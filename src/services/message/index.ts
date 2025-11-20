@@ -217,17 +217,11 @@ export class MessageService {
   };
 
   removeMessagesByAssistant = async (sessionId: string, topicId?: string) => {
-    return lambdaClient.message.removeMessagesByAssistant.mutate({
-      sessionId: this.toDbSessionId(sessionId),
-      topicId,
-    });
+    return lambdaClient.message.removeMessagesByAssistant.mutate({ sessionId, topicId });
   };
 
   removeMessagesByGroup = async (groupId: string, topicId?: string) => {
-    return lambdaClient.message.removeMessagesByGroup.mutate({
-      groupId,
-      topicId,
-    });
+    return lambdaClient.message.removeMessagesByGroup.mutate({ groupId, topicId });
   };
 
   removeAllMessages = async () => {
