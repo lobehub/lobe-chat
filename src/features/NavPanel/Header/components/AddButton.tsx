@@ -1,30 +1,33 @@
-import { ActionIcon, Dropdown } from '@lobehub/ui';
+import { ActionIcon, Dropdown, type MenuProps } from '@lobehub/ui';
 import { MessageSquarePlus, SquarePlus } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ChatGroupWizard } from '@/components/ChatGroupWizard';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import { useGroupActions, useMenuItems, useSessionActions } from '../../hooks';
+import { useCreateMenuItems } from '../../hooks';
 
 const AddButton = memo(() => {
   const { t } = useTranslation('chat');
   const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
-  // Session/Agent creation
-  const { createAgent, isValidatingAgent } = useSessionActions();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Group creation
+  // Create menu items
   const {
+    createAgentMenuItem,
+    createGroupChatMenuItem,
+    createAgent,
     createGroupFromTemplate,
     createGroupWithMembers,
-    isCreating: isCreatingGroup,
-    isModalOpen,
-    openModal,
-    closeModal,
-  } = useGroupActions();
+    isValidatingAgent,
+    isCreatingGroup,
+  } = useCreateMenuItems();
+
+  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   const handleCreateGroupWithMembers = useCallback(
     async (
@@ -38,8 +41,9 @@ const AddButton = memo(() => {
         hostConfig,
         enableSupervisor,
       );
+      closeModal();
     },
-    [createGroupWithMembers, t],
+    [createGroupWithMembers, t, closeModal],
   );
 
   const handleCreateGroupFromTemplate = useCallback(
@@ -50,15 +54,16 @@ const AddButton = memo(() => {
       selectedMemberTitles?: string[],
     ) => {
       await createGroupFromTemplate(templateId, hostConfig, enableSupervisor, selectedMemberTitles);
+      closeModal();
     },
-    [createGroupFromTemplate],
+    [createGroupFromTemplate, closeModal],
   );
 
-  // Menu items
-  const { createMenuItems: dropdownItems } = useMenuItems({
-    onCreateAgent: () => createAgent(),
-    onCreateGroup: openModal,
-  });
+  const dropdownItems = useMemo(() => {
+    const createAgentItem = createAgentMenuItem();
+    const createGroupChatItem = createGroupChatMenuItem(openModal);
+    return [createAgentItem, createGroupChatItem].filter(Boolean) as MenuProps['items'];
+  }, [createAgentMenuItem, createGroupChatMenuItem, openModal]);
 
   if (!showCreateSession) return;
 

@@ -1,21 +1,12 @@
-import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
-import { App } from 'antd';
-import { createStyles } from 'antd-style';
-import { FolderPenIcon, MoreHorizontalIcon, Trash } from 'lucide-react';
+import { ActionIcon, Dropdown, type MenuProps } from '@lobehub/ui';
+import { MoreHorizontalIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 
-import { useGroupActions, useMenuItems, useSessionActions } from '@/features/NavPanel/hooks';
+import { useCreateMenuItems, useSessionGroupMenuItems } from '@/features/NavPanel/hooks';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useSessionStore } from '@/store/session';
 
 import { useAgentModal } from '../../ModalProvider';
 
-const useStyles = createStyles(({ css }) => ({
-  modalRoot: css`
-    z-index: 2000;
-  `,
-}));
 interface ActionsProps {
   id?: string;
   isCustomGroup?: boolean;
@@ -24,23 +15,23 @@ interface ActionsProps {
 }
 
 const Actions = memo<ActionsProps>(({ id, isCustomGroup, isPinned, toggleEditing }) => {
-  const { t } = useTranslation('chat');
-  const { styles } = useStyles();
-  const { modal } = App.useApp();
-
-  const [removeSessionGroup] = useSessionStore((s) => [s.removeSessionGroup]);
-
   const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
   // Modal management
   const { openMemberSelectionModal, closeMemberSelectionModal, openConfigGroupModal } =
     useAgentModal();
 
-  // Session/Agent creation
-  const { createAgent, isLoading: isCreatingAgent } = useSessionActions();
+  // Session group menu items
+  const {
+    renameGroupMenuItem,
+    configGroupMenuItem,
+    deleteGroupMenuItem,
+    createGroupWithMembers,
+    isCreatingGroup,
+  } = useSessionGroupMenuItems();
 
-  // Group creation
-  const { createGroupWithMembers, isCreating: isCreatingGroup } = useGroupActions();
+  // Create menu items
+  const { createAgentMenuItem, createGroupChatMenuItem, isCreatingAgent } = useCreateMenuItems();
 
   // Handler to open member selection modal with callbacks
   const handleOpenMemberSelection = useCallback(() => {
@@ -58,94 +49,42 @@ const Actions = memo<ActionsProps>(({ id, isCustomGroup, isPinned, toggleEditing
     });
   }, [openMemberSelectionModal, closeMemberSelectionModal, createGroupWithMembers]);
 
-  // Menu items
-  const { createConfigMenuItem, createNewAgentMenuItem, createNewGroupChatMenuItem } = useMenuItems(
-    {
-      onCreateAgent: () => createAgent({ groupId: id, isPinned }),
-      onCreateGroup: handleOpenMemberSelection,
-      onOpenConfig: () => openConfigGroupModal(),
-    },
-  );
-
-  const sessionGroupConfigPublicItem = createConfigMenuItem();
-  const newAgentPublicItem = createNewAgentMenuItem();
-  const newGroupChatItem = createNewGroupChatMenuItem();
-
   const isLoading = isCreatingAgent || isCreatingGroup;
 
-  const customGroupItems: MenuProps['items'] = useMemo(
-    () => [
-      {
-        icon: <Icon icon={FolderPenIcon} />,
-        key: 'rename',
-        label: t('sessionGroup.rename'),
-        onClick: (info) => {
-          info.domEvent?.stopPropagation();
-          toggleEditing?.(true);
-        },
-      },
-      sessionGroupConfigPublicItem,
-      {
-        type: 'divider',
-      },
-      {
-        danger: true,
-        icon: <Icon icon={Trash} />,
-        key: 'delete',
-        label: t('delete', { ns: 'common' }),
-        onClick: (info) => {
-          info.domEvent?.stopPropagation();
-          modal.confirm({
-            centered: true,
-            okButtonProps: { danger: true },
-            onOk: async () => {
-              if (!id) return;
-              await removeSessionGroup(id);
-            },
-            rootClassName: styles.modalRoot,
-            title: t('sessionGroup.confirmRemoveGroupAlert'),
-          });
-        },
-      },
-    ],
-    [
-      t,
-      sessionGroupConfigPublicItem,
-      toggleEditing,
-      modal,
-      id,
-      removeSessionGroup,
-      styles.modalRoot,
-    ],
-  );
-
-  const defaultItems: MenuProps['items'] = useMemo(
-    () => [sessionGroupConfigPublicItem],
-    [sessionGroupConfigPublicItem],
-  );
-
-  const tailItems = useMemo(
-    () => (isCustomGroup ? customGroupItems : defaultItems),
-    [isCustomGroup, customGroupItems, defaultItems],
-  );
-
   const menuItems = useMemo(() => {
-    const items: MenuProps['items'] = [];
+    const createAgentItem = createAgentMenuItem({ groupId: id, isPinned });
+    const createGroupChatItem = createGroupChatMenuItem(handleOpenMemberSelection);
+    const configItem = configGroupMenuItem(openConfigGroupModal);
+    const renameItem = renameGroupMenuItem(toggleEditing!);
+    const deleteItem = id ? deleteGroupMenuItem(id) : null;
 
-    if (showCreateSession) {
-      items.push(newAgentPublicItem);
-
-      if (enableGroupChat) {
-        items.push(newGroupChatItem);
-      }
-
-      items.push({ type: 'divider' });
-    }
-
-    items.push(...tailItems);
-
-    return items;
-  }, [showCreateSession, enableGroupChat, newAgentPublicItem, newGroupChatItem, tailItems]);
+    return [
+      ...(showCreateSession
+        ? [
+            createAgentItem,
+            ...(enableGroupChat ? [createGroupChatItem] : []),
+            { type: 'divider' as const },
+          ]
+        : []),
+      ...(isCustomGroup
+        ? [renameItem, configItem, { type: 'divider' as const }, deleteItem]
+        : [configItem]),
+    ].filter(Boolean) as MenuProps['items'];
+  }, [
+    showCreateSession,
+    enableGroupChat,
+    isCustomGroup,
+    id,
+    isPinned,
+    toggleEditing,
+    createAgentMenuItem,
+    createGroupChatMenuItem,
+    configGroupMenuItem,
+    renameGroupMenuItem,
+    deleteGroupMenuItem,
+    handleOpenMemberSelection,
+    openConfigGroupModal,
+  ]);
 
   return (
     <Dropdown

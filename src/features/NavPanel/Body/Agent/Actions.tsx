@@ -1,30 +1,26 @@
 import { ActionIcon, Dropdown, type MenuProps } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { memo, useCallback, useMemo } from 'react';
 
+import { useCreateMenuItems } from '@/features/NavPanel/hooks';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useSessionStore } from '@/store/session';
 
-import { useGroupActions, useMenuItems, useSessionActions } from '../../hooks';
 import { useAgentModal } from './ModalProvider';
 
 const Actions = memo(() => {
-  const { t } = useTranslation('chat');
-  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+  const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
   const { openGroupWizardModal, closeGroupWizardModal, openConfigGroupModal } = useAgentModal();
-  const [addSessionGroup] = useSessionStore((s) => [s.addSessionGroup]);
-  const [isCreatingSessionGroup, setIsCreatingSessionGroup] = useState(false);
 
-  // Session/Agent creation
-  const { createAgent, isLoading: isCreatingAgent } = useSessionActions();
-
-  // Group creation
+  // Create menu items
   const {
+    createAgentMenuItem,
+    createGroupChatMenuItem,
+    createSessionGroupMenuItem,
+    configMenuItem,
     createGroupFromTemplate,
     createGroupWithMembers,
-    isCreating: isCreatingGroup,
-  } = useGroupActions();
+    isLoading,
+  } = useCreateMenuItems();
 
   // Adapter functions to match GroupWizard interface
   const handleGroupWizardCreateCustom = useCallback(
@@ -63,28 +59,28 @@ const Actions = memo(() => {
     handleGroupWizardCreateCustom,
   ]);
 
-  const handleAddSessionGroup = useCallback(async () => {
-    setIsCreatingSessionGroup(true);
-    await addSessionGroup(t('sessionGroup.newGroup'));
-    setIsCreatingSessionGroup(false);
-  }, [addSessionGroup, t]);
-
-  // Menu items
-  const { createConfigMenuItem, createMenuItems, createAddSessionGroupMenuItem } = useMenuItems({
-    onCreateAgent: () => createAgent(),
-    onCreateGroup: handleOpenGroupWizard,
-    onCreateSessionGroup: handleAddSessionGroup,
-    onOpenConfig: openConfigGroupModal,
-  });
-
   const dropdownItems: MenuProps['items'] = useMemo(() => {
-    const configItem = createConfigMenuItem();
-    const addSessionGroupItem = createAddSessionGroupMenuItem();
-    if (!createMenuItems) return [addSessionGroupItem, configItem];
-    return [...createMenuItems, { type: 'divider' as const }, addSessionGroupItem, configItem];
-  }, [createMenuItems, createConfigMenuItem, createAddSessionGroupMenuItem]);
+    const createAgentItem = createAgentMenuItem();
+    const createGroupChatItem = createGroupChatMenuItem(handleOpenGroupWizard);
+    const createSessionGroupItem = createSessionGroupMenuItem();
+    const configItem = configMenuItem(openConfigGroupModal);
 
-  const isLoading = isCreatingAgent || isCreatingGroup || isCreatingSessionGroup;
+    return [
+      createAgentItem,
+      ...(enableGroupChat ? [createGroupChatItem] : []),
+      { type: 'divider' as const },
+      createSessionGroupItem,
+      configItem,
+    ].filter(Boolean) as MenuProps['items'];
+  }, [
+    enableGroupChat,
+    createAgentMenuItem,
+    createGroupChatMenuItem,
+    createSessionGroupMenuItem,
+    configMenuItem,
+    handleOpenGroupWizard,
+    openConfigGroupModal,
+  ]);
 
   if (!showCreateSession) return;
 

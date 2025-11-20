@@ -1,23 +1,11 @@
-import { ActionIcon } from '@lobehub/ui';
-import { PlusIcon } from 'lucide-react';
 import { memo } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
+import { useRepoMenuItems } from '@/features/NavPanel/hooks';
 
 const Actions = memo(() => {
-  const navigate = useNavigate();
-  const { open } = useCreateNewModal();
+  const { createKnowledgeBaseButton } = useRepoMenuItems();
 
-  const handleCreate = () => {
-    open({
-      onSuccess: (id) => {
-        navigate(`/knowledge/bases/${id}`);
-      },
-    });
-  };
-
-  return <ActionIcon icon={PlusIcon} onClick={handleCreate} size={'small'} />;
+  return createKnowledgeBaseButton();
 });
 
 export default Actions;
