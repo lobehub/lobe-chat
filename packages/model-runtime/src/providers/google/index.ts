@@ -46,6 +46,7 @@ const modelsDisableInstuction = new Set([
   'gemini-2.0-flash-preview-image-generation',
   'gemini-2.5-flash-image-preview',
   'gemini-2.5-flash-image',
+  'gemini-3-pro-image-preview',
   'gemma-3-1b-it',
   'gemma-3-4b-it',
   'gemma-3-12b-it',

@@ -16,8 +16,9 @@ const zenmuxChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 65_536,
-    description: 'Gemini 3 Pro Image（Nano Banana）是 Google 的图像生成模型，同时支持多模态对话。',
-    displayName: 'Gemini 3 Pro Image (Nano Banana)',
+    description:
+      'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
+    displayName: 'Gemini 3 Pro Image (Nano Banana Pro)',
     id: 'google/gemini-3-pro-image-preview',
     maxOutput: 32_768,
     pricing: {
