@@ -1,15 +1,20 @@
 import { ActionIcon, Dropdown, type MenuProps } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { useSessionStore } from '@/store/session';
 
 import { useGroupActions, useMenuItems, useSessionActions } from '../../hooks';
 import { useAgentModal } from './ModalProvider';
 
 const CreateButton = memo(() => {
+  const { t } = useTranslation('chat');
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
   const { openGroupWizardModal, closeGroupWizardModal, openConfigGroupModal } = useAgentModal();
+  const [addSessionGroup] = useSessionStore((s) => [s.addSessionGroup]);
+  const [isCreatingSessionGroup, setIsCreatingSessionGroup] = useState(false);
 
   // Session/Agent creation
   const { createAgent, isLoading: isCreatingAgent } = useSessionActions();
@@ -58,20 +63,28 @@ const CreateButton = memo(() => {
     handleGroupWizardCreateCustom,
   ]);
 
+  const handleAddSessionGroup = useCallback(async () => {
+    setIsCreatingSessionGroup(true);
+    await addSessionGroup(t('sessionGroup.newGroup'));
+    setIsCreatingSessionGroup(false);
+  }, [addSessionGroup, t]);
+
   // Menu items
-  const { createConfigMenuItem, createMenuItems } = useMenuItems({
+  const { createConfigMenuItem, createMenuItems, createAddSessionGroupMenuItem } = useMenuItems({
     onCreateAgent: () => createAgent(),
     onCreateGroup: handleOpenGroupWizard,
+    onCreateSessionGroup: handleAddSessionGroup,
     onOpenConfig: openConfigGroupModal,
   });
 
   const dropdownItems: MenuProps['items'] = useMemo(() => {
     const configItem = createConfigMenuItem();
-    if (!createMenuItems) return [configItem];
-    return [...createMenuItems, { type: 'divider' as const }, configItem];
-  }, [createMenuItems, createConfigMenuItem]);
+    const addSessionGroupItem = createAddSessionGroupMenuItem();
+    if (!createMenuItems) return [addSessionGroupItem, configItem];
+    return [...createMenuItems, { type: 'divider' as const }, addSessionGroupItem, configItem];
+  }, [createMenuItems, createConfigMenuItem, createAddSessionGroupMenuItem]);
 
-  const isLoading = isCreatingAgent || isCreatingGroup;
+  const isLoading = isCreatingAgent || isCreatingGroup || isCreatingSessionGroup;
 
   if (!showCreateSession) return;
 

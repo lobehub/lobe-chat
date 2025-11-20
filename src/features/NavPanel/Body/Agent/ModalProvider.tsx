@@ -7,7 +7,6 @@ import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 
 import ConfigGroupModal from './Modals/ConfigGroupModal';
 import CreateGroupModal from './Modals/CreateGroupModal';
-import RenameGroupModal from './Modals/RenameGroupModal';
 
 interface AgentModalContextValue {
   closeAllModals: () => void;
@@ -15,12 +14,10 @@ interface AgentModalContextValue {
   closeCreateGroupModal: () => void;
   closeGroupWizardModal: () => void;
   closeMemberSelectionModal: () => void;
-  closeRenameGroupModal: () => void;
   openConfigGroupModal: () => void;
   openCreateGroupModal: (sessionId: string) => void;
   openGroupWizardModal: (callbacks: GroupWizardCallbacks) => void;
   openMemberSelectionModal: (callbacks: MemberSelectionCallbacks) => void;
-  openRenameGroupModal: (groupId: string) => void;
 }
 
 interface GroupWizardCallbacks {
@@ -66,10 +63,6 @@ export const AgentModalProvider = memo<AgentModalProviderProps>(({ children }) =
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
   const [createGroupSessionId, setCreateGroupSessionId] = useState<string>('');
 
-  // RenameGroupModal state
-  const [renameGroupModalOpen, setRenameGroupModalOpen] = useState(false);
-  const [renameGroupId, setRenameGroupId] = useState<string>('');
-
   // ConfigGroupModal state
   const [configGroupModalOpen, setConfigGroupModalOpen] = useState(false);
 
@@ -86,7 +79,6 @@ export const AgentModalProvider = memo<AgentModalProviderProps>(({ children }) =
     () => ({
       closeAllModals: () => {
         setCreateGroupModalOpen(false);
-        setRenameGroupModalOpen(false);
         setConfigGroupModalOpen(false);
         setGroupWizardOpen(false);
         setMemberSelectionOpen(false);
@@ -95,7 +87,6 @@ export const AgentModalProvider = memo<AgentModalProviderProps>(({ children }) =
       closeCreateGroupModal: () => setCreateGroupModalOpen(false),
       closeGroupWizardModal: () => setGroupWizardOpen(false),
       closeMemberSelectionModal: () => setMemberSelectionOpen(false),
-      closeRenameGroupModal: () => setRenameGroupModalOpen(false),
       openConfigGroupModal: () => setConfigGroupModalOpen(true),
       openCreateGroupModal: (sessionId: string) => {
         setCreateGroupSessionId(sessionId);
@@ -108,10 +99,6 @@ export const AgentModalProvider = memo<AgentModalProviderProps>(({ children }) =
       openMemberSelectionModal: (callbacks: MemberSelectionCallbacks) => {
         setMemberSelectionCallbacks(callbacks);
         setMemberSelectionOpen(true);
-      },
-      openRenameGroupModal: (groupId: string) => {
-        setRenameGroupId(groupId);
-        setRenameGroupModalOpen(true);
       },
     }),
     [],
@@ -127,14 +114,6 @@ export const AgentModalProvider = memo<AgentModalProviderProps>(({ children }) =
           id={createGroupSessionId}
           onCancel={() => setCreateGroupModalOpen(false)}
           open={createGroupModalOpen}
-        />
-      )}
-
-      {renameGroupModalOpen && (
-        <RenameGroupModal
-          id={renameGroupId}
-          onCancel={() => setRenameGroupModalOpen(false)}
-          open={renameGroupModalOpen}
         />
       )}
 

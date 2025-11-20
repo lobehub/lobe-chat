@@ -20,9 +20,10 @@ interface ActionsProps {
   id?: string;
   isCustomGroup?: boolean;
   isPinned?: boolean;
+  toggleEditing?: (visible?: boolean) => void;
 }
 
-const Actions = memo<ActionsProps>(({ id, isCustomGroup, isPinned }) => {
+const Actions = memo<ActionsProps>(({ id, isCustomGroup, isPinned, toggleEditing }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const { modal } = App.useApp();
@@ -32,12 +33,8 @@ const Actions = memo<ActionsProps>(({ id, isCustomGroup, isPinned }) => {
   const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
   // Modal management
-  const {
-    openMemberSelectionModal,
-    closeMemberSelectionModal,
-    openRenameGroupModal,
-    openConfigGroupModal,
-  } = useAgentModal();
+  const { openMemberSelectionModal, closeMemberSelectionModal, openConfigGroupModal } =
+    useAgentModal();
 
   // Session/Agent creation
   const { createAgent, isLoading: isCreatingAgent } = useSessionActions();
@@ -84,7 +81,7 @@ const Actions = memo<ActionsProps>(({ id, isCustomGroup, isPinned }) => {
         label: t('sessionGroup.rename'),
         onClick: (info) => {
           info.domEvent?.stopPropagation();
-          openRenameGroupModal(id!);
+          toggleEditing?.(true);
         },
       },
       sessionGroupConfigPublicItem,
@@ -114,7 +111,7 @@ const Actions = memo<ActionsProps>(({ id, isCustomGroup, isPinned }) => {
     [
       t,
       sessionGroupConfigPublicItem,
-      openRenameGroupModal,
+      toggleEditing,
       modal,
       id,
       removeSessionGroup,

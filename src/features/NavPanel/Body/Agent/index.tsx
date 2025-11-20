@@ -18,7 +18,7 @@ const useStyles = createStyles(({ css, token }) => ({
     transition:
       height,
       opacity,
-      margin-block-start 200ms ${token.motioneaseinout};
+      margin-block-start 200ms ${token.motionEaseInOut};
   `,
   hide: css`
     height: 0;

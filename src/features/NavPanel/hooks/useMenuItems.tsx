@@ -1,5 +1,5 @@
 import { Icon, type MenuProps } from '@lobehub/ui';
-import { Bot, Plus, Settings2, Users, UsersRound } from 'lucide-react';
+import { Bot, FolderPlus, Plus, Settings2, Users, UsersRound } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,6 +17,10 @@ interface UseMenuItemsOptions {
    * Callback when "New Group Chat" menu item is clicked
    */
   onCreateGroup?: () => void;
+  /**
+   * Callback when "Add Session Group" menu item is clicked
+   */
+  onCreateSessionGroup?: () => void | Promise<void>;
   /**
    * Callback when "Config" menu item is clicked
    */
@@ -82,6 +86,22 @@ export const useMenuItems = (options?: UseMenuItemsOptions) => {
     [t, options?.onCreateGroup],
   );
 
+  /**
+   * Create an "Add Session Group" menu item
+   */
+  const createAddSessionGroupMenuItem = useCallback(
+    (onClick?: () => void | Promise<void>): MenuItemType => ({
+      icon: <Icon icon={FolderPlus} />,
+      key: 'addSessionGroup',
+      label: t('sessionGroup.createGroup'),
+      onClick: async (info) => {
+        info.domEvent?.stopPropagation();
+        await (onClick || options?.onCreateSessionGroup)?.();
+      },
+    }),
+    [t, options?.onCreateSessionGroup],
+  );
+
   // ============ Composed Menu Lists ============
   // These create complete menu item lists for common scenarios
 
@@ -111,6 +131,7 @@ export const useMenuItems = (options?: UseMenuItemsOptions) => {
 
   return {
     // Factory methods for individual items
+    createAddSessionGroupMenuItem,
     createConfigMenuItem,
     // Composed menu lists
     createMenuItems: createMenuItems.length > 0 ? createMenuItems : null,
