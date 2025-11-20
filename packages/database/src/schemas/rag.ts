@@ -89,8 +89,8 @@ export type NewEmbeddingsItem = typeof embeddings.$inferInsert;
 export type EmbeddingsSelectItem = typeof embeddings.$inferSelect;
 
 /**
- * 文档块表 - 将文档内容分割成块并关联到 chunks 表，用于向量检索
- * 注意：此表可选，如果已经使用 pages 字段存储了文档块，可以不需要此表
+ * Document chunks table - Splits document content into chunks and associates them with the chunks table for vector retrieval
+ * Note: This table is optional, if the pages field is already being used to store document chunks, this table may not be needed
  */
 export const documentChunks = pgTable(
   'document_chunks',
