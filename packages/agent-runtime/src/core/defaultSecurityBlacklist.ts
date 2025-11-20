@@ -13,7 +13,7 @@ export const DEFAULT_SECURITY_BLACKLIST: SecurityBlacklistConfig = [
     description: 'Recursive deletion of home directory is extremely dangerous',
     match: {
       command: {
-        pattern: 'rm.*-r.*(~|\\$HOME|/Users/[^/]+)/?\\s*$',
+        pattern: 'rm.*-r.*(~|\\$HOME|/Users/[^/]+|/home/[^/]+)/?\\s*$',
         type: 'regex',
       },
     },

@@ -265,6 +265,30 @@ describe('InterventionChecker', () => {
         expect(result.reason).toBe('Recursive deletion of home directory is extremely dangerous');
       });
 
+      it('should block rm -rf on macOS home directory', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'rm -rf /Users/alice',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Recursive deletion of home directory is extremely dangerous');
+      });
+
+      it('should block rm -rf on Linux home directory', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'rm -rf /home/alice',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Recursive deletion of home directory is extremely dangerous');
+      });
+
+      it('should block rm -rf with $HOME variable', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'rm -rf $HOME',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Recursive deletion of home directory is extremely dangerous');
+      });
+
       it('should block rm -rf / command', () => {
         const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
           command: 'rm -rf /',
