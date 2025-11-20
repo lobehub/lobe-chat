@@ -9,7 +9,6 @@ import { Flexbox } from 'react-layout-kit';
 import Avatar from '@/features/ChatItem/components/Avatar';
 import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
 import Title from '@/features/ChatItem/components/Title';
-import Usage from '@/features/ChatList/components/Extras/Usage';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
@@ -19,6 +18,7 @@ import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
+import Usage from '../../components/Extras/Usage';
 import { GroupActionsBar } from './Actions';
 import EditState from './EditState';
 import Group from './Group';

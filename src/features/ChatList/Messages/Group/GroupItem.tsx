@@ -3,9 +3,10 @@ import isEqual from 'fast-deep-equal';
 import { memo, use } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { ContentBlock } from '@/features/ChatList/Messages/Group/ContentBlock';
-import { VirtuaContext } from '@/features/ChatList/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
+
+import { VirtuaContext } from '../../components/VirtualizedList/VirtuosoContext';
+import { ContentBlock } from './ContentBlock';
 
 interface GroupItemProps extends AssistantContentBlock {
   contentId?: string;
