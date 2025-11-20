@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
 
-const CreateButton = memo(() => {
+const Actions = memo(() => {
   const navigate = useNavigate();
   const { open } = useCreateNewModal();
 
@@ -20,4 +20,4 @@ const CreateButton = memo(() => {
   return <ActionIcon icon={PlusIcon} onClick={handleCreate} size={'small'} />;
 });
 
-export default CreateButton;
+export default Actions;

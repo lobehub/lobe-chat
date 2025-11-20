@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
-import CreateButton from './CreateButton';
+import Actions from './Actions';
 import List from './List';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -36,7 +36,7 @@ const Repo = memo<RepoProps>(({ itemKey }) => {
   const { cx, styles } = useStyles();
   return (
     <AccordionItem
-      action={<CreateButton />}
+      action={<Actions />}
       classNames={{
         header: cx(styles.base, !expand && styles.hide),
       }}

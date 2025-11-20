@@ -8,7 +8,7 @@ import isEqual from 'fast-deep-equal';
 import {
   Check,
   ExternalLink,
-  ListTree,
+  FolderInputIcon,
   LucideCopy,
   LucidePlus,
   MoreHorizontalIcon,
@@ -138,7 +138,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
                 },
               },
             ],
-            icon: <Icon icon={ListTree} />,
+            icon: <Icon icon={FolderInputIcon} />,
             key: 'moveGroup',
             label: t('sessionGroup.moveGroup'),
           },

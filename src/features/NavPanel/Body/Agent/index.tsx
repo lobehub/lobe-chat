@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
-import CreateButton from './CreateButton';
+import Actions from './Actions';
 import List from './List';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -38,7 +38,7 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
 
   return (
     <AccordionItem
-      action={<CreateButton />}
+      action={<Actions />}
       classNames={{
         header: cx(styles.base, !expand && styles.hide),
       }}

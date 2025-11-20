@@ -1,7 +1,7 @@
 import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
-import { MoreHorizontalIcon, PencilLine, Trash } from 'lucide-react';
+import { FolderPenIcon, MoreHorizontalIcon, Trash } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -76,7 +76,7 @@ const Actions = memo<ActionsProps>(({ id, isCustomGroup, isPinned, toggleEditing
   const customGroupItems: MenuProps['items'] = useMemo(
     () => [
       {
-        icon: <Icon icon={PencilLine} />,
+        icon: <Icon icon={FolderPenIcon} />,
         key: 'rename',
         label: t('sessionGroup.rename'),
         onClick: (info) => {

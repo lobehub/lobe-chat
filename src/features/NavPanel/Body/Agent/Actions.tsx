@@ -9,7 +9,7 @@ import { useSessionStore } from '@/store/session';
 import { useGroupActions, useMenuItems, useSessionActions } from '../../hooks';
 import { useAgentModal } from './ModalProvider';
 
-const CreateButton = memo(() => {
+const Actions = memo(() => {
   const { t } = useTranslation('chat');
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
   const { openGroupWizardModal, closeGroupWizardModal, openConfigGroupModal } = useAgentModal();
@@ -103,4 +103,4 @@ const CreateButton = memo(() => {
   );
 });
 
-export default CreateButton;
+export default Actions;

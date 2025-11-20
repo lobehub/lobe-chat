@@ -1,5 +1,6 @@
 import { Icon, type MenuProps } from '@lobehub/ui';
-import { Bot, FolderPlus, Plus, Settings2, Users, UsersRound } from 'lucide-react';
+import { GroupBotSquareIcon } from '@lobehub/ui/icons';
+import { Bot, BotIcon, FolderCogIcon, FolderPlus } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -43,7 +44,7 @@ export const useMenuItems = (options?: UseMenuItemsOptions) => {
    */
   const createConfigMenuItem = useCallback(
     (onClick?: () => void): MenuItemType => ({
-      icon: <Icon icon={Settings2} />,
+      icon: <Icon icon={FolderCogIcon} />,
       key: 'config',
       label: t('sessionGroup.config'),
       onClick: (info) => {
@@ -59,7 +60,7 @@ export const useMenuItems = (options?: UseMenuItemsOptions) => {
    */
   const createNewAgentMenuItem = useCallback(
     (onClick?: () => void | Promise<void>): MenuItemType => ({
-      icon: <Icon icon={Plus} />,
+      icon: <Icon icon={BotIcon} />,
       key: 'newAgent',
       label: t('newAgent'),
       onClick: async (info) => {
@@ -75,7 +76,7 @@ export const useMenuItems = (options?: UseMenuItemsOptions) => {
    */
   const createNewGroupChatMenuItem = useCallback(
     (onClick?: () => void): MenuItemType => ({
-      icon: <Icon icon={UsersRound} />,
+      icon: <Icon icon={GroupBotSquareIcon} />,
       key: 'newGroupChat',
       label: t('newGroupChat'),
       onClick: (info) => {
@@ -120,7 +121,7 @@ export const useMenuItems = (options?: UseMenuItemsOptions) => {
         },
         enableGroupChat &&
           options?.onCreateGroup && {
-            icon: <Icon icon={Users} />,
+            icon: <Icon icon={GroupBotSquareIcon} />,
             key: 'newGroup',
             label: t('newGroupChat'),
             onClick: options.onCreateGroup,
