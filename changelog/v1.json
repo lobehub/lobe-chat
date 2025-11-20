@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.93"
+  },
+  {
+    "children": {
       "improvements": ["Remove debug console logs and add loading state."]
     },
     "date": "2025-11-19",
