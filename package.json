@@ -173,7 +173,7 @@
     "@lobehub/icons": "^2.43.1",
     "@lobehub/market-sdk": "^0.23.0",
     "@lobehub/tts": "^2.0.1",
-    "@lobehub/ui": "^2.16.2",
+    "@lobehub/ui": "^2.16.3",
     "@modelcontextprotocol/sdk": "^1.22.0",
     "@neondatabase/serverless": "^1.0.2",
     "@next/third-parties": "^16.0.3",

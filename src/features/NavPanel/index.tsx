@@ -1,6 +1,6 @@
 'use client';
 
-import { DraggableSideNav, type DraggableSideNavProps, ScrollShadow } from '@lobehub/ui';
+import { DraggableSideNav, type DraggableSideNavProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
@@ -80,11 +80,12 @@ const NavPanel = memo(() => {
   return (
     <AgentModalProvider>
       <DraggableSideNav
+        body={() => <Body />}
         className={styles.panel}
         defaultWidth={tmpWidth}
         expand={sessionExpandable}
-        footer={() => <Footer />}
-        header={() => <Header />}
+        footer={() => <Footer expand={sessionExpandable} />}
+        header={() => <Header expand={sessionExpandable} />}
         maxWidth={400}
         minWidth={48}
         onExpandChange={handleExpand}
@@ -92,11 +93,7 @@ const NavPanel = memo(() => {
         placement="left"
         showHandle={false}
         width={sessionsWidth}
-      >
-        <ScrollShadow size={2} style={{ height: '100%' }}>
-          <Body />
-        </ScrollShadow>
-      </DraggableSideNav>
+      />
       <SessionHydration />
     </AgentModalProvider>
   );

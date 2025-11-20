@@ -1,9 +1,9 @@
 'use client';
 
 import { AccordionItem, Text } from '@lobehub/ui';
-import { memo, useMemo } from 'react';
+import { createStyles } from 'antd-style';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -11,28 +11,35 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import CreateButton from './CreateButton';
 import List from './List';
 
+const useStyles = createStyles(({ css, token }) => ({
+  base: css`
+    overflow: hidden;
+    transition:
+      height,
+      opacity,
+      margin-block-start 200ms ${token.motioneaseinout};
+  `,
+  hide: css`
+    height: 0;
+    margin-block-start: -12px;
+    opacity: 0;
+  `,
+}));
+
 interface RepoProps {
   itemKey: string;
 }
 
 const Repo = memo<RepoProps>(({ itemKey }) => {
-  const { t } = useTranslation('common');
   const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
-
-  const listContent = useMemo(
-    () => (
-      <Flexbox gap={1} paddingBlock={1}>
-        <List />
-      </Flexbox>
-    ),
-    [],
-  );
-
-  if (!expand) return listContent;
-
+  const { t } = useTranslation('common');
+  const { cx, styles } = useStyles();
   return (
     <AccordionItem
       action={<CreateButton />}
+      classNames={{
+        header: cx(styles.base, !expand && styles.hide),
+      }}
       itemKey={itemKey}
       paddingBlock={4}
       paddingInline={'8px 4px'}
@@ -42,7 +49,7 @@ const Repo = memo<RepoProps>(({ itemKey }) => {
         </Text>
       }
     >
-      {listContent}
+      <List expand={expand} />
     </AccordionItem>
   );
 });

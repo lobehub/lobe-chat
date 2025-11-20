@@ -20,11 +20,12 @@ import Actions from './Actions';
 import Avatar from './Avatar';
 
 interface SessionItemProps {
+  className?: string;
   id: string;
   style?: CSSProperties;
 }
 
-const SessionItem = memo<SessionItemProps>(({ id, style }) => {
+const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
   const { openCreateGroupModal } = useAgentModal();
   const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
 
@@ -132,6 +133,7 @@ const SessionItem = memo<SessionItemProps>(({ id, style }) => {
         />
       }
       active={active}
+      className={className}
       draggable={isDesktop}
       extra={pinIcon}
       icon={

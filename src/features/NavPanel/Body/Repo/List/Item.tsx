@@ -2,8 +2,6 @@ import { BoxIcon } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import NavItem from '../../../NavItem';
@@ -13,12 +11,12 @@ import Editing from './Editing';
 export const knowledgeItemClass = 'knowledge-base-item';
 
 interface RepoItemProps {
+  expand?: boolean;
   id: string;
   name: string;
 }
 
-const RepoItem = memo<RepoItemProps>(({ id, name }) => {
-  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
+const RepoItem = memo<RepoItemProps>(({ id, name, expand }) => {
   const navigate = useNavigate();
   const [editing, isLoading] = useKnowledgeBaseStore((s) => [
     s.knowledgeBaseRenamingId === id,

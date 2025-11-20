@@ -6,7 +6,7 @@ import { useFetchSessions } from '@/hooks/useFetchSessions';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import SkeletonList from '../SkeletonList';
+import SkeletonList from '../../SkeletonList';
 import Group from './Group';
 import SessionList from './List';
 import { useAgentList } from './useAgentList';

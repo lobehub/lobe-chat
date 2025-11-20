@@ -1,5 +1,5 @@
 import { Accordion } from '@lobehub/ui';
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -17,17 +17,14 @@ const Group = memo<GroupProps>(({ dataSource }) => {
     s.updateSystemStatus,
   ]);
 
-  const list = useMemo(
-    () => dataSource.map((item) => <Item {...item} key={item.id} />),
-    [dataSource],
-  );
-
   return (
     <Accordion
       expandedKeys={sessionGroupKeys}
       onExpandedChange={(keys) => updateSystemStatus({ expandSessionGroupKeys: keys as any })}
     >
-      {list}
+      {dataSource.map((item) => (
+        <Item {...item} key={item.id} />
+      ))}
     </Accordion>
   );
 });

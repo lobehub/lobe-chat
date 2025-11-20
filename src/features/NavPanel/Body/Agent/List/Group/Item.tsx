@@ -1,6 +1,7 @@
 import { AccordionItem, Icon, Text } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import { ListMinusIcon } from 'lucide-react';
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SessionList from '@/features/NavPanel/Body/Agent/List/List';
@@ -10,30 +11,37 @@ import { CustomSessionGroup } from '@/types/session';
 
 import Actions from './Actions';
 
+const useStyles = createStyles(({ css, token }) => ({
+  base: css`
+    overflow: hidden;
+    transition:
+      height,
+      opacity,
+      margin-block-start 200ms ${token.motioneaseinout};
+  `,
+  hide: css`
+    height: 0;
+    margin-block-start: -12px;
+    opacity: 0;
+  `,
+  item: css`
+    transition: padding-inline-start 200ms ${token.motioneaseinout};
+  `,
+  itemExpand: css`
+    padding-inline-start: 16px;
+  `,
+}));
+
 const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
   const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
-
-  const content = useMemo(
-    () => (
-      <SessionList
-        dataSource={children}
-        itemStyle={
-          expand
-            ? {
-                paddingLeft: 16,
-              }
-            : {}
-        }
-      />
-    ),
-    [children, expand],
-  );
-
-  if (!expand) return content;
+  const { cx, styles } = useStyles();
 
   return (
     <AccordionItem
       action={<Actions id={id} isCustomGroup />}
+      classNames={{
+        header: cx(styles.base, !expand && styles.hide),
+      }}
       itemKey={id}
       key={id}
       paddingBlock={4}
@@ -47,7 +55,10 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
         </Flexbox>
       }
     >
-      {content}
+      <SessionList
+        dataSource={children}
+        itemClassName={cx(styles.item, expand && styles.itemExpand)}
+      />
     </AccordionItem>
   );
 });

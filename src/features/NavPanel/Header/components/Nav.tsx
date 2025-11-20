@@ -37,7 +37,7 @@ const Nav = memo(() => {
   );
 
   return (
-    <Flexbox gap={1}>
+    <Flexbox>
       <NavItem
         active={tab === SidebarTabKey.Chat}
         disabled={isPending}

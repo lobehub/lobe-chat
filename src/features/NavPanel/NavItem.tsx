@@ -12,6 +12,12 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 const ACTION_CLASS_NAME = 'nav-item-actions';
 
 const useStyles = createStyles(({ css, token }) => ({
+  base: css`
+    overflow: hidden;
+    transition:
+      width,
+      opacity 200ms ${token.motionEaseInOut};
+  `,
   container: css`
     user-select: none;
     overflow: hidden;
@@ -31,7 +37,10 @@ const useStyles = createStyles(({ css, token }) => ({
       }
     }
   `,
-  hideGroupHeader: css``,
+  hide: css`
+    width: 0;
+    opacity: 0;
+  `,
 }));
 
 interface NavItemProps extends Omit<BlockProps, 'children' | 'title'> {
@@ -68,29 +77,36 @@ const NavItem = memo<NavItemProps>(
     const variant = active ? 'filled' : 'borderless';
     const iconComponent = loading ? Loader2Icon : icon;
 
-    const content = (
-      <Block
-        align={'center'}
-        className={cx(styles.container, className)}
-        clickable={!disabled}
-        gap={8}
-        height={32}
-        horizontal
-        onClick={(e) => {
-          if (disabled || loading) return;
-          onClick?.(e);
-        }}
-        paddingInline={2}
-        variant={variant}
-        {...rest}
-      >
-        {icon && (
-          <Center flex={'none'} height={28} width={28}>
-            <Icon color={iconColor} icon={iconComponent} size={18} spin={loading} />
-          </Center>
-        )}
-        {expand && (
-          <>
+    return (
+      <Tooltip placement={'right'} title={expand ? undefined : title}>
+        <Block
+          align={'center'}
+          className={cx(styles.container, className)}
+          clickable={!disabled}
+          gap={8}
+          height={32}
+          horizontal
+          onClick={(e) => {
+            if (disabled || loading) return;
+            onClick?.(e);
+          }}
+          paddingInline={2}
+          variant={variant}
+          {...rest}
+        >
+          {icon && (
+            <Center flex={'none'} height={28} width={28}>
+              <Icon color={iconColor} icon={iconComponent} size={18} spin={loading} />
+            </Center>
+          )}
+
+          <Flexbox
+            align={'center'}
+            className={cx(styles.base, !expand && styles.hide)}
+            flex={1}
+            gap={8}
+            horizontal
+          >
             <Text color={textColor} ellipsis style={{ flex: 1 }}>
               {title}
             </Text>
@@ -121,16 +137,8 @@ const NavItem = memo<NavItemProps>(
                 </Flexbox>
               )}
             </Flexbox>
-          </>
-        )}
-      </Block>
-    );
-
-    if (expand) return content;
-
-    return (
-      <Tooltip placement={'right'} title={title}>
-        {content}
+          </Flexbox>
+        </Block>
       </Tooltip>
     );
   },

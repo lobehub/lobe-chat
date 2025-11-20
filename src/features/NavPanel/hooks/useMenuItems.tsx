@@ -113,11 +113,10 @@ export const useMenuItems = (options?: UseMenuItemsOptions) => {
     // Factory methods for individual items
     createConfigMenuItem,
     // Composed menu lists
-createMenuItems: createMenuItems.length > 0 ? createMenuItems : null,
-    
-createNewAgentMenuItem,
+    createMenuItems: createMenuItems.length > 0 ? createMenuItems : null,
 
-    
+    createNewAgentMenuItem,
+
     createNewGroupChatMenuItem,
   };
 };

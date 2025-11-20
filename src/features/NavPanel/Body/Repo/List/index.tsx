@@ -1,33 +1,28 @@
 'use client';
 
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
+import SkeletonList from '../../SkeletonList';
 import EmptyStatus from '../EmptyStatus';
-import SkeletonList from '../SkeletonList';
 import Item from './Item';
 
-const RepoList = memo(() => {
-  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
+const RepoList = memo<{ expand?: boolean }>(({ expand }) => {
   const useFetchKnowledgeBaseList = useKnowledgeBaseStore((s) => s.useFetchKnowledgeBaseList);
   const { data, isLoading } = useFetchKnowledgeBaseList();
 
-  // Memoize items to prevent unnecessary re-renders
-  const items = useMemo(() => {
-    if (!data || isLoading) return null;
-    if (data.length === 0) return null;
-
-    return data.map((item) => <Item {...item} key={item.id} />);
-  }, [data, isLoading]);
-
-  // Early returns for loading and empty states
   if (!data || isLoading) return <SkeletonList />;
   if (data.length === 0) return expand ? <EmptyStatus /> : null;
 
-  return items;
+  return (
+    <Flexbox gap={2}>
+      {data.map((item) => (
+        <Item {...item} expand={expand} key={item.id} />
+      ))}
+    </Flexbox>
+  );
 });
 
 export default RepoList;

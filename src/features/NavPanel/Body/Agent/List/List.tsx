@@ -18,10 +18,11 @@ import Item from './Item';
 
 interface SessionListProps {
   dataSource: LobeSessions;
+  itemClassName?: string;
   itemStyle?: CSSProperties;
 }
 
-const List = memo<SessionListProps>(({ dataSource, itemStyle }) => {
+const List = memo<SessionListProps>(({ dataSource, itemStyle, itemClassName }) => {
   const { t } = useTranslation('chat');
   const { analytics } = useAnalytics();
 
@@ -75,25 +76,6 @@ const List = memo<SessionListProps>(({ dataSource, itemStyle }) => {
     [switchSession, analytics],
   );
 
-  // Use a simpler mapping without useMemo for better performance
-  const list = useMemo(
-    () =>
-      dataSource.map(({ id }) => (
-        <Link
-          aria-label={id}
-          href={SESSION_CHAT_URL(id, mobile)}
-          key={id}
-          onClick={(e) => {
-            e.preventDefault();
-            handleClick(id);
-          }}
-        >
-          <Item id={id} style={itemStyle} />
-        </Link>
-      )),
-    [dataSource, handleClick, itemStyle, mobile],
-  );
-
   if (isEmpty) {
     return (
       <Center>
@@ -103,8 +85,20 @@ const List = memo<SessionListProps>(({ dataSource, itemStyle }) => {
   }
 
   return (
-    <Flexbox gap={1} paddingBlock={1}>
-      {list}
+    <Flexbox gap={2}>
+      {dataSource.map(({ id }) => (
+        <Link
+          aria-label={id}
+          href={SESSION_CHAT_URL(id, mobile)}
+          key={id}
+          onClick={(e) => {
+            e.preventDefault();
+            handleClick(id);
+          }}
+        >
+          <Item className={itemClassName} id={id} style={itemStyle} />
+        </Link>
+      ))}
     </Flexbox>
   );
 });

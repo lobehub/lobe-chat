@@ -18,7 +18,6 @@ import { HotkeyScopeEnum } from '@/types/hotkey';
 
 import DesktopLayoutContainer from './DesktopLayoutContainer';
 import RegisterHotkeys from './RegisterHotkeys';
-import SideBar from './SideBar';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 
@@ -53,7 +52,7 @@ const Layout = memo((props: { locale: Locales }) => {
           </DesktopLayoutContainer>
         ) : (
           <>
-            <SideBar />
+            {/*<SideBar />*/}
             <Outlet context={{ locale: locale }} />
           </>
         )}
