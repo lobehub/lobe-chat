@@ -16,12 +16,22 @@ const SessionHydration = memo(() => {
   const useAgentStoreUpdater = createStoreUpdater(useAgentStore);
   const useChatStoreUpdater = createStoreUpdater(useChatStore);
   const [switchTopic] = useChatStore((s) => [s.switchTopic]);
+  const [activeId] = useSessionStore((s) => [s.activeId]);
 
   // two-way bindings the url and session store
   const [session, setSession] = useQueryParam('session', parseAsString.withDefault('inbox'), {
     history: 'replace',
     throttleMs: THROTTLE_DELAY,
   });
+
+  useEffect(() => {
+    if (session !== activeId) {
+      // delay to avoid race condition, the condition may be changed before the setSession is executed
+      setTimeout(() => {
+        setSession(activeId);
+      }, 100);
+    }
+  }, [activeId, session, setSession]);
 
   useStoreUpdater('activeId', session);
   useAgentStoreUpdater('activeId', session);
