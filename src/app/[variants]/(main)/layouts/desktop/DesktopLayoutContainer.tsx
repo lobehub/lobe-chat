@@ -2,7 +2,7 @@ import { useTheme } from 'antd-style';
 import { PropsWithChildren, Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import SideBar from './SideBar';
+import NavPanel from '@/features/NavPanel';
 
 const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
   const theme = useTheme();
@@ -10,7 +10,7 @@ const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
   return (
     <>
       <Suspense>
-        <SideBar />
+        <NavPanel />
       </Suspense>
       <Flexbox
         style={{

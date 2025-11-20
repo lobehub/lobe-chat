@@ -54,7 +54,7 @@ const Nav = memo(() => {
         title={t('tab.knowledgeBase')}
       />
       <NavItem
-        active={tab === SidebarTabKey.Knowledge}
+        active={tab === SidebarTabKey.Image}
         disabled={isPending}
         hidden={!showAiImage}
         icon={Palette}

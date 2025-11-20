@@ -11,6 +11,7 @@ import { isDesktop } from '@/const/version';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
 import TitleBar, { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
 import HotkeyHelperPanel from '@/features/HotkeyHelperPanel';
+import NavPanel from '@/features/NavPanel';
 import { usePlatform } from '@/hooks/usePlatform';
 import { Locales } from '@/locales/resources';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -52,7 +53,7 @@ const Layout = memo((props: { locale: Locales }) => {
           </DesktopLayoutContainer>
         ) : (
           <>
-            {/*<SideBar />*/}
+            <NavPanel />
             <Outlet context={{ locale: locale }} />
           </>
         )}
