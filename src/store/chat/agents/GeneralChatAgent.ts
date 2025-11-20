@@ -3,6 +3,7 @@ import {
   AgentInstruction,
   AgentRuntimeContext,
   AgentState,
+  DEFAULT_SECURITY_BLACKLIST,
   GeneralAgentCallLLMInstructionPayload,
   GeneralAgentCallLLMResultPayload,
   GeneralAgentCallToolResultPayload,
@@ -65,6 +66,9 @@ export class GeneralChatAgent implements Agent {
     const toolsNeedingIntervention: ChatToolPayload[] = [];
     const toolsToExecute: ChatToolPayload[] = [];
 
+    // Get security blacklist (use default if not provided)
+    const securityBlacklist = state.securityBlacklist ?? DEFAULT_SECURITY_BLACKLIST;
+
     // Get user config (default to 'manual' mode)
     const userConfig = state.userInterventionConfig || { approvalMode: 'manual' };
     const { approvalMode, allowList = [] } = userConfig;
@@ -72,6 +76,23 @@ export class GeneralChatAgent implements Agent {
     for (const toolCalling of toolsCalling) {
       const { identifier, apiName } = toolCalling;
       const toolKey = `${identifier}/${apiName}`;
+
+      // Parse arguments for intervention checking
+      let toolArgs: Record<string, any> = {};
+      try {
+        toolArgs = JSON.parse(toolCalling.arguments || '{}');
+      } catch {
+        // Invalid JSON, treat as empty args
+      }
+
+      // Priority 0: CRITICAL - Check security blacklist FIRST
+      // This overrides ALL other settings, including auto-run mode
+      const securityCheck = InterventionChecker.checkSecurityBlacklist(securityBlacklist, toolArgs);
+      if (securityCheck.blocked) {
+        // Security blacklist always requires intervention
+        toolsNeedingIntervention.push(toolCalling);
+        continue;
+      }
 
       // Priority 1: User config is 'auto-run', all tools execute directly
       if (approvalMode === 'auto-run') {
@@ -92,16 +113,9 @@ export class GeneralChatAgent implements Agent {
       // Priority 3: User config is 'manual' (default), use tool's own config
       const config = this.getToolInterventionConfig(toolCalling, state);
 
-      // Parse arguments for intervention checking
-      let toolArgs: Record<string, any> = {};
-      try {
-        toolArgs = JSON.parse(toolCalling.arguments || '{}');
-      } catch {
-        // Invalid JSON, treat as empty args
-      }
-
       const policy = InterventionChecker.shouldIntervene({
         config,
+        securityBlacklist,
         toolArgs,
       });
 
