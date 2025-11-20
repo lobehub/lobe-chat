@@ -28,6 +28,8 @@ export const getLLMConfig = () => {
       ENABLED_GOOGLE: z.boolean(),
       GOOGLE_API_KEY: z.string().optional(),
 
+      ENABLED_VERTEXAI: z.boolean(),
+
       ENABLED_MOONSHOT: z.boolean(),
       MOONSHOT_API_KEY: z.string().optional(),
 
@@ -233,6 +235,8 @@ export const getLLMConfig = () => {
 
       ENABLED_GOOGLE: !!process.env.GOOGLE_API_KEY,
       GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+
+      ENABLED_VERTEXAI: !!process.env.VERTEXAI_CREDENTIALS,
 
       ENABLED_VOLCENGINE: !!process.env.VOLCENGINE_API_KEY,
       VOLCENGINE_API_KEY: process.env.VOLCENGINE_API_KEY,
