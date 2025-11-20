@@ -7,7 +7,7 @@ type RouteContext = {
   }>;
 };
 
-const MARKET_BASE_URL = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://127.0.0.1:8787';
+const MARKET_BASE_URL = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'https://market.lobehub.com';
 const ALLOWED_ENDPOINTS = new Set(['handoff', 'token', 'userinfo']);
 
 const ensureEndpoint = (segments?: string[]) => {

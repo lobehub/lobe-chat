@@ -17,6 +17,7 @@
   "availableAgents": "利用可能なアシスタント",
   "backToBottom": "現在に戻る",
   "chatList": {
+    "expandMessage": "メッセージを展開",
     "longMessageDetail": "詳細を見る"
   },
   "clearCurrentMessages": "現在の会話をクリア",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "深い思考のスイッチ"
+    },
+    "thinkingLevel": {
+      "title": "思考レベル"
     },
     "title": "モデル拡張機能",
     "urlContext": {
@@ -173,9 +177,11 @@
     "title": "メンバーをメンション"
   },
   "messageAction": {
+    "collapse": "メッセージを折りたたむ",
     "continueGeneration": "生成を続ける",
     "delAndRegenerate": "削除して再生成",
     "deleteDisabledByThreads": "サブトピックが存在するため、削除できません。",
+    "expand": "メッセージを展開",
     "regenerate": "再生成"
   },
   "messages": {
@@ -327,6 +333,11 @@
     "screenshot": "スクリーンショット",
     "settings": "エクスポート設定",
     "text": "テキスト",
+    "widthMode": {
+      "label": "幅のモード",
+      "narrow": "ナローモード",
+      "wide": "ワイドモード"
+    },
     "withBackground": "背景画像を含む",
     "withFooter": "フッターを含む",
     "withPluginInfo": "プラグイン情報を含む",
@@ -383,9 +394,12 @@
         "manualDesc": "毎回の呼び出しに手動承認が必要です"
       },
       "reject": "拒否",
+      "rejectAndContinue": "拒否して再実行",
+      "rejectOnly": "拒否",
       "rejectReasonPlaceholder": "拒否理由を入力すると、エージェントが理解し今後の行動を最適化するのに役立ちます",
       "rejectTitle": "今回のツール呼び出しを拒否",
       "rejectedWithReason": "今回のツール呼び出しは次の理由で拒否されました:{{reason}}",
+      "toolAbort": "このツールの呼び出しはユーザーによってキャンセルされました",
       "toolRejected": "今回のツール呼び出しは拒否されました"
     }
   },

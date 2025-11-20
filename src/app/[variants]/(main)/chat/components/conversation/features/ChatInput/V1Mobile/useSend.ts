@@ -6,7 +6,12 @@ import { useGeminiChineseWarning } from '@/hooks/useGeminiChineseWarning';
 import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, messageStateSelectors, topicSelectors } from '@/store/chat/selectors';
+import {
+  chatSelectors,
+  messageStateSelectors,
+  operationSelectors,
+  topicSelectors,
+} from '@/store/chat/selectors';
 import { fileChatSelectors, useFileStore } from '@/store/file';
 import { getUserStoreState } from '@/store/user';
 
@@ -34,7 +39,7 @@ export const useSendMessage = () => {
 
   const send = useCallback(async (params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
-    if (messageStateSelectors.isAIGenerating(store)) return;
+    if (operationSelectors.isAgentRuntimeRunning(store)) return;
 
     // if uploading file or send button is disabled by message, then we should not send the message
     const isUploadingFiles = fileChatSelectors.isUploadingFiles(useFileStore.getState());

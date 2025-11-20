@@ -1,4 +1,4 @@
-import { BRANDING_NAME, isServerMode } from '@lobechat/const';
+import { BRANDING_NAME } from '@lobechat/const';
 import { downloadFile, exportJSONFile } from '@lobechat/utils/client';
 import dayjs from 'dayjs';
 
@@ -19,7 +19,7 @@ class ConfigService {
     }
 
     // or export to file with the data
-    const result = await this.createDataStructure(data, isServerMode ? 'postgres' : 'pglite');
+    const result = await this.createDataStructure(data, 'postgres');
 
     exportJSONFile(result, filename);
   };

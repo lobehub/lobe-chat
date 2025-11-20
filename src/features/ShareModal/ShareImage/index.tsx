@@ -14,10 +14,11 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import { useStyles } from '../style';
 import Preview from './Preview';
-import { FieldType } from './type';
+import { FieldType, WidthMode } from './type';
 
 const DEFAULT_FIELD_VALUE: FieldType = {
   imageType: ImageType.JPG,
+  widthMode: WidthMode.Wide,
   withBackground: true,
   withFooter: true,
   withPluginInfo: false,
@@ -34,7 +35,20 @@ const ShareImage = memo<{ mobile?: boolean }>(() => {
     title: currentAgentTitle,
   });
   const { loading: copyLoading, onCopy } = useImgToClipboard();
+
+  const widthModeOptions = [
+    { label: t('shareModal.widthMode.wide'), value: WidthMode.Wide },
+    { label: t('shareModal.widthMode.narrow'), value: WidthMode.Narrow },
+  ];
+
   const settings: FormItemProps[] = [
+    {
+      children: <Segmented options={widthModeOptions} />,
+      label: t('shareModal.widthMode.label'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'widthMode',
+    },
     {
       children: <Switch />,
       label: t('shareModal.withSystemRole'),

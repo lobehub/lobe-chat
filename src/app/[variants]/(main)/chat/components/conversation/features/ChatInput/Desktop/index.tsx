@@ -10,7 +10,6 @@ import GroupChatInput from './GroupChat';
 
 const Desktop = memo((props: { targetMemberId?: string }) => {
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
-
   return isGroupSession ? <GroupChatInput {...props} /> : <ClassicChatInput />;
 });
 

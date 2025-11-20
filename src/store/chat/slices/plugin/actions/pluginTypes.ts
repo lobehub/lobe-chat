@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { ChatToolPayload } from '@lobechat/types';
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
+import debug from 'debug';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -11,11 +12,10 @@ import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { safeParseJSON } from '@/utils/safeParseJSON';
-import { setNamespace } from '@/utils/storeDebug';
 
-import { displayMessageSelectors } from '../../message/selectors';
+import { dbMessageSelectors } from '../../message/selectors';
 
-const n = setNamespace('plugin');
+const log = debug('lobe-store:plugin-types');
 
 /**
  * Plugin type-specific implementations
@@ -94,17 +94,29 @@ export const pluginTypes: StateCreator<
 
     // if the plugin settings is not valid, then set the message with error type
     if (!result.valid) {
-      const updateResult = await messageService.updateMessageError(id, {
-        body: {
-          error: result.errors,
-          message: '[plugin] your settings is invalid with plugin manifest setting schema',
+      // Get message to extract sessionId/topicId
+      const message = dbMessageSelectors.getDbMessageById(id)(get());
+      const updateResult = await messageService.updateMessageError(
+        id,
+        {
+          body: {
+            error: result.errors,
+            message: '[plugin] your settings is invalid with plugin manifest setting schema',
+          },
+          message: t('response.PluginSettingsInvalid', { ns: 'error' }),
+          type: PluginErrorType.PluginSettingsInvalid as any,
         },
-        message: t('response.PluginSettingsInvalid', { ns: 'error' }),
-        type: PluginErrorType.PluginSettingsInvalid as any,
-      });
+        {
+          sessionId: message?.sessionId,
+          topicId: message?.topicId,
+        },
+      );
 
       if (updateResult?.success && updateResult.messages) {
-        get().replaceMessages(updateResult.messages);
+        get().replaceMessages(updateResult.messages, {
+          sessionId: message?.sessionId,
+          topicId: message?.topicId,
+        });
       }
       return;
     }
@@ -113,20 +125,29 @@ export const pluginTypes: StateCreator<
   invokeMCPTypePlugin: async (id, payload) => {
     const {
       optimisticUpdateMessageContent,
-      internal_togglePluginApiCalling,
       internal_constructToolsCallingContext,
       optimisticUpdatePluginState,
       optimisticUpdateMessagePluginError,
     } = get();
     let data: MCPToolCallResult | undefined;
 
-    try {
-      const abortController = internal_togglePluginApiCalling(
-        true,
-        id,
-        n('fetchPlugin/start') as string,
-      );
+    // Get message to extract sessionId/topicId
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
 
+    // Get abort controller from operation
+    const operationId = get().messageOperationMap[id];
+    const operation = operationId ? get().operations[operationId] : undefined;
+    const abortController = operation?.abortController;
+
+    log(
+      '[invokeMCPTypePlugin] messageId=%s, tool=%s, operationId=%s, aborted=%s',
+      id,
+      payload.apiName,
+      operationId,
+      abortController?.signal.aborted,
+    );
+
+    try {
       const context = internal_constructToolsCallingContext(id);
       const result = await mcpService.invokeMcpToolCall(payload, {
         signal: abortController?.signal,
@@ -139,25 +160,34 @@ export const pluginTypes: StateCreator<
       const err = error as Error;
 
       // ignore the aborted request error
-      if (!err.message.includes('The user aborted a request.')) {
-        const result = await messageService.updateMessageError(id, error as any);
+      if (err.message.includes('The user aborted a request.')) {
+        log('[invokeMCPTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
+      } else {
+        const result = await messageService.updateMessageError(id, error as any, {
+          sessionId: message?.sessionId,
+          topicId: message?.topicId,
+        });
         if (result?.success && result.messages) {
-          get().replaceMessages(result.messages);
+          get().replaceMessages(result.messages, {
+            sessionId: message?.sessionId,
+            topicId: message?.topicId,
+          });
         }
       }
     }
-
-    internal_togglePluginApiCalling(false, id, n('fetchPlugin/end') as string);
 
     // 如果报错则结束了
 
     if (!data) return;
 
+    // operationId already declared above, reuse it
+    const context = operationId ? { operationId } : undefined;
+
     await Promise.all([
-      optimisticUpdateMessageContent(id, data.content),
+      optimisticUpdateMessageContent(id, data.content, undefined, context),
       (async () => {
-        if (data.success) await optimisticUpdatePluginState(id, data.state);
-        else await optimisticUpdateMessagePluginError(id, data.error);
+        if (data.success) await optimisticUpdatePluginState(id, data.state, context);
+        else await optimisticUpdateMessagePluginError(id, data.error, context);
       })(),
     ]);
 
@@ -165,18 +195,26 @@ export const pluginTypes: StateCreator<
   },
 
   internal_callPluginApi: async (id, payload) => {
-    const { optimisticUpdateMessageContent, internal_togglePluginApiCalling } = get();
+    const { optimisticUpdateMessageContent } = get();
     let data: string;
 
+    // Get message to extract sessionId/topicId
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+
+    // Get abort controller from operation
+    const operationId = get().messageOperationMap[id];
+    const operation = operationId ? get().operations[operationId] : undefined;
+    const abortController = operation?.abortController;
+
+    log(
+      '[internal_callPluginApi] messageId=%s, plugin=%s, operationId=%s, aborted=%s',
+      id,
+      payload.identifier,
+      operationId,
+      abortController?.signal.aborted,
+    );
+
     try {
-      const abortController = internal_togglePluginApiCalling(
-        true,
-        id,
-        n('fetchPlugin/start') as string,
-      );
-
-      const message = displayMessageSelectors.getDisplayMessageById(id)(get());
-
       const res = await chatService.runPluginApi(payload, {
         signal: abortController?.signal,
         trace: { observationId: message?.observationId, traceId: message?.traceId },
@@ -192,21 +230,34 @@ export const pluginTypes: StateCreator<
       const err = error as Error;
 
       // ignore the aborted request error
-      if (!err.message.includes('The user aborted a request.')) {
-        const result = await messageService.updateMessageError(id, error as any);
+      if (err.message.includes('The user aborted a request.')) {
+        log(
+          '[internal_callPluginApi] Request aborted: messageId=%s, plugin=%s',
+          id,
+          payload.identifier,
+        );
+      } else {
+        const result = await messageService.updateMessageError(id, error as any, {
+          sessionId: message?.sessionId,
+          topicId: message?.topicId,
+        });
         if (result?.success && result.messages) {
-          get().replaceMessages(result.messages);
+          get().replaceMessages(result.messages, {
+            sessionId: message?.sessionId,
+            topicId: message?.topicId,
+          });
         }
       }
 
       data = '';
     }
-
-    internal_togglePluginApiCalling(false, id, n('fetchPlugin/end') as string);
     // 如果报错则结束了
     if (!data) return;
 
-    await optimisticUpdateMessageContent(id, data);
+    // operationId already declared above, reuse it
+    const context = operationId ? { operationId } : undefined;
+
+    await optimisticUpdateMessageContent(id, data, undefined, context);
 
     return data;
   },

@@ -445,6 +445,40 @@ export class FlatListBuilder {
       const msgUsage = assistant.usage || metaUsage;
       const msgPerformance = assistant.performance || metaPerformance;
 
+      // Extract non-usage/performance metadata fields
+      const otherMetadata: Record<string, any> = {};
+      if (assistant.metadata) {
+        const usagePerformanceFields = new Set([
+          'acceptedPredictionTokens',
+          'cost',
+          'duration',
+          'inputAudioTokens',
+          'inputCacheMissTokens',
+          'inputCachedTokens',
+          'inputCitationTokens',
+          'inputImageTokens',
+          'inputTextTokens',
+          'inputWriteCacheTokens',
+          'latency',
+          'outputAudioTokens',
+          'outputImageTokens',
+          'outputReasoningTokens',
+          'outputTextTokens',
+          'rejectedPredictionTokens',
+          'totalInputTokens',
+          'totalOutputTokens',
+          'totalTokens',
+          'tps',
+          'ttft',
+        ]);
+
+        Object.entries(assistant.metadata).forEach(([key, value]) => {
+          if (!usagePerformanceFields.has(key)) {
+            otherMetadata[key] = value;
+          }
+        });
+      }
+
       const childBlock: AssistantContentBlock = {
         content: assistant.content || '',
         id: assistant.id,
@@ -457,11 +491,36 @@ export class FlatListBuilder {
       if (assistant.reasoning) childBlock.reasoning = assistant.reasoning;
       if (toolsWithResults.length > 0) childBlock.tools = toolsWithResults;
       if (msgUsage) childBlock.usage = msgUsage;
+      if (Object.keys(otherMetadata).length > 0) {
+        childBlock.metadata = otherMetadata;
+      }
 
       children.push(childBlock);
     }
 
     const aggregated = this.messageTransformer.aggregateMetadata(children);
+
+    // Collect all non-usage/performance metadata from all children
+    const groupMetadata: Record<string, any> = {};
+    children.forEach((child) => {
+      if ((child as any).metadata) {
+        Object.assign(groupMetadata, (child as any).metadata);
+      }
+    });
+
+    // If there's group-level metadata, apply it to first child and remove from others
+    if (Object.keys(groupMetadata).length > 0 && children.length > 0) {
+      // Ensure first child has the group metadata
+      if (!(children[0] as any).metadata) {
+        (children[0] as any).metadata = {};
+      }
+      Object.assign((children[0] as any).metadata, groupMetadata);
+
+      // Remove metadata from subsequent children (keep only in first child)
+      for (let i = 1; i < children.length; i++) {
+        delete (children[i] as any).metadata;
+      }
+    }
 
     const result: Message = {
       ...firstAssistant,
@@ -479,6 +538,11 @@ export class FlatListBuilder {
     // Add aggregated fields if they exist
     if (aggregated.performance) result.performance = aggregated.performance;
     if (aggregated.usage) result.usage = aggregated.usage;
+
+    // Add group-level metadata if it exists
+    if (Object.keys(groupMetadata).length > 0) {
+      result.metadata = groupMetadata;
+    }
 
     return result;
   }

@@ -1,276 +1,172 @@
 import * as runtimeModule from '@lobechat/model-runtime';
-import type { EnabledAiModel, ModelAbilities } from 'model-bank';
-import { describe, expect, it, vi } from 'vitest';
+import type { AIImageModelCard, EnabledAiModel, ModelParamsSchema } from 'model-bank';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { getModelListByType } from '../action';
+import {
+  getChatModelList,
+  getImageModelList,
+  normalizeChatModel,
+  normalizeImageModel,
+} from '../action';
 
-// Test fixtures
-const createChatModel = (
-  id: string,
-  providerId: string,
-  overrides: Partial<EnabledAiModel> = {},
-): EnabledAiModel => ({
-  id,
-  providerId,
+const createChatModel = (overrides: Partial<EnabledAiModel> = {}): EnabledAiModel => ({
+  abilities: overrides.abilities ?? { functionCall: true },
+  contextWindowTokens: overrides.contextWindowTokens ?? 8192,
+  displayName: overrides.displayName ?? 'Chat Model',
+  enabled: overrides.enabled ?? true,
+  id: overrides.id ?? 'chat-model',
+  providerId: overrides.providerId ?? 'openai',
   type: 'chat',
-  abilities: { functionCall: true, files: true } satisfies ModelAbilities,
-  contextWindowTokens: 8192,
-  displayName: `${id} model`,
-  enabled: true,
   ...overrides,
 });
 
-const createImageModel = (
-  id: string,
-  providerId: string,
-  overrides: Partial<EnabledAiModel> = {},
-): EnabledAiModel => ({
-  id,
-  providerId,
+type ImageEnabledModel = EnabledAiModel & AIImageModelCard;
+
+const createImageModel = (overrides: Partial<ImageEnabledModel> = {}): ImageEnabledModel => ({
+  abilities: overrides.abilities ?? {},
+  contextWindowTokens: overrides.contextWindowTokens,
+  displayName: overrides.displayName ?? 'Image Model',
+  enabled: overrides.enabled ?? true,
+  id: overrides.id ?? 'image-model',
+  providerId: overrides.providerId ?? 'openai',
   type: 'image',
-  abilities: {} satisfies ModelAbilities,
-  displayName: `${id} model`,
-  enabled: true,
   ...overrides,
 });
 
-// Core test data
-const mockChatModels = [
-  createChatModel('gpt-4', 'openai', {
-    displayName: 'GPT-4',
-    abilities: { functionCall: true, files: true } satisfies ModelAbilities,
-  }),
-  createChatModel('gpt-3.5-turbo', 'openai', {
-    displayName: 'GPT-3.5 Turbo',
-    abilities: { functionCall: true } satisfies ModelAbilities,
-    contextWindowTokens: 4096,
-  }),
-  createChatModel('claude-3-opus', 'anthropic', {
-    displayName: 'Claude 3 Opus',
-    abilities: { functionCall: false, files: true } satisfies ModelAbilities,
-    contextWindowTokens: 200000,
-  }),
-];
-
-const mockImageModels = [
-  createImageModel('dall-e-3', 'openai', {
-    displayName: 'DALL-E 3',
-    parameters: {
-      prompt: { default: '' },
-      size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] },
-    },
-  }),
-  createImageModel('midjourney', 'midjourney', {
-    displayName: 'Midjourney',
-  }),
-];
-
-const allModels = [...mockChatModels, ...mockImageModels];
-
-describe('getModelListByType', () => {
-  describe('Core Functionality', () => {
-    it('should filter models by providerId and type correctly', async () => {
-      const result = await getModelListByType(allModels, 'openai', 'chat');
-
-      expect(result).toHaveLength(2);
-      expect(result.map((m) => m.id)).toEqual(['gpt-4', 'gpt-3.5-turbo']);
-    });
-
-    it('should return correct model structure for chat models', async () => {
-      const result = await getModelListByType(allModels, 'openai', 'chat');
-
-      expect(result[0]).toEqual({
-        abilities: { functionCall: true, files: true },
-        contextWindowTokens: 8192,
-        displayName: 'GPT-4',
-        id: 'gpt-4',
-      });
-    });
-
-    it('should include parameters field for image models', async () => {
-      const result = await getModelListByType(allModels, 'openai', 'image');
-
-      expect(result[0]).toEqual({
-        abilities: {},
-        contextWindowTokens: undefined,
-        displayName: 'DALL-E 3',
-        id: 'dall-e-3',
-        parameters: {
-          prompt: { default: '' },
-          size: { default: '1024x1024', enum: ['512x512', '1024x1024', '1536x1536'] },
-        },
-      });
-    });
-
-    it('should exclude parameters field from chat models', async () => {
-      const result = await getModelListByType(mockChatModels, 'openai', 'chat');
-
-      result.forEach((model) => {
-        expect(model).not.toHaveProperty('parameters');
-      });
-    });
-
-    it('should remove duplicate model IDs', async () => {
-      const duplicateModels = [
-        createChatModel('gpt-4', 'openai', {
-          displayName: 'GPT-4 Version 1',
-          abilities: { functionCall: true } satisfies ModelAbilities,
-        }),
-        createChatModel('gpt-4', 'openai', {
-          displayName: 'GPT-4 Version 2',
-          abilities: { functionCall: false } satisfies ModelAbilities,
-        }),
-      ];
-
-      const result = await getModelListByType(duplicateModels, 'openai', 'chat');
-
-      expect(result).toHaveLength(1);
-      expect(result[0].displayName).toBe('GPT-4 Version 1');
-    });
+describe('aiProvider action helpers', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
-  describe('Edge Cases and Error Handling', () => {
-    it('should handle empty inputs gracefully', async () => {
-      const emptyResult = await getModelListByType([], 'openai', 'chat');
-      expect(emptyResult).toEqual([]);
-
-      const noMatchingProvider = await getModelListByType(allModels, 'nonexistent', 'chat');
-      expect(noMatchingProvider).toEqual([]);
-
-      const noMatchingType = await getModelListByType(allModels, 'openai', 'nonexistent');
-      expect(noMatchingType).toEqual([]);
-    });
-
-    it('should handle missing optional properties', async () => {
-      const modelWithMissingProps = createChatModel('test-model', 'test', {
-        displayName: undefined,
+  describe('normalizeChatModel', () => {
+    it('fills missing optional fields with safe defaults', () => {
+      const model = createChatModel({
         abilities: undefined,
         contextWindowTokens: undefined,
+        displayName: undefined,
       });
 
-      const result = await getModelListByType([modelWithMissingProps], 'test', 'chat');
+      const result = normalizeChatModel(model);
 
-      expect(result[0].displayName).toBe('');
-      expect(result[0].abilities).toEqual({});
-      expect(result[0].contextWindowTokens).toBeUndefined();
-    });
-
-    it('should preserve complex model properties', async () => {
-      const complexModel = createChatModel('complex-model', 'test', {
-        displayName: 'Complex Model with All Properties',
-        abilities: {
-          functionCall: true,
-          files: true,
-          vision: false,
-        } satisfies ModelAbilities,
-        contextWindowTokens: 128000,
-      });
-
-      const result = await getModelListByType([complexModel], 'test', 'chat');
-
-      expect(result[0]).toEqual({
-        id: 'complex-model',
-        displayName: 'Complex Model with All Properties',
-        abilities: {
-          functionCall: true,
-          files: true,
-          vision: false,
-        },
-        contextWindowTokens: 128000,
-      });
-    });
-  });
-
-  describe('Image Model Parameter Handling', () => {
-    it('should use fallback parameters for image models without parameters', async () => {
-      vi.spyOn(runtimeModule, 'getModelPropertyWithFallback').mockResolvedValueOnce({
-        size: '1024x1024',
-      });
-
-      const result = await getModelListByType(allModels, 'midjourney', 'image');
-
-      expect(result[0]).toEqual({
+      expect(result).toEqual({
         abilities: {},
         contextWindowTokens: undefined,
-        displayName: 'Midjourney',
-        id: 'midjourney',
-        parameters: { size: '1024x1024' },
+        displayName: '',
+        id: 'chat-model',
       });
-    });
-
-    it('should handle async parameter fetching for multiple models', async () => {
-      const imageModelsWithoutParams = [
-        createImageModel('stable-diffusion', 'stability', { displayName: 'Stable Diffusion' }),
-        createImageModel('flux-schnell', 'fal', { displayName: 'FLUX Schnell' }),
-      ];
-
-      vi.spyOn(runtimeModule, 'getModelPropertyWithFallback').mockResolvedValue({
-        prompt: { default: '' },
-        width: { default: 512, min: 256, max: 2048 },
-        height: { default: 512, min: 256, max: 2048 },
-      });
-
-      const result = await getModelListByType(imageModelsWithoutParams, 'stability', 'image');
-
-      expect(result).toHaveLength(1);
-      expect(result[0].parameters).toEqual({
-        prompt: { default: '' },
-        width: { default: 512, min: 256, max: 2048 },
-        height: { default: 512, min: 256, max: 2048 },
-      });
-
-      expect(runtimeModule.getModelPropertyWithFallback).toHaveBeenCalledWith(
-        'stable-diffusion',
-        'parameters',
-      );
-    });
-
-    it('should handle failed parameter fallback gracefully', async () => {
-      const failingModel = createImageModel('failing-model', 'test-provider', {
-        displayName: 'Failing Model',
-      });
-
-      vi.spyOn(runtimeModule, 'getModelPropertyWithFallback').mockResolvedValueOnce(undefined);
-
-      const result = await getModelListByType([failingModel], 'test-provider', 'image');
-
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('failing-model');
-      expect(result[0].parameters).toBeUndefined();
     });
   });
 
-  describe('Concurrent Processing', () => {
-    it('should handle large-scale concurrent model processing', async () => {
-      const manyModels = Array.from({ length: 10 }, (_, i) =>
-        createChatModel(`model-${i}`, 'test-provider', {
-          displayName: `Model ${i}`,
-          abilities: { functionCall: i % 2 === 0 } satisfies ModelAbilities,
-          contextWindowTokens: 4096 + i * 1000,
-        }),
-      );
+  describe('normalizeImageModel', () => {
+    it('preserves inline metadata and pricing information', async () => {
+      const model = createImageModel({
+        abilities: { vision: true },
+        contextWindowTokens: 4096,
+        displayName: 'Inline Model',
+        parameters: {
+          prompt: { default: '' },
+          size: { default: '1024x1024', enum: ['512x512', '1024x1024'] },
+        } as ModelParamsSchema,
+        pricing: {
+          units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+        },
+      });
 
-      const result = await getModelListByType(manyModels, 'test-provider', 'chat');
+      const result = await normalizeImageModel(model);
 
-      expect(result).toHaveLength(10);
-      expect(result.map((m) => m.id)).toEqual(manyModels.map((m) => m.id));
-
-      result.forEach((model, index) => {
-        expect(model.abilities.functionCall).toBe(index % 2 === 0);
-        expect(model.contextWindowTokens).toBe(4096 + index * 1000);
+      expect(result).toMatchObject({
+        abilities: { vision: true },
+        displayName: 'Inline Model',
+        parameters: { size: { default: '1024x1024', enum: ['512x512', '1024x1024'] } },
+        pricing: {
+          units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+        },
       });
     });
 
-    it('should maintain model order during concurrent processing', async () => {
-      const orderedModels = [
-        createChatModel('first-model', 'test', { displayName: 'First Model' }),
-        createChatModel('second-model', 'test', { displayName: 'Second Model' }),
-        createChatModel('third-model', 'test', { displayName: 'Third Model' }),
+    it('fetches fallback description/parameters/pricing when missing', async () => {
+      const fallbackSpy = vi
+        .spyOn(runtimeModule, 'getModelPropertyWithFallback')
+        .mockImplementation(async (_id, key) => {
+          if (key === 'parameters')
+            return {
+              prompt: { default: '' },
+              size: { default: '768x768', enum: ['512x512', '768x768'] },
+            } satisfies ModelParamsSchema;
+          if (key === 'pricing')
+            return {
+              units: [{ name: 'imageGeneration', rate: 0.02, strategy: 'fixed', unit: 'image' }],
+            };
+          if (key === 'description') return 'Fallback description';
+          return undefined;
+        });
+
+      const model = createImageModel({
+        id: 'stable-diffusion',
+        providerId: 'stability',
+        parameters: undefined,
+        pricing: undefined,
+      });
+
+      const result = await normalizeImageModel(model);
+
+      expect(result.parameters).toEqual({
+        prompt: { default: '' },
+        size: { default: '768x768', enum: ['512x512', '768x768'] },
+      });
+      expect(result.pricing).toEqual({
+        units: [{ name: 'imageGeneration', rate: 0.02, strategy: 'fixed', unit: 'image' }],
+      });
+      expect(result.description).toBe('Fallback description');
+      expect(fallbackSpy).toHaveBeenCalledWith('stable-diffusion', 'parameters', 'stability');
+      expect(fallbackSpy).toHaveBeenCalledWith('stable-diffusion', 'pricing', 'stability');
+      expect(fallbackSpy).toHaveBeenCalledWith('stable-diffusion', 'description', 'stability');
+    });
+  });
+
+  describe('getChatModelList', () => {
+    const chatModels = [
+      createChatModel({ id: 'gpt-4', providerId: 'openai', displayName: 'GPT-4' }),
+      createChatModel({ id: 'gpt-3.5', providerId: 'openai', displayName: 'GPT-3.5' }),
+      createChatModel({ id: 'claude-3', providerId: 'anthropic', displayName: 'Claude 3' }),
+    ];
+
+    it('filters by provider and deduplicates IDs', async () => {
+      const duplicated = [
+        ...chatModels,
+        createChatModel({ id: 'gpt-4', providerId: 'openai', displayName: 'GPT-4 Duplicate' }),
       ];
 
-      const result = await getModelListByType(orderedModels, 'test', 'chat');
+      const result = await getChatModelList(duplicated, 'openai');
 
-      expect(result.map((m) => m.id)).toEqual(['first-model', 'second-model', 'third-model']);
+      expect(result).toHaveLength(2);
+      expect(result.map((m) => m.id)).toEqual(['gpt-4', 'gpt-3.5']);
+      expect(result[0].displayName).toBe('GPT-4');
+    });
+
+    it('returns empty array when provider has no chat models', async () => {
+      const result = await getChatModelList(chatModels, 'nonexistent');
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('getImageModelList', () => {
+    const imageModels = [
+      createImageModel({ id: 'dall-e-3', providerId: 'openai', displayName: 'DALL-E 3' }),
+      createImageModel({ id: 'midjourney', providerId: 'midjourney', displayName: 'Midjourney' }),
+    ];
+
+    it('collects normalized image models for a provider', async () => {
+      const result = await getImageModelList(imageModels, 'openai');
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('dall-e-3');
+      expect(result[0].displayName).toBe('DALL-E 3');
+    });
+
+    it('returns empty array when provider has no image models', async () => {
+      const result = await getImageModelList(imageModels, 'unknown');
+      expect(result).toEqual([]);
     });
   });
 });

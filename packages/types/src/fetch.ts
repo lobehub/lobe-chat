@@ -2,15 +2,15 @@
 import type { ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
 
 export const ChatErrorType = {
-  // ******* 业务错误语义 ******* //
+  // ******* Business Error Semantics ******* //
 
   InvalidAccessCode: 'InvalidAccessCode', // is in valid password
   InvalidClerkUser: 'InvalidClerkUser', // is not Clerk User
   FreePlanLimit: 'FreePlanLimit', // is not Clerk User
-  SubscriptionPlanLimit: 'SubscriptionPlanLimit', // 订阅用户超限
-  SubscriptionKeyMismatch: 'SubscriptionKeyMismatch', // 订阅 key 不匹配
+  SubscriptionPlanLimit: 'SubscriptionPlanLimit', // Subscription user limit exceeded
+  SubscriptionKeyMismatch: 'SubscriptionKeyMismatch', // Subscription key mismatch
 
-  SupervisorDecisionFailed: 'SupervisorDecisionFailed', // 主持人决策失败
+  SupervisorDecisionFailed: 'SupervisorDecisionFailed', // Supervisor decision failed
 
   InvalidUserKey: 'InvalidUserKey', // is not valid User key
   CreateMessageError: 'CreateMessageError',
@@ -18,20 +18,20 @@ export const ChatErrorType = {
    * @deprecated
    */
   NoOpenAIAPIKey: 'NoOpenAIAPIKey',
-  OllamaServiceUnavailable: 'OllamaServiceUnavailable', // 未启动/检测到 Ollama 服务
+  OllamaServiceUnavailable: 'OllamaServiceUnavailable', // Ollama service not started/detected
   PluginFailToTransformArguments: 'PluginFailToTransformArguments',
   UnknownChatFetchError: 'UnknownChatFetchError',
   SystemTimeNotMatchError: 'SystemTimeNotMatchError',
 
-  // ******* 客户端错误 ******* //
+  // ******* Client Errors ******* //
   BadRequest: 400,
   Unauthorized: 401,
   Forbidden: 403,
-  ContentNotFound: 404, // 没找到接口
-  MethodNotAllowed: 405, // 不支持
+  ContentNotFound: 404, // Endpoint not found
+  MethodNotAllowed: 405, // Method not supported
   TooManyRequests: 429,
 
-  // ******* 服务端错误 ******* //InvalidPluginArgumentsTransform
+  // ******* Server Errors ******* //InvalidPluginArgumentsTransform
   InternalServerError: 500,
   BadGateway: 502,
   ServiceUnavailable: 503,

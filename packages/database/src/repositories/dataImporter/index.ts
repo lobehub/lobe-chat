@@ -1,7 +1,6 @@
+import type { ImportPgDataStructure, ImportResultData, ImporterEntryData } from '@lobechat/types';
 import { and, eq, inArray } from 'drizzle-orm';
 
-import { ImportPgDataStructure } from '@/types/export';
-import { ImportResultData, ImporterEntryData } from '@/types/importer';
 import { uuid } from '@/utils/uuid';
 
 import * as EXPORT_TABLES from '../../schemas';

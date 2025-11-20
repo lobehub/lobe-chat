@@ -23,7 +23,7 @@ const Redirect = memo<RedirectProps>(({ setLoadingStage }) => {
 
   const navToChat = () => {
     setLoadingStage(AppLoadingStage.GoToChat);
-    router.replace('/chat');
+    // router.replace('/chat');
   };
 
   useEffect(() => {

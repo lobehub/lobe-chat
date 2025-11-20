@@ -455,6 +455,63 @@ describe('ToolNameResolver', () => {
     });
   });
 
+  describe('resolve - thoughtSignature', () => {
+    it('should pass through thoughtSignature when present', () => {
+      const toolCalls = [
+        {
+          function: {
+            arguments: '{"query": "test"}',
+            name: 'test-plugin____myAction____builtin',
+          },
+          id: 'call_1',
+          thoughtSignature: 'thinking about this...',
+          type: 'function',
+        },
+      ];
+
+      const manifests = {
+        'test-plugin': {
+          api: [{ description: 'My action', name: 'myAction', parameters: {} }],
+          identifier: 'test-plugin',
+          meta: {},
+          type: 'builtin' as const,
+        },
+      };
+
+      const result = resolver.resolve(toolCalls, manifests);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].thoughtSignature).toBe('thinking about this...');
+    });
+
+    it('should handle missing thoughtSignature', () => {
+      const toolCalls = [
+        {
+          function: {
+            arguments: '{"query": "test"}',
+            name: 'test-plugin____myAction____builtin',
+          },
+          id: 'call_1',
+          type: 'function',
+        },
+      ];
+
+      const manifests = {
+        'test-plugin': {
+          api: [{ description: 'My action', name: 'myAction', parameters: {} }],
+          identifier: 'test-plugin',
+          meta: {},
+          type: 'builtin' as const,
+        },
+      };
+
+      const result = resolver.resolve(toolCalls, manifests);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].thoughtSignature).toBeUndefined();
+    });
+  });
+
   describe('resolve - edge cases', () => {
     it('should filter out invalid tool calls with missing apiName', () => {
       const toolCalls = [

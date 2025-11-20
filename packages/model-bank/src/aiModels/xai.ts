@@ -6,13 +6,94 @@ const xaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 2_000_000,
-    description:
-      '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
-    displayName: 'Grok 4 Fast (Non-Reasoning)',
+    description: '前沿多模态模型，专门针对高性能代理工具调用进行优化。',
+    displayName: 'Grok 4.1 Fast (Non-Reasoning)',
     enabled: true,
+    id: 'grok-4-1-fast-non-reasoning',
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.2, upTo: 0.128 },
+            { rate: 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.5, upTo: 0.128 },
+            { rate: 1, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-11-20',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description: '前沿多模态模型，专门针对高性能代理工具调用进行优化。',
+    displayName: 'Grok 4.1 Fast',
+    enabled: true,
+    id: 'grok-4-1-fast-reasoning',
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.2, upTo: 0.128 },
+            { rate: 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.5, upTo: 0.128 },
+            { rate: 1, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-11-20',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description: '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
+    displayName: 'Grok 4 Fast (Non-Reasoning)',
     id: 'grok-4-fast-non-reasoning',
     pricing: {
       units: [
@@ -51,10 +132,8 @@ const xaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 2_000_000,
-    description:
-      '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
+    description: '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
     displayName: 'Grok 4 Fast',
-    enabled: true,
     id: 'grok-4-fast-reasoning',
     pricing: {
       units: [

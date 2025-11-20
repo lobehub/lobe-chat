@@ -102,7 +102,7 @@
       "SPII": "Seu conteúdo pode conter informações pessoais sensíveis. Para proteger a privacidade, remova essas informações e tente novamente.",
       "default": "Conteúdo bloqueado: {{blockReason}}。Ajuste sua solicitação e tente novamente。"
     },
-    "InsufficientQuota": "Desculpe, a cota dessa chave atingiu o limite. Verifique se o saldo da conta é suficiente ou aumente a cota da chave e tente novamente.",
+    "InsufficientQuota": "Desculpe, a cota desta chave foi atingida. Verifique se há saldo suficiente na conta ou aumente a cota da chave antes de tentar novamente.",
     "InvalidAccessCode": "Senha de acesso inválida ou em branco. Por favor, insira a senha de acesso correta ou adicione uma Chave de API personalizada.",
     "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
     "InvalidClerkUser": "Desculpe, você ainda não fez login. Por favor, faça login ou registre uma conta antes de continuar.",
@@ -131,7 +131,7 @@
     "PluginServerError": "Erro na resposta do servidor do plugin. Verifique o arquivo de descrição do plugin, a configuração do plugin ou a implementação do servidor de acordo com as informações de erro abaixo",
     "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta",
     "ProviderBizError": "Erro no serviço {{provider}} solicitado. Por favor, verifique as informações abaixo ou tente novamente.",
-    "QuotaLimitReached": "Desculpe, o uso atual de tokens ou o número de solicitações atingiu o limite de quota da chave. Por favor, aumente a quota dessa chave ou tente novamente mais tarde.",
+    "QuotaLimitReached": "Desculpe, o uso de tokens ou o número de solicitações atingiu o limite da cota desta chave. Aumente a cota da chave ou tente novamente mais tarde.",
     "StreamChunkError": "Erro de análise do bloco de mensagem da solicitação em fluxo. Verifique se a interface da API atual está em conformidade com os padrões ou entre em contato com seu fornecedor de API para mais informações.",
     "SubscriptionKeyMismatch": "Desculpe, devido a uma falha ocasional no sistema, o uso da assinatura atual está temporariamente inativo. Por favor, clique no botão abaixo para restaurar a assinatura ou entre em contato conosco por e-mail para obter suporte.",
     "SubscriptionPlanLimit": "Seu limite de pontos de assinatura foi atingido, não é possível usar essa funcionalidade. Por favor, faça um upgrade para um plano superior ou configure a API do modelo personalizado para continuar usando.",

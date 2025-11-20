@@ -6,7 +6,7 @@ import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { createErrorResponse } from '@/utils/errorResponse';
 
 export const POST = checkAuth(async (req, { params, jwtPayload }) => {
-  const { provider } = await params;
+  const provider = (await params)!.provider!;
 
   try {
     const agentRuntime = await initModelRuntimeWithUserPayload(provider, jwtPayload);

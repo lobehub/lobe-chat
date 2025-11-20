@@ -11,11 +11,6 @@ import {
 } from './protocol';
 
 const transformOllamaStream = (chunk: ChatResponse, stack: StreamContext): StreamProtocolChunk => {
-  // maybe need another structure to add support for multiple choices
-  if (chunk.done && !chunk.message.content) {
-    return { data: 'finished', id: stack.id, type: 'stop' };
-  }
-
   if (chunk.message.thinking) {
     return { data: chunk.message.thinking, id: stack.id, type: 'reasoning' };
   }
@@ -34,6 +29,11 @@ const transformOllamaStream = (chunk: ChatResponse, stack: StreamContext): Strea
       id: stack.id,
       type: 'tool_calls',
     };
+  }
+
+  // maybe need another structure to add support for multiple choices
+  if (chunk.done && !chunk.message.content) {
+    return { data: 'finished', id: stack.id, type: 'stop' };
   }
 
   // 判断是否有 <think> 或 </think> 标签，更新 thinkingInContent 状态

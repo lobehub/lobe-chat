@@ -283,9 +283,11 @@
     "business": "Colaboración Comercial",
     "support": "Soporte por Correo"
   },
+  "new": "Nuevo",
   "oauth": "Inicio de sesión SSO",
   "officialSite": "Sitio oficial",
   "ok": "Aceptar",
+  "or": "o",
   "password": "Contraseña",
   "pin": "Fijar",
   "pinOff": "Quitar fijación",

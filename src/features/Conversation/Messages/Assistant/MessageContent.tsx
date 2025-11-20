@@ -3,6 +3,7 @@ import { UIChatMessage } from '@lobechat/types';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { CollapsedMessage } from '@/features/Conversation/Messages/Assistant/CollapsedMessage';
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
@@ -12,16 +13,16 @@ import FileChunks from './FileChunks';
 import IntentUnderstanding from './IntentUnderstanding';
 import Reasoning from './Reasoning';
 import SearchGrounding from './SearchGrounding';
-import Tool from './Tool';
 
 export const AssistantMessageContent = memo<
   UIChatMessage & {
     editableContent: ReactNode;
   }
 >(({ id, tools, content, chunksList, search, imageList, ...props }) => {
-  const [editing, generating] = useChatStore((s) => [
+  const [editing, generating, isCollapsed] = useChatStore((s) => [
     messageStateSelectors.isMessageEditing(id)(s),
     messageStateSelectors.isMessageGenerating(id)(s),
+    messageStateSelectors.isMessageCollapsed(id)(s),
   ]);
 
   const isToolCallGenerating = generating && (content === LOADING_FLAT || !content) && !!tools;
@@ -41,14 +42,19 @@ export const AssistantMessageContent = memo<
 
   const showFileChunks = !!chunksList && chunksList.length > 0;
 
-  return editing ? (
-    <DefaultMessage
-      content={content}
-      id={id}
-      isToolCallGenerating={isToolCallGenerating}
-      {...props}
-    />
-  ) : (
+  if (editing)
+    return (
+      <DefaultMessage
+        content={content}
+        id={id}
+        isToolCallGenerating={isToolCallGenerating}
+        {...props}
+      />
+    );
+
+  if (isCollapsed) return <CollapsedMessage content={content} id={id} />;
+
+  return (
     <Flexbox gap={8} id={id}>
       {showSearch && (
         <SearchGrounding citations={search?.citations} searchQueries={search?.searchQueries} />
@@ -67,23 +73,6 @@ export const AssistantMessageContent = memo<
         />
       )}
       {showImageItems && <ImageFileListViewer items={imageList} />}
-      {tools && (
-        <Flexbox gap={8}>
-          {tools.map((toolCall, index) => (
-            <Tool
-              apiName={toolCall.apiName}
-              arguments={toolCall.arguments}
-              id={toolCall.id}
-              identifier={toolCall.identifier}
-              index={index}
-              key={toolCall.id}
-              messageId={id}
-              payload={toolCall}
-              type={toolCall.type}
-            />
-          ))}
-        </Flexbox>
-      )}
     </Flexbox>
   );
 });

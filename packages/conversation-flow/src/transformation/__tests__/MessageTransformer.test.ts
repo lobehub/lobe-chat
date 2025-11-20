@@ -1,6 +1,5 @@
+import type { AssistantContentBlock } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
-
-import type { AssistantContentBlock } from '@/types/index';
 
 import type { Message } from '../../types';
 import { MessageTransformer } from '../MessageTransformer';

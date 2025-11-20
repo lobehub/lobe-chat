@@ -1,8 +1,7 @@
 // @vitest-environment node
+import { AsyncTaskStatus, AsyncTaskType } from '@lobechat/types';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 
 import { asyncTasks, users } from '../../schemas';
 import { LobeChatDatabase } from '../../type';

@@ -1,9 +1,9 @@
 'use client';
 
 import { ChatHeader } from '@lobehub/ui/mobile';
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
 
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
@@ -11,7 +11,7 @@ import { mobileHeaderSticky } from '@/styles/mobileHeader';
 const Header = memo(() => {
   const { t } = useTranslation('common');
 
-  const router = useRouter();
+  const navigate = useNavigate();
   return (
     <ChatHeader
       center={
@@ -23,7 +23,7 @@ const Header = memo(() => {
           }
         />
       }
-      onBackClick={() => router.push('/me')}
+      onBackClick={() => navigate('/me')}
       showBackButton
       style={mobileHeaderSticky}
     />

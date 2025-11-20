@@ -72,6 +72,65 @@ describe('ToolCallProcessor', () => {
       ]);
     });
 
+    it('should pass through thoughtSignature when present', async () => {
+      const processor = new ToolCallProcessor(defaultConfig);
+      const context = createContext([
+        {
+          content: '',
+          id: 'msg1',
+          role: 'assistant',
+          tools: [
+            {
+              apiName: 'search',
+              arguments: '{"query":"test"}',
+              id: 'call_1',
+              identifier: 'web',
+              thoughtSignature: 'Let me search for this information',
+              type: 'builtin',
+            },
+          ],
+        },
+      ]);
+
+      const result = await processor.process(context);
+
+      expect(result.messages[0].tool_calls).toEqual([
+        {
+          function: {
+            arguments: '{"query":"test"}',
+            name: 'web.search',
+          },
+          id: 'call_1',
+          thoughtSignature: 'Let me search for this information',
+          type: 'function',
+        },
+      ]);
+    });
+
+    it('should handle missing thoughtSignature', async () => {
+      const processor = new ToolCallProcessor(defaultConfig);
+      const context = createContext([
+        {
+          content: '',
+          id: 'msg1',
+          role: 'assistant',
+          tools: [
+            {
+              apiName: 'search',
+              arguments: '{"query":"test"}',
+              id: 'call_1',
+              identifier: 'web',
+              type: 'builtin',
+            },
+          ],
+        },
+      ]);
+
+      const result = await processor.process(context);
+
+      expect(result.messages[0].tool_calls[0].thoughtSignature).toBeUndefined();
+    });
+
     it('should use custom genToolCallingName function', async () => {
       const genToolCallingName = vi.fn(
         (identifier, apiName, type) => `custom_${identifier}_${apiName}_${type}`,

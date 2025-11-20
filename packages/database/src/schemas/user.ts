@@ -1,9 +1,9 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import type { CustomPluginParams } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { boolean, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
-import { CustomPluginParams } from '@/types/tool/plugin';
 
 import { timestamps, timestamptz } from './_helpers';
 

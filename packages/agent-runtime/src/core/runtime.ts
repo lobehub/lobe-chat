@@ -24,11 +24,16 @@ import {
  */
 export class AgentRuntime {
   private executors: Record<AgentInstruction['type'], InstructionExecutor>;
+  private operationId?: string;
+  private getOperation?: RuntimeConfig['getOperation'];
 
   constructor(
     private agent: Agent,
     private config: RuntimeConfig = {},
   ) {
+    this.operationId = config.operationId;
+    this.getOperation = config.getOperation;
+
     // Build executors with priority: agent.executors > config.executors > built-in
     this.executors = {
       call_llm: this.createCallLLMExecutor(),
@@ -42,6 +47,28 @@ export class AgentRuntime {
       // Agent provided executors have highest priority
       ...(agent.executors as any),
     };
+  }
+
+  /**
+   * Get operation context (sessionId, topicId, etc.)
+   * Returns the business context captured by the operation
+   */
+  getContext() {
+    if (!this.operationId || !this.getOperation) {
+      return undefined;
+    }
+    return this.getOperation(this.operationId).context;
+  }
+
+  /**
+   * Get operation abort controller
+   * Returns the AbortController for cancellation
+   */
+  getAbortController(): AbortController | undefined {
+    if (!this.operationId || !this.getOperation) {
+      return undefined;
+    }
+    return this.getOperation(this.operationId).abortController;
   }
 
   /**
@@ -194,6 +221,7 @@ export class AgentRuntime {
     approvedToolCall: ChatToolPayload,
   ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: AgentRuntimeContext }> {
     const context: AgentRuntimeContext = {
+      operationId: this.operationId,
       payload: { approvedToolCall },
       phase: 'human_approved_tool',
       session: this.createSessionContext(state),
@@ -289,10 +317,11 @@ export class AgentRuntime {
     }
 
     // Otherwise, just return the resumed state
+    const initialContext = this.createInitialContext(newState);
     return {
       events: [resumeEvent],
       newState,
-      nextContext: this.createInitialContext(newState),
+      nextContext: initialContext,
     };
   }
 
@@ -439,6 +468,7 @@ export class AgentRuntime {
 
         // Provide next context based on LLM result
         const nextContext: AgentRuntimeContext = {
+          operationId: this.operationId,
           payload: {
             hasToolCalls: toolCalls.length > 0,
             result: { content: assistantContent, tool_calls: toolCalls },
@@ -511,6 +541,7 @@ export class AgentRuntime {
 
       // Provide next context for tool result
       const nextContext: AgentRuntimeContext = {
+        operationId: this.operationId,
         payload: {
           result,
           toolCall,
@@ -726,6 +757,7 @@ export class AgentRuntime {
       events: allEvents,
       newState,
       nextContext: {
+        operationId: this.operationId,
         payload: {
           parentMessageId: lastParentMessageId,
           toolCount: results.length,
@@ -792,6 +824,7 @@ export class AgentRuntime {
           events: [warningEvent],
           newState,
           nextContext: {
+            operationId: this.operationId,
             payload: { error: warningEvent.error, isCostWarning: true },
             phase: 'error' as const,
             session: this.createSessionContext(newState),
@@ -821,6 +854,7 @@ export class AgentRuntime {
 
     if (lastMessage?.role === 'user') {
       return {
+        operationId: this.operationId,
         payload: {
           isFirstMessage: state.messages.length === 1,
           message: lastMessage,
@@ -831,6 +865,7 @@ export class AgentRuntime {
     }
 
     return {
+      operationId: this.operationId,
       payload: undefined,
       phase: 'init',
       session: this.createSessionContext(state),

@@ -1,5 +1,6 @@
 'use client';
 
+import { ErrorShape, ImportFileUploadState, ImportStage } from '@lobechat/types';
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { ImportIcon } from 'lucide-react';
@@ -12,7 +13,6 @@ import { importService } from '@/services/import';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { ImportPgDataStructure } from '@/types/export';
-import { ErrorShape, FileUploadState, ImportStage } from '@/types/importer';
 
 import ImportError from './Error';
 import { FileUploading } from './FileUploading';
@@ -64,7 +64,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
   const [duration, setDuration] = useState(0);
   const [importState, setImportState] = useState(ImportStage.Start);
 
-  const [fileUploadingState, setUploadingState] = useState<FileUploadState | undefined>();
+  const [fileUploadingState, setUploadingState] = useState<ImportFileUploadState | undefined>();
   const [importError, setImportError] = useState<ErrorShape | undefined>();
   const [importResults, setImportResults] = useState<ImportResults | undefined>();
   const [showImportModal, setShowImportModal] = useState(false);

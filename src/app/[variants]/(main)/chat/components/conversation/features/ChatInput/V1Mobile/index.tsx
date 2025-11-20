@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useChatStore } from '@/store/chat';
-import { messageStateSelectors } from '@/store/chat/selectors';
+import { operationSelectors } from '@/store/chat/selectors';
 
 import ActionBar from './ActionBar';
 import Files from './Files';
@@ -37,7 +37,7 @@ const MobileChatInput = memo(() => {
   const { isLoading } = useInitAgentConfig();
 
   const [loading, value, onInput, onStop] = useChatStore((s) => [
-    messageStateSelectors.isAIGenerating(s),
+    operationSelectors.isAgentRuntimeRunning(s),
     s.inputMessage,
     s.updateMessageInput,
     s.stopGenerateMessage,
