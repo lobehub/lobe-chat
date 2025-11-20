@@ -164,8 +164,10 @@ const hasThreadBySourceMsgId = (id: string) => (s: ChatStoreState) => {
   return threads.some((t) => t.sourceMessageId === id);
 };
 
-const isThreadAIGenerating = (s: ChatStoreState) =>
-  s.chatLoadingIds.some((id) => portalDisplayChatIDs(s).includes(id));
+const isThreadAIGenerating = (s: ChatStoreState) => {
+  const { operationSelectors } = require('../../operation/selectors');
+  return operationSelectors.isAnyMessageLoading(portalDisplayChatIDs(s))(s);
+};
 
 const isInRAGFlow = (s: ChatStoreState) =>
   s.messageRAGLoadingIds.some((id) => portalDisplayChatIDs(s).includes(id));

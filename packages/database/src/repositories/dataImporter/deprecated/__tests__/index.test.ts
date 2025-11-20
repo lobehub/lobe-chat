@@ -1,4 +1,5 @@
 // @vitest-environment node
+import type { ImporterEntryData } from '@lobechat/types';
 import { eq, inArray } from 'drizzle-orm';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -12,7 +13,6 @@ import {
   topics,
   users,
 } from '@/database/schemas';
-import { ImporterEntryData } from '@/types/importer';
 
 import { DeprecatedDataImporterRepos as DataImporterRepos } from '../index';
 import mockImportData from './fixtures/messages.json';

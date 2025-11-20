@@ -55,9 +55,13 @@ export const pluginPublicApi: StateCreator<
     const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message || message.role !== 'tool' || !message.plugin) return;
 
+    // Get operationId from messageOperationMap
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
+
     // if there is error content, then clear the error
     if (!!message.pluginError) {
-      get().optimisticUpdateMessagePluginError(id, null);
+      get().optimisticUpdateMessagePluginError(id, null, context);
     }
 
     const payload: ChatToolPayload = { ...message.plugin, id: message.tool_call_id! };

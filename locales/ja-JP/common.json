@@ -283,9 +283,11 @@
     "business": "ビジネス提携",
     "support": "メールサポート"
   },
+  "new": "新規",
   "oauth": "SSO ログイン",
   "officialSite": "公式サイト",
   "ok": "OK",
+  "or": "または",
   "password": "パスワード",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",

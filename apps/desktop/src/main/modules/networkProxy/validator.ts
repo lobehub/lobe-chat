@@ -1,7 +1,7 @@
 import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
 
 /**
- * 代理配置验证结果
+ * Proxy configuration validation result
  */
 export interface ProxyValidationResult {
   errors: string[];
@@ -9,38 +9,38 @@ export interface ProxyValidationResult {
 }
 
 /**
- * 代理配置验证器
+ * Proxy configuration validator
  */
 export class ProxyConfigValidator {
   private static readonly SUPPORTED_TYPES = ['http', 'https', 'socks5'] as const;
   private static readonly DEFAULT_BYPASS = 'localhost,127.0.0.1,::1';
 
   /**
-   * 验证代理配置
+   * Validate proxy configuration
    */
   static validate(config: NetworkProxySettings): ProxyValidationResult {
     const errors: string[] = [];
 
-    // 如果未启用代理，跳过验证
+    // If proxy is not enabled, skip validation
     if (!config.enableProxy) {
       return { errors: [], isValid: true };
     }
 
-    // 验证代理类型
+    // Validate proxy type
     if (!this.SUPPORTED_TYPES.includes(config.proxyType as any)) {
       errors.push(
         `Unsupported proxy type: ${config.proxyType}. Supported types: ${this.SUPPORTED_TYPES.join(', ')}`,
       );
     }
 
-    // 验证代理服务器
+    // Validate proxy server
     if (!config.proxyServer?.trim()) {
       errors.push('Proxy server is required when proxy is enabled');
     } else if (!this.isValidHost(config.proxyServer)) {
       errors.push('Invalid proxy server format');
     }
 
-    // 验证代理端口
+    // Validate proxy port
     if (!config.proxyPort?.trim()) {
       errors.push('Proxy port is required when proxy is enabled');
     } else {
@@ -50,7 +50,7 @@ export class ProxyConfigValidator {
       }
     }
 
-    // 验证认证信息
+    // Validate authentication information
     if (config.proxyRequireAuth) {
       if (!config.proxyUsername?.trim()) {
         errors.push('Proxy username is required when authentication is enabled');
@@ -67,10 +67,10 @@ export class ProxyConfigValidator {
   }
 
   /**
-   * 验证主机名格式
+   * Validate host format
    */
   private static isValidHost(host: string): boolean {
-    // 简单的主机名验证（IP 地址或域名）
+    // Simple host validation (IP address or domain name)
     const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
     const domainRegex =
       /^[\dA-Za-z]([\dA-Za-z-]*[\dA-Za-z])?(\.[\dA-Za-z]([\dA-Za-z-]*[\dA-Za-z])?)*$/;

@@ -60,16 +60,17 @@ const Tool = memo<GroupToolProps>(
         <Inspectors
           apiName={apiName}
           arguments={requestArgs}
+          assistantMessageId={assistantMessageId}
           id={id}
           identifier={identifier}
           index={index}
           intervention={intervention}
-          messageId={assistantMessageId}
           result={result}
           setShowPluginRender={setShowCustomPluginUI}
           setShowRender={setShowToolDetail}
           showPluginRender={showCustomPluginUI}
           showRender={showToolContent}
+          toolMessageId={toolMessageId}
           type={type}
         />
         <AnimatedCollapsed open={showToolContent} width={{ collapsed: 'auto' }}>

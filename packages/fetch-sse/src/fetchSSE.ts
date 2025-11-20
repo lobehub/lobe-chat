@@ -17,7 +17,7 @@ import { nanoid } from '@lobechat/utils/uuid';
 
 import { getMessageError } from './parseError';
 
-type SSEFinishType = 'done' | 'error' | 'abort';
+type SSEFinishType = 'done' | 'error' | 'abort' | string;
 
 export type OnFinishHandler = (
   text: string,
@@ -47,6 +47,10 @@ export interface MessageSpeedChunk {
 export interface MessageTextChunk {
   text: string;
   type: 'text';
+}
+export interface MessageStopChunk {
+  reason: string;
+  type: 'stop';
 }
 
 export interface MessageBase64ImageChunk {
@@ -86,7 +90,8 @@ export interface FetchSSEOptions {
       | MessageGroundingChunk
       | MessageUsageChunk
       | MessageBase64ImageChunk
-      | MessageSpeedChunk,
+      | MessageSpeedChunk
+      | MessageStopChunk,
   ) => void;
   responseAnimation?: ResponseAnimation;
 }
@@ -384,6 +389,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
         case 'reasoning_signature': {
           thinkingSignature = data;
+          break;
+        }
+
+        case 'stop': {
+          options.onMessageHandle?.({ reason: data, type: 'stop' });
           break;
         }
 

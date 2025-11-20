@@ -17,6 +17,7 @@
   "availableAgents": "可用助理",
   "backToBottom": "返回底部",
   "chatList": {
+    "expandMessage": "展開訊息",
     "longMessageDetail": "查看詳情"
   },
   "clearCurrentMessages": "清空當前對話",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "深度思考開關"
+    },
+    "thinkingLevel": {
+      "title": "思考層級"
     },
     "title": "模型擴展功能",
     "urlContext": {
@@ -173,9 +177,11 @@
     "title": "提及成員"
   },
   "messageAction": {
+    "collapse": "收起訊息",
     "continueGeneration": "繼續生成",
     "delAndRegenerate": "刪除並重新生成",
     "deleteDisabledByThreads": "存在子話題，無法刪除",
+    "expand": "展開訊息",
     "regenerate": "重新生成"
   },
   "messages": {
@@ -327,6 +333,11 @@
     "screenshot": "截圖",
     "settings": "導出設置",
     "text": "文本",
+    "widthMode": {
+      "label": "寬度模式",
+      "narrow": "窄螢幕模式",
+      "wide": "寬螢幕模式"
+    },
     "withBackground": "包含背景圖片",
     "withFooter": "包含頁腳",
     "withPluginInfo": "包含插件信息",
@@ -383,9 +394,12 @@
         "manualDesc": "每次調用都需要手動批准"
       },
       "reject": "拒絕",
+      "rejectAndContinue": "拒絕後重新執行",
+      "rejectOnly": "拒絕",
       "rejectReasonPlaceholder": "輸入拒絕原因將幫助 Agent 理解並優化後續行動",
       "rejectTitle": "拒絕本次工具調用",
       "rejectedWithReason": "本次工具調用被主動拒絕:{{reason}}",
+      "toolAbort": "本次工具呼叫已被使用者取消",
       "toolRejected": "本次工具調用被主動拒絕"
     }
   },

@@ -186,6 +186,7 @@ export const LocalSystemManifest: BuiltinToolManifest = {
     {
       description:
         'Write content to a specific file. Input should be the file path and content. Overwrites existing file or creates a new one.',
+      humanIntervention: 'required',
       name: LocalSystemApiName.writeLocalFile,
       parameters: {
         properties: {
@@ -199,6 +200,34 @@ export const LocalSystemManifest: BuiltinToolManifest = {
           },
         },
         required: ['path', 'content'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Perform exact string replacements in files. Must read the file first before editing.',
+      humanIntervention: 'required',
+      name: LocalSystemApiName.editLocalFile,
+      parameters: {
+        properties: {
+          file_path: {
+            description: 'The absolute path to the file to modify',
+            type: 'string',
+          },
+          new_string: {
+            description: 'The text to replace with (must differ from old_string)',
+            type: 'string',
+          },
+          old_string: {
+            description: 'The exact text to replace',
+            type: 'string',
+          },
+          replace_all: {
+            description: 'Replace all occurrences of old_string (default: false)',
+            type: 'boolean',
+          },
+        },
+        required: ['file_path', 'old_string', 'new_string'],
         type: 'object',
       },
     },
@@ -345,33 +374,6 @@ export const LocalSystemManifest: BuiltinToolManifest = {
           },
         },
         required: ['pattern'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Perform exact string replacements in files. Must read the file first before editing.',
-      name: LocalSystemApiName.editLocalFile,
-      parameters: {
-        properties: {
-          file_path: {
-            description: 'The absolute path to the file to modify',
-            type: 'string',
-          },
-          new_string: {
-            description: 'The text to replace with (must differ from old_string)',
-            type: 'string',
-          },
-          old_string: {
-            description: 'The exact text to replace',
-            type: 'string',
-          },
-          replace_all: {
-            description: 'Replace all occurrences of old_string (default: false)',
-            type: 'boolean',
-          },
-        },
-        required: ['file_path', 'old_string', 'new_string'],
         type: 'object',
       },
     },

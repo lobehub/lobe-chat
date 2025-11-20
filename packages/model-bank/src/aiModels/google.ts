@@ -123,6 +123,66 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 65_536,
     description:
+      'Gemini 3 Pro 是 全球最佳的多模态理解模型，也是 Google 迄今为止最强大的智能体和氛围编程模型，提供更丰富的视觉效果和更深层次的交互性，所有这些都建立在最先进的推理能力基础之上。',
+    displayName: 'Gemini 3 Pro Preview',
+    enabled: true,
+    id: 'gemini-3-pro-preview',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        {
+          name: 'textInput_cacheRead',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.2, upTo: 200_000 },
+            { rate: 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 2, upTo: 200_000 },
+            { rate: 4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 12, upTo: 200_000 },
+            { rate: 18, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          lookup: { prices: { '1h': 4.5 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-11-18',
+    settings: {
+      extendParams: ['thinkingLevel', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description:
       'Gemini 2.5 Pro 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro',
     enabled: true,
@@ -155,6 +215,12 @@ const googleChatModels: AIChatModelCard[] = [
             { rate: 10, upTo: 200_000 },
             { rate: 15, upTo: 'infinity' },
           ],
+          unit: 'millionTokens',
+        },
+        {
+          lookup: { prices: { '1h': 4.5 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
           unit: 'millionTokens',
         },
       ],
@@ -331,34 +397,6 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      video: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
-    description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
-    displayName: 'Gemini 2.5 Flash Preview 05-20',
-    id: 'gemini-2.5-flash-preview-05-20',
-    maxOutput: 65_536,
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 0.0375, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-05-20',
-    settings: {
-      extendParams: ['thinkingBudget', 'urlContext'],
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
       imageOutput: true,
       vision: true,
     },
@@ -370,6 +408,7 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-image',
     maxOutput: 8192,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -392,6 +431,7 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -451,35 +491,6 @@ const googleChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-09-25',
-    settings: {
-      extendParams: ['thinkingBudget', 'urlContext'],
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      video: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
-    description:
-      'Gemini 2.5 Flash-Lite Preview 是 Google 最小、性价比最高的模型，专为大规模使用而设计。',
-    displayName: 'Gemini 2.5 Flash-Lite Preview 06-17',
-    id: 'gemini-2.5-flash-lite-preview-06-17',
-    maxOutput: 65_536,
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-06-11',
     settings: {
       extendParams: ['thinkingBudget', 'urlContext'],
       searchImpl: 'params',
@@ -844,6 +855,7 @@ const googleImageModels: AIImageModelCard[] = [
     releasedAt: '2025-08-26',
     parameters: nanoBananaParameters,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -860,6 +872,7 @@ const googleImageModels: AIImageModelCard[] = [
     releasedAt: '2025-08-26',
     parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -872,7 +885,7 @@ const googleImageModels: AIImageModelCard[] = [
     id: 'imagen-4.0-generate-001',
     enabled: true,
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series',
+    description: 'Imagen 第四代文生图模型系列',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
     parameters: imagenGenParameters,
@@ -885,7 +898,7 @@ const googleImageModels: AIImageModelCard[] = [
     id: 'imagen-4.0-ultra-generate-001',
     enabled: true,
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series Ultra version',
+    description: 'Imagen 第四代文生图模型系列的 Ultra 版本',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
     parameters: imagenGenParameters,
@@ -898,7 +911,7 @@ const googleImageModels: AIImageModelCard[] = [
     id: 'imagen-4.0-fast-generate-001',
     enabled: true,
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series Fast version',
+    description: 'Imagen 第四代文生图模型系列的快速版本',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
     parameters: imagenGenParameters,
@@ -910,7 +923,7 @@ const googleImageModels: AIImageModelCard[] = [
     displayName: 'Imagen 4 Preview 06-06',
     id: 'imagen-4.0-generate-preview-06-06',
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series',
+    description: 'Imagen 第四代文生图模型系列',
     organization: 'Deepmind',
     releasedAt: '2025-06-06',
     parameters: imagenGenParameters,
@@ -922,7 +935,7 @@ const googleImageModels: AIImageModelCard[] = [
     displayName: 'Imagen 4 Ultra Preview 06-06',
     id: 'imagen-4.0-ultra-generate-preview-06-06',
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series Ultra version',
+    description: 'Imagen 第四代文生图模型系列的 Ultra 版本',
     organization: 'Deepmind',
     releasedAt: '2025-06-11',
     parameters: imagenGenParameters,

@@ -1,9 +1,9 @@
 'use client';
 
-import { useQueryState } from 'nuqs';
 import { useLayoutEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useImageStore } from '@/store/image';
 
 /**

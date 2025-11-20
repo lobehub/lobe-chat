@@ -1,9 +1,9 @@
 import { copyImageToClipboard, sanitizeSVGContent } from '@lobechat/utils/client';
 import { Button, Dropdown, Tooltip } from '@lobehub/ui';
+import { snapdom } from '@zumer/snapdom';
 import { App, Space } from 'antd';
 import { css, cx } from 'antd-style';
 import { CopyIcon, DownloadIcon } from 'lucide-react';
-import { domToPng } from 'modern-screenshot';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -41,12 +41,29 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
   const sanitizedContent = useMemo(() => sanitizeSVGContent(content), [content]);
 
   const generatePng = async () => {
-    return domToPng(document.querySelector(`#${DOM_ID}`) as HTMLDivElement, {
-      features: {
-        // 不启用移除控制符，否则会导致 safari emoji 报错
-        removeControlCharacter: false,
-      },
+    const blob = await snapdom.toBlob(document.querySelector(`#${DOM_ID}`) as HTMLDivElement, {
       scale: 2,
+      type: 'png',
+    });
+
+    if (!blob) {
+      throw new Error('Failed to generate PNG blob');
+    }
+
+    // Convert blob to data URL
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        if (typeof reader.result === 'string') {
+          resolve(reader.result);
+        } else {
+          reject(new Error('FileReader result is not a string'));
+        }
+      });
+      reader.addEventListener('error', () =>
+        reject(reader.error || new Error('Failed to read blob as data URL')),
+      );
+      reader.readAsDataURL(blob);
     });
   };
 

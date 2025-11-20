@@ -17,6 +17,7 @@
   "availableAgents": "Kullanılabilir asistanlar",
   "backToBottom": "En alta git",
   "chatList": {
+    "expandMessage": "Mesajı Genişlet",
     "longMessageDetail": "Detayları görüntüle"
   },
   "clearCurrentMessages": "Mevcut oturum mesajlarını temizle",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "Derin Düşünme Anahtarı"
+    },
+    "thinkingLevel": {
+      "title": "Düşünme Seviyesi"
     },
     "title": "Model Genişletme Özellikleri",
     "urlContext": {
@@ -173,9 +177,11 @@
     "title": "Üyeleri Etiketle"
   },
   "messageAction": {
+    "collapse": "Mesajı Daralt",
     "continueGeneration": "Oluşturmaya devam et",
     "delAndRegenerate": "Sil ve Yeniden Oluştur",
     "deleteDisabledByThreads": "Alt konular mevcut, silinemez",
+    "expand": "Mesajı Genişlet",
     "regenerate": "Yeniden Oluştur"
   },
   "messages": {
@@ -327,6 +333,11 @@
     "screenshot": "Ekran Görüntüsü",
     "settings": "Ayarlar",
     "text": "Metin",
+    "widthMode": {
+      "label": "Genişlik Modu",
+      "narrow": "Dar Ekran Modu",
+      "wide": "Geniş Ekran Modu"
+    },
     "withBackground": "Arka Plan",
     "withFooter": "Footer",
     "withPluginInfo": "Plugin Bilgileri",
@@ -383,9 +394,12 @@
         "manualDesc": "Her çağrı için manuel onay gerekir"
       },
       "reject": "Reddet",
+      "rejectAndContinue": "Reddet ve yeniden dene",
+      "rejectOnly": "Reddet",
       "rejectReasonPlaceholder": "Reddetme nedenini girmek, Agent'ın anlamasına ve sonraki eylemleri iyileştirmesine yardımcı olur",
       "rejectTitle": "Bu Araç Çağrısını Reddet",
       "rejectedWithReason": "Bu araç çağrısı şu nedenle reddedildi: {{reason}}",
+      "toolAbort": "Bu araç çağrısı kullanıcı tarafından iptal edildi",
       "toolRejected": "Bu araç çağrısı kullanıcı tarafından reddedildi"
     }
   },

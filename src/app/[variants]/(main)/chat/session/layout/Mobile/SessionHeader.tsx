@@ -3,8 +3,8 @@
 import { ActionIcon } from '@lobehub/ui';
 import { ChatHeader } from '@lobehub/ui/mobile';
 import { MessageSquarePlus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
@@ -16,14 +16,14 @@ import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
-  const router = useRouter();
+  const navigate = useNavigate();
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <ChatHeader
       left={
         <Flexbox align={'center'} gap={8} horizontal style={{ marginLeft: 8 }}>
-          <UserAvatar onClick={() => router.push('/me')} size={32} />
+          <UserAvatar onClick={() => navigate('/me')} size={32} />
           <ProductLogo type={'text'} />
         </Flexbox>
       }

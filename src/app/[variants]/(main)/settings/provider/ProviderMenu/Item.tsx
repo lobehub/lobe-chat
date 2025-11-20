@@ -2,9 +2,9 @@ import { ProviderIcon } from '@lobehub/icons';
 import { Avatar } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
-import { useSearchParams } from 'next/navigation';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
+import { useSearchParams } from 'react-router-dom';
 
 import { AiProviderListItem, AiProviderSourceEnum } from '@/types/aiProvider';
 
@@ -42,43 +42,44 @@ interface ProviderItemProps extends AiProviderListItem {
 const ProviderItem = memo<ProviderItemProps>(
   ({ id, name, source, enabled, logo, onClick = () => {} }) => {
     const { styles, cx } = useStyles();
-    const searchParams = useSearchParams();
+    const [searchParams] = useSearchParams();
 
-  const activeKey = searchParams.get('provider');
+    const activeKey = searchParams.get('provider');
 
-  const isCustom = source === AiProviderSourceEnum.Custom;
-  return (
-    <div
-      className={cx(styles.container, activeKey === id && styles.active)}
-      onClick={() => {
-        onClick(id);
-      }}
-    >
-      <Flexbox gap={8} horizontal>
-        {isCustom && logo ? (
-          <Avatar
-            alt={name || id}
-            avatar={logo}
-            shape={'square'}
-            size={24}
-            style={{ borderRadius: 6 }}
-          />
-        ) : (
-          <ProviderIcon provider={id} size={24} style={{ borderRadius: 6 }} type={'avatar'} />
-        )}
-        {name}
-      </Flexbox>
-      <Flexbox horizontal>
-        {enabled && (
-          <Center width={24}>
-            <Badge status="success" />
-          </Center>
-        )}
-        {/* cloud slot */}
+    const isCustom = source === AiProviderSourceEnum.Custom;
+    return (
+      <div
+        className={cx(styles.container, activeKey === id && styles.active)}
+        onClick={() => {
+          onClick(id);
+        }}
+      >
+        <Flexbox gap={8} horizontal>
+          {isCustom && logo ? (
+            <Avatar
+              alt={name || id}
+              avatar={logo}
+              shape={'square'}
+              size={24}
+              style={{ borderRadius: 6 }}
+            />
+          ) : (
+            <ProviderIcon provider={id} size={24} style={{ borderRadius: 6 }} type={'avatar'} />
+          )}
+          {name}
+        </Flexbox>
+        <Flexbox horizontal>
+          {enabled && (
+            <Center width={24}>
+              <Badge status="success" />
+            </Center>
+          )}
+          {/* cloud slot */}
 
-        {/* cloud slot */}
-      </Flexbox>
-    </div>
-  );
-});
+          {/* cloud slot */}
+        </Flexbox>
+      </div>
+    );
+  },
+);
 export default ProviderItem;

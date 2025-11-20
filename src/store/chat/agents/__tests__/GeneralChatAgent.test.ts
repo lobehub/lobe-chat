@@ -220,6 +220,50 @@ describe('GeneralChatAgent', () => {
       ]);
     });
 
+    it('should handle invalid JSON in tool arguments gracefully', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const toolCall: ChatToolPayload = {
+        id: 'call-1',
+        identifier: 'test-plugin',
+        apiName: 'test-api',
+        arguments: '{invalid json}', // Invalid JSON
+        type: 'default',
+      };
+
+      const state = createMockState({
+        toolManifestMap: {
+          'test-plugin': {
+            identifier: 'test-plugin',
+            // No humanIntervention config
+          },
+        },
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [toolCall],
+        parentMessageId: 'msg-1',
+      });
+
+      // Should not throw, should proceed with call_tool (treats invalid JSON as empty args)
+      const result = await agent.runner(context, state);
+
+      expect(result).toEqual([
+        {
+          type: 'call_tool',
+          payload: {
+            parentMessageId: 'msg-1',
+            toolCalling: toolCall,
+          },
+        },
+      ]);
+    });
+
     it('should return request_human_approve for tools requiring intervention', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
@@ -522,6 +566,328 @@ describe('GeneralChatAgent', () => {
         type: 'finish',
         reason: 'error_recovery',
         reasonDetail: 'Unknown error occurred',
+      });
+    });
+  });
+
+  describe('unified abort check', () => {
+    it('should handle abort at llm_result phase when state is interrupted', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const toolCalls: ChatToolPayload[] = [
+        {
+          apiName: 'search',
+          arguments: '{"query":"test"}',
+          id: 'call-1',
+          identifier: 'lobe-web-browsing',
+          type: 'default',
+        },
+      ];
+
+      const state = createMockState({
+        status: 'interrupted', // State is interrupted
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: toolCalls,
+        parentMessageId: 'msg-123',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should handle abort and return resolve_aborted_tools
+      expect(result).toEqual({
+        type: 'resolve_aborted_tools',
+        payload: {
+          parentMessageId: 'msg-123',
+          toolsCalling: toolCalls,
+        },
+      });
+    });
+
+    it('should handle abort at tool_result phase when state is interrupted', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const state = createMockState({
+        status: 'interrupted',
+        messages: [
+          {
+            id: 'tool-msg-1',
+            role: 'tool',
+            content: '',
+            plugin: {
+              id: 'call-1',
+              identifier: 'bash',
+              apiName: 'bash',
+              arguments: '{"command":"ls"}',
+              type: 'builtin',
+            },
+            pluginIntervention: { status: 'pending' },
+          } as any,
+        ],
+      });
+
+      const context = createMockContext('tool_result', {
+        parentMessageId: 'msg-456',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should handle abort and resolve pending tools
+      expect(result).toEqual({
+        type: 'resolve_aborted_tools',
+        payload: {
+          parentMessageId: 'msg-456',
+          toolsCalling: [
+            {
+              id: 'call-1',
+              identifier: 'bash',
+              apiName: 'bash',
+              arguments: '{"command":"ls"}',
+              type: 'builtin',
+            },
+          ],
+        },
+      });
+    });
+
+    it('should return finish when state is interrupted with no tools', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const state = createMockState({
+        status: 'interrupted',
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: false,
+        toolsCalling: [],
+        parentMessageId: 'msg-789',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should handle abort and return finish
+      expect(result).toEqual({
+        type: 'finish',
+        reason: 'user_requested',
+        reasonDetail: 'Operation cancelled by user',
+      });
+    });
+
+    it('should continue normal flow when state is not interrupted', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const toolCalls: ChatToolPayload[] = [
+        {
+          apiName: 'search',
+          arguments: '{"query":"test"}',
+          id: 'call-1',
+          identifier: 'lobe-web-browsing',
+          type: 'default',
+        },
+      ];
+
+      const state = createMockState({
+        status: 'running', // Normal running state
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: toolCalls,
+        parentMessageId: 'msg-999',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should continue normal flow and execute tools
+      expect(result).toEqual([
+        {
+          type: 'call_tool',
+          payload: {
+            parentMessageId: 'msg-999',
+            toolCalling: toolCalls[0],
+          },
+        },
+      ]);
+    });
+  });
+
+  describe('unified abort check', () => {
+    it('should handle abort at human_abort phase when state is interrupted', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const toolCalls: ChatToolPayload[] = [
+        {
+          apiName: 'search',
+          arguments: '{"query":"test"}',
+          id: 'call-1',
+          identifier: 'lobe-web-browsing',
+          type: 'default',
+        },
+      ];
+
+      const state = createMockState({
+        status: 'interrupted', // Trigger unified abort check
+      });
+
+      const context = createMockContext('human_abort', {
+        reason: 'user_cancelled',
+        parentMessageId: 'msg-123',
+        hasToolsCalling: true,
+        toolsCalling: toolCalls,
+        result: { content: '', tool_calls: [] },
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should handle abort via extractAbortInfo and return resolve_aborted_tools
+      expect(result).toEqual({
+        type: 'resolve_aborted_tools',
+        payload: {
+          parentMessageId: 'msg-123',
+          toolsCalling: toolCalls,
+        },
+      });
+    });
+  });
+
+  describe('human_abort phase', () => {
+    it('should return resolve_aborted_tools when there are pending tool calls', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const toolCalls: ChatToolPayload[] = [
+        {
+          apiName: 'search',
+          arguments: '{"query":"test"}',
+          id: 'call-1',
+          identifier: 'lobe-web-browsing',
+          type: 'default',
+        },
+        {
+          apiName: 'getWeather',
+          arguments: '{"location":"NYC"}',
+          id: 'call-2',
+          identifier: 'weather-plugin',
+          type: 'default',
+        },
+      ];
+
+      const state = createMockState();
+      const context = createMockContext('human_abort', {
+        reason: 'user_cancelled',
+        parentMessageId: 'msg-123',
+        hasToolsCalling: true,
+        toolsCalling: toolCalls,
+        result: { content: '', tool_calls: [] },
+      });
+
+      const result = await agent.runner(context, state);
+
+      expect(result).toEqual({
+        type: 'resolve_aborted_tools',
+        payload: {
+          parentMessageId: 'msg-123',
+          toolsCalling: toolCalls,
+        },
+      });
+    });
+
+    it('should return finish when there are no tool calls', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const state = createMockState();
+      const context = createMockContext('human_abort', {
+        reason: 'user_cancelled',
+        parentMessageId: 'msg-123',
+        hasToolsCalling: false,
+        toolsCalling: [],
+        result: { content: 'Hello', tool_calls: [] },
+      });
+
+      const result = await agent.runner(context, state);
+
+      expect(result).toEqual({
+        type: 'finish',
+        reason: 'user_requested',
+        reasonDetail: 'user_cancelled',
+      });
+    });
+
+    it('should return finish when toolsCalling is undefined', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const state = createMockState();
+      const context = createMockContext('human_abort', {
+        reason: 'operation_cancelled',
+        parentMessageId: 'msg-456',
+        hasToolsCalling: false,
+        result: { content: 'Partial response', tool_calls: [] },
+      });
+
+      const result = await agent.runner(context, state);
+
+      expect(result).toEqual({
+        type: 'finish',
+        reason: 'user_requested',
+        reasonDetail: 'operation_cancelled',
+      });
+    });
+
+    it('should return finish when toolsCalling is empty array', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const state = createMockState();
+      const context = createMockContext('human_abort', {
+        reason: 'user_cancelled',
+        parentMessageId: 'msg-789',
+        hasToolsCalling: true,
+        toolsCalling: [],
+        result: { content: '', tool_calls: [] },
+      });
+
+      const result = await agent.runner(context, state);
+
+      expect(result).toEqual({
+        type: 'finish',
+        reason: 'user_requested',
+        reasonDetail: 'user_cancelled',
       });
     });
   });

@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Ver lista de parâmetros",
+    "delete": "Excluir chamada de ferramenta",
+    "orphanedToolCall": "Esta chamada de ferramenta pode ter se tornado uma mensagem órfã devido a um erro, o que pode afetar a execução normal do Agente. Por favor, remova-a.",
     "pluginRender": "Ver interface do plugin"
   },
   "list": {
@@ -251,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Editar arquivo",
+      "getCommandOutput": "Obter saída do código",
+      "globLocalFiles": "Buscar arquivos correspondentes",
+      "grepContent": "Procurar conteúdo",
+      "killCommand": "Encerrar execução do código",
       "listLocalFiles": "Ver lista de arquivos",
       "moveLocalFiles": "Mover arquivos",
       "readLocalFile": "Ler conteúdo do arquivo",

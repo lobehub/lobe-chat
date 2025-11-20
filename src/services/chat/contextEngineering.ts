@@ -1,4 +1,4 @@
-import { isDesktop, isServerMode } from '@lobechat/const';
+import { isDesktop } from '@lobechat/const';
 import {
   ContextEngine,
   GroupMessageFlattenProcessor,
@@ -88,7 +88,7 @@ export const contextEngineering = async ({
 
       // 8.5 Message content processing
       new MessageContentProcessor({
-        fileContext: { enabled: isServerMode, includeFileUrl: !isDesktop },
+        fileContext: { enabled: true, includeFileUrl: !isDesktop },
         isCanUseVideo,
         isCanUseVision,
         model,

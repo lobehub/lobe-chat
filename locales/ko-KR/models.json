@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1은 오픈 소스 가중치를 가진 대규모 혼합 주의 추론 모델로, 4,560억 개의 파라미터를 보유하고 있으며, 각 토큰당 약 459억 개의 파라미터가 활성화됩니다. 모델은 100만 토큰의 초장기 문맥을 원활히 지원하며, 번개 주의 메커니즘을 통해 10만 토큰 생성 작업에서 DeepSeek R1 대비 75%의 부동 소수점 연산량을 절감합니다. 또한 MiniMax-M1은 MoE(혼합 전문가) 아키텍처를 채택하고, CISPO 알고리즘과 혼합 주의 설계가 결합된 효율적인 강화 학습 훈련을 통해 긴 입력 추론과 실제 소프트웨어 엔지니어링 환경에서 업계 선도적인 성능을 구현합니다."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2는 에이전트를 위한 효율성을 새롭게 정의합니다. 이 모델은 2,300억 개의 총 파라미터와 100억 개의 활성 파라미터를 갖춘 컴팩트하고 빠르며 경제적인 MoE(Mixture of Experts) 모델로, 코딩 및 에이전트 작업에서 최고의 성능을 발휘하도록 설계되었으며, 강력한 범용 인공지능을 유지합니다. 단 100억 개의 활성 파라미터만으로도 대규모 모델에 필적하는 성능을 제공하여, 고효율 애플리케이션에 이상적인 선택이 됩니다."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "총 파라미터 1조, 활성화 파라미터 320억. 비사고 모델 중에서 최첨단 지식, 수학, 코딩 분야에서 최고 수준을 달성했으며, 범용 에이전트 작업에 더 강합니다. 에이전트 작업에 최적화되어 질문에 답변할 뿐만 아니라 행동도 수행할 수 있습니다. 즉흥적이고 범용적인 대화 및 에이전트 경험에 가장 적합하며, 장시간 사고가 필요 없는 반사 수준 모델입니다."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1은 매우 적은 라벨 데이터만으로도 모델 추론 능력을 크게 향상시켰습니다. 최종 답변 출력 전에 모델이 사고 과정(chain-of-thought)을 먼저 출력하여 최종 답변의 정확도를 높입니다."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B는 70B Llama 모델의 증류 및 더 효율적인 변형입니다. 텍스트 생성 작업에서 강력한 성능을 유지하면서 배포 및 연구를 위한 계산 비용을 줄였습니다. Groq의 맞춤형 언어 처리 유닛(LPU) 하드웨어를 사용하여 빠르고 효율적인 추론을 제공합니다."
+    "description": "DeepSeek R1 Distill Llama 70B는 Llama3.3 70B를 기반으로 한 대형 언어 모델로, DeepSeek R1의 출력으로 미세 조정되어 최첨단 대형 모델과 견줄 수 있는 경쟁력 있는 성능을 구현합니다."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B는 Llama-3.1-8B-Instruct를 기반으로 한 증류 대형 언어 모델로, DeepSeek R1의 출력을 사용하여 훈련되었습니다."
@@ -1478,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 플래시 모델 변형으로, 비용 효율성과 낮은 지연 시간 등의 목표를 위해 최적화되었습니다."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash 미리보기 모델로, 이미지 생성을 지원합니다."
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash는 구글에서 가장 가성비가 뛰어난 모델로, 포괄적인 기능을 제공합니다."
   },
@@ -1508,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview는 Google의 가장 가성비 높은 모델로, 포괄적인 기능을 제공합니다."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview는 Google의 최고의 가성비 모델로, 포괄적인 기능을 제공합니다."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Gemini 2.5 Flash의 미리보기 버전 (2025년 9월 25일)"
   },
@@ -1525,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview는 구글의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용해 대규모 데이터셋, 코드베이스 및 문서를 분석합니다."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro는 Google의 가장 지능적인 모델로, 최첨단 추론 및 멀티모달 이해 능력과 강력한 에이전트 기능 및 분위기 인코딩 기능을 갖추고 있습니다."
   },
   "gemini-flash-latest": {
     "description": "Gemini Flash 최신 버전"
@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro는 더 많은 연산을 활용하여 더 깊이 있는 사고를 수행하고 지속적으로 더 나은 답변을 제공합니다."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — 코드 작성 및 에이전트 작업에 최적화된 플래그십 모델로, 구성 가능한 추론 강도와 더 긴 컨텍스트를 지원합니다."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: 채팅 환경에 적합하도록 설계된 ChatGPT용 GPT-5.1 변형 모델입니다."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: 에이전트 기반의 코드 작업에 최적화된 GPT-5.1 버전으로, Responses API에서 복잡한 코드 및 에이전트 워크플로우에 사용할 수 있습니다."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: 더 작고 비용 효율적인 Codex 변형으로, 에이전트 기반 코드 작업에 최적화되어 있습니다."
+  },
   "gpt-audio": {
     "description": "GPT Audio는 오디오 입출력을 위한 범용 대화 모델로, Chat Completions API에서 오디오 I/O 사용을 지원합니다."
   },
@@ -2028,13 +2040,13 @@
     "description": "Imagen 4세대 텍스트-이미지 모델 시리즈"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 4세대 텍스트-이미지 모델 시리즈"
+    "description": "Imagen 4세대 텍스트-투-이미지 생성 모델 시리즈"
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen 4세대 텍스트 기반 이미지 생성 모델 시리즈 Ultra 버전"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 4세대 텍스트-이미지 모델 시리즈 울트라 버전"
+    "description": "Imagen 4세대 텍스트-투-이미지 생성 모델 시리즈의 Ultra 버전"
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small은 코드 생성, 디버깅 및 리팩토링 작업에 이상적이며, 최소 지연 시간을 자랑합니다."
@@ -2212,6 +2224,9 @@
   },
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct는 Wuwen Xinqiong에서 출시한 소형 파라미터 고효율 모델입니다."
+  },
+  "meituan/longcat-flash-chat": {
+    "description": "메이투안이 오픈소스로 공개한 비사고형 기반 모델로, 대화 상호작용과 에이전트 작업에 최적화되어 있으며, 도구 호출 및 복잡한 다중 회화 시나리오에서 뛰어난 성능을 발휘합니다."
   },
   "meta-llama-3-70b-instruct": {
     "description": "추론, 코딩 및 광범위한 언어 응용 프로그램에서 뛰어난 성능을 발휘하는 강력한 70억 매개변수 모델입니다."
@@ -2443,6 +2458,12 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2는 코딩 및 에이전트 워크플로우를 위해 설계된 효율적인 대형 언어 모델입니다."
+  },
+  "minimax/minimax-m2": {
+    "description": "효율적인 코딩과 에이전트 워크플로우를 위해 설계되었습니다."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2는 2,300억 개의 총 파라미터와 100억 개의 활성 파라미터를 갖춘 컴팩트하고 빠르며 경제적인 혼합 전문가(MoE) 모델로, 코딩 및 에이전트 작업에서 최고의 성능을 발휘하도록 설계되었으며, 강력한 범용 인공지능을 유지합니다. 이 모델은 다중 파일 편집, 코드 실행-수정의 루프, 테스트 기반 검증 및 수정, 복잡한 장기 연결 툴체인 등에서 뛰어난 성능을 보여주며, 개발자 워크플로우에 이상적인 선택입니다."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B는 Mistral의 세계적 수준의 엣지 모델입니다."
@@ -2774,6 +2795,54 @@
   "pro-deepseek-v3": {
     "description": "기업 전용 서비스 모델로, 동시 처리 서비스를 포함합니다."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, 대규모 파라미터의 중국어 모델로, 고품질 콘텐츠 생성 및 복잡한 추론 작업에 적합합니다."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, 중형 범용 모델로, 비용과 성능의 균형이 필요한 텍스트 생성 및 질의응답에 적합합니다."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, 의도 인식 및 에이전트 오케스트레이션을 위한 모델로, 장문 컨텍스트를 지원합니다."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, 경량 에이전트 모델로, 저비용 다중 회화 및 비즈니스 오케스트레이션에 적합합니다."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, 고속 제어 에이전트 모델로, 대규모 다중 작업 에이전트 애플리케이션에 적합합니다."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, 중단기 회화 및 빠른 응답을 위한 고동시성 에이전트 모델입니다."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, 멀티모달 콘텐츠 검토 및 감지 모델로, 이미지-텍스트 적합성 및 인식 작업을 지원합니다."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, 멀티모달 창작 모델로, 이미지와 텍스트의 통합 이해 및 생성을 지원합니다."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, 영어 환경에 특화된 멀티모달 인식 모델입니다."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, 고성능 중국어 범용 모델로, 복잡한 질의응답 및 대규모 추론 작업에 적합합니다."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, Llama 기반 멀티모달 모델로, 범용 이미지-텍스트 이해 작업에 적합합니다."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, 다중 이미지 OCR 모델로, 여러 이미지의 텍스트 감지 및 인식을 지원합니다."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, 멀티모달 질의응답 모델로, 복잡한 이미지-텍스트 환경에서의 정밀 검색 및 응답을 지원합니다."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, 단일 이미지 OCR 모델로, 고정밀 문자 인식을 지원합니다."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, 대규모 파라미터의 비전-언어 모델로, 복잡한 이미지-텍스트 이해에 적합합니다."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, 경량 비전-언어 모델로, 일상적인 이미지-텍스트 질의응답 및 분석에 적합합니다."
+  },
   "qvq-72b-preview": {
     "description": "QVQ 모델은 Qwen 팀이 개발한 실험적 연구 모델로, 시각적 추론 능력 향상에 중점을 두고 있으며, 특히 수학적 추론 분야에서 두드러진 성과를 보입니다."
   },
@@ -2924,7 +2993,9 @@
   "qwen2.5-72b-instruct": {
     "description": "통의 천문 2.5 외부 오픈 소스 72B 규모 모델입니다."
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct, 성숙한 오픈소스 지시형 모델로, 다양한 대화 및 생성 시나리오에 적합합니다."
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "통의천문 코드 모델 오픈 소스 버전입니다."
   },
@@ -2955,11 +3026,15 @@
   "qwen2.5-omni-7b": {
     "description": "Qwen-Omni 시리즈 모델은 비디오, 오디오, 이미지, 텍스트 등 다양한 모드의 데이터를 입력으로 지원하며, 오디오와 텍스트를 출력합니다."
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct, 멀티모달 오픈소스 모델로, 프라이빗 배포 및 다양한 응용에 적합합니다."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "지시 따르기, 수학, 문제 해결, 코드 전반적인 향상, 모든 사물 인식 능력 향상, 다양한 형식의 시각적 요소를 직접 정확하게 위치 지정할 수 있으며, 최대 10분 길이의 긴 비디오 파일을 이해하고 초 단위의 사건 시점을 위치 지정할 수 있습니다. 시간의 선후와 속도를 이해할 수 있으며, 분석 및 위치 지정 능력을 기반으로 OS 또는 모바일 에이전트를 조작할 수 있습니다. 주요 정보 추출 능력과 Json 형식 출력 능력이 뛰어나며, 이 버전은 72B 버전으로, 이 시리즈에서 가장 강력한 버전입니다."
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct, 경량 멀티모달 모델로, 배포 비용과 인식 성능의 균형을 이룹니다."
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL은 Qwen 모델 패밀리의 최신 버전 시각 언어 모델입니다."
   },
@@ -2984,22 +3059,48 @@
   "qwen3": {
     "description": "Qwen3는 알리바바의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B, 입문용 모델로, 단순한 추론 및 자원이 매우 제한된 환경에 적합합니다."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B, 초경량 모델로, 엣지 및 단말 배포에 용이합니다."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B, 중형 모델로, 다국어 질의응답 및 텍스트 생성에 적합합니다."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B, 범용 대형 모델로, 다양한 복잡한 작업에 적합합니다."
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507, 범용 플래그십 지시형 모델로, 다양한 생성 및 추론 작업에 적합합니다."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507, 초대형 사고 모델로, 고난도 추론에 적합합니다."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B, 중대형 범용 모델로, 비용과 성능의 균형을 이룹니다."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507, 중대형 지시형 모델로, 고품질 생성 및 질의응답에 적합합니다."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507, 중대형 사고 모델로, 정밀도와 비용의 균형을 고려합니다."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B, 더 강력한 이해 능력이 필요한 범용 작업에 적합합니다."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B, 중소형 애플리케이션 및 로컬 추론 환경에 적합합니다."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B, 경량 모델로, 유연한 배포가 가능하며 고동시성 업무에 적합합니다."
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "통의천문 코드 모델 오픈소스 버전입니다. 최신 qwen3-coder-30b-a3b-instruct는 Qwen3 기반의 코드 생성 모델로, 강력한 Coding Agent 기능을 갖추고 있으며, 도구 호출 및 환경 상호작용에 능숙합니다. 자율적인 프로그래밍이 가능하며, 뛰어난 코드 처리 능력과 일반적인 언어 능력을 겸비하고 있습니다."
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct, 플래그십 코드 모델로, 다국어 프로그래밍 및 복잡한 코드 이해를 지원합니다."
+  },
   "qwen3-coder-flash": {
     "description": "통의천문 코드 모델입니다. 최신 Qwen3-Coder 시리즈 모델은 Qwen3 기반의 코드 생성 모델로, 강력한 코딩 에이전트 능력을 보유하고 있으며 도구 호출과 환경 상호작용에 능숙하여 자율 프로그래밍이 가능하며, 뛰어난 코드 능력과 함께 범용 능력도 겸비하고 있습니다."
   },
@@ -3012,19 +3113,42 @@
   "qwen3-max": {
     "description": "통의천문3 시리즈 Max 모델로, 2.5 시리즈에 비해 전반적인 범용 능력이 크게 향상되었습니다. 중영문 범용 텍스트 이해 능력, 복잡한 지시 준수 능력, 주관적 개방형 작업 능력, 다국어 능력, 도구 호출 능력이 모두 크게 강화되었으며, 모델의 지식 환각 현상이 줄어들었습니다. 최신 qwen3-max 모델은 qwen3-max-preview 버전에 비해 에이전트 프로그래밍 및 도구 호출 방향에서 특별 업그레이드를 거쳤습니다. 이번 정식 버전 모델은 분야별 SOTA 수준에 도달했으며, 더욱 복잡한 에이전트 요구에 적합한 환경에 맞춰졌습니다."
   },
+  "qwen3-max-preview": {
+    "description": "Tongyi Qianwen 시리즈 중 가장 뛰어난 성능을 가진 모델로, 복잡하고 다단계 작업에 적합합니다. 프리뷰 버전은 사고 기능을 지원합니다."
+  },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3 기반의 차세대 비사고 모드 오픈 소스 모델로, 이전 버전(통의천문3-235B-A22B-Instruct-2507)과 비교하여 중국어 텍스트 이해 능력이 향상되었고, 논리 추론 능력이 강화되었으며, 텍스트 생성 작업에서 더 우수한 성능을 보입니다."
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking, 복잡한 작업을 위한 플래그십 추론 모델 버전입니다."
+  },
   "qwen3-omni-flash": {
     "description": "Qwen-Omni 모델은 텍스트, 이미지, 오디오, 비디오 등 다양한 모달의 조합 입력을 수용할 수 있으며, 텍스트 또는 음성 형태의 응답을 생성할 수 있습니다. 다양한 인간 음색을 제공하며, 다국어 및 방언 음성 출력도 지원합니다. 텍스트 창작, 시각 인식, 음성 비서 등 다양한 분야에 활용 가능합니다."
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct, 플래그십 멀티모달 모델로, 고수준의 이해 및 창작 시나리오에 적합합니다."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking, 플래그십 사고 버전으로, 복잡한 멀티모달 추론 및 계획 작업에 적합합니다."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct, 멀티모달 대형 모델로, 정밀도와 추론 성능을 겸비합니다."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking, 복잡한 멀티모달 작업을 위한 심층 사고 버전입니다."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, 멀티모달 지시형 미세조정 모델로, 고품질 이미지-텍스트 질의응답 및 창작에 적합합니다."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, 멀티모달 심층 사고 버전으로, 복잡한 추론 및 장거리 연쇄 분석을 강화합니다."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct, 경량 멀티모달 모델로, 일상적인 비전 질의응답 및 애플리케이션 통합에 적합합니다."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking, 멀티모달 사고 체인 모델로, 시각 정보에 대한 정밀한 추론에 적합합니다."
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash는 경량 고속 추론 버전으로, 지연에 민감하거나 대량 요청이 필요한 상황에 적합합니다."
   },
@@ -3256,6 +3380,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2는 Microsoft AI에서 제공하는 언어 모델로, 복잡한 대화, 다국어, 추론 및 스마트 어시스턴트 분야에서 특히 뛰어난 성능을 발휘합니다."
   },
+  "x-ai/grok-4-fast": {
+    "description": "Grok 4 Fast를 출시하게 되어 매우 기쁩니다. 이는 비용 효율적인 추론 모델 분야에서 우리의 최신 성과입니다."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "grok-code-fast-1을 출시하게 되어 기쁩니다. 이 모델은 빠르고 경제적인 추론 성능을 제공하며, 에이전트 기반 코딩 작업에서 탁월한 성능을 보입니다."
+  },
   "x1": {
     "description": "Spark X1 모델은 추가 업그레이드를 통해 기존의 수학 과제에서 국내 선두를 유지하며, 추론, 텍스트 생성, 언어 이해 등 일반 과제에서 OpenAI o1 및 DeepSeek R1과 동등한 성과를 달성합니다."
   },
@@ -3315,6 +3445,9 @@
   },
   "yi-vision-v2": {
     "description": "복잡한 시각적 작업 모델로, 여러 이미지를 기반으로 한 고성능 이해 및 분석 능력을 제공합니다."
+  },
+  "z-ai/glm-4.6": {
+    "description": "Zhipu의 최신 플래그십 모델 GLM-4.6은 고급 코딩, 장문 처리, 추론 및 에이전트 능력에서 전 세대를 뛰어넘는 성능을 자랑합니다."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5는 에이전트 애플리케이션을 위해 설계된 기본 모델로, 혼합 전문가(Mixture-of-Experts) 아키텍처를 사용합니다. 도구 호출, 웹 브라우징, 소프트웨어 엔지니어링, 프론트엔드 프로그래밍 분야에서 깊이 최적화되었으며, Claude Code, Roo Code 등 코드 에이전트에 원활히 통합될 수 있습니다. GLM-4.5는 혼합 추론 모드를 채택하여 복잡한 추론과 일상 사용 등 다양한 응용 시나리오에 적응할 수 있습니다."
