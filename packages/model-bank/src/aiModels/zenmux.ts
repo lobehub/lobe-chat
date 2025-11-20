@@ -11,6 +11,26 @@ const zenmuxChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      imageOutput: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description: 'Gemini 3 Flash Image 免费版，支持受限额度的多模态生成。',
+    displayName: 'Gemini 3 Flash Image (Nano Banana) Free',
+    id: 'google/gemini-3-pro-image-preview-free',
+    maxOutput: 32_768,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
       vision: true,
     },
@@ -997,6 +1017,7 @@ const zenmuxChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      imageOutput: true,
       reasoning: true,
       vision: true,
     },
@@ -1019,6 +1040,7 @@ const zenmuxChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      imageOutput: true,
       reasoning: true,
       vision: true,
     },
