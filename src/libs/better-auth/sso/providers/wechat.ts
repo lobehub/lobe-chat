@@ -39,7 +39,7 @@ const provider: GenericProviderDefinition = {
        * Our token proxy encodes wechat_openid/wechat_unionid metadata into the scope string so we
        * can safely retrieve the profile here.
        */
-getUserInfo: async (tokens) => {
+      getUserInfo: async (tokens) => {
         const accessToken = tokens.accessToken;
         const openId = extractWechatMetadata(tokens.scopes, 'wechat_openid');
         const unionId = extractWechatMetadata(tokens.scopes, 'wechat_unionid');
@@ -76,15 +76,15 @@ getUserInfo: async (tokens) => {
           ...profile,
         };
       },
-      
-pkce: false,
-      
-providerId: 'wechat',
-      
-responseMode: 'query',
-      
-scopes: ['snsapi_login'],
-      
+
+      pkce: false,
+
+      providerId: 'wechat',
+
+      responseMode: 'query',
+
+      scopes: ['snsapi_login'],
+
       tokenUrl: tokenProxy,
     };
   },
