@@ -5,6 +5,7 @@ import { Action, setNamespace } from '@/utils/storeDebug';
 
 import type { ChatStoreState } from '../../../initialState';
 import { preventLeavingFn, toggleBooleanList } from '../../../utils';
+import { displayMessageSelectors } from '../selectors/displayMessage';
 
 const n = setNamespace('m');
 
@@ -61,8 +62,20 @@ export const messageRuntimeState: StateCreator<
   MessageRuntimeStateAction
 > = (set, get) => ({
   clearMessageSelection: () => {
+    // Restore original collapse state when clearing selection
+    const messages = displayMessageSelectors.activeDisplayMessages(get());
+    const originallyCollapsedIds = get().messageOriginallyCollapsedIds;
+
+    // Expand all messages that were not originally collapsed
+    messages.forEach((message) => {
+      const wasOriginallyCollapsed = originallyCollapsedIds.includes(message.id);
+      if (!wasOriginallyCollapsed && message.metadata?.collapsed) {
+        get().toggleMessageCollapsed(message.id, false);
+      }
+    });
+
     set(
-      { isMessageSelectionMode: false, messageSelectionIds: [] },
+      { isMessageSelectionMode: false, messageOriginallyCollapsedIds: [], messageSelectionIds: [] },
       false,
       n('clearMessageSelection'),
     );
@@ -129,7 +142,49 @@ export const messageRuntimeState: StateCreator<
   },
 
   toggleMessageSelectionMode: (enabled) => {
-    set({ isMessageSelectionMode: enabled }, false, n('toggleMessageSelectionMode'));
+    if (enabled) {
+      // When entering selection mode, track originally collapsed messages and collapse all
+      const messages = displayMessageSelectors.activeDisplayMessages(get());
+      const originallyCollapsedIds: string[] = [];
+
+      // Identify which messages are already collapsed
+      messages.forEach((message) => {
+        if (message.metadata?.collapsed) {
+          originallyCollapsedIds.push(message.id);
+        }
+      });
+
+      // Collapse all messages that are not already collapsed
+      messages.forEach((message) => {
+        if (!message.metadata?.collapsed) {
+          get().toggleMessageCollapsed(message.id, true);
+        }
+      });
+
+      set(
+        { isMessageSelectionMode: true, messageOriginallyCollapsedIds: originallyCollapsedIds },
+        false,
+        n('toggleMessageSelectionMode/enter'),
+      );
+    } else {
+      // When exiting selection mode, restore original collapse state
+      const messages = displayMessageSelectors.activeDisplayMessages(get());
+      const originallyCollapsedIds = get().messageOriginallyCollapsedIds;
+
+      // Expand all messages that were not originally collapsed
+      messages.forEach((message) => {
+        const wasOriginallyCollapsed = originallyCollapsedIds.includes(message.id);
+        if (!wasOriginallyCollapsed && message.metadata?.collapsed) {
+          get().toggleMessageCollapsed(message.id, false);
+        }
+      });
+
+      set(
+        { isMessageSelectionMode: false, messageOriginallyCollapsedIds: [] },
+        false,
+        n('toggleMessageSelectionMode/exit'),
+      );
+    }
   },
 
   updateMessageSelection: (id, selected) => {

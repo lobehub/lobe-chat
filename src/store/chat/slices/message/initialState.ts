@@ -33,6 +33,10 @@ export interface ChatMessageState {
   groupsInit: boolean;
   isCreatingMessage: boolean;
   /**
+   * Whether the message selection mode is enabled
+   */
+  isMessageSelectionMode: boolean;
+  /**
    * is the message is editing
    */
   messageEditingIds: string[];
@@ -41,17 +45,18 @@ export interface ChatMessageState {
    */
   messageLoadingIds: string[];
   /**
-   * whether messages have fetched
+   * Message IDs that were originally collapsed before entering selection mode
+   * Used to restore collapse state when exiting selection mode
    */
-  messagesInit: boolean;
-  /**
-   * Whether the message selection mode is enabled
-   */
-  isMessageSelectionMode: boolean;
+  messageOriginallyCollapsedIds: string[];
   /**
    * Selected message IDs
    */
   messageSelectionIds: string[];
+  /**
+   * whether messages have fetched
+   */
+  messagesInit: boolean;
   /**
    * Parsed messages for display (includes assistantGroup from conversation-flow)
    */
@@ -82,11 +87,12 @@ export const initialMessageState: ChatMessageState = {
   groupMaps: {},
   groupsInit: false,
   isCreatingMessage: false,
+  isMessageSelectionMode: false,
   messageEditingIds: [],
   messageLoadingIds: [],
-  messagesInit: false,
-  isMessageSelectionMode: false,
+  messageOriginallyCollapsedIds: [],
   messageSelectionIds: [],
+  messagesInit: false,
   messagesMap: {},
   supervisorDebounceTimers: {},
   supervisorDecisionAbortControllers: {},

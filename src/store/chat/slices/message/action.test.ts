@@ -1069,4 +1069,186 @@ describe('chatMessage actions', () => {
       });
     });
   });
+
+  describe('toggleMessageSelectionMode', () => {
+    it('should enable selection mode', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.toggleMessageSelectionMode(true);
+      });
+
+      expect(result.current.isMessageSelectionMode).toBe(true);
+    });
+
+    it('should disable selection mode', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.toggleMessageSelectionMode(true);
+        result.current.toggleMessageSelectionMode(false);
+      });
+
+      expect(result.current.isMessageSelectionMode).toBe(false);
+    });
+
+    it('should auto-collapse all messages when entering selection mode', async () => {
+      const messageId1 = 'message-1';
+      const messageId2 = 'message-2';
+      const messageId3 = 'message-3';
+
+      const messages = [
+        { id: messageId1, role: 'user', content: 'Message 1', metadata: {} },
+        { id: messageId2, role: 'assistant', content: 'Message 2', metadata: {} },
+        { id: messageId3, role: 'user', content: 'Message 3', metadata: { collapsed: true } },
+      ] as UIChatMessage[];
+
+      const key = messageMapKey('session-id', 'topic-id');
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: 'topic-id',
+          messagesMap: {
+            [key]: messages,
+          },
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const toggleMessageCollapsedSpy = vi.spyOn(result.current, 'toggleMessageCollapsed');
+
+      await act(async () => {
+        result.current.toggleMessageSelectionMode(true);
+      });
+
+      // Should collapse message 1 and 2 (message 3 is already collapsed)
+      expect(toggleMessageCollapsedSpy).toHaveBeenCalledWith(messageId1, true);
+      expect(toggleMessageCollapsedSpy).toHaveBeenCalledWith(messageId2, true);
+      expect(toggleMessageCollapsedSpy).not.toHaveBeenCalledWith(messageId3, true);
+      expect(result.current.isMessageSelectionMode).toBe(true);
+      // Should track originally collapsed messages
+      expect(result.current.messageOriginallyCollapsedIds).toEqual([messageId3]);
+    });
+
+    it('should restore original collapse state when exiting selection mode', async () => {
+      const messageId1 = 'message-1';
+      const messageId2 = 'message-2';
+      const messageId3 = 'message-3';
+
+      const messages = [
+        { id: messageId1, role: 'user', content: 'Message 1', metadata: {} },
+        { id: messageId2, role: 'assistant', content: 'Message 2', metadata: {} },
+        { id: messageId3, role: 'user', content: 'Message 3', metadata: { collapsed: true } },
+      ] as UIChatMessage[];
+
+      const key = messageMapKey('session-id', 'topic-id');
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: 'topic-id',
+          messagesMap: {
+            [key]: messages,
+          },
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+
+      // Enter selection mode
+      await act(async () => {
+        result.current.toggleMessageSelectionMode(true);
+      });
+
+      // Update messages map to reflect collapsed state
+      const collapsedMessages = [
+        { id: messageId1, role: 'user', content: 'Message 1', metadata: { collapsed: true } },
+        { id: messageId2, role: 'assistant', content: 'Message 2', metadata: { collapsed: true } },
+        { id: messageId3, role: 'user', content: 'Message 3', metadata: { collapsed: true } },
+      ] as UIChatMessage[];
+
+      act(() => {
+        useChatStore.setState({
+          messagesMap: {
+            [key]: collapsedMessages,
+          },
+        });
+      });
+
+      const toggleMessageCollapsedSpy = vi.spyOn(result.current, 'toggleMessageCollapsed');
+
+      // Exit selection mode
+      await act(async () => {
+        result.current.toggleMessageSelectionMode(false);
+      });
+
+      // Should expand message 1 and 2 (they were not originally collapsed)
+      expect(toggleMessageCollapsedSpy).toHaveBeenCalledWith(messageId1, false);
+      expect(toggleMessageCollapsedSpy).toHaveBeenCalledWith(messageId2, false);
+      // Should NOT expand message 3 (it was originally collapsed)
+      expect(toggleMessageCollapsedSpy).not.toHaveBeenCalledWith(messageId3, false);
+      expect(result.current.isMessageSelectionMode).toBe(false);
+      expect(result.current.messageOriginallyCollapsedIds).toEqual([]);
+    });
+
+    it('should restore collapse state when calling clearMessageSelection', async () => {
+      const messageId1 = 'message-1';
+      const messageId2 = 'message-2';
+      const messageId3 = 'message-3';
+
+      const messages = [
+        { id: messageId1, role: 'user', content: 'Message 1', metadata: {} },
+        { id: messageId2, role: 'assistant', content: 'Message 2', metadata: {} },
+        { id: messageId3, role: 'user', content: 'Message 3', metadata: { collapsed: true } },
+      ] as UIChatMessage[];
+
+      const key = messageMapKey('session-id', 'topic-id');
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: 'topic-id',
+          messagesMap: {
+            [key]: messages,
+          },
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+
+      // Enter selection mode
+      await act(async () => {
+        result.current.toggleMessageSelectionMode(true);
+      });
+
+      // Update messages map to reflect collapsed state
+      const collapsedMessages = [
+        { id: messageId1, role: 'user', content: 'Message 1', metadata: { collapsed: true } },
+        { id: messageId2, role: 'assistant', content: 'Message 2', metadata: { collapsed: true } },
+        { id: messageId3, role: 'user', content: 'Message 3', metadata: { collapsed: true } },
+      ] as UIChatMessage[];
+
+      act(() => {
+        useChatStore.setState({
+          messagesMap: {
+            [key]: collapsedMessages,
+          },
+        });
+      });
+
+      const toggleMessageCollapsedSpy = vi.spyOn(result.current, 'toggleMessageCollapsed');
+
+      // Clear selection
+      await act(async () => {
+        result.current.clearMessageSelection();
+      });
+
+      // Should expand message 1 and 2 (they were not originally collapsed)
+      expect(toggleMessageCollapsedSpy).toHaveBeenCalledWith(messageId1, false);
+      expect(toggleMessageCollapsedSpy).toHaveBeenCalledWith(messageId2, false);
+      // Should NOT expand message 3 (it was originally collapsed)
+      expect(toggleMessageCollapsedSpy).not.toHaveBeenCalledWith(messageId3, false);
+      expect(result.current.isMessageSelectionMode).toBe(false);
+      expect(result.current.messageSelectionIds).toEqual([]);
+      expect(result.current.messageOriginallyCollapsedIds).toEqual([]);
+    });
+  });
 });
