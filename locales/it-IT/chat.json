@@ -17,6 +17,7 @@
   "availableAgents": "Assistenti disponibili",
   "backToBottom": "Torna in fondo",
   "chatList": {
+    "expandMessage": "Espandi messaggio",
     "longMessageDetail": "Visualizza dettagli"
   },
   "clearCurrentMessages": "Cancella messaggi attuali",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "Interruttore di pensiero profondo"
+    },
+    "thinkingLevel": {
+      "title": "Livello di pensiero"
     },
     "title": "Funzionalità di estensione del modello",
     "urlContext": {
@@ -173,9 +177,11 @@
     "title": "Menziona membri"
   },
   "messageAction": {
+    "collapse": "Comprimi messaggio",
     "continueGeneration": "Continua a generare",
     "delAndRegenerate": "Elimina e rigenera",
     "deleteDisabledByThreads": "Esistono sottoargomenti, non è possibile eliminare",
+    "expand": "Espandi messaggio",
     "regenerate": "Rigenera"
   },
   "messages": {
@@ -327,6 +333,11 @@
     "screenshot": "Screenshot",
     "settings": "Impostazioni di esportazione",
     "text": "Testo",
+    "widthMode": {
+      "label": "Modalità larghezza",
+      "narrow": "Modalità schermo stretto",
+      "wide": "Modalità schermo ampio"
+    },
     "withBackground": "Con immagine di sfondo",
     "withFooter": "Con piè di pagina",
     "withPluginInfo": "Con informazioni sul plugin",
@@ -383,9 +394,12 @@
         "manualDesc": "Richiede approvazione manuale per ogni utilizzo"
       },
       "reject": "Rifiuta",
+      "rejectAndContinue": "Rifiuta e riprova",
+      "rejectOnly": "Rifiuta",
       "rejectReasonPlaceholder": "Inserire il motivo del rifiuto aiuterà l'agente a comprendere e ottimizzare le azioni future",
       "rejectTitle": "Rifiuta questa esecuzione dello strumento",
       "rejectedWithReason": "Questa esecuzione dello strumento è stata rifiutata: {{reason}}",
+      "toolAbort": "L'utilizzo dello strumento è stato annullato dall'utente",
       "toolRejected": "Questa esecuzione dello strumento è stata rifiutata"
     }
   },

@@ -155,7 +155,7 @@ export class MessageModel {
       })),
     );
 
-    // 获取关联的文档内容
+    // Get associated document content
     const fileIds = relatedFileList.map((file) => file.id).filter(Boolean);
 
     let documentsMap: Record<string, string> = {};
@@ -662,17 +662,17 @@ export class MessageModel {
 
   deleteMessage = async (id: string) => {
     return this.db.transaction(async (tx) => {
-      // 1. 查询要删除的 message 的完整信息
+      // 1. Query the complete information of the message to be deleted
       const message = await tx
         .select()
         .from(messages)
         .where(and(eq(messages.id, id), eq(messages.userId, this.userId)))
         .limit(1);
 
-      // 如果找不到要删除的 message,直接返回
+      // If the message to be deleted is not found, return directly
       if (message.length === 0) return;
 
-      // 2. 检查 message 是否包含 tools
+      // 2. Check if the message contains tools
       const toolCallIds = (message[0].tools as ChatToolPayload[])
         ?.map((tool) => tool.id)
         .filter(Boolean);
@@ -680,7 +680,7 @@ export class MessageModel {
       let relatedMessageIds: string[] = [];
 
       if (toolCallIds?.length > 0) {
-        // 3. 如果 message 包含 tools,查询出所有相关联的 message id
+        // 3. If the message contains tools, query all associated message ids
         const res = await tx
           .select({ id: messagePlugins.id })
           .from(messagePlugins)
@@ -689,10 +689,10 @@ export class MessageModel {
         relatedMessageIds = res.map((row) => row.id);
       }
 
-      // 4. 合并要删除的 message id 列表
+      // 4. Merge the list of message ids to be deleted
       const messageIdsToDelete = [id, ...relatedMessageIds];
 
-      // 5. 删除所有相关的 message
+      // 5. Delete all related messages
       await tx.delete(messages).where(inArray(messages.id, messageIdsToDelete));
     });
   };

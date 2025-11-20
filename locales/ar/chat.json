@@ -17,6 +17,7 @@
   "availableAgents": "المساعدون المتاحون",
   "backToBottom": "العودة إلى الأسفل",
   "chatList": {
+    "expandMessage": "عرض الرسائل",
     "longMessageDetail": "عرض التفاصيل"
   },
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "مفتاح التفكير العميق"
+    },
+    "thinkingLevel": {
+      "title": "مستوى التفكير"
     },
     "title": "وظائف توسيع النموذج",
     "urlContext": {
@@ -173,9 +177,11 @@
     "title": "الإشارة إلى الأعضاء"
   },
   "messageAction": {
+    "collapse": "إخفاء الرسائل",
     "continueGeneration": "متابعة التوليد",
     "delAndRegenerate": "حذف وإعادة الإنشاء",
     "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
+    "expand": "عرض الرسائل",
     "regenerate": "إعادة الإنشاء"
   },
   "messages": {
@@ -327,6 +333,11 @@
     "screenshot": "لقطة شاشة",
     "settings": "إعدادات التصدير",
     "text": "نص",
+    "widthMode": {
+      "label": "وضع العرض",
+      "narrow": "وضع الشاشة الضيقة",
+      "wide": "وضع الشاشة الواسعة"
+    },
     "withBackground": "تضمين صورة الخلفية",
     "withFooter": "تضمين تذييل",
     "withPluginInfo": "تضمين معلومات البرنامج المساعد",
@@ -383,9 +394,12 @@
         "manualDesc": "يتطلب الموافقة اليدوية في كل مرة يتم فيها الاستدعاء"
       },
       "reject": "رفض",
+      "rejectAndContinue": "رفض ثم إعادة المحاولة",
+      "rejectOnly": "رفض",
       "rejectReasonPlaceholder": "إدخال سبب الرفض سيساعد الوكيل على الفهم وتحسين الإجراءات المستقبلية",
       "rejectTitle": "رفض استدعاء الأداة هذه المرة",
       "rejectedWithReason": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي: {{reason}}",
+      "toolAbort": "تم إلغاء استدعاء الأداة من قبل المستخدم",
       "toolRejected": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي"
     }
   },

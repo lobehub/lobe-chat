@@ -1,11 +1,10 @@
+import { LOBE_CHAT_CLOUD } from '@lobechat/const';
 import { LibraryBig } from 'lucide-react';
 import { Suspense, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TipGuide from '@/components/TipGuide';
-import { LOBE_CHAT_CLOUD } from '@/const/branding';
-import { isServerMode } from '@/const/version';
-import { AssignKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
+import { AttachKnowledgeModal } from '@/features/KnowledgeBaseModal';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
@@ -13,7 +12,7 @@ import { preferenceSelectors } from '@/store/user/selectors';
 import Action from '../components/Action';
 import { useControls } from './useControls';
 
-const enableKnowledge = isServerMode;
+const enableKnowledge = true;
 
 const Knowledge = memo(() => {
   const { t } = useTranslation('chat');
@@ -69,7 +68,7 @@ const Knowledge = memo(() => {
       ) : (
         content
       )}
-      <AssignKnowledgeBaseModal open={modalOpen} setOpen={setModalOpen} />
+      <AttachKnowledgeModal open={modalOpen} setOpen={setModalOpen} />
     </Suspense>
   );
 });

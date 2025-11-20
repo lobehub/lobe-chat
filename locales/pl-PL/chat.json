@@ -17,6 +17,7 @@
   "availableAgents": "Dostępni asystenci",
   "backToBottom": "Przewiń na dół",
   "chatList": {
+    "expandMessage": "Rozwiń wiadomość",
     "longMessageDetail": "Zobacz szczegóły"
   },
   "clearCurrentMessages": "Wyczyść bieżącą rozmowę",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "Przełącznik głębokiego myślenia"
+    },
+    "thinkingLevel": {
+      "title": "Poziom myślenia"
     },
     "title": "Funkcje rozszerzenia modelu",
     "urlContext": {
@@ -173,9 +177,11 @@
     "title": "Wzmianka o członkach"
   },
   "messageAction": {
+    "collapse": "Zwiń wiadomość",
     "continueGeneration": "Kontynuuj generowanie",
     "delAndRegenerate": "Usuń i wygeneruj ponownie",
     "deleteDisabledByThreads": "Istnieją podwątki, nie można usunąć",
+    "expand": "Rozwiń wiadomość",
     "regenerate": "Wygeneruj ponownie"
   },
   "messages": {
@@ -327,6 +333,11 @@
     "screenshot": "Zrzut ekranu",
     "settings": "Ustawienia eksportu",
     "text": "Tekst",
+    "widthMode": {
+      "label": "Tryb szerokości",
+      "narrow": "Tryb wąskiego ekranu",
+      "wide": "Tryb szerokiego ekranu"
+    },
     "withBackground": "Z tłem",
     "withFooter": "Z stopką",
     "withPluginInfo": "Z informacjami o wtyczce",
@@ -383,9 +394,12 @@
         "manualDesc": "Każde wywołanie wymaga ręcznego zatwierdzenia"
       },
       "reject": "Odrzuć",
+      "rejectAndContinue": "Odrzuć i spróbuj ponownie",
+      "rejectOnly": "Odrzuć",
       "rejectReasonPlaceholder": "Wprowadzenie powodu odrzucenia pomoże Agentowi zrozumieć i zoptymalizować przyszłe działania",
       "rejectTitle": "Odrzuć to wywołanie narzędzia",
       "rejectedWithReason": "To wywołanie narzędzia zostało odrzucone: {{reason}}",
+      "toolAbort": "To wywołanie narzędzia zostało anulowane przez użytkownika",
       "toolRejected": "To wywołanie narzędzia zostało odrzucone"
     }
   },

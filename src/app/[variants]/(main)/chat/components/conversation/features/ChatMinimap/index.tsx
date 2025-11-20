@@ -4,26 +4,28 @@ import { Icon } from '@lobehub/ui';
 import { Popover, Tooltip } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import debug from 'debug';
+import isEqual from 'fast-deep-equal';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { markdownToTxt } from 'markdown-to-txt';
 import { memo, useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import {
-  getVirtuosoActiveIndex,
-  getVirtuosoGlobalRef,
-  subscribeVirtuosoActiveIndex,
-  subscribeVirtuosoGlobalRef,
+  getVirtuaActiveIndex,
+  getVirtuaGlobalRef,
+  subscribeVirtuaActiveIndex,
+  subscribeVirtuaGlobalRef,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors } from '@/store/chat/selectors';
 
 const log = debug('lobe-react:chat-minimap');
 
 const MIN_WIDTH = 16;
 const MAX_WIDTH = 30;
 const MAX_CONTENT_LENGTH = 320;
-const MIN_MESSAGES = 4;
+const MIN_MESSAGES = 3;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
@@ -178,7 +180,8 @@ const getIndicatorWidth = (content: string | undefined) => {
 const getPreviewText = (content: string | undefined) => {
   if (!content) return '';
 
-  const normalized = content.replaceAll(/\s+/g, ' ').trim();
+  const plainText = markdownToTxt(content);
+  const normalized = plainText.replaceAll(/\s+/g, ' ').trim();
   if (!normalized) return '';
 
   return normalized.slice(0, 100) + (normalized.length > 100 ? '…' : '');
@@ -192,21 +195,17 @@ interface MinimapIndicator {
   width: number;
 }
 
-const ChatMinimap = () => {
+const ChatMinimap = memo(() => {
   const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
   const [isHovered, setIsHovered] = useState(false);
-  const virtuosoRef = useSyncExternalStore(
-    subscribeVirtuosoGlobalRef,
-    getVirtuosoGlobalRef,
-    () => null,
-  );
+  const virtuaRef = useSyncExternalStore(subscribeVirtuaGlobalRef, getVirtuaGlobalRef, () => null);
   const activeIndex = useSyncExternalStore(
-    subscribeVirtuosoActiveIndex,
-    getVirtuosoActiveIndex,
+    subscribeVirtuaActiveIndex,
+    getVirtuaActiveIndex,
     () => null,
   );
-  const messages = useChatStore(chatSelectors.mainDisplayChats);
+  const messages = useChatStore(displayMessageSelectors.mainAIChats, isEqual);
 
   const theme = useTheme();
 
@@ -245,20 +244,19 @@ const ChatMinimap = () => {
 
   const handleJump = useCallback(
     (virtIndex: number) => {
-      virtuosoRef?.current?.scrollToIndex({
+      virtuaRef?.current?.scrollToIndex(virtIndex, {
         align: 'start',
-        behavior: 'smooth',
-        index: virtIndex,
         // The current index detection will be off by 1, so we need to add 1 here
         offset: 6,
+        smooth: true,
       });
     },
-    [virtuosoRef],
+    [virtuaRef],
   );
 
   const handleStep = useCallback(
     (direction: 'prev' | 'next') => {
-      const ref = virtuosoRef?.current;
+      const ref = virtuaRef?.current;
       if (!ref || indicators.length === 0) return;
 
       let targetPosition: number;
@@ -301,14 +299,13 @@ const ChatMinimap = () => {
 
       if (!targetIndicator) return;
 
-      ref.scrollToIndex({
+      ref.scrollToIndex(targetIndicator.virtuosoIndex, {
         align: 'start',
-        behavior: 'smooth',
-        index: targetIndicator.virtuosoIndex,
         offset: 6,
+        smooth: true,
       });
     },
-    [activeIndex, activeIndicatorPosition, indicators, virtuosoRef],
+    [activeIndex, activeIndicatorPosition, indicators, virtuaRef],
   );
 
   if (indicators.length <= MIN_MESSAGES) return null;
@@ -351,9 +348,7 @@ const ChatMinimap = () => {
                   aria-label={t('minimap.jumpToMessage', { index: position + 1 })}
                   className={styles.indicator}
                   onClick={() => handleJump(virtuosoIndex)}
-                  style={{
-                    width,
-                  }}
+                  style={{ width }}
                   type={'button'}
                 >
                   <div
@@ -380,6 +375,6 @@ const ChatMinimap = () => {
       </Flexbox>
     </Flexbox>
   );
-};
+});
 
-export default memo(ChatMinimap);
+export default ChatMinimap;

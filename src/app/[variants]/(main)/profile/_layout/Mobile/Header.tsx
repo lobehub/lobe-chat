@@ -1,10 +1,10 @@
 'use client';
 
 import { ChatHeader } from '@lobehub/ui/mobile';
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { useActiveProfileKey } from '@/hooks/useActiveTabKey';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
@@ -14,12 +14,12 @@ import ShareButton from '../../stats/features/ShareButton';
 const Header = memo(() => {
   const { t } = useTranslation('auth');
 
-  const router = useRouter();
+  const navigate = useNavigate();
   const activeSettingsKey = useActiveProfileKey();
   const isStats = activeSettingsKey === 'stats';
 
   const handleBackClick = () => {
-    router.push('/me/profile');
+    navigate('/me/profile');
   };
 
   return (

@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { ToolNameResolver } from '@lobechat/context-engine';
-import { MessageToolCall, ToolsCallingContext } from '@lobechat/types';
+import { ChatToolPayload, MessageToolCall, ToolsCallingContext } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -8,7 +8,6 @@ import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { builtinTools } from '@/tools';
-import { Action } from '@/utils/storeDebug';
 
 import { displayMessageSelectors } from '../../message/selectors';
 
@@ -18,18 +17,9 @@ import { displayMessageSelectors } from '../../message/selectors';
  */
 export interface PluginInternalsAction {
   /**
-   * Toggle plugin API calling state
-   */
-  internal_togglePluginApiCalling: (
-    loading: boolean,
-    id?: string,
-    action?: Action,
-  ) => AbortController | undefined;
-
-  /**
    * Transform tool calls from runtime format to storage format
    */
-  internal_transformToolCalls: (toolCalls: MessageToolCall[]) => any[];
+  internal_transformToolCalls: (toolCalls: MessageToolCall[]) => ChatToolPayload[];
 
   /**
    * Construct tools calling context for plugin invocation
@@ -43,10 +33,6 @@ export const pluginInternals: StateCreator<
   [],
   PluginInternalsAction
 > = (set, get) => ({
-  internal_togglePluginApiCalling: (loading, id, action) => {
-    return get().internal_toggleLoadingArrays('pluginApiLoadingIds', loading, id, action);
-  },
-
   internal_transformToolCalls: (toolCalls) => {
     const toolNameResolver = new ToolNameResolver();
 

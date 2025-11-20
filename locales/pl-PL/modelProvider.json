@@ -295,7 +295,7 @@
       },
       "helpDoc": "Dokumentacja konfiguracyjna",
       "responsesApi": {
-        "desc": "Wykorzystuje nową generację formatu zapytań OpenAI, odblokowując zaawansowane funkcje, takie jak łańcuchy myślowe",
+        "desc": "Zgodne z nowym formatem żądań OpenAI, umożliwia korzystanie z zaawansowanych funkcji, takich jak łańcuchy myślowe (obsługiwane tylko przez modele OpenAI)",
         "title": "Użyj specyfikacji Responses API"
       },
       "waitingForMore": "Więcej modeli jest w <1>planach integracji</1>, proszę czekać"

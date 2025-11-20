@@ -287,6 +287,44 @@ describe('ChunkModel', () => {
       expect(result[1].index).toBe(1);
       expect(result[2].index).toBe(2);
     });
+
+    it('should handle chunks with null metadata and return undefined pageNumber', async () => {
+      const fileId = '1';
+      const [chunk] = await serverDB
+        .insert(chunks)
+        .values([{ text: 'Chunk with null metadata', userId, index: 0, metadata: null }])
+        .returning();
+
+      await serverDB.insert(fileChunks).values([{ fileId, chunkId: chunk.id, userId }]);
+
+      const result = await chunkModel.findByFileId(fileId, 0);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].metadata).toBeNull();
+      expect(result[0].pageNumber).toBeUndefined();
+    });
+
+    it('should handle chunks with metadata containing pageNumber', async () => {
+      const fileId = '1';
+      const [chunk] = await serverDB
+        .insert(chunks)
+        .values([
+          {
+            text: 'Chunk with pageNumber',
+            userId,
+            index: 0,
+            metadata: { pageNumber: 5 } as any,
+          },
+        ])
+        .returning();
+
+      await serverDB.insert(fileChunks).values([{ fileId, chunkId: chunk.id, userId }]);
+
+      const result = await chunkModel.findByFileId(fileId, 0);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].pageNumber).toBe(5);
+    });
   });
 
   describe('getChunksTextByFileId', () => {

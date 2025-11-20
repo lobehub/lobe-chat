@@ -3,37 +3,19 @@ import { BuiltinRender } from '@lobechat/types';
 import { CodeInterpreterManifest } from './code-interpreter';
 import CodeInterpreterRender from './code-interpreter/Render';
 // local-system
-import { LocalSystemApiName, LocalSystemManifest } from './local-system';
-import ListFiles from './local-system/Render/ListFiles';
-import ReadLocalFile from './local-system/Render/ReadLocalFile';
-import RenameLocalFile from './local-system/Render/RenameLocalFile';
-import RunCommand from './local-system/Render/RunCommand';
-import SearchFiles from './local-system/Render/SearchFiles';
-import WriteFile from './local-system/Render/WriteFile';
+import { LocalSystemManifest } from './local-system';
+import { LocalSystemRenders } from './local-system/Render';
 // web-browsing
-import { WebBrowsingApiName, WebBrowsingManifest } from './web-browsing';
-import CrawlMultiPages from './web-browsing/Render/CrawlMultiPages';
-import CrawlSinglePage from './web-browsing/Render/CrawlSinglePage';
-import Search from './web-browsing/Render/Search';
+import { WebBrowsingManifest } from './web-browsing';
+import { WebBrowsingRenders } from './web-browsing/Render';
 
 /**
  * Builtin tools renders registry
  * Organized by toolset (identifier) -> API name
  */
 const BuiltinToolsRenders: Record<string, Record<string, BuiltinRender>> = {
-  [LocalSystemManifest.identifier]: {
-    [LocalSystemApiName.searchLocalFiles]: SearchFiles as BuiltinRender,
-    [LocalSystemApiName.listLocalFiles]: ListFiles as BuiltinRender,
-    [LocalSystemApiName.readLocalFile]: ReadLocalFile as BuiltinRender,
-    [LocalSystemApiName.renameLocalFile]: RenameLocalFile as BuiltinRender,
-    [LocalSystemApiName.writeLocalFile]: WriteFile as BuiltinRender,
-    [LocalSystemApiName.runCommand]: RunCommand as BuiltinRender,
-  },
-  [WebBrowsingManifest.identifier]: {
-    [WebBrowsingApiName.search]: Search as BuiltinRender,
-    [WebBrowsingApiName.crawlSinglePage]: CrawlSinglePage as BuiltinRender,
-    [WebBrowsingApiName.crawlMultiPages]: CrawlMultiPages as BuiltinRender,
-  },
+  [LocalSystemManifest.identifier]: LocalSystemRenders as Record<string, BuiltinRender>,
+  [WebBrowsingManifest.identifier]: WebBrowsingRenders as Record<string, BuiltinRender>,
   [CodeInterpreterManifest.identifier]: {
     python: CodeInterpreterRender as BuiltinRender,
   },

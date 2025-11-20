@@ -249,4 +249,29 @@ describe('createRemarkSelfClosingTagPlugin', () => {
 
     expect(tree).toMatchSnapshot();
   });
+
+  it('should handle tags wrapped in backticks (code)', () => {
+    const markdown = `Use this file: \`<${tagName} name="config.json" path="/app/config.json" />\` in your code.`;
+    const tree = processMarkdown(markdown, tagName);
+
+    expect(tree.children).toHaveLength(1);
+    expect(tree.children[0].type).toBe('paragraph');
+
+    const paragraphChildren = tree.children[0].children;
+    expect(paragraphChildren).toHaveLength(3);
+
+    expect(paragraphChildren[0].type).toBe('text');
+    expect(paragraphChildren[0].value).toBe('Use this file: ');
+
+    // The tag should be parsed even inside backticks
+    const tagNode = paragraphChildren[1];
+    expect(tagNode.type).toBe(tagName);
+    expect(tagNode.data?.hProperties).toEqual({
+      name: 'config.json',
+      path: '/app/config.json',
+    });
+
+    expect(paragraphChildren[2].type).toBe('text');
+    expect(paragraphChildren[2].value).toBe(' in your code.');
+  });
 });

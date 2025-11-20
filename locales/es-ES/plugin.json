@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Ver lista de parámetros",
+    "delete": "Eliminar llamada a la herramienta",
+    "orphanedToolCall": "Este mensaje de llamada a la herramienta podría haberse quedado huérfano debido a circunstancias excepcionales, lo que puede afectar el funcionamiento normal del agente. Por favor, elimínelo.",
     "pluginRender": "Ver interfaz del plugin"
   },
   "list": {
@@ -251,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Editar archivo",
+      "getCommandOutput": "Obtener salida del código",
+      "globLocalFiles": "Buscar archivos coincidentes",
+      "grepContent": "Buscar contenido",
+      "killCommand": "Detener ejecución del código",
       "listLocalFiles": "Ver lista de archivos",
       "moveLocalFiles": "Mover archivos",
       "readLocalFile": "Leer contenido del archivo",

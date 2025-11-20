@@ -295,7 +295,7 @@
       },
       "helpDoc": "Guida alla configurazione",
       "responsesApi": {
-        "desc": "Utilizza il nuovo formato di richiesta di OpenAI per sbloccare funzionalità avanzate come la catena di pensiero",
+        "desc": "Utilizza il nuovo formato di richiesta di OpenAI per sbloccare funzionalità avanzate come la catena di pensiero (supportato solo dai modelli OpenAI)",
         "title": "Utilizza lo standard Responses API"
       },
       "waitingForMore": "Altri modelli sono in fase di <1>implementazione</1>, resta sintonizzato"

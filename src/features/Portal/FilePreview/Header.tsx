@@ -14,7 +14,7 @@ const Header = () => {
     chatPortalSelectors.previewFileId(s),
   ]);
 
-  const useFetchFileItem = useFileStore((s) => s.useFetchFileItem);
+  const useFetchFileItem = useFileStore((s) => s.useFetchKnowledgeItem);
 
   const { data, isLoading } = useFetchFileItem(previewFileId);
 
