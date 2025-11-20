@@ -1,0 +1,33 @@
+name: Check Console Log (Warning)
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  check-console-log:
+    name: Check for console.log statements (non-blocking)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Run console.log check
+        run: bunx tsx scripts/checkConsoleLog.mts
