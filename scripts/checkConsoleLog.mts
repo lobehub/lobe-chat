@@ -110,17 +110,26 @@ const checkConsoleLogs = () => {
     }
 
     // Report violations as warnings
-    console.warn('⚠️  Found console.log statements in the following files:\n');
+    console.log('⚠️  Found console.log statements in the following files:\n');
+
+    // Use GitHub Actions annotation format for better visibility in CI
+    const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+
     for (const violation of violations) {
-      console.warn(`  ${violation.file}:${violation.line}`);
-      console.warn(`    ${violation.content}\n`);
+      if (isCI) {
+        // GitHub Actions warning annotation format
+        console.log(`::warning file=${violation.file},line=${violation.line}::console.log found: ${violation.content}`);
+      } else {
+        console.log(`  ${violation.file}:${violation.line}`);
+        console.log(`    ${violation.content}\n`);
+      }
     }
 
-    console.warn(`\n💡 Total violations: ${violations.length}`);
-    console.warn(
+    console.log(`\n💡 Total violations: ${violations.length}`);
+    console.log(
       `\n📝 To whitelist files, add them to ${WHITELIST_PATH} in the following format:`,
     );
-    console.warn(`{
+    console.log(`{
   "files": ["path/to/file.ts"],
   "patterns": ["scripts/**/*.mts", "**/*.test.ts"]
 }\n`);
