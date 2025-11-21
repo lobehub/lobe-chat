@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fixed changelog pages and open again."],
+      "improvements": ["Fix some translations."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.98"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-21",
