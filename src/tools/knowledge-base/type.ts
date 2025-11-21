@@ -11,7 +11,15 @@ export interface SearchKnowledgeBaseState {
   totalResults: number;
 }
 
+export interface FileContentDetail {
+  error?: string;
+  fileId: string;
+  filename: string;
+  preview?: string;
+  totalCharCount?: number;
+  totalLineCount?: number;
+}
+
 export interface ReadKnowledgeState {
-  fileIds: string[];
-  filesRead: number;
+  files: FileContentDetail[];
 }

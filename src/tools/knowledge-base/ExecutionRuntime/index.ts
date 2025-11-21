@@ -1,4 +1,4 @@
-import { formatSearchResults } from '@lobechat/prompts';
+import { formatSearchResults, promptFileContents, promptNoSearchResults } from '@lobechat/prompts';
 import { BuiltinServerRuntimeOutput } from '@lobechat/types';
 
 import { ragService } from '@/services/rag';
@@ -26,21 +26,15 @@ export class KnowledgeBaseExecutionRuntime {
       const { query, topK = 20 } = args;
 
       // Call the existing RAG service
-      const { chunks, fileResults } = await ragService.semanticSearchForChat({
-        fileIds: options?.fileIds,
-        knowledgeIds: options?.knowledgeBaseIds,
-        query,
-        topK,
-      });
+      const { chunks, fileResults } = await ragService.semanticSearchForChat(
+        { fileIds: options?.fileIds, knowledgeIds: options?.knowledgeBaseIds, query, topK },
+        options?.signal,
+      );
 
       if (chunks.length === 0) {
         const state: SearchKnowledgeBaseState = { chunks: [], fileResults: [], totalResults: 0 };
 
-        return {
-          content: this.formatNoSearchResults(query),
-          state,
-          success: true,
-        };
+        return { content: promptNoSearchResults(query), state, success: true };
       }
 
       // Format search results for AI
@@ -63,9 +57,7 @@ export class KnowledgeBaseExecutionRuntime {
    */
   async readKnowledge(
     args: ReadKnowledgeArgs,
-    options?: {
-      signal?: AbortSignal;
-    },
+    options?: { signal?: AbortSignal },
   ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const { fileIds } = args;
@@ -77,22 +69,22 @@ export class KnowledgeBaseExecutionRuntime {
         };
       }
 
-      // TODO: Implement actual file content retrieval
-      // For now, return a placeholder
-      const fileContents = await this.fetchFileContents(fileIds);
+      const fileContents = await ragService.getFileContents(fileIds, options?.signal);
 
-      const formattedContent = this.formatFileContents(fileContents);
+      const formattedContent = promptFileContents(fileContents);
 
       const state: ReadKnowledgeState = {
-        fileIds,
-        filesRead: fileContents.length,
+        files: fileContents.map((file) => ({
+          error: file.error,
+          fileId: file.fileId,
+          filename: file.filename,
+          preview: file.preview,
+          totalCharCount: file.totalCharCount,
+          totalLineCount: file.totalLineCount,
+        })),
       };
 
-      return {
-        content: formattedContent,
-        state,
-        success: true,
-      };
+      return { content: formattedContent, state, success: true };
     } catch (e) {
       return {
         content: `Error reading knowledge: ${(e as Error).message}`,
@@ -100,71 +92,5 @@ export class KnowledgeBaseExecutionRuntime {
         success: false,
       };
     }
-  }
-
-  /**
-   * Format message when no search results found
-   */
-  private formatNoSearchResults(query: string): string {
-    return `# Knowledge Base Search Results
-
-**Search Query:** ${query}
-
-No relevant files found in the knowledge base for this query.
-
-**Suggestions:**
-- Try rephrasing your question with different keywords
-- Check if the information exists in the uploaded documents
-- Ask the user to provide more context or upload relevant documents`;
-  }
-
-  /**
-   * Fetch full content of files (placeholder implementation)
-   */
-  private async fetchFileContents(
-    fileIds: string[],
-  ): Promise<Array<{ content: string; fileId: string; fileName: string }>> {
-    // TODO: Implement actual file content retrieval from database
-    // This should fetch the full parsed content of each file
-    return fileIds.map((fileId) => ({
-      content: `[Full content of file ${fileId} will be loaded here]`,
-      fileId,
-      fileName: `File ${fileId}`,
-    }));
-  }
-
-  /**
-   * Format file contents for AI consumption
-   */
-  private formatFileContents(
-    fileContents: Array<{ content: string; fileId: string; fileName: string }>,
-  ): string {
-    const sections: string[] = [
-      `# Knowledge Base - File Contents`,
-      ``,
-      `**Files Read:** ${fileContents.length}`,
-      ``,
-    ];
-
-    fileContents.forEach((file, index) => {
-      sections.push(
-        `## File ${index + 1}: ${file.fileName}`,
-        ``,
-        `**File ID:** \`${file.fileId}\``,
-        ``,
-        `### Content`,
-        ``,
-        file.content,
-        ``,
-        `---`,
-        ``,
-      );
-    });
-
-    sections.push(
-      `**Note:** Use the information above to answer the user's question. Always cite the source files.`,
-    );
-
-    return sections.join('\n');
   }
 }

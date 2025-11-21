@@ -2,10 +2,12 @@ import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@lobechat/const';
 import { ChatSemanticSearchChunk, FileSearchResult, SemanticSearchSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { inArray } from 'drizzle-orm';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { AsyncTaskModel } from '@/database/models/asyncTask';
 import { ChunkModel } from '@/database/models/chunk';
+import { DocumentModel } from '@/database/models/document';
 import { EmbeddingModel } from '@/database/models/embedding';
 import { FileModel } from '@/database/models/file';
 import { MessageModel } from '@/database/models/message';
@@ -15,6 +17,7 @@ import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';
+import { DocumentService } from '@/server/services/document';
 
 const chunkProcedure = authedProcedure
   .use(serverDatabase)
@@ -27,6 +30,8 @@ const chunkProcedure = authedProcedure
         asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
         chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
         chunkService: new ChunkService(ctx.serverDB, ctx.userId),
+        documentModel: new DocumentModel(ctx.serverDB, ctx.userId),
+        documentService: new DocumentService(ctx.serverDB, ctx.userId),
         embeddingModel: new EmbeddingModel(ctx.serverDB, ctx.userId),
         fileModel: new FileModel(ctx.serverDB, ctx.userId),
         messageModel: new MessageModel(ctx.serverDB, ctx.userId),
@@ -66,7 +71,8 @@ const groupAndRankFiles = (chunks: ChatSemanticSearchChunk[], topK: number): Fil
   for (const fileResult of fileMap.values()) {
     fileResult.topChunks.sort((a, b) => b.similarity - a.similarity);
     const top3 = fileResult.topChunks.slice(0, 3);
-    fileResult.relevanceScore = top3.reduce((sum, chunk) => sum + chunk.similarity, 0) / top3.length;
+    fileResult.relevanceScore =
+      top3.reduce((sum, chunk) => sum + chunk.similarity, 0) / top3.length;
     // Keep only top chunks per file
     fileResult.topChunks = fileResult.topChunks.slice(0, 3);
   }
@@ -119,6 +125,66 @@ export const chunkRouter = router({
         items: await ctx.chunkModel.findByFileId(input.id, input.cursor || 0),
         nextCursor: input.cursor ? input.cursor + 1 : 1,
       };
+    }),
+
+  getFileContents: chunkProcedure
+    .input(
+      z.object({
+        fileIds: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await pMap(
+        input.fileIds,
+        async (fileId) => {
+          // 1. Find file information
+          const file = await ctx.fileModel.findById(fileId);
+          if (!file) {
+            return {
+              content: '',
+              error: 'File not found',
+              fileId,
+              filename: `Unknown file ${fileId}`,
+            };
+          }
+
+          // 2. Find existing parsed document
+          let document = await ctx.documentModel.findByFileId(fileId);
+
+          // 3. If not exists, parse the file
+          if (!document) {
+            try {
+              document = await ctx.documentService.parseFile(fileId);
+            } catch (error) {
+              return {
+                content: '',
+                error: `Failed to parse file: ${(error as Error).message}`,
+                fileId,
+                filename: file.name,
+              };
+            }
+          }
+
+          // 4. Calculate file statistics
+          const content = document.content || '';
+          const lines = content.split('\n');
+          const totalLineCount = lines.length;
+          const totalCharCount = content.length;
+          const preview = lines.slice(0, 5).join('\n');
+
+          // 5. Return content with details
+          return {
+            content,
+            fileId,
+            filename: file.name,
+            metadata: document.metadata,
+            preview,
+            totalCharCount,
+            totalLineCount,
+          };
+        },
+        { concurrency: 3 },
+      );
     }),
 
   retryParseFileTask: chunkProcedure
