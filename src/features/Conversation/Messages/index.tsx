@@ -1,32 +1,16 @@
 'use client';
 
-import { UIChatMessage } from '@lobechat/types';
 import { isDesktop } from '@lobechat/const';
-import type { ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui';
-import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { useSearchParams } from 'next/navigation';
-import {
-  MouseEvent,
-  ReactNode,
-  memo,
-  use,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { useTranslation } from 'react-i18next';
+import { MouseEvent, ReactNode, memo, use, useCallback, useEffect, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ContextMenu from '../components/ContextMenu';
-import ShareMessageModal from '../components/ShareMessageModal';
 import History from '../components/History';
 import { InPortalThreadContext } from '../context/InPortalThreadContext';
 import { useChatItemContextMenu } from '../hooks/useChatItemContextMenu';
-import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import AssistantMessage from './Assistant';
 import GroupMessage from './Group';
 import SupervisorMessage from './Supervisor';
@@ -39,13 +23,7 @@ import {
   upsertVirtuaVisibleItem,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { getChatStoreState, useChatStore } from '@/store/chat';
-import {
-  displayMessageSelectors,
-  messageStateSelectors,
-  threadSelectors,
-} from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   loading: css`
@@ -71,9 +49,6 @@ export interface ChatListItemProps {
   isLatestItem?: boolean;
 }
 
-type MenuItemType = ActionIconGroupItemType | { type: 'divider' };
-type MenuActionEvent = ActionIconGroupEvent & { selectedText?: string };
-
 const Item = memo<ChatListItemProps>(
   ({
     className,
@@ -88,337 +63,29 @@ const Item = memo<ChatListItemProps>(
     const { styles, cx } = useStyles();
     const containerRef = useRef<HTMLDivElement | null>(null);
     const virtuaRef = use(VirtuaContext);
-    const { message } = App.useApp();
-    const { t } = useTranslation('common');
     const searchParams = useSearchParams();
     const topic = searchParams.get('topic');
-    const [shareMessage, setShareMessage] = useState<UIChatMessage | null>(null);
-    const [isShareModalOpen, setShareModalOpen] = useState(false);
 
-    const [
-      role,
-      error,
-      editing,
-      isThreadMode,
-      hasThread,
-      isRegenerating,
-      isCollapsed,
-      isMessageCreating
-    ] = useChatStore(
+    const [role, editing, isMessageCreating] = useChatStore(
       (s) => {
         const item = displayMessageSelectors.getDisplayMessageById(id)(s);
-
         return [
           item?.role,
-          item?.error,
           messageStateSelectors.isMessageEditing(id)(s),
-          !!s.activeThreadId,
-          threadSelectors.hasThreadBySourceMsgId(id)(s),
-          messageStateSelectors.isMessageRegenerating(id)(s),
-          messageStateSelectors.isMessageCollapsed(id)(s),
           messageStateSelectors.isMessageCreating(id)(s),
         ];
       },
       isEqual,
-    );
-    const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
-    const actionsBar = useChatListActionsBar({ hasThread, isRegenerating });
-    const inThread = isThreadMode || inPortalThread;
-
-    const menuItems = useMemo<MenuItemType[]>(() => {
-      if (!role) return [];
-
-      const {
-        branching,
-        collapse,
-        copy,
-        del,
-        delAndRegenerate,
-        divider,
-        edit,
-        expand,
-        regenerate,
-        share,
-        translate,
-        tts,
-      } = actionsBar;
-
-      if (role === 'assistant') {
-        if (error) {
-          return [edit, copy, divider, del, divider, regenerate].filter(Boolean) as MenuItemType[];
-        }
-
-        const collapseAction = isCollapsed ? expand : collapse;
-        const list: MenuItemType[] = [edit, copy, collapseAction];
-
-        if (!inThread && !isGroupSession) list.push(branching);
-
-        list.push(
-          divider,
-          tts,
-          translate,
-          divider,
-          share,
-          divider,
-          regenerate,
-          delAndRegenerate,
-          del,
-        );
-
-        return list.filter(Boolean) as MenuItemType[];
-      }
-
-      if (role === 'user') {
-        const list: MenuItemType[] = [edit, copy];
-
-        if (!inThread) list.push(branching);
-
-        list.push(divider, tts, translate, divider, regenerate, del);
-
-        return list.filter(Boolean) as MenuItemType[];
-      }
-
-      return [];
-    }, [actionsBar, error, inThread, isCollapsed, isGroupSession, role]);
-    const hasMenuItems = menuItems.length > 0;
-
-    const [
-      toggleMessageEditing,
-      deleteMessage,
-      regenerateMessage,
-      regenerateAssistantMessage,
-      translateMessage,
-      ttsMessage,
-      delAndRegenerateMessage,
-      copyMessage,
-      openThreadCreator,
-      resendThreadMessage,
-      delAndResendThreadMessage,
-      toggleMessageCollapsed,
-    ] = useChatStore((s) => [
-      s.toggleMessageEditing,
-      s.deleteMessage,
-      s.regenerateUserMessage,
-      s.regenerateAssistantMessage,
-      s.translateMessage,
-      s.ttsMessage,
-      s.delAndRegenerateMessage,
-      s.copyMessage,
-      s.openThreadCreator,
-      s.resendThreadMessage,
-      s.delAndResendThreadMessage,
-      s.toggleMessageCollapsed,
-
-    ]);
-
-    const getMessage = useCallback(
-      () => displayMessageSelectors.getDisplayMessageById(id)(getChatStoreState()),
-      [id],
-    );
-
-    const handleShare = useCallback(() => {
-      const item = getMessage();
-      if (!item || item.role !== 'assistant') return;
-
-      setShareMessage(item);
-      setShareModalOpen(true);
-    }, [getMessage]);
-    const handleShareClose = useCallback(() => {
-      setShareModalOpen(false);
-      setShareMessage(null);
-    }, []);
-
-    const handleUserAction = useCallback(
-      async (action: MenuActionEvent) => {
-        console.log('action', action);
-        const item = getMessage();
-        if (!item) return;
-
-        if (action.key === 'edit') {
-          toggleMessageEditing(id, true);
-          virtuaRef?.current?.scrollToIndex(index, { align: 'start' });
-        }
-
-        switch (action.key) {
-          case 'copy': {
-            await copyMessage(id, item.content);
-            message.success(t('copySuccess'));
-            break;
-          }
-          case 'expand':
-          case 'collapse': {
-            toggleMessageCollapsed(id);
-            break;
-          }
-          case 'branching': {
-            if (!topic) {
-              message.warning(t('branchingRequiresSavedTopic'));
-              break;
-            }
-            openThreadCreator(id);
-            break;
-          }
-          case 'del': {
-            deleteMessage(id);
-            break;
-          }
-          case 'regenerate': {
-            if (inPortalThread) {
-              resendThreadMessage(id);
-            } else {
-              regenerateMessage(id);
-            }
-
-            if (item.error) deleteMessage(id);
-            break;
-          }
-          case 'delAndRegenerate': {
-            if (inPortalThread) {
-              delAndResendThreadMessage(id);
-            } else {
-              delAndRegenerateMessage(id);
-            }
-            break;
-          }
-          case 'tts': {
-            ttsMessage(id);
-            break;
-          }
-        }
-
-        if (action.keyPath?.at(-1) === 'translate') {
-          const lang = action.keyPath[0];
-          translateMessage(id, lang);
-        }
-      },
-      [
-        copyMessage,
-        toggleMessageCollapsed,
-        deleteMessage,
-        delAndRegenerateMessage,
-        delAndResendThreadMessage,
-        getMessage,
-        id,
-        index,
-        inPortalThread,
-        message,
-        openThreadCreator,
-        regenerateMessage,
-        resendThreadMessage,
-        t,
-        toggleMessageEditing,
-        topic,
-        translateMessage,
-        ttsMessage,
-        virtuaRef,
-      ],
-    );
-
-    const handleAssistantAction = useCallback(
-      async (action: MenuActionEvent) => {
-        const item = getMessage();
-        if (!item) return;
-
-        if (action.key === 'edit') {
-          toggleMessageEditing(id, true);
-          virtuaRef?.current?.scrollToIndex(index, { align: 'start' });
-        }
-
-        switch (action.key) {
-          case 'copy': {
-            await copyMessage(id, item.content);
-            message.success(t('copySuccess', { defaultValue: 'Copy Success' }));
-            break;
-          }
-          case 'branching': {
-            if (!topic) {
-              message.warning(t('branchingRequiresSavedTopic'));
-              break;
-            }
-            openThreadCreator(id);
-            break;
-          }
-          case 'expand':
-          case 'collapse': {
-            toggleMessageCollapsed(id);
-            break;
-          }
-          case 'del': {
-            deleteMessage(id);
-            break;
-          }
-          case 'regenerate': {
-            if (inPortalThread) {
-              resendThreadMessage(id);
-            } else {
-              regenerateAssistantMessage(id);
-            }
-
-            if (item.error) deleteMessage(id);
-            break;
-          }
-          case 'delAndRegenerate': {
-            if (inPortalThread) {
-              delAndResendThreadMessage(id);
-            } else {
-              delAndRegenerateMessage(id);
-            }
-            break;
-          }
-          case 'tts': {
-            ttsMessage(id);
-            break;
-          }
-          case 'share': {
-            handleShare();
-            break;
-          }
-        }
-
-        if (action.keyPath?.at(-1) === 'translate') {
-          const lang = action.keyPath[0];
-          translateMessage(id, lang);
-        }
-      },
-      [
-        copyMessage,
-        deleteMessage,
-        delAndRegenerateMessage,
-        delAndResendThreadMessage,
-        getMessage,
-        handleShare,
-        id,
-        index,
-        inPortalThread,
-        message,
-        openThreadCreator,
-        regenerateAssistantMessage,
-        resendThreadMessage,
-        t,
-        toggleMessageEditing,
-        topic,
-        translateMessage,
-        ttsMessage,
-        virtuaRef,
-      ],
-    );
-
-    const handleMenuAction = useCallback(
-      (action: MenuActionEvent) => {
-        if (role === 'assistant') return handleAssistantAction(action);
-        if (role === 'user') return handleUserAction(action);
-      },
-      [handleAssistantAction, handleUserAction, role],
     );
 
     const {
       containerRef: contextMenuContainerRef,
       contextMenuState,
       handleContextMenu,
-      handleMenuClick: handleContextMenuItemClick,
+      hideContextMenu,
     } = useChatItemContextMenu({
       editing,
-      onActionClick: handleMenuAction,
+      onActionClick: () => {},
     });
 
     const setContainerRef = useCallback(
@@ -430,10 +97,6 @@ const Item = memo<ChatListItemProps>(
     );
 
     // ======================= Performance Optimization ======================= //
-    // these useMemo/useCallback are all for the performance optimization
-    // maybe we can remove it in React 19
-    // ======================================================================== //
-
     useEffect(() => {
       if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
 
@@ -474,9 +137,9 @@ const Item = memo<ChatListItemProps>(
 
     const onContextMenu = useCallback(
       async (event: MouseEvent<HTMLDivElement>) => {
-        if (!hasMenuItems) return;
+        if (!role || (role !== 'user' && role !== 'assistant')) return;
 
-        const item = getMessage();
+        const item = displayMessageSelectors.getDisplayMessageById(id)(getChatStoreState());
         if (!item) return;
 
         if (isDesktop) {
@@ -494,10 +157,10 @@ const Item = memo<ChatListItemProps>(
 
         handleContextMenu(event);
       },
-      [getMessage, handleContextMenu, hasMenuItems, id],
+      [handleContextMenu, id, role],
     );
 
-    const renderContent = useMemo(() => {
+    const renderContent = useCallback(() => {
       switch (role) {
         case 'user': {
           return <UserMessage disableEditing={disableEditing} id={id} index={index} />;
@@ -535,7 +198,7 @@ const Item = memo<ChatListItemProps>(
       }
 
       return null;
-    }, [role, disableEditing, handleShare, id, index, isLatestItem]);
+    }, [role, disableEditing, id, index, isLatestItem]);
 
     if (!role) return;
 
@@ -548,23 +211,20 @@ const Item = memo<ChatListItemProps>(
           onContextMenu={onContextMenu}
           ref={setContainerRef}
         >
-          {renderContent}
+          {renderContent()}
           {endRender}
         </Flexbox>
         <ContextMenu
-          items={menuItems}
-          onMenuClick={handleContextMenuItemClick}
+          id={id}
+          index={index}
+          inPortalThread={inPortalThread}
+          onClose={hideContextMenu}
           position={contextMenuState.position}
           selectedText={contextMenuState.selectedText}
+          topic={topic}
+          virtuaRef={virtuaRef}
           visible={contextMenuState.visible}
         />
-        {shareMessage && (
-          <ShareMessageModal
-            message={shareMessage}
-            onCancel={handleShareClose}
-            open={isShareModalOpen}
-          />
-        )}
       </InPortalThreadContext.Provider>
     );
   },
