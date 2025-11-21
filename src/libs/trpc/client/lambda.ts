@@ -34,9 +34,6 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
           // Don't show notifications for abort errors
           if (showError && !isAbortError) {
             const { loginRequired } = await import('@/components/Error/loginRequiredNotification');
-            const { fetchErrorNotification } = await import(
-              '@/components/Error/fetchErrorNotification'
-            );
 
             switch (status) {
               case 401: {
