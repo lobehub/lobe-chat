@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import { isNotNull } from 'drizzle-orm';
 import {
   boolean,
   index,
@@ -102,7 +103,9 @@ export const documents = pgTable(
     index('documents_file_id_idx').on(table.fileId),
     index('documents_parent_id_idx').on(table.parentId),
     uniqueIndex('documents_client_id_user_id_unique').on(table.clientId, table.userId),
-    uniqueIndex('documents_slug_user_id_unique').on(table.slug, table.userId),
+    uniqueIndex('documents_slug_user_id_unique')
+      .on(table.slug, table.userId)
+      .where(isNotNull(table.slug)),
   ],
 );
 

@@ -791,11 +791,11 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"files\" ADD COLUMN \"slug\" text;",
-      "\nALTER TABLE \"files\" ADD CONSTRAINT \"files_slug_unique\" UNIQUE(\"slug\");"
+      "ALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"slug\" varchar(255);",
+      "\nDO $$ BEGIN\n CREATE UNIQUE INDEX IF NOT EXISTS \"documents_slug_user_id_unique\" ON \"documents\" (\"slug\",\"user_id\") WHERE \"slug\" IS NOT NULL;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;"
     ],
     "bps": true,
     "folderMillis": 1763535087148,
-    "hash": "842d5d380cd518d2e944eae513126c16f6fbdf8ba6b34a96fe8ce9ac42d403a4"
+    "hash": "57a82ce14d96ffa9f140ff63f00af994e91a74703f4d2378286e36be259f117b"
   }
 ]
