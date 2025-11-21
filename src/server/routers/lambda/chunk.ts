@@ -1,5 +1,10 @@
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@lobechat/const';
-import { ChatSemanticSearchChunk, FileSearchResult, SemanticSearchSchema } from '@lobechat/types';
+import {
+  ChatSemanticSearchChunk,
+  FileSearchResult,
+  ProviderConfig,
+  SemanticSearchSchema,
+} from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { inArray } from 'drizzle-orm';
 import pMap from 'p-map';
@@ -11,10 +16,12 @@ import { DocumentModel } from '@/database/models/document';
 import { EmbeddingModel } from '@/database/models/embedding';
 import { FileModel } from '@/database/models/file';
 import { MessageModel } from '@/database/models/message';
+import { AiInfraRepos } from '@/database/repositories/aiInfra';
 import { knowledgeBaseFiles } from '@/database/schemas';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
-import { getServerDefaultFilesConfig } from '@/server/globalConfig';
+import { getServerDefaultFilesConfig, getServerGlobalConfig } from '@/server/globalConfig';
+import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { DocumentService } from '@/server/services/document';
@@ -24,9 +31,15 @@ const chunkProcedure = authedProcedure
   .use(keyVaults)
   .use(async (opts) => {
     const { ctx } = opts;
+    const { aiProvider } = await getServerGlobalConfig();
 
     return opts.next({
       ctx: {
+        aiInfraRepos: new AiInfraRepos(
+          ctx.serverDB,
+          ctx.userId,
+          aiProvider as Record<string, ProviderConfig>,
+        ),
         asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
         chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
         chunkService: new ChunkService(ctx.serverDB, ctx.userId),
@@ -242,12 +255,20 @@ export const chunkRouter = router({
           getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
         let embedding: number[];
 
-        const agentRuntime = await initModelRuntimeWithUserPayload(provider, ctx.jwtPayload);
+        const providerDetail = await ctx.aiInfraRepos.getAiProviderDetail(
+          provider,
+          KeyVaultsGateKeeper.getUserKeyVaults,
+        );
+
+        const modelRuntime = initModelRuntimeWithUserPayload(
+          provider,
+          providerDetail.keyVaults || {},
+        );
 
         // slice content to make sure in the context window limit
         const query = input.query.length > 8000 ? input.query.slice(0, 8000) : input.query;
 
-        const embeddings = await agentRuntime.embeddings({
+        const embeddings = await modelRuntime.embeddings({
           dimensions: 1024,
           input: query,
           model,
