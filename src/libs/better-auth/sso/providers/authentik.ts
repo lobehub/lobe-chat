@@ -3,12 +3,16 @@ import { authEnv } from '@/envs/auth';
 import { buildOidcConfig } from '../helpers';
 import type { GenericProviderDefinition } from '../types';
 
-const provider: GenericProviderDefinition = {
-  build: () =>
+const provider: GenericProviderDefinition<{
+  AUTH_AUTHENTIK_ID: string;
+  AUTH_AUTHENTIK_ISSUER: string;
+  AUTH_AUTHENTIK_SECRET: string;
+}> = {
+  build: (env) =>
     buildOidcConfig({
-      clientId: authEnv.AUTH_AUTHENTIK_ID,
-      clientSecret: authEnv.AUTH_AUTHENTIK_SECRET,
-      issuer: authEnv.AUTH_AUTHENTIK_ISSUER,
+      clientId: env.AUTH_AUTHENTIK_ID,
+      clientSecret: env.AUTH_AUTHENTIK_SECRET,
+      issuer: env.AUTH_AUTHENTIK_ISSUER,
       providerId: 'authentik',
     }),
   checkEnvs: () => {
@@ -16,7 +20,13 @@ const provider: GenericProviderDefinition = {
       authEnv.AUTH_AUTHENTIK_ID &&
       authEnv.AUTH_AUTHENTIK_SECRET &&
       authEnv.AUTH_AUTHENTIK_ISSUER
-    );
+    )
+      ? {
+          AUTH_AUTHENTIK_ID: authEnv.AUTH_AUTHENTIK_ID,
+          AUTH_AUTHENTIK_ISSUER: authEnv.AUTH_AUTHENTIK_ISSUER,
+          AUTH_AUTHENTIK_SECRET: authEnv.AUTH_AUTHENTIK_SECRET,
+        }
+      : false;
   },
   id: 'authentik',
   type: 'generic',

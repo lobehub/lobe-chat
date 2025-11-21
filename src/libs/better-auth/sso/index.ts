@@ -20,9 +20,8 @@ import Microsoft from './providers/microsoft';
 import Okta from './providers/okta';
 import Wechat from './providers/wechat';
 import Zitadel from './providers/zitadel';
-import type { BetterAuthProviderDefinition } from './types';
 
-const providerDefinitions: BetterAuthProviderDefinition[] = [
+const providerDefinitions = [
   Google,
   Github,
   Cognito,
@@ -39,9 +38,9 @@ const providerDefinitions: BetterAuthProviderDefinition[] = [
   Zitadel,
   Feishu,
   Wechat,
-];
+] as const;
 
-const providerRegistry = new Map<string, BetterAuthProviderDefinition>();
+const providerRegistry = new Map<string, (typeof providerDefinitions)[number]>();
 
 for (const definition of providerDefinitions) {
   providerRegistry.set(definition.id, definition);
@@ -65,7 +64,8 @@ export const initBetterAuthSSOProviders = () => {
      * Providers expose checkEnvs predicates so we can fail fast when credentials are missing instead
      * of encountering harder-to-trace errors later in the Better-Auth pipeline.
      */
-    if (!definition.checkEnvs()) {
+    const env = definition.checkEnvs();
+    if (!env) {
       throw new Error(
         `[Better-Auth] ${rawProvider} SSO provider environment variables are not set correctly!`,
       );
@@ -77,7 +77,8 @@ export const initBetterAuthSSOProviders = () => {
         throw new Error(`[Better-Auth] Duplicate SSO provider: ${providerId}`);
       }
 
-      const config = definition.build();
+      // @ts-expect-error - build expects specific env type, but we use union definition type
+      const config = definition.build(env);
       if (config) {
         // @ts-expect-error hard to type
         socialProviders[providerId] = config;
@@ -86,7 +87,8 @@ export const initBetterAuthSSOProviders = () => {
       continue;
     }
 
-    const config = definition.build();
+    // @ts-expect-error - build expects specific env type, but we use union definition type
+    const config = definition.build(env);
 
     if (config) {
       genericOAuthProviders.push(config);

@@ -3,12 +3,16 @@ import { authEnv } from '@/envs/auth';
 import { buildOidcConfig } from '../helpers';
 import type { GenericProviderDefinition } from '../types';
 
-const provider: GenericProviderDefinition = {
-  build: () =>
+const provider: GenericProviderDefinition<{
+  AUTH_LOGTO_ID: string;
+  AUTH_LOGTO_ISSUER: string;
+  AUTH_LOGTO_SECRET: string;
+}> = {
+  build: (env) =>
     buildOidcConfig({
-      clientId: authEnv.AUTH_LOGTO_ID,
-      clientSecret: authEnv.AUTH_LOGTO_SECRET,
-      issuer: authEnv.AUTH_LOGTO_ISSUER,
+      clientId: env.AUTH_LOGTO_ID,
+      clientSecret: env.AUTH_LOGTO_SECRET,
+      issuer: env.AUTH_LOGTO_ISSUER,
       overrides: {
         mapProfileToUser: (profile) => ({
           email: profile.email,
@@ -19,7 +23,13 @@ const provider: GenericProviderDefinition = {
       scopes: ['openid', 'profile', 'email', 'offline_access'],
     }),
   checkEnvs: () => {
-    return !!(authEnv.AUTH_LOGTO_ID && authEnv.AUTH_LOGTO_SECRET && authEnv.AUTH_LOGTO_ISSUER);
+    return !!(authEnv.AUTH_LOGTO_ID && authEnv.AUTH_LOGTO_SECRET && authEnv.AUTH_LOGTO_ISSUER)
+      ? {
+          AUTH_LOGTO_ID: authEnv.AUTH_LOGTO_ID,
+          AUTH_LOGTO_ISSUER: authEnv.AUTH_LOGTO_ISSUER,
+          AUTH_LOGTO_SECRET: authEnv.AUTH_LOGTO_SECRET,
+        }
+      : false;
   },
   id: 'logto',
   type: 'generic',

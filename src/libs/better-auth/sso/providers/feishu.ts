@@ -37,19 +37,23 @@ const isFeishuProfile = (value: unknown): value is FeishuUserProfile => {
   );
 };
 
-const ensureBaseURL = () => {
-  const baseUrl = authEnv.NEXT_PUBLIC_BETTER_AUTH_URL?.trim();
-  if (!baseUrl) {
+const ensureBaseURL = (baseUrl: string | undefined) => {
+  const trimmedUrl = baseUrl?.trim();
+  if (!trimmedUrl) {
     throw new Error('[Better-Auth] NEXT_PUBLIC_BETTER_AUTH_URL is required for Feishu SSO');
   }
-  return baseUrl.replace(/\/$/, '');
+  return trimmedUrl.replace(/\/$/, '');
 };
 
-const provider: GenericProviderDefinition = {
-  build: () => {
-    const clientId = authEnv.AUTH_FEISHU_APP_ID!;
-    const clientSecret = authEnv.AUTH_FEISHU_APP_SECRET!;
-    const tokenProxy = `${ensureBaseURL()}${FEISHU_TOKEN_PROXY_PATH}`;
+const provider: GenericProviderDefinition<{
+  AUTH_FEISHU_APP_ID: string;
+  AUTH_FEISHU_APP_SECRET: string;
+  NEXT_PUBLIC_BETTER_AUTH_URL: string;
+}> = {
+  build: (env) => {
+    const clientId = env.AUTH_FEISHU_APP_ID;
+    const clientSecret = env.AUTH_FEISHU_APP_SECRET;
+    const tokenProxy = `${ensureBaseURL(env.NEXT_PUBLIC_BETTER_AUTH_URL)}${FEISHU_TOKEN_PROXY_PATH}`;
 
     return {
       authentication: 'post',
@@ -119,7 +123,13 @@ const provider: GenericProviderDefinition = {
       authEnv.AUTH_FEISHU_APP_ID &&
       authEnv.AUTH_FEISHU_APP_SECRET &&
       authEnv.NEXT_PUBLIC_BETTER_AUTH_URL
-    );
+    )
+      ? {
+          AUTH_FEISHU_APP_ID: authEnv.AUTH_FEISHU_APP_ID,
+          AUTH_FEISHU_APP_SECRET: authEnv.AUTH_FEISHU_APP_SECRET,
+          NEXT_PUBLIC_BETTER_AUTH_URL: authEnv.NEXT_PUBLIC_BETTER_AUTH_URL,
+        }
+      : false;
   },
   id: 'feishu',
   type: 'generic',

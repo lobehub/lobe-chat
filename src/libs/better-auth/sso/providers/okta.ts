@@ -3,12 +3,16 @@ import { authEnv } from '@/envs/auth';
 import { buildOidcConfig } from '../helpers';
 import type { GenericProviderDefinition } from '../types';
 
-const provider: GenericProviderDefinition = {
-  build: () =>
+const provider: GenericProviderDefinition<{
+  AUTH_OKTA_ID: string;
+  AUTH_OKTA_ISSUER: string;
+  AUTH_OKTA_SECRET: string;
+}> = {
+  build: (env) =>
     buildOidcConfig({
-      clientId: authEnv.AUTH_OKTA_ID,
-      clientSecret: authEnv.AUTH_OKTA_SECRET,
-      issuer: authEnv.AUTH_OKTA_ISSUER,
+      clientId: env.AUTH_OKTA_ID,
+      clientSecret: env.AUTH_OKTA_SECRET,
+      issuer: env.AUTH_OKTA_ISSUER,
       overrides: {
         mapProfileToUser: (profile) => ({
           email: profile.email,
@@ -18,7 +22,13 @@ const provider: GenericProviderDefinition = {
       providerId: 'okta',
     }),
   checkEnvs: () => {
-    return !!(authEnv.AUTH_OKTA_ID && authEnv.AUTH_OKTA_SECRET && authEnv.AUTH_OKTA_ISSUER);
+    return !!(authEnv.AUTH_OKTA_ID && authEnv.AUTH_OKTA_SECRET && authEnv.AUTH_OKTA_ISSUER)
+      ? {
+          AUTH_OKTA_ID: authEnv.AUTH_OKTA_ID,
+          AUTH_OKTA_ISSUER: authEnv.AUTH_OKTA_ISSUER,
+          AUTH_OKTA_SECRET: authEnv.AUTH_OKTA_SECRET,
+        }
+      : false;
   },
   id: 'okta',
   type: 'generic',

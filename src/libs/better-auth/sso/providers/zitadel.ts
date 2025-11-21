@@ -3,31 +3,49 @@ import { authEnv } from '@/envs/auth';
 import { buildOidcConfig, pickEnv } from '../helpers';
 import type { GenericProviderDefinition } from '../types';
 
-const getClientId = () => {
-  return pickEnv(authEnv.ZITADEL_CLIENT_ID, authEnv.AUTH_ZITADEL_ID);
+type ZitadelEnv = {
+  AUTH_ZITADEL_ID?: string;
+  AUTH_ZITADEL_ISSUER?: string;
+  AUTH_ZITADEL_SECRET?: string;
+  ZITADEL_CLIENT_ID?: string;
+  ZITADEL_CLIENT_SECRET?: string;
+  ZITADEL_ISSUER?: string;
 };
 
-const getClientSecret = () => {
-  return pickEnv(authEnv.ZITADEL_CLIENT_SECRET, authEnv.AUTH_ZITADEL_SECRET);
+const getClientId = (env: ZitadelEnv) => {
+  return pickEnv(env.ZITADEL_CLIENT_ID, env.AUTH_ZITADEL_ID);
 };
 
-const getIssuer = () => {
-  return pickEnv(authEnv.ZITADEL_ISSUER, authEnv.AUTH_ZITADEL_ISSUER);
+const getClientSecret = (env: ZitadelEnv) => {
+  return pickEnv(env.ZITADEL_CLIENT_SECRET, env.AUTH_ZITADEL_SECRET);
 };
 
-const provider: GenericProviderDefinition = {
-  build: () =>
+const getIssuer = (env: ZitadelEnv) => {
+  return pickEnv(env.ZITADEL_ISSUER, env.AUTH_ZITADEL_ISSUER);
+};
+
+const provider: GenericProviderDefinition<ZitadelEnv> = {
+  build: (env) =>
     buildOidcConfig({
-      clientId: getClientId()!,
-      clientSecret: getClientSecret()!,
-      issuer: getIssuer()!,
+      clientId: getClientId(env)!,
+      clientSecret: getClientSecret(env)!,
+      issuer: getIssuer(env)!,
       providerId: 'zitadel',
     }),
   checkEnvs: () => {
-    const clientId = getClientId();
-    const clientSecret = getClientSecret();
-    const issuer = getIssuer();
-    return !!(clientId && clientSecret && issuer);
+    const clientId = getClientId(authEnv);
+    const clientSecret = getClientSecret(authEnv);
+    const issuer = getIssuer(authEnv);
+    return !!(clientId && clientSecret && issuer)
+      ? {
+          AUTH_ZITADEL_ID: authEnv.AUTH_ZITADEL_ID,
+          AUTH_ZITADEL_ISSUER: authEnv.AUTH_ZITADEL_ISSUER,
+          AUTH_ZITADEL_SECRET: authEnv.AUTH_ZITADEL_SECRET,
+          ZITADEL_CLIENT_ID: authEnv.ZITADEL_CLIENT_ID,
+          ZITADEL_CLIENT_SECRET: authEnv.ZITADEL_CLIENT_SECRET,
+          ZITADEL_ISSUER: authEnv.ZITADEL_ISSUER,
+        }
+      : false;
   },
   id: 'zitadel',
   type: 'generic',

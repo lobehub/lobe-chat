@@ -6,12 +6,12 @@ const WECHAT_AUTHORIZATION_URL = 'https://open.weixin.qq.com/connect/qrconnect';
 const WECHAT_TOKEN_PROXY_PATH = '/api/auth/wechat/token';
 const WECHAT_USERINFO_URL = 'https://api.weixin.qq.com/sns/userinfo';
 
-const ensureBaseURL = () => {
-  const baseUrl = authEnv.NEXT_PUBLIC_BETTER_AUTH_URL?.trim();
-  if (!baseUrl) {
+const ensureBaseURL = (baseUrl: string | undefined) => {
+  const trimmedUrl = baseUrl?.trim();
+  if (!trimmedUrl) {
     throw new Error('[Better-Auth] NEXT_PUBLIC_BETTER_AUTH_URL is required for WeChat SSO');
   }
-  return baseUrl.replace(/\/$/, '');
+  return trimmedUrl.replace(/\/$/, '');
 };
 
 const extractWechatMetadata = (scopes: string[] | undefined, key: string) => {
@@ -19,11 +19,15 @@ const extractWechatMetadata = (scopes: string[] | undefined, key: string) => {
   return record?.slice(key.length + 1);
 };
 
-const provider: GenericProviderDefinition = {
-  build: () => {
-    const clientId = authEnv.AUTH_WECHAT_ID!;
-    const clientSecret = authEnv.AUTH_WECHAT_SECRET!;
-    const tokenProxy = `${ensureBaseURL()}${WECHAT_TOKEN_PROXY_PATH}`;
+const provider: GenericProviderDefinition<{
+  AUTH_WECHAT_ID: string;
+  AUTH_WECHAT_SECRET: string;
+  NEXT_PUBLIC_BETTER_AUTH_URL: string;
+}> = {
+  build: (env) => {
+    const clientId = env.AUTH_WECHAT_ID;
+    const clientSecret = env.AUTH_WECHAT_SECRET;
+    const tokenProxy = `${ensureBaseURL(env.NEXT_PUBLIC_BETTER_AUTH_URL)}${WECHAT_TOKEN_PROXY_PATH}`;
 
     return {
       authentication: 'post',
@@ -94,7 +98,13 @@ const provider: GenericProviderDefinition = {
       authEnv.AUTH_WECHAT_ID &&
       authEnv.AUTH_WECHAT_SECRET &&
       authEnv.NEXT_PUBLIC_BETTER_AUTH_URL
-    );
+    )
+      ? {
+          AUTH_WECHAT_ID: authEnv.AUTH_WECHAT_ID,
+          AUTH_WECHAT_SECRET: authEnv.AUTH_WECHAT_SECRET,
+          NEXT_PUBLIC_BETTER_AUTH_URL: authEnv.NEXT_PUBLIC_BETTER_AUTH_URL,
+        }
+      : false;
   },
   id: 'wechat',
   type: 'generic',
