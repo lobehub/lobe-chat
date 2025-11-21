@@ -40,7 +40,13 @@ export class DocumentModel {
 
   findById = async (id: string): Promise<DocumentItem | undefined> => {
     return this.db.query.documents.findFirst({
-      where: and(eq(documents.id, id), eq(documents.userId, this.userId)),
+      where: and(eq(documents.userId, this.userId), eq(documents.id, id)),
+    });
+  };
+
+  findByFileId = async (fileId: string) => {
+    return this.db.query.documents.findFirst({
+      where: and(eq(documents.userId, this.userId), eq(documents.fileId, fileId)),
     });
   };
 
@@ -48,6 +54,6 @@ export class DocumentModel {
     return this.db
       .update(documents)
       .set({ ...value, updatedAt: new Date() })
-      .where(and(eq(documents.id, id), eq(documents.userId, this.userId)));
+      .where(and(eq(documents.userId, this.userId), eq(documents.id, id)));
   };
 }

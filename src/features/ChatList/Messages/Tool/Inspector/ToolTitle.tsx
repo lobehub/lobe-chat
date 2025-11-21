@@ -2,15 +2,14 @@ import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ChevronRight } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { shinyTextStylish } from '@/styles/loading';
-import { LocalSystemManifest } from '@/tools/local-system';
-import { WebBrowsingManifest } from '@/tools/web-browsing';
+import { builtinToolIdentifiers } from '@/tools/identifiers';
 
 import BuiltinPluginTitle from './BuiltinPluginTitle';
 
@@ -43,33 +42,14 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
 
   const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 
-  const plugins = useMemo(
-    () => [
-      {
-        apiName: t(`search.apiName.${apiName}`, apiName),
-        // icon: <Icon icon={Globe} size={13} />,
-        id: WebBrowsingManifest.identifier,
-        title: t('search.title'),
-      },
-      {
-        apiName: t(`localSystem.apiName.${apiName}`, apiName),
-        // icon: <Icon icon={Laptop} size={13} />,
-        id: LocalSystemManifest.identifier,
-        title: t('localSystem.title'),
-      },
-    ],
-    [],
-  );
-
-  const builtinPluginTitle = plugins.find((item) => item.id === identifier);
-
-  if (!!builtinPluginTitle) {
+  if (builtinToolIdentifiers.includes(identifier)) {
     return (
       <BuiltinPluginTitle
-        {...builtinPluginTitle}
+        apiName={t(`builtins.${identifier}.apiName.${apiName}`, apiName)}
         identifier={identifier}
         index={index}
         messageId={messageId}
+        title={t(`builtins.${identifier}.title`, identifier)}
         toolCallId={toolCallId}
       />
     );
