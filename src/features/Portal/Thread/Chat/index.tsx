@@ -1,7 +1,7 @@
 import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { SkeletonList } from '@/features/Conversation';
+import { SkeletonList } from '@/features/ChatList';
 
 import ChatInput from './ChatInput';
 import ChatList from './ChatList';

@@ -2,7 +2,7 @@ import { Image, Markdown } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import Arguments from '@/features/Conversation/Messages/Group/Tool/Render/Arguments';
+import Arguments from '@/features/ChatList/Messages/Group/Tool/Render/Arguments';
 import { ToolCallResult } from '@/libs/mcp';
 
 export interface MCPTypeProps {

@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "xAI'nin Grok 4 modeli, güçlü akıl yürütme yeteneklerine sahiptir."
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Yüksek performanslı aracı araç çağrıları için özel olarak optimize edilmiş, son teknoloji çok modlu model."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Yüksek performanslı aracı araç çağrıları için özel olarak optimize edilmiş, son teknoloji çok modlu model."
+  },
   "grok-4-fast-non-reasoning": {
     "description": "Maliyet-etkin çıkarım modellerinde en son gelişmemiz olan Grok 4 Fast’i sunmaktan mutluluk duyuyoruz."
   },

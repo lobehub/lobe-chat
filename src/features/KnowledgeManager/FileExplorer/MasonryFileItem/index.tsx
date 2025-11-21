@@ -177,19 +177,6 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const isMarkdown = isMarkdownFile(name, fileType);
     const isNote = isCustomNote(fileType);
 
-    // Debug: Log editorData for notes
-    useEffect(() => {
-      if (isNote) {
-        console.log('[MasonryFileItem] Note item:', {
-          editorDataPreview: editorData ? JSON.stringify(editorData).slice(0, 100) : null,
-          editorDataType: typeof editorData,
-          hasEditorData: !!editorData,
-          id,
-          name,
-        });
-      }
-    }, [isNote, id, name, editorData]);
-
     const cardRef = useRef<HTMLDivElement>(null);
     const [isInView, setIsInView] = useState(false);
 
@@ -288,12 +275,6 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
           )}
           onClick={() => {
             if (isNote) {
-              console.log('[MasonryFileItem] Opening note modal with:', {
-                editorDataType: typeof editorData,
-                hasEditorData: !!editorData,
-                id,
-                name,
-              });
               setIsNoteModalOpen(true);
             } else {
               onOpen(id);
@@ -384,7 +365,6 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             editorData={editorData}
             knowledgeBaseId={knowledgeBaseId}
             onClose={() => {
-              console.log('[MasonryFileItem] Closing note modal');
               setIsNoteModalOpen(false);
             }}
             open={isNoteModalOpen}

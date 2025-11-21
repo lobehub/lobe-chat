@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "xAI 的 Grok 4，具備強大的推理能力。"
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "前沿多模態模型，專為高效能代理工具調用進行優化。"
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "前沿多模態模型，專為高效能代理工具調用進行優化。"
+  },
   "grok-4-fast-non-reasoning": {
     "description": "我們很高興發布 Grok 4 Fast，這是我們在成本效益推理模型方面的最新進展。"
   },

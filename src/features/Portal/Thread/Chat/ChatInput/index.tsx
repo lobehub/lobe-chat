@@ -7,7 +7,7 @@ import { Trans } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
-import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
+import WideScreenContainer from '@/features/ChatList/components/WideScreenContainer';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';

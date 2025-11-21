@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "Grok 4 van xAI, met krachtige redeneervaardigheden."
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Geavanceerd multimodaal model, geoptimaliseerd voor het aanroepen van krachtige agenttools."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Geavanceerd multimodaal model, geoptimaliseerd voor het aanroepen van krachtige agenttools."
+  },
   "grok-4-fast-non-reasoning": {
     "description": "We zijn verheugd Grok 4 Fast te introduceren, onze nieuwste vooruitgang in kosteneffectieve redeneermodellen."
   },
