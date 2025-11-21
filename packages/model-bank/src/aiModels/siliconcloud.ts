@@ -88,6 +88,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      video: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -109,6 +110,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      video: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -132,6 +134,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      video: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -229,25 +232,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'Ling-1T 是"灵 2.0"系列的首款旗舰级 non-thinking 模型，拥有 1 万亿总参数和每 token 约 500 亿个活动参数。基于灵 2.0 架构构建，Ling-1T 旨在突破高效推理和可扩展认知的极限。Ling-1T-base 在超过 20 万亿个高质量、推理密集的 token 上进行训练。',
-    displayName: 'Ling-1T',
-    id: 'inclusionAI/Ling-1T',
-    pricing: {
-      currency: 'CNY',
-      units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-10-09',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 198_000,
@@ -310,6 +294,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      video: true,
       vision: true,
     },
     contextWindowTokens: 256_000,
@@ -330,6 +315,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      video: true,
       vision: true,
     },
     contextWindowTokens: 256_000,
@@ -349,6 +335,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      video: true,
       vision: true,
     },
     contextWindowTokens: 256_000,
@@ -369,6 +356,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      video: true,
       vision: true,
     },
     contextWindowTokens: 256_000,
@@ -479,6 +467,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      video: true,
       vision: true,
     },
     contextWindowTokens: 256_000,
@@ -501,6 +490,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      video: true,
       vision: true,
     },
     contextWindowTokens: 256_000,
@@ -768,6 +758,44 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-30',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      "Kimi K2 Thinking 是最新、最强大的开源思考模型。它通过大幅扩展多步推理深度，并在 200–300 次连续工具调用中保持稳定的工具使用，在 Humanity's Last Exam (HLE)、BrowseComp 及其他基准测试中树立了新的标杆。同时，K2 Thinking 是一款原生支持 INT4 量化的模型，拥有 256K 上下文窗口，实现了推理延迟和 GPU 显存占用的无损降低",
+    displayName: 'Kimi K2 Thinking',
+    id: 'moonshotai/Kimi-K2-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      "Kimi K2 Thinking 是最新、最强大的开源思考模型。它通过大幅扩展多步推理深度，并在 200–300 次连续工具调用中保持稳定的工具使用，在 Humanity's Last Exam (HLE)、BrowseComp 及其他基准测试中树立了新的标杆。同时，K2 Thinking 是一款原生支持 INT4 量化的模型，拥有 256K 上下文窗口，实现了推理延迟和 GPU 显存占用的无损降低",
+    displayName: 'Kimi K2 Thinking Turbo',
+    id: 'moonshotai/Kimi-K2-Thinking-Turbo',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 32, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-07',
     type: 'chat',
   },
   {
