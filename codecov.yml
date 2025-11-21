@@ -32,7 +32,7 @@ coverage:
       app:
         flags:
           - app
-      threshold: 1
+      threshold: 0.5
     patch: off
 
 
