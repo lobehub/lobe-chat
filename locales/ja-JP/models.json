@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "xAI の Grok 4 は強力な推論能力を備えています。"
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "最先端のマルチモーダルモデルであり、高性能なエージェントツールの呼び出しに特化して最適化されています。"
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "最先端のマルチモーダルモデルであり、高性能なエージェントツールの呼び出しに特化して最適化されています。"
+  },
   "grok-4-fast-non-reasoning": {
     "description": "コスト効率の高い推論モデルにおける最新の進展として、Grok 4 Fastをリリースできることを嬉しく思います。"
   },
