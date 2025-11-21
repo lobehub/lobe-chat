@@ -26,11 +26,15 @@ jobs:
         run: |
           OUTPUT=$(bunx tsx scripts/checkConsoleLog.mts 2>&1)
           echo "$OUTPUT"
-          echo "output<<EOF" >> $GITHUB_OUTPUT
-          echo "$OUTPUT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Save output to file for later use
+          echo "$OUTPUT" > /tmp/console-log-output.txt
+
+          # Check if violations were found
           if echo "$OUTPUT" | grep -q "Total violations:"; then
             echo "has_violations=true" >> $GITHUB_OUTPUT
+            TOTAL=$(echo "$OUTPUT" | grep -oP "Total violations: \K\d+")
+            echo "total=$TOTAL" >> $GITHUB_OUTPUT
           else
             echo "has_violations=false" >> $GITHUB_OUTPUT
           fi
@@ -38,29 +42,26 @@ jobs:
       - name: Comment on PR
         if: steps.check.outputs.has_violations == 'true'
         uses: actions/github-script@v7
+        env:
+          VIOLATION_COUNT: ${{ steps.check.outputs.total }}
         with:
           script: |
-            const output = `${{ steps.check.outputs.output }}`;
+            const fs = require('fs');
+            const output = fs.readFileSync('/tmp/console-log-output.txt', 'utf8');
+            const total = process.env.VIOLATION_COUNT || '0';
 
             // Parse violations from output
             const lines = output.split('\n');
             const violations = [];
-            let i = 0;
-            while (i < lines.length) {
+            for (let i = 0; i < lines.length; i++) {
               const line = lines[i];
               if (line.match(/^\s+\S+:\d+$/)) {
                 const file = line.trim();
                 const content = lines[i + 1]?.trim() || '';
                 violations.push({ file, content });
-                i += 2;
-              } else {
                 i++;
               }
             }
-
-            // Extract total count
-            const totalMatch = output.match(/Total violations: (\d+)/);
-            const total = totalMatch ? totalMatch[1] : violations.length;
 
             // Build comment body
             const maxDisplay = 20;
@@ -71,7 +72,8 @@ jobs:
               body += `<details>\n<summary>Click to see violations (showing first ${Math.min(violations.length, maxDisplay)})</summary>\n\n`;
               body += `| File | Code |\n|------|------|\n`;
               violations.slice(0, maxDisplay).forEach(v => {
-                body += `| \`${v.file}\` | \`${v.content.substring(0, 50)}${v.content.length > 50 ? '...' : ''}\` |\n`;
+                const escapedContent = v.content.substring(0, 50).replace(/\|/g, '\\|').replace(/`/g, '');
+                body += `| \`${v.file}\` | \`${escapedContent}${v.content.length > 50 ? '...' : ''}\` |\n`;
               });
               if (violations.length > maxDisplay) {
                 body += `\n*...and ${violations.length - maxDisplay} more*\n`;
