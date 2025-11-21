@@ -1,10 +1,10 @@
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import type { UserGuide, UserPreference } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
 import { count, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { INBOX_SESSION_ID } from '@/const/session';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
 import { getTestDBInstance } from '../../../core/dbForTest';

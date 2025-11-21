@@ -16,7 +16,7 @@ logo emoji: 🤯
 
 ## Project Technologies Stack
 
-- Next.js 15
+- Next.js 16
 - react 19
 - TypeScript
 - `@lobehub/ui`, antd for component framework
