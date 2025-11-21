@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 to otwartoźródłowy model inferencyjny o dużej skali z mieszanym mechanizmem uwagi, posiadający 456 miliardów parametrów, z których około 45,9 miliarda jest aktywowanych na każdy token. Model natywnie obsługuje ultra-długi kontekst do 1 miliona tokenów i dzięki mechanizmowi błyskawicznej uwagi oszczędza 75% operacji zmiennoprzecinkowych w zadaniach generowania na 100 tysiącach tokenów w porównaniu do DeepSeek R1. Ponadto MiniMax-M1 wykorzystuje architekturę MoE (mieszani eksperci), łącząc algorytm CISPO z efektywnym treningiem wzmacniającym opartym na mieszanej uwadze, osiągając wiodącą w branży wydajność w inferencji długich wejść i rzeczywistych scenariuszach inżynierii oprogramowania."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 na nowo definiuje wydajność agentów inteligentnych. To kompaktowy, szybki i ekonomiczny model MoE (Mixture of Experts) z 230 miliardami całkowitych parametrów i 10 miliardami aktywnych parametrów, zaprojektowany z myślą o najwyższej wydajności w zadaniach kodowania i agentowych, przy jednoczesnym zachowaniu silnej inteligencji ogólnej. Dzięki zaledwie 10 miliardom aktywnych parametrów, MiniMax-M2 oferuje wydajność porównywalną z dużymi modelami, co czyni go idealnym wyborem dla zastosowań wymagających wysokiej efektywności."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Model o łącznej liczbie parametrów 1 biliona i aktywowanych 32 miliardach parametrów. Wśród modeli nie myślących osiąga czołowe wyniki w wiedzy specjalistycznej, matematyce i kodowaniu, lepiej radząc sobie z zadaniami ogólnymi agenta. Model jest starannie zoptymalizowany pod kątem zadań agenta, potrafi nie tylko odpowiadać na pytania, ale także podejmować działania. Idealny do improwizacji, ogólnej rozmowy i doświadczeń agenta, działający na poziomie refleksu bez potrzeby długiego przetwarzania."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 znacząco poprawia zdolność wnioskowania modelu nawet przy minimalnej ilości oznaczonych danych. Przed wygenerowaniem ostatecznej odpowiedzi model najpierw generuje łańcuch myślowy, co zwiększa dokładność końcowej odpowiedzi."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B to zdystylowana, bardziej wydajna wersja modelu Llama 70B. Utrzymuje silną wydajność w zadaniach generowania tekstu, zmniejszając koszty obliczeniowe dla łatwiejszego wdrożenia i badań. Obsługiwany przez Groq na ich niestandardowym sprzęcie LPU, zapewnia szybkie i efektywne wnioskowanie."
+    "description": "DeepSeek R1 Distill Llama 70B to duży model językowy oparty na Llama3.3 70B, który dzięki dostrojeniu na podstawie wyników DeepSeek R1 osiąga konkurencyjną wydajność porównywalną z czołowymi modelami najnowszej generacji."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B to destylowany duży model językowy oparty na Llama-3.1-8B-Instruct, wytrenowany przy użyciu wyjścia DeepSeek R1."
@@ -1478,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash to wariant modelu, zoptymalizowany pod kątem efektywności kosztowej i niskiego opóźnienia."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Model Gemini 2.0 Flash do generowania obrazów, wspierający generację obrazów"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
   },
@@ -1508,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Wersja podglądowa (25 września 2025) Gemini 2.5 Flash"
   },
@@ -1525,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview to najnowocześniejszy model myślowy Google, zdolny do rozumowania nad złożonymi problemami w dziedzinach kodowania, matematyki i STEM oraz do analizy dużych zbiorów danych, repozytoriów kodu i dokumentów z wykorzystaniem długich kontekstów."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro to najinteligentniejszy model Google, oferujący najnowocześniejsze wnioskowanie i rozumienie multimodalne, a także zaawansowane funkcje agenta i kodowania kontekstu."
   },
   "gemini-flash-latest": {
     "description": "Najnowsze wydanie Gemini Flash"
@@ -1906,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "Grok 4 od xAI, wyposażony w potężne zdolności rozumowania."
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Nowoczesny model multimodalny, zoptymalizowany specjalnie do wydajnego korzystania z narzędzi pośredniczących."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Nowoczesny model multimodalny, zoptymalizowany specjalnie do wydajnego korzystania z narzędzi pośredniczących."
   },
   "grok-4-fast-non-reasoning": {
     "description": "Z radością prezentujemy Grok 4 Fast, nasz najnowszy postęp w modelach inferencyjnych o wysokiej efektywności kosztowej."
@@ -2461,6 +2467,9 @@
   },
   "minimax/minimax-m2": {
     "description": "Stworzony z myślą o wydajnym kodowaniu i przepływach pracy agentów."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 to kompaktowy, szybki i ekonomiczny model MoE (Mixture of Experts) z 230 miliardami całkowitych parametrów i 10 miliardami aktywnych parametrów, zaprojektowany z myślą o najwyższej wydajności w zadaniach kodowania i agentowych, przy jednoczesnym zachowaniu silnej inteligencji ogólnej. Model ten doskonale sprawdza się w edycji wielu plików, zamkniętej pętli kodowanie-uruchamianie-naprawa, testowaniu i weryfikacji poprawek oraz w złożonych, długich łańcuchach narzędziowych, co czyni go idealnym wyborem dla przepływów pracy deweloperów."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B to czołowy model brzegowy Mistrala."

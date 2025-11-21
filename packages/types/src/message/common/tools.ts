@@ -7,12 +7,12 @@ import { LobeToolRenderType } from '../../tool';
 // ToolIntervention must be defined first to avoid circular dependency
 export interface ToolIntervention {
   rejectedReason?: string;
-  status?: 'pending' | 'approved' | 'rejected' | 'none';
+  status?: 'pending' | 'approved' | 'rejected' | 'aborted' | 'none';
 }
 
 export const ToolInterventionSchema = z.object({
   rejectedReason: z.string().optional(),
-  status: z.enum(['pending', 'approved', 'rejected', 'none']).optional(),
+  status: z.enum(['pending', 'approved', 'rejected', 'aborted', 'none']).optional(),
 });
 
 export interface ChatPluginPayload {
@@ -30,6 +30,7 @@ export interface ChatToolPayload {
   identifier: string;
   intervention?: ToolIntervention;
   result_msg_id?: string;
+  thoughtSignature?: string;
   type: LobeToolRenderType;
 }
 
@@ -84,6 +85,7 @@ export interface MessageToolCall {
    */
   id: string;
 
+  thoughtSignature?: string;
   /**
    * The type of the tool. Currently, only `function` is supported.
    */
@@ -108,6 +110,7 @@ export const ChatToolPayloadSchema = z.object({
   identifier: z.string(),
   intervention: ToolInterventionSchema.optional(),
   result_msg_id: z.string().optional(),
+  thoughtSignature: z.string().optional(),
   type: z.string(),
 });
 

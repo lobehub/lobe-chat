@@ -109,8 +109,6 @@ export const resetTestEnvironment = () => {
     {
       activeId: TEST_IDS.SESSION_ID,
       activeTopicId: TEST_IDS.TOPIC_ID,
-      chatLoadingIds: [],
-      chatLoadingIdsAbortController: undefined,
       messagesMap: {},
       toolCallingStreamIds: {},
     },

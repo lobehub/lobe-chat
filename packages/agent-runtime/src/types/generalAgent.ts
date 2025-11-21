@@ -42,6 +42,22 @@ export interface GeneralAgentCallToolsBatchResultPayload {
   toolResults: GeneralAgentCallToolResultPayload[];
 }
 
+export interface GeneralAgentHumanAbortPayload {
+  /** Whether there are pending tool calls */
+  hasToolsCalling?: boolean;
+  /** Parent message ID (assistant message) */
+  parentMessageId: string;
+  /** Reason for the abort */
+  reason: string;
+  /** LLM result including content and tool_calls */
+  result?: {
+    content: string;
+    tool_calls?: any[];
+  };
+  /** Pending tool calls that need to be cancelled */
+  toolsCalling?: ChatToolPayload[];
+}
+
 export interface GeneralAgentConfig {
   agentConfig?: {
     [key: string]: any;

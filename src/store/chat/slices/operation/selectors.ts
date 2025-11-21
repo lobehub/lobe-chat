@@ -165,11 +165,30 @@ const getCurrentOperationProgress = (s: ChatStoreState): number | undefined => {
 
 // === Backward Compatibility ===
 /**
- * Check if AI is generating (for backward compatibility)
- * Equivalent to: hasRunningOperationType('generateAI')
+ * Check if agent runtime is running (including both main window and thread)
+ * Excludes operations that are aborting (cleaning up after cancellation)
  */
-const isAIGenerating = (s: ChatStoreState): boolean => {
-  return hasRunningOperationType('generateAI')(s);
+const isAgentRuntimeRunning = (s: ChatStoreState): boolean => {
+  const operationIds = s.operationsByType['execAgentRuntime'] || [];
+  return operationIds.some((id) => {
+    const op = s.operations[id];
+    // Exclude operations that are aborting (user already cancelled, just cleaning up)
+    return op && op.status === 'running' && !op.metadata.isAborting;
+  });
+};
+
+/**
+ * Check if agent runtime is running in main window only
+ * Used for main window UI state (e.g., send button loading)
+ * Excludes thread operations to prevent cross-contamination
+ */
+const isMainWindowAgentRuntimeRunning = (s: ChatStoreState): boolean => {
+  const operationIds = s.operationsByType['execAgentRuntime'] || [];
+  return operationIds.some((id) => {
+    const op = s.operations[id];
+    // Only include main window operations (not thread)
+    return op && op.status === 'running' && !op.metadata.isAborting && !op.metadata.inThread;
+  });
 };
 
 /**
@@ -194,13 +213,109 @@ const isInSearchWorkflow = (s: ChatStoreState): boolean => {
 };
 
 /**
- * Check if a specific message is being processed
+ * Check if a specific message is being processed (any operation type)
  */
 const isMessageProcessing =
   (messageId: string) =>
   (s: ChatStoreState): boolean => {
     const operations = getOperationsByMessage(messageId)(s);
     return operations.some((op) => op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is being generated (AI generation only)
+ * This is more specific than isMessageProcessing - only checks execAgentRuntime operations
+ */
+const isMessageGenerating =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'execAgentRuntime' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is being created (CRUD operation only)
+ * Checks message creation operations:
+ * - User messages: sendMessage
+ * - Assistant messages: createAssistantMessage
+ */
+const isMessageCreating =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some(
+      (op) =>
+        (op.type === 'sendMessage' || op.type === 'createAssistantMessage') &&
+        op.status === 'running',
+    );
+  };
+
+/**
+ * Check if any message in a list is being processed
+ */
+const isAnyMessageLoading =
+  (messageIds: string[]) =>
+  (s: ChatStoreState): boolean => {
+    return messageIds.some((id) => isMessageProcessing(id)(s));
+  };
+
+/**
+ * Check if a specific message is being regenerated
+ */
+const isMessageRegenerating =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'regenerate' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is continuing generation
+ */
+const isMessageContinuing =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'continue' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is in reasoning state
+ */
+const isMessageInReasoning =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'reasoning' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is in tool calling (plugin API invocation)
+ */
+const isMessageInToolCalling =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'toolCalling' && op.status === 'running');
+  };
+
+/**
+ * Check if currently aborting (cleaning up after user cancellation)
+ * Used to show "Cleaning up tool calls..." message
+ */
+const isAborting = (s: ChatStoreState): boolean => {
+  const currentOps = getCurrentContextOperations(s);
+  return currentOps.some((op) => op.status === 'running' && op.metadata.isAborting);
+};
+
+/**
+ * Check if a specific message is aborting
+ */
+const isMessageAborting =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.status === 'running' && op.metadata.isAborting);
   };
 
 /**
@@ -236,11 +351,25 @@ export const operationSelectors = {
   getRunningOperations,
   hasAnyRunningOperation,
   hasRunningOperationType,
-  isAIGenerating,
+  /** @deprecated Use isAgentRuntimeRunning instead */
+  isAIGenerating: isAgentRuntimeRunning,
+
+  isAborting,
+
+  isAgentRuntimeRunning,
+  isAnyMessageLoading,
   isContinuing,
   isInRAGFlow,
   isInSearchWorkflow,
+  isMainWindowAgentRuntimeRunning,
+  isMessageAborting,
+  isMessageContinuing,
+  isMessageCreating,
+  isMessageGenerating,
+  isMessageInReasoning,
+  isMessageInToolCalling,
   isMessageProcessing,
+  isMessageRegenerating,
   isRegenerating,
   isSendingMessage,
 };

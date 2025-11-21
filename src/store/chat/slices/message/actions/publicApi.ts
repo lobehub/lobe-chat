@@ -47,6 +47,10 @@ export interface MessagePublicApiAction {
    * Toggle message collapsed state
    */
   toggleMessageCollapsed: (id: string, collapsed?: boolean) => Promise<void>;
+  /**
+   * Toggle tool inspect expanded state
+   */
+  toggleInspectExpanded: (id: string, expanded?: boolean) => Promise<void>;
 
   // ===== Others ===== //
   copyMessage: (id: string, content: string) => Promise<void>;
@@ -257,5 +261,16 @@ export const messagePublicApi: StateCreator<
     await get().optimisticUpdateMessageMetadata(id, {
       collapsed: nextCollapsed,
     });
+  },
+
+  toggleInspectExpanded: async (id, expanded) => {
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+    if (!message) return;
+
+    // 如果没有传入 expanded，则取反当前状态
+    const nextExpanded = expanded ?? !message.metadata?.inspectExpanded;
+
+    // 直接调用现有的 optimisticUpdateMessageMetadata
+    await get().optimisticUpdateMessageMetadata(id, { inspectExpanded: nextExpanded });
   },
 });

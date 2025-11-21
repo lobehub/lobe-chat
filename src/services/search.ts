@@ -15,8 +15,8 @@ class SearchService {
     return toolsClient.search.crawlPages.mutate(params);
   }
 
-  async webSearch(params: SearchQuery) {
-    return toolsClient.search.webSearch.query(params);
+  async webSearch(params: SearchQuery, options?: { signal?: AbortSignal }) {
+    return toolsClient.search.webSearch.query(params, { signal: options?.signal });
   }
 }
 

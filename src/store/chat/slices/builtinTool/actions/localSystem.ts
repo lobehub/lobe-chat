@@ -13,10 +13,13 @@ import {
   RunCommandParams,
   WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
+import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
 import { LocalSystemExecutionRuntime } from '@/tools/local-system/ExecutionRuntime';
+
+const log = debug('lobe-store:builtin-tool');
 
 /* eslint-disable typescript-sort-keys/interface */
 export interface LocalFileAction {
@@ -33,7 +36,6 @@ export interface LocalFileAction {
   renameLocalFile: (id: string, params: RenameLocalFileParams) => Promise<boolean>;
   reSearchLocalFiles: (id: string, params: LocalSearchFilesParams) => Promise<boolean>;
   searchLocalFiles: (id: string, params: LocalSearchFilesParams) => Promise<boolean>;
-  toggleLocalFileLoading: (id: string, loading: boolean) => void;
   writeLocalFile: (id: string, params: WriteLocalFileParams) => Promise<boolean>;
 
   // Shell Commands
@@ -106,8 +108,6 @@ export const localSystemSlice: StateCreator<
   },
 
   reSearchLocalFiles: async (id, params) => {
-    get().toggleLocalFileLoading(id, true);
-
     await get().optimisticUpdatePluginArguments(id, params);
 
     return get().searchLocalFiles(id, params);
@@ -144,44 +144,94 @@ export const localSystemSlice: StateCreator<
 
   // ==================== utils ====================
 
-  toggleLocalFileLoading: (id, loading) => {
-    // Assuming a loading state structure similar to searchLoading
-    set(
-      (state) => ({
-        localFileLoading: { ...state.localFileLoading, [id]: loading },
-      }),
-      false,
-      `toggleLocalFileLoading/${loading ? 'start' : 'end'}`,
-    );
-  },
   internal_triggerLocalFileToolCalling: async (id, callingService) => {
-    get().toggleLocalFileLoading(id, true);
+    // Get parent operationId from messageOperationMap (should be executeToolCall)
+    const parentOperationId = get().messageOperationMap[id];
+
+    // Create child operation for local system execution
+    // Auto-associates message with this operation via messageId in context
+    const { operationId: localSystemOpId, abortController } = get().startOperation({
+      type: 'builtinToolLocalSystem',
+      context: {
+        messageId: id,
+      },
+      parentOperationId,
+      metadata: {
+        startTime: Date.now(),
+      },
+    });
+
+    log(
+      '[localSystem] messageId=%s, parentOpId=%s, localSystemOpId=%s, aborted=%s',
+      id,
+      parentOperationId,
+      localSystemOpId,
+      abortController.signal.aborted,
+    );
+
+    const context = { operationId: localSystemOpId };
+
     try {
       const { state, content, success, error } = await callingService();
 
+      // Complete local system operation
+      get().completeOperation(localSystemOpId);
+
       if (success) {
         if (state) {
-          await get().optimisticUpdatePluginState(id, state);
+          await get().optimisticUpdatePluginState(id, state, context);
         }
-        await get().optimisticUpdateMessageContent(id, content);
+        await get().optimisticUpdateMessageContent(id, content, undefined, context);
       } else {
-        await get().optimisticUpdateMessagePluginError(id, {
-          body: error,
-          message: error?.message || 'Operation failed',
-          type: 'PluginServerError',
-        });
+        await get().optimisticUpdateMessagePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || 'Operation failed',
+            type: 'PluginServerError',
+          },
+          context,
+        );
         // Still update content even if failed, to show error message
-        await get().optimisticUpdateMessageContent(id, content);
+        await get().optimisticUpdateMessageContent(id, content, undefined, context);
       }
+
+      return true;
     } catch (error) {
-      await get().optimisticUpdateMessagePluginError(id, {
-        body: error,
-        message: (error as Error).message,
+      const err = error as Error;
+
+      log('[localSystem] Error: messageId=%s, error=%s', id, err.message);
+
+      // Check if it's an abort error
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        log('[localSystem] Request aborted: messageId=%s', id);
+        // Fail local system operation for abort
+        get().failOperation(localSystemOpId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        // Don't update error message for user aborts
+        return false;
+      }
+
+      // Fail local system operation for other errors
+      get().failOperation(localSystemOpId, {
+        message: err.message,
         type: 'PluginServerError',
       });
-    }
-    get().toggleLocalFileLoading(id, false);
 
-    return true;
+      // For other errors, update message
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        {
+          body: error,
+          message: err.message,
+          type: 'PluginServerError',
+        },
+        context,
+      );
+
+      return false;
+    }
   },
 });

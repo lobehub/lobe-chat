@@ -38,7 +38,7 @@ export type NewGlobalFile = typeof globalFiles.$inferInsert;
 export type GlobalFileItem = typeof globalFiles.$inferSelect;
 
 /**
- * 文档表 - 存储文件内容或网页搜索结果
+ * Documents table - Stores file content or web search results
  */
 // @ts-ignore
 export const documents = pgTable(
@@ -48,7 +48,7 @@ export const documents = pgTable(
       .$defaultFn(() => idGenerator('documents', 16))
       .primaryKey(),
 
-    // 基本信息
+    // Basic information
     title: text('title'),
     content: text('content'),
 
@@ -56,34 +56,34 @@ export const documents = pgTable(
     fileType: varchar('file_type', { length: 255 }).notNull(),
     filename: text('filename'),
 
-    // 统计信息
+    // Statistics
     totalCharCount: integer('total_char_count').notNull(),
     totalLineCount: integer('total_line_count').notNull(),
 
-    // 元数据
+    // Metadata
     metadata: jsonb('metadata').$type<Record<string, any>>(),
 
-    // 页面/块数据
+    // Page/chunk data
     pages: jsonb('pages').$type<LobeDocumentPage[]>(),
 
-    // 来源类型
+    // Source type
     sourceType: text('source_type', { enum: ['file', 'web', 'api'] }).notNull(),
-    source: text('source').notNull(), // 文件路径或网页URL
+    source: text('source').notNull(), // File path or web URL
 
-    // 关联文件（可选）
+    // Associated file (optional)
     // Forward reference to files table defined below
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     // @ts-expect-error - files is defined later in this file, forward reference is valid at runtime
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     fileId: text('file_id').references(() => files.id, { onDelete: 'set null' }),
 
-    // 父文档（用于文件夹层级结构）
+    // Parent document (for folder hierarchy structure)
     // @ts-ignore
     parentId: varchar('parent_id', { length: 255 }).references(() => documents.id, {
       onDelete: 'set null',
     }),
 
-    // 用户关联
+    // User association
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
@@ -91,7 +91,7 @@ export const documents = pgTable(
 
     editorData: jsonb('editor_data').$type<Record<string, any>>(),
 
-    // 时间戳
+    // Timestamps
     ...timestamps,
   },
   (table) => [
@@ -133,7 +133,7 @@ export const files = pgTable(
     url: text('url').notNull(),
     source: text('source').$type<FileSource>(),
 
-    // 父文档（用于文件夹层级结构）
+    // Parent document (for folder hierarchy structure)
     // @ts-ignore
     parentId: varchar('parent_id', { length: 255 }).references(() => documents.id, {
       onDelete: 'set null',

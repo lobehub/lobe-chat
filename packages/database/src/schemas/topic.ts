@@ -77,7 +77,7 @@ export type ThreadItem = typeof threads.$inferSelect;
 export const insertThreadSchema = createInsertSchema(threads);
 
 /**
- * 文档与话题关联表 - 实现文档和话题的多对多关系
+ * Document-Topic association table - Implements many-to-many relationship between documents and topics
  */
 export const topicDocuments = pgTable(
   'topic_documents',

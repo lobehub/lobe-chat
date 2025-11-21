@@ -2,6 +2,422 @@
 
 # Changelog
 
+## [Version 2.0.0-next.97](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.96...v2.0.0-next.97)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor Conversation to ChatList.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor Conversation to ChatList, closes [#10330](https://github.com/lobehub/lobe-chat/issues/10330) ([bca70e2](https://github.com/lobehub/lobe-chat/commit/bca70e2))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10338](https://github.com/lobehub/lobe-chat/issues/10338) ([9c8cf81](https://github.com/lobehub/lobe-chat/commit/9c8cf81))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.96](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.95...v2.0.0-next.96)
+
+<sup>Released on **2025-11-20**</sup>
+
+#### ✨ Features
+
+- **misc**: Support Command Menu (CMD + J).
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support Command Menu (CMD + J), closes [#10271](https://github.com/lobehub/lobe-chat/issues/10271) ([a9aed0b](https://github.com/lobehub/lobe-chat/commit/a9aed0b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.95](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.94...v2.0.0-next.95)
+
+<sup>Released on **2025-11-20**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Security Blacklist for agent runtime.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Security Blacklist for agent runtime, closes [#10325](https://github.com/lobehub/lobe-chat/issues/10325) ([deab4d0](https://github.com/lobehub/lobe-chat/commit/deab4d0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.94](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.93...v2.0.0-next.94)
+
+<sup>Released on **2025-11-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Provider settings button unable to redirect.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Provider settings button unable to redirect, closes [#10319](https://github.com/lobehub/lobe-chat/issues/10319) ([e025fec](https://github.com/lobehub/lobe-chat/commit/e025fec))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.93](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.92...v2.0.0-next.93)
+
+<sup>Released on **2025-11-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10317](https://github.com/lobehub/lobe-chat/issues/10317) ([8fb9890](https://github.com/lobehub/lobe-chat/commit/8fb9890))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.92](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.91...v2.0.0-next.92)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Remove debug console logs and add loading state.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Remove debug console logs and add loading state, closes [#10314](https://github.com/lobehub/lobe-chat/issues/10314) ([094cdff](https://github.com/lobehub/lobe-chat/commit/094cdff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.91](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.90...v2.0.0-next.91)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the hydrated false problem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the hydrated false problem, closes [#10308](https://github.com/lobehub/lobe-chat/issues/10308) ([340aa2a](https://github.com/lobehub/lobe-chat/commit/340aa2a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.90](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.89...v2.0.0-next.90)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Extract StatusIndicator component and improve tools display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Extract StatusIndicator component and improve tools display, closes [#10311](https://github.com/lobehub/lobe-chat/issues/10311) ([b5ae53a](https://github.com/lobehub/lobe-chat/commit/b5ae53a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.89](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.88...v2.0.0-next.89)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### ✨ Features
+
+- **misc**: Support gemini 3.0 tools calling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support gemini 3.0 tools calling, closes [#10301](https://github.com/lobehub/lobe-chat/issues/10301) ([7114fc1](https://github.com/lobehub/lobe-chat/commit/7114fc1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.88](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.87...v2.0.0-next.88)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fully support Gemini 3.0 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fully support Gemini 3.0 model, closes [#10292](https://github.com/lobehub/lobe-chat/issues/10292) ([6545ef8](https://github.com/lobehub/lobe-chat/commit/6545ef8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.87](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.86...v2.0.0-next.87)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor chat selectors.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor chat selectors, closes [#10274](https://github.com/lobehub/lobe-chat/issues/10274) ([0a056f3](https://github.com/lobehub/lobe-chat/commit/0a056f3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.86](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.85...v2.0.0-next.86)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### ✨ Features
+
+- **misc**: Support user abort in the agent runtime.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support user abort in the agent runtime, closes [#10289](https://github.com/lobehub/lobe-chat/issues/10289) ([0925069](https://github.com/lobehub/lobe-chat/commit/0925069))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.85](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.84...v2.0.0-next.85)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Slove discover pagination router.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Slove discover pagination router, closes [#10294](https://github.com/lobehub/lobe-chat/issues/10294) ([fcda0b5](https://github.com/lobehub/lobe-chat/commit/fcda0b5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.84](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.83...v2.0.0-next.84)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Gemini 3.0 Pro Preview to Google Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Gemini 3.0 Pro Preview to Google Provider, closes [#10290](https://github.com/lobehub/lobe-chat/issues/10290) ([25c4358](https://github.com/lobehub/lobe-chat/commit/25c4358))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.83](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.82...v2.0.0-next.83)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### ✨ Features
+
+- **misc**: New API support switch Responses API mode.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: New API support switch Responses API mode, closes [#9776](https://github.com/lobehub/lobe-chat/issues/9776) [#9916](https://github.com/lobehub/lobe-chat/issues/9916) [#9997](https://github.com/lobehub/lobe-chat/issues/9997) [#9916](https://github.com/lobehub/lobe-chat/issues/9916) ([d0ee3df](https://github.com/lobehub/lobe-chat/commit/d0ee3df))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10291](https://github.com/lobehub/lobe-chat/issues/10291) ([1c9f0d9](https://github.com/lobehub/lobe-chat/commit/1c9f0d9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.82](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.81...v2.0.0-next.82)
+
+<sup>Released on **2025-11-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix noisy error notification.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix noisy error notification, closes [#10286](https://github.com/lobehub/lobe-chat/issues/10286) ([9ea680c](https://github.com/lobehub/lobe-chat/commit/9ea680c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.81](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.80...v2.0.0-next.81)
 
 <sup>Released on **2025-11-18**</sup>

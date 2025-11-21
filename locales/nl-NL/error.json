@@ -102,7 +102,7 @@
       "SPII": "Uw inhoud kan gevoelige persoonlijke identificatiegegevens bevatten. Verwijder dergelijke gevoelige gegevens om de privacy te beschermen en probeer het opnieuw.",
       "default": "Inhoud geblokkeerd: {{blockReason}}. Pas uw verzoek aan en probeer het opnieuw."
     },
-    "InsufficientQuota": "Het spijt ons, de quotum van deze sleutel is bereikt. Controleer of uw account voldoende saldo heeft of vergroot het sleutelquotum en probeer het opnieuw.",
+    "InsufficientQuota": "Het spijt ons, het quotum voor deze sleutel is bereikt. Controleer of het saldo van uw account toereikend is of verhoog het quotum van de sleutel en probeer het opnieuw.",
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
@@ -131,7 +131,7 @@
     "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
     "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is",
     "ProviderBizError": "Er is een fout opgetreden bij het aanvragen van de {{provider}}-service. Controleer de volgende informatie of probeer het opnieuw.",
-    "QuotaLimitReached": "Het spijt ons, het huidige tokenverbruik of het aantal verzoeken heeft de quota-limiet van deze sleutel bereikt. Verhoog de quota van deze sleutel of probeer het later opnieuw.",
+    "QuotaLimitReached": "Het spijt ons, het aantal tokens of verzoeken heeft het quotum voor deze sleutel bereikt. Verhoog het quotum van de sleutel of probeer het later opnieuw.",
     "StreamChunkError": "Fout bij het parseren van het berichtblok van de streamingaanroep. Controleer of de huidige API-interface voldoet aan de standaardnormen, of neem contact op met uw API-leverancier voor advies.",
     "SubscriptionKeyMismatch": "Het spijt ons, maar door een tijdelijke systeemfout is het huidige abonnement tijdelijk ongeldig. Klik op de onderstaande knop om het abonnement te herstellen, of neem contact met ons op via e-mail voor ondersteuning.",
     "SubscriptionPlanLimit": "Uw abonnementscredits zijn op, u kunt deze functie niet gebruiken. Upgrade naar een hoger plan of configureer de aangepaste model-API om door te gaan.",

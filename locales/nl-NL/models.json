@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 is een open-source gewichtenschaalmodel met gemengde aandacht, met 456 miljard parameters, waarbij elke token ongeveer 45,9 miljard parameters activeert. Het model ondersteunt native een ultralange context van 1 miljoen tokens en bespaart dankzij het bliksemaandachtmechanisme 75% van de floating-point-bewerkingen bij generatietaken van 100.000 tokens vergeleken met DeepSeek R1. Tegelijkertijd maakt MiniMax-M1 gebruik van een MoE (Mixture of Experts) architectuur, gecombineerd met het CISPO-algoritme en een efficiënt versterkend leermodel met gemengde aandacht, wat leidt tot toonaangevende prestaties bij lange invoerredenering en echte software-engineering scenario's."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 herdefinieert efficiëntie voor agents. Het is een compact, snel en kosteneffectief MoE-model met 230 miljard totale parameters en 10 miljard actieve parameters. Het is ontworpen voor topprestaties bij codering en agenttaken, terwijl het een sterke algemene intelligentie behoudt. Met slechts 10 miljard actieve parameters levert MiniMax-M2 prestaties die vergelijkbaar zijn met grootschalige modellen, waardoor het een ideale keuze is voor toepassingen met hoge efficiëntie."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters is dit het toonaangevende niet-denkende model op het gebied van geavanceerde kennis, wiskunde en codering, en is het beter geschikt voor algemene agenttaken. Het is zorgvuldig geoptimaliseerd voor agenttaken, kan niet alleen vragen beantwoorden maar ook acties ondernemen. Ideaal voor improvisatie, algemene chat en agentervaringen, het is een reflexniveau model zonder lange denktijd."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 verbetert de redeneercapaciteit van het model aanzienlijk, zelfs met zeer weinig gelabelde data. Voor het geven van het uiteindelijke antwoord genereert het model eerst een keten van gedachten om de nauwkeurigheid van het antwoord te verhogen."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B is een gedistilleerde, efficiëntere variant van het 70B Llama-model. Het behoudt sterke prestaties bij tekstgeneratietaken en vermindert de rekenbelasting voor gemakkelijke implementatie en onderzoek. Gehost door Groq met hun aangepaste Language Processing Unit (LPU) hardware voor snelle en efficiënte inferentie."
+    "description": "DeepSeek R1 Distill Llama 70B is een groot taalmodel gebaseerd op Llama3.3 70B. Het model maakt gebruik van fine-tuning op basis van de output van DeepSeek R1 en behaalt concurrerende prestaties die vergelijkbaar zijn met toonaangevende grote modellen."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B is een gedistilleerd groot taalmodel gebaseerd op Llama-3.1-8B-Instruct, dat is getraind met behulp van de output van DeepSeek R1."
@@ -1478,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash is een modelvariant die is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash previewmodel, ondersteunt beeldgeneratie"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash is het meest kosteneffectieve model van Google en biedt uitgebreide functionaliteiten."
   },
@@ -1508,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview is het meest kosteneffectieve model van Google, dat uitgebreide functionaliteit biedt."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview is het meest kosteneffectieve model van Google en biedt uitgebreide functionaliteiten."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Preview release (25 september 2025) van Gemini 2.5 Flash"
   },
@@ -1525,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview is Google's meest geavanceerde denkwijze-model, in staat om complexe problemen op het gebied van code, wiskunde en STEM te redeneren, en grote datasets, codebases en documenten te analyseren met lange context."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro is het meest geavanceerde model van Google, met state-of-the-art redeneringsvermogen en multimodale interpretatie, evenals krachtige agent- en contextcodering."
   },
   "gemini-flash-latest": {
     "description": "Laatste release van Gemini Flash"
@@ -1906,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "Grok 4 van xAI, met krachtige redeneervaardigheden."
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Geavanceerd multimodaal model, geoptimaliseerd voor het aanroepen van krachtige agenttools."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Geavanceerd multimodaal model, geoptimaliseerd voor het aanroepen van krachtige agenttools."
   },
   "grok-4-fast-non-reasoning": {
     "description": "We zijn verheugd Grok 4 Fast te introduceren, onze nieuwste vooruitgang in kosteneffectieve redeneermodellen."
@@ -2461,6 +2467,9 @@
   },
   "minimax/minimax-m2": {
     "description": "Speciaal ontworpen voor efficiënte codering en agent-workflows."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 is een compact, snel en kosteneffectief Mixture-of-Experts (MoE) model met 230 miljard totale parameters en 10 miljard actieve parameters. Het is ontworpen voor topprestaties bij codering en agenttaken, terwijl het een sterke algemene intelligentie behoudt. Het model blinkt uit in bewerkingen met meerdere bestanden, de code-run-fix-cyclus, testvalidatie en -correctie, en complexe langetermijn toolchains, waardoor het een ideale keuze is voor ontwikkelaarsworkflows."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B is het toonaangevende edge-model van Mistral."
