@@ -75,7 +75,7 @@ export const useStyles = createStyles(
           justify-content: ${placement === 'left' ? 'flex-end' : 'flex-start'};
         `,
         editing &&
-          css`
+        css`
             pointer-events: none !important;
             opacity: 0 !important;
           `,

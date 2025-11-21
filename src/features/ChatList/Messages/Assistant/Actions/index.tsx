@@ -21,6 +21,7 @@ interface AssistantActionsProps {
   id: string;
   index: number;
 }
+
 export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index }) => {
   const { error, tools } = data;
   const [isThreadMode, hasThread, isRegenerating, isCollapsed] = useChatStore((s) => [

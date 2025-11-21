@@ -6,6 +6,8 @@ import { LOADING_FLAT } from '@/const/message';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors } from '@/store/chat/selectors';
 
+export const MessageContentClassName = 'msg_content_flag'
+
 export const DefaultMessage = memo<
   UIChatMessage & {
     addIdOnDOM?: boolean;

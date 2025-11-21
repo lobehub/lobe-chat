@@ -5,6 +5,7 @@ import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { MessageContentClassName } from '@/features/ChatList/Messages/Default';
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
@@ -83,7 +84,7 @@ const MessageContent = memo<MessageContentProps>(
 
     return (
       <Flexbox
-        className={cx(styles.message, editing && styles.editingContainer, className)}
+        className={cx(styles.message, className, editing && styles.editingContainer, MessageContentClassName)}
         onDoubleClick={onDoubleClick}
       >
         {messageContent}

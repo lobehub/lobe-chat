@@ -293,6 +293,12 @@
       "elegant": "Elegante",
       "title": "Animazione di risposta"
     },
+    "contextMenuMode": {
+      "default": "Predefinito",
+      "desc": "Seleziona il tipo di menu contestuale per i messaggi di chat",
+      "disabled": "Disabilitato",
+      "title": "Tipo di menu contestuale"
+    },
     "neutralColor": {
       "desc": "Personalizzazione dei grigi con diverse inclinazioni di colore",
       "title": "Colore Neutro"

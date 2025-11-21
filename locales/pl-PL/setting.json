@@ -293,6 +293,12 @@
       "elegant": "Elegancki",
       "title": "Animacja reakcji"
     },
+    "contextMenuMode": {
+      "default": "Domyślnie",
+      "desc": "Wybierz sposób wyświetlania menu kontekstowego wiadomości czatu",
+      "disabled": "Nie używaj",
+      "title": "Schemat menu kontekstowego"
+    },
     "neutralColor": {
       "desc": "Dostosowanie odcieni szarości w różnych kolorach",
       "title": "Kolor neutralny"

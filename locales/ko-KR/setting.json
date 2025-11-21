@@ -293,6 +293,12 @@
       "elegant": "우아함",
       "title": "반응 애니메이션"
     },
+    "contextMenuMode": {
+      "default": "기본값",
+      "desc": "채팅 메시지 우클릭 메뉴 표시 방식을 선택하세요",
+      "disabled": "사용 안 함",
+      "title": "우클릭 메뉴 방식"
+    },
     "neutralColor": {
       "desc": "다양한 색상 경향의 회색조 사용자 정의",
       "title": "중립 색상"
