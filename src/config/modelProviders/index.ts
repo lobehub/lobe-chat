@@ -46,6 +46,7 @@ import PerplexityProvider from './perplexity';
 import PPIOProvider from './ppio';
 import QiniuProvider from './qiniu';
 import QwenProvider from './qwen';
+import ReplicateProvider from './replicate';
 import SambaNovaProvider from './sambanova';
 import Search1APIProvider from './search1api';
 import SenseNovaProvider from './sensenova';
@@ -156,6 +157,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   PerplexityProvider,
   MistralProvider,
   ModelScopeProvider,
+  ReplicateProvider,
   Ai21Provider,
   UpstageProvider,
   XAIProvider,
@@ -248,6 +250,7 @@ export { default as PerplexityProviderCard } from './perplexity';
 export { default as PPIOProviderCard } from './ppio';
 export { default as QiniuProviderCard } from './qiniu';
 export { default as QwenProviderCard } from './qwen';
+export { default as ReplicateProviderCard } from './replicate';
 export { default as SambaNovaProviderCard } from './sambanova';
 export { default as Search1APIProviderCard } from './search1api';
 export { default as SenseNovaProviderCard } from './sensenova';
