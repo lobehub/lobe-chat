@@ -14,6 +14,14 @@
     "images": "Images :",
     "prompt": "Mot de rappel"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Nombre de caractères",
+        "lines": "Nombre de lignes"
+      }
+    }
+  },
   "localFiles": {
     "editFile": {
       "newString": "Remplacer par",

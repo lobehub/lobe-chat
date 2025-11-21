@@ -272,7 +272,6 @@ export const conversationLifecycle: StateCreator<
         sessionId: activeId,
         topicId: data.topicId ?? activeTopicId,
         parentOperationId: operationId, // Pass as parent operation
-        ragQuery: get().internal_shouldUseRAG() ? message : undefined,
         threadId: activeThreadId,
         skipCreateFirstMessage: true,
       });
@@ -338,7 +337,6 @@ export const conversationLifecycle: StateCreator<
         sessionId: activeId,
         topicId: activeTopicId,
         traceId,
-        ragQuery: get().internal_shouldUseRAG() ? item.content : undefined,
         threadId: activeThreadId,
         parentOperationId: operationId,
       });

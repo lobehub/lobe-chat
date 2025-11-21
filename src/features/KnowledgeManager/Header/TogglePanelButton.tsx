@@ -17,13 +17,13 @@ export const TOOGLE_PANEL_BUTTON_ID = 'toggle-panel-button';
 const TogglePanelButton = memo(() => {
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.ToggleLeftPanel));
 
-  const { t } = useTranslation(['file', 'hotkey']);
+  const { t } = useTranslation(['file']);
 
   const showFilePanel = useGlobalStore(systemStatusSelectors.showFilePanel);
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
   return (
-    <Tooltip hotkey={hotkey} title={t('toggleLeftPanel.title', { ns: 'hotkey' })}>
+    <Tooltip hotkey={hotkey} title={t('toggleLeftPanel')}>
       <ActionIcon
         icon={showFilePanel ? PanelLeftClose : PanelLeftOpen}
         id={TOOGLE_PANEL_BUTTON_ID}

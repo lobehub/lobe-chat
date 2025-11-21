@@ -181,10 +181,12 @@ export class ChunkModel {
   semanticSearchForChat = async ({
     embedding,
     fileIds,
+    topK = 15,
   }: {
     embedding: number[];
     fileIds: string[] | undefined;
     query: string;
+    topK?: number;
   }) => {
     const similarity = sql<number>`1 - (${cosineDistance(embeddings.embeddings, embedding)})`;
 
@@ -210,7 +212,7 @@ export class ChunkModel {
       .where(inArray(fileChunks.fileId, fileIds))
       .orderBy((t) => desc(t.similarity))
       // Relaxed to 15 for now
-      .limit(15);
+      .limit(topK);
 
     return result.map((item) => {
       return {

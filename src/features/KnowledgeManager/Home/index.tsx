@@ -165,7 +165,7 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
           </div>
         )}
 
-        {/* Recent Documents Section */}
+        {/* Recent Pages Section */}
         {(isLoading || topRecentDocuments.length > 0) && (
           <div
             className={styles.section}
@@ -179,7 +179,7 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
             <div className={styles.sectionTitleWrapper}>
               <Text className={styles.sectionTitle} style={{ marginBottom: 0 }}>
                 <FileTextIcon size={18} />
-                {t('home.recentDocuments')}
+                {t('home.recentPages')}
               </Text>
               <div
                 className={styles.sectionActions}
@@ -192,9 +192,9 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
                     items: [
                       {
                         key: 'all-documents',
-                        label: t('menu.allDocuments'),
+                        label: t('menu.allPages'),
                         onClick: () => {
-                          setActiveKey(FilesTabs.Documents);
+                          setActiveKey(FilesTabs.Pages);
                         },
                       },
                     ],

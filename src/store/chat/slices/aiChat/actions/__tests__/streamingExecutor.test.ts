@@ -712,75 +712,8 @@ describe('StreamingExecutor actions', () => {
       );
     });
 
-    // TODO: This test is complex to set up properly with agent runtime and message creation
-    // The functionality is verified in the implementation (streamingExecutor.ts:725-728)
-    it.skip('should pass context to optimisticUpdateMessageRAG', async () => {
-      act(() => {
-        useChatStore.setState({
-          internal_execAgentRuntime: realExecAgentRuntime,
-          activeId: 'active-session',
-          activeTopicId: 'active-topic',
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      const contextSessionId = 'context-session';
-      const contextTopicId = 'context-topic';
-      const userMessage = {
-        id: TEST_IDS.USER_MESSAGE_ID,
-        role: 'user',
-        content: TEST_CONTENT.USER_MESSAGE,
-        sessionId: contextSessionId,
-        topicId: contextTopicId,
-      } as UIChatMessage;
-
-      const ragMetadata = {
-        ragQueryId: 'query-id',
-        fileChunks: [{ id: 'chunk-1', similarity: 0.9 }],
-      };
-
-      const assistantMessageId = 'assistant-msg-id';
-      const assistantMessage = {
-        id: assistantMessageId,
-        role: 'assistant',
-        content: TEST_CONTENT.AI_RESPONSE,
-        sessionId: contextSessionId,
-        topicId: contextTopicId,
-      } as UIChatMessage;
-
-      // Mock createMessage to return the assistant message
-      vi.spyOn(messageService, 'createMessage').mockResolvedValue({
-        id: assistantMessageId,
-        messages: [userMessage, assistantMessage],
-      });
-
-      const updateRAGSpy = vi.spyOn(result.current, 'optimisticUpdateMessageRAG');
-      const streamSpy = vi
-        .spyOn(chatService, 'createAssistantMessageStream')
-        .mockImplementation(async ({ onFinish }) => {
-          await onFinish?.(TEST_CONTENT.AI_RESPONSE, {});
-        });
-
-      await act(async () => {
-        await result.current.internal_execAgentRuntime({
-          messages: [userMessage],
-          parentMessageId: userMessage.id,
-          parentMessageType: 'user',
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
-          ragMetadata,
-        });
-      });
-
-      // Verify optimisticUpdateMessageRAG was called with context
-      expect(updateRAGSpy).toHaveBeenCalledWith(expect.any(String), ragMetadata, {
-        sessionId: contextSessionId,
-        topicId: contextTopicId,
-      });
-
-      streamSpy.mockRestore();
-    });
+    // Note: RAG metadata functionality has been removed
+    // RAG is now handled by Knowledge Base Tools (searchKnowledgeBase and readKnowledge)
   });
 
   describe('StreamingExecutor OptimisticUpdateContext isolation', () => {

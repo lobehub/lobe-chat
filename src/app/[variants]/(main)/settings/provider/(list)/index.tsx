@@ -1,13 +1,14 @@
 'use client';
 
+import { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
 import { isCustomBranding } from '@/const/version';
 
 import DesktopLayout from '../_layout/Desktop';
 import MobileLayout from '../_layout/Mobile';
 import ProviderDetailPage from '../detail';
 import Footer from './Footer';
-import { useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
 const Page = (props: { mobile?: boolean }) => {
   const [SearchParams, setSearchParams] = useSearchParams();
