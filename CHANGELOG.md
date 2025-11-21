@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 2.0.0-next.98](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.97...v2.0.0-next.98)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed changelog pages and open again.
+
+#### 💄 Styles
+
+- **misc**: Fix some translations.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed changelog pages and open again, closes [#10285](https://github.com/lobehub/lobe-chat/issues/10285) ([871d141](https://github.com/lobehub/lobe-chat/commit/871d141))
+
+#### Styles
+
+- **misc**: Fix some translations, closes [#10343](https://github.com/lobehub/lobe-chat/issues/10343) ([ed193e0](https://github.com/lobehub/lobe-chat/commit/ed193e0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.97](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.96...v2.0.0-next.97)
 
 <sup>Released on **2025-11-21**</sup>
