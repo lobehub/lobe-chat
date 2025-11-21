@@ -149,8 +149,6 @@ export const files = pgTable(
       onDelete: 'set null',
     }),
 
-    slug: text('slug').unique(),
-
     ...timestamps,
   },
   (table) => {
