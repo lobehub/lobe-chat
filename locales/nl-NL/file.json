@@ -70,7 +70,6 @@
       "uploadFile": "Bestand uploaden",
       "uploadFolder": "Map uploaden"
     },
-    "newDocumentButton": "Nieuw document",
     "newNoteDialog": {
       "cancel": "Annuleren",
       "editTitle": "Document bewerken",
@@ -83,14 +82,15 @@
       "title": "Nieuw document",
       "updateSuccess": "Document succesvol bijgewerkt"
     },
+    "newPageButton": "Nieuw document",
     "uploadButton": "Uploaden"
   },
   "home": {
     "getStarted": "Aan de slag",
     "greeting": "Aan de slag",
     "quickActions": "Snelle acties",
-    "recentDocuments": "Recente documenten",
     "recentFiles": "Recente bestanden",
+    "recentPages": "Recente documenten",
     "subtitle": "Welkom bij je kennisbank. Begin hier met het beheren van je documenten",
     "uploadEntries": {
       "files": {

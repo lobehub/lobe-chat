@@ -70,7 +70,6 @@
       "uploadFile": "بارگذاری فایل",
       "uploadFolder": "بارگذاری پوشه"
     },
-    "newDocumentButton": "سند جدید",
     "newNoteDialog": {
       "cancel": "لغو",
       "editTitle": "ویرایش سند",
@@ -83,14 +82,15 @@
       "title": "سند جدید",
       "updateSuccess": "سند با موفقیت به‌روزرسانی شد"
     },
+    "newPageButton": "ایجاد سند جدید",
     "uploadButton": "بارگذاری"
   },
   "home": {
     "getStarted": "شروع کنید",
     "greeting": "شروع",
     "quickActions": "دسترسی سریع",
-    "recentDocuments": "اسناد اخیر",
     "recentFiles": "فایل‌های اخیر",
+    "recentPages": "اسناد اخیر",
     "subtitle": "به پایگاه دانش خوش آمدید، از اینجا مدیریت اسناد خود را آغاز کنید",
     "uploadEntries": {
       "files": {

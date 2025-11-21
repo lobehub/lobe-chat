@@ -70,7 +70,6 @@
       "uploadFile": "رفع ملف",
       "uploadFolder": "رفع مجلد"
     },
-    "newDocumentButton": "مستند جديد",
     "newNoteDialog": {
       "cancel": "إلغاء",
       "editTitle": "تحرير المستند",
@@ -83,14 +82,15 @@
       "title": "مستند جديد",
       "updateSuccess": "تم تحديث المستند بنجاح"
     },
+    "newPageButton": "إنشاء مستند جديد",
     "uploadButton": "رفع"
   },
   "home": {
     "getStarted": "ابدأ الآن",
     "greeting": "ابدأ",
     "quickActions": "إجراءات سريعة",
-    "recentDocuments": "المستندات الأخيرة",
     "recentFiles": "الملفات الأخيرة",
+    "recentPages": "الصفحات الأخيرة",
     "subtitle": "مرحبًا بك في قاعدة المعرفة، ابدأ من هنا لإدارة مستنداتك وملاحظاتك",
     "uploadEntries": {
       "files": {

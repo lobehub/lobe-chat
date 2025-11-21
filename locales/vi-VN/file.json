@@ -70,7 +70,6 @@
       "uploadFile": "Tải tệp lên",
       "uploadFolder": "Tải thư mục lên"
     },
-    "newDocumentButton": "Tạo tài liệu mới",
     "newNoteDialog": {
       "cancel": "Hủy",
       "editTitle": "Chỉnh sửa tài liệu",
@@ -83,14 +82,15 @@
       "title": "Tạo tài liệu mới",
       "updateSuccess": "Cập nhật tài liệu thành công"
     },
+    "newPageButton": "Tạo tài liệu mới",
     "uploadButton": "Tải lên"
   },
   "home": {
     "getStarted": "Bắt đầu",
     "greeting": "Bắt đầu",
     "quickActions": "Hành động nhanh",
-    "recentDocuments": "Tài liệu gần đây",
     "recentFiles": "Tệp gần đây",
+    "recentPages": "Tài liệu gần đây",
     "subtitle": "Chào mừng đến với kho tri thức, bắt đầu quản lý tài liệu của bạn từ đây",
     "uploadEntries": {
       "files": {

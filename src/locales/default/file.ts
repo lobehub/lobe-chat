@@ -70,7 +70,6 @@ export default {
       uploadFile: '上传文件',
       uploadFolder: '上传文件夹',
     },
-    newDocumentButton: '新建文档',
     newNoteDialog: {
       cancel: '取消',
       editTitle: '编辑文档',
@@ -83,14 +82,15 @@ export default {
       title: '新建文档',
       updateSuccess: '文档更新成功',
     },
+    newPageButton: '新建文稿',
     uploadButton: '上传',
   },
   home: {
     getStarted: '开始使用',
     greeting: '开始',
     quickActions: '快捷操作',
-    recentDocuments: '最近文档',
     recentFiles: '最近文件',
+    recentPages: '最近文稿',
     subtitle: '欢迎使用知识库，从这里开始管理你的文档和文档',
     uploadEntries: {
       files: {
@@ -117,8 +117,8 @@ export default {
     title: '知识库',
   },
   menu: {
-    allDocuments: '全部文档',
     allFiles: '全部文件',
+    allPages: '全部文稿',
   },
   networkError: '获取知识库失败，请检测网络连接后重试',
   notSupportGuide: {

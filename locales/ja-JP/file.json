@@ -70,7 +70,6 @@
       "uploadFile": "ファイルをアップロード",
       "uploadFolder": "フォルダーをアップロード"
     },
-    "newDocumentButton": "新規ドキュメント",
     "newNoteDialog": {
       "cancel": "キャンセル",
       "editTitle": "ドキュメントを編集",
@@ -83,14 +82,15 @@
       "title": "新規ドキュメント",
       "updateSuccess": "ドキュメントを更新しました"
     },
+    "newPageButton": "新しいドキュメントを作成",
     "uploadButton": "アップロード"
   },
   "home": {
     "getStarted": "はじめに",
     "greeting": "はじめに",
     "quickActions": "クイック操作",
-    "recentDocuments": "最近のドキュメント",
     "recentFiles": "最近のファイル",
+    "recentPages": "最近のドキュメント",
     "subtitle": "ナレッジベースへようこそ。ここからドキュメントの管理を始めましょう。",
     "uploadEntries": {
       "files": {

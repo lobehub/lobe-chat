@@ -70,7 +70,6 @@
       "uploadFile": "上傳檔案",
       "uploadFolder": "上傳資料夾"
     },
-    "newDocumentButton": "新增文件",
     "newNoteDialog": {
       "cancel": "取消",
       "editTitle": "編輯文件",
@@ -83,14 +82,15 @@
       "title": "新增文件",
       "updateSuccess": "文件更新成功"
     },
+    "newPageButton": "新增文件",
     "uploadButton": "上傳"
   },
   "home": {
     "getStarted": "開始使用",
     "greeting": "開始",
     "quickActions": "快速操作",
-    "recentDocuments": "最近文件",
     "recentFiles": "最近檔案",
+    "recentPages": "最近文件",
     "subtitle": "歡迎使用知識庫，從這裡開始管理你的文件與資料",
     "uploadEntries": {
       "files": {

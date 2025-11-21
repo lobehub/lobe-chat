@@ -70,7 +70,6 @@
       "uploadFile": "Enviar arquivo",
       "uploadFolder": "Enviar pasta"
     },
-    "newDocumentButton": "Novo documento",
     "newNoteDialog": {
       "cancel": "Cancelar",
       "editTitle": "Editar documento",
@@ -83,14 +82,15 @@
       "title": "Novo documento",
       "updateSuccess": "Documento atualizado com sucesso"
     },
+    "newPageButton": "Novo Documento",
     "uploadButton": "Enviar"
   },
   "home": {
     "getStarted": "Começar",
     "greeting": "Início",
     "quickActions": "Ações Rápidas",
-    "recentDocuments": "Documentos Recentes",
     "recentFiles": "Arquivos Recentes",
+    "recentPages": "Documentos Recentes",
     "subtitle": "Bem-vindo ao seu repositório de conhecimento. Comece a gerenciar seus documentos aqui",
     "uploadEntries": {
       "files": {

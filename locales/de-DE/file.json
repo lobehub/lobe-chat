@@ -70,7 +70,6 @@
       "uploadFile": "Datei hochladen",
       "uploadFolder": "Ordner hochladen"
     },
-    "newDocumentButton": "Neues Dokument",
     "newNoteDialog": {
       "cancel": "Abbrechen",
       "editTitle": "Dokument bearbeiten",
@@ -83,14 +82,15 @@
       "title": "Neues Dokument",
       "updateSuccess": "Dokument erfolgreich aktualisiert"
     },
+    "newPageButton": "Neues Dokument erstellen",
     "uploadButton": "Hochladen"
   },
   "home": {
     "getStarted": "Loslegen",
     "greeting": "Loslegen",
     "quickActions": "Schnellaktionen",
-    "recentDocuments": "Kürzlich verwendete Dokumente",
     "recentFiles": "Kürzlich verwendete Dateien",
+    "recentPages": "Kürzlich geöffnete Dokumente",
     "subtitle": "Willkommen im Wissensspeicher. Beginnen Sie hier mit der Verwaltung Ihrer Dokumente.",
     "uploadEntries": {
       "files": {

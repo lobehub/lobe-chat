@@ -70,7 +70,6 @@
       "uploadFile": "파일 업로드",
       "uploadFolder": "폴더 업로드"
     },
-    "newDocumentButton": "새 문서",
     "newNoteDialog": {
       "cancel": "취소",
       "editTitle": "문서 편집",
@@ -83,14 +82,15 @@
       "title": "새 문서 만들기",
       "updateSuccess": "문서가 성공적으로 업데이트되었습니다"
     },
+    "newPageButton": "새 문서 만들기",
     "uploadButton": "업로드"
   },
   "home": {
     "getStarted": "시작하기",
     "greeting": "시작하기",
     "quickActions": "빠른 작업",
-    "recentDocuments": "최근 문서",
     "recentFiles": "최근 파일",
+    "recentPages": "최근 문서",
     "subtitle": "지식 관리 시스템에 오신 것을 환영합니다. 여기서 문서를 관리해 보세요",
     "uploadEntries": {
       "files": {

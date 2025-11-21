@@ -70,7 +70,6 @@
       "uploadFile": "Загрузить файл",
       "uploadFolder": "Загрузить папку"
     },
-    "newDocumentButton": "Новый документ",
     "newNoteDialog": {
       "cancel": "Отмена",
       "editTitle": "Редактировать документ",
@@ -83,14 +82,15 @@
       "title": "Создать новый документ",
       "updateSuccess": "Документ успешно обновлён"
     },
+    "newPageButton": "Создать документ",
     "uploadButton": "Загрузить"
   },
   "home": {
     "getStarted": "Начать",
     "greeting": "Начало",
     "quickActions": "Быстрые действия",
-    "recentDocuments": "Недавние документы",
     "recentFiles": "Недавние файлы",
+    "recentPages": "Недавние документы",
     "subtitle": "Добро пожаловать в базу знаний. Начните управлять своими документами отсюда",
     "uploadEntries": {
       "files": {

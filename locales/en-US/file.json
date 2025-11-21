@@ -70,7 +70,6 @@
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
     },
-    "newDocumentButton": "New Document",
     "newNoteDialog": {
       "cancel": "Cancel",
       "editTitle": "Edit Document",
@@ -80,17 +79,18 @@
       "save": "Save",
       "saveError": "Failed to save the document. Please try again.",
       "saveSuccess": "Document saved successfully.",
-      "title": "New Document",
+      "title": "New Page",
       "updateSuccess": "Document updated successfully."
     },
+    "newPageButton": "New Page",
     "uploadButton": "Upload"
   },
   "home": {
     "getStarted": "Get Started",
     "greeting": "Get Started",
     "quickActions": "Quick Actions",
-    "recentDocuments": "Recent Documents",
     "recentFiles": "Recent Files",
+    "recentPages": "Recent Documents",
     "subtitle": "Welcome to your knowledge base. Start managing your documents here.",
     "uploadEntries": {
       "files": {
@@ -103,7 +103,7 @@
         "title": "Create Knowledge Base"
       },
       "newPage": {
-        "title": "New Document"
+        "title": "New Page"
       }
     }
   },

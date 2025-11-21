@@ -70,7 +70,6 @@
       "uploadFile": "Prześlij plik",
       "uploadFolder": "Prześlij folder"
     },
-    "newDocumentButton": "Nowy dokument",
     "newNoteDialog": {
       "cancel": "Anuluj",
       "editTitle": "Edytuj dokument",
@@ -83,14 +82,15 @@
       "title": "Nowy dokument",
       "updateSuccess": "Dokument został zaktualizowany pomyślnie"
     },
+    "newPageButton": "Nowy dokument",
     "uploadButton": "Prześlij"
   },
   "home": {
     "getStarted": "Rozpocznij",
     "greeting": "Zaczynamy",
     "quickActions": "Szybkie akcje",
-    "recentDocuments": "Ostatnie dokumenty",
     "recentFiles": "Ostatnie pliki",
+    "recentPages": "Ostatnie dokumenty",
     "subtitle": "Witamy w bazie wiedzy. Zacznij zarządzać swoimi dokumentami już teraz",
     "uploadEntries": {
       "files": {

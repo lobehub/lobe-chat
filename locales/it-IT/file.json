@@ -70,7 +70,6 @@
       "uploadFile": "Carica file",
       "uploadFolder": "Carica cartella"
     },
-    "newDocumentButton": "Nuovo documento",
     "newNoteDialog": {
       "cancel": "Annulla",
       "editTitle": "Modifica documento",
@@ -83,14 +82,15 @@
       "title": "Nuovo documento",
       "updateSuccess": "Documento aggiornato con successo"
     },
+    "newPageButton": "Nuovo Documento",
     "uploadButton": "Carica"
   },
   "home": {
     "getStarted": "Inizia subito",
     "greeting": "Inizia",
     "quickActions": "Azioni rapide",
-    "recentDocuments": "Documenti recenti",
     "recentFiles": "File recenti",
+    "recentPages": "Documenti recenti",
     "subtitle": "Benvenuto nel tuo archivio di conoscenza, inizia a gestire i tuoi documenti da qui",
     "uploadEntries": {
       "files": {
