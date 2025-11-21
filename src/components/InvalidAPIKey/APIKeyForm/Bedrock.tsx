@@ -6,7 +6,7 @@ import { ModelProvider } from 'model-bank';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FormAction } from '@/features/Conversation/Error/style';
+import { FormAction } from '@/features/ChatList/Error/style';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 const BedrockForm = memo<{ description: string }>(({ description }) => {

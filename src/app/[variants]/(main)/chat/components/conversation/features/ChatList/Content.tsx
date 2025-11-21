@@ -2,8 +2,8 @@
 
 import React, { memo, useCallback } from 'react';
 
-import { SkeletonList, VirtualizedList } from '@/features/Conversation';
-import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
+import { SkeletonList, VirtualizedList } from '@/features/ChatList';
+import WideScreenContainer from '@/features/ChatList/components/WideScreenContainer';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
 import { displayMessageSelectors } from '@/store/chat/selectors';
