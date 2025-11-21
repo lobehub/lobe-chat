@@ -281,9 +281,28 @@ export const chunkRouter = router({
       } catch (e) {
         console.error(e);
 
+        const error = e as any;
+        const errorType = error.errorType;
+
+        // Map business error types to appropriate HTTP status codes
+        if (errorType === 'InvalidProviderAPIKey') {
+          throw new TRPCError({
+            code: 'METHOD_NOT_SUPPORTED',
+            message: error.message || 'Invalid API key for embedding provider',
+          });
+        }
+
+        if (errorType === 'ProviderBizError') {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: error.message || 'Provider service error',
+          });
+        }
+
+        // For unknown errors, still return 500 but with proper message
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: (e as any).errorType || JSON.stringify(e),
+          message: error.message || errorType || 'Failed to perform semantic search',
         });
       }
     }),

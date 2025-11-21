@@ -11,6 +11,11 @@ import { dbMessageSelectors } from '../../message/selectors';
 const log = debug('lobe-store:builtin-tool:knowledge-base');
 
 export interface KnowledgeBaseAction {
+  internal_triggerKnowledgeBaseToolCalling: (
+    id: string,
+    callingService: () => Promise<{ content: string; error?: any; state?: any; success: boolean }>,
+  ) => Promise<boolean>;
+
   /**
    * Read full content of specific files from knowledge base
    */
@@ -19,7 +24,7 @@ export interface KnowledgeBaseAction {
     params: {
       fileIds: string[];
     },
-  ) => Promise<void | boolean>;
+  ) => Promise<boolean>;
 
   /**
    * Search knowledge base for relevant files and chunks
@@ -30,11 +35,12 @@ export interface KnowledgeBaseAction {
       query: string;
       topK?: number;
     },
-  ) => Promise<void | boolean>;
+  ) => Promise<boolean>;
 }
 
 const runtime = new KnowledgeBaseExecutionRuntime();
 
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 export const knowledgeBaseSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
@@ -42,89 +48,12 @@ export const knowledgeBaseSlice: StateCreator<
   KnowledgeBaseAction
 > = (set, get) => ({
   readKnowledge: async (id, params) => {
-    // Get parent operationId from messageOperationMap (should be executeToolCall)
-    const parentOperationId = get().messageOperationMap[id];
-
-    log('[readKnowledge] messageId=%s, fileIds=%o', id, params.fileIds);
-
-    // Create child operation for reading knowledge
-    const { operationId: readOpId, abortController } = get().startOperation({
-      context: {
-        messageId: id,
-      },
-      metadata: {
-        fileIds: params.fileIds,
-        startTime: Date.now(),
-      },
-      parentOperationId,
-      type: 'builtinToolKnowledgeBase',
+    return get().internal_triggerKnowledgeBaseToolCalling(id, async () => {
+      return await runtime.readKnowledge(params);
     });
-
-    log(
-      '[readKnowledge] messageId=%s, parentOpId=%s, readOpId=%s, aborted=%s',
-      id,
-      parentOperationId,
-      readOpId,
-      abortController.signal.aborted,
-    );
-
-    const context = { operationId: readOpId };
-
-    try {
-      const { content, success, error, state } = await runtime.readKnowledge(params, {
-        signal: abortController.signal,
-      });
-
-      // Complete read operation
-      get().completeOperation(readOpId);
-
-      log('[readKnowledge] Read completed: messageId=%s, success=%s', id, success);
-
-      await get().optimisticUpdateMessageContent(id, content, undefined, context);
-
-      if (success) {
-        await get().optimisticUpdatePluginState(id, state, context);
-      } else {
-        await get().optimisticUpdatePluginError(id, error, context);
-      }
-
-      // Always return true to trigger AI summary
-      return true;
-    } catch (e) {
-      const err = e as Error;
-
-      log('[readKnowledge] Error: messageId=%s, error=%s', id, err.message);
-
-      // Check if it's an abort error
-      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
-        log('[readKnowledge] Request aborted: messageId=%s', id);
-        get().failOperation(readOpId, {
-          message: 'User cancelled the request',
-          type: 'UserAborted',
-        });
-        return;
-      }
-
-      // Fail operation for other errors
-      get().failOperation(readOpId, {
-        message: err.message,
-        type: 'PluginServerError',
-      });
-
-      console.error(e);
-      await get().optimisticUpdateMessageContent(
-        id,
-        `Error reading knowledge: ${err.message}`,
-        undefined,
-        context,
-      );
-    }
   },
 
   searchKnowledgeBase: async (id, params) => {
-    // Get parent operationId from messageOperationMap (should be executeToolCall)
-    const parentOperationId = get().messageOperationMap[id];
-
     // Get knowledge base IDs and file IDs from agent store
     const agentState = getAgentStoreState();
     const knowledgeIds = agentSelectors.currentKnowledgeIds(agentState);
@@ -141,91 +70,105 @@ export const knowledgeBaseSlice: StateCreator<
       knowledgeBaseIds: knowledgeIds.knowledgeBaseIds,
     };
 
-    log(
-      '[searchKnowledgeBase] messageId=%s, query=%s, knowledgeBaseIds=%o, fileIds=%o',
-      id,
-      params.query,
-      options.knowledgeBaseIds,
-      options.fileIds,
-    );
+    return get().internal_triggerKnowledgeBaseToolCalling(id, async () => {
+      return await runtime.searchKnowledgeBase(params, {
+        fileIds: options.fileIds,
+        knowledgeBaseIds: options.knowledgeBaseIds,
+        messageId: id,
+      });
+    });
+  },
 
-    // Create child operation for knowledge base search
-    const { operationId: searchOpId, abortController } = get().startOperation({
+  // ==================== utils ====================
+
+  internal_triggerKnowledgeBaseToolCalling: async (id, callingService) => {
+    // Get parent operationId from messageOperationMap (should be executeToolCall)
+    const parentOperationId = get().messageOperationMap[id];
+
+    // Create child operation for knowledge base execution
+    // Auto-associates message with this operation via messageId in context
+    const { operationId: knowledgeBaseOpId, abortController } = get().startOperation({
       context: {
         messageId: id,
       },
       metadata: {
-        fileIds: options.fileIds,
-        knowledgeBaseIds: options.knowledgeBaseIds,
-        query: params.query,
         startTime: Date.now(),
-        topK: params.topK,
       },
       parentOperationId,
       type: 'builtinToolKnowledgeBase',
     });
 
     log(
-      '[searchKnowledgeBase] messageId=%s, parentOpId=%s, searchOpId=%s, aborted=%s',
+      '[knowledgeBase] messageId=%s, parentOpId=%s, knowledgeBaseOpId=%s, aborted=%s',
       id,
       parentOperationId,
-      searchOpId,
+      knowledgeBaseOpId,
       abortController.signal.aborted,
     );
 
-    const context = { operationId: searchOpId };
+    const context = { operationId: knowledgeBaseOpId };
 
     try {
-      const { content, success, error, state } = await runtime.searchKnowledgeBase(params, {
-        fileIds: options.fileIds,
-        knowledgeBaseIds: options.knowledgeBaseIds,
-        messageId: id,
-        signal: abortController.signal,
-      });
+      const { state, content, success, error } = await callingService();
 
-      // Complete search operation
-      get().completeOperation(searchOpId);
-
-      log('[searchKnowledgeBase] Search completed: messageId=%s, success=%s', id, success);
-
-      await get().optimisticUpdateMessageContent(id, content, undefined, context);
+      // Complete knowledge base operation
+      get().completeOperation(knowledgeBaseOpId);
 
       if (success) {
-        await get().optimisticUpdatePluginState(id, state, context);
+        if (state) {
+          await get().optimisticUpdatePluginState(id, state, context);
+        }
+        await get().optimisticUpdateMessageContent(id, content, undefined, context);
       } else {
-        await get().optimisticUpdatePluginError(id, error, context);
+        await get().optimisticUpdateMessagePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || 'Operation failed',
+            type: 'PluginServerError',
+          },
+          context,
+        );
+        // Still update content even if failed, to show error message
+        await get().optimisticUpdateMessageContent(id, content, undefined, context);
       }
 
-      // Always return true to trigger AI summary
       return true;
-    } catch (e) {
-      const err = e as Error;
+    } catch (error) {
+      const err = error as Error;
 
-      log('[searchKnowledgeBase] Error: messageId=%s, error=%s', id, err.message);
+      log('[knowledgeBase] Error: messageId=%s, error=%s', id, err.message);
 
       // Check if it's an abort error
       if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
-        log('[searchKnowledgeBase] Request aborted: messageId=%s', id);
-        get().failOperation(searchOpId, {
+        log('[knowledgeBase] Request aborted: messageId=%s', id);
+        // Fail knowledge base operation for abort
+        get().failOperation(knowledgeBaseOpId, {
           message: 'User cancelled the request',
           type: 'UserAborted',
         });
-        return;
+        // Don't update error message for user aborts
+        return false;
       }
 
-      // Fail operation for other errors
-      get().failOperation(searchOpId, {
+      // Fail knowledge base operation for other errors
+      get().failOperation(knowledgeBaseOpId, {
         message: err.message,
         type: 'PluginServerError',
       });
 
-      console.error(e);
-      await get().optimisticUpdateMessageContent(
+      // For other errors, update message
+      await get().optimisticUpdateMessagePluginError(
         id,
-        `Error searching knowledge base: ${err.message}`,
-        undefined,
+        {
+          body: error,
+          message: err.message,
+          type: 'PluginServerError',
+        },
         context,
       );
+
+      return false;
     }
   },
 });
