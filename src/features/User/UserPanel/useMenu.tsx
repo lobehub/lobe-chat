@@ -17,14 +17,15 @@ import {
 } from 'lucide-react';
 import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 
 import type { MenuProps } from '@/components/Menu';
 import { enableAuth } from '@/const/auth';
 import { BRANDING_EMAIL, LOBE_CHAT_CLOUD, SOCIAL_URL } from '@/const/branding';
 import { DEFAULT_DESKTOP_HOTKEY_CONFIG } from '@/const/desktop';
 import {
+  CHANGELOG,
   DOCUMENTS_REFER_URL,
   GITHUB_ISSUES,
   OFFICIAL_URL,
@@ -119,22 +120,26 @@ export const useMenu = () => {
   const data = !isLogin
     ? []
     : ([
-      {
-        icon: <Icon icon={HardDriveDownload} />,
-        key: 'import',
-        label: <DataImporter>{t('importData')}</DataImporter>,
-      },
-      {
-        type: 'divider',
-      },
-    ].filter(Boolean) as ItemType[]);
+        {
+          icon: <Icon icon={HardDriveDownload} />,
+          key: 'import',
+          label: <DataImporter>{t('importData')}</DataImporter>,
+        },
+        {
+          type: 'divider',
+        },
+      ].filter(Boolean) as ItemType[]);
 
   const helps: MenuProps['items'] = [
     showCloudPromotion && {
       icon: <Icon icon={Cloudy} />,
       key: 'cloud',
       label: (
-        <a href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}`} rel="noopener noreferrer" target="_blank">
+        <a
+          href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}`}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
           {t('userPanel.cloud', { name: LOBE_CHAT_CLOUD })}
         </a>
       ),
@@ -142,7 +147,13 @@ export const useMenu = () => {
     {
       icon: <Icon icon={FileClockIcon} />,
       key: 'changelog',
-      label: <Link to="/changelog">{t('changelog')}</Link>
+      label: isDesktop ? (
+        <a href={CHANGELOG} rel="noopener noreferrer" target="_blank">
+          {t('changelog')}
+        </a>
+      ) : (
+        <Link to="/changelog">{t('changelog')}</Link>
+      ),
     },
     {
       children: [
@@ -208,12 +219,12 @@ export const useMenu = () => {
 
   const logoutItems: MenuProps['items'] = isLoginWithAuth
     ? [
-      {
-        icon: <Icon icon={LogOut} />,
-        key: 'logout',
-        label: <span>{t('signout', { ns: 'auth' })}</span>,
-      },
-    ]
+        {
+          icon: <Icon icon={LogOut} />,
+          key: 'logout',
+          label: <span>{t('signout', { ns: 'auth' })}</span>,
+        },
+      ]
     : [];
 
   return { logoutItems, mainItems };
