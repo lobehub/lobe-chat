@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "新しいナレッジベースを作成"
       },
-      "newDocument": {
-        "title": "新規ドキュメント"
+      "newPage": {
+        "title": "新規文書の作成"
       }
     }
   },

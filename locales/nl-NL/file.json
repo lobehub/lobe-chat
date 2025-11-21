@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "Nieuwe kennisbank"
       },
-      "newDocument": {
-        "title": "Nieuw document"
+      "newPage": {
+        "title": "Nieuw document aanmaken"
       }
     }
   },

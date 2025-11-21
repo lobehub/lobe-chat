@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "Neue Wissensdatenbank"
       },
-      "newDocument": {
-        "title": "Neues Dokument"
+      "newPage": {
+        "title": "Neues Dokument erstellen"
       }
     }
   },

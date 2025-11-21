@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "新建知识库"
       },
-      "newDocument": {
-        "title": "新建文档"
+      "newPage": {
+        "title": "新建文稿"
       }
     }
   },

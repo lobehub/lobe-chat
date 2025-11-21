@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "Create Knowledge Base"
       },
-      "newDocument": {
-        "title": "Create Document"
+      "newPage": {
+        "title": "New Document"
       }
     }
   },
