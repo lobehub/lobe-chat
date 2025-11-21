@@ -1,5 +1,5 @@
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@lobechat/const';
-import { SemanticSearchSchema } from '@lobechat/types';
+import { ChatSemanticSearchChunk, FileSearchResult, SemanticSearchSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { inArray } from 'drizzle-orm';
 import { z } from 'zod';
@@ -33,6 +33,49 @@ const chunkProcedure = authedProcedure
       },
     });
   });
+
+/**
+ * Group chunks by file and calculate relevance scores
+ */
+const groupAndRankFiles = (chunks: ChatSemanticSearchChunk[], topK: number): FileSearchResult[] => {
+  const fileMap = new Map<string, FileSearchResult>();
+
+  // Group chunks by file
+  for (const chunk of chunks) {
+    const fileId = chunk.fileId || 'unknown';
+    const fileName = chunk.fileName || `File ${fileId}`;
+
+    if (!fileMap.has(fileId)) {
+      fileMap.set(fileId, {
+        fileId,
+        fileName,
+        relevanceScore: 0,
+        topChunks: [],
+      });
+    }
+
+    const fileResult = fileMap.get(fileId)!;
+    fileResult.topChunks.push({
+      id: chunk.id,
+      similarity: chunk.similarity,
+      text: chunk.text || '',
+    });
+  }
+
+  // Calculate relevance score for each file (average of top 3 chunks)
+  for (const fileResult of fileMap.values()) {
+    fileResult.topChunks.sort((a, b) => b.similarity - a.similarity);
+    const top3 = fileResult.topChunks.slice(0, 3);
+    fileResult.relevanceScore = top3.reduce((sum, chunk) => sum + chunk.similarity, 0) / top3.length;
+    // Keep only top chunks per file
+    fileResult.topChunks = fileResult.topChunks.slice(0, 3);
+  }
+
+  // Sort files by relevance score and return top K
+  return Array.from(fileMap.values())
+    .sort((a, b) => b.relevanceScore - a.relevanceScore)
+    .slice(0, topK);
+};
 
 export const chunkRouter = router({
   createEmbeddingChunksTask: chunkProcedure
@@ -117,7 +160,6 @@ export const chunkRouter = router({
         input: input.query,
         model,
       });
-      console.timeEnd('embedding');
 
       return ctx.chunkModel.semanticSearch({
         embedding: embeddings![0],
@@ -130,47 +172,22 @@ export const chunkRouter = router({
     .input(SemanticSearchSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const item = await ctx.messageModel.findMessageQueriesById(input.messageId);
         const { model, provider } =
           getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
         let embedding: number[];
-        let ragQueryId: string;
 
-        // if there is no message rag or it's embeddings, then we need to create one
-        if (!item || !item.embeddings) {
-          // TODO: need to support customize
-          const agentRuntime = await initModelRuntimeWithUserPayload(provider, ctx.jwtPayload);
+        const agentRuntime = await initModelRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
-          // slice content to make sure in the context window limit
-          const query =
-            input.rewriteQuery.length > 8000
-              ? input.rewriteQuery.slice(0, 8000)
-              : input.rewriteQuery;
+        // slice content to make sure in the context window limit
+        const query = input.query.length > 8000 ? input.query.slice(0, 8000) : input.query;
 
-          const embeddings = await agentRuntime.embeddings({
-            dimensions: 1024,
-            input: query,
-            model,
-          });
+        const embeddings = await agentRuntime.embeddings({
+          dimensions: 1024,
+          input: query,
+          model,
+        });
 
-          embedding = embeddings![0];
-          const embeddingsId = await ctx.embeddingModel.create({
-            embeddings: embedding,
-            model,
-          });
-
-          const result = await ctx.messageModel.createMessageQuery({
-            embeddingsId,
-            messageId: input.messageId,
-            rewriteQuery: input.rewriteQuery,
-            userQuery: input.userQuery,
-          });
-
-          ragQueryId = result.id;
-        } else {
-          embedding = item.embeddings;
-          ragQueryId = item.id;
-        }
+        embedding = embeddings![0];
 
         let finalFileIds = input.fileIds ?? [];
 
@@ -185,12 +202,16 @@ export const chunkRouter = router({
         const chunks = await ctx.chunkModel.semanticSearchForChat({
           embedding,
           fileIds: finalFileIds,
-          query: input.rewriteQuery,
+          query: input.query,
+          topK: input.topK,
         });
+
+        // Group chunks by file and calculate relevance scores
+        const fileResults = groupAndRankFiles(chunks, input.topK || 15);
 
         // TODO: need to rerank the chunks
 
-        return { chunks, queryId: ragQueryId };
+        return { chunks, fileResults };
       } catch (e) {
         console.error(e);
 

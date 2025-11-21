@@ -1,8 +1,12 @@
 import { ChatSemanticSearchChunk, KnowledgeItem } from '@lobechat/types';
 
 import { chunkPrompts } from './chunk';
+import { formatSearchResults } from './formatSearchResults';
 import { knowledgePrompts } from './knowledge';
 import { userQueryPrompt } from './userQuery';
+
+export { formatSearchResults } from './formatSearchResults';
+export type { FileSearchResult, FileSearchResultChunk } from './formatSearchResults';
 
 export const knowledgeBaseQAPrompts = ({
   chunks,
