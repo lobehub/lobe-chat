@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "کپی کل محتوا",
-    "documentCount": "مجموع {{count}} سند",
     "duplicate": "ایجاد نسخه مشابه",
-    "empty": "هیچ سندی موجود نیست، برای ایجاد اولین سند خود روی دکمه بالا کلیک کنید",
-    "noResults": "سندی مطابق با جستجو یافت نشد",
-    "selectNote": "برای ویرایش یک سند انتخاب کنید",
+    "empty": "هنوز هیچ سندی وجود ندارد، برای ایجاد اولین سند خود روی دکمه بالا کلیک کنید",
+    "noResults": "هیچ سندی مطابق با جستجو یافت نشد",
+    "pageCount": "مجموعاً {{count}} سند",
+    "selectNote": "برای ویرایش، یک سند را انتخاب کنید",
     "untitled": "بدون عنوان"
   },
   "empty": "هیچ فایل/پوشه‌ای بارگذاری نشده است",
@@ -70,7 +70,6 @@
       "uploadFile": "بارگذاری فایل",
       "uploadFolder": "بارگذاری پوشه"
     },
-    "newDocumentButton": "سند جدید",
     "newNoteDialog": {
       "cancel": "لغو",
       "editTitle": "ویرایش سند",
@@ -83,14 +82,15 @@
       "title": "سند جدید",
       "updateSuccess": "سند با موفقیت به‌روزرسانی شد"
     },
+    "newPageButton": "ایجاد سند جدید",
     "uploadButton": "بارگذاری"
   },
   "home": {
     "getStarted": "شروع کنید",
     "greeting": "شروع",
     "quickActions": "دسترسی سریع",
-    "recentDocuments": "اسناد اخیر",
     "recentFiles": "فایل‌های اخیر",
+    "recentPages": "اسناد اخیر",
     "subtitle": "به پایگاه دانش خوش آمدید، از اینجا مدیریت اسناد خود را آغاز کنید",
     "uploadEntries": {
       "files": {
@@ -102,7 +102,7 @@
       "knowledgeBase": {
         "title": "ایجاد پایگاه دانش جدید"
       },
-      "newDocument": {
+      "newPage": {
         "title": "ایجاد سند جدید"
       }
     }
@@ -142,8 +142,8 @@
     "downloadFile": "دانلود فایل",
     "unsupportedFileAndContact": "فرمت این فایل در حال حاضر از پیش‌نمایش آنلاین پشتیبانی نمی‌کند. در صورت نیاز به پیش‌نمایش، لطفاً <1>به ما بازخورد دهید</1>."
   },
-  "searchDocumentPlaceholder": "جستجوی سند",
   "searchFilePlaceholder": "جستجوی فایل",
+  "searchPagePlaceholder": "جستجوی سند",
   "tab": {
     "all": "همه",
     "audios": "صداها",
@@ -156,9 +156,7 @@
     "websites": "وب‌سایت‌ها"
   },
   "title": "پایگاه دانش",
-  "toggleLeftPanel": {
-    "title": "نمایش/پنهان کردن پانل سمت چپ"
-  },
+  "toggleLeftPanel": "نمایش/پنهان‌سازی پنل سمت چپ",
   "uploadDock": {
     "body": {
       "collapse": "بستن",

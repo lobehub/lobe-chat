@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "전체 내용 복사",
-    "documentCount": "총 {{count}}개의 문서",
     "duplicate": "복사본 만들기",
-    "empty": "아직 문서가 없습니다. 위 버튼을 클릭하여 첫 문서를 작성해 보세요",
+    "empty": "아직 문서가 없습니다. 위 버튼을 클릭하여 첫 번째 문서를 만들어보세요",
     "noResults": "일치하는 문서를 찾을 수 없습니다",
-    "selectNote": "편집할 문서를 선택하세요",
+    "pageCount": "총 {{count}}개의 문서",
+    "selectNote": "편집을 시작할 문서를 선택하세요",
     "untitled": "제목 없음"
   },
   "empty": "업로드된 파일/폴더가 없습니다",
@@ -70,7 +70,6 @@
       "uploadFile": "파일 업로드",
       "uploadFolder": "폴더 업로드"
     },
-    "newDocumentButton": "새 문서",
     "newNoteDialog": {
       "cancel": "취소",
       "editTitle": "문서 편집",
@@ -83,14 +82,15 @@
       "title": "새 문서 만들기",
       "updateSuccess": "문서가 성공적으로 업데이트되었습니다"
     },
+    "newPageButton": "새 문서 만들기",
     "uploadButton": "업로드"
   },
   "home": {
     "getStarted": "시작하기",
     "greeting": "시작하기",
     "quickActions": "빠른 작업",
-    "recentDocuments": "최근 문서",
     "recentFiles": "최근 파일",
+    "recentPages": "최근 문서",
     "subtitle": "지식 관리 시스템에 오신 것을 환영합니다. 여기서 문서를 관리해 보세요",
     "uploadEntries": {
       "files": {
@@ -102,7 +102,7 @@
       "knowledgeBase": {
         "title": "새 지식베이스 만들기"
       },
-      "newDocument": {
+      "newPage": {
         "title": "새 문서 만들기"
       }
     }
@@ -142,8 +142,8 @@
     "downloadFile": "파일 다운로드",
     "unsupportedFileAndContact": "이 파일 형식은 온라인 미리보기를 지원하지 않습니다. 미리보기 기능이 필요하시면 <1>의견을 보내주세요</1>"
   },
-  "searchDocumentPlaceholder": "문서 검색",
   "searchFilePlaceholder": "파일 검색",
+  "searchPagePlaceholder": "문서 검색",
   "tab": {
     "all": "전체",
     "audios": "오디오",
@@ -156,9 +156,7 @@
     "websites": "웹사이트"
   },
   "title": "지식 베이스",
-  "toggleLeftPanel": {
-    "title": "왼쪽 패널 표시/숨기기"
-  },
+  "toggleLeftPanel": "왼쪽 패널 표시/숨기기",
   "uploadDock": {
     "body": {
       "collapse": "접기",

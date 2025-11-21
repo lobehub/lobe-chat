@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "Gesamten Inhalt kopieren",
-    "documentCount": "Insgesamt {{count}} Dokumente",
     "duplicate": "Kopie erstellen",
-    "empty": "Noch keine Dokumente vorhanden. Klicken Sie oben, um Ihr erstes Dokument zu erstellen.",
+    "empty": "Noch keine Dokumente vorhanden. Klicke auf die Schaltfläche oben, um dein erstes Dokument zu erstellen.",
     "noResults": "Keine passenden Dokumente gefunden",
-    "selectNote": "Wählen Sie ein Dokument zum Bearbeiten",
+    "pageCount": "Insgesamt {{count}} Dokumente",
+    "selectNote": "Wähle ein Dokument aus, um mit der Bearbeitung zu beginnen",
     "untitled": "Ohne Titel"
   },
   "empty": "Keine hochgeladenen Dateien/Ordner vorhanden",
@@ -70,7 +70,6 @@
       "uploadFile": "Datei hochladen",
       "uploadFolder": "Ordner hochladen"
     },
-    "newDocumentButton": "Neues Dokument",
     "newNoteDialog": {
       "cancel": "Abbrechen",
       "editTitle": "Dokument bearbeiten",
@@ -83,14 +82,15 @@
       "title": "Neues Dokument",
       "updateSuccess": "Dokument erfolgreich aktualisiert"
     },
+    "newPageButton": "Neues Dokument erstellen",
     "uploadButton": "Hochladen"
   },
   "home": {
     "getStarted": "Loslegen",
     "greeting": "Loslegen",
     "quickActions": "Schnellaktionen",
-    "recentDocuments": "Kürzlich verwendete Dokumente",
     "recentFiles": "Kürzlich verwendete Dateien",
+    "recentPages": "Kürzlich geöffnete Dokumente",
     "subtitle": "Willkommen im Wissensspeicher. Beginnen Sie hier mit der Verwaltung Ihrer Dokumente.",
     "uploadEntries": {
       "files": {
@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "Neue Wissensdatenbank"
       },
-      "newDocument": {
-        "title": "Neues Dokument"
+      "newPage": {
+        "title": "Neues Dokument erstellen"
       }
     }
   },
@@ -142,8 +142,8 @@
     "downloadFile": "Datei herunterladen",
     "unsupportedFileAndContact": "Dieses Dateiformat wird derzeit nicht für die Online-Vorschau unterstützt. Wenn Sie eine Vorschau wünschen, können Sie uns gerne <1>Feedback geben</1>."
   },
-  "searchDocumentPlaceholder": "Dokumente durchsuchen",
   "searchFilePlaceholder": "Datei suchen",
+  "searchPagePlaceholder": "Dokumente durchsuchen",
   "tab": {
     "all": "Alle",
     "audios": "Audio",
@@ -156,9 +156,7 @@
     "websites": "Webseiten"
   },
   "title": "Wissensdatenbank",
-  "toggleLeftPanel": {
-    "title": "Linkes Panel einblenden/ausblenden"
-  },
+  "toggleLeftPanel": "Seitenleiste ein-/ausblenden",
   "uploadDock": {
     "body": {
       "collapse": "Einklappen",
