@@ -96,7 +96,7 @@ export const messageQuery: StateCreator<
       enable ? [SWR_USE_FETCH_MESSAGES, messageContextId, activeTopicId, type] : null,
       async ([, sessionId, topicId, type]: [string, string, string | undefined, string]) =>
         type === 'session'
-          ? messageService.getMessages(sessionId, topicId)
+          ? messageService.getMessages({ sessionId, topicId })
           : messageService.getGroupMessages(sessionId, topicId),
       {
         onSuccess: (messages, key) => {

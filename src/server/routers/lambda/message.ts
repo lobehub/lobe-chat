@@ -7,8 +7,7 @@ import {
 import { z } from 'zod';
 
 import { MessageModel } from '@/database/models/message';
-import { getServerDB } from '@/database/server';
-import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
+import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 import { MessageService } from '@/server/services/message';
@@ -64,27 +63,20 @@ export const messageRouter = router({
     return ctx.messageModel.getHeatmaps();
   }),
 
-  // TODO: 未来这部分方法也需要使用 authedProcedure
-  getMessages: publicProcedure
+  getMessages: messageProcedure
     .input(
       z.object({
         current: z.number().optional(),
         groupId: z.string().nullable().optional(),
         pageSize: z.number().optional(),
         sessionId: z.string().nullable().optional(),
+        threadId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
-      if (!ctx.userId) return [];
-      const serverDB = await getServerDB();
-
-      const messageModel = new MessageModel(serverDB, ctx.userId);
-      const fileService = new FileService(serverDB, ctx.userId);
-
-      return messageModel.query(input, {
-        groupAssistantMessages: false,
-        postProcessUrl: (path) => fileService.getFullFileUrl(path),
+      return ctx.messageModel.query(input, {
+        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
       });
     }),
 

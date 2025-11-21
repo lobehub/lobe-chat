@@ -225,7 +225,7 @@ export const chatTopic: StateCreator<
     const { activeId: sessionId, summaryTopicTitle, internal_updateTopicLoading } = get();
 
     internal_updateTopicLoading(id, true);
-    const messages = await messageService.getMessages(sessionId, id);
+    const messages = await messageService.getMessages({ sessionId, topicId: id });
 
     await summaryTopicTitle(id, messages);
     internal_updateTopicLoading(id, false);

@@ -10,6 +10,7 @@
 export type OperationType =
   // === Message sending ===
   | 'sendMessage' // Send message to server
+  | 'sendThreadMessage' // Send message in thread
   | 'createTopic' // Auto create topic
   | 'regenerate' // Regenerate message
   | 'continue' // Continue generation
