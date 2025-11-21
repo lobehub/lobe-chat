@@ -16,7 +16,7 @@ import {
   getVirtuaGlobalRef,
   subscribeVirtuaActiveIndex,
   subscribeVirtuaGlobalRef,
-} from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
+} from '@/features/ChatList/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { displayMessageSelectors } from '@/store/chat/selectors';
 
