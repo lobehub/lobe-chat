@@ -9,7 +9,6 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
-import DesktopChangelogLayout from './(main)/changelog/_layout/Desktop';
 import DesktopMainLayout from './(main)/layouts/desktop';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
@@ -37,6 +36,16 @@ const DesktopChatPage = dynamic(
   },
 );
 const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Desktop'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+
+// Changelog components
+const ChangelogPage = dynamic(() => import('./(main)/changelog/index').then((m) => m.DesktopPage), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+const ChangelogLayout = dynamic(() => import('./(main)/changelog/_layout/Desktop'), {
   loading: () => <Loading />,
   ssr: false,
 });
@@ -257,6 +266,7 @@ const KnowledgeErrorBoundary = createErrorBoundary('/knowledge');
 const SettingsErrorBoundary = createErrorBoundary('/settings');
 const ImageErrorBoundary = createErrorBoundary('/image');
 const ProfileErrorBoundary = createErrorBoundary('/profile');
+const ChangelogErrorBoundary = createErrorBoundary('/changelog');
 const RootErrorBoundary = createErrorBoundary('/chat'); // Root level falls back to chat
 
 // Root layout wrapper component
@@ -460,14 +470,12 @@ export const createDesktopRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <ChangelogPage />,
               index: true,
-              lazy: () =>
-                import('./(main)/changelog/index').then((m) => ({
-                  Component: m.DesktopPage,
-                })),
             },
           ],
-          element: <DesktopChangelogLayout locale={locale} />,
+          element: <ChangelogLayout locale={locale} />,
+          errorElement: <ChangelogErrorBoundary />,
           path: 'changelog',
         },
         // Default route - redirect to chat
