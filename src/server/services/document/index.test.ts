@@ -1,5 +1,5 @@
 import { LobeChatDatabase } from '@lobechat/database';
-import { DocumentItem } from '@lobechat/database/schemas';
+
 import { loadFile } from '@lobechat/file-loaders';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
