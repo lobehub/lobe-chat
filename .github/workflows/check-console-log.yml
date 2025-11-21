@@ -5,13 +5,10 @@ on:
     branches:
       - main
       - next
-  push:
-    branches:
-      - main
-      - next
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   check-console-log:
@@ -25,4 +22,89 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Run console.log check
-        run: bunx tsx scripts/checkConsoleLog.mts
+        id: check
+        run: |
+          OUTPUT=$(bunx tsx scripts/checkConsoleLog.mts 2>&1)
+          echo "$OUTPUT"
+          echo "output<<EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          if echo "$OUTPUT" | grep -q "Total violations:"; then
+            echo "has_violations=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_violations=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment on PR
+        if: steps.check.outputs.has_violations == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const output = `${{ steps.check.outputs.output }}`;
+
+            // Parse violations from output
+            const lines = output.split('\n');
+            const violations = [];
+            let i = 0;
+            while (i < lines.length) {
+              const line = lines[i];
+              if (line.match(/^\s+\S+:\d+$/)) {
+                const file = line.trim();
+                const content = lines[i + 1]?.trim() || '';
+                violations.push({ file, content });
+                i += 2;
+              } else {
+                i++;
+              }
+            }
+
+            // Extract total count
+            const totalMatch = output.match(/Total violations: (\d+)/);
+            const total = totalMatch ? totalMatch[1] : violations.length;
+
+            // Build comment body
+            const maxDisplay = 20;
+            let body = `## ⚠️ Console.log Check Warning\n\n`;
+            body += `Found **${total}** \`console.log\` statement(s) in this PR.\n\n`;
+
+            if (violations.length > 0) {
+              body += `<details>\n<summary>Click to see violations (showing first ${Math.min(violations.length, maxDisplay)})</summary>\n\n`;
+              body += `| File | Code |\n|------|------|\n`;
+              violations.slice(0, maxDisplay).forEach(v => {
+                body += `| \`${v.file}\` | \`${v.content.substring(0, 50)}${v.content.length > 50 ? '...' : ''}\` |\n`;
+              });
+              if (violations.length > maxDisplay) {
+                body += `\n*...and ${violations.length - maxDisplay} more*\n`;
+              }
+              body += `\n</details>\n\n`;
+            }
+
+            body += `> 💡 Consider removing \`console.log\` or adding files to \`.console-log-whitelist.json\`\n`;
+            body += `> This check is non-blocking and won't prevent merging.`;
+
+            // Find existing comment to update instead of creating duplicates
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes('Console.log Check Warning')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
