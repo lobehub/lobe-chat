@@ -50,13 +50,15 @@ jobs:
             const output = fs.readFileSync('/tmp/console-log-output.txt', 'utf8');
             const total = process.env.VIOLATION_COUNT || '0';
 
-            // Parse violations from output
+            // Parse violations from output (format: "  file:line" followed by "    content")
             const lines = output.split('\n');
             const violations = [];
             for (let i = 0; i < lines.length; i++) {
               const line = lines[i];
-              if (line.match(/^\s+\S+:\d+$/)) {
-                const file = line.trim();
+              // Match lines like "  packages/database/src/client/db.ts:258"
+              const fileMatch = line.match(/^\s{2}(\S+:\d+)\s*$/);
+              if (fileMatch) {
+                const file = fileMatch[1];
                 const content = lines[i + 1]?.trim() || '';
                 violations.push({ file, content });
                 i++;
@@ -64,25 +66,28 @@ jobs:
             }
 
             // Build comment body
-            const maxDisplay = 20;
+            const maxDisplay = 30;
             let body = `## ⚠️ Console.log Check Warning\n\n`;
             body += `Found **${total}** \`console.log\` statement(s) in this PR.\n\n`;
 
             if (violations.length > 0) {
-              body += `<details>\n<summary>Click to see violations (showing first ${Math.min(violations.length, maxDisplay)})</summary>\n\n`;
+              body += `<details>\n<summary>📋 Click to see violations (${Math.min(violations.length, maxDisplay)} of ${total} shown)</summary>\n\n`;
               body += `| File | Code |\n|------|------|\n`;
               violations.slice(0, maxDisplay).forEach(v => {
-                const escapedContent = v.content.substring(0, 50).replace(/\|/g, '\\|').replace(/`/g, '');
-                body += `| \`${v.file}\` | \`${escapedContent}${v.content.length > 50 ? '...' : ''}\` |\n`;
+                const escapedContent = v.content
+                  .substring(0, 60)
+                  .replace(/\|/g, '\\|')
+                  .replace(/`/g, "'");
+                body += `| \`${v.file}\` | \`${escapedContent}${v.content.length > 60 ? '...' : ''}\` |\n`;
               });
-              if (violations.length > maxDisplay) {
-                body += `\n*...and ${violations.length - maxDisplay} more*\n`;
+              if (parseInt(total) > maxDisplay) {
+                body += `\n*...and ${parseInt(total) - maxDisplay} more violations*\n`;
               }
               body += `\n</details>\n\n`;
             }
 
-            body += `> 💡 Consider removing \`console.log\` or adding files to \`.console-log-whitelist.json\`\n`;
-            body += `> This check is non-blocking and won't prevent merging.`;
+            body += `> 💡 **Tip:** Remove \`console.log\` or add files to \`.console-log-whitelist.json\`\n`;
+            body += `> ✅ This check is **non-blocking** and won't prevent merging.`;
 
             // Find existing comment to update instead of creating duplicates
             const { data: comments } = await github.rest.issues.listComments({
