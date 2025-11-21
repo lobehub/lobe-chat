@@ -20,10 +20,9 @@ interface AssistantActionsProps {
   data: UIChatMessage;
   id: string;
   index: number;
-  onShare?: () => void;
 }
 
-export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index, onShare }) => {
+export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index }) => {
   const { error, tools } = data;
   const [isThreadMode, hasThread, isRegenerating, isCollapsed] = useChatStore((s) => [
     !!s.activeThreadId,
@@ -161,11 +160,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         // }
 
         case 'share': {
-          if (onShare) {
-            onShare();
-          } else {
-            setShareModal(true);
-          }
+          setShareModal(true);
           break;
         }
       }
@@ -188,7 +183,6 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
       index,
       inPortalThread,
       message,
-      onShare,
       openThreadCreator,
       regenerateAssistantMessage,
       resendThreadMessage,
@@ -232,15 +226,13 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
       {/*{showModal && (*/}
       {/*  <ExportPreview content={data.content} onClose={() => setModal(false)} open={showModal} />*/}
       {/*)}*/}
-      {!onShare && (
-        <ShareMessageModal
-          message={data}
-          onCancel={() => {
-            setShareModal(false);
-          }}
-          open={showShareModal}
-        />
-      )}
+      <ShareMessageModal
+        message={data}
+        onCancel={() => {
+          setShareModal(false);
+        }}
+        open={showShareModal}
+      />
     </>
   );
 });

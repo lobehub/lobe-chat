@@ -509,7 +509,6 @@ const Item = memo<ChatListItemProps>(
               id={id}
               index={index}
               isLatestItem={isLatestItem}
-              onShare={handleShare}
             />
           );
         }

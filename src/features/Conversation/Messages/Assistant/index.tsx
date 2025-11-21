@@ -75,7 +75,7 @@ export const useStyles = createStyles(
           justify-content: ${placement === 'left' ? 'flex-end' : 'flex-start'};
         `,
         editing &&
-          css`
+        css`
             pointer-events: none !important;
             opacity: 0 !important;
           `,
@@ -154,11 +154,10 @@ interface AssistantMessageProps {
   id: string;
   index: number;
   isLatestItem?: boolean;
-  onShare?: () => void;
 }
 
 const AssistantMessage = memo<AssistantMessageProps>(
-  ({ id, index, disableEditing, isLatestItem, onShare }) => {
+  ({ id, index, disableEditing, isLatestItem }) => {
     const item = useChatStore(
       displayMessageSelectors.getDisplayMessageById(id),
       isEqual,
@@ -384,7 +383,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
           </Flexbox>
           {!disableEditing && !editing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
-              <AssistantActionsBar data={item} id={id} index={index} onShare={onShare} />
+              <AssistantActionsBar data={item} id={id} index={index} />
             </Flexbox>
           )}
         </Flexbox>

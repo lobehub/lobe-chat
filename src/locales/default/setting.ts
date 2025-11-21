@@ -298,7 +298,7 @@ export default {
       title: '响应动画',
     },
     contextMenuMode: {
-      default: 'LobeChat默认',
+      default: '默认',
       desc: '选择聊天消息右键菜单的显示方案',
       disabled: '不使用',
       title: '右键菜单方案',
