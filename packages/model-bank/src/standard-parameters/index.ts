@@ -149,7 +149,7 @@ export const ModelParamsMetaSchema = z.object({
     })
     .optional(),
 
-  imageSize: z
+  resolution: z
     .object({
       default: z.string(),
       description: z.string().optional(),

@@ -875,14 +875,14 @@ export const nanoBananaProParameters: ModelParamsSchema = {
     default: '1:1',
     enum: NANO_BANANA_ASPECT_RATIOS,
   },
-  imageSize: {
-    default: '1K',
-    enum: ['1K', '2K', '4K'],
-  },
   imageUrls: {
     default: [],
   },
   prompt: { default: '' },
+  resolution: {
+    default: '1K',
+    enum: ['1K', '2K', '4K'],
+  },
 };
 
 /* eslint-disable sort-keys-fix/sort-keys-fix */
