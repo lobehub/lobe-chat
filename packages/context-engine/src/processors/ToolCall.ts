@@ -130,6 +130,7 @@ export class ToolCallProcessor extends BaseProcessor {
             : `${tool.identifier}.${tool.apiName}`,
         },
         id: tool.id,
+        thoughtSignature: tool.thoughtSignature,
         type: 'function',
       }),
     );

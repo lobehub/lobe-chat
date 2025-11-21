@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1はオープンソースの重みを持つ大規模混合注意力推論モデルで、4560億のパラメータを有し、各トークンで約459億のパラメータが活性化されます。モデルは100万トークンの超長文コンテキストをネイティブにサポートし、ライトニングアテンション機構により10万トークンの生成タスクでDeepSeek R1と比べて75％の浮動小数点演算量を削減します。また、MiniMax-M1はMoE（混合エキスパート）アーキテクチャを採用し、CISPOアルゴリズムと混合注意力設計による効率的な強化学習トレーニングを組み合わせ、長文入力推論および実際のソフトウェア工学シナリオで業界最高の性能を実現しています。"
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 は、エージェントの効率性を再定義するコンパクトで高速かつコスト効率に優れた MoE（Mixture of Experts）モデルです。総パラメータ数は2,300億、アクティブパラメータは100億で、コーディングやエージェントタスクにおいて最高レベルの性能を発揮しつつ、強力な汎用知能を維持します。わずか100億のアクティブパラメータで、大規模モデルに匹敵する性能を実現しており、高効率なアプリケーションに最適な選択肢です。"
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "総パラメータ数1兆、活性化パラメータ320億。非思考モデルの中で、先端知識、数学、コーディングにおいてトップレベルの性能を持ち、汎用エージェントタスクに優れています。エージェントタスクに特化して最適化されており、質問に答えるだけでなく行動も可能です。即興的で汎用的なチャットやエージェント体験に最適で、長時間の思考を必要としない反射的モデルです。"
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1は極めて少ないラベル付きデータでモデルの推論能力を大幅に向上させました。最終回答を出力する前に、モデルは思考の連鎖を出力し、最終答えの正確性を高めます。"
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B は 70B Llama モデルの蒸留版で、より効率的な変種です。テキスト生成タスクで強力な性能を維持しつつ、計算コストを削減し、展開や研究に適しています。Groq のカスタム言語処理ユニット（LPU）ハードウェアでサービス提供され、高速かつ効率的な推論を実現します。"
+    "description": "DeepSeek R1 Distill Llama 70B は、Llama3.3 70B をベースにした大規模言語モデルであり、DeepSeek R1 によるファインチューニングを通じて、最先端の大規模モデルに匹敵する競争力のある性能を実現しています。"
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8BはLlama-3.1-8B-Instructに基づく蒸留大言語モデルで、DeepSeek R1の出力を使用してトレーニングされています。"
@@ -1478,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flashモデルのバリアントで、コスト効率と低遅延などの目標に最適化されています。"
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash プレビュー モデル、画像生成をサポート"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 FlashはGoogleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
   },
@@ -1508,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Previewは、Googleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash PreviewはGoogleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Gemini 2.5 Flash のプレビューリリース（2025年9月25日）"
   },
@@ -1525,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview は Google の最先端思考モデルで、コード、数学、STEM 分野の複雑な問題を推論し、長いコンテキストを用いて大規模なデータセット、コードベース、ドキュメントを分析できます。"
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro は、Google で最も高度なモデルであり、最先端の推論能力とマルチモーダルな理解力、さらに強力なエージェント機能とコンテキスト認識機能を備えています。"
   },
   "gemini-flash-latest": {
     "description": "Gemini Flash の最新リリース"
@@ -1906,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "xAI の Grok 4 は強力な推論能力を備えています。"
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "最先端のマルチモーダルモデルであり、高性能なエージェントツールの呼び出しに特化して最適化されています。"
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "最先端のマルチモーダルモデルであり、高性能なエージェントツールの呼び出しに特化して最適化されています。"
   },
   "grok-4-fast-non-reasoning": {
     "description": "コスト効率の高い推論モデルにおける最新の進展として、Grok 4 Fastをリリースできることを嬉しく思います。"
@@ -2461,6 +2467,9 @@
   },
   "minimax/minimax-m2": {
     "description": "効率的なコーディングとエージェントワークフローのために設計されたモデルです。"
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 は、コンパクトで高速、かつコスト効率に優れた混合エキスパート（MoE）モデルで、総パラメータ数は2,300億、アクティブパラメータは100億です。コーディングやエージェントタスクにおいて最高の性能を発揮しながら、強力な汎用知能を維持します。複数ファイルの編集、コードの実行と修正のループ、テストによる検証と修復、複雑な長距離ツールチェーンの処理において優れた性能を示し、開発者のワークフローに最適なモデルです。"
   },
   "ministral-3b-latest": {
     "description": "Ministral 3BはMistralの世界トップクラスのエッジモデルです。"

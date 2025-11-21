@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { ErrorActionContainer } from '@/features/Conversation/Error/style';
+import { ErrorActionContainer } from '@/features/ChatList/Error/style';
 
 import APIKeyForm from './APIKeyForm';
 

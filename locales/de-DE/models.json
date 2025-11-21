@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 ist ein groß angelegtes hybrides Aufmerksamkeits-Inferenzmodell mit offenen Gewichten, das 456 Milliarden Parameter umfasst und etwa 45,9 Milliarden Parameter pro Token aktiviert. Das Modell unterstützt nativ einen ultralangen Kontext von 1 Million Tokens und spart durch den Blitz-Attention-Mechanismus bei Aufgaben mit 100.000 Tokens im Vergleich zu DeepSeek R1 75 % der Fließkommaoperationen ein. Gleichzeitig verwendet MiniMax-M1 eine MoE-Architektur (Mixture of Experts) und kombiniert den CISPO-Algorithmus mit einem hybriden Aufmerksamkeitsdesign für effizientes verstärkendes Lernen, was in der Langzeiteingabe-Inferenz und realen Software-Engineering-Szenarien branchenführende Leistung erzielt."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 definiert Effizienz für Agenten neu. Es handelt sich um ein kompaktes, schnelles und kosteneffizientes MoE-Modell mit insgesamt 230 Milliarden Parametern und 10 Milliarden aktiven Parametern. Es wurde für Spitzenleistungen bei Codierungs- und Agentenaufgaben entwickelt und bewahrt gleichzeitig eine starke allgemeine Intelligenz. Mit nur 10 Milliarden aktiven Parametern bietet MiniMax-M2 eine Leistung, die mit groß angelegten Modellen vergleichbar ist, und ist damit die ideale Wahl für Anwendungen mit hohen Effizienzanforderungen."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Mit insgesamt 1 Billion Parametern und 32 Milliarden aktivierten Parametern erreicht dieses nicht-denkende Modell Spitzenleistungen in den Bereichen aktuelles Wissen, Mathematik und Programmierung und ist besonders für allgemeine Agentenaufgaben optimiert. Es wurde speziell für Agentenaufgaben verfeinert, kann nicht nur Fragen beantworten, sondern auch Aktionen ausführen. Ideal für spontane, allgemeine Gespräche und Agentenerfahrungen, ist es ein reflexartiges Modell ohne lange Denkzeiten."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 verbessert die Modellschlussfolgerungsfähigkeit erheblich, selbst bei sehr begrenzten annotierten Daten. Vor der Ausgabe der endgültigen Antwort generiert das Modell eine Denkprozesskette, um die Genauigkeit der Antwort zu erhöhen."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B ist eine destillierte, effizientere Variante des 70B Llama Modells. Es behält starke Leistung bei Textgenerierungsaufgaben bei und reduziert den Rechenaufwand für einfachere Bereitstellung und Forschung. Betrieben von Groq mit deren maßgeschneiderter Language Processing Unit (LPU) Hardware für schnelle und effiziente Inferenz."
+    "description": "DeepSeek R1 Distill Llama 70B ist ein großes Sprachmodell auf Basis von Llama3.3 70B. Durch Feintuning mit den Ausgaben von DeepSeek R1 erreicht es eine konkurrenzfähige Leistung, die mit führenden Großmodellen vergleichbar ist."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B ist ein distilliertes großes Sprachmodell, das auf Llama-3.1-8B-Instruct basiert und durch Training mit den Ausgaben von DeepSeek R1 erstellt wurde."
@@ -1478,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash ist eine Modellvariante, die auf Kosteneffizienz und niedrige Latenz optimiert ist."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash Vorschau-Modell, unterstützt die Bildgenerierung"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash ist Googles kosteneffizientestes Modell und bietet umfassende Funktionen."
   },
@@ -1508,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview ist das kosteneffizienteste Modell von Google und bietet umfassende Funktionen."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview ist Googles kosteneffizientestes Modell mit umfassenden Funktionen."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Vorschauversion (25. September 2025) von Gemini 2.5 Flash"
   },
@@ -1525,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview ist Googles fortschrittlichstes Denkmodell, das komplexe Probleme in den Bereichen Code, Mathematik und MINT-Fächer lösen kann und große Datensätze, Codebasen und Dokumente mit langem Kontext analysiert."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro ist das intelligenteste Modell von Google mit modernster Schlussfolgerungsfähigkeit, multimodaler Verarbeitung sowie leistungsstarken Agenten- und Kontextkodierungsfunktionen."
   },
   "gemini-flash-latest": {
     "description": "Neueste Version von Gemini Flash"
@@ -1906,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "xAI's Grok 4 mit starker Schlussfolgerungsfähigkeit."
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Modernes multimodales Modell, speziell optimiert für die Nutzung leistungsstarker Agenten-Tools."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Modernes multimodales Modell, speziell optimiert für die Nutzung leistungsstarker Agenten-Tools."
   },
   "grok-4-fast-non-reasoning": {
     "description": "Wir freuen uns, Grok 4 Fast vorzustellen, unseren neuesten Fortschritt bei kosteneffizienten Inferenzmodellen."
@@ -2461,6 +2467,9 @@
   },
   "minimax/minimax-m2": {
     "description": "Speziell entwickelt für effizientes Codieren und Agenten-Workflows."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 ist ein kompaktes, schnelles und kosteneffizientes Mixture-of-Experts (MoE)-Modell mit 230 Milliarden Gesamtparametern und 10 Milliarden aktiven Parametern. Es wurde für höchste Leistung bei Codierungs- und Agentenaufgaben entwickelt und bietet gleichzeitig eine starke allgemeine Intelligenz. Das Modell überzeugt bei Aufgaben wie der Bearbeitung mehrerer Dateien, dem Code-Ausführen-Fehlerbeheben-Zyklus, Testverifikation und -korrektur sowie bei komplexen, lang verknüpften Toolchains – und ist damit die ideale Wahl für Entwickler-Workflows."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B ist das weltbeste Edge-Modell von Mistral."

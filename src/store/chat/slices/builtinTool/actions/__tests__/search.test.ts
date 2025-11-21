@@ -85,16 +85,18 @@ describe('search actions', () => {
         },
       ];
 
-      expect(searchService.webSearch).toHaveBeenCalledWith({
-        searchEngines: ['google'],
-        query: 'test query',
-      });
-      expect(result.current.searchLoading[messageId]).toBe(false);
+      expect(searchService.webSearch).toHaveBeenCalledWith(
+        {
+          searchEngines: ['google'],
+          query: 'test query',
+        },
+        { signal: expect.any(AbortSignal) },
+      );
       expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         searchResultsPrompt(expectedContent),
         undefined,
-        { sessionId: undefined, topicId: undefined },
+        { operationId: expect.any(String) },
       );
     });
 
@@ -122,17 +124,19 @@ describe('search actions', () => {
         await search(messageId, query);
       });
 
-      expect(searchService.webSearch).toHaveBeenCalledWith({
-        searchEngines: ['custom-engine'],
-        searchTimeRange: 'year',
-        query: 'test query',
-      });
-      expect(result.current.searchLoading[messageId]).toBe(false);
+      expect(searchService.webSearch).toHaveBeenCalledWith(
+        {
+          searchEngines: ['custom-engine'],
+          searchTimeRange: 'year',
+          query: 'test query',
+        },
+        { signal: expect.any(AbortSignal) },
+      );
       expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         searchResultsPrompt([]),
         undefined,
-        { sessionId: undefined, topicId: undefined },
+        { operationId: expect.any(String) },
       );
     });
 
@@ -159,14 +163,7 @@ describe('search actions', () => {
           message: 'Search failed',
           type: 'PluginServerError',
         },
-        { sessionId: undefined, topicId: undefined },
-      );
-      expect(result.current.searchLoading[messageId]).toBe(false);
-      expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
-        messageId,
-        'Search failed',
-        undefined,
-        { sessionId: undefined, topicId: undefined },
+        { operationId: expect.any(String) },
       );
     });
   });
@@ -207,7 +204,7 @@ describe('search actions', () => {
         messageId,
         crawlResultsPrompt(expectedContent as any),
         undefined,
-        { sessionId: undefined, topicId: undefined },
+        { operationId: expect.any(String) },
       );
     });
 
@@ -235,7 +232,7 @@ describe('search actions', () => {
         messageId,
         crawlResultsPrompt(mockResponse.results),
         undefined,
-        { sessionId: undefined, topicId: undefined },
+        { operationId: expect.any(String) },
       );
     });
   });
@@ -304,7 +301,7 @@ describe('search actions', () => {
           sessionId: 'session-id',
           topicId: 'topic-id',
         }),
-        { sessionId: 'session-id', topicId: 'topic-id' },
+        { operationId: expect.any(String) },
       );
 
       expect(result.current.optimisticAddToolToAssistantMessage).toHaveBeenCalledWith(
@@ -313,7 +310,7 @@ describe('search actions', () => {
           identifier: 'search',
           type: 'default',
         }),
-        { sessionId: undefined, topicId: undefined },
+        { operationId: expect.any(String) },
       );
     });
 
@@ -332,24 +329,7 @@ describe('search actions', () => {
     });
   });
 
-  describe('toggleSearchLoading', () => {
-    it('should toggle search loading state', () => {
-      const { result } = renderHook(() => useChatStore());
-      const messageId = 'test-message-id';
-
-      act(() => {
-        result.current.toggleSearchLoading(messageId, true);
-      });
-
-      expect(result.current.searchLoading[messageId]).toBe(true);
-
-      act(() => {
-        result.current.toggleSearchLoading(messageId, false);
-      });
-
-      expect(result.current.searchLoading[messageId]).toBe(false);
-    });
-  });
+  // toggleSearchLoading is no longer needed as we use operation-based state management
 
   describe('OptimisticUpdateContext isolation', () => {
     it('search should pass context to optimistic methods', async () => {
@@ -401,13 +381,13 @@ describe('search actions', () => {
       expect(result.current.optimisticUpdatePluginState).toHaveBeenCalledWith(
         messageId,
         expect.any(Object),
-        { sessionId: contextSessionId, topicId: contextTopicId },
+        { operationId: expect.any(String) },
       );
       expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         expect.any(String),
         undefined,
-        { sessionId: contextSessionId, topicId: contextTopicId },
+        { operationId: expect.any(String) },
       );
     });
 
@@ -456,12 +436,12 @@ describe('search actions', () => {
         messageId,
         expect.any(String),
         undefined,
-        { sessionId: contextSessionId, topicId: contextTopicId },
+        { operationId: expect.any(String) },
       );
       expect(result.current.optimisticUpdatePluginState).toHaveBeenCalledWith(
         messageId,
         expect.any(Object),
-        { sessionId: contextSessionId, topicId: contextTopicId },
+        { operationId: expect.any(String) },
       );
     });
 
@@ -510,14 +490,14 @@ describe('search actions', () => {
           identifier: 'search',
           type: 'default',
         }),
-        { sessionId: contextSessionId, topicId: contextTopicId },
+        { operationId: expect.any(String) },
       );
       expect(result.current.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           sessionId: contextSessionId,
           topicId: contextTopicId,
         }),
-        { sessionId: contextSessionId, topicId: contextTopicId },
+        { operationId: expect.any(String) },
       );
     });
   });

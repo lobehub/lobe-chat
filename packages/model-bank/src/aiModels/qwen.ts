@@ -175,6 +175,51 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 202_752,
+    description: 'GLM系列模型是智谱AI专为智能体设计的混合推理模型，提供思考与非思考两种模式。',
+    displayName: 'GLM-4.6',
+    id: 'glm-4.6',
+    maxOutput: 16_384,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]': 3,
+              '[0.032, infinity]': 4,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]': 14,
+              '[0.032, infinity]': 16,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -218,6 +263,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -1440,6 +1486,50 @@ const qwenChatModels: AIChatModelCard[] = [
       'Qwen3 VL 235B A22B 非思考模式（Instruct），适用于非思考指令场景，保持强大的视觉理解能力。',
     displayName: 'Qwen3 VL 235B A22B Instruct',
     id: 'qwen3-vl-235b-a22b-instruct',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3 VL 32B 思考模式（开源版），针对高难度强推理与长视频理解场景，提供顶尖的视觉+文本推理能力。',
+    displayName: 'Qwen3 VL 32B Thinking',
+    id: 'qwen3-vl-32b-thinking',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3 VL 32B 非思考模式（Instruct），适用于非思考指令场景，保持强大的视觉理解能力。',
+    displayName: 'Qwen3 VL 32B Instruct',
+    id: 'qwen3-vl-32b-instruct',
     maxOutput: 32_768,
     organization: 'Qwen',
     pricing: {

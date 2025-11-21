@@ -4,7 +4,7 @@ import { useAnalytics } from '@lobehub/analytics/react';
 import { memo, useCallback, useEffect } from 'react';
 
 import { getChatStoreState } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/slices/message/selectors';
+import { displayMessageSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { getSessionStoreState } from '@/store/session';
@@ -18,7 +18,7 @@ const MainInterfaceTracker = memo(() => {
     const activeSessionId = currentSession?.id;
     const defaultSessions = sessionSelectors.defaultSessions(getSessionStoreState());
     const showChatSideBar = systemStatusSelectors.showChatSideBar(useGlobalStore.getState());
-    const messages = chatSelectors.activeBaseChats(getChatStoreState());
+    const messages = displayMessageSelectors.activeDisplayMessages(getChatStoreState());
     return {
       active_assistant: activeSessionId === 'inbox' ? null : currentSession?.meta?.title || null,
       has_chat_history: messages.length > 0,
