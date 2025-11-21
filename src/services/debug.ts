@@ -7,7 +7,7 @@ class DebugService {
     //   topicCount: 200,
     // });
     //
-    // console.log('已插入10w');
+    // console.log('Inserted 100k');
     //
     // await DEBUG_MODEL.createRandomData({
     //   messageCount: 300_000,
@@ -15,7 +15,7 @@ class DebugService {
     //   startIndex: 100_001,
     //   topicCount: 200,
     // });
-    // console.log('已插入40w');
+    // console.log('Inserted 400k');
     //
     // await DEBUG_MODEL.createRandomData({
     //   messageCount: 300_000,
@@ -23,7 +23,7 @@ class DebugService {
     //   startIndex: 400_001,
     //   topicCount: 200,
     // });
-    // console.log('已插入70w');
+    // console.log('Inserted 700k');
     //
     // await DEBUG_MODEL.createRandomData({
     //   messageCount: 300_000,
@@ -31,7 +31,7 @@ class DebugService {
     //   startIndex: 700_001,
     //   topicCount: 200,
     // });
-    // console.log('已插入100w');
+    // console.log('Inserted 1M');
   }
 }
 

@@ -28,6 +28,7 @@ vi.mock('@/services/message', () => ({
     createMessage: vi.fn(() => Promise.resolve({ id: 'new-message-id', messages: [] })),
     updateMessage: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
     updateMessageMetadata: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+    updateMessagePlugin: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
     updateMessagePluginError: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
     updateMessageRAG: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
     removeAllMessages: vi.fn(() => Promise.resolve()),
@@ -688,11 +689,14 @@ describe('chatMessage actions', () => {
         await result.current.optimisticUpdateMessageContent(messageId, newContent);
       });
 
-      expect(internal_dispatchMessageSpy).toHaveBeenCalledWith({
-        id: messageId,
-        type: 'updateMessage',
-        value: { content: newContent },
-      });
+      expect(internal_dispatchMessageSpy).toHaveBeenCalledWith(
+        {
+          id: messageId,
+          type: 'updateMessage',
+          value: { content: newContent },
+        },
+        undefined,
+      );
     });
 
     it('should replace messages after updating content', async () => {
@@ -872,10 +876,17 @@ describe('chatMessage actions', () => {
 
       const updateMessageSpy = vi.spyOn(messageService, 'updateMessage');
 
+      let operationId: string;
       await act(async () => {
+        // Create operation with desired context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: contextSessionId, topicId: contextTopicId },
+        });
+        operationId = op.operationId;
+
         await result.current.optimisticUpdateMessageContent(messageId, content, undefined, {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          operationId,
         });
       });
 
@@ -886,7 +897,7 @@ describe('chatMessage actions', () => {
       );
     });
 
-    it('optimisticUpdateMessageError should use context sessionId/topicId', async () => {
+    it('optimisticUpdateMessageError should use context operationId', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const error = { message: 'Error occurred', type: 'error' as any };
@@ -895,10 +906,17 @@ describe('chatMessage actions', () => {
 
       const updateMessageSpy = vi.spyOn(messageService, 'updateMessage');
 
+      let operationId: string;
       await act(async () => {
+        // Create operation with desired context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: contextSessionId, topicId: contextTopicId },
+        });
+        operationId = op.operationId;
+
         await result.current.optimisticUpdateMessageError(messageId, error, {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          operationId,
         });
       });
 
@@ -909,7 +927,7 @@ describe('chatMessage actions', () => {
       );
     });
 
-    it('optimisticDeleteMessage should use context sessionId/topicId', async () => {
+    it('optimisticDeleteMessage should use context operationId', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const contextSessionId = 'context-session';
@@ -917,10 +935,17 @@ describe('chatMessage actions', () => {
 
       const removeMessageSpy = vi.spyOn(messageService, 'removeMessage');
 
+      let operationId: string;
       await act(async () => {
+        // Create operation with desired context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: contextSessionId, topicId: contextTopicId },
+        });
+        operationId = op.operationId;
+
         await result.current.optimisticDeleteMessage(messageId, {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          operationId,
         });
       });
 
@@ -930,7 +955,7 @@ describe('chatMessage actions', () => {
       });
     });
 
-    it('optimisticDeleteMessages should use context sessionId/topicId', async () => {
+    it('optimisticDeleteMessages should use context operationId', async () => {
       const { result } = renderHook(() => useChatStore());
       const ids = ['id-1', 'id-2'];
       const contextSessionId = 'context-session';
@@ -938,14 +963,107 @@ describe('chatMessage actions', () => {
 
       const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
 
+      let operationId: string;
       await act(async () => {
+        // Create operation with desired context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: contextSessionId, topicId: contextTopicId },
+        });
+        operationId = op.operationId;
+
         await result.current.optimisticDeleteMessages(ids, {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          operationId,
         });
       });
 
       expect(removeMessagesSpy).toHaveBeenCalledWith(ids, {
+        sessionId: contextSessionId,
+        topicId: contextTopicId,
+      });
+    });
+  });
+
+  describe('optimisticUpdateMessagePlugin', () => {
+    it('should dispatch message update action with plugin value', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const pluginValue = { arguments: '{"test":"value"}' };
+      const internal_dispatchMessageSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
+
+      await act(async () => {
+        await result.current.optimisticUpdateMessagePlugin(messageId, pluginValue);
+      });
+
+      expect(internal_dispatchMessageSpy).toHaveBeenCalledWith(
+        {
+          id: messageId,
+          type: 'updateMessagePlugin',
+          value: pluginValue,
+        },
+        undefined,
+      );
+    });
+
+    it('should call messageService.updateMessagePlugin with correct parameters', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const pluginValue = { state: 'success' };
+
+      const updateMessagePluginSpy = vi.spyOn(messageService, 'updateMessagePlugin');
+      await act(async () => {
+        await result.current.optimisticUpdateMessagePlugin(messageId, pluginValue);
+      });
+
+      expect(updateMessagePluginSpy).toHaveBeenCalledWith(messageId, pluginValue, {
+        sessionId: 'session-id',
+        topicId: 'topic-id',
+      });
+    });
+
+    it('should replace messages after updating plugin', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const pluginValue = { apiName: 'test-api' };
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
+
+      await act(async () => {
+        await result.current.optimisticUpdateMessagePlugin(messageId, pluginValue);
+      });
+
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(
+        [],
+        expect.objectContaining({
+          sessionId: 'session-id',
+          topicId: 'topic-id',
+        }),
+      );
+    });
+
+    it('should use context operationId when provided', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const pluginValue = { identifier: 'test-plugin' };
+      const contextSessionId = 'context-session';
+      const contextTopicId = 'context-topic';
+
+      const updateMessagePluginSpy = vi.spyOn(messageService, 'updateMessagePlugin');
+
+      let operationId: string;
+      await act(async () => {
+        // Create operation with desired context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: contextSessionId, topicId: contextTopicId },
+        });
+        operationId = op.operationId;
+
+        await result.current.optimisticUpdateMessagePlugin(messageId, pluginValue, {
+          operationId,
+        });
+      });
+
+      expect(updateMessagePluginSpy).toHaveBeenCalledWith(messageId, pluginValue, {
         sessionId: contextSessionId,
         topicId: contextTopicId,
       });

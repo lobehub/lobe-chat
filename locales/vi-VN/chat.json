@@ -65,6 +65,9 @@
     "thinking": {
       "title": "Công tắc suy nghĩ sâu"
     },
+    "thinkingLevel": {
+      "title": "Mức độ tư duy"
+    },
     "title": "Chức năng mở rộng mô hình",
     "urlContext": {
       "desc": "Bật tính năng này sẽ tự động phân tích liên kết trang web để lấy nội dung ngữ cảnh thực tế của trang web",
@@ -396,6 +399,7 @@
       "rejectReasonPlaceholder": "Nhập lý do từ chối sẽ giúp Agent hiểu và cải thiện hành động sau này",
       "rejectTitle": "Từ chối lần gọi công cụ này",
       "rejectedWithReason": "Lần gọi công cụ này đã bị từ chối: {{reason}}",
+      "toolAbort": "Lần gọi công cụ này đã bị người dùng hủy",
       "toolRejected": "Lần gọi công cụ này đã bị từ chối"
     }
   },

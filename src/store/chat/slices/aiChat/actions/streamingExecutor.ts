@@ -28,38 +28,11 @@ import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { toolInterventionSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
-import { setNamespace } from '@/utils/storeDebug';
 
 import { topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
-const n = setNamespace('ai');
 const log = debug('lobe-store:streaming-executor');
-
-interface ProcessMessageParams {
-  traceId?: string;
-  isWelcomeQuestion?: boolean;
-  inSearchWorkflow?: boolean;
-  /**
-   * the RAG query content, should be embedding and used in the semantic search
-   */
-  ragQuery?: string;
-  threadId?: string;
-  inPortalThread?: boolean;
-
-  groupId?: string;
-  agentId?: string;
-  agentConfig?: any; // Agent configuration for group chat agents
-
-  /**
-   * Explicit sessionId for this execution (avoids using global activeId)
-   */
-  sessionId?: string;
-  /**
-   * Explicit topicId for this execution (avoids using global activeTopicId)
-   */
-  topicId?: string | null;
-}
 
 /**
  * Core streaming execution actions for AI chat
@@ -89,18 +62,21 @@ export interface StreamingExecutorAction {
   /**
    * Retrieves an AI-generated chat message from the backend service with streaming
    */
-  internal_fetchAIChatMessage: (input: {
-    messages: UIChatMessage[];
+  internal_fetchAIChatMessage: (params: {
     messageId: string;
-    params?: ProcessMessageParams;
+    messages: UIChatMessage[];
     model: string;
     provider: string;
+    operationId?: string;
+    agentConfig?: any;
+    traceId?: string;
   }) => Promise<{
     isFunctionCall: boolean;
     tools?: ChatToolPayload[];
     tool_calls?: MessageToolCall[];
     content: string;
     traceId?: string;
+    finishType?: string;
     usage?: ModelUsage;
   }>;
   /**
@@ -119,6 +95,14 @@ export interface StreamingExecutorAction {
      * Explicit topicId for this execution (avoids using global activeTopicId)
      */
     topicId?: string | null;
+    /**
+     * Operation ID for this execution (automatically created if not provided)
+     */
+    operationId?: string;
+    /**
+     * Parent operation ID (creates a child operation if provided)
+     */
+    parentOperationId?: string;
     inSearchWorkflow?: boolean;
     /**
      * the RAG query content, should be embedding and used in the semantic search
@@ -219,37 +203,74 @@ export const streamingExecutor: StateCreator<
     return { state, context };
   },
 
-  internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
+  internal_fetchAIChatMessage: async ({
+    messageId,
+    messages,
+    model,
+    provider,
+    operationId,
+    agentConfig,
+    traceId: traceIdParam,
+  }) => {
     const {
-      internal_toggleChatLoading,
-      refreshMessages,
       optimisticUpdateMessageContent,
       internal_dispatchMessage,
       internal_toggleToolCallingStreaming,
-      internal_toggleChatReasoning,
     } = get();
 
-    const abortController = internal_toggleChatLoading(
-      true,
-      messageId,
-      n('generateMessage(start)', { messageId, messages }),
-    );
+    // Get sessionId, topicId, and abortController from operation
+    let sessionId: string;
+    let topicId: string | null | undefined;
+    let traceId: string | undefined = traceIdParam;
+    let abortController: AbortController;
 
-    const agentConfig =
-      params?.agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
+    if (operationId) {
+      const operation = get().operations[operationId];
+      if (!operation) {
+        log('[internal_fetchAIChatMessage] ERROR: Operation not found: %s', operationId);
+        throw new Error(`Operation not found: ${operationId}`);
+      }
+      sessionId = operation.context.sessionId!;
+      topicId = operation.context.topicId;
+      abortController = operation.abortController; // 👈 Use operation's abortController
+      log(
+        '[internal_fetchAIChatMessage] get context from operation %s: sessionId=%s, topicId=%s, aborted=%s',
+        operationId,
+        sessionId,
+        topicId,
+        abortController.signal.aborted,
+      );
+      // Get traceId from operation metadata if not explicitly provided
+      if (!traceId) {
+        traceId = operation.metadata?.traceId;
+      }
+    } else {
+      // Fallback to global state (for legacy code paths without operation)
+      sessionId = get().activeId;
+      topicId = get().activeTopicId;
+      abortController = new AbortController();
+      log(
+        '[internal_fetchAIChatMessage] use global context: sessionId=%s, topicId=%s',
+        sessionId,
+        topicId,
+      );
+    }
+
+    // Get agent config from params or use current
+    const finalAgentConfig = agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     // ================================== //
     //   messages uniformly preprocess    //
     // ================================== //
     // 4. handle max_tokens
-    agentConfig.params.max_tokens = chatConfig.enableMaxTokens
-      ? agentConfig.params.max_tokens
+    finalAgentConfig.params.max_tokens = chatConfig.enableMaxTokens
+      ? finalAgentConfig.params.max_tokens
       : undefined;
 
     // 5. handle reasoning_effort
-    agentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
-      ? agentConfig.params.reasoning_effort
+    finalAgentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
+      ? finalAgentConfig.params.reasoning_effort
       : undefined;
 
     let isFunctionCall = false;
@@ -261,23 +282,21 @@ export const streamingExecutor: StateCreator<
     let thinking = '';
     let thinkingStartAt: number;
     let duration: number | undefined;
+    let reasoningOperationId: string | undefined;
+    let finishType: string | undefined;
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
-    const context: { sessionId: string; topicId?: string | null } = {
-      sessionId: params?.sessionId || get().activeId,
-      topicId: params?.topicId,
-    };
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
-      (toolCalls: any[]) => {
+      (toolCalls: MessageToolCall[]) => {
         internal_dispatchMessage(
           {
             id: messageId,
             type: 'updateMessage',
             value: { tools: get().internal_transformToolCalls(toolCalls) },
           },
-          context,
+          { operationId },
         );
       },
       300,
@@ -293,24 +312,28 @@ export const streamingExecutor: StateCreator<
         messages,
         model,
         provider,
-        ...agentConfig.params,
-        plugins: agentConfig.plugins,
+        ...finalAgentConfig.params,
+        plugins: finalAgentConfig.plugins,
       },
       historySummary: historySummary?.content,
       trace: {
-        traceId: params?.traceId,
-        sessionId: params?.sessionId ?? get().activeId,
-        topicId:
-          (params?.topicId !== undefined ? params.topicId : get().activeTopicId) ?? undefined,
+        traceId,
+        sessionId,
+        topicId: topicId ?? undefined,
         traceName: TraceNameMap.Conversation,
       },
       onErrorHandle: async (error) => {
-        await messageService.updateMessageError(messageId, error, context);
-        await refreshMessages(params?.sessionId, params?.topicId);
+        log(
+          '[internal_fetchAIChatMessage] onError: messageId=%s, error=%s, operationId=%s',
+          messageId,
+          error.message,
+          operationId,
+        );
+        await get().optimisticUpdateMessageError(messageId, error, { operationId });
       },
       onFinish: async (
         content,
-        { traceId, observationId, toolCalls, reasoning, grounding, usage, speed },
+        { traceId, observationId, toolCalls, reasoning, grounding, usage, speed, type },
       ) => {
         // if there is traceId, update it
         if (traceId) {
@@ -318,7 +341,7 @@ export const streamingExecutor: StateCreator<
           messageService.updateMessage(
             messageId,
             { traceId, observationId: observationId ?? undefined },
-            context,
+            { sessionId, topicId },
           );
         }
 
@@ -343,7 +366,6 @@ export const streamingExecutor: StateCreator<
           throttledUpdateToolCalls.flush();
           internal_toggleToolCallingStreaming(messageId, undefined);
 
-          tools = get().internal_transformToolCalls(parsedToolCalls);
           tool_calls = toolCalls;
 
           parsedToolCalls = parsedToolCalls.map((item) => ({
@@ -354,26 +376,35 @@ export const streamingExecutor: StateCreator<
             },
           }));
 
+          tools = get().internal_transformToolCalls(parsedToolCalls);
+
           isFunctionCall = true;
         }
 
         finalUsage = usage;
-        internal_toggleChatReasoning(false, messageId, n('toggleChatReasoning/false') as string);
+        finishType = type;
+
+        log(
+          '[internal_fetchAIChatMessage] onFinish: messageId=%s, finishType=%s, operationId=%s',
+          messageId,
+          type,
+          operationId,
+        );
 
         // update the content after fetch result
         await optimisticUpdateMessageContent(
           messageId,
           content,
           {
-            toolCalls: parsedToolCalls,
+            tools,
             reasoning: !!reasoning
               ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
               : undefined,
             search: !!grounding?.citations ? grounding : undefined,
             imageList: finalImages.length > 0 ? finalImages : undefined,
-            metadata: speed ? { ...usage, ...speed } : usage,
+            metadata: { ...usage, ...speed, performance: speed, usage, finishType: type },
           },
-          context,
+          { operationId },
         );
       },
       onMessageHandle: async (chunk) => {
@@ -398,7 +429,7 @@ export const streamingExecutor: StateCreator<
                   },
                 },
               },
-              context,
+              { operationId },
             );
             break;
           }
@@ -412,7 +443,7 @@ export const streamingExecutor: StateCreator<
                   imageList: chunk.images.map((i) => ({ id: i.id, url: i.data, alt: i.id })),
                 },
               },
-              context,
+              { operationId },
             );
             const image = chunk.image;
 
@@ -436,15 +467,19 @@ export const streamingExecutor: StateCreator<
             if (!duration) {
               duration = Date.now() - thinkingStartAt;
 
-              const isInChatReasoning = get().reasoningLoadingIds.includes(messageId);
-              if (isInChatReasoning) {
-                internal_toggleChatReasoning(
-                  false,
-                  messageId,
-                  n('toggleChatReasoning/false') as string,
-                );
+              // Complete reasoning operation if it exists
+              if (reasoningOperationId) {
+                get().completeOperation(reasoningOperationId);
+                reasoningOperationId = undefined;
               }
             }
+
+            log(
+              '[text stream] messageId=%s, output length=%d, operationId=%s',
+              messageId,
+              output.length,
+              operationId,
+            );
 
             internal_dispatchMessage(
               {
@@ -455,7 +490,7 @@ export const streamingExecutor: StateCreator<
                   reasoning: !!thinking ? { content: thinking, duration } : undefined,
                 },
               },
-              context,
+              { operationId },
             );
             break;
           }
@@ -464,11 +499,17 @@ export const streamingExecutor: StateCreator<
             // if there is no thinkingStartAt, it means the start of reasoning
             if (!thinkingStartAt) {
               thinkingStartAt = Date.now();
-              internal_toggleChatReasoning(
-                true,
-                messageId,
-                n('toggleChatReasoning/true') as string,
-              );
+
+              // Create reasoning operation
+              const { operationId: reasoningOpId } = get().startOperation({
+                type: 'reasoning',
+                context: { sessionId, topicId, messageId },
+                parentOperationId: operationId,
+              });
+              reasoningOperationId = reasoningOpId;
+
+              // Associate message with reasoning operation
+              get().associateMessageWithOperation(messageId, reasoningOperationId);
             }
 
             thinking += chunk.text;
@@ -479,7 +520,7 @@ export const streamingExecutor: StateCreator<
                 type: 'updateMessage',
                 value: { reasoning: { content: thinking } },
               },
-              context,
+              { operationId },
             );
             break;
           }
@@ -489,24 +530,25 @@ export const streamingExecutor: StateCreator<
             internal_toggleToolCallingStreaming(messageId, chunk.isAnimationActives);
             throttledUpdateToolCalls(chunk.tool_calls);
             isFunctionCall = true;
-            const isInChatReasoning = get().reasoningLoadingIds.includes(messageId);
-            if (isInChatReasoning) {
-              if (!duration) {
-                duration = Date.now() - thinkingStartAt;
-              }
 
-              internal_toggleChatReasoning(
-                false,
-                messageId,
-                n('toggleChatReasoning/false') as string,
-              );
+            // Complete reasoning operation if it exists
+            if (!duration && reasoningOperationId) {
+              duration = Date.now() - thinkingStartAt;
+              get().completeOperation(reasoningOperationId);
+              reasoningOperationId = undefined;
             }
           }
         }
       },
     });
 
-    internal_toggleChatLoading(false, messageId, n('generateMessage(end)') as string);
+    log(
+      '[internal_fetchAIChatMessage] completed: messageId=%s, finishType=%s, isFunctionCall=%s, operationId=%s',
+      messageId,
+      finishType,
+      isFunctionCall,
+      operationId,
+    );
 
     return {
       isFunctionCall,
@@ -515,6 +557,7 @@ export const streamingExecutor: StateCreator<
       tools,
       usage: finalUsage,
       tool_calls,
+      finishType,
     };
   },
 
@@ -533,8 +576,34 @@ export const streamingExecutor: StateCreator<
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
     const messageKey = messageMapKey(sessionId, topicId);
 
+    // Create or use provided operation
+    let operationId = params.operationId;
+    if (!operationId) {
+      const { operationId: newOperationId } = get().startOperation({
+        type: 'execAgentRuntime',
+        context: {
+          sessionId,
+          topicId,
+          messageId: parentMessageId,
+          threadId: params.threadId,
+        },
+        parentOperationId: params.parentOperationId, // Pass parent operation ID
+        label: 'AI Generation',
+        metadata: {
+          // Mark if this operation is in thread context
+          // Thread operations should not affect main window UI state
+          inThread: params.inPortalThread || false,
+        },
+      });
+      operationId = newOperationId;
+
+      // Associate message with operation
+      get().associateMessageWithOperation(parentMessageId, operationId);
+    }
+
     log(
-      '[internal_execAgentRuntime] start, sessionId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
+      '[internal_execAgentRuntime] start, operationId: %s, sessionId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
+      operationId,
       sessionId,
       topicId,
       messageKey,
@@ -624,14 +693,19 @@ export const streamingExecutor: StateCreator<
       executors: createAgentExecutors({
         get,
         messageKey,
+        operationId,
         parentId: params.parentMessageId,
-        params: {
-          ...params,
-          sessionId,
-          topicId,
-        },
         skipCreateFirstMessage: params.skipCreateFirstMessage,
       }),
+      getOperation: (opId: string) => {
+        const op = get().operations[opId];
+        if (!op) throw new Error(`Operation not found: ${opId}`);
+        return {
+          abortController: op.abortController,
+          context: op.context,
+        };
+      },
+      operationId,
     });
 
     // Create agent state and context with user intervention config
@@ -657,6 +731,22 @@ export const streamingExecutor: StateCreator<
     // Execute the agent runtime loop
     let stepCount = 0;
     while (state.status !== 'done' && state.status !== 'error') {
+      // Check if operation has been cancelled
+      const currentOperation = get().operations[operationId];
+      if (currentOperation?.status === 'cancelled') {
+        log('[internal_execAgentRuntime] Operation cancelled, marking state as interrupted');
+
+        // Update state status to 'interrupted' so agent can handle abort
+        state = { ...state, status: 'interrupted' };
+
+        // Let agent handle the abort (will clean up pending tools if needed)
+        const result = await runtime.step(state, nextContext);
+        state = result.newState;
+
+        log('[internal_execAgentRuntime] Operation cancelled, stopping loop');
+        break;
+      }
+
       stepCount++;
       log(
         '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s',
@@ -702,6 +792,28 @@ export const streamingExecutor: StateCreator<
 
       state = result.newState;
 
+      // Check if operation was cancelled after step completion
+      const operationAfterStep = get().operations[operationId];
+      if (operationAfterStep?.status === 'cancelled') {
+        log(
+          '[internal_execAgentRuntime] Operation cancelled after step %d, marking state as interrupted',
+          stepCount,
+        );
+
+        // Set state.status to 'interrupted' to trigger agent abort handling
+        state = { ...state, status: 'interrupted' };
+
+        // Let agent handle the abort (will clean up pending tools if needed)
+        // Use result.nextContext if available (e.g., llm_result with tool calls)
+        // otherwise fallback to current nextContext
+        const contextForAbort = result.nextContext || nextContext;
+        const abortResult = await runtime.step(state, contextForAbort);
+        state = abortResult.newState;
+
+        log('[internal_execAgentRuntime] Operation cancelled, stopping loop');
+        break;
+      }
+
       // If no nextContext, stop execution
       if (!result.nextContext) {
         log('[internal_execAgentRuntime] No next context, stopping loop');
@@ -723,11 +835,22 @@ export const streamingExecutor: StateCreator<
       const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
       if (assistantMessage) {
         await get().optimisticUpdateMessageRAG(assistantMessage.id, params.ragMetadata, {
-          sessionId,
-          topicId,
+          operationId,
         });
         log('[internal_execAgentRuntime] RAG metadata updated for assistant message');
       }
+    }
+
+    // Complete operation
+    if (state.status === 'done') {
+      get().completeOperation(operationId);
+      log('[internal_execAgentRuntime] Operation completed successfully');
+    } else if (state.status === 'error') {
+      get().failOperation(operationId, {
+        type: 'runtime_error',
+        message: 'Agent runtime execution failed',
+      });
+      log('[internal_execAgentRuntime] Operation failed');
     }
 
     log('[internal_execAgentRuntime] completed');

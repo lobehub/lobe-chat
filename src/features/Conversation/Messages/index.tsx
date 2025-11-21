@@ -96,7 +96,6 @@ const Item = memo<ChatListItemProps>(
     const [isShareModalOpen, setShareModalOpen] = useState(false);
 
     const [
-      isMessageLoading,
       role,
       error,
       editing,
@@ -104,12 +103,12 @@ const Item = memo<ChatListItemProps>(
       hasThread,
       isRegenerating,
       isCollapsed,
+      isMessageCreating
     ] = useChatStore(
       (s) => {
         const item = displayMessageSelectors.getDisplayMessageById(id)(s);
 
         return [
-          messageStateSelectors.isMessageLoading(id)(s),
           item?.role,
           item?.error,
           messageStateSelectors.isMessageEditing(id)(s),
@@ -117,6 +116,7 @@ const Item = memo<ChatListItemProps>(
           threadSelectors.hasThreadBySourceMsgId(id)(s),
           messageStateSelectors.isMessageRegenerating(id)(s),
           messageStateSelectors.isMessageCollapsed(id)(s),
+          messageStateSelectors.isMessageCreating(id)(s),
         ];
       },
       isEqual,
@@ -208,6 +208,7 @@ const Item = memo<ChatListItemProps>(
       s.resendThreadMessage,
       s.delAndResendThreadMessage,
       s.toggleMessageCollapsed,
+
     ]);
 
     const getMessage = useCallback(
@@ -542,7 +543,7 @@ const Item = memo<ChatListItemProps>(
       <InPortalThreadContext.Provider value={inPortalThread}>
         {enableHistoryDivider && <History />}
         <Flexbox
-          className={cx(styles.message, className, isMessageLoading && styles.loading)}
+          className={cx(styles.message, className, isMessageCreating && styles.loading)}
           data-index={index}
           onContextMenu={onContextMenu}
           ref={setContainerRef}

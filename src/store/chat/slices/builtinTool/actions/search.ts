@@ -1,12 +1,15 @@
 import { crawlResultsPrompt } from '@lobechat/prompts';
 import { CreateMessageParams, SEARCH_SEARXNG_NOT_CONFIG, SearchQuery } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
+import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
 import { searchService } from '@/services/search';
 import { dbMessageSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { WebBrowsingExecutionRuntime } from '@/tools/web-browsing/ExecutionRuntime';
+
+const log = debug('lobe-store:builtin-tool');
 
 export interface SearchAction {
   crawlMultiPages: (
@@ -22,7 +25,6 @@ export interface SearchAction {
   saveSearchResult: (id: string) => Promise<void>;
   search: (id: string, data: SearchQuery, aiSummary?: boolean) => Promise<void | boolean>;
   togglePageContent: (url: string) => void;
-  toggleSearchLoading: (id: string, loading: boolean) => void;
   /**
    * 重新发起搜索
    * @description 会更新插件的 arguments 参数，然后再次搜索
@@ -43,36 +45,79 @@ export const searchSlice: StateCreator<
   SearchAction
 > = (set, get) => ({
   crawlMultiPages: async (id, params, aiSummary = true) => {
-    const { optimisticUpdateMessageContent } = get();
-    get().toggleSearchLoading(id, true);
+    // Get parent operationId from messageOperationMap (should be executeToolCall)
+    const parentOperationId = get().messageOperationMap[id];
 
-    // Get message to extract sessionId/topicId
-    const message = dbMessageSelectors.getDbMessageById(id)(get());
-    const context = { sessionId: message?.sessionId, topicId: message?.topicId };
+    // Create child operation for crawl execution
+    // Auto-associates message with this operation via messageId in context
+    const { operationId: crawlOpId, abortController } = get().startOperation({
+      context: {
+        messageId: id,
+      },
+      metadata: {
+        startTime: Date.now(),
+        urls: params.urls,
+      },
+      parentOperationId,
+      type: 'builtinToolSearch',
+    });
+
+    log(
+      '[crawlMultiPages] messageId=%s, parentOpId=%s, crawlOpId=%s, urls=%o, aborted=%s',
+      id,
+      parentOperationId,
+      crawlOpId,
+      params.urls,
+      abortController.signal.aborted,
+    );
+
+    const context = { operationId: crawlOpId };
 
     try {
       const { content, success, error, state } = await runtime.crawlMultiPages(params);
 
-      await optimisticUpdateMessageContent(id, content, undefined, context);
+      // Complete crawl operation
+      get().completeOperation(crawlOpId);
+
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
 
       if (success) {
         await get().optimisticUpdatePluginState(id, state, context);
       } else {
         await get().optimisticUpdatePluginError(id, error, context);
       }
-      get().toggleSearchLoading(id, false);
-
-      // Convert to XML format to save tokens
 
       // if aiSummary is true, then trigger ai message
       return aiSummary;
     } catch (e) {
       const err = e as Error;
+
+      log('[crawlMultiPages] Error: messageId=%s, error=%s', id, err.message);
+
+      // Check if it's an abort error
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        log('[crawlMultiPages] Request aborted: messageId=%s', id);
+        // Fail crawl operation for abort
+        get().failOperation(crawlOpId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        // Don't update error message for user aborts
+        return;
+      }
+
+      // Fail crawl operation for other errors
+      get().failOperation(crawlOpId, {
+        message: err.message,
+        type: 'PluginServerError',
+      });
+
+      // For other errors, update message
       console.error(e);
       const content = [{ errorMessage: err.message, errorType: err.name }];
 
       const xmlContent = crawlResultsPrompt(content);
-      await optimisticUpdateMessageContent(id, xmlContent, undefined, context);
+      await get().optimisticUpdateMessageContent(id, xmlContent, undefined, context);
     }
   },
 
@@ -88,7 +133,9 @@ export const searchSlice: StateCreator<
 
     const { optimisticAddToolToAssistantMessage, optimisticCreateMessage, openToolUI } = get();
 
-    const context = { sessionId: message.sessionId, topicId: message.topicId };
+    // Get operationId from messageOperationMap
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
 
     // 1. 创建一个新的 tool call message
     const newToolCallId = `tool_call_${nanoid()}`;
@@ -120,10 +167,7 @@ export const searchSlice: StateCreator<
 
     const [result] = await Promise.all([
       // 1. 添加 tool message
-      optimisticCreateMessage(toolMessage, {
-        sessionId: toolMessage.sessionId,
-        topicId: toolMessage.topicId,
-      }),
+      optimisticCreateMessage(toolMessage, context),
       // 2. 将这条 tool call message 插入到 ai 消息的 tools 中
       addToolItem(),
     ]);
@@ -134,61 +178,104 @@ export const searchSlice: StateCreator<
   },
 
   search: async (id, params, aiSummary = true) => {
-    get().toggleSearchLoading(id, true);
+    // Get parent operationId from messageOperationMap (should be executeToolCall)
+    const parentOperationId = get().messageOperationMap[id];
 
-    // Get message to extract sessionId/topicId
-    const message = dbMessageSelectors.getDbMessageById(id)(get());
-    const context = { sessionId: message?.sessionId, topicId: message?.topicId };
+    // Create child operation for search execution
+    // Auto-associates message with this operation via messageId in context
+    const { operationId: searchOpId, abortController } = get().startOperation({
+      context: {
+        messageId: id,
+      },
+      metadata: {
+        query: params.query,
+        startTime: Date.now(),
+      },
+      parentOperationId,
+      type: 'builtinToolSearch',
+    });
 
-    const { content, success, error, state } = await runtime.search(params);
+    log(
+      '[search] messageId=%s, parentOpId=%s, searchOpId=%s, aborted=%s',
+      id,
+      parentOperationId,
+      searchOpId,
+      abortController.signal.aborted,
+    );
 
-    if (success) {
-      await get().optimisticUpdatePluginState(id, state, context);
-    } else {
-      if ((error as Error).message === SEARCH_SEARXNG_NOT_CONFIG) {
-        await get().optimisticUpdateMessagePluginError(
-          id,
-          {
-            body: { provider: 'searxng' },
-            message: 'SearXNG is not configured',
-            type: 'PluginSettingsInvalid',
-          },
-          context,
-        );
+    const context = { operationId: searchOpId };
+
+    try {
+      const { content, success, error, state } = await runtime.search(params, {
+        signal: abortController.signal,
+      });
+
+      // Complete search operation
+      get().completeOperation(searchOpId);
+
+      if (success) {
+        await get().optimisticUpdatePluginState(id, state, context);
       } else {
-        await get().optimisticUpdateMessagePluginError(
-          id,
-          {
-            body: error,
-            message: (error as Error).message,
-            type: 'PluginServerError',
-          },
-          context,
-        );
+        if ((error as Error).message === SEARCH_SEARXNG_NOT_CONFIG) {
+          await get().optimisticUpdateMessagePluginError(
+            id,
+            {
+              body: { provider: 'searxng' },
+              message: 'SearXNG is not configured',
+              type: 'PluginSettingsInvalid',
+            },
+            context,
+          );
+        } else {
+          await get().optimisticUpdateMessagePluginError(
+            id,
+            {
+              body: error,
+              message: (error as Error).message,
+              type: 'PluginServerError',
+            },
+            context,
+          );
+        }
       }
+
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
+
+      // 如果 aiSummary 为 true，则会自动触发总结
+      return aiSummary;
+    } catch (error) {
+      const err = error as Error;
+
+      log('[search] Error: messageId=%s, error=%s', id, err.message);
+
+      // Check if it's an abort error
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        log('[search] Request aborted: messageId=%s', id);
+        // Fail search operation for abort
+        get().failOperation(searchOpId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        // Don't update error message for user aborts
+        return;
+      }
+
+      // Fail search operation for other errors
+      get().failOperation(searchOpId, { message: err.message, type: 'PluginServerError' });
+
+      // For other errors, update message
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        { body: error, message: err.message, type: 'PluginServerError' },
+        context,
+      );
     }
-
-    get().toggleSearchLoading(id, false);
-
-    await get().optimisticUpdateMessageContent(id, content, undefined, context);
-
-    // 如果 aiSummary 为 true，则会自动触发总结
-    return aiSummary;
   },
   togglePageContent: (url) => {
     set({ activePageContentUrl: url });
   },
 
-  toggleSearchLoading: (id, loading) => {
-    set(
-      { searchLoading: { ...get().searchLoading, [id]: loading } },
-      false,
-      `toggleSearchLoading/${loading ? 'start' : 'end'}`,
-    );
-  },
-
   triggerSearchAgain: async (id, data, options) => {
-    get().toggleSearchLoading(id, true);
     await get().optimisticUpdatePluginArguments(id, data);
 
     await get().search(id, data, options?.aiSummary);

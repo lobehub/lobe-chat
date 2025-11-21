@@ -27,7 +27,7 @@ import { ChatTopic, CreateTopicParams } from '@/types/topic';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors } from '../message/selectors';
+import { displayMessageSelectors } from '../message/selectors';
 import { ChatTopicDispatch, topicReducer } from './reducer';
 import { topicSelectors } from './selectors';
 
@@ -92,7 +92,7 @@ export const chatTopic: StateCreator<
   createTopic: async (sessionId, groupId) => {
     const { activeId, activeSessionType, internal_createTopic } = get();
 
-    const messages = chatSelectors.activeBaseChats(get());
+    const messages = displayMessageSelectors.activeDisplayMessages(get());
 
     set({ creatingTopic: true }, false, n('creatingTopic/start'));
     const topicId = await internal_createTopic({
@@ -109,7 +109,7 @@ export const chatTopic: StateCreator<
 
   saveToTopic: async (sessionId, groupId) => {
     // if there is no message, stop
-    const messages = chatSelectors.activeBaseChats(get());
+    const messages = displayMessageSelectors.activeDisplayMessages(get());
     if (messages.length === 0) return;
 
     const { activeId, activeSessionType, summaryTopicTitle, internal_createTopic } = get();

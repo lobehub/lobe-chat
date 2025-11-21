@@ -11,12 +11,16 @@ export type OperationType =
   // === Message sending ===
   | 'sendMessage' // Send message to server
   | 'createTopic' // Auto create topic
-
-  // === AI generation ===
-  | 'generateAI' // AI generate response (entire agent runtime execution)
-  | 'reasoning' // AI reasoning process (child operation)
   | 'regenerate' // Regenerate message
   | 'continue' // Continue generation
+
+  // === AI generation ===
+  | 'execAgentRuntime' // Execute agent runtime (entire agent runtime execution)
+  | 'createAssistantMessage' // Create assistant message (sub-operation of execAgentRuntime)
+  // === LLM execution (sub-operations) ===
+  | 'callLLM' // Call LLM streaming response (sub-operation of execAgentRuntime)
+  // === (sub-operations) ===
+  | 'reasoning' // AI reasoning process (child operation)
 
   // === RAG and retrieval ===
   | 'rag' // RAG retrieval flow (child operation)
@@ -24,6 +28,10 @@ export type OperationType =
 
   // === Tool calling ===
   | 'toolCalling' // Tool calling (streaming, child operation)
+  // === (sub-operations) ===
+  | 'createToolMessage' // Create tool message (sub-operation of executeToolCall)
+  | 'executeToolCall' // Execute tool call (sub-operation of toolCalling)
+  // === (sub-operations of executeToolCall) ===
   | 'pluginApi' // Plugin API call
   | 'builtinToolSearch' // Builtin tool: search
   | 'builtinToolInterpreter' // Builtin tool: code interpreter
@@ -34,6 +42,7 @@ export type OperationType =
   | 'groupAgentGenerate' // Group agent generate
 
   // === Others ===
+  | 'translate' // Translate message
   | 'topicSummary' // Topic summary
   | 'historySummary'; // History summary
 
@@ -59,6 +68,16 @@ export interface OperationContext {
   threadId?: string; // Associated thread ID (Portal Thread)
   groupId?: string; // Associated group ID (Group Chat)
   agentId?: string; // Associated agent ID (specific agent in Group Chat)
+}
+
+/**
+ * Operation cancel context - passed to cancel handler
+ */
+export interface OperationCancelContext {
+  operationId: string;
+  type: OperationType;
+  reason: string;
+  metadata?: OperationMetadata;
 }
 
 /**
@@ -88,6 +107,10 @@ export interface OperationMetadata {
   // Cancel information
   cancelReason?: string;
 
+  // UI state (for sendMessage operation)
+  inputEditorTempState?: any | null; // Editor state snapshot for cancel restoration
+  inputSendErrorMsg?: string; // Error message to display in UI
+
   // Other metadata (extensible)
   [key: string]: any;
 }
@@ -109,6 +132,9 @@ export interface Operation {
 
   // === Metadata ===
   metadata: OperationMetadata;
+
+  // === Cancel handler ===
+  onCancelHandler?: (context: OperationCancelContext) => void | Promise<void>; // Cancel callback
 
   // === Dependencies ===
   parentOperationId?: string; // Parent operation ID (for operation nesting)

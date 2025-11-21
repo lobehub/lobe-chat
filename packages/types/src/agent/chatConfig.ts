@@ -38,6 +38,7 @@ export interface LobeAgentChatConfig {
    */
   textVerbosity?: 'low' | 'medium' | 'high';
   thinking?: 'disabled' | 'auto' | 'enabled';
+  thinkingLevel?: 'low' | 'high';
   thinkingBudget?: number;
   /**
    * Disable context caching
@@ -91,6 +92,7 @@ export const AgentChatConfigSchema = z.object({
   textVerbosity: z.enum(['low', 'medium', 'high']).optional(),
   thinking: z.enum(['disabled', 'auto', 'enabled']).optional(),
   thinkingBudget: z.number().optional(),
+  thinkingLevel: z.enum(['low', 'high']).optional(),
   urlContext: z.boolean().optional(),
   useModelBuiltinSearch: z.boolean().optional(),
 });

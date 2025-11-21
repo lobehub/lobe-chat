@@ -1,9 +1,9 @@
+import { ARTIFACT_THINKING_TAG } from '@lobechat/const';
 import { memo } from 'react';
 
 import Thinking from '@/components/Thinking';
-import { ARTIFACT_THINKING_TAG } from '@/const/plugin';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
@@ -12,7 +12,7 @@ import { isTagClosed } from '../utils';
 
 const Render = memo<MarkdownElementProps>(({ children, id }) => {
   const [isGenerating] = useChatStore((s) => {
-    const message = chatSelectors.getMessageById(id)(s);
+    const message = dbMessageSelectors.getDbMessageById(id)(s);
     return [!isTagClosed(ARTIFACT_THINKING_TAG, message?.content)];
   });
   const transitionMode = useUserStore(userGeneralSettingsSelectors.transitionMode);

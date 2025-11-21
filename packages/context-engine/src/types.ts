@@ -30,6 +30,7 @@ export interface MessageToolCall {
     name: string;
   };
   id: string;
+  thoughtSignature?: string;
   type: 'function';
 }
 export interface Message {

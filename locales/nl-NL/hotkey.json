@@ -7,6 +7,10 @@
     "desc": "Verwijder de berichten en geüploade bestanden van de huidige sessie",
     "title": "Verwijder sessieberichten"
   },
+  "commandPalette": {
+    "desc": "Open het globale opdrachtpaneel voor snelle toegang tot functies",
+    "title": "Opdrachtpaneel"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "Verwijder het laatste bericht en genereer opnieuw",
     "title": "Verwijderen en opnieuw genereren"

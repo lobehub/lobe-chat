@@ -17,6 +17,7 @@ import ReasoningEffortSlider from './ReasoningEffortSlider';
 import ReasoningTokenSlider from './ReasoningTokenSlider';
 import TextVerbositySlider from './TextVerbositySlider';
 import ThinkingBudgetSlider from './ThinkingBudgetSlider';
+import ThinkingLevelSlider from './ThinkingLevelSlider';
 import ThinkingSlider from './ThinkingSlider';
 
 const ControlsForm = memo(() => {
@@ -173,6 +174,16 @@ const ControlsForm = memo(() => {
       layout: 'horizontal',
       minWidth: undefined,
       name: 'thinking',
+      style: {
+        paddingBottom: 0,
+      },
+    },
+    {
+      children: <ThinkingLevelSlider />,
+      label: t('extendParams.thinkingLevel.title'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'thinkingLevel',
       style: {
         paddingBottom: 0,
       },

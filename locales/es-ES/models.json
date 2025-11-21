@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Variante del modelo Gemini 2.0 Flash, optimizada para objetivos como la rentabilidad y la baja latencia."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Modelo de vista previa Gemini 2.0 Flash, que admite la generación de imágenes"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash es el modelo de mejor relación calidad-precio de Google, que ofrece funcionalidades completas."
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview es el modelo más rentable de Google, que ofrece una funcionalidad completa."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview es el modelo de mejor relación calidad-precio de Google, que ofrece funcionalidades completas."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Versión preliminar (25 de septiembre de 2025) de Gemini 2.5 Flash"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview es el modelo de pensamiento más avanzado de Google, capaz de razonar sobre problemas complejos en código, matemáticas y áreas STEM, así como analizar grandes conjuntos de datos, bases de código y documentos utilizando contextos extensos."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro es el modelo más inteligente de Google, con razonamiento de última generación, comprensión multimodal y potentes capacidades de agente y codificación contextual."
   },
   "gemini-flash-latest": {
     "description": "Última versión de Gemini Flash"
@@ -1909,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "Grok 4 de xAI, con potentes capacidades de razonamiento."
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Modelo multimodal de vanguardia, optimizado específicamente para llamadas de herramientas de agente de alto rendimiento."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Modelo multimodal de vanguardia, optimizado específicamente para llamadas de herramientas de agente de alto rendimiento."
   },
   "grok-4-fast-non-reasoning": {
     "description": "Nos complace anunciar Grok 4 Fast, nuestro último avance en modelos de inferencia con alta relación costo-beneficio."

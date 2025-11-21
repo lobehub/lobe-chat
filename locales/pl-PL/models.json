@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash to wariant modelu, zoptymalizowany pod kątem efektywności kosztowej i niskiego opóźnienia."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Model Gemini 2.0 Flash do generowania obrazów, wspierający generację obrazów"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Wersja podglądowa (25 września 2025) Gemini 2.5 Flash"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview to najnowocześniejszy model myślowy Google, zdolny do rozumowania nad złożonymi problemami w dziedzinach kodowania, matematyki i STEM oraz do analizy dużych zbiorów danych, repozytoriów kodu i dokumentów z wykorzystaniem długich kontekstów."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro to najinteligentniejszy model Google, oferujący najnowocześniejsze wnioskowanie i rozumienie multimodalne, a także zaawansowane funkcje agenta i kodowania kontekstu."
   },
   "gemini-flash-latest": {
     "description": "Najnowsze wydanie Gemini Flash"
@@ -1909,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "Grok 4 od xAI, wyposażony w potężne zdolności rozumowania."
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Nowoczesny model multimodalny, zoptymalizowany specjalnie do wydajnego korzystania z narzędzi pośredniczących."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Nowoczesny model multimodalny, zoptymalizowany specjalnie do wydajnego korzystania z narzędzi pośredniczących."
   },
   "grok-4-fast-non-reasoning": {
     "description": "Z radością prezentujemy Grok 4 Fast, nasz najnowszy postęp w modelach inferencyjnych o wysokiej efektywności kosztowej."

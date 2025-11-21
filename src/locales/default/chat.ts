@@ -66,6 +66,9 @@ export default {
     thinking: {
       title: '深度思考开关',
     },
+    thinkingLevel: {
+      title: '思考水平',
+    },
     title: '模型扩展功能',
     urlContext: {
       desc: '开启后将自动解析网页链接，以获取实际网页上下文内容',
@@ -427,6 +430,7 @@ export default {
       rejectReasonPlaceholder: '输入拒绝原因将帮助 Agent 理解并优化后续行动',
       rejectTitle: '拒绝本次工具调用',
       rejectedWithReason: '本次工具调用被主动拒绝:{{reason}}',
+      toolAbort: '本次工具调用被用户取消',
       toolRejected: '本次工具调用被主动拒绝',
     },
   },

@@ -147,6 +147,36 @@ export const UserInterventionConfigSchema = z.object({
 });
 
 /**
+ * Security Blacklist Rule
+ * Used to forcefully block dangerous operations regardless of user settings
+ */
+export interface SecurityBlacklistRule {
+  /**
+   * Description of why this rule exists (for error messages)
+   */
+  description: string;
+
+  /**
+   * Parameter filter - matches against tool call arguments
+   * Same format as HumanInterventionRule.match
+   */
+  match: Record<string, ArgumentMatcher>;
+}
+
+export const SecurityBlacklistRuleSchema = z.object({
+  description: z.string(),
+  match: z.record(z.string(), ArgumentMatcherSchema),
+});
+
+/**
+ * Security Blacklist Configuration
+ * A list of rules that will always block execution and require intervention
+ */
+export type SecurityBlacklistConfig = SecurityBlacklistRule[];
+
+export const SecurityBlacklistConfigSchema = z.array(SecurityBlacklistRuleSchema);
+
+/**
  * Parameters for shouldIntervene method
  */
 export interface ShouldInterveneParams {
@@ -160,6 +190,13 @@ export interface ShouldInterveneParams {
    * @default []
    */
   confirmedHistory?: string[];
+
+  /**
+   * Security blacklist rules that will be checked first
+   * These rules override all other settings including auto-run mode
+   * @default []
+   */
+  securityBlacklist?: SecurityBlacklistConfig;
 
   /**
    * Tool call arguments to check against rules
@@ -177,6 +214,7 @@ export interface ShouldInterveneParams {
 export const ShouldInterveneParamsSchema = z.object({
   config: HumanInterventionConfigSchema.optional(),
   confirmedHistory: z.array(z.string()).optional(),
+  securityBlacklist: SecurityBlacklistConfigSchema.optional(),
   toolArgs: z.record(z.string(), z.any()).optional(),
   toolKey: z.string().optional(),
 });
