@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Copiar todo el contenido",
-    "documentCount": "Total de {{count}} documentos",
     "duplicate": "Crear una copia",
-    "empty": "No hay documentos. Haz clic en el botón de arriba para crear tu primer documento",
+    "empty": "Aún no hay documentos. Haz clic en el botón de arriba para crear tu primer documento.",
     "noResults": "No se encontraron documentos coincidentes",
+    "pageCount": "Total de {{count}} documentos",
     "selectNote": "Selecciona un documento para comenzar a editar",
     "untitled": "Sin título"
   },
@@ -142,8 +142,8 @@
     "downloadFile": "Descargar archivo",
     "unsupportedFileAndContact": "Este formato de archivo no es compatible con la vista previa en línea. Si desea solicitar una vista previa, no dude en <1>contactarnos</1>."
   },
-  "searchDocumentPlaceholder": "Buscar documentos",
   "searchFilePlaceholder": "Buscar archivo",
+  "searchPagePlaceholder": "Buscar documentos",
   "tab": {
     "all": "Todo",
     "audios": "Audios",

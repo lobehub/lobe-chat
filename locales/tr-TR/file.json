@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Tüm İçeriği Kopyala",
-    "documentCount": "Toplam {{count}} belge",
     "duplicate": "Kopyasını Oluştur",
-    "empty": "Henüz belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
+    "empty": "Henüz bir belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
     "noResults": "Eşleşen belge bulunamadı",
+    "pageCount": "Toplam {{count}} belge",
     "selectNote": "Düzenlemeye başlamak için bir belge seçin",
     "untitled": "Başlıksız"
   },
@@ -142,8 +142,8 @@
     "downloadFile": "Dosyayı İndir",
     "unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>."
   },
-  "searchDocumentPlaceholder": "Belge ara",
   "searchFilePlaceholder": "Dosya Ara",
+  "searchPagePlaceholder": "Belge ara",
   "tab": {
     "all": "Tümü",
     "audios": "Sesler",

@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Volledige inhoud kopiëren",
-    "documentCount": "Totaal {{count}} documenten",
     "duplicate": "Kopie maken",
-    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken",
+    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken.",
     "noResults": "Geen overeenkomende documenten gevonden",
+    "pageCount": "Totaal {{count}} documenten",
     "selectNote": "Selecteer een document om te beginnen met bewerken",
     "untitled": "Zonder titel"
   },
@@ -142,8 +142,8 @@
     "downloadFile": "Bestand downloaden",
     "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
   },
-  "searchDocumentPlaceholder": "Documenten zoeken",
   "searchFilePlaceholder": "Zoek bestand",
+  "searchPagePlaceholder": "Documenten zoeken",
   "tab": {
     "all": "Alles",
     "audios": "Audio's",

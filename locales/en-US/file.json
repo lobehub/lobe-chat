@@ -38,8 +38,8 @@
     "editedBy": "Edited by {{name}}",
     "editorPlaceholder": "Type document content, press / to open command menu",
     "empty": {
-      "createNewDocument": "Create New Document",
-      "title": "Select a document to start",
+      "createNewDocument": "Create New Page",
+      "title": "Select a page to start",
       "uploadMarkdown": "Upload Markdown File"
     },
     "linkCopied": "Link copied",
@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "Copy All",
-    "documentCount": "Total {{count}} documents",
     "duplicate": "Duplicate",
     "empty": "No documents yet. Click the button above to create your first one.",
     "noResults": "No matching documents found.",
-    "selectNote": "Select a document to start editing.",
+    "pageCount": "{{count}} pages in total",
+    "selectNote": "Select a document to start editing",
     "untitled": "Untitled"
   },
   "empty": "No files or folders have been uploaded yet.",
@@ -142,8 +142,8 @@
     "downloadFile": "Download File",
     "unsupportedFileAndContact": "This file format is not currently supported for online preview. If you have a request for previewing, feel free to <1>contact us</1>."
   },
-  "searchDocumentPlaceholder": "Search documents",
   "searchFilePlaceholder": "Search Files",
+  "searchPagePlaceholder": "Search Pages",
   "tab": {
     "all": "All",
     "audios": "Audio",

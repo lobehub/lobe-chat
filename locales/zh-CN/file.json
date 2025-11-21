@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "复制全文",
-    "documentCount": "共 {{count}} 个文档",
     "duplicate": "创建副本",
-    "empty": "暂无文档，点击上方按钮创建你的第一篇文档",
-    "noResults": "未找到匹配的文档",
-    "selectNote": "选择一个文档开始编辑",
+    "empty": "暂无文稿，点击上方按钮创建你的第一篇文稿",
+    "noResults": "未找到匹配的文稿",
+    "pageCount": "共 {{count}} 个文稿",
+    "selectNote": "选择一个文稿开始编辑",
     "untitled": "无标题"
   },
   "empty": "暂无已上传文件/文件夹",
@@ -142,8 +142,8 @@
     "downloadFile": "下载文件",
     "unsupportedFileAndContact": "此文件格式暂不支持在线预览，如有预览诉求，欢迎<1>反馈给我们</1>"
   },
-  "searchDocumentPlaceholder": "搜索文档",
   "searchFilePlaceholder": "搜索文件",
+  "searchPagePlaceholder": "搜索文稿",
   "tab": {
     "all": "全部",
     "audios": "语音",

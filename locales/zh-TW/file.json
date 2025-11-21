@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "複製全文",
-    "documentCount": "共 {{count}} 筆文件",
     "duplicate": "建立副本",
-    "empty": "尚無文件，點擊上方按鈕建立你的第一篇文件",
-    "noResults": "找不到符合的文件",
-    "selectNote": "選擇一個文件開始編輯",
+    "empty": "尚無文稿，點擊上方按鈕建立你的第一篇文稿",
+    "noResults": "未找到符合的文稿",
+    "pageCount": "共 {{count}} 篇文稿",
+    "selectNote": "選擇一篇文稿開始編輯",
     "untitled": "無標題"
   },
   "empty": "暫無已上傳文件/文件夾",
@@ -142,8 +142,8 @@
     "downloadFile": "下載檔案",
     "unsupportedFileAndContact": "此檔案格式暫不支援線上預覽，如有預覽需求，歡迎<1>反饋給我們</1>"
   },
-  "searchDocumentPlaceholder": "搜尋文件",
   "searchFilePlaceholder": "搜索檔案",
+  "searchPagePlaceholder": "搜尋文稿",
   "tab": {
     "all": "全部",
     "audios": "語音",

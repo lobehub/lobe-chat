@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Copiar conteúdo completo",
-    "documentCount": "Total de {{count}} documentos",
     "duplicate": "Criar uma cópia",
-    "empty": "Nenhum documento disponível. Clique no botão acima para criar seu primeiro documento",
+    "empty": "Nenhum documento ainda. Clique no botão acima para criar seu primeiro.",
     "noResults": "Nenhum documento correspondente encontrado",
+    "pageCount": "Total de {{count}} documentos",
     "selectNote": "Selecione um documento para começar a editar",
     "untitled": "Sem título"
   },
@@ -142,8 +142,8 @@
     "downloadFile": "Baixar arquivo",
     "unsupportedFileAndContact": "Este formato de arquivo não é suportado para visualização online. Se você tiver interesse em visualizar, sinta-se à vontade para <1>nos enviar um feedback</1>."
   },
-  "searchDocumentPlaceholder": "Pesquisar documentos",
   "searchFilePlaceholder": "Pesquisar arquivo",
+  "searchPagePlaceholder": "Buscar documentos",
   "tab": {
     "all": "Todos",
     "audios": "Áudios",

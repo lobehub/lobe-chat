@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "Sao chép toàn bộ nội dung",
-    "documentCount": "Tổng cộng {{count}} tài liệu",
     "duplicate": "Tạo bản sao",
-    "empty": "Chưa có tài liệu nào, nhấn nút phía trên để tạo tài liệu đầu tiên của bạn",
-    "noResults": "Không tìm thấy tài liệu phù hợp",
-    "selectNote": "Chọn một tài liệu để bắt đầu chỉnh sửa",
+    "empty": "Chưa có bản thảo nào, hãy nhấn nút phía trên để tạo bản thảo đầu tiên của bạn",
+    "noResults": "Không tìm thấy bản thảo phù hợp",
+    "pageCount": "Tổng cộng {{count}} bản thảo",
+    "selectNote": "Chọn một bản thảo để bắt đầu chỉnh sửa",
     "untitled": "Không có tiêu đề"
   },
   "empty": "Chưa có tệp/tệp tin nào được tải lên",
@@ -142,8 +142,8 @@
     "downloadFile": "Tải tệp",
     "unsupportedFileAndContact": "Định dạng tệp này hiện không hỗ trợ xem trước trực tuyến. Nếu bạn có yêu cầu xem trước, vui lòng <1>phản hồi cho chúng tôi</1>"
   },
-  "searchDocumentPlaceholder": "Tìm kiếm tài liệu",
   "searchFilePlaceholder": "Tìm kiếm tệp",
+  "searchPagePlaceholder": "Tìm kiếm bản thảo",
   "tab": {
     "all": "Tất cả",
     "audios": "Âm thanh",

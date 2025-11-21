@@ -228,7 +228,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
           <SearchBar
             allowClear
             onChange={(e) => setSearchKeywords(e.target.value)}
-            placeholder={t('searchDocumentPlaceholder')}
+            placeholder={t('searchPagePlaceholder')}
             style={{ flex: 1 }}
             value={searchKeywords}
             variant={'borderless'}
@@ -252,7 +252,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                 Footer: () => (
                   <Center style={{ paddingBlock: 16 }}>
                     <Text style={{ fontSize: 12 }} type={'secondary'}>
-                      {t('documentList.documentCount', { count: filteredDocuments.length })}
+                      {t('documentList.pageCount', { count: filteredDocuments.length })}
                     </Text>
                   </Center>
                 ),

@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Kopiuj całą treść",
-    "documentCount": "Łącznie {{count}} dokumentów",
     "duplicate": "Utwórz kopię",
-    "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć pierwszy dokument",
+    "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć swój pierwszy dokument.",
     "noResults": "Nie znaleziono pasujących dokumentów",
+    "pageCount": "Łącznie {{count}} dokumentów",
     "selectNote": "Wybierz dokument, aby rozpocząć edycję",
     "untitled": "Bez tytułu"
   },
@@ -142,8 +142,8 @@
     "downloadFile": "Pobierz plik",
     "unsupportedFileAndContact": "Ten format pliku nie jest obecnie obsługiwany w podglądzie online. Jeśli chcesz uzyskać podgląd, zachęcamy do <1>skontaktowania się z nami</1>."
   },
-  "searchDocumentPlaceholder": "Szukaj dokumentu",
   "searchFilePlaceholder": "Szukaj pliku",
+  "searchPagePlaceholder": "Szukaj dokumentów",
   "tab": {
     "all": "Wszystko",
     "audios": "Audio",
