@@ -294,7 +294,7 @@
       "title": "Reaktionsanimation"
     },
     "contextMenuMode": {
-      "default": "LobeChat Standard",
+      "default": "Standard",
       "desc": "Wählen Sie das Anzeigeformat des Kontextmenüs für Chatnachrichten",
       "disabled": "Nicht verwenden",
       "title": "Kontextmenü-Option"

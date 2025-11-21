@@ -173,27 +173,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         translateMessage(id, lang);
       }
     },
-    [
-      copyMessage,
-      data,
-      delAndRegenerateMessage,
-      delAndResendThreadMessage,
-      deleteMessage,
-      id,
-      index,
-      inPortalThread,
-      message,
-      openThreadCreator,
-      regenerateAssistantMessage,
-      resendThreadMessage,
-      t,
-      toggleMessageCollapsed,
-      toggleMessageEditing,
-      topic,
-      translateMessage,
-      ttsMessage,
-      virtuaRef,
-    ],
+    [data, topic],
   );
 
   if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
@@ -227,7 +207,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
       {/*  <ExportPreview content={data.content} onClose={() => setModal(false)} open={showModal} />*/}
       {/*)}*/}
       <ShareMessageModal
-        message={data}
+        message={data!}
         onCancel={() => {
           setShareModal(false);
         }}

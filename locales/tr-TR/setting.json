@@ -294,7 +294,7 @@
       "title": "Yanıt Animasyonu"
     },
     "contextMenuMode": {
-      "default": "LobeChat varsayılanı",
+      "default": "Varsayılan",
       "desc": "Sohbet mesajları sağ tıklama menüsünün görüntüleme seçeneğini seçin",
       "disabled": "Kullanma",
       "title": "Sağ Tıklama Menüsü Seçeneği"

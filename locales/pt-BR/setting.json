@@ -294,7 +294,7 @@
       "title": "Animação de Resposta"
     },
     "contextMenuMode": {
-      "default": "Padrão LobeChat",
+      "default": "Padrão",
       "desc": "Escolha o modo de exibição do menu de contexto ao clicar com o botão direito nas mensagens de chat",
       "disabled": "Desativado",
       "title": "Modo do menu de contexto"

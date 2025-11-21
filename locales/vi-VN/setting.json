@@ -294,7 +294,7 @@
       "title": "Hoạt ảnh phản hồi"
     },
     "contextMenuMode": {
-      "default": "Mặc định LobeChat",
+      "default": "Mặc định",
       "desc": "Chọn phương án hiển thị menu chuột phải cho tin nhắn trò chuyện",
       "disabled": "Không sử dụng",
       "title": "Phương án menu chuột phải"

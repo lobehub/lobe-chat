@@ -294,7 +294,7 @@
       "title": "回應動畫"
     },
     "contextMenuMode": {
-      "default": "LobeChat預設",
+      "default": "預設",
       "desc": "選擇聊天訊息右鍵選單的顯示方案",
       "disabled": "不使用",
       "title": "右鍵選單方案"

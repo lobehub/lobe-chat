@@ -294,7 +294,7 @@
       "title": "반응 애니메이션"
     },
     "contextMenuMode": {
-      "default": "LobeChat 기본값",
+      "default": "기본값",
       "desc": "채팅 메시지 우클릭 메뉴 표시 방식을 선택하세요",
       "disabled": "사용 안 함",
       "title": "우클릭 메뉴 방식"

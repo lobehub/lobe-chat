@@ -294,7 +294,7 @@
       "title": "Animation de réponse"
     },
     "contextMenuMode": {
-      "default": "LobeChat par défaut",
+      "default": "Par défaut",
       "desc": "Choisissez le mode d'affichage du menu contextuel des messages de chat",
       "disabled": "Désactivé",
       "title": "Mode du menu contextuel"

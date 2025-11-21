@@ -294,7 +294,7 @@
       "title": "応答アニメーション"
     },
     "contextMenuMode": {
-      "default": "LobeChatデフォルト",
+      "default": "デフォルト",
       "desc": "チャットメッセージの右クリックメニューの表示方法を選択してください",
       "disabled": "使用しない",
       "title": "右クリックメニューの設定"

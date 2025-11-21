@@ -294,7 +294,7 @@
       "title": "Response Animation"
     },
     "contextMenuMode": {
-      "default": "LobeChat Default",
+      "default": "Default",
       "desc": "Select the display mode for the chat message right-click menu",
       "disabled": "Disabled",
       "title": "Right-Click Menu Mode"

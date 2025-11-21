@@ -294,7 +294,7 @@
       "title": "Reactie-animatie"
     },
     "contextMenuMode": {
-      "default": "LobeChat Standaard",
+      "default": "Standaard",
       "desc": "Kies de weergaveoptie voor het contextmenu van chatberichten",
       "disabled": "Niet gebruiken",
       "title": "Contextmenu-optie"
