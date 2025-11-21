@@ -97,7 +97,7 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
       const newDoc = await createDocument({
         content: '',
         knowledgeBaseId,
-        title: t('home.uploadEntries.newDocument.title'),
+        title: t('home.uploadEntries.newPage.title'),
       });
       // Navigate to the newly created document
       // The KnowledgeHomePage will automatically set category to 'documents' when it detects the id param
@@ -137,7 +137,7 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
     <div className={styles.grid}>
       {/* Create New Note */}
       <Flexbox className={styles.card} onClick={handleCreateNote} padding={16}>
-        <span className={styles.actionTitle}>{t('home.uploadEntries.newDocument.title')}</span>
+        <span className={styles.actionTitle}>{t('home.uploadEntries.newPage.title')}</span>
         <div className={styles.glow} style={{ background: theme.purple }} />
         <FileTypeIcon
           className={styles.icon}

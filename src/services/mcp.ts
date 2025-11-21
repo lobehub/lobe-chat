@@ -10,9 +10,9 @@ import { desktopClient, toolsClient } from '@/libs/trpc/client';
 import { discoverService } from './discover';
 
 /**
- * 计算对象的字节大小
- * @param obj 要计算大小的对象
- * @returns 字节大小
+ * Calculate byte size of object
+ * @param obj Object to calculate size of
+ * @returns Byte size
  */
 function calculateObjectSizeBytes(obj: any): number {
   try {
@@ -85,7 +85,7 @@ class MCPService {
 
     const isStdio = plugin?.customParams?.mcp?.type === 'stdio';
 
-    // 记录调用开始时间
+    // Record call start time
     const callStartTime = Date.now();
     let success = false;
     let errorCode: string | undefined;
@@ -108,22 +108,22 @@ class MCPService {
       errorCode = 'CALL_FAILED';
       errorMessage = err.message;
 
-      // 重新抛出错误，保持原有的错误处理逻辑
+      // Rethrow error, maintain original error handling logic
       throw error;
     } finally {
-      // 异步上报调用结果，不影响主流程
+      // Asynchronously report call result without affecting main flow
       const callEndTime = Date.now();
       const callDurationMs = callEndTime - callStartTime;
 
-      // 计算请求大小
+      // Calculate request size
       const inputParams = safeParseJSON(args) || args;
 
       const requestSizeBytes = calculateObjectSizeBytes(inputParams);
-      // 计算响应大小
+      // Calculate response size
       const responseSizeBytes = success && result ? calculateObjectSizeBytes(result.state) : 0;
 
       const isCustomPlugin = !!customPlugin;
-      // 构造上报数据
+      // Construct report data
       const reportData: CallReportRequest = {
         callDurationMs,
         customPluginInfo: isCustomPlugin
@@ -151,7 +151,7 @@ class MCPService {
         version: plugin.manifest!.version || 'unknown',
       };
 
-      // 异步上报，不影响主流程
+      // Asynchronously report without affecting main flow
       discoverService.reportPluginCall(reportData).catch((reportError) => {
         console.warn('Failed to report MCP tool call:', reportError);
       });
@@ -172,13 +172,13 @@ class MCPService {
     },
     signal?: AbortSignal,
   ) {
-    // 如果是 Desktop 模式且 URL 是本地地址，使用 desktopClient
-    // 这样可以避免在生产环境中通过远程服务器访问用户本地服务
+    // If in Desktop mode and URL is local address, use desktopClient
+    // This avoids accessing user local services through remote server in production
     if (isDesktop && isLocalOrPrivateUrl(params.url)) {
       return desktopClient.mcp.getStreamableMcpServerManifest.query(params, { signal });
     }
 
-    // 否则使用 toolsClient（通过服务器中转）
+    // Otherwise use toolsClient (via server relay)
     return toolsClient.mcp.getStreamableMcpServerManifest.query(params, { signal });
   }
 
@@ -199,16 +199,16 @@ class MCPService {
   }
 
   /**
-   * 检查 MCP 插件安装状态
-   * @param manifest MCP 插件清单
-   * @param signal AbortSignal 用于取消请求
-   * @returns 安装检测结果
+   * Check MCP plugin installation status
+   * @param manifest MCP plugin manifest
+   * @param signal AbortSignal for canceling request
+   * @returns Installation check result
    */
   async checkInstallation(
     manifest: PluginManifest,
     signal?: AbortSignal,
   ): Promise<CheckMcpInstallResult> {
-    // 将所有部署选项传递给主进程进行检查
+    // Pass all deployment options to main process for checking
     return desktopClient.mcp.validMcpServerInstallable.mutate(
       { deploymentOptions: manifest.deploymentOptions as any },
       { signal },

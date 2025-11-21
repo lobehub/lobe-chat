@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Volledige inhoud kopiëren",
-    "documentCount": "Totaal {{count}} documenten",
     "duplicate": "Kopie maken",
-    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken",
+    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken.",
     "noResults": "Geen overeenkomende documenten gevonden",
+    "pageCount": "Totaal {{count}} documenten",
     "selectNote": "Selecteer een document om te beginnen met bewerken",
     "untitled": "Zonder titel"
   },
@@ -70,7 +70,6 @@
       "uploadFile": "Bestand uploaden",
       "uploadFolder": "Map uploaden"
     },
-    "newDocumentButton": "Nieuw document",
     "newNoteDialog": {
       "cancel": "Annuleren",
       "editTitle": "Document bewerken",
@@ -83,14 +82,15 @@
       "title": "Nieuw document",
       "updateSuccess": "Document succesvol bijgewerkt"
     },
+    "newPageButton": "Nieuw document",
     "uploadButton": "Uploaden"
   },
   "home": {
     "getStarted": "Aan de slag",
     "greeting": "Aan de slag",
     "quickActions": "Snelle acties",
-    "recentDocuments": "Recente documenten",
     "recentFiles": "Recente bestanden",
+    "recentPages": "Recente documenten",
     "subtitle": "Welkom bij je kennisbank. Begin hier met het beheren van je documenten",
     "uploadEntries": {
       "files": {
@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "Nieuwe kennisbank"
       },
-      "newDocument": {
-        "title": "Nieuw document"
+      "newPage": {
+        "title": "Nieuw document aanmaken"
       }
     }
   },
@@ -142,8 +142,8 @@
     "downloadFile": "Bestand downloaden",
     "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
   },
-  "searchDocumentPlaceholder": "Documenten zoeken",
   "searchFilePlaceholder": "Zoek bestand",
+  "searchPagePlaceholder": "Documenten zoeken",
   "tab": {
     "all": "Alles",
     "audios": "Audio's",
@@ -156,9 +156,7 @@
     "websites": "Websites"
   },
   "title": "Kennisbank",
-  "toggleLeftPanel": {
-    "title": "Toon/Verberg het linkerpaneel"
-  },
+  "toggleLeftPanel": "Toon/verberg linker paneel",
   "uploadDock": {
     "body": {
       "collapse": "Samenvouwen",

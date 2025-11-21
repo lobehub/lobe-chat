@@ -36,6 +36,7 @@ export type OperationType =
   | 'builtinToolSearch' // Builtin tool: search
   | 'builtinToolInterpreter' // Builtin tool: code interpreter
   | 'builtinToolLocalSystem' // Builtin tool: local system
+  | 'builtinToolKnowledgeBase' // Builtin tool: knowledge base
 
   // === Group Chat ===
   | 'supervisorDecision' // Supervisor decision

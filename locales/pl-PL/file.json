@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Kopiuj całą treść",
-    "documentCount": "Łącznie {{count}} dokumentów",
     "duplicate": "Utwórz kopię",
-    "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć pierwszy dokument",
+    "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć swój pierwszy dokument.",
     "noResults": "Nie znaleziono pasujących dokumentów",
+    "pageCount": "Łącznie {{count}} dokumentów",
     "selectNote": "Wybierz dokument, aby rozpocząć edycję",
     "untitled": "Bez tytułu"
   },
@@ -70,7 +70,6 @@
       "uploadFile": "Prześlij plik",
       "uploadFolder": "Prześlij folder"
     },
-    "newDocumentButton": "Nowy dokument",
     "newNoteDialog": {
       "cancel": "Anuluj",
       "editTitle": "Edytuj dokument",
@@ -83,14 +82,15 @@
       "title": "Nowy dokument",
       "updateSuccess": "Dokument został zaktualizowany pomyślnie"
     },
+    "newPageButton": "Nowy dokument",
     "uploadButton": "Prześlij"
   },
   "home": {
     "getStarted": "Rozpocznij",
     "greeting": "Zaczynamy",
     "quickActions": "Szybkie akcje",
-    "recentDocuments": "Ostatnie dokumenty",
     "recentFiles": "Ostatnie pliki",
+    "recentPages": "Ostatnie dokumenty",
     "subtitle": "Witamy w bazie wiedzy. Zacznij zarządzać swoimi dokumentami już teraz",
     "uploadEntries": {
       "files": {
@@ -102,7 +102,7 @@
       "knowledgeBase": {
         "title": "Nowa baza wiedzy"
       },
-      "newDocument": {
+      "newPage": {
         "title": "Nowy dokument"
       }
     }
@@ -142,8 +142,8 @@
     "downloadFile": "Pobierz plik",
     "unsupportedFileAndContact": "Ten format pliku nie jest obecnie obsługiwany w podglądzie online. Jeśli chcesz uzyskać podgląd, zachęcamy do <1>skontaktowania się z nami</1>."
   },
-  "searchDocumentPlaceholder": "Szukaj dokumentu",
   "searchFilePlaceholder": "Szukaj pliku",
+  "searchPagePlaceholder": "Szukaj dokumentów",
   "tab": {
     "all": "Wszystko",
     "audios": "Audio",
@@ -156,9 +156,7 @@
     "websites": "Strony internetowe"
   },
   "title": "Baza wiedzy",
-  "toggleLeftPanel": {
-    "title": "Pokaż/ukryj panel po lewej stronie"
-  },
+  "toggleLeftPanel": "Pokaż/Ukryj panel po lewej stronie",
   "uploadDock": {
     "body": {
       "collapse": "Zwiń",

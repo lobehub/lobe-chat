@@ -214,6 +214,7 @@ table files {
   metadata jsonb
   chunk_task_id uuid
   embedding_task_id uuid
+  slug text [unique]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

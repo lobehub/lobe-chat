@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "Grok 4 od xAI, wyposażony w potężne zdolności rozumowania."
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Nowoczesny model multimodalny, zoptymalizowany specjalnie do wydajnego korzystania z narzędzi pośredniczących."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Nowoczesny model multimodalny, zoptymalizowany specjalnie do wydajnego korzystania z narzędzi pośredniczących."
+  },
   "grok-4-fast-non-reasoning": {
     "description": "Z radością prezentujemy Grok 4 Fast, nasz najnowszy postęp w modelach inferencyjnych o wysokiej efektywności kosztowej."
   },

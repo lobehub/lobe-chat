@@ -9,7 +9,7 @@ const interceptRoute = async (
 ) => {
   console.log(`[preload] Intercepted ${source} and prevented default behavior:`, path);
 
-  // 使用electron-client-ipc的dispatch方法
+  // Use electron-client-ipc's dispatch method
   try {
     await invoke('interceptRoute', { path, source, url });
   } catch (e) {
@@ -17,15 +17,15 @@ const interceptRoute = async (
   }
 };
 /**
- * 路由拦截器 - 负责捕获和拦截客户端路由导航
+ * Route interceptor - Responsible for capturing and intercepting client-side route navigation
  */
 export const setupRouteInterceptors = function () {
   console.log('[preload] Setting up route interceptors');
 
-  // 存储被阻止的路径，避免pushState重复触发
+  // Store prevented paths to avoid pushState duplicate triggers
   const preventedPaths = new Set<string>();
 
-  // 重写 window.open 方法来拦截 JavaScript 调用
+  // Override window.open method to intercept JavaScript calls
   const originalWindowOpen = window.open;
   window.open = function (url?: string | URL, target?: string, features?: string) {
     if (url) {
@@ -33,15 +33,15 @@ export const setupRouteInterceptors = function () {
         const urlString = typeof url === 'string' ? url : url.toString();
         const urlObj = new URL(urlString, window.location.href);
 
-        // 检查是否为外部链接
+        // Check if it's an external link
         if (urlObj.origin !== window.location.origin) {
           console.log(`[preload] Intercepted window.open for external URL:`, urlString);
-          // 调用主进程处理外部链接
+          // Call main process to handle external link
           invoke('openExternalLink', urlString);
-          return null; // 返回 null 表示没有打开新窗口
+          return null; // Return null to indicate no window was opened
         }
       } catch (error) {
-        // 处理无效 URL 或特殊协议
+        // Handle invalid URL or special protocol
         console.error(`[preload] Intercepted window.open for special protocol:`, url);
         console.error(error);
         invoke('openExternalLink', typeof url === 'string' ? url : url.toString());
@@ -49,11 +49,11 @@ export const setupRouteInterceptors = function () {
       }
     }
 
-    // 对于内部链接，调用原始的 window.open
+    // For internal links, call original window.open
     return originalWindowOpen.call(window, url, target, features);
   };
 
-  // 拦截所有a标签的点击事件 - 针对Next.js的Link组件
+  // Intercept all a tag click events - For Next.js Link component
   document.addEventListener(
     'click',
     async (e) => {
@@ -62,30 +62,30 @@ export const setupRouteInterceptors = function () {
         try {
           const url = new URL(link.href);
 
-          // 检查是否为外部链接
+          // Check if it's an external link
           if (url.origin !== window.location.origin) {
             console.log(`[preload] Intercepted external link click:`, url.href);
-            // 阻止默认的链接跳转行为
+            // Prevent default link navigation behavior
             e.preventDefault();
             e.stopPropagation();
-            // 调用主进程处理外部链接
+            // Call main process to handle external link
             await invoke('openExternalLink', url.href);
-            return false; // 明确阻止后续处理
+            return false; // Explicitly prevent subsequent processing
           }
 
-          // 如果不是外部链接，则继续处理内部路由拦截逻辑
-          // 使用共享配置检查是否需要拦截
+          // If not external link, continue with internal route interception logic
+          // Use shared config to check if interception is needed
           const matchedRoute = findMatchingRoute(url.pathname);
 
-          // 如果是需要拦截的路径
+          // If it's a path that needs interception
           if (matchedRoute) {
             const currentPath = window.location.pathname;
             const isAlreadyInTargetPage = currentPath.startsWith(matchedRoute.pathPrefix);
 
-            // 如果已经在目标页面下，则不拦截，让默认导航继续
+            // If already in target page, don't intercept, let default navigation continue
             if (isAlreadyInTargetPage) return;
 
-            // 立即阻止默认行为，避免Next.js接管路由
+            // Immediately prevent default behavior to avoid Next.js taking over routing
             e.preventDefault();
             e.stopPropagation();
 
@@ -94,15 +94,15 @@ export const setupRouteInterceptors = function () {
             return false;
           }
         } catch (err) {
-          // 处理可能的 URL 解析错误或其他问题
-          // 例如 mailto:, tel: 等协议会导致 new URL() 抛出错误
+          // Handle possible URL parsing errors or other issues
+          // For example mailto:, tel: protocols will cause new URL() to throw error
           if (err instanceof TypeError && err.message.includes('Invalid URL')) {
             console.log(
               '[preload] Non-HTTP link clicked, allowing default browser behavior:',
               link.href,
             );
-            // 对于非 HTTP/HTTPS 链接，允许浏览器默认处理
-            // 不需要 e.preventDefault() 或 invoke
+            // For non-HTTP/HTTPS links, allow browser default handling
+            // No need for e.preventDefault() or invoke
           } else {
             console.error('[preload] Link interception error:', err);
           }
@@ -112,28 +112,28 @@ export const setupRouteInterceptors = function () {
     true,
   );
 
-  // 拦截 history API (用于捕获Next.js的useRouter().push/replace等)
+  // Intercept history API (for capturing Next.js useRouter().push/replace etc.)
   const originalPushState = history.pushState;
   const originalReplaceState = history.replaceState;
 
-  // 重写pushState
+  // Override pushState
   history.pushState = function () {
     const url = arguments[2];
     if (typeof url === 'string') {
       try {
-        // 只处理相对路径或当前域的URL
+        // Only handle relative paths or current domain URLs
         const parsedUrl = new URL(url, window.location.origin);
 
-        // 使用共享配置检查是否需要拦截
+        // Use shared config to check if interception is needed
         const matchedRoute = findMatchingRoute(parsedUrl.pathname);
 
-        // 检查是否需要拦截这个导航
+        // Check if this navigation needs interception
         if (matchedRoute) {
-          // 检查当前页面是否已经在目标路径下，如果是则不拦截
+          // Check if current page is already under target path, if so don't intercept
           const currentPath = window.location.pathname;
           const isAlreadyInTargetPage = currentPath.startsWith(matchedRoute.pathPrefix);
 
-          // 如果已经在目标页面下，则不拦截，让默认导航继续
+          // If already in target page, don't intercept, let default navigation continue
           if (isAlreadyInTargetPage) {
             console.log(
               `[preload] Skip pushState interception for ${parsedUrl.pathname} because already in target page ${matchedRoute.pathPrefix}`,
@@ -141,13 +141,13 @@ export const setupRouteInterceptors = function () {
             return Reflect.apply(originalPushState, this, arguments);
           }
 
-          // 将此路径添加到已阻止集合中
+          // Add this path to prevented set
           preventedPaths.add(parsedUrl.pathname);
 
           interceptRoute(parsedUrl.pathname, 'push-state', parsedUrl.href);
 
-          // 不执行原始的pushState操作，阻止导航发生
-          // 但返回undefined以避免错误
+          // Don't execute original pushState operation, prevent navigation
+          // But return undefined to avoid errors
           return;
         }
       } catch (err) {
@@ -157,23 +157,23 @@ export const setupRouteInterceptors = function () {
     return Reflect.apply(originalPushState, this, arguments);
   };
 
-  // 重写replaceState
+  // Override replaceState
   history.replaceState = function () {
     const url = arguments[2];
     if (typeof url === 'string') {
       try {
         const parsedUrl = new URL(url, window.location.origin);
 
-        // 使用共享配置检查是否需要拦截
+        // Use shared config to check if interception is needed
         const matchedRoute = findMatchingRoute(parsedUrl.pathname);
 
-        // 检查是否需要拦截这个导航
+        // Check if this navigation needs interception
         if (matchedRoute) {
-          // 检查当前页面是否已经在目标路径下，如果是则不拦截
+          // Check if current page is already under target path, if so don't intercept
           const currentPath = window.location.pathname;
           const isAlreadyInTargetPage = currentPath.startsWith(matchedRoute.pathPrefix);
 
-          // 如果已经在目标页面下，则不拦截，让默认导航继续
+          // If already in target page, don't intercept, let default navigation continue
           if (isAlreadyInTargetPage) {
             console.log(
               `[preload] Skip replaceState interception for ${parsedUrl.pathname} because already in target page ${matchedRoute.pathPrefix}`,
@@ -181,12 +181,12 @@ export const setupRouteInterceptors = function () {
             return Reflect.apply(originalReplaceState, this, arguments);
           }
 
-          // 添加到已阻止集合
+          // Add to prevented set
           preventedPaths.add(parsedUrl.pathname);
 
           interceptRoute(parsedUrl.pathname, 'replace-state', parsedUrl.href);
 
-          // 阻止导航
+          // Prevent navigation
           return;
         }
       } catch (err) {
@@ -196,7 +196,7 @@ export const setupRouteInterceptors = function () {
     return Reflect.apply(originalReplaceState, this, arguments);
   };
 
-  // 监听并拦截路由错误 - 有时Next.js会在路由错误时尝试恢复导航
+  // Listen and intercept routing errors - Sometimes Next.js tries to recover navigation on routing errors
   window.addEventListener(
     'error',
     function (e) {

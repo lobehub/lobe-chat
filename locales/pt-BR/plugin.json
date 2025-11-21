@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Ler conteúdo da base de conhecimento",
+        "searchKnowledgeBase": "Pesquisar na base de conhecimento"
+      },
+      "title": "Base de Conhecimento"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Editar arquivo",
+        "getCommandOutput": "Obter saída do código",
+        "globLocalFiles": "Buscar arquivos correspondentes",
+        "grepContent": "Pesquisar conteúdo",
+        "killCommand": "Encerrar execução do código",
+        "listLocalFiles": "Listar arquivos",
+        "moveLocalFiles": "Mover arquivos",
+        "readLocalFile": "Ler conteúdo do arquivo",
+        "renameLocalFile": "Renomear",
+        "runCommand": "Executar código",
+        "searchLocalFiles": "Pesquisar arquivos",
+        "writeLocalFile": "Escrever no arquivo"
+      },
+      "title": "Sistema Local"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Ler conteúdo de várias páginas",
+        "crawlSinglePage": "Ler conteúdo da página",
+        "search": "Pesquisar na web"
+      },
+      "title": "Pesquisa Online"
+    }
+  },
   "confirm": "Confirmar",
   "debug": {
     "arguments": "Parâmetros de chamada",
@@ -251,23 +285,6 @@
     "content": "Chamando plugin...",
     "plugin": "Plugin em execução..."
   },
-  "localSystem": {
-    "apiName": {
-      "editLocalFile": "Editar arquivo",
-      "getCommandOutput": "Obter saída do código",
-      "globLocalFiles": "Buscar arquivos correspondentes",
-      "grepContent": "Procurar conteúdo",
-      "killCommand": "Encerrar execução do código",
-      "listLocalFiles": "Ver lista de arquivos",
-      "moveLocalFiles": "Mover arquivos",
-      "readLocalFile": "Ler conteúdo do arquivo",
-      "renameLocalFile": "Renomear",
-      "runCommand": "Executar código",
-      "searchLocalFiles": "Pesquisar arquivos",
-      "writeLocalFile": "Escrever arquivo"
-    },
-    "title": "Sistema Local"
-  },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Verificando ambiente de instalação...",
     "COMPLETED": "Instalação concluída",
@@ -375,11 +392,6 @@
     "warning": "⚠️ Por favor, confirme que confia na fonte deste plugin, plugins maliciosos podem comprometer a segurança do seu sistema."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Ler conteúdo de várias páginas",
-      "crawlSinglePage": "Ler conteúdo da página",
-      "search": "Pesquisar página"
-    },
     "config": {
       "addKey": "Adicionar chave",
       "close": "Remover",

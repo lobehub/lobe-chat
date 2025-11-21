@@ -143,39 +143,19 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
     const handleOpenChange = (isOpen: boolean) => {
       // When modal opens, load document content if in edit mode
       if (isOpen && documentId && editor) {
-        console.log('[NoteEditorModal] Loading content:', {
-          cachedEditorDataPreview: cachedEditorData
-            ? JSON.stringify(cachedEditorData).slice(0, 100)
-            : null,
-          cachedEditorDataType: typeof cachedEditorData,
-          documentId,
-          documentTitle,
-          hasCachedEditorData: !!cachedEditorData,
-        });
-
         // If editorData is already cached (from list), use it directly
         if (cachedEditorData) {
-          console.log('[NoteEditorModal] Using cached editorData', cachedEditorData);
           setNoteTitle(documentTitle || '');
           editor.setDocument('json', JSON.stringify(cachedEditorData));
           return;
         }
 
         // Otherwise, fetch full content from API
-        console.log('[NoteEditorModal] Fetching from API');
         documentService
           .getDocumentById(documentId)
           .then((doc) => {
             if (doc && doc.content) {
               setNoteTitle(doc.title || doc.filename || '');
-
-              console.log('[NoteEditorModal] Fetched doc.editorData:', {
-                editorDataPreview: doc.editorData
-                  ? JSON.stringify(doc.editorData).slice(0, 100)
-                  : null,
-                editorDataType: typeof doc.editorData,
-                hasEditorData: !!doc.editorData,
-              });
 
               editor.setDocument('json', doc.editorData);
             }
