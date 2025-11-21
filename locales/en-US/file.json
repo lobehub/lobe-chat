@@ -66,7 +66,7 @@
   "header": {
     "actions": {
       "newFolder": "New Folder",
-      "newPage": "New Document",
+      "newPage": "New Page",
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
     },
@@ -156,9 +156,7 @@
     "websites": "Websites"
   },
   "title": "Knowledge Base",
-  "toggleLeftPanel": {
-    "title": "Show/Hide Left Panel"
-  },
+  "toggleLeftPanel": "Show/Hide Left Panel",
   "uploadDock": {
     "body": {
       "collapse": "Collapse",

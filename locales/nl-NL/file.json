@@ -156,9 +156,7 @@
     "websites": "Websites"
   },
   "title": "Kennisbank",
-  "toggleLeftPanel": {
-    "title": "Toon/Verberg het linkerpaneel"
-  },
+  "toggleLeftPanel": "Toon/verberg linker paneel",
   "uploadDock": {
     "body": {
       "collapse": "Samenvouwen",

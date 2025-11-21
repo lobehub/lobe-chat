@@ -156,9 +156,7 @@
     "websites": "Web Siteleri"
   },
   "title": "Bilgi Bankası",
-  "toggleLeftPanel": {
-    "title": "Sol Panelini Göster/Gizle"
-  },
+  "toggleLeftPanel": "Sol paneli göster/gizle",
   "uploadDock": {
     "body": {
       "collapse": "Kapat",

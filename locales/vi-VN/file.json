@@ -156,9 +156,7 @@
     "websites": "Trang web"
   },
   "title": "Kho kiến thức",
-  "toggleLeftPanel": {
-    "title": "Hiện/Ẩn bảng bên trái"
-  },
+  "toggleLeftPanel": "Hiển thị/Ẩn bảng điều khiển bên trái",
   "uploadDock": {
     "body": {
       "collapse": "Thu gọn",

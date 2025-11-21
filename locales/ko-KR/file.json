@@ -156,9 +156,7 @@
     "websites": "웹사이트"
   },
   "title": "지식 베이스",
-  "toggleLeftPanel": {
-    "title": "왼쪽 패널 표시/숨기기"
-  },
+  "toggleLeftPanel": "왼쪽 패널 표시/숨기기",
   "uploadDock": {
     "body": {
       "collapse": "접기",

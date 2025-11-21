@@ -156,9 +156,7 @@
     "websites": "Siti web"
   },
   "title": "Archivio di Conoscenza",
-  "toggleLeftPanel": {
-    "title": "Mostra/Nascondi il pannello sinistro"
-  },
+  "toggleLeftPanel": "Mostra/Nascondi pannello sinistro",
   "uploadDock": {
     "body": {
       "collapse": "Riduci",

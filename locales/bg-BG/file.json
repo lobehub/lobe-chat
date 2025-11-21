@@ -156,9 +156,7 @@
     "websites": "Уебсайтове"
   },
   "title": "База знания",
-  "toggleLeftPanel": {
-    "title": "Покажи/Скрий лявото панел"
-  },
+  "toggleLeftPanel": "Показване/скриване на лявия панел",
   "uploadDock": {
     "body": {
       "collapse": "Скрий",

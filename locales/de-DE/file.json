@@ -156,9 +156,7 @@
     "websites": "Webseiten"
   },
   "title": "Wissensdatenbank",
-  "toggleLeftPanel": {
-    "title": "Linkes Panel einblenden/ausblenden"
-  },
+  "toggleLeftPanel": "Seitenleiste ein-/ausblenden",
   "uploadDock": {
     "body": {
       "collapse": "Einklappen",

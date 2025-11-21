@@ -156,9 +156,7 @@
     "websites": "Sites"
   },
   "title": "Base de Conhecimento",
-  "toggleLeftPanel": {
-    "title": "Mostrar/Ocultar painel esquerdo"
-  },
+  "toggleLeftPanel": "Mostrar/Ocultar painel esquerdo",
   "uploadDock": {
     "body": {
       "collapse": "Recolher",

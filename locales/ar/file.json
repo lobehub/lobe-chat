@@ -156,9 +156,7 @@
     "websites": "المواقع"
   },
   "title": "قاعدة المعرفة",
-  "toggleLeftPanel": {
-    "title": "عرض/إخفاء اللوحة الجانبية اليسرى"
-  },
+  "toggleLeftPanel": "إظهار/إخفاء اللوحة الجانبية اليسرى",
   "uploadDock": {
     "body": {
       "collapse": "طي",

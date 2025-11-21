@@ -156,9 +156,7 @@
     "websites": "ウェブサイト"
   },
   "title": "ナレッジベース",
-  "toggleLeftPanel": {
-    "title": "左側パネルの表示/非表示"
-  },
+  "toggleLeftPanel": "左パネルの表示/非表示を切り替え",
   "uploadDock": {
     "body": {
       "collapse": "折りたたむ",
