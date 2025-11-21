@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "xAI's Grok 4, featuring strong reasoning capabilities."
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Cutting-edge multimodal model optimized specifically for high-performance agent tool invocation."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Cutting-edge multimodal model optimized specifically for high-performance agent tool invocation."
+  },
   "grok-4-fast-non-reasoning": {
     "description": "We are excited to release Grok 4 Fast, our latest advancement in cost-effective reasoning models."
   },

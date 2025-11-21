@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "xAI's Grok 4 mit starker Schlussfolgerungsfähigkeit."
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Modernes multimodales Modell, speziell optimiert für die Nutzung leistungsstarker Agenten-Tools."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Modernes multimodales Modell, speziell optimiert für die Nutzung leistungsstarker Agenten-Tools."
+  },
   "grok-4-fast-non-reasoning": {
     "description": "Wir freuen uns, Grok 4 Fast vorzustellen, unseren neuesten Fortschritt bei kosteneffizienten Inferenzmodellen."
   },

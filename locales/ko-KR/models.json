@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "xAI의 Grok 4로, 강력한 추론 능력을 갖추고 있습니다."
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "최첨단 멀티모달 모델로, 고성능 에이전트 도구 호출에 최적화되어 있습니다."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "최첨단 멀티모달 모델로, 고성능 에이전트 도구 호출에 최적화되어 있습니다."
+  },
   "grok-4-fast-non-reasoning": {
     "description": "비용 효율적인 추론 모델 분야에서의 최신 진전인 Grok 4 Fast를 발표하게 되어 기쁩니다."
   },

@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "Grok 4 da xAI, com forte capacidade de raciocínio."
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Modelo multimodal de ponta, otimizado especialmente para chamadas de ferramentas de agente de alto desempenho."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Modelo multimodal de ponta, otimizado especialmente para chamadas de ferramentas de agente de alto desempenho."
+  },
   "grok-4-fast-non-reasoning": {
     "description": "Temos o prazer de lançar o Grok 4 Fast, nosso avanço mais recente em modelos de inferência com custo-benefício."
   },
