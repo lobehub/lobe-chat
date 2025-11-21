@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.100](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.99...v2.0.0-next.100)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Gemini 3 Pro does not display thought summaries.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Gemini 3 Pro does not display thought summaries, closes [#10345](https://github.com/lobehub/lobe-chat/issues/10345) ([89e296a](https://github.com/lobehub/lobe-chat/commit/89e296a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.99](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.98...v2.0.0-next.99)
 
 <sup>Released on **2025-11-21**</sup>
