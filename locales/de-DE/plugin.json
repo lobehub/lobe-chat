@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Wissensdatenbank lesen",
+        "searchKnowledgeBase": "Wissensdatenbank durchsuchen"
+      },
+      "title": "Wissensdatenbank"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Datei bearbeiten",
+        "getCommandOutput": "Codeausgabe abrufen",
+        "globLocalFiles": "Dateien durchsuchen",
+        "grepContent": "Inhalt durchsuchen",
+        "killCommand": "Codeausführung beenden",
+        "listLocalFiles": "Dateiliste anzeigen",
+        "moveLocalFiles": "Dateien verschieben",
+        "readLocalFile": "Dateiinhalt lesen",
+        "renameLocalFile": "Datei umbenennen",
+        "runCommand": "Code ausführen",
+        "searchLocalFiles": "Dateien suchen",
+        "writeLocalFile": "In Datei schreiben"
+      },
+      "title": "Lokales System"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Inhalte mehrerer Seiten lesen",
+        "crawlSinglePage": "Seiteninhalt lesen",
+        "search": "Seiten durchsuchen"
+      },
+      "title": "Websuche"
+    }
+  },
   "confirm": "Bestätigen",
   "debug": {
     "arguments": "Aufrufparameter",
@@ -251,23 +285,6 @@
     "content": "Plugin wird aufgerufen...",
     "plugin": "Plugin läuft..."
   },
-  "localSystem": {
-    "apiName": {
-      "editLocalFile": "Datei bearbeiten",
-      "getCommandOutput": "Codeausgabe abrufen",
-      "globLocalFiles": "Dateien durchsuchen",
-      "grepContent": "Inhalt durchsuchen",
-      "killCommand": "Codeausführung beenden",
-      "listLocalFiles": "Dateiliste anzeigen",
-      "moveLocalFiles": "Dateien verschieben",
-      "readLocalFile": "Dateiinhalt lesen",
-      "renameLocalFile": "Datei umbenennen",
-      "runCommand": "Befehl ausführen",
-      "searchLocalFiles": "Dateien suchen",
-      "writeLocalFile": "Datei schreiben"
-    },
-    "title": "Lokales System"
-  },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installationsumgebung wird geprüft...",
     "COMPLETED": "Installation abgeschlossen",
@@ -375,11 +392,6 @@
     "warning": "⚠️ Bitte stellen Sie sicher, dass Sie der Quelle dieses Plugins vertrauen. Bösartige Plugins können die Systemsicherheit gefährden."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Mehrere Seiteninhalt lesen",
-      "crawlSinglePage": "Seiteninhalt lesen",
-      "search": "Seite durchsuchen"
-    },
     "config": {
       "addKey": "Schlüssel hinzufügen",
       "close": "Löschen",

@@ -202,7 +202,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const thinkingConfig: ThinkingConfig = {
         includeThoughts:
           (!!thinkingBudget ||
-            (model && (model.includes('-2.5-') || model.includes('thinking')))) &&
+            !!thinkingLevel ||
+            (model && (model.includes('-3-pro-image') || model.includes('thinking')))) &&
           resolvedThinkingBudget !== 0
             ? true
             : undefined,

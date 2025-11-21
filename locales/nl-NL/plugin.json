@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Kennisbankinhoud lezen",
+        "searchKnowledgeBase": "Kennisbank doorzoeken"
+      },
+      "title": "Kennisbank"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Bestand bewerken",
+        "getCommandOutput": "Code-uitvoer ophalen",
+        "globLocalFiles": "Bestanden zoeken met patroon",
+        "grepContent": "Inhoud doorzoeken",
+        "killCommand": "Code-uitvoering beëindigen",
+        "listLocalFiles": "Bestandenlijst bekijken",
+        "moveLocalFiles": "Bestanden verplaatsen",
+        "readLocalFile": "Bestandsinhoud lezen",
+        "renameLocalFile": "Bestand hernoemen",
+        "runCommand": "Code uitvoeren",
+        "searchLocalFiles": "Bestanden doorzoeken",
+        "writeLocalFile": "Bestand schrijven"
+      },
+      "title": "Lokaal systeem"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Inhoud van meerdere pagina's lezen",
+        "crawlSinglePage": "Pagina-inhoud lezen",
+        "search": "Webpagina's doorzoeken"
+      },
+      "title": "Online zoeken"
+    }
+  },
   "confirm": "Bevestigen",
   "debug": {
     "arguments": "Aanroepparameters",
@@ -251,23 +285,6 @@
     "content": "Plugin aan het aanroepen...",
     "plugin": "Plugin wordt uitgevoerd..."
   },
-  "localSystem": {
-    "apiName": {
-      "editLocalFile": "Bestand bewerken",
-      "getCommandOutput": "Code-uitvoer ophalen",
-      "globLocalFiles": "Bestanden zoeken",
-      "grepContent": "Inhoud doorzoeken",
-      "killCommand": "Code-uitvoering beëindigen",
-      "listLocalFiles": "Bestandslijst bekijken",
-      "moveLocalFiles": "Bestanden verplaatsen",
-      "readLocalFile": "Bestandsinhoud lezen",
-      "renameLocalFile": "Naam wijzigen",
-      "runCommand": "Code uitvoeren",
-      "searchLocalFiles": "Bestanden zoeken",
-      "writeLocalFile": "Bestand schrijven"
-    },
-    "title": "Lokaal systeem"
-  },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installatieomgeving controleren...",
     "COMPLETED": "Installatie voltooid",
@@ -375,11 +392,6 @@
     "warning": "⚠️ Bevestig dat u deze pluginbron vertrouwt, kwaadaardige plugins kunnen uw systeem in gevaar brengen."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Meerdere pagina's lezen",
-      "crawlSinglePage": "Pagina-inhoud lezen",
-      "search": "Pagina zoeken"
-    },
     "config": {
       "addKey": "Sleutel toevoegen",
       "close": "Verwijderen",

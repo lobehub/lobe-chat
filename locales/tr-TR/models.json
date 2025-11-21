@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash model varyantı, maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiştir."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash önizleme modeli, görüntü üretimini destekler."
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash, Google'ın en yüksek maliyet-performans modelidir ve kapsamlı özellikler sunar."
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Önizleme, Google'ın en iyi fiyat-performans oranına sahip modelidir ve kapsamlı özellikler sunar."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Önizleme, Google'ın en yüksek maliyet-performans modelidir ve kapsamlı özellikler sunar."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Gemini 2.5 Flash'ın önizleme sürümü (25 Eylül 2025)"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Önizlemesi, Google'ın en gelişmiş düşünce modelidir; kodlama, matematik ve STEM alanlarındaki karmaşık problemleri çözebilir ve uzun bağlam kullanarak büyük veri setleri, kod kütüphaneleri ve belgeleri analiz edebilir."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro, Google'ın en akıllı modeli olup, en son teknoloji çıkarım ve çok modlu anlama yeteneklerinin yanı sıra güçlü aracı ve bağlam kodlama özelliklerine sahiptir."
   },
   "gemini-flash-latest": {
     "description": "Gemini Flash'ın en son sürümü"
@@ -1909,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "xAI'nin Grok 4 modeli, güçlü akıl yürütme yeteneklerine sahiptir."
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Yüksek performanslı aracı araç çağrıları için özel olarak optimize edilmiş, son teknoloji çok modlu model."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Yüksek performanslı aracı araç çağrıları için özel olarak optimize edilmiş, son teknoloji çok modlu model."
   },
   "grok-4-fast-non-reasoning": {
     "description": "Maliyet-etkin çıkarım modellerinde en son gelişmemiz olan Grok 4 Fast’i sunmaktan mutluluk duyuyoruz."

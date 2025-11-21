@@ -5,7 +5,7 @@ import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
@@ -113,18 +113,21 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
             provider={provider.id}
             source={provider.source}
           />
-          <Link to={`/settings?active=provider&provider=${provider.id}`}>
-            <ActionIcon
-              icon={LucideBolt}
-              size={'small'}
-              title={t('ModelSwitchPanel.goToSettings')}
-            />
-          </Link>
+          <ActionIcon
+            icon={LucideBolt}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate(`/settings?active=provider&provider=${provider.id}`);
+            }}
+            size={'small'}
+            title={t('ModelSwitchPanel.goToSettings')}
+          />
         </Flexbox>
       ),
       type: 'group',
     }));
-  }, [enabledList]);
+  }, [enabledList, navigate, t, theme.colorTextTertiary]);
 
   const icon = <div className={styles.tag}>{children}</div>;
 

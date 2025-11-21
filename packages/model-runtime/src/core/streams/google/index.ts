@@ -106,10 +106,10 @@ const transformGoogleGenerativeAIStream = (
   }
 
   // Parse text from candidate.content.parts
-  // Filter out thought content (thought: true) and thoughtSignature
+  // Filter out thought content (thought: true) only, keep thoughtSignature as it's just metadata
   const text =
     candidate?.content?.parts
-      ?.filter((part: any) => part.text && !part.thought && !part.thoughtSignature)
+      ?.filter((part: any) => part.text && !part.thought)
       .map((part: any) => part.text)
       .join('') || '';
 

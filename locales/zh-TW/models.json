@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash 模型變體，針對成本效益和低延遲等目標進行了優化。"
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash 預覽模型，支持圖像生成"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash 是 Google 性價比最高的模型，提供全面的功能。"
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "預覽版本（2025年9月25日）之 Gemini 2.5 Flash"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和STEM領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro 是 Google 最智慧的模型，具備最先進的推理與多模態理解能力，以及強大的代理與情境編碼功能。"
   },
   "gemini-flash-latest": {
     "description": "Gemini Flash 最新版本"
@@ -1909,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "xAI 的 Grok 4，具備強大的推理能力。"
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "前沿多模態模型，專為高效能代理工具調用進行優化。"
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "前沿多模態模型，專為高效能代理工具調用進行優化。"
   },
   "grok-4-fast-non-reasoning": {
     "description": "我們很高興發布 Grok 4 Fast，這是我們在成本效益推理模型方面的最新進展。"

@@ -883,7 +883,6 @@ describe('thread action', () => {
             parentMessageId: 'new-msg-id',
             parentMessageType: 'user',
             inPortalThread: true,
-            ragQuery: 'test with rag',
             threadId: 'existing-thread-id',
           }),
         );
