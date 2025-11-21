@@ -2,11 +2,10 @@ import { EnabledProviderWithModels } from '@lobechat/types';
 import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
-import Link from 'next/link';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { ProviderItemRender } from '@/components/ModelSelect';
 import { useAiInfraStore } from '@/store/aiInfra';
@@ -107,7 +106,7 @@ const ModelSelect = memo(() => {
             provider={provider.id}
             source={provider.source}
           />
-          <Link href={`/settings?active=provider&provider=${provider.id}`}>
+          <Link to={`/settings?active=provider&provider=${provider.id}`}>
             <ActionIcon
               icon={LucideBolt}
               size={'small'}

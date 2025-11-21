@@ -3,7 +3,6 @@ import type { BrowserWindowOpts } from './core/browser/Browser';
 export const BrowsersIdentifiers = {
   chat: 'chat',
   devtools: 'devtools',
-  settings: 'settings',
 };
 
 export const appBrowsers = {
@@ -29,18 +28,6 @@ export const appBrowsers = {
     parentIdentifier: 'chat',
     path: '/desktop/devtools',
     titleBarStyle: 'hiddenInset',
-    vibrancy: 'under-window',
-    width: 1000,
-  },
-  settings: {
-    autoHideMenuBar: true,
-    height: 800,
-    identifier: 'settings',
-    keepAlive: true,
-    minWidth: 600,
-    parentIdentifier: 'chat',
-    path: '/settings',
-    titleBarStyle: 'hidden',
     vibrancy: 'under-window',
     width: 1000,
   },
