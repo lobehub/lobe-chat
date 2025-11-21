@@ -1907,6 +1907,12 @@
   "grok-4-0709": {
     "description": "Grok 4 của xAI, có khả năng suy luận mạnh mẽ."
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Mô hình đa phương thức tiên tiến, được tối ưu hóa đặc biệt để gọi công cụ đại diện hiệu suất cao."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Mô hình đa phương thức tiên tiến, được tối ưu hóa đặc biệt để gọi công cụ đại diện hiệu suất cao."
+  },
   "grok-4-fast-non-reasoning": {
     "description": "Chúng tôi rất vui mừng giới thiệu Grok 4 Fast, bước tiến mới nhất của chúng tôi trong các mô hình suy luận hiệu quả về chi phí."
   },
