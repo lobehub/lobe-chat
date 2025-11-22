@@ -183,11 +183,7 @@ const transformGoogleGenerativeAIStream = (
           ...usageChunks,
         ].filter(Boolean) as StreamProtocolChunk[];
       }
-      // 当有 finishReason 但没有 text 内容时,发送一个空的 text 块以停止加载动画
-      return [
-        { data: '', id: context?.id, type: 'text' },
-        { data: candidate.finishReason, id: context?.id, type: 'stop' },
-      ];
+      return { data: candidate.finishReason, id: context?.id, type: 'stop' };
     }
 
     if (!!text?.trim()) return { data: text, id: context?.id, type: 'text' };

@@ -70,6 +70,7 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 1_048_576 + 65_536,
     description: 'Latest release of Gemini Flash',
     displayName: 'Gemini Flash Latest',
+    enabled: true,
     id: 'gemini-flash-latest',
     maxOutput: 65_536,
     pricing: {
@@ -377,7 +378,6 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 1_048_576 + 65_536,
     description: 'Gemini 2.5 Flash 是 Google 性价比最高的模型，提供全面的功能。',
     displayName: 'Gemini 2.5 Flash',
-    enabled: true,
     id: 'gemini-2.5-flash',
     maxOutput: 65_536,
     pricing: {
@@ -891,6 +891,7 @@ const googleImageModels: AIImageModelCard[] = [
   {
     displayName: 'Nano Banana Pro',
     id: 'gemini-3-pro-image-preview:image',
+    enabled: true,
     type: 'image',
     enabled: true,
     description:
