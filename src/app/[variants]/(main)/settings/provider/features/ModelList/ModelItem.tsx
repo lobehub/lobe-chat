@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelInfoTags } from '@/components/ModelSelect';
+import NewModelBadge from '@/features/ModelSelect/components/NewModelBadge';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { formatPriceByCurrency } from '@/utils/format';
@@ -17,7 +18,6 @@ import {
   getTextInputUnitRate,
   getTextOutputUnitRate,
 } from '@/utils/pricing';
-import { isNewReleaseDate } from '@/utils/time';
 
 import ModelConfigModal from './ModelConfigModal';
 import { ProviderSettingsContext } from './ProviderSettingsContext';
@@ -163,12 +163,7 @@ const ModelItem = memo<ModelItemProps>(
 
     const isMobile = useIsMobile();
 
-    const NewTag =
-      releasedAt && isNewReleaseDate(releasedAt) ? (
-        <Tag color="blue" style={{ marginLeft: 8 }}>
-          {t('new', { ns: 'common' })}
-        </Tag>
-      ) : null;
+    const NewTag = <NewModelBadge releasedAt={releasedAt} />;
 
     const ModelIdTag = (
       <Tag onClick={copyModelId} style={{ cursor: 'pointer', marginRight: 0 }}>

@@ -7,6 +7,8 @@ import numeral from 'numeral';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import NewModelBadge from '@/features/ModelSelect/components/NewModelBadge';
+
 const POPOVER_MAX_WIDTH = 320;
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
@@ -67,6 +69,7 @@ const ImageModelItem = memo<ImageModelItemProps>(
         <Text ellipsis title={model.displayName || model.id}>
           {model.displayName || model.id}
         </Text>
+        <NewModelBadge releasedAt={model.releasedAt} />
       </Flexbox>
     );
 
