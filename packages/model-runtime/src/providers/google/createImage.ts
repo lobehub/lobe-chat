@@ -147,6 +147,7 @@ async function generateImageByChatModel(
       ? {
           imageConfig: {
             aspectRatio: params.aspectRatio,
+            imageSize: params.resolution,
           },
         }
       : {}),
