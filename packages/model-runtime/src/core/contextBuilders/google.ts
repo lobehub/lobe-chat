@@ -126,29 +126,23 @@ export const buildGoogleMessage = async (
   }
 
   const getParts = async () => {
-    if (typeof content === 'string') return [{ text: content }];
+    if (typeof content === 'string') {
+      // For simple string content, check if we need to preserve thoughtSignature from history
+      // This happens when model's previous response had a thoughtSignature on text part
+      const textPart: Part = { text: content };
+      if ((message as any).thoughtSignature) {
+        (textPart as any).thoughtSignature = (message as any).thoughtSignature;
+      }
+      return [textPart];
+    }
 
     const parts = await Promise.all(content.map(async (c) => await buildGooglePart(c)));
     return parts.filter(Boolean) as Part[];
   };
-  const parts = await getParts();
-
-  // Gemini thought signatures are only required / valid on model outputs.
-  // If a message is marked as assistant but only carries plain text / media
-  // (no functionCall / functionResponse), it is effectively user input and
-  // should be sent as role=user to avoid INVALID_ARGUMENT errors related to
-  // missing thought_signature on text / image parts.
-  const hasFunctionLikePart = parts.some((p: any) => p.functionCall || p.functionResponse);
-  const effectiveRole: Content['role'] =
-    message.role === 'assistant' && !hasFunctionLikePart
-      ? 'user'
-      : message.role === 'assistant'
-        ? 'model'
-        : 'user';
 
   return {
-    parts,
-    role: effectiveRole,
+    parts: await getParts(),
+    role: message.role === 'assistant' ? 'model' : 'user',
   };
 };
 
@@ -208,6 +202,26 @@ export const buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promis
             part.thoughtSignature = GEMINI_MAGIC_THOUGHT_SIGNATURE;
           }
         }
+      }
+    }
+  }
+
+  // Validate model messages to prevent INVALID_ARGUMENT errors
+  // According to Gemini API docs, model messages with image/video parts require thoughtSignature
+  // If we find such messages without proper signatures or function calls, they were likely
+  // incorrectly marked as 'model' when they should be 'user' (typically system context injection)
+  for (const content of filteredContents) {
+    if (content.role === 'model' && content.parts) {
+      const hasMediaWithoutSignature = content.parts.some((part: any) => {
+        const hasMedia = part.inlineData && !part.thought;
+        const hasSignature = part.thoughtSignature;
+        const hasFunction = part.functionCall || part.functionResponse;
+        // Model messages with media must have either signature or be function-related
+        return hasMedia && !hasSignature && !hasFunction;
+      });
+
+      if (hasMediaWithoutSignature) {
+        content.role = 'user';
       }
     }
   }
