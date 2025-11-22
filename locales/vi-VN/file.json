@@ -116,8 +116,8 @@
     "title": "Kho tri thức"
   },
   "menu": {
-    "allDocuments": "Tất cả tài liệu",
-    "allFiles": "Tất cả tệp"
+    "allFiles": "Tất cả tệp",
+    "allPages": "Tất cả tài liệu"
   },
   "networkError": "Không thể lấy kho tri thức, vui lòng kiểm tra kết nối mạng và thử lại",
   "notSupportGuide": {

@@ -116,8 +116,8 @@
     "title": "Wissensdatenbank"
   },
   "menu": {
-    "allDocuments": "Alle Dokumente",
-    "allFiles": "Alle Dateien"
+    "allFiles": "Alle Dateien",
+    "allPages": "Alle Dokumente"
   },
   "networkError": "Fehler beim Abrufen der Wissensdatenbank. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut.",
   "notSupportGuide": {

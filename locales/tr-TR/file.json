@@ -116,8 +116,8 @@
     "title": "Bilgi Tabanı"
   },
   "menu": {
-    "allDocuments": "Tüm Belgeler",
-    "allFiles": "Tüm Dosyalar"
+    "allFiles": "Tüm Dosyalar",
+    "allPages": "Tüm Belgeler"
   },
   "networkError": "Bilgi bankası alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
   "notSupportGuide": {

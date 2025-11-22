@@ -116,8 +116,8 @@
     "title": "Knowledge Base"
   },
   "menu": {
-    "allDocuments": "Tutti i documenti",
-    "allFiles": "Tutti i file"
+    "allFiles": "Tutti i file",
+    "allPages": "Tutti i documenti"
   },
   "networkError": "Impossibile ottenere la knowledge base, controlla la connessione di rete e riprova",
   "notSupportGuide": {
