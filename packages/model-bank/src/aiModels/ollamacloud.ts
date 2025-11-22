@@ -25,6 +25,7 @@ const ollamaCloudModels: AIChatModelCard[] = [
     displayName: 'Gemini 3 Pro Preview',
     enabled: true,
     id: 'gemini-3-pro-preview',
+    releasedAt: '2025-11-20',
     type: 'chat',
   },
   {

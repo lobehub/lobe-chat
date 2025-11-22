@@ -14,7 +14,7 @@ const NewModelBadge = memo<NewModelBadgeProps>(({ releasedAt }) => {
   if (!releasedAt || !isNewReleaseDate(releasedAt)) return null;
 
   return (
-    <Tag color="blue" style={{ marginLeft: 8 }}>
+    <Tag color="blue" size="small">
       {t('new')}
     </Tag>
   );

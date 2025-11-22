@@ -195,6 +195,7 @@ const googleChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    releasedAt: '2025-11-20',
     settings: {
       searchImpl: 'params',
       searchProvider: 'google',
