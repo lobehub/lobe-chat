@@ -412,6 +412,7 @@ export interface AiModelForSelect {
    */
   pricePerImage?: number;
   pricing?: Pricing;
+  releasedAt?: string;
 }
 
 export interface EnabledAiModel {

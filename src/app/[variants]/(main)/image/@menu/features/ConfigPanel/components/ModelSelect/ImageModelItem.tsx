@@ -7,6 +7,8 @@ import numeral from 'numeral';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import NewModelBadge from '@/features/ModelSelect/components/NewModelBadge';
+
 const POPOVER_MAX_WIDTH = 320;
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
@@ -26,6 +28,11 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
 type ImageModelItemProps = AiModelForSelect & {
   /**
+   * Whether to show new model badge
+   * @default true
+   */
+  showBadge?: boolean;
+  /**
    * Whether to show popover on hover
    * @default true
    */
@@ -33,7 +40,14 @@ type ImageModelItemProps = AiModelForSelect & {
 };
 
 const ImageModelItem = memo<ImageModelItemProps>(
-  ({ approximatePricePerImage, description, pricePerImage, showPopover = true, ...model }) => {
+  ({
+    approximatePricePerImage,
+    description,
+    pricePerImage,
+    showPopover = true,
+    showBadge = true,
+    ...model
+  }) => {
     const { styles } = useStyles();
 
     const priceLabel = useMemo(() => {
@@ -67,6 +81,7 @@ const ImageModelItem = memo<ImageModelItemProps>(
         <Text ellipsis title={model.displayName || model.id}>
           {model.displayName || model.id}
         </Text>
+        {showBadge && <NewModelBadge releasedAt={model.releasedAt} />}
       </Flexbox>
     );
 
