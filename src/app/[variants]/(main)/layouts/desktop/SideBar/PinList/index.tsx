@@ -3,9 +3,13 @@ import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
+import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -69,13 +73,18 @@ const PinList = () => {
   const list = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
   const [activeId] = useSessionStore((s) => [s.activeId]);
   const switchSession = useSwitchSession();
+  const router = useQueryRoute();
+  const mobile = useServerConfigStore((s) => s.isMobile);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SwitchAgent));
   const hasList = list.length > 0;
-  const [isPinned, { pinAgent }] = usePinnedAgentState();
+  const [isPinned] = usePinnedAgentState();
 
   const switchAgent = (id: string) => {
     switchSession(id);
-    pinAgent();
+    // Update URL with session id and pinned=true query parameter
+    router.push('/chat', {
+      query: { pinned: 'true', session: id },
+    });
   };
 
   return (
@@ -93,21 +102,27 @@ const PinList = () => {
                   placement={'right'}
                   title={sessionHelpers.getTitle(item.meta)}
                 >
-                  <Flexbox
-                    className={cx(
-                      styles.ink,
-                      isPinned && activeId === item.id ? styles.inkActive : undefined,
-                    )}
+                  <Link
+                    aria-label={item.id}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      switchAgent(item.id);
+                    }}
+                    to={SESSION_CHAT_URL(item.id, mobile)}
                   >
-                    <Avatar
-                      avatar={sessionHelpers.getAvatar(item.meta)}
-                      background={item.meta.backgroundColor}
-                      onClick={() => {
-                        switchAgent(item.id);
-                      }}
-                      size={40}
-                    />
-                  </Flexbox>
+                    <Flexbox
+                      className={cx(
+                        styles.ink,
+                        isPinned && activeId === item.id ? styles.inkActive : undefined,
+                      )}
+                    >
+                      <Avatar
+                        avatar={sessionHelpers.getAvatar(item.meta)}
+                        background={item.meta.backgroundColor}
+                        size={40}
+                      />
+                    </Flexbox>
+                  </Link>
                 </Tooltip>
               </Flexbox>
             ))}
