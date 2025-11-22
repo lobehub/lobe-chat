@@ -1057,6 +1057,7 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
     displayName: 'Nano Banana Pro',
+    enabled: true,
     id: 'gemini-3-pro-image-preview',
     maxOutput: 32_768,
     pricing: {
@@ -1067,6 +1068,7 @@ const aihubmixModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    releasedAt: '2025-11-20',
     settings: {
       searchImpl: 'params',
       searchProvider: 'google',

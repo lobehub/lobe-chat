@@ -2,7 +2,6 @@ import { EnabledProviderWithModels } from '@lobechat/types';
 import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
-import Link from 'next/link';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -107,13 +106,15 @@ const ModelSelect = memo(() => {
             provider={provider.id}
             source={provider.source}
           />
-          <Link href={`/settings?active=provider&provider=${provider.id}`}>
-            <ActionIcon
-              icon={LucideBolt}
-              size={'small'}
-              title={t('ModelSwitchPanel.goToSettings')}
-            />
-          </Link>
+          <ActionIcon
+            icon={LucideBolt}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/settings?active=provider&provider=${provider.id}`);
+            }}
+            size={'small'}
+            title={t('ModelSwitchPanel.goToSettings')}
+          />
         </Flexbox>
       ),
       options: getImageModels(provider),
@@ -129,7 +130,7 @@ const ModelSelect = memo(() => {
 
     if (!modelInfo) return props.label;
 
-    return <ImageModelItem {...modelInfo} showPopover={false} />;
+    return <ImageModelItem {...modelInfo} showBadge={false} showPopover={false} />;
   };
 
   return (

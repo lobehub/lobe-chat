@@ -116,8 +116,8 @@
     "title": "知识库"
   },
   "menu": {
-    "allDocuments": "全部文档",
-    "allFiles": "全部文件"
+    "allFiles": "全部文件",
+    "allPages": "全部文稿"
   },
   "networkError": "获取知识库失败，请检测网络连接后重试",
   "notSupportGuide": {

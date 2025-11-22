@@ -116,8 +116,8 @@
     "title": "Baza wiedzy"
   },
   "menu": {
-    "allDocuments": "Wszystkie dokumenty",
-    "allFiles": "Wszystkie pliki"
+    "allFiles": "Wszystkie pliki",
+    "allPages": "Wszystkie dokumenty"
   },
   "networkError": "Nie udało się uzyskać dostępu do bazy wiedzy, proszę sprawdzić połączenie sieciowe i spróbować ponownie",
   "notSupportGuide": {

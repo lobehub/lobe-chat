@@ -116,8 +116,8 @@
     "title": "지식베이스"
   },
   "menu": {
-    "allDocuments": "모든 문서",
-    "allFiles": "모든 파일"
+    "allFiles": "모든 파일",
+    "allPages": "모든 문서"
   },
   "networkError": "지식베이스를 불러오지 못했습니다. 네트워크 연결을 확인한 후 다시 시도해 주세요",
   "notSupportGuide": {

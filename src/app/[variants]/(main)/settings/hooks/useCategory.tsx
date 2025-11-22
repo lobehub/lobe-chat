@@ -22,7 +22,7 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 export const useCategory = () => {
   const { t } = useTranslation('setting');
   const mobile = useServerConfigStore((s) => s.isMobile);
-  const { enableSTT, hideDocs } = useServerConfigStore(featureFlagsSelectors);
+  const { enableSTT, hideDocs, showAiImage } = useServerConfigStore(featureFlagsSelectors);
 
   const cateItems: MenuProps['items'] = useMemo(
     () =>
@@ -50,7 +50,7 @@ export const useCategory = () => {
           key: SettingsTabs.Provider,
           label: t('tab.provider'),
         },
-        {
+        showAiImage && {
           icon: <Icon icon={ImageIcon} />,
           key: SettingsTabs.Image,
           label: t('tab.image'),
@@ -84,7 +84,7 @@ export const useCategory = () => {
           label: t('tab.about'),
         },
       ].filter(Boolean) as MenuProps['items'],
-    [t, enableSTT, hideDocs, mobile],
+    [t, enableSTT, hideDocs, mobile, showAiImage],
   );
 
   return cateItems;

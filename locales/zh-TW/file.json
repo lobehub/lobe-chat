@@ -116,8 +116,8 @@
     "title": "知識庫"
   },
   "menu": {
-    "allDocuments": "全部文件",
-    "allFiles": "所有檔案"
+    "allFiles": "所有檔案",
+    "allPages": "全部文件"
   },
   "networkError": "獲取知識庫失敗，請檢查網路連接後重試",
   "notSupportGuide": {

@@ -116,8 +116,8 @@
     "title": "Kennisbank"
   },
   "menu": {
-    "allDocuments": "Alle documenten",
-    "allFiles": "Alle bestanden"
+    "allFiles": "Alle bestanden",
+    "allPages": "Alle documenten"
   },
   "networkError": "Kon de kennisbank niet ophalen, controleer uw netwerkverbinding en probeer het opnieuw",
   "notSupportGuide": {
