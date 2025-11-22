@@ -509,5 +509,73 @@ describe('Operation Selectors', () => {
       expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
       expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
     });
+
+    it('isMainWindowAgentRuntimeRunning should only detect operations in current active topic', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      // Set active session and topic
+      act(() => {
+        useChatStore.setState({ activeId: 'session1', activeTopicId: 'topic1' });
+      });
+
+      let topic1OpId: string;
+      let topic2OpId: string;
+
+      // Start operation in topic1 (current active topic)
+      act(() => {
+        topic1OpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1', topicId: 'topic1' },
+          metadata: { inThread: false },
+        }).operationId;
+      });
+
+      // Should detect operation in current topic
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Start operation in topic2 (different topic)
+      act(() => {
+        topic2OpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1', topicId: 'topic2' },
+          metadata: { inThread: false },
+        }).operationId;
+      });
+
+      // Should still only detect topic1 operation (current active topic)
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Switch to topic2
+      act(() => {
+        useChatStore.setState({ activeTopicId: 'topic2' });
+      });
+
+      // Should now detect topic2 operation
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete topic2 operation
+      act(() => {
+        result.current.completeOperation(topic2OpId!);
+      });
+
+      // Should not detect any operation in topic2 now
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+
+      // Switch back to topic1
+      act(() => {
+        useChatStore.setState({ activeTopicId: 'topic1' });
+      });
+
+      // Should detect topic1 operation again
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete topic1 operation
+      act(() => {
+        result.current.completeOperation(topic1OpId!);
+      });
+
+      // Should not detect any operation now
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+    });
   });
 });

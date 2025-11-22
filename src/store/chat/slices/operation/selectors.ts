@@ -180,15 +180,17 @@ const isAgentRuntimeRunning = (s: ChatStoreState): boolean => {
 /**
  * Check if agent runtime is running in main window only
  * Used for main window UI state (e.g., send button loading)
- * Excludes thread operations to prevent cross-contamination
+ * Excludes thread operations and operations from other topics to prevent cross-contamination
  */
 const isMainWindowAgentRuntimeRunning = (s: ChatStoreState): boolean => {
-  const operationIds = s.operationsByType['execAgentRuntime'] || [];
-  return operationIds.some((id) => {
-    const op = s.operations[id];
-    // Only include main window operations (not thread)
-    return op && op.status === 'running' && !op.metadata.isAborting && !op.metadata.inThread;
-  });
+  const currentOps = getCurrentContextOperations(s);
+  return currentOps.some(
+    (op) =>
+      op.type === 'execAgentRuntime' &&
+      op.status === 'running' &&
+      !op.metadata.isAborting &&
+      !op.metadata.inThread,
+  );
 };
 
 /**
