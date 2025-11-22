@@ -893,7 +893,6 @@ const googleImageModels: AIImageModelCard[] = [
     id: 'gemini-3-pro-image-preview:image',
     enabled: true,
     type: 'image',
-    enabled: true,
     description:
       'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
     releasedAt: '2025-11-18',
