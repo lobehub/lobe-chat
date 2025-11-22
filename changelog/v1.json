@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Gemini 3 Pro does not display thought summaries."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.100"
+  },
+  {
+    "children": {
+      "features": ["Refactor to use kb search tool."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.99"
+  },
+  {
+    "children": {
       "fixes": ["Fixed changelog pages and open again."],
       "improvements": ["Fix some translations."]
     },
