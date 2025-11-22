@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support bedrok prompt cache and usage compute."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.101"
+  },
+  {
+    "children": {
       "fixes": ["Gemini 3 Pro does not display thought summaries."]
     },
     "date": "2025-11-21",
