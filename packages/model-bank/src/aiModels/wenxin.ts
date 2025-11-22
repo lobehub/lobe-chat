@@ -12,9 +12,57 @@ const wenxinChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
+      '文心5.0 Thinking，原生全模态旗舰模型，支持文本、图像、音频、视频统一建模，综合能力全面升级，适用于复杂问答、创作与智能体场景。',
+    displayName: 'ERNIE 5.0 Thinking',
+    enabled: true,
+    id: 'ernie-5.0-thinking-latest',
+    maxOutput: 65_536,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]': 6,
+              '[0.032, 0.128]': 10,
+            },
+            pricingParams: ['textInput'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]': 24,
+              '[0.032, 0.128]': 40,
+            },
+            pricingParams: ['textInput'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-11-12',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
       '文心5.0 Thinking 预览版，原生全模态旗舰模型，支持文本、图像、音频、视频统一建模，综合能力全面升级，适用于复杂问答、创作与智能体场景。',
     displayName: 'ERNIE 5.0 Thinking Preview',
-    enabled: true,
     id: 'ernie-5.0-thinking-preview',
     maxOutput: 65_536,
     pricing: {

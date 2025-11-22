@@ -8,6 +8,47 @@ const infiniaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 262_144,
+    description:
+      "Kimi K2 Thinking 是最新、最强大的开源思考模型。它通过大幅扩展多步推理深度，并在 200–300 次连续工具调用中保持稳定的工具使用，在 Humanity's Last Exam (HLE)、BrowseComp 及其他基准测试中树立了新的标杆。同时，K2 Thinking 在编程、数学、逻辑推理和 Agent 场景中表现卓越。该模型基于混合专家（MoE）架构，总参数约 1T，支持 256K 上下文窗口并支持工具调用。",
+    displayName: 'Kimi K2 Thinking',
+    id: 'kimi-k2-thinking',
+    maxOutput: 32_768,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 8192,
+    description:
+      'DeepSeek-OCR 是由深度求索（DeepSeek AI）推出的一个视觉语言模型，专注于光学字符识别（OCR）与"上下文光学压缩"。该模型旨在探索从图像中压缩上下文信息的边界，能够高效处理文档并将其转换为如 Markdown 等结构化文本格式。它能够准确识别图像中的文字内容，特别适用于文档数字化、文字提取和结构化处理等应用场景。',
+    displayName: 'DeepSeek OCR',
+    id: 'deepseek-ocr',
+    maxOutput: 8192,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-20',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 200_000,
     description:
       'MiniMax-M2 是一款专为编码与智能体工作流优化的专家混合（MoE）语言模型，具有约 230B 总参数与约 10B 活跃参数。它在保持强通用智能的同时，针对多文件编辑、代码-运行-修复闭环、测试校验修复等开发者场景进行深度增强，在终端、IDE 与 CI 等真实环境中表现稳定、高效。',
@@ -187,6 +228,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -224,6 +268,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -259,6 +306,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
     },
     type: 'chat',
   },
@@ -369,6 +419,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -409,6 +462,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 11.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -429,6 +485,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 8.7, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -448,6 +507,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
     },
     type: 'chat',
   },

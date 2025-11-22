@@ -124,7 +124,7 @@ export interface CreateRouterRuntimeOptions<T extends Record<string, any> = any>
 export const createRouterRuntime = ({
   id,
   routers,
-  apiKey: DEFAULT_API_LEY,
+  apiKey: DEFAULT_API_KEY,
   models: modelsOption,
   ...params
 }: CreateRouterRuntimeOptions) => {
@@ -137,7 +137,7 @@ export const createRouterRuntime = ({
     constructor(options: ClientOptions & Record<string, any> = {}) {
       this._options = {
         ...options,
-        apiKey: options.apiKey?.trim() || DEFAULT_API_LEY,
+        apiKey: options.apiKey?.trim() || DEFAULT_API_KEY,
         baseURL: options.baseURL?.trim(),
       };
 

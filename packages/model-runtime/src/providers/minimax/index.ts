@@ -13,16 +13,7 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.minimaxi.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { enabledSearch, max_tokens, messages, temperature, tools, top_p, ...params } = payload;
-
-      const minimaxTools = enabledSearch
-        ? [
-            ...(tools || []),
-            {
-              type: 'web_search',
-            },
-          ]
-        : tools;
+      const { enabledSearch, max_tokens, messages, temperature, top_p, ...params } = payload;
 
       // Interleaved thinking
       const processedMessages = messages.map((message: any) => {
@@ -77,7 +68,6 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
         messages: processedMessages,
         reasoning_split: true,
         temperature: finalTemperature,
-        tools: minimaxTools,
         top_p: resolvedParams.top_p,
       } as any;
     },
