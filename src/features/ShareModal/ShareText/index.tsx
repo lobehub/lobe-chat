@@ -67,7 +67,13 @@ const ShareText = memo(() => {
   ];
 
   const [systemRole] = useAgentStore((s) => [agentSelectors.currentAgentSystemRole(s)]);
-  const messages = useChatStore(displayMessageSelectors.activeDisplayMessages, isEqual);
+  const messages = useChatStore((s) => {
+    const msgs = displayMessageSelectors.activeDisplayMessages(s);
+    if (s.isMessageSelectionMode && s.messageSelectionIds.length > 0) {
+      return msgs.filter((m) => s.messageSelectionIds.includes(m.id));
+    }
+    return msgs;
+  }, isEqual);
   const topic = useChatStore(topicSelectors.currentActiveTopic, isEqual);
 
   const title = topic?.title || t('shareModal.exportTitle');

@@ -39,6 +39,8 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     openThreadCreator,
     resendThreadMessage,
     delAndResendThreadMessage,
+    toggleMessageSelectionMode,
+    updateMessageSelection,
   ] = useChatStore((s) => [
     // !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
@@ -54,11 +56,13 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     s.openThreadCreator,
     s.resendThreadMessage,
     s.delAndResendThreadMessage,
+    s.toggleMessageSelectionMode,
+    s.updateMessageSelection,
   ]);
 
   // const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
 
-  const { regenerate, edit, copy, divider, del, tts, translate } = useChatListActionsBar({
+  const { regenerate, edit, copy, divider, del, tts, translate, select } = useChatListActionsBar({
     hasThread,
     isRegenerating,
   });
@@ -132,6 +136,12 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
           ttsMessage(id);
           break;
         }
+
+        case 'select': {
+          toggleMessageSelectionMode(true);
+          updateMessageSelection(id, true);
+          break;
+        }
       }
 
       if (action.keyPath.at(-1) === 'translate') {
@@ -149,7 +159,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     <ActionIconGroup
       items={items}
       menu={{
-        items: [edit, copy, divider, tts, translate, divider, regenerate, del],
+        items: [edit, copy, divider, tts, translate, divider, select, divider, regenerate, del],
       }}
       onActionClick={onActionClick}
       size={'small'}

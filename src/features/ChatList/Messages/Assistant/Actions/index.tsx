@@ -46,6 +46,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     translate,
     collapse,
     expand,
+    select,
   } = useChatListActionsBar({ hasThread, isRegenerating });
 
   const hasTools = !!tools;
@@ -76,6 +77,8 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     delAndResendThreadMessage,
     toggleMessageEditing,
     toggleMessageCollapsed,
+    toggleMessageSelectionMode,
+    updateMessageSelection,
   ] = useChatStore((s) => [
     s.deleteMessage,
     s.regenerateAssistantMessage,
@@ -88,6 +91,8 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     s.delAndResendThreadMessage,
     s.toggleMessageEditing,
     s.toggleMessageCollapsed,
+    s.toggleMessageSelectionMode,
+    s.updateMessageSelection,
   ]);
   const { message } = App.useApp();
   const virtuaRef = use(VirtuaContext);
@@ -162,6 +167,12 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
           setShareModal(true);
           break;
         }
+
+        case 'select': {
+          toggleMessageSelectionMode(true);
+          updateMessageSelection(id, true);
+          break;
+        }
       }
 
       if (action.keyPath.at(-1) === 'translate') {
@@ -193,6 +204,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
             translate,
             divider,
             share,
+            select,
             // exportPDF,
             divider,
             regenerate,

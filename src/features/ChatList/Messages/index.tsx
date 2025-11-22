@@ -1,6 +1,7 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
+import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useEffect, useMemo, useRef } from 'react';
@@ -21,7 +22,7 @@ import SupervisorMessage from './Supervisor';
 import ToolMessage from './Tool';
 import UserMessage from './User';
 
-const useStyles = createStyles(({ css, prefixCls }) => ({
+const useStyles = createStyles(({ css, token, prefixCls }) => ({
   loading: css`
     opacity: 0.6;
   `,
@@ -31,6 +32,10 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
     .${prefixCls}-input {
       max-height: 900px;
     }
+  `,
+  selected: css`
+    background: ${token.colorFillTertiary};
+    padding-inline: 8px;
   `,
 }));
 
@@ -43,6 +48,7 @@ export interface ChatListItemProps {
   inPortalThread?: boolean;
   index: number;
   isLatestItem?: boolean;
+  showSelection?: boolean;
 }
 
 const Item = memo<ChatListItemProps>(
@@ -55,14 +61,22 @@ const Item = memo<ChatListItemProps>(
     inPortalThread = false,
     index,
     isLatestItem,
+    showSelection,
   }) => {
     const { styles, cx } = useStyles();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
-    const [role, isMessageCreating] = useChatStore((s) => [
-      displayMessageSelectors.getDisplayMessageById(id)(s)?.role,
-      messageStateSelectors.isMessageCreating(id)(s),
-    ]);
+    const [role, isMessageCreating, isMessageSelectionMode, isSelected, updateMessageSelection] =
+      useChatStore((s) => [
+        displayMessageSelectors.getDisplayMessageById(id)(s)?.role,
+        messageStateSelectors.isMessageCreating(id)(s),
+        s.isMessageSelectionMode,
+        s.messageSelectionIds.includes(id),
+        s.updateMessageSelection,
+      ]);
+
+    const showCheckbox = showSelection === false ? false : isMessageSelectionMode;
+    const isActive = isSelected && showCheckbox;
 
     // ======================= Performance Optimization ======================= //
     // these useMemo/useCallback are all for the performance optimization
@@ -168,13 +182,34 @@ const Item = memo<ChatListItemProps>(
       <InPortalThreadContext.Provider value={inPortalThread}>
         {enableHistoryDivider && <History />}
         <Flexbox
-          className={cx(styles.message, className, isMessageCreating && styles.loading)}
+          className={cx(
+            styles.message,
+            className,
+            isMessageCreating && styles.loading,
+            isActive && styles.selected,
+          )}
           data-index={index}
+          gap={8}
+          horizontal
           onContextMenu={onContextMenu}
           ref={containerRef}
+          style={{
+            marginLeft: isActive ? -8 : undefined,
+            marginRight: isActive ? -8 : undefined,
+          }}
         >
-          {renderContent}
-          {endRender}
+          {showCheckbox && (
+            <Flexbox align={'center'} justify={'center'}>
+              <Checkbox
+                checked={isSelected}
+                onChange={(e) => updateMessageSelection(id, e.target.checked)}
+              />
+            </Flexbox>
+          )}
+          <Flexbox style={{ flex: 1, minWidth: 0 }}>
+            {renderContent}
+            {endRender}
+          </Flexbox>
         </Flexbox>
       </InPortalThreadContext.Provider>
     );

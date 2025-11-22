@@ -2,6 +2,7 @@ import type { ActionIconGroupItemType } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import {
   ArrowDownFromLine,
+  CheckSquare,
   Copy,
   DownloadIcon,
   Edit,
@@ -39,6 +40,7 @@ interface ChatListActionsBar {
   expand: ActionIconGroupItemType;
   export: ActionIconGroupItemType;
   regenerate: ActionIconGroupItemType;
+  select: ActionIconGroupItemType;
   share: ActionIconGroupItemType;
   translate: ActionIconGroupItemType;
   tts: ActionIconGroupItemType;
@@ -118,6 +120,11 @@ export const useChatListActionsBar = ({
         key: 'regenerate',
         label: t('regenerate'),
         spin: isRegenerating,
+      },
+      select: {
+        icon: CheckSquare,
+        key: 'select',
+        label: t('selectMessage', { ns: 'chat' }),
       },
       share: {
         icon: Share2,

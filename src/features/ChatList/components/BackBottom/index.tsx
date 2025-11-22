@@ -1,7 +1,10 @@
 import { Button, Icon } from '@lobehub/ui';
-import { ListEnd } from 'lucide-react';
+import { ListEnd, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
+
+import { useChatStore } from '@/store/chat';
 
 import { useStyles } from './style';
 
@@ -13,17 +16,39 @@ export interface BackBottomProps {
 const BackBottom = memo<BackBottomProps>(({ visible, onScrollToBottom }) => {
   const { styles, cx } = useStyles();
 
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation(['chat', 'common']);
+
+  const [isMessageSelectionMode] = useChatStore((s) => [
+    s.isMessageSelectionMode,
+    s.toggleMessageSelectionMode,
+  ]);
 
   return (
-    <Button
-      className={cx(styles.container, visible && styles.visible)}
-      icon={<Icon icon={ListEnd} />}
-      onClick={onScrollToBottom}
-      size={'small'}
+    <Flexbox
+      className={cx(styles.container, (visible || isMessageSelectionMode) && styles.visible)}
+      gap={8}
     >
-      {t('backToBottom', { defaultValue: 'Back to bottom' })}
-    </Button>
+      {isMessageSelectionMode && (
+        <Button
+          className={styles.button}
+          icon={<Icon icon={X} />}
+          onClick={() => {
+            useChatStore.getState().clearMessageSelection();
+          }}
+          size={'small'}
+        >
+          {t('exitSelection')}
+        </Button>
+      )}
+      <Button
+        className={cx(styles.button, !visible && styles.hide)}
+        icon={<Icon icon={ListEnd} />}
+        onClick={onScrollToBottom}
+        size={'small'}
+      >
+        {t('backToBottom', { defaultValue: 'Back to bottom' })}
+      </Button>
+    </Flexbox>
   );
 });
 
