@@ -2,6 +2,56 @@
 
 # Changelog
 
+## [Version 2.0.0-next.102](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.101...v2.0.0-next.102)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new provider ZenMux & Gemini 3 Pro Image Preview.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new provider ZenMux & Gemini 3 Pro Image Preview, closes [#10310](https://github.com/lobehub/lobe-chat/issues/10310) ([f2291e4](https://github.com/lobehub/lobe-chat/commit/f2291e4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.101](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.100...v2.0.0-next.101)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Support bedrok prompt cache and usage compute.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support bedrok prompt cache and usage compute, closes [#10337](https://github.com/lobehub/lobe-chat/issues/10337) ([beb9471](https://github.com/lobehub/lobe-chat/commit/beb9471))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.100](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.99...v2.0.0-next.100)
 
 <sup>Released on **2025-11-21**</sup>

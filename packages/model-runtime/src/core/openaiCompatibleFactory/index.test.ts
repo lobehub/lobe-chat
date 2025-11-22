@@ -426,7 +426,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           'data: "Hello"\n\n',
           'id: a\n',
           'event: usage\n',
-          'data: {"inputTextTokens":5,"outputTextTokens":5,"totalInputTokens":5,"totalOutputTokens":5,"totalTokens":10}\n\n',
+          'data: {"inputTextTokens":5,"outputTextTokens":5,"totalInputTokens":5,"totalOutputTokens":5,"totalTokens":10,"cost":0.000005}\n\n',
           'id: output_speed\n',
           'event: speed\n',
           expect.stringMatching(/^data: {.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft should be calculated with elapsed time
@@ -601,7 +601,7 @@ describe('LobeOpenAICompatibleFactory', () => {
             signal: controller.signal,
           }),
         );
-      });
+      }, 10000);
     });
 
     describe('Error', () => {

@@ -23,7 +23,9 @@ import {
 import { AgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
+import { getModelPricing } from '../../utils/getModelPricing';
 import { StreamingResponse } from '../../utils/response';
+import { resolveCacheTTL } from '../anthropic/resolveCacheTTL';
 
 /**
  * A prompt constructor for HuggingFace LLama 2 chat models.
@@ -148,7 +150,16 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     payload: ChatStreamPayload,
     options?: ChatMethodOptions,
   ): Promise<Response> => {
-    const { max_tokens, messages, model, temperature, top_p, tools } = payload;
+    const {
+      enabledContextCaching = true,
+      max_tokens,
+      messages,
+      model,
+      temperature,
+      top_p,
+      tools,
+    } = payload;
+    const inputStartAt = Date.now();
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
@@ -159,17 +170,29 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       { hasConflict, normalizeTemperature: true, preferTemperature: true },
     );
 
+    const systemPrompts = !!system_message?.content
+      ? ([
+          {
+            cache_control: enabledContextCaching ? { type: 'ephemeral' } : undefined,
+            text: system_message.content as string,
+            type: 'text',
+          },
+        ] as any)
+      : undefined;
+
+    const anthropicPayload = {
+      anthropic_version: 'bedrock-2023-05-31',
+      max_tokens: max_tokens || 4096,
+      messages: await buildAnthropicMessages(user_messages, { enabledContextCaching }),
+      system: systemPrompts,
+      temperature: resolvedParams.temperature,
+      tools: buildAnthropicTools(tools, { enabledContextCaching }),
+      top_p: resolvedParams.top_p,
+    };
+
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
-      body: JSON.stringify({
-        anthropic_version: 'bedrock-2023-05-31',
-        max_tokens: max_tokens || 4096,
-        messages: await buildAnthropicMessages(user_messages),
-        system: system_message?.content as string,
-        temperature: resolvedParams.temperature,
-        tools: buildAnthropicTools(tools),
-        top_p: resolvedParams.top_p,
-      }),
+      body: JSON.stringify(anthropicPayload),
       contentType: 'application/json',
       modelId: model,
     });
@@ -186,10 +209,21 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         debugStream(debug).catch(console.error);
       }
 
+      const pricing = await getModelPricing(payload.model, ModelProvider.Bedrock);
+      const cacheTTL = resolveCacheTTL({ ...payload, enabledContextCaching }, anthropicPayload);
+      const pricingOptions = cacheTTL ? { lookupParams: { ttl: cacheTTL } } : undefined;
+
       // Respond with the stream
-      return StreamingResponse(AWSBedrockClaudeStream(prod, options?.callback), {
-        headers: options?.headers,
-      });
+      return StreamingResponse(
+        AWSBedrockClaudeStream(prod, {
+          callbacks: options?.callback,
+          inputStartAt,
+          payload: { model, pricing, pricingOptions, provider: ModelProvider.Bedrock },
+        }),
+        {
+          headers: options?.headers,
+        },
+      );
     } catch (e) {
       const err = e as Error & { $metadata: any };
 

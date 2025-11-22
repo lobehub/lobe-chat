@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { aiChatService } from '@/services/aiChat';
+import { getSessionStoreState } from '@/store/session';
 
 import { useChatStore } from '../../../../store';
 import { TEST_CONTENT, TEST_IDS, createMockMessage } from './fixtures';
@@ -30,6 +31,8 @@ beforeEach(() => {
   resetTestEnvironment();
   setupMockSelectors();
   spyOnMessageService();
+  const sessionStore = getSessionStoreState();
+  vi.spyOn(sessionStore, 'triggerSessionUpdate').mockResolvedValue(undefined);
 
   act(() => {
     useChatStore.setState({
