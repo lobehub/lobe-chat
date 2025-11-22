@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.104"
+  },
+  {
+    "children": {
       "fixes": ["Hide ai image config item in settings category."]
     },
     "date": "2025-11-22",
