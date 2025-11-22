@@ -38,6 +38,8 @@ const modelsWithModalities = new Set([
   'gemini-2.0-flash-preview-image-generation',
   'gemini-2.5-flash-image-preview',
   'gemini-2.5-flash-image',
+  'gemini-3-pro-image-preview',
+  'nano-banana-pro-preview',
 ]);
 
 const modelsDisableInstuction = new Set([
@@ -46,8 +48,6 @@ const modelsDisableInstuction = new Set([
   'gemini-2.0-flash-preview-image-generation',
   'gemini-2.5-flash-image-preview',
   'gemini-2.5-flash-image',
-  'gemini-3-pro-image-preview',
-  'nano-banana-pro-preview',
   'gemma-3-1b-it',
   'gemma-3-4b-it',
   'gemma-3-12b-it',
@@ -210,7 +210,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         includeThoughts:
           (!!thinkingBudget ||
             !!thinkingLevel ||
-            (model && (model.includes('-3-pro-image') || model.includes('thinking')))) &&
+            (model &&
+              (model.includes('-3-pro-image') ||
+                model.includes('nano-banana-pro') ||
+                model.includes('thinking')))) &&
           resolvedThinkingBudget !== 0
             ? true
             : undefined,
