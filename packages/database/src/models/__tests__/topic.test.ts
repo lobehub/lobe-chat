@@ -366,9 +366,9 @@ describe('TopicModel', () => {
       await topicModel.batchDeleteByGroupId('group1');
 
       // 断言属于 group1 的 topics 都被删除了
-      expect(
-        await serverDB.select().from(topics).where(eq(topics.groupId, 'group1')),
-      ).toHaveLength(0);
+      expect(await serverDB.select().from(topics).where(eq(topics.groupId, 'group1'))).toHaveLength(
+        0,
+      );
       expect(await serverDB.select().from(topics)).toHaveLength(2);
     });
 
@@ -385,9 +385,9 @@ describe('TopicModel', () => {
       await topicModel.batchDeleteByGroupId();
 
       // 断言属于 group1 的 topics 都被删除了
-      expect(
-        await serverDB.select().from(topics).where(eq(topics.groupId, 'group1')),
-      ).toHaveLength(2);
+      expect(await serverDB.select().from(topics).where(eq(topics.groupId, 'group1'))).toHaveLength(
+        2,
+      );
       expect(await serverDB.select().from(topics)).toHaveLength(2);
     });
   });
