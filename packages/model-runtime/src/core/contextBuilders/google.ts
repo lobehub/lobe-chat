@@ -131,10 +131,24 @@ export const buildGoogleMessage = async (
     const parts = await Promise.all(content.map(async (c) => await buildGooglePart(c)));
     return parts.filter(Boolean) as Part[];
   };
+  const parts = await getParts();
+
+  // Gemini thought signatures are only required / valid on model outputs.
+  // If a message is marked as assistant but only carries plain text / media
+  // (no functionCall / functionResponse), it is effectively user input and
+  // should be sent as role=user to avoid INVALID_ARGUMENT errors related to
+  // missing thought_signature on text / image parts.
+  const hasFunctionLikePart = parts.some((p: any) => p.functionCall || p.functionResponse);
+  const effectiveRole: Content['role'] =
+    message.role === 'assistant' && !hasFunctionLikePart
+      ? 'user'
+      : message.role === 'assistant'
+        ? 'model'
+        : 'user';
 
   return {
-    parts: await getParts(),
-    role: message.role === 'assistant' ? 'model' : 'user',
+    parts,
+    role: effectiveRole,
   };
 };
 
