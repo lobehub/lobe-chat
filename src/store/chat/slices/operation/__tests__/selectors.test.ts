@@ -395,7 +395,7 @@ describe('Operation Selectors', () => {
 
       // Set active context
       act(() => {
-        useChatStore.setState({ activeId: 'session1', activeTopicId: null });
+        useChatStore.setState({ activeId: 'session1', activeTopicId: undefined });
       });
 
       expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
@@ -427,7 +427,7 @@ describe('Operation Selectors', () => {
 
       // Set active context
       act(() => {
-        useChatStore.setState({ activeId: 'session1', activeTopicId: null });
+        useChatStore.setState({ activeId: 'session1', activeTopicId: undefined });
       });
 
       // Start a thread operation (inThread: true)
@@ -459,7 +459,7 @@ describe('Operation Selectors', () => {
 
       // Set active context
       act(() => {
-        useChatStore.setState({ activeId: 'session1', activeTopicId: null });
+        useChatStore.setState({ activeId: 'session1', activeTopicId: undefined });
       });
 
       let mainOpId: string;
@@ -506,7 +506,7 @@ describe('Operation Selectors', () => {
 
       // Set active context
       act(() => {
-        useChatStore.setState({ activeId: 'session1', activeTopicId: null });
+        useChatStore.setState({ activeId: 'session1', activeTopicId: undefined });
       });
 
       let opId: string;
