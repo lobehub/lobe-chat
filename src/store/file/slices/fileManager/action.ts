@@ -23,7 +23,7 @@ export interface FileManageAction {
   dispatchDockFileList: (payload: UploadFileListDispatch) => void;
   embeddingChunks: (fileIds: string[]) => Promise<void>;
   parseFilesToChunks: (ids: string[], params?: { skipExist?: boolean }) => Promise<void>;
-  pushDockFileList: (files: File[], knowledgeBaseId?: string) => Promise<void>;
+  pushDockFileList: (files: File[], knowledgeBaseId?: string, parentId?: string) => Promise<void>;
 
   reEmbeddingChunks: (id: string) => Promise<void>;
   reParseFile: (id: string) => Promise<void>;
@@ -87,7 +87,7 @@ export const createFileManageSlice: StateCreator<
     await get().refreshFileList();
     get().toggleParsingIds(ids, false);
   },
-  pushDockFileList: async (rawFiles, knowledgeBaseId) => {
+  pushDockFileList: async (rawFiles, knowledgeBaseId, parentId) => {
     const { dispatchDockFileList } = get();
 
     // 0. Process ZIP files and extract their contents
@@ -125,6 +125,7 @@ export const createFileManageSlice: StateCreator<
           file,
           knowledgeBaseId,
           onStatusUpdate: dispatchDockFileList,
+          parentId,
         });
 
         await get().refreshFileList();

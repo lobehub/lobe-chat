@@ -1,13 +1,14 @@
 'use client';
 
 import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
-import { Upload } from 'antd';
+import { Input, Modal, Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FilePenLine, FileUp, FolderIcon, FolderUp, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DragUpload from '@/components/DragUpload';
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useFileStore } from '@/store/file';
 
 import NoteEditorModal from '../DocumentExplorer/NoteEditorModal';
@@ -24,7 +25,11 @@ const hotArea = css`
 const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const { t } = useTranslation('file');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
+  const [folderName, setFolderName] = useState('');
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
+  const createFolder = useFileStore((s) => s.createFolder);
+  const [parentId] = useQueryState('folder');
 
   const handleOpenNoteEditor = () => {
     setIsModalOpen(true);
@@ -35,7 +40,14 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   };
 
   const handleCreateFolder = () => {
-    setIsModalOpen(false);
+    setIsFolderModalOpen(true);
+  };
+
+  const handleConfirmCreateFolder = async () => {
+    if (!folderName) return;
+    await createFolder(folderName, parentId || undefined, knowledgeBaseId);
+    setIsFolderModalOpen(false);
+    setFolderName('');
   };
 
   const items = useMemo<MenuProps['items']>(
@@ -61,7 +73,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         label: (
           <Upload
             beforeUpload={async (file) => {
-              await pushDockFileList([file], knowledgeBaseId);
+              await pushDockFileList([file], knowledgeBaseId, parentId || undefined);
 
               return false;
             }}
@@ -78,7 +90,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         label: (
           <Upload
             beforeUpload={async (file) => {
-              await pushDockFileList([file], knowledgeBaseId);
+              await pushDockFileList([file], knowledgeBaseId, parentId || undefined);
 
               return false;
             }}
@@ -91,7 +103,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         ),
       },
     ],
-    [knowledgeBaseId, pushDockFileList],
+    [knowledgeBaseId, parentId, pushDockFileList],
   );
 
   return (
@@ -103,13 +115,28 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
       </Dropdown>
       <DragUpload
         enabledFiles
-        onUploadFiles={(files) => pushDockFileList(files, knowledgeBaseId)}
+        onUploadFiles={(files) => pushDockFileList(files, knowledgeBaseId, parentId || undefined)}
       />
       <NoteEditorModal
         knowledgeBaseId={knowledgeBaseId}
         onClose={handleCloseNoteEditor}
         open={isModalOpen}
+        parentId={parentId || undefined}
       />
+      <Modal
+        onCancel={() => setIsFolderModalOpen(false)}
+        onOk={handleConfirmCreateFolder}
+        open={isFolderModalOpen}
+        title={t('header.actions.newFolder')}
+      >
+        <Input
+          autoFocus
+          onChange={(e) => setFolderName(e.target.value)}
+          onPressEnter={handleConfirmCreateFolder}
+          placeholder={t('header.actions.folderNamePlaceholder', 'Folder Name')}
+          value={folderName}
+        />
+      </Modal>
     </>
   );
 };

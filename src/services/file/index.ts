@@ -9,12 +9,13 @@ import {
 
 interface CreateFileParams extends Omit<UploadFileParams, 'url'> {
   knowledgeBaseId?: string;
+  parentId?: string;
   url: string;
 }
 
 export class FileService {
   createFile = async (
-    params: UploadFileParams,
+    params: UploadFileParams & { parentId?: string },
     knowledgeBaseId?: string,
   ): Promise<{ id: string; url: string }> => {
     return lambdaClient.file.createFile.mutate({ ...params, knowledgeBaseId } as CreateFileParams);

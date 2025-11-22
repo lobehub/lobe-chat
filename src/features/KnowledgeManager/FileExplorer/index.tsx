@@ -1,8 +1,9 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { Button, Icon, Text } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
+import { ArrowLeft } from 'lucide-react';
 import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -99,6 +100,10 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     clearOnDefault: true,
   });
 
+  const [parentId, setParentId] = useQueryState('folder', {
+    clearOnDefault: true,
+  });
+
   const [sorter] = useQueryState('sorter', {
     clearOnDefault: true,
     defaultValue: 'createdAt',
@@ -113,6 +118,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   const { data, isLoading } = useFetchKnowledgeItems({
     category,
     knowledgeBaseId,
+    parentId: parentId || null,
     q: query ?? undefined,
     sortType: sortType ?? undefined,
     sorter: sorter ?? undefined,
@@ -177,25 +183,35 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     [onOpenFile, knowledgeBaseId, selectFileIds],
   );
 
-  return !isLoading && data?.length === 0 ? (
+  return !isLoading && data?.length === 0 && !parentId ? (
     <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
   ) : (
     <Flexbox height={'100%'}>
       <Flexbox style={{ fontSize: 12, marginInline: 24 }}>
-        <ToolBar
-          config={viewConfig}
-          key={selectFileIds.join('-')}
-          knowledgeBaseId={knowledgeBaseId}
-          onConfigChange={setViewConfig}
-          onViewChange={setViewMode}
-          selectCount={selectFileIds.length}
-          selectFileIds={selectFileIds}
-          setSelectedFileIds={setSelectedFileIds}
-          showConfig={!knowledgeBaseId}
-          total={data?.length}
-          totalFileIds={data?.map((item) => item.id) || []}
-          viewMode={viewMode}
-        />
+        <Flexbox align={'center'} gap={8} horizontal>
+          {parentId && (
+            <Button
+              icon={<Icon icon={ArrowLeft} />}
+              onClick={() => setParentId(null)}
+              size={'small'}
+              type={'text'}
+            />
+          )}
+          <ToolBar
+            config={viewConfig}
+            key={selectFileIds.join('-')}
+            knowledgeBaseId={knowledgeBaseId}
+            onConfigChange={setViewConfig}
+            onViewChange={setViewMode}
+            selectCount={selectFileIds.length}
+            selectFileIds={selectFileIds}
+            setSelectedFileIds={setSelectedFileIds}
+            showConfig={!knowledgeBaseId}
+            total={data?.length}
+            totalFileIds={data?.map((item) => item.id) || []}
+            viewMode={viewMode}
+          />
+        </Flexbox>
         {viewMode === 'list' && (
           <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8}>
             <Flexbox className={styles.headerItem} flex={1} style={{ paddingInline: 32 }}>

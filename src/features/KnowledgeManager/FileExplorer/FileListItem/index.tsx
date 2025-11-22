@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
-import { FileBoxIcon, FileText } from 'lucide-react';
+import { FileBoxIcon, FileText, FolderIcon } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -89,6 +89,7 @@ interface FileRenderItemProps extends FileListItem {
   knowledgeBaseId?: string;
   onSelectedChange: (id: string, selected: boolean, shiftKey: boolean, index: number) => void;
   selected?: boolean;
+  slug?: string | null;
 }
 
 const FileRenderItem = memo<FileRenderItemProps>(
@@ -112,6 +113,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     content,
     metadata,
     sourceType,
+    slug,
   }) => {
     const { t } = useTranslation(['components', 'file']);
     const { styles, cx } = useStyles();
@@ -123,6 +125,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType);
     const isNote = sourceType === 'document' || fileType === 'custom/document';
+    const isFolder = fileType === 'custom/folder';
 
     // Extract title and emoji for notes
     const displayTitle = useMemo(() => {
@@ -155,14 +158,26 @@ const FileRenderItem = memo<FileRenderItemProps>(
           flex={1}
           horizontal
           onClick={() => {
-            setSearchParams(
-              (prev) => {
-                const newParams = new URLSearchParams(prev);
-                newParams.set('file', id);
-                return newParams;
-              },
-              { replace: true },
-            );
+            if (isFolder) {
+              setSearchParams(
+                (prev) => {
+                  const newParams = new URLSearchParams(prev);
+                  // Use slug if available, otherwise fall back to id
+                  newParams.set('folder', slug || id);
+                  return newParams;
+                },
+                { replace: true },
+              );
+            } else {
+              setSearchParams(
+                (prev) => {
+                  const newParams = new URLSearchParams(prev);
+                  newParams.set('file', id);
+                  return newParams;
+                },
+                { replace: true },
+              );
+            }
           }}
         >
           <Flexbox align={'center'} horizontal>
@@ -186,7 +201,9 @@ const FileRenderItem = memo<FileRenderItemProps>(
               justify={'center'}
               style={{ fontSize: 24, marginInline: 8, width: 24 }}
             >
-              {isNote ? (
+              {isFolder ? (
+                <Icon icon={FolderIcon} size={24} />
+              ) : isNote ? (
                 emoji ? (
                   <span style={{ fontSize: 24 }}>{emoji}</span>
                 ) : (
@@ -208,49 +225,50 @@ const FileRenderItem = memo<FileRenderItemProps>(
               e.stopPropagation();
             }}
           >
-            {isCreatingFileParseTask || isNull(chunkingStatus) || !chunkingStatus ? (
-              <div className={isCreatingFileParseTask ? undefined : styles.hover}>
-                <Tooltip
-                  styles={{
-                    root: { pointerEvents: 'none' },
-                  }}
-                  title={t(
-                    isSupportedForChunking
-                      ? 'FileManager.actions.chunkingTooltip'
-                      : 'FileManager.actions.chunkingUnsupported',
-                  )}
-                >
-                  <Button
-                    disabled={!isSupportedForChunking}
-                    icon={FileBoxIcon}
-                    loading={isCreatingFileParseTask}
-                    onClick={() => {
-                      parseFiles([id]);
+            {!isFolder &&
+              (isCreatingFileParseTask || isNull(chunkingStatus) || !chunkingStatus ? (
+                <div className={isCreatingFileParseTask ? undefined : styles.hover}>
+                  <Tooltip
+                    styles={{
+                      root: { pointerEvents: 'none' },
                     }}
-                    size={'small'}
-                    type={'text'}
-                  >
-                    {t(
-                      isCreatingFileParseTask
-                        ? 'FileManager.actions.createChunkingTask'
-                        : 'FileManager.actions.chunking',
+                    title={t(
+                      isSupportedForChunking
+                        ? 'FileManager.actions.chunkingTooltip'
+                        : 'FileManager.actions.chunkingUnsupported',
                     )}
-                  </Button>
-                </Tooltip>
-              </div>
-            ) : (
-              <div style={{ cursor: 'default' }}>
-                <ChunksBadge
-                  chunkCount={chunkCount}
-                  chunkingError={chunkingError}
-                  chunkingStatus={chunkingStatus}
-                  embeddingError={embeddingError}
-                  embeddingStatus={embeddingStatus}
-                  finishEmbedding={finishEmbedding}
-                  id={id}
-                />
-              </div>
-            )}
+                  >
+                    <Button
+                      disabled={!isSupportedForChunking}
+                      icon={FileBoxIcon}
+                      loading={isCreatingFileParseTask}
+                      onClick={() => {
+                        parseFiles([id]);
+                      }}
+                      size={'small'}
+                      type={'text'}
+                    >
+                      {t(
+                        isCreatingFileParseTask
+                          ? 'FileManager.actions.createChunkingTask'
+                          : 'FileManager.actions.chunking',
+                      )}
+                    </Button>
+                  </Tooltip>
+                </div>
+              ) : (
+                <div style={{ cursor: 'default' }}>
+                  <ChunksBadge
+                    chunkCount={chunkCount}
+                    chunkingError={chunkingError}
+                    chunkingStatus={chunkingStatus}
+                    embeddingError={embeddingError}
+                    embeddingStatus={embeddingStatus}
+                    finishEmbedding={finishEmbedding}
+                    id={id}
+                  />
+                </div>
+              ))}
             <div className={styles.hover}>
               <DropdownMenu filename={name} id={id} knowledgeBaseId={knowledgeBaseId} url={url} />
             </div>
@@ -260,7 +278,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
           {displayTime}
         </Flexbox>
         <Flexbox className={styles.item} width={FILE_SIZE_WIDTH}>
-          {formatSize(size)}
+          {isFolder ? '-' : formatSize(size)}
         </Flexbox>
       </Flexbox>
     );

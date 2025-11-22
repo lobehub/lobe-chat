@@ -35,7 +35,9 @@ export class DocumentService {
     fileType?: string;
     knowledgeBaseId?: string;
     metadata?: Record<string, any>;
+    parentId?: string;
     rawData?: string;
+    slug?: string;
     title: string;
   }): Promise<DocumentItem> {
     const {
@@ -45,20 +47,43 @@ export class DocumentService {
       fileType = 'custom/document',
       metadata,
       knowledgeBaseId,
+      parentId,
+      slug,
     } = params;
 
     // Calculate character and line counts
     const totalCharCount = content?.length || 0;
     const totalLineCount = content?.split('\n').length || 0;
 
+    let fileId: string | null = null;
+
+    // If creating in a knowledge base, create a corresponding file record
+    if (knowledgeBaseId) {
+      const file = await this.fileModel.create(
+        {
+          fileType,
+          knowledgeBaseId,
+          metadata,
+          name: title,
+          parentId,
+          size: totalCharCount,
+          url: `internal://document/placeholder`, // Placeholder URL
+        },
+        false, // Do not insert to global files
+      );
+      fileId = file.id;
+    }
+
     const document = await this.documentModel.create({
       content,
       editorData,
-      fileId: knowledgeBaseId ? null : undefined,
+      fileId,
       fileType,
       filename: title,
       metadata,
       pages: undefined,
+      parentId,
+      slug,
       source: 'document',
       sourceType: 'api',
       title,
