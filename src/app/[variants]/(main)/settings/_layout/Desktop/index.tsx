@@ -1,6 +1,7 @@
 'use client';
 
 import { useResponsive, useTheme } from 'antd-style';
+import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { memo, useEffect, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useSearchParams } from 'react-router-dom';
@@ -13,7 +14,6 @@ import SettingsContent from '../SettingsContent';
 import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
-import useMergedState from 'rc-util/lib/hooks/useMergedState';
 
 const Layout = memo<LayoutProps>(() => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -22,21 +22,23 @@ const Layout = memo<LayoutProps>(() => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeTabState, setActiveTabState] = useMergedState({
-    active: searchParams.get('active') as SettingsTabs ? searchParams.get('active') as SettingsTabs : SettingsTabs.Common,
-  }, {
-    onChange: (obj: {
-      active: SettingsTabs;
-      provider?: string;
-    }) => {
-      if (obj.provider) {
-        setSearchParams({ active: obj.active, provider: obj.provider });
-      } else {
-        searchParams.delete('provider');
-        setSearchParams({ active: obj.active });
-      }
+  const [activeTabState, setActiveTabState] = useMergedState(
+    {
+      active: (searchParams.get('active') as SettingsTabs)
+        ? (searchParams.get('active') as SettingsTabs)
+        : SettingsTabs.Common,
     },
-  });
+    {
+      onChange: (obj: { active: SettingsTabs; provider?: string }) => {
+        if (obj.provider) {
+          setSearchParams({ active: obj.active, provider: obj.provider });
+        } else {
+          searchParams.delete('provider');
+          setSearchParams({ active: obj.active });
+        }
+      },
+    },
+  );
 
   const setActiveTab = (tab: SettingsTabs) => {
     if (tab === SettingsTabs.Provider) {
@@ -57,7 +59,9 @@ const Layout = memo<LayoutProps>(() => {
     };
   }, []);
 
-  const category = <CategoryContent activeTab={activeTabState.active} onMenuSelect={setActiveTab} />;
+  const category = (
+    <CategoryContent activeTab={activeTabState.active} onMenuSelect={setActiveTab} />
+  );
 
   return (
     <Flexbox

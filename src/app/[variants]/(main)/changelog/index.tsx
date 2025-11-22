@@ -18,7 +18,7 @@ const Page = (props: { isMobile: boolean }) => {
   const { isMobile } = props;
   const { hideDocs } = useServerConfigStore(featureFlagsSelectors);
 
-  const { data } = useSWR('changelog-index', async () => {
+  const { data = [] } = useSWR('changelog-index', async () => {
     const changelogService = new ChangelogService();
     return await changelogService.getChangelogIndex();
   });

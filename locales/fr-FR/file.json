@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Copier tout le contenu",
-    "documentCount": "{{count}} documents au total",
     "duplicate": "Créer une copie",
     "empty": "Aucun document pour le moment, cliquez sur le bouton ci-dessus pour créer votre premier document",
     "noResults": "Aucun document correspondant trouvé",
+    "pageCount": "{{count}} documents au total",
     "selectNote": "Sélectionnez un document pour commencer l’édition",
     "untitled": "Sans titre"
   },
@@ -70,7 +70,6 @@
       "uploadFile": "Télécharger un fichier",
       "uploadFolder": "Télécharger un dossier"
     },
-    "newDocumentButton": "Nouveau document",
     "newNoteDialog": {
       "cancel": "Annuler",
       "editTitle": "Modifier le document",
@@ -83,14 +82,15 @@
       "title": "Nouveau document",
       "updateSuccess": "Document mis à jour avec succès"
     },
+    "newPageButton": "Nouveau document",
     "uploadButton": "Télécharger"
   },
   "home": {
     "getStarted": "Commencer",
     "greeting": "Commencer",
     "quickActions": "Actions rapides",
-    "recentDocuments": "Documents récents",
     "recentFiles": "Fichiers récents",
+    "recentPages": "Pages récentes",
     "subtitle": "Bienvenue dans votre base de connaissances, commencez ici à gérer vos documents",
     "uploadEntries": {
       "files": {
@@ -102,7 +102,7 @@
       "knowledgeBase": {
         "title": "Créer une base de connaissances"
       },
-      "newDocument": {
+      "newPage": {
         "title": "Nouveau document"
       }
     }
@@ -142,8 +142,8 @@
     "downloadFile": "Télécharger le fichier",
     "unsupportedFileAndContact": "Ce format de fichier n'est pas encore pris en charge pour l'aperçu en ligne. Si vous souhaitez un aperçu, n'hésitez pas à <1>nous contacter</1>."
   },
-  "searchDocumentPlaceholder": "Rechercher un document",
   "searchFilePlaceholder": "Rechercher un fichier",
+  "searchPagePlaceholder": "Rechercher un document",
   "tab": {
     "all": "Tout",
     "audios": "Audio",
@@ -156,9 +156,7 @@
     "websites": "Sites web"
   },
   "title": "Base de connaissances",
-  "toggleLeftPanel": {
-    "title": "Afficher/Masquer le panneau de gauche"
-  },
+  "toggleLeftPanel": "Afficher/Masquer le panneau de gauche",
   "uploadDock": {
     "body": {
       "collapse": "Réduire",

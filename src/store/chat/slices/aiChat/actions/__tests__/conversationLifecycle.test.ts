@@ -15,6 +15,17 @@ import {
 // Keep zustand mock as it's needed globally
 vi.mock('zustand/traditional');
 
+// Mock lambdaClient to prevent network requests
+vi.mock('@/libs/trpc/client', () => ({
+  lambdaClient: {
+    session: {
+      updateSession: {
+        mutate: vi.fn().mockResolvedValue(undefined),
+      },
+    },
+  },
+}));
+
 beforeEach(() => {
   resetTestEnvironment();
   setupMockSelectors();

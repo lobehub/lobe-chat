@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Copiar conteúdo completo",
-    "documentCount": "Total de {{count}} documentos",
     "duplicate": "Criar uma cópia",
-    "empty": "Nenhum documento disponível. Clique no botão acima para criar seu primeiro documento",
+    "empty": "Nenhum documento ainda. Clique no botão acima para criar seu primeiro.",
     "noResults": "Nenhum documento correspondente encontrado",
+    "pageCount": "Total de {{count}} documentos",
     "selectNote": "Selecione um documento para começar a editar",
     "untitled": "Sem título"
   },
@@ -70,7 +70,6 @@
       "uploadFile": "Enviar arquivo",
       "uploadFolder": "Enviar pasta"
     },
-    "newDocumentButton": "Novo documento",
     "newNoteDialog": {
       "cancel": "Cancelar",
       "editTitle": "Editar documento",
@@ -83,14 +82,15 @@
       "title": "Novo documento",
       "updateSuccess": "Documento atualizado com sucesso"
     },
+    "newPageButton": "Novo Documento",
     "uploadButton": "Enviar"
   },
   "home": {
     "getStarted": "Começar",
     "greeting": "Início",
     "quickActions": "Ações Rápidas",
-    "recentDocuments": "Documentos Recentes",
     "recentFiles": "Arquivos Recentes",
+    "recentPages": "Documentos Recentes",
     "subtitle": "Bem-vindo ao seu repositório de conhecimento. Comece a gerenciar seus documentos aqui",
     "uploadEntries": {
       "files": {
@@ -102,7 +102,7 @@
       "knowledgeBase": {
         "title": "Nova Base de Conhecimento"
       },
-      "newDocument": {
+      "newPage": {
         "title": "Novo Documento"
       }
     }
@@ -142,8 +142,8 @@
     "downloadFile": "Baixar arquivo",
     "unsupportedFileAndContact": "Este formato de arquivo não é suportado para visualização online. Se você tiver interesse em visualizar, sinta-se à vontade para <1>nos enviar um feedback</1>."
   },
-  "searchDocumentPlaceholder": "Pesquisar documentos",
   "searchFilePlaceholder": "Pesquisar arquivo",
+  "searchPagePlaceholder": "Buscar documentos",
   "tab": {
     "all": "Todos",
     "audios": "Áudios",
@@ -156,9 +156,7 @@
     "websites": "Sites"
   },
   "title": "Base de Conhecimento",
-  "toggleLeftPanel": {
-    "title": "Mostrar/Ocultar painel esquerdo"
-  },
+  "toggleLeftPanel": "Mostrar/Ocultar painel esquerdo",
   "uploadDock": {
     "body": {
       "collapse": "Recolher",

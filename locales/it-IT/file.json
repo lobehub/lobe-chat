@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Copia tutto il contenuto",
-    "documentCount": "Totale {{count}} documenti",
     "duplicate": "Crea una copia",
-    "empty": "Nessun documento disponibile. Clicca sul pulsante in alto per creare il tuo primo documento",
+    "empty": "Nessun documento disponibile, clicca sul pulsante in alto per creare il tuo primo documento",
     "noResults": "Nessun documento corrispondente trovato",
+    "pageCount": "Totale {{count}} documenti",
     "selectNote": "Seleziona un documento per iniziare a modificare",
     "untitled": "Senza titolo"
   },
@@ -70,7 +70,6 @@
       "uploadFile": "Carica file",
       "uploadFolder": "Carica cartella"
     },
-    "newDocumentButton": "Nuovo documento",
     "newNoteDialog": {
       "cancel": "Annulla",
       "editTitle": "Modifica documento",
@@ -83,14 +82,15 @@
       "title": "Nuovo documento",
       "updateSuccess": "Documento aggiornato con successo"
     },
+    "newPageButton": "Nuovo Documento",
     "uploadButton": "Carica"
   },
   "home": {
     "getStarted": "Inizia subito",
     "greeting": "Inizia",
     "quickActions": "Azioni rapide",
-    "recentDocuments": "Documenti recenti",
     "recentFiles": "File recenti",
+    "recentPages": "Documenti recenti",
     "subtitle": "Benvenuto nel tuo archivio di conoscenza, inizia a gestire i tuoi documenti da qui",
     "uploadEntries": {
       "files": {
@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "Crea nuova base di conoscenza"
       },
-      "newDocument": {
-        "title": "Crea nuovo documento"
+      "newPage": {
+        "title": "Nuovo Documento"
       }
     }
   },
@@ -142,8 +142,8 @@
     "downloadFile": "Scarica file",
     "unsupportedFileAndContact": "Questo formato di file non è attualmente supportato per la visualizzazione online. Se hai bisogno di una visualizzazione, ti preghiamo di <1>contattarci</1>."
   },
-  "searchDocumentPlaceholder": "Cerca documenti",
   "searchFilePlaceholder": "Cerca file",
+  "searchPagePlaceholder": "Cerca documenti",
   "tab": {
     "all": "Tutti",
     "audios": "Audio",
@@ -156,9 +156,7 @@
     "websites": "Siti web"
   },
   "title": "Archivio di Conoscenza",
-  "toggleLeftPanel": {
-    "title": "Mostra/Nascondi il pannello sinistro"
-  },
+  "toggleLeftPanel": "Mostra/Nascondi pannello sinistro",
   "uploadDock": {
     "body": {
       "collapse": "Riduci",

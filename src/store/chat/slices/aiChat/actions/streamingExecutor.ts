@@ -2,7 +2,6 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { AgentRuntime, type AgentRuntimeContext, type AgentState } from '@lobechat/agent-runtime';
 import { isDesktop } from '@lobechat/const';
-import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
   ChatImageItem,
   ChatToolPayload,
@@ -11,19 +10,18 @@ import {
   TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
-import type { MessageSemanticSearchChunk } from '@lobechat/types';
 import debug from 'debug';
 import { t } from 'i18next';
 import { throttle } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
+import { createAgentToolsEngine } from '@/helpers/toolEngineering';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getAgentStoreState } from '@/store/agent/store';
 import { GeneralChatAgent } from '@/store/chat/agents/GeneralChatAgent';
 import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
-import { createAgentToolsEngine } from '@/store/chat/agents/createToolEngine';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { toolInterventionSelectors } from '@/store/user/selectors';
@@ -104,15 +102,10 @@ export interface StreamingExecutorAction {
      */
     parentOperationId?: string;
     inSearchWorkflow?: boolean;
-    /**
-     * the RAG query content, should be embedding and used in the semantic search
-     */
-    ragQuery?: string;
     threadId?: string;
     inPortalThread?: boolean;
     skipCreateFirstMessage?: boolean;
     traceId?: string;
-    ragMetadata?: { ragQueryId: string; fileChunks: MessageSemanticSearchChunk[] };
     /**
      * Initial agent state (for resuming execution from a specific point)
      */
@@ -624,59 +617,17 @@ export const streamingExecutor: StateCreator<
     const provider = agentConfigData.provider;
 
     // ===========================================
-    // Step 1: RAG Preprocessing (if enabled)
+    // Step 1: Knowledge Base Tool Integration
     // ===========================================
-    // Skip RAG preprocessing if initialState is provided (messages already preprocessed)
-    if (params.ragQuery && parentMessageType === 'user') {
-      const userMessageId = parentMessageId;
-      log('[internal_execAgentRuntime] RAG preprocessing start');
+    // RAG retrieval is now handled by the Knowledge Base Tool
+    // The AI will decide when to call searchKnowledgeBase and readKnowledge tools
+    // based on the conversation context and available knowledge bases
 
-      // Get relevant chunks from semantic search
-      const {
-        chunks,
-        queryId: ragQueryId,
-        rewriteQuery,
-      } = await get().internal_retrieveChunks(
-        userMessageId,
-        params.ragQuery,
-        // Skip the last message content when building context
-        messages.map((m) => m.content).slice(0, messages.length - 1),
-      );
-
-      log('[internal_execAgentRuntime] RAG chunks retrieved: %d chunks', chunks.length);
-
-      const lastMsg = messages.pop() as UIChatMessage;
-
-      // Build RAG context and append to user query
-      const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
-        chunks,
-        userQuery: lastMsg.content,
-        rewriteQuery,
-        knowledge: agentSelectors.currentEnabledKnowledge(agentStoreState),
-      });
-
-      messages.push({
-        ...lastMsg,
-        content: (lastMsg.content + '\n\n' + knowledgeBaseQAContext).trim(),
-      });
-
-      // Update assistant message with RAG metadata
-      const fileChunks: MessageSemanticSearchChunk[] = chunks.map((c) => ({
-        id: c.id,
-        similarity: c.similarity,
-      }));
-
-      if (fileChunks.length > 0) {
-        // Note: RAG metadata will be updated after assistant message is created by call_llm executor
-        // Store RAG data temporarily in params for later use
-        params.ragMetadata = { ragQueryId: ragQueryId!, fileChunks };
-      }
-
-      log('[internal_execAgentRuntime] RAG preprocessing completed');
-    }
+    // TODO: Implement selected files full-text injection if needed
+    // User-selected files should be handled differently from knowledge base files
 
     // ===========================================
-    // Step 3: Create and Execute Agent Runtime
+    // Step 2: Create and Execute Agent Runtime
     // ===========================================
     log('[internal_execAgentRuntime] Creating agent runtime');
 
@@ -828,18 +779,6 @@ export const streamingExecutor: StateCreator<
       state.status,
       stepCount,
     );
-
-    // Update RAG metadata if available
-    if (params.ragMetadata) {
-      const finalMessages = get().messagesMap[messageKey] || [];
-      const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
-      if (assistantMessage) {
-        await get().optimisticUpdateMessageRAG(assistantMessage.id, params.ragMetadata, {
-          operationId,
-        });
-        log('[internal_execAgentRuntime] RAG metadata updated for assistant message');
-      }
-    }
 
     // Complete operation
     if (state.status === 'done') {

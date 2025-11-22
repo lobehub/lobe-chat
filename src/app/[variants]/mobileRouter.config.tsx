@@ -41,6 +41,15 @@ const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Mobile'), {
   ssr: false,
 });
 
+// Changelog components
+const ChangelogPage = dynamic(() => import('./(main)/changelog/index').then((m) => m.MobilePage), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+const ChangelogLayout = dynamic(() => import('./(main)/changelog/_layout/Mobile'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
 // Discover List components
 const MobileHomePage = dynamic(
   () => import('./(main)/discover/(list)/(home)/index').then((m) => m.MobileHomePage),
@@ -272,6 +281,7 @@ const createErrorBoundary = (resetPath: string) => {
 // Create error boundaries for each route
 const ChatErrorBoundary = createErrorBoundary('/chat');
 const DiscoverErrorBoundary = createErrorBoundary('/discover');
+const ChangelogErrorBoundary = createErrorBoundary('/changelog');
 const KnowledgeErrorBoundary = createErrorBoundary('/knowledge');
 const SettingsErrorBoundary = createErrorBoundary('/settings');
 const ImageErrorBoundary = createErrorBoundary('/image');
@@ -497,6 +507,19 @@ export const createMobileRouter = (locale: Locales) =>
           ],
           errorElement: <MeErrorBoundary />,
           path: 'me',
+        },
+
+        // changelog routes
+        {
+          children: [
+            {
+              element: <ChangelogPage />,
+              index: true,
+            },
+          ],
+          element: <ChangelogLayout locale={locale} />,
+          errorElement: <ChangelogErrorBoundary />,
+          path: 'changelog',
         },
 
         // Default route - redirect to chat

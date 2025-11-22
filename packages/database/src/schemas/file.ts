@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import { isNotNull } from 'drizzle-orm';
 import {
   boolean,
   index,
@@ -91,6 +92,8 @@ export const documents = pgTable(
 
     editorData: jsonb('editor_data').$type<Record<string, any>>(),
 
+    slug: varchar('slug', { length: 255 }),
+
     // Timestamps
     ...timestamps,
   },
@@ -100,6 +103,9 @@ export const documents = pgTable(
     index('documents_file_id_idx').on(table.fileId),
     index('documents_parent_id_idx').on(table.parentId),
     uniqueIndex('documents_client_id_user_id_unique').on(table.clientId, table.userId),
+    uniqueIndex('documents_slug_user_id_unique')
+      .on(table.slug, table.userId)
+      .where(isNotNull(table.slug)),
   ],
 );
 
@@ -133,7 +139,7 @@ export const files = pgTable(
     url: text('url').notNull(),
     source: text('source').$type<FileSource>(),
 
-    // Parent document (for folder hierarchy structure)
+    // Parent Folder or Document
     // @ts-ignore
     parentId: varchar('parent_id', { length: 255 }).references(() => documents.id, {
       onDelete: 'set null',
