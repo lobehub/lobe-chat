@@ -1259,6 +1259,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
       vision: true,
     },
     config: {
@@ -1267,7 +1268,7 @@ const qwenChatModels: AIChatModelCard[] = [
     contextWindowTokens: 65_536,
     description:
       'Qwen-Omni 模型能够接收文本、图片、音频、视频等多种模态的组合输入，并生成文本或语音形式的回复， 提供多种拟人音色，支持多语言和方言的语音输出，可应用于文本创作、视觉识别、语音助手等场景。',
-    displayName: 'Qwen Omni Turbo',
+    displayName: 'Qwen3 Omni Flash',
     id: 'qwen3-omni-flash',
     maxOutput: 16_384,
     organization: 'Qwen',
@@ -1460,6 +1461,9 @@ const qwenChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -1501,7 +1505,7 @@ const qwenChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1527,11 +1531,12 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      vision: true,
       reasoning: true,
+      vision: true,
     },
     contextWindowTokens: 131_072,
-    description: 'Qwen3 VL 32B 思考模式（开源版），针对高难度强推理与长视频理解场景，提供顶尖的视觉+文本推理能力。',
+    description:
+      'Qwen3 VL 32B 思考模式（开源版），针对高难度强推理与长视频理解场景，提供顶尖的视觉+文本推理能力。',
     displayName: 'Qwen3 VL 32B Thinking',
     id: 'qwen3-vl-32b-thinking',
     maxOutput: 32_768,
@@ -1544,7 +1549,7 @@ const qwenChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1553,7 +1558,8 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 131_072,
-    description: 'Qwen3 VL 32B 非思考模式（Instruct），适用于非思考指令场景，保持强大的视觉理解能力。',
+    description:
+      'Qwen3 VL 32B 非思考模式（Instruct），适用于非思考指令场景，保持强大的视觉理解能力。',
     displayName: 'Qwen3 VL 32B Instruct',
     id: 'qwen3-vl-32b-instruct',
     maxOutput: 32_768,
