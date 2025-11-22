@@ -37,6 +37,7 @@ export class DocumentService {
     metadata?: Record<string, any>;
     parentId?: string;
     rawData?: string;
+    slug?: string;
     title: string;
   }): Promise<DocumentItem> {
     const {
@@ -47,6 +48,7 @@ export class DocumentService {
       metadata,
       knowledgeBaseId,
       parentId,
+      slug,
     } = params;
 
     // Calculate character and line counts
@@ -81,6 +83,7 @@ export class DocumentService {
       metadata,
       pages: undefined,
       parentId,
+      slug,
       source: 'document',
       sourceType: 'api',
       title,

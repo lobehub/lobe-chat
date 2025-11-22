@@ -89,6 +89,7 @@ interface FileRenderItemProps extends FileListItem {
   knowledgeBaseId?: string;
   onSelectedChange: (id: string, selected: boolean, shiftKey: boolean, index: number) => void;
   selected?: boolean;
+  slug?: string | null;
 }
 
 const FileRenderItem = memo<FileRenderItemProps>(
@@ -112,6 +113,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     content,
     metadata,
     sourceType,
+    slug,
   }) => {
     const { t } = useTranslation(['components', 'file']);
     const { styles, cx } = useStyles();
@@ -160,7 +162,8 @@ const FileRenderItem = memo<FileRenderItemProps>(
               setSearchParams(
                 (prev) => {
                   const newParams = new URLSearchParams(prev);
-                  newParams.set('folder', id);
+                  // Use slug if available, otherwise fall back to id
+                  newParams.set('folder', slug || id);
                   return newParams;
                 },
                 { replace: true },

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { ChunkModel } from '@/database/models/chunk';
+import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import { MessageModel } from '@/database/models/message';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
@@ -13,6 +14,7 @@ const documentProcedure = authedProcedure.use(serverDatabase).use(async (opts) =
   return opts.next({
     ctx: {
       chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
+      documentModel: new DocumentModel(ctx.serverDB, ctx.userId),
       documentService: new DocumentService(ctx.serverDB, ctx.userId),
       fileModel: new FileModel(ctx.serverDB, ctx.userId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId),
@@ -30,15 +32,26 @@ export const documentRouter = router({
         knowledgeBaseId: z.string().optional(),
         metadata: z.record(z.any()).optional(),
         parentId: z.string().optional(),
+        slug: z.string().optional(),
         title: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // Resolve parentId if it's a slug
+      let resolvedParentId = input.parentId;
+      if (input.parentId) {
+        const docBySlug = await ctx.documentModel.findBySlug(input.parentId);
+        if (docBySlug) {
+          resolvedParentId = docBySlug.id;
+        }
+      }
+
       // Parse editorData from JSON string to object
       const editorData = JSON.parse(input.editorData);
       return ctx.documentService.createDocument({
         ...input,
         editorData,
+        parentId: resolvedParentId,
       });
     }),
 

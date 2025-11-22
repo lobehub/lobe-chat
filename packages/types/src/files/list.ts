@@ -23,6 +23,7 @@ export interface FileListItem {
   metadata?: Record<string, any> | null;
   name: string;
   size: number;
+  slug?: string | null;
   sourceType: string;
   updatedAt: Date;
   url: string;

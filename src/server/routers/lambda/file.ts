@@ -36,9 +36,23 @@ export const fileRouter = router({
     }),
 
   createFile: fileProcedure
-    .input(UploadFileSchema.omit({ url: true }).extend({ parentId: z.string().optional(), url: z.string() }))
+    .input(
+      UploadFileSchema.omit({ url: true }).extend({
+        parentId: z.string().optional(),
+        url: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const { isExist } = await ctx.fileModel.checkHash(input.hash!);
+
+      // Resolve parentId if it's a slug
+      let resolvedParentId = input.parentId;
+      if (input.parentId) {
+        const docBySlug = await ctx.documentModel.findBySlug(input.parentId);
+        if (docBySlug) {
+          resolvedParentId = docBySlug.id;
+        }
+      }
 
       const { id } = await ctx.fileModel.create(
         {
@@ -47,7 +61,7 @@ export const fileRouter = router({
           knowledgeBaseId: input.knowledgeBaseId,
           metadata: input.metadata,
           name: input.name,
-          parentId: input.parentId,
+          parentId: resolvedParentId,
           size: input.size,
           url: input.url,
         },
