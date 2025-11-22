@@ -148,7 +148,8 @@ const transformGoogleGenerativeAIStream = (
 
     // Check for image data before handling finishReason
     if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
-      const part = candidate.content.parts[0];
+      // Filter out reasoning content and get first non-reasoning part
+      const part = candidate.content.parts.find((p: any) => !p.thought);
 
       if (part && part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
         const imageChunk = {
