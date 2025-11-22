@@ -133,7 +133,6 @@ const AppTheme = memo<AppThemeProps>(
           setCookie(LOBE_THEME_APPEARANCE, appearance);
         }}
         theme={{
-          cssVar: true,
           token: {
             fontFamily: customFontFamily ? `${customFontFamily},${theme.fontFamily}` : undefined,
             motion: animationMode !== 'disabled',

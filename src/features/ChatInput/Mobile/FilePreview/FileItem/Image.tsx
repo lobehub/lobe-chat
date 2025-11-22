@@ -52,13 +52,15 @@ const FileItem = memo<FileItemProps>(({ alt, onRemove, src, loading }) => {
       }
       alt={alt || ''}
       alwaysShowActions
+      classNames={{
+        wrapper: cx(styles.image, styles.editableImage),
+      }}
       height={64}
       isLoading={loading}
       objectFit={'cover'}
       size={IMAGE_SIZE as any}
       src={src}
       width={64}
-      wrapperClassName={cx(styles.image, styles.editableImage)}
     />
   );
 });

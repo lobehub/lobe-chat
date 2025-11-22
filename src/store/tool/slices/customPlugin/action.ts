@@ -82,7 +82,7 @@ export const createCustomPluginSlice: StateCreator<
 
       notification.error({
         description: t(`error.${err.message}`, { error: err.cause, ns: 'plugin' }),
-        message: t('error.reinstallError', { name, ns: 'plugin' }),
+        title: t('error.reinstallError', { name, ns: 'plugin' }),
       });
     }
   },

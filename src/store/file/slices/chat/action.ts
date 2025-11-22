@@ -136,7 +136,7 @@ export const createFileSlice: StateCreator<
                   typeof error === 'string'
                   ? error
                   : t('upload.unknownError', { ns: 'error', reason: (error as Error).message }),
-            message: t('upload.uploadFailed', { ns: 'error' }),
+            title: t('upload.uploadFailed', { ns: 'error' }),
           });
 
         dispatchChatUploadFileList({ id: file.name, type: 'removeFile' });

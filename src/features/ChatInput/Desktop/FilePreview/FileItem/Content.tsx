@@ -24,7 +24,7 @@ const Content = memo<UploadFileItem>(({ file, previewUrl }) => {
   const { styles } = useStyles();
 
   if (file.type.startsWith('image')) {
-    return <Image alt={file.name} src={previewUrl} wrapperClassName={styles.image} />;
+    return <Image alt={file.name} classNames={{ wrapper: styles.image }} src={previewUrl} />;
   }
 
   if (file.type.startsWith('video')) {

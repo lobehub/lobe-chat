@@ -194,8 +194,8 @@
     "@xterm/xterm": "^5.5.0",
     "@zumer/snapdom": "^1.9.14",
     "ahooks": "^3.9.6",
-    "antd": "^5.28.1",
-    "antd-style": "^3.7.1",
+    "antd": "^6.0.0",
+    "antd-style": "^4.0.0-alpha.1",
     "brotli-wasm": "^3.0.1",
     "chroma-js": "^3.1.2",
     "cmdk": "^1.1.1",
@@ -399,6 +399,10 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@vercel/speed-insights"
-    ]
+    ],
+    "overrides": {
+      "antd-style": "^4.0.0-alpha.1",
+      "antd": "^6.0.0"
+    }
   }
 }

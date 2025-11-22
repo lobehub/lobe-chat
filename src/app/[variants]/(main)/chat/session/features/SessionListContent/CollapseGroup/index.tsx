@@ -52,7 +52,7 @@ const CollapseGroup = memo<CollapseProps>((props) => {
           style={isActive ? {} : { rotate: '-90deg' }}
         />
       )}
-      expandIconPosition={'end'}
+      expandIconPlacement={'end'}
       ghost
       size={'small'}
       {...props}
