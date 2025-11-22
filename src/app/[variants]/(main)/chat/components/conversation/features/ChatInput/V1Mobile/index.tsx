@@ -18,6 +18,7 @@ import SendButton from './Send';
 import { useSendMessage } from './useSend';
 
 const defaultLeftActions: ActionKeys[] = [
+  'agentMode',
   'model',
   'search',
   'fileUpload',

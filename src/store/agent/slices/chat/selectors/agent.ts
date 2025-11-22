@@ -169,6 +169,8 @@ const openingQuestions = (s: AgentStoreState) =>
   currentAgentConfig(s).openingQuestions || DEFAULT_OPENING_QUESTIONS;
 const openingMessage = (s: AgentStoreState) => currentAgentConfig(s).openingMessage || '';
 
+const enableAgentMode = (s: AgentStoreState) => currentAgentConfig(s).enableAgentMode || true;
+
 export const agentSelectors = {
   currentAgentConfig,
   currentAgentFiles,
@@ -182,6 +184,7 @@ export const agentSelectors = {
   currentEnabledKnowledge,
   currentKnowledgeIds,
   displayableAgentPlugins,
+  enableAgentMode,
   getAgentConfigByAgentId,
   getAgentConfigById,
   hasEnabledKnowledge,
