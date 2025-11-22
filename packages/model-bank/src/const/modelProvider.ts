@@ -10,6 +10,7 @@ export enum ModelProvider {
   Baichuan = 'baichuan',
   Bedrock = 'bedrock',
   Bfl = 'bfl',
+  BurnCloud = 'burncloud',
   Cerebras = 'cerebras',
   Cloudflare = 'cloudflare',
   Cohere = 'cohere',
