@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add new provider ZenMux & Gemini 3 Pro Image Preview."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.102"
+  },
+  {
+    "children": {
       "features": ["Support bedrok prompt cache and usage compute."]
     },
     "date": "2025-11-22",
