@@ -889,6 +889,75 @@ describe('google contextBuilders', () => {
         },
       ]);
     });
+
+    it('should preserve thoughtSignature on assistant text message', async () => {
+      const messages: OpenAIChatMessage[] = [
+        { content: 'Hi there', role: 'user' },
+        {
+          content: 'Model feels confident',
+          role: 'assistant',
+          thoughtSignature: 'sig-test-123',
+        } as OpenAIChatMessage,
+      ];
+
+      const contents = await buildGoogleMessages(messages);
+
+      expect(contents).toHaveLength(2);
+      expect(contents[1]).toEqual({
+        parts: [
+          {
+            text: 'Model feels confident',
+            thoughtSignature: 'sig-test-123',
+          },
+        ],
+        role: 'model',
+      });
+    });
+
+    it('should coerce malformed model media messages without signatures back to user', async () => {
+      const mediaMessage: OpenAIChatMessage = {
+        content: [
+          {
+            text: '翻译这页漫画为中文，给我汉化后的图片',
+            type: 'text',
+          },
+          {
+            image_url: {
+              detail: 'auto',
+              url: 'data:image/png;base64,TEST_BASE64',
+            },
+            type: 'image_url',
+          },
+        ],
+        role: 'assistant',
+      } as OpenAIChatMessage;
+
+      vi.mocked(parseDataUri).mockReturnValueOnce({
+        base64: 'TEST_BASE64',
+        mimeType: 'image/png',
+        type: 'base64',
+      });
+
+      const contents = await buildGoogleMessages([
+        { content: 'Start', role: 'user' },
+        mediaMessage,
+      ]);
+
+      expect(contents).toHaveLength(2);
+      expect(contents[0]).toEqual({ parts: [{ text: 'Start' }], role: 'user' });
+
+      const coerced = contents[1];
+      expect(coerced.role).toBe('user');
+      expect(coerced.parts).not.toBeUndefined();
+      expect(coerced.parts).toHaveLength(2);
+      expect(coerced.parts![0]).toEqual({ text: '翻译这页漫画为中文，给我汉化后的图片' });
+      expect(coerced.parts![1]).toEqual({
+        inlineData: {
+          data: 'TEST_BASE64',
+          mimeType: 'image/png',
+        },
+      });
+    });
   });
 
   describe('buildGoogleTool', () => {

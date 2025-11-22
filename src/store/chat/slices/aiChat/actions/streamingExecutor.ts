@@ -540,6 +540,21 @@ export const streamingExecutor: StateCreator<
               get().completeOperation(reasoningOperationId);
               reasoningOperationId = undefined;
             }
+
+            // 如果有 reasoning 但没有 text，确保更新消息以关闭加载动画 (gemini-3-pro-image)
+            if (thinking && !output) {
+              internal_dispatchMessage(
+                {
+                  id: messageId,
+                  type: 'updateMessage',
+                  value: {
+                    content: output,
+                    reasoning: duration ? { content: thinking, duration } : { content: thinking },
+                  },
+                },
+                { operationId },
+              );
+            }
             break;
           }
         }
