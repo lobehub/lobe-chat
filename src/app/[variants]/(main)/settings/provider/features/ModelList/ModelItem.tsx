@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelInfoTags } from '@/components/ModelSelect';
-import NewModelBadge from '@/features/ModelSelect/components/NewModelBadge';
+import NewModelBadge from '@/components/ModelSelect/NewModelBadge';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { formatPriceByCurrency } from '@/utils/format';

@@ -7,7 +7,7 @@ import numeral from 'numeral';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import NewModelBadge from '@/features/ModelSelect/components/NewModelBadge';
+import NewModelBadge from '@/components/ModelSelect/NewModelBadge';
 
 const POPOVER_MAX_WIDTH = 320;
 
