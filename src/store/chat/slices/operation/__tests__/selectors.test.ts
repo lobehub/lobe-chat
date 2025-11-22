@@ -393,6 +393,11 @@ describe('Operation Selectors', () => {
     it('isMainWindowAgentRuntimeRunning should only detect main window operations', () => {
       const { result } = renderHook(() => useChatStore());
 
+      // Set active context
+      act(() => {
+        useChatStore.setState({ activeId: 'session1', activeTopicId: null });
+      });
+
       expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
 
       // Start a main window operation (inThread: false)
@@ -400,7 +405,7 @@ describe('Operation Selectors', () => {
       act(() => {
         mainOpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session1' },
+          context: { sessionId: 'session1', topicId: null },
           metadata: { inThread: false },
         }).operationId;
       });
@@ -420,12 +425,17 @@ describe('Operation Selectors', () => {
     it('isMainWindowAgentRuntimeRunning should exclude thread operations', () => {
       const { result } = renderHook(() => useChatStore());
 
+      // Set active context
+      act(() => {
+        useChatStore.setState({ activeId: 'session1', activeTopicId: null });
+      });
+
       // Start a thread operation (inThread: true)
       let threadOpId: string;
       act(() => {
         threadOpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session1', threadId: 'thread1' },
+          context: { sessionId: 'session1', topicId: null, threadId: 'thread1' },
           metadata: { inThread: true },
         }).operationId;
       });
@@ -447,6 +457,11 @@ describe('Operation Selectors', () => {
     it('isMainWindowAgentRuntimeRunning should distinguish between main and thread operations', () => {
       const { result } = renderHook(() => useChatStore());
 
+      // Set active context
+      act(() => {
+        useChatStore.setState({ activeId: 'session1', activeTopicId: null });
+      });
+
       let mainOpId: string;
       let threadOpId: string;
 
@@ -454,13 +469,13 @@ describe('Operation Selectors', () => {
       act(() => {
         mainOpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session1' },
+          context: { sessionId: 'session1', topicId: null },
           metadata: { inThread: false },
         }).operationId;
 
         threadOpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session1', threadId: 'thread1' },
+          context: { sessionId: 'session1', topicId: null, threadId: 'thread1' },
           metadata: { inThread: true },
         }).operationId;
       });
@@ -489,11 +504,16 @@ describe('Operation Selectors', () => {
     it('isMainWindowAgentRuntimeRunning should exclude aborting operations', () => {
       const { result } = renderHook(() => useChatStore());
 
+      // Set active context
+      act(() => {
+        useChatStore.setState({ activeId: 'session1', activeTopicId: null });
+      });
+
       let opId: string;
       act(() => {
         opId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session1' },
+          context: { sessionId: 'session1', topicId: null },
           metadata: { inThread: false },
         }).operationId;
       });
