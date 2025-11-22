@@ -99,6 +99,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   ppio?: OpenAICompatibleKeyVault;
   qiniu?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
+  replicate?: OpenAICompatibleKeyVault;
   sambanova?: OpenAICompatibleKeyVault;
   search1api?: OpenAICompatibleKeyVault;
   sensenova?: OpenAICompatibleKeyVault;
