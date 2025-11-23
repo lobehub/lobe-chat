@@ -137,7 +137,20 @@ const Inspectors = memo<InspectorProps>(
 
     const showCustomPluginRender = shouldShowRender && !isPending && !isReject && !isAbort;
     return (
-      <Flexbox className={styles.container} gap={4}>
+      <Flexbox 
+        className={styles.container} 
+        gap={4}
+        onMouseEnter={() => {
+          if (!isPersistentExpanded) {
+            setIsHovered(true);
+          }
+        }}
+        onMouseLeave={() => {
+          if (!isPersistentExpanded) {
+            setIsHovered(false);
+          }
+        }}
+      >
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
           <Flexbox
             align={'center'}
@@ -146,16 +159,6 @@ const Inspectors = memo<InspectorProps>(
             horizontal
             onClick={() => {
               if (toolMessageId) toggleInspectExpanded(toolMessageId);
-            }}
-            onMouseEnter={() => {
-              if (!isPersistentExpanded) {
-                setIsHovered(true);
-              }
-            }}
-            onMouseLeave={() => {
-              if (!isPersistentExpanded) {
-                setIsHovered(false);
-              }
             }}
             paddingInline={4}
           >
