@@ -10,7 +10,7 @@ export const fetchErrorNotification = {
     notification.error({
       description: <Description message={errorMessage} status={status} />,
       icon: <FluentEmoji emoji={'🤧'} size={24} />,
-      message: t('fetchError.title', { ns: 'error' }),
+      title: t('fetchError.title', { ns: 'error' }),
       type: 'error',
     });
   },

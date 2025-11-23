@@ -15,7 +15,7 @@ export const parseConfigFile = async (file: File): Promise<ImportPgDataStructure
         ns: 'error',
         reason: (error as any).message,
       }),
-      message: t('import.importConfigFile.title', { ns: 'error' }),
+      title: t('import.importConfigFile.title', { ns: 'error' }),
     });
   }
 };

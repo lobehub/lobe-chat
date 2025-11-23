@@ -8,7 +8,6 @@ import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
 import { getAntdLocale } from '@/utils/locale';
 
-import AntdV5MonkeyPatch from './AntdV5MonkeyPatch';
 import AppTheme from './AppTheme';
 import CmdkLazy from './CmdkLazy';
 import ImportSettings from './ImportSettings';
@@ -70,7 +69,6 @@ const GlobalLayout = async ({
           </ServerConfigStoreProvider>
         </AppTheme>
       </Locale>
-      <AntdV5MonkeyPatch />
     </StyleRegistry>
   );
 };
