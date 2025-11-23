@@ -5,6 +5,8 @@ import { AiModelType, CHAT_MODEL_IMAGE_GENERATION_PARAMS } from 'model-bank';
 export const IMAGE_GENERATION_MODEL_WHITELIST = [
   'gemini-2.5-flash-image-preview',
   'gemini-2.5-flash-image-preview:free',
+  'gemini-3-pro-image-preview',
+  'gemini-3-pro-image-preview:free',
   // More models can be added in the future
 ] as const;
 
@@ -42,18 +44,20 @@ export async function postProcessModelList(
 
     for (const model of matchingModels) {
       // Blacklist: remove unnecessary properties, keep the rest
+      /* eslint-disable @typescript-eslint/no-unused-vars */
       const {
-        files,           // drop
-        functionCall,    // drop
-        reasoning,       // drop
-        search,          // drop
-        imageOutput,     // drop
-        video,           // drop
-        vision,          // drop
+        files: _files,           // drop
+        functionCall: _functionCall,    // drop
+        reasoning: _reasoning,       // drop
+        search: _search,          // drop
+        imageOutput: _imageOutput,     // drop
+        video: _video,           // drop
+        vision: _vision,          // drop
         type: _dropType, // will be overwritten
         parameters: _dropParams, // will be overwritten
         ...rest
       } = model;
+      /* eslint-enable @typescript-eslint/no-unused-vars */
 
       imageModels.push({
         ...rest, // Keep other fields (such as displayName, pricing, enabled, contextWindowTokens, etc.)
