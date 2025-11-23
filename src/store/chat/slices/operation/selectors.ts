@@ -191,7 +191,16 @@ const isMainWindowAgentRuntimeRunning = (s: ChatStoreState): boolean => {
       return false;
     }
 
-    return s.activeId === op.context.sessionId && s.activeTopicId === op.context.topicId;
+    // Session must match
+    if (s.activeId !== op.context.sessionId) return false;
+
+    // Topic comparison: normalize null/undefined (both mean "default topic")
+    // activeTopicId can be null (initial state) or undefined (after topic operations)
+    // Operation context topicId can also be null or undefined
+    const activeTopicId = s.activeTopicId ?? null;
+    const opTopicId = op.context.topicId ?? null;
+
+    return activeTopicId === opTopicId;
   });
 };
 
