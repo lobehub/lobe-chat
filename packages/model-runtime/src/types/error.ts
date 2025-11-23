@@ -19,14 +19,6 @@ export const AgentRuntimeErrorType = {
   OllamaBizError: 'OllamaBizError',
   OllamaServiceUnavailable: 'OllamaServiceUnavailable',
 
-  InvalidComfyUIArgs: 'InvalidComfyUIArgs',
-  ComfyUIBizError: 'ComfyUIBizError',
-  ComfyUIServiceUnavailable: 'ComfyUIServiceUnavailable',
-  ComfyUIEmptyResult: 'ComfyUIEmptyResult',
-  ComfyUIUploadFailed: 'ComfyUIUploadFailed',
-  ComfyUIWorkflowError: 'ComfyUIWorkflowError',
-  ComfyUIModelError: 'ComfyUIModelError',
-
   InvalidBedrockCredentials: 'InvalidBedrockCredentials',
   InvalidVertexCredentials: 'InvalidVertexCredentials',
   StreamChunkError: 'StreamChunkError',
@@ -34,6 +26,17 @@ export const AgentRuntimeErrorType = {
   InvalidGithubToken: 'InvalidGithubToken',
 
   ConnectionCheckFailed: 'ConnectionCheckFailed',
+
+  // ******* Image Generation Error ******* //
+  ProviderNoImageGenerated: 'ProviderNoImageGenerated',
+
+  InvalidComfyUIArgs: 'InvalidComfyUIArgs',
+  ComfyUIBizError: 'ComfyUIBizError',
+  ComfyUIServiceUnavailable: 'ComfyUIServiceUnavailable',
+  ComfyUIEmptyResult: 'ComfyUIEmptyResult',
+  ComfyUIUploadFailed: 'ComfyUIUploadFailed',
+  ComfyUIWorkflowError: 'ComfyUIWorkflowError',
+  ComfyUIModelError: 'ComfyUIModelError',
 
   /**
    * @deprecated
