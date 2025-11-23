@@ -644,7 +644,7 @@ const nebiusChatModels: AIChatModelCard[] = [
   },
 ];
 
-// 下述模型待验证
+// Models below are pending verification
 
 // export const nebiusImageModels: AIImageModelCard[] = [
 //   {
