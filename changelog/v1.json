@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "features": ["Add nano-banana-pro model support and optimization."]
+    },
+    "date": "2025-11-23",
+    "version": "2.0.0-next.106"
+  },
+  {
     "children": {},
     "date": "2025-11-23",
     "version": "2.0.0-next.105"
