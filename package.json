@@ -396,9 +396,15 @@
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
+  "overrides": {
+    "stylelint-config-clean-order": "7.0.0"
+  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@vercel/speed-insights"
-    ]
+    ],
+    "overrides": {
+      "stylelint-config-clean-order": "7.0.0"
+    }
   }
 }
