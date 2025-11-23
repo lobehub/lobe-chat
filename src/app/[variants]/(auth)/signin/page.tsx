@@ -13,6 +13,7 @@ import { Flexbox } from 'react-layout-kit';
 import { message } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { signIn } from '@/libs/better-auth/auth-client';
+import { isBuiltinProvider, normalizeProviderId } from '@/libs/better-auth/utils/client';
 import { useUserStore } from '@/store/user';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -204,15 +205,27 @@ export default function SignInPage() {
 
   const handleSocialSignIn = async (provider: string) => {
     setSocialLoading(provider);
+    const normalizedProvider = normalizeProviderId(provider);
+
     try {
       const callbackUrl = searchParams.get('callbackUrl') || '/';
-      await signIn.social({
-        callbackURL: callbackUrl,
-        provider,
-      });
+      const result = isBuiltinProvider(normalizedProvider)
+        ? await signIn.social({
+            callbackURL: callbackUrl,
+            provider: normalizedProvider,
+          })
+        : await signIn.oauth2({
+            callbackURL: callbackUrl,
+            providerId: normalizedProvider,
+          });
+
+      if (result?.error) {
+        throw result.error;
+      }
     } catch (error) {
-      console.error(`${provider} sign in error:`, error);
+      console.error(`${normalizedProvider} sign in error:`, error);
       message.error(t('betterAuth.signin.socialError'));
+    } finally {
       setSocialLoading(null);
     }
   };

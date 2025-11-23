@@ -2,7 +2,8 @@ import type { GenericOAuthConfig } from 'better-auth/plugins';
 import type { SocialProviders } from 'better-auth/social-providers';
 
 import { authEnv } from '@/envs/auth';
-import { parseSSOProviders } from '@/libs/better-auth/utils';
+import { BUILTIN_BETTER_AUTH_PROVIDERS } from '@/libs/better-auth/constants';
+import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 
 import Auth0 from './providers/auth0';
 import Authelia from './providers/authelia';
@@ -39,6 +40,16 @@ const providerDefinitions = [
   Feishu,
   Wechat,
 ] as const;
+
+const builtInProviderIds = new Set(BUILTIN_BETTER_AUTH_PROVIDERS);
+
+for (const definition of providerDefinitions) {
+  if (definition.type === 'builtin' && !builtInProviderIds.has(definition.id)) {
+    throw new Error(
+      `[Better-Auth] Built-in provider "${definition.id}" is not registered in BUILTIN_BETTER_AUTH_PROVIDERS (src/libs/better-auth/constants.ts). Please update the constant to keep them in sync.`,
+    );
+  }
+}
 
 const providerRegistry = new Map<string, (typeof providerDefinitions)[number]>();
 
