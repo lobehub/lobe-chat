@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Прочети съдържанието на базата знания",
+        "searchKnowledgeBase": "Търси в базата знания"
+      },
+      "title": "База знания"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Редактирай файл",
+        "getCommandOutput": "Вземи изхода от кода",
+        "globLocalFiles": "Търси съвпадащи файлове",
+        "grepContent": "Търси съдържание",
+        "killCommand": "Прекрати изпълнението на кода",
+        "listLocalFiles": "Преглед на списъка с файлове",
+        "moveLocalFiles": "Премести файлове",
+        "readLocalFile": "Прочети съдържанието на файла",
+        "renameLocalFile": "Преименувай",
+        "runCommand": "Изпълни код",
+        "searchLocalFiles": "Търси файлове",
+        "writeLocalFile": "Запиши файл"
+      },
+      "title": "Локална система"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Прочети съдържание от няколко страници",
+        "crawlSinglePage": "Прочети съдържание от страница",
+        "search": "Търси страница"
+      },
+      "title": "Търсене в интернет"
+    }
+  },
   "confirm": "Потвърждавам",
   "debug": {
     "arguments": "Параметри на извикване",
@@ -251,23 +285,6 @@
     "content": "Извикване на плъгина...",
     "plugin": "Плъгинът работи..."
   },
-  "localSystem": {
-    "apiName": {
-      "editLocalFile": "Редактиране на файл",
-      "getCommandOutput": "Получаване на изход от командата",
-      "globLocalFiles": "Търсене на съвпадащи файлове",
-      "grepContent": "Търсене на съдържание",
-      "killCommand": "Прекратяване на изпълнението на командата",
-      "listLocalFiles": "Преглед на списък с файлове",
-      "moveLocalFiles": "Преместване на файлове",
-      "readLocalFile": "Четене на съдържание на файл",
-      "renameLocalFile": "Преименуване",
-      "runCommand": "Изпълни код",
-      "searchLocalFiles": "Търсене на файлове",
-      "writeLocalFile": "Запис в файл"
-    },
-    "title": "Локална система"
-  },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Проверка на инсталационната среда...",
     "COMPLETED": "Инсталацията е завършена",
@@ -375,11 +392,6 @@
     "warning": "⚠️ Моля, уверете се, че имате доверие на източника на този плъгин, злонамерени плъгини могат да застрашат сигурността на вашата система."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Четене на съдържание от множество страници",
-      "crawlSinglePage": "Четене на съдържание от страница",
-      "search": "Търсене на страници"
-    },
     "config": {
       "addKey": "Добавяне на ключ",
       "close": "Изтриване",

@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Variante do modelo Gemini 2.0 Flash, otimizada para custo-benefício e baixa latência."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Modelo de pré-visualização Gemini 2.0 Flash, suporta geração de imagens"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash é o modelo com melhor custo-benefício do Google, oferecendo funcionalidades abrangentes."
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "O Gemini 2.5 Flash Preview é o modelo mais acessível do Google, oferecendo uma gama completa de funcionalidades."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview é o modelo com melhor custo-benefício do Google, oferecendo funcionalidades abrangentes."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Versão prévia (25 de setembro de 2025) do Gemini 2.5 Flash"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview é o modelo de pensamento mais avançado do Google, capaz de raciocinar sobre problemas complexos em código, matemática e áreas STEM, além de analisar grandes conjuntos de dados, bibliotecas de código e documentos usando contexto extenso."
+  },
+  "gemini-3-pro-preview": {
+    "description": "O Gemini 3 Pro é o modelo mais inteligente do Google, com raciocínio de última geração, compreensão multimodal e poderosos recursos de agente e codificação de contexto."
   },
   "gemini-flash-latest": {
     "description": "Última versão do Gemini Flash"
@@ -1909,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "Grok 4 da xAI, com forte capacidade de raciocínio."
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Modelo multimodal de ponta, otimizado especialmente para chamadas de ferramentas de agente de alto desempenho."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Modelo multimodal de ponta, otimizado especialmente para chamadas de ferramentas de agente de alto desempenho."
   },
   "grok-4-fast-non-reasoning": {
     "description": "Temos o prazer de lançar o Grok 4 Fast, nosso avanço mais recente em modelos de inferência com custo-benefício."

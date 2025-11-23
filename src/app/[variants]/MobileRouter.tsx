@@ -1,32 +1,11 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { memo, useMemo } from 'react';
-import { RouterProvider } from 'react-router-dom';
 
-import BootErrorBoundary from '@/components/BootErrorBoundary';
 import Loading from '@/components/Loading/BrandTextLoading';
 import type { Locales } from '@/types/locale';
 
-import { createMobileRouter } from './mobileRouter.config';
-
-interface ClientRouterProps {
-  locale: Locales;
-}
-
-const ClientRouter = memo<ClientRouterProps>(({ locale }) => {
-  const router = useMemo(() => createMobileRouter(locale), [locale]);
-
-  return (
-    <BootErrorBoundary fallback={<Loading />}>
-      <RouterProvider router={router} />
-    </BootErrorBoundary>
-  );
-});
-
-ClientRouter.displayName = 'ClientRouter';
-
-const MobileRouterClient = dynamic(() => Promise.resolve(ClientRouter), {
+const MobileRouterClient = dynamic(() => import('./MobileClientRouter'), {
   loading: () => <Loading />,
   ssr: false,
 });

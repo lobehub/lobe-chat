@@ -176,6 +176,35 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      imageOutput: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072 + 32_768,
+    description:
+      'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
+    displayName: 'Nano Banana Pro',
+    enabled: true,
+    id: 'gemini-3-pro-image-preview',
+    maxOutput: 32_768,
+    pricing: {
+      approximatePricePerImage: 0.134,
+      units: [
+        { name: 'imageOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-20',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       reasoning: true,
       search: true,
@@ -820,16 +849,16 @@ export const imagenGenParameters: ModelParamsSchema = {
 };
 
 const NANO_BANANA_ASPECT_RATIOS = [
-  '1:1', // 1024x1024
-  '2:3', // 832x1248
-  '3:2', // 1248x832
-  '3:4', // 864x1184
-  '4:3', // 1184x864
-  '4:5', // 896x1152
-  '5:4', // 1152x896
-  '9:16', // 768x1344
-  '16:9', // 1344x768
-  '21:9', // 1536x672
+  '1:1', // 1024x1024 / 2048x2048 / 4096x4096
+  '2:3', // 848x1264 / 1696x2528 / 3392x5056
+  '3:2', // 1264x848 / 2528x1696 / 5056x3392
+  '3:4', // 896x1200 / 1792x2400 / 3584x4800
+  '4:3', // 1200x896 / 2400x1792 / 4800x3584
+  '4:5', // 928x1152 / 1856x2304 / 3712x4608
+  '5:4', // 1152x928 / 2304x1856 / 4608x3712
+  '9:16', // 768x1376 / 1536x2752 / 3072x5504
+  '16:9', // 1376x768 / 2752x1536 / 5504x3072
+  '21:9', // 1584x672 / 3168x1344 / 6336x2688
 ];
 
 export const nanoBananaParameters: ModelParamsSchema = {
@@ -843,8 +872,41 @@ export const nanoBananaParameters: ModelParamsSchema = {
   prompt: { default: '' },
 };
 
+export const nanoBananaProParameters: ModelParamsSchema = {
+  aspectRatio: {
+    default: '1:1',
+    enum: NANO_BANANA_ASPECT_RATIOS,
+  },
+  imageUrls: {
+    default: [],
+  },
+  prompt: { default: '' },
+  resolution: {
+    default: '1K',
+    enum: ['1K', '2K', '4K'],
+  },
+};
+
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 const googleImageModels: AIImageModelCard[] = [
+  {
+    displayName: 'Nano Banana Pro',
+    id: 'gemini-3-pro-image-preview:image',
+    type: 'image',
+    enabled: true,
+    description:
+      'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
+    releasedAt: '2025-11-18',
+    parameters: nanoBananaProParameters,
+    pricing: {
+      approximatePricePerImage: 0.134,
+      units: [
+        { name: 'imageOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+  },
   {
     displayName: 'Nano Banana',
     id: 'gemini-2.5-flash-image:image',

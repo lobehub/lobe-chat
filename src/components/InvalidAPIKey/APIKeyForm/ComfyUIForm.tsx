@@ -10,7 +10,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
 import KeyValueEditor from '@/components/KeyValueEditor';
-import { FormAction } from '@/features/Conversation/Error/style';
+import { FormAction } from '@/features/ChatList/Error/style';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { ComfyUIKeyVault } from '@/types/user/settings';
 

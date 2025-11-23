@@ -14,6 +14,14 @@
     "images": "Immagini:",
     "prompt": "parola chiave"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Numero di caratteri",
+        "lines": "Numero di righe"
+      }
+    }
+  },
   "localFiles": {
     "editFile": {
       "newString": "Sostituisci con",

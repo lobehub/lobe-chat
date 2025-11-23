@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 24.11.1
           package-manager-cache: false
 
       - name: Install bun
@@ -66,7 +66,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 24.11.1
           package-manager-cache: false
 
       # 主要逻辑：确定构建版本号
@@ -111,7 +111,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 24.11.1
           package-manager-cache: false
 
       # node-linker=hoisted 模式将可以确保 asar 压缩可用
@@ -232,7 +232,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 24.11.1
           package-manager-cache: false
 
       - name: Install bun

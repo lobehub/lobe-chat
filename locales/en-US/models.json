@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash is a variant of the model optimized for cost-effectiveness and low latency."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash preview model, supports image generation"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash is Google's most cost-effective model, offering comprehensive capabilities."
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview is Google's most cost-effective model, offering a comprehensive set of features."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview is Google's most cost-effective model, offering comprehensive capabilities."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Preview release (September 25th, 2025) of Gemini 2.5 Flash"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview is Google's most advanced cognitive model, capable of reasoning through complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using long-context understanding."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro is Google's most advanced model, featuring state-of-the-art reasoning, multimodal understanding, and powerful agent capabilities with contextual awareness."
   },
   "gemini-flash-latest": {
     "description": "Latest release of Gemini Flash"
@@ -1909,6 +1906,12 @@
   },
   "grok-4-0709": {
     "description": "xAI's Grok 4, featuring strong reasoning capabilities."
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Cutting-edge multimodal model optimized specifically for high-performance agent tool invocation."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Cutting-edge multimodal model optimized specifically for high-performance agent tool invocation."
   },
   "grok-4-fast-non-reasoning": {
     "description": "We are excited to release Grok 4 Fast, our latest advancement in cost-effective reasoning models."

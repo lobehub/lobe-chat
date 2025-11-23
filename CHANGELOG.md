@@ -2,6 +2,397 @@
 
 # Changelog
 
+## [Version 2.0.0-next.104](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.103...v2.0.0-next.104)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10349](https://github.com/lobehub/lobe-chat/issues/10349) ([3482d38](https://github.com/lobehub/lobe-chat/commit/3482d38))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.103](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.102...v2.0.0-next.103)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Hide ai image config item in settings category.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Hide ai image config item in settings category, closes [#10066](https://github.com/lobehub/lobe-chat/issues/10066) ([90354eb](https://github.com/lobehub/lobe-chat/commit/90354eb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.102](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.101...v2.0.0-next.102)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new provider ZenMux & Gemini 3 Pro Image Preview.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new provider ZenMux & Gemini 3 Pro Image Preview, closes [#10310](https://github.com/lobehub/lobe-chat/issues/10310) ([f2291e4](https://github.com/lobehub/lobe-chat/commit/f2291e4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.101](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.100...v2.0.0-next.101)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Support bedrok prompt cache and usage compute.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support bedrok prompt cache and usage compute, closes [#10337](https://github.com/lobehub/lobe-chat/issues/10337) ([beb9471](https://github.com/lobehub/lobe-chat/commit/beb9471))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.100](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.99...v2.0.0-next.100)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Gemini 3 Pro does not display thought summaries.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Gemini 3 Pro does not display thought summaries, closes [#10345](https://github.com/lobehub/lobe-chat/issues/10345) ([89e296a](https://github.com/lobehub/lobe-chat/commit/89e296a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.99](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.98...v2.0.0-next.99)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### ✨ Features
+
+- **misc**: Refactor to use kb search tool.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Refactor to use kb search tool, closes [#10340](https://github.com/lobehub/lobe-chat/issues/10340) ([291ff3c](https://github.com/lobehub/lobe-chat/commit/291ff3c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.98](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.97...v2.0.0-next.98)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed changelog pages and open again.
+
+#### 💄 Styles
+
+- **misc**: Fix some translations.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed changelog pages and open again, closes [#10285](https://github.com/lobehub/lobe-chat/issues/10285) ([871d141](https://github.com/lobehub/lobe-chat/commit/871d141))
+
+#### Styles
+
+- **misc**: Fix some translations, closes [#10343](https://github.com/lobehub/lobe-chat/issues/10343) ([ed193e0](https://github.com/lobehub/lobe-chat/commit/ed193e0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.97](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.96...v2.0.0-next.97)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor Conversation to ChatList.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor Conversation to ChatList, closes [#10330](https://github.com/lobehub/lobe-chat/issues/10330) ([bca70e2](https://github.com/lobehub/lobe-chat/commit/bca70e2))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10338](https://github.com/lobehub/lobe-chat/issues/10338) ([9c8cf81](https://github.com/lobehub/lobe-chat/commit/9c8cf81))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.96](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.95...v2.0.0-next.96)
+
+<sup>Released on **2025-11-20**</sup>
+
+#### ✨ Features
+
+- **misc**: Support Command Menu (CMD + J).
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support Command Menu (CMD + J), closes [#10271](https://github.com/lobehub/lobe-chat/issues/10271) ([a9aed0b](https://github.com/lobehub/lobe-chat/commit/a9aed0b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.95](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.94...v2.0.0-next.95)
+
+<sup>Released on **2025-11-20**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Security Blacklist for agent runtime.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Security Blacklist for agent runtime, closes [#10325](https://github.com/lobehub/lobe-chat/issues/10325) ([deab4d0](https://github.com/lobehub/lobe-chat/commit/deab4d0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.94](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.93...v2.0.0-next.94)
+
+<sup>Released on **2025-11-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Provider settings button unable to redirect.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Provider settings button unable to redirect, closes [#10319](https://github.com/lobehub/lobe-chat/issues/10319) ([e025fec](https://github.com/lobehub/lobe-chat/commit/e025fec))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.93](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.92...v2.0.0-next.93)
+
+<sup>Released on **2025-11-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10317](https://github.com/lobehub/lobe-chat/issues/10317) ([8fb9890](https://github.com/lobehub/lobe-chat/commit/8fb9890))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.92](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.91...v2.0.0-next.92)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Remove debug console logs and add loading state.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Remove debug console logs and add loading state, closes [#10314](https://github.com/lobehub/lobe-chat/issues/10314) ([094cdff](https://github.com/lobehub/lobe-chat/commit/094cdff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.91](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.90...v2.0.0-next.91)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the hydrated false problem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the hydrated false problem, closes [#10308](https://github.com/lobehub/lobe-chat/issues/10308) ([340aa2a](https://github.com/lobehub/lobe-chat/commit/340aa2a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.90](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.89...v2.0.0-next.90)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Extract StatusIndicator component and improve tools display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Extract StatusIndicator component and improve tools display, closes [#10311](https://github.com/lobehub/lobe-chat/issues/10311) ([b5ae53a](https://github.com/lobehub/lobe-chat/commit/b5ae53a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.89](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.88...v2.0.0-next.89)
 
 <sup>Released on **2025-11-19**</sup>

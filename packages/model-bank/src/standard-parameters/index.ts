@@ -149,6 +149,15 @@ export const ModelParamsMetaSchema = z.object({
     })
     .optional(),
 
+  resolution: z
+    .object({
+      default: z.string(),
+      description: z.string().optional(),
+      enum: z.array(z.string()),
+      type: z.literal('string').optional(),
+    })
+    .optional(),
+
   cfg: z
     .object({
       default: z.number(),

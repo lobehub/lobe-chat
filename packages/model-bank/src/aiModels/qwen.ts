@@ -1499,11 +1499,12 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      vision: true,
       reasoning: true,
+      vision: true,
     },
     contextWindowTokens: 131_072,
-    description: 'Qwen3 VL 32B 思考模式（开源版），针对高难度强推理与长视频理解场景，提供顶尖的视觉+文本推理能力。',
+    description:
+      'Qwen3 VL 32B 思考模式（开源版），针对高难度强推理与长视频理解场景，提供顶尖的视觉+文本推理能力。',
     displayName: 'Qwen3 VL 32B Thinking',
     id: 'qwen3-vl-32b-thinking',
     maxOutput: 32_768,
@@ -1525,7 +1526,8 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 131_072,
-    description: 'Qwen3 VL 32B 非思考模式（Instruct），适用于非思考指令场景，保持强大的视觉理解能力。',
+    description:
+      'Qwen3 VL 32B 非思考模式（Instruct），适用于非思考指令场景，保持强大的视觉理解能力。',
     displayName: 'Qwen3 VL 32B Instruct',
     id: 'qwen3-vl-32b-instruct',
     maxOutput: 32_768,

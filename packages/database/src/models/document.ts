@@ -31,16 +31,22 @@ export class DocumentModel {
     return this.db.delete(documents).where(eq(documents.userId, this.userId));
   };
 
-  query = async () => {
+  query = async (): Promise<DocumentItem[]> => {
     return this.db.query.documents.findMany({
       orderBy: [desc(documents.updatedAt)],
       where: eq(documents.userId, this.userId),
     });
   };
 
-  findById = async (id: string) => {
+  findById = async (id: string): Promise<DocumentItem | undefined> => {
     return this.db.query.documents.findFirst({
-      where: and(eq(documents.id, id), eq(documents.userId, this.userId)),
+      where: and(eq(documents.userId, this.userId), eq(documents.id, id)),
+    });
+  };
+
+  findByFileId = async (fileId: string) => {
+    return this.db.query.documents.findFirst({
+      where: and(eq(documents.userId, this.userId), eq(documents.fileId, fileId)),
     });
   };
 
@@ -48,6 +54,6 @@ export class DocumentModel {
     return this.db
       .update(documents)
       .set({ ...value, updatedAt: new Date() })
-      .where(and(eq(documents.id, id), eq(documents.userId, this.userId)));
+      .where(and(eq(documents.userId, this.userId), eq(documents.id, id)));
   };
 }

@@ -117,6 +117,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   wenxin?: OpenAICompatibleKeyVault;
   xai?: OpenAICompatibleKeyVault;
   xinference?: OpenAICompatibleKeyVault;
+  zenmux?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;
 }
