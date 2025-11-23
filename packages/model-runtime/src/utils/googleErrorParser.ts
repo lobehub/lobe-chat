@@ -104,6 +104,11 @@ export function parseGoogleErrorMessage(message: string): ParsedError {
     return { error: { message }, errorType: AgentRuntimeErrorType.LocationNotSupportError };
   }
 
+  const lowerMessage = message.toLowerCase();
+  if (lowerMessage.includes('no image generated') || lowerMessage.includes('no image data')) {
+    return { error: { message }, errorType: AgentRuntimeErrorType.ProviderNoImageGenerated };
+  }
+
   // Unified error type determination function
   const getErrorType = (code: number | null, message: string): ILobeAgentRuntimeErrorType => {
     if (code === 400 && message.includes('API key not valid')) {

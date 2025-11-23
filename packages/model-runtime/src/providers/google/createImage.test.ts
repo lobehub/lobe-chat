@@ -8,6 +8,7 @@ import { createGoogleImage } from './createImage';
 
 const provider = 'google';
 const bizErrorType = 'ProviderBizError';
+const noImageErrorType = 'ProviderNoImageGenerated';
 const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
@@ -201,7 +202,7 @@ describe('createGoogleImage', () => {
         // Act & Assert - Test error behavior rather than specific text
         await expect(createGoogleImage(mockClient, provider, payload)).rejects.toEqual(
           expect.objectContaining({
-            errorType: bizErrorType,
+            errorType: noImageErrorType,
             provider,
           }),
         );
@@ -224,7 +225,7 @@ describe('createGoogleImage', () => {
         // Act & Assert
         await expect(createGoogleImage(mockClient, provider, payload)).rejects.toEqual(
           expect.objectContaining({
-            errorType: bizErrorType,
+            errorType: noImageErrorType,
             provider,
           }),
         );
@@ -251,7 +252,7 @@ describe('createGoogleImage', () => {
         // Act & Assert
         await expect(createGoogleImage(mockClient, provider, payload)).rejects.toEqual(
           expect.objectContaining({
-            errorType: bizErrorType,
+            errorType: noImageErrorType,
             provider,
           }),
         );
@@ -602,7 +603,7 @@ describe('createGoogleImage', () => {
         // Act & Assert
         await expect(createGoogleImage(mockClient, provider, payload)).rejects.toEqual(
           expect.objectContaining({
-            errorType: bizErrorType,
+            errorType: noImageErrorType,
             provider,
           }),
         );
@@ -627,7 +628,7 @@ describe('createGoogleImage', () => {
         // Act & Assert
         await expect(createGoogleImage(mockClient, provider, payload)).rejects.toEqual(
           expect.objectContaining({
-            errorType: bizErrorType,
+            errorType: noImageErrorType,
             provider,
           }),
         );
