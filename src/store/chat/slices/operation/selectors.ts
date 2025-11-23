@@ -1,5 +1,4 @@
 import type { ChatStoreState } from '@/store/chat/initialState';
-import { displayMessageSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import type { Operation, OperationType } from './types';
@@ -184,31 +183,15 @@ const isAgentRuntimeRunning = (s: ChatStoreState): boolean => {
  * Excludes thread operations and operations from other topics to prevent cross-contamination
  */
 const isMainWindowAgentRuntimeRunning = (s: ChatStoreState): boolean => {
-  const { activeId } = s;
-  if (!activeId) return false;
-
-  // Get current displayed message IDs
-  const currentMessages = displayMessageSelectors.activeDisplayMessages(s);
-  const currentMessageIds = new Set(currentMessages.map((m) => m.id));
-
   const operationIds = s.operationsByType['execAgentRuntime'] || [];
+
   return operationIds.some((id) => {
     const op = s.operations[id];
     if (!op || op.status !== 'running' || op.metadata.isAborting || op.metadata.inThread) {
       return false;
     }
 
-    // Check if operation belongs to current session
-    if (op.context.sessionId !== activeId) {
-      return false;
-    }
-
-    // Check if operation's message is in current displayed messages
-    if (op.context.messageId && !currentMessageIds.has(op.context.messageId)) {
-      return false;
-    }
-
-    return true;
+    return s.activeId === op.context.sessionId && s.activeTopicId === op.context.topicId;
   });
 };
 
