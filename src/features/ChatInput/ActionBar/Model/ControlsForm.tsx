@@ -169,6 +169,20 @@ const ControlsForm = memo(() => {
       tag: 'urlContext',
     },
     {
+      children: <Switch />,
+      desc: isNarrow ? (
+        <span style={descNarrow}>{t('extendParams.codeExecution.desc')}</span>
+      ) : (
+        t('extendParams.codeExecution.desc')
+      ),
+      label: t('extendParams.codeExecution.title'),
+      layout: isNarrow ? 'vertical' : 'horizontal',
+      minWidth: undefined,
+      name: 'codeExecution',
+      style: isNarrow ? undefined : { width: 445 },
+      tag: 'codeExecution',
+    },
+    {
       children: <ThinkingSlider />,
       label: t('extendParams.thinking.title'),
       layout: 'horizontal',

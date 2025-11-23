@@ -62,6 +62,7 @@ export interface LobeAgentChatConfig {
   searchMode?: SearchMode;
   searchFCModel?: WorkingModel;
   urlContext?: boolean;
+  codeExecution?: boolean;
   useModelBuiltinSearch?: boolean;
 }
 /* eslint-enable */

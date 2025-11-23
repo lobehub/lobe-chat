@@ -167,7 +167,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-11-18',
     settings: {
-      extendParams: ['thinkingLevel', 'urlContext'],
+      extendParams: ['thinkingLevel', 'urlContext', 'codeExecution'],
       searchImpl: 'params',
       searchProvider: 'google',
     },

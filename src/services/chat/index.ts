@@ -203,6 +203,10 @@ class ChatService {
       if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {
         extendParams.urlContext = chatConfig.urlContext;
       }
+
+      if (modelExtendParams!.includes('codeExecution') && chatConfig.codeExecution) {
+        extendParams.codeExecution = chatConfig.codeExecution;
+      }
     }
 
     return this.getChatCompletion(

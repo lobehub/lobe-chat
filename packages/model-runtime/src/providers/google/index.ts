@@ -521,6 +521,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     const hasToolCalls = payload?.messages?.some((m) => m.tool_calls?.length);
     const hasSearch = payload?.enabledSearch;
     const hasUrlContext = payload?.urlContext;
+    const hasCodeExecution = payload?.codeExecution;
     const hasFunctionTools = tools && tools.length > 0;
 
     // 如果已经有 tool_calls，优先处理 function declarations
@@ -529,14 +530,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     }
 
     // 构建并返回搜索相关工具（搜索工具不能与 FunctionCall 同时使用）
-    if (hasUrlContext && hasSearch) {
-      return [{ urlContext: {} }, { googleSearch: {} }];
-    }
+    const toolsList: GoogleFunctionCallTool[] = [];
     if (hasUrlContext) {
-      return [{ urlContext: {} }];
+      toolsList.push({ urlContext: {} });
     }
     if (hasSearch) {
-      return [{ googleSearch: {} }];
+      toolsList.push({ googleSearch: {} });
+    }
+    if (hasCodeExecution) {
+      toolsList.push({ codeExecution: {} });
+    }
+    if (toolsList.length > 0) {
+      return toolsList;
     }
 
     // 最后考虑 function declarations

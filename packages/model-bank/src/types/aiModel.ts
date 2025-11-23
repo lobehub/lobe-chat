@@ -243,7 +243,8 @@ export type ExtendParamsType =
   | 'thinking'
   | 'thinkingBudget'
   | 'thinkingLevel'
-  | 'urlContext';
+  | 'urlContext'
+  | 'codeExecution';
 
 export interface AiModelSettings {
   extendParams?: ExtendParamsType[];
