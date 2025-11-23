@@ -58,6 +58,9 @@ describe('call_llm executor', () => {
           sessionId: 'test-session',
           topicId: 'test-topic',
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -229,6 +232,9 @@ describe('call_llm executor', () => {
         expect.objectContaining({
           parentId: 'msg_payload_parent',
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -261,6 +267,9 @@ describe('call_llm executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           parentId: 'msg_context_parent',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });
@@ -1061,6 +1070,9 @@ describe('call_llm executor', () => {
           model: 'claude-3-opus',
           provider: 'anthropic',
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
       expect(mockStore.internal_fetchAIChatMessage).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1180,6 +1192,9 @@ describe('call_llm executor', () => {
         expect.objectContaining({
           threadId,
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -1210,6 +1225,9 @@ describe('call_llm executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           threadId: undefined,
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });

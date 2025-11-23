@@ -32,6 +32,7 @@ export interface PluginOptimisticUpdateAction {
     id: string,
     value: T,
     replace?: boolean,
+    context?: OptimisticUpdateContext,
   ) => Promise<void>;
 
   /**
@@ -106,7 +107,7 @@ export const pluginOptimisticUpdate: StateCreator<
     }
   },
 
-  optimisticUpdatePluginArguments: async (id, value, replace = false) => {
+  optimisticUpdatePluginArguments: async (id, value, replace = false, context) => {
     const { refreshMessages } = get();
     const toolMessage = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!toolMessage || !toolMessage?.tool_call_id) return;
@@ -121,20 +122,22 @@ export const pluginOptimisticUpdate: StateCreator<
     if (isEqual(prevJson, nextValue)) return;
 
     // optimistic update
-    get().internal_dispatchMessage({
-      id,
-      type: 'updateMessagePlugin',
-      value: { arguments: JSON.stringify(nextValue) },
-    });
+    get().internal_dispatchMessage(
+      { id, type: 'updateMessagePlugin', value: { arguments: JSON.stringify(nextValue) } },
+      context,
+    );
 
     // 同样需要更新 assistantMessage 的 pluginArguments
     if (assistantMessage) {
-      get().internal_dispatchMessage({
-        id: assistantMessage.id,
-        type: 'updateMessageTools',
-        tool_call_id: toolMessage?.tool_call_id,
-        value: { arguments: JSON.stringify(nextValue) },
-      });
+      get().internal_dispatchMessage(
+        {
+          id: assistantMessage.id,
+          type: 'updateMessageTools',
+          tool_call_id: toolMessage?.tool_call_id,
+          value: { arguments: JSON.stringify(nextValue) },
+        },
+        context,
+      );
       assistantMessage = displayMessageSelectors.getDisplayMessageById(assistantMessage?.id)(get());
     }
 
@@ -183,11 +186,14 @@ export const pluginOptimisticUpdate: StateCreator<
     if (!assistantMessage) return;
 
     const { internal_dispatchMessage, internal_refreshToUpdateMessageTools } = get();
-    internal_dispatchMessage({
-      type: 'addMessageTool',
-      value: tool,
-      id: assistantMessage.id,
-    });
+    internal_dispatchMessage(
+      {
+        type: 'addMessageTool',
+        value: tool,
+        id: assistantMessage.id,
+      },
+      context,
+    );
 
     await internal_refreshToUpdateMessageTools(id, context);
   },
@@ -199,7 +205,7 @@ export const pluginOptimisticUpdate: StateCreator<
     const { internal_dispatchMessage, internal_refreshToUpdateMessageTools } = get();
 
     // optimistic update
-    internal_dispatchMessage({ type: 'deleteMessageTool', tool_call_id, id: message.id });
+    internal_dispatchMessage({ type: 'deleteMessageTool', tool_call_id, id: message.id }, context);
 
     // update the message tools
     await internal_refreshToUpdateMessageTools(id, context);
