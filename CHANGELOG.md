@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.106](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.105...v2.0.0-next.106)
+
+<sup>Released on **2025-11-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Add nano-banana-pro model support and optimization.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add nano-banana-pro model support and optimization, closes [#10376](https://github.com/lobehub/lobe-chat/issues/10376) ([5349bdc](https://github.com/lobehub/lobe-chat/commit/5349bdc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.105](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.104...v2.0.0-next.105)
 
 <sup>Released on **2025-11-23**</sup>
