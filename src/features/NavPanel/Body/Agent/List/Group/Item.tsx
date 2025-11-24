@@ -1,7 +1,7 @@
 import { AccordionItem, Icon, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import { ListMinusIcon } from 'lucide-react';
-import React, { memo, useCallback } from 'react';
+import { createStyles, useTheme } from 'antd-style';
+import { ListMinusIcon, Loader2 } from 'lucide-react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SessionList from '@/features/NavPanel/Body/Agent/List/List';
@@ -36,8 +36,12 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
+  const theme = useTheme();
   const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
-  const editing = useSessionStore((s) => s.sessionGroupRenamingId === id);
+  const [editing, isUpdating] = useSessionStore((s) => [
+    s.sessionGroupRenamingId === id,
+    s.sessionGroupUpdatingId === id,
+  ]);
   const { cx, styles } = useStyles();
 
   const toggleEditing = useCallback(
@@ -51,20 +55,27 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
     [id],
   );
 
+  const groupIcon = useMemo(() => {
+    if (isUpdating) {
+      return <Icon icon={Loader2} spin style={{ opacity: 0.5 }} />;
+    }
+    return <Icon icon={ListMinusIcon} style={{ opacity: 0.5 }} />;
+  }, [isUpdating, theme.colorTextDescription]);
+
   return (
     <AccordionItem
       action={<Actions id={id} isCustomGroup toggleEditing={toggleEditing} />}
       classNames={{
         header: cx(styles.base, !expand && styles.hide),
       }}
-      disabled={editing}
+      disabled={editing || isUpdating}
       itemKey={id}
       key={id}
       paddingBlock={4}
       paddingInline={'8px 4px'}
       title={
         <Flexbox align="center" gap={4} horizontal style={{ overflow: 'hidden' }}>
-          <Icon icon={ListMinusIcon} style={{ opacity: 0.5 }} />
+          {groupIcon}
           <Text ellipsis fontSize={12} style={{ flex: 1 }} type={'secondary'} weight={500}>
             {name}
           </Text>
@@ -74,6 +85,7 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
       <Editing id={id} name={name} toggleEditing={toggleEditing} />
       <SessionList
         dataSource={children}
+        groupId={id}
         itemClassName={cx(styles.item, expand && styles.itemExpand)}
       />
     </AccordionItem>

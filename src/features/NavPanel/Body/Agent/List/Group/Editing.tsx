@@ -17,9 +17,16 @@ const Editing = memo<EditingProps>(({ id, name, toggleEditing }) => {
     s.updateSessionGroupName,
   ]);
 
-  const handleUpdate = useCallback(() => {
+  const handleUpdate = useCallback(async () => {
     if (newName && name !== newName) {
-      updateSessionGroupName(id, newName);
+      try {
+        // Set loading state
+        useSessionStore.setState({ sessionGroupUpdatingId: id }, false, 'setGroupUpdating');
+        await updateSessionGroupName(id, newName);
+      } finally {
+        // Clear loading state
+        useSessionStore.setState({ sessionGroupUpdatingId: null }, false, 'clearGroupUpdating');
+      }
     }
     toggleEditing(false);
   }, [newName, name, id, updateSessionGroupName, toggleEditing]);

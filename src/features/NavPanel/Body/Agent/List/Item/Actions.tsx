@@ -13,62 +13,69 @@ interface ActionProps {
   id: string;
   openCreateGroupModal: () => void;
   parentType: 'agent' | 'group';
+  toggleEditing: (visible?: boolean) => void;
 }
 
-const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType }) => {
-  const {
-    pinMenuItem,
-    duplicateMenuItem,
-    openInNewWindowMenuItem,
-    moveToGroupMenuItem,
-    deleteMenuItem,
-  } = useSessionItemMenuItems();
-
-  const [pin, sessionType] = useSessionStore((s) => {
-    const session = sessionSelectors.getSessionById(id)(s);
-    return [sessionHelpers.getSessionPinned(session), session.type];
-  });
-
-  const items = useMemo(
-    () =>
-      [
-        pinMenuItem(id, pin ?? false, parentType),
-        duplicateMenuItem(id),
-        ...(isDesktop ? [openInNewWindowMenuItem(id)] : []),
-        { type: 'divider' },
-        moveToGroupMenuItem(id, group, openCreateGroupModal),
-        { type: 'divider' },
-        deleteMenuItem(id, parentType, sessionType),
-      ].filter(Boolean) as MenuProps['items'],
-    [
-      id,
-      pin,
-      parentType,
-      group,
-      sessionType,
+const Actions = memo<ActionProps>(
+  ({ group, id, openCreateGroupModal, parentType, toggleEditing }) => {
+    const {
       pinMenuItem,
+      renameMenuItem,
       duplicateMenuItem,
       openInNewWindowMenuItem,
       moveToGroupMenuItem,
       deleteMenuItem,
-      openCreateGroupModal,
-    ],
-  );
+    } = useSessionItemMenuItems();
 
-  return (
-    <Dropdown
-      arrow={false}
-      menu={{
-        items,
-        onClick: ({ domEvent }) => {
-          domEvent.stopPropagation();
-        },
-      }}
-      trigger={['click']}
-    >
-      <ActionIcon icon={MoreHorizontalIcon} size={'small'} />
-    </Dropdown>
-  );
-});
+    const [pin, sessionType] = useSessionStore((s) => {
+      const session = sessionSelectors.getSessionById(id)(s);
+      return [sessionHelpers.getSessionPinned(session), session.type];
+    });
+
+    const items = useMemo(
+      () =>
+        [
+          pinMenuItem(id, pin ?? false, parentType),
+          renameMenuItem(toggleEditing),
+          duplicateMenuItem(id),
+          ...(isDesktop ? [openInNewWindowMenuItem(id)] : []),
+          { type: 'divider' },
+          moveToGroupMenuItem(id, group, openCreateGroupModal),
+          { type: 'divider' },
+          deleteMenuItem(id, parentType, sessionType),
+        ].filter(Boolean) as MenuProps['items'],
+      [
+        id,
+        pin,
+        parentType,
+        group,
+        sessionType,
+        pinMenuItem,
+        renameMenuItem,
+        duplicateMenuItem,
+        openInNewWindowMenuItem,
+        moveToGroupMenuItem,
+        deleteMenuItem,
+        openCreateGroupModal,
+        toggleEditing,
+      ],
+    );
+
+    return (
+      <Dropdown
+        arrow={false}
+        menu={{
+          items,
+          onClick: ({ domEvent }) => {
+            domEvent.stopPropagation();
+          },
+        }}
+        trigger={['click']}
+      >
+        <ActionIcon icon={MoreHorizontalIcon} size={'small'} />
+      </Dropdown>
+    );
+  },
+);
 
 export default Actions;

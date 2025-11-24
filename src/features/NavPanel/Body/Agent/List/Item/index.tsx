@@ -1,5 +1,6 @@
-import { ActionIcon } from '@lobehub/ui';
-import { PinIcon } from 'lucide-react';
+import { ActionIcon, Icon } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
+import { Loader2, PinIcon } from 'lucide-react';
 import { CSSProperties, DragEvent, memo, useCallback, useMemo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
@@ -18,6 +19,7 @@ import NavItem from '../../../../NavItem';
 import { useAgentModal } from '../../ModalProvider';
 import Actions from './Actions';
 import Avatar from './Avatar';
+import Editing from './Editing';
 
 interface SessionItemProps {
   className?: string;
@@ -26,8 +28,13 @@ interface SessionItemProps {
 }
 
 const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
+  const theme = useTheme();
   const { openCreateGroupModal } = useAgentModal();
   const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
+  const [editing, isUpdating] = useSessionStore((s) => [
+    s.sessionRenamingId === id,
+    s.sessionUpdatingId === id,
+  ]);
 
   // Combine related selectors to reduce store subscriptions
   const { active, sessionData } = useSessionStore(
@@ -113,6 +120,17 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
     openCreateGroupModal(id);
   }, [id, openCreateGroupModal]);
 
+  const toggleEditing = useCallback(
+    (visible?: boolean) => {
+      useSessionStore.setState(
+        { sessionRenamingId: visible ? id : null },
+        false,
+        'toggleSessionRenaming',
+      );
+    },
+    [id],
+  );
+
   // Memoize pin icon
   const pinIcon = useMemo(
     () =>
@@ -122,35 +140,54 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
     [sessionData.pin],
   );
 
+  // Memoize avatar icon (show loader when updating)
+  const avatarIcon = useMemo(() => {
+    if (isUpdating) {
+      return <Icon color={theme.colorTextDescription} icon={Loader2} size={18} spin />;
+    }
+    return (
+      <Avatar
+        avatar={sessionAvatar}
+        avatarBackground={sessionData.avatarBackground}
+        type={sessionData.type}
+      />
+    );
+  }, [
+    isUpdating,
+    sessionAvatar,
+    sessionData.avatarBackground,
+    sessionData.type,
+    theme.colorTextDescription,
+  ]);
+
   return (
-    <NavItem
-      actions={
-        <Actions
-          group={sessionData.group}
-          id={id}
-          openCreateGroupModal={handleOpenCreateGroupModal}
-          parentType={sessionData.type}
-        />
-      }
-      active={active}
-      className={className}
-      draggable={isDesktop}
-      extra={pinIcon}
-      icon={
-        <Avatar
-          avatar={sessionAvatar}
-          avatarBackground={sessionData.avatarBackground}
-          type={sessionData.type}
-        />
-      }
-      key={id}
-      loading={isLoading}
-      onDoubleClick={handleDoubleClick}
-      onDragEnd={handleDragEnd}
-      onDragStart={handleDragStart}
-      style={style}
-      title={sessionData.title}
-    />
+    <>
+      <Editing id={id} title={sessionData.title} toggleEditing={toggleEditing} />
+      <NavItem
+        actions={
+          <Actions
+            group={sessionData.group}
+            id={id}
+            openCreateGroupModal={handleOpenCreateGroupModal}
+            parentType={sessionData.type}
+            toggleEditing={toggleEditing}
+          />
+        }
+        active={active}
+        className={className}
+        disabled={editing || isUpdating}
+        draggable={isDesktop && !editing && !isUpdating}
+        extra={pinIcon}
+        icon={avatarIcon}
+        key={id}
+        loading={isLoading}
+        onDoubleClick={handleDoubleClick}
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+        style={style}
+        title={sessionData.title}
+      />
+    </>
   );
 });
 

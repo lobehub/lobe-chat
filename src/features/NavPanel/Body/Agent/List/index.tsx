@@ -1,5 +1,6 @@
 'use client';
 
+import { SessionDefaultGroup } from '@lobechat/types';
 import { memo, useMemo } from 'react';
 
 import { useFetchSessions } from '@/hooks/useFetchSessions';
@@ -36,7 +37,9 @@ const AgentList = memo(() => {
     <>
       {showPinned && <SessionList dataSource={pinnedList!} />}
       {showCustom && <Group dataSource={customList!} />}
-      {showDefault && <SessionList dataSource={defaultList!} />}
+      {showDefault && (
+        <SessionList dataSource={defaultList!} groupId={SessionDefaultGroup.Default} />
+      )}
     </>
   );
 });

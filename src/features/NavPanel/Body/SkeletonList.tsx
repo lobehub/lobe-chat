@@ -40,17 +40,21 @@ export const SkeletonList = memo(() => {
             minWidth: 24,
           }}
         />
-        <Skeleton.Button
-          active
-          block
-          size={'small'}
-          style={{
-            borderRadius: theme.borderRadius,
-            height: 16,
-            maxHeight: 16,
-            opacity: 0.5,
-          }}
-        />
+        <Flexbox flex={1} height={16}>
+          <Skeleton.Button
+            active
+            block
+            size={'small'}
+            style={{
+              borderRadius: theme.borderRadius,
+              height: 16,
+              margin: 0,
+              maxHeight: 16,
+              opacity: 0.5,
+              padding: 0,
+            }}
+          />
+        </Flexbox>
       </Flexbox>
     );
   }, [theme, expand]);

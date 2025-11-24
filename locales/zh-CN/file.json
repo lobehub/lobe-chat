@@ -109,6 +109,9 @@
   },
   "knowledgeBase": {
     "list": {
+      "action": {
+        "add": "点击开始创建知识库"
+      },
       "confirmRemoveKnowledgeBase": "即将删除该知识库，其中的文件不会删除，将移入全部文件中。知识库删除后将不可恢复，请谨慎操作。",
       "empty": "点击 <1>+</1> 开始创建知识库"
     },

@@ -11,6 +11,7 @@ import {
   FolderInputIcon,
   LucideCopy,
   LucidePlus,
+  Pen,
   Pin,
   PinOff,
   Trash,
@@ -70,6 +71,25 @@ export const useSessionItemMenuItems = () => {
       };
     },
     [t, pinGroup, pinSession],
+  );
+
+  /**
+   * Rename session menu item
+   */
+  const renameMenuItem = useCallback(
+    (onToggleEdit: (visible?: boolean) => void): ItemType => {
+      const iconElement = <Icon icon={Pen} />;
+      return {
+        icon: iconElement,
+        key: 'rename',
+        label: t('rename', { ns: 'common' }),
+        onClick: (info: any) => {
+          info.domEvent?.stopPropagation();
+          onToggleEdit(true);
+        },
+      };
+    },
+    [t],
   );
 
   /**
@@ -214,5 +234,6 @@ export const useSessionItemMenuItems = () => {
     moveToGroupMenuItem,
     openInNewWindowMenuItem,
     pinMenuItem,
+    renameMenuItem,
   };
 };
