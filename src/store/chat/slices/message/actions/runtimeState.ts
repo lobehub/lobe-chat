@@ -5,6 +5,7 @@ import { Action, setNamespace } from '@/utils/storeDebug';
 
 import type { ChatStoreState } from '../../../initialState';
 import { preventLeavingFn, toggleBooleanList } from '../../../utils';
+import { displayMessageSelectors } from '../selectors/displayMessage';
 
 const n = setNamespace('m');
 
@@ -13,6 +14,11 @@ const n = setNamespace('m');
  * Handles loading states, active session tracking, etc.
  */
 export interface MessageRuntimeStateAction {
+  /**
+   * Clear message selection
+   */
+  clearMessageSelection: () => void;
+
   /**
    * helper to toggle the loading state of the array,used by these three toggleXXXLoading
    */
@@ -39,6 +45,14 @@ export interface MessageRuntimeStateAction {
    * Update active session type
    */
   internal_updateActiveSessionType: (sessionType?: 'agent' | 'group') => void;
+  /**
+   * Toggle message selection mode
+   */
+  toggleMessageSelectionMode: (enabled: boolean) => void;
+  /**
+   * Update message selection
+   */
+  updateMessageSelection: (id: string, selected: boolean) => void;
 }
 
 export const messageRuntimeState: StateCreator<
@@ -47,6 +61,26 @@ export const messageRuntimeState: StateCreator<
   [],
   MessageRuntimeStateAction
 > = (set, get) => ({
+  clearMessageSelection: () => {
+    // Restore original collapse state when clearing selection
+    const messages = displayMessageSelectors.activeDisplayMessages(get());
+    const originallyCollapsedIds = get().messageOriginallyCollapsedIds;
+
+    // Expand all messages that were not originally collapsed
+    messages.forEach((message) => {
+      const wasOriginallyCollapsed = originallyCollapsedIds.includes(message.id);
+      if (!wasOriginallyCollapsed && message.metadata?.collapsed) {
+        get().toggleMessageCollapsed(message.id, false);
+      }
+    });
+
+    set(
+      { isMessageSelectionMode: false, messageOriginallyCollapsedIds: [], messageSelectionIds: [] },
+      false,
+      n('clearMessageSelection'),
+    );
+  },
+
   internal_toggleLoadingArrays: (key, loading, id, action) => {
     const abortControllerKey = `${key}AbortController`;
     if (loading) {
@@ -96,6 +130,7 @@ export const messageRuntimeState: StateCreator<
 
     // Before switching sessions, cancel all pending supervisor decisions
     get().internal_cancelAllSupervisorDecisions();
+    get().clearMessageSelection();
 
     set({ activeId }, false, n(`updateActiveId/${activeId}`));
   },
@@ -104,5 +139,61 @@ export const messageRuntimeState: StateCreator<
     if (get().activeSessionType === sessionType) return;
 
     set({ activeSessionType: sessionType }, false, n('updateActiveSessionType'));
+  },
+
+  toggleMessageSelectionMode: (enabled) => {
+    if (enabled) {
+      // When entering selection mode, track originally collapsed messages and collapse all
+      const messages = displayMessageSelectors.activeDisplayMessages(get());
+      const originallyCollapsedIds: string[] = [];
+
+      // Identify which messages are already collapsed
+      messages.forEach((message) => {
+        if (message.metadata?.collapsed) {
+          originallyCollapsedIds.push(message.id);
+        }
+      });
+
+      // Collapse all messages that are not already collapsed
+      messages.forEach((message) => {
+        if (!message.metadata?.collapsed) {
+          get().toggleMessageCollapsed(message.id, true);
+        }
+      });
+
+      set(
+        { isMessageSelectionMode: true, messageOriginallyCollapsedIds: originallyCollapsedIds },
+        false,
+        n('toggleMessageSelectionMode/enter'),
+      );
+    } else {
+      // When exiting selection mode, restore original collapse state
+      const messages = displayMessageSelectors.activeDisplayMessages(get());
+      const originallyCollapsedIds = get().messageOriginallyCollapsedIds;
+
+      // Expand all messages that were not originally collapsed
+      messages.forEach((message) => {
+        const wasOriginallyCollapsed = originallyCollapsedIds.includes(message.id);
+        if (!wasOriginallyCollapsed && message.metadata?.collapsed) {
+          get().toggleMessageCollapsed(message.id, false);
+        }
+      });
+
+      set(
+        { isMessageSelectionMode: false, messageOriginallyCollapsedIds: [] },
+        false,
+        n('toggleMessageSelectionMode/exit'),
+      );
+    }
+  },
+
+  updateMessageSelection: (id, selected) => {
+    set(
+      {
+        messageSelectionIds: toggleBooleanList(get().messageSelectionIds, id, selected),
+      },
+      false,
+      n('updateMessageSelection'),
+    );
   },
 });
