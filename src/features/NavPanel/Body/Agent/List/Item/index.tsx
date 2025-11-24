@@ -1,10 +1,11 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, Icon, type MenuProps } from '@lobehub/ui';
+import { Dropdown } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Loader2, PinIcon } from 'lucide-react';
 import { CSSProperties, DragEvent, memo, useCallback, useMemo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
-import { isDesktop } from '@/const/version';
+import { useDropdownMenu } from '@/features/NavPanel/Body/Agent/List/Item/useDropdownMenu';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -95,9 +96,7 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
 
   // Memoize event handlers
   const handleDoubleClick = useCallback(() => {
-    if (isDesktop) {
-      openSessionInNewWindow(id);
-    }
+    openSessionInNewWindow(id);
   }, [id, openSessionInNewWindow]);
 
   const handleDragStart = useCallback(
@@ -109,7 +108,7 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
 
   const handleDragEnd = useCallback(
     (e: DragEvent) => {
-      if (isDesktop && e.dataTransfer.dropEffect === 'none') {
+      if (e.dataTransfer.dropEffect === 'none') {
         openSessionInNewWindow(id);
       }
     },
@@ -160,33 +159,40 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
     theme.colorTextDescription,
   ]);
 
+  const dropdownMenu: MenuProps['items'] = useDropdownMenu({
+    group: sessionData.group,
+    id,
+    openCreateGroupModal: handleOpenCreateGroupModal,
+    parentType: sessionData.type,
+    toggleEditing,
+  });
+
   return (
     <>
+      <Dropdown
+        menu={{
+          items: dropdownMenu,
+        }}
+        trigger={['contextMenu']}
+      >
+        <NavItem
+          actions={<Actions dropdownMenu={dropdownMenu} />}
+          active={active}
+          className={className}
+          disabled={editing || isUpdating}
+          draggable={!editing && !isUpdating}
+          extra={pinIcon}
+          icon={avatarIcon}
+          key={id}
+          loading={isLoading}
+          onDoubleClick={handleDoubleClick}
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
+          style={style}
+          title={sessionData.title}
+        />
+      </Dropdown>
       <Editing id={id} title={sessionData.title} toggleEditing={toggleEditing} />
-      <NavItem
-        actions={
-          <Actions
-            group={sessionData.group}
-            id={id}
-            openCreateGroupModal={handleOpenCreateGroupModal}
-            parentType={sessionData.type}
-            toggleEditing={toggleEditing}
-          />
-        }
-        active={active}
-        className={className}
-        disabled={editing || isUpdating}
-        draggable={isDesktop && !editing && !isUpdating}
-        extra={pinIcon}
-        icon={avatarIcon}
-        key={id}
-        loading={isLoading}
-        onDoubleClick={handleDoubleClick}
-        onDragEnd={handleDragEnd}
-        onDragStart={handleDragStart}
-        style={style}
-        title={sessionData.title}
-      />
     </>
   );
 });

@@ -1,16 +1,34 @@
-import { Button, Text } from '@lobehub/ui';
+import { ActionIcon, Block, Text } from '@lobehub/ui';
+import { PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
-const EmptyStatus = memo<{ onClick: () => void; title: string }>(({ title, onClick }) => {
+interface EmptyStatusProps {
+  className?: string;
+  onClick: () => void;
+  title: string;
+}
+
+const EmptyStatus = memo<EmptyStatusProps>(({ title, onClick, className }) => {
   return (
-    <Center padding={4}>
-      <Button block onClick={onClick} style={{ background: 'transparent' }} type={'dashed'}>
-        <Text align={'center'} type={'secondary'}>
-          {title}
-        </Text>
-      </Button>
-    </Center>
+    <Block
+      align={'center'}
+      className={className}
+      clickable
+      gap={8}
+      height={32}
+      horizontal
+      onClick={onClick}
+      paddingInline={2}
+      variant={'borderless'}
+    >
+      <Center flex={'none'} height={28} width={28}>
+        <ActionIcon icon={PlusIcon} size={'small'} />
+      </Center>
+      <Text align={'center'} type={'secondary'}>
+        {title}
+      </Text>
+    </Block>
   );
 });
 

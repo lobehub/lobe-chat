@@ -1,9 +1,9 @@
 'use client';
 
 import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
-import { createStyles, useResponsive } from 'antd-style';
+import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { PropsWithChildren, memo, useEffect, useState } from 'react';
+import { PropsWithChildren, memo } from 'react';
 
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
@@ -28,25 +28,17 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const TopicPanel = memo(({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
-  const { md = true, lg = true } = useResponsive();
+
   const [showTopic, toggleConfig] = useGlobalStore((s) => [
     systemStatusSelectors.showChatSideBar(s),
     s.toggleChatSideBar,
   ]);
   const showPortal = useChatStore(chatPortalSelectors.showPortal);
 
-  const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showTopic));
-
   const handleExpand = (expand: boolean) => {
     if (isEqual(expand, Boolean(showTopic))) return;
     toggleConfig(expand);
-    setCacheExpand(expand);
   };
-
-  useEffect(() => {
-    if (lg && cacheExpand) toggleConfig(true);
-    if (!lg) toggleConfig(false);
-  }, [lg, cacheExpand]);
 
   return (
     <DraggablePanel
@@ -56,9 +48,8 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
       }}
       expand={showTopic && !showPortal}
       minWidth={CHAT_SIDEBAR_WIDTH}
-      mode={md ? 'fixed' : 'float'}
       onExpandChange={handleExpand}
-      placement={'right'}
+      placement={'left'}
       showHandleWhenCollapsed={false}
       showHandleWideArea={false}
       styles={{

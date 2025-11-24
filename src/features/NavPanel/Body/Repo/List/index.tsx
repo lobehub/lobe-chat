@@ -5,23 +5,29 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useRepoMenuItems } from '@/features/NavPanel/hooks';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import EmptyStatus from '../../EmptyStatus';
 import SkeletonList from '../../SkeletonList';
 import Item from './Item';
 
-const RepoList = memo<{ expand?: boolean }>(({ expand }) => {
+const RepoList = memo(() => {
+  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const { t } = useTranslation('file');
   const useFetchKnowledgeBaseList = useKnowledgeBaseStore((s) => s.useFetchKnowledgeBaseList);
   const { data, isLoading } = useFetchKnowledgeBaseList();
-  const { createKnowledgeBase } = useRepoMenuItems();
+  const { createRepo } = useRepoMenuItems();
 
   if (!data || isLoading) return <SkeletonList />;
-  if (data.length === 0)
-    return expand ? (
-      <EmptyStatus onClick={createKnowledgeBase} title={t('knowledgeBase.new')} />
-    ) : null;
+
+  const isEmpty = data.length === 0;
+
+  if (isEmpty) {
+    if (!expand) return null;
+    return <EmptyStatus onClick={createRepo} title={t('knowledgeBase.new')} />;
+  }
 
   return (
     <Flexbox gap={2}>

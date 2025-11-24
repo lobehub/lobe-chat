@@ -1,4 +1,3 @@
-import { isDesktop } from '@lobechat/const';
 import { SessionDefaultGroup } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { App } from 'antd';
@@ -7,11 +6,11 @@ import { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import {
   Check,
-  ExternalLink,
   FolderInputIcon,
   LucideCopy,
   LucidePlus,
   Pen,
+  PictureInPicture2Icon,
   Pin,
   PinOff,
   Trash,
@@ -112,14 +111,13 @@ export const useSessionItemMenuItems = () => {
   );
 
   /**
-   * Open in new window menu item (desktop only)
-   * Returns null on non-desktop platforms
+   * Open in new window menu item
+   * Desktop: Opens in a new electron window
+   * Browser: Opens in a popup window
    */
   const openInNewWindowMenuItem = useCallback(
-    (id: string): ItemType | null => {
-      if (!isDesktop) return null;
-
-      const iconElement = <Icon icon={ExternalLink} />;
+    (id: string): ItemType => {
+      const iconElement = <Icon icon={PictureInPicture2Icon} />;
       return {
         icon: iconElement,
         key: 'openInNewWindow',

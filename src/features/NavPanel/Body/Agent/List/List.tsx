@@ -7,6 +7,8 @@ import { Flexbox } from 'react-layout-kit';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useCreateMenuItems } from '@/features/NavPanel/hooks';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { getSessionStoreState } from '@/store/session';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -27,7 +29,7 @@ interface SessionListProps {
 const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClassName }) => {
   const { t } = useTranslation('chat');
   const { analytics } = useAnalytics();
-
+  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const mobile = useServerConfigStore((s) => s.isMobile);
   const switchSession = useSwitchSession();
   const { createAgent } = useCreateMenuItems();
@@ -80,11 +82,18 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
   );
 
   if (isEmpty) {
-    return <EmptyStatus onClick={() => createAgent({ groupId })} title={t('emptyAgentAction')} />;
+    if (!expand) return null;
+    return (
+      <EmptyStatus
+        className={itemClassName}
+        onClick={() => createAgent({ groupId })}
+        title={t('emptyAgentAction')}
+      />
+    );
   }
 
   return (
-    <Flexbox gap={2}>
+    <Flexbox gap={2} paddingBlock={1}>
       {dataSource.map(({ id }) => (
         <Link
           aria-label={id}

@@ -279,7 +279,7 @@ export default {
 
   noSelectedAgents: '还未选择成员',
 
-  openInNewWindow: '单独打开页面',
+  openInNewWindow: '打开独立窗口',
 
   owner: '群主',
 

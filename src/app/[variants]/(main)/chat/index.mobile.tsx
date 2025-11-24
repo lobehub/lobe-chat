@@ -5,22 +5,22 @@ import { memo } from 'react';
 import ConversationArea from './components/ConversationArea';
 import PortalPanel from './components/PortalPanel';
 import TopicSidebar from './components/TopicSidebar';
-import DesktopLayout from './components/_layout/Desktop';
+import MobileLayout from './components/_layout/Mobile';
 import TelemetryNotification from './components/features/TelemetryNotification';
 import PageTitle from './features/PageTitle';
 
-const DesktopChatPage = memo(() => {
+const MobileChatPage = memo(() => {
   return (
     <>
       <PageTitle />
-      <DesktopLayout
-        conversation={<ConversationArea mobile={false} />}
-        portal={<PortalPanel mobile={false} />}
-        topic={<TopicSidebar mobile={false} />}
+      <MobileLayout
+        conversation={<ConversationArea mobile />}
+        portal={<PortalPanel mobile />}
+        topic={<TopicSidebar mobile />}
       />
-      <TelemetryNotification mobile={false} />
+      <TelemetryNotification mobile={true} />
     </>
   );
 });
 
-export default DesktopChatPage;
+export default MobileChatPage;

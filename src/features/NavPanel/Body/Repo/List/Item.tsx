@@ -1,3 +1,4 @@
+import { Dropdown } from '@lobehub/ui';
 import { BoxIcon } from 'lucide-react';
 import { memo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +8,7 @@ import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import NavItem from '../../../NavItem';
 import Actions from './Actions';
 import Editing from './Editing';
-
-export const knowledgeItemClass = 'knowledge-base-item';
+import { useRepoItemDropdownMenu } from './useDropdownMenu';
 
 interface RepoItemProps {
   expand?: boolean;
@@ -18,9 +18,10 @@ interface RepoItemProps {
 
 const RepoItem = memo<RepoItemProps>(({ id, name, expand }) => {
   const navigate = useNavigate();
-  const [editing, isLoading] = useKnowledgeBaseStore((s) => [
+  const [editing, isLoading, isUpdating] = useKnowledgeBaseStore((s) => [
     s.knowledgeBaseRenamingId === id,
     s.knowledgeBaseLoadingIds.includes(id),
+    s.knowledgeBaseUpdatingId === id,
   ]);
 
   const toggleEditing = useCallback(
@@ -46,16 +47,28 @@ const RepoItem = memo<RepoItemProps>(({ id, name, expand }) => {
     navigate(`/knowledge/bases/${id}`);
   }, [id, navigate]);
 
+  const dropdownMenu = useRepoItemDropdownMenu({
+    id,
+    toggleEditing,
+  });
+
   return (
     <>
-      <NavItem
-        actions={<Actions id={id} toggleEditing={toggleEditing} />}
-        disabled={editing}
-        icon={BoxIcon}
-        loading={isLoading}
-        onClick={handleClick}
-        title={name}
-      />
+      <Dropdown
+        menu={{
+          items: dropdownMenu,
+        }}
+        trigger={['contextMenu']}
+      >
+        <NavItem
+          actions={<Actions dropdownMenu={dropdownMenu} />}
+          disabled={editing || isUpdating}
+          icon={BoxIcon}
+          loading={isLoading || isUpdating}
+          onClick={handleClick}
+          title={name}
+        />
+      </Dropdown>
       <Editing id={id} name={name} toggleEditing={toggleEditing} />
     </>
   );

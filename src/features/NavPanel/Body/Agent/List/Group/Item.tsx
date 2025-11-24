@@ -1,17 +1,20 @@
-import { AccordionItem, Icon, Text } from '@lobehub/ui';
-import { createStyles, useTheme } from 'antd-style';
-import { ListMinusIcon, Loader2 } from 'lucide-react';
+import { AccordionItem, Dropdown, Icon, Text } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
+import { FolderClosedIcon, Loader2 } from 'lucide-react';
 import React, { memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SessionList from '@/features/NavPanel/Body/Agent/List/List';
+import { useCreateMenuItems, useSessionGroupMenuItems } from '@/features/NavPanel/hooks';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { CustomSessionGroup } from '@/types/session';
 
+import { useAgentModal } from '../../ModalProvider';
 import Actions from './Actions';
 import Editing from './Editing';
+import { useGroupDropdownMenu } from './useDropdownMenu';
 
 const useStyles = createStyles(({ css, token }) => ({
   base: css`
@@ -31,18 +34,27 @@ const useStyles = createStyles(({ css, token }) => ({
     transition: padding-inline-start 200ms ${token.motionEaseInOut};
   `,
   itemExpand: css`
-    padding-inline-start: 16px;
+    padding-inline-start: 14px;
   `,
 }));
 
 const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
-  const theme = useTheme();
   const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const [editing, isUpdating] = useSessionStore((s) => [
     s.sessionGroupRenamingId === id,
     s.sessionGroupUpdatingId === id,
   ]);
   const { cx, styles } = useStyles();
+
+  // Modal management
+  const { openMemberSelectionModal, closeMemberSelectionModal, openConfigGroupModal } =
+    useAgentModal();
+
+  // Session group menu items
+  const { createGroupWithMembers, isCreatingGroup } = useSessionGroupMenuItems();
+
+  // Create menu items
+  const { isCreatingAgent } = useCreateMenuItems();
 
   const toggleEditing = useCallback(
     (visible?: boolean) => {
@@ -55,26 +67,66 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
     [id],
   );
 
+  // Handler to open member selection modal with callbacks
+  const handleOpenMemberSelection = useCallback(() => {
+    openMemberSelectionModal({
+      onCancel: closeMemberSelectionModal,
+      onConfirm: async (selectedAgents, hostConfig, enableSupervisor) => {
+        await createGroupWithMembers(
+          selectedAgents,
+          'New Group Chat',
+          hostConfig,
+          enableSupervisor,
+        );
+        closeMemberSelectionModal();
+      },
+    });
+  }, [openMemberSelectionModal, closeMemberSelectionModal, createGroupWithMembers]);
+
+  const handleOpenConfigGroupModal = useCallback(() => {
+    openConfigGroupModal();
+  }, [openConfigGroupModal]);
+
+  const dropdownMenu = useGroupDropdownMenu({
+    handleOpenMemberSelection,
+    id,
+    isCustomGroup: true,
+    openConfigGroupModal: handleOpenConfigGroupModal,
+    toggleEditing,
+  });
+
+  const isLoading = isCreatingAgent || isCreatingGroup;
+
   const groupIcon = useMemo(() => {
     if (isUpdating) {
       return <Icon icon={Loader2} spin style={{ opacity: 0.5 }} />;
     }
-    return <Icon icon={ListMinusIcon} style={{ opacity: 0.5 }} />;
-  }, [isUpdating, theme.colorTextDescription]);
+    return <Icon icon={FolderClosedIcon} style={{ opacity: 0.5 }} />;
+  }, [isUpdating]);
 
   return (
     <AccordionItem
-      action={<Actions id={id} isCustomGroup toggleEditing={toggleEditing} />}
+      action={<Actions dropdownMenu={dropdownMenu} isLoading={isLoading} />}
       classNames={{
         header: cx(styles.base, !expand && styles.hide),
       }}
       disabled={editing || isUpdating}
+      headerWrapper={(header) => (
+        <Dropdown
+          menu={{
+            items: dropdownMenu,
+          }}
+          trigger={['contextMenu']}
+        >
+          {header}
+        </Dropdown>
+      )}
       itemKey={id}
       key={id}
       paddingBlock={4}
-      paddingInline={'8px 4px'}
+      paddingInline={'6px 4px'}
       title={
-        <Flexbox align="center" gap={4} horizontal style={{ overflow: 'hidden' }}>
+        <Flexbox align="center" gap={6} horizontal style={{ overflow: 'hidden' }}>
           {groupIcon}
           <Text ellipsis fontSize={12} style={{ flex: 1 }} type={'secondary'} weight={500}>
             {name}

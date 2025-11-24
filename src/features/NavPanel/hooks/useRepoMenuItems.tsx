@@ -1,6 +1,8 @@
-import { ActionIcon } from '@lobehub/ui';
-import { PlusIcon } from 'lucide-react';
+import { Icon } from '@lobehub/ui';
+import { ItemType } from 'antd/es/menu/interface';
+import { BoxIcon } from 'lucide-react';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
@@ -10,13 +12,14 @@ import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
  * Used in Body/Repo/Actions.tsx
  */
 export const useRepoMenuItems = () => {
+  const { t } = useTranslation('knowledgeBase');
   const navigate = useNavigate();
   const { open } = useCreateNewModal();
 
   /**
    * Create knowledge base action
    */
-  const createKnowledgeBase = useCallback(() => {
+  const createRepo = useCallback(() => {
     open({
       onSuccess: (id) => {
         navigate(`/knowledge/bases/${id}`);
@@ -24,17 +27,21 @@ export const useRepoMenuItems = () => {
     });
   }, [open, navigate]);
 
-  /**
-   * Create knowledge base button component
-   * Returns an ActionIcon component ready to render
-   */
-  const createKnowledgeBaseButton = useCallback(
-    () => <ActionIcon icon={PlusIcon} onClick={createKnowledgeBase} size={'small'} />,
-    [createKnowledgeBase],
+  const createRepoMenuItem = useCallback(
+    (): ItemType => ({
+      icon: <Icon icon={BoxIcon} />,
+      key: 'createRepo',
+      label: t('createNew.title'),
+      onClick: (info) => {
+        info.domEvent?.stopPropagation();
+        createRepo();
+      },
+    }),
+    [t, createRepo],
   );
 
   return {
-    createKnowledgeBase,
-    createKnowledgeBaseButton,
+    createRepo,
+    createRepoMenuItem,
   };
 };

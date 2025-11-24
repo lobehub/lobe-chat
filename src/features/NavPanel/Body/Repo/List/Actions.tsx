@@ -1,60 +1,17 @@
-import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
-import { App } from 'antd';
-import { MoreHorizontalIcon, PencilLine, Trash } from 'lucide-react';
-import { memo, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { ActionIcon, Dropdown, type MenuProps } from '@lobehub/ui';
+import { MoreHorizontalIcon } from 'lucide-react';
+import { memo } from 'react';
 
-import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-
-interface RepoItemProps {
-  id: string;
-  toggleEditing: (visible?: boolean) => void;
+interface ActionsProps {
+  dropdownMenu: MenuProps['items'];
 }
 
-const Actions = memo<RepoItemProps>(({ id, toggleEditing }) => {
-  const { t } = useTranslation(['file', 'common']);
-  const [removeKnowledgeBase] = useKnowledgeBaseStore((s) => [s.removeKnowledgeBase]);
-  const { modal } = App.useApp();
-
-  const items = useMemo<MenuProps['items']>(
-    () => [
-      {
-        icon: <Icon icon={PencilLine} />,
-        key: 'rename',
-        label: t('rename', { ns: 'common' }),
-        onClick: () => {
-          toggleEditing(true);
-        },
-      },
-      {
-        type: 'divider',
-      },
-      {
-        danger: true,
-        icon: <Icon icon={Trash} />,
-        key: 'delete',
-        label: t('delete', { ns: 'common' }),
-        onClick: () => {
-          if (!id) return;
-          modal.confirm({
-            centered: true,
-            okButtonProps: { danger: true },
-            onOk: async () => {
-              await removeKnowledgeBase(id);
-            },
-            title: t('knowledgeBase.list.confirmRemoveKnowledgeBase'),
-          });
-        },
-      },
-    ],
-    [t, id, modal, removeKnowledgeBase],
-  );
-
+const Actions = memo<ActionsProps>(({ dropdownMenu }) => {
   return (
     <Dropdown
       arrow={false}
       menu={{
-        items: items,
+        items: dropdownMenu,
         onClick: ({ domEvent }) => {
           domEvent.stopPropagation();
         },

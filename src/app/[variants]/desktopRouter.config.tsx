@@ -28,13 +28,10 @@ import { idLoader, slugLoader } from './loaders/routeParams';
  */
 
 // Chat components
-const DesktopChatPage = dynamic(
-  () => import('./(main)/chat/index').then((m) => m.DesktopChatPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
+const DesktopChatPage = dynamic(() => import('./(main)/chat/index'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
 const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Desktop'), {
   loading: () => <Loading />,
   ssr: false,
