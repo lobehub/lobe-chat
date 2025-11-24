@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fixed the pinned session not work."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.108"
+  },
+  {
+    "children": {
       "improvements": ["Optimize nana banana pro error message."]
     },
     "date": "2025-11-23",
