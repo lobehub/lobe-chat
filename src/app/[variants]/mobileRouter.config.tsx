@@ -403,6 +403,11 @@ export const createMobileRouter = (locale: Locales) =>
               index: true,
             },
             {
+              element: <KnowledgeHome />,
+              loader: idLoader,
+              path: ':id',
+            },
+            {
               element: <KnowledgeBasesList />,
               path: 'bases',
             },
