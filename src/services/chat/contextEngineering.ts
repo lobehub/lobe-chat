@@ -1,6 +1,7 @@
 import { isDesktop } from '@lobechat/const';
 import {
   ContextEngine,
+  FilesInjector,
   GroupMessageFlattenProcessor,
   HistorySummaryProvider,
   HistoryTruncateProcessor,
@@ -19,6 +20,8 @@ import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
 
 import { isCanUseFC } from '@/helpers/isCanUseFC';
+import { getAgentStoreState } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
@@ -50,6 +53,14 @@ export const contextEngineering = async ({
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   const toolNameResolver = new ToolNameResolver();
 
+  // Get enabled agent files with content from agent store
+  const agentStoreState = getAgentStoreState();
+  const agentFiles = agentSelectors.currentAgentFiles(agentStoreState);
+
+  const fileContents = agentFiles
+    .filter((file) => file.enabled && file.content)
+    .map((file) => ({ content: file.content!, fileId: file.id, filename: file.name }));
+
   const pipeline = new ContextEngine({
     pipeline: [
       // 1. History truncation (MUST be first, before any message injection)
@@ -59,6 +70,9 @@ export const contextEngineering = async ({
 
       // 2. System role injection (agent's system role)
       new SystemRoleInjector({ systemRole }),
+
+      // 3. Agent files injection (full content for agent-associated files)
+      new FilesInjector({ fileContents }),
 
       // 4. Tool system role injection
       new ToolSystemRoleProvider({
