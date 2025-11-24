@@ -50,11 +50,11 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId }) => {
   const handleNavigate = (index: number) => {
     if (index === -1) {
       // Navigate to knowledge base root
-      navigate(`/knowledge/bases/${baseKnowledgeBaseId}`);
+      navigate(`/knowledge/repo/${baseKnowledgeBaseId}`);
     } else {
       // Navigate to specific folder level
       const path = folderSegments.slice(0, index + 1).join('/');
-      navigate(`/knowledge/bases/${baseKnowledgeBaseId}/${path}`);
+      navigate(`/knowledge/repo/${baseKnowledgeBaseId}/${path}`);
     }
   };
 

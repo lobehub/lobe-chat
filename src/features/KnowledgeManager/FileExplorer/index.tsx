@@ -285,11 +285,11 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
 
                   if (folderSegments.length <= 1) {
                     // Navigate to knowledge base root
-                    navigate(`/knowledge/bases/${baseKnowledgeBaseId}`);
+                    navigate(`/knowledge/repo/${baseKnowledgeBaseId}`);
                   } else {
                     // Navigate to parent folder
                     const parentPath = folderSegments.slice(0, -1).join('/');
-                    navigate(`/knowledge/bases/${baseKnowledgeBaseId}/${parentPath}`);
+                    navigate(`/knowledge/repo/${baseKnowledgeBaseId}/${parentPath}`);
                   }
                 }}
               />

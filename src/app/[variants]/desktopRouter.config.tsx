@@ -160,19 +160,19 @@ export const createDesktopRouter = () =>
             },
             {
               element: dynamicElement(() => import('./(main)/knowledge/routes/KnowledgeBasesList')),
-              path: 'bases',
+              path: 'repo',
             },
             {
               element: dynamicElement(
                 () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
               ),
               loader: idLoader,
-              path: 'bases/:id/*',
+              path: 'repo/:id/*',
             },
             {
               element: <KnowledgeBaseDetail />,
               loader: idLoader,
-              path: 'bases/:id',
+              path: 'repo/:id',
             },
             {
               element: dynamicElement(

@@ -169,8 +169,8 @@ const FileRenderItem = memo<FileRenderItemProps>(
               if (baseKnowledgeBaseId) {
                 // Build the new path
                 const newPath = folderPath
-                  ? `/knowledge/bases/${baseKnowledgeBaseId}/${folderPath}/${folderSlug}`
-                  : `/knowledge/bases/${baseKnowledgeBaseId}/${folderSlug}`;
+                  ? `/knowledge/repo/${baseKnowledgeBaseId}/${folderPath}/${folderSlug}`
+                  : `/knowledge/repo/${baseKnowledgeBaseId}/${folderSlug}`;
                 navigate(newPath);
               }
             } else {
