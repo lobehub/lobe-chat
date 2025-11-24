@@ -186,6 +186,7 @@ export const agentSelectors = {
   getAgentConfigById,
   hasEnabledKnowledge,
   hasKnowledge,
+  hasKnowledgeBases,
   hasSystemRole,
   inboxAgentConfig,
   inboxAgentModel,
