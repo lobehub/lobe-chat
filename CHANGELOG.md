@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 2.0.0-next.110](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.109...v2.0.0-next.110)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add hyperlink to each topic & pinned agent, support ContextMenu on ChatItem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add hyperlink to each topic & pinned agent, closes [#10367](https://github.com/lobehub/lobe-chat/issues/10367) ([63e4b3d](https://github.com/lobehub/lobe-chat/commit/63e4b3d))
+- **misc**: Support ContextMenu on ChatItem, closes [#9034](https://github.com/lobehub/lobe-chat/issues/9034) ([27c1154](https://github.com/lobehub/lobe-chat/commit/27c1154))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.109](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.108...v2.0.0-next.109)
 
 <sup>Released on **2025-11-24**</sup>
