@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "이 지식베이스를 삭제하려고 합니다. 포함된 파일은 삭제되지 않으며 전체 파일로 이동됩니다. 삭제된 지식베이스는 복구할 수 없으니 신중히 진행해 주세요.",
-      "empty": "<1>+</1>를 클릭하여 지식베이스를 생성하세요"
-    },
-    "new": "새 지식베이스",
-    "title": "지식베이스"
-  },
   "menu": {
     "allFiles": "모든 파일",
     "allPages": "모든 문서"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "파일 다운로드",
     "unsupportedFileAndContact": "이 파일 형식은 온라인 미리보기를 지원하지 않습니다. 미리보기 기능이 필요하시면 <1>의견을 보내주세요</1>"
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "이 저장소를 삭제하려고 합니다. 저장소 내 파일은 삭제되지 않고 전체 파일로 이동됩니다. 저장소 삭제는 복구할 수 없으니 신중히 진행해 주세요.",
+      "empty": "<1>+</1> 버튼을 클릭하여 저장소를 생성하세요"
+    },
+    "new": "새 저장소",
+    "title": "저장소"
   },
   "searchFilePlaceholder": "파일 검색",
   "searchPagePlaceholder": "문서 검색",

@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Die Wissensdatenbank wird gelöscht, die darin enthaltenen Dateien werden nicht gelöscht, sondern in den gesamten Dateien verschoben. Nach dem Löschen der Wissensdatenbank kann sie nicht wiederhergestellt werden, bitte vorsichtig vorgehen.",
-      "empty": "Klicken Sie auf <1>+</1>, um eine Wissensdatenbank zu erstellen"
-    },
-    "new": "Neue Wissensdatenbank",
-    "title": "Wissensdatenbank"
-  },
   "menu": {
     "allFiles": "Alle Dateien",
     "allPages": "Alle Dokumente"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "Datei herunterladen",
     "unsupportedFileAndContact": "Dieses Dateiformat wird derzeit nicht für die Online-Vorschau unterstützt. Wenn Sie eine Vorschau wünschen, können Sie uns gerne <1>Feedback geben</1>."
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "Dieses Repository wird gelöscht. Die darin enthaltenen Dateien bleiben erhalten und werden in 'Alle Dateien' verschoben. Das Repository kann nach dem Löschen nicht wiederhergestellt werden. Bitte gehen Sie vorsichtig vor.",
+      "empty": "Klicken Sie auf <1>+</1>, um ein neues Repository zu erstellen"
+    },
+    "new": "Neues Repository",
+    "title": "Repository"
   },
   "searchFilePlaceholder": "Datei suchen",
   "searchPagePlaceholder": "Dokumente durchsuchen",

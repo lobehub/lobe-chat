@@ -50,7 +50,7 @@ const EmptyStatus = memo(() => {
     >
       <LineIcon />
       <Flexbox align={'center'} className={styles.paragraph} horizontal>
-        <Trans i18nKey={'knowledgeBase.list.empty'} ns={'file'}>
+        <Trans i18nKey={'repo.list.empty'} ns={'file'}>
           点击 <kbd>+</kbd> 开始创建知识库
         </Trans>
       </Flexbox>

@@ -107,18 +107,6 @@ export default {
       },
     },
   },
-  knowledgeBase: {
-    list: {
-      action: {
-        add: '创建知识库',
-      },
-      confirmRemoveKnowledgeBase:
-        '即将删除该知识库，其中的文件不会删除，将移入全部文件中。知识库删除后将不可恢复，请谨慎操作。',
-      empty: '点击 <1>+</1> 开始创建知识库',
-    },
-    new: '新建知识库',
-    title: '知识库',
-  },
   menu: {
     allFiles: '全部文件',
     allPages: '全部文稿',
@@ -145,6 +133,15 @@ export default {
   preview: {
     downloadFile: '下载文件',
     unsupportedFileAndContact: '此文件格式暂不支持在线预览，如有预览诉求，欢迎<1>反馈给我们</1>',
+  },
+  repo: {
+    list: {
+      confirmRemoveRepo:
+        '即将删除该仓库，其中的文件不会删除，将移入全部文件中。知识库删除后将不可恢复，请谨慎操作。',
+      empty: '点击 <1>+</1> 开始创建仓库',
+    },
+    new: '新建仓库',
+    title: '仓库',
   },
   searchFilePlaceholder: '搜索文件',
   searchPagePlaceholder: '搜索文稿',

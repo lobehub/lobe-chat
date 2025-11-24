@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "You are about to delete this knowledge base. The files within will not be deleted and will be moved to All Files. Once deleted, the knowledge base cannot be recovered. Please proceed with caution.",
-      "empty": "Click <1>+</1> to add a knowledge base"
-    },
-    "new": "New Knowledge Base",
-    "title": "Knowledge Base"
-  },
   "menu": {
     "allFiles": "All Files",
     "allPages": "All Documents"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "Download File",
     "unsupportedFileAndContact": "This file format is not currently supported for online preview. If you have a request for previewing, feel free to <1>contact us</1>."
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "This repository will be deleted. Its files will not be removed but moved to All Files. Once deleted, the repository cannot be recovered. Please proceed with caution.",
+      "empty": "Click <1>+</1> to create a new repository"
+    },
+    "new": "New Repository",
+    "title": "Repository"
   },
   "searchFilePlaceholder": "Search Files",
   "searchPagePlaceholder": "Search Pages",
