@@ -31,11 +31,13 @@ export interface ChatCitationItem {
  */
 export interface MessageContentPartText {
   text: string;
+  thoughtSignature?: string;
   type: 'text';
 }
 
 export interface MessageContentPartImage {
   image: string;
+  thoughtSignature?: string;
   type: 'image';
 }
 

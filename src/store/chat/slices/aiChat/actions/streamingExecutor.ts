@@ -5,6 +5,7 @@ import { isDesktop } from '@lobechat/const';
 import {
   ChatImageItem,
   ChatToolPayload,
+  MessageContentPart,
   MessageToolCall,
   ModelUsage,
   TraceNameMap,
@@ -13,6 +14,7 @@ import {
 import debug from 'debug';
 import { t } from 'i18next';
 import { throttle } from 'lodash-es';
+import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
 
 import { createAgentToolsEngine } from '@/helpers/toolEngineering';
@@ -26,6 +28,7 @@ import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { toolInterventionSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
+import { serializePartsForStorage } from '@/utils/multimodalContent';
 
 import { topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
@@ -272,13 +275,20 @@ export const streamingExecutor: StateCreator<
     let finalUsage;
     let msgTraceId: string | undefined;
     let output = '';
-    let thinking = '';
+
+    let thinkingContent = '';
     let thinkingStartAt: number;
-    let duration: number | undefined;
+    let thinkingDuration: number | undefined;
     let reasoningOperationId: string | undefined;
     let finishType: string | undefined;
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
+
+    // Multimodal content parts
+    let contentParts: MessageContentPart[] = [];
+    let reasoningParts: MessageContentPart[] = [];
+    const contentImageUploads: Map<number, Promise<string>> = new Map();
+    const reasoningImageUploads: Map<number, Promise<string>> = new Map();
 
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
@@ -344,7 +354,9 @@ export const streamingExecutor: StateCreator<
         if (uploadTasks.size > 0) {
           try {
             // 等待所有上传任务完成
-            const uploadResults = await Promise.all(uploadTasks.values());
+            const uploadResults = await pMap(Array.from(uploadTasks.values()), (task) => task, {
+              concurrency: 5,
+            });
 
             // 使用上传后的 S3 URL 替换原始图像数据
             finalImages = uploadResults.filter((i) => !!i.url) as ChatImageItem[];
@@ -352,6 +364,14 @@ export const streamingExecutor: StateCreator<
             console.error('Error waiting for image uploads:', error);
           }
         }
+
+        // Wait for all multimodal image uploads to complete
+        // Note: Arrays are already updated in-place when uploads complete
+        // Use Promise.allSettled to continue even if some uploads fail
+        await Promise.allSettled([
+          ...Array.from(contentImageUploads.values()),
+          ...Array.from(reasoningImageUploads.values()),
+        ]);
 
         let parsedToolCalls = toolCalls;
         if (parsedToolCalls && parsedToolCalls.length > 0) {
@@ -384,18 +404,57 @@ export const streamingExecutor: StateCreator<
           operationId,
         );
 
+        // Check if there are any image parts
+        const hasContentImages = contentParts.some((part) => part.type === 'image');
+        const hasReasoningImages = reasoningParts.some((part) => part.type === 'image');
+
+        // Serialize multimodal content for storage
+        const finalContent = hasContentImages ? serializePartsForStorage(contentParts) : content;
+
+        const finalDuration =
+          thinkingDuration && !isNaN(thinkingDuration) ? thinkingDuration : undefined;
+
+        // Determine final reasoning content
+        // Priority: reasoningParts (multimodal) > thinkingContent (from reasoning_part text) > reasoning (from old reasoning event)
+        let finalReasoning: any = undefined;
+        if (hasReasoningImages) {
+          // Has images, use multimodal format
+          finalReasoning = {
+            content: serializePartsForStorage(reasoningParts),
+            duration: finalDuration,
+            isMultimodal: true,
+          };
+        } else if (thinkingContent) {
+          // Has text from reasoning_part but no images
+          finalReasoning = {
+            content: thinkingContent,
+            duration: finalDuration,
+          };
+        } else if (reasoning?.content) {
+          // Fallback to old reasoning event content
+          finalReasoning = {
+            ...reasoning,
+            duration: finalDuration,
+          };
+        }
+
         // update the content after fetch result
         await optimisticUpdateMessageContent(
           messageId,
-          content,
+          finalContent,
           {
             tools,
-            reasoning: !!reasoning
-              ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
-              : undefined,
+            reasoning: finalReasoning,
             search: !!grounding?.citations ? grounding : undefined,
             imageList: finalImages.length > 0 ? finalImages : undefined,
-            metadata: { ...usage, ...speed, performance: speed, usage, finishType: type },
+            metadata: {
+              ...usage,
+              ...speed,
+              performance: speed,
+              usage,
+              finishType: type,
+              ...(hasContentImages && { isMultimodal: true }),
+            },
           },
           { operationId },
         );
@@ -457,8 +516,8 @@ export const streamingExecutor: StateCreator<
             output += chunk.text;
 
             // if there is no duration, it means the end of reasoning
-            if (!duration) {
-              duration = Date.now() - thinkingStartAt;
+            if (!thinkingDuration) {
+              thinkingDuration = Date.now() - thinkingStartAt;
 
               // Complete reasoning operation if it exists
               if (reasoningOperationId) {
@@ -480,7 +539,9 @@ export const streamingExecutor: StateCreator<
                 type: 'updateMessage',
                 value: {
                   content: output,
-                  reasoning: !!thinking ? { content: thinking, duration } : undefined,
+                  reasoning: !!thinkingContent
+                    ? { content: thinkingContent, duration: thinkingDuration }
+                    : undefined,
                 },
               },
               { operationId },
@@ -505,13 +566,154 @@ export const streamingExecutor: StateCreator<
               get().associateMessageWithOperation(messageId, reasoningOperationId);
             }
 
-            thinking += chunk.text;
+            thinkingContent += chunk.text;
 
             internal_dispatchMessage(
               {
                 id: messageId,
                 type: 'updateMessage',
-                value: { reasoning: { content: thinking } },
+                value: { reasoning: { content: thinkingContent } },
+              },
+              { operationId },
+            );
+            break;
+          }
+
+          case 'reasoning_part': {
+            // Start reasoning if not started
+            if (!thinkingStartAt) {
+              thinkingStartAt = Date.now();
+
+              const { operationId: reasoningOpId } = get().startOperation({
+                type: 'reasoning',
+                context: { sessionId, topicId, messageId },
+                parentOperationId: operationId,
+              });
+              reasoningOperationId = reasoningOpId;
+              get().associateMessageWithOperation(messageId, reasoningOperationId);
+            }
+
+            const { partType, content: partContent, mimeType } = chunk;
+
+            if (partType === 'text') {
+              // Text part
+              reasoningParts.push({ type: 'text', text: partContent });
+              thinkingContent += partContent;
+            } else if (partType === 'image') {
+              // Image part
+              const tempImage = `data:${mimeType};base64,${partContent}`;
+              const partIndex = reasoningParts.length;
+              reasoningParts.push({ type: 'image', image: tempImage });
+
+              // Start upload task and update array when done
+              const uploadTask = getFileStoreState()
+                .uploadBase64FileWithProgress(tempImage)
+                .then((file) => {
+                  const url = file?.url || tempImage;
+                  // Replace the object at index to avoid mutation of frozen objects
+                  if (reasoningParts[partIndex]?.type === 'image') {
+                    reasoningParts[partIndex] = { type: 'image', image: url };
+                  }
+                  return url;
+                })
+                .catch((error) => {
+                  console.error('[reasoning_part] Image upload failed:', error);
+                  return tempImage;
+                });
+
+              reasoningImageUploads.set(partIndex, uploadTask);
+            }
+
+            // Real-time update with display format
+            // Check if there are any image parts to determine if it's multimodal
+            const hasReasoningImages = reasoningParts.some((part) => part.type === 'image');
+
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  reasoning: hasReasoningImages
+                    ? { tempDisplayContent: reasoningParts, isMultimodal: true }
+                    : { content: thinkingContent },
+                },
+              },
+              { operationId },
+            );
+            break;
+          }
+
+          case 'content_part': {
+            const { partType, content: partContent, mimeType, thoughtSignature } = chunk;
+
+            // End reasoning when content starts
+            if (!thinkingDuration && reasoningOperationId) {
+              thinkingDuration = Date.now() - thinkingStartAt;
+              get().completeOperation(reasoningOperationId);
+              reasoningOperationId = undefined;
+            }
+
+            if (partType === 'text') {
+              // Text part with optional thoughtSignature
+              contentParts.push({ type: 'text', text: partContent, thoughtSignature });
+              output += partContent;
+            } else if (partType === 'image') {
+              // Image part with optional thoughtSignature
+              const tempImage = `data:${mimeType};base64,${partContent}`;
+              const partIndex = contentParts.length;
+              contentParts.push({ type: 'image', image: tempImage, thoughtSignature });
+
+              // Start upload task and update array when done
+              const uploadTask = getFileStoreState()
+                .uploadBase64FileWithProgress(tempImage)
+                .then((file) => {
+                  const url = file?.url || tempImage;
+                  // Replace the object at index to avoid mutation of frozen objects
+                  if (contentParts[partIndex]?.type === 'image') {
+                    contentParts[partIndex] = {
+                      type: 'image',
+                      image: url,
+                      thoughtSignature,
+                    };
+                  }
+                  return url;
+                })
+                .catch((error) => {
+                  console.error('[content_part] Image upload failed:', error);
+                  return tempImage;
+                });
+
+              contentImageUploads.set(partIndex, uploadTask);
+            }
+
+            // Real-time update with display format
+            // Check if there are any image parts to determine if it's multimodal
+            const hasContentImages = contentParts.some((part) => part.type === 'image');
+
+            const hasReasoningImages = reasoningParts.some((part) => part.type === 'image');
+
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  content: output,
+                  reasoning: hasReasoningImages
+                    ? {
+                        tempDisplayContent: reasoningParts,
+                        isMultimodal: true,
+                        duration: thinkingDuration,
+                      }
+                    : !!thinkingContent
+                      ? { content: thinkingContent, duration: thinkingDuration }
+                      : undefined,
+                  ...(hasContentImages && {
+                    metadata: {
+                      isMultimodal: true,
+                      tempDisplayContent: serializePartsForStorage(contentParts),
+                    },
+                  }),
+                },
               },
               { operationId },
             );
@@ -525,8 +727,8 @@ export const streamingExecutor: StateCreator<
             isFunctionCall = true;
 
             // Complete reasoning operation if it exists
-            if (!duration && reasoningOperationId) {
-              duration = Date.now() - thinkingStartAt;
+            if (!thinkingDuration && reasoningOperationId) {
+              thinkingDuration = Date.now() - thinkingStartAt;
               get().completeOperation(reasoningOperationId);
               reasoningOperationId = undefined;
             }
@@ -535,8 +737,8 @@ export const streamingExecutor: StateCreator<
 
           case 'stop': {
             // Complete reasoning operation when receiving stop signal
-            if (!duration && reasoningOperationId) {
-              duration = Date.now() - thinkingStartAt;
+            if (!thinkingDuration && reasoningOperationId) {
+              thinkingDuration = Date.now() - thinkingStartAt;
               get().completeOperation(reasoningOperationId);
               reasoningOperationId = undefined;
             }
