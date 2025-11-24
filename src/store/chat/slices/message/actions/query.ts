@@ -32,6 +32,7 @@ export interface MessageQueryAction {
     messages: UIChatMessage[],
     params?: {
       action?: any;
+      operationId?: string;
       sessionId?: string;
       topicId?: string | null;
     },
@@ -66,10 +67,22 @@ export const messageQuery: StateCreator<
   },
 
   replaceMessages: (messages, params) => {
-    const messagesKey = messageMapKey(
-      params?.sessionId ?? get().activeId,
-      params?.topicId ?? get().activeTopicId,
-    );
+    let sessionId: string;
+    let topicId: string | null | undefined;
+
+    // Priority 1: Get context from operation if operationId is provided
+    if (params?.operationId) {
+      const { sessionId: opSessionId, topicId: opTopicId } =
+        get().internal_getSessionContext(params);
+      sessionId = opSessionId;
+      topicId = opTopicId;
+    } else {
+      // Priority 2: Use explicit sessionId/topicId or fallback to global state
+      sessionId = params?.sessionId ?? get().activeId;
+      topicId = params?.topicId ?? get().activeTopicId;
+    }
+
+    const messagesKey = messageMapKey(sessionId, topicId);
 
     // Get raw messages from dbMessagesMap and apply reducer
     const nextDbMap = { ...get().dbMessagesMap, [messagesKey]: messages };

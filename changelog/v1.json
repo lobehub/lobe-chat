@@ -1,6 +1,60 @@
 [
   {
     "children": {
+      "fixes": ["Fixed the pinned session not work."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.108"
+  },
+  {
+    "children": {
+      "improvements": ["Optimize nana banana pro error message."]
+    },
+    "date": "2025-11-23",
+    "version": "2.0.0-next.107"
+  },
+  {
+    "children": {
+      "features": ["Add nano-banana-pro model support and optimization."]
+    },
+    "date": "2025-11-23",
+    "version": "2.0.0-next.106"
+  },
+  {
+    "children": {},
+    "date": "2025-11-23",
+    "version": "2.0.0-next.105"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.104"
+  },
+  {
+    "children": {
+      "fixes": ["Hide ai image config item in settings category."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.103"
+  },
+  {
+    "children": {
+      "features": ["Add new provider ZenMux & Gemini 3 Pro Image Preview."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.102"
+  },
+  {
+    "children": {
+      "features": ["Support bedrok prompt cache and usage compute."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.101"
+  },
+  {
+    "children": {
       "fixes": ["Gemini 3 Pro does not display thought summaries."]
     },
     "date": "2025-11-21",

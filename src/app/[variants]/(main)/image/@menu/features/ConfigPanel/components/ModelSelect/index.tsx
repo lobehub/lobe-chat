@@ -135,7 +135,7 @@ const ModelSelect = memo(() => {
 
     if (!modelInfo) return props.label;
 
-    return <ImageModelItem {...modelInfo} showPopover={false} />;
+    return <ImageModelItem {...modelInfo} showBadge={false} showPopover={false} />;
   };
 
   return (

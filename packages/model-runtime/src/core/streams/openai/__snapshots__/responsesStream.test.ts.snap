@@ -858,10 +858,10 @@ exports[`OpenAIResponsesStream Reasoning summary 1`] = `
 ]
 `;
 
-exports[`OpenAIResponsesStream should transform OpenAI stream to protocol stream 1`] = `
+exports[`OpenAIResponsesStream should handle chunks with undefined values gracefully 1`] = `
 [
   
-"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
+"id: resp_undefined_vals
 "
 ,
   
@@ -874,67 +874,15 @@ exports[`OpenAIResponsesStream should transform OpenAI stream to protocol stream
 "
 ,
   
-"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
+"id: undefined
 "
 ,
   
-"event: data
+"event: reasoning
 "
 ,
   
-"data: {"type":"response.in_progress","response":{"id":"resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58","object":"response","created_at":1748925324,"status":"in_progress","error":null,"incomplete_details":null,"instructions":null,"max_output_tokens":null,"model":"o4-mini","output":[],"parallel_tool_calls":true,"previous_response_id":null,"reasoning":{"effort":"medium","summary":null},"service_tier":"auto","store":false,"temperature":1,"text":{"format":{"type":"text"}},"tool_choice":"auto","tools":[{"type":"function","description":"a search service. Useful for when you need to answer questions about current events. Input should be a search query. Output is a JSON array of the query results","name":"lobe-web-browsing____search____builtin","parameters":{"properties":{"query":{"description":"The search query","type":"string"},"searchCategories":{"description":"The search categories you can set:","items":{"enum":["general","images","news","science","videos"],"type":"string"},"type":"array"},"searchEngines":{"description":"The search engines you can use:","items":{"enum":["google","bilibili","bing","duckduckgo","npm","pypi","github","arxiv","google scholar","z-library","reddit","imdb","brave","wikipedia","pinterest","unsplash","vimeo","youtube"],"type":"string"},"type":"array"},"searchTimeRange":{"description":"The time range you can set:","enum":["anytime","day","week","month","year"],"type":"string"}},"required":["query"],"type":"object"},"strict":true},{"type":"function","description":"A crawler can visit page content. Output is a JSON object of title, content, url and website","name":"lobe-web-browsing____crawlSinglePage____builtin","parameters":{"properties":{"url":{"description":"The url need to be crawled","type":"string"}},"required":["url"],"type":"object"},"strict":true},{"type":"function","description":"A crawler can visit multi pages. If need to visit multi website, use this one. Output is an array of JSON object of title, content, url and website","name":"lobe-web-browsing____crawlMultiPages____builtin","parameters":{"properties":{"urls":{"items":{"description":"The urls need to be crawled","type":"string"},"type":"array"}},"required":["urls"],"type":"object"},"strict":true}],"top_p":1,"truncation":"disabled","usage":null,"user":null,"metadata":{}}}
-
-"
-,
-  
-"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
-"
-,
-  
-"event: data
-"
-,
-  
-"data: {"id":"rs_683e7bc80a9c81908f6e3d61ad63cc1e0cf93af363cdcf58","type":"reasoning","summary":[]}
-
-"
-,
-  
-"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
-"
-,
-  
-"event: data
-"
-,
-  
-"data: {"id":"msg_683e7bde8b0c8190970ab8c719c0fc1c0cf93af363cdcf58","type":"message","status":"in_progress","content":[],"role":"assistant"}
-
-"
-,
-  
-"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
-"
-,
-  
-"event: data
-"
-,
-  
-"data: {"type":"response.content_part.added","item_id":"msg_683e7bde8b0c8190970ab8c719c0fc1c0cf93af363cdcf58","output_index":1,"content_index":0,"part":{"type":"output_text","annotations":[],"text":"Hello"}}
-
-"
-,
-  
-"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
-"
-,
-  
-"event: data
-"
-,
-  
-"data: {"type":"response.content_part.added","item_id":"msg_683e7bde8b0c8190970ab8c719c0fc1c0cf93af363cdcf58","output_index":1,"content_index":0,"part":{"type":"output_text","annotations":[],"text":" world"}}
+"data: undefined
 
 "
 ,
@@ -995,24 +943,6 @@ exports[`OpenAIResponsesStream should handle first chunk error without message 1
 ]
 `;
 
-exports[`OpenAIResponsesStream should handle response.created event 1`] = `
-[
-  
-"id: resp_test_123
-"
-,
-  
-"event: data
-"
-,
-  
-"data: "in_progress"
-
-"
-,
-]
-`;
-
 exports[`OpenAIResponsesStream should handle function_call in response.output_item.added 1`] = `
 [
   
@@ -1038,6 +968,50 @@ exports[`OpenAIResponsesStream should handle function_call in response.output_it
 ,
   
 "data: [{"function":{"arguments":"{\\"location\\": \\"San Francisco\\"}","name":"get_weather"},"id":"call_abc123","index":0,"type":"function"}]
+
+"
+,
+]
+`;
+
+exports[`OpenAIResponsesStream should handle multiple annotations and accumulate citations 1`] = `
+[
+  
+"id: resp_multi_citation
+"
+,
+  
+"event: data
+"
+,
+  
+"data: "in_progress"
+
+"
+,
+  
+"id: msg_cite
+"
+,
+  
+"event: text
+"
+,
+  
+"data: null
+
+"
+,
+  
+"id: msg_cite
+"
+,
+  
+"event: text
+"
+,
+  
+"data: null
 
 "
 ,
@@ -1088,6 +1062,117 @@ exports[`OpenAIResponsesStream should handle multiple function_calls with increm
 ]
 `;
 
+exports[`OpenAIResponsesStream should handle non-standard item types in output_item.added 1`] = `
+[
+  
+"id: resp_other_item
+"
+,
+  
+"event: data
+"
+,
+  
+"data: "in_progress"
+
+"
+,
+  
+"id: resp_other_item
+"
+,
+  
+"event: data
+"
+,
+  
+"data: {"type":"message","id":"msg_test","status":"in_progress","content":[],"role":"assistant"}
+
+"
+,
+]
+`;
+
+exports[`OpenAIResponsesStream should handle response.completed with usage 1`] = `
+[
+  
+"id: resp_completed_usage
+"
+,
+  
+"event: data
+"
+,
+  
+"data: "in_progress"
+
+"
+,
+  
+"id: resp_completed_usage
+"
+,
+  
+"event: usage
+"
+,
+  
+"data: {"inputCacheMissTokens":100,"inputTextTokens":100,"outputTextTokens":50,"totalInputTokens":100,"totalOutputTokens":50,"totalTokens":150}
+
+"
+,
+]
+`;
+
+exports[`OpenAIResponsesStream should handle response.completed without usage 1`] = `
+[
+  
+"id: resp_completed_no_usage
+"
+,
+  
+"event: data
+"
+,
+  
+"data: "in_progress"
+
+"
+,
+  
+"id: resp_completed_no_usage
+"
+,
+  
+"event: data
+"
+,
+  
+"data: {"type":"response.completed","response":{"id":"resp_completed_no_usage","status":"completed"}}
+
+"
+,
+]
+`;
+
+exports[`OpenAIResponsesStream should handle response.created event 1`] = `
+[
+  
+"id: resp_test_123
+"
+,
+  
+"event: data
+"
+,
+  
+"data: "in_progress"
+
+"
+,
+]
+`;
+
 exports[`OpenAIResponsesStream should handle response.function_call_arguments.delta 1`] = `
 [
   
@@ -1126,6 +1211,112 @@ exports[`OpenAIResponsesStream should handle response.function_call_arguments.de
 ,
   
 "data: [{"function":{"arguments":" \\"OpenAI\\"}","name":"search_web"},"id":"call_delta","index":0,"type":"function"}]
+
+"
+,
+]
+`;
+
+exports[`OpenAIResponsesStream should handle response.output_item.done with citations 1`] = `
+[
+  
+"id: resp_done_citation
+"
+,
+  
+"event: data
+"
+,
+  
+"data: "in_progress"
+
+"
+,
+  
+"id: msg_final
+"
+,
+  
+"event: text
+"
+,
+  
+"data: null
+
+"
+,
+  
+"id: msg_final
+"
+,
+  
+"event: grounding
+"
+,
+  
+"data: {"citations":[{"title":"Citation Title","url":"https://citation.com"}]}
+
+"
+,
+]
+`;
+
+exports[`OpenAIResponsesStream should handle response.output_item.done without citations 1`] = `
+[
+  
+"id: resp_done_no_citation
+"
+,
+  
+"event: data
+"
+,
+  
+"data: "in_progress"
+
+"
+,
+  
+"id: msg_no_cite
+"
+,
+  
+"event: text
+"
+,
+  
+"data: null
+
+"
+,
+]
+`;
+
+exports[`OpenAIResponsesStream should handle response.output_text.annotation.added 1`] = `
+[
+  
+"id: resp_annotation
+"
+,
+  
+"event: data
+"
+,
+  
+"data: "in_progress"
+
+"
+,
+  
+"id: msg_citation
+"
+,
+  
+"event: text
+"
+,
+  
+"data: null
 
 "
 ,
@@ -1295,218 +1486,6 @@ exports[`OpenAIResponsesStream should handle response.reasoning_summary_text.del
 ]
 `;
 
-exports[`OpenAIResponsesStream should handle response.output_text.annotation.added 1`] = `
-[
-  
-"id: resp_annotation
-"
-,
-  
-"event: data
-"
-,
-  
-"data: "in_progress"
-
-"
-,
-  
-"id: msg_citation
-"
-,
-  
-"event: text
-"
-,
-  
-"data: null
-
-"
-,
-]
-`;
-
-exports[`OpenAIResponsesStream should handle multiple annotations and accumulate citations 1`] = `
-[
-  
-"id: resp_multi_citation
-"
-,
-  
-"event: data
-"
-,
-  
-"data: "in_progress"
-
-"
-,
-  
-"id: msg_cite
-"
-,
-  
-"event: text
-"
-,
-  
-"data: null
-
-"
-,
-  
-"id: msg_cite
-"
-,
-  
-"event: text
-"
-,
-  
-"data: null
-
-"
-,
-]
-`;
-
-exports[`OpenAIResponsesStream should handle response.output_item.done with citations 1`] = `
-[
-  
-"id: resp_done_citation
-"
-,
-  
-"event: data
-"
-,
-  
-"data: "in_progress"
-
-"
-,
-  
-"id: msg_final
-"
-,
-  
-"event: text
-"
-,
-  
-"data: null
-
-"
-,
-  
-"id: msg_final
-"
-,
-  
-"event: grounding
-"
-,
-  
-"data: {"citations":[{"title":"Citation Title","url":"https://citation.com"}]}
-
-"
-,
-]
-`;
-
-exports[`OpenAIResponsesStream should handle response.output_item.done without citations 1`] = `
-[
-  
-"id: resp_done_no_citation
-"
-,
-  
-"event: data
-"
-,
-  
-"data: "in_progress"
-
-"
-,
-  
-"id: msg_no_cite
-"
-,
-  
-"event: text
-"
-,
-  
-"data: null
-
-"
-,
-]
-`;
-
-exports[`OpenAIResponsesStream should handle response.completed with usage 1`] = `
-[
-  
-"id: resp_completed_usage
-"
-,
-  
-"event: data
-"
-,
-  
-"data: "in_progress"
-
-"
-,
-  
-"id: resp_completed_usage
-"
-,
-  
-"event: usage
-"
-,
-  
-"data: {"inputCacheMissTokens":100,"inputTextTokens":100,"outputTextTokens":50,"totalInputTokens":100,"totalOutputTokens":50,"totalTokens":150}
-
-"
-,
-]
-`;
-
-exports[`OpenAIResponsesStream should handle response.completed without usage 1`] = `
-[
-  
-"id: resp_completed_no_usage
-"
-,
-  
-"event: data
-"
-,
-  
-"data: "in_progress"
-
-"
-,
-  
-"id: resp_completed_no_usage
-"
-,
-  
-"event: data
-"
-,
-  
-"data: {"type":"response.completed","response":{"id":"resp_completed_no_usage","status":"completed"}}
-
-"
-,
-]
-`;
-
 exports[`OpenAIResponsesStream should handle unknown chunk type as data 1`] = `
 [
   
@@ -1538,10 +1517,10 @@ exports[`OpenAIResponsesStream should handle unknown chunk type as data 1`] = `
 ]
 `;
 
-exports[`OpenAIResponsesStream should handle non-standard item types in output_item.added 1`] = `
+exports[`OpenAIResponsesStream should transform OpenAI stream to protocol stream 1`] = `
 [
   
-"id: resp_other_item
+"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
 "
 ,
   
@@ -1554,7 +1533,7 @@ exports[`OpenAIResponsesStream should handle non-standard item types in output_i
 "
 ,
   
-"id: resp_other_item
+"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
 "
 ,
   
@@ -1562,17 +1541,12 @@ exports[`OpenAIResponsesStream should handle non-standard item types in output_i
 "
 ,
   
-"data: {"type":"message","id":"msg_test","status":"in_progress","content":[],"role":"assistant"}
+"data: {"type":"response.in_progress","response":{"id":"resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58","object":"response","created_at":1748925324,"status":"in_progress","error":null,"incomplete_details":null,"instructions":null,"max_output_tokens":null,"model":"o4-mini","output":[],"parallel_tool_calls":true,"previous_response_id":null,"reasoning":{"effort":"medium","summary":null},"service_tier":"auto","store":false,"temperature":1,"text":{"format":{"type":"text"}},"tool_choice":"auto","tools":[{"type":"function","description":"a search service. Useful for when you need to answer questions about current events. Input should be a search query. Output is a JSON array of the query results","name":"lobe-web-browsing____search____builtin","parameters":{"properties":{"query":{"description":"The search query","type":"string"},"searchCategories":{"description":"The search categories you can set:","items":{"enum":["general","images","news","science","videos"],"type":"string"},"type":"array"},"searchEngines":{"description":"The search engines you can use:","items":{"enum":["google","bilibili","bing","duckduckgo","npm","pypi","github","arxiv","google scholar","z-library","reddit","imdb","brave","wikipedia","pinterest","unsplash","vimeo","youtube"],"type":"string"},"type":"array"},"searchTimeRange":{"description":"The time range you can set:","enum":["anytime","day","week","month","year"],"type":"string"}},"required":["query"],"type":"object"},"strict":true},{"type":"function","description":"A crawler can visit page content. Output is a JSON object of title, content, url and website","name":"lobe-web-browsing____crawlSinglePage____builtin","parameters":{"properties":{"url":{"description":"The url need to be crawled","type":"string"}},"required":["url"],"type":"object"},"strict":true},{"type":"function","description":"A crawler can visit multi pages. If need to visit multi website, use this one. Output is an array of JSON object of title, content, url and website","name":"lobe-web-browsing____crawlMultiPages____builtin","parameters":{"properties":{"urls":{"items":{"description":"The urls need to be crawled","type":"string"},"type":"array"}},"required":["urls"],"type":"object"},"strict":true}],"top_p":1,"truncation":"disabled","usage":null,"user":null,"metadata":{}}}
 
 "
 ,
-]
-`;
-
-exports[`OpenAIResponsesStream should handle chunks with undefined values gracefully 1`] = `
-[
   
-"id: resp_undefined_vals
+"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
 "
 ,
   
@@ -1580,20 +1554,46 @@ exports[`OpenAIResponsesStream should handle chunks with undefined values gracef
 "
 ,
   
-"data: "in_progress"
+"data: {"id":"rs_683e7bc80a9c81908f6e3d61ad63cc1e0cf93af363cdcf58","type":"reasoning","summary":[]}
 
 "
 ,
   
-"id: undefined
+"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
 "
 ,
   
-"event: reasoning
+"event: data
 "
 ,
   
-"data: undefined
+"data: {"id":"msg_683e7bde8b0c8190970ab8c719c0fc1c0cf93af363cdcf58","type":"message","status":"in_progress","content":[],"role":"assistant"}
+
+"
+,
+  
+"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
+"
+,
+  
+"event: data
+"
+,
+  
+"data: {"type":"response.content_part.added","item_id":"msg_683e7bde8b0c8190970ab8c719c0fc1c0cf93af363cdcf58","output_index":1,"content_index":0,"part":{"type":"output_text","annotations":[],"text":"Hello"}}
+
+"
+,
+  
+"id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58
+"
+,
+  
+"event: data
+"
+,
+  
+"data: {"type":"response.content_part.added","item_id":"msg_683e7bde8b0c8190970ab8c719c0fc1c0cf93af363cdcf58","output_index":1,"content_index":0,"part":{"type":"output_text","annotations":[],"text":" world"}}
 
 "
 ,

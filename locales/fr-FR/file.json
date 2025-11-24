@@ -116,8 +116,8 @@
     "title": "Base de connaissances"
   },
   "menu": {
-    "allDocuments": "Tous les documents",
-    "allFiles": "Tous les fichiers"
+    "allFiles": "Tous les fichiers",
+    "allPages": "Tous les documents"
   },
   "networkError": "Échec de l'accès à la base de connaissances, veuillez vérifier votre connexion réseau et réessayer",
   "notSupportGuide": {
