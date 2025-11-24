@@ -2,17 +2,18 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { LobeChatDatabase } from '../../type';
 import {
   agents,
   agentsFiles,
   agentsKnowledgeBases,
   agentsToSessions,
+  documents,
   files,
   knowledgeBases,
   sessions,
   users,
 } from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 import { AgentModel } from '../agent';
 import { getTestDB } from './_util';
 
@@ -69,6 +70,76 @@ describe('AgentModel', () => {
       expect(result.knowledgeBases).toHaveLength(1);
       expect(result.files).toHaveLength(1);
     });
+
+    it('should fetch and include document content for enabled files', async () => {
+      const agentId = 'test-agent-with-docs';
+      await serverDB.insert(agents).values({ id: agentId, userId });
+      await serverDB.insert(agentsFiles).values({ agentId, fileId: '1', userId, enabled: true });
+      await serverDB.insert(documents).values({
+        id: 'doc1',
+        fileId: '1',
+        userId,
+        content: 'This is document content',
+        fileType: 'application/pdf',
+        totalCharCount: 100,
+        totalLineCount: 10,
+        sourceType: 'file',
+        source: 'document.pdf',
+      });
+
+      const result = await agentModel.getAgentConfigById(agentId);
+
+      expect(result).toBeDefined();
+      expect(result.files).toHaveLength(1);
+      expect(result.files[0].content).toBe('This is document content');
+      expect(result.files[0].enabled).toBe(true);
+    });
+
+    it('should not include content for disabled files', async () => {
+      const agentId = 'test-agent-disabled-file';
+      await serverDB.insert(agents).values({ id: agentId, userId });
+      await serverDB.insert(agentsFiles).values({ agentId, fileId: '1', userId, enabled: false });
+      await serverDB.insert(documents).values({
+        id: 'doc2',
+        fileId: '1',
+        userId,
+        content: 'This should not be included',
+        fileType: 'application/pdf',
+        totalCharCount: 100,
+        totalLineCount: 10,
+        sourceType: 'file',
+        source: 'document.pdf',
+      });
+
+      const result = await agentModel.getAgentConfigById(agentId);
+
+      expect(result).toBeDefined();
+      expect(result.files).toHaveLength(1);
+      expect(result.files[0].content).toBeUndefined();
+      expect(result.files[0].enabled).toBe(false);
+    });
+
+    it('should handle files without documents', async () => {
+      const agentId = 'test-agent-no-docs';
+      await serverDB.insert(agents).values({ id: agentId, userId });
+      await serverDB.insert(agentsFiles).values({ agentId, fileId: '2', userId, enabled: true });
+
+      const result = await agentModel.getAgentConfigById(agentId);
+
+      expect(result).toBeDefined();
+      expect(result.files).toHaveLength(1);
+      expect(result.files[0].content).toBeUndefined();
+    });
+
+    it('should handle agent with no files', async () => {
+      const agentId = 'test-agent-no-files';
+      await serverDB.insert(agents).values({ id: agentId, userId });
+
+      const result = await agentModel.getAgentConfigById(agentId);
+
+      expect(result).toBeDefined();
+      expect(result.files).toHaveLength(0);
+    });
   });
 
   describe('findBySessionId', () => {
@@ -84,10 +155,16 @@ describe('AgentModel', () => {
       expect(result).toBeDefined();
       expect(result?.id).toBe(agentId);
     });
+
+    it('should return undefined when session is not found', async () => {
+      const result = await agentModel.findBySessionId('non-existent-session');
+
+      expect(result).toBeUndefined();
+    });
   });
 
   describe('createAgentKnowledgeBase', () => {
-    it('should create a new agent knowledge base association', async () => {
+    it('should create a new agent knowledge base association with enabled=true by default', async () => {
       const agent = await serverDB
         .insert(agents)
         .values({ userId })
@@ -105,6 +182,27 @@ describe('AgentModel', () => {
         knowledgeBaseId: knowledgeBase.id,
         userId,
         enabled: true,
+      });
+    });
+
+    it('should create a new agent knowledge base association with enabled=false', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId })
+        .returning()
+        .then((res) => res[0]);
+
+      await agentModel.createAgentKnowledgeBase(agent.id, knowledgeBase.id, false);
+
+      const result = await serverDB.query.agentsKnowledgeBases.findFirst({
+        where: eq(agentsKnowledgeBases.agentId, agent.id),
+      });
+
+      expect(result).toMatchObject({
+        agentId: agent.id,
+        knowledgeBaseId: knowledgeBase.id,
+        userId,
+        enabled: false,
       });
     });
   });
@@ -153,7 +251,7 @@ describe('AgentModel', () => {
   });
 
   describe('createAgentFiles', () => {
-    it('should create new agent file associations', async () => {
+    it('should create new agent file associations with enabled=true by default', async () => {
       const agent = await serverDB
         .insert(agents)
         .values({ userId })
@@ -173,6 +271,77 @@ describe('AgentModel', () => {
           expect.objectContaining({ agentId: agent.id, fileId: '2', userId, enabled: true }),
         ]),
       );
+    });
+
+    it('should create new agent file associations with enabled=false', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId })
+        .returning()
+        .then((res) => res[0]);
+
+      await agentModel.createAgentFiles(agent.id, ['1'], false);
+
+      const results = await serverDB.query.agentsFiles.findMany({
+        where: eq(agentsFiles.agentId, agent.id),
+      });
+
+      expect(results).toHaveLength(1);
+      expect(results[0]).toMatchObject({
+        agentId: agent.id,
+        fileId: '1',
+        userId,
+        enabled: false,
+      });
+    });
+
+    it('should skip files that already exist', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId })
+        .returning()
+        .then((res) => res[0]);
+
+      // First insert
+      await serverDB.insert(agentsFiles).values({ agentId: agent.id, fileId: '1', userId });
+
+      // Try to insert the same file again
+      await agentModel.createAgentFiles(agent.id, ['1', '2']);
+
+      const results = await serverDB.query.agentsFiles.findMany({
+        where: eq(agentsFiles.agentId, agent.id),
+      });
+
+      // Should only have 2 files (1 existing + 1 new), not 3
+      expect(results).toHaveLength(2);
+      expect(results.map((r) => r.fileId).sort()).toEqual(['1', '2']);
+    });
+
+    it('should return early when all files already exist', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId })
+        .returning()
+        .then((res) => res[0]);
+
+      // First insert
+      await serverDB.insert(agentsFiles).values([
+        { agentId: agent.id, fileId: '1', userId },
+        { agentId: agent.id, fileId: '2', userId },
+      ]);
+
+      // Try to insert the same files again
+      const result = await agentModel.createAgentFiles(agent.id, ['1', '2']);
+
+      // Should return undefined (early return)
+      expect(result).toBeUndefined();
+
+      const results = await serverDB.query.agentsFiles.findMany({
+        where: eq(agentsFiles.agentId, agent.id),
+      });
+
+      // Should still only have 2 files
+      expect(results).toHaveLength(2);
     });
   });
 
