@@ -30,20 +30,6 @@ type OIDCProviderInput = {
   scopes?: string[];
 };
 
-const createOidcFallbackEndpoints = (issuer?: string) => {
-  if (!issuer) return undefined;
-  const normalizedIssuer = issuer.replace(/\/$/, '');
-
-  return {
-    // better-auth/better-auth#6042 – genericOAuth ignores discoveryUrl for sign-in,
-    // so we provide fallback endpoints derived from the issuer.
-    // Ref: https://github.com/better-auth/better-auth/issues/6042
-    authorizationUrl: `${normalizedIssuer}/authorize`,
-    tokenUrl: `${normalizedIssuer}/oauth/token`,
-    userInfoUrl: `${normalizedIssuer}/userinfo`,
-  } satisfies Partial<GenericOAuthConfig>;
-};
-
 export const buildOidcConfig = ({
   providerId,
   clientId,
@@ -61,7 +47,6 @@ export const buildOidcConfig = ({
 
   const normalizedIssuer = sanitizedIssuer.replace(/\/$/, '');
   const discoveryUrl = createDiscoveryUrl(normalizedIssuer);
-  const fallbackEndpoints = createOidcFallbackEndpoints(normalizedIssuer);
 
   return {
     clientId,
@@ -70,7 +55,7 @@ export const buildOidcConfig = ({
     pkce,
     providerId,
     scopes,
-    ...fallbackEndpoints,
+    // ...fallbackEndpoints,
     ...overrides,
   } satisfies GenericOAuthConfig;
 };
