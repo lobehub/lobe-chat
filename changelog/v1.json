@@ -1,6 +1,22 @@
 [
   {
     "children": {
+      "improvements": ["Add Kimi K2 Thinking to Qwen Provider."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.112"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix db migration snapshot not align with db schema, Separate agent file injection from knowledge base RAG search."
+      ]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.111"
+  },
+  {
+    "children": {
       "improvements": [
         "Add hyperlink to each topic & pinned agent, support ContextMenu on ChatItem."
       ]

@@ -152,6 +152,9 @@ const hasFiles = (s: AgentStoreState) => {
 
 const hasKnowledge = (s: AgentStoreState) => hasKnowledgeBases(s) || hasFiles(s);
 const hasEnabledKnowledge = (s: AgentStoreState) => currentEnabledKnowledge(s).length > 0;
+const hasEnabledKnowledgeBases = (s: AgentStoreState) =>
+  currentAgentKnowledgeBases(s).some((s) => s.enabled);
+
 const currentKnowledgeIds = (s: AgentStoreState) => {
   return {
     fileIds: currentAgentFiles(s)
@@ -185,6 +188,7 @@ export const agentSelectors = {
   getAgentConfigByAgentId,
   getAgentConfigById,
   hasEnabledKnowledge,
+  hasEnabledKnowledgeBases,
   hasKnowledge,
   hasSystemRole,
   inboxAgentConfig,
