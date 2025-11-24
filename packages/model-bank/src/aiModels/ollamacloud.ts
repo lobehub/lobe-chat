@@ -23,7 +23,6 @@ const ollamaCloudModels: AIChatModelCard[] = [
     description:
       'Gemini 3 Pro 是 Google 最智能的模型，具有 SOTA 推理和多模式理解，以及强大的代理和氛围编码功能。',
     displayName: 'Gemini 3 Pro Preview',
-    enabled: true,
     id: 'gemini-3-pro-preview',
     releasedAt: '2025-11-20',
     type: 'chat',
