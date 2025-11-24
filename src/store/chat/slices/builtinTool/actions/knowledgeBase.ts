@@ -6,8 +6,6 @@ import { getAgentStoreState } from '@/store/agent/store';
 import { ChatStore } from '@/store/chat/store';
 import { KnowledgeBaseExecutionRuntime } from '@/tools/knowledge-base/ExecutionRuntime';
 
-import { dbMessageSelectors } from '../../message/selectors';
-
 const log = debug('lobe-store:builtin-tool:knowledge-base');
 
 export interface KnowledgeBaseAction {
