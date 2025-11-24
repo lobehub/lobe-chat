@@ -5,14 +5,28 @@ import { RequestFilteringAgentOptions, useAgent as ssrfAgent } from 'request-fil
  * SSRF-safe fetch implementation for server-side use
  * Uses request-filtering-agent to prevent requests to private IP addresses
  */
+type SSRFOptions = {
+  allowIPAddressList?: string[];
+  allowPrivateIPAddress?: boolean;
+};
+
 // eslint-disable-next-line no-undef
-export const ssrfSafeFetch = async (url: string, options?: RequestInit): Promise<Response> => {
+export const ssrfSafeFetch = async (
+  url: string,
+  options?: RequestInit,
+  ssrfOptions?: SSRFOptions,
+): Promise<Response> => {
   try {
     // Configure SSRF protection options
     const agentOptions: RequestFilteringAgentOptions = {
-      allowIPAddressList: process.env.SSRF_ALLOW_IP_ADDRESS_LIST?.split(',') || [],
-      allowMetaIPAddress: process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS === '1',
-      allowPrivateIPAddress: process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS === '1',
+      allowIPAddressList:
+        ssrfOptions?.allowIPAddressList ||
+        process.env.SSRF_ALLOW_IP_ADDRESS_LIST?.split(',').filter(Boolean) ||
+        [],
+      allowMetaIPAddress:
+        ssrfOptions?.allowPrivateIPAddress || process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS === '1',
+      allowPrivateIPAddress:
+        ssrfOptions?.allowPrivateIPAddress || process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS === '1',
       denyIPAddressList: [],
     };
 

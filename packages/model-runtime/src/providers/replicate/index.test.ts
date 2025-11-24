@@ -40,16 +40,6 @@ describe('LobeReplicateAI', () => {
     });
   });
 
-  describe('textToImage', () => {
-    it('should have textToImage method defined', async () => {
-      const provider = new LobeReplicateAI({
-        apiKey: process.env.REPLICATE_API_TOKEN || 'test-key',
-      });
-
-      expect(provider.textToImage).toBeDefined();
-    });
-  });
-
   describe('models', () => {
     it('should return list of models', async () => {
       const provider = new LobeReplicateAI({

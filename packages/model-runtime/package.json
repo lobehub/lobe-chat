@@ -20,6 +20,7 @@
     "debug": "^4.4.3",
     "model-bank": "workspace:*",
     "openai": "^4.104.0",
-    "replicate": "^1.4.0"
+    "replicate": "^1.4.0",
+    "ssrf-safe-fetch": "workspace:*"
   }
 }
