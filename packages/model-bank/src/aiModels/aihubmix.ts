@@ -1097,7 +1097,7 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-06-17',
     settings: {
-      extendParams: ['thinkingBudget', 'urlContext'],
+      extendParams: ['thinkingBudget', 'urlContext', 'codeExecution'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -1125,7 +1125,7 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-06-17',
     settings: {
-      extendParams: ['thinkingBudget', 'urlContext'],
+      extendParams: ['thinkingBudget', 'urlContext', 'codeExecution'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -1176,7 +1176,7 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-07-22',
     settings: {
-      extendParams: ['thinkingBudget', 'urlContext'],
+      extendParams: ['thinkingBudget', 'urlContext', 'codeExecution'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
