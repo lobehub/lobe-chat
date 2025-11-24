@@ -32,7 +32,7 @@ const MobileChatPage = dynamic(() => import('./(main)/chat/(mobile)'), {
   loading: () => <Loading />,
   ssr: false,
 });
-const ChatSettings = dynamic(() => import('./(main)/chat/settings'), {
+const ChatSettings = dynamic(() => import('./(main)/chat/Settings'), {
   loading: () => <Loading />,
   ssr: false,
 });

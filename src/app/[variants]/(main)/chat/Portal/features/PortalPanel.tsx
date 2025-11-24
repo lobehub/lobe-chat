@@ -1,7 +1,7 @@
 import { Suspense, lazy, memo } from 'react';
 
-import DesktopLayout from '@/app/[variants]/(main)/chat/portal/_layout/Desktop';
-import MobileLayout from '@/app/[variants]/(main)/chat/portal/_layout/Mobile';
+import DesktopLayout from '@/app/[variants]/(main)/chat/Portal/_layout/Desktop';
+import MobileLayout from '@/app/[variants]/(main)/chat/Portal/_layout/Mobile';
 import Loading from '@/components/Loading/BrandTextLoading';
 
 const PortalBody = lazy(() => import('@/features/Portal/router'));

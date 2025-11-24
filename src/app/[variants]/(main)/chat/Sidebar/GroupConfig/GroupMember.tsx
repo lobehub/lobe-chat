@@ -6,6 +6,7 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import AgentSettings from '@/app/[variants]/(main)/chat/Settings/features/AgentSettings';
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 import { DEFAULT_AVATAR, DEFAULT_SUPERVISOR_AVATAR } from '@/const/meta';
 import { useChatStore } from '@/store/chat';
@@ -16,7 +17,6 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { LobeGroupSession } from '@/types/session';
 
-import AgentSettings from '../../../settings/features/AgentSettings';
 import GroupMemberItem from './GroupMemberItem';
 
 interface GroupMemberProps {

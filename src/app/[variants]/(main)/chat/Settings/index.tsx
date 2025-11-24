@@ -6,8 +6,8 @@ import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import MobileContentLayout from '@/components/server/MobileNavLayout';
 import PageTitle from '@/components/PageTitle';
+import MobileContentLayout from '@/components/server/MobileNavLayout';
 import { useCategory } from '@/features/AgentSetting/AgentCategory/useCategory';
 import AgentSettings from '@/features/AgentSetting/AgentSettings';
 import Footer from '@/features/Setting/Footer';
