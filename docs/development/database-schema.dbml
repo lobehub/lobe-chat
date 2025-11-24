@@ -16,6 +16,7 @@ table agents {
   params jsonb [default: `{}`]
   provider text
   system_role text
+  editor_content jsonb
   tts jsonb
   virtual boolean [default: false]
   opening_message text
@@ -187,6 +188,7 @@ table documents {
   user_id text [not null]
   client_id text
   editor_data jsonb
+  slug varchar(255)
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -197,6 +199,7 @@ table documents {
     file_id [name: 'documents_file_id_idx']
     parent_id [name: 'documents_parent_id_idx']
     (client_id, user_id) [name: 'documents_client_id_user_id_unique', unique]
+    (slug, user_id) [name: 'documents_slug_user_id_unique', unique]
   }
 }
 
@@ -214,7 +217,6 @@ table files {
   metadata jsonb
   chunk_task_id uuid
   embedding_task_id uuid
-  slug text [unique]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

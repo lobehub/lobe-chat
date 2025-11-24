@@ -336,6 +336,13 @@
       "when": 1763535087148,
       "tag": "0047_add_slug_document",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1763983765195,
+      "tag": "0048_slippery_wallop",
+      "breakpoints": true
     }
   ],
   "version": "6"
