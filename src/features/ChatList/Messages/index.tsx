@@ -7,6 +7,14 @@ import { useSearchParams } from 'next/navigation';
 import { MouseEvent, ReactNode, memo, use, useCallback, useEffect, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import {
+  VirtuaContext,
+  removeVirtuaVisibleItem,
+  upsertVirtuaVisibleItem,
+} from '@/features/ChatList/components/VirtualizedList/VirtuosoContext';
+import { getChatStoreState, useChatStore } from '@/store/chat';
+import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
+
 import ContextMenu from '../components/ContextMenu';
 import History from '../components/History';
 import { InPortalThreadContext } from '../context/InPortalThreadContext';
@@ -16,14 +24,6 @@ import GroupMessage from './Group';
 import SupervisorMessage from './Supervisor';
 import ToolMessage from './Tool';
 import UserMessage from './User';
-
-import {
-  VirtuaContext,
-  removeVirtuaVisibleItem,
-  upsertVirtuaVisibleItem,
-} from '@/features/ChatList/components/VirtualizedList/VirtuosoContext';
-import { getChatStoreState, useChatStore } from '@/store/chat';
-import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   loading: css`
@@ -66,17 +66,14 @@ const Item = memo<ChatListItemProps>(
     const searchParams = useSearchParams();
     const topic = searchParams.get('topic');
 
-    const [role, editing, isMessageCreating] = useChatStore(
-      (s) => {
-        const item = displayMessageSelectors.getDisplayMessageById(id)(s);
-        return [
-          item?.role,
-          messageStateSelectors.isMessageEditing(id)(s),
-          messageStateSelectors.isMessageCreating(id)(s),
-        ];
-      },
-      isEqual,
-    );
+    const [role, editing, isMessageCreating] = useChatStore((s) => {
+      const item = displayMessageSelectors.getDisplayMessageById(id)(s);
+      return [
+        item?.role,
+        messageStateSelectors.isMessageEditing(id)(s),
+        messageStateSelectors.isMessageCreating(id)(s),
+      ];
+    }, isEqual);
 
     const {
       containerRef: contextMenuContainerRef,
@@ -216,8 +213,8 @@ const Item = memo<ChatListItemProps>(
         </Flexbox>
         <ContextMenu
           id={id}
-          index={index}
           inPortalThread={inPortalThread}
+          index={index}
           onClose={hideContextMenu}
           position={contextMenuState.position}
           selectedText={contextMenuState.selectedText}

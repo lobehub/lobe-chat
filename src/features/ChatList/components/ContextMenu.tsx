@@ -7,14 +7,20 @@ import { Dropdown, type MenuProps } from 'antd';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { isValidElement, memo, useCallback, useMemo, useState, type RefObject } from 'react';
-import type { ComponentType, ReactNode } from 'react';
+import {
+  ComponentType,
+  ReactNode,
+  type RefObject,
+  isValidElement,
+  memo,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import type { VListHandle } from 'virtua';
 
-import ShareMessageModal from './ShareMessageModal';
-import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import { getChatStoreState, useChatStore } from '@/store/chat';
 import {
   displayMessageSelectors,
@@ -23,6 +29,9 @@ import {
 } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+
+import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
+import ShareMessageModal from './ShareMessageModal';
 
 interface ActionMenuItem extends ActionIconGroupItemType {
   children?: { key: string; label: ReactNode }[];
@@ -59,14 +68,14 @@ const useStyles = createStyles(({ css }) => ({
 
 interface ContextMenuProps {
   id: string;
-  index: number;
   inPortalThread: boolean;
+  index: number;
+  onClose: () => void;
   position: { x: number; y: number };
   selectedText?: string;
   topic: string | null;
   virtuaRef?: RefObject<VListHandle | null> | null;
   visible: boolean;
-  onClose: () => void;
 }
 
 const ContextMenu = memo<ContextMenuProps>(
@@ -77,19 +86,16 @@ const ContextMenu = memo<ContextMenuProps>(
     const [shareMessage, setShareMessage] = useState<UIChatMessage | null>(null);
     const [isShareModalOpen, setShareModalOpen] = useState(false);
 
-    const [role, error, isCollapsed, hasThread, isRegenerating] = useChatStore(
-      (s) => {
-        const item = displayMessageSelectors.getDisplayMessageById(id)(s);
-        return [
-          item?.role,
-          item?.error,
-          messageStateSelectors.isMessageCollapsed(id)(s),
-          threadSelectors.hasThreadBySourceMsgId(id)(s),
-          messageStateSelectors.isMessageRegenerating(id)(s),
-        ];
-      },
-      isEqual,
-    );
+    const [role, error, isCollapsed, hasThread, isRegenerating] = useChatStore((s) => {
+      const item = displayMessageSelectors.getDisplayMessageById(id)(s);
+      return [
+        item?.role,
+        item?.error,
+        messageStateSelectors.isMessageCollapsed(id)(s),
+        threadSelectors.hasThreadBySourceMsgId(id)(s),
+        messageStateSelectors.isMessageRegenerating(id)(s),
+      ];
+    }, isEqual);
 
     const isThreadMode = useChatStore((s) => !!s.activeThreadId);
     const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
