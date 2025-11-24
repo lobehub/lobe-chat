@@ -6,16 +6,16 @@ import type { PluginEnableChecker } from '@lobechat/context-engine';
 import { ChatCompletionTool, WorkingModel } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
+import { getAgentStoreState } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
+import { KnowledgeBaseManifest } from '@/tools/knowledge-base';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import { getSearchConfig } from '../getSearchConfig';
 import { isCanUseFC } from '../isCanUseFC';
 import { shouldEnableTool } from '../toolFilters';
-import { KnowledgeBaseManifest } from '@/tools/knowledge-base';
-import { getAgentStoreState } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
 
 /**
  * Tools engine configuration options
@@ -59,11 +59,7 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
 export const createAgentToolsEngine = (workingModel: WorkingModel) =>
   createToolsEngine({
     // Add default tools based on configuration
-    defaultToolIds: [
-      WebBrowsingManifest.identifier,
-      // Only add KnowledgeBase tool if knowledge is enabled
-      KnowledgeBaseManifest.identifier,
-    ],
+    defaultToolIds: [WebBrowsingManifest.identifier, KnowledgeBaseManifest.identifier],
     // Create search-aware enableChecker for this request
     enableChecker: ({ pluginId }) => {
       // Check platform-specific constraints (e.g., LocalSystem desktop-only)
@@ -80,7 +76,7 @@ export const createAgentToolsEngine = (workingModel: WorkingModel) =>
       if (pluginId === KnowledgeBaseManifest.identifier) {
         const agentState = getAgentStoreState();
 
-        return agentSelectors.hasEnabledKnowledge(agentState);
+        return agentSelectors.hasEnabledKnowledgeBases(agentState);
       }
 
       // For all other plugins, enable by default

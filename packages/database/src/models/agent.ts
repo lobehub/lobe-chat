@@ -5,6 +5,7 @@ import {
   agentsFiles,
   agentsKnowledgeBases,
   agentsToSessions,
+  documents,
   files,
   knowledgeBases,
 } from '../schemas';
@@ -23,6 +24,22 @@ export class AgentModel {
     const agent = await this.db.query.agents.findFirst({ where: eq(agents.id, id) });
 
     const knowledge = await this.getAgentAssignedKnowledge(id);
+
+    // Fetch document content for enabled files
+    const enabledFileIds = knowledge.files.filter((f) => f.enabled).map((f) => f.id);
+
+    if (enabledFileIds.length > 0) {
+      const documentsData = await this.db.query.documents.findMany({
+        where: and(eq(documents.userId, this.userId), inArray(documents.fileId, enabledFileIds)),
+      });
+
+      const documentMap = new Map(documentsData.map((doc) => [doc.fileId, doc.content]));
+
+      knowledge.files = knowledge.files.map((file) => ({
+        ...file,
+        content: file.enabled && file.id ? documentMap.get(file.id) : undefined,
+      }));
+    }
 
     return { ...agent, ...knowledge };
   };
