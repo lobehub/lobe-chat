@@ -1,12 +1,7 @@
 'use client';
 
 import { ActionIcon } from '@lobehub/ui';
-import {
-  PanelLeftRightDashedIcon,
-  PanelRightClose,
-  PanelRightOpen,
-  SquareChartGanttIcon,
-} from 'lucide-react';
+import { PanelLeftRightDashedIcon, SquareChartGanttIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,19 +11,14 @@ import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
-import { HotkeyEnum } from '@/types/hotkey';
 
 import ShareButton from './ShareButton';
 
 const HeaderAction = memo<{ className?: string }>(({ className }) => {
   const { t } = useTranslation('chat');
-  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.ToggleRightPanel));
-  const [showAgentSettings, wideScreen, toggleConfig, toggleWideScreen] = useGlobalStore((s) => [
-    systemStatusSelectors.showChatSideBar(s),
+
+  const [wideScreen, toggleWideScreen] = useGlobalStore((s) => [
     systemStatusSelectors.wideScreen(s),
-    s.toggleChatSideBar,
     s.toggleWideScreen,
   ]);
 
@@ -46,16 +36,7 @@ const HeaderAction = memo<{ className?: string }>(({ className }) => {
         }}
       />
       <ShareButton />
-      <ActionIcon
-        icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
-        onClick={() => toggleConfig()}
-        size={DESKTOP_HEADER_ICON_SIZE}
-        title={t('toggleRightPanel.title', { ns: 'hotkey' })}
-        tooltipProps={{
-          hotkey,
-          placement: 'bottom',
-        }}
-      />
+
       {isAgentEditable && <SettingButton />}
     </Flexbox>
   );

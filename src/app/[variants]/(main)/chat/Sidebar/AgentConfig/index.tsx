@@ -14,6 +14,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
 import ConfigLayout from '../ConfigLayout';
+import Header from './Header';
 import SystemRole from './SystemRole';
 
 const AgentConfig = memo(() => {
@@ -57,7 +58,7 @@ const AgentConfig = memo(() => {
       expandedHeight={200}
       headerStyle={{ cursor: 'pointer' }}
       sessionId={sessionId}
-      title={t('settingAgent.prompt.title', { ns: 'setting' })}
+      title={<Header />}
     >
       <SystemRole
         editing={editing}

@@ -1,7 +1,8 @@
 'use client';
 
-import { ScrollShadow } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { ChevronRight } from 'lucide-react';
 import { CSSProperties, ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -9,12 +10,17 @@ import SidebarHeader from '@/components/SidebarHeader';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
-export const useStyles = createStyles(({ css }) => ({
+export const useStyles = createStyles(({ css, token }) => ({
+  chevron: css`
+    transition: transform 0.2s ${token.motionEaseInOut};
+  `,
+  chevronExpanded: css`
+    transform: rotate(90deg);
+  `,
   container: css`
     position: relative;
-    transition:
-      height 0.3s ease,
-      opacity 0.3s ease;
+    overflow: hidden auto;
+    transition: all 0.2s ${token.motionEaseInOut};
   `,
 }));
 
@@ -65,10 +71,25 @@ const ConfigLayout = memo<ConfigLayoutProps>(
           ...(expandedHeight !== undefined ? { maxHeight: 0 } : {}),
         };
 
+    const combinedActions = (
+      <Flexbox align="center" gap={2} horizontal>
+        {actions}
+        <ActionIcon
+          className={`${styles.chevron} ${expanded ? styles.chevronExpanded : ''}`}
+          icon={ChevronRight}
+          onClick={handleHeaderClick}
+          size="small"
+          style={{
+            pointerEvents: 'none',
+          }}
+        />
+      </Flexbox>
+    );
+
     return (
       <Flexbox className={className} height={'fit-content'}>
         <SidebarHeader
-          actions={actions}
+          actions={combinedActions}
           onClick={handleHeaderClick}
           style={{
             cursor: 'pointer',
@@ -76,17 +97,15 @@ const ConfigLayout = memo<ConfigLayoutProps>(
           }}
           title={title}
         />
-        <ScrollShadow
+        <Flexbox
           className={styles.container}
-          size={12}
           style={{
-            transition: 'all 0.3s ease',
             ...computedStyle,
             ...containerStyle,
           }}
         >
           {children}
-        </ScrollShadow>
+        </Flexbox>
       </Flexbox>
     );
   },

@@ -61,13 +61,13 @@ const SystemRole = memo(({ editing, setEditing, open, setOpen, isLoading }: Syst
 
   if (isLoading)
     return (
-      <Flexbox padding={16}>
+      <Flexbox padding={8}>
         <Skeleton active avatar={false} title={false} />
       </Flexbox>
     );
 
   return (
-    <Flexbox height={200} onClick={handleOpen} padding={16}>
+    <Flexbox height={200} onClick={handleOpen} paddingInline={8}>
       <EditableMessage
         classNames={{ markdown: styles.prompt }}
         editing={editing}
