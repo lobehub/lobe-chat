@@ -29,6 +29,7 @@ import FolderBreadcrumb from './FolderBreadcrumb';
 import MasonryItemWrapper from './MasonryFileItem/MasonryItemWrapper';
 import MasonrySkeleton from './MasonrySkeleton';
 import BatchActionsDropdown from './ToolBar/BatchActionsDropdown';
+import ExpandableSearch from './ToolBar/ExpandableSearch';
 import type { MultiSelectActionType } from './ToolBar/MultiSelectActions';
 import ViewSwitcher, { ViewMode } from './ToolBar/ViewSwitcher';
 import { useCheckTaskStatus } from './useCheckTaskStatus';
@@ -301,6 +302,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
         }
         right={
           <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
+            <ExpandableSearch />
             <BatchActionsDropdown
               disabled={selectFileIds.length === 0}
               isInKnowledgeBase={!!knowledgeBaseId}
