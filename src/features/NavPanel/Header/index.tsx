@@ -6,7 +6,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import AddButton from './components/AddButton';
 import Nav from './components/Nav';
-import TogglePanelButton from './components/TogglePanelButton';
 import User from './components/User';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -35,7 +34,6 @@ const Header = memo<{ expand?: boolean }>(({ expand }) => {
           gap={2}
           horizontal
         >
-          <TogglePanelButton />
           <AddButton />
         </Flexbox>
       </Flexbox>

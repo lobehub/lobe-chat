@@ -97,7 +97,6 @@ export const useToggleLeftPanelHotkey = () => {
     HotkeyEnum.ToggleLeftPanel,
     () =>
       updateSystemStatus({
-        sessionsWidth: showSessionPanel ? 0 : 320,
         showSessionPanel: !showSessionPanel,
       }),
     {

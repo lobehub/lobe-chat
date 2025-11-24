@@ -53,6 +53,8 @@ export const SESSION_CHAT_URL = (id: string = INBOX_SESSION_ID, mobile?: boolean
     url: '/chat',
   });
 
+export const REPO_URL = (id: string) => urlJoin('/knowledge/bases', id);
+
 export const imageUrl = (filename: string) => `/images/${filename}`;
 
 export const LOBE_URL_IMPORT_NAME = 'settings';

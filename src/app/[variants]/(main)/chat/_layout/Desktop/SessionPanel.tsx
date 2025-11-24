@@ -7,7 +7,6 @@ import { memo, useEffect, useMemo, useState } from 'react';
 
 import { withSuspense } from '@/components/withSuspense';
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
-import { TOOGLE_PANEL_BUTTON_ID } from '@/features/NavPanel/Header/components/TogglePanelButton';
 import { useIsSingleMode } from '@/hooks/useIsSingleMode';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
@@ -20,17 +19,6 @@ export const useStyles = createStyles(({ css, token }) => ({
     height: 100%;
     color: ${token.colorTextSecondary};
     background: ${token.colorBgLayout};
-
-    #${TOOGLE_PANEL_BUTTON_ID} {
-      opacity: 0;
-      transition: opacity 0.15s ${token.motionEaseInOut};
-    }
-
-    &:hover {
-      #${TOOGLE_PANEL_BUTTON_ID} {
-        opacity: 1;
-      }
-    }
   `,
 }));
 

@@ -8,12 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
-import TogglePanelButton from '@/features/NavPanel/Header/components/TogglePanelButton';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
-import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
@@ -48,7 +44,6 @@ const Main = memo<{ className?: string }>(({ className }) => {
   const { t } = useTranslation(['chat', 'hotkey']);
   const { styles } = useStyles();
   useInitAgentConfig();
-  const [isPinned] = usePinnedAgentState();
 
   const [init, isInbox, title, avatar, backgroundColor, members, sessionType] = useSessionStore(
     (s) => {
@@ -76,12 +71,10 @@ const Main = memo<{ className?: string }>(({ className }) => {
   const openChatSettings = useOpenChatSettings();
 
   const displayTitle = isInbox ? t('inbox.title') : title;
-  const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
 
   if (!init)
     return (
       <Flexbox align={'center'} className={className} gap={8} horizontal>
-        {!isPinned && !showSessionPanel && <TogglePanelButton />}
         <Skeleton
           active
           avatar={{ shape: 'circle', size: 28 }}
@@ -94,7 +87,6 @@ const Main = memo<{ className?: string }>(({ className }) => {
   if (isGroup) {
     return (
       <Flexbox align={'center'} className={className} gap={12} horizontal>
-        {!isPinned && !showSessionPanel && <TogglePanelButton />}
         <GroupAvatar
           avatars={[
             {
@@ -119,7 +111,6 @@ const Main = memo<{ className?: string }>(({ className }) => {
 
   return (
     <Flexbox align={'center'} className={className} gap={12} horizontal>
-      {!isPinned && !showSessionPanel && <TogglePanelButton />}
       <Avatar
         avatar={avatar}
         background={backgroundColor}

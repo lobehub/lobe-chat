@@ -12,7 +12,6 @@ import { ChatGroupWizard } from '@/components/ChatGroupWizard';
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
-import TogglePanelButton from '@/features/NavPanel/Header/components/TogglePanelButton';
 import { useActionSWR } from '@/libs/swr';
 import { useChatGroupStore } from '@/store/chatGroup';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -217,7 +216,6 @@ const Header = memo(() => {
           <ProductLogo className={styles.logo} size={36} type={'text'} />
         </Flexbox>
         <Flexbox align={'center'} gap={4} horizontal>
-          <TogglePanelButton />
           {showCreateSession &&
             (enableGroupChat ? (
               <Dropdown

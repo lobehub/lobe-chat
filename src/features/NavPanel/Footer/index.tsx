@@ -11,15 +11,17 @@ import { Link } from 'react-router-dom';
 import { GITHUB } from '@/const/url';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
+import TogglePanelButton from './TogglePanelButton';
+
 const useStyles = createStyles(({ css, token }) => ({
   base: css`
-    pointer-events: none;
     overflow: hidden;
     transition:
       width,
       opacity 200ms ${token.motionEaseInOut};
   `,
   hide: css`
+    pointer-events: none;
     width: 0;
     opacity: 0;
   `,
@@ -30,21 +32,23 @@ const Footer = memo<{ expand?: boolean }>(({ expand }) => {
   const { t } = useTranslation('common');
   const { hideGitHub } = useServerConfigStore(featureFlagsSelectors);
   return (
-    <Flexbox
-      align={'center'}
-      className={cx(styles.base, !expand && styles.hide)}
-      gap={2}
-      horizontal
-      padding={8}
-    >
-      {!hideGitHub && (
-        <a aria-label={'GitHub'} href={GITHUB} rel="noopener noreferrer" target={'_blank'}>
-          <ActionIcon icon={Github} size={16} title={'GitHub'} />
-        </a>
-      )}
-      <Link aria-label={t('labs')} to={'/labs'}>
-        <ActionIcon icon={FlaskConical} size={16} title={t('labs')} />
-      </Link>
+    <Flexbox align={'center'} gap={2} horizontal justify={'space-between'} padding={8}>
+      <Flexbox
+        align={'center'}
+        className={cx(styles.base, !expand && styles.hide)}
+        gap={2}
+        horizontal
+      >
+        {!hideGitHub && (
+          <a aria-label={'GitHub'} href={GITHUB} rel="noopener noreferrer" target={'_blank'}>
+            <ActionIcon icon={Github} size={16} title={'GitHub'} />
+          </a>
+        )}
+        <Link aria-label={t('labs')} to={'/labs'}>
+          <ActionIcon icon={FlaskConical} size={16} title={t('labs')} />
+        </Link>
+      </Flexbox>
+      <TogglePanelButton expand={expand} />
     </Flexbox>
   );
 });
