@@ -81,8 +81,10 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
           { type: 'separator' },
           {
             accelerator: 'Command+,',
-            click: () => {
-              this.app.browserManager.showSettingsWindow();
+            click: async () => {
+              const mainWindow = this.app.browserManager.getMainWindow();
+              await mainWindow.loadUrl('/settings');
+              mainWindow.show();
             },
             label: t('macOS.preferences'),
           },
@@ -337,7 +339,11 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
         label: t('tray.show', { appName }),
       },
       {
-        click: () => this.app.browserManager.retrieveByIdentifier('settings').show(),
+        click: async () => {
+          const mainWindow = this.app.browserManager.getMainWindow();
+          await mainWindow.loadUrl('/settings');
+          mainWindow.show();
+        },
         label: t('file.preferences'),
       },
       { type: 'separator' },
