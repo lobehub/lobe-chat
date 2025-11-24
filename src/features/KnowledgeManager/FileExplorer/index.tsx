@@ -3,7 +3,7 @@
 import { Button, Icon, Text } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowUp } from 'lucide-react';
 import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -199,6 +199,16 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
             <Button
               icon={<Icon icon={ArrowLeft} />}
               onClick={() => {
+                // Navigate to previous position in browser history
+                window.history.back();
+              }}
+              size={'small'}
+              title="Go back"
+              type={'text'}
+            />
+            <Button
+              icon={<Icon icon={ArrowUp} />}
+              onClick={() => {
                 // Navigate up one level in the folder hierarchy
                 const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
                 if (!baseKnowledgeBaseId) return;
@@ -213,6 +223,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
                 }
               }}
               size={'small'}
+              title="Go to parent folder"
               type={'text'}
             />
             <FolderBreadcrumb knowledgeBaseId={knowledgeBaseId} />
