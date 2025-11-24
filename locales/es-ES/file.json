@@ -116,8 +116,8 @@
     "title": "Base de conocimientos"
   },
   "menu": {
-    "allDocuments": "Todos los documentos",
-    "allFiles": "Todos los archivos"
+    "allFiles": "Todos los archivos",
+    "allPages": "Todos los documentos"
   },
   "networkError": "Error al obtener la base de conocimientos, por favor verifica la conexión a internet y vuelve a intentarlo",
   "notSupportGuide": {

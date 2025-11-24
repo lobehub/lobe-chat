@@ -386,6 +386,11 @@ export const createDesktopRouter = (locale: Locales) =>
               index: true,
             },
             {
+              element: <KnowledgeHome />,
+              loader: idLoader,
+              path: ':id',
+            },
+            {
               element: <KnowledgeBasesList />,
               path: 'bases',
             },

@@ -31,7 +31,7 @@ const stepfunChatModels: AIChatModelCard[] = [
           strategy: 'tiered',
           tiers: [
             { rate: 4, upTo: 0.004 },
-            { rate: 8, upTo: 'infinity' }, // 仍与文档有出入
+            { rate: 8, upTo: 'infinity' }, // Still differs from documentation
           ],
           unit: 'millionTokens',
         },

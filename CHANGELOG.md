@@ -2,6 +2,264 @@
 
 # Changelog
 
+## [Version 2.0.0-next.109](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.108...v2.0.0-next.109)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the knowledge files cant open error.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the knowledge files cant open error, closes [#10386](https://github.com/lobehub/lobe-chat/issues/10386) ([8104c77](https://github.com/lobehub/lobe-chat/commit/8104c77))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10368](https://github.com/lobehub/lobe-chat/issues/10368) ([ed707af](https://github.com/lobehub/lobe-chat/commit/ed707af))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.108](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.107...v2.0.0-next.108)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the pinned session not work.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the pinned session not work, closes [#10323](https://github.com/lobehub/lobe-chat/issues/10323) ([224f999](https://github.com/lobehub/lobe-chat/commit/224f999))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.107](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.106...v2.0.0-next.107)
+
+<sup>Released on **2025-11-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Optimize nana banana pro error message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Optimize nana banana pro error message, closes [#10378](https://github.com/lobehub/lobe-chat/issues/10378) ([cb34757](https://github.com/lobehub/lobe-chat/commit/cb34757))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.106](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.105...v2.0.0-next.106)
+
+<sup>Released on **2025-11-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Add nano-banana-pro model support and optimization.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add nano-banana-pro model support and optimization, closes [#10376](https://github.com/lobehub/lobe-chat/issues/10376) ([5349bdc](https://github.com/lobehub/lobe-chat/commit/5349bdc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.105](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.104...v2.0.0-next.105)
+
+<sup>Released on **2025-11-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **operation**: Isolate loading state to current active topic.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **operation**: Isolate loading state to current active topic, closes [#10360](https://github.com/lobehub/lobe-chat/issues/10360) ([c568369](https://github.com/lobehub/lobe-chat/commit/c568369))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.104](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.103...v2.0.0-next.104)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10349](https://github.com/lobehub/lobe-chat/issues/10349) ([3482d38](https://github.com/lobehub/lobe-chat/commit/3482d38))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.103](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.102...v2.0.0-next.103)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Hide ai image config item in settings category.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Hide ai image config item in settings category, closes [#10066](https://github.com/lobehub/lobe-chat/issues/10066) ([90354eb](https://github.com/lobehub/lobe-chat/commit/90354eb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.102](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.101...v2.0.0-next.102)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new provider ZenMux & Gemini 3 Pro Image Preview.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new provider ZenMux & Gemini 3 Pro Image Preview, closes [#10310](https://github.com/lobehub/lobe-chat/issues/10310) ([f2291e4](https://github.com/lobehub/lobe-chat/commit/f2291e4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.101](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.100...v2.0.0-next.101)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Support bedrok prompt cache and usage compute.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support bedrok prompt cache and usage compute, closes [#10337](https://github.com/lobehub/lobe-chat/issues/10337) ([beb9471](https://github.com/lobehub/lobe-chat/commit/beb9471))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.100](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.99...v2.0.0-next.100)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Gemini 3 Pro does not display thought summaries.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Gemini 3 Pro does not display thought summaries, closes [#10345](https://github.com/lobehub/lobe-chat/issues/10345) ([89e296a](https://github.com/lobehub/lobe-chat/commit/89e296a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.99](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.98...v2.0.0-next.99)
 
 <sup>Released on **2025-11-21**</sup>

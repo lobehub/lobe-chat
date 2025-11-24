@@ -5,6 +5,18 @@ const ollamaCloudModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'Cogito v2.1 671B 是一款可免费商用的美国开源大语言模型，它以媲美顶尖模型的性能、更高的 token 推理效率、128k 长上下文和强大的综合能力为核心优势。',
+    displayName: 'Cogito v2.1 671B',
+    id: 'cogito-2.1:671b',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576,
@@ -13,6 +25,7 @@ const ollamaCloudModels: AIChatModelCard[] = [
     displayName: 'Gemini 3 Pro Preview',
     enabled: true,
     id: 'gemini-3-pro-preview',
+    releasedAt: '2025-11-20',
     type: 'chat',
   },
   {

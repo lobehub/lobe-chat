@@ -261,6 +261,10 @@ export const conversationLifecycle: StateCreator<
 
     summaryTitle().catch(console.error);
 
+    // Complete sendMessage operation here - message creation is done
+    // execAgentRuntime is a separate operation (child) that handles AI response generation
+    get().completeOperation(operationId);
+
     // Get the current messages to generate AI response
     const displayMessages = displayMessageSelectors.activeDisplayMessages(get());
 
@@ -287,16 +291,8 @@ export const conversationLifecycle: StateCreator<
       if (userFiles.length > 0) {
         await getAgentStoreState().addFilesToAgent(userFiles, false);
       }
-
-      // Complete operation on success
-      get().completeOperation(operationId);
     } catch (e) {
       console.error(e);
-      // Fail operation on error
-      get().failOperation(operationId, {
-        type: e instanceof Error ? e.name : 'unknown_error',
-        message: e instanceof Error ? e.message : 'AI generation failed',
-      });
     } finally {
       if (data.topicId) get().internal_updateTopicLoading(data.topicId, false);
     }

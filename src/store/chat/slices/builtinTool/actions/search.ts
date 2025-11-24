@@ -276,7 +276,11 @@ export const searchSlice: StateCreator<
   },
 
   triggerSearchAgain: async (id, data, options) => {
-    await get().optimisticUpdatePluginArguments(id, data);
+    // Get operationId from messageOperationMap to ensure proper context isolation
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
+
+    await get().optimisticUpdatePluginArguments(id, data, false, context);
 
     await get().search(id, data, options?.aiSummary);
   },

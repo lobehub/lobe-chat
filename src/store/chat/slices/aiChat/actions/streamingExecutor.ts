@@ -530,6 +530,17 @@ export const streamingExecutor: StateCreator<
               get().completeOperation(reasoningOperationId);
               reasoningOperationId = undefined;
             }
+            break;
+          }
+
+          case 'stop': {
+            // Complete reasoning operation when receiving stop signal
+            if (!duration && reasoningOperationId) {
+              duration = Date.now() - thinkingStartAt;
+              get().completeOperation(reasoningOperationId);
+              reasoningOperationId = undefined;
+            }
+            break;
           }
         }
       },

@@ -116,8 +116,8 @@
     "title": "知識ベース"
   },
   "menu": {
-    "allDocuments": "すべてのドキュメント",
-    "allFiles": "すべてのファイル"
+    "allFiles": "すべてのファイル",
+    "allPages": "すべてのドキュメント"
   },
   "networkError": "知識ベースの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
   "notSupportGuide": {

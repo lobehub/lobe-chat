@@ -5,7 +5,7 @@ import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ProviderItemRender } from '@/components/ModelSelect';
 import { useAiInfraStore } from '@/store/aiInfra';
@@ -106,13 +106,15 @@ const ModelSelect = memo(() => {
             provider={provider.id}
             source={provider.source}
           />
-          <Link to={`/settings?active=provider&provider=${provider.id}`}>
-            <ActionIcon
-              icon={LucideBolt}
-              size={'small'}
-              title={t('ModelSwitchPanel.goToSettings')}
-            />
-          </Link>
+          <ActionIcon
+            icon={LucideBolt}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/settings?active=provider&provider=${provider.id}`);
+            }}
+            size={'small'}
+            title={t('ModelSwitchPanel.goToSettings')}
+          />
         </Flexbox>
       ),
       options: getImageModels(provider),
@@ -128,7 +130,7 @@ const ModelSelect = memo(() => {
 
     if (!modelInfo) return props.label;
 
-    return <ImageModelItem {...modelInfo} showPopover={false} />;
+    return <ImageModelItem {...modelInfo} showBadge={false} showPopover={false} />;
   };
 
   return (

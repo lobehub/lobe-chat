@@ -116,8 +116,8 @@
     "title": "Repositório de conhecimento"
   },
   "menu": {
-    "allDocuments": "Todos os Documentos",
-    "allFiles": "Todos os arquivos"
+    "allFiles": "Todos os arquivos",
+    "allPages": "Todos os Documentos"
   },
   "networkError": "Falha ao acessar a base de conhecimento, por favor verifique a conexão de rede e tente novamente",
   "notSupportGuide": {

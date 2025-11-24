@@ -310,7 +310,7 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     config: {
-      deploymentName: 'qwen3-coder-plus', // 支持上下文缓存
+      deploymentName: 'qwen3-coder-plus', // Supports context caching
     },
     contextWindowTokens: 1_000_000,
     description:
@@ -373,7 +373,7 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     config: {
-      deploymentName: 'qwen3-coder-flash', // 支持上下文缓存
+      deploymentName: 'qwen3-coder-flash', // Supports context caching
     },
     contextWindowTokens: 1_000_000,
     description:
@@ -1052,7 +1052,7 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen3-max', // 其支持上下文缓存
+      deploymentName: 'qwen3-max', // Supports context caching
     },
     contextWindowTokens: 262_144,
     description:
@@ -1119,7 +1119,7 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen3-max-preview', // 其支持上下文缓存
+      deploymentName: 'qwen3-max-preview', // Supports context caching
     },
     contextWindowTokens: 262_144,
     description: '通义千问系列效果最好的模型，适合复杂、多步骤的任务。预览版已支持思考。',

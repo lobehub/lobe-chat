@@ -40,6 +40,7 @@ export type ProviderModelListItem = {
   parameters?: ModelParamsSchema;
   pricePerImage?: number;
   pricing?: Pricing;
+  releasedAt?: string;
 };
 
 type ModelNormalizer = (model: EnabledAiModel) => Promise<ProviderModelListItem>;
@@ -67,6 +68,7 @@ export const normalizeChatModel = (model: EnabledAiModel): ProviderModelListItem
   contextWindowTokens: model.contextWindowTokens,
   displayName: model.displayName ?? '',
   id: model.id,
+  releasedAt: model.releasedAt,
 });
 
 export const normalizeImageModel = async (
@@ -107,6 +109,7 @@ export const normalizeImageModel = async (
     contextWindowTokens: model.contextWindowTokens,
     displayName: model.displayName ?? '',
     id: model.id,
+    releasedAt: model.releasedAt,
     ...(parameters && { parameters }),
     ...(description && { description }),
     ...(pricing && { pricing }),
