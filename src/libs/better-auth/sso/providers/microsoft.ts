@@ -8,15 +8,15 @@ type MicrosoftEnv = {
   AUTH_AZURE_AD_SECRET?: string;
   AUTH_MICROSOFT_ENTRA_ID_ID?: string;
   AUTH_MICROSOFT_ENTRA_ID_SECRET?: string;
+  AUTH_MICROSOFT_ID?: string;
+  AUTH_MICROSOFT_SECRET?: string;
   AZURE_AD_CLIENT_ID?: string;
   AZURE_AD_CLIENT_SECRET?: string;
-  MICROSOFT_CLIENT_ID?: string;
-  MICROSOFT_CLIENT_SECRET?: string;
 };
 
 const getClientId = (env: MicrosoftEnv) => {
   return pickEnv(
-    env.MICROSOFT_CLIENT_ID,
+    env.AUTH_MICROSOFT_ID,
     env.AUTH_MICROSOFT_ENTRA_ID_ID,
     env.AUTH_AZURE_AD_ID,
     env.AZURE_AD_CLIENT_ID,
@@ -25,7 +25,7 @@ const getClientId = (env: MicrosoftEnv) => {
 
 const getClientSecret = (env: MicrosoftEnv) => {
   return pickEnv(
-    env.MICROSOFT_CLIENT_SECRET,
+    env.AUTH_MICROSOFT_SECRET,
     env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
     env.AUTH_AZURE_AD_SECRET,
     env.AZURE_AD_CLIENT_SECRET,
@@ -51,10 +51,10 @@ const provider: BuiltinProviderDefinition<MicrosoftEnv, 'microsoft'> = {
           AUTH_AZURE_AD_SECRET: authEnv.AUTH_AZURE_AD_SECRET,
           AUTH_MICROSOFT_ENTRA_ID_ID: authEnv.AUTH_MICROSOFT_ENTRA_ID_ID,
           AUTH_MICROSOFT_ENTRA_ID_SECRET: authEnv.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+          AUTH_MICROSOFT_ID: authEnv.AUTH_MICROSOFT_ID,
+          AUTH_MICROSOFT_SECRET: authEnv.AUTH_MICROSOFT_SECRET,
           AZURE_AD_CLIENT_ID: authEnv.AZURE_AD_CLIENT_ID,
           AZURE_AD_CLIENT_SECRET: authEnv.AZURE_AD_CLIENT_SECRET,
-          MICROSOFT_CLIENT_ID: authEnv.MICROSOFT_CLIENT_ID,
-          MICROSOFT_CLIENT_SECRET: authEnv.MICROSOFT_CLIENT_SECRET,
         }
       : false;
   },

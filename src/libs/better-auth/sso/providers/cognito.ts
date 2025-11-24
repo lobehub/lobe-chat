@@ -4,37 +4,37 @@ import type { BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<
   {
-    COGNITO_CLIENT_ID: string;
-    COGNITO_CLIENT_SECRET: string;
-    COGNITO_DOMAIN: string;
-    COGNITO_REGION: string;
-    COGNITO_USERPOOL_ID: string;
+    AUTH_COGNITO_DOMAIN: string;
+    AUTH_COGNITO_ID: string;
+    AUTH_COGNITO_REGION: string;
+    AUTH_COGNITO_SECRET: string;
+    AUTH_COGNITO_USERPOOL_ID: string;
   },
   'cognito'
 > = {
   build: (env) => {
     return {
-      clientId: env.COGNITO_CLIENT_ID,
-      clientSecret: env.COGNITO_CLIENT_SECRET,
-      domain: env.COGNITO_DOMAIN,
-      region: env.COGNITO_REGION,
-      userPoolId: env.COGNITO_USERPOOL_ID,
+      clientId: env.AUTH_COGNITO_ID,
+      clientSecret: env.AUTH_COGNITO_SECRET,
+      domain: env.AUTH_COGNITO_DOMAIN,
+      region: env.AUTH_COGNITO_REGION,
+      userPoolId: env.AUTH_COGNITO_USERPOOL_ID,
     };
   },
   checkEnvs: () => {
     return !!(
-      authEnv.COGNITO_CLIENT_ID &&
-      authEnv.COGNITO_CLIENT_SECRET &&
-      authEnv.COGNITO_DOMAIN &&
-      authEnv.COGNITO_REGION &&
-      authEnv.COGNITO_USERPOOL_ID
+      authEnv.AUTH_COGNITO_ID &&
+      authEnv.AUTH_COGNITO_SECRET &&
+      authEnv.AUTH_COGNITO_DOMAIN &&
+      authEnv.AUTH_COGNITO_REGION &&
+      authEnv.AUTH_COGNITO_USERPOOL_ID
     )
       ? {
-          COGNITO_CLIENT_ID: authEnv.COGNITO_CLIENT_ID,
-          COGNITO_CLIENT_SECRET: authEnv.COGNITO_CLIENT_SECRET,
-          COGNITO_DOMAIN: authEnv.COGNITO_DOMAIN,
-          COGNITO_REGION: authEnv.COGNITO_REGION,
-          COGNITO_USERPOOL_ID: authEnv.COGNITO_USERPOOL_ID,
+          AUTH_COGNITO_DOMAIN: authEnv.AUTH_COGNITO_DOMAIN,
+          AUTH_COGNITO_ID: authEnv.AUTH_COGNITO_ID,
+          AUTH_COGNITO_REGION: authEnv.AUTH_COGNITO_REGION,
+          AUTH_COGNITO_SECRET: authEnv.AUTH_COGNITO_SECRET,
+          AUTH_COGNITO_USERPOOL_ID: authEnv.AUTH_COGNITO_USERPOOL_ID,
         }
       : false;
   },

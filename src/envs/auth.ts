@@ -17,10 +17,6 @@ declare global {
       NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION?: string;
       BETTER_AUTH_SSO_PROVIDERS?: string;
 
-      // ===== Google OAuth (Better Auth) ===== //
-      GOOGLE_CLIENT_ID?: string;
-      GOOGLE_CLIENT_SECRET?: string;
-
       // ===== Next Auth ===== //
       NEXT_AUTH_SECRET?: string;
 
@@ -31,6 +27,22 @@ declare global {
       NEXT_AUTH_SSO_SESSION_STRATEGY?: string;
 
       // ===== Next Auth Provider Credentials ===== //
+      AUTH_GOOGLE_ID?: string;
+      AUTH_GOOGLE_SECRET?: string;
+
+      AUTH_GITHUB_ID?: string;
+      AUTH_GITHUB_SECRET?: string;
+
+      AUTH_COGNITO_ID?: string;
+      AUTH_COGNITO_SECRET?: string;
+      AUTH_COGNITO_ISSUER?: string;
+      AUTH_COGNITO_DOMAIN?: string;
+      AUTH_COGNITO_REGION?: string;
+      AUTH_COGNITO_USERPOOL_ID?: string;
+
+      AUTH_MICROSOFT_ID?: string;
+      AUTH_MICROSOFT_SECRET?: string;
+
       AUTH_AUTH0_ID?: string;
       AUTH_AUTH0_SECRET?: string;
       AUTH_AUTH0_ISSUER?: string;
@@ -86,11 +98,6 @@ declare global {
       AUTH_AZURE_AD_SECRET?: string;
       AUTH_AZURE_AD_TENANT_ID?: string;
 
-      // Github
-      GITHUB_CLIENT_ID?: string;
-      GITHUB_CLIENT_SECRET?: string;
-
-      // Azure AD
       AZURE_AD_CLIENT_ID?: string;
       AZURE_AD_CLIENT_SECRET?: string;
       AZURE_AD_TENANT_ID?: string;
@@ -128,30 +135,27 @@ export const getAuthConfig = () => {
       BETTER_AUTH_SECRET: z.string().optional(),
       BETTER_AUTH_SSO_PROVIDERS: z.string().optional().default(''),
 
-      // Google OAuth
-      GOOGLE_CLIENT_ID: z.string().optional(),
-      GOOGLE_CLIENT_SECRET: z.string().optional(),
-
-      // GitHub OAuth
-      GITHUB_CLIENT_ID: z.string().optional(),
-      GITHUB_CLIENT_SECRET: z.string().optional(),
-
-      // AWS Cognito OAuth
-      COGNITO_CLIENT_ID: z.string().optional(),
-      COGNITO_CLIENT_SECRET: z.string().optional(),
-      COGNITO_DOMAIN: z.string().optional(),
-      COGNITO_REGION: z.string().optional(),
-      COGNITO_USERPOOL_ID: z.string().optional(),
-
-      // Microsoft OAuth
-      MICROSOFT_CLIENT_ID: z.string().optional(),
-      MICROSOFT_CLIENT_SECRET: z.string().optional(),
-
       // ---------------------------------- next auth ----------------------------------
       NEXT_AUTH_SECRET: z.string().optional(),
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
       NEXT_AUTH_DEBUG: z.boolean().optional().default(false),
       NEXT_AUTH_SSO_SESSION_STRATEGY: z.enum(['jwt', 'database']).optional().default('jwt'),
+
+      AUTH_GOOGLE_ID: z.string().optional(),
+      AUTH_GOOGLE_SECRET: z.string().optional(),
+
+      AUTH_GITHUB_ID: z.string().optional(),
+      AUTH_GITHUB_SECRET: z.string().optional(),
+
+      AUTH_COGNITO_ID: z.string().optional(),
+      AUTH_COGNITO_SECRET: z.string().optional(),
+      AUTH_COGNITO_ISSUER: z.string().optional(),
+      AUTH_COGNITO_DOMAIN: z.string().optional(),
+      AUTH_COGNITO_REGION: z.string().optional(),
+      AUTH_COGNITO_USERPOOL_ID: z.string().optional(),
+
+      AUTH_MICROSOFT_ID: z.string().optional(),
+      AUTH_MICROSOFT_SECRET: z.string().optional(),
 
       AUTH_AUTH0_ID: z.string().optional(),
       AUTH_AUTH0_SECRET: z.string().optional(),
@@ -208,14 +212,13 @@ export const getAuthConfig = () => {
       AUTH_AZURE_AD_SECRET: z.string().optional(),
       AUTH_AZURE_AD_TENANT_ID: z.string().optional(),
 
-      ZITADEL_CLIENT_ID: z.string().optional(),
-      ZITADEL_CLIENT_SECRET: z.string().optional(),
-      ZITADEL_ISSUER: z.string().optional(),
-
-      // Azure AD
       AZURE_AD_CLIENT_ID: z.string().optional(),
       AZURE_AD_CLIENT_SECRET: z.string().optional(),
       AZURE_AD_TENANT_ID: z.string().optional(),
+
+      ZITADEL_CLIENT_ID: z.string().optional(),
+      ZITADEL_CLIENT_SECRET: z.string().optional(),
+      ZITADEL_ISSUER: z.string().optional(),
 
       LOGTO_WEBHOOK_SIGNING_KEY: z.string().optional(),
 
@@ -239,24 +242,10 @@ export const getAuthConfig = () => {
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
       BETTER_AUTH_SSO_PROVIDERS: process.env.BETTER_AUTH_SSO_PROVIDERS,
 
-      // Google OAuth (Better Auth)
-      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-
-      // GitHub OAuth (Better Auth)
-      GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-      GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
-
-      // AWS Cognito OAuth (Better Auth)
-      COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
-      COGNITO_CLIENT_SECRET: process.env.COGNITO_CLIENT_SECRET,
-      COGNITO_DOMAIN: process.env.COGNITO_DOMAIN,
-      COGNITO_REGION: process.env.COGNITO_REGION,
-      COGNITO_USERPOOL_ID: process.env.COGNITO_USERPOOL_ID,
-
-      // Microsoft OAuth (Better Auth)
-      MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
-      MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
+      // better-auth env for Cognito provider is different from next-auth's one
+      AUTH_COGNITO_DOMAIN: process.env.AUTH_COGNITO_DOMAIN,
+      AUTH_COGNITO_REGION: process.env.AUTH_COGNITO_REGION,
+      AUTH_COGNITO_USERPOOL_ID: process.env.AUTH_COGNITO_USERPOOL_ID,
 
       // ---------------------------------- next auth ----------------------------------
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH === '1',
@@ -266,6 +255,19 @@ export const getAuthConfig = () => {
       NEXT_AUTH_SSO_SESSION_STRATEGY: process.env.NEXT_AUTH_SSO_SESSION_STRATEGY || 'jwt',
 
       // Next Auth Provider Credentials
+      AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+      AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+
+      AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
+      AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
+
+      AUTH_MICROSOFT_ID: process.env.AUTH_MICROSOFT_ID,
+      AUTH_MICROSOFT_SECRET: process.env.AUTH_MICROSOFT_SECRET,
+
+      AUTH_COGNITO_ID: process.env.AUTH_COGNITO_ID,
+      AUTH_COGNITO_SECRET: process.env.AUTH_COGNITO_SECRET,
+      AUTH_COGNITO_ISSUER: process.env.AUTH_COGNITO_ISSUER,
+
       AUTH_AUTH0_ID: process.env.AUTH_AUTH0_ID,
       AUTH_AUTH0_SECRET: process.env.AUTH_AUTH0_SECRET,
       AUTH_AUTH0_ISSUER: process.env.AUTH_AUTH0_ISSUER,
@@ -321,14 +323,14 @@ export const getAuthConfig = () => {
       AUTH_AZURE_AD_SECRET: process.env.AUTH_AZURE_AD_SECRET,
       AUTH_AZURE_AD_TENANT_ID: process.env.AUTH_AZURE_AD_TENANT_ID,
 
-      ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
-      ZITADEL_CLIENT_SECRET: process.env.ZITADEL_CLIENT_SECRET,
-      ZITADEL_ISSUER: process.env.ZITADEL_ISSUER,
-
-      // Azure AD
+      // legacy Azure AD envs for backward compatibility
       AZURE_AD_CLIENT_ID: process.env.AZURE_AD_CLIENT_ID,
       AZURE_AD_CLIENT_SECRET: process.env.AZURE_AD_CLIENT_SECRET,
       AZURE_AD_TENANT_ID: process.env.AZURE_AD_TENANT_ID,
+
+      ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
+      ZITADEL_CLIENT_SECRET: process.env.ZITADEL_CLIENT_SECRET,
+      ZITADEL_ISSUER: process.env.ZITADEL_ISSUER,
 
       // LOGTO
       LOGTO_WEBHOOK_SIGNING_KEY: process.env.LOGTO_WEBHOOK_SIGNING_KEY,

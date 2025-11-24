@@ -4,22 +4,22 @@ import type { BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<
   {
-    GITHUB_CLIENT_ID: string;
-    GITHUB_CLIENT_SECRET: string;
+    AUTH_GITHUB_ID: string;
+    AUTH_GITHUB_SECRET: string;
   },
   'github'
 > = {
   build: (env) => {
     return {
-      clientId: env.GITHUB_CLIENT_ID,
-      clientSecret: env.GITHUB_CLIENT_SECRET,
+      clientId: env.AUTH_GITHUB_ID,
+      clientSecret: env.AUTH_GITHUB_SECRET,
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.GITHUB_CLIENT_ID && authEnv.GITHUB_CLIENT_SECRET)
+    return !!(authEnv.AUTH_GITHUB_ID && authEnv.AUTH_GITHUB_SECRET)
       ? {
-          GITHUB_CLIENT_ID: authEnv.GITHUB_CLIENT_ID,
-          GITHUB_CLIENT_SECRET: authEnv.GITHUB_CLIENT_SECRET,
+          AUTH_GITHUB_ID: authEnv.AUTH_GITHUB_ID,
+          AUTH_GITHUB_SECRET: authEnv.AUTH_GITHUB_SECRET,
         }
       : false;
   },

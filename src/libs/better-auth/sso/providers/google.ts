@@ -4,22 +4,22 @@ import type { BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<
   {
-    GOOGLE_CLIENT_ID: string;
-    GOOGLE_CLIENT_SECRET: string;
+    AUTH_GOOGLE_ID: string;
+    AUTH_GOOGLE_SECRET: string;
   },
   'google'
 > = {
   build: (env) => {
     return {
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: env.AUTH_GOOGLE_ID,
+      clientSecret: env.AUTH_GOOGLE_SECRET,
     };
   },
   checkEnvs: () => {
-    return !!(authEnv.GOOGLE_CLIENT_ID && authEnv.GOOGLE_CLIENT_SECRET)
+    return !!(authEnv.AUTH_GOOGLE_ID && authEnv.AUTH_GOOGLE_SECRET)
       ? {
-          GOOGLE_CLIENT_ID: authEnv.GOOGLE_CLIENT_ID,
-          GOOGLE_CLIENT_SECRET: authEnv.GOOGLE_CLIENT_SECRET,
+          AUTH_GOOGLE_ID: authEnv.AUTH_GOOGLE_ID,
+          AUTH_GOOGLE_SECRET: authEnv.AUTH_GOOGLE_SECRET,
         }
       : false;
   },
