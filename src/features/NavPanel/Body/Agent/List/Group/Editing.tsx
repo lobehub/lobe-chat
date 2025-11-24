@@ -43,6 +43,7 @@ const Editing = memo<EditingProps>(({ id, name, toggleEditing }) => {
             toggleEditing(false);
           }}
           onChange={(e) => setNewName(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
           onPressEnter={() => {
             handleUpdate();
             toggleEditing(false);

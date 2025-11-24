@@ -1,5 +1,6 @@
 import { Avatar, Block, EmojiPicker, Input } from '@lobehub/ui';
 import { Popover } from 'antd';
+import { useThemeMode } from 'antd-style';
 import { memo, useCallback, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -16,6 +17,7 @@ interface EditingProps {
 
 const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
+  const { isDarkMode } = useThemeMode();
 
   const [editing, updateSessionMeta, switchSession, session] = useSessionStore((s) => {
     const sess = sessionSelectors.getSessionById(id)(s);
@@ -54,7 +56,7 @@ const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
     <Popover
       arrow={false}
       content={
-        <Flexbox gap={4} horizontal style={{ width: 320 }}>
+        <Flexbox gap={4} horizontal onClick={(e) => e.stopPropagation()} style={{ width: 320 }}>
           <EmojiPicker
             customRender={(avatar) => (
               <Block
@@ -62,7 +64,8 @@ const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
                 clickable
                 height={36}
                 justify={'center'}
-                variant={'outlined'}
+                onClick={(e) => e.stopPropagation()}
+                variant={isDarkMode ? 'filled' : 'outlined'}
                 width={36}
               >
                 <Avatar avatar={avatar} shape={'square'} size={32} />
@@ -78,7 +81,6 @@ const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
             defaultValue={title}
             onBlur={() => {
               handleUpdate();
-              toggleEditing(false);
             }}
             onChange={(e) => setNewTitle(e.target.value)}
             onPressEnter={() => {
