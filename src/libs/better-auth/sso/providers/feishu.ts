@@ -3,7 +3,7 @@ import { authEnv } from '@/envs/auth';
 import type { GenericProviderDefinition } from '../types';
 
 const FEISHU_AUTHORIZATION_URL = 'https://accounts.feishu.cn/open-apis/authen/v1/authorize';
-const FEISHU_TOKEN_PROXY_PATH = '/api/auth/feishu/token';
+const FEISHU_TOKEN_URL = 'https://open.feishu.cn/open-apis/authen/v2/oauth/token';
 const FEISHU_USERINFO_URL = 'https://open.feishu.cn/open-apis/authen/v1/user_info';
 
 type FeishuUserProfile = {
@@ -26,6 +26,22 @@ type FeishuUserInfoResponse = {
   msg?: string;
 };
 
+type FeishuTokenPayload = {
+  access_token?: string;
+  expires_in?: number;
+  refresh_token?: string;
+  scope?: string;
+  tokenType?: string;
+  token_type?: string;
+};
+
+type FeishuTokenResponse = {
+  code?: number;
+  data?: FeishuTokenPayload;
+  message?: string;
+  msg?: string;
+} & FeishuTokenPayload;
+
 const isFeishuProfile = (value: unknown): value is FeishuUserProfile => {
   if (!value || typeof value !== 'object') return false;
   const candidate = value as Record<string, unknown>;
@@ -37,26 +53,18 @@ const isFeishuProfile = (value: unknown): value is FeishuUserProfile => {
   );
 };
 
-const ensureBaseURL = (baseUrl: string | undefined) => {
-  const trimmedUrl = baseUrl?.trim();
-  if (!trimmedUrl) {
-    throw new Error('[Better-Auth] NEXT_PUBLIC_BETTER_AUTH_URL is required for Feishu SSO');
-  }
-  return trimmedUrl.replace(/\/$/, '');
-};
+const parseScopes = (scope: string | undefined) =>
+  scope ? scope.split(/[\s,]+/).filter(Boolean) : [];
 
 const provider: GenericProviderDefinition<{
   AUTH_FEISHU_APP_ID: string;
   AUTH_FEISHU_APP_SECRET: string;
-  NEXT_PUBLIC_BETTER_AUTH_URL: string;
 }> = {
   build: (env) => {
     const clientId = env.AUTH_FEISHU_APP_ID;
     const clientSecret = env.AUTH_FEISHU_APP_SECRET;
-    const tokenProxy = `${ensureBaseURL(env.NEXT_PUBLIC_BETTER_AUTH_URL)}${FEISHU_TOKEN_PROXY_PATH}`;
 
     return {
-      authentication: 'post',
       authorizationUrl: FEISHU_AUTHORIZATION_URL,
       authorizationUrlParams: {
         app_id: clientId,
@@ -65,6 +73,47 @@ const provider: GenericProviderDefinition<{
       },
       clientId,
       clientSecret,
+      /**
+       * Exchange code directly with Feishu (no proxy needed).
+       */
+      getToken: async ({ code, redirectURI }) => {
+        const tokenResponse = await fetch(FEISHU_TOKEN_URL, {
+          body: JSON.stringify({
+            app_id: clientId,
+            app_secret: clientSecret,
+            code,
+            grant_type: 'authorization_code',
+            redirect_uri: redirectURI,
+          }),
+          cache: 'no-store',
+          headers: {
+            'content-type': 'application/json; charset=utf-8',
+          },
+          method: 'POST',
+        });
+
+        const parsed = (await tokenResponse.json()) as FeishuTokenResponse;
+        const payload = parsed.data ?? parsed;
+
+        const hasErrorCode = typeof parsed.code === 'number' && parsed.code !== 0;
+        const tokenMissing = !payload.access_token;
+
+        if (!tokenResponse.ok || hasErrorCode || tokenMissing) {
+          throw new Error(parsed.msg ?? parsed.message ?? 'Failed to fetch Feishu OAuth token');
+        }
+
+        return {
+          accessToken: payload.access_token,
+          accessTokenExpiresAt: payload.expires_in
+            ? new Date(Date.now() + payload.expires_in * 1000)
+            : undefined,
+          expiresIn: payload.expires_in,
+          raw: parsed,
+          refreshToken: payload.refresh_token,
+          scopes: parseScopes(payload.scope),
+          tokenType: payload.token_type ?? payload.tokenType ?? 'Bearer',
+        };
+      },
       getUserInfo: async (tokens) => {
         if (!tokens.accessToken) return null;
 
@@ -114,20 +163,14 @@ const provider: GenericProviderDefinition<{
       providerId: 'feishu',
       responseMode: 'query',
       scopes: [],
-      tokenUrl: tokenProxy,
     };
   },
 
   checkEnvs: () => {
-    return !!(
-      authEnv.AUTH_FEISHU_APP_ID &&
-      authEnv.AUTH_FEISHU_APP_SECRET &&
-      authEnv.NEXT_PUBLIC_BETTER_AUTH_URL
-    )
+    return !!(authEnv.AUTH_FEISHU_APP_ID && authEnv.AUTH_FEISHU_APP_SECRET)
       ? {
           AUTH_FEISHU_APP_ID: authEnv.AUTH_FEISHU_APP_ID,
           AUTH_FEISHU_APP_SECRET: authEnv.AUTH_FEISHU_APP_SECRET,
-          NEXT_PUBLIC_BETTER_AUTH_URL: authEnv.NEXT_PUBLIC_BETTER_AUTH_URL,
         }
       : false;
   },

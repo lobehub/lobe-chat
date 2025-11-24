@@ -3,34 +3,33 @@ import { authEnv } from '@/envs/auth';
 import type { GenericProviderDefinition } from '../types';
 
 const WECHAT_AUTHORIZATION_URL = 'https://open.weixin.qq.com/connect/qrconnect';
-const WECHAT_TOKEN_PROXY_PATH = '/api/auth/wechat/token';
+const WECHAT_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token';
 const WECHAT_USERINFO_URL = 'https://api.weixin.qq.com/sns/userinfo';
 
-const ensureBaseURL = (baseUrl: string | undefined) => {
-  const trimmedUrl = baseUrl?.trim();
-  if (!trimmedUrl) {
-    throw new Error('[Better-Auth] NEXT_PUBLIC_BETTER_AUTH_URL is required for WeChat SSO');
-  }
-  return trimmedUrl.replace(/\/$/, '');
+type WeChatTokenResponse = {
+  access_token?: string;
+  errcode?: number;
+  errmsg?: string;
+  expires_in?: number;
+  openid?: string;
+  refresh_token?: string;
+  scope?: string;
+  token_type?: string;
+  unionid?: string;
 };
 
-const extractWechatMetadata = (scopes: string[] | undefined, key: string) => {
-  const record = scopes?.find((item) => item.startsWith(`${key}:`));
-  return record?.slice(key.length + 1);
-};
+const parseWechatScopes = (scope: string | undefined) =>
+  scope ? scope.split(' ').filter(Boolean) : [];
 
 const provider: GenericProviderDefinition<{
   AUTH_WECHAT_ID: string;
   AUTH_WECHAT_SECRET: string;
-  NEXT_PUBLIC_BETTER_AUTH_URL: string;
 }> = {
   build: (env) => {
     const clientId = env.AUTH_WECHAT_ID;
     const clientSecret = env.AUTH_WECHAT_SECRET;
-    const tokenProxy = `${ensureBaseURL(env.NEXT_PUBLIC_BETTER_AUTH_URL)}${WECHAT_TOKEN_PROXY_PATH}`;
 
     return {
-      authentication: 'post',
       authorizationUrl: WECHAT_AUTHORIZATION_URL,
       authorizationUrlParams: {
         appid: clientId,
@@ -40,13 +39,48 @@ const provider: GenericProviderDefinition<{
       clientId,
       clientSecret,
       /**
-       * Our token proxy encodes wechat_openid/wechat_unionid metadata into the scope string so we
-       * can safely retrieve the profile here.
+       * WeChat uses a non-standard token endpoint (GET with appid/secret/code)
+       * and returns openid/unionid alongside tokens, so we exchange the code
+       * manually instead of proxying through a custom API route.
+       */
+      getToken: async ({ code }) => {
+        const tokenUrl = new URL(WECHAT_TOKEN_URL);
+        tokenUrl.searchParams.set('appid', clientId);
+        tokenUrl.searchParams.set('secret', clientSecret);
+        tokenUrl.searchParams.set('code', code);
+        tokenUrl.searchParams.set('grant_type', 'authorization_code');
+
+        const response = await fetch(tokenUrl, { cache: 'no-store' });
+        const data = (await response.json()) as WeChatTokenResponse;
+
+        if (!response.ok || data.errcode) {
+          throw new Error(data.errmsg ?? 'Failed to fetch WeChat OAuth token');
+        }
+
+        if (!data.access_token || !data.openid) {
+          throw new Error('WeChat token response is missing required fields');
+        }
+
+        return {
+          accessToken: data.access_token,
+          accessTokenExpiresAt: data.expires_in
+            ? new Date(Date.now() + data.expires_in * 1000)
+            : undefined,
+          expiresIn: data.expires_in,
+          raw: data,
+          refreshToken: data.refresh_token,
+          refreshTokenExpiresAt: undefined,
+          scopes: parseWechatScopes(data.scope),
+          tokenType: data.token_type ?? 'Bearer',
+        };
+      },
+      /**
+       * Use openid/unionid returned in the token response; no custom scope encoding needed.
        */
       getUserInfo: async (tokens) => {
         const accessToken = tokens.accessToken;
-        const openId = extractWechatMetadata(tokens.scopes, 'wechat_openid');
-        const unionId = extractWechatMetadata(tokens.scopes, 'wechat_unionid');
+        const openId = (tokens as { raw?: WeChatTokenResponse }).raw?.openid;
+        const unionId = (tokens as { raw?: WeChatTokenResponse }).raw?.unionid;
 
         if (!accessToken || !openId) {
           return null;
@@ -88,21 +122,14 @@ const provider: GenericProviderDefinition<{
       responseMode: 'query',
 
       scopes: ['snsapi_login'],
-
-      tokenUrl: tokenProxy,
     };
   },
 
   checkEnvs: () => {
-    return !!(
-      authEnv.AUTH_WECHAT_ID &&
-      authEnv.AUTH_WECHAT_SECRET &&
-      authEnv.NEXT_PUBLIC_BETTER_AUTH_URL
-    )
+    return !!(authEnv.AUTH_WECHAT_ID && authEnv.AUTH_WECHAT_SECRET)
       ? {
           AUTH_WECHAT_ID: authEnv.AUTH_WECHAT_ID,
           AUTH_WECHAT_SECRET: authEnv.AUTH_WECHAT_SECRET,
-          NEXT_PUBLIC_BETTER_AUTH_URL: authEnv.NEXT_PUBLIC_BETTER_AUTH_URL,
         }
       : false;
   },
