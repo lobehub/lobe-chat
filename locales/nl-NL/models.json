@@ -1715,6 +1715,9 @@
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview is het meest geavanceerde denkkader van Google, dat in staat is om complexe problemen op het gebied van code, wiskunde en STEM te redeneren, en grote datasets, codebases en documenten te analyseren met behulp van lange context."
   },
+  "google/gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image (Nano Banana Pro) is het beeldgeneratiemodel van Google en ondersteunt tevens multimodale gesprekken."
+  },
   "google/gemini-3-pro-image-preview-free": {
     "description": "Gratis versie van Gemini 3 Pro Image, met beperkte capaciteit voor multimodale generatie."
   },
