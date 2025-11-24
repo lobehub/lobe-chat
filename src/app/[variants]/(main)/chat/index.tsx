@@ -19,7 +19,6 @@ const DesktopChatPage = memo(() => {
   return (
     <>
       <PageTitle />
-      <ChatHeader />
       <Flexbox
         height={'100%'}
         horizontal
@@ -34,6 +33,7 @@ const DesktopChatPage = memo(() => {
           style={{ overflow: 'hidden', position: 'relative' }}
           width={'100%'}
         >
+          <ChatHeader />
           <ConversationArea mobile={false} />
         </Flexbox>
         <Portal>

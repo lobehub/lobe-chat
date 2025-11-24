@@ -40,7 +40,7 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const Main = memo<{ className?: string }>(({ className }) => {
+const HeaderInfo = memo<{ className?: string }>(({ className }) => {
   const { t } = useTranslation(['chat', 'hotkey']);
   const { styles } = useStyles();
   useInitAgentConfig();
@@ -137,6 +137,6 @@ export default memo<{ className?: string }>(({ className }) => (
       />
     }
   >
-    <Main className={className} />
+    <HeaderInfo className={className} />
   </Suspense>
 ));
