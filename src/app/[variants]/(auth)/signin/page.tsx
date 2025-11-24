@@ -245,10 +245,13 @@ export default function SignInPage() {
     router.push(`/signup?${params.toString()}`);
   };
 
-  // Map provider names to i18n keys
-  const providerI18nKeys: Record<string, string> = {
-    github: t('betterAuth.signin.continueWithGithub'),
-    google: t('betterAuth.signin.continueWithGoogle'),
+  const getProviderLabel = (provider: string) => {
+    const normalized = normalizeProviderId(provider);
+    const normalizedKey = normalized
+      .replaceAll(/(^|[_-])([a-z])/g, (_, __, c) => c.toUpperCase())
+      .replaceAll(/[^\dA-Za-z]/g, '');
+    const key = `betterAuth.signin.continueWith${normalizedKey}`;
+    return t(key, { defaultValue: `Continue with ${normalized}` });
   };
 
   const handleSocialSignIn = async (provider: string) => {
@@ -304,7 +307,7 @@ export default function SignInPage() {
                       onClick={() => handleSocialSignIn(provider)}
                       size="large"
                     >
-                      {providerI18nKeys[provider] || `Continue with ${provider}`}
+                      {getProviderLabel(provider)}
                     </Button>
                   ))}
 
