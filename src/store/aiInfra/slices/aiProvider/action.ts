@@ -1,4 +1,4 @@
-import { isDesktop } from '@lobechat/const';
+import { DESKTOP_USER_ID, isDesktop } from '@lobechat/const';
 import { getModelPropertyWithFallback, resolveImageSinglePrice } from '@lobechat/model-runtime';
 import { uniqBy } from 'lodash-es';
 import {
@@ -194,6 +194,7 @@ export interface AiProviderAction {
    */
   useFetchAiProviderRuntimeState: (
     isLoginOnInit: boolean | undefined,
+    isSyncActive?: boolean,
   ) => SWRResponse<AiProviderRuntimeStateWithBuiltinModels | undefined>;
 }
 
@@ -318,14 +319,29 @@ export const createAiProviderSlice: StateCreator<
       },
     ),
 
-  useFetchAiProviderRuntimeState: (isLogin) => {
+  useFetchAiProviderRuntimeState: (isLogin, isSyncActive?) => {
     const isAuthLoaded = useUserStore(authSelectors.isLoaded);
     const userId = useUserStore(userProfileSelectors.userId);
     // Only fetch when auth is loaded and login status is explicitly defined (true or false)
     // Prevents unnecessary requests when login state is null/undefined
-    const shouldFetch = isAuthLoaded && isLogin !== null && isLogin !== undefined;
+    let shouldFetch = isAuthLoaded && isLogin !== null && isLogin !== undefined;
+
+    if (isDesktop) {
+      if (isSyncActive) {
+        if (userId === undefined || userId === DESKTOP_USER_ID) {
+          shouldFetch = false;
+        } else {
+          shouldFetch = true;
+        }
+      } else if (userId === undefined) {
+        shouldFetch = false;
+      } else {
+        shouldFetch = true;
+      }
+    }
+
     return useClientDataSWR<AiProviderRuntimeStateWithBuiltinModels | undefined>(
-      shouldFetch ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin, userId] : null,
+      shouldFetch ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin] : null,
       async ([, isLogin]) => {
         const [{ LOBE_DEFAULT_MODEL_LIST: builtinAiModelList }, { DEFAULT_MODEL_PROVIDER_LIST }] =
           await Promise.all([import('model-bank'), import('@/config/modelProviders')]);
