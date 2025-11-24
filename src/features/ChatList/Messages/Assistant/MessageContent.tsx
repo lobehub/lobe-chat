@@ -67,6 +67,7 @@ export const AssistantMessageContent = memo<
         <DefaultMessage
           addIdOnDOM={false}
           content={content}
+          hasImages={showImageItems}
           id={id}
           isToolCallGenerating={isToolCallGenerating}
           {...props}
