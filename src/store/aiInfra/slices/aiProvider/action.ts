@@ -16,7 +16,7 @@ import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
 import { useUserStore } from '@/store/user';
-import { authSelectors } from '@/store/user/selectors';
+import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -77,10 +77,10 @@ export const normalizeImageModel = async (
   const fallbackParametersPromise = model.parameters
     ? Promise.resolve<ModelParamsSchema | undefined>(model.parameters)
     : getModelPropertyWithFallback<ModelParamsSchema | undefined>(
-        model.id,
-        'parameters',
-        model.providerId,
-      );
+      model.id,
+      'parameters',
+      model.providerId,
+    );
 
   const modelWithPricing = model as AIImageModelCard;
   const fallbackPricingPromise = modelWithPricing.pricing
@@ -319,19 +319,19 @@ export const createAiProviderSlice: StateCreator<
     ),
 
   useFetchAiProviderRuntimeState: (isLogin) => {
-    const isAuthLoaded = authSelectors.isLoaded(useUserStore.getState());
+    const isAuthLoaded = useUserStore(authSelectors.isLoaded);
+    const userId = useUserStore(userProfileSelectors.userId);
     // Only fetch when auth is loaded and login status is explicitly defined (true or false)
     // Prevents unnecessary requests when login state is null/undefined
     const shouldFetch = isAuthLoaded && isLogin !== null && isLogin !== undefined;
     return useClientDataSWR<AiProviderRuntimeStateWithBuiltinModels | undefined>(
-      shouldFetch ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin] : null,
+      shouldFetch ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin, userId] : null,
       async ([, isLogin]) => {
         const [{ LOBE_DEFAULT_MODEL_LIST: builtinAiModelList }, { DEFAULT_MODEL_PROVIDER_LIST }] =
           await Promise.all([import('model-bank'), import('@/config/modelProviders')]);
 
         if (isLogin) {
           const data = await aiProviderService.getAiProviderRuntimeState();
-
           // Build model lists with proper async handling
           const [enabledChatModelList, enabledImageModelList] = await Promise.all([
             buildChatProviderModelLists(data.enabledChatAiProviders, data.enabledAiModels),
