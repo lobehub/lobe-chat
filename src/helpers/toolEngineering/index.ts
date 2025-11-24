@@ -76,7 +76,7 @@ export const createAgentToolsEngine = (workingModel: WorkingModel) =>
       if (pluginId === KnowledgeBaseManifest.identifier) {
         const agentState = getAgentStoreState();
 
-        return agentSelectors.hasKnowledgeBases(agentState);
+        return agentSelectors.hasEnabledKnowledgeBases(agentState);
       }
 
       // For all other plugins, enable by default
