@@ -19,7 +19,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   drawer: css`
     z-index: 20;
-    background: ${token.colorBgContainerSecondary};
+    background: ${token.colorBgLayout};
   `,
   header: css`
     border-block-end: 1px solid ${token.colorBorderSecondary};
@@ -50,11 +50,6 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
       minWidth={CHAT_SIDEBAR_WIDTH}
       onExpandChange={handleExpand}
       placement={'left'}
-      showHandleWhenCollapsed={false}
-      showHandleWideArea={false}
-      styles={{
-        handle: { display: 'none' },
-      }}
     >
       <DraggablePanelContainer
         style={{

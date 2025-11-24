@@ -11,7 +11,7 @@ import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
-    background: linear-gradient(${token.colorBgElevated}, ${token.colorBgLayout}) !important;
+    background: linear-gradient(${token.colorBgElevated}, ${token.colorBgContainer}) !important;
   `,
 }));
 

@@ -7,7 +7,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import HeaderAction from './HeaderAction';
-import Main from './HeaderInfo';
+import Tags from './Tags';
 
 const Header = () => {
   const theme = useTheme();
@@ -16,7 +16,7 @@ const Header = () => {
   return (
     showHeader && (
       <ChatHeader
-        left={<Main />}
+        left={<Tags />}
         right={<HeaderAction />}
         style={{
           background: theme.colorBgContainer,

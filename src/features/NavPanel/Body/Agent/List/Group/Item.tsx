@@ -1,6 +1,6 @@
 import { AccordionItem, Dropdown, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { FolderClosedIcon, Loader2 } from 'lucide-react';
+import { HashIcon, Loader2 } from 'lucide-react';
 import React, { memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -101,7 +101,7 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
     if (isUpdating) {
       return <Icon icon={Loader2} spin style={{ opacity: 0.5 }} />;
     }
-    return <Icon icon={FolderClosedIcon} style={{ opacity: 0.5 }} />;
+    return <Icon icon={HashIcon} style={{ opacity: 0.5 }} />;
   }, [isUpdating]);
 
   return (

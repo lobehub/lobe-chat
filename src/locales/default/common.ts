@@ -358,12 +358,17 @@ export default {
   },
   tab: {
     aiImage: 'AI 绘画',
+    audio: '音频',
     chat: '会话',
+    community: '社区',
     discover: '发现',
     files: '文件',
+    home: '首页',
+    image: '画图',
     knowledgeBase: '知识库',
     me: '我',
     setting: '设置',
+    video: '视频',
   },
   telemetry: {
     allow: '允许',

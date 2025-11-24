@@ -1,6 +1,6 @@
 'use client';
 
-import { Compass, FolderClosed, HomeIcon, Palette } from 'lucide-react';
+import { Compass, HomeIcon, ImageIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -18,36 +18,28 @@ const Nav = memo(() => {
   const tab = useActiveTabKey();
   const navigate = useNavigate();
   const { t } = useTranslation('common');
-  const { showMarket, enableKnowledgeBase, showAiImage } =
-    useServerConfigStore(featureFlagsSelectors);
+  const { showMarket, showAiImage } = useServerConfigStore(featureFlagsSelectors);
 
   const items = useMemo(
     () => [
       {
         icon: HomeIcon,
         key: SidebarTabKey.Chat,
-        title: t('tab.chat'),
+        title: t('tab.home'),
         url: '/chat',
       },
       {
-        hidden: !enableKnowledgeBase,
-        icon: FolderClosed,
-        key: SidebarTabKey.Knowledge,
-        title: t('tab.knowledgeBase'),
-        url: '/knowledge',
-      },
-      {
         hidden: !showAiImage,
-        icon: Palette,
+        icon: ImageIcon,
         key: SidebarTabKey.Image,
-        title: t('tab.aiImage'),
+        title: t('tab.image'),
         url: '/image',
       },
       {
         hidden: !showMarket,
         icon: Compass,
         key: SidebarTabKey.Discover,
-        title: t('tab.discover'),
+        title: t('tab.community'),
         url: '/discover',
       },
     ],

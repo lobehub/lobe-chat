@@ -25,12 +25,12 @@ const useStyles = createStyles(({ css, token }) => ({
   drawer: css`
     z-index: 10;
     height: 100%;
-    background: ${token.colorBgLayout};
+    background: ${token.colorBgContainer};
   `,
   panel: css`
     overflow: hidden;
     height: 100%;
-    background: ${token.colorBgContainerSecondary};
+    background: ${token.colorBgContainer};
   `,
 }));
 

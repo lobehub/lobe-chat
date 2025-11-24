@@ -12,12 +12,12 @@ const preformat = (id: string) =>
 const useStyles = createStyles(({ css, token, responsive }) => ({
   container: css`
     color: ${token.colorTextQuaternary};
-    background: ${token.colorBgContainerSecondary};
-    box-shadow: 0 3px 4px -2px ${token.colorBgContainerSecondary};
+    background: ${token.colorBgLayout};
+    box-shadow: 0 3px 4px -2px ${token.colorBgLayout};
 
     ${responsive.mobile} {
-      background: ${token.colorBgContainer};
-      box-shadow: 0 3px 4px -2px ${token.colorBgContainer};
+      background: ${token.colorBgLayout};
+      box-shadow: 0 3px 4px -2px ${token.colorBgLayout};
     }
   `,
 }));

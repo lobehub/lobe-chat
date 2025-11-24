@@ -32,7 +32,7 @@ const DesktopChatPage = dynamic(() => import('./(main)/chat/index'), {
   loading: () => <Loading />,
   ssr: false,
 });
-const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Desktop'), {
+const ChatLayout = dynamic(() => import('./(main)/chat/_layout'), {
   loading: () => <Loading />,
   ssr: false,
 });
