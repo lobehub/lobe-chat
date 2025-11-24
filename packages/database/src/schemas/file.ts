@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { isNotNull } from 'drizzle-orm';
 import {
+  AnyPgColumn,
   boolean,
   index,
   integer,
@@ -41,7 +42,6 @@ export type GlobalFileItem = typeof globalFiles.$inferSelect;
 /**
  * Documents table - Stores file content or web search results
  */
-// @ts-ignore
 export const documents = pgTable(
   'documents',
   {
@@ -72,15 +72,12 @@ export const documents = pgTable(
     source: text('source').notNull(), // File path or web URL
 
     // Associated file (optional)
-    // Forward reference to files table defined below
+    // forward reference needs AnyPgColumn to avoid circular type inference
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    // @ts-expect-error - files is defined later in this file, forward reference is valid at runtime
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    fileId: text('file_id').references(() => files.id, { onDelete: 'set null' }),
+    fileId: text('file_id').references((): AnyPgColumn => files.id, { onDelete: 'set null' }),
 
     // Parent document (for folder hierarchy structure)
-    // @ts-ignore
-    parentId: varchar('parent_id', { length: 255 }).references(() => documents.id, {
+    parentId: varchar('parent_id', { length: 255 }).references((): AnyPgColumn => documents.id, {
       onDelete: 'set null',
     }),
 
@@ -113,7 +110,6 @@ export type NewDocument = typeof documents.$inferInsert;
 export type DocumentItem = typeof documents.$inferSelect;
 export const insertDocumentSchema = createInsertSchema(documents);
 
-// @ts-ignore
 export const files = pgTable(
   'files',
   {
@@ -140,8 +136,7 @@ export const files = pgTable(
     source: text('source').$type<FileSource>(),
 
     // Parent Folder or Document
-    // @ts-ignore
-    parentId: varchar('parent_id', { length: 255 }).references(() => documents.id, {
+    parentId: varchar('parent_id', { length: 255 }).references((): AnyPgColumn => documents.id, {
       onDelete: 'set null',
     }),
 
