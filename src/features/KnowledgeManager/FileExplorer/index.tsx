@@ -1,9 +1,9 @@
 'use client';
 
-import { ActionIcon, Icon, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Text, Tooltip } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
-import { ArrowLeft, ArrowUp } from 'lucide-react';
+import { ArrowUp, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -255,17 +255,26 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
           <Tooltip title={t('FileManager.actions.goBack', 'Go back to previous page')}>
             <ActionIcon
               disabled={!hasHistory}
-              icon={<Icon icon={ArrowLeft} size={18} />}
+              icon={ChevronLeftIcon}
               onClick={() => {
                 // Navigate to previous position in browser history
                 window.history.back();
               }}
             />
           </Tooltip>
+          <Tooltip title={t('FileManager.actions.goForward', 'Go forward to next page')}>
+            <ActionIcon
+              icon={ChevronRightIcon}
+              onClick={() => {
+                // Navigate to next position in browser history
+                window.history.forward();
+              }}
+            />
+          </Tooltip>
           <Tooltip title={t('FileManager.actions.goToParent', 'Go to parent folder')}>
             <ActionIcon
               disabled={!canGoUp}
-              icon={<Icon icon={ArrowUp} size={18} />}
+              icon={ArrowUp}
               onClick={() => {
                 // Navigate up one level in the folder hierarchy
                 const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
