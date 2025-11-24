@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 2.0.0-next.111](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.110...v2.0.0-next.111)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix db migration snapshot not align with db schema, Separate agent file injection from knowledge base RAG search.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix db migration snapshot not align with db schema, closes [#10399](https://github.com/lobehub/lobe-chat/issues/10399) ([760105a](https://github.com/lobehub/lobe-chat/commit/760105a))
+- **misc**: Separate agent file injection from knowledge base RAG search, closes [#10398](https://github.com/lobehub/lobe-chat/issues/10398) ([e1c813a](https://github.com/lobehub/lobe-chat/commit/e1c813a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.110](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.109...v2.0.0-next.110)
 
 <sup>Released on **2025-11-24**</sup>
