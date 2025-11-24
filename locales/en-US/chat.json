@@ -45,6 +45,10 @@
   "duplicateTitle": "{{title}} Copy",
   "emptyAgent": "No assistant available",
   "extendParams": {
+    "codeExecution": {
+      "desc": "When enabled, you can use the Python interpreter provided by Google to execute code",
+      "title": "Enable Code Execution"
+    },
     "disableContextCaching": {
       "desc": "The cost of generating a single conversation can be reduced by up to 90%, and the response speed is increased by 4 times (<1>Learn more</1>). Enabling this will automatically disable the limit on the number of historical messages.",
       "title": "Enable Context Caching"
