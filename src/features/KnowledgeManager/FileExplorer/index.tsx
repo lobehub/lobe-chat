@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Icon, Text } from '@lobehub/ui';
+import { ActionIcon, Icon, Text, Tooltip } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
 import { ArrowLeft, ArrowUp } from 'lucide-react';
@@ -12,10 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
+import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
+import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { FilesTabs, SortType } from '@/types/files';
+import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import EmptyStatus from './EmptyStatus';
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './FileListItem';
@@ -23,8 +26,9 @@ import FileSkeleton from './FileSkeleton';
 import FolderBreadcrumb from './FolderBreadcrumb';
 import MasonryItemWrapper from './MasonryFileItem/MasonryItemWrapper';
 import MasonrySkeleton from './MasonrySkeleton';
-import ToolBar from './ToolBar';
-import { ViewMode } from './ToolBar/ViewSwitcher';
+import BatchActionsDropdown from './ToolBar/BatchActionsDropdown';
+import type { MultiSelectActionType } from './ToolBar/MultiSelectActions';
+import ViewSwitcher, { ViewMode } from './ToolBar/ViewSwitcher';
 import { useCheckTaskStatus } from './useCheckTaskStatus';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
@@ -55,7 +59,6 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   const { styles } = useStyles();
 
   const [selectFileIds, setSelectedFileIds] = useState<string[]>([]);
-  const [viewConfig, setViewConfig] = useState({ showFilesInKnowledgeBase: false });
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isMasonryReady, setIsMasonryReady] = useState(false);
@@ -120,15 +123,66 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   });
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
+  const [removeFiles, parseFilesToChunks, fileList] = useFileStore((s) => [
+    s.removeFiles,
+    s.parseFilesToChunks,
+    s.fileList,
+  ]);
+  const [removeFromKnowledgeBase] = useKnowledgeBaseStore((s) => [s.removeFilesFromKnowledgeBase]);
+
+  const { open } = useAddFilesToKnowledgeBaseModal();
+
+  const onActionClick = async (type: MultiSelectActionType) => {
+    switch (type) {
+      case 'delete': {
+        await removeFiles(selectFileIds);
+        setSelectedFileIds([]);
+
+        return;
+      }
+      case 'removeFromKnowledgeBase': {
+        if (!knowledgeBaseId) return;
+
+        await removeFromKnowledgeBase(knowledgeBaseId, selectFileIds);
+        setSelectedFileIds([]);
+        return;
+      }
+      case 'addToKnowledgeBase': {
+        open({
+          fileIds: selectFileIds,
+          onClose: () => setSelectedFileIds([]),
+        });
+        return;
+      }
+      case 'addToOtherKnowledgeBase': {
+        open({
+          fileIds: selectFileIds,
+          knowledgeBaseId,
+          onClose: () => setSelectedFileIds([]),
+        });
+        return;
+      }
+
+      case 'batchChunking': {
+        const chunkableFileIds = selectFileIds.filter((id) => {
+          const file = fileList.find((f) => f.id === id);
+          return file && !isChunkingUnsupported(file.fileType);
+        });
+        await parseFilesToChunks(chunkableFileIds, { skipExist: true });
+        setSelectedFileIds([]);
+        return;
+      }
+    }
+  };
 
   const { data, isLoading } = useFetchKnowledgeItems({
     category,
     knowledgeBaseId,
     parentId: currentFolderSlug || null,
     q: query ?? undefined,
+    showFilesInKnowledgeBase: false,
     sortType: sortType ?? undefined,
     sorter: sorter ?? undefined,
-    ...viewConfig,
   });
 
   // Handle view transition with a brief delay to show skeleton
@@ -189,25 +243,29 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     [onOpenFile, knowledgeBaseId, selectFileIds],
   );
 
+  const hasHistory = typeof window !== 'undefined' && window.history.length > 1;
+  const canGoUp = !!currentFolderSlug;
+
   return !isLoading && data?.length === 0 && !currentFolderSlug ? (
     <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
   ) : (
     <Flexbox height={'100%'}>
       <Flexbox style={{ fontSize: 12, marginInline: 24 }}>
-        {currentFolderSlug && (
-          <Flexbox align={'center'} gap={8} horizontal style={{ marginBottom: 8, minHeight: 32 }}>
-            <Button
-              icon={<Icon icon={ArrowLeft} />}
+        <Flexbox align={'center'} gap={4} horizontal style={{ marginBottom: 8, minHeight: 32 }}>
+          <Tooltip title={t('FileManager.actions.goBack', 'Go back to previous page')}>
+            <ActionIcon
+              disabled={!hasHistory}
+              icon={<Icon icon={ArrowLeft} size={18} />}
               onClick={() => {
                 // Navigate to previous position in browser history
                 window.history.back();
               }}
-              size={'small'}
-              title="Go back"
-              type={'text'}
             />
-            <Button
-              icon={<Icon icon={ArrowUp} />}
+          </Tooltip>
+          <Tooltip title={t('FileManager.actions.goToParent', 'Go to parent folder')}>
+            <ActionIcon
+              disabled={!canGoUp}
+              icon={<Icon icon={ArrowUp} size={18} />}
               onClick={() => {
                 // Navigate up one level in the folder hierarchy
                 const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
@@ -222,28 +280,19 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
                   navigate(`/knowledge/bases/${baseKnowledgeBaseId}/${parentPath}`);
                 }
               }}
-              size={'small'}
-              title="Go to parent folder"
-              type={'text'}
             />
+          </Tooltip>
+          <Flexbox align={'center'} style={{ marginLeft: 12 }}>
             <FolderBreadcrumb knowledgeBaseId={knowledgeBaseId} />
           </Flexbox>
-        )}
-        <Flexbox align={'center'} gap={8} horizontal>
-          <ToolBar
-            config={viewConfig}
-            key={selectFileIds.join('-')}
-            knowledgeBaseId={knowledgeBaseId}
-            onConfigChange={setViewConfig}
-            onViewChange={setViewMode}
+          <Flexbox flex={1} />
+          <BatchActionsDropdown
+            disabled={selectFileIds.length === 0}
+            isInKnowledgeBase={!!knowledgeBaseId}
+            onActionClick={onActionClick}
             selectCount={selectFileIds.length}
-            selectFileIds={selectFileIds}
-            setSelectedFileIds={setSelectedFileIds}
-            showConfig={!knowledgeBaseId}
-            total={data?.length}
-            totalFileIds={data?.map((item) => item.id) || []}
-            viewMode={viewMode}
           />
+          <ViewSwitcher onViewChange={setViewMode} view={viewMode} />
         </Flexbox>
         {viewMode === 'list' && (
           <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8}>

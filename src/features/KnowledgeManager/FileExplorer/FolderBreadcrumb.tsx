@@ -1,15 +1,14 @@
-import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ChevronRight, Folder, Home } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
+import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 const useStyles = createStyles(({ css, token }) => ({
   breadcrumb: css`
-    font-size: 12px;
+    font-size: 14px;
     color: ${token.colorTextSecondary};
   `,
   breadcrumbItem: css`
@@ -25,7 +24,7 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorText};
   `,
   separator: css`
-    margin-inline: 4px;
+    margin-inline: 8px;
     color: ${token.colorTextQuaternary};
   `,
 }));
@@ -40,8 +39,11 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId }) => {
   const { folderSegments, knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
 
   const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
+  const knowledgeBaseName = useKnowledgeBaseStore(
+    knowledgeBaseSelectors.getKnowledgeBaseNameById(baseKnowledgeBaseId || ''),
+  );
 
-  if (!baseKnowledgeBaseId || folderSegments.length === 0) {
+  if (!baseKnowledgeBaseId) {
     return null;
   }
 
@@ -56,35 +58,30 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId }) => {
     }
   };
 
+  const isAtRoot = folderSegments.length === 0;
+
   return (
     <Flexbox align={'center'} className={styles.breadcrumb} gap={0} horizontal>
-      <Flexbox
-        align={'center'}
-        className={styles.breadcrumbItem}
-        gap={4}
-        horizontal
-        onClick={() => handleNavigate(-1)}
+      <span
+        className={cx(styles.breadcrumbItem, isAtRoot && styles.currentItem)}
+        onClick={() => !isAtRoot && handleNavigate(-1)}
+        style={{ cursor: isAtRoot ? 'default' : 'pointer' }}
       >
-        <Icon icon={Home} size={14} />
-        <span>Home</span>
-      </Flexbox>
+        {knowledgeBaseName || 'Knowledge Base'}
+      </span>
 
       {folderSegments.map((segment, index) => {
         const isLast = index === folderSegments.length - 1;
         return (
           <Flexbox align={'center'} gap={0} horizontal key={index}>
-            <Icon className={styles.separator} icon={ChevronRight} size={12} />
-            <Flexbox
-              align={'center'}
+            <span className={styles.separator}>/</span>
+            <span
               className={cx(styles.breadcrumbItem, isLast && styles.currentItem)}
-              gap={4}
-              horizontal
               onClick={() => !isLast && handleNavigate(index)}
               style={{ cursor: isLast ? 'default' : 'pointer' }}
             >
-              <Icon icon={Folder} size={14} />
-              <span>{segment}</span>
-            </Flexbox>
+              {segment}
+            </span>
           </Flexbox>
         );
       })}
