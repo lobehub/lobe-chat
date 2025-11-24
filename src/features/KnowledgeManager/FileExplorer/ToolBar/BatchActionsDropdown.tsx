@@ -1,9 +1,17 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { Button, Icon } from '@lobehub/ui';
 import { App, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
-import { BookMinusIcon, BookPlusIcon, FileBoxIcon, MoreHorizontalIcon, Trash2Icon } from 'lucide-react';
+import {
+  BookMinusIcon,
+  BookPlusIcon,
+  ChevronDownIcon,
+  CircleEllipsisIcon,
+  FileBoxIcon,
+  Trash2Icon,
+} from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 export type MultiSelectActionType =
   | 'addToKnowledgeBase'
@@ -66,18 +74,19 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
         });
       }
 
-      items.push({
-        icon: <Icon icon={FileBoxIcon} />,
-        key: 'batchChunking',
-        label: t('FileManager.actions.batchChunking'),
-        onClick: async () => {
-          await onActionClick('batchChunking');
+      items.push(
+        {
+          icon: <Icon icon={FileBoxIcon} />,
+          key: 'batchChunking',
+          label: t('FileManager.actions.batchChunking'),
+          onClick: async () => {
+            await onActionClick('batchChunking');
+          },
         },
-      });
-
-      items.push({
-        type: 'divider',
-      });
+        {
+          type: 'divider',
+        },
+      );
 
       items.push({
         danger: true,
@@ -102,13 +111,22 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
     }, [isInKnowledgeBase, selectCount, onActionClick, t, modal, message]);
 
     return (
-      <Dropdown disabled={disabled} menu={{ items: menuItems }} placement="bottomLeft" trigger={['click']}>
-        <ActionIcon
-          icon={MoreHorizontalIcon}
-          size={{ blockSize: 28 }}
-          style={{ border: 'none' }}
+      <Dropdown
+        disabled={disabled}
+        menu={{ items: menuItems }}
+        placement="bottomLeft"
+        trigger={['click']}
+      >
+        <Button
+          style={{ paddingInline: 4 }}
           title={t('FileManager.actions.batchActions', 'Batch actions')}
-        />
+          type="text"
+        >
+          <Flexbox align={'center'} gap={4} horizontal>
+            <Icon icon={CircleEllipsisIcon} size={18} />
+            <Icon icon={ChevronDownIcon} size={14} />
+          </Flexbox>
+        </Button>
       </Dropdown>
     );
   },

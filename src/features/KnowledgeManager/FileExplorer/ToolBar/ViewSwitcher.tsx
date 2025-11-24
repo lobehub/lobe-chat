@@ -1,7 +1,8 @@
-import { ActionIcon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import { Grid3x3Icon, ListIcon } from 'lucide-react';
-import { memo } from 'react';
+import { Button, Icon } from '@lobehub/ui';
+import { Dropdown } from 'antd';
+import type { MenuProps } from 'antd';
+import { ChevronDownIcon, Grid3x3Icon, ListIcon } from 'lucide-react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -12,33 +13,43 @@ interface ViewSwitcherProps {
   view: ViewMode;
 }
 
-const useStyles = createStyles(({ css }) => ({
-  container: css`
-    gap: 4px;
-  `,
-}));
-
 const ViewSwitcher = memo<ViewSwitcherProps>(({ onViewChange, view }) => {
   const { t } = useTranslation('components');
-  const { styles } = useStyles();
+
+  const currentViewIcon = view === 'list' ? ListIcon : Grid3x3Icon;
+  const currentViewLabel =
+    view === 'list' ? t('FileManager.view.list') : t('FileManager.view.masonry');
+
+  const menuItems = useMemo<MenuProps['items']>(() => {
+    return [
+      {
+        icon: <Icon icon={ListIcon} />,
+        key: 'list',
+        label: t('FileManager.view.list'),
+        onClick: () => onViewChange('list'),
+      },
+      {
+        icon: <Icon icon={Grid3x3Icon} />,
+        key: 'masonry',
+        label: t('FileManager.view.masonry'),
+        onClick: () => onViewChange('masonry'),
+      },
+    ];
+  }, [onViewChange, t]);
 
   return (
-    <Flexbox className={styles.container} horizontal>
-      <ActionIcon
-        active={view === 'list'}
-        icon={ListIcon}
-        onClick={() => onViewChange('list')}
-        size={16}
-        title={t('FileManager.view.list')}
-      />
-      <ActionIcon
-        active={view === 'masonry'}
-        icon={Grid3x3Icon}
-        onClick={() => onViewChange('masonry')}
-        size={16}
-        title={t('FileManager.view.masonry')}
-      />
-    </Flexbox>
+    <Dropdown
+      menu={{ items: menuItems, selectedKeys: [view] }}
+      placement="bottomRight"
+      trigger={['click']}
+    >
+      <Button style={{ paddingInline: 4 }} title={currentViewLabel} type="text">
+        <Flexbox align={'center'} gap={4} horizontal>
+          <Icon icon={currentViewIcon} size={18} />
+          <Icon icon={ChevronDownIcon} size={14} />
+        </Flexbox>
+      </Button>
+    </Dropdown>
   );
 });
 
