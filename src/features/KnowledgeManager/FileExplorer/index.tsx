@@ -20,6 +20,7 @@ import { FilesTabs, SortType } from '@/types/files';
 import EmptyStatus from './EmptyStatus';
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './FileListItem';
 import FileSkeleton from './FileSkeleton';
+import FolderBreadcrumb from './FolderBreadcrumb';
 import MasonryItemWrapper from './MasonryFileItem/MasonryItemWrapper';
 import MasonrySkeleton from './MasonrySkeleton';
 import ToolBar from './ToolBar';
@@ -193,8 +194,8 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   ) : (
     <Flexbox height={'100%'}>
       <Flexbox style={{ fontSize: 12, marginInline: 24 }}>
-        <Flexbox align={'center'} gap={8} horizontal>
-          {currentFolderSlug && (
+        {currentFolderSlug && (
+          <Flexbox align={'center'} gap={8} horizontal style={{ marginBottom: 8, minHeight: 32 }}>
             <Button
               icon={<Icon icon={ArrowLeft} />}
               onClick={() => {
@@ -214,7 +215,10 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
               size={'small'}
               type={'text'}
             />
-          )}
+            <FolderBreadcrumb knowledgeBaseId={knowledgeBaseId} />
+          </Flexbox>
+        )}
+        <Flexbox align={'center'} gap={8} horizontal>
           <ToolBar
             config={viewConfig}
             key={selectFileIds.join('-')}
