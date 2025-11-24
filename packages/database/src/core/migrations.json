@@ -791,11 +791,11 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"documents\" ADD COLUMN \"slug\" varchar(255);",
-      "\nCREATE UNIQUE INDEX \"documents_slug_user_id_unique\" ON \"documents\" USING btree (\"slug\",\"user_id\") WHERE \"documents\".\"slug\" is not null;"
+      "ALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"slug\" varchar(255);",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"documents_slug_user_id_unique\" ON \"documents\" USING btree (\"slug\",\"user_id\") WHERE \"documents\".\"slug\" is not null;\n"
     ],
     "bps": true,
     "folderMillis": 1763987922211,
-    "hash": "29e3a4a075bca278db70cad98932e7f8d1b3092027b94ef46910b196dec6b5c3"
+    "hash": "f823b521f4d25e5dc5ab238b372727d2d2d7f0aed27b5eabc8a9608ce4e50568"
   }
 ]
