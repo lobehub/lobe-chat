@@ -1,6 +1,5 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -9,7 +8,6 @@ import { FilesTabs } from '@/types/files';
 
 import DocumentExplorer from './DocumentExplorer';
 import FileExplorer from './FileExplorer';
-import Header from './Header';
 import Home from './Home';
 import UploadDock from './UploadDock';
 
@@ -48,13 +46,8 @@ const KnowledgeManager = memo<KnowledgeManagerProps>(
 
     return (
       <>
-        {!isDocumentsView && <Header knowledgeBaseId={knowledgeBaseId} />}
+        {/* {!isDocumentsView && <Header knowledgeBaseId={knowledgeBaseId} />} */}
         <Flexbox gap={12} height={'100%'}>
-          {!isDocumentsView && (
-            <Text strong style={{ fontSize: 16, marginBlock: 16, marginInline: 24 }}>
-              {title}
-            </Text>
-          )}
           {isDocumentsView ? (
             <DocumentExplorer documentId={documentId} knowledgeBaseId={knowledgeBaseId} />
           ) : (

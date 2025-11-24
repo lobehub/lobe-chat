@@ -1,13 +1,14 @@
 'use client';
 
-import { ActionIcon, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Tooltip } from '@lobehub/ui';
+import { ChatHeader } from '@lobehub/ui/chat';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
 import { ArrowUp, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
 
@@ -20,6 +21,7 @@ import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { FilesTabs, SortType } from '@/types/files';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
+import AddButton from '../Header/AddButton';
 import EmptyStatus from './EmptyStatus';
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './FileListItem';
 import FileSkeleton from './FileSkeleton';
@@ -250,59 +252,72 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
   ) : (
     <Flexbox height={'100%'}>
-      <Flexbox style={{ fontSize: 12, marginInline: 24 }}>
-        <Flexbox align={'center'} gap={4} horizontal style={{ marginBottom: 8, minHeight: 32 }}>
-          <Tooltip title={t('FileManager.actions.goBack', 'Go back to previous page')}>
-            <ActionIcon
-              disabled={!hasHistory}
-              icon={ChevronLeftIcon}
-              onClick={() => {
-                // Navigate to previous position in browser history
-                window.history.back();
-              }}
-            />
-          </Tooltip>
-          <Tooltip title={t('FileManager.actions.goForward', 'Go forward to next page')}>
-            <ActionIcon
-              icon={ChevronRightIcon}
-              onClick={() => {
-                // Navigate to next position in browser history
-                window.history.forward();
-              }}
-            />
-          </Tooltip>
-          <Tooltip title={t('FileManager.actions.goToParent', 'Go to parent folder')}>
-            <ActionIcon
-              disabled={!canGoUp}
-              icon={ArrowUp}
-              onClick={() => {
-                // Navigate up one level in the folder hierarchy
-                const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
-                if (!baseKnowledgeBaseId) return;
+      <ChatHeader
+        left={
+          <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
+            <Tooltip title={t('FileManager.actions.goBack', 'Go back to previous page')}>
+              <ActionIcon
+                disabled={!hasHistory}
+                icon={ChevronLeftIcon}
+                onClick={() => {
+                  // Navigate to previous position in browser history
+                  window.history.back();
+                }}
+              />
+            </Tooltip>
+            <Tooltip title={t('FileManager.actions.goForward', 'Go forward to next page')}>
+              <ActionIcon
+                icon={ChevronRightIcon}
+                onClick={() => {
+                  // Navigate to next position in browser history
+                  window.history.forward();
+                }}
+              />
+            </Tooltip>
+            <Tooltip title={t('FileManager.actions.goToParent', 'Go to parent folder')}>
+              <ActionIcon
+                disabled={!canGoUp}
+                icon={ArrowUp}
+                onClick={() => {
+                  // Navigate up one level in the folder hierarchy
+                  const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
+                  if (!baseKnowledgeBaseId) return;
 
-                if (folderSegments.length <= 1) {
-                  // Navigate to knowledge base root
-                  navigate(`/knowledge/bases/${baseKnowledgeBaseId}`);
-                } else {
-                  // Navigate to parent folder
-                  const parentPath = folderSegments.slice(0, -1).join('/');
-                  navigate(`/knowledge/bases/${baseKnowledgeBaseId}/${parentPath}`);
-                }
-              }}
-            />
-          </Tooltip>
-          <Flexbox align={'center'} style={{ marginLeft: 12 }}>
-            <FolderBreadcrumb knowledgeBaseId={knowledgeBaseId} />
+                  if (folderSegments.length <= 1) {
+                    // Navigate to knowledge base root
+                    navigate(`/knowledge/bases/${baseKnowledgeBaseId}`);
+                  } else {
+                    // Navigate to parent folder
+                    const parentPath = folderSegments.slice(0, -1).join('/');
+                    navigate(`/knowledge/bases/${baseKnowledgeBaseId}/${parentPath}`);
+                  }
+                }}
+              />
+            </Tooltip>
+            <Flexbox align={'center'} style={{ marginLeft: 12 }}>
+              <FolderBreadcrumb knowledgeBaseId={knowledgeBaseId} />
+            </Flexbox>
           </Flexbox>
-          <Flexbox flex={1} />
-          <BatchActionsDropdown
-            disabled={selectFileIds.length === 0}
-            isInKnowledgeBase={!!knowledgeBaseId}
-            onActionClick={onActionClick}
-            selectCount={selectFileIds.length}
-          />
-          <ViewSwitcher onViewChange={setViewMode} view={viewMode} />
-        </Flexbox>
+        }
+        right={
+          <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
+            <BatchActionsDropdown
+              disabled={selectFileIds.length === 0}
+              isInKnowledgeBase={!!knowledgeBaseId}
+              onActionClick={onActionClick}
+              selectCount={selectFileIds.length}
+            />
+            <ViewSwitcher onViewChange={setViewMode} view={viewMode} />
+            <Flexbox style={{ marginLeft: 12 }}>
+              <AddButton knowledgeBaseId={knowledgeBaseId} />
+            </Flexbox>
+          </Flexbox>
+        }
+        styles={{
+          left: { padding: 0 },
+        }}
+      />
+      <Flexbox style={{ fontSize: 12, marginTop: 56 }}>
         {viewMode === 'list' && (
           <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8}>
             <Flexbox className={styles.headerItem} flex={1} style={{ paddingInline: 32 }}>
@@ -321,15 +336,6 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
         <FileSkeleton />
       ) : viewMode === 'list' ? (
         <Virtuoso
-          components={{
-            Footer: () => (
-              <Center style={{ height: 64 }}>
-                <Text style={{ fontSize: 12 }} type={'secondary'}>
-                  {t('FileManager.bottom')}
-                </Text>
-              </Center>
-            ),
-          }}
           data={data}
           itemContent={(index, item) => (
             <FileListItem
