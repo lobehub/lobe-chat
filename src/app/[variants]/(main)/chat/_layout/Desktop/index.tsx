@@ -1,17 +1,26 @@
+import { useTheme } from 'antd-style';
+import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import { isDesktop } from '@/const/version';
 import ProtocolUrlHandler from '@/features/ProtocolUrlHandler';
 
 import RegisterHotkeys from './RegisterHotkeys';
-import Workspace from './Workspace';
 
 const Layout = () => {
+  const theme = useTheme();
   return (
     <>
-      <Workspace>
+      <Flexbox
+        flex={1}
+        style={{
+          background: theme.colorBgContainer,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+      >
         <Outlet />
-      </Workspace>
+      </Flexbox>
       {/* ↓ cloud slot ↓ */}
 
       {/* ↑ cloud slot ↑ */}

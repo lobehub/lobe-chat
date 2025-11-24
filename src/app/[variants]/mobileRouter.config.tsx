@@ -28,7 +28,7 @@ import { idLoader, slugLoader } from './loaders/routeParams';
  */
 
 // Chat components
-const MobileChatPage = dynamic(() => import('./(main)/chat/index.mobile'), {
+const MobileChatPage = dynamic(() => import('./(main)/chat/(mobile)'), {
   loading: () => <Loading />,
   ssr: false,
 });
@@ -36,7 +36,7 @@ const ChatSettings = dynamic(() => import('./(main)/chat/settings'), {
   loading: () => <Loading />,
   ssr: false,
 });
-const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Mobile'), {
+const ChatLayout = dynamic(() => import('./(main)/chat/(mobile)/_layout/Mobile'), {
   loading: () => <Loading />,
   ssr: false,
 });
