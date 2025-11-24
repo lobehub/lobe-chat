@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 2.0.0-next.112](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.111...v2.0.0-next.112)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Optimize files schema definition.
+
+#### 💄 Styles
+
+- **misc**: Add Kimi K2 Thinking to Qwen Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Optimize files schema definition, closes [#10403](https://github.com/lobehub/lobe-chat/issues/10403) ([cf28c87](https://github.com/lobehub/lobe-chat/commit/cf28c87))
+
+#### Styles
+
+- **misc**: Add Kimi K2 Thinking to Qwen Provider, closes [#10287](https://github.com/lobehub/lobe-chat/issues/10287) ([bd2e838](https://github.com/lobehub/lobe-chat/commit/bd2e838))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.111](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.110...v2.0.0-next.111)
 
 <sup>Released on **2025-11-24**</sup>
