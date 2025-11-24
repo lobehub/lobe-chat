@@ -1,3 +1,5 @@
+import type { ModelUsage } from '@lobechat/types';
+
 import type { FinishReason } from './event';
 import { AgentState, ToolRegistry, ToolsCalling } from './state';
 import type { Cost, CostCalculationContext, Usage } from './usage';
@@ -5,7 +7,8 @@ import type { Cost, CostCalculationContext, Usage } from './usage';
 /**
  * Runtime execution context passed to Agent runner
  */
-export interface RuntimeContext {
+export interface AgentRuntimeContext {
+  metadata?: Record<string, unknown>;
   /** Phase-specific payload/context */
   payload?: unknown;
   /** Current execution phase */
@@ -14,17 +17,19 @@ export interface RuntimeContext {
     | 'user_input'
     | 'llm_result'
     | 'tool_result'
+    | 'tools_batch_result'
     | 'human_response'
     | 'human_approved_tool'
     | 'error';
-  /** Session metadata */
+  /** Session */
   session: {
-    eventCount: number;
     messageCount: number;
     sessionId: string;
     status: AgentState['status'];
     stepCount: number;
   };
+  /** Usage statistics from the current step (if applicable) */
+  stepUsage?: ModelUsage | unknown;
 }
 
 /**
@@ -68,20 +73,44 @@ export interface Agent {
    * @param context - Current runtime context with phase and payload
    * @param state - Complete agent state for reference
    */
-  runner(context: RuntimeContext, state: AgentState): Promise<AgentInstruction>;
+  runner(
+    context: AgentRuntimeContext,
+    state: AgentState,
+  ): Promise<AgentInstruction | AgentInstruction[]>;
 
   /** Optional tools registry held by the agent */
   tools?: ToolRegistry;
 }
 
+export interface CallLLMPayload {
+  isFirstMessage?: boolean;
+  messages: any[];
+  model: string;
+  provider: string;
+  tools: any[];
+}
+
+export interface CallingToolPayload {
+  apiName: string;
+  arguments: string;
+  id: string;
+  identifier: string;
+  type: 'mcp' | 'default' | 'markdown' | 'standalone';
+}
+
 export interface AgentInstructionCallLlm {
-  payload: unknown;
+  payload: any;
   type: 'call_llm';
 }
 
 export interface AgentInstructionCallTool {
-  toolCall: ToolsCalling;
+  payload: any;
   type: 'call_tool';
+}
+
+export interface AgentInstructionCallToolsBatch {
+  payload: any[];
+  type: 'call_tools_batch';
 }
 
 export interface AgentInstructionRequestHumanPrompt {
@@ -119,6 +148,7 @@ export interface AgentInstructionFinish {
 export type AgentInstruction =
   | AgentInstructionCallLlm
   | AgentInstructionCallTool
+  | AgentInstructionCallToolsBatch
   | AgentInstructionRequestHumanPrompt
   | AgentInstructionRequestHumanSelect
   | AgentInstructionRequestHumanApprove

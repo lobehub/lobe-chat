@@ -4,7 +4,9 @@ import {
   AzureOpenAIKeyVault,
   ClientSecretPayload,
   CloudflareKeyVault,
+  ComfyUIKeyVault,
   OpenAICompatibleKeyVault,
+  VertexAIKeyVault,
 } from '@lobechat/types';
 import { clientApiKeyManager } from '@lobechat/utils/client';
 import { ModelProvider } from 'model-bank';
@@ -14,12 +16,16 @@ import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
 
+import { resolveRuntimeProvider } from './chat/helper';
+
 export const getProviderAuthPayload = (
   provider: string,
   keyVaults: OpenAICompatibleKeyVault &
     AzureOpenAIKeyVault &
     AWSBedrockKeyVault &
-    CloudflareKeyVault,
+    CloudflareKeyVault &
+    ComfyUIKeyVault &
+    VertexAIKeyVault,
 ) => {
   switch (provider) {
     case ModelProvider.Bedrock: {
@@ -72,6 +78,26 @@ export const getProviderAuthPayload = (
       };
     }
 
+    case ModelProvider.ComfyUI: {
+      return {
+        apiKey: keyVaults?.apiKey,
+        authType: keyVaults?.authType,
+        baseURL: keyVaults?.baseURL,
+        customHeaders: keyVaults?.customHeaders,
+        password: keyVaults?.password,
+        username: keyVaults?.username,
+      };
+    }
+
+    case ModelProvider.VertexAI: {
+      // Vertex AI uses JSON credentials, should not split by comma
+      return {
+        apiKey: keyVaults?.apiKey,
+        baseURL: keyVaults?.baseURL,
+        vertexAIRegion: keyVaults?.region,
+      };
+    }
+
     default: {
       return { apiKey: clientApiKeyManager.pick(keyVaults?.apiKey), baseURL: keyVaults?.baseURL };
     }
@@ -104,7 +130,12 @@ export const createPayloadWithKeyVaults = (provider: string) => {
     keyVaults = aiProviderSelectors.providerKeyVaults(provider)(useAiInfraStore.getState()) || {};
   }
 
-  return getProviderAuthPayload(provider, keyVaults);
+  const runtimeProvider = resolveRuntimeProvider(provider);
+
+  return {
+    ...getProviderAuthPayload(runtimeProvider, keyVaults as any),
+    runtimeProvider,
+  };
 };
 
 export const createXorKeyVaultsPayload = (provider: string) => {

@@ -11,6 +11,14 @@ const hotkey: HotkeyI18nTranslations & {
     desc: '清空当前会话的消息和上传的文件',
     title: '清空会话消息',
   },
+  deleteAndRegenerateMessage: {
+    desc: '删除最后一条消息并重新生成',
+    title: '删除并重新生成',
+  },
+  deleteLastMessage: {
+    desc: '删除最后一条消息',
+    title: '删除最后一条消息',
+  },
   desktop: {
     openSettings: {
       desc: '打开应用设置页面',

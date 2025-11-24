@@ -32,6 +32,9 @@
   "bfl": {
     "description": "领先的前沿人工智能研究实验室，构建明日的视觉基础设施。"
   },
+  "cerebras": {
+    "description": "Cerebras 是一个基于其专用 CS-3 系统的 AI 推理平台，旨在提供全球最快、实时响应、高吞吐量的 LLM 服务，专为消除延迟和加速复杂的 AI 工作流（如实时代码生成和代理任务）而设计。"
+  },
   "cloudflare": {
     "description": "在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。"
   },
@@ -40,6 +43,9 @@
   },
   "cometapi": {
     "description": "CometAPI 是一个提供多种前沿大模型接口的服务平台，支持 OpenAI、Anthropic、Google 及更多，适合多样化的开发和应用需求。用户可根据自身需求灵活选择最优的模型和价格，助力AI体验的提升。"
+  },
+  "comfyui": {
+    "description": "强大的开源图像、视频、音频生成工作流引擎，支持 SD FLUX Qwen Hunyuan WAN 等先进模型，提供节点化工作流编辑和私有化部署能力"
   },
   "deepseek": {
     "description": "DeepSeek 是一家专注于人工智能技术研究和应用的公司，其最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。"

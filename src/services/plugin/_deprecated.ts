@@ -1,7 +1,7 @@
+import { LobeTool } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
 import { PluginModel } from '@/database/_deprecated/models/plugin';
-import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { IPluginService, InstallPluginParams } from './type';

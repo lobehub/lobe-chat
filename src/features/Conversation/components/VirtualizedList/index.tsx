@@ -85,6 +85,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
         components={{
           List,
         }}
+
         computeItemKey={(_, item) => item}
         data={dataSource}
         followOutput={getFollowOutput}

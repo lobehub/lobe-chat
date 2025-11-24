@@ -11,7 +11,6 @@ import {
   BoldIcon,
   CodeXmlIcon,
   ItalicIcon,
-  LinkIcon,
   ListIcon,
   ListOrderedIcon,
   ListTodoIcon,
@@ -102,13 +101,6 @@ const TypoBar = memo(() => {
           onClick: editorState.blockquote,
         },
         {
-          icon: LinkIcon,
-          key: 'link',
-          label: t('typobar.link'),
-          onClick: editorState.insertLink,
-          tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.Link).keys },
-        },
-        {
           type: 'divider',
         },
         {
@@ -142,7 +134,7 @@ const TypoBar = memo(() => {
           key: 'codeblockLang',
         },
       ].filter(Boolean) as ChatInputActionsProps['items'],
-    [editorState, t],
+    [editorState],
   );
 
   return (

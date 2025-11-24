@@ -1,5 +1,6 @@
 /**
- * This file contains the edge router of Lobe Chat tRPC-backend
+ * @deprecated
+ * TODO: it will be remove in V2.0
  */
 import { publicProcedure, router } from '@/libs/trpc/edge';
 

@@ -10,9 +10,11 @@ import { default as azureai } from './azureai';
 import { default as baichuan } from './baichuan';
 import { default as bedrock } from './bedrock';
 import { default as bfl } from './bfl';
+import { default as cerebras } from './cerebras';
 import { default as cloudflare } from './cloudflare';
 import { default as cohere } from './cohere';
 import { default as cometapi } from './cometapi';
+import { default as comfyui } from './comfyui';
 import { default as deepseek } from './deepseek';
 import { default as fal } from './fal';
 import { default as featherlessai } from './featherlessai';
@@ -96,9 +98,11 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   baichuan,
   bedrock,
   bfl,
+  cerebras,
   cloudflare,
   cohere,
   cometapi,
+  comfyui,
   deepseek,
   fal,
   featherlessai,
@@ -163,9 +167,11 @@ export { default as azureai } from './azureai';
 export { default as baichuan } from './baichuan';
 export { default as bedrock } from './bedrock';
 export { default as bfl } from './bfl';
+export { default as cerebras } from './cerebras';
 export { default as cloudflare } from './cloudflare';
 export { default as cohere } from './cohere';
 export { default as cometapi } from './cometapi';
+export { default as comfyui } from './comfyui';
 export { default as deepseek } from './deepseek';
 export { default as fal, fluxSchnellParamsSchema } from './fal';
 export { default as featherlessai } from './featherlessai';

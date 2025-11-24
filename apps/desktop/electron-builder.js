@@ -1,5 +1,7 @@
 const dotenv = require('dotenv');
+const fs = require('node:fs/promises');
 const os = require('node:os');
+const path = require('node:path');
 
 dotenv.config();
 
@@ -32,11 +34,50 @@ const getProtocolScheme = () => {
 
 const protocolScheme = getProtocolScheme();
 
+// Determine icon file based on version type
+const getIconFileName = () => {
+  if (isNightly) return 'Icon-nightly';
+  if (isBeta) return 'Icon-beta';
+  return 'Icon';
+};
+
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration
  */
 const config = {
+  /**
+   * AfterPack hook to copy pre-generated Liquid Glass Assets.car for macOS 26+
+   * @see https://github.com/electron-userland/electron-builder/issues/9254
+   * @see https://github.com/MultiboxLabs/flow-browser/pull/159
+   * @see https://github.com/electron/packager/pull/1806
+   */
+  afterPack: async (context) => {
+    // Only process macOS builds
+    if (context.electronPlatformName !== 'darwin') {
+      return;
+    }
+
+    const iconFileName = getIconFileName();
+    const assetsCarSource = path.join(__dirname, 'build', `${iconFileName}.Assets.car`);
+    const resourcesPath = path.join(
+      context.appOutDir,
+      `${context.packager.appInfo.productFilename}.app`,
+      'Contents',
+      'Resources',
+    );
+    const assetsCarDest = path.join(resourcesPath, 'Assets.car');
+
+    try {
+      await fs.access(assetsCarSource);
+      await fs.copyFile(assetsCarSource, assetsCarDest);
+      console.log(`✅ Copied Liquid Glass icon: ${iconFileName}.Assets.car`);
+    } catch {
+      // Non-critical: Assets.car not found or copy failed
+      // App will use fallback .icns icon on all macOS versions
+      console.log(`⏭️  Skipping Assets.car (not found or copy failed)`);
+    }
+  },
   appId: isNightly
     ? 'com.lobehub.lobehub-desktop-nightly'
     : isBeta
@@ -81,6 +122,7 @@ const config = {
     compression: 'maximum',
     entitlementsInherit: 'build/entitlements.mac.plist',
     extendInfo: {
+      CFBundleIconName: 'AppIcon',
       CFBundleURLTypes: [
         {
           CFBundleURLName: 'LobeHub Protocol',

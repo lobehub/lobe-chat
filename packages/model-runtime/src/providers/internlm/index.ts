@@ -1,13 +1,16 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  type OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
 export interface InternLMModelCard {
   id: string;
 }
 
-export const LobeInternLMAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://internlm-chat.intern-ai.org.cn/puyu/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -31,6 +34,7 @@ export const LobeInternLMAI = createOpenAICompatibleRuntime({
     const modelList: InternLMModelCard[] = modelsPage.data;
 
     return modelList
+      .filter((model) => model && model.id)
       .map((model) => {
         const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
           (m) => model.id.toLowerCase() === m.id.toLowerCase(),
@@ -51,8 +55,9 @@ export const LobeInternLMAI = createOpenAICompatibleRuntime({
             knownModel?.abilities?.vision ||
             false,
         };
-      })
-      .filter(Boolean) as ChatModelCard[];
+      }) as ChatModelCard[];
   },
   provider: ModelProvider.InternLM,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeInternLMAI = createOpenAICompatibleRuntime(params);

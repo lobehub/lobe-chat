@@ -51,4 +51,7 @@ export interface LobeAgentSettings {
   meta: MetaData;
 }
 
-export type LobeSessions = LobeAgentSession[];
+// Union type for all session types
+export type LobeSession = LobeAgentSession | LobeGroupSession;
+
+export type LobeSessions = LobeSession[];

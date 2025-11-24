@@ -1,5 +1,5 @@
 {
-  "desc": "Beheer je bestanden en kennisbank",
+  "desc": "Beheer je kennis",
   "detail": {
     "basic": {
       "createdAt": "Aanmaakdatum",
@@ -70,7 +70,7 @@
     "videos": "Video's",
     "websites": "Websites"
   },
-  "title": "Bestanden",
+  "title": "Kennisbank",
   "toggleLeftPanel": {
     "title": "Toon/Verberg het linkerpaneel"
   },
@@ -85,6 +85,7 @@
         "restTime": "Overgebleven {{time}}"
       }
     },
+    "fileQueueInfo": "Bezig met uploaden van de eerste {{count}} bestanden, de resterende {{remaining}} bestanden worden in de wachtrij geplaatst",
     "totalCount": "Totaal {{count}} items",
     "uploadStatus": {
       "error": "Uploadfout",

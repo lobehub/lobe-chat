@@ -4,10 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
+import { PluginStoreTabs } from '@/store/tool/slices/oldStore';
 
 export const Search = memo(() => {
   const { t } = useTranslation('plugin');
-  const [keywords] = useToolStore((s) => [s.mcpSearchKeywords]);
+  const [listType, mcpKeywords, pluginKeywords] = useToolStore((s) => [
+    s.listType,
+    s.mcpSearchKeywords,
+    s.pluginSearchKeywords,
+  ]);
+
+  // 根据当前选项卡决定使用哪个关键词
+  const keywords = listType === PluginStoreTabs.MCP ? mcpKeywords : pluginKeywords;
 
   return (
     <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
@@ -16,7 +24,11 @@ export const Search = memo(() => {
           allowClear
           defaultValue={keywords}
           onSearch={(keywords: string) => {
-            useToolStore.setState({ mcpSearchKeywords: keywords, searchLoading: true });
+            if (listType === PluginStoreTabs.MCP) {
+              useToolStore.setState({ mcpSearchKeywords: keywords, searchLoading: true });
+            } else if (listType === PluginStoreTabs.Plugin) {
+              useToolStore.setState({ pluginSearchKeywords: keywords, pluginSearchLoading: true });
+            }
           }}
           placeholder={t('store.placeholder')}
           variant={'borderless'}

@@ -1,5 +1,5 @@
 export default {
-  desc: '管理你的文件与知识库',
+  desc: '管理你的知识',
   detail: {
     basic: {
       createdAt: '创建时间',
@@ -71,7 +71,7 @@ export default {
     videos: '视频',
     websites: '网页',
   },
-  title: '文件',
+  title: '知识库',
   toggleLeftPanel: {
     title: '显示/隐藏左侧面板',
   },
@@ -86,6 +86,7 @@ export default {
         restTime: '剩余 {{time}}',
       },
     },
+    fileQueueInfo: '正在上传前 {{count}} 个文件，剩余 {{remaining}} 个文件将排队上传',
     totalCount: '共 {{count}} 项',
     uploadStatus: {
       error: '上传出错',

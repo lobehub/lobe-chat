@@ -1,3 +1,7 @@
+import {
+  GetStreamableMcpServerManifestInputSchema,
+  StreamableHTTPAuthSchema,
+} from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -5,15 +9,6 @@ import { isDesktop, isServerMode } from '@/const/version';
 import { passwordProcedure } from '@/libs/trpc/edge';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { mcpService } from '@/server/services/mcp';
-
-const StreamableHTTPAuthSchema = z
-  .object({
-    // Bearer Token
-    accessToken: z.string().optional(),
-    token: z.string().optional(),
-    type: z.enum(['none', 'bearer', 'oauth2']), // OAuth2 Access Token
-  })
-  .optional();
 
 // Define Zod schemas for MCP Client parameters
 const httpParamsSchema = z.object({
@@ -47,20 +42,7 @@ const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
 
 export const mcpRouter = router({
   getStreamableMcpServerManifest: mcpProcedure
-    .input(
-      z.object({
-        auth: StreamableHTTPAuthSchema,
-        headers: z.record(z.string()).optional(),
-        identifier: z.string(),
-        metadata: z
-          .object({
-            avatar: z.string().optional(),
-            description: z.string().optional(),
-          })
-          .optional(),
-        url: z.string().url(),
-      }),
-    )
+    .input(GetStreamableMcpServerManifestInputSchema)
     .query(async ({ input }) => {
       return await mcpService.getStreamableMcpServerManifest(
         input.identifier,

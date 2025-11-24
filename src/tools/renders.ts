@@ -1,4 +1,4 @@
-import { BuiltinRender } from '@/types/tool';
+import { BuiltinRender } from '@lobechat/types';
 
 import { CodeInterpreterManifest } from './code-interpreter';
 import CodeInterpreterRender from './code-interpreter/Render';

@@ -16,7 +16,7 @@ import {
   TextToImagePayload,
   TextToSpeechPayload,
 } from '../types';
-import { CreateImagePayload } from '../types/image';
+import { AuthenticatedImageRuntime, CreateImagePayload } from '../types/image';
 import { LobeRuntimeAI } from './BaseAI';
 
 export interface AgentChatOptions {
@@ -41,7 +41,7 @@ export class ModelRuntime {
    *
    * @example - Use without trace
    * ```ts
-   * const agentRuntime = await initializeWithClientStore(provider, payload);
+   * const agentRuntime = await initializeWithClientStore({ provider, payload });
    * const data = payload as ChatStreamPayload;
    * return await agentRuntime.chat(data);
    * ```
@@ -90,6 +90,13 @@ export class ModelRuntime {
 
   async pullModel(params: PullModelParams, options?: ModelRequestOptions) {
     return this._runtime.pullModel?.(params, options);
+  }
+
+  /**
+   * Get authentication headers if runtime supports it
+   */
+  getAuthHeaders(): Record<string, string> | undefined {
+    return (this._runtime as AuthenticatedImageRuntime).getAuthHeaders?.();
   }
 
   /**

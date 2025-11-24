@@ -92,14 +92,15 @@
     "installLater": "다음 시작 시 업데이트",
     "isLatestVersion": "현재 최신 버전입니다",
     "isLatestVersionDesc": "훌륭합니다! 사용 중인 버전 {{version}}은 최신 버전입니다.",
-    "later": "나중에 업데이트",
+    "later": "나중에",
     "newVersionAvailable": "새 버전 사용 가능",
     "newVersionAvailableDesc": "새 버전 {{version}}이 발견되었습니다. 지금 다운로드 하시겠습니까?",
     "restartAndInstall": "업데이트 설치 및 재시작",
     "updateError": "업데이트 오류",
-    "updateReady": "업데이트 준비 완료",
+    "updateReady": "새 버전이 사용 가능합니다",
     "updateReadyDesc": "새 버전 {{version}}이 다운로드 완료되었습니다. 애플리케이션을 재시작하면 설치가 완료됩니다.",
-    "upgradeNow": "지금 업데이트"
+    "upgradeNow": "지금 업데이트",
+    "willInstallLater": "업데이트는 다음 실행 시 설치됩니다"
   },
   "waitingOAuth": {
     "cancel": "취소",

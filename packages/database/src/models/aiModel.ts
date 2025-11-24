@@ -19,12 +19,21 @@ export class AiModelModel {
     this.db = db;
   }
 
+  /**
+   * Helper method to validate if array is empty and return early if needed
+   * @param array - Array to validate
+   * @returns true if array is empty, false otherwise
+   */
+  private isEmptyArray(array: unknown[]): boolean {
+    return array.length === 0;
+  }
+
   create = async (params: NewAiModelItem) => {
     const [result] = await this.db
       .insert(aiModels)
       .values({
         ...params,
-        enabled: true, // enabled by default
+        enabled: params.enabled ?? true, // enabled by default, but respect explicit value
         source: AiModelSourceEnum.Custom,
         userId: this.userId,
       })
@@ -122,16 +131,37 @@ export class AiModelModel {
   };
 
   toggleModelEnabled = async (value: ToggleAiModelEnableParams) => {
+    const now = new Date();
+    const insertValues = {
+      ...value,
+      updatedAt: now,
+      userId: this.userId,
+    } as typeof aiModels.$inferInsert;
+
+    if (value.type) insertValues.type = value.type;
+
+    const updateValues: Partial<typeof aiModels.$inferInsert> = {
+      enabled: value.enabled,
+      updatedAt: now,
+    };
+
+    if (value.type) updateValues.type = value.type;
+
     return this.db
       .insert(aiModels)
-      .values({ ...value, updatedAt: new Date(), userId: this.userId })
+      .values(insertValues)
       .onConflictDoUpdate({
-        set: { enabled: value.enabled, updatedAt: new Date() },
+        set: updateValues,
         target: [aiModels.id, aiModels.providerId, aiModels.userId],
       });
   };
 
   batchUpdateAiModels = async (providerId: string, models: AiProviderModelListItem[]) => {
+    // Early return if models array is empty to prevent database insertion error
+    if (this.isEmptyArray(models)) {
+      return [];
+    }
+
     const records = models.map(({ id, ...model }) => ({
       ...model,
       id,
@@ -150,6 +180,11 @@ export class AiModelModel {
   };
 
   batchToggleAiModels = async (providerId: string, models: string[], enabled: boolean) => {
+    // Early return if models array is empty to prevent database insertion error
+    if (this.isEmptyArray(models)) {
+      return;
+    }
+
     return this.db.transaction(async (trx) => {
       // 1. insert models that are not in the db
       const insertedRecords = await trx
@@ -206,21 +241,38 @@ export class AiModelModel {
   }
 
   updateModelsOrder = async (providerId: string, sortMap: AiModelSortMap[]) => {
+    // Early return if sortMap array is empty
+    if (this.isEmptyArray(sortMap)) {
+      return;
+    }
+
     await this.db.transaction(async (tx) => {
-      const updates = sortMap.map(({ id, sort }) => {
+      const updates = sortMap.map(({ id, sort, type }) => {
+        const now = new Date();
+        const insertValues: typeof aiModels.$inferInsert = {
+          enabled: true,
+          id,
+          providerId,
+          sort,
+          // source: isBuiltin ? 'builtin' : 'custom',
+          updatedAt: now,
+          userId: this.userId,
+        };
+
+        if (type) insertValues.type = type;
+
+        const updateValues: Partial<typeof aiModels.$inferInsert> = {
+          sort,
+          updatedAt: now,
+        };
+
+        if (type) updateValues.type = type;
+
         return tx
           .insert(aiModels)
-          .values({
-            enabled: true,
-            id,
-            providerId,
-            sort,
-            // source: isBuiltin ? 'builtin' : 'custom',
-            updatedAt: new Date(),
-            userId: this.userId,
-          })
+          .values(insertValues)
           .onConflictDoUpdate({
-            set: { sort, updatedAt: new Date() },
+            set: updateValues,
             target: [aiModels.id, aiModels.userId, aiModels.providerId],
           });
       });

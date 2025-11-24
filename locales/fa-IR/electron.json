@@ -92,14 +92,15 @@
     "installLater": "به‌روزرسانی در راه‌اندازی بعدی",
     "isLatestVersion": "در حال حاضر آخرین نسخه است",
     "isLatestVersionDesc": "عالی است، نسخه {{version}} که استفاده می‌کنید، آخرین نسخه موجود است.",
-    "later": "به‌روزرسانی بعداً",
+    "later": "بعداً",
     "newVersionAvailable": "نسخه جدید در دسترس است",
     "newVersionAvailableDesc": "نسخه جدید {{version}} شناسایی شد، آیا می‌خواهید بلافاصله دانلود کنید؟",
     "restartAndInstall": "نصب به‌روزرسانی و راه‌اندازی مجدد",
     "updateError": "خطا در به‌روزرسانی",
-    "updateReady": "به‌روزرسانی آماده است",
+    "updateReady": "نسخه جدیدی در دسترس است",
     "updateReadyDesc": "نسخه جدید {{version}} دانلود شده است، با راه‌اندازی مجدد برنامه نصب کامل می‌شود.",
-    "upgradeNow": "همین حالا به‌روزرسانی کنید"
+    "upgradeNow": "همین حالا به‌روزرسانی کنید",
+    "willInstallLater": "به‌روزرسانی در راه‌اندازی بعدی نصب خواهد شد"
   },
   "waitingOAuth": {
     "cancel": "لغو",

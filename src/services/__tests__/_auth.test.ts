@@ -175,6 +175,20 @@ describe('getProviderAuthPayload', () => {
     });
   });
 
+  it('should return correct payload for VertexAI provider without splitting JSON credentials', () => {
+    // Vertex AI uses JSON credentials that contain commas
+    const mockVertexAIConfig = {
+      apiKey: '{"type":"service_account","project_id":"test-project","private_key":"test-key"}',
+      baseURL: 'https://us-central1-aiplatform.googleapis.com',
+    };
+
+    const payload = getProviderAuthPayload(ModelProvider.VertexAI, mockVertexAIConfig);
+    expect(payload).toEqual({
+      apiKey: mockVertexAIConfig.apiKey,
+      baseURL: mockVertexAIConfig.baseURL,
+    });
+  });
+
   it('should return an empty object or throw an error for an unknown provider', () => {
     const payload = getProviderAuthPayload('UnknownProvider', {});
     expect(payload).toEqual({});

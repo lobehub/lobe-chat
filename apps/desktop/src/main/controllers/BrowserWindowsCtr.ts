@@ -1,7 +1,11 @@
-import { InterceptRouteParams } from '@lobechat/electron-client-ipc';
+import { InterceptRouteParams, OpenSettingsWindowOptions } from '@lobechat/electron-client-ipc';
 import { extractSubPath, findMatchingRoute } from '~common/routes';
 
-import { AppBrowsersIdentifiers, BrowsersIdentifiers } from '@/appBrowsers';
+import {
+  AppBrowsersIdentifiers,
+  BrowsersIdentifiers,
+  WindowTemplateIdentifiers,
+} from '@/appBrowsers';
 import { IpcClientEventSender } from '@/types/ipcClientEvent';
 
 import { ControllerModule, ipcClientEvent, shortcut } from './index';
@@ -14,11 +18,16 @@ export default class BrowserWindowsCtr extends ControllerModule {
   }
 
   @ipcClientEvent('openSettingsWindow')
-  async openSettingsWindow(tab?: string) {
-    console.log('[BrowserWindowsCtr] Received request to open settings window', tab);
+  async openSettingsWindow(options?: string | OpenSettingsWindowOptions) {
+    const normalizedOptions: OpenSettingsWindowOptions =
+      typeof options === 'string' || options === undefined
+        ? { tab: typeof options === 'string' ? options : undefined }
+        : options;
+
+    console.log('[BrowserWindowsCtr] Received request to open settings window', normalizedOptions);
 
     try {
-      await this.app.browserManager.showSettingsWindowWithTab(tab);
+      await this.app.browserManager.showSettingsWindowWithTab(normalizedOptions);
 
       return { success: true };
     } catch (error) {
@@ -68,15 +77,37 @@ export default class BrowserWindowsCtr extends ControllerModule {
 
     try {
       if (matchedRoute.targetWindow === BrowsersIdentifiers.settings) {
-        const subPath = extractSubPath(path, matchedRoute.pathPrefix);
+        const extractedSubPath = extractSubPath(path, matchedRoute.pathPrefix);
+        const sanitizedSubPath =
+          extractedSubPath && !extractedSubPath.startsWith('?') ? extractedSubPath : undefined;
+        let searchParams: Record<string, string> | undefined;
+        try {
+          const url = new URL(params.url);
+          const entries = Array.from(url.searchParams.entries());
+          if (entries.length > 0) {
+            searchParams = entries.reduce<Record<string, string>>((acc, [key, value]) => {
+              acc[key] = value;
+              return acc;
+            }, {});
+          }
+        } catch (error) {
+          console.warn(
+            '[BrowserWindowsCtr] Failed to parse URL for settings route interception:',
+            params.url,
+            error,
+          );
+        }
 
-        await this.app.browserManager.showSettingsWindowWithTab(subPath);
+        await this.app.browserManager.showSettingsWindowWithTab({
+          searchParams,
+          tab: sanitizedSubPath,
+        });
 
         return {
           intercepted: true,
           path,
           source,
-          subPath,
+          subPath: sanitizedSubPath,
           targetWindow: matchedRoute.targetWindow,
         };
       } else {
@@ -96,6 +127,77 @@ export default class BrowserWindowsCtr extends ControllerModule {
         intercepted: false,
         path,
         source,
+      };
+    }
+  }
+
+  /**
+   * Create a new multi-instance window
+   */
+  @ipcClientEvent('createMultiInstanceWindow')
+  async createMultiInstanceWindow(params: {
+    path: string;
+    templateId: WindowTemplateIdentifiers;
+    uniqueId?: string;
+  }) {
+    try {
+      console.log('[BrowserWindowsCtr] Creating multi-instance window:', params);
+
+      const result = this.app.browserManager.createMultiInstanceWindow(
+        params.templateId,
+        params.path,
+        params.uniqueId,
+      );
+
+      // Show the window
+      result.browser.show();
+
+      return {
+        success: true,
+        windowId: result.identifier,
+      };
+    } catch (error) {
+      console.error('[BrowserWindowsCtr] Failed to create multi-instance window:', error);
+      return {
+        error: error.message,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Get all windows by template
+   */
+  @ipcClientEvent('getWindowsByTemplate')
+  async getWindowsByTemplate(templateId: string) {
+    try {
+      const windowIds = this.app.browserManager.getWindowsByTemplate(templateId);
+      return {
+        success: true,
+        windowIds,
+      };
+    } catch (error) {
+      console.error('[BrowserWindowsCtr] Failed to get windows by template:', error);
+      return {
+        error: error.message,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Close all windows by template
+   */
+  @ipcClientEvent('closeWindowsByTemplate')
+  async closeWindowsByTemplate(templateId: string) {
+    try {
+      this.app.browserManager.closeWindowsByTemplate(templateId);
+      return { success: true };
+    } catch (error) {
+      console.error('[BrowserWindowsCtr] Failed to close windows by template:', error);
+      return {
+        error: error.message,
+        success: false,
       };
     }
   }

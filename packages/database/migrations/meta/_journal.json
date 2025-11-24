@@ -252,6 +252,41 @@
       "when": 1759116400580,
       "tag": "0035_add_virtual",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1759666151079,
+      "tag": "0036_add_group_messages",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1760086906862,
+      "tag": "0037_add_user_memory",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1760108430562,
+      "tag": "0038_add_image_user_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1761554153406,
+      "tag": "0039_add_editor_data",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1761563458595,
+      "tag": "0040_improve_user_memory_field",
+      "breakpoints": true
     }
   ],
   "version": "6"

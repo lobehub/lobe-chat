@@ -1,9 +1,8 @@
-import { Icon } from '@lobehub/ui';
-import { Divider, Skeleton } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -43,7 +42,6 @@ interface SearchBarProps {
 
 const SearchBar = memo<SearchBarProps>(
   ({ defaultEngines, defaultQuery, resultsNumber, onEditingChange, searching }) => {
-    const { t } = useTranslation('tool');
     const isMobile = useIsMobile();
     const { styles, cx } = useStyles();
     return (
@@ -67,22 +65,18 @@ const SearchBar = memo<SearchBarProps>(
           {defaultQuery}
         </Flexbox>
 
-        <Flexbox align={'center'} horizontal>
-          <div className={styles.font}>{t('search.searchEngine.title')}</div>
-          {searching ? (
-            <Skeleton.Button active size={'small'} />
-          ) : (
+        {searching ? (
+          <Skeleton.Node active style={{ height: 20, width: 40 }} />
+        ) : (
+          <Flexbox align={'center'} horizontal>
             <EngineAvatarGroup engines={defaultEngines} />
-          )}
-
-          {!isMobile && (
-            <>
-              <Divider type={'vertical'} />
-              <div className={styles.font}>{t('search.searchResult')}</div>
-              {searching ? <Skeleton.Button active size={'small'} /> : resultsNumber}
-            </>
-          )}
-        </Flexbox>
+            {!isMobile && (
+              <Text style={{ fontSize: 12 }} type={'secondary'}>
+                {resultsNumber}
+              </Text>
+            )}
+          </Flexbox>
+        )}
       </Flexbox>
     );
   },

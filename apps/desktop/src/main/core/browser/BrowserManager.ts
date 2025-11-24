@@ -1,9 +1,18 @@
-import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
+import {
+  MainBroadcastEventKey,
+  MainBroadcastParams,
+  OpenSettingsWindowOptions,
+} from '@lobechat/electron-client-ipc';
 import { WebContents } from 'electron';
 
 import { createLogger } from '@/utils/logger';
 
-import { AppBrowsersIdentifiers, appBrowsers } from '../../appBrowsers';
+import {
+  AppBrowsersIdentifiers,
+  WindowTemplateIdentifiers,
+  appBrowsers,
+  windowTemplates,
+} from '../../appBrowsers';
 import type { App } from '../App';
 import type { BrowserWindowOpts } from './Browser';
 import Browser from './Browser';
@@ -14,9 +23,9 @@ const logger = createLogger('core:BrowserManager');
 export class BrowserManager {
   app: App;
 
-  browsers: Map<AppBrowsersIdentifiers, Browser> = new Map();
+  browsers: Map<string, Browser> = new Map();
 
-  private webContentsMap = new Map<WebContents, AppBrowsersIdentifiers>();
+  private webContentsMap = new Map<WebContents, string>();
 
   constructor(app: App) {
     logger.debug('Initializing BrowserManager');
@@ -51,26 +60,47 @@ export class BrowserManager {
   };
 
   broadcastToWindow = <T extends MainBroadcastEventKey>(
-    identifier: AppBrowsersIdentifiers,
+    identifier: string,
     event: T,
     data: MainBroadcastParams<T>,
   ) => {
     logger.debug(`Broadcasting event ${event} to window: ${identifier}`);
-    this.browsers.get(identifier).broadcast(event, data);
+    this.browsers.get(identifier)?.broadcast(event, data);
   };
 
   /**
    * Display the settings window and navigate to a specific tab
    * @param tab Settings window sub-path tab
    */
-  async showSettingsWindowWithTab(tab?: string) {
-    logger.debug(`Showing settings window with tab: ${tab || 'default'}`);
-    // common is the main path for settings route
-    if (tab && tab !== 'common') {
-      const browser = await this.redirectToPage('settings', tab);
+  async showSettingsWindowWithTab(options?: OpenSettingsWindowOptions) {
+    const tab = options?.tab;
+    const searchParams = options?.searchParams;
+
+    const query = new URLSearchParams();
+    if (searchParams) {
+      Object.entries(searchParams).forEach(([key, value]) => {
+        if (value !== undefined) query.set(key, value);
+      });
+    }
+
+    if (tab && tab !== 'common' && !query.has('active')) {
+      query.set('active', tab);
+    }
+
+    const queryString = query.toString();
+    const activeTab = query.get('active') ?? tab;
+
+    logger.debug(
+      `Showing settings window with navigation: active=${activeTab || 'default'}, query=${
+        queryString || 'none'
+      }`,
+    );
+
+    if (queryString) {
+      const browser = await this.redirectToPage('settings', undefined, queryString);
 
       // make provider page more large
-      if (tab.startsWith('provider/')) {
+      if (activeTab?.startsWith('provider')) {
         logger.debug('Resizing window for provider settings');
         browser.setWindowSize({ height: 1000, width: 1400 });
         browser.moveToCenter();
@@ -87,21 +117,32 @@ export class BrowserManager {
    * @param identifier Window identifier
    * @param subPath Sub-path, such as 'agent', 'about', etc.
    */
-  async redirectToPage(identifier: AppBrowsersIdentifiers, subPath?: string) {
+  async redirectToPage(identifier: string, subPath?: string, search?: string) {
     try {
       // Ensure window is retrieved or created
       const browser = this.retrieveByIdentifier(identifier);
       browser.hide();
 
-      const baseRoute = appBrowsers[identifier].path;
+      // Handle both static and dynamic windows
+      let baseRoute: string;
+      if (identifier in appBrowsers) {
+        baseRoute = appBrowsers[identifier as AppBrowsersIdentifiers].path;
+      } else {
+        // For dynamic windows, extract base route from the browser options
+        const browserOptions = browser.options;
+        baseRoute = browserOptions.path;
+      }
 
       // Build complete URL path
       const fullPath = subPath ? `${baseRoute}/${subPath}` : baseRoute;
+      const normalizedSearch =
+        search && search.length > 0 ? (search.startsWith('?') ? search : `?${search}`) : '';
+      const fullUrl = `${fullPath}${normalizedSearch}`;
 
-      logger.debug(`Redirecting to: ${fullPath}`);
+      logger.debug(`Redirecting to: ${fullUrl}`);
 
       // Load URL and show window
-      await browser.loadUrl(fullPath);
+      await browser.loadUrl(fullUrl);
       browser.show();
 
       return browser;
@@ -114,13 +155,81 @@ export class BrowserManager {
   /**
    * get Browser by identifier
    */
-  retrieveByIdentifier(identifier: AppBrowsersIdentifiers) {
+  retrieveByIdentifier(identifier: string) {
     const browser = this.browsers.get(identifier);
 
     if (browser) return browser;
 
-    logger.debug(`Browser ${identifier} not found, initializing new instance`);
-    return this.retrieveOrInitialize(appBrowsers[identifier]);
+    // Check if it's a static browser
+    if (identifier in appBrowsers) {
+      logger.debug(`Browser ${identifier} not found, initializing new instance`);
+      return this.retrieveOrInitialize(appBrowsers[identifier as AppBrowsersIdentifiers]);
+    }
+
+    throw new Error(`Browser ${identifier} not found and is not a static browser`);
+  }
+
+  /**
+   * Create a multi-instance window from template
+   * @param templateId Template identifier
+   * @param path Full path with query parameters
+   * @param uniqueId Optional unique identifier, will be generated if not provided
+   * @returns The window identifier and Browser instance
+   */
+  createMultiInstanceWindow(
+    templateId: WindowTemplateIdentifiers,
+    path: string,
+    uniqueId?: string,
+  ) {
+    const template = windowTemplates[templateId];
+    if (!template) {
+      throw new Error(`Window template ${templateId} not found`);
+    }
+
+    // Generate unique identifier
+    const windowId =
+      uniqueId ||
+      `${template.baseIdentifier}_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+
+    // Create browser options from template
+    const browserOpts: BrowserWindowOpts = {
+      ...template,
+      identifier: windowId,
+      path: path,
+    };
+
+    logger.debug(`Creating multi-instance window: ${windowId} with path: ${path}`);
+
+    const browser = this.retrieveOrInitialize(browserOpts);
+
+    return {
+      browser: browser,
+      identifier: windowId,
+    };
+  }
+
+  /**
+   * Get all windows based on template
+   * @param templateId Template identifier
+   * @returns Array of window identifiers matching the template
+   */
+  getWindowsByTemplate(templateId: string): string[] {
+    const prefix = `${templateId}_`;
+    return Array.from(this.browsers.keys()).filter((id) => id.startsWith(prefix));
+  }
+
+  /**
+   * Close all windows based on template
+   * @param templateId Template identifier
+   */
+  closeWindowsByTemplate(templateId: string): void {
+    const windowIds = this.getWindowsByTemplate(templateId);
+    windowIds.forEach((id) => {
+      const browser = this.browsers.get(id);
+      if (browser) {
+        browser.close();
+      }
+    });
   }
 
   /**
@@ -144,7 +253,7 @@ export class BrowserManager {
    * @param options Browser window options
    */
   private retrieveOrInitialize(options: BrowserWindowOpts) {
-    let browser = this.browsers.get(options.identifier as AppBrowsersIdentifiers);
+    let browser = this.browsers.get(options.identifier);
     if (browser) {
       logger.debug(`Retrieved existing browser: ${options.identifier}`);
       return browser;
@@ -153,7 +262,7 @@ export class BrowserManager {
     logger.debug(`Creating new browser: ${options.identifier}`);
     browser = new Browser(options, this.app);
 
-    const identifier = options.identifier as AppBrowsersIdentifiers;
+    const identifier = options.identifier;
     this.browsers.set(identifier, browser);
 
     // 记录 WebContents 和 identifier 的映射
@@ -165,33 +274,32 @@ export class BrowserManager {
     });
 
     browser.browserWindow.on('show', () => {
-      if (browser.webContents)
-        this.webContentsMap.set(browser.webContents, browser.identifier as AppBrowsersIdentifiers);
+      if (browser.webContents) this.webContentsMap.set(browser.webContents, browser.identifier);
     });
 
     return browser;
   }
 
   closeWindow(identifier: string) {
-    const browser = this.browsers.get(identifier as AppBrowsersIdentifiers);
+    const browser = this.browsers.get(identifier);
     browser?.close();
   }
 
   minimizeWindow(identifier: string) {
-    const browser = this.browsers.get(identifier as AppBrowsersIdentifiers);
+    const browser = this.browsers.get(identifier);
     browser?.browserWindow.minimize();
   }
 
   maximizeWindow(identifier: string) {
-    const browser = this.browsers.get(identifier as AppBrowsersIdentifiers);
-    if (browser.browserWindow.isMaximized()) {
+    const browser = this.browsers.get(identifier);
+    if (browser?.browserWindow.isMaximized()) {
       browser?.browserWindow.unmaximize();
     } else {
       browser?.browserWindow.maximize();
     }
   }
 
-  getIdentifierByWebContents(webContents: WebContents): AppBrowsersIdentifiers | null {
+  getIdentifierByWebContents(webContents: WebContents): string | null {
     return this.webContentsMap.get(webContents) || null;
   }
 

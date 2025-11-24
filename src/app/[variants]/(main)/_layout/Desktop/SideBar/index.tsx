@@ -6,6 +6,7 @@ import { Suspense, memo } from 'react';
 
 import { isDesktop } from '@/const/version';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
+import { useIsSingleMode } from '@/hooks/useIsSingleMode';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -26,11 +27,13 @@ const Top = () => {
 
 const Nav = memo(() => {
   const theme = useTheme();
+  const isSingleMode = useIsSingleMode();
   const inZenMode = useGlobalStore(systemStatusSelectors.inZenMode);
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    !inZenMode && (
+    !inZenMode &&
+    !isSingleMode && (
       <SideNav
         avatar={
           <div className={electronStylish.nodrag}>
@@ -52,11 +55,14 @@ const Nav = memo(() => {
         }}
         topActions={
           <Suspense>
-            <div className={electronStylish.nodrag} style={{
-              display: 'flex',
-              flexDirection: 'column',
-              maxHeight: "calc(100vh - 150px)"
-            }}>
+            <div
+              className={electronStylish.nodrag}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                maxHeight: isDesktop ? 'calc(100vh - 180px)' : 'calc(100vh - 150px)',
+              }}
+            >
               <Top />
               {showPinList && <PinList />}
             </div>

@@ -1,3 +1,11 @@
+import { DEFAULT_AGENT_CONFIG, DEFAULT_INBOX_AVATAR, INBOX_SESSION_ID } from '@lobechat/const';
+import {
+  ChatSessionList,
+  LobeAgentConfig,
+  LobeAgentSession,
+  LobeGroupSession,
+  SessionRankItem,
+} from '@lobechat/types';
 import {
   Column,
   and,
@@ -15,11 +23,6 @@ import {
 } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
-import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
-import { INBOX_SESSION_ID } from '@/const/session';
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { LobeAgentConfig } from '@/types/agent';
-import { ChatSessionList, LobeAgentSession, SessionRankItem } from '@/types/session';
 import { merge } from '@/utils/merge';
 
 import {
@@ -207,6 +210,23 @@ export class SessionModel {
         });
 
         if (existResult) return existResult;
+      }
+
+      if (type === 'group') {
+        const result = await trx
+          .insert(sessions)
+          .values({
+            ...session,
+            createdAt: new Date(),
+            id,
+            slug,
+            type,
+            updatedAt: new Date(),
+            userId: this.userId,
+          })
+          .returning();
+
+        return result[0];
       }
 
       const newAgents = await trx
@@ -413,7 +433,47 @@ export class SessionModel {
       );
     }
 
-    const mergedValue = merge(session.agent, data);
+    // 先处理参数字段：undefined 表示删除，null 表示禁用标记
+    const existingParams = session.agent.params ?? {};
+    const updatedParams: Record<string, any> = { ...existingParams };
+
+    if (data.params) {
+      const incomingParams = data.params as Record<string, any>;
+      Object.keys(incomingParams).forEach((key) => {
+        const incomingValue = incomingParams[key];
+
+        // undefined 代表显式删除该字段
+        if (incomingValue === undefined) {
+          delete updatedParams[key];
+          return;
+        }
+
+        // 其余值（包括 null）都直接覆盖，null 表示在前端禁用该参数
+        updatedParams[key] = incomingValue;
+      });
+    }
+
+    // 构建要合并的数据，排除 params（单独处理）
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { params: _params, ...restData } = data;
+    const mergedValue = merge(session.agent, restData);
+
+    // 应用处理后的参数
+    mergedValue.params = Object.keys(updatedParams).length > 0 ? updatedParams : undefined;
+
+    // 最终清理：确保没有 undefined 或 null 值进入数据库
+    if (mergedValue.params) {
+      const params = mergedValue.params as Record<string, any>;
+      Object.keys(params).forEach((key) => {
+        if (params[key] === undefined) {
+          delete params[key];
+        }
+      });
+      if (Object.keys(params).length === 0) {
+        mergedValue.params = undefined;
+      }
+    }
+
     return this.db
       .update(agents)
       .set(mergedValue)
@@ -431,12 +491,53 @@ export class SessionModel {
     description,
     avatar,
     groupId,
+    type,
     ...res
-  }: SessionItem & { agentsToSessions?: { agent: AgentItem }[] }): LobeAgentSession => {
+  }: SessionItem & { agentsToSessions?: { agent: AgentItem }[] }):
+    | LobeAgentSession
+    | LobeGroupSession => {
+    const meta = {
+      avatar: avatar ?? undefined,
+      backgroundColor: backgroundColor ?? undefined,
+      description: description ?? undefined,
+      tags: undefined,
+      title: title ?? undefined,
+    };
+
+    if (type === 'group') {
+      // For group sessions, return without agent-specific fields
+      // Transform agentsToSessions to include both relationship and agent data
+      const members =
+        agentsToSessions?.map((item, index) => {
+          const member = {
+            // Start with agent properties for compatibility
+            ...item.agent,
+            // Override with ChatGroupAgentItem properties
+            agentId: item.agent.id,
+            chatGroupId: res.id,
+            enabled: true,
+            order: index,
+            role: 'participant',
+            // Keep agent timestamps for now (could be overridden if needed)
+          };
+          return member;
+        }) || [];
+
+      return {
+        ...res,
+        group: groupId,
+        members,
+        meta,
+        type: 'group',
+      } as LobeGroupSession;
+    }
+
+    // For agent sessions, include agent-specific fields
     // TODO: 未来这里需要更好的实现方案，目前只取第一个
     const agent = agentsToSessions?.[0]?.agent;
     return {
       ...res,
+      config: agent ? (agent as any) : { model: '', plugins: [] }, // Ensure config exists for agent sessions
       group: groupId,
       meta: {
         avatar: agent?.avatar ?? avatar ?? undefined,
@@ -445,8 +546,9 @@ export class SessionModel {
         tags: agent?.tags ?? undefined,
         title: agent?.title ?? title ?? undefined,
       },
-      model: agent?.model,
-    } as any;
+      model: agent?.model || '',
+      type: 'agent',
+    } as LobeAgentSession;
   };
 
   findSessionsByKeywords = async (params: {

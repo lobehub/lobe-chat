@@ -14,7 +14,7 @@ import { getSessionStoreState, useSessionStore } from '@/store/session';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
 import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
-import { LobeAgentSession } from '@/types/session';
+import { LobeSessions } from '@/types/session';
 
 import SkeletonList from '../../SkeletonList';
 import AddButton from './AddButton';
@@ -26,7 +26,7 @@ const useStyles = createStyles(
   `,
 );
 interface SessionListProps {
-  dataSource?: LobeAgentSession[];
+  dataSource?: LobeSessions;
   groupId?: string;
   showAddButton?: boolean;
 }

@@ -1,7 +1,11 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 
 export interface MistralModelCard {
   capabilities: {
@@ -13,21 +17,27 @@ export interface MistralModelCard {
   max_context_length: number;
 }
 
-export const LobeMistralAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.mistral.ai/v1',
   chatCompletion: {
     // Mistral API does not support stream_options: { include_usage: true }
     // refs: https://github.com/lobehub/lobe-chat/issues/6825
     excludeUsage: true,
-    handlePayload: (payload) => ({
-      ...(payload.max_tokens !== undefined && { max_tokens: payload.max_tokens }),
-      messages: payload.messages as any,
-      model: payload.model,
-      stream: true,
-      temperature: payload.temperature !== undefined ? payload.temperature / 2 : undefined,
-      ...(payload.tools && { tools: payload.tools }),
-      top_p: payload.top_p,
-    }),
+    handlePayload: (payload) => {
+      // Resolve parameters with normalization
+      const resolvedParams = resolveParameters(
+        { max_tokens: payload.max_tokens, temperature: payload.temperature, top_p: payload.top_p },
+        { normalizeTemperature: true },
+      );
+
+      return {
+        ...resolvedParams,
+        messages: payload.messages as any,
+        model: payload.model,
+        stream: true,
+        ...(payload.tools && { tools: payload.tools }),
+      };
+    },
     noUserId: true,
   },
   debug: {
@@ -59,4 +69,6 @@ export const LobeMistralAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Mistral,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeMistralAI = createOpenAICompatibleRuntime(params);

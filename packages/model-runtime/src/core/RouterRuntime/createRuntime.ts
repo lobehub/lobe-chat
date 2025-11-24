@@ -66,7 +66,7 @@ type Routers =
       },
     ) => RouterInstance[] | Promise<RouterInstance[]>);
 
-interface CreateRouterRuntimeOptions<T extends Record<string, any> = any> {
+export interface CreateRouterRuntimeOptions<T extends Record<string, any> = any> {
   apiKey?: string;
   chatCompletion?: {
     excludeUsage?: boolean;
@@ -181,7 +181,6 @@ export const createRouterRuntime = ({
       for (const runtimeItem of runtimes) {
         const models = runtimeItem.models || [];
         if (models.includes(model)) {
-          console.log(`get runtime ${runtimeItem.id} ${model}`);
           return runtimeItem.runtime;
         }
       }

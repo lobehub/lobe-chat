@@ -1,8 +1,8 @@
+import { UniformSearchResult } from '@lobechat/types';
 import React, { memo, useCallback } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-import { UniformSearchResult } from '@/types/tool/search';
-
+import { SEARCH_ITEM_LIMITED_COUNT } from '../../../const';
 import Item from './SearchItem';
 
 interface ResultListProps {
@@ -11,7 +11,9 @@ interface ResultListProps {
 
 const ResultList = memo<ResultListProps>(({ dataSources }) => {
   const itemContent = useCallback(
-    (index: number, result: UniformSearchResult) => <Item {...result} highlight={index < 15} />,
+    (index: number, result: UniformSearchResult) => (
+      <Item {...result} highlight={index < SEARCH_ITEM_LIMITED_COUNT} />
+    ),
     [],
   );
 

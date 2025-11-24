@@ -1,0 +1,14 @@
+{
+  "desc": "Aqui você encontrará atualizações periódicas sobre os novos recursos que estamos explorando. Sinta-se à vontade para testá-los!",
+  "features": {
+    "groupChat": {
+      "desc": "Ative a capacidade de orquestração de bate-papo em grupo com múltiplos agentes.",
+      "title": "Bate-papo em Grupo (Múltiplos Agentes)"
+    },
+    "inputMarkdown": {
+      "desc": "Renderize Markdown em tempo real na área de entrada (negrito, blocos de código, tabelas, etc.).",
+      "title": "Renderização de Markdown na Entrada"
+    }
+  },
+  "title": "Laboratório"
+}

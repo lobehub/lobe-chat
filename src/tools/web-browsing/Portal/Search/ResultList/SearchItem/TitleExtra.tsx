@@ -3,8 +3,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { EngineAvatarGroup } from '@/tools/web-browsing/components/EngineAvatar';
-
+import { EngineAvatarGroup } from '../../../../components/EngineAvatar';
 import CategoryAvatar from './CategoryAvatar';
 
 interface TitleExtraProps {

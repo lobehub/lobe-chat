@@ -1,3 +1,4 @@
+import { LobeTool } from '@lobechat/types';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import { uniqBy } from 'lodash-es';
@@ -10,7 +11,6 @@ import { toolService } from '@/services/tool';
 import { globalHelpers } from '@/store/global/helpers';
 import { pluginStoreSelectors } from '@/store/tool/selectors';
 import { DiscoverPluginItem, PluginListResponse, PluginQueryParams } from '@/types/discover';
-import { LobeTool } from '@/types/tool';
 import { PluginInstallError } from '@/types/tool/plugin';
 import { sleep } from '@/utils/sleep';
 import { setNamespace } from '@/utils/storeDebug';
@@ -262,8 +262,6 @@ export const createPluginStoreSlice: StateCreator<
   },
   useFetchPluginStore: () =>
     useSWR<DiscoverPluginItem[]>('loadPluginStore', get().loadPluginStore, {
-      fallbackData: [],
       revalidateOnFocus: false,
-      suspense: true,
     }),
 });

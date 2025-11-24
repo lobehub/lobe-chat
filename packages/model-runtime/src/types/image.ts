@@ -1,7 +1,6 @@
 /* eslint-disable typescript-sort-keys/interface */
+import { ModelUsage } from '@lobechat/types';
 import { RuntimeImageGenParams } from 'model-bank';
-
-import { ModelUsage } from '@/types/message';
 
 export type CreateImagePayload = {
   model: string;
@@ -34,3 +33,12 @@ export type CreateImageResponse = {
    */
   modelUsage?: ModelUsage;
 };
+
+// 新增：支持认证图片下载的运行时接口
+export interface AuthenticatedImageRuntime {
+  /**
+   * Get authentication headers for image download
+   * Used when the image server requires authentication
+   */
+  getAuthHeaders(): Record<string, string> | undefined;
+}

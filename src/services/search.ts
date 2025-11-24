@@ -1,3 +1,5 @@
+import { SearchQuery } from '@lobechat/types';
+
 import { toolsClient } from '@/libs/trpc/client';
 
 class SearchService {
@@ -9,8 +11,12 @@ class SearchService {
     return toolsClient.search.crawlPages.mutate({ urls: [url] });
   }
 
-  crawlPages(urls: string[]) {
-    return toolsClient.search.crawlPages.mutate({ urls });
+  crawlPages(params: { urls: string[] }) {
+    return toolsClient.search.crawlPages.mutate(params);
+  }
+
+  async webSearch(params: SearchQuery) {
+    return toolsClient.search.webSearch.query(params);
   }
 }
 

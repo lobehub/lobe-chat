@@ -12,6 +12,112 @@ const googleChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description: 'Latest release of Gemini Pro',
+    displayName: 'Gemini Pro Latest',
+    id: 'gemini-pro-latest',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        {
+          name: 'textInput_cacheRead',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.31, upTo: 200_000 },
+            { rate: 0.625, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 1.25, upTo: 200_000 },
+            { rate: 2.5, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 10, upTo: 200_000 },
+            { rate: 15, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    settings: {
+      extendParams: ['thinkingBudget', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description: 'Latest release of Gemini Flash',
+    displayName: 'Gemini Flash Latest',
+    id: 'gemini-flash-latest',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['thinkingBudget', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description: 'Latest release of Gemini Flash-Lite',
+    displayName: 'Gemini Flash-Lite Latest',
+    id: 'gemini-flash-lite-latest',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['thinkingBudget', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
       video: true,
       vision: true,
     },
@@ -204,6 +310,34 @@ const googleChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 65_536,
+    description: 'Preview release (Septempber 25th, 2025) of Gemini 2.5 Flash',
+    displayName: 'Gemini 2.5 Flash Preview Sep 2025',
+    id: 'gemini-2.5-flash-preview-09-2025',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-25',
+    settings: {
+      extendParams: ['thinkingBudget', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
     description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
     displayName: 'Gemini 2.5 Flash Preview 05-20',
     id: 'gemini-2.5-flash-preview-05-20',
@@ -233,6 +367,28 @@ const googleChatModels: AIChatModelCard[] = [
       'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
     displayName: 'Nano Banana',
     enabled: true,
+    id: 'gemini-2.5-flash-image',
+    maxOutput: 8192,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-26',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      imageOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 32_768 + 8192,
+    description:
+      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+    displayName: 'Nano Banana (Preview)',
     id: 'gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {
@@ -267,6 +423,34 @@ const googleChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-22',
+    settings: {
+      extendParams: ['thinkingBudget', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description: 'Preview release (September 25th, 2025) of Gemini 2.5 Flash-Lite',
+    displayName: 'Gemini 2.5 Flash-Lite Preview Sep 2025',
+    id: 'gemini-2.5-flash-lite-preview-09-2025',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-25',
     settings: {
       extendParams: ['thinkingBudget', 'urlContext'],
       searchImpl: 'params',
@@ -636,10 +820,34 @@ const googleChatModels: AIChatModelCard[] = [
 ];
 
 // Common parameters for Imagen models
-const imagenBaseParameters: ModelParamsSchema = {
+export const imagenGenParameters: ModelParamsSchema = {
   aspectRatio: {
     default: '1:1',
     enum: ['1:1', '16:9', '9:16', '3:4', '4:3'],
+  },
+  prompt: { default: '' },
+};
+
+const NANO_BANANA_ASPECT_RATIOS = [
+  '1:1', // 1024x1024
+  '2:3', // 832x1248
+  '3:2', // 1248x832
+  '3:4', // 864x1184
+  '4:3', // 1184x864
+  '4:5', // 896x1152
+  '5:4', // 1152x896
+  '9:16', // 768x1344
+  '16:9', // 1344x768
+  '21:9', // 1536x672
+];
+
+export const nanoBananaParameters: ModelParamsSchema = {
+  aspectRatio: {
+    default: '1:1',
+    enum: NANO_BANANA_ASPECT_RATIOS,
+  },
+  imageUrls: {
+    default: [],
   },
   prompt: { default: '' },
 };
@@ -648,8 +856,24 @@ const imagenBaseParameters: ModelParamsSchema = {
 const googleImageModels: AIImageModelCard[] = [
   {
     displayName: 'Nano Banana',
-    id: 'gemini-2.5-flash-image-preview:image',
+    id: 'gemini-2.5-flash-image:image',
     enabled: true,
+    type: 'image',
+    description:
+      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+    releasedAt: '2025-08-26',
+    parameters: nanoBananaParameters,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+  },
+  {
+    displayName: 'Nano Banana (Preview)',
+    id: 'gemini-2.5-flash-image-preview:image',
     type: 'image',
     description:
       'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
@@ -659,7 +883,7 @@ const googleImageModels: AIImageModelCard[] = [
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'imageOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
   },
@@ -671,7 +895,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
@@ -684,7 +908,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series Ultra version',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
     },
@@ -697,7 +921,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series Fast version',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.02, strategy: 'fixed', unit: 'image' }],
     },
@@ -709,7 +933,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series',
     organization: 'Deepmind',
     releasedAt: '2024-06-06',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
@@ -721,7 +945,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series Ultra version',
     organization: 'Deepmind',
     releasedAt: '2025-06-11',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
     },

@@ -1,23 +1,23 @@
 {
   "assistants": {
     "addAgent": "도우미 추가",
-    "addAgentAndConverse": "도우미 추가 및 대화하기",
-    "addAgentSuccess": "추가 성공",
+    "addAgentAndConverse": "도우미 추가 및 대화 시작",
+    "addAgentSuccess": "성공적으로 추가되었습니다",
     "conversation": {
-      "l1": "안녕하세요, 저는 **{{name}}**입니다. 궁금한 점이 있으면 무엇이든 물어보세요. 최선을 다해 답변하겠습니다 ~",
-      "l2": "다음은 제 능력 소개입니다: ",
-      "l3": "대화를 시작해 볼까요!"
+      "l1": "안녕하세요, 저는 **{{name}}**입니다. 무엇이든 물어보세요. 최선을 다해 답변드릴게요~",
+      "l2": "다음은 제 기능 소개입니다:",
+      "l3": "지금 바로 대화를 시작해볼까요!"
     },
     "description": "도우미 소개",
     "detail": "상세 정보",
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "도우미는 다음 지식 베이스를 내장하여 더 많은 질문에 답변할 수 있도록 도와줍니다.",
-          "title": "지식 베이스"
+          "desc": "이 도우미는 다음과 같은 지식 기반을 내장하고 있어 더 많은 질문에 답할 수 있습니다.",
+          "title": "지식 기반"
         },
         "plugin": {
-          "desc": "도우미는 다음 플러그인을 내장하여 더 많은 작업을 수행할 수 있도록 도와줍니다.",
+          "desc": "이 도우미는 다음과 같은 플러그인을 내장하고 있어 다양한 작업을 수행할 수 있습니다.",
           "title": "내장 플러그인"
         },
         "title": "도우미 기능"
@@ -29,13 +29,13 @@
       "related": {
         "listTitle": "관련 도우미",
         "more": "더 보기",
-        "title": "관련 추천"
+        "title": "추천 도우미"
       },
       "sidebar": {
         "toc": "목차"
       },
       "summary": {
-        "title": "이 도우미로 할 수 있는 일"
+        "title": "이 도우미로 무엇을 할 수 있나요?"
       },
       "systemRole": {
         "openingMessage": "시작 메시지",
@@ -45,29 +45,29 @@
     },
     "list": "도우미 목록",
     "more": "더 보기",
-    "plugins": "플러그인 통합",
+    "plugins": "통합 플러그인",
     "recentSubmits": "최근 업데이트",
     "sorts": {
-      "createdAt": "최근 게시",
+      "createdAt": "최신 등록",
       "identifier": "도우미 ID",
-      "knowledgeCount": "지식 베이스 수",
+      "knowledgeCount": "지식 기반 수",
       "pluginCount": "플러그인 수",
       "title": "도우미 이름",
       "tokenUsage": "토큰 사용량"
     },
-    "suggestions": "추천 항목",
+    "suggestions": "추천 도우미",
     "systemRole": "도우미 설정",
     "tokenUsage": "도우미 프롬프트 토큰 사용량",
-    "try": "해보기",
-    "withKnowledge": "이 도우미는 지식 베이스를 포함합니다",
+    "try": "시도해보기",
+    "withKnowledge": "이 도우미는 지식 기반을 포함합니다",
     "withPlugin": "이 도우미는 플러그인을 포함합니다"
   },
-  "back": "발견으로 돌아가기",
+  "back": "탐색으로 돌아가기",
   "category": {
     "assistant": {
       "academic": "학술",
       "all": "전체",
-      "career": "직업",
+      "career": "커리어",
       "copywriting": "카피라이팅",
       "design": "디자인",
       "education": "교육",
@@ -76,13 +76,13 @@
       "games": "게임",
       "general": "일반",
       "life": "생활",
-      "marketing": "마케팅",
-      "office": "사무",
+      "marketing": "비즈니스",
+      "office": "오피스",
       "programming": "프로그래밍",
       "translation": "번역"
     },
     "plugin": {
-      "all": "모두",
+      "all": "전체",
       "gaming-entertainment": "게임 및 엔터테인먼트",
       "life-style": "라이프스타일",
       "lifestyle": "라이프스타일",
@@ -90,52 +90,52 @@
       "science-education": "과학 및 교육",
       "social": "소셜 미디어",
       "stocks-finance": "주식 및 금융",
-      "tools": "유용한 도구",
+      "tools": "유틸리티 도구",
       "web-search": "웹 검색"
     }
   },
-  "cleanFilter": "필터 지우기",
-  "create": "창작",
+  "cleanFilter": "필터 초기화",
+  "create": "창작하기",
   "createGuide": {
     "func1": {
-      "desc1": "대화 창의 오른쪽 상단 설정을 통해 제출할 도우미의 설정 페이지로 이동하세요;",
-      "desc2": "오른쪽 상단의 도우미 마켓에 제출 버튼을 클릭하세요.",
+      "desc1": "대화창 우측 상단의 설정을 통해 제출할 도우미의 설정 페이지로 이동하세요.",
+      "desc2": "우측 상단의 '도우미 마켓에 제출' 버튼을 클릭하세요.",
       "tag": "방법 1",
-      "title": "LobeChat을 통해 제출하기"
+      "title": "LobeChat을 통해 제출"
     },
     "func2": {
       "button": "Github 도우미 저장소로 이동",
-      "desc": "도우미를 인덱스에 추가하려면 plugins 디렉토리에 agent-template.json 또는 agent-template-full.json을 사용하여 항목을 만들고, 간단한 설명을 작성한 후 적절히 태그를 추가하고, 풀 리퀘스트를 생성하세요.",
+      "desc": "도우미를 인덱스에 추가하려면 plugins 디렉토리에 agent-template.json 또는 agent-template-full.json을 사용하여 항목을 생성하고, 간단한 설명과 적절한 태그를 작성한 후 Pull Request를 생성하세요.",
       "tag": "방법 2",
-      "title": "Github을 통해 제출하기"
+      "title": "Github을 통해 제출"
     }
   },
-  "dislike": "싫어요",
+  "dislike": "좋지 않음",
   "filter": "필터",
   "filterBy": {
     "authorRange": {
-      "everyone": "모든 저자",
-      "followed": "팔로우한 저자",
-      "title": "저자 범위"
+      "everyone": "모든 작성자",
+      "followed": "팔로우한 작성자",
+      "title": "작성자 범위"
     },
-    "contentLength": "최소 맥락 길이",
+    "contentLength": "최소 컨텍스트 길이",
     "maxToken": {
-      "title": "최대 길이 설정 (Token)",
-      "unlimited": "무제한"
+      "title": "최대 길이 설정 (토큰)",
+      "unlimited": "제한 없음"
     },
     "other": {
       "functionCall": "함수 호출 지원",
       "title": "기타",
-      "vision": "비주얼 인식 지원",
-      "withKnowledge": "지식 베이스 포함",
+      "vision": "비전 인식 지원",
+      "withKnowledge": "지식 기반 포함",
       "withTool": "플러그인 포함"
     },
     "pricing": "모델 가격",
     "timePeriod": {
-      "all": "전체 시간",
+      "all": "전체 기간",
       "day": "최근 24시간",
       "month": "최근 30일",
-      "title": "시간 범위",
+      "title": "기간",
       "week": "최근 7일",
       "year": "최근 1년"
     }
@@ -143,12 +143,12 @@
   "home": {
     "featuredAssistants": "추천 도우미",
     "featuredModels": "추천 모델",
-    "featuredProviders": "추천 모델 서비스 제공자",
+    "featuredProviders": "추천 모델 제공자",
     "featuredTools": "추천 플러그인",
-    "more": "더 많은 발견"
+    "more": "더 알아보기"
   },
   "isClaimed": "인증됨",
-  "isFeatured": "추천",
+  "isFeatured": "추천됨",
   "isOfficial": "공식 인증",
   "like": "좋아요",
   "mcp": {
@@ -166,12 +166,12 @@
         "name": "개발 도구"
       },
       "gaming-entertainment": {
-        "description": "게임, 엔터테인먼트 및 레저 활동",
-        "name": "게임 엔터테인먼트"
+        "description": "게임, 엔터테인먼트 및 여가 활동",
+        "name": "게임 & 엔터테인먼트"
       },
       "health-wellness": {
-        "description": "건강, 피트니스 및 심신 관리",
-        "name": "건강 관리"
+        "description": "건강, 피트니스 및 웰빙",
+        "name": "건강 & 웰빙"
       },
       "lifestyle": {
         "description": "개인 라이프스타일, 습관 및 일상 활동",
@@ -182,8 +182,8 @@
         "name": "미디어 생성"
       },
       "news": {
-        "description": "뉴스 집계, 보도 및 정보 서비스",
-        "name": "뉴스 및 정보"
+        "description": "뉴스 수집, 보도 및 정보 서비스",
+        "name": "뉴스 & 정보"
       },
       "productivity": {
         "description": "작업 관리, 노트 및 생산성 도구",
@@ -191,7 +191,7 @@
       },
       "science-education": {
         "description": "과학 연구, 학습 및 교육 도구",
-        "name": "과학 교육"
+        "name": "과학 & 교육"
       },
       "social": {
         "description": "소셜 네트워크 및 커뮤니케이션",
@@ -199,19 +199,19 @@
       },
       "stocks-finance": {
         "description": "금융 시장, 거래 및 투자",
-        "name": "주식 및 금융"
+        "name": "금융 & 투자"
       },
       "tools": {
-        "description": "범용 실용 도구 및 서비스",
-        "name": "실용 도구"
+        "description": "범용 유틸리티 도구 및 서비스",
+        "name": "유틸리티 도구"
       },
       "travel-transport": {
-        "description": "여행 계획 및 교통",
-        "name": "여행 및 교통"
+        "description": "여행 계획 및 교통 수단",
+        "name": "여행 & 교통"
       },
       "weather": {
-        "description": "일기 예보 및 기상 서비스",
-        "name": "기상 및 날씨"
+        "description": "일기예보 및 기상 서비스",
+        "name": "날씨 & 기상"
       },
       "web-search": {
         "description": "웹 검색 및 정보 검색",
@@ -221,11 +221,11 @@
     "details": {
       "connectionType": {
         "hybrid": {
-          "desc": "이 서비스는 구성 또는 사용 시나리오에 따라 로컬 또는 클라우드에서 실행할 수 있는 이중 실행 기능을 갖추고 있습니다.",
+          "desc": "이 서비스는 설정 또는 사용 시나리오에 따라 로컬 또는 클라우드에서 실행될 수 있으며, 이중 실행 기능을 갖추고 있습니다.",
           "title": "하이브리드 서비스"
         },
         "local": {
-          "desc": "이 서버는 클라이언트 로컬 장치에서만 실행되며, 설치 및 로컬 리소스에 의존합니다.",
+          "desc": "이 서버는 클라이언트의 로컬 장치에서만 실행되며, 로컬 리소스에 의존합니다.",
           "title": "로컬 서비스"
         },
         "remote": {
@@ -235,28 +235,28 @@
       },
       "deployment": {
         "args": "매개변수",
-        "checkCommand": "명령 확인",
-        "command": "명령",
+        "checkCommand": "확인 명령어",
+        "command": "명령어",
         "commandLine": "시스템 의존성",
         "connection": "연결 방식",
         "connectionType": "연결 유형",
-        "description": "플러그인 설치 및 배포 방식",
-        "descriptionPlaceholder": "선택적 설명 정보",
+        "description": "플러그인의 설치 및 배포 방식",
+        "descriptionPlaceholder": "선택 사항 설명",
         "empty": "배포 옵션 없음",
         "env": "환경 변수",
-        "guide": "설치 안내",
-        "installation": "{{method}}로 설치",
-        "installationMethod": "설치 방법",
+        "guide": "설치 가이드",
+        "installation": "{{method}} 방식으로 설치",
+        "installationMethod": "설치 방식",
         "other": "기타 설정",
         "packageName": "패키지 이름",
         "platform": {
           "steps": {
-            "claude": "- **Claude Desktop** 앱을 엽니다.\n- **설정**으로 이동 후 **개발자** 선택\n- **구성 편집** 클릭\n- **claude_desktop_config.json** 파일 열기\n- 서버 구성을 기존 파일에 복사하여 붙여넣고 저장",
-            "cline": "- Cline 확장 프로그램이 설치된 VS Code를 엽니다.\n- 사이드바에서 Cline 아이콘 클릭\n- 드롭다운 메뉴에서 **MCP Servers** 선택\n- **Remote Servers** 탭에서 서버 이름과 MCP 서버 URL 입력\n- **Add Server** 클릭하여 연결",
-            "cursor": "- **설정**으로 이동 후 Cursor 설정 선택\n- 왼쪽에서 **MCP** 선택\n- 오른쪽 상단의 **새 글로벌 MCP 서버 추가** 클릭\n- 서버 구성을 기존 파일에 복사하여 붙여넣고 저장",
-            "lobeChat": "- **LobeChat 데스크톱** 앱을 엽니다.\n- **설정** - **기본 도우미**로 이동\n- **플러그인 설정** - **사용자 정의 플러그인** 선택\n- **빠른 JSON 구성 가져오기** 클릭\n- 서버 구성을 텍스트 박스에 복사하여 붙여넣고 설치",
-            "openai": "- **OpenAI 앱** 또는 개발 환경을 엽니다.\n- **Responses API**에서 MCP 도구 구성\n- API 요청의 **tools** 배열에 MCP 블록 추가\n- **server_url**을 MCP 서버 엔드포인트로 설정\n- 인증에 필요한 헤더 정보 포함 (API 키, 토큰 등)\n- `allowed_tools` 매개변수로 노출 도구 제한\n- `require_approval`로 도구 실행 승인 제어",
-            "vscode": "- VS Code를 엽니다.\n- 명령 팔레트(`Ctrl+Shift+P` / `Cmd+Shift+P`) 열기\n- **MCP: Add Server** 입력 후 선택\n- 작업 공간 또는 사용자 설정에 추가 선택\n- 서버 구성 복사하여 붙여넣기"
+            "claude": "- **Claude Desktop** 앱을 엽니다\n- **설정**으로 이동한 후 **개발자**를 선택합니다\n- **구성 편집**을 클릭합니다\n- **claude_desktop_config.json** 파일을 엽니다\n- 서버 구성을 복사하여 기존 파일에 붙여넣고 저장합니다",
+            "cline": "- Cline 확장이 설치된 VS Code를 엽니다\n- 사이드바에서 Cline 아이콘을 클릭합니다\n- 드롭다운 메뉴에서 **MCP Servers**를 선택합니다\n- **Remote Servers** 탭에서 서버 이름과 MCP 서버 URL을 입력합니다\n- **Add Server**를 클릭하여 연결합니다",
+            "cursor": "- **설정**으로 이동한 후 Cursor 설정을 선택합니다\n- 왼쪽에서 **MCP**를 선택합니다\n- 오른쪽 상단의 **새 글로벌 MCP 서버 추가**를 클릭합니다\n- 서버 구성을 복사하여 기존 파일에 붙여넣고 저장합니다",
+            "lobeChat": "- **LobeChat 데스크탑** 앱을 엽니다\n- **설정** - **기본 어시스턴트**로 이동합니다\n- **플러그인 설정** - **사용자 정의 플러그인**을 선택합니다\n- **JSON 구성 빠른 가져오기**를 클릭합니다\n- 서버 구성을 텍스트 상자에 붙여넣고 설치합니다",
+            "openai": "- **OpenAI 앱** 또는 개발 환경을 엽니다\n- **Responses API**에서 MCP 도구를 구성합니다\n- API 요청의 **tools** 배열에 MCP 블록을 추가합니다\n- **server_url**을 MCP 서버 엔드포인트로 설정합니다\n- 인증에 필요한 헤더 정보(API 키, 토큰 등)를 포함합니다\n- `allowed_tools` 매개변수로 노출 도구를 제한합니다\n- `require_approval`을 설정하여 도구 실행 승인 여부를 제어합니다",
+            "vscode": "- VS Code를 엽니다\n- 명령 팔레트(`Ctrl+Shift+P` / `Cmd+Shift+P`)를 엽니다\n- **MCP: Add Server**를 입력하고 선택합니다\n- 워크스페이스 또는 사용자 설정에 추가를 선택합니다\n- 서버 구성을 복사하여 붙여넣습니다"
           },
           "title": "{{platform}}에서 설치"
         },
@@ -268,14 +268,14 @@
           "required": "필수",
           "type": "유형"
         },
-        "title": "설치 방법"
+        "title": "설치 방식"
       },
       "githubBadge": {
-        "desc": "LobeHub는 정기적으로 코드 저장소와 문서를 스캔하여:\n\n- MCP 서버가 정상 작동하는지 확인합니다.\n- 도구, 리소스, 프롬프트 및 필요한 매개변수 등 서버 특성을 추출합니다.\n- 배지는 사용자가 MCP 서버의 보안성, 기능 특성 및 설치 안내를 빠르게 평가할 수 있도록 돕습니다.\n\n다음 코드를 `README.md` 파일에 복사하여 붙여넣으세요:"
+        "desc": "LobeHub는 코드베이스와 문서를 정기적으로 스캔하여 다음을 수행합니다:\n\n- MCP 서버가 정상적으로 작동하는지 확인합니다.\n- 도구, 리소스, 프롬프트 및 필요한 매개변수와 같은 서버 기능을 추출합니다.\n- 우리의 배지는 사용자가 MCP 서버의 보안성, 기능 및 설치 가이드를 빠르게 평가할 수 있도록 도와줍니다.\n\n아래 코드를 `README.md` 파일에 복사하여 붙여넣으세요:"
       },
       "nav": {
         "needHelp": "도움이 필요하신가요?",
-        "reportIssue": "문제 신고",
+        "reportIssue": "문제 보고",
         "viewSourceCode": "소스 코드 보기"
       },
       "overview": {
@@ -284,15 +284,15 @@
       "related": {
         "listTitle": "관련 MCP 서버",
         "more": "더 보기",
-        "title": "관련 추천"
+        "title": "추천"
       },
       "schema": {
         "mode": {
           "docs": "문서"
         },
         "prompts": {
-          "arguments": "매개변수 구성",
-          "desc": "사용자가 선택하여 트리거하는 대화형 템플릿",
+          "arguments": "매개변수 설정",
+          "desc": "사용자가 선택하여 트리거하는 인터랙티브 템플릿",
           "empty": "프롬프트 없음",
           "instructions": "지침 설명",
           "table": {
@@ -303,7 +303,7 @@
           "title": "프롬프트 목록"
         },
         "resources": {
-          "desc": "클라이언트가 첨부 및 관리하는 컨텍스트 데이터",
+          "desc": "클라이언트가 첨부하고 관리하는 컨텍스트 데이터",
           "empty": "리소스 없음",
           "table": {
             "description": "설명",
@@ -315,7 +315,7 @@
         },
         "title": "플러그인 기능",
         "tools": {
-          "desc": "대형 언어 모델(LLM)에 노출되어 작업을 수행하는 기능 인터페이스",
+          "desc": "대형 언어 모델(LLM)에 노출되는 기능 인터페이스로 작업을 수행합니다",
           "empty": "도구 없음",
           "inputSchema": "입력 설명",
           "instructions": "지침 설명",
@@ -330,27 +330,27 @@
       },
       "score": {
         "claimed": {
-          "desc": "이 MCP 서버는 소유자가 인증하여 소유권과 관리를 보장합니다.",
-          "title": "소유자 인증됨"
+          "desc": "이 MCP 서버는 소유자가 소유권을 주장하여 관리되고 있습니다.",
+          "title": "소유자 확인됨"
         },
         "deployMoreThanManual": {
-          "desc": "이 MCP 서버는 Manual 외에 더 친숙한 설치 방법을 제공하여 사용자가 쉽게 배포하고 사용할 수 있습니다.",
-          "title": "친숙한 설치 방법 제공"
+          "desc": "이 MCP 서버는 수동 설치 외에도 더 편리한 설치 방법을 제공하여 사용자가 쉽게 배포하고 사용할 수 있습니다.",
+          "title": "편리한 설치 방식 제공"
         },
         "deployment": {
-          "desc": "이 MCP 서버는 최소 하나의 설치 방법을 제공하여 사용자가 배포하고 사용할 수 있습니다.",
+          "desc": "이 MCP 서버는 최소 하나 이상의 설치 방법을 제공하여 사용자가 배포하고 사용할 수 있습니다.",
           "descWithCount": "이 MCP 서버는 {{number}}개의 설치 방법을 제공하여 사용자가 배포하고 사용할 수 있습니다.",
-          "title": "최소 하나의 설치 방법 제공"
+          "title": "설치 방법 제공"
         },
         "license": {
           "desc": "이 저장소에는 LICENSE 파일이 포함되어 있습니다.",
           "descWithlicense": "이 저장소의 라이선스는 {{license}}입니다.",
-          "title": "LICENSE 포함"
+          "title": "라이선스 포함"
         },
         "listTitle": "평가 세부사항",
         "notClaimed": {
-          "desc": "이 MCP 서버의 소유자라면 다음 방법으로 인증할 수 있습니다.",
-          "title": "소유자 미인증"
+          "desc": "이 MCP 서버의 소유자라면 아래 방법으로 소유권을 주장할 수 있습니다.",
+          "title": "소유자 미확인"
         },
         "prompts": {
           "desc": "이 MCP 서버는 프롬프트를 제공하여 사용자가 서비스와 상호작용할 수 있습니다.",
@@ -362,34 +362,34 @@
           "title": "README 포함"
         },
         "resources": {
-          "desc": "이 MCP 서버는 리소스를 제공하여 사용자가 컨텍스트 데이터를 첨부 및 관리할 수 있습니다.",
-          "descWithCount": "이 MCP 서버는 {{number}}개의 리소스를 제공하여 사용자가 컨텍스트 데이터를 첨부 및 관리할 수 있습니다.",
+          "desc": "이 MCP 서버는 리소스를 제공하여 사용자가 컨텍스트 데이터를 첨부하고 관리할 수 있습니다.",
+          "descWithCount": "이 MCP 서버는 {{number}}개의 리소스를 제공하여 사용자가 컨텍스트 데이터를 첨부하고 관리할 수 있습니다.",
           "title": "리소스 포함"
         },
         "title": "평가",
         "tools": {
-          "desc": "서비스는 최소 하나의 도구를 제공하여 사용자가 특정 작업을 수행할 수 있도록 합니다.",
-          "descWithCount": "이 MCP 서버는 {{number}}개의 도구 기능을 제공하여 사용자가 특정 작업을 수행할 수 있도록 합니다.",
-          "title": "최소 하나의 도구 포함"
+          "desc": "서비스는 사용자가 특정 작업을 수행할 수 있도록 최소 하나 이상의 도구를 제공해야 합니다.",
+          "descWithCount": "이 MCP 서버는 {{number}}개의 도구 기능을 제공하여 사용자가 특정 작업을 수행할 수 있습니다.",
+          "title": "도구 포함"
         },
         "validated": {
-          "desc": "이 MCP 서버는 설치 검증을 통과하여 품질과 신뢰성을 보장합니다.",
+          "desc": "이 MCP 서버는 설치 검증을 통과하여 품질과 신뢰성이 보장됩니다.",
           "title": "검증 완료"
         }
       },
       "scoreLevel": {
         "a": {
-          "desc": "이 MCP 서버는 엄격한 검증을 거쳐 포괄적인 기능과 고품질 사용자 경험을 제공합니다.",
+          "desc": "이 MCP 서버는 철저한 검증을 거쳐 완전한 기능과 높은 품질의 사용자 경험을 제공합니다.",
           "fullTitle": "우수 플러그인",
           "title": "우수"
         },
         "b": {
-          "desc": "이 MCP 서버는 좋은 기능과 사용자 경험을 제공하지만 일부 측면에서 개선이 필요할 수 있습니다.",
+          "desc": "이 MCP 서버는 양호한 기능과 사용자 경험을 제공하지만 일부 개선이 필요할 수 있습니다.",
           "fullTitle": "기능 양호",
           "title": "양호"
         },
         "f": {
-          "desc": "이 MCP 서버는 기능이 불완전하거나 품질이 낮아 사용에 주의가 필요합니다.",
+          "desc": "이 MCP 서버는 기능이 불완전하거나 품질이 낮아 사용 시 주의가 필요합니다.",
           "fullTitle": "품질 미흡",
           "title": "미흡"
         }
@@ -402,11 +402,11 @@
           "tools": "도구"
         },
         "configuration": {
-          "title": "플러그인 구성"
+          "title": "플러그인 설정"
         },
         "connection": {
           "args": "시작 매개변수",
-          "command": "시작 명령",
+          "command": "시작 명령어",
           "title": "연결 정보",
           "type": "연결 유형",
           "url": "서비스 주소"
@@ -419,24 +419,24 @@
         "meta": {
           "homepage": "공식 홈페이지",
           "installCount": "설치 수",
-          "language": "소스 코드 언어",
+          "language": "소스 언어",
           "license": "라이선스",
-          "published": "게시일",
-          "repo": "소스 코드 저장소",
-          "stars": "별점 수",
+          "published": "출시일",
+          "repo": "소스 저장소",
+          "stars": "스타 수",
           "title": "상세 정보",
           "updated": "최근 업데이트"
         },
-        "moreServerConfig": "상세 보기",
+        "moreServerConfig": "자세히 보기",
         "recommendServers": "관련 MCP",
         "serverConfig": "설치 구성",
         "toc": "목차"
       },
       "summary": {
-        "title": "이 MCP 서버로 할 수 있는 일"
+        "title": "이 MCP 서버로 무엇을 할 수 있나요?"
       },
       "totalScore": {
-        "description": "각 지표를 종합하여 계산한 총점",
+        "description": "각 항목을 종합하여 계산된 총점",
         "legend": {
           "aGrade": "A등급 ({{minPercent}}-100%)",
           "bGrade": "B등급 ({{minPercent}}-{{maxPercent}}%)",
@@ -450,7 +450,7 @@
           "incompleteRequired": "❌ 필수 항목 미완료 ({{count}}개)",
           "title": "평가 세부사항"
         },
-        "ratingFormat": "평가: {{level}}",
+        "ratingFormat": "등급: {{level}}",
         "scoreInfo": {
           "items": "항목",
           "points": "점수",
@@ -461,20 +461,20 @@
       "versions": {
         "table": {
           "isLatest": "최신 버전",
-          "isValidated": "검증 완료",
-          "publishAt": "게시일",
+          "isValidated": "검증됨",
+          "publishAt": "출시일",
           "version": "버전"
         },
         "title": "버전 기록"
       }
     },
     "hero": {
-      "desc": "오픈 소스 및 배포 가능한 MCP 서버 플랫폼으로, AI 시스템이 파일 시스템, 데이터베이스, API 등 핵심 리소스에 쉽게 접근할 수 있도록 도와 AI 능력을 전면 확장합니다.",
-      "subTitle": "오픈 소스 & 즉시 사용 가능",
-      "title": "AI를 위한 오픈 소스 MCP 마켓플레이스"
+      "desc": "오픈소스 및 배포 가능한 MCP 서버 플랫폼으로, AI 시스템이 파일 시스템, 데이터베이스, API 등 핵심 리소스에 쉽게 접근할 수 있도록 도와주며 AI 기능을 확장합니다.",
+      "subTitle": "오픈소스 & 즉시 사용 가능",
+      "title": "AI를 위한 오픈소스 MCP 마켓플레이스"
     },
     "sorts": {
-      "createdAt": "최근 추가",
+      "createdAt": "최근 추가됨",
       "installCount": "설치 수",
       "isFeatured": "추천 플러그인",
       "isValidated": "검증된 플러그인",
@@ -486,12 +486,12 @@
     },
     "title": "MCP 마켓플레이스",
     "unvalidated": {
-      "desc": "이 MCP 서버는 아직 검증되지 않았습니다.",
-      "title": "검증되지 않음"
+      "desc": "이 MCP 서버는 아직 검증되지 않았습니다",
+      "title": "미검증"
     },
     "validated": {
-      "desc": "이 MCP 서버는 검증되어 품질과 신뢰성을 보장합니다.",
-      "descWithDate": "이 MCP 서버는 {{date}}에 검증되어 품질과 신뢰성을 보장합니다.",
+      "desc": "이 MCP 서버는 검증을 통과하여 품질과 신뢰성이 보장됩니다.",
+      "descWithDate": "이 MCP 서버는 {{date}}에 검증을 통과하여 품질과 신뢰성이 보장됩니다.",
       "title": "검증됨"
     }
   },

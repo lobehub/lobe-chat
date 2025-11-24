@@ -34,5 +34,5 @@ export const POST = async (req: Request) => {
   // if resOrOpenAI is a Response, it means there is an error,just return it
   if (openaiOrErrResponse instanceof Response) return openaiOrErrResponse;
 
-  return await createOpenaiAudioSpeech({ openai: openaiOrErrResponse, payload });
+  return await createOpenaiAudioSpeech({ openai: openaiOrErrResponse as any, payload });
 };

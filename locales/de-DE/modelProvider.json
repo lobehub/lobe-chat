@@ -82,6 +82,58 @@
       "title": "Cloudflare-Kundenkennung / API-Adresse"
     }
   },
+  "comfyui": {
+    "apiKey": {
+      "desc": "API-Schlüssel für die Authentifizierung mit Bearer-Token",
+      "placeholder": "Bitte API-Schlüssel eingeben",
+      "required": "Bitte API-Schlüssel eingeben",
+      "title": "API-Schlüssel"
+    },
+    "authType": {
+      "desc": "Wählen Sie die Authentifizierungsmethode für den ComfyUI-Server",
+      "options": {
+        "basic": "Benutzername/Passwort",
+        "bearer": "Bearer (API-Schlüssel)",
+        "custom": "Benutzerdefinierte Header",
+        "none": "Keine Authentifizierung erforderlich"
+      },
+      "placeholder": "Bitte Authentifizierungstyp wählen",
+      "title": "Authentifizierungstyp"
+    },
+    "baseURL": {
+      "desc": "Webadresse für den Zugriff auf ComfyUI",
+      "placeholder": "http://127.0.0.1:8000",
+      "required": "Bitte ComfyUI-Serveradresse eingeben",
+      "title": "ComfyUI-Serveradresse"
+    },
+    "checker": {
+      "desc": "Verbindung testen, um die Konfiguration zu überprüfen",
+      "title": "Verbindungsprüfung"
+    },
+    "customHeaders": {
+      "addButton": "Header hinzufügen",
+      "deleteTooltip": "Diesen Header löschen",
+      "desc": "Erforderliche Header für benutzerdefinierte Authentifizierung im Schlüssel-Wert-Format",
+      "duplicateKeyError": "Header-Schlüssel dürfen nicht doppelt sein",
+      "keyPlaceholder": "Schlüssel",
+      "required": "Bitte benutzerdefinierte Header eingeben",
+      "title": "Benutzerdefinierte Header",
+      "valuePlaceholder": "Wert"
+    },
+    "password": {
+      "desc": "Passwort für die Basis-Authentifizierung",
+      "placeholder": "Bitte Passwort eingeben",
+      "required": "Bitte Passwort eingeben",
+      "title": "Passwort"
+    },
+    "title": "ComfyUI",
+    "username": {
+      "desc": "Benutzername für die Basis-Authentifizierung",
+      "placeholder": "Bitte Benutzernamen eingeben",
+      "required": "Bitte Benutzernamen eingeben",
+      "title": "Benutzername"
+    }
+  },
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Bitte geben Sie Ihren API-Schlüssel ein",
@@ -284,15 +336,42 @@
           "placeholder": "Bitte Modell-ID eingeben, z. B. gpt-4o oder claude-3.5-sonnet",
           "title": "Modell-ID"
         },
+        "imageOutput": {
+          "extra": "Diese Einstellung aktiviert lediglich die Fähigkeit des Modells zur Bildgenerierung. Die tatsächliche Leistung hängt vollständig vom Modell selbst ab. Bitte testen Sie selbst, ob das Modell über eine nutzbare Bildgenerierungsfunktion verfügt.",
+          "title": "Bildgenerierung unterstützen"
+        },
         "modalTitle": "Benutzerdefinierte Modellkonfiguration",
         "reasoning": {
           "extra": "Diese Konfiguration aktiviert nur die Fähigkeit des Modells zu tiefem Denken. Die tatsächlichen Ergebnisse hängen vollständig vom Modell selbst ab. Bitte testen Sie selbst, ob das Modell über die Fähigkeit zum tiefen Denken verfügt.",
           "title": "Unterstützung für tiefes Denken"
         },
+        "search": {
+          "extra": "Diese Einstellung aktiviert lediglich die integrierte Internetsuchfunktion des Modells. Ob eine integrierte Suchmaschine unterstützt wird, hängt vom Modell selbst ab. Bitte testen Sie selbst, ob die Suchfunktion des Modells verfügbar ist.",
+          "title": "Internetsuche unterstützen"
+        },
         "tokens": {
           "extra": "Maximale Token-Anzahl für das Modell festlegen",
           "title": "Maximales Kontextfenster",
           "unlimited": "Unbegrenzt"
+        },
+        "type": {
+          "extra": "Verschiedene Modelltypen haben unterschiedliche Anwendungsbereiche und Fähigkeiten",
+          "options": {
+            "chat": "Chat",
+            "embedding": "Vektorisierung",
+            "image": "Bildgenerierung",
+            "realtime": "Echtzeit-Chat",
+            "stt": "Spracherkennung",
+            "text2music": "Text zu Musik",
+            "text2video": "Text zu Video",
+            "tts": "Sprachsynthese"
+          },
+          "placeholder": "Bitte Modelltyp auswählen",
+          "title": "Modelltyp"
+        },
+        "video": {
+          "extra": "Diese Einstellung aktiviert lediglich die Videorekognition innerhalb der Anwendung. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte testen Sie selbst, ob das Modell über eine nutzbare Videorekognitionsfunktion verfügt.",
+          "title": "Videoerkennung unterstützen"
         },
         "vision": {
           "extra": "Diese Konfiguration aktiviert nur die Bild-Upload-Funktionalität in der Anwendung. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte testen Sie die Verwendbarkeit der visuellen Erkennungsfähigkeit des Modells selbst.",
@@ -372,6 +451,11 @@
       "desc": "Geben Sie Ihre Vertex AI-Schlüssel ein",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Vertex AI-Schlüssel"
+    },
+    "region": {
+      "desc": "Wählen Sie die Region für den Vertex AI-Dienst aus. Einige Modelle wie Gemini 2.5 sind nur in bestimmten Regionen verfügbar (z. B. global).",
+      "placeholder": "Region auswählen",
+      "title": "Vertex AI-Region"
     }
   },
   "zeroone": {

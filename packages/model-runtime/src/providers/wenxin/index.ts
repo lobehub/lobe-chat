@@ -1,8 +1,11 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
-export const LobeWenxinAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://qianfan.baidubce.com/v2',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -25,4 +28,6 @@ export const LobeWenxinAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_WENXIN_CHAT_COMPLETION === '1',
   },
   provider: ModelProvider.Wenxin,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeWenxinAI = createOpenAICompatibleRuntime(params);

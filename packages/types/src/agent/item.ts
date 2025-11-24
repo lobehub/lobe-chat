@@ -53,6 +53,11 @@ export interface LobeAgentConfig {
    * 语音服务
    */
   tts: LobeAgentTTSConfig;
+
+  /**
+   * Flag for assistants generated automatically (e.g., from templates)
+   */
+  virtual?: boolean;
 }
 
 export type LobeAgentConfigKeys =
@@ -82,4 +87,5 @@ export interface AgentItem {
   tts?: LobeAgentTTSConfig | null;
   updatedAt: Date;
   userId: string;
+  virtual?: boolean | null;
 }

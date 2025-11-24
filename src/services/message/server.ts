@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { ChatTranslate, UIChatMessage } from '@lobechat/types';
+
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
-import { ChatMessage, ChatTranslate } from '@/types/message';
 
 import { IMessageService } from './type';
 
@@ -9,7 +10,14 @@ export class ServerService implements IMessageService {
   createMessage: IMessageService['createMessage'] = async ({ sessionId, ...params }) => {
     return lambdaClient.message.createMessage.mutate({
       ...params,
-      sessionId: this.toDbSessionId(sessionId),
+      sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
+    });
+  };
+
+  createNewMessage: IMessageService['createNewMessage'] = async ({ sessionId, ...params }) => {
+    return lambdaClient.message.createNewMessage.mutate({
+      ...params,
+      sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
     });
   };
 
@@ -17,13 +25,22 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.batchCreateMessages.mutate(messages);
   };
 
-  getMessages: IMessageService['getMessages'] = async (sessionId, topicId) => {
+  getMessages: IMessageService['getMessages'] = async (sessionId, topicId, groupId) => {
     const data = await lambdaClient.message.getMessages.query({
+      groupId,
       sessionId: this.toDbSessionId(sessionId),
       topicId,
     });
 
-    return data as unknown as ChatMessage[];
+    return data as unknown as UIChatMessage[];
+  };
+
+  getGroupMessages: IMessageService['getGroupMessages'] = async (groupId, topicId) => {
+    const data = await lambdaClient.message.getMessages.query({
+      groupId,
+      topicId,
+    });
+    return data as unknown as UIChatMessage[];
   };
 
   getAllMessages: IMessageService['getAllMessages'] = async () => {
@@ -102,6 +119,13 @@ export class ServerService implements IMessageService {
   ) => {
     return lambdaClient.message.removeMessagesByAssistant.mutate({
       sessionId: this.toDbSessionId(sessionId),
+      topicId,
+    });
+  };
+
+  removeMessagesByGroup: IMessageService['removeMessagesByGroup'] = async (groupId, topicId) => {
+    return lambdaClient.message.removeMessagesByGroup.mutate({
+      groupId,
       topicId,
     });
   };

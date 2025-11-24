@@ -1,4 +1,14 @@
 import {
+  EditLocalFileParams,
+  EditLocalFileResult,
+  GetCommandOutputParams,
+  GetCommandOutputResult,
+  GlobFilesParams,
+  GlobFilesResult,
+  GrepContentParams,
+  GrepContentResult,
+  KillCommandParams,
+  KillCommandResult,
   ListLocalFileParams,
   LocalFileItem,
   LocalMoveFilesResultItem,
@@ -10,11 +20,14 @@ import {
   OpenLocalFileParams,
   OpenLocalFolderParams,
   RenameLocalFileParams,
+  RunCommandParams,
+  RunCommandResult,
   WriteLocalFileParams,
   dispatch,
 } from '@lobechat/electron-client-ipc';
 
 class LocalFileService {
+  // File Operations
   async listLocalFiles(params: ListLocalFileParams): Promise<LocalFileItem[]> {
     return dispatch('listLocalFiles', params);
   }
@@ -51,6 +64,33 @@ class LocalFileService {
     return dispatch('writeLocalFile', params);
   }
 
+  async editLocalFile(params: EditLocalFileParams): Promise<EditLocalFileResult> {
+    return dispatch('editLocalFile', params);
+  }
+
+  // Shell Commands
+  async runCommand(params: RunCommandParams): Promise<RunCommandResult> {
+    return dispatch('runCommand', params);
+  }
+
+  async getCommandOutput(params: GetCommandOutputParams): Promise<GetCommandOutputResult> {
+    return dispatch('getCommandOutput', params);
+  }
+
+  async killCommand(params: KillCommandParams): Promise<KillCommandResult> {
+    return dispatch('killCommand', params);
+  }
+
+  // Search & Find
+  async grepContent(params: GrepContentParams): Promise<GrepContentResult> {
+    return dispatch('grepContent', params);
+  }
+
+  async globFiles(params: GlobFilesParams): Promise<GlobFilesResult> {
+    return dispatch('globLocalFiles', params);
+  }
+
+  // Helper methods
   async openLocalFileOrFolder(path: string, isDirectory: boolean) {
     if (isDirectory) {
       return this.openLocalFolder({ isDirectory, path });

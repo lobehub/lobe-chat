@@ -1,7 +1,7 @@
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_FEATURE_FLAGS } from '@/config/featureFlags';
+import { DEFAULT_FEATURE_FLAGS, mapFeatureFlagsEnvToState } from '@/config/featureFlags';
 
 import { ServerConfigStore, createServerConfigStore, initServerConfigStore } from './store';
 
@@ -21,21 +21,25 @@ describe('createServerConfigStore', () => {
   it('should initialize store with default state', () => {
     const store = createServerConfigStore();
 
+    expect(store.getState().featureFlags).toHaveProperty('showLLM');
+    expect(store.getState().featureFlags).toHaveProperty('enablePlugins');
     expect(store.getState()).toMatchObject({
-      featureFlags: DEFAULT_FEATURE_FLAGS,
       serverConfig: { telemetry: {}, aiProvider: {} },
     });
   });
 
   it('should initialize store with custom initial state', () => {
     const initialState: Partial<ServerConfigStore> = {
-      featureFlags: { edit_agent: false },
+      featureFlags: {
+        ...mapFeatureFlagsEnvToState(DEFAULT_FEATURE_FLAGS),
+        isAgentEditable: false,
+      },
       serverConfig: { telemetry: { langfuse: true }, aiProvider: {} },
     };
 
     const store = initServerConfigStore(initialState);
 
-    expect(store.getState().featureFlags.edit_agent).toBeFalsy();
+    expect(store.getState().featureFlags.isAgentEditable).toBeFalsy();
     expect(store.getState().serverConfig).toEqual({
       telemetry: { langfuse: true },
       aiProvider: {},
@@ -46,9 +50,14 @@ describe('createServerConfigStore', () => {
     const store = createServerConfigStore();
 
     act(() => {
-      store.setState({ featureFlags: { dalle: false } });
+      store.setState({
+        featureFlags: {
+          ...store.getState().featureFlags,
+          showDalle: false,
+        },
+      });
     });
 
-    expect(store.getState().featureFlags.dalle).toBeFalsy();
+    expect(store.getState().featureFlags.showDalle).toBeFalsy();
   });
 });

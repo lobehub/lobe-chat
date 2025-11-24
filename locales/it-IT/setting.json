@@ -35,9 +35,16 @@
       "title": "Ripristina tutte le impostazioni"
     }
   },
+  "groupTab": {
+    "chat": "Chat",
+    "members": "Membri",
+    "meta": "Informazioni di base"
+  },
   "header": {
     "desc": "Preferenze e impostazioni del modello.",
     "global": "Impostazioni globali",
+    "group": "Impostazioni del Team",
+    "groupDesc": "Gestisci il team di agenti e le preferenze di chat",
     "session": "Impostazioni della sessione",
     "sessionDesc": "Impostazioni del personaggio e preferenze di sessione.",
     "sessionWithName": "Impostazioni della sessione · {{name}}",
@@ -138,6 +145,9 @@
       "title": "Indirizzo del proxy API"
     },
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato"
+  },
+  "message": {
+    "success": "Aggiornamento riuscito"
   },
   "plugin": {
     "addMCPPlugin": "Aggiungi plugin MCP",
@@ -293,6 +303,109 @@
       "title": "Tema"
     },
     "title": "Impostazioni Generali"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Inserisci la descrizione del team",
+      "title": "Descrizione del Team"
+    },
+    "name": {
+      "placeholder": "Inserisci il nome del team",
+      "title": "Nome del Team"
+    },
+    "scene": {
+      "desc": "Seleziona lo scenario del team",
+      "options": {
+        "casual": "Informale",
+        "productive": "Produttivo"
+      },
+      "title": "Scenario del Team"
+    },
+    "submit": "Aggiorna Team",
+    "systemPrompt": {
+      "placeholder": "Inserisci il prompt di sistema del moderatore",
+      "title": "Prompt di sistema del moderatore"
+    },
+    "title": "Informazioni sul Team di Agenti"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Dopo la disattivazione, puoi comunque inviare messaggi privati all'assistente",
+      "title": "Consenti messaggi privati dall'assistente"
+    },
+    "enableSupervisor": {
+      "desc": "Abilita la funzione di supervisore del team di agenti. Il supervisore gestirà il flusso delle conversazioni del team",
+      "title": "Attiva moderatore"
+    },
+    "maxResponseInRow": {
+      "desc": "Seleziona quante risposte consecutive un membro può inviare. Imposta a 0 per disabilitare questo limite.",
+      "title": "Numero di risposte consecutive"
+    },
+    "model": {
+      "desc": "Gli interventi dei membri del gruppo non saranno influenzati. Alcuni modelli non possono essere utilizzati come moderatori.",
+      "title": "Modello moderatore"
+    },
+    "orchestratorTitle": "Impostazioni moderatore",
+    "responseOrder": {
+      "desc": "Gli agenti risponderanno nell'ordine impostato nella chat",
+      "options": {
+        "natural": "Naturale",
+        "sequential": "Sequenziale"
+      },
+      "placeholder": "Seleziona l'ordine di risposta",
+      "title": "Ordine di risposta"
+    },
+    "responseSpeed": {
+      "desc": "Controlla la velocità complessiva della conversazione",
+      "options": {
+        "fast": "Veloce",
+        "medium": "Media",
+        "slow": "Lenta"
+      },
+      "placeholder": "Seleziona la velocità di risposta",
+      "title": "Velocità di risposta"
+    },
+    "revealDM": {
+      "desc": "Rendi visibili i messaggi privati inviati ad altri membri.",
+      "title": "Mostra contenuti messaggi privati"
+    },
+    "submit": "Aggiorna impostazioni",
+    "systemPrompt": {
+      "desc": "Prompt di sistema personalizzato per il moderatore della chat di gruppo. Può influenzare il comportamento predefinito del moderatore.",
+      "placeholder": "Inserisci un prompt di sistema personalizzato per il moderatore...",
+      "title": "Prompt di sistema del moderatore"
+    },
+    "title": "Impostazioni chat"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Aggiungi al gruppo",
+    "availableAgents": "Assistenti disponibili",
+    "createMember": "Crea membro",
+    "defaultAgent": "Assistente personalizzato",
+    "disableHost": "Disattiva assistente host",
+    "edit": "Modifica membro",
+    "empty": "Non ci sono ancora membri in questo team. Clicca sul pulsante + per aggiungerli.",
+    "enableHost": "Attiva assistente host",
+    "groupHost": "Host del gruppo",
+    "groupMembers": "Membri del gruppo",
+    "host": {
+      "description": "Quando l'host è nel gruppo, la chat di gruppo funziona in modo automatizzato, adatta a compiti creativi.",
+      "title": "Host"
+    },
+    "noAvailableAgents": "Nessun assistente disponibile",
+    "noDescription": "Nessuna descrizione",
+    "noMembersInGroup": "Nessun membro nel gruppo",
+    "owner": "Tu (proprietario)",
+    "remove": "Rimuovi membro",
+    "removeFromGroup": "Rimuovi dal gruppo",
+    "you": "Tu"
+  },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Imposta il numero predefinito di immagini da generare quando si crea una nuova attività nel pannello di generazione immagini.",
+      "label": "Numero predefinito di immagini",
+      "title": "Impostazioni AI per il disegno"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -549,6 +662,7 @@
     "common": "Impostazioni comuni",
     "experiment": "实验",
     "hotkey": "Scorciatoie",
+    "image": "Disegno AI",
     "llm": "Modello linguistico",
     "provider": "Fornitore di servizi AI",
     "proxy": "Proxy di rete",

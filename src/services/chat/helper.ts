@@ -54,3 +54,14 @@ export const isEnableFetchOnClient = (provider: string) => {
     return aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
   }
 };
+
+export const resolveRuntimeProvider = (provider: string) => {
+  if (isDeprecatedEdition) return provider;
+
+  const isBuiltin = Object.values(ModelProvider).includes(provider as any);
+  if (isBuiltin) return provider;
+
+  const providerConfig = aiProviderSelectors.providerConfigById(provider)(getAiInfraStoreState());
+
+  return providerConfig?.settings.sdkType || 'openai';
+};

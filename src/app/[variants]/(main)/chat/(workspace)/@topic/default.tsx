@@ -1,5 +1,5 @@
-// import TopicListContent from './features/TopicListContent';
-import React, { Suspense, lazy } from 'react';
+import dynamic from 'next/dynamic';
+import React from 'react';
 
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
@@ -7,27 +7,25 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';
 import SkeletonList from './features/SkeletonList';
-import SystemRole from './features/SystemRole';
+import Topic from './features/Topic';
 
-const TopicContent = lazy(() => import('./features/TopicListContent'));
+const ConfigSwitcher = dynamic(() => import('./features/ConfigSwitcher'), {
+  loading: () => <SkeletonList />,
+});
 
-const Topic = async (props: DynamicLayoutProps) => {
+const Sidebar = async (props: DynamicLayoutProps) => {
   const isMobile = await RouteVariants.getIsMobile(props);
 
   const Layout = isMobile ? Mobile : Desktop;
 
   return (
-    <>
-      {!isMobile && <SystemRole />}
-      <Layout>
-        <Suspense fallback={<SkeletonList />}>
-          <TopicContent />
-        </Suspense>
-      </Layout>
-    </>
+    <Layout>
+      <ConfigSwitcher />
+      <Topic />
+    </Layout>
   );
 };
 
-Topic.displayName = 'ChatTopic';
+Sidebar.displayName = 'ChatTopic';
 
-export default Topic;
+export default Sidebar;

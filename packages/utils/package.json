@@ -5,7 +5,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./server": "./src/server/index.ts",
-    "./client": "./src/client/index.ts"
+    "./client": "./src/client/index.ts",
+    "./object": "./src/object.ts",
+    "./*": "./src/*.ts"
   },
   "scripts": {
     "test": "vitest",
@@ -18,7 +20,6 @@
     "dompurify": "^3.2.7"
   },
   "devDependencies": {
-    "@types/dompurify": "^3.2.0",
     "vitest-canvas-mock": "^0.3.3"
   }
 }

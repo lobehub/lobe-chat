@@ -82,6 +82,58 @@
       "title": "Cloudflare アカウント ID / API アドレス"
     }
   },
+  "comfyui": {
+    "apiKey": {
+      "desc": "Bearerトークン認証に必要なAPIキー",
+      "placeholder": "APIキーを入力してください",
+      "required": "APIキーを入力してください",
+      "title": "APIキー"
+    },
+    "authType": {
+      "desc": "ComfyUIサーバーとの認証方式を選択してください",
+      "options": {
+        "basic": "ユーザー名/パスワード",
+        "bearer": "Bearer（APIキー）",
+        "custom": "カスタムヘッダー",
+        "none": "認証不要"
+      },
+      "placeholder": "認証タイプを選択してください",
+      "title": "認証タイプ"
+    },
+    "baseURL": {
+      "desc": "ComfyUIのWebアクセスアドレス",
+      "placeholder": "http://127.0.0.1:8000",
+      "required": "ComfyUIサービスのアドレスを入力してください",
+      "title": "ComfyUIサービスアドレス"
+    },
+    "checker": {
+      "desc": "接続が正しく構成されているかをテストします",
+      "title": "接続チェック"
+    },
+    "customHeaders": {
+      "addButton": "ヘッダーを追加",
+      "deleteTooltip": "このヘッダーを削除",
+      "desc": "カスタム認証方式に必要なリクエストヘッダー（キーと値のペア）",
+      "duplicateKeyError": "ヘッダーのキー名は重複できません",
+      "keyPlaceholder": "キー名",
+      "required": "カスタムヘッダーを入力してください",
+      "title": "カスタムヘッダー",
+      "valuePlaceholder": "値"
+    },
+    "password": {
+      "desc": "基本認証に必要なパスワード",
+      "placeholder": "パスワードを入力してください",
+      "required": "パスワードを入力してください",
+      "title": "パスワード"
+    },
+    "title": "ComfyUI",
+    "username": {
+      "desc": "基本認証に必要なユーザー名",
+      "placeholder": "ユーザー名を入力してください",
+      "required": "ユーザー名を入力してください",
+      "title": "ユーザー名"
+    }
+  },
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "あなたの API キーを入力してください",
@@ -284,15 +336,42 @@
           "placeholder": "モデルIDを入力してください。例：gpt-4o または claude-3.5-sonnet",
           "title": "モデル ID"
         },
+        "imageOutput": {
+          "extra": "この設定はモデルによる画像生成機能のみを有効にします。実際の効果はモデル自体に完全に依存するため、このモデルが画像生成機能を備えているかどうかをご自身でご確認ください。",
+          "title": "画像生成対応"
+        },
         "modalTitle": "カスタムモデル設定",
         "reasoning": {
           "extra": "この設定は、モデルの深い思考能力を有効にするだけです。具体的な効果はモデル自体に依存しますので、このモデルが利用可能な深い思考能力を持っているかどうかはご自身でテストしてください。",
           "title": "深い思考をサポート"
         },
+        "search": {
+          "extra": "この設定はモデル内蔵の検索エンジンによるオンライン検索機能のみを有効にします。内蔵検索エンジンの対応可否はモデル自体に依存するため、このモデルの検索機能が利用可能かどうかをご自身でご確認ください。",
+          "title": "オンライン検索対応"
+        },
         "tokens": {
           "extra": "モデルがサポートする最大トークン数を設定する",
           "title": "最大コンテキストウィンドウ",
           "unlimited": "無制限"
+        },
+        "type": {
+          "extra": "異なるモデルタイプは、それぞれ異なる使用シーンと能力を持っています",
+          "options": {
+            "chat": "チャット",
+            "embedding": "ベクトル化",
+            "image": "画像生成",
+            "realtime": "リアルタイムチャット",
+            "stt": "音声からテキストへ",
+            "text2music": "テキストから音楽へ",
+            "text2video": "テキストから動画へ",
+            "tts": "音声合成"
+          },
+          "placeholder": "モデルタイプを選択してください",
+          "title": "モデルタイプ"
+        },
+        "video": {
+          "extra": "この設定はアプリ内のビデオ認識機能のみを有効にします。認識の可否はモデル自体に依存するため、このモデルのビデオ認識機能が利用可能かどうかをご自身でご確認ください。",
+          "title": "ビデオ認識対応"
         },
         "vision": {
           "extra": "この設定はアプリ内の画像アップロード設定のみを有効にします。認識のサポートはモデル自体に依存しますので、そのモデルの視覚認識機能の可用性を自分でテストしてください",
@@ -372,6 +451,11 @@
       "desc": "あなたの Vertex AI キーを入力してください",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Vertex AI キー"
+    },
+    "region": {
+      "desc": "Vertex AI サービスのリージョンを選択してください。一部のモデル（例：Gemini 2.5）は特定のリージョン（例：global）でのみ利用可能です。",
+      "placeholder": "リージョンを選択",
+      "title": "Vertex AI リージョン"
     }
   },
   "zeroone": {

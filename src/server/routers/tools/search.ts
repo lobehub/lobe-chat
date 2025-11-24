@@ -1,6 +1,6 @@
+import { isServerMode } from '@lobechat/const';
 import { z } from 'zod';
 
-import { isServerMode } from '@/const/version';
 import { passwordProcedure } from '@/libs/trpc/edge';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { searchService } from '@/server/services/search';
@@ -35,5 +35,18 @@ export const searchRouter = router({
     )
     .query(async ({ input }) => {
       return await searchService.query(input.query, input.optionalParams);
+    }),
+
+  webSearch: searchProcedure
+    .input(
+      z.object({
+        query: z.string(),
+        searchCategories: z.array(z.string()).optional(),
+        searchEngines: z.array(z.string()).optional(),
+        searchTimeRange: z.string().optional(),
+      }),
+    )
+    .query(async ({ input }) => {
+      return await searchService.webSearch(input);
     }),
 });

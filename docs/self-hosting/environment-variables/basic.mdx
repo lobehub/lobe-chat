@@ -152,6 +152,18 @@ For specific content, please refer to the [Feature Flags](/docs/self-hosting/adv
 - Default: -
 - Example: `https://cdn.example.com`
 
+## AI Image
+
+### `AI_IMAGE_DEFAULT_IMAGE_NUM`
+
+- Type: Optional
+- Description: Sets the default number of images to generate for AI image generation. Users can still override this value in their settings.
+- Default: `4`
+- Example: `6`
+- Range: `1-20`
+
+This environment variable allows administrators to customize the default image generation count for their deployment. The value must be between 1 and 20. If not set, it defaults to 4. Users can still adjust this value in their personal settings.
+
 ## Plugin Service
 
 ### `PLUGINS_INDEX_URL`

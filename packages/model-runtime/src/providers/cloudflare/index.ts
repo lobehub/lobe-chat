@@ -3,14 +3,14 @@ import { ModelProvider } from 'model-bank';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { createCallbacksTransformer } from '../../core/streams';
-import { ChatMethodOptions, ChatStreamPayload } from '../../types';
-import { AgentRuntimeErrorType } from '../../types/error';
 import {
   CloudflareStreamTransformer,
   DEFAULT_BASE_URL_PREFIX,
   desensitizeCloudflareUrl,
   fillUrl,
-} from '../../utils/cloudflareHelpers';
+} from '../../core/streams/cloudflare';
+import { ChatMethodOptions, ChatStreamPayload } from '../../types';
+import { AgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { StreamingResponse } from '../../utils/response';

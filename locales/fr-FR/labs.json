@@ -1,0 +1,14 @@
+{
+  "desc": "Nous mettons à jour régulièrement cette section avec de nouvelles fonctionnalités en cours d'exploration. N'hésitez pas à les essayer !",
+  "features": {
+    "groupChat": {
+      "desc": "Activez la coordination de discussions de groupe avec plusieurs agents intelligents.",
+      "title": "Discussion de groupe (multi-agents)"
+    },
+    "inputMarkdown": {
+      "desc": "Rendu en temps réel du Markdown dans la zone de saisie (gras, blocs de code, tableaux, etc.).",
+      "title": "Rendu Markdown dans le champ de saisie"
+    }
+  },
+  "title": "Laboratoire"
+}

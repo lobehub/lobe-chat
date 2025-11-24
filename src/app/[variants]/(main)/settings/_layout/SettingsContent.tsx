@@ -21,6 +21,9 @@ const componentMap = {
   [SettingsTabs.Provider]: dynamic(() => import('../provider'), {
     loading: () => <Loading />,
   }),
+  [SettingsTabs.Image]: dynamic(() => import('../image'), {
+    loading: () => <Loading />,
+  }),
   [SettingsTabs.TTS]: dynamic(() => import('../tts'), {
     loading: () => <Loading />,
   }),

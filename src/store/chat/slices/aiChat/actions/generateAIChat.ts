@@ -1,13 +1,20 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { LOADING_FLAT, MESSAGE_CANCEL_FLAT, isDesktop, isServerMode } from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
-import { TraceEventType, TraceNameMap } from '@lobechat/types';
+import {
+  ChatImageItem,
+  CreateMessageParams,
+  MessageSemanticSearchChunk,
+  SendMessageParams,
+  TraceEventType,
+  TraceNameMap,
+  UIChatMessage,
+} from '@lobechat/types';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { isDesktop, isServerMode } from '@/const/version';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
@@ -20,9 +27,6 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { getFileStoreState } from '@/store/file/store';
 import { useSessionStore } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
-import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
-import { ChatImageItem } from '@/types/message/image';
-import { MessageSemanticSearchChunk } from '@/types/rag';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
@@ -39,6 +43,10 @@ interface ProcessMessageParams {
   ragQuery?: string;
   threadId?: string;
   inPortalThread?: boolean;
+
+  groupId?: string;
+  agentId?: string;
+  agentConfig?: any; // Agent configuration for group chat agents
 }
 
 export interface AIGenerateAction {
@@ -68,7 +76,7 @@ export interface AIGenerateAction {
    * including preprocessing and postprocessing steps
    */
   internal_coreProcessMessage: (
-    messages: ChatMessage[],
+    messages: UIChatMessage[],
     parentId: string,
     params?: ProcessMessageParams,
   ) => Promise<void>;
@@ -76,7 +84,7 @@ export interface AIGenerateAction {
    * Retrieves an AI-generated chat message from the backend service
    */
   internal_fetchAIChatMessage: (input: {
-    messages: ChatMessage[];
+    messages: UIChatMessage[];
     messageId: string;
     params?: ProcessMessageParams;
     model: string;
@@ -93,7 +101,7 @@ export interface AIGenerateAction {
     id: string,
     params?: {
       traceId?: string;
-      messages?: ChatMessage[];
+      messages?: UIChatMessage[];
       threadId?: string;
       inPortalThread?: boolean;
     },
@@ -333,7 +341,7 @@ export const generateAIChat: StateCreator<
 
       ragQueryId = queryId;
 
-      const lastMsg = messages.pop() as ChatMessage;
+      const lastMsg = messages.pop() as UIChatMessage;
 
       // 2. build the retrieve context messages
       const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
@@ -384,9 +392,14 @@ export const generateAIChat: StateCreator<
       model,
       provider!,
     )(aiInfraStoreState);
+    const isModelBuiltinSearchInternal = aiModelSelectors.isModelBuiltinSearchInternal(
+      model,
+      provider!,
+    )(aiInfraStoreState);
     const useModelBuiltinSearch = agentChatConfigSelectors.useModelBuiltinSearch(agentStoreState);
     const useModelSearch =
-      (isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch;
+      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch) ||
+      isModelBuiltinSearchInternal;
     const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(agentStoreState);
 
     if (isAgentEnableSearch && !useModelSearch && !isModelSupportToolUse) {
@@ -540,7 +553,8 @@ export const generateAIChat: StateCreator<
       n('generateMessage(start)', { messageId, messages }),
     );
 
-    const agentConfig = agentSelectors.currentAgentConfig(getAgentStoreState());
+    const agentConfig =
+      params?.agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     // ================================== //
@@ -766,7 +780,7 @@ export const generateAIChat: StateCreator<
 
     const currentMessage = chats[currentIndex];
 
-    let contextMessages: ChatMessage[] = [];
+    let contextMessages: UIChatMessage[] = [];
 
     switch (currentMessage.role) {
       case 'tool':

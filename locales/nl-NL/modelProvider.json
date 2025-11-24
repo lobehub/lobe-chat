@@ -82,6 +82,58 @@
       "title": "Cloudflare-account ID / API-URL"
     }
   },
+  "comfyui": {
+    "apiKey": {
+      "desc": "API-sleutel vereist voor Bearer Token-authenticatie",
+      "placeholder": "Voer API-sleutel in",
+      "required": "Voer API-sleutel in",
+      "title": "API-sleutel"
+    },
+    "authType": {
+      "desc": "Selecteer de authenticatiemethode voor verbinding met de ComfyUI-server",
+      "options": {
+        "basic": "Gebruikersnaam/Wachtwoord",
+        "bearer": "Bearer (API-sleutel)",
+        "custom": "Aangepaste request headers",
+        "none": "Geen authenticatie vereist"
+      },
+      "placeholder": "Selecteer authenticatietype",
+      "title": "Authenticatietype"
+    },
+    "baseURL": {
+      "desc": "Webadres voor toegang tot ComfyUI",
+      "placeholder": "http://127.0.0.1:8000",
+      "required": "Voer het ComfyUI-serviceadres in",
+      "title": "ComfyUI-serviceadres"
+    },
+    "checker": {
+      "desc": "Test of de verbinding correct is geconfigureerd",
+      "title": "Connectiviteitscontrole"
+    },
+    "customHeaders": {
+      "addButton": "Request header toevoegen",
+      "deleteTooltip": "Verwijder deze request header",
+      "desc": "Request headers vereist voor aangepaste authenticatie, in key-value formaat",
+      "duplicateKeyError": "Header-sleutels mogen niet worden herhaald",
+      "keyPlaceholder": "Sleutel",
+      "required": "Voer aangepaste request headers in",
+      "title": "Aangepaste request headers",
+      "valuePlaceholder": "Waarde"
+    },
+    "password": {
+      "desc": "Wachtwoord vereist voor basisauthenticatie",
+      "placeholder": "Voer wachtwoord in",
+      "required": "Voer wachtwoord in",
+      "title": "Wachtwoord"
+    },
+    "title": "ComfyUI",
+    "username": {
+      "desc": "Gebruikersnaam vereist voor basisauthenticatie",
+      "placeholder": "Voer gebruikersnaam in",
+      "required": "Voer gebruikersnaam in",
+      "title": "Gebruikersnaam"
+    }
+  },
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Vul je API-sleutel in",
@@ -284,15 +336,42 @@
           "placeholder": "Voer model-id in, bijvoorbeeld gpt-4o of claude-3.5-sonnet",
           "title": "Model ID"
         },
+        "imageOutput": {
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid van het model in om afbeeldingen te genereren. Het daadwerkelijke resultaat hangt volledig af van het model zelf. Test zelf of het model in staat is bruikbare afbeeldingen te genereren.",
+          "title": "Ondersteunt afbeeldingsgeneratie"
+        },
         "modalTitle": "Configuratie van aangepast model",
         "reasoning": {
           "extra": "Deze configuratie schakelt alleen de mogelijkheid voor diepgaand denken van het model in. Het specifieke effect hangt volledig af van het model zelf, test zelf of dit model in staat is tot bruikbaar diepgaand denken.",
           "title": "Ondersteuning voor diepgaand denken"
         },
+        "search": {
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid van het ingebouwde zoekmechanisme van het model in om verbinding te maken met het internet. Of het ingebouwde zoekmechanisme wordt ondersteund, hangt af van het model zelf. Test zelf of het ingebouwde zoekmechanisme van het model bruikbaar is.",
+          "title": "Ondersteunt zoeken via internet"
+        },
         "tokens": {
           "extra": "Stel het maximale aantal tokens in dat door het model wordt ondersteund",
           "title": "Maximale contextvenster",
           "unlimited": "Onbeperkt"
+        },
+        "type": {
+          "extra": "Verschillende modeltypen hebben verschillende toepassingsscenario's en mogelijkheden",
+          "options": {
+            "chat": "Gesprek",
+            "embedding": "Vectorisatie",
+            "image": "Afbeeldingsgeneratie",
+            "realtime": "Realtime gesprek",
+            "stt": "Spraak naar tekst",
+            "text2music": "Tekst naar muziek",
+            "text2video": "Tekst naar video",
+            "tts": "Spraaksynthese"
+          },
+          "placeholder": "Selecteer een modeltype",
+          "title": "Modeltype"
+        },
+        "video": {
+          "extra": "Deze configuratie schakelt alleen de videodetectie-instellingen in de applicatie in. Of videodetectie wordt ondersteund, hangt volledig af van het model zelf. Test zelf of het model in staat is bruikbare videodetectie uit te voeren.",
+          "title": "Ondersteunt videodetectie"
         },
         "vision": {
           "extra": "Deze configuratie zal alleen de afbeeldinguploadcapaciteit in de applicatie inschakelen, of herkenning wordt ondersteund hangt volledig af van het model zelf, test de beschikbaarheid van de visuele herkenningscapaciteit van dit model zelf.",
@@ -372,6 +451,11 @@
       "desc": "Vul je Vertex AI-sleutels in",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Vertex AI-sleutels"
+    },
+    "region": {
+      "desc": "Selecteer de regio voor de Vertex AI-service. Sommige modellen, zoals Gemini 2.5, zijn alleen beschikbaar in specifieke regio's (zoals global).",
+      "placeholder": "Selecteer een regio",
+      "title": "Vertex AI-regio"
     }
   },
   "zeroone": {

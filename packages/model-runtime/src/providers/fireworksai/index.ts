@@ -1,7 +1,10 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
 export interface FireworksAIModelCard {
   context_length: number;
@@ -10,7 +13,7 @@ export interface FireworksAIModelCard {
   supports_tools: boolean;
 }
 
-export const LobeFireworksAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.fireworks.ai/inference/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_FIREWORKSAI_CHAT_COMPLETION === '1',
@@ -45,4 +48,6 @@ export const LobeFireworksAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.FireworksAI,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeFireworksAI = createOpenAICompatibleRuntime(params);

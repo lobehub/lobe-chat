@@ -1,6 +1,5 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref: https://docs.anthropic.com/en/docs/about-claude/models#model-names
 const Anthropic: ModelProviderCard = {
   chatModels: [
     {
@@ -86,17 +85,6 @@ const Anthropic: ModelProviderCard = {
     {
       contextWindowTokens: 200_000,
       description:
-        'Claude 3 Sonnet 在智能和速度方面为企业工作负载提供了理想的平衡。它以更低的价格提供最大效用，可靠且适合大规模部署。',
-      displayName: 'Claude 3 Sonnet',
-      functionCall: true,
-      id: 'claude-3-sonnet-20240229',
-      maxOutput: 4096,
-      releasedAt: '2024-02-29',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 200_000,
-      description:
         'Claude 3 Opus 是 Anthropic 用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。',
       displayName: 'Claude 3 Opus',
       enabled: true,
@@ -105,24 +93,6 @@ const Anthropic: ModelProviderCard = {
       maxOutput: 4096,
       releasedAt: '2024-02-29',
       vision: true,
-    },
-    {
-      contextWindowTokens: 200_000,
-      description:
-        'Claude 2 为企业提供了关键能力的进步，包括业界领先的 200K token 上下文、大幅降低模型幻觉的发生率、系统提示以及一个新的测试功能：工具调用。',
-      displayName: 'Claude 2.1',
-      id: 'claude-2.1',
-      maxOutput: 4096,
-      releasedAt: '2023-11-21',
-    },
-    {
-      contextWindowTokens: 100_000,
-      description:
-        'Claude 2 为企业提供了关键能力的进步，包括业界领先的 200K token 上下文、大幅降低模型幻觉的发生率、系统提示以及一个新的测试功能：工具调用。',
-      displayName: 'Claude 2.0',
-      id: 'claude-2.0',
-      maxOutput: 4096,
-      releasedAt: '2023-07-11',
     },
   ],
   checkModel: 'claude-3-haiku-20240307',

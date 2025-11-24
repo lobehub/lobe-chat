@@ -28,31 +28,31 @@
     "placeholder": "TeX 수식을 입력하세요"
   },
   "slash": {
-    "h1": "1단계 제목",
-    "h2": "2단계 제목",
-    "h3": "3단계 제목",
+    "h1": "제목 1",
+    "h2": "제목 2",
+    "h3": "제목 3",
     "hr": "구분선",
     "table": "표",
     "tex": "TeX 수식"
   },
   "table": {
-    "delete": "테이블 삭제",
+    "delete": "표 삭제",
     "deleteColumn": "열 삭제",
     "deleteRow": "행 삭제",
-    "insertColumnLeft": "왼쪽에 {{count}}개의 열 삽입",
-    "insertColumnRight": "오른쪽에 {{count}}개의 열 삽입",
-    "insertRowAbove": "위에 {{count}}개의 행 삽입",
-    "insertRowBelow": "아래에 {{count}}개의 행 삽입"
+    "insertColumnLeft": "왼쪽에 {{count}}열 삽입",
+    "insertColumnRight": "오른쪽에 {{count}}열 삽입",
+    "insertRowAbove": "위에 {{count}}행 삽입",
+    "insertRowBelow": "아래에 {{count}}행 삽입"
   },
   "typobar": {
     "blockquote": "인용",
     "bold": "굵게",
-    "bulletList": "순서 없는 목록",
+    "bulletList": "글머리 기호 목록",
     "code": "인라인 코드",
     "codeblock": "코드 블록",
     "italic": "기울임꼴",
     "link": "링크",
-    "numberList": "번호 매긴 목록",
+    "numberList": "번호 매기기 목록",
     "strikethrough": "취소선",
     "table": "표",
     "taskList": "작업 목록",

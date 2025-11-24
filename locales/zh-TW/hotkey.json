@@ -7,6 +7,14 @@
     "desc": "清空當前會話的消息和上傳的檔案",
     "title": "清空會話消息"
   },
+  "deleteAndRegenerateMessage": {
+    "desc": "刪除最後一則訊息並重新產生",
+    "title": "刪除並重新產生"
+  },
+  "deleteLastMessage": {
+    "desc": "刪除最後一則訊息",
+    "title": "刪除最後一則訊息"
+  },
   "desktop": {
     "openSettings": {
       "desc": "打開應用設定頁面",

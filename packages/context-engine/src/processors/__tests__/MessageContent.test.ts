@@ -1,24 +1,21 @@
-import { ChatImageItem, ChatMessage, ChatVideoItem } from '@lobechat/types';
+import { ChatImageItem, ChatVideoItem, UIChatMessage } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { PipelineContext } from '../../types';
 import { MessageContentProcessor } from '../MessageContent';
 
-vi.mock('@lobechat/utils', () => ({
-  imageUrlToBase64: vi.fn().mockResolvedValue({
-    base64: 'base64-data',
-    mimeType: 'image/png',
-  }),
-  isLocalUrl: vi.fn((url: string) => url.includes('localhost') || url.includes('127.0.0.1')),
-  parseDataUri: vi.fn((url: string) => {
-    if (url.startsWith('data:')) {
-      return { type: 'data' };
-    }
-    return { type: 'url' };
-  }),
-}));
+vi.mock('@lobechat/utils/imageToBase64', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@lobechat/utils/imageToBase64')>();
+  return {
+    ...actual,
+    imageUrlToBase64: vi.fn().mockResolvedValue({
+      base64: 'base64-data',
+      mimeType: 'image/png',
+    }),
+  };
+});
 
-const createContext = (messages: ChatMessage[]): PipelineContext => ({
+const createContext = (messages: UIChatMessage[]): PipelineContext => ({
   initialState: { messages: [] } as any,
   messages,
   metadata: { model: 'gpt-4', provider: 'openai', maxTokens: 100000 },
@@ -40,7 +37,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
@@ -68,7 +65,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
@@ -103,7 +100,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
@@ -132,13 +129,13 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
           content: 'Hello',
           imageList: [
-            { url: 'http://localhost:3000/image.jpg', alt: '', id: 'test' } as ChatImageItem,
+            { url: 'http://127.0.0.1:3000/image.jpg', alt: '', id: 'test' } as ChatImageItem,
           ],
           createdAt: Date.now(),
           updatedAt: Date.now(),
@@ -164,7 +161,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'assistant',
@@ -197,7 +194,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'assistant',
@@ -231,7 +228,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: true },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
@@ -273,7 +270,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
@@ -309,7 +306,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'assistant',
@@ -352,7 +349,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: true },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test1',
           role: 'user',
@@ -404,7 +401,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
@@ -432,7 +429,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
@@ -469,7 +466,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
@@ -499,7 +496,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: true, includeFileUrl: true },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',
@@ -540,7 +537,7 @@ describe('MessageContentProcessor', () => {
         fileContext: { enabled: false },
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           id: 'test',
           role: 'user',

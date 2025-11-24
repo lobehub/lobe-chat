@@ -7,6 +7,14 @@
     "desc": "Wyczyść wiadomości i przesłane pliki w bieżącej rozmowie",
     "title": "Wyczyść wiadomości rozmowy"
   },
+  "deleteAndRegenerateMessage": {
+    "desc": "Usuń ostatnią wiadomość i wygeneruj ponownie",
+    "title": "Usuń i wygeneruj ponownie"
+  },
+  "deleteLastMessage": {
+    "desc": "Usuń ostatnią wiadomość",
+    "title": "Usuń ostatnią wiadomość"
+  },
   "desktop": {
     "openSettings": {
       "desc": "Otwórz stronę ustawień aplikacji",

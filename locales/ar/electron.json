@@ -92,14 +92,15 @@
     "installLater": "تحديث عند بدء التشغيل التالي",
     "isLatestVersion": "الإصدار الحالي هو الأحدث",
     "isLatestVersionDesc": "رائع، الإصدار {{version}} الذي تستخدمه هو أحدث إصدار متاح.",
-    "later": "تحديث لاحقًا",
+    "later": "لاحقًا",
     "newVersionAvailable": "يتوفر إصدار جديد",
     "newVersionAvailableDesc": "تم العثور على إصدار جديد {{version}}، هل ترغب في التنزيل الآن؟",
     "restartAndInstall": "تثبيت التحديث وإعادة التشغيل",
     "updateError": "خطأ في التحديث",
-    "updateReady": "التحديث جاهز",
+    "updateReady": "يتوفر إصدار جديد",
     "updateReadyDesc": "تم تنزيل الإصدار الجديد {{version}}، يمكنك إكمال التثبيت بعد إعادة تشغيل التطبيق.",
-    "upgradeNow": "تحديث الآن"
+    "upgradeNow": "تحديث الآن",
+    "willInstallLater": "سيتم تثبيت التحديث عند بدء التشغيل التالي"
   },
   "waitingOAuth": {
     "cancel": "إلغاء",

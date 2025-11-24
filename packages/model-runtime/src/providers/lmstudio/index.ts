@@ -1,13 +1,16 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
 export interface LMStudioModelCard {
   id: string;
 }
 
-export const LobeLMStudioAI = createOpenAICompatibleRuntime({
+export const params = {
   apiKey: 'placeholder-to-avoid-error',
   baseURL: 'http://127.0.0.1:1234/v1',
   debug: {
@@ -38,4 +41,6 @@ export const LobeLMStudioAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.LMStudio,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeLMStudioAI = createOpenAICompatibleRuntime(params);

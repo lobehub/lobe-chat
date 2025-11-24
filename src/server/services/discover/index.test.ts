@@ -23,58 +23,66 @@ vi.mock('@/locales/resources', () => ({
 process.env.MARKET_BASE_URL = 'http://localhost:8787/api';
 
 // Mock constants with inline data
-vi.mock('model-bank', () => ({
-  LOBE_DEFAULT_MODEL_LIST: [
-    {
-      id: 'gpt-4',
-      displayName: 'GPT-4',
-      description: 'OpenAI GPT-4 model',
-      providerId: 'openai',
-      contextWindowTokens: 8192,
-      abilities: {
-        vision: true,
-        functionCall: true,
-        files: true,
+vi.mock('model-bank', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as any),
+    LOBE_DEFAULT_MODEL_LIST: [
+      {
+        id: 'gpt-4',
+        displayName: 'GPT-4',
+        description: 'OpenAI GPT-4 model',
+        providerId: 'openai',
+        contextWindowTokens: 8192,
+        abilities: {
+          vision: true,
+          functionCall: true,
+          files: true,
+        },
+        pricing: {
+          input: 0.03,
+          output: 0.06,
+        },
+        releasedAt: '2023-03-01T00:00:00Z',
       },
-      pricing: {
-        input: 0.03,
-        output: 0.06,
+      {
+        id: 'claude-3-opus',
+        displayName: 'Claude 3 Opus',
+        description: 'Anthropic Claude 3 Opus model',
+        providerId: 'anthropic',
+        contextWindowTokens: 200000,
+        abilities: {
+          vision: true,
+          reasoning: true,
+        },
+        pricing: {
+          input: 0.015,
+          output: 0.075,
+        },
+        releasedAt: '2024-02-01T00:00:00Z',
       },
-      releasedAt: '2023-03-01T00:00:00Z',
-    },
-    {
-      id: 'claude-3-opus',
-      displayName: 'Claude 3 Opus',
-      description: 'Anthropic Claude 3 Opus model',
-      providerId: 'anthropic',
-      contextWindowTokens: 200000,
-      abilities: {
-        vision: true,
-        reasoning: true,
-      },
-      pricing: {
-        input: 0.015,
-        output: 0.075,
-      },
-      releasedAt: '2024-02-01T00:00:00Z',
-    },
-  ],
-}));
+    ],
+  };
+});
 
-vi.mock('@/config/modelProviders', () => ({
-  DEFAULT_MODEL_PROVIDER_LIST: [
-    {
-      id: 'openai',
-      name: 'OpenAI',
-      description: 'OpenAI provider',
-    },
-    {
-      id: 'anthropic',
-      name: 'Anthropic',
-      description: 'Anthropic provider',
-    },
-  ],
-}));
+vi.mock('@/config/modelProviders', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as any),
+    DEFAULT_MODEL_PROVIDER_LIST: [
+      {
+        id: 'openai',
+        name: 'OpenAI',
+        description: 'OpenAI provider',
+      },
+      {
+        id: 'anthropic',
+        name: 'Anthropic',
+        description: 'Anthropic provider',
+      },
+    ],
+  };
+});
 
 vi.mock('@/const/discover', () => ({
   DEFAULT_DISCOVER_ASSISTANT_ITEM: {},

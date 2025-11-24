@@ -1,0 +1,14 @@
+{
+  "desc": "Hier werden wir regelmäßig neue Funktionen vorstellen, die wir gerade erforschen – probieren Sie sie gerne aus!",
+  "features": {
+    "groupChat": {
+      "desc": "Aktivieren Sie die Koordination von Gruppenchats mit mehreren KI-Agenten.",
+      "title": "Gruppenchats (mehrere Agenten)"
+    },
+    "inputMarkdown": {
+      "desc": "Echtzeit-Rendering von Markdown im Eingabefeld (Fettdruck, Codeblöcke, Tabellen usw.).",
+      "title": "Markdown-Rendering im Eingabefeld"
+    }
+  },
+  "title": "Labor"
+}

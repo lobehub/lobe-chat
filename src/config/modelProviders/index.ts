@@ -11,9 +11,11 @@ import AzureAIProvider from './azureai';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import BflProvider from './bfl';
+import CerebrasProvider from './cerebras';
 import CloudflareProvider from './cloudflare';
 import CohereProvider from './cohere';
 import CometAPIProvider from './cometapi';
+import ComfyUIProvider from './comfyui';
 import DeepSeekProvider from './deepseek';
 import FalProvider from './fal';
 import FeatherlessAIProvider from './featherlessai';
@@ -130,6 +132,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   OllamaProvider,
   OllamaCloudProvider,
   VLLMProvider,
+  ComfyUIProvider,
   XinferenceProvider,
   AnthropicProvider,
   BedrockProvider,
@@ -189,6 +192,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   NebiusProvider,
   CometAPIProvider,
   VercelAIGatewayProvider,
+  CerebrasProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -211,9 +215,11 @@ export { default as AzureAIProviderCard } from './azureai';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as BflProviderCard } from './bfl';
+export { default as CerebrasProviderCard } from './cerebras';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as CohereProviderCard } from './cohere';
 export { default as CometAPIProviderCard } from './cometapi';
+export { default as ComfyUIProviderCard } from './comfyui';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as FalProviderCard } from './fal';
 export { default as FeatherlessAIProviderCard } from './featherlessai';

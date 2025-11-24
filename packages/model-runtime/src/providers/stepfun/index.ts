@@ -1,13 +1,16 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
 export interface StepfunModelCard {
   id: string;
 }
 
-export const LobeStepfunAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.stepfun.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -76,4 +79,6 @@ export const LobeStepfunAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Stepfun,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeStepfunAI = createOpenAICompatibleRuntime(params);

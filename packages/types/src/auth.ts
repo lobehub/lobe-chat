@@ -16,6 +16,8 @@ export interface ClientSecretPayload {
    */
   baseURL?: string;
 
+  runtimeProvider?: string;
+
   azureApiVersion?: string;
 
   awsAccessKeyId?: string;
@@ -24,6 +26,16 @@ export interface ClientSecretPayload {
   awsSessionToken?: string;
 
   cloudflareBaseURLOrAccountID?: string;
+
+  vertexAIRegion?: string;
+
+  /**
+   * ComfyUI specific authentication fields
+   */
+  authType?: string;
+  username?: string;
+  password?: string;
+  customHeaders?: Record<string, string>;
 
   /**
    * user id

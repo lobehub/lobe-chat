@@ -6,6 +6,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useImageStore } from '@/store/image';
 
+const { currentImageSettingsMock } = vi.hoisted(() => ({
+  currentImageSettingsMock: vi.fn(() => ({
+    defaultImageNum: 4,
+  })),
+}));
+
+vi.mock('@/store/user/slices/settings/selectors', () => ({
+  settingsSelectors: {
+    currentImageSettings: currentImageSettingsMock,
+  },
+}));
+
 // Test fixtures
 const customModelSchema: ModelParamsSchema = {
   prompt: { default: '' },
@@ -74,6 +86,7 @@ const initialTestState = {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  currentImageSettingsMock.mockReturnValue({ defaultImageNum: 4 });
   useImageStore.setState(initialTestState);
 });
 
@@ -483,6 +496,7 @@ describe('GenerationConfigAction', () => {
     });
 
     it('should initialize with remembered model when user is logged in', () => {
+      currentImageSettingsMock.mockReturnValueOnce({ defaultImageNum: 6 });
       const { result } = renderHook(() => useImageStore());
 
       useImageStore.setState({
@@ -499,6 +513,7 @@ describe('GenerationConfigAction', () => {
       expect(result.current.provider).toBe('fal');
       expect(result.current.parameters).toEqual(fluxSchnellDefaultValues);
       expect(result.current.isInit).toBe(true);
+      expect(result.current.imageNum).toBe(6);
     });
 
     it('should handle initialization without remembered preferences', () => {
@@ -511,6 +526,7 @@ describe('GenerationConfigAction', () => {
       });
 
       expect(result.current.isInit).toBe(true);
+      expect(result.current.imageNum).toBe(4);
     });
 
     it('should handle initialization errors gracefully', () => {
@@ -523,6 +539,7 @@ describe('GenerationConfigAction', () => {
       });
 
       expect(result.current.isInit).toBe(true);
+      expect(result.current.imageNum).toBe(4);
     });
   });
 });

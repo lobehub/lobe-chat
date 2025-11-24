@@ -1,11 +1,11 @@
 import { ActionIcon, ActionIconProps } from '@lobehub/ui';
-import { Book, Github } from 'lucide-react';
+import { FlaskConical, Github } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DOCUMENTS_REFER_URL, GITHUB } from '@/const/url';
+import { GITHUB } from '@/const/url';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 const ICON_SIZE: ActionIconProps['size'] = {
@@ -16,7 +16,8 @@ const ICON_SIZE: ActionIconProps['size'] = {
 
 const BottomActions = memo(() => {
   const { t } = useTranslation('common');
-  const { hideGitHub, hideDocs } = useServerConfigStore(featureFlagsSelectors);
+
+  const { hideGitHub } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <Flexbox gap={8}>
@@ -30,16 +31,14 @@ const BottomActions = memo(() => {
           />
         </Link>
       )}
-      {!hideDocs && (
-        <Link aria-label={t('document')} href={DOCUMENTS_REFER_URL} target={'_blank'}>
-          <ActionIcon
-            icon={Book}
-            size={ICON_SIZE}
-            title={t('document')}
-            tooltipProps={{ placement: 'right' }}
-          />
-        </Link>
-      )}
+      <Link aria-label={t('labs')} href={'/labs'}>
+        <ActionIcon
+          icon={FlaskConical}
+          size={ICON_SIZE}
+          title={t('labs')}
+          tooltipProps={{ placement: 'right' }}
+        />
+      </Link>
     </Flexbox>
   );
 });

@@ -1,4 +1,4 @@
-import { LobeToolRenderType } from '@/types/tool';
+import { LobeToolRenderType } from '@lobechat/types';
 
 import { V4ChatPluginPayload } from './v4';
 

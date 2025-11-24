@@ -92,14 +92,15 @@
     "installLater": "Gelecek başlatmada güncelle",
     "isLatestVersion": "Şu anda en son sürümdesiniz",
     "isLatestVersionDesc": "Harika, kullandığınız sürüm {{version}} en güncel sürüm. ",
-    "later": "Güncellemeyi daha sonra yap",
+    "later": "Daha sonra",
     "newVersionAvailable": "Yeni sürüm mevcut",
     "newVersionAvailableDesc": "Yeni sürüm {{version}} bulundu, hemen indirmek ister misiniz?",
     "restartAndInstall": "Güncellemeyi yükle ve yeniden başlat",
     "updateError": "Güncelleme hatası",
-    "updateReady": "Güncelleme hazır",
+    "updateReady": "Yeni bir sürüm mevcut",
     "updateReadyDesc": "Yeni sürüm {{version}} indirildi, uygulamayı yeniden başlattığınızda yükleme tamamlanacaktır.",
-    "upgradeNow": "Şimdi güncelle"
+    "upgradeNow": "Şimdi güncelle",
+    "willInstallLater": "Güncelleme bir sonraki başlatmada yüklenecek"
   },
   "waitingOAuth": {
     "cancel": "İptal",

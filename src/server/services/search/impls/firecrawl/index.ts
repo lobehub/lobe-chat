@@ -1,11 +1,10 @@
+import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import urlJoin from 'url-join';
 
-import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
-
 import { SearchServiceImpl } from '../type';
-import { FirecrawlSearchParameters, FirecrawlResponse } from './type';
+import { FirecrawlResponse, FirecrawlSearchParameters } from './type';
 
 const log = debug('lobe-search:Firecrawl');
 
@@ -48,7 +47,7 @@ export class FirecrawlImpl implements SearchServiceImpl {
       ...defaultQueryParams,
       tbs:
         params?.searchTimeRange && params.searchTimeRange !== 'anytime'
-          ? timeRangeMapping[params.searchTimeRange as keyof typeof timeRangeMapping] ?? undefined
+          ? (timeRangeMapping[params.searchTimeRange as keyof typeof timeRangeMapping] ?? undefined)
           : undefined,
     };
 

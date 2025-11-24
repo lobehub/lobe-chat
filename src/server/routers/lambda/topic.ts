@@ -75,6 +75,7 @@ export const topicRouter = router({
     .input(
       z.object({
         favorite: z.boolean().optional(),
+        groupId: z.string().nullable().optional(),
         messages: z.array(z.string()).optional(),
         sessionId: z.string().nullable().optional(),
         title: z.string(),
@@ -94,9 +95,9 @@ export const topicRouter = router({
   getTopics: publicProcedure
     .input(
       z.object({
+        containerId: z.string().nullable().optional(),
         current: z.number().optional(),
         pageSize: z.number().optional(),
-        sessionId: z.string().nullable().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {

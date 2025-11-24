@@ -3,6 +3,7 @@ title: LobeChat Authentication Service Environment Variables
 description: >-
   Explore the essential environment variables for configuring authentication services in LobeChat, including OAuth SSO, NextAuth settings, and provider-specific details.
 
+
 tags:
   - Authentication Service
   - OAuth SSO
@@ -278,6 +279,22 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Description: Issuer of the Okta application. This is the URL of the Okta instance -- If branding is set up, it can be your custom domain.
 - Default: `-`
 - Example: `https://your-instance.okta.com`
+
+### Feishu
+
+#### `AUTH_FEISHU_APP_ID`
+
+- Type: Required
+- Description: App ID of the Feishu application.
+- Default: `-`
+- Example: `cli_9f7b1e1e1e1e1e1e`
+
+#### `AUTH_FEISHU_APP_SECRET`
+
+- Type: Required
+- Description: App Secret of the Feishu application.
+- Default: `-`
+- Example: `AlHxxX1e1e1e1e1e1e1e1e1e1e1e1e1e`
 
 ### Generic OIDC
 

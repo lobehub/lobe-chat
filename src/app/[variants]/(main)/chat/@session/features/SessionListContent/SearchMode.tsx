@@ -1,6 +1,9 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useSessionStore } from '@/store/session';
+import { LobeAgentSession, LobeSessionType, LobeSessions } from '@/types/session';
 
 import SkeletonList from '../SkeletonList';
 import SessionList from './List';
@@ -11,9 +14,28 @@ const SearchMode = memo(() => {
     s.useSearchSessions,
   ]);
 
+  const isMobile = useServerConfigStore(serverConfigSelectors.isMobile);
+
   const { data, isLoading } = useSearchSessions(sessionSearchKeywords);
 
-  return isLoading ? <SkeletonList /> : <SessionList dataSource={data} showAddButton={false} />;
+  const filteredData = useMemo(() => {
+    if (!data) return data;
+
+    if (isMobile) {
+      return data.filter((session: LobeSessions[0]) => session.type !== LobeSessionType.Group);
+    }
+
+    return data.filter(
+      (session: LobeSessions[0]) =>
+        session.type !== LobeSessionType.Agent || !(session as LobeAgentSession).config?.virtual,
+    );
+  }, [data, isMobile]);
+
+  return isLoading ? (
+    <SkeletonList />
+  ) : (
+    <SessionList dataSource={filteredData} showAddButton={false} />
+  );
 });
 
 SearchMode.displayName = 'SessionSearchMode';

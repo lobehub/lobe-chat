@@ -92,14 +92,15 @@
     "installLater": "Update on next launch",
     "isLatestVersion": "You are using the latest version",
     "isLatestVersionDesc": "Great! The version {{version}} you are using is the latest available.",
-    "later": "Update later",
+    "later": "Later",
     "newVersionAvailable": "New version available",
     "newVersionAvailableDesc": "A new version {{version}} has been found, would you like to download it now?",
     "restartAndInstall": "Install updates and restart",
     "updateError": "Update error",
-    "updateReady": "Update ready",
+    "updateReady": "A new version is available",
     "updateReadyDesc": "The new version {{version}} has been downloaded. Restart the application to complete the installation.",
-    "upgradeNow": "Update now"
+    "upgradeNow": "Update now",
+    "willInstallLater": "The update will be installed on the next launch"
   },
   "waitingOAuth": {
     "cancel": "Cancel",

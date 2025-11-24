@@ -1,13 +1,11 @@
+import { AiModelForSelect, EnabledAiModel, ModelSearchImplementType } from 'model-bank';
 import { z } from 'zod';
-
-import { AiModelForSelect, EnabledAiModel, ModelSearchImplementType } from '../../model-bank/src/types/aiModel';
 
 export type ResponseAnimationStyle = 'smooth' | 'fadeIn' | 'none';
 export type ResponseAnimation =
   | {
       speed?: number;
       text?: ResponseAnimationStyle;
-      toolsCalling?: ResponseAnimationStyle;
     }
   | ResponseAnimationStyle;
 
@@ -27,6 +25,7 @@ export const AiProviderSDKEnum = {
   AzureAI: 'azureai',
   Bedrock: 'bedrock',
   Cloudflare: 'cloudflare',
+  ComfyUI: 'comfyui',
   Google: 'google',
   Huggingface: 'huggingface',
   Ollama: 'ollama',
@@ -40,6 +39,7 @@ export type AiProviderSDKType = (typeof AiProviderSDKEnum)[keyof typeof AiProvid
 
 const AiProviderSdkTypes = [
   'anthropic',
+  'comfyui',
   'openai',
   'ollama',
   'azure',
@@ -242,7 +242,15 @@ export const UpdateAiProviderConfigSchema = z.object({
     })
     .optional(),
   fetchOnClient: z.boolean().nullable().optional(),
-  keyVaults: z.record(z.string(), z.string().optional()).optional(),
+  keyVaults: z
+    .record(
+      z.string(),
+      z.union([
+        z.string().optional(),
+        z.record(z.string(), z.string()).optional(), // 支持嵌套对象，如 customHeaders
+      ]),
+    )
+    .optional(),
 });
 
 export type UpdateAiProviderConfigParams = z.infer<typeof UpdateAiProviderConfigSchema>;

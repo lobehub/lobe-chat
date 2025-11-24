@@ -46,6 +46,7 @@ export const userSettings = pgTable('user_settings', {
   systemAgent: jsonb('system_agent'),
   defaultAgent: jsonb('default_agent'),
   tool: jsonb('tool'),
+  image: jsonb('image'),
 });
 export type UserSettingsItem = typeof userSettings.$inferSelect;
 

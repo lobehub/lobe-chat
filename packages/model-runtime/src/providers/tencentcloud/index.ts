@@ -1,13 +1,16 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
 export interface TencentCloudModelCard {
   id: string;
 }
 
-export const LobeTencentCloudAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.lkeap.cloud.tencent.com/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_TENCENT_CLOUD_CHAT_COMPLETION === '1',
@@ -42,4 +45,6 @@ export const LobeTencentCloudAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.TencentCloud,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeTencentCloudAI = createOpenAICompatibleRuntime(params);

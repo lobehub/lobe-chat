@@ -1,5 +1,7 @@
 import { filesPrompts } from '@lobechat/prompts';
-import { imageUrlToBase64, isLocalUrl, parseDataUri } from '@lobechat/utils';
+import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
+import { parseDataUri } from '@lobechat/utils/uriParser';
+import { isDesktopLocalStaticServerUrl } from '@lobechat/utils/url';
 import debug from 'debug';
 
 import { BaseProcessor } from '../base/BaseProcessor';
@@ -277,7 +279,7 @@ export class MessageContentProcessor extends BaseProcessor {
         const { type } = parseDataUri(image.url);
 
         let processedUrl = image.url;
-        if (type === 'url' && isLocalUrl(image.url)) {
+        if (type === 'url' && isDesktopLocalStaticServerUrl(image.url)) {
           const { base64, mimeType } = await imageUrlToBase64(image.url);
           processedUrl = `data:${mimeType};base64,${base64}`;
         }

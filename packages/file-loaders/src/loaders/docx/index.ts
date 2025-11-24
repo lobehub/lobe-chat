@@ -1,70 +1,61 @@
-import { DocxLoader as LangchainDocxLoader } from '@langchain/community/document_loaders/fs/docx';
 import debug from 'debug';
+import fs from 'node:fs/promises';
+import mammoth from 'mammoth';
 
 import type { DocumentPage, FileLoaderInterface } from '../../types';
 
 const log = debug('file-loaders:docx');
 
 /**
- * Loads Word documents (.docx) using the LangChain Community DocxLoader.
+ * Loads Word documents (.docx) using mammoth library.
+ * Extracts text content and basic metadata from DOCX files.
  */
 export class DocxLoader implements FileLoaderInterface {
   async loadPages(filePath: string): Promise<DocumentPage[]> {
     log('Loading DOCX file:', filePath);
     try {
-      let loader: LangchainDocxLoader;
-      if (filePath.endsWith('.doc')) {
-        loader = new LangchainDocxLoader(filePath, { type: 'doc' });
-      } else {
-        loader = new LangchainDocxLoader(filePath, { type: 'docx' });
-      }
-      log('LangChain DocxLoader created');
-      const docs = await loader.load(); // Langchain DocxLoader typically loads the whole doc as one
-      log('DOCX document loaded, parts:', docs.length);
+      // Read file as buffer
+      const buffer = await fs.readFile(filePath);
+      log('File buffer read, size:', buffer.length);
 
-      const pages: DocumentPage[] = docs.map((doc) => {
-        const pageContent = doc.pageContent || '';
-        const lines = pageContent.split('\n');
-        const lineCount = lines.length;
-        const charCount = pageContent.length;
+      // Extract text using mammoth
+      const result = await mammoth.extractRawText({ buffer });
+      const pageContent = result.value;
+      log('Text extracted, length:', pageContent.length);
 
-        // Langchain DocxLoader doesn't usually provide page numbers in metadata
-        // We treat it as a single page
-        const metadata = {
-          ...doc.metadata, // Include any other metadata Langchain provides
+      // Count lines and characters
+      const lines = pageContent.split('\n');
+      const lineCount = lines.length;
+      const charCount = pageContent.length;
+
+      log('DOCX document processed, lines:', lineCount, 'chars:', charCount);
+
+      // Create single page with extracted content
+      const page: DocumentPage = {
+        charCount,
+        lineCount,
+        metadata: {
           pageNumber: 1,
-        };
+        },
+        pageContent,
+      };
 
-        // @ts-expect-error Remove source if present, as it's handled at the FileDocument level
-        delete metadata.source;
-
-        log('DOCX document processed, lines:', lineCount, 'chars:', charCount);
-
-        return {
-          charCount,
-          lineCount,
-          metadata,
-          pageContent,
-        };
-      });
-
-      // If docs array is empty (e.g., empty file), create an empty page
-      if (pages.length === 0) {
-        log('No content in DOCX document, creating empty page');
-        pages.push({
-          charCount: 0,
-          lineCount: 0,
-          metadata: { pageNumber: 1 },
-          pageContent: '',
-        });
+      // Handle warnings if any
+      if (result.messages.length > 0) {
+        const warnings = result.messages.filter((msg) => msg.type === 'warning');
+        if (warnings.length > 0) {
+          log('Extraction warnings:', warnings.length);
+          warnings.forEach((warning) => log('Warning:', warning.message));
+        }
       }
 
-      log('DOCX loading completed, total pages:', pages.length);
-      return pages;
+      log('DOCX loading completed');
+      return [page];
     } catch (e) {
       const error = e as Error;
       log('Error encountered while loading DOCX file');
-      console.error(`Error loading DOCX file ${filePath} using LangChain loader: ${error.message}`);
+      console.error(`Error loading DOCX file ${filePath}: ${error.message}`);
+
       const errorPage: DocumentPage = {
         charCount: 0,
         lineCount: 0,

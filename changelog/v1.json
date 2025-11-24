@@ -1,6 +1,547 @@
 [
   {
     "children": {
+      "fixes": ["OIDC error when connecting to self-host instance."]
+    },
+    "date": "2025-11-02",
+    "version": "1.142.9"
+  },
+  {
+    "children": {},
+    "date": "2025-10-30",
+    "version": "1.142.8"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-28",
+    "version": "1.142.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-28",
+    "version": "1.142.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add MiniMax-M2 model."]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.5"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Pre render ModelSwitchPanel, The error details of the connectivity check lead to a layout problem."
+      ]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Adjust modal setting form styles for improved layout and responsiveness, Unzip file when uploading in knowledge base [LOB-500]."
+      ]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.3"
+  },
+  {
+    "children": {
+      "improvements": ["Improve provider modal height when creating custom provider."]
+    },
+    "date": "2025-10-26",
+    "version": "1.142.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-26",
+    "version": "1.142.1"
+  },
+  {
+    "children": {
+      "features": ["Use env to control clerk allow origin feature."]
+    },
+    "date": "2025-10-24",
+    "version": "1.142.0"
+  },
+  {
+    "children": {
+      "fixes": ["Loadmore not work & navbar not show in pwa."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve local system tools render."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.9"
+  },
+  {
+    "children": {
+      "improvements": ["Improvement for Agent Team After Alpha Launch [LOB-517]."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.8"
+  },
+  {
+    "children": {
+      "improvements": ["Allow removal of top_p and similar request parameters."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-22",
+    "version": "1.141.6"
+  },
+  {
+    "children": {
+      "improvements": ["Change discover page from RSC to SPA to improve performance."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix model runtime cost calculate with CNY."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.4"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.3"
+  },
+  {
+    "children": {},
+    "date": "2025-10-21",
+    "version": "1.141.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor context engine."]
+    },
+    "date": "2025-10-21",
+    "version": "1.141.1"
+  },
+  {
+    "children": {
+      "features": ["Add PDF export functionality to share modal."],
+      "fixes": [
+        "Ignore abort signal errors in TRPC client, slove when pwa user info have code cannot be viewed in full."
+      ],
+      "improvements": [
+        "Add knowledge base mansory layout [LOB-496], improve rich text link display."
+      ]
+    },
+    "date": "2025-10-21",
+    "version": "1.141.0"
+  },
+  {
+    "children": {
+      "features": ["Add ComfyUI integration Phase1(RFC-128)."]
+    },
+    "date": "2025-10-21",
+    "version": "1.140.0"
+  },
+  {
+    "children": {},
+    "date": "2025-10-21",
+    "version": "1.139.5"
+  },
+  {
+    "children": {
+      "fixes": ["Pass threadId to messages in sendMessageInServer."]
+    },
+    "date": "2025-10-21",
+    "version": "1.139.4"
+  },
+  {
+    "children": {
+      "improvements": ["Show message author in minimap."]
+    },
+    "date": "2025-10-21",
+    "version": "1.139.3"
+  },
+  {
+    "children": {
+      "improvements": ["Solve when desktop the sider agent list too long."]
+    },
+    "date": "2025-10-20",
+    "version": "1.139.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-20",
+    "version": "1.139.1"
+  },
+  {
+    "children": {
+      "features": ["Support image generation for siliconcloud."]
+    },
+    "date": "2025-10-19",
+    "version": "1.139.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor upload router into lambda and decide to remove it in V2."]
+    },
+    "date": "2025-10-18",
+    "version": "1.138.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix response API tools calling issue."]
+    },
+    "date": "2025-10-18",
+    "version": "1.138.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix topic fetch not correct in custom agent."]
+    },
+    "date": "2025-10-18",
+    "version": "1.138.3"
+  },
+  {
+    "children": {
+      "improvements": ["Improve welcome message."]
+    },
+    "date": "2025-10-16",
+    "version": "1.138.2"
+  },
+  {
+    "children": {
+      "fixes": ["Automatic topic creation switch does not work."]
+    },
+    "date": "2025-10-16",
+    "version": "1.138.1"
+  },
+  {
+    "children": {
+      "features": ["Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag."]
+    },
+    "date": "2025-10-16",
+    "version": "1.138.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add Claude Haiku 4.5 model."]
+    },
+    "date": "2025-10-16",
+    "version": "1.137.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve update notification."]
+    },
+    "date": "2025-10-15",
+    "version": "1.137.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix duplicate tools id issue and fix link dialog issue."],
+      "improvements": ["Add region support for Vertex AI provider."]
+    },
+    "date": "2025-10-15",
+    "version": "1.137.8"
+  },
+  {
+    "children": {
+      "improvements": ["Use different favicon.ico in dev mode."]
+    },
+    "date": "2025-10-15",
+    "version": "1.137.7"
+  },
+  {
+    "children": {
+      "fixes": ["Update Claude workflows to use oauth token, vertext ai create image."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add imagen model to vertex ai."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.5"
+  },
+  {
+    "children": {
+      "fixes": ["Prevent Vertex AI JSON credentials from being split by comma."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.4"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix mcp server connect issue and refactor web search implement, fix tools calling long name length >64 issue."
+      ]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix the Worker URL cross-origin issue."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.2"
+  },
+  {
+    "children": {
+      "improvements": ["Change the user chatItem maxWidth should use flex 1."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.1"
+  },
+  {
+    "children": {
+      "features": ["Add new setting for default image num."]
+    },
+    "date": "2025-10-12",
+    "version": "1.137.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix input cannot send markdown."],
+      "improvements": ["Optimize OpenRouter modelFetch endpoint, update i18n."]
+    },
+    "date": "2025-10-12",
+    "version": "1.136.13"
+  },
+  {
+    "children": {
+      "improvements": ["Add more AWS regions, Update infini-ai models."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.12"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add capability inference for web search, image output and video recognition in model parsing and update UI form items to support search, imageOutput and video abilities."
+      ]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.11"
+  },
+  {
+    "children": {
+      "improvements": ["Improve search experience."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add lab to support disable/enable rich text."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.9"
+  },
+  {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.8"
+  },
+  {
+    "children": {
+      "fixes": ["Disable rich text in markdown editor."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.6"
+  },
+  {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.5"
+  },
+  {
+    "children": {
+      "fixes": ["Add 'gemini-2.5-flash-image' to disabled models Thinking."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.4"
+  },
+  {
+    "children": {
+      "improvements": ["Add delete & regenerate hotkeys."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.2"
+  },
+  {
+    "children": {},
+    "date": "2025-10-09",
+    "version": "1.136.1"
+  },
+  {
+    "children": {
+      "features": ["Add new provider Cerebras."],
+      "fixes": ["Fix standalone plugin rerender issue."]
+    },
+    "date": "2025-10-09",
+    "version": "1.136.0"
+  },
+  {
+    "children": {},
+    "date": "2025-10-08",
+    "version": "1.135.6"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-08",
+    "version": "1.135.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add GPT-5 pro model."]
+    },
+    "date": "2025-10-07",
+    "version": "1.135.4"
+  },
+  {
+    "children": {
+      "improvements": ["Improve Korean translate."]
+    },
+    "date": "2025-10-07",
+    "version": "1.135.3"
+  },
+  {
+    "children": {},
+    "date": "2025-10-06",
+    "version": "1.135.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve styles and fix tools calling condition."]
+    },
+    "date": "2025-10-06",
+    "version": "1.135.1"
+  },
+  {
+    "children": {
+      "features": ["Huanyuan text-to-image 3."]
+    },
+    "date": "2025-10-06",
+    "version": "1.135.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-06",
+    "version": "1.134.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-05",
+    "version": "1.134.6"
+  },
+  {
+    "children": {},
+    "date": "2025-10-05",
+    "version": "1.134.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add promptfoo to improve prompts quality."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.4"
+  },
+  {
+    "children": {
+      "fixes": ["Type not preserved when model is sorted."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.3"
+  },
+  {
+    "children": {
+      "improvements": ["Allow switching model type."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-05",
+    "version": "1.134.1"
+  },
+  {
+    "children": {
+      "features": ["Support double-click to open multi agent window on the desktop."]
+    },
+    "date": "2025-10-04",
+    "version": "1.134.0"
+  },
+  {
+    "children": {
+      "fixes": ["type not preserved when model is disabled or sorted."],
+      "improvements": ["Nano banana support aspect_ratio."]
+    },
+    "date": "2025-10-04",
+    "version": "1.133.6"
+  },
+  {
+    "children": {
+      "fixes": ["Custom provider fails when client requests are enabled."],
+      "improvements": ["Optimized extendParams UI, update i18n."]
+    },
+    "date": "2025-10-04",
+    "version": "1.133.5"
+  },
+  {
+    "children": {
+      "fixes": ["OllamaCloud error."],
+      "improvements": ["Fix chat minimap overflow."]
+    },
+    "date": "2025-10-01",
+    "version": "1.133.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor a ssrf-safe-fetch module."],
+      "fixes": ["Fix frontend random API key config not work."]
+    },
+    "date": "2025-10-01",
+    "version": "1.133.3"
+  },
+  {
+    "children": {
       "improvements": ["Add minimap to chat list for quick navigation."]
     },
     "date": "2025-09-30",

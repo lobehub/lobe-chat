@@ -7,6 +7,14 @@
     "desc": "Clear the messages and uploaded files from the current conversation",
     "title": "Clear Conversation Messages"
   },
+  "deleteAndRegenerateMessage": {
+    "desc": "Delete the last message and regenerate",
+    "title": "Delete and Regenerate"
+  },
+  "deleteLastMessage": {
+    "desc": "Delete the last message",
+    "title": "Delete Last Message"
+  },
   "desktop": {
     "openSettings": {
       "desc": "Open the application settings page",

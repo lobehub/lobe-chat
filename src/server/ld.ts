@@ -87,7 +87,7 @@ export class Ld {
     return {
       '@id': this.getId(OFFICIAL_URL, '#organization'),
       '@type': 'Organization',
-      'alternateName': 'LobeChat',
+      'alternateName': 'LobeHub',
       'contactPoint': {
         '@type': 'ContactPoint',
         'contactType': 'customer support',

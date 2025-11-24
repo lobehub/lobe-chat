@@ -12,9 +12,11 @@ const PluginState = memo<FunctionMessageProps>(({ toolCallId }) => {
   const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(toolCallId));
 
   return (
-    <Highlighter language={'json'} style={{ maxHeight: 200, maxWidth: 800, overflow: 'scroll' }}>
-      {JSON.stringify(toolMessage?.pluginState, null, 2)}
-    </Highlighter>
+    toolMessage?.pluginState && (
+      <Highlighter language={'json'} style={{ maxHeight: 200, maxWidth: 800, overflow: 'scroll' }}>
+        {JSON.stringify(toolMessage?.pluginState, null, 2)}
+      </Highlighter>
+    )
   );
 });
 
