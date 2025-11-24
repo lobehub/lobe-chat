@@ -809,22 +809,10 @@
   {
     "sql": [
       "ALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"slug\" varchar(255);",
-      "\nDO $$ BEGIN\n CREATE UNIQUE INDEX IF NOT EXISTS \"documents_slug_user_id_unique\" ON \"documents\" (\"slug\",\"user_id\") WHERE \"slug\" IS NOT NULL;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;"
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"documents_slug_user_id_unique\" ON \"documents\" USING btree (\"slug\",\"user_id\") WHERE \"documents\".\"slug\" is not null;\n"
     ],
     "bps": true,
-    "folderMillis": 1763535087148,
-    "hash": "57a82ce14d96ffa9f140ff63f00af994e91a74703f4d2378286e36be259f117b"
-  },
-  {
-    "sql": [
-      "ALTER TABLE \"files\" DROP CONSTRAINT \"files_slug_unique\";",
-      "\nALTER TABLE \"agents\" ADD COLUMN \"editor_content\" jsonb;",
-      "\nALTER TABLE \"documents\" ADD COLUMN \"slug\" varchar(255);",
-      "\nCREATE UNIQUE INDEX \"documents_slug_user_id_unique\" ON \"documents\" USING btree (\"slug\",\"user_id\") WHERE \"documents\".\"slug\" is not null;",
-      "\nALTER TABLE \"files\" DROP COLUMN \"slug\";"
-    ],
-    "bps": true,
-    "folderMillis": 1763983765195,
-    "hash": "8c52902cbfb3282f44b8bd20767e434c72f85e810553432f8cb2aa8b297f07b1"
+    "folderMillis": 1763987922211,
+    "hash": "f823b521f4d25e5dc5ab238b372727d2d2d7f0aed27b5eabc8a9608ce4e50568"
   }
 ]

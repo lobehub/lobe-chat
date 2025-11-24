@@ -2,6 +2,91 @@
 
 # Changelog
 
+## [Version 2.0.0-next.111](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.110...v2.0.0-next.111)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix db migration snapshot not align with db schema, Separate agent file injection from knowledge base RAG search.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix db migration snapshot not align with db schema, closes [#10399](https://github.com/lobehub/lobe-chat/issues/10399) ([760105a](https://github.com/lobehub/lobe-chat/commit/760105a))
+- **misc**: Separate agent file injection from knowledge base RAG search, closes [#10398](https://github.com/lobehub/lobe-chat/issues/10398) ([e1c813a](https://github.com/lobehub/lobe-chat/commit/e1c813a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.110](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.109...v2.0.0-next.110)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add hyperlink to each topic & pinned agent, support ContextMenu on ChatItem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add hyperlink to each topic & pinned agent, closes [#10367](https://github.com/lobehub/lobe-chat/issues/10367) ([63e4b3d](https://github.com/lobehub/lobe-chat/commit/63e4b3d))
+- **misc**: Support ContextMenu on ChatItem, closes [#9034](https://github.com/lobehub/lobe-chat/issues/9034) ([27c1154](https://github.com/lobehub/lobe-chat/commit/27c1154))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.109](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.108...v2.0.0-next.109)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the knowledge files cant open error.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the knowledge files cant open error, closes [#10386](https://github.com/lobehub/lobe-chat/issues/10386) ([8104c77](https://github.com/lobehub/lobe-chat/commit/8104c77))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10368](https://github.com/lobehub/lobe-chat/issues/10368) ([ed707af](https://github.com/lobehub/lobe-chat/commit/ed707af))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.108](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.107...v2.0.0-next.108)
 
 <sup>Released on **2025-11-24**</sup>

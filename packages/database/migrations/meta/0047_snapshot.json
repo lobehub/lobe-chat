@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "8a423b68-c609-44e1-bd48-f2ed62fec5ef",
+  "id": "20a4c30c-04f0-4993-b493-0ae6a3144f9e",
   "policies": {},
   "prevId": "abe0cb47-a970-4ec0-a29f-1afa9bd2fe02",
   "roles": {},
@@ -1259,6 +1259,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "accessed_at": {
           "name": "accessed_at",
           "type": "timestamp with time zone",
@@ -1359,6 +1365,28 @@
             }
           ],
           "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "documents_slug_user_id_unique": {
+          "name": "documents_slug_user_id_unique",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"documents\".\"slug\" is not null",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -1478,12 +1506,6 @@
         "embedding_task_id": {
           "name": "embedding_task_id",
           "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "slug": {
-          "name": "slug",
-          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -1610,13 +1632,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "files_slug_unique": {
-          "name": "files_slug_unique",
-          "nullsNotDistinct": false,
-          "columns": ["slug"]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
