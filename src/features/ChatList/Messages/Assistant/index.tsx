@@ -33,7 +33,7 @@ import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
 import { AssistantActionsBar } from './Actions';
 import { AssistantMessageExtra } from './Extra';
-import { AssistantMessageContent } from './MessageContent';
+import { AssistantMessageBody } from './MessageBody';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
 const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
@@ -75,7 +75,7 @@ export const useStyles = createStyles(
           justify-content: ${placement === 'left' ? 'flex-end' : 'flex-start'};
         `,
         editing &&
-        css`
+          css`
             pointer-events: none !important;
             opacity: 0 !important;
           `,
@@ -88,7 +88,6 @@ export const useStyles = createStyles(
           width: 100%;
           max-width: 100vw;
           padding-block: 24px 12px;
-          padding-inline: 12px;
 
           @supports (content-visibility: auto) {
             contain-intrinsic-size: auto 100lvh;
@@ -305,9 +304,13 @@ const AssistantMessage = memo<AssistantMessageProps>(
 
     const renderMessage = useCallback(
       (editableContent: ReactNode) => (
-        <AssistantMessageContent {...item} editableContent={editableContent} />
+        <AssistantMessageBody
+          {...item}
+          editableContent={editableContent}
+          markdownProps={markdownProps}
+        />
       ),
-      [item],
+      [item, markdownProps],
     );
     const errorMessage = <ErrorMessageExtra data={item} />;
 
