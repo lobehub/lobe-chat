@@ -1048,6 +1048,68 @@ describe('UserMemoryModel', () => {
       expect(identityMemory?.role).toBeNull();
     });
 
+    it('keeps existing identity fields when merge payload is empty', async () => {
+      const { identityId } = await userMemoryModel.addIdentityEntry({
+        base: { summary: 'keep base' },
+        identity: {
+          description: 'Keep description',
+          metadata: { keep: true },
+          relationship: 'colleague',
+          role: 'engineer',
+          tags: ['keep'],
+          type: 'professional',
+        },
+      });
+
+      await userMemoryModel.updateIdentityEntry({
+        identityId,
+        identity: {},
+        mergeStrategy: MergeStrategyEnum.Merge,
+      });
+
+      const identityMemory = await serverDB.query.userMemoriesIdentities.findFirst({
+        where: eq(userMemoriesIdentities.id, identityId),
+      });
+
+      expect(identityMemory?.description).toBe('Keep description');
+      expect(identityMemory?.metadata).toEqual({ keep: true });
+      expect(identityMemory?.relationship).toBe('colleague');
+      expect(identityMemory?.role).toBe('engineer');
+      expect(identityMemory?.tags).toEqual(['keep']);
+      expect(identityMemory?.type).toBe('professional');
+    });
+
+    it('clears all identity fields when replacing with an empty payload', async () => {
+      const { identityId } = await userMemoryModel.addIdentityEntry({
+        base: { summary: 'keep base' },
+        identity: {
+          description: 'Will be cleared',
+          metadata: { existing: true },
+          relationship: 'mentor',
+          role: 'lead',
+          tags: ['tagged'],
+          type: 'personal',
+        },
+      });
+
+      await userMemoryModel.updateIdentityEntry({
+        identityId,
+        identity: {},
+        mergeStrategy: MergeStrategyEnum.Replace,
+      });
+
+      const identityMemory = await serverDB.query.userMemoriesIdentities.findFirst({
+        where: eq(userMemoriesIdentities.id, identityId),
+      });
+
+      expect(identityMemory?.description).toBeNull();
+      expect(identityMemory?.metadata).toBeNull();
+      expect(identityMemory?.relationship).toBeNull();
+      expect(identityMemory?.role).toBeNull();
+      expect(identityMemory?.tags).toBeNull();
+      expect(identityMemory?.type).toBeNull();
+    });
+
     it('removes identity entry and associated base memory', async () => {
       const { identityId, userMemoryId } = await userMemoryModel.addIdentityEntry({
         base: {

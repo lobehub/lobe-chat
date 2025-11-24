@@ -7,6 +7,8 @@ import {
 } from '@lobechat/types';
 import { and, cosineDistance, desc, eq, inArray, sql } from 'drizzle-orm';
 
+import { merge } from '@/utils/merge';
+
 import {
   UserMemoryContext,
   UserMemoryContextsWithoutVectors,
@@ -618,44 +620,13 @@ export class UserMemoryModel {
         return false;
       }
 
-      const baseUpdate: Partial<typeof userMemories.$inferInsert> = {};
-      const identityUpdate: Partial<typeof userMemoriesIdentities.$inferInsert> = {};
+      let baseUpdate: Partial<typeof userMemories.$inferInsert> = {};
+      let identityUpdate: Partial<typeof userMemoriesIdentities.$inferInsert> = {};
 
       if (params.base) {
-        const base = params.base;
-
-        const applyBaseField = <
-          K extends keyof IdentityEntryBasePayload,
-          C extends keyof typeof userMemories.$inferInsert,
-        >(
-          sourceKey: K,
-          columnKey: C,
-          transform?: (value: IdentityEntryBasePayload[K]) => (typeof userMemories.$inferInsert)[C],
-        ) => {
-          const value = base[sourceKey];
-          if (value === undefined) return;
-
-          const transformed = transform
-            ? transform(value)
-            : (value as (typeof userMemories.$inferInsert)[C]);
-
-          baseUpdate[columnKey] = (transformed ?? null) as (typeof userMemories.$inferInsert)[C];
-        };
-
-        applyBaseField('details', 'details');
-        applyBaseField('detailsVector1024', 'detailsVector1024');
-        applyBaseField('memoryCategory', 'memoryCategory');
-        applyBaseField('memoryLayer', 'memoryLayer');
-        applyBaseField('memoryType', 'memoryType');
-        applyBaseField('metadata', 'metadata');
-        applyBaseField('status', 'status');
-        applyBaseField('summary', 'summary');
-        applyBaseField('summaryVector1024', 'summaryVector1024');
-        applyBaseField('tags', 'tags');
-        applyBaseField('title', 'title');
-
-        if (base.lastAccessedAt !== undefined) {
-          baseUpdate.lastAccessedAt = coerceDate(base.lastAccessedAt) ?? new Date();
+        baseUpdate = merge(baseUpdate, params.base);
+        if (baseUpdate.lastAccessedAt !== undefined) {
+          baseUpdate.lastAccessedAt = coerceDate(baseUpdate.lastAccessedAt) ?? new Date();
         }
 
         if (Object.keys(baseUpdate).length > 0) {
@@ -670,53 +641,51 @@ export class UserMemoryModel {
       }
 
       if (params.identity) {
-        const identity = params.identity;
+        if (mergeStrategy === 'replace') {
+          const identity = params.identity;
 
-        const applyIdentityField = <
-          K extends keyof IdentityEntryPayload,
-          C extends keyof typeof userMemoriesIdentities.$inferInsert,
-        >(
-          sourceKey: K,
-          columnKey: C,
-          transform?: (
-            value: IdentityEntryPayload[K],
-          ) => (typeof userMemoriesIdentities.$inferInsert)[C],
-        ) => {
-          const value = identity[sourceKey];
-
-          if (mergeStrategy === 'replace') {
-            identityUpdate[columnKey] = (
-              value === undefined
+          identityUpdate = {
+            description: identity.description ?? null,
+            descriptionVector: identity.descriptionVector ?? null,
+            episodicDate:
+              identity.episodicDate === undefined ? null : coerceDate(identity.episodicDate),
+            metadata: identity.metadata ?? null,
+            relationship:
+              identity.relationship === undefined
                 ? null
-                : ((transform
-                    ? transform(value)
-                    : (value as (typeof userMemoriesIdentities.$inferInsert)[C])) ?? null)
-            ) as (typeof userMemoriesIdentities.$inferInsert)[C];
-          } else if (value !== undefined) {
-            identityUpdate[columnKey] = (
-              transform
-                ? transform(value)
-                : ((value as (typeof userMemoriesIdentities.$inferInsert)[C]) ?? null)
-            ) as (typeof userMemoriesIdentities.$inferInsert)[C];
-          }
-        };
+                : identity.relationship === null
+                  ? null
+                  : (normalizeRelationshipValue(identity.relationship) ?? null),
+            role: identity.role ?? null,
+            tags: identity.tags ?? null,
+            type:
+              identity.type === undefined
+                ? null
+                : identity.type === null
+                  ? null
+                  : (normalizeIdentityTypeValue(identity.type) ?? null),
+          };
+        } else {
+          identityUpdate = merge(identityUpdate, params.identity);
 
-        applyIdentityField('description', 'description');
-        applyIdentityField('descriptionVector', 'descriptionVector');
-        applyIdentityField('metadata', 'metadata');
-        applyIdentityField('role', 'role');
-        applyIdentityField('tags', 'tags');
-        applyIdentityField('type', 'type', (value) => {
-          if (value === undefined) return null;
-          if (value === null) return null;
-          return normalizeIdentityTypeValue(value) ?? null;
-        });
-        applyIdentityField('relationship', 'relationship', (value) => {
-          if (value === undefined) return null;
-          if (value === null) return null;
-          return normalizeRelationshipValue(value) ?? null;
-        });
-        applyIdentityField('episodicDate', 'episodicDate', (value) => coerceDate(value));
+          if (params.identity.type !== undefined) {
+            identityUpdate.type =
+              params.identity.type === null
+                ? null
+                : (normalizeIdentityTypeValue(params.identity.type) ?? null);
+          }
+
+          if (params.identity.relationship !== undefined) {
+            identityUpdate.relationship =
+              params.identity.relationship === null
+                ? null
+                : (normalizeRelationshipValue(params.identity.relationship) ?? null);
+          }
+
+          if (params.identity.episodicDate !== undefined) {
+            identityUpdate.episodicDate = coerceDate(params.identity.episodicDate);
+          }
+        }
 
         if (Object.keys(identityUpdate).length > 0) {
           identityUpdate.updatedAt = new Date();
