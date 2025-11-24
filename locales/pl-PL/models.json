@@ -1715,6 +1715,9 @@
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview to najnowocześniejszy model myślowy Google, zdolny do rozumowania nad złożonymi problemami w dziedzinie kodowania, matematyki i STEM oraz do analizy dużych zbiorów danych, repozytoriów kodu i dokumentów przy użyciu długiego kontekstu."
   },
+  "google/gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image (Nano Banana Pro) to model generowania obrazów firmy Google, obsługujący również dialogi multimodalne."
+  },
   "google/gemini-3-pro-image-preview-free": {
     "description": "Gemini 3 Pro Image – wersja darmowa, obsługuje ograniczoną liczbę generacji multimodalnych."
   },
@@ -2777,14 +2780,51 @@
   "openai/gpt-4-turbo": {
     "description": "gpt-4-turbo od OpenAI posiada szeroką wiedzę ogólną i specjalistyczną, umożliwiającą wykonywanie złożonych instrukcji w języku naturalnym i precyzyjne rozwiązywanie trudnych problemów. Data zakończenia wiedzy to kwiecień 2023, a okno kontekstu wynosi 128 000 tokenów."
   },
-  "openai/gpt-4.1": {},
-  "openai/gpt-4.1-mini": {},
-  "openai/gpt-4.1-nano": {},
-  "openai/gpt-4o": {},
-  "openai/gpt-4o-mini": {},
-  "openai/gpt-5": {},
-  "openai/gpt-5-mini": {},
-  "openai/gpt-5-nano": {},
+  "openai/gpt-4.1": {
+    "description": "Seria GPT-4.1 oferuje większy kontekst oraz lepsze możliwości inżynieryjne i wnioskowania."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 Mini zapewnia niższe opóźnienia i lepszy stosunek jakości do ceny, idealny do średnich kontekstów i przepływów dialogowych."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 Nano to opcja o bardzo niskim koszcie i opóźnieniu, odpowiednia do częstych, krótkich rozmów lub scenariuszy klasyfikacyjnych."
+  },
+  "openai/gpt-4o": {
+    "description": "Seria GPT-4o to model Omni firmy OpenAI, obsługujący wejścia tekstowe i graficzne oraz wyjścia tekstowe."
+  },
+  "openai/gpt-4o-mini": {
+    "description": "GPT-4o-mini to szybka, kompaktowa wersja GPT-4o, idealna do scenariuszy z niskim opóźnieniem i multimodalnością."
+  },
+  "openai/gpt-5": {
+    "description": "GPT-5 to wysokowydajny model OpenAI, odpowiedni do szerokiego zakresu zadań produkcyjnych i badawczych."
+  },
+  "openai/gpt-5-chat": {
+    "description": "GPT-5 Chat to zoptymalizowana wersja GPT-5 do scenariuszy konwersacyjnych, oferująca niższe opóźnienia i lepsze doświadczenie interakcji."
+  },
+  "openai/gpt-5-codex": {
+    "description": "GPT-5-Codex to wariant GPT-5 zoptymalizowany pod kątem programowania, idealny do dużych przepływów pracy z kodem."
+  },
+  "openai/gpt-5-mini": {
+    "description": "GPT-5 Mini to odchudzona wersja rodziny GPT-5, przeznaczona do zastosowań wymagających niskiego opóźnienia i kosztów."
+  },
+  "openai/gpt-5-nano": {
+    "description": "GPT-5 Nano to ultrakompaktowa wersja z rodziny GPT-5, idealna do scenariuszy o bardzo wysokich wymaganiach dotyczących kosztów i opóźnień."
+  },
+  "openai/gpt-5-pro": {
+    "description": "GPT-5 Pro to flagowy model OpenAI, oferujący zaawansowane możliwości wnioskowania, generowania kodu i funkcje klasy korporacyjnej, wspierający routing testowy i rygorystyczne polityki bezpieczeństwa."
+  },
+  "openai/gpt-5.1": {
+    "description": "GPT-5.1 to najnowszy flagowy model z serii GPT-5, oferujący znaczną poprawę w zakresie ogólnego wnioskowania, przestrzegania instrukcji i naturalności dialogu, odpowiedni do szerokiego zakresu zadań."
+  },
+  "openai/gpt-5.1-chat": {
+    "description": "GPT-5.1 Chat to lekki członek rodziny GPT-5.1, zoptymalizowany pod kątem konwersacji o niskim opóźnieniu, zachowując przy tym silne zdolności wnioskowania i wykonywania poleceń."
+  },
+  "openai/gpt-5.1-codex": {
+    "description": "GPT-5.1-Codex to wariant GPT-5.1 zoptymalizowany do inżynierii oprogramowania i przepływów pracy z kodem, idealny do dużych refaktoryzacji, złożonego debugowania i długotrwałego programowania autonomicznego."
+  },
+  "openai/gpt-5.1-codex-mini": {
+    "description": "GPT-5.1-Codex-Mini to kompaktowa, przyspieszona wersja GPT-5.1-Codex, lepiej dostosowana do scenariuszy programistycznych wrażliwych na opóźnienia i koszty."
+  },
   "openai/gpt-oss-120b": {
     "description": "Niezwykle kompetentny, uniwersalny duży model językowy z potężnymi i kontrolowanymi zdolnościami wnioskowania."
   },
@@ -2809,7 +2849,9 @@
   "openai/o3-mini-high": {
     "description": "o3-mini w wersji o wysokim poziomie rozumowania, oferujący wysoką inteligencję przy tych samych kosztach i celach opóźnienia co o1-mini."
   },
-  "openai/o4-mini": {},
+  "openai/o4-mini": {
+    "description": "OpenAI o4-mini to kompaktowy, wydajny model wnioskowania firmy OpenAI, idealny do zastosowań wymagających niskiego opóźnienia."
+  },
   "openai/o4-mini-high": {
     "description": "o4-mini w wersji o wysokim poziomie wnioskowania, zoptymalizowany do szybkiego i efektywnego wnioskowania, osiągający wysoką wydajność i efektywność w zadaniach kodowania i wizualnych."
   },
@@ -3011,12 +3053,20 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Potężny średniej wielkości model kodu, wspierający długość kontekstu 32K, specjalizujący się w programowaniu wielojęzycznym."
   },
-  "qwen/qwen3-14b": {},
+  "qwen/qwen3-14b": {
+    "description": "Qwen3-14B to wersja 14B z serii Qwen, odpowiednia do standardowego wnioskowania i scenariuszy konwersacyjnych."
+  },
   "qwen/qwen3-14b:free": {
     "description": "Qwen3-14B to gęsty model językowy o 14 miliardach parametrów w serii Qwen3, zaprojektowany z myślą o złożonym wnioskowaniu i efektywnych dialogach. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do matematyki, programowania i wnioskowania logicznego a trybem 'nie-myślenia' stosowanym w ogólnych rozmowach. Model został dostosowany do przestrzegania instrukcji, użycia narzędzi agenta, twórczego pisania oraz wielojęzycznych zadań w ponad 100 językach i dialektach. Obsługuje natywnie 32K tokenów kontekstu i może być rozszerzany do 131K tokenów za pomocą YaRN."
   },
   "qwen/qwen3-235b-a22b": {
     "description": "Qwen3-235B-A22B to model mieszanki ekspertów (MoE) o 235 miliardach parametrów opracowany przez Qwen, aktywujący 22 miliardy parametrów przy każdym przejściu do przodu. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do złożonego wnioskowania, matematyki i zadań kodowania a trybem 'nie-myślenia' stosowanym w ogólnych rozmowach. Model wykazuje silne zdolności w zakresie wnioskowania, wsparcia wielojęzycznego (ponad 100 języków i dialektów), zaawansowanego przestrzegania instrukcji oraz wywoływania narzędzi agenta. Obsługuje natywnie okno kontekstu 32K tokenów i może być rozszerzany do 131K tokenów za pomocą YaRN."
+  },
+  "qwen/qwen3-235b-a22b-2507": {
+    "description": "Qwen3-235B-A22B-Instruct-2507 to wersja Instruct z serii Qwen3, łącząca obsługę wielojęzycznych instrukcji i długiego kontekstu."
+  },
+  "qwen/qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3-235B-A22B-Thinking-2507 to wariant Thinking z serii Qwen3, wzmocniony pod kątem złożonych zadań matematycznych i wnioskowania."
   },
   "qwen/qwen3-235b-a22b:free": {
     "description": "Qwen3-235B-A22B to model mieszanki ekspertów (MoE) o 235 miliardach parametrów opracowany przez Qwen, aktywujący 22 miliardy parametrów przy każdym przejściu do przodu. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do złożonego wnioskowania, matematyki i zadań kodowania a trybem 'nie-myślenia' stosowanym w ogólnych rozmowach. Model wykazuje silne zdolności w zakresie wnioskowania, wsparcia wielojęzycznego (ponad 100 języków i dialektów), zaawansowanego przestrzegania instrukcji oraz wywoływania narzędzi agenta. Obsługuje natywnie okno kontekstu 32K tokenów i może być rozszerzany do 131K tokenów za pomocą YaRN."
@@ -3035,6 +3085,21 @@
   },
   "qwen/qwen3-8b:free": {
     "description": "Qwen3-8B to gęsty model językowy o 8 miliardach parametrów w serii Qwen3, zaprojektowany z myślą o zadaniach wymagających intensywnego wnioskowania i efektywnych dialogach. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do matematyki, kodowania i wnioskowania logicznego a trybem 'nie-myślenia' stosowanym w ogólnych rozmowach. Model został dostosowany do przestrzegania instrukcji, integracji agenta, twórczego pisania oraz wielojęzycznego użycia w ponad 100 językach i dialektach. Obsługuje natywnie okno kontekstu 32K tokenów i może być rozszerzany do 131K tokenów za pomocą YaRN."
+  },
+  "qwen/qwen3-coder": {
+    "description": "Qwen3-Coder to rodzina generatorów kodu z serii Qwen3, specjalizująca się w rozumieniu i generowaniu kodu w długich dokumentach."
+  },
+  "qwen/qwen3-coder-plus": {
+    "description": "Qwen3-Coder-Plus to specjalnie zoptymalizowany model agenta kodującego z serii Qwen, obsługujący bardziej złożone wywołania narzędzi i długoterminowe sesje."
+  },
+  "qwen/qwen3-max": {
+    "description": "Qwen3 Max to zaawansowany model wnioskowania z serii Qwen3, odpowiedni do wielojęzycznego wnioskowania i integracji narzędzi."
+  },
+  "qwen/qwen3-max-preview": {
+    "description": "Qwen3 Max (preview) to wersja Max z serii Qwen, zaprojektowana do zaawansowanego wnioskowania i integracji narzędzi (wersja podglądowa)."
+  },
+  "qwen/qwen3-vl-plus": {
+    "description": "Qwen3 VL-Plus to wzbogacona wizualnie wersja Qwen3, oferująca ulepszone możliwości wnioskowania multimodalnego i przetwarzania wideo."
   },
   "qwen2": {
     "description": "Qwen2 to nowa generacja dużego modelu językowego Alibaba, wspierająca różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
@@ -3411,6 +3476,9 @@
   "vercel/v0-1.5-md": {
     "description": "Dostęp do modelu stojącego za v0 do generowania, naprawiania i optymalizacji nowoczesnych aplikacji webowych, z rozumowaniem specyficznym dla frameworków i aktualną wiedzą."
   },
+  "volcengine/doubao-seed-code": {
+    "description": "Doubao-Seed-Code to duży model firmy Volcengine zoptymalizowany pod kątem programowania agentowego, osiągający doskonałe wyniki w wielu benchmarkach programistycznych i agentowych, obsługujący kontekst do 256K."
+  },
   "wan2.2-t2i-flash": {
     "description": "Wersja ekspresowa Wanxiang 2.2, najnowszy model. Kompleksowo ulepszony pod względem kreatywności, stabilności i realizmu, generuje szybko i oferuje wysoką opłacalność."
   },
@@ -3438,8 +3506,24 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 to model językowy dostarczany przez Microsoft AI, który wyróżnia się w złożonych dialogach, wielojęzyczności, wnioskowaniu i inteligentnych asystentach."
   },
-  "x-ai/grok-4-fast": {},
-  "x-ai/grok-code-fast-1": {},
+  "x-ai/grok-4": {
+    "description": "Grok 4 to flagowy model wnioskowania firmy xAI, oferujący potężne możliwości wnioskowania i obsługę multimodalności."
+  },
+  "x-ai/grok-4-fast": {
+    "description": "Grok 4 Fast to model firmy xAI o wysokiej przepustowości i niskim koszcie (obsługuje okno kontekstu 2M), idealny do zastosowań wymagających dużej równoległości i długiego kontekstu."
+  },
+  "x-ai/grok-4-fast-non-reasoning": {
+    "description": "Grok 4 Fast (Non-Reasoning) to model multimodalny firmy xAI o wysokiej przepustowości i niskim koszcie (obsługuje okno kontekstu 2M), przeznaczony do scenariuszy wrażliwych na opóźnienia i koszty, które nie wymagają wnioskowania wewnętrznego. Występuje równolegle z wersją reasoning i umożliwia włączenie wnioskowania za pomocą parametru reasoning enable w API. Prompty i odpowiedzi mogą być wykorzystywane przez xAI lub OpenRouter do ulepszania przyszłych modeli."
+  },
+  "x-ai/grok-4.1-fast": {
+    "description": "Grok 4.1 Fast to model firmy xAI o wysokiej przepustowości i niskim koszcie (obsługuje okno kontekstu 2M), idealny do zastosowań wymagających dużej równoległości i długiego kontekstu."
+  },
+  "x-ai/grok-4.1-fast-non-reasoning": {
+    "description": "Grok 4.1 Fast (Non-Reasoning) to model multimodalny firmy xAI o wysokiej przepustowości i niskim koszcie (obsługuje okno kontekstu 2M), przeznaczony do scenariuszy wrażliwych na opóźnienia i koszty, które nie wymagają wnioskowania wewnętrznego. Występuje równolegle z wersją reasoning i umożliwia włączenie wnioskowania za pomocą parametru reasoning enable w API. Prompty i odpowiedzi mogą być wykorzystywane przez xAI lub OpenRouter do ulepszania przyszłych modeli."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "Grok Code Fast 1 to szybki model kodujący firmy xAI, generujący czytelny i inżynieryjnie dopasowany kod."
+  },
   "x1": {
     "description": "Model Spark X1 zostanie dalej ulepszony, osiągając wyniki w zadaniach ogólnych, takich jak rozumowanie, generowanie tekstu i rozumienie języka, które będą porównywalne z OpenAI o1 i DeepSeek R1."
   },
@@ -3500,7 +3584,15 @@
   "yi-vision-v2": {
     "description": "Model do złożonych zadań wizualnych, oferujący wysokowydajną zdolność rozumienia i analizy na podstawie wielu obrazów."
   },
-  "z-ai/glm-4.6": {},
+  "z-ai/glm-4.5": {
+    "description": "GLM 4.5 to flagowy model firmy Z.AI, obsługujący tryby hybrydowego wnioskowania i zoptymalizowany pod kątem zadań inżynieryjnych i długiego kontekstu."
+  },
+  "z-ai/glm-4.5-air": {
+    "description": "GLM 4.5 Air to lekka wersja GLM 4.5, odpowiednia do scenariuszy wrażliwych na koszty, zachowując przy tym silne zdolności wnioskowania."
+  },
+  "z-ai/glm-4.6": {
+    "description": "GLM 4.6 to flagowy model firmy Z.AI, oferujący rozszerzoną długość kontekstu i ulepszone możliwości kodowania."
+  },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 to podstawowy model zaprojektowany specjalnie do zastosowań agentowych, wykorzystujący architekturę mieszanych ekspertów (Mixture-of-Experts). Model jest głęboko zoptymalizowany pod kątem wywoływania narzędzi, przeglądania stron internetowych, inżynierii oprogramowania i programowania frontendowego, wspierając bezproblemową integrację z inteligentnymi agentami kodu takimi jak Claude Code i Roo Code. GLM-4.5 stosuje hybrydowy tryb wnioskowania, dostosowując się do złożonych i codziennych scenariuszy użycia."
   },
@@ -3521,5 +3613,8 @@
   },
   "zai/glm-4.5v": {
     "description": "GLM-4.5V zbudowany jest na bazie GLM-4.5-Air, dziedzicząc zweryfikowane technologie GLM-4.1V-Thinking, jednocześnie skutecznie skalując się dzięki potężnej architekturze MoE z 106 miliardami parametrów."
+  },
+  "zenmux/auto": {
+    "description": "Funkcja automatycznego routingu ZenMux automatycznie wybiera najlepszy model pod względem wydajności i opłacalności spośród obsługiwanych modeli, w zależności od treści Twojego zapytania."
   }
 }

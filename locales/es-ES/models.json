@@ -1715,6 +1715,9 @@
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview es el modelo de pensamiento más avanzado de Google, capaz de razonar sobre problemas complejos en código, matemáticas y áreas STEM, así como de analizar grandes conjuntos de datos, bases de código y documentos utilizando contextos extensos."
   },
+  "google/gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image (Nano Banana Pro) es el modelo de generación de imágenes de Google, que también admite conversaciones multimodales."
+  },
   "google/gemini-3-pro-image-preview-free": {
     "description": "Versión gratuita de Gemini 3 Pro Image, compatible con generación multimodal con cuota limitada."
   },
