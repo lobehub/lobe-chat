@@ -8,8 +8,10 @@ import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
 
+import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
@@ -100,9 +102,12 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     clearOnDefault: true,
   });
 
-  const [parentId, setParentId] = useQueryState('folder', {
-    clearOnDefault: true,
-  });
+  const navigate = useNavigate();
+  const {
+    currentFolderSlug,
+    folderSegments,
+    knowledgeBaseId: currentKnowledgeBaseId,
+  } = useFolderPath();
 
   const [sorter] = useQueryState('sorter', {
     clearOnDefault: true,
@@ -118,7 +123,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   const { data, isLoading } = useFetchKnowledgeItems({
     category,
     knowledgeBaseId,
-    parentId: parentId || null,
+    parentId: currentFolderSlug || null,
     q: query ?? undefined,
     sortType: sortType ?? undefined,
     sorter: sorter ?? undefined,
@@ -183,16 +188,29 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     [onOpenFile, knowledgeBaseId, selectFileIds],
   );
 
-  return !isLoading && data?.length === 0 && !parentId ? (
+  return !isLoading && data?.length === 0 && !currentFolderSlug ? (
     <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
   ) : (
     <Flexbox height={'100%'}>
       <Flexbox style={{ fontSize: 12, marginInline: 24 }}>
         <Flexbox align={'center'} gap={8} horizontal>
-          {parentId && (
+          {currentFolderSlug && (
             <Button
               icon={<Icon icon={ArrowLeft} />}
-              onClick={() => setParentId(null)}
+              onClick={() => {
+                // Navigate up one level in the folder hierarchy
+                const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
+                if (!baseKnowledgeBaseId) return;
+
+                if (folderSegments.length <= 1) {
+                  // Navigate to knowledge base root
+                  navigate(`/knowledge/bases/${baseKnowledgeBaseId}`);
+                } else {
+                  // Navigate to parent folder
+                  const parentPath = folderSegments.slice(0, -1).join('/');
+                  navigate(`/knowledge/bases/${baseKnowledgeBaseId}/${parentPath}`);
+                }
+              }}
               size={'small'}
               type={'text'}
             />

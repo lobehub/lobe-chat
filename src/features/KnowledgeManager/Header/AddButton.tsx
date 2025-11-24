@@ -7,8 +7,8 @@ import { FilePenLine, FileUp, FolderIcon, FolderUp, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
 import DragUpload from '@/components/DragUpload';
-import { useQueryState } from '@/hooks/useQueryParam';
 import { useFileStore } from '@/store/file';
 
 import NoteEditorModal from '../DocumentExplorer/NoteEditorModal';
@@ -29,7 +29,8 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const [folderName, setFolderName] = useState('');
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
   const createFolder = useFileStore((s) => s.createFolder);
-  const [parentId] = useQueryState('folder');
+  const { currentFolderSlug } = useFolderPath();
+  const parentId = currentFolderSlug;
 
   const handleOpenNoteEditor = () => {
     setIsModalOpen(true);

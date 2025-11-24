@@ -9,8 +9,9 @@ import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
@@ -117,7 +118,9 @@ const FileRenderItem = memo<FileRenderItemProps>(
   }) => {
     const { t } = useTranslation(['components', 'file']);
     const { styles, cx } = useStyles();
+    const navigate = useNavigate();
     const [, setSearchParams] = useSearchParams();
+    const { knowledgeBaseId: currentKnowledgeBaseId, folderPath } = useFolderPath();
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
       fileManagerSelectors.isCreatingFileParseTask(id)(s),
       s.parseFilesToChunks,
@@ -159,15 +162,17 @@ const FileRenderItem = memo<FileRenderItemProps>(
           horizontal
           onClick={() => {
             if (isFolder) {
-              setSearchParams(
-                (prev) => {
-                  const newParams = new URLSearchParams(prev);
-                  // Use slug if available, otherwise fall back to id
-                  newParams.set('folder', slug || id);
-                  return newParams;
-                },
-                { replace: true },
-              );
+              // Navigate to folder using path-based routing
+              const folderSlug = slug || id;
+              const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
+
+              if (baseKnowledgeBaseId) {
+                // Build the new path
+                const newPath = folderPath
+                  ? `/knowledge/bases/${baseKnowledgeBaseId}/${folderPath}/${folderSlug}`
+                  : `/knowledge/bases/${baseKnowledgeBaseId}/${folderSlug}`;
+                navigate(newPath);
+              }
             } else {
               setSearchParams(
                 (prev) => {
