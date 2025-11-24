@@ -1715,6 +1715,9 @@
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã hóa, toán học và STEM, cũng như phân tích các bộ dữ liệu lớn, kho mã và tài liệu bằng ngữ cảnh dài."
   },
+  "google/gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image (Nano Banana Pro) là mô hình tạo hình ảnh của Google, đồng thời hỗ trợ hội thoại đa phương thức."
+  },
   "google/gemini-3-pro-image-preview-free": {
     "description": "Phiên bản miễn phí của Gemini 3 Pro Image, hỗ trợ tạo đa phương thức với hạn mức giới hạn."
   },

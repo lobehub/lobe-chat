@@ -2,6 +2,64 @@
 
 # Changelog
 
+## [Version 2.0.0-next.109](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.108...v2.0.0-next.109)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the knowledge files cant open error.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the knowledge files cant open error, closes [#10386](https://github.com/lobehub/lobe-chat/issues/10386) ([8104c77](https://github.com/lobehub/lobe-chat/commit/8104c77))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10368](https://github.com/lobehub/lobe-chat/issues/10368) ([ed707af](https://github.com/lobehub/lobe-chat/commit/ed707af))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.108](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.107...v2.0.0-next.108)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the pinned session not work.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the pinned session not work, closes [#10323](https://github.com/lobehub/lobe-chat/issues/10323) ([224f999](https://github.com/lobehub/lobe-chat/commit/224f999))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.107](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.106...v2.0.0-next.107)
 
 <sup>Released on **2025-11-23**</sup>
