@@ -51,6 +51,9 @@ describe('request_human_approve executor', () => {
           parentId: 'msg_assistant',
           groupId: assistantMessage.groupId,
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -205,6 +208,9 @@ describe('request_human_approve executor', () => {
         expect.objectContaining({
           groupId: 'group_123',
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -231,6 +237,9 @@ describe('request_human_approve executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           parentId: 'msg_assistant_456',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });
@@ -329,6 +338,9 @@ describe('request_human_approve executor', () => {
             }),
             tool_call_id: toolCall.id,
             pluginIntervention: { status: 'pending' },
+          }),
+          expect.objectContaining({
+            operationId: expect.any(String),
           }),
         );
       });
@@ -538,6 +550,9 @@ describe('request_human_approve executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           parentId: 'msg_3_last',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });

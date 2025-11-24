@@ -108,7 +108,11 @@ export const localSystemSlice: StateCreator<
   },
 
   reSearchLocalFiles: async (id, params) => {
-    await get().optimisticUpdatePluginArguments(id, params);
+    // Get operationId from messageOperationMap to ensure proper context isolation
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
+
+    await get().optimisticUpdatePluginArguments(id, params, false, context);
 
     return get().searchLocalFiles(id, params);
   },

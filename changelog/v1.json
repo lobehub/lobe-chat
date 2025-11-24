@@ -1,6 +1,25 @@
 [
   {
     "children": {
+      "improvements": ["Optimize nana banana pro error message."]
+    },
+    "date": "2025-11-23",
+    "version": "2.0.0-next.107"
+  },
+  {
+    "children": {
+      "features": ["Add nano-banana-pro model support and optimization."]
+    },
+    "date": "2025-11-23",
+    "version": "2.0.0-next.106"
+  },
+  {
+    "children": {},
+    "date": "2025-11-23",
+    "version": "2.0.0-next.105"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-22",

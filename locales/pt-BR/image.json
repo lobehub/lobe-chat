@@ -37,6 +37,14 @@
         "standard": "Padrão"
       }
     },
+    "resolution": {
+      "label": "Resolução",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
+    },
     "seed": {
       "label": "Semente",
       "random": "Semente aleatória"
