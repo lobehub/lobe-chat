@@ -99,7 +99,7 @@ export const agentRouter = router({
 
       const session = await ctx.sessionModel.findByIdOrSlug(input.sessionId);
 
-      if (!session) throw new Error('Session not found');
+      if (!session) throw new Error(`Session [${input.sessionId}] not found`);
       const sessionId = session.id;
 
       return ctx.agentModel.findBySessionId(sessionId);

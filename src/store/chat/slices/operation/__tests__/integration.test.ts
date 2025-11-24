@@ -217,8 +217,8 @@ describe('Operation Management Integration Tests', () => {
       expect(opB.context.topicId).toBe('topic-b');
 
       // Get operations by context
-      const contextA = messageMapKey('session-1', 'topic-a');
-      const contextB = messageMapKey('session-1', 'topic-b');
+      const contextA = messageMapKey({ sessionId: 'session-1', topicId: 'topic-a' });
+      const contextB = messageMapKey({ sessionId: 'session-1', topicId: 'topic-b' });
 
       const opsInA = result.current.operationsByContext[contextA] || [];
       const opsInB = result.current.operationsByContext[contextB] || [];

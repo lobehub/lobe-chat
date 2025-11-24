@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 
-import ErrorMessageExtra, { useErrorContent } from '../../../Error';
+import ErrorMessageExtra, { useErrorContent } from '@/features/Conversation/Error';
 
 export interface ErrorContentProps {
   error?: ChatMessageError;

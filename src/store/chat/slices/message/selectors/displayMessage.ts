@@ -60,7 +60,7 @@ const getMeta = (message: UIChatMessage) => {
  * Get the current chat key for accessing messagesMap
  */
 export const currentDisplayChatKey = (s: ChatStoreState) =>
-  messageMapKey(s.activeId, s.activeTopicId);
+  messageMapKey({ sessionId: s.activeId, topicId: s.activeTopicId });
 
 /**
  * Get display messages by key (with meta information)
@@ -313,7 +313,7 @@ const isSupervisorLoading = (groupId: string) => (s: ChatStoreState) =>
 
 const getSupervisorTodos = (groupId?: string, topicId?: string | null) => (s: ChatStoreState) => {
   if (!groupId) return [];
-  return s.supervisorTodos[messageMapKey(groupId, topicId)] || [];
+  return s.supervisorTodos[messageMapKey({ sessionId: groupId, topicId })] || [];
 };
 
 // ============= Inbox Selectors ========== //
@@ -323,7 +323,7 @@ const getSupervisorTodos = (groupId?: string, topicId?: string | null) => (s: Ch
  */
 const inboxActiveTopicDisplayMessages = (state: ChatStoreState) => {
   const activeTopicId = state.activeTopicId;
-  const key = messageMapKey(INBOX_SESSION_ID, activeTopicId);
+  const key = messageMapKey({ sessionId: INBOX_SESSION_ID, topicId: activeTopicId });
   return state.messagesMap[key] || [];
 };
 

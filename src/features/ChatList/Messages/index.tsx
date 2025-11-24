@@ -15,9 +15,8 @@ import {
 import { getChatStoreState, useChatStore } from '@/store/chat';
 import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
-import ContextMenu from '../components/ContextMenu';
+import ContextMenu from '@/features/Conversation/components/ContextMenu';
 import History from '../components/History';
-import { InPortalThreadContext } from '../context/InPortalThreadContext';
 import { useChatItemContextMenu } from '../hooks/useChatItemContextMenu';
 import AssistantMessage from './Assistant';
 import GroupMessage from './Group';
@@ -200,7 +199,7 @@ const Item = memo<ChatListItemProps>(
     if (!role) return;
 
     return (
-      <InPortalThreadContext.Provider value={inPortalThread}>
+      <>
         {enableHistoryDivider && <History />}
         <Flexbox
           className={cx(styles.message, className, isMessageCreating && styles.loading)}
@@ -222,7 +221,7 @@ const Item = memo<ChatListItemProps>(
           virtuaRef={virtuaRef}
           visible={contextMenuState.visible}
         />
-      </InPortalThreadContext.Provider>
+      </>
     );
   },
   isEqual,

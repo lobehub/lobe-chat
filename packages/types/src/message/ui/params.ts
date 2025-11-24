@@ -68,6 +68,7 @@ export interface CreateNewMessageParams {
 export interface SendMessageParams {
   /**
    * create a thread
+   * @deprecated Use ConversationContext.newThread instead
    */
   createThread?: boolean;
   files?: UploadFileItem[];
@@ -82,6 +83,19 @@ export interface SendMessageParams {
    */
   metadata?: Record<string, any>;
   onlyAddUserMessage?: boolean;
+
+  /**
+   * Display messages for the current conversation context.
+   * If provided, sendMessage will use these messages instead of querying from store.
+   * This decouples sendMessage from store selectors.
+   */
+  messages?: UIChatMessage[];
+
+  /**
+   * Parent message ID for the new message.
+   * If not provided, will be calculated from messages list.
+   */
+  parentId?: string;
 }
 
 export interface SendThreadMessageParams {

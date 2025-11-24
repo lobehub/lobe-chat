@@ -10,7 +10,7 @@ import Portal from '../components/layout/Desktop/Portal';
 import TopicPanel from '../components/layout/Desktop/TopicPanel';
 import ChatHeaderMobile from '../components/layout/Mobile/ChatHeader';
 import TopicModal from '../components/layout/Mobile/TopicModal';
-import ConversationArea from './ConversationArea';
+import Conversation from './conversation';
 import PortalPanel from './PortalPanel';
 import TopicSidebar from './TopicSidebar';
 
@@ -25,7 +25,7 @@ const DesktopWorkspace = memo(() => (
       width={'100%'}
     >
       <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }} width={'100%'}>
-        <ConversationArea mobile={false} />
+        <Conversation mobile={false} />
       </Flexbox>
       <Portal>
         <Suspense fallback={<BrandTextLoading />}>
@@ -45,7 +45,7 @@ DesktopWorkspace.displayName = 'DesktopWorkspace';
 const MobileWorkspace = memo(() => (
   <>
     <MobileContentLayout header={<ChatHeaderMobile />} style={{ overflowY: 'hidden' }}>
-      <ConversationArea mobile />
+      <Conversation mobile />
     </MobileContentLayout>
     <TopicModal>
       <TopicSidebar mobile />

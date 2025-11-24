@@ -49,7 +49,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
-          messagesMap: { [messageMapKey('session-id')]: [toolMessage] },
+          messagesMap: { [messageMapKey({ sessionId: 'session-id' })]: [toolMessage] },
           internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
       });
@@ -100,7 +100,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
-          messagesMap: { [messageMapKey('session-id')]: [nonToolMessage] },
+          messagesMap: { [messageMapKey({ sessionId: 'session-id' })]: [nonToolMessage] },
           internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
       });
@@ -250,8 +250,7 @@ describe('ChatPluginAction', () => {
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        sessionId: undefined,
-        topicId: undefined,
+        context: { sessionId: '', topicId: undefined },
       });
       expect(storeState.triggerAIMessage).not.toHaveBeenCalled(); // 确保在错误情况下不调用此方法
     });
@@ -291,8 +290,7 @@ describe('ChatPluginAction', () => {
       );
 
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        sessionId: 'inbox',
-        topicId: null,
+        context: { sessionId: 'inbox', topicId: null, threadId: undefined },
       });
     });
   });
@@ -334,8 +332,7 @@ describe('ChatPluginAction', () => {
 
       // 验证 replaceMessages 是否被调用
       expect(result.current.replaceMessages).toHaveBeenCalledWith(mockMessages, {
-        sessionId: 'session-id',
-        topicId: 'topic-id',
+        context: { sessionId: 'session-id', topicId: 'topic-id' },
       });
     });
 
@@ -514,8 +511,7 @@ describe('ChatPluginAction', () => {
       });
 
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        sessionId: undefined,
-        topicId: undefined,
+        context: { sessionId: '', topicId: undefined },
       });
     });
   });
@@ -540,7 +536,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
-          messagesMap: { [messageMapKey('session-id')]: [message] },
+          messagesMap: { [messageMapKey({ sessionId: 'session-id' })]: [message] },
           internal_invokeDifferentTypePlugin: internal_invokeDifferentTypePluginMock,
           optimisticUpdateMessagePluginError: vi.fn(),
         });
@@ -579,7 +575,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
-          messagesMap: { [messageMapKey('session-id')]: [message] },
+          messagesMap: { [messageMapKey({ sessionId: 'session-id' })]: [message] },
           internal_invokeDifferentTypePlugin: vi.fn(),
           optimisticUpdateMessagePluginError: internal_updateMessageErrorMock,
         });
@@ -622,7 +618,9 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'anbccfdd',
-          messagesMap: { [messageMapKey('anbccfdd')]: [assistantMessage, toolMessage] },
+          messagesMap: {
+            [messageMapKey({ sessionId: 'anbccfdd' })]: [assistantMessage, toolMessage],
+          },
           refreshMessages: vi.fn(),
         });
       });
@@ -725,8 +723,7 @@ describe('ChatPluginAction', () => {
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        sessionId: undefined,
-        topicId: undefined,
+        context: { sessionId: '', topicId: undefined },
       });
     });
   });
@@ -861,8 +858,7 @@ describe('ChatPluginAction', () => {
         { sessionId: 'inbox', topicId: null },
       );
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        sessionId: 'inbox',
-        topicId: null,
+        context: { sessionId: 'inbox', topicId: null, threadId: undefined },
       });
     });
   });
@@ -890,7 +886,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'anbccfdd',
-          messagesMap: { [messageMapKey('anbccfdd')]: [assistantMessage] },
+          messagesMap: { [messageMapKey({ sessionId: 'anbccfdd' })]: [assistantMessage] },
           refreshMessages: vi.fn(),
         });
       });
@@ -945,8 +941,7 @@ describe('ChatPluginAction', () => {
           { sessionId: contextSessionId, topicId: contextTopicId },
         );
         expect(replaceMessagesSpy).toHaveBeenCalledWith([], {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          context: { sessionId: contextSessionId, topicId: contextTopicId, threadId: undefined },
         });
       });
 
@@ -1031,7 +1026,7 @@ describe('ChatPluginAction', () => {
         } as any;
 
         // Set up both dbMessagesMap and messagesMap
-        const key = messageMapKey(contextSessionId, contextTopicId);
+        const key = messageMapKey({ sessionId: contextSessionId, topicId: contextTopicId });
         let operationId: string;
         act(() => {
           // Create operation with desired context

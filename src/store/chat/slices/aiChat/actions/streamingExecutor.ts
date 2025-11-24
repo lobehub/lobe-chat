@@ -799,13 +799,14 @@ export const streamingExecutor: StateCreator<
       parentMessageType,
       sessionId: paramSessionId,
       topicId: paramTopicId,
+      threadId,
     } = params;
 
     // Use provided sessionId/topicId or fallback to global state
     const { activeId, activeTopicId } = get();
     const sessionId = paramSessionId ?? activeId;
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
-    const messageKey = messageMapKey(sessionId, topicId);
+    const messageKey = messageMapKey({ sessionId, topicId, threadId });
 
     // Create or use provided operation
     let operationId = params.operationId;
@@ -816,7 +817,7 @@ export const streamingExecutor: StateCreator<
           sessionId,
           topicId,
           messageId: parentMessageId,
-          threadId: params.threadId,
+          threadId,
         },
         parentOperationId: params.parentOperationId, // Pass parent operation ID
         label: 'AI Generation',
@@ -973,7 +974,7 @@ export const streamingExecutor: StateCreator<
               });
             }
             const finalMessages = get().messagesMap[messageKey] || [];
-            get().replaceMessages(finalMessages, { sessionId, topicId });
+            get().replaceMessages(finalMessages, { context: { sessionId, topicId, threadId } });
             break;
           }
         }

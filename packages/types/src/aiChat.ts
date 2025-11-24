@@ -4,6 +4,7 @@ import { UIChatMessage } from './message';
 import { OpenAIChatMessage } from './openai/chat';
 import { LobeUniformTool, LobeUniformToolSchema } from './tool';
 import { ChatTopic } from './topic';
+import { ThreadType } from './topic/thread';
 
 export interface SendNewMessage {
   content: string;
@@ -12,7 +13,26 @@ export interface SendNewMessage {
   parentId?: string;
 }
 
+/**
+ * Parameters for creating a new thread along with message
+ */
+export interface CreateThreadWithMessageParams {
+  /** Parent thread ID (for nested threads) */
+  parentThreadId?: string;
+  /** Source message ID that the thread is branched from (optional for standalone threads) */
+  sourceMessageId?: string;
+  /** Optional thread title */
+  title?: string;
+  /** Thread type */
+  type: ThreadType;
+}
+
 export interface SendMessageServerParams {
+  /**
+   * Optional: Create a new thread along with the message
+   * If provided, the message will be created in the newly created thread
+   */
+  newThread?: CreateThreadWithMessageParams;
   newAssistantMessage: {
     model: string;
     provider: string;
@@ -28,11 +48,19 @@ export interface SendMessageServerParams {
   topicId?: string;
 }
 
+export const CreateThreadWithMessageSchema = z.object({
+  parentThreadId: z.string().optional(),
+  sourceMessageId: z.string().optional(),
+  title: z.string().optional(),
+  type: z.nativeEnum(ThreadType),
+});
+
 export const AiSendMessageServerSchema = z.object({
   newAssistantMessage: z.object({
     model: z.string().optional(),
     provider: z.string().optional(),
   }),
+  newThread: CreateThreadWithMessageSchema.optional(),
   newTopic: z
     .object({
       title: z.string().optional(),
@@ -51,6 +79,10 @@ export const AiSendMessageServerSchema = z.object({
 
 export interface SendMessageServerResponse {
   assistantMessageId: string;
+  /**
+   * If a new thread was created, this will be the thread ID
+   */
+  createdThreadId?: string;
   isCreateNewTopic: boolean;
   messages: UIChatMessage[];
   topicId: string;
