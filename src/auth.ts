@@ -1,10 +1,11 @@
 import { serverDB } from '@lobechat/database';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { genericOAuth } from 'better-auth/plugins';
+import { genericOAuth, magicLink } from 'better-auth/plugins';
 
 import { authEnv } from '@/envs/auth';
 import {
+  getMagicLinkEmailTemplate,
   getResetPasswordEmailTemplate,
   getVerificationEmailTemplate,
 } from '@/libs/better-auth/email-templates';
@@ -14,6 +15,8 @@ import { emailService } from '@/server/services/email';
 // Email verification link expiration time (in seconds)
 // Default is 1 hour (3600 seconds) as per Better Auth documentation
 const VERIFICATION_LINK_EXPIRES_IN = 3600;
+const MAGIC_LINK_EXPIRES_IN = 900;
+const enableMagicLink = authEnv.NEXT_PUBLIC_ENABLE_MAGIC_LINK;
 
 const { socialProviders, genericOAuthProviders } = initBetterAuthSSOProviders();
 
@@ -55,14 +58,33 @@ export const auth = betterAuth({
     },
   },
 
-  plugins:
-    genericOAuthProviders.length > 0
+  plugins: [
+    ...(genericOAuthProviders.length > 0
       ? [
           genericOAuth({
             config: genericOAuthProviders,
           }),
         ]
-      : undefined,
+      : []),
+    ...(enableMagicLink
+      ? [
+          magicLink({
+            expiresIn: MAGIC_LINK_EXPIRES_IN,
+            sendMagicLink: async ({ email, url }) => {
+              const template = getMagicLinkEmailTemplate({
+                expiresInSeconds: MAGIC_LINK_EXPIRES_IN,
+                url,
+              });
+
+              await emailService.sendMail({
+                to: email,
+                ...template,
+              });
+            },
+          }),
+        ]
+      : []),
+  ],
   socialProviders,
 
   user: {

@@ -114,6 +114,7 @@ export const getAuthConfig = () => {
       NEXT_PUBLIC_ENABLE_BETTER_AUTH: z.boolean().optional(),
       NEXT_PUBLIC_BETTER_AUTH_URL: z.string().optional(),
       NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION: z.boolean().optional().default(false),
+      NEXT_PUBLIC_ENABLE_MAGIC_LINK: z.boolean().optional().default(false),
 
       // ---------------------------------- next auth ----------------------------------
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: z.boolean().optional(),
@@ -234,6 +235,7 @@ export const getAuthConfig = () => {
       NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
       NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION:
         process.env.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION === '1',
+      NEXT_PUBLIC_ENABLE_MAGIC_LINK: process.env.NEXT_PUBLIC_ENABLE_MAGIC_LINK === '1',
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
       BETTER_AUTH_SSO_PROVIDERS: process.env.BETTER_AUTH_SSO_PROVIDERS,
 

@@ -1,6 +1,7 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { account } from '@/database/schemas/betterAuth';
 import { users } from '@/database/schemas/user';
 import { serverDB } from '@/database/server';
 
@@ -32,9 +33,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ exists: false });
     }
 
+    const accounts = await serverDB
+      .select({
+        password: account.password,
+        providerId: account.providerId,
+      })
+      .from(account)
+      .where(and(eq(account.userId, user.id)));
+
+    const providers = Array.from(new Set(accounts.map((a) => a.providerId).filter(Boolean)));
+    const hasPassword = accounts.some(
+      (a) =>
+        a.providerId === 'credential' && typeof a.password === 'string' && a.password.length > 0,
+    );
+
     return NextResponse.json({
       emailVerified: user.emailVerified,
       exists: true,
+      hasPassword,
+      providers,
     });
   } catch (error) {
     console.error('Error checking user existence:', error);

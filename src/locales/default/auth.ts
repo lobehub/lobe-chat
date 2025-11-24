@@ -79,6 +79,9 @@ export default {
         title: '登录',
       },
       error: '登录失败，请检查邮箱和密码',
+      magicLinkButton: '发送魔法链接',
+      magicLinkError: '发送魔法链接失败，请稍后再试',
+      magicLinkSent: '魔法链接已发送，请检查邮箱',
       nextStep: '下一步',
       noAccount: '还没有账号？',
       orContinueWith: '或',
@@ -88,6 +91,7 @@ export default {
       },
       signupLink: '立即注册',
       socialError: '社交登录失败，请重试',
+      socialOnlyHint: '该邮箱使用社交账号注册，请使用社交账号登录',
       submit: '登录',
     },
     signup: {

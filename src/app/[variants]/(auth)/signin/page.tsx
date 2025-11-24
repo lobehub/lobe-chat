@@ -12,6 +12,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { message } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
+import { getAuthConfig } from '@/envs/auth';
 import { signIn } from '@/libs/better-auth/auth-client';
 import { isBuiltinProvider, normalizeProviderId } from '@/libs/better-auth/utils/client';
 import { useUserStore } from '@/store/user';
@@ -88,6 +89,7 @@ export default function SignInPage() {
   const { t } = useTranslation('auth');
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { NEXT_PUBLIC_ENABLE_MAGIC_LINK: enableMagicLink } = getAuthConfig();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
@@ -105,6 +107,42 @@ export default function SignInPage() {
       passwordInputRef.current?.focus();
     }
   }, [step]);
+
+  const handleSendMagicLink = async (targetEmail?: string) => {
+    try {
+      const emailValue =
+        targetEmail ||
+        (await form
+          .validateFields(['email'])
+          .then((v) => v.email as string)
+          .catch(() => null));
+
+      if (!emailValue) {
+        return;
+      }
+
+      const callbackUrl = searchParams.get('callbackUrl') || '/';
+      const { error } = await signIn.magicLink({
+        callbackURL: callbackUrl,
+        email: emailValue,
+      });
+
+      if (error) {
+        message.error(error.message || t('betterAuth.signin.magicLinkError'));
+        return;
+      }
+
+      message.success(t('betterAuth.signin.magicLinkSent'));
+    } catch (error) {
+      // validation errors are surfaced by antd form; only log unexpected errors
+      if (!(error as any)?.errorFields) {
+        console.error('Magic link error:', error);
+        message.error(t('betterAuth.signin.magicLinkError'));
+      }
+    } finally {
+      // no-op
+    }
+  };
 
   // Check if user exists
   const handleCheckUser = async (values: Pick<SignInFormValues, 'email'>) => {
@@ -127,9 +165,19 @@ export default function SignInPage() {
         return;
       }
 
-      // User exists, move to password step
       setEmail(values.email);
-      setStep('password');
+
+      if (enableMagicLink) {
+        await handleSendMagicLink(values.email);
+        return;
+      }
+
+      if (data.hasPassword) {
+        setStep('password');
+        return;
+      }
+
+      message.info(t('betterAuth.signin.socialOnlyHint'));
     } catch (error) {
       console.error('Error checking user:', error);
       message.error(t('betterAuth.signin.error'));
