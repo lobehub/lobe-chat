@@ -128,4 +128,6 @@ export interface MessageMetadata extends ModelUsage, ModelPerformance {
    * Flag indicating if message content is multimodal (serialized MessageContentPart[])
    */
   isMultimodal?: boolean;
+  // message content is multimodal, display content in the streaming, won't save to db
+  tempDisplayContent?: string;
 }

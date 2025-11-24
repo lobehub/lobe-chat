@@ -7,6 +7,7 @@ import { convertGoogleAIUsage } from '../../usageConverters/google-ai';
 import {
   ChatPayloadForTransformStream,
   StreamContext,
+  StreamPartChunkData,
   StreamProtocolChunk,
   StreamToolCallChunkData,
   createCallbacksTransformer,
@@ -114,12 +115,74 @@ const transformGoogleGenerativeAIStream = (
       .join('') || '';
 
   if (candidate) {
-    // 首先检查是否为 reasoning 内容 (thought: true)
+    // Process multimodal parts (text and images in reasoning or content)
     if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
+      const results: StreamProtocolChunk[] = [];
+
       for (const part of candidate.content.parts) {
+        // 1. Reasoning text part
         if (part && part.text && part.thought === true) {
-          return { data: part.text, id: context.id, type: 'reasoning' };
+          results.push({
+            data: {
+              content: part.text,
+              inReasoning: true,
+              partType: 'text',
+              thoughtSignature: part.thoughtSignature,
+            } as StreamPartChunkData,
+            id: context.id,
+            type: 'reasoning_part',
+          });
         }
+
+        // 2. Reasoning image part
+        else if (part && part.inlineData && part.thought === true) {
+          results.push({
+            data: {
+              content: part.inlineData.data,
+              inReasoning: true,
+              mimeType: part.inlineData.mimeType,
+              partType: 'image',
+              thoughtSignature: part.thoughtSignature,
+            } as StreamPartChunkData,
+            id: context.id,
+            type: 'reasoning_part',
+          });
+        }
+
+        // 3. Content text part
+        else if (part && part.text && !part.thought) {
+          results.push({
+            data: {
+              content: part.text,
+              partType: 'text',
+              thoughtSignature: part.thoughtSignature,
+            } as StreamPartChunkData,
+            id: context.id,
+            type: 'content_part',
+          });
+        }
+
+        // 4. Content image part
+        else if (part && part.inlineData && !part.thought) {
+          results.push({
+            data: {
+              content: part.inlineData.data,
+              mimeType: part.inlineData.mimeType,
+              partType: 'image',
+              thoughtSignature: part.thoughtSignature,
+            } as StreamPartChunkData,
+            id: context.id,
+            type: 'content_part',
+          });
+        }
+      }
+
+      // If we found multimodal parts, return them with usage chunks
+      if (results.length > 0) {
+        if (candidate.finishReason && usageMetadata) {
+          results.push(...usageChunks);
+        }
+        return results;
       }
     }
 

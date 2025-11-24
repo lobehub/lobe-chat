@@ -52,6 +52,7 @@ export interface ModelReasoning {
    */
   isMultimodal?: boolean;
   signature?: string;
+  tempDisplayContent?: MessageContentPart[];
 }
 
 export const ModelReasoningSchema = z.object({
