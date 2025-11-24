@@ -12,12 +12,17 @@ import { useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
+import { useUrlHydrationStore } from '@/store/urlHydration';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
 const StoreInitialization = memo(() => {
   // prefetch error ns to avoid don't show error content correctly
   useTranslation('error');
+
+  // Initialize from URL (one-time)
+  const initAgentPinnedFromUrl = useUrlHydrationStore((s) => s.initAgentPinnedFromUrl);
+  initAgentPinnedFromUrl();
 
   const router = useRouter();
   const [isLogin, isSignedIn, useInitUserState] = useUserStore((s) => [

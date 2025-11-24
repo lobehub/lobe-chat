@@ -1715,6 +1715,9 @@
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和 STEM 領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
   },
+  "google/gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image（Nano Banana Pro）是 Google 的圖像生成模型，同時支援多模態對話。"
+  },
   "google/gemini-3-pro-image-preview-free": {
     "description": "Gemini 3 Pro Image 免費版，支援有限額度的多模態生成。"
   },

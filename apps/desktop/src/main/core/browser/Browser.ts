@@ -336,6 +336,7 @@ export default class Browser {
       vibrancy: 'sidebar',
       visualEffectState: 'active',
       webPreferences: {
+        backgroundThrottling: false,
         contextIsolation: true,
         preload: join(preloadDir, 'index.js'),
       },

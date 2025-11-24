@@ -3,18 +3,22 @@
 import { isDesktop } from '@lobechat/const';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ReactNode, memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { MouseEvent, ReactNode, memo, use, useCallback, useEffect, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import {
+  VirtuaContext,
   removeVirtuaVisibleItem,
   upsertVirtuaVisibleItem,
 } from '@/features/ChatList/components/VirtualizedList/VirtuosoContext';
 import { getChatStoreState, useChatStore } from '@/store/chat';
 import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
+import ContextMenu from '../components/ContextMenu';
 import History from '../components/History';
 import { InPortalThreadContext } from '../context/InPortalThreadContext';
+import { useChatItemContextMenu } from '../hooks/useChatItemContextMenu';
 import AssistantMessage from './Assistant';
 import GroupMessage from './Group';
 import SupervisorMessage from './Supervisor';
@@ -58,17 +62,38 @@ const Item = memo<ChatListItemProps>(
   }) => {
     const { styles, cx } = useStyles();
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const virtuaRef = use(VirtuaContext);
+    const searchParams = useSearchParams();
+    const topic = searchParams.get('topic');
 
-    const [role, isMessageCreating] = useChatStore((s) => [
-      displayMessageSelectors.getDisplayMessageById(id)(s)?.role,
-      messageStateSelectors.isMessageCreating(id)(s),
-    ]);
+    const [role, editing, isMessageCreating] = useChatStore((s) => {
+      const item = displayMessageSelectors.getDisplayMessageById(id)(s);
+      return [
+        item?.role,
+        messageStateSelectors.isMessageEditing(id)(s),
+        messageStateSelectors.isMessageCreating(id)(s),
+      ];
+    }, isEqual);
+
+    const {
+      containerRef: contextMenuContainerRef,
+      contextMenuState,
+      handleContextMenu,
+      hideContextMenu,
+    } = useChatItemContextMenu({
+      editing,
+      onActionClick: () => {},
+    });
+
+    const setContainerRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        containerRef.current = node;
+        contextMenuContainerRef.current = node;
+      },
+      [contextMenuContainerRef],
+    );
 
     // ======================= Performance Optimization ======================= //
-    // these useMemo/useCallback are all for the performance optimization
-    // maybe we can remove it in React 19
-    // ======================================================================== //
-
     useEffect(() => {
       if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
 
@@ -107,22 +132,32 @@ const Item = memo<ChatListItemProps>(
       };
     }, [index]);
 
-    const onContextMenu = useCallback(async () => {
-      const item = displayMessageSelectors.getDisplayMessageById(id)(getChatStoreState());
+    const onContextMenu = useCallback(
+      async (event: MouseEvent<HTMLDivElement>) => {
+        if (!role || (role !== 'user' && role !== 'assistant')) return;
 
-      if (isDesktop && item) {
-        const { electronSystemService } = await import('@/services/electron/system');
+        const item = displayMessageSelectors.getDisplayMessageById(id)(getChatStoreState());
+        if (!item) return;
 
-        electronSystemService.showContextMenu('chat', {
-          content: item.content,
-          hasError: !!item.error,
-          messageId: id,
-          role: item.role,
-        });
-      }
-    }, [id]);
+        if (isDesktop) {
+          const { electronSystemService } = await import('@/services/electron/system');
 
-    const renderContent = useMemo(() => {
+          electronSystemService.showContextMenu('chat', {
+            content: item.content,
+            hasError: !!item.error,
+            messageId: id,
+            role: item.role,
+          });
+
+          return;
+        }
+
+        handleContextMenu(event);
+      },
+      [handleContextMenu, id, role],
+    );
+
+    const renderContent = useCallback(() => {
       switch (role) {
         case 'user': {
           return <UserMessage disableEditing={disableEditing} id={id} index={index} />;
@@ -171,11 +206,22 @@ const Item = memo<ChatListItemProps>(
           className={cx(styles.message, className, isMessageCreating && styles.loading)}
           data-index={index}
           onContextMenu={onContextMenu}
-          ref={containerRef}
+          ref={setContainerRef}
         >
-          {renderContent}
+          {renderContent()}
           {endRender}
         </Flexbox>
+        <ContextMenu
+          id={id}
+          inPortalThread={inPortalThread}
+          index={index}
+          onClose={hideContextMenu}
+          position={contextMenuState.position}
+          selectedText={contextMenuState.selectedText}
+          topic={topic}
+          virtuaRef={virtuaRef}
+          visible={contextMenuState.visible}
+        />
       </InPortalThreadContext.Provider>
     );
   },
