@@ -239,7 +239,6 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log('click');
             }}
             size={'small'}
           />
