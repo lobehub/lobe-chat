@@ -163,7 +163,7 @@ const FolderTreeItem = memo<{
           </Flexbox>
         </Flexbox>
 
-        {item.isFolder && isExpanded && item.children && (
+        {item.isFolder && isExpanded && item.children && item.children.length > 0 && (
           <motion.div
             animate={{ height: 'auto', opacity: 1 }}
             initial={{ height: 0, opacity: 0 }}
