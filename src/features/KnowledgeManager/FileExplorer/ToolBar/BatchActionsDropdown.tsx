@@ -1,6 +1,7 @@
 import { Button, Icon } from '@lobehub/ui';
 import { App, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
+import { useTheme } from 'antd-style';
 import {
   BookMinusIcon,
   BookPlusIcon,
@@ -31,6 +32,7 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
   ({ selectCount, isInKnowledgeBase, onActionClick, disabled }) => {
     const { t } = useTranslation(['components', 'common']);
     const { modal, message } = App.useApp();
+    const theme = useTheme();
 
     const menuItems = useMemo<MenuProps['items']>(() => {
       const items: MenuProps['items'] = [];
@@ -123,8 +125,8 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
           type="text"
         >
           <Flexbox align={'center'} gap={4} horizontal>
-            <Icon icon={CircleEllipsisIcon} size={18} />
-            <Icon icon={ChevronDownIcon} size={14} />
+            <Icon color={theme.colorIcon} icon={CircleEllipsisIcon} size={18} />
+            <Icon color={theme.colorIcon} icon={ChevronDownIcon} size={14} />
           </Flexbox>
         </Button>
       </Dropdown>

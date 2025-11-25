@@ -304,7 +304,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
           <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
             <ExpandableSearch />
             <BatchActionsDropdown
-              disabled={selectFileIds.length === 0}
+              // disabled={selectFileIds.length === 0}
               isInKnowledgeBase={!!knowledgeBaseId}
               onActionClick={onActionClick}
               selectCount={selectFileIds.length}
