@@ -1,9 +1,14 @@
 import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
 import { ModelProvider } from 'model-bank';
 
+import { hasTemperatureTopPConflict } from '../../const/models';
 import { LobeRuntimeAI } from '../../core/BaseAI';
-import { buildAnthropicMessages, buildAnthropicTools } from '../../core/contextBuilders/anthropic';
-import { MODEL_PARAMETER_CONFLICTS, resolveParameters } from '../../core/parameterResolver';
+import {
+  buildAnthropicMessages,
+  buildAnthropicTools,
+  buildSearchTool,
+} from '../../core/contextBuilders/anthropic';
+import { resolveParameters } from '../../core/parameterResolver';
 import { AnthropicStream } from '../../core/streams';
 import {
   type ChatCompletionErrorPayload,
@@ -160,20 +165,8 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     });
 
     if (enabledSearch) {
-      // Limit the number of searches per request
-      const maxUses = process.env.ANTHROPIC_MAX_USES;
+      const webSearchTool = buildSearchTool();
 
-      const webSearchTool: Anthropic.WebSearchTool20250305 = {
-        name: 'web_search',
-        type: 'web_search_20250305',
-        ...(maxUses &&
-          Number.isInteger(Number(maxUses)) &&
-          Number(maxUses) > 0 && {
-            max_uses: Number(maxUses),
-          }),
-      };
-
-      // 如果已有工具，则添加到现有工具列表中；否则创建新的工具列表
       if (postTools && postTools.length > 0) {
         postTools = [...postTools, webSearchTool];
       } else {
@@ -200,7 +193,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     }
 
     // Resolve temperature and top_p parameters based on model constraints
-    const hasConflict = MODEL_PARAMETER_CONFLICTS.ANTHROPIC_CLAUDE_4_PLUS.has(model);
+    const hasConflict = hasTemperatureTopPConflict(model);
     const resolvedParams = resolveParameters(
       { temperature, top_p },
       { hasConflict, normalizeTemperature: true, preferTemperature: true },

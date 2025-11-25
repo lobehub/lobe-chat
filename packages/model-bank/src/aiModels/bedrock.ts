@@ -13,7 +13,7 @@ const bedrockChatModels: AIChatModelCard[] = [
       'Claude Opus 4.5 是 Anthropic 的旗舰模型，结合了卓越的智能与可扩展性能，适合需要最高质量回应和推理能力的复杂任务。',
     displayName: 'Claude Opus 4.5',
     enabled: true,
-    id: 'us.anthropic.claude-opus-4-5-20251101-v1:0',
+    id: 'global.anthropic.claude-opus-4-5-20251101-v1:0',
     maxOutput: 64_000,
     pricing: {
       units: [
@@ -23,6 +23,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-11-24',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -45,6 +48,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-09-29',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -68,6 +74,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-10-15',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   /*
@@ -111,6 +120,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-02-24',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -131,6 +143,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-10-22',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -151,6 +166,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-10-22',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -171,6 +189,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-06-20',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -191,6 +212,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-03-07',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -228,6 +252,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-02-29',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {

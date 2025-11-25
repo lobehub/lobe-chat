@@ -6,9 +6,10 @@ import {
 } from '@aws-sdk/client-bedrock-runtime';
 import { ModelProvider } from 'model-bank';
 
+import { hasTemperatureTopPConflict } from '../../const/models';
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { buildAnthropicMessages, buildAnthropicTools } from '../../core/contextBuilders/anthropic';
-import { MODEL_PARAMETER_CONFLICTS, resolveParameters } from '../../core/parameterResolver';
+import { resolveParameters } from '../../core/parameterResolver';
 import {
   AWSBedrockClaudeStream,
   AWSBedrockLlamaStream,
@@ -172,7 +173,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     const user_messages = messages.filter((m) => m.role !== 'system');
 
     // Resolve temperature and top_p parameters based on model constraints
-    const hasConflict = MODEL_PARAMETER_CONFLICTS.BEDROCK_CLAUDE_4_PLUS.has(model);
+    const hasConflict = hasTemperatureTopPConflict(model);
     const resolvedParams = resolveParameters(
       { temperature, top_p },
       { hasConflict, normalizeTemperature: true, preferTemperature: true },
@@ -190,12 +191,16 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         ] as Anthropic.TextBlockParam[])
       : undefined;
 
+    const postTools = buildAnthropicTools(tools, {
+      enabledContextCaching,
+    });
+
     const anthropicBase = {
       anthropic_version: 'bedrock-2023-05-31',
       max_tokens: resolvedMaxTokens,
       messages: await buildAnthropicMessages(user_messages, { enabledContextCaching }),
       system: systemPrompts,
-      tools: buildAnthropicTools(tools, { enabledContextCaching }),
+      tools: postTools,
     };
 
     const anthropicPayload =
