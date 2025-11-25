@@ -1,6 +1,7 @@
 import { Button, Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
+import { useTheme } from 'antd-style';
 import { ChevronDownIcon, Grid3x3Icon, ListIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +16,7 @@ interface ViewSwitcherProps {
 
 const ViewSwitcher = memo<ViewSwitcherProps>(({ onViewChange, view }) => {
   const { t } = useTranslation('components');
+  const theme = useTheme();
 
   const currentViewIcon = view === 'list' ? ListIcon : Grid3x3Icon;
   const currentViewLabel =
@@ -45,8 +47,8 @@ const ViewSwitcher = memo<ViewSwitcherProps>(({ onViewChange, view }) => {
     >
       <Button style={{ paddingInline: 4 }} title={currentViewLabel} type="text">
         <Flexbox align={'center'} gap={4} horizontal>
-          <Icon icon={currentViewIcon} size={18} />
-          <Icon icon={ChevronDownIcon} size={14} />
+          <Icon color={theme.colorIcon} icon={currentViewIcon} size={18} />
+          <Icon color={theme.colorIcon} icon={ChevronDownIcon} size={14} />
         </Flexbox>
       </Button>
     </Dropdown>

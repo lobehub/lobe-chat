@@ -23,9 +23,9 @@ interface KnowledgeManagerProps {
 }
 
 /**
- * Manage knowledge items. Can be all items or certian knowledge base.
+ * Manage knowledge items. Can be all items or certian repo.
  *
- * DocumentExplorer: For the "documents" category.
+ * DocumentExplorer: For the "pages" category.
  * Home: For the "home" category.
  * FileExplorer: For other categories.
  */
@@ -46,7 +46,6 @@ const KnowledgeManager = memo<KnowledgeManagerProps>(
 
     return (
       <>
-        {/* {!isDocumentsView && <Header knowledgeBaseId={knowledgeBaseId} />} */}
         <Flexbox gap={12} height={'100%'}>
           {isDocumentsView ? (
             <DocumentExplorer documentId={documentId} knowledgeBaseId={knowledgeBaseId} />
