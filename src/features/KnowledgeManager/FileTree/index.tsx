@@ -18,8 +18,12 @@ import TreeSkeleton from './TreeSkeleton';
 const useStyles = createStyles(({ css, token }) => ({
   fileItem: css`
     cursor: pointer;
-    padding: 4px 8px;
+
+    padding-block: 4px;
+    padding-inline: 8px;
+
     color: ${token.colorText};
+
     transition: background-color 0.2s;
 
     &:hover {
@@ -31,8 +35,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   folderHeader: css`
     cursor: pointer;
-    padding: 4px 8px;
+
+    padding-block: 4px;
+    padding-inline: 8px;
+
     color: ${token.colorTextSecondary};
+
     transition: background-color 0.2s;
 
     &:hover {
@@ -151,7 +159,13 @@ const FolderTreeItem = memo<{
           ) : (
             <div style={{ width: 24 }} />
           )}
-          <Flexbox align={'center'} flex={1} gap={8} horizontal style={{ minHeight: 28 }}>
+          <Flexbox
+            align={'center'}
+            flex={1}
+            gap={8}
+            horizontal
+            style={{ minHeight: 28, minWidth: 0 }}
+          >
             {item.isFolder ? (
               <Icon icon={isExpanded ? FolderOpenIcon : FolderIcon} size={16} />
             ) : item.sourceType === 'document' ? (
@@ -159,7 +173,18 @@ const FolderTreeItem = memo<{
             ) : (
               <FileIcon fileName={item.name} fileType={item.fileType} size={16} />
             )}
-            <span style={{ flex: 1, fontSize: 14, lineHeight: '20px' }}>{item.name}</span>
+            <span
+              style={{
+                flex: 1,
+                fontSize: 14,
+                lineHeight: '20px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {item.name}
+            </span>
           </Flexbox>
         </Flexbox>
 
