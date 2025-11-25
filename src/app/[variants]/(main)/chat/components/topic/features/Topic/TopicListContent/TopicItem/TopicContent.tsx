@@ -97,15 +97,15 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       },
       ...(isDesktop
         ? [
-            {
-              icon: <Icon icon={ExternalLink} />,
-              key: 'openInNewWindow',
-              label: t('actions.openInNewWindow'),
-              onClick: () => {
-                openTopicInNewWindow(activeId, id);
-              },
+          {
+            icon: <Icon icon={ExternalLink} />,
+            key: 'openInNewWindow',
+            label: t('actions.openInNewWindow'),
+            onClick: () => {
+              openTopicInNewWindow(activeId, id);
             },
-          ]
+          },
+        ]
         : []),
       {
         type: 'divider',
@@ -237,7 +237,9 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
             className="topic-more"
             icon={MoreVertical}
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
+              console.log('click');
             }}
             size={'small'}
           />

@@ -67,6 +67,9 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav, threadId }) =
     <Flexbox style={{ position: 'relative' }}>
       <Link
         onClick={(e) => {
+          if (e.button === 0 && (e.metaKey || e.ctrlKey)) {
+            return;
+          }
           e.preventDefault();
           toggleTopic(id);
           toggleConfig(false);
