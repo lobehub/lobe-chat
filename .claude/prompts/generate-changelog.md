@@ -120,6 +120,8 @@ If there are multiple significant PRs:
 
 ### 6. Create Pull Request
 
+**IMPORTANT**: If running in **DRY RUN MODE**, skip this step entirely. Instead, provide a summary of what would be created.
+
 - Create a new branch: `automatic/changelog-YYYY-MM-DD`
 - Commit changes with message:
   ```
@@ -151,6 +153,23 @@ If there are multiple significant PRs:
 
     🤖 Generated with [Claude Code](https://claude.com/claude-code)
     ```
+
+## Dry Run Mode
+
+If the workflow is running in **DRY RUN MODE**:
+
+- **DO** fetch and analyze PRs as normal
+- **DO** generate changelog content and show it in your response
+- **DO** show what files would be created and their content
+- **DO** show what the index.json update would look like
+- **DO NOT** actually create any files
+- **DO NOT** create any branches or PRs
+- **DO NOT** commit any changes
+- **DO** provide a clear summary at the end showing:
+  - Number of PRs analyzed
+  - Number of changelog entries that would be created
+  - Preview of the changelog content
+  - What the index.json update would be
 
 ## Important Rules
 

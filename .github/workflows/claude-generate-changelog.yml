@@ -12,6 +12,11 @@ on:
         required: false
         type: string
         default: '7'
+      dry_run:
+        description: 'Run in dry-run mode (no PR creation, just preview)'
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: generate-changelog
@@ -59,10 +64,13 @@ jobs:
 
             Collect all merged pull requests from the last ${{ inputs.days_back || '7' }} days and generate user-friendly changelog entries.
 
+            ${{ inputs.dry_run && '**DRY RUN MODE**: This is a test run. Do NOT create any PRs or commit changes. Only analyze PRs and show what would be generated.' || '' }}
+
             ## Environment Information
             - Repository: ${{ github.repository }}
             - Branch: ${{ github.ref_name }}
             - Days to look back: ${{ inputs.days_back || '7' }} days
+            - Dry Run: ${{ inputs.dry_run }}
             - Run ID: ${{ github.run_id }}
             - Current Date: $(date +%Y-%m-%d)
 
