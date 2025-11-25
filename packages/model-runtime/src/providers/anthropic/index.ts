@@ -22,6 +22,7 @@ import { StreamingResponse } from '../../utils/response';
 import { createAnthropicGenerateObject } from './generateObject';
 import { handleAnthropicError } from './handleAnthropicError';
 import { resolveCacheTTL } from './resolveCacheTTL';
+import { resolveMaxTokens } from './resolveMaxTokens';
 
 export interface AnthropicModelCard {
   created_at: string;
@@ -30,8 +31,6 @@ export interface AnthropicModelCard {
 }
 
 type anthropicTools = Anthropic.Tool | Anthropic.WebSearchTool20250305;
-
-const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
 
@@ -139,16 +138,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       enabledSearch,
     } = payload;
 
-    const { anthropic: anthropicModels } = await import('model-bank');
-    const modelConfig = anthropicModels.find((m) => m.id === model);
-    const defaultMaxOutput = modelConfig?.maxOutput;
-
-    // 配置优先级：用户设置 > 模型配置 > 硬编码默认值
-    const getMaxTokens = () => {
-      if (max_tokens) return max_tokens;
-      if (defaultMaxOutput) return defaultMaxOutput;
-      return undefined;
-    };
+    const resolvedMaxTokens = await resolveMaxTokens({ max_tokens, model, thinking });
 
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
@@ -192,19 +182,17 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     }
 
     if (!!thinking && thinking.type === 'enabled') {
-      const maxTokens = getMaxTokens() || 32_000; // Claude Opus 4 has minimum maxOutput
-
       // `temperature` may only be set to 1 when thinking is enabled.
       // `top_p` must be unset when thinking is enabled.
       return {
-        max_tokens: maxTokens,
+        max_tokens: resolvedMaxTokens,
         messages: postMessages,
         model,
         system: systemPrompts,
         thinking: {
           ...thinking,
           budget_tokens: thinking?.budget_tokens
-            ? Math.min(thinking.budget_tokens, maxTokens - 1) // `max_tokens` must be greater than `thinking.budget_tokens`.
+            ? Math.min(thinking.budget_tokens, resolvedMaxTokens - 1) // `max_tokens` must be greater than `thinking.budget_tokens`.
             : 1024,
         },
         tools: postTools,
@@ -221,7 +209,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     return {
       // claude 3 series model hax max output token of 4096, 3.x series has 8192
       // https://docs.anthropic.com/en/docs/about-claude/models/all-models#:~:text=200K-,Max%20output,-Normal%3A
-      max_tokens: getMaxTokens() || (modelsWithSmallContextWindow.has(model) ? 4096 : 8192),
+      max_tokens: resolvedMaxTokens,
       messages: postMessages,
       model,
       system: systemPrompts,
