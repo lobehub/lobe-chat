@@ -43,51 +43,63 @@ export const responsesAPIModels = new Set([
 ]);
 
 /**
- * models support context caching
+ * Regex patterns for models that support context caching (3.5+)
  */
-export const contextCachingModels = new Set([
-  'claude-opus-4-5-20251101',
-  'claude-haiku-4-5-20251001',
-  'claude-sonnet-4-5-latest',
-  'claude-sonnet-4-5-20250929',
-  'anthropic/claude-sonnet-4.5',
-  'claude-opus-4-latest',
-  'claude-opus-4-20250514',
-  'claude-sonnet-4-latest',
-  'claude-sonnet-4-20250514',
-  'claude-3-7-sonnet-latest',
-  'claude-3-7-sonnet-20250219',
-  'claude-3-5-sonnet-latest',
-  'claude-3-5-sonnet-20241022',
-  'claude-3-5-sonnet-20240620',
-  'claude-3-5-haiku-latest',
-  'claude-3-5-haiku-20241022',
-  // Bedrock model IDs
-  'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
-  'anthropic.claude-sonnet-4-5-20250929-v1:0',
-  'us.anthropic.claude-haiku-4-5-20251001-v1:0',
-  'anthropic.claude-haiku-4-5-20251001-v1:0',
-  'global.anthropic.claude-opus-4-5-20251101-v1:0',
-  'anthropic.claude-opus-4-5-20251101-v1:0',
-]);
+export const contextCachingModelPatterns: RegExp[] = [
+  // Claude 4.5 series - Anthropic API
+  /^claude-(opus|sonnet|haiku)-4-5-/,
+  // Claude 4 series - Anthropic API
+  /^claude-(opus|sonnet)-4-/,
+  // Claude 3.7 - Anthropic API
+  /^claude-3-7-sonnet-/,
+  // Claude 3.5 series - Anthropic API
+  /^claude-3-5-(sonnet|haiku)-/,
+  // OpenRouter format (3.5+)
+  /^anthropic\/claude-(opus|sonnet|haiku)-(4\.5|4|3\.7|3\.5)/,
+  /^anthropic\/claude-(4\.5|4|3\.7|3\.5)-(opus|sonnet|haiku)/,
+  // AWS Bedrock format: [region.]anthropic.claude-xxx
+  /anthropic\.claude-(opus|sonnet|haiku)-(4-5|4|3-7|3-5)-/,
+];
 
-export const thinkingWithToolClaudeModels = new Set([
-  'claude-opus-4-5-20251101',
-  'claude-opus-4-latest',
-  'claude-opus-4-20250514',
-  'claude-sonnet-4-latest',
-  'claude-sonnet-4-20250514',
-  'claude-sonnet-4-5-latest',
-  'claude-sonnet-4-5-20250929',
-  'claude-haiku-4-5-20251001',
-  'anthropic/claude-sonnet-4.5',
-  'claude-3-7-sonnet-latest',
-  'claude-3-7-sonnet-20250219',
-  // Bedrock model IDs
-  'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
-  'anthropic.claude-sonnet-4-5-20250929-v1:0',
-  'us.anthropic.claude-haiku-4-5-20251001-v1:0',
-  'anthropic.claude-haiku-4-5-20251001-v1:0',
-  'global.anthropic.claude-opus-4-5-20251101-v1:0',
-  'anthropic.claude-opus-4-5-20251101-v1:0',
-]);
+export const isContextCachingModel = (model: string): boolean => {
+  return contextCachingModelPatterns.some((pattern) => pattern.test(model));
+};
+
+/**
+ * Regex patterns for Claude models that support thinking with tools (3.7+)
+ */
+export const thinkingWithToolClaudeModelPatterns: RegExp[] = [
+  // Claude 4.5 series - Anthropic API
+  /^claude-(opus|sonnet|haiku)-4-5-/,
+  // Claude 4 series - Anthropic API
+  /^claude-(opus|sonnet)-4-/,
+  // Claude 3.7 - Anthropic API
+  /^claude-3-7-sonnet-/,
+  // OpenRouter format (3.7+)
+  /^anthropic\/claude-(opus|sonnet|haiku)-(4\.5|4|3\.7)/,
+  /^anthropic\/claude-(4\.5|4|3\.7)-(opus|sonnet|haiku)/,
+  // AWS Bedrock format: [region.]anthropic.claude-xxx
+  /anthropic\.claude-(opus|sonnet|haiku)-(4-5|4|3-7)-/,
+];
+
+export const isThinkingWithToolClaudeModel = (model: string): boolean => {
+  return thinkingWithToolClaudeModelPatterns.some((pattern) => pattern.test(model));
+};
+
+/**
+ * Regex patterns for Claude 4+ models that have temperature/top_p parameter conflict
+ * (cannot set both temperature and top_p at the same time)
+ */
+export const temperatureTopPConflictModelPatterns: RegExp[] = [
+  // Claude 4+ series - Anthropic API (4, 4.1, 4.5)
+  /^claude-(opus|sonnet|haiku)-4/,
+  // OpenRouter format
+  /^anthropic\/claude-(opus|sonnet|haiku)-(4\.5|4\.1|4)/,
+  /^anthropic\/claude-(4\.5|4\.1|4)-(opus|sonnet|haiku)/,
+  // AWS Bedrock format: [region.]anthropic.claude-xxx
+  /anthropic\.claude-(opus|sonnet|haiku)-4/,
+];
+
+export const hasTemperatureTopPConflict = (model: string): boolean => {
+  return temperatureTopPConflictModelPatterns.some((pattern) => pattern.test(model));
+};
