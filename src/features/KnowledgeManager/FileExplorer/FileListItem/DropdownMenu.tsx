@@ -5,17 +5,20 @@ import {
   BookMinusIcon,
   BookPlusIcon,
   DownloadIcon,
+  FolderInputIcon,
   LinkIcon,
   MoreHorizontalIcon,
   Trash,
 } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
 import { useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { downloadFile } from '@/utils/client/downloadFile';
+
+import MoveToFolderModal from '../MoveToFolderModal';
 
 interface DropdownMenuProps {
   filename: string;
@@ -27,6 +30,8 @@ interface DropdownMenuProps {
 const DropdownMenu = memo<DropdownMenuProps>(({ id, knowledgeBaseId, url, filename }) => {
   const { t } = useTranslation(['components', 'common']);
   const { message, modal } = App.useApp();
+
+  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
 
   const [removeFile] = useFileStore((s) => [s.removeFileItem]);
   const [removeFilesFromKnowledgeBase] = useKnowledgeBaseStore((s) => [
@@ -93,6 +98,15 @@ const DropdownMenu = memo<DropdownMenuProps>(({ id, knowledgeBaseId, url, filena
           type: 'divider',
         },
         {
+          icon: <Icon icon={FolderInputIcon} />,
+          key: 'moveToFolder',
+          label: t('FileManager.actions.moveToFolder'),
+          onClick: async ({ domEvent }) => {
+            domEvent.stopPropagation();
+            setIsMoveModalOpen(true);
+          },
+        },
+        {
           icon: <Icon icon={LinkIcon} />,
           key: 'copyUrl',
           label: t('FileManager.actions.copyUrl'),
@@ -141,9 +155,17 @@ const DropdownMenu = memo<DropdownMenuProps>(({ id, knowledgeBaseId, url, filena
     ).filter(Boolean);
   }, [inKnowledgeBase]);
   return (
-    <Dropdown menu={{ items }}>
-      <ActionIcon icon={MoreHorizontalIcon} size={'small'} />
-    </Dropdown>
+    <>
+      <Dropdown menu={{ items }}>
+        <ActionIcon icon={MoreHorizontalIcon} size={'small'} />
+      </Dropdown>
+      <MoveToFolderModal
+        fileId={id}
+        knowledgeBaseId={knowledgeBaseId}
+        onClose={() => setIsMoveModalOpen(false)}
+        open={isMoveModalOpen}
+      />
+    </>
   );
 });
 

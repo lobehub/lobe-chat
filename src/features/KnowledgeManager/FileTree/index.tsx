@@ -1,16 +1,15 @@
 'use client';
 
-import { CaretDownFilled } from '@ant-design/icons';
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { motion } from 'framer-motion';
-import { FileText, FolderIcon, FolderOpenIcon } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
 import FileIcon from '@/components/FileIcon';
+import FolderTree, { FolderTreeItem as BaseFolderTreeItem } from '@/features/KnowledgeManager/components/FolderTree';
 import { fileService } from '@/services/file';
 
 import TreeSkeleton from './TreeSkeleton';
@@ -33,33 +32,11 @@ const useStyles = createStyles(({ css, token }) => ({
   fileItemActive: css`
     background-color: ${token.colorFillSecondary};
   `,
-  folderHeader: css`
-    cursor: pointer;
-
-    padding-block: 4px;
-    padding-inline: 8px;
-
-    color: ${token.colorTextSecondary};
-
-    transition: background-color 0.2s;
-
-    &:hover {
-      background-color: ${token.colorFillTertiary};
-    }
-  `,
-  folderHeaderActive: css`
-    color: ${token.colorText};
-    background-color: ${token.colorFillSecondary};
-  `,
 }));
 
-interface TreeItem {
-  children?: TreeItem[];
+interface TreeItem extends BaseFolderTreeItem {
   fileType: string;
-  id: string;
   isFolder: boolean;
-  name: string;
-  slug?: string | null;
   sourceType?: string;
 }
 
@@ -67,8 +44,8 @@ interface FileTreeProps {
   knowledgeBaseId: string;
 }
 
-// Recursive component to render folder tree
-const FolderTreeItem = memo<{
+// Recursive component to render folder and file tree
+const FileTreeItem = memo<{
   expandedFolders: Set<string>;
   item: TreeItem;
   knowledgeBaseId: string;
@@ -93,72 +70,50 @@ const FolderTreeItem = memo<{
     const { currentFolderSlug } = useFolderPath();
 
     const itemKey = item.slug || item.id;
-    const isExpanded = expandedFolders.has(itemKey);
+
+    const handleFileClick = useCallback(() => {
+      // Open file modal using slug-based routing
+      const currentPath = currentFolderSlug
+        ? `/knowledge/repo/${knowledgeBaseId}/${currentFolderSlug}`
+        : `/knowledge/repo/${knowledgeBaseId}`;
+      navigate(`${currentPath}?file=${itemKey}`);
+    }, [itemKey, currentFolderSlug, knowledgeBaseId, navigate]);
+
+    const handleFolderClick = useCallback(
+      (folderId: string, folderSlug?: string | null) => {
+        const navKey = folderSlug || folderId;
+        navigate(`/knowledge/repo/${knowledgeBaseId}/${navKey}`);
+      },
+      [knowledgeBaseId, navigate],
+    );
+
+    if (item.isFolder) {
+      // Render as folder using shared component
+      return (
+        <FolderTree
+          expandedFolders={expandedFolders}
+          items={[item]}
+          loadedFolders={loadedFolders}
+          onFolderClick={handleFolderClick}
+          onLoadFolder={onLoadFolder}
+          onToggleFolder={onToggleFolder}
+          selectedKey={selectedKey}
+        />
+      );
+    }
+
+    // Render as file
     const isActive = selectedKey === itemKey;
-
-    const handleClick = useCallback(async () => {
-      if (item.isFolder) {
-        // Toggle folder expansion
-        onToggleFolder(itemKey);
-
-        // Load children if not already loaded
-        if (!isExpanded && !loadedFolders.has(itemKey)) {
-          await onLoadFolder(itemKey);
-        }
-      } else {
-        // Open file modal using slug-based routing
-        const currentPath = currentFolderSlug
-          ? `/knowledge/repo/${knowledgeBaseId}/${currentFolderSlug}`
-          : `/knowledge/repo/${knowledgeBaseId}`;
-        navigate(`${currentPath}?file=${itemKey}`);
-      }
-    }, [
-      item.isFolder,
-      itemKey,
-      isExpanded,
-      loadedFolders,
-      onToggleFolder,
-      onLoadFolder,
-      currentFolderSlug,
-      knowledgeBaseId,
-      navigate,
-    ]);
-
-    const handleFolderNavigate = useCallback(() => {
-      if (item.isFolder) {
-        navigate(`/knowledge/repo/${knowledgeBaseId}/${itemKey}`);
-      }
-    }, [item.isFolder, knowledgeBaseId, itemKey, navigate]);
-
     return (
       <Flexbox gap={2}>
         <Flexbox
           align={'center'}
-          className={cx(
-            item.isFolder ? styles.folderHeader : styles.fileItem,
-            isActive && (item.isFolder ? styles.folderHeaderActive : styles.fileItemActive),
-          )}
+          className={cx(styles.fileItem, isActive && styles.fileItemActive)}
           horizontal
-          onClick={item.isFolder ? handleFolderNavigate : handleClick}
+          onClick={handleFileClick}
           style={{ paddingInlineStart: level * 16 + 8 }}
         >
-          {item.isFolder ? (
-            <motion.div
-              animate={{ rotate: isExpanded ? 0 : -90 }}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
-            >
-              <ActionIcon
-                icon={CaretDownFilled as any}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleClick();
-                }}
-                size={'small'}
-              />
-            </motion.div>
-          ) : (
-            <div style={{ width: 24 }} />
-          )}
+          <div style={{ width: 24 }} />
           <Flexbox
             align={'center'}
             flex={1}
@@ -166,9 +121,7 @@ const FolderTreeItem = memo<{
             horizontal
             style={{ minHeight: 28, minWidth: 0 }}
           >
-            {item.isFolder ? (
-              <Icon icon={isExpanded ? FolderOpenIcon : FolderIcon} size={16} />
-            ) : item.sourceType === 'document' ? (
+            {item.sourceType === 'document' ? (
               <Icon icon={FileText} size={16} />
             ) : (
               <FileIcon fileName={item.name} fileType={item.fileType} size={16} />
@@ -187,37 +140,12 @@ const FolderTreeItem = memo<{
             </span>
           </Flexbox>
         </Flexbox>
-
-        {item.isFolder && isExpanded && item.children && item.children.length > 0 && (
-          <motion.div
-            animate={{ height: 'auto', opacity: 1 }}
-            initial={{ height: 0, opacity: 0 }}
-            style={{ overflow: 'hidden' }}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
-          >
-            <Flexbox gap={2}>
-              {item.children.map((child) => (
-                <FolderTreeItem
-                  expandedFolders={expandedFolders}
-                  item={child}
-                  key={child.id}
-                  knowledgeBaseId={knowledgeBaseId}
-                  level={level + 1}
-                  loadedFolders={loadedFolders}
-                  onLoadFolder={onLoadFolder}
-                  onToggleFolder={onToggleFolder}
-                  selectedKey={selectedKey}
-                />
-              ))}
-            </Flexbox>
-          </motion.div>
-        )}
       </Flexbox>
     );
   },
 );
 
-FolderTreeItem.displayName = 'FolderTreeItem';
+FileTreeItem.displayName = 'FileTreeItem';
 
 const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   const { currentFolderSlug } = useFolderPath();
@@ -228,7 +156,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   const [loadedFolders, setLoadedFolders] = useState<Set<string>>(new Set());
 
   // Sort items: folders first, then files
-  const sortItems = useCallback((items: TreeItem[]): TreeItem[] => {
+  const sortItems = useCallback(<T extends TreeItem>(items: T[]): T[] => {
     return [...items].sort((a, b) => {
       // Folders first
       if (a.isFolder && !b.isFolder) return -1;
@@ -249,7 +177,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
           showFilesInKnowledgeBase: false,
         });
 
-        const mappedItems = data.map((item) => ({
+        const mappedItems: TreeItem[] = data.map((item) => ({
           children: undefined,
           fileType: item.fileType,
           id: item.id,
@@ -300,10 +228,10 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
             return items.map((item) => {
               const itemKey = item.slug || item.id;
               if (itemKey === folderId) {
-                return { ...item, children: sortedChildren };
+                return { ...item, children: sortedChildren as TreeItem[] };
               }
               if (item.children) {
-                return { ...item, children: updateItem(item.children) };
+                return { ...item, children: updateItem(item.children as TreeItem[]) };
               }
               return item;
             });
@@ -338,7 +266,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   return (
     <Flexbox gap={2}>
       {items.map((item) => (
-        <FolderTreeItem
+        <FileTreeItem
           expandedFolders={expandedFolders}
           item={item}
           key={item.id}

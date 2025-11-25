@@ -26,17 +26,20 @@
       "createChunkingTask": "Preparing...",
       "deleteSuccess": "File deleted successfully.",
       "downloading": "Downloading file...",
+      "goBack": "Go to previous page",
+      "goForward": "Go to next page",
+      "goToParent": "Go to parent folder",
+      "moveError": "Failed to move file",
+      "moveHere": "Move here",
+      "moveSuccess": "File moved successfully",
+      "moveToFolder": "Move to...",
+      "moveToRoot": "Move to root directory",
       "removeFromKnowledgeBase": "Remove from Knowledge Base",
       "removeFromKnowledgeBaseSuccess": "File removed successfully."
     },
     "bottom": "You've reached the end.",
     "config": {
       "showFilesInKnowledgeBase": "Show content in Knowledge Base"
-    },
-    "sort": {
-      "dateAdded": "Date Added",
-      "name": "Name",
-      "size": "Size"
     },
     "emptyStatus": {
       "actions": {
@@ -46,6 +49,12 @@
       },
       "or": "or",
       "title": "Drag files or folders here"
+    },
+    "noFolders": "No folders available",
+    "sort": {
+      "dateAdded": "Date Added",
+      "name": "Name",
+      "size": "Size"
     },
     "title": {
       "createdAt": "Created At",

@@ -294,6 +294,30 @@ export const fileRouter = router({
       // remove from S3
       await ctx.fileService.deleteFiles(needToRemoveFileList.map((file) => file.url!));
     }),
+
+  updateFile: fileProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        parentId: z.string().nullable().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, parentId } = input;
+
+      // Resolve parentId if it's a slug (otherwise use as-is)
+      let resolvedParentId: string | null | undefined = parentId;
+      if (parentId) {
+        const docBySlug = await ctx.documentModel.findBySlug(parentId);
+        if (docBySlug) {
+          resolvedParentId = docBySlug.id;
+        }
+      }
+
+      await ctx.fileModel.update(id, { parentId: resolvedParentId });
+
+      return { success: true };
+    }),
 });
 
 export type FileRouter = typeof fileRouter;

@@ -73,6 +73,10 @@ export class FileService {
   removeFileAsyncTask = async (id: string, type: 'embedding' | 'chunk') => {
     return lambdaClient.file.removeFileAsyncTask.mutate({ id, type });
   };
+
+  updateFile = async (id: string, data: { parentId?: string | null }) => {
+    return lambdaClient.file.updateFile.mutate({ id, ...data });
+  };
 }
 
 export const fileService = new FileService();

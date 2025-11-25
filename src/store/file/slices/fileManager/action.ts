@@ -28,6 +28,7 @@ export interface FolderCrumb {
 export interface FileManageAction {
   dispatchDockFileList: (payload: UploadFileListDispatch) => void;
   embeddingChunks: (fileIds: string[]) => Promise<void>;
+  moveFileToFolder: (fileId: string, parentId: string | null) => Promise<void>;
   parseFilesToChunks: (ids: string[], params?: { skipExist?: boolean }) => Promise<void>;
   pushDockFileList: (files: File[], knowledgeBaseId?: string, parentId?: string) => Promise<void>;
 
@@ -193,6 +194,12 @@ export const createFileManageSlice: StateCreator<
     await fileService.removeFiles(ids);
     await get().refreshFileList();
   },
+
+  moveFileToFolder: async (fileId, parentId) => {
+    await fileService.updateFile(fileId, { parentId });
+    await get().refreshFileList();
+  },
+
   toggleEmbeddingIds: (ids, loading) => {
     set((state) => {
       const nextValue = new Set(state.creatingEmbeddingTaskIds);
