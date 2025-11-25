@@ -293,6 +293,12 @@
       "elegant": "Elegante",
       "title": "Animação de Resposta"
     },
+    "contextMenuMode": {
+      "default": "Padrão",
+      "desc": "Escolha o modo de exibição do menu de contexto ao clicar com o botão direito nas mensagens de chat",
+      "disabled": "Desativado",
+      "title": "Modo do menu de contexto"
+    },
     "neutralColor": {
       "desc": "Personalização de escala de cinza com diferentes inclinações de cor",
       "title": "Cor Neutra"

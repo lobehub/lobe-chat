@@ -28,6 +28,7 @@ The project follows a well-organized monorepo structure:
 
 ### Git Workflow
 
+- The current release branch is `next` instead of `main` until v2.0.0 is officially released
 - Use rebase for git pull
 - Git commit messages should prefix with gitmoji
 - Git branch name format: `username/feat/feature-name`

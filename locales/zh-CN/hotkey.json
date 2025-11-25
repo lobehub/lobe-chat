@@ -7,6 +7,10 @@
     "desc": "清空当前会话的消息和上传的文件",
     "title": "清空会话消息"
   },
+  "commandPalette": {
+    "desc": "打开全局命令面板快速访问功能",
+    "title": "命令面板"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "删除最后一条消息并重新生成",
     "title": "删除并重新生成"

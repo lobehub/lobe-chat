@@ -167,14 +167,22 @@ export const messagePublicApi: StateCreator<
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || message.role !== 'tool') return;
 
+    // Get operationId from messageOperationMap to ensure proper context isolation
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
+
     const removeToolInAssistantMessage = async () => {
       if (!message.parentId) return;
-      await get().optimisticRemoveToolFromAssistantMessage(message.parentId, message.tool_call_id);
+      await get().optimisticRemoveToolFromAssistantMessage(
+        message.parentId,
+        message.tool_call_id,
+        context,
+      );
     };
 
     await Promise.all([
       // 1. remove tool message
-      get().optimisticDeleteMessage(id),
+      get().optimisticDeleteMessage(id, context),
       // 2. remove the tool item in the assistant tools
       removeToolInAssistantMessage(),
     ]);

@@ -6,8 +6,11 @@ import type { PluginEnableChecker } from '@lobechat/context-engine';
 import { ChatCompletionTool, WorkingModel } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
+import { getAgentStoreState } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
+import { KnowledgeBaseManifest } from '@/tools/knowledge-base';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import { getSearchConfig } from '../getSearchConfig';
@@ -53,21 +56,27 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
   });
 };
 
-export const createChatToolsEngine = (workingModel: WorkingModel) =>
+export const createAgentToolsEngine = (workingModel: WorkingModel) =>
   createToolsEngine({
-    // Add WebBrowsingManifest as default tool
-    defaultToolIds: [WebBrowsingManifest.identifier],
+    // Add default tools based on configuration
+    defaultToolIds: [WebBrowsingManifest.identifier, KnowledgeBaseManifest.identifier],
     // Create search-aware enableChecker for this request
     enableChecker: ({ pluginId }) => {
       // Check platform-specific constraints (e.g., LocalSystem desktop-only)
       if (!shouldEnableTool(pluginId)) {
         return false;
       }
-
       // For WebBrowsingManifest, apply search logic
       if (pluginId === WebBrowsingManifest.identifier) {
         const searchConfig = getSearchConfig(workingModel.model, workingModel.provider);
         return searchConfig.useApplicationBuiltinSearchTool;
+      }
+
+      // For KnowledgeBaseManifest, only enable if knowledge is enabled
+      if (pluginId === KnowledgeBaseManifest.identifier) {
+        const agentState = getAgentStoreState();
+
+        return agentSelectors.hasEnabledKnowledgeBases(agentState);
       }
 
       // For all other plugins, enable by default

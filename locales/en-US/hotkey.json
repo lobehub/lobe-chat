@@ -7,6 +7,10 @@
     "desc": "Clear the messages and uploaded files from the current conversation",
     "title": "Clear Conversation Messages"
   },
+  "commandPalette": {
+    "desc": "Open the global command palette for quick access to features",
+    "title": "Command Palette"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "Delete the last message and regenerate",
     "title": "Delete and Regenerate"

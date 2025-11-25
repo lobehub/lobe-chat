@@ -7,6 +7,10 @@
     "desc": "Aktuelle Nachrichten und hochgeladene Dateien im Gespräch löschen",
     "title": "Gesprächsnachrichten löschen"
   },
+  "commandPalette": {
+    "desc": "Öffne die globale Befehlspalette für schnellen Zugriff auf Funktionen",
+    "title": "Befehlspalette"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "Letzte Nachricht löschen und neu generieren",
     "title": "Löschen und neu generieren"

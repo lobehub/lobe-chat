@@ -10,12 +10,12 @@ export const parseSystemAgent = (envString: string = ''): Partial<UserSystemAgen
 
   const config: Partial<UserSystemAgentConfig> = {};
 
-  // 处理全角逗号和多余空格
+  // Handle full-width commas and extra spaces
   let envValue = envString.replaceAll('，', ',').trim();
 
   const pairs = envValue.split(',');
 
-  // 用于存储默认设置，如果有 default=provider/model 的情况
+  // Store default settings if there is a default=provider/model case
   let defaultSetting: { model: string; provider: string } | undefined;
 
   for (const pair of pairs) {
@@ -29,7 +29,7 @@ export const parseSystemAgent = (envString: string = ''): Partial<UserSystemAgen
         throw new Error('Missing model or provider value');
       }
 
-      // 如果是 default 键，保存默认设置
+      // If it's the default key, save the default settings
       if (key === 'default') {
         defaultSetting = {
           model: model.trim(),
@@ -50,7 +50,7 @@ export const parseSystemAgent = (envString: string = ''): Partial<UserSystemAgen
     }
   }
 
-  // 如果有默认设置，应用到所有未设置的系统智能体
+  // If there are default settings, apply them to all unconfigured system agents
   if (defaultSetting) {
     for (const key of protectedKeys) {
       if (!config[key as keyof UserSystemAgentConfig]) {

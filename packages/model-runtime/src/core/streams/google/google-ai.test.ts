@@ -1239,4 +1239,65 @@ describe('GoogleGenerativeAIStream', () => {
       ]);
     });
   });
+
+  describe('Thought filtering logic', () => {
+    it('should keep text and thoughtSignature when both exist in parts', async () => {
+      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+      const data = [
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: 'Here is my answer',
+                    thoughtSignature: 'sig123',
+                  },
+                ],
+                role: 'model',
+              },
+              finishReason: 'STOP',
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 10,
+            candidatesTokenCount: 5,
+            totalTokenCount: 15,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 10 }],
+            thoughtsTokenCount: 50,
+          },
+        },
+      ];
+
+      const mockGoogleStream = new ReadableStream({
+        start(controller) {
+          data.forEach((item) => {
+            controller.enqueue(item);
+          });
+          controller.close();
+        },
+      });
+
+      const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+      const chunks = await decodeStreamChunks(protocolStream);
+
+      expect(chunks).toEqual(
+        [
+          'id: chat_1',
+          'event: text',
+          'data: "Here is my answer"\n',
+
+          'id: chat_1',
+          'event: stop',
+          'data: "STOP"\n',
+
+          'id: chat_1',
+          'event: usage',
+          'data: {"inputTextTokens":10,"outputImageTokens":0,"outputReasoningTokens":50,"outputTextTokens":5,"totalInputTokens":10,"totalOutputTokens":55,"totalTokens":15}\n',
+        ].map((i) => i + '\n'),
+      );
+    });
+  });
 });

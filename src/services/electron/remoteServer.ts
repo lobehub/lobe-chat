@@ -2,35 +2,35 @@ import { DataSyncConfig, MarketAuthorizationParams, dispatch } from '@lobechat/e
 
 class RemoteServerService {
   /**
-   * 获取远程服务器配置
+   * Get remote server configuration
    */
   getRemoteServerConfig = async () => {
     return dispatch('getRemoteServerConfig');
   };
 
   /**
-   * 设置远程服务器配置
+   * Set remote server configuration
    */
   setRemoteServerConfig = async (config: DataSyncConfig) => {
     return dispatch('setRemoteServerConfig', config);
   };
 
   /**
-   * 清除远程服务器配置
+   * Clear remote server configuration
    */
   clearRemoteServerConfig = async () => {
     return dispatch('clearRemoteServerConfig');
   };
 
   /**
-   * 请求授权
+   * Request authorization
    */
   requestAuthorization = async (config: DataSyncConfig) => {
     return dispatch('requestAuthorization', config);
   };
 
   /**
-   * 请求 Market 授权
+   * Request Market authorization
    */
   requestMarketAuthorization = async (params: MarketAuthorizationParams) => {
     return dispatch('requestMarketAuthorization', params);

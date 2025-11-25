@@ -293,6 +293,12 @@
       "elegant": "Zarif",
       "title": "Yanıt Animasyonu"
     },
+    "contextMenuMode": {
+      "default": "Varsayılan",
+      "desc": "Sohbet mesajları sağ tıklama menüsünün görüntüleme seçeneğini seçin",
+      "disabled": "Kullanma",
+      "title": "Sağ Tıklama Menüsü Seçeneği"
+    },
     "neutralColor": {
       "desc": "Farklı renk eğilimlerine sahip gri tonları özelleştirme",
       "title": "Nötr Renk"

@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Tüm İçeriği Kopyala",
-    "documentCount": "Toplam {{count}} belge",
     "duplicate": "Kopyasını Oluştur",
-    "empty": "Henüz belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
+    "empty": "Henüz bir belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
     "noResults": "Eşleşen belge bulunamadı",
+    "pageCount": "Toplam {{count}} belge",
     "selectNote": "Düzenlemeye başlamak için bir belge seçin",
     "untitled": "Başlıksız"
   },
@@ -70,7 +70,6 @@
       "uploadFile": "Dosya Yükle",
       "uploadFolder": "Klasör Yükle"
     },
-    "newDocumentButton": "Yeni Belge",
     "newNoteDialog": {
       "cancel": "İptal",
       "editTitle": "Belgeyi Düzenle",
@@ -83,14 +82,15 @@
       "title": "Yeni Belge",
       "updateSuccess": "Belge başarıyla güncellendi"
     },
+    "newPageButton": "Yeni Belge Oluştur",
     "uploadButton": "Yükle"
   },
   "home": {
     "getStarted": "Başlarken",
     "greeting": "Başla",
     "quickActions": "Hızlı İşlemler",
-    "recentDocuments": "Son Belgeler",
     "recentFiles": "Son Dosyalar",
+    "recentPages": "Son Belgeler",
     "subtitle": "Bilgi tabanına hoş geldiniz, belgelerinizi buradan yönetin",
     "uploadEntries": {
       "files": {
@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "Yeni Bilgi Tabanı"
       },
-      "newDocument": {
-        "title": "Yeni Belge"
+      "newPage": {
+        "title": "Yeni Belge Oluştur"
       }
     }
   },
@@ -116,8 +116,8 @@
     "title": "Bilgi Tabanı"
   },
   "menu": {
-    "allDocuments": "Tüm Belgeler",
-    "allFiles": "Tüm Dosyalar"
+    "allFiles": "Tüm Dosyalar",
+    "allPages": "Tüm Belgeler"
   },
   "networkError": "Bilgi bankası alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
   "notSupportGuide": {
@@ -142,8 +142,8 @@
     "downloadFile": "Dosyayı İndir",
     "unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>."
   },
-  "searchDocumentPlaceholder": "Belge ara",
   "searchFilePlaceholder": "Dosya Ara",
+  "searchPagePlaceholder": "Belge ara",
   "tab": {
     "all": "Tümü",
     "audios": "Sesler",
@@ -156,9 +156,7 @@
     "websites": "Web Siteleri"
   },
   "title": "Bilgi Bankası",
-  "toggleLeftPanel": {
-    "title": "Sol Panelini Göster/Gizle"
-  },
+  "toggleLeftPanel": "Sol paneli göster/gizle",
   "uploadDock": {
     "body": {
       "collapse": "Kapat",

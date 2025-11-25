@@ -778,15 +778,24 @@
   {
     "sql": [
       "ALTER TABLE \"documents\" ALTER COLUMN \"id\" SET DATA TYPE varchar(255);",
-      "\nALTER TABLE \"documents\" ADD COLUMN \"parent_id\" varchar(255);",
-      "\nALTER TABLE \"files\" ADD COLUMN \"parent_id\" varchar(255);",
-      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;",
-      "\nALTER TABLE \"files\" ADD CONSTRAINT \"files_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;",
-      "\nCREATE INDEX \"documents_parent_id_idx\" ON \"documents\" USING btree (\"parent_id\");",
-      "\nCREATE INDEX \"files_parent_id_idx\" ON \"files\" USING btree (\"parent_id\");"
+      "\nALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"parent_id\" varchar(255);",
+      "\nALTER TABLE \"files\" ADD COLUMN IF NOT EXISTS \"parent_id\" varchar(255);",
+      "\nDO $$ BEGIN\n ALTER TABLE \"documents\" ADD CONSTRAINT \"documents_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;",
+      "\nDO $$ BEGIN\n ALTER TABLE \"files\" ADD CONSTRAINT \"files_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;",
+      "\nCREATE INDEX IF NOT EXISTS \"documents_parent_id_idx\" ON \"documents\" USING btree (\"parent_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"files_parent_id_idx\" ON \"files\" USING btree (\"parent_id\");"
     ],
     "bps": true,
     "folderMillis": 1763453175961,
-    "hash": "6cfc00744de6a8f4d60b793673911bb740f9a50661663e28b843e5adae08f94a"
+    "hash": "6c2081c8ac22772a8276052c9ae0852a4c03463cbe998df26f85683ab356b914"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"slug\" varchar(255);",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"documents_slug_user_id_unique\" ON \"documents\" USING btree (\"slug\",\"user_id\") WHERE \"documents\".\"slug\" is not null;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1763987922211,
+    "hash": "f823b521f4d25e5dc5ab238b372727d2d2d7f0aed27b5eabc8a9608ce4e50568"
   }
 ]

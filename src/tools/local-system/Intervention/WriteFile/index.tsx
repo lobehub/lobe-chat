@@ -11,7 +11,7 @@ import { LocalFile, LocalFolder } from '@/features/LocalFile';
 
 const WriteFile = memo<BuiltinInterventionProps<WriteLocalFileParams>>(({ args }) => {
   const { t } = useTranslation('tool');
-  const { base, dir, ext } = path.parse(args.path);
+  const { base, dir, ext } = path.parse(args.path || '');
 
   // Detect language from file extension
   const language = useMemo(() => {

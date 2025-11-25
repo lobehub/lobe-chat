@@ -913,7 +913,7 @@ describe('ChatService', () => {
             enabledToolIds: [WebBrowsingManifest.identifier],
           }),
         };
-        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+        vi.spyOn(toolEngineeringModule, 'createAgentToolsEngine').mockReturnValue(
           mockToolsEngine as any,
         );
 
@@ -964,7 +964,7 @@ describe('ChatService', () => {
             enabledToolIds: [WebBrowsingManifest.identifier],
           }),
         };
-        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+        vi.spyOn(toolEngineeringModule, 'createAgentToolsEngine').mockReturnValue(
           mockToolsEngine as any,
         );
 
@@ -1009,7 +1009,7 @@ describe('ChatService', () => {
             enabledToolIds: [WebBrowsingManifest.identifier],
           }),
         };
-        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+        vi.spyOn(toolEngineeringModule, 'createAgentToolsEngine').mockReturnValue(
           mockToolsEngine as any,
         );
 

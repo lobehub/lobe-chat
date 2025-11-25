@@ -14,6 +14,14 @@
     "images": "Изображения:",
     "prompt": "подсказка"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Количество символов",
+        "lines": "Количество строк"
+      }
+    }
+  },
   "localFiles": {
     "editFile": {
       "newString": "Заменить на",
