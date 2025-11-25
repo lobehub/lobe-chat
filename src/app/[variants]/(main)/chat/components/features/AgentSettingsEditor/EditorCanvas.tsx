@@ -22,7 +22,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { Heading1Icon, Heading2Icon, Heading3Icon, Loader2Icon, Table2Icon } from 'lucide-react';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -64,81 +64,51 @@ const EditorCanvas = memo(() => {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
 
-  const latestPayload = useRef<SavePayload | null>(null);
-  const isSaving = useRef(false);
-  const lastSaved = useRef<SavePayload | null>(null);
-
-  const flushSave = useCallback(async () => {
-    if (isSaving.current || !latestPayload.current) return;
-
-    isSaving.current = true;
-    const payload = latestPayload.current;
-    latestPayload.current = null;
-
-    setSaveStatus('saving');
-
-    try {
-      await updateConfig(payload);
-      lastSaved.current = payload;
-      setSaveStatus('saved');
-      setLastUpdatedTime(new Date());
-    } catch (error: any) {
-      // Ignore expected aborts from newer updates; surface other errors
-      if (error?.name === 'AbortError' || error?.message?.includes('aborted')) {
-        setSaveStatus('idle');
-      } else {
-        console.error('[EditorCanvas] Failed to save:', error);
-        setSaveStatus('idle');
-      }
-    } finally {
-      isSaving.current = false;
-      if (latestPayload.current) {
-        flushSave();
-      }
-    }
-  }, [updateConfig]);
-
-  const queueSave = useCallback(
-    (payload: SavePayload) => {
-      if (lastSaved.current && isEqual(payload, lastSaved.current)) return;
-      latestPayload.current = payload;
-      flushSave();
-    },
-    [flushSave],
-  );
-
   const debouncedSave = useMemo(
     () =>
       debounce(
-        (editor: IEditor) => {
-          try {
-            const markdownContent = editor.getDocument('markdown') as unknown as string;
-            const jsonContent = editor.getDocument('json') as unknown as Record<string, any>;
+        async (payload: SavePayload) => {
+          setSaveStatus('saving');
 
-            queueSave({
-              editorContent: structuredClone(jsonContent || {}), // Store as object, not string
-              systemRole: markdownContent || '',
-            });
-          } catch (error) {
-            console.error('[EditorCanvas] Failed to read editor content:', error);
-            setSaveStatus('idle');
+          try {
+            await updateConfig(payload);
+            setSaveStatus('saved');
+            setLastUpdatedTime(new Date());
+          } catch (error: any) {
+            if (error?.name === 'AbortError' || error?.message?.includes('aborted')) {
+              setSaveStatus('idle');
+            } else {
+              console.error('[EditorCanvas] Failed to save:', error);
+              setSaveStatus('idle');
+            }
           }
         },
         SAVE_DEBOUNCE_TIME,
         { leading: false, trailing: true },
       ),
-    [queueSave],
+    [updateConfig],
   );
 
   useEffect(() => {
     return () => debouncedSave.cancel();
   }, [debouncedSave]);
 
-  const handleChange = (editor: IEditor) => debouncedSave(editor);
+  const handleChange = (editor: IEditor) => {
+    try {
+      const markdownContent = editor.getDocument('markdown') as unknown as string;
+      const jsonContent = editor.getDocument('json') as unknown as Record<string, any>;
 
-  const handleInit = (editor: IEditor) => {
-    handleChange(editor);
+      debouncedSave({
+        editorContent: structuredClone(jsonContent || {}), // Store as object, not string
+        systemRole: markdownContent || '',
+      });
+    } catch (error) {
+      console.error('[EditorCanvas] Failed to read editor content:', error);
+      setSaveStatus('idle');
+    }
   };
+
+  const handleInit = () => {};
 
 
   // Mention options for @ tools insertion
