@@ -94,8 +94,8 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual([
         // text
         'id: chat_1\n',
-        'event: text\n',
-        `data: "Hello"\n\n`,
+        'event: content_part\n',
+        `data: {"content":"Hello","partType":"text"}\n\n`,
 
         // tool call
         'id: chat_1\n',
@@ -104,8 +104,8 @@ describe('GoogleGenerativeAIStream', () => {
 
         // text
         'id: chat_1\n',
-        'event: text\n',
-        `data: " world!"\n\n`,
+        'event: content_part\n',
+        `data: {"content":" world!","partType":"text"}\n\n`,
         // stop
         'id: chat_1\n',
         'event: stop\n',
@@ -251,16 +251,16 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: chat_1',
-          'event: text',
-          'data: "234"\n',
+          'event: content_part',
+          'data: {"content":"234","partType":"text"}\n',
 
           'id: chat_1',
           'event: text',
           'data: ""\n',
 
           'id: chat_1',
-          'event: text',
-          `data: "567890\\n"\n`,
+          'event: content_part',
+          `data: {"content":"567890\\n","partType":"text"}\n`,
           // stop
           'id: chat_1',
           'event: stop',
@@ -376,20 +376,20 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: chat_1',
-          'event: reasoning',
-          'data: "**Understanding the Conditional Logic**\\n\\n"\n',
+          'event: reasoning_part',
+          'data: {"content":"**Understanding the Conditional Logic**\\n\\n","inReasoning":true,"partType":"text"}\n',
 
           'id: chat_1',
-          'event: reasoning',
-          `data: "**Finalizing Interpretation**\\n\\n"\n`,
+          'event: reasoning_part',
+          `data: {"content":"**Finalizing Interpretation**\\n\\n","inReasoning":true,"partType":"text"}\n`,
 
           'id: chat_1',
-          'event: text',
-          `data: "简单来说，"\n`,
+          'event: content_part',
+          `data: {"content":"简单来说，","partType":"text"}\n`,
 
           'id: chat_1',
-          'event: text',
-          `data: "文本内容。"\n`,
+          'event: content_part',
+          `data: {"content":"文本内容。","partType":"text"}\n`,
           // stop
           'id: chat_1',
           'event: stop',
