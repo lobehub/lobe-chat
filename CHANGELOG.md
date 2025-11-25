@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.113](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.112...v2.0.0-next.113)
+
+<sup>Released on **2025-11-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed when desktop userId was change manytimes the aimodel not right.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed when desktop userId was change manytimes the aimodel not right, closes [#10389](https://github.com/lobehub/lobe-chat/issues/10389) ([3ed8153](https://github.com/lobehub/lobe-chat/commit/3ed8153))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.112](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.111...v2.0.0-next.112)
 
 <sup>Released on **2025-11-24**</sup>
