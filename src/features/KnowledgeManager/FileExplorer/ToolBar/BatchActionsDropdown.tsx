@@ -1,18 +1,17 @@
-import { Button, Icon } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { App, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
-import { useTheme } from 'antd-style';
 import {
   BookMinusIcon,
   BookPlusIcon,
-  ChevronDownIcon,
   CircleEllipsisIcon,
   FileBoxIcon,
   Trash2Icon,
 } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+
+import ActionIconWithChevron from './ActionIconWithChevron';
 
 export type MultiSelectActionType =
   | 'addToKnowledgeBase'
@@ -32,7 +31,6 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
   ({ selectCount, isInKnowledgeBase, onActionClick, disabled }) => {
     const { t } = useTranslation(['components', 'common']);
     const { modal, message } = App.useApp();
-    const theme = useTheme();
 
     const menuItems = useMemo<MenuProps['items']>(() => {
       const items: MenuProps['items'] = [];
@@ -119,16 +117,11 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
         placement="bottomLeft"
         trigger={['click']}
       >
-        <Button
-          style={{ paddingInline: 4 }}
+        <ActionIconWithChevron
+          disabled={disabled}
+          icon={CircleEllipsisIcon}
           title={t('FileManager.actions.batchActions', 'Batch actions')}
-          type="text"
-        >
-          <Flexbox align={'center'} gap={4} horizontal>
-            <Icon color={theme.colorIcon} icon={CircleEllipsisIcon} size={18} />
-            <Icon color={theme.colorIcon} icon={ChevronDownIcon} size={14} />
-          </Flexbox>
-        </Button>
+        />
       </Dropdown>
     );
   },
