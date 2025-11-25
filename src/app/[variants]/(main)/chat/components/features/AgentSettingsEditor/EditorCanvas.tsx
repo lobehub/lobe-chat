@@ -108,8 +108,6 @@ const EditorCanvas = memo(() => {
     }
   };
 
-  const handleInit = () => {};
-
 
   // Mention options for @ tools insertion
   const mentionOptions = useMemo(
@@ -151,6 +149,9 @@ const EditorCanvas = memo(() => {
           };
         });
       },
+      markdownWriter: (mention: any) => {
+        return `\n<mention>${mention.label}[${mention.metadata?.id || mention.label}]</mention>\n`;
+      },
     }),
     [installedTools],
   );
@@ -169,6 +170,7 @@ const EditorCanvas = memo(() => {
         direction="horizontal"
         gap={8}
         style={{
+          height:'42px',
           paddingBlock: 12,
           paddingInline: 32,
           position: 'sticky',
@@ -218,7 +220,6 @@ const EditorCanvas = memo(() => {
             content={initialLoad}
             editor={editor}
             mentionOption={mentionOptions}
-            onInit={handleInit}
             onTextChange={handleChange}
             placeholder={t('settingAgent.prompt.placeholder')}
             plugins={[
