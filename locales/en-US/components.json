@@ -33,6 +33,11 @@
     "config": {
       "showFilesInKnowledgeBase": "Show content in Knowledge Base"
     },
+    "sort": {
+      "dateAdded": "Date Added",
+      "name": "Name",
+      "size": "Size"
+    },
     "emptyStatus": {
       "actions": {
         "file": "Upload File",

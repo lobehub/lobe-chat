@@ -33,6 +33,11 @@
     "config": {
       "showFilesInKnowledgeBase": "显示知识库中内容"
     },
+    "sort": {
+      "dateAdded": "添加日期",
+      "name": "名称",
+      "size": "大小"
+    },
     "emptyStatus": {
       "actions": {
         "file": "上传文件",

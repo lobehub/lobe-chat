@@ -31,6 +31,7 @@ import MasonrySkeleton from './MasonrySkeleton';
 import BatchActionsDropdown from './ToolBar/BatchActionsDropdown';
 import ExpandableSearch from './ToolBar/ExpandableSearch';
 import type { MultiSelectActionType } from './ToolBar/MultiSelectActions';
+import SortDropdown from './ToolBar/SortDropdown';
 import ViewSwitcher, { ViewMode } from './ToolBar/ViewSwitcher';
 import { useCheckTaskStatus } from './useCheckTaskStatus';
 
@@ -178,15 +179,52 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     }
   };
 
-  const { data, isLoading } = useFetchKnowledgeItems({
+  const { data: rawData, isLoading } = useFetchKnowledgeItems({
     category,
     knowledgeBaseId,
     parentId: currentFolderSlug || null,
     q: query ?? undefined,
     showFilesInKnowledgeBase: false,
-    sortType: sortType ?? undefined,
-    sorter: sorter ?? undefined,
   });
+
+  // Client-side sorting
+  const data = useMemo(() => {
+    if (!rawData) return rawData;
+
+    const sorted = [...rawData];
+    const currentSorter = sorter || 'createdAt';
+    const currentSortType = sortType || SortType.Desc;
+
+    sorted.sort((a, b) => {
+      let aValue: any;
+      let bValue: any;
+
+      switch (currentSorter) {
+        case 'name': {
+          aValue = a.name?.toLowerCase() || '';
+          bValue = b.name?.toLowerCase() || '';
+          break;
+        }
+        case 'size': {
+          aValue = a.size || 0;
+          bValue = b.size || 0;
+          break;
+        }
+        default: {
+          aValue = new Date(a.createdAt).getTime();
+          bValue = new Date(b.createdAt).getTime();
+          break;
+        }
+      }
+
+      if (currentSortType === SortType.Asc) {
+        return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+      }
+      return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+    });
+
+    return sorted;
+  }, [rawData, sorter, sortType]);
 
   // Handle view transition with a brief delay to show skeleton
   React.useEffect(() => {
@@ -303,6 +341,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
         right={
           <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
             <ExpandableSearch />
+            <SortDropdown />
             <BatchActionsDropdown
               // disabled={selectFileIds.length === 0}
               isInKnowledgeBase={!!knowledgeBaseId}

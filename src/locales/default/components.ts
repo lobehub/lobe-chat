@@ -47,6 +47,11 @@ export default {
       or: '或者',
       title: '将文件或文件夹拖到这里',
     },
+    sort: {
+      dateAdded: '添加日期',
+      name: '名称',
+      size: '大小',
+    },
     title: {
       createdAt: '创建时间',
       size: '大小',
