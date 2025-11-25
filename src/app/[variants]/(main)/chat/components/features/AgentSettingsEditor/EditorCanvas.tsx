@@ -22,7 +22,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { Heading1Icon, Heading2Icon, Heading3Icon, Loader2Icon, Table2Icon } from 'lucide-react';
-import { memo, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -34,7 +34,8 @@ import PROMPT_TEMPLATE from './promptTemplate.json';
 
 dayjs.extend(relativeTime);
 
-const SAVE_DEBOUNCE_TIME = 200; // ms
+const SAVE_DEBOUNCE_TIME = 300; // ms
+type SavePayload = { editorContent: Record<string, any>; systemRole: string };
 
 
 /**
@@ -63,26 +64,77 @@ const EditorCanvas = memo(() => {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
 
-  const handleChange = debounce((editor: IEditor) => {
+  const latestPayload = useRef<SavePayload | null>(null);
+  const isSaving = useRef(false);
+  const lastSaved = useRef<SavePayload | null>(null);
+
+  const flushSave = useCallback(async () => {
+    if (isSaving.current || !latestPayload.current) return;
+
+    isSaving.current = true;
+    const payload = latestPayload.current;
+    latestPayload.current = null;
+
     setSaveStatus('saving');
 
     try {
-      const markdownContent = editor.getDocument('markdown') as unknown as string;
-      const jsonContent = editor.getDocument('json') as unknown as Record<string, any>;
-
-      // Save both markdown (for AI) and JSON (for editor state)
-      updateConfig({
-        editorContent: structuredClone(jsonContent || {}), // Store as object, not string
-        systemRole: markdownContent || '',
-      });
-
+      await updateConfig(payload);
+      lastSaved.current = payload;
       setSaveStatus('saved');
       setLastUpdatedTime(new Date());
-    } catch (error) {
-      console.error('[EditorCanvas] Failed to save:', error);
-      setSaveStatus('idle');
+    } catch (error: any) {
+      // Ignore expected aborts from newer updates; surface other errors
+      if (error?.name === 'AbortError' || error?.message?.includes('aborted')) {
+        setSaveStatus('idle');
+      } else {
+        console.error('[EditorCanvas] Failed to save:', error);
+        setSaveStatus('idle');
+      }
+    } finally {
+      isSaving.current = false;
+      if (latestPayload.current) {
+        flushSave();
+      }
     }
-  }, SAVE_DEBOUNCE_TIME);
+  }, [updateConfig]);
+
+  const queueSave = useCallback(
+    (payload: SavePayload) => {
+      if (lastSaved.current && isEqual(payload, lastSaved.current)) return;
+      latestPayload.current = payload;
+      flushSave();
+    },
+    [flushSave],
+  );
+
+  const debouncedSave = useMemo(
+    () =>
+      debounce(
+        (editor: IEditor) => {
+          try {
+            const markdownContent = editor.getDocument('markdown') as unknown as string;
+            const jsonContent = editor.getDocument('json') as unknown as Record<string, any>;
+
+            queueSave({
+              editorContent: structuredClone(jsonContent || {}), // Store as object, not string
+              systemRole: markdownContent || '',
+            });
+          } catch (error) {
+            console.error('[EditorCanvas] Failed to read editor content:', error);
+            setSaveStatus('idle');
+          }
+        },
+        SAVE_DEBOUNCE_TIME,
+        { leading: false, trailing: true },
+      ),
+    [queueSave],
+  );
+
+  useEffect(() => {
+    return () => debouncedSave.cancel();
+  }, [debouncedSave]);
+
+  const handleChange = (editor: IEditor) => debouncedSave(editor);
 
   const handleInit = (editor: IEditor) => {
     handleChange(editor);

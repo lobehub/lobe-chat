@@ -3,7 +3,7 @@
 import { ActionIcon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Settings } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -27,11 +27,17 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
   const theme = useTheme();
 
   const config = useStore((s) => s.config);
+  const [modelValue, setModelValue] = useState({
+    model: config.model,
+    provider: config.provider,
+  });
   const updateConfig = useStore((s) => s.setAgentConfig);
-
-  const handleModelChange = ({ model, provider }: { model: string; provider: string }) => {
-    updateConfig({ model, provider });
-  };
+  const handleModelChange = useMemo(()=>{
+    return ({ model, provider }: { model: string; provider: string }) => {
+      setModelValue({ model, provider });
+      updateConfig({ model, provider });
+    }
+  },[])
 
   return (
     <Flexbox
@@ -60,10 +66,7 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
       <Flexbox flex={1} style={{ maxWidth: 400 }}>
         <ModelSelect
           onChange={handleModelChange}
-          value={{
-            model: config.model,
-            provider: config.provider,
-          }}
+          value={modelValue}
         />
       </Flexbox>
 
