@@ -143,7 +143,14 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       enabledSearch,
     } = payload;
 
-    const resolvedMaxTokens = await resolveMaxTokens({ max_tokens, model, thinking });
+    const { anthropic: anthropicModels } = await import('model-bank');
+
+    const resolvedMaxTokens = await resolveMaxTokens({
+      max_tokens,
+      model,
+      providerModels: anthropicModels,
+      thinking,
+    });
 
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');

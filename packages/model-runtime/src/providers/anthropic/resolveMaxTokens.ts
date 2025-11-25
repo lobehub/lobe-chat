@@ -1,18 +1,5 @@
 import type { ChatStreamPayload } from '../../types';
 
-/**
- * Normalize Anthropic / Bedrock Claude model ids to the canonical Anthropic id.
- * Examples:
- * - anthropic.claude-3-opus-20240229-v1:0 -> claude-3-opus-20240229
- * - us.anthropic.claude-haiku-4-5-20251001-v1:0 -> claude-haiku-4-5-20251001
- */
-export const normalizeAnthropicModelId = (modelId: string) => {
-  const withoutAlias = modelId.split(':')[0];
-  const withoutPrefix = withoutAlias.replace(/^(global\.)?([a-z]+\.)?anthropic\./, '');
-
-  return withoutPrefix.replace(/-v\d+$/, '');
-};
-
 const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
 /**
@@ -23,15 +10,14 @@ export const resolveMaxTokens = async ({
   max_tokens,
   model,
   thinking,
+  providerModels,
 }: {
   max_tokens?: number;
   model: string;
+  providerModels: { id: string; maxOutput?: number }[];
   thinking?: ChatStreamPayload['thinking'];
 }) => {
-  const normalizedModelId = normalizeAnthropicModelId(model);
-
-  const { anthropic: anthropicModels } = await import('model-bank');
-  const defaultMaxOutput = anthropicModels.find((m) => m.id === normalizedModelId)?.maxOutput;
+  const defaultMaxOutput = providerModels.find((m) => m.id === model)?.maxOutput;
 
   const preferredMaxTokens = max_tokens ?? defaultMaxOutput;
 
@@ -39,5 +25,9 @@ export const resolveMaxTokens = async ({
 
   if (thinking?.type === 'enabled') return 32_000;
 
-  return modelsWithSmallContextWindow.has(normalizedModelId) ? 4096 : 8192;
+  const hasSmallContextWindow = Array.from(modelsWithSmallContextWindow).some((id) =>
+    model.includes(id),
+  );
+
+  return hasSmallContextWindow ? 4096 : 8192;
 };

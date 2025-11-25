@@ -179,7 +179,14 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       { hasConflict, normalizeTemperature: true, preferTemperature: true },
     );
 
-    const resolvedMaxTokens = await resolveMaxTokens({ max_tokens, model, thinking });
+    const { bedrock: bedrockModels } = await import('model-bank');
+
+    const resolvedMaxTokens = await resolveMaxTokens({
+      max_tokens,
+      model,
+      providerModels: bedrockModels,
+      thinking,
+    });
 
     const systemPrompts = !!system_message?.content
       ? ([
