@@ -104,6 +104,7 @@ export class AiModelModel {
         id: aiModels.id,
         parameters: aiModels.parameters,
         providerId: aiModels.providerId,
+        releasedAt: aiModels.releasedAt,
         sort: aiModels.sort,
         source: aiModels.source,
         type: aiModels.type,

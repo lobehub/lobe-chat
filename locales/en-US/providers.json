@@ -191,6 +191,9 @@
   "xinference": {
     "description": "Xorbits Inference (Xinference) is an open-source platform designed to simplify the deployment and integration of diverse AI models. With Xinference, you can leverage any open-source LLM, embedding model, or multimodal model to perform inference in cloud or on-premises environments, enabling the creation of powerful AI applications."
   },
+  "zenmux": {
+    "description": "ZenMux is a unified AI service aggregation platform that supports a variety of mainstream AI service interfaces, including OpenAI, Anthropic, and Google VertexAI. It offers flexible routing capabilities, allowing you to easily switch between and manage different AI models."
+  },
   "zeroone": {
     "description": "01.AI focuses on AI 2.0 era technologies, vigorously promoting the innovation and application of 'human + artificial intelligence', using powerful models and advanced AI technologies to enhance human productivity and achieve technological empowerment."
   },

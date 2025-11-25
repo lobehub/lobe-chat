@@ -191,6 +191,9 @@
   "xinference": {
     "description": "Xorbits Inference (Xinference), çeşitli yapay zeka modellerinin çalıştırılmasını ve entegrasyonunu kolaylaştıran açık kaynaklı bir platformdur. Xinference ile bulutta veya yerel ortamda herhangi bir açık kaynaklı LLM, gömme modeli ve çoklu modal modeli kullanarak çıkarım yapabilir ve güçlü yapay zeka uygulamaları oluşturabilirsiniz."
   },
+  "zenmux": {
+    "description": "ZenMux, OpenAI, Anthropic, Google VertexAI gibi birçok popüler yapay zeka hizmeti arayüzünü destekleyen birleşik bir yapay zeka hizmetleri toplama platformudur. Esnek yönlendirme yetenekleri sayesinde farklı yapay zeka modelleri arasında kolayca geçiş yapabilir ve yönetebilirsiniz."
+  },
   "zeroone": {
     "description": "01.AI, yapay zeka 2.0 çağının yapay zeka teknolojisine odaklanmakta ve 'insan + yapay zeka' yenilik ve uygulamalarını teşvik etmektedir. Son derece güçlü modeller ve gelişmiş yapay zeka teknolojileri kullanarak insan üretkenliğini artırmayı ve teknolojik güçlendirmeyi hedeflemektedir."
   },

@@ -7,6 +7,10 @@
     "desc": "清空當前會話的消息和上傳的檔案",
     "title": "清空會話消息"
   },
+  "commandPalette": {
+    "desc": "開啟全域指令面板以快速存取功能",
+    "title": "指令面板"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "刪除最後一則訊息並重新產生",
     "title": "刪除並重新產生"

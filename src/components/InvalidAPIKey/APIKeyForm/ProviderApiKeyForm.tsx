@@ -4,7 +4,7 @@ import { ReactNode, memo, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
-import { FormAction } from '@/features/Conversation/Error/style';
+import { FormAction } from '@/features/ChatList/Error/style';
 import { useProviderName } from '@/hooks/useProviderName';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { GlobalLLMProviderKey } from '@/types/user/settings';

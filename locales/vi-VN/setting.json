@@ -293,6 +293,12 @@
       "elegant": "Thanh lịch",
       "title": "Hoạt ảnh phản hồi"
     },
+    "contextMenuMode": {
+      "default": "Mặc định",
+      "desc": "Chọn phương án hiển thị menu chuột phải cho tin nhắn trò chuyện",
+      "disabled": "Không sử dụng",
+      "title": "Phương án menu chuột phải"
+    },
     "neutralColor": {
       "desc": "Tùy chỉnh thang độ xám với các xu hướng màu sắc khác nhau",
       "title": "Màu trung tính"

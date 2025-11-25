@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { ChatItem } from '@/features/Conversation';
+import { ChatItem } from '@/features/ChatList';
 
 export interface ThreadChatItemProps {
   id: string;

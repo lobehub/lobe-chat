@@ -10,11 +10,11 @@ dotenv.config();
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 const partialBuildPages = [
   // no need for desktop
-  {
-    name: 'changelog',
-    disabled: isDesktop,
-    paths: ['src/app/[variants]/(main)/changelog'],
-  },
+  // {
+  //   name: 'changelog',
+  //   disabled: isDesktop,
+  //   paths: ['src/app/[variants]/(main)/changelog'],
+  // },
   {
     name: 'auth',
     disabled: isDesktop,

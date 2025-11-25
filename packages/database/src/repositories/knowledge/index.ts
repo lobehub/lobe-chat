@@ -129,12 +129,6 @@ export class KnowledgeRepo {
       };
     });
 
-    console.log('[KnowledgeRepo.query] Fetched items:', {
-      count: mappedResults.length,
-      documents: mappedResults.filter((item) => item.sourceType === 'document'),
-      sampleEditorData: mappedResults.find((item) => item.sourceType === 'document')?.editorData,
-    });
-
     return mappedResults;
   }
 
@@ -308,7 +302,10 @@ export class KnowledgeRepo {
 
         // Exclude custom/document and source_type='file' from Documents category
         if (category === FilesTabs.Documents) {
-          whereConditions.push(sql`${documents.fileType} != ${'custom/document'}`, sql`${documents.sourceType} != ${'file'}`);
+          whereConditions.push(
+            sql`${documents.fileType} != ${'custom/document'}`,
+            sql`${documents.sourceType} != ${'file'}`,
+          );
         }
       } else if (fileTypePrefix) {
         whereConditions.push(sql`${documents.fileType} ILIKE ${`${fileTypePrefix}%`}`);
@@ -338,7 +335,7 @@ export class KnowledgeRepo {
     // Documents don't have knowledge base association currently, so skip if knowledgeBaseId is set
     if (knowledgeBaseId) {
       return sql`
-        SELECT 
+        SELECT
           NULL::varchar(30) as id,
           NULL::text as name,
           NULL::varchar(255) as file_type,

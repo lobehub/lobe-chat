@@ -38,7 +38,7 @@ export class DatabaseManager {
   private callbacks?: DatabaseLoadingCallbacks;
   private isLocalDBSchemaSynced = false;
 
-  // CDN 配置
+  // CDN configuration
   private static WASM_CDN_URL =
     'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/postgres.wasm';
 
@@ -57,7 +57,7 @@ export class DatabaseManager {
     return DatabaseManager.instance;
   }
 
-  // 加载并编译 WASM 模块
+  // Load and compile WASM module
   private async loadWasmModule(): Promise<WebAssembly.Module> {
     const start = Date.now();
     this.callbacks?.onStateChange?.(DatabaseLoadingState.LoadingWasm);
@@ -72,7 +72,7 @@ export class DatabaseManager {
     let receivedLength = 0;
     const chunks: Uint8Array[] = [];
 
-    // 读取数据流
+    // Read data stream
     // eslint-disable-next-line no-constant-condition
     while (true) {
       const { done, value } = await reader.read();
@@ -82,7 +82,7 @@ export class DatabaseManager {
       chunks.push(value);
       receivedLength += value.length;
 
-      // 计算并报告进度
+      // Calculate and report progress
       const progress = Math.min(Math.round((receivedLength / contentLength) * 100), 100);
       this.callbacks?.onProgress?.({
         phase: 'wasm',
@@ -90,7 +90,7 @@ export class DatabaseManager {
       });
     }
 
-    // 合并数据块
+    // Merge data chunks
     const wasmBytes = new Uint8Array(receivedLength);
     let position = 0;
     for (const chunk of chunks) {
@@ -104,7 +104,7 @@ export class DatabaseManager {
       progress: 100,
     });
 
-    // 编译 WASM 模块
+    // Compile WASM module
     return WebAssembly.compile(wasmBytes);
   }
 
@@ -114,7 +114,7 @@ export class DatabaseManager {
     return await res.blob();
   };
 
-  // 异步加载 PGlite 相关依赖
+  // Asynchronously load PGlite related dependencies
   private async loadDependencies() {
     const start = Date.now();
     this.callbacks?.onStateChange?.(DatabaseLoadingState.LoadingDependencies);
@@ -135,7 +135,7 @@ export class DatabaseManager {
         const result = await importPromise;
         loaded += 1;
 
-        // 计算加载进度
+        // Calculate loading progress
         this.callbacks?.onProgress?.({
           phase: 'dependencies',
           progress: Math.min(Math.round((loaded / imports.length) * 100), 100),
@@ -156,7 +156,7 @@ export class DatabaseManager {
     return { IdbFs, MemoryFS, PGlite, fsBundle, vector };
   }
 
-  // 数据库迁移方法
+  // Database migration method
   private async migrate(skipMultiRun = false): Promise<DrizzleInstance> {
     if (this.isLocalDBSchemaSynced && skipMultiRun) return this.db;
 
@@ -169,17 +169,17 @@ export class DatabaseManager {
         try {
           const drizzleMigration = new DrizzleMigrationModel(this.db as any);
 
-          // 检查数据库中是否存在表
+          // Check if tables exist in database
           const tableCount = await drizzleMigration.getTableCounts();
 
-          // 如果表数量大于0，则认为数据库已正确初始化
+          // If table count > 0, consider database properly initialized
           if (tableCount > 0) {
             this.isLocalDBSchemaSynced = true;
             return this.db;
           }
         } catch (error) {
           console.warn('Error checking table existence, proceeding with migration', error);
-          // 如果查询失败，继续执行迁移以确保安全
+          // If query fails, continue migration to ensure safety
         }
       }
     }

@@ -1074,7 +1074,7 @@ export const openaiEmbeddingModels: AIEmbeddingModelCard[] = [
   },
 ];
 
-// 语音合成模型
+// Text-to-speech models
 export const openaiTTSModels: AITTSModelCard[] = [
   {
     description: '最新的文本转语音模型，针对实时场景优化速度',
@@ -1109,7 +1109,7 @@ export const openaiTTSModels: AITTSModelCard[] = [
   },
 ];
 
-// 语音识别模型
+// Speech recognition models
 export const openaiSTTModels: AISTTModelCard[] = [
   {
     description: '通用语音识别模型，支持多语言语音识别、语音翻译和语言识别。',
@@ -1161,7 +1161,7 @@ export const openaiSTTModels: AISTTModelCard[] = [
   },
 ];
 
-// 图像生成模型
+// Image generation models
 export const openaiImageModels: AIImageModelCard[] = [
   // https://platform.openai.com/docs/models/gpt-image-1
   {
@@ -1276,7 +1276,7 @@ export const openaiImageModels: AIImageModelCard[] = [
   },
 ];
 
-// GPT-4o 和 GPT-4o-mini 实时模型
+// GPT-4o and GPT-4o-mini realtime models
 export const openaiRealtimeModels: AIRealtimeModelCard[] = [
   {
     abilities: {
