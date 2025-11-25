@@ -1,4 +1,4 @@
-import { getServerDBConfig } from '@/config/db';
+import { getServerDBConfig } from '@/envs/db';
 import { UserKeyVaults } from '@/types/user/settings';
 
 interface DecryptionResult {

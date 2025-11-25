@@ -8,8 +8,8 @@ import debug from 'debug';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
 import urlJoin from 'url-join';
 
-import { serverDBEnv } from '@/config/db';
 import { appEnv } from '@/envs/app';
+import { serverDBEnv } from '@/envs/db';
 
 const log = debug('lobe-next-auth:adapter');
 

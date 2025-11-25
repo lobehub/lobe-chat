@@ -4,7 +4,7 @@ import { drizzle as nodeDrizzle } from 'drizzle-orm/node-postgres';
 import { Pool as NodePool } from 'pg';
 import ws from 'ws';
 
-import { serverDBEnv } from '@/config/db';
+import { serverDBEnv } from '@/envs/db';
 
 import * as schema from '../schemas';
 import { LobeChatDatabase } from '../type';

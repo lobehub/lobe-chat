@@ -4,10 +4,10 @@ import debug from 'debug';
 import Provider, { Configuration, KoaContextWithOIDC, errors } from 'oidc-provider';
 import urlJoin from 'url-join';
 
-import { serverDBEnv } from '@/config/db';
 import { enableClerk } from '@/const/auth';
 import { UserModel } from '@/database/models/user';
 import { appEnv } from '@/envs/app';
+import { serverDBEnv } from '@/envs/db';
 import { getJWKS } from '@/libs/oidc-provider/jwt';
 import { normalizeLocale } from '@/locales/resources';
 

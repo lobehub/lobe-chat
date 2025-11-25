@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { getServerDBConfig } from '@/config/db';
+import { getServerDBConfig } from '@/envs/db';
 import { createCallerFactory } from '@/libs/trpc/lambda';
 import { lambdaRouter } from '@/server/routers/lambda';
 

@@ -1,8 +1,8 @@
 import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { serverDBEnv } from '@/config/db';
 import { serverDB } from '@/database/server';
+import { serverDBEnv } from '@/envs/db';
 import { dateKeys } from '@/libs/next-auth/adapter';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 

@@ -10,6 +10,9 @@ export const getServerDBConfig = () => {
 
       KEY_VAULTS_SECRET: process.env.KEY_VAULTS_SECRET,
 
+      QSTASH_TOKEN: process.env.QSTASH_TOKEN,
+      REDIS_URL: process.env.REDIS_URL,
+
       REMOVE_GLOBAL_FILE: process.env.DISABLE_REMOVE_GLOBAL_FILE !== '0',
     },
     server: {
@@ -18,6 +21,9 @@ export const getServerDBConfig = () => {
       DATABASE_URL: z.string().optional(),
 
       KEY_VAULTS_SECRET: z.string().optional(),
+
+      QSTASH_TOKEN: z.string().optional(),
+      REDIS_URL: z.string().optional(),
 
       REMOVE_GLOBAL_FILE: z.boolean().optional(),
     },

@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { Pool as NodePool } from 'pg';
 import ws from 'ws';
 
-import { serverDBEnv } from '@/config/db';
+import { serverDBEnv } from '@/envs/db';
 
 import * as schema from '../schemas';
 

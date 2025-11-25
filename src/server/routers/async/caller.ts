@@ -3,10 +3,10 @@ import { createTRPCClient, httpLink } from '@trpc/client';
 import superjson from 'superjson';
 import urlJoin from 'url-join';
 
-import { serverDBEnv } from '@/config/db';
 import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { isDesktop } from '@/const/version';
 import { appEnv } from '@/envs/app';
+import { serverDBEnv } from '@/envs/db';
 import { createAsyncCallerFactory } from '@/libs/trpc/async';
 import { createAsyncContextInner } from '@/libs/trpc/async/context';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
