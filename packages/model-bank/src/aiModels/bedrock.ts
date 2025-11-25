@@ -291,6 +291,7 @@ const bedrockChatModels: AIChatModelCard[] = [
       '一款快速、经济且仍然非常有能力的模型，可以处理包括日常对话、文本分析、总结和文档问答在内的一系列任务。',
     displayName: 'Claude Instant',
     id: 'anthropic.claude-instant-v1',
+    maxOutput: 4096,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },

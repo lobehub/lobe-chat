@@ -1,6 +1,10 @@
 import type { ChatStreamPayload } from '../../types';
 
-const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
+const smallContextWindowPatterns = [
+  /claude-3-opus-20240229/,
+  /claude-3-haiku-20240307/,
+  /claude-v2(:1)?$/,
+];
 
 /**
  * Resolve the max_tokens value to align Anthropic and Bedrock behavior.
@@ -25,9 +29,7 @@ export const resolveMaxTokens = async ({
 
   if (thinking?.type === 'enabled') return 32_000;
 
-  const hasSmallContextWindow = Array.from(modelsWithSmallContextWindow).some((id) =>
-    model.includes(id),
-  );
+  const hasSmallContextWindow = smallContextWindowPatterns.some((pattern) => pattern.test(model));
 
   return hasSmallContextWindow ? 4096 : 8192;
 };
