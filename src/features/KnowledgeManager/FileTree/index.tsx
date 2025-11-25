@@ -12,12 +12,12 @@ import { useNavigate } from 'react-router-dom';
 import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
 import FileIcon from '@/components/FileIcon';
 import { fileService } from '@/services/file';
-import type { FileListItem } from '@/types/files';
+
+import TreeSkeleton from './TreeSkeleton';
 
 const useStyles = createStyles(({ css, token }) => ({
   fileItem: css`
     cursor: pointer;
-    border-radius: ${token.borderRadiusSM}px;
     padding: 4px 8px;
     color: ${token.colorText};
     transition: background-color 0.2s;
@@ -31,7 +31,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   folderHeader: css`
     cursor: pointer;
-    border-radius: ${token.borderRadiusSM}px;
     padding: 4px 8px;
     color: ${token.colorTextSecondary};
     transition: background-color 0.2s;
@@ -308,11 +307,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   }, []);
 
   if (loading) {
-    return (
-      <Flexbox paddingBlock={16} style={{ color: '#999' }}>
-        Loading...
-      </Flexbox>
-    );
+    return <TreeSkeleton />;
   }
 
   return (
