@@ -408,8 +408,9 @@ export const streamingExecutor: StateCreator<
         const hasContentImages = contentParts.some((part) => part.type === 'image');
         const hasReasoningImages = reasoningParts.some((part) => part.type === 'image');
 
-        // Serialize multimodal content for storage
-        const finalContent = hasContentImages ? serializePartsForStorage(contentParts) : content;
+        // Determine final content
+        // If has images, serialize contentParts; otherwise use accumulated output text
+        const finalContent = hasContentImages ? serializePartsForStorage(contentParts) : output;
 
         const finalDuration =
           thinkingDuration && !isNaN(thinkingDuration) ? thinkingDuration : undefined;
@@ -596,9 +597,18 @@ export const streamingExecutor: StateCreator<
             const { partType, content: partContent, mimeType } = chunk;
 
             if (partType === 'text') {
-              // Text part - create new array to avoid mutation
-              const newPart: MessageContentPart = { type: 'text', text: partContent };
-              reasoningParts = [...reasoningParts, newPart];
+              const lastPart = reasoningParts.at(-1);
+
+              // If last part is also text, merge chunks together
+              if (lastPart?.type === 'text') {
+                reasoningParts = [
+                  ...reasoningParts.slice(0, -1),
+                  { type: 'text', text: lastPart.text + partContent },
+                ];
+              } else {
+                // Create new text part (first chunk, may contain thoughtSignature)
+                reasoningParts = [...reasoningParts, { type: 'text', text: partContent }];
+              }
               thinkingContent += partContent;
             } else if (partType === 'image') {
               // Image part - create new array to avoid mutation
@@ -656,12 +666,18 @@ export const streamingExecutor: StateCreator<
             }
 
             if (partType === 'text') {
-              // Text part - create new array to avoid mutation
-              const newPart: MessageContentPart = {
-                type: 'text',
-                text: partContent,
-              };
-              contentParts = [...contentParts, newPart];
+              const lastPart = contentParts.at(-1);
+
+              // If last part is also text, merge chunks together
+              if (lastPart?.type === 'text') {
+                contentParts = [
+                  ...contentParts.slice(0, -1),
+                  { type: 'text', text: lastPart.text + partContent },
+                ];
+              } else {
+                // Create new text part (first chunk, may contain thoughtSignature)
+                contentParts = [...contentParts, { type: 'text', text: partContent }];
+              }
               output += partContent;
             } else if (partType === 'image') {
               // Image part - create new array to avoid mutation
