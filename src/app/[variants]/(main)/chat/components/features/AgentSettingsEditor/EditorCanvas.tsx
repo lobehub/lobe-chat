@@ -54,9 +54,20 @@ const EditorCanvas = memo(() => {
   const theme = useTheme();
   const editor = useEditor();
   const editorContent = useStore((s) => s.config.editorContent);
+  const systemRole = useStore((s) => s.config.systemRole);
   const updateConfig = useStore((s) => s.setAgentConfig);
 
   const [initialLoad] = useState(editorContent || PROMPT_TEMPLATE);
+
+  useEffect(() => {
+    if (editorContent) {
+      editor?.setDocument('json', editorContent || PROMPT_TEMPLATE);
+    }else if (systemRole) {
+      editor?.setDocument('markdown', systemRole);
+    }else{
+      editor?.setDocument('json', PROMPT_TEMPLATE);
+    }
+  }, []);
 
   // Get available tools for @ mention
   const installedTools = useToolStore(toolSelectors.metaList, isEqual);
