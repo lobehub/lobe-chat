@@ -62,6 +62,10 @@ export class FileService {
     return lambdaClient.file.getFileItemById.query({ id });
   };
 
+  getFolderBreadcrumb = async (slug: string) => {
+    return lambdaClient.document.getFolderBreadcrumb.query({ slug });
+  };
+
   checkFileHash = async (hash: string): Promise<CheckFileHashResult> => {
     return lambdaClient.file.checkFileHash.mutate({ hash });
   };

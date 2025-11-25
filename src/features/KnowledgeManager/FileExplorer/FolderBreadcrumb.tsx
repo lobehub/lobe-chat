@@ -4,6 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
+import { useFileStore } from '@/store/file';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -33,54 +34,61 @@ interface FolderBreadcrumbProps {
   knowledgeBaseId?: string;
 }
 
+interface FolderCrumb {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId }) => {
   const { styles, cx } = useStyles();
   const navigate = useNavigate();
-  const { folderSegments, knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
+  const { currentFolderSlug, knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
 
   const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
   const knowledgeBaseName = useKnowledgeBaseStore(
     knowledgeBaseSelectors.getKnowledgeBaseNameById(baseKnowledgeBaseId || ''),
   );
 
+  // Fetch folder breadcrumb chain from backend
+  const useFetchFolderBreadcrumb = useFileStore((s) => s.useFetchFolderBreadcrumb);
+  const { data: folderChain = [] } = useFetchFolderBreadcrumb(currentFolderSlug);
+
   if (!baseKnowledgeBaseId) {
     return null;
   }
 
-  const handleNavigate = (index: number) => {
-    if (index === -1) {
-      // Navigate to knowledge base root
-      navigate(`/knowledge/repo/${baseKnowledgeBaseId}`);
+  const handleNavigate = (slug: string | null) => {
+    if (slug) {
+      navigate(`/knowledge/repo/${baseKnowledgeBaseId}/${slug}`);
     } else {
-      // Navigate to specific folder level
-      const path = folderSegments.slice(0, index + 1).join('/');
-      navigate(`/knowledge/repo/${baseKnowledgeBaseId}/${path}`);
+      navigate(`/knowledge/repo/${baseKnowledgeBaseId}`);
     }
   };
 
-  const isAtRoot = folderSegments.length === 0;
+  const isAtRoot = folderChain.length === 0;
 
   return (
     <Flexbox align={'center'} className={styles.breadcrumb} gap={0} horizontal>
       <span
         className={cx(styles.breadcrumbItem, isAtRoot && styles.currentItem)}
-        onClick={() => !isAtRoot && handleNavigate(-1)}
+        onClick={() => !isAtRoot && handleNavigate(null)}
         style={{ cursor: isAtRoot ? 'default' : 'pointer' }}
       >
         {knowledgeBaseName || 'Knowledge Base'}
       </span>
 
-      {folderSegments.map((segment, index) => {
-        const isLast = index === folderSegments.length - 1;
+      {folderChain.map((folder: FolderCrumb, index: number) => {
+        const isLast = index === folderChain.length - 1;
         return (
-          <Flexbox align={'center'} gap={0} horizontal key={index}>
+          <Flexbox align={'center'} gap={0} horizontal key={folder.id}>
             <span className={styles.separator}>/</span>
             <span
               className={cx(styles.breadcrumbItem, isLast && styles.currentItem)}
-              onClick={() => !isLast && handleNavigate(index)}
+              onClick={() => !isLast && handleNavigate(folder.slug)}
               style={{ cursor: isLast ? 'default' : 'pointer' }}
             >
-              {segment}
+              {folder.name}
             </span>
           </Flexbox>
         );

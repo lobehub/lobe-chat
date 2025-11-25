@@ -22,6 +22,10 @@ export interface FileListItem {
    */
   metadata?: Record<string, any> | null;
   name: string;
+  /**
+   * Parent folder ID (for folder hierarchy)
+   */
+  parentId?: string | null;
   size: number;
   slug?: string | null;
   sourceType: string;

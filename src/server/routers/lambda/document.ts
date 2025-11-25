@@ -67,6 +67,31 @@ export const documentRouter = router({
       return ctx.documentService.getDocumentById(input.id);
     }),
 
+  getFolderBreadcrumb: documentProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const chain = [];
+      let currentFolder = await ctx.documentModel.findBySlug(input.slug);
+
+      // Build chain from current folder to root
+      while (currentFolder) {
+        chain.unshift({
+          id: currentFolder.id,
+          name: currentFolder.title || currentFolder.filename || 'Untitled',
+          slug: currentFolder.slug || currentFolder.id,
+        });
+
+        // Find parent folder
+        if (currentFolder.parentId) {
+          currentFolder = await ctx.documentModel.findById(currentFolder.parentId);
+        } else {
+          break;
+        }
+      }
+
+      return chain;
+    }),
+
   parseFileContent: documentProcedure
     .input(
       z.object({

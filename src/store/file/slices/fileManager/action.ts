@@ -19,6 +19,12 @@ import { fileManagerSelectors } from './selectors';
 
 const serverFileService = new FileService();
 
+export interface FolderCrumb {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export interface FileManageAction {
   dispatchDockFileList: (payload: UploadFileListDispatch) => void;
   embeddingChunks: (fileIds: string[]) => Promise<void>;
@@ -35,6 +41,7 @@ export interface FileManageAction {
   toggleEmbeddingIds: (ids: string[], loading?: boolean) => void;
   toggleParsingIds: (ids: string[], loading?: boolean) => void;
 
+  useFetchFolderBreadcrumb: (slug?: string | null) => SWRResponse<FolderCrumb[]>;
   useFetchKnowledgeItem: (id?: string) => SWRResponse<FileListItem | undefined>;
   useFetchKnowledgeItems: (params: QueryFileListParams) => SWRResponse<FileListItem[]>;
 }
@@ -220,6 +227,15 @@ export const createFileManageSlice: StateCreator<
       return { creatingChunkingTaskIds: Array.from(nextValue.values()) };
     });
   },
+
+  useFetchFolderBreadcrumb: (slug) =>
+    useClientDataSWR<FolderCrumb[]>(
+      !slug ? null : ['useFetchFolderBreadcrumb', slug],
+      async () => {
+        const response = await serverFileService.getFolderBreadcrumb(slug!);
+        return response;
+      },
+    ),
 
   useFetchKnowledgeItem: (id) =>
     useClientDataSWR<FileListItem | undefined>(!id ? null : ['useFetchKnowledgeItem', id], () =>

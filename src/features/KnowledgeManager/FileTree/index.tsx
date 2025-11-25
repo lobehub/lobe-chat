@@ -90,7 +90,7 @@ const FolderTreeItem = memo<{
   }) => {
     const { styles, cx } = useStyles();
     const navigate = useNavigate();
-    const { folderPath } = useFolderPath();
+    const { currentFolderSlug } = useFolderPath();
 
     const itemKey = item.slug || item.id;
     const isExpanded = expandedFolders.has(itemKey);
@@ -106,9 +106,9 @@ const FolderTreeItem = memo<{
           await onLoadFolder(itemKey);
         }
       } else {
-        // Open file modal
-        const currentPath = folderPath
-          ? `/knowledge/repo/${knowledgeBaseId}/${folderPath}`
+        // Open file modal using slug-based routing
+        const currentPath = currentFolderSlug
+          ? `/knowledge/repo/${knowledgeBaseId}/${currentFolderSlug}`
           : `/knowledge/repo/${knowledgeBaseId}`;
         navigate(`${currentPath}?file=${itemKey}`);
       }
@@ -119,7 +119,7 @@ const FolderTreeItem = memo<{
       loadedFolders,
       onToggleFolder,
       onLoadFolder,
-      folderPath,
+      currentFolderSlug,
       knowledgeBaseId,
       navigate,
     ]);

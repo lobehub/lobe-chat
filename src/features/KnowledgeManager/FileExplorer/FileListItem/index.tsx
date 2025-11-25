@@ -126,7 +126,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     const { styles, cx } = useStyles();
     const navigate = useNavigate();
     const [, setSearchParams] = useSearchParams();
-    const { knowledgeBaseId: currentKnowledgeBaseId, folderPath } = useFolderPath();
+    const { knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
       fileManagerSelectors.isCreatingFileParseTask(id)(s),
       s.parseFilesToChunks,
@@ -168,16 +168,13 @@ const FileRenderItem = memo<FileRenderItemProps>(
           horizontal
           onClick={() => {
             if (isFolder) {
-              // Navigate to folder using path-based routing
+              // Navigate to folder using slug-based routing (Google Drive style)
               const folderSlug = slug || id;
               const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
 
               if (baseKnowledgeBaseId) {
-                // Build the new path
-                const newPath = folderPath
-                  ? `/knowledge/repo/${baseKnowledgeBaseId}/${folderPath}/${folderSlug}`
-                  : `/knowledge/repo/${baseKnowledgeBaseId}/${folderSlug}`;
-                navigate(newPath);
+                // Navigate directly to folder by slug, no nested paths
+                navigate(`/knowledge/repo/${baseKnowledgeBaseId}/${folderSlug}`);
               }
             } else {
               setSearchParams(

@@ -1,15 +1,12 @@
 'use client';
 
-import { ActionIcon, Tooltip } from '@lobehub/ui';
 import { ChatHeader } from '@lobehub/ui/chat';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
-import { ArrowUp, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { useNavigate } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
@@ -110,12 +107,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     clearOnDefault: true,
   });
 
-  const navigate = useNavigate();
-  const {
-    currentFolderSlug,
-    folderSegments,
-    knowledgeBaseId: currentKnowledgeBaseId,
-  } = useFolderPath();
+  const { currentFolderSlug, knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
 
   const [sorter] = useQueryState('sorter', {
     clearOnDefault: true,
@@ -284,9 +276,6 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     [onOpenFile, knowledgeBaseId, selectFileIds],
   );
 
-  const hasHistory = typeof window !== 'undefined' && window.history.length > 1;
-  const canGoUp = !!currentFolderSlug;
-
   return !isLoading && data?.length === 0 && !currentFolderSlug ? (
     <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
   ) : (
@@ -294,45 +283,6 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
       <ChatHeader
         left={
           <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
-            <Tooltip title={t('FileManager.actions.goBack', 'Go back to previous page')}>
-              <ActionIcon
-                disabled={!hasHistory}
-                icon={ChevronLeftIcon}
-                onClick={() => {
-                  // Navigate to previous position in browser history
-                  window.history.back();
-                }}
-              />
-            </Tooltip>
-            <Tooltip title={t('FileManager.actions.goForward', 'Go forward to next page')}>
-              <ActionIcon
-                icon={ChevronRightIcon}
-                onClick={() => {
-                  // Navigate to next position in browser history
-                  window.history.forward();
-                }}
-              />
-            </Tooltip>
-            <Tooltip title={t('FileManager.actions.goToParent', 'Go to parent folder')}>
-              <ActionIcon
-                disabled={!canGoUp}
-                icon={ArrowUp}
-                onClick={() => {
-                  // Navigate up one level in the folder hierarchy
-                  const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
-                  if (!baseKnowledgeBaseId) return;
-
-                  if (folderSegments.length <= 1) {
-                    // Navigate to knowledge base root
-                    navigate(`/knowledge/repo/${baseKnowledgeBaseId}`);
-                  } else {
-                    // Navigate to parent folder
-                    const parentPath = folderSegments.slice(0, -1).join('/');
-                    navigate(`/knowledge/repo/${baseKnowledgeBaseId}/${parentPath}`);
-                  }
-                }}
-              />
-            </Tooltip>
             <Flexbox align={'center'} style={{ marginLeft: 12 }}>
               <FolderBreadcrumb knowledgeBaseId={knowledgeBaseId} />
             </Flexbox>
