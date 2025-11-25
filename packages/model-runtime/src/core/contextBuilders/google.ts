@@ -29,7 +29,10 @@ export const buildGooglePart = async (
     }
 
     case 'text': {
-      return { text: content.text };
+      return {
+        text: content.text,
+        thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
+      };
     }
 
     case 'image_url': {
@@ -42,6 +45,7 @@ export const buildGooglePart = async (
 
         return {
           inlineData: { data: base64, mimeType: mimeType || 'image/png' },
+          thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
         };
       }
 
@@ -50,6 +54,7 @@ export const buildGooglePart = async (
 
         return {
           inlineData: { data: base64, mimeType },
+          thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
         };
       }
 
@@ -66,6 +71,7 @@ export const buildGooglePart = async (
 
         return {
           inlineData: { data: base64, mimeType: mimeType || 'video/mp4' },
+          thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
         };
       }
 
@@ -76,6 +82,7 @@ export const buildGooglePart = async (
 
         return {
           inlineData: { data: base64, mimeType },
+          thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
         };
       }
 
@@ -126,7 +133,8 @@ export const buildGoogleMessage = async (
   }
 
   const getParts = async () => {
-    if (typeof content === 'string') return [{ text: content }];
+    if (typeof content === 'string')
+      return [{ text: content, thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }];
 
     const parts = await Promise.all(content.map(async (c) => await buildGooglePart(c)));
     return parts.filter(Boolean) as Part[];
