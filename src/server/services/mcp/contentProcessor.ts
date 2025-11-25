@@ -13,9 +13,9 @@ const log = debug('lobe-mcp:content-processor');
 export type ProcessContentBlocksFn = (blocks: ToolCallContent[]) => Promise<ToolCallContent[]>;
 
 /**
- * 处理 MCP 返回的 content blocks
- * - 上传图片/音频到存储并替换 data 为代理 URL
- * - 保持其他类型的 block 不变
+ * Process content blocks returned by MCP
+ * - Upload images/audio to storage and replace data with proxy URL
+ * - Keep other types of blocks unchanged
  */
 export const processContentBlocks = async (
   blocks: ToolCallContent[],
@@ -64,10 +64,10 @@ export const processContentBlocks = async (
 };
 
 /**
- * 将 content blocks 转换为字符串
- * - text: 提取 text 字段
- * - image/audio: 提取 data 字段（通常是上传后的代理 URL）
- * - 其他: 返回空字符串
+ * Convert content blocks to string
+ * - text: Extract text field
+ * - image/audio: Extract data field (usually the proxy URL after upload)
+ * - others: Return empty string
  */
 export const contentBlocksToString = (blocks: ToolCallContent[] | null | undefined): string => {
   if (!blocks) return '';
