@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add Claude Opus 4.5 model."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.115"
+  },
+  {
+    "children": {
       "fixes": ["Fixed the topic link dropdown error."]
     },
     "date": "2025-11-25",
