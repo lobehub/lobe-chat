@@ -186,8 +186,15 @@ export const fileRouter = router({
   getKnowledgeItems: fileProcedure.input(QueryFileListSchema).query(async ({ ctx, input }) => {
     const knowledgeItems = await ctx.knowledgeRepo.query(input);
 
+    // Filter out folders from Documents category when in Inbox (no knowledgeBaseId)
+    const filteredItems = !input.knowledgeBaseId
+      ? knowledgeItems.filter(
+          (item) => !(item.sourceType === 'document' && item.fileType === 'custom/folder'),
+        )
+      : knowledgeItems;
+
     // Process files (add chunk info and async task status)
-    const fileItems = knowledgeItems.filter((item) => item.sourceType === 'file');
+    const fileItems = filteredItems.filter((item) => item.sourceType === 'file');
     const fileIds = fileItems.map((item) => item.id);
     const chunks = await ctx.chunkModel.countByFileIds(fileIds);
 
@@ -204,7 +211,7 @@ export const fileRouter = router({
 
     // Combine all items with their metadata
     const resultItems = [] as any[];
-    for (const item of knowledgeItems) {
+    for (const item of filteredItems) {
       if (item.sourceType === 'file') {
         const chunkTask = item.chunkTaskId
           ? chunkTasks.find((task) => task.id === item.chunkTaskId)
