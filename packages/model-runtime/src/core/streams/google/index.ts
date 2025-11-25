@@ -115,8 +115,55 @@ const transformGoogleGenerativeAIStream = (
       .join('') || '';
 
   if (candidate) {
+    // Check if this response contains reasoning or multimodal content
+    const parts = candidate.content?.parts || [];
+    const hasReasoningParts = parts.some((p: any) => p.thought === true);
+    const hasImageParts = parts.some((p: any) => p.inlineData);
+    const hasThoughtSignature = parts.some((p: any) => p.thoughtSignature);
+    const hasThoughtsInMetadata = (usageMetadata as any)?.thoughtsTokenCount > 0;
+
+    // Check model version to determine if new format should be used
+    const modelVersion = (chunk as any).modelVersion || '';
+    const isGemini25Plus = modelVersion.includes('gemini-2.5') || modelVersion.includes('gemini-3');
+    const isGemini3Model =
+      modelVersion.includes('gemini-3') || modelVersion.includes('image-preview');
+
+    // Check if this is the old single-image scenario (single image part with finishReason)
+    // This should use the legacy base64_image event format (only for gemini-2.0 and earlier)
+    const isSingleImageWithFinish =
+      parts.length === 1 &&
+      hasImageParts &&
+      !hasReasoningParts &&
+      candidate.finishReason &&
+      !isGemini25Plus;
+
+    // Check if this has grounding metadata (should use legacy text + grounding events)
+    const hasGroundingMetadata = !!candidate.groundingMetadata?.groundingChunks;
+
+    // Use content_part/reasoning_part events when:
+    // 1. There are reasoning parts in current chunk (thought: true)
+    // 2. There are multiple parts with images (multimodal content)
+    // 3. There are thoughtSignature in parts (reasoning metadata attached to content)
+    // 4. There is thoughtsTokenCount in metadata (indicates response contains reasoning)
+    // 5. This is Gemini 3 model with image generation (always use new format for consistency)
+    // BUT NOT for:
+    // - The legacy single-image scenario
+    // - Grounding metadata scenario (uses legacy text + grounding events)
+    const shouldUseMultimodalProcessing =
+      (hasReasoningParts ||
+        (hasImageParts && parts.length > 1) ||
+        hasThoughtSignature ||
+        hasThoughtsInMetadata ||
+        isGemini3Model) &&
+      !isSingleImageWithFinish &&
+      !hasGroundingMetadata;
+
     // Process multimodal parts (text and images in reasoning or content)
-    if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
+    if (
+      shouldUseMultimodalProcessing &&
+      Array.isArray(candidate.content?.parts) &&
+      candidate.content.parts.length > 0
+    ) {
       const results: StreamProtocolChunk[] = [];
 
       for (const part of candidate.content.parts) {

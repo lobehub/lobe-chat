@@ -94,8 +94,8 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual([
         // text
         'id: chat_1\n',
-        'event: content_part\n',
-        `data: {"content":"Hello","partType":"text"}\n\n`,
+        'event: text\n',
+        `data: "Hello"\n\n`,
 
         // tool call
         'id: chat_1\n',
@@ -104,8 +104,8 @@ describe('GoogleGenerativeAIStream', () => {
 
         // text
         'id: chat_1\n',
-        'event: content_part\n',
-        `data: {"content":" world!","partType":"text"}\n\n`,
+        'event: text\n',
+        `data: " world!"\n\n`,
         // stop
         'id: chat_1\n',
         'event: stop\n',
@@ -471,12 +471,12 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: chat_1',
-          'event: text',
-          'data: "234"\n',
+          'event: content_part',
+          'data: {"content":"234","partType":"text"}\n',
 
           'id: chat_1',
-          'event: text',
-          `data: "567890\\n"\n`,
+          'event: content_part',
+          `data: {"content":"567890\\n","partType":"text"}\n`,
           // stop
           'id: chat_1',
           'event: stop',
@@ -1166,8 +1166,8 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: chat_1',
-          'event: text',
-          'data: "你好！很高兴为你服务。请问有什么我可以帮你的吗？\\n\\n无论是回答问题、协助写作、翻译，还是随便聊聊，我都随时待命！"\n',
+          'event: content_part',
+          'data: {"content":"你好！很高兴为你服务。请问有什么我可以帮你的吗？\\n\\n无论是回答问题、协助写作、翻译，还是随便聊聊，我都随时待命！","partType":"text"}\n',
 
           'id: chat_1',
           'event: stop',
@@ -1286,8 +1286,8 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: chat_1',
-          'event: text',
-          'data: "Here is my answer"\n',
+          'event: content_part',
+          'data: {"content":"Here is my answer","partType":"text","thoughtSignature":"sig123"}\n',
 
           'id: chat_1',
           'event: stop',
