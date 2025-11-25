@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Bedrock claude model thinking support."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.117"
+  },
+  {
+    "children": {
       "features": ["Support nano banana pro."]
     },
     "date": "2025-11-25",
