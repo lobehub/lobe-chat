@@ -244,6 +244,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
             className="topic-more"
             icon={MoreVertical}
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
             }}
             size={'small'}

@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fixed when desktop userId was change manytimes the aimodel not right."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.113"
+  },
+  {
+    "children": {
       "improvements": ["Add Kimi K2 Thinking to Qwen Provider."]
     },
     "date": "2025-11-24",

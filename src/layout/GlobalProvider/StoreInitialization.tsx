@@ -9,6 +9,8 @@ import { createStoreUpdater } from 'zustand-utils';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { useAiInfraStore } from '@/store/aiInfra';
+import { useElectronStore } from '@/store/electron';
+import { electronSyncSelectors } from '@/store/electron/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
@@ -63,8 +65,10 @@ const StoreInitialization = memo(() => {
   // init inbox agent and default agent config
   useInitAgentStore(isLoginOnInit, serverConfig.defaultAgent?.config);
 
+  const isSyncActive = useElectronStore((s) => electronSyncSelectors.isSyncActive(s));
+
   // init user provider key vaults
-  useInitAiProviderKeyVaults(isLoginOnInit);
+  useInitAiProviderKeyVaults(isLoginOnInit, isSyncActive);
 
   // init user state
   useInitUserState(isLoginOnInit, serverConfig, {
