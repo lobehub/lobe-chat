@@ -1,3 +1,4 @@
+import { deserializeParts } from '@lobechat/utils';
 import { Markdown, MarkdownProps } from '@lobehub/ui';
 import { memo } from 'react';
 
@@ -5,7 +6,6 @@ import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
 import { RichContentRenderer } from '@/features/ChatList/components/RichContentRenderer';
 import { normalizeThinkTags, processWithArtifact } from '@/features/ChatList/utils/markdown';
-import { deserializeParts } from '@/utils/multimodalContent';
 
 const MessageContent = memo<{
   addIdOnDOM?: boolean;

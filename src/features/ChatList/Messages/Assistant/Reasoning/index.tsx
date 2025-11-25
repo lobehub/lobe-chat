@@ -1,4 +1,5 @@
 import { MessageContentPart } from '@lobechat/types';
+import { deserializeParts } from '@lobechat/utils';
 import { memo } from 'react';
 
 import Thinking from '@/components/Thinking';
@@ -6,7 +7,6 @@ import { useChatStore } from '@/store/chat';
 import { aiChatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
-import { deserializeParts } from '@/utils/multimodalContent';
 
 import { RichContentRenderer } from '../../../components/RichContentRenderer';
 

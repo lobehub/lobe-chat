@@ -11,6 +11,7 @@ import {
   TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
+import { serializePartsForStorage } from '@lobechat/utils';
 import debug from 'debug';
 import { t } from 'i18next';
 import { throttle } from 'lodash-es';
@@ -28,7 +29,6 @@ import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { toolInterventionSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
-import { serializePartsForStorage } from '@/utils/multimodalContent';
 
 import { topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
@@ -596,24 +596,26 @@ export const streamingExecutor: StateCreator<
             const { partType, content: partContent, mimeType } = chunk;
 
             if (partType === 'text') {
-              // Text part
-              reasoningParts.push({ type: 'text', text: partContent });
+              // Text part - create new array to avoid mutation
+              const newPart: MessageContentPart = { type: 'text', text: partContent };
+              reasoningParts = [...reasoningParts, newPart];
               thinkingContent += partContent;
             } else if (partType === 'image') {
-              // Image part
+              // Image part - create new array to avoid mutation
               const tempImage = `data:${mimeType};base64,${partContent}`;
               const partIndex = reasoningParts.length;
-              reasoningParts.push({ type: 'image', image: tempImage });
+              const newPart: MessageContentPart = { type: 'image', image: tempImage };
+              reasoningParts = [...reasoningParts, newPart];
 
               // Start upload task and update array when done
               const uploadTask = getFileStoreState()
                 .uploadBase64FileWithProgress(tempImage)
                 .then((file) => {
                   const url = file?.url || tempImage;
-                  // Replace the object at index to avoid mutation of frozen objects
-                  if (reasoningParts[partIndex]?.type === 'image') {
-                    reasoningParts[partIndex] = { type: 'image', image: url };
-                  }
+                  // Replace the part at index by creating a new array
+                  const updatedParts = [...reasoningParts];
+                  updatedParts[partIndex] = { type: 'image', image: url };
+                  reasoningParts = updatedParts;
                   return url;
                 })
                 .catch((error) => {
@@ -644,7 +646,7 @@ export const streamingExecutor: StateCreator<
           }
 
           case 'content_part': {
-            const { partType, content: partContent, mimeType, thoughtSignature } = chunk;
+            const { partType, content: partContent, mimeType } = chunk;
 
             // End reasoning when content starts
             if (!thinkingDuration && reasoningOperationId) {
@@ -654,28 +656,35 @@ export const streamingExecutor: StateCreator<
             }
 
             if (partType === 'text') {
-              // Text part with optional thoughtSignature
-              contentParts.push({ type: 'text', text: partContent, thoughtSignature });
+              // Text part - create new array to avoid mutation
+              const newPart: MessageContentPart = {
+                type: 'text',
+                text: partContent,
+              };
+              contentParts = [...contentParts, newPart];
               output += partContent;
             } else if (partType === 'image') {
-              // Image part with optional thoughtSignature
+              // Image part - create new array to avoid mutation
               const tempImage = `data:${mimeType};base64,${partContent}`;
               const partIndex = contentParts.length;
-              contentParts.push({ type: 'image', image: tempImage, thoughtSignature });
+              const newPart: MessageContentPart = {
+                type: 'image',
+                image: tempImage,
+              };
+              contentParts = [...contentParts, newPart];
 
               // Start upload task and update array when done
               const uploadTask = getFileStoreState()
                 .uploadBase64FileWithProgress(tempImage)
                 .then((file) => {
                   const url = file?.url || tempImage;
-                  // Replace the object at index to avoid mutation of frozen objects
-                  if (contentParts[partIndex]?.type === 'image') {
-                    contentParts[partIndex] = {
-                      type: 'image',
-                      image: url,
-                      thoughtSignature,
-                    };
-                  }
+                  // Replace the part at index by creating a new array
+                  const updatedParts = [...contentParts];
+                  updatedParts[partIndex] = {
+                    type: 'image',
+                    image: url,
+                  };
+                  contentParts = updatedParts;
                   return url;
                 })
                 .catch((error) => {
