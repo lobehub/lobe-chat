@@ -43,7 +43,6 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
     checkbox: hover,
     container: css`
       cursor: pointer;
-      margin-inline: 16px;
       border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
 
       &:hover {
@@ -67,13 +66,20 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
     `,
     name: css`
       overflow: hidden;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
+      flex: 1;
 
+      min-width: 0;
       margin-inline-start: 12px;
 
       color: ${token.colorText};
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    `,
+    nameContainer: css`
+      overflow: hidden;
+      flex: 1;
+      min-width: 0;
+      max-width: 600px;
     `,
     selected: css`
       background: ${token.colorFillTertiary};
@@ -185,7 +191,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
             }
           }}
         >
-          <Flexbox align={'center'} horizontal>
+          <Flexbox align={'center'} className={styles.nameContainer} horizontal>
             <Center
               height={48}
               onClick={(e) => {
