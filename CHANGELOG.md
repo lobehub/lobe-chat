@@ -2,6 +2,515 @@
 
 # Changelog
 
+## [Version 2.0.0-next.115](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.114...v2.0.0-next.115)
+
+<sup>Released on **2025-11-25**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Claude Opus 4.5 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Claude Opus 4.5 model, closes [#10406](https://github.com/lobehub/lobe-chat/issues/10406) ([042005a](https://github.com/lobehub/lobe-chat/commit/042005a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.114](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.113...v2.0.0-next.114)
+
+<sup>Released on **2025-11-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the topic link dropdown error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the topic link dropdown error, closes [#10408](https://github.com/lobehub/lobe-chat/issues/10408) ([864e3d5](https://github.com/lobehub/lobe-chat/commit/864e3d5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.113](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.112...v2.0.0-next.113)
+
+<sup>Released on **2025-11-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed when desktop userId was change manytimes the aimodel not right.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed when desktop userId was change manytimes the aimodel not right, closes [#10389](https://github.com/lobehub/lobe-chat/issues/10389) ([3ed8153](https://github.com/lobehub/lobe-chat/commit/3ed8153))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.112](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.111...v2.0.0-next.112)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Optimize files schema definition.
+
+#### 💄 Styles
+
+- **misc**: Add Kimi K2 Thinking to Qwen Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Optimize files schema definition, closes [#10403](https://github.com/lobehub/lobe-chat/issues/10403) ([cf28c87](https://github.com/lobehub/lobe-chat/commit/cf28c87))
+
+#### Styles
+
+- **misc**: Add Kimi K2 Thinking to Qwen Provider, closes [#10287](https://github.com/lobehub/lobe-chat/issues/10287) ([bd2e838](https://github.com/lobehub/lobe-chat/commit/bd2e838))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.111](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.110...v2.0.0-next.111)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix db migration snapshot not align with db schema, Separate agent file injection from knowledge base RAG search.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix db migration snapshot not align with db schema, closes [#10399](https://github.com/lobehub/lobe-chat/issues/10399) ([760105a](https://github.com/lobehub/lobe-chat/commit/760105a))
+- **misc**: Separate agent file injection from knowledge base RAG search, closes [#10398](https://github.com/lobehub/lobe-chat/issues/10398) ([e1c813a](https://github.com/lobehub/lobe-chat/commit/e1c813a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.110](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.109...v2.0.0-next.110)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add hyperlink to each topic & pinned agent, support ContextMenu on ChatItem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add hyperlink to each topic & pinned agent, closes [#10367](https://github.com/lobehub/lobe-chat/issues/10367) ([63e4b3d](https://github.com/lobehub/lobe-chat/commit/63e4b3d))
+- **misc**: Support ContextMenu on ChatItem, closes [#9034](https://github.com/lobehub/lobe-chat/issues/9034) ([27c1154](https://github.com/lobehub/lobe-chat/commit/27c1154))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.109](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.108...v2.0.0-next.109)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the knowledge files cant open error.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the knowledge files cant open error, closes [#10386](https://github.com/lobehub/lobe-chat/issues/10386) ([8104c77](https://github.com/lobehub/lobe-chat/commit/8104c77))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10368](https://github.com/lobehub/lobe-chat/issues/10368) ([ed707af](https://github.com/lobehub/lobe-chat/commit/ed707af))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.108](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.107...v2.0.0-next.108)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the pinned session not work.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the pinned session not work, closes [#10323](https://github.com/lobehub/lobe-chat/issues/10323) ([224f999](https://github.com/lobehub/lobe-chat/commit/224f999))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.107](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.106...v2.0.0-next.107)
+
+<sup>Released on **2025-11-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Optimize nana banana pro error message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Optimize nana banana pro error message, closes [#10378](https://github.com/lobehub/lobe-chat/issues/10378) ([cb34757](https://github.com/lobehub/lobe-chat/commit/cb34757))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.106](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.105...v2.0.0-next.106)
+
+<sup>Released on **2025-11-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Add nano-banana-pro model support and optimization.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add nano-banana-pro model support and optimization, closes [#10376](https://github.com/lobehub/lobe-chat/issues/10376) ([5349bdc](https://github.com/lobehub/lobe-chat/commit/5349bdc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.105](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.104...v2.0.0-next.105)
+
+<sup>Released on **2025-11-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **operation**: Isolate loading state to current active topic.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **operation**: Isolate loading state to current active topic, closes [#10360](https://github.com/lobehub/lobe-chat/issues/10360) ([c568369](https://github.com/lobehub/lobe-chat/commit/c568369))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.104](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.103...v2.0.0-next.104)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10349](https://github.com/lobehub/lobe-chat/issues/10349) ([3482d38](https://github.com/lobehub/lobe-chat/commit/3482d38))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.103](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.102...v2.0.0-next.103)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Hide ai image config item in settings category.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Hide ai image config item in settings category, closes [#10066](https://github.com/lobehub/lobe-chat/issues/10066) ([90354eb](https://github.com/lobehub/lobe-chat/commit/90354eb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.102](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.101...v2.0.0-next.102)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new provider ZenMux & Gemini 3 Pro Image Preview.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new provider ZenMux & Gemini 3 Pro Image Preview, closes [#10310](https://github.com/lobehub/lobe-chat/issues/10310) ([f2291e4](https://github.com/lobehub/lobe-chat/commit/f2291e4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.101](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.100...v2.0.0-next.101)
+
+<sup>Released on **2025-11-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Support bedrok prompt cache and usage compute.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support bedrok prompt cache and usage compute, closes [#10337](https://github.com/lobehub/lobe-chat/issues/10337) ([beb9471](https://github.com/lobehub/lobe-chat/commit/beb9471))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.100](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.99...v2.0.0-next.100)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Gemini 3 Pro does not display thought summaries.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Gemini 3 Pro does not display thought summaries, closes [#10345](https://github.com/lobehub/lobe-chat/issues/10345) ([89e296a](https://github.com/lobehub/lobe-chat/commit/89e296a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.99](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.98...v2.0.0-next.99)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### ✨ Features
+
+- **misc**: Refactor to use kb search tool.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Refactor to use kb search tool, closes [#10340](https://github.com/lobehub/lobe-chat/issues/10340) ([291ff3c](https://github.com/lobehub/lobe-chat/commit/291ff3c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.98](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.97...v2.0.0-next.98)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed changelog pages and open again.
+
+#### 💄 Styles
+
+- **misc**: Fix some translations.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed changelog pages and open again, closes [#10285](https://github.com/lobehub/lobe-chat/issues/10285) ([871d141](https://github.com/lobehub/lobe-chat/commit/871d141))
+
+#### Styles
+
+- **misc**: Fix some translations, closes [#10343](https://github.com/lobehub/lobe-chat/issues/10343) ([ed193e0](https://github.com/lobehub/lobe-chat/commit/ed193e0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.97](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.96...v2.0.0-next.97)
+
+<sup>Released on **2025-11-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor Conversation to ChatList.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor Conversation to ChatList, closes [#10330](https://github.com/lobehub/lobe-chat/issues/10330) ([bca70e2](https://github.com/lobehub/lobe-chat/commit/bca70e2))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10338](https://github.com/lobehub/lobe-chat/issues/10338) ([9c8cf81](https://github.com/lobehub/lobe-chat/commit/9c8cf81))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.96](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.95...v2.0.0-next.96)
 
 <sup>Released on **2025-11-20**</sup>

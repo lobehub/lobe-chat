@@ -1,6 +1,6 @@
 import { AIChatModelCard, AIEmbeddingModelCard } from '../types/aiModel';
 
-// 根据 Vercel AI Gateway 提供的模型列表，按 SOTA、大模型、小模型排序
+// Model list provided by Vercel AI Gateway, sorted by SOTA, large models, small models
 const vercelAIGatewayChatModels: AIChatModelCard[] = [
   {
     abilities: {

@@ -843,7 +843,7 @@ const doubaoChatModels: AIChatModelCard[] = [
 const volcengineImageModels: AIImageModelCard[] = [
   {
     /*
-    // TODO: AIImageModelCard 不支持 config.deploymentName
+    // TODO: AIImageModelCard does not support config.deploymentName
     config: {
       deploymentName: 'doubao-seedream-3-0-t2i-250415',
     },
@@ -877,7 +877,7 @@ const volcengineImageModels: AIImageModelCard[] = [
   },
   {
     /*
-    // TODO: AIImageModelCard 不支持 config.deploymentName
+    // TODO: AIImageModelCard does not support config.deploymentName
     config: {
       deploymentName: 'doubao-seedream-3-0-t2i-250415',
     },
@@ -910,7 +910,7 @@ const volcengineImageModels: AIImageModelCard[] = [
     releasedAt: '2025-04-15',
     type: 'image',
   },
-  // Note: Doubao 图生图模型与文生图模型公用一个 Endpoint，当前如果存在 imageUrl 会切换至 edit endpoint 下
+  // Note: Doubao image-to-image and text-to-image models share the same Endpoint, currently switches to edit endpoint if imageUrl exists
   {
     // config: {
     //   deploymentName: 'doubao-seededit-3-0-i2i-250628',

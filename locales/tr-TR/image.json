@@ -37,6 +37,14 @@
         "standard": "Standart"
       }
     },
+    "resolution": {
+      "label": "Çözünürlük",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
+    },
     "seed": {
       "label": "Tohum",
       "random": "Rastgele Tohum"

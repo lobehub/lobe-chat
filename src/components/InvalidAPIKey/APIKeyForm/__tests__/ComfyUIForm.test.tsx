@@ -97,7 +97,7 @@ vi.mock('react-layout-kit', () => ({
   )),
 }));
 
-vi.mock('@/features/Conversation/Error/style', () => ({
+vi.mock('@/features/ChatList/Error/style', () => ({
   FormAction: vi.fn(({ children, title, description, avatar, ...props }) => (
     <div data-testid="form-action" {...props}>
       <div data-testid="avatar">{avatar}</div>

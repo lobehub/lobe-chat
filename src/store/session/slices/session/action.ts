@@ -76,6 +76,15 @@ export interface SessionAction {
    */
   removeSession: (id: string) => Promise<void>;
 
+  /**
+   * Set the agent panel pinned state
+   */
+  setAgentPinned: (pinned: boolean | ((prev: boolean) => boolean)) => void;
+  /**
+   * Toggle the agent panel pinned state
+   */
+  toggleAgentPinned: () => void;
+
   updateSearchKeywords: (keywords: string) => void;
 
   useFetchSessions: (
@@ -187,10 +196,24 @@ export const createSessionSlice: StateCreator<
     }
   },
 
+  setAgentPinned: (value) => {
+    set(
+      (state) => ({
+        isAgentPinned: typeof value === 'function' ? value(state.isAgentPinned) : value,
+      }),
+      false,
+      n('setAgentPinned'),
+    );
+  },
+
   switchSession: (sessionId) => {
     if (get().activeId === sessionId) return;
 
     set({ activeId: sessionId }, false, n(`activeSession/${sessionId}`));
+  },
+
+  toggleAgentPinned: () => {
+    set((state) => ({ isAgentPinned: !state.isAgentPinned }), false, n('toggleAgentPinned'));
   },
 
   triggerSessionUpdate: async (id) => {

@@ -148,10 +148,9 @@ export const createRouterRuntime = ({
     }
 
     /**
-     * TODO: 考虑添加缓存机制，避免重复创建相同配置的 runtimes
+     * Resolve routers configuration and validate
      */
-    private async createRuntimesByRouters(model?: string): Promise<RuntimeItem[]> {
-      // 动态获取 routers，支持传入 model
+    private async resolveRouters(model?: string): Promise<RouterInstance[]> {
       const resolvedRouters =
         typeof this._routers === 'function'
           ? await this._routers(this._options, { model })
@@ -161,6 +160,41 @@ export const createRouterRuntime = ({
         throw new Error('empty providers');
       }
 
+      return resolvedRouters;
+    }
+
+    /**
+     * Create runtime for inference requests (chat, generateObject, etc.)
+     * Finds the router that matches the model, or uses the last router as fallback
+     */
+    private async createRuntimeForInference(model: string): Promise<RuntimeItem> {
+      const resolvedRouters = await this.resolveRouters(model);
+
+      const matchedRouter =
+        resolvedRouters.find((router) => {
+          if (router.models && router.models.length > 0) {
+            return router.models.includes(model);
+          }
+          return false;
+        }) ?? resolvedRouters.at(-1)!;
+
+      const providerAI =
+        matchedRouter.runtime ?? baseRuntimeMap[matchedRouter.apiType] ?? LobeOpenAI;
+      const finalOptions = { ...this._params, ...this._options, ...matchedRouter.options };
+      const runtime: LobeRuntimeAI = new providerAI({ ...finalOptions, id: this._id });
+
+      return {
+        id: matchedRouter.apiType,
+        models: matchedRouter.models,
+        runtime,
+      };
+    }
+
+    /**
+     * Create all runtimes for listing models
+     */
+    private async createRuntimes(): Promise<RuntimeItem[]> {
+      const resolvedRouters = await this.resolveRouters();
       return resolvedRouters.map((router) => {
         const providerAI = router.runtime ?? baseRuntimeMap[router.apiType] ?? LobeOpenAI;
         const finalOptions = { ...this._params, ...this._options, ...router.options };
@@ -176,16 +210,8 @@ export const createRouterRuntime = ({
 
     // Check if it can match a specific model, otherwise default to using the last runtime
     async getRuntimeByModel(model: string) {
-      const runtimes = await this.createRuntimesByRouters(model);
-
-      for (const runtimeItem of runtimes) {
-        const models = runtimeItem.models || [];
-        if (models.includes(model)) {
-          return runtimeItem.runtime;
-        }
-      }
-
-      return runtimes.at(-1)!.runtime;
+      const runtimeItem = await this.createRuntimeForInference(model);
+      return runtimeItem.runtime;
     }
 
     async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
@@ -222,9 +248,8 @@ export const createRouterRuntime = ({
 
     async models() {
       if (modelsOption && typeof modelsOption === 'function') {
-        // 延迟创建 runtimes
-        const runtimes = await this.createRuntimesByRouters();
-        // 如果是函数式配置，使用最后一个运行时的客户端来调用函数
+        const runtimes = await this.createRuntimes();
+        // If it's a functional configuration, use the last runtime's client to call the function
         const lastRuntime = runtimes.at(-1)?.runtime;
         if (lastRuntime && 'client' in lastRuntime) {
           const modelList = await modelsOption({ client: (lastRuntime as any).client });
@@ -232,8 +257,7 @@ export const createRouterRuntime = ({
         }
       }
 
-      // 延迟创建 runtimes
-      const runtimes = await this.createRuntimesByRouters();
+      const runtimes = await this.createRuntimes();
       return runtimes.at(-1)?.runtime.models?.();
     }
 

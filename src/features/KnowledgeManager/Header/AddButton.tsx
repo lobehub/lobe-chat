@@ -36,7 +36,6 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
 
   const handleCreateFolder = () => {
     setIsModalOpen(false);
-    console.log('create folder');
   };
 
   const items = useMemo<MenuProps['items']>(

@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { SkeletonList, VirtualizedList } from '@/features/Conversation';
+import { SkeletonList, VirtualizedList } from '@/features/ChatList';
 import { useFetchThreads } from '@/hooks/useFetchThreads';
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';

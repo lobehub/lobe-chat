@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "قراءة محتوى قاعدة المعرفة",
+        "searchKnowledgeBase": "البحث في قاعدة المعرفة"
+      },
+      "title": "قاعدة المعرفة"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "تحرير الملف",
+        "getCommandOutput": "الحصول على مخرجات الكود",
+        "globLocalFiles": "البحث عن الملفات",
+        "grepContent": "البحث في المحتوى",
+        "killCommand": "إيقاف تنفيذ الكود",
+        "listLocalFiles": "عرض قائمة الملفات",
+        "moveLocalFiles": "نقل الملفات",
+        "readLocalFile": "قراءة محتوى الملف",
+        "renameLocalFile": "إعادة تسمية",
+        "runCommand": "تنفيذ الكود",
+        "searchLocalFiles": "البحث في الملفات",
+        "writeLocalFile": "كتابة إلى الملف"
+      },
+      "title": "النظام المحلي"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "قراءة محتوى عدة صفحات",
+        "crawlSinglePage": "قراءة محتوى الصفحة",
+        "search": "البحث في الصفحات"
+      },
+      "title": "البحث عبر الإنترنت"
+    }
+  },
   "confirm": "تأكيد",
   "debug": {
     "arguments": "معلمات الاستدعاء",
@@ -251,23 +285,6 @@
     "content": "جارٍ استدعاء الإضافة...",
     "plugin": "تشغيل الإضافة..."
   },
-  "localSystem": {
-    "apiName": {
-      "editLocalFile": "تحرير الملف",
-      "getCommandOutput": "الحصول على مخرجات الأوامر",
-      "globLocalFiles": "البحث عن الملفات المطابقة",
-      "grepContent": "البحث في المحتوى",
-      "killCommand": "إيقاف تنفيذ الأمر",
-      "listLocalFiles": "عرض قائمة الملفات",
-      "moveLocalFiles": "نقل الملفات",
-      "readLocalFile": "قراءة محتوى الملف",
-      "renameLocalFile": "إعادة تسمية",
-      "runCommand": "تشغيل الأمر",
-      "searchLocalFiles": "بحث في الملفات",
-      "writeLocalFile": "كتابة في الملف"
-    },
-    "title": "النظام المحلي"
-  },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "جارٍ فحص بيئة التثبيت...",
     "COMPLETED": "اكتمل التثبيت",
@@ -375,11 +392,6 @@
     "warning": "⚠️ يرجى التأكد من ثقتك بمصدر هذه الإضافة، الإضافات الخبيثة قد تضر بأمان نظامك."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "قراءة محتوى عدة صفحات",
-      "crawlSinglePage": "قراءة محتوى الصفحة",
-      "search": "البحث في الصفحة"
-    },
     "config": {
       "addKey": "إضافة مفتاح",
       "close": "حذف",

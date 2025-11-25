@@ -1,10 +1,13 @@
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
+import qs from 'query-string';
 import { Suspense, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
 
 import ThreadList from '../ThreadList';
 import DefaultContent from './DefaultContent';
@@ -52,32 +55,46 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav, threadId }) =
   const { styles, cx } = useStyles();
   const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
   const [toggleTopic] = useChatStore((s) => [s.switchTopic]);
+  const activeId = useSessionStore((s) => s.activeId);
   const [isHover, setHovering] = useState(false);
+
+  const topicUrl = qs.stringifyUrl({
+    query: id ? { session: activeId, topic: id } : { session: activeId },
+    url: '/chat',
+  });
 
   return (
     <Flexbox style={{ position: 'relative' }}>
-      <Flexbox
-        align={'center'}
-        className={cx(styles.container, 'topic-item', active && !threadId && styles.active)}
-        distribution={'space-between'}
-        horizontal
-        onClick={() => {
+      <Link
+        onClick={(e) => {
+          if (e.button === 0 && (e.metaKey || e.ctrlKey)) {
+            return;
+          }
+          e.preventDefault();
           toggleTopic(id);
           toggleConfig(false);
         }}
-        onMouseEnter={() => {
-          setHovering(true);
-        }}
-        onMouseLeave={() => {
-          setHovering(false);
-        }}
+        to={topicUrl}
       >
-        {!id ? (
-          <DefaultContent />
-        ) : (
-          <TopicContent fav={fav} id={id} showMore={isHover} title={title} />
-        )}
-      </Flexbox>
+        <Flexbox
+          align={'center'}
+          className={cx(styles.container, 'topic-item', active && !threadId && styles.active)}
+          distribution={'space-between'}
+          horizontal
+          onMouseEnter={() => {
+            setHovering(true);
+          }}
+          onMouseLeave={() => {
+            setHovering(false);
+          }}
+        >
+          {!id ? (
+            <DefaultContent />
+          ) : (
+            <TopicContent fav={fav} id={id} showMore={isHover} title={title} />
+          )}
+        </Flexbox>
+      </Link>
       {active && (
         <Suspense
           fallback={
