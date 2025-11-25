@@ -84,7 +84,6 @@ export const useStyles = createStyles(
         variant === 'docs' && rawContainerStylish,
         css`
           position: relative;
-
           width: 100%;
           max-width: 100vw;
           padding-block: 24px 12px;
