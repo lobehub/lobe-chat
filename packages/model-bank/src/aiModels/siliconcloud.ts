@@ -33,8 +33,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 262_144,
     description:
       'Kimi K2 Thinking Turbo 是 Kimi K2 系列的 Turbo 版本，针对推理速度和吞吐进行了优化，同时保留 K2 Thinking 的多步推理与工具调用能力。该模型基于混合专家（MoE）架构，总参数约 1T，原生支持 256K 上下文并可稳定执行大规模工具调用，适用于对延迟和并发有更高要求的生产场景。',
-    displayName: 'Kimi K2 Thinking (Turbo)',
-    id: 'moonshotai/Kimi-K2-Thinking-Turbo',
+    displayName: 'Kimi K2 Thinking (Pro)',
+    id: 'Pro/moonshotai/Kimi-K2-Thinking',
     pricing: {
       currency: 'CNY',
       units: [
