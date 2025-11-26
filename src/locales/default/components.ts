@@ -39,6 +39,9 @@ export default {
       moveToRoot: '移动到根目录',
       removeFromKnowledgeBase: '从知识库中移除',
       removeFromKnowledgeBaseSuccess: '文件移除成功',
+      rename: '重命名',
+      renameError: '重命名失败',
+      renameSuccess: '重命名成功',
     },
     bottom: '已经到底啦',
     config: {

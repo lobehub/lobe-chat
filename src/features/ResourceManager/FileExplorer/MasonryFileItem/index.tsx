@@ -167,7 +167,6 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     size,
     onOpen,
     metadata,
-    sourceType,
   }) => {
     const { styles, cx } = useStyles();
     const [markdownContent, setMarkdownContent] = useState<string>('');
@@ -271,7 +270,6 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             filename={name}
             id={id}
             knowledgeBaseId={knowledgeBaseId}
-            sourceType={sourceType}
             url={url}
           />
         </div>

@@ -1,12 +1,12 @@
 import { Button, Icon, Tooltip } from '@lobehub/ui';
-import { Checkbox } from 'antd';
+import { App, Checkbox, Input } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon, FileText, FolderIcon } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -95,6 +95,7 @@ interface FileRenderItemProps extends FileListItem {
   index: number;
   knowledgeBaseId?: string;
   onSelectedChange: (id: string, selected: boolean, shiftKey: boolean, index: number) => void;
+  pendingRenameItemId?: string | null;
   selected?: boolean;
   slug?: string | null;
 }
@@ -121,16 +122,25 @@ const FileRenderItem = memo<FileRenderItemProps>(
     metadata,
     sourceType,
     slug,
+    pendingRenameItemId,
   }) => {
     const { t } = useTranslation(['components', 'file']);
     const { styles, cx } = useStyles();
+    const { message } = App.useApp();
     const navigate = useNavigate();
     const [, setSearchParams] = useSearchParams();
     const { knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
-    const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
-      fileManagerSelectors.isCreatingFileParseTask(id)(s),
-      s.parseFilesToChunks,
-    ]);
+    const [isCreatingFileParseTask, parseFiles, renameFolder, setPendingRenameItemId] =
+      useFileStore((s) => [
+        fileManagerSelectors.isCreatingFileParseTask(id)(s),
+        s.parseFilesToChunks,
+        s.renameFolder,
+        s.setPendingRenameItemId,
+      ]);
+
+    const [isRenaming, setIsRenaming] = useState(false);
+    const [renamingValue, setRenamingValue] = useState(name);
+    const inputRef = useRef<any>(null);
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType);
     const isNote = sourceType === 'document' || fileType === 'custom/document';
@@ -151,6 +161,51 @@ const FileRenderItem = memo<FileRenderItemProps>(
       dayjs().diff(dayjs(createdAt), 'd') < 7
         ? dayjs(createdAt).fromNow()
         : dayjs(createdAt).format('YYYY-MM-DD');
+
+    const handleRenameStart = () => {
+      setIsRenaming(true);
+      setRenamingValue(name);
+      // Focus input after render
+      setTimeout(() => {
+        inputRef.current?.focus();
+        inputRef.current?.select();
+      }, 0);
+    };
+
+    const handleRenameConfirm = async () => {
+      if (!renamingValue.trim()) {
+        message.error(t('FileManager.actions.renameError'));
+        return;
+      }
+
+      if (renamingValue.trim() === name) {
+        setIsRenaming(false);
+        return;
+      }
+
+      try {
+        await renameFolder(id, renamingValue.trim());
+        message.success(t('FileManager.actions.renameSuccess'));
+        setIsRenaming(false);
+      } catch (error) {
+        console.error('Rename error:', error);
+        message.error(t('FileManager.actions.renameError'));
+      }
+    };
+
+    const handleRenameCancel = () => {
+      setIsRenaming(false);
+      setRenamingValue(name);
+    };
+
+    // Auto-start renaming if this is the pending rename item
+    useEffect(() => {
+      if (pendingRenameItemId === id && isFolder && !isRenaming) {
+        handleRenameStart();
+        // Clear the pending rename item after triggering
+        setPendingRenameItemId(null);
+      }
+    }, [pendingRenameItemId, id, isFolder]);
 
     return (
       <Flexbox
@@ -223,7 +278,28 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 <FileIcon fileName={name} fileType={fileType} size={24} />
               )}
             </Flexbox>
-            <span className={styles.name}>{displayTitle}</span>
+            {isRenaming && isFolder ? (
+              <Input
+                onBlur={handleRenameConfirm}
+                onChange={(e) => setRenamingValue(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleRenameConfirm();
+                  } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    handleRenameCancel();
+                  }
+                }}
+                ref={inputRef}
+                size="small"
+                style={{ flex: 1, maxWidth: 400 }}
+                value={renamingValue}
+              />
+            ) : (
+              <span className={styles.name}>{displayTitle}</span>
+            )}
           </Flexbox>
           <Flexbox
             align={'center'}
@@ -283,7 +359,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 filename={name}
                 id={id}
                 knowledgeBaseId={knowledgeBaseId}
-                sourceType={sourceType}
+                onRenameStart={isFolder ? handleRenameStart : undefined}
                 url={url}
               />
             </div>

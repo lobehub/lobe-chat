@@ -1,8 +1,8 @@
 import { LobeChatDatabase } from '@lobechat/database';
 import { DocumentItem, documents, files } from '@lobechat/database/schemas';
 import { loadFile } from '@lobechat/file-loaders';
-import { and, eq } from 'drizzle-orm';
 import debug from 'debug';
+import { and, eq } from 'drizzle-orm';
 
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
@@ -59,7 +59,8 @@ export class DocumentService {
     let fileId: string | null = null;
 
     // If creating in a knowledge base, create a corresponding file record
-    if (knowledgeBaseId) {
+    // BUT skip for folders - folders should only exist in the documents table
+    if (knowledgeBaseId && fileType !== 'custom/folder') {
       const file = await this.fileModel.create(
         {
           fileType,
@@ -75,13 +76,17 @@ export class DocumentService {
       fileId = file.id;
     }
 
+    // Store knowledgeBaseId in metadata for folders (which don't have fileId)
+    const finalMetadata =
+      knowledgeBaseId && fileType === 'custom/folder' ? { ...metadata, knowledgeBaseId } : metadata;
+
     const document = await this.documentModel.create({
       content,
       editorData,
       fileId,
       fileType,
       filename: title,
-      metadata,
+      metadata: finalMetadata,
       pages: undefined,
       parentId,
       slug,
@@ -179,7 +184,17 @@ export class DocumentService {
       updates.metadata = params.metadata;
     }
 
-    return this.documentModel.update(id, updates);
+    const result = await this.documentModel.update(id, updates);
+
+    // If title was updated and this document has an associated file, update the file name too
+    if (params.title !== undefined) {
+      const document = await this.documentModel.findById(id);
+      if (document?.fileId) {
+        await this.fileModel.update(document.fileId, { name: params.title });
+      }
+    }
+
+    return result;
   }
 
   /**

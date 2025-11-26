@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
-import { Input, Modal, Upload } from 'antd';
+import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FilePenLine, FileUp, FolderIcon, FolderUp, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -24,10 +24,9 @@ const hotArea = css`
 const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const { t } = useTranslation('file');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
-  const [folderName, setFolderName] = useState('');
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
   const createFolder = useFileStore((s) => s.createFolder);
+  const setPendingRenameItemId = useFileStore((s) => s.setPendingRenameItemId);
   const currentFolderId = useFileStore((s) => s.currentFolderId);
 
   const handleOpenNoteEditor = () => {
@@ -38,15 +37,11 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
     setIsModalOpen(false);
   };
 
-  const handleCreateFolder = () => {
-    setIsFolderModalOpen(true);
-  };
-
-  const handleConfirmCreateFolder = async () => {
-    if (!folderName) return;
-    await createFolder(folderName, currentFolderId ?? undefined, knowledgeBaseId);
-    setIsFolderModalOpen(false);
-    setFolderName('');
+  const handleCreateFolder = async () => {
+    // Create folder with "Untitled" name immediately
+    const folderId = await createFolder('Untitled', currentFolderId ?? undefined, knowledgeBaseId);
+    // Trigger auto-rename
+    setPendingRenameItemId(folderId);
   };
 
   const items = useMemo<MenuProps['items']>(
@@ -124,20 +119,6 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         open={isModalOpen}
         parentId={currentFolderId ?? undefined}
       />
-      <Modal
-        onCancel={() => setIsFolderModalOpen(false)}
-        onOk={handleConfirmCreateFolder}
-        open={isFolderModalOpen}
-        title={t('header.actions.newFolder')}
-      >
-        <Input
-          autoFocus
-          onChange={(e) => setFolderName(e.target.value)}
-          onPressEnter={handleConfirmCreateFolder}
-          placeholder={t('header.actions.folderNamePlaceholder', 'Folder Name')}
-          value={folderName}
-        />
-      </Modal>
     </>
   );
 };

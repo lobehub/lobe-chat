@@ -121,10 +121,11 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   });
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
-  const [removeFiles, parseFilesToChunks, fileList] = useFileStore((s) => [
+  const [removeFiles, parseFilesToChunks, fileList, pendingRenameItemId] = useFileStore((s) => [
     s.removeFiles,
     s.parseFilesToChunks,
     s.fileList,
+    s.pendingRenameItemId,
   ]);
   const [removeFromKnowledgeBase, removeKnowledgeBase] = useKnowledgeBaseStore((s) => [
     s.removeFilesFromKnowledgeBase,
@@ -394,6 +395,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
                     }
                     setLastSelectedIndex(clickedIndex);
                   }}
+                  pendingRenameItemId={pendingRenameItemId}
                   selected={selectFileIds.includes(item.id)}
                   {...item}
                 />

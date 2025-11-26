@@ -35,8 +35,9 @@ export interface DocumentAction {
   }) => Promise<{ [key: string]: any; id: string }>;
   /**
    * Create a new folder
+   * Returns the created folder's ID
    */
-  createFolder: (name: string, parentId?: string, knowledgeBaseId?: string) => Promise<void>;
+  createFolder: (name: string, parentId?: string, knowledgeBaseId?: string) => Promise<string>;
   /**
    * Create a new optimistic document immediately in local map
    * Returns the temporary ID for the new document
@@ -117,7 +118,7 @@ export const createDocumentSlice: StateCreator<
       .replaceAll(/--+/g, '-') // Replace multiple hyphens with single hyphen
       .replaceAll(/^-+|-+$/g, ''); // Trim hyphens from start and end
 
-    await documentService.createDocument({
+    const folder = await documentService.createDocument({
       content: '',
       editorData: '{}',
       fileType: 'custom/folder',
@@ -131,6 +132,8 @@ export const createDocumentSlice: StateCreator<
     });
 
     await get().refreshFileList();
+
+    return folder.id;
   },
 
   createOptimisticDocument: (title = 'Untitled') => {

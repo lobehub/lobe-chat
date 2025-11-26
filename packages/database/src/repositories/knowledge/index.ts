@@ -442,27 +442,32 @@ export class KnowledgeRepo {
         }
       }
 
-      // When in a knowledge base, documents are only accessible via their linked files
-      // Documents with fileId are already returned by the file query via their linked file records
-      // Standalone documents (without fileId) cannot be associated with a knowledge base,
-      // so we return an empty result set
+      // When in a knowledge base, return standalone documents (folders and notes without fileId)
+      // that have the knowledgeBaseId set in their metadata. Documents with fileId are already
+      // returned by the file query via their linked file records.
+      kbWhereConditions.push(
+        sql`d.file_id IS NULL`,
+        sql`d.metadata->>'knowledgeBaseId' = ${knowledgeBaseId}`,
+      );
+
       return sql`
         SELECT
-          NULL::varchar(30) as id,
-          NULL::text as name,
-          NULL::varchar(255) as file_type,
-          NULL::integer as size,
-          NULL::text as url,
-          NULL::timestamp with time zone as created_at,
-          NULL::timestamp with time zone as updated_at,
-          NULL::uuid as chunk_task_id,
-          NULL::uuid as embedding_task_id,
-          NULL::jsonb as editor_data,
-          NULL::text as content,
-          NULL::varchar(255) as slug,
-          NULL::jsonb as metadata,
-          NULL::text as source_type
-        WHERE false
+          d.id,
+          COALESCE(d.title, d.filename, 'Untitled') as name,
+          d.file_type,
+          d.total_char_count as size,
+          d.source as url,
+          d.created_at,
+          d.updated_at,
+          NULL as chunk_task_id,
+          NULL as embedding_task_id,
+          d.editor_data,
+          d.content,
+          d.slug,
+          d.metadata,
+          'document' as source_type
+        FROM ${documents} d
+        WHERE ${sql.join(kbWhereConditions, sql` AND `)}
       `;
     }
 

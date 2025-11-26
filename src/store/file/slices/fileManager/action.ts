@@ -38,8 +38,10 @@ export interface FileManageAction {
   removeAllFiles: () => Promise<void>;
   removeFileItem: (id: string) => Promise<void>;
   removeFiles: (ids: string[]) => Promise<void>;
+  renameFolder: (folderId: string, newName: string) => Promise<void>;
 
   setCurrentFolderId: (folderId: string | null | undefined) => void;
+  setPendingRenameItemId: (id: string | null) => void;
 
   toggleEmbeddingIds: (ids: string[], loading?: boolean) => void;
   toggleParsingIds: (ids: string[], loading?: boolean) => void;
@@ -80,6 +82,10 @@ export const createFileManageSlice: StateCreator<
     await get().refreshFileList();
     get().toggleEmbeddingIds(fileIds, false);
   },
+  moveFileToFolder: async (fileId, parentId) => {
+    await fileService.updateFile(fileId, { parentId });
+    await get().refreshFileList();
+  },
   parseFilesToChunks: async (ids: string[], params) => {
     // toggle file ids
     get().toggleParsingIds(ids);
@@ -97,6 +103,7 @@ export const createFileManageSlice: StateCreator<
     await get().refreshFileList();
     get().toggleParsingIds(ids, false);
   },
+
   pushDockFileList: async (rawFiles, knowledgeBaseId, parentId) => {
     const { dispatchDockFileList } = get();
 
@@ -154,7 +161,6 @@ export const createFileManageSlice: StateCreator<
       await get().parseFilesToChunks(fileIdsToEmbed, { skipExist: false });
     }
   },
-
   reEmbeddingChunks: async (id) => {
     if (fileManagerSelectors.isCreatingChunkEmbeddingTask(id)(get())) return;
 
@@ -187,6 +193,7 @@ export const createFileManageSlice: StateCreator<
   removeAllFiles: async () => {
     await fileService.removeAllFiles();
   },
+
   removeFileItem: async (id) => {
     await fileService.removeFile(id);
     await get().refreshFileList();
@@ -197,13 +204,18 @@ export const createFileManageSlice: StateCreator<
     await get().refreshFileList();
   },
 
-  moveFileToFolder: async (fileId, parentId) => {
-    await fileService.updateFile(fileId, { parentId });
+  renameFolder: async (folderId, newName) => {
+    const { documentService } = await import('@/services/document');
+    await documentService.updateDocument({ id: folderId, title: newName });
     await get().refreshFileList();
   },
 
   setCurrentFolderId: (folderId) => {
     set({ currentFolderId: folderId }, false, 'setCurrentFolderId');
+  },
+
+  setPendingRenameItemId: (id) => {
+    set({ pendingRenameItemId: id }, false, 'setPendingRenameItemId');
   },
 
   toggleEmbeddingIds: (ids, loading) => {
@@ -242,13 +254,10 @@ export const createFileManageSlice: StateCreator<
   },
 
   useFetchFolderBreadcrumb: (slug) =>
-    useClientDataSWR<FolderCrumb[]>(
-      !slug ? null : ['useFetchFolderBreadcrumb', slug],
-      async () => {
-        const response = await serverFileService.getFolderBreadcrumb(slug!);
-        return response;
-      },
-    ),
+    useClientDataSWR<FolderCrumb[]>(!slug ? null : ['useFetchFolderBreadcrumb', slug], async () => {
+      const response = await serverFileService.getFolderBreadcrumb(slug!);
+      return response;
+    }),
 
   useFetchKnowledgeItem: (id) =>
     useClientDataSWR<FileListItem | undefined>(!id ? null : ['useFetchKnowledgeItem', id], () =>
