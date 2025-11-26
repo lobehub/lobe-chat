@@ -4,9 +4,7 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import FolderTree, {
-  FolderTreeItem,
-} from '@/features/KnowledgeManager/components/FolderTree';
+import FolderTree, { FolderTreeItem } from '@/features/ResourceManager/components/FolderTree';
 import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';
 
