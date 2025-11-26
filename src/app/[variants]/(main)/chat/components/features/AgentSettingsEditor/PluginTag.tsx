@@ -5,8 +5,7 @@ import { Tag, Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { AlertCircle, X } from 'lucide-react';
-import { memo, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { memo, useMemo } from 'react';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { useDiscoverStore } from '@/store/discover';
@@ -50,7 +49,6 @@ interface PluginTagProps {
 }
 
 const PluginTag = memo<PluginTagProps>(({ pluginId, onRemove }) => {
-  const { t } = useTranslation('setting');
   const { styles } = useStyles();
 
   // Extract identifier
