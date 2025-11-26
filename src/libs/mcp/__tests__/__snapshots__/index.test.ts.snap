@@ -5,6 +5,8 @@ exports[`MCPClient > Stdio Transport > should list tools via stdio 1`] = `
   {
     "description": "Echoes back a message with 'Hello' prefix",
     "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": false,
       "properties": {
         "message": {
           "description": "The message to echo",
@@ -21,6 +23,7 @@ exports[`MCPClient > Stdio Transport > should list tools via stdio 1`] = `
   {
     "description": "Lists all available tools and methods",
     "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
       "properties": {},
       "type": "object",
     },
@@ -29,6 +32,8 @@ exports[`MCPClient > Stdio Transport > should list tools via stdio 1`] = `
   {
     "description": "Adds two numbers",
     "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": false,
       "properties": {
         "a": {
           "description": "The first number",
