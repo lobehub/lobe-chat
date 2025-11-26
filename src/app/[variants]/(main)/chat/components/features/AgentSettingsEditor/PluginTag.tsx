@@ -111,6 +111,7 @@ const PluginTag = memo<PluginTagProps>(({ pluginId, onRemove }) => {
   const tagContent = (
     <Tag
       className={`${styles.tag} ${!meta.isInstalled ? styles.notInstalledTag : ''}`}
+      closable
       closeIcon={<X size={12} />}
       icon={
         !meta.isInstalled ? <AlertCircle className={styles.warningIcon} size={14} /> : undefined

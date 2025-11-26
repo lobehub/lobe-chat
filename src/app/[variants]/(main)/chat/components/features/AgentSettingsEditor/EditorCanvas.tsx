@@ -14,12 +14,8 @@ import {
   IEditor,
 } from '@lobehub/editor';
 import { Editor, useEditor } from '@lobehub/editor/react';
-import { Icon } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import { debounce } from 'lodash-es';
-import { Heading1Icon, Heading2Icon, Heading3Icon, Loader2Icon, Table2Icon } from 'lucide-react';
+import { Heading1Icon, Heading2Icon, Heading3Icon, Table2Icon } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -28,8 +24,6 @@ import { useStore } from '@/features/AgentSetting/store';
 
 import PROMPT_TEMPLATE from './promptTemplate.json';
 import { useMentionOptions } from './MentionList';
-
-dayjs.extend(relativeTime);
 
 const SAVE_DEBOUNCE_TIME = 300; // ms
 type SavePayload = { editorContent: Record<string, any>; systemRole: string };
@@ -40,7 +34,7 @@ type SavePayload = { editorContent: Record<string, any>; systemRole: string };
  *
  * Rich text editor for Agent system prompt using @lobehub/editor.
  * Features:
- * - Auto-save with debouncing and status indicator
+ * - Auto-save with debouncing (status indicator now in AutoSaveHint)
  * - Structured template for new agents
  * - @ mention for inserting available tools
  * - Slash commands for formatting
@@ -48,15 +42,17 @@ type SavePayload = { editorContent: Record<string, any>; systemRole: string };
  */
 const EditorCanvas = memo(() => {
   const { t } = useTranslation('setting');
-  const theme = useTheme();
   const editor = useEditor();
   const editorContent = useStore((s) => s.config.editorContent);
   const systemRole = useStore((s) => s.config.systemRole);
   const updateConfig = useStore((s) => s.setAgentConfig);
-
+  const loadingState = useStore((s) => s.loadingState);
   const [initialLoad] = useState(editorContent || PROMPT_TEMPLATE);
 
   useEffect(() => {
+    if (editorContent === undefined && systemRole === undefined && loadingState?.avatar === undefined) {
+      return
+    }
     if (editorContent) {
       editor?.setDocument('json', editorContent || PROMPT_TEMPLATE);
     } else if (systemRole) {
@@ -64,31 +60,19 @@ const EditorCanvas = memo(() => {
     } else {
       editor?.setDocument('json', PROMPT_TEMPLATE);
     }
-  }, []);
+  }, [loadingState, editorContent, systemRole]);
 
   // Mention options for @ tools insertion
   const mentionOptions = useMentionOptions();
-
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-  const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
 
   const debouncedSave = useMemo(
     () =>
       debounce(
         async (payload: SavePayload) => {
-          setSaveStatus('saving');
-
           try {
             await updateConfig(payload);
-            setSaveStatus('saved');
-            setLastUpdatedTime(new Date());
           } catch (error: any) {
-            if (error?.name === 'AbortError' || error?.message?.includes('aborted')) {
-              setSaveStatus('idle');
-            } else {
-              console.error('[EditorCanvas] Failed to save:', error);
-              setSaveStatus('idle');
-            }
+            console.error('[EditorCanvas] Failed to save:', error);
           }
         },
         SAVE_DEBOUNCE_TIME,
@@ -112,7 +96,6 @@ const EditorCanvas = memo(() => {
       });
     } catch (error) {
       console.error('[EditorCanvas] Failed to read editor content:', error);
-      setSaveStatus('idle');
     }
   };
 
@@ -125,47 +108,11 @@ const EditorCanvas = memo(() => {
         position: 'relative',
       }}
     >
-      {/* Save Status Indicator (Top Right) */}
-      <Flexbox
-        align="center"
-        direction="horizontal"
-        gap={8}
-        style={{
-          height:'42px',
-          paddingBlock: 12,
-          paddingInline: 32,
-          position: 'sticky',
-          right: 32,
-          top: 0,
-          zIndex: 10,
-        }}
-      >
-        <Flexbox flex={1} />
-        {saveStatus === 'saving' && (
-          <Flexbox align="center" direction="horizontal" gap={6}>
-            <Icon icon={Loader2Icon} spin />
-            <span style={{ color: theme.colorTextTertiary, fontSize: 12 }}>Saving...</span>
-          </Flexbox>
-        )}
-        {saveStatus === 'saved' && lastUpdatedTime && (
-          <span
-            style={{
-              color: theme.colorTextTertiary,
-              fontSize: 12,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Saved {dayjs(lastUpdatedTime).fromNow()}
-          </span>
-        )}
-      </Flexbox>
-
       <Flexbox
         paddingBlock={12}
         style={{
           margin: '0 auto',
-          maxWidth: 900,
-          paddingInline: 32,
+          paddingInline: 24,
           width: '100%',
         }}
       >

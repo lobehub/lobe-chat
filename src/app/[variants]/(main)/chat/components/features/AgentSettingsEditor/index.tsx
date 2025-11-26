@@ -8,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import AgentSettings from '@/app/[variants]/(main)/chat/components/features/AgentSettings';
 import SmartAgentActionButton from '@/app/[variants]/(main)/chat/settings/features/SmartAgentActionButton';
+import Loading from '@/components/Loading/BrandTextLoading';
 import { isDesktop } from '@/const/version';
 import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
 import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
@@ -20,6 +21,7 @@ import { LobeSessionType } from '@/types/session';
 
 import AgentConfigBar from './AgentConfigBar';
 import AgentHeader from './AgentHeader';
+import AutoSaveHint from './AutoSaveHint';
 import EditorCanvas from './EditorCanvas';
 
 export interface AgentSettingsEditorProps {
@@ -42,7 +44,6 @@ export interface AgentSettingsEditorProps {
 const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, open }) => {
   const theme = useTheme();
   const [showSettingsDrawer, setShowSettingsDrawer] = useState(false);
-
   // Use provided agentId or fall back to current active session
   const activeId = useSessionStore((s) => s.activeId);
   const id = agentId || activeId;
@@ -137,8 +138,14 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
     >
       {/* Main Drawer: Clean editing interface */}
       <Drawer
-        extra={<SmartAgentActionButton modal={false} />}
+        extra={
+          <Flexbox align="center" direction="horizontal" gap={12}>
+            <AutoSaveHint />
+            <SmartAgentActionButton modal={false} />
+          </Flexbox>
+        }
         height={isDesktop ? `calc(100vh - ${TITLE_BAR_HEIGHT}px)` : '100vh'}
+        noHeader={true}
         onClose={handleClose}
         open={isOpen}
         placement="bottom"
@@ -147,7 +154,6 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
             padding: 0,
           },
         }}
-        title={meta?.title || 'Agent'}
         width="100%"
       >
         <Flexbox
@@ -157,14 +163,22 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
             overflow: 'hidden',
           }}
         >
-          {/* Header: Avatar + Name + Description */}
-          <AgentHeader />
+          {(isLoading) ? (
+            <Flexbox align="center" height="100vh" justify="center">
+              <Loading />
+            </Flexbox>
+          ) : (
+            <>
+              {/* Header: Avatar + Name + Description */}
+              <AgentHeader />
 
-          {/* Config Bar: Model Selector + Settings Button */}
-          <AgentConfigBar onOpenSettings={() => setShowSettingsDrawer(true)} />
+              {/* Config Bar: Model Selector + Settings Button */}
+              <AgentConfigBar onOpenSettings={() => setShowSettingsDrawer(true)} />
 
-          {/* Main Content: Prompt Editor */}
-          <EditorCanvas />
+              {/* Main Content: Prompt Editor */}
+              <EditorCanvas />
+            </>
+          )}
         </Flexbox>
       </Drawer>
 

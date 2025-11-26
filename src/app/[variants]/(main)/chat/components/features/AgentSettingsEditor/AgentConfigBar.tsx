@@ -161,12 +161,9 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
     <>
       <Flexbox
         direction="vertical"
-        gap={12}
-        paddingBlock={16}
+        gap={18}
+        paddingBlock={12}
         paddingInline={24}
-        style={{
-          borderBottom: `1px solid ${theme.colorBorderSecondary}`,
-        }}
       >
         {/* First Row: Model Selector */}
         <Flexbox align="center" direction="horizontal" gap={12}>
