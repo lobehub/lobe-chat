@@ -18,51 +18,77 @@ export type MultiSelectActionType =
   | 'addToOtherKnowledgeBase'
   | 'batchChunking'
   | 'delete'
+  | 'deleteLibrary'
   | 'removeFromKnowledgeBase';
 
 interface BatchActionsDropdownProps {
   disabled?: boolean;
   isInKnowledgeBase?: boolean;
+  knowledgeBaseId?: string;
   onActionClick: (type: MultiSelectActionType) => Promise<void>;
   selectCount: number;
 }
 
 const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
-  ({ selectCount, isInKnowledgeBase, onActionClick, disabled }) => {
-    const { t } = useTranslation(['components', 'common']);
+  ({ selectCount, isInKnowledgeBase, knowledgeBaseId, onActionClick, disabled }) => {
+    const { t } = useTranslation(['components', 'common', 'file']);
     const { modal, message } = App.useApp();
 
     const menuItems = useMemo<MenuProps['items']>(() => {
       const items: MenuProps['items'] = [];
 
-      if (isInKnowledgeBase) {
+      // Show delete library option only when in a knowledge base and no files selected
+      if (isInKnowledgeBase && knowledgeBaseId && selectCount === 0) {
         items.push({
-          icon: <Icon icon={BookMinusIcon} />,
-          key: 'removeFromKnowledgeBase',
-          label: t('FileManager.actions.removeFromKnowledgeBase'),
-          onClick: () => {
+          danger: true,
+          icon: <Icon icon={Trash2Icon} />,
+          key: 'deleteLibrary',
+          label: t('delete', { ns: 'common' }),
+          onClick: async () => {
             modal.confirm({
               okButtonProps: {
                 danger: true,
               },
               onOk: async () => {
-                await onActionClick('removeFromKnowledgeBase');
-                message.success(t('FileManager.actions.removeFromKnowledgeBaseSuccess'));
+                await onActionClick('deleteLibrary');
               },
-              title: t('FileManager.actions.confirmRemoveFromKnowledgeBase', {
-                count: selectCount,
-              }),
+              title: t('library.list.confirmRemoveLibrary', { ns: 'file' }),
             });
           },
         });
-        items.push({
-          icon: <Icon icon={BookPlusIcon} />,
-          key: 'addToOtherKnowledgeBase',
-          label: t('FileManager.actions.addToOtherKnowledgeBase'),
-          onClick: () => {
-            onActionClick('addToOtherKnowledgeBase');
+        return items;
+      }
+
+      if (isInKnowledgeBase) {
+        items.push(
+          {
+            icon: <Icon icon={BookMinusIcon} />,
+            key: 'removeFromKnowledgeBase',
+            label: t('FileManager.actions.removeFromKnowledgeBase'),
+            onClick: () => {
+              modal.confirm({
+                okButtonProps: {
+                  danger: true,
+                },
+                onOk: async () => {
+                  await onActionClick('removeFromKnowledgeBase');
+                  message.success(t('FileManager.actions.removeFromKnowledgeBaseSuccess'));
+                },
+                title: t('FileManager.actions.confirmRemoveFromKnowledgeBase', {
+                  count: selectCount,
+                }),
+              });
+            },
           },
-        });
+          {
+            icon: <Icon icon={BookPlusIcon} />,
+            key: 'addToOtherKnowledgeBase',
+            label: t('FileManager.actions.addToOtherKnowledgeBase'),
+            onClick: () => {
+              onActionClick('addToOtherKnowledgeBase');
+            },
+          },
+        );
       } else {
         items.push({
           icon: <Icon icon={BookPlusIcon} />,
@@ -86,29 +112,28 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
         {
           type: 'divider',
         },
+        {
+          danger: true,
+          icon: <Icon icon={Trash2Icon} />,
+          key: 'delete',
+          label: t('delete', { ns: 'common' }),
+          onClick: async () => {
+            modal.confirm({
+              okButtonProps: {
+                danger: true,
+              },
+              onOk: async () => {
+                await onActionClick('delete');
+                message.success(t('FileManager.actions.deleteSuccess'));
+              },
+              title: t('FileManager.actions.confirmDeleteMultiFiles', { count: selectCount }),
+            });
+          },
+        },
       );
 
-      items.push({
-        danger: true,
-        icon: <Icon icon={Trash2Icon} />,
-        key: 'delete',
-        label: t('delete', { ns: 'common' }),
-        onClick: async () => {
-          modal.confirm({
-            okButtonProps: {
-              danger: true,
-            },
-            onOk: async () => {
-              await onActionClick('delete');
-              message.success(t('FileManager.actions.deleteSuccess'));
-            },
-            title: t('FileManager.actions.confirmDeleteMultiFiles', { count: selectCount }),
-          });
-        },
-      });
-
       return items;
-    }, [isInKnowledgeBase, selectCount, onActionClick, t, modal, message]);
+    }, [isInKnowledgeBase, knowledgeBaseId, selectCount, onActionClick, t, modal, message]);
 
     return (
       <Dropdown

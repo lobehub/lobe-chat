@@ -7,6 +7,7 @@ import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
@@ -58,6 +59,7 @@ interface FileExplorerProps {
 const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpenFile }) => {
   const { t } = useTranslation('components');
   const { styles } = useStyles();
+  const navigate = useNavigate();
 
   const [selectFileIds, setSelectedFileIds] = useState<string[]>([]);
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
@@ -124,7 +126,10 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     s.parseFilesToChunks,
     s.fileList,
   ]);
-  const [removeFromKnowledgeBase] = useKnowledgeBaseStore((s) => [s.removeFilesFromKnowledgeBase]);
+  const [removeFromKnowledgeBase, removeKnowledgeBase] = useKnowledgeBaseStore((s) => [
+    s.removeFilesFromKnowledgeBase,
+    s.removeKnowledgeBase,
+  ]);
 
   const { open } = useAddFilesToKnowledgeBaseModal();
 
@@ -166,6 +171,13 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
         });
         await parseFilesToChunks(chunkableFileIds, { skipExist: true });
         setSelectedFileIds([]);
+        return;
+      }
+
+      case 'deleteLibrary': {
+        if (!knowledgeBaseId) return;
+        await removeKnowledgeBase(knowledgeBaseId);
+        navigate('/knowledge');
         return;
       }
     }
@@ -309,6 +321,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
             <SortDropdown />
             <BatchActionsDropdown
               isInKnowledgeBase={!!knowledgeBaseId}
+              knowledgeBaseId={knowledgeBaseId}
               onActionClick={onActionClick}
               selectCount={selectFileIds.length}
             />
