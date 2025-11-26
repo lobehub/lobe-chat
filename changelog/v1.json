@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Slove the publish to market the agent config error."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.122"
+  },
+  {
+    "children": {
       "improvements": ["Add image aspect ratio and resolution settings for Nano Banana Pro."]
     },
     "date": "2025-11-26",
