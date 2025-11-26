@@ -22,9 +22,9 @@ import { LobeSessionType } from '@/types/session';
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`
+    overflow-y: auto;
     flex: 1;
     padding: ${token.paddingLG}px;
-    overflow-y: auto;
   `,
   modal: css`
     .ant-modal-content {
@@ -32,29 +32,31 @@ const useStyles = createStyles(({ css, token }) => ({
     }
 
     .ant-modal-header {
+      margin-block-end: 0;
       padding: ${token.paddingLG}px;
-      margin-bottom: 0;
-      border-bottom: 1px solid ${token.colorBorderSecondary};
+      border-block-end: 1px solid ${token.colorBorderSecondary};
     }
 
     .ant-modal-body {
-      padding: 0;
-      height: 70vh;
       overflow: hidden;
+      height: 70vh;
+      padding: 0;
     }
   `,
   sidebar: css`
     width: 200px;
     padding: ${token.paddingLG}px;
-    border-right: 1px solid ${token.colorBorderSecondary};
+    border-inline-end: 1px solid ${token.colorBorderSecondary};
     background: ${token.colorFillQuaternary};
   `,
   sidebarTitle: css`
-    margin-bottom: ${token.marginLG}px;
-    padding: 0 ${token.paddingSM}px;
-    color: ${token.colorTextSecondary};
+    margin-block-end: ${token.marginLG}px;
+    padding-block: 0;
+    padding-inline: ${token.paddingSM}px;
+
     font-size: ${token.fontSizeSM}px;
     font-weight: 600;
+    color: ${token.colorTextSecondary};
   `,
 }));
 
@@ -164,10 +166,10 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
 
   // Define available menu items (开场设置、聊天偏好、模型设置)
   const menuItems: ItemType[] = [
-    !isInbox && {
+    !isInbox ? {
       key: ChatSettingsTabs.Opening,
       label: t('agentTab.opening'),
-    },
+    } : null,
     {
       key: ChatSettingsTabs.Chat,
       label: t('agentTab.chat'),
@@ -176,7 +178,7 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
       key: ChatSettingsTabs.Modal,
       label: t('agentTab.modal'),
     },
-  ].filter(Boolean);
+  ].filter(Boolean) as ItemType[];
 
   return (
     <AgentSettingsProvider
@@ -194,8 +196,8 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
         onCancel={handleClose}
         open={isOpen}
         styles={{
-          body:{
-            padding:0,
+          body: {
+            padding: 0,
           }
         }}
         title={t('header.session')}

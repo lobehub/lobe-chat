@@ -44,7 +44,11 @@ export interface LobeAgentConfig {
   /**
    * 启用的插件
    */
-  plugins?: string[];
+  plugins?: string[] | {
+    enabled: boolean;
+    identifier: string;
+    settings: Record<string, any>;
+  }[];
 
   /**
    *  模型供应商
