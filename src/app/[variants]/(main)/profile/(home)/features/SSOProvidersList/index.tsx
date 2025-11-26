@@ -8,7 +8,12 @@ import { Flexbox } from 'react-layout-kit';
 
 import { modal, notification } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
-import { linkSocial, listAccounts, unlinkAccount } from '@/libs/better-auth/auth-client';
+import {
+  accountInfo,
+  linkSocial,
+  listAccounts,
+  unlinkAccount,
+} from '@/libs/better-auth/auth-client';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
 import { useServerConfigStore } from '@/store/serverConfig';
@@ -28,31 +33,48 @@ export const SSOProvidersList = memo(() => {
 
   const { data, isLoading, mutate } = useOnlyFetchOnceSWR(
     'profile-sso-providers',
-    async (): Promise<SSOProvider[]> => {
+    async (): Promise<{ hasCredential: boolean; providers: SSOProvider[] }> => {
       if (isLoginWithBetterAuth) {
         // Use better-auth native listAccounts API
         const result = await listAccounts();
         const accounts = result.data || [];
+        // Check if user has credential (password) login
+        const hasCredential = accounts.some((account) => account.providerId === 'credential');
         // Filter out credential provider and map to SSOProvider format
-        return accounts
-          .filter((account) => account.providerId !== 'credential')
-          .map((account) => ({
-            provider: account.providerId,
-            providerAccountId: account.accountId,
-          }));
+        const providers = await Promise.all(
+          accounts
+            .filter((account) => account.providerId !== 'credential')
+            .map(async (account) => {
+              const info = await accountInfo({
+                query: {
+                  accountId: account.accountId,
+                },
+              });
+
+              return {
+                email: info.data?.user?.email || '',
+                provider: account.providerId,
+                providerAccountId: account.accountId,
+              };
+            }),
+        );
+        return { hasCredential, providers };
       }
 
       // Fallback for NextAuth - use tRPC
-      return userService.getUserSSOProviders();
+      const providers = await userService.getUserSSOProviders();
+      return { hasCredential: false, providers };
     },
   );
 
-  const allowUnlink = (data?.length ?? 0) > 1;
+  const providers = data?.providers || [];
+  // Allow unlink if user has multiple SSO providers OR has credential login
+  const allowUnlink = providers.length > 1 || data?.hasCredential;
 
   // Get linked provider IDs for filtering
   const linkedProviderIds = useMemo(() => {
-    return new Set(data?.map((item) => item.provider) || []);
-  }, [data]);
+    return new Set(providers.map((item) => item.provider));
+  }, [providers]);
 
   // Get available providers for linking (filter out already linked)
   const availableProviders = useMemo(() => {
@@ -60,7 +82,8 @@ export const SSOProvidersList = memo(() => {
   }, [oAuthSSOProviders, linkedProviderIds]);
 
   const handleUnlinkSSO = async (provider: string, providerAccountId: string) => {
-    if (data?.length === 1 || !data) {
+    // Prevent unlink if this is the only login method
+    if (!allowUnlink) {
       notification.error({
         message: t('profile.sso.unlink.forbidden'),
       });
@@ -118,7 +141,7 @@ export const SSOProvidersList = memo(() => {
 
   return (
     <Flexbox gap={8}>
-      {data?.map((item) => (
+      {providers.map((item) => (
         <Flexbox
           align={'center'}
           gap={8}
@@ -129,9 +152,11 @@ export const SSOProvidersList = memo(() => {
           <Flexbox align={'center'} gap={6} horizontal style={{ fontSize: 12 }}>
             {AuthIcons(item.provider, 16)}
             <span style={providerNameStyle}>{item.provider}</span>
-            <Typography.Text style={{ fontSize: 11 }} type="secondary">
-              · {userProfile?.email}
-            </Typography.Text>
+            {item.email && (
+              <Typography.Text style={{ fontSize: 11 }} type="secondary">
+                · {item.email}
+              </Typography.Text>
+            )}
           </Flexbox>
           <ActionIcon
             disabled={!allowUnlink}
@@ -145,12 +170,7 @@ export const SSOProvidersList = memo(() => {
       {/* Link Account Button - Only show for Better-Auth users with available providers */}
       {isLoginWithBetterAuth && availableProviders.length > 0 && (
         <Dropdown menu={{ items: linkMenuItems, style: { maxWidth: '200px' } }} trigger={['click']}>
-          <Flexbox
-            align={'center'}
-            gap={6}
-            horizontal
-            style={{ cursor: 'pointer', fontSize: 12, opacity: 0.6 }}
-          >
+          <Flexbox align={'center'} gap={6} horizontal style={{ cursor: 'pointer', fontSize: 12 }}>
             <Plus size={14} />
             <span>{t('profile.sso.link.button')}</span>
             <ArrowRight size={14} />

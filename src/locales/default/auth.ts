@@ -168,8 +168,11 @@ export default {
   loginOrSignup: '登录 / 注册',
   profile: {
     avatar: '头像',
+    cancel: '取消',
     email: '电子邮件地址',
     fullName: '全名',
+    fullNameInputHint: '请输入新的全名',
+    save: '保存',
     sso: {
       link: {
         button: '连接帐户',
@@ -184,6 +187,9 @@ export default {
         title: '是否解绑该第三方账户 {{provider}} ？',
       },
     },
+    title: '个人资料详情',
+    updateAvatar: '更新头像',
+    updateFullName: '更新全名',
     username: '用户名',
   },
   signout: '退出登录',

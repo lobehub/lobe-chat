@@ -23,6 +23,7 @@ const { socialProviders, genericOAuthProviders } = initBetterAuthSSOProviders();
 export const auth = betterAuth({
   account: {
     accountLinking: {
+      allowDifferentEmails: true,
       enabled: true,
     },
   },

@@ -93,6 +93,7 @@ export const NextAuthAccountSchame = z.object({
  * SSO Provider info displayed in profile page
  */
 export interface SSOProvider {
+  email?: string;
   /** Expiration time - Date for better-auth, number (Unix timestamp) for next-auth */
   expiresAt?: Date | number | null;
   provider: string;

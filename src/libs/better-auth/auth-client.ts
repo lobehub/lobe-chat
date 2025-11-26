@@ -13,6 +13,7 @@ const enableMagicLink = getAuthConfig().NEXT_PUBLIC_ENABLE_MAGIC_LINK;
 
 export const {
   linkSocial,
+  accountInfo,
   listAccounts,
   sendVerificationEmail,
   signIn,
