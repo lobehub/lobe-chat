@@ -14,6 +14,7 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
+import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { downloadFile } from '@/utils/client/downloadFile';
@@ -21,25 +22,32 @@ import { downloadFile } from '@/utils/client/downloadFile';
 import MoveToFolderModal from '../MoveToFolderModal';
 
 interface DropdownMenuProps {
+  fileType: string;
   filename: string;
   id: string;
   knowledgeBaseId?: string;
+  sourceType?: string;
   url: string;
 }
 
-const DropdownMenu = memo<DropdownMenuProps>(({ id, knowledgeBaseId, url, filename }) => {
-  const { t } = useTranslation(['components', 'common']);
-  const { message, modal } = App.useApp();
+const DropdownMenu = memo<DropdownMenuProps>(
+  ({ id, knowledgeBaseId, url, filename, fileType, sourceType }) => {
+    const { t } = useTranslation(['components', 'common']);
+    const { message, modal } = App.useApp();
 
-  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
+    const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
 
-  const [removeFile] = useFileStore((s) => [s.removeFileItem]);
-  const [removeFilesFromKnowledgeBase] = useKnowledgeBaseStore((s) => [
-    s.removeFilesFromKnowledgeBase,
-  ]);
+    const [removeFile, refreshFileList] = useFileStore((s) => [
+      s.removeFileItem,
+      s.refreshFileList,
+    ]);
+    const [removeFilesFromKnowledgeBase] = useKnowledgeBaseStore((s) => [
+      s.removeFilesFromKnowledgeBase,
+    ]);
 
-  const inKnowledgeBase = !!knowledgeBaseId;
-  const { open } = useAddFilesToKnowledgeBaseModal();
+    const inKnowledgeBase = !!knowledgeBaseId;
+    const { open } = useAddFilesToKnowledgeBaseModal();
+    const isFolder = fileType === 'custom/folder';
 
   const items = useMemo(() => {
     const knowledgeBaseActions = (
@@ -143,30 +151,38 @@ const DropdownMenu = memo<DropdownMenuProps>(({ id, knowledgeBaseId, url, filena
           onClick: async ({ domEvent }) => {
             domEvent.stopPropagation();
             modal.confirm({
-              content: t('FileManager.actions.confirmDelete'),
+              content: isFolder
+                ? t('FileManager.actions.confirmDeleteFolder')
+                : t('FileManager.actions.confirmDelete'),
               okButtonProps: { danger: true },
               onOk: async () => {
-                await removeFile(id);
+                if (isFolder) {
+                  await documentService.deleteDocument(id);
+                  await refreshFileList();
+                } else {
+                  await removeFile(id);
+                }
               },
             });
           },
         },
       ] as ItemType[]
     ).filter(Boolean);
-  }, [inKnowledgeBase]);
-  return (
-    <>
-      <Dropdown menu={{ items }}>
-        <ActionIcon icon={MoreHorizontalIcon} size={'small'} />
-      </Dropdown>
-      <MoveToFolderModal
-        fileId={id}
-        knowledgeBaseId={knowledgeBaseId}
-        onClose={() => setIsMoveModalOpen(false)}
-        open={isMoveModalOpen}
-      />
-    </>
-  );
-});
+  }, [inKnowledgeBase, isFolder]);
+    return (
+      <>
+        <Dropdown menu={{ items }}>
+          <ActionIcon icon={MoreHorizontalIcon} size={'small'} />
+        </Dropdown>
+        <MoveToFolderModal
+          fileId={id}
+          knowledgeBaseId={knowledgeBaseId}
+          onClose={() => setIsMoveModalOpen(false)}
+          open={isMoveModalOpen}
+        />
+      </>
+    );
+  },
+);
 
 export default DropdownMenu;

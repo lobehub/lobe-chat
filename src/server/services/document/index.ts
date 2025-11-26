@@ -1,6 +1,7 @@
 import { LobeChatDatabase } from '@lobechat/database';
-import { DocumentItem } from '@lobechat/database/schemas';
+import { DocumentItem, documents, files } from '@lobechat/database/schemas';
 import { loadFile } from '@lobechat/file-loaders';
+import { and, eq } from 'drizzle-orm';
 import debug from 'debug';
 
 import { DocumentModel } from '@/database/models/document';
@@ -109,9 +110,39 @@ export class DocumentService {
   }
 
   /**
-   * Delete document
+   * Delete document (recursively deletes children if it's a folder)
    */
   async deleteDocument(id: string) {
+    const document = await this.documentModel.findById(id);
+    if (!document) return;
+
+    // If it's a folder, recursively delete all children first
+    if (document.fileType === 'custom/folder') {
+      const children = await this.db.query.documents.findMany({
+        where: eq(documents.parentId, id),
+      });
+
+      // Recursively delete all children
+      for (const child of children) {
+        await this.deleteDocument(child.id);
+      }
+
+      // Also delete all files in this folder
+      const childFiles = await this.db.query.files.findMany({
+        where: and(eq(files.parentId, id), eq(files.userId, this.userId)),
+      });
+
+      for (const file of childFiles) {
+        await this.fileModel.delete(file.id);
+      }
+    }
+
+    // Delete the associated file record if it exists
+    if (document.fileId) {
+      await this.fileModel.delete(document.fileId);
+    }
+
+    // Finally delete the document itself
     return this.documentModel.delete(id);
   }
 

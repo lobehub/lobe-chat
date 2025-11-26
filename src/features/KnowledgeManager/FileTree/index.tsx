@@ -3,7 +3,7 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { FileText } from 'lucide-react';
-import { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolder
 import FileIcon from '@/components/FileIcon';
 import FolderTree, { FolderTreeItem as BaseFolderTreeItem } from '@/features/KnowledgeManager/components/FolderTree';
 import { fileService } from '@/services/file';
+import { useFileStore } from '@/store/file';
 
 import TreeSkeleton from './TreeSkeleton';
 
@@ -150,10 +151,20 @@ FileTreeItem.displayName = 'FileTreeItem';
 const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   const { currentFolderSlug } = useFolderPath();
 
-  const [items, setItems] = useState<TreeItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
+
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [loadedFolders, setLoadedFolders] = useState<Set<string>>(new Set());
+  const [folderChildrenCache, setFolderChildrenCache] = useState<Map<string, TreeItem[]>>(
+    new Map(),
+  );
+
+  // Fetch root level data using SWR
+  const { data: rootData, isLoading } = useFetchKnowledgeItems({
+    knowledgeBaseId,
+    parentId: null,
+    showFilesInKnowledgeBase: false,
+  });
 
   // Sort items: folders first, then files
   const sortItems = useCallback(<T extends TreeItem>(items: T[]): T[] => {
@@ -166,38 +177,29 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
     });
   }, []);
 
-  // Fetch root level data
+  // Convert root data to tree items
+  const items: TreeItem[] = React.useMemo(() => {
+    if (!rootData) return [];
+
+    const mappedItems: TreeItem[] = rootData.map((item) => ({
+      children: folderChildrenCache.get(item.slug || item.id),
+      fileType: item.fileType,
+      id: item.id,
+      isFolder: item.fileType === 'custom/folder',
+      name: item.name,
+      slug: item.slug,
+      sourceType: item.sourceType,
+    }));
+
+    return sortItems(mappedItems);
+  }, [rootData, sortItems, folderChildrenCache]);
+
+  // Clear folder cache when root data changes (e.g., when a folder is deleted)
   useEffect(() => {
-    const fetchRootData = async () => {
-      setLoading(true);
-      try {
-        const data = await fileService.getKnowledgeItems({
-          knowledgeBaseId,
-          parentId: null,
-          showFilesInKnowledgeBase: false,
-        });
-
-        const mappedItems: TreeItem[] = data.map((item) => ({
-          children: undefined,
-          fileType: item.fileType,
-          id: item.id,
-          isFolder: item.fileType === 'custom/folder',
-          name: item.name,
-          slug: item.slug,
-          sourceType: item.sourceType,
-        }));
-
-        setItems(sortItems(mappedItems));
-      } catch (error) {
-        console.error('Failed to load root files:', error);
-        setItems([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRootData();
-  }, [knowledgeBaseId, sortItems]);
+    setFolderChildrenCache(new Map());
+    setLoadedFolders(new Set());
+    setExpandedFolders(new Set());
+  }, [rootData]);
 
   const handleLoadFolder = useCallback(
     async (folderId: string) => {
@@ -223,20 +225,11 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
         // Sort children: folders first, then files
         const sortedChildren = sortItems(childItems);
 
-        setItems((prevItems) => {
-          const updateItem = (items: TreeItem[]): TreeItem[] => {
-            return items.map((item) => {
-              const itemKey = item.slug || item.id;
-              if (itemKey === folderId) {
-                return { ...item, children: sortedChildren as TreeItem[] };
-              }
-              if (item.children) {
-                return { ...item, children: updateItem(item.children as TreeItem[]) };
-              }
-              return item;
-            });
-          };
-          return updateItem(prevItems);
+        // Store children in cache
+        setFolderChildrenCache((prev) => {
+          const next = new Map(prev);
+          next.set(folderId, sortedChildren);
+          return next;
         });
 
         setLoadedFolders((prev) => new Set([...prev, folderId]));
@@ -259,7 +252,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
     });
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return <TreeSkeleton />;
   }
 

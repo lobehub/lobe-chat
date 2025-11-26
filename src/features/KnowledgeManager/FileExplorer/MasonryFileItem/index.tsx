@@ -167,6 +167,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     size,
     onOpen,
     metadata,
+    sourceType,
   }) => {
     const { styles, cx } = useStyles();
     const [markdownContent, setMarkdownContent] = useState<string>('');
@@ -265,7 +266,14 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         </div>
 
         <div className={cx('dropdown', styles.dropdown)} onClick={(e) => e.stopPropagation()}>
-          <DropdownMenu filename={name} id={id} knowledgeBaseId={knowledgeBaseId} url={url} />
+          <DropdownMenu
+            fileType={fileType}
+            filename={name}
+            id={id}
+            knowledgeBaseId={knowledgeBaseId}
+            sourceType={sourceType}
+            url={url}
+          />
         </div>
 
         <div
