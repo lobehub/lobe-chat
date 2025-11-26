@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.121](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.120...v2.0.0-next.121)
+
+<sup>Released on **2025-11-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add image aspect ratio and resolution settings for Nano Banana Pro.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add image aspect ratio and resolution settings for Nano Banana Pro, closes [#10430](https://github.com/lobehub/lobe-chat/issues/10430) ([a197b4b](https://github.com/lobehub/lobe-chat/commit/a197b4b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.120](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.119...v2.0.0-next.120)
 
 <sup>Released on **2025-11-26**</sup>
