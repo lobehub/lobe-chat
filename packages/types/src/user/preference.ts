@@ -89,6 +89,16 @@ export const NextAuthAccountSchame = z.object({
   providerAccountId: z.string(),
 });
 
+/**
+ * SSO Provider info displayed in profile page
+ */
+export interface SSOProvider {
+  /** Expiration time - Date for better-auth, number (Unix timestamp) for next-auth */
+  expiresAt?: Date | number | null;
+  provider: string;
+  providerAccountId: string;
+}
+
 export const UserPreferenceSchema = z
   .object({
     guide: UserGuideSchema.optional(),

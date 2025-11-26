@@ -21,6 +21,12 @@ const enableMagicLink = authEnv.NEXT_PUBLIC_ENABLE_MAGIC_LINK;
 const { socialProviders, genericOAuthProviders } = initBetterAuthSSOProviders();
 
 export const auth = betterAuth({
+  account: {
+    accountLinking: {
+      enabled: true,
+    },
+  },
+
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
   }),
@@ -88,6 +94,12 @@ export const auth = betterAuth({
   socialProviders,
 
   user: {
+    additionalFields: {
+      fullName: {
+        required: false,
+        type: 'string',
+      },
+    },
     fields: {
       image: 'avatar',
       name: 'username',

@@ -31,8 +31,9 @@ const UserUpdater = memo(() => {
         // Preserve avatar from settings, don't override with auth provider value
         avatar: userAvatar || '',
         email: betterAuthUser.email,
-        fullName: betterAuthUser.name,
+        fullName: betterAuthUser.fullName,
         id: betterAuthUser.id,
+        username: betterAuthUser.name,
       } as LobeUser;
 
       // Update user data in store

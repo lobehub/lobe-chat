@@ -1,9 +1,10 @@
 'use client';
 
-import { Form, type FormGroupItemType, Input } from '@lobehub/ui';
+import { CopyButton, Form, type FormGroupItemType, Input } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { enableAuth } from '@/const/auth';
 import { FORM_STYLE } from '@/const/layoutTokens';
@@ -15,16 +16,19 @@ import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 import SSOProvidersList from './features/SSOProvidersList';
 
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const [isLoginWithNextAuth, isLogin] = useUserStore((s) => [
+  const [isLoginWithNextAuth, isLoginWithBetterAuth, isLogin] = useUserStore((s) => [
     authSelectors.isLoginWithNextAuth(s),
+    authSelectors.isLoginWithBetterAuth(s),
     authSelectors.isLogin(s),
   ]);
-  const [nickname, username, userProfile, loading] = useUserStore((s) => [
-    userProfileSelectors.nickName(s),
+  const [username, fullName, userProfile, loading] = useUserStore((s) => [
     userProfileSelectors.username(s),
+    userProfileSelectors.fullName(s),
     userProfileSelectors.userProfile(s),
     !s.isLoaded,
   ]);
+
+  const isLoginWithAuth = isLoginWithNextAuth || isLoginWithBetterAuth;
 
   const [form] = Form.useForm();
   const { t } = useTranslation('auth');
@@ -48,19 +52,27 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
         minWidth: undefined,
       },
       {
-        children: <Input disabled />,
+        children: username || '--',
         label: t('profile.username'),
-        name: 'username',
       },
       {
         children: <Input disabled />,
-        hidden: !isLoginWithNextAuth || !userProfile?.email,
+        label: t('profile.fullName'),
+        name: 'fullName',
+      },
+      {
+        children: (
+          <Flexbox align="center" gap={8} horizontal>
+            {userProfile?.email}
+            <CopyButton content={userProfile?.email || ''} size="small" />
+          </Flexbox>
+        ),
+        hidden: !isLoginWithAuth || !userProfile?.email,
         label: t('profile.email'),
-        name: 'email',
       },
       {
         children: <SSOProvidersList />,
-        hidden: !isLoginWithNextAuth,
+        hidden: !isLoginWithAuth,
         label: t('profile.sso.providers'),
         layout: 'vertical',
         minWidth: undefined,
@@ -72,8 +84,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
     <Form
       form={form}
       initialValues={{
-        email: userProfile?.email || '--',
-        username: nickname || username,
+        fullName: fullName || '--',
       }}
       items={[profile]}
       itemsType={'group'}
