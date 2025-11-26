@@ -7,9 +7,12 @@ import { CSSProperties, ReactNode, memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { notification } from '@/components/AntdStaticMethods';
 import { fetchErrorNotification } from '@/components/Error/fetchErrorNotification';
 import { enableAuth } from '@/const/auth';
 import UserAvatar from '@/features/User/UserAvatar';
+import { listAccounts, requestPasswordReset } from '@/libs/better-auth/auth-client';
+import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { imageToBase64 } from '@/utils/imageToBase64';
@@ -160,6 +163,7 @@ const FullNameRow = memo(() => {
                 <Input
                   autoFocus
                   onChange={(e) => setEditValue(e.target.value)}
+                  onPressEnter={handleSave}
                   placeholder={t('profile.fullName')}
                   value={editValue}
                 />
@@ -198,6 +202,54 @@ const FullNameRow = memo(() => {
   );
 });
 
+const PasswordRow = memo(() => {
+  const { t } = useTranslation('auth');
+  const userProfile = useUserStore(userProfileSelectors.userProfile);
+  const [sending, setSending] = useState(false);
+
+  const handleChangePassword = useCallback(async () => {
+    if (!userProfile?.email) return;
+
+    try {
+      setSending(true);
+      await requestPasswordReset({
+        email: userProfile.email,
+        redirectTo: `/reset-password?email=${encodeURIComponent(userProfile.email)}`,
+      });
+      notification.success({
+        message: t('profile.resetPasswordSent'),
+      });
+    } catch (error) {
+      console.error('Failed to send reset password email:', error);
+      notification.error({
+        message: t('profile.resetPasswordError'),
+      });
+    } finally {
+      setSending(false);
+    }
+  }, [userProfile?.email, t]);
+
+  return (
+    <ProfileRow
+      action={
+        <Typography.Text
+          onClick={sending ? undefined : handleChangePassword}
+          style={{
+            cursor: sending ? 'default' : 'pointer',
+            fontSize: 13,
+            opacity: sending ? 0.5 : 1,
+          }}
+        >
+          {t('profile.changePassword')}
+        </Typography.Text>
+      }
+      label={t('profile.password')}
+    >
+      <Typography.Text>••••••</Typography.Text>
+    </ProfileRow>
+  );
+});
+
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [isLoginWithNextAuth, isLoginWithBetterAuth] = useUserStore((s) => [
     authSelectors.isLoginWithNextAuth(s),
@@ -208,6 +260,16 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
     userProfileSelectors.userProfile(s),
     !s.isLoaded,
   ]);
+
+  // Check if user has credential (password) login for Better Auth
+  const { data: hasCredential } = useOnlyFetchOnceSWR(
+    isLoginWithBetterAuth ? 'profile-has-credential' : null,
+    async () => {
+      const result = await listAccounts();
+      const accounts = result.data || [];
+      return accounts.some((account) => account.providerId === 'credential');
+    },
+  );
 
   const isLoginWithAuth = isLoginWithNextAuth || isLoginWithBetterAuth;
 
@@ -247,6 +309,14 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       </ProfileRow>
 
       <Divider style={{ margin: 0 }} />
+
+      {/* Password Row - Only for Better Auth users with credential login */}
+      {isLoginWithBetterAuth && hasCredential && (
+        <>
+          <PasswordRow />
+          <Divider style={{ margin: 0 }} />
+        </>
+      )}
 
       {/* Email Row - Read Only */}
       {isLoginWithAuth && userProfile?.email && (

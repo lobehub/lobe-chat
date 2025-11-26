@@ -15,6 +15,8 @@ export const {
   linkSocial,
   accountInfo,
   listAccounts,
+  requestPasswordReset,
+  resetPassword,
   sendVerificationEmail,
   signIn,
   signOut,

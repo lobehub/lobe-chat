@@ -13,7 +13,7 @@ import { Flexbox } from 'react-layout-kit';
 import { message } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { getAuthConfig } from '@/envs/auth';
-import { signIn } from '@/libs/better-auth/auth-client';
+import { requestPasswordReset, signIn } from '@/libs/better-auth/auth-client';
 import { isBuiltinProvider, normalizeProviderId } from '@/libs/better-auth/utils/client';
 import { useUserStore } from '@/store/user';
 
@@ -107,6 +107,14 @@ export default function SignInPage() {
       passwordInputRef.current?.focus();
     }
   }, [step]);
+
+  // Pre-fill email from URL params
+  useEffect(() => {
+    const emailParam = searchParams.get('email');
+    if (emailParam) {
+      form.setFieldValue('email', emailParam);
+    }
+  }, [searchParams, form]);
 
   const handleSendMagicLink = async (targetEmail?: string) => {
     try {
@@ -403,6 +411,24 @@ export default function SignInPage() {
                   />
                 </Form.Item>
               </Form>
+
+              <div
+                className={styles.backButton}
+                onClick={async () => {
+                  try {
+                    await requestPasswordReset({
+                      email,
+                      redirectTo: `/reset-password?email=${encodeURIComponent(email)}`,
+                    });
+                    message.success(t('betterAuth.signin.forgotPasswordSent'));
+                  } catch {
+                    message.error(t('betterAuth.signin.forgotPasswordError'));
+                  }
+                }}
+                style={{ marginTop: '1rem', textAlign: 'center' }}
+              >
+                {t('betterAuth.signin.forgotPassword')}
+              </div>
             </>
           )}
         </div>

@@ -67,6 +67,19 @@ export default {
       passwordRequired: '请输入密码',
       usernameRequired: '请输入用户名',
     },
+    resetPassword: {
+      backToSignIn: '返回登录',
+      confirmPasswordPlaceholder: '确认新密码',
+      confirmPasswordRequired: '请确认新密码',
+      description: '请输入您的新密码',
+      error: '重置密码失败，请重试',
+      invalidToken: '无效或已过期的重置链接',
+      newPasswordPlaceholder: '输入新密码',
+      passwordMismatch: '两次输入的密码不一致',
+      submit: '重置密码',
+      success: '密码重置成功，请使用新密码登录',
+      title: '重置密码',
+    },
     signin: {
       backToEmail: '返回修改邮箱',
       continueWithAuth0: '使用 Auth0 登录',
@@ -91,6 +104,9 @@ export default {
         title: '登录',
       },
       error: '登录失败，请检查邮箱和密码',
+      forgotPassword: '忘记密码？',
+      forgotPasswordError: '发送重置密码链接失败',
+      forgotPasswordSent: '重置密码链接已发送，请检查邮箱',
       magicLinkButton: '发送登录链接',
       magicLinkError: '发送登录链接失败，请稍后再试',
       magicLinkSent: '登录链接已发送，请检查邮箱',
@@ -169,9 +185,13 @@ export default {
   profile: {
     avatar: '头像',
     cancel: '取消',
+    changePassword: '重置密码',
     email: '电子邮件地址',
     fullName: '全名',
     fullNameInputHint: '请输入新的全名',
+    password: '密码',
+    resetPasswordError: '发送密码重置链接失败',
+    resetPasswordSent: '密码重置链接已发送，请检查邮箱',
     save: '保存',
     sso: {
       link: {
