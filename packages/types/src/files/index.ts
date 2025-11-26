@@ -14,6 +14,7 @@ export enum FileSource {
 }
 
 export interface FileItem {
+  content?: string;
   createdAt: Date;
   enabled?: boolean;
   id: string;

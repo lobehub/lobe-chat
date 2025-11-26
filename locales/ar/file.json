@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "نسخ المحتوى الكامل",
-    "documentCount": "إجمالي {{count}} مستند",
     "duplicate": "إنشاء نسخة",
-    "empty": "لا توجد مستندات حاليًا، انقر على الزر أعلاه لإنشاء أول مستند لك",
+    "empty": "لا توجد مستندات حالياً، انقر على الزر أعلاه لإنشاء أول مستند لك",
     "noResults": "لم يتم العثور على مستندات مطابقة",
-    "selectNote": "اختر مستندًا للبدء في التحرير",
+    "pageCount": "إجمالي {{count}} مستند",
+    "selectNote": "اختر مستندًا لبدء التحرير",
     "untitled": "بدون عنوان"
   },
   "empty": "لا توجد ملفات/مجلدات تم تحميلها بعد",
@@ -70,7 +70,6 @@
       "uploadFile": "رفع ملف",
       "uploadFolder": "رفع مجلد"
     },
-    "newDocumentButton": "مستند جديد",
     "newNoteDialog": {
       "cancel": "إلغاء",
       "editTitle": "تحرير المستند",
@@ -83,14 +82,15 @@
       "title": "مستند جديد",
       "updateSuccess": "تم تحديث المستند بنجاح"
     },
+    "newPageButton": "إنشاء مستند جديد",
     "uploadButton": "رفع"
   },
   "home": {
     "getStarted": "ابدأ الآن",
     "greeting": "ابدأ",
     "quickActions": "إجراءات سريعة",
-    "recentDocuments": "المستندات الأخيرة",
     "recentFiles": "الملفات الأخيرة",
+    "recentPages": "الصفحات الأخيرة",
     "subtitle": "مرحبًا بك في قاعدة المعرفة، ابدأ من هنا لإدارة مستنداتك وملاحظاتك",
     "uploadEntries": {
       "files": {
@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "قاعدة معرفة جديدة"
       },
-      "newDocument": {
-        "title": "مستند جديد"
+      "newPage": {
+        "title": "إنشاء مستند جديد"
       }
     }
   },
@@ -116,8 +116,8 @@
     "title": "المكتبة المعرفية"
   },
   "menu": {
-    "allDocuments": "جميع المستندات",
-    "allFiles": "جميع الملفات"
+    "allFiles": "جميع الملفات",
+    "allPages": "جميع المستندات"
   },
   "networkError": "فشل في الحصول على قاعدة المعرفة، يرجى التحقق من اتصال الشبكة ثم إعادة المحاولة",
   "notSupportGuide": {
@@ -142,8 +142,8 @@
     "downloadFile": "تحميل الملف",
     "unsupportedFileAndContact": "هذا التنسيق من الملفات غير مدعوم للمعاينة عبر الإنترنت، إذا كان لديك طلب للمعاينة، فلا تتردد في <1>إبلاغنا</1>"
   },
-  "searchDocumentPlaceholder": "ابحث في المستندات",
   "searchFilePlaceholder": "بحث عن ملف",
+  "searchPagePlaceholder": "ابحث في المستندات",
   "tab": {
     "all": "الكل",
     "audios": "الصوتيات",
@@ -156,9 +156,7 @@
     "websites": "المواقع"
   },
   "title": "قاعدة المعرفة",
-  "toggleLeftPanel": {
-    "title": "عرض/إخفاء اللوحة الجانبية اليسرى"
-  },
+  "toggleLeftPanel": "إظهار/إخفاء اللوحة الجانبية اليسرى",
   "uploadDock": {
     "body": {
       "collapse": "طي",

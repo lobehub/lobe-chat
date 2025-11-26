@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Bilgi tabanını oku",
+        "searchKnowledgeBase": "Bilgi tabanında ara"
+      },
+      "title": "Bilgi Tabanı"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Dosyayı düzenle",
+        "getCommandOutput": "Komut çıktısını al",
+        "globLocalFiles": "Dosyaları desenle ara",
+        "grepContent": "İçerikte ara",
+        "killCommand": "Komut çalışmasını durdur",
+        "listLocalFiles": "Dosya listesini görüntüle",
+        "moveLocalFiles": "Dosyaları taşı",
+        "readLocalFile": "Dosya içeriğini oku",
+        "renameLocalFile": "Yeniden adlandır",
+        "runCommand": "Komut çalıştır",
+        "searchLocalFiles": "Dosyalarda ara",
+        "writeLocalFile": "Dosyaya yaz"
+      },
+      "title": "Yerel Sistem"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Birden fazla sayfanın içeriğini oku",
+        "crawlSinglePage": "Sayfa içeriğini oku",
+        "search": "Sayfada ara"
+      },
+      "title": "İnternette Arama"
+    }
+  },
   "confirm": "Onayla",
   "debug": {
     "arguments": "Çağrı parametreleri",
@@ -251,23 +285,6 @@
     "content": "Eklenti çağrılıyor...",
     "plugin": "Eklenti çalışıyor..."
   },
-  "localSystem": {
-    "apiName": {
-      "editLocalFile": "Dosyayı Düzenle",
-      "getCommandOutput": "Komut Çıktısını Al",
-      "globLocalFiles": "Dosyaları Ara",
-      "grepContent": "İçeriği Ara",
-      "killCommand": "Komut Yürütmesini Durdur",
-      "listLocalFiles": "Dosya listesini görüntüle",
-      "moveLocalFiles": "Dosya taşı",
-      "readLocalFile": "Dosya içeriğini oku",
-      "renameLocalFile": "Dosya adını değiştir",
-      "runCommand": "Komutu Çalıştır",
-      "searchLocalFiles": "Dosya ara",
-      "writeLocalFile": "Dosyaya yaz"
-    },
-    "title": "Yerel Sistem"
-  },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Kurulum ortamı kontrol ediliyor...",
     "COMPLETED": "Kurulum tamamlandı",
@@ -375,11 +392,6 @@
     "warning": "⚠️ Lütfen bu eklentinin kaynağına güvendiğinizden emin olun, kötü amaçlı eklentiler sistem güvenliğinizi tehlikeye atabilir."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Birden fazla sayfa içeriği oku",
-      "crawlSinglePage": "Sayfa içeriği oku",
-      "search": "Sayfa ara"
-    },
     "config": {
       "addKey": "Anahtar ekle",
       "close": "Sil",

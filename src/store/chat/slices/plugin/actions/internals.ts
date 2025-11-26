@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { ToolNameResolver } from '@lobechat/context-engine';
-import { MessageToolCall, ToolsCallingContext } from '@lobechat/types';
+import { ChatToolPayload, MessageToolCall, ToolsCallingContext } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -19,7 +19,7 @@ export interface PluginInternalsAction {
   /**
    * Transform tool calls from runtime format to storage format
    */
-  internal_transformToolCalls: (toolCalls: MessageToolCall[]) => any[];
+  internal_transformToolCalls: (toolCalls: MessageToolCall[]) => ChatToolPayload[];
 
   /**
    * Construct tools calling context for plugin invocation

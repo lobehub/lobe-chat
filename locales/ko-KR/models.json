@@ -720,25 +720,28 @@
     "description": "Claude 3 Opus는 Anthropic의 가장 지능적인 모델로, 매우 복잡한 작업에서 시장 선도적인 성능을 보입니다. 탁월한 유창성과 인간과 유사한 이해력을 바탕으로 개방형 프롬프트와 전례 없는 시나리오를 능숙하게 처리합니다."
   },
   "anthropic/claude-3.5-haiku": {
-    "description": "Claude 3.5 Haiku는 가장 빠른 모델의 차세대 버전입니다. Claude 3 Haiku와 유사한 속도를 유지하면서 모든 기술 영역에서 개선되었으며, 많은 지능 벤치마크에서 이전 세대 최대 모델인 Claude 3 Opus를 능가합니다."
+    "description": "Claude 3.5 Haiku는 속도, 코딩 정확도 및 도구 사용 능력이 향상된 모델로, 빠른 응답과 도구 상호작용이 중요한 상황에 적합합니다."
   },
   "anthropic/claude-3.5-sonnet": {
-    "description": "Claude 3.5 Sonnet은 지능과 속도 사이의 이상적인 균형을 이룹니다—특히 기업 워크로드에 적합합니다. 동급 제품 대비 낮은 비용으로 강력한 성능을 제공하며, 대규모 AI 배포에서 높은 내구성을 위해 설계되었습니다."
+    "description": "Claude 3.5 Sonnet은 Sonnet 계열의 빠르고 효율적인 모델로, 향상된 코딩 및 추론 성능을 제공합니다. 일부 버전은 Sonnet 3.7 등으로 점진적으로 대체될 예정입니다."
   },
   "anthropic/claude-3.7-sonnet": {
-    "description": "Claude 3.7 Sonnet은 최초의 혼합 추론 모델이자 Anthropic의 가장 지능적인 모델입니다. 코딩, 콘텐츠 생성, 데이터 분석 및 계획 작업에서 최첨단 성능을 제공하며, 이전 모델인 Claude 3.5 Sonnet의 소프트웨어 엔지니어링 및 컴퓨터 활용 능력을 기반으로 구축되었습니다."
+    "description": "Claude 3.7 Sonnet은 Sonnet 시리즈의 업그레이드 버전으로, 더욱 강력한 추론 및 코딩 능력을 제공하며, 기업용 복잡한 작업에 적합합니다."
+  },
+  "anthropic/claude-haiku-4.5": {
+    "description": "Claude Haiku 4.5는 높은 정확도를 유지하면서도 매우 낮은 지연 시간을 자랑하는 Anthropic의 고성능 고속 모델입니다."
   },
   "anthropic/claude-opus-4": {
-    "description": "Claude Opus 4는 Anthropic의 가장 강력한 모델이자 세계 최고의 코딩 모델로, SWE-bench(72.5%) 및 Terminal-bench(43.2%)에서 선두를 달리고 있습니다. 수천 단계가 필요한 장기 작업에 지속적인 성능을 제공하며, 수시간 연속 작업이 가능해 AI 에이전트의 능력을 크게 확장합니다."
+    "description": "Opus 4는 복잡한 작업과 기업용 애플리케이션을 위해 설계된 Anthropic의 플래그십 모델입니다."
   },
   "anthropic/claude-opus-4.1": {
-    "description": "Claude Opus 4.1은 Opus 4의 플러그 앤 플레이 대체 모델로, 실제 코딩 및 에이전트 작업에서 뛰어난 성능과 정확도를 제공합니다. Opus 4.1은 SWE-bench Verified에서 74.5%의 최첨단 코딩 성능을 달성했으며, 복잡한 다단계 문제를 더 엄격하고 세밀하게 처리합니다."
+    "description": "Opus 4.1은 프로그래밍, 복잡한 추론 및 지속적인 작업에 최적화된 Anthropic의 고급 모델입니다."
   },
   "anthropic/claude-sonnet-4": {
-    "description": "Claude Sonnet 4는 Sonnet 3.7의 업계 선도 능력을 크게 향상시켰으며, 코딩에서 뛰어난 성능을 보이고 SWE-bench에서 최첨단 72.7%를 달성했습니다. 이 모델은 성능과 효율성 사이의 균형을 이루며, 내부 및 외부 사용 사례에 적합하고 향상된 제어성을 통해 구현에 대한 더 큰 통제를 제공합니다."
+    "description": "Claude Sonnet 4는 사고 기반과 비사고 기반 기능을 결합한 Anthropic의 하이브리드 추론 모델입니다."
   },
   "anthropic/claude-sonnet-4.5": {
-    "description": "Claude Sonnet 4.5는 Anthropic의 지금까지 가장 지능적인 모델입니다."
+    "description": "Claude Sonnet 4.5는 복잡한 추론과 코딩에 최적화된 Anthropic의 최신 하이브리드 추론 모델입니다."
   },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B는 720억 개의 파라미터와 160억 활성 파라미터를 가진 희소 대형 언어 모델로, 그룹 혼합 전문가(MoGE) 아키텍처를 기반으로 합니다. 전문가 선택 단계에서 전문가를 그룹화하고 각 그룹 내에서 토큰이 동일 수의 전문가를 활성화하도록 제한하여 전문가 부하 균형을 달성함으로써 Ascend 플랫폼에서의 모델 배포 효율성을 크게 향상시켰습니다."
@@ -760,6 +763,9 @@
   },
   "baidu/ERNIE-4.5-300B-A47B": {
     "description": "ERNIE-4.5-300B-A47B는 바이두에서 개발한 혼합 전문가(MoE) 아키텍처 기반의 대형 언어 모델입니다. 총 3천억 개의 파라미터를 보유하지만 추론 시 각 토큰당 470억 파라미터만 활성화하여 강력한 성능과 계산 효율성을 동시에 달성합니다. ERNIE 4.5 시리즈의 핵심 모델 중 하나로, 텍스트 이해, 생성, 추론 및 프로그래밍 작업에서 뛰어난 능력을 보여줍니다. 이 모델은 텍스트와 시각 모달리티의 공동 학습을 통한 혁신적인 다중 모달 이기종 MoE 사전학습 방식을 채택하여, 특히 명령 준수와 세계 지식 기억 측면에서 탁월한 성능을 발휘합니다."
+  },
+  "baidu/ernie-5.0-thinking-preview": {
+    "description": "ERNIE 5.0 Thinking Preview는 바이두의 차세대 멀티모달 원어 모델로, 멀티모달 이해, 명령 수행, 창작, 사실 기반 질의응답 및 도구 호출에 능숙합니다."
   },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse는 지시 조정, 데이터 차익 거래, 선호 훈련 및 모델 통합의 혁신을 통해 단일 언어 모델의 성능에 도전하는 고성능 32B 다국어 모델입니다. 23개 언어를 지원합니다."
@@ -868,6 +874,9 @@
   },
   "codex-mini-latest": {
     "description": "codex-mini-latest는 o4-mini의 미세 조정 버전으로, Codex CLI 전용입니다. API를 통해 직접 사용하려면 gpt-4.1부터 시작하는 것을 권장합니다."
+  },
+  "cogito-2.1:671b": {
+    "description": "Cogito v2.1 671B는 미국에서 오픈소스로 제공되는 무료 상업용 대형 언어 모델로, 최고 수준의 성능, 높은 토큰 추론 효율, 128k 긴 문맥 처리 및 강력한 종합 능력을 갖추고 있습니다."
   },
   "cogview-4": {
     "description": "CogView-4는 지푸가 처음으로 한자 생성을 지원하는 오픈 소스 텍스트-이미지 생성 모델로, 의미 이해, 이미지 생성 품질, 중영 문자 생성 능력 등 여러 측면에서 전면적으로 향상되었으며, 임의 길이의 중영 이중 언어 입력을 지원하고 주어진 범위 내에서 임의 해상도의 이미지를 생성할 수 있습니다."
@@ -1139,6 +1148,9 @@
   "deepseek-vl2-small": {
     "description": "DeepSeek VL2 Small, 경량 멀티모달 버전으로, 자원이 제한되거나 고동시 환경에 적합합니다."
   },
+  "deepseek/deepseek-chat": {
+    "description": "DeepSeek-V3는 DeepSeek 팀이 개발한 고성능 하이브리드 추론 모델로, 복잡한 작업 및 도구 통합에 적합합니다."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3는 685B 매개변수를 가진 전문가 혼합 모델로, DeepSeek 팀의 플래그십 채팅 모델 시리즈의 최신 반복입니다.\n\n이 모델은 [DeepSeek V3](/deepseek/deepseek-chat-v3) 모델을 계승하며 다양한 작업에서 뛰어난 성능을 보입니다."
   },
@@ -1146,13 +1158,13 @@
     "description": "DeepSeek V3는 685B 매개변수를 가진 전문가 혼합 모델로, DeepSeek 팀의 플래그십 채팅 모델 시리즈의 최신 반복입니다.\n\n이 모델은 [DeepSeek V3](/deepseek/deepseek-chat-v3) 모델을 계승하며 다양한 작업에서 뛰어난 성능을 보입니다."
   },
   "deepseek/deepseek-chat-v3.1": {
-    "description": "DeepSeek-V3.1은 128K 긴 컨텍스트와 효율적인 모드 전환을 지원하는 대형 하이브리드 추론 모델로, 도구 호출, 코드 생성 및 복잡한 추론 작업에서 탁월한 성능과 속도를 구현했습니다."
+    "description": "DeepSeek-V3.1은 긴 문맥을 지원하는 DeepSeek의 하이브리드 추론 모델로, 사고/비사고 모드와 도구 통합을 지원합니다."
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek R1 모델은 소규모 버전 업그레이드를 거쳐 현재 버전은 DeepSeek-R1-0528입니다. 최신 업데이트에서 DeepSeek R1은 증가된 계산 자원과 학습 후 도입된 알고리즘 최적화 메커니즘을 활용하여 추론 깊이와 능력을 크게 향상시켰습니다. 이 모델은 수학, 프로그래밍 및 일반 논리 등 여러 벤치마크에서 뛰어난 성능을 보이며, 전체 성능은 현재 O3 및 Gemini 2.5 Pro와 같은 선도 모델에 근접합니다."
   },
   "deepseek/deepseek-r1-0528": {
-    "description": "DeepSeek-R1은 매우 적은 라벨 데이터만으로도 모델 추론 능력을 크게 향상시켰습니다. 최종 답변 출력 전에 모델이 사고 과정(chain-of-thought)을 먼저 출력하여 최종 답변의 정확도를 높입니다."
+    "description": "DeepSeek R1 0528은 DeepSeek의 최신 변형 모델로, 오픈소스 활용성과 깊이 있는 추론에 중점을 두었습니다."
   },
   "deepseek/deepseek-r1-0528:free": {
     "description": "DeepSeek-R1은 매우 적은 라벨 데이터만으로도 모델 추론 능력을 크게 향상시켰습니다. 최종 답변 출력 전에 모델이 사고 과정(chain-of-thought)을 먼저 출력하여 최종 답변의 정확도를 높입니다."
@@ -1174,6 +1186,9 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1은 극히 적은 주석 데이터로 모델의 추론 능력을 크게 향상시킵니다. 최종 답변을 출력하기 전에 모델은 먼저 사고의 연쇄 내용을 출력하여 최종 답변의 정확성을 높입니다."
+  },
+  "deepseek/deepseek-reasoner": {
+    "description": "DeepSeek-V3 Thinking(reasoner)는 DeepSeek의 실험적 추론 모델로, 고난이도 추론 작업에 적합합니다."
   },
   "deepseek/deepseek-v3": {
     "description": "향상된 추론 능력을 갖춘 빠르고 범용적인 대형 언어 모델입니다."
@@ -1481,9 +1496,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 플래시 모델 변형으로, 비용 효율성과 낮은 지연 시간 등의 목표를 위해 최적화되었습니다."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash 미리보기 모델로, 이미지 생성을 지원합니다."
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash는 구글에서 가장 가성비가 뛰어난 모델로, 포괄적인 기능을 제공합니다."
   },
@@ -1511,9 +1523,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview는 Google의 가장 가성비 높은 모델로, 포괄적인 기능을 제공합니다."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview는 Google의 최고의 가성비 모델로, 포괄적인 기능을 제공합니다."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Gemini 2.5 Flash의 미리보기 버전 (2025년 9월 25일)"
   },
@@ -1528,6 +1537,15 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview는 구글의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용해 대규모 데이터셋, 코드베이스 및 문서를 분석합니다."
+  },
+  "gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image(Nano Banana Pro)는 Google의 이미지 생성 모델로, 멀티모달 대화를 지원합니다."
+  },
+  "gemini-3-pro-image-preview:image": {
+    "description": "Gemini 3 Pro Image(Nano Banana Pro)는 Google의 이미지 생성 모델로, 멀티모달 대화를 지원합니다."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro는 세계 최고 수준의 멀티모달 이해 모델로, Google이 개발한 가장 강력한 에이전트 및 분위기 기반 프로그래밍 모델입니다. 풍부한 시각 효과와 깊이 있는 상호작용을 제공하며, 최첨단 추론 능력을 기반으로 합니다."
   },
   "gemini-flash-latest": {
     "description": "Gemini Flash 최신 버전"
@@ -1653,7 +1671,7 @@
     "description": "GLM-Zero-Preview는 강력한 복잡한 추론 능력을 갖추고 있으며, 논리 추론, 수학, 프로그래밍 등 분야에서 우수한 성능을 발휘합니다."
   },
   "google/gemini-2.0-flash": {
-    "description": "Gemini 2.0 Flash는 차세대 기능과 개선된 성능을 제공하며, 뛰어난 속도, 내장 도구 사용, 멀티모달 생성 및 100만 토큰의 컨텍스트 윈도우를 지원합니다."
+    "description": "Gemini 2.0 Flash는 Google의 고성능 추론 모델로, 확장된 멀티모달 작업에 적합합니다."
   },
   "google/gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash는 뛰어난 속도, 원주율 도구 사용, 다중 모달 생성 및 1M 토큰 문맥 창을 포함한 차세대 기능과 개선 사항을 제공합니다."
@@ -1664,14 +1682,23 @@
   "google/gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash Lite는 차세대 기능과 개선된 성능을 제공하며, 뛰어난 속도, 내장 도구 사용, 멀티모달 생성 및 100만 토큰의 컨텍스트 윈도우를 지원합니다."
   },
+  "google/gemini-2.0-flash-lite-001": {
+    "description": "Gemini 2.0 Flash Lite는 Gemini 시리즈의 경량 버전으로, 기본적으로 사고 기능이 비활성화되어 지연 시간과 비용 효율이 향상되며, 매개변수를 통해 활성화할 수 있습니다."
+  },
   "google/gemini-2.5-flash": {
-    "description": "Gemini 2.5 Flash는 사고 모델로서 뛰어난 종합 능력을 제공합니다. 가격과 성능의 균형을 목표로 하며, 멀티모달 및 100만 토큰의 컨텍스트 윈도우를 지원합니다."
+    "description": "Gemini 2.5 Flash(Lite/Pro/Flash) 시리즈는 Google의 중저지연부터 고성능까지 아우르는 추론 모델입니다."
+  },
+  "google/gemini-2.5-flash-image": {
+    "description": "Gemini 2.5 Flash Image(Nano Banana)는 Google의 이미지 생성 모델로, 멀티모달 대화를 지원합니다."
+  },
+  "google/gemini-2.5-flash-image-free": {
+    "description": "Gemini 2.5 Flash Image 무료 버전은 제한된 용량의 멀티모달 생성을 지원합니다."
   },
   "google/gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash 실험 모델로, 이미지 생성을 지원합니다."
   },
   "google/gemini-2.5-flash-lite": {
-    "description": "Gemini 2.5 Flash-Lite는 균형 잡힌 저지연 모델로, 구성 가능한 사고 예산과 도구 연결성(예: Google 검색 기반 및 코드 실행)을 제공합니다. 멀티모달 입력을 지원하며 100만 토큰의 컨텍스트 윈도우를 제공합니다."
+    "description": "Gemini 2.5 Flash Lite는 Gemini 2.5의 경량 버전으로, 지연 시간과 비용을 최적화하여 고처리량 환경에 적합합니다."
   },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하고 있어 더 높은 정확성과 세밀한 맥락 처리를 통해 응답을 제공합니다.\n\n주의: 이 모델에는 두 가지 변형이 있습니다: 사고 및 비사고. 출력 가격은 사고 능력이 활성화되었는지 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사가 없는)을 선택하면 모델이 사고 토큰 생성을 명확히 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 수신하려면 ‘:thinking’ 변형을 선택해야 하며, 이는 더 높은 사고 출력 가격을 발생시킵니다.\n\n또한, Gemini 2.5 Flash는 문서에 설명된 대로 '추론 최대 토큰 수' 매개변수를 통해 구성할 수 있습니다 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
@@ -1680,10 +1707,25 @@
     "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하고 있어 더 높은 정확성과 세밀한 맥락 처리를 통해 응답을 제공합니다.\n\n주의: 이 모델에는 두 가지 변형이 있습니다: 사고 및 비사고. 출력 가격은 사고 능력이 활성화되었는지 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사가 없는)을 선택하면 모델이 사고 토큰 생성을 명확히 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 수신하려면 ‘:thinking’ 변형을 선택해야 하며, 이는 더 높은 사고 출력 가격을 발생시킵니다.\n\n또한, Gemini 2.5 Flash는 문서에 설명된 대로 '추론 최대 토큰 수' 매개변수를 통해 구성할 수 있습니다 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
   "google/gemini-2.5-pro": {
-    "description": "Gemini 2.5 Pro는 가장 진보된 추론 Gemini 모델로, 복잡한 문제 해결이 가능합니다. 200만 토큰의 컨텍스트 윈도우를 가지며, 텍스트, 이미지, 오디오, 비디오 및 PDF 문서를 포함한 멀티모달 입력을 지원합니다."
+    "description": "Gemini 2.5 Pro는 Google의 플래그십 추론 모델로, 긴 문맥과 복잡한 작업을 지원합니다."
+  },
+  "google/gemini-2.5-pro-free": {
+    "description": "Gemini 2.5 Pro 무료 버전은 제한된 용량의 멀티모달 긴 문맥을 지원하며, 체험 및 경량 워크플로우에 적합합니다."
   },
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview는 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 사용하여 대규모 데이터 세트, 코드베이스 및 문서를 분석할 수 있습니다."
+  },
+  "google/gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image(Nano Banana Pro)는 Google의 이미지 생성 모델로, 멀티모달 대화를 지원합니다."
+  },
+  "google/gemini-3-pro-image-preview-free": {
+    "description": "Gemini 3 Pro Image 무료 버전은 제한된 용량의 멀티모달 생성을 지원합니다."
+  },
+  "google/gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro는 Gemini 시리즈의 차세대 멀티모달 추론 모델로, 텍스트, 오디오, 이미지, 비디오 등 다양한 입력을 이해하고 복잡한 작업 및 대규모 코드베이스를 처리할 수 있습니다."
+  },
+  "google/gemini-3-pro-preview-free": {
+    "description": "Gemini 3 Pro 무료 프리뷰 버전은 표준 버전과 동일한 멀티모달 이해 및 추론 능력을 갖추고 있으나, 무료 용량 및 속도 제한이 있어 체험 및 저빈도 사용에 적합합니다."
   },
   "google/gemini-embedding-001": {
     "description": "최첨단 임베딩 모델로, 영어, 다국어 및 코드 작업에서 뛰어난 성능을 보입니다."
@@ -1910,6 +1952,12 @@
   "grok-4-0709": {
     "description": "xAI의 Grok 4로, 강력한 추론 능력을 갖추고 있습니다."
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "최첨단 멀티모달 모델로, 고성능 에이전트 도구 호출에 최적화되어 있습니다."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "최첨단 멀티모달 모델로, 고성능 에이전트 도구 호출에 최적화되어 있습니다."
+  },
   "grok-4-fast-non-reasoning": {
     "description": "비용 효율적인 추론 모델 분야에서의 최신 진전인 Grok 4 Fast를 발표하게 되어 기쁩니다."
   },
@@ -2054,20 +2102,35 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small은 코드 생성, 디버깅 및 리팩토링 작업에 이상적이며, 최소 지연 시간을 자랑합니다."
   },
-  "inclusionAI/Ling-1T": {
-    "description": "Ling-1T는 'Ling 2.0' 시리즈의 첫 번째 플래그십 non-thinking 모델로, 총 1조 개의 파라미터와 토큰당 약 500억 개의 활성 파라미터를 보유하고 있습니다. Ling 2.0 아키텍처를 기반으로 구축되었으며, 효율적인 추론과 확장 가능한 인지 능력의 한계를 돌파하는 것을 목표로 합니다. Ling-1T-base는 200조 개 이상의 고품질 추론 중심 토큰으로 학습되었습니다."
-  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0은 앤트 그룹 백령 팀이 발표한 Ling 2.0 아키텍처 시리즈의 세 번째 모델입니다. 혼합 전문가(MoE) 모델로 총 파라미터 수는 1000억에 달하지만, 각 토큰당 61억 파라미터만 활성화(비임베딩 48억)됩니다. 경량 구성 모델로서 여러 권위 있는 평가에서 400억 규모의 밀집(Dense) 모델 및 더 큰 규모의 MoE 모델과 견줄 만한 성능을 보여줍니다. 이 모델은 '대형 모델 = 대형 파라미터'라는 공감대 하에 극대화된 아키텍처 설계와 학습 전략을 통해 고효율 경로를 탐색하는 것을 목표로 합니다."
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0은 MoE 아키텍처 기반의 소형 고성능 대형 언어 모델입니다. 총 160억 파라미터를 보유하지만 각 토큰당 14억(비임베딩 7억 8천 9백만) 파라미터만 활성화하여 매우 빠른 생성 속도를 실현합니다. 효율적인 MoE 설계와 대규모 고품질 학습 데이터 덕분에, 활성화 파라미터가 14억에 불과함에도 불구하고 Ling-mini-2.0은 하위 작업에서 100억 이하의 밀집 LLM 및 더 큰 규모의 MoE 모델과 견줄 수 있는 최상위 성능을 보여줍니다."
   },
-  "inclusionAI/Ring-1T": {
-    "description": "Ring-1T는 백링(Bailing) 팀이 공개한 1조 파라미터 규모의 오픈소스 사고 모델입니다. Ling 2.0 아키텍처와 Ling-1T-base 모델을 기반으로 학습되었으며, 총 파라미터 수는 1조, 활성 파라미터는 500억 개에 달합니다. 최대 128K의 컨텍스트 윈도우를 지원하며, 대규모 검증 가능한 보상 강화 학습을 통해 최적화되었습니다."
-  },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0은 Ling-flash-2.0-base를 기반으로 깊이 최적화된 고성능 사고 모델입니다. 혼합 전문가(MoE) 아키텍처를 채택하여 총 1000억 파라미터를 보유하지만, 추론 시에는 61억 파라미터만 활성화합니다. 독창적인 icepop 알고리즘을 통해 MoE 대형 모델의 강화 학습(RL) 훈련 중 불안정성 문제를 해결하여 복잡한 추론 능력을 장기 훈련 동안 지속적으로 향상시켰습니다. 수학 경시대회, 코드 생성, 논리 추론 등 여러 고난도 벤치마크에서 뛰어난 성과를 거두었으며, 400억 파라미터 이하의 최상위 밀집 모델을 능가하고 더 큰 규모의 오픈소스 MoE 모델 및 폐쇄형 고성능 사고 모델과 견줄 만한 성능을 자랑합니다. 복잡한 추론에 집중하면서도 창의적 글쓰기 작업에서도 우수한 성능을 보입니다. 또한 효율적인 아키텍처 설계 덕분에 강력한 성능과 함께 고속 추론을 실현하여 고부하 환경에서 사고 모델의 배포 비용을 크게 절감합니다."
+  },
+  "inclusionai/ling-1t": {
+    "description": "Ling-1T는 inclusionAI의 1T MoE 대형 모델로, 고강도 추론 작업과 대규모 문맥에 최적화되어 있습니다."
+  },
+  "inclusionai/ling-flash-2.0": {
+    "description": "Ling-flash-2.0은 inclusionAI의 MoE 모델로, 효율성과 추론 성능을 최적화하여 중대형 작업에 적합합니다."
+  },
+  "inclusionai/ling-mini-2.0": {
+    "description": "Ling-mini-2.0은 inclusionAI의 경량화된 MoE 모델로, 추론 능력을 유지하면서도 비용을 크게 절감합니다."
+  },
+  "inclusionai/ming-flash-omini-preview": {
+    "description": "Ming-flash-omni Preview는 inclusionAI의 멀티모달 모델로, 음성, 이미지, 비디오 입력을 지원하며 이미지 렌더링 및 음성 인식 능력을 최적화했습니다."
+  },
+  "inclusionai/ring-1t": {
+    "description": "Ring-1T는 inclusionAI의 조 단위 파라미터를 가진 MoE 사고 모델로, 대규모 추론 및 연구 중심 작업에 적합합니다."
+  },
+  "inclusionai/ring-flash-2.0": {
+    "description": "Ring-flash-2.0은 고처리량 환경을 위한 inclusionAI의 Ring 모델 변형으로, 속도와 비용 효율성을 강조합니다."
+  },
+  "inclusionai/ring-mini-2.0": {
+    "description": "Ring-mini-2.0은 inclusionAI의 고처리량 경량화 MoE 버전으로, 동시 처리 환경에 주로 사용됩니다."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5는 다양한 시나리오에서 스마트 대화 솔루션을 제공합니다."
@@ -2120,6 +2183,12 @@
   "kimi-k2-instruct": {
     "description": "Kimi K2 Instruct, Kimi 공식 추론 모델로, 장기 컨텍스트, 코드, 질의응답 등 다양한 시나리오를 지원합니다."
   },
+  "kimi-k2-thinking": {
+    "description": "K2 장기 사고 모델은 256k 문맥을 지원하며, 다단계 도구 호출과 사고를 통해 복잡한 문제 해결에 능숙합니다."
+  },
+  "kimi-k2-thinking-turbo": {
+    "description": "K2 장기 사고 모델의 고속 버전으로, 256k 문맥을 지원하며, 심층 추론에 능하고 초당 60~100 토큰의 출력 속도를 자랑합니다."
+  },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2는 강력한 코드 처리 및 에이전트(Agent) 기능을 갖춘 MoE(혼합 전문가) 아키텍처 기반 모델로, 총 파라미터 수는 1T(1조), 활성화 파라미터는 32B(320억)입니다. 일반 지식 추론, 프로그래밍, 수학, 에이전트 등 주요 분야의 벤치마크 성능 테스트에서 K2 모델은 다른 주요 오픈 소스 모델들을 능가합니다."
   },
@@ -2131,6 +2200,9 @@
   },
   "kimi-thinking-preview": {
     "description": "kimi-thinking-preview 모델은 월면의 어두운 면에서 제공하는 다중 모달 추론 능력과 범용 추론 능력을 갖춘 다중 모달 사고 모델로, 심층 추론에 능하며 더 어렵고 복잡한 문제 해결을 돕습니다."
+  },
+  "kuaishou/kat-coder-pro-v1": {
+    "description": "KAT-Coder-Pro-V1(한시적 무료)은 코드 이해 및 자동화 프로그래밍에 특화되어 있으며, 효율적인 프로그래밍 에이전트 작업에 사용됩니다."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM은 학습 과학 원칙에 맞춰 훈련된 실험적이고 특정 작업에 특화된 언어 모델로, 교육 및 학습 환경에서 시스템 지침을 따르며 전문가 멘토 역할을 수행합니다."
@@ -2463,7 +2535,7 @@
     "description": "MiniMax M2는 코딩 및 에이전트 워크플로우를 위해 설계된 효율적인 대형 언어 모델입니다."
   },
   "minimax/minimax-m2": {
-    "description": "효율적인 코딩과 에이전트 워크플로우를 위해 설계되었습니다."
+    "description": "MiniMax-M2는 코딩 및 에이전트 작업에서 뛰어난 성능을 보이는 고성능 대비 가성비 모델로, 다양한 엔지니어링 환경에 적합합니다."
   },
   "minimaxai/minimax-m2": {
     "description": "MiniMax-M2는 2,300억 개의 총 파라미터와 100억 개의 활성 파라미터를 갖춘 컴팩트하고 빠르며 경제적인 혼합 전문가(MoE) 모델로, 코딩 및 에이전트 작업에서 최고의 성능을 발휘하도록 설계되었으며, 강력한 범용 인공지능을 유지합니다. 이 모델은 다중 파일 편집, 코드 실행-수정의 루프, 테스트 기반 검증 및 수정, 복잡한 장기 연결 툴체인 등에서 뛰어난 성능을 보여주며, 개발자 워크플로우에 이상적인 선택입니다."
@@ -2612,11 +2684,20 @@
   "moonshotai/kimi-k2": {
     "description": "Kimi K2는 Moonshot AI가 개발한 대규모 혼합 전문가(MoE) 언어 모델로, 총 1조 매개변수와 한 번의 순전파당 320억 활성 매개변수를 갖추고 있습니다. 고급 도구 사용, 추론 및 코드 합성을 포함한 에이전트 능력에 최적화되어 있습니다."
   },
+  "moonshotai/kimi-k2-0711": {
+    "description": "Kimi K2 0711은 Kimi 시리즈의 Instruct 버전으로, 고품질 코드 및 도구 호출 환경에 적합합니다."
+  },
   "moonshotai/kimi-k2-0905": {
-    "description": "kimi-k2-0905-preview 모델은 256k 문맥 길이를 가지며, 더욱 강력한 에이전틱 코딩(Agentic Coding) 능력, 뛰어난 프론트엔드 코드의 미적 감각과 실용성, 그리고 향상된 문맥 이해 능력을 갖추고 있습니다."
+    "description": "Kimi K2 0905는 Kimi 시리즈의 0905 업데이트 버전으로, 문맥 길이와 추론 성능이 향상되었으며, 코딩 환경에 최적화되었습니다."
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "kimi-k2-0905-preview 모델은 256k 문맥 길이를 가지며, 더욱 강력한 에이전틱 코딩(Agentic Coding) 능력, 뛰어난 프론트엔드 코드의 미적 감각과 실용성, 그리고 향상된 문맥 이해 능력을 갖추고 있습니다."
+  },
+  "moonshotai/kimi-k2-thinking": {
+    "description": "Kimi K2 Thinking은 Moonshot이 심층 추론 작업을 위해 최적화한 사고 모델로, 범용 에이전트 기능을 갖추고 있습니다."
+  },
+  "moonshotai/kimi-k2-thinking-turbo": {
+    "description": "Kimi K2 Thinking Turbo는 Kimi K2 Thinking의 고속 버전으로, 심층 추론 능력을 유지하면서 응답 지연을 크게 줄였습니다."
   },
   "morph/morph-v3-fast": {
     "description": "Morph는 Claude 또는 GPT-4o와 같은 최첨단 모델이 제안하는 코드 변경 사항을 기존 코드 파일에 빠르게 적용하는 전문 AI 모델입니다. 초당 4500+ 토큰 처리 속도를 자랑하며, AI 코딩 워크플로우의 마지막 단계를 담당합니다. 16k 입력 토큰과 16k 출력 토큰을 지원합니다."
@@ -2700,28 +2781,49 @@
     "description": "OpenAI의 gpt-4-turbo는 광범위한 일반 지식과 도메인 전문성을 갖추어 자연어의 복잡한 지시를 따르고 어려운 문제를 정확히 해결할 수 있습니다. 지식 컷오프는 2023년 4월이며, 컨텍스트 윈도우는 128,000 토큰입니다."
   },
   "openai/gpt-4.1": {
-    "description": "GPT 4.1은 OpenAI의 플래그십 모델로, 복잡한 작업에 적합하며 다분야 문제 해결에 뛰어납니다."
+    "description": "GPT-4.1 시리즈는 더 넓은 문맥과 향상된 엔지니어링 및 추론 능력을 제공합니다."
   },
   "openai/gpt-4.1-mini": {
-    "description": "GPT 4.1 mini는 지능, 속도 및 비용 사이의 균형을 이루어 다양한 사용 사례에 매력적인 모델입니다."
+    "description": "GPT-4.1 Mini는 더 낮은 지연 시간과 뛰어난 가성비를 제공하며, 중간 수준의 문맥 처리에 적합합니다."
   },
   "openai/gpt-4.1-nano": {
-    "description": "GPT-4.1 nano는 가장 빠르고 비용 효율적인 GPT 4.1 모델입니다."
+    "description": "GPT-4.1 Nano는 매우 저비용, 저지연 옵션으로, 짧은 대화나 분류 작업과 같은 고빈도 시나리오에 적합합니다."
   },
   "openai/gpt-4o": {
-    "description": "OpenAI의 GPT-4o는 광범위한 일반 지식과 도메인 전문성을 갖추어 자연어의 복잡한 지시를 따르고 어려운 문제를 정확히 해결할 수 있습니다. GPT-4 Turbo와 동등한 성능을 더 빠르고 저렴한 API로 제공합니다."
+    "description": "GPT-4o 시리즈는 OpenAI의 Omni 모델로, 텍스트 + 이미지 입력과 텍스트 출력을 지원합니다."
   },
   "openai/gpt-4o-mini": {
-    "description": "OpenAI의 GPT-4o mini는 가장 진보되고 비용 효율적인 소형 모델입니다. 멀티모달(텍스트 또는 이미지 입력을 받아 텍스트 출력)이며, gpt-3.5-turbo보다 더 높은 지능을 가지면서도 동일한 속도를 유지합니다."
+    "description": "GPT-4o-mini는 GPT-4o의 경량 고속 버전으로, 저지연 텍스트-이미지 혼합 시나리오에 적합합니다."
   },
   "openai/gpt-5": {
-    "description": "GPT-5는 OpenAI의 플래그십 언어 모델로, 복잡한 추론, 광범위한 현실 세계 지식, 코드 집약적 및 다단계 에이전트 작업에서 뛰어난 성능을 보입니다."
+    "description": "GPT-5는 OpenAI의 고성능 모델로, 다양한 생산 및 연구 작업에 적합합니다."
+  },
+  "openai/gpt-5-chat": {
+    "description": "GPT-5 Chat은 대화 시나리오에 최적화된 GPT-5의 하위 모델로, 지연 시간을 줄여 상호작용 경험을 향상시킵니다."
+  },
+  "openai/gpt-5-codex": {
+    "description": "GPT-5-Codex는 코딩 시나리오에 특화된 GPT-5 변형 모델로, 대규모 코드 워크플로우에 적합합니다."
   },
   "openai/gpt-5-mini": {
-    "description": "GPT-5 mini는 비용 최적화된 모델로, 추론 및 채팅 작업에서 우수한 성능을 보이며 속도, 비용 및 능력 사이에서 최적의 균형을 제공합니다."
+    "description": "GPT-5 Mini는 GPT-5 계열의 경량 버전으로, 저지연 및 저비용 환경에 적합합니다."
   },
   "openai/gpt-5-nano": {
-    "description": "GPT-5 nano는 높은 처리량을 제공하는 모델로, 간단한 지시나 분류 작업에 적합합니다."
+    "description": "GPT-5 Nano는 비용과 지연 시간에 민감한 환경에 적합한 초소형 모델입니다."
+  },
+  "openai/gpt-5-pro": {
+    "description": "GPT-5 Pro는 OpenAI의 플래그십 모델로, 향상된 추론, 코드 생성 및 엔터프라이즈 기능을 제공하며, 테스트 시 라우팅 및 엄격한 보안 정책을 지원합니다."
+  },
+  "openai/gpt-5.1": {
+    "description": "GPT-5.1은 GPT-5 시리즈의 최신 플래그십 모델로, 일반 추론, 명령 이행, 대화 자연스러움에서 GPT-5 대비 현저한 향상을 이루었으며, 다양한 작업에 적합합니다."
+  },
+  "openai/gpt-5.1-chat": {
+    "description": "GPT-5.1 Chat은 GPT-5.1 계열의 경량 모델로, 저지연 대화에 최적화되었으며, 강력한 추론 및 명령 실행 능력을 유지합니다."
+  },
+  "openai/gpt-5.1-codex": {
+    "description": "GPT-5.1-Codex는 소프트웨어 엔지니어링 및 코딩 워크플로우에 최적화된 GPT-5.1 변형 모델로, 대규모 리팩토링, 복잡한 디버깅 및 장시간 자율 코딩 작업에 적합합니다."
+  },
+  "openai/gpt-5.1-codex-mini": {
+    "description": "GPT-5.1-Codex-Mini는 GPT-5.1-Codex의 경량 고속 버전으로, 지연 시간과 비용에 민감한 코딩 시나리오에 적합합니다."
   },
   "openai/gpt-oss-120b": {
     "description": "강력하고 제어 가능한 추론 능력을 갖춘 매우 유능한 범용 대형 언어 모델입니다."
@@ -2748,7 +2850,7 @@
     "description": "o3-mini 고급 추론 버전은 o1-mini와 동일한 비용 및 지연 목표에서 높은 지능을 제공합니다."
   },
   "openai/o4-mini": {
-    "description": "OpenAI의 o4-mini는 빠르고 비용 효율적인 추론을 제공하며, 특히 수학(AIME 벤치마크 최고 성능), 코딩 및 시각 작업에서 뛰어난 성능을 보입니다."
+    "description": "OpenAI o4-mini는 OpenAI의 경량 고효율 추론 모델로, 저지연 환경에 적합합니다."
   },
   "openai/o4-mini-high": {
     "description": "o4-mini 고급 추론 버전으로, 빠르고 효율적인 추론을 위해 최적화되어 있으며, 코딩 및 시각적 작업에서 매우 높은 효율성과 성능을 자랑합니다."
@@ -2952,13 +3054,19 @@
     "description": "32K 컨텍스트 길이를 지원하는 강력한 중형 코드 모델로, 다국어 프로그래밍에 능숙합니다."
   },
   "qwen/qwen3-14b": {
-    "description": "Qwen3-14B는 Qwen3 시리즈의 밀집형 148억 매개변수 인과 언어 모델로, 복잡한 추론과 효율적인 대화를 위해 설계되었습니다. 수학, 프로그래밍 및 논리 추론과 같은 작업을 위한 '사고' 모드와 일반 대화를 위한 '비사고' 모드 간의 원활한 전환을 지원합니다. 이 모델은 지침 준수, 에이전트 도구 사용, 창의적 글쓰기 및 100개 이상의 언어와 방언에서의 다국어 작업을 위해 미세 조정되었습니다. 기본적으로 32K 토큰 컨텍스트를 처리하며, YaRN 기반 확장을 통해 131K 토큰으로 확장할 수 있습니다."
+    "description": "Qwen3-14B는 Qwen 시리즈의 14B 버전으로, 일반적인 추론 및 대화 시나리오에 적합합니다."
   },
   "qwen/qwen3-14b:free": {
     "description": "Qwen3-14B는 Qwen3 시리즈의 밀집형 148억 매개변수 인과 언어 모델로, 복잡한 추론과 효율적인 대화를 위해 설계되었습니다. 수학, 프로그래밍 및 논리 추론과 같은 작업을 위한 '사고' 모드와 일반 대화를 위한 '비사고' 모드 간의 원활한 전환을 지원합니다. 이 모델은 지침 준수, 에이전트 도구 사용, 창의적 글쓰기 및 100개 이상의 언어와 방언에서의 다국어 작업을 위해 미세 조정되었습니다. 기본적으로 32K 토큰 컨텍스트를 처리하며, YaRN 기반 확장을 통해 131K 토큰으로 확장할 수 있습니다."
   },
   "qwen/qwen3-235b-a22b": {
     "description": "Qwen3-235B-A22B는 Qwen이 개발한 235B 매개변수 전문가 혼합(MoE) 모델로, 매번 전방 전달 시 22B 매개변수를 활성화합니다. 복잡한 추론, 수학 및 코드 작업을 위한 '사고' 모드와 일반 대화 효율을 위한 '비사고' 모드 간의 원활한 전환을 지원합니다. 이 모델은 강력한 추론 능력, 다국어 지원(100개 이상의 언어와 방언), 고급 지침 준수 및 에이전트 도구 호출 능력을 보여줍니다. 기본적으로 32K 토큰 컨텍스트 창을 처리하며, YaRN 기반 확장을 통해 131K 토큰으로 확장할 수 있습니다."
+  },
+  "qwen/qwen3-235b-a22b-2507": {
+    "description": "Qwen3-235B-A22B-Instruct-2507은 Qwen3 시리즈의 Instruct 버전으로, 다국어 명령 처리와 긴 문맥 시나리오를 모두 지원합니다."
+  },
+  "qwen/qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3-235B-A22B-Thinking-2507은 Qwen3의 Thinking 변형 모델로, 복잡한 수학 및 추론 작업에 특화되어 있습니다."
   },
   "qwen/qwen3-235b-a22b:free": {
     "description": "Qwen3-235B-A22B는 Qwen이 개발한 235B 매개변수 전문가 혼합(MoE) 모델로, 매번 전방 전달 시 22B 매개변수를 활성화합니다. 복잡한 추론, 수학 및 코드 작업을 위한 '사고' 모드와 일반 대화 효율을 위한 '비사고' 모드 간의 원활한 전환을 지원합니다. 이 모델은 강력한 추론 능력, 다국어 지원(100개 이상의 언어와 방언), 고급 지침 준수 및 에이전트 도구 호출 능력을 보여줍니다. 기본적으로 32K 토큰 컨텍스트 창을 처리하며, YaRN 기반 확장을 통해 131K 토큰으로 확장할 수 있습니다."
@@ -2977,6 +3085,21 @@
   },
   "qwen/qwen3-8b:free": {
     "description": "Qwen3-8B는 Qwen3 시리즈의 밀집형 82억 매개변수 인과 언어 모델로, 추론 집약적인 작업과 효율적인 대화를 위해 설계되었습니다. 수학, 코딩 및 논리 추론을 위한 '사고' 모드와 일반 대화를 위한 '비사고' 모드 간의 원활한 전환을 지원합니다. 이 모델은 지침 준수, 에이전트 통합, 창의적 글쓰기 및 100개 이상의 언어와 방언에서의 다국어 사용을 위해 미세 조정되었습니다. 기본적으로 32K 토큰 컨텍스트 창을 지원하며, YaRN을 통해 131K 토큰으로 확장할 수 있습니다."
+  },
+  "qwen/qwen3-coder": {
+    "description": "Qwen3-Coder는 Qwen3의 코드 생성 모델 계열로, 긴 문서 내 코드 이해 및 생성에 능숙합니다."
+  },
+  "qwen/qwen3-coder-plus": {
+    "description": "Qwen3-Coder-Plus는 Qwen 시리즈의 고급 코드 에이전트 모델로, 복잡한 도구 호출 및 장기 세션을 지원합니다."
+  },
+  "qwen/qwen3-max": {
+    "description": "Qwen3 Max는 Qwen3 시리즈의 고급 추론 모델로, 다국어 추론 및 도구 통합에 적합합니다."
+  },
+  "qwen/qwen3-max-preview": {
+    "description": "Qwen3 Max(프리뷰)는 고급 추론 및 도구 통합을 위한 Qwen 시리즈의 Max 버전(미리보기)입니다."
+  },
+  "qwen/qwen3-vl-plus": {
+    "description": "Qwen3 VL-Plus는 Qwen3의 시각 기능 강화 버전으로, 멀티모달 추론 및 비디오 처리 능력을 향상시켰습니다."
   },
   "qwen2": {
     "description": "Qwen2는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
@@ -3272,9 +3395,6 @@
   "step-r1-v-mini": {
     "description": "이 모델은 강력한 이미지 이해 능력을 갖춘 추론 대모델로, 이미지와 텍스트 정보를 처리하며, 깊은 사고 후 텍스트를 생성합니다. 이 모델은 시각적 추론 분야에서 두드러진 성능을 보이며, 1차 대열의 수학, 코드, 텍스트 추론 능력을 갖추고 있습니다. 문맥 길이는 100k입니다."
   },
-  "step3": {
-    "description": "Step3는 Jieyue Xingchen에서 출시한 멀티모달 모델로, 강력한 시각 이해 능력을 갖추고 있습니다."
-  },
   "stepfun-ai/step3": {
     "description": "Step3은 StepFun(중국명: 阶跃星辰)이 발표한 최첨단 멀티모달 추론 모델로, 총 321B의 파라미터와 38B의 활성화 파라미터를 가진 전문가 혼합(MoE) 아키텍처를 기반으로 합니다. 이 모델은 엔드투엔드 설계를 채택해 디코딩 비용을 최소화하는 동시에 시각-언어 추론에서 최상급 성능을 제공합니다. 다중 행렬 분해 어텐션(MFA)과 어텐션-FFN 디커플링(AFD)의 결합 설계를 통해 Step3은 플래그십급 및 저사양 가속기 모두에서 탁월한 효율을 유지합니다. 사전학습 단계에서 Step3은 20조개 이상의 텍스트 토큰(20T)과 4조개 이상의 이미지-텍스트 혼합 토큰(4T)을 처리했으며, 10여 개 언어를 포괄합니다. 이 모델은 수학, 코드 및 멀티모달을 포함한 여러 벤치마크에서 오픈소스 모델 중 선도적인 수준의 성능을 달성했습니다."
   },
@@ -3356,6 +3476,9 @@
   "vercel/v0-1.5-md": {
     "description": "특정 프레임워크 추론과 최신 지식을 갖춘 현대 웹 애플리케이션 생성, 수정 및 최적화를 위한 v0 기반 모델에 접근합니다."
   },
+  "volcengine/doubao-seed-code": {
+    "description": "Doubao-Seed-Code는 바이트댄스 화산 엔진이 Agentic Programming에 최적화한 대형 모델로, 다양한 프로그래밍 및 에이전트 벤치마크에서 우수한 성능을 보이며 256K 문맥을 지원합니다."
+  },
   "wan2.2-t2i-flash": {
     "description": "만상2.2 초고속 버전으로, 현재 최신 모델입니다. 창의성, 안정성, 사실적 질감이 전면 업그레이드되었으며, 생성 속도가 빠르고 비용 효율성이 높습니다."
   },
@@ -3383,11 +3506,23 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2는 Microsoft AI에서 제공하는 언어 모델로, 복잡한 대화, 다국어, 추론 및 스마트 어시스턴트 분야에서 특히 뛰어난 성능을 발휘합니다."
   },
+  "x-ai/grok-4": {
+    "description": "Grok 4는 xAI의 플래그십 추론 모델로, 강력한 추론 및 멀티모달 기능을 제공합니다."
+  },
   "x-ai/grok-4-fast": {
-    "description": "Grok 4 Fast를 출시하게 되어 매우 기쁩니다. 이는 비용 효율적인 추론 모델 분야에서 우리의 최신 성과입니다."
+    "description": "Grok 4 Fast는 xAI의 고처리량, 저비용 모델로(2M 문맥 창 지원), 고동시성과 긴 문맥이 필요한 시나리오에 적합합니다."
+  },
+  "x-ai/grok-4-fast-non-reasoning": {
+    "description": "Grok 4 Fast(Non-Reasoning)는 xAI의 고처리량, 저비용 멀티모달 모델로(2M 문맥 창 지원), 지연 시간과 비용에 민감하지만 모델 내 추론이 필요 없는 시나리오에 적합합니다. 이는 Grok 4 Fast의 reasoning 버전과 병행되며, API의 reasoning enable 파라미터를 통해 필요 시 추론 기능을 활성화할 수 있습니다. 프롬프트와 응답은 xAI 또는 OpenRouter에 의해 향후 모델 개선에 활용될 수 있습니다."
+  },
+  "x-ai/grok-4.1-fast": {
+    "description": "Grok 4.1 Fast는 xAI의 고처리량, 저비용 모델로(2M 문맥 창 지원), 고동시성과 긴 문맥이 필요한 시나리오에 적합합니다."
+  },
+  "x-ai/grok-4.1-fast-non-reasoning": {
+    "description": "Grok 4.1 Fast(Non-Reasoning)는 xAI의 고처리량, 저비용 멀티모달 모델로(2M 문맥 창 지원), 지연 시간과 비용에 민감하지만 모델 내 추론이 필요 없는 시나리오에 적합합니다. 이는 Grok 4 Fast의 reasoning 버전과 병행되며, API의 reasoning enable 파라미터를 통해 필요 시 추론 기능을 활성화할 수 있습니다. 프롬프트와 응답은 xAI 또는 OpenRouter에 의해 향후 모델 개선에 활용될 수 있습니다."
   },
   "x-ai/grok-code-fast-1": {
-    "description": "grok-code-fast-1을 출시하게 되어 기쁩니다. 이 모델은 빠르고 경제적인 추론 성능을 제공하며, 에이전트 기반 코딩 작업에서 탁월한 성능을 보입니다."
+    "description": "Grok Code Fast 1은 xAI의 고속 코드 모델로, 가독성과 엔지니어링 적합성이 뛰어난 출력을 제공합니다."
   },
   "x1": {
     "description": "Spark X1 모델은 추가 업그레이드를 통해 기존의 수학 과제에서 국내 선두를 유지하며, 추론, 텍스트 생성, 언어 이해 등 일반 과제에서 OpenAI o1 및 DeepSeek R1과 동등한 성과를 달성합니다."
@@ -3449,8 +3584,14 @@
   "yi-vision-v2": {
     "description": "복잡한 시각적 작업 모델로, 여러 이미지를 기반으로 한 고성능 이해 및 분석 능력을 제공합니다."
   },
+  "z-ai/glm-4.5": {
+    "description": "GLM 4.5는 Z.AI의 플래그십 모델로, 하이브리드 추론 모드를 지원하며 엔지니어링 및 긴 문맥 작업에 최적화되어 있습니다."
+  },
+  "z-ai/glm-4.5-air": {
+    "description": "GLM 4.5 Air는 GLM 4.5의 경량 버전으로, 비용에 민감한 환경에서도 강력한 추론 능력을 유지합니다."
+  },
   "z-ai/glm-4.6": {
-    "description": "Zhipu의 최신 플래그십 모델 GLM-4.6은 고급 코딩, 장문 처리, 추론 및 에이전트 능력에서 전 세대를 뛰어넘는 성능을 자랑합니다."
+    "description": "GLM 4.6은 Z.AI의 플래그십 모델로, 문맥 길이와 코딩 능력을 확장하였습니다."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5는 에이전트 애플리케이션을 위해 설계된 기본 모델로, 혼합 전문가(Mixture-of-Experts) 아키텍처를 사용합니다. 도구 호출, 웹 브라우징, 소프트웨어 엔지니어링, 프론트엔드 프로그래밍 분야에서 깊이 최적화되었으며, Claude Code, Roo Code 등 코드 에이전트에 원활히 통합될 수 있습니다. GLM-4.5는 혼합 추론 모드를 채택하여 복잡한 추론과 일상 사용 등 다양한 응용 시나리오에 적응할 수 있습니다."
@@ -3472,5 +3613,8 @@
   },
   "zai/glm-4.5v": {
     "description": "GLM-4.5V는 GLM-4.5-Air 기본 모델을 기반으로 구축되었으며, 검증된 GLM-4.1V-Thinking 기술을 계승하면서 강력한 1060억 매개변수 MoE 아키텍처를 통해 효율적인 확장을 실현했습니다."
+  },
+  "zenmux/auto": {
+    "description": "ZenMux의 자동 라우팅 기능은 요청 내용을 기반으로 지원되는 모델 중 가장 가성비가 높고 성능이 우수한 모델을 자동으로 선택합니다."
   }
 }

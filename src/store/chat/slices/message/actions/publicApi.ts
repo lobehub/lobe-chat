@@ -47,6 +47,10 @@ export interface MessagePublicApiAction {
    * Toggle message collapsed state
    */
   toggleMessageCollapsed: (id: string, collapsed?: boolean) => Promise<void>;
+  /**
+   * Toggle tool inspect expanded state
+   */
+  toggleInspectExpanded: (id: string, expanded?: boolean) => Promise<void>;
 
   // ===== Others ===== //
   copyMessage: (id: string, content: string) => Promise<void>;
@@ -163,14 +167,22 @@ export const messagePublicApi: StateCreator<
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || message.role !== 'tool') return;
 
+    // Get operationId from messageOperationMap to ensure proper context isolation
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
+
     const removeToolInAssistantMessage = async () => {
       if (!message.parentId) return;
-      await get().optimisticRemoveToolFromAssistantMessage(message.parentId, message.tool_call_id);
+      await get().optimisticRemoveToolFromAssistantMessage(
+        message.parentId,
+        message.tool_call_id,
+        context,
+      );
     };
 
     await Promise.all([
       // 1. remove tool message
-      get().optimisticDeleteMessage(id),
+      get().optimisticDeleteMessage(id, context),
       // 2. remove the tool item in the assistant tools
       removeToolInAssistantMessage(),
     ]);
@@ -257,5 +269,16 @@ export const messagePublicApi: StateCreator<
     await get().optimisticUpdateMessageMetadata(id, {
       collapsed: nextCollapsed,
     });
+  },
+
+  toggleInspectExpanded: async (id, expanded) => {
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+    if (!message) return;
+
+    // 如果没有传入 expanded，则取反当前状态
+    const nextExpanded = expanded ?? !message.metadata?.inspectExpanded;
+
+    // 直接调用现有的 optimisticUpdateMessageMetadata
+    await get().optimisticUpdateMessageMetadata(id, { inspectExpanded: nextExpanded });
   },
 });

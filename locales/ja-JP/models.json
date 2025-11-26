@@ -720,25 +720,28 @@
     "description": "Claude 3 Opus は Anthropic の最も知能的なモデルで、高度に複雑なタスクにおいて市場をリードする性能を持ちます。卓越した流暢さと人間に近い理解力で、オープンプロンプトや未経験のシナリオを自在に扱います。"
   },
   "anthropic/claude-3.5-haiku": {
-    "description": "Claude 3.5 Haiku は当社の最速モデルの次世代版です。Claude 3 Haiku と同等の速度を維持しつつ、すべてのスキルセットで改善され、多くの知能ベンチマークで前世代最大モデル Claude 3 Opus を上回っています。"
+    "description": "Claude 3.5 Haiku は、速度、コーディング精度、ツール使用において強化された機能を備えています。高速性とツール連携が求められるシーンに最適です。"
   },
   "anthropic/claude-3.5-sonnet": {
-    "description": "Claude 3.5 Sonnet は知能と速度の理想的なバランスを実現し、特に企業向けワークロードに適しています。同等製品と比較して低コストで強力な性能を提供し、大規模AI展開における高耐久性を念頭に設計されています。"
+    "description": "Claude 3.5 Sonnet は Sonnet ファミリーの高速・高効率モデルで、優れたコーディングおよび推論性能を提供します。一部のバージョンは順次 Sonnet 3.7 などに置き換えられます。"
   },
   "anthropic/claude-3.7-sonnet": {
-    "description": "Claude 3.7 Sonnet は初のハイブリッド推論モデルであり、Anthropic 史上最も知能的なモデルです。コーディング、コンテンツ生成、データ分析、計画タスクにおいて最先端の性能を提供し、前身の Claude 3.5 Sonnet のソフトウェア工学およびコンピュータ利用能力を基盤としています。"
+    "description": "Claude 3.7 Sonnet は Sonnet シリーズのアップグレード版で、より強力な推論およびコーディング能力を備え、企業向けの複雑なタスクに適しています。"
+  },
+  "anthropic/claude-haiku-4.5": {
+    "description": "Claude Haiku 4.5 は Anthropic の高性能・高速モデルで、高い精度を維持しながら極めて低いレイテンシを実現しています。"
   },
   "anthropic/claude-opus-4": {
-    "description": "Claude Opus 4 は Anthropic 史上最強のモデルであり、世界最高のコーディングモデルです。SWE-bench（72.5%）および Terminal-bench（43.2%）でトップを走っています。数千ステップに及ぶ長期タスクに持続的な性能を提供し、数時間連続稼働が可能で、AIエージェントの能力を大幅に拡張します。"
+    "description": "Opus 4 は Anthropic のフラッグシップモデルで、複雑なタスクや企業向けアプリケーションに特化して設計されています。"
   },
   "anthropic/claude-opus-4.1": {
-    "description": "Claude Opus 4.1 は Opus 4 のプラグアンドプレイ代替モデルで、実際のコーディングおよびエージェントタスクに卓越した性能と精度を提供します。SWE-bench Verified で74.5%の最先端コーディング性能を達成し、複雑な多段階問題をより厳密かつ詳細に処理します。"
+    "description": "Opus 4.1 は Anthropic のハイエンドモデルで、プログラミング、複雑な推論、継続的なタスクに最適化されています。"
   },
   "anthropic/claude-sonnet-4": {
-    "description": "Claude Sonnet 4 は Sonnet 3.7 の業界トップの能力を大幅に向上させ、コーディングで優れた性能を発揮し、SWE-bench で最先端の72.7%を達成しました。性能と効率のバランスが取れており、内部および外部のユースケースに適し、強化された制御性により実装の管理性が向上しています。"
+    "description": "Claude Sonnet 4 は Anthropic のハイブリッド推論モデルで、思考と非思考の混合能力を提供します。"
   },
   "anthropic/claude-sonnet-4.5": {
-    "description": "Claude Sonnet 4.5 は Anthropic のこれまでで最も賢いモデルです。"
+    "description": "Claude Sonnet 4.5 は Anthropic の最新ハイブリッド推論モデルで、複雑な推論とコーディングに最適化されています。"
   },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B は、720億パラメータ、160億アクティベーションパラメータのスパース大規模言語モデルであり、グループ化された混合エキスパート（MoGE）アーキテクチャに基づいています。エキスパート選択段階でエキスパートをグループ化し、各グループ内でトークンが均等にエキスパートをアクティベートするよう制約を設けることで、エキスパートの負荷バランスを実現し、昇騰プラットフォーム上でのモデル展開効率を大幅に向上させています。"
@@ -760,6 +763,9 @@
   },
   "baidu/ERNIE-4.5-300B-A47B": {
     "description": "ERNIE-4.5-300B-A47B は、百度（Baidu）が開発した混合エキスパート（MoE）アーキテクチャに基づく大規模言語モデルです。総パラメータ数は3000億ですが、推論時には各トークンで470億パラメータのみをアクティベートし、強力な性能を維持しつつ計算効率も両立しています。ERNIE 4.5シリーズの中核モデルの一つとして、テキスト理解、生成、推論、プログラミングなどのタスクで卓越した能力を発揮します。本モデルは革新的なマルチモーダル異種MoE事前学習手法を採用し、テキストと視覚モダリティの共同学習により、特に指示遵守と世界知識の記憶において優れた効果を発揮しています。"
+  },
+  "baidu/ernie-5.0-thinking-preview": {
+    "description": "ERNIE 5.0 Thinking Preview は、百度の次世代ネイティブマルチモーダル文心モデルで、マルチモーダル理解、指示の遵守、創作、事実に基づく質疑応答、ツール呼び出しに優れています。"
   },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanseは、高性能な32B多言語モデルで、指示調整、データアービトラージ、好みのトレーニング、モデル統合の革新を通じて、単一言語モデルのパフォーマンスに挑戦します。23の言語をサポートしています。"
@@ -868,6 +874,9 @@
   },
   "codex-mini-latest": {
     "description": "codex-mini-latest は o4-mini の微調整バージョンで、Codex CLI 専用に設計されています。API を直接使用する場合は、gpt-4.1 から始めることを推奨します。"
+  },
+  "cogito-2.1:671b": {
+    "description": "Cogito v2.1 671B は、商用利用が可能な米国発のオープンソース大規模言語モデルで、トップクラスの性能、高いトークン推論効率、128k の長文脈、強力な総合能力を備えています。"
   },
   "cogview-4": {
     "description": "CogView-4 は智譜が初めて開発した漢字生成対応のオープンソーステキストから画像生成モデルであり、意味理解、画像生成の品質、中英文字生成能力の全方位的な向上を実現しています。任意の長さの中英バイリンガル入力に対応し、指定された範囲内で任意の解像度の画像を生成することが可能です。"
@@ -1139,6 +1148,9 @@
   "deepseek-vl2-small": {
     "description": "DeepSeek VL2 Small、軽量なマルチモーダルバージョンで、リソース制限や高負荷環境に適しています。"
   },
+  "deepseek/deepseek-chat": {
+    "description": "DeepSeek-V3 は DeepSeek チームによる高性能ハイブリッド推論モデルで、複雑なタスクやツール統合に適しています。"
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3は、685Bパラメータの専門的な混合モデルであり、DeepSeekチームのフラッグシップチャットモデルシリーズの最新のイテレーションです。\n\nこれは、[DeepSeek V3](/deepseek/deepseek-chat-v3)モデルを継承し、さまざまなタスクで優れたパフォーマンスを発揮します。"
   },
@@ -1146,13 +1158,13 @@
     "description": "DeepSeek V3は、685Bパラメータの専門的な混合モデルであり、DeepSeekチームのフラッグシップチャットモデルシリーズの最新のイテレーションです。\n\nこれは、[DeepSeek V3](/deepseek/deepseek-chat-v3)モデルを継承し、さまざまなタスクで優れたパフォーマンスを発揮します。"
   },
   "deepseek/deepseek-chat-v3.1": {
-    "description": "DeepSeek-V3.1 は128Kの長いコンテキストと効率的なモード切替をサポートする大型ハイブリッド推論モデルで、ツール呼び出し、コード生成、複雑な推論タスクにおいて卓越した性能と速度を実現しています。"
+    "description": "DeepSeek-V3.1 は DeepSeek の長文脈ハイブリッド推論モデルで、思考/非思考の混合モードとツール統合をサポートします。"
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek R1 モデルは小規模なバージョンアップを経て、現在のバージョンは DeepSeek-R1-0528 です。最新のアップデートでは、計算資源の増加とトレーニング後のアルゴリズム最適化を活用し、推論の深度と能力が大幅に向上しました。数学、プログラミング、一般論理など複数のベンチマークで優れた性能を示し、全体的な性能は O3 や Gemini 2.5 Pro といった先行モデルに近づいています。"
   },
   "deepseek/deepseek-r1-0528": {
-    "description": "DeepSeek-R1は極めて少ないラベル付きデータでモデルの推論能力を大幅に向上させました。最終回答を出力する前に、モデルは思考の連鎖を出力し、最終答えの正確性を高めます。"
+    "description": "DeepSeek R1 0528 は DeepSeek のアップデート版で、オープンソース利用と推論の深さに重点を置いています。"
   },
   "deepseek/deepseek-r1-0528:free": {
     "description": "DeepSeek-R1は極めて少ないラベル付きデータでモデルの推論能力を大幅に向上させました。最終回答を出力する前に、モデルは思考の連鎖を出力し、最終答えの正確性を高めます。"
@@ -1174,6 +1186,9 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1は、わずかなラベル付きデータしかない状況で、モデルの推論能力を大幅に向上させました。最終的な回答を出力する前に、モデルは思考の連鎖を出力し、最終的な答えの正確性を向上させます。"
+  },
+  "deepseek/deepseek-reasoner": {
+    "description": "DeepSeek-V3 Thinking（reasoner）は DeepSeek の実験的推論モデルで、高度な推論タスクに適しています。"
   },
   "deepseek/deepseek-v3": {
     "description": "強化された推論能力を持つ高速汎用大規模言語モデルです。"
@@ -1481,9 +1496,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flashモデルのバリアントで、コスト効率と低遅延などの目標に最適化されています。"
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash プレビュー モデル、画像生成をサポート"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 FlashはGoogleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
   },
@@ -1511,9 +1523,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Previewは、Googleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash PreviewはGoogleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Gemini 2.5 Flash のプレビューリリース（2025年9月25日）"
   },
@@ -1528,6 +1537,15 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview は Google の最先端思考モデルで、コード、数学、STEM 分野の複雑な問題を推論し、長いコンテキストを用いて大規模なデータセット、コードベース、ドキュメントを分析できます。"
+  },
+  "gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image（Nano Banana Pro）は Google の画像生成モデルで、マルチモーダル対話にも対応しています。"
+  },
+  "gemini-3-pro-image-preview:image": {
+    "description": "Gemini 3 Pro Image（Nano Banana Pro）は Google の画像生成モデルで、マルチモーダル対話にも対応しています。"
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro は世界最高水準のマルチモーダル理解モデルであり、Google 史上最も強力なエージェントおよび雰囲気プログラミングモデルです。豊かなビジュアル表現と深いインタラクションを提供し、最先端の推論能力に基づいて構築されています。"
   },
   "gemini-flash-latest": {
     "description": "Gemini Flash の最新リリース"
@@ -1653,7 +1671,7 @@
     "description": "GLM-Zero-Previewは、強力な複雑な推論能力を備え、論理推論、数学、プログラミングなどの分野で優れたパフォーマンスを発揮します。"
   },
   "google/gemini-2.0-flash": {
-    "description": "Gemini 2.0 Flash は次世代の機能と改良を提供し、卓越した速度、組み込みツールの使用、マルチモーダル生成、100万トークンのコンテキストウィンドウを備えています。"
+    "description": "Gemini 2.0 Flash は Google の高性能推論モデルで、拡張されたマルチモーダルタスクに適しています。"
   },
   "google/gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flashは、卓越した速度、ネイティブツールの使用、マルチモーダル生成、1Mトークンのコンテキストウィンドウを含む次世代の機能と改善を提供します。"
@@ -1664,14 +1682,23 @@
   "google/gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash Lite は次世代の機能と改良を提供し、卓越した速度、組み込みツールの使用、マルチモーダル生成、100万トークンのコンテキストウィンドウを備えています。"
   },
+  "google/gemini-2.0-flash-lite-001": {
+    "description": "Gemini 2.0 Flash Lite は Gemini ファミリーの軽量版で、デフォルトでは思考を無効にしてレイテンシとコストを最適化していますが、パラメータで有効化可能です。"
+  },
   "google/gemini-2.5-flash": {
-    "description": "Gemini 2.5 Flash は思考モデルで、優れた包括的能力を提供します。価格と性能のバランスを目指し、マルチモーダルと100万トークンのコンテキストウィンドウをサポートします。"
+    "description": "Gemini 2.5 Flash（Lite/Pro/Flash）シリーズは、Google の中低レイテンシから高性能推論モデル群です。"
+  },
+  "google/gemini-2.5-flash-image": {
+    "description": "Gemini 2.5 Flash Image（Nano Banana）は Google の画像生成モデルで、マルチモーダル対話にも対応しています。"
+  },
+  "google/gemini-2.5-flash-image-free": {
+    "description": "Gemini 2.5 Flash Image 無料版は、制限付きのマルチモーダル生成をサポートします。"
   },
   "google/gemini-2.5-flash-image-preview": {
     "description": "Gemini 2.5 Flash 実験モデル、画像生成に対応"
   },
   "google/gemini-2.5-flash-lite": {
-    "description": "Gemini 2.5 Flash-Lite はバランスの取れた低遅延モデルで、思考予算とツール接続性（例：Google Search の根拠付けやコード実行）を設定可能です。マルチモーダル入力をサポートし、100万トークンのコンテキストウィンドウを提供します。"
+    "description": "Gemini 2.5 Flash Lite は Gemini 2.5 の軽量版で、レイテンシとコストを最適化し、高スループットなシーンに適しています。"
   },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flashは、Googleの最先端の主力モデルであり、高度な推論、コーディング、数学、科学タスクのために設計されています。内蔵の「思考」能力を備えており、より高い精度と詳細なコンテキスト処理で応答を提供します。\n\n注意：このモデルには、思考と非思考の2つのバリアントがあります。出力の価格は、思考能力が有効かどうかによって大きく異なります。標準バリアント（「:thinking」サフィックスなし）を選択すると、モデルは明示的に思考トークンの生成を避けます。\n\n思考能力を利用して思考トークンを受け取るには、「:thinking」バリアントを選択する必要があり、これにより思考出力の価格が高くなります。\n\nさらに、Gemini 2.5 Flashは、「推論最大トークン数」パラメータを介して構成可能であり、文書に記載されています (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
@@ -1680,10 +1707,25 @@
     "description": "Gemini 2.5 Flashは、Googleの最先端の主力モデルであり、高度な推論、コーディング、数学、科学タスクのために設計されています。内蔵の「思考」能力を備えており、より高い精度と詳細なコンテキスト処理で応答を提供します。\n\n注意：このモデルには、思考と非思考の2つのバリアントがあります。出力の価格は、思考能力が有効かどうかによって大きく異なります。標準バリアント（「:thinking」サフィックスなし）を選択すると、モデルは明示的に思考トークンの生成を避けます。\n\n思考能力を利用して思考トークンを受け取るには、「:thinking」バリアントを選択する必要があり、これにより思考出力の価格が高くなります。\n\nさらに、Gemini 2.5 Flashは、「推論最大トークン数」パラメータを介して構成可能であり、文書に記載されています (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
   },
   "google/gemini-2.5-pro": {
-    "description": "Gemini 2.5 Pro は当社の最先端推論 Gemini モデルで、複雑な問題を解決可能です。200万トークンのコンテキストウィンドウを持ち、テキスト、画像、音声、動画、PDFドキュメントなどのマルチモーダル入力をサポートします。"
+    "description": "Gemini 2.5 Pro は Google のフラッグシップ推論モデルで、長文脈と複雑なタスクに対応します。"
+  },
+  "google/gemini-2.5-pro-free": {
+    "description": "Gemini 2.5 Pro 無料版は、制限付きのマルチモーダル長文脈をサポートし、試用や軽量なワークフローに適しています。"
   },
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview は、Google の最先端の思考モデルであり、コード、数学、STEM 分野の複雑な問題を推論し、長いコンテキストを用いて大規模なデータセット、コードベース、ドキュメントを分析することができます。"
+  },
+  "google/gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image（Nano Banana Pro）は、Googleの画像生成モデルであり、マルチモーダル対話にも対応しています。"
+  },
+  "google/gemini-3-pro-image-preview-free": {
+    "description": "Gemini 3 Pro Image 無料版は、制限付きのマルチモーダル生成をサポートします。"
+  },
+  "google/gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro は Gemini シリーズの次世代マルチモーダル推論モデルで、テキスト、音声、画像、動画など多様な入力を理解し、複雑なタスクや大規模コードベースの処理に対応します。"
+  },
+  "google/gemini-3-pro-preview-free": {
+    "description": "Gemini 3 Pro 無料プレビュー版は、標準版と同等のマルチモーダル理解と推論能力を備えていますが、無料枠とレート制限の影響を受けるため、体験や低頻度利用に適しています。"
   },
   "google/gemini-embedding-001": {
     "description": "最先端の埋め込みモデルで、英語、多言語、コードタスクにおいて優れた性能を発揮します。"
@@ -1910,6 +1952,12 @@
   "grok-4-0709": {
     "description": "xAI の Grok 4 は強力な推論能力を備えています。"
   },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "最先端のマルチモーダルモデルであり、高性能なエージェントツールの呼び出しに特化して最適化されています。"
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "最先端のマルチモーダルモデルであり、高性能なエージェントツールの呼び出しに特化して最適化されています。"
+  },
   "grok-4-fast-non-reasoning": {
     "description": "コスト効率の高い推論モデルにおける最新の進展として、Grok 4 Fastをリリースできることを嬉しく思います。"
   },
@@ -2054,20 +2102,35 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small はコード生成、デバッグ、リファクタリングタスクに最適で、最小遅延を実現します。"
   },
-  "inclusionAI/Ling-1T": {
-    "description": "Ling-1T は「Ling 2.0」シリーズ初のフラッグシップ non-thinking モデルで、総パラメータ数は1兆、トークンごとのアクティブパラメータは約500億。Ling 2.0 アーキテクチャに基づき、高効率な推論とスケーラブルな認知の限界に挑戦。Ling-1T-base は20兆以上の高品質かつ推論集約型トークンでトレーニングされています。"
-  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0は、Ant GroupのBailingチームがリリースしたLing 2.0アーキテクチャシリーズの第3弾モデルです。混合エキスパート（MoE）モデルで、総パラメータ数は1000億に達しますが、1トークンあたりの活性化パラメータは61億（非埋め込みは48億）に抑えられています。軽量構成のモデルとして、複数の権威ある評価で400億規模の密モデルやより大規模なMoEモデルに匹敵またはそれを超える性能を示しています。本モデルは「大きなモデル＝大きなパラメータ」という共通認識のもと、効率的な性能向上の道を探求するために極限のアーキテクチャ設計とトレーニング戦略を採用しています。"
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0はMoEアーキテクチャに基づく小型高性能大規模言語モデルです。総パラメータ数は16Bですが、1トークンあたりの活性化パラメータは1.4B（非埋め込みは789M）に抑えられており、非常に高速な生成を実現しています。効率的なMoE設計と大規模高品質トレーニングデータのおかげで、活性化パラメータが1.4Bに過ぎないにもかかわらず、下流タスクにおいて10B未満の密モデルやより大規模なMoEモデルに匹敵するトップクラスの性能を発揮します。"
   },
-  "inclusionAI/Ring-1T": {
-    "description": "Ring-1T は百灵（Bailing）チームが開発した、1兆パラメータ規模のオープンソース思考モデルです。Ling 2.0 アーキテクチャと Ling-1T-base を基盤に構築され、総パラメータ数は1兆、アクティブパラメータは500億。最大128Kのコンテキストウィンドウに対応し、大規模な検証可能報酬強化学習によって最適化されています。"
-  },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0はLing-flash-2.0-baseを深く最適化した高性能思考モデルです。混合エキスパート（MoE）アーキテクチャを採用し、総パラメータ数は100Bですが、推論時には6.1Bパラメータのみを活性化します。独自のicepopアルゴリズムにより、MoE大規模モデルの強化学習（RL）トレーニングにおける不安定性問題を解決し、長期トレーニングでの複雑推論能力の持続的向上を実現しました。Ring-flash-2.0は数学コンテスト、コード生成、論理推論などの高難度ベンチマークで顕著な成果を挙げており、40Bパラメータ未満のトップ密モデルを凌駕し、より大規模なオープンソースMoEモデルやクローズドソースの高性能思考モデルに匹敵します。複雑推論に特化しつつも、創造的な文章作成タスクでも優れた性能を示します。さらに、高効率なアーキテクチャ設計により、強力な性能を提供しつつ高速推論を実現し、高負荷環境での思考モデルの展開コストを大幅に削減しています。"
+  },
+  "inclusionai/ling-1t": {
+    "description": "Ling-1T は inclusionAI の 1T MoE 大規模モデルで、高度な推論タスクと大規模文脈に最適化されています。"
+  },
+  "inclusionai/ling-flash-2.0": {
+    "description": "Ling-flash-2.0 は inclusionAI の MoE モデルで、効率と推論性能を最適化し、中〜大規模タスクに適しています。"
+  },
+  "inclusionai/ling-mini-2.0": {
+    "description": "Ling-mini-2.0 は inclusionAI の軽量化 MoE モデルで、推論能力を維持しつつコストを大幅に削減しています。"
+  },
+  "inclusionai/ming-flash-omini-preview": {
+    "description": "Ming-flash-omni Preview は inclusionAI のマルチモーダルモデルで、音声、画像、動画入力に対応し、画像レンダリングと音声認識能力を最適化しています。"
+  },
+  "inclusionai/ring-1t": {
+    "description": "Ring-1T は inclusionAI のトリリオンパラメータ MoE 思考モデルで、大規模推論や研究タスクに適しています。"
+  },
+  "inclusionai/ring-flash-2.0": {
+    "description": "Ring-flash-2.0 は inclusionAI の高スループット向け Ring モデルの派生版で、速度とコスト効率を重視しています。"
+  },
+  "inclusionai/ring-mini-2.0": {
+    "description": "Ring-mini-2.0 は inclusionAI の高スループット軽量 MoE バージョンで、主に並列処理シーンに使用されます。"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5は多様なシーンでのインテリジェントな対話ソリューションを提供します。"
@@ -2120,6 +2183,12 @@
   "kimi-k2-instruct": {
     "description": "Kimi K2 Instruct、Kimi 公式の推論モデルで、長文コンテキスト、コード、QA など多様なシナリオに対応します。"
   },
+  "kimi-k2-thinking": {
+    "description": "K2 長期思考モデルは 256k の文脈をサポートし、マルチステップのツール呼び出しと思考に対応し、複雑な問題の解決に長けています。"
+  },
+  "kimi-k2-thinking-turbo": {
+    "description": "K2 長期思考モデルの高速版で、256k の文脈をサポートし、深い推論に優れ、出力速度は毎秒 60〜100 トークンに向上しています。"
+  },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 は高度なコード処理能力とエージェント機能を備えた MoE（Mixture of Experts）アーキテクチャの基盤モデルで、総パラメータ数は1T、アクティブパラメータは32Bです。一般的な知識推論、プログラミング、数学、エージェントなどの主要カテゴリにおけるベンチマークで、K2モデルは他の主要なオープンソースモデルを上回る性能を示しています。"
   },
@@ -2131,6 +2200,9 @@
   },
   "kimi-thinking-preview": {
     "description": "kimi-thinking-preview モデルは月の裏側が提供するマルチモーダル推論能力と汎用推論能力を備えたマルチモーダル思考モデルで、深い推論に優れ、より多くの難しい課題の解決を支援します。"
+  },
+  "kuaishou/kat-coder-pro-v1": {
+    "description": "KAT-Coder-Pro-V1（期間限定無料）は、コード理解と自動プログラミングに特化し、効率的なプログラミングエージェントタスクに使用されます。"
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLMは、学習科学の原則に従って訓練された実験的なタスク特化型言語モデルで、教育や学習のシーンでシステムの指示に従い、専門的なメンターとして機能します。"
@@ -2463,7 +2535,7 @@
     "description": "MiniMax M2は、コーディングおよびエージェントワークフローのために構築された高効率な大規模言語モデルです。"
   },
   "minimax/minimax-m2": {
-    "description": "効率的なコーディングとエージェントワークフローのために設計されたモデルです。"
+    "description": "MiniMax-M2 は、コーディングとエージェントタスクにおいて優れた性能を発揮する高コストパフォーマンスモデルで、さまざまなエンジニアリングシーンに適しています。"
   },
   "minimaxai/minimax-m2": {
     "description": "MiniMax-M2 は、コンパクトで高速、かつコスト効率に優れた混合エキスパート（MoE）モデルで、総パラメータ数は2,300億、アクティブパラメータは100億です。コーディングやエージェントタスクにおいて最高の性能を発揮しながら、強力な汎用知能を維持します。複数ファイルの編集、コードの実行と修正のループ、テストによる検証と修復、複雑な長距離ツールチェーンの処理において優れた性能を示し、開発者のワークフローに最適なモデルです。"
@@ -2612,11 +2684,20 @@
   "moonshotai/kimi-k2": {
     "description": "Kimi K2 は Moonshot AI による大規模混合エキスパート（MoE）言語モデルで、総パラメータ数1兆、1回のフォワードパスあたり320億の活性化パラメータを持ちます。高度なツール使用、推論、コード合成などのエージェント能力に最適化されています。"
   },
+  "moonshotai/kimi-k2-0711": {
+    "description": "Kimi K2 0711 は Kimi シリーズの Instruct バージョンで、高品質なコード生成とツール呼び出しシーンに適しています。"
+  },
   "moonshotai/kimi-k2-0905": {
-    "description": "kimi-k2-0905-previewモデルは256kのコンテキスト長を持ち、より強力なエージェントコーディング能力、より優れたフロントエンドコードの美観と実用性、そしてより良いコンテキスト理解能力を備えています。"
+    "description": "Kimi K2 0905 は Kimi シリーズの 0905 アップデートで、文脈と推論性能を拡張し、コーディングシーンを最適化しています。"
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "kimi-k2-0905-previewモデルは256kのコンテキスト長を持ち、より強力なエージェントコーディング能力、より優れたフロントエンドコードの美観と実用性、そしてより良いコンテキスト理解能力を備えています。"
+  },
+  "moonshotai/kimi-k2-thinking": {
+    "description": "Kimi K2 Thinking は Moonshot による深い推論タスク向けに最適化された思考モデルで、汎用エージェント能力を備えています。"
+  },
+  "moonshotai/kimi-k2-thinking-turbo": {
+    "description": "Kimi K2 Thinking Turbo は Kimi K2 Thinking の高速版で、深い推論能力を維持しつつ、応答遅延を大幅に削減しています。"
   },
   "morph/morph-v3-fast": {
     "description": "Morph は Claude や GPT-4o のような最先端モデルが提案するコード変更を既存のコードファイルに高速に適用する専用AIモデルを提供します。高速で4500+トークン/秒の処理速度を持ち、AIコーディングワークフローの最終段階を担います。16k入力トークンと16k出力トークンをサポートします。"
@@ -2700,28 +2781,49 @@
     "description": "OpenAI の gpt-4-turbo は広範な一般知識と専門知識を持ち、自然言語の複雑な指示に従い、難解な問題を正確に解決します。知識カットオフは2023年4月で、128,000トークンのコンテキストウィンドウを備えています。"
   },
   "openai/gpt-4.1": {
-    "description": "GPT 4.1 は OpenAI のフラッグシップモデルで、複雑なタスクに適しています。多分野にわたる問題解決に非常に優れています。"
+    "description": "GPT-4.1シリーズは、より広い文脈理解と強力なエンジニアリング・推論能力を提供します。"
   },
   "openai/gpt-4.1-mini": {
-    "description": "GPT 4.1 mini は知能、速度、コストのバランスを取り、多くのユースケースに魅力的なモデルです。"
+    "description": "GPT-4.1 Miniは、低遅延かつ高コストパフォーマンスを実現し、中程度の文脈処理に適しています。"
   },
   "openai/gpt-4.1-nano": {
-    "description": "GPT-4.1 nano は最速かつ最もコスト効率の良い GPT 4.1 モデルです。"
+    "description": "GPT-4.1 Nanoは、非常に低コスト・低遅延の選択肢であり、高頻度の短い対話や分類タスクに適しています。"
   },
   "openai/gpt-4o": {
-    "description": "OpenAI の GPT-4o は広範な一般知識と専門知識を持ち、自然言語の複雑な指示に従い、難解な問題を正確に解決します。より高速かつ低コストのAPIで GPT-4 Turbo と同等の性能を発揮します。"
+    "description": "GPT-4oシリーズは、OpenAIのOmniモデルであり、テキスト＋画像入力とテキスト出力に対応しています。"
   },
   "openai/gpt-4o-mini": {
-    "description": "OpenAI の GPT-4o mini は最先端かつコスト効率の高い小型モデルです。マルチモーダル対応（テキストまたは画像入力を受け付けテキスト出力）で、gpt-3.5-turbo より高い知能を持ちつつ同等の速度を実現しています。"
+    "description": "GPT-4o-miniは、GPT-4oの軽量高速モデルで、低遅延のマルチモーダルシナリオに適しています。"
   },
   "openai/gpt-5": {
-    "description": "GPT-5 は OpenAI のフラッグシップ言語モデルで、複雑な推論、広範な現実世界知識、コード集約型および多段階エージェントタスクに優れた性能を示します。"
+    "description": "GPT-5は、OpenAIの高性能モデルで、幅広い生産・研究タスクに対応します。"
+  },
+  "openai/gpt-5-chat": {
+    "description": "GPT-5 Chatは、対話シナリオ向けに最適化されたGPT-5のサブモデルで、遅延を抑えたインタラクション体験を提供します。"
+  },
+  "openai/gpt-5-codex": {
+    "description": "GPT-5-Codexは、コーディング用途に特化して最適化されたGPT-5のバリアントで、大規模なコードワークフローに適しています。"
   },
   "openai/gpt-5-mini": {
-    "description": "GPT-5 mini はコスト最適化されたモデルで、推論・チャットタスクに優れています。速度、コスト、能力の最適なバランスを提供します。"
+    "description": "GPT-5 Miniは、GPT-5ファミリーの軽量版で、低遅延・低コストのシナリオに適しています。"
   },
   "openai/gpt-5-nano": {
-    "description": "GPT-5 nano は高スループットモデルで、単純な指示や分類タスクに優れています。"
+    "description": "GPT-5 Nanoは、ファミリー内で最も小型のモデルで、コストと遅延に厳しい要件があるシナリオに最適です。"
+  },
+  "openai/gpt-5-pro": {
+    "description": "GPT-5 Proは、OpenAIのフラッグシップモデルで、強力な推論・コード生成・エンタープライズ機能を提供し、テスト時のルーティングや厳格なセキュリティポリシーにも対応します。"
+  },
+  "openai/gpt-5.1": {
+    "description": "GPT-5.1は、GPT-5シリーズの最新フラッグシップモデルで、一般的な推論、指示の遵守、自然な対話において大幅な向上を実現し、幅広いタスクに対応します。"
+  },
+  "openai/gpt-5.1-chat": {
+    "description": "GPT-5.1 Chatは、GPT-5.1ファミリーの軽量モデルで、低遅延の対話に最適化されつつ、強力な推論と指示実行能力を保持しています。"
+  },
+  "openai/gpt-5.1-codex": {
+    "description": "GPT-5.1-Codexは、ソフトウェアエンジニアリングとコーディングワークフローに特化して最適化されたGPT-5.1のバリアントで、大規模なリファクタリング、複雑なデバッグ、長時間の自律的コーディングに適しています。"
+  },
+  "openai/gpt-5.1-codex-mini": {
+    "description": "GPT-5.1-Codex-Miniは、GPT-5.1-Codexの小型高速版で、遅延とコストに敏感なコーディングシナリオに適しています。"
   },
   "openai/gpt-oss-120b": {
     "description": "非常に有能な汎用大規模言語モデルで、強力かつ制御可能な推論能力を持ちます。"
@@ -2748,7 +2850,7 @@
     "description": "o3-mini高推論レベル版は、o1-miniと同じコストと遅延目標で高い知性を提供します。"
   },
   "openai/o4-mini": {
-    "description": "OpenAI の o4-mini は高速かつコスト効率の良い推論を提供し、そのサイズにおいて卓越した性能を持ち、特に数学（AIMEベンチマークで最高評価）、コーディング、視覚タスクに優れています。"
+    "description": "OpenAI o4-miniは、OpenAIの小型高効率推論モデルで、低遅延のシナリオに適しています。"
   },
   "openai/o4-mini-high": {
     "description": "o4-mini高推論レベル版で、迅速かつ効果的な推論のために最適化されており、コーディングや視覚タスクで非常に高い効率と性能を発揮します。"
@@ -2952,13 +3054,19 @@
     "description": "強力な中型コードモデルで、32Kのコンテキスト長をサポートし、多言語プログラミングに優れています。"
   },
   "qwen/qwen3-14b": {
-    "description": "Qwen3-14BはQwen3シリーズの中で、148億パラメータの密な因果言語モデルであり、複雑な推論と効率的な対話のために設計されています。数学、プログラミング、論理推論などのタスクのための「思考」モードと一般的な対話のための「非思考」モードの間をシームレスに切り替えることができます。このモデルは微調整されており、指示の遵守、エージェントツールの使用、創造的な執筆、100以上の言語と方言にわたる多言語タスクに対応しています。32Kトークンのコンテキストをネイティブに処理し、YaRNベースの拡張を使用して131Kトークンに拡張可能です。"
+    "description": "Qwen3-14Bは、Qwenシリーズの14Bバージョンで、一般的な推論や対話シナリオに適しています。"
   },
   "qwen/qwen3-14b:free": {
     "description": "Qwen3-14BはQwen3シリーズの中で、148億パラメータの密な因果言語モデルであり、複雑な推論と効率的な対話のために設計されています。数学、プログラミング、論理推論などのタスクのための「思考」モードと一般的な対話のための「非思考」モードの間をシームレスに切り替えることができます。このモデルは微調整されており、指示の遵守、エージェントツールの使用、創造的な執筆、100以上の言語と方言にわたる多言語タスクに対応しています。32Kトークンのコンテキストをネイティブに処理し、YaRNベースの拡張を使用して131Kトークンに拡張可能です。"
   },
   "qwen/qwen3-235b-a22b": {
     "description": "Qwen3-235B-A22BはQwenによって開発された235Bパラメータの専門家混合（MoE）モデルで、各前方伝播で22Bパラメータをアクティブ化します。複雑な推論、数学、コードタスクのための「思考」モードと、一般的な対話の効率のための「非思考」モードの間をシームレスに切り替えることができます。このモデルは強力な推論能力、100以上の言語と方言にわたる多言語サポート、高度な指示遵守、エージェントツール呼び出し能力を示しています。32Kトークンのコンテキストウィンドウをネイティブに処理し、YaRNベースの拡張を使用して131Kトークンに拡張可能です。"
+  },
+  "qwen/qwen3-235b-a22b-2507": {
+    "description": "Qwen3-235B-A22B-Instruct-2507は、Qwen3シリーズのInstructバージョンで、多言語指示と長文脈シナリオの両方に対応しています。"
+  },
+  "qwen/qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3-235B-A22B-Thinking-2507は、Qwen3のThinkingバリアントで、複雑な数学や推論タスクに特化して強化されています。"
   },
   "qwen/qwen3-235b-a22b:free": {
     "description": "Qwen3-235B-A22BはQwenによって開発された235Bパラメータの専門家混合（MoE）モデルで、各前方伝播で22Bパラメータをアクティブ化します。複雑な推論、数学、コードタスクのための「思考」モードと、一般的な対話の効率のための「非思考」モードの間をシームレスに切り替えることができます。このモデルは強力な推論能力、100以上の言語と方言にわたる多言語サポート、高度な指示遵守、エージェントツール呼び出し能力を示しています。32Kトークンのコンテキストウィンドウをネイティブに処理し、YaRNベースの拡張を使用して131Kトークンに拡張可能です。"
@@ -2977,6 +3085,21 @@
   },
   "qwen/qwen3-8b:free": {
     "description": "Qwen3-8BはQwen3シリーズの中で、82億パラメータの密な因果言語モデルであり、推論集約型タスクと効率的な対話のために設計されています。数学、コーディング、論理推論のための「思考」モードと一般的な対話のための「非思考」モードの間をシームレスに切り替えることができます。このモデルは微調整されており、指示の遵守、エージェント統合、創造的な執筆、100以上の言語と方言にわたる多言語使用に対応しています。32Kトークンのコンテキストウィンドウをネイティブにサポートし、YaRNを使用して131Kトークンに拡張可能です。"
+  },
+  "qwen/qwen3-coder": {
+    "description": "Qwen3-Coderは、Qwen3のコード生成ファミリーで、長文ドキュメント内のコード理解と生成に優れています。"
+  },
+  "qwen/qwen3-coder-plus": {
+    "description": "Qwen3-Coder-Plusは、Qwenシリーズで特別に最適化されたコーディングエージェントモデルで、より複雑なツール呼び出しや長期的な会話に対応します。"
+  },
+  "qwen/qwen3-max": {
+    "description": "Qwen3 Maxは、Qwen3シリーズのハイエンド推論モデルで、多言語推論やツール統合に適しています。"
+  },
+  "qwen/qwen3-max-preview": {
+    "description": "Qwen3 Max（プレビュー）は、Qwenシリーズの高度な推論とツール統合に対応したMaxバージョンのプレビュー版です。"
+  },
+  "qwen/qwen3-vl-plus": {
+    "description": "Qwen3 VL-Plusは、Qwen3の視覚強化バージョンで、マルチモーダル推論と動画処理能力が向上しています。"
   },
   "qwen2": {
     "description": "Qwen2は、Alibabaの新世代大規模言語モデルであり、優れた性能で多様なアプリケーションニーズをサポートします。"
@@ -3272,9 +3395,6 @@
   "step-r1-v-mini": {
     "description": "このモデルは強力な画像理解能力を持つ推論大モデルで、画像とテキスト情報を処理し、深い思考の後にテキストを生成します。このモデルは視覚推論分野で優れたパフォーマンスを発揮し、数学、コード、テキスト推論能力も第一級です。コンテキスト長は100kです。"
   },
-  "step3": {
-    "description": "Step3 は JIEYUEXINGCHEN によって開発されたマルチモーダルモデルで、優れた視覚理解能力を備えています。"
-  },
   "stepfun-ai/step3": {
     "description": "Step3 は階跃星辰（StepFun）が公開した最先端のマルチモーダル推論モデルで、総パラメータ数321B、活性化パラメータ38Bを持つエキスパートミックス（MoE）アーキテクチャに基づいて構築されています。本モデルはエンドツーエンド設計を採用し、デコードコストの最小化を図りながら視覚言語推論においてトップクラスの性能を提供します。多行列分解注意（MFA）と注意-FFNのデカップリング（AFD）という協調設計により、Step3 はフラッグシップ級からローエンドのアクセラレータまで一貫して高い効率を維持します。事前学習段階では、Step3 は20Tを超えるテキストトークンと4Tの画像・テキスト混合トークンを処理し、十数言語をカバーしました。このモデルは数学、コード、多モーダルなど複数のベンチマークにおいてオープンソースモデルの中でトップレベルの成績を達成しています。"
   },
@@ -3356,6 +3476,9 @@
   "vercel/v0-1.5-md": {
     "description": "v0 の背後にあるモデルにアクセスし、特定フレームワークの推論と最新知識を用いてモダンなWebアプリを生成、修正、最適化します。"
   },
+  "volcengine/doubao-seed-code": {
+    "description": "Doubao-Seed-Codeは、ByteDanceのVolcano EngineによるAgentic Programming向けに最適化された大規模モデルで、複数のプログラミングおよびエージェントベンチマークで優れた性能を発揮し、256Kの文脈に対応します。"
+  },
   "wan2.2-t2i-flash": {
     "description": "万相2.2の高速版で、現時点で最新のモデルです。創造性、安定性、写実的質感が全面的にアップグレードされ、生成速度が速く、コストパフォーマンスに優れています。"
   },
@@ -3383,11 +3506,23 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2は、Microsoft AIが提供する言語モデルであり、複雑な対話、多言語、推論、インテリジェントアシスタントの分野で特に優れた性能を発揮します。"
   },
+  "x-ai/grok-4": {
+    "description": "Grok 4は、xAIのフラッグシップ推論モデルで、強力な推論とマルチモーダル機能を提供します。"
+  },
   "x-ai/grok-4-fast": {
-    "description": "Grok 4 Fast をリリースできることを嬉しく思います。これは、コスト効率の高い推論モデルにおける最新の進展です。"
+    "description": "Grok 4 Fastは、xAIの高スループット・低コストモデルで（2Mの文脈ウィンドウに対応）、高並列性と長文脈が求められるシナリオに適しています。"
+  },
+  "x-ai/grok-4-fast-non-reasoning": {
+    "description": "Grok 4 Fast（Non-Reasoning）は、xAIの高スループット・低コストのマルチモーダルモデルで（2Mの文脈ウィンドウに対応）、遅延とコストに敏感だがモデル内推論を必要としないシナリオ向けです。Grok 4 Fastの推論版と並列で提供され、APIのreasoning enableパラメータで推論機能を有効化できます。プロンプトと補完は、xAIまたはOpenRouterによって将来のモデル改善に使用される可能性があります。"
+  },
+  "x-ai/grok-4.1-fast": {
+    "description": "Grok 4.1 Fastは、xAIの高スループット・低コストモデルで（2Mの文脈ウィンドウに対応）、高並列性と長文脈が求められるシナリオに適しています。"
+  },
+  "x-ai/grok-4.1-fast-non-reasoning": {
+    "description": "Grok 4.1 Fast（Non-Reasoning）は、xAIの高スループット・低コストのマルチモーダルモデルで（2Mの文脈ウィンドウに対応）、遅延とコストに敏感だがモデル内推論を必要としないシナリオ向けです。Grok 4 Fastの推論版と並列で提供され、APIのreasoning enableパラメータで推論機能を有効化できます。プロンプトと補完は、xAIまたはOpenRouterによって将来のモデル改善に使用される可能性があります。"
   },
   "x-ai/grok-code-fast-1": {
-    "description": "grok-code-fast-1 を発表できることを嬉しく思います。これは、高速かつ経済的な推論モデルであり、エージェントによるコーディングにおいて優れた性能を発揮します。"
+    "description": "Grok Code Fast 1は、xAIの高速コードモデルで、可読性とエンジニアリング適合性の高い出力を提供します。"
   },
   "x1": {
     "description": "Spark X1 モデルはさらにアップグレードされ、元の数学タスクで国内のリーダーシップを維持しつつ、推論、テキスト生成、言語理解などの一般的なタスクで OpenAI o1 および DeepSeek R1 に匹敵する効果を実現します。"
@@ -3449,8 +3584,14 @@
   "yi-vision-v2": {
     "description": "複雑な視覚タスクモデルで、複数の画像に基づく高性能な理解と分析能力を提供します。"
   },
+  "z-ai/glm-4.5": {
+    "description": "GLM 4.5は、Z.AIのフラッグシップモデルで、ハイブリッド推論モードをサポートし、エンジニアリングや長文脈タスクに最適化されています。"
+  },
+  "z-ai/glm-4.5-air": {
+    "description": "GLM 4.5 Airは、GLM 4.5の軽量版で、コストに敏感なシナリオに適しつつ、強力な推論能力を保持しています。"
+  },
   "z-ai/glm-4.6": {
-    "description": "智譜の最新フラッグシップモデル GLM-4.6 は、高度なコーディング、長文処理、推論およびエージェント能力において前世代を大きく上回る性能を実現しています。"
+    "description": "GLM 4.6は、Z.AIのフラッグシップモデルで、文脈長とコーディング能力が拡張されています。"
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5はエージェントアプリケーション向けに設計された基盤モデルで、混合専門家（Mixture-of-Experts）アーキテクチャを採用。ツール呼び出し、ウェブブラウジング、ソフトウェア工学、フロントエンドプログラミング分野で深く最適化され、Claude CodeやRoo Codeなどのコードエージェントへのシームレスな統合をサポートします。混合推論モードを採用し、複雑な推論や日常利用など多様なシナリオに適応可能です。"
@@ -3472,5 +3613,8 @@
   },
   "zai/glm-4.5v": {
     "description": "GLM-4.5V は GLM-4.5-Air 基盤モデルに基づき、GLM-4.1V-Thinking の検証済み技術を継承しつつ、強力な1060億パラメータの MoE アーキテクチャで効率的にスケールアップしています。"
+  },
+  "zenmux/auto": {
+    "description": "ZenMuxの自動ルーティング機能は、リクエスト内容に応じて、対応するモデルの中から最もコストパフォーマンスが高く、性能の良いモデルを自動的に選択します。"
   }
 }

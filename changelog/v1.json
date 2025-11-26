@@ -1,6 +1,227 @@
 [
   {
     "children": {
+      "features": ["Bedrock claude model thinking support."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.117"
+  },
+  {
+    "children": {
+      "features": ["Support nano banana pro."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.116"
+  },
+  {
+    "children": {
+      "features": ["Add Claude Opus 4.5 model."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.115"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the topic link dropdown error."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.114"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed when desktop userId was change manytimes the aimodel not right."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.113"
+  },
+  {
+    "children": {
+      "improvements": ["Add Kimi K2 Thinking to Qwen Provider."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.112"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix db migration snapshot not align with db schema, Separate agent file injection from knowledge base RAG search."
+      ]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.111"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add hyperlink to each topic & pinned agent, support ContextMenu on ChatItem."
+      ]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.110"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the knowledge files cant open error."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.109"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the pinned session not work."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.108"
+  },
+  {
+    "children": {
+      "improvements": ["Optimize nana banana pro error message."]
+    },
+    "date": "2025-11-23",
+    "version": "2.0.0-next.107"
+  },
+  {
+    "children": {
+      "features": ["Add nano-banana-pro model support and optimization."]
+    },
+    "date": "2025-11-23",
+    "version": "2.0.0-next.106"
+  },
+  {
+    "children": {},
+    "date": "2025-11-23",
+    "version": "2.0.0-next.105"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.104"
+  },
+  {
+    "children": {
+      "fixes": ["Hide ai image config item in settings category."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.103"
+  },
+  {
+    "children": {
+      "features": ["Add new provider ZenMux & Gemini 3 Pro Image Preview."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.102"
+  },
+  {
+    "children": {
+      "features": ["Support bedrok prompt cache and usage compute."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.101"
+  },
+  {
+    "children": {
+      "fixes": ["Gemini 3 Pro does not display thought summaries."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.100"
+  },
+  {
+    "children": {
+      "features": ["Refactor to use kb search tool."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.99"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed changelog pages and open again."],
+      "improvements": ["Fix some translations."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.98"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.97"
+  },
+  {
+    "children": {
+      "features": ["Support Command Menu (CMD + J)."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.96"
+  },
+  {
+    "children": {
+      "features": ["Add Security Blacklist for agent runtime."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.95"
+  },
+  {
+    "children": {
+      "fixes": ["Provider settings button unable to redirect."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.94"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.93"
+  },
+  {
+    "children": {
+      "improvements": ["Remove debug console logs and add loading state."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.92"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the hydrated false problem."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.91"
+  },
+  {
+    "children": {
+      "improvements": ["Extract StatusIndicator component and improve tools display."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.90"
+  },
+  {
+    "children": {
+      "features": ["Support gemini 3.0 tools calling."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.89"
+  },
+  {
+    "children": {
+      "improvements": ["Fully support Gemini 3.0 model."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.88"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor chat selectors."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.87"
+  },
+  {
+    "children": {
       "features": ["Support user abort in the agent runtime."]
     },
     "date": "2025-11-19",

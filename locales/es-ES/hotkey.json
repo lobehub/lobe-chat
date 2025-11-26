@@ -7,6 +7,10 @@
     "desc": "Eliminar los mensajes y archivos subidos de la conversación actual",
     "title": "Eliminar mensajes de la conversación"
   },
+  "commandPalette": {
+    "desc": "Abre el panel de comandos global para acceder rápidamente a las funciones",
+    "title": "Panel de Comandos"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "Eliminar el último mensaje y volver a generarlo",
     "title": "Eliminar y regenerar"

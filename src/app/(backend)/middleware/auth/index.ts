@@ -21,12 +21,11 @@ import { createErrorResponse } from '@/utils/errorResponse';
 import { checkAuthMethod } from './utils';
 
 type CreateRuntime = (jwtPayload: ClientSecretPayload) => ModelRuntime;
-type RequestOptions = { createRuntime?: CreateRuntime; params: Promise<{ provider: string }> };
+type RequestOptions = { createRuntime?: CreateRuntime; params: Promise<{ provider?: string }> };
 
 export type RequestHandler = (
   req: Request,
   options: RequestOptions & {
-    createRuntime?: CreateRuntime;
     jwtPayload: ClientSecretPayload;
   },
 ) => Promise<Response>;

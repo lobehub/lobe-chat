@@ -22,6 +22,9 @@ export const expectMessageCreated = (mockStore: ChatStore, role: 'assistant' | '
     expect.objectContaining({
       role,
     }),
+    expect.objectContaining({
+      operationId: expect.any(String),
+    }),
   );
 };
 

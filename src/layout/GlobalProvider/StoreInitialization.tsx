@@ -12,12 +12,19 @@ import { useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
+import { useUrlHydrationStore } from '@/store/urlHydration';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
+import { electronSyncSelectors } from '@/store/electron/selectors';
+import { useElectronStore } from '@/store/electron';
 
 const StoreInitialization = memo(() => {
   // prefetch error ns to avoid don't show error content correctly
   useTranslation('error');
+
+  // Initialize from URL (one-time)
+  const initAgentPinnedFromUrl = useUrlHydrationStore((s) => s.initAgentPinnedFromUrl);
+  initAgentPinnedFromUrl();
 
   const router = useRouter();
   const [isLogin, isSignedIn, useInitUserState] = useUserStore((s) => [
@@ -58,21 +65,14 @@ const StoreInitialization = memo(() => {
   // init inbox agent and default agent config
   useInitAgentStore(isLoginOnInit, serverConfig.defaultAgent?.config);
 
+  const isSyncActive = useElectronStore((s) => electronSyncSelectors.isSyncActive(s));
+
   // init user provider key vaults
-  useInitAiProviderKeyVaults(isLoginOnInit);
+  useInitAiProviderKeyVaults(isLoginOnInit,isSyncActive);
 
   // init user state
   useInitUserState(isLoginOnInit, serverConfig, {
-    onError: () => {
-      // 即使失败也要设置标志，避免应用卡住
-      useGlobalStore.setState({ isAppHydrated: true });
-      console.warn('[Hydration] Client state initialization failed.');
-    },
     onSuccess: (state) => {
-      // 设置水合完成标志
-      useGlobalStore.setState({ isAppHydrated: true });
-      console.log('[Hydration] Client state initialized successfully.');
-
       if (state.isOnboard === false) {
         router.push('/onboard');
       }

@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import OllamaSetupGuide from '@/components/OllamaSetupGuide';
 import { isDesktop } from '@/const/version';
-import { ErrorActionContainer } from '@/features/Conversation/Error/style';
+import { ErrorActionContainer } from '@/features/ChatList/Error/style';
 
 import OllamaDesktopSetupGuide from './Desktop';
 

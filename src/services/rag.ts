@@ -22,8 +22,12 @@ class RAGService {
     return lambdaClient.chunk.semanticSearch.mutate({ fileIds, query });
   };
 
-  semanticSearchForChat = async (params: SemanticSearchSchemaType) => {
-    return lambdaClient.chunk.semanticSearchForChat.mutate(params);
+  semanticSearchForChat = async (params: SemanticSearchSchemaType, signal?: AbortSignal) => {
+    return lambdaClient.chunk.semanticSearchForChat.mutate(params, { signal });
+  };
+
+  getFileContents = async (fileIds: string[], signal?: AbortSignal) => {
+    return lambdaClient.chunk.getFileContents.mutate({ fileIds }, { signal });
   };
 
   deleteMessageRagQuery = async (id: string) => {
