@@ -2,7 +2,6 @@
 
 import {
   INSERT_HEADING_COMMAND,
-  INSERT_MENTION_COMMAND,
   INSERT_TABLE_COMMAND,
   ReactCodeblockPlugin,
   ReactCodePlugin,
@@ -19,7 +18,6 @@ import { Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { Heading1Icon, Heading2Icon, Heading3Icon, Loader2Icon, Table2Icon } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
@@ -27,10 +25,9 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useStore } from '@/features/AgentSetting/store';
-import { pluginHelpers, useToolStore } from '@/store/tool';
-import { toolSelectors } from '@/store/tool/selectors';
 
 import PROMPT_TEMPLATE from './promptTemplate.json';
+import { useMentionOptions } from './MentionList';
 
 dayjs.extend(relativeTime);
 
@@ -62,15 +59,15 @@ const EditorCanvas = memo(() => {
   useEffect(() => {
     if (editorContent) {
       editor?.setDocument('json', editorContent || PROMPT_TEMPLATE);
-    }else if (systemRole) {
+    } else if (systemRole) {
       editor?.setDocument('markdown', systemRole);
-    }else{
+    } else {
       editor?.setDocument('json', PROMPT_TEMPLATE);
     }
   }, []);
 
-  // Get available tools for @ mention
-  const installedTools = useToolStore(toolSelectors.metaList, isEqual);
+  // Mention options for @ tools insertion
+  const mentionOptions = useMentionOptions();
 
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
@@ -119,53 +116,6 @@ const EditorCanvas = memo(() => {
     }
   };
 
-
-  // Mention options for @ tools insertion
-  const mentionOptions = useMemo(
-    () => ({
-      items: async (
-        search: { leadOffset: number; matchingString: string; replaceableString: string } | null,
-      ) => {
-        const searchQuery = search?.matchingString?.toLowerCase() || '';
-
-        const filteredTools = installedTools.filter((tool) => {
-          const title = pluginHelpers.getPluginTitle(tool.meta);
-          const desc = pluginHelpers.getPluginDesc(tool.meta);
-
-          return (
-            title?.toLowerCase().includes(searchQuery) ||
-            desc?.toLowerCase().includes(searchQuery) ||
-            tool.identifier?.toLowerCase().includes(searchQuery)
-          );
-        });
-
-        return filteredTools.map((tool) => {
-          const title = pluginHelpers.getPluginTitle(tool.meta) || tool.identifier;
-          const desc = pluginHelpers.getPluginDesc(tool.meta);
-
-          return {
-            key: tool.identifier,
-            label: title,
-            metadata: {
-              description: desc,
-              identifier: tool.identifier,
-            },
-            onSelect: (editor: any) => {
-              // Insert tool as mention
-              editor.dispatchCommand(INSERT_MENTION_COMMAND, {
-                label: title,
-                metadata: { description: desc, identifier: tool.identifier },
-              });
-            },
-          };
-        });
-      },
-      markdownWriter: (mention: any) => {
-        return `\n<mention>${mention.label}[${mention.metadata?.id || mention.label}]</mention>\n`;
-      },
-    }),
-    [installedTools],
-  );
 
   return (
     <Flexbox
