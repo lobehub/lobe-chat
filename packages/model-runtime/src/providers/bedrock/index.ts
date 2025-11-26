@@ -1,3 +1,4 @@
+import type Anthropic from '@anthropic-ai/sdk';
 import {
   BedrockRuntimeClient,
   InvokeModelCommand,
@@ -5,9 +6,10 @@ import {
 } from '@aws-sdk/client-bedrock-runtime';
 import { ModelProvider } from 'model-bank';
 
+import { hasTemperatureTopPConflict } from '../../const/models';
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { buildAnthropicMessages, buildAnthropicTools } from '../../core/contextBuilders/anthropic';
-import { MODEL_PARAMETER_CONFLICTS, resolveParameters } from '../../core/parameterResolver';
+import { resolveParameters } from '../../core/parameterResolver';
 import {
   AWSBedrockClaudeStream,
   AWSBedrockLlamaStream,
@@ -26,6 +28,7 @@ import { debugStream } from '../../utils/debugStream';
 import { getModelPricing } from '../../utils/getModelPricing';
 import { StreamingResponse } from '../../utils/response';
 import { resolveCacheTTL } from '../anthropic/resolveCacheTTL';
+import { resolveMaxTokens } from '../anthropic/resolveMaxTokens';
 
 /**
  * A prompt constructor for HuggingFace LLama 2 chat models.
@@ -62,19 +65,24 @@ export function experimental_buildLlama2Prompt(messages: { content: string; role
 export interface LobeBedrockAIParams {
   accessKeyId?: string;
   accessKeySecret?: string;
+  id?: string;
   region?: string;
   sessionToken?: string;
 }
 
 export class LobeBedrockAI implements LobeRuntimeAI {
   private client: BedrockRuntimeClient;
+  private id: string;
 
   region: string;
 
-  constructor({ region, accessKeyId, accessKeySecret, sessionToken }: LobeBedrockAIParams = {}) {
+  constructor(options: LobeBedrockAIParams = {}) {
+    const { id, region, accessKeyId, accessKeySecret, sessionToken } = options;
+
     if (!(accessKeyId && accessKeySecret))
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
     this.region = region ?? 'us-east-1';
+    this.id = id ?? ModelProvider.Bedrock;
     this.client = new BedrockRuntimeClient({
       credentials: {
         accessKeyId: accessKeyId,
@@ -158,17 +166,27 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       temperature,
       top_p,
       tools,
+      thinking,
     } = payload;
     const inputStartAt = Date.now();
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
     // Resolve temperature and top_p parameters based on model constraints
-    const hasConflict = MODEL_PARAMETER_CONFLICTS.BEDROCK_CLAUDE_4_PLUS.has(model);
+    const hasConflict = hasTemperatureTopPConflict(model);
     const resolvedParams = resolveParameters(
       { temperature, top_p },
       { hasConflict, normalizeTemperature: true, preferTemperature: true },
     );
+
+    const { bedrock: bedrockModels } = await import('model-bank');
+
+    const resolvedMaxTokens = await resolveMaxTokens({
+      max_tokens,
+      model,
+      providerModels: bedrockModels,
+      thinking,
+    });
 
     const systemPrompts = !!system_message?.content
       ? ([
@@ -177,18 +195,39 @@ export class LobeBedrockAI implements LobeRuntimeAI {
             text: system_message.content as string,
             type: 'text',
           },
-        ] as any)
+        ] as Anthropic.TextBlockParam[])
       : undefined;
 
-    const anthropicPayload = {
+    const postTools = buildAnthropicTools(tools, {
+      enabledContextCaching,
+    });
+
+    const anthropicBase = {
       anthropic_version: 'bedrock-2023-05-31',
-      max_tokens: max_tokens || 4096,
+      max_tokens: resolvedMaxTokens,
       messages: await buildAnthropicMessages(user_messages, { enabledContextCaching }),
       system: systemPrompts,
-      temperature: resolvedParams.temperature,
-      tools: buildAnthropicTools(tools, { enabledContextCaching }),
-      top_p: resolvedParams.top_p,
+      tools: postTools,
     };
+
+    const anthropicPayload =
+      thinking?.type === 'enabled'
+        ? {
+            ...anthropicBase,
+            thinking: {
+              ...thinking,
+              // `max_tokens` must be greater than `budget_tokens`
+              budget_tokens: Math.max(
+                1,
+                Math.min(thinking.budget_tokens || 1024, resolvedMaxTokens - 1),
+              ),
+            },
+          }
+        : {
+            ...anthropicBase,
+            temperature: resolvedParams.temperature,
+            top_p: resolvedParams.top_p,
+          };
 
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
@@ -209,7 +248,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         debugStream(debug).catch(console.error);
       }
 
-      const pricing = await getModelPricing(payload.model, ModelProvider.Bedrock);
+      const pricing = await getModelPricing(payload.model, this.id);
       const cacheTTL = resolveCacheTTL({ ...payload, enabledContextCaching }, anthropicPayload);
       const pricingOptions = cacheTTL ? { lookupParams: { ttl: cacheTTL } } : undefined;
 
@@ -218,7 +257,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         AWSBedrockClaudeStream(prod, {
           callbacks: options?.callback,
           inputStartAt,
-          payload: { model, pricing, pricingOptions, provider: ModelProvider.Bedrock },
+          payload: { model, pricing, pricingOptions, provider: this.id },
         }),
         {
           headers: options?.headers,

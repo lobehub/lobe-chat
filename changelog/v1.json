@@ -1,6 +1,57 @@
 [
   {
     "children": {
+      "features": ["Bedrock claude model thinking support."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.117"
+  },
+  {
+    "children": {
+      "features": ["Support nano banana pro."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.116"
+  },
+  {
+    "children": {
+      "features": ["Add Claude Opus 4.5 model."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.115"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the topic link dropdown error."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.114"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed when desktop userId was change manytimes the aimodel not right."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.113"
+  },
+  {
+    "children": {
+      "improvements": ["Add Kimi K2 Thinking to Qwen Provider."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.112"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix db migration snapshot not align with db schema, Separate agent file injection from knowledge base RAG search."
+      ]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.111"
+  },
+  {
+    "children": {
       "improvements": [
         "Add hyperlink to each topic & pinned agent, support ContextMenu on ChatItem."
       ]

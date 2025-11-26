@@ -6,8 +6,6 @@ import { getAgentStoreState } from '@/store/agent/store';
 import { ChatStore } from '@/store/chat/store';
 import { KnowledgeBaseExecutionRuntime } from '@/tools/knowledge-base/ExecutionRuntime';
 
-import { dbMessageSelectors } from '../../message/selectors';
-
 const log = debug('lobe-store:builtin-tool:knowledge-base');
 
 export interface KnowledgeBaseAction {
@@ -54,26 +52,17 @@ export const knowledgeBaseSlice: StateCreator<
   },
 
   searchKnowledgeBase: async (id, params) => {
-    // Get knowledge base IDs and file IDs from agent store
+    // Get knowledge base IDs from agent store
     const agentState = getAgentStoreState();
     const knowledgeIds = agentSelectors.currentKnowledgeIds(agentState);
 
-    // Get user-selected files from messages
-    const userFiles = dbMessageSelectors
-      .dbUserFiles(get())
-      .map((f) => f?.id)
-      .filter(Boolean) as string[];
-
-    // Merge knowledge base files and user-selected files
-    const options = {
-      fileIds: [...knowledgeIds.fileIds, ...userFiles],
-      knowledgeBaseIds: knowledgeIds.knowledgeBaseIds,
-    };
+    // Only search in knowledge bases, not agent files
+    // Agent files will be injected as full content in context-engine
+    const knowledgeBaseIds = knowledgeIds.knowledgeBaseIds;
 
     return get().internal_triggerKnowledgeBaseToolCalling(id, async () => {
       return await runtime.searchKnowledgeBase(params, {
-        fileIds: options.fileIds,
-        knowledgeBaseIds: options.knowledgeBaseIds,
+        knowledgeBaseIds,
         messageId: id,
       });
     });
