@@ -207,6 +207,7 @@ export class DocumentService {
         fileType: file.fileType,
         metadata: fileDocument.metadata,
         pages: fileDocument.pages,
+        parentId: file.parentId,
         source: file.url,
         sourceType: 'file',
         title: fileDocument.metadata?.title,

@@ -39,6 +39,8 @@ export interface FileManageAction {
   removeFileItem: (id: string) => Promise<void>;
   removeFiles: (ids: string[]) => Promise<void>;
 
+  setCurrentFolderId: (folderId: string | null | undefined) => void;
+
   toggleEmbeddingIds: (ids: string[], loading?: boolean) => void;
   toggleParsingIds: (ids: string[], loading?: boolean) => void;
 
@@ -198,6 +200,10 @@ export const createFileManageSlice: StateCreator<
   moveFileToFolder: async (fileId, parentId) => {
     await fileService.updateFile(fileId, { parentId });
     await get().refreshFileList();
+  },
+
+  setCurrentFolderId: (folderId) => {
+    set({ currentFolderId: folderId }, false, 'setCurrentFolderId');
   },
 
   toggleEmbeddingIds: (ids, loading) => {

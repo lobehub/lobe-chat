@@ -4,6 +4,7 @@ import { UploadFileItem } from '@/types/files/upload';
 export interface FileManagerState {
   creatingChunkingTaskIds: string[];
   creatingEmbeddingTaskIds: string[];
+  currentFolderId?: string | null;
   dockUploadFileList: UploadFileItem[];
   fileDetail?: FileListItem;
   fileList: FileListItem[];
@@ -13,6 +14,7 @@ export interface FileManagerState {
 export const initialFileManagerState: FileManagerState = {
   creatingChunkingTaskIds: [],
   creatingEmbeddingTaskIds: [],
+  currentFolderId: undefined,
   dockUploadFileList: [],
   fileList: [],
 };

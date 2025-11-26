@@ -107,7 +107,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     clearOnDefault: true,
   });
 
-  const { currentFolderSlug, knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
+  const { currentFolderSlug } = useFolderPath();
 
   const [sorter] = useQueryState('sorter', {
     clearOnDefault: true,
@@ -170,6 +170,21 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
       }
     }
   };
+
+  const setCurrentFolderId = useFileStore((s) => s.setCurrentFolderId);
+  const useFetchFolderBreadcrumb = useFileStore((s) => s.useFetchFolderBreadcrumb);
+  const { data: folderBreadcrumb } = useFetchFolderBreadcrumb(currentFolderSlug);
+
+  // Update current folder ID based on breadcrumb data
+  React.useEffect(() => {
+    if (!currentFolderSlug) {
+      setCurrentFolderId(null);
+    } else if (folderBreadcrumb && folderBreadcrumb.length > 0) {
+      // The current folder is the last item in the breadcrumb chain
+      const currentFolder = folderBreadcrumb[folderBreadcrumb.length - 1];
+      setCurrentFolderId(currentFolder.id);
+    }
+  }, [currentFolderSlug, folderBreadcrumb, setCurrentFolderId]);
 
   const { data: rawData, isLoading } = useFetchKnowledgeItems({
     category,
@@ -276,9 +291,9 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     [onOpenFile, knowledgeBaseId, selectFileIds],
   );
 
-  return !isLoading && data?.length === 0 && !currentFolderSlug ? (
-    <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
-  ) : (
+  const showEmptyStatus = !isLoading && data?.length === 0 && !currentFolderSlug;
+
+  return (
     <Flexbox height={'100%'}>
       <ChatHeader
         left={
@@ -293,14 +308,13 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
             <ExpandableSearch />
             <SortDropdown />
             <BatchActionsDropdown
-              // disabled={selectFileIds.length === 0}
               isInKnowledgeBase={!!knowledgeBaseId}
               onActionClick={onActionClick}
               selectCount={selectFileIds.length}
             />
             <ViewSwitcher onViewChange={setViewMode} view={viewMode} />
             <Flexbox style={{ marginLeft: 12 }}>
-              <AddButton knowledgeBaseId={knowledgeBaseId} />
+              <AddButton folderId={currentFolderSlug ?? undefined} knowledgeBaseId={knowledgeBaseId} />
             </Flexbox>
           </Flexbox>
         }
@@ -308,99 +322,105 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
           left: { padding: 0 },
         }}
       />
-      <Flexbox style={{ fontSize: 12, marginTop: 56 }}>
-        {viewMode === 'list' && (
-          <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8}>
-            <Flexbox className={styles.headerItem} flex={1} style={{ paddingInline: 32 }}>
-              {t('FileManager.title.title')}
-            </Flexbox>
-            <Flexbox className={styles.headerItem} width={FILE_DATE_WIDTH}>
-              {t('FileManager.title.createdAt')}
-            </Flexbox>
-            <Flexbox className={styles.headerItem} width={FILE_SIZE_WIDTH}>
-              {t('FileManager.title.size')}
-            </Flexbox>
-          </Flexbox>
-        )}
-      </Flexbox>
-      {isLoading || (viewMode === 'list' && isTransitioning) ? (
-        <FileSkeleton />
-      ) : viewMode === 'list' ? (
-        <Virtuoso
-          data={data}
-          itemContent={(index, item) => (
-            <FileListItem
-              index={index}
-              key={item.id}
-              knowledgeBaseId={knowledgeBaseId}
-              onSelectedChange={(id, checked, shiftKey, clickedIndex) => {
-                if (shiftKey && lastSelectedIndex !== null && selectFileIds.length > 0 && data) {
-                  // Range selection with shift key
-                  const start = Math.min(lastSelectedIndex, clickedIndex);
-                  const end = Math.max(lastSelectedIndex, clickedIndex);
-                  const rangeIds = data.slice(start, end + 1).map((item) => item.id);
-
-                  setSelectedFileIds((prev) => {
-                    // Create a Set for efficient lookup
-                    const prevSet = new Set(prev);
-                    // Add all items in range
-                    rangeIds.forEach((rangeId) => prevSet.add(rangeId));
-                    return Array.from(prevSet);
-                  });
-                } else {
-                  // Normal selection
-                  setSelectedFileIds((prev) => {
-                    if (checked) {
-                      return [...prev, id];
-                    }
-                    return prev.filter((item) => item !== id);
-                  });
-                }
-                setLastSelectedIndex(clickedIndex);
-              }}
-              selected={selectFileIds.includes(item.id)}
-              {...item}
-            />
-          )}
-          style={{ flex: 1 }}
-        />
+      {showEmptyStatus ? (
+        <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
       ) : (
-        <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-          {/* Skeleton overlay */}
-          {(isTransitioning || !isMasonryReady) && (
-            <div
-              style={{
-                background: 'inherit',
-                inset: 0,
-                position: 'absolute',
-                zIndex: 10,
-              }}
-            >
-              <MasonrySkeleton columnCount={columnCount} />
+        <>
+          <Flexbox style={{ fontSize: 12, marginTop: 56 }}>
+            {viewMode === 'list' && (
+              <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8}>
+                <Flexbox className={styles.headerItem} flex={1} style={{ paddingInline: 32 }}>
+                  {t('FileManager.title.title')}
+                </Flexbox>
+                <Flexbox className={styles.headerItem} width={FILE_DATE_WIDTH}>
+                  {t('FileManager.title.createdAt')}
+                </Flexbox>
+                <Flexbox className={styles.headerItem} width={FILE_SIZE_WIDTH}>
+                  {t('FileManager.title.size')}
+                </Flexbox>
+              </Flexbox>
+            )}
+          </Flexbox>
+          {isLoading || (viewMode === 'list' && isTransitioning) ? (
+            <FileSkeleton />
+          ) : viewMode === 'list' ? (
+            <Virtuoso
+              data={data}
+              itemContent={(index, item) => (
+                <FileListItem
+                  index={index}
+                  key={item.id}
+                  knowledgeBaseId={knowledgeBaseId}
+                  onSelectedChange={(id, checked, shiftKey, clickedIndex) => {
+                    if (shiftKey && lastSelectedIndex !== null && selectFileIds.length > 0 && data) {
+                      // Range selection with shift key
+                      const start = Math.min(lastSelectedIndex, clickedIndex);
+                      const end = Math.max(lastSelectedIndex, clickedIndex);
+                      const rangeIds = data.slice(start, end + 1).map((item) => item.id);
+
+                      setSelectedFileIds((prev) => {
+                        // Create a Set for efficient lookup
+                        const prevSet = new Set(prev);
+                        // Add all items in range
+                        rangeIds.forEach((rangeId) => prevSet.add(rangeId));
+                        return Array.from(prevSet);
+                      });
+                    } else {
+                      // Normal selection
+                      setSelectedFileIds((prev) => {
+                        if (checked) {
+                          return [...prev, id];
+                        }
+                        return prev.filter((item) => item !== id);
+                      });
+                    }
+                    setLastSelectedIndex(clickedIndex);
+                  }}
+                  selected={selectFileIds.includes(item.id)}
+                  {...item}
+                />
+              )}
+              style={{ flex: 1 }}
+            />
+          ) : (
+            <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+              {/* Skeleton overlay */}
+              {(isTransitioning || !isMasonryReady) && (
+                <div
+                  style={{
+                    background: 'inherit',
+                    inset: 0,
+                    position: 'absolute',
+                    zIndex: 10,
+                  }}
+                >
+                  <MasonrySkeleton columnCount={columnCount} />
+                </div>
+              )}
+              {/* Masonry content - always rendered but hidden until ready */}
+              <div
+                style={{
+                  height: '100%',
+                  opacity: isMasonryReady ? 1 : 0,
+                  overflowY: 'auto',
+                  transition: 'opacity 0.2s ease-in-out',
+                }}
+              >
+                <div style={{ paddingBlockEnd: 64, paddingBlockStart: 12, paddingInline: 24 }}>
+                  <VirtuosoMasonry
+                    ItemContent={MasonryItemWrapper}
+                    columnCount={columnCount}
+                    context={masonryContext}
+                    data={data || []}
+                    style={{
+                      gap: '16px',
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           )}
-          {/* Masonry content - always rendered but hidden until ready */}
-          <div
-            style={{
-              height: '100%',
-              opacity: isMasonryReady ? 1 : 0,
-              overflowY: 'auto',
-              transition: 'opacity 0.2s ease-in-out',
-            }}
-          >
-            <div style={{ paddingBlockEnd: 64, paddingBlockStart: 12, paddingInline: 24 }}>
-              <VirtuosoMasonry
-                ItemContent={MasonryItemWrapper}
-                columnCount={columnCount}
-                context={masonryContext}
-                data={data || []}
-                style={{
-                  gap: '16px',
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        </>
       )}
     </Flexbox>
   );
