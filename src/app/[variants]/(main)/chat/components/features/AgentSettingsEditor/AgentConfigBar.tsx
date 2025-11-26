@@ -38,6 +38,7 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
   const theme = useTheme();
 
   const config = useStore((s) => s.config);
+
   const [modelValue, setModelValue] = useState({
     model: config.model,
     provider: config.provider,
@@ -46,6 +47,7 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
 
   // Plugin state management
   const plugins = config?.plugins || [];
+
   const toggleAgentPlugin = useStore((s) => s.toggleAgentPlugin);
   const installedPluginList = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const builtinList = useToolStore(builtinToolSelectors.metaList, isEqual);
@@ -54,16 +56,11 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
 
-  // Build plugin identifiers array for checks
-  const pluginIdentifiers = useMemo(() => {
-    return plugins.map((p) => (typeof p === 'string' ? p : p?.identifier));
-  }, [plugins]);
-
   // Fetch plugins
   const [useFetchPluginStore] = useToolStore((s) => [s.useFetchPluginStore]);
   useFetchPluginStore();
   useFetchInstalledPlugins();
-  useCheckPluginsIsInstalled(pluginIdentifiers);
+  useCheckPluginsIsInstalled(plugins);
 
   const handleModelChange = useMemo(() => {
     return ({ model, provider }: { model: string; provider: string }) => {
@@ -83,7 +80,7 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
       };
 
   // Build dropdown menu items (adapted from useControls)
-  const enablePluginCount = pluginIdentifiers.filter(
+  const enablePluginCount = plugins.filter(
     (id) => !builtinList.some((b) => b.identifier === id),
   ).length;
 
@@ -95,7 +92,7 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
           key: item.identifier,
           label: (
             <ToolItem
-              checked={pluginIdentifiers.includes(item.identifier)}
+              checked={plugins.includes(item.identifier)}
               id={item.identifier}
               label={item.meta?.title}
               onUpdate={async () => {
@@ -120,7 +117,7 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
           key: item.identifier,
           label: (
             <ToolItem
-              checked={pluginIdentifiers.includes(item.identifier)}
+              checked={plugins.includes(item.identifier)}
               id={item.identifier}
               label={item.title}
               onUpdate={async () => {
@@ -157,7 +154,7 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
         },
       },
     ],
-    [builtinList, installedPluginList, pluginIdentifiers, enablePluginCount, t, toggleAgentPlugin],
+    [builtinList, installedPluginList, plugins, enablePluginCount, t, toggleAgentPlugin],
   )
 
   return (
@@ -214,9 +211,9 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
         {plugins?.length > 0 && (
           <Flexbox align="center" direction="horizontal" gap={8} style={{ flexWrap: 'wrap' }}>
             {plugins?.map((pluginId) => {
-              const key = typeof pluginId === 'string' ? pluginId : pluginId?.identifier;
+
               return (
-                <PluginTag key={key} onRemove={handleRemovePlugin(pluginId)} pluginId={pluginId} />
+                <PluginTag key={pluginId} onRemove={handleRemovePlugin(pluginId)} pluginId={pluginId} />
               );
             })}
           </Flexbox>
