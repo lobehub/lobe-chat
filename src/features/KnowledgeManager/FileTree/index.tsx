@@ -1,15 +1,17 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
+import { CaretDownFilled } from '@ant-design/icons';
+import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { FileText } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { FileText, FolderIcon, FolderOpenIcon } from 'lucide-react';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
 import FileIcon from '@/components/FileIcon';
-import FolderTree, { FolderTreeItem as BaseFolderTreeItem } from '@/features/KnowledgeManager/components/FolderTree';
+import type { FolderTreeItem as BaseFolderTreeItem } from '@/features/KnowledgeManager/components/FolderTree';
 import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';
 
@@ -72,6 +74,8 @@ const FileTreeItem = memo<{
 
     const itemKey = item.slug || item.id;
 
+    console.log('RENDERING ITEM', JSON.stringify(item, null, 2));
+
     const handleFileClick = useCallback(() => {
       // Open file modal using slug-based routing
       const currentPath = currentFolderSlug
@@ -89,17 +93,89 @@ const FileTreeItem = memo<{
     );
 
     if (item.isFolder) {
-      // Render as folder using shared component
+      const isExpanded = expandedFolders.has(itemKey);
+      const isActive = selectedKey === itemKey;
+
+      const handleToggle = async () => {
+        // Toggle folder expansion
+        onToggleFolder(itemKey);
+
+        // Load children if not already loaded
+        if (!isExpanded && !loadedFolders.has(itemKey)) {
+          await onLoadFolder(itemKey);
+        }
+      };
+
       return (
-        <FolderTree
-          expandedFolders={expandedFolders}
-          items={[item]}
-          loadedFolders={loadedFolders}
-          onFolderClick={handleFolderClick}
-          onLoadFolder={onLoadFolder}
-          onToggleFolder={onToggleFolder}
-          selectedKey={selectedKey}
-        />
+        <Flexbox gap={2}>
+          <Flexbox
+            align={'center'}
+            className={cx(styles.fileItem, isActive && styles.fileItemActive)}
+            horizontal
+            onClick={() => handleFolderClick(item.id, item.slug)}
+            style={{ paddingInlineStart: level * 16 + 8 }}
+          >
+            <motion.div
+              animate={{ rotate: isExpanded ? 0 : -90 }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            >
+              <ActionIcon
+                icon={CaretDownFilled as any}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggle();
+                }}
+                size={'small'}
+              />
+            </motion.div>
+            <Flexbox
+              align={'center'}
+              flex={1}
+              gap={8}
+              horizontal
+              style={{ minHeight: 28, minWidth: 0 }}
+            >
+              <Icon icon={isExpanded ? FolderOpenIcon : FolderIcon} size={16} />
+              <span
+                style={{
+                  flex: 1,
+                  fontSize: 14,
+                  lineHeight: '20px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {item.name}
+              </span>
+            </Flexbox>
+          </Flexbox>
+
+          {isExpanded && item.children && item.children.length > 0 && (
+            <motion.div
+              animate={{ height: 'auto', opacity: 1 }}
+              initial={{ height: 0, opacity: 0 }}
+              style={{ overflow: 'hidden' }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            >
+              <Flexbox gap={2}>
+                {item.children.map((child) => (
+                  <FileTreeItem
+                    expandedFolders={expandedFolders}
+                    item={child}
+                    key={child.id}
+                    knowledgeBaseId={knowledgeBaseId}
+                    level={level + 1}
+                    loadedFolders={loadedFolders}
+                    onLoadFolder={onLoadFolder}
+                    onToggleFolder={onToggleFolder}
+                    selectedKey={selectedKey}
+                  />
+                ))}
+              </Flexbox>
+            </motion.div>
+          )}
+        </Flexbox>
       );
     }
 
@@ -181,15 +257,48 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   const items: TreeItem[] = React.useMemo(() => {
     if (!rootData) return [];
 
-    const mappedItems: TreeItem[] = rootData.map((item) => ({
-      children: folderChildrenCache.get(item.slug || item.id),
-      fileType: item.fileType,
-      id: item.id,
-      isFolder: item.fileType === 'custom/folder',
-      name: item.name,
-      slug: item.slug,
-      sourceType: item.sourceType,
-    }));
+    const mappedItems: TreeItem[] = rootData.map((item) => {
+      const itemKey = item.slug || item.id;
+      let children = folderChildrenCache.get(itemKey);
+
+      // If this is a folder and server provided children, use them and cache them
+      if (
+        item.fileType === 'custom/folder' &&
+        !children &&
+        item.children &&
+        Array.isArray(item.children)
+      ) {
+        const serverChildren: TreeItem[] = item.children.map((child: any) => ({
+          children: undefined,
+          fileType: child.fileType,
+          id: child.id,
+          isFolder: child.fileType === 'custom/folder',
+          name: child.name,
+          slug: child.slug,
+          sourceType: child.sourceType,
+        }));
+
+        children = sortItems(serverChildren);
+
+        // Update cache and loaded state
+        setFolderChildrenCache((prev) => {
+          const next = new Map(prev);
+          next.set(itemKey, children!);
+          return next;
+        });
+        setLoadedFolders((prev) => new Set([...prev, itemKey]));
+      }
+
+      return {
+        children,
+        fileType: item.fileType,
+        id: item.id,
+        isFolder: item.fileType === 'custom/folder',
+        name: item.name,
+        slug: item.slug,
+        sourceType: item.sourceType,
+      };
+    });
 
     return sortItems(mappedItems);
   }, [rootData, sortItems, folderChildrenCache]);
