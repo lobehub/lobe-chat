@@ -243,6 +243,8 @@ export type ExtendParamsType =
   | 'thinking'
   | 'thinkingBudget'
   | 'thinkingLevel'
+  | 'imageAspectRatio'
+  | 'imageResolution'
   | 'urlContext';
 
 export interface AiModelSettings {
