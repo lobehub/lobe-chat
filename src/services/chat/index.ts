@@ -203,6 +203,14 @@ class ChatService {
       if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {
         extendParams.urlContext = chatConfig.urlContext;
       }
+
+      if (modelExtendParams!.includes('imageAspectRatio') && chatConfig.imageAspectRatio) {
+        extendParams.imageAspectRatio = chatConfig.imageAspectRatio;
+      }
+
+      if (modelExtendParams!.includes('imageResolution') && chatConfig.imageResolution) {
+        extendParams.imageResolution = chatConfig.imageResolution;
+      }
     }
 
     return this.getChatCompletion(
