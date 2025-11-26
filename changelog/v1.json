@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.119"
+  },
+  {
+    "children": {
       "fixes": ["Showing compatibility with both new and old versions of Plugins."]
     },
     "date": "2025-11-26",
