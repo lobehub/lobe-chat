@@ -170,11 +170,13 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
                 provider,
               },
               plugins:
-                plugins?.map((plugin) => ({
-                  enabled: true,
-                  identifier: plugin,
-                  settings: {},
-                })) || [],
+                plugins?.map((plugin) => {
+                  if (typeof plugin === 'string') {
+                    return plugin;
+                  } else {
+                    return null
+                  }
+                }) || [],
               systemRole: systemRole,
             },
             description: meta?.description || '',
