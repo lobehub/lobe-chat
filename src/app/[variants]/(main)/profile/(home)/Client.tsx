@@ -3,7 +3,7 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, Divider, Input, Skeleton, Spin, Typography, Upload } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CSSProperties, ReactNode, memo, useCallback, useState } from 'react';
+import { CSSProperties, ReactNode, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -11,8 +11,7 @@ import { notification } from '@/components/AntdStaticMethods';
 import { fetchErrorNotification } from '@/components/Error/fetchErrorNotification';
 import { enableAuth } from '@/const/auth';
 import UserAvatar from '@/features/User/UserAvatar';
-import { listAccounts, requestPasswordReset } from '@/libs/better-auth/auth-client';
-import { useOnlyFetchOnceSWR } from '@/libs/swr';
+import { requestPasswordReset } from '@/libs/better-auth/auth-client';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { imageToBase64 } from '@/utils/imageToBase64';
@@ -255,27 +254,27 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
     authSelectors.isLoginWithNextAuth(s),
     authSelectors.isLoginWithBetterAuth(s),
   ]);
-  const [username, userProfile, loading] = useUserStore((s) => [
+  const [username, userProfile, isUserLoaded] = useUserStore((s) => [
     userProfileSelectors.username(s),
     userProfileSelectors.userProfile(s),
-    !s.isLoaded,
+    s.isLoaded,
   ]);
-
-  // Check if user has credential (password) login for Better Auth
-  const { data: hasCredential } = useOnlyFetchOnceSWR(
-    isLoginWithBetterAuth ? 'profile-has-credential' : null,
-    async () => {
-      const result = await listAccounts();
-      const accounts = result.data || [];
-      return accounts.some((account) => account.providerId === 'credential');
-    },
-  );
+  const isEmailPasswordAuth = useUserStore(authSelectors.isEmailPasswordAuth);
+  const isLoadedAuthProviders = useUserStore(authSelectors.isLoadedAuthProviders);
+  const fetchAuthProviders = useUserStore((s) => s.fetchAuthProviders);
 
   const isLoginWithAuth = isLoginWithNextAuth || isLoginWithBetterAuth;
+  const isLoading = !isUserLoaded || (isLoginWithAuth && !isLoadedAuthProviders);
+
+  useEffect(() => {
+    if (isLoginWithAuth) {
+      fetchAuthProviders();
+    }
+  }, [isLoginWithAuth, fetchAuthProviders]);
 
   const { t } = useTranslation('auth');
 
-  if (loading)
+  if (isLoading)
     return (
       <Skeleton
         active
@@ -311,7 +310,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Divider style={{ margin: 0 }} />
 
       {/* Password Row - Only for Better Auth users with credential login */}
-      {isLoginWithBetterAuth && hasCredential && (
+      {isLoginWithBetterAuth && isEmailPasswordAuth && (
         <>
           <PasswordRow />
           <Divider style={{ margin: 0 }} />

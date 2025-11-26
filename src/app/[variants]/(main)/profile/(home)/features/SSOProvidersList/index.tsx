@@ -1,20 +1,13 @@
-import { SSOProvider } from '@lobechat/types';
 import { ActionIcon } from '@lobehub/ui';
 import { Dropdown, type MenuProps, Typography } from 'antd';
-import { ArrowRight, Plus, RotateCw, Unlink } from 'lucide-react';
+import { ArrowRight, Plus, Unlink } from 'lucide-react';
 import { CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { modal, notification } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
-import {
-  accountInfo,
-  linkSocial,
-  listAccounts,
-  unlinkAccount,
-} from '@/libs/better-auth/auth-client';
-import { useOnlyFetchOnceSWR } from '@/libs/swr';
+import { linkSocial, unlinkAccount } from '@/libs/better-auth/auth-client';
 import { userService } from '@/services/user';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
@@ -28,48 +21,14 @@ const providerNameStyle: CSSProperties = {
 export const SSOProvidersList = memo(() => {
   const userProfile = useUserStore(userProfileSelectors.userProfile);
   const isLoginWithBetterAuth = useUserStore(authSelectors.isLoginWithBetterAuth);
+  const providers = useUserStore(authSelectors.authProviders);
+  const isEmailPasswordAuth = useUserStore(authSelectors.isEmailPasswordAuth);
+  const refreshAuthProviders = useUserStore((s) => s.refreshAuthProviders);
   const oAuthSSOProviders = useServerConfigStore(serverConfigSelectors.oAuthSSOProviders);
   const { t } = useTranslation('auth');
 
-  const { data, isLoading, mutate } = useOnlyFetchOnceSWR(
-    'profile-sso-providers',
-    async (): Promise<{ hasCredential: boolean; providers: SSOProvider[] }> => {
-      if (isLoginWithBetterAuth) {
-        // Use better-auth native listAccounts API
-        const result = await listAccounts();
-        const accounts = result.data || [];
-        // Check if user has credential (password) login
-        const hasCredential = accounts.some((account) => account.providerId === 'credential');
-        // Filter out credential provider and map to SSOProvider format
-        const providers = await Promise.all(
-          accounts
-            .filter((account) => account.providerId !== 'credential')
-            .map(async (account) => {
-              const info = await accountInfo({
-                query: {
-                  accountId: account.accountId,
-                },
-              });
-
-              return {
-                email: info.data?.user?.email || '',
-                provider: account.providerId,
-                providerAccountId: account.accountId,
-              };
-            }),
-        );
-        return { hasCredential, providers };
-      }
-
-      // Fallback for NextAuth - use tRPC
-      const providers = await userService.getUserSSOProviders();
-      return { hasCredential: false, providers };
-    },
-  );
-
-  const providers = data?.providers || [];
-  // Allow unlink if user has multiple SSO providers OR has credential login
-  const allowUnlink = providers.length > 1 || data?.hasCredential;
+  // Allow unlink if user has multiple SSO providers OR has email/password login
+  const allowUnlink = providers.length > 1 || isEmailPasswordAuth;
 
   // Get linked provider IDs for filtering
   const linkedProviderIds = useMemo(() => {
@@ -106,7 +65,7 @@ export const SSOProvidersList = memo(() => {
           // Fallback for NextAuth
           await userService.unlinkSSOProvider(provider, providerAccountId);
         }
-        mutate();
+        refreshAuthProviders();
       },
       title: <span style={providerNameStyle}>{t('profile.sso.unlink.title', { provider })}</span>,
     });
@@ -129,15 +88,6 @@ export const SSOProvidersList = memo(() => {
     label: <span style={providerNameStyle}>{provider}</span>,
     onClick: () => handleLinkSSO(provider),
   }));
-
-  if (isLoading) {
-    return (
-      <Flexbox align={'center'} gap={4} horizontal>
-        <ActionIcon icon={RotateCw} size={'small'} spin />
-        <Typography.Text type="secondary">{t('profile.sso.loading')}</Typography.Text>
-      </Flexbox>
-    );
-  }
 
   return (
     <Flexbox gap={8}>
