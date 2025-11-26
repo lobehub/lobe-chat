@@ -2,6 +2,164 @@
 
 # Changelog
 
+## [Version 2.0.0-next.117](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.116...v2.0.0-next.117)
+
+<sup>Released on **2025-11-25**</sup>
+
+#### ✨ Features
+
+- **misc**: Bedrock claude model thinking support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Bedrock claude model thinking support, closes [#10422](https://github.com/lobehub/lobe-chat/issues/10422) ([8b41638](https://github.com/lobehub/lobe-chat/commit/8b41638))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.116](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.115...v2.0.0-next.116)
+
+<sup>Released on **2025-11-25**</sup>
+
+#### ✨ Features
+
+- **misc**: Support nano banana pro.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support nano banana pro, closes [#10413](https://github.com/lobehub/lobe-chat/issues/10413) ([a93cfcd](https://github.com/lobehub/lobe-chat/commit/a93cfcd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.115](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.114...v2.0.0-next.115)
+
+<sup>Released on **2025-11-25**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Claude Opus 4.5 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Claude Opus 4.5 model, closes [#10406](https://github.com/lobehub/lobe-chat/issues/10406) ([042005a](https://github.com/lobehub/lobe-chat/commit/042005a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.114](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.113...v2.0.0-next.114)
+
+<sup>Released on **2025-11-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the topic link dropdown error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the topic link dropdown error, closes [#10408](https://github.com/lobehub/lobe-chat/issues/10408) ([864e3d5](https://github.com/lobehub/lobe-chat/commit/864e3d5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.113](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.112...v2.0.0-next.113)
+
+<sup>Released on **2025-11-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed when desktop userId was change manytimes the aimodel not right.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed when desktop userId was change manytimes the aimodel not right, closes [#10389](https://github.com/lobehub/lobe-chat/issues/10389) ([3ed8153](https://github.com/lobehub/lobe-chat/commit/3ed8153))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.112](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.111...v2.0.0-next.112)
+
+<sup>Released on **2025-11-24**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Optimize files schema definition.
+
+#### 💄 Styles
+
+- **misc**: Add Kimi K2 Thinking to Qwen Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Optimize files schema definition, closes [#10403](https://github.com/lobehub/lobe-chat/issues/10403) ([cf28c87](https://github.com/lobehub/lobe-chat/commit/cf28c87))
+
+#### Styles
+
+- **misc**: Add Kimi K2 Thinking to Qwen Provider, closes [#10287](https://github.com/lobehub/lobe-chat/issues/10287) ([bd2e838](https://github.com/lobehub/lobe-chat/commit/bd2e838))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.111](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.110...v2.0.0-next.111)
 
 <sup>Released on **2025-11-24**</sup>
