@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.122](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.121...v2.0.0-next.122)
+
+<sup>Released on **2025-11-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Slove the publish to market the agent config error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Slove the publish to market the agent config error, closes [#10440](https://github.com/lobehub/lobe-chat/issues/10440) ([fda8119](https://github.com/lobehub/lobe-chat/commit/fda8119))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.121](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.120...v2.0.0-next.121)
 
 <sup>Released on **2025-11-26**</sup>
