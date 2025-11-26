@@ -89,7 +89,7 @@ const AgentHeader = memo(() => {
         />
       </Flexbox>
 
-      {/* Name and Description (Right) */}
+      {/* Name and Description */}
       <Flexbox flex={1} gap={4}>
         {/* Name Input */}
         <input

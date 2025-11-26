@@ -7,6 +7,7 @@ import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import AgentSettings from '@/app/[variants]/(main)/chat/components/features/AgentSettings';
+import SmartAgentActionButton from '@/app/[variants]/(main)/chat/settings/features/SmartAgentActionButton';
 import { isDesktop } from '@/const/version';
 import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
 import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
@@ -136,8 +137,8 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
     >
       {/* Main Drawer: Clean editing interface */}
       <Drawer
+        extra={<SmartAgentActionButton modal={false} />}
         height={isDesktop ? `calc(100vh - ${TITLE_BAR_HEIGHT}px)` : '100vh'}
-        noHeader
         onClose={handleClose}
         open={isOpen}
         placement="bottom"
@@ -146,6 +147,7 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
             padding: 0,
           },
         }}
+        title={meta?.title || 'Agent'}
         width="100%"
       >
         <Flexbox
