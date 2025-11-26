@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.120](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.119...v2.0.0-next.120)
+
+<sup>Released on **2025-11-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Try to fix “TypeError: Response body object should not be disturbed or locked”.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Try to fix “TypeError: Response body object should not be disturbed or locked”, closes [#10321](https://github.com/lobehub/lobe-chat/issues/10321) ([a547e9e](https://github.com/lobehub/lobe-chat/commit/a547e9e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.119](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.118...v2.0.0-next.119)
 
 <sup>Released on **2025-11-26**</sup>
