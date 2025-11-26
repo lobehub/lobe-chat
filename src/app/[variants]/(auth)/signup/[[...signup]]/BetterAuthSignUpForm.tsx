@@ -56,7 +56,7 @@ interface SignUpFormValues {
   password: string;
 }
 
-export default function SignUpPage() {
+export default function BetterAuthSignUpForm() {
   const { styles } = useStyles();
   const { t } = useTranslation('auth');
   const router = useRouter();
