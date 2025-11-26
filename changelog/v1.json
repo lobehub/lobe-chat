@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add image aspect ratio and resolution settings for Nano Banana Pro."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.121"
+  },
+  {
+    "children": {
       "fixes": ["Try to fix “TypeError: Response body object should not be disturbed or locked”."]
     },
     "date": "2025-11-26",
