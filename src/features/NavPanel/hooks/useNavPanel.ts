@@ -1,6 +1,6 @@
 'use client';
 
-import { type DraggableSideNavProps } from '@lobehub/ui';
+import { type DraggablePanelProps } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { useCallback, useState } from 'react';
 
@@ -27,9 +27,10 @@ export const useNavPanel = () => {
     [sessionExpandable, updatePreference],
   );
 
-  const handleSizeChange: DraggableSideNavProps['onWidthChange'] = useCallback(
-    (_: any, width: number) => {
-      if (!sessionExpandable || !width || width < 64) return;
+  const handleSizeChange: DraggablePanelProps['onSizeChange'] = useCallback(
+    (_: any, size: any) => {
+      const width = size?.width;
+      if (!width || width < 64) return;
       if (isEqual(width, sessionsWidth)) return;
       setWidth(width);
       updatePreference({ sessionsWidth: width });

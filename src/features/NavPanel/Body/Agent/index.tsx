@@ -1,45 +1,25 @@
 'use client';
 
 import { AccordionItem, Dropdown, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import React, { memo, useCallback } from 'react';
+import React, { Suspense, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useCreateMenuItems } from '@/features/NavPanel/hooks';
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
+import SkeletonList from '../SkeletonList';
 import Actions from './Actions';
 import List from './List';
 import { useAgentModal } from './ModalProvider';
 import { useAgentActionsDropdownMenu } from './useDropdownMenu';
-
-const useStyles = createStyles(({ css, token }) => ({
-  base: css`
-    overflow: hidden;
-    transition:
-      height,
-      opacity,
-      margin-block-start 200ms ${token.motionEaseInOut};
-  `,
-  hide: css`
-    pointer-events: none;
-    height: 0;
-    margin-block-start: -12px;
-    opacity: 0;
-  `,
-}));
 
 interface AgentProps {
   itemKey: string;
 }
 
 const Agent = memo<AgentProps>(({ itemKey }) => {
-  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const { t } = useTranslation('common');
-  const { cx, styles } = useStyles();
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   const { openGroupWizardModal, closeGroupWizardModal, openConfigGroupModal } = useAgentModal();
@@ -96,9 +76,6 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
   if (!showCreateSession) {
     return (
       <AccordionItem
-        classNames={{
-          header: cx(styles.base, !expand && styles.hide),
-        }}
         itemKey={itemKey}
         paddingBlock={4}
         paddingInline={'8px 4px'}
@@ -118,9 +95,6 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
   return (
     <AccordionItem
       action={<Actions dropdownMenu={dropdownMenu} isLoading={isLoading} />}
-      classNames={{
-        header: cx(styles.base, !expand && styles.hide),
-      }}
       headerWrapper={(header) => (
         <Dropdown
           menu={{
@@ -140,9 +114,11 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
         </Text>
       }
     >
-      <Flexbox gap={4} paddingBlock={1}>
-        <List />
-      </Flexbox>
+      <Suspense fallback={<SkeletonList />}>
+        <Flexbox gap={4} paddingBlock={1}>
+          <List />
+        </Flexbox>
+      </Suspense>
     </AccordionItem>
   );
 });

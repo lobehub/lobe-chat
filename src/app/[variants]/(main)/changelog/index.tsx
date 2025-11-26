@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
 import NotFound from '@/components/404';
-import { Locales } from '@/locales/resources';
+import type { Locales } from '@/locales/resources';
 import { ChangelogService } from '@/server/services/changelog';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -14,7 +14,8 @@ import Post from './features/Post';
 import UpdateChangelogStatus from './features/UpdateChangelogStatus';
 
 const Page = (props: { isMobile: boolean }) => {
-  const { locale } = useOutletContext<{ locale: Locales }>();
+  const { i18n } = useTranslation();
+  const locale = i18n.language as Locales;
   const { isMobile } = props;
   const { hideDocs } = useServerConfigStore(featureFlagsSelectors);
 

@@ -5,29 +5,10 @@ import { useTheme } from 'antd-style';
 import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
-
 export const SkeletonList = memo(() => {
-  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const theme = useTheme();
 
   const SkeletonItem = useCallback(() => {
-    if (!expand)
-      return (
-        <Skeleton.Button
-          active
-          block
-          size={'small'}
-          style={{
-            borderRadius: theme.borderRadius,
-            height: 32,
-            maxHeight: 32,
-            minWidth: 32,
-            opacity: 0.5,
-          }}
-        />
-      );
     return (
       <Flexbox align={'center'} flex={1} gap={8} height={32} horizontal padding={4}>
         <Skeleton.Button
@@ -57,7 +38,7 @@ export const SkeletonList = memo(() => {
         </Flexbox>
       </Flexbox>
     );
-  }, [theme, expand]);
+  }, [theme.borderRadius]);
 
   return (
     <Flexbox gap={2}>

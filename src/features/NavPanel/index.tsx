@@ -1,16 +1,33 @@
 'use client';
 
-import { DraggableSideNav } from '@lobehub/ui';
+import { DraggablePanel } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { PropsWithChildren, ReactNode, memo, useLayoutEffect, useSyncExternalStore } from 'react';
 
-import Body from './Body';
-import { AgentModalProvider } from './Body/Agent/ModalProvider';
-import Footer from './Footer';
-import Header from './Header';
+import { TOGGLE_BUTTON_ID } from '@/features/NavPanel/TogglePanelButton';
+
 import { USER_DROPDOWN_ICON_ID } from './Header/components/User';
-import SessionHydration from './SessionHydration';
 import { useNavPanel } from './hooks/useNavPanel';
+
+type NavPanelSnapshot = {
+  key: string;
+  node: ReactNode;
+} | null;
+
+let currentSnapshot: NavPanelSnapshot = null;
+const listeners = new Set<() => void>();
+
+const subscribeNavPanel = (listener: () => void) => {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+};
+
+const getNavPanelSnapshot = () => currentSnapshot;
+const setNavPanelSnapshot = (snapshot: NavPanelSnapshot) => {
+  currentSnapshot = snapshot;
+  listeners.forEach((listener) => listener());
+};
 
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
@@ -23,6 +40,12 @@ export const useStyles = createStyles(({ css, token }) => ({
       user-select: none;
     }
 
+    #${TOGGLE_BUTTON_ID} {
+      width: 0 !important;
+      opacity: 0;
+      transition: opacity 0.2s ${token.motionEaseOut};
+    }
+
     #${USER_DROPDOWN_ICON_ID} {
       width: 0 !important;
       opacity: 0;
@@ -30,6 +53,11 @@ export const useStyles = createStyles(({ css, token }) => ({
     }
 
     &:hover {
+      #${TOGGLE_BUTTON_ID} {
+        width: 32px !important;
+        opacity: 1;
+      }
+
       #${USER_DROPDOWN_ICON_ID} {
         width: 14px !important;
         opacity: 1;
@@ -40,28 +68,82 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const NavPanel = memo(() => {
   const { styles } = useStyles();
-  const { defaultWidth, handleExpand, expand, handleSizeChange, width } = useNavPanel();
+  const { expand, handleSizeChange, width, handleExpand } = useNavPanel();
+  const panelContent = useSyncExternalStore(
+    subscribeNavPanel,
+    getNavPanelSnapshot,
+    getNavPanelSnapshot,
+  );
 
   return (
-    <AgentModalProvider>
-      <DraggableSideNav
-        body={() => <Body />}
-        className={styles.panel}
-        defaultWidth={defaultWidth}
-        expand={expand}
-        footer={(expand) => <Footer expand={expand} />}
-        header={(expand) => <Header expand={expand} />}
-        maxWidth={400}
-        minWidth={48}
-        onExpandChange={handleExpand}
-        onWidthChange={handleSizeChange}
-        placement="left"
-        showHandle={false}
-        width={width}
-      />
-      <SessionHydration />
-    </AgentModalProvider>
+    <DraggablePanel
+      className={styles.panel}
+      expand={expand}
+      maxWidth={400}
+      minWidth={240}
+      onExpandChange={handleExpand}
+      onSizeChange={handleSizeChange}
+      placement="left"
+      size={{ height: '100%', width }}
+      style={{ overflow: 'hidden' }}
+    >
+      <div style={{ height: '100%', minWidth: 240, overflow: 'hidden', position: 'relative' }}>
+        <AnimatePresence initial={false} mode="popLayout">
+          {panelContent && (
+            <motion.div
+              animate={{ opacity: 1, x: 0 }}
+              exit={{
+                opacity: 0,
+                position: 'absolute',
+                x: panelContent.key === 'home' ? '-20%' : '20%',
+              }}
+              initial={{
+                opacity: 0,
+                x: panelContent.key === 'home' ? '-20%' : '20%',
+              }}
+              key={panelContent.key}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                inset: 0,
+                position: 'absolute',
+                width: '100%',
+              }}
+              transition={{
+                duration: 0.4,
+                ease: [0.4, 0, 0.2, 1],
+              }}
+            >
+              {panelContent.node}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </DraggablePanel>
   );
 });
 
 export default NavPanel;
+
+interface NavPanelPortalProps extends PropsWithChildren {
+  /**
+   * Unique key to trigger transition animation when content changes
+   * @example <NavPanelPortal navKey="chat">...</NavPanelPortal>
+   */
+  navKey?: string;
+}
+
+export const NavPanelPortal = memo<NavPanelPortalProps>(({ children, navKey = 'default' }) => {
+  useLayoutEffect(() => {
+    if (!children) return;
+
+    setNavPanelSnapshot({
+      key: navKey,
+      node: children,
+    });
+    // Intentionally keep previous content until new one mounts.
+  }, [children, navKey]);
+
+  return null;
+});

@@ -1,7 +1,6 @@
 'use client';
 
 import { ActionIcon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
 import { FlaskConical, Github } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,34 +10,12 @@ import { Link } from 'react-router-dom';
 import { GITHUB } from '@/const/url';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import TogglePanelButton from './TogglePanelButton';
-
-const useStyles = createStyles(({ css, token }) => ({
-  base: css`
-    overflow: hidden;
-    transition:
-      width,
-      opacity 200ms ${token.motionEaseInOut};
-  `,
-  hide: css`
-    pointer-events: none;
-    width: 0;
-    opacity: 0;
-  `,
-}));
-
-const Footer = memo<{ expand?: boolean }>(({ expand }) => {
-  const { cx, styles } = useStyles();
+const Footer = memo(() => {
   const { t } = useTranslation('common');
   const { hideGitHub } = useServerConfigStore(featureFlagsSelectors);
   return (
     <Flexbox align={'center'} gap={2} horizontal justify={'space-between'} padding={8}>
-      <Flexbox
-        align={'center'}
-        className={cx(styles.base, !expand && styles.hide)}
-        gap={2}
-        horizontal
-      >
+      <Flexbox align={'center'} gap={2} horizontal>
         {!hideGitHub && (
           <a aria-label={'GitHub'} href={GITHUB} rel="noopener noreferrer" target={'_blank'}>
             <ActionIcon icon={Github} size={16} title={'GitHub'} />
@@ -48,7 +25,6 @@ const Footer = memo<{ expand?: boolean }>(({ expand }) => {
           <ActionIcon icon={FlaskConical} size={16} title={t('labs')} />
         </Link>
       </Flexbox>
-      <TogglePanelButton expand={expand} />
     </Flexbox>
   );
 });

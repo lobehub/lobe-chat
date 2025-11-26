@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useNavPanel } from '@/features/NavPanel/hooks/useNavPanel';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -14,7 +13,6 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 import NavItem from '../../NavItem';
 
 const Nav = memo(() => {
-  const { closePanel, openPanel } = useNavPanel();
   const tab = useActiveTabKey();
   const navigate = useNavigate();
   const { t } = useTranslation('common');
@@ -54,11 +52,6 @@ const Nav = memo(() => {
           onClick={(e) => {
             e.preventDefault();
             navigate(item.url);
-            if (item.key === SidebarTabKey.Chat) {
-              openPanel();
-            } else {
-              closePanel();
-            }
           }}
           to={item.url}
         >

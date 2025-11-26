@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import Agent from './Agent';
+import { AgentModalProvider } from './Agent/ModalProvider';
 import BottomMenu from './BottomMenu';
 import Repo from './Repo';
 
@@ -20,9 +21,11 @@ const Body = memo(() => {
   return (
     <ScrollShadow size={2} style={{ height: '100%' }}>
       <Flexbox paddingInline={8}>
-        <Accordion defaultExpandedKeys={[GroupKey.Repo, GroupKey.Agent]} gap={8}>
+        <Accordion defaultExpandedKeys={[GroupKey.Repo, GroupKey.Agent]} disableAnimation gap={8}>
           {enableKnowledgeBase && <Repo itemKey={GroupKey.Repo} />}
-          <Agent itemKey={GroupKey.Agent} />
+          <AgentModalProvider>
+            <Agent itemKey={GroupKey.Agent} />
+          </AgentModalProvider>
           <BottomMenu />
         </Accordion>
       </Flexbox>

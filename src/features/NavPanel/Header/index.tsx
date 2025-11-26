@@ -1,39 +1,27 @@
 'use client';
 
-import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import TogglePanelButton from '../TogglePanelButton';
 import AddButton from './components/AddButton';
 import Nav from './components/Nav';
 import User from './components/User';
 
-const useStyles = createStyles(({ css, token }) => ({
-  base: css`
-    overflow: hidden;
-    transition:
-      width,
-      opacity 200ms ${token.motionEaseInOut};
-  `,
-  hide: css`
-    pointer-events: none;
-    width: 0;
-    opacity: 0;
-  `,
-}));
-
-const Header = memo<{ expand?: boolean }>(({ expand }) => {
-  const { cx, styles } = useStyles();
+const Header = memo(() => {
   return (
     <Flexbox gap={8} paddingBlock={8} paddingInline={8}>
       <Flexbox align={'center'} horizontal justify={'space-between'}>
-        <User expand={expand} />
+        <User />
         <Flexbox
           align={'center'}
-          className={cx(styles.base, !expand && styles.hide)}
-          gap={2}
+          gap={1}
           horizontal
+          style={{
+            overflow: 'hidden',
+          }}
         >
+          <TogglePanelButton />
           <AddButton />
         </Flexbox>
       </Flexbox>

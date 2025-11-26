@@ -6,8 +6,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import SessionList from '@/features/NavPanel/Body/Agent/List/List';
 import { useCreateMenuItems, useSessionGroupMenuItems } from '@/features/NavPanel/hooks';
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { CustomSessionGroup } from '@/types/session';
 
@@ -16,35 +14,18 @@ import Actions from './Actions';
 import Editing from './Editing';
 import { useGroupDropdownMenu } from './useDropdownMenu';
 
-const useStyles = createStyles(({ css, token }) => ({
-  base: css`
-    overflow: hidden;
-    transition:
-      height,
-      opacity,
-      margin-block-start 200ms ${token.motionEaseInOut};
-  `,
-  hide: css`
-    pointer-events: none;
-    height: 0;
-    margin-block-start: -12px;
-    opacity: 0;
-  `,
+const useStyles = createStyles(({ css }) => ({
   item: css`
-    transition: padding-inline-start 200ms ${token.motionEaseInOut};
-  `,
-  itemExpand: css`
     padding-inline-start: 14px;
   `,
 }));
 
 const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
-  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const [editing, isUpdating] = useSessionStore((s) => [
     s.sessionGroupRenamingId === id,
     s.sessionGroupUpdatingId === id,
   ]);
-  const { cx, styles } = useStyles();
+  const { styles } = useStyles();
 
   // Modal management
   const { openMemberSelectionModal, closeMemberSelectionModal, openConfigGroupModal } =
@@ -107,9 +88,6 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
   return (
     <AccordionItem
       action={<Actions dropdownMenu={dropdownMenu} isLoading={isLoading} />}
-      classNames={{
-        header: cx(styles.base, !expand && styles.hide),
-      }}
       disabled={editing || isUpdating}
       headerWrapper={(header) => (
         <Dropdown
@@ -135,11 +113,7 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
       }
     >
       <Editing id={id} name={name} toggleEditing={toggleEditing} />
-      <SessionList
-        dataSource={children}
-        groupId={id}
-        itemClassName={cx(styles.item, expand && styles.itemExpand)}
-      />
+      <SessionList dataSource={children} groupId={id} itemClassName={styles.item} />
     </AccordionItem>
   );
 });

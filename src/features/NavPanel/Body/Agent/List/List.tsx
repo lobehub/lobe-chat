@@ -1,12 +1,10 @@
 import { useAnalytics } from '@lobehub/analytics/react';
 import { CSSProperties, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useCreateMenuItems } from '@/features/NavPanel/hooks';
-import { useNavPanel } from '@/features/NavPanel/hooks/useNavPanel';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { getSessionStoreState } from '@/store/session';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -27,7 +25,6 @@ interface SessionListProps {
 const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClassName }) => {
   const { t } = useTranslation('chat');
   const { analytics } = useAnalytics();
-  const { expand, closePanel } = useNavPanel();
   const switchSession = useSwitchSession();
   const { createAgent } = useCreateMenuItems();
 
@@ -79,7 +76,6 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
   );
 
   if (isEmpty) {
-    if (!expand) return null;
     return (
       <EmptyStatus
         className={itemClassName}
@@ -90,7 +86,7 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
   }
 
   return (
-    <Flexbox gap={2} paddingBlock={1}>
+    <div>
       {dataSource.map(({ id }) => (
         <Link
           aria-label={id}
@@ -98,14 +94,14 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
           onClick={(e) => {
             e.preventDefault();
             handleClick(id);
-            closePanel();
           }}
+          style={{ marginBlock: 1 }}
           to={SESSION_CHAT_URL(id, false)}
         >
           <Item className={itemClassName} id={id} style={itemStyle} />
         </Link>
       ))}
-    </Flexbox>
+    </div>
   );
 });
 
