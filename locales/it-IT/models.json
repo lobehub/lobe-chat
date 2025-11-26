@@ -737,6 +737,9 @@
   "anthropic/claude-opus-4.1": {
     "description": "Opus 4.1 è un modello avanzato di Anthropic, ottimizzato per programmazione, ragionamento complesso e compiti continuativi."
   },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
+  },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 è una versione a ragionamento ibrido di Anthropic, che combina capacità cognitive e non cognitive."
   },
@@ -826,6 +829,9 @@
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 è il modello più potente di Anthropic per gestire compiti altamente complessi. Eccelle in prestazioni, intelligenza, fluidità e comprensione."
+  },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 può generare risposte quasi istantanee o un pensiero graduale prolungato, permettendo all'utente di vedere chiaramente questi processi."
@@ -1670,6 +1676,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview possiede potenti capacità di ragionamento complesso, eccellendo nei campi del ragionamento logico, della matematica e della programmazione."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash è un modello di ragionamento ad alte prestazioni di Google, adatto a compiti multimodali estesi."
   },
@@ -2184,7 +2193,7 @@
     "description": "Kimi K2 Instruct, modello ufficiale di inferenza Kimi, supporta contesto lungo, codice, Q&A e altri scenari."
   },
   "kimi-k2-thinking": {
-    "description": "Il modello K2 Thinking supporta contesto fino a 256k, chiamate multi-step di strumenti e ragionamento, eccellendo nella risoluzione di problemi complessi."
+    "description": "Il modello kimi-k2-thinking, fornito da Moonshot AI, è un modello di pensiero dotato di capacità agentiche generali e di ragionamento, eccellente nel ragionamento profondo e capace di utilizzare strumenti in più fasi per risolvere una vasta gamma di problemi complessi."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Versione ad alta velocità del modello K2 Thinking, supporta contesto da 256k, eccelle nel ragionamento profondo con output a 60-100 token al secondo."

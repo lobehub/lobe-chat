@@ -1,6 +1,76 @@
 [
   {
     "children": {
+      "fixes": ["Slove the publish to market the agent config error."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.122"
+  },
+  {
+    "children": {
+      "improvements": ["Add image aspect ratio and resolution settings for Nano Banana Pro."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.121"
+  },
+  {
+    "children": {
+      "fixes": ["Try to fix “TypeError: Response body object should not be disturbed or locked”."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.120"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.119"
+  },
+  {
+    "children": {
+      "fixes": ["Showing compatibility with both new and old versions of Plugins."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.118"
+  },
+  {
+    "children": {
+      "features": ["Bedrock claude model thinking support."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.117"
+  },
+  {
+    "children": {
+      "features": ["Support nano banana pro."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.116"
+  },
+  {
+    "children": {
+      "features": ["Add Claude Opus 4.5 model."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.115"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the topic link dropdown error."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.114"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed when desktop userId was change manytimes the aimodel not right."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.113"
+  },
+  {
+    "children": {
       "improvements": ["Add Kimi K2 Thinking to Qwen Provider."]
     },
     "date": "2025-11-24",

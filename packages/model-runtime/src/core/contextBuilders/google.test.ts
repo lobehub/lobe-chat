@@ -33,7 +33,7 @@ describe('google contextBuilders', () => {
 
       const result = await buildGooglePart(content);
 
-      expect(result).toEqual({ text: 'Hello' });
+      expect(result).toEqual({ text: 'Hello', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE });
     });
 
     it('should handle thinking type messages', async () => {
@@ -71,6 +71,7 @@ describe('google contextBuilders', () => {
           data: 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
           mimeType: 'image/png',
         },
+        thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
       });
     });
 
@@ -101,6 +102,7 @@ describe('google contextBuilders', () => {
           data: mockBase64,
           mimeType: 'image/png',
         },
+        thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
       });
 
       expect(imageToBase64Module.imageUrlToBase64).toHaveBeenCalledWith(imageUrl);
@@ -144,6 +146,7 @@ describe('google contextBuilders', () => {
           data: 'mockVideoBase64Data',
           mimeType: 'video/mp4',
         },
+        thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
       });
     });
   });
@@ -158,7 +161,7 @@ describe('google contextBuilders', () => {
       const converted = await buildGoogleMessage(message);
 
       expect(converted).toEqual({
-        parts: [{ text: 'Hello' }],
+        parts: [{ text: 'Hello', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
         role: 'model',
       });
     });
@@ -172,7 +175,7 @@ describe('google contextBuilders', () => {
       const converted = await buildGoogleMessage(message);
 
       expect(converted).toEqual({
-        parts: [{ text: 'Hi' }],
+        parts: [{ text: 'Hi', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
         role: 'user',
       });
     });
@@ -196,8 +199,11 @@ describe('google contextBuilders', () => {
 
       expect(converted).toEqual({
         parts: [
-          { text: 'Check this image:' },
-          { inlineData: { data: '...', mimeType: 'image/png' } },
+          { text: 'Check this image:', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE },
+          {
+            inlineData: { data: '...', mimeType: 'image/png' },
+            thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
+          },
         ],
         role: 'user',
       });
@@ -334,10 +340,18 @@ describe('google contextBuilders', () => {
 
         expect(contents).toEqual([
           {
-            parts: [{ text: '<plugins>Web Browsing plugin available</plugins>' }],
+            parts: [
+              {
+                text: '<plugins>Web Browsing plugin available</plugins>',
+                thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
+              },
+            ],
             role: 'user',
           },
-          { parts: [{ text: '杭州天气如何' }], role: 'user' },
+          {
+            parts: [{ text: '杭州天气如何', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+            role: 'user',
+          },
           {
             parts: [
               {
@@ -421,7 +435,7 @@ describe('google contextBuilders', () => {
 
         expect(contents).toEqual([
           {
-            parts: [{ text: '杭州天气如何' }],
+            parts: [{ text: '杭州天气如何', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
             role: 'user',
           },
           {
@@ -507,7 +521,7 @@ describe('google contextBuilders', () => {
 
         expect(contents).toEqual([
           {
-            parts: [{ text: 'First question' }],
+            parts: [{ text: 'First question', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
             role: 'user',
           },
           {
@@ -534,7 +548,7 @@ describe('google contextBuilders', () => {
             role: 'user',
           },
           {
-            parts: [{ text: 'Second question' }],
+            parts: [{ text: 'Second question', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
             role: 'user',
           },
           {
@@ -604,11 +618,16 @@ describe('google contextBuilders', () => {
 
         expect(contents).toEqual([
           {
-            parts: [{ text: '<plugins>Web Browsing plugin available</plugins>' }],
+            parts: [
+              {
+                text: '<plugins>Web Browsing plugin available</plugins>',
+                thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
+              },
+            ],
             role: 'user',
           },
           {
-            parts: [{ text: '杭州天气如何' }],
+            parts: [{ text: '杭州天气如何', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
             role: 'user',
           },
           {
@@ -635,7 +654,7 @@ describe('google contextBuilders', () => {
             role: 'user',
           },
           {
-            parts: [{ text: 'Please try again' }],
+            parts: [{ text: 'Please try again', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
             role: 'user',
           },
         ]);
@@ -651,7 +670,7 @@ describe('google contextBuilders', () => {
       const converted = await buildGoogleMessage(message);
 
       expect(converted).toEqual({
-        parts: [{ text: '' }],
+        parts: [{ text: '', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
         role: 'user',
       });
     });
@@ -690,7 +709,12 @@ describe('google contextBuilders', () => {
       const contents = await buildGoogleMessages(messages);
 
       expect(contents).toHaveLength(1);
-      expect(contents).toEqual([{ parts: [{ text: 'Hello' }], role: 'user' }]);
+      expect(contents).toEqual([
+        {
+          parts: [{ text: 'Hello', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+          role: 'user',
+        },
+      ]);
     });
 
     it('should not modify the length if model is gemini-1.5-pro', async () => {
@@ -703,8 +727,14 @@ describe('google contextBuilders', () => {
 
       expect(contents).toHaveLength(2);
       expect(contents).toEqual([
-        { parts: [{ text: 'Hello' }], role: 'user' },
-        { parts: [{ text: 'Hi' }], role: 'model' },
+        {
+          parts: [{ text: 'Hello', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+          role: 'user',
+        },
+        {
+          parts: [{ text: 'Hi', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+          role: 'model',
+        },
       ]);
     });
 
@@ -730,7 +760,13 @@ describe('google contextBuilders', () => {
       expect(contents).toHaveLength(1);
       expect(contents).toEqual([
         {
-          parts: [{ text: 'Hello' }, { inlineData: { data: '...', mimeType: 'image/png' } }],
+          parts: [
+            { text: 'Hello', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE },
+            {
+              inlineData: { data: '...', mimeType: 'image/png' },
+              thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
+            },
+          ],
           role: 'user',
         },
       ]);
@@ -801,8 +837,14 @@ describe('google contextBuilders', () => {
 
       expect(contents).toHaveLength(2);
       expect(contents).toEqual([
-        { parts: [{ text: 'Hello' }], role: 'user' },
-        { parts: [{ text: 'Hi' }], role: 'model' },
+        {
+          parts: [{ text: 'Hello', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+          role: 'user',
+        },
+        {
+          parts: [{ text: 'Hi', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+          role: 'model',
+        },
       ]);
     });
 
@@ -817,8 +859,14 @@ describe('google contextBuilders', () => {
 
       expect(contents).toHaveLength(2);
       expect(contents).toEqual([
-        { parts: [{ text: 'Hello' }], role: 'user' },
-        { parts: [{ text: 'Hi' }], role: 'model' },
+        {
+          parts: [{ text: 'Hello', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+          role: 'user',
+        },
+        {
+          parts: [{ text: 'Hi', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+          role: 'model',
+        },
       ]);
     });
 
@@ -857,8 +905,14 @@ describe('google contextBuilders', () => {
       const contents = await buildGoogleMessages(messages);
 
       expect(contents).toEqual([
-        { parts: [{ text: 'system prompt' }], role: 'user' },
-        { parts: [{ text: 'LobeChat 最新版本' }], role: 'user' },
+        {
+          parts: [{ text: 'system prompt', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+          role: 'user',
+        },
+        {
+          parts: [{ text: 'LobeChat 最新版本', thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }],
+          role: 'user',
+        },
         {
           parts: [
             {

@@ -1,4 +1,5 @@
-import { contextCachingModels, thinkingWithToolClaudeModels } from '@/const/models';
+import { isContextCachingModel, isThinkingWithToolClaudeModel } from '@lobechat/model-runtime';
+
 import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_SEARCH_FC_MODEL } from '@/const/settings';
 import { AgentStoreState } from '@/store/agent/initialState';
 import { LobeAgentChatConfig } from '@/types/agent';
@@ -24,12 +25,12 @@ const enableHistoryCount = (s: AgentStoreState) => {
   // 如果开启了上下文缓存，且当前模型类型匹配，则不开启历史记录
   const enableContextCaching = !chatConfig.disableContextCaching;
 
-  if (enableContextCaching && contextCachingModels.has(config.model)) return false;
+  if (enableContextCaching && isContextCachingModel(config.model)) return false;
 
   // 当开启搜索时，针对 claude 3.7 sonnet 模型不开启历史记录
   const enableSearch = isAgentEnableSearch(s);
 
-  if (enableSearch && thinkingWithToolClaudeModels.has(config.model)) return false;
+  if (enableSearch && isThinkingWithToolClaudeModel(config.model)) return false;
 
   return chatConfig.enableHistoryCount;
 };

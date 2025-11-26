@@ -10,8 +10,6 @@ import { AgentRuntimeErrorType } from '../../types/error';
 import * as debugStreamModule from '../../utils/debugStream';
 import { LobeBedrockAI, experimental_buildLlama2Prompt } from './index';
 
-const provider = 'bedrock';
-
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -478,7 +476,7 @@ describe('LobeBedrockAI', () => {
             accept: 'application/json',
             body: JSON.stringify({
               anthropic_version: 'bedrock-2023-05-31',
-              max_tokens: 4096,
+              max_tokens: 8192,
               messages: [
                 {
                   content: [
@@ -521,7 +519,7 @@ describe('LobeBedrockAI', () => {
             accept: 'application/json',
             body: JSON.stringify({
               anthropic_version: 'bedrock-2023-05-31',
-              max_tokens: 4096,
+              max_tokens: 8192,
               messages: [
                 {
                   content: [
@@ -565,7 +563,7 @@ describe('LobeBedrockAI', () => {
             accept: 'application/json',
             body: JSON.stringify({
               anthropic_version: 'bedrock-2023-05-31',
-              max_tokens: 4096,
+              max_tokens: 8192,
               messages: [
                 {
                   content: [
@@ -610,7 +608,7 @@ describe('LobeBedrockAI', () => {
             accept: 'application/json',
             body: JSON.stringify({
               anthropic_version: 'bedrock-2023-05-31',
-              max_tokens: 4096,
+              max_tokens: 64_000,
               messages: [
                 {
                   content: [
@@ -654,7 +652,7 @@ describe('LobeBedrockAI', () => {
             accept: 'application/json',
             body: JSON.stringify({
               anthropic_version: 'bedrock-2023-05-31',
-              max_tokens: 4096,
+              max_tokens: 8192,
               messages: [
                 {
                   content: [

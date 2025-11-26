@@ -71,6 +71,22 @@ export interface MessageGroundingChunk {
   type: 'grounding';
 }
 
+export interface MessageReasoningPartChunk {
+  content: string;
+  mimeType?: string;
+  partType: 'text' | 'image';
+  thoughtSignature?: string;
+  type: 'reasoning_part';
+}
+
+export interface MessageContentPartChunk {
+  content: string;
+  mimeType?: string;
+  partType: 'text' | 'image';
+  thoughtSignature?: string;
+  type: 'content_part';
+}
+
 interface MessageToolCallsChunk {
   isAnimationActives?: boolean[];
   tool_calls: MessageToolCall[];
@@ -87,6 +103,8 @@ export interface FetchSSEOptions {
       | MessageTextChunk
       | MessageToolCallsChunk
       | MessageReasoningChunk
+      | MessageReasoningPartChunk
+      | MessageContentPartChunk
       | MessageGroundingChunk
       | MessageUsageChunk
       | MessageBase64ImageChunk
@@ -417,6 +435,18 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
             }
           }
 
+          break;
+        }
+
+        case 'reasoning_part':
+        case 'content_part': {
+          options.onMessageHandle?.({
+            content: data.content,
+            mimeType: data.mimeType,
+            partType: data.partType,
+            thoughtSignature: data.thoughtSignature,
+            type: ev.event,
+          });
           break;
         }
 

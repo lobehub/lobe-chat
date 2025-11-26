@@ -5,14 +5,17 @@ import { isDesktop } from '@lobechat/const';
 import {
   ChatImageItem,
   ChatToolPayload,
+  MessageContentPart,
   MessageToolCall,
   ModelUsage,
   TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
+import { serializePartsForStorage } from '@lobechat/utils';
 import debug from 'debug';
 import { t } from 'i18next';
 import { throttle } from 'lodash-es';
+import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
 
 import { createAgentToolsEngine } from '@/helpers/toolEngineering';
@@ -272,13 +275,20 @@ export const streamingExecutor: StateCreator<
     let finalUsage;
     let msgTraceId: string | undefined;
     let output = '';
-    let thinking = '';
+
+    let thinkingContent = '';
     let thinkingStartAt: number;
-    let duration: number | undefined;
+    let thinkingDuration: number | undefined;
     let reasoningOperationId: string | undefined;
     let finishType: string | undefined;
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
+
+    // Multimodal content parts
+    let contentParts: MessageContentPart[] = [];
+    let reasoningParts: MessageContentPart[] = [];
+    const contentImageUploads: Map<number, Promise<string>> = new Map();
+    const reasoningImageUploads: Map<number, Promise<string>> = new Map();
 
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
@@ -344,7 +354,9 @@ export const streamingExecutor: StateCreator<
         if (uploadTasks.size > 0) {
           try {
             // 等待所有上传任务完成
-            const uploadResults = await Promise.all(uploadTasks.values());
+            const uploadResults = await pMap(Array.from(uploadTasks.values()), (task) => task, {
+              concurrency: 5,
+            });
 
             // 使用上传后的 S3 URL 替换原始图像数据
             finalImages = uploadResults.filter((i) => !!i.url) as ChatImageItem[];
@@ -352,6 +364,14 @@ export const streamingExecutor: StateCreator<
             console.error('Error waiting for image uploads:', error);
           }
         }
+
+        // Wait for all multimodal image uploads to complete
+        // Note: Arrays are already updated in-place when uploads complete
+        // Use Promise.allSettled to continue even if some uploads fail
+        await Promise.allSettled([
+          ...Array.from(contentImageUploads.values()),
+          ...Array.from(reasoningImageUploads.values()),
+        ]);
 
         let parsedToolCalls = toolCalls;
         if (parsedToolCalls && parsedToolCalls.length > 0) {
@@ -384,18 +404,58 @@ export const streamingExecutor: StateCreator<
           operationId,
         );
 
+        // Check if there are any image parts
+        const hasContentImages = contentParts.some((part) => part.type === 'image');
+        const hasReasoningImages = reasoningParts.some((part) => part.type === 'image');
+
+        // Determine final content
+        // If has images, serialize contentParts; otherwise use accumulated output text
+        const finalContent = hasContentImages ? serializePartsForStorage(contentParts) : output;
+
+        const finalDuration =
+          thinkingDuration && !isNaN(thinkingDuration) ? thinkingDuration : undefined;
+
+        // Determine final reasoning content
+        // Priority: reasoningParts (multimodal) > thinkingContent (from reasoning_part text) > reasoning (from old reasoning event)
+        let finalReasoning: any = undefined;
+        if (hasReasoningImages) {
+          // Has images, use multimodal format
+          finalReasoning = {
+            content: serializePartsForStorage(reasoningParts),
+            duration: finalDuration,
+            isMultimodal: true,
+          };
+        } else if (thinkingContent) {
+          // Has text from reasoning_part but no images
+          finalReasoning = {
+            content: thinkingContent,
+            duration: finalDuration,
+          };
+        } else if (reasoning?.content) {
+          // Fallback to old reasoning event content
+          finalReasoning = {
+            ...reasoning,
+            duration: finalDuration,
+          };
+        }
+
         // update the content after fetch result
         await optimisticUpdateMessageContent(
           messageId,
-          content,
+          finalContent,
           {
             tools,
-            reasoning: !!reasoning
-              ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
-              : undefined,
+            reasoning: finalReasoning,
             search: !!grounding?.citations ? grounding : undefined,
             imageList: finalImages.length > 0 ? finalImages : undefined,
-            metadata: { ...usage, ...speed, performance: speed, usage, finishType: type },
+            metadata: {
+              ...usage,
+              ...speed,
+              performance: speed,
+              usage,
+              finishType: type,
+              ...(hasContentImages && { isMultimodal: true }),
+            },
           },
           { operationId },
         );
@@ -457,8 +517,8 @@ export const streamingExecutor: StateCreator<
             output += chunk.text;
 
             // if there is no duration, it means the end of reasoning
-            if (!duration) {
-              duration = Date.now() - thinkingStartAt;
+            if (!thinkingDuration) {
+              thinkingDuration = Date.now() - thinkingStartAt;
 
               // Complete reasoning operation if it exists
               if (reasoningOperationId) {
@@ -480,7 +540,9 @@ export const streamingExecutor: StateCreator<
                 type: 'updateMessage',
                 value: {
                   content: output,
-                  reasoning: !!thinking ? { content: thinking, duration } : undefined,
+                  reasoning: !!thinkingContent
+                    ? { content: thinkingContent, duration: thinkingDuration }
+                    : undefined,
                 },
               },
               { operationId },
@@ -505,13 +567,178 @@ export const streamingExecutor: StateCreator<
               get().associateMessageWithOperation(messageId, reasoningOperationId);
             }
 
-            thinking += chunk.text;
+            thinkingContent += chunk.text;
 
             internal_dispatchMessage(
               {
                 id: messageId,
                 type: 'updateMessage',
-                value: { reasoning: { content: thinking } },
+                value: { reasoning: { content: thinkingContent } },
+              },
+              { operationId },
+            );
+            break;
+          }
+
+          case 'reasoning_part': {
+            // Start reasoning if not started
+            if (!thinkingStartAt) {
+              thinkingStartAt = Date.now();
+
+              const { operationId: reasoningOpId } = get().startOperation({
+                type: 'reasoning',
+                context: { sessionId, topicId, messageId },
+                parentOperationId: operationId,
+              });
+              reasoningOperationId = reasoningOpId;
+              get().associateMessageWithOperation(messageId, reasoningOperationId);
+            }
+
+            const { partType, content: partContent, mimeType } = chunk;
+
+            if (partType === 'text') {
+              const lastPart = reasoningParts.at(-1);
+
+              // If last part is also text, merge chunks together
+              if (lastPart?.type === 'text') {
+                reasoningParts = [
+                  ...reasoningParts.slice(0, -1),
+                  { type: 'text', text: lastPart.text + partContent },
+                ];
+              } else {
+                // Create new text part (first chunk, may contain thoughtSignature)
+                reasoningParts = [...reasoningParts, { type: 'text', text: partContent }];
+              }
+              thinkingContent += partContent;
+            } else if (partType === 'image') {
+              // Image part - create new array to avoid mutation
+              const tempImage = `data:${mimeType};base64,${partContent}`;
+              const partIndex = reasoningParts.length;
+              const newPart: MessageContentPart = { type: 'image', image: tempImage };
+              reasoningParts = [...reasoningParts, newPart];
+
+              // Start upload task and update array when done
+              const uploadTask = getFileStoreState()
+                .uploadBase64FileWithProgress(tempImage)
+                .then((file) => {
+                  const url = file?.url || tempImage;
+                  // Replace the part at index by creating a new array
+                  const updatedParts = [...reasoningParts];
+                  updatedParts[partIndex] = { type: 'image', image: url };
+                  reasoningParts = updatedParts;
+                  return url;
+                })
+                .catch((error) => {
+                  console.error('[reasoning_part] Image upload failed:', error);
+                  return tempImage;
+                });
+
+              reasoningImageUploads.set(partIndex, uploadTask);
+            }
+
+            // Real-time update with display format
+            // Check if there are any image parts to determine if it's multimodal
+            const hasReasoningImages = reasoningParts.some((part) => part.type === 'image');
+
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  reasoning: hasReasoningImages
+                    ? { tempDisplayContent: reasoningParts, isMultimodal: true }
+                    : { content: thinkingContent },
+                },
+              },
+              { operationId },
+            );
+            break;
+          }
+
+          case 'content_part': {
+            const { partType, content: partContent, mimeType } = chunk;
+
+            // End reasoning when content starts
+            if (!thinkingDuration && reasoningOperationId) {
+              thinkingDuration = Date.now() - thinkingStartAt;
+              get().completeOperation(reasoningOperationId);
+              reasoningOperationId = undefined;
+            }
+
+            if (partType === 'text') {
+              const lastPart = contentParts.at(-1);
+
+              // If last part is also text, merge chunks together
+              if (lastPart?.type === 'text') {
+                contentParts = [
+                  ...contentParts.slice(0, -1),
+                  { type: 'text', text: lastPart.text + partContent },
+                ];
+              } else {
+                // Create new text part (first chunk, may contain thoughtSignature)
+                contentParts = [...contentParts, { type: 'text', text: partContent }];
+              }
+              output += partContent;
+            } else if (partType === 'image') {
+              // Image part - create new array to avoid mutation
+              const tempImage = `data:${mimeType};base64,${partContent}`;
+              const partIndex = contentParts.length;
+              const newPart: MessageContentPart = {
+                type: 'image',
+                image: tempImage,
+              };
+              contentParts = [...contentParts, newPart];
+
+              // Start upload task and update array when done
+              const uploadTask = getFileStoreState()
+                .uploadBase64FileWithProgress(tempImage)
+                .then((file) => {
+                  const url = file?.url || tempImage;
+                  // Replace the part at index by creating a new array
+                  const updatedParts = [...contentParts];
+                  updatedParts[partIndex] = {
+                    type: 'image',
+                    image: url,
+                  };
+                  contentParts = updatedParts;
+                  return url;
+                })
+                .catch((error) => {
+                  console.error('[content_part] Image upload failed:', error);
+                  return tempImage;
+                });
+
+              contentImageUploads.set(partIndex, uploadTask);
+            }
+
+            // Real-time update with display format
+            // Check if there are any image parts to determine if it's multimodal
+            const hasContentImages = contentParts.some((part) => part.type === 'image');
+
+            const hasReasoningImages = reasoningParts.some((part) => part.type === 'image');
+
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  content: output,
+                  reasoning: hasReasoningImages
+                    ? {
+                        tempDisplayContent: reasoningParts,
+                        isMultimodal: true,
+                        duration: thinkingDuration,
+                      }
+                    : !!thinkingContent
+                      ? { content: thinkingContent, duration: thinkingDuration }
+                      : undefined,
+                  ...(hasContentImages && {
+                    metadata: {
+                      isMultimodal: true,
+                      tempDisplayContent: serializePartsForStorage(contentParts),
+                    },
+                  }),
+                },
               },
               { operationId },
             );
@@ -525,8 +752,8 @@ export const streamingExecutor: StateCreator<
             isFunctionCall = true;
 
             // Complete reasoning operation if it exists
-            if (!duration && reasoningOperationId) {
-              duration = Date.now() - thinkingStartAt;
+            if (!thinkingDuration && reasoningOperationId) {
+              thinkingDuration = Date.now() - thinkingStartAt;
               get().completeOperation(reasoningOperationId);
               reasoningOperationId = undefined;
             }
@@ -535,8 +762,8 @@ export const streamingExecutor: StateCreator<
 
           case 'stop': {
             // Complete reasoning operation when receiving stop signal
-            if (!duration && reasoningOperationId) {
-              duration = Date.now() - thinkingStartAt;
+            if (!thinkingDuration && reasoningOperationId) {
+              thinkingDuration = Date.now() - thinkingStartAt;
               get().completeOperation(reasoningOperationId);
               reasoningOperationId = undefined;
             }

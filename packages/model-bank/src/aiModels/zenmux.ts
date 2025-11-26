@@ -19,7 +19,6 @@ const zenmuxChatModels: AIChatModelCard[] = [
     description:
       'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
     displayName: 'Gemini 3 Pro Image (Nano Banana Pro)',
-    enabled: true,
     id: 'google/gemini-3-pro-image-preview',
     maxOutput: 32_768,
     pricing: {
@@ -42,6 +41,7 @@ const zenmuxChatModels: AIChatModelCard[] = [
     contextWindowTokens: 65_536,
     description: 'Gemini 3 Pro Image 免费版，支持受限额度的多模态生成。',
     displayName: 'Gemini 3 Pro Image (Nano Banana) Free',
+    enabled: true,
     id: 'google/gemini-3-pro-image-preview-free',
     maxOutput: 32_768,
     pricing: {
@@ -84,6 +84,7 @@ const zenmuxChatModels: AIChatModelCard[] = [
     description:
       'Gemini 3 Pro 免费预览版，具备与标准版相同的多模态理解与推理能力，但受免费额度与速率限制影响，更适合作为体验与低频使用。',
     displayName: 'Gemini 3 Pro Preview Free',
+    enabled: true,
     id: 'google/gemini-3-pro-preview-free',
     maxOutput: 65_530,
     pricing: {
@@ -988,6 +989,34 @@ const zenmuxChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.54, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'Claude Opus 4.5 是 Anthropic 的旗舰模型，结合了卓越的智能与可扩展性能，适合需要最高质量回应和推理能力的复杂任务。',
+    displayName: 'Claude Opus 4.5',
+    id: 'claude-opus-4-5-20251101',
+    maxOutput: 64_000,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-24',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
