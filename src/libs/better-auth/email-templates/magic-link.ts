@@ -92,7 +92,7 @@ export const getMagicLinkEmailTemplate = (params: { expiresInSeconds: number; ur
 </body>
 </html>
     `,
-    subject: 'Your LobeChat magic link',
+    subject: 'Your LobeChat sign-in link',
     text: `Use this link to sign in: ${url}\n\nThis link expires in ${expirationText}.`,
   };
 };
