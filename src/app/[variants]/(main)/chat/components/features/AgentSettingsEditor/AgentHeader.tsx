@@ -42,7 +42,7 @@ const AgentHeader = memo(() => {
   // Sync local state when meta changes from external source
   useEffect(() => {
     setLocalTitle(meta.title || '');
-  }, [meta.title, meta.description]);
+  }, [meta.title]);
 
   // Debounced save for title
   const { run: debouncedSaveTitle } = useDebounceFn(
@@ -107,7 +107,7 @@ const AgentHeader = memo(() => {
         />
       </Flexbox>
 
-      {/* Name and Description */}
+      {/* Name */}
       <Flexbox flex={1} gap={4}>
         {/* Name Input */}
         <input
