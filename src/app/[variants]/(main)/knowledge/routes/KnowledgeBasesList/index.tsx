@@ -20,7 +20,7 @@ const KnowledgeBasesListPage = memo(() => {
     <>
       <FilePanel>
         <Flexbox gap={16} height={'100%'} paddingInline={8}>
-          <PanelTitle title={t('repo.title')} />
+          <PanelTitle title={t('library.title')} />
           <KnowledgeBaseList />
         </Flexbox>
       </FilePanel>

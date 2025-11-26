@@ -181,8 +181,8 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
       setCurrentFolderId(null);
     } else if (folderBreadcrumb && folderBreadcrumb.length > 0) {
       // The current folder is the last item in the breadcrumb chain
-      const currentFolder = folderBreadcrumb[folderBreadcrumb.length - 1];
-      setCurrentFolderId(currentFolder.id);
+      const currentFolder = folderBreadcrumb.at(-1);
+      setCurrentFolderId(currentFolder?.id ?? null);
     }
   }, [currentFolderSlug, folderBreadcrumb, setCurrentFolderId]);
 
@@ -314,7 +314,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
             />
             <ViewSwitcher onViewChange={setViewMode} view={viewMode} />
             <Flexbox style={{ marginLeft: 12 }}>
-              <AddButton folderId={currentFolderSlug ?? undefined} knowledgeBaseId={knowledgeBaseId} />
+              <AddButton knowledgeBaseId={knowledgeBaseId} />
             </Flexbox>
           </Flexbox>
         }
@@ -352,7 +352,12 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
                   key={item.id}
                   knowledgeBaseId={knowledgeBaseId}
                   onSelectedChange={(id, checked, shiftKey, clickedIndex) => {
-                    if (shiftKey && lastSelectedIndex !== null && selectFileIds.length > 0 && data) {
+                    if (
+                      shiftKey &&
+                      lastSelectedIndex !== null &&
+                      selectFileIds.length > 0 &&
+                      data
+                    ) {
                       // Range selection with shift key
                       const start = Math.min(lastSelectedIndex, clickedIndex);
                       const end = Math.max(lastSelectedIndex, clickedIndex);

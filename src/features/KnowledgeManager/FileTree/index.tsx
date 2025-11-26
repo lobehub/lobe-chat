@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
 import FileIcon from '@/components/FileIcon';
-import type { FolderTreeItem as BaseFolderTreeItem } from '@/features/KnowledgeManager/components/FolderTree';
 import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';
 
@@ -37,9 +36,13 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface TreeItem extends BaseFolderTreeItem {
+interface TreeItem {
+  children?: TreeItem[];
   fileType: string;
+  id: string;
   isFolder: boolean;
+  name: string;
+  slug?: string | null;
   sourceType?: string;
 }
 
@@ -54,8 +57,8 @@ const FileTreeItem = memo<{
   knowledgeBaseId: string;
   level?: number;
   loadedFolders: Set<string>;
-  onLoadFolder: (folderId: string) => Promise<void>;
-  onToggleFolder: (folderId: string) => void;
+  onLoadFolder: (_: string) => Promise<void>;
+  onToggleFolder: (_: string) => void;
   selectedKey: string | null;
 }>(
   ({
@@ -259,35 +262,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
 
     const mappedItems: TreeItem[] = rootData.map((item) => {
       const itemKey = item.slug || item.id;
-      let children = folderChildrenCache.get(itemKey);
-
-      // If this is a folder and server provided children, use them and cache them
-      if (
-        item.fileType === 'custom/folder' &&
-        !children &&
-        item.children &&
-        Array.isArray(item.children)
-      ) {
-        const serverChildren: TreeItem[] = item.children.map((child: any) => ({
-          children: undefined,
-          fileType: child.fileType,
-          id: child.id,
-          isFolder: child.fileType === 'custom/folder',
-          name: child.name,
-          slug: child.slug,
-          sourceType: child.sourceType,
-        }));
-
-        children = sortItems(serverChildren);
-
-        // Update cache and loaded state
-        setFolderChildrenCache((prev) => {
-          const next = new Map(prev);
-          next.set(itemKey, children!);
-          return next;
-        });
-        setLoadedFolders((prev) => new Set([...prev, itemKey]));
-      }
+      const children = folderChildrenCache.get(itemKey);
 
       return {
         children,

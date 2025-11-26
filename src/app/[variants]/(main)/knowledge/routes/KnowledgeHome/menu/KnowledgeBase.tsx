@@ -60,9 +60,14 @@ const Collection = () => {
             }}
             size={'small'}
           />
-          <div style={{ flex: 1, lineHeight: '14px' }}>{t('repo.title')}</div>
+          <div style={{ flex: 1, lineHeight: '14px' }}>{t('library.title')}</div>
         </Flexbox>
-        <ActionIcon icon={PlusIcon} onClick={handleCreate} size={'small'} title={t('repo.new')} />
+        <ActionIcon
+          icon={PlusIcon}
+          onClick={handleCreate}
+          size={'small'}
+          title={t('library.new')}
+        />
       </Flexbox>
 
       {showList && (

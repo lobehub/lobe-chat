@@ -21,13 +21,7 @@ const hotArea = css`
   }
 `;
 
-const AddButton = ({
-  knowledgeBaseId,
-  folderId,
-}: {
-  folderId?: string;
-  knowledgeBaseId?: string;
-}) => {
+const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const { t } = useTranslation('file');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
@@ -115,12 +109,14 @@ const AddButton = ({
     <>
       <Dropdown menu={{ items }} placement="bottomRight">
         <Button icon={Plus} type="primary">
-          {t('addKnowledge')}
+          {t('addLibrary')}
         </Button>
       </Dropdown>
       <DragUpload
         enabledFiles
-        onUploadFiles={(files) => pushDockFileList(files, knowledgeBaseId, currentFolderId ?? undefined)}
+        onUploadFiles={(files) =>
+          pushDockFileList(files, knowledgeBaseId, currentFolderId ?? undefined)
+        }
       />
       <NoteEditorModal
         knowledgeBaseId={knowledgeBaseId}

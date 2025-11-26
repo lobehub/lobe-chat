@@ -88,7 +88,7 @@ const Content = memo<KnowledgeBaseItemProps>(({ id, name, showMore }) => {
             onOk: async () => {
               await removeKnowledgeBase(id);
             },
-            title: t('repo.list.confirmRemoveRepo'),
+            title: t('library.list.confirmRemoveLibrary'),
           });
         },
       },
