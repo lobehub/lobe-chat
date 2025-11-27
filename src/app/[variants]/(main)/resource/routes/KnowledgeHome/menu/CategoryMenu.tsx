@@ -15,6 +15,7 @@ import type { MenuProps } from '@/components/Menu';
 import { FilesTabs } from '@/types/files';
 
 import { useFileCategory } from '../../../hooks/useFileCategory';
+import { useResourceManagerStore } from '../store';
 
 const useStyles = createStyles(({ css, token }) => ({
   header: css`
@@ -42,6 +43,8 @@ const CategoryMenu = memo(() => {
   const [activeKey] = useFileCategory();
   const [showCollapsed, setShowCollapsed] = useState(activeKey !== FilesTabs.All);
   const navigate = useNavigate();
+
+  const setMode = useResourceManagerStore((s) => s.setMode);
 
   const collapsedItems: MenuProps['items'] = useMemo(
     () => [
@@ -89,6 +92,7 @@ const CategoryMenu = memo(() => {
         horizontal
         onClick={() => {
           navigate('/resource', { replace: true });
+          setMode('files');
         }}
         paddingBlock={6}
         paddingInline={8}
@@ -126,6 +130,13 @@ const CategoryMenu = memo(() => {
             items={collapsedItems}
             onClick={({ key }) => {
               const categoryParam = key === FilesTabs.All ? '' : `?category=${key}`;
+
+              if (key === FilesTabs.Pages) {
+                setMode('pages');
+              } else {
+                setMode('files');
+              }
+
               navigate(`/resource${categoryParam}`, { replace: true });
             }}
             selectable

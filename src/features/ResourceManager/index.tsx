@@ -1,16 +1,19 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { FilesTabs } from '@/types/files';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
 
 import FileExplorer from './FileExplorer';
 import DocumentExplorer from './PageExplorer';
+import PageEditor from './PageExplorer/PageEditor';
 import UploadDock from './UploadDock';
 
 const ChunkDrawer = dynamic(() => import('./ChunkDrawer'), { ssr: false });
+
+export type ResouceManagerMode = 'page' | 'pages' | 'files';
 
 interface KnowledgeManagerProps {
   category?: string;
@@ -28,22 +31,34 @@ interface KnowledgeManagerProps {
  * Home: For the "home" category.
  * FileExplorer: For other categories.
  */
-const KnowledgeManager = memo<KnowledgeManagerProps>(
+const ResourceManager = memo<KnowledgeManagerProps>(
   ({ knowledgeBaseId, category, onOpenFile, documentId }) => {
-    const isDocumentsView = category === FilesTabs.Pages;
+    const mode = useResourceManagerStore((s) => s.mode);
 
-    return (
-      <>
-        <Flexbox gap={12} height={'100%'}>
-          {isDocumentsView ? (
-            <DocumentExplorer documentId={documentId} knowledgeBaseId={knowledgeBaseId} />
-          ) : (
+    const MainContent = useMemo(() => {
+      switch (mode) {
+        case 'page': {
+          return <PageEditor documentId={documentId} knowledgeBaseId={knowledgeBaseId} />;
+        }
+        case 'pages': {
+          return <DocumentExplorer documentId={documentId} knowledgeBaseId={knowledgeBaseId} />;
+        }
+        case 'files': {
+          return (
             <FileExplorer
               category={category}
               knowledgeBaseId={knowledgeBaseId}
               onOpenFile={onOpenFile}
             />
-          )}
+          );
+        }
+      }
+    }, [mode, documentId, knowledgeBaseId, category, onOpenFile]);
+
+    return (
+      <>
+        <Flexbox gap={12} height={'100%'}>
+          {MainContent}
         </Flexbox>
         <UploadDock />
         <ChunkDrawer />
@@ -52,4 +67,4 @@ const KnowledgeManager = memo<KnowledgeManagerProps>(
   },
 );
 
-export default KnowledgeManager;
+export default ResourceManager;

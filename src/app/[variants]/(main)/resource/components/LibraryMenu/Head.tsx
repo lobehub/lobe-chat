@@ -8,7 +8,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import RepoIcon from '@/components/RepoIcon';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
-import GoBack from '../../../components/GoBack';
+import GoBack from '../GoBack';
 
 const Head = memo<{ id: string }>(({ id }) => {
   const name = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseNameById(id));

@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import FilePanel from '@/features/FileSidePanel';
 
-import Menu from '../KnowledgeBaseDetail/menu/Menu';
+import Menu from '../../components/LibraryMenu/Menu';
 
 /**
  * Knowledge Base Settings Page

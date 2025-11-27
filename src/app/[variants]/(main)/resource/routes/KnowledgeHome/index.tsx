@@ -10,14 +10,19 @@ import { useParams } from 'react-router-dom';
 import NProgress from '@/components/NProgress';
 import PanelTitle from '@/components/PanelTitle';
 import FilePanel from '@/features/FileSidePanel';
-import KnowledgeItemManager from '@/features/ResourceManager';
+import ResourceManager from '@/features/ResourceManager';
+import FileTree from '@/features/ResourceManager/FileTree';
 import TogglePanelButton from '@/features/ResourceManager/Header/TogglePanelButton';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
+import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { FilesTabs } from '@/types/files';
 
+import LibraryHead from '../../components/LibraryMenu/Head';
 import { useFileCategory } from '../../hooks/useFileCategory';
+import { useFolderPath } from '../../hooks/useFolderPath';
+import { useKnowledgeBaseItem } from '../../hooks/useKnowledgeItem';
 import FileModalQueryRoute from '../../shared/FileModalQueryRoute';
-import { useSetFileModalId } from '../../shared/useFileQueryParam';
+import { ResourceManagerProvider } from './ResourceManagerProvider';
 import Container from './layout/Container';
 import RegisterHotkeys from './layout/RegisterHotkeys';
 import CategoryMenu from './menu/CategoryMenu';
@@ -51,7 +56,24 @@ const useStyles = createStyles(({ css, token }) => ({
 const Sidebar = memo(() => {
   const { t } = useTranslation('file');
   const { styles } = useStyles();
+  const { knowledgeBaseId } = useFolderPath();
 
+  // If we're in a library route, show library sidebar
+  if (knowledgeBaseId) {
+    return (
+      <Flexbox className={styles.sidebar} gap={16} height={'100%'} style={{ paddingTop: 12 }}>
+        <div className={`${styles.toggleButton} toggle-button`}>
+          <TogglePanelButton />
+        </div>
+        <Flexbox paddingInline={12}>
+          <LibraryHead id={knowledgeBaseId} />
+        </Flexbox>
+        <FileTree knowledgeBaseId={knowledgeBaseId} />
+      </Flexbox>
+    );
+  }
+
+  // Otherwise show category sidebar
   return (
     <Flexbox className={styles.sidebar} gap={16} height={'100%'}>
       <div className={`${styles.toggleButton} toggle-button`}>
@@ -68,23 +90,29 @@ const Sidebar = memo(() => {
 
 Sidebar.displayName = 'Sidebar';
 
-// Main files list component
+// Main content component
 const MainContent = memo(() => {
   const { id } = useParams<{ id: string }>();
+  const { knowledgeBaseId } = useFolderPath();
   const [category] = useFileCategory();
-  const setFileModalId = useSetFileModalId();
+
+  // Load knowledge base data if we're in a library route
+  useKnowledgeBaseItem(knowledgeBaseId || '');
+  const libraryName = useKnowledgeBaseStore(
+    knowledgeBaseSelectors.getKnowledgeBaseNameById(knowledgeBaseId || ''),
+  );
 
   return (
-    <KnowledgeItemManager
+    <ResourceManager
       category={category}
       documentId={id}
-      onOpenFile={setFileModalId}
-      title={`${category as FilesTabs}`}
+      knowledgeBaseId={knowledgeBaseId || undefined}
+      title={knowledgeBaseId ? libraryName : `${category as FilesTabs}`}
     />
   );
 });
 
-MainContent.displayName = 'FilesListPage';
+MainContent.displayName = 'MainContent';
 
 const DesktopLayout = memo(() => {
   return (
@@ -141,11 +169,22 @@ const MobileLayout = memo(() => {
 
 MobileLayout.displayName = 'MobileLayout';
 
-// Main Knowledge Home Page
-const KnowledgeHomePage = memo(() => {
+// Main Knowledge Home Page Content
+const KnowledgeHomePageContent = memo(() => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
   return isMobile ? <MobileLayout /> : <DesktopLayout />;
+});
+
+KnowledgeHomePageContent.displayName = 'KnowledgeHomePageContent';
+
+// Main Knowledge Home Page with Provider
+const KnowledgeHomePage = memo(() => {
+  return (
+    <ResourceManagerProvider>
+      <KnowledgeHomePageContent />
+    </ResourceManagerProvider>
+  );
 });
 
 KnowledgeHomePage.displayName = 'KnowledgeHomePage';

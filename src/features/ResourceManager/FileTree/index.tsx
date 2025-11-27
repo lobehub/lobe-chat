@@ -10,6 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
 import FileIcon from '@/components/FileIcon';
 import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';
@@ -75,16 +76,26 @@ const FileTreeItem = memo<{
     const navigate = useNavigate();
     const { currentFolderSlug } = useFolderPath();
 
-    const itemKey = item.slug || item.id;
+    const [setMode, setCurrentViewItemId] = useResourceManagerStore((s) => [
+      s.setMode,
+      s.setCurrentViewItemId,
+    ]);
 
-    console.log('RENDERING ITEM', JSON.stringify(item, null, 2));
+    const itemKey = item.slug || item.id;
 
     const handleFileClick = useCallback(() => {
       // Open file modal using slug-based routing
       const currentPath = currentFolderSlug
         ? `/resource/library/${knowledgeBaseId}/${currentFolderSlug}`
         : `/resource/library/${knowledgeBaseId}`;
-      navigate(`${currentPath}?file=${itemKey}`);
+
+      setCurrentViewItemId(itemKey);
+      if (itemKey.startsWith('doc')) {
+        setMode('page');
+      } else {
+        navigate(`${currentPath}?file=${itemKey}`);
+        setMode('files');
+      }
     }, [itemKey, currentFolderSlug, knowledgeBaseId, navigate]);
 
     const handleFolderClick = useCallback(

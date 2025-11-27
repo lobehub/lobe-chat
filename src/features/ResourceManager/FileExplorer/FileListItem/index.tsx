@@ -12,6 +12,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
@@ -172,6 +173,8 @@ const FileRenderItem = memo<FileRenderItemProps>(
       }, 0);
     };
 
+    const setMode = useResourceManagerStore((s) => s.setMode);
+
     const handleRenameConfirm = async () => {
       if (!renamingValue.trim()) {
         message.error(t('FileManager.actions.renameError'));
@@ -228,9 +231,10 @@ const FileRenderItem = memo<FileRenderItemProps>(
               const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
 
               if (baseKnowledgeBaseId) {
-                // Navigate directly to folder by slug, no nested paths
                 navigate(`/resource/library/${baseKnowledgeBaseId}/${folderSlug}`);
               }
+            } else if (isNote) {
+              setMode('page');
             } else {
               setSearchParams(
                 (prev) => {

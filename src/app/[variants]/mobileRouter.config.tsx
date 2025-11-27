@@ -160,12 +160,12 @@ export const createMobileRouter = () =>
               path: 'library',
             },
             {
-              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBaseDetail')),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
               loader: idLoader,
               path: 'library/:id/*',
             },
             {
-              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBaseDetail')),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
               loader: idLoader,
               path: 'library/:id',
             },
