@@ -38,7 +38,11 @@ const UserUpdater = memo(() => {
 
       // Update user data in store
       useUserStore.setState({ user: lobeUser });
+      return;
     }
+
+    // Clear user data when session becomes unavailable
+    useUserStore.setState({ user: undefined });
   }, [betterAuthUser]);
 
   return null;
