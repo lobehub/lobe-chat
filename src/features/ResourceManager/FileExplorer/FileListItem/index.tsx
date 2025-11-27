@@ -229,7 +229,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
 
               if (baseKnowledgeBaseId) {
                 // Navigate directly to folder by slug, no nested paths
-                navigate(`/knowledge/library/${baseKnowledgeBaseId}/${folderSlug}`);
+                navigate(`/resource/library/${baseKnowledgeBaseId}/${folderSlug}`);
               }
             } else {
               setSearchParams(
