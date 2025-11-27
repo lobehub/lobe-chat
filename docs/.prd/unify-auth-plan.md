@@ -68,23 +68,35 @@
 - [x] Remove useless fallback OIDC URLs
 - [x] Update better-auth dependency to version 1.4.1
 
+### Phase 8: Profile Page & Auth Providers Management
+
+- [x] Redesign profile page layout with ProfileRow component
+- [x] Add fullName editing with inline edit UI
+- [x] Add password reset functionality for email/password users
+- [x] Create reset-password page with token validation
+- [x] Add forgot password link on signin page
+- [x] Move auth providers state from component to Zustand store
+- [x] Add `authProviders` and `isEmailPasswordAuth` to user store
+- [x] Add `fetchAuthProviders` and `refreshAuthProviders` actions
+- [x] SSO provider link/unlink with proper state management
+
 ---
 
 ## Pending Phases
 
-### Phase 8: Additional OAuth Providers (Optional)
+### Phase 9: Additional OAuth Providers (Optional)
 
 - [ ] Support Apple OAuth
 - [ ] Support other providers as needed (Discord, Twitter, etc.)
 
-### Phase 9: Data Migration
+### Phase 10: Data Migration
 
 - [x] Add Better-Auth database schema migration (0047_better_auth.sql)
 - [x] Add better-auth migration scripts infrastructure
 - [ ] Implement Clerk user data migration script (will be done in lobechat-cloud)
 - [ ] Implement NextAuth user data migration script
 
-### Phase 10: Cleanup (Future)
+### Phase 11: Cleanup (Future)
 
 - [ ] Remove Clerk related code (will be done in lobechat-cloud)
 - [ ] Remove NextAuth related code
