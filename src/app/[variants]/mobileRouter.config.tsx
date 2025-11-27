@@ -147,34 +147,32 @@ export const createMobileRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/knowledge/routes/KnowledgeHome')),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
               index: true,
             },
             {
-              element: dynamicElement(() => import('./(main)/knowledge/routes/KnowledgeHome')),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
               loader: idLoader,
               path: ':id',
             },
             {
-              element: dynamicElement(() => import('./(main)/knowledge/routes/KnowledgeBasesList')),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBasesList')),
               path: 'library',
             },
             {
-              element: dynamicElement(
-                () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
-              ),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBaseDetail')),
               loader: idLoader,
               path: 'library/:id/*',
             },
             {
-              element: <KnowledgeBaseDetail />,
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBaseDetail')),
               loader: idLoader,
               path: 'library/:id',
             },
           ],
-          element: dynamicElement(() => import('./(main)/knowledge/_layout/Mobile')),
-          errorElement: <ErrorBoundary resetPath="/knowledge" />,
-          path: 'knowledge',
+          element: dynamicElement(() => import('./(main)/resource/_layout/Mobile')),
+          errorElement: <ErrorBoundary resetPath="/resource" />,
+          path: 'resource',
         },
 
         // Settings routes

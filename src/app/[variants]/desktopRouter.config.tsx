@@ -151,43 +151,37 @@ export const createDesktopRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/knowledge/routes/KnowledgeHome')),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
               index: true,
             },
             {
-              element: dynamicElement(() => import('./(main)/knowledge/routes/KnowledgeHome')),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
               loader: idLoader,
               path: ':id',
             },
             {
-              element: dynamicElement(() => import('./(main)/knowledge/routes/KnowledgeBasesList')),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBasesList')),
               path: 'library',
             },
             {
-              element: dynamicElement(
-                () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
-              ),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBaseDetail')),
               loader: idLoader,
               path: 'library/:id/:slug',
             },
             {
-              element: dynamicElement(
-                () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
-              ),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBaseDetail')),
               loader: idLoader,
               path: 'library/:id',
             },
             {
-              element: dynamicElement(
-                () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
-              ),
+              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBaseDetail')),
               loader: idLoader,
               path: '*',
             },
           ],
-          element: dynamicElement(() => import('./(main)/knowledge/_layout/Desktop')),
-          errorElement: <ErrorBoundary resetPath="/knowledge" />,
-          path: 'knowledge',
+          element: dynamicElement(() => import('./(main)/resource/_layout/Desktop')),
+          errorElement: <ErrorBoundary resetPath="/resource" />,
+          path: 'resource',
         },
 
         // Settings routes

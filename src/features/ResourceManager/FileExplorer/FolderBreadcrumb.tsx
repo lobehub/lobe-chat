@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
-import { useFolderPath } from '@/app/[variants]/(main)/knowledge/hooks/useFolderPath';
+import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
 import { useFileStore } from '@/store/file';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 

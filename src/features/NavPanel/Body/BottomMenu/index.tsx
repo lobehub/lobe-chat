@@ -36,7 +36,7 @@ const BottomMenu = memo(() => {
           icon: FolderClosed,
           key: SidebarTabKey.Files,
           title: t('tab.files'),
-          url: '/knowledge',
+          url: '/resource',
         },
       ].filter(Boolean) as Item[],
     [t],
