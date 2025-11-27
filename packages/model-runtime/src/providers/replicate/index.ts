@@ -1,17 +1,20 @@
+import createDebug from 'debug';
 import { ModelProvider } from 'model-bank';
 import Replicate from 'replicate';
 
+import { LobeRuntimeAI } from '../../core/BaseAI';
 import {
-  createSSEProtocolTransformer,
-  createTokenSpeedCalculator,
   StreamContext,
   convertIterableToStream,
+  createSSEProtocolTransformer,
+  createTokenSpeedCalculator,
 } from '../../core/streams/protocol';
-import { LobeRuntimeAI } from '../../core/BaseAI';
 import {
   type ChatCompletionErrorPayload,
   ChatMethodOptions,
   ChatStreamPayload,
+  CreateImagePayload,
+  CreateImageResponse,
 } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeError } from '../../utils/createError';
@@ -19,6 +22,7 @@ import { desensitizeUrl } from '../../utils/desensitizeUrl';
 import { StreamingResponse } from '../../utils/response';
 
 const DEFAULT_BASE_URL = 'https://api.replicate.com';
+const log = createDebug('lobe-image:replicate');
 
 interface ReplicateAIParams {
   apiKey?: string;
@@ -84,47 +88,48 @@ export class LobeReplicateAI implements LobeRuntimeAI {
 
       const transformReplicateEvent = (event: any, ctx: StreamContext) => {
         switch (event.event) {
-        case 'output': {
-          const text = typeof event.data === 'string' ? event.data : JSON.stringify(event.data);
+          case 'output': {
+            const text = typeof event.data === 'string' ? event.data : JSON.stringify(event.data);
 
-          if (text) {
-            // Replicate does not return token usage; estimate by character length
-            const estimatedTokens = Math.ceil(text.length / 4);
-            ctx.usage = ctx.usage || { totalOutputTokens: 0, totalTokens: 0 };
-            ctx.usage.totalOutputTokens = (ctx.usage.totalOutputTokens || 0) + estimatedTokens;
-            ctx.usage.totalTokens = (ctx.usage.totalTokens || 0) + estimatedTokens;
+            if (text) {
+              // Replicate does not return token usage; estimate by character length
+              const estimatedTokens = Math.ceil(text.length / 4);
+              ctx.usage = ctx.usage || { totalOutputTokens: 0, totalTokens: 0 };
+              ctx.usage.totalOutputTokens = (ctx.usage.totalOutputTokens || 0) + estimatedTokens;
+              ctx.usage.totalTokens = (ctx.usage.totalTokens || 0) + estimatedTokens;
+            }
+
+            return { data: text, id: ctx.id, type: 'text' } as const;
           }
 
-          return { data: text, id: ctx.id, type: 'text' } as const;
-        }
+          case 'done': {
+            const result = [];
 
-        case 'done': {
-          const result = [];
+            if (ctx.usage) {
+              result.push({ data: ctx.usage, id: ctx.id, type: 'usage' } as const);
+            }
 
-          if (ctx.usage) {
-            result.push({ data: ctx.usage, id: ctx.id, type: 'usage' } as const);
+            result.push({ data: 'stop', id: ctx.id, type: 'stop' } as const);
+
+            return result;
           }
 
-          result.push({ data: 'stop', id: ctx.id, type: 'stop' } as const);
+          case 'error': {
+            const message =
+              typeof event.data === 'string'
+                ? event.data
+                : (event?.data?.message as string) || 'Replicate streaming error';
 
-          return result;
-        }
+            return {
+              data: { body: event.data, message },
+              id: ctx.id,
+              type: 'error',
+            } as const;
+          }
 
-        case 'error': {
-          const message =
-            typeof event.data === 'string'
-              ? event.data
-              : (event?.data?.message as string) || 'Replicate streaming error';
-
-          return {
-            data: { body: event.data, message },
-            id: ctx.id,
-            type: 'error',
-          } as const;
-        }
-
-        default:
-          return { data: event, id: ctx.id, type: 'data' } as const;
+          default: {
+            return { data: event, id: ctx.id, type: 'data' } as const;
+          }
         }
       };
 
@@ -148,202 +153,69 @@ export class LobeReplicateAI implements LobeRuntimeAI {
   /**
    * Image generation support for LobeChat async image generation (FLUX, Stable Diffusion, etc.)
    */
-  async createImage(payload: any): Promise<any> {
+  async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
     try {
       const { model, params } = payload;
-      const { prompt, width, height, cfg, steps, seed, imageUrl, aspectRatio } = params;
+      const { prompt, width, height, cfg, steps, seed, imageUrl, imageUrls, aspectRatio } = params;
 
-      console.log('[Replicate createImage] === START ===');
-      console.log('[Replicate createImage] Model:', model);
-      console.log('[Replicate createImage] Params received:', JSON.stringify(params, null, 2));
+      log('createImage: model=%s params=%O', model, params);
 
-      const input: Record<string, any> = {};
+      const input: Record<string, unknown> = {};
 
       // Redux models don't use prompt - they only use the input image
-      if (!model.includes('redux')) {
+      if (!model.includes('redux') && prompt) {
         input.prompt = prompt;
-        console.log('[Replicate createImage] Added prompt:', prompt);
-      } else {
-        console.log('[Replicate createImage] Skipping prompt (Redux model)');
       }
 
-      // Handle image-to-image models
-      if (imageUrl) {
-        console.log('[Replicate createImage] imageUrl provided:', imageUrl);
-
-        // Determine the parameter name based on model type
-        let imageParamName: string;
-        if (model.includes('redux')) {
-          imageParamName = 'redux_image';
-          console.log('[Replicate createImage] Will map to redux_image');
-        } else if (model.includes('canny') || model.includes('depth')) {
-          imageParamName = 'control_image';
-          console.log('[Replicate createImage] Will map to control_image');
-        } else if (model.includes('fill')) {
-          imageParamName = 'image';
-          console.log('[Replicate createImage] Will map to image (fill)');
-        } else {
-          imageParamName = 'image';
-          console.log('[Replicate createImage] Will map to image (generic)');
-        }
-
-        // Check if URL is accessible from internet or local
-        const isLocalUrl =
-          imageUrl.includes('localhost') ||
-          imageUrl.includes('127.0.0.1') ||
-          imageUrl.includes('.local') ||
-          imageUrl.startsWith('http://192.168.') ||
-          imageUrl.startsWith('http://10.') ||
-          imageUrl.startsWith('http://172.');
-
-        if (isLocalUrl) {
-          console.log('[Replicate createImage] Local URL detected, will fetch and upload as data');
-          try {
-            // Fetch the image from local URL
-            const { ssrfSafeFetch } = await import('ssrf-safe-fetch');
-            const imageResponse = await ssrfSafeFetch(imageUrl, undefined, {
-              allowPrivateIPAddress: true,
-            });
-            if (!imageResponse.ok) {
-              throw new Error(
-                `Failed to fetch image: ${imageResponse.status} ${imageResponse.statusText}`,
-              );
-            }
-
-            // Get image as buffer
-            const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
-            console.log(
-              '[Replicate createImage] Fetched image, size:',
-              imageBuffer.length,
-              'bytes',
-            );
-
-            // Check size limit (100MB)
-            if (imageBuffer.length > 100 * 1024 * 1024) {
-              throw new Error(`Image too large: ${imageBuffer.length} bytes (max 100MB)`);
-            }
-
-            // Replicate SDK accepts Buffer objects directly
-            input[imageParamName] = imageBuffer;
-            console.log('[Replicate createImage] Mapped to', imageParamName, 'as Buffer');
-          } catch (fetchError: any) {
-            console.error('[Replicate createImage] Error fetching local image:', fetchError);
-            throw new Error(`Failed to fetch local image: ${fetchError.message}`);
-          }
-        } else {
-          // Public URL - use directly
-          input[imageParamName] = imageUrl;
-          console.log('[Replicate createImage] Public URL, mapped directly to', imageParamName);
-        }
-      } else {
-        console.log('[Replicate createImage] No imageUrl provided');
+      const referenceImage = imageUrls?.[0] ?? imageUrl;
+      if (referenceImage) {
+        const imageParamName = this.resolveImageParamName(model);
+        input[imageParamName] = await this.buildImageInput(referenceImage);
       }
 
       // Map LobeChat params to Replicate params
       if (width && height) {
         input.width = width;
         input.height = height;
-        console.log('[Replicate createImage] Set dimensions:', width, 'x', height);
       }
 
       // For FLUX models, convert to aspect_ratio
       if (model.includes('flux')) {
-        // Use explicit aspectRatio if provided (for Redux models)
-        if (aspectRatio) {
-          input.aspect_ratio = aspectRatio;
-          console.log('[Replicate createImage] Set aspect_ratio from param:', aspectRatio);
-        } else if (width && height) {
-          if (width === height) {
-            input.aspect_ratio = '1:1';
-          } else if (width === 1280 && height === 720) {
-            input.aspect_ratio = '16:9';
-          } else if (width === 720 && height === 1280) {
-            input.aspect_ratio = '9:16';
-          } else if (width > height) {
-            input.aspect_ratio = '16:9';
-          } else {
-            input.aspect_ratio = '9:16';
-          }
-          console.log('[Replicate createImage] Calculated aspect_ratio:', input.aspect_ratio);
+        const resolvedAspectRatio = this.resolveAspectRatio({ aspectRatio, height, model, width });
+        if (resolvedAspectRatio) {
+          input.aspect_ratio = resolvedAspectRatio;
         }
+
         // Remove width/height for FLUX models (unless it's Fill which needs dimensions)
         if (!model.includes('fill')) {
           delete input.width;
           delete input.height;
-          console.log('[Replicate createImage] Removed width/height (using aspect_ratio)');
         }
       }
 
       // Add optional parameters
       if (cfg !== undefined) {
         input.guidance_scale = cfg;
-        console.log('[Replicate createImage] Set guidance_scale:', cfg);
       }
       if (steps !== undefined) {
         // Redux uses num_inference_steps, control models use steps
         if (model.includes('redux')) {
           input.num_inference_steps = steps;
-          console.log('[Replicate createImage] Set num_inference_steps:', steps);
         } else if (model.includes('canny') || model.includes('depth') || model.includes('fill')) {
           input.steps = steps;
-          console.log('[Replicate createImage] Set steps:', steps);
         } else {
           input.num_inference_steps = steps;
-          console.log('[Replicate createImage] Set num_inference_steps:', steps);
         }
       }
       if (seed !== undefined && seed !== null) {
         input.seed = seed;
-        console.log('[Replicate createImage] Set seed:', seed);
       }
 
-      // Run prediction - with useFileOutput: false, returns URL strings
-      // Log input object without Buffer data (which would be huge)
-      const inputForLogging = { ...input };
-      for (const key in inputForLogging) {
-        if (Buffer.isBuffer(inputForLogging[key])) {
-          inputForLogging[key] = `<Buffer ${inputForLogging[key].length} bytes>`;
-        }
-      }
-      console.log(
-        '[Replicate createImage] Final input object:',
-        JSON.stringify(inputForLogging, null, 2),
-      );
-      console.log('[Replicate createImage] Calling client.run...');
-
+      log('createImage: final input %O', this.sanitizeInputForLog(input));
       const output = await this.client.run(model as any, { input });
 
-      console.log('[Replicate createImage] Raw output:', output);
-      console.log(
-        '[Replicate createImage] Output type:',
-        typeof output,
-        'Is array:',
-        Array.isArray(output),
-      );
-
-      // Extract URL from output
-      let outputImageUrl: string;
-
-      if (Array.isArray(output)) {
-        if (output.length === 0) {
-          throw new Error('Replicate returned empty array');
-        }
-        // First item should be the URL string
-        outputImageUrl = output[0];
-        console.log('[Replicate] Extracted URL from array:', outputImageUrl);
-      } else if (typeof output === 'string') {
-        outputImageUrl = output;
-        console.log('[Replicate] Output is direct string URL:', outputImageUrl);
-      } else {
-        console.error('[Replicate] Unexpected output structure:', output);
-        throw new Error(`Unexpected output format from Replicate: ${typeof output}`);
-      }
-
-      if (typeof outputImageUrl !== 'string') {
-        throw new Error(`Expected URL string, got ${typeof outputImageUrl}: ${outputImageUrl}`);
-      }
-
-      console.log('[Replicate] Final imageUrl:', outputImageUrl);
+      const outputImageUrl = this.extractImageUrl(output);
+      log('createImage: output url=%s', outputImageUrl);
 
       return {
         height: height,
@@ -351,12 +223,119 @@ export class LobeReplicateAI implements LobeRuntimeAI {
         width: width,
       };
     } catch (error) {
-      console.error('[Replicate createImage] ERROR caught:', error);
-      console.error('[Replicate createImage] Error type:', (error as any)?.constructor?.name);
-      console.error('[Replicate createImage] Error message:', (error as any)?.message);
-      console.error('[Replicate createImage] Full error:', JSON.stringify(error, null, 2));
-      throw this.handleError(error);
+      log('createImage failed: %O', error);
+      throw AgentRuntimeError.createImage({
+        error: error as any,
+        errorType: this.resolveImageErrorType(error),
+        provider: this.id,
+      });
     }
+  }
+
+  private resolveImageParamName(model: string): string {
+    if (model.includes('redux')) return 'redux_image';
+    if (model.includes('canny') || model.includes('depth')) return 'control_image';
+
+    return 'image';
+  }
+
+  private async buildImageInput(imageUrl: string): Promise<string | Buffer> {
+    if (!this.isLocalUrl(imageUrl)) return imageUrl;
+
+    const { ssrfSafeFetch } = await import('ssrf-safe-fetch');
+    const imageResponse = await ssrfSafeFetch(imageUrl, undefined, {
+      allowPrivateIPAddress: true,
+    });
+
+    if (!imageResponse.ok) {
+      throw new Error(`Failed to fetch image: ${imageResponse.status} ${imageResponse.statusText}`);
+    }
+
+    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+    if (imageBuffer.length > 100 * 1024 * 1024) {
+      throw new Error(`Image too large: ${imageBuffer.length} bytes (max 100MB)`);
+    }
+
+    return imageBuffer;
+  }
+
+  private isLocalUrl(imageUrl: string): boolean {
+    return (
+      imageUrl.includes('localhost') ||
+      imageUrl.includes('127.0.0.1') ||
+      imageUrl.includes('.local') ||
+      imageUrl.startsWith('http://192.168.') ||
+      imageUrl.startsWith('http://10.') ||
+      imageUrl.startsWith('http://172.')
+    );
+  }
+
+  private resolveAspectRatio({
+    aspectRatio,
+    height,
+    model,
+    width,
+  }: {
+    aspectRatio?: string;
+    height?: number;
+    model: string;
+    width?: number;
+  }): string | undefined {
+    if (!model.includes('flux')) return undefined;
+    if (aspectRatio) return aspectRatio;
+    if (!width || !height) return undefined;
+
+    if (width === height) return '1:1';
+    if (width === 1280 && height === 720) return '16:9';
+    if (width === 720 && height === 1280) return '9:16';
+
+    return width > height ? '16:9' : '9:16';
+  }
+
+  private sanitizeInputForLog(input: Record<string, unknown>): Record<string, unknown> {
+    return Object.fromEntries(
+      Object.entries(input).map(([key, value]) => {
+        if (Buffer.isBuffer(value)) {
+          return [key, `<Buffer ${value.length} bytes>`];
+        }
+
+        return [key, value];
+      }),
+    );
+  }
+
+  private extractImageUrl(output: unknown): string {
+    if (Array.isArray(output)) {
+      if (output.length === 0) {
+        throw new Error('Replicate returned empty array');
+      }
+
+      if (typeof output[0] !== 'string') {
+        throw new Error(`Unexpected output type in array: ${typeof output[0]}`);
+      }
+
+      return output[0];
+    }
+
+    if (typeof output === 'string') {
+      return output;
+    }
+
+    throw new Error(`Unexpected output format from Replicate: ${typeof output}`);
+  }
+
+  private resolveImageErrorType(error: unknown): AgentRuntimeErrorType {
+    const message = ((error as any)?.message || '').toLowerCase();
+
+    if (message.includes('authentication') || message.includes('api token')) {
+      return AgentRuntimeErrorType.InvalidProviderAPIKey;
+    }
+
+    if (message.includes('not found')) {
+      return AgentRuntimeErrorType.ModelNotFound;
+    }
+
+    return AgentRuntimeErrorType.ProviderBizError;
   }
 
   /**
