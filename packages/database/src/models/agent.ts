@@ -1,6 +1,10 @@
 import { and, desc, eq, inArray } from 'drizzle-orm';
+import type { PartialDeep } from 'type-fest';
+
+import { merge } from '@/utils/merge';
 
 import {
+  AgentItem,
   agents,
   agentsFiles,
   agentsKnowledgeBases,
@@ -179,5 +183,61 @@ export class AgentModel {
           eq(agentsFiles.userId, this.userId),
         ),
       );
+  };
+
+  updateConfig = async (agentId: string, data: PartialDeep<AgentItem> | undefined | null) => {
+    if (!data || Object.keys(data).length === 0) return;
+
+    const agent = await this.db.query.agents.findFirst({
+      where: and(eq(agents.id, agentId), eq(agents.userId, this.userId)),
+    });
+
+    if (!agent) return;
+
+    // First process the params field: undefined means delete, null means disable flag
+    const existingParams = agent.params ?? {};
+    const updatedParams: Record<string, any> = { ...existingParams };
+
+    if (data.params) {
+      const incomingParams = data.params as Record<string, any>;
+      Object.keys(incomingParams).forEach((key) => {
+        const incomingValue = incomingParams[key];
+
+        // undefined means explicitly delete this field
+        if (incomingValue === undefined) {
+          delete updatedParams[key];
+          return;
+        }
+
+        // All other values (including null) are directly overwritten, null means disable this param on the frontend
+        updatedParams[key] = incomingValue;
+      });
+    }
+
+    // Build data to be merged, excluding params (processed separately)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { params: _params, ...restData } = data;
+    const mergedValue = merge(agent, restData);
+
+    // Apply the processed parameters
+    mergedValue.params = Object.keys(updatedParams).length > 0 ? updatedParams : undefined;
+
+    // Final cleanup: ensure no undefined or null values enter the database
+    if (mergedValue.params) {
+      const params = mergedValue.params as Record<string, any>;
+      Object.keys(params).forEach((key) => {
+        if (params[key] === undefined) {
+          delete params[key];
+        }
+      });
+      if (Object.keys(params).length === 0) {
+        mergedValue.params = undefined;
+      }
+    }
+
+    return this.db
+      .update(agents)
+      .set(mergedValue)
+      .where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)));
   };
 }

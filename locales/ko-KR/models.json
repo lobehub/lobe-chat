@@ -3467,6 +3467,9 @@
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5는 Anthropic에서 가장 빠르고 똑똑한 Haiku 모델로, 번개처럼 빠른 속도와 확장된 사고 능력을 갖추고 있습니다."
   },
+  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5는 Anthropic의 플래그십 모델로, 탁월한 지능과 확장 가능한 성능을 결합하여 최고 수준의 응답 품질과 추론 능력이 요구되는 복잡한 작업에 적합합니다."
+  },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5는 지금까지 Anthropic이 개발한 가장 지능적인 모델입니다."
   },

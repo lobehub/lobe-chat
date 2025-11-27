@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useChatStore } from '@/store/chat';
 import { useServerConfigStore } from '@/store/serverConfig';
@@ -15,17 +16,19 @@ export const useSwitchSession = () => {
   const pathname = location.pathname;
 
   return useCallback(
-    (id: string) => {
-      switchSession(id);
+    (agentId: string) => {
+      switchSession(agentId);
       togglePortal(false);
 
-      const chatPath = '/chat';
-      if (mobile || pathname !== chatPath) {
+      const chatPath = '/agent';
+      if (mobile) {
         setTimeout(() => {
           router.push(chatPath, {
-            query: { session: id, showMobileWorkspace: 'true' },
+            query: { showMobileWorkspace: 'true' },
           });
         }, 50);
+      } else {
+        router.push(SESSION_CHAT_URL(agentId!, false));
       }
     },
     [mobile, pathname, switchSession, togglePortal, router],

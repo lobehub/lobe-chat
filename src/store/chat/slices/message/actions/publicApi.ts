@@ -63,16 +63,21 @@ export const messagePublicApi: StateCreator<
   MessagePublicApiAction
 > = (set, get) => ({
   addAIMessage: async () => {
-    const { optimisticCreateMessage, updateMessageInput, activeTopicId, activeId, inputMessage } =
-      get();
-    if (!activeId) return;
+    const {
+      optimisticCreateMessage,
+      updateMessageInput,
+      activeTopicId,
+      activeAgentId,
+      inputMessage,
+    } = get();
+    if (!activeAgentId) return;
 
     const parentId = displayMessageSelectors.lastDisplayMessageId(get());
 
     const result = await optimisticCreateMessage({
       content: inputMessage,
       role: 'assistant',
-      sessionId: activeId,
+      agentId: activeAgentId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
       parentId,
@@ -84,9 +89,14 @@ export const messagePublicApi: StateCreator<
   },
 
   addUserMessage: async ({ message, fileList }) => {
-    const { optimisticCreateMessage, updateMessageInput, activeTopicId, activeId, activeThreadId } =
-      get();
-    if (!activeId) return;
+    const {
+      optimisticCreateMessage,
+      updateMessageInput,
+      activeTopicId,
+      activeAgentId,
+      activeThreadId,
+    } = get();
+    if (!activeAgentId) return;
 
     const parentId = displayMessageSelectors.lastDisplayMessageId(get());
 
@@ -94,7 +104,7 @@ export const messagePublicApi: StateCreator<
       content: message,
       files: fileList,
       role: 'user',
-      sessionId: activeId,
+      agentId: activeAgentId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
       threadId: activeThreadId,
@@ -153,8 +163,10 @@ export const messagePublicApi: StateCreator<
     let ids = [message.id];
 
     get().internal_dispatchMessage({ type: 'deleteMessages', ids });
+    const agentId = get().activeAgentId;
+    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.removeMessages(ids, {
-      sessionId: get().activeId,
+      agentId,
       topicId: get().activeTopicId,
     });
 

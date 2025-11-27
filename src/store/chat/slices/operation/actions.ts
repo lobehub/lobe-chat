@@ -70,11 +70,16 @@ export interface OperationActions {
   getOperationAbortSignal: (operationId: string) => AbortSignal;
 
   /**
-   * Get sessionId and topicId from operation or fallback to global state
+   * Get conversation context from operation or fallback to global state
    * This is a helper method that can be used by other slices
+   *
+   * Migration Note (LOBE-1086):
+   * - Only agentId is used for message association
+   * - Backend handles sessionId mapping internally based on agentId
    */
   internal_getSessionContext: (context?: { operationId?: string }) => {
-    sessionId: string;
+    agentId: string;
+    threadId: string | null | undefined;
     topicId: string | null | undefined;
   };
 
@@ -132,26 +137,30 @@ export const operationActions: StateCreator<
         log('[internal_getSessionContext] ERROR: Operation not found: %s', context.operationId);
         throw new Error(`Operation not found: ${context.operationId}`);
       }
-      const sessionId = operation.context.sessionId!;
+      const agentId = operation.context.agentId!;
       const topicId = operation.context.topicId;
+      const threadId = operation.context.threadId;
       log(
-        '[internal_getSessionContext] get from operation %s: sessionId=%s, topicId=%s',
+        '[internal_getSessionContext] get from operation %s: agentId=%s, topicId=%s, threadId=%s',
         context.operationId,
-        sessionId,
+        agentId,
         topicId,
+        threadId,
       );
-      return { sessionId, topicId };
+      return { agentId, topicId, threadId };
     }
 
     // Fallback to global state
-    const sessionId = get().activeId;
+    const agentId = get().activeAgentId;
     const topicId = get().activeTopicId;
+    const threadId = get().activeThreadId;
     log(
-      '[internal_getSessionContext] use global state: sessionId=%s, topicId=%s',
-      sessionId,
+      '[internal_getSessionContext] use global state: agentId=%s, topicId=%s, threadId=%s',
+      agentId,
       topicId,
+      threadId,
     );
-    return { sessionId, topicId };
+    return { agentId, topicId, threadId };
   },
 
   startOperation: (params) => {
@@ -222,12 +231,12 @@ export const operationActions: StateCreator<
           state.messageOperationMap[context.messageId] = operationId;
         }
 
-        // Update context index (if sessionId exists)
-        if (context.sessionId) {
-          const contextKey = messageMapKey(
-            context.sessionId,
-            context.topicId !== undefined ? context.topicId : null,
-          );
+        // Update context index (if agentId exists)
+        if (context.agentId) {
+          const contextKey = messageMapKey({
+            agentId: context.agentId,
+            topicId: context.topicId !== undefined ? context.topicId : null,
+          });
           if (!state.operationsByContext[contextKey]) {
             state.operationsByContext[contextKey] = [];
           }
@@ -510,8 +519,8 @@ export const operationActions: StateCreator<
       }
 
       // Context filters
-      if (filter.sessionId !== undefined) {
-        matches = matches && op.context.sessionId === filter.sessionId;
+      if (filter.agentId !== undefined) {
+        matches = matches && op.context.agentId === filter.agentId;
       }
       if (filter.topicId !== undefined) {
         matches = matches && op.context.topicId === filter.topicId;
@@ -597,11 +606,11 @@ export const operationActions: StateCreator<
           }
 
           // Remove from context index
-          if (op.context.sessionId) {
-            const contextKey = messageMapKey(
-              op.context.sessionId,
-              op.context.topicId !== undefined ? op.context.topicId : null,
-            );
+          if (op.context.agentId) {
+            const contextKey = messageMapKey({
+              agentId: op.context.agentId,
+              topicId: op.context.topicId !== undefined ? op.context.topicId : null,
+            });
             const contextIndex = state.operationsByContext[contextKey];
             if (contextIndex) {
               state.operationsByContext[contextKey] = contextIndex.filter(

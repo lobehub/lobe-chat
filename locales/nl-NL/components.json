@@ -26,6 +26,14 @@
       "createChunkingTask": "Voorbereiden...",
       "deleteSuccess": "Bestand succesvol verwijderd",
       "downloading": "Bestand aan het downloaden...",
+      "goBack": "Ga terug naar de vorige pagina",
+      "goForward": "Ga verder naar de volgende pagina",
+      "goToParent": "Ga naar de bovenliggende map",
+      "moveError": "Verplaatsen van bestand mislukt",
+      "moveHere": "Hierheen verplaatsen",
+      "moveSuccess": "Bestand succesvol verplaatst",
+      "moveToFolder": "Verplaatsen naar...",
+      "moveToRoot": "Verplaatsen naar hoofdmap",
       "removeFromKnowledgeBase": "Verwijderen uit kennisbank",
       "removeFromKnowledgeBaseSuccess": "Bestand succesvol verwijderd"
     },
@@ -41,6 +49,12 @@
       },
       "or": "of",
       "title": "Sleep bestanden of mappen hierheen"
+    },
+    "noFolders": "Geen mappen beschikbaar",
+    "sort": {
+      "dateAdded": "Datum toegevoegd",
+      "name": "Naam",
+      "size": "Grootte"
     },
     "title": {
       "createdAt": "Aangemaakt op",
