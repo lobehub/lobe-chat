@@ -53,6 +53,12 @@
       "desc": "Giới hạn dựa trên cơ chế Claude Thinking (<1>Tìm hiểu thêm</1>), khi bật sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
       "title": "Bật tư duy sâu sắc"
     },
+    "imageAspectRatio": {
+      "title": "Tỷ lệ khung hình ảnh"
+    },
+    "imageResolution": {
+      "title": "Độ phân giải hình ảnh"
+    },
     "reasoningBudgetToken": {
       "title": "Token tiêu tốn cho tư duy"
     },
