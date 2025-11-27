@@ -15,11 +15,11 @@ export const userMemorySlice: StateCreator<
   UserMemoryAction
 > = (set, get) => ({
   searchUserMemory: async (id, params) => {
-    const { internal_updateMessageContent } = get();
+    const { optimisticUpdateMessageContent } = get();
 
     try {
       const result = await userMemoryService.searchMemory(params);
-      await internal_updateMessageContent(id, JSON.stringify(result));
+      await optimisticUpdateMessageContent(id, JSON.stringify(result));
       return true;
     } catch (error) {
       console.error('Failed to retrieve memories:', error);
@@ -30,7 +30,7 @@ export const userMemorySlice: StateCreator<
         preferences: [],
       };
 
-      await internal_updateMessageContent(id, JSON.stringify(errorResult));
+      await optimisticUpdateMessageContent(id, JSON.stringify(errorResult));
       return false;
     }
   },
