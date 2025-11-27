@@ -31,6 +31,23 @@ export interface NewAPIPricing {
 const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined';
 
 /**
+ * Parse a pricing API HTTP response into a `NewAPIPricing[] | null`.
+ * Shared between browser and server branches to avoid duplicated logic.
+ */
+const parsePricingResponse = async (res: Response): Promise<NewAPIPricing[] | null> => {
+  if (!res.ok) {
+    return null;
+  }
+
+  try {
+    const body = await res.json();
+    return body?.success && body?.data ? (body.data as NewAPIPricing[]) : null;
+  } catch {
+    return null;
+  }
+};
+
+/**
  * Fetch pricing information with CORS bypass for client-side requests
  * In browser environment, use /webapi/proxy to avoid CORS errors
  */
@@ -47,12 +64,7 @@ const fetchPricing = async (
         method: 'POST',
       });
 
-      if (proxyResponse.ok) {
-        const pricingData = await proxyResponse.json();
-        if (pricingData.success && pricingData.data) {
-          return pricingData.data as NewAPIPricing[];
-        }
-      }
+      return await parsePricingResponse(proxyResponse);
     } else {
       // In server environment, fetch directly
       const pricingResponse = await fetch(pricingUrl, {
@@ -61,18 +73,12 @@ const fetchPricing = async (
         },
       });
 
-      if (pricingResponse.ok) {
-        const pricingData = await pricingResponse.json();
-        if (pricingData.success && pricingData.data) {
-          return pricingData.data as NewAPIPricing[];
-        }
-      }
+      return await parsePricingResponse(pricingResponse);
     }
   } catch (error) {
     console.debug('Failed to fetch NewAPI pricing info:', error);
+    return null;
   }
-
-  return null;
 };
 
 export const params = {
