@@ -3,9 +3,9 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ChatInput from '@/app/[variants]/(main)/chat/components/conversation/features/ChatInput';
 import { useChatGroupStore } from '@/store/chatGroup';
 
+import ChatInput from '../../../../app/[variants]/(main)/chat/Conversation/ChatInput';
 import ThreadChatList from './ThreadChatList';
 
 const Body = memo(() => {

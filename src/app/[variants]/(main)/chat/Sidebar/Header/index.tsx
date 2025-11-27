@@ -1,0 +1,80 @@
+'use client';
+
+import { Block, Text } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
+import { PropsWithChildren, memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
+
+import TogglePanelButton from '@/features/NavPanel/TogglePanelButton';
+import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
+import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
+import { useSessionStore } from '@/store/session';
+import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+
+import Avatar from './Avatar';
+import SwitchButton from './SwitchButton';
+
+const useStyles = createStyles(({ css, token }) => ({
+  container: css`
+    overflow: hidden;
+    border-block-end: 1px solid ${token.colorBorderSecondary};
+  `,
+}));
+
+const HeaderInfo = memo<PropsWithChildren>(() => {
+  const { t } = useTranslation('chat');
+  const { styles } = useStyles();
+  useInitAgentConfig();
+
+  const [isInbox, title] = useSessionStore((s) => [
+    sessionSelectors.isInboxSession(s),
+    sessionMetaSelectors.currentAgentTitle(s),
+  ]);
+
+  const displayTitle = isInbox ? t('inbox.title') : title;
+
+  const openChatSettings = useOpenChatSettings();
+
+  return (
+    <Flexbox
+      align={'center'}
+      className={styles.container}
+      flex={'none'}
+      gap={8}
+      height={48}
+      horizontal
+      justify={'space-between'}
+      padding={8}
+    >
+      <Flexbox
+        align={'center'}
+        flex={1}
+        gap={8}
+        horizontal
+        style={{
+          overflow: 'hidden',
+        }}
+      >
+        <Block
+          align={'center'}
+          clickable
+          height={32}
+          justify={'center'}
+          onClick={openChatSettings}
+          variant={'borderless'}
+          width={32}
+        >
+          <Avatar size={28} />
+        </Block>
+        <Text ellipsis weight={500}>
+          {displayTitle}
+        </Text>
+        <SwitchButton />
+      </Flexbox>
+      <TogglePanelButton />
+    </Flexbox>
+  );
+});
+
+export default HeaderInfo;
