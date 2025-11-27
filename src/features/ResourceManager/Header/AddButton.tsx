@@ -3,7 +3,7 @@
 import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
-import { FilePenLine, FileUp, FolderIcon, FolderUp, Plus } from 'lucide-react';
+import { FilePenLine, FileUp, FolderIcon, FolderUp, Link, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -95,6 +95,37 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
             <div className={cx(hotArea)}>{t('header.actions.uploadFolder')}</div>
           </Upload>
         ),
+      },
+      {
+        type: 'divider',
+      },
+      {
+        children: [
+          {
+            key: 'connect-notion',
+            label: 'Notion',
+            onClick: () => {
+              // TODO: Implement Notion connection
+            },
+          },
+          {
+            key: 'connect-google-drive',
+            label: 'Google Drive',
+            onClick: () => {
+              // TODO: Implement Google Drive connection
+            },
+          },
+          {
+            key: 'connect-onedrive',
+            label: 'OneDrive',
+            onClick: () => {
+              // TODO: Implement OneDrive connection
+            },
+          },
+        ],
+        icon: <Icon icon={Link} />,
+        key: 'connect',
+        label: t('header.actions.connect'),
       },
     ],
     [knowledgeBaseId, currentFolderId, pushDockFileList],

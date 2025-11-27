@@ -65,6 +65,7 @@ export default {
   empty: '暂无已上传文件/文件夹',
   header: {
     actions: {
+      connect: '连接...',
       newFolder: '新建文件夹',
       newPage: '新建文稿',
       uploadFile: '上传文件',

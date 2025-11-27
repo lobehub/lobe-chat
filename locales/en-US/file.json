@@ -65,6 +65,7 @@
   "empty": "No files or folders have been uploaded yet.",
   "header": {
     "actions": {
+      "connect": "Connect...",
       "newFolder": "New Folder",
       "newPage": "New Page",
       "uploadFile": "Upload File",
