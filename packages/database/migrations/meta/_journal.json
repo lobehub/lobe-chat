@@ -336,13 +336,6 @@
       "when": 1763987922211,
       "tag": "0047_add_slug_document",
       "breakpoints": true
-    },
-    {
-      "idx": 48,
-      "version": "7",
-      "when": 1763991209268,
-      "tag": "0048_early_havok",
-      "breakpoints": true
     }
   ],
   "version": "6"
