@@ -14,26 +14,31 @@ vi.mock('swr', async (importOriginal) => {
   };
 });
 
-// 定义一个变量来存储 enableAuth 的值
-let enableClerk = false;
+// Use vi.hoisted to ensure variables exist before vi.mock factory executes
+const { enableClerk, enableNextAuth, enableBetterAuth } = vi.hoisted(() => ({
+  enableClerk: { value: false },
+  enableNextAuth: { value: false },
+  enableBetterAuth: { value: false },
+}));
 
-let enableNextAuth = false;
-
-// 模拟 @/const/auth 模块
 vi.mock('@/const/auth', () => ({
   get enableClerk() {
-    return enableClerk;
+    return enableClerk.value;
   },
   get enableNextAuth() {
-    return enableNextAuth;
+    return enableNextAuth.value;
+  },
+  get enableBetterAuth() {
+    return enableBetterAuth.value;
   },
 }));
 
 afterEach(() => {
   vi.restoreAllMocks();
 
-  enableNextAuth = false;
-  enableClerk = false;
+  enableNextAuth.value = false;
+  enableClerk.value = false;
+  enableBetterAuth.value = false;
 });
 
 /**
@@ -61,7 +66,7 @@ describe('createAuthSlice', () => {
 
   describe('logout', () => {
     it('should call clerkSignOut when Clerk is enabled', async () => {
-      enableClerk = true;
+      enableClerk.value = true;
 
       const clerkSignOutMock = vi.fn();
       useUserStore.setState({ clerkSignOut: clerkSignOutMock });
@@ -89,7 +94,7 @@ describe('createAuthSlice', () => {
     });
 
     it('should call next-auth signOut when NextAuth is enabled', async () => {
-      enableNextAuth = true;
+      enableNextAuth.value = true;
 
       const { result } = renderHook(() => useUserStore());
 
@@ -100,7 +105,7 @@ describe('createAuthSlice', () => {
       const { signOut } = await import('next-auth/react');
 
       expect(signOut).toHaveBeenCalled();
-      enableNextAuth = false;
+      enableNextAuth.value = false;
     });
 
     it('should not call next-auth signOut when NextAuth is disabled', async () => {
@@ -118,7 +123,7 @@ describe('createAuthSlice', () => {
 
   describe('openLogin', () => {
     it('should call clerkSignIn when Clerk is enabled', async () => {
-      enableClerk = true;
+      enableClerk.value = true;
       const clerkSignInMock = vi.fn();
       useUserStore.setState({ clerkSignIn: clerkSignInMock });
 
@@ -144,7 +149,7 @@ describe('createAuthSlice', () => {
     });
 
     it('should call next-auth signIn when NextAuth is enabled', async () => {
-      enableNextAuth = true;
+      enableNextAuth.value = true;
 
       const { result } = renderHook(() => useUserStore());
 
@@ -155,7 +160,7 @@ describe('createAuthSlice', () => {
       const { signIn } = await import('next-auth/react');
 
       expect(signIn).toHaveBeenCalled();
-      enableNextAuth = false;
+      enableNextAuth.value = false;
     });
     it('should not call next-auth signIn when NextAuth is disabled', async () => {
       const { result } = renderHook(() => useUserStore());
