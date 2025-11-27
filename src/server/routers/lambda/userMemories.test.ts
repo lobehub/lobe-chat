@@ -214,12 +214,10 @@ describe('userMemories.retrieveMemory', () => {
     });
 
     expect(embeddingsMock).toHaveBeenCalledTimes(1);
-    expect(searchWithEmbedding).toHaveBeenCalledWith({
+    expect(searchWithEmbedding.mock.calls[0][0]).toBeTypeOf('object');
+    expect(searchWithEmbedding.mock.calls[0][0]).toStrictEqual({
       embedding: [1],
-      limit: 5,
       limits: { contexts: 1, experiences: 1, preferences: 1 },
-      memoryCategory: 'work',
-      memoryType: 'project',
     });
 
     expect(result.contexts[0]).toMatchObject({
