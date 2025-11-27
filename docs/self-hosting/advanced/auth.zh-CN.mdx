@@ -44,6 +44,13 @@ LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全�
 | `NEXT_PUBLIC_AUTH_URL`           | 可选 | 浏览器可访问的 Better Auth 回调 URL。仅在默认生成的 URL 不正确时设置    |
 | `AUTH_SSO_PROVIDERS`             | 可选 | 启用的 SSO 提供商列表，以逗号分隔，例如 `google,github,microsoft` |
 
+<Callout type={'warning'}>
+  若使用官方 Docker 镜像构建 / 部署，默认是 **开启 NextAuth、关闭 Better Auth**
+  （`NEXT_PUBLIC_ENABLE_NEXT_AUTH=1`、`NEXT_PUBLIC_ENABLE_BETTER_AUTH=0`），以避免意外跳转到新版登录页。
+  如果要切换到 Better Auth，请同时显式设置构建参数和运行时环境变量：
+  `NEXT_PUBLIC_ENABLE_BETTER_AUTH=1`、`NEXT_PUBLIC_ENABLE_NEXT_AUTH=0`，并重新构建镜像。
+</Callout>
+
 ### 支持的 SSO 提供商
 
 | 提供商                   | 值                       | 环境变量                                                                                                      |
