@@ -1,20 +1,24 @@
 import { Suspense, memo } from 'react';
 
 import { NavPanelPortal } from '@/features/NavPanel';
-import BackButton from '@/features/NavPanel/BackButton';
+import SessionHydration from '@/features/NavPanel/SessionHydration';
 
 import ConfigSwitcher from './ConfigSwitcher';
+import Header from './Header';
 import Topic from './Topic';
 
 const ChatTopic = memo(() => {
   return (
-    <NavPanelPortal navKey="chat">
-      <BackButton />
-      <Suspense>
-        <ConfigSwitcher />
-        <Topic />
-      </Suspense>
-    </NavPanelPortal>
+    <>
+      <NavPanelPortal navKey="chat">
+        <Suspense>
+          <Header />
+          <ConfigSwitcher />
+          <Topic />
+        </Suspense>
+      </NavPanelPortal>
+      <SessionHydration />
+    </>
   );
 });
 

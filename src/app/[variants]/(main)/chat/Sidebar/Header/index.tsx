@@ -1,16 +1,19 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { Block, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import TogglePanelButton from '@/features/NavPanel/TogglePanelButton';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
+import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import Avatar from './Avatar';
+import SwitchButton from './SwitchButton';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -19,8 +22,8 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const HeaderInfo = memo(() => {
-  const { t } = useTranslation(['chat', 'hotkey']);
+const HeaderInfo = memo<PropsWithChildren>(() => {
+  const { t } = useTranslation('chat');
   const { styles } = useStyles();
   useInitAgentConfig();
 
@@ -30,6 +33,8 @@ const HeaderInfo = memo(() => {
   ]);
 
   const displayTitle = isInbox ? t('inbox.title') : title;
+
+  const openChatSettings = useOpenChatSettings();
 
   return (
     <Flexbox
@@ -51,11 +56,23 @@ const HeaderInfo = memo(() => {
           overflow: 'hidden',
         }}
       >
-        <Avatar size={32} />
+        <Block
+          align={'center'}
+          clickable
+          height={32}
+          justify={'center'}
+          onClick={openChatSettings}
+          variant={'borderless'}
+          width={32}
+        >
+          <Avatar size={28} />
+        </Block>
         <Text ellipsis weight={500}>
           {displayTitle}
         </Text>
+        <SwitchButton />
       </Flexbox>
+      <TogglePanelButton />
     </Flexbox>
   );
 });
