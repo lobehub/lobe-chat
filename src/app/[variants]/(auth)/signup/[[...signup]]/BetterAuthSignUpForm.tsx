@@ -93,7 +93,7 @@ export default function BetterAuthSignUpForm() {
       }
 
       // Redirect based on email verification requirement
-      if (authEnv.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION) {
+      if (authEnv.NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION) {
         // Email verification required, redirect to verification notice page
         // callbackURL is already passed to signUp.email for verification link
         router.push(

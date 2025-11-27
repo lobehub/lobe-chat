@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { serverDB } from '@lobechat/database';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
@@ -28,6 +29,10 @@ export const auth = betterAuth({
     },
   },
 
+  // Use renamed env vars (fallback to next-auth vars is handled in src/envs/auth.ts)
+  baseURL: authEnv.NEXT_PUBLIC_AUTH_URL,
+  secret: authEnv.AUTH_SECRET,
+
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
   }),
@@ -37,7 +42,7 @@ export const auth = betterAuth({
     enabled: true,
     maxPasswordLength: 64,
     minPasswordLength: 8,
-    requireEmailVerification: authEnv.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION,
+    requireEmailVerification: authEnv.NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION,
 
     sendResetPassword: async ({ user, url }) => {
       const template = getResetPasswordEmailTemplate({ url });

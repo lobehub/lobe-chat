@@ -16,10 +16,10 @@ import { parseFilesConfig } from './parseFilesConfig';
 
 /**
  * Get Better-Auth SSO providers list
- * Parses BETTER_AUTH_SSO_PROVIDERS and returns enabled providers
+ * Parses AUTH_SSO_PROVIDERS and returns enabled providers
  */
 const getBetterAuthSSOProviders = () => {
-  return parseSSOProviders(authEnv.BETTER_AUTH_SSO_PROVIDERS);
+  return parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
 };
 
 export const getServerGlobalConfig = async () => {

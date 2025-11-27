@@ -11,11 +11,11 @@ declare global {
       CLERK_SECRET_KEY?: string;
       CLERK_WEBHOOK_SECRET?: string;
 
-      // ===== Better Auth ===== //
-      BETTER_AUTH_SECRET?: string;
-      NEXT_PUBLIC_BETTER_AUTH_URL?: string;
-      NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION?: string;
-      BETTER_AUTH_SSO_PROVIDERS?: string;
+      // ===== Auth (shared by Better Auth / Next Auth) ===== //
+      AUTH_SECRET?: string;
+      NEXT_PUBLIC_AUTH_URL?: string;
+      NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION?: string;
+      AUTH_SSO_PROVIDERS?: string;
 
       // ===== Next Auth ===== //
       NEXT_AUTH_SECRET?: string;
@@ -119,8 +119,8 @@ export const getAuthConfig = () => {
 
       // ---------------------------------- better auth ----------------------------------
       NEXT_PUBLIC_ENABLE_BETTER_AUTH: z.boolean().optional(),
-      NEXT_PUBLIC_BETTER_AUTH_URL: z.string().optional(),
-      NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION: z.boolean().optional().default(false),
+      NEXT_PUBLIC_AUTH_URL: z.string().optional(),
+      NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION: z.boolean().optional().default(false),
       NEXT_PUBLIC_ENABLE_MAGIC_LINK: z.boolean().optional().default(false),
 
       // ---------------------------------- next auth ----------------------------------
@@ -132,8 +132,8 @@ export const getAuthConfig = () => {
       CLERK_WEBHOOK_SECRET: z.string().optional(),
 
       // ---------------------------------- better auth ----------------------------------
-      BETTER_AUTH_SECRET: z.string().optional(),
-      BETTER_AUTH_SSO_PROVIDERS: z.string().optional().default(''),
+      AUTH_SECRET: z.string().optional(),
+      AUTH_SSO_PROVIDERS: z.string().optional().default(''),
 
       // ---------------------------------- next auth ----------------------------------
       NEXT_AUTH_SECRET: z.string().optional(),
@@ -235,12 +235,16 @@ export const getAuthConfig = () => {
 
       // ---------------------------------- better auth ----------------------------------
       NEXT_PUBLIC_ENABLE_BETTER_AUTH: process.env.NEXT_PUBLIC_ENABLE_BETTER_AUTH === '1',
-      NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
-      NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION:
-        process.env.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION === '1',
+      // Fallback to NEXTAUTH_URL origin for seamless migration from next-auth
+      NEXT_PUBLIC_AUTH_URL:
+        process.env.NEXT_PUBLIC_AUTH_URL ??
+        (process.env.NEXTAUTH_URL ? new URL(process.env.NEXTAUTH_URL).origin : undefined),
+      NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION: process.env.NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION === '1',
       NEXT_PUBLIC_ENABLE_MAGIC_LINK: process.env.NEXT_PUBLIC_ENABLE_MAGIC_LINK === '1',
-      BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-      BETTER_AUTH_SSO_PROVIDERS: process.env.BETTER_AUTH_SSO_PROVIDERS,
+      // Fallback to NEXT_AUTH_SECRET for seamless migration from next-auth
+      AUTH_SECRET: process.env.AUTH_SECRET ?? process.env.NEXT_AUTH_SECRET,
+      // Fallback to NEXT_AUTH_SSO_PROVIDERS for seamless migration from next-auth
+      AUTH_SSO_PROVIDERS: process.env.AUTH_SSO_PROVIDERS ?? process.env.NEXT_AUTH_SSO_PROVIDERS,
 
       // better-auth env for Cognito provider is different from next-auth's one
       AUTH_COGNITO_DOMAIN: process.env.AUTH_COGNITO_DOMAIN,

@@ -59,7 +59,7 @@ for (const definition of providerDefinitions) {
 }
 
 export const initBetterAuthSSOProviders = () => {
-  const enabledProviders = parseSSOProviders(authEnv.BETTER_AUTH_SSO_PROVIDERS);
+  const enabledProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
 
   const socialProviders: SocialProviders = {};
   const genericOAuthProviders: GenericOAuthConfig[] = [];
