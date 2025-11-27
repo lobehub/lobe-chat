@@ -79,6 +79,7 @@
 - [x] Add `authProviders` and `isEmailPasswordAuth` to user store
 - [x] Add `fetchAuthProviders` and `refreshAuthProviders` actions
 - [x] SSO provider link/unlink with proper state management
+- [x] Add Better Auth support to `getUserAuth` utility with tests
 
 ---
 

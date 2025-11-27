@@ -1,4 +1,6 @@
-import { enableClerk, enableNextAuth } from '@/const/auth';
+import { headers } from 'next/headers';
+
+import { enableBetterAuth, enableClerk, enableNextAuth } from '@/const/auth';
 import { DESKTOP_USER_ID } from '@/const/desktop';
 import { isDesktop } from '@/const/version';
 
@@ -9,6 +11,21 @@ export const getUserAuth = async () => {
     const clerkAuth = new ClerkAuth();
 
     return await clerkAuth.getAuth();
+  }
+
+  if (enableBetterAuth) {
+    const { auth: betterAuth } = await import('@/auth');
+
+    const currentHeaders = await headers();
+    const requestHeaders = Object.fromEntries(currentHeaders.entries());
+
+    const session = await betterAuth.api.getSession({
+      headers: requestHeaders,
+    });
+
+    const userId = session?.user?.id;
+
+    return { betterAuth: session, userId };
   }
 
   if (enableNextAuth) {
