@@ -4,7 +4,7 @@ import { CaretDownFilled } from '@ant-design/icons';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { motion } from 'framer-motion';
-import { FilePenIcon, FileText, FolderOpen, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
+import { FilePenIcon, FileText, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -40,16 +40,11 @@ const CategoryMenu = memo(() => {
   const { t } = useTranslation('file');
   const { styles, cx } = useStyles();
   const [activeKey] = useFileCategory();
-  const [showCollapsed, setShowCollapsed] = useState(activeKey !== FilesTabs.Home);
+  const [showCollapsed, setShowCollapsed] = useState(activeKey !== FilesTabs.All);
   const navigate = useNavigate();
 
   const collapsedItems: MenuProps['items'] = useMemo(
     () => [
-      {
-        icon: <Icon icon={FolderOpen} />,
-        key: FilesTabs.All,
-        label: t('tab.all'),
-      },
       {
         icon: <Icon icon={FileText} />,
         key: FilesTabs.Documents,
@@ -84,7 +79,7 @@ const CategoryMenu = memo(() => {
     [t],
   );
 
-  const isHomeActive = activeKey === FilesTabs.Home;
+  const isHomeActive = activeKey === FilesTabs.All;
 
   return (
     <Flexbox gap={4}>
@@ -93,7 +88,7 @@ const CategoryMenu = memo(() => {
         className={cx(styles.header, isHomeActive && styles.headerActive)}
         horizontal
         onClick={() => {
-          navigate('/knowledge', { replace: true });
+          navigate('/resource', { replace: true });
         }}
         paddingBlock={6}
         paddingInline={8}
@@ -112,7 +107,7 @@ const CategoryMenu = memo(() => {
               size={'small'}
             />
           </motion.div>
-          <div style={{ flex: 1, lineHeight: '14px' }}>{t('tab.home')}</div>
+          <div style={{ flex: 1, lineHeight: '14px' }}>{t('tab.all')}</div>
         </Flexbox>
       </Flexbox>
 
@@ -130,9 +125,8 @@ const CategoryMenu = memo(() => {
             compact
             items={collapsedItems}
             onClick={({ key }) => {
-              // Navigate to home route and set category
-              const categoryParam = key === FilesTabs.Home ? '' : `?category=${key}`;
-              navigate(`/knowledge${categoryParam}`, { replace: true });
+              const categoryParam = key === FilesTabs.All ? '' : `?category=${key}`;
+              navigate(`/resource${categoryParam}`, { replace: true });
             }}
             selectable
             selectedKeys={[activeKey]}

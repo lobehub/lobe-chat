@@ -1,12 +1,13 @@
 import { memo } from 'react';
 
 import Sidebar from './Sidebar';
+import HomeContent from './components';
 
 const Home = memo(() => {
   return (
     <>
       <Sidebar />
-      <div>Home Page</div>
+      <HomeContent onOpenFile={() => {}} />
     </>
   );
 });

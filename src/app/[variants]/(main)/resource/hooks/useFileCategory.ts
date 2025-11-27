@@ -11,7 +11,7 @@ export const useFileCategory = (): [string, (value: string) => void] => {
   const { id } = useParams<{ id: string }>();
 
   // If there's an ID in the path, default to Pages instead of Home
-  const defaultCategory = id ? FilesTabs.Pages : FilesTabs.Home;
+  const defaultCategory = id ? FilesTabs.Pages : FilesTabs.All;
   const category = searchParams.get('category') ?? defaultCategory;
 
   const setCategory = (value: string) => {
@@ -19,7 +19,7 @@ export const useFileCategory = (): [string, (value: string) => void] => {
       (prev) => {
         const newParams = new URLSearchParams(prev);
 
-        if (value === FilesTabs.Home) {
+        if (value === FilesTabs.All) {
           // Clear on default
           newParams.delete('category');
         } else {
