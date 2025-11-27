@@ -15,7 +15,7 @@ import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum } from '@/types/hotkey';
 
-const AgentSettings = dynamic(() => import('./AgentSettings'), {
+const AgentSettingsEditor = dynamic(() => import('./AgentSettingsEditor'), {
   ssr: false,
 });
 
@@ -47,7 +47,7 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
         }}
       />
 
-      {isGroupSession ? <AgentTeamSettings key={id} /> : <AgentSettings key={id} />}
+      {isGroupSession ? <AgentTeamSettings key={id} /> : <AgentSettingsEditor key={id} />}
     </>
   );
 });

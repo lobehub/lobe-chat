@@ -1,0 +1,1 @@
+ALTER TABLE "agents" ADD COLUMN "editor_content" jsonb;

@@ -53,6 +53,7 @@ export const agents = pgTable(
     params: jsonb('params').default({}),
     provider: text('provider'),
     systemRole: text('system_role'),
+    editorContent: jsonb('editor_content'),
     tts: jsonb('tts').$type<LobeAgentTTSConfig>(),
 
     virtual: boolean('virtual').default(false),

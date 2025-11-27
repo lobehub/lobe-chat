@@ -886,8 +886,48 @@ export class DiscoverService {
     const all = await this._getPluginList(locale);
     let raw = all.find((item) => item.identifier === identifier);
     if (!raw) {
-      log('getPluginDetail: plugin not found for identifier=%s', identifier);
-      return;
+      log('getPluginDetail: plugin not found in default store for identifier=%s, trying MCP plugin', identifier);
+      try {
+        const mcpDetail = await this.getMcpDetail({ identifier, locale });
+        const convertedMcp: Partial<DiscoverPluginDetail> = {
+          author:
+            typeof (mcpDetail as any).author === 'object'
+              ? (mcpDetail as any).author?.name || ''
+              : (mcpDetail as any).author || '',
+          avatar: (mcpDetail as any).icon || (mcpDetail as any).avatar || '',
+          category: (mcpDetail as any).category as any,
+          createdAt: (mcpDetail as any).createdAt || '',
+          description: mcpDetail.description || '',
+          homepage: mcpDetail.homepage || '',
+          identifier: mcpDetail.identifier,
+          manifest: undefined,
+          related: mcpDetail.related.map((item) => ({
+            author:
+              typeof (item as any).author === 'object'
+                ? (item as any).author?.name || ''
+                : (item as any).author || '',
+            avatar: (item as any).icon || (item as any).avatar || '',
+            category: (item as any).category as any,
+            createdAt: (item as any).createdAt || '',
+            description: (item as any).description || '',
+            homepage: (item as any).homepage || '',
+            identifier: item.identifier,
+            manifest: undefined,
+            schemaVersion: 1,
+            tags: (item as any).tags || [],
+            title: (item as any).name || item.identifier,
+          })) as unknown as DiscoverPluginItem[],
+          schemaVersion: 1,
+          tags: (mcpDetail as any).tags || [],
+          title: (mcpDetail as any).name || mcpDetail.identifier,
+        };
+        const plugin = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), convertedMcp);
+        log('getPluginDetail: returning converted MCP plugin');
+        return plugin as DiscoverPluginDetail;
+      } catch (error) {
+        log('getPluginDetail: MCP plugin not found for identifier=%s, error=%O', identifier, error);
+        return;
+      }
     }
 
     raw = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), raw);

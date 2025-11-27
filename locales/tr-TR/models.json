@@ -737,6 +737,9 @@
   "anthropic/claude-opus-4.1": {
     "description": "Opus 4.1, Anthropic’in üst düzey modelidir; programlama, karmaşık akıl yürütme ve sürekli görevler için optimize edilmiştir."
   },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5, Anthropic'in amiral gemisi modelidir. Üstün zekâ ve ölçeklenebilir performansı bir araya getirerek, en yüksek kalitede yanıtlar ve akıl yürütme yeteneği gerektiren karmaşık görevler için idealdir."
+  },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4, Anthropic’in hibrit akıl yürütme modelidir; düşünsel ve düşünsel olmayan yetenekleri bir arada sunar."
   },
@@ -826,6 +829,9 @@
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4, Anthropic'in son derece karmaşık görevleri işlemek için geliştirdiği en güçlü modeldir. Performans, zeka, akıcılık ve anlama açısından mükemmel bir şekilde öne çıkmaktadır."
+  },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5, Anthropic'in amiral gemisi modelidir. Üstün zekâ ve ölçeklenebilir performansı bir araya getirerek, en yüksek kalitede yanıtlar ve akıl yürütme yeteneği gerektiren karmaşık görevler için idealdir."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4, neredeyse anında yanıtlar veya uzatılmış adım adım düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir."
@@ -1670,6 +1676,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview, karmaşık akıl yürütme yeteneklerine sahip olup, mantıksal akıl yürütme, matematik, programlama gibi alanlarda mükemmel performans sergilemektedir."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5, Anthropic'in amiral gemisi modelidir. Üstün zekâ ve ölçeklenebilir performansı bir araya getirerek, en yüksek kalitede yanıtlar ve akıl yürütme yeteneği gerektiren karmaşık görevler için idealdir."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash, Google’ın yüksek performanslı akıl yürütme modelidir; genişletilmiş çok modlu görevler için uygundur."
   },
@@ -2184,7 +2193,7 @@
     "description": "Kimi K2 Instruct, Kimi'nin resmi çıkarım modeli, uzun bağlam, kodlama, soru-cevap gibi çoklu senaryoları destekler."
   },
   "kimi-k2-thinking": {
-    "description": "K2 Uzun Düşünme Modeli, 256k bağlamı destekler; çok adımlı araç çağırma ve düşünme yeteneğine sahiptir, daha karmaşık problemleri çözmede uzmandır."
+    "description": "kimi-k2-thinking modeli, Moonshot tarafından sunulan genel amaçlı bir düşünme modelidir. Gelişmiş akıl yürütme yeteneklerine sahiptir ve çok adımlı araç kullanımıyla çeşitli zorlukların üstesinden gelmeye yardımcı olur."
   },
   "kimi-k2-thinking-turbo": {
     "description": "K2 Uzun Düşünme Modeli’nin yüksek hızlı sürümüdür; 256k bağlamı destekler, derin akıl yürütmede uzmandır ve saniyede 60-100 token üretim hızına ulaşır."

@@ -4,7 +4,7 @@ import { Avatar, Button, Form, type FormGroupItemType, Tag, Tooltip } from '@lob
 import { Empty, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideTrash2, Store } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -134,11 +134,12 @@ const AgentPlugin = memo(() => {
           <Trans i18nKey={'plugin.empty'} ns={'setting'}>
             暂无安装插件，
             <Link
-              href={'/'}
               onClick={(e) => {
+                e.stopPropagation();
                 e.preventDefault();
                 setShowStore(true);
               }}
+              to={'/'}
             >
               前往插件市场
             </Link>
