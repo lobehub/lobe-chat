@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.123"
+  },
+  {
+    "children": {
       "fixes": ["Slove the publish to market the agent config error."]
     },
     "date": "2025-11-26",
