@@ -5,7 +5,7 @@ import { useTheme } from 'antd-style';
 import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-export const SkeletonList = memo(() => {
+export const SkeletonList = memo<{ rows?: number }>(({ rows = 3 }) => {
   const theme = useTheme();
 
   const SkeletonItem = useCallback(() => {
@@ -42,7 +42,7 @@ export const SkeletonList = memo(() => {
 
   return (
     <Flexbox gap={2}>
-      {Array.from({ length: 3 }).map((_, i) => (
+      {Array.from({ length: rows }).map((_, i) => (
         <SkeletonItem key={i} />
       ))}
     </Flexbox>
