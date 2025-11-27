@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { imageUrl } from '@/const/url';
+import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
 import { useFetchTopics } from '@/hooks/useFetchTopics';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
@@ -14,7 +15,6 @@ import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { TopicDisplayMode } from '@/types/topic';
 
-import { SkeletonList } from '../../SkeletonList';
 import ByTimeMode from '../TopicListContent/ByTimeMode';
 import FlatMode from '../TopicListContent/FlatMode';
 import SearchResult from '../TopicListContent/SearchResult';

@@ -3,11 +3,10 @@
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
+import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
-
-import SkeletonList from './SkeletonList';
 
 const AgentConfig = dynamic(() => import('./AgentConfig'), {
   loading: () => <SkeletonList />,

@@ -1,7 +1,8 @@
 import { ActionIcon, Dropdown, Icon, Tag } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { useTheme } from 'antd-style';
 import { MessageSquareDashed, Star } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { Suspense, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -11,6 +12,7 @@ import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
+import ThreadList from '../../TopicListContent/ThreadList';
 import Actions from './Actions';
 import Editing from './Editing';
 import { useTopicItemDropdownMenu } from './useDropdownMenu';
@@ -23,7 +25,7 @@ interface TopicItemProps {
   title: string;
 }
 
-const TopicItem = memo<TopicItemProps>(({ id, title, fav, active }) => {
+const TopicItem = memo<TopicItemProps>(({ id, title, fav, active, threadId }) => {
   const { t } = useTranslation('topic');
   const theme = useTheme();
   const openTopicInNewWindow = useGlobalStore((s) => s.openTopicInNewWindow);
@@ -74,9 +76,17 @@ const TopicItem = memo<TopicItemProps>(({ id, title, fav, active }) => {
         loading={isLoading}
         onClick={handleClick}
         title={
-          <Flexbox align={'center'} flex={1} gap={4} horizontal>
+          <Flexbox align={'center'} flex={1} gap={6} horizontal>
             {t('defaultTitle')}
-            <Tag size={'small'}>{t('temp')}</Tag>
+            <Tag
+              size={'small'}
+              style={{
+                color: theme.colorTextDescription,
+                fontSize: 10,
+              }}
+            >
+              {t('temp')}
+            </Tag>
           </Flexbox>
         }
       />
@@ -84,7 +94,7 @@ const TopicItem = memo<TopicItemProps>(({ id, title, fav, active }) => {
   }
 
   return (
-    <>
+    <Flexbox style={{ position: 'relative' }}>
       <Dropdown
         menu={{
           items: dropdownMenu,
@@ -93,7 +103,7 @@ const TopicItem = memo<TopicItemProps>(({ id, title, fav, active }) => {
       >
         <NavItem
           actions={<Actions dropdownMenu={dropdownMenu} />}
-          active={active}
+          active={active && !threadId}
           disabled={editing}
           icon={
             <ActionIcon
@@ -114,7 +124,19 @@ const TopicItem = memo<TopicItemProps>(({ id, title, fav, active }) => {
         />
       </Dropdown>
       <Editing id={id} title={title} toggleEditing={toggleEditing} />
-    </>
+      {active && (
+        <Suspense
+          fallback={
+            <Flexbox gap={8} paddingBlock={8} paddingInline={24} width={'100%'}>
+              <Skeleton.Button active size={'small'} style={{ height: 18, width: '100%' }} />
+              <Skeleton.Button active size={'small'} style={{ height: 18, width: '100%' }} />
+            </Flexbox>
+          }
+        >
+          <ThreadList />
+        </Suspense>
+      )}
+    </Flexbox>
   );
 });
 

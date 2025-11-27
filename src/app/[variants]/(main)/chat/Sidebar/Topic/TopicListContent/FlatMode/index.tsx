@@ -12,7 +12,7 @@ import TopicItem from '../../List/Item';
 
 const FlatMode = memo(() => {
   const { t } = useTranslation('topic');
-  const [activeTopicId] = useChatStore((s) => [s.activeTopicId]);
+  const [activeTopicId, activeThreadId] = useChatStore((s) => [s.activeTopicId, s.activeThreadId]);
   const activeTopicList = useChatStore(topicSelectors.displayTopics, isEqual);
 
   return (
@@ -27,6 +27,7 @@ const FlatMode = memo(() => {
           fav={topic.favorite}
           id={topic.id}
           key={topic.id}
+          threadId={activeThreadId}
           title={topic.title}
         />
       ))}

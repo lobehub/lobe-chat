@@ -5,12 +5,12 @@ import React, { Suspense, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import { SkeletonList } from '../SkeletonList';
 import Actions from './Actions';
 import List from './List';
 import { useTopicActionsDropdownMenu } from './useDropdownMenu';

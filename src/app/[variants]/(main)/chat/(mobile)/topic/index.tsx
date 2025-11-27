@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic';
 import { Flexbox } from 'react-layout-kit';
 
-import SkeletonList from '@/app/[variants]/(main)/chat/Sidebar/SkeletonList';
 import TopicSearchBar from '@/app/[variants]/(main)/chat/Sidebar/Topic/TopicSearchBar';
+import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
 
 import TopicModal from './TopicModal';
 

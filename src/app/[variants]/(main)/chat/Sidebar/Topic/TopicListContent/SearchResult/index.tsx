@@ -6,10 +6,10 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
+import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 
-import { SkeletonList } from '../../../SkeletonList';
 import TopicItem from '../../List/Item';
 
 const SearchResult = memo(() => {

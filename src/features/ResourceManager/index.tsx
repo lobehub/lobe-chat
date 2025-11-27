@@ -20,7 +20,7 @@ interface KnowledgeManagerProps {
   // Directly open a document if provided
   documentId?: string;
   knowledgeBaseId?: string;
-  onOpenFile: (id: string) => void;
+  onOpenFile?: (id: string) => void;
   title: string;
 }
 

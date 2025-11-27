@@ -53,7 +53,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 interface FileExplorerProps {
   category?: string;
   knowledgeBaseId?: string;
-  onOpenFile: (id: string) => void;
+  onOpenFile?: (id: string) => void;
 }
 
 const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpenFile }) => {
