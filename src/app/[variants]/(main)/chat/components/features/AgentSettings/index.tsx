@@ -1,20 +1,17 @@
 'use client';
 
-import { Drawer } from '@lobehub/ui';
+import type { ItemType } from 'antd/es/menu/interface';
+import { Modal } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import HeaderContent from '@/app/[variants]/(main)/chat/settings/features/HeaderContent';
-import BrandWatermark from '@/components/BrandWatermark';
-import PanelTitle from '@/components/PanelTitle';
+import Menu from '@/components/Menu';
 import { INBOX_SESSION_ID } from '@/const/session';
-import { isDesktop } from '@/const/version';
-import { AgentCategory, AgentSettings as Settings } from '@/features/AgentSetting';
+import { AgentSettings as Settings } from '@/features/AgentSetting';
 import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
-import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
-import Footer from '@/features/Setting/Footer';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
@@ -22,6 +19,46 @@ import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { LobeSessionType } from '@/types/session';
+
+const useStyles = createStyles(({ css, token }) => ({
+  content: css`
+    overflow-y: auto;
+    flex: 1;
+    padding: ${token.paddingLG}px;
+  `,
+  modal: css`
+    .ant-modal-content {
+      padding: 0;
+    }
+
+    .ant-modal-header {
+      margin-block-end: 0;
+      padding: ${token.paddingLG}px;
+      border-block-end: 1px solid ${token.colorBorderSecondary};
+    }
+
+    .ant-modal-body {
+      overflow: hidden;
+      height: 70vh;
+      padding: 0;
+    }
+  `,
+  sidebar: css`
+    width: 200px;
+    padding: ${token.paddingLG}px;
+    border-inline-end: 1px solid ${token.colorBorderSecondary};
+    background: ${token.colorFillQuaternary};
+  `,
+  sidebarTitle: css`
+    margin-block-end: ${token.marginLG}px;
+    padding-block: 0;
+    padding-inline: ${token.paddingSM}px;
+
+    font-size: ${token.fontSizeSM}px;
+    font-weight: 600;
+    color: ${token.colorTextSecondary};
+  `,
+}));
 
 export interface AgentSettingsProps {
   agentId?: string;
@@ -36,6 +73,7 @@ export interface AgentSettingsProps {
  */
 const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
   const { t } = useTranslation('setting');
+  const { styles } = useStyles();
 
   // Use provided agentId or fall back to current active session
   const activeId = useSessionStore((s) => s.activeId);
@@ -124,7 +162,23 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
 
   const isInbox = id === INBOX_SESSION_ID;
 
-  const [tab, setTab] = useState(isInbox ? ChatSettingsTabs.Prompt : ChatSettingsTabs.Meta);
+  const [tab, setTab] = useState(isInbox ? ChatSettingsTabs.Chat : ChatSettingsTabs.Opening);
+
+  // Define available menu items (开场设置、聊天偏好、模型设置)
+  const menuItems: ItemType[] = [
+    !isInbox ? {
+      key: ChatSettingsTabs.Opening,
+      label: t('agentTab.opening'),
+    } : null,
+    {
+      key: ChatSettingsTabs.Chat,
+      label: t('agentTab.chat'),
+    },
+    {
+      key: ChatSettingsTabs.Modal,
+      label: t('agentTab.modal'),
+    },
+  ].filter(Boolean) as ItemType[];
 
   return (
     <AgentSettingsProvider
@@ -135,52 +189,47 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
       onConfigChange={updateAgentConfig}
       onMetaChange={updateAgentMeta}
     >
-      <Drawer
-        containerMaxWidth={1280}
-        height={isDesktop ? `calc(100vh - ${TITLE_BAR_HEIGHT}px)` : '100vh'}
-        noHeader
-        onClose={handleClose}
+      <Modal
+        centered
+        className={styles.modal}
+        footer={null}
+        onCancel={handleClose}
         open={isOpen}
-        placement={'bottom'}
-        sidebar={
-          <Flexbox
-            gap={20}
-            style={{
-              height: 'calc(100vh - 28px)',
-            }}
-          >
-            <PanelTitle desc={t('header.sessionDesc')} title={t('header.session')} />
-            <Flexbox flex={1} width={'100%'}>
-              <AgentCategory setTab={setTab} tab={tab} />
-            </Flexbox>
-            <Flexbox align={'center'} gap={8} paddingInline={8} width={'100%'}>
-              <HeaderContent modal />
-            </Flexbox>
-            <BrandWatermark paddingInline={12} />
-          </Flexbox>
-        }
-        sidebarWidth={280}
         styles={{
-          sidebarContent: {
-            gap: 48,
-            justifyContent: 'space-between',
-            minHeight: isDesktop ? `calc(100% - ${TITLE_BAR_HEIGHT}px)` : '100%',
-            paddingBlock: 24,
-            paddingInline: 48,
-          },
+          body: {
+            padding: 0,
+          }
         }}
+        title={t('header.session')}
+        width={800}
       >
-        <Settings
-          config={config}
-          id={id}
-          loading={isLoading}
-          meta={meta}
-          onConfigChange={updateAgentConfig}
-          onMetaChange={updateAgentMeta}
-          tab={tab}
-        />
-        <Footer />
-      </Drawer>
+        <Flexbox direction="horizontal" height="100%">
+          {/* Left Sidebar */}
+          <div className={styles.sidebar}>
+            <div className={styles.sidebarTitle}>{t('header.session')}</div>
+            <Menu
+              compact
+              items={menuItems}
+              onClick={({ key }) => setTab(key as ChatSettingsTabs)}
+              selectable
+              selectedKeys={[tab]}
+            />
+          </div>
+
+          {/* Right Content */}
+          <div className={styles.content}>
+            <Settings
+              config={config}
+              id={id}
+              loading={isLoading}
+              meta={meta}
+              onConfigChange={updateAgentConfig}
+              onMetaChange={updateAgentMeta}
+              tab={tab}
+            />
+          </div>
+        </Flexbox>
+      </Modal>
     </AgentSettingsProvider>
   );
 });
