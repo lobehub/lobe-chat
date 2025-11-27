@@ -36,8 +36,8 @@ export const config = {
     '/discover',
     '/discover(.*)',
     '/labs',
-    '/chat',
-    '/chat(.*)',
+    '/agent',
+    '/agent(.*)',
     '/changelog(.*)',
     '/settings(.*)',
     '/image',
@@ -135,6 +135,7 @@ const defaultMiddleware = (request: NextRequest) => {
   // All SPA routes that use react-router-dom should be rewritten to just /${route}
   const spaRoutes = [
     '/chat',
+    '/agent',
     '/discover',
     '/knowledge',
     '/settings',

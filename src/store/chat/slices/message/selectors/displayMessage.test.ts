@@ -178,15 +178,16 @@ describe('displayMessageSelectors', () => {
       });
       act(() => {
         useAgentStore.setState({
-          activeId: 'inbox',
+          activeAgentId: 'inbox-agent',
+          inboxAgentId: 'inbox-agent',
           agentMap: {
-            inbox: {
+            'inbox-agent': {
               chatConfig: {
                 historyCount: 2,
                 enableHistoryCount: true,
               },
               model: 'abc',
-            } as LobeAgentConfig,
+            },
           },
         });
       });

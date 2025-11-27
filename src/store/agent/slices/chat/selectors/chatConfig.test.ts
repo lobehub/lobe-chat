@@ -16,7 +16,7 @@ const createMockState = (
     agentMap: {
       agent1: merge(DEFAULT_AGENT_CONFIG, { ...config, chatConfig }),
     },
-    activeId: 'agent1',
+    activeAgentId: 'agent1',
   }) as AgentStoreState;
 
 describe('agentChatConfigSelectors', () => {

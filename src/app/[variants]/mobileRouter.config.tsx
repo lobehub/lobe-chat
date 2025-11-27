@@ -286,12 +286,12 @@ export const createMobileRouter = () =>
         // Default route - redirect to chat
         {
           index: true,
-          loader: () => redirect('/chat', { status: 302 }),
+          loader: () => redirect('/agent', { status: 302 }),
         },
 
         // Catch-all route
         {
-          loader: () => redirect('/chat', { status: 302 }),
+          loader: () => redirect('/agent', { status: 302 }),
           path: '*',
         },
       ],

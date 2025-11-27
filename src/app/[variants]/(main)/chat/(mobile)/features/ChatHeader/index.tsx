@@ -21,7 +21,7 @@ const MobileHeader = memo(() => {
     <ChatHeader
       center={<ChatHeaderTitle />}
       onBackClick={() =>
-        router.push('/chat', { query: { session: INBOX_SESSION_ID }, replace: true })
+        router.push('/agent', { query: { session: INBOX_SESSION_ID }, replace: true })
       }
       right={
         <>

@@ -4,22 +4,23 @@ import { Avatar, GroupAvatar } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { GroupMemberWithAgent } from '@/types/session';
 
 const HeaderAvatar = memo<{ size?: number }>(({ size = 28 }) => {
-  const [avatar, backgroundColor, members, sessionType] = useSessionStore((s) => {
-    const session = sessionSelectors.currentSession(s);
+  const [avatar, backgroundColor] = useAgentStore((s) => [
+    agentSelectors.currentAgentAvatar(s),
+    agentSelectors.currentAgentBackgroundColor(s),
+  ]);
 
-    return [
-      sessionMetaSelectors.currentAgentAvatar(s),
-      sessionMetaSelectors.currentAgentBackgroundColor(s),
-      session?.type === 'group' ? session.members : undefined,
-      session?.type,
-    ];
+  const [members, sessionType] = useSessionStore((s) => {
+    const session = sessionSelectors.currentSession(s);
+    return [session?.type === 'group' ? session.members : undefined, session?.type];
   });
 
   const currentUser = useUserStore((s) => ({
@@ -48,7 +49,9 @@ const HeaderAvatar = memo<{ size?: number }>(({ size = 28 }) => {
     );
   }
 
-  return <Avatar avatar={avatar} background={backgroundColor} shape={'circle'} size={size} />;
+  return (
+    <Avatar avatar={avatar} background={backgroundColor || undefined} shape={'circle'} size={size} />
+  );
 });
 
 export default HeaderAvatar;

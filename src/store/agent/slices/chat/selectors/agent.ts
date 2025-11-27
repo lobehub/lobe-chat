@@ -3,7 +3,6 @@ import {
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
-  INBOX_SESSION_ID,
 } from '@lobechat/const';
 import { KnowledgeItem, KnowledgeType, LobeAgentConfig, LobeAgentTTSConfig } from '@lobechat/types';
 import { VoiceList } from '@lobehub/tts';
@@ -13,38 +12,37 @@ import { filterToolIds } from '@/helpers/toolFilters';
 import { AgentStoreState } from '@/store/agent/initialState';
 import { merge } from '@/utils/merge';
 
-const isInboxSession = (s: AgentStoreState) => s.activeId === INBOX_SESSION_ID;
+const isInboxAgent = (s: AgentStoreState) =>
+  !!s.inboxAgentId && s.activeAgentId === s.inboxAgentId;
+
+// ==========   Meta   ============== //
+
+const currentAgentData = (s: AgentStoreState) =>
+  s.activeAgentId ? s.agentMap[s.activeAgentId] : undefined;
+
+const currentAgentTitle = (s: AgentStoreState) => currentAgentData(s)?.title;
+
+const currentAgentAvatar = (s: AgentStoreState) => currentAgentData(s)?.avatar;
+
+const currentAgentDescription = (s: AgentStoreState) => currentAgentData(s)?.description;
+
+const currentAgentBackgroundColor = (s: AgentStoreState) => currentAgentData(s)?.backgroundColor;
+
+const currentAgentTags = (s: AgentStoreState) => currentAgentData(s)?.tags || [];
 
 // ==========   Config   ============== //
 
 const inboxAgentConfig = (s: AgentStoreState) =>
-  merge(DEFAULT_AGENT_CONFIG, s.agentMap[INBOX_SESSION_ID]);
+  s.inboxAgentId ? merge(DEFAULT_AGENT_CONFIG, s.agentMap[s.inboxAgentId]) : DEFAULT_AGENT_CONFIG;
 const inboxAgentModel = (s: AgentStoreState) => inboxAgentConfig(s).model;
 
 const getAgentConfigById =
-  (id: string) =>
-  (s: AgentStoreState): LobeAgentConfig =>
-    merge(s.defaultAgentConfig, s.agentMap[id]);
-
-const getAgentConfigByAgentId =
   (agentId: string) =>
-  (s: AgentStoreState): LobeAgentConfig => {
-    // Find the session that contains this agent
-    const sessionId = Object.keys(s.agentMap).find((sessionKey) => {
-      const agentConfig = s.agentMap[sessionKey];
-      return agentConfig?.id === agentId;
-    });
-
-    if (sessionId) {
-      return merge(s.defaultAgentConfig, s.agentMap[sessionId]);
-    }
-
-    // Fallback to default config if agent not found
-    return s.defaultAgentConfig;
-  };
+  (s: AgentStoreState): LobeAgentConfig =>
+    merge(s.defaultAgentConfig, s.agentMap[agentId]);
 
 export const currentAgentConfig = (s: AgentStoreState): LobeAgentConfig =>
-  getAgentConfigById(s.activeId)(s);
+  getAgentConfigById(s.activeAgentId || '')(s);
 
 const currentAgentSystemRole = (s: AgentStoreState) => {
   return currentAgentConfig(s).systemRole;
@@ -166,14 +164,18 @@ const currentKnowledgeIds = (s: AgentStoreState) => {
   };
 };
 
-const isAgentConfigLoading = (s: AgentStoreState) => !s.agentConfigInitMap[s.activeId];
+const isAgentConfigLoading = (s: AgentStoreState) =>
+  !s.activeAgentId || !s.agentConfigInitMap[s.activeAgentId];
 
 const openingQuestions = (s: AgentStoreState) =>
   currentAgentConfig(s).openingQuestions || DEFAULT_OPENING_QUESTIONS;
 const openingMessage = (s: AgentStoreState) => currentAgentConfig(s).openingMessage || '';
 
 export const agentSelectors = {
+  currentAgentAvatar,
+  currentAgentBackgroundColor,
   currentAgentConfig,
+  currentAgentDescription,
   currentAgentFiles,
   currentAgentKnowledgeBases,
   currentAgentModel,
@@ -182,10 +184,11 @@ export const agentSelectors = {
   currentAgentSystemRole,
   currentAgentTTS,
   currentAgentTTSVoice,
+  currentAgentTags,
+  currentAgentTitle,
   currentEnabledKnowledge,
   currentKnowledgeIds,
   displayableAgentPlugins,
-  getAgentConfigByAgentId,
   getAgentConfigById,
   hasEnabledKnowledge,
   hasEnabledKnowledgeBases,
@@ -194,7 +197,7 @@ export const agentSelectors = {
   inboxAgentConfig,
   inboxAgentModel,
   isAgentConfigLoading,
-  isInboxSession,
+  isInboxAgent,
   openingMessage,
   openingQuestions,
 };

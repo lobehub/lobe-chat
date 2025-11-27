@@ -2,15 +2,18 @@ import type { PartialDeep } from 'type-fest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { AgentSettingsInstance } from '@/features/AgentSetting';
-import { LobeAgentConfig } from '@/types/agent';
+import { AgentItem, LobeAgentConfig } from '@/types/agent';
 
 export interface AgentState {
   activeAgentId?: string;
-  activeId: string;
   agentConfigInitMap: Record<string, boolean>;
-  agentMap: Record<string, PartialDeep<LobeAgentConfig>>;
+  agentMap: Record<string, PartialDeep<AgentItem>>;
   agentSettingInstance?: AgentSettingsInstance | null;
   defaultAgentConfig: LobeAgentConfig;
+  /**
+   * inbox agent id, since inbox is accessed via sessionId, we need to store its agentId separately
+   */
+  inboxAgentId?: string;
   isInboxAgentConfigInit: boolean;
   showAgentSetting: boolean;
   updateAgentChatConfigSignal?: AbortController;
@@ -18,7 +21,6 @@ export interface AgentState {
 }
 
 export const initialAgentChatState: AgentState = {
-  activeId: 'inbox',
   agentConfigInitMap: {},
   agentMap: {},
   defaultAgentConfig: DEFAULT_AGENT_CONFIG,

@@ -10,8 +10,8 @@ import BackButton, { BACK_BUTTON_ID } from '@/features/NavPanel/BackButton';
 import TogglePanelButton from '@/features/NavPanel/TogglePanelButton';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 import Avatar from './Avatar';
 import SwitchButton from './SwitchButton';
@@ -41,9 +41,9 @@ const HeaderInfo = memo<PropsWithChildren>(() => {
   const { styles } = useStyles();
   useInitAgentConfig();
 
-  const [isInbox, title] = useSessionStore((s) => [
-    sessionSelectors.isInboxSession(s),
-    sessionMetaSelectors.currentAgentTitle(s),
+  const [isInbox, title] = useAgentStore((s) => [
+    agentSelectors.isInboxAgent(s),
+    agentSelectors.currentAgentTitle(s),
   ]);
 
   const displayTitle = isInbox ? t('inbox.title') : title;

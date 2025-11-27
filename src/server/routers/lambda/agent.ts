@@ -105,6 +105,16 @@ export const agentRouter = router({
       return ctx.agentModel.findBySessionId(sessionId);
     }),
 
+  getAgentConfigById: agentProcedure
+    .input(
+      z.object({
+        agentId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      return ctx.agentModel.getAgentConfigById(input.agentId);
+    }),
+
   getKnowledgeBasesAndFiles: agentProcedure
     .input(
       z.object({
