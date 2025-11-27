@@ -1,5 +1,7 @@
 # Better-Auth Implementation Plan
 
+Whenever make new progress in current pr, be sure to update this plan.
+
 ## Completed Phases
 
 ### Phase 1: Email Service & Email Verification
