@@ -1,4 +1,3 @@
-import { emailEnv } from '@/envs/email';
 
 import { EmailImplType, EmailPayload, EmailResponse, createEmailServiceImpl } from './impls';
 import type { EmailServiceImpl } from './impls';
@@ -11,13 +10,6 @@ export class EmailService {
   private emailImpl: EmailServiceImpl;
 
   constructor(implType?: EmailImplType) {
-    // Validate SMTP_USER is configured
-    if (!emailEnv.SMTP_USER) {
-      throw new Error(
-        'SMTP_USER environment variable is required to use email service. Please configure SMTP settings in your .env file.',
-      );
-    }
-
     this.emailImpl = createEmailServiceImpl(implType);
   }
 
@@ -42,9 +34,6 @@ export class EmailService {
     return true;
   }
 }
-
-// Export a default instance for convenience
-export const emailService = new EmailService();
 
 // Export types
 export type { EmailPayload, EmailResponse } from './impls';

@@ -19,6 +19,12 @@ export class NodemailerImpl implements EmailServiceImpl {
   constructor(config?: NodemailerConfig) {
     log('Initializing Nodemailer with config: %o', config);
 
+    if (!config && !emailEnv.SMTP_USER) {
+      throw new Error(
+        'SMTP_USER environment variable is required to use email service. Please configure SMTP settings in your .env file.',
+      );
+    }
+
     // Use environment variables if config is not provided
     const transportConfig: NodemailerConfig = config ?? {
       auth: {

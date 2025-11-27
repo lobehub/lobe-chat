@@ -17,7 +17,9 @@ EmailService
 ### Basic Example
 
 ```typescript
-import { emailService } from '@/server/services/email';
+import { EmailService } from '@/server/services/email';
+
+const emailService = new EmailService();
 
 // Send a simple text email
 await emailService.sendMail({
@@ -111,7 +113,9 @@ console.log('Preview URL:', result.previewUrl);
 Before sending emails, verify your SMTP configuration:
 
 ```typescript
-import { emailService } from '@/server/services/email';
+import { EmailService } from '@/server/services/email';
+
+const emailService = new EmailService();
 
 try {
   await emailService.verify();
@@ -128,12 +132,14 @@ Example integration for email verification:
 ```typescript
 import { betterAuth } from 'better-auth';
 
-import { emailService } from '@/server/services/email';
+import { EmailService } from '@/server/services/email';
 
 export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPasswordEmail: async ({ user, url }) => {
+      const emailService = new EmailService();
+
       await emailService.sendMail({
         from: 'noreply@lobechat.com',
         to: user.email,
@@ -150,6 +156,8 @@ export const auth = betterAuth({
   emailVerification: {
     enabled: true,
     sendVerificationEmail: async ({ user, url }) => {
+      const emailService = new EmailService();
+
       await emailService.sendMail({
         from: 'noreply@lobechat.com',
         to: user.email,

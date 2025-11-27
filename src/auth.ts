@@ -10,7 +10,7 @@ import {
   getVerificationEmailTemplate,
 } from '@/libs/better-auth/email-templates';
 import { initBetterAuthSSOProviders } from '@/libs/better-auth/sso';
-import { emailService } from '@/server/services/email';
+import { EmailService } from '@/server/services/email';
 
 // Email verification link expiration time (in seconds)
 // Default is 1 hour (3600 seconds) as per Better Auth documentation
@@ -42,6 +42,7 @@ export const auth = betterAuth({
     sendResetPassword: async ({ user, url }) => {
       const template = getResetPasswordEmailTemplate({ url });
 
+      const emailService = new EmailService();
       await emailService.sendMail({
         to: user.email,
         ...template,
@@ -58,6 +59,7 @@ export const auth = betterAuth({
         userName: user.name,
       });
 
+      const emailService = new EmailService();
       await emailService.sendMail({
         to: user.email,
         ...template,
@@ -83,6 +85,7 @@ export const auth = betterAuth({
                 url,
               });
 
+              const emailService = new EmailService();
               await emailService.sendMail({
                 to: email,
                 ...template,
