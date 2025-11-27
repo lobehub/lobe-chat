@@ -31,7 +31,7 @@ const AgentList = memo(() => {
     };
   }, [pinnedList?.length, customList?.length, defaultList?.length]);
 
-  if (!isInit) return <SkeletonList />;
+  if (!isInit) return <SkeletonList rows={6} />;
 
   return (
     <>

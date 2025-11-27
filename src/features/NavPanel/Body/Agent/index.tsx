@@ -114,7 +114,7 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
         </Text>
       }
     >
-      <Suspense fallback={<SkeletonList />}>
+      <Suspense fallback={<SkeletonList rows={6} />}>
         <Flexbox gap={4} paddingBlock={1}>
           <List />
         </Flexbox>
