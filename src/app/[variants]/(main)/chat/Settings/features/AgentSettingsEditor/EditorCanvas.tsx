@@ -26,7 +26,7 @@ import { useMentionOptions } from './MentionList';
 import PROMPT_TEMPLATE from './promptTemplate.json';
 
 const SAVE_DEBOUNCE_TIME = 300; // ms
-type SavePayload = { editorContent: Record<string, any>; systemRole: string };
+type SavePayload = { editorData: Record<string, any>; systemRole: string };
 
 /**
  * EditorCanvas
@@ -42,28 +42,28 @@ type SavePayload = { editorContent: Record<string, any>; systemRole: string };
 const EditorCanvas = memo(() => {
   const { t } = useTranslation('setting');
   const editor = useEditor();
-  const editorContent = useStore((s) => s.config.editorContent);
+  const editorData = useStore((s) => s.config.editorData);
   const systemRole = useStore((s) => s.config.systemRole);
   const updateConfig = useStore((s) => s.setAgentConfig);
   const loadingState = useStore((s) => s.loadingState);
-  const [initialLoad] = useState(editorContent || PROMPT_TEMPLATE);
+  const [initialLoad] = useState(editorData || PROMPT_TEMPLATE);
 
   useEffect(() => {
     if (
-      editorContent === undefined &&
+      editorData === undefined &&
       systemRole === undefined &&
       loadingState?.avatar === undefined
     ) {
       return;
     }
-    if (editorContent) {
-      editor?.setDocument('json', editorContent || PROMPT_TEMPLATE);
+    if (editorData) {
+      editor?.setDocument('json', editorData || PROMPT_TEMPLATE);
     } else if (systemRole) {
       editor?.setDocument('markdown', systemRole);
     } else {
       editor?.setDocument('json', PROMPT_TEMPLATE);
     }
-  }, [loadingState, editorContent, systemRole]);
+  }, [loadingState]);
 
   // Mention options for @ tools insertion
   const mentionOptions = useMentionOptions();
@@ -94,7 +94,7 @@ const EditorCanvas = memo(() => {
       const jsonContent = editor.getDocument('json') as unknown as Record<string, any>;
 
       debouncedSave({
-        editorContent: structuredClone(jsonContent || {}), // Store as object, not string
+        editorData: structuredClone(jsonContent || {}), // Store as object, not string
         systemRole: markdownContent || '',
       });
     } catch (error) {

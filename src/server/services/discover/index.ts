@@ -537,11 +537,14 @@ export class DiscoverService {
         createdAt: (data as any).createdAt,
         currentVersion: data.version,
         description: (data as any).description || data.summary,
+        // @ts-ignore
+        editorData: data.editorData || {},
+
         examples: Array.isArray((data as any).examples)
           ? (data as any).examples.map((example: any) => ({
-            content: typeof example === 'string' ? example : example.content || '',
-            role: example.role || 'user',
-          }))
+              content: typeof example === 'string' ? example : example.content || '',
+              role: example.role || 'user',
+            }))
           : [],
         homepage:
           (data as any).homepage ||
@@ -886,7 +889,10 @@ export class DiscoverService {
     const all = await this._getPluginList(locale);
     let raw = all.find((item) => item.identifier === identifier);
     if (!raw) {
-      log('getPluginDetail: plugin not found in default store for identifier=%s, trying MCP plugin', identifier);
+      log(
+        'getPluginDetail: plugin not found in default store for identifier=%s, trying MCP plugin',
+        identifier,
+      );
       try {
         const mcpDetail = await this.getMcpDetail({ identifier, locale });
         const convertedMcp: Partial<DiscoverPluginDetail> = {
