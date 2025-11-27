@@ -1,5 +1,8 @@
 import { BuiltinRender } from '@lobechat/types';
 
+// agent-builder
+import { AgentBuilderManifest } from './agent-builder';
+import { AgentBuilderRenders } from './agent-builder/Render';
 import { CodeInterpreterManifest } from './code-interpreter';
 import CodeInterpreterRender from './code-interpreter/Render';
 // knowledge-base
@@ -17,6 +20,7 @@ import { WebBrowsingRenders } from './web-browsing/Render';
  * Organized by toolset (identifier) -> API name
  */
 const BuiltinToolsRenders: Record<string, Record<string, BuiltinRender>> = {
+  [AgentBuilderManifest.identifier]: AgentBuilderRenders as Record<string, BuiltinRender>,
   [LocalSystemManifest.identifier]: LocalSystemRenders as Record<string, BuiltinRender>,
   [WebBrowsingManifest.identifier]: WebBrowsingRenders as Record<string, BuiltinRender>,
   [KnowledgeBaseManifest.identifier]: KnowledgeBaseRenders as Record<string, BuiltinRender>,

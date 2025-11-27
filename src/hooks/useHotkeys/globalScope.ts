@@ -5,6 +5,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -71,10 +72,27 @@ export const useOpenHotkeyHelperHotkey = () => {
   );
 };
 
+export const useToggleLeftPanelHotkey = () => {
+  const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
+  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+
+  return useHotkeyById(
+    HotkeyEnum.ToggleLeftPanel,
+    () =>
+      updateSystemStatus({
+        showSessionPanel: !showSessionPanel,
+      }),
+    {
+      enableOnContentEditable: true,
+    },
+  );
+};
+
 // 注册聚合
 
 export const useRegisterGlobalHotkeys = () => {
   // 全局自动注册不需要 enableScope
+  useToggleLeftPanelHotkey();
   useSwitchAgentHotkey();
   useNavigateToChatHotkey();
   useOpenHotkeyHelperHotkey();

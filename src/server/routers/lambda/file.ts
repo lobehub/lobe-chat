@@ -36,9 +36,23 @@ export const fileRouter = router({
     }),
 
   createFile: fileProcedure
-    .input(UploadFileSchema.omit({ url: true }).extend({ url: z.string() }))
+    .input(
+      UploadFileSchema.omit({ url: true }).extend({
+        parentId: z.string().optional(),
+        url: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const { isExist } = await ctx.fileModel.checkHash(input.hash!);
+
+      // Resolve parentId if it's a slug
+      let resolvedParentId = input.parentId;
+      if (input.parentId) {
+        const docBySlug = await ctx.documentModel.findBySlug(input.parentId);
+        if (docBySlug) {
+          resolvedParentId = docBySlug.id;
+        }
+      }
 
       const { id } = await ctx.fileModel.create(
         {
@@ -47,6 +61,7 @@ export const fileRouter = router({
           knowledgeBaseId: input.knowledgeBaseId,
           metadata: input.metadata,
           name: input.name,
+          parentId: resolvedParentId,
           size: input.size,
           url: input.url,
         },
@@ -171,8 +186,15 @@ export const fileRouter = router({
   getKnowledgeItems: fileProcedure.input(QueryFileListSchema).query(async ({ ctx, input }) => {
     const knowledgeItems = await ctx.knowledgeRepo.query(input);
 
+    // Filter out folders from Documents category when in Inbox (no knowledgeBaseId)
+    const filteredItems = !input.knowledgeBaseId
+      ? knowledgeItems.filter(
+          (item) => !(item.sourceType === 'document' && item.fileType === 'custom/folder'),
+        )
+      : knowledgeItems;
+
     // Process files (add chunk info and async task status)
-    const fileItems = knowledgeItems.filter((item) => item.sourceType === 'file');
+    const fileItems = filteredItems.filter((item) => item.sourceType === 'file');
     const fileIds = fileItems.map((item) => item.id);
     const chunks = await ctx.chunkModel.countByFileIds(fileIds);
 
@@ -189,7 +211,7 @@ export const fileRouter = router({
 
     // Combine all items with their metadata
     const resultItems = [] as any[];
-    for (const item of knowledgeItems) {
+    for (const item of filteredItems) {
       if (item.sourceType === 'file') {
         const chunkTask = item.chunkTaskId
           ? chunkTasks.find((task) => task.id === item.chunkTaskId)
@@ -271,6 +293,101 @@ export const fileRouter = router({
 
       // remove from S3
       await ctx.fileService.deleteFiles(needToRemoveFileList.map((file) => file.url!));
+    }),
+
+  updateFile: fileProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        parentId: z.string().nullable().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, parentId } = input;
+
+      // Resolve parentId if it's a slug (otherwise use as-is)
+      let resolvedParentId: string | null | undefined = parentId;
+      if (parentId) {
+        const docBySlug = await ctx.documentModel.findBySlug(parentId);
+        if (docBySlug) {
+          resolvedParentId = docBySlug.id;
+        }
+      }
+
+      await ctx.fileModel.update(id, { parentId: resolvedParentId });
+
+      return { success: true };
+    }),
+
+  recentFiles: fileProcedure
+    .input(z.object({ limit: z.number().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const limit = input?.limit ?? 12;
+      // Query recent items and filter for files only (exclude documents/pages)
+      const allItems = await ctx.knowledgeRepo.queryRecent(limit * 3); // Query more to ensure we have enough files after filtering
+      const fileItems = allItems
+        .filter((item) => item.sourceType === 'file' && item.fileType !== 'custom/document')
+        .slice(0, limit);
+
+      if (fileItems.length === 0) return [];
+
+      // Get file IDs for batch processing
+      const fileIds = fileItems.map((item) => item.id);
+      const chunksArray = await ctx.chunkModel.countByFileIds(fileIds);
+      const chunks: Record<string, number> = {};
+      for (const item of chunksArray) {
+        if (item.id) chunks[item.id] = item.count;
+      }
+
+      const chunkTaskIds = fileItems.map((item) => item.chunkTaskId).filter(Boolean) as string[];
+      const embeddingTaskIds = fileItems
+        .map((item) => item.embeddingTaskId)
+        .filter(Boolean) as string[];
+
+      const [chunkTasks, embeddingTasks] = await Promise.all([
+        chunkTaskIds.length > 0
+          ? ctx.asyncTaskModel.findByIds(chunkTaskIds, AsyncTaskType.Chunking)
+          : Promise.resolve([]),
+        embeddingTaskIds.length > 0
+          ? ctx.asyncTaskModel.findByIds(embeddingTaskIds, AsyncTaskType.Embedding)
+          : Promise.resolve([]),
+      ]);
+
+      // Build result with task status
+      const resultFiles: FileListItem[] = [];
+      for (const item of fileItems) {
+        const chunkTask = item.chunkTaskId
+          ? chunkTasks.find((task) => task.id === item.chunkTaskId)
+          : null;
+        const embeddingTask = item.embeddingTaskId
+          ? embeddingTasks.find((task) => task.id === item.embeddingTaskId)
+          : null;
+
+        resultFiles.push({
+          ...item,
+          chunkCount: chunks[item.id] ?? 0,
+          chunkingError: chunkTask?.error ?? null,
+          chunkingStatus: chunkTask?.status as AsyncTaskStatus,
+          embeddingError: embeddingTask?.error ?? null,
+          embeddingStatus: embeddingTask?.status as AsyncTaskStatus,
+          finishEmbedding: embeddingTask?.status === AsyncTaskStatus.Success,
+          sourceType: 'file' as const,
+          url: await ctx.fileService.getFullFileUrl(item.url!),
+        } as FileListItem);
+      }
+
+      return resultFiles;
+    }),
+
+  recentPages: fileProcedure
+    .input(z.object({ limit: z.number().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const limit = input?.limit ?? 12;
+      // Query recent items and filter for pages (documents) only, exclude folders
+      const allItems = await ctx.knowledgeRepo.queryRecent(limit * 3); // Query more to ensure we have enough pages after filtering
+      return allItems
+        .filter((item) => item.sourceType === 'document' && item.fileType !== 'custom/folder')
+        .slice(0, limit);
     }),
 });
 

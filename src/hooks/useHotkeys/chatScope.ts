@@ -2,17 +2,15 @@ import isEqual from 'fast-deep-equal';
 import { useEffect } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 
-import { useSend } from '@/app/[variants]/(main)/chat/components/conversation/features/ChatInput/useSend';
+import { useSend } from '@/app/[variants]/(main)/chat/features/Conversation/ChatInput/useSend';
 import { useClearCurrentMessages } from '@/features/ChatInput/ActionBar/Clear';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useActionSWR } from '@/libs/swr';
 import { useChatStore } from '@/store/chat';
 import { displayMessageSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { HotkeyEnum, HotkeyScopeEnum } from '@/types/hotkey';
 
-import { usePinnedAgentState } from '../usePinnedAgentState';
 import { useHotkeyById } from './useHotkeyById';
 
 export const useSaveTopicHotkey = () => {
@@ -87,26 +85,6 @@ export const useDeleteLastMessageHotkey = () => {
   );
 };
 
-export const useToggleLeftPanelHotkey = () => {
-  const isZenMode = useGlobalStore((s) => s.status.zenMode);
-  const [isPinned] = usePinnedAgentState();
-  const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
-  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
-
-  return useHotkeyById(
-    HotkeyEnum.ToggleLeftPanel,
-    () =>
-      updateSystemStatus({
-        sessionsWidth: showSessionPanel ? 0 : 320,
-        showSessionPanel: !showSessionPanel,
-      }),
-    {
-      enableOnContentEditable: true,
-      enabled: !isZenMode && !isPinned,
-    },
-  );
-};
-
 export const useToggleRightPanelHotkey = () => {
   const isZenMode = useGlobalStore((s) => s.status.zenMode);
   const toggleConfig = useGlobalStore((s) => s.toggleChatSideBar);
@@ -146,7 +124,6 @@ export const useRegisterChatHotkeys = () => {
   useOpenChatSettingsHotkey();
 
   // Layout
-  useToggleLeftPanelHotkey();
   useToggleRightPanelHotkey();
   useToggleZenModeHotkey();
 

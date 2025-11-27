@@ -21,7 +21,8 @@ import { messageMapKey } from '../../../utils/messageMapKey';
 /**
  * Get the current chat key for accessing dbMessagesMap
  */
-export const currentDbChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.activeTopicId);
+export const currentDbChatKey = (s: ChatStoreState) =>
+  messageMapKey({ agentId: s.activeAgentId, topicId: s.activeTopicId });
 
 /**
  * Get raw messages from database by key
@@ -33,10 +34,10 @@ const getDbMessagesByKey =
   };
 
 /**
- * Get current active session's raw messages from database
+ * Get current active agent's raw messages from database
  */
 const activeDbMessages = (s: ChatStoreState): UIChatMessage[] => {
-  if (!s.activeId) return [];
+  if (!s.activeAgentId) return [];
   return getDbMessagesByKey(currentDbChatKey(s))(s);
 };
 
@@ -74,6 +75,21 @@ const getTraceIdByDbMessageId = (id: string) => (s: ChatStoreState) =>
  * Get latest raw message from database
  */
 const latestDbMessage = (s: ChatStoreState) => activeDbMessages(s).at(-1);
+
+/**
+ * Get latest user message from database
+ */
+const latestUserMessage = (s: ChatStoreState) => {
+  const messages = activeDbMessages(s);
+
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = messages[index];
+
+    if (message.role === 'user') return message;
+  }
+
+  return undefined;
+};
 
 // ============= DB Message Filtering ========== //
 
@@ -126,7 +142,7 @@ const isCurrentDbChatLoaded = (s: ChatStoreState) => !!s.dbMessagesMap[currentDb
  */
 const inboxActiveTopicDbMessages = (state: ChatStoreState) => {
   const activeTopicId = state.activeTopicId;
-  const key = messageMapKey('inbox', activeTopicId);
+  const key = messageMapKey({ agentId: 'inbox', topicId: activeTopicId });
   return state.dbMessagesMap[key] || [];
 };
 
@@ -144,4 +160,5 @@ export const dbMessageSelectors = {
   inboxActiveTopicDbMessages,
   isCurrentDbChatLoaded,
   latestDbMessage,
+  latestUserMessage,
 };

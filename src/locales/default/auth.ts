@@ -266,7 +266,7 @@ export default {
   },
   tab: {
     apikey: 'API Key 管理',
-    profile: '个人资料',
+    profile: '我的账号',
     security: '安全',
     stats: '数据统计',
     usage: '用量统计',

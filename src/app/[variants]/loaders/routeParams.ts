@@ -29,6 +29,13 @@ export const slugLoader = ({ params }: LoaderFunctionArgs): SlugParams => {
   return { slug: params.slug };
 };
 
+export const agentIdLoader = ({ params }: LoaderFunctionArgs): { agentId: string } => {
+  if (!params.aid) {
+    throw new Error('Slug parameter is required');
+  }
+  return { agentId: params.aid };
+};
+
 /**
  * Specific loader for routes with 'id' param
  * Returns: { id: string }

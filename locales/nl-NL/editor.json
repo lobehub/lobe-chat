@@ -53,10 +53,12 @@
     "italic": "Cursief",
     "link": "Link",
     "numberList": "Genummerde lijst",
+    "redo": "Opnieuw uitvoeren",
     "strikethrough": "Doorhalen",
     "table": "tabel",
     "taskList": "Takenlijst",
     "tex": "TeX-formule",
-    "underline": "Onderstrepen"
+    "underline": "Onderstrepen",
+    "undo": "Ongedaan maken"
   }
 }

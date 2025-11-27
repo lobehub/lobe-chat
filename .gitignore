@@ -24,7 +24,7 @@ Desktop.ini
 .windsurfrules
 *.code-workspace
 .vscode/sessions.json
-
+prd
 # Temporary files
 .temp/
 temp/

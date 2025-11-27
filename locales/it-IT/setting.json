@@ -2,6 +2,7 @@
   "about": {
     "title": "Informazioni"
   },
+  "advancedSettings": "Impostazioni avanzate",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -41,6 +42,11 @@
       "untitled": "Assistente senza titolo"
     }
   },
+  "agentProfile": {
+    "latest": "Ultima versione caricata",
+    "saved": "Salvato",
+    "saving": "Salvataggio automatico in corso..."
+  },
   "agentTab": {
     "chat": "Preferenze di chat",
     "meta": "Informazioni assistente",
@@ -75,6 +81,12 @@
       "success": "Tutte le impostazioni sono state ripristinate con successo",
       "title": "Ripristina tutte le impostazioni"
     }
+  },
+  "group": {
+    "aiConfig": "Configurazione AI",
+    "common": "Generale",
+    "profile": "Account",
+    "system": "Sistema"
   },
   "groupTab": {
     "chat": "Chat",
@@ -663,6 +675,7 @@
     "identifier": "Identificatore dell'assistente (identifier)",
     "metaMiss": "Si prega di completare le informazioni dell'assistente prima di inviare, è necessario includere nome, descrizione e tag",
     "placeholder": "Inserisci l'identificatore dell'assistente, deve essere univoco, ad esempio sviluppo-web",
+    "success": "Assistente inviato con successo",
     "tooltips": "Condividi sul mercato degli assistenti"
   },
   "submitFooter": {
@@ -758,23 +771,31 @@
   "tab": {
     "about": "Informazioni",
     "agent": "Assistente predefinito",
-    "common": "Impostazioni comuni",
+    "apikey": "Gestione API Key",
+    "common": "Aspetto",
     "experiment": "实验",
     "hotkey": "Scorciatoie",
-    "image": "Disegno AI",
+    "image": "Servizio di Disegno",
     "llm": "Modello linguistico",
+    "profile": "Il mio account",
     "provider": "Fornitore di servizi AI",
     "proxy": "Proxy di rete",
+    "security": "Sicurezza",
+    "stats": "Statistiche dei dati",
     "storage": "Storage dati",
     "sync": "云端同步",
     "system-agent": "Assistente di sistema",
-    "tts": "Servizio vocale"
+    "tts": "Servizio vocale",
+    "usage": "Statistiche di utilizzo"
   },
   "tools": {
+    "add": "Integra plugin",
     "builtins": {
       "groupName": "Predefiniti"
     },
     "disabled": "Il modello attuale non supporta le chiamate di funzione e non è possibile utilizzare il plugin",
+    "notInstalled": "Non installato",
+    "notInstalledWarning": "Il plugin attuale non è installato, il che potrebbe influire sull'utilizzo dell'assistente",
     "plugins": {
       "enabled": "Abilitato {{num}}",
       "groupName": "Plugin",

@@ -27,7 +27,7 @@ describe('search actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useChatStore.setState({
-      activeId: 'session-id',
+      activeAgentId: 'session-id',
       activeTopicId: 'topic-id',
       searchLoading: {},
       optimisticUpdateMessageContent: vi.fn(),
@@ -312,7 +312,7 @@ describe('search actions', () => {
           plugin: mockMessage.plugin,
           pluginState: mockMessage.pluginState,
           role: 'tool',
-          sessionId: 'session-id',
+          agentId: 'session-id',
           topicId: 'topic-id',
         }),
         { operationId: expect.any(String) },
@@ -508,7 +508,7 @@ describe('search actions', () => {
       );
       expect(result.current.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          sessionId: contextSessionId,
+          agentId: 'session-id',
           topicId: contextTopicId,
         }),
         { operationId: expect.any(String) },

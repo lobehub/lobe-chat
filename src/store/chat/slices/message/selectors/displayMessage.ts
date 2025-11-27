@@ -3,9 +3,7 @@ import { AssistantContentBlock, UIChatMessage } from '@lobechat/types';
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
@@ -41,15 +39,13 @@ const getMeta = (message: UIChatMessage) => {
     }
 
     default: {
-      // For group chat, get meta from agent session
+      // For group chat, get meta from agent store by agentId
       if (message.groupId && message.agentId) {
-        return sessionMetaSelectors.getAgentMetaByAgentId(message.agentId)(
-          useSessionStore.getState(),
-        );
+        return agentSelectors.getAgentMetaById(message.agentId)(useAgentStore.getState());
       }
 
-      // Otherwise, use the current session's agent meta for single agent chat
-      return sessionMetaSelectors.currentAgentMeta(useSessionStore.getState());
+      // Otherwise, use the current agent's meta for single agent chat
+      return agentSelectors.currentAgentMeta(useAgentStore.getState());
     }
   }
 };
@@ -60,7 +56,7 @@ const getMeta = (message: UIChatMessage) => {
  * Get the current chat key for accessing messagesMap
  */
 export const currentDisplayChatKey = (s: ChatStoreState) =>
-  messageMapKey(s.activeId, s.activeTopicId);
+  messageMapKey({ agentId: s.activeAgentId, topicId: s.activeTopicId });
 
 /**
  * Get display messages by key (with meta information)
@@ -73,10 +69,10 @@ const getDisplayMessagesByKey =
   };
 
 /**
- * Get current active session's display messages (includes assistantGroup messages)
+ * Get current active agent's display messages (includes assistantGroup messages)
  */
 const activeDisplayMessages = (s: ChatStoreState): UIChatMessage[] => {
-  if (!s.activeId) return [];
+  if (!s.activeAgentId) return [];
   return getDisplayMessagesByKey(currentDisplayChatKey(s))(s);
 };
 
@@ -177,7 +173,7 @@ const isCurrentDisplayChatLoaded = (s: ChatStoreState) => !!s.messagesMap[curren
  * Show inbox welcome screen
  */
 const showInboxWelcome = (s: ChatStoreState): boolean => {
-  const isInbox = s.activeId === INBOX_SESSION_ID;
+  const isInbox = s.activeAgentId === INBOX_SESSION_ID;
   if (!isInbox) return false;
 
   const data = activeDisplayMessages(s);
@@ -313,7 +309,7 @@ const isSupervisorLoading = (groupId: string) => (s: ChatStoreState) =>
 
 const getSupervisorTodos = (groupId?: string, topicId?: string | null) => (s: ChatStoreState) => {
   if (!groupId) return [];
-  return s.supervisorTodos[messageMapKey(groupId, topicId)] || [];
+  return s.supervisorTodos[messageMapKey({ agentId: groupId, topicId })] || [];
 };
 
 // ============= Inbox Selectors ========== //
@@ -323,7 +319,7 @@ const getSupervisorTodos = (groupId?: string, topicId?: string | null) => (s: Ch
  */
 const inboxActiveTopicDisplayMessages = (state: ChatStoreState) => {
   const activeTopicId = state.activeTopicId;
-  const key = messageMapKey(INBOX_SESSION_ID, activeTopicId);
+  const key = messageMapKey({ agentId: INBOX_SESSION_ID, topicId: activeTopicId });
   return state.messagesMap[key] || [];
 };
 

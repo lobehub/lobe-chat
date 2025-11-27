@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
+  "emptyAgentAction": "Asistan Oluştur",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Tek bir diyalogun üretim maliyeti en fazla %90 oranında düşürülebilir, yanıt hızı 4 kat artar (<1>Daha fazla bilgi edinin</1>). Açıldığında, otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "Tüm İçerik",
     "allFiles": "Tüm Dosyalar",
-    "allKnowledgeBases": "Tüm Bilgi Tabanları",
-    "disabled": "Mevcut dağıtım modu bilgi tabanı sohbetini desteklemiyor. Kullanmak istiyorsanız, lütfen sunucu veritabanı dağıtımına geçin veya {{cloud}} hizmetini kullanın.",
+    "allLibraries": "Tüm Kütüphaneler",
+    "disabled": "Geçerli dağıtım modu bilgi tabanı sohbetini desteklemiyor. Kullanmak için sunucu veritabanı dağıtımına geçin veya {{cloud}} hizmetini kullanın.",
     "library": {
       "action": {
         "add": "Ekle",
         "detail": "Detay",
         "remove": "Kaldır"
       },
-      "title": "Dosya/Bilgi Tabanı"
+      "title": "Dosya/Kütüphane"
     },
-    "relativeFilesOrKnowledgeBases": "İlişkili Dosyalar/Bilgi Tabanları",
+    "relativeFilesOrLibraries": "İlişkili Dosyalar/Kütüphaneler",
     "title": "Bilgi Tabanı",
-    "uploadGuide": "Yüklenen dosyaları 'Bilgi Tabanı' içinde görebilirsiniz.",
+    "uploadGuide": "Yüklediğiniz dosyaları 'Kaynaklar' bölümünde görüntüleyebilirsiniz",
     "viewMore": "Daha Fazla Gör"
   },
   "memberSelection": {
@@ -252,7 +253,7 @@
   "noMatchingAgents": "Eşleşen üye bulunamadı",
   "noMembersYet": "Bu grupta henüz üye yok. Asistanı davet etmek için + düğmesine tıklayın.",
   "noSelectedAgents": "Henüz üye seçilmedi",
-  "openInNewWindow": "Sayfayı yeni pencerede aç",
+  "openInNewWindow": "Yeni Pencerede Aç",
   "owner": "Grup sahibi",
   "pin": "Sabitle",
   "pinOff": "Sabitlemeyi Kaldır",
@@ -361,6 +362,10 @@
       "title": "Görevler tamamlandı"
     }
   },
+  "tab": {
+    "profile": "Asistan Profili",
+    "search": "Ara"
+  },
   "thread": {
     "divider": "Alt konu",
     "threadMessageCount": "{{messageCount}} mesaj",
@@ -413,6 +418,7 @@
     "checkOpenNewTopic": "Yeni bir konu açılsın mı?",
     "checkSaveCurrentMessages": "Mevcut sohbeti konu olarak kaydetmek istiyor musunuz?",
     "openNewTopic": "Yeni Konu",
+    "recent": "Son Konular",
     "saveCurrentMessages": "Mevcut oturumu konu olarak kaydet"
   },
   "translate": {

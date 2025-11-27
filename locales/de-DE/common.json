@@ -137,6 +137,8 @@
   "close": "Schließen",
   "cmdk": {
     "about": "Über",
+    "aiModeEmptyState": "Gib deine Frage oben ein, um mit der KI zu chatten",
+    "aiModePlaceholder": "Stelle der KI eine Frage...",
     "communitySupport": "Community-Support",
     "discover": "Entdecken",
     "knowledgeBase": "Wissensdatenbank",
@@ -304,6 +306,10 @@
     "business": "Geschäftliche Zusammenarbeit",
     "support": "E-Mail-Support"
   },
+  "navPanel": {
+    "agent": "Assistent",
+    "library": "Bibliothek"
+  },
   "new": "Neu",
   "oauth": "SSO-Anmeldung",
   "officialSite": "Offizielle Website",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "KI-Gemälde",
+    "aiImage": "Zeichnung",
+    "audio": "Audio",
     "chat": "Chat",
+    "community": "Community",
     "discover": "Entdecken",
     "files": "Dateien",
+    "home": "Startseite",
     "knowledgeBase": "Wissensdatenbank",
     "me": "Ich",
-    "setting": "Einstellung"
+    "pages": "Dokumente",
+    "resource": "Ressourcen",
+    "search": "Suche",
+    "setting": "Einstellung",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Erlauben",

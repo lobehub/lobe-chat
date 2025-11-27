@@ -137,6 +137,8 @@
   "close": "Затвори",
   "cmdk": {
     "about": "Относно",
+    "aiModeEmptyState": "Въведете въпроса си в полето по-горе, за да започнете разговор с AI",
+    "aiModePlaceholder": "Задайте въпрос на AI...",
     "communitySupport": "Общностна поддръжка",
     "discover": "Открий",
     "knowledgeBase": "База знания",
@@ -304,6 +306,10 @@
     "business": "Бизнес сътрудничество",
     "support": "Поддръжка по имейл"
   },
+  "navPanel": {
+    "agent": "Асистент",
+    "library": "Библиотека"
+  },
   "new": "Нов",
   "oauth": "SSO Вход",
   "officialSite": "Официален сайт",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "AI рисуване",
+    "aiImage": "Рисуване",
+    "audio": "Аудио",
     "chat": "Чат",
+    "community": "Общност",
     "discover": "Открий",
     "files": "Файлове",
+    "home": "Начало",
     "knowledgeBase": "База знания",
     "me": "аз",
-    "setting": "Настройки"
+    "pages": "Документи",
+    "resource": "Ресурси",
+    "search": "Търсене",
+    "setting": "Настройки",
+    "video": "Видео"
   },
   "telemetry": {
     "allow": "Разреши",

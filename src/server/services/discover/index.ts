@@ -575,6 +575,9 @@ export class DiscoverService {
         createdAt: (data as any).createdAt,
         currentVersion: data.version,
         description: (data as any).description || data.summary,
+        // @ts-ignore
+        editorData: data.editorData || {},
+
         examples: Array.isArray((data as any).examples)
           ? (data as any).examples.map((example: any) => ({
               content: typeof example === 'string' ? example : example.content || '',

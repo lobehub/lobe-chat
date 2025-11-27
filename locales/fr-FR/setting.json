@@ -2,6 +2,7 @@
   "about": {
     "title": "À propos"
   },
+  "advancedSettings": "Paramètres avancés",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -41,6 +42,11 @@
       "untitled": "Assistant sans titre"
     }
   },
+  "agentProfile": {
+    "latest": "Dernière version chargée",
+    "saved": "Enregistré",
+    "saving": "Enregistrement automatique en cours..."
+  },
   "agentTab": {
     "chat": "Préférences de discussion",
     "meta": "Informations de l'agent",
@@ -75,6 +81,12 @@
       "success": "Toutes les configurations ont été réinitialisées avec succès",
       "title": "Réinitialiser tous les paramètres"
     }
+  },
+  "group": {
+    "aiConfig": "Configuration de l'IA",
+    "common": "Général",
+    "profile": "Compte",
+    "system": "Système"
   },
   "groupTab": {
     "chat": "Discussion",
@@ -663,6 +675,7 @@
     "identifier": "Identifiant de l'assistant (identifier)",
     "metaMiss": "Veuillez compléter les informations de l'agent avant de soumettre. Elles doivent inclure le nom, la description et les balises.",
     "placeholder": "Veuillez entrer l'identifiant de l'agent, qui doit être unique, par exemple développement-web",
+    "success": "Assistant soumis avec succès",
     "tooltips": "Partager sur le marché des agents"
   },
   "submitFooter": {
@@ -758,23 +771,31 @@
   "tab": {
     "about": "À propos",
     "agent": "Agent par défaut",
-    "common": "Paramètres généraux",
+    "apikey": "Gestion des clés API",
+    "common": "Apparence",
     "experiment": "Expérience",
     "hotkey": "Raccourcis clavier",
-    "image": "Dessin IA",
+    "image": "Service de dessin",
     "llm": "Modèle de langue",
+    "profile": "Mon compte",
     "provider": "Fournisseur de services d'IA",
     "proxy": "Proxy réseau",
+    "security": "Sécurité",
+    "stats": "Statistiques",
     "storage": "Stockage des données",
     "sync": "Synchronisation cloud",
     "system-agent": "Agent système",
-    "tts": "Service vocal"
+    "tts": "Service vocal",
+    "usage": "Statistiques d'utilisation"
   },
   "tools": {
+    "add": "Intégrer un plugin",
     "builtins": {
       "groupName": "Intégré"
     },
     "disabled": "Ce modèle ne prend pas en charge les appels de fonction et ne peut pas utiliser de plugins",
+    "notInstalled": "Non installé",
+    "notInstalledWarning": "Le plugin actuel n'est pas installé, ce qui pourrait affecter le fonctionnement de l'assistant",
     "plugins": {
       "enabled": "Activé {{num}}",
       "groupName": "Plugins",

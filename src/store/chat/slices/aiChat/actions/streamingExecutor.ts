@@ -6,6 +6,7 @@ import {
   ChatImageItem,
   ChatToolPayload,
   MessageContentPart,
+  MessageMapScope,
   MessageToolCall,
   ModelUsage,
   TraceNameMap,
@@ -46,9 +47,9 @@ export interface StreamingExecutorAction {
     messages: UIChatMessage[];
     parentMessageId: string;
     /**
-     * Explicit sessionId for this execution (avoids using global activeId)
+     * Explicit agentId for this execution (avoids using global activeAgentId)
      */
-    sessionId?: string;
+    agentId?: string;
     /**
      * Explicit topicId for this execution (avoids using global activeTopicId)
      */
@@ -88,10 +89,7 @@ export interface StreamingExecutorAction {
     messages: UIChatMessage[];
     parentMessageId: string;
     parentMessageType: 'user' | 'assistant' | 'tool';
-    /**
-     * Explicit sessionId for this execution (avoids using global activeId)
-     */
-    sessionId?: string;
+    agentId?: string;
     /**
      * Explicit topicId for this execution (avoids using global activeTopicId)
      */
@@ -117,6 +115,10 @@ export interface StreamingExecutorAction {
      * Initial agent runtime context (for resuming execution from a specific phase)
      */
     initialContext?: AgentRuntimeContext;
+    /**
+     * Scope for message storage key (for PageAgent, etc.)
+     */
+    scope?: MessageMapScope;
   }) => Promise<void>;
 }
 
@@ -129,19 +131,20 @@ export const streamingExecutor: StateCreator<
   internal_createAgentState: ({
     messages,
     parentMessageId,
-    sessionId: paramSessionId,
+    agentId: paramAgentId,
     topicId: paramTopicId,
     threadId,
     initialState,
     initialContext,
   }) => {
-    // Use provided sessionId/topicId or fallback to global state
-    const { activeId, activeTopicId } = get();
-    const sessionId = paramSessionId ?? activeId;
+    // Use provided agentId/topicId or fallback to global state
+    const { activeAgentId, activeTopicId } = get();
+    const agentId = paramAgentId ?? activeAgentId;
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
 
     const agentStoreState = getAgentStoreState();
-    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
+    // Use agentId to get agent config instead of currentAgentConfig
+    const agentConfigData = agentSelectors.getAgentConfigById(agentId || '')(agentStoreState);
 
     // Get tools manifest map
     const toolsEngine = createAgentToolsEngine({
@@ -168,11 +171,11 @@ export const streamingExecutor: StateCreator<
     const state =
       initialState ||
       AgentRuntime.createInitialState({
-        sessionId,
+        sessionId: agentId,
         messages,
         maxSteps: 400,
         metadata: {
-          sessionId,
+          sessionId: agentId,
           topicId,
           threadId,
         },
@@ -189,7 +192,7 @@ export const streamingExecutor: StateCreator<
         parentMessageId,
       },
       session: {
-        sessionId,
+        sessionId: agentId,
         messageCount: messages.length,
         status: state.status,
         stepCount: 0,
@@ -214,9 +217,11 @@ export const streamingExecutor: StateCreator<
       internal_toggleToolCallingStreaming,
     } = get();
 
-    // Get sessionId, topicId, and abortController from operation
-    let sessionId: string;
+    // Get agentId, topicId, and abortController from operation
+    let agentId: string;
     let topicId: string | null | undefined;
+    let threadId: string | undefined;
+    let scope: MessageMapScope | undefined;
     let traceId: string | undefined = traceIdParam;
     let abortController: AbortController;
 
@@ -226,13 +231,15 @@ export const streamingExecutor: StateCreator<
         log('[internal_fetchAIChatMessage] ERROR: Operation not found: %s', operationId);
         throw new Error(`Operation not found: ${operationId}`);
       }
-      sessionId = operation.context.sessionId!;
+      agentId = operation.context.agentId!;
       topicId = operation.context.topicId;
+      threadId = operation.context.threadId ?? undefined;
+      scope = operation.context.scope;
       abortController = operation.abortController; // 👈 Use operation's abortController
       log(
-        '[internal_fetchAIChatMessage] get context from operation %s: sessionId=%s, topicId=%s, aborted=%s',
+        '[internal_fetchAIChatMessage] get context from operation %s: agentId=%s, topicId=%s, aborted=%s',
         operationId,
-        sessionId,
+        agentId,
         topicId,
         abortController.signal.aborted,
       );
@@ -242,19 +249,26 @@ export const streamingExecutor: StateCreator<
       }
     } else {
       // Fallback to global state (for legacy code paths without operation)
-      sessionId = get().activeId;
+      agentId = get().activeAgentId;
       topicId = get().activeTopicId;
       abortController = new AbortController();
       log(
-        '[internal_fetchAIChatMessage] use global context: sessionId=%s, topicId=%s',
-        sessionId,
+        '[internal_fetchAIChatMessage] use global context: agentId=%s, topicId=%s',
+        agentId,
         topicId,
       );
     }
 
-    // Get agent config from params or use current
-    const finalAgentConfig = agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+    // Create base context for child operations
+    const fetchContext = { agentId, topicId, threadId, scope };
+
+    // Get agent config from params or use agentId-specific config
+    const agentStoreState = getAgentStoreState();
+    const finalAgentConfig =
+      agentConfig || agentSelectors.getAgentConfigById(agentId || '')(agentStoreState);
+    const chatConfig = agentChatConfigSelectors.getAgentChatConfigById(agentId || '')(
+      agentStoreState,
+    );
 
     // ================================== //
     //   messages uniformly preprocess    //
@@ -312,6 +326,7 @@ export const streamingExecutor: StateCreator<
     await chatService.createAssistantMessageStream({
       abortController,
       params: {
+        agentId: agentId || undefined, // Pass agentId to chatService
         messages,
         model,
         provider,
@@ -321,7 +336,7 @@ export const streamingExecutor: StateCreator<
       historySummary: historySummary?.content,
       trace: {
         traceId,
-        sessionId,
+        sessionId: agentId,
         topicId: topicId ?? undefined,
         traceName: TraceNameMap.Conversation,
       },
@@ -344,7 +359,7 @@ export const streamingExecutor: StateCreator<
           messageService.updateMessage(
             messageId,
             { traceId, observationId: observationId ?? undefined },
-            { sessionId, topicId },
+            { agentId, topicId },
           );
         }
 
@@ -558,7 +573,7 @@ export const streamingExecutor: StateCreator<
               // Create reasoning operation
               const { operationId: reasoningOpId } = get().startOperation({
                 type: 'reasoning',
-                context: { sessionId, topicId, messageId },
+                context: { ...fetchContext, messageId },
                 parentOperationId: operationId,
               });
               reasoningOperationId = reasoningOpId;
@@ -587,7 +602,7 @@ export const streamingExecutor: StateCreator<
 
               const { operationId: reasoningOpId } = get().startOperation({
                 type: 'reasoning',
-                context: { sessionId, topicId, messageId },
+                context: { ...fetchContext, messageId },
                 parentOperationId: operationId,
               });
               reasoningOperationId = reasoningOpId;
@@ -797,27 +812,27 @@ export const streamingExecutor: StateCreator<
       messages: originalMessages,
       parentMessageId,
       parentMessageType,
-      sessionId: paramSessionId,
+      agentId: paramAgentId,
       topicId: paramTopicId,
+      threadId,
+      scope,
     } = params;
 
-    // Use provided sessionId/topicId or fallback to global state
-    const { activeId, activeTopicId } = get();
-    const sessionId = paramSessionId ?? activeId;
+    // Use provided agentId/topicId or fallback to global state
+    const { activeAgentId, activeTopicId } = get();
+    const agentId = paramAgentId ?? activeAgentId;
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
-    const messageKey = messageMapKey(sessionId, topicId);
+
+    // Create a base context object for all operations and message map key
+    const context = { agentId, topicId, threadId, scope };
+    const messageKey = messageMapKey(context);
 
     // Create or use provided operation
     let operationId = params.operationId;
     if (!operationId) {
       const { operationId: newOperationId } = get().startOperation({
         type: 'execAgentRuntime',
-        context: {
-          sessionId,
-          topicId,
-          messageId: parentMessageId,
-          threadId: params.threadId,
-        },
+        context: { ...context, messageId: parentMessageId },
         parentOperationId: params.parentOperationId, // Pass parent operation ID
         label: 'AI Generation',
         metadata: {
@@ -833,9 +848,9 @@ export const streamingExecutor: StateCreator<
     }
 
     log(
-      '[internal_execAgentRuntime] start, operationId: %s, sessionId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
+      '[internal_execAgentRuntime] start, operationId: %s, agentId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
       operationId,
-      sessionId,
+      agentId,
       topicId,
       messageKey,
       parentMessageId,
@@ -847,10 +862,11 @@ export const streamingExecutor: StateCreator<
     let messages = [...originalMessages];
 
     const agentStoreState = getAgentStoreState();
-    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
+    // Use agentId to get agent config instead of currentAgentConfig
+    const agentConfigData = agentSelectors.getAgentConfigById(agentId || '')(agentStoreState);
     const { chatConfig } = agentConfigData;
 
-    // Use current agent config
+    // Use agent config from agentId
     const model = agentConfigData.model;
     const provider = agentConfigData.provider;
 
@@ -902,7 +918,7 @@ export const streamingExecutor: StateCreator<
       get().internal_createAgentState({
         messages,
         parentMessageId: params.parentMessageId,
-        sessionId,
+        agentId,
         topicId,
         threadId: params.threadId,
         initialState: params.initialState,
@@ -968,12 +984,12 @@ export const streamingExecutor: StateCreator<
             const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
             if (assistantMessage) {
               await messageService.updateMessageError(assistantMessage.id, event.error, {
-                sessionId,
+                agentId,
                 topicId,
               });
             }
             const finalMessages = get().messagesMap[messageKey] || [];
-            get().replaceMessages(finalMessages, { sessionId, topicId });
+            get().replaceMessages(finalMessages, { context });
             break;
           }
         }
@@ -1035,15 +1051,14 @@ export const streamingExecutor: StateCreator<
     // Desktop notification (if not in tools calling mode)
     if (isDesktop) {
       try {
-        const messageKey = `${activeId}_${activeTopicId ?? null}`;
+        const messageKey = `${activeAgentId}_${activeTopicId ?? null}`;
         const finalMessages = get().messagesMap[messageKey] || [];
         const lastAssistant = finalMessages.findLast((m) => m.role === 'assistant');
 
         // Only show notification if there's content and no tools
         if (lastAssistant?.content && !lastAssistant?.tools) {
-          const { desktopNotificationService } = await import(
-            '@/services/electron/desktopNotification'
-          );
+          const { desktopNotificationService } =
+            await import('@/services/electron/desktopNotification');
 
           await desktopNotificationService.showNotification({
             body: lastAssistant.content,
@@ -1056,10 +1071,12 @@ export const streamingExecutor: StateCreator<
     }
 
     // Summary history if context messages is larger than historyCount
-    const historyCount = agentChatConfigSelectors.historyCount(agentStoreState);
+    const historyCount = agentChatConfigSelectors.getHistoryCountById(agentId || '')(
+      agentStoreState,
+    );
 
     if (
-      agentChatConfigSelectors.enableHistoryCount(agentStoreState) &&
+      agentChatConfigSelectors.getEnableHistoryCountById(agentId || '')(agentStoreState) &&
       chatConfig.enableCompressHistory &&
       messages.length > historyCount
     ) {

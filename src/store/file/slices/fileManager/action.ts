@@ -19,11 +19,18 @@ import { fileManagerSelectors } from './selectors';
 
 const serverFileService = new FileService();
 
+export interface FolderCrumb {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export interface FileManageAction {
   dispatchDockFileList: (payload: UploadFileListDispatch) => void;
   embeddingChunks: (fileIds: string[]) => Promise<void>;
+  moveFileToFolder: (fileId: string, parentId: string | null) => Promise<void>;
   parseFilesToChunks: (ids: string[], params?: { skipExist?: boolean }) => Promise<void>;
-  pushDockFileList: (files: File[], knowledgeBaseId?: string) => Promise<void>;
+  pushDockFileList: (files: File[], knowledgeBaseId?: string, parentId?: string) => Promise<void>;
 
   reEmbeddingChunks: (id: string) => Promise<void>;
   reParseFile: (id: string) => Promise<void>;
@@ -31,10 +38,15 @@ export interface FileManageAction {
   removeAllFiles: () => Promise<void>;
   removeFileItem: (id: string) => Promise<void>;
   removeFiles: (ids: string[]) => Promise<void>;
+  renameFolder: (folderId: string, newName: string) => Promise<void>;
+
+  setCurrentFolderId: (folderId: string | null | undefined) => void;
+  setPendingRenameItemId: (id: string | null) => void;
 
   toggleEmbeddingIds: (ids: string[], loading?: boolean) => void;
   toggleParsingIds: (ids: string[], loading?: boolean) => void;
 
+  useFetchFolderBreadcrumb: (slug?: string | null) => SWRResponse<FolderCrumb[]>;
   useFetchKnowledgeItem: (id?: string) => SWRResponse<FileListItem | undefined>;
   useFetchKnowledgeItems: (params: QueryFileListParams) => SWRResponse<FileListItem[]>;
 }
@@ -70,6 +82,10 @@ export const createFileManageSlice: StateCreator<
     await get().refreshFileList();
     get().toggleEmbeddingIds(fileIds, false);
   },
+  moveFileToFolder: async (fileId, parentId) => {
+    await fileService.updateFile(fileId, { parentId });
+    await get().refreshFileList();
+  },
   parseFilesToChunks: async (ids: string[], params) => {
     // toggle file ids
     get().toggleParsingIds(ids);
@@ -87,7 +103,8 @@ export const createFileManageSlice: StateCreator<
     await get().refreshFileList();
     get().toggleParsingIds(ids, false);
   },
-  pushDockFileList: async (rawFiles, knowledgeBaseId) => {
+
+  pushDockFileList: async (rawFiles, knowledgeBaseId, parentId) => {
     const { dispatchDockFileList } = get();
 
     // 0. Process ZIP files and extract their contents
@@ -125,6 +142,7 @@ export const createFileManageSlice: StateCreator<
           file,
           knowledgeBaseId,
           onStatusUpdate: dispatchDockFileList,
+          parentId,
         });
 
         await get().refreshFileList();
@@ -143,7 +161,6 @@ export const createFileManageSlice: StateCreator<
       await get().parseFilesToChunks(fileIdsToEmbed, { skipExist: false });
     }
   },
-
   reEmbeddingChunks: async (id) => {
     if (fileManagerSelectors.isCreatingChunkEmbeddingTask(id)(get())) return;
 
@@ -171,11 +188,16 @@ export const createFileManageSlice: StateCreator<
     get().toggleParsingIds([id], false);
   },
   refreshFileList: async () => {
-    await mutate([FETCH_ALL_KNOWLEDGE_KEY, get().queryListParams]);
+    // Invalidate all queries that start with FETCH_ALL_KNOWLEDGE_KEY
+    // This ensures all file lists (explorer, tree, etc.) are refreshed
+    await mutate((key) => Array.isArray(key) && key[0] === FETCH_ALL_KNOWLEDGE_KEY, undefined, {
+      revalidate: true,
+    });
   },
   removeAllFiles: async () => {
     await fileService.removeAllFiles();
   },
+
   removeFileItem: async (id) => {
     await fileService.removeFile(id);
     await get().refreshFileList();
@@ -185,6 +207,21 @@ export const createFileManageSlice: StateCreator<
     await fileService.removeFiles(ids);
     await get().refreshFileList();
   },
+
+  renameFolder: async (folderId, newName) => {
+    const { documentService } = await import('@/services/document');
+    await documentService.updateDocument({ id: folderId, title: newName });
+    await get().refreshFileList();
+  },
+
+  setCurrentFolderId: (folderId) => {
+    set({ currentFolderId: folderId }, false, 'setCurrentFolderId');
+  },
+
+  setPendingRenameItemId: (id) => {
+    set({ pendingRenameItemId: id }, false, 'setPendingRenameItemId');
+  },
+
   toggleEmbeddingIds: (ids, loading) => {
     set((state) => {
       const nextValue = new Set(state.creatingEmbeddingTaskIds);
@@ -219,6 +256,12 @@ export const createFileManageSlice: StateCreator<
       return { creatingChunkingTaskIds: Array.from(nextValue.values()) };
     });
   },
+
+  useFetchFolderBreadcrumb: (slug) =>
+    useClientDataSWR<FolderCrumb[]>(!slug ? null : ['useFetchFolderBreadcrumb', slug], async () => {
+      const response = await serverFileService.getFolderBreadcrumb(slug!);
+      return response;
+    }),
 
   useFetchKnowledgeItem: (id) =>
     useClientDataSWR<FileListItem | undefined>(!id ? null : ['useFetchKnowledgeItem', id], () =>

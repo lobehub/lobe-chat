@@ -2,6 +2,7 @@
   "about": {
     "title": "O nas"
   },
+  "advancedSettings": "Ustawienia zaawansowane",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Awatar",
@@ -41,6 +42,11 @@
       "untitled": "Asystent bez nazwy"
     }
   },
+  "agentProfile": {
+    "latest": "Załadowano najnowszą wersję",
+    "saved": "Zapisano",
+    "saving": "Automatyczne zapisywanie..."
+  },
   "agentTab": {
     "chat": "Preferencje czatu",
     "meta": "Informacje o asystencie",
@@ -75,6 +81,12 @@
       "success": "Wszystkie ustawienia zostały zresetowane",
       "title": "Zresetuj wszystkie ustawienia"
     }
+  },
+  "group": {
+    "aiConfig": "Konfiguracja AI",
+    "common": "Ogólne",
+    "profile": "Konto",
+    "system": "System"
   },
   "groupTab": {
     "chat": "Czaty",
@@ -663,6 +675,7 @@
     "identifier": "Identyfikator asystenta (identifier)",
     "metaMiss": "Proszę uzupełnić informacje o asystencie przed przesłaniem, należy podać nazwę, opis i tagi",
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
+    "success": "Asystent został pomyślnie przesłany",
     "tooltips": "Udostępnij na rynku asystentów"
   },
   "submitFooter": {
@@ -758,23 +771,31 @@
   "tab": {
     "about": "O nas",
     "agent": "Domyślny asystent",
-    "common": "Ustawienia ogólne",
+    "apikey": "Zarządzanie kluczami API",
+    "common": "Wygląd",
     "experiment": "Eksperyment",
     "hotkey": "Skróty klawiszowe",
-    "image": "Rysowanie AI",
+    "image": "Usługa rysowania",
     "llm": "Model językowy",
+    "profile": "Moje konto",
     "provider": "Dostawca usług AI",
     "proxy": "Proxy sieciowy",
+    "security": "Bezpieczeństwo",
+    "stats": "Statystyki danych",
     "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
     "system-agent": "System Agent",
-    "tts": "Usługa głosowa"
+    "tts": "Usługa głosowa",
+    "usage": "Statystyki zużycia"
   },
   "tools": {
+    "add": "Zintegruj wtyczkę",
     "builtins": {
       "groupName": "Wbudowane"
     },
     "disabled": "Aktualny model nie obsługuje wywołań funkcji i nie można użyć wtyczki",
+    "notInstalled": "Nie zainstalowano",
+    "notInstalledWarning": "Aktualna wtyczka nie została zainstalowana, co może wpłynąć na działanie asystenta",
     "plugins": {
       "enabled": "Włączone {{num}}",
       "groupName": "Wtyczki",

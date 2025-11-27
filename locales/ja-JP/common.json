@@ -137,6 +137,8 @@
   "close": "閉じる",
   "cmdk": {
     "about": "概要",
+    "aiModeEmptyState": "上の入力欄に質問を入力して、AIとの対話を始めましょう",
+    "aiModePlaceholder": "AIに質問する...",
     "communitySupport": "コミュニティサポート",
     "discover": "発見",
     "knowledgeBase": "ナレッジベース",
@@ -304,6 +306,10 @@
     "business": "ビジネス提携",
     "support": "メールサポート"
   },
+  "navPanel": {
+    "agent": "アシスタント",
+    "library": "ライブラリ"
+  },
   "new": "新規",
   "oauth": "SSO ログイン",
   "officialSite": "公式サイト",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "AI 画像生成",
+    "aiImage": "イラスト",
+    "audio": "オーディオ",
     "chat": "チャット",
+    "community": "コミュニティ",
     "discover": "発見",
     "files": "ファイル",
+    "home": "ホーム",
     "knowledgeBase": "ナレッジベース",
     "me": "私",
-    "setting": "設定"
+    "pages": "ドキュメント",
+    "resource": "リソース",
+    "search": "検索",
+    "setting": "設定",
+    "video": "ビデオ"
   },
   "telemetry": {
     "allow": "許可する",

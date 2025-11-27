@@ -10,7 +10,7 @@ import PluginTag from '@/features/PluginTag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 
 import pkg from '../../../../package.json';
 import { useContainerStyles } from '../style';
@@ -25,11 +25,11 @@ const Preview = memo<FieldType & { title?: string }>(
       agentSelectors.displayableAgentPlugins(s),
       agentSelectors.currentAgentSystemRole(s),
     ]);
-    const [isInbox, description, avatar, backgroundColor] = useSessionStore((s) => [
-      sessionSelectors.isInboxSession(s),
-      sessionMetaSelectors.currentAgentDescription(s),
-      sessionMetaSelectors.currentAgentAvatar(s),
-      sessionMetaSelectors.currentAgentBackgroundColor(s),
+    const isInbox = useSessionStore(sessionSelectors.isInboxSession);
+    const [description, avatar, backgroundColor] = useAgentStore((s) => [
+      agentSelectors.currentAgentDescription(s),
+      agentSelectors.currentAgentAvatar(s),
+      agentSelectors.currentAgentBackgroundColor(s),
     ]);
 
     const { t } = useTranslation('chat');

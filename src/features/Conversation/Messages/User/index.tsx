@@ -1,0 +1,187 @@
+import { Tag } from '@lobehub/ui';
+import { useResponsive } from 'antd-style';
+import isEqual from 'fast-deep-equal';
+import { ReactNode, memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
+
+import { Avatar, BorderSpacing, Title } from '@/components/ChatItem';
+import { useUserAvatar } from '@/hooks/useUserAvatar';
+import { useAgentStore } from '@/store/agent';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
+
+import { markdownElements } from '../../MarkdownElements';
+import { MessageContent, useStyles } from '../../components/ChatItem';
+import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
+import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
+import type { MessageActionsConfig } from '../../types';
+import Actions from './Actions';
+import { UserMessageExtra } from './Extra';
+import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
+import { UserMessageContent } from './MessageContent';
+
+interface UserMessageProps {
+  actionsConfig?: MessageActionsConfig;
+  disableEditing?: boolean;
+  id: string;
+  index: number;
+}
+
+const rehypePlugins = markdownElements
+  .filter((s) => s.scope !== 'assistant')
+  .map((element) => element.rehypePlugin)
+  .filter(Boolean);
+
+const remarkPlugins = markdownElements
+  .filter((s) => s.scope !== 'assistant')
+  .map((element) => element.remarkPlugin)
+  .filter(Boolean);
+
+const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing, index }) => {
+  const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
+
+  const { content, createdAt, error, role, extra, targetId } = item;
+
+  const { t } = useTranslation('chat');
+  const { mobile } = useResponsive();
+  const avatar = useUserAvatar();
+  const title = useUserStore(userProfileSelectors.displayUserName);
+
+  const displayMode = useAgentStore(agentChatConfigSelectors.displayMode);
+
+  // Get editing and loading state from ConversationStore
+  const editing = useConversationStore(messageStateSelectors.isMessageEditing(id));
+  const loading = useConversationStore(messageStateSelectors.isMessageCreating(id));
+
+  // Get target name for DM indicator
+  const userName = useUserStore(userProfileSelectors.nickName) || 'User';
+  const agents = useSessionStore(sessionSelectors.currentGroupAgents);
+
+  const dmIndicator = useMemo(() => {
+    if (!targetId) return undefined;
+
+    let targetName = targetId;
+    if (targetId === 'user') {
+      targetName = userName;
+    } else {
+      const targetAgent = agents?.find((agent) => agent.id === targetId);
+      targetName = targetAgent?.title || targetId;
+    }
+
+    return <Tag>{t('dm.visibleTo', { target: targetName })}</Tag>;
+  }, [targetId, userName, agents, t]);
+
+  const placement = displayMode === 'chat' ? 'right' : 'left';
+  const variant = displayMode === 'chat' ? 'bubble' : 'docs';
+
+  const { styles } = useStyles({
+    editing,
+    placement,
+    primary: true,
+    showTitle: false,
+    time: createdAt,
+    title,
+    variant,
+  });
+
+  const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, index, role });
+
+  const renderMessage = useCallback(
+    (editableContent: ReactNode) => (
+      <UserMessageContent {...item} editableContent={editableContent} />
+    ),
+    [item],
+  );
+
+  const components = useMemo(
+    () =>
+      Object.fromEntries(
+        markdownElements.map((element) => {
+          const Component = element.Component;
+
+          return [element.tag, (props: any) => <Component {...props} id={id} />];
+        }),
+      ),
+    [id],
+  );
+
+  const markdownProps = useMemo(
+    () => ({
+      components,
+      customRender: (dom: ReactNode, { text }: { text: string }) => (
+        <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />
+      ),
+      rehypePlugins,
+      remarkPlugins,
+    }),
+    [displayMode],
+  );
+
+  return (
+    <Flexbox className={styles.container} gap={8}>
+      <Flexbox
+        direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
+        gap={mobile ? 6 : 12}
+      >
+        <Avatar
+          alt={title}
+          avatar={{ avatar, title }}
+          loading={loading}
+          placement={placement}
+          size={32}
+          style={{ marginTop: 6 }}
+        />
+        <Flexbox
+          align={placement === 'left' ? 'flex-start' : 'flex-end'}
+          className={styles.messageContainer}
+        >
+          <Title
+            avatar={{ avatar, title }}
+            placement={placement}
+            showTitle={false}
+            time={createdAt}
+            titleAddon={dmIndicator}
+          />
+          <Flexbox
+            align={placement === 'left' ? 'flex-start' : 'flex-end'}
+            className={styles.messageContent}
+            direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
+            gap={8}
+          >
+            <Flexbox flex={1} style={{ maxWidth: '100%', minWidth: 0 }}>
+              <MessageContent
+                editing={editing}
+                id={id}
+                markdownProps={markdownProps}
+                message={content}
+                messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
+                onDoubleClick={onDoubleClick}
+                placement={placement}
+                primary
+                renderMessage={renderMessage}
+                variant={variant}
+              />
+            </Flexbox>
+          </Flexbox>
+        </Flexbox>
+        {mobile && variant === 'bubble' && <BorderSpacing borderSpacing={32} />}
+      </Flexbox>
+
+      <Flexbox direction={'horizontal-reverse'}>
+        <Actions
+          actionsConfig={actionsConfig}
+          data={item}
+          disableEditing={disableEditing}
+          id={id}
+          index={index}
+        />
+      </Flexbox>
+    </Flexbox>
+  );
+});
+
+export default UserMessage;

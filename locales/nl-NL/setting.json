@@ -2,6 +2,7 @@
   "about": {
     "title": "Over"
   },
+  "advancedSettings": "Geavanceerde instellingen",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Profielfoto",
@@ -41,6 +42,11 @@
       "untitled": "Naamloze assistent"
     }
   },
+  "agentProfile": {
+    "latest": "Nieuwste versie geladen",
+    "saved": "Opgeslagen",
+    "saving": "Automatisch opslaan..."
+  },
   "agentTab": {
     "chat": "Chatvoorkeur",
     "meta": "Assistentinformatie",
@@ -75,6 +81,12 @@
       "success": "Alle instellingen zijn succesvol gereset",
       "title": "Alle instellingen resetten"
     }
+  },
+  "group": {
+    "aiConfig": "AI-configuratie",
+    "common": "Algemeen",
+    "profile": "Account",
+    "system": "Systeem"
   },
   "groupTab": {
     "chat": "Chat",
@@ -663,6 +675,7 @@
     "identifier": "Assistentidentifier (identifier)",
     "metaMiss": "Vul alstublieft de assistentinformatie in voordat u deze indient. Dit moet de naam, beschrijving en labels bevatten",
     "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
+    "success": "Assistent succesvol ingediend",
     "tooltips": "Delen op de assistentenmarkt"
   },
   "submitFooter": {
@@ -758,23 +771,31 @@
   "tab": {
     "about": "Over",
     "agent": "Standaardassistent",
-    "common": "Algemene instellingen",
+    "apikey": "API-sleutelbeheer",
+    "common": "Uiterlijk",
     "experiment": "Experiment",
     "hotkey": "Sneltoetsen",
-    "image": "AI Tekeningen",
+    "image": "Tekenservice",
     "llm": "Taalmodel",
+    "profile": "Mijn account",
     "provider": "AI-dienstverlener",
     "proxy": "Netwerkproxy",
+    "security": "Beveiliging",
+    "stats": "Gegevensstatistieken",
     "storage": "Gegevensopslag",
     "sync": "Cloudsynchronisatie",
     "system-agent": "Systeemassistent",
-    "tts": "Spraakdienst"
+    "tts": "Spraakdienst",
+    "usage": "Verbruiksstatistieken"
   },
   "tools": {
+    "add": "Plug-in integreren",
     "builtins": {
       "groupName": "Ingebouwd"
     },
     "disabled": "Dit model ondersteunt momenteel geen functieaanroepen en kan geen plug-ins gebruiken",
+    "notInstalled": "Niet geïnstalleerd",
+    "notInstalledWarning": "De huidige plug-in is niet geïnstalleerd, wat het gebruik van de assistent kan beïnvloeden",
     "plugins": {
       "enabled": "Ingeschakeld {{num}}",
       "groupName": "Plug-ins",

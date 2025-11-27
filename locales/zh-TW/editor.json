@@ -53,10 +53,12 @@
     "italic": "斜體",
     "link": "連結",
     "numberList": "有序清單",
+    "redo": "重作",
     "strikethrough": "刪除線",
     "table": "表格",
     "taskList": "任務列表",
     "tex": "TeX 公式",
-    "underline": "底線"
+    "underline": "底線",
+    "undo": "復原"
   }
 }

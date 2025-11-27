@@ -137,6 +137,8 @@
   "close": "Sluiten",
   "cmdk": {
     "about": "Over",
+    "aiModeEmptyState": "Typ je vraag in het invoerveld hierboven om een gesprek met de AI te starten",
+    "aiModePlaceholder": "Stel een vraag aan de AI...",
     "communitySupport": "Communityondersteuning",
     "discover": "Ontdekken",
     "knowledgeBase": "Kennisbank",
@@ -304,6 +306,10 @@
     "business": "Zakelijke samenwerking",
     "support": "E-mailondersteuning"
   },
+  "navPanel": {
+    "agent": "Assistent",
+    "library": "Bibliotheek"
+  },
   "new": "Nieuw",
   "oauth": "SSO inloggen",
   "officialSite": "Officiële website",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "AI-afbeelding",
+    "aiImage": "Schilderij",
+    "audio": "Audio",
     "chat": "Chat",
+    "community": "Gemeenschap",
     "discover": "Ontdekken",
     "files": "Bestanden",
+    "home": "Startpagina",
     "knowledgeBase": "Kennisbank",
     "me": "Ik",
-    "setting": "Instellingen"
+    "pages": "Documenten",
+    "resource": "Bronnen",
+    "search": "Zoeken",
+    "setting": "Instellingen",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Toestaan",
