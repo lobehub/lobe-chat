@@ -1,23 +1,27 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { DEFAULT_AGENT_CHAT_CONFIG, INBOX_SESSION_ID, LOADING_FLAT } from '@lobechat/const';
+import { DEFAULT_AGENT_CHAT_CONFIG, LOADING_FLAT } from '@lobechat/const';
 import {
   ChatImageItem,
   ChatVideoItem,
+  ConversationContext,
   SendMessageParams,
   SendMessageServerResponse,
   TraceEventType,
 } from '@lobechat/types';
+import { nanoid } from '@lobechat/utils';
 import { TRPCClientError } from '@trpc/client';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
 import { aiChatService } from '@/services/aiChat';
 import { getAgentStoreState } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
+import { useUserMemoryStore } from '@/store/userMemory';
 
 import {
   dbMessageSelectors,
@@ -28,14 +32,39 @@ import {
 import { messageMapKey } from '../../../utils/messageMapKey';
 
 /**
+ * Extended params for sendMessage with context
+ */
+export interface SendMessageWithContextParams extends SendMessageParams {
+  /**
+   * Conversation context (required for cross-store usage)
+   * Contains sessionId, topicId, and threadId
+   */
+  context: ConversationContext;
+}
+
+/**
+ * Result returned from sendMessage
+ */
+export interface SendMessageResult {
+  /** The created assistant message ID */
+  assistantMessageId: string;
+  /** The created thread ID (if a new thread was created) */
+  createdThreadId?: string;
+  /** The created user message ID */
+  userMessageId: string;
+}
+
+/**
  * Actions managing the complete lifecycle of conversations including sending,
  * regenerating, and resending messages
  */
 export interface ConversationLifecycleAction {
   /**
    * Sends a new message to the AI chat system
+   * @param params - Message params with required context
+   * @returns Result containing message IDs and created thread ID if applicable
    */
-  sendMessage: (params: SendMessageParams) => Promise<void>;
+  sendMessage: (params: SendMessageWithContextParams) => Promise<SendMessageResult | undefined>;
   regenerateUserMessage: (
     id: string,
     params?: { skipTrace?: boolean; traceId?: string },
@@ -60,10 +89,31 @@ export const conversationLifecycle: StateCreator<
   [],
   ConversationLifecycleAction
 > = (set, get) => ({
-  sendMessage: async ({ message, files, onlyAddUserMessage }) => {
-    const { activeTopicId, activeId, activeThreadId, internal_execAgentRuntime, mainInputEditor } =
-      get();
-    if (!activeId) return;
+  sendMessage: async ({
+    message,
+    files,
+    onlyAddUserMessage,
+    context,
+    messages: inputMessages,
+    parentId: inputParentId,
+  }) => {
+    const { internal_execAgentRuntime, mainInputEditor } = get();
+
+    // Use context from params (required)
+    const { agentId } = context;
+    // If creating new thread (isNew + scope='thread'), threadId will be created by server
+    const isCreatingNewThread = context.isNew && context.scope === 'thread';
+    // Build newThread params for server from new context format
+    // Only create newThread if we have both sourceMessageId and threadType
+    const newThread =
+      isCreatingNewThread && context.sourceMessageId && context.threadType
+        ? { sourceMessageId: context.sourceMessageId, type: context.threadType }
+        : undefined;
+
+    if (!agentId) return;
+
+    // When creating new thread, override threadId to undefined (server will create it)
+    const operationContext = isCreatingNewThread ? { ...context, threadId: undefined } : context;
 
     const fileIdList = files?.map((f) => f.id);
 
@@ -78,21 +128,45 @@ export const conversationLifecycle: StateCreator<
       return;
     }
 
-    const messages = displayMessageSelectors.activeDisplayMessages(get());
-    const lastDisplayMessageId = displayMessageSelectors.lastDisplayMessageId(get());
+    // Use provided messages or query from store
+    const contextKey = messageMapKey(context);
+    const messages =
+      inputMessages ?? displayMessageSelectors.getDisplayMessagesByKey(contextKey)(get());
+    const lastMessage = messages.at(-1);
 
-    let parentId: string | undefined;
-    if (lastDisplayMessageId) {
-      parentId = displayMessageSelectors.findLastMessageId(lastDisplayMessageId)(get());
+    useUserMemoryStore.getState().setActiveMemoryContext({
+      session: sessionSelectors.currentSession(getSessionStoreState()),
+      topic: topicSelectors.currentActiveTopic(get()),
+      latestUserMessage: lastMessage?.content,
+      sendingMessage: message,
+    });
+
+    // Use provided parentId or calculate from messages
+    let parentId: string | undefined = inputParentId;
+    if (!parentId && lastMessage) {
+      parentId = displayMessageSelectors.findLastMessageId(lastMessage.id)(get());
     }
 
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
     const autoCreateThreshold =
       chatConfig.autoCreateTopicThreshold ?? DEFAULT_AGENT_CHAT_CONFIG.autoCreateTopicThreshold;
     const shouldCreateNewTopic =
-      !activeTopicId &&
+      !context.topicId &&
       !!chatConfig.enableAutoCreateTopic &&
       messages.length + 2 >= autoCreateThreshold;
+
+    // Create operation for send message first, so we can use operationId for optimistic updates
+    const tempId = 'tmp_' + nanoid();
+    const tempAssistantId = 'tmp_' + nanoid();
+    const { operationId, abortController } = get().startOperation({
+      type: 'sendMessage',
+      context: { ...operationContext, messageId: tempId },
+      label: 'Send Message',
+      metadata: {
+        // Mark this as thread operation if threadId exists
+        inThread: !!operationContext.threadId,
+      },
+    });
 
     // 构造服务端模式临时消息的本地媒体预览（优先使用 S3 URL）
     const filesInStore = getFileStoreState().chatUploadFileList;
@@ -111,44 +185,34 @@ export const conversationLifecycle: StateCreator<
         alt: f.file?.name || f.id,
       }));
 
-    // use optimistic update to avoid the slow waiting
-    const tempId = get().optimisticCreateTmpMessage({
-      content: message,
-      // if message has attached with files, then add files to message and the agent
-      files: fileIdList,
-      role: 'user',
-      sessionId: activeId,
-      // if there is activeTopicId，then add topicId to message
-      topicId: activeTopicId,
-      threadId: activeThreadId,
-      imageList: tempImages.length > 0 ? tempImages : undefined,
-      videoList: tempVideos.length > 0 ? tempVideos : undefined,
-    });
-    const tempAssistantId = get().optimisticCreateTmpMessage({
-      content: LOADING_FLAT,
-      role: 'assistant',
-      sessionId: activeId,
-      // if there is activeTopicId，then add topicId to message
-      topicId: activeTopicId,
-      threadId: activeThreadId,
-    });
+    // use optimistic update to avoid the slow waiting (now with operationId for correct context)
+    get().optimisticCreateTmpMessage(
+      {
+        content: message,
+        // if message has attached with files, then add files to message and the agent
+        files: fileIdList,
+        role: 'user',
+        agentId: operationContext.agentId,
+        // if there is topicId，then add topicId to message
+        topicId: operationContext.topicId ?? undefined,
+        threadId: operationContext.threadId ?? undefined,
+        imageList: tempImages.length > 0 ? tempImages : undefined,
+        videoList: tempVideos.length > 0 ? tempVideos : undefined,
+      },
+      { operationId, tempMessageId: tempId },
+    );
+    get().optimisticCreateTmpMessage(
+      {
+        content: LOADING_FLAT,
+        role: 'assistant',
+        agentId: operationContext.agentId,
+        // if there is topicId，then add topicId to message
+        topicId: operationContext.topicId ?? undefined,
+        threadId: operationContext.threadId ?? undefined,
+      },
+      { operationId, tempMessageId: tempAssistantId },
+    );
     get().internal_toggleMessageLoading(true, tempId);
-
-    // Create operation for send message
-    const { operationId, abortController } = get().startOperation({
-      type: 'sendMessage',
-      context: {
-        sessionId: activeId,
-        topicId: activeTopicId,
-        threadId: activeThreadId,
-        messageId: tempId,
-      },
-      label: 'Send Message',
-      metadata: {
-        // Mark this as main window operation (not thread)
-        inThread: false,
-      },
-    });
 
     // Associate temp message with operation
     get().associateMessageWithOperation(tempId, operationId);
@@ -167,33 +231,49 @@ export const conversationLifecycle: StateCreator<
       data = await aiChatService.sendMessageInServer(
         {
           newUserMessage: { content: message, files: fileIdList, parentId },
-          // if there is activeTopicId，then add topicId to message
-          topicId: activeTopicId,
-          threadId: activeThreadId,
+          // if there is topicId，then add topicId to message
+          topicId: operationContext.topicId ?? undefined,
+          threadId: operationContext.threadId ?? undefined,
+          // Support creating new thread along with message
+          newThread: newThread
+            ? {
+                sourceMessageId: newThread.sourceMessageId,
+                type: newThread.type,
+              }
+            : undefined,
           newTopic: shouldCreateNewTopic
             ? {
                 topicMessageIds: messages.map((m) => m.id),
                 title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
               }
             : undefined,
-          sessionId: activeId === INBOX_SESSION_ID ? undefined : activeId,
+          agentId: operationContext.agentId,
           newAssistantMessage: { model, provider: provider! },
         },
         abortController,
       );
-      let topicId = activeTopicId;
+      // Use created topicId/threadId if available, otherwise use original from context
+      let finalTopicId = operationContext.topicId;
+      const finalThreadId = data.createdThreadId ?? operationContext.threadId;
+
       // refresh the total data
       if (data?.topics) {
         get().internal_dispatchTopic({ type: 'updateTopics', value: data.topics });
-        topicId = data.topicId;
+        finalTopicId = data.topicId;
 
         // Record the created topicId in metadata (not context)
         get().updateOperationMetadata(operationId, { createdTopicId: data.topicId });
       }
 
+      // Record created threadId in operation metadata
+      if (data.createdThreadId) {
+        get().updateOperationMetadata(operationId, { createdThreadId: data.createdThreadId });
+      }
+
+      // Create final context with updated topicId/threadId from server response
+      const finalContext = { ...operationContext, topicId: finalTopicId, threadId: finalThreadId };
       get().replaceMessages(data.messages, {
-        sessionId: activeId,
-        topicId: topicId,
+        context: finalContext,
         action: 'sendMessage/serverResponse',
       });
 
@@ -234,9 +314,6 @@ export const conversationLifecycle: StateCreator<
 
     if (!data) return;
 
-    //  update assistant update to make it rerank
-    getSessionStoreState().triggerSessionUpdate(get().activeId);
-
     if (data.topicId) get().internal_updateTopicLoading(data.topicId, true);
 
     const summaryTitle = async () => {
@@ -252,7 +329,7 @@ export const conversationLifecycle: StateCreator<
 
       if (topic && !topic.title) {
         const chats = displayMessageSelectors
-          .getDisplayMessagesByKey(messageMapKey(activeId, topic.id))(get())
+          .getDisplayMessagesByKey(messageMapKey({ agentId, topicId: topic.id }))(get())
           .filter((item) => item.id !== data.assistantMessageId);
 
         await get().summaryTopicTitle(topic.id, chats);
@@ -265,19 +342,31 @@ export const conversationLifecycle: StateCreator<
     // execAgentRuntime is a separate operation (child) that handles AI response generation
     get().completeOperation(operationId);
 
+    // Create final context for AI execution (with updated topicId/threadId from server)
+    const execContext = {
+      ...operationContext,
+      topicId: data.topicId ?? operationContext.topicId,
+      threadId: data.createdThreadId ?? operationContext.threadId,
+    };
+
     // Get the current messages to generate AI response
-    const displayMessages = displayMessageSelectors.activeDisplayMessages(get());
+    const displayMessages = displayMessageSelectors.getDisplayMessagesByKey(
+      messageMapKey(execContext),
+    )(get());
 
     try {
       await internal_execAgentRuntime({
         messages: displayMessages,
         parentMessageId: data.assistantMessageId,
         parentMessageType: 'assistant',
-        sessionId: activeId,
-        topicId: data.topicId ?? activeTopicId,
+        agentId: execContext.agentId,
+        topicId: execContext.topicId,
         parentOperationId: operationId, // Pass as parent operation
-        threadId: activeThreadId,
+        threadId: execContext.threadId ?? undefined,
+        // If a new thread was created, mark as inPortalThread for consistent behavior
+        inPortalThread: !!data.createdThreadId,
         skipCreateFirstMessage: true,
+        scope: execContext.scope,
       });
 
       //
@@ -296,6 +385,13 @@ export const conversationLifecycle: StateCreator<
     } finally {
       if (data.topicId) get().internal_updateTopicLoading(data.topicId, false);
     }
+
+    // Return result for callers who need message IDs
+    return {
+      assistantMessageId: data.assistantMessageId,
+      createdThreadId: data.createdThreadId,
+      userMessageId: data.userMessageId,
+    };
   },
 
   regenerateUserMessage: async (id, params) => {
@@ -312,12 +408,19 @@ export const conversationLifecycle: StateCreator<
 
     if (contextMessages.length <= 0) return;
 
-    const { internal_execAgentRuntime, activeThreadId, activeId, activeTopicId } = get();
+    const { internal_execAgentRuntime, activeThreadId, activeAgentId, activeTopicId } = get();
+
+    // Create base context for regeneration (using global state)
+    const regenContext = {
+      agentId: activeAgentId,
+      topicId: activeTopicId,
+      threadId: activeThreadId,
+    };
 
     // Create regenerate operation
     const { operationId } = get().startOperation({
       type: 'regenerate',
-      context: { sessionId: activeId, topicId: activeTopicId, messageId: id },
+      context: { ...regenContext, messageId: id },
     });
 
     try {
@@ -330,10 +433,10 @@ export const conversationLifecycle: StateCreator<
         messages: contextMessages,
         parentMessageId: id,
         parentMessageType: 'user',
-        sessionId: activeId,
-        topicId: activeTopicId,
+        agentId: regenContext.agentId,
+        topicId: regenContext.topicId,
         traceId,
-        threadId: activeThreadId,
+        threadId: regenContext.threadId,
         parentOperationId: operationId,
       });
 
@@ -374,12 +477,19 @@ export const conversationLifecycle: StateCreator<
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
-    const { activeId, activeTopicId } = get();
+    const { activeAgentId, activeTopicId, activeThreadId } = get();
+
+    // Create base context for continue operation (using global state)
+    const continueContext = {
+      agentId: activeAgentId,
+      topicId: activeTopicId,
+      threadId: activeThreadId,
+    };
 
     // Create continue operation
     const { operationId } = get().startOperation({
       type: 'continue',
-      context: { sessionId: activeId, topicId: activeTopicId, messageId },
+      context: { ...continueContext, messageId },
     });
 
     try {
@@ -389,8 +499,9 @@ export const conversationLifecycle: StateCreator<
         messages: chats,
         parentMessageId: id,
         parentMessageType: message.role as 'assistant' | 'tool' | 'user',
-        sessionId: activeId,
-        topicId: activeTopicId,
+        agentId: continueContext.agentId,
+        topicId: continueContext.topicId,
+        threadId: continueContext.threadId,
         parentOperationId: operationId,
       });
 

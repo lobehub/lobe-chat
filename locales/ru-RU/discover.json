@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "Помощники сообщества",
     "featuredAssistants": "Рекомендуемые помощники",
     "featuredModels": "Рекомендуемые модели",
+    "featuredPlugins": "Рекомендуемые плагины",
     "featuredProviders": "Рекомендуемые поставщики моделей",
     "featuredTools": "Рекомендуемые плагины",
     "more": "Узнать больше"

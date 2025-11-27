@@ -1,12 +1,13 @@
 {
   "actions": {
+    "addNewTopic": "Crear nuevo tema",
     "autoRename": "Renombrar automáticamente",
     "confirmRemoveAll": "Se eliminarán todos los temas. Una vez eliminados, no se podrán recuperar. Por favor, actúe con precaución.",
     "confirmRemoveTopic": "Se eliminará este tema. Una vez eliminado, no se podrá recuperar. Por favor, actúe con precaución.",
     "confirmRemoveUnstarred": "Se eliminarán los temas no favoritos. Una vez eliminados, no se podrán recuperar. Por favor, actúe con precaución.",
     "duplicate": "Crear copia",
     "export": "Exportar tema",
-    "openInNewWindow": "Abrir en una nueva ventana",
+    "openInNewWindow": "Abrir en una ventana nueva",
     "removeAll": "Eliminar todos los temas",
     "removeUnstarred": "Eliminar temas no favoritos"
   },

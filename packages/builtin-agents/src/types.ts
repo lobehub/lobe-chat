@@ -1,0 +1,85 @@
+import type { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
+
+/**
+ * Builtin Agent Slugs - unique identifiers for builtin agents
+ */
+export const BUILTIN_AGENT_SLUGS = {
+  agentBuilder: 'agent-builder',
+  inbox: 'inbox',
+  pageAgent: 'page-agent',
+} as const;
+
+export type BuiltinAgentSlug = (typeof BUILTIN_AGENT_SLUGS)[keyof typeof BUILTIN_AGENT_SLUGS];
+
+/**
+ * Persist Config - these fields will be stored in the database
+ */
+export interface BuiltinAgentPersistConfig {
+  /** Default chat configuration */
+  chatConfig?: Partial<LobeAgentChatConfig>;
+  /** Default model */
+  model?: string;
+  /** Default provider */
+  provider?: string;
+}
+
+/**
+ * Runtime Result - dynamically generated config, not persisted
+ */
+export interface BuiltinAgentRuntimeResult {
+  /** Dynamically generated system role */
+  systemRole: string;
+  // Future extensible fields can be added here
+}
+
+/**
+ * Runtime Context - context passed to runtime function
+ */
+export interface RuntimeContext {
+  /** Current date string (e.g., "2024-12-03") */
+  currentDate: string;
+
+  /** Document content for PageAgent */
+  documentContent?: string;
+
+  /** Current model being used */
+  model?: string;
+
+  /** Target agent config for AgentBuilder */
+  targetAgentConfig?: LobeAgentConfig;
+
+  /** User's locale */
+  userLocale?: string;
+}
+
+/**
+ * Runtime config - can be either a function or a plain object
+ * - Function: (ctx: RuntimeContext) => BuiltinAgentRuntimeResult
+ * - Object: BuiltinAgentRuntimeResult (static config)
+ */
+export type BuiltinAgentRuntimeConfig =
+  | ((ctx: RuntimeContext) => BuiltinAgentRuntimeResult)
+  | BuiltinAgentRuntimeResult;
+
+/**
+ * Builtin Agent Definition - complete definition with persist and runtime parts
+ */
+export interface BuiltinAgentDefinition {
+  /**
+   * Persist config - stored in database
+   */
+  persist?: BuiltinAgentPersistConfig;
+
+  /**
+   * Runtime config - generates dynamic config based on context
+   * Can be either:
+   * - A function that takes RuntimeContext and returns BuiltinAgentRuntimeResult
+   * - A plain BuiltinAgentRuntimeResult object (for static systemRole)
+   */
+  runtime: BuiltinAgentRuntimeConfig;
+
+  /**
+   * Unique identifier for the builtin agent
+   */
+  slug: BuiltinAgentSlug;
+}

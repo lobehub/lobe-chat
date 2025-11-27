@@ -137,6 +137,8 @@
   "close": "Đóng",
   "cmdk": {
     "about": "Giới thiệu",
+    "aiModeEmptyState": "Nhập câu hỏi của bạn vào ô phía trên để bắt đầu trò chuyện với AI",
+    "aiModePlaceholder": "Đặt câu hỏi cho AI...",
     "communitySupport": "Hỗ trợ cộng đồng",
     "discover": "Khám phá",
     "knowledgeBase": "Cơ sở kiến thức",
@@ -304,6 +306,10 @@
     "business": "Hợp tác kinh doanh",
     "support": "Hỗ trợ qua email"
   },
+  "navPanel": {
+    "agent": "Trợ lý",
+    "library": "Thư viện"
+  },
   "new": "Mới",
   "oauth": "Đăng nhập SSO",
   "officialSite": "Trang web chính thức",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "Vẽ tranh AI",
+    "aiImage": "Vẽ tranh",
+    "audio": "Âm thanh",
     "chat": "Trò chuyện",
+    "community": "Cộng đồng",
     "discover": "Khám phá",
     "files": "Tệp",
+    "home": "Trang chủ",
     "knowledgeBase": "Cơ sở tri thức",
     "me": "Tôi",
-    "setting": "Cài đặt"
+    "pages": "Tài liệu",
+    "resource": "Tài nguyên",
+    "search": "Tìm kiếm",
+    "setting": "Cài đặt",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Cho phép",

@@ -137,6 +137,8 @@
   "close": "Close",
   "cmdk": {
     "about": "About",
+    "aiModeEmptyState": "Type your question above to start chatting with AI",
+    "aiModePlaceholder": "Ask AI anything...",
     "communitySupport": "Community Support",
     "discover": "Discover",
     "knowledgeBase": "Knowledge Base",
@@ -304,6 +306,10 @@
     "business": "Business Cooperation",
     "support": "Email Support"
   },
+  "navPanel": {
+    "agent": "Assistant",
+    "library": "Library"
+  },
   "new": "NEW",
   "oauth": "SSO Login",
   "officialSite": "Official Website",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "AI Painting",
+    "aiImage": "Artwork",
+    "audio": "Audio",
     "chat": "Chat",
+    "community": "Community",
     "discover": "Discover",
     "files": "Files",
+    "home": "Home",
     "knowledgeBase": "Knowledge Base",
     "me": "Me",
-    "setting": "Settings"
+    "pages": "Documents",
+    "resource": "Resources",
+    "search": "Search",
+    "setting": "Settings",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Allow",

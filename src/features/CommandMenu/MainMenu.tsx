@@ -1,0 +1,134 @@
+import { Command } from 'cmdk';
+import {
+  BookOpen,
+  Bot,
+  Compass,
+  Github,
+  MessageCircle,
+  Monitor,
+  Palette,
+  Settings,
+  Star,
+} from 'lucide-react';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+interface MainMenuProps {
+  onCreateSession: () => void;
+  onExternalLink: (url: string) => void;
+  onNavigate: (path: string) => void;
+  onNavigateToTheme: () => void;
+  pathname: string | null;
+  showCreateSession?: boolean;
+  styles: {
+    icon: string;
+    itemContent: string;
+    itemLabel: string;
+  };
+}
+
+const MainMenu = memo<MainMenuProps>(
+  ({
+    onCreateSession,
+    onExternalLink,
+    onNavigate,
+    onNavigateToTheme,
+    pathname,
+    showCreateSession,
+    styles,
+  }) => {
+    const { t } = useTranslation('common');
+
+    return (
+      <>
+        {showCreateSession && (
+          <Command.Item onSelect={onCreateSession} value="new-agent">
+            <Bot className={styles.icon} />
+            <div className={styles.itemContent}>
+              <div className={styles.itemLabel}>{t('cmdk.newAgent')}</div>
+            </div>
+          </Command.Item>
+        )}
+
+        {!pathname?.startsWith('/settings') && (
+          <Command.Item onSelect={() => onNavigate('/settings')} value="settings">
+            <Settings className={styles.icon} />
+            <div className={styles.itemContent}>
+              <div className={styles.itemLabel}>{t('cmdk.settings')}</div>
+            </div>
+          </Command.Item>
+        )}
+
+        <Command.Item onSelect={onNavigateToTheme} value="theme">
+          <Monitor className={styles.icon} />
+          <div className={styles.itemContent}>
+            <div className={styles.itemLabel}>{t('cmdk.theme')}</div>
+          </div>
+        </Command.Item>
+
+        <Command.Group heading={t('cmdk.navigate')}>
+          {!pathname?.startsWith('/discover') && (
+            <Command.Item onSelect={() => onNavigate('/discover')} value="discover">
+              <Compass className={styles.icon} />
+              <div className={styles.itemContent}>
+                <div className={styles.itemLabel}>{t('cmdk.discover')}</div>
+              </div>
+            </Command.Item>
+          )}
+          {!pathname?.startsWith('/image') && (
+            <Command.Item onSelect={() => onNavigate('/image')} value="painting">
+              <Palette className={styles.icon} />
+              <div className={styles.itemContent}>
+                <div className={styles.itemLabel}>{t('cmdk.painting')}</div>
+              </div>
+            </Command.Item>
+          )}
+          {!pathname?.startsWith('/knowledge') && (
+            <Command.Item onSelect={() => onNavigate('/knowledge')} value="knowledge">
+              <BookOpen className={styles.icon} />
+              <div className={styles.itemContent}>
+                <div className={styles.itemLabel}>{t('cmdk.knowledgeBase')}</div>
+              </div>
+            </Command.Item>
+          )}
+        </Command.Group>
+
+        <Command.Group heading={t('cmdk.about')}>
+          <Command.Item
+            onSelect={() =>
+              onExternalLink('https://github.com/lobehub/lobe-chat/issues/new/choose')
+            }
+            value="submit-issue"
+          >
+            <Github className={styles.icon} />
+            <div className={styles.itemContent}>
+              <div className={styles.itemLabel}>{t('cmdk.submitIssue')}</div>
+            </div>
+          </Command.Item>
+          <Command.Item
+            onSelect={() => onExternalLink('https://github.com/lobehub/lobe-chat')}
+            value="star-github"
+          >
+            <Star className={styles.icon} />
+            <div className={styles.itemContent}>
+              <div className={styles.itemLabel}>{t('cmdk.starOnGitHub')}</div>
+            </div>
+          </Command.Item>
+          <Command.Item
+            onSelect={() => onExternalLink('https://discord.gg/AYFPHvv2jT')}
+            value="discord"
+          >
+            <MessageCircle className={styles.icon} />
+            <div className={styles.itemContent}>
+              <div className={styles.itemLabel}>{t('cmdk.communitySupport')}</div>
+            </div>
+          </Command.Item>
+        </Command.Group>
+      </>
+    );
+  },
+);
+
+MainMenu.displayName = 'MainMenu';
+
+export default MainMenu;

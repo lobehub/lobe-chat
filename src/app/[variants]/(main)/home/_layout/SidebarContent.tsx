@@ -1,0 +1,13 @@
+import { memo } from 'react';
+
+import SideBarLayout from '@/features/NavPanel/SideBarLayout';
+
+import Body from './Body';
+import Footer from './Footer';
+import Header from './Header';
+
+const Sidebar = memo(() => {
+  return <SideBarLayout body={<Body />} footer={<Footer />} header={<Header />} />;
+});
+
+export default Sidebar;

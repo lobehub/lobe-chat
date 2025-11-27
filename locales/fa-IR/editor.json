@@ -53,10 +53,12 @@
     "italic": "ایتالیک",
     "link": "پیوند",
     "numberList": "فهرست شماره‌دار",
+    "redo": "دوباره انجام دادن",
     "strikethrough": "خط خورده",
     "table": "جدول",
     "taskList": "فهرست وظایف",
     "tex": "فرمول TeX",
-    "underline": "زیرخط"
+    "underline": "زیرخط",
+    "undo": "واگردانی"
   }
 }

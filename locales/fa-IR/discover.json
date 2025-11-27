@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "دستیاران جامعه",
     "featuredAssistants": "دستیارهای پیشنهادی",
     "featuredModels": "مدل‌های پیشنهادی",
+    "featuredPlugins": "افزونه‌های ویژه",
     "featuredProviders": "ارائه‌دهندگان مدل پیشنهادی",
     "featuredTools": "افزونه‌های پیشنهادی",
     "more": "کشف بیشتر"

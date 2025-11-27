@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
+  "emptyAgentAction": "Assistent aanmaken",
   "extendParams": {
     "disableContextCaching": {
       "desc": "De kosten voor het genereren van een enkele conversatie kunnen met maximaal 90% worden verlaagd, en de responssnelheid kan tot 4 keer worden verhoogd (<1>Lees meer</1>). Wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "Alle inhoud",
     "allFiles": "Alle bestanden",
-    "allKnowledgeBases": "Alle kennisbanken",
-    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Als je dit wilt gebruiken, schakel dan over naar serverdatabase-implementatie of gebruik de {{cloud}}-dienst.",
+    "allLibraries": "Alle bibliotheken",
+    "disabled": "De huidige implementatiemodus ondersteunt geen gesprekken met de kennisbank. Schakel over naar een server-side database-implementatie of gebruik de {{cloud}}-dienst om dit te activeren.",
     "library": {
       "action": {
         "add": "Toevoegen",
         "detail": "Details",
         "remove": "Verwijderen"
       },
-      "title": "Bestand/Kennisbank"
+      "title": "Bestanden/Bibliotheek"
     },
-    "relativeFilesOrKnowledgeBases": "Gerelateerde bestanden/kennisbanken",
+    "relativeFilesOrLibraries": "Gerelateerde bestanden/bibliotheken",
     "title": "Kennisbank",
-    "uploadGuide": "Geüploade bestanden kunnen worden bekeken in de 'Kennisbank'.",
+    "uploadGuide": "Geüploade bestanden kun je terugvinden onder 'Bronnen'.",
     "viewMore": "Bekijk meer"
   },
   "memberSelection": {
@@ -252,7 +253,7 @@
   "noMatchingAgents": "Geen overeenkomende leden gevonden",
   "noMembersYet": "Deze groep heeft nog geen leden. Klik op de + knop om assistenten uit te nodigen.",
   "noSelectedAgents": "Nog geen leden geselecteerd",
-  "openInNewWindow": "In een nieuw venster openen",
+  "openInNewWindow": "Open in een nieuw venster",
   "owner": "Groepseigenaar",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
@@ -361,6 +362,10 @@
       "title": "Taken voltooid"
     }
   },
+  "tab": {
+    "profile": "Assistentprofiel",
+    "search": "Zoeken"
+  },
   "thread": {
     "divider": "Subonderwerp",
     "threadMessageCount": "{{messageCount}} berichten",
@@ -413,6 +418,7 @@
     "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
     "checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",
     "openNewTopic": "Nieuw onderwerp openen",
+    "recent": "Recente onderwerpen",
     "saveCurrentMessages": "Huidig gesprek opslaan als onderwerp"
   },
   "translate": {

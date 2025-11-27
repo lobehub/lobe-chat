@@ -137,6 +137,8 @@
   "close": "닫기",
   "cmdk": {
     "about": "정보",
+    "aiModeEmptyState": "위의 입력창에 질문을 입력하여 AI와 대화를 시작하세요",
+    "aiModePlaceholder": "AI에게 질문하기...",
     "communitySupport": "커뮤니티 지원",
     "discover": "탐색",
     "knowledgeBase": "지식 베이스",
@@ -304,6 +306,10 @@
     "business": "비즈니스 제휴",
     "support": "이메일 지원"
   },
+  "navPanel": {
+    "agent": "도우미",
+    "library": "자료실"
+  },
   "new": "새로운",
   "oauth": "SSO 로그인",
   "officialSite": "공식 웹사이트",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "AI 그림",
+    "aiImage": "그림",
+    "audio": "오디오",
     "chat": "채팅",
+    "community": "커뮤니티",
     "discover": "탐색",
     "files": "파일",
+    "home": "홈",
     "knowledgeBase": "지식 베이스",
     "me": "내 정보",
-    "setting": "설정"
+    "pages": "문서",
+    "resource": "자료",
+    "search": "검색",
+    "setting": "설정",
+    "video": "비디오"
   },
   "telemetry": {
     "allow": "허용",

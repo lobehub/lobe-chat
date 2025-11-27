@@ -19,6 +19,7 @@
       "chunkingTooltip": "ファイルを複数のテキストブロックに分割し、ベクトル化した後、意味検索やファイル対話に使用できます",
       "chunkingUnsupported": "このファイルはチャンク分割をサポートしていません",
       "confirmDelete": "このファイルを削除しようとしています。削除後は復元できませんので、操作を確認してください",
+      "confirmDeleteFolder": "このフォルダーとそのすべての内容を削除しようとしています。削除後は元に戻せません。本当に実行しますか？",
       "confirmDeleteMultiFiles": "選択した {{count}} 個のファイルを削除しようとしています。削除後は復元できませんので、操作を確認してください",
       "confirmRemoveFromKnowledgeBase": "選択した {{count}} 個のファイルを知識ベースから削除しようとしています。削除後もファイルはすべてのファイルで表示できますので、操作を確認してください",
       "copyUrl": "リンクをコピー",
@@ -26,8 +27,19 @@
       "createChunkingTask": "準備中...",
       "deleteSuccess": "ファイルが正常に削除されました",
       "downloading": "ファイルをダウンロード中...",
+      "goBack": "前のページに戻る",
+      "goForward": "次のページへ進む",
+      "goToParent": "親フォルダへ移動",
+      "moveError": "ファイルの移動に失敗しました",
+      "moveHere": "ここに移動",
+      "moveSuccess": "ファイルを正常に移動しました",
+      "moveToFolder": "フォルダへ移動...",
+      "moveToRoot": "ルートディレクトリへ移動",
       "removeFromKnowledgeBase": "知識ベースから削除",
-      "removeFromKnowledgeBaseSuccess": "ファイルが正常に削除されました"
+      "removeFromKnowledgeBaseSuccess": "ファイルが正常に削除されました",
+      "rename": "名前を変更",
+      "renameError": "名前の変更に失敗しました",
+      "renameSuccess": "名前の変更に成功しました"
     },
     "bottom": "これ以上ありません",
     "config": {
@@ -41,6 +53,12 @@
       },
       "or": "または",
       "title": "ここにファイルまたはフォルダーをドラッグしてください"
+    },
+    "noFolders": "フォルダがありません",
+    "sort": {
+      "dateAdded": "追加日",
+      "name": "名前",
+      "size": "サイズ"
     },
     "title": {
       "createdAt": "作成日時",
