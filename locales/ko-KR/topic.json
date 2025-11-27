@@ -1,5 +1,6 @@
 {
   "actions": {
+    "addNewTopic": "새 주제 만들기",
     "autoRename": "자동 이름 변경",
     "confirmRemoveAll": "모든 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 진행해 주세요.",
     "confirmRemoveTopic": "이 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 진행해 주세요.",

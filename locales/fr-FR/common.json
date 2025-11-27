@@ -137,6 +137,8 @@
   "close": "Fermer",
   "cmdk": {
     "about": "À propos",
+    "aiModeEmptyState": "Saisissez votre question dans le champ ci-dessus pour commencer à discuter avec l'IA",
+    "aiModePlaceholder": "Posez une question à l'IA...",
     "communitySupport": "Support communautaire",
     "discover": "Découvrir",
     "knowledgeBase": "Base de connaissances",
@@ -304,6 +306,10 @@
     "business": "Partenariats commerciaux",
     "support": "Support par e-mail"
   },
+  "navPanel": {
+    "agent": "Assistant",
+    "library": "Bibliothèque"
+  },
   "new": "Nouveau",
   "oauth": "Connexion SSO",
   "officialSite": "Site officiel",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "Peinture IA",
+    "aiImage": "Illustration",
+    "audio": "Audio",
     "chat": "Conversation",
+    "community": "Communauté",
     "discover": "Découvrir",
     "files": "Fichiers",
+    "home": "Accueil",
     "knowledgeBase": "Base de connaissances",
     "me": "moi",
-    "setting": "Paramètre"
+    "pages": "Documents",
+    "resource": "Ressources",
+    "search": "Recherche",
+    "setting": "Paramètre",
+    "video": "Vidéo"
   },
   "telemetry": {
     "allow": "Autoriser",

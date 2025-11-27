@@ -53,10 +53,12 @@
     "italic": "Italic",
     "link": "Link",
     "numberList": "Numbered list",
+    "redo": "Redo",
     "strikethrough": "Strikethrough",
     "table": "Table",
     "taskList": "Task List",
     "tex": "TeX Formula",
-    "underline": "Underline"
+    "underline": "Underline",
+    "undo": "Undo"
   }
 }

@@ -2,6 +2,7 @@ export default {
   about: {
     title: '关于',
   },
+  advancedSettings: '进阶配置',
   agentInfoDescription: {
     basic: {
       avatar: '头像',
@@ -41,6 +42,11 @@ export default {
       untitled: '未命名助手',
     },
   },
+  agentProfile: {
+    latest: '已加载最新版本',
+    saved: '已保存',
+    saving: '自动保存中...',
+  },
   agentTab: {
     chat: '聊天偏好',
     meta: '助手信息',
@@ -75,6 +81,12 @@ export default {
       success: '已重置所有设置',
       title: '重置所有设置',
     },
+  },
+  group: {
+    aiConfig: 'AI 配置',
+    common: '通用',
+    profile: '账号',
+    system: '系统',
   },
   groupTab: {
     chat: '聊天',
@@ -667,6 +679,7 @@ export default {
     identifier: '助手标识符（identifier）',
     metaMiss: '请补全助手信息后提交，需要包含名称、描述和标签',
     placeholder: '请输入助手的标识符，需要是唯一的，比如 web-development',
+    success: '助手提交成功',
     tooltips: '分享到助手市场',
   },
   submitFooter: {
@@ -762,23 +775,31 @@ export default {
   tab: {
     'about': '关于',
     'agent': '默认助手',
-    'common': '通用设置',
+    'apikey': 'API Key 管理',
+    'common': '外观',
     'experiment': '实验',
     'hotkey': '快捷键',
-    'image': 'AI 绘画',
+    'image': '绘画服务',
     'llm': '语言模型',
+    'profile': '我的账号',
     'provider': 'AI 服务商',
     'proxy': '网络代理',
+    'security': '安全',
+    'stats': '数据统计',
     'storage': '数据存储',
     'sync': '云端同步',
     'system-agent': '系统助手',
     'tts': '语音服务',
+    'usage': '用量统计',
   },
   tools: {
+    add: '集成插件',
     builtins: {
       groupName: '内置插件',
     },
     disabled: '当前模型不支持函数调用，无法使用插件',
+    notInstalled: '未安装',
+    notInstalledWarning: '当前插件暂未安装，可能会影响助手使用',
     plugins: {
       enabled: '已启用 {{num}}',
       groupName: '三方插件',

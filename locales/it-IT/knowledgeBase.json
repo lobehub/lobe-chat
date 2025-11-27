@@ -2,6 +2,7 @@
   "addToKnowledgeBase": {
     "addSuccess": "File aggiunto con successo, <1>visualizza subito</1>",
     "confirm": "Aggiungi",
+    "error": "Aggiunta del file alla base di conoscenza non riuscita",
     "id": {
       "placeholder": "Seleziona il knowledge base da aggiungere",
       "required": "Seleziona il knowledge base",

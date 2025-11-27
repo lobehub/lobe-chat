@@ -1,8 +1,7 @@
 import { Flexbox } from 'react-layout-kit';
+import { Outlet } from 'react-router-dom';
 
 import Footer from '@/features/Setting/Footer';
-
-import { Outlet } from 'react-router-dom';
 
 import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../../features/const';
 import Nav from './Nav';

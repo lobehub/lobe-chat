@@ -1,321 +1,33 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
-import { createBrowserRouter, redirect, useNavigate, useRouteError } from 'react-router-dom';
+import { createBrowserRouter, redirect } from 'react-router-dom';
 
-import ErrorCapture from '@/components/Error';
 import Loading from '@/components/Loading/BrandTextLoading';
-import { useGlobalStore } from '@/store/global';
-import type { Locales } from '@/types/locale';
+import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
-import { MobileMainLayout } from './(main)/layouts/mobile';
-import { idLoader, slugLoader } from './loaders/routeParams';
-
-/**
- * Mobile Router Configuration - Pure CSR Mode
- *
- * IMPORTANT: This router runs ONLY in the browser (client-side).
- *
- * Key characteristics:
- * - createBrowserRouter uses window.history API (client-only)
- * - All loaders execute in the browser during navigation
- * - No server-side rendering or hydration involved
- * - Route data fetching happens on-demand during client navigation
- *
- * The entire router tree is wrapped with Next.js dynamic import (ssr: false),
- * ensuring this code never executes on the server.
- */
-
-// Chat components
-const MobileChatPage = dynamic(() => import('./(main)/chat/index').then((m) => m.MobileChatPage), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const ChatSettings = dynamic(() => import('./(main)/chat/settings'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Mobile'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-// Changelog components
-const ChangelogPage = dynamic(() => import('./(main)/changelog/index').then((m) => m.MobilePage), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const ChangelogLayout = dynamic(() => import('./(main)/changelog/_layout/Mobile'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-// Discover List components
-const MobileHomePage = dynamic(
-  () => import('./(main)/discover/(list)/(home)/index').then((m) => m.MobileHomePage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const MobileAssistantPage = dynamic(
-  () => import('./(main)/discover/(list)/assistant/index').then((m) => m.MobileAssistantPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverAssistantLayout = dynamic(
-  () => import('./(main)/discover/(list)/assistant/_layout/Mobile'),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverListMobileModelPage = dynamic(
-  () => import('./(main)/discover/(list)/model/index').then((m) => m.MobileModelPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverModelLayout = dynamic(() => import('./(main)/discover/(list)/model/_layout/Mobile'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const DiscoverListMobileProviderPage = dynamic(
-  () => import('./(main)/discover/(list)/provider/index').then((m) => m.MobileProviderPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverListMobileMcpPage = dynamic(
-  () => import('./(main)/discover/(list)/mcp/index').then((m) => m.MobileMcpPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverMcpLayout = dynamic(() => import('./(main)/discover/(list)/mcp/_layout/Mobile'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const DiscoverListLayout = dynamic(() => import('./(main)/discover/(list)/_layout/Mobile/index'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-// Discover Detail components
-const MobileDiscoverAssistantDetailPage = dynamic(
-  () =>
-    import('./(main)/discover/(detail)/assistant/index').then(
-      (m) => m.MobileDiscoverAssistantDetailPage,
-    ),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverDetailMobileModelPage = dynamic(
-  () => import('./(main)/discover/(detail)/model/index').then((m) => m.MobileModelPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverDetailMobileProviderPage = dynamic(
-  () => import('./(main)/discover/(detail)/provider/index').then((m) => m.MobileProviderPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverDetailMobileMcpPage = dynamic(
-  () => import('./(main)/discover/(detail)/mcp/index').then((m) => m.MobileMcpPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverDetailLayout = dynamic(
-  () => import('./(main)/discover/(detail)/_layout/Mobile/index'),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const DiscoverLayout = dynamic(() => import('./(main)/discover/_layout/Mobile/index'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-// Knowledge components
-const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const KnowledgeBasesList = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBasesList'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const KnowledgeBaseDetail = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBaseDetail'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const KnowledgeLayout = dynamic(() => import('./(main)/knowledge/_layout/Mobile'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-// Settings components
-const SettingsLayout = dynamic(() => import('./(main)/settings/_layout/Mobile'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const SettingsLayoutWrapper = dynamic(() => import('./(main)/settings/_layout/MobileWrapper'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-// Image components
-const ImageComingSoon = dynamic(() => import('./(main)/image/ComingSoon'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const ImageLayoutMobile = dynamic(() => import('./(main)/image/_layout/Mobile'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-// Labs components
-const LabsPage = dynamic(() => import('./(main)/labs'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-// Profile components
-const ProfileHomePage = dynamic(() => import('./(main)/profile/(home)'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const ProfileApikeyPage = dynamic(() => import('./(main)/profile/apikey/index'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const MobileProfileSecurityPage = dynamic(
-  () => import('./(main)/profile/security').then((m) => m.MobileProfileSecurityPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const MobileProfileStatsPage = dynamic(
-  () => import('./(main)/profile/stats').then((m) => m.MobileProfileStatsPage),
-  {
-    loading: () => <Loading />,
-    ssr: false,
-  },
-);
-const ProfileLayoutMobile = dynamic(() => import('./(main)/profile/_layout/Mobile'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-// Me (mobile personal center) components
-const MeHomePage = dynamic(() => import('./(main)/(mobile)/me/(home)'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const MeHomeLayout = dynamic(() => import('./(main)/(mobile)/me/(home)/layout'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const MeProfilePage = dynamic(() => import('./(main)/(mobile)/me/profile'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const MeProfileLayout = dynamic(() => import('./(main)/(mobile)/me/profile/layout'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const MeSettingsPage = dynamic(() => import('./(main)/(mobile)/me/settings'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const MeSettingsLayout = dynamic(() => import('./(main)/(mobile)/me/settings/layout'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-// Component to register navigate function in global store
-const NavigatorRegistrar = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    useGlobalStore.setState({ navigate });
-
-    return () => {
-      useGlobalStore.setState({ navigate: undefined });
-    };
-  }, [navigate]);
-
-  return null;
-};
-
-// Error boundary factory for React Router errorElement
-const createErrorBoundary = (resetPath: string) => {
-  const ErrorBoundary = () => {
-    const error = useRouteError() as Error;
-    const navigate = useNavigate();
-
-    const reset = () => {
-      navigate(resetPath);
-    };
-
-    return <ErrorCapture error={error} reset={reset} />;
-  };
-  return ErrorBoundary;
-};
-
-// Create error boundaries for each route
-const ChatErrorBoundary = createErrorBoundary('/chat');
-const DiscoverErrorBoundary = createErrorBoundary('/discover');
-const ChangelogErrorBoundary = createErrorBoundary('/changelog');
-const KnowledgeErrorBoundary = createErrorBoundary('/knowledge');
-const SettingsErrorBoundary = createErrorBoundary('/settings');
-const ImageErrorBoundary = createErrorBoundary('/image');
-const ProfileErrorBoundary = createErrorBoundary('/profile');
-const MeErrorBoundary = createErrorBoundary('/me'); // Mobile only
-const RootErrorBoundary = createErrorBoundary('/chat'); // Root level falls back to chat
-
-// Root layout wrapper component
-const RootLayout = (props: { locale: Locales }) => (
-  <>
-    <NavigatorRegistrar />
-    <MobileMainLayout locale={props.locale} />
-  </>
-);
+import { MobileMainLayout } from './(main)/(mobile)/_layout';
+import { slugLoader } from './loaders/routeParams';
 
 // Create mobile router configuration
-export const createMobileRouter = (locale: Locales) =>
+export const createMobileRouter = () =>
   createBrowserRouter([
     {
+      HydrateFallback: Loading,
       children: [
         // Chat routes
         {
           children: [
             {
-              element: <MobileChatPage />,
+              element: dynamicElement(() => import('./(main)/chat/(mobile)')),
               index: true,
             },
             {
-              element: <ChatSettings />,
+              element: dynamicElement(() => import('./(main)/chat/profile/Settings')),
               path: 'settings',
             },
           ],
-          element: <ChatLayout />,
-          errorElement: <ChatErrorBoundary />,
+          element: dynamicElement(() => import('./(main)/chat/(mobile)/_layout/Mobile')),
+          errorElement: <ErrorBoundary resetPath="/chat" />,
           path: 'chat',
         },
 
@@ -326,157 +38,124 @@ export const createMobileRouter = (locale: Locales) =>
             {
               children: [
                 {
-                  element: <MobileHomePage />,
+                  element: dynamicElement(() =>
+                    import('./(main)/discover/(list)/(home)/index').then((m) => m.MobileHomePage),
+                  ),
                   index: true,
                 },
                 {
                   children: [
                     {
-                      element: <MobileAssistantPage />,
+                      element: dynamicElement(() =>
+                        import('./(main)/discover/(list)/assistant/index').then(
+                          (m) => m.MobileAssistantPage,
+                        ),
+                      ),
                       path: 'assistant',
                     },
                   ],
-                  element: <DiscoverAssistantLayout />,
+                  element: dynamicElement(
+                    () => import('./(main)/discover/(list)/assistant/_layout/Mobile'),
+                  ),
                 },
                 {
                   children: [
                     {
-                      element: <DiscoverListMobileModelPage />,
+                      element: dynamicElement(() =>
+                        import('./(main)/discover/(list)/model/index').then(
+                          (m) => m.MobileModelPage,
+                        ),
+                      ),
                       path: 'model',
                     },
                   ],
-                  element: <DiscoverModelLayout />,
+                  element: dynamicElement(
+                    () => import('./(main)/discover/(list)/model/_layout/Mobile'),
+                  ),
                 },
                 {
-                  element: <DiscoverListMobileProviderPage />,
+                  element: dynamicElement(() =>
+                    import('./(main)/discover/(list)/provider/index').then(
+                      (m) => m.MobileProviderPage,
+                    ),
+                  ),
                   path: 'provider',
                 },
                 {
                   children: [
                     {
-                      element: <DiscoverListMobileMcpPage />,
+                      element: dynamicElement(() =>
+                        import('./(main)/discover/(list)/mcp/index').then((m) => m.MobileMcpPage),
+                      ),
                       path: 'mcp',
                     },
                   ],
-                  element: <DiscoverMcpLayout />,
+                  element: dynamicElement(
+                    () => import('./(main)/discover/(list)/mcp/_layout/Mobile'),
+                  ),
                 },
               ],
-              element: <DiscoverListLayout />,
+              element: dynamicElement(
+                () => import('./(main)/discover/(list)/_layout/Mobile/index'),
+              ),
             },
             // Detail routes (with DetailLayout)
             {
               children: [
                 {
-                  element: <MobileDiscoverAssistantDetailPage />,
+                  element: dynamicElement(() =>
+                    import('./(main)/discover/(detail)/assistant/index').then(
+                      (m) => m.MobileDiscoverAssistantDetailPage,
+                    ),
+                  ),
                   loader: slugLoader,
                   path: 'assistant/:slug',
                 },
                 {
-                  element: <DiscoverDetailMobileModelPage />,
+                  element: dynamicElement(() =>
+                    import('./(main)/discover/(detail)/model/index').then((m) => m.MobileModelPage),
+                  ),
                   loader: slugLoader,
                   path: 'model/:slug',
                 },
                 {
-                  element: <DiscoverDetailMobileProviderPage />,
+                  element: dynamicElement(() =>
+                    import('./(main)/discover/(detail)/provider/index').then(
+                      (m) => m.MobileProviderPage,
+                    ),
+                  ),
                   loader: slugLoader,
                   path: 'provider/:slug',
                 },
                 {
-                  element: <DiscoverDetailMobileMcpPage />,
+                  element: dynamicElement(() =>
+                    import('./(main)/discover/(detail)/mcp/index').then((m) => m.MobileMcpPage),
+                  ),
                   loader: slugLoader,
                   path: 'mcp/:slug',
                 },
               ],
-              element: <DiscoverDetailLayout />,
+              element: dynamicElement(
+                () => import('./(main)/discover/(detail)/_layout/Mobile/index'),
+              ),
             },
           ],
-          element: <DiscoverLayout />,
-          errorElement: <DiscoverErrorBoundary />,
+          element: dynamicElement(() => import('./(main)/discover/_layout/Mobile/index')),
+          errorElement: <ErrorBoundary resetPath="/discover" />,
           path: 'discover',
-        },
-
-        // Knowledge routes
-        {
-          children: [
-            {
-              element: <KnowledgeHome />,
-              index: true,
-            },
-            {
-              element: <KnowledgeHome />,
-              loader: idLoader,
-              path: ':id',
-            },
-            {
-              element: <KnowledgeBasesList />,
-              path: 'bases',
-            },
-            {
-              element: <KnowledgeBaseDetail />,
-              loader: idLoader,
-              path: 'bases/:id',
-            },
-          ],
-          element: <KnowledgeLayout />,
-          errorElement: <KnowledgeErrorBoundary />,
-          path: 'knowledge',
         },
 
         // Settings routes
         {
           children: [
             {
-              element: <SettingsLayout />,
+              element: dynamicElement(() => import('./(main)/settings/(mobile)')),
               index: true,
             },
           ],
-          element: <SettingsLayoutWrapper />,
-          errorElement: <SettingsErrorBoundary />,
+          element: dynamicElement(() => import('./(main)/settings/(mobile)/_layout')),
+          errorElement: <ErrorBoundary resetPath="/settings" />,
           path: 'settings',
-        },
-
-        // Image routes
-        {
-          children: [
-            {
-              element: <ImageComingSoon />,
-              index: true,
-            },
-          ],
-          element: <ImageLayoutMobile />,
-          errorElement: <ImageErrorBoundary />,
-          path: 'image',
-        },
-
-        // Labs routes
-        {
-          element: <LabsPage />,
-          path: 'labs',
-        },
-
-        // Profile routes
-        {
-          children: [
-            {
-              element: <ProfileHomePage />,
-              index: true,
-            },
-            {
-              element: <ProfileApikeyPage />,
-              path: 'apikey',
-            },
-            {
-              element: <MobileProfileSecurityPage />,
-              path: 'security',
-            },
-            {
-              element: <MobileProfileStatsPage />,
-              path: 'stats',
-            },
-          ],
-          element: <ProfileLayoutMobile />,
-          errorElement: <ProfileErrorBoundary />,
-          path: 'profile',
         },
 
         // Me routes (mobile personal center)
@@ -485,32 +164,32 @@ export const createMobileRouter = (locale: Locales) =>
             {
               children: [
                 {
-                  element: <MeHomePage />,
+                  element: dynamicElement(() => import('./(main)/(mobile)/me/(home)')),
                   index: true,
                 },
               ],
-              element: <MeHomeLayout />,
+              element: dynamicElement(() => import('./(main)/(mobile)/me/(home)/layout')),
             },
             {
               children: [
                 {
-                  element: <MeProfilePage />,
+                  element: dynamicElement(() => import('./(main)/(mobile)/me/profile')),
                   path: 'profile',
                 },
               ],
-              element: <MeProfileLayout />,
+              element: dynamicElement(() => import('./(main)/(mobile)/me/profile/layout')),
             },
             {
               children: [
                 {
-                  element: <MeSettingsPage />,
+                  element: dynamicElement(() => import('./(main)/(mobile)/me/settings')),
                   path: 'settings',
                 },
               ],
-              element: <MeSettingsLayout />,
+              element: dynamicElement(() => import('./(main)/(mobile)/me/settings/layout')),
             },
           ],
-          errorElement: <MeErrorBoundary />,
+          errorElement: <ErrorBoundary resetPath="/me" />,
           path: 'me',
         },
 
@@ -518,29 +197,31 @@ export const createMobileRouter = (locale: Locales) =>
         {
           children: [
             {
-              element: <ChangelogPage />,
+              element: dynamicElement(() =>
+                import('./(main)/changelog/index').then((m) => m.MobilePage),
+              ),
               index: true,
             },
           ],
-          element: <ChangelogLayout locale={locale} />,
-          errorElement: <ChangelogErrorBoundary />,
+          element: dynamicElement(() => import('./(main)/changelog/_layout/Mobile')),
+          errorElement: <ErrorBoundary resetPath="/changelog" />,
           path: 'changelog',
         },
 
         // Default route - redirect to chat
         {
           index: true,
-          loader: () => redirect('/chat', { status: 302 }),
+          loader: () => redirect('/agent', { status: 302 }),
         },
 
         // Catch-all route
         {
-          loader: () => redirect('/chat', { status: 302 }),
+          loader: () => redirect('/agent', { status: 302 }),
           path: '*',
         },
       ],
-      element: <RootLayout locale={locale} />,
-      errorElement: <RootErrorBoundary />,
+      element: <MobileMainLayout />,
+      errorElement: <ErrorBoundary resetPath="/chat" />,
       path: '/',
     },
   ]);

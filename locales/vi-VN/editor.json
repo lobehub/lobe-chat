@@ -53,10 +53,12 @@
     "italic": "Nghiêng",
     "link": "Liên kết",
     "numberList": "Danh sách có thứ tự",
+    "redo": "Làm lại",
     "strikethrough": "Gạch ngang",
     "table": "bảng",
     "taskList": "Danh sách công việc",
     "tex": "Công thức TeX",
-    "underline": "Gạch chân"
+    "underline": "Gạch chân",
+    "undo": "Hoàn tác"
   }
 }

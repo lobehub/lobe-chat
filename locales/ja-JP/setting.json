@@ -2,6 +2,7 @@
   "about": {
     "title": "について"
   },
+  "advancedSettings": "詳細設定",
   "agentInfoDescription": {
     "basic": {
       "avatar": "アバター",
@@ -41,6 +42,11 @@
       "untitled": "無題のアシスタント"
     }
   },
+  "agentProfile": {
+    "latest": "最新バージョンが読み込まれました",
+    "saved": "保存済み",
+    "saving": "自動保存中..."
+  },
   "agentTab": {
     "chat": "チャット設定",
     "meta": "メタ情報",
@@ -75,6 +81,12 @@
       "success": "すべての設定がリセットされました",
       "title": "すべての設定をリセット"
     }
+  },
+  "group": {
+    "aiConfig": "AI 設定",
+    "common": "共通",
+    "profile": "アカウント",
+    "system": "システム"
   },
   "groupTab": {
     "chat": "チャット",
@@ -663,6 +675,7 @@
     "identifier": "アシスタント識別子（identifier）",
     "metaMiss": "エージェント情報を入力してから提出してください。名前、説明、タグが必要です。",
     "placeholder": "エージェントの識別子を入力してください。一意である必要があります。例：web-development",
+    "success": "アシスタントの送信に成功しました",
     "tooltips": "エージェントマーケットに共有"
   },
   "submitFooter": {
@@ -758,23 +771,31 @@
   "tab": {
     "about": "について",
     "agent": "デフォルトエージェント",
-    "common": "一般設定",
+    "apikey": "APIキー管理",
+    "common": "外観",
     "experiment": "実験",
     "hotkey": "ショートカットキー",
-    "image": "AI画像生成",
+    "image": "画像生成サービス",
     "llm": "言語モデル",
+    "profile": "マイアカウント",
     "provider": "AIサービスプロバイダー",
     "proxy": "ネットワークプロキシ",
+    "security": "セキュリティ",
+    "stats": "データ統計",
     "storage": "データストレージ",
     "sync": "クラウド同期",
     "system-agent": "システムアシスタント",
-    "tts": "音声サービス"
+    "tts": "音声サービス",
+    "usage": "使用状況統計"
   },
   "tools": {
+    "add": "プラグインを統合",
     "builtins": {
       "groupName": "組み込み"
     },
     "disabled": "現在のモデルは関数呼び出しをサポートしていません。プラグインを使用できません",
+    "notInstalled": "未インストール",
+    "notInstalledWarning": "現在このプラグインはインストールされておらず、アシスタントの使用に影響する可能性があります",
     "plugins": {
       "enabled": "{{num}} が有効",
       "groupName": "プラグイン",

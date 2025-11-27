@@ -2,6 +2,7 @@
   "about": {
     "title": "Hakkında"
   },
+  "advancedSettings": "Gelişmiş Ayarlar",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -41,6 +42,11 @@
       "untitled": "İsimsiz Asistan"
     }
   },
+  "agentProfile": {
+    "latest": "En son sürüm yüklendi",
+    "saved": "Kaydedildi",
+    "saving": "Otomatik kaydediliyor..."
+  },
   "agentTab": {
     "chat": "Sohbet Tercihi",
     "meta": "Asistan Bilgisi",
@@ -75,6 +81,12 @@
       "success": "Tüm ayarlar sıfırlandı",
       "title": "Tüm Ayarları Sıfırla"
     }
+  },
+  "group": {
+    "aiConfig": "AI Yapılandırması",
+    "common": "Genel",
+    "profile": "Hesap",
+    "system": "Sistem"
   },
   "groupTab": {
     "chat": "Sohbet",
@@ -663,6 +675,7 @@
     "identifier": "Asistan Tanımlayıcısı (identifier)",
     "metaMiss": "Lütfen göndermeden önce asistan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
+    "success": "Asistan başarıyla gönderildi",
     "tooltips": "Asistan pazarına paylaşın"
   },
   "submitFooter": {
@@ -758,23 +771,31 @@
   "tab": {
     "about": "Hakkında",
     "agent": "Varsayılan Asistan",
-    "common": "Genel Ayarlar",
+    "apikey": "API Anahtarı Yönetimi",
+    "common": "Görünüm",
     "experiment": "Deney",
     "hotkey": "Kısayollar",
-    "image": "AI Çizim",
+    "image": "Çizim Hizmeti",
     "llm": "Modeller",
+    "profile": "Hesabım",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "proxy": "Ağ Proxy",
+    "security": "Güvenlik",
+    "stats": "Veri İstatistikleri",
     "storage": "Veri Depolama",
     "sync": "Bulut Senkronizasyonu",
     "system-agent": "Sistem Asistanı",
-    "tts": "Metin Seslendirme"
+    "tts": "Metin Seslendirme",
+    "usage": "Kullanım İstatistikleri"
   },
   "tools": {
+    "add": "Eklenti Entegre Et",
     "builtins": {
       "groupName": "Dahili Araçlar"
     },
     "disabled": "Mevcut model fonksiyon çağrılarını desteklemez, eklenti kullanılamaz",
+    "notInstalled": "Yüklü değil",
+    "notInstalledWarning": "Bu eklenti henüz yüklenmedi, bu durum asistanın kullanımını etkileyebilir",
     "plugins": {
       "enabled": "Etkin: {{num}}",
       "groupName": "Eklentiler",

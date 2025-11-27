@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "コミュニティアシスタント",
     "featuredAssistants": "おすすめアシスタント",
     "featuredModels": "おすすめモデル",
+    "featuredPlugins": "おすすめプラグイン",
     "featuredProviders": "おすすめモデルサービスプロバイダー",
     "featuredTools": "おすすめプラグイン",
     "more": "もっと発見する"

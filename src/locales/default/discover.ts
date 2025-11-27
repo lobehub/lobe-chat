@@ -187,8 +187,10 @@ export default {
     },
   },
   home: {
+    communityAgents: '社区助手',
     featuredAssistants: '推荐助手',
     featuredModels: '推荐模型',
+    featuredPlugins: '精选插件',
     featuredProviders: '推荐模型服务商',
     featuredTools: '推荐插件',
     more: '发现更多',

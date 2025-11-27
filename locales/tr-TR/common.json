@@ -137,6 +137,8 @@
   "close": "Kapat",
   "cmdk": {
     "about": "Hakkında",
+    "aiModeEmptyState": "Yukarıdaki giriş kutusuna sorunuzu yazarak yapay zeka ile sohbet etmeye başlayın",
+    "aiModePlaceholder": "Yapay zekaya soru sor...",
     "communitySupport": "Topluluk Desteği",
     "discover": "Keşfet",
     "knowledgeBase": "Bilgi Tabanı",
@@ -304,6 +306,10 @@
     "business": "İşbirliği",
     "support": "E-posta Desteği"
   },
+  "navPanel": {
+    "agent": "Asistan",
+    "library": "Kütüphane"
+  },
   "new": "Yeni",
   "oauth": "SSO Girişi",
   "officialSite": "Resmi Site",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "Yapay Zeka Resim",
+    "aiImage": "Çizim",
+    "audio": "Ses",
     "chat": "Chat",
+    "community": "Topluluk",
     "discover": "Keşfet",
     "files": "Dosyalar",
+    "home": "Ana Sayfa",
     "knowledgeBase": "Bilgi Tabanı",
     "me": "ben",
-    "setting": "Ayarlar"
+    "pages": "Belgeler",
+    "resource": "Kaynaklar",
+    "search": "Ara",
+    "setting": "Ayarlar",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "İzin ver",

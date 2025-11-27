@@ -9,7 +9,7 @@ import { aiChatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
-import { markdownElements } from '../../MarkdownElements';
+import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import Reasoning from '../Assistant/Reasoning';
 import ImageFileListViewer from '../User/ImageFileListViewer';
 import ErrorContent from './Error';

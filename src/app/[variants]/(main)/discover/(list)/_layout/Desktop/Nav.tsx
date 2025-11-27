@@ -2,7 +2,6 @@
 
 import { Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { rgba } from 'polished';
 import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -12,27 +11,24 @@ import { DiscoverTab } from '@/types/discover';
 
 import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../../features/const';
 import { useNav } from '../../../features/useNav';
-import SortButton from '../../features/SortButton';
 import MarketSourceSwitch from '../../assistant/features/MarketSourceSwitch';
+import SortButton from '../../features/SortButton';
 import { useScroll } from './useScroll';
 
-export const useStyles = createStyles(({ cx, stylish, css, token }) => ({
-  container: cx(
-    stylish.blur,
-    css`
-      position: absolute;
-      z-index: 9;
-      inset-block-start: 52px;
-      inset-inline: 0 0;
+export const useStyles = createStyles(({ css, token }) => ({
+  container: css`
+    position: absolute;
+    z-index: 9;
+    inset-block-start: 44px;
+    inset-inline: 0 0;
 
-      padding-block: 4px;
-      border-block-end: 1px solid ${token.colorBorderSecondary};
+    padding-block: 4px;
+    border-block-end: 1px solid ${token.colorBorderSecondary};
 
-      background: ${rgba(token.colorBgContainerSecondary, 0.9)};
+    background: ${token.colorBgContainerSecondary};
 
-      transition: all 0.3s ${token.motionEaseInOut};
-    `,
-  ),
+    transition: all 0.3s ${token.motionEaseInOut};
+  `,
   hide: css`
     transform: translateY(-150%);
   `,

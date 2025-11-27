@@ -2,6 +2,7 @@
   "about": {
     "title": "정보"
   },
+  "advancedSettings": "고급 설정",
   "agentInfoDescription": {
     "basic": {
       "avatar": "아바타",
@@ -41,6 +42,11 @@
       "untitled": "제목 없는 도우미"
     }
   },
+  "agentProfile": {
+    "latest": "최신 버전이 로드되었습니다",
+    "saved": "저장되었습니다",
+    "saving": "자동 저장 중..."
+  },
   "agentTab": {
     "chat": "채팅 환경설정",
     "meta": "도우미 정보",
@@ -75,6 +81,12 @@
       "success": "모든 설정이 초기화되었습니다",
       "title": "모든 설정 초기화"
     }
+  },
+  "group": {
+    "aiConfig": "AI 설정",
+    "common": "일반",
+    "profile": "계정",
+    "system": "시스템"
   },
   "groupTab": {
     "chat": "채팅",
@@ -663,6 +675,7 @@
     "identifier": "도우미 식별자(identifier)",
     "metaMiss": "에이전트 정보를 입력한 후 제출하십시오. 이름, 설명 및 태그를 포함해야 합니다.",
     "placeholder": "에이전트 식별자를 입력하세요. 고유해야 하며, 예: 웹 개발",
+    "success": "도우미가 성공적으로 제출되었습니다",
     "tooltips": "에이전트 마켓에 공유"
   },
   "submitFooter": {
@@ -758,23 +771,31 @@
   "tab": {
     "about": "소개",
     "agent": "기본 에이전트",
-    "common": "일반 설정",
+    "apikey": "API 키 관리",
+    "common": "외관",
     "experiment": "실험",
     "hotkey": "단축키",
-    "image": "AI 그림",
+    "image": "그림 서비스",
     "llm": "언어 모델",
+    "profile": "내 계정",
     "provider": "AI 서비스 제공자",
     "proxy": "네트워크 프록시",
+    "security": "보안",
+    "stats": "데이터 통계",
     "storage": "데이터 저장소",
     "sync": "클라우드 동기화",
     "system-agent": "시스템 도우미",
-    "tts": "음성 서비스"
+    "tts": "음성 서비스",
+    "usage": "사용량 통계"
   },
   "tools": {
+    "add": "플러그인 통합",
     "builtins": {
       "groupName": "내장"
     },
     "disabled": "현재 모델은 함수 호출을 지원하지 않으며 플러그인을 사용할 수 없습니다",
+    "notInstalled": "설치되지 않음",
+    "notInstalledWarning": "현재 플러그인이 설치되지 않아 도우미 사용에 영향을 줄 수 있습니다",
     "plugins": {
       "enabled": "활성화됨 {{num}}",
       "groupName": "플러그인",

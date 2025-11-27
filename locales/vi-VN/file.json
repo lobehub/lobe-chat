@@ -1,8 +1,8 @@
 {
   "addFolder": "Tạo thư mục",
-  "addKnowledge": "Thêm kiến thức",
+  "addLibrary": "Thêm vào thư viện",
   "addPage": "Tạo tài liệu",
-  "desc": "Quản lý kiến thức công việc, học tập và cuộc sống của bạn.",
+  "desc": "Quản lý tài nguyên công việc, học tập và cuộc sống của bạn.",
   "detail": {
     "basic": {
       "createdAt": "Thời gian tạo",
@@ -50,6 +50,9 @@
       "pin": "Ghim tài liệu"
     },
     "saving": "Đang lưu...",
+    "slashCommands": {
+      "image": "Hình ảnh"
+    },
     "titlePlaceholder": "Không có tiêu đề",
     "wordCount": "{{wordCount}} từ"
   },
@@ -57,14 +60,20 @@
     "copyContent": "Sao chép toàn bộ nội dung",
     "duplicate": "Tạo bản sao",
     "empty": "Chưa có bản thảo nào, hãy nhấn nút phía trên để tạo bản thảo đầu tiên của bạn",
+    "filter": {
+      "all": "Tất cả",
+      "onlyInPages": "Chỉ trong tài liệu"
+    },
     "noResults": "Không tìm thấy bản thảo phù hợp",
     "pageCount": "Tổng cộng {{count}} bản thảo",
     "selectNote": "Chọn một bản thảo để bắt đầu chỉnh sửa",
+    "title": "Tài liệu",
     "untitled": "Không có tiêu đề"
   },
   "empty": "Chưa có tệp/tệp tin nào được tải lên",
   "header": {
     "actions": {
+      "connect": "Kết nối...",
       "newFolder": "Tạo thư mục mới",
       "newPage": "Tạo tài liệu mới",
       "uploadFile": "Tải tệp lên",
@@ -91,7 +100,7 @@
     "quickActions": "Hành động nhanh",
     "recentFiles": "Tệp gần đây",
     "recentPages": "Tài liệu gần đây",
-    "subtitle": "Chào mừng đến với kho tri thức, bắt đầu quản lý tài liệu của bạn từ đây",
+    "subtitle": "Chào mừng đến với Trung tâm Tài nguyên, bắt đầu quản lý tài liệu của bạn từ đây",
     "uploadEntries": {
       "files": {
         "title": "Tải lên tệp"
@@ -99,27 +108,27 @@
       "folder": {
         "title": "Tải lên thư mục"
       },
-      "knowledgeBase": {
-        "title": "Tạo kho kiến thức mới"
+      "library": {
+        "title": "Tạo thư viện mới"
       },
       "newPage": {
         "title": "Tạo tài liệu mới"
       }
     }
   },
-  "knowledgeBase": {
+  "library": {
     "list": {
-      "confirmRemoveKnowledgeBase": "Bạn sắp xóa kho tri thức này, các tệp trong đó sẽ không bị xóa mà sẽ được chuyển vào tất cả tệp. Kho tri thức sau khi xóa sẽ không thể khôi phục, vui lòng cẩn thận khi thực hiện.",
-      "empty": "Nhấp vào <1>+</1> để bắt đầu tạo kho tri thức"
+      "confirmRemoveLibrary": "Thư viện này sẽ bị xóa, các tệp bên trong sẽ không bị xóa mà sẽ được chuyển vào mục Tất cả tệp. Sau khi xóa, thư viện sẽ không thể khôi phục, vui lòng cẩn thận.",
+      "empty": "Nhấn <1>+</1> để bắt đầu tạo thư viện"
     },
-    "new": "Tạo kho tri thức mới",
-    "title": "Kho tri thức"
+    "new": "Thư viện",
+    "title": "Thư viện"
   },
   "menu": {
     "allFiles": "Tất cả tệp",
     "allPages": "Tất cả tài liệu"
   },
-  "networkError": "Không thể lấy kho tri thức, vui lòng kiểm tra kết nối mạng và thử lại",
+  "networkError": "Không thể tải thư viện, vui lòng kiểm tra kết nối mạng và thử lại",
   "notSupportGuide": {
     "desc": "Phiên bản triển khai hiện tại là chế độ cơ sở dữ liệu khách hàng, không thể sử dụng chức năng quản lý tệp. Vui lòng chuyển sang <1>chế độ triển khai cơ sở dữ liệu máy chủ</1>, hoặc sử dụng trực tiếp <3>LobeChat Cloud</3>",
     "features": {
@@ -131,9 +140,9 @@
         "desc": "Sử dụng mô hình vector hiệu suất cao để vector hóa các phân đoạn văn bản, thực hiện tìm kiếm ngữ nghĩa nội dung tệp",
         "title": "Ngữ nghĩa hóa vector"
       },
-      "repos": {
-        "desc": "Hỗ trợ tạo kho tri thức và cho phép thêm các loại tệp khác nhau, xây dựng kiến thức thuộc lĩnh vực của bạn",
-        "title": "Kho tri thức"
+      "libraries": {
+        "desc": "Hỗ trợ tạo thư viện và cho phép thêm các loại tệp khác nhau, xây dựng kho tài nguyên theo lĩnh vực của bạn",
+        "title": "Thư viện"
       }
     },
     "title": "Chế độ triển khai hiện tại không hỗ trợ quản lý tệp"
@@ -155,7 +164,7 @@
     "videos": "Video",
     "websites": "Trang web"
   },
-  "title": "Kho kiến thức",
+  "title": "Tài nguyên",
   "toggleLeftPanel": "Hiển thị/Ẩn bảng điều khiển bên trái",
   "uploadDock": {
     "body": {

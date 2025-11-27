@@ -1,7 +1,15 @@
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { chatGroups, messages, sessions, topics, users } from '../../schemas';
+import {
+  agents,
+  agentsToSessions,
+  chatGroups,
+  messages,
+  sessions,
+  topics,
+  users,
+} from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 import { CreateTopicParams, TopicModel } from '../topic';
 import { getTestDB } from './_util';
@@ -149,6 +157,433 @@ describe('TopicModel', () => {
 
       expect(result2).toHaveLength(1);
       expect(result2[0].id).toBe('topic1');
+    });
+
+    describe('query with agentId filter', () => {
+      // ========== Legacy data tests (topics with sessionId only) ==========
+      it('should filter legacy topics by agentId through agentsToSessions lookup', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'session-for-agent', userId },
+            { id: 'session-other', userId },
+          ]);
+
+          await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
+
+          await trx
+            .insert(agentsToSessions)
+            .values([{ agentId: 'agent1', sessionId: 'session-for-agent', userId }]);
+
+          // Legacy topics: have sessionId but no agentId
+          await trx.insert(topics).values([
+            {
+              id: 'topic-agent-session',
+              userId,
+              sessionId: 'session-for-agent',
+              agentId: null,
+              updatedAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'topic-other-session',
+              userId,
+              sessionId: 'session-other',
+              agentId: null,
+              updatedAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with agentId should return legacy topics from the associated session
+        const result = await topicModel.query({ agentId: 'agent1' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('topic-agent-session');
+      });
+
+      // ========== New data tests (topics with agentId directly) ==========
+      it('should filter new topics by agentId directly', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(agents).values([
+            { id: 'new-agent-1', userId, title: 'New Agent 1' },
+            { id: 'new-agent-2', userId, title: 'New Agent 2' },
+          ]);
+
+          // New topics: have agentId directly stored
+          await trx.insert(topics).values([
+            {
+              id: 'new-topic-1',
+              userId,
+              agentId: 'new-agent-1',
+              sessionId: null,
+              updatedAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'new-topic-2',
+              userId,
+              agentId: 'new-agent-2',
+              sessionId: null,
+              updatedAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with agentId should return topics with matching agentId
+        const result = await topicModel.query({ agentId: 'new-agent-1' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('new-topic-1');
+      });
+
+      // ========== Mixed data tests (both legacy and new topics) ==========
+      it('should return both legacy and new topics when querying by agentId', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'mixed-session', userId }]);
+
+          await trx.insert(agents).values([{ id: 'mixed-agent', userId, title: 'Mixed Agent' }]);
+
+          await trx
+            .insert(agentsToSessions)
+            .values([{ agentId: 'mixed-agent', sessionId: 'mixed-session', userId }]);
+
+          await trx.insert(topics).values([
+            // Legacy topic: has sessionId, no agentId
+            {
+              id: 'legacy-topic',
+              userId,
+              sessionId: 'mixed-session',
+              agentId: null,
+              updatedAt: new Date('2023-01-01'),
+            },
+            // New topic: has agentId directly
+            {
+              id: 'new-topic',
+              userId,
+              sessionId: null,
+              agentId: 'mixed-agent',
+              updatedAt: new Date('2023-01-02'),
+            },
+            // Topic with both agentId and sessionId
+            {
+              id: 'both-topic',
+              userId,
+              sessionId: 'mixed-session',
+              agentId: 'mixed-agent',
+              updatedAt: new Date('2023-01-03'),
+            },
+          ]);
+        });
+
+        const result = await topicModel.query({ agentId: 'mixed-agent' });
+
+        // Should return all 3 topics
+        expect(result).toHaveLength(3);
+        expect(result.map((t) => t.id).sort()).toEqual(['both-topic', 'legacy-topic', 'new-topic']);
+      });
+
+      it('should not return duplicate topics when both agentId and sessionId match', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'dedup-session', userId }]);
+
+          await trx.insert(agents).values([{ id: 'dedup-agent', userId, title: 'Dedup Agent' }]);
+
+          await trx
+            .insert(agentsToSessions)
+            .values([{ agentId: 'dedup-agent', sessionId: 'dedup-session', userId }]);
+
+          // Topic with both agentId and sessionId pointing to the same agent
+          await trx.insert(topics).values([
+            {
+              id: 'dedup-topic',
+              userId,
+              sessionId: 'dedup-session',
+              agentId: 'dedup-agent',
+              updatedAt: new Date('2023-01-01'),
+            },
+          ]);
+        });
+
+        const result = await topicModel.query({ agentId: 'dedup-agent' });
+
+        // Should return exactly 1 topic (no duplicates)
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('dedup-topic');
+      });
+
+      // ========== Edge cases ==========
+      it('should return empty array when agentId has no associated session and no direct agentId match', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'session1', userId }]);
+
+          await trx
+            .insert(agents)
+            .values([{ id: 'agent-no-match', userId, title: 'Agent No Match' }]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'topic-session1',
+              userId,
+              sessionId: 'session1',
+              agentId: null,
+            },
+          ]);
+        });
+
+        // Query with agentId that has no session association and no direct match
+        const result = await topicModel.query({ agentId: 'agent-no-match' });
+
+        expect(result).toHaveLength(0);
+      });
+
+      it('should return topics with direct agentId match even without agentsToSessions entry', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(agents).values([{ id: 'orphan-agent', userId, title: 'Orphan Agent' }]);
+
+          // No agentsToSessions entry for this agent
+          await trx.insert(topics).values([
+            {
+              id: 'orphan-topic',
+              userId,
+              agentId: 'orphan-agent',
+              sessionId: null,
+              updatedAt: new Date('2023-01-01'),
+            },
+          ]);
+        });
+
+        const result = await topicModel.query({ agentId: 'orphan-agent' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('orphan-topic');
+      });
+
+      // ========== User isolation tests ==========
+      it('should only return topics for current user when querying by agentId', async () => {
+        const otherUserId = 'other-user-for-topic-test';
+
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(users).values([{ id: otherUserId }]);
+
+          await trx
+            .insert(agents)
+            .values([{ id: 'shared-agent-name', userId, title: 'User Agent' }]);
+
+          // Create topic for current user with agentId
+          await trx.insert(topics).values([
+            {
+              id: 'user-topic',
+              userId,
+              agentId: 'shared-agent-name',
+            },
+            {
+              id: 'other-user-topic',
+              userId: otherUserId,
+              agentId: 'shared-agent-name', // Same agentId but different user
+            },
+          ]);
+        });
+
+        const result = await topicModel.query({ agentId: 'shared-agent-name' });
+
+        // Should only return current user's topic
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('user-topic');
+      });
+
+      it('should only lookup agentsToSessions for current user', async () => {
+        const otherUserId = 'other-user-for-topic-test-2';
+
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(users).values([{ id: otherUserId }]);
+
+          await trx.insert(sessions).values([
+            { id: 'user-session', userId },
+            { id: 'other-user-session', userId: otherUserId },
+          ]);
+
+          await trx.insert(agents).values([
+            { id: 'user-agent', userId, title: 'User Agent' },
+            { id: 'other-user-agent', userId: otherUserId, title: 'Other User Agent' },
+          ]);
+
+          // Only create agentsToSessions for the other user
+          await trx
+            .insert(agentsToSessions)
+            .values([
+              { agentId: 'other-user-agent', sessionId: 'other-user-session', userId: otherUserId },
+            ]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'topic-user',
+              userId,
+              agentId: 'other-user-agent', // Has same agentId but won't match via session lookup
+            },
+            {
+              id: 'topic-other-user',
+              userId: otherUserId,
+              sessionId: 'other-user-session',
+            },
+          ]);
+        });
+
+        // Query with other user's agentId
+        const result = await topicModel.query({ agentId: 'other-user-agent' });
+
+        // Should return current user's topic with matching agentId
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('topic-user');
+      });
+
+      // ========== Pagination tests ==========
+      it('should work with agentId and pagination', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx
+            .insert(agents)
+            .values([{ id: 'paginate-agent', userId, title: 'Paginate Agent' }]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'page-topic1',
+              userId,
+              agentId: 'paginate-agent',
+              updatedAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'page-topic2',
+              userId,
+              agentId: 'paginate-agent',
+              updatedAt: new Date('2023-01-02'),
+            },
+            {
+              id: 'page-topic3',
+              userId,
+              agentId: 'paginate-agent',
+              updatedAt: new Date('2023-01-03'),
+            },
+          ]);
+        });
+
+        // Query with agentId and pagination
+        const result = await topicModel.query({
+          agentId: 'paginate-agent',
+          current: 0,
+          pageSize: 2,
+        });
+
+        expect(result).toHaveLength(2);
+        expect(result[0].id).toBe('page-topic3'); // Most recent first
+        expect(result[1].id).toBe('page-topic2');
+
+        // Second page
+        const result2 = await topicModel.query({
+          agentId: 'paginate-agent',
+          current: 1,
+          pageSize: 2,
+        });
+        expect(result2).toHaveLength(1);
+        expect(result2[0].id).toBe('page-topic1');
+      });
+
+      it('should work with agentId and favorite sorting', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(agents).values([{ id: 'fav-agent', userId, title: 'Fav Agent' }]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'fav-topic1',
+              userId,
+              agentId: 'fav-agent',
+              favorite: false,
+              updatedAt: new Date('2023-01-03'),
+            },
+            {
+              id: 'fav-topic2',
+              userId,
+              agentId: 'fav-agent',
+              favorite: true,
+              updatedAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'fav-topic3',
+              userId,
+              agentId: 'fav-agent',
+              favorite: true,
+              updatedAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        const result = await topicModel.query({ agentId: 'fav-agent' });
+
+        expect(result).toHaveLength(3);
+        // Favorites first, then by updatedAt desc
+        expect(result[0].id).toBe('fav-topic3'); // favorite=true, most recent
+        expect(result[1].id).toBe('fav-topic2'); // favorite=true, older
+        expect(result[2].id).toBe('fav-topic1'); // favorite=false
+      });
+
+      // ========== ContainerId fallback tests (preserved from original) ==========
+      it('should use containerId when agentId is not provided', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'container-session', userId }]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'container-topic',
+              userId,
+              sessionId: 'container-session',
+              updatedAt: new Date('2023-01-01'),
+            },
+          ]);
+        });
+
+        // Query without agentId, only containerId
+        const result = await topicModel.query({ containerId: 'container-session' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('container-topic');
+      });
+
+      it('should ignore containerId when agentId is provided', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'agent-only-session', userId },
+            { id: 'container-only-session', userId },
+          ]);
+
+          await trx
+            .insert(agents)
+            .values([{ id: 'priority-agent', userId, title: 'Priority Agent' }]);
+
+          await trx
+            .insert(agentsToSessions)
+            .values([{ agentId: 'priority-agent', sessionId: 'agent-only-session', userId }]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'agent-topic',
+              userId,
+              sessionId: 'agent-only-session',
+              updatedAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'container-topic',
+              userId,
+              sessionId: 'container-only-session',
+              updatedAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with both agentId and containerId - agentId takes priority
+        const result = await topicModel.query({
+          agentId: 'priority-agent',
+          containerId: 'container-only-session',
+        });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('agent-topic');
+      });
     });
   });
 
@@ -392,6 +827,181 @@ describe('TopicModel', () => {
     });
   });
 
+  describe('batchDeleteByAgentId', () => {
+    it('should delete topics with direct agentId match (new data)', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(agents).values([
+          { id: 'delete-agent-1', userId, title: 'Delete Agent 1' },
+          { id: 'delete-agent-2', userId, title: 'Delete Agent 2' },
+        ]);
+
+        await trx.insert(topics).values([
+          { id: 'topic-agent-1', userId, agentId: 'delete-agent-1' },
+          { id: 'topic-agent-1-b', userId, agentId: 'delete-agent-1' },
+          { id: 'topic-agent-2', userId, agentId: 'delete-agent-2' },
+        ]);
+      });
+
+      // Delete topics for agent 1
+      await topicModel.batchDeleteByAgentId('delete-agent-1');
+
+      // Verify agent 1 topics are deleted
+      const remainingTopics = await serverDB.select().from(topics).where(eq(topics.userId, userId));
+      expect(remainingTopics).toHaveLength(1);
+      expect(remainingTopics[0].id).toBe('topic-agent-2');
+    });
+
+    it('should delete legacy topics via sessionId lookup', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([
+          { id: 'legacy-session-1', userId },
+          { id: 'legacy-session-2', userId },
+        ]);
+
+        await trx.insert(agents).values([{ id: 'legacy-agent', userId, title: 'Legacy Agent' }]);
+
+        await trx
+          .insert(agentsToSessions)
+          .values([{ agentId: 'legacy-agent', sessionId: 'legacy-session-1', userId }]);
+
+        // Legacy topics: have sessionId but no agentId
+        await trx.insert(topics).values([
+          { id: 'legacy-topic-1', userId, sessionId: 'legacy-session-1', agentId: null },
+          { id: 'legacy-topic-2', userId, sessionId: 'legacy-session-1', agentId: null },
+          { id: 'other-session-topic', userId, sessionId: 'legacy-session-2', agentId: null },
+        ]);
+      });
+
+      // Delete topics for legacy agent
+      await topicModel.batchDeleteByAgentId('legacy-agent');
+
+      // Verify legacy topics are deleted
+      const remainingTopics = await serverDB.select().from(topics).where(eq(topics.userId, userId));
+      expect(remainingTopics).toHaveLength(1);
+      expect(remainingTopics[0].id).toBe('other-session-topic');
+    });
+
+    it('should delete both new and legacy topics', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'mixed-del-session', userId }]);
+
+        await trx
+          .insert(agents)
+          .values([{ id: 'mixed-del-agent', userId, title: 'Mixed Delete Agent' }]);
+
+        await trx
+          .insert(agentsToSessions)
+          .values([{ agentId: 'mixed-del-agent', sessionId: 'mixed-del-session', userId }]);
+
+        await trx.insert(topics).values([
+          // Legacy topic
+          { id: 'mixed-legacy', userId, sessionId: 'mixed-del-session', agentId: null },
+          // New topic
+          { id: 'mixed-new', userId, agentId: 'mixed-del-agent', sessionId: null },
+          // Topic with both
+          { id: 'mixed-both', userId, sessionId: 'mixed-del-session', agentId: 'mixed-del-agent' },
+        ]);
+      });
+
+      // Delete all topics for the agent
+      await topicModel.batchDeleteByAgentId('mixed-del-agent');
+
+      // All topics should be deleted
+      const remainingTopics = await serverDB.select().from(topics).where(eq(topics.userId, userId));
+      expect(remainingTopics).toHaveLength(0);
+    });
+
+    it('should not delete topics from other users', async () => {
+      const otherUserId = 'other-user-delete-test';
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(users).values([{ id: otherUserId }]);
+
+        await trx
+          .insert(agents)
+          .values([{ id: 'shared-delete-agent', userId, title: 'Shared Agent' }]);
+
+        await trx.insert(topics).values([
+          { id: 'user-topic-del', userId, agentId: 'shared-delete-agent' },
+          { id: 'other-user-topic-del', userId: otherUserId, agentId: 'shared-delete-agent' },
+        ]);
+      });
+
+      // Delete topics for current user
+      await topicModel.batchDeleteByAgentId('shared-delete-agent');
+
+      // Only current user's topic should be deleted
+      const allTopics = await serverDB.select().from(topics);
+      expect(allTopics).toHaveLength(1);
+      expect(allTopics[0].id).toBe('other-user-topic-del');
+    });
+
+    it('should handle agent with no associated session gracefully', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx
+          .insert(agents)
+          .values([{ id: 'no-session-agent', userId, title: 'No Session Agent' }]);
+
+        // No agentsToSessions entry
+        await trx
+          .insert(topics)
+          .values([{ id: 'orphan-del-topic', userId, agentId: 'no-session-agent' }]);
+      });
+
+      // Should still delete topics with direct agentId match
+      await topicModel.batchDeleteByAgentId('no-session-agent');
+
+      const remainingTopics = await serverDB.select().from(topics).where(eq(topics.userId, userId));
+      expect(remainingTopics).toHaveLength(0);
+    });
+
+    it('should not delete any topics if agentId does not match', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx
+          .insert(agents)
+          .values([{ id: 'existing-agent', userId, title: 'Existing Agent' }]);
+
+        await trx
+          .insert(topics)
+          .values([{ id: 'existing-topic', userId, agentId: 'existing-agent' }]);
+      });
+
+      // Delete with non-existent agentId
+      await topicModel.batchDeleteByAgentId('non-existent-agent');
+
+      // No topics should be deleted
+      const remainingTopics = await serverDB.select().from(topics).where(eq(topics.userId, userId));
+      expect(remainingTopics).toHaveLength(1);
+    });
+
+    it('should delete associated messages when topics are deleted', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx
+          .insert(agents)
+          .values([{ id: 'msg-del-agent', userId, title: 'Message Delete Agent' }]);
+
+        await trx
+          .insert(topics)
+          .values([{ id: 'msg-del-topic', userId, agentId: 'msg-del-agent' }]);
+
+        await trx.insert(messages).values([
+          { id: 'msg1', userId, role: 'user', topicId: 'msg-del-topic' },
+          { id: 'msg2', userId, role: 'assistant', topicId: 'msg-del-topic' },
+        ]);
+      });
+
+      // Delete topic
+      await topicModel.batchDeleteByAgentId('msg-del-agent');
+
+      // Messages should be deleted via cascade
+      const remainingMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.userId, userId));
+      expect(remainingMessages).toHaveLength(0);
+    });
+  });
+
   describe('batchDelete', () => {
     it('should delete multiple topics and their associated messages', async () => {
       await serverDB.transaction(async (tx) => {
@@ -572,6 +1182,54 @@ describe('TopicModel', () => {
       expect(dbTopic).toHaveLength(1);
       expect(dbTopic[0]).toEqual(createdTopic);
     });
+
+    it('should create a new topic with agentId', async () => {
+      // 创建 agent
+      await serverDB.insert(agents).values({ id: 'agent-for-topic', userId, title: 'Test Agent' });
+
+      const topicData = {
+        title: 'Topic with Agent',
+        favorite: false,
+        sessionId,
+        agentId: 'agent-for-topic',
+      } satisfies CreateTopicParams;
+
+      const topicId = 'topic-with-agent';
+
+      // 调用 create 方法
+      const createdTopic = await topicModel.create(topicData, topicId);
+
+      // 断言返回的 topic 数据正确
+      expect(createdTopic.id).toBe(topicId);
+      expect(createdTopic.title).toBe('Topic with Agent');
+      expect(createdTopic.agentId).toBe('agent-for-topic');
+      expect(createdTopic.sessionId).toBe(sessionId);
+
+      // 断言 topic 已在数据库中创建且 agentId 正确
+      const dbTopic = await serverDB.select().from(topics).where(eq(topics.id, topicId));
+      expect(dbTopic).toHaveLength(1);
+      expect(dbTopic[0].agentId).toBe('agent-for-topic');
+    });
+
+    it('should create a new topic with only agentId (no sessionId)', async () => {
+      // 创建 agent
+      await serverDB.insert(agents).values({ id: 'agent-only', userId, title: 'Agent Only' });
+
+      const topicData = {
+        title: 'Agent Only Topic',
+        favorite: true,
+        agentId: 'agent-only',
+      } satisfies CreateTopicParams;
+
+      const topicId = 'agent-only-topic';
+
+      // 调用 create 方法
+      const createdTopic = await topicModel.create(topicData, topicId);
+
+      // 断言 agentId 已存储，sessionId 为 null
+      expect(createdTopic.agentId).toBe('agent-only');
+      expect(createdTopic.sessionId).toBeNull();
+    });
   });
 
   describe('batchCreate', () => {
@@ -661,6 +1319,52 @@ describe('TopicModel', () => {
       expect(createdTopics[0].id).toBeDefined();
       expect(createdTopics[1].id).toBeDefined();
       expect(createdTopics[0].id).not.toBe(createdTopics[1].id);
+    });
+
+    it('should batch create topics with agentId', async () => {
+      // 创建 agents
+      await serverDB.insert(agents).values([
+        { id: 'batch-agent-1', userId, title: 'Batch Agent 1' },
+        { id: 'batch-agent-2', userId, title: 'Batch Agent 2' },
+      ]);
+
+      const topicParams = [
+        {
+          title: 'Topic with Agent 1',
+          favorite: true,
+          sessionId,
+          agentId: 'batch-agent-1',
+        },
+        {
+          title: 'Topic with Agent 2',
+          favorite: false,
+          agentId: 'batch-agent-2',
+        },
+      ];
+
+      // 调用 batchCreate 方法
+      const createdTopics = await topicModel.batchCreate(topicParams);
+
+      // 断言 agentId 正确存储
+      expect(createdTopics).toHaveLength(2);
+      expect(createdTopics[0].agentId).toBe('batch-agent-1');
+      expect(createdTopics[0].sessionId).toBe(sessionId);
+      expect(createdTopics[1].agentId).toBe('batch-agent-2');
+      expect(createdTopics[1].sessionId).toBeNull();
+
+      // 验证数据库中的数据
+      const dbTopics = await serverDB
+        .select()
+        .from(topics)
+        .where(
+          inArray(
+            topics.id,
+            createdTopics.map((t) => t.id),
+          ),
+        );
+      expect(dbTopics).toHaveLength(2);
+      expect(dbTopics.find((t) => t.id === createdTopics[0].id)?.agentId).toBe('batch-agent-1');
+      expect(dbTopics.find((t) => t.id === createdTopics[1].id)?.agentId).toBe('batch-agent-2');
     });
   });
 
@@ -843,6 +1547,135 @@ describe('TopicModel', () => {
       });
 
       expect(result).toBe(3); // should return all topics if date is invalid
+    });
+  });
+
+  describe('queryRecent', () => {
+    it('should return recent topics with agent info', async () => {
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(agents).values([
+          {
+            id: 'agent1',
+            userId,
+            title: 'Agent 1',
+            avatar: 'avatar1.png',
+            backgroundColor: '#ff0000',
+          },
+          {
+            id: 'agent2',
+            userId,
+            title: 'Agent 2',
+            avatar: 'avatar2.png',
+            backgroundColor: '#00ff00',
+          },
+        ]);
+
+        await tx.insert(topics).values([
+          {
+            id: 'recent-topic-1',
+            title: 'Topic 1',
+            userId,
+            agentId: 'agent1',
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'recent-topic-2',
+            title: 'Topic 2',
+            userId,
+            agentId: 'agent2',
+            updatedAt: new Date('2023-02-01'),
+          },
+          {
+            id: 'recent-topic-3',
+            title: 'Topic 3',
+            userId,
+            agentId: 'agent1',
+            updatedAt: new Date('2023-03-01'),
+          },
+        ]);
+      });
+
+      const result = await topicModel.queryRecent();
+
+      expect(result).toHaveLength(3);
+      // Should be ordered by updatedAt desc
+      expect(result[0].id).toBe('recent-topic-3');
+      expect(result[0].title).toBe('Topic 3');
+      expect(result[0].agent).toEqual({
+        id: 'agent1',
+        title: 'Agent 1',
+        avatar: 'avatar1.png',
+        backgroundColor: '#ff0000',
+      });
+
+      expect(result[1].id).toBe('recent-topic-2');
+      expect(result[1].agent).toEqual({
+        id: 'agent2',
+        title: 'Agent 2',
+        avatar: 'avatar2.png',
+        backgroundColor: '#00ff00',
+      });
+    });
+
+    it('should respect limit parameter', async () => {
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(agents).values([{ id: 'limit-agent', userId, title: 'Limit Agent' }]);
+
+        await tx.insert(topics).values([
+          { id: 'limit-topic-1', title: 'Topic 1', userId, agentId: 'limit-agent' },
+          { id: 'limit-topic-2', title: 'Topic 2', userId, agentId: 'limit-agent' },
+          { id: 'limit-topic-3', title: 'Topic 3', userId, agentId: 'limit-agent' },
+        ]);
+      });
+
+      const result = await topicModel.queryRecent(2);
+
+      expect(result).toHaveLength(2);
+    });
+
+    it('should return null agent when topic has no agentId', async () => {
+      await serverDB
+        .insert(topics)
+        .values([{ id: 'no-agent-topic', title: 'Topic without agent', userId, agentId: null }]);
+
+      const result = await topicModel.queryRecent();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('no-agent-topic');
+      expect(result[0].agent).toBeNull();
+    });
+
+    it('should only return topics for current user', async () => {
+      const otherUserId = 'other-user-recent';
+
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(users).values([{ id: otherUserId }]);
+
+        await tx.insert(topics).values([
+          { id: 'user-recent-topic', title: 'User Topic', userId },
+          { id: 'other-recent-topic', title: 'Other Topic', userId: otherUserId },
+        ]);
+      });
+
+      const result = await topicModel.queryRecent();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('user-recent-topic');
+    });
+
+    it('should use default limit of 12', async () => {
+      await serverDB.transaction(async (tx) => {
+        const topicValues = Array.from({ length: 15 }, (_, i) => ({
+          id: `default-limit-topic-${i}`,
+          title: `Topic ${i}`,
+          userId,
+        }));
+        await tx.insert(topics).values(topicValues);
+      });
+
+      const result = await topicModel.queryRecent();
+
+      expect(result).toHaveLength(12);
     });
   });
 });
