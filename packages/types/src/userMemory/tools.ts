@@ -229,7 +229,7 @@ export const searchMemorySchema = z.object({
 export type SearchMemoryParams = z.infer<typeof searchMemorySchema>;
 
 export interface SearchMemoryResult {
-  contexts: Array<Omit<UserMemoryContext, 'userId' | 'descriptionVector'>>;
+  contexts: Array<Omit<UserMemoryContext, 'userId' | 'titleVector' | 'descriptionVector'>>;
   experiences: Array<
     Omit<UserMemoryExperience, 'userId' | 'actionVector' | 'situationVector' | 'keyLearningVector'>
   >;
