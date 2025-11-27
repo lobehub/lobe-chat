@@ -4,6 +4,7 @@ table agents {
   title varchar(255)
   description varchar(1000)
   tags jsonb [default: `[]`]
+  editor_data jsonb
   avatar text
   background_color text
   market_identifier text
