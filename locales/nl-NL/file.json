@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Je staat op het punt deze kennisbank te verwijderen. De bestanden hierin worden niet verwijderd, maar verplaatst naar 'Alle bestanden'. Een verwijderde kennisbank kan niet worden hersteld, wees voorzichtig.",
-      "empty": "Klik op <1>+</1> om een kennisbank te maken"
-    },
-    "new": "Nieuwe kennisbank",
-    "title": "Kennisbank"
-  },
   "menu": {
     "allFiles": "Alle bestanden",
     "allPages": "Alle documenten"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "Bestand downloaden",
     "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "Deze opslagplaats wordt verwijderd. De bestanden blijven behouden en worden verplaatst naar 'Alle bestanden'. Verwijderde kennisopslagplaatsen kunnen niet worden hersteld. Ga voorzichtig te werk.",
+      "empty": "Klik op <1>+</1> om een nieuwe opslagplaats aan te maken"
+    },
+    "new": "Nieuwe opslagplaats",
+    "title": "Opslagplaats"
   },
   "searchFilePlaceholder": "Zoek bestand",
   "searchPagePlaceholder": "Documenten zoeken",

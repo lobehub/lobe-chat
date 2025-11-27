@@ -4,11 +4,11 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useLoaderData } from 'react-router-dom';
 
-import type { IdParams } from '@/app/[variants]/loaders/routeParams';
 import FileModalQueryRoute from '@/app/[variants]/(main)/knowledge/shared/FileModalQueryRoute';
 import { useSetFileModalId } from '@/app/[variants]/(main)/knowledge/shared/useFileQueryParam';
+import type { IdParams } from '@/app/[variants]/loaders/routeParams';
 import FilePanel from '@/features/FileSidePanel';
-import KnowledgeItemManager from '@/features/KnowledgeManager';
+import KnowledgeItemManager from '@/features/ResourceManager';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import { useKnowledgeBaseItem } from '../../hooks/useKnowledgeItem';

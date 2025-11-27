@@ -1676,9 +1676,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Previewは、強力な複雑な推論能力を備え、論理推論、数学、プログラミングなどの分野で優れたパフォーマンスを発揮します。"
   },
-  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5 は Anthropic のフラッグシップモデルであり、卓越した知性とスケーラビリティを兼ね備え、最高水準の応答品質と推論能力が求められる複雑なタスクに最適です。"
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash は Google の高性能推論モデルで、拡張されたマルチモーダルタスクに適しています。"
   },
@@ -2193,7 +2190,7 @@
     "description": "Kimi K2 Instruct、Kimi 公式の推論モデルで、長文コンテキスト、コード、QA など多様なシナリオに対応します。"
   },
   "kimi-k2-thinking": {
-    "description": "kimi-k2-thinking モデルは、月の裏側が提供する汎用的なエージェント機能と推論能力を備えた思考モデルであり、高度な推論を得意とし、複数のツールを段階的に活用することで、さまざまな難題の解決を支援します。"
+    "description": "kimi-k2-thinking モデルは、月の裏側が提供する汎用的なエージェント能力と推論能力を備えた思考モデルであり、深い推論に優れ、複数ステップのツール呼び出しを通じてさまざまな難題の解決を支援します。"
   },
   "kimi-k2-thinking-turbo": {
     "description": "K2 長期思考モデルの高速版で、256k の文脈をサポートし、深い推論に優れ、出力速度は毎秒 60〜100 トークンに向上しています。"
@@ -3466,6 +3463,9 @@
   },
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5 は、Anthropic による最速かつ最もスマートな Haiku モデルで、驚異的なスピードと高度な思考能力を備えています。"
+  },
+  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 は Anthropic のフラッグシップモデルであり、卓越した知性とスケーラビリティを兼ね備え、最高水準の応答品質と推論能力が求められる複雑なタスクに最適です。"
   },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5 は、Anthropic がこれまでに開発した中で最も高度な知能を持つモデルです。"

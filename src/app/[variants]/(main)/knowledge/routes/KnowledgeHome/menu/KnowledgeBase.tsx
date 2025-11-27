@@ -37,7 +37,7 @@ const Collection = () => {
   const handleCreate = () => {
     open({
       onSuccess: (id) => {
-        navigate(`/knowledge/bases/${id}`);
+        navigate(`/knowledge/repo/${id}`);
       },
     });
   };
@@ -60,13 +60,13 @@ const Collection = () => {
             }}
             size={'small'}
           />
-          <div style={{ flex: 1, lineHeight: '14px' }}>{t('knowledgeBase.title')}</div>
+          <div style={{ flex: 1, lineHeight: '14px' }}>{t('library.title')}</div>
         </Flexbox>
         <ActionIcon
           icon={PlusIcon}
           onClick={handleCreate}
           size={'small'}
-          title={t('knowledgeBase.new')}
+          title={t('library.new')}
         />
       </Flexbox>
 

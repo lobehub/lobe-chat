@@ -3,14 +3,14 @@
 import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
-import { FilePenLine, FileUp, FolderIcon, FolderUp, Plus } from 'lucide-react';
+import { FilePenLine, FileUp, FolderIcon, FolderUp, Link, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DragUpload from '@/components/DragUpload';
 import { useFileStore } from '@/store/file';
 
-import NoteEditorModal from '../DocumentExplorer/NoteEditorModal';
+import PageEditorModal from '../PageExplorer/PageEditorModal';
 
 const hotArea = css`
   &::before {
@@ -25,6 +25,9 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const { t } = useTranslation('file');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
+  const createFolder = useFileStore((s) => s.createFolder);
+  const setPendingRenameItemId = useFileStore((s) => s.setPendingRenameItemId);
+  const currentFolderId = useFileStore((s) => s.currentFolderId);
 
   const handleOpenNoteEditor = () => {
     setIsModalOpen(true);
@@ -34,8 +37,11 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
     setIsModalOpen(false);
   };
 
-  const handleCreateFolder = () => {
-    setIsModalOpen(false);
+  const handleCreateFolder = async () => {
+    // Create folder with "Untitled" name immediately
+    const folderId = await createFolder('Untitled', currentFolderId ?? undefined, knowledgeBaseId);
+    // Trigger auto-rename
+    setPendingRenameItemId(folderId);
   };
 
   const items = useMemo<MenuProps['items']>(
@@ -61,7 +67,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         label: (
           <Upload
             beforeUpload={async (file) => {
-              await pushDockFileList([file], knowledgeBaseId);
+              await pushDockFileList([file], knowledgeBaseId, currentFolderId ?? undefined);
 
               return false;
             }}
@@ -78,7 +84,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         label: (
           <Upload
             beforeUpload={async (file) => {
-              await pushDockFileList([file], knowledgeBaseId);
+              await pushDockFileList([file], knowledgeBaseId, currentFolderId ?? undefined);
 
               return false;
             }}
@@ -90,25 +96,59 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
           </Upload>
         ),
       },
+      {
+        type: 'divider',
+      },
+      {
+        children: [
+          {
+            key: 'connect-notion',
+            label: 'Notion',
+            onClick: () => {
+              // TODO: Implement Notion connection
+            },
+          },
+          {
+            key: 'connect-google-drive',
+            label: 'Google Drive',
+            onClick: () => {
+              // TODO: Implement Google Drive connection
+            },
+          },
+          {
+            key: 'connect-onedrive',
+            label: 'OneDrive',
+            onClick: () => {
+              // TODO: Implement OneDrive connection
+            },
+          },
+        ],
+        icon: <Icon icon={Link} />,
+        key: 'connect',
+        label: t('header.actions.connect'),
+      },
     ],
-    [knowledgeBaseId, pushDockFileList],
+    [knowledgeBaseId, currentFolderId, pushDockFileList],
   );
 
   return (
     <>
       <Dropdown menu={{ items }} placement="bottomRight">
         <Button icon={Plus} type="primary">
-          {t('addKnowledge')}
+          {t('addLibrary')}
         </Button>
       </Dropdown>
       <DragUpload
         enabledFiles
-        onUploadFiles={(files) => pushDockFileList(files, knowledgeBaseId)}
+        onUploadFiles={(files) =>
+          pushDockFileList(files, knowledgeBaseId, currentFolderId ?? undefined)
+        }
       />
-      <NoteEditorModal
+      <PageEditorModal
         knowledgeBaseId={knowledgeBaseId}
         onClose={handleCloseNoteEditor}
         open={isModalOpen}
+        parentId={currentFolderId ?? undefined}
       />
     </>
   );

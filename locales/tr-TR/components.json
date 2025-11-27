@@ -26,6 +26,14 @@
       "createChunkingTask": "Hazırlanıyor...",
       "deleteSuccess": "Dosya başarıyla silindi",
       "downloading": "Dosya indiriliyor...",
+      "goBack": "Önceki sayfaya dön",
+      "goForward": "Sonraki sayfaya git",
+      "goToParent": "Üst klasöre git",
+      "moveError": "Dosya taşınamadı",
+      "moveHere": "Buraya taşı",
+      "moveSuccess": "Dosya başarıyla taşındı",
+      "moveToFolder": "Şuraya taşı...",
+      "moveToRoot": "Kök dizine taşı",
       "removeFromKnowledgeBase": "Bilgi tabanından kaldır",
       "removeFromKnowledgeBaseSuccess": "Dosya başarıyla kaldırıldı"
     },
@@ -41,6 +49,12 @@
       },
       "or": "veya",
       "title": "Dosyayı veya klasörü buraya sürükleyin"
+    },
+    "noFolders": "Klasör bulunamadı",
+    "sort": {
+      "dateAdded": "Eklenme tarihi",
+      "name": "Ad",
+      "size": "Boyut"
     },
     "title": {
       "createdAt": "Oluşturulma zamanı",

@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Você está prestes a excluir este repositório de conhecimento. Os arquivos não serão excluídos, mas serão movidos para 'Todos os arquivos'. Após a exclusão, o repositório não poderá ser recuperado, por favor, proceda com cautela.",
-      "empty": "Clique em <1>+</1> para começar a criar um repositório de conhecimento"
-    },
-    "new": "Novo repositório de conhecimento",
-    "title": "Repositório de conhecimento"
-  },
   "menu": {
     "allFiles": "Todos os arquivos",
     "allPages": "Todos os Documentos"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "Baixar arquivo",
     "unsupportedFileAndContact": "Este formato de arquivo não é suportado para visualização online. Se você tiver interesse em visualizar, sinta-se à vontade para <1>nos enviar um feedback</1>."
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "Este repositório será excluído, mas os arquivos nele contidos não serão apagados — eles serão movidos para Todos os Arquivos. A exclusão do repositório é irreversível, por favor, proceda com cautela.",
+      "empty": "Clique em <1>+</1> para começar a criar um repositório"
+    },
+    "new": "Novo Repositório",
+    "title": "Repositório"
   },
   "searchFilePlaceholder": "Pesquisar arquivo",
   "searchPagePlaceholder": "Buscar documentos",

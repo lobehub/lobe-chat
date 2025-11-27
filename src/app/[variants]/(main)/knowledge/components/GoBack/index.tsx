@@ -29,7 +29,7 @@ const useStyles = createStyles(({ css, token }) => {
 interface GoBackProps {
   /**
    * The path to navigate to (relative to MemoryRouter)
-   * e.g., "/" for /knowledge, "/bases" for /knowledge/bases
+   * e.g., "/" for /knowledge, "/repo" for /knowledge/repo
    */
   to: string;
 }

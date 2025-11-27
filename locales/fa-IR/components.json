@@ -26,6 +26,14 @@
       "createChunkingTask": "در حال آماده‌سازی...",
       "deleteSuccess": "فایل با موفقیت حذف شد",
       "downloading": "در حال دانلود فایل...",
+      "goBack": "بازگشت به صفحه قبل",
+      "goForward": "رفتن به صفحه بعد",
+      "goToParent": "ورود به پوشه والد",
+      "moveError": "انتقال فایل ناموفق بود",
+      "moveHere": "انتقال به این مکان",
+      "moveSuccess": "فایل با موفقیت منتقل شد",
+      "moveToFolder": "انتقال به...",
+      "moveToRoot": "انتقال به ریشه",
       "removeFromKnowledgeBase": "حذف از پایگاه دانش",
       "removeFromKnowledgeBaseSuccess": "فایل با موفقیت حذف شد"
     },
@@ -41,6 +49,12 @@
       },
       "or": "یا",
       "title": "فایل یا پوشه را به اینجا بکشید"
+    },
+    "noFolders": "هیچ پوشه‌ای موجود نیست",
+    "sort": {
+      "dateAdded": "تاریخ افزودن",
+      "name": "نام",
+      "size": "اندازه"
     },
     "title": {
       "createdAt": "زمان ایجاد",
