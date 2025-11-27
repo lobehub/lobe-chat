@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support better-auth."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.125"
+  },
+  {
+    "children": {
       "fixes": [
         "Fixed the agent settings plugins pages error problem, improve topic item interaction and editing behavior."
       ]
