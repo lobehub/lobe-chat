@@ -115,6 +115,57 @@ export const userMemoriesPreferences = pgTable(
   ],
 );
 
+export const userMemoriesActivities = pgTable(
+  'user_memories_activities',
+  {
+    id: varchar255('id')
+      .$defaultFn(() => idGenerator('memory'))
+      .primaryKey(),
+
+    userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
+    userMemoryId: varchar255('user_memory_id').references(() => userMemories.id, {
+      onDelete: 'cascade',
+    }),
+
+    metadata: jsonb('metadata').$type<Record<string, unknown>>(),
+    tags: text('tags').array(),
+
+    activityType: varchar255('activity_type'),
+    status: varchar255('status'),
+    timezone: varchar255('timezone'),
+    startsAt: timestamptz('starts_at'),
+    endsAt: timestamptz('ends_at'),
+
+    associatedIdentityIds: jsonb('associated_identity_ids').$type<string[]>(),
+    location: jsonb('location').$type<{
+      address?: string;
+      name?: string;
+      tags?: string[];
+      type?: string;
+    }>(),
+
+    notes: text('notes'),
+    narrative: text('narrative'),
+    narrativeVector: vector('narrative_vector', { dimensions: 1024 }),
+    feedback: text('feedback'),
+    feedbackVector: vector('feedback_vector', { dimensions: 1024 }),
+
+    ...timestamps,
+  },
+  (table) => [
+    index('user_memories_activities_narrative_vector_index').using(
+      'hnsw',
+      table.narrativeVector.op('vector_cosine_ops'),
+    ),
+    index('user_memories_activities_feedback_vector_index').using(
+      'hnsw',
+      table.feedbackVector.op('vector_cosine_ops'),
+    ),
+    index('user_memories_activities_activity_type_index').on(table.activityType),
+    index('user_memories_activities_status_index').on(table.status),
+  ],
+);
+
 export const userMemoriesIdentities = pgTable(
   'user_memories_identities',
   {
@@ -225,3 +276,10 @@ export type UserMemoryExperiencesWithoutVectors = Omit<
   'situationVector' | 'actionVector' | 'keyLearningVector'
 >;
 export type NewUserMemoryExperience = typeof userMemoriesExperiences.$inferInsert;
+
+export type UserMemoryActivity = typeof userMemoriesActivities.$inferSelect;
+export type UserMemoryActivitiesWithoutVectors = Omit<
+  UserMemoryActivity,
+  'narrativeVector' | 'feedbackVector'
+>;
+export type NewUserMemoryActivity = typeof userMemoriesActivities.$inferInsert;

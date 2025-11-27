@@ -350,6 +350,13 @@
       "when": 1764229953081,
       "tag": "0049_better_auth",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1764264362074,
+      "tag": "0050_add_user_memory_activities",
+      "breakpoints": true
     }
   ],
   "version": "6"
