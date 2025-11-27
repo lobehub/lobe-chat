@@ -343,6 +343,13 @@
       "when": 1764215503726,
       "tag": "0048_add_editor_data",
       "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1764229953081,
+      "tag": "0049_better_auth",
+      "breakpoints": true
     }
   ],
   "version": "6"

@@ -35,8 +35,6 @@ CREATE TABLE IF NOT EXISTS "verifications" (
 	"value" text NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "files" DROP CONSTRAINT IF EXISTS "files_slug_unique";--> statement-breakpoint
-ALTER TABLE "documents" ADD COLUMN IF NOT EXISTS "slug" varchar(255);--> statement-breakpoint
 ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "email_verified" boolean DEFAULT false NOT NULL;--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
@@ -49,6 +47,3 @@ DO $$ BEGIN
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
---> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "documents_slug_user_id_unique" ON "documents" USING btree ("slug","user_id") WHERE "documents"."slug" is not null;--> statement-breakpoint
-ALTER TABLE "files" DROP COLUMN IF EXISTS "slug";
