@@ -76,7 +76,6 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
   if (!showCreateSession) {
     return (
       <AccordionItem
-        gap={2}
         itemKey={itemKey}
         paddingBlock={6}
         paddingInline={'8px 6px'}

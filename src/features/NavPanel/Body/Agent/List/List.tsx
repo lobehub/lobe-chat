@@ -88,15 +88,17 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
 
   return (
     <Flexbox gap={1}>
-      {dataSource.map(({ id, config }) => (
+      {dataSource.map(({ id, ...res }) => (
         <Link
           aria-label={id}
           key={id}
           onClick={(e) => {
             e.preventDefault();
-            handleClick(id, config?.id);
+            // TODO: need to be fixed
+            handleClick(id, (res as any).config?.id);
           }}
-          to={SESSION_CHAT_URL(id, config?.id, false)}
+          // TODO: need to be fixed
+          to={SESSION_CHAT_URL(id, (res as any).config?.id, false)}
         >
           <Item className={itemClassName} id={id} style={itemStyle} />
         </Link>

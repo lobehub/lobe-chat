@@ -28,7 +28,7 @@ export const useSwitchSession = () => {
           });
         }, 50);
       } else {
-        router.push(SESSION_CHAT_URL(id, agentId, false));
+        router.push(SESSION_CHAT_URL(id, agentId!, false));
       }
     },
     [mobile, pathname, switchSession, togglePortal, router],

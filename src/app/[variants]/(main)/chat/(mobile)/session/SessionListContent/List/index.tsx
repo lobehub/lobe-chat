@@ -49,7 +49,7 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
       <LazyLoad className={styles} key={id}>
         <Link
           aria-label={id}
-          href={SESSION_CHAT_URL(id, mobile)}
+          href={SESSION_CHAT_URL(id, id, mobile)}
           onClick={(e) => {
             e.preventDefault();
             switchSession(id);
