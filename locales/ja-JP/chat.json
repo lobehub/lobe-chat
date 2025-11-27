@@ -53,6 +53,12 @@
       "desc": "Claude Thinkingメカニズムに基づく制限（<1>詳細はこちら</1>）により、有効にすると過去のメッセージ数制限が自動的に無効になります。",
       "title": "深い思考を有効にする"
     },
+    "imageAspectRatio": {
+      "title": "画像のアスペクト比"
+    },
+    "imageResolution": {
+      "title": "画像の解像度"
+    },
     "reasoningBudgetToken": {
       "title": "思考消費トークン"
     },
