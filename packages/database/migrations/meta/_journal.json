@@ -336,6 +336,13 @@
       "when": 1763987922211,
       "tag": "0047_add_slug_document",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1764215503726,
+      "tag": "0048_clean_magma",
+      "breakpoints": true
     }
   ],
   "version": "6"

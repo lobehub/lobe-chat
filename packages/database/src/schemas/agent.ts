@@ -34,6 +34,7 @@ export const agents = pgTable(
     title: varchar('title', { length: 255 }),
     description: varchar('description', { length: 1000 }),
     tags: jsonb('tags').$type<string[]>().default([]),
+    editorData: jsonb('editor_data').$type<Record<string, any>>(),
     avatar: text('avatar'),
     backgroundColor: text('background_color'),
     marketIdentifier: text('market_identifier'),
