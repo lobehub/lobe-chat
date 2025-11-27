@@ -237,14 +237,14 @@ export const getAuthConfig = () => {
       NEXT_PUBLIC_ENABLE_BETTER_AUTH: process.env.NEXT_PUBLIC_ENABLE_BETTER_AUTH === '1',
       // Fallback to NEXTAUTH_URL origin for seamless migration from next-auth
       NEXT_PUBLIC_AUTH_URL:
-        process.env.NEXT_PUBLIC_AUTH_URL ??
+        process.env.NEXT_PUBLIC_AUTH_URL ||
         (process.env.NEXTAUTH_URL ? new URL(process.env.NEXTAUTH_URL).origin : undefined),
       NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION: process.env.NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION === '1',
       NEXT_PUBLIC_ENABLE_MAGIC_LINK: process.env.NEXT_PUBLIC_ENABLE_MAGIC_LINK === '1',
       // Fallback to NEXT_AUTH_SECRET for seamless migration from next-auth
-      AUTH_SECRET: process.env.AUTH_SECRET ?? process.env.NEXT_AUTH_SECRET,
+      AUTH_SECRET: process.env.AUTH_SECRET || process.env.NEXT_AUTH_SECRET,
       // Fallback to NEXT_AUTH_SSO_PROVIDERS for seamless migration from next-auth
-      AUTH_SSO_PROVIDERS: process.env.AUTH_SSO_PROVIDERS ?? process.env.NEXT_AUTH_SSO_PROVIDERS,
+      AUTH_SSO_PROVIDERS: process.env.AUTH_SSO_PROVIDERS || process.env.NEXT_AUTH_SSO_PROVIDERS,
 
       // better-auth env for Cognito provider is different from next-auth's one
       AUTH_COGNITO_DOMAIN: process.env.AUTH_COGNITO_DOMAIN,
