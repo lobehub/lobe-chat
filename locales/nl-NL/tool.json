@@ -14,9 +14,31 @@
     "images": "Afbeeldingen:",
     "prompt": "prompt"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Aantal tekens",
+        "lines": "Aantal regels"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "Vervangen door",
+      "oldString": "Zoekterm",
+      "replaceAll": "Alles vervangen",
+      "replaceFirst": "Alleen eerste vervangen"
+    },
     "file": "Bestand",
     "folder": "Map",
+    "moveFiles": {
+      "itemsMoved": "{{count}} items verplaatst:",
+      "itemsMoved_one": "{{count}} item verplaatst:",
+      "itemsMoved_other": "{{count}} items verplaatst:",
+      "itemsToMove": "{{count}} items te verplaatsen:",
+      "itemsToMove_one": "{{count}} item te verplaatsen:",
+      "itemsToMove_other": "{{count}} items te verplaatsen:"
+    },
     "open": "Openen",
     "openFile": "Bestand openen",
     "openFolder": "Map openen",
@@ -26,7 +48,12 @@
     "readFile": "Bestand lezen",
     "readFileError": "Fout bij het lezen van het bestand, controleer of het bestandspad correct is",
     "readFiles": "Bestanden lezen",
-    "readFilesError": "Fout bij het lezen van bestanden, controleer of het bestandspad correct is"
+    "readFilesError": "Fout bij het lezen van bestanden, controleer of het bestandspad correct is",
+    "writeFile": {
+      "characters": "Tekens",
+      "preview": "Voorbeeld van inhoud",
+      "truncated": "Afgekapt"
+    }
   },
   "search": {
     "createNewSearch": "Maak een nieuwe zoekopdracht",

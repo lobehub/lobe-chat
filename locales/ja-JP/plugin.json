@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "ナレッジベースの内容を読み取る",
+        "searchKnowledgeBase": "ナレッジベースを検索する"
+      },
+      "title": "ナレッジベース"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "ファイルを編集する",
+        "getCommandOutput": "コードの出力を取得する",
+        "globLocalFiles": "ファイルを検索する",
+        "grepContent": "内容を検索する",
+        "killCommand": "コードの実行を停止する",
+        "listLocalFiles": "ファイル一覧を表示する",
+        "moveLocalFiles": "ファイルを移動する",
+        "readLocalFile": "ファイルの内容を読み取る",
+        "renameLocalFile": "ファイル名を変更する",
+        "runCommand": "コードを実行する",
+        "searchLocalFiles": "ファイルを検索する",
+        "writeLocalFile": "ファイルに書き込む"
+      },
+      "title": "ローカルシステム"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "複数のページの内容を読み取る",
+        "crawlSinglePage": "ページの内容を読み取る",
+        "search": "ページを検索する"
+      },
+      "title": "ウェブ検索"
+    }
+  },
   "confirm": "確定",
   "debug": {
     "arguments": "呼び出しパラメータ",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "パラメータリストを表示",
+    "delete": "ツール呼び出しを削除",
+    "orphanedToolCall": "このツール呼び出しメッセージは、異常な理由により孤立している可能性があり、エージェントの正常な実行に影響を与えることがあります。削除してください。",
     "pluginRender": "プラグイン画面を表示"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "プラグインを呼び出し中...",
     "plugin": "プラグイン実行中..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "ファイル一覧を表示",
-      "moveLocalFiles": "ファイルを移動",
-      "readLocalFile": "ファイル内容を読み込み",
-      "renameLocalFile": "ファイル名を変更",
-      "searchLocalFiles": "ファイルを検索",
-      "writeLocalFile": "ファイルに書き込み"
-    },
-    "title": "ローカルファイル"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "インストール環境を確認中...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ このプラグインの出所を信頼していることを確認してください。悪意のあるプラグインはシステムの安全を脅かす可能性があります。"
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "複数ページの内容を読み込み",
-      "crawlSinglePage": "ページ内容を読み込み",
-      "search": "ページを検索"
-    },
     "config": {
       "addKey": "キーを追加",
       "close": "削除",

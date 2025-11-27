@@ -1,5 +1,8 @@
 {
-  "desc": "あなたの知識を管理する",
+  "addFolder": "フォルダーを作成",
+  "addKnowledge": "知識を追加",
+  "addPage": "ドキュメントを作成",
+  "desc": "仕事、学習、生活の知識を管理しましょう。",
   "detail": {
     "basic": {
       "createdAt": "作成日時",
@@ -21,14 +24,88 @@
       "embeddingStatus": "ベクトル化"
     }
   },
+  "documentEditor": {
+    "addIcon": "アイコンを追加",
+    "autoSaveMessage": "ドキュメントは自動的に保存されます。手動で保存する必要はありません。",
+    "chooseIcon": "アイコンを選択",
+    "deleteConfirm": {
+      "content": "このドキュメントを削除しようとしています。削除後は復元できませんので、ご注意ください。",
+      "title": "ドキュメントの削除"
+    },
+    "deleteError": "ドキュメントの削除に失敗しました",
+    "deleteSuccess": "ドキュメントを削除しました",
+    "editedAt": "最終編集：{{time}}",
+    "editedBy": "最終編集者：{{name}}",
+    "editorPlaceholder": "ドキュメントの内容を入力し、「/」でコマンドメニューを開く",
+    "empty": {
+      "createNewDocument": "新しいドキュメントを作成",
+      "title": "ドキュメントを選択して開始",
+      "uploadMarkdown": "Markdownファイルをアップロード"
+    },
+    "linkCopied": "リンクをコピーしました",
+    "menu": {
+      "copyLink": "リンクをコピー",
+      "exportDocument": "ドキュメントをエクスポート",
+      "importDocument": "ドキュメントをインポート",
+      "pin": "ドキュメントをピン留め"
+    },
+    "saving": "保存中...",
+    "titlePlaceholder": "無題",
+    "wordCount": "{{wordCount}} 文字"
+  },
+  "documentList": {
+    "copyContent": "全文をコピー",
+    "duplicate": "複製を作成",
+    "empty": "まだ文書がありません。上のボタンをクリックして最初の文書を作成しましょう",
+    "noResults": "一致する文書が見つかりませんでした",
+    "pageCount": "全 {{count}} 件の文書",
+    "selectNote": "編集を始める文書を選択してください",
+    "untitled": "無題"
+  },
   "empty": "アップロードされたファイル/フォルダーはありません",
   "header": {
     "actions": {
       "newFolder": "新しいフォルダーを作成",
+      "newPage": "新しいドキュメント",
       "uploadFile": "ファイルをアップロード",
       "uploadFolder": "フォルダーをアップロード"
     },
+    "newNoteDialog": {
+      "cancel": "キャンセル",
+      "editTitle": "ドキュメントを編集",
+      "emptyContent": "ドキュメントの内容は空にできません",
+      "loadError": "ドキュメントの読み込みに失敗しました。再試行してください。",
+      "loading": "読み込み中...",
+      "save": "保存",
+      "saveError": "ドキュメントの保存に失敗しました。再試行してください。",
+      "saveSuccess": "ドキュメントを保存しました",
+      "title": "新規ドキュメント",
+      "updateSuccess": "ドキュメントを更新しました"
+    },
+    "newPageButton": "新しいドキュメントを作成",
     "uploadButton": "アップロード"
+  },
+  "home": {
+    "getStarted": "はじめに",
+    "greeting": "はじめに",
+    "quickActions": "クイック操作",
+    "recentFiles": "最近のファイル",
+    "recentPages": "最近のドキュメント",
+    "subtitle": "ナレッジベースへようこそ。ここからドキュメントの管理を始めましょう。",
+    "uploadEntries": {
+      "files": {
+        "title": "ファイルをアップロード"
+      },
+      "folder": {
+        "title": "フォルダをアップロード"
+      },
+      "knowledgeBase": {
+        "title": "新しいナレッジベースを作成"
+      },
+      "newPage": {
+        "title": "新規文書の作成"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "新しい知識ベース",
     "title": "知識ベース"
+  },
+  "menu": {
+    "allFiles": "すべてのファイル",
+    "allPages": "すべてのドキュメント"
   },
   "networkError": "知識ベースの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "このファイル形式はオンラインプレビューをサポートしていません。プレビューのリクエストがある場合は、ぜひ<1>ご連絡ください</1>。"
   },
   "searchFilePlaceholder": "ファイルを検索",
+  "searchPagePlaceholder": "文書を検索",
   "tab": {
-    "all": "すべてのファイル",
+    "all": "すべて",
     "audios": "音声",
     "documents": "文書",
+    "home": "ホーム",
     "images": "画像",
+    "moreTypes": "その他の種類",
+    "pages": "ドキュメント",
     "videos": "動画",
     "websites": "ウェブサイト"
   },
   "title": "ナレッジベース",
-  "toggleLeftPanel": {
-    "title": "左側パネルの表示/非表示"
-  },
+  "toggleLeftPanel": "左パネルの表示/非表示を切り替え",
   "uploadDock": {
     "body": {
       "collapse": "折りたたむ",

@@ -7,6 +7,7 @@ import {
 } from '@lobechat/const';
 import {
   AssistantListResponse,
+  AssistantMarketSource,
   AssistantQueryParams,
   AssistantSorts,
   CacheRevalidate,
@@ -60,9 +61,12 @@ export class DiscoverService {
   constructor({ accessToken }: { accessToken?: string } = {}) {
     this.market = new MarketSDK({
       accessToken,
-      baseURL: process.env.MARKET_BASE_URL,
+      baseURL: process.env.NEXT_PUBLIC_MARKET_BASE_URL,
     });
-    log('DiscoverService initialized with market baseURL: %s', process.env.MARKET_BASE_URL);
+    log(
+      'DiscoverService initialized with market baseURL: %s',
+      process.env.NEXT_PUBLIC_MARKET_BASE_URL,
+    );
   }
 
   async registerClient({ userAgent }: { userAgent?: string }) {
@@ -102,7 +106,7 @@ export class DiscoverService {
   async fetchM2MToken(params: { clientId: string; clientSecret: string }) {
     // 使用传入的客户端凭证创建新的 MarketSDK 实例
     const tokenMarket = new MarketSDK({
-      baseURL: process.env.MARKET_BASE_URL,
+      baseURL: process.env.NEXT_PUBLIC_MARKET_BASE_URL,
       clientId: params.clientId,
       clientSecret: params.clientSecret,
     });
@@ -208,25 +212,47 @@ export class DiscoverService {
     return result;
   };
 
-  // ============================== Assistant Market ==============================
+  private normalizeAuthorField = (author: unknown): string => {
+    if (!author) return '';
 
-  private _getAssistantList = async (locale?: string): Promise<DiscoverAssistantItem[]> => {
-    log('_getAssistantList: locale=%s', locale);
+    if (typeof author === 'string') return author;
+
+    if (typeof author === 'object') {
+      const { avatar, url, name } = author as {
+        avatar?: unknown;
+        name?: unknown;
+        url?: unknown;
+      };
+
+      if (typeof name === 'string' && name.length > 0) return name;
+      if (typeof avatar === 'string' && avatar.length > 0) return avatar;
+      if (typeof url === 'string' && url.length > 0) return url;
+    }
+
+    return '';
+  };
+
+  private isLegacySource = (source?: AssistantMarketSource) => source === 'legacy';
+
+  private legacyGetAssistantListRaw = async (locale?: string): Promise<DiscoverAssistantItem[]> => {
+    log('legacyGetAssistantListRaw: locale=%s', locale);
     const normalizedLocale = normalizeLocale(locale);
     const list = await this.assistantStore.getAgentIndex(normalizedLocale);
     if (!list || !Array.isArray(list)) {
-      log('_getAssistantList: no valid list found, returning empty array');
+      log('legacyGetAssistantListRaw: no valid list found, returning empty array');
       return [];
     }
     const result = list.map(({ meta, ...item }) => ({ ...item, ...meta }));
-    log('_getAssistantList: returning %d items', result.length);
+    log('legacyGetAssistantListRaw: returning %d items', result.length);
     return result;
   };
 
-  getAssistantCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
-    log('getAssistantCategories: params=%O', params);
+  private legacyGetAssistantCategories = async (
+    params: CategoryListQuery = {},
+  ): Promise<CategoryItem[]> => {
+    log('legacyGetAssistantCategories: params=%O', params);
     const { q, locale } = params;
-    let list = await this._getAssistantList(locale);
+    let list = await this.legacyGetAssistantListRaw(locale);
     if (q) {
       const originalCount = list.length;
       list = list.filter((item) => {
@@ -238,7 +264,7 @@ export class DiscoverService {
           .includes(decodeURIComponent(q).toLowerCase());
       });
       log(
-        'getAssistantCategories: filtered by query "%s", %d -> %d items',
+        'legacyGetAssistantCategories: filtered by query "%s", %d -> %d items',
         q,
         originalCount,
         list.length,
@@ -246,25 +272,26 @@ export class DiscoverService {
     }
     const categoryCounts = countBy(list, (item) => item.category);
     const result = Object.entries(categoryCounts)
-      .filter(([category]) => Boolean(category)) // 过滤掉空值
+      .filter(([category]) => Boolean(category))
       .map(([category, count]) => ({
         category,
         count,
       }));
-    log('getAssistantCategories: returning %d categories', result.length);
+    log('legacyGetAssistantCategories: returning %d categories', result.length);
     return result;
   };
 
-  getAssistantDetail = async (params: {
+  private legacyGetAssistantDetail = async (params: {
     identifier: string;
     locale?: string;
+    version?: string;
   }): Promise<DiscoverAssistantDetail | undefined> => {
-    log('getAssistantDetail: params=%O', params);
+    log('legacyGetAssistantDetail: params=%O', params);
     const { locale, identifier } = params;
     const normalizedLocale = normalizeLocale(locale);
     let data = await this.assistantStore.getAgent(identifier, normalizedLocale);
     if (!data) {
-      log('getAssistantDetail: assistant not found for identifier=%s', identifier);
+      log('legacyGetAssistantDetail: assistant not found for identifier=%s', identifier);
       return;
     }
     const { meta, ...item } = data;
@@ -274,30 +301,36 @@ export class DiscoverService {
       locale,
       page: 1,
       pageSize: 7,
+      source: 'legacy',
     });
     const result = {
       ...assistant,
       related: list.items.filter((item) => item.identifier !== assistant.identifier).slice(0, 6),
     };
-    log('getAssistantDetail: returning assistant with %d related items', result.related.length);
+    log(
+      'legacyGetAssistantDetail: returning assistant with %d related items',
+      result.related.length,
+    );
     return result;
   };
 
-  getAssistantIdentifiers = async (): Promise<IdentifiersResponse> => {
-    log('getAssistantIdentifiers: fetching identifiers');
-    const list = await this._getAssistantList();
+  private legacyGetAssistantIdentifiers = async (): Promise<IdentifiersResponse> => {
+    log('legacyGetAssistantIdentifiers: fetching identifiers');
+    const list = await this.legacyGetAssistantListRaw();
     const result = list.map((item) => {
       return {
         identifier: item.identifier,
         lastModified: item.createdAt,
       };
     });
-    log('getAssistantIdentifiers: returning %d identifiers', result.length);
+    log('legacyGetAssistantIdentifiers: returning %d identifiers', result.length);
     return result;
   };
 
-  getAssistantList = async (params: AssistantQueryParams = {}): Promise<AssistantListResponse> => {
-    log('getAssistantList: params=%O', params);
+  private legacyGetAssistantList = async (
+    params: AssistantQueryParams = {},
+  ): Promise<AssistantListResponse> => {
+    log('legacyGetAssistantList: params=%O', params);
     const {
       locale,
       category,
@@ -306,14 +339,29 @@ export class DiscoverService {
       pageSize = 20,
       q,
       sort = AssistantSorts.CreatedAt,
+      ownerId,
     } = params;
-    let list = await this._getAssistantList(locale);
+    const currentPage = Number(page) || 1;
+    const currentPageSize = Number(pageSize) || 20;
+
+    if (ownerId) {
+      log('legacyGetAssistantList: ownerId filter not supported in legacy source');
+      return {
+        currentPage,
+        items: [],
+        pageSize: currentPageSize,
+        totalCount: 0,
+        totalPages: 0,
+      };
+    }
+
+    let list = await this.legacyGetAssistantListRaw(locale);
     const originalCount = list.length;
 
     if (category) {
       list = list.filter((item) => item.category === category);
       log(
-        'getAssistantList: filtered by category "%s", %d -> %d items',
+        'legacyGetAssistantList: filtered by category "%s", %d -> %d items',
         category,
         originalCount,
         list.length,
@@ -330,11 +378,16 @@ export class DiscoverService {
           .toLowerCase()
           .includes(decodeURIComponent(q).toLowerCase());
       });
-      log('getAssistantList: filtered by query "%s", %d -> %d items', q, beforeFilter, list.length);
+      log(
+        'legacyGetAssistantList: filtered by query "%s", %d -> %d items',
+        q,
+        beforeFilter,
+        list.length,
+      );
     }
 
     if (sort) {
-      log('getAssistantList: sorting by %s %s', sort, order);
+      log('legacyGetAssistantList: sorting by %s %s', sort, order);
       switch (sort) {
         case AssistantSorts.CreatedAt: {
           list = list.sort((a, b) => {
@@ -349,9 +402,9 @@ export class DiscoverService {
         case AssistantSorts.KnowledgeCount: {
           list = list.sort((a, b) => {
             if (order === 'asc') {
-              return a.knowledgeCount - b.knowledgeCount;
+              return (a.knowledgeCount || 0) - (b.knowledgeCount || 0);
             } else {
-              return b.knowledgeCount - a.knowledgeCount;
+              return (b.knowledgeCount || 0) - (a.knowledgeCount || 0);
             }
           });
           break;
@@ -359,9 +412,9 @@ export class DiscoverService {
         case AssistantSorts.PluginCount: {
           list = list.sort((a, b) => {
             if (order === 'asc') {
-              return a.pluginCount - b.pluginCount;
+              return (a.pluginCount || 0) - (b.pluginCount || 0);
             } else {
-              return b.pluginCount - a.pluginCount;
+              return (b.pluginCount || 0) - (a.pluginCount || 0);
             }
           });
           break;
@@ -369,9 +422,9 @@ export class DiscoverService {
         case AssistantSorts.TokenUsage: {
           list = list.sort((a, b) => {
             if (order === 'asc') {
-              return a.tokenUsage - b.tokenUsage;
+              return (a.tokenUsage || 0) - (b.tokenUsage || 0);
             } else {
-              return b.tokenUsage - a.tokenUsage;
+              return (b.tokenUsage || 0) - (a.tokenUsage || 0);
             }
           });
           break;
@@ -396,23 +449,269 @@ export class DiscoverService {
           });
           break;
         }
+        default: {
+          break;
+        }
       }
     }
 
+    const start = (currentPage - 1) * currentPageSize;
+    const end = currentPage * currentPageSize;
     const result = {
-      currentPage: page,
-      items: list.slice((page - 1) * pageSize, page * pageSize),
-      pageSize,
+      currentPage,
+      items: list.slice(start, end),
+      pageSize: currentPageSize,
       totalCount: list.length,
-      totalPages: Math.ceil(list.length / pageSize),
+      totalPages: Math.ceil(list.length / currentPageSize),
     };
     log(
-      'getAssistantList: returning page %d/%d with %d items',
-      page,
+      'legacyGetAssistantList: returning page %d/%d with %d items',
+      currentPage,
       result.totalPages,
       result.items.length,
     );
     return result;
+  };
+
+  // ============================== Assistant Market ==============================
+
+  getAssistantCategories = async (
+    params: CategoryListQuery & { source?: AssistantMarketSource } = {},
+  ): Promise<CategoryItem[]> => {
+    log('getAssistantCategories: params=%O', params);
+    const { source, ...rest } = params;
+    if (this.isLegacySource(source)) {
+      return this.legacyGetAssistantCategories(rest);
+    }
+
+    const { q, locale } = rest;
+    const normalizedLocale = normalizeLocale(locale);
+
+    try {
+      // @ts-ignore
+      const categories = await this.market.agents.getCategories({
+        locale: normalizedLocale,
+        q,
+      });
+      log('getAssistantCategories: returning %d categories from market SDK', categories.length);
+      return categories;
+    } catch (error) {
+      log('getAssistantCategories: error fetching from market SDK: %O', error);
+      return [];
+    }
+  };
+
+  getAssistantDetail = async (params: {
+    identifier: string;
+    locale?: string;
+    source?: AssistantMarketSource;
+    version?: string;
+  }): Promise<DiscoverAssistantDetail | undefined> => {
+    log('getAssistantDetail: params=%O', params);
+    const { source, ...rest } = params;
+    if (this.isLegacySource(source)) {
+      return this.legacyGetAssistantDetail(rest);
+    }
+
+    const { locale, identifier, version } = rest;
+    const normalizedLocale = normalizeLocale(locale);
+
+    try {
+      // @ts-ignore
+      const data = await this.market.agents.getAgentDetail(identifier, {
+        locale: normalizedLocale,
+        version,
+      });
+
+      if (!data) {
+        log('getAssistantDetail: assistant not found for identifier=%s', identifier);
+        return;
+      }
+
+      const normalizedAuthor = this.normalizeAuthorField(data.author);
+      const assistant = {
+        author: normalizedAuthor || (data.ownerId !== null ? `User${data.ownerId}` : 'Unknown'),
+        avatar: data.avatar || normalizedAuthor || '',
+        category: (data as any).category || 'general',
+        config: data.config || {},
+        createdAt: (data as any).createdAt,
+        currentVersion: data.version,
+        description: (data as any).description || data.summary,
+        examples: Array.isArray((data as any).examples)
+          ? (data as any).examples.map((example: any) => ({
+            content: typeof example === 'string' ? example : example.content || '',
+            role: example.role || 'user',
+          }))
+          : [],
+        homepage:
+          (data as any).homepage ||
+          `https://lobehub.com/discover/assistant/${(data as any).identifier}`,
+        identifier: (data as any).identifier,
+        knowledgeCount:
+          (data.config as any)?.knowledgeBases?.length || (data as any).knowledgeCount || 0,
+        pluginCount: (data.config as any)?.plugins?.length || (data as any).pluginCount || 0,
+        readme: data.documentationUrl || '',
+        schemaVersion: 1,
+        status: data.status,
+        summary: data.summary || '',
+        systemRole: (data.config as any)?.systemRole || '',
+        tags: data.tags || [],
+        title: (data as any).name || (data as any).identifier,
+        tokenUsage: data.tokenUsage || 0,
+        versions:
+          // @ts-ignore
+          data.versions?.map((item) => ({
+            createdAt: (item as any).createdAt || item.updatedAt,
+            isLatest: item.isLatest,
+            isValidated: item.isValidated,
+            status: item.status as any,
+            version: item.version,
+          })) || [],
+      };
+
+      // Get related assistants
+      const list = await this.getAssistantList({
+        category: assistant.category,
+        locale,
+        page: 1,
+        pageSize: 7,
+        source,
+      });
+
+      const result = {
+        ...assistant,
+        related: list.items.filter((item) => item.identifier !== assistant.identifier).slice(0, 6),
+      };
+
+      log('getAssistantDetail: returning assistant with %d related items', result.related.length);
+      return result;
+    } catch (error) {
+      log('getAssistantDetail: error fetching from market SDK: %O', error);
+      return;
+    }
+  };
+
+  getAssistantIdentifiers = async (
+    params: { source?: AssistantMarketSource } = {},
+  ): Promise<IdentifiersResponse> => {
+    log('getAssistantIdentifiers: fetching identifiers with params=%O', params);
+    if (this.isLegacySource(params.source)) {
+      return this.legacyGetAssistantIdentifiers();
+    }
+
+    try {
+      // @ts-ignore
+      const identifiers = await this.market.agents.getPublishedIdentifiers();
+      // @ts-ignore
+      const result = identifiers.map((item) => ({
+        identifier: item.id,
+        lastModified: item.lastModified,
+      }));
+      log('getAssistantIdentifiers: returning %d identifiers from market SDK', result.length);
+      return result;
+    } catch (error) {
+      log('getAssistantIdentifiers: error fetching from market SDK: %O', error);
+      return [];
+    }
+  };
+
+  getAssistantList = async (params: AssistantQueryParams = {}): Promise<AssistantListResponse> => {
+    log('getAssistantList: params=%O', params);
+    const { source, ...rest } = params;
+    if (this.isLegacySource(source)) {
+      return this.legacyGetAssistantList(rest);
+    }
+
+    const {
+      locale,
+      category,
+      order = 'desc',
+      page = 1,
+      pageSize = 20,
+      q,
+      sort = AssistantSorts.CreatedAt,
+      ownerId,
+    } = rest;
+
+    try {
+      const normalizedLocale = normalizeLocale(locale);
+
+      let apiSort: 'createdAt' | 'updatedAt' | 'name' = 'createdAt';
+      switch (sort) {
+        case AssistantSorts.Identifier:
+        case AssistantSorts.Title: {
+          apiSort = 'name';
+          break;
+        }
+        case AssistantSorts.CreatedAt:
+        case AssistantSorts.MyOwn: {
+          apiSort = 'createdAt';
+          break;
+        }
+        default: {
+          apiSort = 'createdAt';
+        }
+      }
+
+      // @ts-ignore
+      const data = await this.market.agents.getAgentList({
+        category,
+        locale: normalizedLocale,
+        order,
+        ownerId,
+        page,
+        pageSize,
+        q,
+        sort: apiSort,
+        status: 'published',
+        visibility: 'public',
+      });
+
+      const transformedItems: DiscoverAssistantItem[] = (data.items || []).map((item: any) => {
+        const normalizedAuthor = this.normalizeAuthorField(item.author);
+        return {
+          author: normalizedAuthor || (item.ownerId !== null ? `User${item.ownerId}` : 'Unknown'),
+          avatar: item.avatar || normalizedAuthor || '',
+          category: item.category || 'general',
+          config: item.config || {},
+          createdAt: item.createdAt || item.updatedAt || new Date().toISOString(),
+          description: item.description || item.summary || '',
+          homepage: item.homepage || `https://lobehub.com/discover/assistant/${item.identifier}`,
+          identifier: item.identifier,
+          knowledgeCount: item.knowledgeCount ?? item.config?.knowledgeBases?.length ?? 0,
+          pluginCount: item.pluginCount ?? item.config?.plugins?.length ?? 0,
+          schemaVersion: item.schemaVersion ?? 1,
+          tags: item.tags || [],
+          title: item.name || item.identifier,
+          tokenUsage: item.tokenUsage || 0,
+        };
+      });
+
+      const result: AssistantListResponse = {
+        currentPage: data.currentPage || page,
+        items: transformedItems,
+        pageSize: data.pageSize || pageSize,
+        totalCount: data.totalCount || 0,
+        totalPages: data.totalPages || 0,
+      };
+
+      log(
+        'getAssistantList: returning page %d/%d with %d items from market SDK',
+        result.currentPage,
+        result.totalPages,
+        result.items.length,
+      );
+      return result;
+    } catch (error) {
+      log('getAssistantList: error fetching from market SDK: %O', error);
+      return {
+        currentPage: page,
+        items: [],
+        pageSize,
+        totalCount: 0,
+        totalPages: 0,
+      };
+    }
   };
 
   // ============================== MCP Market ==============================
@@ -587,8 +886,48 @@ export class DiscoverService {
     const all = await this._getPluginList(locale);
     let raw = all.find((item) => item.identifier === identifier);
     if (!raw) {
-      log('getPluginDetail: plugin not found for identifier=%s', identifier);
-      return;
+      log('getPluginDetail: plugin not found in default store for identifier=%s, trying MCP plugin', identifier);
+      try {
+        const mcpDetail = await this.getMcpDetail({ identifier, locale });
+        const convertedMcp: Partial<DiscoverPluginDetail> = {
+          author:
+            typeof (mcpDetail as any).author === 'object'
+              ? (mcpDetail as any).author?.name || ''
+              : (mcpDetail as any).author || '',
+          avatar: (mcpDetail as any).icon || (mcpDetail as any).avatar || '',
+          category: (mcpDetail as any).category as any,
+          createdAt: (mcpDetail as any).createdAt || '',
+          description: mcpDetail.description || '',
+          homepage: mcpDetail.homepage || '',
+          identifier: mcpDetail.identifier,
+          manifest: undefined,
+          related: mcpDetail.related.map((item) => ({
+            author:
+              typeof (item as any).author === 'object'
+                ? (item as any).author?.name || ''
+                : (item as any).author || '',
+            avatar: (item as any).icon || (item as any).avatar || '',
+            category: (item as any).category as any,
+            createdAt: (item as any).createdAt || '',
+            description: (item as any).description || '',
+            homepage: (item as any).homepage || '',
+            identifier: item.identifier,
+            manifest: undefined,
+            schemaVersion: 1,
+            tags: (item as any).tags || [],
+            title: (item as any).name || item.identifier,
+          })) as unknown as DiscoverPluginItem[],
+          schemaVersion: 1,
+          tags: (mcpDetail as any).tags || [],
+          title: (mcpDetail as any).name || mcpDetail.identifier,
+        };
+        const plugin = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), convertedMcp);
+        log('getPluginDetail: returning converted MCP plugin');
+        return plugin as DiscoverPluginDetail;
+      } catch (error) {
+        log('getPluginDetail: MCP plugin not found for identifier=%s, error=%O', identifier, error);
+        return;
+      }
     }
 
     raw = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), raw);

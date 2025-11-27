@@ -1,14 +1,11 @@
-// @vitest-environment edge-runtime
-import { GenerateContentResponse, Tool } from '@google/genai';
-import { OpenAIChatMessage } from '@lobechat/model-runtime';
-import { ChatStreamPayload } from '@lobechat/types';
+// @vitest-environment node
+import { GenerateContentResponse } from '@google/genai';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOBE_ERROR_KEY } from '../../core/streams';
 import { AgentRuntimeErrorType } from '../../types/error';
 import * as debugStreamModule from '../../utils/debugStream';
-import * as imageToBase64Module from '../../utils/imageToBase64';
 import { LobeGoogleAI, resolveModelThinkingBudget } from './index';
 
 const provider = 'google';
@@ -622,5 +619,101 @@ describe('resolveModelThinkingBudget', () => {
     expect(resolveModelThinkingBudget('unknown-model')).toBeUndefined();
     expect(resolveModelThinkingBudget('unknown-model', 999)).toBe(999);
     expect(resolveModelThinkingBudget('unknown-model', 99_999)).toBe(24_576);
+  });
+});
+
+describe('thinkingConfig includeThoughts logic', () => {
+  it('should enable thinking when thinkingBudget is set', async () => {
+    const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
+    vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
+
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'gemini-2.5-pro',
+      thinkingBudget: 5000,
+      temperature: 0,
+    });
+
+    const callArgs = (instance['client'].models.generateContentStream as any).mock.calls[0];
+    const config = callArgs[0].config;
+    expect(config.thinkingConfig?.includeThoughts).toBe(true);
+  });
+
+  it('should enable thinking when thinkingLevel is set', async () => {
+    const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
+    vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
+
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'gemini-3-pro',
+      thinkingLevel: 'high',
+      temperature: 0,
+    });
+
+    const callArgs = (instance['client'].models.generateContentStream as any).mock.calls[0];
+    const config = callArgs[0].config;
+    expect(config.thinkingConfig?.includeThoughts).toBe(true);
+  });
+
+  it('should enable thinking for gemini-3-pro-image models', async () => {
+    const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
+    vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
+
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'gemini-3-pro-image-preview',
+      temperature: 0,
+    });
+
+    const callArgs = (instance['client'].models.generateContentStream as any).mock.calls[0];
+    const config = callArgs[0].config;
+    expect(config.thinkingConfig?.includeThoughts).toBe(true);
+  });
+
+  it('should enable thinking for thinking-enabled models', async () => {
+    const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
+    vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
+
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'gemini-2.0-flash-thinking-exp',
+      temperature: 0,
+    });
+
+    const callArgs = (instance['client'].models.generateContentStream as any).mock.calls[0];
+    const config = callArgs[0].config;
+    expect(config.thinkingConfig?.includeThoughts).toBe(true);
+  });
+
+  it('should disable thinking when resolvedThinkingBudget is 0', async () => {
+    const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
+    vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
+
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'gemini-2.5-flash-lite',
+      thinkingBudget: 0,
+      temperature: 0,
+    });
+
+    const callArgs = (instance['client'].models.generateContentStream as any).mock.calls[0];
+    const config = callArgs[0].config;
+    expect(config.thinkingConfig?.includeThoughts).toBeUndefined();
+  });
+
+  it('should add thinkingLevel to config for 3.x models when provided', async () => {
+    const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
+    vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
+
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'gemini-3-pro',
+      thinkingLevel: 'high',
+      temperature: 0,
+    });
+
+    const callArgs = (instance['client'].models.generateContentStream as any).mock.calls[0];
+    const config = callArgs[0].config as any;
+    expect(config.thinkingConfig?.thinkingLevel).toBe('high');
   });
 });

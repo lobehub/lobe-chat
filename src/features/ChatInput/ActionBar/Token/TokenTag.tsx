@@ -6,14 +6,14 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { createChatToolsEngine } from '@/helpers/toolEngineering';
+import { createAgentToolsEngine } from '@/helpers/toolEngineering';
 import { useModelContextWindowTokens } from '@/hooks/useModelContextWindowTokens';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors, topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
@@ -57,7 +57,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   const pluginIds = useAgentStore(agentSelectors.currentAgentPlugins);
 
   const toolsString = useToolStore((s) => {
-    const toolsEngine = createChatToolsEngine({ model, provider });
+    const toolsEngine = createAgentToolsEngine({ model, provider });
 
     const { tools, enabledToolIds } = toolsEngine.generateToolsDetailed({
       model,
@@ -77,7 +77,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   const inputTokenCount = useTokenCount(input);
 
   const chatsString = useMemo(() => {
-    const chats = chatSelectors.mainAIChatsWithHistoryConfig(useChatStore.getState());
+    const chats = dbMessageSelectors.activeDbMessages(useChatStore.getState());
     return chats.map((chat) => chat.content).join('');
   }, [messageString, historyCount, enableHistoryCount]);
 

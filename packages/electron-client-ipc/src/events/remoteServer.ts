@@ -1,6 +1,10 @@
 import { DataSyncConfig } from '../types/dataSync';
 import { ProxyTRPCRequestParams, ProxyTRPCRequestResult } from '../types/proxyTRPCRequest';
 
+export interface MarketAuthorizationParams {
+  authUrl: string;
+}
+
 /**
  * 远程服务器配置相关的事件
  */
@@ -18,6 +22,10 @@ export interface RemoteServerDispatchEvents {
     success: boolean;
   };
   requestAuthorization: (config: DataSyncConfig) => {
+    error?: string;
+    success: boolean;
+  };
+  requestMarketAuthorization: (params: MarketAuthorizationParams) => {
     error?: string;
     success: boolean;
   };

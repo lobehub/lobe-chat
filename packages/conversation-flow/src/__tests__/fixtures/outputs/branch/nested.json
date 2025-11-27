@@ -111,7 +111,11 @@
       "parentId": null,
       "createdAt": 1704067200000,
       "updatedAt": 1704067200000,
-      "meta": {}
+      "meta": {},
+      "branch": {
+        "activeBranchIndex": 0,
+        "count": 3
+      }
     },
     {
       "id": "msg-302",
@@ -138,6 +142,10 @@
       "meta": {},
       "metadata": {
         "activeBranchIndex": 1
+      },
+      "branch": {
+        "activeBranchIndex": 1,
+        "count": 2
       }
     },
     {
@@ -162,7 +170,11 @@
       "parentId": "msg-307",
       "createdAt": 1704067220000,
       "updatedAt": 1704067220000,
-      "meta": {}
+      "meta": {},
+      "branch": {
+        "activeBranchIndex": 0,
+        "count": 2
+      }
     },
     {
       "id": "msg-311",
@@ -189,6 +201,10 @@
       "meta": {},
       "metadata": {
         "activeBranchIndex": 1
+      },
+      "branch": {
+        "activeBranchIndex": 1,
+        "count": 2
       }
     },
     {

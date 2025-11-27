@@ -23,10 +23,7 @@ const mockTogetherAIAPIKey = 'togetherai-api-key';
 // mock the traditional zustand
 vi.mock('zustand/traditional');
 
-const setModelProviderConfig = <T extends GlobalLLMProviderKey>(
-  provider: T,
-  config: Partial<UserKeyVaults[T]>,
-) => {
+const setModelProviderConfig = (provider: string, config: any) => {
   useUserStore.setState({
     settings: { keyVaults: { [provider]: config } },
   });

@@ -199,6 +199,12 @@
     "all": "Tutti",
     "list": {
       "disabled": "Non attivato",
+      "disabledActions": {
+        "sort": "Ordina per",
+        "sortAlphabetical": "Ordina alfabeticamente",
+        "sortAlphabeticalDesc": "Ordina in ordine alfabetico inverso",
+        "sortDefault": "Ordinamento predefinito"
+      },
       "enabled": "Attivato"
     },
     "notFound": "Nessun risultato trovato",
@@ -289,7 +295,7 @@
       },
       "helpDoc": "Guida alla configurazione",
       "responsesApi": {
-        "desc": "Utilizza il nuovo formato di richiesta di OpenAI per sbloccare funzionalità avanzate come la catena di pensiero",
+        "desc": "Utilizza il nuovo formato di richiesta di OpenAI per sbloccare funzionalità avanzate come la catena di pensiero (supportato solo dai modelli OpenAI)",
         "title": "Utilizza lo standard Responses API"
       },
       "waitingForMore": "Altri modelli sono in fase di <1>implementazione</1>, resta sintonizzato"
@@ -391,7 +397,13 @@
       "addNew": "Aggiungi modello",
       "disabled": "Non attivato",
       "disabledActions": {
-        "showMore": "Mostra tutto"
+        "showMore": "Mostra tutto",
+        "sort": "Ordina per",
+        "sortAlphabetical": "Ordina alfabeticamente",
+        "sortAlphabeticalDesc": "Ordina in ordine alfabetico inverso",
+        "sortDefault": "Ordinamento predefinito",
+        "sortReleasedAt": "Ordina per data di rilascio (più vecchi prima)",
+        "sortReleasedAtDesc": "Ordina per data di rilascio (più recenti prima)"
       },
       "empty": {
         "desc": "Si prega di creare un modello personalizzato o di importare un modello per iniziare a utilizzarlo",

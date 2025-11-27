@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Leer contenido de la base de conocimientos",
+        "searchKnowledgeBase": "Buscar en la base de conocimientos"
+      },
+      "title": "Base de conocimientos"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Editar archivo",
+        "getCommandOutput": "Obtener salida del código",
+        "globLocalFiles": "Buscar archivos por patrón",
+        "grepContent": "Buscar contenido",
+        "killCommand": "Detener ejecución del código",
+        "listLocalFiles": "Ver lista de archivos",
+        "moveLocalFiles": "Mover archivos",
+        "readLocalFile": "Leer contenido del archivo",
+        "renameLocalFile": "Renombrar archivo",
+        "runCommand": "Ejecutar código",
+        "searchLocalFiles": "Buscar archivos",
+        "writeLocalFile": "Escribir archivo"
+      },
+      "title": "Sistema local"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Leer contenido de múltiples páginas",
+        "crawlSinglePage": "Leer contenido de la página",
+        "search": "Buscar en la web"
+      },
+      "title": "Búsqueda en línea"
+    }
+  },
   "confirm": "Confirmar",
   "debug": {
     "arguments": "Parámetros de llamada",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "Ver lista de parámetros",
+    "delete": "Eliminar llamada a la herramienta",
+    "orphanedToolCall": "Este mensaje de llamada a la herramienta podría haberse quedado huérfano debido a circunstancias excepcionales, lo que puede afectar el funcionamiento normal del agente. Por favor, elimínelo.",
     "pluginRender": "Ver interfaz del plugin"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "Llamando al plugin...",
     "plugin": "Plugin en ejecución..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "Ver lista de archivos",
-      "moveLocalFiles": "Mover archivos",
-      "readLocalFile": "Leer contenido del archivo",
-      "renameLocalFile": "Renombrar",
-      "searchLocalFiles": "Buscar archivos",
-      "writeLocalFile": "Escribir archivo"
-    },
-    "title": "Archivos locales"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Verificando entorno de instalación...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ Por favor confirme que confía en la fuente de este plugin, plugins maliciosos pueden comprometer la seguridad de su sistema."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Leer contenido de múltiples páginas",
-      "crawlSinglePage": "Leer contenido de página",
-      "search": "Buscar página"
-    },
     "config": {
       "addKey": "Agregar clave",
       "close": "Eliminar",

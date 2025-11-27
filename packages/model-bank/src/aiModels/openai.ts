@@ -21,6 +21,112 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      imageOutput: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'GPT-5.1 — 针对编码和 agent 任务优化的旗舰模型，支持可配置的推理强度与更长上下文。',
+    displayName: 'GPT-5.1',
+    enabled: true,
+    id: 'gpt-5.1',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-13',
+    settings: {
+      extendParams: ['gpt5_1ReasoningEffort', 'textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 128_000,
+    description: 'GPT-5.1 Chat：用于 ChatGPT 的 GPT-5.1 变体，适合聊天场景。',
+    displayName: 'GPT-5.1 Chat',
+    enabled: true,
+    id: 'gpt-5.1-chat-latest',
+    maxOutput: 16_384,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-13',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      imageOutput: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'GPT-5.1 Codex：针对 agentic 编码任务优化的 GPT-5.1 版本，可在 Responses API 中用于更复杂的代码/代理工作流。',
+    displayName: 'GPT-5.1 Codex',
+    id: 'gpt-5.1-codex',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-13',
+    settings: {
+      extendParams: ['gpt5_1ReasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      imageOutput: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'GPT-5.1 Codex mini：体积更小、成本更低的 Codex 变体，针对 agentic 编码任务进行了优化。',
+    displayName: 'GPT-5.1 Codex mini',
+    id: 'gpt-5.1-codex-mini',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-13',
+    settings: {
+      extendParams: ['gpt5_1ReasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
       search: true,
       vision: true,
@@ -64,7 +170,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2024-09-15',
     settings: {
-      extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+      extendParams: ['gpt5ReasoningEffort'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -81,7 +187,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       '跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。',
     displayName: 'GPT-5',
-    enabled: true,
     id: 'gpt-5',
     maxOutput: 128_000,
     pricing: {
@@ -159,7 +264,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'ChatGPT 中使用的 GPT-5 模型。结合了强大的语言理解与生成能力，适合对话式交互应用。',
     displayName: 'GPT-5 Chat',
-    enabled: true,
     id: 'gpt-5-chat-latest',
     maxOutput: 128_000,
     pricing: {
@@ -970,7 +1074,7 @@ export const openaiEmbeddingModels: AIEmbeddingModelCard[] = [
   },
 ];
 
-// 语音合成模型
+// Text-to-speech models
 export const openaiTTSModels: AITTSModelCard[] = [
   {
     description: '最新的文本转语音模型，针对实时场景优化速度',
@@ -1005,7 +1109,7 @@ export const openaiTTSModels: AITTSModelCard[] = [
   },
 ];
 
-// 语音识别模型
+// Speech recognition models
 export const openaiSTTModels: AISTTModelCard[] = [
   {
     description: '通用语音识别模型，支持多语言语音识别、语音翻译和语言识别。',
@@ -1057,7 +1161,7 @@ export const openaiSTTModels: AISTTModelCard[] = [
   },
 ];
 
-// 图像生成模型
+// Image generation models
 export const openaiImageModels: AIImageModelCard[] = [
   // https://platform.openai.com/docs/models/gpt-image-1
   {
@@ -1067,31 +1171,13 @@ export const openaiImageModels: AIImageModelCard[] = [
     id: 'gpt-image-1',
     parameters: gptImage1ParamsSchema,
     pricing: {
+      approximatePricePerImage: 0.042,
       units: [
         { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
-        {
-          lookup: {
-            prices: {
-              high_1024x1024: 0.167,
-              high_1024x1536: 0.25,
-              high_1536x1024: 0.25,
-              low_1024x1024: 0.011,
-              low_1024x1536: 0.016,
-              low_1536x1024: 0.016,
-              medium_1024x1024: 0.042,
-              medium_1024x1536: 0.063,
-              medium_1536x1024: 0.063,
-            },
-            pricingParams: ['quality', 'size'],
-          },
-          name: 'imageGeneration',
-          strategy: 'lookup',
-          unit: 'image',
-        },
       ],
     },
     resolutions: ['1024x1024', '1024x1536', '1536x1024'],
@@ -1104,28 +1190,13 @@ export const openaiImageModels: AIImageModelCard[] = [
     id: 'gpt-image-1-mini',
     parameters: gptImage1ParamsSchema,
     pricing: {
+      approximatePricePerImage: 0.011,
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput_cacheRead', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
-        {
-          lookup: {
-            prices: {
-              low_1024x1024: 0.005,
-              low_1024x1536: 0.006,
-              low_1536x1024: 0.006,
-              medium_1024x1024: 0.011,
-              medium_1024x1536: 0.015,
-              medium_1536x1024: 0.015,
-            },
-            pricingParams: ['quality', 'size'],
-          },
-          name: 'imageGeneration',
-          strategy: 'lookup',
-          unit: 'image',
-        },
       ],
     },
     releasedAt: '2025-10-06',
@@ -1205,7 +1276,7 @@ export const openaiImageModels: AIImageModelCard[] = [
   },
 ];
 
-// GPT-4o 和 GPT-4o-mini 实时模型
+// GPT-4o and GPT-4o-mini realtime models
 export const openaiRealtimeModels: AIRealtimeModelCard[] = [
   {
     abilities: {

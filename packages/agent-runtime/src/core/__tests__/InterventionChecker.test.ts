@@ -1,75 +1,76 @@
-import type { HumanInterventionConfig } from '@lobechat/types';
+import type { HumanInterventionConfig, SecurityBlacklistConfig } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
 import { InterventionChecker } from '../InterventionChecker';
+import { DEFAULT_SECURITY_BLACKLIST } from '../defaultSecurityBlacklist';
 
 describe('InterventionChecker', () => {
   describe('shouldIntervene', () => {
     it('should return never when config is undefined', () => {
-      const result = InterventionChecker.shouldIntervene({ config: undefined, toolArgs: {} });
+      const result = InterventionChecker.shouldIntervene({
+        config: undefined,
+        securityBlacklist: [], // Disable blacklist for this test
+        toolArgs: {},
+      });
       expect(result).toBe('never');
     });
 
     it('should return the policy when config is a simple string', () => {
-      expect(InterventionChecker.shouldIntervene({ config: 'never', toolArgs: {} })).toBe('never');
-      expect(InterventionChecker.shouldIntervene({ config: 'always', toolArgs: {} })).toBe(
-        'always',
-      );
-      expect(InterventionChecker.shouldIntervene({ config: 'first', toolArgs: {} })).toBe('first');
-    });
-
-    it('should handle "first" policy with confirmed history', () => {
-      const toolKey = 'web-browsing/crawlSinglePage';
-      const confirmedHistory = [toolKey];
-
-      const result = InterventionChecker.shouldIntervene({
-        config: 'first',
-        toolArgs: {},
-        confirmedHistory,
-        toolKey,
-      });
-      expect(result).toBe('never');
-    });
-
-    it('should require intervention for "first" policy without confirmation', () => {
-      const toolKey = 'web-browsing/crawlSinglePage';
-      const confirmedHistory: string[] = [];
-
-      const result = InterventionChecker.shouldIntervene({
-        config: 'first',
-        toolArgs: {},
-        confirmedHistory,
-        toolKey,
-      });
-      expect(result).toBe('first');
+      expect(
+        InterventionChecker.shouldIntervene({
+          config: 'never',
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: {},
+        }),
+      ).toBe('never');
+      expect(
+        InterventionChecker.shouldIntervene({
+          config: 'required',
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: {},
+        }),
+      ).toBe('required');
     });
 
     it('should match rules in order and return first match', () => {
       const config: HumanInterventionConfig = [
         { match: { command: 'ls:*' }, policy: 'never' },
-        { match: { command: 'git commit:*' }, policy: 'first' },
-        { policy: 'always' }, // Default rule
+        { match: { command: 'git commit:*' }, policy: 'required' },
+        { policy: 'required' }, // Default rule
       ];
 
-      expect(InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'ls:' } })).toBe(
-        'never',
-      );
       expect(
-        InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'git commit:' } }),
-      ).toBe('first');
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { command: 'ls:' },
+        }),
+      ).toBe('never');
       expect(
-        InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'rm -rf /' } }),
-      ).toBe('always');
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { command: 'git commit:' },
+        }),
+      ).toBe('required');
+      expect(
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { command: 'rm -rf /' },
+        }),
+      ).toBe('required');
     });
 
-    it('should return always as default when no rule matches', () => {
+    it('should return require as default when no rule matches', () => {
       const config: HumanInterventionConfig = [{ match: { command: 'ls:*' }, policy: 'never' }];
 
       const result = InterventionChecker.shouldIntervene({
         config,
+        securityBlacklist: [], // Disable blacklist for this test
         toolArgs: { command: 'rm -rf /' },
       });
-      expect(result).toBe('always');
+      expect(result).toBe('required');
     });
 
     it('should handle multiple parameter matching', () => {
@@ -81,13 +82,14 @@ describe('InterventionChecker', () => {
           },
           policy: 'never',
         },
-        { policy: 'always' },
+        { policy: 'required' },
       ];
 
       // Both match
       expect(
         InterventionChecker.shouldIntervene({
           config,
+          securityBlacklist: [], // Disable blacklist for this test
           toolArgs: {
             command: 'git add:.',
             path: '/Users/project/file.ts',
@@ -99,25 +101,27 @@ describe('InterventionChecker', () => {
       expect(
         InterventionChecker.shouldIntervene({
           config,
+          securityBlacklist: [], // Disable blacklist for this test
           toolArgs: {
             command: 'git add:.',
             path: '/tmp/file.ts',
           },
         }),
-      ).toBe('always');
+      ).toBe('required');
     });
 
     it('should handle default rule without match', () => {
       const config: HumanInterventionConfig = [
         { match: { command: 'ls:*' }, policy: 'never' },
-        { policy: 'first' }, // Default rule
+        { policy: 'required' }, // Default rule
       ];
 
       const result = InterventionChecker.shouldIntervene({
         config,
+        securityBlacklist: [], // Disable blacklist for this test
         toolArgs: { command: 'anything' },
       });
-      expect(result).toBe('first');
+      expect(result).toBe('required');
     });
   });
 
@@ -245,89 +249,502 @@ describe('InterventionChecker', () => {
     });
   });
 
+  describe('checkSecurityBlacklist', () => {
+    it('should return not blocked when blacklist is empty', () => {
+      const result = InterventionChecker.checkSecurityBlacklist([], { command: 'rm -rf /' });
+      expect(result.blocked).toBe(false);
+      expect(result.reason).toBeUndefined();
+    });
+
+    describe('with DEFAULT_SECURITY_BLACKLIST', () => {
+      it('should block dangerous rm -rf ~/ command', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'rm -rf ~/',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Recursive deletion of home directory is extremely dangerous');
+      });
+
+      it('should block rm -rf on macOS home directory', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'rm -rf /Users/alice',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Recursive deletion of home directory is extremely dangerous');
+      });
+
+      it('should block rm -rf on Linux home directory', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'rm -rf /home/alice',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Recursive deletion of home directory is extremely dangerous');
+      });
+
+      it('should block rm -rf with $HOME variable', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'rm -rf $HOME',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Recursive deletion of home directory is extremely dangerous');
+      });
+
+      it('should block rm -rf / command', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'rm -rf /',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Recursive deletion of root directory will destroy the system');
+      });
+
+      it('should allow safe rm commands', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'rm -rf /tmp/test-folder',
+        });
+        expect(result.blocked).toBe(false);
+      });
+
+      it('should block fork bomb', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: ':(){ :|:& };:',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Fork bomb can crash the system');
+      });
+
+      it('should block dangerous dd commands to disk devices', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'dd if=/dev/zero of=/dev/sda',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Writing random data to disk devices can destroy data');
+      });
+
+      it('should block reading .env files via command', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'cat .env',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe(
+          'Reading .env files may leak sensitive credentials and API keys',
+        );
+      });
+
+      it('should block reading .env files via path', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          path: '/project/.env.local',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe(
+          'Reading .env files may leak sensitive credentials and API keys',
+        );
+      });
+
+      it('should block reading SSH private keys via command', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'cat ~/.ssh/id_rsa',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Reading SSH private keys can compromise system security');
+      });
+
+      it('should block reading SSH private keys via path', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          path: '/home/user/.ssh/id_ed25519',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Reading SSH private keys can compromise system security');
+      });
+
+      it('should allow reading SSH public keys', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'cat ~/.ssh/id_rsa.pub',
+        });
+        expect(result.blocked).toBe(false);
+      });
+
+      it('should block reading AWS credentials via command', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'cat ~/.aws/credentials',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Accessing AWS credentials can leak cloud access keys');
+      });
+
+      it('should block reading AWS credentials via path', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          path: '/home/user/.aws/credentials',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Accessing AWS credentials can leak cloud access keys');
+      });
+
+      it('should block reading Docker config', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'less ~/.docker/config.json',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Reading Docker config may expose registry credentials');
+      });
+
+      it('should block reading Kubernetes config', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          path: '/home/user/.kube/config',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Reading Kubernetes config may expose cluster credentials');
+      });
+
+      it('should block reading Git credentials', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'cat ~/.git-credentials',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Reading Git credentials file may leak access tokens');
+      });
+
+      it('should block reading npm token file', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          path: '/home/user/.npmrc',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe(
+          'Reading npm token file may expose package registry credentials',
+        );
+      });
+
+      it('should block reading shell history files', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          command: 'cat ~/.bash_history',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe(
+          'Reading history files may expose sensitive commands and credentials',
+        );
+      });
+
+      it('should block reading GCP credentials', () => {
+        const result = InterventionChecker.checkSecurityBlacklist(DEFAULT_SECURITY_BLACKLIST, {
+          path: '/home/user/.config/gcloud/application_default_credentials.json',
+        });
+        expect(result.blocked).toBe(true);
+        expect(result.reason).toBe('Reading GCP credentials may leak cloud service account keys');
+      });
+    });
+
+    describe('with custom blacklist', () => {
+      it('should work with multiple parameter matching', () => {
+        const blacklist: SecurityBlacklistConfig = [
+          {
+            description: 'Dangerous operation on system files',
+            match: {
+              command: { pattern: 'rm.*', type: 'regex' },
+              path: '/etc/*',
+            },
+          },
+        ];
+
+        // Both match - should block
+        expect(
+          InterventionChecker.checkSecurityBlacklist(blacklist, {
+            command: 'rm -rf',
+            path: '/etc/passwd',
+          }).blocked,
+        ).toBe(true);
+
+        // Only command matches - should not block
+        expect(
+          InterventionChecker.checkSecurityBlacklist(blacklist, {
+            command: 'rm -rf',
+            path: '/tmp/file',
+          }).blocked,
+        ).toBe(false);
+
+        // Only path matches - should not block
+        expect(
+          InterventionChecker.checkSecurityBlacklist(blacklist, {
+            command: 'cat',
+            path: '/etc/passwd',
+          }).blocked,
+        ).toBe(false);
+      });
+    });
+  });
+
+  describe('shouldIntervene with security blacklist', () => {
+    describe('with default blacklist behavior', () => {
+      it('should block dangerous commands even in auto-run mode', () => {
+        // Even with config set to 'never', default blacklist should override
+        const result = InterventionChecker.shouldIntervene({
+          config: 'never',
+          // Not passing securityBlacklist - should use DEFAULT_SECURITY_BLACKLIST
+          toolArgs: { command: 'rm -rf ~/' },
+        });
+
+        expect(result).toBe('required');
+      });
+
+      it('should block dangerous commands even with no config', () => {
+        // Even with no config (which normally means 'never'), default blacklist should override
+        const result = InterventionChecker.shouldIntervene({
+          config: undefined,
+          // Not passing securityBlacklist - should use DEFAULT_SECURITY_BLACKLIST
+          toolArgs: { command: 'rm -rf /' },
+        });
+
+        expect(result).toBe('required');
+      });
+
+      it('should allow safe commands to follow normal intervention rules', () => {
+        // Safe command should follow normal config
+        const result = InterventionChecker.shouldIntervene({
+          config: 'never',
+          // Not passing securityBlacklist - should use DEFAULT_SECURITY_BLACKLIST
+          toolArgs: { command: 'ls -la' },
+        });
+
+        expect(result).toBe('never');
+      });
+
+      it('should block reading sensitive files', () => {
+        // Test with actual default blacklist for sensitive file reading
+        const result = InterventionChecker.shouldIntervene({
+          config: 'never',
+          // Not passing securityBlacklist - should use DEFAULT_SECURITY_BLACKLIST
+          toolArgs: { command: 'cat .env' },
+        });
+
+        expect(result).toBe('required');
+      });
+    });
+
+    describe('with custom blacklist replacement', () => {
+      it('should use custom blacklist instead of default when provided', () => {
+        const customBlacklist: SecurityBlacklistConfig = [
+          {
+            description: 'Block all npm commands in production',
+            match: {
+              command: { pattern: 'npm.*', type: 'regex' },
+            },
+          },
+        ];
+
+        // Custom blacklist blocks npm but not rm
+        expect(
+          InterventionChecker.shouldIntervene({
+            config: 'never',
+            securityBlacklist: customBlacklist,
+            toolArgs: { command: 'npm install' },
+          }),
+        ).toBe('required');
+
+        // rm is not in custom blacklist, should follow config
+        expect(
+          InterventionChecker.shouldIntervene({
+            config: 'never',
+            securityBlacklist: customBlacklist,
+            toolArgs: { command: 'rm -rf ~/' },
+          }),
+        ).toBe('never');
+      });
+
+      it('should support extending default blacklist with custom rules', () => {
+        const extendedBlacklist: SecurityBlacklistConfig = [
+          ...DEFAULT_SECURITY_BLACKLIST,
+          {
+            description: 'Block access to production database',
+            match: {
+              command: { pattern: '.*psql.*production.*', type: 'regex' },
+            },
+          },
+        ];
+
+        // Default rule still works
+        expect(
+          InterventionChecker.shouldIntervene({
+            config: 'never',
+            securityBlacklist: extendedBlacklist,
+            toolArgs: { command: 'rm -rf ~/' },
+          }),
+        ).toBe('required');
+
+        // Custom rule works
+        expect(
+          InterventionChecker.shouldIntervene({
+            config: 'never',
+            securityBlacklist: extendedBlacklist,
+            toolArgs: { command: 'psql -h production.db' },
+          }),
+        ).toBe('required');
+
+        // Safe commands pass
+        expect(
+          InterventionChecker.shouldIntervene({
+            config: 'never',
+            securityBlacklist: extendedBlacklist,
+            toolArgs: { command: 'psql -h localhost' },
+          }),
+        ).toBe('never');
+      });
+
+      it('should allow disabling security blacklist by passing empty array', () => {
+        // Dangerous command should not be blocked when blacklist is empty
+        const result = InterventionChecker.shouldIntervene({
+          config: 'never',
+          securityBlacklist: [], // Explicitly disable blacklist
+          toolArgs: { command: 'rm -rf ~/' },
+        });
+
+        expect(result).toBe('never');
+      });
+
+      it('should support project-specific blacklist rules', () => {
+        const projectBlacklist: SecurityBlacklistConfig = [
+          {
+            description: 'Block modifying package.json in CI',
+            match: {
+              path: { pattern: '.*/package\\.json$', type: 'regex' },
+              command: { pattern: '(vim|nano|vi|emacs|code|sed).*', type: 'regex' },
+            },
+          },
+        ];
+
+        // Should block editing package.json
+        expect(
+          InterventionChecker.shouldIntervene({
+            config: 'never',
+            securityBlacklist: projectBlacklist,
+            toolArgs: {
+              command: 'vim package.json',
+              path: '/project/package.json',
+            },
+          }),
+        ).toBe('required');
+
+        // Should allow reading package.json
+        expect(
+          InterventionChecker.shouldIntervene({
+            config: 'never',
+            securityBlacklist: projectBlacklist,
+            toolArgs: {
+              command: 'cat package.json',
+              path: '/project/package.json',
+            },
+          }),
+        ).toBe('never');
+      });
+    });
+  });
+
   describe('Integration scenarios', () => {
     it('should handle Bash tool scenario', () => {
       const config: HumanInterventionConfig = [
         { match: { command: 'ls:*' }, policy: 'never' },
-        { match: { command: 'git add:*' }, policy: 'first' },
-        { match: { command: 'git commit:*' }, policy: 'first' },
-        { match: { command: 'rm:*' }, policy: 'always' },
-        { policy: 'always' },
+        { match: { command: 'git add:*' }, policy: 'required' },
+        { match: { command: 'git commit:*' }, policy: 'required' },
+        { match: { command: 'rm:*' }, policy: 'required' },
+        { policy: 'required' },
       ];
 
       // Safe commands - never
-      expect(InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'ls:' } })).toBe(
-        'never',
-      );
+      expect(
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { command: 'ls:' },
+        }),
+      ).toBe('never');
 
-      // Git commands - first
+      // Git commands - require
       expect(
-        InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'git add:.' } }),
-      ).toBe('first');
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { command: 'git add:.' },
+        }),
+      ).toBe('required');
       expect(
-        InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'git commit:-m' } }),
-      ).toBe('first');
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { command: 'git commit:-m' },
+        }),
+      ).toBe('required');
 
-      // Dangerous commands - always
-      expect(InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'rm:-rf' } })).toBe(
-        'always',
-      );
+      // Dangerous commands - require
       expect(
-        InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'npm install' } }),
-      ).toBe('always');
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { command: 'rm:-rf' },
+        }),
+      ).toBe('required');
+      expect(
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { command: 'npm install' },
+        }),
+      ).toBe('required');
     });
 
     it('should handle LocalSystem tool scenario', () => {
       const config: HumanInterventionConfig = [
         { match: { path: '/Users/project/*' }, policy: 'never' },
-        { policy: 'first' },
+        { policy: 'required' },
       ];
 
       // Project directory - never
       expect(
         InterventionChecker.shouldIntervene({
           config,
+          securityBlacklist: [], // Disable blacklist for this test
           toolArgs: { path: '/Users/project/file.ts' },
         }),
       ).toBe('never');
 
-      // Outside project - first
-      expect(
-        InterventionChecker.shouldIntervene({ config, toolArgs: { path: '/tmp/file.ts' } }),
-      ).toBe('first');
-    });
-
-    it('should handle Web Browsing tool with simple policy', () => {
-      const config: HumanInterventionConfig = 'always';
-
-      expect(
-        InterventionChecker.shouldIntervene({ config, toolArgs: { url: 'https://example.com' } }),
-      ).toBe('always');
-    });
-
-    it('should handle first policy with confirmation history', () => {
-      const config: HumanInterventionConfig = [
-        { match: { command: 'git add:*' }, policy: 'first' },
-        { policy: 'always' },
-      ];
-
-      const toolKey = 'bash/bash#abc123';
-      const args = { command: 'git add:.' };
-
-      // First time - requires intervention
+      // Outside project - require
       expect(
         InterventionChecker.shouldIntervene({
           config,
-          toolArgs: args,
-          confirmedHistory: [],
-          toolKey,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { path: '/tmp/file.ts' },
         }),
-      ).toBe('first');
+      ).toBe('required');
+    });
 
-      // After confirmation - never
-      const confirmedHistory = [toolKey];
+    it('should handle Web Browsing tool with simple policy', () => {
+      const config: HumanInterventionConfig = 'required';
+
       expect(
-        InterventionChecker.shouldIntervene({ config, toolArgs: args, confirmedHistory, toolKey }),
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: [], // Disable blacklist for this test
+          toolArgs: { url: 'https://example.com' },
+        }),
+      ).toBe('required');
+    });
+
+    it('should handle security blacklist overriding user config', () => {
+      const config: HumanInterventionConfig = 'never';
+      const blacklist: SecurityBlacklistConfig = DEFAULT_SECURITY_BLACKLIST;
+
+      // Dangerous command blocked even with 'never' config
+      expect(
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: blacklist,
+          toolArgs: { command: 'rm -rf /' },
+        }),
+      ).toBe('required');
+
+      // Safe command follows config
+      expect(
+        InterventionChecker.shouldIntervene({
+          config,
+          securityBlacklist: blacklist,
+          toolArgs: { command: 'ls -la' },
+        }),
       ).toBe('never');
     });
   });

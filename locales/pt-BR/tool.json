@@ -14,9 +14,31 @@
     "images": "Imagens:",
     "prompt": "Palavra-chave"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Número de caracteres",
+        "lines": "Número de linhas"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "Substituir por",
+      "oldString": "Procurar por",
+      "replaceAll": "Substituir todas as correspondências",
+      "replaceFirst": "Substituir apenas a primeira correspondência"
+    },
     "file": "Arquivo",
     "folder": "Pasta",
+    "moveFiles": {
+      "itemsMoved": "{{count}} item(ns) movido(s):",
+      "itemsMoved_one": "{{count}} item movido:",
+      "itemsMoved_other": "{{count}} itens movidos:",
+      "itemsToMove": "{{count}} item(ns) a mover:",
+      "itemsToMove_one": "{{count}} item a mover:",
+      "itemsToMove_other": "{{count}} itens a mover:"
+    },
     "open": "Abrir",
     "openFile": "Abrir arquivo",
     "openFolder": "Abrir pasta",
@@ -26,7 +48,12 @@
     "readFile": "Ler arquivo",
     "readFileError": "Falha ao ler o arquivo, verifique se o caminho do arquivo está correto",
     "readFiles": "Ler arquivos",
-    "readFilesError": "Falha ao ler os arquivos, verifique se o caminho do arquivo está correto"
+    "readFilesError": "Falha ao ler os arquivos, verifique se o caminho do arquivo está correto",
+    "writeFile": {
+      "characters": "Caracteres",
+      "preview": "Pré-visualização do conteúdo",
+      "truncated": "Truncado"
+    }
   },
   "search": {
     "createNewSearch": "Criar nova pesquisa",

@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Leggi contenuti della base di conoscenza",
+        "searchKnowledgeBase": "Cerca nella base di conoscenza"
+      },
+      "title": "Base di conoscenza"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Modifica file",
+        "getCommandOutput": "Ottieni output del codice",
+        "globLocalFiles": "Cerca file corrispondenti",
+        "grepContent": "Cerca contenuto",
+        "killCommand": "Termina esecuzione del codice",
+        "listLocalFiles": "Visualizza elenco file",
+        "moveLocalFiles": "Sposta file",
+        "readLocalFile": "Leggi contenuto del file",
+        "renameLocalFile": "Rinomina",
+        "runCommand": "Esegui codice",
+        "searchLocalFiles": "Cerca file",
+        "writeLocalFile": "Scrivi nel file"
+      },
+      "title": "Sistema locale"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Leggi contenuti da più pagine",
+        "crawlSinglePage": "Leggi contenuto della pagina",
+        "search": "Cerca nella pagina"
+      },
+      "title": "Ricerca online"
+    }
+  },
   "confirm": "Conferma",
   "debug": {
     "arguments": "Parametri di chiamata",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "Visualizza lista parametri",
+    "delete": "Elimina chiamata allo strumento",
+    "orphanedToolCall": "Questo messaggio di chiamata allo strumento potrebbe essere diventato orfano a causa di un'anomalia, il che potrebbe compromettere il corretto funzionamento dell'agente. Si consiglia di rimuoverlo.",
     "pluginRender": "Visualizza interfaccia plugin"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "Chiamata plugin in corso...",
     "plugin": "Plugin in esecuzione..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "Visualizza lista file",
-      "moveLocalFiles": "Sposta file",
-      "readLocalFile": "Leggi contenuto file",
-      "renameLocalFile": "Rinomina",
-      "searchLocalFiles": "Cerca file",
-      "writeLocalFile": "Scrivi file"
-    },
-    "title": "File locali"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Verifica ambiente di installazione...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ Assicurati di fidarti della fonte di questo plugin, plugin malevoli possono compromettere la sicurezza del sistema."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Leggi contenuti di più pagine",
-      "crawlSinglePage": "Leggi contenuto pagina",
-      "search": "Cerca pagina"
-    },
     "config": {
       "addKey": "Aggiungi chiave",
       "close": "Elimina",

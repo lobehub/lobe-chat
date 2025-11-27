@@ -1,5 +1,8 @@
 {
-  "desc": "Quản lý kiến thức của bạn",
+  "addFolder": "Tạo thư mục",
+  "addKnowledge": "Thêm kiến thức",
+  "addPage": "Tạo tài liệu",
+  "desc": "Quản lý kiến thức công việc, học tập và cuộc sống của bạn.",
   "detail": {
     "basic": {
       "createdAt": "Thời gian tạo",
@@ -21,14 +24,88 @@
       "embeddingStatus": "Trạng thái vector hóa"
     }
   },
+  "documentEditor": {
+    "addIcon": "Thêm biểu tượng",
+    "autoSaveMessage": "Tài liệu sẽ được tự động lưu, không cần lưu thủ công",
+    "chooseIcon": "Chọn biểu tượng",
+    "deleteConfirm": {
+      "content": "Tài liệu này sẽ bị xóa và không thể khôi phục. Vui lòng cẩn trọng.",
+      "title": "Xóa tài liệu"
+    },
+    "deleteError": "Xóa tài liệu thất bại",
+    "deleteSuccess": "Xóa tài liệu thành công",
+    "editedAt": "Chỉnh sửa lần cuối vào {{time}}",
+    "editedBy": "Người chỉnh sửa cuối cùng: {{name}}",
+    "editorPlaceholder": "Nhập nội dung tài liệu, nhấn / để mở menu lệnh",
+    "empty": {
+      "createNewDocument": "Tạo tài liệu mới",
+      "title": "Chọn một tài liệu để bắt đầu",
+      "uploadMarkdown": "Tải lên tệp Markdown"
+    },
+    "linkCopied": "Đã sao chép liên kết",
+    "menu": {
+      "copyLink": "Sao chép liên kết",
+      "exportDocument": "Xuất tài liệu",
+      "importDocument": "Nhập tài liệu",
+      "pin": "Ghim tài liệu"
+    },
+    "saving": "Đang lưu...",
+    "titlePlaceholder": "Không có tiêu đề",
+    "wordCount": "{{wordCount}} từ"
+  },
+  "documentList": {
+    "copyContent": "Sao chép toàn bộ nội dung",
+    "duplicate": "Tạo bản sao",
+    "empty": "Chưa có bản thảo nào, hãy nhấn nút phía trên để tạo bản thảo đầu tiên của bạn",
+    "noResults": "Không tìm thấy bản thảo phù hợp",
+    "pageCount": "Tổng cộng {{count}} bản thảo",
+    "selectNote": "Chọn một bản thảo để bắt đầu chỉnh sửa",
+    "untitled": "Không có tiêu đề"
+  },
   "empty": "Chưa có tệp/tệp tin nào được tải lên",
   "header": {
     "actions": {
       "newFolder": "Tạo thư mục mới",
+      "newPage": "Tạo tài liệu mới",
       "uploadFile": "Tải tệp lên",
       "uploadFolder": "Tải thư mục lên"
     },
+    "newNoteDialog": {
+      "cancel": "Hủy",
+      "editTitle": "Chỉnh sửa tài liệu",
+      "emptyContent": "Nội dung tài liệu không được để trống",
+      "loadError": "Tải tài liệu thất bại, vui lòng thử lại",
+      "loading": "Đang tải...",
+      "save": "Lưu",
+      "saveError": "Lưu tài liệu thất bại, vui lòng thử lại",
+      "saveSuccess": "Lưu tài liệu thành công",
+      "title": "Tạo tài liệu mới",
+      "updateSuccess": "Cập nhật tài liệu thành công"
+    },
+    "newPageButton": "Tạo tài liệu mới",
     "uploadButton": "Tải lên"
+  },
+  "home": {
+    "getStarted": "Bắt đầu",
+    "greeting": "Bắt đầu",
+    "quickActions": "Hành động nhanh",
+    "recentFiles": "Tệp gần đây",
+    "recentPages": "Tài liệu gần đây",
+    "subtitle": "Chào mừng đến với kho tri thức, bắt đầu quản lý tài liệu của bạn từ đây",
+    "uploadEntries": {
+      "files": {
+        "title": "Tải lên tệp"
+      },
+      "folder": {
+        "title": "Tải lên thư mục"
+      },
+      "knowledgeBase": {
+        "title": "Tạo kho kiến thức mới"
+      },
+      "newPage": {
+        "title": "Tạo tài liệu mới"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "Tạo kho tri thức mới",
     "title": "Kho tri thức"
+  },
+  "menu": {
+    "allFiles": "Tất cả tệp",
+    "allPages": "Tất cả tài liệu"
   },
   "networkError": "Không thể lấy kho tri thức, vui lòng kiểm tra kết nối mạng và thử lại",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "Định dạng tệp này hiện không hỗ trợ xem trước trực tuyến. Nếu bạn có yêu cầu xem trước, vui lòng <1>phản hồi cho chúng tôi</1>"
   },
   "searchFilePlaceholder": "Tìm kiếm tệp",
+  "searchPagePlaceholder": "Tìm kiếm bản thảo",
   "tab": {
-    "all": "Tất cả tệp",
+    "all": "Tất cả",
     "audios": "Âm thanh",
     "documents": "Tài liệu",
+    "home": "Trang chủ",
     "images": "Hình ảnh",
+    "moreTypes": "Thêm loại",
+    "pages": "Bản thảo",
     "videos": "Video",
     "websites": "Trang web"
   },
   "title": "Kho kiến thức",
-  "toggleLeftPanel": {
-    "title": "Hiện/Ẩn bảng bên trái"
-  },
+  "toggleLeftPanel": "Hiển thị/Ẩn bảng điều khiển bên trái",
   "uploadDock": {
     "body": {
       "collapse": "Thu gọn",

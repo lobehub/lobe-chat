@@ -1,5 +1,8 @@
 {
-  "desc": "管理你的知识",
+  "addFolder": "创建文件夹",
+  "addKnowledge": "添加知识",
+  "addPage": "创建文稿",
+  "desc": "管理你的工作、学习与生活知识。",
   "detail": {
     "basic": {
       "createdAt": "创建时间",
@@ -21,14 +24,88 @@
       "embeddingStatus": "向量化"
     }
   },
+  "documentEditor": {
+    "addIcon": "添加图标",
+    "autoSaveMessage": "文档会自动保存，无需手动保存",
+    "chooseIcon": "选择图标",
+    "deleteConfirm": {
+      "content": "即将删除该文档，删除后将不可恢复，请谨慎操作。",
+      "title": "删除文档"
+    },
+    "deleteError": "删除文档失败",
+    "deleteSuccess": "文档删除成功",
+    "editedAt": "最后编辑于 {{time}}",
+    "editedBy": "最后编辑者 {{name}}",
+    "editorPlaceholder": "输入文档内容，按 / 打开命令菜单",
+    "empty": {
+      "createNewDocument": "创建新文档",
+      "title": "选择一个文档以开始",
+      "uploadMarkdown": "上传 Markdown 文件"
+    },
+    "linkCopied": "链接已复制",
+    "menu": {
+      "copyLink": "复制链接",
+      "exportDocument": "导出文档",
+      "importDocument": "导入文档",
+      "pin": "置顶文档"
+    },
+    "saving": "保存中...",
+    "titlePlaceholder": "无标题",
+    "wordCount": "{{wordCount}} 字"
+  },
+  "documentList": {
+    "copyContent": "复制全文",
+    "duplicate": "创建副本",
+    "empty": "暂无文稿，点击上方按钮创建你的第一篇文稿",
+    "noResults": "未找到匹配的文稿",
+    "pageCount": "共 {{count}} 个文稿",
+    "selectNote": "选择一个文稿开始编辑",
+    "untitled": "无标题"
+  },
   "empty": "暂无已上传文件/文件夹",
   "header": {
     "actions": {
       "newFolder": "新建文件夹",
+      "newPage": "新建文稿",
       "uploadFile": "上传文件",
       "uploadFolder": "上传文件夹"
     },
+    "newNoteDialog": {
+      "cancel": "取消",
+      "editTitle": "编辑文档",
+      "emptyContent": "文档内容不能为空",
+      "loadError": "加载文档失败,请重试",
+      "loading": "加载中...",
+      "save": "保存",
+      "saveError": "保存文档失败,请重试",
+      "saveSuccess": "文档保存成功",
+      "title": "新建文档",
+      "updateSuccess": "文档更新成功"
+    },
+    "newPageButton": "新建文稿",
     "uploadButton": "上传"
+  },
+  "home": {
+    "getStarted": "开始使用",
+    "greeting": "开始",
+    "quickActions": "快捷操作",
+    "recentFiles": "最近文件",
+    "recentPages": "最近文稿",
+    "subtitle": "欢迎使用知识库，从这里开始管理你的文档和文档",
+    "uploadEntries": {
+      "files": {
+        "title": "上传文件"
+      },
+      "folder": {
+        "title": "上传文件夹"
+      },
+      "knowledgeBase": {
+        "title": "新建知识库"
+      },
+      "newPage": {
+        "title": "新建文稿"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "新建知识库",
     "title": "知识库"
+  },
+  "menu": {
+    "allFiles": "全部文件",
+    "allPages": "全部文稿"
   },
   "networkError": "获取知识库失败，请检测网络连接后重试",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "此文件格式暂不支持在线预览，如有预览诉求，欢迎<1>反馈给我们</1>"
   },
   "searchFilePlaceholder": "搜索文件",
+  "searchPagePlaceholder": "搜索文稿",
   "tab": {
-    "all": "全部文件",
+    "all": "全部",
     "audios": "语音",
     "documents": "文档",
+    "home": "首页",
     "images": "图片",
+    "moreTypes": "更多类型",
+    "pages": "文稿",
     "videos": "视频",
     "websites": "网页"
   },
   "title": "知识库",
-  "toggleLeftPanel": {
-    "title": "显示/隐藏左侧面板"
-  },
+  "toggleLeftPanel": "显示/隐藏左侧面板",
   "uploadDock": {
     "body": {
       "collapse": "收起",

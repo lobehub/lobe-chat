@@ -1,5 +1,8 @@
 {
-  "desc": "Gerencie seu conhecimento",
+  "addFolder": "Criar pasta",
+  "addKnowledge": "Adicionar conhecimento",
+  "addPage": "Criar documento",
+  "desc": "Gerencie seus conhecimentos de trabalho, estudo e vida.",
   "detail": {
     "basic": {
       "createdAt": "Data de criação",
@@ -21,14 +24,88 @@
       "embeddingStatus": "Vetorização"
     }
   },
+  "documentEditor": {
+    "addIcon": "Adicionar ícone",
+    "autoSaveMessage": "O documento é salvo automaticamente, não é necessário salvar manualmente",
+    "chooseIcon": "Escolher ícone",
+    "deleteConfirm": {
+      "content": "Este documento será excluído permanentemente e não poderá ser recuperado. Por favor, tenha cuidado.",
+      "title": "Excluir documento"
+    },
+    "deleteError": "Falha ao excluir o documento",
+    "deleteSuccess": "Documento excluído com sucesso",
+    "editedAt": "Última edição em {{time}}",
+    "editedBy": "Última edição por {{name}}",
+    "editorPlaceholder": "Digite o conteúdo do documento, pressione / para abrir o menu de comandos",
+    "empty": {
+      "createNewDocument": "Criar novo documento",
+      "title": "Selecione um documento para começar",
+      "uploadMarkdown": "Carregar arquivo Markdown"
+    },
+    "linkCopied": "Link copiado",
+    "menu": {
+      "copyLink": "Copiar link",
+      "exportDocument": "Exportar documento",
+      "importDocument": "Importar documento",
+      "pin": "Fixar documento"
+    },
+    "saving": "Salvando...",
+    "titlePlaceholder": "Sem título",
+    "wordCount": "{{wordCount}} palavras"
+  },
+  "documentList": {
+    "copyContent": "Copiar conteúdo completo",
+    "duplicate": "Criar uma cópia",
+    "empty": "Nenhum documento ainda. Clique no botão acima para criar seu primeiro.",
+    "noResults": "Nenhum documento correspondente encontrado",
+    "pageCount": "Total de {{count}} documentos",
+    "selectNote": "Selecione um documento para começar a editar",
+    "untitled": "Sem título"
+  },
   "empty": "Nenhum arquivo/pasta enviado até o momento",
   "header": {
     "actions": {
       "newFolder": "Nova pasta",
+      "newPage": "Novo documento",
       "uploadFile": "Enviar arquivo",
       "uploadFolder": "Enviar pasta"
     },
+    "newNoteDialog": {
+      "cancel": "Cancelar",
+      "editTitle": "Editar documento",
+      "emptyContent": "O conteúdo do documento não pode estar vazio",
+      "loadError": "Falha ao carregar o documento, tente novamente",
+      "loading": "Carregando...",
+      "save": "Salvar",
+      "saveError": "Falha ao salvar o documento, tente novamente",
+      "saveSuccess": "Documento salvo com sucesso",
+      "title": "Novo documento",
+      "updateSuccess": "Documento atualizado com sucesso"
+    },
+    "newPageButton": "Novo Documento",
     "uploadButton": "Enviar"
+  },
+  "home": {
+    "getStarted": "Começar",
+    "greeting": "Início",
+    "quickActions": "Ações Rápidas",
+    "recentFiles": "Arquivos Recentes",
+    "recentPages": "Documentos Recentes",
+    "subtitle": "Bem-vindo ao seu repositório de conhecimento. Comece a gerenciar seus documentos aqui",
+    "uploadEntries": {
+      "files": {
+        "title": "Enviar Arquivos"
+      },
+      "folder": {
+        "title": "Enviar Pasta"
+      },
+      "knowledgeBase": {
+        "title": "Nova Base de Conhecimento"
+      },
+      "newPage": {
+        "title": "Novo Documento"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "Novo repositório de conhecimento",
     "title": "Repositório de conhecimento"
+  },
+  "menu": {
+    "allFiles": "Todos os arquivos",
+    "allPages": "Todos os Documentos"
   },
   "networkError": "Falha ao acessar a base de conhecimento, por favor verifique a conexão de rede e tente novamente",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "Este formato de arquivo não é suportado para visualização online. Se você tiver interesse em visualizar, sinta-se à vontade para <1>nos enviar um feedback</1>."
   },
   "searchFilePlaceholder": "Pesquisar arquivo",
+  "searchPagePlaceholder": "Buscar documentos",
   "tab": {
-    "all": "Todos os arquivos",
+    "all": "Todos",
     "audios": "Áudios",
     "documents": "Documentos",
+    "home": "Início",
     "images": "Imagens",
+    "moreTypes": "Mais Tipos",
+    "pages": "Documentos",
     "videos": "Vídeos",
     "websites": "Sites"
   },
   "title": "Base de Conhecimento",
-  "toggleLeftPanel": {
-    "title": "Mostrar/Ocultar painel esquerdo"
-  },
+  "toggleLeftPanel": "Mostrar/Ocultar painel esquerdo",
   "uploadDock": {
     "body": {
       "collapse": "Recolher",

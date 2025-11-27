@@ -44,13 +44,13 @@ describe('ChatPluginAction', () => {
         content: 'Tool content to summarize',
       } as UIChatMessage;
 
-      const internal_coreProcessMessageMock = vi.fn();
+      const internal_execAgentRuntimeMock = vi.fn();
 
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
           messagesMap: { [messageMapKey('session-id')]: [toolMessage] },
-          internal_coreProcessMessage: internal_coreProcessMessageMock,
+          internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
       });
 
@@ -60,27 +60,30 @@ describe('ChatPluginAction', () => {
         await result.current.summaryPluginContent(messageId);
       });
 
-      expect(internal_coreProcessMessageMock).toHaveBeenCalledWith(
-        [
-          {
-            role: 'assistant',
-            content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
-          },
-          {
-            ...toolMessage,
-            meta: {
-              avatar: DEFAULT_INBOX_AVATAR,
-              backgroundColor: 'rgba(0,0,0,0)',
-              description: undefined,
-              title: undefined,
+      expect(internal_execAgentRuntimeMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          messages: [
+            {
+              role: 'assistant',
+              content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
             },
-            content: toolMessage.content,
-            role: 'assistant',
-            name: undefined,
-            tool_call_id: undefined,
-          },
-        ],
-        messageId,
+            {
+              ...toolMessage,
+              meta: {
+                avatar: DEFAULT_INBOX_AVATAR,
+                backgroundColor: 'rgba(0,0,0,0)',
+                description: undefined,
+                title: undefined,
+              },
+              content: toolMessage.content,
+              role: 'assistant',
+              name: undefined,
+              tool_call_id: undefined,
+            },
+          ],
+          parentMessageId: messageId,
+          parentMessageType: 'assistant',
+        }),
       );
     });
 
@@ -92,13 +95,13 @@ describe('ChatPluginAction', () => {
         content: 'User message',
       } as UIChatMessage;
 
-      const internal_coreProcessMessageMock = vi.fn();
+      const internal_execAgentRuntimeMock = vi.fn();
 
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
           messagesMap: { [messageMapKey('session-id')]: [nonToolMessage] },
-          internal_coreProcessMessage: internal_coreProcessMessageMock,
+          internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
       });
 
@@ -108,42 +111,7 @@ describe('ChatPluginAction', () => {
         await result.current.summaryPluginContent(messageId);
       });
 
-      expect(internal_coreProcessMessageMock).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('internal_togglePluginApiCalling', () => {
-    it('should toggle plugin API calling state', () => {
-      const internal_toggleLoadingArraysMock = vi.fn();
-
-      act(() => {
-        useChatStore.setState({
-          internal_toggleLoadingArrays: internal_toggleLoadingArraysMock,
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      const messageId = 'message-id';
-      const action = 'test-action';
-
-      result.current.internal_togglePluginApiCalling(true, messageId, action);
-
-      expect(internal_toggleLoadingArraysMock).toHaveBeenCalledWith(
-        'pluginApiLoadingIds',
-        true,
-        messageId,
-        action,
-      );
-
-      result.current.internal_togglePluginApiCalling(false, messageId, action);
-
-      expect(internal_toggleLoadingArraysMock).toHaveBeenCalledWith(
-        'pluginApiLoadingIds',
-        false,
-        messageId,
-        action,
-      );
+      expect(internal_execAgentRuntimeMock).not.toHaveBeenCalled();
     });
   });
 
@@ -156,8 +124,9 @@ describe('ChatPluginAction', () => {
       // 设置初始状态
       const initialState = {
         messages: [],
-        internal_coreProcessMessage: vi.fn(),
+        internal_execAgentRuntime: vi.fn(),
         refreshMessages: vi.fn(),
+        optimisticUpdateMessageContent: vi.fn(),
       };
       useChatStore.setState(initialState);
 
@@ -170,21 +139,19 @@ describe('ChatPluginAction', () => {
         await result.current.fillPluginMessageContent(messageId, newContent, true);
       });
 
-      // 验证 messageService.internal_updateMessageContent 是否被正确调用
-      expect(messageService.updateMessage).toHaveBeenCalledWith(
+      // 验证 optimisticUpdateMessageContent 是否被正确调用
+      expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
-        { content: newContent },
-        { sessionId: 'inbox', topicId: null },
+        newContent,
       );
 
-      // 验证 refreshMessages 是否被调用
-      expect(result.current.refreshMessages).toHaveBeenCalled();
-
       // 验证 coreProcessMessage 是否被正确调用
-      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
-        mockCurrentChats,
-        messageId,
-        {},
+      expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
+        expect.objectContaining({
+          messages: mockCurrentChats,
+          parentMessageId: messageId,
+          parentMessageType: 'user',
+        }),
       );
     });
     it('should update message content and not trigger ai message', async () => {
@@ -196,8 +163,9 @@ describe('ChatPluginAction', () => {
       const initialState = {
         messages: [],
         coreProcessMessage: vi.fn(),
-        internal_coreProcessMessage: vi.fn(),
+        internal_execAgentRuntime: vi.fn(),
         refreshMessages: vi.fn(),
+        optimisticUpdateMessageContent: vi.fn(),
       };
       useChatStore.setState(initialState);
 
@@ -210,18 +178,14 @@ describe('ChatPluginAction', () => {
         await result.current.fillPluginMessageContent(messageId, newContent);
       });
 
-      // 验证 messageService.internal_updateMessageContent 是否被正确调用
-      expect(messageService.updateMessage).toHaveBeenCalledWith(
+      // 验证 optimisticUpdateMessageContent 是否被正确调用
+      expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
-        { content: newContent },
-        { sessionId: 'inbox', topicId: null },
+        newContent,
       );
 
-      // 验证 refreshMessages 是否被调用
-      expect(result.current.refreshMessages).toHaveBeenCalled();
-
       // 验证 coreProcessMessage 没有被正确调用
-      expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+      expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
     });
   });
 
@@ -235,7 +199,7 @@ describe('ChatPluginAction', () => {
 
       vi.spyOn(storeState, 'refreshMessages');
       vi.spyOn(storeState, 'triggerAIMessage').mockResolvedValue(undefined);
-      vi.spyOn(storeState, 'internal_togglePluginApiCalling').mockReturnValue(undefined);
+      vi.spyOn(storeState, 'optimisticUpdateMessageContent').mockResolvedValue();
 
       const runSpy = vi.spyOn(chatService, 'runPluginApi').mockResolvedValue({
         text: pluginApiResponse,
@@ -248,22 +212,12 @@ describe('ChatPluginAction', () => {
         await result.current.invokeDefaultTypePlugin(messageId, pluginPayload);
       });
 
-      expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
-        true,
-        messageId,
-        expect.any(String),
-      );
       expect(runSpy).toHaveBeenCalledWith(pluginPayload, { signal: undefined, trace: {} });
-      expect(messageService.updateMessage).toHaveBeenCalledWith(
+      expect(storeState.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
-        { content: pluginApiResponse },
-        { sessionId: 'inbox', topicId: null },
-      );
-      expect(storeState.refreshMessages).toHaveBeenCalled();
-      expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
-        false,
-        'message-id',
-        'plugin/fetchPlugin/end',
+        pluginApiResponse,
+        undefined,
+        undefined,
       );
     });
 
@@ -282,7 +236,6 @@ describe('ChatPluginAction', () => {
       const storeState = useChatStore.getState();
       const replaceMessagesSpy = vi.spyOn(storeState, 'replaceMessages');
       vi.spyOn(storeState, 'triggerAIMessage').mockResolvedValue(undefined);
-      vi.spyOn(storeState, 'internal_togglePluginApiCalling').mockReturnValue(undefined);
 
       vi.spyOn(chatService, 'runPluginApi').mockRejectedValue(error);
 
@@ -291,237 +244,16 @@ describe('ChatPluginAction', () => {
         await result.current.invokeDefaultTypePlugin(messageId, pluginPayload);
       });
 
-      expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
-        true,
-        messageId,
-        expect.any(String),
-      );
       expect(chatService.runPluginApi).toHaveBeenCalledWith(pluginPayload, { trace: {} });
-      expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error);
-      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
-      expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
-        false,
-        'message-id',
-        'plugin/fetchPlugin/end',
-      );
+      expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error, {
+        sessionId: undefined,
+        topicId: undefined,
+      });
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
+        sessionId: undefined,
+        topicId: undefined,
+      });
       expect(storeState.triggerAIMessage).not.toHaveBeenCalled(); // 确保在错误情况下不调用此方法
-    });
-  });
-
-  describe('triggerToolCalls', () => {
-    it('should trigger tool calls for the assistant message', async () => {
-      const assistantId = 'assistant-id';
-      const message = {
-        id: assistantId,
-        role: 'assistant',
-        content: 'Assistant message',
-        tools: [
-          {
-            id: 'tool1',
-            type: 'standalone',
-            identifier: 'plugin1',
-            apiName: 'api1',
-            arguments: '{}',
-          },
-          {
-            id: 'tool2',
-            type: 'markdown',
-            identifier: 'plugin2',
-            apiName: 'api2',
-            arguments: '{}',
-          },
-          {
-            id: 'tool3',
-            type: 'builtin',
-            identifier: 'builtin1',
-            apiName: 'api3',
-            arguments: '{}',
-          },
-          {
-            id: 'tool4',
-            type: 'default',
-            identifier: 'plugin3',
-            apiName: 'api4',
-            arguments: '{}',
-          },
-        ],
-      } as UIChatMessage;
-
-      const invokeStandaloneTypePluginMock = vi.fn();
-      const invokeMarkdownTypePluginMock = vi.fn();
-      const invokeBuiltinToolMock = vi.fn();
-      const invokeDefaultTypePluginMock = vi.fn().mockResolvedValue('Default tool response');
-      const triggerAIMessageMock = vi.fn();
-      const internal_createMessageMock = vi
-        .fn()
-        .mockResolvedValue({ id: 'tool-message-id', messages: [] });
-      const getTraceIdByMessageIdMock = vi.fn().mockReturnValue('trace-id');
-
-      act(() => {
-        useChatStore.setState({
-          messagesMap: {
-            [messageMapKey('session-id', 'topic-id')]: [message],
-          },
-          invokeStandaloneTypePlugin: invokeStandaloneTypePluginMock,
-          invokeMarkdownTypePlugin: invokeMarkdownTypePluginMock,
-          invokeBuiltinTool: invokeBuiltinToolMock,
-          invokeDefaultTypePlugin: invokeDefaultTypePluginMock,
-          triggerAIMessage: triggerAIMessageMock,
-          internal_createMessage: internal_createMessageMock,
-          activeId: 'session-id',
-          activeTopicId: 'topic-id',
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.triggerToolCalls(assistantId);
-      });
-
-      // Verify that tool messages were created for each tool call
-      expect(internal_createMessageMock).toHaveBeenCalledTimes(4);
-      expect(internal_createMessageMock).toHaveBeenNthCalledWith(1, {
-        content: '',
-        parentId: assistantId,
-        plugin: message.tools![0],
-        role: 'tool',
-        sessionId: 'session-id',
-        tool_call_id: 'tool1',
-        topicId: 'topic-id',
-        threadId: undefined,
-        groupId: undefined,
-      });
-      expect(internal_createMessageMock).toHaveBeenNthCalledWith(2, {
-        content: '',
-        parentId: assistantId,
-        plugin: message.tools![1],
-        role: 'tool',
-        sessionId: 'session-id',
-        tool_call_id: 'tool2',
-        topicId: 'topic-id',
-        threadId: undefined,
-        groupId: undefined,
-      });
-      expect(internal_createMessageMock).toHaveBeenNthCalledWith(3, {
-        content: '',
-        parentId: assistantId,
-        plugin: message.tools![2],
-        role: 'tool',
-        sessionId: 'session-id',
-        tool_call_id: 'tool3',
-        topicId: 'topic-id',
-        threadId: undefined,
-        groupId: undefined,
-      });
-      expect(internal_createMessageMock).toHaveBeenNthCalledWith(4, {
-        content: '',
-        parentId: assistantId,
-        plugin: message.tools![3],
-        role: 'tool',
-        sessionId: 'session-id',
-        tool_call_id: 'tool4',
-        topicId: 'topic-id',
-        threadId: undefined,
-        groupId: undefined,
-      });
-
-      // Verify that the appropriate plugin types were invoked
-      expect(invokeStandaloneTypePluginMock).toHaveBeenCalledWith(
-        'tool-message-id',
-        message.tools![0],
-      );
-      expect(invokeMarkdownTypePluginMock).toHaveBeenCalledWith(
-        'tool-message-id',
-        message.tools![1],
-      );
-      expect(invokeBuiltinToolMock).toHaveBeenCalledWith('tool-message-id', message.tools![2]);
-      expect(invokeDefaultTypePluginMock).toHaveBeenCalledWith(
-        'tool-message-id',
-        message.tools![3],
-      );
-
-      // Verify that AI message was triggered for default type tool call
-      // expect(getTraceIdByMessageIdMock).toHaveBeenCalledWith('tool-message-id');
-      // expect(triggerAIMessageMock).toHaveBeenCalledWith({ traceId: 'trace-id' });
-    });
-
-    it('should not trigger AI message if no default type tool calls', async () => {
-      const assistantId = 'assistant-id';
-      const message = {
-        id: assistantId,
-        role: 'assistant',
-        content: 'Assistant message',
-        tools: [
-          {
-            id: 'tool1',
-            type: 'standalone',
-            identifier: 'plugin1',
-            apiName: 'api1',
-            arguments: '{}',
-          },
-          {
-            id: 'tool2',
-            type: 'markdown',
-            identifier: 'plugin2',
-            apiName: 'api2',
-            arguments: '{}',
-          },
-          {
-            id: 'tool3',
-            type: 'builtin',
-            identifier: 'builtin1',
-            apiName: 'api3',
-            arguments: '{}',
-          },
-        ],
-      } as UIChatMessage;
-
-      const invokeStandaloneTypePluginMock = vi.fn();
-      const invokeMarkdownTypePluginMock = vi.fn();
-      const invokeBuiltinToolMock = vi.fn();
-      const triggerAIMessageMock = vi.fn();
-      const internal_createMessageMock = vi
-        .fn()
-        .mockResolvedValue({ id: 'tool-message-id', messages: [] });
-
-      act(() => {
-        useChatStore.setState({
-          invokeStandaloneTypePlugin: invokeStandaloneTypePluginMock,
-          invokeMarkdownTypePlugin: invokeMarkdownTypePluginMock,
-          invokeBuiltinTool: invokeBuiltinToolMock,
-          triggerAIMessage: triggerAIMessageMock,
-          internal_createMessage: internal_createMessageMock,
-          activeId: 'session-id',
-          messagesMap: {
-            [messageMapKey('session-id', 'topic-id')]: [message],
-          },
-          activeTopicId: 'topic-id',
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.triggerToolCalls(assistantId);
-      });
-
-      // Verify that tool messages were created for each tool call
-      expect(internal_createMessageMock).toHaveBeenCalledTimes(3);
-
-      // Verify that the appropriate plugin types were invoked
-      expect(invokeStandaloneTypePluginMock).toHaveBeenCalledWith(
-        'tool-message-id',
-        message.tools![0],
-      );
-      expect(invokeMarkdownTypePluginMock).toHaveBeenCalledWith(
-        'tool-message-id',
-        message.tools![1],
-      );
-      expect(invokeBuiltinToolMock).toHaveBeenCalledWith('tool-message-id', message.tools![2]);
-
-      // Verify that AI message was not triggered
-      expect(triggerAIMessageMock).not.toHaveBeenCalled();
     });
   });
 
@@ -546,7 +278,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.updatePluginState(messageId, pluginStateValue);
+        await result.current.optimisticUpdatePluginState(messageId, pluginStateValue);
       });
 
       expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
@@ -558,7 +290,10 @@ describe('ChatPluginAction', () => {
         },
       );
 
-      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
+        sessionId: 'inbox',
+        topicId: null,
+      });
     });
   });
 
@@ -598,7 +333,10 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 replaceMessages 是否被调用
-      expect(result.current.replaceMessages).toHaveBeenCalledWith(mockMessages);
+      expect(result.current.replaceMessages).toHaveBeenCalledWith(mockMessages, {
+        sessionId: 'session-id',
+        topicId: 'topic-id',
+      });
     });
 
     it('should handle errors when message creation fails', async () => {
@@ -775,7 +513,10 @@ describe('ChatPluginAction', () => {
         type: 'PluginSettingsInvalid',
       });
 
-      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
+        sessionId: undefined,
+        topicId: undefined,
+      });
     });
   });
 
@@ -801,7 +542,7 @@ describe('ChatPluginAction', () => {
           activeId: 'session-id',
           messagesMap: { [messageMapKey('session-id')]: [message] },
           internal_invokeDifferentTypePlugin: internal_invokeDifferentTypePluginMock,
-          internal_updateMessageError: vi.fn(),
+          optimisticUpdateMessagePluginError: vi.fn(),
         });
       });
 
@@ -840,7 +581,7 @@ describe('ChatPluginAction', () => {
           activeId: 'session-id',
           messagesMap: { [messageMapKey('session-id')]: [message] },
           internal_invokeDifferentTypePlugin: vi.fn(),
-          internal_updateMessagePluginError: internal_updateMessageErrorMock,
+          optimisticUpdateMessagePluginError: internal_updateMessageErrorMock,
         });
       });
 
@@ -850,7 +591,7 @@ describe('ChatPluginAction', () => {
         await result.current.reInvokeToolMessage(messageId);
       });
 
-      expect(internal_updateMessageErrorMock).toHaveBeenCalledWith(messageId, null);
+      expect(internal_updateMessageErrorMock).toHaveBeenCalledWith(messageId, null, undefined);
     });
   });
 
@@ -889,7 +630,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.updatePluginArguments(messageId, newArguments);
+        await result.current.optimisticUpdatePluginArguments(messageId, newArguments);
       });
 
       expect(messageService.updateMessagePluginArguments).toHaveBeenCalledWith(
@@ -924,8 +665,7 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useChatStore.setState({
-          internal_togglePluginApiCalling: vi.fn(),
-          internal_updateMessageContent: vi.fn(),
+          optimisticUpdateMessageContent: vi.fn(),
           refreshMessages: vi.fn(),
         });
       });
@@ -937,9 +677,11 @@ describe('ChatPluginAction', () => {
       });
 
       expect(chatService.runPluginApi).toHaveBeenCalledWith(payload, expect.any(Object));
-      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+      expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         apiResponse,
+        undefined,
+        undefined,
       );
       expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { traceId: 'trace-id' });
     });
@@ -968,7 +710,6 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useChatStore.setState({
-          internal_togglePluginApiCalling: vi.fn(),
           replaceMessages: replaceMessagesSpy,
         });
       });
@@ -979,8 +720,14 @@ describe('ChatPluginAction', () => {
         await result.current.internal_callPluginApi(messageId, payload);
       });
 
-      expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error);
-      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+      expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error, {
+        sessionId: undefined,
+        topicId: undefined,
+      });
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
+        sessionId: undefined,
+        topicId: undefined,
+      });
     });
   });
 
@@ -1105,7 +852,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.internal_updatePluginError(messageId, error);
+        await result.current.optimisticUpdatePluginError(messageId, error);
       });
 
       expect(messageService.updateMessage).toHaveBeenCalledWith(
@@ -1113,7 +860,10 @@ describe('ChatPluginAction', () => {
         { error },
         { sessionId: 'inbox', topicId: null },
       );
-      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
+        sessionId: 'inbox',
+        topicId: null,
+      });
     });
   });
 
@@ -1146,7 +896,7 @@ describe('ChatPluginAction', () => {
       });
 
       await act(async () => {
-        await result.current.internal_addToolToAssistantMessage(messageId, {
+        await result.current.optimisticAddToolToAssistantMessage(messageId, {
           identifier,
           arguments: '{"oldKey":"oldValue"}',
           id: 'newId',
@@ -1155,7 +905,166 @@ describe('ChatPluginAction', () => {
         });
       });
 
-      expect(refreshToUpdateMessageToolsSpy).toHaveBeenCalledWith(messageId);
+      expect(refreshToUpdateMessageToolsSpy).toHaveBeenCalledWith(messageId, undefined);
+    });
+  });
+
+  describe('Plugin OptimisticUpdateContext isolation', () => {
+    describe('optimisticUpdatePluginState', () => {
+      it('should use context sessionId/topicId when provided', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const pluginState = { key: 'value' };
+        const contextSessionId = 'context-session';
+        const contextTopicId = 'context-topic';
+
+        (messageService.updateMessagePluginState as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
+
+        let operationId: string;
+        await act(async () => {
+          // Create operation with desired context
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: { sessionId: contextSessionId, topicId: contextTopicId },
+          });
+          operationId = op.operationId;
+
+          await result.current.optimisticUpdatePluginState(messageId, pluginState, {
+            operationId,
+          });
+        });
+
+        expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
+          messageId,
+          pluginState,
+          { sessionId: contextSessionId, topicId: contextTopicId },
+        );
+        expect(replaceMessagesSpy).toHaveBeenCalledWith([], {
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        });
+      });
+
+      it('should fallback to activeId/activeTopicId when context not provided', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const pluginState = { key: 'value' };
+
+        act(() => {
+          useChatStore.setState({
+            activeId: 'active-session',
+            activeTopicId: 'active-topic',
+          });
+        });
+
+        (messageService.updateMessagePluginState as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        await act(async () => {
+          await result.current.optimisticUpdatePluginState(messageId, pluginState);
+        });
+
+        expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
+          messageId,
+          pluginState,
+          { sessionId: 'active-session', topicId: 'active-topic' },
+        );
+      });
+    });
+
+    describe('optimisticUpdatePluginError', () => {
+      it('should use context sessionId/topicId when provided', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const error = { message: 'Plugin error', type: 'error' as any };
+        const contextSessionId = 'context-session';
+        const contextTopicId = 'context-topic';
+
+        (messageService.updateMessage as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        let operationId: string;
+        await act(async () => {
+          // Create operation with desired context
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: { sessionId: contextSessionId, topicId: contextTopicId },
+          });
+          operationId = op.operationId;
+
+          await result.current.optimisticUpdatePluginError(messageId, error, {
+            operationId,
+          });
+        });
+
+        expect(messageService.updateMessage).toHaveBeenCalledWith(
+          messageId,
+          { error },
+          { sessionId: contextSessionId, topicId: contextTopicId },
+        );
+      });
+    });
+
+    describe('internal_refreshToUpdateMessageTools', () => {
+      it('should use context sessionId/topicId when provided', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const contextSessionId = 'context-session';
+        const contextTopicId = 'context-topic';
+
+        const message = {
+          id: messageId,
+          role: 'assistant',
+          content: 'test',
+          tools: [{ id: 'tool-1', identifier: 'test', apiName: 'test', arguments: '{}' }],
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        } as any;
+
+        // Set up both dbMessagesMap and messagesMap
+        const key = messageMapKey(contextSessionId, contextTopicId);
+        let operationId: string;
+        act(() => {
+          // Create operation with desired context
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: { sessionId: contextSessionId, topicId: contextTopicId },
+          });
+          operationId = op.operationId;
+
+          useChatStore.setState({
+            dbMessagesMap: {
+              [key]: [message],
+            },
+            messagesMap: {
+              [key]: [message],
+            },
+            activeId: contextSessionId,
+            activeTopicId: contextTopicId,
+          });
+        });
+
+        await act(async () => {
+          await result.current.internal_refreshToUpdateMessageTools(messageId, {
+            operationId,
+          });
+        });
+
+        expect(messageService.updateMessage).toHaveBeenCalledWith(
+          messageId,
+          { tools: message.tools },
+          { sessionId: contextSessionId, topicId: contextTopicId },
+        );
+      });
     });
   });
 });

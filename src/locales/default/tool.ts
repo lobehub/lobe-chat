@@ -1,12 +1,12 @@
 export default {
-  codeInterpreter: {
+  'codeInterpreter': {
     error: '执行错误',
     executing: '执行中...',
     files: '文件：',
     output: '输出：',
     returnValue: '返回值：',
   },
-  dalle: {
+  'dalle': {
     autoGenerate: '自动生成',
     downloading: 'DallE3 生成的图片链接有效期仅1小时，正在缓存图片到本地...',
     generate: '生成',
@@ -14,9 +14,31 @@ export default {
     images: '图片:',
     prompt: '提示词',
   },
-  localFiles: {
+  'lobe-knowledge-base': {
+    readKnowledge: {
+      meta: {
+        chars: '字符数',
+        lines: '行数',
+      },
+    },
+  },
+  'localFiles': {
+    editFile: {
+      newString: '替换为',
+      oldString: '查找内容',
+      replaceAll: '替换全部匹配项',
+      replaceFirst: '仅替换第一个匹配项',
+    },
     file: '文件',
     folder: '文件夹',
+    moveFiles: {
+      itemsMoved: '已移动 {{count}} 个项目：',
+      itemsMoved_one: '已移动 {{count}} 个项目：',
+      itemsMoved_other: '已移动 {{count}} 个项目：',
+      itemsToMove: '{{count}} 个项目待移动：',
+      itemsToMove_one: '{{count}} 个项目待移动：',
+      itemsToMove_other: '{{count}} 个项目待移动：',
+    },
     open: '打开',
     openFile: '打开文件',
     openFolder: '打开文件夹',
@@ -27,8 +49,13 @@ export default {
     readFileError: '读取文件失败，请检查文件路径是否正确',
     readFiles: '读取文件',
     readFilesError: '读取文件失败，请检查文件路径是否正确',
+    writeFile: {
+      characters: '字符',
+      preview: '内容预览',
+      truncated: '已截断',
+    },
   },
-  search: {
+  'search': {
     createNewSearch: '创建新的搜索记录',
     emptyResult: '没有搜索到结果，请修改关键词后重试',
     genAiMessage: '创建助手消息',
@@ -75,7 +102,7 @@ export default {
     summaryTooltip: '总结当前内容',
     viewMoreResults: '查看更多 {{results}} 个结果',
   },
-  updateArgs: {
+  'updateArgs': {
     duplicateKeyError: '字段键必须唯一',
     form: {
       add: '添加一项',

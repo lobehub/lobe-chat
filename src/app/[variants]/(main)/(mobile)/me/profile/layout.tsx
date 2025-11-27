@@ -1,13 +1,11 @@
-import { PropsWithChildren } from 'react';
+import MobileContentLayout from "@/components/server/MobileNavLayout";
+import { Outlet } from "react-router-dom";
+import Header from "./features/Header";
 
-import MobileContentLayout from '@/components/server/MobileNavLayout';
-
-import Header from './features/Header';
-
-const Layout = ({ children }: PropsWithChildren) => {
-  return <MobileContentLayout header={<Header />}>{children}</MobileContentLayout>;
-};
-
-Layout.displayName = 'MeProfileLayout';
+const Layout = () => {
+    return <MobileContentLayout header={<Header />}>
+        <Outlet />
+    </MobileContentLayout>
+}
 
 export default Layout;

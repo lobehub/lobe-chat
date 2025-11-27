@@ -14,9 +14,31 @@
     "images": "Изображения:",
     "prompt": "подсказка"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Брой знаци",
+        "lines": "Брой редове"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "Замени с",
+      "oldString": "Търсене на съдържание",
+      "replaceAll": "Замени всички съвпадения",
+      "replaceFirst": "Замени само първото съвпадение"
+    },
     "file": "Файл",
     "folder": "Папка",
+    "moveFiles": {
+      "itemsMoved": "Преместени {{count}} елемента:",
+      "itemsMoved_one": "Преместен {{count}} елемент:",
+      "itemsMoved_other": "Преместени {{count}} елемента:",
+      "itemsToMove": "{{count}} елемента за преместване:",
+      "itemsToMove_one": "{{count}} елемент за преместване:",
+      "itemsToMove_other": "{{count}} елемента за преместване:"
+    },
     "open": "Отвори",
     "openFile": "Отвори файл",
     "openFolder": "Отвори папка",
@@ -26,7 +48,12 @@
     "readFile": "Прочети файл",
     "readFileError": "Неуспешно четене на файла, моля, проверете дали пътят към файла е правилен",
     "readFiles": "Прочети файлове",
-    "readFilesError": "Неуспешно четене на файловете, моля, проверете дали пътят към файловете е правилен"
+    "readFilesError": "Неуспешно четене на файловете, моля, проверете дали пътят към файловете е правилен",
+    "writeFile": {
+      "characters": "Знаци",
+      "preview": "Преглед на съдържанието",
+      "truncated": "Съкратено"
+    }
   },
   "search": {
     "createNewSearch": "Създаване на нова търсене",

@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Чтение содержимого базы знаний",
+        "searchKnowledgeBase": "Поиск в базе знаний"
+      },
+      "title": "База знаний"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Редактировать файл",
+        "getCommandOutput": "Получить вывод команды",
+        "globLocalFiles": "Поиск файлов по шаблону",
+        "grepContent": "Поиск по содержимому",
+        "killCommand": "Остановить выполнение кода",
+        "listLocalFiles": "Просмотр списка файлов",
+        "moveLocalFiles": "Переместить файлы",
+        "readLocalFile": "Чтение содержимого файла",
+        "renameLocalFile": "Переименовать",
+        "runCommand": "Выполнить код",
+        "searchLocalFiles": "Поиск файлов",
+        "writeLocalFile": "Запись в файл"
+      },
+      "title": "Локальная система"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Чтение содержимого нескольких страниц",
+        "crawlSinglePage": "Чтение содержимого страницы",
+        "search": "Поиск по страницам"
+      },
+      "title": "Поиск в интернете"
+    }
+  },
   "confirm": "Подтвердить",
   "debug": {
     "arguments": "Аргументы вызова",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "Просмотр списка параметров",
+    "delete": "Удалить вызов инструмента",
+    "orphanedToolCall": "Этот вызов инструмента, возможно, стал изолированным из-за непредвиденных обстоятельств, что может повлиять на корректную работу агента. Пожалуйста, удалите его.",
     "pluginRender": "Просмотр интерфейса плагина"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "Вызов плагина...",
     "plugin": "Плагин работает..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "Просмотр списка файлов",
-      "moveLocalFiles": "Перемещение файлов",
-      "readLocalFile": "Чтение содержимого файла",
-      "renameLocalFile": "Переименование",
-      "searchLocalFiles": "Поиск файлов",
-      "writeLocalFile": "Запись в файл"
-    },
-    "title": "Локальные файлы"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Проверка среды установки...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ Пожалуйста, убедитесь, что вы доверяете источнику этого плагина, вредоносные плагины могут угрожать безопасности вашей системы."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Чтение содержимого нескольких страниц",
-      "crawlSinglePage": "Чтение содержимого страницы",
-      "search": "Поиск по странице"
-    },
     "config": {
       "addKey": "Добавить ключ",
       "close": "Удалить",

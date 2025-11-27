@@ -18,6 +18,7 @@ export default {
   availableAgents: '可用助手',
   backToBottom: '跳转至当前',
   chatList: {
+    expandMessage: '展开消息',
     longMessageDetail: '查看详情',
   },
   clearCurrentMessages: '清空当前会话消息',
@@ -53,6 +54,12 @@ export default {
       desc: '基于 Claude Thinking 机制限制（<1>了解更多</1>），开启后将自动禁用历史消息数限制',
       title: '开启深度思考',
     },
+    imageAspectRatio: {
+      title: '图片宽高比',
+    },
+    imageResolution: {
+      title: '图片分辨率',
+    },
     reasoningBudgetToken: {
       title: '思考消耗 Token',
     },
@@ -64,6 +71,9 @@ export default {
     },
     thinking: {
       title: '深度思考开关',
+    },
+    thinkingLevel: {
+      title: '思考水平',
     },
     title: '模型扩展功能',
     urlContext: {
@@ -188,8 +198,11 @@ export default {
   },
 
   messageAction: {
+    collapse: '收起消息',
+    continueGeneration: '继续生成',
     delAndRegenerate: '删除并重新生成',
     deleteDisabledByThreads: '存在子话题，不能删除',
+    expand: '展开消息',
     regenerate: '重新生成',
   },
 
@@ -264,6 +277,8 @@ export default {
   noMembersYet: '此群组还没有成员。点击 + 按钮邀请助手。',
 
   noSelectedAgents: '还未选择成员',
+
+  openInNewWindow: '单独打开页面',
 
   owner: '群主',
 
@@ -355,6 +370,11 @@ export default {
     screenshot: '截图',
     settings: '导出设置',
     text: '文本',
+    widthMode: {
+      label: '宽度模式',
+      narrow: '窄屏模式',
+      wide: '宽屏模式',
+    },
     withBackground: '包含背景图片',
     withFooter: '包含页脚',
     withPluginInfo: '包含插件信息',
@@ -396,6 +416,29 @@ export default {
     overload: '超过限制',
     remained: '剩余',
     used: '使用',
+  },
+  tool: {
+    intervention: {
+      approve: '批准',
+      approveAndRemember: '批准并记住',
+      approveOnce: '仅本次批准',
+      mode: {
+        allowList: '白名单',
+        allowListDesc: '仅自动执行已批准的工具',
+        autoRun: '自动批准',
+        autoRunDesc: '自动批准所有工具执行',
+        manual: '手动',
+        manualDesc: '每次调用都需要手动批准',
+      },
+      reject: '拒绝',
+      rejectAndContinue: '拒绝后重试执行',
+      rejectOnly: '拒绝',
+      rejectReasonPlaceholder: '输入拒绝原因将帮助 Agent 理解并优化后续行动',
+      rejectTitle: '拒绝本次工具调用',
+      rejectedWithReason: '本次工具调用被主动拒绝:{{reason}}',
+      toolAbort: '本次工具调用被用户取消',
+      toolRejected: '本次工具调用被主动拒绝',
+    },
   },
   topic: {
     checkOpenNewTopic: '是否开启新话题?',

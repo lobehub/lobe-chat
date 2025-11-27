@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Close Window"
+    },
+    "messages": {
+      "authFailed": "Authorization failed: {{error}}",
+      "missingParams": "Missing authorization parameters",
+      "processing": "Processing authorization...",
+      "successWithCountdown": "{{message}} The window will close automatically in {{countdown}} seconds",
+      "successWithRedirect": "Authorization successful! Redirecting..."
+    },
+    "titles": {
+      "error": "Authorization Failed",
+      "loading": "LobeHub Market Authorization",
+      "success": "Authorization Successful"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "Authorization failed, please try again.",
+    "browserOnly": "The authorization process can only be initiated in a browser.",
+    "codeConsumed": "The authorization code has already been used. Please try again.",
+    "codeVerifierMissing": "Invalid authorization session. Please restart the login process.",
+    "general": "An error occurred during authorization. Please try again.",
+    "handoffFailed": "Failed to retrieve authorization result. Please try again.",
+    "handoffTimeout": "Authorization timed out. Please complete the process in your browser and try again.",
+    "oidcNotReady": "Authorization service is not ready. Please try again later.",
+    "openBrowserFailed": "Failed to open the system browser. Please try again.",
+    "openPopupFailed": "Failed to open authorization popup. Please check your browser's popup blocker settings.",
+    "popupClosed": "The authorization window was closed before completion.",
+    "sessionExpired": "Authorization session has expired. Please log in again.",
+    "stateMismatch": "Authorization state mismatch. Please try again.",
+    "stateMissing": "Authorization state not found. Please try again."
+  },
+  "messages": {
+    "loading": "Starting authorization process...",
+    "success": {
+      "submit": "Authorization successful! You can now publish your assistant.",
+      "upload": "Authorization successful! You can now publish a new version."
+    }
+  }
+}

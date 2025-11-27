@@ -47,6 +47,10 @@ export type UserMessageContentPart =
 export interface OpenAIChatMessage {
   content: string | UserMessageContentPart[];
   name?: string;
+  reasoning?: {
+    content?: string;
+    duration?: number;
+  };
   role: LLMRoleType;
   tool_call_id?: string;
   tool_calls?: MessageToolCall[];
@@ -70,6 +74,14 @@ export interface ChatStreamPayload {
    * @default 0
    */
   frequency_penalty?: number;
+  /**
+   * @title Image aspect ratio for image generation
+   */
+  imageAspectRatio?: string;
+  /**
+   * @title Image resolution for image generation (e.g., '1K', '2K', '4K')
+   */
+  imageResolution?: '1K' | '2K' | '4K';
   /**
    * @title 生成文本的最大长度
    */
@@ -120,6 +132,10 @@ export interface ChatStreamPayload {
     type: 'enabled' | 'disabled';
   };
   thinkingBudget?: number;
+  /**
+   * Thinking level for Gemini models (e.g., gemini-3.0-pro)
+   */
+  thinkingLevel?: 'low' | 'high';
   tool_choice?: string;
   tools?: ChatCompletionTool[];
   /**

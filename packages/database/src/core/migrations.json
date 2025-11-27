@@ -762,5 +762,40 @@
     "bps": true,
     "folderMillis": 1762251112601,
     "hash": "923ccbdf46c32be9a981dabd348e6923b4a365444241e9b8cc174bf5b914cbc5"
+  },
+  {
+    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"market_identifier\" text;\n"],
+    "bps": true,
+    "folderMillis": 1762870034882,
+    "hash": "4178aacb4b8892b7fd15d29209bbf9b1d1f9d7c406ba796f27542c0bcd919680"
+  },
+  {
+    "sql": ["ALTER TABLE \"message_plugins\" ADD COLUMN IF NOT EXISTS \"intervention\" jsonb;\n"],
+    "bps": true,
+    "folderMillis": 1762911968658,
+    "hash": "552a032cc0e595277232e70b5f9338658585bafe9481ae8346a5f322b673a68b"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"documents\" ALTER COLUMN \"id\" SET DATA TYPE varchar(255);",
+      "\nALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"parent_id\" varchar(255);",
+      "\nALTER TABLE \"files\" ADD COLUMN IF NOT EXISTS \"parent_id\" varchar(255);",
+      "\nDO $$ BEGIN\n ALTER TABLE \"documents\" ADD CONSTRAINT \"documents_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;",
+      "\nDO $$ BEGIN\n ALTER TABLE \"files\" ADD CONSTRAINT \"files_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;",
+      "\nCREATE INDEX IF NOT EXISTS \"documents_parent_id_idx\" ON \"documents\" USING btree (\"parent_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"files_parent_id_idx\" ON \"files\" USING btree (\"parent_id\");"
+    ],
+    "bps": true,
+    "folderMillis": 1763453175961,
+    "hash": "6c2081c8ac22772a8276052c9ae0852a4c03463cbe998df26f85683ab356b914"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"slug\" varchar(255);",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"documents_slug_user_id_unique\" ON \"documents\" USING btree (\"slug\",\"user_id\") WHERE \"documents\".\"slug\" is not null;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1763987922211,
+    "hash": "f823b521f4d25e5dc5ab238b372727d2d2d7f0aed27b5eabc8a9608ce4e50568"
   }
 ]

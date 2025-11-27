@@ -14,9 +14,31 @@
     "images": "Images :",
     "prompt": "Mot de rappel"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Nombre de caractères",
+        "lines": "Nombre de lignes"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "Remplacer par",
+      "oldString": "Rechercher",
+      "replaceAll": "Remplacer toutes les occurrences",
+      "replaceFirst": "Remplacer uniquement la première occurrence"
+    },
     "file": "Fichier",
     "folder": "Dossier",
+    "moveFiles": {
+      "itemsMoved": "{{count}} élément(s) déplacé(s) :",
+      "itemsMoved_one": "{{count}} élément déplacé :",
+      "itemsMoved_other": "{{count}} éléments déplacés :",
+      "itemsToMove": "{{count}} élément(s) à déplacer :",
+      "itemsToMove_one": "{{count}} élément à déplacer :",
+      "itemsToMove_other": "{{count}} éléments à déplacer :"
+    },
     "open": "Ouvrir",
     "openFile": "Ouvrir le fichier",
     "openFolder": "Ouvrir le dossier",
@@ -26,7 +48,12 @@
     "readFile": "Lire le fichier",
     "readFileError": "Échec de la lecture du fichier, veuillez vérifier si le chemin du fichier est correct",
     "readFiles": "Lire les fichiers",
-    "readFilesError": "Échec de la lecture des fichiers, veuillez vérifier si le chemin du fichier est correct"
+    "readFilesError": "Échec de la lecture des fichiers, veuillez vérifier si le chemin du fichier est correct",
+    "writeFile": {
+      "characters": "caractères",
+      "preview": "Aperçu du contenu",
+      "truncated": "Tronqué"
+    }
   },
   "search": {
     "createNewSearch": "Créer un nouvel enregistrement de recherche",

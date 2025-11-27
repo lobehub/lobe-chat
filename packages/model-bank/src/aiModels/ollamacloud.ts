@@ -6,9 +6,34 @@ const ollamaCloudModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 200_000,
+    contextWindowTokens: 163_840,
     description:
-      'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
+      'Cogito v2.1 671B 是一款可免费商用的美国开源大语言模型，它以媲美顶尖模型的性能、更高的 token 推理效率、128k 长上下文和强大的综合能力为核心优势。',
+    displayName: 'Cogito v2.1 671B',
+    id: 'cogito-2.1:671b',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576,
+    description:
+      'Gemini 3 Pro 是 Google 最智能的模型，具有 SOTA 推理和多模式理解，以及强大的代理和氛围编码功能。',
+    displayName: 'Gemini 3 Pro Preview',
+    id: 'gemini-3-pro-preview',
+    releasedAt: '2025-11-20',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 200_000,
+    description: 'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
     displayName: 'MiniMax M2',
     enabled: true,
     id: 'minimax-m2',
@@ -36,7 +61,6 @@ const ollamaCloudModels: AIChatModelCard[] = [
     description:
       'DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。',
     displayName: 'DeepSeek V3.1',
-    enabled: true,
     id: 'deepseek-v3.1:671b',
     type: 'chat',
   },
@@ -91,10 +115,20 @@ const ollamaCloudModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 262_144,
+    displayName: 'Qwen3 VL 235B Instruct',
+    id: 'qwen3-vl:235b-instruct',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
       vision: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 262_144,
     displayName: 'Qwen3 VL 235B',
     id: 'qwen3-vl:235b',
     type: 'chat',

@@ -14,9 +14,31 @@
     "images": "Imágenes:",
     "prompt": "Palabra de aviso"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Número de caracteres",
+        "lines": "Número de líneas"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "Reemplazar con",
+      "oldString": "Buscar",
+      "replaceAll": "Reemplazar todas las coincidencias",
+      "replaceFirst": "Reemplazar solo la primera coincidencia"
+    },
     "file": "Archivo",
     "folder": "Carpeta",
+    "moveFiles": {
+      "itemsMoved": "Se han movido {{count}} elementos:",
+      "itemsMoved_one": "Se ha movido {{count}} elemento:",
+      "itemsMoved_other": "Se han movido {{count}} elementos:",
+      "itemsToMove": "{{count}} elementos por mover:",
+      "itemsToMove_one": "{{count}} elemento por mover:",
+      "itemsToMove_other": "{{count}} elementos por mover:"
+    },
     "open": "Abrir",
     "openFile": "Abrir archivo",
     "openFolder": "Abrir carpeta",
@@ -26,7 +48,12 @@
     "readFile": "Leer archivo",
     "readFileError": "Error al leer el archivo, por favor verifica si la ruta del archivo es correcta",
     "readFiles": "Leer archivos",
-    "readFilesError": "Error al leer los archivos, por favor verifica si la ruta del archivo es correcta"
+    "readFilesError": "Error al leer los archivos, por favor verifica si la ruta del archivo es correcta",
+    "writeFile": {
+      "characters": "caracteres",
+      "preview": "Vista previa del contenido",
+      "truncated": "Truncado"
+    }
   },
   "search": {
     "createNewSearch": "Crear un nuevo registro de búsqueda",

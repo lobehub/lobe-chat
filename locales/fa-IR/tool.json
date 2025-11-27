@@ -14,9 +14,31 @@
     "images": "تصاویر:",
     "prompt": "کلمات کلیدی"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "تعداد نویسه‌ها",
+        "lines": "تعداد خطوط"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "جایگزین با",
+      "oldString": "یافتن محتوا",
+      "replaceAll": "جایگزینی تمام موارد",
+      "replaceFirst": "فقط اولین مورد را جایگزین کن"
+    },
     "file": "فایل",
     "folder": "پوشه",
+    "moveFiles": {
+      "itemsMoved": "{{count}} مورد منتقل شد:",
+      "itemsMoved_one": "{{count}} مورد منتقل شد:",
+      "itemsMoved_other": "{{count}} مورد منتقل شد:",
+      "itemsToMove": "{{count}} مورد برای انتقال:",
+      "itemsToMove_one": "{{count}} مورد برای انتقال:",
+      "itemsToMove_other": "{{count}} مورد برای انتقال:"
+    },
     "open": "باز کردن",
     "openFile": "باز کردن فایل",
     "openFolder": "باز کردن پوشه",
@@ -26,7 +48,12 @@
     "readFile": "خواندن فایل",
     "readFileError": "خطا در خواندن فایل، لطفاً مسیر فایل را بررسی کنید",
     "readFiles": "خواندن فایل‌ها",
-    "readFilesError": "خطا در خواندن فایل‌ها، لطفاً مسیر فایل‌ها را بررسی کنید"
+    "readFilesError": "خطا در خواندن فایل‌ها، لطفاً مسیر فایل‌ها را بررسی کنید",
+    "writeFile": {
+      "characters": "کاراکتر",
+      "preview": "پیش‌نمایش محتوا",
+      "truncated": "بریده شده"
+    }
   },
   "search": {
     "createNewSearch": "ایجاد جستجوی جدید",

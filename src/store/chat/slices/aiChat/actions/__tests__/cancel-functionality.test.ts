@@ -1,7 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { useChatStore } from '../../../../store';
+import { messageMapKey } from '../../../../utils/messageMapKey';
 
 describe('Cancel send message functionality tests', () => {
   describe('cancelSendMessageInServer', () => {
@@ -13,7 +14,8 @@ describe('Cancel send message functionality tests', () => {
         useChatStore.setState({
           activeId: 'session-1',
           activeTopicId: 'topic-1',
-          mainSendMessageOperations: {},
+          operations: {},
+          operationsByContext: {},
         });
       });
 
@@ -28,13 +30,91 @@ describe('Cancel send message functionality tests', () => {
       }).not.toThrow();
     });
 
+    it('should cancel running sendMessage operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      const sessionId = 'session-1';
+      const topicId = 'topic-1';
+
+      act(() => {
+        useChatStore.setState({
+          activeId: sessionId,
+          activeTopicId: topicId,
+        });
+      });
+
+      // Start a sendMessage operation
+      let operationId: string;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId, topicId },
+        });
+        operationId = res.operationId;
+      });
+
+      expect(result.current.operations[operationId!].status).toBe('running');
+
+      // Cancel the operation
+      act(() => {
+        result.current.cancelSendMessageInServer();
+      });
+
+      expect(result.current.operations[operationId!].status).toBe('cancelled');
+    });
+
+    it('should restore editor state when cancelling', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      const sessionId = 'session-1';
+      const topicId = 'topic-1';
+      const mockEditorState = { content: 'test message' };
+
+      // Mock editor
+      const mockEditor = {
+        setJSONState: vi.fn(),
+        getJSONState: vi.fn().mockReturnValue(mockEditorState),
+      };
+
+      act(() => {
+        useChatStore.setState({
+          activeId: sessionId,
+          activeTopicId: topicId,
+          mainInputEditor: mockEditor as any,
+        });
+      });
+
+      // Create operation with editor state
+      let operationId: string;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId, topicId },
+        });
+        operationId = res.operationId;
+
+        result.current.updateOperationMetadata(res.operationId, {
+          inputEditorTempState: mockEditorState,
+        });
+      });
+
+      // Cancel
+      act(() => {
+        result.current.cancelSendMessageInServer();
+      });
+
+      // Verify editor state was restored
+      expect(mockEditor.setJSONState).toHaveBeenCalledWith(mockEditorState);
+    });
+
     it('should be able to call with specified topic ID', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
         useChatStore.setState({
           activeId: 'session-1',
-          mainSendMessageOperations: {},
+          operations: {},
+          operationsByContext: {},
         });
       });
 
@@ -54,7 +134,8 @@ describe('Cancel send message functionality tests', () => {
         useChatStore.setState({
           activeId: 'session-1',
           activeTopicId: 'topic-1',
-          mainSendMessageOperations: {},
+          operations: {},
+          operationsByContext: {},
         });
       });
 
@@ -66,42 +147,71 @@ describe('Cancel send message functionality tests', () => {
         });
       }).not.toThrow();
     });
-  });
 
-  describe('Internal methods', () => {
-    it('should have internal state management methods', () => {
+    it('should clear error messages from sendMessage operations', () => {
       const { result } = renderHook(() => useChatStore());
 
-      expect(typeof result.current.internal_toggleSendMessageOperation).toBe('function');
-      expect(typeof result.current.internal_updateSendMessageOperation).toBe('function');
-    });
-
-    it('internal_toggleSendMessageOperation should work normally', () => {
-      const { result } = renderHook(() => useChatStore());
+      const sessionId = 'session-1';
+      const topicId = 'topic-1';
 
       act(() => {
-        useChatStore.setState({ mainSendMessageOperations: {} });
+        useChatStore.setState({
+          activeId: sessionId,
+          activeTopicId: topicId,
+        });
       });
 
-      expect(() => {
-        act(() => {
-          const abortController = result.current.internal_toggleSendMessageOperation(
-            'test-key',
-            true,
-          );
-          expect(abortController).toBeInstanceOf(AbortController);
+      // Create operation with error
+      let operationId: string;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId, topicId },
         });
-      }).not.toThrow();
+        operationId = res.operationId;
+
+        result.current.updateOperationMetadata(res.operationId, {
+          inputSendErrorMsg: 'Test error',
+        });
+      });
+
+      expect(result.current.operations[operationId!].metadata.inputSendErrorMsg).toBe('Test error');
+
+      // Clear error
+      act(() => {
+        result.current.clearSendMessageError();
+      });
+
+      expect(result.current.operations[operationId!].metadata.inputSendErrorMsg).toBeUndefined();
     });
   });
 
-  describe('State structure', () => {
-    it('should have mainSendMessageOperations state', () => {
+  describe('Operation system', () => {
+    it('should have operation management methods', () => {
       const { result } = renderHook(() => useChatStore());
 
-      // Ensure state exists
-      expect(result.current.mainSendMessageOperations).toBeDefined();
-      expect(typeof result.current.mainSendMessageOperations).toBe('object');
+      expect(typeof result.current.startOperation).toBe('function');
+      expect(typeof result.current.cancelOperation).toBe('function');
+      expect(typeof result.current.updateOperationMetadata).toBe('function');
+    });
+
+    it('should track operations by context', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      const sessionId = 'session-1';
+      const topicId = 'topic-1';
+
+      let operationId: string;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId, topicId },
+        });
+        operationId = res.operationId;
+      });
+
+      const contextKey = messageMapKey(sessionId, topicId);
+      expect(result.current.operationsByContext[contextKey]).toContain(operationId!);
     });
   });
 });

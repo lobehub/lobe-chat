@@ -1,6 +1,3 @@
-import { isServerMode, isUsePgliteDB } from '@/const/version';
-import { DatabaseLoadingState } from '@/types/clientDB';
-
 import { GlobalState, INITIAL_STATUS } from '../initialState';
 
 export const systemStatus = (s: GlobalState) => s.status;
@@ -32,29 +29,6 @@ const wideScreen = (s: GlobalState) => !s.status.noWideScreen;
 const chatInputHeight = (s: GlobalState) => s.status.chatInputHeight || 64;
 const expandInputActionbar = (s: GlobalState) => s.status.expandInputActionbar;
 const isStatusInit = (s: GlobalState) => !!s.isStatusInit;
-const isPgliteNotEnabled = (s: GlobalState) =>
-  isUsePgliteDB && !isServerMode && isStatusInit(s) && !s.status.isEnablePglite;
-
-/**
- * 当且仅当 client db 模式，且 pglite 未初始化完成时返回 true
- */
-const isPgliteNotInited = (s: GlobalState) =>
-  isUsePgliteDB &&
-  isStatusInit(s) &&
-  s.status.isEnablePglite &&
-  s.initClientDBStage !== DatabaseLoadingState.Ready;
-
-/**
- * 当且仅当 client db 模式，且 pglite 初始化完成时返回 true
- */
-const isPgliteInited = (s: GlobalState): boolean =>
-  (isStatusInit(s) &&
-    s.status.isEnablePglite &&
-    s.initClientDBStage === DatabaseLoadingState.Ready) ||
-  false;
-
-// 这个变量控制 clientdb 是否完成初始化，正常来说，只有 pgliteDB 模式下，才会存在变化，其他时候都是 true
-const isDBInited = (s: GlobalState): boolean => (isUsePgliteDB ? isPgliteInited(s) : true);
 
 const getAgentSystemRoleExpanded =
   (agentId: string) =>
@@ -63,8 +37,16 @@ const getAgentSystemRoleExpanded =
     return map[agentId] !== false; // 角色设定默认为展开状态
   };
 
+const disabledModelProvidersSortType = (s: GlobalState) =>
+  s.status.disabledModelProvidersSortType || 'default';
+const disabledModelsSortType = (s: GlobalState) => s.status.disabledModelsSortType || 'default';
+const tokenDisplayFormatShort = (s: GlobalState) =>
+  s.status.tokenDisplayFormatShort !== undefined ? s.status.tokenDisplayFormatShort : true;
+
 export const systemStatusSelectors = {
   chatInputHeight,
+  disabledModelProvidersSortType,
+  disabledModelsSortType,
   expandInputActionbar,
   filePanelWidth,
   getAgentSystemRoleExpanded,
@@ -72,10 +54,6 @@ export const systemStatusSelectors = {
   imagePanelWidth,
   imageTopicPanelWidth,
   inZenMode,
-  isDBInited,
-  isPgliteInited,
-  isPgliteNotEnabled,
-  isPgliteNotInited,
   isShowCredit,
   isStatusInit,
   language,
@@ -93,5 +71,6 @@ export const systemStatusSelectors = {
   showSystemRole,
   systemStatus,
   themeMode,
+  tokenDisplayFormatShort,
   wideScreen,
 };

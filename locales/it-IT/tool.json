@@ -14,9 +14,31 @@
     "images": "Immagini:",
     "prompt": "parola chiave"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Numero di caratteri",
+        "lines": "Numero di righe"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "Sostituisci con",
+      "oldString": "Trova",
+      "replaceAll": "Sostituisci tutte le occorrenze",
+      "replaceFirst": "Sostituisci solo la prima occorrenza"
+    },
     "file": "File",
     "folder": "Cartella",
+    "moveFiles": {
+      "itemsMoved": "{{count}} elementi spostati:",
+      "itemsMoved_one": "{{count}} elemento spostato:",
+      "itemsMoved_other": "{{count}} elementi spostati:",
+      "itemsToMove": "{{count}} elementi da spostare:",
+      "itemsToMove_one": "{{count}} elemento da spostare:",
+      "itemsToMove_other": "{{count}} elementi da spostare:"
+    },
     "open": "Apri",
     "openFile": "Apri file",
     "openFolder": "Apri cartella",
@@ -26,7 +48,12 @@
     "readFile": "Leggi file",
     "readFileError": "Impossibile leggere il file, controlla se il percorso del file è corretto",
     "readFiles": "Leggi file",
-    "readFilesError": "Impossibile leggere i file, controlla se il percorso del file è corretto"
+    "readFilesError": "Impossibile leggere i file, controlla se il percorso del file è corretto",
+    "writeFile": {
+      "characters": "Caratteri",
+      "preview": "Anteprima contenuto",
+      "truncated": "Troncato"
+    }
   },
   "search": {
     "createNewSearch": "Crea una nuova registrazione di ricerca",

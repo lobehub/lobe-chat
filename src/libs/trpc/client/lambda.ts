@@ -34,9 +34,6 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
           // Don't show notifications for abort errors
           if (showError && !isAbortError) {
             const { loginRequired } = await import('@/components/Error/loginRequiredNotification');
-            const { fetchErrorNotification } = await import(
-              '@/components/Error/fetchErrorNotification'
-            );
 
             switch (status) {
               case 401: {
@@ -52,8 +49,7 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
               }
 
               default: {
-                if (fetchErrorNotification)
-                  fetchErrorNotification.error({ errorMessage: err.message, status });
+                console.error(err);
               }
             }
           }
@@ -84,7 +80,7 @@ const customHttpBatchLink = httpBatchLink({
     // dynamic import to avoid circular dependency
     const { createHeaderWithAuth } = await import('@/services/_auth');
 
-    let provider: ModelProvider = ModelProvider.OpenAI;
+    let provider: ModelProvider | undefined;
     // for image page, we need to get the provider from the store
     log('Getting provider from store for image page: %s', location.pathname);
     if (location.pathname === '/image') {
@@ -96,8 +92,9 @@ const customHttpBatchLink = httpBatchLink({
       log('Getting provider from store for image page: %s', provider);
     }
 
-    // TODO: we need to support provider select for chat page
-    const headers = await createHeaderWithAuth({ provider });
+    // Only include provider in JWT for image operations
+    // For other operations (like knowledge base embedding), let server use its own config
+    const headers = await createHeaderWithAuth(provider ? { provider } : undefined);
     log('Headers: %O', headers);
     return headers;
   },

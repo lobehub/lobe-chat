@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Odczytaj zawartość bazy wiedzy",
+        "searchKnowledgeBase": "Przeszukaj bazę wiedzy"
+      },
+      "title": "Baza wiedzy"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Edytuj plik",
+        "getCommandOutput": "Pobierz wynik polecenia",
+        "globLocalFiles": "Wyszukaj pliki",
+        "grepContent": "Przeszukaj zawartość",
+        "killCommand": "Zatrzymaj wykonywanie kodu",
+        "listLocalFiles": "Wyświetl listę plików",
+        "moveLocalFiles": "Przenieś pliki",
+        "readLocalFile": "Odczytaj zawartość pliku",
+        "renameLocalFile": "Zmień nazwę",
+        "runCommand": "Wykonaj kod",
+        "searchLocalFiles": "Wyszukaj pliki",
+        "writeLocalFile": "Zapisz plik"
+      },
+      "title": "System lokalny"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Odczytaj zawartość wielu stron",
+        "crawlSinglePage": "Odczytaj zawartość strony",
+        "search": "Wyszukaj stronę"
+      },
+      "title": "Wyszukiwanie online"
+    }
+  },
   "confirm": "Potwierdź",
   "debug": {
     "arguments": "Argumenty wywołania",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "Zobacz listę argumentów",
+    "delete": "Usuń wywołanie narzędzia",
+    "orphanedToolCall": "To wywołanie narzędzia mogło zostać osierocone z powodu nieoczekiwanych okoliczności, co może zakłócić prawidłowe działanie Agenta. Proszę je usunąć.",
     "pluginRender": "Zobacz interfejs wtyczki"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "Wywoływanie wtyczki...",
     "plugin": "Wtyczka działa..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "Wyświetl listę plików",
-      "moveLocalFiles": "Przenieś pliki",
-      "readLocalFile": "Odczytaj zawartość pliku",
-      "renameLocalFile": "Zmień nazwę",
-      "searchLocalFiles": "Wyszukaj pliki",
-      "writeLocalFile": "Zapisz do pliku"
-    },
-    "title": "Pliki lokalne"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Sprawdzanie środowiska instalacji...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ Upewnij się, że ufasz źródłu tej wtyczki, złośliwe wtyczki mogą zagrozić bezpieczeństwu Twojego systemu."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Odczytaj zawartość wielu stron",
-      "crawlSinglePage": "Odczytaj zawartość strony",
-      "search": "Wyszukaj stronę"
-    },
     "config": {
       "addKey": "Dodaj klucz",
       "close": "Usuń",

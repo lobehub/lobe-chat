@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Lire le contenu de la base de connaissances",
+        "searchKnowledgeBase": "Rechercher dans la base de connaissances"
+      },
+      "title": "Base de connaissances"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Modifier le fichier",
+        "getCommandOutput": "Obtenir la sortie du code",
+        "globLocalFiles": "Rechercher des fichiers correspondants",
+        "grepContent": "Rechercher dans le contenu",
+        "killCommand": "Arrêter l'exécution du code",
+        "listLocalFiles": "Afficher la liste des fichiers",
+        "moveLocalFiles": "Déplacer les fichiers",
+        "readLocalFile": "Lire le contenu du fichier",
+        "renameLocalFile": "Renommer",
+        "runCommand": "Exécuter le code",
+        "searchLocalFiles": "Rechercher des fichiers",
+        "writeLocalFile": "Écrire dans le fichier"
+      },
+      "title": "Système local"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Lire le contenu de plusieurs pages",
+        "crawlSinglePage": "Lire le contenu de la page",
+        "search": "Rechercher sur la page"
+      },
+      "title": "Recherche en ligne"
+    }
+  },
   "confirm": "Confirmer",
   "debug": {
     "arguments": "Arguments d'appel",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "Voir la liste des paramètres",
+    "delete": "Supprimer l'appel d'outil",
+    "orphanedToolCall": "Cet appel d'outil est peut-être devenu orphelin en raison d'une erreur, ce qui pourrait perturber le bon fonctionnement de l'agent. Veuillez le supprimer.",
     "pluginRender": "Voir l'interface du plugin"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "Appel du plugin en cours...",
     "plugin": "Plugin en cours d'exécution..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "Voir la liste des fichiers",
-      "moveLocalFiles": "Déplacer les fichiers",
-      "readLocalFile": "Lire le contenu du fichier",
-      "renameLocalFile": "Renommer",
-      "searchLocalFiles": "Rechercher des fichiers",
-      "writeLocalFile": "Écrire dans un fichier"
-    },
-    "title": "Fichiers locaux"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Vérification de l'environnement d'installation...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ Veuillez confirmer que vous faites confiance à la source de ce plugin, un plugin malveillant pourrait compromettre la sécurité de votre système."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Lire le contenu de plusieurs pages",
-      "crawlSinglePage": "Lire le contenu de la page",
-      "search": "Rechercher sur la page"
-    },
     "config": {
       "addKey": "Ajouter une clé",
       "close": "Supprimer",

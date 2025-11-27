@@ -75,7 +75,11 @@ export const ModelPerformanceSchema = z.object({
   latency: z.number().optional(),
 });
 
-export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSchema);
+export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSchema).extend({
+  collapsed: z.boolean().optional(),
+  inspectExpanded: z.boolean().optional(),
+  isMultimodal: z.boolean().optional(),
+});
 
 export interface ModelUsage extends ModelTokensUsage {
   /**
@@ -106,5 +110,24 @@ export interface ModelPerformance {
 export interface MessageMetadata extends ModelUsage, ModelPerformance {
   activeBranchIndex?: number;
   activeColumn?: boolean;
+  finishType?: string;
+  /**
+   * Message collapse state
+   * true: collapsed, false/undefined: expanded
+   */
+  collapsed?: boolean;
+  /**
+   * Tool inspect expanded state
+   * true: expanded, false/undefined: collapsed
+   */
+  inspectExpanded?: boolean;
   compare?: boolean;
+  usage?: ModelUsage;
+  performance?: ModelPerformance;
+  /**
+   * Flag indicating if message content is multimodal (serialized MessageContentPart[])
+   */
+  isMultimodal?: boolean;
+  // message content is multimodal, display content in the streaming, won't save to db
+  tempDisplayContent?: string;
 }

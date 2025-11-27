@@ -1,0 +1,136 @@
+import type { AgentInstruction, AgentState } from '@lobechat/agent-runtime';
+
+import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
+import type { OperationType } from '@/store/chat/slices/operation/types';
+import type { ChatStore } from '@/store/chat/store';
+
+/**
+ * Execute an executor with mock context
+ *
+ * @example
+ * const result = await executeWithMockContext({
+ *   executor: 'call_llm',
+ *   instruction: createCallLLMInstruction(),
+ *   state: createInitialState(),
+ *   mockStore,
+ *   context: { operationId: 'op_123', messageKey: 'session_topic', parentId: 'msg_456' }
+ * });
+ */
+export const executeWithMockContext = async ({
+  executor,
+  instruction,
+  state,
+  mockStore,
+  context,
+  skipCreateFirstMessage = false,
+}: {
+  context: {
+    messageKey: string;
+    operationId: string;
+    parentId: string;
+    sessionId?: string;
+    topicId?: string | null;
+  };
+  executor: AgentInstruction['type'];
+  instruction: AgentInstruction;
+  mockStore: ChatStore;
+  skipCreateFirstMessage?: boolean;
+  state: AgentState;
+}) => {
+  // Ensure operation exists in store
+  if (!mockStore.operations[context.operationId]) {
+    mockStore.operations[context.operationId] = {
+      abortController: new AbortController(),
+      childOperationIds: [],
+      context: {
+        messageId: context.parentId,
+        sessionId: context.sessionId || 'test-session',
+        topicId: context.topicId !== undefined ? context.topicId : 'test-topic',
+      },
+      id: context.operationId,
+      metadata: { startTime: Date.now() },
+      status: 'running',
+      type: 'execAgentRuntime' as OperationType,
+    };
+  }
+
+  // Create executors with mock context
+  const executors = createAgentExecutors({
+    get: () => mockStore,
+    messageKey: context.messageKey,
+    operationId: context.operationId,
+    parentId: context.parentId,
+    skipCreateFirstMessage,
+  });
+
+  const executorFn = executors[executor];
+  if (!executorFn) {
+    throw new Error(`Executor ${executor} not found`);
+  }
+
+  // Execute
+  const result = await executorFn(instruction, state);
+
+  return result;
+};
+
+/**
+ * Create initial agent runtime state for testing
+ */
+export const createInitialState = (overrides: Partial<AgentState> = {}): AgentState => {
+  const defaultState: any = {
+    lastModified: new Date().toISOString(),
+    messages: [],
+    sessionId: 'test-session',
+    status: 'running',
+    stepCount: 1,
+    usage: {
+      humanInteraction: {
+        approvalRequests: 0,
+        promptRequests: 0,
+        selectRequests: 0,
+        totalWaitingTimeMs: 0,
+      },
+      llm: {
+        apiCalls: 0,
+        processingTimeMs: 0,
+        tokens: {
+          input: 0,
+          output: 0,
+          total: 0,
+        },
+      },
+      tools: {
+        byTool: [],
+        totalCalls: 0,
+        totalTimeMs: 0,
+      },
+    },
+  };
+
+  return {
+    ...defaultState,
+    ...overrides,
+  } as AgentState;
+};
+
+/**
+ * Create a test context object for executor
+ */
+export const createTestContext = (
+  overrides: {
+    messageKey?: string;
+    operationId?: string;
+    parentId?: string;
+    sessionId?: string;
+    topicId?: string | null;
+  } = {},
+) => {
+  return {
+    messageKey:
+      overrides.messageKey ||
+      `${overrides.sessionId || 'test-session'}_${overrides.topicId !== undefined ? overrides.topicId : 'test-topic'}`,
+    operationId: overrides.operationId || 'op_test',
+    parentId: overrides.parentId || 'msg_parent',
+  };
+};

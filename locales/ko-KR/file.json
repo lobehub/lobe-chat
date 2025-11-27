@@ -1,5 +1,8 @@
 {
-  "desc": "지식을 관리하세요",
+  "addFolder": "폴더 만들기",
+  "addKnowledge": "지식 추가",
+  "addPage": "문서 생성",
+  "desc": "작업, 학습 및 생활 지식을 관리하세요.",
   "detail": {
     "basic": {
       "createdAt": "생성 시간",
@@ -21,14 +24,88 @@
       "embeddingStatus": "벡터화 상태"
     }
   },
+  "documentEditor": {
+    "addIcon": "아이콘 추가",
+    "autoSaveMessage": "문서는 자동으로 저장되며, 수동 저장이 필요하지 않습니다",
+    "chooseIcon": "아이콘 선택",
+    "deleteConfirm": {
+      "content": "이 문서를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중히 진행해 주세요.",
+      "title": "문서 삭제"
+    },
+    "deleteError": "문서 삭제에 실패했습니다",
+    "deleteSuccess": "문서가 성공적으로 삭제되었습니다",
+    "editedAt": "{{time}}에 마지막으로 편집됨",
+    "editedBy": "마지막 편집자: {{name}}",
+    "editorPlaceholder": "문서 내용을 입력하세요. / 키를 눌러 명령 메뉴를 엽니다",
+    "empty": {
+      "createNewDocument": "새 문서 만들기",
+      "title": "문서를 선택하여 시작하세요",
+      "uploadMarkdown": "Markdown 파일 업로드"
+    },
+    "linkCopied": "링크가 복사되었습니다",
+    "menu": {
+      "copyLink": "링크 복사",
+      "exportDocument": "문서 내보내기",
+      "importDocument": "문서 가져오기",
+      "pin": "문서 상단 고정"
+    },
+    "saving": "저장 중...",
+    "titlePlaceholder": "제목 없음",
+    "wordCount": "{{wordCount}}자"
+  },
+  "documentList": {
+    "copyContent": "전체 내용 복사",
+    "duplicate": "복사본 만들기",
+    "empty": "아직 문서가 없습니다. 위 버튼을 클릭하여 첫 번째 문서를 만들어보세요",
+    "noResults": "일치하는 문서를 찾을 수 없습니다",
+    "pageCount": "총 {{count}}개의 문서",
+    "selectNote": "편집을 시작할 문서를 선택하세요",
+    "untitled": "제목 없음"
+  },
   "empty": "업로드된 파일/폴더가 없습니다",
   "header": {
     "actions": {
       "newFolder": "새 폴더 만들기",
+      "newPage": "새 문서 만들기",
       "uploadFile": "파일 업로드",
       "uploadFolder": "폴더 업로드"
     },
+    "newNoteDialog": {
+      "cancel": "취소",
+      "editTitle": "문서 편집",
+      "emptyContent": "문서 내용은 비워둘 수 없습니다",
+      "loadError": "문서 불러오기에 실패했습니다. 다시 시도해 주세요",
+      "loading": "불러오는 중...",
+      "save": "저장",
+      "saveError": "문서 저장에 실패했습니다. 다시 시도해 주세요",
+      "saveSuccess": "문서가 성공적으로 저장되었습니다",
+      "title": "새 문서 만들기",
+      "updateSuccess": "문서가 성공적으로 업데이트되었습니다"
+    },
+    "newPageButton": "새 문서 만들기",
     "uploadButton": "업로드"
+  },
+  "home": {
+    "getStarted": "시작하기",
+    "greeting": "시작하기",
+    "quickActions": "빠른 작업",
+    "recentFiles": "최근 파일",
+    "recentPages": "최근 문서",
+    "subtitle": "지식 관리 시스템에 오신 것을 환영합니다. 여기서 문서를 관리해 보세요",
+    "uploadEntries": {
+      "files": {
+        "title": "파일 업로드"
+      },
+      "folder": {
+        "title": "폴더 업로드"
+      },
+      "knowledgeBase": {
+        "title": "새 지식베이스 만들기"
+      },
+      "newPage": {
+        "title": "새 문서 만들기"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "새 지식베이스",
     "title": "지식베이스"
+  },
+  "menu": {
+    "allFiles": "모든 파일",
+    "allPages": "모든 문서"
   },
   "networkError": "지식베이스를 불러오지 못했습니다. 네트워크 연결을 확인한 후 다시 시도해 주세요",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "이 파일 형식은 온라인 미리보기를 지원하지 않습니다. 미리보기 기능이 필요하시면 <1>의견을 보내주세요</1>"
   },
   "searchFilePlaceholder": "파일 검색",
+  "searchPagePlaceholder": "문서 검색",
   "tab": {
-    "all": "전체 파일",
+    "all": "전체",
     "audios": "오디오",
     "documents": "문서",
+    "home": "홈",
     "images": "이미지",
+    "moreTypes": "더 많은 유형",
+    "pages": "문서",
     "videos": "비디오",
     "websites": "웹사이트"
   },
   "title": "지식 베이스",
-  "toggleLeftPanel": {
-    "title": "왼쪽 패널 표시/숨기기"
-  },
+  "toggleLeftPanel": "왼쪽 패널 표시/숨기기",
   "uploadDock": {
     "body": {
       "collapse": "접기",

@@ -1,5 +1,8 @@
 {
-  "desc": "Beheer je kennis",
+  "addFolder": "Map aanmaken",
+  "addKnowledge": "Kennis toevoegen",
+  "addPage": "Document aanmaken",
+  "desc": "Beheer je kennis over werk, studie en leven.",
   "detail": {
     "basic": {
       "createdAt": "Aanmaakdatum",
@@ -21,14 +24,88 @@
       "embeddingStatus": "Vectorisatie"
     }
   },
+  "documentEditor": {
+    "addIcon": "Pictogram toevoegen",
+    "autoSaveMessage": "Documenten worden automatisch opgeslagen, handmatig opslaan is niet nodig",
+    "chooseIcon": "Pictogram kiezen",
+    "deleteConfirm": {
+      "content": "Je staat op het punt dit document te verwijderen. Dit kan niet ongedaan worden gemaakt. Wees voorzichtig.",
+      "title": "Document verwijderen"
+    },
+    "deleteError": "Verwijderen van document mislukt",
+    "deleteSuccess": "Document succesvol verwijderd",
+    "editedAt": "Laatst bewerkt op {{time}}",
+    "editedBy": "Laatst bewerkt door {{name}}",
+    "editorPlaceholder": "Voer documentinhoud in, druk op / om het opdrachtmenu te openen",
+    "empty": {
+      "createNewDocument": "Nieuw document aanmaken",
+      "title": "Selecteer een document om te beginnen",
+      "uploadMarkdown": "Markdown-bestand uploaden"
+    },
+    "linkCopied": "Link gekopieerd",
+    "menu": {
+      "copyLink": "Link kopiëren",
+      "exportDocument": "Document exporteren",
+      "importDocument": "Document importeren",
+      "pin": "Document vastzetten"
+    },
+    "saving": "Bezig met opslaan...",
+    "titlePlaceholder": "Zonder titel",
+    "wordCount": "{{wordCount}} woorden"
+  },
+  "documentList": {
+    "copyContent": "Volledige inhoud kopiëren",
+    "duplicate": "Kopie maken",
+    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken.",
+    "noResults": "Geen overeenkomende documenten gevonden",
+    "pageCount": "Totaal {{count}} documenten",
+    "selectNote": "Selecteer een document om te beginnen met bewerken",
+    "untitled": "Zonder titel"
+  },
   "empty": "Geen bestanden/mappen geüpload",
   "header": {
     "actions": {
       "newFolder": "Nieuwe map",
+      "newPage": "Nieuw document",
       "uploadFile": "Bestand uploaden",
       "uploadFolder": "Map uploaden"
     },
+    "newNoteDialog": {
+      "cancel": "Annuleren",
+      "editTitle": "Document bewerken",
+      "emptyContent": "Documentinhoud mag niet leeg zijn",
+      "loadError": "Laden van document mislukt, probeer het opnieuw",
+      "loading": "Bezig met laden...",
+      "save": "Opslaan",
+      "saveError": "Opslaan van document mislukt, probeer het opnieuw",
+      "saveSuccess": "Document succesvol opgeslagen",
+      "title": "Nieuw document",
+      "updateSuccess": "Document succesvol bijgewerkt"
+    },
+    "newPageButton": "Nieuw document",
     "uploadButton": "Uploaden"
+  },
+  "home": {
+    "getStarted": "Aan de slag",
+    "greeting": "Aan de slag",
+    "quickActions": "Snelle acties",
+    "recentFiles": "Recente bestanden",
+    "recentPages": "Recente documenten",
+    "subtitle": "Welkom bij je kennisbank. Begin hier met het beheren van je documenten",
+    "uploadEntries": {
+      "files": {
+        "title": "Bestanden uploaden"
+      },
+      "folder": {
+        "title": "Map uploaden"
+      },
+      "knowledgeBase": {
+        "title": "Nieuwe kennisbank"
+      },
+      "newPage": {
+        "title": "Nieuw document aanmaken"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "Nieuwe kennisbank",
     "title": "Kennisbank"
+  },
+  "menu": {
+    "allFiles": "Alle bestanden",
+    "allPages": "Alle documenten"
   },
   "networkError": "Kon de kennisbank niet ophalen, controleer uw netwerkverbinding en probeer het opnieuw",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
   },
   "searchFilePlaceholder": "Zoek bestand",
+  "searchPagePlaceholder": "Documenten zoeken",
   "tab": {
-    "all": "Alle bestanden",
+    "all": "Alles",
     "audios": "Audio's",
     "documents": "Documenten",
+    "home": "Startpagina",
     "images": "Afbeeldingen",
+    "moreTypes": "Meer typen",
+    "pages": "Documenten",
     "videos": "Video's",
     "websites": "Websites"
   },
   "title": "Kennisbank",
-  "toggleLeftPanel": {
-    "title": "Toon/Verberg het linkerpaneel"
-  },
+  "toggleLeftPanel": "Toon/verberg linker paneel",
   "uploadDock": {
     "body": {
       "collapse": "Samenvouwen",

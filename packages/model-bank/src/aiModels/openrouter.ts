@@ -41,6 +41,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -702,9 +703,36 @@ const openrouterChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
+    description:
+      'Claude Opus 4.5 是 Anthropic 的旗舰模型，结合了卓越的智能与可扩展性能，适合需要最高质量回应和推理能力的复杂任务。',
+    displayName: 'Claude Opus 4.5',
+    id: 'anthropic/claude-opus-4.5',
+    maxOutput: 64_000,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheWrite', rate: 6.25, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-24',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
     description: 'Claude Sonnet 4.5 是 Anthropic 迄今为止最智能的模型。',
     displayName: 'Claude Sonnet 4.5',
-    enabled: true,
     id: 'anthropic/claude-sonnet-4.5',
     maxOutput: 64_000,
     pricing: {

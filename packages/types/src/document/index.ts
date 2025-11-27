@@ -1,172 +1,184 @@
 /**
- * 在 LobeChat 中的文档对象
+ * Document object in LobeChat
  */
 export interface LobeDocument {
   /**
-   * 文件内容
+   * File content
    */
   content: string | null;
   /**
-   * 文件创建时间戳。
+   * File creation timestamp
    */
   createdAt: Date;
 
+  editorData: Record<string, any> | null;
+
   /**
-   * 文件类型或扩展名
+   * File type or extension
    */
   fileType: string;
 
   /**
-   * 原始文件名。
+   * Original filename
    */
   filename: string;
 
   id: string;
 
   /**
-   * 文件级别的元数据。
-   * 例如从文件属性中提取的标题、作者，或整个文件加载失败时的错误。
+   * File-level metadata
+   * For example, title and author extracted from file properties, or errors when the entire file fails to load
    */
   metadata: {
     /**
-     * 允许添加其他文件级别的元数据。
+     * Allow adding other file-level metadata
      */
     [key: string]: any;
     /**
-     * 文档作者 (如果可用)。
+     * Document author (if available)
      */
     author?: string;
     /**
-     * 如果整个文件加载失败，记录错误信息。
+     * Error information if the entire file fails to load
      */
     error?: string;
   };
 
   /**
-   * 包含文档中所有逻辑页面/块的数组。
-   * 顺序通常对应文件中的自然顺序。
+   * Array containing all logical pages/blocks in the document
+   * Order typically corresponds to the natural order in the file
    */
   pages?: LobeDocumentPage[];
 
   /**
-   * 原始文件的完整路径。
+   * Full path of the original file
    */
   source: string;
 
   /**
-   * 文档标题 (如果可用)。
+   * Document source type
+   */
+  sourceType: DocumentSourceType;
+
+  /**
+   * Document title (if available)
    */
   title?: string;
 
   /**
-   * 整个文档的总字符数 (所有 Page 的 charCount 之和)。
-   * 需要在所有 Page 加载和计算后得出。
+   * Total character count of the entire document (sum of charCount of all Pages)
+   * Obtained after all Pages are loaded and calculated
    */
   totalCharCount: number;
 
   /**
-   * 整个文档的总行数 (所有 Page 的 lineCount 之和)。
-   * 需要在所有 Page 加载和计算后得出。
+   * Total line count of the entire document (sum of lineCount of all Pages)
+   * Obtained after all Pages are loaded and calculated
    */
   totalLineCount: number;
 
   /**
-   * 文件最后修改时间戳。
+   * File last modified timestamp
    */
   updatedAt: Date;
 }
 
 /**
- * 代表文件中的一个逻辑单元/页面/块。
+ * Represents a logical unit/page/block in a file
  */
 export interface LobeDocumentPage {
   /**
-   * 此页/块内容的字符数。
+   * Character count of this page/block content
    */
   charCount: number;
 
   /**
-   * 此页/块内容的行数。
+   * Line count of this page/block content
    */
   lineCount: number;
 
   /**
-   * 与此页/块相关的元数据。
+   * Metadata related to this page/block
    */
   metadata: {
     /**
-     * 允许添加其他特定于页/块的元数据。
+     * Allow adding other page/block-specific metadata
      */
     [key: string]: any;
 
     /**
-     * 如果原始文件单元被进一步分割成块，这是当前块的索引。
+     * If the original file unit is further split into chunks, this is the index of the current chunk
      */
     chunkIndex?: number;
 
     /**
-     * 处理此页/块时发生的错误。
+     * Errors that occurred while processing this page/block
      */
     error?: string;
 
     /**
-     * 此页/块在原始文件中的结束行号。
+     * Ending line number of this page/block in the original file
      */
     lineNumberEnd?: number;
 
     /**
-     * 此页/块在原始文件中的起始行号。
+     * Starting line number of this page/block in the original file
      */
     lineNumberStart?: number;
 
     /**
-     * 页码 (适用于 PDF, DOCX)。
+     * Page number (applicable to PDF, DOCX)
      */
     pageNumber?: number;
 
     /**
-     * 与此页/块相关的章节标题。
+     * Section title related to this page/block
      */
     sectionTitle?: string;
 
     /**
-     * 工作表名称 (适用于 XLSX)。
+     * Worksheet name (applicable to XLSX)
      */
     sheetName?: string;
 
     /**
-     * 幻灯片编号 (适用于 PPTX)。
+     * Slide number (applicable to PPTX)
      */
     slideNumber?: number;
 
     /**
-     * 如果原始文件单元被进一步分割成块，这是该单元的总块数。
+     * If the original file unit is further split into chunks, this is the total number of chunks for that unit
      */
     totalChunks?: number;
   };
 
   /**
-   * 此页/块的核心文本内容。
+   * Core text content of this page/block
    */
   pageContent: string;
 }
 
 /**
- * 文档来源类型
+ * Document source type
  */
 export enum DocumentSourceType {
   /**
-   * 来自 API 的内容
+   * Content from API
    */
   API = 'api',
 
   /**
-   * 本地或上传的文件
+   * Document created in editor
+   */
+  EDITOR = 'editor',
+
+  /**
+   * Local or uploaded file
    */
   FILE = 'file',
 
   /**
-   * 网页内容
+   * Web content
    */
   WEB = 'web',
 }

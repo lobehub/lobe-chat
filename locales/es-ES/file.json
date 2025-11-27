@@ -1,5 +1,8 @@
 {
-  "desc": "Gestiona tu conocimiento",
+  "addFolder": "Crear carpeta",
+  "addKnowledge": "Agregar conocimiento",
+  "addPage": "Crear documento",
+  "desc": "Gestiona tus conocimientos de trabajo, estudio y vida.",
   "detail": {
     "basic": {
       "createdAt": "Fecha de creación",
@@ -21,14 +24,88 @@
       "embeddingStatus": "Vectorización"
     }
   },
+  "documentEditor": {
+    "addIcon": "Agregar ícono",
+    "autoSaveMessage": "El documento se guarda automáticamente, no es necesario guardarlo manualmente",
+    "chooseIcon": "Elegir ícono",
+    "deleteConfirm": {
+      "content": "Estás a punto de eliminar este documento. Una vez eliminado, no se podrá recuperar. Procede con precaución.",
+      "title": "Eliminar documento"
+    },
+    "deleteError": "Error al eliminar el documento",
+    "deleteSuccess": "Documento eliminado con éxito",
+    "editedAt": "Última edición el {{time}}",
+    "editedBy": "Editado por última vez por {{name}}",
+    "editorPlaceholder": "Escribe el contenido del documento, pulsa / para abrir el menú de comandos",
+    "empty": {
+      "createNewDocument": "Crear nuevo documento",
+      "title": "Selecciona un documento para comenzar",
+      "uploadMarkdown": "Subir archivo Markdown"
+    },
+    "linkCopied": "Enlace copiado",
+    "menu": {
+      "copyLink": "Copiar enlace",
+      "exportDocument": "Exportar documento",
+      "importDocument": "Importar documento",
+      "pin": "Fijar documento"
+    },
+    "saving": "Guardando...",
+    "titlePlaceholder": "Sin título",
+    "wordCount": "{{wordCount}} palabras"
+  },
+  "documentList": {
+    "copyContent": "Copiar todo el contenido",
+    "duplicate": "Crear una copia",
+    "empty": "Aún no hay documentos. Haz clic en el botón de arriba para crear tu primer documento.",
+    "noResults": "No se encontraron documentos coincidentes",
+    "pageCount": "Total de {{count}} documentos",
+    "selectNote": "Selecciona un documento para comenzar a editar",
+    "untitled": "Sin título"
+  },
   "empty": "No hay archivos/carpetas subidos aún",
   "header": {
     "actions": {
       "newFolder": "Nueva carpeta",
+      "newPage": "Nuevo documento",
       "uploadFile": "Subir archivo",
       "uploadFolder": "Subir carpeta"
     },
+    "newNoteDialog": {
+      "cancel": "Cancelar",
+      "editTitle": "Editar documento",
+      "emptyContent": "El contenido del documento no puede estar vacío",
+      "loadError": "Error al cargar el documento, por favor intenta de nuevo",
+      "loading": "Cargando...",
+      "save": "Guardar",
+      "saveError": "Error al guardar el documento, por favor intenta de nuevo",
+      "saveSuccess": "Documento guardado con éxito",
+      "title": "Nuevo documento",
+      "updateSuccess": "Documento actualizado con éxito"
+    },
+    "newPageButton": "Nuevo documento",
     "uploadButton": "Subir"
+  },
+  "home": {
+    "getStarted": "Comenzar",
+    "greeting": "Comenzar",
+    "quickActions": "Acciones rápidas",
+    "recentFiles": "Archivos recientes",
+    "recentPages": "Páginas recientes",
+    "subtitle": "Bienvenido a tu base de conocimientos. Comienza aquí a gestionar tus documentos y notas",
+    "uploadEntries": {
+      "files": {
+        "title": "Subir archivos"
+      },
+      "folder": {
+        "title": "Subir carpeta"
+      },
+      "knowledgeBase": {
+        "title": "Nueva base de conocimientos"
+      },
+      "newPage": {
+        "title": "Nuevo documento"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "Nueva base de conocimientos",
     "title": "Base de conocimientos"
+  },
+  "menu": {
+    "allFiles": "Todos los archivos",
+    "allPages": "Todos los documentos"
   },
   "networkError": "Error al obtener la base de conocimientos, por favor verifica la conexión a internet y vuelve a intentarlo",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "Este formato de archivo no es compatible con la vista previa en línea. Si desea solicitar una vista previa, no dude en <1>contactarnos</1>."
   },
   "searchFilePlaceholder": "Buscar archivo",
+  "searchPagePlaceholder": "Buscar documentos",
   "tab": {
-    "all": "Todos los archivos",
+    "all": "Todo",
     "audios": "Audios",
     "documents": "Documentos",
+    "home": "Inicio",
     "images": "Imágenes",
+    "moreTypes": "Más tipos",
+    "pages": "Documentos",
     "videos": "Videos",
     "websites": "Sitios web"
   },
   "title": "Base de conocimientos",
-  "toggleLeftPanel": {
-    "title": "Mostrar/Ocultar panel izquierdo"
-  },
+  "toggleLeftPanel": "Mostrar/Ocultar panel izquierdo",
   "uploadDock": {
     "body": {
       "collapse": "Colapsar",

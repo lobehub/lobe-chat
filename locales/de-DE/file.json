@@ -1,5 +1,8 @@
 {
-  "desc": "Verwalte dein Wissen",
+  "addFolder": "Ordner erstellen",
+  "addKnowledge": "Wissen hinzufügen",
+  "addPage": "Dokument erstellen",
+  "desc": "Verwalte dein Wissen für Arbeit, Studium und Alltag.",
   "detail": {
     "basic": {
       "createdAt": "Erstellungszeit",
@@ -21,14 +24,88 @@
       "embeddingStatus": "Vektorisierung"
     }
   },
+  "documentEditor": {
+    "addIcon": "Symbol hinzufügen",
+    "autoSaveMessage": "Das Dokument wird automatisch gespeichert, ein manuelles Speichern ist nicht erforderlich.",
+    "chooseIcon": "Symbol auswählen",
+    "deleteConfirm": {
+      "content": "Dieses Dokument wird gelöscht und kann danach nicht wiederhergestellt werden. Bitte seien Sie vorsichtig.",
+      "title": "Dokument löschen"
+    },
+    "deleteError": "Löschen des Dokuments fehlgeschlagen",
+    "deleteSuccess": "Dokument erfolgreich gelöscht",
+    "editedAt": "Zuletzt bearbeitet am {{time}}",
+    "editedBy": "Zuletzt bearbeitet von {{name}}",
+    "editorPlaceholder": "Geben Sie den Dokumentinhalt ein, drücken Sie / für das Befehlsmenü",
+    "empty": {
+      "createNewDocument": "Neues Dokument erstellen",
+      "title": "Wählen Sie ein Dokument, um zu beginnen",
+      "uploadMarkdown": "Markdown-Datei hochladen"
+    },
+    "linkCopied": "Link wurde kopiert",
+    "menu": {
+      "copyLink": "Link kopieren",
+      "exportDocument": "Dokument exportieren",
+      "importDocument": "Dokument importieren",
+      "pin": "Dokument anheften"
+    },
+    "saving": "Speichern...",
+    "titlePlaceholder": "Ohne Titel",
+    "wordCount": "{{wordCount}} Wörter"
+  },
+  "documentList": {
+    "copyContent": "Gesamten Inhalt kopieren",
+    "duplicate": "Kopie erstellen",
+    "empty": "Noch keine Dokumente vorhanden. Klicke auf die Schaltfläche oben, um dein erstes Dokument zu erstellen.",
+    "noResults": "Keine passenden Dokumente gefunden",
+    "pageCount": "Insgesamt {{count}} Dokumente",
+    "selectNote": "Wähle ein Dokument aus, um mit der Bearbeitung zu beginnen",
+    "untitled": "Ohne Titel"
+  },
   "empty": "Keine hochgeladenen Dateien/Ordner vorhanden",
   "header": {
     "actions": {
       "newFolder": "Neuen Ordner erstellen",
+      "newPage": "Neues Dokument",
       "uploadFile": "Datei hochladen",
       "uploadFolder": "Ordner hochladen"
     },
+    "newNoteDialog": {
+      "cancel": "Abbrechen",
+      "editTitle": "Dokument bearbeiten",
+      "emptyContent": "Der Dokumentinhalt darf nicht leer sein",
+      "loadError": "Fehler beim Laden des Dokuments. Bitte versuchen Sie es erneut.",
+      "loading": "Wird geladen...",
+      "save": "Speichern",
+      "saveError": "Fehler beim Speichern des Dokuments. Bitte versuchen Sie es erneut.",
+      "saveSuccess": "Dokument erfolgreich gespeichert",
+      "title": "Neues Dokument",
+      "updateSuccess": "Dokument erfolgreich aktualisiert"
+    },
+    "newPageButton": "Neues Dokument erstellen",
     "uploadButton": "Hochladen"
+  },
+  "home": {
+    "getStarted": "Loslegen",
+    "greeting": "Loslegen",
+    "quickActions": "Schnellaktionen",
+    "recentFiles": "Kürzlich verwendete Dateien",
+    "recentPages": "Kürzlich geöffnete Dokumente",
+    "subtitle": "Willkommen im Wissensspeicher. Beginnen Sie hier mit der Verwaltung Ihrer Dokumente.",
+    "uploadEntries": {
+      "files": {
+        "title": "Dateien hochladen"
+      },
+      "folder": {
+        "title": "Ordner hochladen"
+      },
+      "knowledgeBase": {
+        "title": "Neue Wissensdatenbank"
+      },
+      "newPage": {
+        "title": "Neues Dokument erstellen"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "Neue Wissensdatenbank",
     "title": "Wissensdatenbank"
+  },
+  "menu": {
+    "allFiles": "Alle Dateien",
+    "allPages": "Alle Dokumente"
   },
   "networkError": "Fehler beim Abrufen der Wissensdatenbank. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut.",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "Dieses Dateiformat wird derzeit nicht für die Online-Vorschau unterstützt. Wenn Sie eine Vorschau wünschen, können Sie uns gerne <1>Feedback geben</1>."
   },
   "searchFilePlaceholder": "Datei suchen",
+  "searchPagePlaceholder": "Dokumente durchsuchen",
   "tab": {
-    "all": "Alle Dateien",
+    "all": "Alle",
     "audios": "Audio",
     "documents": "Dokumente",
+    "home": "Startseite",
     "images": "Bilder",
+    "moreTypes": "Weitere Typen",
+    "pages": "Dokumente",
     "videos": "Videos",
     "websites": "Webseiten"
   },
   "title": "Wissensdatenbank",
-  "toggleLeftPanel": {
-    "title": "Linkes Panel einblenden/ausblenden"
-  },
+  "toggleLeftPanel": "Seitenleiste ein-/ausblenden",
   "uploadDock": {
     "body": {
       "collapse": "Einklappen",

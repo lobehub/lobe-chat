@@ -38,6 +38,7 @@ export enum KnowledgeType {
 
 export interface KnowledgeItem {
   avatar?: string | null;
+  content?: string;
   description?: string | null;
   enabled?: boolean;
   fileType?: string;

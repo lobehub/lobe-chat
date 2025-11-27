@@ -2,6 +2,45 @@
   "about": {
     "title": "Sobre"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Avatar",
+      "description": "Descrição",
+      "name": "Nome",
+      "tags": "Tags",
+      "title": "Informações do Assistente"
+    },
+    "chat": {
+      "displayMode": "Modo de exibição",
+      "enableHistoryCount": "Ativar contagem de mensagens anteriores",
+      "historyCount": "Número de mensagens anteriores",
+      "no": "Não",
+      "searchMode": "Modo de busca",
+      "title": "Preferências de conversa",
+      "yes": "Sim"
+    },
+    "model": {
+      "maxTokens": "Máximo de Tokens",
+      "model": "Modelo",
+      "provider": "Provedor",
+      "temperature": "Temperatura",
+      "title": "Configurações do Modelo",
+      "topP": "Valor Top P"
+    },
+    "plugins": {
+      "count": "Configurações de Plugins ({{count}})",
+      "empty": "Nenhum plugin instalado",
+      "title": "Plugins Instalados"
+    },
+    "role": {
+      "systemRole": "Prompt do sistema",
+      "title": "Configurações de Papel"
+    },
+    "value": {
+      "unset": "Não definido",
+      "untitled": "Assistente sem título"
+    }
+  },
   "agentTab": {
     "chat": "Preferências de bate-papo",
     "meta": "Informações do assistente",
@@ -18,6 +57,8 @@
     },
     "title": "Análise de dados"
   },
+  "checking": "Verificando...",
+  "checkingPermissions": "Verificando permissões...",
   "danger": {
     "clear": {
       "action": "Limpar Agora",
@@ -146,6 +187,58 @@
     },
     "waitingForMore": "Mais modelos estão sendo <1>planejados para serem adicionados</1>, aguarde ansiosamente"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Descreva as principais mudanças e melhorias desta versão",
+        "label": "Registro de alterações",
+        "maxLengthError": "O registro de alterações não pode exceder 500 caracteres",
+        "placeholder": "Insira o registro de alterações",
+        "required": "Por favor, insira o registro de alterações"
+      },
+      "comparison": {
+        "local": "Versão local atual",
+        "remote": "Versão publicada atual"
+      },
+      "identifier": {
+        "extra": "O identificador será usado como a identificação única do assistente. Recomenda-se usar letras minúsculas, números e hífens",
+        "label": "Identificador do Assistente",
+        "lengthError": "O identificador deve ter entre 3 e 50 caracteres",
+        "patternError": "O identificador pode conter apenas letras minúsculas, números e hífens",
+        "placeholder": "Insira o identificador único do assistente, ex: web-development",
+        "required": "Por favor, insira o identificador do assistente"
+      },
+      "loading": {
+        "fetchingRemote": "Carregando dados remotos...",
+        "submit": "Publicando assistente...",
+        "upload": "Publicando nova versão..."
+      },
+      "messages": {
+        "createVersionFailed": "Falha ao criar versão: {{message}}",
+        "fetchRemoteFailed": "Falha ao obter dados do assistente remoto",
+        "missingIdentifier": "O assistente atual ainda não possui um identificador de mercado",
+        "notAuthenticated": "Por favor, faça login na conta do mercado",
+        "publishFailed": "Falha na publicação: {{message}}"
+      },
+      "submitButton": "Publicar",
+      "title": {
+        "submit": "Compartilhar no Mercado de Assistentes",
+        "upload": "Publicar Nova Versão"
+      }
+    },
+    "resultModal": {
+      "message": "O assistente foi enviado para revisão. Após aprovação, será publicado automaticamente. Clique em \"Ver no Mercado\" para visualizar o assistente publicado.",
+      "view": "Ver no Mercado"
+    },
+    "submit": {
+      "button": "Compartilhar no Mercado",
+      "tooltip": "Compartilhar assistente no mercado"
+    },
+    "upload": {
+      "button": "Publicar Nova Versão",
+      "tooltip": "Publicar nova versão no mercado de assistentes"
+    }
+  },
   "message": {
     "success": "Atualização bem-sucedida"
   },
@@ -199,6 +292,12 @@
       "disabled": "Desativado",
       "elegant": "Elegante",
       "title": "Animação de Resposta"
+    },
+    "contextMenuMode": {
+      "default": "Padrão",
+      "desc": "Escolha o modo de exibição do menu de contexto ao clicar com o botão direito nas mensagens de chat",
+      "disabled": "Desativado",
+      "title": "Modo do menu de contexto"
     },
     "neutralColor": {
       "desc": "Personalização de escala de cinza com diferentes inclinações de cor",
@@ -561,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Enviar Assistente",
-    "identifier": "Identificador do assistente",
+    "identifier": "Identificador do Assistente (identifier)",
     "metaMiss": "Por favor, complete as informações do assistente antes de enviar, incluindo nome, descrição e etiqueta",
     "placeholder": "Insira o identificador único do assistente, como por exemplo, desenvolvimento-web",
     "tooltips": "Compartilhar no mercado de assistentes"

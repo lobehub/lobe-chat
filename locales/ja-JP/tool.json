@@ -14,9 +14,31 @@
     "images": "画像:",
     "prompt": "プロンプト"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "文字数",
+        "lines": "行数"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "置換後の文字列",
+      "oldString": "検索文字列",
+      "replaceAll": "すべて置換",
+      "replaceFirst": "最初の一致のみ置換"
+    },
     "file": "ファイル",
     "folder": "フォルダー",
+    "moveFiles": {
+      "itemsMoved": "{{count}} 件のアイテムを移動しました：",
+      "itemsMoved_one": "{{count}} 件のアイテムを移動しました：",
+      "itemsMoved_other": "{{count}} 件のアイテムを移動しました：",
+      "itemsToMove": "{{count}} 件のアイテムを移動予定：",
+      "itemsToMove_one": "{{count}} 件のアイテムを移動予定：",
+      "itemsToMove_other": "{{count}} 件のアイテムを移動予定："
+    },
     "open": "開く",
     "openFile": "ファイルを開く",
     "openFolder": "フォルダーを開く",
@@ -26,7 +48,12 @@
     "readFile": "ファイルを読み込む",
     "readFileError": "ファイルの読み込みに失敗しました。ファイルパスが正しいか確認してください。",
     "readFiles": "ファイルを読み込む",
-    "readFilesError": "ファイルの読み込みに失敗しました。ファイルパスが正しいか確認してください。"
+    "readFilesError": "ファイルの読み込みに失敗しました。ファイルパスが正しいか確認してください。",
+    "writeFile": {
+      "characters": "文字数",
+      "preview": "内容プレビュー",
+      "truncated": "切り捨てられました"
+    }
   },
   "search": {
     "createNewSearch": "新しい検索記録を作成",

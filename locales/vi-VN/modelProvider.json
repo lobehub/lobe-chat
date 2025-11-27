@@ -199,6 +199,12 @@
     "all": "Tất cả",
     "list": {
       "disabled": "Chưa kích hoạt",
+      "disabledActions": {
+        "sort": "Cách sắp xếp",
+        "sortAlphabetical": "Sắp xếp theo chữ cái",
+        "sortAlphabeticalDesc": "Sắp xếp theo chữ cái (Z-A)",
+        "sortDefault": "Sắp xếp mặc định"
+      },
       "enabled": "Đã kích hoạt"
     },
     "notFound": "Không tìm thấy kết quả tìm kiếm",
@@ -289,7 +295,7 @@
       },
       "helpDoc": "Hướng dẫn cấu hình",
       "responsesApi": {
-        "desc": "Sử dụng định dạng yêu cầu thế hệ mới của OpenAI, mở khóa các tính năng nâng cao như chuỗi suy nghĩ",
+        "desc": "Áp dụng định dạng yêu cầu thế hệ mới của OpenAI, mở khóa các tính năng nâng cao như chuỗi tư duy (chỉ hỗ trợ mô hình OpenAI)",
         "title": "Sử dụng chuẩn Responses API"
       },
       "waitingForMore": "Nhiều mô hình hơn đang <1>được lên kế hoạch</1>, xin hãy chờ đợi"
@@ -391,7 +397,13 @@
       "addNew": "Thêm mô hình",
       "disabled": "Chưa được kích hoạt",
       "disabledActions": {
-        "showMore": "Hiển thị tất cả"
+        "showMore": "Hiển thị tất cả",
+        "sort": "Cách sắp xếp",
+        "sortAlphabetical": "Sắp xếp theo chữ cái",
+        "sortAlphabeticalDesc": "Sắp xếp theo chữ cái (Z-A)",
+        "sortDefault": "Sắp xếp mặc định",
+        "sortReleasedAt": "Sắp xếp theo ngày phát hành sớm nhất",
+        "sortReleasedAtDesc": "Sắp xếp theo ngày phát hành mới nhất"
       },
       "empty": {
         "desc": "Vui lòng tạo mô hình tùy chỉnh hoặc kéo mô hình để bắt đầu sử dụng",

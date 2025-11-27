@@ -17,6 +17,7 @@
   "availableAgents": "دستیاران در دسترس",
   "backToBottom": "بازگشت به پایین",
   "chatList": {
+    "expandMessage": "گسترش پیام",
     "longMessageDetail": "مشاهده جزئیات"
   },
   "clearCurrentMessages": "پاک کردن پیام‌های جلسه فعلی",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "کلید تفکر عمیق"
+    },
+    "thinkingLevel": {
+      "title": "سطح تفکر"
     },
     "title": "ویژگی‌های گسترش مدل",
     "urlContext": {
@@ -173,8 +177,11 @@
     "title": "ذکر اعضا"
   },
   "messageAction": {
+    "collapse": "بستن پیام",
+    "continueGeneration": "ادامه تولید",
     "delAndRegenerate": "حذف و بازتولید",
     "deleteDisabledByThreads": "زیرموضوع وجود دارد، نمی‌توان حذف کرد",
+    "expand": "گسترش پیام",
     "regenerate": "بازتولید"
   },
   "messages": {
@@ -239,6 +246,7 @@
   "noMatchingAgents": "عضوی مطابق با جستجو یافت نشد",
   "noMembersYet": "این گروه هنوز عضوی ندارد. برای دعوت دستیاران، روی دکمهٔ + کلیک کنید.",
   "noSelectedAgents": "هنوز هیچ عضوی انتخاب نشده است",
+  "openInNewWindow": "باز کردن در یک پنجره جدید",
   "owner": "صاحب گروه",
   "pin": "سنجاق کردن",
   "pinOff": "لغو سنجاق",
@@ -325,6 +333,11 @@
     "screenshot": "اسکرین‌شات",
     "settings": "تنظیمات خروجی",
     "text": "متن",
+    "widthMode": {
+      "label": "حالت عرض",
+      "narrow": "حالت صفحه باریک",
+      "wide": "حالت صفحه عریض"
+    },
     "withBackground": "شامل تصویر پس‌زمینه",
     "withFooter": "شامل پاورقی",
     "withPluginInfo": "شامل اطلاعات افزونه",
@@ -366,6 +379,29 @@
     "overload": "بیش از حد",
     "remained": "باقی‌مانده",
     "used": "استفاده شده"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "تأیید",
+      "approveAndRemember": "تأیید و به خاطر سپردن",
+      "approveOnce": "تأیید فقط برای این بار",
+      "mode": {
+        "allowList": "فهرست مجاز",
+        "allowListDesc": "فقط ابزارهای تأییدشده به‌صورت خودکار اجرا می‌شوند",
+        "autoRun": "تأیید خودکار",
+        "autoRunDesc": "تأیید خودکار اجرای همه ابزارها",
+        "manual": "دستی",
+        "manualDesc": "نیاز به تأیید دستی برای هر بار فراخوانی"
+      },
+      "reject": "رد کردن",
+      "rejectAndContinue": "رد کردن و تلاش مجدد برای اجرا",
+      "rejectOnly": "رد کردن",
+      "rejectReasonPlaceholder": "وارد کردن دلیل رد به Agent کمک می‌کند تا اقدامات بعدی را بهینه کند",
+      "rejectTitle": "رد این فراخوانی ابزار",
+      "rejectedWithReason": "این فراخوانی ابزار با دلیل زیر رد شد:{{reason}}",
+      "toolAbort": "این فراخوانی ابزار توسط کاربر لغو شد",
+      "toolRejected": "این فراخوانی ابزار به‌صورت دستی رد شد"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "آیا مایل به باز کردن موضوع جدید هستید؟",

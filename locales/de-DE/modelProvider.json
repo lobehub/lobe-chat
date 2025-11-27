@@ -199,6 +199,12 @@
     "all": "Alle",
     "list": {
       "disabled": "Nicht aktiviert",
+      "disabledActions": {
+        "sort": "Sortieroptionen",
+        "sortAlphabetical": "Alphabetisch sortieren",
+        "sortAlphabeticalDesc": "In umgekehrter alphabetischer Reihenfolge sortieren",
+        "sortDefault": "Standard-Sortierung"
+      },
       "enabled": "Aktiviert"
     },
     "notFound": "Keine Suchergebnisse gefunden",
@@ -289,7 +295,7 @@
       },
       "helpDoc": "Konfigurationsanleitung",
       "responsesApi": {
-        "desc": "Verwendet das neue Anforderungsformat von OpenAI, um fortgeschrittene Funktionen wie Chain-of-Thought freizuschalten",
+        "desc": "Verwendet das neue Anforderungsformat von OpenAI, um erweiterte Funktionen wie Chain-of-Thought freizuschalten (nur mit OpenAI-Modellen kompatibel)",
         "title": "Verwendung des Responses API-Standards"
       },
       "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte warten Sie"
@@ -391,7 +397,13 @@
       "addNew": "Modell hinzufügen",
       "disabled": "Nicht aktiviert",
       "disabledActions": {
-        "showMore": "Alle anzeigen"
+        "showMore": "Alle anzeigen",
+        "sort": "Sortieroptionen",
+        "sortAlphabetical": "Alphabetisch sortieren",
+        "sortAlphabeticalDesc": "In umgekehrter alphabetischer Reihenfolge sortieren",
+        "sortDefault": "Standard-Sortierung",
+        "sortReleasedAt": "Nach frühestem Veröffentlichungsdatum sortieren",
+        "sortReleasedAtDesc": "Nach neuestem Veröffentlichungsdatum sortieren"
       },
       "empty": {
         "desc": "Bitte erstellen Sie ein benutzerdefiniertes Modell oder ziehen Sie ein Modell, um zu beginnen.",

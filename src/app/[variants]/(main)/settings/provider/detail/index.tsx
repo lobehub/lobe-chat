@@ -1,21 +1,40 @@
-import ProviderGrid from '../(list)/ProviderGrid';
-import Azure from './azure';
-import AzureAI from './azureai';
-import Bedrock from './bedrock';
-import Cloudflare from './cloudflare';
-import ComfyUI from './comfyui';
-import DefaultPage from './default/ProviderDetialPage';
-import GitHub from './github';
-import Ollama from './ollama';
-import OpenAI from './openai';
-import VertexAI from './vertexai';
+import dynamic from 'next/dynamic';
 
-const ProviderDetailPage = (props: { id?: string | null }) => {
-  const { id } = props;
+import Loading from '@/components/Loading/BrandTextLoading';
+
+const NewAPI = dynamic(() => import('./newapi'), { loading: () => <Loading />, ssr: false });
+const OpenAI = dynamic(() => import('./openai'), { loading: () => <Loading />, ssr: false });
+const VertexAI = dynamic(() => import('./vertexai'), { loading: () => <Loading />, ssr: false });
+const GitHub = dynamic(() => import('./github'), { loading: () => <Loading />, ssr: false });
+const Ollama = dynamic(() => import('./ollama'), { loading: () => <Loading />, ssr: false });
+const ComfyUI = dynamic(() => import('./comfyui'), { loading: () => <Loading />, ssr: false });
+const Cloudflare = dynamic(() => import('./cloudflare'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+const Bedrock = dynamic(() => import('./bedrock'), { loading: () => <Loading />, ssr: false });
+const AzureAI = dynamic(() => import('./azureai'), { loading: () => <Loading />, ssr: false });
+const Azure = dynamic(() => import('./azure'), { loading: () => <Loading />, ssr: false });
+const ProviderGrid = dynamic(() => import('../(list)/ProviderGrid'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+const DefaultPage = dynamic(() => import('./default/ProviderDetialPage'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+
+type ProviderDetailPageProps = {
+  id?: string | null;
+  onProviderSelect: (provider: string) => void;
+};
+
+const ProviderDetailPage = (props: ProviderDetailPageProps) => {
+  const { id, onProviderSelect } = props;
 
   switch (id) {
     case 'all': {
-      return <ProviderGrid />;
+      return <ProviderGrid onProviderSelect={onProviderSelect} />;
     }
     case 'azure': {
       return <Azure />;
@@ -37,6 +56,9 @@ const ProviderDetailPage = (props: { id?: string | null }) => {
     }
     case 'ollama': {
       return <Ollama />;
+    }
+    case 'newapi': {
+      return <NewAPI />;
     }
     case 'openai': {
       return <OpenAI />;

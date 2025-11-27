@@ -14,9 +14,31 @@
     "images": "Görseller:",
     "prompt": "İpucu"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Karakter Sayısı",
+        "lines": "Satır Sayısı"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "Şununla değiştir",
+      "oldString": "Aranacak içerik",
+      "replaceAll": "Tüm eşleşmeleri değiştir",
+      "replaceFirst": "Yalnızca ilk eşleşmeyi değiştir"
+    },
     "file": "Dosya",
     "folder": "Klasör",
+    "moveFiles": {
+      "itemsMoved": "{{count}} öğe taşındı:",
+      "itemsMoved_one": "{{count}} öğe taşındı:",
+      "itemsMoved_other": "{{count}} öğe taşındı:",
+      "itemsToMove": "{{count}} öğe taşınacak:",
+      "itemsToMove_one": "{{count}} öğe taşınacak:",
+      "itemsToMove_other": "{{count}} öğe taşınacak:"
+    },
     "open": "Aç",
     "openFile": "Dosyayı Aç",
     "openFolder": "Klasörü Aç",
@@ -26,7 +48,12 @@
     "readFile": "Dosyayı Oku",
     "readFileError": "Dosya okunamadı, lütfen dosya yolunu kontrol edin",
     "readFiles": "Dosyaları Oku",
-    "readFilesError": "Dosyalar okunamadı, lütfen dosya yolunu kontrol edin"
+    "readFilesError": "Dosyalar okunamadı, lütfen dosya yolunu kontrol edin",
+    "writeFile": {
+      "characters": "Karakter",
+      "preview": "İçerik Önizlemesi",
+      "truncated": "Kısaltıldı"
+    }
   },
   "search": {
     "createNewSearch": "Yeni bir arama kaydı oluştur",

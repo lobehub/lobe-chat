@@ -6,22 +6,13 @@ import { ragService } from '@/services/rag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { ChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors, displayMessageSelectors } from '@/store/chat/selectors';
 import { toggleBooleanList } from '@/store/chat/utils';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import { ChatSemanticSearchChunk } from '@/types/chunk';
 
 export interface ChatRAGAction {
   deleteUserMessageRagQuery: (id: string) => Promise<void>;
-  /**
-   * Retrieve chunks from semantic search
-   */
-  internal_retrieveChunks: (
-    id: string,
-    userQuery: string,
-    messages: string[],
-  ) => Promise<{ chunks: ChatSemanticSearchChunk[]; queryId?: string; rewriteQuery?: string }>;
   /**
    * Rewrite user content to better RAG query
    */
@@ -35,7 +26,6 @@ export interface ChatRAGAction {
   rewriteQuery: (id: string) => Promise<void>;
 }
 
-const knowledgeIds = () => agentSelectors.currentKnowledgeIds(useAgentStore.getState());
 const hasEnabledKnowledge = () => agentSelectors.hasEnabledKnowledge(useAgentStore.getState());
 
 export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [], ChatRAGAction> = (
@@ -43,7 +33,7 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
   get,
 ) => ({
   deleteUserMessageRagQuery: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     if (!message || !message.ragQueryId) return;
 
@@ -58,40 +48,6 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
     await get().refreshMessages();
   },
 
-  internal_retrieveChunks: async (id, userQuery, messages) => {
-    get().internal_toggleMessageRAGLoading(true, id);
-
-    const message = chatSelectors.getMessageById(id)(get());
-
-    // 1. get the rewrite query
-    let rewriteQuery = message?.ragQuery as string | undefined;
-
-    // if there is no ragQuery and there is a chat history
-    // we need to rewrite the user message to get better results
-    if (!message?.ragQuery && messages.length > 0) {
-      rewriteQuery = await get().internal_rewriteQuery(id, userQuery, messages);
-    }
-
-    // 2. retrieve chunks from semantic search
-    const files = chatSelectors.currentUserFiles(get()).map((f) => f.id);
-    try {
-      const { chunks, queryId } = await ragService.semanticSearchForChat({
-        fileIds: knowledgeIds().fileIds.concat(files),
-        knowledgeIds: knowledgeIds().knowledgeBaseIds,
-        messageId: id,
-        rewriteQuery: rewriteQuery || userQuery,
-        userQuery,
-      });
-
-      get().internal_toggleMessageRAGLoading(false, id);
-
-      return { chunks, queryId, rewriteQuery };
-    } catch {
-      get().internal_toggleMessageRAGLoading(false, id);
-
-      return { chunks: [] };
-    }
-  },
   internal_rewriteQuery: async (id, content, messages) => {
     let rewriteQuery = content;
 
@@ -145,13 +101,13 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
   },
 
   rewriteQuery: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
     // delete the current ragQuery
     await get().deleteUserMessageRagQuery(id);
 
-    const chats = chatSelectors.mainAIChatsWithHistoryConfig(get());
+    const chats = displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
 
     await get().internal_rewriteQuery(
       id,

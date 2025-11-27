@@ -18,6 +18,7 @@ import {
   WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
 import { SYSTEM_FILES_TO_IGNORE, loadFile } from '@lobechat/file-loaders';
+import { createPatch } from 'diff';
 import { shell } from 'electron';
 import fg from 'fast-glob';
 import { Stats, constants } from 'node:fs';
@@ -94,26 +95,45 @@ export default class LocalFileCtr extends ControllerModule {
   }
 
   @ipcClientEvent('readLocalFile')
-  async readFile({ path: filePath, loc }: LocalReadFileParams): Promise<LocalReadFileResult> {
-    const effectiveLoc = loc ?? [0, 200];
-    logger.debug('Starting to read file:', { filePath, loc: effectiveLoc });
+  async readFile({
+    path: filePath,
+    loc,
+    fullContent,
+  }: LocalReadFileParams): Promise<LocalReadFileResult> {
+    const effectiveLoc = fullContent ? undefined : (loc ?? [0, 200]);
+    logger.debug('Starting to read file:', { filePath, fullContent, loc: effectiveLoc });
 
     try {
       const fileDocument = await loadFile(filePath);
 
-      const [startLine, endLine] = effectiveLoc;
       const lines = fileDocument.content.split('\n');
       const totalLineCount = lines.length;
       const totalCharCount = fileDocument.content.length;
 
-      // Adjust slice indices to be 0-based and inclusive/exclusive
-      const selectedLines = lines.slice(startLine, endLine);
-      const content = selectedLines.join('\n');
-      const charCount = content.length;
-      const lineCount = selectedLines.length;
+      let content: string;
+      let charCount: number;
+      let lineCount: number;
+      let actualLoc: [number, number];
+
+      if (effectiveLoc === undefined) {
+        // Return full content
+        content = fileDocument.content;
+        charCount = totalCharCount;
+        lineCount = totalLineCount;
+        actualLoc = [0, totalLineCount];
+      } else {
+        // Return specified range
+        const [startLine, endLine] = effectiveLoc;
+        const selectedLines = lines.slice(startLine, endLine);
+        content = selectedLines.join('\n');
+        charCount = content.length;
+        lineCount = selectedLines.length;
+        actualLoc = effectiveLoc;
+      }
 
       logger.debug('File read successfully:', {
         filePath,
+        fullContent,
         selectedLineCount: lineCount,
         totalCharCount,
         totalLineCount,
@@ -128,7 +148,7 @@ export default class LocalFileCtr extends ControllerModule {
         fileType: fileDocument.fileType,
         filename: fileDocument.filename,
         lineCount,
-        loc: effectiveLoc,
+        loc: actualLoc,
         // Line count for the selected range
         modifiedTime: fileDocument.modifiedTime,
 
@@ -467,15 +487,35 @@ export default class LocalFileCtr extends ControllerModule {
    */
   @ipcClientEvent('searchLocalFiles')
   async handleLocalFilesSearch(params: LocalSearchFilesParams): Promise<FileResult[]> {
-    logger.debug('Received file search request:', { keywords: params.keywords });
+    logger.debug('Received file search request:', {
+      directory: params.directory,
+      keywords: params.keywords,
+    });
 
-    const options: Omit<SearchOptions, 'keywords'> = {
-      limit: 30,
+    // Build search options from params, mapping directory to onlyIn
+    const options: SearchOptions = {
+      contentContains: params.contentContains,
+      createdAfter: params.createdAfter ? new Date(params.createdAfter) : undefined,
+      createdBefore: params.createdBefore ? new Date(params.createdBefore) : undefined,
+      detailed: params.detailed,
+      exclude: params.exclude,
+      fileTypes: params.fileTypes,
+      keywords: params.keywords,
+      limit: params.limit || 30,
+      liveUpdate: params.liveUpdate,
+      modifiedAfter: params.modifiedAfter ? new Date(params.modifiedAfter) : undefined,
+      modifiedBefore: params.modifiedBefore ? new Date(params.modifiedBefore) : undefined,
+      onlyIn: params.directory, // Map directory param to onlyIn option
+      sortBy: params.sortBy,
+      sortDirection: params.sortDirection,
     };
 
     try {
-      const results = await this.searchService.search(params.keywords, options);
-      logger.debug('File search completed', { count: results.length });
+      const results = await this.searchService.search(options.keywords, options);
+      logger.debug('File search completed', {
+        count: results.length,
+        directory: params.directory,
+      });
       return results;
     } catch (error) {
       logger.error('File search failed:', error);
@@ -691,8 +731,32 @@ export default class LocalFileCtr extends ControllerModule {
       // Write back to file
       await writeFile(filePath, newContent, 'utf8');
 
-      logger.info(`${logPrefix} File edited successfully`, { replacements });
+      // Generate diff for UI display
+      const patch = createPatch(filePath, content, newContent, '', '');
+      const diffText = `diff --git a${filePath} b${filePath}\n${patch}`;
+
+      // Calculate lines added and deleted from patch
+      const patchLines = patch.split('\n');
+      let linesAdded = 0;
+      let linesDeleted = 0;
+
+      for (const line of patchLines) {
+        if (line.startsWith('+') && !line.startsWith('+++')) {
+          linesAdded++;
+        } else if (line.startsWith('-') && !line.startsWith('---')) {
+          linesDeleted++;
+        }
+      }
+
+      logger.info(`${logPrefix} File edited successfully`, {
+        linesAdded,
+        linesDeleted,
+        replacements,
+      });
       return {
+        diffText,
+        linesAdded,
+        linesDeleted,
         replacements,
         success: true,
       };

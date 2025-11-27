@@ -1,8 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { imageUrlToBase64 } from '@lobechat/utils';
 import OpenAI from 'openai';
 
 import { OpenAIChatMessage, UserMessageContentPart } from '../../types';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
 
 export const buildAnthropicBlock = async (
@@ -222,4 +222,18 @@ export const buildAnthropicTools = (
       name: tool.function.name,
     }),
   );
+};
+
+export const buildSearchTool = (): Anthropic.WebSearchTool20250305 => {
+  const maxUses = process.env.ANTHROPIC_MAX_USES;
+
+  return {
+    name: 'web_search',
+    type: 'web_search_20250305',
+    ...(maxUses &&
+      Number.isInteger(Number(maxUses)) &&
+      Number(maxUses) > 0 && {
+        max_uses: Number(maxUses),
+      }),
+  };
 };

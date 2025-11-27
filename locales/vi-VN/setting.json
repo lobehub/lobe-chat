@@ -2,6 +2,45 @@
   "about": {
     "title": "Về chúng tôi"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Ảnh đại diện",
+      "description": "Mô tả",
+      "name": "Tên",
+      "tags": "Thẻ",
+      "title": "Thông tin trợ lý"
+    },
+    "chat": {
+      "displayMode": "Chế độ hiển thị",
+      "enableHistoryCount": "Bật đếm tin nhắn lịch sử",
+      "historyCount": "Số lượng tin nhắn lịch sử",
+      "no": "Không",
+      "searchMode": "Chế độ tìm kiếm",
+      "title": "Tùy chọn trò chuyện",
+      "yes": "Có"
+    },
+    "model": {
+      "maxTokens": "Số lượng Token tối đa",
+      "model": "Mô hình",
+      "provider": "Nhà cung cấp",
+      "temperature": "Nhiệt độ",
+      "title": "Cài đặt mô hình",
+      "topP": "Giá trị Top P"
+    },
+    "plugins": {
+      "count": "Cài đặt plugin ({{count}})",
+      "empty": "Chưa cài đặt plugin nào",
+      "title": "Plugin đã cài đặt"
+    },
+    "role": {
+      "systemRole": "Lời nhắc hệ thống",
+      "title": "Cài đặt vai trò"
+    },
+    "value": {
+      "unset": "Chưa thiết lập",
+      "untitled": "Trợ lý chưa có tên"
+    }
+  },
   "agentTab": {
     "chat": "Tùy chọn Trò chuyện",
     "meta": "Thông tin Trợ lý",
@@ -18,6 +57,8 @@
     },
     "title": "Thống kê dữ liệu"
   },
+  "checking": "Đang kiểm tra...",
+  "checkingPermissions": "Đang kiểm tra quyền...",
   "danger": {
     "clear": {
       "action": "Xóa ngay",
@@ -146,6 +187,58 @@
     },
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Mô tả những thay đổi và cải tiến chính trong phiên bản này",
+        "label": "Nhật ký thay đổi",
+        "maxLengthError": "Nhật ký thay đổi không được vượt quá 500 ký tự",
+        "placeholder": "Vui lòng nhập nhật ký thay đổi",
+        "required": "Vui lòng nhập nhật ký thay đổi"
+      },
+      "comparison": {
+        "local": "Phiên bản hiện tại trên máy",
+        "remote": "Phiên bản đã phát hành"
+      },
+      "identifier": {
+        "extra": "Định danh sẽ là mã định danh duy nhất của trợ lý, nên sử dụng chữ thường, số và dấu gạch ngang",
+        "label": "Định danh trợ lý",
+        "lengthError": "Độ dài định danh phải từ 3 đến 50 ký tự",
+        "patternError": "Định danh chỉ được chứa chữ thường, số và dấu gạch ngang",
+        "placeholder": "Vui lòng nhập định danh duy nhất cho trợ lý, ví dụ: web-development",
+        "required": "Vui lòng nhập định danh trợ lý"
+      },
+      "loading": {
+        "fetchingRemote": "Đang tải dữ liệu từ xa...",
+        "submit": "Đang phát hành trợ lý...",
+        "upload": "Đang phát hành phiên bản mới..."
+      },
+      "messages": {
+        "createVersionFailed": "Tạo phiên bản thất bại: {{message}}",
+        "fetchRemoteFailed": "Không thể lấy dữ liệu trợ lý từ xa",
+        "missingIdentifier": "Trợ lý hiện tại chưa có định danh thị trường",
+        "notAuthenticated": "Vui lòng đăng nhập tài khoản thị trường trước",
+        "publishFailed": "Phát hành thất bại: {{message}}"
+      },
+      "submitButton": "Phát hành",
+      "title": {
+        "submit": "Chia sẻ lên thị trường trợ lý",
+        "upload": "Phát hành phiên bản mới"
+      }
+    },
+    "resultModal": {
+      "message": "Trợ lý đã được gửi để kiểm duyệt, sẽ tự động hiển thị sau khi được phê duyệt. Nhấn “Xem trên thị trường” để xem trợ lý đã phát hành.",
+      "view": "Xem trên thị trường"
+    },
+    "submit": {
+      "button": "Chia sẻ lên thị trường",
+      "tooltip": "Chia sẻ trợ lý lên thị trường"
+    },
+    "upload": {
+      "button": "Phát hành phiên bản mới",
+      "tooltip": "Phát hành phiên bản mới lên thị trường trợ lý"
+    }
+  },
   "message": {
     "success": "Cập nhật thành công"
   },
@@ -199,6 +292,12 @@
       "disabled": "Tắt",
       "elegant": "Thanh lịch",
       "title": "Hoạt ảnh phản hồi"
+    },
+    "contextMenuMode": {
+      "default": "Mặc định",
+      "desc": "Chọn phương án hiển thị menu chuột phải cho tin nhắn trò chuyện",
+      "disabled": "Không sử dụng",
+      "title": "Phương án menu chuột phải"
     },
     "neutralColor": {
       "desc": "Tùy chỉnh thang độ xám với các xu hướng màu sắc khác nhau",
@@ -561,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Gửi trợ lý",
-    "identifier": "Nhận dạng trợ lý",
+    "identifier": "Định danh trợ lý (identifier)",
     "metaMiss": "Vui lòng điền đầy đủ thông tin trợ lý trước khi gửi, cần bao gồm tên, mô tả và nhãn",
     "placeholder": "Vui lòng nhập nhận dạng trợ lý, cần phải duy nhất, ví dụ như phát triển web",
     "tooltips": "Chia sẻ lên thị trường trợ lý"

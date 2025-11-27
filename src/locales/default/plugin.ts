@@ -1,4 +1,38 @@
 export default {
+  builtins: {
+    'lobe-knowledge-base': {
+      apiName: {
+        readKnowledge: '读取知识库内容',
+        searchKnowledgeBase: '搜索知识库',
+      },
+      title: '知识库',
+    },
+    'lobe-local-system': {
+      apiName: {
+        editLocalFile: '编辑文件',
+        getCommandOutput: '获取代码输出',
+        globLocalFiles: '匹配搜索文件',
+        grepContent: '搜索内容',
+        killCommand: '终止代码执行',
+        listLocalFiles: '查看文件列表',
+        moveLocalFiles: '移动文件',
+        readLocalFile: '读取文件内容',
+        renameLocalFile: '重命名',
+        runCommand: '执行代码',
+        searchLocalFiles: '搜索文件',
+        writeLocalFile: '写入文件',
+      },
+      title: '本地系统',
+    },
+    'lobe-web-browsing': {
+      apiName: {
+        crawlMultiPages: '读取多个页面内容',
+        crawlSinglePage: '读取页面内容',
+        search: '搜索页面',
+      },
+      title: '联网搜索',
+    },
+  },
   confirm: '确定',
   debug: {
     arguments: '调用参数',
@@ -237,6 +271,9 @@ export default {
   },
   inspector: {
     args: '查看参数列表',
+    delete: '删除工具调用',
+    orphanedToolCall:
+      '该工具调用消息可能因异常原因成为孤立消息，这会影响 Agent 的正常执行，请将其移除',
     pluginRender: '查看插件界面',
   },
   list: {
@@ -249,17 +286,6 @@ export default {
   loading: {
     content: '调用插件中...',
     plugin: '插件运行中...',
-  },
-  localSystem: {
-    apiName: {
-      listLocalFiles: '查看文件列表',
-      moveLocalFiles: '移动文件',
-      readLocalFile: '读取文件内容',
-      renameLocalFile: '重命名',
-      searchLocalFiles: '搜索文件',
-      writeLocalFile: '写入文件',
-    },
-    title: '本地文件',
   },
   mcpInstall: {
     CHECKING_INSTALLATION: '检查安装环境...',
@@ -369,11 +395,6 @@ export default {
     warning: '⚠️ 请确认您信任此插件的来源，恶意插件可能会危害您的系统安全。',
   },
   search: {
-    apiName: {
-      crawlMultiPages: '读取多个页面内容',
-      crawlSinglePage: '读取页面内容',
-      search: '搜索页面',
-    },
     config: {
       addKey: '添加秘钥',
       close: '删除',

@@ -14,9 +14,31 @@
     "images": "Images:",
     "prompt": "Prompt"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Character Count",
+        "lines": "Line Count"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "Replace with",
+      "oldString": "Find",
+      "replaceAll": "Replace all occurrences",
+      "replaceFirst": "Replace first occurrence only"
+    },
     "file": "File",
     "folder": "Folder",
+    "moveFiles": {
+      "itemsMoved": "{{count}} item(s) moved:",
+      "itemsMoved_one": "{{count}} item moved:",
+      "itemsMoved_other": "{{count}} items moved:",
+      "itemsToMove": "{{count}} item(s) to move:",
+      "itemsToMove_one": "{{count}} item to move:",
+      "itemsToMove_other": "{{count}} items to move:"
+    },
     "open": "Open",
     "openFile": "Open File",
     "openFolder": "Open Folder",
@@ -26,7 +48,12 @@
     "readFile": "Read File",
     "readFileError": "Failed to read file, please check if the file path is correct",
     "readFiles": "Read Files",
-    "readFilesError": "Failed to read files, please check if the file path is correct"
+    "readFilesError": "Failed to read files, please check if the file path is correct",
+    "writeFile": {
+      "characters": "characters",
+      "preview": "Content Preview",
+      "truncated": "truncated"
+    }
   },
   "search": {
     "createNewSearch": "Create a new search record",

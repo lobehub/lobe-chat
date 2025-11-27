@@ -14,9 +14,31 @@
     "images": "Bilder:",
     "prompt": "Hinweiswort"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "Zeichenanzahl",
+        "lines": "Zeilenzahl"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "Ersetzen durch",
+      "oldString": "Suchbegriff",
+      "replaceAll": "Alle Vorkommen ersetzen",
+      "replaceFirst": "Nur erstes Vorkommen ersetzen"
+    },
     "file": "Datei",
     "folder": "Ordner",
+    "moveFiles": {
+      "itemsMoved": "{{count}} Elemente wurden verschoben:",
+      "itemsMoved_one": "{{count}} Element wurde verschoben:",
+      "itemsMoved_other": "{{count}} Elemente wurden verschoben:",
+      "itemsToMove": "{{count}} Elemente zum Verschieben:",
+      "itemsToMove_one": "{{count}} Element zum Verschieben:",
+      "itemsToMove_other": "{{count}} Elemente zum Verschieben:"
+    },
     "open": "Öffnen",
     "openFile": "Datei öffnen",
     "openFolder": "Ordner öffnen",
@@ -26,7 +48,12 @@
     "readFile": "Datei lesen",
     "readFileError": "Fehler beim Lesen der Datei, bitte überprüfen Sie den Dateipfad",
     "readFiles": "Dateien lesen",
-    "readFilesError": "Fehler beim Lesen der Dateien, bitte überprüfen Sie den Dateipfad"
+    "readFilesError": "Fehler beim Lesen der Dateien, bitte überprüfen Sie den Dateipfad",
+    "writeFile": {
+      "characters": "Zeichen",
+      "preview": "Vorschau des Inhalts",
+      "truncated": "Abgeschnitten"
+    }
   },
   "search": {
     "createNewSearch": "Neue Suchanfrage erstellen",

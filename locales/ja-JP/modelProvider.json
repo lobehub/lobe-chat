@@ -199,6 +199,12 @@
     "all": "すべて",
     "list": {
       "disabled": "未使用",
+      "disabledActions": {
+        "sort": "並び替え方法",
+        "sortAlphabetical": "アルファベット順に並び替え",
+        "sortAlphabeticalDesc": "アルファベット逆順に並び替え",
+        "sortDefault": "デフォルトの並び順"
+      },
       "enabled": "使用中"
     },
     "notFound": "検索結果が見つかりません",
@@ -289,7 +295,7 @@
       },
       "helpDoc": "設定ガイド",
       "responsesApi": {
-        "desc": "OpenAIの新世代リクエストフォーマット規格を採用し、チェーン思考などの高度な機能を解放します",
+        "desc": "OpenAI の次世代リクエスト形式仕様を採用し、思考チェーンなどの高度な機能を解放します（OpenAI モデルのみ対応）",
         "title": "Responses API 規格の使用"
       },
       "waitingForMore": "さらに多くのモデルが <1>接続予定</1> です。お楽しみに"
@@ -391,7 +397,13 @@
       "addNew": "モデルを追加",
       "disabled": "無効",
       "disabledActions": {
-        "showMore": "すべて表示"
+        "showMore": "すべて表示",
+        "sort": "並び替え方法",
+        "sortAlphabetical": "アルファベット順に並び替え",
+        "sortAlphabeticalDesc": "アルファベット逆順に並び替え",
+        "sortDefault": "デフォルトの並び順",
+        "sortReleasedAt": "公開日が早い順に並び替え",
+        "sortReleasedAtDesc": "公開日が新しい順に並び替え"
       },
       "empty": {
         "desc": "カスタムモデルを作成するか、モデルを取得してから使用を開始してください",

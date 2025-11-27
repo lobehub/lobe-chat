@@ -102,7 +102,7 @@
       "SPII": "İçeriğiniz hassas kişisel kimlik bilgileri içerebilir. Gizliliği korumak için lütfen ilgili hassas bilgileri kaldırıp tekrar deneyin.",
       "default": "İçerik engellendi: {{blockReason}}。Lütfen isteğinizin içeriğini düzenleyip tekrar deneyin."
     },
-    "InsufficientQuota": "Üzgünüm, bu anahtarın kotası (quota) dolmuş durumda, lütfen hesap bakiyenizi kontrol edin veya anahtar kotasını artırdıktan sonra tekrar deneyin",
+    "InsufficientQuota": "Üzgünüz, bu anahtarın kotası doldu. Lütfen hesap bakiyenizin yeterli olup olmadığını kontrol edin veya anahtar kotasını artırdıktan sonra tekrar deneyin.",
     "InvalidAccessCode": "Geçersiz Erişim Kodu: Geçersiz veya boş bir şifre girdiniz. Lütfen doğru erişim şifresini girin veya özel API Anahtarı ekleyin.",
     "InvalidBedrockCredentials": "Bedrock kimlik doğrulaması geçersiz, lütfen AccessKeyId/SecretAccessKey bilgilerinizi kontrol edip tekrar deneyin",
     "InvalidClerkUser": "Üzgünüz, şu anda giriş yapmadınız. Lütfen işlemlere devam etmeden önce giriş yapın veya hesap oluşturun",
@@ -131,7 +131,7 @@
     "PluginServerError": "Eklenti sunucusu isteği bir hata ile döndü. Lütfen aşağıdaki hata bilgilerine dayanarak eklenti bildirim dosyanızı, eklenti yapılandırmanızı veya sunucu uygulamanızı kontrol edin",
     "PluginSettingsInvalid": "Bu eklenti, kullanılmadan önce doğru şekilde yapılandırılmalıdır. Lütfen yapılandırmanızın doğru olup olmadığını kontrol edin",
     "ProviderBizError": "Talep {{provider}} hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
-    "QuotaLimitReached": "Üzgünüz, mevcut Token kullanımı veya istek sayısı bu anahtarın kota (quota) sınırına ulaştı. Lütfen bu anahtarın kotasını artırın veya daha sonra tekrar deneyin.",
+    "QuotaLimitReached": "Üzgünüz, mevcut Token kullanımı veya istek sayısı bu anahtarın kota sınırına ulaştı. Lütfen anahtar kotasını artırın ya da daha sonra tekrar deneyin.",
     "StreamChunkError": "Akış isteği mesaj parçası çözümleme hatası, lütfen mevcut API arayüzünün standartlara uygun olup olmadığını kontrol edin veya API sağlayıcınızla iletişime geçin.",
     "SubscriptionKeyMismatch": "Üzgünüz, sistemdeki geçici bir arıza nedeniyle mevcut abonelik kullanımınız geçici olarak devre dışı kalmıştır. Lütfen aşağıdaki düğmeye tıklayarak aboneliğinizi geri yükleyin veya destek almak için bizimle iletişime geçin.",
     "SubscriptionPlanLimit": "Abonelik puanlarınız tükenmiştir, bu özelliği kullanamazsınız. Lütfen daha yüksek bir plana geçin veya özel model API'sini yapılandırarak devam edin.",

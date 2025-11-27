@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Kennisbankinhoud lezen",
+        "searchKnowledgeBase": "Kennisbank doorzoeken"
+      },
+      "title": "Kennisbank"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Bestand bewerken",
+        "getCommandOutput": "Code-uitvoer ophalen",
+        "globLocalFiles": "Bestanden zoeken met patroon",
+        "grepContent": "Inhoud doorzoeken",
+        "killCommand": "Code-uitvoering beëindigen",
+        "listLocalFiles": "Bestandenlijst bekijken",
+        "moveLocalFiles": "Bestanden verplaatsen",
+        "readLocalFile": "Bestandsinhoud lezen",
+        "renameLocalFile": "Bestand hernoemen",
+        "runCommand": "Code uitvoeren",
+        "searchLocalFiles": "Bestanden doorzoeken",
+        "writeLocalFile": "Bestand schrijven"
+      },
+      "title": "Lokaal systeem"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Inhoud van meerdere pagina's lezen",
+        "crawlSinglePage": "Pagina-inhoud lezen",
+        "search": "Webpagina's doorzoeken"
+      },
+      "title": "Online zoeken"
+    }
+  },
   "confirm": "Bevestigen",
   "debug": {
     "arguments": "Aanroepparameters",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "Bekijk parameterlijst",
+    "delete": "Hulpoproep verwijderen",
+    "orphanedToolCall": "Dit hulpoproepbericht is mogelijk geïsoleerd geraakt door een onverwachte fout, wat de normale werking van de agent kan beïnvloeden. Verwijder het alstublieft.",
     "pluginRender": "Bekijk plugin-interface"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "Plugin aan het aanroepen...",
     "plugin": "Plugin wordt uitgevoerd..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "Bestandslijst bekijken",
-      "moveLocalFiles": "Bestanden verplaatsen",
-      "readLocalFile": "Bestandsinhoud lezen",
-      "renameLocalFile": "Naam wijzigen",
-      "searchLocalFiles": "Bestanden zoeken",
-      "writeLocalFile": "Bestand schrijven"
-    },
-    "title": "Lokale bestanden"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installatieomgeving controleren...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ Bevestig dat u deze pluginbron vertrouwt, kwaadaardige plugins kunnen uw systeem in gevaar brengen."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Meerdere pagina's lezen",
-      "crawlSinglePage": "Pagina-inhoud lezen",
-      "search": "Pagina zoeken"
-    },
     "config": {
       "addKey": "Sleutel toevoegen",
       "close": "Verwijderen",

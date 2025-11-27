@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Wissensdatenbank lesen",
+        "searchKnowledgeBase": "Wissensdatenbank durchsuchen"
+      },
+      "title": "Wissensdatenbank"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Datei bearbeiten",
+        "getCommandOutput": "Codeausgabe abrufen",
+        "globLocalFiles": "Dateien durchsuchen",
+        "grepContent": "Inhalt durchsuchen",
+        "killCommand": "Codeausführung beenden",
+        "listLocalFiles": "Dateiliste anzeigen",
+        "moveLocalFiles": "Dateien verschieben",
+        "readLocalFile": "Dateiinhalt lesen",
+        "renameLocalFile": "Datei umbenennen",
+        "runCommand": "Code ausführen",
+        "searchLocalFiles": "Dateien suchen",
+        "writeLocalFile": "In Datei schreiben"
+      },
+      "title": "Lokales System"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Inhalte mehrerer Seiten lesen",
+        "crawlSinglePage": "Seiteninhalt lesen",
+        "search": "Seiten durchsuchen"
+      },
+      "title": "Websuche"
+    }
+  },
   "confirm": "Bestätigen",
   "debug": {
     "arguments": "Aufrufparameter",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "Parameterliste anzeigen",
+    "delete": "Werkzeugaufruf löschen",
+    "orphanedToolCall": "Dieser Werkzeugaufruf könnte aufgrund eines Fehlers verwaist sein, was den normalen Ablauf des Agenten beeinträchtigen kann. Bitte entfernen Sie ihn.",
     "pluginRender": "Plugin-Oberfläche anzeigen"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "Plugin wird aufgerufen...",
     "plugin": "Plugin läuft..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "Dateiliste anzeigen",
-      "moveLocalFiles": "Dateien verschieben",
-      "readLocalFile": "Dateiinhalt lesen",
-      "renameLocalFile": "Datei umbenennen",
-      "searchLocalFiles": "Dateien suchen",
-      "writeLocalFile": "Datei schreiben"
-    },
-    "title": "Lokale Dateien"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installationsumgebung wird geprüft...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ Bitte stellen Sie sicher, dass Sie der Quelle dieses Plugins vertrauen. Bösartige Plugins können die Systemsicherheit gefährden."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Mehrere Seiteninhalt lesen",
-      "crawlSinglePage": "Seiteninhalt lesen",
-      "search": "Seite durchsuchen"
-    },
     "config": {
       "addKey": "Schlüssel hinzufügen",
       "close": "Löschen",

@@ -1,7 +1,6 @@
+import type { ImportPgDataStructure, ImportResultData, ImporterEntryData } from '@lobechat/types';
 import { and, eq, inArray } from 'drizzle-orm';
 
-import { ImportPgDataStructure } from '@/types/export';
-import { ImportResultData, ImporterEntryData } from '@/types/importer';
 import { uuid } from '@/utils/uuid';
 
 import * as EXPORT_TABLES from '../../schemas';
@@ -18,39 +17,39 @@ interface ImportResult {
 type ConflictStrategy = 'skip' | 'override' | 'merge';
 
 interface TableImportConfig {
-  // 冲突处理策略
+  // Conflict resolution strategy
   conflictStrategy?: ConflictStrategy;
-  // 字段处理函数
+  // Field processing functions
   fieldProcessors?: {
     [field: string]: (value: any) => any;
   };
-  // 是否使用复合主键（没有单独的id字段）
+  // Whether to use composite key (no separate id field)
   isCompositeKey?: boolean;
-  // 是否保留原始ID
+  // Whether to preserve original ID
   preserveId?: boolean;
-  // 关系字段定义
+  // Relation field definitions
   relations?: {
     field: string;
     sourceField?: string;
     sourceTable: string;
   }[];
-  // 自引用字段
+  // Self-reference fields
   selfReferences?: {
     field: string;
     sourceField?: string;
   }[];
-  // 表名
+  // Table name
   table: string;
-  // 唯一约束字段
+  // Unique constraint fields
   uniqueConstraints?: string[];
 }
 
-// 导入表配置
+// Import table configuration
 const IMPORT_TABLE_CONFIG: TableImportConfig[] = [
   {
     conflictStrategy: 'merge',
     preserveId: true,
-    // 特殊表，ID与用户ID相同
+    // Special table, ID same as user ID
     table: 'userSettings',
     uniqueConstraints: ['id'],
   },

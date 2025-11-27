@@ -199,6 +199,12 @@
     "all": "전체",
     "list": {
       "disabled": "비활성화됨",
+      "disabledActions": {
+        "sort": "정렬 방식",
+        "sortAlphabetical": "가나다순 정렬",
+        "sortAlphabeticalDesc": "가나다역순 정렬",
+        "sortDefault": "기본 정렬"
+      },
       "enabled": "활성화됨"
     },
     "notFound": "검색 결과가 없습니다",
@@ -289,7 +295,7 @@
       },
       "helpDoc": "설정 가이드",
       "responsesApi": {
-        "desc": "OpenAI의 차세대 요청 형식 규격을 사용하여 Chain of Thought 등 고급 기능을 활성화합니다",
+        "desc": "OpenAI의 차세대 요청 형식 규격을 사용하여, 사고의 흐름 등 고급 기능을 활성화합니다 (OpenAI 모델에서만 지원됨)",
         "title": "Responses API 규격 사용"
       },
       "waitingForMore": "더 많은 모델이 <1>도입 예정</1>입니다. 기대해 주세요"
@@ -391,7 +397,13 @@
       "addNew": "모델 추가",
       "disabled": "비활성화됨",
       "disabledActions": {
-        "showMore": "모두 보기"
+        "showMore": "모두 보기",
+        "sort": "정렬 방식",
+        "sortAlphabetical": "가나다순 정렬",
+        "sortAlphabeticalDesc": "가나다역순 정렬",
+        "sortDefault": "기본 정렬",
+        "sortReleasedAt": "최초 출시일 순 정렬",
+        "sortReleasedAtDesc": "최신 출시일 순 정렬"
       },
       "empty": {
         "desc": "사용자 정의 모델을 생성하거나 모델을 가져온 후 사용을 시작해 보세요",

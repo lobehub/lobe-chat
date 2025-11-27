@@ -2,6 +2,45 @@
   "about": {
     "title": "About"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Avatar",
+      "description": "Description",
+      "name": "Name",
+      "tags": "Tags",
+      "title": "Agent Info"
+    },
+    "chat": {
+      "displayMode": "Display Mode",
+      "enableHistoryCount": "Enable Message History Count",
+      "historyCount": "Message History Count",
+      "no": "No",
+      "searchMode": "Search Mode",
+      "title": "Chat Preferences",
+      "yes": "Yes"
+    },
+    "model": {
+      "maxTokens": "Max Token Count",
+      "model": "Model",
+      "provider": "Provider",
+      "temperature": "Temperature",
+      "title": "Model Settings",
+      "topP": "Top P Value"
+    },
+    "plugins": {
+      "count": "Plugin Settings ({{count}})",
+      "empty": "No plugins installed yet",
+      "title": "Installed Plugins"
+    },
+    "role": {
+      "systemRole": "System Prompt",
+      "title": "Role Settings"
+    },
+    "value": {
+      "unset": "Not Set",
+      "untitled": "Untitled Agent"
+    }
+  },
   "agentTab": {
     "chat": "Chat Preferences",
     "meta": "Assistant Info",
@@ -18,6 +57,8 @@
     },
     "title": "Analytics"
   },
+  "checking": "Checking...",
+  "checkingPermissions": "Checking permissions...",
   "danger": {
     "clear": {
       "action": "Clear Now",
@@ -146,6 +187,58 @@
     },
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Describe the key changes and improvements in this version",
+        "label": "Changelog",
+        "maxLengthError": "Changelog must not exceed 500 characters",
+        "placeholder": "Enter the changelog",
+        "required": "Please enter the changelog"
+      },
+      "comparison": {
+        "local": "Current Local Version",
+        "remote": "Currently Published Version"
+      },
+      "identifier": {
+        "extra": "The identifier serves as the unique ID for the agent. Use lowercase letters, numbers, and hyphens.",
+        "label": "Agent Identifier",
+        "lengthError": "Identifier must be between 3 and 50 characters",
+        "patternError": "Identifier can only contain lowercase letters, numbers, and hyphens",
+        "placeholder": "Enter a unique identifier for the agent, e.g., web-development",
+        "required": "Please enter the agent identifier"
+      },
+      "loading": {
+        "fetchingRemote": "Loading remote data...",
+        "submit": "Publishing agent...",
+        "upload": "Publishing new version..."
+      },
+      "messages": {
+        "createVersionFailed": "Failed to create version: {{message}}",
+        "fetchRemoteFailed": "Failed to fetch remote agent data",
+        "missingIdentifier": "This agent does not have a market identifier yet",
+        "notAuthenticated": "Please log in to your market account first",
+        "publishFailed": "Publish failed: {{message}}"
+      },
+      "submitButton": "Publish",
+      "title": {
+        "submit": "Share to Agent Market",
+        "upload": "Publish New Version"
+      }
+    },
+    "resultModal": {
+      "message": "The agent has been submitted for review. It will go live automatically once approved. Click 'View in Market' to see the published agent.",
+      "view": "View in Market"
+    },
+    "submit": {
+      "button": "Share to Market",
+      "tooltip": "Share the agent to the market"
+    },
+    "upload": {
+      "button": "Publish New Version",
+      "tooltip": "Publish a new version to the agent market"
+    }
+  },
   "message": {
     "success": "Update successful"
   },
@@ -199,6 +292,12 @@
       "disabled": "Off",
       "elegant": "Elegant",
       "title": "Response Animation"
+    },
+    "contextMenuMode": {
+      "default": "Default",
+      "desc": "Select the display mode for the chat message right-click menu",
+      "disabled": "Disabled",
+      "title": "Right-Click Menu Mode"
     },
     "neutralColor": {
       "desc": "Custom grayscale with different color tendencies",
@@ -561,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Submit Assistant",
-    "identifier": "Assistant Identifier",
+    "identifier": "Agent Identifier",
     "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags",
     "placeholder": "Enter a unique identifier for the assistant, e.g. web-development",
     "tooltips": "Share to the assistant marketplace"

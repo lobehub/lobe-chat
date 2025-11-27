@@ -1,5 +1,8 @@
 {
-  "desc": "Manage your knowledge",
+  "addFolder": "Create Folder",
+  "addKnowledge": "Add Knowledge",
+  "addPage": "Create Document",
+  "desc": "Manage your knowledge for work, study, and life.",
   "detail": {
     "basic": {
       "createdAt": "Creation Time",
@@ -21,14 +24,88 @@
       "embeddingStatus": "embedding"
     }
   },
+  "documentEditor": {
+    "addIcon": "Add Icon",
+    "autoSaveMessage": "Document auto-saves, no manual save needed",
+    "chooseIcon": "Choose Icon",
+    "deleteConfirm": {
+      "content": "This document will be deleted permanently and cannot be recovered. Please proceed with caution.",
+      "title": "Delete Document"
+    },
+    "deleteError": "Failed to delete document",
+    "deleteSuccess": "Document deleted successfully",
+    "editedAt": "Edited {{time}}",
+    "editedBy": "Edited by {{name}}",
+    "editorPlaceholder": "Type document content, press / to open command menu",
+    "empty": {
+      "createNewDocument": "Create New Page",
+      "title": "Select a page to start",
+      "uploadMarkdown": "Upload Markdown File"
+    },
+    "linkCopied": "Link copied",
+    "menu": {
+      "copyLink": "Copy Link",
+      "exportDocument": "Export Document",
+      "importDocument": "Import Document",
+      "pin": "Pin Document"
+    },
+    "saving": "Saving...",
+    "titlePlaceholder": "Untitled",
+    "wordCount": "{{wordCount}} words"
+  },
+  "documentList": {
+    "copyContent": "Copy All",
+    "duplicate": "Duplicate",
+    "empty": "No documents yet. Click the button above to create your first one.",
+    "noResults": "No matching documents found.",
+    "pageCount": "{{count}} pages in total",
+    "selectNote": "Select a document to start editing",
+    "untitled": "Untitled"
+  },
   "empty": "No files or folders have been uploaded yet.",
   "header": {
     "actions": {
       "newFolder": "New Folder",
+      "newPage": "New Page",
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
     },
+    "newNoteDialog": {
+      "cancel": "Cancel",
+      "editTitle": "Edit Document",
+      "emptyContent": "Document content cannot be empty.",
+      "loadError": "Failed to load the document. Please try again.",
+      "loading": "Loading...",
+      "save": "Save",
+      "saveError": "Failed to save the document. Please try again.",
+      "saveSuccess": "Document saved successfully.",
+      "title": "New Page",
+      "updateSuccess": "Document updated successfully."
+    },
+    "newPageButton": "New Page",
     "uploadButton": "Upload"
+  },
+  "home": {
+    "getStarted": "Get Started",
+    "greeting": "Get Started",
+    "quickActions": "Quick Actions",
+    "recentFiles": "Recent Files",
+    "recentPages": "Recent Documents",
+    "subtitle": "Welcome to your knowledge base. Start managing your documents here.",
+    "uploadEntries": {
+      "files": {
+        "title": "Upload Files"
+      },
+      "folder": {
+        "title": "Upload Folder"
+      },
+      "knowledgeBase": {
+        "title": "Create Knowledge Base"
+      },
+      "newPage": {
+        "title": "New Page"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "New Knowledge Base",
     "title": "Knowledge Base"
+  },
+  "menu": {
+    "allFiles": "All Files",
+    "allPages": "All Documents"
   },
   "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "This file format is not currently supported for online preview. If you have a request for previewing, feel free to <1>contact us</1>."
   },
   "searchFilePlaceholder": "Search Files",
+  "searchPagePlaceholder": "Search Pages",
   "tab": {
-    "all": "All Files",
+    "all": "All",
     "audios": "Audio",
     "documents": "Documents",
+    "home": "Home",
     "images": "Images",
+    "moreTypes": "More Types",
+    "pages": "Pages",
     "videos": "Videos",
     "websites": "Websites"
   },
   "title": "Knowledge Base",
-  "toggleLeftPanel": {
-    "title": "Show/Hide Left Panel"
-  },
+  "toggleLeftPanel": "Show/Hide Left Panel",
   "uploadDock": {
     "body": {
       "collapse": "Collapse",

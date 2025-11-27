@@ -3,7 +3,7 @@
 import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
 import { createStyles, useResponsive, useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { PropsWithChildren, memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 import { withSuspense } from '@/components/withSuspense';
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
@@ -12,6 +12,7 @@ import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
+import SessionPanelContent from '../../components/SessionPanel';
 import { TOOGLE_PANEL_BUTTON_ID } from '../../features/TogglePanelButton';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -33,7 +34,7 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const SessionPanel = memo<PropsWithChildren>(({ children }) => {
+const SessionPanel = memo(() => {
   const isSingleMode = useIsSingleMode();
 
   const { md = true } = useResponsive();
@@ -75,11 +76,15 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
 
   const { appearance } = useThemeMode();
 
-  const SessionPanel = useMemo(() => {
+  const PanelContent = useMemo(() => {
     if (isSingleMode) {
-      // 在单一模式下，仍然渲染 children 以确保 SessionHydration 等逻辑组件正常工作
+      // 在单一模式下，仍然渲染 SessionPanelContent 以确保 SessionHydration 等逻辑组件正常工作
       // 但使用隐藏样式而不是 return null
-      return <div style={{ display: 'none' }}>{children}</div>;
+      return (
+        <div style={{ display: 'none' }}>
+          <SessionPanelContent mobile={false} />
+        </div>
+      );
     }
 
     return (
@@ -98,13 +103,13 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
         size={{ height: '100%', width: sessionsWidth }}
       >
         <DraggablePanelContainer style={{ flex: 'none', height: '100%', minWidth: FOLDER_WIDTH }}>
-          {children}
+          <SessionPanelContent mobile={false} />
         </DraggablePanelContainer>
       </DraggablePanel>
     );
   }, [sessionsWidth, md, isPinned, sessionExpandable, tmpWidth, appearance, isSingleMode]);
 
-  return SessionPanel;
+  return PanelContent;
 });
 
 export default withSuspense(SessionPanel);

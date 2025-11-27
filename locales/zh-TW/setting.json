@@ -2,6 +2,45 @@
   "about": {
     "title": "關於"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "頭像",
+      "description": "描述",
+      "name": "名稱",
+      "tags": "標籤",
+      "title": "助手資訊"
+    },
+    "chat": {
+      "displayMode": "顯示模式",
+      "enableHistoryCount": "啟用歷史訊息計數",
+      "historyCount": "歷史訊息數量",
+      "no": "否",
+      "searchMode": "搜尋模式",
+      "title": "聊天偏好",
+      "yes": "是"
+    },
+    "model": {
+      "maxTokens": "最大 Token 數",
+      "model": "模型",
+      "provider": "服務提供者",
+      "temperature": "溫度",
+      "title": "模型設定",
+      "topP": "Top P 值"
+    },
+    "plugins": {
+      "count": "外掛設定（{{count}}）",
+      "empty": "尚未安裝外掛",
+      "title": "已安裝外掛"
+    },
+    "role": {
+      "systemRole": "系統提示詞",
+      "title": "角色設定"
+    },
+    "value": {
+      "unset": "未設定",
+      "untitled": "未命名助手"
+    }
+  },
   "agentTab": {
     "chat": "聊天偏好",
     "meta": "助手資訊",
@@ -18,6 +57,8 @@
     },
     "title": "數據統計"
   },
+  "checking": "檢查中...",
+  "checkingPermissions": "檢查權限中...",
   "danger": {
     "clear": {
       "action": "立即清除",
@@ -146,6 +187,58 @@
     },
     "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "描述此版本的主要變更與改進",
+        "label": "變更日誌",
+        "maxLengthError": "變更日誌不能超過 500 個字元",
+        "placeholder": "請輸入變更日誌",
+        "required": "請輸入變更日誌"
+      },
+      "comparison": {
+        "local": "本地目前版本",
+        "remote": "目前已發布版本"
+      },
+      "identifier": {
+        "extra": "識別碼將作為助手的唯一標識，建議使用小寫字母、數字與連字號",
+        "label": "助手識別碼",
+        "lengthError": "識別碼長度應在 3-50 個字元之間",
+        "patternError": "識別碼只能包含小寫字母、數字與連字號",
+        "placeholder": "請輸入助手的唯一識別碼，例如：web-development",
+        "required": "請輸入助手識別碼"
+      },
+      "loading": {
+        "fetchingRemote": "正在載入遠端資料...",
+        "submit": "正在發布助手...",
+        "upload": "正在發布新版本..."
+      },
+      "messages": {
+        "createVersionFailed": "版本建立失敗：{{message}}",
+        "fetchRemoteFailed": "取得遠端助手資料失敗",
+        "missingIdentifier": "目前助手尚未設定市場識別碼",
+        "notAuthenticated": "請先登入市場帳號",
+        "publishFailed": "發布失敗：{{message}}"
+      },
+      "submitButton": "發布",
+      "title": {
+        "submit": "分享到助手市集",
+        "upload": "發布新版本"
+      }
+    },
+    "resultModal": {
+      "message": "助手已提交審核，審核通過後將自動上線。點擊「在市集查看」以查看已發布的助手。",
+      "view": "在市集查看"
+    },
+    "submit": {
+      "button": "分享到市集",
+      "tooltip": "分享助手到市集"
+    },
+    "upload": {
+      "button": "發布新版本",
+      "tooltip": "發布新版本到助手市集"
+    }
+  },
   "message": {
     "success": "更新成功"
   },
@@ -199,6 +292,12 @@
       "disabled": "關閉",
       "elegant": "優雅",
       "title": "回應動畫"
+    },
+    "contextMenuMode": {
+      "default": "預設",
+      "desc": "選擇聊天訊息右鍵選單的顯示方案",
+      "disabled": "不使用",
+      "title": "右鍵選單方案"
     },
     "neutralColor": {
       "desc": "不同色彩傾向的灰階自訂",
@@ -561,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "提交助手",
-    "identifier": "助手標識符",
+    "identifier": "助手識別碼（identifier）",
     "metaMiss": "請補全助手信息後提交，需要包含名稱、描述和標籤",
     "placeholder": "請輸入助手的標識符，需要是唯一的，比如 web-development",
     "tooltips": "分享到助手市場"

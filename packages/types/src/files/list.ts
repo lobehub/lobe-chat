@@ -1,19 +1,29 @@
 import { z } from 'zod';
 
-import { AsyncTaskStatus } from '@/types/asyncTask';
+import type { AsyncTaskStatus } from '../asyncTask';
 
 export interface FileListItem {
   chunkCount: number | null;
   chunkingError: any | null;
   chunkingStatus?: AsyncTaskStatus | null;
+  /**
+   * Text content of the document (for notes/documents)
+   */
+  content?: string | null;
   createdAt: Date;
+  editorData?: Record<string, any> | null;
   embeddingError: any | null;
   embeddingStatus?: AsyncTaskStatus | null;
   fileType: string;
   finishEmbedding: boolean;
   id: string;
+  /**
+   * Metadata (for notes/documents)
+   */
+  metadata?: Record<string, any> | null;
   name: string;
   size: number;
+  sourceType: string;
   updatedAt: Date;
   url: string;
 }

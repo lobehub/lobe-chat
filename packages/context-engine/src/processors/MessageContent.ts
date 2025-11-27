@@ -1,4 +1,5 @@
 import { filesPrompts } from '@lobechat/prompts';
+import { MessageContentPart } from '@lobechat/types';
 import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
 import { parseDataUri } from '@lobechat/utils/uriParser';
 import { isDesktopLocalStaticServerUrl } from '@lobechat/utils/url';
@@ -8,6 +9,23 @@ import { BaseProcessor } from '../base/BaseProcessor';
 import type { PipelineContext, ProcessorOptions } from '../types';
 
 const log = debug('context-engine:processor:MessageContentProcessor');
+
+/**
+ * Deserialize content string to message content parts
+ * Returns null if content is not valid JSON array of parts
+ */
+const deserializeParts = (content: string): MessageContentPart[] | null => {
+  try {
+    const parsed = JSON.parse(content);
+    // Validate it's an array with valid part structure
+    if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.type) {
+      return parsed as MessageContentPart[];
+    }
+  } catch {
+    // Not JSON, treat as plain text
+  }
+  return null;
+};
 
 export interface FileContextConfig {
   /** Whether to enable file context injection */
@@ -30,6 +48,7 @@ export interface MessageContentConfig {
 }
 
 export interface UserMessageContentPart {
+  googleThoughtSignature?: string;
   image_url?: {
     detail?: string;
     url: string;
@@ -64,7 +83,7 @@ export class MessageContentProcessor extends BaseProcessor {
     let userMessagesProcessed = 0;
     let assistantMessagesProcessed = 0;
 
-    // 处理每条消息的内容
+    // Process the content of each message
     for (let i = 0; i < clonedContext.messages.length; i++) {
       const message = clonedContext.messages[i];
 
@@ -91,11 +110,11 @@ export class MessageContentProcessor extends BaseProcessor {
         }
       } catch (error) {
         log.extend('error')(`Error processing message ${message.id} content: ${error}`);
-        // 继续处理其他消息
+        // Continue processing other messages
       }
     }
 
-    // 更新元数据
+    // Update metadata
     clonedContext.metadata.messageContentProcessed = processedCount;
     clonedContext.metadata.userMessagesProcessed = userMessagesProcessed;
     clonedContext.metadata.assistantMessagesProcessed = assistantMessagesProcessed;
@@ -163,14 +182,14 @@ export class MessageContentProcessor extends BaseProcessor {
       contentParts.push(...videoContentParts);
     }
 
-    // 明确返回的字段，只保留必要的消息字段
+    // Explicitly return fields, keeping only necessary message fields
     const hasFileContext = (hasFiles || hasImages || hasVideos) && this.config.fileContext?.enabled;
     const hasVisionContent =
       hasImages && this.config.isCanUseVision?.(this.config.model, this.config.provider);
     const hasVideoContent =
       hasVideos && this.config.isCanUseVideo?.(this.config.model, this.config.provider);
 
-    // 如果只有文本内容且没有添加文件上下文也没有视觉/视频内容，返回纯文本
+    // If only text content and no file context added and no vision/video content, return plain text
     if (
       contentParts.length === 1 &&
       contentParts[0].type === 'text' &&
@@ -185,7 +204,7 @@ export class MessageContentProcessor extends BaseProcessor {
         meta: message.meta,
         role: message.role,
         updatedAt: message.updatedAt,
-        // 保留其他可能需要的字段，但移除已处理的文件相关字段
+        // Keep other potentially needed fields, but remove processed file-related fields
         ...(message.tools && { tools: message.tools }),
         ...(message.tool_calls && { tool_calls: message.tool_calls }),
         ...(message.tool_call_id && { tool_call_id: message.tool_call_id }),
@@ -193,7 +212,7 @@ export class MessageContentProcessor extends BaseProcessor {
       };
     }
 
-    // 返回结构化内容
+    // Return structured content
     return {
       content: contentParts,
       createdAt: message.createdAt,
@@ -201,7 +220,7 @@ export class MessageContentProcessor extends BaseProcessor {
       meta: message.meta,
       role: message.role,
       updatedAt: message.updatedAt,
-      // 保留其他可能需要的字段，但移除已处理的文件相关字段
+      // Keep other potentially needed fields, but remove processed file-related fields
       ...(message.tools && { tools: message.tools }),
       ...(message.tool_calls && { tool_calls: message.tool_calls }),
       ...(message.tool_call_id && { tool_call_id: message.tool_call_id }),
@@ -210,10 +229,10 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理助手消息内容
+   * Process assistant message content
    */
   private async processAssistantMessage(message: any): Promise<any> {
-    // 检查是否有推理内容（thinking mode）
+    // Priority 1: Check if there is reasoning content with signature (thinking mode)
     const shouldIncludeThinking = message.reasoning && !!message.reasoning?.signature;
 
     if (shouldIncludeThinking) {
@@ -235,11 +254,63 @@ export class MessageContentProcessor extends BaseProcessor {
       };
     }
 
-    // 检查是否有图片（助手消息也可能包含图片）
+    // Priority 2: Check if reasoning content is multimodal
+    const hasMultimodalReasoning = message.reasoning?.isMultimodal && message.reasoning?.content;
+
+    if (hasMultimodalReasoning) {
+      const reasoningParts = deserializeParts(message.reasoning.content);
+      if (reasoningParts) {
+        // Convert reasoning multimodal parts to plain text
+        const reasoningText = reasoningParts
+          .map((part) => {
+            if (part.type === 'text') return part.text;
+            if (part.type === 'image') return `[Image: ${part.image}]`;
+            return '';
+          })
+          .join('\n');
+
+        // Update reasoning to plain text
+        const updatedMessage = {
+          ...message,
+          reasoning: {
+            ...message.reasoning,
+            content: reasoningText,
+            isMultimodal: false, // Convert to non-multimodal
+          },
+        };
+
+        // Handle main content based on whether it's multimodal
+        if (message.metadata?.isMultimodal && message.content) {
+          const contentParts = deserializeParts(message.content);
+          if (contentParts) {
+            const convertedParts = this.convertMessagePartsToContentParts(contentParts);
+            return {
+              ...updatedMessage,
+              content: convertedParts,
+            };
+          }
+        }
+
+        return updatedMessage;
+      }
+    }
+
+    // Priority 3: Check if message content is multimodal
+    const hasMultimodalContent = message.metadata?.isMultimodal && message.content;
+
+    if (hasMultimodalContent) {
+      const parts = deserializeParts(message.content);
+      if (parts) {
+        const contentParts = this.convertMessagePartsToContentParts(parts);
+        return { ...message, content: contentParts };
+      }
+    }
+
+    // Priority 4: Check if there are images (legacy imageList field)
     const hasImages = message.imageList && message.imageList.length > 0;
 
     if (hasImages && this.config.isCanUseVision?.(this.config.model, this.config.provider)) {
-      // 创建结构化内容
+      // Create structured content
       const contentParts: UserMessageContentPart[] = [];
 
       if (message.content) {
@@ -249,17 +320,14 @@ export class MessageContentProcessor extends BaseProcessor {
         });
       }
 
-      // 处理图片内容
+      // Process image content
       const imageContentParts = await this.processImageList(message.imageList || []);
       contentParts.push(...imageContentParts);
 
-      return {
-        ...message,
-        content: contentParts,
-      };
+      return { ...message, content: contentParts };
     }
 
-    // 普通助手消息，返回纯文本内容
+    // Regular assistant message, return plain text content
     return {
       ...message,
       content: message.content,
@@ -267,7 +335,33 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理图片列表
+   * Convert MessageContentPart[] (internal format) to OpenAI-compatible UserMessageContentPart[]
+   */
+  private convertMessagePartsToContentParts(parts: MessageContentPart[]): UserMessageContentPart[] {
+    const contentParts: UserMessageContentPart[] = [];
+
+    for (const part of parts) {
+      if (part.type === 'text') {
+        contentParts.push({
+          googleThoughtSignature: part.thoughtSignature,
+          text: part.text,
+          type: 'text',
+        });
+      } else if (part.type === 'image') {
+        // Images are already in S3 URL format, no conversion needed
+        contentParts.push({
+          googleThoughtSignature: part.thoughtSignature,
+          image_url: { detail: 'auto', url: part.image },
+          type: 'image_url',
+        });
+      }
+    }
+
+    return contentParts;
+  }
+
+  /**
+   * Process image list
    */
   private async processImageList(imageList: any[]): Promise<UserMessageContentPart[]> {
     if (!imageList || imageList.length === 0) {
@@ -293,7 +387,7 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理视频列表
+   * Process video list
    */
   private async processVideoList(videoList: any[]): Promise<UserMessageContentPart[]> {
     if (!videoList || videoList.length === 0) {
@@ -309,7 +403,7 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
-   * 验证内容部分格式
+   * Validate content part format
    */
   private validateContentPart(part: UserMessageContentPart): boolean {
     if (!part || !part.type) return false;

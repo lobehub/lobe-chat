@@ -17,6 +17,7 @@
   "availableAgents": "사용 가능한 도우미",
   "backToBottom": "하단으로 이동",
   "chatList": {
+    "expandMessage": "메시지 펼치기",
     "longMessageDetail": "자세히 보기"
   },
   "clearCurrentMessages": "현재 대화 지우기",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "심층 사고 스위치"
+    },
+    "thinkingLevel": {
+      "title": "사고 수준"
     },
     "title": "모델 확장 기능",
     "urlContext": {
@@ -173,8 +177,11 @@
     "title": "멤버 언급"
   },
   "messageAction": {
+    "collapse": "메시지 접기",
+    "continueGeneration": "계속 생성하기",
     "delAndRegenerate": "삭제하고 다시 생성",
     "deleteDisabledByThreads": "하위 주제가 존재하여 삭제할 수 없습니다.",
+    "expand": "메시지 펼치기",
     "regenerate": "다시 생성"
   },
   "messages": {
@@ -239,6 +246,7 @@
   "noMatchingAgents": "일치하는 멤버가 없습니다",
   "noMembersYet": "이 그룹에는 아직 구성원이 없습니다. + 버튼을 눌러 어시스턴트를 초대하세요.",
   "noSelectedAgents": "아직 멤버를 선택하지 않았습니다",
+  "openInNewWindow": "새 창에서 열기",
   "owner": "그룹 소유자",
   "pin": "고정",
   "pinOff": "고정 해제",
@@ -325,6 +333,11 @@
     "screenshot": "스크린샷",
     "settings": "내보내기 설정",
     "text": "텍스트",
+    "widthMode": {
+      "label": "너비 모드",
+      "narrow": "좁은 화면 모드",
+      "wide": "넓은 화면 모드"
+    },
     "withBackground": "배경 이미지 포함",
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",
@@ -366,6 +379,29 @@
     "overload": "한도 초과",
     "remained": "남음",
     "used": "사용됨"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "승인",
+      "approveAndRemember": "승인 및 기억하기",
+      "approveOnce": "이번만 승인",
+      "mode": {
+        "allowList": "허용 목록",
+        "allowListDesc": "승인된 도구만 자동 실행",
+        "autoRun": "자동 승인",
+        "autoRunDesc": "모든 도구 실행 자동 승인",
+        "manual": "수동",
+        "manualDesc": "매번 호출 시 수동 승인 필요"
+      },
+      "reject": "거부",
+      "rejectAndContinue": "거부 후 다시 실행",
+      "rejectOnly": "거부",
+      "rejectReasonPlaceholder": "거부 사유를 입력하면 에이전트가 이해하고 이후 행동을 최적화하는 데 도움이 됩니다",
+      "rejectTitle": "이번 도구 호출 거부",
+      "rejectedWithReason": "이번 도구 호출이 다음 사유로 거부됨: {{reason}}",
+      "toolAbort": "이번 도구 호출이 사용자에 의해 취소되었습니다",
+      "toolRejected": "이번 도구 호출이 거부되었습니다"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "새 주제를 열까요?",

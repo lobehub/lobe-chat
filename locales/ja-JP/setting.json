@@ -2,6 +2,45 @@
   "about": {
     "title": "について"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "アバター",
+      "description": "説明",
+      "name": "名前",
+      "tags": "タグ",
+      "title": "アシスタント情報"
+    },
+    "chat": {
+      "displayMode": "表示モード",
+      "enableHistoryCount": "履歴メッセージ数を有効にする",
+      "historyCount": "履歴メッセージ数",
+      "no": "いいえ",
+      "searchMode": "検索モード",
+      "title": "チャット設定",
+      "yes": "はい"
+    },
+    "model": {
+      "maxTokens": "最大トークン数",
+      "model": "モデル",
+      "provider": "プロバイダー",
+      "temperature": "温度",
+      "title": "モデル設定",
+      "topP": "Top P 値"
+    },
+    "plugins": {
+      "count": "プラグイン設定（{{count}}）",
+      "empty": "プラグインがまだインストールされていません",
+      "title": "インストール済みプラグイン"
+    },
+    "role": {
+      "systemRole": "システムプロンプト",
+      "title": "ロール設定"
+    },
+    "value": {
+      "unset": "未設定",
+      "untitled": "無題のアシスタント"
+    }
+  },
   "agentTab": {
     "chat": "チャット設定",
     "meta": "メタ情報",
@@ -18,6 +57,8 @@
     },
     "title": "データ分析"
   },
+  "checking": "確認中...",
+  "checkingPermissions": "権限を確認中...",
   "danger": {
     "clear": {
       "action": "すぐにクリア",
@@ -146,6 +187,58 @@
     },
     "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "このバージョンの主な変更点と改善点を記述してください",
+        "label": "変更ログ",
+        "maxLengthError": "変更ログは500文字以内で入力してください",
+        "placeholder": "変更ログを入力してください",
+        "required": "変更ログを入力してください"
+      },
+      "comparison": {
+        "local": "ローカルの現在のバージョン",
+        "remote": "公開中のバージョン"
+      },
+      "identifier": {
+        "extra": "識別子はアシスタントの一意なIDとして使用されます。小文字、数字、ハイフンの使用を推奨します",
+        "label": "アシスタント識別子",
+        "lengthError": "識別子の長さは3〜50文字である必要があります",
+        "patternError": "識別子には小文字、数字、ハイフンのみ使用できます",
+        "placeholder": "例: web-development のように一意な識別子を入力してください",
+        "required": "アシスタント識別子を入力してください"
+      },
+      "loading": {
+        "fetchingRemote": "リモートデータを読み込み中...",
+        "submit": "アシスタントを公開中...",
+        "upload": "新しいバージョンを公開中..."
+      },
+      "messages": {
+        "createVersionFailed": "バージョンの作成に失敗しました: {{message}}",
+        "fetchRemoteFailed": "リモートアシスタントデータの取得に失敗しました",
+        "missingIdentifier": "現在のアシスタントにはマーケット識別子がありません",
+        "notAuthenticated": "まずマーケットアカウントにログインしてください",
+        "publishFailed": "公開に失敗しました: {{message}}"
+      },
+      "submitButton": "公開",
+      "title": {
+        "submit": "アシスタントマーケットに共有",
+        "upload": "新しいバージョンを公開"
+      }
+    },
+    "resultModal": {
+      "message": "アシスタントは審査に提出されました。審査に通過すると自動的に公開されます。「マーケットで確認」をクリックして公開済みのアシスタントを確認できます。",
+      "view": "マーケットで確認"
+    },
+    "submit": {
+      "button": "マーケットに共有",
+      "tooltip": "アシスタントをマーケットに共有する"
+    },
+    "upload": {
+      "button": "新しいバージョンを公開",
+      "tooltip": "アシスタントマーケットに新しいバージョンを公開する"
+    }
+  },
   "message": {
     "success": "更新に成功しました"
   },
@@ -199,6 +292,12 @@
       "disabled": "オフ",
       "elegant": "エレガント",
       "title": "応答アニメーション"
+    },
+    "contextMenuMode": {
+      "default": "デフォルト",
+      "desc": "チャットメッセージの右クリックメニューの表示方法を選択してください",
+      "disabled": "使用しない",
+      "title": "右クリックメニューの設定"
     },
     "neutralColor": {
       "desc": "異なる色彩傾向のグレースケールカスタマイズ",
@@ -561,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "エージェントを提出",
-    "identifier": "エージェント識別子",
+    "identifier": "アシスタント識別子（identifier）",
     "metaMiss": "エージェント情報を入力してから提出してください。名前、説明、タグが必要です。",
     "placeholder": "エージェントの識別子を入力してください。一意である必要があります。例：web-development",
     "tooltips": "エージェントマーケットに共有"

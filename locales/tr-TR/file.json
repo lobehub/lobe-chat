@@ -1,5 +1,8 @@
 {
-  "desc": "Bilgini yönet",
+  "addFolder": "Klasör Oluştur",
+  "addKnowledge": "Bilgi Ekle",
+  "addPage": "Belge Oluştur",
+  "desc": "Çalışma, öğrenme ve yaşam bilginizi yönetin.",
   "detail": {
     "basic": {
       "createdAt": "Oluşturulma Zamanı",
@@ -21,14 +24,88 @@
       "embeddingStatus": "Vektörleştirme"
     }
   },
+  "documentEditor": {
+    "addIcon": "Simge Ekle",
+    "autoSaveMessage": "Belge otomatik olarak kaydedilir, manuel kaydetmeye gerek yoktur",
+    "chooseIcon": "Simge Seç",
+    "deleteConfirm": {
+      "content": "Bu belge silinmek üzere. Silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+      "title": "Belgeyi Sil"
+    },
+    "deleteError": "Belge silinemedi",
+    "deleteSuccess": "Belge başarıyla silindi",
+    "editedAt": "Son düzenleme: {{time}}",
+    "editedBy": "Son düzenleyen: {{name}}",
+    "editorPlaceholder": "Belge içeriğini girin, komut menüsünü açmak için / tuşuna basın",
+    "empty": {
+      "createNewDocument": "Yeni Belge Oluştur",
+      "title": "Başlamak için bir belge seçin",
+      "uploadMarkdown": "Markdown Dosyası Yükle"
+    },
+    "linkCopied": "Bağlantı kopyalandı",
+    "menu": {
+      "copyLink": "Bağlantıyı Kopyala",
+      "exportDocument": "Belgeyi Dışa Aktar",
+      "importDocument": "Belgeyi İçe Aktar",
+      "pin": "Belgeyi Sabitle"
+    },
+    "saving": "Kaydediliyor...",
+    "titlePlaceholder": "Başlıksız",
+    "wordCount": "{{wordCount}} kelime"
+  },
+  "documentList": {
+    "copyContent": "Tüm İçeriği Kopyala",
+    "duplicate": "Kopyasını Oluştur",
+    "empty": "Henüz bir belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
+    "noResults": "Eşleşen belge bulunamadı",
+    "pageCount": "Toplam {{count}} belge",
+    "selectNote": "Düzenlemeye başlamak için bir belge seçin",
+    "untitled": "Başlıksız"
+  },
   "empty": "Henüz yüklenmiş dosya/klasör yok",
   "header": {
     "actions": {
       "newFolder": "Yeni Klasör",
+      "newPage": "Yeni Belge",
       "uploadFile": "Dosya Yükle",
       "uploadFolder": "Klasör Yükle"
     },
+    "newNoteDialog": {
+      "cancel": "İptal",
+      "editTitle": "Belgeyi Düzenle",
+      "emptyContent": "Belge içeriği boş olamaz",
+      "loadError": "Belge yüklenemedi, lütfen tekrar deneyin",
+      "loading": "Yükleniyor...",
+      "save": "Kaydet",
+      "saveError": "Belge kaydedilemedi, lütfen tekrar deneyin",
+      "saveSuccess": "Belge başarıyla kaydedildi",
+      "title": "Yeni Belge",
+      "updateSuccess": "Belge başarıyla güncellendi"
+    },
+    "newPageButton": "Yeni Belge Oluştur",
     "uploadButton": "Yükle"
+  },
+  "home": {
+    "getStarted": "Başlarken",
+    "greeting": "Başla",
+    "quickActions": "Hızlı İşlemler",
+    "recentFiles": "Son Dosyalar",
+    "recentPages": "Son Belgeler",
+    "subtitle": "Bilgi tabanına hoş geldiniz, belgelerinizi buradan yönetin",
+    "uploadEntries": {
+      "files": {
+        "title": "Dosya Yükle"
+      },
+      "folder": {
+        "title": "Klasör Yükle"
+      },
+      "knowledgeBase": {
+        "title": "Yeni Bilgi Tabanı"
+      },
+      "newPage": {
+        "title": "Yeni Belge Oluştur"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "Yeni Bilgi Tabanı",
     "title": "Bilgi Tabanı"
+  },
+  "menu": {
+    "allFiles": "Tüm Dosyalar",
+    "allPages": "Tüm Belgeler"
   },
   "networkError": "Bilgi bankası alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>."
   },
   "searchFilePlaceholder": "Dosya Ara",
+  "searchPagePlaceholder": "Belge ara",
   "tab": {
-    "all": "Tüm Dosyalar",
+    "all": "Tümü",
     "audios": "Sesler",
     "documents": "Belgeler",
+    "home": "Ana Sayfa",
     "images": "Görseller",
+    "moreTypes": "Daha Fazla Tür",
+    "pages": "Belgeler",
     "videos": "Videolar",
     "websites": "Web Siteleri"
   },
   "title": "Bilgi Bankası",
-  "toggleLeftPanel": {
-    "title": "Sol Panelini Göster/Gizle"
-  },
+  "toggleLeftPanel": "Sol paneli göster/gizle",
   "uploadDock": {
     "body": {
       "collapse": "Kapat",

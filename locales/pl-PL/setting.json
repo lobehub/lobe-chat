@@ -2,6 +2,45 @@
   "about": {
     "title": "O nas"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Awatar",
+      "description": "Opis",
+      "name": "Nazwa",
+      "tags": "Tagi",
+      "title": "Informacje o Asystencie"
+    },
+    "chat": {
+      "displayMode": "Tryb wyświetlania",
+      "enableHistoryCount": "Włącz licznik historii wiadomości",
+      "historyCount": "Liczba wiadomości w historii",
+      "no": "Nie",
+      "searchMode": "Tryb wyszukiwania",
+      "title": "Preferencje czatu",
+      "yes": "Tak"
+    },
+    "model": {
+      "maxTokens": "Maksymalna liczba tokenów",
+      "model": "Model",
+      "provider": "Dostawca",
+      "temperature": "Temperatura",
+      "title": "Ustawienia modelu",
+      "topP": "Wartość Top P"
+    },
+    "plugins": {
+      "count": "Ustawienia wtyczek ({{count}})",
+      "empty": "Brak zainstalowanych wtyczek",
+      "title": "Zainstalowane wtyczki"
+    },
+    "role": {
+      "systemRole": "Systemowy prompt",
+      "title": "Ustawienia roli"
+    },
+    "value": {
+      "unset": "Nieustawione",
+      "untitled": "Asystent bez nazwy"
+    }
+  },
   "agentTab": {
     "chat": "Preferencje czatu",
     "meta": "Informacje o asystencie",
@@ -18,6 +57,8 @@
     },
     "title": "Analiza danych"
   },
+  "checking": "Sprawdzanie...",
+  "checkingPermissions": "Sprawdzanie uprawnień...",
   "danger": {
     "clear": {
       "action": "Wyczyść teraz",
@@ -146,6 +187,58 @@
     },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Opisz główne zmiany i ulepszenia w tej wersji",
+        "label": "Dziennik zmian",
+        "maxLengthError": "Dziennik zmian nie może przekraczać 500 znaków",
+        "placeholder": "Wprowadź dziennik zmian",
+        "required": "Wprowadź dziennik zmian"
+      },
+      "comparison": {
+        "local": "Lokalna wersja",
+        "remote": "Opublikowana wersja"
+      },
+      "identifier": {
+        "extra": "Identyfikator będzie unikalnym identyfikatorem asystenta. Zalecane są małe litery, cyfry i myślniki",
+        "label": "Identyfikator asystenta",
+        "lengthError": "Identyfikator powinien mieć od 3 do 50 znaków",
+        "patternError": "Identyfikator może zawierać tylko małe litery, cyfry i myślniki",
+        "placeholder": "Wprowadź unikalny identyfikator asystenta, np.: web-development",
+        "required": "Wprowadź identyfikator asystenta"
+      },
+      "loading": {
+        "fetchingRemote": "Ładowanie danych zdalnych...",
+        "submit": "Publikowanie asystenta...",
+        "upload": "Publikowanie nowej wersji..."
+      },
+      "messages": {
+        "createVersionFailed": "Nie udało się utworzyć wersji: {{message}}",
+        "fetchRemoteFailed": "Nie udało się pobrać danych zdalnego asystenta",
+        "missingIdentifier": "Obecny asystent nie ma identyfikatora rynkowego",
+        "notAuthenticated": "Zaloguj się na konto rynkowe",
+        "publishFailed": "Publikacja nie powiodła się: {{message}}"
+      },
+      "submitButton": "Opublikuj",
+      "title": {
+        "submit": "Udostępnij w Rynku Asystentów",
+        "upload": "Opublikuj nową wersję"
+      }
+    },
+    "resultModal": {
+      "message": "Asystent został przesłany do weryfikacji. Po zatwierdzeniu zostanie automatycznie opublikowany. Kliknij „Zobacz w Rynku”, aby zobaczyć opublikowanego asystenta.",
+      "view": "Zobacz w Rynku"
+    },
+    "submit": {
+      "button": "Udostępnij w Rynku",
+      "tooltip": "Udostępnij asystenta w Rynku"
+    },
+    "upload": {
+      "button": "Opublikuj nową wersję",
+      "tooltip": "Opublikuj nową wersję w Rynku Asystentów"
+    }
+  },
   "message": {
     "success": "Pomyślnie zaktualizowano"
   },
@@ -199,6 +292,12 @@
       "disabled": "Wyłączone",
       "elegant": "Elegancki",
       "title": "Animacja reakcji"
+    },
+    "contextMenuMode": {
+      "default": "Domyślnie",
+      "desc": "Wybierz sposób wyświetlania menu kontekstowego wiadomości czatu",
+      "disabled": "Nie używaj",
+      "title": "Schemat menu kontekstowego"
     },
     "neutralColor": {
       "desc": "Dostosowanie odcieni szarości w różnych kolorach",
@@ -561,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Prześlij asystenta",
-    "identifier": "Identyfikator asystenta",
+    "identifier": "Identyfikator asystenta (identifier)",
     "metaMiss": "Proszę uzupełnić informacje o asystencie przed przesłaniem, należy podać nazwę, opis i tagi",
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
     "tooltips": "Udostępnij na rynku asystentów"

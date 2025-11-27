@@ -1,6 +1,7 @@
 import {
   CreateNewMessageParamsSchema,
   UpdateMessageParamsSchema,
+  UpdateMessagePluginSchema,
   UpdateMessageRAGParamsSchema,
 } from '@lobechat/types';
 import { z } from 'zod';
@@ -9,7 +10,6 @@ import { serverDBEnv } from '@/config/db';
 import { FileModel } from '@/database/models/file';
 import { MessageModel } from '@/database/models/message';
 import { UserModel } from '@/database/models/user';
-import { updateMessagePluginSchema } from '@/database/schemas';
 import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -58,10 +58,9 @@ export const messageRouter = router({
     }),
 
   createMessage: messageProcedure
-    .input(CreateNewMessageParamsSchema.extend({ useGroup: z.boolean().optional() }))
+    .input(CreateNewMessageParamsSchema)
     .mutation(async ({ input, ctx }) => {
-      const { useGroup, ...params } = input;
-      return ctx.messageService.createMessage(params as any, { useGroup });
+      return ctx.messageService.createMessage(input as any);
     }),
 
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {
@@ -77,20 +76,17 @@ export const messageRouter = router({
         pageSize: z.number().optional(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
       const serverDB = await getServerDB();
 
-      const { useGroup, ...queryParams } = input;
-
       const messageModel = new MessageModel(serverDB, ctx.userId);
       const fileService = new FileService(serverDB, ctx.userId);
 
-      return messageModel.query(queryParams, {
-        groupAssistantMessages: useGroup ?? false,
+      return messageModel.query(input, {
+        groupAssistantMessages: false,
         postProcessUrl: (path) => fileService.getFullFileUrl(path),
       });
     }),
@@ -109,7 +105,6 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -129,7 +124,6 @@ export const messageRouter = router({
         ids: z.array(z.string()),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -262,7 +256,6 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
         value: UpdateMessageParamsSchema,
       }),
     )
@@ -275,11 +268,14 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: updateMessagePluginSchema.partial(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        value: UpdateMessagePluginSchema.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updateMessagePlugin(input.id, input.value);
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMessagePlugin(id, value, options);
     }),
 
   updateMessageRAG: messageProcedure
@@ -287,7 +283,6 @@ export const messageRouter = router({
       UpdateMessageRAGParamsSchema.extend({
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -299,11 +294,14 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
         value: z.object({}).passthrough(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updateMetadata(input.id, input.value);
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMetadata(id, value, options);
     }),
 
   updatePluginError: messageProcedure
@@ -312,7 +310,6 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough().nullable(),
       }),
     )
@@ -327,7 +324,6 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough(),
       }),
     )
@@ -356,7 +352,6 @@ export const messageRouter = router({
 
       return ctx.messageModel.updateTTS(input.id, input.value);
     }),
-
   updateTranslate: messageProcedure
     .input(
       z.object({

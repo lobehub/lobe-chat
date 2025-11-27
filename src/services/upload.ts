@@ -1,4 +1,4 @@
-import { isDesktop, isServerMode } from '@lobechat/const';
+import { isDesktop } from '@lobechat/const';
 import { parseDataUri } from '@lobechat/model-runtime';
 import { uuid } from '@lobechat/utils';
 import dayjs from 'dayjs';
@@ -7,7 +7,6 @@ import { sha256 } from 'js-sha256';
 import { fileEnv } from '@/envs/file';
 import { lambdaClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
-import { clientS3Storage } from '@/services/file/ClientS3';
 import { FileMetadata, UploadBase64ToS3Result } from '@/types/files';
 import { FileUploadState, FileUploadStatus } from '@/types/files/upload';
 
@@ -60,7 +59,7 @@ class UploadService {
    */
   uploadFileToS3 = async (
     file: File,
-    { onProgress, directory, skipCheckFileType, onNotSupported, pathname }: UploadFileToS3Options,
+    { onProgress, directory, pathname }: UploadFileToS3Options,
   ): Promise<{ data: FileMetadata; success: boolean }> => {
     const { getElectronStoreState } = await import('@/store/electron');
     const { electronSyncSelectors } = await import('@/store/electron/selectors');
@@ -68,34 +67,17 @@ class UploadService {
     const state = getElectronStoreState();
     const isSyncActive = electronSyncSelectors.isSyncActive(state);
 
-    // 桌面端上传逻辑（并且没开启 sync 同步）
+    // Desktop upload logic (when sync is not enabled)
     if (isDesktop && !isSyncActive) {
       const data = await this.uploadToDesktopS3(file, { directory, pathname });
       return { data, success: true };
     }
 
-    // 服务端上传逻辑
-    if (isServerMode) {
-      // if is server mode, upload to server s3,
+    // Server-side upload logic
 
-      const data = await this.uploadToServerS3(file, { directory, onProgress, pathname });
-      return { data, success: true };
-    }
+    // if is server mode, upload to server s3,
 
-    // upload to client s3
-    // 客户端上传逻辑
-    if (!skipCheckFileType && !file.type.startsWith('image') && !file.type.startsWith('video')) {
-      onNotSupported?.();
-      return { data: undefined as unknown as FileMetadata, success: false };
-    }
-
-    const fileArrayBuffer = await file.arrayBuffer();
-
-    // 1. check file hash
-    const hash = sha256(fileArrayBuffer);
-    // Upload to the indexeddb in the browser
-    const data = await this.uploadToClientS3(hash, file);
-
+    const data = await this.uploadToServerS3(file, { directory, onProgress, pathname });
     return { data, success: true };
   };
 
@@ -103,18 +85,18 @@ class UploadService {
     base64Data: string,
     options: UploadFileToS3Options = {},
   ): Promise<UploadBase64ToS3Result> => {
-    // 解析 base64 数据
+    // Parse base64 data
     const { base64, mimeType, type } = parseDataUri(base64Data);
 
     if (!base64 || !mimeType || type !== 'base64') {
       throw new Error('Invalid base64 data for image');
     }
 
-    // 将 base64 转换为 Blob
+    // Convert base64 to Blob
     const byteCharacters = atob(base64);
     const byteArrays = [];
 
-    // 分块处理以避免内存问题
+    // Process in chunks to avoid memory issues
     for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
       const slice = byteCharacters.slice(offset, offset + 1024);
 
@@ -129,14 +111,14 @@ class UploadService {
 
     const blob = new Blob(byteArrays, { type: mimeType });
 
-    // 确定文件扩展名
+    // Determine file extension
     const fileExtension = mimeType.split('/')[1] || 'png';
     const fileName = `${options.filename || `image_${dayjs().format('YYYY-MM-DD-hh-mm-ss')}`}.${fileExtension}`;
 
-    // 创建文件对象
+    // Create file object
     const file = new File([blob], fileName, { type: mimeType });
 
-    // 使用统一的上传方法
+    // Use unified upload method
     const { data: metadata } = await this.uploadFileToS3(file, options);
     const hash = sha256(await file.arrayBuffer());
 
@@ -221,23 +203,12 @@ class UploadService {
     const fileArrayBuffer = await file.arrayBuffer();
     const hash = sha256(fileArrayBuffer);
 
-    // 生成文件路径元数据
+    // Generate file path metadata
     const { pathname } = generateFilePathMetadata(file.name, options);
 
     const { desktopFileAPI } = await import('@/services/electron/file');
     const { metadata } = await desktopFileAPI.uploadFile(file, hash, pathname);
     return metadata;
-  };
-
-  private uploadToClientS3 = async (hash: string, file: File): Promise<FileMetadata> => {
-    await clientS3Storage.putObject(hash, file);
-
-    return {
-      date: (Date.now() / 1000 / 60 / 60).toFixed(0),
-      dirname: '',
-      filename: file.name,
-      path: `client-s3://${hash}`,
-    };
   };
 
   /**
@@ -261,7 +232,7 @@ class UploadService {
       preSignUrl: string;
     }
   > => {
-    // 生成文件路径元数据
+    // Generate file path metadata
     const { date, dirname, filename, pathname } = generateFilePathMetadata(file.name, options);
 
     const preSignUrl = await lambdaClient.upload.createS3PreSignedUrl.mutate({ pathname });

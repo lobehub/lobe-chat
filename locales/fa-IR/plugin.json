@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "خواندن محتوای پایگاه دانش",
+        "searchKnowledgeBase": "جستجو در پایگاه دانش"
+      },
+      "title": "پایگاه دانش"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "ویرایش فایل",
+        "getCommandOutput": "دریافت خروجی کد",
+        "globLocalFiles": "جستجوی فایل‌ها با الگو",
+        "grepContent": "جستجوی محتوا",
+        "killCommand": "توقف اجرای کد",
+        "listLocalFiles": "مشاهده فهرست فایل‌ها",
+        "moveLocalFiles": "انتقال فایل‌ها",
+        "readLocalFile": "خواندن محتوای فایل",
+        "renameLocalFile": "تغییر نام فایل",
+        "runCommand": "اجرای کد",
+        "searchLocalFiles": "جستجوی فایل‌ها",
+        "writeLocalFile": "نوشتن در فایل"
+      },
+      "title": "سیستم محلی"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "خواندن محتوای چندین صفحه",
+        "crawlSinglePage": "خواندن محتوای صفحه",
+        "search": "جستجوی صفحات"
+      },
+      "title": "جستجوی آنلاین"
+    }
+  },
   "confirm": "تأیید",
   "debug": {
     "arguments": "پارامترهای فراخوانی",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "مشاهده لیست پارامترها",
+    "delete": "حذف فراخوانی ابزار",
+    "orphanedToolCall": "این پیام فراخوانی ابزار ممکن است به دلایل غیرعادی به یک پیام یتیم تبدیل شده باشد که می‌تواند عملکرد عادی عامل را مختل کند. لطفاً آن را حذف کنید.",
     "pluginRender": "مشاهده رابط افزونه"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "در حال فراخوانی افزونه...",
     "plugin": "افزونه در حال اجرا..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "مشاهده لیست فایل‌ها",
-      "moveLocalFiles": "جابجایی فایل‌ها",
-      "readLocalFile": "خواندن محتوای فایل",
-      "renameLocalFile": "تغییر نام",
-      "searchLocalFiles": "جستجوی فایل‌ها",
-      "writeLocalFile": "نوشتن در فایل"
-    },
-    "title": "فایل‌های محلی"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "در حال بررسی محیط نصب...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ لطفاً اطمینان حاصل کنید که به منبع این افزونه اعتماد دارید، افزونه‌های مخرب ممکن است امنیت سیستم شما را به خطر بیندازند."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "خواندن محتوای چند صفحه",
-      "crawlSinglePage": "خواندن محتوای صفحه",
-      "search": "جستجوی صفحه"
-    },
     "config": {
       "addKey": "افزودن کلید",
       "close": "حذف",

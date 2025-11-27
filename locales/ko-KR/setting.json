@@ -2,6 +2,45 @@
   "about": {
     "title": "정보"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "아바타",
+      "description": "설명",
+      "name": "이름",
+      "tags": "태그",
+      "title": "도우미 정보"
+    },
+    "chat": {
+      "displayMode": "표시 모드",
+      "enableHistoryCount": "이전 메시지 수 카운트 활성화",
+      "historyCount": "이전 메시지 수",
+      "no": "아니오",
+      "searchMode": "검색 모드",
+      "title": "채팅 환경설정",
+      "yes": "예"
+    },
+    "model": {
+      "maxTokens": "최대 토큰 수",
+      "model": "모델",
+      "provider": "서비스 제공자",
+      "temperature": "온도",
+      "title": "모델 설정",
+      "topP": "Top P 값"
+    },
+    "plugins": {
+      "count": "플러그인 설정 ({{count}})",
+      "empty": "아직 설치된 플러그인이 없습니다",
+      "title": "설치된 플러그인"
+    },
+    "role": {
+      "systemRole": "시스템 프롬프트",
+      "title": "역할 설정"
+    },
+    "value": {
+      "unset": "설정되지 않음",
+      "untitled": "제목 없는 도우미"
+    }
+  },
   "agentTab": {
     "chat": "채팅 환경설정",
     "meta": "도우미 정보",
@@ -18,6 +57,8 @@
     },
     "title": "데이터 통계"
   },
+  "checking": "확인 중...",
+  "checkingPermissions": "권한 확인 중...",
   "danger": {
     "clear": {
       "action": "즉시 삭제",
@@ -146,6 +187,58 @@
     },
     "waitingForMore": "더 많은 모델이 <1>도입 예정</1>입니다. 기대해 주세요."
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "이 버전의 주요 변경 사항과 개선 사항을 설명하세요",
+        "label": "변경 로그",
+        "maxLengthError": "변경 로그는 500자 이내여야 합니다",
+        "placeholder": "변경 로그를 입력하세요",
+        "required": "변경 로그를 입력해 주세요"
+      },
+      "comparison": {
+        "local": "현재 로컬 버전",
+        "remote": "현재 게시된 버전"
+      },
+      "identifier": {
+        "extra": "식별자는 도우미의 고유 식별자로 사용되며, 소문자, 숫자, 하이픈을 사용하는 것이 좋습니다",
+        "label": "도우미 식별자",
+        "lengthError": "식별자는 3자에서 50자 사이여야 합니다",
+        "patternError": "식별자는 소문자, 숫자, 하이픈만 포함할 수 있습니다",
+        "placeholder": "예: web-development 와 같은 고유 식별자를 입력하세요",
+        "required": "도우미 식별자를 입력해 주세요"
+      },
+      "loading": {
+        "fetchingRemote": "원격 데이터를 불러오는 중...",
+        "submit": "도우미 게시 중...",
+        "upload": "새 버전 게시 중..."
+      },
+      "messages": {
+        "createVersionFailed": "버전 생성 실패: {{message}}",
+        "fetchRemoteFailed": "원격 도우미 데이터를 가져오는 데 실패했습니다",
+        "missingIdentifier": "현재 도우미에 마켓 식별자가 없습니다",
+        "notAuthenticated": "먼저 마켓 계정에 로그인해 주세요",
+        "publishFailed": "게시 실패: {{message}}"
+      },
+      "submitButton": "게시",
+      "title": {
+        "submit": "도우미 마켓에 공유",
+        "upload": "새 버전 게시"
+      }
+    },
+    "resultModal": {
+      "message": "도우미가 심사 대기 중입니다. 심사 통과 후 자동으로 게시됩니다. '마켓에서 보기'를 클릭하여 게시된 도우미를 확인하세요.",
+      "view": "마켓에서 보기"
+    },
+    "submit": {
+      "button": "마켓에 공유",
+      "tooltip": "도우미를 마켓에 공유합니다"
+    },
+    "upload": {
+      "button": "새 버전 게시",
+      "tooltip": "도우미 마켓에 새 버전을 게시합니다"
+    }
+  },
   "message": {
     "success": "업데이트 성공"
   },
@@ -199,6 +292,12 @@
       "disabled": "비활성화",
       "elegant": "우아함",
       "title": "반응 애니메이션"
+    },
+    "contextMenuMode": {
+      "default": "기본값",
+      "desc": "채팅 메시지 우클릭 메뉴 표시 방식을 선택하세요",
+      "disabled": "사용 안 함",
+      "title": "우클릭 메뉴 방식"
     },
     "neutralColor": {
       "desc": "다양한 색상 경향의 회색조 사용자 정의",
@@ -561,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "에이전트 제출",
-    "identifier": "에이전트 식별자",
+    "identifier": "도우미 식별자(identifier)",
     "metaMiss": "에이전트 정보를 입력한 후 제출하십시오. 이름, 설명 및 태그를 포함해야 합니다.",
     "placeholder": "에이전트 식별자를 입력하세요. 고유해야 하며, 예: 웹 개발",
     "tooltips": "에이전트 마켓에 공유"

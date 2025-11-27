@@ -16,8 +16,8 @@
   "dependencies": {
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
-    "dayjs": "^1.11.18",
-    "dompurify": "^3.2.7"
+    "dayjs": "^1.11.19",
+    "dompurify": "^3.3.0"
   },
   "devDependencies": {
     "vitest-canvas-mock": "^0.3.3"

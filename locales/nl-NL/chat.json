@@ -17,6 +17,7 @@
   "availableAgents": "Beschikbare assistenten",
   "backToBottom": "Terug naar onderen",
   "chatList": {
+    "expandMessage": "Bericht uitvouwen",
     "longMessageDetail": "Bekijk details"
   },
   "clearCurrentMessages": "Huidige berichten wissen",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "Diepdenkschakelaar"
+    },
+    "thinkingLevel": {
+      "title": "Denkniveau"
     },
     "title": "Modeluitbreidingsfunctie",
     "urlContext": {
@@ -173,8 +177,11 @@
     "title": "Leden vermelden"
   },
   "messageAction": {
+    "collapse": "Bericht samenvouwen",
+    "continueGeneration": "Doorgaan met genereren",
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
     "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
+    "expand": "Bericht uitvouwen",
     "regenerate": "Opnieuw genereren"
   },
   "messages": {
@@ -239,6 +246,7 @@
   "noMatchingAgents": "Geen overeenkomende leden gevonden",
   "noMembersYet": "Deze groep heeft nog geen leden. Klik op de + knop om assistenten uit te nodigen.",
   "noSelectedAgents": "Nog geen leden geselecteerd",
+  "openInNewWindow": "In een nieuw venster openen",
   "owner": "Groepseigenaar",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
@@ -325,6 +333,11 @@
     "screenshot": "Screenshot",
     "settings": "Exportinstellingen",
     "text": "Tekst",
+    "widthMode": {
+      "label": "Breedtemodus",
+      "narrow": "Smalle schermmodus",
+      "wide": "Brede schermmodus"
+    },
     "withBackground": "Met achtergrondafbeelding",
     "withFooter": "Met voettekst",
     "withPluginInfo": "Met plug-in informatie",
@@ -366,6 +379,29 @@
     "overload": "Overschrijding van limiet",
     "remained": "Resterend",
     "used": "Gebruikt"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Goedkeuren",
+      "approveAndRemember": "Goedkeuren en onthouden",
+      "approveOnce": "Alleen deze keer goedkeuren",
+      "mode": {
+        "allowList": "Toegestane lijst",
+        "allowListDesc": "Voer alleen automatisch goedgekeurde tools uit",
+        "autoRun": "Automatisch goedkeuren",
+        "autoRunDesc": "Keur automatisch alle tooluitvoeringen goed",
+        "manual": "Handmatig",
+        "manualDesc": "Handmatige goedkeuring vereist bij elke oproep"
+      },
+      "reject": "Weigeren",
+      "rejectAndContinue": "Weigeren en opnieuw proberen",
+      "rejectOnly": "Weigeren",
+      "rejectReasonPlaceholder": "Het opgeven van een reden helpt de agent om toekomstige acties te verbeteren",
+      "rejectTitle": "Huidige tooloproep weigeren",
+      "rejectedWithReason": "Deze tooloproep is geweigerd met reden: {{reason}}",
+      "toolAbort": "Deze hulpmiddeloproep is door de gebruiker geannuleerd",
+      "toolRejected": "Deze tooloproep is geweigerd"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",

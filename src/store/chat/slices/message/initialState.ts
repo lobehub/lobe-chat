@@ -16,6 +16,10 @@ export interface ChatMessageState {
    */
   activeSessionType?: 'agent' | 'group';
   /**
+   * Raw messages from database (flat structure)
+   */
+  dbMessagesMap: Record<string, UIChatMessage[]>;
+  /**
    * Group agents maps by group ID
    */
   groupAgentMaps: Record<string, ChatGroupAgentItem[]>;
@@ -40,6 +44,9 @@ export interface ChatMessageState {
    * whether messages have fetched
    */
   messagesInit: boolean;
+  /**
+   * Parsed messages for display (includes assistantGroup from conversation-flow)
+   */
   messagesMap: Record<string, UIChatMessage[]>;
   /**
    * Supervisor decision debounce timers by group ID
@@ -62,6 +69,7 @@ export interface ChatMessageState {
 export const initialMessageState: ChatMessageState = {
   activeId: 'inbox',
   activeSessionType: undefined,
+  dbMessagesMap: {},
   groupAgentMaps: {},
   groupMaps: {},
   groupsInit: false,

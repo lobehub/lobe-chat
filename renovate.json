@@ -17,22 +17,39 @@
   "ignoreDeps": [],
   "labels": ["dependencies"],
   "packageRules": [
-    // 1) Pinned deps: isolate (OK to use separate* here because there's no matchUpdateTypes)
     {
-      "description": "Isolate PRs for pinned deps (exact x.y.z)",
+      "description": "Un-group tilde ranges",
       "matchManagers": ["npm", "pnpm", "yarn", "bun"],
-      "matchCurrentValue": "^\\d+\\.\\d+\\.\\d+([+-][0-9A-Za-z.-]+)?$",
+      "matchCurrentValue": "^~.*$",
       "groupName": null,
-      "separateMinorPatch": true,
-      "separateMajorMinor": true
+      "groupSlug": null,
+      "separateMajorMinor": true,
+      "separateMinorPatch": true
     },
-    // 2) Non-pinned deps: Patch versions, grouped together
     {
-      "description": "Group patch versions together for non-pinned deps",
+      "description": "Un-group pinned deps (exact x.y.z)",
       "matchManagers": ["npm", "pnpm", "yarn", "bun"],
-      "matchCurrentValue": "/(^[~^]|[<>=| -])/", // anything that looks like a range
-      "groupName": "patch dependencies",
-      "matchUpdateTypes": ["patch"]
+      "matchCurrentValue": "/^\\d+\\.\\d+\\.\\d+([+-][0-9A-Za-z.-]+)?$/",
+      "groupName": null,
+      "groupSlug": null,
+      "separateMajorMinor": true,
+      "separateMinorPatch": true
+    },
+    {
+      "description": "Un-group experimental caret ranges (^0.x)",
+      "matchManagers": ["npm", "pnpm", "yarn", "bun"],
+      "matchCurrentValue": "^\\^0\\.\\d+(\\.\\d+)?([+-][0-9A-Za-z.-]+)?$",
+      "groupName": null,
+      "separateMajorMinor": true,
+      "separateMinorPatch": true
+    },
+    {
+      "description": "Group ^>=1 ranges for patch/minor",
+      "matchManagers": ["npm", "pnpm", "yarn", "bun"],
+      "matchCurrentValue": "/^\\^[1-9]+[0-9]*(\\.\\d+){0,2}([+-][0-9A-Za-z.-]+)?$/",
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-non-major-dependencies"
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],
@@ -41,7 +58,7 @@
   "rangeStrategy": "bump",
   "rebaseWhen": "conflicted",
   "schedule": "on sunday before 6:00am",
+  "separateMinorPatch": false,
   "separateMajorMinor": true,
-  "separateMultipleMajor": true,
   "timezone": "UTC"
 }

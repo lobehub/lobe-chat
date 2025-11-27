@@ -2,6 +2,45 @@
   "about": {
     "title": "Over"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Profielfoto",
+      "description": "Beschrijving",
+      "name": "Naam",
+      "tags": "Tags",
+      "title": "Assistentinformatie"
+    },
+    "chat": {
+      "displayMode": "Weergavemodus",
+      "enableHistoryCount": "Aantal berichten in geschiedenis inschakelen",
+      "historyCount": "Aantal berichten in geschiedenis",
+      "no": "Nee",
+      "searchMode": "Zoekmodus",
+      "title": "Chatvoorkeuren",
+      "yes": "Ja"
+    },
+    "model": {
+      "maxTokens": "Maximaal aantal tokens",
+      "model": "Model",
+      "provider": "Aanbieder",
+      "temperature": "Temperatuur",
+      "title": "Modelinstellingen",
+      "topP": "Top P-waarde"
+    },
+    "plugins": {
+      "count": "Plugin-instellingen ({{count}})",
+      "empty": "Nog geen plugins geïnstalleerd",
+      "title": "Geïnstalleerde plugins"
+    },
+    "role": {
+      "systemRole": "Systeemprompt",
+      "title": "Rolinstellingen"
+    },
+    "value": {
+      "unset": "Niet ingesteld",
+      "untitled": "Naamloze assistent"
+    }
+  },
   "agentTab": {
     "chat": "Chatvoorkeur",
     "meta": "Assistentinformatie",
@@ -18,6 +57,8 @@
     },
     "title": "Analytics"
   },
+  "checking": "Bezig met controleren...",
+  "checkingPermissions": "Bezig met controleren van rechten...",
   "danger": {
     "clear": {
       "action": "Direct verwijderen",
@@ -146,6 +187,58 @@
     },
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Beschrijf de belangrijkste wijzigingen en verbeteringen in deze versie",
+        "label": "Wijzigingslogboek",
+        "maxLengthError": "Het wijzigingslogboek mag niet meer dan 500 tekens bevatten",
+        "placeholder": "Voer het wijzigingslogboek in",
+        "required": "Voer het wijzigingslogboek in"
+      },
+      "comparison": {
+        "local": "Huidige lokale versie",
+        "remote": "Huidige gepubliceerde versie"
+      },
+      "identifier": {
+        "extra": "De identifier dient als unieke identificatie van de assistent. Gebruik bij voorkeur kleine letters, cijfers en koppeltekens",
+        "label": "Assistentidentifier",
+        "lengthError": "De identifier moet tussen 3 en 50 tekens lang zijn",
+        "patternError": "De identifier mag alleen kleine letters, cijfers en koppeltekens bevatten",
+        "placeholder": "Voer een unieke identifier in, bijv.: web-development",
+        "required": "Voer een assistentidentifier in"
+      },
+      "loading": {
+        "fetchingRemote": "Bezig met laden van externe gegevens...",
+        "submit": "Bezig met publiceren van assistent...",
+        "upload": "Bezig met publiceren van nieuwe versie..."
+      },
+      "messages": {
+        "createVersionFailed": "Versie aanmaken mislukt: {{message}}",
+        "fetchRemoteFailed": "Ophalen van externe assistentgegevens mislukt",
+        "missingIdentifier": "Deze assistent heeft nog geen marktplaatsidentifier",
+        "notAuthenticated": "Log eerst in op je marktplaatsaccount",
+        "publishFailed": "Publicatie mislukt: {{message}}"
+      },
+      "submitButton": "Publiceren",
+      "title": {
+        "submit": "Delen op de assistentenmarktplaats",
+        "upload": "Nieuwe versie publiceren"
+      }
+    },
+    "resultModal": {
+      "message": "De assistent is ter beoordeling ingediend. Na goedkeuring wordt deze automatisch gepubliceerd. Klik op 'Bekijk in marktplaats' om de gepubliceerde assistent te bekijken.",
+      "view": "Bekijk in marktplaats"
+    },
+    "submit": {
+      "button": "Delen op marktplaats",
+      "tooltip": "Deel de assistent op de marktplaats"
+    },
+    "upload": {
+      "button": "Nieuwe versie publiceren",
+      "tooltip": "Publiceer een nieuwe versie op de assistentenmarktplaats"
+    }
+  },
   "message": {
     "success": "Succesvol bijgewerkt"
   },
@@ -199,6 +292,12 @@
       "disabled": "Uitgeschakeld",
       "elegant": "Elegant",
       "title": "Reactie-animatie"
+    },
+    "contextMenuMode": {
+      "default": "Standaard",
+      "desc": "Kies de weergaveoptie voor het contextmenu van chatberichten",
+      "disabled": "Niet gebruiken",
+      "title": "Contextmenu-optie"
     },
     "neutralColor": {
       "desc": "Aangepaste grijstinten met verschillende kleurvoorkeuren",
@@ -561,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Assistent indienen",
-    "identifier": "Assistent-identificatie",
+    "identifier": "Assistentidentifier (identifier)",
     "metaMiss": "Vul alstublieft de assistentinformatie in voordat u deze indient. Dit moet de naam, beschrijving en labels bevatten",
     "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
     "tooltips": "Delen op de assistentenmarkt"

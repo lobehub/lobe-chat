@@ -35,11 +35,16 @@ export const setupMockSelectors = (
 /**
  * Setup store state with messages
  */
-export const setupStoreWithMessages = (messages: any[], sessionId = TEST_IDS.SESSION_ID) => {
+export const setupStoreWithMessages = (
+  messages: any[],
+  sessionId = TEST_IDS.SESSION_ID,
+  topicId: string | null | undefined = TEST_IDS.TOPIC_ID,
+) => {
   useChatStore.setState({
     activeId: sessionId,
+    activeTopicId: topicId ?? undefined,
     messagesMap: {
-      [messageMapKey(sessionId)]: messages,
+      [messageMapKey(sessionId, topicId ?? undefined)]: messages,
     },
   });
 };
@@ -63,6 +68,9 @@ export const spyOnMessageService = () => {
   const updateMessageSpy = vi
     .spyOn(messageService, 'updateMessage')
     .mockResolvedValue({ messages: [], success: true });
+  const updateMessageMetadataSpy = vi
+    .spyOn(messageService, 'updateMessageMetadata')
+    .mockResolvedValue({ messages: [], success: true });
   const removeMessageSpy = vi
     .spyOn(messageService, 'removeMessage')
     .mockResolvedValue(undefined as any);
@@ -74,6 +82,7 @@ export const spyOnMessageService = () => {
     createMessageSpy,
     removeMessageSpy,
     updateMessageErrorSpy,
+    updateMessageMetadataSpy,
     updateMessageSpy,
   };
 };
@@ -100,8 +109,6 @@ export const resetTestEnvironment = () => {
     {
       activeId: TEST_IDS.SESSION_ID,
       activeTopicId: TEST_IDS.TOPIC_ID,
-      chatLoadingIds: [],
-      chatLoadingIdsAbortController: undefined,
       messagesMap: {},
       toolCallingStreamIds: {},
     },

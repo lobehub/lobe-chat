@@ -15,7 +15,7 @@ const Head = memo<{ id: string }>(({ id }) => {
 
   return (
     <Flexbox gap={8}>
-      <GoBack to="/" />
+      <GoBack to="/knowledge" />
       <Flexbox align={'center'} gap={8} height={36} horizontal>
         <Center style={{ minWidth: 24 }} width={24}>
           <RepoIcon />

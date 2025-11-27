@@ -15,6 +15,7 @@ import {
   StdioMCPParams,
 } from '@/libs/mcp';
 
+import { ProcessContentBlocksFn, contentBlocksToString } from './contentProcessor';
 import { mcpSystemDepsCheckService } from './deps';
 
 const log = debug('lobe-mcp:service');
@@ -154,12 +155,19 @@ export class MCPService {
     }
   }
 
-  // callTool now accepts MCPClientParams, toolName, and args
-  async callTool(params: MCPClientParams, toolName: string, argsStr: any): Promise<any> {
-    const client = await this.getClient(params); // Get client using params
+  // callTool now accepts an object with clientParams, toolName, argsStr, and processContentBlocks
+  async callTool(options: {
+    argsStr: any;
+    clientParams: MCPClientParams;
+    processContentBlocks?: ProcessContentBlocksFn;
+    toolName: string;
+  }): Promise<any> {
+    const { clientParams, toolName, argsStr, processContentBlocks } = options;
+
+    const client = await this.getClient(clientParams); // Get client using params
 
     const args = safeParseJSON(argsStr);
-    const loggableParams = this.sanitizeForLogging(params);
+    const loggableParams = this.sanitizeForLogging(clientParams);
 
     log(
       `Calling tool "${toolName}" using client for params: %O with args: %O`,
@@ -170,39 +178,45 @@ export class MCPService {
     try {
       // Delegate the call to the MCPClient instance
       const result = await client.callTool(toolName, args); // Pass args directly
+
+      // Process content blocks (upload images, etc.)
+      const newContent =
+        result.isError || !processContentBlocks
+          ? result.content
+          : await processContentBlocks(result.content);
+
+      // Convert content blocks to string
+      const content = contentBlocksToString(newContent);
+
+      const state = { ...result, content: newContent };
+
       log(
         `Tool "${toolName}" called successfully for params: %O, result: %O`,
         loggableParams,
-        result,
+        state,
       );
-      const { content, isError } = result;
 
-      if (isError) return result;
+      if (result.isError) return { content, state, success: true };
 
-      const data = content as { text: string; type: 'text' }[];
-
-      if (!data || data.length === 0) return data;
-
-      if (data.length > 1) return data;
-
-      const text = data[0]?.text;
-      if (!text) return data;
-
-      // try to get json object, which will be stringify in the client
-      const json = safeParseJSON(text);
-      if (json) return json;
-
-      return text;
+      return { content, state, success: true };
     } catch (error) {
       if (error instanceof McpError) {
         const mcpError = error as McpError;
 
-        return mcpError.message;
+        return {
+          content: mcpError.message,
+          error: error,
+          state: {
+            content: [{ text: mcpError.message, type: 'text' }],
+            isError: true,
+          },
+          success: false,
+        };
       }
 
       console.error(
         `Error calling tool "${toolName}" for params %O:`,
-        this.sanitizeForLogging(params),
+        this.sanitizeForLogging(clientParams),
         error,
       );
       // Propagate a TRPCError
@@ -236,7 +250,7 @@ export class MCPService {
     } catch (error) {
       console.error(`Failed to initialize MCP client:`, error);
 
-      // 保留完整的错误信息，特别是详细的 stderr 输出
+      // Preserve complete error information, especially detailed stderr output
       const errorMessage = error instanceof Error ? error.message : String(error);
 
       if (typeof error === 'object' && !!error && 'data' in error) {
@@ -247,7 +261,7 @@ export class MCPService {
         });
       }
 
-      // 记录详细的错误信息用于调试
+      // Log detailed error information for debugging
       log('Detailed initialization error: %O', {
         error: errorMessage,
         params: this.sanitizeForLogging(params),
@@ -257,7 +271,7 @@ export class MCPService {
       throw new TRPCError({
         cause: error,
         code: 'INTERNAL_SERVER_ERROR',
-        message: errorMessage, // 直接使用完整的错误信息
+        message: errorMessage, // Use complete error message directly
       });
     }
   }
@@ -293,12 +307,12 @@ export class MCPService {
   ): Promise<LobeChatPluginManifest> {
     const mcpParams = { name: identifier, type: 'http' as const, url };
 
-    // 如果有认证信息，添加到参数中
+    // Add authentication info to parameters if available
     if (auth) {
       (mcpParams as any).auth = auth;
     }
 
-    // 如果有 headers 信息，添加到参数中
+    // Add headers info to parameters if available
     if (headers) {
       (mcpParams as any).headers = headers;
     }
@@ -369,23 +383,23 @@ export class MCPService {
       log('Checking MCP plugin installation status: %O', loggableInput);
       const results = [];
 
-      // 检查每个部署选项
+      // Check each deployment option
       for (const option of input.deploymentOptions) {
-        // 使用系统依赖检查服务检查部署选项
+        // Use system dependency check service to check deployment option
         const result = await mcpSystemDepsCheckService.checkDeployOption(option);
         results.push(result);
       }
 
-      // 找出推荐的或第一个可安装的选项
+      // Find the recommended or first installable option
       const recommendedResult = results.find((r) => r.isRecommended && r.allDependenciesMet);
       const firstInstallableResult = results.find((r) => r.allDependenciesMet);
 
-      // 返回推荐的结果，或第一个可安装的结果，或第一个结果
+      // Return the recommended result, or the first installable result, or the first result
       const bestResult = recommendedResult || firstInstallableResult || results[0];
 
       log('Check completed, best result: %O', bestResult);
 
-      // 构造返回结果，确保包含配置检查信息
+      // Construct return result, ensure configuration check information is included
       const checkResult: CheckMcpInstallResult = {
         ...bestResult,
         allOptions: results,
@@ -393,7 +407,7 @@ export class MCPService {
         success: true,
       };
 
-      // 如果最佳结果需要配置，确保在顶层设置相关字段
+      // If the best result requires configuration, ensure related fields are set at the top level
       if (bestResult?.needsConfig) {
         checkResult.needsConfig = true;
         checkResult.configSchema = bestResult.configSchema;

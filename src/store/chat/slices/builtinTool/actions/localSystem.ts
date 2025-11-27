@@ -5,7 +5,6 @@ import {
   GrepContentParams,
   KillCommandParams,
   ListLocalFileParams,
-  LocalMoveFilesResultItem,
   LocalReadFileParams,
   LocalReadFilesParams,
   LocalSearchFilesParams,
@@ -14,30 +13,19 @@ import {
   RunCommandParams,
   WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
+import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
-import { localFileService } from '@/services/electron/localFileService';
 import { ChatStore } from '@/store/chat/store';
-import {
-  EditLocalFileState,
-  GetCommandOutputState,
-  GlobFilesState,
-  GrepContentState,
-  KillCommandState,
-  LocalFileListState,
-  LocalFileSearchState,
-  LocalMoveFilesState,
-  LocalReadFileState,
-  LocalReadFilesState,
-  LocalRenameFileState,
-  RunCommandState,
-} from '@/tools/local-system/type';
+import { LocalSystemExecutionRuntime } from '@/tools/local-system/ExecutionRuntime';
+
+const log = debug('lobe-store:builtin-tool');
 
 /* eslint-disable typescript-sort-keys/interface */
 export interface LocalFileAction {
-  internal_triggerLocalFileToolCalling: <T = any>(
+  internal_triggerLocalFileToolCalling: (
     id: string,
-    callingService: () => Promise<{ content: any; state?: T }>,
+    callingService: () => Promise<{ content: string; error?: any; state?: any; success: boolean }>,
   ) => Promise<boolean>;
 
   // File Operations
@@ -48,7 +36,6 @@ export interface LocalFileAction {
   renameLocalFile: (id: string, params: RenameLocalFileParams) => Promise<boolean>;
   reSearchLocalFiles: (id: string, params: LocalSearchFilesParams) => Promise<boolean>;
   searchLocalFiles: (id: string, params: LocalSearchFilesParams) => Promise<boolean>;
-  toggleLocalFileLoading: (id: string, loading: boolean) => void;
   writeLocalFile: (id: string, params: WriteLocalFileParams) => Promise<boolean>;
 
   // Shell Commands
@@ -63,6 +50,8 @@ export interface LocalFileAction {
 }
 /* eslint-enable typescript-sort-keys/interface */
 
+const runtime = new LocalSystemExecutionRuntime();
+
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 export const localSystemSlice: StateCreator<
   ChatStore,
@@ -72,253 +61,181 @@ export const localSystemSlice: StateCreator<
 > = (set, get) => ({
   // ==================== File Editing ====================
   editLocalFile: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<EditLocalFileState>(id, async () => {
-      const result = await localFileService.editLocalFile(params);
-
-      const message = result.success
-        ? `Successfully replaced ${result.replacements} occurrence(s) in ${params.file_path}`
-        : `Edit failed: ${result.error}`;
-
-      const state: EditLocalFileState = { message, result };
-
-      return { content: result, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.editLocalFile(params);
     });
   },
 
   writeLocalFile: async (id, params) => {
     return get().internal_triggerLocalFileToolCalling(id, async () => {
-      const result = await localFileService.writeFile(params);
-
-      let content: { message: string; success: boolean };
-
-      if (result.success) {
-        content = {
-          message: `成功写入文件 ${params.path}`,
-          success: true,
-        };
-      } else {
-        const errorMessage = result.error;
-
-        content = { message: errorMessage || '写入文件失败', success: false };
-      }
-      return { content };
+      return await runtime.writeLocalFile(params);
     });
   },
   moveLocalFiles: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<LocalMoveFilesState>(id, async () => {
-      const results: LocalMoveFilesResultItem[] = await localFileService.moveLocalFiles(params);
-
-      // 检查所有文件是否成功移动以更新消息内容
-      const allSucceeded = results.every((r) => r.success);
-      const someFailed = results.some((r) => !r.success);
-      const successCount = results.filter((r) => r.success).length;
-      const failedCount = results.length - successCount;
-
-      let message = '';
-
-      if (allSucceeded) {
-        message = `Successfully moved ${results.length} item(s).`;
-      } else if (someFailed) {
-        message = `Moved ${successCount} item(s) successfully. Failed to move ${failedCount} item(s).`;
-      } else {
-        // 所有都失败了？
-        message = `Failed to move all ${results.length} item(s).`;
-      }
-
-      const state: LocalMoveFilesState = { results, successCount, totalCount: results.length };
-
-      return { content: { message, results }, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.moveLocalFiles(params);
     });
   },
   renameLocalFile: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<LocalRenameFileState>(id, async () => {
-      const { path: currentPath, newName } = params;
-
-      // Basic validation for newName (can be done here or backend, maybe better in backend)
-      if (
-        !newName ||
-        newName.includes('/') ||
-        newName.includes('\\') ||
-        newName === '.' ||
-        newName === '..' ||
-        /["*/:<>?\\|]/.test(newName)
-      ) {
-        throw new Error(
-          'Invalid new name provided. It cannot be empty, contain path separators, or invalid characters.',
-        );
-      }
-
-      const result = await localFileService.renameLocalFile({ newName, path: currentPath }); // Call the specific service
-
-      let state: LocalRenameFileState;
-      let content: { message: string; success: boolean };
-
-      if (result.success) {
-        state = { newPath: result.newPath!, oldPath: currentPath, success: true };
-        // Simplified message
-        content = {
-          message: `Successfully renamed file ${currentPath} to ${newName}.`,
-          success: true,
-        };
-      } else {
-        const errorMessage = result.error;
-        state = {
-          error: errorMessage,
-          newPath: '',
-          oldPath: params.path,
-          success: false,
-        };
-        content = { message: errorMessage, success: false };
-      }
-      return { content, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.renameLocalFile(params);
     });
   },
 
   // ==================== Search & Find ====================
   grepContent: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<GrepContentState>(id, async () => {
-      const result = await localFileService.grepContent(params);
-
-      const message = result.success
-        ? `Found ${result.total_matches} matches in ${result.matches.length} locations`
-        : 'Search failed';
-
-      const state: GrepContentState = { message, result };
-
-      return { content: result, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.grepContent(params);
     });
   },
 
   globLocalFiles: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<GlobFilesState>(id, async () => {
-      const result = await localFileService.globFiles(params);
-
-      const message = result.success ? `Found ${result.total_files} files` : 'Glob search failed';
-
-      const state: GlobFilesState = { message, result };
-
-      return { content: result, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.globLocalFiles(params);
     });
   },
 
   searchLocalFiles: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<LocalFileSearchState>(id, async () => {
-      const result = await localFileService.searchLocalFiles(params);
-      const state: LocalFileSearchState = { searchResults: result };
-      return { content: result, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.searchLocalFiles(params);
     });
   },
 
   listLocalFiles: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<LocalFileListState>(id, async () => {
-      const result = await localFileService.listLocalFiles(params);
-      const state: LocalFileListState = { listResults: result };
-      return { content: result, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.listLocalFiles(params);
     });
   },
 
   reSearchLocalFiles: async (id, params) => {
-    get().toggleLocalFileLoading(id, true);
+    // Get operationId from messageOperationMap to ensure proper context isolation
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
 
-    await get().updatePluginArguments(id, params);
+    await get().optimisticUpdatePluginArguments(id, params, false, context);
 
     return get().searchLocalFiles(id, params);
   },
 
   readLocalFile: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<LocalReadFileState>(id, async () => {
-      const result = await localFileService.readLocalFile(params);
-      const state: LocalReadFileState = { fileContent: result };
-      return { content: result, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.readLocalFile(params);
     });
   },
 
   readLocalFiles: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<LocalReadFilesState>(id, async () => {
-      const results = await localFileService.readLocalFiles(params);
-      const state: LocalReadFilesState = { filesContent: results };
-      return { content: results, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.readLocalFiles(params);
     });
   },
 
   // ==================== Shell Commands ====================
   runCommand: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<RunCommandState>(id, async () => {
-      const result = await localFileService.runCommand(params);
-
-      let message: string;
-
-      if (result.success) {
-        if (result.shell_id) {
-          message = `Command started in background with shell_id: ${result.shell_id}`;
-        } else {
-          message = `Command completed successfully. Exit code: ${result.exit_code}`;
-        }
-      } else {
-        message = `Command failed: ${result.error}`;
-      }
-
-      const state: RunCommandState = { message, result };
-
-      return { content: result, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.runCommand(params);
     });
   },
   killCommand: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<KillCommandState>(id, async () => {
-      const result = await localFileService.killCommand(params);
-
-      const message = result.success
-        ? `Successfully killed shell: ${params.shell_id}`
-        : `Failed to kill shell: ${result.error}`;
-
-      const state: KillCommandState = { message, result };
-
-      return { content: result, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.killCommand(params);
     });
   },
   getCommandOutput: async (id, params) => {
-    return get().internal_triggerLocalFileToolCalling<GetCommandOutputState>(id, async () => {
-      const result = await localFileService.getCommandOutput(params);
-
-      const message = result.success
-        ? `Output retrieved. Running: ${result.running}`
-        : `Failed: ${result.error}`;
-
-      const state: GetCommandOutputState = { message, result };
-
-      return { content: result, state };
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      return await runtime.getCommandOutput(params);
     });
   },
 
   // ==================== utils ====================
 
-  toggleLocalFileLoading: (id, loading) => {
-    // Assuming a loading state structure similar to searchLoading
-    set(
-      (state) => ({
-        localFileLoading: { ...state.localFileLoading, [id]: loading },
-      }),
-      false,
-      `toggleLocalFileLoading/${loading ? 'start' : 'end'}`,
-    );
-  },
   internal_triggerLocalFileToolCalling: async (id, callingService) => {
-    get().toggleLocalFileLoading(id, true);
+    // Get parent operationId from messageOperationMap (should be executeToolCall)
+    const parentOperationId = get().messageOperationMap[id];
+
+    // Create child operation for local system execution
+    // Auto-associates message with this operation via messageId in context
+    const { operationId: localSystemOpId, abortController } = get().startOperation({
+      type: 'builtinToolLocalSystem',
+      context: {
+        messageId: id,
+      },
+      parentOperationId,
+      metadata: {
+        startTime: Date.now(),
+      },
+    });
+
+    log(
+      '[localSystem] messageId=%s, parentOpId=%s, localSystemOpId=%s, aborted=%s',
+      id,
+      parentOperationId,
+      localSystemOpId,
+      abortController.signal.aborted,
+    );
+
+    const context = { operationId: localSystemOpId };
+
     try {
-      const { state, content } = await callingService();
-      if (state) {
-        await get().updatePluginState(id, state as any);
+      const { state, content, success, error } = await callingService();
+
+      // Complete local system operation
+      get().completeOperation(localSystemOpId);
+
+      if (success) {
+        if (state) {
+          await get().optimisticUpdatePluginState(id, state, context);
+        }
+        await get().optimisticUpdateMessageContent(id, content, undefined, context);
+      } else {
+        await get().optimisticUpdateMessagePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || 'Operation failed',
+            type: 'PluginServerError',
+          },
+          context,
+        );
+        // Still update content even if failed, to show error message
+        await get().optimisticUpdateMessageContent(id, content, undefined, context);
       }
-      await get().internal_updateMessageContent(id, JSON.stringify(content));
+
+      return true;
     } catch (error) {
-      await get().internal_updateMessagePluginError(id, {
-        body: error,
-        message: (error as Error).message,
+      const err = error as Error;
+
+      log('[localSystem] Error: messageId=%s, error=%s', id, err.message);
+
+      // Check if it's an abort error
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        log('[localSystem] Request aborted: messageId=%s', id);
+        // Fail local system operation for abort
+        get().failOperation(localSystemOpId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        // Don't update error message for user aborts
+        return false;
+      }
+
+      // Fail local system operation for other errors
+      get().failOperation(localSystemOpId, {
+        message: err.message,
         type: 'PluginServerError',
       });
-    }
-    get().toggleLocalFileLoading(id, false);
 
-    return true;
+      // For other errors, update message
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        {
+          body: error,
+          message: err.message,
+          type: 'PluginServerError',
+        },
+        context,
+      );
+
+      return false;
+    }
   },
 });

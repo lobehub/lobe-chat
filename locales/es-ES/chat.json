@@ -17,6 +17,7 @@
   "availableAgents": "Agentes disponibles",
   "backToBottom": "Volver al fondo",
   "chatList": {
+    "expandMessage": "Expandir mensaje",
     "longMessageDetail": "Ver detalles"
   },
   "clearCurrentMessages": "Borrar mensajes actuales",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "Interruptor de pensamiento profundo"
+    },
+    "thinkingLevel": {
+      "title": "Nivel de pensamiento"
     },
     "title": "Funcionalidad de extensión del modelo",
     "urlContext": {
@@ -173,8 +177,11 @@
     "title": "Mencionar miembros"
   },
   "messageAction": {
+    "collapse": "Ocultar mensaje",
+    "continueGeneration": "Continuar generando",
     "delAndRegenerate": "Eliminar y Regenerar",
     "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
+    "expand": "Expandir mensaje",
     "regenerate": "Regenerar"
   },
   "messages": {
@@ -239,6 +246,7 @@
   "noMatchingAgents": "No se encontraron miembros coincidentes",
   "noMembersYet": "Este grupo aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
   "noSelectedAgents": "Aún no se han seleccionado miembros",
+  "openInNewWindow": "Abrir en una nueva ventana",
   "owner": "Propietario del grupo",
   "pin": "Fijar",
   "pinOff": "Desfijar",
@@ -325,6 +333,11 @@
     "screenshot": "Captura de pantalla",
     "settings": "Configuración de exportación",
     "text": "Texto",
+    "widthMode": {
+      "label": "Modo de ancho",
+      "narrow": "Modo de pantalla estrecha",
+      "wide": "Modo de pantalla ancha"
+    },
     "withBackground": "Incluir imagen de fondo",
     "withFooter": "Incluir pie de página",
     "withPluginInfo": "Incluir información del plugin",
@@ -366,6 +379,29 @@
     "overload": "Excedido",
     "remained": "Restante",
     "used": "Usado"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Aprobar",
+      "approveAndRemember": "Aprobar y recordar",
+      "approveOnce": "Aprobar solo esta vez",
+      "mode": {
+        "allowList": "Lista blanca",
+        "allowListDesc": "Ejecutar automáticamente solo las herramientas aprobadas",
+        "autoRun": "Aprobación automática",
+        "autoRunDesc": "Aprobar automáticamente la ejecución de todas las herramientas",
+        "manual": "Manual",
+        "manualDesc": "Se requiere aprobación manual para cada ejecución"
+      },
+      "reject": "Rechazar",
+      "rejectAndContinue": "Rechazar y volver a intentar",
+      "rejectOnly": "Rechazar",
+      "rejectReasonPlaceholder": "Ingresar una razón ayudará al agente a comprender y mejorar futuras acciones",
+      "rejectTitle": "Rechazar esta ejecución de herramienta",
+      "rejectedWithReason": "Esta ejecución de herramienta fue rechazada: {{reason}}",
+      "toolAbort": "La llamada a la herramienta fue cancelada por el usuario",
+      "toolRejected": "Esta ejecución de herramienta fue rechazada"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "¿Abrir un nuevo tema?",

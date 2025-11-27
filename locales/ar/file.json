@@ -1,5 +1,8 @@
 {
-  "desc": "إدارة معرفتك",
+  "addFolder": "إنشاء مجلد",
+  "addKnowledge": "إضافة معرفة",
+  "addPage": "إنشاء مستند",
+  "desc": "نظّم معرفتك في العمل، الدراسة والحياة.",
   "detail": {
     "basic": {
       "createdAt": "تاريخ الإنشاء",
@@ -21,14 +24,88 @@
       "embeddingStatus": "تحويل إلى متجهات"
     }
   },
+  "documentEditor": {
+    "addIcon": "إضافة أيقونة",
+    "autoSaveMessage": "يتم حفظ المستند تلقائيًا، لا حاجة للحفظ اليدوي",
+    "chooseIcon": "اختر أيقونة",
+    "deleteConfirm": {
+      "content": "سيتم حذف هذا المستند، ولا يمكن استعادته بعد الحذف. يرجى توخي الحذر.",
+      "title": "حذف المستند"
+    },
+    "deleteError": "فشل في حذف المستند",
+    "deleteSuccess": "تم حذف المستند بنجاح",
+    "editedAt": "آخر تعديل في {{time}}",
+    "editedBy": "آخر من عدّل: {{name}}",
+    "editorPlaceholder": "أدخل محتوى المستند، اضغط / لفتح قائمة الأوامر",
+    "empty": {
+      "createNewDocument": "إنشاء مستند جديد",
+      "title": "اختر مستندًا للبدء",
+      "uploadMarkdown": "رفع ملف Markdown"
+    },
+    "linkCopied": "تم نسخ الرابط",
+    "menu": {
+      "copyLink": "نسخ الرابط",
+      "exportDocument": "تصدير المستند",
+      "importDocument": "استيراد مستند",
+      "pin": "تثبيت المستند"
+    },
+    "saving": "جارٍ الحفظ...",
+    "titlePlaceholder": "بدون عنوان",
+    "wordCount": "{{wordCount}} كلمة"
+  },
+  "documentList": {
+    "copyContent": "نسخ المحتوى الكامل",
+    "duplicate": "إنشاء نسخة",
+    "empty": "لا توجد مستندات حالياً، انقر على الزر أعلاه لإنشاء أول مستند لك",
+    "noResults": "لم يتم العثور على مستندات مطابقة",
+    "pageCount": "إجمالي {{count}} مستند",
+    "selectNote": "اختر مستندًا لبدء التحرير",
+    "untitled": "بدون عنوان"
+  },
   "empty": "لا توجد ملفات/مجلدات تم تحميلها بعد",
   "header": {
     "actions": {
       "newFolder": "إنشاء مجلد جديد",
+      "newPage": "مستند جديد",
       "uploadFile": "رفع ملف",
       "uploadFolder": "رفع مجلد"
     },
+    "newNoteDialog": {
+      "cancel": "إلغاء",
+      "editTitle": "تحرير المستند",
+      "emptyContent": "لا يمكن أن يكون محتوى المستند فارغًا",
+      "loadError": "فشل في تحميل المستند، يرجى المحاولة مرة أخرى",
+      "loading": "جارٍ التحميل...",
+      "save": "حفظ",
+      "saveError": "فشل في حفظ المستند، يرجى المحاولة مرة أخرى",
+      "saveSuccess": "تم حفظ المستند بنجاح",
+      "title": "مستند جديد",
+      "updateSuccess": "تم تحديث المستند بنجاح"
+    },
+    "newPageButton": "إنشاء مستند جديد",
     "uploadButton": "رفع"
+  },
+  "home": {
+    "getStarted": "ابدأ الآن",
+    "greeting": "ابدأ",
+    "quickActions": "إجراءات سريعة",
+    "recentFiles": "الملفات الأخيرة",
+    "recentPages": "الصفحات الأخيرة",
+    "subtitle": "مرحبًا بك في قاعدة المعرفة، ابدأ من هنا لإدارة مستنداتك وملاحظاتك",
+    "uploadEntries": {
+      "files": {
+        "title": "رفع ملفات"
+      },
+      "folder": {
+        "title": "رفع مجلد"
+      },
+      "knowledgeBase": {
+        "title": "قاعدة معرفة جديدة"
+      },
+      "newPage": {
+        "title": "إنشاء مستند جديد"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "إنشاء مكتبة معرفية جديدة",
     "title": "المكتبة المعرفية"
+  },
+  "menu": {
+    "allFiles": "جميع الملفات",
+    "allPages": "جميع المستندات"
   },
   "networkError": "فشل في الحصول على قاعدة المعرفة، يرجى التحقق من اتصال الشبكة ثم إعادة المحاولة",
   "notSupportGuide": {
@@ -62,18 +143,20 @@
     "unsupportedFileAndContact": "هذا التنسيق من الملفات غير مدعوم للمعاينة عبر الإنترنت، إذا كان لديك طلب للمعاينة، فلا تتردد في <1>إبلاغنا</1>"
   },
   "searchFilePlaceholder": "بحث عن ملف",
+  "searchPagePlaceholder": "ابحث في المستندات",
   "tab": {
-    "all": "جميع الملفات",
+    "all": "الكل",
     "audios": "الصوتيات",
     "documents": "المستندات",
+    "home": "الرئيسية",
     "images": "الصور",
+    "moreTypes": "أنواع أخرى",
+    "pages": "المستندات",
     "videos": "الفيديوهات",
     "websites": "المواقع"
   },
   "title": "قاعدة المعرفة",
-  "toggleLeftPanel": {
-    "title": "عرض/إخفاء اللوحة الجانبية اليسرى"
-  },
+  "toggleLeftPanel": "إظهار/إخفاء اللوحة الجانبية اليسرى",
   "uploadDock": {
     "body": {
       "collapse": "طي",

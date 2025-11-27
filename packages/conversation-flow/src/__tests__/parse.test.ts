@@ -22,9 +22,9 @@ describe('parse', () => {
 
   describe('Tool Usage', () => {
     it('should parse assistant with tools correctly', () => {
-      const result = parse(inputs.assistantWithTools);
+      const result = parse(inputs.assistantGroup.assistantWithTools);
 
-      expect(serializeParseResult(result)).toEqual(outputs.assistantWithTools);
+      expect(serializeParseResult(result)).toEqual(outputs.assistantGroup.assistantWithTools);
     });
 
     it('should include follow-up messages after assistant chain', () => {
@@ -71,6 +71,18 @@ describe('parse', () => {
 
       expect(serializeParseResult(result)).toEqual(outputs.branch.nested);
     });
+
+    it('should handle multiple assistant group branches', () => {
+      const result = parse(inputs.branch.multiAssistantGroup);
+
+      expect(serializeParseResult(result)).toEqual(outputs.branch.multiAssistantGroup);
+    });
+
+    it('should handle assistant group with branches', () => {
+      const result = parse(inputs.branch.assistantGroupBranches);
+
+      expect(serializeParseResult(result)).toEqual(outputs.branch.assistantGroupBranches);
+    });
   });
 
   describe('Compare Mode', () => {
@@ -87,11 +99,34 @@ describe('parse', () => {
     });
   });
 
-  describe('Complex Scenarios', () => {
-    it('should handle complex mixed scenarios correctly', () => {
-      const result = parse(inputs.complexScenario);
+  describe('Assistant Group Scenarios', () => {
+    it('should handle tools with assistant branches correctly', () => {
+      const result = parse(inputs.assistantGroup.toolsWithBranches);
 
-      expect(serializeParseResult(result)).toEqual(outputs.complexScenario);
+      expect(serializeParseResult(result)).toEqual(outputs.assistantGroup.toolsWithBranches);
+    });
+  });
+
+  describe('Performance', () => {
+    it('should parse 10000 items within 50ms', () => {
+      // Generate 10000 messages as flat siblings (no deep nesting to avoid stack overflow)
+      // This simulates a more realistic scenario where messages are not deeply nested
+      const largeInput = Array.from({ length: 10000 }, (_, i) => ({
+        id: `msg-${i}`,
+        role: i % 2 === 0 ? ('user' as const) : ('assistant' as const),
+        content: `Message ${i}`,
+        parentId: undefined, // All messages at the same level
+        createdAt: Date.now() + i,
+      }));
+
+      const startTime = performance.now();
+      const result = parse(largeInput as any[]);
+      const endTime = performance.now();
+
+      const executionTime = endTime - startTime;
+
+      expect(result.flatList.length).toBeGreaterThan(0);
+      expect(executionTime).toBeLessThan(50);
     });
   });
 });

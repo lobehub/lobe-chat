@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Đọc nội dung cơ sở tri thức",
+        "searchKnowledgeBase": "Tìm kiếm trong cơ sở tri thức"
+      },
+      "title": "Cơ sở tri thức"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Chỉnh sửa tệp",
+        "getCommandOutput": "Lấy kết quả mã lệnh",
+        "globLocalFiles": "Tìm kiếm tệp theo mẫu",
+        "grepContent": "Tìm kiếm nội dung",
+        "killCommand": "Dừng thực thi mã lệnh",
+        "listLocalFiles": "Xem danh sách tệp",
+        "moveLocalFiles": "Di chuyển tệp",
+        "readLocalFile": "Đọc nội dung tệp",
+        "renameLocalFile": "Đổi tên tệp",
+        "runCommand": "Thực thi mã lệnh",
+        "searchLocalFiles": "Tìm kiếm tệp",
+        "writeLocalFile": "Ghi nội dung vào tệp"
+      },
+      "title": "Hệ thống cục bộ"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Đọc nội dung nhiều trang",
+        "crawlSinglePage": "Đọc nội dung trang",
+        "search": "Tìm kiếm trang"
+      },
+      "title": "Tìm kiếm trực tuyến"
+    }
+  },
   "confirm": "Xác nhận",
   "debug": {
     "arguments": "Tham số gọi",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "Xem danh sách tham số",
+    "delete": "Xoá lệnh gọi công cụ",
+    "orphanedToolCall": "Lệnh gọi công cụ này có thể đã trở thành một tin nhắn bị cô lập do sự cố bất thường, điều này có thể ảnh hưởng đến quá trình thực thi bình thường của Tác nhân. Vui lòng xoá nó.",
     "pluginRender": "Xem giao diện plugin"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "Đang gọi plugin...",
     "plugin": "Plugin đang chạy..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "Xem danh sách tệp",
-      "moveLocalFiles": "Di chuyển tệp",
-      "readLocalFile": "Đọc nội dung tệp",
-      "renameLocalFile": "Đổi tên",
-      "searchLocalFiles": "Tìm kiếm tệp",
-      "writeLocalFile": "Ghi tệp"
-    },
-    "title": "Tệp cục bộ"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Đang kiểm tra môi trường cài đặt...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ Vui lòng xác nhận bạn tin tưởng nguồn plugin này, plugin độc hại có thể gây nguy hiểm cho hệ thống của bạn."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Đọc nội dung nhiều trang",
-      "crawlSinglePage": "Đọc nội dung trang",
-      "search": "Tìm kiếm trang"
-    },
     "config": {
       "addKey": "Thêm khóa bí mật",
       "close": "Xóa",

@@ -14,9 +14,31 @@
     "images": "이미지:",
     "prompt": "프롬프트"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "문자 수",
+        "lines": "줄 수"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "다음으로 바꾸기",
+      "oldString": "찾을 내용",
+      "replaceAll": "모든 항목 바꾸기",
+      "replaceFirst": "첫 번째 항목만 바꾸기"
+    },
     "file": "파일",
     "folder": "폴더",
+    "moveFiles": {
+      "itemsMoved": "{{count}}개 항목이 이동되었습니다:",
+      "itemsMoved_one": "{{count}}개 항목이 이동되었습니다:",
+      "itemsMoved_other": "{{count}}개 항목이 이동되었습니다:",
+      "itemsToMove": "{{count}}개 항목을 이동할 예정입니다:",
+      "itemsToMove_one": "{{count}}개 항목을 이동할 예정입니다:",
+      "itemsToMove_other": "{{count}}개 항목을 이동할 예정입니다:"
+    },
     "open": "열기",
     "openFile": "파일 열기",
     "openFolder": "폴더 열기",
@@ -26,7 +48,12 @@
     "readFile": "파일 읽기",
     "readFileError": "파일을 읽는 데 실패했습니다. 파일 경로가 올바른지 확인하세요.",
     "readFiles": "파일 읽기",
-    "readFilesError": "파일을 읽는 데 실패했습니다. 파일 경로가 올바른지 확인하세요."
+    "readFilesError": "파일을 읽는 데 실패했습니다. 파일 경로가 올바른지 확인하세요.",
+    "writeFile": {
+      "characters": "문자 수",
+      "preview": "내용 미리보기",
+      "truncated": "잘림"
+    }
   },
   "search": {
     "createNewSearch": "새 검색 기록 만들기",

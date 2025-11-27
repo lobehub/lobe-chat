@@ -2,6 +2,45 @@
   "about": {
     "title": "关于"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "头像",
+      "description": "描述",
+      "name": "名称",
+      "tags": "标签",
+      "title": "助手信息"
+    },
+    "chat": {
+      "displayMode": "展示模式",
+      "enableHistoryCount": "启用历史消息计数",
+      "historyCount": "历史消息数量",
+      "no": "否",
+      "searchMode": "搜索模式",
+      "title": "聊天偏好",
+      "yes": "是"
+    },
+    "model": {
+      "maxTokens": "最大 Token 数",
+      "model": "模型",
+      "provider": "服务商",
+      "temperature": "温度",
+      "title": "模型设置",
+      "topP": "Top P 值"
+    },
+    "plugins": {
+      "count": "插件设置（{{count}}）",
+      "empty": "尚未安装插件",
+      "title": "已安装插件"
+    },
+    "role": {
+      "systemRole": "系统提示词",
+      "title": "角色设置"
+    },
+    "value": {
+      "unset": "未设置",
+      "untitled": "未命名助手"
+    }
+  },
   "agentTab": {
     "chat": "聊天偏好",
     "meta": "助手信息",
@@ -18,6 +57,8 @@
     },
     "title": "数据统计"
   },
+  "checking": "检查中...",
+  "checkingPermissions": "检查权限中...",
   "danger": {
     "clear": {
       "action": "立即清除",
@@ -146,6 +187,58 @@
     },
     "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "描述此版本的主要变更和改进",
+        "label": "变更日志",
+        "maxLengthError": "变更日志不能超过500个字符",
+        "placeholder": "请输入变更日志",
+        "required": "请输入变更日志"
+      },
+      "comparison": {
+        "local": "本地当前版本",
+        "remote": "当前发布版本"
+      },
+      "identifier": {
+        "extra": "标识符将作为助手的唯一标识，建议使用小写字母、数字和连字符",
+        "label": "助手标识符",
+        "lengthError": "标识符长度应在3-50个字符之间",
+        "patternError": "标识符只能包含小写字母、数字和连字符",
+        "placeholder": "请输入助手的唯一标识符，如: web-development",
+        "required": "请输入助手标识符"
+      },
+      "loading": {
+        "fetchingRemote": "正在加载远程数据...",
+        "submit": "正在发布助手...",
+        "upload": "正在发布新版本..."
+      },
+      "messages": {
+        "createVersionFailed": "版本创建失败: {{message}}",
+        "fetchRemoteFailed": "获取远程助手数据失败",
+        "missingIdentifier": "当前助手还没有市场标识符",
+        "notAuthenticated": "请先登录市场账户",
+        "publishFailed": "发布失败: {{message}}"
+      },
+      "submitButton": "发布",
+      "title": {
+        "submit": "分享到助手市场",
+        "upload": "发布新版本"
+      }
+    },
+    "resultModal": {
+      "message": "助手已提交审核，审核通过后将自动上线。点击「在市场查看」查看已发布的助手。",
+      "view": "在市场查看"
+    },
+    "submit": {
+      "button": "分享到市场",
+      "tooltip": "分享助手到市场"
+    },
+    "upload": {
+      "button": "发布新版本",
+      "tooltip": "发布新版本到助手市场"
+    }
+  },
   "message": {
     "success": "更新成功"
   },
@@ -199,6 +292,12 @@
       "disabled": "关闭",
       "elegant": "优雅",
       "title": "响应动画"
+    },
+    "contextMenuMode": {
+      "default": "默认",
+      "desc": "选择聊天消息右键菜单的显示方案",
+      "disabled": "不使用",
+      "title": "右键菜单方案"
     },
     "neutralColor": {
       "desc": "不同色彩倾向的灰阶自定义",
@@ -561,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "提交助手",
-    "identifier": "identifier 助手标识符",
+    "identifier": "助手标识符（identifier）",
     "metaMiss": "请补全助手信息后提交，需要包含名称、描述和标签",
     "placeholder": "请输入助手的标识符，需要是唯一的，比如 web-development",
     "tooltips": "分享到助手市场"

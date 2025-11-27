@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "Read Knowledge Base Content",
+        "searchKnowledgeBase": "Search Knowledge Base"
+      },
+      "title": "Knowledge Base"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "Edit File",
+        "getCommandOutput": "Get Command Output",
+        "globLocalFiles": "Search Files by Pattern",
+        "grepContent": "Search Content",
+        "killCommand": "Terminate Command Execution",
+        "listLocalFiles": "View File List",
+        "moveLocalFiles": "Move Files",
+        "readLocalFile": "Read File Content",
+        "renameLocalFile": "Rename File",
+        "runCommand": "Execute Command",
+        "searchLocalFiles": "Search Files",
+        "writeLocalFile": "Write to File"
+      },
+      "title": "Local System"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "Read Multiple Pages",
+        "crawlSinglePage": "Read Page Content",
+        "search": "Search Web Pages"
+      },
+      "title": "Web Browsing"
+    }
+  },
   "confirm": "Confirm",
   "debug": {
     "arguments": "Call Arguments",
@@ -236,6 +270,8 @@
   },
   "inspector": {
     "args": "View Argument List",
+    "delete": "Delete Tool Call",
+    "orphanedToolCall": "This tool call message may have become orphaned due to an unexpected issue, which could affect the Agent's normal operation. Please remove it.",
     "pluginRender": "View Plugin Interface"
   },
   "list": {
@@ -248,17 +284,6 @@
   "loading": {
     "content": "Calling plugin...",
     "plugin": "Plugin running..."
-  },
-  "localSystem": {
-    "apiName": {
-      "listLocalFiles": "View File List",
-      "moveLocalFiles": "Move Files",
-      "readLocalFile": "Read File Content",
-      "renameLocalFile": "Rename",
-      "searchLocalFiles": "Search Files",
-      "writeLocalFile": "Write File"
-    },
-    "title": "Local Files"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Checking installation environment...",
@@ -367,11 +392,6 @@
     "warning": "⚠️ Please confirm you trust the source of this plugin. Malicious plugins may harm your system security."
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "Read Multiple Pages Content",
-      "crawlSinglePage": "Read Page Content",
-      "search": "Search Pages"
-    },
     "config": {
       "addKey": "Add Key",
       "close": "Delete",

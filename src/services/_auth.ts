@@ -1,4 +1,4 @@
-import { LOBE_CHAT_AUTH_HEADER, isDeprecatedEdition } from '@lobechat/const';
+import { LOBE_CHAT_AUTH_HEADER } from '@lobechat/const';
 import {
   AWSBedrockKeyVault,
   AzureOpenAIKeyVault,
@@ -13,7 +13,7 @@ import { ModelProvider } from 'model-bank';
 
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useUserStore } from '@/store/user';
-import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
 
 import { resolveRuntimeProvider } from './chat/helper';
@@ -105,10 +105,9 @@ export const getProviderAuthPayload = (
 };
 
 const createAuthTokenWithPayload = (payload = {}) => {
-  const accessCode = keyVaultsConfigSelectors.password(useUserStore.getState());
   const userId = userProfileSelectors.userId(useUserStore.getState());
 
-  return obfuscatePayloadWithXOR<ClientSecretPayload>({ accessCode, userId, ...payload });
+  return obfuscatePayloadWithXOR<ClientSecretPayload>({ userId, ...payload });
 };
 
 interface AuthParams {
@@ -119,16 +118,7 @@ interface AuthParams {
 }
 
 export const createPayloadWithKeyVaults = (provider: string) => {
-  let keyVaults = {};
-
-  // TODO: remove this condition in V2.0
-  if (isDeprecatedEdition) {
-    keyVaults = keyVaultsConfigSelectors.getVaultByProvider(provider as any)(
-      useUserStore.getState(),
-    );
-  } else {
-    keyVaults = aiProviderSelectors.providerKeyVaults(provider)(useAiInfraStore.getState()) || {};
-  }
+  let keyVaults = aiProviderSelectors.providerKeyVaults(provider)(useAiInfraStore.getState()) || {};
 
   const runtimeProvider = resolveRuntimeProvider(provider);
 

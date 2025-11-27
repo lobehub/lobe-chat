@@ -14,9 +14,31 @@
     "images": "الصور:",
     "prompt": "كلمة تلميح"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "عدد الأحرف",
+        "lines": "عدد السطور"
+      }
+    }
+  },
   "localFiles": {
+    "editFile": {
+      "newString": "استبدال بـ",
+      "oldString": "البحث عن",
+      "replaceAll": "استبدال جميع المطابقات",
+      "replaceFirst": "استبدال أول مطابقة فقط"
+    },
     "file": "ملف",
     "folder": "مجلد",
+    "moveFiles": {
+      "itemsMoved": "تم نقل {{count}} عنصر:",
+      "itemsMoved_one": "تم نقل {{count}} عنصر:",
+      "itemsMoved_other": "تم نقل {{count}} عنصر:",
+      "itemsToMove": "{{count}} عنصر في انتظار النقل:",
+      "itemsToMove_one": "{{count}} عنصر في انتظار النقل:",
+      "itemsToMove_other": "{{count}} عنصر في انتظار النقل:"
+    },
     "open": "فتح",
     "openFile": "فتح ملف",
     "openFolder": "فتح مجلد",
@@ -26,7 +48,12 @@
     "readFile": "قراءة الملف",
     "readFileError": "فشل في قراءة الملف، يرجى التحقق من صحة مسار الملف",
     "readFiles": "قراءة الملفات",
-    "readFilesError": "فشل في قراءة الملفات، يرجى التحقق من صحة مسار الملف"
+    "readFilesError": "فشل في قراءة الملفات، يرجى التحقق من صحة مسار الملف",
+    "writeFile": {
+      "characters": "أحرف",
+      "preview": "معاينة المحتوى",
+      "truncated": "تم الاقتطاع"
+    }
   },
   "search": {
     "createNewSearch": "إنشاء سجل بحث جديد",
