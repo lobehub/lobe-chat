@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Better-auth fallback next-auth providers env."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.127"
+  },
+  {
+    "children": {
       "fixes": ["Align docker auth defaults and better-auth docs."]
     },
     "date": "2025-11-27",
