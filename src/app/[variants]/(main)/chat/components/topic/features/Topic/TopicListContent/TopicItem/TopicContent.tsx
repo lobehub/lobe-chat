@@ -105,22 +105,13 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       },
       ...(isDesktop
         ? [
-<<<<<<< HEAD:src/app/[variants]/(main)/chat/(workspace)/@topic/features/Topic/TopicListContent/TopicItem/TopicContent.tsx
             {
               icon: <Icon icon={ExternalLink} />,
               key: 'openInNewWindow',
-              label: '单独打开页面',
+              label: t('actions.openInNewWindow'),
               onClick: () => {
                 openTopicInNewWindow(activeId, id);
               },
-=======
-          {
-            icon: <Icon icon={ExternalLink} />,
-            key: 'openInNewWindow',
-            label: t('actions.openInNewWindow'),
-            onClick: () => {
-              openTopicInNewWindow(activeId, id);
->>>>>>> upstream/next:src/app/[variants]/(main)/chat/components/topic/features/Topic/TopicListContent/TopicItem/TopicContent.tsx
             },
           ]
         : []),
@@ -205,11 +196,8 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       t,
       toggleEditing,
       openTopicInNewWindow,
-<<<<<<< HEAD:src/app/[variants]/(main)/chat/(workspace)/@topic/features/Topic/TopicListContent/TopicItem/TopicContent.tsx
       settings.general?.deleteTopicFiles,
       updateGeneralConfig,
-=======
->>>>>>> upstream/next:src/app/[variants]/(main)/chat/components/topic/features/Topic/TopicListContent/TopicItem/TopicContent.tsx
     ],
   );
 
