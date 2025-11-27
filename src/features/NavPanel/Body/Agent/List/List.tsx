@@ -1,6 +1,7 @@
 import { useAnalytics } from '@lobehub/analytics/react';
 import { CSSProperties, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/url';
@@ -86,7 +87,7 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
   }
 
   return (
-    <div>
+    <Flexbox gap={1}>
       {dataSource.map(({ id, config }) => (
         <Link
           aria-label={id}
@@ -95,13 +96,12 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
             e.preventDefault();
             handleClick(id, config?.id);
           }}
-          style={{ marginBlock: 1 }}
           to={SESSION_CHAT_URL(id, config?.id, false)}
         >
           <Item className={itemClassName} id={id} style={itemStyle} />
         </Link>
       ))}
-    </div>
+    </Flexbox>
   );
 });
 

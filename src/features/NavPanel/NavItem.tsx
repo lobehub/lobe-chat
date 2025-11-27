@@ -55,13 +55,13 @@ const NavItem = memo<NavItemProps>(
         className={cx(styles.container, className)}
         clickable={!disabled}
         gap={8}
-        height={32}
+        height={36}
         horizontal
         onClick={(e) => {
           if (disabled || loading) return;
           onClick?.(e);
         }}
-        paddingInline={2}
+        paddingInline={'2px 4px'}
         variant={variant}
         {...rest}
       >

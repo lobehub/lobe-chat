@@ -2,6 +2,7 @@
 
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { LIBRARY_URL } from '@/const/url';
@@ -28,7 +29,7 @@ const RepoList = memo(() => {
   }
 
   return (
-    <div>
+    <Flexbox gap={1}>
       {data.map((item) => (
         <Link
           aria-label={item.id}
@@ -37,13 +38,12 @@ const RepoList = memo(() => {
             e.preventDefault();
             navigate(LIBRARY_URL(item.id));
           }}
-          style={{ marginBlock: 1 }}
           to={LIBRARY_URL(item.id)}
         >
           <Item {...item} key={item.id} />
         </Link>
       ))}
-    </div>
+    </Flexbox>
   );
 });
 

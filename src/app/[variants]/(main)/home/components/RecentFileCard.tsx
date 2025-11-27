@@ -4,11 +4,14 @@ import { formatSize } from '@lobechat/utils/format';
 import { Image as LobeImage, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { FileListItem } from '@/types/files';
+
+dayjs.extend(relativeTime);
 
 const IMAGE_FILE_TYPES = new Set([
   'image/png',

@@ -76,18 +76,17 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
   if (!showCreateSession) {
     return (
       <AccordionItem
+        gap={2}
         itemKey={itemKey}
-        paddingBlock={4}
-        paddingInline={'8px 4px'}
+        paddingBlock={6}
+        paddingInline={'8px 6px'}
         title={
           <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
             {t('navPanel.agent', { defaultValue: '助手' })}
           </Text>
         }
       >
-        <Flexbox gap={4} paddingBlock={1}>
-          <List />
-        </Flexbox>
+        <List />
       </AccordionItem>
     );
   }

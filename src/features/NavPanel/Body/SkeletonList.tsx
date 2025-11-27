@@ -10,7 +10,7 @@ export const SkeletonList = memo<{ rows?: number }>(({ rows = 3 }) => {
 
   const SkeletonItem = useCallback(() => {
     return (
-      <Flexbox align={'center'} flex={1} gap={8} height={32} horizontal padding={4}>
+      <Flexbox align={'center'} flex={1} gap={8} height={36} horizontal padding={4}>
         <Skeleton.Button
           size={'small'}
           style={{

@@ -101,8 +101,8 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
       )}
       itemKey={id}
       key={id}
-      paddingBlock={4}
-      paddingInline={'6px 4px'}
+      paddingBlock={6}
+      paddingInline={'4px 6px'}
       title={
         <Flexbox align="center" gap={6} horizontal style={{ overflow: 'hidden' }}>
           {groupIcon}

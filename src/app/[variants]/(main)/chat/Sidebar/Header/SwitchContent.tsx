@@ -4,7 +4,6 @@ import { Flexbox } from 'react-layout-kit';
 import List from '@/features/NavPanel/Body/Agent/List';
 import { AgentModalProvider } from '@/features/NavPanel/Body/Agent/ModalProvider';
 import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
-import SessionHydration from '@/features/NavPanel/SessionHydration';
 
 const SwitchContent = memo(() => {
   return (
@@ -21,7 +20,6 @@ const SwitchContent = memo(() => {
         >
           <List />
         </Flexbox>
-        <SessionHydration />
       </AgentModalProvider>
     </Suspense>
   );

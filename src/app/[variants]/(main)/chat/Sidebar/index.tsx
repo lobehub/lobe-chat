@@ -1,8 +1,9 @@
 import { Accordion, ScrollShadow } from '@lobehub/ui';
-import { Suspense, memo } from 'react';
+import React, { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { NavPanelPortal } from '@/features/NavPanel';
+import SessionHydration from '@/features/NavPanel/SessionHydration';
 
 import ConfigSwitcher from './ConfigSwitcher';
 import Header from './Header';
@@ -25,6 +26,7 @@ const ChatTopic = memo(() => {
             </Accordion>
           </Flexbox>
         </ScrollShadow>
+        <SessionHydration />
       </Suspense>
     </NavPanelPortal>
   );

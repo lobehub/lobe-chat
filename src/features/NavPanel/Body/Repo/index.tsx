@@ -31,8 +31,8 @@ const Repo = memo<RepoProps>(({ itemKey }) => {
         </Dropdown>
       )}
       itemKey={itemKey}
-      paddingBlock={4}
-      paddingInline={'8px 4px'}
+      paddingBlock={6}
+      paddingInline={'8px 6px'}
       title={
         <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
           {t('navPanel.library', { defaultValue: '资料库' })}
