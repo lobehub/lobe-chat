@@ -483,7 +483,10 @@ describe('contextEngineering', () => {
 
       expect(result[0].role).toBe('system');
       expect(result[0].content).toContain(
-        '<user_memories contexts="1" experiences="0" memory_fetched_at="{{datetime}}" preferences="0">',
+        '<user_memories contexts="1" experiences="0" memory_fetched_at="',
+      );
+      expect(result[0].content).toContain(
+        '" preferences="0"><user_memories_context id="ctx-1"><context_title>LobeHub</context_title><context_description>Weekly syncs for LobeHub</context_description></user_memories_context></user_memories>',
       );
       expect(result[0].content).toContain('<context_title>LobeHub</context_title>');
       expect(result[1].content).toBe(
