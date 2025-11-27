@@ -5,7 +5,7 @@ import { memo } from 'react';
 
 const SwitchButton = memo(() => {
   return (
-    <Popover content={'111'} trigger={['click']}>
+    <Popover arrow={false} content={'111'} trigger={['click']}>
       <ActionIcon
         icon={ChevronsUpDownIcon}
         size={{
