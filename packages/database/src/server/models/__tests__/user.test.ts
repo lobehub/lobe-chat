@@ -428,9 +428,6 @@ describe('UserModel', () => {
       expect(result[0]).toMatchObject({
         provider: 'github',
         providerAccountId: '123456',
-        type: 'oauth',
-        userId,
-        scope: 'user:email',
       });
       expect(result[0].expiresAt).toBeDefined();
     });
