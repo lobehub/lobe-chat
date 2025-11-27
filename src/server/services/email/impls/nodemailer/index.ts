@@ -16,44 +16,24 @@ const log = debug('lobe-email:Nodemailer');
 export class NodemailerImpl implements EmailServiceImpl {
   private transporter: Transporter;
 
-  constructor(config?: NodemailerConfig) {
-    log('Initializing Nodemailer with config: %o', config);
+  constructor() {
+    log('Initializing Nodemailer from environment variables');
 
-    if (!config && !emailEnv.SMTP_USER) {
+    if (!emailEnv.SMTP_USER || !emailEnv.SMTP_PASS) {
       throw new Error(
-        'SMTP_USER environment variable is required to use email service. Please configure SMTP settings in your .env file.',
+        'SMTP_USER and SMTP_PASS environment variables are required to use email service. Please configure SMTP settings in your .env file.',
       );
     }
 
-    // Use environment variables if config is not provided
-    const transportConfig: NodemailerConfig = config ?? {
+    const transportConfig: NodemailerConfig = {
       auth: {
-        pass: emailEnv.SMTP_PASS ?? '',
-        user: emailEnv.SMTP_USER ?? '',
+        pass: emailEnv.SMTP_PASS,
+        user: emailEnv.SMTP_USER,
       },
       host: emailEnv.SMTP_HOST ?? 'localhost',
       port: emailEnv.SMTP_PORT ?? 587,
       secure: emailEnv.SMTP_SECURE ?? false,
     };
-
-    // Validate configuration
-    if (!transportConfig.service && !transportConfig.host) {
-      throw new TRPCError({
-        code: 'PRECONDITION_FAILED',
-        message: 'Nodemailer requires either service name or SMTP host to be configured',
-      });
-    }
-
-    if (
-      !transportConfig.service &&
-      transportConfig.auth &&
-      (!transportConfig.auth.user || !transportConfig.auth.pass)
-    ) {
-      throw new TRPCError({
-        code: 'PRECONDITION_FAILED',
-        message: 'Nodemailer requires SMTP authentication credentials',
-      });
-    }
 
     try {
       this.transporter = nodemailer.createTransport(transportConfig);
