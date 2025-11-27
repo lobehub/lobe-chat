@@ -57,7 +57,7 @@ export const SESSION_CHAT_URL = (
     url: `/agent/${agentId}`,
   });
 
-export const REPO_URL = (id: string) => urlJoin('/knowledge/bases', id);
+export const LIBRARY_URL = (id: string) => urlJoin('/knowledge/library', id);
 
 export const imageUrl = (filename: string) => `/images/${filename}`;
 

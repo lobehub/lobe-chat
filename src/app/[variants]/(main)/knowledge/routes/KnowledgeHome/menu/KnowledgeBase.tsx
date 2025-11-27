@@ -37,7 +37,7 @@ const Collection = () => {
   const handleCreate = () => {
     open({
       onSuccess: (id) => {
-        navigate(`/knowledge/repo/${id}`);
+        navigate(`/knowledge/library/${id}`);
       },
     });
   };
