@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Stai per eliminare questa knowledge base. I file al suo interno non verranno eliminati, ma spostati in 'Tutti i file'. Una volta eliminata, la knowledge base non potrà essere recuperata, procedi con cautela.",
-      "empty": "Clicca <1>+</1> per iniziare a creare una knowledge base"
-    },
-    "new": "Nuova knowledge base",
-    "title": "Knowledge Base"
-  },
   "menu": {
     "allFiles": "Tutti i file",
     "allPages": "Tutti i documenti"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "Scarica file",
     "unsupportedFileAndContact": "Questo formato di file non è attualmente supportato per la visualizzazione online. Se hai bisogno di una visualizzazione, ti preghiamo di <1>contattarci</1>."
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "Il repository sta per essere eliminato. I file al suo interno non verranno cancellati, ma spostati nella sezione Tutti i file. Una volta eliminato, il repository non potrà essere recuperato. Procedi con cautela.",
+      "empty": "Fai clic su <1>+</1> per iniziare a creare un repository"
+    },
+    "new": "Crea nuovo repository",
+    "title": "Repository"
   },
   "searchFilePlaceholder": "Cerca file",
   "searchPagePlaceholder": "Cerca documenti",

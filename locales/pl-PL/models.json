@@ -1676,9 +1676,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview posiada silne zdolności do złożonego wnioskowania, wyróżniając się w dziedzinach takich jak wnioskowanie logiczne, matematyka i programowanie."
   },
-  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5 to flagowy model firmy Anthropic, łączący wyjątkową inteligencję z możliwością skalowania, idealny do złożonych zadań wymagających najwyższej jakości odpowiedzi i zdolności rozumowania."
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash to wysokowydajny model wnioskowania firmy Google, odpowiedni do rozszerzonych zadań multimodalnych."
   },
@@ -2193,7 +2190,7 @@
     "description": "Kimi K2 Instruct, oficjalny model wnioskowania Kimi, wspierający długi kontekst, kodowanie, pytania i inne scenariusze."
   },
   "kimi-k2-thinking": {
-    "description": "Model kimi-k2-thinking, opracowany przez Moonshot AI, to uniwersalny model myślenia z agentowymi zdolnościami i umiejętnością rozumowania. Doskonale radzi sobie z głębokim wnioskowaniem i potrafi korzystać z narzędzi w wielu krokach, pomagając rozwiązywać różnorodne problemy."
+    "description": "Model kimi-k2-thinking, opracowany przez Moonshot AI, to uniwersalny model myślenia z agentowymi zdolnościami i umiejętnością rozumowania. Doskonale radzi sobie z głębokim rozumowaniem i potrafi korzystać z narzędzi w wielu krokach, pomagając rozwiązywać różnorodne trudne problemy."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Szybka wersja modelu długiego myślenia K2, obsługuje kontekst 256k, specjalizuje się w głębokim wnioskowaniu, z prędkością generowania 60–100 tokenów na sekundę."
@@ -3466,6 +3463,9 @@
   },
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5 to najszybszy i najbardziej inteligentny model Haiku firmy Anthropic, oferujący błyskawiczne działanie i zaawansowane możliwości rozumowania."
+  },
+  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 to flagowy model firmy Anthropic, łączący wyjątkową inteligencję z możliwością skalowania, idealny do złożonych zadań wymagających najwyższej jakości odpowiedzi i zdolności rozumowania."
   },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5 to jak dotąd najbardziej zaawansowany model stworzony przez firmę Anthropic."

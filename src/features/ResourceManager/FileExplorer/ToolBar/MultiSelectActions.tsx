@@ -21,10 +21,11 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
 export type MultiSelectActionType =
   | 'addToKnowledgeBase'
-  | 'delete'
+  | 'addToOtherKnowledgeBase'
   | 'batchChunking'
-  | 'removeFromKnowledgeBase'
-  | 'addToOtherKnowledgeBase';
+  | 'delete'
+  | 'deleteLibrary'
+  | 'removeFromKnowledgeBase';
 
 interface MultiSelectActionsProps {
   isInKnowledgeBase?: boolean;

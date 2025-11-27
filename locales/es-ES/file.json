@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Estás a punto de eliminar esta base de conocimientos. Los archivos no se eliminarán, se moverán a Todos los archivos. Una vez eliminada, la base de conocimientos no se podrá recuperar, por favor actúa con precaución.",
-      "empty": "Haz clic en <1>+</1> para comenzar a crear una base de conocimientos"
-    },
-    "new": "Nueva base de conocimientos",
-    "title": "Base de conocimientos"
-  },
   "menu": {
     "allFiles": "Todos los archivos",
     "allPages": "Todos los documentos"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "Descargar archivo",
     "unsupportedFileAndContact": "Este formato de archivo no es compatible con la vista previa en línea. Si desea solicitar una vista previa, no dude en <1>contactarnos</1>."
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "Estás a punto de eliminar este repositorio. Los archivos no se eliminarán, sino que se moverán a Todos los archivos. Una vez eliminado, el repositorio no se podrá recuperar. Procede con precaución.",
+      "empty": "Haz clic en <1>+</1> para comenzar a crear un repositorio"
+    },
+    "new": "Nuevo repositorio",
+    "title": "Repositorio"
   },
   "searchFilePlaceholder": "Buscar archivo",
   "searchPagePlaceholder": "Buscar documentos",
