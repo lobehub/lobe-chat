@@ -95,15 +95,15 @@ export const pluginOptimisticUpdate: StateCreator<
       context,
     );
 
-    const { sessionId, topicId } = internal_getSessionContext(context);
+    const ctx = internal_getSessionContext(context);
 
     const result = await messageService.updateMessagePluginState(id, value, {
-      sessionId,
-      topicId,
+      agentId: ctx.agentId,
+      topicId: ctx.topicId,
     });
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages, { sessionId, topicId });
+      replaceMessages(result.messages, { context: ctx });
     }
   },
 
@@ -169,15 +169,15 @@ export const pluginOptimisticUpdate: StateCreator<
       context,
     );
 
-    const { sessionId, topicId } = internal_getSessionContext(context);
+    const ctx = internal_getSessionContext(context);
 
     const result = await messageService.updateMessagePlugin(id, value, {
-      sessionId,
-      topicId,
+      agentId: ctx.agentId,
+      topicId: ctx.topicId,
     });
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages, { sessionId, topicId });
+      replaceMessages(result.messages, { context: ctx });
     }
   },
 
@@ -216,18 +216,15 @@ export const pluginOptimisticUpdate: StateCreator<
 
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } }, context);
 
-    const { sessionId, topicId } = internal_getSessionContext(context);
+    const ctx = internal_getSessionContext(context);
 
     const result = await messageService.updateMessage(
       id,
       { error },
-      {
-        sessionId,
-        topicId,
-      },
+      { agentId: ctx.agentId, topicId: ctx.topicId },
     );
     if (result?.success && result.messages) {
-      replaceMessages(result.messages, { sessionId, topicId });
+      replaceMessages(result.messages, { context: ctx });
     }
   },
 
@@ -238,21 +235,18 @@ export const pluginOptimisticUpdate: StateCreator<
 
     const { internal_toggleMessageLoading, replaceMessages, internal_getSessionContext } = get();
 
-    const { sessionId, topicId } = internal_getSessionContext(context);
+    const ctx = internal_getSessionContext(context);
 
     internal_toggleMessageLoading(true, id);
     const result = await messageService.updateMessage(
       id,
       { tools: message.tools },
-      {
-        sessionId,
-        topicId,
-      },
+      { agentId: ctx.agentId, topicId: ctx.topicId },
     );
     internal_toggleMessageLoading(false, id);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages, { sessionId, topicId });
+      replaceMessages(result.messages, { context: ctx });
     }
   },
 });

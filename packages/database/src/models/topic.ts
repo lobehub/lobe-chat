@@ -1,7 +1,7 @@
 import { DBMessageItem, TopicRankItem } from '@lobechat/types';
 import { and, count, desc, eq, gt, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
 
-import { TopicItem, messages, topics } from '../schemas';
+import { TopicItem, agentsToSessions, messages, topics } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
@@ -15,6 +15,7 @@ export interface CreateTopicParams {
 }
 
 interface QueryTopicParams {
+  agentId?: string | null;
   containerId?: string | null; // sessionId or groupId
   current?: number;
   pageSize?: number;
@@ -30,8 +31,26 @@ export class TopicModel {
   }
   // **************** Query *************** //
 
-  query = async ({ current = 0, pageSize = 9999, containerId }: QueryTopicParams = {}) => {
+  query = async ({ agentId, current = 0, pageSize = 9999, containerId }: QueryTopicParams = {}) => {
     const offset = current * pageSize;
+
+    // If agentId is provided, try to get the associated sessionId
+    let effectiveContainerId = containerId;
+    if (agentId) {
+      const agentSession = await this.db
+        .select({ sessionId: agentsToSessions.sessionId })
+        .from(agentsToSessions)
+        .where(
+          and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)),
+        )
+        .limit(1);
+
+      // If found, use the associated sessionId; otherwise fallback to the provided containerId
+      if (agentSession[0]?.sessionId) {
+        effectiveContainerId = agentSession[0].sessionId;
+      }
+    }
+
     return (
       this.db
         .select({
@@ -44,7 +63,7 @@ export class TopicModel {
           updatedAt: topics.updatedAt,
         })
         .from(topics)
-        .where(and(eq(topics.userId, this.userId), this.matchContainer(containerId)))
+        .where(and(eq(topics.userId, this.userId), this.matchContainer(effectiveContainerId)))
         // In boolean sorting, false is considered "smaller" than true.
         // So here we use desc to ensure that topics with favorite as true are in front.
         .orderBy(desc(topics.favorite), desc(topics.updatedAt))

@@ -26,6 +26,14 @@
       "createChunkingTask": "준비 중...",
       "deleteSuccess": "파일이 성공적으로 삭제되었습니다.",
       "downloading": "파일 다운로드 중...",
+      "goBack": "이전 페이지로 돌아가기",
+      "goForward": "다음 페이지로 이동",
+      "goToParent": "상위 폴더로 이동",
+      "moveError": "파일 이동 실패",
+      "moveHere": "여기로 이동",
+      "moveSuccess": "파일이 성공적으로 이동되었습니다",
+      "moveToFolder": "다음으로 이동...",
+      "moveToRoot": "루트 디렉터리로 이동",
       "removeFromKnowledgeBase": "지식베이스에서 제거",
       "removeFromKnowledgeBaseSuccess": "파일이 성공적으로 제거되었습니다."
     },
@@ -41,6 +49,12 @@
       },
       "or": "또는",
       "title": "파일이나 폴더를 이곳에 끌어다 놓으세요"
+    },
+    "noFolders": "폴더가 없습니다",
+    "sort": {
+      "dateAdded": "추가 날짜",
+      "name": "이름",
+      "size": "크기"
     },
     "title": {
       "createdAt": "생성일",

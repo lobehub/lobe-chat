@@ -3458,6 +3458,9 @@
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5 是 Anthropic 速度最快且最聰明的 Haiku 模型，具備閃電般的反應速度與延伸思考能力。"
   },
+  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 是 Anthropic 的旗艦模型，結合了卓越的智慧與可擴展的效能，適用於需要最高品質回應與推理能力的複雜任務。"
+  },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5 是 Anthropic 迄今為止最智慧的模型。"
   },

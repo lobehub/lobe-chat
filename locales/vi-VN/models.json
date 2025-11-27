@@ -729,7 +729,7 @@
     "description": "Opus 4.1 là mô hình cao cấp của Anthropic, được tối ưu cho lập trình, suy luận phức tạp và các tác vụ liên tục."
   },
   "anthropic/claude-opus-4.5": {
-    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và năng lực suy luận xuất sắc."
+    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và khả năng suy luận xuất sắc."
   },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 là phiên bản suy luận hỗn hợp của Anthropic, cung cấp khả năng kết hợp giữa tư duy và phản hồi trực tiếp."
@@ -822,7 +822,7 @@
     "description": "Claude Opus 4 là mô hình mạnh mẽ nhất của Anthropic được sử dụng để xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự trôi chảy và khả năng hiểu biết."
   },
   "claude-opus-4-5-20251101": {
-    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và năng lực suy luận xuất sắc."
+    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và khả năng suy luận xuất sắc."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 có thể tạo ra phản hồi gần như tức thì hoặc suy nghĩ từng bước kéo dài, người dùng có thể thấy rõ các quá trình này."
@@ -1667,9 +1667,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview có khả năng suy luận phức tạp mạnh mẽ, thể hiện xuất sắc trong các lĩnh vực suy luận logic, toán học, lập trình."
   },
-  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và năng lực suy luận xuất sắc."
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash là mô hình suy luận hiệu suất cao của Google, phù hợp với các tác vụ đa phương thức mở rộng."
   },
@@ -2184,7 +2181,7 @@
     "description": "Kimi K2 Instruct, mô hình suy luận chính thức của Kimi, hỗ trợ ngữ cảnh dài, mã nguồn, hỏi đáp và nhiều tình huống khác."
   },
   "kimi-k2-thinking": {
-    "description": "Mô hình kimi-k2-thinking do Moonshot AI phát triển, là một mô hình tư duy với khả năng đại lý tổng quát và suy luận mạnh mẽ. Nó nổi bật trong việc suy luận sâu và có thể sử dụng công cụ nhiều bước để hỗ trợ giải quyết các vấn đề phức tạp."
+    "description": "Mô hình kimi-k2-thinking do Moonshot AI phát triển, là một mô hình tư duy với năng lực đại lý tổng quát và khả năng suy luận, nổi bật với khả năng suy luận sâu và hỗ trợ giải quyết các vấn đề phức tạp thông qua việc sử dụng công cụ nhiều bước."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Phiên bản tốc độ cao của mô hình tư duy dài K2, hỗ trợ ngữ cảnh 256k, giỏi suy luận sâu, tốc độ đầu ra đạt 60-100 tokens mỗi giây."
@@ -3457,6 +3454,9 @@
   },
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5 là mô hình Haiku nhanh nhất và thông minh nhất của Anthropic, với tốc độ như chớp và khả năng tư duy mở rộng."
+  },
+  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và khả năng suy luận xuất sắc."
   },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5 là mô hình thông minh nhất của Anthropic cho đến nay."

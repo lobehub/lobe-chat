@@ -26,6 +26,14 @@
       "createChunkingTask": "جارٍ التحضير...",
       "deleteSuccess": "تم حذف الملف بنجاح",
       "downloading": "جارٍ تحميل الملف...",
+      "goBack": "العودة إلى الصفحة السابقة",
+      "goForward": "الانتقال إلى الصفحة التالية",
+      "goToParent": "الانتقال إلى المجلد الرئيسي",
+      "moveError": "فشل في نقل الملف",
+      "moveHere": "نقل إلى هنا",
+      "moveSuccess": "تم نقل الملف بنجاح",
+      "moveToFolder": "نقل إلى...",
+      "moveToRoot": "نقل إلى الدليل الجذري",
       "removeFromKnowledgeBase": "إزالة من قاعدة المعرفة",
       "removeFromKnowledgeBaseSuccess": "تمت إزالة الملف بنجاح"
     },
@@ -41,6 +49,12 @@
       },
       "or": "أو",
       "title": "قم بسحب الملف أو المجلد هنا"
+    },
+    "noFolders": "لا توجد مجلدات حالياً",
+    "sort": {
+      "dateAdded": "تاريخ الإضافة",
+      "name": "الاسم",
+      "size": "الحجم"
     },
     "title": {
       "createdAt": "تاريخ الإنشاء",

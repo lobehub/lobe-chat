@@ -36,9 +36,23 @@ export const fileRouter = router({
     }),
 
   createFile: fileProcedure
-    .input(UploadFileSchema.omit({ url: true }).extend({ url: z.string() }))
+    .input(
+      UploadFileSchema.omit({ url: true }).extend({
+        parentId: z.string().optional(),
+        url: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const { isExist } = await ctx.fileModel.checkHash(input.hash!);
+
+      // Resolve parentId if it's a slug
+      let resolvedParentId = input.parentId;
+      if (input.parentId) {
+        const docBySlug = await ctx.documentModel.findBySlug(input.parentId);
+        if (docBySlug) {
+          resolvedParentId = docBySlug.id;
+        }
+      }
 
       const { id } = await ctx.fileModel.create(
         {
@@ -47,6 +61,7 @@ export const fileRouter = router({
           knowledgeBaseId: input.knowledgeBaseId,
           metadata: input.metadata,
           name: input.name,
+          parentId: resolvedParentId,
           size: input.size,
           url: input.url,
         },
@@ -171,8 +186,15 @@ export const fileRouter = router({
   getKnowledgeItems: fileProcedure.input(QueryFileListSchema).query(async ({ ctx, input }) => {
     const knowledgeItems = await ctx.knowledgeRepo.query(input);
 
+    // Filter out folders from Documents category when in Inbox (no knowledgeBaseId)
+    const filteredItems = !input.knowledgeBaseId
+      ? knowledgeItems.filter(
+          (item) => !(item.sourceType === 'document' && item.fileType === 'custom/folder'),
+        )
+      : knowledgeItems;
+
     // Process files (add chunk info and async task status)
-    const fileItems = knowledgeItems.filter((item) => item.sourceType === 'file');
+    const fileItems = filteredItems.filter((item) => item.sourceType === 'file');
     const fileIds = fileItems.map((item) => item.id);
     const chunks = await ctx.chunkModel.countByFileIds(fileIds);
 
@@ -189,7 +211,7 @@ export const fileRouter = router({
 
     // Combine all items with their metadata
     const resultItems = [] as any[];
-    for (const item of knowledgeItems) {
+    for (const item of filteredItems) {
       if (item.sourceType === 'file') {
         const chunkTask = item.chunkTaskId
           ? chunkTasks.find((task) => task.id === item.chunkTaskId)
@@ -271,6 +293,30 @@ export const fileRouter = router({
 
       // remove from S3
       await ctx.fileService.deleteFiles(needToRemoveFileList.map((file) => file.url!));
+    }),
+
+  updateFile: fileProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        parentId: z.string().nullable().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, parentId } = input;
+
+      // Resolve parentId if it's a slug (otherwise use as-is)
+      let resolvedParentId: string | null | undefined = parentId;
+      if (parentId) {
+        const docBySlug = await ctx.documentModel.findBySlug(parentId);
+        if (docBySlug) {
+          resolvedParentId = docBySlug.id;
+        }
+      }
+
+      await ctx.fileModel.update(id, { parentId: resolvedParentId });
+
+      return { success: true };
     }),
 });
 

@@ -57,7 +57,7 @@ export const createMockChatConfig = (overrides = {}) => ({
 
 // Mock Store State Factory
 export const createMockStoreState = (overrides = {}) => ({
-  activeId: TEST_IDS.SESSION_ID,
+  activeAgentId: TEST_IDS.SESSION_ID,
   activeTopicId: TEST_IDS.TOPIC_ID,
   messagesMap: {},
   toolCallingStreamIds: {},

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { SearchMode } from '@/types/search';
 
@@ -93,13 +93,15 @@ const Item = memo<NetworkOption>(({ value, description, icon, label }) => {
 
 const Controls = memo(() => {
   const { t } = useTranslation('chat');
-  const [model, provider, useModelBuiltinSearch, searchMode, updateAgentChatConfig] = useAgentStore((s) => [
-    agentSelectors.currentAgentModel(s),
-    agentSelectors.currentAgentModelProvider(s),
-    agentChatConfigSelectors.useModelBuiltinSearch(s),
-    agentChatConfigSelectors.currentChatConfig(s).searchMode,
-    s.updateAgentChatConfig,
-  ]);
+  const [model, provider, useModelBuiltinSearch, searchMode, updateAgentChatConfig] = useAgentStore(
+    (s) => [
+      agentSelectors.currentAgentModel(s),
+      agentSelectors.currentAgentModelProvider(s),
+      agentChatConfigSelectors.useModelBuiltinSearch(s),
+      agentChatConfigSelectors.currentChatConfig(s).searchMode,
+      s.updateAgentChatConfig,
+    ],
+  );
 
   const supportFC = useAiInfraStore(aiModelSelectors.isModelSupportToolUse(model, provider));
   const isProviderHasBuiltinSearchConfig = useAiInfraStore(
@@ -111,7 +113,9 @@ const Controls = memo(() => {
   const isModelBuiltinSearchInternal = useAiInfraStore(
     aiModelSelectors.isModelBuiltinSearchInternal(model, provider),
   );
-  const modelBuiltinSearchImpl = useAiInfraStore(aiModelSelectors.modelBuiltinSearchImpl(model, provider));
+  const modelBuiltinSearchImpl = useAiInfraStore(
+    aiModelSelectors.modelBuiltinSearchImpl(model, provider),
+  );
 
   useEffect(() => {
     if (isModelBuiltinSearchInternal && (searchMode ?? 'off') === 'off') {
@@ -121,33 +125,35 @@ const Controls = memo(() => {
 
   const options: NetworkOption[] = isModelBuiltinSearchInternal
     ? [
-      {
-        description: t('search.mode.auto.desc'),
-        icon: SparkleIcon,
-        label: t('search.mode.auto.title'),
-        value: 'auto',
-      },
-    ]
+        {
+          description: t('search.mode.auto.desc'),
+          icon: SparkleIcon,
+          label: t('search.mode.auto.title'),
+          value: 'auto',
+        },
+      ]
     : [
-      {
-        description: t('search.mode.off.desc'),
-        icon: GlobeOffIcon,
-        label: t('search.mode.off.title'),
-        value: 'off',
-      },
-      {
-        description: t('search.mode.auto.desc'),
-        icon: SparkleIcon,
-        label: t('search.mode.auto.title'),
-        value: 'auto',
-      },
-    ];
+        {
+          description: t('search.mode.off.desc'),
+          icon: GlobeOffIcon,
+          label: t('search.mode.off.title'),
+          value: 'off',
+        },
+        {
+          description: t('search.mode.auto.desc'),
+          icon: SparkleIcon,
+          label: t('search.mode.auto.title'),
+          value: 'auto',
+        },
+      ];
 
-  const showModelBuiltinSearch = !isModelBuiltinSearchInternal &&
+  const showModelBuiltinSearch =
+    !isModelBuiltinSearchInternal &&
     (isModelHasBuiltinSearchConfig || isProviderHasBuiltinSearchConfig);
 
   const showFCSearchModel =
-    !supportFC && (!modelBuiltinSearchImpl || (!isModelBuiltinSearchInternal && !useModelBuiltinSearch));
+    !supportFC &&
+    (!modelBuiltinSearchImpl || (!isModelBuiltinSearchInternal && !useModelBuiltinSearch));
 
   const showDivider = showModelBuiltinSearch || showFCSearchModel;
 

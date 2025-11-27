@@ -729,7 +729,7 @@
     "description": "Opus 4.1 ist ein High-End-Modell von Anthropic, optimiert für Programmierung, komplexe Schlussfolgerungen und dauerhafte Aufgaben."
   },
   "anthropic/claude-opus-4.5": {
-    "description": "Claude Opus 4.5 ist das Flaggschiffmodell von Anthropic. Es vereint herausragende Intelligenz mit skalierbarer Leistung und eignet sich ideal für komplexe Aufgaben, die höchste Qualität bei Antworten und ausgeprägte Fähigkeiten im logischen Denken erfordern."
+    "description": "Claude Opus 4.5 ist das Flaggschiffmodell von Anthropic. Es vereint herausragende Intelligenz mit skalierbarer Leistung und eignet sich ideal für komplexe Aufgaben, die höchste Qualität bei Antworten und ausgeprägte Fähigkeiten zur Schlussfolgerung erfordern."
   },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 ist eine hybride Schlussfolgerungsversion von Anthropic, die sowohl kognitive als auch nicht-kognitive Fähigkeiten kombiniert."
@@ -822,7 +822,7 @@
     "description": "Claude Opus 4 ist das leistungsstärkste Modell von Anthropic zur Bewältigung hochkomplexer Aufgaben. Es zeichnet sich durch hervorragende Leistung, Intelligenz, Flüssigkeit und Verständnis aus."
   },
   "claude-opus-4-5-20251101": {
-    "description": "Claude Opus 4.5 ist das Flaggschiffmodell von Anthropic. Es vereint herausragende Intelligenz mit skalierbarer Leistung und eignet sich ideal für komplexe Aufgaben, die höchste Qualität bei Antworten und ausgeprägte Fähigkeiten im logischen Denken erfordern."
+    "description": "Claude Opus 4.5 ist das Flaggschiffmodell von Anthropic. Es vereint herausragende Intelligenz mit skalierbarer Leistung und eignet sich ideal für komplexe Aufgaben, die höchste Qualität bei Antworten und ausgeprägte Fähigkeiten zur Schlussfolgerung erfordern."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 kann nahezu sofortige Antworten oder verlängerte schrittweise Überlegungen erzeugen, die für den Nutzer klar nachvollziehbar sind."
@@ -1667,9 +1667,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview verfügt über starke Fähigkeiten zur komplexen Schlussfolgerung und zeigt hervorragende Leistungen in den Bereichen logisches Denken, Mathematik und Programmierung."
   },
-  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5 ist das Flaggschiffmodell von Anthropic. Es vereint herausragende Intelligenz mit skalierbarer Leistung und eignet sich ideal für komplexe Aufgaben, die höchste Qualität bei Antworten und ausgeprägte Fähigkeiten im logischen Denken erfordern."
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash ist ein leistungsstarkes Schlussfolgerungsmodell von Google, geeignet für erweiterte multimodale Aufgaben."
   },
@@ -2184,7 +2181,7 @@
     "description": "Kimi K2 Instruct, das offizielle Inferenzmodell von Kimi mit Unterstützung für Langkontext, Code, QA und mehr."
   },
   "kimi-k2-thinking": {
-    "description": "Das Modell kimi-k2-thinking von Moonshot AI ist ein vielseitiges Denkmodell mit agentischen Fähigkeiten und ausgeprägtem logischen Denkvermögen. Es zeichnet sich durch tiefgehende Schlussfolgerungen aus und kann durch mehrstufige Werkzeugnutzung bei der Lösung verschiedenster Probleme unterstützen."
+    "description": "Das kimi-k2-thinking-Modell von Moonshot AI ist ein vielseitiges Denkmodell mit agentischen Fähigkeiten und ausgeprägtem logischen Denkvermögen. Es zeichnet sich durch tiefgehende Schlussfolgerungen aus und kann durch mehrstufige Werkzeugnutzung bei der Lösung verschiedenster Probleme unterstützen."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Turbo-Version des K2 Langzeit-Denkmodells mit 256k Kontext, spezialisiert auf tiefgreifende Schlussfolgerung und einer Ausgabegeschwindigkeit von 60–100 Tokens pro Sekunde."
@@ -3457,6 +3454,9 @@
   },
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5 ist das schnellste und intelligenteste Haiku-Modell von Anthropic mit blitzschneller Reaktionszeit und erweiterten Denkfähigkeiten."
+  },
+  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 ist das Flaggschiffmodell von Anthropic. Es vereint herausragende Intelligenz mit skalierbarer Leistung und eignet sich ideal für komplexe Aufgaben, die höchste Qualität bei Antworten und ausgeprägte Fähigkeiten zur Schlussfolgerung erfordern."
   },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5 ist das bisher intelligenteste Modell von Anthropic."

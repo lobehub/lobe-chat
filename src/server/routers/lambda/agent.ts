@@ -99,10 +99,20 @@ export const agentRouter = router({
 
       const session = await ctx.sessionModel.findByIdOrSlug(input.sessionId);
 
-      if (!session) throw new Error('Session not found');
+      if (!session) throw new Error(`Session [${input.sessionId}] not found`);
       const sessionId = session.id;
 
       return ctx.agentModel.findBySessionId(sessionId);
+    }),
+
+  getAgentConfigById: agentProcedure
+    .input(
+      z.object({
+        agentId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      return ctx.agentModel.getAgentConfigById(input.agentId);
     }),
 
   getKnowledgeBasesAndFiles: agentProcedure
@@ -168,5 +178,17 @@ export const agentRouter = router({
         input.knowledgeBaseId,
         input.enabled,
       );
+    }),
+
+  updateAgentConfig: agentProcedure
+    .input(
+      z.object({
+        agentId: z.string(),
+        value: z.object({}).passthrough().partial(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      // Use AgentService to update and return the updated agent data
+      return ctx.agentService.updateAgentConfig(input.agentId, input.value);
     }),
 });

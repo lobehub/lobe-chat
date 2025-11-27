@@ -26,7 +26,7 @@ const Header = memo(() => {
   const handleBackClick = () => {
     console.log('gobackclick', isSessionActive, showMobileWorkspace, activeSettingsKey, providerName);
     if (isSessionActive && showMobileWorkspace) {
-      navigate('/chat');
+      navigate('/agent');
     } else if (activeSettingsKey === 'provider' && providerName) {
       setProviderName(null);
       setActiveSettingsKey('provider');

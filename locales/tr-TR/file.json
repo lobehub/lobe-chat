@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Bu bilgi tabanı silinecek, içindeki dosyalar silinmeyecek, tüm dosyalar içine taşınacaktır. Bilgi tabanı silindikten sonra geri alınamaz, lütfen dikkatli olun.",
-      "empty": "Bilgi tabanı oluşturmak için <1>+</1> tıklayın"
-    },
-    "new": "Yeni Bilgi Tabanı",
-    "title": "Bilgi Tabanı"
-  },
   "menu": {
     "allFiles": "Tüm Dosyalar",
     "allPages": "Tüm Belgeler"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "Dosyayı İndir",
     "unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>."
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "Bu depo silinmek üzere. İçindeki dosyalar silinmeyecek, tüm dosyalar klasörüne taşınacaktır. Bilgi deposu silindikten sonra geri getirilemez, lütfen dikkatli olun.",
+      "empty": "<1>+</1> simgesine tıklayarak yeni bir depo oluşturun"
+    },
+    "new": "Yeni Depo",
+    "title": "Depo"
   },
   "searchFilePlaceholder": "Dosya Ara",
   "searchPagePlaceholder": "Belge ara",

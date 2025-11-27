@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "即將刪除該知識庫，其中的檔案不會刪除，將移入全部檔案中。知識庫刪除後將不可恢復，請謹慎操作。",
-      "empty": "點擊 <1>+</1> 開始創建知識庫"
-    },
-    "new": "新建知識庫",
-    "title": "知識庫"
-  },
   "menu": {
     "allFiles": "所有檔案",
     "allPages": "全部文件"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "下載檔案",
     "unsupportedFileAndContact": "此檔案格式暫不支援線上預覽，如有預覽需求，歡迎<1>反饋給我們</1>"
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "即將刪除該倉庫，其中的檔案不會被刪除，將移入全部檔案中。知識庫刪除後將無法恢復，請謹慎操作。",
+      "empty": "點擊 <1>+</1> 開始建立倉庫"
+    },
+    "new": "新增倉庫",
+    "title": "倉庫"
   },
   "searchFilePlaceholder": "搜索檔案",
   "searchPagePlaceholder": "搜尋文稿",

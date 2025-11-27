@@ -31,7 +31,7 @@ export const AssistantsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
         session: item.id,
         ...(mobile ? { showMobileWorkspace: true } : {}),
       },
-      url: '/chat',
+      url: '/agent',
     });
 
     return {

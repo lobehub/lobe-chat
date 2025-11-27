@@ -18,8 +18,6 @@ import { createAgentToolsEngine, createToolsEngine } from '@/helpers/toolEnginee
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
-import { getSessionStoreState } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
@@ -457,7 +455,7 @@ class ChatService {
   };
 
   private mapTrace = (trace?: TracePayload, tag?: TraceTagMap): TracePayload => {
-    const tags = sessionMetaSelectors.currentAgentMeta(getSessionStoreState()).tags || [];
+    const tags = agentSelectors.currentAgentMeta(getAgentStoreState()).tags || [];
 
     const enabled = preferenceSelectors.userAllowTrace(getUserStoreState());
 

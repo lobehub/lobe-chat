@@ -73,6 +73,7 @@ export interface CreateTopicParams {
 }
 
 export interface QueryTopicParams {
+  agentId?: string | null;
   containerId?: string | null; // sessionId or groupId
   current?: number;
   pageSize?: number;
