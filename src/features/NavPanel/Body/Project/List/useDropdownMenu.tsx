@@ -6,15 +6,15 @@ import { useTranslation } from 'react-i18next';
 
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
-interface RepoItemDropdownMenuProps {
+interface ProjectItemDropdownMenuProps {
   id: string;
   toggleEditing: (visible?: boolean) => void;
 }
 
-export const useRepoItemDropdownMenu = ({
+export const useProjectItemDropdownMenu = ({
   id,
   toggleEditing,
-}: RepoItemDropdownMenuProps): MenuProps['items'] => {
+}: ProjectItemDropdownMenuProps): MenuProps['items'] => {
   const { t } = useTranslation(['file', 'common']);
   const [removeKnowledgeBase] = useKnowledgeBaseStore((s) => [s.removeKnowledgeBase]);
   const { modal } = App.useApp();
@@ -45,7 +45,7 @@ export const useRepoItemDropdownMenu = ({
             onOk: async () => {
               await removeKnowledgeBase(id);
             },
-            title: t('knowledgeBase.list.confirmRemoveKnowledgeBase'),
+            title: '即将删除该项目，删除后该将无法找回，请确认你的操作',
           });
         },
       },

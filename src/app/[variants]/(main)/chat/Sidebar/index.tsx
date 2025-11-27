@@ -1,11 +1,11 @@
-import { Accordion, ScrollShadow } from '@lobehub/ui';
+import { Accordion } from '@lobehub/ui';
 import React, { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { NavPanelPortal } from '@/features/NavPanel';
 import SessionHydration from '@/features/NavPanel/SessionHydration';
+import SideBarLayout from '@/features/NavPanel/SideBarLayout';
 
-import ConfigSwitcher from './ConfigSwitcher';
 import Header from './Header';
 import Topic from './Topic';
 
@@ -17,15 +17,16 @@ const ChatTopic = memo(() => {
   return (
     <NavPanelPortal navKey="chat">
       <Suspense>
-        <Header />
-        <ConfigSwitcher />
-        <ScrollShadow size={2} style={{ flex: 1 }}>
-          <Flexbox paddingInline={8}>
-            <Accordion defaultExpandedKeys={[ChatSidebarKey.Topic]} disableAnimation gap={8}>
-              <Topic itemKey={ChatSidebarKey.Topic} />
-            </Accordion>
-          </Flexbox>
-        </ScrollShadow>
+        <SideBarLayout
+          body={
+            <Flexbox paddingInline={8}>
+              <Accordion defaultExpandedKeys={[ChatSidebarKey.Topic]} disableAnimation gap={8}>
+                <Topic itemKey={ChatSidebarKey.Topic} />
+              </Accordion>
+            </Flexbox>
+          }
+          header={<Header />}
+        />
         <SessionHydration />
       </Suspense>
     </NavPanelPortal>

@@ -1,24 +1,12 @@
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Body from './Body';
 import Footer from './Footer';
 import Header from './Header';
+import SideBarLayout from './SideBarLayout';
 
 const Content = memo(() => {
-  return (
-    <Flexbox style={{ height: '100%', overflow: 'hidden' }}>
-      <Flexbox flex={'none'}>
-        <Header />
-      </Flexbox>
-      <Flexbox flex={1} style={{ height: '100%', overflow: 'hidden' }}>
-        <Body />
-      </Flexbox>
-      <Flexbox flex={'none'}>
-        <Footer />
-      </Flexbox>
-    </Flexbox>
-  );
+  return <SideBarLayout body={<Body />} footer={<Footer />} header={<Header />} />;
 });
 
 export default Content;

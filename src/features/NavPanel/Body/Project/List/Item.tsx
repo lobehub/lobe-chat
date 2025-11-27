@@ -7,14 +7,14 @@ import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import NavItem from '../../../NavItem';
 import Actions from './Actions';
 import Editing from './Editing';
-import { useRepoItemDropdownMenu } from './useDropdownMenu';
+import { useProjectItemDropdownMenu } from './useDropdownMenu';
 
-interface RepoItemProps {
+interface ProjectItemProps {
   id: string;
   name: string;
 }
 
-const RepoItem = memo<RepoItemProps>(({ id, name }) => {
+const ProjectItem = memo<ProjectItemProps>(({ id, name }) => {
   const [editing, isLoading, isUpdating] = useKnowledgeBaseStore((s) => [
     s.knowledgeBaseRenamingId === id,
     s.knowledgeBaseLoadingIds.includes(id),
@@ -32,7 +32,7 @@ const RepoItem = memo<RepoItemProps>(({ id, name }) => {
     [id],
   );
 
-  const dropdownMenu = useRepoItemDropdownMenu({
+  const dropdownMenu = useProjectItemDropdownMenu({
     id,
     toggleEditing,
   });
@@ -58,4 +58,4 @@ const RepoItem = memo<RepoItemProps>(({ id, name }) => {
   );
 });
 
-export default RepoItem;
+export default ProjectItem;

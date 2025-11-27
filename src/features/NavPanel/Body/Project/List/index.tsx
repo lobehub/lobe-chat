@@ -1,31 +1,29 @@
 'use client';
 
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { LIBRARY_URL } from '@/const/url';
-import { useRepoMenuItems } from '@/features/NavPanel/hooks';
+import { useProjectMenuItems } from '@/features/NavPanel/hooks';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import EmptyStatus from '../../EmptyStatus';
 import SkeletonList from '../../SkeletonList';
 import Item from './Item';
 
-const RepoList = memo(() => {
+const ProjectList = memo(() => {
   const navigate = useNavigate();
-  const { t } = useTranslation('file');
   const useFetchKnowledgeBaseList = useKnowledgeBaseStore((s) => s.useFetchKnowledgeBaseList);
   const { data, isLoading } = useFetchKnowledgeBaseList();
-  const { createRepo } = useRepoMenuItems();
+  const { createProject } = useProjectMenuItems();
 
   if (!data || isLoading) return <SkeletonList />;
 
   const isEmpty = data.length === 0;
 
   if (isEmpty) {
-    return <EmptyStatus onClick={createRepo} title={t('knowledgeBase.new')} />;
+    return <EmptyStatus onClick={createProject} title={'新建项目'} />;
   }
 
   return (
@@ -47,4 +45,4 @@ const RepoList = memo(() => {
   );
 });
 
-export default RepoList;
+export default ProjectList;

@@ -19,7 +19,6 @@ import SwitchButton from './SwitchButton';
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     overflow: hidden;
-    border-block-end: 1px solid ${token.colorBorderSecondary};
 
     #${BACK_BUTTON_ID} {
       width: 0 !important;

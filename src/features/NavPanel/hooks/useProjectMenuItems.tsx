@@ -9,9 +9,9 @@ import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
 
 /**
  * Hook for generating menu items/buttons for knowledge base actions
- * Used in Body/Repo/Actions.tsx
+ * Used in Body/Project/Actions.tsx
  */
-export const useRepoMenuItems = () => {
+export const useProjectMenuItems = () => {
   const { t } = useTranslation('knowledgeBase');
   const navigate = useNavigate();
   const { open } = useCreateNewModal();
@@ -19,7 +19,7 @@ export const useRepoMenuItems = () => {
   /**
    * Create knowledge base action
    */
-  const createRepo = useCallback(() => {
+  const createProject = useCallback(() => {
     open({
       onSuccess: (id) => {
         navigate(`/knowledge/bases/${id}`);
@@ -27,21 +27,21 @@ export const useRepoMenuItems = () => {
     });
   }, [open, navigate]);
 
-  const createRepoMenuItem = useCallback(
+  const createProjectMenuItem = useCallback(
     (): ItemType => ({
       icon: <Icon icon={BoxIcon} />,
-      key: 'createRepo',
+      key: 'createProject',
       label: t('createNew.title'),
       onClick: (info) => {
         info.domEvent?.stopPropagation();
-        createRepo();
+        createProject();
       },
     }),
-    [t, createRepo],
+    [t, createProject],
   );
 
   return {
-    createRepo,
-    createRepoMenuItem,
+    createProject,
+    createProjectMenuItem,
   };
 };

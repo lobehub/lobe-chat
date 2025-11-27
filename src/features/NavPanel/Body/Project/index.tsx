@@ -8,15 +8,15 @@ import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
 
 import Actions from './Actions';
 import List from './List';
-import { useRepoActionsDropdownMenu } from './useDropdownMenu';
+import { useProjectActionsDropdownMenu } from './useDropdownMenu';
 
-interface RepoProps {
+interface ProjectProps {
   itemKey: string;
 }
 
-const Repo = memo<RepoProps>(({ itemKey }) => {
+const Project = memo<ProjectProps>(({ itemKey }) => {
   const { t } = useTranslation('common');
-  const dropdownMenu = useRepoActionsDropdownMenu();
+  const dropdownMenu = useProjectActionsDropdownMenu();
   return (
     <AccordionItem
       action={<Actions />}
@@ -46,4 +46,4 @@ const Repo = memo<RepoProps>(({ itemKey }) => {
   );
 });
 
-export default Repo;
+export default Project;

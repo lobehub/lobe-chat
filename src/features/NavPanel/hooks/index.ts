@@ -1,4 +1,4 @@
 export { useCreateMenuItems } from './useCreateMenuItems';
-export { useRepoMenuItems } from './useRepoMenuItems';
+export { useProjectMenuItems } from './useProjectMenuItems';
 export { useSessionGroupMenuItems } from './useSessionGroupMenuItems';
 export { useSessionItemMenuItems } from './useSessionItemMenuItems';
