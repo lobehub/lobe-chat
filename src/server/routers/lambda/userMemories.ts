@@ -117,7 +117,7 @@ const searchUserMemories = async (
   };
 
   const layeredResults = await ctx.memoryModel.searchWithEmbedding({
-    embedding: queryEmbeddings?.[0] || [],
+    embedding: queryEmbeddings?.[0],
     limits,
   });
 
