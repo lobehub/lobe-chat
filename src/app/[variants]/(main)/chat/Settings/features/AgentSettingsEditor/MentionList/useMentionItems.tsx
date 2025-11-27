@@ -1,7 +1,7 @@
-import { IEditor, INSERT_MENTION_COMMAND } from '@lobehub/editor';
 import { ToolNameResolver } from '@lobechat/context-engine';
-import { apiPrompt, toolPrompt, type API } from '@lobechat/prompts';
+import { type API, apiPrompt, toolPrompt } from '@lobechat/prompts';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
+import { IEditor, INSERT_MENTION_COMMAND } from '@lobehub/editor';
 import isEqual from 'fast-deep-equal';
 import { useCallback, useMemo } from 'react';
 
@@ -129,7 +129,9 @@ const useMentionOptions = () => {
   }, [installedTools, toggleAgentPlugin]);
 
   const loadItems = useCallback(
-    async (search: { leadOffset: number; matchingString: string; replaceableString: string } | null) => {
+    async (
+      search: { leadOffset: number; matchingString: string; replaceableString: string } | null,
+    ) => {
       const query = search?.matchingString?.toLowerCase() || '';
 
       if (!query) return baseItems;
