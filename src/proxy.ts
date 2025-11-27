@@ -55,10 +55,7 @@ export const config = {
     '/next-auth/(.*)',
     '/oauth(.*)',
     '/oidc(.*)',
-    // ↓ cloud ↓
   ],
-  // Enable Node.js runtime for better-auth session validation (Next.js 15.2.0+)
-  runtime: 'nodejs',
 };
 
 const backendApiEndpoints = ['/api', '/trpc', '/webapi', '/oidc'];
