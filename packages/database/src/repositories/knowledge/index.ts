@@ -211,7 +211,7 @@ export class KnowledgeRepo {
     }
 
     // Category filter
-    if (category && category !== FilesTabs.All && category !== FilesTabs.Home) {
+    if (category && category !== FilesTabs.All) {
       const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
       if (Array.isArray(fileTypePrefix)) {
         // For multiple file types (e.g., Documents includes 'application' and 'custom')
@@ -343,7 +343,7 @@ export class KnowledgeRepo {
     }
 
     // Category filter - match documents by fileType prefix
-    if (category && category !== FilesTabs.All && category !== FilesTabs.Home) {
+    if (category && category !== FilesTabs.All) {
       const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
       if (Array.isArray(fileTypePrefix)) {
         // For multiple file types (e.g., Documents includes 'application' and 'custom')
@@ -402,7 +402,7 @@ export class KnowledgeRepo {
       }
 
       // Category filter
-      if (category && category !== FilesTabs.All && category !== FilesTabs.Home) {
+      if (category && category !== FilesTabs.All) {
         const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
         if (Array.isArray(fileTypePrefix)) {
           const orConditions = fileTypePrefix.map(

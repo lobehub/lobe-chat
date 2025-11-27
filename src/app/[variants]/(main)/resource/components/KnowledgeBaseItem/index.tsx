@@ -21,7 +21,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     border-radius: ${token.borderRadius}px;
 
     &.${knowledgeItemClass} {
-      width: calc(100% - 16px);
+      width: 100%;
     }
 
     &:hover {
