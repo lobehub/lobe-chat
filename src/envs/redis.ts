@@ -12,13 +12,22 @@ const parseNumber = (value?: string) => {
   return Number.isInteger(parsed) ? parsed : undefined;
 };
 
+const parseRedisTls = (value?: string) => {
+  if (!value) {
+    return false
+  }
+
+  const normalized = value.trim().toLowerCase();
+  return normalized === 'true' || normalized === '1';
+};
+
 export const getRedisEnv = () => {
   return createEnv({
     runtimeEnv: {
       REDIS_DATABASE: parseNumber(process.env.REDIS_DATABASE),
       REDIS_PASSWORD: process.env.REDIS_PASSWORD,
       REDIS_PREFIX: process.env.REDIS_PREFIX || 'lobechat',
-      REDIS_TLS: Boolean(process.env.REDIS_TLS),
+      REDIS_TLS: parseRedisTls(process.env.REDIS_TLS),
       REDIS_URL: process.env.REDIS_URL,
       REDIS_USERNAME: process.env.REDIS_USERNAME,
       UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
@@ -28,7 +37,7 @@ export const getRedisEnv = () => {
       REDIS_DATABASE: z.number().int().optional(),
       REDIS_PASSWORD: z.string().optional(),
       REDIS_PREFIX: z.string(),
-      REDIS_TLS: z.boolean(),
+      REDIS_TLS: z.boolean().default(false),
       REDIS_URL: z.string().url().optional(),
       REDIS_USERNAME: z.string().optional(),
       UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
