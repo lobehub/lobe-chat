@@ -46,6 +46,13 @@ To enable Better Auth in LobeChat, set the following environment variables:
 | `NEXT_PUBLIC_AUTH_URL`           | Optional | The URL accessible from the browser for Better Auth callbacks. Only set this if the default generated URL is incorrect |
 | `AUTH_SSO_PROVIDERS`             | Optional | Comma-separated list of enabled SSO providers, e.g., `google,github,microsoft`                                         |
 
+<Callout type={'warning'}>
+  If you build/deploy with the official Docker image, the defaults keep **NextAuth enabled** and **Better
+  Auth disabled** (`NEXT_PUBLIC_ENABLE_NEXT_AUTH=1`, `NEXT_PUBLIC_ENABLE_BETTER_AUTH=0`) to avoid unexpected
+  login redirects. To switch to Better Auth, set both build args and runtime envs explicitly:
+  `NEXT_PUBLIC_ENABLE_BETTER_AUTH=1` and `NEXT_PUBLIC_ENABLE_NEXT_AUTH=0`, then rebuild the image.
+</Callout>
+
 ### Supported SSO Providers
 
 | Provider              | Value                   | Environment Variables                                                                                     |
