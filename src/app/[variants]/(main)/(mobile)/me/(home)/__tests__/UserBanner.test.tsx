@@ -31,22 +31,24 @@ vi.mock('@/const/version', () => ({
   isDesktop: false,
 }));
 
-// 定义一个变量来存储 enableAuth 的值
-let enableAuth = true;
-let enableClerk = false;
+// Use vi.hoisted to ensure variables exist before vi.mock factory executes
+const { enableAuth, enableClerk } = vi.hoisted(() => ({
+  enableAuth: { value: true },
+  enableClerk: { value: false },
+}));
 
-// 模拟 @/const/auth 模块
 vi.mock('@/const/auth', () => ({
   get enableAuth() {
-    return enableAuth;
+    return enableAuth.value;
   },
   get enableClerk() {
-    return enableClerk;
+    return enableClerk.value;
   },
 }));
 
 afterEach(() => {
-  enableAuth = true;
+  enableAuth.value = true;
+  enableClerk.value = false;
   mockNavigate.mockReset();
 });
 
@@ -55,7 +57,7 @@ describe('UserBanner', () => {
     act(() => {
       useUserStore.setState({ isSignedIn: false });
     });
-    enableAuth = false;
+    enableAuth.value = false;
 
     render(<UserBanner />);
 
@@ -69,7 +71,7 @@ describe('UserBanner', () => {
       useUserStore.setState({ isSignedIn: true });
     });
 
-    enableClerk = true;
+    enableClerk.value = true;
 
     render(<UserBanner />);
 
@@ -82,7 +84,7 @@ describe('UserBanner', () => {
     act(() => {
       useUserStore.setState({ isSignedIn: false });
     });
-    enableClerk = true;
+    enableClerk.value = true;
 
     render(<UserBanner />);
 

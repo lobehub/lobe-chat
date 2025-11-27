@@ -5,7 +5,22 @@ alwaysApply: false
 
 # Database Migrations Guide
 
-## Defensive Programming - Use Idempotent Clauses
+## Step1: Generate migrations:
+
+```bash
+bun run db:generate
+```
+
+this step will generate or update the following files:
+
+- packages/database/migrations/0046_xxx.sql
+- packages/database/migrations/meta/\_journal.json
+
+## Step2: optimize the migration sql fileName
+
+the migration sql file name is randomly generated, we need to optimize the file name to make it more readable and meaningful. For example, `0046_xxx.sql` -> `0046_better_auth.sql`
+
+## Step3: Defensive Programming - Use Idempotent Clauses
 
 Always use defensive clauses to make migrations idempotent:
 

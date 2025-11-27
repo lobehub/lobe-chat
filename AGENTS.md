@@ -6,13 +6,12 @@ This document serves as a comprehensive guide for all team members when developi
 
 Built with modern technologies:
 
-- **Frontend**: Next.js 15, React 19, TypeScript
+- **Frontend**: Next.js 16, React 19, TypeScript
 - **UI Components**: Ant Design, @lobehub/ui, antd-style
 - **State Management**: Zustand, SWR
 - **Database**: PostgreSQL, PGLite, Drizzle ORM
 - **Testing**: Vitest, Testing Library
 - **Package Manager**: pnpm (monorepo structure)
-- **Build Tools**: Next.js (Turbopack in dev, Webpack in prod)
 
 ## Directory Structure
 
@@ -39,7 +38,6 @@ The project follows a well-organized monorepo structure:
 - Use `pnpm` as the primary package manager
 - Use `bun` to run npm scripts
 - Use `bunx` to run executable npm packages
-- Navigate to specific packages using `cd packages/<package-name>`
 
 ### Code Style Guidelines
 
