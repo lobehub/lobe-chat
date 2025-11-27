@@ -8,6 +8,13 @@ import { LobeAgentTTSConfig } from './tts';
 
 export interface LobeAgentConfig {
   chatConfig: LobeAgentChatConfig;
+
+  /**
+   * 编辑器内容（JSON 格式）
+   * 用于保存富文本编辑器的完整状态，包括 mention 等特殊节点
+   */
+  editorData?: any;
+
   fewShots?: FewShots;
   files?: FileItem[];
   id?: string;
@@ -72,6 +79,7 @@ export interface AgentItem {
   clientId?: string | null;
   createdAt: Date;
   description?: string | null;
+  editorData?: any | null;
   fewShots?: any | null;
   id: string;
   model?: string | null;

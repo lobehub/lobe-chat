@@ -1,7 +1,7 @@
 import { UIChatMessage } from '@lobechat/types';
 import { ActionIconGroup, type ActionIconGroupEvent } from '@lobehub/ui';
 import { useSearchParams } from 'next/navigation';
-import { memo, useCallback, useContext } from 'react';
+import { memo, useCallback } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import {
@@ -10,7 +10,6 @@ import {
   threadSelectors,
 } from '@/store/chat/selectors';
 
-import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
 import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
 
 interface GroupActionsProps {
@@ -33,23 +32,14 @@ const WithoutContentId = memo<GroupActionsProps>(({ id, data }) => {
     isContinuing,
   });
 
-  const inPortalThread = useContext(InPortalThreadContext);
-  // const inThread = isThreadMode || inPortalThread;
-
   const items = [continueGeneration, delAndRegenerate, del];
 
   const searchParams = useSearchParams();
   const topic = searchParams.get('topic');
 
-  const [
-    deleteMessage,
-    delAndRegenerateMessage,
-    delAndResendThreadMessage,
-    continueGenerationMessage,
-  ] = useChatStore((s) => [
+  const [deleteMessage, delAndRegenerateMessage, continueGenerationMessage] = useChatStore((s) => [
     s.deleteMessage,
     s.delAndRegenerateMessage,
-    s.delAndResendThreadMessage,
     s.continueGenerationMessage,
   ]);
 
@@ -75,11 +65,7 @@ const WithoutContentId = memo<GroupActionsProps>(({ id, data }) => {
         }
 
         case 'delAndRegenerate': {
-          if (inPortalThread) {
-            delAndResendThreadMessage(id);
-          } else {
-            delAndRegenerateMessage(id);
-          }
+          delAndRegenerateMessage(id);
           break;
         }
       }

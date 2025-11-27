@@ -6,14 +6,14 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 import { withSuspense } from '@/components/withSuspense';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
-import { Locales } from '@/locales/resources';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { NavigatorRegistrar } from '@/utils/router';
 
 import NavBar from './NavBar';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 const MOBILE_NAV_ROUTES = new Set([
-  '/chat',
+  '/agent',
   '/discover',
   '/discover/assistant',
   '/discover/mcp',
@@ -23,8 +23,7 @@ const MOBILE_NAV_ROUTES = new Set([
   '/me',
 ]);
 
-export const MobileMainLayout = memo((props: { locale: Locales }) => {
-  const { locale } = props;
+export const MobileMainLayout = memo(() => {
   const showMobileWorkspace = useShowMobileWorkspace();
   const location = useLocation();
   const pathname = location.pathname;
@@ -34,8 +33,9 @@ export const MobileMainLayout = memo((props: { locale: Locales }) => {
 
   return (
     <>
+      <NavigatorRegistrar />
       {showCloudPromotion && <CloudBanner mobile />}
-      <Outlet context={{ locale: locale }} />
+      <Outlet />
       {showNav && <NavBar />}
     </>
   );

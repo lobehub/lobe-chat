@@ -4,7 +4,6 @@ import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { chatService } from '@/services/chat';
 import { ragService } from '@/services/rag';
-import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { chatSelectors, dbMessageSelectors, displayMessageSelectors } from '@/store/chat/selectors';
 import { systemAgentSelectors } from '@/store/user/selectors';

@@ -1,7 +1,7 @@
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { chatGroups, messages, sessions, topics, users } from '../../schemas';
+import { agents, agentsToSessions, chatGroups, messages, sessions, topics, users } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 import { CreateTopicParams, TopicModel } from '../topic';
 import { getTestDB } from './_util';
@@ -149,6 +149,201 @@ describe('TopicModel', () => {
 
       expect(result2).toHaveLength(1);
       expect(result2[0].id).toBe('topic1');
+    });
+
+    describe('query with agentId filter', () => {
+      it('should filter topics by agentId through agentsToSessions lookup', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'session-for-agent', userId },
+            { id: 'session-other', userId },
+          ]);
+
+          await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
+
+          await trx.insert(agentsToSessions).values([
+            { agentId: 'agent1', sessionId: 'session-for-agent', userId },
+          ]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'topic-agent-session',
+              userId,
+              sessionId: 'session-for-agent',
+              updatedAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'topic-other-session',
+              userId,
+              sessionId: 'session-other',
+              updatedAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with agentId should return topics from the associated session
+        const result = await topicModel.query({ agentId: 'agent1' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('topic-agent-session');
+      });
+
+      it('should return empty array when agentId has no associated session and no containerId fallback', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'session1', userId }]);
+
+          await trx.insert(agents).values([{ id: 'agent-no-session', userId, title: 'Agent No Session' }]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'topic-session1',
+              userId,
+              sessionId: 'session1',
+            },
+          ]);
+        });
+
+        // Query with agentId that has no session association
+        const result = await topicModel.query({ agentId: 'agent-no-session' });
+
+        // Should return topics with no session/group (which is empty in this case)
+        expect(result).toHaveLength(0);
+      });
+
+      it('should fallback to provided containerId when agentId lookup returns nothing', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'fallback-session', userId }]);
+
+          await trx.insert(agents).values([{ id: 'agent-no-session', userId, title: 'Agent No Session' }]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'topic-fallback',
+              userId,
+              sessionId: 'fallback-session',
+              updatedAt: new Date('2023-01-01'),
+            },
+          ]);
+        });
+
+        // Query with agentId that has no session, but provide containerId as fallback
+        const result = await topicModel.query({
+          agentId: 'agent-no-session',
+          containerId: 'fallback-session',
+        });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('topic-fallback');
+      });
+
+      it('should use agentId session over provided containerId when agentId has association', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'agent-session', userId },
+            { id: 'provided-session', userId },
+          ]);
+
+          await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
+
+          await trx.insert(agentsToSessions).values([
+            { agentId: 'agent1', sessionId: 'agent-session', userId },
+          ]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'topic-agent-session',
+              userId,
+              sessionId: 'agent-session',
+              updatedAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'topic-provided-session',
+              userId,
+              sessionId: 'provided-session',
+              updatedAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with both agentId and containerId - agentId should take priority
+        const result = await topicModel.query({
+          agentId: 'agent1',
+          containerId: 'provided-session',
+        });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('topic-agent-session');
+      });
+
+      it('should only lookup agentsToSessions for current user', async () => {
+        const otherUserId = 'other-user-for-topic-test';
+
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(users).values([{ id: otherUserId }]);
+
+          await trx.insert(sessions).values([
+            { id: 'user-session', userId },
+            { id: 'other-user-session', userId: otherUserId },
+          ]);
+
+          // Different agent IDs for different users (agent id is primary key)
+          await trx.insert(agents).values([
+            { id: 'user-agent', userId, title: 'User Agent' },
+            { id: 'other-user-agent', userId: otherUserId, title: 'Other User Agent' },
+          ]);
+
+          // Only create agentsToSessions for the other user
+          await trx.insert(agentsToSessions).values([
+            { agentId: 'other-user-agent', sessionId: 'other-user-session', userId: otherUserId },
+          ]);
+
+          await trx.insert(topics).values([
+            {
+              id: 'topic-user',
+              userId,
+              sessionId: null, // no session
+              groupId: null,
+            },
+            {
+              id: 'topic-other-user',
+              userId: otherUserId,
+              sessionId: 'other-user-session',
+            },
+          ]);
+        });
+
+        // Query with other user's agentId - should not find association since it belongs to other user
+        const result = await topicModel.query({ agentId: 'other-user-agent' });
+
+        // Should return topics with no session/group for the current user
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('topic-user');
+      });
+
+      it('should work with agentId and pagination', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'agent-session', userId }]);
+
+          await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
+
+          await trx.insert(agentsToSessions).values([
+            { agentId: 'agent1', sessionId: 'agent-session', userId },
+          ]);
+
+          await trx.insert(topics).values([
+            { id: 'topic1', userId, sessionId: 'agent-session', updatedAt: new Date('2023-01-01') },
+            { id: 'topic2', userId, sessionId: 'agent-session', updatedAt: new Date('2023-01-02') },
+            { id: 'topic3', userId, sessionId: 'agent-session', updatedAt: new Date('2023-01-03') },
+          ]);
+        });
+
+        // Query with agentId and pagination
+        const result = await topicModel.query({ agentId: 'agent1', current: 0, pageSize: 2 });
+
+        expect(result).toHaveLength(2);
+        expect(result[0].id).toBe('topic3'); // Most recent first
+        expect(result[1].id).toBe('topic2');
+      });
     });
   });
 

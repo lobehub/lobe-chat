@@ -26,6 +26,14 @@
       "createChunkingTask": "Preparando...",
       "deleteSuccess": "Archivo eliminado con éxito",
       "downloading": "Descargando archivo...",
+      "goBack": "Volver a la página anterior",
+      "goForward": "Avanzar a la siguiente página",
+      "goToParent": "Ir a la carpeta superior",
+      "moveError": "Error al mover el archivo",
+      "moveHere": "Mover aquí",
+      "moveSuccess": "Archivo movido con éxito",
+      "moveToFolder": "Mover a...",
+      "moveToRoot": "Mover a la carpeta raíz",
       "removeFromKnowledgeBase": "Eliminar de la base de conocimientos",
       "removeFromKnowledgeBaseSuccess": "Archivo eliminado con éxito"
     },
@@ -41,6 +49,12 @@
       },
       "or": "o",
       "title": "Arrastra archivos o carpetas aquí"
+    },
+    "noFolders": "No hay carpetas disponibles",
+    "sort": {
+      "dateAdded": "Fecha de añadido",
+      "name": "Nombre",
+      "size": "Tamaño"
     },
     "title": {
       "createdAt": "Fecha de creación",

@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { LOADING_FLAT, THREAD_DRAFT_ID } from '@lobechat/const';
+import { LOADING_FLAT } from '@lobechat/const';
 import { chainSummaryTitle } from '@lobechat/prompts';
 import {
   CreateMessageParams,
@@ -19,7 +19,6 @@ import { threadService } from '@/services/thread';
 import { threadSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { globalHelpers } from '@/store/global/helpers';
-import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 import { merge } from '@/utils/merge';
@@ -36,6 +35,8 @@ export interface ChatThreadAction {
   refreshThreads: () => Promise<void>;
   /**
    * Sends a new thread message to the AI chat system
+   * @deprecated Use sendMessage with context.newThread instead for unified message sending.
+   * This method will be removed in a future version.
    */
   sendThreadMessage: (params: SendThreadMessageParams) => Promise<void>;
   resendThreadMessage: (messageId: string) => Promise<void>;
@@ -98,100 +99,64 @@ export const chatThreadMessage: StateCreator<
     );
     get().togglePortal(false);
   },
+  /**
+   * @deprecated Use sendMessage with context.newThread instead
+   */
   sendThreadMessage: async ({ message }) => {
-    const {
-      internal_execAgentRuntime,
-      activeTopicId,
-      activeId,
-      threadStartMessageId,
-      newThreadMode,
-      portalThreadId,
-    } = get();
-    if (!activeId || !activeTopicId) return;
+    const { activeTopicId, activeAgentId, threadStartMessageId, newThreadMode, portalThreadId } =
+      get();
 
-    // if message is empty or no files, then stop
+    if (!activeAgentId || !activeTopicId) return;
+
+    // if message is empty, then stop
     if (!message) return;
 
     set({ isCreatingThreadMessage: true }, false, n('creatingThreadMessage/start'));
 
-    const newMessage: CreateMessageParams = {
-      content: message,
-      // if message has attached with files, then add files to message and the agent
-      // files: fileIdList,
-      role: 'user',
-      sessionId: activeId,
-      // if there is activeTopicId，then add topicId to message
-      topicId: activeTopicId,
-      threadId: portalThreadId,
-    };
+    try {
+      // Get thread messages for context
+      const messages = threadSelectors.portalAIChats(get());
 
-    let parentMessageId: string | undefined = undefined;
-    let tempMessageId: string | undefined = undefined;
-
-    // if there is no portalThreadId, then create a thread and then append message
-    if (!portalThreadId) {
-      if (!threadStartMessageId) return;
-      // we need to create a temp message for optimistic update
-      tempMessageId = get().optimisticCreateTmpMessage({
-        ...newMessage,
-        threadId: THREAD_DRAFT_ID,
-      });
-      get().internal_toggleMessageLoading(true, tempMessageId);
-
-      const { threadId, messageId } = await get().createThread({
-        message: newMessage,
-        sourceMessageId: threadStartMessageId,
-        topicId: activeTopicId,
-        type: newThreadMode,
+      // Use unified sendMessage with context.newThread for new thread creation
+      const result = await get().sendMessage({
+        message,
+        messages,
+        context: {
+          agentId: activeAgentId,
+          topicId: activeTopicId,
+          // If there's an existing thread, use it
+          threadId: portalThreadId,
+          // If no thread exists, create a new one
+          newThread:
+            !portalThreadId && threadStartMessageId
+              ? {
+                  sourceMessageId: threadStartMessageId,
+                  type: newThreadMode,
+                }
+              : undefined,
+        },
       });
 
-      parentMessageId = messageId;
+      // Handle post-message-creation tasks for new thread
+      if (result?.createdThreadId) {
+        // Refresh threads list
+        await get().refreshThreads();
+        // Refresh messages to include new thread messages
+        await get().refreshMessages();
+        // Open the newly created thread in portal
+        get().openThreadInPortal(result.createdThreadId, threadStartMessageId);
 
-      // mark the portal in thread mode
-      await get().refreshThreads();
-      await get().refreshMessages();
-
-      get().openThreadInPortal(threadId, threadStartMessageId);
-    } else {
-      // if there is a thread, just append message
-      // we need to create a temp message for optimistic update
-      tempMessageId = get().optimisticCreateTmpMessage(newMessage);
-      get().internal_toggleMessageLoading(true, tempMessageId);
-
-      const result = await get().optimisticCreateMessage(newMessage, { tempMessageId });
-      if (!result) return;
-      parentMessageId = result.id;
-    }
-
-    get().internal_toggleMessageLoading(false, tempMessageId);
-
-    if (!parentMessageId) return;
-    //  update assistant update to make it rerank
-    useSessionStore.getState().triggerSessionUpdate(get().activeId);
-
-    // Get the current messages to generate AI response
-    const messages = threadSelectors.portalAIChats(get());
-
-    await internal_execAgentRuntime({
-      messages,
-      parentMessageId,
-      parentMessageType: 'user',
-      sessionId: get().activeId,
-      topicId: get().activeTopicId,
-      threadId: get().portalThreadId,
-      inPortalThread: true,
-    });
-
-    set({ isCreatingThreadMessage: false }, false, n('creatingThreadMessage/stop'));
-
-    // 说明是在新建 thread，需要自动总结标题
-    if (!portalThreadId) {
-      const portalThread = threadSelectors.currentPortalThread(get());
-
-      if (!portalThread) return;
-
-      const chats = threadSelectors.portalAIChats(get());
-      await get().summaryThreadTitle(portalThread.id, chats);
+        // Summarize thread title for new thread
+        const portalThread = threadSelectors.currentPortalThread(get());
+        if (portalThread) {
+          const chats = threadSelectors.portalAIChats(get());
+          await get().summaryThreadTitle(portalThread.id, chats);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      set({ isCreatingThreadMessage: false }, false, n('creatingThreadMessage/stop'));
     }
   },
   resendThreadMessage: async (messageId) => {

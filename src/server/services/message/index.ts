@@ -53,7 +53,7 @@ export class MessageService {
    */
   private async queryWithSuccess(
     options?: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     if (!options || (options.sessionId === undefined && options.topicId === undefined)) {
       return { success: true };
     }
@@ -76,20 +76,20 @@ export class MessageService {
    * reducing the need for separate refresh calls and improving performance.
    */
   async createMessage(params: CreateMessageParams): Promise<CreateMessageResult> {
-    // 1. Create the message
+    // 1. Create the message (使用 agentId)
     const item = await this.messageModel.create(params);
 
-    // 2. Query all messages for this session/topic
+    // 2. Query all messages for this agent/topic
+    // 使用 agentId 字段查询
     const messages = await this.messageModel.query(
       {
+        agentId: params.agentId,
         current: 0,
         groupId: params.groupId,
         pageSize: 9999,
-        sessionId: params.sessionId,
         topicId: params.topicId,
       },
       {
-        groupAssistantMessages: false,
         postProcessUrl: this.postProcessUrl,
       },
     );
@@ -145,7 +145,7 @@ export class MessageService {
     id: string,
     value: any,
     options: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     await this.messageModel.updatePluginState(id, value);
     return this.queryWithSuccess(options);
   }
@@ -158,7 +158,7 @@ export class MessageService {
     id: string,
     value: any,
     options: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     await this.messageModel.updateMessagePlugin(id, value);
     return this.queryWithSuccess(options);
   }
@@ -171,7 +171,7 @@ export class MessageService {
     id: string,
     value: UpdateMessageParams,
     options: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     await this.messageModel.update(id, value as any);
     return this.queryWithSuccess(options);
   }

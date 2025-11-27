@@ -27,7 +27,7 @@ const CreateForm = memo<CreateFormProps>(({ onClose, onSuccess }) => {
         onSuccess(id);
         onClose?.();
       } else {
-        window.location.href = `/knowledge/bases/${id}`;
+        window.location.href = `/resource/library/${id}`;
       }
     } catch (e) {
       console.error(e);
