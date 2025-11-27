@@ -137,6 +137,8 @@
   "close": "إغلاق",
   "cmdk": {
     "about": "حول",
+    "aiModeEmptyState": "أدخل سؤالك في الحقل أعلاه لبدء المحادثة مع الذكاء الاصطناعي",
+    "aiModePlaceholder": "اطرح سؤالاً على الذكاء الاصطناعي...",
     "communitySupport": "دعم المجتمع",
     "discover": "استكشاف",
     "knowledgeBase": "قاعدة المعرفة",
@@ -304,6 +306,10 @@
     "business": "شراكات تجارية",
     "support": "الدعم عبر البريد الإلكتروني"
   },
+  "navPanel": {
+    "agent": "المساعد",
+    "library": "المكتبة"
+  },
   "new": "جديد",
   "oauth": "تسجيل الدخول SSO",
   "officialSite": "الموقع الرسمي",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "الرسم بالذكاء الاصطناعي",
+    "aiImage": "رسم",
+    "audio": "الصوت",
     "chat": "الدردشة",
+    "community": "المجتمع",
     "discover": "اكتشاف",
     "files": "ملفات",
+    "home": "الصفحة الرئيسية",
     "knowledgeBase": "قاعدة المعرفة",
     "me": "أنا",
-    "setting": "الإعدادات"
+    "pages": "المستندات",
+    "resource": "الموارد",
+    "search": "البحث",
+    "setting": "الإعدادات",
+    "video": "الفيديو"
   },
   "telemetry": {
     "allow": "السماح",

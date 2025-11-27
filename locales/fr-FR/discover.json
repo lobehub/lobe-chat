@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "Assistants de la communauté",
     "featuredAssistants": "Assistants recommandés",
     "featuredModels": "Modèles recommandés",
+    "featuredPlugins": "Plugins en vedette",
     "featuredProviders": "Fournisseurs de modèles recommandés",
     "featuredTools": "Plugins recommandés",
     "more": "Découvrez plus"

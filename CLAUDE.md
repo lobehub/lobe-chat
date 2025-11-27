@@ -64,6 +64,10 @@ When working with Linear issues:
 3. **Update issue status** when completing tasks using `mcp__linear-server__update_issue`
 4. **MUST add completion comment** using `mcp__linear-server__create_comment`
 
+### Creating Issues
+
+When creating new Linear issues using `mcp__linear-server__create_issue`, **MUST add the `claude code` label** to indicate the issue was created by Claude Code.
+
 ### Completion Comment (REQUIRED)
 
 **Every time you complete an issue, you MUST add a comment summarizing the work done.** This is critical for:

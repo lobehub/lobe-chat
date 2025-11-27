@@ -2,6 +2,7 @@ export default {
   addToKnowledgeBase: {
     addSuccess: '文件添加成功，<1>立即查看</1>',
     confirm: '添加',
+    error: '添加文件到知识库失败',
     id: {
       placeholder: '请选择要添加的知识库',
       required: '请选择知识库',

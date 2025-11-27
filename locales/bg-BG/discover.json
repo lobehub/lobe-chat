@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "Общностни асистенти",
     "featuredAssistants": "Препоръчани асистенти",
     "featuredModels": "Препоръчани модели",
+    "featuredPlugins": "Препоръчани плъгини",
     "featuredProviders": "Препоръчани доставчици на модели",
     "featuredTools": "Препоръчани инструменти",
     "more": "Открий повече"

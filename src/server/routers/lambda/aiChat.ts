@@ -8,10 +8,12 @@ import debug from 'debug';
 
 import { LOADING_FLAT } from '@/const/message';
 import { MessageModel } from '@/database/models/message';
+import { ThreadModel } from '@/database/models/thread';
 import { TopicModel } from '@/database/models/topic';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
+import { resolveContext } from '@/server/routers/lambda/_helpers/resolveContext';
 import { AiChatService } from '@/server/services/aiChat';
 import { FileService } from '@/server/services/file';
 import { getXorPayload } from '@/utils/server';
@@ -26,6 +28,7 @@ const aiChatProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
       aiChatService: new AiChatService(ctx.serverDB, ctx.userId),
       fileService: new FileService(ctx.serverDB, ctx.userId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId),
+      threadModel: new ThreadModel(ctx.serverDB, ctx.userId),
       topicModel: new TopicModel(ctx.serverDB, ctx.userId),
     },
   });
@@ -70,11 +73,23 @@ export const aiChatRouter = router({
   sendMessageInServer: aiChatProcedure
     .input(AiSendMessageServerSchema)
     .mutation(async ({ input, ctx }) => {
-      log('sendMessageInServer called for sessionId: %s', input.sessionId);
-      log('topicId: %s, newTopic: %O', input.topicId, input.newTopic);
+      log('sendMessageInServer called for agentId: %s', input.agentId);
+      log(
+        'topicId: %s, newTopic: %O, newThread: %O',
+        input.topicId,
+        input.newTopic,
+        input.newThread,
+      );
+      let sessionId = input.sessionId;
+      if (!sessionId) {
+        const context = await resolveContext(input, ctx.serverDB, ctx.userId);
+        if (!!context.sessionId) sessionId = context.sessionId;
+      }
 
       let messageId: string;
       let topicId = input.topicId!;
+      let threadId = input.threadId;
+      let createdThreadId: string | undefined;
 
       let isCreateNewTopic = false;
 
@@ -82,8 +97,9 @@ export const aiChatRouter = router({
       if (input.newTopic) {
         log('creating new topic with title: %s', input.newTopic.title);
         const topicItem = await ctx.topicModel.create({
+          agentId: input.agentId,
           messages: input.newTopic.topicMessageIds,
-          sessionId: input.sessionId,
+          sessionId,
           title: input.newTopic.title,
         });
         topicId = topicItem.id;
@@ -91,15 +107,37 @@ export const aiChatRouter = router({
         log('new topic created with id: %s', topicId);
       }
 
+      // create thread if there should be a new thread
+      if (input.newThread) {
+        log(
+          'creating new thread with sourceMessageId: %s, type: %s',
+          input.newThread.sourceMessageId,
+          input.newThread.type,
+        );
+        const threadItem = await ctx.threadModel.create({
+          parentThreadId: input.newThread.parentThreadId,
+          sourceMessageId: input.newThread.sourceMessageId,
+          title: input.newThread.title,
+          topicId,
+          type: input.newThread.type,
+        });
+        if (threadItem) {
+          threadId = threadItem.id;
+          createdThreadId = threadItem.id;
+          log('new thread created with id: %s', threadId);
+        }
+      }
+
       // create user message
       log('creating user message with content length: %d', input.newUserMessage.content.length);
       const userMessageItem = await ctx.messageModel.create({
+        agentId: input.agentId,
         content: input.newUserMessage.content,
         files: input.newUserMessage.files,
         parentId: input.newUserMessage.parentId,
         role: 'user',
-        sessionId: input.sessionId!,
-        threadId: input.threadId,
+        sessionId,
+        threadId,
         topicId,
       });
 
@@ -113,13 +151,14 @@ export const aiChatRouter = router({
         input.newAssistantMessage.provider,
       );
       const assistantMessageItem = await ctx.messageModel.create({
+        agentId: input.agentId,
         content: LOADING_FLAT,
         model: input.newAssistantMessage.model,
         parentId: messageId,
         provider: input.newAssistantMessage.provider,
         role: 'assistant',
-        sessionId: input.sessionId!,
-        threadId: input.threadId,
+        sessionId,
+        threadId,
         topicId,
       });
       log('assistant message created with id: %s', assistantMessageItem.id);
@@ -127,8 +166,9 @@ export const aiChatRouter = router({
       // retrieve latest messages and topic with
       log('retrieving messages and topics');
       const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
+        agentId: input.agentId,
         includeTopic: isCreateNewTopic,
-        sessionId: input.sessionId,
+        sessionId,
         topicId,
       });
 
@@ -136,6 +176,7 @@ export const aiChatRouter = router({
 
       return {
         assistantMessageId: assistantMessageItem.id,
+        createdThreadId,
         isCreateNewTopic,
         messages,
         topicId,

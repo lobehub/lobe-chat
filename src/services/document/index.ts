@@ -8,6 +8,8 @@ export interface CreateDocumentParams {
   fileType?: string;
   knowledgeBaseId?: string;
   metadata?: Record<string, any>;
+  parentId?: string;
+  slug?: string;
   title: string;
 }
 
@@ -16,6 +18,7 @@ export interface UpdateDocumentParams {
   editorData?: string;
   id: string;
   metadata?: Record<string, any>;
+  parentId?: string | null;
   title?: string;
 }
 

@@ -1,8 +1,8 @@
 {
   "addFolder": "Créer un dossier",
-  "addKnowledge": "Ajouter des connaissances",
+  "addLibrary": "Ajouter à la bibliothèque",
   "addPage": "Créer un document",
-  "desc": "Gérez vos connaissances liées au travail, aux études et à la vie quotidienne.",
+  "desc": "Gérez vos ressources de travail, d'étude et de vie.",
   "detail": {
     "basic": {
       "createdAt": "Date de création",
@@ -50,6 +50,9 @@
       "pin": "Épingler le document"
     },
     "saving": "Enregistrement en cours...",
+    "slashCommands": {
+      "image": "Image"
+    },
     "titlePlaceholder": "Sans titre",
     "wordCount": "{{wordCount}} mots"
   },
@@ -57,14 +60,20 @@
     "copyContent": "Copier tout le contenu",
     "duplicate": "Créer une copie",
     "empty": "Aucun document pour le moment, cliquez sur le bouton ci-dessus pour créer votre premier document",
+    "filter": {
+      "all": "Tous",
+      "onlyInPages": "Uniquement dans les documents"
+    },
     "noResults": "Aucun document correspondant trouvé",
     "pageCount": "{{count}} documents au total",
     "selectNote": "Sélectionnez un document pour commencer l’édition",
+    "title": "Documents",
     "untitled": "Sans titre"
   },
   "empty": "Aucun fichier/dossier téléchargé pour le moment",
   "header": {
     "actions": {
+      "connect": "Connexion...",
       "newFolder": "Nouveau dossier",
       "newPage": "Nouveau document",
       "uploadFile": "Télécharger un fichier",
@@ -91,7 +100,7 @@
     "quickActions": "Actions rapides",
     "recentFiles": "Fichiers récents",
     "recentPages": "Pages récentes",
-    "subtitle": "Bienvenue dans votre base de connaissances, commencez ici à gérer vos documents",
+    "subtitle": "Bienvenue dans le Centre de ressources, commencez ici à gérer vos documents et fichiers.",
     "uploadEntries": {
       "files": {
         "title": "Téléverser des fichiers"
@@ -99,27 +108,27 @@
       "folder": {
         "title": "Téléverser un dossier"
       },
-      "knowledgeBase": {
-        "title": "Créer une base de connaissances"
+      "library": {
+        "title": "Nouvelle bibliothèque"
       },
       "newPage": {
         "title": "Nouveau document"
       }
     }
   },
-  "knowledgeBase": {
+  "library": {
     "list": {
-      "confirmRemoveKnowledgeBase": "Vous allez supprimer cette base de connaissances. Les fichiers ne seront pas supprimés, mais déplacés dans tous les fichiers. La suppression de la base de connaissances est irréversible, veuillez agir avec prudence.",
-      "empty": "Cliquez sur <1>+</1> pour commencer à créer une base de connaissances"
+      "confirmRemoveLibrary": "Vous êtes sur le point de supprimer cette bibliothèque. Les fichiers qu'elle contient ne seront pas supprimés, mais déplacés vers Tous les fichiers. Cette action est irréversible, veuillez procéder avec prudence.",
+      "empty": "Cliquez sur <1>+</1> pour commencer à créer une bibliothèque"
     },
-    "new": "Nouvelle base de connaissances",
-    "title": "Base de connaissances"
+    "new": "Bibliothèque",
+    "title": "Bibliothèques"
   },
   "menu": {
     "allFiles": "Tous les fichiers",
     "allPages": "Tous les documents"
   },
-  "networkError": "Échec de l'accès à la base de connaissances, veuillez vérifier votre connexion réseau et réessayer",
+  "networkError": "Échec de la récupération des bibliothèques. Veuillez vérifier votre connexion réseau et réessayer.",
   "notSupportGuide": {
     "desc": "L'instance déployée actuellement est en mode base de données client, la fonction de gestion des fichiers n'est pas disponible. Veuillez passer en <1>mode de déploiement de base de données serveur</1>, ou utilisez directement <3>LobeChat Cloud</3>",
     "features": {
@@ -131,9 +140,9 @@
         "desc": "Utilise des modèles vectoriels haute performance pour vectoriser les segments de texte, permettant une recherche sémantique du contenu des fichiers",
         "title": "Sémantisation vectorielle"
       },
-      "repos": {
-        "desc": "Prend en charge la création de bases de connaissances et permet d'ajouter différents types de fichiers, construisant ainsi votre propre savoir-faire",
-        "title": "Base de connaissances"
+      "libraries": {
+        "desc": "Permet de créer des bibliothèques et d’y ajouter différents types de fichiers pour construire vos propres ressources spécialisées.",
+        "title": "Bibliothèques"
       }
     },
     "title": "Le mode de déploiement actuel ne prend pas en charge la gestion des fichiers"
@@ -155,7 +164,7 @@
     "videos": "Vidéos",
     "websites": "Sites web"
   },
-  "title": "Base de connaissances",
+  "title": "Ressources",
   "toggleLeftPanel": "Afficher/Masquer le panneau de gauche",
   "uploadDock": {
     "body": {

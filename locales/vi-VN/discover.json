@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "Trợ lý cộng đồng",
     "featuredAssistants": "Trợ lý nổi bật",
     "featuredModels": "Mô hình nổi bật",
+    "featuredPlugins": "Plugin nổi bật",
     "featuredProviders": "Nhà cung cấp mô hình nổi bật",
     "featuredTools": "Plugin nổi bật",
     "more": "Khám phá thêm"

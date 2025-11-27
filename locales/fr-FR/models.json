@@ -735,7 +735,7 @@
     "description": "Opus 4.1 est un modèle haut de gamme d’Anthropic, optimisé pour la programmation, le raisonnement complexe et les tâches continues."
   },
   "anthropic/claude-opus-4.5": {
-    "description": "Claude Opus 4.5 est le modèle phare d'Anthropic, alliant une intelligence exceptionnelle à des performances évolutives. Il est idéal pour les tâches complexes nécessitant des réponses de très haute qualité et de solides capacités de raisonnement."
+    "description": "Claude Opus 4.5 est le modèle phare d'Anthropic, alliant une intelligence exceptionnelle à des performances évolutives. Il est idéal pour les tâches complexes nécessitant des réponses de la plus haute qualité et de solides capacités de raisonnement."
   },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 est une version hybride de raisonnement d’Anthropic, combinant capacités cognitives et non cognitives."
@@ -840,7 +840,7 @@
     "description": "Claude Opus 4 est le modèle le plus puissant d'Anthropic pour traiter des tâches hautement complexes. Il excelle en performance, intelligence, fluidité et compréhension."
   },
   "claude-opus-4-5-20251101": {
-    "description": "Claude Opus 4.5 est le modèle phare d'Anthropic, alliant une intelligence exceptionnelle à des performances évolutives. Il est idéal pour les tâches complexes nécessitant des réponses de très haute qualité et de solides capacités de raisonnement."
+    "description": "Claude Opus 4.5 est le modèle phare d'Anthropic, alliant une intelligence exceptionnelle à des performances évolutives. Il est idéal pour les tâches complexes nécessitant des réponses de la plus haute qualité et de solides capacités de raisonnement."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 peut générer des réponses quasi instantanées ou des réflexions prolongées étape par étape, visibles clairement par l'utilisateur."
@@ -1695,7 +1695,7 @@
     "description": "GLM-Zero-Preview possède de puissantes capacités de raisonnement complexe, se distinguant dans les domaines du raisonnement logique, des mathématiques et de la programmation."
   },
   "global.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5 est le modèle phare d'Anthropic, alliant une intelligence exceptionnelle à des performances évolutives. Il est idéal pour les tâches complexes nécessitant des réponses de très haute qualité et de solides capacités de raisonnement."
+    "description": "Claude Opus 4.5 est le modèle phare d'Anthropic, alliant une intelligence exceptionnelle à des performances évolutives, idéal pour les tâches complexes nécessitant des réponses de la plus haute qualité et des capacités de raisonnement avancées."
   },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash est un modèle de raisonnement haute performance de Google, adapté aux tâches multimodales étendues."
@@ -2211,7 +2211,7 @@
     "description": "Kimi K2 Instruct, modèle d'inférence officiel de Kimi, prenant en charge le long contexte, le code, les questions-réponses et d'autres scénarios."
   },
   "kimi-k2-thinking": {
-    "description": "Le modèle kimi-k2-thinking, proposé par Moonshot AI, est un modèle de réflexion doté de capacités agentiques générales et de raisonnement. Il excelle dans le raisonnement approfondi et peut utiliser des outils en plusieurs étapes pour résoudre divers problèmes complexes."
+    "description": "Le modèle kimi-k2-thinking, proposé par Moonshot AI, est un modèle de réflexion doté de capacités générales d'agent et de raisonnement. Il excelle dans le raisonnement approfondi et peut utiliser des outils en plusieurs étapes pour résoudre divers problèmes complexes."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Version rapide du modèle de raisonnement long K2, avec un contexte de 256k, spécialisé dans le raisonnement profond et une vitesse de sortie de 60 à 100 tokens par seconde."

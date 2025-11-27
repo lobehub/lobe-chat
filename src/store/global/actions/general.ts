@@ -36,44 +36,65 @@ export const generalActionSlice: StateCreator<
   GlobalGeneralAction
 > = (set, get) => ({
   openSessionInNewWindow: async (sessionId: string) => {
-    if (!isDesktop) return;
+    const url = `/chat?session=${sessionId}${isDesktop ? '&mode=single' : ''}`;
 
-    try {
-      const { ensureElectronIpc } = await import('@/utils/electron/ipc');
-      const url = `/chat?session=${sessionId}&mode=single`;
 
-      const result = await ensureElectronIpc().windows.createMultiInstanceWindow({
-        path: url,
-        templateId: 'chatSingle',
-        uniqueId: `chat_${sessionId}`,
-      });
+    if (isDesktop) {
+      try {
+        const { ensureElectronIpc } = await import('@/utils/electron/ipc');
+        const url = `/chat?session=${sessionId}&mode=single`;
 
-      if (!result.success) {
-        console.error('Failed to open session in new window:', result.error);
+        const result = await ensureElectronIpc().windows.createMultiInstanceWindow({
+          path: url,
+          templateId: 'chatSingle',
+          uniqueId: `chat_${sessionId}`,
+        });
+
+        if (!result.success) {
+          console.error('Failed to open session in new window:', result.error);
+        }
+      } catch (error) {
+        console.error('Error opening session in new window:', error);
       }
-    } catch (error) {
-      console.error('Error opening session in new window:', error);
+    } else {
+      // Open in popup window for browser
+      const width = 1200;
+      const height = 800;
+      const left = (window.screen.width - width) / 2;
+      const top = (window.screen.height - height) / 2;
+      const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`;
+      window.open(url, `session_${sessionId}`, features);
     }
   },
 
   openTopicInNewWindow: async (sessionId: string, topicId: string) => {
-    if (!isDesktop) return;
+    const url = `/chat?session=${sessionId}&topic=${topicId}${isDesktop ? '&mode=single' : ''}`;
 
-    try {
-      const { ensureElectronIpc } = await import('@/utils/electron/ipc');
-      const url = `/chat?session=${sessionId}&topic=${topicId}&mode=single`;
+    if (isDesktop) {
+      try {
+        const { ensureElectronIpc } = await import('@/utils/electron/ipc');
+        const url = `/chat?session=${sessionId}&topic=${topicId}&mode=single`;
 
-      const result = await ensureElectronIpc().windows.createMultiInstanceWindow({
-        path: url,
-        templateId: 'chatSingle',
-        uniqueId: `chat_${sessionId}_${topicId}`,
-      });
+        const result = await ensureElectronIpc().windows.createMultiInstanceWindow({
+          path: url,
+          templateId: 'chatSingle',
+          uniqueId: `chat_${sessionId}_${topicId}`,
+        });
 
-      if (!result.success) {
-        console.error('Failed to open topic in new window:', result.error);
+        if (!result.success) {
+          console.error('Failed to open topic in new window:', result.error);
+        }
+      } catch (error) {
+        console.error('Error opening topic in new window:', error);
       }
-    } catch (error) {
-      console.error('Error opening topic in new window:', error);
+    } else {
+      // Open in popup window for browser
+      const width = 1200;
+      const height = 800;
+      const left = (window.screen.width - width) / 2;
+      const top = (window.screen.height - height) / 2;
+      const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`;
+      window.open(url, `session_${sessionId}_topic_${topicId}`, features);
     }
   },
 

@@ -1,12 +1,13 @@
 {
   "actions": {
+    "addNewTopic": "Tạo chủ đề mới",
     "autoRename": "Đặt tên tự động",
     "confirmRemoveAll": "Sắp xóa tất cả các chủ đề, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
     "confirmRemoveTopic": "Sắp xóa chủ đề này, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
     "confirmRemoveUnstarred": "Sắp xóa các chủ đề chưa được đánh dấu, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
     "duplicate": "Tạo bản sao",
     "export": "Xuất chủ đề",
-    "openInNewWindow": "Mở trang trong cửa sổ mới",
+    "openInNewWindow": "Mở trong cửa sổ mới",
     "removeAll": "Xóa tất cả các chủ đề",
     "removeUnstarred": "Xóa các chủ đề chưa được đánh dấu"
   },

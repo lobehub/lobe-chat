@@ -1,6 +1,7 @@
 import { LobeSessions } from '@/types/session';
 
 export interface SessionState {
+  activeAgentId?: string;
   /**
    * @title 当前活动的会话
    * @description 当前正在编辑或查看的会话
@@ -16,12 +17,21 @@ export interface SessionState {
   isSessionsFirstFetchFinished: boolean;
   pinnedSessions: LobeSessions;
   searchKeywords: string;
+  /**
+   * @title 正在重命名的会话 ID
+   * @description 用于控制会话重命名弹窗的显示状态
+   */
+  sessionRenamingId: string | null;
   sessionSearchKeywords?: string;
+  /**
+   * @title 正在更新的会话 ID
+   * @description 用于显示会话更新时的加载状态
+   */
+  sessionUpdatingId: string | null;
   /**
    * it means defaultSessions
    */
   sessions: LobeSessions;
-  signalSessionMeta?: AbortController;
 }
 
 export const initialSessionState: SessionState = {
@@ -32,5 +42,7 @@ export const initialSessionState: SessionState = {
   isSessionsFirstFetchFinished: false,
   pinnedSessions: [],
   searchKeywords: '',
+  sessionRenamingId: null,
+  sessionUpdatingId: null,
   sessions: [],
 };

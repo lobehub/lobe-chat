@@ -53,10 +53,12 @@
     "italic": "Kursiv",
     "link": "Link",
     "numberList": "Nummerierte Liste",
+    "redo": "Wiederholen",
     "strikethrough": "Durchgestrichen",
     "table": "Tabelle",
     "taskList": "Aufgabenliste",
     "tex": "TeX-Formel",
-    "underline": "Unterstrichen"
+    "underline": "Unterstrichen",
+    "undo": "Rückgängig"
   }
 }

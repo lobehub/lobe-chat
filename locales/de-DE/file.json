@@ -1,8 +1,8 @@
 {
   "addFolder": "Ordner erstellen",
-  "addKnowledge": "Wissen hinzufügen",
+  "addLibrary": "Zur Bibliothek hinzufügen",
   "addPage": "Dokument erstellen",
-  "desc": "Verwalte dein Wissen für Arbeit, Studium und Alltag.",
+  "desc": "Verwalte deine Ressourcen für Arbeit, Studium und Alltag.",
   "detail": {
     "basic": {
       "createdAt": "Erstellungszeit",
@@ -50,6 +50,9 @@
       "pin": "Dokument anheften"
     },
     "saving": "Speichern...",
+    "slashCommands": {
+      "image": "Bild"
+    },
     "titlePlaceholder": "Ohne Titel",
     "wordCount": "{{wordCount}} Wörter"
   },
@@ -57,14 +60,20 @@
     "copyContent": "Gesamten Inhalt kopieren",
     "duplicate": "Kopie erstellen",
     "empty": "Noch keine Dokumente vorhanden. Klicke auf die Schaltfläche oben, um dein erstes Dokument zu erstellen.",
+    "filter": {
+      "all": "Alle",
+      "onlyInPages": "Nur in Dokumenten"
+    },
     "noResults": "Keine passenden Dokumente gefunden",
     "pageCount": "Insgesamt {{count}} Dokumente",
     "selectNote": "Wähle ein Dokument aus, um mit der Bearbeitung zu beginnen",
+    "title": "Dokumente",
     "untitled": "Ohne Titel"
   },
   "empty": "Keine hochgeladenen Dateien/Ordner vorhanden",
   "header": {
     "actions": {
+      "connect": "Verbinden...",
       "newFolder": "Neuen Ordner erstellen",
       "newPage": "Neues Dokument",
       "uploadFile": "Datei hochladen",
@@ -91,7 +100,7 @@
     "quickActions": "Schnellaktionen",
     "recentFiles": "Kürzlich verwendete Dateien",
     "recentPages": "Kürzlich geöffnete Dokumente",
-    "subtitle": "Willkommen im Wissensspeicher. Beginnen Sie hier mit der Verwaltung Ihrer Dokumente.",
+    "subtitle": "Willkommen im Ressourcen-Center. Beginne hier mit der Verwaltung deiner Dokumente und Dateien.",
     "uploadEntries": {
       "files": {
         "title": "Dateien hochladen"
@@ -99,27 +108,27 @@
       "folder": {
         "title": "Ordner hochladen"
       },
-      "knowledgeBase": {
-        "title": "Neue Wissensdatenbank"
+      "library": {
+        "title": "Neue Bibliothek erstellen"
       },
       "newPage": {
         "title": "Neues Dokument erstellen"
       }
     }
   },
-  "knowledgeBase": {
+  "library": {
     "list": {
-      "confirmRemoveKnowledgeBase": "Die Wissensdatenbank wird gelöscht, die darin enthaltenen Dateien werden nicht gelöscht, sondern in den gesamten Dateien verschoben. Nach dem Löschen der Wissensdatenbank kann sie nicht wiederhergestellt werden, bitte vorsichtig vorgehen.",
-      "empty": "Klicken Sie auf <1>+</1>, um eine Wissensdatenbank zu erstellen"
+      "confirmRemoveLibrary": "Diese Bibliothek wird gelöscht. Die darin enthaltenen Dateien bleiben erhalten und werden in 'Alle Dateien' verschoben. Nach dem Löschen kann die Bibliothek nicht wiederhergestellt werden. Bitte gehe vorsichtig vor.",
+      "empty": "Klicke auf <1>+</1>, um eine neue Bibliothek zu erstellen"
     },
-    "new": "Neue Wissensdatenbank",
-    "title": "Wissensdatenbank"
+    "new": "Bibliothek",
+    "title": "Bibliothek"
   },
   "menu": {
     "allFiles": "Alle Dateien",
     "allPages": "Alle Dokumente"
   },
-  "networkError": "Fehler beim Abrufen der Wissensdatenbank. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut.",
+  "networkError": "Fehler beim Laden der Bibliothek. Bitte überprüfe deine Netzwerkverbindung und versuche es erneut.",
   "notSupportGuide": {
     "desc": "Die aktuelle Bereitstellung ist im Client-Datenbankmodus und unterstützt keine Dateiverwaltungsfunktionen. Bitte wechseln Sie zu <1>Server-Datenbank-Bereitstellungsmodus</1> oder verwenden Sie direkt <3>LobeChat Cloud</3>",
     "features": {
@@ -131,9 +140,9 @@
         "desc": "Verwendet leistungsstarke Vektormodelle zur Vektorisierung von Textteilen, um eine semantische Suche nach Dateiinhalten zu ermöglichen",
         "title": "Vektor-Semantisierung"
       },
-      "repos": {
-        "desc": "Unterstützt die Erstellung von Wissensdatenbanken und ermöglicht das Hinzufügen verschiedener Dateitypen, um Ihr Fachwissen aufzubauen",
-        "title": "Wissensdatenbank"
+      "libraries": {
+        "desc": "Erstelle Bibliotheken und füge verschiedene Dateitypen hinzu, um deine persönliche Wissenssammlung aufzubauen.",
+        "title": "Bibliotheken"
       }
     },
     "title": "Der aktuelle Bereitstellungsmodus unterstützt keine Dateiverwaltung"
@@ -155,7 +164,7 @@
     "videos": "Videos",
     "websites": "Webseiten"
   },
-  "title": "Wissensdatenbank",
+  "title": "Ressourcen",
   "toggleLeftPanel": "Seitenleiste ein-/ausblenden",
   "uploadDock": {
     "body": {

@@ -14,7 +14,7 @@ const Layout = ({
     <Flexbox
       horizontal
       style={{
-        maxHeight: '100vh',
+        maxHeight: '100%',
       }}
       width={'100%'}
     >

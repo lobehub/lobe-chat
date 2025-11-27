@@ -53,10 +53,12 @@
     "italic": "기울임꼴",
     "link": "링크",
     "numberList": "번호 매기기 목록",
+    "redo": "다시 실행",
     "strikethrough": "취소선",
     "table": "표",
     "taskList": "작업 목록",
     "tex": "TeX 수식",
-    "underline": "밑줄"
+    "underline": "밑줄",
+    "undo": "실행 취소"
   }
 }

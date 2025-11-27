@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "Community Assistants",
     "featuredAssistants": "Featured Assistants",
     "featuredModels": "Featured Models",
+    "featuredPlugins": "Featured Plugins",
     "featuredProviders": "Featured Model Providers",
     "featuredTools": "Featured Plugins",
     "more": "Discover More"

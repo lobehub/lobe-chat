@@ -1,8 +1,8 @@
 export default {
   addFolder: '创建文件夹',
-  addKnowledge: '添加知识',
+  addLibrary: '添加到资源库',
   addPage: '创建文稿',
-  desc: '管理你的工作、学习与生活知识。',
+  desc: '管理你的工作、学习与生活资源。',
   detail: {
     basic: {
       createdAt: '创建时间',
@@ -50,6 +50,9 @@ export default {
       pin: '置顶文档',
     },
     saving: '保存中...',
+    slashCommands: {
+      image: '图片',
+    },
     titlePlaceholder: '无标题',
     wordCount: '{{wordCount}} 字',
   },
@@ -57,14 +60,20 @@ export default {
     copyContent: '复制全文',
     duplicate: '创建副本',
     empty: '暂无文稿，点击上方按钮创建你的第一篇文稿',
+    filter: {
+      all: '全部',
+      onlyInPages: '仅在文稿中',
+    },
     noResults: '未找到匹配的文稿',
     pageCount: '共 {{count}} 个文稿',
     selectNote: '选择一个文稿开始编辑',
+    title: '文稿',
     untitled: '无标题',
   },
   empty: '暂无已上传文件/文件夹',
   header: {
     actions: {
+      connect: '连接...',
       newFolder: '新建文件夹',
       newPage: '新建文稿',
       uploadFile: '上传文件',
@@ -91,7 +100,7 @@ export default {
     quickActions: '快捷操作',
     recentFiles: '最近文件',
     recentPages: '最近文稿',
-    subtitle: '欢迎使用知识库，从这里开始管理你的文档和文档',
+    subtitle: '欢迎使用资源中心，从这里开始管理你的文档和文档',
     uploadEntries: {
       files: {
         title: '上传文件',
@@ -99,28 +108,28 @@ export default {
       folder: {
         title: '上传文件夹',
       },
-      knowledgeBase: {
-        title: '新建知识库',
+      library: {
+        title: '新建资源库',
       },
       newPage: {
         title: '新建文稿',
       },
     },
   },
-  knowledgeBase: {
+  library: {
     list: {
-      confirmRemoveKnowledgeBase:
-        '即将删除该知识库，其中的文件不会删除，将移入全部文件中。知识库删除后将不可恢复，请谨慎操作。',
-      empty: '点击 <1>+</1> 开始创建知识库',
+      confirmRemoveLibrary:
+        '即将删除该资源库，其中的文件不会删除，将移入全部文件中。资源库删除后将不可恢复，请谨慎操作。',
+      empty: '点击 <1>+</1> 开始创建资源库',
     },
-    new: '新建知识库',
-    title: '知识库',
+    new: '库',
+    title: '库',
   },
   menu: {
     allFiles: '全部文件',
     allPages: '全部文稿',
   },
-  networkError: '获取知识库失败，请检测网络连接后重试',
+  networkError: '获取资源库失败，请检测网络连接后重试',
   notSupportGuide: {
     desc: '当前部署实例为客户端数据库模式，无法使用文件管理功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeChat Cloud</3>',
     features: {
@@ -132,9 +141,9 @@ export default {
         desc: '使用高性能向量模型，对文本分块进行向量化，实现文件内容的语义化检索',
         title: '向量语义化',
       },
-      repos: {
-        desc: '支持创建知识库，并允许添加不同类型的文件，构建属于你的领域知识',
-        title: '知识库',
+      libraries: {
+        desc: '支持创建资源库，并允许添加不同类型的文件，构建属于你的领域资源',
+        title: '资源库',
       },
     },
     title: '当前部署模式不支持文件管理',
@@ -156,7 +165,7 @@ export default {
     videos: '视频',
     websites: '网页',
   },
-  title: '知识库',
+  title: '资源',
   toggleLeftPanel: '显示/隐藏左侧面板',
   uploadDock: {
     body: {

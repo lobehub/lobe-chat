@@ -53,10 +53,12 @@
     "italic": "Corsivo",
     "link": "Collegamento",
     "numberList": "Elenco numerato",
+    "redo": "Ripeti",
     "strikethrough": "Testo barrato",
     "table": "tabella",
     "taskList": "Elenco attività",
     "tex": "Formula TeX",
-    "underline": "Sottolineato"
+    "underline": "Sottolineato",
+    "undo": "Annulla"
   }
 }

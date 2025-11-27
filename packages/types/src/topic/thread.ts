@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
-export enum ThreadType {
-  Continuation = 'continuation',
-  Standalone = 'standalone',
-}
+export const ThreadType = {
+  Continuation: 'continuation',
+  Standalone: 'standalone',
+} as const;
+
+export type IThreadType = (typeof ThreadType)[keyof typeof ThreadType];
 
 export enum ThreadStatus {
   Active = 'active',
@@ -20,7 +22,7 @@ export interface ThreadItem {
   status: ThreadStatus;
   title: string;
   topicId: string;
-  type: ThreadType;
+  type: IThreadType;
   updatedAt: Date;
   userId: string;
 }
@@ -30,7 +32,7 @@ export interface CreateThreadParams {
   sourceMessageId?: string;
   title?: string;
   topicId: string;
-  type: ThreadType;
+  type: IThreadType;
 }
 
 export const createThreadSchema = z.object({
@@ -38,5 +40,5 @@ export const createThreadSchema = z.object({
   sourceMessageId: z.string().optional(),
   title: z.string().optional(),
   topicId: z.string(),
-  type: z.nativeEnum(ThreadType),
+  type: z.enum([ThreadType.Continuation, ThreadType.Standalone]),
 });

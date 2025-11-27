@@ -1,8 +1,8 @@
 {
   "addFolder": "建立資料夾",
-  "addKnowledge": "新增知識",
+  "addLibrary": "新增至資源庫",
   "addPage": "建立文稿",
-  "desc": "管理你的工作、學習與生活知識。",
+  "desc": "管理你的工作、學習與生活資源。",
   "detail": {
     "basic": {
       "createdAt": "創建時間",
@@ -50,6 +50,9 @@
       "pin": "置頂文件"
     },
     "saving": "儲存中...",
+    "slashCommands": {
+      "image": "圖片"
+    },
     "titlePlaceholder": "無標題",
     "wordCount": "{{wordCount}} 字"
   },
@@ -57,14 +60,20 @@
     "copyContent": "複製全文",
     "duplicate": "建立副本",
     "empty": "尚無文稿，點擊上方按鈕建立你的第一篇文稿",
+    "filter": {
+      "all": "全部",
+      "onlyInPages": "僅限於文稿中"
+    },
     "noResults": "未找到符合的文稿",
     "pageCount": "共 {{count}} 篇文稿",
     "selectNote": "選擇一篇文稿開始編輯",
+    "title": "文稿",
     "untitled": "無標題"
   },
   "empty": "暫無已上傳文件/文件夾",
   "header": {
     "actions": {
+      "connect": "連接...",
       "newFolder": "新建資料夾",
       "newPage": "新增文件",
       "uploadFile": "上傳檔案",
@@ -91,7 +100,7 @@
     "quickActions": "快速操作",
     "recentFiles": "最近檔案",
     "recentPages": "最近文件",
-    "subtitle": "歡迎使用知識庫，從這裡開始管理你的文件與資料",
+    "subtitle": "歡迎使用資源中心，從這裡開始管理你的文件與資料",
     "uploadEntries": {
       "files": {
         "title": "上傳檔案"
@@ -99,27 +108,27 @@
       "folder": {
         "title": "上傳資料夾"
       },
-      "knowledgeBase": {
-        "title": "新增知識庫"
+      "library": {
+        "title": "新增資源庫"
       },
       "newPage": {
         "title": "新增文稿"
       }
     }
   },
-  "knowledgeBase": {
+  "library": {
     "list": {
-      "confirmRemoveKnowledgeBase": "即將刪除該知識庫，其中的檔案不會刪除，將移入全部檔案中。知識庫刪除後將不可恢復，請謹慎操作。",
-      "empty": "點擊 <1>+</1> 開始創建知識庫"
+      "confirmRemoveLibrary": "即將刪除該資源庫，當中的檔案不會被刪除，將移至全部檔案中。資源庫刪除後將無法恢復，請謹慎操作。",
+      "empty": "點擊 <1>+</1> 開始建立資源庫"
     },
-    "new": "新建知識庫",
-    "title": "知識庫"
+    "new": "庫",
+    "title": "庫"
   },
   "menu": {
     "allFiles": "所有檔案",
     "allPages": "全部文件"
   },
-  "networkError": "獲取知識庫失敗，請檢查網路連接後重試",
+  "networkError": "無法取得資源庫，請檢查網路連線後重試",
   "notSupportGuide": {
     "desc": "當前部署實例為客戶端資料庫模式，無法使用檔案管理功能。請切換到<1>伺服器端資料庫部署模式</1>，或直接使用 <3>LobeChat Cloud</3>",
     "features": {
@@ -131,9 +140,9 @@
         "desc": "使用高性能向量模型，對文本分塊進行向量化，實現檔案內容的語義化檢索",
         "title": "向量語義化"
       },
-      "repos": {
-        "desc": "支持創建知識庫，並允許添加不同類型的檔案，構建屬於你的領域知識",
-        "title": "知識庫"
+      "libraries": {
+        "desc": "支援建立資源庫，並可新增不同類型的檔案，打造屬於你的專業資源",
+        "title": "資源庫"
       }
     },
     "title": "當前部署模式不支持檔案管理"
@@ -155,7 +164,7 @@
     "videos": "視頻",
     "websites": "網頁"
   },
-  "title": "知識庫",
+  "title": "資源",
   "toggleLeftPanel": "顯示/隱藏左側面板",
   "uploadDock": {
     "body": {

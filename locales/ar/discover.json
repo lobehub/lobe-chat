@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "مساعدو المجتمع",
     "featuredAssistants": "مساعدون مميزون",
     "featuredModels": "نماذج مميزة",
+    "featuredPlugins": "الإضافات المميزة",
     "featuredProviders": "مزودو نماذج مميزون",
     "featuredTools": "إضافات مميزة",
     "more": "اكتشف المزيد"

@@ -53,10 +53,12 @@
     "italic": "Kursywa",
     "link": "Link",
     "numberList": "Lista numerowana",
+    "redo": "Ponów",
     "strikethrough": "Przekreślenie",
     "table": "tabela",
     "taskList": "Lista zadań",
     "tex": "Formuła TeX",
-    "underline": "Podkreślenie"
+    "underline": "Podkreślenie",
+    "undo": "Cofnij"
   }
 }

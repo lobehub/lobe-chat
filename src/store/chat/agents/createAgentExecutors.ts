@@ -30,7 +30,7 @@ const TOOL_PRICING: Record<string, number> = {
  * Creates custom executors for the Chat Agent Runtime
  * These executors wrap existing chat store methods to integrate with agent-runtime
  *
- * @param context.operationId - Operation ID to get business context (sessionId, topicId, etc.)
+ * @param context.operationId - Operation ID to get business context (agentId, topicId, etc.)
  * @param context.get - Store getter function
  * @param context.messageKey - Message map key
  * @param context.parentId - Parent message ID
@@ -47,7 +47,7 @@ export const createAgentExecutors = (context: {
 
   /**
    * Get operation context via closure
-   * Returns the business context (sessionId, topicId, etc.) captured by the operation
+   * Returns the business context (agentId, topicId, etc.) captured by the operation
    */
   const getOperationContext = () => {
     const operation = context.get().operations[context.operationId];
@@ -96,7 +96,7 @@ export const createAgentExecutors = (context: {
             parentId: llmPayload.parentMessageId,
             provider: llmPayload.provider,
             role: 'assistant',
-            sessionId: opContext.sessionId!,
+            agentId: opContext.agentId!,
             threadId: opContext.threadId,
             topicId: opContext.topicId ?? undefined,
           },
@@ -274,7 +274,7 @@ export const createAgentExecutors = (context: {
       const { operationId } = context.get().startOperation({
         type: 'toolCalling',
         context: {
-          sessionId: opContext.sessionId!,
+          agentId: opContext.agentId!,
           topicId: opContext.topicId,
         },
         parentOperationId: context.operationId,
@@ -319,7 +319,7 @@ export const createAgentExecutors = (context: {
           const createToolMsgOpId = context.get().startOperation({
             type: 'createToolMessage',
             context: {
-              sessionId: opContext.sessionId!,
+              agentId: opContext.agentId!,
               topicId: opContext.topicId,
             },
             parentOperationId: toolOperationId,
@@ -368,7 +368,7 @@ export const createAgentExecutors = (context: {
             parentId: payload.parentMessageId,
             plugin: chatToolPayload,
             role: 'tool',
-            sessionId: opContext.sessionId!,
+            agentId: opContext.agentId!,
             threadId: opContext.threadId,
             tool_call_id: chatToolPayload.id,
             topicId: opContext.topicId ?? undefined,
@@ -631,7 +631,7 @@ export const createAgentExecutors = (context: {
             },
             pluginIntervention: { status: 'pending' },
             role: 'tool',
-            sessionId: opContext.sessionId!,
+            agentId: opContext.agentId!,
             threadId: opContext.threadId,
             tool_call_id: toolPayload.id,
             topicId: opContext.topicId ?? undefined,
@@ -710,7 +710,7 @@ export const createAgentExecutors = (context: {
           plugin: toolPayload,
           pluginIntervention: { status: 'aborted' },
           role: 'tool',
-          sessionId: opContext.sessionId!,
+          agentId: opContext.agentId!,
           threadId: opContext.threadId,
           tool_call_id: toolPayload.id,
           topicId: opContext.topicId ?? undefined,

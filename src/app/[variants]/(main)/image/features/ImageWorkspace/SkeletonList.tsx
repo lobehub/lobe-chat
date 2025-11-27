@@ -9,7 +9,7 @@ import PromptInput from '@/app/[variants]/(main)/image/features/PromptInput';
 
 const SkeletonList = memo(() => {
   return (
-    <>
+    <Flexbox style={{ minHeight: 'calc(100vh - 44px)' }}>
       <Block variant={'borderless'}>
         <Flexbox gap={12}>
           {/* Prompt text skeleton */}
@@ -41,7 +41,7 @@ const SkeletonList = memo(() => {
       >
         <PromptInput disableAnimation={true} showTitle={false} />
       </Center>
-    </>
+    </Flexbox>
   );
 });
 
