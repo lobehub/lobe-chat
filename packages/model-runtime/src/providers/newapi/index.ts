@@ -25,6 +25,56 @@ export interface NewAPIPricing {
   supported_endpoint_types?: string[];
 }
 
+/**
+ * Detect if running in browser environment
+ */
+const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined';
+
+/**
+ * Fetch pricing information with CORS bypass for client-side requests
+ * In browser environment, use /webapi/proxy to avoid CORS errors
+ */
+const fetchPricing = async (
+  pricingUrl: string,
+  apiKey: string,
+): Promise<NewAPIPricing[] | null> => {
+  try {
+    if (isBrowser()) {
+      // In browser environment, use the proxy endpoint to avoid CORS
+      // The proxy endpoint expects the URL as the request body
+      const proxyResponse = await fetch('/webapi/proxy', {
+        body: pricingUrl,
+        method: 'POST',
+      });
+
+      if (proxyResponse.ok) {
+        const pricingData = await proxyResponse.json();
+        if (pricingData.success && pricingData.data) {
+          return pricingData.data as NewAPIPricing[];
+        }
+      }
+    } else {
+      // In server environment, fetch directly
+      const pricingResponse = await fetch(pricingUrl, {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+      });
+
+      if (pricingResponse.ok) {
+        const pricingData = await pricingResponse.json();
+        if (pricingData.success && pricingData.data) {
+          return pricingData.data as NewAPIPricing[];
+        }
+      }
+    }
+  } catch (error) {
+    console.debug('Failed to fetch NewAPI pricing info:', error);
+  }
+
+  return null;
+};
+
 export const params = {
   debug: {
     chatCompletion: () => process.env.DEBUG_NEWAPI_CHAT_COMPLETION === '1',
@@ -42,25 +92,12 @@ export const params = {
 
     // Try to get pricing information to enrich model details
     let pricingMap: Map<string, NewAPIPricing> = new Map();
-    try {
-      // Use saved baseURL
-      const pricingResponse = await fetch(`${baseURL}/api/pricing`, {
-        headers: {
-          Authorization: `Bearer ${openAIClient.apiKey}`,
-        },
-      });
 
-      if (pricingResponse.ok) {
-        const pricingData = await pricingResponse.json();
-        if (pricingData.success && pricingData.data) {
-          (pricingData.data as NewAPIPricing[]).forEach((pricing) => {
-            pricingMap.set(pricing.model_name, pricing);
-          });
-        }
-      }
-    } catch (error) {
-      // If fetching pricing information fails, continue using the basic model information
-      console.debug('Failed to fetch NewAPI pricing info:', error);
+    const pricingList = await fetchPricing(`${baseURL}/api/pricing`, openAIClient.apiKey || '');
+    if (pricingList) {
+      pricingList.forEach((pricing) => {
+        pricingMap.set(pricing.model_name, pricing);
+      });
     }
 
     // Process the model list: determine the provider for each model based on priority rules
