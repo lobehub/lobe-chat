@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { REPO_URL } from '@/const/url';
+import { LIBRARY_URL } from '@/const/url';
 import { useRepoMenuItems } from '@/features/NavPanel/hooks';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
@@ -35,10 +35,10 @@ const RepoList = memo(() => {
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
-            navigate(REPO_URL(item.id));
+            navigate(LIBRARY_URL(item.id));
           }}
           style={{ marginBlock: 1 }}
-          to={REPO_URL(item.id)}
+          to={LIBRARY_URL(item.id)}
         >
           <Item {...item} key={item.id} />
         </Link>

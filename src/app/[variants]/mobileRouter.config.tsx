@@ -157,19 +157,19 @@ export const createMobileRouter = () =>
             },
             {
               element: dynamicElement(() => import('./(main)/knowledge/routes/KnowledgeBasesList')),
-              path: 'repo',
+              path: 'library',
             },
             {
               element: dynamicElement(
                 () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
               ),
               loader: idLoader,
-              path: 'repo/:id/*',
+              path: 'library/:id/*',
             },
             {
               element: <KnowledgeBaseDetail />,
               loader: idLoader,
-              path: 'repo/:id',
+              path: 'library/:id',
             },
           ],
           element: dynamicElement(() => import('./(main)/knowledge/_layout/Mobile')),
