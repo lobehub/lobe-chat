@@ -13,6 +13,7 @@ export enum SidebarTabKey {
   Image = 'image',
   Knowledge = 'knowledge',
   Me = 'me',
+  Pages = 'pages',
   Setting = 'settings',
 }
 
@@ -61,6 +62,8 @@ export interface SystemStatus {
   expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
+  // which topicGroup should expand
+  expandTopicGroupKeys?: string[];
   fileManagerViewMode?: 'list' | 'masonry';
   filePanelWidth: number;
   hideGemini2_5FlashImagePreviewChineseWarning?: boolean;

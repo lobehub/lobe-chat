@@ -1,0 +1,33 @@
+import { Flexbox } from 'react-layout-kit';
+import { Outlet } from 'react-router-dom';
+
+import ImagePanel from '@/features/ImageSidePanel';
+import ImageTopicPanel from '@/features/ImageTopicPanel';
+
+import Container from './Container';
+import RegisterHotkeys from './RegisterHotkeys';
+import { LayoutProps } from './type';
+
+const Layout = ({ menu, topic }: Omit<LayoutProps, 'children'>) => {
+  return (
+    <>
+      <Flexbox
+        height={'100%'}
+        horizontal
+        style={{ maxWidth: '100%', overflow: 'hidden', position: 'relative' }}
+        width={'100%'}
+      >
+        <ImagePanel>{menu}</ImagePanel>
+        <Container>
+          <Outlet />
+        </Container>
+        <ImageTopicPanel>{topic}</ImageTopicPanel>
+      </Flexbox>
+      <RegisterHotkeys />
+    </>
+  );
+};
+
+Layout.displayName = 'DesktopAiImageLayout';
+
+export default Layout;

@@ -29,7 +29,7 @@ describe('topicSelectors', () => {
     });
 
     it('should return all current topics from the store', () => {
-      const state = merge(initialStore, { topicMaps, activeId: 'test' });
+      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
 
       const topics = topicSelectors.currentTopics(state);
       expect(topics).toEqual(topicMaps.test);
@@ -43,7 +43,7 @@ describe('topicSelectors', () => {
     });
 
     it('should return the number of current topics', () => {
-      const state = merge(initialStore, { topicMaps, activeId: 'test' });
+      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
       const length = topicSelectors.currentTopicLength(state);
       expect(length).toBe(topicMaps.test.length);
     });
@@ -56,7 +56,11 @@ describe('topicSelectors', () => {
     });
 
     it('should return the current active topic', () => {
-      const state = merge(initialStore, { topicMaps, activeId: 'test', activeTopicId: 'topic1' });
+      const state = merge(initialStore, {
+        topicMaps,
+        activeAgentId: 'test',
+        activeTopicId: 'topic1',
+      });
       const topic = topicSelectors.currentActiveTopic(state);
       expect(topic).toEqual(topicMaps.test[0]);
     });
@@ -64,7 +68,7 @@ describe('topicSelectors', () => {
 
   describe('currentUnFavTopics', () => {
     it('should return all unfavorited topics', () => {
-      const state = merge(initialStore, { topicMaps, activeId: 'test' });
+      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
       const topics = topicSelectors.currentUnFavTopics(state);
       expect(topics).toEqual([topicMaps.test[1]]);
     });
@@ -72,7 +76,7 @@ describe('topicSelectors', () => {
 
   describe('displayTopics', () => {
     it('should return current topics if not searching', () => {
-      const state = merge(initialStore, { topicMaps, activeId: 'test' });
+      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
       const topics = topicSelectors.displayTopics(state);
       expect(topics).toEqual(topicMaps.test);
     });
@@ -89,13 +93,13 @@ describe('topicSelectors', () => {
 
   describe('getTopicById', () => {
     it('should return undefined if topic is not found', () => {
-      const state = merge(initialStore, { topicMaps, activeId: 'test' });
+      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
       const topic = topicSelectors.getTopicById('notfound')(state);
       expect(topic).toBeUndefined();
     });
 
     it('should return the topic with the given id', () => {
-      const state = merge(initialStore, { topicMaps, activeId: 'test' });
+      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
       const topic = topicSelectors.getTopicById('topic1')(state);
       expect(topic).toEqual(topicMaps.test[0]);
     });
@@ -103,7 +107,7 @@ describe('topicSelectors', () => {
 
   describe('groupedTopicsSelector', () => {
     it('should return empty array if there are no topics', () => {
-      const state = merge(initialStore, { activeId: 'test' });
+      const state = merge(initialStore, { activeAgentId: 'test' });
       const grouped = topicSelectors.groupedTopicsSelector(state);
       expect(grouped).toEqual([]);
     });
@@ -116,7 +120,7 @@ describe('topicSelectors', () => {
 
       const state = merge(initialStore, {
         topicMaps: { test: topics },
-        activeId: 'test',
+        activeAgentId: 'test',
       });
 
       const grouped = topicSelectors.groupedTopicsSelector(state);
@@ -133,7 +137,7 @@ describe('topicSelectors', () => {
 
       const state = merge(initialStore, {
         topicMaps: { test: topics },
-        activeId: 'test',
+        activeAgentId: 'test',
       });
 
       const grouped = topicSelectors.groupedTopicsSelector(state);
@@ -159,7 +163,7 @@ describe('topicSelectors', () => {
 
       const state = merge(initialStore, {
         topicMaps: { test: topics },
-        activeId: 'test',
+        activeAgentId: 'test',
       });
 
       const grouped = topicSelectors.groupedTopicsSelector(state);

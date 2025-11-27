@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Bạn sắp xóa kho tri thức này, các tệp trong đó sẽ không bị xóa mà sẽ được chuyển vào tất cả tệp. Kho tri thức sau khi xóa sẽ không thể khôi phục, vui lòng cẩn thận khi thực hiện.",
-      "empty": "Nhấp vào <1>+</1> để bắt đầu tạo kho tri thức"
-    },
-    "new": "Tạo kho tri thức mới",
-    "title": "Kho tri thức"
-  },
   "menu": {
     "allFiles": "Tất cả tệp",
     "allPages": "Tất cả tài liệu"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "Tải tệp",
     "unsupportedFileAndContact": "Định dạng tệp này hiện không hỗ trợ xem trước trực tuyến. Nếu bạn có yêu cầu xem trước, vui lòng <1>phản hồi cho chúng tôi</1>"
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "Sắp xóa kho lưu trữ này, các tệp bên trong sẽ không bị xóa mà sẽ được chuyển vào mục Tất cả tệp. Sau khi xóa, kho kiến thức sẽ không thể khôi phục, vui lòng thao tác cẩn thận.",
+      "empty": "Nhấn <1>+</1> để bắt đầu tạo kho lưu trữ"
+    },
+    "new": "Tạo kho lưu trữ mới",
+    "title": "Kho lưu trữ"
   },
   "searchFilePlaceholder": "Tìm kiếm tệp",
   "searchPagePlaceholder": "Tìm kiếm bản thảo",

@@ -5,6 +5,8 @@ export const systemStatus = (s: GlobalState) => s.status;
 const sessionGroupKeys = (s: GlobalState): string[] =>
   s.status.expandSessionGroupKeys || INITIAL_STATUS.expandSessionGroupKeys;
 
+const topicGroupKeys = (s: GlobalState): string[] | undefined => s.status.expandTopicGroupKeys;
+
 const showSystemRole = (s: GlobalState) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalState) => s.status.mobileShowTopic;
 const mobileShowPortal = (s: GlobalState) => s.status.mobileShowPortal;
@@ -34,7 +36,7 @@ const getAgentSystemRoleExpanded =
   (agentId: string) =>
   (s: GlobalState): boolean => {
     const map = s.status.systemRoleExpandedMap || {};
-    return map[agentId] !== false; // 角色设定默认为展开状态
+    return map[agentId] === true; // 角色设定默认为折叠状态
   };
 
 const disabledModelProvidersSortType = (s: GlobalState) =>
@@ -72,5 +74,6 @@ export const systemStatusSelectors = {
   systemStatus,
   themeMode,
   tokenDisplayFormatShort,
+  topicGroupKeys,
   wideScreen,
 };

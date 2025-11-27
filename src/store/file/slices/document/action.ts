@@ -30,8 +30,14 @@ export interface DocumentAction {
   createDocument: (params: {
     content: string;
     knowledgeBaseId?: string;
+    parentId?: string;
     title: string;
   }) => Promise<{ [key: string]: any; id: string }>;
+  /**
+   * Create a new folder
+   * Returns the created folder's ID
+   */
+  createFolder: (name: string, parentId?: string, knowledgeBaseId?: string) => Promise<string>;
   /**
    * Create a new optimistic document immediately in local map
    * Returns the temporary ID for the new document
@@ -77,7 +83,7 @@ export const createDocumentSlice: StateCreator<
   [],
   DocumentAction
 > = (set, get) => ({
-  createDocument: async ({ title, content, knowledgeBaseId }) => {
+  createDocument: async ({ title, content, knowledgeBaseId, parentId }) => {
     const now = Date.now();
 
     // Create document with markdown content, leave editorData as empty JSON object
@@ -89,6 +95,7 @@ export const createDocumentSlice: StateCreator<
       metadata: {
         createdAt: now,
       },
+      parentId,
       title,
     });
 
@@ -97,6 +104,36 @@ export const createDocumentSlice: StateCreator<
     // without triggering the loading skeleton
 
     return newDoc;
+  },
+
+  createFolder: async (name, parentId, knowledgeBaseId) => {
+    const now = Date.now();
+
+    // Generate slug from folder name
+    const slug = name
+      .toLowerCase()
+      .trim()
+      .replaceAll(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
+      .replaceAll(/[^\w-]+/g, '') // Remove all non-word chars except hyphens
+      .replaceAll(/--+/g, '-') // Replace multiple hyphens with single hyphen
+      .replaceAll(/^-+|-+$/g, ''); // Trim hyphens from start and end
+
+    const folder = await documentService.createDocument({
+      content: '',
+      editorData: '{}',
+      fileType: 'custom/folder',
+      knowledgeBaseId,
+      metadata: {
+        createdAt: now,
+      },
+      parentId,
+      slug: slug || undefined, // Only include slug if it's not empty
+      title: name,
+    });
+
+    await get().refreshFileList();
+
+    return folder.id;
   },
 
   createOptimisticDocument: (title = 'Untitled') => {

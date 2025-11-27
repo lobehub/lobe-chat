@@ -12,6 +12,7 @@ export type CreateMessageRoleType = 'user' | 'assistant' | 'tool' | 'supervisor'
 
 export interface CreateMessageParams
   extends Partial<Omit<UIChatMessage, 'content' | 'role' | 'topicId' | 'chunksList'>> {
+  agentId?: string;
   content: string;
   error?: ChatMessageError | null;
   fileChunks?: MessageSemanticSearchChunk[];
@@ -20,7 +21,10 @@ export interface CreateMessageParams
   provider?: string;
   groupId?: string;
   role: CreateMessageRoleType;
-  sessionId: string;
+  /**
+   * @deprecated Use agentId instead
+   */
+  sessionId?: string;
   targetId?: string | null;
   threadId?: string | null;
   topicId?: string;
@@ -35,7 +39,7 @@ export interface CreateNewMessageParams {
   // ========== Required fields ==========
   role: CreateMessageRoleType;
   content: string;
-  sessionId: string;
+  agentId: string;
 
   // ========== Tool related ==========
   tool_call_id?: string;
@@ -68,6 +72,7 @@ export interface CreateNewMessageParams {
 export interface SendMessageParams {
   /**
    * create a thread
+   * @deprecated Use ConversationContext.newThread instead
    */
   createThread?: boolean;
   files?: UploadFileItem[];
@@ -82,6 +87,19 @@ export interface SendMessageParams {
    */
   metadata?: Record<string, any>;
   onlyAddUserMessage?: boolean;
+
+  /**
+   * Display messages for the current conversation context.
+   * If provided, sendMessage will use these messages instead of querying from store.
+   * This decouples sendMessage from store selectors.
+   */
+  messages?: UIChatMessage[];
+
+  /**
+   * Parent message ID for the new message.
+   * If not provided, will be calculated from messages list.
+   */
+  parentId?: string;
 }
 
 export interface SendThreadMessageParams {
@@ -125,6 +143,11 @@ export const CreateNewMessageParamsSchema = z
     // Required fields
     role: UIMessageRoleTypeSchema,
     content: z.string(),
+    // agentId is required, but can be resolved from sessionId in the router
+    agentId: z.string().optional(),
+    /**
+     * @deprecated Use agentId instead. Will be resolved to agentId in the router.
+     */
     sessionId: z.string().nullable().optional(),
     // Tool related
     tool_call_id: z.string().optional(),

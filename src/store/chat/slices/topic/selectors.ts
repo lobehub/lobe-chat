@@ -5,7 +5,7 @@ import { groupTopicsByTime } from '@/utils/client/topic';
 
 import { ChatStoreState } from '../../initialState';
 
-const currentTopics = (s: ChatStoreState): ChatTopic[] | undefined => s.topicMaps[s.activeId];
+const currentTopics = (s: ChatStoreState): ChatTopic[] | undefined => s.topicMaps[s.activeAgentId];
 
 const currentActiveTopic = (s: ChatStoreState): ChatTopic | undefined => {
   return currentTopics(s)?.find((topic) => topic.id === s.activeTopicId);

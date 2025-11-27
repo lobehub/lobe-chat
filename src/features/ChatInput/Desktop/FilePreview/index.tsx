@@ -3,7 +3,7 @@ import { memo } from 'react';
 import DragUpload from '@/components/DragUpload';
 import { useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
 
 import FileItemList from './FileList';

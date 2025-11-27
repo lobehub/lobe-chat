@@ -26,6 +26,14 @@
       "createChunkingTask": "Đang chuẩn bị...",
       "deleteSuccess": "Tệp đã được xóa thành công",
       "downloading": "Đang tải tệp...",
+      "goBack": "Quay lại trang trước",
+      "goForward": "Tiến đến trang sau",
+      "goToParent": "Đi đến thư mục cha",
+      "moveError": "Di chuyển tệp thất bại",
+      "moveHere": "Di chuyển đến đây",
+      "moveSuccess": "Di chuyển tệp thành công",
+      "moveToFolder": "Di chuyển đến...",
+      "moveToRoot": "Di chuyển đến thư mục gốc",
       "removeFromKnowledgeBase": "Xóa khỏi kho tri thức",
       "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công"
     },
@@ -41,6 +49,12 @@
       },
       "or": "hoặc",
       "title": "Kéo tệp hoặc thư mục vào đây"
+    },
+    "noFolders": "Hiện không có thư mục nào",
+    "sort": {
+      "dateAdded": "Ngày thêm",
+      "name": "Tên",
+      "size": "Kích thước"
     },
     "title": {
       "createdAt": "Thời gian tạo",

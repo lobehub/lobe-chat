@@ -28,6 +28,7 @@ interface UploadWithProgressParams {
   file: File;
   knowledgeBaseId?: string;
   onStatusUpdate?: OnStatusUpdate;
+  parentId?: string;
   /**
    * Optional flag to indicate whether to skip the file type check.
    * When set to `true`, any file type checks will be bypassed.
@@ -81,7 +82,7 @@ export const createFileUploadSlice: StateCreator<
     });
     return { ...res, dimensions, filename: metadata.filename };
   },
-  uploadWithProgress: async ({ file, onStatusUpdate, knowledgeBaseId, skipCheckFileType }) => {
+  uploadWithProgress: async ({ file, onStatusUpdate, knowledgeBaseId, skipCheckFileType, parentId }) => {
     const fileArrayBuffer = await file.arrayBuffer();
 
     // 1. extract image dimensions if applicable
@@ -147,6 +148,7 @@ export const createFileUploadSlice: StateCreator<
         hash,
         metadata,
         name: file.name,
+        parentId,
         size: file.size,
         url: metadata.path || checkStatus.url,
       },

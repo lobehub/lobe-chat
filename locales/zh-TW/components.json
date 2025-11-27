@@ -26,6 +26,14 @@
       "createChunkingTask": "準備中...",
       "deleteSuccess": "文件刪除成功",
       "downloading": "文件下載中...",
+      "goBack": "返回上一頁",
+      "goForward": "前進到下一頁",
+      "goToParent": "進入父層資料夾",
+      "moveError": "移動檔案失敗",
+      "moveHere": "移動到此處",
+      "moveSuccess": "檔案移動成功",
+      "moveToFolder": "移動到...",
+      "moveToRoot": "移動到根目錄",
       "removeFromKnowledgeBase": "從知識庫中移除",
       "removeFromKnowledgeBaseSuccess": "文件移除成功"
     },
@@ -41,6 +49,12 @@
       },
       "or": "或者",
       "title": "將文件或文件夾拖到這裡"
+    },
+    "noFolders": "暫無資料夾",
+    "sort": {
+      "dateAdded": "新增日期",
+      "name": "名稱",
+      "size": "大小"
     },
     "title": {
       "createdAt": "創建時間",
