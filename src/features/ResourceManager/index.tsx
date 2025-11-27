@@ -6,9 +6,9 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FilesTabs } from '@/types/files';
 
-import DocumentExplorer from './DocumentExplorer';
 import FileExplorer from './FileExplorer';
 import Home from './Home';
+import DocumentExplorer from './PageExplorer';
 import UploadDock from './UploadDock';
 
 const ChunkDrawer = dynamic(() => import('./ChunkDrawer'), { ssr: false });

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import DragUpload from '@/components/DragUpload';
 import { useFileStore } from '@/store/file';
 
-import NoteEditorModal from '../DocumentExplorer/NoteEditorModal';
+import PageEditorModal from '../PageExplorer/PageEditorModal';
 
 const hotArea = css`
   &::before {
@@ -144,7 +144,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
           pushDockFileList(files, knowledgeBaseId, currentFolderId ?? undefined)
         }
       />
-      <NoteEditorModal
+      <PageEditorModal
         knowledgeBaseId={knowledgeBaseId}
         onClose={handleCloseNoteEditor}
         open={isModalOpen}

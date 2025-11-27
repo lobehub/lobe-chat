@@ -5,7 +5,7 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 
-import NoteEditorModal from '../../DocumentExplorer/NoteEditorModal';
+import PageEditorModal from '../../PageExplorer/PageEditorModal';
 import DropdownMenu from '../FileListItem/DropdownMenu';
 import DefaultFileItem from './DefaultFileItem';
 import ImageFileItem from './ImageFileItem';
@@ -365,7 +365,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
 
         {/* Note Editor Modal */}
         {isNote && (
-          <NoteEditorModal
+          <PageEditorModal
             documentId={id}
             documentTitle={name}
             editorData={editorData}
