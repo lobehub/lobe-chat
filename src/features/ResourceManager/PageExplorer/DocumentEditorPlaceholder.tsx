@@ -61,13 +61,14 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface DocumentEditorPlaceholderProps {
+  hasPages?: boolean;
   knowledgeBaseId?: string;
   onCreateNewNote: () => void;
   onNoteCreated?: (noteId: string) => void;
 }
 
 const DocumentEditorPlaceholder = memo<DocumentEditorPlaceholderProps>(
-  ({ knowledgeBaseId, onCreateNewNote, onNoteCreated }) => {
+  ({ hasPages = false, knowledgeBaseId, onCreateNewNote, onNoteCreated }) => {
     const { t } = useTranslation(['file', 'common']);
     const theme = useTheme();
     const { styles } = useStyles();
@@ -101,10 +102,12 @@ const DocumentEditorPlaceholder = memo<DocumentEditorPlaceholderProps>(
 
     return (
       <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
-        <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
-          <Text as={'h4'}>{t('documentEditor.empty.title')}</Text>
-          <Text type={'secondary'}>{t('or', { ns: 'common' })}</Text>
-        </Flexbox>
+        {hasPages && (
+          <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
+            <Text as={'h4'}>{t('documentEditor.empty.title')}</Text>
+            <Text type={'secondary'}>{t('or', { ns: 'common' })}</Text>
+          </Flexbox>
+        )}
         <Flexbox gap={12} horizontal>
           {/* Create New Note */}
           <Flexbox className={styles.card} onClick={onCreateNewNote} padding={16}>

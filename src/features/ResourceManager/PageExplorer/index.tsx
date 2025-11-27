@@ -220,72 +220,80 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
     }
   };
 
+  // Show list panel only if loading, has documents, or has search query
+  const shouldShowListPanel =
+    isDocumentListLoading || filteredDocuments.length > 0 || searchKeywords.trim() !== '';
+
   return (
     <div className={styles.container}>
       {/* Left Panel - Documents List */}
-      <div className={styles.listPanel}>
-        <div className={styles.header}>
-          <SearchBar
-            allowClear
-            onChange={(e) => setSearchKeywords(e.target.value)}
-            placeholder={t('searchPagePlaceholder')}
-            style={{ flex: 1 }}
-            value={searchKeywords}
-            variant={'borderless'}
-          />
-          <ActionIcon
-            icon={PlusIcon}
-            onClick={handleNewDocument}
-            title={t('header.newPageButton')}
-          />
-        </div>
-        <div className={styles.documentList}>
-          {isDocumentListLoading ? (
-            <DocumentListSkeleton />
-          ) : filteredDocuments.length === 0 ? (
-            <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>
-              {searchKeywords.trim() ? t('documentList.noResults') : t('documentList.empty')}
-            </div>
-          ) : (
-            <Virtuoso
-              components={{
-                Footer: () => (
-                  <Center style={{ paddingBlock: 16 }}>
-                    <Text style={{ fontSize: 12 }} type={'secondary'}>
-                      {t('documentList.pageCount', { count: filteredDocuments.length })}
-                    </Text>
-                  </Center>
-                ),
-              }}
-              data={filteredDocuments}
-              itemContent={(_index, document) => {
-                const isSelected = selectedDocumentId === document.id;
-                const isRenaming = renamingDocumentId === document.id;
-                return (
-                  <DocumentListItem
-                    document={document}
-                    isRenaming={isRenaming}
-                    isSelected={isSelected}
-                    key={document.id}
-                    onDelete={() => {
-                      if (selectedDocumentId === document.id) {
-                        setSelectedDocumentId(null);
-                        setIsCreatingNew(false);
-                        updateUrl(null);
-                      }
-                    }}
-                    onRenameConfirm={handleRenameConfirm}
-                    onRenameOpenChange={handleRenameOpenChange}
-                    onSelect={handleDocumentSelect}
-                    untitledText={t('documentList.untitled')}
-                  />
-                );
-              }}
-              style={{ height: '100%' }}
+      {shouldShowListPanel && (
+        <div className={styles.listPanel}>
+          <div className={styles.header}>
+            <SearchBar
+              allowClear
+              onChange={(e) => setSearchKeywords(e.target.value)}
+              placeholder={t('searchPagePlaceholder')}
+              style={{ flex: 1 }}
+              value={searchKeywords}
+              variant={'borderless'}
             />
-          )}
+            <ActionIcon
+              icon={PlusIcon}
+              onClick={handleNewDocument}
+              title={t('header.newPageButton')}
+            />
+          </div>
+          <div className={styles.documentList}>
+            {isDocumentListLoading ? (
+              <DocumentListSkeleton />
+            ) : filteredDocuments.length === 0 ? (
+              <div
+                style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}
+              >
+                {searchKeywords.trim() ? t('documentList.noResults') : t('documentList.empty')}
+              </div>
+            ) : (
+              <Virtuoso
+                components={{
+                  Footer: () => (
+                    <Center style={{ paddingBlock: 16 }}>
+                      <Text style={{ fontSize: 12 }} type={'secondary'}>
+                        {t('documentList.pageCount', { count: filteredDocuments.length })}
+                      </Text>
+                    </Center>
+                  ),
+                }}
+                data={filteredDocuments}
+                itemContent={(_index, document) => {
+                  const isSelected = selectedDocumentId === document.id;
+                  const isRenaming = renamingDocumentId === document.id;
+                  return (
+                    <DocumentListItem
+                      document={document}
+                      isRenaming={isRenaming}
+                      isSelected={isSelected}
+                      key={document.id}
+                      onDelete={() => {
+                        if (selectedDocumentId === document.id) {
+                          setSelectedDocumentId(null);
+                          setIsCreatingNew(false);
+                          updateUrl(null);
+                        }
+                      }}
+                      onRenameConfirm={handleRenameConfirm}
+                      onRenameOpenChange={handleRenameOpenChange}
+                      onSelect={handleDocumentSelect}
+                      untitledText={t('documentList.untitled')}
+                    />
+                  );
+                }}
+                style={{ height: '100%' }}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Right Panel - Editor */}
       <div className={styles.editorPanel}>
@@ -302,6 +310,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
           />
         ) : (
           <DocumentEditorPlaceholder
+            hasPages={documents.length > 0}
             knowledgeBaseId={knowledgeBaseId}
             onCreateNewNote={handleNewDocument}
             onNoteCreated={(documentId) => {
