@@ -167,6 +167,7 @@ export const createChatSlice: StateCreator<
       ([, id]: readonly [string, string]) => sessionService.getSessionConfig(id),
       {
         onSuccess: (data) => {
+          console.log('config', data);
           get().internal_dispatchAgentMap(sessionId, data, 'fetch');
 
           set(

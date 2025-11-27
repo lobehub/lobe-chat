@@ -25,10 +25,8 @@ export const useInitAgentConfig = (targetAgentId?: string) => {
     }
     return s.activeId;
   });
-  console.log('sessionId', sessionId);
 
   const data = useFetchAgentConfig(isLogin, sessionId);
 
-  console.log(data.data);
   return { ...data, isLoading: data.isLoading && isLogin };
 };
