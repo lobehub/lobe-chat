@@ -331,6 +331,9 @@ const betterAuthMiddleware = async (req: NextRequest) => {
 
   logBetterAuth('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
 
+  // Skip session lookup for public routes to reduce latency
+  if (!isProtected) return response;
+
   // Get full session with user data (Next.js 15.2.0+ feature)
   const session = await auth.api.getSession({
     headers: req.headers,
