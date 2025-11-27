@@ -63,10 +63,10 @@ export class Manifest {
       screenshots: screenshots.map((item) => this._getScreenshot(item)),
       short_name: name,
       splash_pages: null,
-      start_url: '/chat',
+      start_url: '/agent',
       tab_strip: {
         new_tab_button: {
-          url: '/chat',
+          url: '/agent',
         },
       },
       theme_color: color,

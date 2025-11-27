@@ -114,7 +114,7 @@ export interface SearchUserMemoryParams {
 }
 
 export interface SearchUserMemoryWithEmbeddingParams {
-  embedding: number[];
+  embedding?: number[];
   limits?: Partial<Record<'contexts' | 'experiences' | 'preferences', number>>;
   memoryCategory?: string;
   memoryType?: string;

@@ -1,0 +1,28 @@
+'use client';
+
+import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
+
+import CommunityAgents from './CommunityAgents';
+import FeaturedPlugins from './FeaturedPlugins';
+import InputArea from './InputArea';
+import RecentPage from './RecentPage';
+import RecentResource from './RecentResource';
+import RecentTopic from './RecentTopic';
+import WelcomeText from './WelcomeText';
+
+const Home = memo(() => {
+  return (
+    <Flexbox gap={40}>
+      <WelcomeText />
+      <InputArea />
+      <RecentTopic />
+      <RecentPage />
+      <CommunityAgents />
+      <FeaturedPlugins />
+      <RecentResource />
+    </Flexbox>
+  );
+});
+
+export default Home;

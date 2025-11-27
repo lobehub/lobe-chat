@@ -11,7 +11,7 @@ import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
+import { agentSelectors } from '@/store/agent/selectors';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({

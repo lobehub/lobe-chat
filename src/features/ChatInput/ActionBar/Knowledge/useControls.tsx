@@ -38,7 +38,7 @@ export const useControls = ({
     //     {
     //       icon: <RepoIcon />,
     //       key: 'allRepos',
-    //       label: <KnowledgeBaseItem id={'all'} label={t('knowledgeBase.allKnowledgeBases')} />,
+    //       label: <KnowledgeBaseItem id={'all'} label={t('knowledgeBase.allLibraries')} />,
     //     },
     //   ],
     //   key: 'all',
@@ -88,8 +88,8 @@ export const useControls = ({
           ),
         })),
       ],
-      key: 'relativeFilesOrKnowledgeBases',
-      label: t('knowledgeBase.relativeFilesOrKnowledgeBases'),
+      key: 'relativeFilesOrLibraries',
+      label: t('knowledgeBase.relativeFilesOrLibraries'),
       type: 'group',
     },
     {

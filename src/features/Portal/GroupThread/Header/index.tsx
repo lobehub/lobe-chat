@@ -34,7 +34,7 @@ const Header = memo(() => {
       paddingBlock={6}
       paddingInline={8}
       style={{
-        background: `linear-gradient(to bottom, ${theme.colorBgContainerSecondary}, ${theme.colorFillQuaternary})`,
+        background: theme.colorBgContainer,
       }}
       title={
         <Flexbox align={'center'} gap={8} horizontal>

@@ -53,10 +53,12 @@
     "italic": "斜体",
     "link": "リンク",
     "numberList": "番号付きリスト",
+    "redo": "やり直し",
     "strikethrough": "取り消し線",
     "table": "表",
     "taskList": "タスクリスト",
     "tex": "TeX 公式",
-    "underline": "下線"
+    "underline": "下線",
+    "undo": "元に戻す"
   }
 }

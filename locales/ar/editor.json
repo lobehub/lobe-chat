@@ -53,10 +53,12 @@
     "italic": "مائل",
     "link": "رابط",
     "numberList": "قائمة مرقمة",
+    "redo": "إعادة",
     "strikethrough": "شطب",
     "table": "جدول",
     "taskList": "قائمة المهام",
     "tex": "معادلة TeX",
-    "underline": "تسطير"
+    "underline": "تسطير",
+    "undo": "تراجع"
   }
 }

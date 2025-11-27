@@ -2,6 +2,7 @@
   "addToKnowledgeBase": {
     "addSuccess": "Tài liệu đã được thêm thành công, <1>xem ngay</1>",
     "confirm": "Thêm",
+    "error": "Thêm tệp vào cơ sở tri thức thất bại",
     "id": {
       "placeholder": "Vui lòng chọn kho kiến thức để thêm",
       "required": "Vui lòng chọn kho kiến thức",

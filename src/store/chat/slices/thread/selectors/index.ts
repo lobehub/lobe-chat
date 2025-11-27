@@ -169,8 +169,6 @@ const isThreadAIGenerating = (s: ChatStoreState) => {
   return operationSelectors.isAnyMessageLoading(portalDisplayChatIDs(s))(s);
 };
 
-const isInRAGFlow = (s: ChatStoreState) =>
-  s.messageRAGLoadingIds.some((id) => portalDisplayChatIDs(s).includes(id));
 const isCreatingMessage = (s: ChatStoreState) => s.isCreatingThreadMessage;
 const isHasMessageLoading = (s: ChatStoreState) =>
   s.messageLoadingIds.some((id) => portalDisplayChatIDs(s).includes(id));
@@ -184,9 +182,7 @@ const isSendButtonDisabledByMessage = (s: ChatStoreState) =>
   // 2. when is creating the topic
   s.isCreatingThread ||
   // 3. when is creating the message
-  isCreatingMessage(s) ||
-  // 4. when the message is in RAG flow
-  isInRAGFlow(s);
+  isCreatingMessage(s);
 
 export const threadSelectors = {
   currentPortalThread,

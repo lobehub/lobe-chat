@@ -137,6 +137,8 @@
   "close": "بستن",
   "cmdk": {
     "about": "درباره",
+    "aiModeEmptyState": "برای شروع گفتگو با هوش مصنوعی، سوال خود را در کادر بالا وارد کنید",
+    "aiModePlaceholder": "سوالی از هوش مصنوعی بپرسید...",
     "communitySupport": "پشتیبانی جامعه",
     "discover": "کشف",
     "knowledgeBase": "پایگاه دانش",
@@ -304,6 +306,10 @@
     "business": "همکاری تجاری",
     "support": "پشتیبانی ایمیل"
   },
+  "navPanel": {
+    "agent": "دستیار",
+    "library": "کتابخانه"
+  },
   "new": "جدید",
   "oauth": "ورود با SSO",
   "officialSite": "وب‌سایت رسمی",
@@ -358,13 +364,20 @@
     }
   },
   "tab": {
-    "aiImage": "نقاشی هوش مصنوعی",
+    "aiImage": "نقاشی",
+    "audio": "صوتی",
     "chat": "گفتگو",
+    "community": "انجمن",
     "discover": "کشف",
     "files": "فایل‌ها",
+    "home": "خانه",
     "knowledgeBase": "پایگاه دانش",
     "me": "من",
-    "setting": "تنظیمات"
+    "pages": "اسناد",
+    "resource": "منابع",
+    "search": "جستجو",
+    "setting": "تنظیمات",
+    "video": "ویدیو"
   },
   "telemetry": {
     "allow": "اجازه دادن",

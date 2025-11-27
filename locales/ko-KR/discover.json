@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "커뮤니티 도우미",
     "featuredAssistants": "추천 도우미",
     "featuredModels": "추천 모델",
+    "featuredPlugins": "추천 플러그인",
     "featuredProviders": "추천 모델 제공자",
     "featuredTools": "추천 플러그인",
     "more": "더 알아보기"

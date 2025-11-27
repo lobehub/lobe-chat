@@ -141,13 +141,13 @@ export const searchSlice: StateCreator<
     const newToolCallId = `tool_call_${nanoid()}`;
 
     const toolMessage: CreateMessageParams = {
+      agentId: message.agentId ?? get().activeAgentId,
       content: message.content,
       id: undefined,
       parentId: message.parentId,
       plugin: message.plugin,
       pluginState: message.pluginState,
       role: 'tool',
-      sessionId: message.sessionId ?? get().activeId,
       tool_call_id: newToolCallId,
       topicId: message.topicId !== undefined ? message.topicId : get().activeTopicId,
     };
