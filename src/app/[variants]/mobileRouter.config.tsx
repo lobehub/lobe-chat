@@ -188,19 +188,6 @@ export const createMobileRouter = () =>
           path: 'settings',
         },
 
-        // Image routes
-        {
-          children: [
-            {
-              element: dynamicElement(() => import('./(main)/image/ComingSoon')),
-              index: true,
-            },
-          ],
-          element: dynamicElement(() => import('./(main)/image/_layout/Mobile')),
-          errorElement: <ErrorBoundary resetPath="/image" />,
-          path: 'image',
-        },
-
         // Labs routes
         {
           element: dynamicElement(() => import('./(main)/labs')),

@@ -2,9 +2,10 @@
 
 import { memo } from 'react';
 
-import Menu from '../@menu/default';
-import Topic from '../@topic/default';
-import Desktop from './Desktop';
+import Menu from '@/app/[variants]/(main)/image/Menu';
+import Topic from '@/app/[variants]/(main)/image/TopicGallery';
+
+import Desktop from './index';
 
 const DesktopImageWrapper = memo(() => {
   return <Desktop menu={<Menu />} topic={<Topic />} />;

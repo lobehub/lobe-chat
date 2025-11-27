@@ -5,6 +5,8 @@ export const systemStatus = (s: GlobalState) => s.status;
 const sessionGroupKeys = (s: GlobalState): string[] =>
   s.status.expandSessionGroupKeys || INITIAL_STATUS.expandSessionGroupKeys;
 
+const topicGroupKeys = (s: GlobalState): string[] | undefined => s.status.expandTopicGroupKeys;
+
 const showSystemRole = (s: GlobalState) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalState) => s.status.mobileShowTopic;
 const mobileShowPortal = (s: GlobalState) => s.status.mobileShowPortal;
@@ -72,5 +74,6 @@ export const systemStatusSelectors = {
   systemStatus,
   themeMode,
   tokenDisplayFormatShort,
+  topicGroupKeys,
   wideScreen,
 };

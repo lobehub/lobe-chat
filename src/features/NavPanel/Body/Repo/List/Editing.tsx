@@ -57,7 +57,9 @@ const Editing = memo<EditingProps>(({ id, name, toggleEditing }) => {
         },
       }}
       trigger={['click']}
-    />
+    >
+      <div />
+    </Popover>
   );
 });
 

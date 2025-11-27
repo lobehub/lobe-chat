@@ -2,34 +2,48 @@ import { Input } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { memo, useCallback, useState } from 'react';
 
-import { useSessionStore } from '@/store/session';
+import { useChatStore } from '@/store/chat';
 
 interface EditingProps {
   id: string;
-  name: string;
+  title: string;
   toggleEditing: (visible?: boolean) => void;
 }
 
-const Editing = memo<EditingProps>(({ id, name, toggleEditing }) => {
-  const [newName, setNewName] = useState(name);
-  const [editing, updateSessionGroupName] = useSessionStore((s) => [
-    s.sessionGroupRenamingId === id,
-    s.updateSessionGroupName,
+const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
+  const [newTitle, setNewTitle] = useState(title);
+  const [editing, updateTopicTitle] = useChatStore((s) => [
+    s.topicRenamingId === id,
+    s.updateTopicTitle,
   ]);
 
   const handleUpdate = useCallback(async () => {
-    if (newName && name !== newName) {
+    if (newTitle && title !== newTitle) {
       try {
         // Set loading state
-        useSessionStore.setState({ sessionGroupUpdatingId: id }, false, 'setGroupUpdating');
-        await updateSessionGroupName(id, newName);
+        useChatStore.setState(
+          {
+            topicLoadingIds: [...useChatStore.getState().topicLoadingIds, id],
+          },
+          false,
+          'setTopicUpdating',
+        );
+        await updateTopicTitle(id, newTitle);
       } finally {
         // Clear loading state
-        useSessionStore.setState({ sessionGroupUpdatingId: null }, false, 'clearGroupUpdating');
+        useChatStore.setState(
+          {
+            topicLoadingIds: useChatStore
+              .getState()
+              .topicLoadingIds.filter((loadingId) => loadingId !== id),
+          },
+          false,
+          'clearTopicUpdating',
+        );
       }
     }
     toggleEditing(false);
-  }, [newName, name, id, updateSessionGroupName, toggleEditing]);
+  }, [newTitle, title, id, updateTopicTitle, toggleEditing]);
 
   return (
     <Popover
@@ -37,12 +51,12 @@ const Editing = memo<EditingProps>(({ id, name, toggleEditing }) => {
       content={
         <Input
           autoFocus
-          defaultValue={name}
+          defaultValue={title}
           onBlur={() => {
             handleUpdate();
             toggleEditing(false);
           }}
-          onChange={(e) => setNewName(e.target.value)}
+          onChange={(e) => setNewTitle(e.target.value)}
           onClick={(e) => e.stopPropagation()}
           onPressEnter={() => {
             handleUpdate();

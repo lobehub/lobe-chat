@@ -1,36 +1,53 @@
-import { createStyles } from 'antd-style';
+import { AccordionItem, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { GroupedTopic } from '@/types/topic';
 
+import TopicItem from '../../List/Item';
+
 const preformat = (id: string) =>
   id.startsWith('20') ? (id.includes('-') ? dayjs(id).format('MMMM') : id) : undefined;
 
-const useStyles = createStyles(({ css, token, responsive }) => ({
-  container: css`
-    color: ${token.colorTextQuaternary};
-    background: ${token.colorBgLayout};
-    box-shadow: 0 3px 4px -2px ${token.colorBgLayout};
+interface GroupItemProps {
+  activeThreadId?: string;
+  activeTopicId?: string;
+  group: GroupedTopic;
+}
 
-    ${responsive.mobile} {
-      background: ${token.colorBgLayout};
-      box-shadow: 0 3px 4px -2px ${token.colorBgLayout};
-    }
-  `,
-}));
-
-const TopicGroupItem = memo<Omit<GroupedTopic, 'children'>>(({ id, title }) => {
+const GroupItem = memo<GroupItemProps>(({ group, activeTopicId, activeThreadId }) => {
   const { t } = useTranslation('topic');
-  const { styles } = useStyles();
-  const timeTitle = preformat(id) ?? t(`groupTitle.byTime.${id}` as any);
+  const { id, title, children } = group;
+
+  const timeTitle = useMemo(() => preformat(id) ?? t(`groupTitle.byTime.${id}` as any), [id, t]);
 
   return (
-    <Flexbox className={styles.container} paddingBlock={'12px 8px'} paddingInline={12}>
-      {title ? title : timeTitle}
-    </Flexbox>
+    <AccordionItem
+      itemKey={id}
+      paddingBlock={4}
+      paddingInline={'8px 4px'}
+      title={
+        <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
+          {title || timeTitle}
+        </Text>
+      }
+    >
+      <Flexbox gap={1} paddingBlock={1}>
+        {children.map((topic) => (
+          <TopicItem
+            active={activeTopicId === topic.id}
+            fav={topic.favorite}
+            id={topic.id}
+            key={topic.id}
+            threadId={activeThreadId}
+            title={topic.title}
+          />
+        ))}
+      </Flexbox>
+    </AccordionItem>
   );
 });
-export default TopicGroupItem;
+
+export default GroupItem;

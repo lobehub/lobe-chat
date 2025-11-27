@@ -1,12 +1,12 @@
-import { Outlet } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
+import { Outlet } from 'react-router-dom';
 
 import ImagePanel from '@/features/ImageSidePanel';
 import ImageTopicPanel from '@/features/ImageTopicPanel';
 
-import { LayoutProps } from '../type';
 import Container from './Container';
 import RegisterHotkeys from './RegisterHotkeys';
+import { LayoutProps } from './type';
 
 const Layout = ({ menu, topic }: Omit<LayoutProps, 'children'>) => {
   return (

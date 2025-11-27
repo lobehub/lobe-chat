@@ -185,6 +185,7 @@
     "@serwist/next": "^9.2.1",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-query": "^5.90.10",
+    "@tanstack/react-virtual": "^3.13.12",
     "@trpc/client": "^11.7.1",
     "@trpc/next": "^11.7.1",
     "@trpc/react-query": "^11.7.1",

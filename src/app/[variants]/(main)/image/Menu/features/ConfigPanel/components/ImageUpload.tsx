@@ -24,7 +24,7 @@ export interface ImageUploadProps {
   onChange?: (
     data?:
       | string // Old API: just URL
-      | { dimensions?: { height: number, width: number; }, url: string; }, // New API: URL with dimensions
+      | { dimensions?: { height: number; width: number }; url: string }, // New API: URL with dimensions
   ) => void;
   style?: React.CSSProperties;
   value?: string | null;

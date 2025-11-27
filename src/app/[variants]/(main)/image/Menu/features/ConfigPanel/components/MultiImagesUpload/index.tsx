@@ -44,7 +44,7 @@ export interface MultiImagesUploadProps {
   onChange?: (
     data:
       | string[] // Old API: just URLs
-      | { dimensions?: { height: number, width: number; }, urls: string[]; }, // New API: URLs with first image dimensions
+      | { dimensions?: { height: number; width: number }; urls: string[] }, // New API: URLs with first image dimensions
   ) => void;
   style?: React.CSSProperties;
   value?: string[];
@@ -655,7 +655,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
       // Wait for all uploads to complete and collect successful URLs and dimensions
       const uploadResults = await Promise.allSettled(uploadPromises);
       const successfulUrls: string[] = [];
-      let firstImageDimensions: { height: number, width: number; } | undefined;
+      let firstImageDimensions: { height: number; width: number } | undefined;
 
       uploadResults.forEach((result, index) => {
         const displayItem = newDisplayItems[index];

@@ -1,19 +1,17 @@
 'use client';
 
 import isEqual from 'fast-deep-equal';
-import React, { memo, useCallback, useMemo, useRef } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { ChatTopic } from '@/types/topic';
 
-import TopicItem from '../TopicItem';
+import TopicItem from '../../List/Item';
 
 const FlatMode = memo(() => {
   const { t } = useTranslation('topic');
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [activeTopicId] = useChatStore((s) => [s.activeTopicId]);
   const activeTopicList = useChatStore(topicSelectors.displayTopics, isEqual);
 
@@ -22,36 +20,30 @@ const FlatMode = memo(() => {
       { favorite: false, id: 'default', title: t('defaultTitle') } as ChatTopic,
       ...(activeTopicList || []),
     ],
-    [activeTopicList],
+    [activeTopicList, t],
   );
-
-  const itemContent = useCallback(
-    (index: number, { id, favorite, title }: ChatTopic) =>
-      index === 0 ? (
-        <TopicItem active={!activeTopicId} fav={favorite} title={title} />
-      ) : (
-        <TopicItem active={activeTopicId === id} fav={favorite} id={id} key={id} title={title} />
-      ),
-    [activeTopicId],
-  );
-
-  const activeIndex = topics.findIndex((topic) => topic.id === activeTopicId);
 
   return (
-    <Virtuoso
-      // components={{ ScrollSeekPlaceholder: Placeholder }}
-      computeItemKey={(_, item) => item.id}
-      data={topics}
-      defaultItemHeight={44}
-      initialTopMostItemIndex={Math.max(activeIndex, 0)}
-      itemContent={itemContent}
-      overscan={44 * 10}
-      ref={virtuosoRef}
-      // scrollSeekConfiguration={{
-      //   enter: (velocity) => Math.abs(velocity) > 350,
-      //   exit: (velocity) => Math.abs(velocity) < 10,
-      // }}
-    />
+    <>
+      {topics.map((topic, index) =>
+        index === 0 ? (
+          <TopicItem
+            active={!activeTopicId}
+            fav={topic.favorite}
+            key="default"
+            title={topic.title}
+          />
+        ) : (
+          <TopicItem
+            active={activeTopicId === topic.id}
+            fav={topic.favorite}
+            id={topic.id}
+            key={topic.id}
+            title={topic.title}
+          />
+        ),
+      )}
+    </>
   );
 });
 
