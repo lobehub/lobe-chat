@@ -16,7 +16,7 @@ import {
   CreateImagePayload,
   CreateImageResponse,
 } from '../../types';
-import { AgentRuntimeErrorType } from '../../types/error';
+import { AgentRuntimeErrorType, type ILobeAgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeError } from '../../utils/createError';
 import { desensitizeUrl } from '../../utils/desensitizeUrl';
 import { StreamingResponse } from '../../utils/response';
@@ -324,7 +324,7 @@ export class LobeReplicateAI implements LobeRuntimeAI {
     throw new Error(`Unexpected output format from Replicate: ${typeof output}`);
   }
 
-  private resolveImageErrorType(error: unknown): AgentRuntimeErrorType {
+  private resolveImageErrorType(error: unknown): ILobeAgentRuntimeErrorType {
     const message = ((error as any)?.message || '').toLowerCase();
 
     if (message.includes('authentication') || message.includes('api token')) {
