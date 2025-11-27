@@ -34,7 +34,7 @@ const getAgentSystemRoleExpanded =
   (agentId: string) =>
   (s: GlobalState): boolean => {
     const map = s.status.systemRoleExpandedMap || {};
-    return map[agentId] !== false; // 角色设定默认为展开状态
+    return map[agentId] === true; // 角色设定默认为折叠状态
   };
 
 const disabledModelProvidersSortType = (s: GlobalState) =>

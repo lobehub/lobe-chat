@@ -45,6 +45,7 @@ export default {
   },
   duplicateTitle: '{{title}} 副本',
   emptyAgent: '暂无助手',
+  emptyAgentAction: '创建助手',
   extendParams: {
     disableContextCaching: {
       desc: '单条对话生成成本最高可降低 90%，响应速度提升 4 倍（<1>了解更多</1>）。开启后将自动禁用历史消息数限制',
@@ -278,7 +279,7 @@ export default {
 
   noSelectedAgents: '还未选择成员',
 
-  openInNewWindow: '单独打开页面',
+  openInNewWindow: '打开独立窗口',
 
   owner: '群主',
 
