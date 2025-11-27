@@ -2,6 +2,57 @@
 
 # Changelog
 
+## [Version 2.0.0-next.124](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.123...v2.0.0-next.124)
+
+<sup>Released on **2025-11-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fixed the agent settings plugins pages error problem, improve topic item interaction and editing behavior.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fixed the agent settings plugins pages error problem, closes [#10437](https://github.com/lobehub/lobe-chat/issues/10437) ([c58f37a](https://github.com/lobehub/lobe-chat/commit/c58f37a))
+- **misc**: Improve topic item interaction and editing behavior, closes [#10409](https://github.com/lobehub/lobe-chat/issues/10409) ([85b45cb](https://github.com/lobehub/lobe-chat/commit/85b45cb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.123](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.122...v2.0.0-next.123)
+
+<sup>Released on **2025-11-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10445](https://github.com/lobehub/lobe-chat/issues/10445) ([4942bc9](https://github.com/lobehub/lobe-chat/commit/4942bc9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.122](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.121...v2.0.0-next.122)
 
 <sup>Released on **2025-11-26**</sup>

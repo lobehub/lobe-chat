@@ -97,15 +97,15 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       },
       ...(isDesktop
         ? [
-          {
-            icon: <Icon icon={ExternalLink} />,
-            key: 'openInNewWindow',
-            label: t('actions.openInNewWindow'),
-            onClick: () => {
-              openTopicInNewWindow(activeId, id);
+            {
+              icon: <Icon icon={ExternalLink} />,
+              key: 'openInNewWindow',
+              label: t('actions.openInNewWindow'),
+              onClick: () => {
+                openTopicInNewWindow(activeId, id);
+              },
             },
-          },
-        ]
+          ]
         : []),
       {
         type: 'divider',
@@ -210,6 +210,13 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       ) : (
         <EditableText
           editing={editing}
+          onBlur={(e) => {
+            const v = (e.target as HTMLInputElement).value;
+            if (title !== v) {
+              updateTopicTitle(id, v);
+            }
+            toggleEditing(false);
+          }}
           onChangeEnd={(v) => {
             if (title !== v) {
               updateTopicTitle(id, v);

@@ -797,5 +797,11 @@
     "bps": true,
     "folderMillis": 1763987922211,
     "hash": "f823b521f4d25e5dc5ab238b372727d2d2d7f0aed27b5eabc8a9608ce4e50568"
+  },
+  {
+    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;"],
+    "bps": true,
+    "folderMillis": 1764215503726,
+    "hash": "4188893a9083b3c7baebdbad0dd3f9d9400ede7584ca2394f5c64305dc9ec7b0"
   }
 ]
