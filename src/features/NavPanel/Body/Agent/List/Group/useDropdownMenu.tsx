@@ -1,0 +1,67 @@
+import { type MenuProps } from '@lobehub/ui';
+import { useMemo } from 'react';
+
+import { useCreateMenuItems, useSessionGroupMenuItems } from '@/features/NavPanel/hooks';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
+interface GroupDropdownMenuProps {
+  handleOpenMemberSelection: () => void;
+  id?: string;
+  isCustomGroup?: boolean;
+  isPinned?: boolean;
+  openConfigGroupModal: () => void;
+  toggleEditing?: (visible?: boolean) => void;
+}
+
+export const useGroupDropdownMenu = ({
+  id,
+  isCustomGroup,
+  isPinned,
+  toggleEditing,
+  handleOpenMemberSelection,
+  openConfigGroupModal,
+}: GroupDropdownMenuProps): MenuProps['items'] => {
+  const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
+
+  // Session group menu items
+  const { renameGroupMenuItem, configGroupMenuItem, deleteGroupMenuItem } =
+    useSessionGroupMenuItems();
+
+  // Create menu items
+  const { createAgentMenuItem, createGroupChatMenuItem } = useCreateMenuItems();
+
+  return useMemo(() => {
+    const createAgentItem = createAgentMenuItem({ groupId: id, isPinned });
+    const createGroupChatItem = createGroupChatMenuItem(handleOpenMemberSelection);
+    const configItem = configGroupMenuItem(openConfigGroupModal);
+    const renameItem = toggleEditing ? renameGroupMenuItem(toggleEditing) : null;
+    const deleteItem = id ? deleteGroupMenuItem(id) : null;
+
+    return [
+      ...(showCreateSession
+        ? [
+            createAgentItem,
+            ...(enableGroupChat ? [createGroupChatItem] : []),
+            { type: 'divider' as const },
+          ]
+        : []),
+      ...(isCustomGroup
+        ? [renameItem, configItem, { type: 'divider' as const }, deleteItem]
+        : [configItem]),
+    ].filter(Boolean) as MenuProps['items'];
+  }, [
+    showCreateSession,
+    enableGroupChat,
+    isCustomGroup,
+    id,
+    isPinned,
+    toggleEditing,
+    createAgentMenuItem,
+    createGroupChatMenuItem,
+    configGroupMenuItem,
+    renameGroupMenuItem,
+    deleteGroupMenuItem,
+    handleOpenMemberSelection,
+    openConfigGroupModal,
+  ]);
+};

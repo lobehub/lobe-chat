@@ -16,7 +16,17 @@ export interface SessionState {
   isSessionsFirstFetchFinished: boolean;
   pinnedSessions: LobeSessions;
   searchKeywords: string;
+  /**
+   * @title 正在重命名的会话 ID
+   * @description 用于控制会话重命名弹窗的显示状态
+   */
+  sessionRenamingId: string | null;
   sessionSearchKeywords?: string;
+  /**
+   * @title 正在更新的会话 ID
+   * @description 用于显示会话更新时的加载状态
+   */
+  sessionUpdatingId: string | null;
   /**
    * it means defaultSessions
    */
@@ -32,5 +42,7 @@ export const initialSessionState: SessionState = {
   isSessionsFirstFetchFinished: false,
   pinnedSessions: [],
   searchKeywords: '',
+  sessionRenamingId: null,
+  sessionUpdatingId: null,
   sessions: [],
 };

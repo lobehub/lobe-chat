@@ -1,30 +1,27 @@
 import { useTheme } from 'antd-style';
-import { PropsWithChildren, Suspense, memo } from 'react';
+import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import SideBar from './SideBar';
+import { isDesktop } from '@/const/version';
 
 const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
   const theme = useTheme();
 
+  if (!isDesktop) return children;
+
   return (
-    <>
-      <Suspense>
-        <SideBar />
-      </Suspense>
-      <Flexbox
-        style={{
-          background: theme.colorBgLayout,
-          borderInlineStart: `1px solid ${theme.colorBorderSecondary}`,
-          borderStartStartRadius: 12,
-          borderTop: `1px solid ${theme.colorBorderSecondary}`,
-          overflow: 'hidden',
-        }}
-        width={'100%'}
-      >
-        {children}
-      </Flexbox>
-    </>
+    <Flexbox
+      style={{
+        background: theme.colorBgLayout,
+        borderInlineStart: `1px solid ${theme.colorBorderSecondary}`,
+        borderStartStartRadius: 12,
+        borderTop: `1px solid ${theme.colorBorderSecondary}`,
+        overflow: 'hidden',
+      }}
+      width={'100%'}
+    >
+      {children}
+    </Flexbox>
   );
 });
 export default DesktopLayoutContainer;
