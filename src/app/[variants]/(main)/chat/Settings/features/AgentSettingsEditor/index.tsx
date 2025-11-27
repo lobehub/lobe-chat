@@ -6,8 +6,7 @@ import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import AgentSettings from '@/app/[variants]/(main)/chat/components/features/AgentSettings';
-import SmartAgentActionButton from '@/app/[variants]/(main)/chat/settings/features/SmartAgentActionButton';
+import SmartAgentActionButton from '@/app/[variants]/(main)/chat/Settings/features/SmartAgentActionButton';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { isDesktop } from '@/const/version';
 import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
@@ -19,6 +18,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { LobeSessionType } from '@/types/session';
 
+import AgentSettings from '../AgentSettings';
 import AgentConfigBar from './AgentConfigBar';
 import AgentHeader from './AgentHeader';
 import AutoSaveHint from './AutoSaveHint';
@@ -163,7 +163,7 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
             overflow: 'hidden',
           }}
         >
-          {(isLoading) ? (
+          {isLoading ? (
             <Flexbox align="center" height="100vh" justify="center">
               <Loading />
             </Flexbox>
