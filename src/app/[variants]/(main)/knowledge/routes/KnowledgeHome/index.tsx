@@ -10,8 +10,8 @@ import { useParams } from 'react-router-dom';
 import NProgress from '@/components/NProgress';
 import PanelTitle from '@/components/PanelTitle';
 import FilePanel from '@/features/FileSidePanel';
-import KnowledgeItemManager from '@/features/KnowledgeManager';
-import TogglePanelButton from '@/features/KnowledgeManager/Header/TogglePanelButton';
+import KnowledgeItemManager from '@/features/ResourceManager';
+import TogglePanelButton from '@/features/ResourceManager/Header/TogglePanelButton';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { FilesTabs } from '@/types/files';
 

@@ -166,20 +166,20 @@ export default {
   knowledgeBase: {
     all: '所有内容',
     allFiles: '所有文件',
-    allKnowledgeBases: '所有知识库',
+    allLibraries: '所有资源库',
     disabled:
-      '当前部署模式不支持知识库对话，如需使用，请切换到服务端数据库部署或使用 {{cloud}} 服务',
+      '当前部署模式不支持资源库对话，如需使用，请切换到服务端数据库部署或使用 {{cloud}} 服务',
     library: {
       action: {
         add: '添加',
         detail: '详情',
         remove: '移除',
       },
-      title: '文件/知识库',
+      title: '文件/资源库',
     },
-    relativeFilesOrKnowledgeBases: '关联文件/知识库',
-    title: '知识库',
-    uploadGuide: '上传过的文件可以在「知识库」中查看哦',
+    relativeFilesOrLibraries: '关联文件/资源库',
+    title: '资源库',
+    uploadGuide: '上传过的文件可以在「资源」中查看哦',
     viewMore: '查看更多',
   },
   memberSelection: {

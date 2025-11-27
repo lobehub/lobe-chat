@@ -157,14 +157,19 @@ export const createMobileRouter = () =>
             },
             {
               element: dynamicElement(() => import('./(main)/knowledge/routes/KnowledgeBasesList')),
-              path: 'bases',
+              path: 'library',
             },
             {
               element: dynamicElement(
                 () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
               ),
               loader: idLoader,
-              path: 'bases/:id',
+              path: 'library/:id/*',
+            },
+            {
+              element: <KnowledgeBaseDetail />,
+              loader: idLoader,
+              path: 'library/:id',
             },
           ],
           element: dynamicElement(() => import('./(main)/knowledge/_layout/Mobile')),
@@ -286,12 +291,12 @@ export const createMobileRouter = () =>
         // Default route - redirect to chat
         {
           index: true,
-          loader: () => redirect('/chat', { status: 302 }),
+          loader: () => redirect('/agent', { status: 302 }),
         },
 
         // Catch-all route
         {
-          loader: () => redirect('/chat', { status: 302 }),
+          loader: () => redirect('/agent', { status: 302 }),
           path: '*',
         },
       ],

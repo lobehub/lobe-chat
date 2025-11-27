@@ -11,10 +11,10 @@ import { Virtuoso } from 'react-virtuoso';
 import { useFileStore } from '@/store/file';
 import { DocumentSourceType, LobeDocument } from '@/types/document';
 
-import DocumentEditor from './DocumentEditor';
 import DocumentEditorPlaceholder from './DocumentEditorPlaceholder';
 import DocumentListItem from './DocumentListItem';
 import DocumentListSkeleton from './DocumentListSkeleton';
+import PageEditor from './PageEditor';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -290,7 +290,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
       {/* Right Panel - Editor */}
       <div className={styles.editorPanel}>
         {selectedDocumentId || isCreatingNew ? (
-          <DocumentEditor
+          <PageEditor
             documentId={selectedDocumentId || undefined}
             knowledgeBaseId={knowledgeBaseId}
             onDelete={() => {

@@ -309,7 +309,7 @@ export default {
   },
   navPanel: {
     agent: '助手',
-    repo: '仓库',
+    library: '资料库',
   },
   new: '新',
   oauth: 'SSO 登录',

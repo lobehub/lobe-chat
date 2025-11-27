@@ -26,6 +26,14 @@
       "createChunkingTask": "準備中...",
       "deleteSuccess": "ファイルが正常に削除されました",
       "downloading": "ファイルをダウンロード中...",
+      "goBack": "前のページに戻る",
+      "goForward": "次のページへ進む",
+      "goToParent": "親フォルダへ移動",
+      "moveError": "ファイルの移動に失敗しました",
+      "moveHere": "ここに移動",
+      "moveSuccess": "ファイルを正常に移動しました",
+      "moveToFolder": "フォルダへ移動...",
+      "moveToRoot": "ルートディレクトリへ移動",
       "removeFromKnowledgeBase": "知識ベースから削除",
       "removeFromKnowledgeBaseSuccess": "ファイルが正常に削除されました"
     },
@@ -41,6 +49,12 @@
       },
       "or": "または",
       "title": "ここにファイルまたはフォルダーをドラッグしてください"
+    },
+    "noFolders": "フォルダがありません",
+    "sort": {
+      "dateAdded": "追加日",
+      "name": "名前",
+      "size": "サイズ"
     },
     "title": {
       "createdAt": "作成日時",

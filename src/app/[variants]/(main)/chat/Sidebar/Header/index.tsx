@@ -6,11 +6,12 @@ import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import BackButton, { BACK_BUTTON_ID } from '@/features/NavPanel/BackButton';
 import TogglePanelButton from '@/features/NavPanel/TogglePanelButton';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 import Avatar from './Avatar';
 import SwitchButton from './SwitchButton';
@@ -19,6 +20,19 @@ const useStyles = createStyles(({ css, token }) => ({
   container: css`
     overflow: hidden;
     border-block-end: 1px solid ${token.colorBorderSecondary};
+
+    #${BACK_BUTTON_ID} {
+      width: 0 !important;
+      opacity: 0;
+      transition: all 0.2s ${token.motionEaseOut};
+    }
+
+    &:hover {
+      #${BACK_BUTTON_ID} {
+        width: 24px !important;
+        opacity: 1;
+      }
+    }
   `,
 }));
 
@@ -27,9 +41,9 @@ const HeaderInfo = memo<PropsWithChildren>(() => {
   const { styles } = useStyles();
   useInitAgentConfig();
 
-  const [isInbox, title] = useSessionStore((s) => [
-    sessionSelectors.isInboxSession(s),
-    sessionMetaSelectors.currentAgentTitle(s),
+  const [isInbox, title] = useAgentStore((s) => [
+    agentSelectors.isInboxAgent(s),
+    agentSelectors.currentAgentTitle(s),
   ]);
 
   const displayTitle = isInbox ? t('inbox.title') : title;
@@ -50,27 +64,42 @@ const HeaderInfo = memo<PropsWithChildren>(() => {
       <Flexbox
         align={'center'}
         flex={1}
-        gap={8}
         horizontal
         style={{
           overflow: 'hidden',
         }}
       >
-        <Block
+        <BackButton
+          size={{
+            blockSize: 32,
+            size: 16,
+          }}
+        />
+        <Flexbox
           align={'center'}
-          clickable
-          height={32}
-          justify={'center'}
-          onClick={openChatSettings}
-          variant={'borderless'}
-          width={32}
+          flex={1}
+          gap={8}
+          horizontal
+          style={{
+            overflow: 'hidden',
+          }}
         >
-          <Avatar size={28} />
-        </Block>
-        <Text ellipsis weight={500}>
-          {displayTitle}
-        </Text>
-        <SwitchButton />
+          <Block
+            align={'center'}
+            clickable
+            height={32}
+            justify={'center'}
+            onClick={openChatSettings}
+            variant={'borderless'}
+            width={32}
+          >
+            <Avatar size={28} />
+          </Block>
+          <Text ellipsis weight={500}>
+            {displayTitle}
+          </Text>
+          <SwitchButton />
+        </Flexbox>
       </Flexbox>
       <TogglePanelButton />
     </Flexbox>

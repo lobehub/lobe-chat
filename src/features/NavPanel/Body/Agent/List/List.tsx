@@ -32,8 +32,8 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
   const isEmpty = useMemo(() => dataSource.length === 0, [dataSource.length]);
 
   const handleClick = useCallback(
-    (id: string) => {
-      switchSession(id);
+    (id: string, agentId: string) => {
+      switchSession(id, agentId);
 
       // Defer analytics tracking to avoid blocking UI
       if (analytics) {
@@ -87,16 +87,16 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
 
   return (
     <div>
-      {dataSource.map(({ id }) => (
+      {dataSource.map(({ id, config }) => (
         <Link
           aria-label={id}
           key={id}
           onClick={(e) => {
             e.preventDefault();
-            handleClick(id);
+            handleClick(id, config?.id);
           }}
           style={{ marginBlock: 1 }}
-          to={SESSION_CHAT_URL(id, false)}
+          to={SESSION_CHAT_URL(id, config?.id, false)}
         >
           <Item className={itemClassName} id={id} style={itemStyle} />
         </Link>

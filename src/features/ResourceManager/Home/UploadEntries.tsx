@@ -148,9 +148,9 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
         />
       </Flexbox>
 
-      {/* Create Knowledge Base */}
-      {/* <Flexbox className={styles.card} onClick={handleCreateKnowledgeBase} padding={16}>
-        <span className={styles.actionTitle}>{t('home.uploadEntries.knowledgeBase.title')}</span>
+      {/* Create Library */}
+      {/* <Flexbox className={styles.card} onClick={handleCreateLibrary} padding={16}>
+        <span className={styles.actionTitle}>{t('home.uploadEntries.library.title')}</span>
         <div className={styles.glow} style={{ background: theme.colorPrimary }} />
         <FileTypeIcon
           className={styles.icon}

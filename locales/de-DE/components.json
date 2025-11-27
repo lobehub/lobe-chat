@@ -26,6 +26,14 @@
       "createChunkingTask": "Wird vorbereitet...",
       "deleteSuccess": "Datei erfolgreich gelöscht",
       "downloading": "Datei wird heruntergeladen...",
+      "goBack": "Zurück zur vorherigen Seite",
+      "goForward": "Weiter zur nächsten Seite",
+      "goToParent": "Zum übergeordneten Ordner",
+      "moveError": "Datei konnte nicht verschoben werden",
+      "moveHere": "Hierher verschieben",
+      "moveSuccess": "Datei erfolgreich verschoben",
+      "moveToFolder": "Verschieben nach...",
+      "moveToRoot": "In das Stammverzeichnis verschieben",
       "removeFromKnowledgeBase": "Aus der Wissensdatenbank entfernen",
       "removeFromKnowledgeBaseSuccess": "Datei erfolgreich entfernt"
     },
@@ -41,6 +49,12 @@
       },
       "or": "oder",
       "title": "Ziehen Sie Dateien oder Ordner hierher"
+    },
+    "noFolders": "Keine Ordner vorhanden",
+    "sort": {
+      "dateAdded": "Hinzugefügt am",
+      "name": "Name",
+      "size": "Größe"
     },
     "title": {
       "createdAt": "Erstellungsdatum",

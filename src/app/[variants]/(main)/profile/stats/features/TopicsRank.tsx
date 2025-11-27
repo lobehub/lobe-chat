@@ -33,7 +33,7 @@ export const TopicsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
         topic: item.id,
         ...(mobile ? { showMobileWorkspace: true } : {}),
       },
-      url: '/chat',
+      url: '/agent',
     });
     return {
       icon: <Icon color={theme.colorTextDescription} icon={MessageSquareIcon} size={16} />,

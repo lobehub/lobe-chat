@@ -107,14 +107,6 @@
       }
     }
   },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Vous allez supprimer cette base de connaissances. Les fichiers ne seront pas supprimés, mais déplacés dans tous les fichiers. La suppression de la base de connaissances est irréversible, veuillez agir avec prudence.",
-      "empty": "Cliquez sur <1>+</1> pour commencer à créer une base de connaissances"
-    },
-    "new": "Nouvelle base de connaissances",
-    "title": "Base de connaissances"
-  },
   "menu": {
     "allFiles": "Tous les fichiers",
     "allPages": "Tous les documents"
@@ -141,6 +133,14 @@
   "preview": {
     "downloadFile": "Télécharger le fichier",
     "unsupportedFileAndContact": "Ce format de fichier n'est pas encore pris en charge pour l'aperçu en ligne. Si vous souhaitez un aperçu, n'hésitez pas à <1>nous contacter</1>."
+  },
+  "repo": {
+    "list": {
+      "confirmRemoveRepo": "Ce dépôt va être supprimé. Les fichiers qu’il contient ne seront pas supprimés, mais déplacés dans Tous les fichiers. Une fois supprimé, le dépôt ne pourra pas être restauré. Veuillez procéder avec prudence.",
+      "empty": "Cliquez sur <1>+</1> pour commencer à créer un dépôt"
+    },
+    "new": "Nouveau dépôt",
+    "title": "Dépôt"
   },
   "searchFilePlaceholder": "Rechercher un fichier",
   "searchPagePlaceholder": "Rechercher un document",

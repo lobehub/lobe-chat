@@ -71,7 +71,7 @@ export const createChatSlice: StateCreator<
     if (fileIds.length === 0) return;
 
     await agentService.createAgentFiles(activeAgentId, fileIds, enabled);
-    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentConfig(activeAgentId);
     await internal_refreshAgentKnowledge();
   },
   addKnowledgeBaseToAgent: async (knowledgeBaseId) => {
@@ -79,7 +79,7 @@ export const createChatSlice: StateCreator<
     if (!activeAgentId) return;
 
     await agentService.createAgentKnowledgeBase(activeAgentId, knowledgeBaseId, true);
-    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentConfig(activeAgentId);
     await internal_refreshAgentKnowledge();
   },
   removeFileFromAgent: async (fileId) => {
@@ -87,7 +87,7 @@ export const createChatSlice: StateCreator<
     if (!activeAgentId) return;
 
     await agentService.deleteAgentFile(activeAgentId, fileId);
-    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentConfig(activeAgentId);
     await internal_refreshAgentKnowledge();
   },
   removeKnowledgeBaseFromAgent: async (knowledgeBaseId) => {
@@ -95,7 +95,7 @@ export const createChatSlice: StateCreator<
     if (!activeAgentId) return;
 
     await agentService.deleteAgentKnowledgeBase(activeAgentId, knowledgeBaseId);
-    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentConfig(activeAgentId);
     await internal_refreshAgentKnowledge();
   },
 
@@ -108,7 +108,7 @@ export const createChatSlice: StateCreator<
 
     await agentService.toggleFile(activeAgentId, id, open);
 
-    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentConfig(activeAgentId);
   },
   toggleKnowledgeBase: async (id, open) => {
     const { activeAgentId, internal_refreshAgentConfig } = get();
@@ -116,7 +116,7 @@ export const createChatSlice: StateCreator<
 
     await agentService.toggleKnowledgeBase(activeAgentId, id, open);
 
-    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentConfig(activeAgentId);
   },
   togglePlugin: async (id, open) => {
     const originConfig = agentSelectors.currentAgentConfig(get());
@@ -143,37 +143,40 @@ export const createChatSlice: StateCreator<
     await get().updateAgentConfig(config);
   },
   updateAgentChatConfig: async (config) => {
-    const { activeId } = get();
+    const { activeAgentId } = get();
 
-    if (!activeId) return;
+    if (!activeAgentId) return;
 
     await get().updateAgentConfig({ chatConfig: config });
   },
   updateAgentConfig: async (config) => {
-    const { activeId } = get();
+    const { activeAgentId } = get();
 
-    if (!activeId) return;
+    if (!activeAgentId) return;
 
     const controller = get().internal_createAbortController('updateAgentConfigSignal');
 
-    await get().internal_updateAgentConfig(activeId, config, controller.signal);
+    await get().internal_updateAgentConfig(activeAgentId, config, controller.signal);
   },
-  useFetchAgentConfig: (isLogin, sessionId) =>
+  useFetchAgentConfig: (isLogin, agentId) =>
     useClientDataSWR<LobeAgentConfig>(
       // Only fetch when login status is explicitly true (not null/undefined)
-      isLogin === true && !sessionId.startsWith('cg_')
-        ? ([FETCH_AGENT_CONFIG_KEY, sessionId] as const)
+      isLogin === true && agentId && !agentId.startsWith('cg_')
+        ? ([FETCH_AGENT_CONFIG_KEY, agentId] as const)
         : null,
-      ([, id]: readonly [string, string]) => sessionService.getSessionConfig(id),
+      async ([, id]: readonly [string, string]) => {
+        const data = await agentService.getAgentConfigById(id);
+        console.log('agentConfig', data);
+        return data as LobeAgentConfig;
+      },
       {
         onSuccess: (data) => {
-          console.log('config', data);
-          get().internal_dispatchAgentMap(sessionId, data, 'fetch');
+          get().internal_dispatchAgentMap(agentId, data, 'fetch');
 
           set(
             {
               activeAgentId: data.id,
-              agentConfigInitMap: { ...get().agentConfigInitMap, [sessionId]: true },
+              agentConfigInitMap: { ...get().agentConfigInitMap, [agentId]: true },
             },
             false,
             'fetchAgentConfig',
@@ -196,20 +199,25 @@ export const createChatSlice: StateCreator<
     useOnlyFetchOnceSWR<PartialDeep<LobeAgentConfig>>(
       // Only fetch when login status is explicitly true (not null/undefined/false)
       isLogin === true ? 'fetchInboxAgentConfig' : null,
-      () => sessionService.getSessionConfig(INBOX_SESSION_ID),
+      // inbox is a special case, still need to use sessionId to get config
+      async () => {
+        const data = await agentService.getSessionConfig(INBOX_SESSION_ID);
+        return data as PartialDeep<LobeAgentConfig>;
+      },
       {
         onSuccess: (data) => {
           set(
             {
               defaultAgentConfig: merge(get().defaultAgentConfig, defaultAgentConfig),
+              inboxAgentId: data?.id,
               isInboxAgentConfigInit: true,
             },
             false,
             'initDefaultAgent',
           );
 
-          if (data) {
-            get().internal_dispatchAgentMap(INBOX_SESSION_ID, data, 'initInbox');
+          if (data?.id) {
+            get().internal_dispatchAgentMap(data.id, data, 'initInbox');
           }
         },
       },

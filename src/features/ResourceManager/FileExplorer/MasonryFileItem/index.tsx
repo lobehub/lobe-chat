@@ -5,7 +5,7 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 
-import NoteEditorModal from '../../DocumentExplorer/NoteEditorModal';
+import PageEditorModal from '../../PageExplorer/PageEditorModal';
 import DropdownMenu from '../FileListItem/DropdownMenu';
 import DefaultFileItem from './DefaultFileItem';
 import ImageFileItem from './ImageFileItem';
@@ -265,7 +265,13 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         </div>
 
         <div className={cx('dropdown', styles.dropdown)} onClick={(e) => e.stopPropagation()}>
-          <DropdownMenu filename={name} id={id} knowledgeBaseId={knowledgeBaseId} url={url} />
+          <DropdownMenu
+            fileType={fileType}
+            filename={name}
+            id={id}
+            knowledgeBaseId={knowledgeBaseId}
+            url={url}
+          />
         </div>
 
         <div
@@ -359,7 +365,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
 
         {/* Note Editor Modal */}
         {isNote && (
-          <NoteEditorModal
+          <PageEditorModal
             documentId={id}
             documentTitle={name}
             editorData={editorData}

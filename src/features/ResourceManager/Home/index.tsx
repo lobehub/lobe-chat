@@ -93,10 +93,12 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
     return files.slice(0, 10);
   }, [allItems]);
 
-  // Get top 10 recent documents (filter by sourceType === 'document')
+  // Get top 10 recent documents (filter by sourceType === 'document', exclude folders)
   const topRecentDocuments = useMemo(() => {
     if (!allItems) return [];
-    const documents = allItems.filter((item) => item.sourceType === 'document');
+    const documents = allItems.filter(
+      (item) => item.sourceType === 'document' && item.fileType !== 'custom/folder',
+    );
     return documents.slice(0, 10);
   }, [allItems]);
 

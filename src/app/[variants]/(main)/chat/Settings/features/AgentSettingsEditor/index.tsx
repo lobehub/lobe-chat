@@ -51,7 +51,7 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
   // Handle global store state or use props
   const [showAgentSetting] = useAgentStore((s) => [s.showAgentSetting]);
 
-  const { isLoading: isAgentConfigLoading } = useInitAgentConfig(agentId);
+  const { isLoading: isAgentConfigLoading } = useInitAgentConfig();
 
   const isLoading = isAgentConfigLoading || !showAgentSetting;
   // Determine visibility - use prop if provided, otherwise use global state
@@ -60,18 +60,14 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
   // Handle close - use prop if provided, otherwise use global state setter
   const handleClose = onClose || (() => useAgentStore.setState({ showAgentSetting: false }));
 
-  // Get agent config and meta based on the provided or active agent ID
+  // Get agent config based on the provided or active agent ID
   const config = useAgentStore((s) => {
     if (agentId) {
-      // Use the new selector that works with agent IDs
-      return agentSelectors.getAgentConfigByAgentId(agentId)(s);
-    } else if (id) {
-      // Use the existing selector for session IDs
-      return agentSelectors.getAgentConfigById(id)(s);
-    } else {
-      // Use current agent config
-      return agentSelectors.currentAgentConfig(s);
+      // agentMap is now keyed by agentId, use getAgentConfigById directly
+      return agentSelectors.getAgentConfigById(agentId)(s);
     }
+    // Use current agent config
+    return agentSelectors.currentAgentConfig(s);
   }, isEqual);
 
   const meta = useSessionStore((s) => {
@@ -83,6 +79,7 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
       return sessionMetaSelectors.currentAgentMeta(s);
     }
   }, isEqual);
+
   // Handle global store state
   const [globalUpdateAgentConfig] = useAgentStore((s) => [s.updateAgentConfig]);
   const [globalUpdateAgentMeta] = useSessionStore((s) => [s.updateSessionMeta]);

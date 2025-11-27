@@ -44,6 +44,17 @@ class AgentService {
   getFilesAndKnowledgeBases = async (agentId: string) => {
     return lambdaClient.agent.getKnowledgeBasesAndFiles.query({ agentId });
   };
+
+  getAgentConfigById = async (agentId: string) => {
+    return lambdaClient.agent.getAgentConfigById.query({ agentId });
+  };
+
+  /**
+   * @deprecated use getAgentConfigById instead
+   */
+  getSessionConfig = async (sessionId: string) => {
+    return lambdaClient.agent.getAgentConfig.query({ sessionId });
+  };
 }
 
 export const agentService = new AgentService();

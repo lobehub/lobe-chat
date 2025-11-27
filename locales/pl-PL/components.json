@@ -26,6 +26,14 @@
       "createChunkingTask": "Przygotowywanie...",
       "deleteSuccess": "Plik usunięty pomyślnie",
       "downloading": "Pobieranie pliku...",
+      "goBack": "Wróć do poprzedniej strony",
+      "goForward": "Przejdź do następnej strony",
+      "goToParent": "Przejdź do folderu nadrzędnego",
+      "moveError": "Nie udało się przenieść pliku",
+      "moveHere": "Przenieś tutaj",
+      "moveSuccess": "Plik został pomyślnie przeniesiony",
+      "moveToFolder": "Przenieś do...",
+      "moveToRoot": "Przenieś do katalogu głównego",
       "removeFromKnowledgeBase": "Usuń z bazy wiedzy",
       "removeFromKnowledgeBaseSuccess": "Plik usunięty pomyślnie"
     },
@@ -41,6 +49,12 @@
       },
       "or": "lub",
       "title": "Przeciągnij plik lub folder tutaj"
+    },
+    "noFolders": "Brak folderów",
+    "sort": {
+      "dateAdded": "Data dodania",
+      "name": "Nazwa",
+      "size": "Rozmiar"
     },
     "title": {
       "createdAt": "Data utworzenia",

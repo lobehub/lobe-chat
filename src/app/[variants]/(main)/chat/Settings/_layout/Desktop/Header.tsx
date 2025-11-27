@@ -16,7 +16,7 @@ const Header = memo(() => {
   return (
     <ChatHeader
       left={<ChatHeaderTitle title={t('header.session')} />}
-      onBackClick={() => navigate(pathString('/chat', { search: location.search }))}
+      onBackClick={() => navigate(pathString('/agent', { search: location.search }))}
       right={<HeaderContent />}
       showBackButton
     />

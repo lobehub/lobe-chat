@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`agentSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly 1`] = `
+exports[`agentSelectors > inboxAgentConfig > should merge DEFAULT_AGENT_CONFIG and inboxAgent config correctly 1`] = `
 {
   "chatConfig": {
     "autoCreateTopicThreshold": 2,

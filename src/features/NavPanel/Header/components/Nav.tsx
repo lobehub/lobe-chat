@@ -24,7 +24,7 @@ const Nav = memo(() => {
         icon: HomeIcon,
         key: SidebarTabKey.Chat,
         title: t('tab.home'),
-        url: '/chat',
+        url: '/agent',
       },
       {
         hidden: !showAiImage,
