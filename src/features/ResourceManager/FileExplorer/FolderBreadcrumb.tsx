@@ -60,9 +60,9 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId }) => {
 
   const handleNavigate = (slug: string | null) => {
     if (slug) {
-      navigate(`/knowledge/library/${baseKnowledgeBaseId}/${slug}`);
+      navigate(`/resource/library/${baseKnowledgeBaseId}/${slug}`);
     } else {
-      navigate(`/knowledge/library/${baseKnowledgeBaseId}`);
+      navigate(`/resource/library/${baseKnowledgeBaseId}`);
     }
   };
 

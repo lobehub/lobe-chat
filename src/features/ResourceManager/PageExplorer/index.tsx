@@ -61,7 +61,7 @@ interface DocumentExplorerProps {
 }
 
 const updateUrl = (docId: string | null) => {
-  const newPath = docId ? `/knowledge/${docId}` : '/knowledge';
+  const newPath = docId ? `/resource/${docId}` : '/knowledge';
   window.history.replaceState({}, '', newPath);
 };
 

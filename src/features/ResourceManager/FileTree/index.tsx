@@ -82,15 +82,15 @@ const FileTreeItem = memo<{
     const handleFileClick = useCallback(() => {
       // Open file modal using slug-based routing
       const currentPath = currentFolderSlug
-        ? `/knowledge/library/${knowledgeBaseId}/${currentFolderSlug}`
-        : `/knowledge/library/${knowledgeBaseId}`;
+        ? `/resource/library/${knowledgeBaseId}/${currentFolderSlug}`
+        : `/resource/library/${knowledgeBaseId}`;
       navigate(`${currentPath}?file=${itemKey}`);
     }, [itemKey, currentFolderSlug, knowledgeBaseId, navigate]);
 
     const handleFolderClick = useCallback(
       (folderId: string, folderSlug?: string | null) => {
         const navKey = folderSlug || folderId;
-        navigate(`/knowledge/library/${knowledgeBaseId}/${navKey}`);
+        navigate(`/resource/library/${knowledgeBaseId}/${navKey}`);
       },
       [knowledgeBaseId, navigate],
     );

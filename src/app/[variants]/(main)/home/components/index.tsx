@@ -106,7 +106,7 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
   const handleDocumentClick = (documentId: string) => {
     // Navigate to the document in the explorer
     // The KnowledgeHomePage will automatically set category to 'documents' when it detects the id param
-    navigate(`/knowledge/${documentId}`);
+    navigate(`/resource/${documentId}`);
   };
 
   return (
