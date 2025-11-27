@@ -51,6 +51,9 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
   // Handle global store state or use props
   const [showAgentSetting] = useAgentStore((s) => [s.showAgentSetting]);
 
+  const { isLoading: isAgentConfigLoading } = useInitAgentConfig(agentId);
+
+  const isLoading = isAgentConfigLoading || !showAgentSetting;
   // Determine visibility - use prop if provided, otherwise use global state
   const isOpen = open !== undefined ? open : showAgentSetting;
 
@@ -80,9 +83,6 @@ const AgentSettingsEditor = memo<AgentSettingsEditorProps>(({ agentId, onClose, 
       return sessionMetaSelectors.currentAgentMeta(s);
     }
   }, isEqual);
-
-  const { isLoading } = useInitAgentConfig(agentId);
-
   // Handle global store state
   const [globalUpdateAgentConfig] = useAgentStore((s) => [s.updateAgentConfig]);
   const [globalUpdateAgentMeta] = useSessionStore((s) => [s.updateSessionMeta]);
