@@ -2,7 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { mutate } from 'swr';
 import { describe, expect, it, vi } from 'vitest';
 
-import { INBOX_SESSION_ID } from '@/const/session';
+import { agentService } from '@/services/agent';
 import { globalService } from '@/services/global';
 import { sessionService } from '@/services/session';
 import { useAgentStore } from '@/store/agent';
@@ -95,7 +95,7 @@ describe('AgentSlice', () => {
   });
 
   describe('updateAgentConfig', () => {
-    it('should update global config if current session is inbox session', async () => {
+    it('should update config when activeAgentId is set', async () => {
       const { result } = renderHook(() => useAgentStore());
       const config = { model: 'gpt-3.5-turbo' };
       const updateSessionConfigMock = vi
@@ -103,12 +103,16 @@ describe('AgentSlice', () => {
         .mockResolvedValue(undefined);
       const refreshMock = vi.spyOn(result.current, 'internal_refreshAgentConfig');
 
+      act(() => {
+        useAgentStore.setState({ activeAgentId: 'inbox-agent-id' });
+      });
+
       await act(async () => {
         await result.current.updateAgentConfig(config);
       });
 
       expect(updateSessionConfigMock).toHaveBeenCalledWith(
-        'inbox',
+        'inbox-agent-id',
         config,
         expect.any(AbortSignal),
       );
@@ -128,7 +132,7 @@ describe('AgentSlice', () => {
       // 模拟当前会话不是收件箱会话
       act(() => {
         useAgentStore.setState({
-          activeId: 'session-id',
+          activeAgentId: 'agent-id',
         });
       });
 
@@ -137,7 +141,7 @@ describe('AgentSlice', () => {
       });
 
       expect(updateSessionConfigMock).toHaveBeenCalledWith(
-        'session-id',
+        'agent-id',
         config,
         expect.any(AbortSignal),
       );
@@ -146,14 +150,14 @@ describe('AgentSlice', () => {
       refreshMock.mockRestore();
     });
 
-    it('should not update config if there is no current session', async () => {
+    it('should not update config if there is no current agent', async () => {
       const { result } = renderHook(() => useAgentStore());
       const config = { model: 'gpt-3.5-turbo' };
       const updateSessionConfigMock = vi.spyOn(sessionService, 'updateSessionConfig');
 
-      // 模拟没有当前会话
+      // 模拟没有当前 agent
       act(() => {
-        useAgentStore.setState({ activeId: null as any });
+        useAgentStore.setState({ activeAgentId: undefined });
       });
 
       await act(async () => {
@@ -169,17 +173,18 @@ describe('AgentSlice', () => {
     it('should update agentConfig and isAgentConfigInit when data changes and isAgentConfigInit is false', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      // act(() => {
-      //   result.current.agentMap = {};
-      // });
+      vi.spyOn(agentService, 'getAgentConfigById').mockResolvedValueOnce({
+        id: 'test-agent-id',
+        model: 'gpt-4',
+      } as any);
 
-      vi.spyOn(sessionService, 'getSessionConfig').mockResolvedValueOnce({ model: 'gpt-4' } as any);
-
-      renderHook(() => result.current.useFetchAgentConfig(true, 'test-session-id'));
+      renderHook(() => result.current.useFetchAgentConfig(true, 'test-agent-id'));
 
       await waitFor(() => {
-        expect(result.current.agentMap['test-session-id']).toEqual({ model: 'gpt-4' });
-        // expect(result.current.isAgentConfigInit).toBe(true);
+        expect(result.current.agentMap['test-agent-id']).toEqual({
+          id: 'test-agent-id',
+          model: 'gpt-4',
+        });
       });
     });
 
@@ -189,20 +194,24 @@ describe('AgentSlice', () => {
       act(() => {
         useAgentStore.setState({
           agentMap: {
-            'test-session-id': { model: 'gpt-3.5-turbo' },
+            'test-agent-id': { id: 'test-agent-id', model: 'gpt-3.5-turbo' },
           },
         });
       });
 
       vi.spyOn(useSessionStore, 'setState');
-      vi.spyOn(sessionService, 'getSessionConfig').mockResolvedValueOnce({
+      vi.spyOn(agentService, 'getAgentConfigById').mockResolvedValueOnce({
+        id: 'test-agent-id',
         model: 'gpt-3.5-turbo',
       } as any);
 
-      renderHook(() => result.current.useFetchAgentConfig(true, 'test-session-id'));
+      renderHook(() => result.current.useFetchAgentConfig(true, 'test-agent-id'));
 
       await waitFor(() => {
-        expect(result.current.agentMap['test-session-id']).toEqual({ model: 'gpt-3.5-turbo' });
+        expect(result.current.agentMap['test-agent-id']).toEqual({
+          id: 'test-agent-id',
+          model: 'gpt-3.5-turbo',
+        });
 
         expect(useSessionStore.setState).not.toHaveBeenCalled();
       });
@@ -212,28 +221,35 @@ describe('AgentSlice', () => {
   describe('useFetchInboxAgentConfig', () => {
     it('should merge DEFAULT_AGENT_CONFIG and update defaultAgentConfig and isDefaultAgentConfigInit on success', async () => {
       const { result } = renderHook(() => useAgentStore());
-      vi.spyOn(sessionService, 'getSessionConfig').mockResolvedValue({
+      vi.spyOn(agentService, 'getSessionConfig').mockResolvedValue({
+        id: 'inbox-agent-123',
         model: 'gemini-pro',
       } as any);
 
       renderHook(() => result.current.useInitInboxAgentStore(true));
 
       await waitFor(async () => {
-        expect(result.current.agentMap[INBOX_SESSION_ID]).toEqual({ model: 'gemini-pro' });
+        // agentMap key is now agentId (data.id), not INBOX_SESSION_ID
+        expect(result.current.agentMap['inbox-agent-123']).toEqual({
+          id: 'inbox-agent-123',
+          model: 'gemini-pro',
+        });
+        expect(result.current.inboxAgentId).toBe('inbox-agent-123');
         expect(result.current.isInboxAgentConfigInit).toBe(true);
       });
     });
 
     it('should not modify state if user not logged in', async () => {
       const { result } = renderHook(() => useAgentStore());
-      vi.spyOn(sessionService, 'getSessionConfig').mockResolvedValue({
+      vi.spyOn(agentService, 'getSessionConfig').mockResolvedValue({
+        id: 'inbox-agent-123',
         model: 'gemini-pro',
       } as any);
 
       renderHook(() => result.current.useInitInboxAgentStore(false));
 
       await waitFor(async () => {
-        expect(result.current.agentMap[INBOX_SESSION_ID]).toBeUndefined();
+        expect(result.current.agentMap['inbox-agent-123']).toBeUndefined();
         expect(result.current.isInboxAgentConfigInit).toBe(false);
       });
     });
@@ -241,12 +257,12 @@ describe('AgentSlice', () => {
     it('should not modify state on failure', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      vi.spyOn(globalService, 'getDefaultAgentConfig').mockRejectedValueOnce(new Error());
+      vi.spyOn(agentService, 'getSessionConfig').mockRejectedValueOnce(new Error());
 
       renderHook(() => result.current.useInitInboxAgentStore(true));
 
       await waitFor(async () => {
-        expect(result.current.agentMap[INBOX_SESSION_ID]).toBeUndefined();
+        expect(result.current.inboxAgentId).toBeUndefined();
         expect(result.current.isInboxAgentConfigInit).toBe(false);
       });
     });
@@ -311,11 +327,11 @@ describe('AgentSlice', () => {
   });
 
   describe('edge cases', () => {
-    it('should not update config if activeId is null', async () => {
+    it('should not update config if activeAgentId is undefined', async () => {
       const { result } = renderHook(() => useAgentStore());
 
       act(() => {
-        useAgentStore.setState({ activeId: null } as any);
+        useAgentStore.setState({ activeAgentId: undefined });
       });
 
       const updateMock = vi.spyOn(result.current, 'internal_updateAgentConfig');

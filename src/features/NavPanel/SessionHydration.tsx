@@ -4,7 +4,6 @@ import { memo, useEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { parseAsString, useQueryParam } from '@/hooks/useQueryParam';
-import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 
@@ -13,7 +12,6 @@ const THROTTLE_DELAY = 50;
 // sync outside state to useSessionStore
 const SessionHydration = memo(() => {
   const useStoreUpdater = createStoreUpdater(useSessionStore);
-  const useAgentStoreUpdater = createStoreUpdater(useAgentStore);
   const useChatStoreUpdater = createStoreUpdater(useChatStore);
   const [switchTopic] = useChatStore((s) => [s.switchTopic]);
 
@@ -24,7 +22,6 @@ const SessionHydration = memo(() => {
   });
 
   useStoreUpdater('activeId', session);
-  useAgentStoreUpdater('activeId', session);
   useChatStoreUpdater('activeId', session);
 
   useEffect(() => {

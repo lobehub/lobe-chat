@@ -34,8 +34,8 @@ export const config = {
     '/discover',
     '/discover(.*)',
     '/labs',
-    '/chat',
-    '/chat(.*)',
+    '/agent',
+    '/agent(.*)',
     '/changelog(.*)',
     '/settings(.*)',
     '/image',
@@ -129,8 +129,19 @@ const defaultMiddleware = (request: NextRequest) => {
   // / -> /zh-CN__0__dark
   // /discover -> /zh-CN__0__dark/discover
   // All SPA routes that use react-router-dom should be rewritten to just /${route}
-  const spaRoutes = ['/chat', '/discover', '/knowledge', '/settings', '/image', '/labs', '/changelog', '/profile', '/me'];
-  const isSpaRoute = spaRoutes.some(route => url.pathname.startsWith(route));
+  const spaRoutes = [
+    '/chat',
+    '/agent',
+    '/discover',
+    '/knowledge',
+    '/settings',
+    '/image',
+    '/labs',
+    '/changelog',
+    '/profile',
+    '/me',
+  ];
+  const isSpaRoute = spaRoutes.some((route) => url.pathname.startsWith(route));
 
   let nextPathname: string;
   if (isSpaRoute) {
@@ -141,7 +152,6 @@ const defaultMiddleware = (request: NextRequest) => {
   const nextURL = appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL
     ? urlJoin(url.origin, nextPathname)
     : nextPathname;
-
 
   console.log('nextURL', nextURL);
 

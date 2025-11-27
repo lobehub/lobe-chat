@@ -71,7 +71,7 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav, threadId }) =
           if (e.button === 0 && (e.metaKey || e.ctrlKey) && id) {
             const topicUrl = qs.stringifyUrl({
               query: { session: activeId, topic: id },
-              url: '/chat',
+              url: '/agent',
             });
             window.open(topicUrl, '_blank');
             return;

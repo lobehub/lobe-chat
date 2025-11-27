@@ -5,7 +5,7 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
 import DesktopMainLayout from './(main)/layouts/desktop';
-import { idLoader, slugLoader } from './loaders/routeParams';
+import { agentIdLoader, idLoader, slugLoader } from './loaders/routeParams';
 
 // Create desktop router configuration
 export const createDesktopRouter = () =>
@@ -21,12 +21,13 @@ export const createDesktopRouter = () =>
             },
             {
               element: dynamicElement(() => import('./(main)/chat/index')),
-              path: '*',
+              loader: agentIdLoader,
+              path: '/agent/:aid',
             },
           ],
           element: dynamicElement(() => import('./(main)/chat/_layout')),
-          errorElement: <ErrorBoundary resetPath="/chat" />,
-          path: 'chat',
+          errorElement: <ErrorBoundary resetPath="/agent" />,
+          path: 'agent',
         },
 
         // Discover routes with nested structure

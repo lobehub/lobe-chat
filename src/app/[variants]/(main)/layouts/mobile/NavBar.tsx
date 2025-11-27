@@ -45,7 +45,7 @@ const NavBar = memo(() => {
           ),
           key: SidebarTabKey.Chat,
           onClick: () => {
-            navigate('/chat');
+            navigate('/agent');
           },
           title: t('tab.chat'),
         },

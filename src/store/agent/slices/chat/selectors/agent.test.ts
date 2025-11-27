@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 
-import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { AgentStore } from '@/store/agent';
 import { AgentState } from '@/store/agent/slices/chat/initialState';
@@ -16,18 +15,19 @@ vi.mock('i18next', () => ({
 const agentConfig = DEFAULT_AGENT_CONFIG;
 
 const mockSessionStore = merge(initialState, {
-  activeId: '1',
+  activeAgentId: '1',
   agentMap: {
     '1': agentConfig,
   },
 } as Partial<AgentState>) as unknown as AgentStore;
 
 describe('agentSelectors', () => {
-  describe('defaultAgentConfig', () => {
-    it('should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly', () => {
+  describe('inboxAgentConfig', () => {
+    it('should merge DEFAULT_AGENT_CONFIG and inboxAgent config correctly', () => {
       const s = {
+        inboxAgentId: 'inbox-agent-123',
         agentMap: {
-          inbox: {
+          'inbox-agent-123': {
             systemRole: 'user',
             model: 'gpt-3.5-turbo',
             params: {
@@ -40,6 +40,17 @@ describe('agentSelectors', () => {
       const result = agentSelectors.inboxAgentConfig(s);
 
       expect(result).toMatchSnapshot();
+    });
+
+    it('should return DEFAULT_AGENT_CONFIG when inboxAgentId is not set', () => {
+      const s = {
+        inboxAgentId: undefined,
+        agentMap: {},
+      } as unknown as AgentStore;
+
+      const result = agentSelectors.inboxAgentConfig(s);
+
+      expect(result).toEqual(DEFAULT_AGENT_CONFIG);
     });
   });
 
@@ -196,7 +207,7 @@ describe('agentSelectors', () => {
 
     it('should return undefined if system role is not defined in the agent config', () => {
       const modifiedStore = merge({}, {
-        activeId: '1',
+        activeAgentId: '1',
         agentMap: {
           '1': {
             systemRole: undefined,
@@ -209,18 +220,29 @@ describe('agentSelectors', () => {
     });
   });
 
-  describe('isInboxSession', () => {
-    it('should return true if activeId is INBOX_SESSION_ID', () => {
+  describe('isInboxAgent', () => {
+    it('should return true if activeAgentId equals inboxAgentId', () => {
       const modifiedStore = {
         ...mockSessionStore,
-        activeId: INBOX_SESSION_ID,
+        activeAgentId: 'inbox-agent-id',
+        inboxAgentId: 'inbox-agent-id',
       };
-      const isInbox = agentSelectors.isInboxSession(modifiedStore);
+      const isInbox = agentSelectors.isInboxAgent(modifiedStore);
       expect(isInbox).toBe(true);
     });
 
-    it('should return false if activeId is not INBOX_SESSION_ID', () => {
-      const isInbox = agentSelectors.isInboxSession(mockSessionStore);
+    it('should return false if activeAgentId does not equal inboxAgentId', () => {
+      const isInbox = agentSelectors.isInboxAgent(mockSessionStore);
+      expect(isInbox).toBe(false);
+    });
+
+    it('should return false if inboxAgentId is not set', () => {
+      const modifiedStore = {
+        ...mockSessionStore,
+        activeAgentId: 'some-agent-id',
+        inboxAgentId: undefined,
+      };
+      const isInbox = agentSelectors.isInboxAgent(modifiedStore);
       expect(isInbox).toBe(false);
     });
   });

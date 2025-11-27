@@ -79,18 +79,14 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
   const activeId = useSessionStore((s) => s.activeId);
   const id = agentId || activeId;
 
-  // Get agent config and meta based on the provided or active agent ID
+  // Get agent config based on the provided or active agent ID
   const config = useAgentStore((s) => {
     if (agentId) {
-      // Use the new selector that works with agent IDs
-      return agentSelectors.getAgentConfigByAgentId(agentId)(s);
-    } else if (id) {
-      // Use the existing selector for session IDs
-      return agentSelectors.getAgentConfigById(id)(s);
-    } else {
-      // Use current agent config
-      return agentSelectors.currentAgentConfig(s);
+      // agentMap is now keyed by agentId, use getAgentConfigById directly
+      return agentSelectors.getAgentConfigById(agentId)(s);
     }
+    // Use current agent config
+    return agentSelectors.currentAgentConfig(s);
   }, isEqual);
   const meta = useSessionStore((s) => {
     if (agentId) {
@@ -102,7 +98,7 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
     }
   }, isEqual);
 
-  const { isLoading } = useInitAgentConfig(agentId);
+  const { isLoading } = useInitAgentConfig();
 
   // Handle global store state or use props
   const [showAgentSetting, globalUpdateAgentConfig] = useAgentStore((s) => [
