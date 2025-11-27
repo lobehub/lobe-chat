@@ -17,7 +17,6 @@ table agents {
   params jsonb [default: `{}`]
   provider text
   system_role text
-  editor_content jsonb
   tts jsonb
   virtual boolean [default: false]
   opening_message text
