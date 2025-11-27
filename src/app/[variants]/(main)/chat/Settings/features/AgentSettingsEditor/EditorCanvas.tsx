@@ -1,17 +1,17 @@
 'use client';
 
 import {
+  IEditor,
   INSERT_HEADING_COMMAND,
   INSERT_TABLE_COMMAND,
-  ReactCodeblockPlugin,
   ReactCodePlugin,
+  ReactCodeblockPlugin,
   ReactHRPlugin,
   ReactLinkHighlightPlugin,
   ReactListPlugin,
   ReactMathPlugin,
   ReactMentionPlugin,
   ReactTablePlugin,
-  IEditor,
 } from '@lobehub/editor';
 import { Editor, useEditor } from '@lobehub/editor/react';
 import { debounce } from 'lodash-es';
@@ -22,12 +22,11 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useStore } from '@/features/AgentSetting/store';
 
-import PROMPT_TEMPLATE from './promptTemplate.json';
 import { useMentionOptions } from './MentionList';
+import PROMPT_TEMPLATE from './promptTemplate.json';
 
 const SAVE_DEBOUNCE_TIME = 300; // ms
 type SavePayload = { editorContent: Record<string, any>; systemRole: string };
-
 
 /**
  * EditorCanvas
@@ -50,8 +49,12 @@ const EditorCanvas = memo(() => {
   const [initialLoad] = useState(editorContent || PROMPT_TEMPLATE);
 
   useEffect(() => {
-    if (editorContent === undefined && systemRole === undefined && loadingState?.avatar === undefined) {
-      return
+    if (
+      editorContent === undefined &&
+      systemRole === undefined &&
+      loadingState?.avatar === undefined
+    ) {
+      return;
     }
     if (editorContent) {
       editor?.setDocument('json', editorContent || PROMPT_TEMPLATE);
@@ -98,7 +101,6 @@ const EditorCanvas = memo(() => {
       console.error('[EditorCanvas] Failed to read editor content:', error);
     }
   };
-
 
   return (
     <Flexbox

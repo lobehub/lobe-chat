@@ -8,8 +8,10 @@ import React, { Suspense, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Action from '@/features/ChatInput/ActionBar/components/Action';
+import PluginAvatar from '@/components/Plugins/PluginAvatar';
+import { useStore } from '@/features/AgentSetting/store';
 import ToolItem from '@/features/ChatInput/ActionBar/Tools/ToolItem';
+import Action from '@/features/ChatInput/ActionBar/components/Action';
 import ModelSelect from '@/features/ModelSelect';
 import PluginStore from '@/features/PluginStore';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
@@ -17,9 +19,7 @@ import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useToolStore } from '@/store/tool';
 import { builtinToolSelectors, pluginSelectors } from '@/store/tool/selectors';
 
-import { useStore } from '@/features/AgentSetting/store';
 import PluginTag from './PluginTag';
-import PluginAvatar from '@/components/Plugins/PluginAvatar';
 
 interface AgentConfigBarProps {
   onOpenSettings: () => void;
@@ -72,12 +72,12 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
   // Handle plugin remove via Tag close
   const handleRemovePlugin =
     (pluginId: string | { enabled: boolean; identifier: string; settings: Record<string, any> }) =>
-      (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const identifier = typeof pluginId === 'string' ? pluginId : pluginId?.identifier;
-        toggleAgentPlugin(identifier, false);
-      };
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const identifier = typeof pluginId === 'string' ? pluginId : pluginId?.identifier;
+      toggleAgentPlugin(identifier, false);
+    };
 
   // Build dropdown menu items (adapted from useControls)
   const enablePluginCount = plugins.filter(
@@ -155,16 +155,11 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
       },
     ],
     [builtinList, installedPluginList, plugins, enablePluginCount, t, toggleAgentPlugin],
-  )
+  );
 
   return (
     <>
-      <Flexbox
-        direction="vertical"
-        gap={18}
-        paddingBlock={12}
-        paddingInline={24}
-      >
+      <Flexbox direction="vertical" gap={18} paddingBlock={12} paddingInline={24}>
         {/* First Row: Model Selector */}
         <Flexbox align="center" direction="horizontal" gap={12}>
           {/* Label */}
@@ -208,9 +203,12 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
         {plugins?.length > 0 && (
           <Flexbox align="center" direction="horizontal" gap={8} style={{ flexWrap: 'wrap' }}>
             {plugins?.map((pluginId) => {
-
               return (
-                <PluginTag key={pluginId} onRemove={handleRemovePlugin(pluginId)} pluginId={pluginId} />
+                <PluginTag
+                  key={pluginId}
+                  onRemove={handleRemovePlugin(pluginId)}
+                  pluginId={pluginId}
+                />
               );
             })}
           </Flexbox>

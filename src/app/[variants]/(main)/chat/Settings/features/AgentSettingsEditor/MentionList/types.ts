@@ -1,5 +1,5 @@
-import type { DropdownMenuItemType } from '@lobehub/ui';
 import type { API } from '@lobechat/prompts';
+import type { DropdownMenuItemType } from '@lobehub/ui';
 
 export type MentionEntityType = 'collection' | 'api';
 

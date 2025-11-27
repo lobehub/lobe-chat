@@ -3,8 +3,8 @@
 import { Icon, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { useTheme } from 'antd-style';
-import dynamic from 'next/dynamic';
 import { PaletteIcon } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -128,7 +128,6 @@ const AgentHeader = memo(() => {
           }}
           value={localTitle}
         />
-
       </Flexbox>
     </Flexbox>
   );
