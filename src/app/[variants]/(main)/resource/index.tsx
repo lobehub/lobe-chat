@@ -179,7 +179,6 @@ const MobileLayout = memo(() => {
 
 MobileLayout.displayName = 'MobileLayout';
 
-// Main Knowledge Home Page Content
 const KnowledgeHomePageContent = memo(() => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
@@ -189,7 +188,7 @@ const KnowledgeHomePageContent = memo(() => {
 KnowledgeHomePageContent.displayName = 'KnowledgeHomePageContent';
 
 // Main Knowledge Home Page with Provider
-const KnowledgeHomePage = memo(() => {
+const ResourcePage = memo(() => {
   return (
     <ResourceManagerProvider>
       <KnowledgeHomePageContent />
@@ -197,6 +196,6 @@ const KnowledgeHomePage = memo(() => {
   );
 });
 
-KnowledgeHomePage.displayName = 'KnowledgeHomePage';
+ResourcePage.displayName = 'ResourcePage';
 
-export default KnowledgeHomePage;
+export default ResourcePage;
