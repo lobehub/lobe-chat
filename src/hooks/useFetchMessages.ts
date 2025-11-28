@@ -44,7 +44,7 @@ export const useFetchMessages = () => {
     if (!isMemoryPluginEnabled || !sessionId) return undefined;
 
     return {
-      latestMessageContent: latestUserMessage?.content,
+      latestUserMessage: latestUserMessage?.content,
       session: currentSession,
       topic: activeTopic,
     };
