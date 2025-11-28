@@ -4,8 +4,8 @@ import { Flexbox } from 'react-layout-kit';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
-import ChatHeader from './ChatHeader';
 import ConversationArea from './ConversationArea';
+import ChatHeader from './Header';
 
 const ChatConversation = memo(() => {
   const showHeader = useGlobalStore(systemStatusSelectors.showChatHeader);

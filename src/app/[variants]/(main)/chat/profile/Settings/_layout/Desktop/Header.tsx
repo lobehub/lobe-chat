@@ -7,8 +7,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { pathString } from '@/utils/url';
 
-import HeaderContent from '../../features/HeaderContent';
-
 const Header = memo(() => {
   const { t } = useTranslation('setting');
   const navigate = useNavigate();
@@ -17,7 +15,6 @@ const Header = memo(() => {
     <ChatHeader
       left={<ChatHeaderTitle title={t('header.session')} />}
       onBackClick={() => navigate(pathString('/agent', { search: location.search }))}
-      right={<HeaderContent />}
       showBackButton
     />
   );

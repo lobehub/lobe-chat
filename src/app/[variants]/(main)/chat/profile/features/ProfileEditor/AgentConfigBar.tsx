@@ -159,7 +159,7 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
 
   return (
     <>
-      <Flexbox direction="vertical" gap={18} paddingBlock={12} paddingInline={24}>
+      <Flexbox direction="vertical" gap={16}>
         {/* First Row: Model Selector */}
         <Flexbox align="center" direction="horizontal" gap={12}>
           {/* Label */}

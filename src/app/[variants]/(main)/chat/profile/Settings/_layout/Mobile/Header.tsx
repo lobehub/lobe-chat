@@ -7,8 +7,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
-import HeaderContent from '../../features/HeaderContent';
-
 const Header = memo(() => {
   const { t } = useTranslation('setting');
   const navigate = useNavigate();
@@ -17,7 +15,6 @@ const Header = memo(() => {
     <ChatHeader
       center={<ChatHeader.Title title={t('header.session')} />}
       onBackClick={() => navigate(-1)}
-      right={<HeaderContent />}
       showBackButton
       style={mobileHeaderSticky}
     />

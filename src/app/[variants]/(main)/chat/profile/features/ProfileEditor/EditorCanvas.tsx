@@ -87,7 +87,8 @@ const EditorCanvas = memo(() => {
       style={{
         cursor: 'text',
         flex: 1,
-        minHeight: '500px',
+        minHeight: 480,
+        paddingBottom: 120,
       }}
     >
       <Editor
@@ -154,10 +155,6 @@ const EditorCanvas = memo(() => {
               },
             },
           ],
-        }}
-        style={{
-          minHeight: '500px',
-          paddingBottom: '200px',
         }}
       />
     </div>

@@ -1,11 +1,10 @@
 'use client';
 
-import { Icon, Tooltip } from '@lobehub/ui';
+import { EmojiPicker, Icon, Input, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { useTheme } from 'antd-style';
 import { PaletteIcon } from 'lucide-react';
-import dynamic from 'next/dynamic';
-import { memo, useEffect, useState } from 'react';
+import { Suspense, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -14,18 +13,8 @@ import { useStore } from '@/features/AgentSetting/store';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 
-const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
-
 const SAVE_DEBOUNCE_TIME = 500; // ms
 
-/**
- * AgentHeader
- *
- * Displays and allows editing of:
- * - Agent avatar (emoji picker)
- * - Agent name (title)
- * - Agent description
- */
 const AgentHeader = memo(() => {
   const { t } = useTranslation(['setting', 'common']);
   const theme = useTheme();
@@ -65,15 +54,7 @@ const AgentHeader = memo(() => {
   };
 
   return (
-    <Flexbox
-      align="start"
-      direction="vertical"
-      gap={16}
-      padding={24}
-      style={{
-        paddingBottom: 12,
-      }}
-    >
+    <Flexbox align="start" direction="vertical" gap={16} paddingBlock={16}>
       {/* Avatar (Left) */}
       <Flexbox flex="none">
         <EmojiPicker
@@ -87,10 +68,12 @@ const AgentHeader = memo(() => {
               ),
               render: () => (
                 <Flexbox padding={16}>
-                  <BackgroundSwatches
-                    onChange={handleBackgroundColorChange}
-                    value={backgroundColor}
-                  />
+                  <Suspense>
+                    <BackgroundSwatches
+                      onChange={handleBackgroundColorChange}
+                      value={backgroundColor}
+                    />
+                  </Suspense>
                 </Flexbox>
               ),
               value: 'background',
@@ -98,37 +81,29 @@ const AgentHeader = memo(() => {
           ]}
           locale={locale}
           onChange={handleAvatarChange}
-          size={64}
-          style={{
-            background: backgroundColor,
-            borderRadius: 12,
-          }}
+          shape={'square'}
+          size={78}
           value={meta.avatar}
         />
       </Flexbox>
 
       {/* Name */}
-      <Flexbox flex={1} gap={4}>
-        {/* Name Input */}
-        <input
-          onChange={(e) => {
-            setLocalTitle(e.target.value);
-            debouncedSaveTitle(e.target.value);
-          }}
-          placeholder={t('settingAgent.name.placeholder', { ns: 'setting' })}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: theme.colorText,
-            fontSize: 20,
-            fontWeight: 600,
-            lineHeight: 1.4,
-            outline: 'none',
-            width: '100%',
-          }}
-          value={localTitle}
-        />
-      </Flexbox>
+
+      <Input
+        onChange={(e) => {
+          setLocalTitle(e.target.value);
+          debouncedSaveTitle(e.target.value);
+        }}
+        placeholder={t('settingAgent.name.placeholder', { ns: 'setting' })}
+        style={{
+          fontSize: 40,
+          fontWeight: 600,
+          padding: 0,
+          width: '100%',
+        }}
+        value={localTitle}
+        variant={'borderless'}
+      />
     </Flexbox>
   );
 });

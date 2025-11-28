@@ -10,15 +10,7 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import MarketPublishButton from './MarketPublishButton';
 
-interface SmartAgentActionButtonProps {
-  modal?: boolean;
-}
-
-/**
- * 智能Agent操作按钮组件
- * 根据Agent的所有权自动决定显示"提交新Agent"还是"上传新版本"按钮
- */
-const SmartAgentActionButton = memo<SmartAgentActionButtonProps>(({ modal }) => {
+const AgentPublishButton = memo(() => {
   const { t } = useTranslation('setting');
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
   const { isOwnAgent } = useAgentOwnershipCheck(meta?.marketIdentifier);
@@ -41,28 +33,16 @@ const SmartAgentActionButton = memo<SmartAgentActionButtonProps>(({ modal }) => 
 
   switch (buttonType) {
     case 'upload': {
-      return (
-        <MarketPublishButton
-          action="upload"
-          marketIdentifier={meta?.marketIdentifier}
-          modal={modal}
-        />
-      );
+      return <MarketPublishButton action="upload" marketIdentifier={meta?.marketIdentifier} />;
     }
 
     case 'submit': {
-      return (
-        <MarketPublishButton
-          action="submit"
-          marketIdentifier={meta?.marketIdentifier}
-          modal={modal}
-        />
-      );
+      return <MarketPublishButton action="submit" marketIdentifier={meta?.marketIdentifier} />;
     }
 
     default: {
       return (
-        <Button block={Boolean(modal)} disabled icon={Loader2} loading variant={'filled'}>
+        <Button disabled icon={Loader2} loading variant={'filled'}>
           {t('checkingPermissions')}
         </Button>
       );
@@ -70,6 +50,4 @@ const SmartAgentActionButton = memo<SmartAgentActionButtonProps>(({ modal }) => 
   }
 });
 
-SmartAgentActionButton.displayName = 'SmartAgentActionButton';
-
-export default SmartAgentActionButton;
+export default AgentPublishButton;

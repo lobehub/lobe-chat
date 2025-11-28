@@ -18,6 +18,7 @@ const Layout = () => {
       <Sidebar />
       <Flexbox
         flex={1}
+        height={'100vh'}
         style={{
           background: theme.colorBgContainer,
           overflow: 'hidden',
