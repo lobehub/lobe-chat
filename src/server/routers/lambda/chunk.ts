@@ -162,7 +162,12 @@ export const chunkRouter = router({
           }
 
           // 2. Find existing parsed document
-          let document = await ctx.documentModel.findByFileId(fileId);
+          let document:
+            | {
+                content: string | null;
+                metadata: Record<string, any> | null;
+              }
+            | undefined = await ctx.documentModel.findByFileId(fileId);
 
           // 3. If not exists, parse the file
           if (!document) {

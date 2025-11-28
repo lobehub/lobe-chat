@@ -85,28 +85,30 @@ export function useQueryParam<T>(
 
       const updateParams = () => {
         // 使用函数式更新，确保基于最新的 searchParams
-        setSearchParams((prevParams) => {
-          const newSearchParams = new URLSearchParams(prevParams);
-          console.log('updateParams', newSearchParams.toString());
-          const serialized = currentParser.serialize(actualValue);
+        setSearchParams(
+          (prevParams) => {
+            const newSearchParams = new URLSearchParams(prevParams);
+            const serialized = currentParser.serialize(actualValue);
 
-          // 处理 clearOnDefault 选项
-          if (
-            currentClearOnDefault &&
-            currentDefaultValue !== undefined &&
-            serialized === currentParser.serialize(currentDefaultValue as T)
-          ) {
-            newSearchParams.delete(key);
-          } else if (serialized === null || serialized === undefined) {
-            newSearchParams.delete(key);
-          } else {
-            newSearchParams.set(key, serialized);
-          }
+            // 处理 clearOnDefault 选项
+            if (
+              currentClearOnDefault &&
+              currentDefaultValue !== undefined &&
+              serialized === currentParser.serialize(currentDefaultValue as T)
+            ) {
+              newSearchParams.delete(key);
+            } else if (serialized === null || serialized === undefined) {
+              newSearchParams.delete(key);
+            } else {
+              newSearchParams.set(key, serialized);
+            }
 
-          console.log('updateParams', newSearchParams.toString());
+            console.log('updateParams', newSearchParams.toString());
 
-          return newSearchParams;
-        }, { replace: currentHistory === 'replace' });
+            return newSearchParams;
+          },
+          { replace: currentHistory === 'replace' },
+        );
       };
 
       // 处理节流

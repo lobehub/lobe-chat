@@ -737,6 +737,9 @@
   "anthropic/claude-opus-4.1": {
     "description": "Opus 4.1 es un modelo avanzado de Anthropic, optimizado para programación, razonamiento complejo y tareas continuas."
   },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5 es el modelo insignia de Anthropic, que combina una inteligencia excepcional con un rendimiento escalable, ideal para tareas complejas que requieren respuestas de la más alta calidad y una gran capacidad de razonamiento."
+  },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 es una versión de razonamiento híbrido de Anthropic, que combina capacidades de pensamiento y no pensamiento."
   },
@@ -826,6 +829,9 @@
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 es el modelo más potente de Anthropic para manejar tareas altamente complejas. Se destaca en rendimiento, inteligencia, fluidez y comprensión."
+  },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5 es el modelo insignia de Anthropic, que combina una inteligencia excepcional con un rendimiento escalable, ideal para tareas complejas que requieren respuestas de la más alta calidad y una gran capacidad de razonamiento."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 puede generar respuestas casi instantáneas o un pensamiento prolongado paso a paso, permitiendo a los usuarios ver claramente estos procesos."
@@ -1670,6 +1676,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview posee una poderosa capacidad de razonamiento complejo, destacándose en áreas como razonamiento lógico, matemáticas y programación."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 es el modelo insignia de Anthropic, que combina una inteligencia excepcional con un rendimiento escalable, ideal para tareas complejas que requieren respuestas de la más alta calidad y una gran capacidad de razonamiento."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash es un modelo de razonamiento de alto rendimiento de Google, adecuado para tareas multimodales extendidas."
   },
@@ -1714,6 +1723,9 @@
   },
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview es el modelo de pensamiento más avanzado de Google, capaz de razonar sobre problemas complejos en código, matemáticas y áreas STEM, así como de analizar grandes conjuntos de datos, bases de código y documentos utilizando contextos extensos."
+  },
+  "google/gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image (Nano Banana Pro) es el modelo de generación de imágenes de Google, que también admite conversaciones multimodales."
   },
   "google/gemini-3-pro-image-preview-free": {
     "description": "Versión gratuita de Gemini 3 Pro Image, compatible con generación multimodal con cuota limitada."
@@ -2181,7 +2193,7 @@
     "description": "Kimi K2 Instruct, modelo de inferencia oficial de Kimi, compatible con contexto largo, código, preguntas y respuestas, entre otros escenarios."
   },
   "kimi-k2-thinking": {
-    "description": "Modelo de pensamiento K2 con contexto de 256k, compatible con llamadas de herramientas en múltiples pasos y razonamiento, especializado en resolver problemas complejos."
+    "description": "El modelo kimi-k2-thinking, proporcionado por Moonshot AI, es un modelo de pensamiento con capacidades generales de agente y razonamiento. Se destaca en el razonamiento profundo y puede utilizar herramientas en múltiples pasos para ayudar a resolver diversos problemas complejos."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Versión rápida del modelo de pensamiento K2, compatible con contexto de 256k, especializado en razonamiento profundo, con velocidad de salida de 60-100 tokens por segundo."

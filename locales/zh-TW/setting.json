@@ -293,6 +293,12 @@
       "elegant": "優雅",
       "title": "回應動畫"
     },
+    "contextMenuMode": {
+      "default": "預設",
+      "desc": "選擇聊天訊息右鍵選單的顯示方案",
+      "disabled": "不使用",
+      "title": "右鍵選單方案"
+    },
     "neutralColor": {
       "desc": "不同色彩傾向的灰階自訂",
       "title": "中性色"

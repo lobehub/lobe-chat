@@ -16,7 +16,6 @@ export class KnowledgeBaseExecutionRuntime {
   async searchKnowledgeBase(
     args: SearchKnowledgeBaseArgs,
     options?: {
-      fileIds?: string[];
       knowledgeBaseIds?: string[];
       messageId?: string;
       signal?: AbortSignal;
@@ -25,9 +24,10 @@ export class KnowledgeBaseExecutionRuntime {
     try {
       const { query, topK = 20 } = args;
 
-      // Call the existing RAG service
+      // Only search in knowledge bases, not agent files
+      // Agent files will be injected as full content in context-engine
       const { chunks, fileResults } = await ragService.semanticSearchForChat(
-        { fileIds: options?.fileIds, knowledgeIds: options?.knowledgeBaseIds, query, topK },
+        { knowledgeIds: options?.knowledgeBaseIds, query, topK },
         options?.signal,
       );
 

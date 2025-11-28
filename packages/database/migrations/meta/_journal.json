@@ -333,8 +333,22 @@
     {
       "idx": 47,
       "version": "7",
-      "when": 1763535087148,
+      "when": 1763987922211,
       "tag": "0047_add_slug_document",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1764215503726,
+      "tag": "0048_add_editor_data",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1764229953081,
+      "tag": "0049_better_auth",
       "breakpoints": true
     }
   ],

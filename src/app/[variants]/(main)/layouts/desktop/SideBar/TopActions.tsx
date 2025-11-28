@@ -2,11 +2,12 @@ import { ActionIcon, ActionIconProps, Hotkey } from '@lobehub/ui';
 import { Compass, FolderClosed, MessageSquare, Palette } from 'lucide-react';
 import { memo, useMemo, useTransition } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
+import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -31,11 +32,8 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
-
-  const [switchBackToChat, isMobile] = useGlobalStore((s) => [
-    s.switchBackToChat,
-    s.isMobile,
-  ]);
+  const [, { unpinAgent }] = usePinnedAgentState();
+  const [switchBackToChat, isMobile] = useGlobalStore((s) => [s.switchBackToChat, s.isMobile]);
   const { showMarket, enableKnowledgeBase, showAiImage } =
     useServerConfigStore(featureFlagsSelectors);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.NavigateToChat));
@@ -69,6 +67,7 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           e.preventDefault();
           startTransition(() => {
             switchBackToChat(activeSessionId);
+            unpinAgent();
           });
         }}
         size={ICON_SIZE}
