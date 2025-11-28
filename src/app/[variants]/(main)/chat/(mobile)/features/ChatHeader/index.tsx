@@ -3,8 +3,8 @@
 import { ChatHeader } from '@lobehub/ui/mobile';
 import { memo, useState } from 'react';
 
-import ShareButton from '@/app/[variants]/(main)/chat/Conversation/ChatHeader/ShareButton';
-import SettingButton from '@/app/[variants]/(main)/chat/Settings/features/SettingButton';
+import ShareButton from '@/app/[variants]/(main)/chat/features/Conversation/ChatHeader/ShareButton';
+import SettingButton from '@/app/[variants]/(main)/chat/profile/Settings/features/SettingButton';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';

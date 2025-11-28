@@ -20,7 +20,7 @@ export const createMobileRouter = () =>
               index: true,
             },
             {
-              element: dynamicElement(() => import('./(main)/chat/Settings')),
+              element: dynamicElement(() => import('./(main)/chat/profile/Settings')),
               path: 'settings',
             },
           ],

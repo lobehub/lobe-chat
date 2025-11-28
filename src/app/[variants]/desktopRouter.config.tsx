@@ -16,11 +16,21 @@ export const createDesktopRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/chat/index')),
               index: true,
+              loader: () => redirect('/', { status: 302 }),
             },
             {
-              element: dynamicElement(() => import('./(main)/chat/index')),
+              children: [
+                {
+                  element: dynamicElement(() => import('./(main)/chat')),
+                  index: true,
+                  loader: agentIdLoader,
+                },
+                {
+                  element: dynamicElement(() => import('./(main)/chat/profile')),
+                  path: 'profile',
+                },
+              ],
               loader: agentIdLoader,
               path: '/agent/:aid',
             },
@@ -40,7 +50,7 @@ export const createDesktopRouter = () =>
                   children: [
                     {
                       element: dynamicElement(() =>
-                        import('./(main)/discover/(list)/assistant/index').then(
+                        import('./(main)/discover/(list)/assistant').then(
                           (m) => m.DesktopAssistantPage,
                         ),
                       ),
@@ -56,9 +66,7 @@ export const createDesktopRouter = () =>
                   children: [
                     {
                       element: dynamicElement(() =>
-                        import('./(main)/discover/(list)/model/index').then(
-                          (m) => m.DesktopModelPage,
-                        ),
+                        import('./(main)/discover/(list)/model').then((m) => m.DesktopModelPage),
                       ),
                       index: true,
                     },
@@ -70,9 +78,7 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(() =>
-                    import('./(main)/discover/(list)/provider/index').then(
-                      (m) => m.DesktopProviderPage,
-                    ),
+                    import('./(main)/discover/(list)/provider').then((m) => m.DesktopProviderPage),
                   ),
                   path: 'provider',
                 },
@@ -80,7 +86,7 @@ export const createDesktopRouter = () =>
                   children: [
                     {
                       element: dynamicElement(() =>
-                        import('./(main)/discover/(list)/mcp/index').then((m) => m.DesktopMcpPage),
+                        import('./(main)/discover/(list)/mcp').then((m) => m.DesktopMcpPage),
                       ),
                       index: true,
                     },
@@ -92,21 +98,19 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(() =>
-                    import('./(main)/discover/(list)/(home)/index').then((m) => m.DesktopHomePage),
+                    import('./(main)/discover/(list)/(home)').then((m) => m.DesktopHomePage),
                   ),
                   index: true,
                 },
               ],
-              element: dynamicElement(
-                () => import('./(main)/discover/(list)/_layout/Desktop/index'),
-              ),
+              element: dynamicElement(() => import('./(main)/discover/(list)/_layout/Desktop')),
             },
             // Detail routes (with DetailLayout)
             {
               children: [
                 {
                   element: dynamicElement(() =>
-                    import('./(main)/discover/(detail)/assistant/index').then(
+                    import('./(main)/discover/(detail)/assistant').then(
                       (m) => m.DesktopDiscoverAssistantDetailPage,
                     ),
                   ),
@@ -115,16 +119,14 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(() =>
-                    import('./(main)/discover/(detail)/model/index').then(
-                      (m) => m.DesktopModelPage,
-                    ),
+                    import('./(main)/discover/(detail)/model').then((m) => m.DesktopModelPage),
                   ),
                   loader: slugLoader,
                   path: 'model/:slug',
                 },
                 {
                   element: dynamicElement(() =>
-                    import('./(main)/discover/(detail)/provider/index').then(
+                    import('./(main)/discover/(detail)/provider').then(
                       (m) => m.DesktopProviderPage,
                     ),
                   ),
@@ -133,7 +135,7 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(() =>
-                    import('./(main)/discover/(detail)/mcp/index').then((m) => m.DesktopMcpPage),
+                    import('./(main)/discover/(detail)/mcp').then((m) => m.DesktopMcpPage),
                   ),
                   loader: slugLoader,
                   path: 'mcp/:slug',
@@ -142,7 +144,7 @@ export const createDesktopRouter = () =>
               element: dynamicElement(() => import('./(main)/discover/(detail)/_layout/Desktop')),
             },
           ],
-          element: dynamicElement(() => import('./(main)/discover/_layout/Desktop/index')),
+          element: dynamicElement(() => import('./(main)/discover/_layout/Desktop')),
           errorElement: <ErrorBoundary resetPath="/discover" />,
           path: 'discover',
         },
@@ -242,24 +244,24 @@ export const createDesktopRouter = () =>
               index: true,
             },
             {
-              element: dynamicElement(() => import('./(main)/profile/apikey/index')),
+              element: dynamicElement(() => import('./(main)/profile/apikey')),
               path: 'apikey',
             },
             {
               element: dynamicElement(() =>
-                import('./(main)/profile/security/index').then((m) => m.DesktopProfileSecurityPage),
+                import('./(main)/profile/security').then((m) => m.DesktopProfileSecurityPage),
               ),
               path: 'security',
             },
             {
               element: dynamicElement(() =>
-                import('./(main)/profile/stats/index').then((m) => m.DesktopProfileStatsPage),
+                import('./(main)/profile/stats').then((m) => m.DesktopProfileStatsPage),
               ),
               path: 'stats',
             },
             {
               element: dynamicElement(() =>
-                import('./(main)/profile/usage/index').then((m) => m.DesktopProfileUsagePage),
+                import('./(main)/profile/usage').then((m) => m.DesktopProfileUsagePage),
               ),
               path: 'usage',
             },
@@ -274,7 +276,7 @@ export const createDesktopRouter = () =>
           children: [
             {
               element: dynamicElement(() =>
-                import('./(main)/changelog/index').then((m) => m.DesktopPage),
+                import('./(main)/changelog').then((m) => m.DesktopPage),
               ),
               index: true,
             },
@@ -295,7 +297,7 @@ export const createDesktopRouter = () =>
         },
       ],
       element: <DesktopMainLayout />,
-      errorElement: <ErrorBoundary resetPath="/chat" />,
+      errorElement: <ErrorBoundary resetPath="/" />,
       path: '/',
     },
   ]);

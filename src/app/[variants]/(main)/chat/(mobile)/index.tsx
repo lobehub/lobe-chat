@@ -2,8 +2,8 @@
 
 import { memo } from 'react';
 
-import ConversationArea from '@/app/[variants]/(main)/chat/Conversation/ConversationArea';
-import PortalPanel from '@/app/[variants]/(main)/chat/Portal/features/PortalPanel';
+import ConversationArea from '@/app/[variants]/(main)/chat/features/Conversation/ConversationArea';
+import PortalPanel from '@/app/[variants]/(main)/chat/features/Portal/features/PortalPanel';
 import MainInterfaceTracker from '@/components/Analytics/MainInterfaceTracker';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 

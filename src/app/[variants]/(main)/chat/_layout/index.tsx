@@ -6,11 +6,13 @@ import { isDesktop } from '@/const/version';
 import ProtocolUrlHandler from '@/features/ProtocolUrlHandler';
 
 import RegisterHotkeys from './RegisterHotkeys';
+import Sidebar from './Sidebar';
 
 const Layout = () => {
   const theme = useTheme();
   return (
     <>
+      <Sidebar />
       <Flexbox
         flex={1}
         style={{
