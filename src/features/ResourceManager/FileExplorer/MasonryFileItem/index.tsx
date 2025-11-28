@@ -143,7 +143,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface MasonryFileItemProps extends FileListItem {
   knowledgeBaseId?: string;
-  onOpen: (id: string) => void;
+  onOpen?: (id: string) => void;
   onSelectedChange: (id: string, selected: boolean) => void;
   selected?: boolean;
 }
@@ -283,7 +283,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             if (isNote) {
               setIsNoteModalOpen(true);
             } else {
-              onOpen(id);
+              onOpen?.(id);
             }
           }}
         >

@@ -7,7 +7,7 @@ import MasonryFileItem from '.';
 interface MasonryItemWrapperProps {
   context: {
     knowledgeBaseId?: string;
-    openFile: (id: string) => void;
+    openFile?: (id: string) => void;
     selectFileIds: string[];
     setSelectedFileIds: (updater: (prev: string[]) => string[]) => void;
   };
