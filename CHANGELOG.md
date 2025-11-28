@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.130](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.129...v2.0.0-next.130)
+
+<sup>Released on **2025-11-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add handling for `content_part` and `reasoning_part` events in fetchSSE.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add handling for `content_part` and `reasoning_part` events in fetchSSE, closes [#10470](https://github.com/lobehub/lobe-chat/issues/10470) ([8aff3ab](https://github.com/lobehub/lobe-chat/commit/8aff3ab))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.129](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.128...v2.0.0-next.129)
 
 <sup>Released on **2025-11-28**</sup>
