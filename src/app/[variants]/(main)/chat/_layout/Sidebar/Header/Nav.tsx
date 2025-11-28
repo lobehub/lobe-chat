@@ -1,6 +1,6 @@
 'use client';
 
-import { UserPen } from 'lucide-react';
+import { BotPromptIcon } from '@lobehub/ui/icons';
 import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -20,11 +20,11 @@ const Nav = memo(() => {
     <Flexbox gap={1}>
       <NavItem
         active={isProfileActive}
-        icon={UserPen}
+        icon={BotPromptIcon}
         onClick={() => {
           router.push(urlJoin('/agent', agentId!, 'profile'));
         }}
-        title={'profile'}
+        title={'Profile'}
       />
     </Flexbox>
   );
