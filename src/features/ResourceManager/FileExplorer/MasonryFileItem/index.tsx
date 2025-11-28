@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 

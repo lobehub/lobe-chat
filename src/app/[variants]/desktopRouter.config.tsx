@@ -153,30 +153,26 @@ export const createDesktopRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
+              element: dynamicElement(() => import('./(main)/resource')),
               index: true,
             },
             {
-              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
+              element: dynamicElement(() => import('./(main)/resource')),
               loader: idLoader,
               path: ':id',
             },
             {
-              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeBasesList')),
-              path: 'library',
-            },
-            {
-              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
+              element: dynamicElement(() => import('./(main)/resource')),
               loader: idLoader,
               path: 'library/:id/:slug',
             },
             {
-              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
+              element: dynamicElement(() => import('./(main)/resource')),
               loader: idLoader,
               path: 'library/:id',
             },
             {
-              element: dynamicElement(() => import('./(main)/resource/routes/KnowledgeHome')),
+              element: dynamicElement(() => import('./(main)/resource')),
               loader: idLoader,
               path: '*',
             },

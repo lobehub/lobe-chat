@@ -2,7 +2,7 @@
 
 import { ReactNode, memo, useRef } from 'react';
 
-import { Provider, createStore } from './store';
+import { Provider, createStore } from '../store';
 
 interface ResourceManagerProviderProps {
   children: ReactNode;

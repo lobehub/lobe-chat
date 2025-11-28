@@ -14,7 +14,7 @@ import Menu from '@/components/Menu';
 import type { MenuProps } from '@/components/Menu';
 import { FilesTabs } from '@/types/files';
 
-import { useFileCategory } from '../../../hooks/useFileCategory';
+import { useFileCategory } from '../hooks/useFileCategory';
 import { useResourceManagerStore } from '../store';
 
 const useStyles = createStyles(({ css, token }) => ({

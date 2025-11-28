@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
 
 import FileExplorer from './FileExplorer';
 import DocumentExplorer from './PageExplorer';

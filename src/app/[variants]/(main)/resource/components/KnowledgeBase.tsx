@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
 
-import KnowledgeBaseList from '../../../components/KnowledgeBaseList';
+import KnowledgeBaseList from './KnowledgeBaseList';
 
 const useStyles = createStyles(({ css, token }) => ({
   header: css`

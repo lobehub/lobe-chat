@@ -12,7 +12,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
-import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';

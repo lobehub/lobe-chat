@@ -17,15 +17,15 @@ import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { FilesTabs } from '@/types/files';
 
-import LibraryHead from '../../components/LibraryMenu/Head';
-import { useFileCategory } from '../../hooks/useFileCategory';
-import { useFolderPath } from '../../hooks/useFolderPath';
-import { useKnowledgeBaseItem } from '../../hooks/useKnowledgeItem';
-import { ResourceManagerProvider } from './ResourceManagerProvider';
-import Container from './layout/Container';
-import RegisterHotkeys from './layout/RegisterHotkeys';
-import CategoryMenu from './menu/CategoryMenu';
-import Collection from './menu/KnowledgeBase';
+import CategoryMenu from './components/CategoryMenu';
+import Container from './components/Container';
+import Collection from './components/KnowledgeBase';
+import LibraryHead from './components/LibraryMenu/Head';
+import RegisterHotkeys from './components/RegisterHotkeys';
+import { ResourceManagerProvider } from './components/ResourceManagerProvider';
+import { useFileCategory } from './hooks/useFileCategory';
+import { useFolderPath } from './hooks/useFolderPath';
+import { useKnowledgeBaseItem } from './hooks/useKnowledgeItem';
 import { useResourceManagerStore } from './store';
 
 const useStyles = createStyles(({ css, token }) => ({

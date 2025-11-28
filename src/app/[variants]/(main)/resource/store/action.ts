@@ -17,7 +17,9 @@ export interface Action {
 
 export type Store = Action & State;
 
-type CreateStore = (initState?: Partial<State>) => StateCreator<Store, [['zustand/devtools', never]]>;
+type CreateStore = (
+  initState?: Partial<State>,
+) => StateCreator<Store, [['zustand/devtools', never]]>;
 
 export const store: CreateStore = (publicState) => (set) => ({
   ...initialState,

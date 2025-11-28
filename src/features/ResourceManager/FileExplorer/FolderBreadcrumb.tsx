@@ -4,7 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
-import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
 import { useFileStore } from '@/store/file';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
