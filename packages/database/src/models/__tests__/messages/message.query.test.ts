@@ -21,6 +21,7 @@ import {
   messages,
   messagesFiles,
   sessions,
+  threads,
   topics,
   users,
 } from '../../../schemas';
@@ -1142,6 +1143,254 @@ describe('MessageModel Query Tests', () => {
       expect(result[0].fileList).toHaveLength(1);
       expect(result[0].fileList![0].id).toBe(fileId);
       expect(result[0].fileList![0].content).toBe('This is the document content for testing');
+    });
+  });
+
+  describe('query messages with threadId filter', () => {
+    it('should filter messages by threadId', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create threads first due to foreign key constraint
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-1',
+            type: 'standalone',
+          },
+          {
+            id: 'thread2',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-2',
+            type: 'standalone',
+          },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-thread-1',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'message in thread 1',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg-thread-2',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread1',
+            role: 'assistant',
+            content: 'another message in thread 1',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg-thread-other',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread2',
+            role: 'user',
+            content: 'message in thread 2',
+            createdAt: new Date('2023-01-03'),
+          },
+          {
+            id: 'msg-no-thread',
+            userId,
+            sessionId: 'session1',
+            threadId: null,
+            role: 'user',
+            content: 'message without thread',
+            createdAt: new Date('2023-01-04'),
+          },
+        ]);
+      });
+
+      // Query messages in specific thread
+      const result = await messageModel.query({ sessionId: 'session1', threadId: 'thread1' });
+
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('msg-thread-1');
+      expect(result[1].id).toBe('msg-thread-2');
+    });
+
+    it('should query messages with null threadId (only non-thread messages)', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create thread first
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-1',
+            type: 'standalone',
+          },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-no-thread-1',
+            userId,
+            sessionId: 'session1',
+            threadId: null,
+            role: 'user',
+            content: 'message without thread 1',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg-no-thread-2',
+            userId,
+            sessionId: 'session1',
+            threadId: null,
+            role: 'assistant',
+            content: 'message without thread 2',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg-thread-1',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'message in thread 1',
+            createdAt: new Date('2023-01-03'),
+          },
+        ]);
+      });
+
+      // Query with explicit null threadId should return only non-thread messages
+      const result = await messageModel.query({ sessionId: 'session1', threadId: null });
+
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('msg-no-thread-1');
+      expect(result[1].id).toBe('msg-no-thread-2');
+    });
+
+    it('should query messages with combined sessionId, topicId and threadId filters', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create threads first
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-1',
+            type: 'standalone',
+          },
+          {
+            id: 'thread2',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-2',
+            type: 'standalone',
+          },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-all-filters',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'message with all filters',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg-diff-thread',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread2',
+            role: 'user',
+            content: 'message with different thread',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg-no-thread',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'message without thread',
+            createdAt: new Date('2023-01-03'),
+          },
+        ]);
+      });
+
+      // Query specific session, topic and thread combination
+      const result = await messageModel.query({
+        sessionId: 'session1',
+        topicId: 'topic1',
+        threadId: 'thread1',
+      });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('msg-all-filters');
+    });
+
+    it('should query messages by threadId with sessionId but without topicId', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create threads first
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-1',
+            type: 'standalone',
+          },
+          {
+            id: 'thread2',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-2',
+            type: 'standalone',
+          },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-thread-1',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'message in thread 1',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg-thread-2',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread2',
+            role: 'user',
+            content: 'message in thread 2',
+            createdAt: new Date('2023-01-02'),
+          },
+        ]);
+      });
+
+      // Query by sessionId and threadId without topicId
+      const result = await messageModel.query({ sessionId: 'session1', threadId: 'thread1' });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('msg-thread-1');
     });
   });
 

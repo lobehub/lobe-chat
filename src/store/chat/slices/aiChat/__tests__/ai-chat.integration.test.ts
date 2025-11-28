@@ -353,9 +353,9 @@ describe('AI Chat Operation Integration Tests', () => {
       expect(result.current.operations[op3Id].context).toMatchObject(op3Context);
 
       // Verify context index
-      const contextKey1 = messageMapKey('session-1', 'topic-a');
-      const contextKey2 = messageMapKey('session-1', 'topic-b');
-      const contextKey3 = messageMapKey('session-2', 'topic-a');
+      const contextKey1 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-a' });
+      const contextKey2 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-b' });
+      const contextKey3 = messageMapKey({ sessionId: 'session-2', topicId: 'topic-a' });
 
       expect(result.current.operationsByContext[contextKey1]).toContain(op1Id);
       expect(result.current.operationsByContext[contextKey2]).toContain(op2Id);

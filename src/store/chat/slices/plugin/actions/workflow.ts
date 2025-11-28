@@ -50,8 +50,7 @@ export const pluginWorkflow: StateCreator<
 
     const result = await messageService.createMessage(newMessage);
     get().replaceMessages(result.messages, {
-      sessionId: newMessage.sessionId,
-      topicId: newMessage.topicId,
+      context: { sessionId: newMessage.sessionId, topicId: newMessage.topicId },
     });
   },
 

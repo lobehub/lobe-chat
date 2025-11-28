@@ -10,11 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
-import Avatar from '@/features/ChatItem/components/Avatar';
-import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
-import ErrorContent from '@/features/ChatItem/components/ErrorContent';
-import MessageContent from '@/features/ChatItem/components/MessageContent';
-import Title from '@/features/ChatItem/components/Title';
+import { Avatar, BorderSpacing, ErrorContent, Title } from '@/components/ChatItem';
+import MessageContent from '@/features/ChatItem/MessageContent';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
@@ -27,10 +24,10 @@ import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
-import ErrorMessageExtra, { useErrorContent } from '../../Error';
-import { markdownElements } from '../../MarkdownElements';
+import ErrorMessageExtra, { useErrorContent } from '@/features/Conversation/Error';
+import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
-import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
+import { normalizeThinkTags, processWithArtifact } from '@/features/Conversation/utils/markdown';
 import { AssistantActionsBar } from './Actions';
 import { AssistantMessageExtra } from './Extra';
 import { AssistantMessageBody } from './MessageBody';

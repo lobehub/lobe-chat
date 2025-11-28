@@ -37,7 +37,7 @@ describe('chatSelectors - Backward Compatibility Layer', () => {
     it('should work as backward compatibility alias for getDisplayMessageById', () => {
       const state = merge(initialStore, {
         messagesMap: {
-          [messageMapKey('abc')]: mockMessages,
+          [messageMapKey({ sessionId: 'abc' })]: mockMessages,
         },
         activeId: 'abc',
       });
@@ -54,7 +54,7 @@ describe('chatSelectors - Backward Compatibility Layer', () => {
         activeTopicId: 'topicId',
       };
       const result = chatSelectors.currentChatKey(state as ChatStore);
-      expect(result).toBe(messageMapKey('testId', 'topicId'));
+      expect(result).toBe(messageMapKey({ sessionId: 'testId', topicId: 'topicId' }));
     });
   });
 
@@ -62,7 +62,7 @@ describe('chatSelectors - Backward Compatibility Layer', () => {
     it('should work as backward compatibility alias for activeDisplayMessages', () => {
       const state = merge(initialStore, {
         messagesMap: {
-          [messageMapKey('abc')]: mockMessages,
+          [messageMapKey({ sessionId: 'abc' })]: mockMessages,
         },
         activeId: 'abc',
       });
@@ -81,7 +81,7 @@ describe('chatSelectors - Backward Compatibility Layer', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         dbMessagesMap: {
-          [messageMapKey('test-id')]: messages,
+          [messageMapKey({ sessionId: 'test-id' })]: messages,
         },
       };
       const result = chatSelectors.currentToolMessages(state as ChatStore);

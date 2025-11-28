@@ -7,18 +7,11 @@ import debug from 'debug';
 import isEqual from 'fast-deep-equal';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
-import { memo, useCallback, useMemo, useState, useSyncExternalStore } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import {
-  getVirtuaActiveIndex,
-  getVirtuaGlobalRef,
-  subscribeVirtuaActiveIndex,
-  subscribeVirtuaGlobalRef,
-} from '@/features/ChatList/components/VirtualizedList/VirtuosoContext';
-import { useChatStore } from '@/store/chat';
-import { displayMessageSelectors } from '@/store/chat/selectors';
+import { conversationSelectors, useConversationStore } from '@/features/Conversation';
 
 const log = debug('lobe-react:chat-minimap');
 
@@ -199,13 +192,10 @@ const ChatMinimap = memo(() => {
   const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
   const [isHovered, setIsHovered] = useState(false);
-  const virtuaRef = useSyncExternalStore(subscribeVirtuaGlobalRef, getVirtuaGlobalRef, () => null);
-  const activeIndex = useSyncExternalStore(
-    subscribeVirtuaActiveIndex,
-    getVirtuaActiveIndex,
-    () => null,
-  );
-  const messages = useChatStore(displayMessageSelectors.mainAIChats, isEqual);
+
+  const scrollMethods = useConversationStore(conversationSelectors.virtuaScrollMethods);
+  const activeIndex = useConversationStore(conversationSelectors.activeIndex);
+  const messages = useConversationStore(conversationSelectors.displayMessages, isEqual);
 
   const theme = useTheme();
 
@@ -244,20 +234,14 @@ const ChatMinimap = memo(() => {
 
   const handleJump = useCallback(
     (virtIndex: number) => {
-      virtuaRef?.current?.scrollToIndex(virtIndex, {
-        align: 'start',
-        // The current index detection will be off by 1, so we need to add 1 here
-        offset: 6,
-        smooth: true,
-      });
+      scrollMethods?.scrollToIndex(virtIndex, { align: 'start', smooth: true });
     },
-    [virtuaRef],
+    [scrollMethods],
   );
 
   const handleStep = useCallback(
     (direction: 'prev' | 'next') => {
-      const ref = virtuaRef?.current;
-      if (!ref || indicators.length === 0) return;
+      if (!scrollMethods || indicators.length === 0) return;
 
       let targetPosition: number;
 
@@ -299,13 +283,9 @@ const ChatMinimap = memo(() => {
 
       if (!targetIndicator) return;
 
-      ref.scrollToIndex(targetIndicator.virtuosoIndex, {
-        align: 'start',
-        offset: 6,
-        smooth: true,
-      });
+      scrollMethods.scrollToIndex(targetIndicator.virtuosoIndex, { align: 'start', smooth: true });
     },
-    [activeIndex, activeIndicatorPosition, indicators, virtuaRef],
+    [activeIndex, activeIndicatorPosition, indicators, scrollMethods],
   );
 
   if (indicators.length <= MIN_MESSAGES) return null;

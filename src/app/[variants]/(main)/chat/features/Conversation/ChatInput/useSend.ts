@@ -97,7 +97,16 @@ export const useSend = () => {
     if (params.onlyAddAIMessage) {
       addAIMessage();
     } else {
-      sendMessage({ files: fileList, message: inputMessage, ...params });
+      sendMessage({
+        files: fileList,
+        message: inputMessage,
+        ...params,
+        context: {
+          sessionId: store.activeId!,
+          topicId: store.activeTopicId,
+          threadId: store.activeThreadId,
+        },
+      });
     }
 
     clearChatUploadFileList();

@@ -53,7 +53,7 @@ export class MessageService {
    */
   private async queryWithSuccess(
     options?: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     if (!options || (options.sessionId === undefined && options.topicId === undefined)) {
       return { success: true };
     }
@@ -89,7 +89,6 @@ export class MessageService {
         topicId: params.topicId,
       },
       {
-        groupAssistantMessages: false,
         postProcessUrl: this.postProcessUrl,
       },
     );
@@ -145,7 +144,7 @@ export class MessageService {
     id: string,
     value: any,
     options: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     await this.messageModel.updatePluginState(id, value);
     return this.queryWithSuccess(options);
   }
@@ -158,7 +157,7 @@ export class MessageService {
     id: string,
     value: any,
     options: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     await this.messageModel.updateMessagePlugin(id, value);
     return this.queryWithSuccess(options);
   }
@@ -171,7 +170,7 @@ export class MessageService {
     id: string,
     value: UpdateMessageParams,
     options: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     await this.messageModel.update(id, value as any);
     return this.queryWithSuccess(options);
   }

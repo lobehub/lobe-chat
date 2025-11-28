@@ -69,6 +69,11 @@ export const useSendMessage = () => {
       files: fileList,
       message: store.inputMessage,
       ...params,
+      context: {
+        sessionId: store.activeId!,
+        topicId: store.activeTopicId,
+        threadId: store.activeThreadId,
+      },
     });
 
     updateMessageInput('');

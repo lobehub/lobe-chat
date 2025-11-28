@@ -70,7 +70,7 @@ export const conversationControl: StateCreator<
 
     // Determine which operation to cancel
     const targetTopicId = topicId ?? activeTopicId;
-    const contextKey = messageMapKey(activeId, targetTopicId);
+    const contextKey = messageMapKey({ sessionId: activeId, topicId: targetTopicId });
 
     // Cancel operations in the operation system
     const operationIds = get().operationsByContext[contextKey] || [];
@@ -83,7 +83,7 @@ export const conversationControl: StateCreator<
     });
 
     // Restore editor state if it's the active session
-    if (contextKey === messageMapKey(activeId, activeTopicId)) {
+    if (contextKey === messageMapKey({ sessionId: activeId, topicId: activeTopicId })) {
       // Find the latest sendMessage operation with editor state
       for (const opId of [...operationIds].reverse()) {
         const op = get().operations[opId];
@@ -97,7 +97,7 @@ export const conversationControl: StateCreator<
 
   clearSendMessageError: () => {
     const { activeId, activeTopicId } = get();
-    const contextKey = messageMapKey(activeId, activeTopicId);
+    const contextKey = messageMapKey({ sessionId: activeId, topicId: activeTopicId });
     const operationIds = get().operationsByContext[contextKey] || [];
 
     // Clear error message from all sendMessage operations in current context

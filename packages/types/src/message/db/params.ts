@@ -23,6 +23,7 @@ export interface QueryMessageParams {
   groupId?: string | null;
   pageSize?: number;
   sessionId?: string | null;
+  threadId?: string | null;
   topicId?: string | null;
 }
 

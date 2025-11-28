@@ -140,7 +140,9 @@ export const chatTopic: StateCreator<
       if (isGroupSession) {
         set(
           produce((state: ChatStoreState) => {
-            state.supervisorTodos[messageMapKey(groupId || activeId, null)] = [];
+            state.supervisorTodos[
+              messageMapKey({ sessionId: groupId || activeId, topicId: null })
+            ] = [];
           }),
           false,
           n('resetSupervisorTodosOnSaveToTopic', { groupId: groupId || activeId }),
@@ -225,7 +227,7 @@ export const chatTopic: StateCreator<
     const { activeId: sessionId, summaryTopicTitle, internal_updateTopicLoading } = get();
 
     internal_updateTopicLoading(id, true);
-    const messages = await messageService.getMessages(sessionId, id);
+    const messages = await messageService.getMessages({ sessionId, topicId: id });
 
     await summaryTopicTitle(id, messages);
     internal_updateTopicLoading(id, false);
@@ -292,7 +294,7 @@ export const chatTopic: StateCreator<
       }
 
       if (isGroupSession) {
-        const newKey = messageMapKey(activeId, id ?? null);
+        const newKey = messageMapKey({ sessionId: activeId, topicId: id ?? null });
         set(
           produce((state: ChatStoreState) => {
             state.supervisorTodos[newKey] = [];

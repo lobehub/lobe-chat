@@ -1,4 +1,6 @@
 /* eslint-disable typescript-sort-keys/interface, sort-keys-fix/sort-keys-fix */
+import type { ConversationContext } from '@lobechat/types';
+
 /**
  * Operation Type Definitions
  * Unified operation state management for all async operations
@@ -10,6 +12,7 @@
 export type OperationType =
   // === Message sending ===
   | 'sendMessage' // Send message to server
+  | 'sendThreadMessage' // Send message in thread (deprecated, will be merged into sendMessage)
   | 'createTopic' // Auto create topic
   | 'regenerate' // Regenerate message
   | 'continue' // Continue generation
@@ -60,13 +63,11 @@ export type OperationStatus =
 
 /**
  * Operation context - business entity associations
+ * Extends ConversationContext with operation-specific fields
  * Captured when Operation is created, never changes afterwards
  */
-export interface OperationContext {
-  sessionId?: string; // Associated session ID (normal session or group)
-  topicId?: string | null; // Associated topic ID (null means default topic)
+export interface OperationContext extends Partial<ConversationContext> {
   messageId?: string; // Associated message ID
-  threadId?: string; // Associated thread ID (Portal Thread)
   groupId?: string; // Associated group ID (Group Chat)
   agentId?: string; // Associated agent ID (specific agent in Group Chat)
 }
