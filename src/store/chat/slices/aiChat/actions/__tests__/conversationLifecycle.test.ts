@@ -47,18 +47,24 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+// Helper to create context for testing
+const createTestContext = (sessionId = TEST_IDS.SESSION_ID) => ({
+  sessionId,
+  topicId: null,
+  threadId: null,
+});
+
 describe('ConversationLifecycle actions', () => {
   describe('sendMessage', () => {
     describe('validation', () => {
-      it('should not send when there is no active session', async () => {
-        act(() => {
-          useChatStore.setState({ activeId: undefined });
-        });
-
+      it('should not send when sessionId is empty', async () => {
         const { result } = renderHook(() => useChatStore());
 
         await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
+          await result.current.sendMessage({
+            message: TEST_CONTENT.USER_MESSAGE,
+            context: { sessionId: '', topicId: null, threadId: null },
+          });
         });
 
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
@@ -68,7 +74,10 @@ describe('ConversationLifecycle actions', () => {
         const { result } = renderHook(() => useChatStore());
 
         await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.EMPTY });
+          await result.current.sendMessage({
+            message: TEST_CONTENT.EMPTY,
+            context: createTestContext(),
+          });
         });
 
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
@@ -78,7 +87,11 @@ describe('ConversationLifecycle actions', () => {
         const { result } = renderHook(() => useChatStore());
 
         await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.EMPTY, files: [] });
+          await result.current.sendMessage({
+            message: TEST_CONTENT.EMPTY,
+            files: [],
+            context: createTestContext(),
+          });
         });
 
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
@@ -99,6 +112,7 @@ describe('ConversationLifecycle actions', () => {
           await result.current.sendMessage({
             message: TEST_CONTENT.USER_MESSAGE,
             onlyAddUserMessage: true,
+            context: createTestContext(),
           });
         });
 
@@ -118,7 +132,10 @@ describe('ConversationLifecycle actions', () => {
         } as any);
 
         await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
+          await result.current.sendMessage({
+            message: TEST_CONTENT.USER_MESSAGE,
+            context: createTestContext(),
+          });
         });
 
         expect(result.current.internal_execAgentRuntime).toHaveBeenCalled();

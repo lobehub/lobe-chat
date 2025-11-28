@@ -44,7 +44,7 @@ export const setupStoreWithMessages = (
     activeId: sessionId,
     activeTopicId: topicId ?? undefined,
     messagesMap: {
-      [messageMapKey(sessionId, topicId ?? undefined)]: messages,
+      [messageMapKey({ sessionId, topicId: topicId ?? undefined })]: messages,
     },
   });
 };

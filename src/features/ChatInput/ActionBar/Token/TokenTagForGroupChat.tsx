@@ -51,7 +51,10 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
   const activeSessionId = useSessionStore((s) => s.activeId);
   const groupConfig = useChatGroupStore(chatGroupSelectors.currentGroupConfig);
   const supervisorTodos = useChatStore((s) =>
-    activeSessionId ? s.supervisorTodos[messageMapKey(activeSessionId, activeTopicId)] || [] : [],
+    activeSessionId
+      ? s.supervisorTodos[messageMapKey({ sessionId: activeSessionId, topicId: activeTopicId })] ||
+        []
+      : [],
   );
 
   const maxTokens = useModelContextWindowTokens(model, provider);

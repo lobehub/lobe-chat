@@ -119,7 +119,7 @@ describe('topic action', () => {
       act(() => {
         useChatStore.setState({
           messagesMap: {
-            [messageMapKey('session')]: [],
+            [messageMapKey({ sessionId: 'session' })]: [],
           },
           activeId: 'session',
         });
@@ -139,7 +139,7 @@ describe('topic action', () => {
       act(() => {
         useChatStore.setState({
           messagesMap: {
-            [messageMapKey('session-id')]: messages,
+            [messageMapKey({ sessionId: 'session-id' })]: messages,
           },
           activeId: 'session-id',
         });
@@ -163,7 +163,7 @@ describe('topic action', () => {
     it('should reset supervisor todos after saving to topic for group sessions', async () => {
       const { result } = renderHook(() => useChatStore());
       const groupId = 'group-session';
-      const todoKey = messageMapKey(groupId, null);
+      const todoKey = messageMapKey({ sessionId: groupId, topicId: null });
       const messages = [{ id: 'group-message-1' }] as UIChatMessage[];
 
       await act(async () => {
@@ -171,7 +171,7 @@ describe('topic action', () => {
           activeId: groupId,
           activeSessionType: 'group',
           messagesMap: {
-            [messageMapKey(groupId)]: messages,
+            [messageMapKey({ sessionId: groupId })]: messages,
           },
           supervisorTodos: {
             [todoKey]: [{ id: 'todo-1' } as any],
@@ -350,14 +350,14 @@ describe('topic action', () => {
       const { result } = renderHook(() => useChatStore());
       const groupId = 'group-1';
       const nextTopicId = 'topic-2';
-      const expectedKey = messageMapKey(groupId, nextTopicId);
+      const expectedKey = messageMapKey({ sessionId: groupId, topicId: nextTopicId });
 
       await act(async () => {
         useChatStore.setState({
           activeId: groupId,
           activeSessionType: 'group',
           supervisorTodos: {
-            [messageMapKey(groupId, null)]: [{ id: 'todo' } as any],
+            [messageMapKey({ sessionId: groupId, topicId: null })]: [{ id: 'todo' } as any],
           },
         });
       });
@@ -377,7 +377,7 @@ describe('topic action', () => {
       const { result } = renderHook(() => useChatStore());
       const groupId = 'group-from-session';
       const newTopicId = 'topic-session';
-      const expectedKey = messageMapKey(groupId, newTopicId);
+      const expectedKey = messageMapKey({ sessionId: groupId, topicId: newTopicId });
 
       await act(async () => {
         useChatStore.setState({
@@ -611,7 +611,7 @@ describe('topic action', () => {
         useChatStore.setState({
           activeId,
           messagesMap: {
-            [messageMapKey(activeId)]: messages,
+            [messageMapKey({ sessionId: activeId })]: messages,
           },
         });
       });
@@ -674,7 +674,7 @@ describe('topic action', () => {
         await result.current.autoRenameTopicTitle(topicId);
       });
 
-      expect(getMessagesSpy).toHaveBeenCalledWith(activeId, topicId);
+      expect(getMessagesSpy).toHaveBeenCalledWith({ sessionId: activeId, topicId });
       expect(summaryTopicTitleSpy).toHaveBeenCalledWith(topicId, messages);
     });
   });

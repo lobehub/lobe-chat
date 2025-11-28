@@ -219,7 +219,7 @@ describe('chatMessage actions', () => {
           activeId: 'session-id',
           activeTopicId: undefined,
           messagesMap: {
-            [messageMapKey('session-id')]: [{ id: messageId } as UIChatMessage],
+            [messageMapKey({ sessionId: 'session-id' })]: [{ id: messageId } as UIChatMessage],
           },
         });
       });
@@ -229,8 +229,7 @@ describe('chatMessage actions', () => {
 
       expect(deleteSpy).toHaveBeenCalledWith(messageId);
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        sessionId: 'session-id',
-        topicId: undefined,
+        context: { sessionId: 'session-id', topicId: undefined, threadId: undefined },
       });
     });
 
@@ -256,7 +255,7 @@ describe('chatMessage actions', () => {
           activeId: 'session-id',
           activeTopicId: undefined,
           messagesMap: {
-            [messageMapKey('session-id')]: [
+            [messageMapKey({ sessionId: 'session-id' })]: [
               { id: messageId, tools: [{ id: 'tool1' }, { id: 'tool2' }] } as UIChatMessage,
               { id: '2', tool_call_id: 'tool1', role: 'tool' } as UIChatMessage,
               { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
@@ -274,8 +273,7 @@ describe('chatMessage actions', () => {
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        sessionId: 'session-id',
-        topicId: undefined,
+        context: { sessionId: 'session-id', topicId: undefined, threadId: undefined },
       });
     });
 
@@ -298,7 +296,7 @@ describe('chatMessage actions', () => {
           activeId: 'session-id',
           activeTopicId: undefined,
           messagesMap: {
-            [messageMapKey('session-id')]: [
+            [messageMapKey({ sessionId: 'session-id' })]: [
               {
                 id: groupMessageId,
                 role: 'assistantGroup',
@@ -328,8 +326,7 @@ describe('chatMessage actions', () => {
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        sessionId: 'session-id',
-        topicId: undefined,
+        context: { sessionId: 'session-id', topicId: undefined, threadId: undefined },
       });
     });
 
@@ -352,7 +349,7 @@ describe('chatMessage actions', () => {
           activeId: 'session-id',
           activeTopicId: undefined,
           messagesMap: {
-            [messageMapKey('session-id')]: [
+            [messageMapKey({ sessionId: 'session-id' })]: [
               {
                 id: groupMessageId,
                 role: 'assistantGroup',
@@ -395,8 +392,7 @@ describe('chatMessage actions', () => {
         },
       );
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        sessionId: 'session-id',
-        topicId: undefined,
+        context: { sessionId: 'session-id', topicId: undefined, threadId: undefined },
       });
     });
   });
@@ -452,7 +448,7 @@ describe('chatMessage actions', () => {
         { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
       ];
 
-      const key = messageMapKey(sessionId, topicId);
+      const key = messageMapKey({ sessionId, topicId });
       act(() => {
         useChatStore.setState({
           activeId: sessionId,
@@ -709,13 +705,10 @@ describe('chatMessage actions', () => {
         await result.current.optimisticUpdateMessageContent(messageId, newContent);
       });
 
-      expect(replaceMessagesSpy).toHaveBeenCalledWith(
-        [],
-        expect.objectContaining({
-          sessionId: 'session-id',
-          topicId: 'topic-id',
-        }),
-      );
+      expect(replaceMessagesSpy).toHaveBeenCalledWith([], {
+        action: 'optimisticUpdateMessageContent',
+        context: { sessionId: 'session-id', topicId: 'topic-id', threadId: undefined },
+      });
     });
   });
 
@@ -1031,13 +1024,9 @@ describe('chatMessage actions', () => {
         await result.current.optimisticUpdateMessagePlugin(messageId, pluginValue);
       });
 
-      expect(replaceMessagesSpy).toHaveBeenCalledWith(
-        [],
-        expect.objectContaining({
-          sessionId: 'session-id',
-          topicId: 'topic-id',
-        }),
-      );
+      expect(replaceMessagesSpy).toHaveBeenCalledWith([], {
+        context: { sessionId: 'session-id', topicId: 'topic-id', threadId: undefined },
+      });
     });
 
     it('should use context operationId when provided', async () => {

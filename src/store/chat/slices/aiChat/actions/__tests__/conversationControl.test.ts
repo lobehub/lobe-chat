@@ -304,8 +304,8 @@ describe('ConversationControl actions', () => {
       expect(result.current.operations[opId2!].status).toBe('running');
       expect(opId1).not.toBe(opId2);
 
-      const contextKey1 = messageMapKey('session-1', 'topic-1');
-      const contextKey2 = messageMapKey('session-1', 'topic-2');
+      const contextKey1 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-1' });
+      const contextKey2 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-2' });
 
       expect(result.current.operationsByContext[contextKey1]).toContain(opId1!);
       expect(result.current.operationsByContext[contextKey2]).toContain(opId2!);

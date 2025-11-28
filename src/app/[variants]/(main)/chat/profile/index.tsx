@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import WideScreenContainer from '@/features/ChatList/components/WideScreenContainer';
+import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 
 import Header from './features/Header';
 import ProfileEditor from './features/ProfileEditor';

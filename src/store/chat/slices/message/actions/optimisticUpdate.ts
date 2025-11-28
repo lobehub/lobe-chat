@@ -145,8 +145,8 @@ export const messageOptimisticUpdate: StateCreator<
       const result = await messageService.createMessage(message);
 
       // Use the messages returned from createMessage (already grouped)
-      const { sessionId, topicId } = get().internal_getSessionContext(context);
-      replaceMessages(result.messages, { sessionId, topicId });
+      const ctx = get().internal_getSessionContext(context);
+      replaceMessages(result.messages, { context: ctx });
 
       internal_toggleMessageLoading(false, tempId);
       return result;
@@ -181,25 +181,25 @@ export const messageOptimisticUpdate: StateCreator<
 
   optimisticDeleteMessage: async (id: string, context) => {
     get().internal_dispatchMessage({ id, type: 'deleteMessage' }, context);
-    const { sessionId, topicId } = get().internal_getSessionContext(context);
+    const ctx = get().internal_getSessionContext(context);
     const result = await messageService.removeMessage(id, {
-      sessionId,
-      topicId,
+      sessionId: ctx.sessionId,
+      topicId: ctx.topicId,
     });
     if (result?.success && result.messages) {
-      get().replaceMessages(result.messages, { sessionId, topicId });
+      get().replaceMessages(result.messages, { context: ctx });
     }
   },
 
   optimisticDeleteMessages: async (ids, context) => {
     get().internal_dispatchMessage({ ids, type: 'deleteMessages' }, context);
-    const { sessionId, topicId } = get().internal_getSessionContext(context);
+    const ctx = get().internal_getSessionContext(context);
     const result = await messageService.removeMessages(ids, {
-      sessionId,
-      topicId,
+      sessionId: ctx.sessionId,
+      topicId: ctx.topicId,
     });
     if (result?.success && result.messages) {
-      get().replaceMessages(result.messages, { sessionId, topicId });
+      get().replaceMessages(result.messages, { context: ctx });
     }
   },
 
@@ -229,7 +229,7 @@ export const messageOptimisticUpdate: StateCreator<
       );
     }
 
-    const { sessionId, topicId } = get().internal_getSessionContext(context);
+    const ctx = get().internal_getSessionContext(context);
 
     const result = await messageService.updateMessage(
       id,
@@ -243,14 +243,13 @@ export const messageOptimisticUpdate: StateCreator<
         search: extra?.search,
         tools: extra?.tools,
       },
-      { sessionId, topicId },
+      { sessionId: ctx.sessionId, topicId: ctx.topicId },
     );
 
     if (result && result.success && result.messages) {
       replaceMessages(result.messages, {
         action: 'optimisticUpdateMessageContent',
-        sessionId,
-        topicId,
+        context: ctx,
       });
     } else {
       await refreshMessages();
@@ -259,10 +258,14 @@ export const messageOptimisticUpdate: StateCreator<
 
   optimisticUpdateMessageError: async (id, error, context) => {
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } }, context);
-    const { sessionId, topicId } = get().internal_getSessionContext(context);
-    const result = await messageService.updateMessage(id, { error }, { sessionId, topicId });
+    const ctx = get().internal_getSessionContext(context);
+    const result = await messageService.updateMessage(
+      id,
+      { error },
+      { sessionId: ctx.sessionId, topicId: ctx.topicId },
+    );
     if (result?.success && result.messages) {
-      get().replaceMessages(result.messages, { sessionId, topicId });
+      get().replaceMessages(result.messages, { context: ctx });
     } else {
       await get().refreshMessages();
     }
@@ -281,16 +284,16 @@ export const messageOptimisticUpdate: StateCreator<
       context,
     );
 
-    const { sessionId, topicId } = get().internal_getSessionContext(context);
+    const ctx = get().internal_getSessionContext(context);
 
     // Persist to database
     const result = await messageService.updateMessageMetadata(id, metadata, {
-      sessionId,
-      topicId,
+      sessionId: ctx.sessionId,
+      topicId: ctx.topicId,
     });
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages, { sessionId, topicId });
+      replaceMessages(result.messages, { context: ctx });
     } else {
       await refreshMessages();
     }
@@ -309,35 +312,38 @@ export const messageOptimisticUpdate: StateCreator<
       context,
     );
 
-    const { sessionId, topicId } = get().internal_getSessionContext(context);
+    const ctx = get().internal_getSessionContext(context);
 
     // Persist to database
-    const result = await messageService.updateMessagePlugin(id, value, { sessionId, topicId });
+    const result = await messageService.updateMessagePlugin(id, value, {
+      sessionId: ctx.sessionId,
+      topicId: ctx.topicId,
+    });
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages, { sessionId, topicId });
+      replaceMessages(result.messages, { context: ctx });
     }
   },
 
   optimisticUpdateMessagePluginError: async (id, error, context) => {
-    const { sessionId, topicId } = get().internal_getSessionContext(context);
+    const ctx = get().internal_getSessionContext(context);
     const result = await messageService.updateMessagePluginError(id, error, {
-      sessionId,
-      topicId,
+      sessionId: ctx.sessionId,
+      topicId: ctx.topicId,
     });
     if (result?.success && result.messages) {
-      get().replaceMessages(result.messages, { sessionId, topicId });
+      get().replaceMessages(result.messages, { context: ctx });
     }
   },
 
   optimisticUpdateMessageRAG: async (id, data, context) => {
-    const { sessionId, topicId } = get().internal_getSessionContext(context);
+    const ctx = get().internal_getSessionContext(context);
     const result = await messageService.updateMessageRAG(id, data, {
-      sessionId,
-      topicId,
+      sessionId: ctx.sessionId,
+      topicId: ctx.topicId,
     });
     if (result?.success && result.messages) {
-      get().replaceMessages(result.messages, { sessionId, topicId });
+      get().replaceMessages(result.messages, { context: ctx });
     }
   },
 });

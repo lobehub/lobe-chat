@@ -114,8 +114,7 @@ export const pluginTypes: StateCreator<
 
       if (updateResult?.success && updateResult.messages) {
         get().replaceMessages(updateResult.messages, {
-          sessionId: message?.sessionId,
-          topicId: message?.topicId,
+          context: { sessionId: message?.sessionId || '', topicId: message?.topicId },
         });
       }
       return;
@@ -169,8 +168,7 @@ export const pluginTypes: StateCreator<
         });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
-            sessionId: message?.sessionId,
-            topicId: message?.topicId,
+            context: { sessionId: message?.sessionId || '', topicId: message?.topicId },
           });
         }
       }
@@ -243,8 +241,7 @@ export const pluginTypes: StateCreator<
         });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
-            sessionId: message?.sessionId,
-            topicId: message?.topicId,
+            context: { sessionId: message?.sessionId || '', topicId: message?.topicId },
           });
         }
       }

@@ -210,7 +210,7 @@ describe('Cancel send message functionality tests', () => {
         operationId = res.operationId;
       });
 
-      const contextKey = messageMapKey(sessionId, topicId);
+      const contextKey = messageMapKey({ sessionId, topicId });
       expect(result.current.operationsByContext[contextKey]).toContain(operationId!);
     });
   });

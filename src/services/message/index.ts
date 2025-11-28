@@ -31,14 +31,18 @@ export class MessageService {
     });
   };
 
-  getMessages = async (
-    sessionId: string,
-    topicId?: string,
-    groupId?: string,
-  ): Promise<UIChatMessage[]> => {
+  getMessages = async (params: {
+    groupId?: string;
+    sessionId: string;
+    threadId?: string;
+    topicId?: string;
+  }): Promise<UIChatMessage[]> => {
+    const { sessionId, topicId, groupId, threadId } = params;
+
     const data = await lambdaClient.message.getMessages.query({
       groupId,
-      sessionId: this.toDbSessionId(sessionId),
+      sessionId,
+      threadId,
       topicId,
     });
 
@@ -213,17 +217,11 @@ export class MessageService {
   };
 
   removeMessagesByAssistant = async (sessionId: string, topicId?: string) => {
-    return lambdaClient.message.removeMessagesByAssistant.mutate({
-      sessionId: this.toDbSessionId(sessionId),
-      topicId,
-    });
+    return lambdaClient.message.removeMessagesByAssistant.mutate({ sessionId, topicId });
   };
 
   removeMessagesByGroup = async (groupId: string, topicId?: string) => {
-    return lambdaClient.message.removeMessagesByGroup.mutate({
-      groupId,
-      topicId,
-    });
+    return lambdaClient.message.removeMessagesByGroup.mutate({ groupId, topicId });
   };
 
   removeAllMessages = async () => {

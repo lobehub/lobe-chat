@@ -19,10 +19,10 @@ describe('dbMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         dbMessagesMap: {
-          [messageMapKey('test-id')]: messages,
+          [messageMapKey({ sessionId: 'test-id' })]: messages,
         },
         messagesMap: {
-          [messageMapKey('test-id')]: messages,
+          [messageMapKey({ sessionId: 'test-id' })]: messages,
         },
       };
       const result = dbMessageSelectors.dbToolMessages(state as ChatStore);
@@ -38,10 +38,10 @@ describe('dbMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         dbMessagesMap: {
-          [messageMapKey('test-id')]: messages,
+          [messageMapKey({ sessionId: 'test-id' })]: messages,
         },
         messagesMap: {
-          [messageMapKey('test-id')]: messages,
+          [messageMapKey({ sessionId: 'test-id' })]: messages,
         },
       };
       const result = dbMessageSelectors.dbToolMessages(state as ChatStore);
