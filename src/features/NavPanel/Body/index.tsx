@@ -21,12 +21,8 @@ const Body = memo(() => {
   const { enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
   return (
     <AgentModalProvider>
-      <Flexbox paddingInline={8}>
-        <Accordion
-          defaultExpandedKeys={[GroupKey.Project, GroupKey.Agent]}
-          disableAnimation
-          gap={8}
-        >
+      <Flexbox paddingInline={4}>
+        <Accordion defaultExpandedKeys={[GroupKey.Project, GroupKey.Agent]} gap={8}>
           {enableKnowledgeBase && <Repo itemKey={GroupKey.Project} />}
           <Agent itemKey={GroupKey.Agent} />
           <BottomMenu />

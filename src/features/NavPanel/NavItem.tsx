@@ -61,7 +61,7 @@ const NavItem = memo<NavItemProps>(
           if (disabled || loading) return;
           onClick?.(e);
         }}
-        paddingInline={'2px 4px'}
+        paddingInline={4}
         variant={variant}
         {...rest}
       >

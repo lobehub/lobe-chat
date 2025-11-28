@@ -19,7 +19,6 @@ const Group = memo<GroupProps>(({ dataSource }) => {
 
   return (
     <Accordion
-      disableAnimation
       expandedKeys={sessionGroupKeys}
       onExpandedChange={(keys) => updateSystemStatus({ expandSessionGroupKeys: keys as any })}
     >

@@ -10,8 +10,8 @@ import User from './components/User';
 
 const Header = memo(() => {
   return (
-    <Flexbox gap={8} paddingBlock={8} paddingInline={8}>
-      <Flexbox align={'center'} horizontal justify={'space-between'}>
+    <Flexbox gap={2} padding={4}>
+      <Flexbox align={'center'} horizontal justify={'space-between'} padding={2}>
         <User />
         <Flexbox
           align={'center'}

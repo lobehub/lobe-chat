@@ -8,7 +8,7 @@ import Nav from './Nav';
 
 const HeaderInfo = memo<PropsWithChildren>(() => {
   return (
-    <Flexbox gap={8} paddingBlock={8} paddingInline={8}>
+    <Flexbox gap={2} padding={4}>
       <Agent />
       <Nav />
     </Flexbox>

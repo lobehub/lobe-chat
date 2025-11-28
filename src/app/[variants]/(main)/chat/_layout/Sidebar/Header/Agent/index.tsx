@@ -6,7 +6,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import BackButton, { BACK_BUTTON_ID } from '@/features/NavPanel/BackButton';
 import TogglePanelButton from '@/features/NavPanel/TogglePanelButton';
-import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 
 import AgentInfo from './AgentInfo';
 
@@ -31,7 +30,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const HeaderInfo = memo<PropsWithChildren>(() => {
   const { styles } = useStyles();
-  useInitAgentConfig();
 
   return (
     <Flexbox
@@ -41,6 +39,7 @@ const HeaderInfo = memo<PropsWithChildren>(() => {
       gap={8}
       horizontal
       justify={'space-between'}
+      padding={2}
     >
       <Flexbox
         align={'center'}

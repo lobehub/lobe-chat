@@ -73,36 +73,23 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
     openConfigGroupModal: handleOpenConfigGroupModal,
   });
 
-  if (!showCreateSession) {
-    return (
-      <AccordionItem
-        itemKey={itemKey}
-        paddingBlock={6}
-        paddingInline={'8px 6px'}
-        title={
-          <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-            {t('navPanel.agent', { defaultValue: '助手' })}
-          </Text>
-        }
-      >
-        <List />
-      </AccordionItem>
-    );
-  }
-
   return (
     <AccordionItem
-      action={<Actions dropdownMenu={dropdownMenu} isLoading={isLoading} />}
-      headerWrapper={(header) => (
-        <Dropdown
-          menu={{
-            items: dropdownMenu,
-          }}
-          trigger={['contextMenu']}
-        >
-          {header}
-        </Dropdown>
-      )}
+      action={showCreateSession && <Actions dropdownMenu={dropdownMenu} isLoading={isLoading} />}
+      headerWrapper={
+        showCreateSession
+          ? (header) => (
+              <Dropdown
+                menu={{
+                  items: dropdownMenu,
+                }}
+                trigger={['contextMenu']}
+              >
+                {header}
+              </Dropdown>
+            )
+          : undefined
+      }
       itemKey={itemKey}
       paddingBlock={4}
       paddingInline={'8px 4px'}
