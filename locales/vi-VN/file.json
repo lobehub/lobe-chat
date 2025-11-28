@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "Sao chép toàn bộ nội dung",
-    "documentCount": "Tổng cộng {{count}} tài liệu",
     "duplicate": "Tạo bản sao",
-    "empty": "Chưa có tài liệu nào, nhấn nút phía trên để tạo tài liệu đầu tiên của bạn",
-    "noResults": "Không tìm thấy tài liệu phù hợp",
-    "selectNote": "Chọn một tài liệu để bắt đầu chỉnh sửa",
+    "empty": "Chưa có bản thảo nào, hãy nhấn nút phía trên để tạo bản thảo đầu tiên của bạn",
+    "noResults": "Không tìm thấy bản thảo phù hợp",
+    "pageCount": "Tổng cộng {{count}} bản thảo",
+    "selectNote": "Chọn một bản thảo để bắt đầu chỉnh sửa",
     "untitled": "Không có tiêu đề"
   },
   "empty": "Chưa có tệp/tệp tin nào được tải lên",
@@ -70,7 +70,6 @@
       "uploadFile": "Tải tệp lên",
       "uploadFolder": "Tải thư mục lên"
     },
-    "newDocumentButton": "Tạo tài liệu mới",
     "newNoteDialog": {
       "cancel": "Hủy",
       "editTitle": "Chỉnh sửa tài liệu",
@@ -83,14 +82,15 @@
       "title": "Tạo tài liệu mới",
       "updateSuccess": "Cập nhật tài liệu thành công"
     },
+    "newPageButton": "Tạo tài liệu mới",
     "uploadButton": "Tải lên"
   },
   "home": {
     "getStarted": "Bắt đầu",
     "greeting": "Bắt đầu",
     "quickActions": "Hành động nhanh",
-    "recentDocuments": "Tài liệu gần đây",
     "recentFiles": "Tệp gần đây",
+    "recentPages": "Tài liệu gần đây",
     "subtitle": "Chào mừng đến với kho tri thức, bắt đầu quản lý tài liệu của bạn từ đây",
     "uploadEntries": {
       "files": {
@@ -102,7 +102,7 @@
       "knowledgeBase": {
         "title": "Tạo kho kiến thức mới"
       },
-      "newDocument": {
+      "newPage": {
         "title": "Tạo tài liệu mới"
       }
     }
@@ -116,8 +116,8 @@
     "title": "Kho tri thức"
   },
   "menu": {
-    "allDocuments": "Tất cả tài liệu",
-    "allFiles": "Tất cả tệp"
+    "allFiles": "Tất cả tệp",
+    "allPages": "Tất cả tài liệu"
   },
   "networkError": "Không thể lấy kho tri thức, vui lòng kiểm tra kết nối mạng và thử lại",
   "notSupportGuide": {
@@ -142,8 +142,8 @@
     "downloadFile": "Tải tệp",
     "unsupportedFileAndContact": "Định dạng tệp này hiện không hỗ trợ xem trước trực tuyến. Nếu bạn có yêu cầu xem trước, vui lòng <1>phản hồi cho chúng tôi</1>"
   },
-  "searchDocumentPlaceholder": "Tìm kiếm tài liệu",
   "searchFilePlaceholder": "Tìm kiếm tệp",
+  "searchPagePlaceholder": "Tìm kiếm bản thảo",
   "tab": {
     "all": "Tất cả",
     "audios": "Âm thanh",
@@ -156,9 +156,7 @@
     "websites": "Trang web"
   },
   "title": "Kho kiến thức",
-  "toggleLeftPanel": {
-    "title": "Hiện/Ẩn bảng bên trái"
-  },
+  "toggleLeftPanel": "Hiển thị/Ẩn bảng điều khiển bên trái",
   "uploadDock": {
     "body": {
       "collapse": "Thu gọn",

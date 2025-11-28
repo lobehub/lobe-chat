@@ -60,6 +60,7 @@ export const KeyEnum = {
 export const HotkeyEnum = {
   AddUserMessage: 'addUserMessage',
   ClearCurrentMessages: 'clearCurrentMessages',
+  CommandPalette: 'commandPalette',
   DeleteAndRegenerateMessage: 'deleteAndRegenerateMessage',
   DeleteLastMessage: 'deleteLastMessage',
   EditMessage: 'editMessage',

@@ -3,10 +3,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { extractBearerToken, getUserAuth } from '../auth';
 
 // Mock auth constants
+let mockEnableBetterAuth = false;
 let mockEnableClerk = false;
 let mockEnableNextAuth = false;
 
 vi.mock('@/const/auth', () => ({
+  get enableBetterAuth() {
+    return mockEnableBetterAuth;
+  },
   get enableClerk() {
     return mockEnableClerk;
   },
@@ -38,9 +42,26 @@ vi.mock('@/libs/next-auth', () => ({
   },
 }));
 
+vi.mock('next/headers', () => ({
+  headers: vi.fn(() => new Headers()),
+}));
+
+vi.mock('@/auth', () => ({
+  auth: {
+    api: {
+      getSession: vi.fn().mockResolvedValue({
+        user: {
+          id: 'better-auth-user-id',
+        },
+      }),
+    },
+  },
+}));
+
 describe('getUserAuth', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockEnableBetterAuth = false;
     mockEnableClerk = false;
     mockEnableNextAuth = false;
   });
@@ -90,6 +111,37 @@ describe('getUserAuth', () => {
         redirectToSignIn: expect.any(Function),
       },
       userId: 'clerk-user-id',
+    });
+  });
+
+  it('should return better auth when better auth is enabled', async () => {
+    mockEnableBetterAuth = true;
+
+    const auth = await getUserAuth();
+
+    expect(auth).toEqual({
+      betterAuth: {
+        user: {
+          id: 'better-auth-user-id',
+        },
+      },
+      userId: 'better-auth-user-id',
+    });
+  });
+
+  it('should prioritize better auth over next auth when both are enabled', async () => {
+    mockEnableBetterAuth = true;
+    mockEnableNextAuth = true;
+
+    const auth = await getUserAuth();
+
+    expect(auth).toEqual({
+      betterAuth: {
+        user: {
+          id: 'better-auth-user-id',
+        },
+      },
+      userId: 'better-auth-user-id',
     });
   });
 });

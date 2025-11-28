@@ -1,10 +1,12 @@
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
+import qs from 'query-string';
 import { Suspense, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
 
 import ThreadList from '../ThreadList';
 import DefaultContent from './DefaultContent';
@@ -51,7 +53,8 @@ export interface ConfigCellProps {
 const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav, threadId }) => {
   const { styles, cx } = useStyles();
   const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
-  const [toggleTopic] = useChatStore((s) => [s.switchTopic]);
+  const [toggleTopic, editing] = useChatStore((s) => [s.switchTopic, s.topicRenamingId === id]);
+  const activeId = useSessionStore((s) => s.activeId);
   const [isHover, setHovering] = useState(false);
 
   return (
@@ -61,7 +64,18 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav, threadId }) =
         className={cx(styles.container, 'topic-item', active && !threadId && styles.active)}
         distribution={'space-between'}
         horizontal
-        onClick={() => {
+        onClick={(e) => {
+          // 重命名时不切换话题
+          if (editing) return;
+          // Ctrl/Cmd+点击在新窗口打开
+          if (e.button === 0 && (e.metaKey || e.ctrlKey) && id) {
+            const topicUrl = qs.stringifyUrl({
+              query: { session: activeId, topic: id },
+              url: '/chat',
+            });
+            window.open(topicUrl, '_blank');
+            return;
+          }
           toggleTopic(id);
           toggleConfig(false);
         }}

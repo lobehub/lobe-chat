@@ -1,10 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  MODEL_PARAMETER_CONFLICTS,
-  createParameterResolver,
-  resolveParameters,
-} from './parameterResolver';
+import { hasTemperatureTopPConflict } from '../const/models';
+import { createParameterResolver, resolveParameters } from './parameterResolver';
 
 describe('resolveParameters', () => {
   describe('Basic functionality', () => {
@@ -247,54 +244,41 @@ describe('createParameterResolver', () => {
   });
 });
 
-describe('MODEL_PARAMETER_CONFLICTS', () => {
-  describe('ANTHROPIC_CLAUDE_4_PLUS', () => {
-    it('should contain expected Claude 4+ models', () => {
-      expect(MODEL_PARAMETER_CONFLICTS.ANTHROPIC_CLAUDE_4_PLUS.has('claude-opus-4-1')).toBe(true);
-      expect(
-        MODEL_PARAMETER_CONFLICTS.ANTHROPIC_CLAUDE_4_PLUS.has('claude-opus-4-1-20250805'),
-      ).toBe(true);
-      expect(
-        MODEL_PARAMETER_CONFLICTS.ANTHROPIC_CLAUDE_4_PLUS.has('claude-sonnet-4-5-20250929'),
-      ).toBe(true);
+describe('hasTemperatureTopPConflict', () => {
+  describe('Anthropic Claude 4+ models', () => {
+    it('should return true for Claude 4+ models', () => {
+      expect(hasTemperatureTopPConflict('claude-opus-4-1-20250805')).toBe(true);
+      expect(hasTemperatureTopPConflict('claude-sonnet-4-5-20250929')).toBe(true);
+      expect(hasTemperatureTopPConflict('claude-haiku-4-5-20251001')).toBe(true);
     });
 
-    it('should not contain Claude 3.x models', () => {
-      expect(MODEL_PARAMETER_CONFLICTS.ANTHROPIC_CLAUDE_4_PLUS.has('claude-3-opus-20240229')).toBe(
-        false,
-      );
-      expect(
-        MODEL_PARAMETER_CONFLICTS.ANTHROPIC_CLAUDE_4_PLUS.has('claude-3.5-sonnet-20240620'),
-      ).toBe(false);
+    it('should return false for Claude 3.x models', () => {
+      expect(hasTemperatureTopPConflict('claude-3-opus-20240229')).toBe(false);
+      expect(hasTemperatureTopPConflict('claude-3-5-sonnet-20240620')).toBe(false);
     });
   });
 
-  describe('BEDROCK_CLAUDE_4_PLUS', () => {
-    it('should contain both standard and Bedrock-specific model IDs', () => {
-      expect(MODEL_PARAMETER_CONFLICTS.BEDROCK_CLAUDE_4_PLUS.has('claude-opus-4-1')).toBe(true);
-      expect(
-        MODEL_PARAMETER_CONFLICTS.BEDROCK_CLAUDE_4_PLUS.has(
-          'anthropic.claude-opus-4-1-20250805-v1:0',
-        ),
-      ).toBe(true);
-      expect(
-        MODEL_PARAMETER_CONFLICTS.BEDROCK_CLAUDE_4_PLUS.has(
-          'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
-        ),
-      ).toBe(true);
+  describe('OpenRouter Claude 4+ models', () => {
+    it('should return true for OpenRouter Claude 4+ models', () => {
+      expect(hasTemperatureTopPConflict('anthropic/claude-opus-4.5')).toBe(true);
+      expect(hasTemperatureTopPConflict('anthropic/claude-sonnet-4.1')).toBe(true);
+      expect(hasTemperatureTopPConflict('anthropic/claude-4.5-opus')).toBe(true);
     });
 
-    it('should contain all Bedrock regional variants', () => {
-      expect(
-        MODEL_PARAMETER_CONFLICTS.BEDROCK_CLAUDE_4_PLUS.has(
-          'anthropic.claude-opus-4-20250514-v1:0',
-        ),
-      ).toBe(true);
-      expect(
-        MODEL_PARAMETER_CONFLICTS.BEDROCK_CLAUDE_4_PLUS.has(
-          'us.anthropic.claude-opus-4-20250514-v1:0',
-        ),
-      ).toBe(true);
+    it('should return false for OpenRouter Claude 3.x models', () => {
+      expect(hasTemperatureTopPConflict('anthropic/claude-3.5-sonnet')).toBe(false);
+      expect(hasTemperatureTopPConflict('anthropic/claude-3.7-sonnet')).toBe(false);
+    });
+  });
+
+  describe('Bedrock Claude 4+ models', () => {
+    it('should return true for Bedrock Claude 4+ models', () => {
+      expect(hasTemperatureTopPConflict('anthropic.claude-opus-4-1-20250805-v1:0')).toBe(true);
+      expect(hasTemperatureTopPConflict('us.anthropic.claude-sonnet-4-5-20250929-v1:0')).toBe(true);
+    });
+
+    it('should return false for Bedrock Claude 3.x models', () => {
+      expect(hasTemperatureTopPConflict('anthropic.claude-3-5-sonnet-20240620-v1:0')).toBe(false);
     });
   });
 });

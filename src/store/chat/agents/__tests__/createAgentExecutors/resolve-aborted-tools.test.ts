@@ -57,6 +57,9 @@ describe('resolve_aborted_tools executor', () => {
           topicId: 'test-topic',
           parentId: parentMessage.id,
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -113,6 +116,9 @@ describe('resolve_aborted_tools executor', () => {
             plugin: toolCall,
             pluginIntervention: { status: 'aborted' },
             tool_call_id: toolCall.id,
+          }),
+          expect.objectContaining({
+            operationId: expect.any(String),
           }),
         );
       });
@@ -193,17 +199,22 @@ describe('resolve_aborted_tools executor', () => {
       });
 
       // Then
-      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith({
-        role: 'tool',
-        content: 'Tool execution was aborted by user.',
-        plugin: toolCall,
-        pluginIntervention: { status: 'aborted' },
-        tool_call_id: 'tool_abc',
-        parentId: 'msg_parent',
-        sessionId: 'sess_123',
-        topicId: 'topic_456',
-        threadId: undefined,
-      });
+      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          role: 'tool',
+          content: 'Tool execution was aborted by user.',
+          plugin: toolCall,
+          pluginIntervention: { status: 'aborted' },
+          tool_call_id: 'tool_abc',
+          parentId: 'msg_parent',
+          sessionId: 'sess_123',
+          topicId: 'topic_456',
+          threadId: undefined,
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
+      );
     });
 
     it('should preserve tool payload details', async () => {
@@ -240,6 +251,9 @@ describe('resolve_aborted_tools executor', () => {
         expect.objectContaining({
           plugin: toolCall,
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -263,6 +277,9 @@ describe('resolve_aborted_tools executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           topicId: undefined,
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });
@@ -481,6 +498,9 @@ describe('resolve_aborted_tools executor', () => {
         expect.objectContaining({
           plugin: toolCall,
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -571,6 +591,9 @@ describe('resolve_aborted_tools executor', () => {
             type: 'builtin',
           }),
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -605,6 +628,9 @@ describe('resolve_aborted_tools executor', () => {
           plugin: expect.objectContaining({
             type: 'default',
           }),
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });

@@ -210,6 +210,9 @@ export const getLLMConfig = () => {
       ENABLED_CEREBRAS: z.boolean(),
       CEREBRAS_API_KEY: z.string().optional(),
 
+      ENABLED_ZENMUX: z.boolean(),
+      ZENMUX_API_KEY: z.string().optional(),
+
       ENABLED_STRAICO: z.boolean(),
       STRAICO_API_KEY: z.string().optional(),
     },
@@ -419,6 +422,9 @@ export const getLLMConfig = () => {
 
       ENABLED_CEREBRAS: !!process.env.CEREBRAS_API_KEY,
       CEREBRAS_API_KEY: process.env.CEREBRAS_API_KEY,
+
+      ENABLED_ZENMUX: !!process.env.ZENMUX_API_KEY,
+      ZENMUX_API_KEY: process.env.ZENMUX_API_KEY,
 
       ENABLED_STRAICO: !!process.env.STRAICO_API_KEY,
       STRAICO_API_KEY: process.env.STRAICO_API_KEY,

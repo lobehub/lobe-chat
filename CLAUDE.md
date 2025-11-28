@@ -14,6 +14,7 @@ read @.cursor/rules/project-structure.mdc
 
 ### Git Workflow
 
+- The current release branch is `next` instead of `main` until v2.0.0 is officially released
 - use rebase for git pull
 - git commit message should prefix with gitmoji
 - git branch name format example: tj/feat/feature-name

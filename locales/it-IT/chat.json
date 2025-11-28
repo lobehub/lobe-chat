@@ -53,6 +53,12 @@
       "desc": "Limitazioni basate sul meccanismo di pensiero di Claude (<1>Scopri di più</1>), attivando questa opzione verrà disabilitato automaticamente il limite sul numero di messaggi storici.",
       "title": "Attiva il pensiero profondo"
     },
+    "imageAspectRatio": {
+      "title": "Proporzioni dell'immagine"
+    },
+    "imageResolution": {
+      "title": "Risoluzione dell'immagine"
+    },
     "reasoningBudgetToken": {
       "title": "Token di consumo del pensiero"
     },

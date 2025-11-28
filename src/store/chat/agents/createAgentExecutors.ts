@@ -89,16 +89,19 @@ export const createAgentExecutors = (context: {
           llmPayload.parentMessageId = context.parentId;
         }
         // Create assistant message (following server-side pattern)
-        const assistantMessageItem = await context.get().optimisticCreateMessage({
-          content: LOADING_FLAT,
-          model: llmPayload.model,
-          parentId: llmPayload.parentMessageId,
-          provider: llmPayload.provider,
-          role: 'assistant',
-          sessionId: opContext.sessionId!,
-          threadId: opContext.threadId,
-          topicId: opContext.topicId ?? undefined,
-        });
+        const assistantMessageItem = await context.get().optimisticCreateMessage(
+          {
+            content: LOADING_FLAT,
+            model: llmPayload.model,
+            parentId: llmPayload.parentMessageId,
+            provider: llmPayload.provider,
+            role: 'assistant',
+            sessionId: opContext.sessionId!,
+            threadId: opContext.threadId,
+            topicId: opContext.topicId ?? undefined,
+          },
+          { operationId: context.operationId },
+        );
 
         if (!assistantMessageItem) {
           throw new Error('Failed to create assistant message');
@@ -371,7 +374,9 @@ export const createAgentExecutors = (context: {
             topicId: opContext.topicId ?? undefined,
           };
 
-          const createPromise = context.get().optimisticCreateMessage(toolMessageParams);
+          const createPromise = context
+            .get()
+            .optimisticCreateMessage(toolMessageParams, { operationId: createToolMsgOpId });
           context.get().updateOperationMetadata(createToolMsgOpId, {
             createMessagePromise: createPromise,
           });
@@ -632,7 +637,9 @@ export const createAgentExecutors = (context: {
             topicId: opContext.topicId ?? undefined,
           };
 
-          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+          const createResult = await context
+            .get()
+            .optimisticCreateMessage(toolMessageParams, { operationId: context.operationId });
 
           if (!createResult) {
             log(
@@ -709,7 +716,9 @@ export const createAgentExecutors = (context: {
           topicId: opContext.topicId ?? undefined,
         };
 
-        const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+        const createResult = await context
+          .get()
+          .optimisticCreateMessage(toolMessageParams, { operationId: context.operationId });
 
         if (createResult) {
           log(

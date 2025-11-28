@@ -53,6 +53,12 @@
       "desc": "Beperkingen op basis van het Claude Thinking-mechanisme (<1>Lees meer</1>), wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
       "title": "Diepe denkwijze inschakelen"
     },
+    "imageAspectRatio": {
+      "title": "Beeldverhouding"
+    },
+    "imageResolution": {
+      "title": "Beeldresolutie"
+    },
     "reasoningBudgetToken": {
       "title": "Denken verbruik Token"
     },

@@ -1,4 +1,5 @@
 import { filesPrompts } from '@lobechat/prompts';
+import { MessageContentPart } from '@lobechat/types';
 import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
 import { parseDataUri } from '@lobechat/utils/uriParser';
 import { isDesktopLocalStaticServerUrl } from '@lobechat/utils/url';
@@ -8,6 +9,23 @@ import { BaseProcessor } from '../base/BaseProcessor';
 import type { PipelineContext, ProcessorOptions } from '../types';
 
 const log = debug('context-engine:processor:MessageContentProcessor');
+
+/**
+ * Deserialize content string to message content parts
+ * Returns null if content is not valid JSON array of parts
+ */
+const deserializeParts = (content: string): MessageContentPart[] | null => {
+  try {
+    const parsed = JSON.parse(content);
+    // Validate it's an array with valid part structure
+    if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.type) {
+      return parsed as MessageContentPart[];
+    }
+  } catch {
+    // Not JSON, treat as plain text
+  }
+  return null;
+};
 
 export interface FileContextConfig {
   /** Whether to enable file context injection */
@@ -30,6 +48,7 @@ export interface MessageContentConfig {
 }
 
 export interface UserMessageContentPart {
+  googleThoughtSignature?: string;
   image_url?: {
     detail?: string;
     url: string;
@@ -213,7 +232,7 @@ export class MessageContentProcessor extends BaseProcessor {
    * Process assistant message content
    */
   private async processAssistantMessage(message: any): Promise<any> {
-    // Check if there is reasoning content (thinking mode)
+    // Priority 1: Check if there is reasoning content with signature (thinking mode)
     const shouldIncludeThinking = message.reasoning && !!message.reasoning?.signature;
 
     if (shouldIncludeThinking) {
@@ -235,7 +254,59 @@ export class MessageContentProcessor extends BaseProcessor {
       };
     }
 
-    // Check if there are images (assistant messages may also contain images)
+    // Priority 2: Check if reasoning content is multimodal
+    const hasMultimodalReasoning = message.reasoning?.isMultimodal && message.reasoning?.content;
+
+    if (hasMultimodalReasoning) {
+      const reasoningParts = deserializeParts(message.reasoning.content);
+      if (reasoningParts) {
+        // Convert reasoning multimodal parts to plain text
+        const reasoningText = reasoningParts
+          .map((part) => {
+            if (part.type === 'text') return part.text;
+            if (part.type === 'image') return `[Image: ${part.image}]`;
+            return '';
+          })
+          .join('\n');
+
+        // Update reasoning to plain text
+        const updatedMessage = {
+          ...message,
+          reasoning: {
+            ...message.reasoning,
+            content: reasoningText,
+            isMultimodal: false, // Convert to non-multimodal
+          },
+        };
+
+        // Handle main content based on whether it's multimodal
+        if (message.metadata?.isMultimodal && message.content) {
+          const contentParts = deserializeParts(message.content);
+          if (contentParts) {
+            const convertedParts = this.convertMessagePartsToContentParts(contentParts);
+            return {
+              ...updatedMessage,
+              content: convertedParts,
+            };
+          }
+        }
+
+        return updatedMessage;
+      }
+    }
+
+    // Priority 3: Check if message content is multimodal
+    const hasMultimodalContent = message.metadata?.isMultimodal && message.content;
+
+    if (hasMultimodalContent) {
+      const parts = deserializeParts(message.content);
+      if (parts) {
+        const contentParts = this.convertMessagePartsToContentParts(parts);
+        return { ...message, content: contentParts };
+      }
+    }
+
+    // Priority 4: Check if there are images (legacy imageList field)
     const hasImages = message.imageList && message.imageList.length > 0;
 
     if (hasImages && this.config.isCanUseVision?.(this.config.model, this.config.provider)) {
@@ -253,10 +324,7 @@ export class MessageContentProcessor extends BaseProcessor {
       const imageContentParts = await this.processImageList(message.imageList || []);
       contentParts.push(...imageContentParts);
 
-      return {
-        ...message,
-        content: contentParts,
-      };
+      return { ...message, content: contentParts };
     }
 
     // Regular assistant message, return plain text content
@@ -264,6 +332,32 @@ export class MessageContentProcessor extends BaseProcessor {
       ...message,
       content: message.content,
     };
+  }
+
+  /**
+   * Convert MessageContentPart[] (internal format) to OpenAI-compatible UserMessageContentPart[]
+   */
+  private convertMessagePartsToContentParts(parts: MessageContentPart[]): UserMessageContentPart[] {
+    const contentParts: UserMessageContentPart[] = [];
+
+    for (const part of parts) {
+      if (part.type === 'text') {
+        contentParts.push({
+          googleThoughtSignature: part.thoughtSignature,
+          text: part.text,
+          type: 'text',
+        });
+      } else if (part.type === 'image') {
+        // Images are already in S3 URL format, no conversion needed
+        contentParts.push({
+          googleThoughtSignature: part.thoughtSignature,
+          image_url: { detail: 'auto', url: part.image },
+          type: 'image_url',
+        });
+      }
+    }
+
+    return contentParts;
   }
 
   /**

@@ -20,8 +20,8 @@ export const fluxKreaParamsSchema: ModelParamsSchema = {
 
 export const qwenImageParamsSchema: ModelParamsSchema = {
   cfg: { default: 2.5, max: 20, min: 0, step: 0.1 },
-  // 实测 fal 宽高 最大就支持到 1536
-  // 默认值取自 https://chat.qwen.ai/ 官网的默认值
+  // Tested: fal width/height max support up to 1536
+  // Default values from https://chat.qwen.ai/ official website
   height: { default: 1328, max: 1536, min: 512, step: 1 },
   prompt: { default: '' },
   seed: { default: null },

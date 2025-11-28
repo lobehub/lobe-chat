@@ -1,6 +1,243 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.128"
+  },
+  {
+    "children": {
+      "fixes": ["Better-auth fallback next-auth providers env."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.127"
+  },
+  {
+    "children": {
+      "fixes": ["Align docker auth defaults and better-auth docs."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.126"
+  },
+  {
+    "children": {
+      "features": ["Support better-auth."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.125"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fixed the agent settings plugins pages error problem, improve topic item interaction and editing behavior."
+      ]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.124"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.123"
+  },
+  {
+    "children": {
+      "fixes": ["Slove the publish to market the agent config error."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.122"
+  },
+  {
+    "children": {
+      "improvements": ["Add image aspect ratio and resolution settings for Nano Banana Pro."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.121"
+  },
+  {
+    "children": {
+      "fixes": ["Try to fix “TypeError: Response body object should not be disturbed or locked”."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.120"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.119"
+  },
+  {
+    "children": {
+      "fixes": ["Showing compatibility with both new and old versions of Plugins."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.118"
+  },
+  {
+    "children": {
+      "features": ["Bedrock claude model thinking support."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.117"
+  },
+  {
+    "children": {
+      "features": ["Support nano banana pro."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.116"
+  },
+  {
+    "children": {
+      "features": ["Add Claude Opus 4.5 model."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.115"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the topic link dropdown error."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.114"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed when desktop userId was change manytimes the aimodel not right."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.113"
+  },
+  {
+    "children": {
+      "improvements": ["Add Kimi K2 Thinking to Qwen Provider."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.112"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix db migration snapshot not align with db schema, Separate agent file injection from knowledge base RAG search."
+      ]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.111"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add hyperlink to each topic & pinned agent, support ContextMenu on ChatItem."
+      ]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.110"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the knowledge files cant open error."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.109"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the pinned session not work."]
+    },
+    "date": "2025-11-24",
+    "version": "2.0.0-next.108"
+  },
+  {
+    "children": {
+      "improvements": ["Optimize nana banana pro error message."]
+    },
+    "date": "2025-11-23",
+    "version": "2.0.0-next.107"
+  },
+  {
+    "children": {
+      "features": ["Add nano-banana-pro model support and optimization."]
+    },
+    "date": "2025-11-23",
+    "version": "2.0.0-next.106"
+  },
+  {
+    "children": {},
+    "date": "2025-11-23",
+    "version": "2.0.0-next.105"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.104"
+  },
+  {
+    "children": {
+      "fixes": ["Hide ai image config item in settings category."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.103"
+  },
+  {
+    "children": {
+      "features": ["Add new provider ZenMux & Gemini 3 Pro Image Preview."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.102"
+  },
+  {
+    "children": {
+      "features": ["Support bedrok prompt cache and usage compute."]
+    },
+    "date": "2025-11-22",
+    "version": "2.0.0-next.101"
+  },
+  {
+    "children": {
+      "fixes": ["Gemini 3 Pro does not display thought summaries."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.100"
+  },
+  {
+    "children": {
+      "features": ["Refactor to use kb search tool."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.99"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed changelog pages and open again."],
+      "improvements": ["Fix some translations."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.98"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-21",
+    "version": "2.0.0-next.97"
+  },
+  {
+    "children": {
+      "features": ["Support Command Menu (CMD + J)."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.96"
+  },
+  {
+    "children": {
       "features": ["Add Security Blacklist for agent runtime."]
     },
     "date": "2025-11-20",
