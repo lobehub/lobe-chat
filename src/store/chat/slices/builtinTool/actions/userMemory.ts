@@ -2,36 +2,131 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { userMemoryService } from '@/services/userMemory';
 import { ChatStore } from '@/store/chat/store';
-import type { SearchMemoryParams } from '@/types/userMemory';
+import {
+  AddContextMemoryParams,
+  AddExperienceMemoryParams,
+  AddIdentityMemoryParams,
+  AddPreferenceMemoryParams,
+  RemoveIdentityMemoryParams,
+  SearchMemoryParams,
+  UpdateIdentityMemoryParams,
+} from '@/types/userMemory';
 
 export interface UserMemoryAction {
+  addContextMemory: (id: string, params: AddContextMemoryParams) => Promise<boolean>;
+  addExperienceMemory: (id: string, params: AddExperienceMemoryParams) => Promise<boolean>;
+  addIdentityMemory: (id: string, params: AddIdentityMemoryParams) => Promise<boolean>;
+  addPreferenceMemory: (id: string, params: AddPreferenceMemoryParams) => Promise<boolean>;
+  removeIdentityMemory: (id: string, params: RemoveIdentityMemoryParams) => Promise<boolean>;
   searchUserMemory: (id: string, params: SearchMemoryParams) => Promise<boolean>;
+  updateIdentityMemory: (id: string, params: UpdateIdentityMemoryParams) => Promise<boolean>;
 }
+
+const runMemoryTool = async (
+  id: string,
+  executor: () => Promise<unknown>,
+  get: () => ChatStore,
+  errorPayload?: (error: Error) => unknown,
+): Promise<boolean> => {
+  const {
+    completeOperation,
+    failOperation,
+    messageOperationMap,
+    optimisticUpdateMessageContent,
+    optimisticUpdateMessagePluginError,
+    startOperation,
+  } = get();
+
+  const parentOperationId = messageOperationMap[id];
+  const { operationId } = startOperation({
+    context: { messageId: id },
+    metadata: { startTime: Date.now() },
+    parentOperationId,
+    type: 'builtinToolMemory',
+  });
+  const context = { operationId };
+
+  try {
+    const result = await executor();
+    completeOperation(operationId);
+    await optimisticUpdateMessageContent(id, JSON.stringify(result), undefined, context);
+
+    if (typeof (result as any)?.success === 'boolean') return (result as any).success;
+
+    return true;
+  } catch (error) {
+    const err = error as Error;
+
+    console.error('Failed to run memory tool:', err);
+
+    failOperation(operationId, {
+      message: err.message,
+      type: 'PluginServerError',
+    });
+
+    await optimisticUpdateMessagePluginError(
+      id,
+      {
+        body: error,
+        message: err.message,
+        type: 'PluginServerError',
+      },
+      context,
+    );
+
+    const fallback = errorPayload?.(err) ?? {
+      message: `Failed to run memory tool: ${err.message}`,
+      success: false,
+    };
+
+    await optimisticUpdateMessageContent(id, JSON.stringify(fallback), undefined, context);
+
+    return false;
+  }
+};
 
 export const userMemorySlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
   UserMemoryAction
-> = (set, get) => ({
-  searchUserMemory: async (id, params) => {
-    const { optimisticUpdateMessageContent } = get();
+> = (_set, get) => ({
+  addContextMemory: async (id, params) => {
+    return runMemoryTool(id, () => userMemoryService.addContextMemory(params), get);
+  },
 
-    try {
-      const result = await userMemoryService.searchMemory(params);
-      await optimisticUpdateMessageContent(id, JSON.stringify(result));
-      return true;
-    } catch (error) {
-      console.error('Failed to retrieve memories:', error);
-      const errorResult = {
+  addExperienceMemory: async (id, params) => {
+    return runMemoryTool(id, () => userMemoryService.addExperienceMemory(params), get);
+  },
+
+  addIdentityMemory: async (id, params) => {
+    return runMemoryTool(id, () => userMemoryService.addIdentityMemory(params), get);
+  },
+
+  addPreferenceMemory: async (id, params) => {
+    return runMemoryTool(id, () => userMemoryService.addPreferenceMemory(params), get);
+  },
+
+  removeIdentityMemory: async (id, params) => {
+    return runMemoryTool(id, () => userMemoryService.removeIdentityMemory(params), get);
+  },
+
+  searchUserMemory: async (id, params) => {
+    return runMemoryTool(
+      id,
+      () => userMemoryService.searchMemory(params),
+      get,
+      (error) => ({
         contexts: [],
-        error: `Failed to retrieve memories: ${(error as Error).message}`,
+        error: `Failed to retrieve memories: ${error.message}`,
         experiences: [],
         preferences: [],
-      };
+        success: false,
+      }),
+    );
+  },
 
-      await optimisticUpdateMessageContent(id, JSON.stringify(errorResult));
-      return false;
-    }
+  updateIdentityMemory: async (id, params) => {
+    return runMemoryTool(id, () => userMemoryService.updateIdentityMemory(params), get);
   },
 });
