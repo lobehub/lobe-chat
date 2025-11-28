@@ -350,6 +350,13 @@
       "when": 1764229953081,
       "tag": "0049_better_auth",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1764303057060,
+      "tag": "0050_thread_and_user_id",
+      "breakpoints": true
     }
   ],
   "version": "6"
