@@ -1,5 +1,6 @@
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,6 +8,7 @@ import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderP
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
 import { useFileStore } from '@/store/file';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
+import { FilesTabs } from '@/types/files';
 
 const useStyles = createStyles(({ css, token }) => ({
   breadcrumb: css`
@@ -32,6 +34,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface FolderBreadcrumbProps {
+  category?: string;
   fileName?: string;
   knowledgeBaseId?: string;
 }
@@ -42,8 +45,9 @@ interface FolderCrumb {
   slug: string;
 }
 
-const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId, fileName }) => {
+const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ category, knowledgeBaseId, fileName }) => {
   const { styles, cx } = useStyles();
+  const { t } = useTranslation('file');
   const navigate = useNavigate();
   const { currentFolderSlug, knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
 
@@ -59,8 +63,24 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId, fileNam
   const useFetchFolderBreadcrumb = useFileStore((s) => s.useFetchFolderBreadcrumb);
   const { data: folderChain = [] } = useFetchFolderBreadcrumb(currentFolderSlug);
 
+  // When in inbox mode (no knowledgeBaseId), show category in breadcrumb
   if (!baseKnowledgeBaseId) {
-    return null;
+    if (!category || category === FilesTabs.All) {
+      return null;
+    }
+
+    const categoryLabel = t(`tab.${category as FilesTabs}` as any);
+
+    return (
+      <Flexbox align={'center'} className={styles.breadcrumb} gap={0} horizontal>
+        <span
+          className={cx(styles.breadcrumbItem, styles.currentItem)}
+          style={{ cursor: 'default' }}
+        >
+          {categoryLabel}
+        </span>
+      </Flexbox>
+    );
   }
 
   const handleNavigate = (slug: string | null) => {

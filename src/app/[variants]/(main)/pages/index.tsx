@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import DocumentExplorer from '@/features/ResourceManager/PageExplorer';
+import PageExplorer from '@/features/ResourceManager/PageExplorer';
 
 /**
  * Pages route - dedicated page for managing documents/pages
@@ -12,7 +12,7 @@ import DocumentExplorer from '@/features/ResourceManager/PageExplorer';
 const PagesPage = memo(() => {
   const { id } = useParams<{ id: string }>();
 
-  return <DocumentExplorer documentId={id} />;
+  return <PageExplorer documentId={id} />;
 });
 
 PagesPage.displayName = 'PagesPage';

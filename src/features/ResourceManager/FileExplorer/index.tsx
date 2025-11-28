@@ -344,7 +344,11 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
                 title={t('back', { ns: 'common' })}
               />
               <Flexbox align={'center'} style={{ marginLeft: 12 }}>
-                <FolderBreadcrumb fileName={currentFile?.name} knowledgeBaseId={knowledgeBaseId} />
+                <FolderBreadcrumb
+                  category={category}
+                  fileName={currentFile?.name}
+                  knowledgeBaseId={knowledgeBaseId}
+                />
               </Flexbox>
             </Flexbox>
           }
@@ -365,7 +369,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
         left={
           <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
             <Flexbox align={'center'} style={{ marginLeft: 12 }}>
-              <FolderBreadcrumb knowledgeBaseId={knowledgeBaseId} />
+              <FolderBreadcrumb category={category} knowledgeBaseId={knowledgeBaseId} />
             </Flexbox>
           </Flexbox>
         }
