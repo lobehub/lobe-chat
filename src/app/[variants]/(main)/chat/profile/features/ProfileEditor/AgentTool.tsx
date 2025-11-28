@@ -1,9 +1,8 @@
 'use client';
 
 import { ActionIcon, Avatar, Icon, ItemType } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ArrowRight, Blocks, Settings, Store, ToyBrick } from 'lucide-react';
+import { ArrowRight, Blocks, Store, ToyBrick } from 'lucide-react';
 import React, { Suspense, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -12,7 +11,6 @@ import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { useStore } from '@/features/AgentSetting/store';
 import ToolItem from '@/features/ChatInput/ActionBar/Tools/ToolItem';
 import Action from '@/features/ChatInput/ActionBar/components/Action';
-import ModelSelect from '@/features/ModelSelect';
 import PluginStore from '@/features/PluginStore';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
@@ -21,29 +19,9 @@ import { builtinToolSelectors, pluginSelectors } from '@/store/tool/selectors';
 
 import PluginTag from './PluginTag';
 
-interface AgentConfigBarProps {
-  onOpenSettings: () => void;
-}
-
-/**
- * AgentConfigBar
- *
- * Primary configuration area featuring:
- * - Model selector (visual focus)
- * - Plugin selector with Tag display (using Tools component pattern)
- * - Settings button (opens legacy AgentSettings drawer)
- */
-const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
+const AgentTool = memo(() => {
   const { t } = useTranslation('setting');
-  const theme = useTheme();
-
   const config = useStore((s) => s.config);
-
-  const [modelValue, setModelValue] = useState({
-    model: config.model,
-    provider: config.provider,
-  });
-  const updateConfig = useStore((s) => s.setAgentConfig);
 
   // Plugin state management
   const plugins = config?.plugins || [];
@@ -61,13 +39,6 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
   useFetchPluginStore();
   useFetchInstalledPlugins();
   useCheckPluginsIsInstalled(plugins);
-
-  const handleModelChange = useMemo(() => {
-    return ({ model, provider }: { model: string; provider: string }) => {
-      setModelValue({ model, provider });
-      updateConfig({ model, provider });
-    };
-  }, [updateConfig]);
 
   // Handle plugin remove via Tag close
   const handleRemovePlugin =
@@ -159,45 +130,25 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
 
   return (
     <>
-      <Flexbox direction="vertical" gap={16}>
-        {/* First Row: Model Selector */}
-        <Flexbox align="center" direction="horizontal" gap={12}>
-          {/* Label */}
-          <Flexbox
-            flex="none"
-            style={{
-              color: theme.colorTextSecondary,
-              fontSize: 14,
-              fontWeight: 500,
+      {/* Plugin Selector and Tags */}
+      <Flexbox align="center" direction="horizontal" gap={12}>
+        {/* Plugin Selector Dropdown - Using Action component pattern */}
+        <Suspense fallback={<ActionIcon disabled icon={Blocks} title={t('tools.title')} />}>
+          <Action
+            dropdown={{
+              maxHeight: 500,
+              maxWidth: 480,
+              menu: { items: menuItems },
+              minWidth: 320,
             }}
-          >
-            {t('settingModel.model.title')}
-          </Flexbox>
+            icon={Blocks}
+            loading={updating}
+            showTooltip={false}
+            title={t('tools.title')}
+          />
+        </Suspense>
 
-          {/* Model Selector */}
-          <Flexbox flex={1} style={{ maxWidth: 400 }}>
-            <ModelSelect onChange={handleModelChange} value={modelValue} />
-          </Flexbox>
-
-          {/* Plugin Selector Dropdown - Using Action component pattern */}
-          <Suspense fallback={<ActionIcon disabled icon={Blocks} title={t('tools.title')} />}>
-            <Action
-              dropdown={{
-                maxHeight: 500,
-                maxWidth: 480,
-                menu: { items: menuItems },
-                minWidth: 320,
-              }}
-              icon={Blocks}
-              loading={updating}
-              showTooltip={false}
-              title={t('tools.title')}
-            />
-          </Suspense>
-
-          {/* Settings Button - Opens Legacy AgentSettings Drawer */}
-          <ActionIcon icon={Settings} onClick={onOpenSettings} title="Advanced Settings" />
-        </Flexbox>
+        {/* Settings Button - Opens Legacy AgentSettings Drawer */}
 
         {/* Second Row: Selected Plugins as Tags */}
         {plugins?.length > 0 && (
@@ -214,11 +165,10 @@ const AgentConfigBar = memo<AgentConfigBarProps>(({ onOpenSettings }) => {
           </Flexbox>
         )}
       </Flexbox>
-
       {/* PluginStore Modal */}
       <PluginStore open={modalOpen} setOpen={setModalOpen} />
     </>
   );
 });
 
-export default AgentConfigBar;
+export default AgentTool;

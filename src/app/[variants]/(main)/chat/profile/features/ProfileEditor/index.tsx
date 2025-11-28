@@ -1,39 +1,58 @@
 'use client';
 
+import { ActionIcon } from '@lobehub/ui';
 import { Divider } from 'antd';
-import { memo, useState } from 'react';
+import { Settings } from 'lucide-react';
+import { memo, useMemo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
+import { useStore } from '@/features/AgentSetting/store';
+import ModelSelect from '@/features/ModelSelect';
 import { useAgentStore } from '@/store/agent';
 
 import AgentSettings from '../../Settings/features/AgentSettings';
-import AgentConfigBar from './AgentConfigBar';
 import AgentHeader from './AgentHeader';
+import AgentTool from './AgentTool';
 import EditorCanvas from './EditorCanvas';
 
 const ProfileEditor = memo(() => {
   const [showSettingsDrawer, setShowSettingsDrawer] = useState(false);
   const [agentId, isLoading] = useAgentStore((s) => [s.activeAgentId, !s.isInboxAgentConfigInit]);
 
+  const config = useStore((s) => s.config);
+  const [modelValue, setModelValue] = useState({
+    model: config.model,
+    provider: config.provider,
+  });
+  const updateConfig = useStore((s) => s.setAgentConfig);
+
+  const handleModelChange = useMemo(() => {
+    return ({ model, provider }: { model: string; provider: string }) => {
+      setModelValue({ model, provider });
+      updateConfig({ model, provider });
+    };
+  }, [updateConfig]);
+
+  if (isLoading) return <Loading />;
+
   return (
     <>
-      {isLoading ? (
-        <Flexbox align="center" height="100vh" justify="center">
-          <Loading />
-        </Flexbox>
-      ) : (
-        <>
-          {/* Header: Avatar + Name + Description */}
-          <AgentHeader />
-          {/* Config Bar: Model Selector + Settings Button */}
-          <AgentConfigBar onOpenSettings={() => setShowSettingsDrawer(true)} />
-          <Divider />
-          {/* Main Content: Prompt Editor */}
-          <EditorCanvas />
-        </>
-      )}
-
+      {/* Header: Avatar + Name + Description */}
+      <AgentHeader />
+      {/* Config Bar: Model Selector + Settings Button */}
+      <Flexbox gap={4} horizontal justify={'flex-start'}>
+        <ModelSelect onChange={handleModelChange} value={modelValue} />
+        <ActionIcon
+          icon={Settings}
+          onClick={() => setShowSettingsDrawer(true)}
+          title="Advanced Settings"
+        />
+      </Flexbox>
+      <AgentTool />
+      <Divider />
+      {/* Main Content: Prompt Editor */}
+      <EditorCanvas />
       {/* Legacy AgentSettings Drawer (opened via Settings button) */}
       <AgentSettings
         agentId={agentId}

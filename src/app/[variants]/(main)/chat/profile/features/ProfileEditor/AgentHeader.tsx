@@ -54,41 +54,35 @@ const AgentHeader = memo(() => {
   };
 
   return (
-    <Flexbox align="start" direction="vertical" gap={16} paddingBlock={16}>
-      {/* Avatar (Left) */}
-      <Flexbox flex="none">
-        <EmojiPicker
-          background={backgroundColor}
-          customTabs={[
-            {
-              label: (
-                <Tooltip title={t('settingAgent.backgroundColor.title', { ns: 'setting' })}>
-                  <Icon icon={PaletteIcon} size={{ size: 20, strokeWidth: 2.5 }} />
-                </Tooltip>
-              ),
-              render: () => (
-                <Flexbox padding={16}>
-                  <Suspense>
-                    <BackgroundSwatches
-                      onChange={handleBackgroundColorChange}
-                      value={backgroundColor}
-                    />
-                  </Suspense>
-                </Flexbox>
-              ),
-              value: 'background',
-            },
-          ]}
-          locale={locale}
-          onChange={handleAvatarChange}
-          shape={'square'}
-          size={78}
-          value={meta.avatar}
-        />
-      </Flexbox>
-
-      {/* Name */}
-
+    <Flexbox gap={4} paddingBlock={8}>
+      <EmojiPicker
+        background={backgroundColor}
+        customTabs={[
+          {
+            label: (
+              <Tooltip title={t('settingAgent.backgroundColor.title', { ns: 'setting' })}>
+                <Icon icon={PaletteIcon} size={{ size: 20, strokeWidth: 2.5 }} />
+              </Tooltip>
+            ),
+            render: () => (
+              <Flexbox padding={16}>
+                <Suspense>
+                  <BackgroundSwatches
+                    onChange={handleBackgroundColorChange}
+                    value={backgroundColor}
+                  />
+                </Suspense>
+              </Flexbox>
+            ),
+            value: 'background',
+          },
+        ]}
+        locale={locale}
+        onChange={handleAvatarChange}
+        shape={'square'}
+        size={78}
+        value={meta.avatar}
+      />
       <Input
         onChange={(e) => {
           setLocalTitle(e.target.value);
