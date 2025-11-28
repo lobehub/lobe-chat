@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Add handling for content_part and reasoning_part events in fetchSSE."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.130"
+  },
+  {
+    "children": {
       "fixes": ["Filter out file with sourceType = file."]
     },
     "date": "2025-11-28",
