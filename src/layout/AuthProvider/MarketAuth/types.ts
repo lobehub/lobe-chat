@@ -36,10 +36,12 @@ export interface MarketAuthState {
 }
 
 export interface MarketAuthContextType extends MarketAuthState {
+  getAccessToken: () => string | null;
   getCurrentUserInfo: () => MarketUserInfo | null;
+  getRefreshToken: () => string | null;
   refreshToken: () => Promise<boolean>;
   signIn: () => Promise<number | null>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
 }
 
 export interface OIDCConfig {
@@ -59,6 +61,7 @@ export interface TokenResponse {
   accessToken: string;
   expiresIn: number;
   idToken?: string;
+  refreshToken?: string;
   scope: string;
   tokenType: string;
 }
