@@ -68,6 +68,8 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav, threadId }) =
         distribution={'space-between'}
         horizontal
         onClick={(e) => {
+          // Alt+Click should keep the current topic selection (reserved shortcut)
+          if (e.altKey) return;
           // 重命名时不切换话题
           if (editing) return;
           // Ctrl/Cmd+点击在新窗口打开
