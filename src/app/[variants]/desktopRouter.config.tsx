@@ -147,7 +147,7 @@ export const createDesktopRouter = () =>
           path: 'discover',
         },
 
-        // Knowledge routes
+        // Resource routes
         {
           children: [
             {
@@ -208,6 +208,24 @@ export const createDesktopRouter = () =>
           element: dynamicElement(() => import('./(main)/image/_layout/DesktopWrapper')),
           errorElement: <ErrorBoundary resetPath="/image" />,
           path: 'image',
+        },
+
+        // Pages routes
+        {
+          children: [
+            {
+              element: dynamicElement(() => import('./(main)/pages')),
+              index: true,
+            },
+            {
+              element: dynamicElement(() => import('./(main)/pages')),
+              loader: idLoader,
+              path: ':id',
+            },
+          ],
+          element: dynamicElement(() => import('./(main)/pages/_layout/Desktop')),
+          errorElement: <ErrorBoundary resetPath="/pages" />,
+          path: 'pages',
         },
 
         // Labs routes

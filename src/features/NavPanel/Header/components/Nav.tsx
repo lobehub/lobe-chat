@@ -1,6 +1,6 @@
 'use client';
 
-import { Compass, HomeIcon, ImageIcon } from 'lucide-react';
+import { Compass, FilePenIcon, HomeIcon, ImageIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -32,6 +32,13 @@ const Nav = memo(() => {
         key: SidebarTabKey.Image,
         title: t('tab.image'),
         url: '/image',
+      },
+      {
+        hidden: !showAiImage,
+        icon: FilePenIcon,
+        key: SidebarTabKey.Pages,
+        title: t('tab.pages'),
+        url: '/pages',
       },
       {
         hidden: !showMarket,

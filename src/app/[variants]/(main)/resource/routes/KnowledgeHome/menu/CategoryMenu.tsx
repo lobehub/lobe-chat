@@ -4,7 +4,7 @@ import { CaretDownFilled } from '@ant-design/icons';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { motion } from 'framer-motion';
-import { FilePenIcon, FileText, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
+import { FileText, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -52,11 +52,6 @@ const CategoryMenu = memo(() => {
         icon: <Icon icon={FileText} />,
         key: FilesTabs.Documents,
         label: t('tab.documents'),
-      },
-      {
-        icon: <Icon icon={FilePenIcon} />,
-        key: FilesTabs.Pages,
-        label: t('tab.pages'),
       },
       {
         icon: <Icon icon={ImageIcon} />,
@@ -131,11 +126,7 @@ const CategoryMenu = memo(() => {
             onClick={({ key }) => {
               const categoryParam = key === FilesTabs.All ? '' : `?category=${key}`;
 
-              if (key === FilesTabs.Pages) {
-                setMode('pages');
-              } else {
-                setMode('files');
-              }
+              setMode('files');
 
               navigate(`/resource${categoryParam}`, { replace: true });
             }}

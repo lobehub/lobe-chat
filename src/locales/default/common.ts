@@ -367,6 +367,7 @@ export default {
     image: '画图',
     knowledgeBase: '知识库',
     me: '我',
+    pages: '文稿',
     setting: '设置',
     video: '视频',
   },
