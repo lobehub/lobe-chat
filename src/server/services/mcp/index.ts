@@ -13,6 +13,7 @@ import {
   McpResource,
   McpTool,
   StdioMCPParams,
+  ToolCallResult,
 } from '@/libs/mcp';
 
 import { ProcessContentBlocksFn, contentBlocksToString } from './contentProcessor';
@@ -224,6 +225,50 @@ export class MCPService {
         cause: error,
         code: 'INTERNAL_SERVER_ERROR',
         message: `Error calling tool "${toolName}" on MCP server: ${(error as Error).message}`,
+      });
+    }
+  }
+
+  // callTool now accepts an object with clientParams, toolName, argsStr, and processContentBlocks
+  async formatCloudTool(options: {
+    data: ToolCallResult;
+    processContentBlocks?: ProcessContentBlocksFn;
+  }): Promise<any> {
+    const { data, processContentBlocks } = options;
+    try {
+      // Delegate the call to the MCPClient instance
+      const result = data; // Pass args directly
+      // Process content blocks (upload images, etc.)
+      const newContent =
+        result?.isError || !processContentBlocks
+          ? result?.content
+          : await processContentBlocks(result?.content);
+      // Convert content blocks to string
+      const content = contentBlocksToString(newContent);
+      const state = { ...result, content: newContent };
+      if (result?.isError) return { content, state, success: true };
+      return { content: content, state, success: true };
+    } catch (error) {
+      if (error instanceof McpError) {
+        const mcpError = error as McpError;
+
+        return {
+          content: mcpError.message,
+          error: error,
+          state: {
+            content: [{ text: mcpError.message, type: 'text' }],
+            isError: true,
+          },
+          success: false,
+        };
+      }
+
+      console.error(`Error calling tool for cloud endpoint`, error);
+      // Propagate a TRPCError
+      throw new TRPCError({
+        cause: error,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Error calling tool on cloud endpoint MCP server: ${(error as Error).message}`,
       });
     }
   }

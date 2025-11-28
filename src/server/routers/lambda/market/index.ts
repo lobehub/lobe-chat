@@ -4,7 +4,8 @@ import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
-import { publicProcedure, router } from '@/libs/trpc/lambda';
+import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DiscoverService } from '@/server/services/discover';
 import {
   AssistantSorts,
@@ -27,7 +28,70 @@ const marketProcedure = publicProcedure.use(async ({ ctx, next }) => {
   });
 });
 
+// Procedure with user authentication for operations requiring user access token
+const authedMarketProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next }) => {
+  return next({
+    ctx: {
+      discoverService: new DiscoverService({ accessToken: ctx.marketAccessToken }),
+    },
+  });
+});
+
 export const marketRouter = router({
+  // ============================== Cloud MCP Gateway ==============================
+  callCloudMcpEndpoint: authedMarketProcedure
+    .input(
+      z.object({
+        apiParams: z.record(z.any()),
+        identifier: z.string(),
+        toolName: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      log('callCloudMcpEndpoint input: %O', input);
+
+      try {
+        // Get user access token from database
+        const { UserModel } = await import('@/database/models/user');
+        const userModel = new UserModel(ctx.serverDB, ctx.userId);
+
+        // Query user_settings to get market.accessToken
+        const userState = await userModel.getUserState(async () => ({}));
+        const userAccessToken = userState.settings?.market?.accessToken;
+        console.log('callCloudMcpEndpoint: userAccessToken', userAccessToken);
+
+        log('callCloudMcpEndpoint: userAccessToken exists=%s', !!userAccessToken);
+
+        if (!userAccessToken) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: 'User access token not found. Please sign in to Market first.',
+          });
+        }
+
+        const result = await ctx.discoverService.callCloudMcpEndpoint({
+          apiParams: input.apiParams,
+          identifier: input.identifier,
+          toolName: input.toolName,
+          userAccessToken,
+        });
+
+        return result;
+      } catch (error) {
+        log('Error calling cloud MCP endpoint: %O', error);
+
+        // Re-throw TRPCError as-is
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to call cloud MCP endpoint',
+        });
+      }
+    }),
+
   // ============================== Assistant Market ==============================
   getAssistantCategories: marketProcedure
     .input(
@@ -558,7 +622,6 @@ export const marketRouter = router({
     }),
 
   // ============================== Analytics ==============================
-
   reportCall: marketProcedure
     .input(
       z.object({

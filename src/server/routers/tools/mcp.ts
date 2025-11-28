@@ -29,14 +29,30 @@ const stdioParamsSchema = z.object({
   type: z.literal('stdio'),
 });
 
+const cloudParamsSchema = z.object({
+  auth: StreamableHTTPAuthSchema,
+  headers: z.record(z.string()).optional(),
+  name: z.string().min(1),
+  type: z.literal('cloud'),
+  url: z.string().url(),
+});
+
 // Union schema for MCPClientParams
-const mcpClientParamsSchema = z.union([httpParamsSchema, stdioParamsSchema]);
+const mcpClientParamsSchema = z.union([httpParamsSchema, stdioParamsSchema, cloudParamsSchema]);
 
 const checkStdioEnvironment = (params: z.infer<typeof mcpClientParamsSchema>) => {
   if (params.type === 'stdio' && !isDesktop) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Stdio MCP type is not supported in web environment.',
+    });
+  }
+
+  if (params.type === 'cloud') {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message:
+        'Cloud MCP type should not be handled by tools router. Use market.callCloudMcpEndpoint instead.',
     });
   }
 };
@@ -119,6 +135,24 @@ export const mcpRouter = router({
         clientParams: input.params,
         toolName: input.toolName,
         argsStr: input.args,
+        processContentBlocks: boundProcessContentBlocks,
+      });
+    }),
+
+  callToolWithCloud: mcpProcedure
+    .input(
+      z.object({
+        data: z.any(), // Use the outer input
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      // Create a closure that binds fileService and userId to processContentBlocks
+      const boundProcessContentBlocks = async (blocks: ToolCallContent[]) => {
+        return processContentBlocks(blocks, ctx.fileService);
+      };
+      // Pass the validated params, toolName, args, and bound processContentBlocks to the service
+      return await mcpService.formatCloudTool({
+        data: input.data,
         processContentBlocks: boundProcessContentBlocks,
       });
     }),
