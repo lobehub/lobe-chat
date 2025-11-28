@@ -53,7 +53,10 @@ export interface ConfigCellProps {
 const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav, threadId }) => {
   const { styles, cx } = useStyles();
   const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
-  const [toggleTopic, editing] = useChatStore((s) => [s.switchTopic, s.topicRenamingId === id]);
+  const [toggleTopic, editing] = useChatStore((s) => [
+    s.switchTopic,
+    s.topicRenamingId !== undefined && s.topicRenamingId === id,
+  ]);
   const activeId = useSessionStore((s) => s.activeId);
   const [isHover, setHovering] = useState(false);
 
