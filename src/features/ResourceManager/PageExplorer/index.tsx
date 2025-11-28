@@ -41,7 +41,7 @@ const useStyles = createStyles(({ css, token }) => ({
     padding-inline: ${token.paddingXS}px;
     border-block-end: 1px solid ${token.colorBorderSecondary};
 
-    background: ${token.colorBgContainer};
+    background: ${token.colorBgLayout};
   `,
   listPanel: css`
     display: flex;
@@ -51,7 +51,7 @@ const useStyles = createStyles(({ css, token }) => ({
     min-width: 280px;
     border-inline-end: 1px solid ${token.colorBorderSecondary};
 
-    background: ${token.colorBgContainer};
+    background: ${token.colorBgLayout};
   `,
 }));
 
