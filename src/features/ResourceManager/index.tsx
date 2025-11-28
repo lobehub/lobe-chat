@@ -13,7 +13,7 @@ import UploadDock from './UploadDock';
 
 const ChunkDrawer = dynamic(() => import('./ChunkDrawer'), { ssr: false });
 
-export type ResouceManagerMode = 'page' | 'pages' | 'files';
+export type ResouceManagerMode = 'page' | 'pages' | 'files' | 'file';
 
 interface KnowledgeManagerProps {
   category?: string;
@@ -43,7 +43,8 @@ const ResourceManager = memo<KnowledgeManagerProps>(
         case 'pages': {
           return <DocumentExplorer documentId={documentId} knowledgeBaseId={knowledgeBaseId} />;
         }
-        case 'files': {
+        case 'files':
+        case 'file': {
           return (
             <FileExplorer
               category={category}

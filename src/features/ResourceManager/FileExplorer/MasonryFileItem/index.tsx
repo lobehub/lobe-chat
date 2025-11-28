@@ -1,7 +1,9 @@
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { memo, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 
@@ -172,6 +174,9 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const [markdownContent, setMarkdownContent] = useState<string>('');
     const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+    const [, setSearchParams] = useSearchParams();
+    const setMode = useResourceManagerStore((s) => s.setMode);
+    const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
 
     const isImage = fileType && IMAGE_TYPES.has(fileType);
     const isMarkdown = isMarkdownFile(name, fileType);
@@ -283,6 +288,19 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             if (isNote) {
               setIsNoteModalOpen(true);
             } else {
+              // Set mode to file and store the file ID
+              setCurrentViewItemId(id);
+              setMode('file');
+              // Also update URL query parameter for shareable links
+              setSearchParams(
+                (prev) => {
+                  const newParams = new URLSearchParams(prev);
+                  newParams.set('file', id);
+                  return newParams;
+                },
+                { replace: true },
+              );
+              // Still call onOpen if provided for backwards compatibility
               onOpen?.(id);
             }
           }}

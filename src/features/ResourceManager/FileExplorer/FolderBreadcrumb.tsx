@@ -31,6 +31,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface FolderBreadcrumbProps {
+  fileName?: string;
   knowledgeBaseId?: string;
 }
 
@@ -40,7 +41,7 @@ interface FolderCrumb {
   slug: string;
 }
 
-const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId }) => {
+const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId, fileName }) => {
   const { styles, cx } = useStyles();
   const navigate = useNavigate();
   const { currentFolderSlug, knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
@@ -66,7 +67,7 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId }) => {
     }
   };
 
-  const isAtRoot = folderChain.length === 0;
+  const isAtRoot = folderChain.length === 0 && !fileName;
 
   return (
     <Flexbox align={'center'} className={styles.breadcrumb} gap={0} horizontal>
@@ -79,7 +80,7 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId }) => {
       </span>
 
       {folderChain.map((folder: FolderCrumb, index: number) => {
-        const isLast = index === folderChain.length - 1;
+        const isLast = index === folderChain.length - 1 && !fileName;
         return (
           <Flexbox align={'center'} gap={0} horizontal key={folder.id}>
             <span className={styles.separator}>/</span>
@@ -93,6 +94,18 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId }) => {
           </Flexbox>
         );
       })}
+
+      {fileName && (
+        <Flexbox align={'center'} gap={0} horizontal>
+          <span className={styles.separator}>/</span>
+          <span
+            className={cx(styles.breadcrumbItem, styles.currentItem)}
+            style={{ cursor: 'default' }}
+          >
+            {fileName}
+          </span>
+        </Flexbox>
+      )}
     </Flexbox>
   );
 });

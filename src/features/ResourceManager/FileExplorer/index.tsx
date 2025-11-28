@@ -1,24 +1,28 @@
 'use client';
 
+import { ActionIcon } from '@lobehub/ui';
 import { ChatHeader } from '@lobehub/ui/chat';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
+import { ArrowLeft } from 'lucide-react';
 import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
 import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
 import { useQueryState } from '@/hooks/useQueryParam';
-import { useFileStore } from '@/store/file';
+import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { FilesTabs, SortType } from '@/types/files';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
+import FilePreviewer from '../FilePreviewer';
 import AddButton from '../Header/AddButton';
 import EmptyStatus from './EmptyStatus';
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './FileListItem';
@@ -60,11 +64,18 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   const { t } = useTranslation('components');
   const { styles } = useStyles();
   const navigate = useNavigate();
+  const [, setSearchParams] = useSearchParams();
 
   const [selectFileIds, setSelectedFileIds] = useState<string[]>([]);
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isMasonryReady, setIsMasonryReady] = useState(false);
+
+  const mode = useResourceManagerStore((s) => s.mode);
+  const currentViewItemId = useResourceManagerStore((s) => s.currentViewItemId);
+  const setMode = useResourceManagerStore((s) => s.setMode);
+  const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
+  const currentFile = useFileStore(fileManagerSelectors.getFileById(currentViewItemId));
 
   // Always use masonry view for Images category, ignore stored preference
   const storedViewMode = useGlobalStore((s) => s.status.fileManagerViewMode);
@@ -305,6 +316,45 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   );
 
   const showEmptyStatus = !isLoading && data?.length === 0 && !currentFolderSlug;
+
+  // Show file preview mode
+  if (mode === 'file' && currentViewItemId) {
+    const handleBackToList = () => {
+      setMode('files');
+      setCurrentViewItemId(undefined);
+      // Remove file query parameter from URL
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.delete('file');
+        return newParams;
+      });
+    };
+
+    return (
+      <Flexbox height={'100%'}>
+        <ChatHeader
+          left={
+            <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
+              <ActionIcon
+                icon={ArrowLeft}
+                onClick={handleBackToList}
+                title={t('back', { ns: 'common' })}
+              />
+              <Flexbox align={'center'} style={{ marginLeft: 12 }}>
+                <FolderBreadcrumb fileName={currentFile?.name} knowledgeBaseId={knowledgeBaseId} />
+              </Flexbox>
+            </Flexbox>
+          }
+          styles={{
+            left: { padding: 0 },
+          }}
+        />
+        <Flexbox flex={1} style={{ marginTop: 56, overflow: 'hidden' }}>
+          <FilePreviewer fileId={currentViewItemId} />
+        </Flexbox>
+      </Flexbox>
+    );
+  }
 
   return (
     <Flexbox height={'100%'}>

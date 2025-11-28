@@ -174,6 +174,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     };
 
     const setMode = useResourceManagerStore((s) => s.setMode);
+    const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
 
     const handleRenameConfirm = async () => {
       if (!renamingValue.trim()) {
@@ -236,6 +237,10 @@ const FileRenderItem = memo<FileRenderItemProps>(
             } else if (isNote) {
               setMode('page');
             } else {
+              // Set mode to file and store the file ID
+              setCurrentViewItemId(id);
+              setMode('file');
+              // Also update URL query parameter for shareable links
               setSearchParams(
                 (prev) => {
                   const newParams = new URLSearchParams(prev);

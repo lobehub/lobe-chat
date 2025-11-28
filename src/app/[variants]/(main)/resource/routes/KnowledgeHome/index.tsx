@@ -1,11 +1,11 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useMediaQuery } from 'react-responsive';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import NProgress from '@/components/NProgress';
 import PanelTitle from '@/components/PanelTitle';
@@ -21,12 +21,12 @@ import LibraryHead from '../../components/LibraryMenu/Head';
 import { useFileCategory } from '../../hooks/useFileCategory';
 import { useFolderPath } from '../../hooks/useFolderPath';
 import { useKnowledgeBaseItem } from '../../hooks/useKnowledgeItem';
-import FileModalQueryRoute from '../../shared/FileModalQueryRoute';
 import { ResourceManagerProvider } from './ResourceManagerProvider';
 import Container from './layout/Container';
 import RegisterHotkeys from './layout/RegisterHotkeys';
 import CategoryMenu from './menu/CategoryMenu';
 import Collection from './menu/KnowledgeBase';
+import { useResourceManagerStore } from './store';
 
 const useStyles = createStyles(({ css, token }) => ({
   main: css`
@@ -95,12 +95,24 @@ const MainContent = memo(() => {
   const { id } = useParams<{ id: string }>();
   const { knowledgeBaseId } = useFolderPath();
   const [category] = useFileCategory();
+  const [searchParams] = useSearchParams();
+  const setMode = useResourceManagerStore((s) => s.setMode);
+  const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
 
   // Load knowledge base data if we're in a library route
   useKnowledgeBaseItem(knowledgeBaseId || '');
   const libraryName = useKnowledgeBaseStore(
     knowledgeBaseSelectors.getKnowledgeBaseNameById(knowledgeBaseId || ''),
   );
+
+  // Sync URL query parameter with store on mount and when it changes
+  useEffect(() => {
+    const fileId = searchParams.get('file');
+    if (fileId) {
+      setCurrentViewItemId(fileId);
+      setMode('file');
+    }
+  }, [searchParams, setCurrentViewItemId, setMode]);
 
   return (
     <ResourceManager
@@ -132,7 +144,6 @@ const DesktopLayout = memo(() => {
         </Container>
       </Flexbox>
       <RegisterHotkeys />
-      <FileModalQueryRoute />
     </>
   );
 });
@@ -162,7 +173,6 @@ const MobileLayout = memo(() => {
       >
         <MainContent />
       </Flexbox>
-      <FileModalQueryRoute />
     </>
   );
 });
