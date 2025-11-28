@@ -1004,6 +1004,7 @@ table user_settings {
   language_model jsonb
   system_agent jsonb
   default_agent jsonb
+  market jsonb
   tool jsonb
   image jsonb
 }
