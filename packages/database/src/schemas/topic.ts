@@ -49,12 +49,17 @@ export const threads = pgTable(
       .primaryKey(),
 
     title: text('title'),
-    type: text('type', { enum: ['continuation', 'standalone'] }).notNull(),
-    status: text('status', { enum: ['active', 'deprecated', 'archived'] }).default('active'),
+    content: text('content'),
+    editor_data: jsonb('editor_data'),
+    type: text('type', { enum: ['continuation', 'standalone', 'isolation'] }).notNull(),
+    status: text('status', {
+      enum: ['active', 'processing', 'pending', 'inReview', 'todo', 'cancel'],
+    }),
+
     topicId: text('topic_id')
       .references(() => topics.id, { onDelete: 'cascade' })
       .notNull(),
-    sourceMessageId: text('source_message_id').notNull(),
+    sourceMessageId: text('source_message_id'),
     // @ts-ignore
     parentThreadId: text('parent_thread_id').references(() => threads.id, { onDelete: 'set null' }),
     clientId: text('client_id'),
