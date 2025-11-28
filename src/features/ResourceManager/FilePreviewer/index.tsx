@@ -13,14 +13,18 @@ interface FilePreviewerProps {
 }
 
 const FilePreviewer = memo<FilePreviewerProps>(({ fileId }) => {
+  const useFetchKnowledgeItem = useFileStore((s) => s.useFetchKnowledgeItem);
+  const { data: fetchedFile } = useFetchKnowledgeItem(fileId);
   const file = useFileStore(fileManagerSelectors.getFileById(fileId));
 
-  if (!fileId || !file) return null;
+  const displayFile = file || fetchedFile;
+
+  if (!fileId || !displayFile) return null;
 
   return (
     <Flexbox height={'100%'} horizontal width={'100%'}>
       <Flexbox flex={1} height={'100%'} style={{ overflow: 'hidden' }}>
-        <FileViewer {...file} />
+        <FileViewer {...displayFile} />
       </Flexbox>
       <FileDetail id={fileId} />
     </Flexbox>

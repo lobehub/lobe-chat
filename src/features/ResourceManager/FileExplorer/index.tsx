@@ -75,7 +75,10 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   const currentViewItemId = useResourceManagerStore((s) => s.currentViewItemId);
   const setMode = useResourceManagerStore((s) => s.setMode);
   const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
-  const currentFile = useFileStore(fileManagerSelectors.getFileById(currentViewItemId));
+  const useFetchKnowledgeItem = useFileStore((s) => s.useFetchKnowledgeItem);
+  const { data: fetchedCurrentFile } = useFetchKnowledgeItem(currentViewItemId);
+  const currentFile =
+    useFileStore(fileManagerSelectors.getFileById(currentViewItemId)) || fetchedCurrentFile;
 
   // Always use masonry view for Images category, ignore stored preference
   const storedViewMode = useGlobalStore((s) => s.status.fileManagerViewMode);
