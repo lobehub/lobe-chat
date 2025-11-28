@@ -1,11 +1,12 @@
 ---
 title: LobeChat Authentication Service Environment Variables
 description: >-
-  Explore the essential environment variables for configuring authentication services in LobeChat, including OAuth SSO, NextAuth settings, and provider-specific details.
+  Explore the essential environment variables for configuring authentication services in LobeChat, including Better Auth, OAuth SSO, NextAuth settings, and provider-specific details.
 
 
 tags:
   - Authentication Service
+  - Better Auth
   - OAuth SSO
   - Clerk
   - NextAuth
@@ -14,6 +15,191 @@ tags:
 # Authentication Service
 
 LobeChat provides a complete authentication service capability when deployed. The following are the relevant environment variables. You can use these environment variables to easily define the identity verification services that need to be enabled in LobeChat.
+
+## Better Auth
+
+### General Settings
+
+#### `NEXT_PUBLIC_ENABLE_BETTER_AUTH`
+
+- Type: Required
+- Description: Set to `1` to enable Better Auth service. When enabled, Better Auth will be used for authentication instead of Next Auth or Clerk.
+- Default: `-`
+- Example: `1`
+
+#### `AUTH_SECRET`
+
+- Type: Required
+- Description: Key used to encrypt session tokens. Shared between Better Auth and Next Auth. You can generate the key using the command: `openssl rand -base64 32`.
+- Default: `-`
+- Example: `Tfhi2t2pelSMEA8eaV61KaqPNEndFFdMIxDaJnS1CUI=`
+
+#### `NEXT_PUBLIC_AUTH_URL`
+
+- Type: Optional
+- Description: The URL accessible from the browser for Better Auth callbacks. Only set this if the default generated URL is incorrect.
+- Default: `-`
+- Example: `https://example.com`
+
+#### `NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION`
+
+- Type: Optional
+- Description: Set to `1` to require email verification before users can sign in. Users must verify their email address after registration.
+- Default: `0`
+- Example: `1`
+
+#### `AUTH_SSO_PROVIDERS`
+
+- Type: Optional
+- Description: Comma-separated list of enabled SSO providers. The order determines the display order of providers on the login page.
+- Default: `-`
+- Example: `google,github,microsoft,cognito`
+
+### Email Service (SMTP)
+
+These settings are required for email verification and password reset features.
+
+#### `SMTP_HOST`
+
+- Type: Required (for email features)
+- Description: SMTP server hostname.
+- Default: `-`
+- Example: `smtp.gmail.com`
+
+#### `SMTP_PORT`
+
+- Type: Required (for email features)
+- Description: SMTP server port. Usually `587` for TLS or `465` for SSL.
+- Default: `-`
+- Example: `587`
+
+#### `SMTP_SECURE`
+
+- Type: Optional
+- Description: Use secure connection. Set to `true` for port 465 (SSL), `false` for port 587 (TLS).
+- Default: `false`
+- Example: `false`
+
+#### `SMTP_USER`
+
+- Type: Required (for email features)
+- Description: SMTP authentication username, usually your email address.
+- Default: `-`
+- Example: `your-email@example.com`
+
+#### `SMTP_PASS`
+
+- Type: Required (for email features)
+- Description: SMTP authentication password. For Gmail, use an app-specific password.
+- Default: `-`
+- Example: `your-app-specific-password`
+
+### Google
+
+#### `AUTH_GOOGLE_ID`
+
+- Type: Required
+- Description: Client ID of the Google OAuth application. Get it from [Google Cloud Console](https://console.cloud.google.com/apis/credentials).
+- Default: `-`
+- Example: `123456789.apps.googleusercontent.com`
+
+#### `AUTH_GOOGLE_SECRET`
+
+- Type: Required
+- Description: Client Secret of the Google OAuth application.
+- Default: `-`
+- Example: `GOCSPX-xxxxxxxxxxxxxxxxxxxx`
+
+### GitHub
+
+#### `AUTH_GITHUB_ID`
+
+- Type: Required
+- Description: Client ID of the GitHub OAuth application. Get it from [GitHub Developer Settings](https://github.com/settings/developers).
+- Default: `-`
+- Example: `Ov23xxxxxxxxxxxxx`
+
+#### `AUTH_GITHUB_SECRET`
+
+- Type: Required
+- Description: Client Secret of the GitHub OAuth application.
+- Default: `-`
+- Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### Microsoft
+
+#### `AUTH_MICROSOFT_ID`
+
+- Type: Required
+- Description: Client ID of the Microsoft Entra ID (Azure AD) application. Get it from [Azure Portal](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade).
+- Default: `-`
+- Example: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+
+#### `AUTH_MICROSOFT_SECRET`
+
+- Type: Required
+- Description: Client Secret of the Microsoft Entra ID application.
+- Default: `-`
+- Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### AWS Cognito
+
+#### `AUTH_COGNITO_ID`
+
+- Type: Required
+- Description: Client ID of the AWS Cognito User Pool App Client. Get it from [AWS Cognito Console](https://console.aws.amazon.com/cognito).
+- Default: `-`
+- Example: `xxxxxxxxxxxxxxxxxxxxx`
+
+#### `AUTH_COGNITO_SECRET`
+
+- Type: Required
+- Description: Client Secret of the AWS Cognito App Client.
+- Default: `-`
+- Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+#### `AUTH_COGNITO_ISSUER`
+
+- Type: Required
+- Description: The Cognito User Pool issuer URL. Format: `https://cognito-idp.{region}.amazonaws.com/{userPoolId}`
+- Default: `-`
+- Example: `https://cognito-idp.us-east-1.amazonaws.com/us-east-1_xxxxxxxxx`
+
+### Feishu
+
+#### `AUTH_FEISHU_APP_ID`
+
+- Type: Required
+- Description: App ID of the Feishu application. Get it from [Feishu Open Platform](https://open.feishu.cn/app).
+- Default: `-`
+- Example: `cli_xxxxxxxxxxxxxxxx`
+
+#### `AUTH_FEISHU_APP_SECRET`
+
+- Type: Required
+- Description: App Secret of the Feishu application.
+- Default: `-`
+- Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### WeChat
+
+#### `AUTH_WECHAT_ID`
+
+- Type: Required
+- Description: App ID of the WeChat Open Platform application. Get it from [WeChat Open Platform](https://open.weixin.qq.com/).
+- Default: `-`
+- Example: `wxxxxxxxxxxxxxxxxxxx`
+
+#### `AUTH_WECHAT_SECRET`
+
+- Type: Required
+- Description: App Secret of the WeChat application.
+- Default: `-`
+- Example: `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+<Callout type={'info'}>
+  For other OIDC-based providers (Auth0, Authelia, Authentik, Casdoor, Cloudflare Zero Trust, Keycloak, Logto, Okta, ZITADEL, Generic OIDC), the environment variables follow the same pattern as Next Auth. See the [Next Auth section](#next-auth) below for details.
+</Callout>
 
 ## Next Auth
 

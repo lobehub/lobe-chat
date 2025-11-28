@@ -797,5 +797,24 @@
     "bps": true,
     "folderMillis": 1763987922211,
     "hash": "f823b521f4d25e5dc5ab238b372727d2d2d7f0aed27b5eabc8a9608ce4e50568"
+  },
+  {
+    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;"],
+    "bps": true,
+    "folderMillis": 1764215503726,
+    "hash": "4188893a9083b3c7baebdbad0dd3f9d9400ede7584ca2394f5c64305dc9ec7b0"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"accounts\" (\n\t\"access_token\" text,\n\t\"access_token_expires_at\" timestamp,\n\t\"account_id\" text NOT NULL,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"id_token\" text,\n\t\"password\" text,\n\t\"provider_id\" text NOT NULL,\n\t\"refresh_token\" text,\n\t\"refresh_token_expires_at\" timestamp,\n\t\"scope\" text,\n\t\"updated_at\" timestamp NOT NULL,\n\t\"user_id\" text NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"auth_sessions\" (\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"expires_at\" timestamp NOT NULL,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"ip_address\" text,\n\t\"token\" text NOT NULL,\n\t\"updated_at\" timestamp NOT NULL,\n\t\"user_agent\" text,\n\t\"user_id\" text NOT NULL,\n\tCONSTRAINT \"auth_sessions_token_unique\" UNIQUE(\"token\")\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"verifications\" (\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"expires_at\" timestamp NOT NULL,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"identifier\" text NOT NULL,\n\t\"updated_at\" timestamp DEFAULT now() NOT NULL,\n\t\"value\" text NOT NULL\n);\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"email_verified\" boolean DEFAULT false NOT NULL;",
+      "\nDO $$ BEGIN\n ALTER TABLE \"accounts\" ADD CONSTRAINT \"accounts_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n",
+      "\nDO $$ BEGIN\n ALTER TABLE \"auth_sessions\" ADD CONSTRAINT \"auth_sessions_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764229953081,
+    "hash": "1532ebceae7b70550bc9c230fb0a65090aaa773bc7b873eefbc2ce2a815997e2"
   }
 ]

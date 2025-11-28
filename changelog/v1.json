@@ -1,6 +1,43 @@
 [
   {
     "children": {
+      "fixes": ["Better-auth fallback next-auth providers env."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.127"
+  },
+  {
+    "children": {
+      "fixes": ["Align docker auth defaults and better-auth docs."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.126"
+  },
+  {
+    "children": {
+      "features": ["Support better-auth."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.125"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fixed the agent settings plugins pages error problem, improve topic item interaction and editing behavior."
+      ]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.124"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.123"
+  },
+  {
+    "children": {
       "fixes": ["Slove the publish to market the agent config error."]
     },
     "date": "2025-11-26",
