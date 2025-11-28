@@ -840,9 +840,9 @@
     "hash": "2c103eee82bdf329944fb622dd9c2b9f20df80eb54f23eb9254d2285de413099"
   },
   {
-    "sql": ["ALTER TABLE \"user_settings\" ADD COLUMN \"market\" jsonb;"],
+    "sql": ["ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"market\" jsonb;"],
     "bps": true,
     "folderMillis": 1764335703306,
-    "hash": "25cf2f0968641aa437c64bbe0a033e1c41b63dc44df35bf92db43c21987170e9"
+    "hash": "28c0d738c0b1fdf5fd871363be1a1477b4accbabdc140fe8dc6e9b339aae2c89"
   }
 ]
