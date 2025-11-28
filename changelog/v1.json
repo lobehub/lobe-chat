@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Implement uniform callback URL for SSO providers."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.131"
+  },
+  {
+    "children": {
       "fixes": ["Add handling for content_part and reasoning_part events in fetchSSE."]
     },
     "date": "2025-11-28",
