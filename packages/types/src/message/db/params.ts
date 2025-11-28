@@ -19,6 +19,7 @@ import {
 import { UIChatMessage } from '../ui';
 
 export interface QueryMessageParams {
+  agentId?: string | null;
   current?: number;
   groupId?: string | null;
   pageSize?: number;

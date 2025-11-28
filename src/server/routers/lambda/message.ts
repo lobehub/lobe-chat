@@ -66,6 +66,7 @@ export const messageRouter = router({
   getMessages: messageProcedure
     .input(
       z.object({
+        agentId: z.string().nullable().optional(),
         current: z.number().optional(),
         groupId: z.string().nullable().optional(),
         pageSize: z.number().optional(),

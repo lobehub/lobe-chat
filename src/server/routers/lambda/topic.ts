@@ -91,22 +91,17 @@ export const topicRouter = router({
     return ctx.topicModel.queryAll();
   }),
 
-  // TODO: this procedure should be used with authedProcedure
-  getTopics: publicProcedure
+  getTopics: topicProcedure
     .input(
       z.object({
+        agentId: z.string().nullable().optional(),
         containerId: z.string().nullable().optional(),
         current: z.number().optional(),
         pageSize: z.number().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
-      if (!ctx.userId) return [];
-
-      const serverDB = await getServerDB();
-      const topicModel = new TopicModel(serverDB, ctx.userId);
-
-      return topicModel.query(input);
+      return ctx.topicModel.query(input);
     }),
 
   hasTopics: topicProcedure.query(async ({ ctx }) => {
