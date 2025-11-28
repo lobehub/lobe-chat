@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Filter out file with sourceType = file."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.129"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-28",
