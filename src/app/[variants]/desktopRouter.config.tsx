@@ -24,19 +24,18 @@ export const createDesktopRouter = () =>
                 {
                   element: dynamicElement(() => import('./(main)/chat')),
                   index: true,
-                  loader: agentIdLoader,
                 },
                 {
                   element: dynamicElement(() => import('./(main)/chat/profile')),
                   path: 'profile',
                 },
               ],
+              element: dynamicElement(() => import('./(main)/chat/_layout')),
+              errorElement: <ErrorBoundary resetPath="/agent" />,
               loader: agentIdLoader,
-              path: '/agent/:aid',
+              path: ':aid',
             },
           ],
-          element: dynamicElement(() => import('./(main)/chat/_layout')),
-          errorElement: <ErrorBoundary resetPath="/agent" />,
           path: 'agent',
         },
 

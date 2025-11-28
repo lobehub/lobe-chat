@@ -234,15 +234,7 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(
     ]);
 
     const handleButtonClick = useCallback(async () => {
-      console.log(
-        `[MarketPublishButton][${action}] Button clicked, isAuthenticated:`,
-        isAuthenticated,
-      );
-
       if (!isAuthenticated) {
-        console.log(
-          `[MarketPublishButton][${action}] User not authenticated, starting authorization`,
-        );
         try {
           message.loading({ content: tMarketAuth('messages.loading'), key: 'market-auth' });
           const accountId = await signIn();
@@ -300,7 +292,6 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(
       }
 
       // User is authenticated, directly publish
-      console.log(`[MarketPublishButton][${action}] User is authenticated, publishing directly`);
       await handlePublish();
     }, [
       action,

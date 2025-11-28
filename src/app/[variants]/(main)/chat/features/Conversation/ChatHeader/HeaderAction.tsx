@@ -6,11 +6,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import SettingButton from '@/app/[variants]/(main)/chat/profile/Settings/features/SettingButton';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import ShareButton from './ShareButton';
 
@@ -21,8 +19,6 @@ const HeaderAction = memo<{ className?: string }>(({ className }) => {
     systemStatusSelectors.wideScreen(s),
     s.toggleWideScreen,
   ]);
-
-  const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <Flexbox className={className} gap={4} horizontal>
@@ -36,8 +32,6 @@ const HeaderAction = memo<{ className?: string }>(({ className }) => {
         }}
       />
       <ShareButton />
-
-      {isAgentEditable && <SettingButton />}
     </Flexbox>
   );
 });

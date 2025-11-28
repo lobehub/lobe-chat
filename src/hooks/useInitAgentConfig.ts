@@ -10,12 +10,8 @@ import { authSelectors } from '@/store/user/selectors';
  */
 export const useInitAgentConfig = () => {
   const [useFetchAgentConfig] = useAgentStore((s) => [s.useFetchAgentConfig]);
-
   const isLogin = useUserStore(authSelectors.isLogin);
-
   const load = useLoaderData();
-
-  console.log('load:', load?.agentId);
   const data = useFetchAgentConfig(isLogin, load?.agentId);
 
   return { ...data, isLoading: data.isLoading && isLogin };

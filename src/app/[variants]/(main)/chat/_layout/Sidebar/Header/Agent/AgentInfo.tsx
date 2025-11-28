@@ -34,11 +34,10 @@ const Agent = memo<PropsWithChildren>(() => {
         clickable
         gap={8}
         horizontal
-        paddingBlock={2}
+        padding={2}
         style={{
           minWidth: 32,
           overflow: 'hidden',
-          paddingInline: 2,
         }}
         variant={'borderless'}
       >
@@ -54,7 +53,7 @@ const Agent = memo<PropsWithChildren>(() => {
         <ActionIcon
           icon={ChevronsUpDownIcon}
           size={{
-            blockSize: 32,
+            blockSize: 28,
             size: 16,
           }}
           style={{

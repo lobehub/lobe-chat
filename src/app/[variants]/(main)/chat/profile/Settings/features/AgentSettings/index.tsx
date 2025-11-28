@@ -12,7 +12,6 @@ import Menu from '@/components/Menu';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { AgentSettings as Settings } from '@/features/AgentSetting';
 import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
-import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { ChatSettingsTabs } from '@/store/global/initialState';
@@ -98,7 +97,7 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
     }
   }, isEqual);
 
-  const { isLoading } = useInitAgentConfig();
+  const isLoading = false;
 
   // Handle global store state or use props
   const [showAgentSetting, globalUpdateAgentConfig] = useAgentStore((s) => [

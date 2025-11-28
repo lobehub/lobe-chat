@@ -3,13 +3,16 @@ import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import { isDesktop } from '@/const/version';
+import SessionHydration from '@/features/NavPanel/SessionHydration';
 import ProtocolUrlHandler from '@/features/ProtocolUrlHandler';
+import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 
 import RegisterHotkeys from './RegisterHotkeys';
 import Sidebar from './Sidebar';
 
 const Layout = () => {
   const theme = useTheme();
+  useInitAgentConfig();
   return (
     <>
       <Sidebar />
@@ -28,6 +31,7 @@ const Layout = () => {
       {/* ↑ cloud slot ↑ */}
       <RegisterHotkeys />
       {isDesktop && <ProtocolUrlHandler />}
+      <SessionHydration />
     </>
   );
 };

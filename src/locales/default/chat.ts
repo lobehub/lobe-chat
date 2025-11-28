@@ -106,7 +106,6 @@ export default {
       role: '设定',
     },
   },
-
   groupWizard: {
     chooseMembers: '选择现有助手...',
     createGroup: '创建团队',
@@ -132,18 +131,13 @@ export default {
   history: {
     title: '助手将只记住最后{{count}}条消息',
   },
-
   historyRange: '历史范围',
-
   historySummary: '历史消息总结',
-
   inactive: '不活跃',
-
   inbox: {
     desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
   },
-
   input: {
     addAi: '添加一条 AI 消息',
     addUser: '添加一条用户消息',
@@ -157,12 +151,13 @@ export default {
     warp: '换行',
     warpWithKey: '按 <key/> 键换行',
   },
-
   intentUnderstanding: {
     title: '正在理解并分析您的意图...',
   },
+
   // Group chat related translations
   inviteMembers: '邀请成员',
+
   knowledgeBase: {
     all: '所有内容',
     allFiles: '所有文件',
@@ -191,7 +186,6 @@ export default {
     searchAgents: '搜索 Agent...',
     setInitialMembers: '选择团队成员',
   },
-
   members: 'Members',
 
   mention: {
@@ -257,6 +251,7 @@ export default {
       total: '总计消耗',
     },
   },
+
   minimap: {
     jumpToMessage: '跳转至第 {{index}} 条消息',
     nextMessage: '下一条消息',
@@ -264,7 +259,6 @@ export default {
     senderAssistant: 'Agent',
     senderUser: '你',
   },
-
   newAgent: '新建助手',
 
   newGroupChat: '新建 Agent 团队',
@@ -298,6 +292,7 @@ export default {
   },
 
   regenerate: '重新生成',
+
   roleAndArchive: '角色与记录',
   search: {
     grounding: {
@@ -392,6 +387,10 @@ export default {
       allComplete: '所有任务已完成',
       title: '任务已完成',
     },
+  },
+  tab: {
+    profile: '助手档案',
+    search: '搜索',
   },
   thread: {
     divider: '子话题',

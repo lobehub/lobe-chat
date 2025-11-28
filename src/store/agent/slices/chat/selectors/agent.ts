@@ -1,5 +1,6 @@
 import {
   DEFAULT_AGENT_CONFIG,
+  DEFAULT_AVATAR,
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
@@ -12,8 +13,7 @@ import { filterToolIds } from '@/helpers/toolFilters';
 import { AgentStoreState } from '@/store/agent/initialState';
 import { merge } from '@/utils/merge';
 
-const isInboxAgent = (s: AgentStoreState) =>
-  !!s.inboxAgentId && s.activeAgentId === s.inboxAgentId;
+const isInboxAgent = (s: AgentStoreState) => !!s.inboxAgentId && s.activeAgentId === s.inboxAgentId;
 
 // ==========   Meta   ============== //
 
@@ -22,11 +22,12 @@ const currentAgentData = (s: AgentStoreState) =>
 
 const currentAgentTitle = (s: AgentStoreState) => currentAgentData(s)?.title;
 
-const currentAgentAvatar = (s: AgentStoreState) => currentAgentData(s)?.avatar;
+const currentAgentAvatar = (s: AgentStoreState) => currentAgentData(s)?.avatar || DEFAULT_AVATAR;
 
 const currentAgentDescription = (s: AgentStoreState) => currentAgentData(s)?.description;
 
-const currentAgentBackgroundColor = (s: AgentStoreState) => currentAgentData(s)?.backgroundColor;
+const currentAgentBackgroundColor = (s: AgentStoreState) =>
+  currentAgentData(s)?.backgroundColor || 'transparent';
 
 const currentAgentTags = (s: AgentStoreState) => currentAgentData(s)?.tags || [];
 

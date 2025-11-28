@@ -85,7 +85,6 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
           marketApiService.setAccessToken(accessToken);
           const data = await marketApiService.getAgentDetail(marketIdentifier);
           if (!cancelled) {
-            console.log('data', data);
             setRemoteAgentData(data);
           }
         } catch (error) {

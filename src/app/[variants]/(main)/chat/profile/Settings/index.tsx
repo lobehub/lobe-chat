@@ -11,7 +11,6 @@ import MobileContentLayout from '@/components/server/MobileNavLayout';
 import { useCategory } from '@/features/AgentSetting/AgentCategory/useCategory';
 import AgentSettings from '@/features/AgentSetting/AgentSettings';
 import Footer from '@/features/Setting/Footer';
-import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { ChatSettingsTabs } from '@/store/global/initialState';
@@ -36,7 +35,7 @@ export default memo(() => {
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
 
-  const { isLoading } = useInitAgentConfig();
+  const isLoading = false;
 
   return (
     <MobileContentLayout header={<MobileHeader />}>

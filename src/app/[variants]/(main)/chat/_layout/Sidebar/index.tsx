@@ -1,7 +1,6 @@
 import React, { Suspense, memo } from 'react';
 
 import { NavPanelPortal } from '@/features/NavPanel';
-import SessionHydration from '@/features/NavPanel/SessionHydration';
 import SideBarLayout from '@/features/NavPanel/SideBarLayout';
 
 import Body from './Body';
@@ -12,7 +11,6 @@ const ChatTopic = memo(() => {
     <NavPanelPortal navKey="agent">
       <Suspense>
         <SideBarLayout body={<Body />} header={<Header />} />
-        <SessionHydration />
       </Suspense>
     </NavPanelPortal>
   );
