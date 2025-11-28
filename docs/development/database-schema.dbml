@@ -506,7 +506,7 @@ table nextauth_accounts {
   session_state text
   token_type text
   type text [not null]
-  userId text [not null]
+  user_id text [not null]
 
   indexes {
     (provider, providerAccountId) [pk]
@@ -521,17 +521,17 @@ table nextauth_authenticators {
   credentialPublicKey text [not null]
   providerAccountId text [not null]
   transports text
-  userId text [not null]
+  user_id text [not null]
 
   indexes {
-    (userId, credentialID) [pk]
+    (user_id, credentialID) [pk]
   }
 }
 
 table nextauth_sessions {
   expires timestamp [not null]
   sessionToken text [pk, not null]
-  userId text [not null]
+  user_id text [not null]
 }
 
 table nextauth_verificationtokens {
@@ -925,10 +925,12 @@ table sessions {
 table threads {
   id text [pk, not null]
   title text
+  content text
+  editor_data jsonb
   type text [not null]
-  status text [default: 'active']
+  status text
   topic_id text [not null]
-  source_message_id text [not null]
+  source_message_id text
   parent_thread_id text
   client_id text
   user_id text [not null]
