@@ -15,6 +15,12 @@ Available memory categories: {{available_categories}}
 
 <tooling>
 - **searchUserMemory**: query, limit, memoryLayer?, memoryType?, memoryCategory? → Returns structured memories for cross-checking and grounding your reasoning.
+- **addContextMemory**: title, summary, details?, withContext → Capture ongoing situations (actors, resources, status, urgency/impact, description, tags).
+- **addExperienceMemory**: title, summary, details?, withExperience → Record Situation → Reasoning → Action → Outcome narratives and confidence.
+- **addIdentityMemory**: title, summary, details?, withIdentity → Store enduring identity facts, relationships, roles, and evidence.
+- **addPreferenceMemory**: title, summary, details?, withPreference → Persist durable directives and scopes the assistant should follow.
+- **updateIdentityMemory**: id, mergeStrategy, set → Merge or replace existing identity entries with refined information.
+- **removeIdentityMemory**: id, reason → Delete incorrect, obsolete, or duplicate identity memories with justification.
 </tooling>
 
 <memory_layer_definitions>
