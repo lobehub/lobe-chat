@@ -4,6 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/routes/KnowledgeHome/store';
 import { useFileStore } from '@/store/file';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
@@ -46,6 +47,9 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId, fileNam
   const navigate = useNavigate();
   const { currentFolderSlug, knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
 
+  const setMode = useResourceManagerStore((s) => s.setMode);
+  const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
+
   const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
   const knowledgeBaseName = useKnowledgeBaseStore(
     knowledgeBaseSelectors.getKnowledgeBaseNameById(baseKnowledgeBaseId || ''),
@@ -60,6 +64,12 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId, fileNam
   }
 
   const handleNavigate = (slug: string | null) => {
+    // If navigating while viewing a file, reset the file view mode
+    if (fileName) {
+      setMode('files');
+      setCurrentViewItemId(undefined);
+    }
+
     if (slug) {
       navigate(`/resource/library/${baseKnowledgeBaseId}/${slug}`);
     } else {
@@ -68,13 +78,14 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ knowledgeBaseId, fileNam
   };
 
   const isAtRoot = folderChain.length === 0 && !fileName;
+  const isRootClickable = folderChain.length > 0 || fileName;
 
   return (
     <Flexbox align={'center'} className={styles.breadcrumb} gap={0} horizontal>
       <span
         className={cx(styles.breadcrumbItem, isAtRoot && styles.currentItem)}
-        onClick={() => !isAtRoot && handleNavigate(null)}
-        style={{ cursor: isAtRoot ? 'default' : 'pointer' }}
+        onClick={() => isRootClickable && handleNavigate(null)}
+        style={{ cursor: isRootClickable ? 'pointer' : 'default' }}
       >
         {knowledgeBaseName || 'Knowledge Base'}
       </span>
