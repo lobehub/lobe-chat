@@ -38,8 +38,7 @@ const Agent = memo<PropsWithChildren>(() => {
         style={{
           minWidth: 32,
           overflow: 'hidden',
-          paddingInlineEnd: 8,
-          paddingInlineStart: 2,
+          paddingInline: 2,
         }}
         variant={'borderless'}
       >

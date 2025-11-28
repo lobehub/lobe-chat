@@ -19,7 +19,6 @@ const SwitchPanel = memo<PropsWithChildren>(({ children }) => {
               style={{
                 maxHeight: '50vh',
                 overflowY: 'auto',
-                width: 240,
               }}
             >
               <List />
@@ -27,10 +26,11 @@ const SwitchPanel = memo<PropsWithChildren>(({ children }) => {
           </AgentModalProvider>
         </Suspense>
       }
-      placement={'bottom'}
+      placement={'bottomLeft'}
       styles={{
         body: {
           padding: 0,
+          width: 240,
         },
       }}
       trigger={['click']}
