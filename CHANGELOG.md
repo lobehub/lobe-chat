@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.132](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.131...v2.0.0-next.132)
+
+<sup>Released on **2025-11-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Unable to switch to default topic.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Unable to switch to default topic, closes [#10472](https://github.com/lobehub/lobe-chat/issues/10472) ([d181f71](https://github.com/lobehub/lobe-chat/commit/d181f71))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.131](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.130...v2.0.0-next.131)
 
 <sup>Released on **2025-11-28**</sup>
