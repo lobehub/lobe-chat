@@ -104,14 +104,14 @@ export const auth = betterAuth({
 
   user: {
     additionalFields: {
-      fullName: {
+      username: {
         required: false,
         type: 'string',
       },
     },
     fields: {
       image: 'avatar',
-      name: 'username',
+      name: 'full_name',
     },
     modelName: 'users',
   },
