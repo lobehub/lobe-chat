@@ -47,6 +47,7 @@ declare global {
       NEXT_PUBLIC_AUTH_URL?: string;
       NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION?: string;
       AUTH_SSO_PROVIDERS?: string;
+      AUTH_TRUSTED_ORIGINS?: string;
 
       // ===== Next Auth ===== //
       NEXT_AUTH_SECRET?: string;
@@ -165,6 +166,7 @@ export const getAuthConfig = () => {
       // ---------------------------------- better auth ----------------------------------
       AUTH_SECRET: z.string().optional(),
       AUTH_SSO_PROVIDERS: z.string().optional().default(''),
+      AUTH_TRUSTED_ORIGINS: z.string().optional(),
 
       // ---------------------------------- next auth ----------------------------------
       NEXT_AUTH_SECRET: z.string().optional(),
@@ -274,6 +276,7 @@ export const getAuthConfig = () => {
       AUTH_SECRET: process.env.AUTH_SECRET || process.env.NEXT_AUTH_SECRET,
       // Fallback to NEXT_AUTH_SSO_PROVIDERS for seamless migration from next-auth
       AUTH_SSO_PROVIDERS: process.env.AUTH_SSO_PROVIDERS || process.env.NEXT_AUTH_SSO_PROVIDERS,
+      AUTH_TRUSTED_ORIGINS: process.env.AUTH_TRUSTED_ORIGINS,
 
       // better-auth env for Cognito provider is different from next-auth's one
       AUTH_COGNITO_DOMAIN: process.env.AUTH_COGNITO_DOMAIN,

@@ -21,6 +21,42 @@ const enableMagicLink = authEnv.NEXT_PUBLIC_ENABLE_MAGIC_LINK;
 
 const { socialProviders, genericOAuthProviders } = initBetterAuthSSOProviders();
 
+/**
+ * Normalize a URL-like string to an origin with https fallback.
+ */
+const normalizeOrigin = (url?: string) => {
+  if (!url) return undefined;
+
+  try {
+    const normalizedUrl = url.startsWith('http') ? url : `https://${url}`;
+
+    return new URL(normalizedUrl).origin;
+  } catch {
+    return undefined;
+  }
+};
+
+/**
+ * Build trusted origins with env override and Vercel-aware defaults.
+ */
+const getTrustedOrigins = () => {
+  if (authEnv.AUTH_TRUSTED_ORIGINS) {
+    const originsFromEnv = authEnv.AUTH_TRUSTED_ORIGINS.split(',')
+      .map((item) => normalizeOrigin(item.trim()))
+      .filter(Boolean) as string[];
+
+    if (originsFromEnv.length > 0) return Array.from(new Set(originsFromEnv));
+  }
+
+  const defaults = [
+    authEnv.NEXT_PUBLIC_AUTH_URL,
+    normalizeOrigin(process.env.VERCEL_BRANCH_URL),
+    normalizeOrigin(process.env.VERCEL_URL),
+  ].filter(Boolean) as string[];
+
+  return defaults.length > 0 ? Array.from(new Set(defaults)) : undefined;
+};
+
 export const auth = betterAuth({
   account: {
     accountLinking: {
@@ -32,7 +68,7 @@ export const auth = betterAuth({
   // Use renamed env vars (fallback to next-auth vars is handled in src/envs/auth.ts)
   baseURL: authEnv.NEXT_PUBLIC_AUTH_URL,
   secret: authEnv.AUTH_SECRET,
-  trustedOrigins: authEnv.NEXT_PUBLIC_AUTH_URL ? [authEnv.NEXT_PUBLIC_AUTH_URL] : undefined,
+  trustedOrigins: getTrustedOrigins(),
 
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
