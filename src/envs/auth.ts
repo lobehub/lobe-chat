@@ -228,7 +228,10 @@ export const getAuthConfig = () => {
 
     runtimeEnv: {
       // Clerk
-      NEXT_PUBLIC_ENABLE_CLERK_AUTH: !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+      NEXT_PUBLIC_ENABLE_CLERK_AUTH:
+        process.env.NEXT_PUBLIC_ENABLE_CLERK_AUTH === '1'
+          ? true
+          : !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
       CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
       CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
