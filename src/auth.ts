@@ -32,6 +32,7 @@ export const auth = betterAuth({
   // Use renamed env vars (fallback to next-auth vars is handled in src/envs/auth.ts)
   baseURL: authEnv.NEXT_PUBLIC_AUTH_URL,
   secret: authEnv.AUTH_SECRET,
+  trustedOrigins: authEnv.NEXT_PUBLIC_AUTH_URL ? [authEnv.NEXT_PUBLIC_AUTH_URL] : undefined,
 
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
