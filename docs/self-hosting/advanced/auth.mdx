@@ -39,12 +39,18 @@ By setting the environment variables `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CL
 
 To enable Better Auth in LobeChat, set the following environment variables:
 
-| Environment Variable             | Type     | Description                                                                                                            |
-| -------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_ENABLE_BETTER_AUTH` | Required | Set to `1` to enable Better Auth service                                                                               |
-| `AUTH_SECRET`                    | Required | Key used to encrypt session tokens. Generate using: `openssl rand -base64 32`                                          |
-| `NEXT_PUBLIC_AUTH_URL`           | Optional | The URL accessible from the browser for Better Auth callbacks. Only set this if the default generated URL is incorrect |
-| `AUTH_SSO_PROVIDERS`             | Optional | Comma-separated list of enabled SSO providers, e.g., `google,github,microsoft`                                         |
+| Environment Variable             | Type     | Description                                                                                             |
+| -------------------------------- | -------- | ------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_ENABLE_BETTER_AUTH` | Required | Set to `1` to enable Better Auth service                                                                |
+| `AUTH_SECRET`                    | Required | Key used to encrypt session tokens. Generate using: `openssl rand -base64 32`                           |
+| `NEXT_PUBLIC_AUTH_URL`           | Required | The browser-accessible base URL for Better Auth (e.g., `http://localhost:3010`, `https://lobechat.com`) |
+| `AUTH_SSO_PROVIDERS`             | Optional | Comma-separated list of enabled SSO providers, e.g., `google,github,microsoft`                          |
+
+<Callout type={'error'}>
+  **Important**: Better Auth is currently only suitable for **fresh deployments**. If you are already using NextAuth or Clerk and have existing user data in your database, **do not switch to Better Auth yet**, otherwise existing users will not be able to log in.
+
+  We are developing user data migration tools from NextAuth/Clerk to Better Auth. Documentation will be updated once the migration solution is complete. For progress updates, please follow [GitHub Issue #10456](https://github.com/lobehub/lobe-chat/issues/10456).
+</Callout>
 
 <Callout type={'warning'}>
   If you build/deploy with the official Docker image, the defaults keep **NextAuth enabled** and **Better
