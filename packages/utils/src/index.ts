@@ -14,3 +14,4 @@ export * from './sleep';
 export * from './uriParser';
 export * from './url';
 export * from './uuid';
+export * from './videoToBase64';
