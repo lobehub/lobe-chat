@@ -4,6 +4,35 @@ import { z } from 'zod';
 
 import { enableBetterAuth, enableClerk, enableNextAuth } from '@/const/auth';
 
+/**
+ * Resolve public auth URL with compatibility fallbacks for NextAuth and Vercel deployments.
+ */
+const resolvePublicAuthUrl = () => {
+  if (process.env.NEXT_PUBLIC_AUTH_URL) return process.env.NEXT_PUBLIC_AUTH_URL;
+
+  if (process.env.NEXTAUTH_URL) {
+    try {
+      return new URL(process.env.NEXTAUTH_URL).origin;
+    } catch {
+      // ignore invalid NEXTAUTH_URL
+    }
+  }
+
+  if (process.env.VERCEL_URL) {
+    try {
+      const normalizedVercelUrl = process.env.VERCEL_URL.startsWith('http')
+        ? process.env.VERCEL_URL
+        : `https://${process.env.VERCEL_URL}`;
+
+      return new URL(normalizedVercelUrl).origin;
+    } catch {
+      // ignore invalid Vercel URL
+    }
+  }
+
+  return undefined;
+};
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
@@ -237,10 +266,8 @@ export const getAuthConfig = () => {
 
       // ---------------------------------- better auth ----------------------------------
       NEXT_PUBLIC_ENABLE_BETTER_AUTH: enableBetterAuth,
-      // Fallback to NEXTAUTH_URL origin for seamless migration from next-auth
-      NEXT_PUBLIC_AUTH_URL:
-        process.env.NEXT_PUBLIC_AUTH_URL ||
-        (process.env.NEXTAUTH_URL ? new URL(process.env.NEXTAUTH_URL).origin : undefined),
+      // Fallback to NEXTAUTH_URL origin or Vercel deployment domain for seamless migration from next-auth
+      NEXT_PUBLIC_AUTH_URL: resolvePublicAuthUrl(),
       NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION: process.env.NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION === '1',
       NEXT_PUBLIC_ENABLE_MAGIC_LINK: process.env.NEXT_PUBLIC_ENABLE_MAGIC_LINK === '1',
       // Fallback to NEXT_AUTH_SECRET for seamless migration from next-auth
