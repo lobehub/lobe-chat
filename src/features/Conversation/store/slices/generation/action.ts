@@ -70,18 +70,17 @@ export interface GenerationAction {
 
   /**
    * Regenerate an assistant message
-   * @deprecated Use regenerateMessage instead - temporary bridge to ChatStore
    */
   regenerateAssistantMessage: (messageId: string) => Promise<void>;
 
   /**
    * Regenerate a message
+   * @deprecated
    */
   regenerateMessage: (messageId: string) => Promise<void>;
 
   /**
    * Regenerate a user message
-   * @deprecated Use regenerateMessage instead - temporary bridge to ChatStore
    */
   regenerateUserMessage: (messageId: string) => Promise<void>;
 
@@ -193,16 +192,12 @@ export const generationSlice: StateCreator<
     await chatStore.reInvokeToolMessage(messageId);
   },
 
-
-
-regenerateAssistantMessage: async (messageId: string) => {
+  regenerateAssistantMessage: async (messageId: string) => {
     const chatStore = useChatStore.getState();
     await chatStore.regenerateAssistantMessage(messageId);
   },
 
-
-
-regenerateMessage: async (messageId: string) => {
+  regenerateMessage: async (messageId: string) => {
     const state = get();
     const { hooks } = state;
 
@@ -234,11 +229,9 @@ regenerateMessage: async (messageId: string) => {
     }
   },
 
-
-
-// ===== Temporary Bridge Methods =====
-// These methods delegate to ChatStore and will be properly implemented later
-regenerateUserMessage: async (messageId: string) => {
+  // ===== Temporary Bridge Methods =====
+  // These methods delegate to ChatStore and will be properly implemented later
+  regenerateUserMessage: async (messageId: string) => {
     const chatStore = useChatStore.getState();
     await chatStore.regenerateUserMessage(messageId);
   },
@@ -248,23 +241,16 @@ regenerateUserMessage: async (messageId: string) => {
     await chatStore.resendThreadMessage(messageId);
   },
 
-
-
-stopGenerating: () => {
+  stopGenerating: () => {
     const state = get();
     const { context, hooks } = state;
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
 
     const chatStore = useChatStore.getState();
 
     // Cancel all running execAgentRuntime operations in this conversation context
     chatStore.cancelOperations(
-      {
-        sessionId,
-        status: 'running',
-        topicId,
-        type: 'execAgentRuntime',
-      },
+      { agentId, status: 'running', topicId, type: 'execAgentRuntime' },
       MESSAGE_CANCEL_FLAT,
     );
 

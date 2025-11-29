@@ -17,7 +17,7 @@ describe('dbMessageSelectors', () => {
         { id: '5', role: 'tool', tools: [] },
       ] as UIChatMessage[];
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         dbMessagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: messages,
         },
@@ -36,7 +36,7 @@ describe('dbMessageSelectors', () => {
         { id: '2', role: 'assistant', content: 'Hi' },
       ] as UIChatMessage[];
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         dbMessagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: messages,
         },

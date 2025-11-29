@@ -289,8 +289,8 @@ describe('ConversationStore', () => {
 
       expect(store1.getState().inputMessage).toBe('Message 1');
       expect(store2.getState().inputMessage).toBe('Message 2');
-      expect(store1.getState().context.sessionId).toBe('session-1');
-      expect(store2.getState().context.sessionId).toBe('session-2');
+      expect(store1.getState().context.agentId).toBe('session-1');
+      expect(store2.getState().context.agentId).toBe('session-2');
     });
   });
 });

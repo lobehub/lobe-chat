@@ -15,7 +15,7 @@ describe('Operation Management Integration Tests', () => {
   beforeEach(() => {
     act(() => {
       useChatStore.setState({
-        activeId: 'test-session',
+        activeAgentId: 'test-session',
         activeTopicId: 'test-topic',
         operations: {},
         operationsByType: {} as any,
@@ -38,7 +38,7 @@ describe('Operation Management Integration Tests', () => {
       act(() => {
         const { operationId: id } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId, topicId, messageId },
+          context: { agentId: sessionId, topicId, messageId },
           label: 'AI Generation',
         });
         operationId = id;
@@ -48,7 +48,7 @@ describe('Operation Management Integration Tests', () => {
       expect(result.current.operations[operationId!]).toBeDefined();
       expect(result.current.operations[operationId!].status).toBe('running');
       expect(result.current.operations[operationId!].context).toEqual({
-        sessionId,
+        agentId: sessionId,
         topicId,
         messageId,
       });
@@ -130,7 +130,7 @@ describe('Operation Management Integration Tests', () => {
       const parentOp = result.current.operations[parentOpId!];
       const childOp = result.current.operations[childOpId!];
 
-      expect(childOp.context.sessionId).toBe(parentOp.context.sessionId);
+      expect(childOp.context.agentId).toBe(parentOp.context.agentId);
       expect(childOp.context.topicId).toBe(parentOp.context.topicId);
       expect(childOp.parentOperationId).toBe(parentOpId);
       expect(parentOp.childOperationIds).toContain(childOpId);

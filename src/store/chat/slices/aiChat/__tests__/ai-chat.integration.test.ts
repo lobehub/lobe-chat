@@ -15,7 +15,7 @@ describe('AI Chat Operation Integration Tests', () => {
   beforeEach(() => {
     act(() => {
       useChatStore.setState({
-        activeId: 'test-session',
+        activeAgentId: 'test-session',
         activeTopicId: 'test-topic',
         operations: {},
         operationsByType: {} as any,
@@ -39,7 +39,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const { operationId: id } = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId, topicId },
+          context: { agentId: sessionId, topicId },
           metadata: {
             inputEditorTempState: mockEditorState,
           },
@@ -73,7 +73,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const { operationId: id } = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId, topicId },
+          context: { agentId: sessionId, topicId },
           metadata: {
             inputEditorTempState: mockEditorState,
           },
@@ -100,7 +100,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const { operationId: id } = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId, topicId },
+          context: { agentId: sessionId, topicId },
         });
         operationId = id;
       });
@@ -165,7 +165,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const { operationId: id } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId, topicId, messageId },
+          context: { agentId: sessionId, topicId, messageId },
           label: 'AI Generation',
         });
         operationId = id;
@@ -384,7 +384,7 @@ describe('AI Chat Operation Integration Tests', () => {
       let cancelledIds: string[] = [];
       act(() => {
         cancelledIds = result.current.cancelOperations({
-          sessionId: 'session-1',
+          agentId: 'session-1',
           topicId: 'topic-a',
         });
       });
@@ -418,7 +418,7 @@ describe('AI Chat Operation Integration Tests', () => {
       let cancelledIds: string[] = [];
       act(() => {
         cancelledIds = result.current.cancelOperations({
-          sessionId: 'session-1',
+          agentId: 'session-1',
         });
       });
 
@@ -471,7 +471,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const { operationId: id } = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId, topicId },
+          context: { agentId: sessionId, topicId },
         });
         operationId = id;
       });
@@ -607,7 +607,7 @@ describe('AI Chat Operation Integration Tests', () => {
         const { operationId: id } = result.current.startOperation({
           type: 'execAgentRuntime',
           context: {
-            sessionId: result.current.activeId,
+            agentId: result.current.activeAgentId,
             topicId: result.current.activeTopicId,
           },
         });

@@ -55,6 +55,23 @@ see @.cursor/rules/typescript.mdc
 - **Dev**: Translate `locales/zh-CN/namespace.json` and `locales/en-US/namespace.json` locales file only for dev preview
 - DON'T run `pnpm i18n`, let CI auto handle it
 
+## Linear Issue Management
+
+When working with Linear issues:
+
+1. **Retrieve issue details** before starting work using `mcp__linear-server__get_issue`
+2. **Update issue status** when completing tasks using `mcp__linear-server__update_issue`
+3. **Add completion summary** as a comment using `mcp__linear-server__create_comment`
+
+**Important**: When completing an issue, always add a detailed comment summarizing:
+
+- What was implemented/changed
+- Key files modified or created
+- Code examples if applicable
+- Any important notes for reviewers
+
+This ensures proper documentation and helps team members understand the changes made.
+
 ## Rules Index
 
 Some useful project rules are listed in @.cursor/rules/rules-index.mdc

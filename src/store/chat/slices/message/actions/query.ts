@@ -50,11 +50,11 @@ export const messageQuery: StateCreator<
   // TODO: The mutate should only be called once, but since we haven't merge session and group,
   // we need to call it twice
   refreshMessages: async (context?: Partial<ConversationContext>) => {
-    const sessionId = context?.sessionId ?? get().activeId;
+    const agentId = context?.agentId ?? get().activeAgentId;
     const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
     // TODO: Support threadId refresh when needed
-    await mutate([SWR_USE_FETCH_MESSAGES, sessionId, topicId, 'session']);
-    await mutate([SWR_USE_FETCH_MESSAGES, sessionId, topicId, 'group']);
+    await mutate([SWR_USE_FETCH_MESSAGES, agentId, topicId, 'session']);
+    await mutate([SWR_USE_FETCH_MESSAGES, agentId, topicId, 'group']);
   },
 
   replaceMessages: (messages, params) => {

@@ -39,7 +39,7 @@ describe('chatSelectors - Backward Compatibility Layer', () => {
         messagesMap: {
           [messageMapKey({ agentId: 'abc' })]: mockMessages,
         },
-        activeId: 'abc',
+        activeAgentId: 'abc',
       });
       const message = chatSelectors.getMessageById('msg1')(state);
       expect(message?.id).toBe('msg1');
@@ -50,7 +50,7 @@ describe('chatSelectors - Backward Compatibility Layer', () => {
   describe('currentChatKey', () => {
     it('should work as backward compatibility alias for currentDisplayChatKey', () => {
       const state: Partial<ChatStore> = {
-        activeId: 'testId',
+        activeAgentId: 'testId',
         activeTopicId: 'topicId',
       };
       const result = chatSelectors.currentChatKey(state as ChatStore);
@@ -64,7 +64,7 @@ describe('chatSelectors - Backward Compatibility Layer', () => {
         messagesMap: {
           [messageMapKey({ agentId: 'abc' })]: mockMessages,
         },
-        activeId: 'abc',
+        activeAgentId: 'abc',
       });
       const chats = chatSelectors.activeBaseChats(state);
       expect(chats).toHaveLength(2);
@@ -79,7 +79,7 @@ describe('chatSelectors - Backward Compatibility Layer', () => {
         { id: '2', role: 'tool', content: 'Tool message' },
       ] as UIChatMessage[];
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         dbMessagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: messages,
         },

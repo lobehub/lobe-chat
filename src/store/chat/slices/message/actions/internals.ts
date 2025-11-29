@@ -37,7 +37,7 @@ export const messageInternals: StateCreator<
 > = (set, get) => ({
   // the internal process method of the AI message
   internal_dispatchMessage: (payload, context) => {
-    let sessionId: string;
+    let agentId: string;
     let topicId: string | null | undefined;
 
     // Get context from operation if operationId is provided
@@ -47,26 +47,26 @@ export const messageInternals: StateCreator<
         log('[internal_dispatchMessage] ERROR: Operation not found: %s', context.operationId);
         throw new Error(`Operation not found: ${context.operationId}`);
       }
-      sessionId = operation.context.sessionId!;
+      agentId = operation.context.agentId!;
       topicId = operation.context.topicId;
       log(
-        '[internal_dispatchMessage] get context from operation %s: sessionId=%s, topicId=%s',
+        '[internal_dispatchMessage] get context from operation %s: agentId=%s, topicId=%s',
         context.operationId,
-        sessionId,
+        agentId,
         topicId,
       );
     } else {
       // Fallback to global state
-      sessionId = get().activeId;
+      agentId = get().activeAgentId;
       topicId = get().activeTopicId;
       log(
-        '[internal_dispatchMessage] use global context: sessionId=%s, topicId=%s',
-        sessionId,
+        '[internal_dispatchMessage] use global context: agentId=%s, topicId=%s',
+        agentId,
         topicId,
       );
     }
 
-    const messagesKey = messageMapKey({ agentId: sessionId, topicId });
+    const messagesKey = messageMapKey({ agentId, topicId });
 
     // Get raw messages from dbMessagesMap and apply reducer
     const rawMessages = get().dbMessagesMap[messagesKey] || [];

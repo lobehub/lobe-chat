@@ -111,7 +111,7 @@ const mockChatStore = {
   messagesMap: {
     [messageMapKey({ agentId: 'abc' })]: mockMessages,
   },
-  activeId: 'abc',
+  activeAgentId: 'abc',
 } as ChatStore;
 
 beforeAll(() => {
@@ -138,7 +138,7 @@ describe('displayMessageSelectors', () => {
         messagesMap: {
           [messageMapKey({ agentId: 'abc' })]: mockMessages,
         },
-        activeId: 'abc',
+        activeAgentId: 'abc',
       });
       const message = displayMessageSelectors.getDisplayMessageById('msg1')(state);
       expect(message).toEqual(mockedChats[0]);
@@ -161,7 +161,7 @@ describe('displayMessageSelectors', () => {
         messagesMap: {
           [messageMapKey({ agentId: 'abc' })]: mockMessages,
         },
-        activeId: 'abc',
+        activeAgentId: 'abc',
       });
 
       const chats = displayMessageSelectors.mainAIChatsWithHistoryConfig(state);
@@ -174,7 +174,7 @@ describe('displayMessageSelectors', () => {
         messagesMap: {
           [messageMapKey({ agentId: 'abc' })]: mockMessages,
         },
-        activeId: 'abc',
+        activeAgentId: 'abc',
       });
       act(() => {
         useAgentStore.setState({
@@ -235,7 +235,7 @@ describe('displayMessageSelectors', () => {
         messagesMap: {
           [messageMapKey({ agentId: 'active-session' })]: mockMessages,
         },
-        activeId: 'active-session',
+        activeAgentId: 'active-session',
       });
 
       // Assume that the mainAIChatsWithHistoryConfig will return the last two messages
@@ -260,7 +260,7 @@ describe('displayMessageSelectors', () => {
         messagesMap: {
           [messageMapKey({ agentId: 'active-session' })]: mockReasoningMessages,
         },
-        activeId: 'active-session',
+        activeAgentId: 'active-session',
       });
 
       const expectedString = mockReasoningMessages.at(-1)?.reasoning?.content;
@@ -276,14 +276,14 @@ describe('displayMessageSelectors', () => {
 
   describe('showInboxWelcome', () => {
     it('should return false if the active session is not the inbox session', () => {
-      const state = merge(initialStore, { activeId: 'someActiveId' });
+      const state = merge(initialStore, { activeAgentId: 'someActiveId' });
       const result = displayMessageSelectors.showInboxWelcome(state);
       expect(result).toBe(false);
     });
 
     it('should return false if there are existing messages in the inbox session', () => {
       const state = merge(initialStore, {
-        activeId: INBOX_SESSION_ID,
+        activeAgentId: INBOX_SESSION_ID,
         messagesMap: {
           [messageMapKey({ agentId: 'inbox' })]: mockMessages,
         },
@@ -294,7 +294,7 @@ describe('displayMessageSelectors', () => {
 
     it('should return true if the active session is the inbox session and there are no existing messages', () => {
       const state = merge(initialStore, {
-        activeId: INBOX_SESSION_ID,
+        activeAgentId: INBOX_SESSION_ID,
         messages: [],
       });
       const result = displayMessageSelectors.showInboxWelcome(state);
@@ -305,7 +305,7 @@ describe('displayMessageSelectors', () => {
   describe('currentDisplayChatKey', () => {
     it('should generate correct key with activeId only', () => {
       const state: Partial<ChatStore> = {
-        activeId: 'testId',
+        activeAgentId: 'testId',
         activeTopicId: undefined,
       };
       const result = displayMessageSelectors.currentDisplayChatKey(state as ChatStore);
@@ -314,7 +314,7 @@ describe('displayMessageSelectors', () => {
 
     it('should generate correct key with both activeId and activeTopicId', () => {
       const state: Partial<ChatStore> = {
-        activeId: 'testId',
+        activeAgentId: 'testId',
         activeTopicId: 'topicId',
       };
       const result = displayMessageSelectors.currentDisplayChatKey(state as ChatStore);
@@ -323,7 +323,7 @@ describe('displayMessageSelectors', () => {
 
     it('should generate key with undefined activeId', () => {
       const state: Partial<ChatStore> = {
-        activeId: undefined,
+        activeAgentId: undefined,
         activeTopicId: 'topicId',
       };
       const result = displayMessageSelectors.currentDisplayChatKey(state as ChatStore);
@@ -332,7 +332,7 @@ describe('displayMessageSelectors', () => {
 
     it('should generate key with empty string activeId', () => {
       const state: Partial<ChatStore> = {
-        activeId: '',
+        activeAgentId: '',
         activeTopicId: undefined,
       };
       const result = displayMessageSelectors.currentDisplayChatKey(state as ChatStore);
@@ -356,7 +356,7 @@ describe('displayMessageSelectors', () => {
         messagesMap: {
           [messageMapKey({ agentId: 'group-123' })]: groupChatMessages,
         },
-        activeId: 'group-123',
+        activeAgentId: 'group-123',
       });
 
       const chats = displayMessageSelectors.activeDisplayMessages(state);
@@ -399,7 +399,7 @@ describe('displayMessageSelectors', () => {
       } as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
@@ -440,7 +440,7 @@ describe('displayMessageSelectors', () => {
       } as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
@@ -480,7 +480,7 @@ describe('displayMessageSelectors', () => {
       } as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
@@ -502,7 +502,7 @@ describe('displayMessageSelectors', () => {
       } as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [assistantMessage],
         },
@@ -523,7 +523,7 @@ describe('displayMessageSelectors', () => {
       } as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
@@ -544,7 +544,7 @@ describe('displayMessageSelectors', () => {
       } as unknown as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
@@ -592,7 +592,7 @@ describe('displayMessageSelectors', () => {
       } as unknown as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
@@ -619,7 +619,7 @@ describe('displayMessageSelectors', () => {
       } as unknown as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
@@ -634,7 +634,7 @@ describe('displayMessageSelectors', () => {
 
     it('should return undefined when message is not found', () => {
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [],
         },
@@ -656,7 +656,7 @@ describe('displayMessageSelectors', () => {
       } as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [message],
         },
@@ -684,7 +684,7 @@ describe('displayMessageSelectors', () => {
       } as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
@@ -720,7 +720,7 @@ describe('displayMessageSelectors', () => {
       } as unknown as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [messageWithTools],
         },
@@ -756,7 +756,7 @@ describe('displayMessageSelectors', () => {
       } as unknown as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [message],
         },
@@ -768,7 +768,7 @@ describe('displayMessageSelectors', () => {
 
     it('should return undefined for non-existent message', () => {
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [],
         },
@@ -806,7 +806,7 @@ describe('displayMessageSelectors', () => {
       } as unknown as UIChatMessage;
 
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         messagesMap: {
           [messageMapKey({ agentId: 'test-id' })]: [messageWithChildrenAndTools],
         },

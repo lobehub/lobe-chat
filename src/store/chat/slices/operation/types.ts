@@ -153,10 +153,9 @@ export interface Operation {
 export interface OperationFilter {
   type?: OperationType | OperationType[];
   status?: OperationStatus | OperationStatus[];
-  sessionId?: string;
+  agentId?: string;
   topicId?: string | null;
   messageId?: string;
   threadId?: string;
   groupId?: string;
-  agentId?: string;
 }
