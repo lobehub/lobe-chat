@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Betterauth name should mapped to fullName."]
+    },
+    "date": "2025-11-29",
+    "version": "2.0.0-next.133"
+  },
+  {
+    "children": {
       "fixes": ["Unable to switch to default topic."]
     },
     "date": "2025-11-29",
