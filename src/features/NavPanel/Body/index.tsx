@@ -4,7 +4,6 @@ import { Accordion } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import SessionHydration from '@/features/NavPanel/SessionHydration';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import Agent from './Agent';
@@ -28,7 +27,6 @@ const Body = memo(() => {
           <BottomMenu />
         </Accordion>
       </Flexbox>
-      <SessionHydration />
     </AgentModalProvider>
   );
 });

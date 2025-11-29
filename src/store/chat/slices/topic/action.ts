@@ -55,13 +55,17 @@ export interface ChatTopicAction {
   updateTopicTitle: (id: string, title: string) => Promise<void>;
   useFetchTopics: (
     enable: boolean,
-    sessionId?: string,
-    groupId?: string,
+    params: {
+      agentId?: string;
+      groupId?: string;
+    },
   ) => SWRResponse<ChatTopic[]>;
   useSearchTopics: (
     keywords?: string,
-    sessionId?: string,
-    groupId?: string,
+    params: {
+      agentId?: string;
+      groupId?: string;
+    },
   ) => SWRResponse<ChatTopic[]>;
 
   internal_updateTopicTitleInSummary: (id: string, title: string) => void;
@@ -234,16 +238,15 @@ export const chatTopic: StateCreator<
   },
 
   // query
-  useFetchTopics: (enable, containerId) =>
+  useFetchTopics: (enable, { agentId }) =>
     useClientDataSWR<ChatTopic[]>(
-      enable ? [SWR_USE_FETCH_TOPIC, containerId] : null,
-      async ([, containerId]: [string, string | undefined]) =>
-        topicService.getTopics({ containerId }),
+      enable ? [SWR_USE_FETCH_TOPIC, agentId] : null,
+      async ([, agentId]: [string, string | undefined]) => topicService.getTopics({ agentId }),
       {
         onSuccess: (topics) => {
-          if (!containerId) return;
+          if (!agentId) return;
 
-          const nextMap = { ...get().topicMaps, [containerId]: topics };
+          const nextMap = { ...get().topicMaps, [agentId]: topics };
 
           // no need to update map if the topics have been init and the map is the same
           if (get().topicsInit && isEqual(nextMap, get().topicMaps)) return;
@@ -251,20 +254,16 @@ export const chatTopic: StateCreator<
           set(
             { topicMaps: nextMap, topicsInit: true },
             false,
-            n('useFetchTopics(success)', { containerId }),
+            n('useFetchTopics(success)', { containerId: agentId }),
           );
         },
       },
     ),
-  useSearchTopics: (keywords, sessionId, groupId) =>
+  useSearchTopics: (keywords, { agentId, groupId }) =>
     useSWR<ChatTopic[]>(
-      [SWR_USE_SEARCH_TOPIC, keywords, sessionId, groupId],
-      ([, keywords, sessionId, groupId]: [
-        string,
-        string,
-        string | undefined,
-        string | undefined,
-      ]) => topicService.searchTopics(keywords, sessionId, groupId),
+      [SWR_USE_SEARCH_TOPIC, keywords, agentId, groupId],
+      ([, keywords, agentId, groupId]: [string, string, string | undefined, string | undefined]) =>
+        topicService.searchTopics(keywords, agentId, groupId),
       {
         onSuccess: (data) => {
           set(

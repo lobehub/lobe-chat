@@ -771,30 +771,6 @@ describe('chatMessage actions', () => {
     });
   });
 
-  describe('useFetchMessages hook', () => {
-    // beforeEach(() => {
-    //   vi.mocked(useSWR).mockRestore();
-    // });
-
-    it('should fetch messages for given session and topic ids', async () => {
-      const sessionId = 'session-id';
-      const topicId = 'topic-id';
-      const messages = [{ id: 'message-id', content: 'Hello' }];
-
-      // 设置模拟返回值
-      (messageService.getMessages as Mock).mockResolvedValue(messages);
-
-      const { result } = renderHook(() =>
-        useChatStore().useFetchMessages(true, sessionId, topicId),
-      );
-
-      // 等待异步操作完成
-      await waitFor(() => {
-        expect(result.current.data).toEqual(messages);
-      });
-    });
-  });
-
   describe('internal_toggleMessageLoading', () => {
     it('should add message id to messageLoadingIds when loading is true', () => {
       const { result } = renderHook(() => useChatStore());

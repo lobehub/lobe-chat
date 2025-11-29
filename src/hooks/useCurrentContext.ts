@@ -13,15 +13,12 @@ import { useChatStore } from '@/store/chat';
  * @returns The current conversation context
  */
 export function useCurrentContext(): ConversationContext {
-  const [sessionId, topicId, threadId] = useChatStore((s) => [
-    s.activeId,
+  const [agentId, topicId, threadId] = useChatStore((s) => [
+    s.activeAgentId,
     s.activeTopicId ?? null,
     s.activeThreadId ?? null,
   ]);
 
-  return {
-    sessionId,
-    threadId,
-    topicId,
-  };
+  console.log('CurrentContext', agentId);
+  return { agentId, threadId, topicId };
 }

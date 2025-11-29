@@ -8,8 +8,6 @@ import { Flexbox } from 'react-layout-kit';
 import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 
 import Actions from './Actions';
 import List from './List';
@@ -22,11 +20,8 @@ interface TopicProps {
 const Topic = memo<TopicProps>(({ itemKey }) => {
   const { t } = useTranslation(['topic', 'common']);
   const [topicLength] = useChatStore((s) => [topicSelectors.currentTopicLength(s)]);
-  const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const [showSearch, setShowSearch] = useState(false);
   const dropdownMenu = useTopicActionsDropdownMenu();
-
-  if (isInbox) return null;
 
   return (
     <AccordionItem

@@ -74,7 +74,7 @@ export interface OperationActions {
    * This is a helper method that can be used by other slices
    */
   internal_getSessionContext: (context?: { operationId?: string }) => {
-    sessionId: string;
+    agentId: string;
     threadId: string | null | undefined;
     topicId: string | null | undefined;
   };
@@ -133,30 +133,30 @@ export const operationActions: StateCreator<
         log('[internal_getSessionContext] ERROR: Operation not found: %s', context.operationId);
         throw new Error(`Operation not found: ${context.operationId}`);
       }
-      const sessionId = operation.context.sessionId!;
+      const agentId = operation.context.agentId!;
       const topicId = operation.context.topicId;
       const threadId = operation.context.threadId;
       log(
-        '[internal_getSessionContext] get from operation %s: sessionId=%s, topicId=%s, threadId=%s',
+        '[internal_getSessionContext] get from operation %s: agentId=%s, topicId=%s, threadId=%s',
         context.operationId,
-        sessionId,
+        agentId,
         topicId,
         threadId,
       );
-      return { sessionId, topicId, threadId };
+      return { agentId, topicId, threadId };
     }
 
     // Fallback to global state
-    const sessionId = get().activeId;
+    const agentId = get().activeAgentId;
     const topicId = get().activeTopicId;
     const threadId = get().activeThreadId;
     log(
-      '[internal_getSessionContext] use global state: sessionId=%s, topicId=%s, threadId=%s',
-      sessionId,
+      '[internal_getSessionContext] use global state: agentId=%s, topicId=%s, threadId=%s',
+      agentId,
       topicId,
       threadId,
     );
-    return { sessionId, topicId, threadId };
+    return { agentId, topicId, threadId };
   },
 
   startOperation: (params) => {
@@ -227,10 +227,10 @@ export const operationActions: StateCreator<
           state.messageOperationMap[context.messageId] = operationId;
         }
 
-        // Update context index (if sessionId exists)
-        if (context.sessionId) {
+        // Update context index (if agentId exists)
+        if (context.agentId) {
           const contextKey = messageMapKey({
-            sessionId: context.sessionId,
+            agentId: context.agentId,
             topicId: context.topicId !== undefined ? context.topicId : null,
           });
           if (!state.operationsByContext[contextKey]) {
@@ -515,8 +515,8 @@ export const operationActions: StateCreator<
       }
 
       // Context filters
-      if (filter.sessionId !== undefined) {
-        matches = matches && op.context.sessionId === filter.sessionId;
+      if (filter.agentId !== undefined) {
+        matches = matches && op.context.agentId === filter.agentId;
       }
       if (filter.topicId !== undefined) {
         matches = matches && op.context.topicId === filter.topicId;
@@ -602,9 +602,9 @@ export const operationActions: StateCreator<
           }
 
           // Remove from context index
-          if (op.context.sessionId) {
+          if (op.context.agentId) {
             const contextKey = messageMapKey({
-              sessionId: op.context.sessionId,
+              agentId: op.context.agentId,
               topicId: op.context.topicId !== undefined ? op.context.topicId : null,
             });
             const contextIndex = state.operationsByContext[contextKey];
