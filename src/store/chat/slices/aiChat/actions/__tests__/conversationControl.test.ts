@@ -24,7 +24,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
         });
       });
@@ -35,7 +35,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'execAgentRuntime',
           context: {
-            sessionId: TEST_IDS.SESSION_ID,
+            agentId: TEST_IDS.SESSION_ID,
             topicId: TEST_IDS.TOPIC_ID,
           },
         });
@@ -57,7 +57,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
         });
       });
@@ -68,7 +68,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'execAgentRuntime',
           context: {
-            sessionId: 'different-session',
+            agentId: 'different-session',
             topicId: 'different-topic',
           },
         });
@@ -94,7 +94,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
           mainInputEditor: { setJSONState: mockSetJSONState } as any,
         });
@@ -106,7 +106,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'sendMessage',
           context: {
-            sessionId: TEST_IDS.SESSION_ID,
+            agentId: TEST_IDS.SESSION_ID,
             topicId: TEST_IDS.TOPIC_ID,
           },
         });
@@ -134,7 +134,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
         });
       });
 
@@ -144,7 +144,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'sendMessage',
           context: {
-            sessionId: TEST_IDS.SESSION_ID,
+            agentId: TEST_IDS.SESSION_ID,
             topicId: customTopicId,
           },
         });
@@ -185,7 +185,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
         });
       });
@@ -196,7 +196,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'sendMessage',
           context: {
-            sessionId: TEST_IDS.SESSION_ID,
+            agentId: TEST_IDS.SESSION_ID,
             topicId: TEST_IDS.TOPIC_ID,
           },
         });

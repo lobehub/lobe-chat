@@ -23,7 +23,7 @@ describe('call_llm executor', () => {
     it('should create assistant message with LOADING_FLAT content', async () => {
       // Given
       const mockStore = createMockStore();
-      const context = createTestContext({ sessionId: 'test-session', topicId: 'test-topic' });
+      const context = createTestContext({ agentId: 'test-session', topicId: 'test-topic' });
       const instruction = createCallLLMInstruction({
         model: 'gpt-4',
         provider: 'openai',
@@ -1150,7 +1150,7 @@ describe('call_llm executor', () => {
     it('should handle threadId when provided in operation context', async () => {
       // Given
       const mockStore = createMockStore();
-      const context = createTestContext({ sessionId: 'test-session', topicId: 'test-topic' });
+      const context = createTestContext({ agentId: 'test-session', topicId: 'test-topic' });
       const threadId = 'thread_123';
 
       // Setup operation with threadId

@@ -341,7 +341,7 @@ export const streamingExecutor: StateCreator<
           messageService.updateMessage(
             messageId,
             { traceId, observationId: observationId ?? undefined },
-            { sessionId: agentId, topicId },
+            { agentId, topicId },
           );
         }
 

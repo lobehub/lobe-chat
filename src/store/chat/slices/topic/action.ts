@@ -94,7 +94,7 @@ export const chatTopic: StateCreator<
   },
 
   createTopic: async (sessionId, groupId) => {
-    const { activeId, activeSessionType, internal_createTopic } = get();
+    const { activeAgentId, activeSessionType, internal_createTopic } = get();
 
     const messages = displayMessageSelectors.activeDisplayMessages(get());
 
@@ -103,8 +103,8 @@ export const chatTopic: StateCreator<
       title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
       ...(activeSessionType === 'group'
-        ? { groupId: groupId || activeId }
-        : { sessionId: sessionId || activeId }),
+        ? { groupId: groupId || activeAgentId }
+        : { sessionId: sessionId || activeAgentId }),
     });
     set({ creatingTopic: false }, false, n('creatingTopic/end'));
 
@@ -116,15 +116,15 @@ export const chatTopic: StateCreator<
     const messages = displayMessageSelectors.activeDisplayMessages(get());
     if (messages.length === 0) return;
 
-    const { activeId, activeSessionType, summaryTopicTitle, internal_createTopic } = get();
+    const { activeAgentId, activeSessionType, summaryTopicTitle, internal_createTopic } = get();
 
     // 1. create topic and bind these messages
     const topicId = await internal_createTopic({
       title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
       ...(activeSessionType === 'group'
-        ? { groupId: groupId || activeId }
-        : { sessionId: sessionId || activeId }),
+        ? { groupId: groupId || activeAgentId }
+        : { sessionId: sessionId || activeAgentId }),
     });
 
     get().internal_updateTopicLoading(topicId, true);
@@ -134,7 +134,7 @@ export const chatTopic: StateCreator<
 
     // Clear supervisor todos for temporary topic in current container after saving
     try {
-      const { activeId, activeSessionType } = get();
+      const { activeAgentId, activeSessionType } = get();
       let isGroupSession = activeSessionType === 'group';
       if (activeSessionType === undefined) {
         const sessionStore = useSessionStore.getState();
@@ -144,11 +144,12 @@ export const chatTopic: StateCreator<
       if (isGroupSession) {
         set(
           produce((state: ChatStoreState) => {
-            state.supervisorTodos[messageMapKey({ agentId: groupId || activeId, topicId: null })] =
-              [];
+            state.supervisorTodos[
+              messageMapKey({ agentId: groupId || activeAgentId, topicId: null })
+            ] = [];
           }),
           false,
-          n('resetSupervisorTodosOnSaveToTopic', { groupId: groupId || activeId }),
+          n('resetSupervisorTodosOnSaveToTopic', { groupId: groupId || activeAgentId }),
         );
       }
     } catch (error) {
@@ -227,7 +228,7 @@ export const chatTopic: StateCreator<
   },
 
   autoRenameTopicTitle: async (id) => {
-    const { activeId: sessionId, summaryTopicTitle, internal_updateTopicLoading } = get();
+    const { activeAgentId: sessionId, summaryTopicTitle, internal_updateTopicLoading } = get();
 
     internal_updateTopicLoading(id, true);
     const messages = await messageService.getMessages({ sessionId, topicId: id });
@@ -283,7 +284,7 @@ export const chatTopic: StateCreator<
 
     // Reset supervisor todos when switching topics in group chats
     try {
-      const { activeId, activeSessionType, internal_cancelSupervisorDecision } = get();
+      const { activeAgentId, activeSessionType, internal_cancelSupervisorDecision } = get();
       // Determine group session robustly (cached flag or from session store)
       let isGroupSession = activeSessionType === 'group';
       if (activeSessionType === undefined) {
@@ -292,17 +293,17 @@ export const chatTopic: StateCreator<
       }
 
       if (isGroupSession) {
-        const newKey = messageMapKey({ agentId: activeId, topicId: id ?? null });
+        const newKey = messageMapKey({ agentId: activeAgentId, topicId: id ?? null });
         set(
           produce((state: ChatStoreState) => {
             state.supervisorTodos[newKey] = [];
           }),
           false,
-          n('resetSupervisorTodosOnTopicSwitch', { groupId: activeId, topicId: id ?? null }),
+          n('resetSupervisorTodosOnTopicSwitch', { groupId: activeAgentId, topicId: id ?? null }),
         );
 
         // Also cancel any pending supervisor decisions tied to this group
-        internal_cancelSupervisorDecision?.(activeId);
+        internal_cancelSupervisorDecision?.(activeAgentId);
       }
     } catch {
       // no-op: resetting todos should not block topic switching
@@ -313,9 +314,9 @@ export const chatTopic: StateCreator<
   },
   // delete
   removeSessionTopics: async () => {
-    const { switchTopic, activeId, refreshTopic } = get();
+    const { switchTopic, activeAgentId, refreshTopic } = get();
 
-    await topicService.removeTopics(activeId);
+    await topicService.removeTopics(activeAgentId);
     await refreshTopic();
 
     // switch to default topic
@@ -345,11 +346,11 @@ export const chatTopic: StateCreator<
     await refreshTopic();
   },
   removeTopic: async (id) => {
-    const { activeId, activeTopicId, switchTopic, refreshTopic } = get();
+    const { activeAgentId, activeTopicId, switchTopic, refreshTopic } = get();
 
     // remove messages in the topic
     // TODO: Need to remove because server service don't need to call it
-    await messageService.removeMessagesByAssistant(activeId, id);
+    await messageService.removeMessagesByAssistant(activeAgentId, id);
 
     // remove topic
     await topicService.removeTopic(id);
@@ -377,7 +378,7 @@ export const chatTopic: StateCreator<
     );
   },
   refreshTopic: async () => {
-    return mutate([SWR_USE_FETCH_TOPIC, get().activeId]);
+    return mutate([SWR_USE_FETCH_TOPIC, get().activeAgentId]);
   },
 
   internal_updateTopicLoading: (id, loading) => {
@@ -420,7 +421,7 @@ export const chatTopic: StateCreator<
 
   internal_dispatchTopic: (payload, action) => {
     const nextTopics = topicReducer(topicSelectors.currentTopics(get()), payload);
-    const nextMap = { ...get().topicMaps, [get().activeId]: nextTopics };
+    const nextMap = { ...get().topicMaps, [get().activeAgentId]: nextTopics };
 
     // no need to update map if is the same
     if (isEqual(nextMap, get().topicMaps)) return;

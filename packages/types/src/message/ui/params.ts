@@ -12,6 +12,7 @@ export type CreateMessageRoleType = 'user' | 'assistant' | 'tool' | 'supervisor'
 
 export interface CreateMessageParams
   extends Partial<Omit<UIChatMessage, 'content' | 'role' | 'topicId' | 'chunksList'>> {
+  agentId?: string;
   content: string;
   error?: ChatMessageError | null;
   fileChunks?: MessageSemanticSearchChunk[];
@@ -20,6 +21,9 @@ export interface CreateMessageParams
   provider?: string;
   groupId?: string;
   role: CreateMessageRoleType;
+  /**
+   * @deprecated Use agentId instead
+   */
   sessionId?: string;
   targetId?: string | null;
   threadId?: string | null;
@@ -35,7 +39,7 @@ export interface CreateNewMessageParams {
   // ========== Required fields ==========
   role: CreateMessageRoleType;
   content: string;
-  sessionId: string;
+  agentId: string;
 
   // ========== Tool related ==========
   tool_call_id?: string;
@@ -139,6 +143,10 @@ export const CreateNewMessageParamsSchema = z
     // Required fields
     role: UIMessageRoleTypeSchema,
     content: z.string(),
+    agentId: z.string().nullable().optional(),
+    /**
+     * @deprecated
+     */
     sessionId: z.string().nullable().optional(),
     // Tool related
     tool_call_id: z.string().optional(),

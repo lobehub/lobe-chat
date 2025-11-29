@@ -54,7 +54,7 @@ describe('ChatEnhanceAction', () => {
       // Setup initial state
       act(() => {
         useChatStore.setState({
-          activeId: 'session',
+          activeAgentId: 'session',
           dbMessagesMap: {
             [messageMapKey({ agentId: 'session' })]: [
               {

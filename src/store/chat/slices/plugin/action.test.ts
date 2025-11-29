@@ -48,7 +48,7 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: 'session-id',
+          activeAgentId: 'session-id',
           messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [toolMessage] },
           internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
@@ -99,7 +99,7 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: 'session-id',
+          activeAgentId: 'session-id',
           messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [nonToolMessage] },
           internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
@@ -284,7 +284,7 @@ describe('ChatPluginAction', () => {
         messageId,
         pluginStateValue,
         {
-          sessionId: 'inbox',
+          agentId: 'inbox',
           topicId: null,
         },
       );
@@ -307,7 +307,7 @@ describe('ChatPluginAction', () => {
       // 设置初始状态并模拟 replaceMessages 方法
       const initialState = {
         replaceMessages: vi.fn(),
-        activeId: 'session-id',
+        activeAgentId: 'session-id',
         activeTopicId: 'topic-id',
       };
       useChatStore.setState(initialState);
@@ -323,10 +323,11 @@ describe('ChatPluginAction', () => {
 
       // 验证 messageService.createMessage 是否被带有正确参数调用
       expect(messageService.createMessage).toHaveBeenCalledWith({
+        agentId: initialState.activeAgentId,
         content,
         parentId,
         role: 'assistant',
-        sessionId: initialState.activeId,
+        sessionId: initialState.activeAgentId,
         topicId: initialState.activeTopicId,
       });
 
@@ -344,7 +345,7 @@ describe('ChatPluginAction', () => {
       // 设置初始状态并模拟 refreshMessages 方法
       const initialState = {
         refreshMessages: vi.fn(),
-        activeId: 'session-id',
+        activeAgentId: 'session-id',
         activeTopicId: 'topic-id',
       };
       useChatStore.setState(initialState);
@@ -362,10 +363,11 @@ describe('ChatPluginAction', () => {
 
       // 验证 messageService.create 是否被带有正确参数调用
       expect(messageService.createMessage).toHaveBeenCalledWith({
+        agentId: initialState.activeAgentId,
         content,
         parentId,
         role: 'assistant',
-        sessionId: initialState.activeId,
+        sessionId: initialState.activeAgentId,
         topicId: initialState.activeTopicId,
       });
 
@@ -535,7 +537,7 @@ describe('ChatPluginAction', () => {
       const internal_invokeDifferentTypePluginMock = vi.fn();
       act(() => {
         useChatStore.setState({
-          activeId: 'session-id',
+          activeAgentId: 'session-id',
           messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [message] },
           internal_invokeDifferentTypePlugin: internal_invokeDifferentTypePluginMock,
           optimisticUpdateMessagePluginError: vi.fn(),
@@ -574,7 +576,7 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: 'session-id',
+          activeAgentId: 'session-id',
           messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [message] },
           internal_invokeDifferentTypePlugin: vi.fn(),
           optimisticUpdateMessagePluginError: internal_updateMessageErrorMock,
@@ -617,7 +619,7 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: 'anbccfdd',
+          activeAgentId: 'anbccfdd',
           messagesMap: {
             [messageMapKey({ agentId: 'anbccfdd' })]: [assistantMessage, toolMessage],
           },
@@ -885,7 +887,7 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: 'anbccfdd',
+          activeAgentId: 'anbccfdd',
           messagesMap: { [messageMapKey({ agentId: 'anbccfdd' })]: [assistantMessage] },
           refreshMessages: vi.fn(),
         });
@@ -952,7 +954,7 @@ describe('ChatPluginAction', () => {
 
         act(() => {
           useChatStore.setState({
-            activeId: 'active-session',
+            activeAgentId: 'active-session',
             activeTopicId: 'active-topic',
           });
         });
@@ -1043,7 +1045,7 @@ describe('ChatPluginAction', () => {
             messagesMap: {
               [key]: [message],
             },
-            activeId: contextSessionId,
+            activeAgentId: contextSessionId,
             activeTopicId: contextTopicId,
           });
         });

@@ -94,7 +94,7 @@ export const pluginTypes: StateCreator<
 
     // if the plugin settings is not valid, then set the message with error type
     if (!result.valid) {
-      // Get message to extract sessionId/topicId
+      // Get message to extract agentId/topicId
       const message = dbMessageSelectors.getDbMessageById(id)(get());
       const updateResult = await messageService.updateMessageError(
         id,
@@ -107,6 +107,7 @@ export const pluginTypes: StateCreator<
           type: PluginErrorType.PluginSettingsInvalid as any,
         },
         {
+          agentId: message?.agentId,
           sessionId: message?.sessionId,
           topicId: message?.topicId,
         },
@@ -114,7 +115,7 @@ export const pluginTypes: StateCreator<
 
       if (updateResult?.success && updateResult.messages) {
         get().replaceMessages(updateResult.messages, {
-          context: { sessionId: message?.sessionId || '', topicId: message?.topicId },
+          context: { agentId: message?.agentId || '', topicId: message?.topicId },
         });
       }
       return;
@@ -130,7 +131,7 @@ export const pluginTypes: StateCreator<
     } = get();
     let data: MCPToolCallResult | undefined;
 
-    // Get message to extract sessionId/topicId
+    // Get message to extract agentId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     // Get abort controller from operation
@@ -163,12 +164,13 @@ export const pluginTypes: StateCreator<
         log('[invokeMCPTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
       } else {
         const result = await messageService.updateMessageError(id, error as any, {
+          agentId: message?.agentId,
           sessionId: message?.sessionId,
           topicId: message?.topicId,
         });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
-            context: { sessionId: message?.sessionId || '', topicId: message?.topicId },
+            context: { agentId: message?.agentId || '', topicId: message?.topicId },
           });
         }
       }
@@ -196,7 +198,7 @@ export const pluginTypes: StateCreator<
     const { optimisticUpdateMessageContent } = get();
     let data: string;
 
-    // Get message to extract sessionId/topicId
+    // Get message to extract agentId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     // Get abort controller from operation
@@ -236,12 +238,13 @@ export const pluginTypes: StateCreator<
         );
       } else {
         const result = await messageService.updateMessageError(id, error as any, {
+          agentId: message?.agentId,
           sessionId: message?.sessionId,
           topicId: message?.topicId,
         });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
-            context: { sessionId: message?.sessionId || '', topicId: message?.topicId },
+            context: { agentId: message?.agentId || '', topicId: message?.topicId },
           });
         }
       }

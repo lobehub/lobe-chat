@@ -72,6 +72,10 @@ export interface OperationActions {
   /**
    * Get conversation context from operation or fallback to global state
    * This is a helper method that can be used by other slices
+   *
+   * Migration Note (LOBE-1086):
+   * - Only agentId is used for message association
+   * - Backend handles sessionId mapping internally based on agentId
    */
   internal_getSessionContext: (context?: { operationId?: string }) => {
     agentId: string;

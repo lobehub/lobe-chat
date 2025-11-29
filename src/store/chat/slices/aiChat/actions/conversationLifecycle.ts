@@ -18,7 +18,6 @@ import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
-import { getSessionStoreState } from '@/store/session';
 
 import {
   dbMessageSelectors,
@@ -97,14 +96,14 @@ export const conversationLifecycle: StateCreator<
     const { internal_execAgentRuntime, mainInputEditor } = get();
 
     // Use context from params (required)
-    const sessionId = context.agentId;
+    const agentId = context.agentId;
     const topicId = context.topicId ?? undefined;
     // If newThread is provided, threadId will be created by server
     // If threadId is provided, use it directly
     const threadId = context.newThread ? undefined : (context.threadId ?? undefined);
     const newThread = context.newThread;
 
-    if (!sessionId) return;
+    if (!agentId) return;
 
     const fileIdList = files?.map((f) => f.id);
 
@@ -160,7 +159,7 @@ export const conversationLifecycle: StateCreator<
       // if message has attached with files, then add files to message and the agent
       files: fileIdList,
       role: 'user',
-      sessionId,
+      agentId,
       // if there is topicId，then add topicId to message
       topicId,
       threadId,
@@ -170,7 +169,7 @@ export const conversationLifecycle: StateCreator<
     const tempAssistantId = get().optimisticCreateTmpMessage({
       content: LOADING_FLAT,
       role: 'assistant',
-      sessionId,
+      agentId,
       // if there is topicId，then add topicId to message
       topicId,
       threadId,
@@ -181,7 +180,7 @@ export const conversationLifecycle: StateCreator<
     const { operationId, abortController } = get().startOperation({
       type: 'sendMessage',
       context: {
-        sessionId,
+        agentId,
         topicId,
         threadId,
         messageId: tempId,
@@ -227,7 +226,7 @@ export const conversationLifecycle: StateCreator<
                 title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
               }
             : undefined,
-          sessionId: sessionId === INBOX_SESSION_ID ? undefined : sessionId,
+          sessionId: agentId === INBOX_SESSION_ID ? undefined : agentId,
           newAssistantMessage: { model, provider: provider! },
         },
         abortController,
@@ -251,7 +250,7 @@ export const conversationLifecycle: StateCreator<
       }
 
       get().replaceMessages(data.messages, {
-        context: { agentId: sessionId, topicId: finalTopicId, threadId: finalThreadId },
+        context: { agentId, topicId: finalTopicId, threadId: finalThreadId },
         action: 'sendMessage/serverResponse',
       });
 
@@ -292,9 +291,6 @@ export const conversationLifecycle: StateCreator<
 
     if (!data) return;
 
-    //  update assistant update to make it rerank
-    getSessionStoreState().triggerSessionUpdate(sessionId);
-
     if (data.topicId) get().internal_updateTopicLoading(data.topicId, true);
 
     const summaryTitle = async () => {
@@ -310,7 +306,7 @@ export const conversationLifecycle: StateCreator<
 
       if (topic && !topic.title) {
         const chats = displayMessageSelectors
-          .getDisplayMessagesByKey(messageMapKey({ agentId: sessionId, topicId: topic.id }))(get())
+          .getDisplayMessagesByKey(messageMapKey({ agentId, topicId: topic.id }))(get())
           .filter((item) => item.id !== data.assistantMessageId);
 
         await get().summaryTopicTitle(topic.id, chats);
@@ -329,7 +325,7 @@ export const conversationLifecycle: StateCreator<
     // Get the current messages to generate AI response
     const displayMessages = displayMessageSelectors.getDisplayMessagesByKey(
       messageMapKey({
-        agentId: sessionId,
+        agentId,
         topicId: data.topicId ?? topicId,
         threadId: finalThreadId,
       }),
@@ -340,7 +336,7 @@ export const conversationLifecycle: StateCreator<
         messages: displayMessages,
         parentMessageId: data.assistantMessageId,
         parentMessageType: 'assistant',
-        sessionId,
+        agentId,
         topicId: data.topicId ?? topicId,
         parentOperationId: operationId, // Pass as parent operation
         threadId: finalThreadId,
@@ -388,12 +384,12 @@ export const conversationLifecycle: StateCreator<
 
     if (contextMessages.length <= 0) return;
 
-    const { internal_execAgentRuntime, activeThreadId, activeId, activeTopicId } = get();
+    const { internal_execAgentRuntime, activeThreadId, activeAgentId, activeTopicId } = get();
 
     // Create regenerate operation
     const { operationId } = get().startOperation({
       type: 'regenerate',
-      context: { sessionId: activeId, topicId: activeTopicId, messageId: id },
+      context: { agentId: activeAgentId, topicId: activeTopicId, messageId: id },
     });
 
     try {
@@ -406,7 +402,7 @@ export const conversationLifecycle: StateCreator<
         messages: contextMessages,
         parentMessageId: id,
         parentMessageType: 'user',
-        sessionId: activeId,
+        agentId: activeAgentId,
         topicId: activeTopicId,
         traceId,
         threadId: activeThreadId,
@@ -450,12 +446,12 @@ export const conversationLifecycle: StateCreator<
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
-    const { activeId, activeTopicId } = get();
+    const { activeAgentId, activeTopicId } = get();
 
     // Create continue operation
     const { operationId } = get().startOperation({
       type: 'continue',
-      context: { sessionId: activeId, topicId: activeTopicId, messageId },
+      context: { agentId: activeAgentId, topicId: activeTopicId, messageId },
     });
 
     try {
@@ -465,7 +461,7 @@ export const conversationLifecycle: StateCreator<
         messages: chats,
         parentMessageId: id,
         parentMessageType: message.role as 'assistant' | 'tool' | 'user',
-        sessionId: activeId,
+        agentId: activeAgentId,
         topicId: activeTopicId,
         parentOperationId: operationId,
       });

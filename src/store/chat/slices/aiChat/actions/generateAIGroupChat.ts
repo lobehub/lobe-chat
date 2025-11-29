@@ -289,7 +289,7 @@ export const chatAiGroupChat: StateCreator<
           files: files?.map((f) => f.id),
           role: 'user',
           groupId,
-          sessionId: useSessionStore.getState().activeId,
+          agentId: useSessionStore.getState().activeId,
           topicId: activeTopicId,
           targetId: targetMemberId,
         };
@@ -392,8 +392,8 @@ export const chatAiGroupChat: StateCreator<
       const createSupervisorTodoMessage = async (todoList: SupervisorTodoItem[]) => {
         if (!groupId) return;
 
-        const sessionId = useSessionStore.getState().activeId || groupId;
-        if (!sessionId) return;
+        const agentId = useSessionStore.getState().activeId || groupId;
+        if (!agentId) return;
 
         const content = formatSupervisorTodoContent(todoList);
         const supervisorMessage: CreateMessageParams = {
@@ -402,7 +402,7 @@ export const chatAiGroupChat: StateCreator<
           provider: groupConfig.orchestratorProvider,
           groupId,
           role: 'supervisor',
-          sessionId,
+          agentId,
           topicId: currentTopicId ?? undefined,
         };
 
@@ -663,8 +663,7 @@ export const chatAiGroupChat: StateCreator<
           groupId,
           content: LOADING_FLAT,
           provider: agentProvider,
-          agentId,
-          sessionId: useSessionStore.getState().activeId,
+          agentId: agentId || useSessionStore.getState().activeId,
           topicId: activeTopicId,
           targetId: targetId, // Use targetId when provided for DM messages
         };
@@ -930,7 +929,7 @@ export const chatAiGroupChat: StateCreator<
           model: groupConfig.orchestratorModel,
           provider: groupConfig.orchestratorProvider,
           groupId,
-          sessionId: useSessionStore.getState().activeId || groupId,
+          agentId: useSessionStore.getState().activeId || groupId,
           topicId: activeTopicId,
           error: {
             type: ChatErrorType.SupervisorDecisionFailed,

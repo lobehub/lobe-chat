@@ -37,20 +37,20 @@ export const pluginWorkflow: StateCreator<
   PluginWorkflowAction
 > = (set, get) => ({
   createAssistantMessageByPlugin: async (content, parentId) => {
-    // Get parent message to extract sessionId/topicId
+    // Get parent message to extract agentId/topicId
     const parentMessage = dbMessageSelectors.getDbMessageById(parentId)(get());
 
     const newMessage: CreateMessageParams = {
       content,
       parentId,
       role: 'assistant',
-      sessionId: parentMessage?.sessionId ?? get().activeId,
+      agentId: parentMessage?.agentId ?? get().activeAgentId,
       topicId: parentMessage?.topicId !== undefined ? parentMessage.topicId : get().activeTopicId,
     };
 
     const result = await messageService.createMessage(newMessage);
     get().replaceMessages(result.messages, {
-      context: { sessionId: newMessage.sessionId, topicId: newMessage.topicId },
+      context: { agentId: newMessage.agentId, topicId: newMessage.topicId },
     });
   },
 
@@ -65,7 +65,7 @@ export const pluginWorkflow: StateCreator<
       messages: chats,
       parentMessageId: parentId ?? chats.at(-1)!.id,
       parentMessageType: 'user',
-      sessionId: get().activeId,
+      agentId: get().activeAgentId,
       topicId: get().activeTopicId,
       traceId,
       threadId,

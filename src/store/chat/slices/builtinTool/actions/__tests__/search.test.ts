@@ -27,7 +27,7 @@ describe('search actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useChatStore.setState({
-      activeId: 'session-id',
+      activeAgentId: 'session-id',
       activeTopicId: 'topic-id',
       searchLoading: {},
       optimisticUpdateMessageContent: vi.fn(),

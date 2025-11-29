@@ -79,7 +79,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   useChatStore.setState(
     {
-      activeId: 'test-session-id',
+      activeAgentId: 'test-session-id',
       activeTopicId: 'test-topic-id',
       isCreatingThread: false,
       isCreatingThreadMessage: false,
@@ -560,11 +560,11 @@ describe('thread action', () => {
 
   describe('sendThreadMessage', () => {
     describe('validation', () => {
-      it('should not send when activeId is undefined', async () => {
+      it('should not send when activeAgentId is undefined', async () => {
         const { result } = renderHook(() => useChatStore());
 
         act(() => {
-          useChatStore.setState({ activeId: undefined });
+          useChatStore.setState({ activeAgentId: undefined as any });
         });
 
         await act(async () => {

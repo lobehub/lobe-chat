@@ -77,7 +77,7 @@ export const messagePublicApi: StateCreator<
     const result = await optimisticCreateMessage({
       content: inputMessage,
       role: 'assistant',
-      sessionId: activeAgentId,
+      agentId: activeAgentId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
       parentId,
@@ -104,7 +104,7 @@ export const messagePublicApi: StateCreator<
       content: message,
       files: fileList,
       role: 'user',
-      sessionId: activeAgentId,
+      agentId: activeAgentId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
       threadId: activeThreadId,
@@ -163,8 +163,10 @@ export const messagePublicApi: StateCreator<
     let ids = [message.id];
 
     get().internal_dispatchMessage({ type: 'deleteMessages', ids });
+    const agentId = get().activeAgentId;
+    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.removeMessages(ids, {
-      sessionId: get().activeAgentId,
+      agentId,
       topicId: get().activeTopicId,
     });
 

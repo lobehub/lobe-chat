@@ -103,9 +103,10 @@ export const chatThreadMessage: StateCreator<
    * @deprecated Use sendMessage with context.newThread instead
    */
   sendThreadMessage: async ({ message }) => {
-    const { activeTopicId, activeId, threadStartMessageId, newThreadMode, portalThreadId } = get();
+    const { activeTopicId, activeAgentId, threadStartMessageId, newThreadMode, portalThreadId } =
+      get();
 
-    if (!activeId || !activeTopicId) return;
+    if (!activeAgentId || !activeTopicId) return;
 
     // if message is empty, then stop
     if (!message) return;
@@ -121,7 +122,7 @@ export const chatThreadMessage: StateCreator<
         message,
         messages,
         context: {
-          agentId: activeId,
+          agentId: activeAgentId,
           topicId: activeTopicId,
           // If there's an existing thread, use it
           threadId: portalThreadId,

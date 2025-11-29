@@ -136,7 +136,7 @@ describe('StreamingExecutor actions', () => {
       const { operationId } = result.current.startOperation({
         type: 'execAgentRuntime',
         context: {
-          sessionId: TEST_IDS.SESSION_ID,
+          agentId: TEST_IDS.SESSION_ID,
           topicId: null,
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
         },
@@ -184,7 +184,7 @@ describe('StreamingExecutor actions', () => {
       const { operationId } = result.current.startOperation({
         type: 'execAgentRuntime',
         context: {
-          sessionId: TEST_IDS.SESSION_ID,
+          agentId: TEST_IDS.SESSION_ID,
           topicId: null,
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
         },
@@ -266,7 +266,7 @@ describe('StreamingExecutor actions', () => {
       const { operationId } = result.current.startOperation({
         type: 'execAgentRuntime',
         context: {
-          sessionId: TEST_IDS.SESSION_ID,
+          agentId: TEST_IDS.SESSION_ID,
           topicId: null,
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
         },
@@ -323,7 +323,7 @@ describe('StreamingExecutor actions', () => {
       const { operationId } = result.current.startOperation({
         type: 'execAgentRuntime',
         context: {
-          sessionId: TEST_IDS.SESSION_ID,
+          agentId: TEST_IDS.SESSION_ID,
           topicId: null,
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
         },
@@ -669,11 +669,11 @@ describe('StreamingExecutor actions', () => {
       streamSpy.mockRestore();
     });
 
-    it('should use provided sessionId/topicId for trace parameters', async () => {
+    it('should use provided agentId/topicId for trace parameters', async () => {
       act(() => {
         useChatStore.setState({
           internal_execAgentRuntime: realExecAgentRuntime,
-          activeId: 'active-session',
+          activeAgentId: 'active-session',
           activeTopicId: 'active-topic',
         });
       });
@@ -696,12 +696,12 @@ describe('StreamingExecutor actions', () => {
           messages: [userMessage],
           parentMessageId: userMessage.id,
           parentMessageType: 'user',
-          sessionId: contextSessionId,
+          agentId: contextSessionId,
           topicId: contextTopicId,
         });
       });
 
-      // Verify trace was called with context sessionId/topicId, not active ones
+      // Verify trace was called with context agentId/topicId, not active ones
       expect(streamSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           trace: expect.objectContaining({
@@ -720,7 +720,7 @@ describe('StreamingExecutor actions', () => {
     it('should pass context to optimisticUpdateMessageContent in internal_fetchAIChatMessage', async () => {
       const { result } = renderHook(() => useChatStore());
       const messages = [createMockMessage({ role: 'user' })];
-      const contextSessionId = 'context-session';
+      const contextAgentId = 'context-session';
       const contextTopicId = 'context-topic';
 
       const updateContentSpy = vi.spyOn(result.current, 'optimisticUpdateMessageContent');
@@ -736,7 +736,7 @@ describe('StreamingExecutor actions', () => {
       const { operationId } = result.current.startOperation({
         type: 'execAgentRuntime',
         context: {
-          sessionId: contextSessionId,
+          agentId: contextAgentId,
           topicId: contextTopicId,
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
         },
@@ -765,10 +765,10 @@ describe('StreamingExecutor actions', () => {
       streamSpy.mockRestore();
     });
 
-    it('should use activeId/activeTopicId when context not provided', async () => {
+    it('should use activeAgentId/activeTopicId when context not provided', async () => {
       act(() => {
         useChatStore.setState({
-          activeId: 'active-session',
+          activeAgentId: 'active-session',
           activeTopicId: 'active-topic',
         });
       });
