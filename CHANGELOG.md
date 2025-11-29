@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.134](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.133...v2.0.0-next.134)
+
+<sup>Released on **2025-11-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Betterauth public url auto detect from VERCEL_URL.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Betterauth public url auto detect from VERCEL_URL, closes [#10493](https://github.com/lobehub/lobe-chat/issues/10493) ([b5bf8ad](https://github.com/lobehub/lobe-chat/commit/b5bf8ad))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.133](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.132...v2.0.0-next.133)
 
 <sup>Released on **2025-11-29**</sup>
