@@ -2,6 +2,8 @@
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
+import { enableBetterAuth, enableClerk, enableNextAuth } from '@/const/auth';
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
@@ -228,16 +230,13 @@ export const getAuthConfig = () => {
 
     runtimeEnv: {
       // Clerk
-      NEXT_PUBLIC_ENABLE_CLERK_AUTH:
-        process.env.NEXT_PUBLIC_ENABLE_CLERK_AUTH === '1'
-          ? true
-          : !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+      NEXT_PUBLIC_ENABLE_CLERK_AUTH: enableClerk,
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
       CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
       CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 
       // ---------------------------------- better auth ----------------------------------
-      NEXT_PUBLIC_ENABLE_BETTER_AUTH: process.env.NEXT_PUBLIC_ENABLE_BETTER_AUTH === '1',
+      NEXT_PUBLIC_ENABLE_BETTER_AUTH: enableBetterAuth,
       // Fallback to NEXTAUTH_URL origin for seamless migration from next-auth
       NEXT_PUBLIC_AUTH_URL:
         process.env.NEXT_PUBLIC_AUTH_URL ||
@@ -255,7 +254,7 @@ export const getAuthConfig = () => {
       AUTH_COGNITO_USERPOOL_ID: process.env.AUTH_COGNITO_USERPOOL_ID,
 
       // ---------------------------------- next auth ----------------------------------
-      NEXT_PUBLIC_ENABLE_NEXT_AUTH: process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH === '1',
+      NEXT_PUBLIC_ENABLE_NEXT_AUTH: enableNextAuth,
       NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
       NEXT_AUTH_DEBUG: !!process.env.NEXT_AUTH_DEBUG,
