@@ -235,16 +235,43 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const log = debug(`${this.logPrefix}:shouldUseResponsesAPI`);
 
-      // Priority 1: User explicitly set apiMode via switch
-      if (userApiMode === 'responses') {
-        log('using Responses API: explicit userApiMode=%s', userApiMode);
+      // Priority 0: Check built-in responsesAPIModels FIRST (highest priority)
+      // These models MUST use Responses API regardless of user settings
+      if (model && responsesAPIModels.has(model)) {
+        log('using Responses API: model %s in built-in responsesAPIModels (forced)', model);
         return true;
       }
 
-      // Priority 2: userApiMode is explicitly set to something else
-      if (userApiMode !== undefined) {
+      // Priority 1: userApiMode is explicitly set to 'chatCompletion' (user disabled the switch)
+      if (userApiMode === 'chatCompletion') {
         log('using Chat Completions API: userApiMode=%s', userApiMode);
         return false;
+      }
+
+      // Priority 2: When user enables the switch (userApiMode === 'responses')
+      // Check if useResponseModels is configured - if so, only matching models use Responses API
+      // If useResponseModels is not configured, all models use Responses API
+      if (userApiMode === 'responses') {
+        if (model && flagUseResponseModels?.length) {
+          const matches = flagUseResponseModels.some((m: string | RegExp) =>
+            typeof m === 'string' ? model.includes(m) : (m as RegExp).test(model),
+          );
+          if (matches) {
+            log(
+              'using Responses API: userApiMode=responses and model %s matches useResponseModels',
+              model,
+            );
+            return true;
+          }
+          log(
+            'using Chat Completions API: userApiMode=responses but model %s does not match useResponseModels',
+            model,
+          );
+          return false;
+        }
+        // No useResponseModels configured, use Responses API for all models
+        log('using Responses API: userApiMode=responses (no useResponseModels filter)');
+        return true;
       }
 
       // Priority 3: Explicit responseApi flag
@@ -259,7 +286,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         return true;
       }
 
-      // Priority 5: Check if model matches useResponseModels patterns
+      // Priority 5: Check if model matches useResponseModels patterns (without user switch)
       if (model && flagUseResponseModels?.length) {
         const matches = flagUseResponseModels.some((m: string | RegExp) =>
           typeof m === 'string' ? model.includes(m) : (m as RegExp).test(model),
@@ -268,12 +295,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           log('using Responses API: model %s matches useResponseModels config', model);
           return true;
         }
-      }
-
-      // Priority 6: Check built-in responsesAPIModels
-      if (model && responsesAPIModels.has(model)) {
-        log('using Responses API: model %s in built-in responsesAPIModels', model);
-        return true;
       }
 
       log('using Chat Completions API for %s', context);

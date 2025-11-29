@@ -267,11 +267,14 @@ class ChatService {
       model = findDeploymentName(model, provider);
     }
 
-    const apiMode = aiProviderSelectors.isProviderEnableResponseApi(provider)(
-      getAiInfraStoreState(),
-    )
+    // When user explicitly disables Responses API, set apiMode to 'chatCompletion'
+    // This ensures the user's preference takes priority over provider's useResponseModels config
+    // When user enables Responses API, set to 'responses' to force use Responses API
+    const apiMode: 'responses' | 'chatCompletion' = aiProviderSelectors.isProviderEnableResponseApi(
+      provider,
+    )(getAiInfraStoreState())
       ? 'responses'
-      : undefined;
+      : 'chatCompletion';
 
     // Get the chat config to check streaming preference
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
