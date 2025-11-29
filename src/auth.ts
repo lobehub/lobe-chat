@@ -111,7 +111,8 @@ export const auth = betterAuth({
     },
     fields: {
       image: 'avatar',
-      name: 'full_name',
+      // NOTE: use drizzle filed instead of db field, so use fullName instead of full_name
+      name: 'fullName',
     },
     modelName: 'users',
   },
