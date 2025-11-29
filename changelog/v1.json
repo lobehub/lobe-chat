@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Betterauth public url auto detect from VERCEL_URL."]
+    },
+    "date": "2025-11-29",
+    "version": "2.0.0-next.134"
+  },
+  {
+    "children": {
       "fixes": ["Betterauth name should mapped to fullName."]
     },
     "date": "2025-11-29",
