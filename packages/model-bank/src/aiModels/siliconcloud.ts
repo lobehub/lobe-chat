@@ -5,6 +5,26 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'MiniMax-M2 为智能体重新定义了效率。它是一款紧凑、快速且经济高效的 MoE 模型，拥有 2300 亿总参数和 100 亿激活参数，专为编码和智能体任务的顶级性能而打造，同时保持强大的通用智能。仅需 100 亿激活参数，MiniMax-M2 就能提供与大规模模型相媲美的性能，使其成为高效率应用的理想选择。',
+    displayName: 'MiniMax-M2',
+    id: 'MiniMaxAI/MiniMax-M2',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       vision: true,
     },
     contextWindowTokens: 262_144,
@@ -162,67 +182,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-09-27',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'Ling-1T 是 "灵 2.0" 系列的首款旗舰级 non-thinking 模型，拥有 1 万亿总参数和每 token 约 500 亿个活动参数。基于灵 2.0 架构构建，Ling-1T 旨在突破高效推理和可扩展认知的极限。Ling-1T-base 在超过 20 万亿个高质量、推理密集的 token 上进行训练，针对大型知识密集型任务与长文档理解进行了优化，具备出色的工具调用和上下文记忆能力。',
-    displayName: 'Ling 1T',
-    id: 'inclusionAI/Ling-1T',
-    pricing: {
-      currency: 'CNY',
-      units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-10-09',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'Ring-1T 是一款由百灵（Bailing）团队发布的万亿参数规模的开源思想模型。它基于 Ling 2.0 架构和 Ling-1T-base 基础模型训练，总参数量达 1 万亿，激活参数量为 500 亿，并支持高达 128K 的上下文窗口。该模型通过大规模可验证奖励强化学习进行优化。',
-    displayName: 'Ring-1T',
-    id: 'inclusionAI/Ring-1T',
-    pricing: {
-      currency: 'CNY',
-      units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-10-14',
-    settings: {
-      extendParams: ['reasoningBudgetToken'],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'Ling-1T 是"灵 2.0"系列的首款旗舰级 non-thinking 模型，拥有 1 万亿总参数和每 token 约 500 亿个活动参数。基于灵 2.0 架构构建，Ling-1T 旨在突破高效推理和可扩展认知的极限。Ling-1T-base 在超过 20 万亿个高质量、推理密集的 token 上进行训练。',
-    displayName: 'Ling-1T',
-    id: 'inclusionAI/Ling-1T',
-    pricing: {
-      currency: 'CNY',
-      units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-10-09',
     type: 'chat',
   },
   {

@@ -37,7 +37,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'kimi-k2-250905',
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 262_144,
     description:
       'Kimi-K2 是一款Moonshot AI推出的具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
     displayName: 'Kimi K2',
@@ -790,7 +790,7 @@ const doubaoChatModels: AIChatModelCard[] = [
 const volcengineImageModels: AIImageModelCard[] = [
   {
     /*
-    // TODO: AIImageModelCard 不支持 config.deploymentName
+    // TODO: AIImageModelCard does not support config.deploymentName
     config: {
       deploymentName: 'doubao-seedream-3-0-t2i-250415',
     },
@@ -824,7 +824,7 @@ const volcengineImageModels: AIImageModelCard[] = [
   },
   {
     /*
-    // TODO: AIImageModelCard 不支持 config.deploymentName
+    // TODO: AIImageModelCard does not support config.deploymentName
     config: {
       deploymentName: 'doubao-seedream-3-0-t2i-250415',
     },
@@ -857,7 +857,7 @@ const volcengineImageModels: AIImageModelCard[] = [
     releasedAt: '2025-04-15',
     type: 'image',
   },
-  // Note: Doubao 图生图模型与文生图模型公用一个 Endpoint，当前如果存在 imageUrl 会切换至 edit endpoint 下
+  // Note: Doubao image-to-image and text-to-image models share the same Endpoint, currently switches to edit endpoint if imageUrl exists
   {
     // config: {
     //   deploymentName: 'doubao-seededit-3-0-i2i-250628',

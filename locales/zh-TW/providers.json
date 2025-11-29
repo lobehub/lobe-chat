@@ -191,6 +191,9 @@
   "xinference": {
     "description": "Xorbits推論（Xinference）是一個開源平台，用於簡化各種AI模型的運行與整合。透過Xinference，您可以在雲端或本地環境中使用任何開源LLM、嵌入模型和多模態模型進行推論，並創建強大的AI應用程式。"
   },
+  "zenmux": {
+    "description": "ZenMux 是一個統一的 AI 服務整合平台，支援 OpenAI、Anthropic、Google VertexAI 等多種主流 AI 服務介面。提供靈活的路由功能，讓您可以輕鬆切換與管理不同的 AI 模型。"
+  },
   "zeroone": {
     "description": "01.AI 專注於 AI 2.0 時代的人工智慧技術，大力推動「人+人工智慧」的創新和應用，採用超強大模型和先進 AI 技術以提升人類生產力，實現技術賦能。"
   },

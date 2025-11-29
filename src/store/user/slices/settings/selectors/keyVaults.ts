@@ -10,12 +10,7 @@ const getVaultByProvider = (provider: string) => (s: UserStore) =>
   // @ts-ignore
   (keyVaultsSettings(s)[provider] || {}) as any;
 
-const password = (s: UserStore) => keyVaultsSettings(s).password || '';
-
 export const keyVaultsConfigSelectors = {
   getVaultByProvider,
-
   keyVaultsSettings,
-
-  password,
 };

@@ -1,8 +1,7 @@
+import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
 import { and, eq, inArray } from 'drizzle-orm';
 import { LLMParams } from 'model-bank';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 
 import {
   NewSession,

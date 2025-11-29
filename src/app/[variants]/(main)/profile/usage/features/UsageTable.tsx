@@ -2,11 +2,11 @@ import { ProviderIcon } from '@lobehub/icons';
 import { Tag } from '@lobehub/ui';
 import { Table, TableColumnType, Typography } from 'antd';
 import { useTheme } from 'antd-style';
-import { parseAsInteger, useQueryState } from 'nuqs';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { parseAsInteger, useQueryParam } from '@/hooks/useQueryParam';
 import { useClientDataSWR } from '@/libs/swr';
 import { usageService } from '@/services/usage';
 import { formatDate, formatNumber } from '@/utils/format';
@@ -21,14 +21,12 @@ const UsageTable = memo<UsageChartProps>(({ dateStrings }) => {
     usageService.findByMonth(dateStrings),
   );
 
-  const [currentPage, setCurrentPage] = useQueryState(
-    'current',
-    parseAsInteger.withDefault(1).withOptions({ clearOnDefault: true }),
-  );
-  const [pageSize, setPageSize] = useQueryState(
-    'pageSize',
-    parseAsInteger.withDefault(5).withOptions({ clearOnDefault: true }),
-  );
+  const [currentPage, setCurrentPage] = useQueryParam('current', parseAsInteger.withDefault(1), {
+    clearOnDefault: true,
+  });
+  const [pageSize, setPageSize] = useQueryParam('pageSize', parseAsInteger.withDefault(5), {
+    clearOnDefault: true,
+  });
 
   useEffect(() => {
     if (dateStrings) {

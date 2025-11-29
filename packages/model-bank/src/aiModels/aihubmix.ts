@@ -598,9 +598,43 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
+      'Claude Opus 4.5 是 Anthropic 的旗舰模型，结合了卓越的智能与可扩展性能，适合需要最高质量回应和推理能力的复杂任务。',
+    displayName: 'Claude Opus 4.5',
+    enabled: true,
+    id: 'claude-opus-4-5-20251101',
+    maxOutput: 64_000,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: { prices: { '1h': 10, '5m': 6.25 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-11-24',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
       'Claude Opus 4.1 是 Anthropic 最新的用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。',
     displayName: 'Claude Opus 4.1',
-    enabled: true,
     id: 'claude-opus-4-1-20250805',
     maxOutput: 32_000,
     pricing: {
@@ -991,6 +1025,95 @@ const aihubmixModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description:
+      'Gemini 3 Pro 是 Google 最智能的模型，具有 SOTA 推理和多模式理解，以及强大的代理和氛围编码功能。',
+    displayName: 'Gemini 3 Pro Preview',
+    enabled: true,
+    id: 'gemini-3-pro-preview',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        {
+          name: 'textInput_cacheRead',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.2, upTo: 200_000 },
+            { rate: 0.4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 2, upTo: 200_000 },
+            { rate: 4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 12, upTo: 200_000 },
+            { rate: 18, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          lookup: { prices: { '1h': 4.5 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-11-18',
+    settings: {
+      extendParams: ['thinkingLevel', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      imageOutput: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072 + 32_768,
+    description:
+      'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
+    displayName: 'Nano Banana Pro',
+    enabled: true,
+    id: 'gemini-3-pro-image-preview',
+    maxOutput: 32_768,
+    pricing: {
+      approximatePricePerImage: 0.134,
+      units: [
+        { name: 'imageOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-20',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
       structuredOutput: true,
       vision: true,
     },
@@ -998,7 +1121,6 @@ const aihubmixModels: AIChatModelCard[] = [
     description:
       'Gemini 2.5 Pro 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro',
-    enabled: true,
     id: 'gemini-2.5-pro',
     maxOutput: 65_536,
     pricing: {

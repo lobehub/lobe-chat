@@ -1,3 +1,4 @@
+import type Anthropic from '@anthropic-ai/sdk';
 import {
   BedrockRuntimeClient,
   InvokeModelCommand,
@@ -5,9 +6,10 @@ import {
 } from '@aws-sdk/client-bedrock-runtime';
 import { ModelProvider } from 'model-bank';
 
+import { hasTemperatureTopPConflict } from '../../const/models';
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { buildAnthropicMessages, buildAnthropicTools } from '../../core/contextBuilders/anthropic';
-import { MODEL_PARAMETER_CONFLICTS, resolveParameters } from '../../core/parameterResolver';
+import { resolveParameters } from '../../core/parameterResolver';
 import {
   AWSBedrockClaudeStream,
   AWSBedrockLlamaStream,
@@ -23,7 +25,10 @@ import {
 import { AgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
+import { getModelPricing } from '../../utils/getModelPricing';
 import { StreamingResponse } from '../../utils/response';
+import { resolveCacheTTL } from '../anthropic/resolveCacheTTL';
+import { resolveMaxTokens } from '../anthropic/resolveMaxTokens';
 
 /**
  * A prompt constructor for HuggingFace LLama 2 chat models.
@@ -60,19 +65,24 @@ export function experimental_buildLlama2Prompt(messages: { content: string; role
 export interface LobeBedrockAIParams {
   accessKeyId?: string;
   accessKeySecret?: string;
+  id?: string;
   region?: string;
   sessionToken?: string;
 }
 
 export class LobeBedrockAI implements LobeRuntimeAI {
   private client: BedrockRuntimeClient;
+  private id: string;
 
   region: string;
 
-  constructor({ region, accessKeyId, accessKeySecret, sessionToken }: LobeBedrockAIParams = {}) {
+  constructor(options: LobeBedrockAIParams = {}) {
+    const { id, region, accessKeyId, accessKeySecret, sessionToken } = options;
+
     if (!(accessKeyId && accessKeySecret))
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
     this.region = region ?? 'us-east-1';
+    this.id = id ?? ModelProvider.Bedrock;
     this.client = new BedrockRuntimeClient({
       credentials: {
         accessKeyId: accessKeyId,
@@ -148,28 +158,80 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     payload: ChatStreamPayload,
     options?: ChatMethodOptions,
   ): Promise<Response> => {
-    const { max_tokens, messages, model, temperature, top_p, tools } = payload;
+    const {
+      enabledContextCaching = true,
+      max_tokens,
+      messages,
+      model,
+      temperature,
+      top_p,
+      tools,
+      thinking,
+    } = payload;
+    const inputStartAt = Date.now();
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
     // Resolve temperature and top_p parameters based on model constraints
-    const hasConflict = MODEL_PARAMETER_CONFLICTS.BEDROCK_CLAUDE_4_PLUS.has(model);
+    const hasConflict = hasTemperatureTopPConflict(model);
     const resolvedParams = resolveParameters(
       { temperature, top_p },
       { hasConflict, normalizeTemperature: true, preferTemperature: true },
     );
 
+    const { bedrock: bedrockModels } = await import('model-bank');
+
+    const resolvedMaxTokens = await resolveMaxTokens({
+      max_tokens,
+      model,
+      providerModels: bedrockModels,
+      thinking,
+    });
+
+    const systemPrompts = !!system_message?.content
+      ? ([
+          {
+            cache_control: enabledContextCaching ? { type: 'ephemeral' } : undefined,
+            text: system_message.content as string,
+            type: 'text',
+          },
+        ] as Anthropic.TextBlockParam[])
+      : undefined;
+
+    const postTools = buildAnthropicTools(tools, {
+      enabledContextCaching,
+    });
+
+    const anthropicBase = {
+      anthropic_version: 'bedrock-2023-05-31',
+      max_tokens: resolvedMaxTokens,
+      messages: await buildAnthropicMessages(user_messages, { enabledContextCaching }),
+      system: systemPrompts,
+      tools: postTools,
+    };
+
+    const anthropicPayload =
+      thinking?.type === 'enabled'
+        ? {
+            ...anthropicBase,
+            thinking: {
+              ...thinking,
+              // `max_tokens` must be greater than `budget_tokens`
+              budget_tokens: Math.max(
+                1,
+                Math.min(thinking.budget_tokens || 1024, resolvedMaxTokens - 1),
+              ),
+            },
+          }
+        : {
+            ...anthropicBase,
+            temperature: resolvedParams.temperature,
+            top_p: resolvedParams.top_p,
+          };
+
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
-      body: JSON.stringify({
-        anthropic_version: 'bedrock-2023-05-31',
-        max_tokens: max_tokens || 4096,
-        messages: await buildAnthropicMessages(user_messages),
-        system: system_message?.content as string,
-        temperature: resolvedParams.temperature,
-        tools: buildAnthropicTools(tools),
-        top_p: resolvedParams.top_p,
-      }),
+      body: JSON.stringify(anthropicPayload),
       contentType: 'application/json',
       modelId: model,
     });
@@ -186,10 +248,21 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         debugStream(debug).catch(console.error);
       }
 
+      const pricing = await getModelPricing(payload.model, this.id);
+      const cacheTTL = resolveCacheTTL({ ...payload, enabledContextCaching }, anthropicPayload);
+      const pricingOptions = cacheTTL ? { lookupParams: { ttl: cacheTTL } } : undefined;
+
       // Respond with the stream
-      return StreamingResponse(AWSBedrockClaudeStream(prod, options?.callback), {
-        headers: options?.headers,
-      });
+      return StreamingResponse(
+        AWSBedrockClaudeStream(prod, {
+          callbacks: options?.callback,
+          inputStartAt,
+          payload: { model, pricing, pricingOptions, provider: this.id },
+        }),
+        {
+          headers: options?.headers,
+        },
+      );
     } catch (e) {
       const err = e as Error & { $metadata: any };
 

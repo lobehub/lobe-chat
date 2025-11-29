@@ -56,7 +56,7 @@ export class EvalEvaluationModel {
         ),
       );
 
-    // 然后查询每个评估的记录统计
+    // Then query record statistics for each evaluation
     const evaluationIds = evaluations.map((evals) => evals.id);
 
     const recordStats = await this.db

@@ -322,6 +322,48 @@
       "when": 1762911968658,
       "tag": "0045_add_tool_intervention",
       "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1763453175961,
+      "tag": "0046_add_parent_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1763987922211,
+      "tag": "0047_add_slug_document",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1764215503726,
+      "tag": "0048_add_editor_data",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1764229953081,
+      "tag": "0049_better_auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1764303057060,
+      "tag": "0050_thread_and_user_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1764335703306,
+      "tag": "0051_add_market_into_user_settings",
+      "breakpoints": true
     }
   ],
   "version": "6"

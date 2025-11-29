@@ -99,10 +99,10 @@ export const checkOwnership = async ({
 export const useAgentOwnershipCheck = (marketIdentifier?: string): AgentOwnershipResult => {
   const [result, setResult] = useState<AgentOwnershipResult>({ isOwnAgent: null });
   const marketAuth = useMarketAuth();
-  const { session, isAuthenticated } = marketAuth;
+  const { isAuthenticated } = marketAuth;
 
   useEffect(() => {
-    if (!marketIdentifier || !isAuthenticated || !session) {
+    if (!marketIdentifier || !isAuthenticated) {
       setResult({ isOwnAgent: false });
       return;
     }
@@ -121,8 +121,16 @@ export const useAgentOwnershipCheck = (marketIdentifier?: string): AgentOwnershi
           return;
         }
 
+        // 优先从 DB 获取 access token，如果没有则从 session 获取
+        const accessToken = marketAuth.getAccessToken();
+        if (!accessToken) {
+          console.warn('[useAgentOwnershipCheck] No access token available');
+          setResult({ isOwnAgent: false });
+          return;
+        }
+
         const isOwner = await checkOwnership({
-          accessToken: session.accessToken,
+          accessToken,
           accountId: currentAccountId,
           marketIdentifier,
         });
@@ -137,7 +145,7 @@ export const useAgentOwnershipCheck = (marketIdentifier?: string): AgentOwnershi
     };
 
     runOwnershipCheck();
-  }, [marketIdentifier, isAuthenticated, session, marketAuth]);
+  }, [marketIdentifier, isAuthenticated, marketAuth]);
 
   return result;
 };

@@ -198,6 +198,10 @@ export const userRouter = router({
     return ctx.userModel.updateUser({ avatar: input });
   }),
 
+  updateFullName: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    return ctx.userModel.updateUser({ fullName: input });
+  }),
+
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updateGuide(input);
   }),

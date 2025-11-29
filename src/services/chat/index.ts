@@ -14,7 +14,7 @@ import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
-import { createChatToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
+import { createAgentToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
@@ -90,7 +90,7 @@ class ChatService {
 
     const pluginIds = [...(enabledPlugins || [])];
 
-    const toolsEngine = createChatToolsEngine({
+    const toolsEngine = createAgentToolsEngine({
       model: payload.model,
       provider: payload.provider!,
     });
@@ -196,8 +196,20 @@ class ChatService {
         extendParams.thinkingBudget = chatConfig.thinkingBudget;
       }
 
+      if (modelExtendParams!.includes('thinkingLevel') && chatConfig.thinkingLevel) {
+        extendParams.thinkingLevel = chatConfig.thinkingLevel;
+      }
+
       if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {
         extendParams.urlContext = chatConfig.urlContext;
+      }
+
+      if (modelExtendParams!.includes('imageAspectRatio') && chatConfig.imageAspectRatio) {
+        extendParams.imageAspectRatio = chatConfig.imageAspectRatio;
+      }
+
+      if (modelExtendParams!.includes('imageResolution') && chatConfig.imageResolution) {
+        extendParams.imageResolution = chatConfig.imageResolution;
       }
     }
 

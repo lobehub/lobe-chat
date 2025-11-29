@@ -1,4 +1,4 @@
-import { Google } from '@lobehub/icons';
+import { Aws, Google, Microsoft } from '@lobehub/icons';
 import {
   Auth0,
   Authelia,
@@ -19,10 +19,12 @@ const iconComponents: { [key: string]: React.ElementType } = {
   'authentik': Authentik.Color,
   'casdoor': Casdoor.Color,
   'cloudflare': Cloudflare.Color,
+  'cognito': Aws.Color,
   'default': NextAuth.Color,
   'github': Github,
   'google': Google.Color,
   'logto': Logto.Color,
+  'microsoft': Microsoft.Color,
   'microsoft-entra-id': MicrosoftEntra.Color,
   'zitadel': Zitadel.Color,
 };

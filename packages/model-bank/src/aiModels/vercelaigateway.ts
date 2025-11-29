@@ -1,6 +1,6 @@
 import { AIChatModelCard, AIEmbeddingModelCard } from '../types/aiModel';
 
-// 根据 Vercel AI Gateway 提供的模型列表，按 SOTA、大模型、小模型排序
+// Model list provided by Vercel AI Gateway, sorted by SOTA, large models, small models
 const vercelAIGatewayChatModels: AIChatModelCard[] = [
   {
     abilities: {
@@ -1561,23 +1561,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheWrite', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'DeepSeek-R1-Distill-Llama-70B 是 70B Llama 模型的蒸馏、更高效变体。它在文本生成任务中保持强大性能，减少计算开销以便于部署和研究。由 Groq 使用其自定义语言处理单元 (LPU) 硬件提供服务，以提供快速高效的推理。',
-    displayName: 'DeepSeek R1 Distill Llama 70B',
-    id: 'deepseek/deepseek-r1-distill-llama-70b',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

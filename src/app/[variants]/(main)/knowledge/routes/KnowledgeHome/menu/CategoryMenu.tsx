@@ -93,7 +93,7 @@ const CategoryMenu = memo(() => {
         className={cx(styles.header, isHomeActive && styles.headerActive)}
         horizontal
         onClick={() => {
-          navigate('/', { replace: true });
+          navigate('/knowledge', { replace: true });
         }}
         paddingBlock={6}
         paddingInline={8}
@@ -132,7 +132,7 @@ const CategoryMenu = memo(() => {
             onClick={({ key }) => {
               // Navigate to home route and set category
               const categoryParam = key === FilesTabs.Home ? '' : `?category=${key}`;
-              navigate(`/${categoryParam}`, { replace: true });
+              navigate(`/knowledge${categoryParam}`, { replace: true });
             }}
             selectable
             selectedKeys={[activeKey]}

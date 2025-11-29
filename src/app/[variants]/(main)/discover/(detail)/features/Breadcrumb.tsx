@@ -3,12 +3,12 @@
 import { CopyButton } from '@lobehub/ui';
 import { Breadcrumb as AntdBreadcrumb } from 'antd';
 import { useTheme } from 'antd-style';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import Link from '@/app/[variants]/(main)/components/Link';
 import { DiscoverTab } from '@/types/discover';
 
 const Breadcrumb = memo<{ identifier: string; tab: DiscoverTab }>(({ tab, identifier }) => {

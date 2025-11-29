@@ -37,6 +37,14 @@
         "standard": "標準"
       }
     },
+    "resolution": {
+      "label": "解析度",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
+    },
     "seed": {
       "label": "種子",
       "random": "隨機種子"

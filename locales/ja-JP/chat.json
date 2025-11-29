@@ -53,6 +53,12 @@
       "desc": "Claude Thinkingメカニズムに基づく制限（<1>詳細はこちら</1>）により、有効にすると過去のメッセージ数制限が自動的に無効になります。",
       "title": "深い思考を有効にする"
     },
+    "imageAspectRatio": {
+      "title": "画像のアスペクト比"
+    },
+    "imageResolution": {
+      "title": "画像の解像度"
+    },
     "reasoningBudgetToken": {
       "title": "思考消費トークン"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "深い思考のスイッチ"
+    },
+    "thinkingLevel": {
+      "title": "思考レベル"
     },
     "title": "モデル拡張機能",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "スクリーンショット",
     "settings": "エクスポート設定",
     "text": "テキスト",
+    "widthMode": {
+      "label": "幅のモード",
+      "narrow": "ナローモード",
+      "wide": "ワイドモード"
+    },
     "withBackground": "背景画像を含む",
     "withFooter": "フッターを含む",
     "withPluginInfo": "プラグイン情報を含む",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "拒否理由を入力すると、エージェントが理解し今後の行動を最適化するのに役立ちます",
       "rejectTitle": "今回のツール呼び出しを拒否",
       "rejectedWithReason": "今回のツール呼び出しは次の理由で拒否されました:{{reason}}",
+      "toolAbort": "このツールの呼び出しはユーザーによってキャンセルされました",
       "toolRejected": "今回のツール呼び出しは拒否されました"
     }
   },

@@ -1,10 +1,13 @@
 import type { ChatModelCard } from '@lobechat/types';
+import { omit } from 'lodash-es';
 import { AiModelType, CHAT_MODEL_IMAGE_GENERATION_PARAMS } from 'model-bank';
 
 // Whitelist for automatic image model generation
 export const IMAGE_GENERATION_MODEL_WHITELIST = [
   'gemini-2.5-flash-image-preview',
   'gemini-2.5-flash-image-preview:free',
+  'gemini-3-pro-image-preview',
+  'gemini-3-pro-image-preview:free',
   // More models can be added in the future
 ] as const;
 
@@ -41,19 +44,18 @@ export async function postProcessModelList(
     const matchingModels = finalModels.filter((model) => model.id.endsWith(whitelistPattern));
 
     for (const model of matchingModels) {
-      // Blacklist: remove unnecessary properties, keep the rest
-      const {
-        files,           // drop
-        functionCall,    // drop
-        reasoning,       // drop
-        search,          // drop
-        imageOutput,     // drop
-        video,           // drop
-        vision,          // drop
-        type: _dropType, // will be overwritten
-        parameters: _dropParams, // will be overwritten
-        ...rest
-      } = model;
+      // Remove unnecessary properties, keep the rest
+      const rest = omit(model, [
+        'files',
+        'functionCall',
+        'reasoning',
+        'search',
+        'imageOutput',
+        'video',
+        'vision',
+        'type',
+        'parameters',
+      ]);
 
       imageModels.push({
         ...rest, // Keep other fields (such as displayName, pricing, enabled, contextWindowTokens, etc.)

@@ -23,7 +23,7 @@ export interface MessageQueryAction {
   /**
    * Manually refresh messages from server
    */
-  refreshMessages: () => Promise<void>;
+  refreshMessages: (sessionId?: string, topicId?: string | null) => Promise<void>;
 
   /**
    * Replace current messages with new data
@@ -32,8 +32,9 @@ export interface MessageQueryAction {
     messages: UIChatMessage[],
     params?: {
       action?: any;
+      operationId?: string;
       sessionId?: string;
-      topicId?: string;
+      topicId?: string | null;
     },
   ) => void;
 
@@ -58,16 +59,30 @@ export const messageQuery: StateCreator<
 > = (set, get) => ({
   // TODO: The mutate should only be called once, but since we haven't merge session and group,
   // we need to call it twice
-  refreshMessages: async () => {
-    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'session']);
-    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'group']);
+  refreshMessages: async (sessionId?: string, topicId?: string | null) => {
+    const sid = sessionId ?? get().activeId;
+    const tid = topicId !== undefined ? topicId : get().activeTopicId;
+    await mutate([SWR_USE_FETCH_MESSAGES, sid, tid, 'session']);
+    await mutate([SWR_USE_FETCH_MESSAGES, sid, tid, 'group']);
   },
 
   replaceMessages: (messages, params) => {
-    const messagesKey = messageMapKey(
-      params?.sessionId ?? get().activeId,
-      params?.topicId ?? get().activeTopicId,
-    );
+    let sessionId: string;
+    let topicId: string | null | undefined;
+
+    // Priority 1: Get context from operation if operationId is provided
+    if (params?.operationId) {
+      const { sessionId: opSessionId, topicId: opTopicId } =
+        get().internal_getSessionContext(params);
+      sessionId = opSessionId;
+      topicId = opTopicId;
+    } else {
+      // Priority 2: Use explicit sessionId/topicId or fallback to global state
+      sessionId = params?.sessionId ?? get().activeId;
+      topicId = params?.topicId ?? get().activeTopicId;
+    }
+
+    const messagesKey = messageMapKey(sessionId, topicId);
 
     // Get raw messages from dbMessagesMap and apply reducer
     const nextDbMap = { ...get().dbMessagesMap, [messagesKey]: messages };

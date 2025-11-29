@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { LOADING_FLAT } from '@lobechat/const';
 import {
   GroupMemberInfo,
   buildGroupChatSystemPrompt,
@@ -14,7 +15,6 @@ import {
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOADING_FLAT } from '@/const/message';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -602,8 +602,6 @@ export const chatAiGroupChat: StateCreator<
         refreshMessages,
         activeTopicId,
         internal_dispatchMessage,
-        internal_toggleChatLoading,
-        triggerToolCalls,
       } = get();
 
       try {
@@ -710,30 +708,14 @@ export const chatAiGroupChat: StateCreator<
         const messagesForAPI = [systemMessage, ...messagesWithAuthors];
 
         if (assistantId) {
-          const { isFunctionCall } = await internal_fetchAIChatMessage({
-            messages: messagesForAPI,
+          await internal_fetchAIChatMessage({
             messageId: assistantId,
+            messages: messagesForAPI,
             model: agentModel,
             provider: agentProvider,
-            params: {
-              traceId: `group-${groupId}-agent-${agentId}`,
-              agentConfig: agentData,
-            },
+            agentConfig: agentData,
+            traceId: `group-${groupId}-agent-${agentId}`,
           });
-
-          // Handle tool calling in group chat like single chat
-          if (isFunctionCall) {
-            get().internal_toggleMessageInToolsCalling(true, assistantId);
-            await refreshMessages();
-            await triggerToolCalls(assistantId, {
-              threadId: undefined,
-              inPortalThread: false,
-            });
-            // Change: if an agent message is a tool call, make the same agent speak again
-            // instead of asking supervisor for a decision.
-            await get().internal_processAgentMessage(groupId, agentId, targetId, instruction);
-            return;
-          }
         }
 
         await refreshMessages();
@@ -770,8 +752,6 @@ export const chatAiGroupChat: StateCreator<
             },
           });
         }
-      } finally {
-        internal_toggleChatLoading(false, undefined, n('processAgentMessage(end)'));
       }
     },
 

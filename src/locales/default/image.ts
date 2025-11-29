@@ -37,6 +37,14 @@ export default {
         standard: '标准',
       },
     },
+    resolution: {
+      label: '分辨率',
+      options: {
+        '1K': '1K',
+        '2K': '2K',
+        '4K': '4K',
+      },
+    },
     seed: {
       label: '种子',
       random: '随机种子',

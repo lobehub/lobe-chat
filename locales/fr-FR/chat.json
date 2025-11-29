@@ -53,6 +53,12 @@
       "desc": "Basé sur les restrictions du mécanisme Claude Thinking (<1>En savoir plus</1>), une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
       "title": "Activer la réflexion approfondie"
     },
+    "imageAspectRatio": {
+      "title": "Rapport largeur/hauteur de l'image"
+    },
+    "imageResolution": {
+      "title": "Résolution de l'image"
+    },
     "reasoningBudgetToken": {
       "title": "Token de consommation de réflexion"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "Interrupteur de réflexion approfondie"
+    },
+    "thinkingLevel": {
+      "title": "Niveau de réflexion"
     },
     "title": "Fonctionnalités d'extension du modèle",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "Capture d'écran",
     "settings": "Paramètres d'exportation",
     "text": "Texte",
+    "widthMode": {
+      "label": "Mode de largeur",
+      "narrow": "Mode écran étroit",
+      "wide": "Mode écran large"
+    },
     "withBackground": "Avec image de fond",
     "withFooter": "Avec pied de page",
     "withPluginInfo": "Avec informations sur le plugin",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "Saisir une raison de rejet aidera l'agent à comprendre et à améliorer ses actions futures",
       "rejectTitle": "Rejeter cet appel d'outil",
       "rejectedWithReason": "Cet appel d'outil a été rejeté volontairement : {{reason}}",
+      "toolAbort": "L'appel de l'outil a été annulé par l'utilisateur",
       "toolRejected": "Cet appel d'outil a été rejeté volontairement"
     }
   },

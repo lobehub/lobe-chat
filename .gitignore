@@ -103,8 +103,8 @@ vertex-ai-key.json
 .local/
 .claude/
 .mcp.json
-
 CLAUDE.local.md
+.agent/
 
 # MCP tools
 .serena/**
@@ -115,6 +115,4 @@ CLAUDE.local.md
 *.doc*
 *.xls*
 
-prd
-GEMINI.md
 e2e/reports

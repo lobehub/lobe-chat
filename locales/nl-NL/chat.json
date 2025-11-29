@@ -53,6 +53,12 @@
       "desc": "Beperkingen op basis van het Claude Thinking-mechanisme (<1>Lees meer</1>), wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
       "title": "Diepe denkwijze inschakelen"
     },
+    "imageAspectRatio": {
+      "title": "Beeldverhouding"
+    },
+    "imageResolution": {
+      "title": "Beeldresolutie"
+    },
     "reasoningBudgetToken": {
       "title": "Denken verbruik Token"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "Diepdenkschakelaar"
+    },
+    "thinkingLevel": {
+      "title": "Denkniveau"
     },
     "title": "Modeluitbreidingsfunctie",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "Screenshot",
     "settings": "Exportinstellingen",
     "text": "Tekst",
+    "widthMode": {
+      "label": "Breedtemodus",
+      "narrow": "Smalle schermmodus",
+      "wide": "Brede schermmodus"
+    },
     "withBackground": "Met achtergrondafbeelding",
     "withFooter": "Met voettekst",
     "withPluginInfo": "Met plug-in informatie",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "Het opgeven van een reden helpt de agent om toekomstige acties te verbeteren",
       "rejectTitle": "Huidige tooloproep weigeren",
       "rejectedWithReason": "Deze tooloproep is geweigerd met reden: {{reason}}",
+      "toolAbort": "Deze hulpmiddeloproep is door de gebruiker geannuleerd",
       "toolRejected": "Deze tooloproep is geweigerd"
     }
   },

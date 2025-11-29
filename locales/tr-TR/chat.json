@@ -53,6 +53,12 @@
       "desc": "Claude Thinking mekanizmasına dayalı kısıtlamalar (<1>Daha fazla bilgi edinin</1>), açıldığında otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
       "title": "Derin Düşünmeyi Aç"
     },
+    "imageAspectRatio": {
+      "title": "Görüntü En-Boy Oranı"
+    },
+    "imageResolution": {
+      "title": "Görüntü Çözünürlüğü"
+    },
     "reasoningBudgetToken": {
       "title": "Düşünme Tüketim Tokeni"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "Derin Düşünme Anahtarı"
+    },
+    "thinkingLevel": {
+      "title": "Düşünme Seviyesi"
     },
     "title": "Model Genişletme Özellikleri",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "Ekran Görüntüsü",
     "settings": "Ayarlar",
     "text": "Metin",
+    "widthMode": {
+      "label": "Genişlik Modu",
+      "narrow": "Dar Ekran Modu",
+      "wide": "Geniş Ekran Modu"
+    },
     "withBackground": "Arka Plan",
     "withFooter": "Footer",
     "withPluginInfo": "Plugin Bilgileri",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "Reddetme nedenini girmek, Agent'ın anlamasına ve sonraki eylemleri iyileştirmesine yardımcı olur",
       "rejectTitle": "Bu Araç Çağrısını Reddet",
       "rejectedWithReason": "Bu araç çağrısı şu nedenle reddedildi: {{reason}}",
+      "toolAbort": "Bu araç çağrısı kullanıcı tarafından iptal edildi",
       "toolRejected": "Bu araç çağrısı kullanıcı tarafından reddedildi"
     }
   },

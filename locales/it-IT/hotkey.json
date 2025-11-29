@@ -7,6 +7,10 @@
     "desc": "Cancella i messaggi e i file caricati della conversazione attuale",
     "title": "Cancella messaggi della conversazione"
   },
+  "commandPalette": {
+    "desc": "Apri il pannello comandi globale per accedere rapidamente alle funzioni",
+    "title": "Pannello comandi"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "Elimina l'ultimo messaggio e rigeneralo",
     "title": "Elimina e rigenera"

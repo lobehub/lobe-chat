@@ -53,6 +53,12 @@
       "desc": "Based on the Claude Thinking mechanism limit (<1>Learn more</1>), enabling this will automatically disable the limit on the number of historical messages.",
       "title": "Enable Deep Thinking"
     },
+    "imageAspectRatio": {
+      "title": "Image Aspect Ratio"
+    },
+    "imageResolution": {
+      "title": "Image Resolution"
+    },
     "reasoningBudgetToken": {
       "title": "Thinking Consumption Token"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "Deep Thinking Switch"
+    },
+    "thinkingLevel": {
+      "title": "Level of Thinking"
     },
     "title": "Model Extension Features",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "Screenshot",
     "settings": "Export Settings",
     "text": "Text",
+    "widthMode": {
+      "label": "Width Mode",
+      "narrow": "Narrow",
+      "wide": "Wide"
+    },
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "Providing a reason will help the Agent understand and improve future actions",
       "rejectTitle": "Reject This Tool Invocation",
       "rejectedWithReason": "This tool invocation was actively rejected: {{reason}}",
+      "toolAbort": "This tool invocation was canceled by the user",
       "toolRejected": "This tool invocation was actively rejected"
     }
   },

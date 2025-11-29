@@ -16,10 +16,6 @@ export interface ChatMessageState {
    */
   activeSessionType?: 'agent' | 'group';
   /**
-   * is the message is continuing generation (used for disable continue button)
-   */
-  continuingIds: string[];
-  /**
    * Raw messages from database (flat structure)
    */
   dbMessagesMap: Record<string, UIChatMessage[]>;
@@ -53,10 +49,6 @@ export interface ChatMessageState {
    */
   messagesMap: Record<string, UIChatMessage[]>;
   /**
-   * is the message is regenerating (used for disable regenerate button)
-   */
-  regeneratingIds: string[];
-  /**
    * Supervisor decision debounce timers by group ID
    */
   supervisorDebounceTimers: Record<string, number>;
@@ -77,7 +69,6 @@ export interface ChatMessageState {
 export const initialMessageState: ChatMessageState = {
   activeId: 'inbox',
   activeSessionType: undefined,
-  continuingIds: [],
   dbMessagesMap: {},
   groupAgentMaps: {},
   groupMaps: {},
@@ -87,7 +78,6 @@ export const initialMessageState: ChatMessageState = {
   messageLoadingIds: [],
   messagesInit: false,
   messagesMap: {},
-  regeneratingIds: [],
   supervisorDebounceTimers: {},
   supervisorDecisionAbortControllers: {},
   supervisorDecisionLoading: [],

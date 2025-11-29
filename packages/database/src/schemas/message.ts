@@ -36,25 +36,25 @@ export const messageGroups = pgTable(
       .$defaultFn(() => idGenerator('messageGroups'))
       .notNull(),
 
-    // 关联关系 - 只需要 topic 层级
+    // Association - only needs topic level
     topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }),
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
 
-    // 支持嵌套结构
+    // Support nested structure
     // @ts-ignore
     parentGroupId: varchar255('parent_group_id').references(() => messageGroups.id, {
       onDelete: 'cascade',
     }),
 
-    // 关联的用户消息
+    // Associated user message
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     parentMessageId: text('parent_message_id').references(() => messages.id, {
       onDelete: 'cascade',
     }),
 
-    // 元数据
+    // Metadata
     title: varchar255('title'),
     description: text('description'),
 

@@ -75,6 +75,14 @@ export interface ChatStreamPayload {
    */
   frequency_penalty?: number;
   /**
+   * @title Image aspect ratio for image generation
+   */
+  imageAspectRatio?: string;
+  /**
+   * @title Image resolution for image generation (e.g., '1K', '2K', '4K')
+   */
+  imageResolution?: '1K' | '2K' | '4K';
+  /**
    * @title 生成文本的最大长度
    */
   max_tokens?: number;
@@ -124,6 +132,10 @@ export interface ChatStreamPayload {
     type: 'enabled' | 'disabled';
   };
   thinkingBudget?: number;
+  /**
+   * Thinking level for Gemini models (e.g., gemini-3.0-pro)
+   */
+  thinkingLevel?: 'low' | 'high';
   tool_choice?: string;
   tools?: ChatCompletionTool[];
   /**

@@ -1,12 +1,12 @@
-import { PropsWithChildren } from 'react';
 
 import NProgress from '@/components/NProgress';
+import { Outlet } from 'react-router-dom';
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = () => {
   return (
     <>
       <NProgress />
-      {children}
+      <Outlet />
     </>
   );
 };
