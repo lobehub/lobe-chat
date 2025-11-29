@@ -412,7 +412,7 @@ export const chatAiGroupChat: StateCreator<
       };
 
       const messages =
-        messagesMap[messageMapKey({ sessionId: groupId, topicId: currentTopicId })] || [];
+        messagesMap[messageMapKey({ agentId: groupId, topicId: currentTopicId })] || [];
       const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
 
       if (messages.length === 0) return;
@@ -449,7 +449,7 @@ export const chatAiGroupChat: StateCreator<
       const realUserName = userProfileSelectors.nickName(userStoreState) || 'User';
 
       try {
-        const todoKey = messageMapKey({ sessionId: groupId, topicId: currentTopicId });
+        const todoKey = messageMapKey({ agentId: groupId, topicId: currentTopicId });
 
         const context: SupervisorContext = {
           allowDM: groupConfig.allowDM,
@@ -607,7 +607,7 @@ export const chatAiGroupChat: StateCreator<
 
       try {
         const allMessages =
-          messagesMap[messageMapKey({ sessionId: groupId, topicId: activeTopicId })] || [];
+          messagesMap[messageMapKey({ agentId: groupId, topicId: activeTopicId })] || [];
         if (allMessages.length === 0) return;
 
         // Filter messages for this specific agent based on DM targeting rules
@@ -737,7 +737,7 @@ export const chatAiGroupChat: StateCreator<
 
         // Also update error state if we have an assistant message (for consistency with single chat)
         const currentMessages =
-          get().messagesMap[messageMapKey({ sessionId: groupId, topicId: activeTopicId })] || [];
+          get().messagesMap[messageMapKey({ agentId: groupId, topicId: activeTopicId })] || [];
         const errorMessage = currentMessages.find(
           (m) => m.role === 'assistant' && m.agentId === agentId && m.content === LOADING_FLAT,
         );
@@ -907,7 +907,7 @@ export const chatAiGroupChat: StateCreator<
     internal_updateSupervisorTodos: (groupId, topicId, todos) => {
       if (!groupId) return;
 
-      const key = messageMapKey({ sessionId: groupId, topicId });
+      const key = messageMapKey({ agentId: groupId, topicId });
 
       set(
         produce((state: ChatStoreState) => {

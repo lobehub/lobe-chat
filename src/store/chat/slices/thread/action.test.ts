@@ -212,7 +212,7 @@ describe('thread action', () => {
           message: {
             content: 'test message',
             role: 'user',
-            sessionId: 'test-session-id',
+            agentId: 'test-session-id',
           },
           sourceMessageId: 'source-msg-id',
           topicId: 'test-topic-id',
@@ -224,7 +224,7 @@ describe('thread action', () => {
         message: {
           content: 'test message',
           role: 'user',
-          sessionId: 'test-session-id',
+          agentId: 'test-session-id',
         },
         sourceMessageId: 'source-msg-id',
         topicId: 'test-topic-id',
@@ -244,7 +244,7 @@ describe('thread action', () => {
 
       await act(async () => {
         await result.current.createThread({
-          message: { content: 'test', role: 'user', sessionId: 'test-session-id' },
+          message: { content: 'test', role: 'user', agentId: 'test-session-id' },
           sourceMessageId: 'source-msg-id',
           topicId: 'test-topic-id',
           type: ThreadType.Continuation,
@@ -432,7 +432,7 @@ describe('thread action', () => {
           id: 'msg-1',
           meta: {},
           role: 'user',
-          sessionId: 'test-session-id',
+          agentId: 'test-session-id',
           updatedAt: Date.now(),
         },
       ];
@@ -632,7 +632,7 @@ describe('thread action', () => {
           expect.objectContaining({
             message: 'test message',
             context: expect.objectContaining({
-              sessionId: 'test-session-id',
+              agentId: 'test-session-id',
               topicId: 'test-topic-id',
               newThread: {
                 sourceMessageId: 'source-msg-id',
@@ -667,14 +667,14 @@ describe('thread action', () => {
         act(() => {
           useChatStore.setState({
             messagesMap: {
-              [messageMapKey({ sessionId: 'test-session-id', topicId: 'test-topic-id' })]: [
+              [messageMapKey({ agentId: 'test-session-id', topicId: 'test-topic-id' })]: [
                 {
                   content: 'test',
                   createdAt: Date.now(),
                   id: 'msg-1',
                   meta: {},
                   role: 'user',
-                  sessionId: 'test-session-id',
+                  agentId: 'test-session-id',
                   updatedAt: Date.now(),
                 },
               ],
@@ -739,7 +739,7 @@ describe('thread action', () => {
           expect.objectContaining({
             message: 'follow-up message',
             context: expect.objectContaining({
-              sessionId: 'test-session-id',
+              agentId: 'test-session-id',
               topicId: 'test-topic-id',
               threadId: 'existing-thread-id',
             }),

@@ -23,7 +23,7 @@ const createMockState = (overrides: Partial<State> = {}): State => ({
 
   // Core state
   context: {
-    sessionId: 'session-1',
+    agentId: 'session-1',
     topicId: null,
     threadId: null,
   },
@@ -41,7 +41,7 @@ describe('conversationSelectors', () => {
       it('should return the full context', () => {
         const store = createMockState({
           context: {
-            sessionId: 'session-1',
+            agentId: 'session-1',
             topicId: 'topic-1',
             threadId: 'thread-1',
           },
@@ -50,7 +50,7 @@ describe('conversationSelectors', () => {
         const result = conversationSelectors.context(store);
 
         expect(result).toEqual({
-          sessionId: 'session-1',
+          agentId: 'session-1',
           topicId: 'topic-1',
           threadId: 'thread-1',
         });
@@ -60,17 +60,17 @@ describe('conversationSelectors', () => {
     describe('sessionId', () => {
       it('should return sessionId from context', () => {
         const store = createMockState({
-          context: { sessionId: 'my-session', topicId: null, threadId: null },
+          context: { agentId: 'my-session', topicId: null, threadId: null },
         });
 
-        expect(conversationSelectors.sessionId(store)).toBe('my-session');
+        expect(conversationSelectors.agentId(store)).toBe('my-session');
       });
     });
 
     describe('topicId', () => {
       it('should return topicId when set', () => {
         const store = createMockState({
-          context: { sessionId: 'session-1', topicId: 'topic-123', threadId: null },
+          context: { agentId: 'session-1', topicId: 'topic-123', threadId: null },
         });
 
         expect(conversationSelectors.topicId(store)).toBe('topic-123');
@@ -78,7 +78,7 @@ describe('conversationSelectors', () => {
 
       it('should return null when topicId is not set', () => {
         const store = createMockState({
-          context: { sessionId: 'session-1', topicId: null, threadId: null },
+          context: { agentId: 'session-1', topicId: null, threadId: null },
         });
 
         expect(conversationSelectors.topicId(store)).toBeNull();
@@ -88,7 +88,7 @@ describe('conversationSelectors', () => {
     describe('threadId', () => {
       it('should return threadId when set', () => {
         const store = createMockState({
-          context: { sessionId: 'session-1', topicId: 'topic-1', threadId: 'thread-456' },
+          context: { agentId: 'session-1', topicId: 'topic-1', threadId: 'thread-456' },
         });
 
         expect(conversationSelectors.threadId(store)).toBe('thread-456');
@@ -96,7 +96,7 @@ describe('conversationSelectors', () => {
 
       it('should return null when threadId is not set', () => {
         const store = createMockState({
-          context: { sessionId: 'session-1', topicId: null, threadId: null },
+          context: { agentId: 'session-1', topicId: null, threadId: null },
         });
 
         expect(conversationSelectors.threadId(store)).toBeNull();
@@ -106,7 +106,7 @@ describe('conversationSelectors', () => {
     describe('isThread', () => {
       it('should return true when threadId is set', () => {
         const store = createMockState({
-          context: { sessionId: 'session-1', topicId: 'topic-1', threadId: 'thread-1' },
+          context: { agentId: 'session-1', topicId: 'topic-1', threadId: 'thread-1' },
         });
 
         expect(conversationSelectors.isThread(store)).toBe(true);
@@ -114,7 +114,7 @@ describe('conversationSelectors', () => {
 
       it('should return false when threadId is null', () => {
         const store = createMockState({
-          context: { sessionId: 'session-1', topicId: 'topic-1', threadId: null },
+          context: { agentId: 'session-1', topicId: 'topic-1', threadId: null },
         });
 
         expect(conversationSelectors.isThread(store)).toBe(false);
@@ -124,7 +124,7 @@ describe('conversationSelectors', () => {
     describe('isTopic', () => {
       it('should return true when topicId is set', () => {
         const store = createMockState({
-          context: { sessionId: 'session-1', topicId: 'topic-1', threadId: null },
+          context: { agentId: 'session-1', topicId: 'topic-1', threadId: null },
         });
 
         expect(conversationSelectors.isTopic(store)).toBe(true);
@@ -132,7 +132,7 @@ describe('conversationSelectors', () => {
 
       it('should return false when topicId is null', () => {
         const store = createMockState({
-          context: { sessionId: 'session-1', topicId: null, threadId: null },
+          context: { agentId: 'session-1', topicId: null, threadId: null },
         });
 
         expect(conversationSelectors.isTopic(store)).toBe(false);

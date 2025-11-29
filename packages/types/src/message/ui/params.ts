@@ -20,7 +20,7 @@ export interface CreateMessageParams
   provider?: string;
   groupId?: string;
   role: CreateMessageRoleType;
-  sessionId: string;
+  sessionId?: string;
   targetId?: string | null;
   threadId?: string | null;
   topicId?: string;

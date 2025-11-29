@@ -18,7 +18,7 @@ const getCurrentContextOperations = (s: ChatStoreState): Operation[] => {
   const { activeId, activeTopicId } = s;
   if (!activeId) return [];
 
-  const contextKey = messageMapKey({ sessionId: activeId, topicId: activeTopicId });
+  const contextKey = messageMapKey({ agentId: activeId, topicId: activeTopicId });
   const operationIds = s.operationsByContext[contextKey] || [];
   return operationIds.map((id) => s.operations[id]).filter(Boolean);
 };
@@ -164,13 +164,13 @@ const getCurrentOperationProgress = (s: ChatStoreState): number | undefined => {
 };
 
 /**
- * Get operations by context (sessionId, topicId, threadId)
+ * Get operations by context (agentId, topicId, threadId)
  * Useful for filtering operations for a specific conversation context
  */
 const getOperationsByContext =
-  (context: { sessionId: string; threadId?: string | null; topicId?: string | null }) =>
+  (context: { agentId: string; threadId?: string | null; topicId?: string | null }) =>
   (s: ChatStoreState): Operation[] => {
-    const contextKey = messageMapKey({ sessionId: context.sessionId, topicId: context.topicId });
+    const contextKey = messageMapKey({ agentId: context.agentId, topicId: context.topicId });
     const operationIds = s.operationsByContext[contextKey] || [];
     return operationIds
       .map((id) => s.operations[id])
@@ -188,7 +188,7 @@ const getOperationsByContext =
  * Use this for loading states in components that display a specific conversation
  */
 const hasRunningOperationByContext =
-  (context: { sessionId: string; threadId?: string | null; topicId?: string | null }) =>
+  (context: { agentId: string; threadId?: string | null; topicId?: string | null }) =>
   (s: ChatStoreState): boolean => {
     const operations = getOperationsByContext(context)(s);
     return operations.some((op) => op.status === 'running' && !op.metadata.isAborting);
@@ -199,7 +199,7 @@ const hasRunningOperationByContext =
  * More specific than hasRunningOperationByContext - only checks execAgentRuntime operations
  */
 const isAgentRuntimeRunningByContext =
-  (context: { sessionId: string; threadId?: string | null; topicId?: string | null }) =>
+  (context: { agentId: string; threadId?: string | null; topicId?: string | null }) =>
   (s: ChatStoreState): boolean => {
     const operations = getOperationsByContext(context)(s);
     return operations.some(

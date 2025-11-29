@@ -98,7 +98,7 @@ export const pluginOptimisticUpdate: StateCreator<
     const ctx = internal_getSessionContext(context);
 
     const result = await messageService.updateMessagePluginState(id, value, {
-      sessionId: ctx.sessionId,
+      sessionId: ctx.agentId,
       topicId: ctx.topicId,
     });
 
@@ -172,7 +172,7 @@ export const pluginOptimisticUpdate: StateCreator<
     const ctx = internal_getSessionContext(context);
 
     const result = await messageService.updateMessagePlugin(id, value, {
-      sessionId: ctx.sessionId,
+      sessionId: ctx.agentId,
       topicId: ctx.topicId,
     });
 
@@ -221,7 +221,7 @@ export const pluginOptimisticUpdate: StateCreator<
     const result = await messageService.updateMessage(
       id,
       { error },
-      { sessionId: ctx.sessionId, topicId: ctx.topicId },
+      { sessionId: ctx.agentId, topicId: ctx.topicId },
     );
     if (result?.success && result.messages) {
       replaceMessages(result.messages, { context: ctx });
@@ -241,7 +241,7 @@ export const pluginOptimisticUpdate: StateCreator<
     const result = await messageService.updateMessage(
       id,
       { tools: message.tools },
-      { sessionId: ctx.sessionId, topicId: ctx.topicId },
+      { sessionId: ctx.agentId, topicId: ctx.topicId },
     );
     internal_toggleMessageLoading(false, id);
 

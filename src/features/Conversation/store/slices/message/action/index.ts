@@ -15,11 +15,6 @@ import { type MessageStateAction, messageStateSlice } from './state';
  */
 export interface MessageAction extends MessageCRUDAction, MessageStateAction {
   /**
-   * Send a message in this conversation (unified Main + Thread)
-   */
-  sendMessage: ReturnType<typeof sendMessage>;
-
-  /**
    * Add an AI message (convenience method)
    */
   addAIMessage: (content: string) => Promise<string | undefined>;
@@ -27,7 +22,12 @@ export interface MessageAction extends MessageCRUDAction, MessageStateAction {
   /**
    * Add a user message (convenience method)
    */
-  addUserMessage: (params: { message: string; fileList?: string[] }) => Promise<string | undefined>;
+  addUserMessage: (params: { fileList?: string[]; message: string }) => Promise<string | undefined>;
+
+  /**
+   * Send a message in this conversation (unified Main + Thread)
+   */
+  sendMessage: ReturnType<typeof sendMessage>;
 }
 
 export const messageSlice: StateCreator<
@@ -42,26 +42,23 @@ export const messageSlice: StateCreator<
   // Spread state actions
   ...messageStateSlice(set, get, ...rest),
 
-  // Send message
-  sendMessage: sendMessage(set, get),
-
   // Convenience methods
   addAIMessage: async (content: string) => {
     const state = get();
     const { context, hooks } = state;
-    const { sessionId, topicId, threadId } = context;
+    const { agentId, topicId, threadId } = context;
 
     // Get parent message ID
     const displayMessages = state.displayMessages;
     const parentId = displayMessages.length > 0 ? displayMessages.at(-1)?.id : undefined;
 
     const id = await state.createMessage({
+      agentId: agentId,
       content,
-      role: 'assistant',
-      sessionId,
-      topicId: topicId ?? undefined,
-      threadId: threadId ?? undefined,
       parentId,
+      role: 'assistant',
+      threadId: threadId ?? undefined,
+      topicId: topicId ?? undefined,
     });
 
     if (id) {
@@ -83,7 +80,7 @@ export const messageSlice: StateCreator<
   addUserMessage: async ({ message, fileList }) => {
     const state = get();
     const { context, hooks } = state;
-    const { sessionId, topicId, threadId } = context;
+    const { agentId, topicId, threadId } = context;
 
     // Get parent message ID
     const displayMessages = state.displayMessages;
@@ -92,11 +89,11 @@ export const messageSlice: StateCreator<
     const id = await state.createMessage({
       content: message,
       files: fileList,
-      role: 'user',
-      sessionId,
-      topicId: topicId ?? undefined,
-      threadId: threadId ?? undefined,
       parentId,
+      role: 'user',
+      sessionId: agentId,
+      threadId: threadId ?? undefined,
+      topicId: topicId ?? undefined,
     });
 
     if (id) {
@@ -114,4 +111,7 @@ export const messageSlice: StateCreator<
 
     return id;
   },
+
+  // Send message
+  sendMessage: sendMessage(set, get),
 });

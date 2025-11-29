@@ -66,7 +66,7 @@ export const messageInternals: StateCreator<
       );
     }
 
-    const messagesKey = messageMapKey({ sessionId, topicId });
+    const messagesKey = messageMapKey({ agentId: sessionId, topicId });
 
     // Get raw messages from dbMessagesMap and apply reducer
     const rawMessages = get().dbMessagesMap[messagesKey] || [];

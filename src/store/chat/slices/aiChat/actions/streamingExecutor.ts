@@ -806,7 +806,7 @@ export const streamingExecutor: StateCreator<
     const { activeId, activeTopicId } = get();
     const sessionId = paramSessionId ?? activeId;
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
-    const messageKey = messageMapKey({ sessionId, topicId, threadId });
+    const messageKey = messageMapKey({ agentId: sessionId, topicId, threadId });
 
     // Create or use provided operation
     let operationId = params.operationId;
@@ -814,7 +814,7 @@ export const streamingExecutor: StateCreator<
       const { operationId: newOperationId } = get().startOperation({
         type: 'execAgentRuntime',
         context: {
-          sessionId,
+          agentId: sessionId,
           topicId,
           messageId: parentMessageId,
           threadId,

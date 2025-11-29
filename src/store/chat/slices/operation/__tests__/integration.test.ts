@@ -84,7 +84,7 @@ describe('Operation Management Integration Tests', () => {
       act(() => {
         const res = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'test-session' },
+          context: { agentId: 'test-session' },
         });
         operationId = res.operationId;
         abortController = res.abortController;
@@ -111,7 +111,7 @@ describe('Operation Management Integration Tests', () => {
       act(() => {
         const { operationId } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'test-session', topicId: 'test-topic' },
+          context: { agentId: 'test-session', topicId: 'test-topic' },
         });
         parentOpId = operationId;
       });
@@ -147,7 +147,7 @@ describe('Operation Management Integration Tests', () => {
       act(() => {
         const { operationId } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'test-session' },
+          context: { agentId: 'test-session' },
         });
         parentOpId = operationId;
       });
@@ -189,7 +189,7 @@ describe('Operation Management Integration Tests', () => {
       act(() => {
         const { operationId } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1', topicId: 'topic-a' },
+          context: { agentId: 'session-1', topicId: 'topic-a' },
         });
         opIdTopicA = operationId;
       });
@@ -204,7 +204,7 @@ describe('Operation Management Integration Tests', () => {
       act(() => {
         const { operationId } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1', topicId: 'topic-b' },
+          context: { agentId: 'session-1', topicId: 'topic-b' },
         });
         opIdTopicB = operationId;
       });
@@ -217,8 +217,8 @@ describe('Operation Management Integration Tests', () => {
       expect(opB.context.topicId).toBe('topic-b');
 
       // Get operations by context
-      const contextA = messageMapKey({ sessionId: 'session-1', topicId: 'topic-a' });
-      const contextB = messageMapKey({ sessionId: 'session-1', topicId: 'topic-b' });
+      const contextA = messageMapKey({ agentId: 'session-1', topicId: 'topic-a' });
+      const contextB = messageMapKey({ agentId: 'session-1', topicId: 'topic-b' });
 
       const opsInA = result.current.operationsByContext[contextA] || [];
       const opsInB = result.current.operationsByContext[contextB] || [];
@@ -241,7 +241,7 @@ describe('Operation Management Integration Tests', () => {
         for (let i = 0; i < 5; i++) {
           const { operationId } = result.current.startOperation({
             type: i % 2 === 0 ? 'execAgentRuntime' : 'toolCalling',
-            context: { sessionId: 'session-1', messageId: `msg-${i}` },
+            context: { agentId: 'session-1', messageId: `msg-${i}` },
           });
           opIds.push(operationId);
         }
@@ -277,7 +277,7 @@ describe('Operation Management Integration Tests', () => {
       act(() => {
         const { operationId } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1' },
+          context: { agentId: 'session-1' },
         });
         oldOpId = operationId;
       });
@@ -306,7 +306,7 @@ describe('Operation Management Integration Tests', () => {
       act(() => {
         const { operationId } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1' },
+          context: { agentId: 'session-1' },
         });
         recentOpId = operationId;
       });

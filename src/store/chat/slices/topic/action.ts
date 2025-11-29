@@ -61,7 +61,7 @@ export interface ChatTopicAction {
     },
   ) => SWRResponse<ChatTopic[]>;
   useSearchTopics: (
-    keywords?: string,
+    keywords: string | undefined,
     params: {
       agentId?: string;
       groupId?: string;
@@ -144,9 +144,8 @@ export const chatTopic: StateCreator<
       if (isGroupSession) {
         set(
           produce((state: ChatStoreState) => {
-            state.supervisorTodos[
-              messageMapKey({ sessionId: groupId || activeId, topicId: null })
-            ] = [];
+            state.supervisorTodos[messageMapKey({ agentId: groupId || activeId, topicId: null })] =
+              [];
           }),
           false,
           n('resetSupervisorTodosOnSaveToTopic', { groupId: groupId || activeId }),
@@ -293,7 +292,7 @@ export const chatTopic: StateCreator<
       }
 
       if (isGroupSession) {
-        const newKey = messageMapKey({ sessionId: activeId, topicId: id ?? null });
+        const newKey = messageMapKey({ agentId: activeId, topicId: id ?? null });
         set(
           produce((state: ChatStoreState) => {
             state.supervisorTodos[newKey] = [];

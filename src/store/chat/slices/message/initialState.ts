@@ -67,6 +67,7 @@ export interface ChatMessageState {
 }
 
 export const initialMessageState: ChatMessageState = {
+  activeAgentId: 'inbox',
   activeId: 'inbox',
   activeSessionType: undefined,
   dbMessagesMap: {},

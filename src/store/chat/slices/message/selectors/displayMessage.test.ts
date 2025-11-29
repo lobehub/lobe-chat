@@ -109,7 +109,7 @@ const mockedChats = [
 
 const mockChatStore = {
   messagesMap: {
-    [messageMapKey({ sessionId: 'abc' })]: mockMessages,
+    [messageMapKey({ agentId: 'abc' })]: mockMessages,
   },
   activeId: 'abc',
 } as ChatStore;
@@ -136,7 +136,7 @@ describe('displayMessageSelectors', () => {
     it('should return the message object with the matching id', () => {
       const state = merge(initialStore, {
         messagesMap: {
-          [messageMapKey({ sessionId: 'abc' })]: mockMessages,
+          [messageMapKey({ agentId: 'abc' })]: mockMessages,
         },
         activeId: 'abc',
       });
@@ -159,7 +159,7 @@ describe('displayMessageSelectors', () => {
     it('should slice the messages according to the current agent config', () => {
       const state = merge(initialStore, {
         messagesMap: {
-          [messageMapKey({ sessionId: 'abc' })]: mockMessages,
+          [messageMapKey({ agentId: 'abc' })]: mockMessages,
         },
         activeId: 'abc',
       });
@@ -172,7 +172,7 @@ describe('displayMessageSelectors', () => {
     it('should slice the messages according to config, assuming historyCount is mocked to 2', async () => {
       const state = merge(initialStore, {
         messagesMap: {
-          [messageMapKey({ sessionId: 'abc' })]: mockMessages,
+          [messageMapKey({ agentId: 'abc' })]: mockMessages,
         },
         activeId: 'abc',
       });
@@ -233,7 +233,7 @@ describe('displayMessageSelectors', () => {
       // Prepare a state with a few messages
       const state = merge(initialStore, {
         messagesMap: {
-          [messageMapKey({ sessionId: 'active-session' })]: mockMessages,
+          [messageMapKey({ agentId: 'active-session' })]: mockMessages,
         },
         activeId: 'active-session',
       });
@@ -258,7 +258,7 @@ describe('displayMessageSelectors', () => {
       // Prepare a state with a few messages
       const state = merge(initialStore, {
         messagesMap: {
-          [messageMapKey({ sessionId: 'active-session' })]: mockReasoningMessages,
+          [messageMapKey({ agentId: 'active-session' })]: mockReasoningMessages,
         },
         activeId: 'active-session',
       });
@@ -285,7 +285,7 @@ describe('displayMessageSelectors', () => {
       const state = merge(initialStore, {
         activeId: INBOX_SESSION_ID,
         messagesMap: {
-          [messageMapKey({ sessionId: 'inbox' })]: mockMessages,
+          [messageMapKey({ agentId: 'inbox' })]: mockMessages,
         },
       });
       const result = displayMessageSelectors.showInboxWelcome(state);
@@ -309,7 +309,7 @@ describe('displayMessageSelectors', () => {
         activeTopicId: undefined,
       };
       const result = displayMessageSelectors.currentDisplayChatKey(state as ChatStore);
-      expect(result).toBe(messageMapKey({ sessionId: 'testId', topicId: undefined }));
+      expect(result).toBe(messageMapKey({ agentId: 'testId', topicId: undefined }));
     });
 
     it('should generate correct key with both activeId and activeTopicId', () => {
@@ -318,7 +318,7 @@ describe('displayMessageSelectors', () => {
         activeTopicId: 'topicId',
       };
       const result = displayMessageSelectors.currentDisplayChatKey(state as ChatStore);
-      expect(result).toBe(messageMapKey({ sessionId: 'testId', topicId: 'topicId' }));
+      expect(result).toBe(messageMapKey({ agentId: 'testId', topicId: 'topicId' }));
     });
 
     it('should generate key with undefined activeId', () => {
@@ -327,7 +327,7 @@ describe('displayMessageSelectors', () => {
         activeTopicId: 'topicId',
       };
       const result = displayMessageSelectors.currentDisplayChatKey(state as ChatStore);
-      expect(result).toBe(messageMapKey({ sessionId: undefined as any, topicId: 'topicId' }));
+      expect(result).toBe(messageMapKey({ agentId: undefined as any, topicId: 'topicId' }));
     });
 
     it('should generate key with empty string activeId', () => {
@@ -336,7 +336,7 @@ describe('displayMessageSelectors', () => {
         activeTopicId: undefined,
       };
       const result = displayMessageSelectors.currentDisplayChatKey(state as ChatStore);
-      expect(result).toBe(messageMapKey({ sessionId: '', topicId: undefined }));
+      expect(result).toBe(messageMapKey({ agentId: '', topicId: undefined }));
     });
   });
 
@@ -354,7 +354,7 @@ describe('displayMessageSelectors', () => {
 
       const state = merge(initialStore, {
         messagesMap: {
-          [messageMapKey({ sessionId: 'group-123' })]: groupChatMessages,
+          [messageMapKey({ agentId: 'group-123' })]: groupChatMessages,
         },
         activeId: 'group-123',
       });
@@ -401,7 +401,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [groupMessage],
+          [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
       };
 
@@ -442,7 +442,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [groupMessage],
+          [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
       };
 
@@ -482,7 +482,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [groupMessage],
+          [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
       };
 
@@ -504,7 +504,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [assistantMessage],
+          [messageMapKey({ agentId: 'test-id' })]: [assistantMessage],
         },
       };
 
@@ -525,7 +525,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [groupMessage],
+          [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
       };
 
@@ -546,7 +546,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [groupMessage],
+          [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
       };
 
@@ -594,7 +594,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [groupMessage],
+          [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
       };
 
@@ -621,7 +621,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [groupMessage],
+          [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
       };
 
@@ -636,7 +636,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [],
+          [messageMapKey({ agentId: 'test-id' })]: [],
         },
       };
 
@@ -658,7 +658,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [message],
+          [messageMapKey({ agentId: 'test-id' })]: [message],
         },
       };
 
@@ -686,7 +686,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [groupMessage],
+          [messageMapKey({ agentId: 'test-id' })]: [groupMessage],
         },
       };
 
@@ -722,7 +722,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [messageWithTools],
+          [messageMapKey({ agentId: 'test-id' })]: [messageWithTools],
         },
       };
 
@@ -758,7 +758,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [message],
+          [messageMapKey({ agentId: 'test-id' })]: [message],
         },
       };
 
@@ -770,7 +770,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [],
+          [messageMapKey({ agentId: 'test-id' })]: [],
         },
       };
 
@@ -808,7 +808,7 @@ describe('displayMessageSelectors', () => {
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
         messagesMap: {
-          [messageMapKey({ sessionId: 'test-id' })]: [messageWithChildrenAndTools],
+          [messageMapKey({ agentId: 'test-id' })]: [messageWithChildrenAndTools],
         },
       };
 

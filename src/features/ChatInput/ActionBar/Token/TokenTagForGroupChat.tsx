@@ -52,8 +52,7 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
   const groupConfig = useChatGroupStore(chatGroupSelectors.currentGroupConfig);
   const supervisorTodos = useChatStore((s) =>
     activeSessionId
-      ? s.supervisorTodos[messageMapKey({ sessionId: activeSessionId, topicId: activeTopicId })] ||
-        []
+      ? s.supervisorTodos[messageMapKey({ agentId: activeSessionId, topicId: activeTopicId })] || []
       : [],
   );
 

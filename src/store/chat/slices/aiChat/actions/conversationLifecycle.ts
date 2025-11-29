@@ -97,7 +97,7 @@ export const conversationLifecycle: StateCreator<
     const { internal_execAgentRuntime, mainInputEditor } = get();
 
     // Use context from params (required)
-    const sessionId = context.sessionId;
+    const sessionId = context.agentId;
     const topicId = context.topicId ?? undefined;
     // If newThread is provided, threadId will be created by server
     // If threadId is provided, use it directly
@@ -251,7 +251,7 @@ export const conversationLifecycle: StateCreator<
       }
 
       get().replaceMessages(data.messages, {
-        context: { sessionId, topicId: finalTopicId, threadId: finalThreadId },
+        context: { agentId: sessionId, topicId: finalTopicId, threadId: finalThreadId },
         action: 'sendMessage/serverResponse',
       });
 
@@ -310,7 +310,7 @@ export const conversationLifecycle: StateCreator<
 
       if (topic && !topic.title) {
         const chats = displayMessageSelectors
-          .getDisplayMessagesByKey(messageMapKey({ sessionId, topicId: topic.id }))(get())
+          .getDisplayMessagesByKey(messageMapKey({ agentId: sessionId, topicId: topic.id }))(get())
           .filter((item) => item.id !== data.assistantMessageId);
 
         await get().summaryTopicTitle(topic.id, chats);
@@ -328,7 +328,11 @@ export const conversationLifecycle: StateCreator<
 
     // Get the current messages to generate AI response
     const displayMessages = displayMessageSelectors.getDisplayMessagesByKey(
-      messageMapKey({ sessionId, topicId: data.topicId ?? topicId, threadId: finalThreadId }),
+      messageMapKey({
+        agentId: sessionId,
+        topicId: data.topicId ?? topicId,
+        threadId: finalThreadId,
+      }),
     )(get());
 
     try {

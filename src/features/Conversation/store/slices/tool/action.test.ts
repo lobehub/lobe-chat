@@ -1,8 +1,8 @@
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createStore } from '../../index';
 import type { ConversationContext, ConversationHooks } from '../../../types';
+import { createStore } from '../../index';
 
 // Mock dependencies
 const mockApproveToolCalling = vi.fn();
@@ -68,7 +68,7 @@ describe('Tool Actions', () => {
   describe('approveToolCall', () => {
     it('should approve a tool call', async () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -85,7 +85,7 @@ describe('Tool Actions', () => {
     it('should call onToolApproved hook before approval', async () => {
       const onToolApproved = vi.fn().mockResolvedValue(true);
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -104,7 +104,7 @@ describe('Tool Actions', () => {
     it('should respect onToolApproved hook returning false', async () => {
       const onToolApproved = vi.fn().mockResolvedValue(false);
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -123,7 +123,7 @@ describe('Tool Actions', () => {
     it('should call onToolCallComplete hook after approval', async () => {
       const onToolCallComplete = vi.fn();
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -143,7 +143,7 @@ describe('Tool Actions', () => {
     it('should call onToolRejected hook before rejection', async () => {
       const onToolRejected = vi.fn().mockResolvedValue(true);
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -161,7 +161,7 @@ describe('Tool Actions', () => {
     it('should respect onToolRejected hook returning false', async () => {
       const onToolRejected = vi.fn().mockResolvedValue(false);
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -181,7 +181,7 @@ describe('Tool Actions', () => {
   describe('rejectAndContinueToolCall', () => {
     it('should reject and continue tool call', async () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -199,7 +199,7 @@ describe('Tool Actions', () => {
   describe('switchMessageBranch', () => {
     it('should call updateMessageMetadata with branch index', async () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -216,7 +216,7 @@ describe('Tool Actions', () => {
 
     it('should switch to branch index 0', async () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };

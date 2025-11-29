@@ -245,7 +245,7 @@ describe('ConversationControl actions', () => {
       act(() => {
         const res = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'test-session' },
+          context: { agentId: 'test-session' },
         });
         operationId = res.operationId;
         abortController = res.abortController;
@@ -264,7 +264,7 @@ describe('ConversationControl actions', () => {
       act(() => {
         const res = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'test-session' },
+          context: { agentId: 'test-session' },
         });
         operationId = res.operationId;
 
@@ -289,11 +289,11 @@ describe('ConversationControl actions', () => {
       act(() => {
         const res1 = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'session-1', topicId: 'topic-1' },
+          context: { agentId: 'session-1', topicId: 'topic-1' },
         });
         const res2 = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'session-1', topicId: 'topic-2' },
+          context: { agentId: 'session-1', topicId: 'topic-2' },
         });
 
         opId1 = res1.operationId;
@@ -304,8 +304,8 @@ describe('ConversationControl actions', () => {
       expect(result.current.operations[opId2!].status).toBe('running');
       expect(opId1).not.toBe(opId2);
 
-      const contextKey1 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-1' });
-      const contextKey2 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-2' });
+      const contextKey1 = messageMapKey({ agentId: 'session-1', topicId: 'topic-1' });
+      const contextKey2 = messageMapKey({ agentId: 'session-1', topicId: 'topic-2' });
 
       expect(result.current.operationsByContext[contextKey1]).toContain(opId1!);
       expect(result.current.operationsByContext[contextKey2]).toContain(opId2!);

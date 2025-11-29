@@ -49,7 +49,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
-          messagesMap: { [messageMapKey({ sessionId: 'session-id' })]: [toolMessage] },
+          messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [toolMessage] },
           internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
       });
@@ -100,7 +100,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
-          messagesMap: { [messageMapKey({ sessionId: 'session-id' })]: [nonToolMessage] },
+          messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [nonToolMessage] },
           internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
       });
@@ -250,7 +250,7 @@ describe('ChatPluginAction', () => {
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: '', topicId: undefined },
+        context: { agentId: '', topicId: undefined },
       });
       expect(storeState.triggerAIMessage).not.toHaveBeenCalled(); // 确保在错误情况下不调用此方法
     });
@@ -290,7 +290,7 @@ describe('ChatPluginAction', () => {
       );
 
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: 'inbox', topicId: null, threadId: undefined },
+        context: { agentId: 'inbox', topicId: null, threadId: undefined },
       });
     });
   });
@@ -332,7 +332,7 @@ describe('ChatPluginAction', () => {
 
       // 验证 replaceMessages 是否被调用
       expect(result.current.replaceMessages).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: 'session-id', topicId: 'topic-id' },
+        context: { agentId: 'session-id', topicId: 'topic-id' },
       });
     });
 
@@ -511,7 +511,7 @@ describe('ChatPluginAction', () => {
       });
 
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: '', topicId: undefined },
+        context: { agentId: '', topicId: undefined },
       });
     });
   });
@@ -536,7 +536,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
-          messagesMap: { [messageMapKey({ sessionId: 'session-id' })]: [message] },
+          messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [message] },
           internal_invokeDifferentTypePlugin: internal_invokeDifferentTypePluginMock,
           optimisticUpdateMessagePluginError: vi.fn(),
         });
@@ -575,7 +575,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
-          messagesMap: { [messageMapKey({ sessionId: 'session-id' })]: [message] },
+          messagesMap: { [messageMapKey({ agentId: 'session-id' })]: [message] },
           internal_invokeDifferentTypePlugin: vi.fn(),
           optimisticUpdateMessagePluginError: internal_updateMessageErrorMock,
         });
@@ -619,7 +619,7 @@ describe('ChatPluginAction', () => {
         useChatStore.setState({
           activeId: 'anbccfdd',
           messagesMap: {
-            [messageMapKey({ sessionId: 'anbccfdd' })]: [assistantMessage, toolMessage],
+            [messageMapKey({ agentId: 'anbccfdd' })]: [assistantMessage, toolMessage],
           },
           refreshMessages: vi.fn(),
         });
@@ -723,7 +723,7 @@ describe('ChatPluginAction', () => {
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: '', topicId: undefined },
+        context: { agentId: '', topicId: undefined },
       });
     });
   });
@@ -855,10 +855,10 @@ describe('ChatPluginAction', () => {
       expect(messageService.updateMessage).toHaveBeenCalledWith(
         messageId,
         { error },
-        { sessionId: 'inbox', topicId: null },
+        { agentId: 'inbox', topicId: null },
       );
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: 'inbox', topicId: null, threadId: undefined },
+        context: { agentId: 'inbox', topicId: null, threadId: undefined },
       });
     });
   });
@@ -886,7 +886,7 @@ describe('ChatPluginAction', () => {
       act(() => {
         useChatStore.setState({
           activeId: 'anbccfdd',
-          messagesMap: { [messageMapKey({ sessionId: 'anbccfdd' })]: [assistantMessage] },
+          messagesMap: { [messageMapKey({ agentId: 'anbccfdd' })]: [assistantMessage] },
           refreshMessages: vi.fn(),
         });
       });
@@ -926,7 +926,7 @@ describe('ChatPluginAction', () => {
           // Create operation with desired context
           const op = result.current.startOperation({
             type: 'sendMessage',
-            context: { sessionId: contextSessionId, topicId: contextTopicId },
+            context: { agentId: contextSessionId, topicId: contextTopicId },
           });
           operationId = op.operationId;
 
@@ -938,10 +938,10 @@ describe('ChatPluginAction', () => {
         expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
           messageId,
           pluginState,
-          { sessionId: contextSessionId, topicId: contextTopicId },
+          { agentId: contextSessionId, topicId: contextTopicId },
         );
         expect(replaceMessagesSpy).toHaveBeenCalledWith([], {
-          context: { sessionId: contextSessionId, topicId: contextTopicId, threadId: undefined },
+          context: { agentId: contextSessionId, topicId: contextTopicId, threadId: undefined },
         });
       });
 
@@ -969,7 +969,7 @@ describe('ChatPluginAction', () => {
         expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
           messageId,
           pluginState,
-          { sessionId: 'active-session', topicId: 'active-topic' },
+          { agentId: 'active-session', topicId: 'active-topic' },
         );
       });
     });
@@ -992,7 +992,7 @@ describe('ChatPluginAction', () => {
           // Create operation with desired context
           const op = result.current.startOperation({
             type: 'sendMessage',
-            context: { sessionId: contextSessionId, topicId: contextTopicId },
+            context: { agentId: contextSessionId, topicId: contextTopicId },
           });
           operationId = op.operationId;
 
@@ -1004,7 +1004,7 @@ describe('ChatPluginAction', () => {
         expect(messageService.updateMessage).toHaveBeenCalledWith(
           messageId,
           { error },
-          { sessionId: contextSessionId, topicId: contextTopicId },
+          { agentId: contextSessionId, topicId: contextTopicId },
         );
       });
     });
@@ -1026,13 +1026,13 @@ describe('ChatPluginAction', () => {
         } as any;
 
         // Set up both dbMessagesMap and messagesMap
-        const key = messageMapKey({ sessionId: contextSessionId, topicId: contextTopicId });
+        const key = messageMapKey({ agentId: contextSessionId, topicId: contextTopicId });
         let operationId: string;
         act(() => {
           // Create operation with desired context
           const op = result.current.startOperation({
             type: 'sendMessage',
-            context: { sessionId: contextSessionId, topicId: contextTopicId },
+            context: { agentId: contextSessionId, topicId: contextTopicId },
           });
           operationId = op.operationId;
 
@@ -1057,7 +1057,7 @@ describe('ChatPluginAction', () => {
         expect(messageService.updateMessage).toHaveBeenCalledWith(
           messageId,
           { tools: message.tools },
-          { sessionId: contextSessionId, topicId: contextTopicId },
+          { agentId: contextSessionId, topicId: contextTopicId },
         );
       });
     });

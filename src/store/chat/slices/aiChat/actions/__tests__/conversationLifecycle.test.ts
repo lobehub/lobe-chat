@@ -48,8 +48,8 @@ afterEach(() => {
 });
 
 // Helper to create context for testing
-const createTestContext = (sessionId = TEST_IDS.SESSION_ID) => ({
-  sessionId,
+const createTestContext = (agentId = TEST_IDS.SESSION_ID) => ({
+  agentId,
   topicId: null,
   threadId: null,
 });
@@ -63,7 +63,7 @@ describe('ConversationLifecycle actions', () => {
         await act(async () => {
           await result.current.sendMessage({
             message: TEST_CONTENT.USER_MESSAGE,
-            context: { sessionId: '', topicId: null, threadId: null },
+            context: { agentId: '', topicId: null, threadId: null },
           });
         });
 
@@ -186,7 +186,7 @@ describe('ConversationLifecycle actions', () => {
       act(() => {
         const { operationId } = result.current.startOperation({
           type: 'regenerate',
-          context: { sessionId: TEST_IDS.SESSION_ID, messageId: TEST_IDS.USER_MESSAGE_ID },
+          context: { agentId: TEST_IDS.SESSION_ID, messageId: TEST_IDS.USER_MESSAGE_ID },
         });
 
         useChatStore.setState({
@@ -244,7 +244,7 @@ describe('ConversationLifecycle actions', () => {
       act(() => {
         result.current.startOperation({
           type: 'regenerate',
-          context: { sessionId: TEST_IDS.SESSION_ID, messageId: TEST_IDS.MESSAGE_ID },
+          context: { agentId: TEST_IDS.SESSION_ID, messageId: TEST_IDS.MESSAGE_ID },
         });
 
         useChatStore.setState({

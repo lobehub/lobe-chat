@@ -183,7 +183,7 @@ export const messageOptimisticUpdate: StateCreator<
     get().internal_dispatchMessage({ id, type: 'deleteMessage' }, context);
     const ctx = get().internal_getSessionContext(context);
     const result = await messageService.removeMessage(id, {
-      sessionId: ctx.sessionId,
+      sessionId: ctx.agentId,
       topicId: ctx.topicId,
     });
     if (result?.success && result.messages) {
@@ -195,7 +195,7 @@ export const messageOptimisticUpdate: StateCreator<
     get().internal_dispatchMessage({ ids, type: 'deleteMessages' }, context);
     const ctx = get().internal_getSessionContext(context);
     const result = await messageService.removeMessages(ids, {
-      sessionId: ctx.sessionId,
+      sessionId: ctx.agentId,
       topicId: ctx.topicId,
     });
     if (result?.success && result.messages) {
@@ -243,7 +243,7 @@ export const messageOptimisticUpdate: StateCreator<
         search: extra?.search,
         tools: extra?.tools,
       },
-      { sessionId: ctx.sessionId, topicId: ctx.topicId },
+      { sessionId: ctx.agentId, topicId: ctx.topicId },
     );
 
     if (result && result.success && result.messages) {
@@ -262,7 +262,7 @@ export const messageOptimisticUpdate: StateCreator<
     const result = await messageService.updateMessage(
       id,
       { error },
-      { sessionId: ctx.sessionId, topicId: ctx.topicId },
+      { sessionId: ctx.agentId, topicId: ctx.topicId },
     );
     if (result?.success && result.messages) {
       get().replaceMessages(result.messages, { context: ctx });
@@ -288,7 +288,7 @@ export const messageOptimisticUpdate: StateCreator<
 
     // Persist to database
     const result = await messageService.updateMessageMetadata(id, metadata, {
-      sessionId: ctx.sessionId,
+      sessionId: ctx.agentId,
       topicId: ctx.topicId,
     });
 
@@ -316,7 +316,7 @@ export const messageOptimisticUpdate: StateCreator<
 
     // Persist to database
     const result = await messageService.updateMessagePlugin(id, value, {
-      sessionId: ctx.sessionId,
+      sessionId: ctx.agentId,
       topicId: ctx.topicId,
     });
 
@@ -328,7 +328,7 @@ export const messageOptimisticUpdate: StateCreator<
   optimisticUpdateMessagePluginError: async (id, error, context) => {
     const ctx = get().internal_getSessionContext(context);
     const result = await messageService.updateMessagePluginError(id, error, {
-      sessionId: ctx.sessionId,
+      sessionId: ctx.agentId,
       topicId: ctx.topicId,
     });
     if (result?.success && result.messages) {
@@ -339,7 +339,7 @@ export const messageOptimisticUpdate: StateCreator<
   optimisticUpdateMessageRAG: async (id, data, context) => {
     const ctx = get().internal_getSessionContext(context);
     const result = await messageService.updateMessageRAG(id, data, {
-      sessionId: ctx.sessionId,
+      sessionId: ctx.agentId,
       topicId: ctx.topicId,
     });
     if (result?.success && result.messages) {

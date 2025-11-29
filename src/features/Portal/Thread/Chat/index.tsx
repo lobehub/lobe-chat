@@ -41,7 +41,7 @@ const ThreadChat = memo<ThreadChatProps>(({ mobile }) => {
   // Build ConversationContext for thread
   const context: ConversationContext = useMemo(
     () => ({
-      sessionId: activeId,
+      agentId: activeId,
       threadId: portalThreadId,
       topicId: activeTopicId,
     }),

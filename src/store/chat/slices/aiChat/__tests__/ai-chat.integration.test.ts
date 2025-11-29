@@ -136,7 +136,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const res = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'test-session', topicId: 'test-topic' },
+          context: { agentId: 'test-session', topicId: 'test-topic' },
         });
         operationId = res.operationId;
         abortController = res.abortController;
@@ -190,7 +190,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const { operationId } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1', topicId: 'topic-1', messageId: 'msg-1' },
+          context: { agentId: 'session-1', topicId: 'topic-1', messageId: 'msg-1' },
         });
         parentOpId = operationId;
       });
@@ -245,7 +245,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         parentOpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1', messageId: 'msg-1' },
+          context: { agentId: 'session-1', messageId: 'msg-1' },
         }).operationId;
 
         reasoningOpId = result.current.startOperation({
@@ -290,7 +290,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         parentOpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1' },
+          context: { agentId: 'session-1' },
         }).operationId;
 
         childOpId = result.current.startOperation({
@@ -322,9 +322,9 @@ describe('AI Chat Operation Integration Tests', () => {
     it('should handle multiple sendMessage operations in different contexts', () => {
       const { result } = renderHook(() => useChatStore());
 
-      const op1Context = { sessionId: 'session-1', topicId: 'topic-a' };
-      const op2Context = { sessionId: 'session-1', topicId: 'topic-b' };
-      const op3Context = { sessionId: 'session-2', topicId: 'topic-a' };
+      const op1Context = { agentId: 'session-1', topicId: 'topic-a' };
+      const op2Context = { agentId: 'session-1', topicId: 'topic-b' };
+      const op3Context = { agentId: 'session-2', topicId: 'topic-a' };
 
       let op1Id = '';
       let op2Id = '';
@@ -353,9 +353,9 @@ describe('AI Chat Operation Integration Tests', () => {
       expect(result.current.operations[op3Id].context).toMatchObject(op3Context);
 
       // Verify context index
-      const contextKey1 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-a' });
-      const contextKey2 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-b' });
-      const contextKey3 = messageMapKey({ sessionId: 'session-2', topicId: 'topic-a' });
+      const contextKey1 = messageMapKey({ agentId: 'session-1', topicId: 'topic-a' });
+      const contextKey2 = messageMapKey({ agentId: 'session-1', topicId: 'topic-b' });
+      const contextKey3 = messageMapKey({ agentId: 'session-2', topicId: 'topic-a' });
 
       expect(result.current.operationsByContext[contextKey1]).toContain(op1Id);
       expect(result.current.operationsByContext[contextKey2]).toContain(op2Id);
@@ -371,12 +371,12 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         topicAOpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1', topicId: 'topic-a' },
+          context: { agentId: 'session-1', topicId: 'topic-a' },
         }).operationId;
 
         topicBOpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1', topicId: 'topic-b' },
+          context: { agentId: 'session-1', topicId: 'topic-b' },
         }).operationId;
       });
 
@@ -405,12 +405,12 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         session1OpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1', topicId: 'topic-1' },
+          context: { agentId: 'session-1', topicId: 'topic-1' },
         }).operationId;
 
         session2OpId = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-2', topicId: 'topic-1' },
+          context: { agentId: 'session-2', topicId: 'topic-1' },
         }).operationId;
       });
 
@@ -438,7 +438,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const { operationId: id } = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1' },
+          context: { agentId: 'session-1' },
         });
         operationId = id;
       });
@@ -508,7 +508,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         toolCallingOpId = result.current.startOperation({
           type: 'toolCalling',
-          context: { sessionId: 'session-1', messageId },
+          context: { agentId: 'session-1', messageId },
         }).operationId;
       });
 
@@ -518,7 +518,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const res = result.current.startOperation({
           type: 'executeToolCall',
-          context: { sessionId: 'session-1', messageId },
+          context: { agentId: 'session-1', messageId },
           parentOperationId: toolCallingOpId,
         });
         executeToolOpId = res.operationId;
@@ -566,7 +566,7 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         const res = result.current.startOperation({
           type: 'executeToolCall',
-          context: { sessionId: 'session-1', messageId },
+          context: { agentId: 'session-1', messageId },
         });
         executeToolOpId = res.operationId;
         abortController = res.abortController;
@@ -636,17 +636,17 @@ describe('AI Chat Operation Integration Tests', () => {
       act(() => {
         sendOpId = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'session-1' },
+          context: { agentId: 'session-1' },
         }).operationId;
 
         genOpId1 = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-1' },
+          context: { agentId: 'session-1' },
         }).operationId;
 
         genOpId2 = result.current.startOperation({
           type: 'execAgentRuntime',
-          context: { sessionId: 'session-2' },
+          context: { agentId: 'session-2' },
         }).operationId;
       });
 

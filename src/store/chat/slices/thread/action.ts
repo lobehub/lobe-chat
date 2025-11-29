@@ -121,17 +121,18 @@ export const chatThreadMessage: StateCreator<
         message,
         messages,
         context: {
-          sessionId: activeId,
+          agentId: activeId,
           topicId: activeTopicId,
           // If there's an existing thread, use it
           threadId: portalThreadId,
           // If no thread exists, create a new one
-          newThread: !portalThreadId && threadStartMessageId
-            ? {
-                sourceMessageId: threadStartMessageId,
-                type: newThreadMode,
-              }
-            : undefined,
+          newThread:
+            !portalThreadId && threadStartMessageId
+              ? {
+                  sourceMessageId: threadStartMessageId,
+                  type: newThreadMode,
+                }
+              : undefined,
         },
       });
 

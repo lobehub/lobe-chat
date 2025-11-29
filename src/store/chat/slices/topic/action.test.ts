@@ -119,7 +119,7 @@ describe('topic action', () => {
       act(() => {
         useChatStore.setState({
           messagesMap: {
-            [messageMapKey({ sessionId: 'session' })]: [],
+            [messageMapKey({ agentId: 'session' })]: [],
           },
           activeId: 'session',
         });
@@ -139,7 +139,7 @@ describe('topic action', () => {
       act(() => {
         useChatStore.setState({
           messagesMap: {
-            [messageMapKey({ sessionId: 'session-id' })]: messages,
+            [messageMapKey({ agentId: 'session-id' })]: messages,
           },
           activeId: 'session-id',
         });
@@ -163,7 +163,7 @@ describe('topic action', () => {
     it('should reset supervisor todos after saving to topic for group sessions', async () => {
       const { result } = renderHook(() => useChatStore());
       const groupId = 'group-session';
-      const todoKey = messageMapKey({ sessionId: groupId, topicId: null });
+      const todoKey = messageMapKey({ agentId: groupId, topicId: null });
       const messages = [{ id: 'group-message-1' }] as UIChatMessage[];
 
       await act(async () => {
@@ -171,7 +171,7 @@ describe('topic action', () => {
           activeId: groupId,
           activeSessionType: 'group',
           messagesMap: {
-            [messageMapKey({ sessionId: groupId })]: messages,
+            [messageMapKey({ agentId: groupId })]: messages,
           },
           supervisorTodos: {
             [todoKey]: [{ id: 'todo-1' } as any],
@@ -275,7 +275,9 @@ describe('topic action', () => {
       (topicService.getTopics as Mock).mockResolvedValue(topics);
 
       // Use the hook with the session id
-      const { result } = renderHook(() => useChatStore().useFetchTopics(true, sessionId));
+      const { result } = renderHook(() =>
+        useChatStore().useFetchTopics(true, { agentId: sessionId }),
+      );
 
       // Wait for the hook to resolve and update the state
       await waitFor(() => {
@@ -294,7 +296,7 @@ describe('topic action', () => {
       (topicService.searchTopics as Mock).mockResolvedValue(searchResults);
 
       // Use the hook with the keywords
-      const { result } = renderHook(() => useChatStore().useSearchTopics(keywords));
+      const { result } = renderHook(() => useChatStore().useSearchTopics(keywords, {}));
 
       // Wait for the hook to resolve and update the state
       await waitFor(() => {
@@ -350,14 +352,14 @@ describe('topic action', () => {
       const { result } = renderHook(() => useChatStore());
       const groupId = 'group-1';
       const nextTopicId = 'topic-2';
-      const expectedKey = messageMapKey({ sessionId: groupId, topicId: nextTopicId });
+      const expectedKey = messageMapKey({ agentId: groupId, topicId: nextTopicId });
 
       await act(async () => {
         useChatStore.setState({
           activeId: groupId,
           activeSessionType: 'group',
           supervisorTodos: {
-            [messageMapKey({ sessionId: groupId, topicId: null })]: [{ id: 'todo' } as any],
+            [messageMapKey({ agentId: groupId, topicId: null })]: [{ id: 'todo' } as any],
           },
         });
       });
@@ -377,7 +379,7 @@ describe('topic action', () => {
       const { result } = renderHook(() => useChatStore());
       const groupId = 'group-from-session';
       const newTopicId = 'topic-session';
-      const expectedKey = messageMapKey({ sessionId: groupId, topicId: newTopicId });
+      const expectedKey = messageMapKey({ agentId: groupId, topicId: newTopicId });
 
       await act(async () => {
         useChatStore.setState({
@@ -611,7 +613,7 @@ describe('topic action', () => {
         useChatStore.setState({
           activeId,
           messagesMap: {
-            [messageMapKey({ sessionId: activeId })]: messages,
+            [messageMapKey({ agentId: activeId })]: messages,
           },
         });
       });
@@ -674,7 +676,7 @@ describe('topic action', () => {
         await result.current.autoRenameTopicTitle(topicId);
       });
 
-      expect(getMessagesSpy).toHaveBeenCalledWith({ sessionId: activeId, topicId });
+      expect(getMessagesSpy).toHaveBeenCalledWith({ agentId: activeId, topicId });
       expect(summaryTopicTitleSpy).toHaveBeenCalledWith(topicId, messages);
     });
   });

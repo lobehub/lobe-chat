@@ -102,9 +102,9 @@ export const useSend = () => {
         message: inputMessage,
         ...params,
         context: {
-          sessionId: store.activeId!,
-          topicId: store.activeTopicId,
+          agentId: store.activeAgentId!,
           threadId: store.activeThreadId,
+          topicId: store.activeTopicId,
         },
       });
     }

@@ -70,9 +70,9 @@ export const useSendMessage = () => {
       message: store.inputMessage,
       ...params,
       context: {
-        sessionId: store.activeId!,
-        topicId: store.activeTopicId,
+        agentId: store.activeAgentId!,
         threadId: store.activeThreadId,
+        topicId: store.activeTopicId,
       },
     });
 
@@ -89,7 +89,7 @@ export const useSendMessage = () => {
     analytics?.track({
       name: 'send_message',
       properties: {
-        chat_id: store.activeId || 'unknown',
+        chat_id: store.activeAgentId || 'unknown',
         current_topic: topicSelectors.currentActiveTopic(store)?.title || null,
         has_attachments: fileList.length > 0,
         history_message_count: chatSelectors.activeBaseChats(store).length,

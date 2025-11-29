@@ -151,7 +151,8 @@ export const messageCRUDSlice: StateCreator<
   // ===== Update Tools ===== //
   addToolToMessage: async (messageId, tool) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Optimistic update
     internal_dispatchMessage({
@@ -174,7 +175,8 @@ export const messageCRUDSlice: StateCreator<
 
   clearMessages: async () => {
     const { context, replaceMessages } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Clear from database
     await messageService.removeMessagesByAssistant(sessionId, topicId ?? undefined);
@@ -187,7 +189,8 @@ export const messageCRUDSlice: StateCreator<
   createMessage: async (params) => {
     const { context, internal_dispatchMessage, replaceMessages, internal_toggleMessageLoading } =
       get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Create temp message for optimistic update
     const tempId = get().createTempMessage(params);
@@ -261,7 +264,8 @@ export const messageCRUDSlice: StateCreator<
   deleteMessage: async (id) => {
     const state = get();
     const { internal_dispatchMessage, replaceMessages, context } = state;
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     const message = dataSelectors.getDisplayMessageById(id)(state);
     if (!message) return;
@@ -297,7 +301,8 @@ export const messageCRUDSlice: StateCreator<
 
   deleteMessages: async (ids) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Optimistic update
     internal_dispatchMessage({ ids, type: 'deleteMessages' });
@@ -315,7 +320,8 @@ export const messageCRUDSlice: StateCreator<
 
   deleteToolMessage: async (id) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     const message = dataSelectors.getDbMessageById(id)(get());
     if (!message || message.role !== 'tool') return;
@@ -345,7 +351,8 @@ export const messageCRUDSlice: StateCreator<
 
   removeToolFromMessage: async (messageId, toolCallId) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Optimistic update
     internal_dispatchMessage({
@@ -372,7 +379,8 @@ export const messageCRUDSlice: StateCreator<
   // ===== Update Content ===== //
   updateMessageContent: async (id, content, extra) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Optimistic update
     if (extra?.tools) {
@@ -412,7 +420,8 @@ export const messageCRUDSlice: StateCreator<
 
   updateMessageError: async (id, error) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Optimistic update
     internal_dispatchMessage({
@@ -435,7 +444,8 @@ export const messageCRUDSlice: StateCreator<
 
   updateMessageMetadata: async (id, metadata) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Optimistic update
     internal_dispatchMessage({ id, type: 'updateMessageMetadata', value: metadata });
@@ -453,7 +463,8 @@ export const messageCRUDSlice: StateCreator<
 
   updateMessagePlugin: async (id, value) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Optimistic update
     internal_dispatchMessage({
@@ -475,7 +486,8 @@ export const messageCRUDSlice: StateCreator<
 
   updateMessagePluginError: async (id, error) => {
     const { replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Persist to database (no optimistic update for plugin error)
     const result = await messageService.updateMessagePluginError(id, error, {
@@ -490,7 +502,8 @@ export const messageCRUDSlice: StateCreator<
 
   updateMessageRAG: async (id, data) => {
     const { replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Persist to database
     const result = await messageService.updateMessageRAG(id, data, {
@@ -505,7 +518,8 @@ export const messageCRUDSlice: StateCreator<
 
   updateMessageTool: async (messageId, toolCallId, value) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     // Optimistic update
     internal_dispatchMessage({
@@ -532,7 +546,8 @@ export const messageCRUDSlice: StateCreator<
 
   updatePluginArguments: async (id, value, replace = false) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
-    const { sessionId, topicId } = context;
+    const { agentId, topicId } = context;
+    const sessionId = agentId;
 
     const toolMessage = dataSelectors.getDisplayMessageById(id)(get());
     if (!toolMessage || !toolMessage.tool_call_id) return;
