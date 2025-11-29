@@ -78,13 +78,14 @@ export class MessageService {
   updateMessageError = async (
     id: string,
     value: ChatMessageError,
-    options?: { sessionId?: string | null; topicId?: string | null },
+    options?: { agentId?: string; sessionId?: string | null; topicId?: string | null },
   ) => {
     const error = value.type
       ? value
       : { body: value, message: value.message, type: 'ApplicationRuntimeError' };
 
     return lambdaClient.message.update.mutate({
+      agentId: options?.agentId,
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
@@ -100,9 +101,10 @@ export class MessageService {
   updateMessage = async (
     id: string,
     value: Partial<UpdateMessageParams>,
-    options?: { sessionId?: string | null; topicId?: string | null },
+    options?: { agentId?: string; sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.update.mutate({
+      agentId: options?.agentId,
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
@@ -121,11 +123,12 @@ export class MessageService {
   updateMessageMetadata = async (
     id: string,
     value: Partial<MessageMetadata>,
-    options?: { sessionId?: string | null; topicId?: string | null },
+    options?: { agentId?: string; sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
     return abortableRequest.execute(`message-metadata-${id}`, (signal) =>
       lambdaClient.message.updateMetadata.mutate(
         {
+          agentId: options?.agentId,
           id,
           sessionId: options?.sessionId,
           topicId: options?.topicId,
@@ -139,9 +142,10 @@ export class MessageService {
   updateMessagePluginState = async (
     id: string,
     value: Record<string, any>,
-    options?: { sessionId?: string | null; topicId?: string | null },
+    options?: { agentId?: string; sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.updatePluginState.mutate({
+      agentId: options?.agentId,
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
@@ -152,9 +156,10 @@ export class MessageService {
   updateMessagePluginError = async (
     id: string,
     error: ChatMessagePluginError | null,
-    options?: { sessionId?: string | null; topicId?: string | null },
+    options?: { agentId?: string; sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.updatePluginError.mutate({
+      agentId: options?.agentId,
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
@@ -165,9 +170,10 @@ export class MessageService {
   updateMessagePlugin = async (
     id: string,
     value: Partial<Omit<MessagePluginItem, 'id'>>,
-    options?: { sessionId?: string | null; topicId?: string | null },
+    options?: { agentId?: string; sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.updateMessagePlugin.mutate({
+      agentId: options?.agentId,
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
@@ -178,9 +184,10 @@ export class MessageService {
   updateMessageRAG = async (
     id: string,
     data: UpdateMessageRAGParams,
-    options?: { sessionId?: string | null; topicId?: string | null },
+    options?: { agentId?: string; sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.updateMessageRAG.mutate({
+      agentId: options?.agentId,
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
@@ -190,9 +197,10 @@ export class MessageService {
 
   removeMessage = async (
     id: string,
-    options?: { sessionId?: string | null; topicId?: string | null },
+    options?: { agentId?: string; sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.removeMessage.mutate({
+      agentId: options?.agentId,
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
@@ -201,9 +209,10 @@ export class MessageService {
 
   removeMessages = async (
     ids: string[],
-    options?: { sessionId?: string | null; topicId?: string | null },
+    options?: { agentId?: string; sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.removeMessages.mutate({
+      agentId: options?.agentId,
       ids,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
