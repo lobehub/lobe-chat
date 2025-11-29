@@ -104,14 +104,15 @@ export const auth = betterAuth({
 
   user: {
     additionalFields: {
-      fullName: {
+      username: {
         required: false,
         type: 'string',
       },
     },
     fields: {
       image: 'avatar',
-      name: 'username',
+      // NOTE: use drizzle filed instead of db field, so use fullName instead of full_name
+      name: 'fullName',
     },
     modelName: 'users',
   },
