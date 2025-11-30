@@ -28,6 +28,7 @@ export interface CreateThreadWithMessageParams {
 }
 
 export interface SendMessageServerParams {
+  agentId?: string;
   newAssistantMessage: {
     model: string;
     provider: string;
@@ -56,6 +57,7 @@ export const CreateThreadWithMessageSchema = z.object({
 });
 
 export const AiSendMessageServerSchema = z.object({
+  agentId: z.string().optional(),
   newAssistantMessage: z.object({
     model: z.string().optional(),
     provider: z.string().optional(),
