@@ -342,7 +342,7 @@
     "@types/nodemailer": "^7.0.3",
     "@types/numeral": "^2.0.5",
     "@types/oidc-provider": "^9.5.0",
-    "@types/pdfkit": "^0.17.3",
+    "@types/pdfkit": "^0.17.4",
     "@types/pg": "^8.15.6",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
