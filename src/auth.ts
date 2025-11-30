@@ -11,6 +11,7 @@ import {
   getVerificationEmailTemplate,
 } from '@/libs/better-auth/email-templates';
 import { initBetterAuthSSOProviders } from '@/libs/better-auth/sso';
+import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 import { EmailService } from '@/server/services/email';
 
 // Email verification link expiration time (in seconds)
@@ -62,6 +63,7 @@ export const auth = betterAuth({
     accountLinking: {
       allowDifferentEmails: true,
       enabled: true,
+      trustedProviders: parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS),
     },
   },
 
