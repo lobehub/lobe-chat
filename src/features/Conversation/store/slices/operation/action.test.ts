@@ -37,7 +37,7 @@ describe('Message State Actions', () => {
   describe('toggleMessageEditing', () => {
     it('should toggle message editing state to true', () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -53,7 +53,7 @@ describe('Message State Actions', () => {
 
     it('should toggle message editing state to false', () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };

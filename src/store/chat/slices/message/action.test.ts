@@ -44,7 +44,7 @@ vi.mock('@/services/topic', () => ({
 const realRefreshMessages = useChatStore.getState().refreshMessages;
 // Mock state
 const mockState = {
-  activeId: 'session-id',
+  activeAgentId: 'session-id',
   activeTopicId: 'topic-id',
   messages: [],
   refreshMessages: vi.fn(),
@@ -67,7 +67,7 @@ afterEach(() => {
 describe('chatMessage actions', () => {
   describe('addAIMessage', () => {
     it('should return early if activeId is undefined', async () => {
-      useChatStore.setState({ activeId: undefined });
+      useChatStore.setState({ activeAgentId: undefined });
       const { result } = renderHook(() => useChatStore());
       const updateMessageInputSpy = vi.spyOn(result.current, 'updateMessageInput');
 
@@ -91,7 +91,7 @@ describe('chatMessage actions', () => {
       expect(messageService.createMessage).toHaveBeenCalledWith({
         content: inputMessage,
         role: 'assistant',
-        sessionId: mockState.activeId,
+        sessionId: mockState.activeAgentId,
         topicId: mockState.activeTopicId,
       });
     });
@@ -109,7 +109,7 @@ describe('chatMessage actions', () => {
 
   describe('addUserMessage', () => {
     it('should return early if activeId is undefined', async () => {
-      useChatStore.setState({ activeId: undefined });
+      useChatStore.setState({ activeAgentId: undefined });
       const { result } = renderHook(() => useChatStore());
       const updateMessageInputSpy = vi.spyOn(result.current, 'updateMessageInput');
 
@@ -125,7 +125,7 @@ describe('chatMessage actions', () => {
       const message = 'Test user message';
       const fileList = ['file-id-1', 'file-id-2'];
       useChatStore.setState({
-        activeId: mockState.activeId,
+        activeAgentId: mockState.activeAgentId,
         activeTopicId: mockState.activeTopicId,
       });
       const { result } = renderHook(() => useChatStore());
@@ -138,7 +138,7 @@ describe('chatMessage actions', () => {
         content: message,
         files: fileList,
         role: 'user',
-        sessionId: mockState.activeId,
+        sessionId: mockState.activeAgentId,
         topicId: mockState.activeTopicId,
         threadId: undefined,
       });
@@ -148,7 +148,7 @@ describe('chatMessage actions', () => {
       const message = 'Test user message';
       const activeThreadId = 'thread-123';
       useChatStore.setState({
-        activeId: mockState.activeId,
+        activeAgentId: mockState.activeAgentId,
         activeTopicId: mockState.activeTopicId,
         activeThreadId,
       });
@@ -162,7 +162,7 @@ describe('chatMessage actions', () => {
         content: message,
         files: undefined,
         role: 'user',
-        sessionId: mockState.activeId,
+        sessionId: mockState.activeAgentId,
         topicId: mockState.activeTopicId,
         threadId: activeThreadId,
       });
@@ -181,7 +181,7 @@ describe('chatMessage actions', () => {
 
     it('should handle message without fileList', async () => {
       const message = 'Test user message without files';
-      useChatStore.setState({ activeId: mockState.activeId });
+      useChatStore.setState({ activeAgentId: mockState.activeAgentId });
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
@@ -192,7 +192,7 @@ describe('chatMessage actions', () => {
         content: message,
         files: undefined,
         role: 'user',
-        sessionId: mockState.activeId,
+        sessionId: mockState.activeAgentId,
         topicId: mockState.activeTopicId,
         threadId: undefined,
       });
@@ -216,10 +216,10 @@ describe('chatMessage actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: 'session-id',
+          activeAgentId: 'session-id',
           activeTopicId: undefined,
           messagesMap: {
-            [messageMapKey({ sessionId: 'session-id' })]: [{ id: messageId } as UIChatMessage],
+            [messageMapKey({ agentId: 'session-id' })]: [{ id: messageId } as UIChatMessage],
           },
         });
       });
@@ -229,7 +229,7 @@ describe('chatMessage actions', () => {
 
       expect(deleteSpy).toHaveBeenCalledWith(messageId);
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: 'session-id', topicId: undefined, threadId: undefined },
+        context: { agentId: 'session-id', topicId: undefined, threadId: undefined },
       });
     });
 
@@ -252,10 +252,10 @@ describe('chatMessage actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: 'session-id',
+          activeAgentId: 'session-id',
           activeTopicId: undefined,
           messagesMap: {
-            [messageMapKey({ sessionId: 'session-id' })]: [
+            [messageMapKey({ agentId: 'session-id' })]: [
               { id: messageId, tools: [{ id: 'tool1' }, { id: 'tool2' }] } as UIChatMessage,
               { id: '2', tool_call_id: 'tool1', role: 'tool' } as UIChatMessage,
               { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
@@ -273,7 +273,7 @@ describe('chatMessage actions', () => {
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: 'session-id', topicId: undefined, threadId: undefined },
+        context: { agentId: 'session-id', topicId: undefined, threadId: undefined },
       });
     });
 
@@ -293,10 +293,10 @@ describe('chatMessage actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: 'session-id',
+          activeAgentId: 'session-id',
           activeTopicId: undefined,
           messagesMap: {
-            [messageMapKey({ sessionId: 'session-id' })]: [
+            [messageMapKey({ agentId: 'session-id' })]: [
               {
                 id: groupMessageId,
                 role: 'assistantGroup',
@@ -326,7 +326,7 @@ describe('chatMessage actions', () => {
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: 'session-id', topicId: undefined, threadId: undefined },
+        context: { agentId: 'session-id', topicId: undefined, threadId: undefined },
       });
     });
 
@@ -346,10 +346,10 @@ describe('chatMessage actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: 'session-id',
+          activeAgentId: 'session-id',
           activeTopicId: undefined,
           messagesMap: {
-            [messageMapKey({ sessionId: 'session-id' })]: [
+            [messageMapKey({ agentId: 'session-id' })]: [
               {
                 id: groupMessageId,
                 role: 'assistantGroup',
@@ -392,7 +392,7 @@ describe('chatMessage actions', () => {
         },
       );
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { sessionId: 'session-id', topicId: undefined, threadId: undefined },
+        context: { agentId: 'session-id', topicId: undefined, threadId: undefined },
       });
     });
   });
@@ -448,10 +448,10 @@ describe('chatMessage actions', () => {
         { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
       ];
 
-      const key = messageMapKey({ sessionId, topicId });
+      const key = messageMapKey({ agentId: sessionId, topicId });
       act(() => {
         useChatStore.setState({
-          activeId: sessionId,
+          activeAgentId: sessionId,
           activeTopicId: topicId as unknown as string,
           dbMessagesMap: {
             [key]: rawMessages,
@@ -505,7 +505,7 @@ describe('chatMessage actions', () => {
           tools: [{ id: 'tool2' }],
         },
         {
-          sessionId,
+          agentId: sessionId,
           topicId,
         },
       );
@@ -670,7 +670,7 @@ describe('chatMessage actions', () => {
 
       expect(spy).toHaveBeenCalledWith(
         messageId,
-        { content: newContent },
+        expect.objectContaining({ content: newContent }),
         { sessionId: 'session-id', topicId: 'topic-id' },
       );
     });
@@ -707,7 +707,7 @@ describe('chatMessage actions', () => {
 
       expect(replaceMessagesSpy).toHaveBeenCalledWith([], {
         action: 'optimisticUpdateMessageContent',
-        context: { sessionId: 'session-id', topicId: 'topic-id', threadId: undefined },
+        context: { agentId: 'session-id', topicId: 'topic-id', threadId: undefined },
       });
     });
   });
@@ -730,7 +730,7 @@ describe('chatMessage actions', () => {
       useChatStore.setState({ refreshMessages: realRefreshMessages });
 
       const { result } = renderHook(() => useChatStore());
-      const activeId = useChatStore.getState().activeId;
+      const activeId = useChatStore.getState().activeAgentId;
       const activeTopicId = useChatStore.getState().activeTopicId;
 
       // 在这里，我们不需要再次模拟 mutate，因为它已经在顶部被模拟了
@@ -768,30 +768,6 @@ describe('chatMessage actions', () => {
 
       // 确保恢复 mutate 的模拟，以免影响其他测试
       (mutate as Mock).mockReset();
-    });
-  });
-
-  describe('useFetchMessages hook', () => {
-    // beforeEach(() => {
-    //   vi.mocked(useSWR).mockRestore();
-    // });
-
-    it('should fetch messages for given session and topic ids', async () => {
-      const sessionId = 'session-id';
-      const topicId = 'topic-id';
-      const messages = [{ id: 'message-id', content: 'Hello' }];
-
-      // 设置模拟返回值
-      (messageService.getMessages as Mock).mockResolvedValue(messages);
-
-      const { result } = renderHook(() =>
-        useChatStore().useFetchMessages(true, sessionId, topicId),
-      );
-
-      // 等待异步操作完成
-      await waitFor(() => {
-        expect(result.current.data).toEqual(messages);
-      });
     });
   });
 
@@ -874,7 +850,7 @@ describe('chatMessage actions', () => {
         // Create operation with desired context
         const op = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: contextSessionId, topicId: contextTopicId },
+          context: { agentId: contextSessionId, topicId: contextTopicId },
         });
         operationId = op.operationId;
 
@@ -885,7 +861,7 @@ describe('chatMessage actions', () => {
 
       expect(updateMessageSpy).toHaveBeenCalledWith(
         messageId,
-        { content, tools: undefined },
+        expect.objectContaining({ content, tools: undefined }),
         { sessionId: contextSessionId, topicId: contextTopicId },
       );
     });
@@ -904,7 +880,7 @@ describe('chatMessage actions', () => {
         // Create operation with desired context
         const op = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: contextSessionId, topicId: contextTopicId },
+          context: { agentId: contextSessionId, topicId: contextTopicId },
         });
         operationId = op.operationId;
 
@@ -933,7 +909,7 @@ describe('chatMessage actions', () => {
         // Create operation with desired context
         const op = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: contextSessionId, topicId: contextTopicId },
+          context: { agentId: contextSessionId, topicId: contextTopicId },
         });
         operationId = op.operationId;
 
@@ -961,7 +937,7 @@ describe('chatMessage actions', () => {
         // Create operation with desired context
         const op = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: contextSessionId, topicId: contextTopicId },
+          context: { agentId: contextSessionId, topicId: contextTopicId },
         });
         operationId = op.operationId;
 
@@ -1025,7 +1001,7 @@ describe('chatMessage actions', () => {
       });
 
       expect(replaceMessagesSpy).toHaveBeenCalledWith([], {
-        context: { sessionId: 'session-id', topicId: 'topic-id', threadId: undefined },
+        context: { agentId: 'session-id', topicId: 'topic-id', threadId: undefined },
       });
     });
 
@@ -1043,7 +1019,7 @@ describe('chatMessage actions', () => {
         // Create operation with desired context
         const op = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: contextSessionId, topicId: contextTopicId },
+          context: { agentId: contextSessionId, topicId: contextTopicId },
         });
         operationId = op.operationId;
 

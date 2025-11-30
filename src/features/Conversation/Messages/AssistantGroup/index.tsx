@@ -8,10 +8,10 @@ import { Flexbox } from 'react-layout-kit';
 import { Avatar, BorderSpacing, Title } from '@/components/ChatItem';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import type { MessageActionsConfig } from '../../types';
@@ -107,7 +107,7 @@ const GroupMessage = memo<GroupMessageProps>(
     const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
 
     const { usage, createdAt, children, performance, model, provider } = item;
-    const avatar = useSessionStore(sessionMetaSelectors.currentAgentMeta);
+    const avatar = useAgentStore(agentSelectors.currentAgentMeta);
 
     const { mobile } = useResponsive();
     const placement = 'left';

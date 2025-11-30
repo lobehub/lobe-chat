@@ -18,7 +18,7 @@ describe('call_tool executor', () => {
     it('should create tool message and execute tool successfully', async () => {
       // Given
       const mockStore = createMockStore();
-      const context = createTestContext({ sessionId: 'test-session', topicId: 'test-topic' });
+      const context = createTestContext({ agentId: 'test-session', topicId: 'test-topic' });
 
       const assistantMessage = createAssistantMessage({ groupId: 'group_123' });
       mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
@@ -128,7 +128,7 @@ describe('call_tool executor', () => {
     it('should create tool message with correct structure', async () => {
       // Given
       const mockStore = createMockStore();
-      const context = createTestContext({ sessionId: 'sess_123', topicId: 'topic_456' });
+      const context = createTestContext({ agentId: 'sess_123', topicId: 'topic_456' });
 
       const assistantMessage = createAssistantMessage({ groupId: 'group_789' });
       mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
@@ -152,7 +152,7 @@ describe('call_tool executor', () => {
         instruction,
         state,
         mockStore,
-        context: { ...context, sessionId: 'sess_123', topicId: 'topic_456' },
+        context: { ...context, agentId: 'sess_123', topicId: 'topic_456' },
       });
 
       // Then
@@ -431,7 +431,7 @@ describe('call_tool executor', () => {
     it('should create toolCalling operation as parent', async () => {
       // Given
       const mockStore = createMockStore();
-      const context = createTestContext({ sessionId: 'sess_op', topicId: 'topic_op' });
+      const context = createTestContext({ agentId: 'sess_op', topicId: 'topic_op' });
 
       const assistantMessage = createAssistantMessage();
       mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
@@ -453,14 +453,14 @@ describe('call_tool executor', () => {
         instruction,
         state,
         mockStore,
-        context: { ...context, sessionId: 'sess_op', topicId: 'topic_op' },
+        context: { ...context, agentId: 'sess_op', topicId: 'topic_op' },
       });
 
       // Then
       expect(mockStore.startOperation).toHaveBeenNthCalledWith(1, {
         type: 'toolCalling',
         context: {
-          sessionId: 'sess_op',
+          agentId: 'sess_op',
           topicId: 'topic_op',
         },
         parentOperationId: context.operationId,
@@ -475,7 +475,7 @@ describe('call_tool executor', () => {
     it('should create createToolMessage operation as child of toolCalling', async () => {
       // Given
       const mockStore = createMockStore();
-      const context = createTestContext({ sessionId: 'sess_child', topicId: 'topic_child' });
+      const context = createTestContext({ agentId: 'sess_child', topicId: 'topic_child' });
 
       const assistantMessage = createAssistantMessage();
       mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
@@ -497,7 +497,7 @@ describe('call_tool executor', () => {
         instruction,
         state,
         mockStore,
-        context: { ...context, sessionId: 'sess_child', topicId: 'topic_child' },
+        context: { ...context, agentId: 'sess_child', topicId: 'topic_child' },
       });
 
       // Then
@@ -506,7 +506,7 @@ describe('call_tool executor', () => {
       expect(mockStore.startOperation).toHaveBeenNthCalledWith(2, {
         type: 'createToolMessage',
         context: {
-          sessionId: 'sess_child',
+          agentId: 'sess_child',
           topicId: 'topic_child',
         },
         parentOperationId: toolCallingOpId,
@@ -1639,7 +1639,7 @@ describe('call_tool executor', () => {
     it('should handle null topicId', async () => {
       // Given
       const mockStore = createMockStore();
-      const context = createTestContext({ sessionId: 'test-session', topicId: null });
+      const context = createTestContext({ agentId: 'test-session', topicId: null });
 
       const assistantMessage = createAssistantMessage();
       mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
@@ -1653,7 +1653,7 @@ describe('call_tool executor', () => {
         instruction,
         state,
         mockStore,
-        context: { ...context, sessionId: 'test-session', topicId: null },
+        context: { ...context, agentId: 'test-session', topicId: null },
       });
 
       // Then
@@ -1805,7 +1805,7 @@ describe('call_tool executor', () => {
     it('should skip tool execution when parent operation is cancelled after message creation', async () => {
       // Given
       const mockStore = createMockStore();
-      const context = createTestContext({ sessionId: 'cancel-test', topicId: 'topic-test' });
+      const context = createTestContext({ agentId: 'cancel-test', topicId: 'topic-test' });
 
       const assistantMessage = createAssistantMessage();
       mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];

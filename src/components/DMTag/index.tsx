@@ -4,10 +4,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { useChatGroupStore } from '@/store/chatGroup';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
@@ -29,7 +29,11 @@ const DMTag = memo<DMTagProps>(({ senderId, targetId }) => {
 
   const currentUserAvatar = useUserStore(userProfileSelectors.userAvatar);
 
-  const targetInfo = useSessionStore((s) => {
+  const agentMeta = useAgentStore((s) =>
+    targetId && targetId !== 'user' ? agentSelectors.getAgentMetaById(targetId)(s) : null,
+  );
+
+  const targetInfo = (() => {
     if (!targetId) return null;
     if (targetId === 'user') {
       return {
@@ -39,13 +43,12 @@ const DMTag = memo<DMTagProps>(({ senderId, targetId }) => {
       };
     }
 
-    const agentMeta = sessionMetaSelectors.getAgentMetaByAgentId(targetId)(s);
     return {
-      avatar: agentMeta.avatar || DEFAULT_INBOX_AVATAR,
-      backgroundColor: agentMeta.backgroundColor,
-      name: ` ${agentMeta.title || t('untitledAgent')} `,
+      avatar: agentMeta?.avatar || DEFAULT_INBOX_AVATAR,
+      backgroundColor: agentMeta?.backgroundColor,
+      name: ` ${agentMeta?.title || t('untitledAgent')} `,
     };
-  });
+  })();
 
   // Don't show tag if we don't have target info
   if (!targetInfo) return null;

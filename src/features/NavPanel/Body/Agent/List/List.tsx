@@ -33,8 +33,8 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
   const isEmpty = useMemo(() => dataSource.length === 0, [dataSource.length]);
 
   const handleClick = useCallback(
-    (id: string, agentId: string) => {
-      switchSession(id, agentId);
+    (agentId: string) => {
+      switchSession(agentId);
 
       // Defer analytics tracking to avoid blocking UI
       if (analytics) {
@@ -43,7 +43,8 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
           const userStore = getUserStoreState();
           const sessionStore = getSessionStoreState();
           const userId = userProfileSelectors.userId(userStore);
-          const session = sessionSelectors.getSessionById(id)(sessionStore);
+          // TODO: need refactor to agentId
+          const session = sessionSelectors.getSessionById(agentId)(sessionStore);
 
           if (session) {
             const sessionGroupId = session.group || 'default';
@@ -53,11 +54,11 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
             analytics.track({
               name: 'switch_session',
               properties: {
+                agent_id: agentId,
                 assistant_name: session.meta?.title || 'Untitled Agent',
                 assistant_tags: session.meta?.tags || [],
                 group_id: sessionGroupId,
                 group_name: groupName,
-                session_id: id,
                 spm: 'homepage.chat.session_list_item.click',
                 user_id: userId || 'anonymous',
               },
@@ -95,10 +96,10 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
           onClick={(e) => {
             e.preventDefault();
             // TODO: need to be fixed
-            handleClick(id, (res as any).config?.id);
+            handleClick((res as any).config?.id);
           }}
           // TODO: need to be fixed
-          to={SESSION_CHAT_URL(id, (res as any).config?.id, false)}
+          to={SESSION_CHAT_URL((res as any).config?.id, false)}
         >
           <Item className={itemClassName} id={id} style={itemStyle} />
         </Link>

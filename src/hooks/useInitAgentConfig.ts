@@ -9,10 +9,15 @@ import { authSelectors } from '@/store/user/selectors';
  * Otherwise, use the active session id to fetch the config.
  */
 export const useInitAgentConfig = () => {
-  const [useFetchAgentConfig] = useAgentStore((s) => [s.useFetchAgentConfig]);
+  const [useFetchAgentConfig, activeAgentId] = useAgentStore((s) => [
+    s.useFetchAgentConfig,
+    s.activeAgentId,
+  ]);
+
   const isLogin = useUserStore(authSelectors.isLogin);
   const load = useLoaderData();
-  const data = useFetchAgentConfig(isLogin, load?.agentId);
+
+  const data = useFetchAgentConfig(isLogin, activeAgentId ?? load?.agentId);
 
   return { ...data, isLoading: data.isLoading && isLogin };
 };

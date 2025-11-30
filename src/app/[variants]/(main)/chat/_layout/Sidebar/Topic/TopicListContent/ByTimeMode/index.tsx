@@ -29,9 +29,6 @@ const ByTimeMode = memo(() => {
 
   return (
     <>
-      {/* Default topic */}
-      <TopicItem active={!activeTopicId} fav={false} title={t('defaultTitle')} />
-
       {/* Grouped topics */}
       <Accordion
         disableAnimation

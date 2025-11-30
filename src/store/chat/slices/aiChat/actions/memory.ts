@@ -31,7 +31,7 @@ export const chatMemory: StateCreator<
       },
       params: { ...chainSummaryHistory(messages), model, provider, stream: false },
       trace: {
-        sessionId: get().activeId,
+        sessionId: get().activeAgentId,
         topicId: get().activeTopicId,
         traceName: TraceNameMap.SummaryHistoryMessages,
       },

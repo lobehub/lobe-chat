@@ -23,7 +23,7 @@ vi.mock('@lobechat/conversation-flow', () => ({
 const createTestStore = (context?: Partial<ConversationContext>) =>
   createStore({
     context: {
-      sessionId: 'test-session',
+      agentId: 'test-session',
       topicId: null,
       threadId: null,
       ...context,
@@ -150,7 +150,7 @@ describe('Message CRUD Actions', () => {
       await store.getState().deleteMessage('msg-1');
 
       expect(removeMessagesSpy).toHaveBeenCalledWith(['msg-1'], {
-        sessionId: 'test-session',
+        agentId: 'test-session',
         topicId: undefined,
       });
     });
@@ -454,7 +454,7 @@ describe('Message CRUD Actions', () => {
       const onMessageCopied = vi.fn();
 
       const store = createStore({
-        context: { sessionId: 'test-session', topicId: null, threadId: null },
+        context: { agentId: 'test-session', topicId: null, threadId: null },
         hooks: { onMessageCopied },
       });
 
@@ -476,7 +476,7 @@ describe('Message CRUD Actions', () => {
       const onMessageModified = vi.fn();
 
       const store = createStore({
-        context: { sessionId: 'test-session', topicId: null, threadId: null },
+        context: { agentId: 'test-session', topicId: null, threadId: null },
         hooks: { onMessageModified },
       });
 

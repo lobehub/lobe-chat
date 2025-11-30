@@ -17,7 +17,6 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import AgentInfoDescription from '../AgentInfoDescription';
 import PublishResultModal from '../PublishResultModal';
@@ -41,7 +40,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
     const isUpload = action === 'upload';
 
     const { session: marketSession, isAuthenticated } = useMarketAuth();
-    const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+    const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
     const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);
 
     const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);

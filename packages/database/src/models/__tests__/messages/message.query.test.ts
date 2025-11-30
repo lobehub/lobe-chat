@@ -7,6 +7,7 @@ import { uuid } from '@/utils/uuid';
 
 import {
   agents,
+  agentsToSessions,
   chatGroups,
   chunks,
   documents,
@@ -781,6 +782,231 @@ describe('MessageModel Query Tests', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('msg-s1-t1');
+    });
+
+    describe('query with agentId filter', () => {
+      it('should filter messages by agentId through agentsToSessions lookup', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'session-for-agent', userId },
+            { id: 'session-other', userId },
+          ]);
+
+          await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
+
+          await trx.insert(agentsToSessions).values([
+            { agentId: 'agent1', sessionId: 'session-for-agent', userId },
+          ]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-agent-session',
+              userId,
+              sessionId: 'session-for-agent',
+              role: 'user',
+              content: 'message in agent session',
+              createdAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'msg-other-session',
+              userId,
+              sessionId: 'session-other',
+              role: 'user',
+              content: 'message in other session',
+              createdAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with agentId should return messages from the associated session
+        const result = await messageModel.query({ agentId: 'agent1' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-agent-session');
+      });
+
+      it('should return empty array when agentId has no associated session and no sessionId fallback', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'session1', userId }]);
+
+          await trx.insert(agents).values([{ id: 'agent-no-session', userId, title: 'Agent No Session' }]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-session1',
+              userId,
+              sessionId: 'session1',
+              role: 'user',
+              content: 'message in session1',
+            },
+          ]);
+        });
+
+        // Query with agentId that has no session association
+        const result = await messageModel.query({ agentId: 'agent-no-session' });
+
+        // Should return inbox messages (sessionId is null) which is empty in this case
+        expect(result).toHaveLength(0);
+      });
+
+      it('should fallback to provided sessionId when agentId lookup returns nothing', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'fallback-session', userId }]);
+
+          await trx.insert(agents).values([{ id: 'agent-no-session', userId, title: 'Agent No Session' }]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-fallback',
+              userId,
+              sessionId: 'fallback-session',
+              role: 'user',
+              content: 'message in fallback session',
+              createdAt: new Date('2023-01-01'),
+            },
+          ]);
+        });
+
+        // Query with agentId that has no session, but provide sessionId as fallback
+        const result = await messageModel.query({
+          agentId: 'agent-no-session',
+          sessionId: 'fallback-session',
+        });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-fallback');
+      });
+
+      it('should use agentId session over provided sessionId when agentId has association', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'agent-session', userId },
+            { id: 'provided-session', userId },
+          ]);
+
+          await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
+
+          await trx.insert(agentsToSessions).values([
+            { agentId: 'agent1', sessionId: 'agent-session', userId },
+          ]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-agent-session',
+              userId,
+              sessionId: 'agent-session',
+              role: 'user',
+              content: 'message in agent session',
+              createdAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'msg-provided-session',
+              userId,
+              sessionId: 'provided-session',
+              role: 'user',
+              content: 'message in provided session',
+              createdAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with both agentId and sessionId - agentId should take priority
+        const result = await messageModel.query({
+          agentId: 'agent1',
+          sessionId: 'provided-session',
+        });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-agent-session');
+      });
+
+      it('should work with agentId and topicId filters combined', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'agent-session', userId }]);
+
+          await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
+
+          await trx.insert(agentsToSessions).values([
+            { agentId: 'agent1', sessionId: 'agent-session', userId },
+          ]);
+
+          await trx.insert(topics).values([
+            { id: 'topic1', sessionId: 'agent-session', userId },
+            { id: 'topic2', sessionId: 'agent-session', userId },
+          ]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-topic1',
+              userId,
+              sessionId: 'agent-session',
+              topicId: 'topic1',
+              role: 'user',
+              content: 'message in topic1',
+              createdAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'msg-topic2',
+              userId,
+              sessionId: 'agent-session',
+              topicId: 'topic2',
+              role: 'user',
+              content: 'message in topic2',
+              createdAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with agentId and topicId
+        const result = await messageModel.query({ agentId: 'agent1', topicId: 'topic1' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-topic1');
+      });
+
+      it('should only lookup agentsToSessions for current user', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'user-session', userId },
+            { id: 'other-user-session', userId: otherUserId },
+          ]);
+
+          // Different agent IDs for different users (agent id is primary key)
+          await trx.insert(agents).values([
+            { id: 'user-agent', userId, title: 'User Agent' },
+            { id: 'other-user-agent', userId: otherUserId, title: 'Other User Agent' },
+          ]);
+
+          // Only create agentsToSessions for the other user
+          await trx.insert(agentsToSessions).values([
+            { agentId: 'other-user-agent', sessionId: 'other-user-session', userId: otherUserId },
+          ]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-user',
+              userId,
+              sessionId: null, // inbox
+              role: 'user',
+              content: 'user message',
+            },
+            {
+              id: 'msg-other-user',
+              userId: otherUserId,
+              sessionId: 'other-user-session',
+              role: 'user',
+              content: 'other user message',
+            },
+          ]);
+        });
+
+        // Query with other user's agentId - should not find association since it belongs to other user
+        const result = await messageModel.query({ agentId: 'other-user-agent' });
+
+        // Should return inbox messages (no session found for this user)
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-user');
+      });
     });
   });
 

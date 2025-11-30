@@ -18,7 +18,6 @@ import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import PublishResultModal from '../PublishResultModal';
 import { type MarketPublishAction } from './MarketPublishModal';
@@ -43,7 +42,7 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(
     const { isAuthenticated, isLoading, session, signIn } = useMarketAuth();
 
     // Agent data from store
-    const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+    const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
     const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);
     const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
     const editorData = useStore((s) => s.config.editorData);

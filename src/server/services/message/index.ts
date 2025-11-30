@@ -76,16 +76,17 @@ export class MessageService {
    * reducing the need for separate refresh calls and improving performance.
    */
   async createMessage(params: CreateMessageParams): Promise<CreateMessageResult> {
-    // 1. Create the message
+    // 1. Create the message (使用 agentId)
     const item = await this.messageModel.create(params);
 
-    // 2. Query all messages for this session/topic
+    // 2. Query all messages for this agent/topic
+    // 使用 agentId 字段查询
     const messages = await this.messageModel.query(
       {
+        agentId: params.agentId,
         current: 0,
         groupId: params.groupId,
         pageSize: 9999,
-        sessionId: params.sessionId,
         topicId: params.topicId,
       },
       {

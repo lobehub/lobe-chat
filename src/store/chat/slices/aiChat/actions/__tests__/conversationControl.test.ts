@@ -24,7 +24,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
         });
       });
@@ -35,7 +35,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'execAgentRuntime',
           context: {
-            sessionId: TEST_IDS.SESSION_ID,
+            agentId: TEST_IDS.SESSION_ID,
             topicId: TEST_IDS.TOPIC_ID,
           },
         });
@@ -57,7 +57,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
         });
       });
@@ -68,7 +68,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'execAgentRuntime',
           context: {
-            sessionId: 'different-session',
+            agentId: 'different-session',
             topicId: 'different-topic',
           },
         });
@@ -94,7 +94,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
           mainInputEditor: { setJSONState: mockSetJSONState } as any,
         });
@@ -106,7 +106,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'sendMessage',
           context: {
-            sessionId: TEST_IDS.SESSION_ID,
+            agentId: TEST_IDS.SESSION_ID,
             topicId: TEST_IDS.TOPIC_ID,
           },
         });
@@ -134,7 +134,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
         });
       });
 
@@ -144,7 +144,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'sendMessage',
           context: {
-            sessionId: TEST_IDS.SESSION_ID,
+            agentId: TEST_IDS.SESSION_ID,
             topicId: customTopicId,
           },
         });
@@ -185,7 +185,7 @@ describe('ConversationControl actions', () => {
 
       act(() => {
         useChatStore.setState({
-          activeId: TEST_IDS.SESSION_ID,
+          activeAgentId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
         });
       });
@@ -196,7 +196,7 @@ describe('ConversationControl actions', () => {
         const res = result.current.startOperation({
           type: 'sendMessage',
           context: {
-            sessionId: TEST_IDS.SESSION_ID,
+            agentId: TEST_IDS.SESSION_ID,
             topicId: TEST_IDS.TOPIC_ID,
           },
         });
@@ -245,7 +245,7 @@ describe('ConversationControl actions', () => {
       act(() => {
         const res = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'test-session' },
+          context: { agentId: 'test-session' },
         });
         operationId = res.operationId;
         abortController = res.abortController;
@@ -264,7 +264,7 @@ describe('ConversationControl actions', () => {
       act(() => {
         const res = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'test-session' },
+          context: { agentId: 'test-session' },
         });
         operationId = res.operationId;
 
@@ -289,11 +289,11 @@ describe('ConversationControl actions', () => {
       act(() => {
         const res1 = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'session-1', topicId: 'topic-1' },
+          context: { agentId: 'session-1', topicId: 'topic-1' },
         });
         const res2 = result.current.startOperation({
           type: 'sendMessage',
-          context: { sessionId: 'session-1', topicId: 'topic-2' },
+          context: { agentId: 'session-1', topicId: 'topic-2' },
         });
 
         opId1 = res1.operationId;
@@ -304,8 +304,8 @@ describe('ConversationControl actions', () => {
       expect(result.current.operations[opId2!].status).toBe('running');
       expect(opId1).not.toBe(opId2);
 
-      const contextKey1 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-1' });
-      const contextKey2 = messageMapKey({ sessionId: 'session-1', topicId: 'topic-2' });
+      const contextKey1 = messageMapKey({ agentId: 'session-1', topicId: 'topic-1' });
+      const contextKey2 = messageMapKey({ agentId: 'session-1', topicId: 'topic-2' });
 
       expect(result.current.operationsByContext[contextKey1]).toContain(opId1!);
       expect(result.current.operationsByContext[contextKey2]).toContain(opId2!);

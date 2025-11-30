@@ -1,6 +1,7 @@
 import { LobeSessions } from '@/types/session';
 
 export interface SessionState {
+  activeAgentId?: string;
   /**
    * @title 当前活动的会话
    * @description 当前正在编辑或查看的会话

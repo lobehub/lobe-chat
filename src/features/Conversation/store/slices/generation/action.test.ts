@@ -1,8 +1,8 @@
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createStore } from '../../index';
 import type { ConversationContext, ConversationHooks } from '../../../types';
+import { createStore } from '../../index';
 
 // Mock useChatStore
 const mockCancelOperations = vi.fn();
@@ -43,7 +43,7 @@ describe('Generation Actions', () => {
   describe('stopGenerating', () => {
     it('should cancel all running execAgentRuntime operations', () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: 'topic-1',
         threadId: null,
       };
@@ -58,7 +58,7 @@ describe('Generation Actions', () => {
         {
           type: 'execAgentRuntime',
           status: 'running',
-          sessionId: 'session-1',
+          agentId: 'session-1',
           topicId: 'topic-1',
         },
         expect.any(String),
@@ -68,7 +68,7 @@ describe('Generation Actions', () => {
     it('should call onGenerationStop hook', () => {
       const onGenerationStop = vi.fn();
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -87,7 +87,7 @@ describe('Generation Actions', () => {
   describe('cancelOperation', () => {
     it('should cancel specific operation via ChatStore', () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -104,7 +104,7 @@ describe('Generation Actions', () => {
     it('should call onOperationCancelled hook', () => {
       const onOperationCancelled = vi.fn();
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -123,7 +123,7 @@ describe('Generation Actions', () => {
   describe('clearOperations', () => {
     it('should be a no-op since operations are managed by ChatStore', () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -142,9 +142,7 @@ describe('Generation Actions', () => {
   describe('regenerateMessage', () => {
     it('should regenerate user message', async () => {
       // Mock messagesMap to include the message
-      vi.mocked(
-        await import('@/store/chat').then((m) => m.useChatStore.getState),
-      ).mockReturnValue({
+      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
         messagesMap: {
           default: [{ id: 'msg-1', role: 'user', content: 'Hello' }],
         },
@@ -153,7 +151,7 @@ describe('Generation Actions', () => {
       } as any);
 
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -168,9 +166,7 @@ describe('Generation Actions', () => {
     });
 
     it('should regenerate assistant message', async () => {
-      vi.mocked(
-        await import('@/store/chat').then((m) => m.useChatStore.getState),
-      ).mockReturnValue({
+      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
         messagesMap: {
           default: [{ id: 'msg-2', role: 'assistant', content: 'Hi' }],
         },
@@ -179,7 +175,7 @@ describe('Generation Actions', () => {
       } as any);
 
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -196,9 +192,7 @@ describe('Generation Actions', () => {
     it('should call onBeforeRegenerate hook and respect false return', async () => {
       const onBeforeRegenerate = vi.fn().mockResolvedValue(false);
 
-      vi.mocked(
-        await import('@/store/chat').then((m) => m.useChatStore.getState),
-      ).mockReturnValue({
+      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
         messagesMap: {
           default: [{ id: 'msg-1', role: 'user', content: 'Hello' }],
         },
@@ -207,7 +201,7 @@ describe('Generation Actions', () => {
       } as any);
 
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -226,9 +220,7 @@ describe('Generation Actions', () => {
     it('should call onRegenerateComplete hook after regeneration', async () => {
       const onRegenerateComplete = vi.fn();
 
-      vi.mocked(
-        await import('@/store/chat').then((m) => m.useChatStore.getState),
-      ).mockReturnValue({
+      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
         messagesMap: {
           default: [{ id: 'msg-1', role: 'user', content: 'Hello' }],
         },
@@ -237,7 +229,7 @@ describe('Generation Actions', () => {
       } as any);
 
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -253,9 +245,7 @@ describe('Generation Actions', () => {
     });
 
     it('should not regenerate if message not found', async () => {
-      vi.mocked(
-        await import('@/store/chat').then((m) => m.useChatStore.getState),
-      ).mockReturnValue({
+      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
         messagesMap: {
           default: [],
         },
@@ -264,7 +254,7 @@ describe('Generation Actions', () => {
       } as any);
 
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -283,15 +273,13 @@ describe('Generation Actions', () => {
   describe('continueGeneration', () => {
     it('should continue generation from message', async () => {
       // Reset mock to ensure continueGenerationMessage is available
-      vi.mocked(
-        await import('@/store/chat').then((m) => m.useChatStore.getState),
-      ).mockReturnValue({
+      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
         messagesMap: {},
         continueGenerationMessage: mockContinueGenerationMessage,
       } as any);
 
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -309,7 +297,7 @@ describe('Generation Actions', () => {
       const onBeforeContinue = vi.fn().mockResolvedValue(false);
 
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -327,9 +315,7 @@ describe('Generation Actions', () => {
 
     it('should call onContinueComplete hook after continuation', async () => {
       // Reset mock to ensure continueGenerationMessage is available
-      vi.mocked(
-        await import('@/store/chat').then((m) => m.useChatStore.getState),
-      ).mockReturnValue({
+      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
         messagesMap: {},
         continueGenerationMessage: mockContinueGenerationMessage.mockResolvedValue(undefined),
       } as any);
@@ -337,7 +323,7 @@ describe('Generation Actions', () => {
       const onContinueComplete = vi.fn();
 
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };

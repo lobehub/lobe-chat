@@ -115,7 +115,7 @@ describe('ConversationStore', () => {
   describe('createStore', () => {
     it('should create a store with correct initial state', () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: 'topic-1',
         threadId: null,
       };
@@ -131,7 +131,7 @@ describe('ConversationStore', () => {
 
     it('should create store with custom hooks', () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
@@ -151,7 +151,7 @@ describe('ConversationStore', () => {
 
     it('should create store with thread context', () => {
       const context: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: 'topic-1',
         threadId: 'thread-1',
       };
@@ -167,7 +167,7 @@ describe('ConversationStore', () => {
     describe('updateInputMessage', () => {
       it('should update input message', () => {
         const context: ConversationContext = {
-          sessionId: 'session-1',
+          agentId: 'session-1',
           topicId: null,
           threadId: null,
         };
@@ -183,7 +183,7 @@ describe('ConversationStore', () => {
 
       it('should handle empty message', () => {
         const context: ConversationContext = {
-          sessionId: 'session-1',
+          agentId: 'session-1',
           topicId: null,
           threadId: null,
         };
@@ -202,7 +202,7 @@ describe('ConversationStore', () => {
     describe('setEditor', () => {
       it('should set editor instance', () => {
         const context: ConversationContext = {
-          sessionId: 'session-1',
+          agentId: 'session-1',
           topicId: null,
           threadId: null,
         };
@@ -219,7 +219,7 @@ describe('ConversationStore', () => {
 
       it('should allow setting editor to null', () => {
         const context: ConversationContext = {
-          sessionId: 'session-1',
+          agentId: 'session-1',
           topicId: null,
           threadId: null,
         };
@@ -239,7 +239,7 @@ describe('ConversationStore', () => {
     describe('cleanupInput', () => {
       it('should reset input state on cleanupInput', () => {
         const context: ConversationContext = {
-          sessionId: 'session-1',
+          agentId: 'session-1',
           topicId: null,
           threadId: null,
         };
@@ -268,13 +268,13 @@ describe('ConversationStore', () => {
   describe('Store Isolation', () => {
     it('should create independent store instances', () => {
       const context1: ConversationContext = {
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: null,
         threadId: null,
       };
 
       const context2: ConversationContext = {
-        sessionId: 'session-2',
+        agentId: 'session-2',
         topicId: null,
         threadId: null,
       };
@@ -289,9 +289,8 @@ describe('ConversationStore', () => {
 
       expect(store1.getState().inputMessage).toBe('Message 1');
       expect(store2.getState().inputMessage).toBe('Message 2');
-      expect(store1.getState().context.sessionId).toBe('session-1');
-      expect(store2.getState().context.sessionId).toBe('session-2');
+      expect(store1.getState().context.agentId).toBe('session-1');
+      expect(store2.getState().context.agentId).toBe('session-2');
     });
-
   });
 });

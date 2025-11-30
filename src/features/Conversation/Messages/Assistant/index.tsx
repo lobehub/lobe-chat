@@ -10,26 +10,26 @@ import { Flexbox } from 'react-layout-kit';
 
 import { Avatar, BorderSpacing, ErrorContent, Title } from '@/components/ChatItem';
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
-import ErrorMessageExtra, { useErrorContent } from '../../Error';
-import { markdownElements } from '../../MarkdownElements';
-import { AssistantMessageBody } from './components/MessageBody';
-import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
+import ErrorMessageExtra, { useErrorContent } from '../../Error';
+import { markdownElements } from '../../MarkdownElements';
 import { MessageContent } from '../../components/ChatItem';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import type { MessageActionsConfig } from '../../types';
+import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
 import { AssistantActionsBar } from './Actions';
 import { AssistantMessageExtra } from './Extra';
+import { AssistantMessageBody } from './components/MessageBody';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
 const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
@@ -172,7 +172,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
       metadata,
     } = item;
 
-    const avatar = useSessionStore(sessionMetaSelectors.currentAgentMeta);
+    const avatar = useAgentStore(agentSelectors.currentAgentMeta);
     const { t } = useTranslation('chat');
     const { mobile } = useResponsive();
     const placement = 'left';
@@ -377,7 +377,12 @@ const AssistantMessage = memo<AssistantMessageProps>(
           </Flexbox>
           {!disableEditing && !editing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
-              <AssistantActionsBar actionsConfig={actionsConfig} data={item} id={id} index={index} />
+              <AssistantActionsBar
+                actionsConfig={actionsConfig}
+                data={item}
+                id={id}
+                index={index}
+              />
             </Flexbox>
           )}
         </Flexbox>

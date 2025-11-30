@@ -16,7 +16,6 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 import { LobeSessionType } from '@/types/session';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -87,13 +86,13 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
     // Use current agent config
     return agentSelectors.currentAgentConfig(s);
   }, isEqual);
-  const meta = useSessionStore((s) => {
+  const meta = useAgentStore((s) => {
     if (agentId) {
       // Use the selector that works with agent IDs
-      return sessionMetaSelectors.getAgentMetaByAgentId(agentId)(s);
+      return agentSelectors.getAgentMetaById(agentId)(s);
     } else {
-      // Use current agent meta for session-based access
-      return sessionMetaSelectors.currentAgentMeta(s);
+      // Use current agent meta
+      return agentSelectors.currentAgentMeta(s);
     }
   }, isEqual);
 
@@ -104,10 +103,7 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
     s.showAgentSetting,
     s.updateAgentConfig,
   ]);
-  const [globalUpdateAgentMeta] = useSessionStore((s) => [
-    s.updateSessionMeta,
-    sessionMetaSelectors.currentAgentTitle(s),
-  ]);
+  const [globalUpdateAgentMeta] = useSessionStore((s) => [s.updateSessionMeta]);
 
   // Create custom update functions that can target specific sessions
   const updateAgentConfig = async (config: any) => {

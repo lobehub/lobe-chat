@@ -4,16 +4,14 @@ import { Avatar, Block } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 const HeaderAvatar = memo(() => {
-  const [avatar, backgroundColor] = useSessionStore((s) => {
-    return [
-      sessionMetaSelectors.currentAgentAvatar(s),
-      sessionMetaSelectors.currentAgentBackgroundColor(s),
-    ];
-  });
+  const [avatar, backgroundColor] = useAgentStore((s) => [
+    agentSelectors.currentAgentAvatar(s),
+    agentSelectors.currentAgentBackgroundColor(s),
+  ]);
 
   const openChatSettings = useOpenChatSettings();
 

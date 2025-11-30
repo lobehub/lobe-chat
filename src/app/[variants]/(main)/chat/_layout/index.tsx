@@ -2,8 +2,8 @@ import { useTheme } from 'antd-style';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
+import AgentIdSync from '@/app/[variants]/(main)/chat/_layout/AgentIdSync';
 import { isDesktop } from '@/const/version';
-import SessionHydration from '@/features/NavPanel/SessionHydration';
 import ProtocolUrlHandler from '@/features/ProtocolUrlHandler';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 
@@ -13,6 +13,7 @@ import Sidebar from './Sidebar';
 const Layout = () => {
   const theme = useTheme();
   useInitAgentConfig();
+
   return (
     <>
       <Sidebar />
@@ -32,7 +33,7 @@ const Layout = () => {
       {/* ↑ cloud slot ↑ */}
       <RegisterHotkeys />
       {isDesktop && <ProtocolUrlHandler />}
-      <SessionHydration />
+      <AgentIdSync />
     </>
   );
 };

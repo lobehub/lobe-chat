@@ -13,7 +13,7 @@ import PluginTag from '@/features/PluginTag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 
 import { useContainerStyles } from '../style';
 import { useStyles } from './style';
@@ -32,11 +32,11 @@ const Preview = memo<PreviewProps>(
       agentSelectors.displayableAgentPlugins(s),
     ]);
 
-    const [isInbox, description, avatar, backgroundColor] = useSessionStore((s) => [
-      sessionSelectors.isInboxSession(s),
-      sessionMetaSelectors.currentAgentDescription(s),
-      sessionMetaSelectors.currentAgentAvatar(s),
-      sessionMetaSelectors.currentAgentBackgroundColor(s),
+    const isInbox = useSessionStore(sessionSelectors.isInboxSession);
+    const [description, avatar, backgroundColor] = useAgentStore((s) => [
+      agentSelectors.currentAgentDescription(s),
+      agentSelectors.currentAgentAvatar(s),
+      agentSelectors.currentAgentBackgroundColor(s),
     ]);
 
     const { t } = useTranslation('chat');
@@ -70,10 +70,7 @@ const Preview = memo<PreviewProps>(
               style={{ paddingTop: 24, position: 'relative' }}
               width={'100%'}
             >
-              <ChatItem
-                avatar={{ avatar, backgroundColor, title: displayTitle }}
-                id={message.id}
-              />
+              <ChatItem avatar={{ avatar, backgroundColor, title: displayTitle }} id={message.id} />
             </Flexbox>
             {withFooter ? (
               <Flexbox align={'center'} className={styles.footer} gap={4}>

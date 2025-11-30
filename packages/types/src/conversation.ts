@@ -34,6 +34,7 @@ import { ThreadType } from './topic/thread';
  * ```
  */
 export interface ConversationContext {
+  agentId: string;
   /**
    * Parameters for creating a new thread along with the message.
    * If provided, a new thread will be created and the message will be added to it.
@@ -56,7 +57,7 @@ export interface ConversationContext {
   /**
    * Session or group ID
    */
-  sessionId: string;
+  sessionId?: string;
   /**
    * Thread ID (takes highest priority if present)
    */

@@ -20,7 +20,7 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
  * @returns OperationState object with reactive getters
  */
 export const useOperationState = (context: ConversationContext): OperationState => {
-  const contextKey = messageMapKey({ sessionId: context.sessionId, topicId: context.topicId });
+  const contextKey = messageMapKey({ agentId: context.agentId, topicId: context.topicId });
 
   // Subscribe to the relevant parts of ChatStore for reactivity
   const { operations, operationsByContext, operationsByMessage, toolCallingStreamIds } =

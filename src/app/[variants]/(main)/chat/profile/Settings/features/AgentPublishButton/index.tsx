@@ -5,14 +5,14 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAgentOwnershipCheck } from '@/hooks/useAgentOwnershipCheck';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 import MarketPublishButton from './MarketPublishButton';
 
 const AgentPublishButton = memo(() => {
   const { t } = useTranslation('setting');
-  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+  const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
   const { isOwnAgent } = useAgentOwnershipCheck(meta?.marketIdentifier);
 
   const buttonType = useMemo(() => {

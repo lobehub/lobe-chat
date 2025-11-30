@@ -51,14 +51,14 @@ export const conversationControl: StateCreator<
   ConversationControlAction
 > = (set, get) => ({
   stopGenerateMessage: () => {
-    const { activeId, activeTopicId, cancelOperations } = get();
+    const { activeAgentId, activeTopicId, cancelOperations } = get();
 
     // Cancel all running execAgentRuntime operations in the current context
     cancelOperations(
       {
         type: 'execAgentRuntime',
         status: 'running',
-        sessionId: activeId,
+        agentId: activeAgentId,
         topicId: activeTopicId,
       },
       MESSAGE_CANCEL_FLAT,
@@ -66,11 +66,11 @@ export const conversationControl: StateCreator<
   },
 
   cancelSendMessageInServer: (topicId?: string) => {
-    const { activeId, activeTopicId } = get();
+    const { activeAgentId, activeTopicId } = get();
 
     // Determine which operation to cancel
     const targetTopicId = topicId ?? activeTopicId;
-    const contextKey = messageMapKey({ sessionId: activeId, topicId: targetTopicId });
+    const contextKey = messageMapKey({ agentId: activeAgentId, topicId: targetTopicId });
 
     // Cancel operations in the operation system
     const operationIds = get().operationsByContext[contextKey] || [];
@@ -83,7 +83,7 @@ export const conversationControl: StateCreator<
     });
 
     // Restore editor state if it's the active session
-    if (contextKey === messageMapKey({ sessionId: activeId, topicId: activeTopicId })) {
+    if (contextKey === messageMapKey({ agentId: activeAgentId, topicId: activeTopicId })) {
       // Find the latest sendMessage operation with editor state
       for (const opId of [...operationIds].reverse()) {
         const op = get().operations[opId];
@@ -96,8 +96,8 @@ export const conversationControl: StateCreator<
   },
 
   clearSendMessageError: () => {
-    const { activeId, activeTopicId } = get();
-    const contextKey = messageMapKey({ sessionId: activeId, topicId: activeTopicId });
+    const { activeAgentId, activeTopicId } = get();
+    const contextKey = messageMapKey({ agentId: activeAgentId, topicId: activeTopicId });
     const operationIds = get().operationsByContext[contextKey] || [];
 
     // Clear error message from all sendMessage operations in current context
@@ -149,7 +149,7 @@ export const conversationControl: StateCreator<
         messages: currentMessages,
         parentMessageId: toolMessageId, // Start from tool message
         parentMessageType: 'tool', // Type is 'tool'
-        sessionId: get().activeId,
+        agentId: get().activeAgentId,
         topicId: get().activeTopicId,
         threadId: activeThreadId,
         initialState: state,
@@ -207,7 +207,7 @@ export const conversationControl: StateCreator<
         messages: currentMessages,
         parentMessageId: messageId,
         parentMessageType: 'tool',
-        sessionId: get().activeId,
+        agentId: get().activeAgentId,
         topicId: get().activeTopicId,
         threadId: activeThreadId,
         initialState: state,

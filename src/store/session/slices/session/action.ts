@@ -207,9 +207,9 @@ export const createSessionSlice: StateCreator<
   },
 
   switchSession: (sessionId) => {
-    if (get().activeId === sessionId) return;
+    if (get().activeAgentId === sessionId) return;
 
-    set({ activeId: sessionId }, false, n(`activeSession/${sessionId}`));
+    set({ activeAgentId: sessionId }, false, n(`activeSession/${sessionId}`));
   },
 
   toggleAgentPinned: () => {

@@ -45,7 +45,7 @@ vi.mock('@/libs/swr', () => ({
 // Create a test store
 const createTestStore = () =>
   createStore({
-    context: { sessionId: 'test-session', topicId: null, threadId: null },
+    context: { agentId: 'test-session', topicId: null, threadId: null },
   });
 
 describe('DataSlice', () => {
@@ -59,7 +59,7 @@ describe('DataSlice', () => {
         value: {
           content: 'Hello',
           role: 'user',
-          sessionId: 'session-1',
+          agentId: 'session-1',
         },
       });
 
@@ -80,7 +80,7 @@ describe('DataSlice', () => {
         value: {
           content: 'Hello',
           role: 'user',
-          sessionId: 'session-1',
+          agentId: 'session-1',
         },
       });
 
@@ -440,19 +440,19 @@ describe('DataSlice', () => {
       vi.mocked(messageService.getMessages).mockResolvedValue(mockMessages);
 
       const store = createStore({
-        context: { sessionId: 'test-session', topicId: 'test-topic', threadId: 'test-thread' },
+        context: { agentId: 'test-session', topicId: 'test-topic', threadId: 'test-thread' },
       });
 
       // Call useFetchMessages - this triggers the SWR mock
       store.getState().useFetchMessages({
-        sessionId: 'test-session',
+        agentId: 'test-session',
         topicId: 'test-topic',
         threadId: 'test-thread',
       });
 
       await waitFor(() => {
         expect(messageService.getMessages).toHaveBeenCalledWith({
-          sessionId: 'test-session',
+          agentId: 'test-session',
           threadId: 'test-thread',
           topicId: 'test-topic',
         });
@@ -474,18 +474,18 @@ describe('DataSlice', () => {
       vi.mocked(messageService.getMessages).mockResolvedValue(mockMessages);
 
       const store = createStore({
-        context: { sessionId: 'test-session', topicId: 'test-topic', threadId: null },
+        context: { agentId: 'test-session', topicId: 'test-topic', threadId: null },
       });
 
       store.getState().useFetchMessages({
-        sessionId: 'test-session',
+        agentId: 'test-session',
         topicId: 'test-topic',
         threadId: null,
       });
 
       await waitFor(() => {
         expect(messageService.getMessages).toHaveBeenCalledWith({
-          sessionId: 'test-session',
+          agentId: 'test-session',
           threadId: undefined,
           topicId: 'test-topic',
         });
@@ -494,11 +494,11 @@ describe('DataSlice', () => {
 
     it('should not fetch when sessionId is empty', () => {
       const store = createStore({
-        context: { sessionId: '', topicId: null, threadId: null },
+        context: { agentId: '', topicId: null, threadId: null },
       });
 
       store.getState().useFetchMessages({
-        sessionId: '',
+        agentId: '',
         topicId: null,
         threadId: null,
       });
@@ -513,11 +513,11 @@ describe('DataSlice', () => {
 
     it('should use different SWR keys for different threadIds', () => {
       const store1 = createStore({
-        context: { sessionId: 'session-1', topicId: 'topic-1', threadId: 'thread-1' },
+        context: { agentId: 'session-1', topicId: 'topic-1', threadId: 'thread-1' },
       });
 
       store1.getState().useFetchMessages({
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: 'topic-1',
         threadId: 'thread-1',
       });
@@ -525,11 +525,11 @@ describe('DataSlice', () => {
       const firstCallKey = vi.mocked(useClientDataSWR).mock.calls[0][0];
 
       const store2 = createStore({
-        context: { sessionId: 'session-1', topicId: 'topic-1', threadId: 'thread-2' },
+        context: { agentId: 'session-1', topicId: 'topic-1', threadId: 'thread-2' },
       });
 
       store2.getState().useFetchMessages({
-        sessionId: 'session-1',
+        agentId: 'session-1',
         topicId: 'topic-1',
         threadId: 'thread-2',
       });
@@ -544,11 +544,11 @@ describe('DataSlice', () => {
 
     it('should use same SWR key structure with Object containing sessionId, topicId, threadId', () => {
       const store = createStore({
-        context: { sessionId: 'test-session', topicId: 'test-topic', threadId: 'test-thread' },
+        context: { agentId: 'test-session', topicId: 'test-topic', threadId: 'test-thread' },
       });
 
       store.getState().useFetchMessages({
-        sessionId: 'test-session',
+        agentId: 'test-session',
         topicId: 'test-topic',
         threadId: 'test-thread',
       });
@@ -559,7 +559,7 @@ describe('DataSlice', () => {
       expect(Array.isArray(swrKey)).toBe(true);
       expect(swrKey[0]).toBe('CONVERSATION_FETCH_MESSAGES');
       expect(swrKey[1]).toEqual({
-        sessionId: 'test-session',
+        agentId: 'test-session',
         topicId: 'test-topic',
         threadId: 'test-thread',
       });

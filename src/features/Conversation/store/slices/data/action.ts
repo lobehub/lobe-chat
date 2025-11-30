@@ -75,14 +75,14 @@ export const dataSlice: StateCreator<
   },
 
   useFetchMessages: (context) => {
-    const swrKey: ConversationContext | null = context.sessionId ? context : null;
-
+    const swrKey: ConversationContext | null = context.agentId ? context : null;
+    console.log(swrKey);
     return useClientDataSWR<UIChatMessage[]>(
-      context.sessionId ? ['CONVERSATION_FETCH_MESSAGES', swrKey] : null,
+      context.agentId ? ['CONVERSATION_FETCH_MESSAGES', swrKey] : null,
 
       async ([, key]: [string, ConversationContext]) => {
         return messageService.getMessages({
-          sessionId: key.sessionId,
+          agentId: key.agentId,
           threadId: key.threadId ?? undefined,
           topicId: key.topicId ?? undefined,
         });

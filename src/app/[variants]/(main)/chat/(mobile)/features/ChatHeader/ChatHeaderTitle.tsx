@@ -6,11 +6,13 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 
 const ChatHeaderTitle = memo(() => {
   const { t } = useTranslation(['chat', 'topic']);
@@ -19,10 +21,8 @@ const ChatHeaderTitle = memo(() => {
     topicSelectors.currentTopicLength(s),
     topicSelectors.currentActiveTopic(s),
   ]);
-  const [isInbox, title] = useSessionStore((s) => [
-    sessionSelectors.isInboxSession(s),
-    sessionMetaSelectors.currentAgentTitle(s),
-  ]);
+  const isInbox = useSessionStore(sessionSelectors.isInboxSession);
+  const title = useAgentStore(agentSelectors.currentAgentTitle);
   const theme = useTheme();
 
   const displayTitle = isInbox ? t('inbox.title') : title;

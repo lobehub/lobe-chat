@@ -4,7 +4,10 @@ import type { ConversationContext, ConversationHooks, OperationState } from '../
 import { DEFAULT_OPERATION_STATE } from '../types/operation';
 import { type DataState, dataInitialState } from './slices/data/initialState';
 import { type InputState, inputInitialState } from './slices/input/initialState';
-import { type MessageStateState, messageStateInitialState } from './slices/messageState/initialState';
+import {
+  type MessageStateState,
+  messageStateInitialState,
+} from './slices/messageState/initialState';
 import { type VirtuaListState, virtuaListInitialState } from './slices/virtuaList/initialState';
 
 export interface State extends DataState, InputState, MessageStateState, VirtuaListState {
@@ -37,7 +40,7 @@ export const initialState: State = {
   ...virtuaListInitialState,
 
   context: {
-    sessionId: '',
+    agentId: '',
     threadId: null,
     topicId: null,
   },

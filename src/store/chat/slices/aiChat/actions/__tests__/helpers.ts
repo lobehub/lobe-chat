@@ -3,7 +3,6 @@ import { vi } from 'vitest';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import { useChatStore } from '../../../../store';
 import { messageMapKey } from '../../../../utils/messageMapKey';
@@ -27,7 +26,7 @@ export const setupMockSelectors = (
     createMockChatConfig(options.chatConfig),
   );
 
-  vi.spyOn(sessionMetaSelectors, 'currentAgentMeta').mockImplementation(
+  vi.spyOn(agentSelectors, 'currentAgentMeta').mockImplementation(
     () => options.agentMeta || { tags: [] },
   );
 };
@@ -41,10 +40,10 @@ export const setupStoreWithMessages = (
   topicId: string | null | undefined = TEST_IDS.TOPIC_ID,
 ) => {
   useChatStore.setState({
-    activeId: sessionId,
+    activeAgentId: sessionId,
     activeTopicId: topicId ?? undefined,
     messagesMap: {
-      [messageMapKey({ sessionId, topicId: topicId ?? undefined })]: messages,
+      [messageMapKey({ agentId: sessionId, topicId: topicId ?? undefined })]: messages,
     },
   });
 };
@@ -107,7 +106,7 @@ export const resetTestEnvironment = () => {
   vi.clearAllMocks();
   useChatStore.setState(
     {
-      activeId: TEST_IDS.SESSION_ID,
+      activeAgentId: TEST_IDS.SESSION_ID,
       activeTopicId: TEST_IDS.TOPIC_ID,
       messagesMap: {},
       toolCallingStreamIds: {},

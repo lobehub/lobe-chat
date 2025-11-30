@@ -24,6 +24,7 @@ import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
 import {
+  agentsToSessions,
   chunks,
   documents,
   embeddings,
@@ -53,6 +54,7 @@ export class MessageModel {
   // **************** Query *************** //
   query = async (
     {
+      agentId,
       current = 0,
       pageSize = 1000,
       sessionId,
@@ -65,6 +67,23 @@ export class MessageModel {
     } = {},
   ) => {
     const offset = current * pageSize;
+
+    // If agentId is provided, try to get the associated sessionId
+    let effectiveSessionId = sessionId;
+    if (agentId) {
+      const agentSession = await this.db
+        .select({ sessionId: agentsToSessions.sessionId })
+        .from(agentsToSessions)
+        .where(
+          and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)),
+        )
+        .limit(1);
+
+      // If found, use the associated sessionId; otherwise fallback to the provided sessionId
+      if (agentSession[0]?.sessionId) {
+        effectiveSessionId = agentSession[0].sessionId;
+      }
+    }
 
     // 1. get basic messages
     const result = await this.db
@@ -122,7 +141,7 @@ export class MessageModel {
       .where(
         and(
           eq(messages.userId, this.userId),
-          this.matchSession(sessionId),
+          this.matchSession(effectiveSessionId),
           this.matchTopic(topicId),
           this.matchGroup(groupId),
           this.matchThread(threadId),
