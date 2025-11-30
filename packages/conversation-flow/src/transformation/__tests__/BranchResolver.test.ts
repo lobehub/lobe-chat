@@ -171,5 +171,44 @@ describe('BranchResolver', () => {
 
       expect(resolver.getActiveBranchIdFromMetadata(message, childIds, childrenMap)).toBe('msg-2');
     });
+
+    it('should return undefined for optimistic update (activeBranchIndex === childIds.length)', () => {
+      const message: Message = {
+        content: 'test',
+        createdAt: 0,
+        id: 'msg-1',
+        meta: {},
+        metadata: { activeBranchIndex: 2 }, // index = childIds.length (optimistic update)
+        role: 'user',
+        updatedAt: 0,
+      };
+
+      const childIds = ['msg-2', 'msg-3'];
+      const childrenMap = new Map<string | null, string[]>();
+
+      // When activeBranchIndex === childIds.length, it's an optimistic update
+      // The branch hasn't been created yet, so return undefined
+      expect(
+        resolver.getActiveBranchIdFromMetadata(message, childIds, childrenMap),
+      ).toBeUndefined();
+    });
+
+    it('should ignore activeBranchIndex when it exceeds optimistic update range', () => {
+      const message: Message = {
+        content: 'test',
+        createdAt: 0,
+        id: 'msg-1',
+        meta: {},
+        metadata: { activeBranchIndex: 5 }, // > childIds.length (invalid)
+        role: 'user',
+        updatedAt: 0,
+      };
+
+      const childIds = ['msg-2', 'msg-3'];
+      const childrenMap = new Map<string | null, string[]>();
+
+      // activeBranchIndex > childIds.length should be ignored, fallback to default
+      expect(resolver.getActiveBranchIdFromMetadata(message, childIds, childrenMap)).toBe('msg-2');
+    });
   });
 });
