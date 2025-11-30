@@ -1,8 +1,8 @@
 {
   "addFolder": "폴더 만들기",
-  "addKnowledge": "지식 추가",
+  "addLibrary": "라이브러리에 추가",
   "addPage": "문서 생성",
-  "desc": "작업, 학습 및 생활 지식을 관리하세요.",
+  "desc": "작업, 학습 및 생활 리소스를 관리하세요.",
   "detail": {
     "basic": {
       "createdAt": "생성 시간",
@@ -65,6 +65,7 @@
   "empty": "업로드된 파일/폴더가 없습니다",
   "header": {
     "actions": {
+      "connect": "연결 중...",
       "newFolder": "새 폴더 만들기",
       "newPage": "새 문서 만들기",
       "uploadFile": "파일 업로드",
@@ -91,7 +92,7 @@
     "quickActions": "빠른 작업",
     "recentFiles": "최근 파일",
     "recentPages": "최근 문서",
-    "subtitle": "지식 관리 시스템에 오신 것을 환영합니다. 여기서 문서를 관리해 보세요",
+    "subtitle": "리소스 센터에 오신 것을 환영합니다. 여기서 문서와 자료를 관리하세요.",
     "uploadEntries": {
       "files": {
         "title": "파일 업로드"
@@ -99,19 +100,27 @@
       "folder": {
         "title": "폴더 업로드"
       },
-      "knowledgeBase": {
-        "title": "새 지식베이스 만들기"
+      "library": {
+        "title": "새 라이브러리 만들기"
       },
       "newPage": {
         "title": "새 문서 만들기"
       }
     }
   },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "이 라이브러리를 삭제하려고 합니다. 라이브러리 내 파일은 삭제되지 않으며 전체 파일로 이동됩니다. 삭제된 라이브러리는 복구할 수 없으니 신중히 진행하세요.",
+      "empty": "<1>+</1>을 클릭하여 라이브러리를 생성하세요"
+    },
+    "new": "라이브러리",
+    "title": "라이브러리"
+  },
   "menu": {
     "allFiles": "모든 파일",
     "allPages": "모든 문서"
   },
-  "networkError": "지식베이스를 불러오지 못했습니다. 네트워크 연결을 확인한 후 다시 시도해 주세요",
+  "networkError": "라이브러리를 불러오지 못했습니다. 네트워크 연결을 확인한 후 다시 시도하세요.",
   "notSupportGuide": {
     "desc": "현재 배포 인스턴스는 클라이언트 데이터베이스 모드로, 파일 관리 기능을 사용할 수 없습니다. <1>서버 데이터베이스 배포 모드</1>로 전환하거나 <3>LobeChat Cloud</3>를 이용해 주세요",
     "features": {
@@ -123,9 +132,9 @@
         "desc": "고성능 벡터 모델을 사용하여 텍스트를 청크 단위로 벡터화하고, 파일 내용을 의미 기반으로 검색할 수 있습니다",
         "title": "의미 기반 벡터화"
       },
-      "repos": {
-        "desc": "지식베이스를 생성하고 다양한 형식의 파일을 추가하여 나만의 전문 지식을 구축할 수 있습니다",
-        "title": "지식베이스 구축"
+      "libraries": {
+        "desc": "라이브러리를 생성하고 다양한 유형의 파일을 추가하여 나만의 전문 리소스를 구축할 수 있습니다.",
+        "title": "라이브러리"
       }
     },
     "title": "현재 배포 모드에서는 파일 관리 기능을 지원하지 않습니다"
@@ -133,14 +142,6 @@
   "preview": {
     "downloadFile": "파일 다운로드",
     "unsupportedFileAndContact": "이 파일 형식은 온라인 미리보기를 지원하지 않습니다. 미리보기 기능이 필요하시면 <1>의견을 보내주세요</1>"
-  },
-  "repo": {
-    "list": {
-      "confirmRemoveRepo": "이 저장소를 삭제하려고 합니다. 저장소 내 파일은 삭제되지 않고 전체 파일로 이동됩니다. 저장소 삭제는 복구할 수 없으니 신중히 진행해 주세요.",
-      "empty": "<1>+</1> 버튼을 클릭하여 저장소를 생성하세요"
-    },
-    "new": "새 저장소",
-    "title": "저장소"
   },
   "searchFilePlaceholder": "파일 검색",
   "searchPagePlaceholder": "문서 검색",
@@ -155,7 +156,7 @@
     "videos": "비디오",
     "websites": "웹사이트"
   },
-  "title": "지식 베이스",
+  "title": "리소스",
   "toggleLeftPanel": "왼쪽 패널 표시/숨기기",
   "uploadDock": {
     "body": {

@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
+  "emptyAgentAction": "도우미 만들기",
   "extendParams": {
     "disableContextCaching": {
       "desc": "단일 대화 생성 비용을 최대 90%까지 줄이고, 응답 속도를 4배 향상시킵니다 (<1>자세히 알아보기</1>). 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "모든 내용",
     "allFiles": "모든 파일",
-    "allKnowledgeBases": "모든 지식 베이스",
-    "disabled": "현재 배포 모드에서는 지식 기반 대화가 지원되지 않습니다. 사용하려면 서버 데이터베이스 배포로 전환하거나 {{cloud}} 서비스를 이용해 주십시오.",
+    "allLibraries": "모든 리소스 라이브러리",
+    "disabled": "현재 배포 모드에서는 리소스 라이브러리 대화를 지원하지 않습니다. 사용하려면 서버 데이터베이스 배포로 전환하거나 {{cloud}} 서비스를 이용해 주세요.",
     "library": {
       "action": {
         "add": "추가",
         "detail": "상세",
         "remove": "제거"
       },
-      "title": "파일/지식 베이스"
+      "title": "파일/리소스 라이브러리"
     },
-    "relativeFilesOrKnowledgeBases": "관련 파일/지식 베이스",
-    "title": "지식 베이스",
-    "uploadGuide": "업로드한 파일은 '지식 베이스'에서 확인할 수 있습니다.",
+    "relativeFilesOrLibraries": "연관된 파일/리소스 라이브러리",
+    "title": "리소스 라이브러리",
+    "uploadGuide": "업로드한 파일은 '리소스'에서 확인할 수 있어요.",
     "viewMore": "더 보기"
   },
   "memberSelection": {
@@ -360,6 +361,10 @@
       "allComplete": "모든 작업이 완료되었습니다",
       "title": "작업 완료"
     }
+  },
+  "tab": {
+    "profile": "도우미 프로필",
+    "search": "검색"
   },
   "thread": {
     "divider": "하위 주제",

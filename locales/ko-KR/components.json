@@ -19,6 +19,7 @@
       "chunkingTooltip": "파일을 여러 텍스트 블록으로 분할하고 벡터화하여 의미 기반 검색 및 파일 대화에 사용할 수 있습니다.",
       "chunkingUnsupported": "이 파일은 분할을 지원하지 않습니다.",
       "confirmDelete": "이 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없습니다. 계속하시겠습니까?",
+      "confirmDeleteFolder": "이 폴더와 그 안의 모든 내용을 삭제하려고 합니다. 삭제 후에는 복구할 수 없습니다. 계속하시겠습니까?",
       "confirmDeleteMultiFiles": "선택한 {{count}}개의 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없습니다. 계속하시겠습니까?",
       "confirmRemoveFromKnowledgeBase": "선택한 {{count}}개의 파일을 지식베이스에서 제거하려고 합니다. 제거 후에도 전체 파일 목록에서 확인할 수 있습니다. 계속하시겠습니까?",
       "copyUrl": "링크 복사",
@@ -35,7 +36,10 @@
       "moveToFolder": "다음으로 이동...",
       "moveToRoot": "루트 디렉터리로 이동",
       "removeFromKnowledgeBase": "지식베이스에서 제거",
-      "removeFromKnowledgeBaseSuccess": "파일이 성공적으로 제거되었습니다."
+      "removeFromKnowledgeBaseSuccess": "파일이 성공적으로 제거되었습니다.",
+      "rename": "이름 변경",
+      "renameError": "이름 변경에 실패했습니다",
+      "renameSuccess": "이름이 성공적으로 변경되었습니다"
     },
     "bottom": "마지막입니다",
     "config": {

@@ -1,8 +1,8 @@
 {
   "addFolder": "Map aanmaken",
-  "addKnowledge": "Kennis toevoegen",
+  "addLibrary": "Toevoegen aan bibliotheek",
   "addPage": "Document aanmaken",
-  "desc": "Beheer je kennis over werk, studie en leven.",
+  "desc": "Beheer je bronnen voor werk, studie en dagelijks leven.",
   "detail": {
     "basic": {
       "createdAt": "Aanmaakdatum",
@@ -65,6 +65,7 @@
   "empty": "Geen bestanden/mappen geüpload",
   "header": {
     "actions": {
+      "connect": "Verbinden...",
       "newFolder": "Nieuwe map",
       "newPage": "Nieuw document",
       "uploadFile": "Bestand uploaden",
@@ -91,7 +92,7 @@
     "quickActions": "Snelle acties",
     "recentFiles": "Recente bestanden",
     "recentPages": "Recente documenten",
-    "subtitle": "Welkom bij je kennisbank. Begin hier met het beheren van je documenten",
+    "subtitle": "Welkom bij het Bronnencentrum. Begin hier met het beheren van je documenten en bestanden.",
     "uploadEntries": {
       "files": {
         "title": "Bestanden uploaden"
@@ -99,19 +100,27 @@
       "folder": {
         "title": "Map uploaden"
       },
-      "knowledgeBase": {
-        "title": "Nieuwe kennisbank"
+      "library": {
+        "title": "Nieuwe bibliotheek aanmaken"
       },
       "newPage": {
         "title": "Nieuw document aanmaken"
       }
     }
   },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Je staat op het punt deze bibliotheek te verwijderen. De bestanden worden niet verwijderd, maar verplaatst naar 'Alle bestanden'. Deze actie kan niet ongedaan worden gemaakt. Wees voorzichtig.",
+      "empty": "Klik op <1>+</1> om een nieuwe bibliotheek aan te maken"
+    },
+    "new": "Bibliotheek",
+    "title": "Bibliotheken"
+  },
   "menu": {
     "allFiles": "Alle bestanden",
     "allPages": "Alle documenten"
   },
-  "networkError": "Kon de kennisbank niet ophalen, controleer uw netwerkverbinding en probeer het opnieuw",
+  "networkError": "Kan de bibliotheek niet ophalen. Controleer je netwerkverbinding en probeer het opnieuw.",
   "notSupportGuide": {
     "desc": "De huidige implementatie is in client-database modus, waardoor de bestandsbeheerfunctie niet beschikbaar is. Schakel over naar <1>server-database implementatiemodus</1>, of gebruik direct <3>LobeChat Cloud</3>",
     "features": {
@@ -123,9 +132,9 @@
         "desc": "Gebruik hoogwaardige vectormodellen om tekstdelen te vectoriseren, waardoor semantische zoekopdrachten in de inhoud van bestanden mogelijk zijn",
         "title": "Vector-semantisering"
       },
-      "repos": {
-        "desc": "Ondersteunt het maken van kennisbanken en staat het toevoegen van verschillende bestandstypen toe, zodat je jouw eigen domeinkennis kunt opbouwen",
-        "title": "Kennisbank"
+      "libraries": {
+        "desc": "Ondersteunt het aanmaken van bibliotheken en het toevoegen van verschillende bestandstypen om je eigen kennisdomein op te bouwen.",
+        "title": "Bibliotheken"
       }
     },
     "title": "De huidige implementatiemodus ondersteunt geen bestandsbeheer"
@@ -133,14 +142,6 @@
   "preview": {
     "downloadFile": "Bestand downloaden",
     "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
-  },
-  "repo": {
-    "list": {
-      "confirmRemoveRepo": "Deze opslagplaats wordt verwijderd. De bestanden blijven behouden en worden verplaatst naar 'Alle bestanden'. Verwijderde kennisopslagplaatsen kunnen niet worden hersteld. Ga voorzichtig te werk.",
-      "empty": "Klik op <1>+</1> om een nieuwe opslagplaats aan te maken"
-    },
-    "new": "Nieuwe opslagplaats",
-    "title": "Opslagplaats"
   },
   "searchFilePlaceholder": "Zoek bestand",
   "searchPagePlaceholder": "Documenten zoeken",
@@ -155,7 +156,7 @@
     "videos": "Video's",
     "websites": "Websites"
   },
-  "title": "Kennisbank",
+  "title": "Bronnen",
   "toggleLeftPanel": "Toon/verberg linker paneel",
   "uploadDock": {
     "body": {

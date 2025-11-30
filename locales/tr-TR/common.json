@@ -304,6 +304,10 @@
     "business": "İşbirliği",
     "support": "E-posta Desteği"
   },
+  "navPanel": {
+    "agent": "Asistan",
+    "library": "Kütüphane"
+  },
   "new": "Yeni",
   "oauth": "SSO Girişi",
   "officialSite": "Resmi Site",
@@ -359,12 +363,19 @@
   },
   "tab": {
     "aiImage": "Yapay Zeka Resim",
+    "audio": "Ses",
     "chat": "Chat",
+    "community": "Topluluk",
     "discover": "Keşfet",
     "files": "Dosyalar",
+    "home": "Ana Sayfa",
+    "image": "Çizim",
     "knowledgeBase": "Bilgi Tabanı",
     "me": "ben",
-    "setting": "Ayarlar"
+    "pages": "Belgeler",
+    "search": "Ara",
+    "setting": "Ayarlar",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "İzin ver",

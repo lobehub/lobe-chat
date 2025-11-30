@@ -1,8 +1,8 @@
 {
   "addFolder": "Utwórz folder",
-  "addKnowledge": "Dodaj wiedzę",
+  "addLibrary": "Dodaj do biblioteki",
   "addPage": "Utwórz dokument",
-  "desc": "Zarządzaj swoją wiedzą z pracy, nauki i życia.",
+  "desc": "Zarządzaj swoimi zasobami do pracy, nauki i życia.",
   "detail": {
     "basic": {
       "createdAt": "Data utworzenia",
@@ -65,6 +65,7 @@
   "empty": "Brak przesłanych plików/folderów",
   "header": {
     "actions": {
+      "connect": "Połącz...",
       "newFolder": "Nowy folder",
       "newPage": "Nowy dokument",
       "uploadFile": "Prześlij plik",
@@ -91,7 +92,7 @@
     "quickActions": "Szybkie akcje",
     "recentFiles": "Ostatnie pliki",
     "recentPages": "Ostatnie dokumenty",
-    "subtitle": "Witamy w bazie wiedzy. Zacznij zarządzać swoimi dokumentami już teraz",
+    "subtitle": "Witamy w Centrum Zasobów — zacznij zarządzać swoimi dokumentami i plikami stąd",
     "uploadEntries": {
       "files": {
         "title": "Prześlij pliki"
@@ -99,19 +100,27 @@
       "folder": {
         "title": "Prześlij folder"
       },
-      "knowledgeBase": {
-        "title": "Nowa baza wiedzy"
+      "library": {
+        "title": "Utwórz nową bibliotekę"
       },
       "newPage": {
         "title": "Nowy dokument"
       }
     }
   },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Zamierzasz usunąć tę bibliotekę. Pliki w niej zawarte nie zostaną usunięte, lecz przeniesione do folderu Wszystkie pliki. Po usunięciu biblioteki nie będzie można jej przywrócić — proszę zachować ostrożność.",
+      "empty": "Kliknij <1>+</1>, aby rozpocząć tworzenie biblioteki"
+    },
+    "new": "Biblioteka",
+    "title": "Biblioteka"
+  },
   "menu": {
     "allFiles": "Wszystkie pliki",
     "allPages": "Wszystkie dokumenty"
   },
-  "networkError": "Nie udało się uzyskać dostępu do bazy wiedzy, proszę sprawdzić połączenie sieciowe i spróbować ponownie",
+  "networkError": "Nie udało się pobrać biblioteki. Sprawdź połączenie z siecią i spróbuj ponownie.",
   "notSupportGuide": {
     "desc": "Obecna instancja wdrożeniowa jest w trybie bazy danych klienta, co uniemożliwia korzystanie z funkcji zarządzania plikami. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio korzystać z <3>LobeChat Cloud</3>",
     "features": {
@@ -123,9 +132,9 @@
         "desc": "Wykorzystuje wysokowydajne modele wektorowe do indeksowania fragmentów tekstu, umożliwiając semantyczne przeszukiwanie treści plików",
         "title": "Semantyzacja wektorów"
       },
-      "repos": {
-        "desc": "Obsługuje tworzenie bazy wiedzy i pozwala na dodawanie różnych typów plików, budując swoją własną wiedzę w danej dziedzinie",
-        "title": "Baza wiedzy"
+      "libraries": {
+        "desc": "Możliwość tworzenia bibliotek i dodawania różnych typów plików, aby zbudować własne zasoby tematyczne",
+        "title": "Biblioteki"
       }
     },
     "title": "Obecny tryb wdrożenia nie obsługuje zarządzania plikami"
@@ -133,14 +142,6 @@
   "preview": {
     "downloadFile": "Pobierz plik",
     "unsupportedFileAndContact": "Ten format pliku nie jest obecnie obsługiwany w podglądzie online. Jeśli chcesz uzyskać podgląd, zachęcamy do <1>skontaktowania się z nami</1>."
-  },
-  "repo": {
-    "list": {
-      "confirmRemoveRepo": "Zamierzasz usunąć to repozytorium. Pliki w nim zawarte nie zostaną usunięte, lecz przeniesione do folderu 'Wszystkie pliki'. Po usunięciu repozytorium nie będzie można go odzyskać — prosimy o ostrożność.",
-      "empty": "Kliknij <1>+</1>, aby rozpocząć tworzenie repozytorium"
-    },
-    "new": "Utwórz nowe repozytorium",
-    "title": "Repozytorium"
   },
   "searchFilePlaceholder": "Szukaj pliku",
   "searchPagePlaceholder": "Szukaj dokumentów",
@@ -155,7 +156,7 @@
     "videos": "Wideo",
     "websites": "Strony internetowe"
   },
-  "title": "Baza wiedzy",
+  "title": "Zasoby",
   "toggleLeftPanel": "Pokaż/Ukryj panel po lewej stronie",
   "uploadDock": {
     "body": {

@@ -304,6 +304,10 @@
     "business": "Geschäftliche Zusammenarbeit",
     "support": "E-Mail-Support"
   },
+  "navPanel": {
+    "agent": "Assistent",
+    "library": "Bibliothek"
+  },
   "new": "Neu",
   "oauth": "SSO-Anmeldung",
   "officialSite": "Offizielle Website",
@@ -359,12 +363,19 @@
   },
   "tab": {
     "aiImage": "KI-Gemälde",
+    "audio": "Audio",
     "chat": "Chat",
+    "community": "Community",
     "discover": "Entdecken",
     "files": "Dateien",
+    "home": "Startseite",
+    "image": "Zeichnen",
     "knowledgeBase": "Wissensdatenbank",
     "me": "Ich",
-    "setting": "Einstellung"
+    "pages": "Dokumente",
+    "search": "Suche",
+    "setting": "Einstellung",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Erlauben",

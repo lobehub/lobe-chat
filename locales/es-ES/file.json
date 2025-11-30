@@ -1,8 +1,8 @@
 {
   "addFolder": "Crear carpeta",
-  "addKnowledge": "Agregar conocimiento",
+  "addLibrary": "Agregar a la biblioteca",
   "addPage": "Crear documento",
-  "desc": "Gestiona tus conocimientos de trabajo, estudio y vida.",
+  "desc": "Gestiona tus recursos de trabajo, estudio y vida.",
   "detail": {
     "basic": {
       "createdAt": "Fecha de creación",
@@ -65,6 +65,7 @@
   "empty": "No hay archivos/carpetas subidos aún",
   "header": {
     "actions": {
+      "connect": "Conectar...",
       "newFolder": "Nueva carpeta",
       "newPage": "Nuevo documento",
       "uploadFile": "Subir archivo",
@@ -91,7 +92,7 @@
     "quickActions": "Acciones rápidas",
     "recentFiles": "Archivos recientes",
     "recentPages": "Páginas recientes",
-    "subtitle": "Bienvenido a tu base de conocimientos. Comienza aquí a gestionar tus documentos y notas",
+    "subtitle": "Bienvenido al Centro de Recursos, comienza aquí a gestionar tus documentos y archivos",
     "uploadEntries": {
       "files": {
         "title": "Subir archivos"
@@ -99,19 +100,27 @@
       "folder": {
         "title": "Subir carpeta"
       },
-      "knowledgeBase": {
-        "title": "Nueva base de conocimientos"
+      "library": {
+        "title": "Crear nueva biblioteca"
       },
       "newPage": {
         "title": "Nuevo documento"
       }
     }
   },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Estás a punto de eliminar esta biblioteca. Los archivos no se eliminarán, sino que se moverán a Todos los archivos. Esta acción no se puede deshacer, procede con precaución.",
+      "empty": "Haz clic en <1>+</1> para comenzar a crear una biblioteca"
+    },
+    "new": "Biblioteca",
+    "title": "Biblioteca"
+  },
   "menu": {
     "allFiles": "Todos los archivos",
     "allPages": "Todos los documentos"
   },
-  "networkError": "Error al obtener la base de conocimientos, por favor verifica la conexión a internet y vuelve a intentarlo",
+  "networkError": "No se pudo obtener la biblioteca. Verifica tu conexión a internet e inténtalo de nuevo.",
   "notSupportGuide": {
     "desc": "La instancia de despliegue actual está en modo de base de datos cliente, no se puede utilizar la función de gestión de archivos. Por favor, cambia a <1>modo de despliegue de base de datos en servidor</1>, o utiliza directamente <3>LobeChat Cloud</3>",
     "features": {
@@ -123,9 +132,9 @@
         "desc": "Utiliza modelos de vectores de alto rendimiento para vectorizar fragmentos de texto, permitiendo la búsqueda semántica del contenido del archivo",
         "title": "Semantización de vectores"
       },
-      "repos": {
-        "desc": "Soporta la creación de bases de conocimientos y permite añadir diferentes tipos de archivos, construyendo tu propio conocimiento en el área",
-        "title": "Base de conocimientos"
+      "libraries": {
+        "desc": "Permite crear bibliotecas y añadir diferentes tipos de archivos para construir tus propios recursos especializados",
+        "title": "Bibliotecas"
       }
     },
     "title": "El modo de despliegue actual no soporta la gestión de archivos"
@@ -133,14 +142,6 @@
   "preview": {
     "downloadFile": "Descargar archivo",
     "unsupportedFileAndContact": "Este formato de archivo no es compatible con la vista previa en línea. Si desea solicitar una vista previa, no dude en <1>contactarnos</1>."
-  },
-  "repo": {
-    "list": {
-      "confirmRemoveRepo": "Estás a punto de eliminar este repositorio. Los archivos no se eliminarán, sino que se moverán a Todos los archivos. Una vez eliminado, el repositorio no se podrá recuperar. Procede con precaución.",
-      "empty": "Haz clic en <1>+</1> para comenzar a crear un repositorio"
-    },
-    "new": "Nuevo repositorio",
-    "title": "Repositorio"
   },
   "searchFilePlaceholder": "Buscar archivo",
   "searchPagePlaceholder": "Buscar documentos",
@@ -155,7 +156,7 @@
     "videos": "Videos",
     "websites": "Sitios web"
   },
-  "title": "Base de conocimientos",
+  "title": "Recursos",
   "toggleLeftPanel": "Mostrar/Ocultar panel izquierdo",
   "uploadDock": {
     "body": {

@@ -19,6 +19,7 @@
       "chunkingTooltip": "将文件拆分为多个文本块并向量化后，可用于语义检索和文件对话",
       "chunkingUnsupported": "该文件不支持分块",
       "confirmDelete": "即将删除该文件，删除后该将无法找回，请确认你的操作",
+      "confirmDeleteFolder": "即将删除该文件夹及其所有内容，删除后该将无法找回，请确认你的操作",
       "confirmDeleteMultiFiles": "即将删除选中的 {{count}} 个文件，删除后该将无法找回，请确认你的操作",
       "confirmRemoveFromKnowledgeBase": "即将从知识库中移除选中的 {{count}} 个文件，移除后文件仍然可以在全部文件中查看，请确认你的操作",
       "copyUrl": "复制链接",
@@ -35,7 +36,10 @@
       "moveToFolder": "移动到...",
       "moveToRoot": "移动到根目录",
       "removeFromKnowledgeBase": "从知识库中移除",
-      "removeFromKnowledgeBaseSuccess": "文件移除成功"
+      "removeFromKnowledgeBaseSuccess": "文件移除成功",
+      "rename": "重命名",
+      "renameError": "重命名失败",
+      "renameSuccess": "重命名成功"
     },
     "bottom": "已经到底啦",
     "config": {

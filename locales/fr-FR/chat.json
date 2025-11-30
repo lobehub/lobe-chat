@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Copie",
   "emptyAgent": "Aucun assistant disponible",
+  "emptyAgentAction": "Créer un assistant",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Le coût de génération d'une seule conversation peut être réduit de 90 % au maximum, avec une vitesse de réponse augmentée de 4 fois (<1>En savoir plus</1>). Une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "Tout le contenu",
     "allFiles": "Tous les fichiers",
-    "allKnowledgeBases": "Toutes les bases de connaissances",
-    "disabled": "Le mode de déploiement actuel ne prend pas en charge les dialogues de la base de connaissances. Pour l'utiliser, veuillez passer à un déploiement de base de données sur serveur ou utiliser le service {{cloud}}.",
+    "allLibraries": "Toutes les bibliothèques",
+    "disabled": "Le mode de déploiement actuel ne prend pas en charge les conversations avec la bibliothèque. Pour l'utiliser, veuillez passer à un déploiement avec base de données côté serveur ou utiliser le service {{cloud}}",
     "library": {
       "action": {
         "add": "Ajouter",
         "detail": "Détails",
         "remove": "Supprimer"
       },
-      "title": "Fichiers/Bases de connaissances"
+      "title": "Fichiers/Bibliothèque"
     },
-    "relativeFilesOrKnowledgeBases": "Fichiers/Bases de connaissances associés",
-    "title": "Base de connaissances",
-    "uploadGuide": "Les fichiers téléchargés peuvent être consultés dans la « Base de connaissances ».",
+    "relativeFilesOrLibraries": "Fichiers/Bibliothèques associés",
+    "title": "Bibliothèque",
+    "uploadGuide": "Les fichiers téléchargés peuvent être consultés dans la section « Ressources »",
     "viewMore": "Voir plus"
   },
   "memberSelection": {
@@ -360,6 +361,10 @@
       "allComplete": "Toutes les tâches sont terminées",
       "title": "Tâches terminées"
     }
+  },
+  "tab": {
+    "profile": "Profil de l'assistant",
+    "search": "Recherche"
   },
   "thread": {
     "divider": "Sous-sujet",

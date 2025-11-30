@@ -1667,6 +1667,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview có khả năng suy luận phức tạp mạnh mẽ, thể hiện xuất sắc trong các lĩnh vực suy luận logic, toán học, lập trình."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và khả năng suy luận tối ưu."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash là mô hình suy luận hiệu suất cao của Google, phù hợp với các tác vụ đa phương thức mở rộng."
   },
@@ -3454,9 +3457,6 @@
   },
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5 là mô hình Haiku nhanh nhất và thông minh nhất của Anthropic, với tốc độ như chớp và khả năng tư duy mở rộng."
-  },
-  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và khả năng suy luận xuất sắc."
   },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5 là mô hình thông minh nhất của Anthropic cho đến nay."

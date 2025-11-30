@@ -1667,6 +1667,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview possiede potenti capacità di ragionamento complesso, eccellendo nei campi del ragionamento logico, della matematica e della programmazione."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash è un modello di ragionamento ad alte prestazioni di Google, adatto a compiti multimodali estesi."
   },
@@ -3454,9 +3457,6 @@
   },
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5 è il modello Haiku più veloce e intelligente di Anthropic, con una velocità fulminea e una notevole capacità di ragionamento esteso."
-  },
-  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
   },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5 è il modello più intelligente mai realizzato da Anthropic fino ad oggi."

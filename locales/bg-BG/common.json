@@ -304,6 +304,10 @@
     "business": "Бизнес сътрудничество",
     "support": "Поддръжка по имейл"
   },
+  "navPanel": {
+    "agent": "Асистент",
+    "library": "Библиотека"
+  },
   "new": "Нов",
   "oauth": "SSO Вход",
   "officialSite": "Официален сайт",
@@ -359,12 +363,19 @@
   },
   "tab": {
     "aiImage": "AI рисуване",
+    "audio": "Аудио",
     "chat": "Чат",
+    "community": "Общност",
     "discover": "Открий",
     "files": "Файлове",
+    "home": "Начало",
+    "image": "Изображения",
     "knowledgeBase": "База знания",
     "me": "аз",
-    "setting": "Настройки"
+    "pages": "Документи",
+    "search": "Търсене",
+    "setting": "Настройки",
+    "video": "Видео"
   },
   "telemetry": {
     "allow": "Разреши",

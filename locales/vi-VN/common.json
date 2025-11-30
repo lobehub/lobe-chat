@@ -304,6 +304,10 @@
     "business": "Hợp tác kinh doanh",
     "support": "Hỗ trợ qua email"
   },
+  "navPanel": {
+    "agent": "Trợ lý",
+    "library": "Thư viện"
+  },
   "new": "Mới",
   "oauth": "Đăng nhập SSO",
   "officialSite": "Trang web chính thức",
@@ -359,12 +363,19 @@
   },
   "tab": {
     "aiImage": "Vẽ tranh AI",
+    "audio": "Âm thanh",
     "chat": "Trò chuyện",
+    "community": "Cộng đồng",
     "discover": "Khám phá",
     "files": "Tệp",
+    "home": "Trang chủ",
+    "image": "Hình ảnh",
     "knowledgeBase": "Cơ sở tri thức",
     "me": "Tôi",
-    "setting": "Cài đặt"
+    "pages": "Tài liệu",
+    "search": "Tìm kiếm",
+    "setting": "Cài đặt",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Cho phép",

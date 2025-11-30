@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暫無助手",
+  "emptyAgentAction": "建立助手",
   "extendParams": {
     "disableContextCaching": {
       "desc": "單條對話生成成本最高可降低 90%，響應速度提升 4 倍（<1>了解更多</1>）。開啟後將自動禁用歷史消息數限制",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "所有內容",
     "allFiles": "所有檔案",
-    "allKnowledgeBases": "所有知識庫",
-    "disabled": "目前的部署模式不支援知識庫對話，如需使用，請切換到伺服器端資料庫部署或使用 {{cloud}} 服務",
+    "allLibraries": "所有資源庫",
+    "disabled": "目前的部署模式不支援資源庫對話，如需使用，請切換至伺服器端資料庫部署或使用 {{cloud}} 服務",
     "library": {
       "action": {
         "add": "添加",
         "detail": "詳情",
         "remove": "移除"
       },
-      "title": "檔案/知識庫"
+      "title": "檔案／資源庫"
     },
-    "relativeFilesOrKnowledgeBases": "關聯檔案/知識庫",
-    "title": "知識庫",
-    "uploadGuide": "上傳過的檔案可以在「知識庫」中查看哦",
+    "relativeFilesOrLibraries": "關聯檔案／資源庫",
+    "title": "資源庫",
+    "uploadGuide": "上傳的檔案可在「資源」中查看喔",
     "viewMore": "查看更多"
   },
   "memberSelection": {
@@ -252,7 +253,7 @@
   "noMatchingAgents": "沒有符合的成員",
   "noMembersYet": "此群組尚未有成員。請點選 + 按鈕邀請助理。",
   "noSelectedAgents": "尚未選擇成員",
-  "openInNewWindow": "在新視窗中開啟",
+  "openInNewWindow": "開啟獨立視窗",
   "owner": "群組擁有者",
   "pin": "置頂",
   "pinOff": "取消置頂",
@@ -360,6 +361,10 @@
       "allComplete": "所有任務已完成",
       "title": "任務已完成"
     }
+  },
+  "tab": {
+    "profile": "助手檔案",
+    "search": "搜尋"
   },
   "thread": {
     "divider": "子話題",

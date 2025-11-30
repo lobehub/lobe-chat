@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Cópia",
   "emptyAgent": "Sem assistente disponível",
+  "emptyAgentAction": "Criar assistente",
   "extendParams": {
     "disableContextCaching": {
       "desc": "O custo de geração de uma única conversa pode ser reduzido em até 90%, com um aumento de 4 vezes na velocidade de resposta (<1>Saiba mais</1>). Ao ativar, o limite de mensagens históricas será desativado automaticamente.",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "Todo conteúdo",
     "allFiles": "Todos os arquivos",
-    "allKnowledgeBases": "Todos os bancos de conhecimento",
-    "disabled": "O modo de implantação atual não suporta diálogos com a base de conhecimento. Para utilizá-lo, por favor, mude para a implantação do banco de dados no servidor ou utilize o serviço {{cloud}}.",
+    "allLibraries": "Todas as bibliotecas",
+    "disabled": "O modo de implantação atual não suporta conversas com bibliotecas. Para usar esse recurso, altere para uma implantação com banco de dados no servidor ou utilize o serviço {{cloud}}",
     "library": {
       "action": {
         "add": "Adicionar",
         "detail": "Detalhes",
         "remove": "Remover"
       },
-      "title": "Arquivo/Banco de Conhecimento"
+      "title": "Arquivos/Biblioteca"
     },
-    "relativeFilesOrKnowledgeBases": "Arquivos/Bancos de Conhecimento relacionados",
-    "title": "Banco de Conhecimento",
-    "uploadGuide": "Os arquivos enviados podem ser visualizados em 'Banco de Conhecimento'.",
+    "relativeFilesOrLibraries": "Arquivos/Bibliotecas relacionadas",
+    "title": "Biblioteca",
+    "uploadGuide": "Os arquivos enviados podem ser visualizados em \"Recursos\"",
     "viewMore": "Ver mais"
   },
   "memberSelection": {
@@ -252,7 +253,7 @@
   "noMatchingAgents": "Nenhum membro correspondente encontrado",
   "noMembersYet": "Este grupo ainda não tem membros. Clique no botão + para convidar assistentes.",
   "noSelectedAgents": "Nenhum membro selecionado ainda",
-  "openInNewWindow": "Abrir em uma nova janela",
+  "openInNewWindow": "Abrir em nova janela",
   "owner": "Proprietário do grupo",
   "pin": "Fixar",
   "pinOff": "Desafixar",
@@ -360,6 +361,10 @@
       "allComplete": "Todas as tarefas foram concluídas",
       "title": "Tarefas concluídas"
     }
+  },
+  "tab": {
+    "profile": "Perfil do assistente",
+    "search": "Pesquisar"
   },
   "thread": {
     "divider": "Subtópico",

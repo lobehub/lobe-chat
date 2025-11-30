@@ -304,6 +304,10 @@
     "business": "Współpraca biznesowa",
     "support": "Wsparcie mailowe"
   },
+  "navPanel": {
+    "agent": "Asystent",
+    "library": "Biblioteka"
+  },
   "new": "Nowy",
   "oauth": "Logowanie SSO",
   "officialSite": "Oficjalna strona internetowa",
@@ -359,12 +363,19 @@
   },
   "tab": {
     "aiImage": "AI Rysowanie",
+    "audio": "Audio",
     "chat": "Czat",
+    "community": "Społeczność",
     "discover": "Odkryj",
     "files": "Pliki",
+    "home": "Strona główna",
+    "image": "Obraz",
     "knowledgeBase": "Baza wiedzy",
     "me": "ja",
-    "setting": "Ustawienia"
+    "pages": "Dokumenty",
+    "search": "Szukaj",
+    "setting": "Ustawienia",
+    "video": "Wideo"
   },
   "telemetry": {
     "allow": "Zezwalaj",
