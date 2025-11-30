@@ -143,7 +143,7 @@ export const CreateNewMessageParamsSchema = z
     // Required fields
     role: UIMessageRoleTypeSchema,
     content: z.string(),
-    agentId: z.string().nullable().optional(),
+    agentId: z.string(),
     /**
      * @deprecated
      */

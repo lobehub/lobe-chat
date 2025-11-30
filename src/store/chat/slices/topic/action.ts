@@ -228,10 +228,10 @@ export const chatTopic: StateCreator<
   },
 
   autoRenameTopicTitle: async (id) => {
-    const { activeAgentId: sessionId, summaryTopicTitle, internal_updateTopicLoading } = get();
+    const { activeAgentId: agentId, summaryTopicTitle, internal_updateTopicLoading } = get();
 
     internal_updateTopicLoading(id, true);
-    const messages = await messageService.getMessages({ sessionId, topicId: id });
+    const messages = await messageService.getMessages({ agentId, topicId: id });
 
     await summaryTopicTitle(id, messages);
     internal_updateTopicLoading(id, false);

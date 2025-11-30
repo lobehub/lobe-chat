@@ -57,16 +57,10 @@ export const messageRouter = router({
     }),
 
   createMessage: messageProcedure
-    .input(CreateNewMessageParamsSchema.extend(basicContextSchema.shape))
+    .input(CreateNewMessageParamsSchema)
     .mutation(async ({ input, ctx }) => {
-      const { agentId, ...rest } = input;
-      const resolved = await resolveContext(
-        { agentId, sessionId: rest.sessionId },
-        ctx.serverDB,
-        ctx.userId,
-      );
-
-      return ctx.messageService.createMessage({ ...rest, sessionId: resolved.sessionId } as any);
+      // 直接使用 agentId，不再转换为 sessionId
+      return ctx.messageService.createMessage(input as any);
     }),
 
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {

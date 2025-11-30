@@ -108,7 +108,6 @@ export const pluginTypes: StateCreator<
         },
         {
           agentId: message?.agentId,
-          sessionId: message?.sessionId,
           topicId: message?.topicId,
         },
       );
@@ -165,7 +164,6 @@ export const pluginTypes: StateCreator<
       } else {
         const result = await messageService.updateMessageError(id, error as any, {
           agentId: message?.agentId,
-          sessionId: message?.sessionId,
           topicId: message?.topicId,
         });
         if (result?.success && result.messages) {
@@ -239,7 +237,6 @@ export const pluginTypes: StateCreator<
       } else {
         const result = await messageService.updateMessageError(id, error as any, {
           agentId: message?.agentId,
-          sessionId: message?.sessionId,
           topicId: message?.topicId,
         });
         if (result?.success && result.messages) {

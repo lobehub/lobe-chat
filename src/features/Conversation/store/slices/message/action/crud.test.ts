@@ -150,7 +150,7 @@ describe('Message CRUD Actions', () => {
       await store.getState().deleteMessage('msg-1');
 
       expect(removeMessagesSpy).toHaveBeenCalledWith(['msg-1'], {
-        sessionId: 'test-session',
+        agentId: 'test-session',
         topicId: undefined,
       });
     });
