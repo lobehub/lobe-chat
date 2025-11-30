@@ -18,7 +18,20 @@ import {
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
-import { and, asc, count, desc, eq, gt, inArray, isNotNull, isNull, like, sql } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gt,
+  inArray,
+  isNotNull,
+  isNull,
+  like,
+  or,
+  sql,
+} from 'drizzle-orm';
 
 import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
@@ -68,21 +81,24 @@ export class MessageModel {
   ) => {
     const offset = current * pageSize;
 
-    // If agentId is provided, try to get the associated sessionId
-    let effectiveSessionId = sessionId;
+    // If agentId is provided, query messages that match either:
+    // 1. messages.agentId = agentId (new data with agentId stored directly)
+    // 2. messages.sessionId = associated sessionId (legacy data via agentsToSessions lookup)
+    let agentCondition;
     if (agentId) {
+      // Get the associated sessionId for backward compatibility with legacy data
       const agentSession = await this.db
         .select({ sessionId: agentsToSessions.sessionId })
         .from(agentsToSessions)
-        .where(
-          and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)),
-        )
+        .where(and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)))
         .limit(1);
 
-      // If found, use the associated sessionId; otherwise fallback to the provided sessionId
-      if (agentSession[0]?.sessionId) {
-        effectiveSessionId = agentSession[0].sessionId;
-      }
+      const associatedSessionId = agentSession[0]?.sessionId;
+
+      // Build condition to match both new (agentId) and legacy (sessionId) data
+      agentCondition = associatedSessionId
+        ? or(eq(messages.agentId, agentId), eq(messages.sessionId, associatedSessionId))
+        : eq(messages.agentId, agentId);
     }
 
     // 1. get basic messages
@@ -141,7 +157,7 @@ export class MessageModel {
       .where(
         and(
           eq(messages.userId, this.userId),
-          this.matchSession(effectiveSessionId),
+          agentCondition ?? this.matchSession(sessionId),
           this.matchTopic(topicId),
           this.matchGroup(groupId),
           this.matchThread(threadId),
@@ -761,6 +777,30 @@ export class MessageModel {
 
   deleteAllMessages = async () => {
     return this.db.delete(messages).where(eq(messages.userId, this.userId));
+  };
+
+  /**
+   * Deletes multiple messages based on the agentId.
+   * This will delete messages that have either:
+   * 1. Direct agentId match (new data)
+   * 2. SessionId match via agentsToSessions lookup (legacy data)
+   */
+  batchDeleteByAgentId = async (agentId: string) => {
+    // Get the associated sessionId for backward compatibility with legacy data
+    const agentSession = await this.db
+      .select({ sessionId: agentsToSessions.sessionId })
+      .from(agentsToSessions)
+      .where(and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)))
+      .limit(1);
+
+    const associatedSessionId = agentSession[0]?.sessionId;
+
+    // Build condition to match both new (agentId) and legacy (sessionId) data
+    const agentCondition = associatedSessionId
+      ? or(eq(messages.agentId, agentId), eq(messages.sessionId, associatedSessionId))
+      : eq(messages.agentId, agentId);
+
+    return this.db.delete(messages).where(and(eq(messages.userId, this.userId), agentCondition));
   };
 
   // **************** Helper *************** //
