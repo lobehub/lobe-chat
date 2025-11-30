@@ -1,13 +1,16 @@
 import { Button, Icon } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { BrainIcon, LucideRefreshCcwDot, PlusIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useAiInfraStore } from '@/store/aiInfra';
+import { ModelUpdateResult } from '@/store/aiInfra/slices/aiModel/action';
 
 import CreateNewModelModal from './CreateNewModelModal';
+import { UpdateNotificationContent } from './UpdateNotification';
 
 const useStyles = createStyles(({ css, token }) => ({
   circle: css`
@@ -48,11 +51,41 @@ const useStyles = createStyles(({ css, token }) => ({
 const EmptyState = memo<{ provider: string }>(({ provider }) => {
   const { t } = useTranslation('modelProvider');
   const { styles } = useStyles();
+  const { notification } = App.useApp();
 
   const [fetchRemoteModelList] = useAiInfraStore((s) => [s.fetchRemoteModelList]);
 
   const [fetchRemoteModelsLoading, setFetchRemoteModelsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const showUpdateNotification = useCallback(
+    (result: ModelUpdateResult) => {
+      const { added } = result;
+
+      // For first fetch (empty state), only show if models were added
+      if (added.length > 0) {
+        const notificationKey = `model-update-${Date.now()}`;
+        let dismissed = false;
+        const closeNotification = () => {
+          if (dismissed) return;
+          dismissed = true;
+          notification.destroy(notificationKey);
+        };
+
+        notification.success({
+          description: <UpdateNotificationContent added={added} onAutoClose={closeNotification} />,
+          duration: null,
+          key: notificationKey,
+          message: t('providerModels.list.fetcher.updateResult.title'),
+          onClose: () => {
+            dismissed = true;
+          },
+          style: { overflow: 'hidden', position: 'relative', width: 380 },
+        });
+      }
+    },
+    [notification, t],
+  );
 
   return (
     <Center className={styles.container} gap={24} paddingBlock={40}>
@@ -80,7 +113,10 @@ const EmptyState = memo<{ provider: string }>(({ provider }) => {
           onClick={async () => {
             setFetchRemoteModelsLoading(true);
             try {
-              await fetchRemoteModelList(provider);
+              const result = await fetchRemoteModelList(provider);
+              if (result) {
+                showUpdateNotification(result);
+              }
             } catch (e) {
               console.error(e);
             }

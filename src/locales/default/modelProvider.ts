@@ -431,6 +431,18 @@ export default {
         fetching: '正在获取模型列表...',
         latestTime: '上次更新时间：{{time}}',
         noLatestTime: '暂未获取列表',
+        updateResult: {
+          added: '新增 {{count}} 个模型',
+          addedModels: '新增模型：{{models}}',
+          collapse: '收起',
+          noChanges: '模型列表无变化',
+          removed: '移除 {{count}} 个模型',
+          removedButBuiltin: '以下 {{count}} 个模型已从远端移除，但仍保留在内置列表中：{{models}}',
+          removedButBuiltinTitle: '模型列表已过期',
+          removedModels: '移除模型：{{models}}',
+          showMore: '展开更多 ({{count}} 个)',
+          title: '模型列表已更新',
+        },
       },
       noModelsInCategory: '该分类下暂无启用的模型',
       resetAll: {
