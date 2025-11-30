@@ -19,6 +19,7 @@
       "chunkingTooltip": "Chia tách tệp thành nhiều khối văn bản và vector hóa, có thể sử dụng cho tìm kiếm ngữ nghĩa và đối thoại tệp",
       "chunkingUnsupported": "Tập tin này không hỗ trợ phân mảnh",
       "confirmDelete": "Bạn sắp xóa tệp này, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
+      "confirmDeleteFolder": "Thư mục này và toàn bộ nội dung bên trong sẽ bị xóa vĩnh viễn và không thể khôi phục. Vui lòng xác nhận thao tác của bạn.",
       "confirmDeleteMultiFiles": "Bạn sắp xóa {{count}} tệp đã chọn, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
       "confirmRemoveFromKnowledgeBase": "Bạn sắp xóa {{count}} tệp đã chọn khỏi kho tri thức, sau khi xóa tệp vẫn có thể xem trong tất cả các tệp, vui lòng xác nhận hành động của bạn",
       "copyUrl": "Sao chép liên kết",
@@ -35,7 +36,10 @@
       "moveToFolder": "Di chuyển đến...",
       "moveToRoot": "Di chuyển đến thư mục gốc",
       "removeFromKnowledgeBase": "Xóa khỏi kho tri thức",
-      "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công"
+      "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công",
+      "rename": "Đổi tên",
+      "renameError": "Đổi tên thất bại",
+      "renameSuccess": "Đổi tên thành công"
     },
     "bottom": "Đã đến cuối rồi",
     "config": {

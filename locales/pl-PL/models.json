@@ -1676,6 +1676,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview posiada silne zdolności do złożonego wnioskowania, wyróżniając się w dziedzinach takich jak wnioskowanie logiczne, matematyka i programowanie."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 to flagowy model firmy Anthropic, łączący wyjątkową inteligencję z wysoką skalowalnością, idealny do złożonych zadań wymagających najwyższej jakości odpowiedzi i zdolności rozumowania."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash to wysokowydajny model wnioskowania firmy Google, odpowiedni do rozszerzonych zadań multimodalnych."
   },
@@ -3463,9 +3466,6 @@
   },
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5 to najszybszy i najbardziej inteligentny model Haiku firmy Anthropic, oferujący błyskawiczne działanie i zaawansowane możliwości rozumowania."
-  },
-  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5 to flagowy model firmy Anthropic, łączący wyjątkową inteligencję z możliwością skalowania, idealny do złożonych zadań wymagających najwyższej jakości odpowiedzi i zdolności rozumowania."
   },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5 to jak dotąd najbardziej zaawansowany model stworzony przez firmę Anthropic."

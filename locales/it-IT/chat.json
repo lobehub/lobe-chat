@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "Nessun assistente disponibile",
+  "emptyAgentAction": "Crea assistente",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Il costo di generazione di una singola conversazione può essere ridotto fino al 90%, con una velocità di risposta aumentata di 4 volte (<1>Scopri di più</1>). Attivando questa opzione, verrà disabilitato automaticamente il limite sul numero di messaggi storici.",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "Tutti i contenuti",
     "allFiles": "Tutti i file",
-    "allKnowledgeBases": "Tutte le basi di conoscenza",
-    "disabled": "L'attuale modalità di distribuzione non supporta le conversazioni con la base di conoscenza. Se desideri utilizzarla, passa alla distribuzione del database server o utilizza il servizio {{cloud}}.",
+    "allLibraries": "Tutte le librerie",
+    "disabled": "La modalità di distribuzione attuale non supporta le conversazioni con la libreria. Per utilizzare questa funzione, passa a una distribuzione con database lato server o utilizza il servizio {{cloud}}",
     "library": {
       "action": {
         "add": "Aggiungi",
         "detail": "Dettagli",
         "remove": "Rimuovi"
       },
-      "title": "File/Basi di conoscenza"
+      "title": "File/Libreria"
     },
-    "relativeFilesOrKnowledgeBases": "File/Basi di conoscenza correlate",
-    "title": "Base di conoscenza",
-    "uploadGuide": "I file caricati possono essere visualizzati nella 'Base di conoscenza'.",
+    "relativeFilesOrLibraries": "File/Librerie correlate",
+    "title": "Libreria",
+    "uploadGuide": "I file caricati possono essere visualizzati nella sezione \"Risorse\"",
     "viewMore": "Visualizza di più"
   },
   "memberSelection": {
@@ -360,6 +361,10 @@
       "allComplete": "Tutti i compiti sono stati completati",
       "title": "Compiti completati"
     }
+  },
+  "tab": {
+    "profile": "Profilo assistente",
+    "search": "Cerca"
   },
   "thread": {
     "divider": "Sottoargomento",
