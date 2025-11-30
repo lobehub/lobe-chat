@@ -3,7 +3,6 @@ import { vi } from 'vitest';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import { useChatStore } from '../../../../store';
 import { messageMapKey } from '../../../../utils/messageMapKey';
@@ -27,7 +26,7 @@ export const setupMockSelectors = (
     createMockChatConfig(options.chatConfig),
   );
 
-  vi.spyOn(sessionMetaSelectors, 'currentAgentMeta').mockImplementation(
+  vi.spyOn(agentSelectors, 'currentAgentMeta').mockImplementation(
     () => options.agentMeta || { tags: [] },
   );
 };

@@ -2,7 +2,6 @@
 
 import { Tabs } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +14,6 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import MobileHeader from './_layout/Mobile/Header';
 
@@ -24,16 +22,14 @@ export default memo(() => {
   const [tab, setTab] = useState(ChatSettingsTabs.Prompt);
   const theme = useTheme();
   const cateItems = useCategory();
-  const [id, updateAgentMeta, title] = useSessionStore((s) => [
-    s.activeId,
-    s.updateSessionMeta,
-    sessionMetaSelectors.currentAgentTitle(s),
+  const [id, updateAgentMeta] = useSessionStore((s) => [s.activeId, s.updateSessionMeta]);
+
+  const [updateAgentConfig, config, meta, title] = useAgentStore((s) => [
+    s.updateAgentConfig,
+    agentSelectors.currentAgentConfig(s),
+    agentSelectors.currentAgentMeta(s),
+    agentSelectors.currentAgentTitle(s),
   ]);
-
-  const [updateAgentConfig] = useAgentStore((s) => [s.updateAgentConfig]);
-
-  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
-  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
 
   const isLoading = false;
 

@@ -12,8 +12,6 @@ import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { ChatSettingsTabs } from '@/store/global/initialState';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 
 export const useStyles = createStyles(({ css, token }) => ({
   prompt: css`
@@ -39,11 +37,10 @@ const SystemRole = memo(({ editing, setEditing, open, setOpen, isLoading }: Syst
   const openChatSettings = useOpenChatSettings(ChatSettingsTabs.Prompt);
   const { t } = useTranslation('common');
 
-  const [meta] = useSessionStore((s) => [sessionMetaSelectors.currentAgentMeta(s)]);
-
-  const [systemRole, updateAgentConfig] = useAgentStore((s) => [
+  const [systemRole, updateAgentConfig, meta] = useAgentStore((s) => [
     agentSelectors.currentAgentSystemRole(s),
     s.updateAgentConfig,
+    agentSelectors.currentAgentMeta(s),
   ]);
 
   const handleOpenWithEdit = (e: MouseEvent) => {

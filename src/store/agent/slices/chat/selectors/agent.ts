@@ -1,11 +1,18 @@
 import {
   DEFAULT_AGENT_CONFIG,
   DEFAULT_AVATAR,
+  DEFAULT_BACKGROUND_COLOR,
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
 } from '@lobechat/const';
-import { KnowledgeItem, KnowledgeType, LobeAgentConfig, LobeAgentTTSConfig } from '@lobechat/types';
+import {
+  KnowledgeItem,
+  KnowledgeType,
+  LobeAgentConfig,
+  LobeAgentTTSConfig,
+  MetaData,
+} from '@lobechat/types';
 import { VoiceList } from '@lobehub/tts';
 
 import { DEFAULT_OPENING_QUESTIONS } from '@/features/AgentSetting/store/selectors';
@@ -30,6 +37,40 @@ const currentAgentBackgroundColor = (s: AgentStoreState) =>
   currentAgentData(s)?.backgroundColor || 'transparent';
 
 const currentAgentTags = (s: AgentStoreState) => currentAgentData(s)?.tags || [];
+
+/**
+ * Get complete meta data for the current agent
+ * Used to replace sessionMetaSelectors.currentAgentMeta
+ */
+const currentAgentMeta = (s: AgentStoreState): MetaData => {
+  const data = currentAgentData(s);
+  return {
+    avatar: data?.avatar || DEFAULT_AVATAR,
+    backgroundColor: data?.backgroundColor || DEFAULT_BACKGROUND_COLOR,
+    description: data?.description || undefined,
+    tags: data?.tags,
+    title: data?.title || undefined,
+  };
+};
+
+/**
+ * Get agent meta by agent ID (for group chat)
+ * Used to replace sessionMetaSelectors.getAgentMetaByAgentId
+ */
+const getAgentMetaById =
+  (agentId: string) =>
+  (s: AgentStoreState): MetaData => {
+    const data = s.agentMap[agentId];
+    if (!data) return {};
+
+    return {
+      avatar: data.avatar || DEFAULT_AVATAR,
+      backgroundColor: data.backgroundColor || DEFAULT_BACKGROUND_COLOR,
+      description: data.description || undefined,
+      tags: data.tags,
+      title: data.title || undefined,
+    };
+  };
 
 // ==========   Config   ============== //
 
@@ -179,6 +220,7 @@ export const agentSelectors = {
   currentAgentDescription,
   currentAgentFiles,
   currentAgentKnowledgeBases,
+  currentAgentMeta,
   currentAgentModel,
   currentAgentModelProvider,
   currentAgentPlugins,
@@ -191,6 +233,7 @@ export const agentSelectors = {
   currentKnowledgeIds,
   displayableAgentPlugins,
   getAgentConfigById,
+  getAgentMetaById,
   hasEnabledKnowledge,
   hasEnabledKnowledgeBases,
   hasKnowledge,

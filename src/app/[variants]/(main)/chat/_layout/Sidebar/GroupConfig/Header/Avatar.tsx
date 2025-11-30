@@ -5,19 +5,19 @@ import { memo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { GroupMemberWithAgent } from '@/types/session';
 
 const HeaderAvatar = memo<{ size?: number }>(() => {
-  const [title, members] = useSessionStore((s) => {
+  const title = useAgentStore(agentSelectors.currentAgentTitle);
+  const members = useSessionStore((s) => {
     const session = sessionSelectors.currentSession(s);
-    return [
-      sessionMetaSelectors.currentAgentTitle(s),
-      session?.type === 'group' ? session.members : undefined,
-    ];
+    return session?.type === 'group' ? session.members : undefined;
   });
 
   const currentUser = useUserStore((s) => ({
@@ -56,7 +56,7 @@ const HeaderAvatar = memo<{ size?: number }>(() => {
         ]}
         cornerShape={'square'}
         size={28}
-        title={title}
+        title={title ?? undefined}
       />
     </Block>
   );

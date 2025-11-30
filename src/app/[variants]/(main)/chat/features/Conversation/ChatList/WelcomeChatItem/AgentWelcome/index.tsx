@@ -15,8 +15,6 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import AddButton from './AddButton';
 
@@ -55,7 +53,7 @@ const InboxWelcome = memo(() => {
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
   // const openingQuestions = useAgentStore(agentSelectors.openingQuestions);
 
-  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+  const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
 
   const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
     name: meta.title || t('defaultAgent', { ns: 'chat' }),

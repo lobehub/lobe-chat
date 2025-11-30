@@ -14,8 +14,6 @@ import {
 } from '@/store/chat/selectors';
 import { fileChatSelectors, useFileStore } from '@/store/file';
 import { mentionSelectors, useMentionStore } from '@/store/mention';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 import { getUserStoreState } from '@/store/user';
 
 export interface UseSendMessageParams {
@@ -243,11 +241,11 @@ export const useSendGroupMessage = () => {
       // Append mentioned users as plain text like "@userName"
       const mentionState = useMentionStore.getState();
       const mentioned = mentionSelectors.mentionedUsers(mentionState);
-      const sessionState = useSessionStore.getState();
+      const agentState = getAgentStoreState();
       const mentionText =
         mentioned.length > 0
           ? ` ${mentioned
-              .map((id) => sessionMetaSelectors.getAgentMetaByAgentId(id)(sessionState).title || id)
+              .map((id) => agentSelectors.getAgentMetaById(id)(agentState).title || id)
               .map((name) => `@${name}`)
               .join(' ')}`
           : '';

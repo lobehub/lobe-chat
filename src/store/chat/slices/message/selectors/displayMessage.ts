@@ -3,9 +3,7 @@ import { AssistantContentBlock, UIChatMessage } from '@lobechat/types';
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
@@ -41,15 +39,13 @@ const getMeta = (message: UIChatMessage) => {
     }
 
     default: {
-      // For group chat, get meta from agent session
+      // For group chat, get meta from agent store by agentId
       if (message.groupId && message.agentId) {
-        return sessionMetaSelectors.getAgentMetaByAgentId(message.agentId)(
-          useSessionStore.getState(),
-        );
+        return agentSelectors.getAgentMetaById(message.agentId)(useAgentStore.getState());
       }
 
-      // Otherwise, use the current session's agent meta for single agent chat
-      return sessionMetaSelectors.currentAgentMeta(useSessionStore.getState());
+      // Otherwise, use the current agent's meta for single agent chat
+      return agentSelectors.currentAgentMeta(useAgentStore.getState());
     }
   }
 };
