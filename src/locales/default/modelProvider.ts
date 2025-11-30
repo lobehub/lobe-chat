@@ -193,6 +193,7 @@ export default {
   },
   list: {
     title: {
+      custom: '未启用自定义服务商',
       disabled: '未启用服务商',
       enabled: '已启用服务商',
     },
@@ -201,6 +202,7 @@ export default {
     addCustomProvider: '添加自定义服务商',
     all: '全部',
     list: {
+      custom: '自定义未启用',
       disabled: '未启用',
       disabledActions: {
         sort: '排序方式',
