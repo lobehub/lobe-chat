@@ -93,7 +93,6 @@ export const createKnowledgeSlice: StateCreator<
       ([, id]: string[]) => agentService.getFilesAndKnowledgeBases(id),
       {
         fallbackData: [],
-        suspense: true,
       },
     );
   },
