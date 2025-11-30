@@ -1,6 +1,62 @@
 [
   {
     "children": {
+      "fixes": ["Refresh custom AI provider on selection."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.136"
+  },
+  {
+    "children": {
+      "fixes": ["Fix BetterAuth Unable to link account - untrusted provider."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.135"
+  },
+  {
+    "children": {
+      "fixes": ["Betterauth public url auto detect from VERCEL_URL."]
+    },
+    "date": "2025-11-29",
+    "version": "2.0.0-next.134"
+  },
+  {
+    "children": {
+      "fixes": ["Betterauth name should mapped to fullName."]
+    },
+    "date": "2025-11-29",
+    "version": "2.0.0-next.133"
+  },
+  {
+    "children": {
+      "fixes": ["Unable to switch to default topic."]
+    },
+    "date": "2025-11-29",
+    "version": "2.0.0-next.132"
+  },
+  {
+    "children": {
+      "fixes": ["Implement uniform callback URL for SSO providers."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.131"
+  },
+  {
+    "children": {
+      "fixes": ["Add handling for content_part and reasoning_part events in fetchSSE."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.130"
+  },
+  {
+    "children": {
+      "fixes": ["Filter out file with sourceType = file."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.129"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-28",

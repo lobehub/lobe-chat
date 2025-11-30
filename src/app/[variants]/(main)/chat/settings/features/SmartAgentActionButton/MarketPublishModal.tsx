@@ -40,7 +40,8 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
     const isSubmit = action === 'submit';
     const isUpload = action === 'upload';
 
-    const { session: marketSession, isAuthenticated } = useMarketAuth();
+    const marketAuth = useMarketAuth();
+    const { isAuthenticated } = marketAuth;
     const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
     const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);
 
@@ -74,7 +75,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
     useEffect(() => {
       if (!isUpload) return;
       const marketIdentifier = meta?.marketIdentifier;
-      const accessToken = marketSession?.accessToken;
+      const accessToken = marketAuth.getAccessToken();
       if (!open || !isAuthenticated || !accessToken || !marketIdentifier) return;
 
       let cancelled = false;
@@ -105,13 +106,14 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
       return () => {
         cancelled = true;
       };
-    }, [isAuthenticated, isUpload, marketSession?.accessToken, meta?.marketIdentifier, open]);
+    }, [isAuthenticated, isUpload, marketAuth, meta?.marketIdentifier, open]);
 
     const tokenUsage = useTokenCount(systemRole);
 
     const handleSubmit = useCallback(
       async (values: MarketPublishFormValues) => {
-        if (!isAuthenticated || !marketSession?.accessToken) {
+        const accessToken = marketAuth.getAccessToken();
+        if (!isAuthenticated || !accessToken) {
           message.error(t('marketPublish.modal.messages.notAuthenticated'));
           return false;
         }
@@ -126,12 +128,15 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
 
         try {
           message.loading({ content: loadingMessage, key: messageKey });
-          marketApiService.setAccessToken(marketSession.accessToken);
+          marketApiService.setAccessToken(accessToken);
 
           if (isSubmit) {
             identifier = values.identifier?.trim();
             if (!identifier) {
-              message.error({ content: t('marketPublish.modal.identifier.required'), key: messageKey });
+              message.error({
+                content: t('marketPublish.modal.identifier.required'),
+                key: messageKey,
+              });
               return false;
             }
 
@@ -145,7 +150,10 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
               await marketApiService.createAgent(createPayload as any);
             }
           } else if (!identifier) {
-            message.error({ content: t('marketPublish.modal.messages.missingIdentifier'), key: messageKey });
+            message.error({
+              content: t('marketPublish.modal.messages.missingIdentifier'),
+              key: messageKey,
+            });
             return false;
           }
 
@@ -174,7 +182,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
                   if (typeof plugin === 'string') {
                     return plugin;
                   } else {
-                    return null
+                    return null;
                   }
                 }) || [],
               systemRole: systemRole,
@@ -191,7 +199,9 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
           } catch (versionError) {
             const errorMessage = versionError instanceof Error ? versionError.message : '未知错误';
             message.error({
-              content: t('marketPublish.modal.messages.createVersionFailed', { message: errorMessage }),
+              content: t('marketPublish.modal.messages.createVersionFailed', {
+                message: errorMessage,
+              }),
               key: messageKey,
             });
             return false;
@@ -210,7 +220,10 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
         } catch (error) {
           console.error('Market publish failed:', error);
           const errorMessage = error instanceof Error ? error.message : '发布失败';
-          message.error({ content: t('marketPublish.modal.messages.publishFailed', { message: errorMessage }), key: messageKey });
+          message.error({
+            content: t('marketPublish.modal.messages.publishFailed', { message: errorMessage }),
+            key: messageKey,
+          });
           return false;
         }
       },
@@ -223,12 +236,12 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
         isAuthenticated,
         isSubmit,
         language,
+        marketAuth,
         meta?.avatar,
         meta?.description,
         meta?.marketIdentifier,
         meta?.tags,
         meta?.title,
-        marketSession?.accessToken,
         messageKey,
         loadingMessage,
         model,
@@ -271,7 +284,10 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
               placeholder={t('marketPublish.modal.identifier.placeholder')}
               rules={[
                 { message: t('marketPublish.modal.identifier.required'), required: true },
-                { message: t('marketPublish.modal.identifier.patternError'), pattern: /^[\da-z-]+$/ },
+                {
+                  message: t('marketPublish.modal.identifier.patternError'),
+                  pattern: /^[\da-z-]+$/,
+                },
                 { max: 50, message: t('marketPublish.modal.identifier.lengthError'), min: 3 },
               ]}
             />

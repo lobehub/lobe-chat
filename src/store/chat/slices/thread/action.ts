@@ -47,7 +47,7 @@ export interface ChatThreadAction {
     type: ThreadType;
   }) => Promise<{ threadId: string; messageId: string }>;
   openThreadCreator: (messageId: string) => void;
-  openThreadInPortal: (threadId: string, sourceMessageId: string) => void;
+  openThreadInPortal: (threadId: string, sourceMessageId?: string | null) => void;
   closeThreadPortal: () => void;
   useFetchThreads: (enable: boolean, topicId?: string) => SWRResponse<ThreadItem[]>;
   summaryThreadTitle: (threadId: string, messages: UIChatMessage[]) => Promise<void>;

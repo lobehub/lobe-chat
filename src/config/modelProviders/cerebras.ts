@@ -9,6 +9,9 @@ const Cerebras: ModelProviderCard = {
   modelsUrl: 'https://inference-docs.cerebras.ai/models/overview',
   name: 'Cerebras',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.cerebras.ai/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

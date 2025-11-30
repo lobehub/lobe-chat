@@ -32,7 +32,7 @@ def patch_matplotlib():
 
 patch_matplotlib()`;
 
-// Pyodide 对象不能在 Worker 之间传递，因此定义为全局变量
+// Pyodide object cannot be transferred between Workers, so it's defined as a global variable
 let pyodide: PyodideAPI | undefined;
 
 class PythonWorker {
@@ -56,7 +56,7 @@ class PythonWorker {
   }
 
   /**
-   * 初始化 Python 解释器
+   * Initialize Python interpreter
    */
   async init() {
     pyodide = await globalThis.loadPyodide({
@@ -67,13 +67,13 @@ class PythonWorker {
   }
 
   /**
-   * 上传文件到解释器环境中
-   * @param files 文件列表
+   * Upload files to the interpreter environment
+   * @param files File list
    */
   async uploadFiles(files: File[]) {
     for (const file of files) {
       const content = new Uint8Array(await file.arrayBuffer());
-      // TODO: 此处可以考虑使用 WORKERFS 减少一次拷贝
+      // TODO: Consider using WORKERFS here to reduce one copy operation
       if (file.name.startsWith('/')) {
         this.pyodide.FS.writeFile(file.name, content);
       } else {
@@ -84,15 +84,15 @@ class PythonWorker {
   }
 
   /**
-   * 从解释器环境中下载变动的文件
-   * @param files 文件列表
+   * Download modified files from the interpreter environment
+   * @param files File list
    */
   async downloadFiles() {
     const result: File[] = [];
     for (const entry of this.pyodide.FS.readdir('/mnt/data')) {
       if (entry === '.' || entry === '..') continue;
       const filePath = `/mnt/data/${entry}`;
-      // pyodide 的 FS 类型定义有问题，只能采用 any
+      // pyodide's FS type definition has issues, have to use any
       const content = (this.pyodide.FS as any).readFile(filePath, { encoding: 'binary' });
       const blob = new Blob([content]);
       const file = new File([blob], filePath);
@@ -104,8 +104,8 @@ class PythonWorker {
   }
 
   /**
-   * 安装 Python 包
-   * @param packages 包名列表
+   * Install Python packages
+   * @param packages Package name list
    */
   async installPackages(packages: string[]) {
     await this.pyodide.loadPackage('micropip');
@@ -115,16 +115,16 @@ class PythonWorker {
   }
 
   /**
-   * 执行 Python 代码
-   * @param code 代码
+   * Execute Python code
+   * @param code Code
    */
   async runPython(code: string): Promise<PythonResult> {
     await this.patchFonts();
-    // NOTE: loadPackagesFromImports 只会处理 pyodide 官方包
+    // NOTE: loadPackagesFromImports only processes official pyodide packages
     await this.pyodide.loadPackagesFromImports(code);
     await this.patchPackages();
 
-    // 安装依赖后再捕获标准输出，避免记录安装日志
+    // Capture standard output after installing dependencies to avoid logging installation messages
     const output: PythonOutput[] = [];
     this.pyodide.setStdout({
       batched: (o: string) => {
@@ -137,7 +137,7 @@ class PythonWorker {
       },
     });
 
-    // 执行代码
+    // Execute code
     let result;
     let success = false;
     try {
@@ -172,15 +172,15 @@ class PythonWorker {
     };
     for (const [filename, url] of Object.entries(fontFiles)) {
       const buffer = await fetch(url, { cache: 'force-cache' }).then((res) => res.arrayBuffer());
-      // NOTE: 此处理论上使用 createLazyFile 更好，但 pyodide 中使用会导致报错
+      // NOTE: In theory, createLazyFile would be better here, but it causes errors in pyodide
       this.pyodide.FS.writeFile(`/usr/share/fonts/truetype/${filename}`, new Uint8Array(buffer));
     }
   }
 
   private async isNewFile(file: File) {
     const isSameFile = async (a: File, b: File) => {
-      // a 是传入的文件，可能使用了绝对路径或相对路径
-      // b 是解释器环境中的文件，使用绝对路径
+      // a is the passed-in file, may use absolute or relative path
+      // b is the file in the interpreter environment, uses absolute path
       if (a.name.startsWith('/')) {
         if (a.name !== b.name) return false;
       } else {
