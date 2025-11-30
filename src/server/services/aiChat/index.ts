@@ -19,6 +19,7 @@ export class AiChatService {
   }
 
   async getMessagesAndTopics(params: {
+    agentId?: string;
     current?: number;
     includeTopic?: boolean;
     pageSize?: number;

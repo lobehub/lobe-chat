@@ -76,7 +76,7 @@ export const dataSlice: StateCreator<
 
   useFetchMessages: (context) => {
     const swrKey: ConversationContext | null = context.agentId ? context : null;
-    console.log(swrKey);
+
     return useClientDataSWR<UIChatMessage[]>(
       context.agentId ? ['CONVERSATION_FETCH_MESSAGES', swrKey] : null,
 

@@ -19,6 +19,5 @@ export function useCurrentContext(): ConversationContext {
     s.activeThreadId ?? null,
   ]);
 
-  console.log('CurrentContext', agentId);
   return { agentId, threadId, topicId };
 }

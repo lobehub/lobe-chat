@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { DEFAULT_AGENT_CHAT_CONFIG, INBOX_SESSION_ID, LOADING_FLAT } from '@lobechat/const';
+import { DEFAULT_AGENT_CHAT_CONFIG, LOADING_FLAT } from '@lobechat/const';
 import {
   ChatImageItem,
   ChatVideoItem,
@@ -226,7 +226,7 @@ export const conversationLifecycle: StateCreator<
                 title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
               }
             : undefined,
-          sessionId: agentId === INBOX_SESSION_ID ? undefined : agentId,
+          agentId,
           newAssistantMessage: { model, provider: provider! },
         },
         abortController,
