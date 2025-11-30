@@ -18,6 +18,9 @@ import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
+import { getSessionStoreState } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
+import { useUserMemoryStore } from '@/store/userMemory';
 
 import {
   dbMessageSelectors,
@@ -123,6 +126,13 @@ export const conversationLifecycle: StateCreator<
     const messages =
       inputMessages ?? displayMessageSelectors.getDisplayMessagesByKey(contextKey)(get());
     const lastMessage = messages.at(-1);
+
+    useUserMemoryStore.getState().setActiveMemoryContext({
+      session: sessionSelectors.currentSession(getSessionStoreState()),
+      topic: topicSelectors.currentActiveTopic(get()),
+      latestUserMessage: lastMessage?.content,
+      sendingMessage: message,
+    });
 
     // Use provided parentId or calculate from messages
     let parentId: string | undefined = inputParentId;
