@@ -83,6 +83,7 @@ export const messages = pgTable(
 
     role: varchar255('role').notNull(),
     content: text('content'),
+    editorData: jsonb('editor_data'),
     reasoning: jsonb('reasoning').$type<ModelReasoning>(),
     search: jsonb('search').$type<GroundingSearch>(),
     metadata: jsonb('metadata'),
@@ -104,6 +105,9 @@ export const messages = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
+    /**
+     * we might deprecate sessionId in the future
+     */
     sessionId: text('session_id').references(() => sessions.id, { onDelete: 'cascade' }),
     topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }),
     threadId: text('thread_id').references(() => threads.id, { onDelete: 'cascade' }),
@@ -111,8 +115,7 @@ export const messages = pgTable(
     parentId: text('parent_id').references(() => messages.id, { onDelete: 'set null' }),
     quotaId: text('quota_id').references(() => messages.id, { onDelete: 'set null' }),
 
-    // used for group chat
-    agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
+    agentId: text('agent_id').references(() => agents.id, { onDelete: 'cascade' }),
     groupId: text('group_id').references(() => chatGroups.id, { onDelete: 'set null' }),
     // targetId can be an agent ID, "user", or null - no FK constraint
     targetId: text('target_id'),
