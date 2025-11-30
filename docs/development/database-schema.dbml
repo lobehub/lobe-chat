@@ -157,6 +157,7 @@ table auth_sessions {
   created_at timestamp [not null, default: `now()`]
   expires_at timestamp [not null]
   id text [pk, not null]
+  impersonated_by text
   ip_address text
   token text [not null, unique]
   updated_at timestamp [not null]
@@ -1028,6 +1029,10 @@ table users {
   email_verified boolean [not null, default: false]
   email_verified_at "timestamp with time zone"
   preference jsonb
+  role text
+  banned boolean [default: false]
+  ban_reason text
+  ban_expires "timestamp with time zone"
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

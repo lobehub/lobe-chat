@@ -859,5 +859,17 @@
     "bps": true,
     "folderMillis": 1764500630663,
     "hash": "94721bc06910a456a4756c9b0c27ef5d7ff55b7ea8c772acf58052c0155c693b"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"auth_sessions\" ADD COLUMN IF NOT EXISTS \"impersonated_by\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"role\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"banned\" boolean DEFAULT false;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"ban_reason\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"ban_expires\" timestamp with time zone;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764511006123,
+    "hash": "523a8418ceeadbe80c34affee07cdfa2e8076e297473c55c73e74648a9be1e45"
   }
 ]
