@@ -309,6 +309,93 @@ describe('aiChatRouter', () => {
     expect(res.createdThreadId).toBeUndefined();
   });
 
+  describe('agentId support', () => {
+    it('should pass agentId to messages when provided', async () => {
+      const mockCreateMessage = vi
+        .fn()
+        .mockResolvedValueOnce({ id: 'm-user' })
+        .mockResolvedValueOnce({ id: 'm-assistant' });
+      const mockGet = vi.fn().mockResolvedValue({ messages: [], topics: undefined });
+
+      vi.mocked(MessageModel).mockImplementation(() => ({ create: mockCreateMessage }) as any);
+      vi.mocked(AiChatService).mockImplementation(() => ({ getMessagesAndTopics: mockGet }) as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      await caller.sendMessageInServer({
+        agentId: 'agent-1',
+        newAssistantMessage: { model: 'gpt-4o', provider: 'openai' },
+        newUserMessage: { content: 'hi' },
+        sessionId: 's1',
+        topicId: 't1',
+      } as any);
+
+      // Verify agentId is passed to user message
+      expect(mockCreateMessage).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          agentId: 'agent-1',
+          content: 'hi',
+          role: 'user',
+          sessionId: 's1',
+          topicId: 't1',
+        }),
+      );
+
+      // Verify agentId is passed to assistant message
+      expect(mockCreateMessage).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          agentId: 'agent-1',
+          role: 'assistant',
+          sessionId: 's1',
+          topicId: 't1',
+        }),
+      );
+
+      // Verify agentId is passed to getMessagesAndTopics
+      expect(mockGet).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'agent-1',
+          sessionId: 's1',
+          topicId: 't1',
+        }),
+      );
+    });
+
+    it('should pass agentId to topic creation when provided', async () => {
+      const mockCreateTopic = vi.fn().mockResolvedValue({ id: 't1' });
+      const mockCreateMessage = vi
+        .fn()
+        .mockResolvedValueOnce({ id: 'm-user' })
+        .mockResolvedValueOnce({ id: 'm-assistant' });
+      const mockGet = vi.fn().mockResolvedValue({ messages: [], topics: [{}] });
+
+      vi.mocked(TopicModel).mockImplementation(() => ({ create: mockCreateTopic }) as any);
+      vi.mocked(MessageModel).mockImplementation(() => ({ create: mockCreateMessage }) as any);
+      vi.mocked(AiChatService).mockImplementation(() => ({ getMessagesAndTopics: mockGet }) as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      await caller.sendMessageInServer({
+        agentId: 'agent-1',
+        newAssistantMessage: { model: 'gpt-4o', provider: 'openai' },
+        newTopic: { title: 'New Topic' },
+        newUserMessage: { content: 'hi' },
+        sessionId: 's1',
+      } as any);
+
+      // Verify agentId is passed to topic creation
+      expect(mockCreateTopic).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'agent-1',
+          sessionId: 's1',
+          title: 'New Topic',
+        }),
+      );
+    });
+  });
+
   describe('outputJSON', () => {
     it('should successfully generate structured output', async () => {
       const { getXorPayload } = await import('@/utils/server');
