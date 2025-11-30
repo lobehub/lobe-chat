@@ -15,9 +15,14 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
 import { createAgentToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
+import { userMemoryService } from '@/services/userMemory';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
+import { getChatStoreState } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/selectors';
+import { getSessionStoreState } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
@@ -26,6 +31,14 @@ import {
   userGeneralSettingsSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
+import {
+  getUserMemoryStoreState,
+  useUserMemoryStore,
+  userMemorySelectors,
+} from '@/store/userMemory';
+import { userMemoryCacheKey } from '@/store/userMemory/utils/cacheKey';
+import { createMemorySearchParams } from '@/store/userMemory/utils/searchParams';
+import { MemoryManifest } from '@/tools/memory';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
@@ -86,7 +99,13 @@ class ChatService {
 
     // =================== 1. preprocess tools =================== //
 
-    const pluginIds = [...(enabledPlugins || [])];
+    const agentStoreState = getAgentStoreState();
+    const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(agentStoreState);
+    const pluginIds =
+      enabledPlugins && enabledPlugins.length > 0
+        ? [...enabledPlugins]
+        : [...(agentConfig.plugins ?? [])];
 
     const toolsEngine = createAgentToolsEngine({
       model: payload.model,
@@ -99,11 +118,70 @@ class ChatService {
       toolIds: pluginIds,
     });
 
-    // ============  2. preprocess messages   ============ //
+    // =================== 1.1 process user memories =================== //
 
-    const agentStoreState = getAgentStoreState();
-    const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(agentStoreState);
+    const isMemoryPluginEnabled =
+      pluginIds.includes(MemoryManifest.identifier) ||
+      enabledToolIds.includes(MemoryManifest.identifier);
+    let userMemories =
+      userMemorySelectors.activeUserMemories(isMemoryPluginEnabled)(getUserMemoryStoreState());
+
+    if (isMemoryPluginEnabled && !userMemories) {
+      const chatStoreState = getChatStoreState();
+      const sessionStoreState = getSessionStoreState();
+
+      const historyMessages = messages.slice(0, -1);
+      const latestHistoryMessage = [...historyMessages]
+        .reverse()
+        .find((item) => typeof item?.content === 'string' && item.content.trim().length > 0);
+      const pendingMessage = messages.at(-1);
+
+      const memoryContext = {
+        latestMessageContent: latestHistoryMessage?.content,
+        pendingMessageContent: pendingMessage?.content,
+        session: sessionSelectors.currentSession(sessionStoreState),
+        topic: topicSelectors.currentActiveTopic(chatStoreState),
+      };
+
+      useUserMemoryStore.getState().setActiveMemoryContext(memoryContext);
+
+      const updatedMemoryState = getUserMemoryStoreState();
+      const memoryParams =
+        updatedMemoryState.activeParams ?? createMemorySearchParams(memoryContext);
+
+      if (memoryParams) {
+        const key = userMemoryCacheKey(memoryParams);
+        const cachedMemories = updatedMemoryState.memoryMap[key];
+
+        if (cachedMemories) {
+          const cachedAt = updatedMemoryState.memoryFetchedAtMap[key] ?? Date.now();
+          userMemories = {
+            fetchedAt: cachedAt,
+            memories: cachedMemories,
+          };
+        } else {
+          const result = await userMemoryService.retrieveMemory(memoryParams);
+          const next = result ?? { contexts: [], experiences: [], preferences: [] };
+          const fetchedAt = Date.now();
+
+          useUserMemoryStore.setState((state) => ({
+            memoryFetchedAtMap: {
+              ...state.memoryFetchedAtMap,
+              [key]: fetchedAt,
+            },
+            memoryMap: {
+              ...state.memoryMap,
+              [key]: next,
+            },
+          }));
+
+          userMemories = {
+            fetchedAt,
+            memories: next,
+          };
+        }
+      }
+    }
 
     // Apply context engineering with preprocessing configuration
     const oaiMessages = await contextEngineering({
@@ -117,6 +195,7 @@ class ChatService {
       sessionId: options?.trace?.sessionId,
       systemRole: agentConfig.systemRole,
       tools: enabledToolIds,
+      userMemories,
     });
 
     // ============  3. process extend params   ============ //

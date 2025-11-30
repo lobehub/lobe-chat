@@ -6,12 +6,14 @@ import { ChatCodeInterpreterAction, codeInterpreterSlice } from './interpreter';
 import { KnowledgeBaseAction, knowledgeBaseSlice } from './knowledgeBase';
 import { LocalFileAction, localSystemSlice } from './localSystem';
 import { SearchAction, searchSlice } from './search';
+import { UserMemoryAction, userMemorySlice } from './userMemory';
 
 export interface ChatBuiltinToolAction
   extends SearchAction,
     LocalFileAction,
     ChatCodeInterpreterAction,
-    KnowledgeBaseAction {}
+    KnowledgeBaseAction,
+    UserMemoryAction {}
 
 export const chatToolSlice: StateCreator<
   ChatStore,
@@ -23,4 +25,5 @@ export const chatToolSlice: StateCreator<
   ...localSystemSlice(...params),
   ...codeInterpreterSlice(...params),
   ...knowledgeBaseSlice(...params),
+  ...userMemorySlice(...params),
 });

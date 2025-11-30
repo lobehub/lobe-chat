@@ -40,6 +40,7 @@ export type OperationType =
   | 'builtinToolInterpreter' // Builtin tool: code interpreter
   | 'builtinToolLocalSystem' // Builtin tool: local system
   | 'builtinToolKnowledgeBase' // Builtin tool: knowledge base
+  | 'builtinToolMemory' // Builtin tool: user memory
 
   // === Group Chat ===
   | 'supervisorDecision' // Supervisor decision

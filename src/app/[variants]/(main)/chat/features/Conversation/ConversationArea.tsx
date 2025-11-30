@@ -1,13 +1,20 @@
 'use client';
 
-import { Suspense, memo, useMemo } from 'react';
+import { Suspense, memo, useEffect, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { ChatList, ConversationProvider } from '@/features/Conversation';
 import { useCurrentContext } from '@/hooks/useCurrentContext';
 import { useOperationState } from '@/hooks/useOperationState';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
+import { useUserMemoryStore } from '@/store/userMemory';
+import { MemoryManifest } from '@/tools/memory';
 
 import ChatHydration from './ChatHydration';
 import MainChatInput from './ChatInput';
@@ -30,6 +37,36 @@ interface ConversationAreaProps {
  */
 const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
   const context = useCurrentContext();
+
+  const enabledPlugins = useAgentStore(agentSelectors.currentAgentPlugins);
+  const [useFetchUserMemory, setActiveMemoryContext] = useUserMemoryStore((s) => [
+    s.useFetchUserMemory,
+    s.setActiveMemoryContext,
+  ]);
+  const [currentSession, activeTopic] = [
+    useSessionStore(sessionSelectors.currentSession),
+    useChatStore(topicSelectors.currentActiveTopic),
+  ];
+
+  const isMemoryPluginEnabled = useMemo(() => {
+    if (!enabledPlugins) return false;
+
+    return enabledPlugins.includes(MemoryManifest.identifier);
+  }, [enabledPlugins]);
+
+  useEffect(() => {
+    if (!isMemoryPluginEnabled) {
+      setActiveMemoryContext(undefined);
+      return;
+    }
+
+    setActiveMemoryContext({
+      session: currentSession,
+      topic: activeTopic,
+    });
+  }, [activeTopic, currentSession, isMemoryPluginEnabled, setActiveMemoryContext]);
+
+  useFetchUserMemory(Boolean(isMemoryPluginEnabled && context.agentId));
 
   // Get raw dbMessages from ChatStore for this context
   // ConversationStore will parse them internally to generate displayMessages
