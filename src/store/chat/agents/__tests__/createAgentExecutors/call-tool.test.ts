@@ -158,12 +158,12 @@ describe('call_tool executor', () => {
       // Then
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
+          agentId: 'sess_123',
           content: '',
           groupId: 'group_789',
           parentId: 'msg_parent_123',
           plugin: toolCall,
           role: 'tool',
-          sessionId: 'sess_123',
           threadId: undefined,
           tool_call_id: 'tool_call_xyz',
           topicId: 'topic_456',

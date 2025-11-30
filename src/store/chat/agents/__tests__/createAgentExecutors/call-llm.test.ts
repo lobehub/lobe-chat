@@ -51,11 +51,11 @@ describe('call_llm executor', () => {
       expectMessageCreated(mockStore, 'assistant');
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
+          agentId: 'test-session',
           content: LOADING_FLAT,
           role: 'assistant',
           model: 'gpt-4',
           provider: 'openai',
-          sessionId: 'test-session',
           topicId: 'test-topic',
         }),
         expect.objectContaining({

@@ -150,7 +150,7 @@ describe('SessionAction', () => {
         result.current.switchSession(sessionId);
       });
 
-      expect(result.current.activeId).toBe(sessionId);
+      expect(result.current.activeAgentId).toBe(sessionId);
     });
   });
 
