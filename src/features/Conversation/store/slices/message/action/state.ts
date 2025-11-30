@@ -12,19 +12,14 @@ import { dataSelectors } from '../../data/selectors';
  */
 export interface MessageStateAction {
   /**
+   * Copy message content to clipboard
+   */
+  copyMessage: (id: string, content: string) => Promise<void>;
+
+  /**
    * Toggle message loading state
    */
   internal_toggleMessageLoading: (loading: boolean, id: string) => void;
-
-  /**
-   * Toggle message collapsed state
-   */
-  toggleMessageCollapsed: (id: string, collapsed?: boolean) => Promise<void>;
-
-  /**
-   * Toggle tool inspect expanded state
-   */
-  toggleInspectExpanded: (id: string, expanded?: boolean) => Promise<void>;
 
   /**
    * Modify message content (with optimistic update)
@@ -32,9 +27,14 @@ export interface MessageStateAction {
   modifyMessageContent: (id: string, content: string) => Promise<void>;
 
   /**
-   * Copy message content to clipboard
+   * Toggle tool inspect expanded state
    */
-  copyMessage: (id: string, content: string) => Promise<void>;
+  toggleInspectExpanded: (id: string, expanded?: boolean) => Promise<void>;
+
+  /**
+   * Toggle message collapsed state
+   */
+  toggleMessageCollapsed: (id: string, collapsed?: boolean) => Promise<void>;
 }
 
 export const messageStateSlice: StateCreator<
@@ -43,6 +43,17 @@ export const messageStateSlice: StateCreator<
   [],
   MessageStateAction
 > = (set, get) => ({
+  copyMessage: async (id, content) => {
+    const { hooks } = get();
+
+    await copyToClipboard(content);
+
+    // ===== Hook: onMessageCopied =====
+    if (hooks.onMessageCopied) {
+      hooks.onMessageCopied(id);
+    }
+  },
+
   internal_toggleMessageLoading: (loading, id) => {
     set(
       (state) => ({
@@ -58,28 +69,6 @@ export const messageStateSlice: StateCreator<
       false,
       loading ? 'toggleMessageLoading/start' : 'toggleMessageLoading/end',
     );
-  },
-
-  toggleMessageCollapsed: async (id, collapsed) => {
-    const message = dataSelectors.getDisplayMessageById(id)(get());
-    if (!message) return;
-
-    // If collapsed is not provided, toggle current state
-    const nextCollapsed = collapsed ?? !message.metadata?.collapsed;
-
-    // Use optimistic update
-    await get().updateMessageMetadata(id, { collapsed: nextCollapsed });
-  },
-
-  toggleInspectExpanded: async (id, expanded) => {
-    const message = dataSelectors.getDbMessageById(id)(get());
-    if (!message) return;
-
-    // If expanded is not provided, toggle current state
-    const nextExpanded = expanded ?? !message.metadata?.inspectExpanded;
-
-    // Use optimistic update
-    await get().updateMessageMetadata(id, { inspectExpanded: nextExpanded });
   },
 
   modifyMessageContent: async (id, content) => {
@@ -98,14 +87,25 @@ export const messageStateSlice: StateCreator<
     }
   },
 
-  copyMessage: async (id, content) => {
-    const { hooks } = get();
+  toggleInspectExpanded: async (id, expanded) => {
+    const message = dataSelectors.getDbMessageById(id)(get());
+    if (!message) return;
 
-    await copyToClipboard(content);
+    // If expanded is not provided, toggle current state
+    const nextExpanded = expanded ?? !message.metadata?.inspectExpanded;
 
-    // ===== Hook: onMessageCopied =====
-    if (hooks.onMessageCopied) {
-      hooks.onMessageCopied(id);
-    }
+    // Use optimistic update
+    await get().updateMessageMetadata(id, { inspectExpanded: nextExpanded });
+  },
+
+  toggleMessageCollapsed: async (id, collapsed) => {
+    const message = dataSelectors.getDisplayMessageById(id)(get());
+    if (!message) return;
+
+    // If collapsed is not provided, toggle current state
+    const nextCollapsed = collapsed ?? !message.metadata?.collapsed;
+
+    // Use optimistic update
+    await get().updateMessageMetadata(id, { collapsed: nextCollapsed });
   },
 });

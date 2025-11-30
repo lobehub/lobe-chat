@@ -72,13 +72,26 @@ When working with Linear issues:
 - Code review context
 - Future reference and debugging
 
-**Workflow:**
+### IMPORTANT: Per-Issue Completion Rule
 
-1. Complete the implementation
+**When working on multiple issues (e.g., parent issue with sub-issues), you MUST update status and add comment for EACH issue IMMEDIATELY after completing it.** Do NOT wait until all issues are done to update them in batch.
+
+**Workflow for EACH individual issue:**
+
+1. Complete the implementation for this specific issue
 2. Run type check: `bun run type-check`
 3. Run related tests if applicable
-4. Update issue status to "Done": `mcp__linear-server__update_issue`
-5. **Add completion comment**: `mcp__linear-server__create_comment` ← DO NOT SKIP THIS STEP
+4. **IMMEDIATELY** update issue status to "Done": `mcp__linear-server__update_issue`
+5. **IMMEDIATELY** add completion comment: `mcp__linear-server__create_comment`
+6. Only then move on to the next issue
+
+**❌ Wrong approach:**
+
+- Complete Issue A → Complete Issue B → Complete Issue C → Update all statuses → Add all comments
+
+**✅ Correct approach:**
+
+- Complete Issue A → Update A status → Add A comment → Complete Issue B → Update B status → Add B comment → ...
 
 ## Rules Index
 

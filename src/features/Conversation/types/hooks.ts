@@ -1,4 +1,9 @@
-import type { ChatToolPayload, MessageToolCall, SendMessageParams, UIChatMessage } from '@lobechat/types';
+import type {
+  ChatToolPayload,
+  MessageToolCall,
+  SendMessageParams,
+  UIChatMessage,
+} from '@lobechat/types';
 
 /**
  * Conversation Lifecycle Hooks
@@ -12,6 +17,7 @@ import type { ChatToolPayload, MessageToolCall, SendMessageParams, UIChatMessage
  * - Add analytics/logging
  * - Implement custom approval flows
  */
+/* eslint-disable typescript-sort-keys/interface */
 export interface ConversationHooks {
   // ========================================
   // Message Lifecycle Hooks
