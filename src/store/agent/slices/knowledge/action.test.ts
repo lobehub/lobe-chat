@@ -38,7 +38,7 @@ beforeEach(() => {
     activeAgentId: undefined,
     agentConfigInitMap: {},
     agentMap: {},
-    defaultAgentConfig: {},
+    defaultAgentConfig: {} as any,
     inboxAgentId: undefined,
     isInboxAgentConfigInit: false,
     updateAgentConfigSignal: undefined,
@@ -79,7 +79,7 @@ describe('KnowledgeSlice Actions', () => {
     it('should call createAgentFiles with correct params', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      vi.mocked(agentService.createAgentFiles).mockResolvedValue(undefined);
+      vi.mocked(agentService.createAgentFiles).mockResolvedValue(undefined as any);
 
       act(() => {
         useAgentStore.setState({ activeAgentId: 'agent-1' });
@@ -89,7 +89,11 @@ describe('KnowledgeSlice Actions', () => {
         await result.current.addFilesToAgent(['file-1', 'file-2'], true);
       });
 
-      expect(agentService.createAgentFiles).toHaveBeenCalledWith('agent-1', ['file-1', 'file-2'], true);
+      expect(agentService.createAgentFiles).toHaveBeenCalledWith(
+        'agent-1',
+        ['file-1', 'file-2'],
+        true,
+      );
     });
   });
 
@@ -107,7 +111,7 @@ describe('KnowledgeSlice Actions', () => {
     it('should call createAgentKnowledgeBase with enabled=true', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      vi.mocked(agentService.createAgentKnowledgeBase).mockResolvedValue(undefined);
+      vi.mocked(agentService.createAgentKnowledgeBase).mockResolvedValue(undefined as any);
 
       act(() => {
         useAgentStore.setState({ activeAgentId: 'agent-1' });
@@ -135,7 +139,7 @@ describe('KnowledgeSlice Actions', () => {
     it('should call deleteAgentFile with correct params', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      vi.mocked(agentService.deleteAgentFile).mockResolvedValue(undefined);
+      vi.mocked(agentService.deleteAgentFile).mockResolvedValue(undefined as any);
 
       act(() => {
         useAgentStore.setState({ activeAgentId: 'agent-1' });
@@ -163,7 +167,7 @@ describe('KnowledgeSlice Actions', () => {
     it('should call deleteAgentKnowledgeBase with correct params', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      vi.mocked(agentService.deleteAgentKnowledgeBase).mockResolvedValue(undefined);
+      vi.mocked(agentService.deleteAgentKnowledgeBase).mockResolvedValue(undefined as any);
 
       act(() => {
         useAgentStore.setState({ activeAgentId: 'agent-1' });
@@ -191,7 +195,7 @@ describe('KnowledgeSlice Actions', () => {
     it('should call toggleFile with correct params', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      vi.mocked(agentService.toggleFile).mockResolvedValue(undefined);
+      vi.mocked(agentService.toggleFile).mockResolvedValue(undefined as any);
 
       act(() => {
         useAgentStore.setState({ activeAgentId: 'agent-1' });
@@ -207,7 +211,7 @@ describe('KnowledgeSlice Actions', () => {
     it('should call toggleFile with open=false', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      vi.mocked(agentService.toggleFile).mockResolvedValue(undefined);
+      vi.mocked(agentService.toggleFile).mockResolvedValue(undefined as any);
 
       act(() => {
         useAgentStore.setState({ activeAgentId: 'agent-1' });
@@ -235,7 +239,7 @@ describe('KnowledgeSlice Actions', () => {
     it('should call toggleKnowledgeBase with correct params', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      vi.mocked(agentService.toggleKnowledgeBase).mockResolvedValue(undefined);
+      vi.mocked(agentService.toggleKnowledgeBase).mockResolvedValue(undefined as any);
 
       act(() => {
         useAgentStore.setState({ activeAgentId: 'agent-1' });
@@ -251,7 +255,7 @@ describe('KnowledgeSlice Actions', () => {
     it('should call toggleKnowledgeBase with open=false', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      vi.mocked(agentService.toggleKnowledgeBase).mockResolvedValue(undefined);
+      vi.mocked(agentService.toggleKnowledgeBase).mockResolvedValue(undefined as any);
 
       act(() => {
         useAgentStore.setState({ activeAgentId: 'agent-1' });

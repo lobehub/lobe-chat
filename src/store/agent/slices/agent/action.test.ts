@@ -423,7 +423,7 @@ describe('AgentSlice Actions', () => {
         systemRole: 'You are a helpful assistant',
       } as LobeAgentConfig;
 
-      vi.mocked(agentService.getAgentConfigById).mockResolvedValueOnce(mockAgentConfig);
+      vi.mocked(agentService.getAgentConfigById).mockResolvedValueOnce(mockAgentConfig as any);
 
       const { result } = renderHook(() => useAgentStore().useFetchAgentConfig(true, 'agent-1'), {
         wrapper: withSWR,

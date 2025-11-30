@@ -31,7 +31,7 @@ beforeEach(() => {
     activeAgentId: undefined,
     agentConfigInitMap: {},
     agentMap: {},
-    defaultAgentConfig: {},
+    defaultAgentConfig: {} as any,
     inboxAgentId: undefined,
     isInboxAgentConfigInit: false,
     updateAgentConfigSignal: undefined,
@@ -49,14 +49,14 @@ describe('PluginSlice Actions', () => {
       const { result } = renderHook(() => useAgentStore());
 
       vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { plugins: ['plugin-1'] },
+        agent: { plugins: ['plugin-1'] } as any,
         success: true,
       });
 
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': { plugins: [] } },
+          agentMap: { 'agent-1': { plugins: [] } as any },
         });
       });
 
@@ -77,14 +77,14 @@ describe('PluginSlice Actions', () => {
       const { result } = renderHook(() => useAgentStore());
 
       vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { plugins: [] },
+        agent: { plugins: [] } as any,
         success: true,
       });
 
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': { plugins: ['plugin-1'] } },
+          agentMap: { 'agent-1': { plugins: ['plugin-1'] } as any },
         });
       });
 
@@ -105,14 +105,14 @@ describe('PluginSlice Actions', () => {
       const { result } = renderHook(() => useAgentStore());
 
       vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { plugins: ['plugin-1'] },
+        agent: { plugins: ['plugin-1'] } as any,
         success: true,
       });
 
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': { plugins: [] } },
+          agentMap: { 'agent-1': { plugins: [] } as any },
         });
       });
 
@@ -133,14 +133,14 @@ describe('PluginSlice Actions', () => {
       const { result } = renderHook(() => useAgentStore());
 
       vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { plugins: [] },
+        agent: { plugins: [] } as any,
         success: true,
       });
 
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': { plugins: ['plugin-1'] } },
+          agentMap: { 'agent-1': { plugins: ['plugin-1'] } as any },
         });
       });
 
@@ -161,14 +161,14 @@ describe('PluginSlice Actions', () => {
       const { result } = renderHook(() => useAgentStore());
 
       vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { plugins: ['plugin-1'] },
+        agent: { plugins: ['plugin-1'] } as any,
         success: true,
       });
 
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': { plugins: ['plugin-1'] } },
+          agentMap: { 'agent-1': { plugins: ['plugin-1'] } as any },
         });
       });
 
@@ -190,14 +190,14 @@ describe('PluginSlice Actions', () => {
       const { result } = renderHook(() => useAgentStore());
 
       vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { plugins: ['plugin-1'] },
+        agent: { plugins: ['plugin-1'] } as any,
         success: true,
       });
 
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': {} }, // No plugins field
+          agentMap: { 'agent-1': {} as any }, // No plugins field
         });
       });
 
@@ -220,14 +220,14 @@ describe('PluginSlice Actions', () => {
       const { result } = renderHook(() => useAgentStore());
 
       vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { plugins: [] },
+        agent: { plugins: [] } as any,
         success: true,
       });
 
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': { plugins: ['plugin-1'] } },
+          agentMap: { 'agent-1': { plugins: ['plugin-1'] } as any },
         });
       });
 
@@ -248,14 +248,14 @@ describe('PluginSlice Actions', () => {
       const { result } = renderHook(() => useAgentStore());
 
       vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { plugins: ['existing-plugin'] },
+        agent: { plugins: ['existing-plugin'] } as any,
         success: true,
       });
 
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': { plugins: ['existing-plugin'] } },
+          agentMap: { 'agent-1': { plugins: ['existing-plugin'] } as any },
         });
       });
 

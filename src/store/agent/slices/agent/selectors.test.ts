@@ -1,4 +1,10 @@
-import { DEFAULT_AGENT_CONFIG, DEFAULT_AVATAR, DEFAULT_MODEL, DEFAULT_PROVIDER, DEFAUTT_AGENT_TTS_CONFIG } from '@lobechat/const';
+import {
+  DEFAULT_AGENT_CONFIG,
+  DEFAULT_AVATAR,
+  DEFAULT_MODEL,
+  DEFAULT_PROVIDER,
+  DEFAUTT_AGENT_TTS_CONFIG,
+} from '@lobechat/const';
 import { KnowledgeType } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -22,6 +28,7 @@ const createState = (overrides: Partial<AgentStoreState> = {}): AgentStoreState 
   defaultAgentConfig: {} as any,
   inboxAgentId: undefined,
   isInboxAgentConfigInit: false,
+  showAgentSetting: false,
   updateAgentConfigSignal: undefined,
   updateAgentMetaSignal: undefined,
   ...overrides,
@@ -242,9 +249,7 @@ describe('agentSelectors', () => {
         activeAgentId: 'agent-1',
         agentMap: {
           'agent-1': {
-            files: [
-              { enabled: true, id: 'file-1', name: 'file1.txt', type: 'text/plain' },
-            ],
+            files: [{ enabled: true, id: 'file-1', name: 'file1.txt', type: 'text/plain' }],
           } as any,
         },
       });

@@ -15,9 +15,10 @@ const createState = (overrides: Partial<AgentStoreState> = {}): AgentStoreState 
   activeAgentId: undefined,
   agentConfigInitMap: {},
   agentMap: {},
-  defaultAgentConfig: {},
+  defaultAgentConfig: {} as any,
   inboxAgentId: undefined,
   isInboxAgentConfigInit: false,
+  showAgentSetting: false,
   updateAgentConfigSignal: undefined,
   updateAgentMetaSignal: undefined,
   ...overrides,
@@ -54,12 +55,12 @@ describe('agentChatConfigSelectors', () => {
         activeAgentId: 'agent-1',
         agentMap: {
           'agent-1': {
-            chatConfig: { searchMode: 'builtin' },
-          },
+            chatConfig: { searchMode: 'auto' },
+          } as any,
         },
       });
 
-      expect(agentChatConfigSelectors.agentSearchMode(state)).toBe('builtin');
+      expect(agentChatConfigSelectors.agentSearchMode(state)).toBe('auto');
     });
 
     it('should return "off" as default', () => {
@@ -78,8 +79,8 @@ describe('agentChatConfigSelectors', () => {
         activeAgentId: 'agent-1',
         agentMap: {
           'agent-1': {
-            chatConfig: { searchMode: 'builtin' },
-          },
+            chatConfig: { searchMode: 'auto' },
+          } as any,
         },
       });
 
@@ -92,7 +93,7 @@ describe('agentChatConfigSelectors', () => {
         agentMap: {
           'agent-1': {
             chatConfig: { searchMode: 'off' },
-          },
+          } as any,
         },
       });
 
@@ -121,12 +122,15 @@ describe('agentChatConfigSelectors', () => {
         activeAgentId: 'agent-1',
         agentMap: {
           'agent-1': {
-            chatConfig: { searchFCModel: 'custom-model' },
-          },
+            chatConfig: { searchFCModel: { id: 'custom-model', provider: 'openai' } },
+          } as any,
         },
       });
 
-      expect(agentChatConfigSelectors.searchFCModel(state)).toBe('custom-model');
+      expect(agentChatConfigSelectors.searchFCModel(state)).toEqual({
+        id: 'custom-model',
+        provider: 'openai',
+      });
     });
 
     it('should return default when not specified', () => {
@@ -162,10 +166,10 @@ describe('agentChatConfigSelectors', () => {
             chatConfig: {
               disableContextCaching: true,
               enableHistoryCount: true,
-              searchMode: 'builtin',
+              searchMode: 'auto',
             },
             model: 'claude-3-7-sonnet',
-          },
+          } as any,
         },
       });
 
@@ -224,7 +228,9 @@ describe('agentChatConfigSelectors', () => {
         agentMap: { 'agent-1': {} },
       });
 
-      expect(agentChatConfigSelectors.historyCount(state)).toBe(DEFAULT_AGENT_CHAT_CONFIG.historyCount);
+      expect(agentChatConfigSelectors.historyCount(state)).toBe(
+        DEFAULT_AGENT_CHAT_CONFIG.historyCount,
+      );
     });
   });
 
