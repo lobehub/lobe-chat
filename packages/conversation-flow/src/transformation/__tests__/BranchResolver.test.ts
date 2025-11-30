@@ -71,13 +71,13 @@ describe('BranchResolver', () => {
       expect(resolver.getActiveBranchId(message, idNode)).toBe('msg-2');
     });
 
-    it('should ignore invalid activeBranchIndex', () => {
+    it('should return undefined for optimistic update (activeBranchIndex === children.length)', () => {
       const message: Message = {
         content: 'test',
         createdAt: 0,
         id: 'msg-1',
         meta: {},
-        metadata: { activeBranchIndex: 5 }, // out of bounds
+        metadata: { activeBranchIndex: 2 }, // index = children.length (optimistic update)
         role: 'user',
         updatedAt: 0,
       };
@@ -90,7 +90,31 @@ describe('BranchResolver', () => {
         id: 'msg-1',
       };
 
-      // Should default to first branch
+      // When activeBranchIndex === children.length, it's an optimistic update
+      // The branch hasn't been created yet, so return undefined
+      expect(resolver.getActiveBranchId(message, idNode)).toBeUndefined();
+    });
+
+    it('should ignore activeBranchIndex when it exceeds optimistic update range', () => {
+      const message: Message = {
+        content: 'test',
+        createdAt: 0,
+        id: 'msg-1',
+        meta: {},
+        metadata: { activeBranchIndex: 5 }, // > children.length (invalid)
+        role: 'user',
+        updatedAt: 0,
+      };
+
+      const idNode: IdNode = {
+        children: [
+          { children: [], id: 'msg-2' },
+          { children: [], id: 'msg-3' },
+        ],
+        id: 'msg-1',
+      };
+
+      // activeBranchIndex > children.length should be ignored, fallback to default
       expect(resolver.getActiveBranchId(message, idNode)).toBe('msg-2');
     });
   });
