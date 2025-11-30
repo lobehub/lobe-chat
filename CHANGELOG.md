@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.137](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.136...v2.0.0-next.137)
+
+<sup>Released on **2025-11-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update apiMode handling in ChatService to prioritize user preferences.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update apiMode handling in ChatService to prioritize user preferences, closes [#10487](https://github.com/lobehub/lobe-chat/issues/10487) ([5483d91](https://github.com/lobehub/lobe-chat/commit/5483d91))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.136](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.135...v2.0.0-next.136)
 
 <sup>Released on **2025-11-30**</sup>
