@@ -12,7 +12,7 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 import { MessageService } from '@/server/services/message';
 
-import { resolveContext } from './_helpers/resolveContext';
+import { resolveAgentIdFromSession, resolveContext } from './_helpers/resolveContext';
 import { basicContextSchema } from './_schema/context';
 
 const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
@@ -59,8 +59,14 @@ export const messageRouter = router({
   createMessage: messageProcedure
     .input(CreateNewMessageParamsSchema)
     .mutation(async ({ input, ctx }) => {
-      // 直接使用 agentId，不再转换为 sessionId
-      return ctx.messageService.createMessage(input as any);
+      // 如果没有 agentId 但有 sessionId，从 sessionId 解析出 agentId
+      let agentId = input.agentId;
+      if (!agentId && input.sessionId) {
+        agentId = (await resolveAgentIdFromSession(input.sessionId, ctx.serverDB, ctx.userId))!;
+      }
+
+      // 使用解析后的 agentId 创建消息
+      return ctx.messageService.createMessage({ ...input, agentId } as any);
     }),
 
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {

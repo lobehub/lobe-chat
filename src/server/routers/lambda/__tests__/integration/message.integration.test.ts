@@ -108,7 +108,7 @@ describe('Message Router Integration Tests', () => {
       expect(createdMessage).toBeDefined();
       expect(createdMessage).toMatchObject({
         id: result.id,
-        sessionId: testSessionId,
+        agentId: testAgentId, // sessionId 会解析为 agentId 存储
         topicId: testTopicId,
         userId: userId,
         content: 'Test message',
@@ -149,7 +149,7 @@ describe('Message Router Integration Tests', () => {
       expect(createdMessage.threadId).toBe(thread.id);
       expect(createdMessage).toMatchObject({
         id: result.id,
-        sessionId: testSessionId,
+        agentId: testAgentId,
         topicId: testTopicId,
         threadId: thread.id,
         content: 'Test message in thread',
@@ -173,7 +173,7 @@ describe('Message Router Integration Tests', () => {
         .where(eq(messages.id, result.id));
 
       expect(createdMessage.topicId).toBeNull();
-      expect(createdMessage.sessionId).toBe(testSessionId);
+      expect(createdMessage.agentId).toBe(testAgentId);
     });
 
     it('should fail when sessionId does not exist', async () => {
@@ -247,7 +247,7 @@ describe('Message Router Integration Tests', () => {
           .where(eq(messages.id, result.id));
 
         expect(createdMessage).toBeDefined();
-        expect(createdMessage.sessionId).toBe(testSessionId);
+        expect(createdMessage.agentId).toBe(testAgentId);
         expect(createdMessage.content).toBe('Message created with agentId');
       });
 
@@ -266,7 +266,7 @@ describe('Message Router Integration Tests', () => {
           .from(messages)
           .where(eq(messages.id, result.id));
 
-        expect(createdMessage.sessionId).toBe(testSessionId);
+        expect(createdMessage.agentId).toBe(testAgentId);
         expect(createdMessage.topicId).toBe(testTopicId);
       });
 
@@ -294,27 +294,21 @@ describe('Message Router Integration Tests', () => {
           .from(messages)
           .where(eq(messages.id, result.id));
 
-        // 应该使用 agentId 解析出的 sessionId
-        expect(createdMessage.sessionId).toBe(testSessionId);
+        // 应该使用提供的 agentId
+        expect(createdMessage.agentId).toBe(testAgentId);
       });
 
-      it('should fall back to sessionId when agentId not found', async () => {
+      it('should fail when agentId does not exist due to FK constraint', async () => {
         const caller = messageRouter.createCaller(createTestContext(userId));
 
-        const result = await caller.createMessage({
-          content: 'Message with non-existent agentId',
-          role: 'user',
-          agentId: 'non-existent-agent-id',
-          sessionId: testSessionId,
-        });
-
-        const [createdMessage] = await serverDB
-          .select()
-          .from(messages)
-          .where(eq(messages.id, result.id));
-
-        // 当 agentId 不存在时，使用提供的 sessionId
-        expect(createdMessage.sessionId).toBe(testSessionId);
+        // 当 agentId 不存在时，应该因为外键约束而失败
+        await expect(
+          caller.createMessage({
+            content: 'Message with non-existent agentId',
+            role: 'user',
+            agentId: 'non-existent-agent-id',
+          }),
+        ).rejects.toThrow();
       });
     });
 
@@ -431,7 +425,7 @@ describe('Message Router Integration Tests', () => {
         const remainingMessages = await serverDB
           .select()
           .from(messages)
-          .where(eq(messages.sessionId, testSessionId));
+          .where(eq(messages.agentId, testAgentId));
 
         expect(remainingMessages).toHaveLength(0);
       });
@@ -463,7 +457,7 @@ describe('Message Router Integration Tests', () => {
         const remainingMessages = await serverDB
           .select()
           .from(messages)
-          .where(eq(messages.sessionId, testSessionId));
+          .where(eq(messages.agentId, testAgentId));
 
         expect(remainingMessages).toHaveLength(1);
         expect(remainingMessages[0].id).toBe(msgOutside.id);
@@ -702,7 +696,7 @@ describe('Message Router Integration Tests', () => {
       const remainingMessages = await serverDB
         .select()
         .from(messages)
-        .where(eq(messages.sessionId, testSessionId));
+        .where(eq(messages.agentId, testAgentId));
 
       expect(remainingMessages).toHaveLength(0);
     });
@@ -888,7 +882,7 @@ describe('Message Router Integration Tests', () => {
       const remainingMessages = await serverDB
         .select()
         .from(messages)
-        .where(eq(messages.sessionId, testSessionId));
+        .where(eq(messages.agentId, testAgentId));
 
       expect(remainingMessages).toHaveLength(0);
     });
@@ -917,11 +911,11 @@ describe('Message Router Integration Tests', () => {
         topicId: testTopicId,
       });
 
-      // 验证 topic 中的消息已删除，但 session 中的其他消息仍存在
+      // 验证 topic 中的消息已删除，但其他消息仍存在
       const remainingMessages = await serverDB
         .select()
         .from(messages)
-        .where(eq(messages.sessionId, testSessionId));
+        .where(eq(messages.agentId, testAgentId));
 
       expect(remainingMessages).toHaveLength(1);
       expect(remainingMessages[0].id).toBe(msgOutsideTopicResult.id);

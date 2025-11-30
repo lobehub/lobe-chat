@@ -143,9 +143,10 @@ export const CreateNewMessageParamsSchema = z
     // Required fields
     role: UIMessageRoleTypeSchema,
     content: z.string(),
-    agentId: z.string(),
+    // agentId is required, but can be resolved from sessionId in the router
+    agentId: z.string().optional(),
     /**
-     * @deprecated
+     * @deprecated Use agentId instead. Will be resolved to agentId in the router.
      */
     sessionId: z.string().nullable().optional(),
     // Tool related
