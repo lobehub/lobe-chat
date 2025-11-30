@@ -447,6 +447,7 @@ table messages {
   id text [pk, not null]
   role varchar(255) [not null]
   content text
+  editor_data jsonb
   reasoning jsonb
   search jsonb
   metadata jsonb
@@ -961,6 +962,9 @@ table topics {
   title text
   favorite boolean [default: false]
   session_id text
+  content text
+  editor_data jsonb
+  agent_id text
   group_id text
   user_id text [not null]
   client_id text
@@ -976,6 +980,7 @@ table topics {
     (id, user_id) [name: 'topics_id_user_id_idx']
     session_id [name: 'topics_session_id_idx']
     group_id [name: 'topics_group_id_idx']
+    agent_id [name: 'topics_agent_id_idx']
   }
 }
 

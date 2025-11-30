@@ -5,6 +5,7 @@ import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamps, timestamptz } from './_helpers';
+import { agents } from './agent';
 import { chatGroups } from './chatGroup';
 import { documents } from './file';
 import { sessions } from './session';
@@ -19,6 +20,9 @@ export const topics = pgTable(
     title: text('title'),
     favorite: boolean('favorite').default(false),
     sessionId: text('session_id').references(() => sessions.id, { onDelete: 'cascade' }),
+    content: text('content'),
+    editorData: jsonb('editor_data'),
+    agentId: text('agent_id').references(() => agents.id, { onDelete: 'cascade' }),
     groupId: text('group_id').references(() => chatGroups.id, { onDelete: 'cascade' }),
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
@@ -34,6 +38,7 @@ export const topics = pgTable(
     index('topics_id_user_id_idx').on(t.id, t.userId),
     index('topics_session_id_idx').on(t.sessionId),
     index('topics_group_id_idx').on(t.groupId),
+    index('topics_agent_id_idx').on(t.agentId),
   ],
 );
 

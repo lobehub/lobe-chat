@@ -364,6 +364,13 @@
       "when": 1764335703306,
       "tag": "0051_add_market_into_user_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1764500630663,
+      "tag": "0052_topic_and_messages",
+      "breakpoints": true
     }
   ],
   "version": "6"

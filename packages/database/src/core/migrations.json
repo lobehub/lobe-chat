@@ -844,5 +844,20 @@
     "bps": true,
     "folderMillis": 1764335703306,
     "hash": "28c0d738c0b1fdf5fd871363be1a1477b4accbabdc140fe8dc6e9b339aae2c89"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"messages\" DROP CONSTRAINT \"messages_agent_id_agents_id_fk\";\n",
+      "\nALTER TABLE \"messages\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"content\" text;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"agent_id\" text;",
+      "\nALTER TABLE \"messages\" ADD CONSTRAINT \"messages_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"topics\" ADD CONSTRAINT \"topics_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nCREATE INDEX IF NOT EXISTS \"topics_agent_id_idx\" ON \"topics\" USING btree (\"agent_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764500630663,
+    "hash": "94721bc06910a456a4756c9b0c27ef5d7ff55b7ea8c772acf58052c0155c693b"
   }
 ]
