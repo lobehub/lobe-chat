@@ -16,7 +16,6 @@ import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
 
 import AgentInfoDescription from '../AgentInfoDescription';
 import PublishResultModal from '../PublishResultModal';
@@ -41,7 +40,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
 
     const { session: marketSession, isAuthenticated } = useMarketAuth();
     const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
-    const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);
+    const updateAgentMeta = useAgentStore((s) => s.updateAgentMeta);
 
     const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
     const language = useGlobalStore(globalGeneralSelectors.currentLanguage);
@@ -204,7 +203,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
           }
 
           if (isSubmit) {
-            updateSessionMeta({ marketIdentifier: identifier });
+            updateAgentMeta({ marketIdentifier: identifier });
           }
 
           setPublishResult({ identifier });
@@ -246,7 +245,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
         provider,
         systemRole,
         tokenUsage,
-        updateSessionMeta,
+        updateAgentMeta,
       ],
     );
 

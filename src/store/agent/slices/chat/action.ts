@@ -13,6 +13,7 @@ import { AgentState } from '@/store/agent/slices/chat/initialState';
 import { useSessionStore } from '@/store/session';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { KnowledgeItem } from '@/types/knowledgeBase';
+import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
 import type { AgentStore } from '../../store';
@@ -38,6 +39,11 @@ export interface AgentChatAction {
     data: PartialDeep<LobeAgentConfig>,
     signal?: AbortSignal,
   ) => Promise<void>;
+  internal_updateAgentMeta: (
+    id: string,
+    meta: Partial<MetaData>,
+    signal?: AbortSignal,
+  ) => Promise<void>;
   removeFileFromAgent: (fileId: string) => Promise<void>;
   removeKnowledgeBaseFromAgent: (knowledgeBaseId: string) => Promise<void>;
 
@@ -48,6 +54,7 @@ export interface AgentChatAction {
   togglePlugin: (id: string, open?: boolean) => Promise<void>;
   updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
   updateAgentConfig: (config: PartialDeep<LobeAgentConfig>) => Promise<void>;
+  updateAgentMeta: (meta: Partial<MetaData>) => Promise<void>;
   useFetchAgentConfig: (isLogin: boolean | undefined, id: string) => SWRResponse<LobeAgentConfig>;
   useFetchFilesAndKnowledgeBases: () => SWRResponse<KnowledgeItem[]>;
   useInitInboxAgentStore: (
@@ -158,6 +165,15 @@ export const createChatSlice: StateCreator<
 
     await get().internal_updateAgentConfig(activeAgentId, config, controller.signal);
   },
+  updateAgentMeta: async (meta) => {
+    const { activeAgentId } = get();
+
+    if (!activeAgentId) return;
+
+    const controller = get().internal_createAbortController('updateAgentMetaSignal');
+
+    await get().internal_updateAgentMeta(activeAgentId, meta, controller.signal);
+  },
   useFetchAgentConfig: (isLogin, agentId) =>
     useClientDataSWR<LobeAgentConfig>(
       // Only fetch when login status is explicitly true (not null/undefined)
@@ -248,6 +264,19 @@ export const createChatSlice: StateCreator<
 
     // refresh sessions to update the agent config if the model has changed
     if (prevModel !== data.model) await useSessionStore.getState().refreshSessions();
+  },
+
+  internal_updateAgentMeta: async (id, meta, signal) => {
+    // optimistic update at frontend - meta fields are at the top level of agent config
+    get().internal_dispatchAgentMap(
+      id,
+      meta as PartialDeep<LobeAgentConfig>,
+      'optimistic_updateAgentMeta',
+    );
+
+    await sessionService.updateSessionMeta(id, meta, signal);
+    await get().internal_refreshAgentConfig(id);
+    await useSessionStore.getState().refreshSessions();
   },
 
   internal_refreshAgentConfig: async (id) => {

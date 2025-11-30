@@ -18,6 +18,7 @@ export interface AgentState {
   showAgentSetting: boolean;
   updateAgentChatConfigSignal?: AbortController;
   updateAgentConfigSignal?: AbortController;
+  updateAgentMetaSignal?: AbortController;
 }
 
 export const initialAgentChatState: AgentState = {

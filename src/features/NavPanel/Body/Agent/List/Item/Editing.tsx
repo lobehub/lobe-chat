@@ -4,10 +4,12 @@ import { useThemeMode } from 'antd-style';
 import { memo, useCallback, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
 interface EditingProps {
   id: string;
@@ -19,9 +21,9 @@ const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
   const { isDarkMode } = useThemeMode();
 
-  const [editing, updateSessionMeta, switchSession, session] = useSessionStore((s) => {
+  const [editing, session] = useSessionStore((s) => {
     const sess = sessionSelectors.getSessionById(id)(s);
-    return [s.sessionRenamingId === id, s.updateSessionMeta, s.switchSession, sess];
+    return [s.sessionRenamingId === id, sess];
   });
 
   const currentAvatar = sessionMetaSelectors.getAvatar(session.meta);
@@ -38,19 +40,28 @@ const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
         // Set loading state
         useSessionStore.setState({ sessionUpdatingId: id }, false, 'setSessionUpdating');
 
-        // Switch to this session first to ensure updateSessionMeta works on the correct session
-        switchSession(id);
         const updates: { avatar?: string; title?: string } = {};
         if (newTitle && title !== newTitle) updates.title = newTitle;
         if (newAvatar && currentAvatar !== newAvatar) updates.avatar = newAvatar;
-        await updateSessionMeta(updates);
+
+        // Get the agentId from the session's config
+        // For agent sessions, session.config.id is the agentId
+        // Note: The id passed to internal_updateAgentMeta is actually the sessionId,
+        // as sessionService.updateSessionMeta expects sessionId
+        const targetId =
+          session.type === LobeSessionType.Agent
+            ? ((session as LobeAgentSession).config.id ?? id)
+            : id;
+
+        // Use internal_updateAgentMeta to update the specific agent's meta
+        await useAgentStore.getState().internal_updateAgentMeta(targetId, updates);
       } finally {
         // Clear loading state
         useSessionStore.setState({ sessionUpdatingId: null }, false, 'clearSessionUpdating');
       }
     }
     toggleEditing(false);
-  }, [newTitle, newAvatar, title, currentAvatar, id, updateSessionMeta, switchSession]);
+  }, [newTitle, newAvatar, title, currentAvatar, id, session]);
 
   return (
     <Popover

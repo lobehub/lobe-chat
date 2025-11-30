@@ -16,7 +16,6 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
-import { LobeSessionType } from '@/types/session';
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`
@@ -99,25 +98,17 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
   const isLoading = false;
 
   // Handle global store state or use props
-  const [showAgentSetting, globalUpdateAgentConfig] = useAgentStore((s) => [
+  const [showAgentSetting, globalUpdateAgentConfig, globalUpdateAgentMeta] = useAgentStore((s) => [
     s.showAgentSetting,
     s.updateAgentConfig,
+    s.updateAgentMeta,
   ]);
-  const [globalUpdateAgentMeta] = useSessionStore((s) => [s.updateSessionMeta]);
 
   // Create custom update functions that can target specific sessions
   const updateAgentConfig = async (config: any) => {
     if (agentId) {
-      // Find the agent session ID from the agent ID
-      const sessions = useSessionStore.getState().sessions || [];
-      const agentSession = sessions.find(
-        (session) => session.type === LobeSessionType.Agent && session.config?.id === agentId,
-      );
-
-      if (agentSession) {
-        // Use the internal agent store function with the specific session ID
-        await useAgentStore.getState().internal_updateAgentConfig(agentSession.id, config);
-      }
+      // Use the internal agent store function with the specific agent ID
+      await useAgentStore.getState().internal_updateAgentConfig(agentId, config);
     } else {
       // Use the global update function for current session
       await globalUpdateAgentConfig(config);
@@ -126,19 +117,8 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
 
   const updateAgentMeta = async (meta: any) => {
     if (agentId) {
-      // Find the agent session ID from the agent ID
-      const sessions = useSessionStore.getState().sessions || [];
-      const agentSession = sessions.find(
-        (session) => session.type === LobeSessionType.Agent && session.config?.id === agentId,
-      );
-
-      if (agentSession) {
-        // Use the session service directly with the specific session ID
-        const { sessionService } = await import('@/services/session');
-        await sessionService.updateSessionMeta(agentSession.id, meta);
-        // Refresh sessions to update the UI
-        await useSessionStore.getState().refreshSessions();
-      }
+      // Use the internal agent store function with the specific agent ID
+      await useAgentStore.getState().internal_updateAgentMeta(agentId, meta);
     } else {
       // Use the global update function for current session
       await globalUpdateAgentMeta(meta);

@@ -60,17 +60,25 @@ see @.cursor/rules/typescript.mdc
 When working with Linear issues:
 
 1. **Retrieve issue details** before starting work using `mcp__linear-server__get_issue`
-2. **Update issue status** when completing tasks using `mcp__linear-server__update_issue`
-3. **Add completion summary** as a comment using `mcp__linear-server__create_comment`
+2. **Check for sub-issues**: If the issue has sub-issues, retrieve and review ALL sub-issues using `mcp__linear-server__list_issues` with `parentId` filter before starting work
+3. **Update issue status** when completing tasks using `mcp__linear-server__update_issue`
+4. **MUST add completion comment** using `mcp__linear-server__create_comment`
 
-**Important**: When completing an issue, always add a detailed comment summarizing:
+### Completion Comment (REQUIRED)
 
-- What was implemented/changed
-- Key files modified or created
-- Code examples if applicable
-- Any important notes for reviewers
+**Every time you complete an issue, you MUST add a comment summarizing the work done.** This is critical for:
 
-This ensures proper documentation and helps team members understand the changes made.
+- Team visibility and knowledge sharing
+- Code review context
+- Future reference and debugging
+
+**Workflow:**
+
+1. Complete the implementation
+2. Run type check: `bun run type-check`
+3. Run related tests if applicable
+4. Update issue status to "Done": `mcp__linear-server__update_issue`
+5. **Add completion comment**: `mcp__linear-server__create_comment` ← DO NOT SKIP THIS STEP
 
 ## Rules Index
 
