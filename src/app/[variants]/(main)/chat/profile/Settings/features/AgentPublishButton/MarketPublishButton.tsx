@@ -17,7 +17,6 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
-import { useSessionStore } from '@/store/session';
 
 import PublishResultModal from '../PublishResultModal';
 import { type MarketPublishAction } from './MarketPublishModal';
@@ -43,7 +42,7 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(
 
     // Agent data from store
     const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
-    const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);
+    const updateAgentMeta = useAgentStore((s) => s.updateAgentMeta);
     const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
     const editorData = useStore((s) => s.config.editorData);
     const language = useGlobalStore(globalGeneralSelectors.currentLanguage);
@@ -181,7 +180,7 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(
         }
 
         if (isSubmit) {
-          updateSessionMeta({ marketIdentifier: identifier });
+          updateAgentMeta({ marketIdentifier: identifier });
         }
 
         setPublishResult({ identifier });
@@ -229,7 +228,7 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(
       systemRole,
       tokenUsage,
       tSetting,
-      updateSessionMeta,
+      updateAgentMeta,
     ]);
 
     const handleButtonClick = useCallback(async () => {

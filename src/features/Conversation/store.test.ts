@@ -54,7 +54,7 @@ vi.mock('@/store/agent', () => ({
   },
 }));
 
-vi.mock('@/store/agent/slices/chat', () => ({
+vi.mock('@/store/agent/selectors', () => ({
   agentChatConfigSelectors: {
     currentChatConfig: vi.fn(() => ({
       enableAutoCreateTopic: false,

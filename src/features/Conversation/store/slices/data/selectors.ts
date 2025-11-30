@@ -100,7 +100,7 @@ const getGroupLatestMessageWithoutTools = (id: string) => (s: State) => {
  * Get the topic summary for current conversation
  * This is a bridge selector that reads from global ChatStore
  */
-const currentTopicSummary = (_s: State) => {
+const currentTopicSummary = () => {
   const chatState = useChatStore.getState();
   return topicSelectors.currentActiveTopicSummary(chatState);
 };

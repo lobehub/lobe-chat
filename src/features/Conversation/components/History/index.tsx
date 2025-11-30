@@ -30,8 +30,8 @@ const useStyles = createStyles(({ css, token }) => ({
 const History = memo(() => {
   const { styles, theme } = useStyles();
   const { t } = useTranslation('chat');
-  const [content, model] = useConversationStore((s) => {
-    const history = dataSelectors.currentTopicSummary(s);
+  const [content, model] = useConversationStore(() => {
+    const history = dataSelectors.currentTopicSummary();
     return [history?.content, history?.model];
   });
 

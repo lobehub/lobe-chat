@@ -22,10 +22,11 @@ export default memo(() => {
   const [tab, setTab] = useState(ChatSettingsTabs.Prompt);
   const theme = useTheme();
   const cateItems = useCategory();
-  const [id, updateAgentMeta] = useSessionStore((s) => [s.activeId, s.updateSessionMeta]);
+  const id = useSessionStore((s) => s.activeId);
 
-  const [updateAgentConfig, config, meta, title] = useAgentStore((s) => [
+  const [updateAgentConfig, updateAgentMeta, config, meta, title] = useAgentStore((s) => [
     s.updateAgentConfig,
+    s.updateAgentMeta,
     agentSelectors.currentAgentConfig(s),
     agentSelectors.currentAgentMeta(s),
     agentSelectors.currentAgentTitle(s),

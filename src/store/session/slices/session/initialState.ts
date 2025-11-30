@@ -32,7 +32,6 @@ export interface SessionState {
    * it means defaultSessions
    */
   sessions: LobeSessions;
-  signalSessionMeta?: AbortController;
 }
 
 export const initialSessionState: SessionState = {

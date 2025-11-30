@@ -11,6 +11,5 @@ export { default as BorderSpacing } from './components/BorderSpacing';
 export { default as ErrorContent } from './components/ErrorContent';
 export { default as Loading } from './components/Loading';
 export { default as Title } from './components/Title';
-
 export { useStyles } from './style';
 export type * from './type';

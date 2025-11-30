@@ -2,10 +2,11 @@ import { Button, Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import type { LucideIcon } from 'lucide-react';
 import { ChevronDownIcon } from 'lucide-react';
+import type { ComponentProps } from 'react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-interface ActionIconWithChevronProps extends React.ComponentProps<typeof Button> {
+interface ActionIconWithChevronProps extends ComponentProps<typeof Button> {
   icon: LucideIcon;
 }
 
@@ -33,4 +34,3 @@ const ActionIconWithChevron = memo<ActionIconWithChevronProps>(
 ActionIconWithChevron.displayName = 'ActionIconWithChevron';
 
 export default ActionIconWithChevron;
-

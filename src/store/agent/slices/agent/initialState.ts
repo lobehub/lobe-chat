@@ -4,7 +4,7 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { AgentSettingsInstance } from '@/features/AgentSetting';
 import { AgentItem, LobeAgentConfig } from '@/types/agent';
 
-export interface AgentState {
+export interface AgentSliceState {
   activeAgentId?: string;
   agentConfigInitMap: Record<string, boolean>;
   agentMap: Record<string, PartialDeep<AgentItem>>;
@@ -18,9 +18,10 @@ export interface AgentState {
   showAgentSetting: boolean;
   updateAgentChatConfigSignal?: AbortController;
   updateAgentConfigSignal?: AbortController;
+  updateAgentMetaSignal?: AbortController;
 }
 
-export const initialAgentChatState: AgentState = {
+export const initialAgentSliceState: AgentSliceState = {
   agentConfigInitMap: {},
   agentMap: {},
   defaultAgentConfig: DEFAULT_AGENT_CONFIG,

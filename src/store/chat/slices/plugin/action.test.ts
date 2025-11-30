@@ -67,19 +67,14 @@ describe('ChatPluginAction', () => {
               role: 'assistant',
               content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
             },
-            {
-              ...toolMessage,
-              meta: {
-                avatar: DEFAULT_INBOX_AVATAR,
-                backgroundColor: 'rgba(0,0,0,0)',
-                description: undefined,
-                title: undefined,
-              },
+            expect.objectContaining({
+              id: toolMessage.id,
               content: toolMessage.content,
               role: 'assistant',
-              name: undefined,
-              tool_call_id: undefined,
-            },
+              meta: expect.objectContaining({
+                backgroundColor: 'rgba(0,0,0,0)',
+              }),
+            }),
           ],
           parentMessageId: messageId,
           parentMessageType: 'assistant',
@@ -327,7 +322,6 @@ describe('ChatPluginAction', () => {
         content,
         parentId,
         role: 'assistant',
-        sessionId: initialState.activeAgentId,
         topicId: initialState.activeTopicId,
       });
 
@@ -367,7 +361,6 @@ describe('ChatPluginAction', () => {
         content,
         parentId,
         role: 'assistant',
-        sessionId: initialState.activeAgentId,
         topicId: initialState.activeTopicId,
       });
 

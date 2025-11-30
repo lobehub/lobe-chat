@@ -5,7 +5,11 @@ import { memo, useCallback, useMemo, useState } from 'react';
 
 import ShareMessageModal from '../../../components/ShareMessageModal';
 import { messageStateSelectors, useConversationStore } from '../../../store';
-import type { MessageActionItem, MessageActionItemOrDivider, MessageActionsConfig } from '../../../types';
+import type {
+  MessageActionItem,
+  MessageActionItemOrDivider,
+  MessageActionsConfig,
+} from '../../../types';
 import { useGroupActions } from '../useGroupActions';
 
 // Helper to strip handleClick from action items before passing to ActionIconGroup
@@ -16,6 +20,7 @@ const stripHandleClick = (item: MessageActionItemOrDivider): ActionIconGroupItem
   if (children) {
     return {
       ...rest,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       children: children.map(({ handleClick: _, ...child }) => child),
     } as ActionIconGroupItemType;
   }
@@ -23,9 +28,7 @@ const stripHandleClick = (item: MessageActionItemOrDivider): ActionIconGroupItem
 };
 
 // Build action items map for handleAction lookup
-const buildActionsMap = (
-  items: MessageActionItemOrDivider[],
-): Map<string, MessageActionItem> => {
+const buildActionsMap = (items: MessageActionItemOrDivider[]): Map<string, MessageActionItem> => {
   const map = new Map<string, MessageActionItem>();
   for (const item of items) {
     if ('key' in item && item.key) {

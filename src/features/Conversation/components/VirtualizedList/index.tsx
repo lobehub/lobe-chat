@@ -78,10 +78,10 @@ const VirtualizedList = memo<VirtualizedListProps>(
       const ref = virtuaRef.current;
       if (ref) {
         registerVirtuaScrollMethods({
-          scrollToIndex: (index, options) => ref.scrollToIndex(index, options),
           getScrollOffset: () => ref.scrollOffset,
           getScrollSize: () => ref.scrollSize,
           getViewportSize: () => ref.viewportSize,
+          scrollToIndex: (index, options) => ref.scrollToIndex(index, options),
         });
       }
 
