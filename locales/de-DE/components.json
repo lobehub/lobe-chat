@@ -19,6 +19,7 @@
       "chunkingTooltip": "Teilen Sie die Datei in mehrere Textblöcke und vektorisieren Sie sie, um sie für die semantische Suche und Dateidialoge zu verwenden.",
       "chunkingUnsupported": "Diese Datei unterstützt kein Chunking.",
       "confirmDelete": "Die Datei wird gelöscht. Nach dem Löschen kann sie nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
+      "confirmDeleteFolder": "Dieser Ordner und sein gesamter Inhalt werden gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bitte bestätigen Sie Ihre Aktion.",
       "confirmDeleteMultiFiles": "Die ausgewählten {{count}} Dateien werden gelöscht. Nach dem Löschen können sie nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
       "confirmRemoveFromKnowledgeBase": "Die ausgewählten {{count}} Dateien werden aus der Wissensdatenbank entfernt. Die Dateien sind weiterhin in allen Dateien sichtbar. Bitte bestätigen Sie Ihre Aktion.",
       "copyUrl": "Link kopieren",
@@ -35,7 +36,10 @@
       "moveToFolder": "Verschieben nach...",
       "moveToRoot": "In das Stammverzeichnis verschieben",
       "removeFromKnowledgeBase": "Aus der Wissensdatenbank entfernen",
-      "removeFromKnowledgeBaseSuccess": "Datei erfolgreich entfernt"
+      "removeFromKnowledgeBaseSuccess": "Datei erfolgreich entfernt",
+      "rename": "Umbenennen",
+      "renameError": "Umbenennen fehlgeschlagen",
+      "renameSuccess": "Erfolgreich umbenannt"
     },
     "bottom": "Das Ende ist erreicht",
     "config": {

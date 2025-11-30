@@ -1676,6 +1676,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview heeft krachtige complexe redeneercapaciteiten en presteert uitstekend in logische redenering, wiskunde en programmeren."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 is het vlaggenschipmodel van Anthropic, dat uitmuntende intelligentie combineert met schaalbare prestaties. Het is ideaal voor complexe taken die de hoogste kwaliteit van antwoorden en redeneervermogen vereisen."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash is een krachtig redeneermodel van Google, geschikt voor uitgebreide multimodale taken."
   },
@@ -3463,9 +3466,6 @@
   },
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5 is het snelste en slimste Haiku-model van Anthropic, met razendsnelle prestaties en geavanceerde denkvermogens."
-  },
-  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5 is het vlaggenschipmodel van Anthropic, dat uitmuntende intelligentie combineert met schaalbare prestaties. Het is ideaal voor complexe taken die de hoogste kwaliteit van antwoorden en redeneervermogen vereisen."
   },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5 is het meest geavanceerde model dat Anthropic tot nu toe heeft ontwikkeld."

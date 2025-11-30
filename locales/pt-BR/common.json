@@ -304,6 +304,10 @@
     "business": "Parcerias Comerciais",
     "support": "Suporte por E-mail"
   },
+  "navPanel": {
+    "agent": "Assistente",
+    "library": "Biblioteca"
+  },
   "new": "Novo",
   "oauth": "Login SSO",
   "officialSite": "Site Oficial",
@@ -359,12 +363,19 @@
   },
   "tab": {
     "aiImage": "Pintura AI",
+    "audio": "Áudio",
     "chat": "Chat",
+    "community": "Comunidade",
     "discover": "Descobrir",
     "files": "Arquivos",
+    "home": "Início",
+    "image": "Imagem",
     "knowledgeBase": "Base de Conhecimento",
     "me": "eu",
-    "setting": "Configuração"
+    "pages": "Documentos",
+    "search": "Pesquisar",
+    "setting": "Configuração",
+    "video": "Vídeo"
   },
   "telemetry": {
     "allow": "Permitir",

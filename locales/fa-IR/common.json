@@ -304,6 +304,10 @@
     "business": "همکاری تجاری",
     "support": "پشتیبانی ایمیل"
   },
+  "navPanel": {
+    "agent": "دستیار",
+    "library": "کتابخانه"
+  },
   "new": "جدید",
   "oauth": "ورود با SSO",
   "officialSite": "وب‌سایت رسمی",
@@ -359,12 +363,19 @@
   },
   "tab": {
     "aiImage": "نقاشی هوش مصنوعی",
+    "audio": "صوتی",
     "chat": "گفتگو",
+    "community": "انجمن",
     "discover": "کشف",
     "files": "فایل‌ها",
+    "home": "خانه",
+    "image": "تصویر",
     "knowledgeBase": "پایگاه دانش",
     "me": "من",
-    "setting": "تنظیمات"
+    "pages": "اسناد",
+    "search": "جستجو",
+    "setting": "تنظیمات",
+    "video": "ویدیو"
   },
   "telemetry": {
     "allow": "اجازه دادن",

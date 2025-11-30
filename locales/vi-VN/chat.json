@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Bản sao",
   "emptyAgent": "Không có trợ lý",
+  "emptyAgentAction": "Tạo trợ lý",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Chi phí tạo ra một cuộc hội thoại đơn lẻ có thể giảm tới 90%, tốc độ phản hồi tăng gấp 4 lần (<1>Tìm hiểu thêm</1>). Khi bật, sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "Tất cả nội dung",
     "allFiles": "Tất cả tệp",
-    "allKnowledgeBases": "Tất cả kho kiến thức",
-    "disabled": "Chế độ triển khai hiện tại không hỗ trợ đối thoại với cơ sở kiến thức. Nếu bạn muốn sử dụng, hãy chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ {{cloud}}.",
+    "allLibraries": "Tất cả thư viện",
+    "disabled": "Chế độ triển khai hiện tại không hỗ trợ hội thoại với thư viện. Để sử dụng, vui lòng chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ {{cloud}}",
     "library": {
       "action": {
         "add": "Thêm",
         "detail": "Chi tiết",
         "remove": "Xóa"
       },
-      "title": "Tệp/Kho kiến thức"
+      "title": "Tệp/Thư viện"
     },
-    "relativeFilesOrKnowledgeBases": "Tệp/Kho kiến thức liên quan",
-    "title": "Kho kiến thức",
-    "uploadGuide": "Các tệp đã tải lên có thể được xem trong 'Kho kiến thức'",
+    "relativeFilesOrLibraries": "Tệp/Thư viện liên quan",
+    "title": "Thư viện",
+    "uploadGuide": "Các tệp đã tải lên có thể được xem trong mục \"Tài nguyên\"",
     "viewMore": "Xem thêm"
   },
   "memberSelection": {
@@ -360,6 +361,10 @@
       "allComplete": "Tất cả nhiệm vụ đã hoàn thành",
       "title": "Nhiệm vụ đã hoàn thành"
     }
+  },
+  "tab": {
+    "profile": "Hồ sơ trợ lý",
+    "search": "Tìm kiếm"
   },
   "thread": {
     "divider": "Chủ đề con",

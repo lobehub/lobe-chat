@@ -1,8 +1,8 @@
 {
   "addFolder": "Criar pasta",
-  "addKnowledge": "Adicionar conhecimento",
+  "addLibrary": "Adicionar à Biblioteca",
   "addPage": "Criar documento",
-  "desc": "Gerencie seus conhecimentos de trabalho, estudo e vida.",
+  "desc": "Gerencie seus recursos de trabalho, estudo e vida.",
   "detail": {
     "basic": {
       "createdAt": "Data de criação",
@@ -65,6 +65,7 @@
   "empty": "Nenhum arquivo/pasta enviado até o momento",
   "header": {
     "actions": {
+      "connect": "Conectar...",
       "newFolder": "Nova pasta",
       "newPage": "Novo documento",
       "uploadFile": "Enviar arquivo",
@@ -91,7 +92,7 @@
     "quickActions": "Ações Rápidas",
     "recentFiles": "Arquivos Recentes",
     "recentPages": "Documentos Recentes",
-    "subtitle": "Bem-vindo ao seu repositório de conhecimento. Comece a gerenciar seus documentos aqui",
+    "subtitle": "Bem-vindo ao Centro de Recursos, comece a gerenciar seus documentos e arquivos aqui",
     "uploadEntries": {
       "files": {
         "title": "Enviar Arquivos"
@@ -99,19 +100,27 @@
       "folder": {
         "title": "Enviar Pasta"
       },
-      "knowledgeBase": {
-        "title": "Nova Base de Conhecimento"
+      "library": {
+        "title": "Nova Biblioteca"
       },
       "newPage": {
         "title": "Novo Documento"
       }
     }
   },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Esta biblioteca será excluída. Os arquivos nela contidos não serão apagados, mas movidos para Todos os Arquivos. A exclusão da biblioteca é irreversível, por favor, proceda com cautela.",
+      "empty": "Clique em <1>+</1> para começar a criar uma biblioteca"
+    },
+    "new": "Biblioteca",
+    "title": "Bibliotecas"
+  },
   "menu": {
     "allFiles": "Todos os arquivos",
     "allPages": "Todos os Documentos"
   },
-  "networkError": "Falha ao acessar a base de conhecimento, por favor verifique a conexão de rede e tente novamente",
+  "networkError": "Falha ao obter bibliotecas. Verifique sua conexão com a internet e tente novamente.",
   "notSupportGuide": {
     "desc": "A instância atual está no modo de banco de dados cliente e não pode usar a funcionalidade de gerenciamento de arquivos. Por favor, mude para <1>modo de banco de dados servidor</1>, ou use diretamente <3>LobeChat Cloud</3>",
     "features": {
@@ -123,9 +132,9 @@
         "desc": "Utiliza modelos vetoriais de alto desempenho para vetorização de partes de texto, permitindo a busca semântica do conteúdo dos arquivos",
         "title": "Semantização vetorial"
       },
-      "repos": {
-        "desc": "Permite a criação de repositórios de conhecimento e a adição de diferentes tipos de arquivos, construindo seu próprio conhecimento de domínio",
-        "title": "Repositório de conhecimento"
+      "libraries": {
+        "desc": "Suporta a criação de bibliotecas e permite adicionar diferentes tipos de arquivos para construir seus próprios recursos especializados",
+        "title": "Bibliotecas"
       }
     },
     "title": "O modo de implantação atual não suporta gerenciamento de arquivos"
@@ -133,14 +142,6 @@
   "preview": {
     "downloadFile": "Baixar arquivo",
     "unsupportedFileAndContact": "Este formato de arquivo não é suportado para visualização online. Se você tiver interesse em visualizar, sinta-se à vontade para <1>nos enviar um feedback</1>."
-  },
-  "repo": {
-    "list": {
-      "confirmRemoveRepo": "Este repositório será excluído, mas os arquivos nele contidos não serão apagados — eles serão movidos para Todos os Arquivos. A exclusão do repositório é irreversível, por favor, proceda com cautela.",
-      "empty": "Clique em <1>+</1> para começar a criar um repositório"
-    },
-    "new": "Novo Repositório",
-    "title": "Repositório"
   },
   "searchFilePlaceholder": "Pesquisar arquivo",
   "searchPagePlaceholder": "Buscar documentos",
@@ -155,7 +156,7 @@
     "videos": "Vídeos",
     "websites": "Sites"
   },
-  "title": "Base de Conhecimento",
+  "title": "Recursos",
   "toggleLeftPanel": "Mostrar/Ocultar painel esquerdo",
   "uploadDock": {
     "body": {

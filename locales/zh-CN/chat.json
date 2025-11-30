@@ -44,7 +44,7 @@
   },
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暂无助手",
-  "emptyAgentAction": "点击开始创建助手",
+  "emptyAgentAction": "创建助手",
   "extendParams": {
     "disableContextCaching": {
       "desc": "单条对话生成成本最高可降低 90%，响应速度提升 4 倍（<1>了解更多</1>）。开启后将自动禁用历史消息数限制",
@@ -155,19 +155,19 @@
   "knowledgeBase": {
     "all": "所有内容",
     "allFiles": "所有文件",
-    "allKnowledgeBases": "所有知识库",
-    "disabled": "当前部署模式不支持知识库对话，如需使用，请切换到服务端数据库部署或使用 {{cloud}} 服务",
+    "allLibraries": "所有资源库",
+    "disabled": "当前部署模式不支持资源库对话，如需使用，请切换到服务端数据库部署或使用 {{cloud}} 服务",
     "library": {
       "action": {
         "add": "添加",
         "detail": "详情",
         "remove": "移除"
       },
-      "title": "文件/知识库"
+      "title": "文件/资源库"
     },
-    "relativeFilesOrKnowledgeBases": "关联文件/知识库",
-    "title": "知识库",
-    "uploadGuide": "上传过的文件可以在「知识库」中查看哦",
+    "relativeFilesOrLibraries": "关联文件/资源库",
+    "title": "资源库",
+    "uploadGuide": "上传过的文件可以在「资源」中查看哦",
     "viewMore": "查看更多"
   },
   "memberSelection": {
@@ -253,7 +253,7 @@
   "noMatchingAgents": "没有匹配的成员",
   "noMembersYet": "此群组还没有成员。点击 + 按钮邀请助手。",
   "noSelectedAgents": "还未选择成员",
-  "openInNewWindow": "单独打开页面",
+  "openInNewWindow": "打开独立窗口",
   "owner": "群主",
   "pin": "置顶",
   "pinOff": "取消置顶",
@@ -361,6 +361,10 @@
       "allComplete": "所有任务已完成",
       "title": "任务已完成"
     }
+  },
+  "tab": {
+    "profile": "助手档案",
+    "search": "搜索"
   },
   "thread": {
     "divider": "子话题",

@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} kopia",
   "emptyAgent": "Brak asystenta",
+  "emptyAgentAction": "Utwórz asystenta",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Koszt generowania pojedynczej rozmowy może zostać obniżony o 90%, a prędkość odpowiedzi wzrośnie czterokrotnie (<1>Dowiedz się więcej</1>). Po włączeniu automatycznie wyłączone zostanie ograniczenie liczby wiadomości historycznych",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "Wszystkie treści",
     "allFiles": "Wszystkie pliki",
-    "allKnowledgeBases": "Wszystkie bazy wiedzy",
-    "disabled": "Obecny tryb wdrożenia nie obsługuje rozmów z bazą wiedzy. Aby z niej skorzystać, przełącz się na wdrożenie z bazą danych serwera lub skorzystaj z usługi {{cloud}}.",
+    "allLibraries": "Wszystkie biblioteki",
+    "disabled": "Obecny tryb wdrożenia nie obsługuje rozmów z biblioteką wiedzy. Aby skorzystać z tej funkcji, przełącz się na wdrożenie z bazą danych po stronie serwera lub skorzystaj z usługi {{cloud}}",
     "library": {
       "action": {
         "add": "Dodaj",
         "detail": "Szczegóły",
         "remove": "Usuń"
       },
-      "title": "Plik/Baza wiedzy"
+      "title": "Pliki/Biblioteka"
     },
-    "relativeFilesOrKnowledgeBases": "Powiązane pliki/bazy wiedzy",
-    "title": "Baza wiedzy",
-    "uploadGuide": "Przesłane pliki można przeglądać w „Bazie wiedzy”",
+    "relativeFilesOrLibraries": "Powiązane pliki/biblioteki",
+    "title": "Biblioteka wiedzy",
+    "uploadGuide": "Przesłane pliki można przeglądać w sekcji „Zasoby”",
     "viewMore": "Zobacz więcej"
   },
   "memberSelection": {
@@ -252,7 +253,7 @@
   "noMatchingAgents": "Brak pasujących członków",
   "noMembersYet": "W tej grupie nie ma jeszcze żadnych członków. Kliknij przycisk +, aby zaprosić asystentów.",
   "noSelectedAgents": "Nie wybrano jeszcze członków",
-  "openInNewWindow": "Otwórz na osobnej stronie",
+  "openInNewWindow": "Otwórz w nowym oknie",
   "owner": "Właściciel grupy",
   "pin": "Przypnij",
   "pinOff": "Odepnij",
@@ -360,6 +361,10 @@
       "allComplete": "Wszystkie zadania zostały ukończone",
       "title": "Zadania ukończone"
     }
+  },
+  "tab": {
+    "profile": "Profil asystenta",
+    "search": "Szukaj"
   },
   "thread": {
     "divider": "Podwątek",

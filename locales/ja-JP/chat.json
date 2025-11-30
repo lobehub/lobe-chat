@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} のコピー",
   "emptyAgent": "エージェントがいません",
+  "emptyAgentAction": "アシスタントを作成",
   "extendParams": {
     "disableContextCaching": {
       "desc": "単一の対話生成コストは最大90%削減され、応答速度は4倍向上します（<1>詳細はこちら</1>）。有効にすると、過去のメッセージ数制限が自動的に無効になります。",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "すべてのコンテンツ",
     "allFiles": "すべてのファイル",
-    "allKnowledgeBases": "すべての知識ベース",
-    "disabled": "現在のデプロイモードでは知識ベースの対話はサポートされていません。使用するには、サーバー側のデータベースデプロイに切り替えるか、{{cloud}} サービスを利用してください。",
+    "allLibraries": "すべてのリソースライブラリ",
+    "disabled": "現在のデプロイモードではリソースライブラリとの対話はサポートされていません。ご利用になるには、サーバーサイドのデータベースデプロイに切り替えるか、{{cloud}} サービスをご利用ください。",
     "library": {
       "action": {
         "add": "追加",
         "detail": "詳細",
         "remove": "削除"
       },
-      "title": "ファイル/知識ベース"
+      "title": "ファイル／リソースライブラリ"
     },
-    "relativeFilesOrKnowledgeBases": "関連ファイル/知識ベース",
-    "title": "知識ベース",
-    "uploadGuide": "アップロードしたファイルは「知識ベース」で確認できますよ",
+    "relativeFilesOrLibraries": "関連ファイル／リソースライブラリ",
+    "title": "リソースライブラリ",
+    "uploadGuide": "アップロードしたファイルは「リソース」で確認できます",
     "viewMore": "さらに表示"
   },
   "memberSelection": {
@@ -360,6 +361,10 @@
       "allComplete": "すべてのタスクが完了しました",
       "title": "タスク完了"
     }
+  },
+  "tab": {
+    "profile": "アシスタントプロフィール",
+    "search": "検索"
   },
   "thread": {
     "divider": "サブトピック",

@@ -1,8 +1,8 @@
 {
   "addFolder": "Crea cartella",
-  "addKnowledge": "Aggiungi conoscenza",
+  "addLibrary": "Aggiungi alla libreria",
   "addPage": "Crea documento",
-  "desc": "Gestisci le tue conoscenze su lavoro, studio e vita.",
+  "desc": "Gestisci le tue risorse per il lavoro, lo studio e la vita quotidiana.",
   "detail": {
     "basic": {
       "createdAt": "Data di creazione",
@@ -65,6 +65,7 @@
   "empty": "Nessun file/cartella caricato",
   "header": {
     "actions": {
+      "connect": "Connessione in corso...",
       "newFolder": "Nuova cartella",
       "newPage": "Nuovo documento",
       "uploadFile": "Carica file",
@@ -91,7 +92,7 @@
     "quickActions": "Azioni rapide",
     "recentFiles": "File recenti",
     "recentPages": "Documenti recenti",
-    "subtitle": "Benvenuto nel tuo archivio di conoscenza, inizia a gestire i tuoi documenti da qui",
+    "subtitle": "Benvenuto nel Centro Risorse, inizia da qui a gestire i tuoi documenti e file",
     "uploadEntries": {
       "files": {
         "title": "Carica file"
@@ -99,19 +100,27 @@
       "folder": {
         "title": "Carica cartella"
       },
-      "knowledgeBase": {
-        "title": "Crea nuova base di conoscenza"
+      "library": {
+        "title": "Crea nuova libreria"
       },
       "newPage": {
         "title": "Nuovo Documento"
       }
     }
   },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Stai per eliminare questa libreria. I file al suo interno non verranno eliminati, ma spostati in 'Tutti i file'. Una volta eliminata, la libreria non potrà essere recuperata. Procedi con cautela.",
+      "empty": "Fai clic su <1>+</1> per iniziare a creare una libreria"
+    },
+    "new": "Libreria",
+    "title": "Librerie"
+  },
   "menu": {
     "allFiles": "Tutti i file",
     "allPages": "Tutti i documenti"
   },
-  "networkError": "Impossibile ottenere la knowledge base, controlla la connessione di rete e riprova",
+  "networkError": "Impossibile recuperare le librerie. Controlla la connessione di rete e riprova.",
   "notSupportGuide": {
     "desc": "L'istanza attuale è in modalità database client e non supporta la gestione dei file. Passa a <1>modalità di distribuzione del database server</1>, oppure utilizza direttamente <3>LobeChat Cloud</3>",
     "features": {
@@ -123,9 +132,9 @@
         "desc": "Utilizza modelli vettoriali ad alte prestazioni per vettorizzare i blocchi di testo, consentendo la ricerca semantica del contenuto dei file",
         "title": "Semantizzazione vettoriale"
       },
-      "repos": {
-        "desc": "Supporta la creazione di knowledge base e consente di aggiungere diversi tipi di file, costruendo la tua conoscenza di settore",
-        "title": "Knowledge Base"
+      "libraries": {
+        "desc": "Supporta la creazione di librerie e l'aggiunta di diversi tipi di file per costruire le tue risorse tematiche",
+        "title": "Librerie"
       }
     },
     "title": "La modalità di distribuzione attuale non supporta la gestione dei file"
@@ -133,14 +142,6 @@
   "preview": {
     "downloadFile": "Scarica file",
     "unsupportedFileAndContact": "Questo formato di file non è attualmente supportato per la visualizzazione online. Se hai bisogno di una visualizzazione, ti preghiamo di <1>contattarci</1>."
-  },
-  "repo": {
-    "list": {
-      "confirmRemoveRepo": "Il repository sta per essere eliminato. I file al suo interno non verranno cancellati, ma spostati nella sezione Tutti i file. Una volta eliminato, il repository non potrà essere recuperato. Procedi con cautela.",
-      "empty": "Fai clic su <1>+</1> per iniziare a creare un repository"
-    },
-    "new": "Crea nuovo repository",
-    "title": "Repository"
   },
   "searchFilePlaceholder": "Cerca file",
   "searchPagePlaceholder": "Cerca documenti",
@@ -155,7 +156,7 @@
     "videos": "Video",
     "websites": "Siti web"
   },
-  "title": "Archivio di Conoscenza",
+  "title": "Risorse",
   "toggleLeftPanel": "Mostra/Nascondi pannello sinistro",
   "uploadDock": {
     "body": {

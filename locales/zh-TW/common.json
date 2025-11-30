@@ -304,6 +304,10 @@
     "business": "商務合作",
     "support": "郵件支持"
   },
+  "navPanel": {
+    "agent": "助理",
+    "library": "資料庫"
+  },
   "new": "新增",
   "oauth": "單一登錄（SSO）",
   "officialSite": "官方網站",
@@ -359,12 +363,19 @@
   },
   "tab": {
     "aiImage": "AI 繪畫",
+    "audio": "音訊",
     "chat": "對話",
+    "community": "社群",
     "discover": "發現",
     "files": "檔案",
+    "home": "首頁",
+    "image": "繪圖",
     "knowledgeBase": "知識庫",
     "me": "我",
-    "setting": "設定"
+    "pages": "文稿",
+    "search": "搜尋",
+    "setting": "設定",
+    "video": "影片"
   },
   "telemetry": {
     "allow": "允許",

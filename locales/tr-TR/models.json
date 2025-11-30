@@ -1676,6 +1676,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview, karmaşık akıl yürütme yeteneklerine sahip olup, mantıksal akıl yürütme, matematik, programlama gibi alanlarda mükemmel performans sergilemektedir."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5, Anthropic'in amiral gemisi modelidir; üstün zekâ ve ölçeklenebilir performansı bir araya getirerek, en yüksek kalitede yanıtlar ve akıl yürütme yeteneği gerektiren karmaşık görevler için idealdir."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash, Google’ın yüksek performanslı akıl yürütme modelidir; genişletilmiş çok modlu görevler için uygundur."
   },
@@ -3463,9 +3466,6 @@
   },
   "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
     "description": "Claude Haiku 4.5, Anthropic'in şimdiye kadarki en hızlı ve en akıllı Haiku modelidir; yıldırım hızında çalışır ve gelişmiş düşünme yeteneklerine sahiptir."
-  },
-  "us.anthropic.claude-opus-4-5-20251101-v1:0": {
-    "description": "Claude Opus 4.5, Anthropic'in amiral gemisi modelidir. Üstün zekâ ve ölçeklenebilir performansı bir araya getirerek, en yüksek kalitede yanıtlar ve akıl yürütme yeteneği gerektiren karmaşık görevler için idealdir."
   },
   "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
     "description": "Claude Sonnet 4.5, Anthropic'in bugüne kadarki en akıllı modelidir."

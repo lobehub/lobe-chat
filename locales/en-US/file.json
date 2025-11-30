@@ -1,8 +1,8 @@
 {
   "addFolder": "Create Folder",
-  "addKnowledge": "Add Knowledge",
+  "addLibrary": "Add to Library",
   "addPage": "Create Document",
-  "desc": "Manage your knowledge for work, study, and life.",
+  "desc": "Manage your resources for work, study, and life.",
   "detail": {
     "basic": {
       "createdAt": "Creation Time",
@@ -92,7 +92,7 @@
     "quickActions": "Quick Actions",
     "recentFiles": "Recent Files",
     "recentPages": "Recent Documents",
-    "subtitle": "Welcome to your knowledge base. Start managing your documents here.",
+    "subtitle": "Welcome to the Resource Center. Start managing your documents and files here.",
     "uploadEntries": {
       "files": {
         "title": "Upload Files"
@@ -100,19 +100,27 @@
       "folder": {
         "title": "Upload Folder"
       },
-      "knowledgeBase": {
-        "title": "Create Knowledge Base"
+      "library": {
+        "title": "Create New Library"
       },
       "newPage": {
         "title": "New Page"
       }
     }
   },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "You are about to delete this library. The files within it will not be deleted but moved to All Files. This action cannot be undone, so please proceed with caution.",
+      "empty": "Click <1>+</1> to create a new library"
+    },
+    "new": "Library",
+    "title": "Library"
+  },
   "menu": {
     "allFiles": "All Files",
     "allPages": "All Documents"
   },
-  "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
+  "networkError": "Failed to retrieve libraries. Please check your network connection and try again.",
   "notSupportGuide": {
     "desc": "The current deployment instance is in client database mode, and file management features are not available. Please switch to <1>server database deployment mode</1>, or use <3>LobeChat Cloud</3> directly.",
     "features": {
@@ -124,9 +132,9 @@
         "desc": "Utilizes high-performance vector models to vectorize text chunks, enabling semantic search of file content.",
         "title": "Vector Semantics"
       },
-      "repos": {
-        "desc": "Supports the creation of knowledge bases and allows the addition of different types of files, building your domain knowledge.",
-        "title": "Knowledge Base"
+      "libraries": {
+        "desc": "Create libraries and add various types of files to build your own knowledge base.",
+        "title": "Library"
       }
     },
     "title": "The current deployment mode does not support file management"
@@ -134,14 +142,6 @@
   "preview": {
     "downloadFile": "Download File",
     "unsupportedFileAndContact": "This file format is not currently supported for online preview. If you have a request for previewing, feel free to <1>contact us</1>."
-  },
-  "repo": {
-    "list": {
-      "confirmRemoveRepo": "This repository will be deleted. Its files will not be removed but moved to All Files. Once deleted, the repository cannot be recovered. Please proceed with caution.",
-      "empty": "Click <1>+</1> to create a new repository"
-    },
-    "new": "New Repository",
-    "title": "Repository"
   },
   "searchFilePlaceholder": "Search Files",
   "searchPagePlaceholder": "Search Pages",
@@ -156,7 +156,7 @@
     "videos": "Videos",
     "websites": "Websites"
   },
-  "title": "Knowledge Base",
+  "title": "Resources",
   "toggleLeftPanel": "Show/Hide Left Panel",
   "uploadDock": {
     "body": {

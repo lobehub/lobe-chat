@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Copy",
   "emptyAgent": "No assistant available",
+  "emptyAgentAction": "Create Assistant",
   "extendParams": {
     "disableContextCaching": {
       "desc": "The cost of generating a single conversation can be reduced by up to 90%, and the response speed is increased by 4 times (<1>Learn more</1>). Enabling this will automatically disable the limit on the number of historical messages.",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "All Content",
     "allFiles": "All Files",
-    "allKnowledgeBases": "All Knowledge Bases",
-    "disabled": "The current deployment mode does not support knowledge base conversations. To use this feature, please switch to server-side database deployment or use the {{cloud}} service.",
+    "allLibraries": "All Libraries",
+    "disabled": "The current deployment mode does not support knowledge base conversations. To use this feature, please switch to a server-side database deployment or use the {{cloud}} service.",
     "library": {
       "action": {
         "add": "Add",
         "detail": "Details",
         "remove": "Remove"
       },
-      "title": "Files/Knowledge Base"
+      "title": "Files/Libraries"
     },
-    "relativeFilesOrKnowledgeBases": "Related Files/Knowledge Bases",
+    "relativeFilesOrLibraries": "Related Files/Libraries",
     "title": "Knowledge Base",
-    "uploadGuide": "Uploaded files can be viewed in the 'Knowledge Base'.",
+    "uploadGuide": "Uploaded files can be viewed in the 'Resources' section.",
     "viewMore": "View More"
   },
   "memberSelection": {
@@ -252,7 +253,7 @@
   "noMatchingAgents": "No matching members found",
   "noMembersYet": "This group doesn't have any members yet. Click the + button to invite assistants.",
   "noSelectedAgents": "No members selected yet",
-  "openInNewWindow": "Open in a new window",
+  "openInNewWindow": "Open in New Window",
   "owner": "Group Owner",
   "pin": "Pin",
   "pinOff": "Unpin",
@@ -360,6 +361,10 @@
       "allComplete": "All tasks completed",
       "title": "Tasks Completed"
     }
+  },
+  "tab": {
+    "profile": "Assistant Profile",
+    "search": "Search"
   },
   "thread": {
     "divider": "Subtopic",

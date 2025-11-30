@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Kein Assistent verfügbar",
+  "emptyAgentAction": "Assistent erstellen",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Die Kosten für die Generierung einer einzelnen Konversation können um bis zu 90 % gesenkt werden, die Reaktionsgeschwindigkeit wird um das Vierfache erhöht (<1>Mehr erfahren</1>). Wenn aktiviert, wird die Begrenzung der Anzahl historischer Nachrichten automatisch deaktiviert.",
@@ -154,19 +155,19 @@
   "knowledgeBase": {
     "all": "Alle Inhalte",
     "allFiles": "Alle Dateien",
-    "allKnowledgeBases": "Alle Wissensdatenbanken",
-    "disabled": "Der aktuelle Bereitstellungsmodus unterstützt keine Dialoge mit der Wissensdatenbank. Bitte wechseln Sie zur Bereitstellung mit einer Serverdatenbank oder nutzen Sie den {{cloud}}-Dienst.",
+    "allLibraries": "Alle Bibliotheken",
+    "disabled": "Der aktuelle Bereitstellungsmodus unterstützt keine Bibliotheksdialoge. Um diese Funktion zu nutzen, wechseln Sie bitte zur serverseitigen Datenbankbereitstellung oder verwenden Sie den {{cloud}}-Dienst.",
     "library": {
       "action": {
         "add": "Hinzufügen",
         "detail": "Details",
         "remove": "Entfernen"
       },
-      "title": "Datei/Wissensdatenbank"
+      "title": "Dateien/Bibliothek"
     },
-    "relativeFilesOrKnowledgeBases": "Verwandte Dateien/Wissensdatenbanken",
+    "relativeFilesOrLibraries": "Verknüpfte Dateien/Bibliotheken",
     "title": "Wissensdatenbank",
-    "uploadGuide": "Hochgeladene Dateien können in der „Wissensdatenbank“ eingesehen werden.",
+    "uploadGuide": "Hochgeladene Dateien können unter „Ressourcen“ eingesehen werden.",
     "viewMore": "Mehr anzeigen"
   },
   "memberSelection": {
@@ -360,6 +361,10 @@
       "allComplete": "Alle Aufgaben erledigt",
       "title": "Aufgaben abgeschlossen"
     }
+  },
+  "tab": {
+    "profile": "Assistentenprofil",
+    "search": "Suche"
   },
   "thread": {
     "divider": "Unterthema",

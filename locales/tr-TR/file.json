@@ -1,8 +1,8 @@
 {
   "addFolder": "Klasör Oluştur",
-  "addKnowledge": "Bilgi Ekle",
+  "addLibrary": "Kitaplığa Ekle",
   "addPage": "Belge Oluştur",
-  "desc": "Çalışma, öğrenme ve yaşam bilginizi yönetin.",
+  "desc": "Çalışma, öğrenme ve yaşam kaynaklarını yönetin.",
   "detail": {
     "basic": {
       "createdAt": "Oluşturulma Zamanı",
@@ -65,6 +65,7 @@
   "empty": "Henüz yüklenmiş dosya/klasör yok",
   "header": {
     "actions": {
+      "connect": "Bağlan...",
       "newFolder": "Yeni Klasör",
       "newPage": "Yeni Belge",
       "uploadFile": "Dosya Yükle",
@@ -91,7 +92,7 @@
     "quickActions": "Hızlı İşlemler",
     "recentFiles": "Son Dosyalar",
     "recentPages": "Son Belgeler",
-    "subtitle": "Bilgi tabanına hoş geldiniz, belgelerinizi buradan yönetin",
+    "subtitle": "Kaynak Merkezine hoş geldiniz, belgelerinizi buradan yönetmeye başlayın",
     "uploadEntries": {
       "files": {
         "title": "Dosya Yükle"
@@ -99,19 +100,27 @@
       "folder": {
         "title": "Klasör Yükle"
       },
-      "knowledgeBase": {
-        "title": "Yeni Bilgi Tabanı"
+      "library": {
+        "title": "Yeni Kitaplık Oluştur"
       },
       "newPage": {
         "title": "Yeni Belge Oluştur"
       }
     }
   },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Bu kitaplık silinmek üzere. İçindeki dosyalar silinmeyecek, Tüm Dosyalar'a taşınacaktır. Kitaplık silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+      "empty": "<1>+</1> simgesine tıklayarak kitaplık oluşturmaya başlayın"
+    },
+    "new": "Kitaplık",
+    "title": "Kitaplık"
+  },
   "menu": {
     "allFiles": "Tüm Dosyalar",
     "allPages": "Tüm Belgeler"
   },
-  "networkError": "Bilgi bankası alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
+  "networkError": "Kitaplık alınamadı, lütfen ağ bağlantınızı kontrol ettikten sonra tekrar deneyin",
   "notSupportGuide": {
     "desc": "Mevcut dağıtım örneği istemci veritabanı modunda, dosya yönetim işlevini kullanamazsınız. Lütfen <1>sunucu veritabanı dağıtım moduna</1> geçin veya doğrudan <3>LobeChat Cloud</3> kullanın.",
     "features": {
@@ -123,9 +132,9 @@
         "desc": "Yüksek performanslı vektör modelleri kullanarak, metin parçalarını vektörleştirir ve dosya içeriğinin anlamsal olarak aranmasını sağlar.",
         "title": "Vektör Anlamlandırma"
       },
-      "repos": {
-        "desc": "Bilgi tabanı oluşturmayı destekler ve farklı türde dosyalar eklemeye izin verir, kendi alan bilginizi oluşturun.",
-        "title": "Bilgi Tabanı"
+      "libraries": {
+        "desc": "Kendi alanınıza ait kaynakları oluşturmak için kitaplıklar oluşturabilir ve farklı türde dosyalar ekleyebilirsiniz",
+        "title": "Kitaplıklar"
       }
     },
     "title": "Mevcut dağıtım modu dosya yönetimini desteklemiyor"
@@ -133,14 +142,6 @@
   "preview": {
     "downloadFile": "Dosyayı İndir",
     "unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>."
-  },
-  "repo": {
-    "list": {
-      "confirmRemoveRepo": "Bu depo silinmek üzere. İçindeki dosyalar silinmeyecek, tüm dosyalar klasörüne taşınacaktır. Bilgi deposu silindikten sonra geri getirilemez, lütfen dikkatli olun.",
-      "empty": "<1>+</1> simgesine tıklayarak yeni bir depo oluşturun"
-    },
-    "new": "Yeni Depo",
-    "title": "Depo"
   },
   "searchFilePlaceholder": "Dosya Ara",
   "searchPagePlaceholder": "Belge ara",
@@ -155,7 +156,7 @@
     "videos": "Videolar",
     "websites": "Web Siteleri"
   },
-  "title": "Bilgi Bankası",
+  "title": "Kaynaklar",
   "toggleLeftPanel": "Sol paneli göster/gizle",
   "uploadDock": {
     "body": {
