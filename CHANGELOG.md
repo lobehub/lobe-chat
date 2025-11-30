@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.136](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.135...v2.0.0-next.136)
+
+<sup>Released on **2025-11-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refresh custom AI provider on selection.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refresh custom AI provider on selection, closes [#10506](https://github.com/lobehub/lobe-chat/issues/10506) ([d7db99e](https://github.com/lobehub/lobe-chat/commit/d7db99e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.135](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.134...v2.0.0-next.135)
 
 <sup>Released on **2025-11-30**</sup>
