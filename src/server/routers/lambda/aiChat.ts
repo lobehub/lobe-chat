@@ -131,11 +131,12 @@ export const aiChatRouter = router({
       // create user message
       log('creating user message with content length: %d', input.newUserMessage.content.length);
       const userMessageItem = await ctx.messageModel.create({
-        agentId: input.agentId!,
+        agentId: input.agentId,
         content: input.newUserMessage.content,
         files: input.newUserMessage.files,
         parentId: input.newUserMessage.parentId,
         role: 'user',
+        sessionId,
         threadId,
         topicId,
       });
@@ -150,12 +151,13 @@ export const aiChatRouter = router({
         input.newAssistantMessage.provider,
       );
       const assistantMessageItem = await ctx.messageModel.create({
-        agentId: input.agentId!,
+        agentId: input.agentId,
         content: LOADING_FLAT,
         model: input.newAssistantMessage.model,
         parentId: messageId,
         provider: input.newAssistantMessage.provider,
         role: 'assistant',
+        sessionId,
         threadId,
         topicId,
       });
@@ -164,8 +166,9 @@ export const aiChatRouter = router({
       // retrieve latest messages and topic with
       log('retrieving messages and topics');
       const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
-        agentId: input.agentId!,
+        agentId: input.agentId,
         includeTopic: isCreateNewTopic,
+        sessionId,
         topicId,
       });
 

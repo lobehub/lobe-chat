@@ -57,13 +57,16 @@ describe('aiChatRouter', () => {
       title: 'T',
     });
 
-    expect(mockCreateMessage).toHaveBeenNthCalledWith(1, {
-      content: 'hi',
-      files: ['f1'],
-      role: 'user',
-      sessionId: 's1',
-      topicId: 't1',
-    });
+    expect(mockCreateMessage).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        content: 'hi',
+        files: ['f1'],
+        role: 'user',
+        sessionId: 's1',
+        topicId: 't1',
+      }),
+    );
 
     expect(mockCreateMessage).toHaveBeenNthCalledWith(
       2,
@@ -77,7 +80,9 @@ describe('aiChatRouter', () => {
       }),
     );
 
-    expect(mockGet).toHaveBeenCalledWith({ includeTopic: true, sessionId: 's1', topicId: 't1' });
+    expect(mockGet).toHaveBeenCalledWith(
+      expect.objectContaining({ includeTopic: true, sessionId: 's1', topicId: 't1' }),
+    );
     expect(res.assistantMessageId).toBe('m-assistant');
     expect(res.userMessageId).toBe('m-user');
     expect(res.isCreateNewTopic).toBe(true);
@@ -106,11 +111,13 @@ describe('aiChatRouter', () => {
     } as any);
 
     expect(mockCreateMessage).toHaveBeenCalled();
-    expect(mockGet).toHaveBeenCalledWith({
-      includeTopic: false,
-      sessionId: 's1',
-      topicId: 't-exist',
-    });
+    expect(mockGet).toHaveBeenCalledWith(
+      expect.objectContaining({
+        includeTopic: false,
+        sessionId: 's1',
+        topicId: 't-exist',
+      }),
+    );
     expect(res.isCreateNewTopic).toBe(false);
     expect(res.topicId).toBe('t-exist');
   });
@@ -135,13 +142,16 @@ describe('aiChatRouter', () => {
       topicId: 't1',
     } as any);
 
-    expect(mockCreateMessage).toHaveBeenNthCalledWith(1, {
-      content: 'hi',
-      role: 'user',
-      sessionId: 's1',
-      threadId: 'thread-123',
-      topicId: 't1',
-    });
+    expect(mockCreateMessage).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        content: 'hi',
+        role: 'user',
+        sessionId: 's1',
+        threadId: 'thread-123',
+        topicId: 't1',
+      }),
+    );
 
     expect(mockCreateMessage).toHaveBeenNthCalledWith(
       2,
@@ -191,13 +201,16 @@ describe('aiChatRouter', () => {
     });
 
     // Verify messages use the newly created threadId
-    expect(mockCreateMessage).toHaveBeenNthCalledWith(1, {
-      content: 'hi',
-      role: 'user',
-      sessionId: 's1',
-      threadId: 'thread-new',
-      topicId: 't1',
-    });
+    expect(mockCreateMessage).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        content: 'hi',
+        role: 'user',
+        sessionId: 's1',
+        threadId: 'thread-new',
+        topicId: 't1',
+      }),
+    );
 
     expect(mockCreateMessage).toHaveBeenNthCalledWith(
       2,
@@ -258,13 +271,16 @@ describe('aiChatRouter', () => {
     });
 
     // Messages use both new topicId and threadId
-    expect(mockCreateMessage).toHaveBeenNthCalledWith(1, {
-      content: 'hi',
-      role: 'user',
-      sessionId: 's1',
-      threadId: 'thread-new',
-      topicId: 't-new',
-    });
+    expect(mockCreateMessage).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        content: 'hi',
+        role: 'user',
+        sessionId: 's1',
+        threadId: 'thread-new',
+        topicId: 't-new',
+      }),
+    );
 
     expect(res.isCreateNewTopic).toBe(true);
     expect(res.topicId).toBe('t-new');
