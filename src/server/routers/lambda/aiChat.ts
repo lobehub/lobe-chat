@@ -97,6 +97,7 @@ export const aiChatRouter = router({
       if (input.newTopic) {
         log('creating new topic with title: %s', input.newTopic.title);
         const topicItem = await ctx.topicModel.create({
+          agentId: input.agentId,
           messages: input.newTopic.topicMessageIds,
           sessionId,
           title: input.newTopic.title,
