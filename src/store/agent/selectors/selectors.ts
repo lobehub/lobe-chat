@@ -17,8 +17,9 @@ import { VoiceList } from '@lobehub/tts';
 
 import { DEFAULT_OPENING_QUESTIONS } from '@/features/AgentSetting/store/selectors';
 import { filterToolIds } from '@/helpers/toolFilters';
-import { AgentStoreState } from '@/store/agent/initialState';
 import { merge } from '@/utils/merge';
+
+import type { AgentStoreState } from '../initialState';
 
 const isInboxAgent = (s: AgentStoreState) => !!s.inboxAgentId && s.activeAgentId === s.inboxAgentId;
 

@@ -1,8 +1,8 @@
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
+import { agentSelectors } from '../../selectors';
 import type { AgentStore } from '../../store';
-import { agentSelectors } from '../agent/selectors';
 
 /**
  * Plugin Slice Actions

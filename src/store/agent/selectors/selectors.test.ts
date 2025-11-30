@@ -1,14 +1,14 @@
+import { describe, expect, it, vi } from 'vitest';
+
 import {
   DEFAULT_AGENT_CONFIG,
   DEFAULT_AVATAR,
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
-} from '@lobechat/const';
-import { KnowledgeType } from '@lobechat/types';
-import { describe, expect, it, vi } from 'vitest';
-
+} from '@/const/index';
 import { AgentStoreState } from '@/store/agent/initialState';
+import { KnowledgeType } from '@/types/index';
 
 import { agentSelectors, currentAgentConfig } from './selectors';
 

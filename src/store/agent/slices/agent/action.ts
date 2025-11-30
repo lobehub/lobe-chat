@@ -13,9 +13,9 @@ import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
+import { agentSelectors } from '../../selectors/selectors';
 import type { AgentStore } from '../../store';
 import { AgentSliceState } from './initialState';
-import { agentSelectors } from './selectors';
 
 const FETCH_AGENT_CONFIG_KEY = 'FETCH_AGENT_CONFIG';
 

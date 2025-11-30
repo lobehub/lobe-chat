@@ -1,8 +1,8 @@
+import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_SEARCH_FC_MODEL } from '@lobechat/const';
 import { isContextCachingModel, isThinkingWithToolClaudeModel } from '@lobechat/model-runtime';
+import { LobeAgentChatConfig } from '@lobechat/types';
 
-import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_SEARCH_FC_MODEL } from '@/const/settings';
 import { AgentStoreState } from '@/store/agent/initialState';
-import { LobeAgentChatConfig } from '@/types/agent';
 
 import { currentAgentConfig } from './selectors';
 
