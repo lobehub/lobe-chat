@@ -6,6 +6,7 @@ import { LobeChatDatabase } from '@/database/type';
 import { ConversationContextInput } from '../_schema/context';
 
 export interface ResolvedContext {
+  agentId: string | null;
   groupId: string | null;
   sessionId: string | null;
   threadId: string | null;
@@ -44,6 +45,7 @@ export const resolveContext = async (
   }
 
   return {
+    agentId: input.agentId ?? null,
     groupId: input.groupId ?? null,
     sessionId: resolvedSessionId,
     threadId: input.threadId ?? null,
