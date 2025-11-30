@@ -7,6 +7,7 @@ import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../
 import { idGenerator } from '../utils/idGenerator';
 
 export interface CreateTopicParams {
+  agentId?: string | null;
   favorite?: boolean;
   groupId?: string | null;
   messages?: string[];
@@ -19,6 +20,7 @@ interface QueryTopicParams {
   containerId?: string | null; // sessionId or groupId
   current?: number;
   pageSize?: number;
+  sessionId?: string | null;
 }
 
 export class TopicModel {
@@ -34,23 +36,42 @@ export class TopicModel {
   query = async ({ agentId, current = 0, pageSize = 9999, containerId }: QueryTopicParams = {}) => {
     const offset = current * pageSize;
 
-    // If agentId is provided, try to get the associated sessionId
-    let effectiveContainerId = containerId;
+    // If agentId is provided, query topics that match either:
+    // 1. topics.agentId = agentId (new data with agentId stored directly)
+    // 2. topics.sessionId = associated sessionId (legacy data via agentsToSessions lookup)
     if (agentId) {
+      // Get the associated sessionId for backward compatibility with legacy data
       const agentSession = await this.db
         .select({ sessionId: agentsToSessions.sessionId })
         .from(agentsToSessions)
-        .where(
-          and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)),
-        )
+        .where(and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)))
         .limit(1);
 
-      // If found, use the associated sessionId; otherwise fallback to the provided containerId
-      if (agentSession[0]?.sessionId) {
-        effectiveContainerId = agentSession[0].sessionId;
-      }
+      const associatedSessionId = agentSession[0]?.sessionId;
+
+      // Build condition to match both new (agentId) and legacy (sessionId) data
+      const agentCondition = associatedSessionId
+        ? or(eq(topics.agentId, agentId), eq(topics.sessionId, associatedSessionId))
+        : eq(topics.agentId, agentId);
+
+      return this.db
+        .select({
+          createdAt: topics.createdAt,
+          favorite: topics.favorite,
+          historySummary: topics.historySummary,
+          id: topics.id,
+          metadata: topics.metadata,
+          title: topics.title,
+          updatedAt: topics.updatedAt,
+        })
+        .from(topics)
+        .where(and(eq(topics.userId, this.userId), agentCondition))
+        .orderBy(desc(topics.favorite), desc(topics.updatedAt))
+        .limit(pageSize)
+        .offset(offset);
     }
 
+    // Fallback to containerId-based query (original behavior)
     return (
       this.db
         .select({
@@ -63,7 +84,7 @@ export class TopicModel {
           updatedAt: topics.updatedAt,
         })
         .from(topics)
-        .where(and(eq(topics.userId, this.userId), this.matchContainer(effectiveContainerId)))
+        .where(and(eq(topics.userId, this.userId), this.matchContainer(containerId)))
         // In boolean sorting, false is considered "smaller" than true.
         // So here we use desc to ensure that topics with favorite as true are in front.
         .orderBy(desc(topics.favorite), desc(topics.updatedAt))
@@ -196,6 +217,7 @@ export class TopicModel {
     return this.db.transaction(async (tx) => {
       const insertData = {
         ...params,
+        agentId: params.agentId || null,
         groupId: params.groupId || null,
         id,
         sessionId: params.sessionId || null,
@@ -225,6 +247,7 @@ export class TopicModel {
         .insert(topics)
         .values(
           topicParams.map((params) => ({
+            agentId: params.agentId || null,
             favorite: params.favorite,
             groupId: params.sessionId ? null : params.groupId,
             id: params.id || this.genId(),
@@ -329,6 +352,30 @@ export class TopicModel {
     return this.db
       .delete(topics)
       .where(and(this.matchGroup(groupId), eq(topics.userId, this.userId)));
+  };
+
+  /**
+   * Deletes multiple topics based on the agentId.
+   * This will delete topics that have either:
+   * 1. Direct agentId match (new data)
+   * 2. SessionId match via agentsToSessions lookup (legacy data)
+   */
+  batchDeleteByAgentId = async (agentId: string) => {
+    // Get the associated sessionId for backward compatibility with legacy data
+    const agentSession = await this.db
+      .select({ sessionId: agentsToSessions.sessionId })
+      .from(agentsToSessions)
+      .where(and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)))
+      .limit(1);
+
+    const associatedSessionId = agentSession[0]?.sessionId;
+
+    // Build condition to match both new (agentId) and legacy (sessionId) data
+    const agentCondition = associatedSessionId
+      ? or(eq(topics.agentId, agentId), eq(topics.sessionId, associatedSessionId))
+      : eq(topics.agentId, agentId);
+
+    return this.db.delete(topics).where(and(eq(topics.userId, this.userId), agentCondition));
   };
 
   /**

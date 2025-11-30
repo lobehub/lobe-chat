@@ -42,6 +42,7 @@ describe('resolveContext', () => {
       );
 
       expect(result).toEqual({
+        agentId: null,
         groupId: null,
         sessionId: 'session-1',
         threadId: null,
@@ -110,6 +111,7 @@ describe('resolveContext', () => {
       );
 
       expect(result).toEqual({
+        agentId: null,
         sessionId: 'session-1',
         topicId: 'topic-1',
         threadId: 'thread-1',
@@ -132,6 +134,7 @@ describe('resolveContext', () => {
       );
 
       expect(result).toEqual({
+        agentId: null,
         sessionId: null,
         topicId: null,
         threadId: null,
@@ -145,6 +148,7 @@ describe('resolveContext', () => {
       const result = await resolveContext({}, mockDb, mockUserId);
 
       expect(result).toEqual({
+        agentId: null,
         sessionId: null,
         topicId: null,
         threadId: null,

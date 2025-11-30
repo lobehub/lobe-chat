@@ -4,6 +4,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { uuid } from '@/utils/uuid';
 
 import {
+  agents,
+  agentsToSessions,
   chatGroups,
   messagePlugins,
   messageQueries,
@@ -476,6 +478,196 @@ describe('MessageModel Delete Tests', () => {
       } catch (e) {
         expect(e).toBeInstanceOf(Error);
       }
+    });
+  });
+
+  describe('batchDeleteByAgentId', () => {
+    it('should delete messages with direct agentId match', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(agents).values([{ id: 'agent-del-1', userId, title: 'Agent Delete 1' }]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-del-1',
+            userId,
+            agentId: 'agent-del-1',
+            role: 'user',
+            content: 'to delete',
+          },
+          {
+            id: 'msg-keep-1',
+            userId,
+            agentId: null,
+            role: 'user',
+            content: 'to keep',
+          },
+        ]);
+      });
+
+      await messageModel.batchDeleteByAgentId('agent-del-1');
+
+      const remaining = await serverDB.query.messages.findMany({
+        where: eq(messages.userId, userId),
+      });
+
+      expect(remaining).toHaveLength(1);
+      expect(remaining[0].id).toBe('msg-keep-1');
+    });
+
+    it('should delete legacy messages by agentId through agentsToSessions lookup', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session-del', userId }]);
+
+        await trx.insert(agents).values([{ id: 'agent-del-2', userId, title: 'Agent Delete 2' }]);
+
+        await trx
+          .insert(agentsToSessions)
+          .values([{ agentId: 'agent-del-2', sessionId: 'session-del', userId }]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-del-legacy',
+            userId,
+            sessionId: 'session-del',
+            agentId: null,
+            role: 'user',
+            content: 'legacy to delete',
+          },
+          {
+            id: 'msg-keep-2',
+            userId,
+            sessionId: null,
+            agentId: null,
+            role: 'user',
+            content: 'to keep',
+          },
+        ]);
+      });
+
+      await messageModel.batchDeleteByAgentId('agent-del-2');
+
+      const remaining = await serverDB.query.messages.findMany({
+        where: eq(messages.userId, userId),
+      });
+
+      expect(remaining).toHaveLength(1);
+      expect(remaining[0].id).toBe('msg-keep-2');
+    });
+
+    it('should delete both legacy and new messages using OR condition', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session-del-mixed', userId }]);
+
+        await trx
+          .insert(agents)
+          .values([{ id: 'agent-del-mixed', userId, title: 'Agent Delete Mixed' }]);
+
+        await trx
+          .insert(agentsToSessions)
+          .values([{ agentId: 'agent-del-mixed', sessionId: 'session-del-mixed', userId }]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-del-legacy-mixed',
+            userId,
+            sessionId: 'session-del-mixed',
+            agentId: null,
+            role: 'user',
+            content: 'legacy to delete',
+          },
+          {
+            id: 'msg-del-new-mixed',
+            userId,
+            sessionId: null,
+            agentId: 'agent-del-mixed',
+            role: 'user',
+            content: 'new to delete',
+          },
+          {
+            id: 'msg-keep-mixed',
+            userId,
+            sessionId: null,
+            agentId: null,
+            role: 'user',
+            content: 'to keep',
+          },
+        ]);
+      });
+
+      await messageModel.batchDeleteByAgentId('agent-del-mixed');
+
+      const remaining = await serverDB.query.messages.findMany({
+        where: eq(messages.userId, userId),
+      });
+
+      expect(remaining).toHaveLength(1);
+      expect(remaining[0].id).toBe('msg-keep-mixed');
+    });
+
+    it('should only delete messages belonging to the current user', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(agents).values([
+          { id: 'agent-del-user', userId, title: 'Agent Delete User' },
+          { id: 'agent-del-other', userId: otherUserId, title: 'Agent Delete Other' },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-del-user',
+            userId,
+            agentId: 'agent-del-user',
+            role: 'user',
+            content: 'user to delete',
+          },
+          {
+            id: 'msg-keep-other',
+            userId: otherUserId,
+            agentId: 'agent-del-other',
+            role: 'user',
+            content: 'other user keep',
+          },
+        ]);
+      });
+
+      await messageModel.batchDeleteByAgentId('agent-del-user');
+
+      // User's message should be deleted
+      const userMessages = await serverDB.query.messages.findMany({
+        where: eq(messages.userId, userId),
+      });
+      expect(userMessages).toHaveLength(0);
+
+      // Other user's message should remain
+      const otherMessages = await serverDB.query.messages.findMany({
+        where: eq(messages.userId, otherUserId),
+      });
+      expect(otherMessages).toHaveLength(1);
+      expect(otherMessages[0].id).toBe('msg-keep-other');
+    });
+
+    it('should do nothing when agentId has no associated messages', async () => {
+      await serverDB
+        .insert(agents)
+        .values([{ id: 'agent-del-empty', userId, title: 'Agent Delete Empty' }]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'msg-keep-empty',
+          userId,
+          agentId: null,
+          role: 'user',
+          content: 'keep this',
+        },
+      ]);
+
+      await messageModel.batchDeleteByAgentId('agent-del-empty');
+
+      const remaining = await serverDB.query.messages.findMany({
+        where: eq(messages.userId, userId),
+      });
+
+      expect(remaining).toHaveLength(1);
+      expect(remaining[0].id).toBe('msg-keep-empty');
     });
   });
 });
