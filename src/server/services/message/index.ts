@@ -6,6 +6,7 @@ import { MessageModel } from '@/database/models/message';
 import { FileService } from '../file';
 
 interface QueryOptions {
+  agentId?: string | null;
   groupId?: string | null;
   sessionId?: string | null;
   topicId?: string | null;
@@ -50,18 +51,24 @@ export class MessageService {
 
   /**
    * Query messages and return response with success status (used after mutations)
+   * 优先使用 agentId，如果没有则使用 sessionId（向后兼容）
    */
   private async queryWithSuccess(
     options?: QueryOptions,
   ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
-    if (!options || (options.sessionId === undefined && options.topicId === undefined)) {
+    if (
+      !options ||
+      (options.agentId === undefined &&
+        options.sessionId === undefined &&
+        options.topicId === undefined)
+    ) {
       return { success: true };
     }
 
-    const { sessionId, topicId, groupId } = options;
+    const { agentId, sessionId, topicId, groupId } = options;
 
     const messages = await this.messageModel.query(
-      { groupId, sessionId, topicId },
+      { agentId, groupId, sessionId, topicId },
       this.getQueryOptions(),
     );
 
