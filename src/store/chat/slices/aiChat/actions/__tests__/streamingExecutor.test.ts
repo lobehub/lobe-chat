@@ -85,7 +85,7 @@ describe('StreamingExecutor actions', () => {
           error: expect.objectContaining({ type: 'InvalidProviderAPIKey' }),
         }),
         expect.objectContaining({
-          sessionId: TEST_IDS.SESSION_ID,
+          agentId: TEST_IDS.SESSION_ID,
           topicId: TEST_IDS.TOPIC_ID,
         }),
       );
@@ -419,7 +419,7 @@ describe('StreamingExecutor actions', () => {
         TEST_IDS.ASSISTANT_MESSAGE_ID,
         expect.objectContaining({ traceId }),
         expect.objectContaining({
-          sessionId: expect.any(String),
+          agentId: expect.any(String),
           topicId: expect.any(String),
         }),
       );

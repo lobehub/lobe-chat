@@ -91,7 +91,7 @@ describe('chatMessage actions', () => {
       expect(messageService.createMessage).toHaveBeenCalledWith({
         content: inputMessage,
         role: 'assistant',
-        sessionId: mockState.activeAgentId,
+        agentId: mockState.activeAgentId,
         topicId: mockState.activeTopicId,
       });
     });
@@ -138,7 +138,7 @@ describe('chatMessage actions', () => {
         content: message,
         files: fileList,
         role: 'user',
-        sessionId: mockState.activeAgentId,
+        agentId: mockState.activeAgentId,
         topicId: mockState.activeTopicId,
         threadId: undefined,
       });
@@ -162,7 +162,7 @@ describe('chatMessage actions', () => {
         content: message,
         files: undefined,
         role: 'user',
-        sessionId: mockState.activeAgentId,
+        agentId: mockState.activeAgentId,
         topicId: mockState.activeTopicId,
         threadId: activeThreadId,
       });
@@ -192,7 +192,7 @@ describe('chatMessage actions', () => {
         content: message,
         files: undefined,
         role: 'user',
-        sessionId: mockState.activeAgentId,
+        agentId: mockState.activeAgentId,
         topicId: mockState.activeTopicId,
         threadId: undefined,
       });
@@ -269,7 +269,7 @@ describe('chatMessage actions', () => {
 
       // Only the message itself should be deleted, tool messages remain as orphaned
       expect(removeMessagesSpy).toHaveBeenCalledWith([messageId], {
-        sessionId: 'session-id',
+        agentId: 'session-id',
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
@@ -322,7 +322,7 @@ describe('chatMessage actions', () => {
       });
 
       expect(removeMessagesSpy).toHaveBeenCalledWith([groupMessageId, 'child-1', 'child-2'], {
-        sessionId: 'session-id',
+        agentId: 'session-id',
         topicId: undefined,
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
@@ -387,7 +387,7 @@ describe('chatMessage actions', () => {
       expect(removeMessagesSpy).toHaveBeenCalledWith(
         [groupMessageId, 'child-1', 'child-2', 'tool-result-1'],
         {
-          sessionId: 'session-id',
+          agentId: 'session-id',
           topicId: undefined,
         },
       );
@@ -671,7 +671,7 @@ describe('chatMessage actions', () => {
       expect(spy).toHaveBeenCalledWith(
         messageId,
         expect.objectContaining({ content: newContent }),
-        { sessionId: 'session-id', topicId: 'topic-id' },
+        { agentId: 'session-id', topicId: 'topic-id' },
       );
     });
 
@@ -862,7 +862,7 @@ describe('chatMessage actions', () => {
       expect(updateMessageSpy).toHaveBeenCalledWith(
         messageId,
         expect.objectContaining({ content, tools: undefined }),
-        { sessionId: contextSessionId, topicId: contextTopicId },
+        { agentId: contextSessionId, topicId: contextTopicId },
       );
     });
 
@@ -892,7 +892,7 @@ describe('chatMessage actions', () => {
       expect(updateMessageSpy).toHaveBeenCalledWith(
         messageId,
         { error },
-        { sessionId: contextSessionId, topicId: contextTopicId },
+        { agentId: contextSessionId, topicId: contextTopicId },
       );
     });
 
@@ -919,7 +919,7 @@ describe('chatMessage actions', () => {
       });
 
       expect(removeMessageSpy).toHaveBeenCalledWith(messageId, {
-        sessionId: contextSessionId,
+        agentId: contextSessionId,
         topicId: contextTopicId,
       });
     });
@@ -947,7 +947,7 @@ describe('chatMessage actions', () => {
       });
 
       expect(removeMessagesSpy).toHaveBeenCalledWith(ids, {
-        sessionId: contextSessionId,
+        agentId: contextSessionId,
         topicId: contextTopicId,
       });
     });
@@ -985,7 +985,7 @@ describe('chatMessage actions', () => {
       });
 
       expect(updateMessagePluginSpy).toHaveBeenCalledWith(messageId, pluginValue, {
-        sessionId: 'session-id',
+        agentId: 'session-id',
         topicId: 'topic-id',
       });
     });
@@ -1029,7 +1029,7 @@ describe('chatMessage actions', () => {
       });
 
       expect(updateMessagePluginSpy).toHaveBeenCalledWith(messageId, pluginValue, {
-        sessionId: contextSessionId,
+        agentId: contextSessionId,
         topicId: contextTopicId,
       });
     });
