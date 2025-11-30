@@ -1,8 +1,6 @@
 import qs from 'query-string';
 import urlJoin from 'url-join';
 
-import { INBOX_SESSION_ID } from './session';
-
 const isDev = process.env.NODE_ENV === 'development';
 
 export const UTM_SOURCE = 'chat_preview';
@@ -47,13 +45,9 @@ export const AGENTS_INDEX_GITHUB = 'https://github.com/lobehub/lobe-chat-agents'
 export const AGENTS_INDEX_GITHUB_ISSUE = urlJoin(AGENTS_INDEX_GITHUB, 'issues/new');
 export const AGENTS_OFFICIAL_URL = 'https://lobehub.com/agent';
 
-export const SESSION_CHAT_URL = (
-  id: string = INBOX_SESSION_ID,
-  agentId: string,
-  mobile?: boolean,
-) =>
+export const SESSION_CHAT_URL = (agentId: string, mobile?: boolean) =>
   qs.stringifyUrl({
-    query: mobile ? { session: id, showMobileWorkspace: mobile } : { session: id },
+    query: mobile ? { showMobileWorkspace: mobile } : {},
     url: `/agent/${agentId}`,
   });
 

@@ -118,7 +118,7 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
     try {
       const session = await createSessionWithMarketIdentifier(true);
       message.success(t('assistants.addAgentSuccess'));
-      navigate(SESSION_CHAT_URL(session, session!, mobile));
+      navigate(SESSION_CHAT_URL(session!, mobile));
     } finally {
       setIsLoading(false);
     }

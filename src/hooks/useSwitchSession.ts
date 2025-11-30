@@ -16,19 +16,19 @@ export const useSwitchSession = () => {
   const pathname = location.pathname;
 
   return useCallback(
-    (id: string, agentId?: string) => {
-      switchSession(id);
+    (agentId: string) => {
+      switchSession(agentId);
       togglePortal(false);
 
       const chatPath = '/agent';
       if (mobile) {
         setTimeout(() => {
           router.push(chatPath, {
-            query: { session: id, showMobileWorkspace: 'true' },
+            query: { showMobileWorkspace: 'true' },
           });
         }, 50);
       } else {
-        router.push(SESSION_CHAT_URL(id, agentId!, false));
+        router.push(SESSION_CHAT_URL(agentId!, false));
       }
     },
     [mobile, pathname, switchSession, togglePortal, router],

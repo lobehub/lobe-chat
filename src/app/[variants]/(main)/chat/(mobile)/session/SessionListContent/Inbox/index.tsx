@@ -37,7 +37,7 @@ const Inbox = memo(() => {
           switchSession(INBOX_SESSION_ID);
         }
       }}
-      to={SESSION_CHAT_URL(INBOX_SESSION_ID, INBOX_SESSION_ID, mobile)}
+      to={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
     >
       <ListItem
         active={activeId === INBOX_SESSION_ID}
