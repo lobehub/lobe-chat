@@ -386,4 +386,234 @@ describe('AgentModel', () => {
       expect(result?.enabled).toBe(false);
     });
   });
+
+  describe('updateConfig', () => {
+    it('should update agent basic fields', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Original Title', description: 'Original Desc' })
+        .returning()
+        .then((res) => res[0]);
+
+      await agentModel.updateConfig(agent.id, { title: 'New Title', description: 'New Desc' });
+
+      const updated = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+
+      expect(updated?.title).toBe('New Title');
+      expect(updated?.description).toBe('New Desc');
+    });
+
+    it('should return early when data is null', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Original' })
+        .returning()
+        .then((res) => res[0]);
+
+      const result = await agentModel.updateConfig(agent.id, null);
+
+      expect(result).toBeUndefined();
+
+      const unchanged = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+      expect(unchanged?.title).toBe('Original');
+    });
+
+    it('should return early when data is undefined', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Original' })
+        .returning()
+        .then((res) => res[0]);
+
+      const result = await agentModel.updateConfig(agent.id, undefined);
+
+      expect(result).toBeUndefined();
+
+      const unchanged = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+      expect(unchanged?.title).toBe('Original');
+    });
+
+    it('should return early when data is empty object', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Original' })
+        .returning()
+        .then((res) => res[0]);
+
+      const result = await agentModel.updateConfig(agent.id, {});
+
+      expect(result).toBeUndefined();
+
+      const unchanged = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+      expect(unchanged?.title).toBe('Original');
+    });
+
+    it('should return undefined when agent does not exist', async () => {
+      const result = await agentModel.updateConfig('non-existent-id', { title: 'New Title' });
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should not update agent of other users', async () => {
+      const otherUserId = 'other-user-for-update-test';
+      await serverDB.insert(users).values([{ id: otherUserId }]);
+
+      const otherAgent = await serverDB
+        .insert(agents)
+        .values({ userId: otherUserId, title: 'Other User Agent' })
+        .returning()
+        .then((res) => res[0]);
+
+      const result = await agentModel.updateConfig(otherAgent.id, { title: 'Hacked Title' });
+
+      expect(result).toBeUndefined();
+
+      const unchanged = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, otherAgent.id),
+      });
+      expect(unchanged?.title).toBe('Other User Agent');
+    });
+
+    describe('params field handling', () => {
+      it('should update params field values', async () => {
+        const agent = await serverDB
+          .insert(agents)
+          .values({ userId, params: { temperature: 0.5 } })
+          .returning()
+          .then((res) => res[0]);
+
+        await agentModel.updateConfig(agent.id, { params: { temperature: 0.8 } });
+
+        const updated = await serverDB.query.agents.findFirst({
+          where: eq(agents.id, agent.id),
+        });
+
+        expect(updated?.params).toEqual({ temperature: 0.8 });
+      });
+
+      it('should add new params while keeping existing ones', async () => {
+        const agent = await serverDB
+          .insert(agents)
+          .values({ userId, params: { temperature: 0.5 } })
+          .returning()
+          .then((res) => res[0]);
+
+        await agentModel.updateConfig(agent.id, { params: { topP: 0.9 } });
+
+        const updated = await serverDB.query.agents.findFirst({
+          where: eq(agents.id, agent.id),
+        });
+
+        expect(updated?.params).toEqual({ temperature: 0.5, topP: 0.9 });
+      });
+
+      it('should use null to disable a param (frontend semantics)', async () => {
+        const agent = await serverDB
+          .insert(agents)
+          .values({ userId, params: { temperature: 0.5, topP: 0.9 } })
+          .returning()
+          .then((res) => res[0]);
+
+        await agentModel.updateConfig(agent.id, { params: { temperature: null } });
+
+        const updated = await serverDB.query.agents.findFirst({
+          where: eq(agents.id, agent.id),
+        });
+
+        expect(updated?.params).toEqual({ temperature: null, topP: 0.9 });
+      });
+
+      it('should keep existing params when updating with empty params object', async () => {
+        const agent = await serverDB
+          .insert(agents)
+          .values({ userId, params: { temperature: 0.5 } })
+          .returning()
+          .then((res) => res[0]);
+
+        // Empty params object means no changes to params - existing values are preserved
+        await agentModel.updateConfig(agent.id, { params: {} });
+
+        const updated = await serverDB.query.agents.findFirst({
+          where: eq(agents.id, agent.id),
+        });
+
+        // Existing params should be preserved
+        expect(updated?.params).toEqual({ temperature: 0.5 });
+      });
+
+      it('should handle agent with no existing params', async () => {
+        const agent = await serverDB
+          .insert(agents)
+          .values({ userId })
+          .returning()
+          .then((res) => res[0]);
+
+        await agentModel.updateConfig(agent.id, { params: { temperature: 0.7 } });
+
+        const updated = await serverDB.query.agents.findFirst({
+          where: eq(agents.id, agent.id),
+        });
+
+        expect(updated?.params).toEqual({ temperature: 0.7 });
+      });
+    });
+
+    describe('deep merge behavior', () => {
+      it('should deep merge nested objects', async () => {
+        const agent = await serverDB
+          .insert(agents)
+          .values({
+            userId,
+            title: 'Test Agent',
+            chatConfig: { historyCount: 10, enableAutoCreateTopic: true },
+          })
+          .returning()
+          .then((res) => res[0]);
+
+        await agentModel.updateConfig(agent.id, {
+          chatConfig: { historyCount: 20 },
+        });
+
+        const updated = await serverDB.query.agents.findFirst({
+          where: eq(agents.id, agent.id),
+        });
+
+        expect(updated?.chatConfig).toEqual({
+          historyCount: 20,
+          enableAutoCreateTopic: true,
+        });
+      });
+
+      it('should preserve unmodified fields when updating specific fields', async () => {
+        const agent = await serverDB
+          .insert(agents)
+          .values({
+            userId,
+            title: 'Original Title',
+            description: 'Original Description',
+            systemRole: 'You are a helpful assistant',
+          })
+          .returning()
+          .then((res) => res[0]);
+
+        await agentModel.updateConfig(agent.id, { title: 'Updated Title' });
+
+        const updated = await serverDB.query.agents.findFirst({
+          where: eq(agents.id, agent.id),
+        });
+
+        expect(updated?.title).toBe('Updated Title');
+        expect(updated?.description).toBe('Original Description');
+        expect(updated?.systemRole).toBe('You are a helpful assistant');
+      });
+    });
+  });
 });
