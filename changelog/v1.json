@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix BetterAuth Unable to link account - untrusted provider."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.135"
+  },
+  {
+    "children": {
       "fixes": ["Betterauth public url auto detect from VERCEL_URL."]
     },
     "date": "2025-11-29",
