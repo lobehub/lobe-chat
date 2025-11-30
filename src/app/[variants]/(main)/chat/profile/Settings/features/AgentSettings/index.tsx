@@ -13,7 +13,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { AgentSettings as Settings } from '@/features/AgentSetting';
 import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
+import { agentSelectors } from '@/store/agent/selectors';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
@@ -107,8 +107,8 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
   // Create custom update functions that can target specific sessions
   const updateAgentConfig = async (config: any) => {
     if (agentId) {
-      // Use the internal agent store function with the specific agent ID
-      await useAgentStore.getState().internal_updateAgentConfig(agentId, config);
+      // Use the optimistic update function with the specific agent ID
+      await useAgentStore.getState().optimisticUpdateAgentConfig(agentId, config);
     } else {
       // Use the global update function for current session
       await globalUpdateAgentConfig(config);
@@ -117,8 +117,8 @@ const AgentSettings = memo<AgentSettingsProps>(({ agentId, onClose, open }) => {
 
   const updateAgentMeta = async (meta: any) => {
     if (agentId) {
-      // Use the internal agent store function with the specific agent ID
-      await useAgentStore.getState().internal_updateAgentMeta(agentId, meta);
+      // Use the optimistic update function with the specific agent ID
+      await useAgentStore.getState().optimisticUpdateAgentMeta(agentId, meta);
     } else {
       // Use the global update function for current session
       await globalUpdateAgentMeta(meta);

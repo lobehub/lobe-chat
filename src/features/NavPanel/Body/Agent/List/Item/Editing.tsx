@@ -46,14 +46,14 @@ const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
 
         // Get the agentId from the session's config
         // For agent sessions, session.config.id is the agentId
-        // internal_updateAgentMeta expects agentId directly
+        // optimisticUpdateAgentMeta expects agentId directly
         const targetId =
           session.type === LobeSessionType.Agent
             ? ((session as LobeAgentSession).config.id ?? id)
             : id;
 
-        // Use internal_updateAgentMeta to update the specific agent's meta
-        await useAgentStore.getState().internal_updateAgentMeta(targetId, updates);
+        // Use optimisticUpdateAgentMeta to update the specific agent's meta
+        await useAgentStore.getState().optimisticUpdateAgentMeta(targetId, updates);
       } finally {
         // Clear loading state
         useSessionStore.setState({ sessionUpdatingId: null }, false, 'clearSessionUpdating');

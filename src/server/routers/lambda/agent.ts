@@ -188,6 +188,7 @@ export const agentRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.agentModel.updateConfig(input.agentId, input.value);
+      // Use AgentService to update and return the updated agent data
+      return ctx.agentService.updateAgentConfig(input.agentId, input.value);
     }),
 });

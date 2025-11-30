@@ -12,8 +12,6 @@ import type { MessageAction } from './slices/message/action';
 import { messageSlice } from './slices/message/action';
 import type { MessageEditingAction } from './slices/messageState/action';
 import { messageEditingSlice } from './slices/messageState/action';
-import type { MessageOperationAction } from './slices/operation/action';
-import { messageOperationSlice } from './slices/operation/action';
 import type { ToolAction } from './slices/tool/action';
 import { toolSlice } from './slices/tool/action';
 import type { VirtuaListAction } from './slices/virtuaList/action';
@@ -26,7 +24,6 @@ export type Store = State &
   GenerationAction &
   InputAction &
   MessageAction &
-  MessageOperationAction &
   MessageEditingAction &
   ToolAction &
   VirtuaListAction;
@@ -56,7 +53,6 @@ export const createStoreAction: CreateStore =
     ...generationSlice(...params),
     ...inputSlice(...params),
     ...messageSlice(...params),
-    ...messageOperationSlice(...params),
     ...messageEditingSlice(...params),
     ...toolSlice(...params),
     ...virtuaListSlice(...params),

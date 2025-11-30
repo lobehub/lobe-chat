@@ -127,7 +127,8 @@ const MoveToFolderModal = memo<MoveToFolderModalProps>(
       });
     }, []);
 
-    const handleFolderClick = useCallback((folderId: string, folderSlug?: string | null) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const handleFolderClick = useCallback((folderId: string, _folderSlug?: string | null) => {
       // Always use the document ID, not the slug
       setSelectedFolderId(folderId);
     }, []);

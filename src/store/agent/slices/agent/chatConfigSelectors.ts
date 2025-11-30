@@ -4,7 +4,7 @@ import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_SEARCH_FC_MODEL } from '@/cons
 import { AgentStoreState } from '@/store/agent/initialState';
 import { LobeAgentChatConfig } from '@/types/agent';
 
-import { currentAgentConfig } from './agent';
+import { currentAgentConfig } from './selectors';
 
 export const currentAgentChatConfig = (s: AgentStoreState): LobeAgentChatConfig =>
   currentAgentConfig(s).chatConfig || {};

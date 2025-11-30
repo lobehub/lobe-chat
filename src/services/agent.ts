@@ -59,7 +59,10 @@ class AgentService {
     return lambdaClient.agent.getAgentConfig.query({ sessionId });
   };
 
-  updateAgentConfig = (
+  /**
+   * Update agent config and return the updated agent data
+   */
+  updateAgentConfig = async (
     agentId: string,
     config: PartialDeep<LobeAgentConfig>,
     signal?: AbortSignal,
@@ -70,7 +73,10 @@ class AgentService {
     );
   };
 
-  updateAgentMeta = (agentId: string, meta: Partial<MetaData>, signal?: AbortSignal) => {
+  /**
+   * Update agent meta and return the updated agent data
+   */
+  updateAgentMeta = async (agentId: string, meta: Partial<MetaData>, signal?: AbortSignal) => {
     return lambdaClient.agent.updateAgentConfig.mutate({ agentId, value: meta }, { signal });
   };
 }
