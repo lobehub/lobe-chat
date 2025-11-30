@@ -179,4 +179,15 @@ export const agentRouter = router({
         input.enabled,
       );
     }),
+
+  updateAgentConfig: agentProcedure
+    .input(
+      z.object({
+        agentId: z.string(),
+        value: z.object({}).passthrough().partial(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return ctx.agentModel.updateConfig(input.agentId, input.value);
+    }),
 });

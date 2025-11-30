@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { agentService } from '@/services/agent';
 import { globalService } from '@/services/global';
-import { sessionService } from '@/services/session';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
@@ -98,8 +97,8 @@ describe('AgentSlice', () => {
     it('should update config when activeAgentId is set', async () => {
       const { result } = renderHook(() => useAgentStore());
       const config = { model: 'gpt-3.5-turbo' };
-      const updateSessionConfigMock = vi
-        .spyOn(sessionService, 'updateSessionConfig')
+      const updateAgentConfigMock = vi
+        .spyOn(agentService, 'updateAgentConfig')
         .mockResolvedValue(undefined);
       const refreshMock = vi.spyOn(result.current, 'internal_refreshAgentConfig');
 
@@ -111,25 +110,25 @@ describe('AgentSlice', () => {
         await result.current.updateAgentConfig(config);
       });
 
-      expect(updateSessionConfigMock).toHaveBeenCalledWith(
+      expect(updateAgentConfigMock).toHaveBeenCalledWith(
         'inbox-agent-id',
         config,
         expect.any(AbortSignal),
       );
       expect(refreshMock).toHaveBeenCalled();
-      updateSessionConfigMock.mockRestore();
+      updateAgentConfigMock.mockRestore();
       refreshMock.mockRestore();
     });
 
-    it('should update session config if current session is not inbox session', async () => {
+    it('should update agent config if current agent is not inbox agent', async () => {
       const { result } = renderHook(() => useAgentStore());
       const config = { model: 'gpt-3.5-turbo' };
-      const updateSessionConfigMock = vi
-        .spyOn(sessionService, 'updateSessionConfig')
+      const updateAgentConfigMock = vi
+        .spyOn(agentService, 'updateAgentConfig')
         .mockResolvedValue(undefined);
       const refreshMock = vi.spyOn(result.current, 'internal_refreshAgentConfig');
 
-      // 模拟当前会话不是收件箱会话
+      // 模拟当前 agent 不是收件箱 agent
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'agent-id',
@@ -140,20 +139,20 @@ describe('AgentSlice', () => {
         await result.current.updateAgentConfig(config);
       });
 
-      expect(updateSessionConfigMock).toHaveBeenCalledWith(
+      expect(updateAgentConfigMock).toHaveBeenCalledWith(
         'agent-id',
         config,
         expect.any(AbortSignal),
       );
       expect(refreshMock).toHaveBeenCalled();
-      updateSessionConfigMock.mockRestore();
+      updateAgentConfigMock.mockRestore();
       refreshMock.mockRestore();
     });
 
     it('should not update config if there is no current agent', async () => {
       const { result } = renderHook(() => useAgentStore());
       const config = { model: 'gpt-3.5-turbo' };
-      const updateSessionConfigMock = vi.spyOn(sessionService, 'updateSessionConfig');
+      const updateAgentConfigMock = vi.spyOn(agentService, 'updateAgentConfig');
 
       // 模拟没有当前 agent
       act(() => {
@@ -164,8 +163,8 @@ describe('AgentSlice', () => {
         await result.current.updateAgentConfig(config);
       });
 
-      expect(updateSessionConfigMock).not.toHaveBeenCalled();
-      updateSessionConfigMock.mockRestore();
+      expect(updateAgentConfigMock).not.toHaveBeenCalled();
+      updateAgentConfigMock.mockRestore();
     });
   });
 
@@ -269,19 +268,19 @@ describe('AgentSlice', () => {
   });
 
   describe('internal_updateAgentConfig', () => {
-    it('should call sessionService.updateSessionConfig', async () => {
+    it('should call agentService.updateAgentConfig', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      const updateSessionConfigMock = vi
-        .spyOn(sessionService, 'updateSessionConfig')
+      const updateAgentConfigMock = vi
+        .spyOn(agentService, 'updateAgentConfig')
         .mockResolvedValue(undefined);
 
       await act(async () => {
-        await result.current.internal_updateAgentConfig('test-session-id', { foo: 'bar' } as any);
+        await result.current.internal_updateAgentConfig('test-agent-id', { foo: 'bar' } as any);
       });
 
-      expect(updateSessionConfigMock).toHaveBeenCalledWith(
-        'test-session-id',
+      expect(updateAgentConfigMock).toHaveBeenCalledWith(
+        'test-agent-id',
         { foo: 'bar' },
         undefined,
       );

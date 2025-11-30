@@ -8,7 +8,6 @@ import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useClientDataSWR, useOnlyFetchOnceSWR } from '@/libs/swr';
 import { agentService } from '@/services/agent';
-import { sessionService } from '@/services/session';
 import { AgentState } from '@/store/agent/slices/chat/initialState';
 import { useSessionStore } from '@/store/session';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
@@ -259,7 +258,7 @@ export const createChatSlice: StateCreator<
     // optimistic update at frontend
     get().internal_dispatchAgentMap(id, data, 'optimistic_updateAgentConfig');
 
-    await sessionService.updateSessionConfig(id, data, signal);
+    await agentService.updateAgentConfig(id, data, signal);
     await get().internal_refreshAgentConfig(id);
 
     // refresh sessions to update the agent config if the model has changed
@@ -274,7 +273,7 @@ export const createChatSlice: StateCreator<
       'optimistic_updateAgentMeta',
     );
 
-    await sessionService.updateSessionMeta(id, meta, signal);
+    await agentService.updateAgentMeta(id, meta, signal);
     await get().internal_refreshAgentConfig(id);
     await useSessionStore.getState().refreshSessions();
   },

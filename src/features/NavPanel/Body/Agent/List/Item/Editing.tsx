@@ -46,8 +46,7 @@ const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
 
         // Get the agentId from the session's config
         // For agent sessions, session.config.id is the agentId
-        // Note: The id passed to internal_updateAgentMeta is actually the sessionId,
-        // as sessionService.updateSessionMeta expects sessionId
+        // internal_updateAgentMeta expects agentId directly
         const targetId =
           session.type === LobeSessionType.Agent
             ? ((session as LobeAgentSession).config.id ?? id)

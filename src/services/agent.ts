@@ -1,3 +1,6 @@
+import { LobeAgentConfig, MetaData } from '@lobechat/types';
+import type { PartialDeep } from 'type-fest';
+
 import { lambdaClient } from '@/libs/trpc/client';
 
 class AgentService {
@@ -54,6 +57,21 @@ class AgentService {
    */
   getSessionConfig = async (sessionId: string) => {
     return lambdaClient.agent.getAgentConfig.query({ sessionId });
+  };
+
+  updateAgentConfig = (
+    agentId: string,
+    config: PartialDeep<LobeAgentConfig>,
+    signal?: AbortSignal,
+  ) => {
+    return lambdaClient.agent.updateAgentConfig.mutate(
+      { agentId, value: config },
+      { context: { showNotification: false }, signal },
+    );
+  };
+
+  updateAgentMeta = (agentId: string, meta: Partial<MetaData>, signal?: AbortSignal) => {
+    return lambdaClient.agent.updateAgentConfig.mutate({ agentId, value: meta }, { signal });
   };
 }
 
