@@ -12,6 +12,7 @@ import {
   LOBE_CHAT_AUTH_HEADER,
   LOBE_CHAT_OIDC_AUTH_HEADER,
   OAUTH_AUTHORIZED,
+  enableBetterAuth,
   enableClerk,
 } from '@/const/auth';
 import { ClerkAuth } from '@/libs/clerk-auth';
@@ -49,6 +50,18 @@ export const checkAuth =
       // get Authorization from header
       const authorization = req.headers.get(LOBE_CHAT_AUTH_HEADER);
       const oauthAuthorized = !!req.headers.get(OAUTH_AUTHORIZED);
+      let betterAuthAuthorized = false;
+
+      // better auth handler
+      if (enableBetterAuth) {
+        const { auth: betterAuth } = await import('@/auth');
+
+        const session = await betterAuth.api.getSession({
+          headers: req.headers,
+        });
+
+        betterAuthAuthorized = !!session?.user?.id;
+      }
 
       if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
 
@@ -81,6 +94,7 @@ export const checkAuth =
         checkAuthMethod({
           accessCode: jwtPayload.accessCode,
           apiKey: jwtPayload.apiKey,
+          betterAuthAuthorized,
           clerkAuth,
           nextAuthAuthorized: oauthAuthorized,
         });

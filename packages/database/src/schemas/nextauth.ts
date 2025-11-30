@@ -20,7 +20,7 @@ export const nextauthAccounts = pgTable(
     session_state: text('session_state'),
     token_type: text('token_type'),
     type: text('type').$type<AdapterAccount>().notNull(),
-    userId: text('userId')
+    userId: text('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
   },
@@ -40,7 +40,7 @@ export const nextauthAccounts = pgTable(
 export const nextauthSessions = pgTable(`nextauth_sessions`, {
   expires: timestamp('expires', { mode: 'date' }).notNull(),
   sessionToken: text('sessionToken').primaryKey(),
-  userId: text('userId')
+  userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
 });
@@ -77,7 +77,7 @@ export const nextauthAuthenticators = pgTable(
     credentialPublicKey: text('credentialPublicKey').notNull(),
     providerAccountId: text('providerAccountId').notNull(),
     transports: text('transports'),
-    userId: text('userId')
+    userId: text('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
   },

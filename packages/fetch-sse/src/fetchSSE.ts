@@ -438,8 +438,27 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           break;
         }
 
-        case 'reasoning_part':
+        case 'reasoning_part': {
+          // For reasoning_part, accumulate thinking content
+          if (data.partType === 'text' && data.content) {
+            thinking += data.content;
+          }
+          options.onMessageHandle?.({
+            content: data.content,
+            mimeType: data.mimeType,
+            partType: data.partType,
+            thoughtSignature: data.thoughtSignature,
+            type: ev.event,
+          });
+          break;
+        }
+
         case 'content_part': {
+          // For content_part, accumulate text content to output
+          // This is critical for Gemini 2.5 models which use content_part instead of text events
+          if (data.partType === 'text' && data.content) {
+            output += data.content;
+          }
           options.onMessageHandle?.({
             content: data.content,
             mimeType: data.mimeType,

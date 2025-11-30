@@ -3,6 +3,8 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 import { MARKET_OIDC_ENDPOINTS } from '@/services/_url';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/slices/settings/selectors/settings';
 
 import { MarketAuthError } from './errors';
 import { MarketOIDC } from './oidc';
@@ -84,6 +86,71 @@ const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null
     console.error('[MarketAuth] Error fetching user info:', error);
     return null;
   }
+};
+
+/**
+ * 从 DB 获取 market tokens
+ */
+const getMarketTokensFromDB = () => {
+  const settings = settingsSelectors.currentSettings(useUserStore.getState());
+  return settings.market;
+};
+
+/**
+ * 存储 market tokens 到 DB
+ */
+const saveMarketTokensToDB = async (
+  accessToken: string,
+  refreshToken?: string,
+  expiresAt?: number,
+) => {
+  console.log('[MarketAuth] Saving tokens to DB');
+  try {
+    await useUserStore.getState().setSettings({
+      market: {
+        accessToken,
+        expiresAt,
+        refreshToken,
+      },
+    });
+    console.log('[MarketAuth] Tokens saved to DB successfully');
+  } catch (error) {
+    console.error('[MarketAuth] Failed to save tokens to DB:', error);
+  }
+};
+
+/**
+ * 清除 DB 中的 market tokens
+ */
+const clearMarketTokensFromDB = async () => {
+  console.log('[MarketAuth] Clearing tokens from DB');
+  try {
+    await useUserStore.getState().setSettings({
+      market: {
+        accessToken: undefined,
+        expiresAt: undefined,
+        refreshToken: undefined,
+      },
+    });
+    console.log('[MarketAuth] Tokens cleared from DB successfully');
+  } catch (error) {
+    console.error('[MarketAuth] Failed to clear tokens from DB:', error);
+  }
+};
+
+/**
+ * 获取 refresh token（优先从 DB 获取）
+ */
+const getRefreshToken = (): string | null => {
+  // 优先从 DB 获取
+  const dbTokens = getMarketTokensFromDB();
+  if (dbTokens?.refreshToken) {
+    console.log('[MarketAuth] Retrieved refresh token from DB');
+    return dbTokens.refreshToken;
+  }
+
+  console.log('[MarketAuth] No refresh token found');
+  return null;
 };
 
 /**
@@ -234,6 +301,13 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
         sessionStorage.setItem('market_user_info', JSON.stringify(userInfo));
       }
 
+      // 存储 tokens 到 DB
+      await saveMarketTokensToDB(
+        tokenResponse.accessToken,
+        tokenResponse.refreshToken,
+        newSession.expiresAt,
+      );
+
       setSession(newSession);
       setStatus('authenticated');
 
@@ -249,12 +323,14 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   /**
    * 登出方法
    */
-  const signOut = () => {
+  const signOut = async () => {
     setSession(null);
     setStatus('unauthenticated');
     removeTokenFromCookie();
     sessionStorage.removeItem('market_auth_session');
     sessionStorage.removeItem('market_user_info');
+    // 清除 DB 中的 tokens
+    await clearMarketTokensFromDB();
   };
 
   /**
@@ -274,6 +350,40 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       }
     } catch (error) {
       console.error('[MarketAuth] Failed to get user info from storage:', error);
+    }
+
+    return null;
+  };
+
+  /**
+   * 获取 access token（优先从 DB 获取，否则从 session 获取）
+   */
+  const getAccessToken = (): string | null => {
+    // 优先从 DB 获取
+    const dbTokens = getMarketTokensFromDB();
+    if (dbTokens?.accessToken) {
+      console.log('[MarketAuth] Retrieved access token from DB');
+      return dbTokens.accessToken;
+    }
+
+    // 如果 DB 中没有，从 session 获取
+    if (session?.accessToken) {
+      console.log('[MarketAuth] Retrieved access token from session');
+      return session.accessToken;
+    }
+
+    // 如果 session 中也没有，尝试从 sessionStorage 获取
+    try {
+      const sessionData = sessionStorage.getItem('market_auth_session');
+      if (sessionData) {
+        const parsedSession = JSON.parse(sessionData) as MarketAuthSession;
+        if (parsedSession.accessToken) {
+          console.log('[MarketAuth] Retrieved access token from sessionStorage');
+          return parsedSession.accessToken;
+        }
+      }
+    } catch (error) {
+      console.error('[MarketAuth] Failed to get access token from sessionStorage:', error);
     }
 
     return null;
@@ -324,6 +434,13 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
             sessionStorage.setItem('market_user_info', JSON.stringify(userInfo));
           }
 
+          // 存储 tokens 到 DB
+          await saveMarketTokensToDB(
+            tokenResponse.accessToken,
+            tokenResponse.refreshToken,
+            newSession.expiresAt,
+          );
+
           setSession(newSession);
           setStatus('authenticated');
 
@@ -339,7 +456,9 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   }, [shouldReauthorize, oidcClient]);
 
   const contextValue: MarketAuthContextType = {
+    getAccessToken,
     getCurrentUserInfo,
+    getRefreshToken,
     isAuthenticated: status === 'authenticated',
     isLoading: status === 'loading',
     refreshToken,

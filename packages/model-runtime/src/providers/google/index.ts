@@ -201,7 +201,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   async chat(rawPayload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const payload = this.buildPayload(rawPayload);
-      const { model, thinkingBudget, thinkingLevel } = payload;
+      const { model, thinkingBudget, thinkingLevel, imageAspectRatio, imageResolution } = payload;
 
       // https://ai.google.dev/gemini-api/docs/thinking#set-budget
       const resolvedThinkingBudget = resolveModelThinkingBudget(model, thinkingBudget);
@@ -242,6 +242,13 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const config: GenerateContentConfig = {
         abortSignal: originalSignal,
+        imageConfig:
+          modelsWithModalities.has(model) && imageAspectRatio
+            ? {
+                aspectRatio: imageAspectRatio,
+                imageSize: imageResolution,
+              }
+            : undefined,
         maxOutputTokens: payload.max_tokens,
         responseModalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
         // avoid wide sensitive words

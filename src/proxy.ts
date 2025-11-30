@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { UAParser } from 'ua-parser-js';
 import urlJoin from 'url-join';
 
+import { auth } from '@/auth';
 import { OAUTH_AUTHORIZED } from '@/const/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
@@ -21,6 +22,7 @@ import { RouteVariants } from './utils/server/routeVariants';
 const logDefault = debug('middleware:default');
 const logNextAuth = debug('middleware:next-auth');
 const logClerk = debug('middleware:clerk');
+const logBetterAuth = debug('middleware:better-auth');
 
 // OIDC session pre-sync constant
 const OIDC_SESSION_HEADER = 'x-oidc-session-sync';
@@ -47,10 +49,12 @@ export const config = {
 
     '/login(.*)',
     '/signup(.*)',
+    '/signin(.*)',
+    '/verify-email(.*)',
+    '/reset-password(.*)',
     '/next-auth/(.*)',
     '/oauth(.*)',
     '/oidc(.*)',
-    // ↓ cloud ↓
   ],
 };
 
@@ -129,8 +133,18 @@ const defaultMiddleware = (request: NextRequest) => {
   // / -> /zh-CN__0__dark
   // /discover -> /zh-CN__0__dark/discover
   // All SPA routes that use react-router-dom should be rewritten to just /${route}
-  const spaRoutes = ['/chat', '/discover', '/knowledge', '/settings', '/image', '/labs', '/changelog', '/profile', '/me'];
-  const isSpaRoute = spaRoutes.some(route => url.pathname.startsWith(route));
+  const spaRoutes = [
+    '/chat',
+    '/discover',
+    '/knowledge',
+    '/settings',
+    '/image',
+    '/labs',
+    '/changelog',
+    '/profile',
+    '/me',
+  ];
+  const isSpaRoute = spaRoutes.some((route) => url.pathname.startsWith(route));
 
   let nextPathname: string;
   if (isSpaRoute) {
@@ -141,7 +155,6 @@ const defaultMiddleware = (request: NextRequest) => {
   const nextURL = appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL
     ? urlJoin(url.origin, nextPathname)
     : nextPathname;
-
 
   console.log('nextURL', nextURL);
 
@@ -194,6 +207,10 @@ const isPublicRoute = createRouteMatcher([
   // clerk
   '/login',
   '/signup',
+  // better auth
+  '/signin',
+  '/verify-email',
+  '/reset-password',
   // oauth
   // Make only the consent view public (GET page), not other oauth paths
   '/oauth/consent/(.*)',
@@ -304,8 +321,53 @@ const clerkAuthMiddleware = clerkMiddleware(
   },
 );
 
+const betterAuthMiddleware = async (req: NextRequest) => {
+  logBetterAuth('BetterAuth middleware processing request: %s %s', req.method, req.url);
+
+  const response = defaultMiddleware(req);
+
+  // when enable auth protection, only public route is not protected, others are all protected
+  const isProtected = appEnv.ENABLE_AUTH_PROTECTION ? !isPublicRoute(req) : isProtectedRoute(req);
+
+  logBetterAuth('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
+
+  // Skip session lookup for public routes to reduce latency
+  if (!isProtected) return response;
+
+  // Get full session with user data (Next.js 15.2.0+ feature)
+  const session = await auth.api.getSession({
+    headers: req.headers,
+  });
+
+  const isLoggedIn = !!session?.user;
+
+  logBetterAuth('BetterAuth session status: %O', {
+    isLoggedIn,
+    userId: session?.user?.id,
+  });
+
+  if (!isLoggedIn) {
+    // If request a protected route, redirect to sign-in page
+    if (isProtected) {
+      logBetterAuth('Request a protected route, redirecting to sign-in page');
+      const signInUrl = new URL('/signin', req.nextUrl.origin);
+      signInUrl.searchParams.set('callbackUrl', req.nextUrl.href);
+      const hl = req.nextUrl.searchParams.get('hl');
+      if (hl) {
+        signInUrl.searchParams.set('hl', hl);
+        logBetterAuth('Preserving locale to sign-in: hl=%s', hl);
+      }
+      return Response.redirect(signInUrl);
+    }
+    logBetterAuth('Request a free route but not login, allow visit without auth header');
+  }
+
+  return response;
+};
+
 logDefault('Middleware configuration: %O', {
   enableAuthProtection: appEnv.ENABLE_AUTH_PROTECTION,
+  enableBetterAuth: authEnv.NEXT_PUBLIC_ENABLE_BETTER_AUTH,
   enableClerk: authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH,
   enableNextAuth: authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH,
   enableOIDC: oidcEnv.ENABLE_OIDC,
@@ -313,6 +375,8 @@ logDefault('Middleware configuration: %O', {
 
 export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
   ? clerkAuthMiddleware
-  : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
-    ? nextAuthMiddleware
-    : defaultMiddleware;
+  : authEnv.NEXT_PUBLIC_ENABLE_BETTER_AUTH
+    ? betterAuthMiddleware
+    : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
+      ? nextAuthMiddleware
+      : defaultMiddleware;

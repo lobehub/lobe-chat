@@ -112,6 +112,7 @@ export const providerRuntimeMap = {
   ppio: LobePPIOAI,
   qiniu: LobeQiniuAI,
   qwen: LobeQwenAI,
+  router: LobeNewAPIAI,
   sambanova: LobeSambaNovaAI,
   search1api: LobeSearch1API,
   sensenova: LobeSenseNovaAI,

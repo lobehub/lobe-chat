@@ -57,6 +57,12 @@
       "desc": "Based on the Claude Thinking mechanism limit (<1>Learn more</1>), enabling this will automatically disable the limit on the number of historical messages.",
       "title": "Enable Deep Thinking"
     },
+    "imageAspectRatio": {
+      "title": "Image Aspect Ratio"
+    },
+    "imageResolution": {
+      "title": "Image Resolution"
+    },
     "reasoningBudgetToken": {
       "title": "Thinking Consumption Token"
     },

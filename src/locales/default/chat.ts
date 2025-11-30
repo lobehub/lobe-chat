@@ -58,6 +58,12 @@ export default {
       desc: '基于 Claude Thinking 机制限制（<1>了解更多</1>），开启后将自动禁用历史消息数限制',
       title: '开启深度思考',
     },
+    imageAspectRatio: {
+      title: '图片宽高比',
+    },
+    imageResolution: {
+      title: '图片分辨率',
+    },
     reasoningBudgetToken: {
       title: '思考消耗 Token',
     },

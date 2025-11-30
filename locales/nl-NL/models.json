@@ -737,6 +737,9 @@
   "anthropic/claude-opus-4.1": {
     "description": "Opus 4.1 is een geavanceerd model van Anthropic, geoptimaliseerd voor programmeren, complexe redenering en langdurige taken."
   },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5 is het vlaggenschipmodel van Anthropic, dat uitmuntende intelligentie combineert met schaalbare prestaties. Het is ideaal voor complexe taken die antwoorden van de hoogste kwaliteit en geavanceerde redeneervermogen vereisen."
+  },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 is een hybride redeneermodel van Anthropic, dat zowel denkende als niet-denkende capaciteiten combineert."
   },
@@ -826,6 +829,9 @@
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 is het krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het presteert uitstekend op het gebied van prestaties, intelligentie, vloeiendheid en begrip."
+  },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5 is het vlaggenschipmodel van Anthropic, dat uitmuntende intelligentie combineert met schaalbare prestaties. Het is ideaal voor complexe taken die antwoorden van de hoogste kwaliteit en geavanceerde redeneervermogen vereisen."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 kan bijna onmiddellijke reacties genereren of uitgebreide stapsgewijze overwegingen, waarbij gebruikers deze processen duidelijk kunnen volgen."
@@ -1670,6 +1676,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview heeft krachtige complexe redeneercapaciteiten en presteert uitstekend in logische redenering, wiskunde en programmeren."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 is het vlaggenschipmodel van Anthropic, dat uitmuntende intelligentie combineert met schaalbare prestaties. Het is ideaal voor complexe taken die antwoorden van de hoogste kwaliteit en geavanceerde redeneervermogen vereisen."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash is een krachtig redeneermodel van Google, geschikt voor uitgebreide multimodale taken."
   },
@@ -2184,7 +2193,7 @@
     "description": "Kimi K2 Instruct, het officiële redeneermodel van Kimi, ondersteunt lange context, code, Q&A en meer."
   },
   "kimi-k2-thinking": {
-    "description": "K2 Thinking-model met lange context, ondersteunt 256k context, meervoudige toolaanroepen en denkstappen, en blinkt uit in het oplossen van complexe problemen."
+    "description": "Het kimi-k2-thinking-model, aangeboden door Moonshot AI, is een denkmodel met algemene agentische capaciteiten en redeneervermogen. Het blinkt uit in diepgaande redenering en kan via meerstapsgebruik van tools helpen bij het oplossen van uiteenlopende complexe problemen."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Snelle versie van het K2 Thinking-model, ondersteunt 256k context, geoptimaliseerd voor diepgaande redenering met een uitvoersnelheid van 60-100 tokens per seconde."
