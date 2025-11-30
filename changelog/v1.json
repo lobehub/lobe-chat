@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Update apiMode handling in ChatService to prioritize user preferences."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.137"
+  },
+  {
+    "children": {
       "fixes": ["Refresh custom AI provider on selection."]
     },
     "date": "2025-11-30",
