@@ -152,6 +152,9 @@ describe('DocumentModel', () => {
         'Second document',
       );
 
+      // Wait a bit to ensure timestamp difference
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
       // Update first document to make it more recent
       await documentModel.update(doc1Id, { content: 'Updated first document' });
 
