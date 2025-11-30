@@ -2,7 +2,7 @@
 import { serverDB } from '@lobechat/database';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { genericOAuth, magicLink } from 'better-auth/plugins';
+import { admin, genericOAuth, magicLink } from 'better-auth/plugins';
 
 import { authEnv } from '@/envs/auth';
 import {
@@ -112,6 +112,7 @@ export const auth = betterAuth({
   },
 
   plugins: [
+    admin(),
     ...(genericOAuthProviders.length > 0
       ? [
           genericOAuth({

@@ -1,8 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
+import { enableBetterAuth, enableClerk, enableNextAuth } from '@lobechat/const';
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
-
-import { enableBetterAuth, enableClerk, enableNextAuth } from '@/const/auth';
 
 /**
  * Resolve public auth URL with compatibility fallbacks for NextAuth and Vercel deployments.

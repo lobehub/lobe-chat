@@ -28,6 +28,12 @@ export const users = pgTable('users', {
 
   preference: jsonb('preference').$defaultFn(() => DEFAULT_PREFERENCE),
 
+  // better-auth admin
+  role: text('role'),
+  banned: boolean('banned').default(false),
+  banReason: text('ban_reason'),
+  banExpires: timestamptz('ban_expires'),
+
   ...timestamps,
 });
 
