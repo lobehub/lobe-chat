@@ -70,6 +70,10 @@ export interface DocumentAction {
    */
   replaceTempDocumentWithReal: (tempId: string, realDocument: LobeDocument) => void;
   /**
+   * Update document directly (no optimistic update)
+   */
+  updateDocument: (documentId: string, updates: Partial<LobeDocument>) => Promise<void>;
+  /**
    * Optimistically update document in local map and queue for DB sync
    */
   updateDocumentOptimistically: (
@@ -323,6 +327,22 @@ export const createDocumentSlice: StateCreator<
     set({ localDocumentMap: newMap }, false, n('replaceTempDocumentWithReal'));
   },
 
+  updateDocument: async (id, updates) => {
+    await documentService.updateDocument({
+      content: updates.content ?? undefined,
+      editorData: updates.editorData
+        ? typeof updates.editorData === 'string'
+          ? updates.editorData
+          : JSON.stringify(updates.editorData)
+        : undefined,
+      id,
+      metadata: updates.metadata,
+      parentId: updates.parentId ?? undefined,
+      title: updates.title,
+    });
+    await get().refreshFileList();
+  },
+
   updateDocumentOptimistically: async (documentId, updates) => {
     const { localDocumentMap, documents } = get();
 
@@ -372,11 +392,13 @@ export const createDocumentSlice: StateCreator<
             : JSON.stringify(updatedDocument.editorData || {}),
         id: documentId,
         metadata: updatedDocument.metadata || {},
+        parentId: updatedDocument.parentId || undefined,
         title: updatedDocument.title || updatedDocument.filename,
       });
 
       // After successful sync, refresh file list to get server state
       // This will eventually sync back to the map via syncDocumentMapWithServer
+      await get().refreshFileList();
     } catch (error) {
       console.error('[updateDocumentOptimistically] Failed to sync to DB:', error);
       // On error, revert the optimistic update

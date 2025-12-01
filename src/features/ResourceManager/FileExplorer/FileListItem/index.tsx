@@ -1,3 +1,5 @@
+import { useDraggable, useDroppable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 import { Button, Icon, Tooltip } from '@lobehub/ui';
 import { App, Checkbox, Input } from 'antd';
 import { createStyles } from 'antd-style';
@@ -57,6 +59,16 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
       .chunk-tag {
         opacity: 1;
       }
+    `,
+
+    dragOver: css`
+      background: ${token.colorFillSecondary} !important;
+      outline: 2px dashed ${token.colorPrimary};
+      outline-offset: -2px;
+    `,
+
+    dragging: css`
+      opacity: 0.5;
     `,
 
     hover,
@@ -147,6 +159,42 @@ const FileRenderItem = memo<FileRenderItemProps>(
     const isNote = sourceType === 'document' || fileType === 'custom/document';
     const isFolder = fileType === 'custom/folder';
 
+    const {
+      attributes,
+      listeners,
+      setNodeRef: setDraggableRef,
+      transform,
+      isDragging,
+    } = useDraggable({
+      data: {
+        fileType,
+        isFolder,
+        name,
+        sourceType,
+      },
+      id,
+    });
+
+    const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+      data: {
+        fileType,
+        isFolder,
+        name,
+        sourceType,
+      },
+      disabled: !isFolder,
+      id,
+    });
+
+    const setNodeRef = (node: HTMLElement | null) => {
+      setDraggableRef(node);
+      setDroppableRef(node);
+    };
+
+    const dndStyle = {
+      transform: CSS.Translate.toString(transform),
+    };
+
     // Extract title and emoji for notes
     const displayTitle = useMemo(() => {
       if (isNote && content) {
@@ -214,10 +262,19 @@ const FileRenderItem = memo<FileRenderItemProps>(
     return (
       <Flexbox
         align={'center'}
-        className={cx(styles.container, selected && styles.selected)}
+        className={cx(
+          styles.container,
+          selected && styles.selected,
+          isDragging && styles.dragging,
+          isOver && styles.dragOver,
+        )}
         height={48}
         horizontal
         paddingInline={8}
+        ref={setNodeRef}
+        style={dndStyle}
+        {...attributes}
+        {...listeners}
       >
         <Flexbox
           align={'center'}
@@ -269,6 +326,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
 
                 onSelectedChange(id, !selected, e.shiftKey, index);
               }}
+              onPointerDown={(e) => e.stopPropagation()}
               style={{ paddingInline: 4 }}
             >
               <Checkbox
@@ -310,6 +368,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
                     handleRenameCancel();
                   }
                 }}
+                onPointerDown={(e) => e.stopPropagation()}
                 ref={inputRef}
                 size="small"
                 style={{ flex: 1, maxWidth: 400 }}
@@ -326,6 +385,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
             onClick={(e) => {
               e.stopPropagation();
             }}
+            onPointerDown={(e) => e.stopPropagation()}
           >
             {!isFolder &&
               (isCreatingFileParseTask || isNull(chunkingStatus) || !chunkingStatus ? (

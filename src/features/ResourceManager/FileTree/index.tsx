@@ -1,6 +1,7 @@
 'use client';
 
 import { CaretDownFilled } from '@ant-design/icons';
+import { useDroppable } from '@dnd-kit/core';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { motion } from 'framer-motion';
@@ -34,6 +35,11 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   fileItemActive: css`
     background-color: ${token.colorFillSecondary};
+  `,
+  fileItemDragOver: css`
+    background-color: ${token.colorFillSecondary} !important;
+    outline: 2px dashed ${token.colorPrimary};
+    outline-offset: -2px;
   `,
 }));
 
@@ -83,6 +89,16 @@ const FileTreeItem = memo<{
 
     const itemKey = item.slug || item.id;
 
+    const { setNodeRef, isOver } = useDroppable({
+      data: {
+        fileType: 'custom/folder',
+        isFolder: true,
+        name: item.name,
+      },
+      disabled: !item.isFolder,
+      id: item.id,
+    });
+
     const handleFileClick = useCallback(() => {
       // Open file modal using slug-based routing
       const currentPath = currentFolderSlug
@@ -121,10 +137,14 @@ const FileTreeItem = memo<{
       };
 
       return (
-        <Flexbox gap={2}>
+        <Flexbox gap={2} ref={setNodeRef}>
           <Flexbox
             align={'center'}
-            className={cx(styles.fileItem, isActive && styles.fileItemActive)}
+            className={cx(
+              styles.fileItem,
+              isActive && styles.fileItemActive,
+              isOver && styles.fileItemDragOver,
+            )}
             horizontal
             onClick={() => handleFolderClick(item.id, item.slug)}
             style={{ paddingInlineStart: level * 16 + 8 }}

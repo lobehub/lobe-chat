@@ -1,12 +1,25 @@
 'use client';
 
-import { createStyles } from 'antd-style';
-import { memo, useEffect } from 'react';
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { Icon } from '@lobehub/ui';
+import { createStyles, useTheme } from 'antd-style';
+import { FileText, FolderIcon } from 'lucide-react';
+import { memo, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 import { useMediaQuery } from 'react-responsive';
 import { useParams, useSearchParams } from 'react-router-dom';
 
+import FileIcon from '@/components/FileIcon';
 import NProgress from '@/components/NProgress';
 import PanelTitle from '@/components/PanelTitle';
 import FilePanel from '@/features/FileSidePanel';
@@ -14,6 +27,7 @@ import ResourceManager from '@/features/ResourceManager';
 import FileTree from '@/features/ResourceManager/FileTree';
 import TogglePanelButton from '@/features/ResourceManager/Header/TogglePanelButton';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
+import { useFileStore } from '@/store/file';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { FilesTabs } from '@/types/files';
 
@@ -127,8 +141,51 @@ const MainContent = memo(() => {
 MainContent.displayName = 'MainContent';
 
 const DesktopLayout = memo(() => {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeData, setActiveData] = useState<any>(null);
+  const updateDocument = useFileStore((s) => s.updateDocument);
+  const moveFileToFolder = useFileStore((s) => s.moveFileToFolder);
+  const theme = useTheme();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+  );
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+    setActiveData(event.active.data.current);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const currentActiveData = active.data.current;
+      const overData = over.data.current;
+
+      if (overData?.isFolder && currentActiveData) {
+        const isDocument =
+          currentActiveData.sourceType === 'document' ||
+          currentActiveData.fileType === 'custom/document' ||
+          currentActiveData.fileType === 'custom/folder';
+
+        if (isDocument) {
+          updateDocument(active.id as string, { parentId: over.id as string });
+        } else {
+          moveFileToFolder(active.id as string, over.id as string);
+        }
+      }
+    }
+    setActiveId(null);
+    setActiveData(null);
+  };
+
   return (
-    <>
+    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
       <NProgress />
       <Flexbox
         height={'100%'}
@@ -144,7 +201,58 @@ const DesktopLayout = memo(() => {
         </Container>
       </Flexbox>
       <RegisterHotkeys />
-    </>
+      {createPortal(
+        <DragOverlay>
+          {activeId && activeData ? (
+            <Flexbox
+              align={'center'}
+              style={{
+                background: theme.colorBgContainer,
+                border: `1px solid ${theme.colorSplit}`,
+                borderRadius: 8,
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                cursor: 'grabbing',
+                height: 48,
+                paddingInline: 16,
+                width: 300,
+              }}
+            >
+              <Flexbox align={'center'} horizontal>
+                <Flexbox
+                  align={'center'}
+                  justify={'center'}
+                  style={{ fontSize: 24, marginInlineEnd: 8, width: 24 }}
+                >
+                  {activeData.fileType === 'custom/folder' ? (
+                    <Icon icon={FolderIcon} size={24} />
+                  ) : activeData.fileType === 'custom/document' ? (
+                    <Center height={24} width={24}>
+                      <Icon icon={FileText} size={24} />
+                    </Center>
+                  ) : (
+                    <FileIcon
+                      fileName={activeData.name}
+                      fileType={activeData.fileType}
+                      size={24}
+                    />
+                  )}
+                </Flexbox>
+                <span
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {activeData.name}
+                </span>
+              </Flexbox>
+            </Flexbox>
+          ) : null}
+        </DragOverlay>,
+        document.body,
+      )}
+    </DndContext>
   );
 });
 
