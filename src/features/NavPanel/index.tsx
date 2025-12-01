@@ -43,13 +43,17 @@ export const useStyles = createStyles(({ css, token }) => ({
     #${TOGGLE_BUTTON_ID} {
       width: 0 !important;
       opacity: 0;
-      transition: opacity 0.2s ${token.motionEaseOut};
+      transition:
+        opacity,
+        width 0.2s ${token.motionEaseOut};
     }
 
     #${USER_DROPDOWN_ICON_ID} {
       width: 0 !important;
       opacity: 0;
-      transition: opacity 0.2s ${token.motionEaseOut};
+      transition:
+        opacity,
+        width 0.2s ${token.motionEaseOut};
     }
 
     &:hover {

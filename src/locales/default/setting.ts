@@ -42,6 +42,11 @@ export default {
       untitled: '未命名助手',
     },
   },
+  agentProfile: {
+    latest: '已加载最新版本',
+    saved: '已保存',
+    saving: '自动保存中...',
+  },
   agentTab: {
     chat: '聊天偏好',
     meta: '助手信息',
@@ -668,6 +673,7 @@ export default {
     identifier: '助手标识符（identifier）',
     metaMiss: '请补全助手信息后提交，需要包含名称、描述和标签',
     placeholder: '请输入助手的标识符，需要是唯一的，比如 web-development',
+    success: '助手提交成功',
     tooltips: '分享到助手市场',
   },
   submitFooter: {
