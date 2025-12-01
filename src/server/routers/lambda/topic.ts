@@ -176,7 +176,6 @@ export const topicRouter = router({
         }
 
         // 2. 获取 Code Interpreter 插件生成的文件 ID（存储在消息 content JSON 中）
-        const codeInterpreterFileIds: string[] = [];
         for (const message of topicMessages) {
           // 查找该消息对应的 plugin 信息
           const plugin = await ctx.serverDB.query.messagePlugins.findFirst({
@@ -189,52 +188,13 @@ export const topicRouter = router({
               const result: CodeInterpreterResponse = JSON.parse(message.content);
               if (result.files) {
                 for (const file of result.files) {
-                  if (file.fileId) {
-                    codeInterpreterFileIds.push(file.fileId);
+                  if (file.fileId && !filesToDelete.includes(file.fileId)) {
+                    filesToDelete.push(file.fileId);
                   }
                 }
               }
             } catch {
               // 解析失败则跳过
-            }
-          }
-        }
-
-        // 检查 Code Interpreter 文件是否被其他消息使用
-        if (codeInterpreterFileIds.length > 0) {
-          // 获取所有非本话题的消息中使用的 Code Interpreter 文件
-          const otherMessages = await ctx.serverDB.query.messages.findMany({
-            where: (messages, { ne, eq, and }) => {
-              return and(ne(messages.topicId, topicId), eq(messages.userId, ctx.userId));
-            },
-          });
-
-          const otherUsedFileIds = new Set<string>();
-          for (const message of otherMessages) {
-            const plugin = await ctx.serverDB.query.messagePlugins.findFirst({
-              where: (messagePlugins, { eq }) => eq(messagePlugins.id, message.id),
-            });
-
-            if (plugin?.identifier === CODE_INTERPRETER_IDENTIFIER && message.content) {
-              try {
-                const result: CodeInterpreterResponse = JSON.parse(message.content);
-                if (result.files) {
-                  for (const file of result.files) {
-                    if (file.fileId) {
-                      otherUsedFileIds.add(file.fileId);
-                    }
-                  }
-                }
-              } catch {
-                // 解析失败则跳过
-              }
-            }
-          }
-
-          // 只删除不被其他消息使用的 Code Interpreter 文件
-          for (const fileId of codeInterpreterFileIds) {
-            if (!otherUsedFileIds.has(fileId) && !filesToDelete.includes(fileId)) {
-              filesToDelete.push(fileId);
             }
           }
         }
