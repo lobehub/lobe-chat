@@ -2,6 +2,7 @@ export default {
   about: {
     title: '关于',
   },
+  advancedSettings: '进阶配置',
   agentInfoDescription: {
     basic: {
       avatar: '头像',
@@ -775,10 +776,13 @@ export default {
     'tts': '语音服务',
   },
   tools: {
+    add: '集成插件',
     builtins: {
       groupName: '内置插件',
     },
     disabled: '当前模型不支持函数调用，无法使用插件',
+    notInstalled: '未安装',
+    notInstalledWarning: '当前插件暂未安装，可能会影响助手使用',
     plugins: {
       enabled: '已启用 {{num}}',
       groupName: '三方插件',

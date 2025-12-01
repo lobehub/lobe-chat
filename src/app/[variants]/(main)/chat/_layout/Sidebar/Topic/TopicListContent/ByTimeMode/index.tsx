@@ -28,7 +28,6 @@ const ByTimeMode = memo(() => {
     <>
       {/* Grouped topics */}
       <Accordion
-        disableAnimation
         expandedKeys={expandedKeys}
         gap={2}
         onExpandedChange={(keys) => updateSystemStatus({ expandTopicGroupKeys: keys as any })}

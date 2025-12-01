@@ -2,6 +2,7 @@
 
 import { EmojiPicker, Icon, Input, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
+import { Skeleton } from 'antd';
 import { useTheme } from 'antd-style';
 import { PaletteIcon } from 'lucide-react';
 import { Suspense, memo, useEffect, useState } from 'react';
@@ -65,10 +66,20 @@ const AgentHeader = memo(() => {
               </Tooltip>
             ),
             render: () => (
-              <Flexbox padding={16}>
-                <Suspense>
+              <Flexbox padding={8} width={332}>
+                <Suspense
+                  fallback={
+                    <Flexbox gap={8}>
+                      <Skeleton.Button block style={{ height: 38 }} />
+                      <Skeleton.Button block style={{ height: 38 }} />
+                    </Flexbox>
+                  }
+                >
                   <BackgroundSwatches
+                    gap={8}
                     onChange={handleBackgroundColorChange}
+                    shape={'square'}
+                    size={38}
                     value={backgroundColor}
                   />
                 </Suspense>
@@ -79,6 +90,9 @@ const AgentHeader = memo(() => {
         ]}
         locale={locale}
         onChange={handleAvatarChange}
+        popupProps={{
+          placement: 'bottomLeft',
+        }}
         shape={'square'}
         size={78}
         value={meta.avatar}

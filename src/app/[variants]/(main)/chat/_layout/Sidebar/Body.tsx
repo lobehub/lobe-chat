@@ -11,7 +11,7 @@ export enum ChatSidebarKey {
 const Body = memo(() => {
   return (
     <Flexbox paddingInline={4}>
-      <Accordion defaultExpandedKeys={[ChatSidebarKey.Topic]} disableAnimation gap={8}>
+      <Accordion defaultExpandedKeys={[ChatSidebarKey.Topic]} gap={8}>
         <Topic itemKey={ChatSidebarKey.Topic} />
       </Accordion>
     </Flexbox>

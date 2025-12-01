@@ -80,7 +80,6 @@ const DesktopChatInput = memo<{ showFootnote?: boolean }>(({ showFootnote }) => 
         className={cx(styles.container, expand && styles.fullscreen)}
         gap={8}
         paddingBlock={showFootnote ? '0 8px' : '0 12px'}
-        paddingInline={12}
       >
         <ChatInput
           defaultHeight={chatInputHeight || 32}
