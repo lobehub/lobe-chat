@@ -1,3 +1,4 @@
+import { CodeInterpreterResponse } from '@lobechat/types';
 import { z } from 'zod';
 
 import { serverDBEnv } from '@/config/db';
@@ -9,6 +10,9 @@ import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 import { BatchTaskResult } from '@/types/service';
+
+// Code Interpreter 插件标识符
+const CODE_INTERPRETER_IDENTIFIER = 'lobe-code-interpreter';
 
 const topicProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -138,29 +142,24 @@ export const topicRouter = router({
       // 如果需要删除文件，先获取话题关联的文件ID并检查使用情况
       let filesToDelete: string[] = [];
       if (shouldDeleteFiles) {
+        // 获取当前话题的所有消息
+        const topicMessages = await ctx.serverDB.query.messages.findMany({
+          where: (messages, { eq, and }) => {
+            return and(eq(messages.topicId, topicId), eq(messages.userId, ctx.userId));
+          },
+        });
+        const topicMessageIds = new Set(topicMessages.map((m) => m.id));
+
+        // 1. 获取 messages_files 关联的文件 ID
         const fileIdsInTopic = await ctx.topicModel.getTopicFileIds(topicId);
 
         if (fileIdsInTopic.length > 0) {
-          // 获取当前话题的所有消息ID
-          const topicMessages = await ctx.serverDB.query.messages.findMany({
-            where: (messages, { eq, and }) => {
-              return and(
-                eq(messages.topicId, topicId),
-                eq(messages.userId, ctx.userId),
-              );
-            },
-          });
-          const topicMessageIds = new Set(topicMessages.map((m) => m.id));
-
           // 检查每个文件是否被其他话题的消息使用
           for (const fileId of fileIdsInTopic) {
             // 查询该文件在所有消息中的使用情况
             const fileUsage = await ctx.serverDB.query.messagesFiles.findMany({
               where: (messagesFiles, { eq, and }) => {
-                return and(
-                  eq(messagesFiles.fileId, fileId),
-                  eq(messagesFiles.userId, ctx.userId),
-                );
+                return and(eq(messagesFiles.fileId, fileId), eq(messagesFiles.userId, ctx.userId));
               },
             });
 
@@ -175,6 +174,70 @@ export const topicRouter = router({
             }
           }
         }
+
+        // 2. 获取 Code Interpreter 插件生成的文件 ID（存储在消息 content JSON 中）
+        const codeInterpreterFileIds: string[] = [];
+        for (const message of topicMessages) {
+          // 查找该消息对应的 plugin 信息
+          const plugin = await ctx.serverDB.query.messagePlugins.findFirst({
+            where: (messagePlugins, { eq }) => eq(messagePlugins.id, message.id),
+          });
+
+          // 检查是否为 Code Interpreter 插件
+          if (plugin?.identifier === CODE_INTERPRETER_IDENTIFIER && message.content) {
+            try {
+              const result: CodeInterpreterResponse = JSON.parse(message.content);
+              if (result.files) {
+                for (const file of result.files) {
+                  if (file.fileId) {
+                    codeInterpreterFileIds.push(file.fileId);
+                  }
+                }
+              }
+            } catch {
+              // 解析失败则跳过
+            }
+          }
+        }
+
+        // 检查 Code Interpreter 文件是否被其他消息使用
+        if (codeInterpreterFileIds.length > 0) {
+          // 获取所有非本话题的消息中使用的 Code Interpreter 文件
+          const otherMessages = await ctx.serverDB.query.messages.findMany({
+            where: (messages, { ne, eq, and }) => {
+              return and(ne(messages.topicId, topicId), eq(messages.userId, ctx.userId));
+            },
+          });
+
+          const otherUsedFileIds = new Set<string>();
+          for (const message of otherMessages) {
+            const plugin = await ctx.serverDB.query.messagePlugins.findFirst({
+              where: (messagePlugins, { eq }) => eq(messagePlugins.id, message.id),
+            });
+
+            if (plugin?.identifier === CODE_INTERPRETER_IDENTIFIER && message.content) {
+              try {
+                const result: CodeInterpreterResponse = JSON.parse(message.content);
+                if (result.files) {
+                  for (const file of result.files) {
+                    if (file.fileId) {
+                      otherUsedFileIds.add(file.fileId);
+                    }
+                  }
+                }
+              } catch {
+                // 解析失败则跳过
+              }
+            }
+          }
+
+          // 只删除不被其他消息使用的 Code Interpreter 文件
+          for (const fileId of codeInterpreterFileIds) {
+            if (!otherUsedFileIds.has(fileId) && !filesToDelete.includes(fileId)) {
+              filesToDelete.push(fileId);
+            }
+          }
+        }
       }
 
       // 如果有仅属于该主题的文件，则先删除它们
@@ -182,7 +245,10 @@ export const topicRouter = router({
         const fileModel = new FileModel(ctx.serverDB, ctx.userId);
         const fileService = new FileService(ctx.serverDB, ctx.userId);
 
-        const deletedFiles = await fileModel.deleteMany(filesToDelete, serverDBEnv.REMOVE_GLOBAL_FILE);
+        const deletedFiles = await fileModel.deleteMany(
+          filesToDelete,
+          serverDBEnv.REMOVE_GLOBAL_FILE,
+        );
 
         // 从文件存储中删除文件
         if (deletedFiles && deletedFiles.length > 0) {
