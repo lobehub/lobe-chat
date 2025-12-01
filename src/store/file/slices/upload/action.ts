@@ -35,6 +35,10 @@ interface UploadWithProgressParams {
    * Default is `false`, which means file type checks will be performed.
    */
   skipCheckFileType?: boolean;
+  /**
+   * Optional source identifier for the file (e.g., 'page-editor', 'image_generation')
+   */
+  source?: string;
 }
 
 interface UploadWithProgressResult {
@@ -82,7 +86,14 @@ export const createFileUploadSlice: StateCreator<
     });
     return { ...res, dimensions, filename: metadata.filename };
   },
-  uploadWithProgress: async ({ file, onStatusUpdate, knowledgeBaseId, skipCheckFileType, parentId }) => {
+  uploadWithProgress: async ({
+    file,
+    onStatusUpdate,
+    knowledgeBaseId,
+    skipCheckFileType,
+    parentId,
+    source,
+  }) => {
     const fileArrayBuffer = await file.arrayBuffer();
 
     // 1. extract image dimensions if applicable
@@ -150,6 +161,7 @@ export const createFileUploadSlice: StateCreator<
         name: file.name,
         parentId,
         size: file.size,
+        source,
         url: metadata.path || checkStatus.url,
       },
       knowledgeBaseId,
