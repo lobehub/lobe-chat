@@ -368,6 +368,7 @@ export default {
     knowledgeBase: '知识库',
     me: '我',
     pages: '文稿',
+    resource: '资源',
     search: '搜索',
     setting: '设置',
     video: '视频',
