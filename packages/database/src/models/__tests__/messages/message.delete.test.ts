@@ -211,6 +211,98 @@ describe('MessageModel Delete Tests', () => {
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(1);
     });
+
+    it('should update child messages parentId when deleting parent chain', async () => {
+      // Create a tree: A -> B -> C -> D
+      // Delete [B, C], D should have parentId = A
+      await serverDB.insert(messages).values([
+        { id: 'A', userId, role: 'user', content: 'message A', parentId: null },
+        { id: 'B', userId, role: 'assistant', content: 'message B', parentId: 'A' },
+        { id: 'C', userId, role: 'tool', content: 'message C', parentId: 'B' },
+        { id: 'D', userId, role: 'user', content: 'message D', parentId: 'C' },
+      ]);
+
+      // Delete B and C
+      await messageModel.deleteMessages(['B', 'C']);
+
+      // Assert B and C are deleted
+      const deletedB = await serverDB.select().from(messages).where(eq(messages.id, 'B'));
+      expect(deletedB).toHaveLength(0);
+      const deletedC = await serverDB.select().from(messages).where(eq(messages.id, 'C'));
+      expect(deletedC).toHaveLength(0);
+
+      // Assert D's parentId is now A (skipping deleted B and C)
+      const messageD = await serverDB.select().from(messages).where(eq(messages.id, 'D'));
+      expect(messageD).toHaveLength(1);
+      expect(messageD[0].parentId).toBe('A');
+
+      // Assert A is unchanged
+      const messageA = await serverDB.select().from(messages).where(eq(messages.id, 'A'));
+      expect(messageA).toHaveLength(1);
+      expect(messageA[0].parentId).toBeNull();
+    });
+
+    it('should set child parentId to null when deleting entire parent chain from root', async () => {
+      // Create a tree: A -> B -> C -> D
+      // Delete [A, B, C], D should have parentId = null
+      await serverDB.insert(messages).values([
+        { id: 'A', userId, role: 'user', content: 'message A', parentId: null },
+        { id: 'B', userId, role: 'assistant', content: 'message B', parentId: 'A' },
+        { id: 'C', userId, role: 'tool', content: 'message C', parentId: 'B' },
+        { id: 'D', userId, role: 'user', content: 'message D', parentId: 'C' },
+      ]);
+
+      // Delete A, B, and C
+      await messageModel.deleteMessages(['A', 'B', 'C']);
+
+      // Assert A, B, C are deleted
+      const remaining = await serverDB.select().from(messages).where(eq(messages.userId, userId));
+      expect(remaining).toHaveLength(1);
+      expect(remaining[0].id).toBe('D');
+
+      // Assert D's parentId is null (all ancestors deleted)
+      expect(remaining[0].parentId).toBeNull();
+    });
+
+    it('should handle multiple independent trees when batch deleting', async () => {
+      // Create two independent trees:
+      // Tree 1: A -> B -> C
+      // Tree 2: X -> Y -> Z
+      // Delete [B, Y], C should have parentId = A, Z should have parentId = X
+      await serverDB.insert(messages).values([
+        { id: 'A', userId, role: 'user', content: 'message A', parentId: null },
+        { id: 'B', userId, role: 'assistant', content: 'message B', parentId: 'A' },
+        { id: 'C', userId, role: 'user', content: 'message C', parentId: 'B' },
+        { id: 'X', userId, role: 'user', content: 'message X', parentId: null },
+        { id: 'Y', userId, role: 'assistant', content: 'message Y', parentId: 'X' },
+        { id: 'Z', userId, role: 'user', content: 'message Z', parentId: 'Y' },
+      ]);
+
+      // Delete B and Y
+      await messageModel.deleteMessages(['B', 'Y']);
+
+      // Assert C's parentId is A
+      const messageC = await serverDB.select().from(messages).where(eq(messages.id, 'C'));
+      expect(messageC).toHaveLength(1);
+      expect(messageC[0].parentId).toBe('A');
+
+      // Assert Z's parentId is X
+      const messageZ = await serverDB.select().from(messages).where(eq(messages.id, 'Z'));
+      expect(messageZ).toHaveLength(1);
+      expect(messageZ[0].parentId).toBe('X');
+    });
+
+    it('should handle empty ids array', async () => {
+      await serverDB
+        .insert(messages)
+        .values([{ id: 'A', userId, role: 'user', content: 'message A' }]);
+
+      // Should not throw and not delete anything
+      await messageModel.deleteMessages([]);
+
+      const result = await serverDB.select().from(messages).where(eq(messages.id, 'A'));
+      expect(result).toHaveLength(1);
+    });
   });
   describe('deleteMessageTranslate', () => {
     it('should delete the message translate record', async () => {
