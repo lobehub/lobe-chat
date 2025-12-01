@@ -1,17 +1,15 @@
-import React, { Suspense, memo } from 'react';
+import React, { memo } from 'react';
 
-import Menu from '@/app/[variants]/(main)/image/_layout/Menu';
 import { NavPanelPortal } from '@/features/NavPanel';
 import SideBarLayout from '@/features/NavPanel/SideBarLayout';
 
+import ConfigPanel from './ConfigPanel';
 import Header from './Header';
 
 const Sidebar = memo(() => {
   return (
     <NavPanelPortal navKey="image">
-      <Suspense>
-        <SideBarLayout body={<Menu />} header={<Header />} />
-      </Suspense>
+      <SideBarLayout body={<ConfigPanel />} header={<Header />} />
     </NavPanelPortal>
   );
 });

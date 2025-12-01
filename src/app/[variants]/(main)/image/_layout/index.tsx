@@ -3,27 +3,25 @@ import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
-import Topic from '@/app/[variants]/(main)/image/_layout/TopicGallery';
-import ImageTopicPanel from '@/features/ImageTopicPanel';
-
 import RegisterHotkeys from './RegisterHotkeys';
 import Sidebar from './Sidebar';
+import TopicSidebar from './TopicSidebar';
 
 const Layout = memo(() => {
   const theme = useTheme();
   return (
     <>
+      <Sidebar />
       <Flexbox
         height={'100%'}
         horizontal
         style={{ maxWidth: '100%', overflow: 'hidden', position: 'relative' }}
         width={'100%'}
       >
-        <Sidebar />
         <Center
           flex={1}
           style={{
-            background: theme.colorBgContainerSecondary,
+            background: theme.colorBgContainer,
             overflowX: 'hidden',
             overflowY: 'auto',
             position: 'relative',
@@ -41,9 +39,7 @@ const Layout = memo(() => {
             <Outlet />
           </Flexbox>
         </Center>
-        <ImageTopicPanel>
-          <Topic />
-        </ImageTopicPanel>
+        <TopicSidebar />
       </Flexbox>
       <RegisterHotkeys />
     </>
