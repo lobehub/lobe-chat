@@ -29,30 +29,14 @@ const stdioParamsSchema = z.object({
   type: z.literal('stdio'),
 });
 
-const cloudParamsSchema = z.object({
-  auth: StreamableHTTPAuthSchema,
-  headers: z.record(z.string()).optional(),
-  name: z.string().min(1),
-  type: z.literal('cloud'),
-  url: z.string().url(),
-});
-
 // Union schema for MCPClientParams
-const mcpClientParamsSchema = z.union([httpParamsSchema, stdioParamsSchema, cloudParamsSchema]);
+const mcpClientParamsSchema = z.union([httpParamsSchema, stdioParamsSchema]);
 
 const checkStdioEnvironment = (params: z.infer<typeof mcpClientParamsSchema>) => {
   if (params.type === 'stdio' && !isDesktop) {
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Stdio MCP type is not supported in web environment.',
-    });
-  }
-
-  if (params.type === 'cloud') {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message:
-        'Cloud MCP type should not be handled by tools router. Use market.callCloudMcpEndpoint instead.',
     });
   }
 };

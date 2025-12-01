@@ -155,7 +155,7 @@ async function preCheckStdioCommand(params: {
 
 export class MCPClient {
   private mcp: Client;
-  private transport: Transport | undefined;
+  private transport: Transport;
   private params: MCPClientParams;
 
   constructor(params: MCPClientParams) {
@@ -208,18 +208,13 @@ export class MCPClient {
         log('Using Stdio transport with command: %s , args: %O', params.command, params.args);
 
         this.transport = new StdioClientTransport({
+          args: params.args,
           command: params.command,
           env: {
             ...getDefaultEnvironment(),
             ...params.env,
           },
         });
-        break;
-      }
-
-      case 'cloud': {
-        // no need todo anything
-        log('Using Cloud transport with url: %s', params.url);
         break;
       }
 
@@ -241,10 +236,6 @@ export class MCPClient {
     log('Initializing MCP connection...');
 
     try {
-      if (this.params.type === 'cloud' || !this.transport) {
-        // if use cloud , use cloud gateway to connect no need to initialize transport
-        return;
-      }
       await this.mcp.connect(this.transport, { onprogress: options.onProgress });
       log('MCP connection initialized.');
     } catch (e) {
@@ -276,19 +267,6 @@ export class MCPClient {
 
       // For other connection types or when pre-check doesn't provide more information
       if ((e as any).code === -32_000) {
-        if (this.params.type === 'cloud') {
-          throw createMCPError(
-            'CONNECTION_FAILED',
-            'Failed to connect to Cloud Endpoint MCP server, please check your configuration',
-            {
-              originalError: (e as Error).message,
-              params: {
-                type: this.params.type,
-              },
-              step: 'mcp_connect',
-            },
-          );
-        }
         throw createMCPError(
           'CONNECTION_FAILED',
           'Failed to connect to MCP server, please check your configuration',
@@ -302,16 +280,6 @@ export class MCPClient {
             step: 'mcp_connect',
           },
         );
-      }
-
-      if (this.params.type === 'cloud') {
-        throw createMCPError('UNKNOWN_ERROR', (e as Error).message, {
-          originalError: (e as Error).message,
-          params: {
-            type: this.params.type,
-          },
-          step: 'mcp_connect',
-        });
       }
 
       // Wrap other unknown errors

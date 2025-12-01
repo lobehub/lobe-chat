@@ -65,52 +65,6 @@ describe('MCPClient', () => {
     }, 30000);
   });
 
-  // --- Cloud Transport tests ---
-  describe('Cloud Transport', () => {
-    let mcpClient: MCPClient;
-    const cloudConnection = {
-      auth: { type: 'none' as const },
-      headers: { 'X-Custom-Header': 'test-value' },
-      name: 'Cloud Test Connection',
-      type: 'cloud' as const,
-      url: 'https://cloud-mcp.example.com/api/endpoint',
-    };
-
-    beforeEach(() => {
-      mcpClient = new MCPClient(cloudConnection);
-    });
-
-    it('should create an instance with cloud transport', () => {
-      expect(mcpClient).toBeInstanceOf(MCPClient);
-    });
-
-    it('should initialize without connecting (cloud gateway handles connection)', async () => {
-      // Cloud type should initialize without error and without creating transport
-      await expect(mcpClient.initialize()).resolves.toBeUndefined();
-    });
-
-    it('should not create transport for cloud type', () => {
-      // Access private transport through type assertion for testing
-      const transport = (mcpClient as any).transport;
-      expect(transport).toBeUndefined();
-    });
-
-    it('should store cloud connection parameters correctly', () => {
-      const params = (mcpClient as any).params;
-      expect(params.type).toBe('cloud');
-      expect(params.url).toBe('https://cloud-mcp.example.com/api/endpoint');
-      expect(params.name).toBe('Cloud Test Connection');
-      expect(params.headers).toEqual({ 'X-Custom-Header': 'test-value' });
-      expect(params.auth).toEqual({ type: 'none' });
-    });
-
-    it('should initialize multiple times without error', async () => {
-      await expect(mcpClient.initialize()).resolves.toBeUndefined();
-      await expect(mcpClient.initialize()).resolves.toBeUndefined();
-      await expect(mcpClient.initialize()).resolves.toBeUndefined();
-    });
-  });
-
   // Error Handling tests remain the same...
   describe('Error Handling', () => {
     it('should throw error for unsupported connection type', () => {

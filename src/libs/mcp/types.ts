@@ -157,7 +157,7 @@ export interface CloudMCPParams {
   url: string;
 }
 
-export type MCPClientParams = HttpMCPClientParams | StdioMCPParams | CloudMCPParams;
+export type MCPClientParams = HttpMCPClientParams | StdioMCPParams;
 
 export type MCPErrorType =
   | 'CONNECTION_FAILED'
