@@ -70,7 +70,7 @@ const useStyles = createStyles(({ css, token }) => ({
     flex-direction: column;
     align-items: center;
 
-    padding-block: 24px 16px;
+    padding-block: 32px 0;
     padding-inline: 0;
   `,
   okButton: css`
@@ -83,20 +83,20 @@ const useStyles = createStyles(({ css, token }) => ({
     align-items: center;
     justify-content: center;
 
-    width: 48px;
-    height: 48px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
 
     background: ${token.colorPrimaryBg};
 
     svg {
-      width: 24px;
-      height: 24px;
+      width: 36px;
+      height: 36px;
       color: ${token.colorPrimary};
     }
   `,
   title: css`
-    margin-block-end: 8px;
+    margin-block-end: 24px;
     font-size: 18px;
     font-weight: 600;
     color: ${token.colorText};

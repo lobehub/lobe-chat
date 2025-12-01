@@ -87,9 +87,7 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(
         `[MarketPublishButton][${action}] User not authenticated, starting authorization`,
       );
       try {
-        message.loading({ content: tMarketAuth('messages.loading'), key: 'market-auth' });
         const accountId = await signIn();
-        message.success({ content: buttonCopy.successMessage, key: 'market-auth' });
 
         let targetAction: MarketPublishAction = action;
 
