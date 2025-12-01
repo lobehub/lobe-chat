@@ -1,4 +1,5 @@
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { users } from './user';
 
@@ -15,50 +16,105 @@ import { users } from './user';
 //     .notNull(),
 // });
 
-export const session = pgTable('auth_sessions', {
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  expiresAt: timestamp('expires_at').notNull(),
-  id: text('id').primaryKey(),
-  impersonatedBy: text('impersonated_by'),
-  ipAddress: text('ip_address'),
-  token: text('token').notNull().unique(),
-  updatedAt: timestamp('updated_at')
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  userAgent: text('user_agent'),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-});
+export const session = pgTable(
+  'auth_sessions',
+  {
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    id: text('id').primaryKey(),
+    impersonatedBy: text('impersonated_by'),
+    ipAddress: text('ip_address'),
+    token: text('token').notNull().unique(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    userAgent: text('user_agent'),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+  },
+  (table) => [index('auth_session_userId_idx').on(table.userId)],
+);
 
-export const account = pgTable('accounts', {
-  accessToken: text('access_token'),
-  accessTokenExpiresAt: timestamp('access_token_expires_at'),
-  accountId: text('account_id').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  id: text('id').primaryKey(),
-  idToken: text('id_token'),
-  password: text('password'),
-  providerId: text('provider_id').notNull(),
-  refreshToken: text('refresh_token'),
-  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
-  scope: text('scope'),
-  updatedAt: timestamp('updated_at')
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-});
+export const account = pgTable(
+  'accounts',
+  {
+    accessToken: text('access_token'),
+    accessTokenExpiresAt: timestamp('access_token_expires_at'),
+    accountId: text('account_id').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    id: text('id').primaryKey(),
+    idToken: text('id_token'),
+    password: text('password'),
+    providerId: text('provider_id').notNull(),
+    refreshToken: text('refresh_token'),
+    refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+    scope: text('scope'),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+  },
+  (table) => [index('account_userId_idx').on(table.userId)],
+);
 
-export const verification = pgTable('verifications', {
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  expiresAt: timestamp('expires_at').notNull(),
-  id: text('id').primaryKey(),
-  identifier: text('identifier').notNull(),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  value: text('value').notNull(),
-});
+export const verification = pgTable(
+  'verifications',
+  {
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    id: text('id').primaryKey(),
+    identifier: text('identifier').notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    value: text('value').notNull(),
+  },
+  (table) => [index('verification_identifier_idx').on(table.identifier)],
+);
+
+export const twoFactor = pgTable(
+  'two_factor',
+  {
+    backupCodes: text('backup_codes').notNull(),
+    id: text('id').primaryKey(),
+    secret: text('secret').notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+  },
+  (table) => [
+    index('two_factor_secret_idx').on(table.secret),
+    index('two_factor_user_id_idx').on(table.userId),
+  ],
+);
+
+export const usersRelations = relations(users, ({ many }) => ({
+  accounts: many(account),
+  sessions: many(session),
+  twoFactors: many(twoFactor),
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  users: one(users, {
+    fields: [session.userId],
+    references: [users.id],
+  }),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+  users: one(users, {
+    fields: [account.userId],
+    references: [users.id],
+  }),
+}));
+
+export const twoFactorRelations = relations(twoFactor, ({ one }) => ({
+  users: one(users, {
+    fields: [twoFactor.userId],
+    references: [users.id],
+  }),
+}));

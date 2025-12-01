@@ -378,6 +378,13 @@
       "when": 1764511006123,
       "tag": "0053_better_auth_admin",
       "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1764560671465,
+      "tag": "0054_better_auth_indexes",
+      "breakpoints": true
     }
   ],
   "version": "6"
