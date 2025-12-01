@@ -1,320 +1,274 @@
-import { ThreadType } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
 import { messageMapKey } from './messageMapKey';
 
 describe('messageMapKey', () => {
-  describe('basic agentId only', () => {
-    it('should generate key with agentId only', () => {
-      const result = messageMapKey({ agentId: 'agent-1' });
-      expect(result).toBe('agent-1_null');
+  describe('Main mode (default scope)', () => {
+    it('should use main as default scope when no threadId', () => {
+      const result = messageMapKey({ agentId: 'agt_xxx' });
+      expect(result).toBe('main_agt_xxx_new');
     });
 
-    it('should handle empty string agentId', () => {
-      const result = messageMapKey({ agentId: '' });
-      expect(result).toBe('_null');
+    it('should generate key for existing topic', () => {
+      const result = messageMapKey({ agentId: 'agt_xxx', topicId: 'tpc_yyy' });
+      expect(result).toBe('main_agt_xxx_tpc_yyy');
     });
 
-    it('should handle agentId with special characters', () => {
-      const result = messageMapKey({ agentId: 'agent-123-abc_def' });
-      expect(result).toBe('agent-123-abc_def_null');
-    });
-  });
-
-  describe('agentId with topicId', () => {
-    it('should generate key with agentId and topicId', () => {
-      const result = messageMapKey({ agentId: 'agent-1', topicId: 'topic-1' });
-      expect(result).toBe('agent-1_topic-1');
-    });
-
-    it('should handle null topicId', () => {
-      const result = messageMapKey({ agentId: 'agent-1', topicId: null });
-      expect(result).toBe('agent-1_null');
-    });
-
-    it('should handle undefined topicId (same as null)', () => {
-      const result = messageMapKey({ agentId: 'agent-1', topicId: undefined });
-      expect(result).toBe('agent-1_null');
-    });
-
-    it('should handle empty string topicId', () => {
-      const result = messageMapKey({ agentId: 'agent-1', topicId: '' });
-      expect(result).toBe('agent-1_');
-    });
-
-    it('should handle topicId with special characters', () => {
-      const result = messageMapKey({ agentId: 'agent-1', topicId: 'topic-123-abc_def' });
-      expect(result).toBe('agent-1_topic-123-abc_def');
+    it('should handle explicit main scope', () => {
+      const result = messageMapKey({ scope: 'main', agentId: 'agt_xxx', topicId: 'tpc_yyy' });
+      expect(result).toBe('main_agt_xxx_tpc_yyy');
     });
   });
 
-  describe('thread mode (highest priority)', () => {
-    it('should generate thread key with threadId', () => {
-      const result = messageMapKey({ agentId: 'agent-1', threadId: 'thread-1' });
-      expect(result).toBe('agent-1_thread_thread-1');
-    });
-
-    it('should prioritize threadId over topicId', () => {
+  describe('Thread mode (auto-detected)', () => {
+    it('should auto-detect thread scope when threadId is present', () => {
       const result = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-1',
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        threadId: 'thd_zzz',
       });
-      expect(result).toBe('agent-1_thread_thread-1');
+      expect(result).toBe('thread_agt_xxx_tpc_yyy_thd_zzz');
     });
 
-    it('should handle null threadId (falls back to topic mode)', () => {
-      const result = messageMapKey({ agentId: 'agent-1', topicId: 'topic-1', threadId: null });
-      expect(result).toBe('agent-1_topic-1');
-    });
-
-    it('should handle undefined threadId (falls back to topic mode)', () => {
+    it('should generate new thread key with scope and isNew', () => {
       const result = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: undefined,
+        scope: 'thread',
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        isNew: true,
       });
-      expect(result).toBe('agent-1_topic-1');
+      expect(result).toBe('thread_agt_xxx_tpc_yyy_new');
     });
 
-    it('should handle empty string threadId', () => {
-      const result = messageMapKey({ agentId: 'agent-1', topicId: 'topic-1', threadId: '' });
-      expect(result).toBe('agent-1_topic-1');
-    });
-
-    it('should handle threadId with special characters', () => {
-      const result = messageMapKey({ agentId: 'agent-1', threadId: 'thread-123-abc_def' });
-      expect(result).toBe('agent-1_thread_thread-123-abc_def');
+    it('should handle explicit thread scope with isNew', () => {
+      const result = messageMapKey({
+        scope: 'thread',
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        isNew: true,
+      });
+      expect(result).toBe('thread_agt_xxx_tpc_yyy_new');
     });
   });
 
-  describe('key uniqueness', () => {
+  describe('Group mode', () => {
+    it('should generate key for new group topic', () => {
+      const result = messageMapKey({ scope: 'group', agentId: 'grp_xxx' });
+      expect(result).toBe('group_grp_xxx_new');
+    });
+
+    it('should generate key for existing group topic', () => {
+      const result = messageMapKey({ scope: 'group', agentId: 'grp_xxx', topicId: 'tpc_yyy' });
+      expect(result).toBe('group_grp_xxx_tpc_yyy');
+    });
+  });
+
+  describe('Group agent mode', () => {
+    it('should generate key for new agent topic in group', () => {
+      const result = messageMapKey({
+        scope: 'group_agent',
+        agentId: 'grp_xxx',
+        topicId: 'tpc_yyy',
+        isNew: true,
+      });
+      expect(result).toBe('group_agent_grp_xxx_tpc_yyy_new');
+    });
+
+    it('should generate key for existing agent topic in group', () => {
+      const result = messageMapKey({
+        scope: 'group_agent',
+        agentId: 'grp_xxx',
+        topicId: 'tpc_yyy',
+        threadId: 'tpc_zzz', // subTopicId via threadId
+      });
+      expect(result).toBe('group_agent_grp_xxx_tpc_yyy_tpc_zzz');
+    });
+  });
+
+  describe('Key uniqueness and isolation', () => {
+    it('should generate different keys for different scopes', () => {
+      const mainKey = messageMapKey({ agentId: 'agt_xxx', topicId: 'tpc_yyy' });
+      const threadKey = messageMapKey({
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        threadId: 'thd_zzz',
+      });
+      const groupKey = messageMapKey({ scope: 'group', agentId: 'grp_xxx', topicId: 'tpc_yyy' });
+      const groupAgentKey = messageMapKey({
+        scope: 'group_agent',
+        agentId: 'grp_xxx',
+        topicId: 'tpc_yyy',
+        threadId: 'tpc_zzz',
+      });
+
+      expect(new Set([mainKey, threadKey, groupKey, groupAgentKey]).size).toBe(4);
+    });
+
     it('should generate different keys for different agentIds', () => {
-      const key1 = messageMapKey({ agentId: 'agent-1', topicId: 'topic-1' });
-      const key2 = messageMapKey({ agentId: 'agent-2', topicId: 'topic-1' });
+      const key1 = messageMapKey({ agentId: 'agt_111', topicId: 'tpc_yyy' });
+      const key2 = messageMapKey({ agentId: 'agt_222', topicId: 'tpc_yyy' });
       expect(key1).not.toBe(key2);
     });
 
     it('should generate different keys for different topicIds', () => {
-      const key1 = messageMapKey({ agentId: 'agent-1', topicId: 'topic-1' });
-      const key2 = messageMapKey({ agentId: 'agent-1', topicId: 'topic-2' });
+      const key1 = messageMapKey({ agentId: 'agt_xxx', topicId: 'tpc_111' });
+      const key2 = messageMapKey({ agentId: 'agt_xxx', topicId: 'tpc_222' });
       expect(key1).not.toBe(key2);
     });
 
     it('should generate different keys for different threadIds', () => {
-      const key1 = messageMapKey({ agentId: 'agent-1', threadId: 'thread-1' });
-      const key2 = messageMapKey({ agentId: 'agent-1', threadId: 'thread-2' });
+      const key1 = messageMapKey({
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        threadId: 'thd_111',
+      });
+      const key2 = messageMapKey({
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        threadId: 'thd_222',
+      });
       expect(key1).not.toBe(key2);
     });
 
-    it('should generate different keys for topic vs thread mode', () => {
-      const topicKey = messageMapKey({ agentId: 'agent-1', topicId: 'topic-1' });
-      const threadKey = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-1',
+    it('should isolate new threads from different topics', () => {
+      const newThread1 = messageMapKey({
+        scope: 'thread',
+        agentId: 'agt_xxx',
+        topicId: 'tpc_111',
+        isNew: true,
       });
-      expect(topicKey).not.toBe(threadKey);
+      const newThread2 = messageMapKey({
+        scope: 'thread',
+        agentId: 'agt_xxx',
+        topicId: 'tpc_222',
+        isNew: true,
+      });
+      expect(newThread1).not.toBe(newThread2);
+      expect(newThread1).toBe('thread_agt_xxx_tpc_111_new');
+      expect(newThread2).toBe('thread_agt_xxx_tpc_222_new');
     });
   });
 
-  describe('real-world scenarios', () => {
-    it('should handle inbox agent without topic', () => {
-      const result = messageMapKey({ agentId: 'inbox' });
-      expect(result).toBe('inbox_null');
+  describe('Edge cases', () => {
+    it('should handle null topicId as no topic (new)', () => {
+      const result = messageMapKey({ agentId: 'agt_xxx', topicId: null });
+      expect(result).toBe('main_agt_xxx_new');
     });
 
-    it('should handle inbox agent with topic', () => {
-      const result = messageMapKey({ agentId: 'inbox', topicId: 'topic-123' });
-      expect(result).toBe('inbox_topic-123');
+    it('should handle undefined topicId as no topic (new)', () => {
+      const result = messageMapKey({ agentId: 'agt_xxx', topicId: undefined });
+      expect(result).toBe('main_agt_xxx_new');
     });
 
-    it('should handle group agent', () => {
-      const result = messageMapKey({ agentId: 'group-abc', topicId: 'topic-xyz' });
-      expect(result).toBe('group-abc_topic-xyz');
-    });
-
-    it('should handle thread in group agent', () => {
+    it('should handle null threadId (no thread, fallback to main)', () => {
       const result = messageMapKey({
-        agentId: 'group-abc',
-        topicId: 'topic-xyz',
-        threadId: 'thread-001',
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        threadId: null,
       });
-      expect(result).toBe('group-abc_thread_thread-001');
+      expect(result).toBe('main_agt_xxx_tpc_yyy');
     });
 
-    it('should handle multiple threads in same agent', () => {
-      const thread1 = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-1',
-      });
-      const thread2 = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-2',
-      });
-      const thread3 = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-3',
-      });
-
-      expect(thread1).toBe('agent-1_thread_thread-1');
-      expect(thread2).toBe('agent-1_thread_thread-2');
-      expect(thread3).toBe('agent-1_thread_thread-3');
-      expect(new Set([thread1, thread2, thread3]).size).toBe(3);
-    });
-  });
-
-  describe('edge cases', () => {
-    it('should handle all parameters as empty strings', () => {
-      const result = messageMapKey({ agentId: '', topicId: '', threadId: '' });
-      expect(result).toBe('_');
-    });
-
-    it('should handle agentId with underscore (potential conflict)', () => {
-      const result = messageMapKey({ agentId: 'agent_with_underscores', topicId: 'topic-1' });
-      expect(result).toBe('agent_with_underscores_topic-1');
-    });
-
-    it('should handle topicId with underscore', () => {
-      const result = messageMapKey({ agentId: 'agent-1', topicId: 'topic_with_underscores' });
-      expect(result).toBe('agent-1_topic_with_underscores');
-    });
-
-    it('should handle threadId with underscore', () => {
-      const result = messageMapKey({ agentId: 'agent-1', threadId: 'thread_with_underscores' });
-      expect(result).toBe('agent-1_thread_thread_with_underscores');
-    });
-
-    it('should be consistent when called multiple times with same params', () => {
-      const key1 = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-1',
-      });
-      const key2 = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-1',
-      });
-      expect(key1).toBe(key2);
-    });
-  });
-
-  describe('context object compatibility', () => {
-    it('should work with ConversationContext-like objects', () => {
+    it('should be consistent when called multiple times', () => {
       const context = {
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-1',
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        threadId: 'thd_zzz',
       };
-      const result = messageMapKey(context);
-      expect(result).toBe('agent-1_thread_thread-1');
+      expect(messageMapKey(context)).toBe(messageMapKey(context));
     });
 
-    it('should work when spreading context object', () => {
-      const context = { agentId: 'agent-1', topicId: 'topic-1' };
-      const result = messageMapKey({ ...context, threadId: 'thread-1' });
-      expect(result).toBe('agent-1_thread_thread-1');
+    it('should handle special characters in IDs', () => {
+      const result = messageMapKey({
+        agentId: 'agt_123-abc_def',
+        topicId: 'tpc_456-xyz',
+      });
+      expect(result).toBe('main_agt_123-abc_def_tpc_456-xyz');
     });
   });
 
-  describe('new thread mode (creating new thread)', () => {
-    it('should generate newThread key with sourceMessageId', () => {
+  describe('isNew flag behavior', () => {
+    it('should add _new suffix when isNew is true and topicId exists', () => {
       const result = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+        scope: 'thread',
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        isNew: true,
       });
-      expect(result).toBe('agent-1_newThread_msg-abc');
+      expect(result).toBe('thread_agt_xxx_tpc_yyy_new');
     });
 
-    it('should prioritize threadId over newThread', () => {
+    it('should not add extra _new when isNew is true but no topicId (already _new)', () => {
       const result = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-1',
-        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+        scope: 'main',
+        agentId: 'agt_xxx',
+        isNew: true,
       });
-      expect(result).toBe('agent-1_thread_thread-1');
+      expect(result).toBe('main_agt_xxx_new');
     });
 
-    it('should fall back to topic mode when newThread has no sourceMessageId', () => {
+    it('should ignore isNew when threadId exists', () => {
       const result = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        newThread: { sourceMessageId: '', type: 'continuation' },
+        agentId: 'agt_xxx',
+        topicId: 'tpc_yyy',
+        threadId: 'thd_zzz',
+        isNew: true,
       });
-      expect(result).toBe('agent-1_topic-1');
+      // threadId takes priority, isNew is ignored
+      expect(result).toBe('thread_agt_xxx_tpc_yyy_thd_zzz');
+    });
+  });
+
+  describe('Real-world scenarios', () => {
+    it('Scenario: User starts new conversation in agent', () => {
+      const result = messageMapKey({ agentId: 'agt_abc123' });
+      expect(result).toBe('main_agt_abc123_new');
     });
 
-    it('should fall back to topic mode when newThread is undefined', () => {
+    it('Scenario: User continues conversation in existing topic', () => {
       const result = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        newThread: undefined,
+        agentId: 'agt_abc123',
+        topicId: 'tpc_xyz789',
       });
-      expect(result).toBe('agent-1_topic-1');
+      expect(result).toBe('main_agt_abc123_tpc_xyz789');
     });
 
-    it('should generate different keys for different sourceMessageIds', () => {
-      const key1 = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        newThread: { sourceMessageId: 'msg-1', type: 'continuation' },
+    it('Scenario: User creates a new thread from a message', () => {
+      const result = messageMapKey({
+        scope: 'thread',
+        agentId: 'agt_abc123',
+        topicId: 'tpc_xyz789',
+        isNew: true,
       });
-      const key2 = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        newThread: { sourceMessageId: 'msg-2', type: 'continuation' },
-      });
-      expect(key1).not.toBe(key2);
-      expect(key1).toBe('agent-1_newThread_msg-1');
-      expect(key2).toBe('agent-1_newThread_msg-2');
+      expect(result).toBe('thread_agt_abc123_tpc_xyz789_new');
     });
 
-    it('should generate different keys for newThread vs existing thread', () => {
-      const newThreadKey = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+    it('Scenario: User enters an existing thread', () => {
+      const result = messageMapKey({
+        agentId: 'agt_abc123',
+        topicId: 'tpc_xyz789',
+        threadId: 'thd_thread001',
       });
-      const existingThreadKey = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        threadId: 'thread-1',
-      });
-      expect(newThreadKey).not.toBe(existingThreadKey);
+      expect(result).toBe('thread_agt_abc123_tpc_xyz789_thd_thread001');
     });
 
-    it('should generate different keys for newThread vs main conversation', () => {
-      const newThreadKey = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+    it('Scenario: User chats in a group', () => {
+      const result = messageMapKey({
+        scope: 'group',
+        agentId: 'grp_group001',
+        topicId: 'tpc_grouptopic',
       });
-      const mainKey = messageMapKey({
-        agentId: 'agent-1',
-        topicId: 'topic-1',
-      });
-      expect(newThreadKey).not.toBe(mainKey);
+      expect(result).toBe('group_grp_group001_tpc_grouptopic');
     });
 
-    it('should handle newThread with different types', () => {
-      const continuationKey = messageMapKey({
-        agentId: 'agent-1',
-        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+    it('Scenario: User chats with specific agent in group', () => {
+      const result = messageMapKey({
+        scope: 'group_agent',
+        agentId: 'grp_group001',
+        topicId: 'tpc_grouptopic',
+        threadId: 'tpc_agenttopic',
       });
-      const resendKey = messageMapKey({
-        agentId: 'agent-1',
-        // @ts-ignore
-        newThread: { sourceMessageId: 'msg-abc', type: 'resend' },
-      });
-      // Same sourceMessageId should generate same key regardless of type
-      expect(continuationKey).toBe(resendKey);
-      expect(continuationKey).toBe('agent-1_newThread_msg-abc');
+      expect(result).toBe('group_agent_grp_group001_tpc_grouptopic_tpc_agenttopic');
     });
   });
 });
