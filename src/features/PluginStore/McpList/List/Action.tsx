@@ -1,10 +1,12 @@
 import { ActionIcon, Button, Dropdown, Icon } from '@lobehub/ui';
-import { App } from 'antd';
+import { App, message } from 'antd';
 import { MoreVerticalIcon, Trash2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
+import { resolveMarketAuthError } from '@/layout/AuthProvider/MarketAuth/errors';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useToolStore } from '@/store/tool';
@@ -15,21 +17,27 @@ interface ActionsProps {
 }
 
 const Actions = memo<ActionsProps>(({ identifier }) => {
-  const [installed, installing, unInstallPlugin, installMCPPlugin, cancelInstallMCPPlugin] =
+  const [installed, installing, unInstallPlugin, installMCPPlugin, cancelInstallMCPPlugin, plugin] =
     useToolStore((s) => [
       pluginSelectors.isPluginInstalled(identifier)(s),
       mcpStoreSelectors.isMCPInstalling(identifier)(s),
       s.uninstallPlugin,
       s.installMCPPlugin,
       s.cancelInstallMCPPlugin,
+      mcpStoreSelectors.getPluginById(identifier)(s),
     ]);
 
   const { t } = useTranslation('plugin');
+  const { t: tMarketAuth } = useTranslation('marketAuth');
   const [togglePlugin, isPluginEnabledInAgent] = useAgentStore((s) => [
     s.togglePlugin,
     agentSelectors.currentAgentPlugins(s).includes(identifier),
   ]);
   const { modal } = App.useApp();
+  const { isAuthenticated, signIn } = useMarketAuth();
+
+  // Check if this is a cloud MCP plugin
+  const isCloudMcp = !!((plugin as any)?.cloudEndPoint || (plugin as any)?.haveCloudEndpoint);
 
   return (
     <Flexbox align={'center'} horizontal>
@@ -85,6 +93,33 @@ const Actions = memo<ActionsProps>(({ identifier }) => {
         <Button
           onClick={async (e) => {
             e.stopPropagation();
+
+            // If this is a cloud MCP and user is not authenticated, request authorization first
+            if (isCloudMcp && !isAuthenticated) {
+              console.log(
+                '[MCPListAction] Cloud MCP detected, user not authenticated, starting authorization',
+              );
+
+              try {
+                message.loading({ content: tMarketAuth('messages.loading'), key: 'market-auth' });
+                await signIn();
+                message.success({
+                  content: tMarketAuth('messages.success.cloudMcpInstall'),
+                  key: 'market-auth',
+                });
+                console.log(
+                  '[MCPListAction] Authorization successful, proceeding with installation',
+                );
+              } catch (error) {
+                console.error('[MCPListAction] Authorization failed:', error);
+                const normalizedError = resolveMarketAuthError(error);
+                message.error({
+                  content: tMarketAuth(`errors.${normalizedError.code}`),
+                  key: 'market-auth',
+                });
+                return; // Don't proceed with installation if auth fails
+              }
+            }
 
             const isSuccess = await installMCPPlugin(identifier);
 

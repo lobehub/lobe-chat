@@ -35,6 +35,7 @@ export default {
   messages: {
     loading: '正在启动授权流程...',
     success: {
+      cloudMcpInstall: '授权成功！现在可以安装 Cloud MCP 插件了。',
       submit: '授权成功！现在可以发布助手了。',
       upload: '授权成功！现在可以发布新版本了。',
     },
