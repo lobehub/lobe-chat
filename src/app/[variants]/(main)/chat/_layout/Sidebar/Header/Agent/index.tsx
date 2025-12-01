@@ -1,65 +1,68 @@
 'use client';
 
-import { createStyles } from 'antd-style';
-import { PropsWithChildren, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { ActionIcon, Avatar, Block, Text } from '@lobehub/ui';
+import { ChevronsUpDownIcon } from 'lucide-react';
+import React, { PropsWithChildren, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import BackButton, { BACK_BUTTON_ID } from '@/features/NavPanel/BackButton';
-import TogglePanelButton from '@/features/NavPanel/TogglePanelButton';
+import { DEFAULT_AVATAR } from '@/const/meta';
+import { SkeletonItem } from '@/features/NavPanel/Body/SkeletonList';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
-import AgentInfo from './AgentInfo';
+import SwitchPanel from './SwitchPanel';
 
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    overflow: hidden;
+const Agent = memo<PropsWithChildren>(() => {
+  const { t } = useTranslation(['chat', 'common']);
 
-    #${BACK_BUTTON_ID} {
-      width: 0 !important;
-      opacity: 0;
-      transition: all 0.2s ${token.motionEaseOut};
-    }
+  const [isLoading, isInbox, title, avatar, backgroundColor] = useAgentStore((s) => [
+    agentSelectors.isAgentConfigLoading(s),
+    agentSelectors.isInboxAgent(s),
+    agentSelectors.currentAgentTitle(s),
+    agentSelectors.currentAgentAvatar(s),
+    agentSelectors.currentAgentBackgroundColor(s),
+  ]);
 
-    &:hover {
-      #${BACK_BUTTON_ID} {
-        width: 24px !important;
-        opacity: 1;
-      }
-    }
-  `,
-}));
+  const displayTitle = isInbox ? t('inbox.title') : title || t('defaultSession', { ns: 'common' });
 
-const HeaderInfo = memo<PropsWithChildren>(() => {
-  const { styles } = useStyles();
+  if (isLoading) return <SkeletonItem />;
 
   return (
-    <Flexbox
-      align={'center'}
-      className={styles.container}
-      flex={'none'}
-      gap={8}
-      horizontal
-      justify={'space-between'}
-      padding={2}
-    >
-      <Flexbox
+    <SwitchPanel>
+      <Block
         align={'center'}
-        flex={1}
+        clickable
+        gap={8}
         horizontal
+        padding={2}
         style={{
+          minWidth: 32,
           overflow: 'hidden',
         }}
+        variant={'borderless'}
       >
-        <BackButton
+        <Avatar
+          avatar={avatar || DEFAULT_AVATAR}
+          background={backgroundColor || undefined}
+          shape={'square'}
+          size={28}
+        />
+        <Text ellipsis weight={500}>
+          {displayTitle}
+        </Text>
+        <ActionIcon
+          icon={ChevronsUpDownIcon}
           size={{
-            blockSize: 32,
+            blockSize: 28,
             size: 16,
           }}
+          style={{
+            width: 24,
+          }}
         />
-        <AgentInfo />
-      </Flexbox>
-      <TogglePanelButton />
-    </Flexbox>
+      </Block>
+    </SwitchPanel>
   );
 });
 
-export default HeaderInfo;
+export default Agent;

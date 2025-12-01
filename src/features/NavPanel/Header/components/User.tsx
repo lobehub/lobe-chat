@@ -7,7 +7,6 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
-import { BRANDING_NAME } from '@/const/branding';
 import UserAvatar from '@/features/User/UserAvatar';
 import UserPanel from '@/features/User/UserPanel';
 import { useUserStore } from '@/store/user';
@@ -15,7 +14,7 @@ import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 export const USER_DROPDOWN_ICON_ID = 'user-dropdown-icon';
 
-const User = memo(() => {
+const User = memo<{ lite?: boolean }>(({ lite }) => {
   const [nickname, username, isSignedIn] = useUserStore((s) => [
     userProfileSelectors.nickName(s),
     userProfileSelectors.username(s),
@@ -33,32 +32,34 @@ const User = memo(() => {
         style={{
           minWidth: 32,
           overflow: 'hidden',
-          paddingInlineEnd: 8,
+          paddingInlineEnd: lite ? 2 : 8,
           paddingInlineStart: 2,
         }}
         variant={'borderless'}
       >
         <UserAvatar shape={'square'} size={28} />
-        <Flexbox align={'center'} gap={4} horizontal style={{ overflow: 'hidden' }}>
-          {!isSignedIn ? (
-            <ProductLogo color={theme.colorText} size={28} type={'text'} />
-          ) : (
-            <Text
-              ellipsis
-              style={{
-                flex: 1,
-              }}
-              weight={500}
-            >
-              {nickname || username || BRANDING_NAME}
-            </Text>
-          )}
-          <Icon
-            color={theme.colorTextDescription}
-            icon={ChevronDownIcon}
-            id={USER_DROPDOWN_ICON_ID}
-          />
-        </Flexbox>
+        {!lite && (
+          <Flexbox align={'center'} gap={4} horizontal style={{ overflow: 'hidden' }}>
+            {!isSignedIn && (nickname || username) ? (
+              <ProductLogo color={theme.colorText} size={28} type={'text'} />
+            ) : (
+              <Text
+                ellipsis
+                style={{
+                  flex: 1,
+                }}
+                weight={500}
+              >
+                {nickname || username}
+              </Text>
+            )}
+            <Icon
+              color={theme.colorTextDescription}
+              icon={ChevronDownIcon}
+              id={USER_DROPDOWN_ICON_ID}
+            />
+          </Flexbox>
+        )}
       </Block>
     </UserPanel>
   );

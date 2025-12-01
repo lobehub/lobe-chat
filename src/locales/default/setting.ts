@@ -42,6 +42,11 @@ export default {
       untitled: '未命名助手',
     },
   },
+  agentProfile: {
+    latest: '已加载最新版本',
+    saved: '已保存',
+    saving: '自动保存中...',
+  },
   agentTab: {
     chat: '聊天偏好',
     meta: '助手信息',
