@@ -9,7 +9,7 @@ import { timestamps, timestamptz } from './_helpers';
 export const users = pgTable('users', {
   id: text('id').primaryKey().notNull(),
   username: text('username').unique(),
-  email: text('email'),
+  email: text('email').unique(),
 
   avatar: text('avatar'),
   phone: text('phone'),
@@ -27,6 +27,19 @@ export const users = pgTable('users', {
   emailVerifiedAt: timestamptz('email_verified_at'),
 
   preference: jsonb('preference').$defaultFn(() => DEFAULT_PREFERENCE),
+
+  // better-auth admin
+  role: text('role'),
+  banned: boolean('banned').default(false),
+  banReason: text('ban_reason'),
+  banExpires: timestamptz('ban_expires'),
+
+  // better-auth two-factor
+  twoFactorEnabled: boolean('two_factor_enabled').default(false),
+
+  // better-auth phone number
+  phoneNumber: text('phone_number').unique(),
+  phoneNumberVerified: boolean('phone_number_verified'),
 
   ...timestamps,
 });
