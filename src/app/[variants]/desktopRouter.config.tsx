@@ -211,18 +211,18 @@ export const createDesktopRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/pages')),
+              element: dynamicElement(() => import('./(main)/page')),
               index: true,
             },
             {
-              element: dynamicElement(() => import('./(main)/pages')),
+              element: dynamicElement(() => import('./(main)/page')),
               loader: idLoader,
               path: ':id',
             },
           ],
-          element: dynamicElement(() => import('./(main)/pages/_layout/Desktop')),
-          errorElement: <ErrorBoundary resetPath="/pages" />,
-          path: 'pages',
+          element: dynamicElement(() => import('./(main)/page/_layout/Desktop')),
+          errorElement: <ErrorBoundary resetPath="/page" />,
+          path: 'page',
         },
 
         // Labs routes

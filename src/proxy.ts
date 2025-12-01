@@ -44,6 +44,8 @@ export const config = {
     '/resource',
     '/resource(.*)',
     '/profile(.*)',
+    '/page',
+    '/page(.*)',
     '/me',
     '/me(.*)',
 
@@ -138,6 +140,7 @@ const defaultMiddleware = (request: NextRequest) => {
     '/agent',
     '/discover',
     '/resource',
+    '/page',
     '/settings',
     '/image',
     '/labs',
