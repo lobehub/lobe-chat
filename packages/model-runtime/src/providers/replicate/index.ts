@@ -54,7 +54,8 @@ export class LobeReplicateAI implements LobeRuntimeAI {
         throw new Error('Invalid model id for Replicate connectivity check');
       }
 
-      const [owner, nameWithVersion] = modelId.split('/');
+      const [owner, ...nameParts] = modelId.split('/');
+      const nameWithVersion = nameParts.join('/');
       const [name] = nameWithVersion.split(':'); // drop :version if present
 
       // Fast auth + existence check via SDK; no inference cost
