@@ -555,6 +555,201 @@ describe('messagesReducer', () => {
       expect(newState.find((m) => m.id === 'message1')).toBeUndefined();
       expect(newState.find((m) => m.id === 'message2')).toBeDefined();
     });
+
+    it('should update child parentId when deleting parent chain', () => {
+      // Create a tree: A -> B -> C -> D
+      const treeState: UIChatMessage[] = [
+        {
+          id: 'A',
+          content: 'A',
+          role: 'user',
+          createdAt: 1,
+          updatedAt: 1,
+          meta: {},
+          parentId: undefined,
+        },
+        {
+          id: 'B',
+          content: 'B',
+          role: 'assistant',
+          createdAt: 2,
+          updatedAt: 2,
+          meta: {},
+          parentId: 'A',
+        },
+        {
+          id: 'C',
+          content: 'C',
+          role: 'tool',
+          createdAt: 3,
+          updatedAt: 3,
+          meta: {},
+          parentId: 'B',
+        },
+        {
+          id: 'D',
+          content: 'D',
+          role: 'user',
+          createdAt: 4,
+          updatedAt: 4,
+          meta: {},
+          parentId: 'C',
+        },
+      ];
+
+      // Delete B and C
+      const payload: MessageDispatch = {
+        type: 'deleteMessages',
+        ids: ['B', 'C'],
+      };
+
+      const newState = messagesReducer(treeState, payload);
+
+      // Should have A and D remaining
+      expect(newState.length).toBe(2);
+      expect(newState.find((m) => m.id === 'A')).toBeDefined();
+      expect(newState.find((m) => m.id === 'D')).toBeDefined();
+
+      // D's parentId should be updated to A (skipping deleted B and C)
+      const messageD = newState.find((m) => m.id === 'D');
+      expect(messageD?.parentId).toBe('A');
+    });
+
+    it('should set child parentId to undefined when deleting entire parent chain from root', () => {
+      // Create a tree: A -> B -> C -> D
+      const treeState: UIChatMessage[] = [
+        {
+          id: 'A',
+          content: 'A',
+          role: 'user',
+          createdAt: 1,
+          updatedAt: 1,
+          meta: {},
+          parentId: undefined,
+        },
+        {
+          id: 'B',
+          content: 'B',
+          role: 'assistant',
+          createdAt: 2,
+          updatedAt: 2,
+          meta: {},
+          parentId: 'A',
+        },
+        {
+          id: 'C',
+          content: 'C',
+          role: 'tool',
+          createdAt: 3,
+          updatedAt: 3,
+          meta: {},
+          parentId: 'B',
+        },
+        {
+          id: 'D',
+          content: 'D',
+          role: 'user',
+          createdAt: 4,
+          updatedAt: 4,
+          meta: {},
+          parentId: 'C',
+        },
+      ];
+
+      // Delete A, B, and C
+      const payload: MessageDispatch = {
+        type: 'deleteMessages',
+        ids: ['A', 'B', 'C'],
+      };
+
+      const newState = messagesReducer(treeState, payload);
+
+      // Should have only D remaining
+      expect(newState.length).toBe(1);
+      expect(newState[0].id).toBe('D');
+
+      // D's parentId should be undefined (all ancestors deleted)
+      expect(newState[0].parentId).toBeUndefined();
+    });
+
+    it('should handle multiple independent trees when batch deleting', () => {
+      // Tree 1: A -> B -> C, Tree 2: X -> Y -> Z
+      const treeState: UIChatMessage[] = [
+        {
+          id: 'A',
+          content: 'A',
+          role: 'user',
+          createdAt: 1,
+          updatedAt: 1,
+          meta: {},
+          parentId: undefined,
+        },
+        {
+          id: 'B',
+          content: 'B',
+          role: 'assistant',
+          createdAt: 2,
+          updatedAt: 2,
+          meta: {},
+          parentId: 'A',
+        },
+        {
+          id: 'C',
+          content: 'C',
+          role: 'user',
+          createdAt: 3,
+          updatedAt: 3,
+          meta: {},
+          parentId: 'B',
+        },
+        {
+          id: 'X',
+          content: 'X',
+          role: 'user',
+          createdAt: 4,
+          updatedAt: 4,
+          meta: {},
+          parentId: undefined,
+        },
+        {
+          id: 'Y',
+          content: 'Y',
+          role: 'assistant',
+          createdAt: 5,
+          updatedAt: 5,
+          meta: {},
+          parentId: 'X',
+        },
+        {
+          id: 'Z',
+          content: 'Z',
+          role: 'user',
+          createdAt: 6,
+          updatedAt: 6,
+          meta: {},
+          parentId: 'Y',
+        },
+      ];
+
+      // Delete B and Y
+      const payload: MessageDispatch = {
+        type: 'deleteMessages',
+        ids: ['B', 'Y'],
+      };
+
+      const newState = messagesReducer(treeState, payload);
+
+      // Should have A, C, X, Z remaining
+      expect(newState.length).toBe(4);
+
+      // C's parentId should be A
+      const messageC = newState.find((m) => m.id === 'C');
+      expect(messageC?.parentId).toBe('A');
+
+      // Z's parentId should be X
+      const messageZ = newState.find((m) => m.id === 'Z');
+      expect(messageZ?.parentId).toBe('X');
+    });
   });
 
   describe('updateMessages', () => {
