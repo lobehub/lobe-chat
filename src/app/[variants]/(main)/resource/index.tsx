@@ -122,7 +122,7 @@ const MainContent = memo(() => {
   // Sync URL query parameter with store on mount and when it changes
   useEffect(() => {
     const fileId = searchParams.get('file');
-    if (fileId) {
+    if (fileId && !fileId.startsWith('doc')) {
       setCurrentViewItemId(fileId);
       setMode('file');
     }
@@ -174,6 +174,10 @@ const DesktopLayout = memo(() => {
       const itemsToMove = isDraggingSelection ? selectedFileIds : [active.id as string];
 
       if (overData?.isFolder) {
+        // Check if dropping on root folder (special ID pattern: __root__:knowledgeBaseId)
+        const isRootDrop = typeof over.id === 'string' && over.id.startsWith('__root__:');
+        const targetParentId = isRootDrop ? null : (over.id as string);
+
         const pools = itemsToMove.map((id) => {
           const item = fileList.find((f) => f.id === id);
           if (!item) return Promise.resolve();
@@ -184,9 +188,9 @@ const DesktopLayout = memo(() => {
             item.fileType === 'custom/folder';
 
           if (isDocument) {
-            return updateDocument(id, { parentId: over.id as string });
+            return updateDocument(id, { parentId: targetParentId });
           } else {
-            return moveFileToFolder(id, over.id as string);
+            return moveFileToFolder(id, targetParentId);
           }
         });
 

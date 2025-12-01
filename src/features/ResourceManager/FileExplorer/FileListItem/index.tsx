@@ -156,7 +156,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     const inputRef = useRef<any>(null);
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType);
-    const isNote = sourceType === 'document' || fileType === 'custom/document';
+    const isPage = sourceType === 'document' || fileType === 'custom/document';
     const isFolder = fileType === 'custom/folder';
 
     const {
@@ -197,14 +197,14 @@ const FileRenderItem = memo<FileRenderItemProps>(
 
     // Extract title and emoji for notes
     const displayTitle = useMemo(() => {
-      if (isNote && content) {
+      if (isPage && content) {
         const extractedTitle = extractTitle(content);
         return extractedTitle || name || t('file:documentList.untitled');
       }
       return name;
-    }, [isNote, content, name, t]);
+    }, [isPage, content, name, t]);
 
-    const emoji = isNote ? metadata?.emoji : null;
+    const emoji = isPage ? metadata?.emoji : null;
 
     const displayTime =
       dayjs().diff(dayjs(createdAt), 'd') < 7
@@ -291,7 +291,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
               if (baseKnowledgeBaseId) {
                 navigate(`/resource/library/${baseKnowledgeBaseId}/${folderSlug}`);
               }
-            } else if (isNote) {
+            } else if (isPage) {
               setCurrentViewItemId(id);
               setMode('page');
               setSearchParams(
@@ -342,7 +342,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
             >
               {isFolder ? (
                 <Icon icon={FolderIcon} size={24} />
-              ) : isNote ? (
+              ) : isPage ? (
                 emoji ? (
                   <span style={{ fontSize: 24 }}>{emoji}</span>
                 ) : (

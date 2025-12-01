@@ -35,7 +35,7 @@ const DocumentActions = memo<DocumentActionsProps>(
             message.success(t('documentEditor.deleteSuccess', { ns: 'file' }));
             onDelete?.();
           } catch (error) {
-            console.error('Failed to delete document:', error);
+            console.error('Failed to delete page:', error);
             message.error(t('documentEditor.deleteError', { ns: 'file' }));
           } finally {
             setLoading(false);
@@ -50,7 +50,7 @@ const DocumentActions = memo<DocumentActionsProps>(
         try {
           await navigator.clipboard.writeText(documentContent);
         } catch (error) {
-          console.error('Failed to copy document:', error);
+          console.error('Failed to copy page:', error);
         }
       }
     };
@@ -60,7 +60,7 @@ const DocumentActions = memo<DocumentActionsProps>(
       try {
         await duplicateDocument(documentId);
       } catch (error) {
-        console.error('Failed to duplicate document:', error);
+        console.error('Failed to duplicate page:', error);
       } finally {
         setLoading(false);
       }

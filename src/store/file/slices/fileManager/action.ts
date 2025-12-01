@@ -188,7 +188,11 @@ export const createFileManageSlice: StateCreator<
     get().toggleParsingIds([id], false);
   },
   refreshFileList: async () => {
-    await mutate([FETCH_ALL_KNOWLEDGE_KEY, get().queryListParams]);
+    // Invalidate all queries that start with FETCH_ALL_KNOWLEDGE_KEY
+    // This ensures all file lists (explorer, tree, etc.) are refreshed
+    await mutate((key) => Array.isArray(key) && key[0] === FETCH_ALL_KNOWLEDGE_KEY, undefined, {
+      revalidate: true,
+    });
   },
   removeAllFiles: async () => {
     await fileService.removeAllFiles();

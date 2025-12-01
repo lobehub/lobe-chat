@@ -38,7 +38,7 @@ export const usePageEditor = ({
   onSave,
   parentId,
 }: UsePageEditorOptions) => {
-  const currentDocument = useFileStore(documentSelectors.getDocumentById(documentId));
+  const currentPage = useFileStore(documentSelectors.getDocumentById(documentId));
 
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [currentTitle, setCurrentTitle] = useState('');
@@ -64,28 +64,28 @@ export const usePageEditor = ({
     return pages.map((page) => page.pageContent).join('\n\n');
   }, []);
 
-  // Sync title and emoji when document data changes
+  // Sync title and emoji when page data changes
   useEffect(() => {
-    if (currentDocument?.title !== undefined && currentDocument.title !== currentTitle) {
-      setCurrentTitle(currentDocument.title);
+    if (currentPage?.title !== undefined && currentPage.title !== currentTitle) {
+      setCurrentTitle(currentPage.title);
     }
-    if (currentDocument && currentDocument.metadata?.emoji !== currentEmoji) {
-      setCurrentEmoji(currentDocument.metadata.emoji);
+    if (currentPage && currentPage.metadata?.emoji !== currentEmoji) {
+      setCurrentEmoji(currentPage.metadata.emoji);
     }
-  }, [currentDocument?.title, currentDocument?.metadata?.emoji]);
+  }, [currentPage?.title, currentPage?.metadata?.emoji]);
 
-  // Load document content when documentId changes
+  // Load page content when documentId changes
   const onEditorInit = () => {
     isInitialLoadRef.current = true;
 
     if (documentId && editor) {
-      setCurrentEmoji(currentDocument?.metadata?.emoji);
+      setCurrentEmoji(currentPage?.metadata?.emoji);
       setLastUpdatedTime(null);
 
-      // Check if this is an optimistic temp document
-      if (currentDocument && documentId.startsWith('temp-document-')) {
-        console.log('[usePageEditor] Using optimistic document from currentDocument');
-        setCurrentTitle(currentDocument.title || 'Untitled Document');
+      // Check if this is an optimistic temp page
+      if (currentPage && documentId.startsWith('temp-document-')) {
+        console.log('[usePageEditor] Using optimistic page from currentPage');
+        setCurrentTitle(currentPage.title || 'Untitled Page');
         // editor.cleanDocument();
         setWordCount(0);
         setTimeout(() => {
@@ -94,24 +94,24 @@ export const usePageEditor = ({
         return;
       }
 
-      if (currentDocument?.editorData && Object.keys(currentDocument.editorData).length > 0) {
-        setCurrentTitle(currentDocument.title || '');
+      if (currentPage?.editorData && Object.keys(currentPage.editorData).length > 0) {
+        setCurrentTitle(currentPage.title || '');
         isInitialLoadRef.current = true;
 
-        console.log('[usePageEditor] Setting editor data', currentDocument.editorData);
+        console.log('[usePageEditor] Setting editor data', currentPage.editorData);
 
-        editor.setDocument('json', JSON.stringify(currentDocument.editorData));
-        const textContent = currentDocument.content || '';
+        editor.setDocument('json', JSON.stringify(currentPage.editorData));
+        const textContent = currentPage.content || '';
         setWordCount(calculateWordCount(textContent));
         setTimeout(() => {
           isInitialLoadRef.current = false;
         }, RESET_DELAY);
         return;
-      } else if (currentDocument?.pages && editor) {
-        const pagesContent = extractContentFromPages(currentDocument.pages);
+      } else if (currentPage?.pages && editor) {
+        const pagesContent = extractContentFromPages(currentPage.pages);
         if (pagesContent) {
           console.log('[usePageEditor] Using pages content as fallback');
-          setCurrentTitle(currentDocument.title || '');
+          setCurrentTitle(currentPage.title || '');
           isInitialLoadRef.current = true;
           editor.setDocument('markdown', pagesContent);
           setWordCount(calculateWordCount(pagesContent));
@@ -153,7 +153,7 @@ export const usePageEditor = ({
         const emoji = options?.emoji !== undefined ? options.emoji : currentEmoji;
 
         if (currentDocId && !currentDocId.startsWith('temp-document-')) {
-          // Update existing document
+          // Update existing page
           await updateDocumentOptimistically(currentDocId, {
             content: textContent,
             editorData: structuredClone(editorData),
@@ -168,7 +168,7 @@ export const usePageEditor = ({
             }, 0);
           }
         } else {
-          // Create new document
+          // Create new page
           const now = Date.now();
           const timestamp = new Date(now).toLocaleString('en-US', {
             day: '2-digit',
@@ -177,9 +177,9 @@ export const usePageEditor = ({
             month: 'short',
             year: 'numeric',
           });
-          const finalTitle = title || `Document - ${timestamp}`;
+          const finalTitle = title || `Page - ${timestamp}`;
 
-          const newDoc = await documentService.createDocument({
+          const newPage = await documentService.createDocument({
             content: textContent,
             editorData: JSON.stringify(editorData),
             fileType: 'custom/document',
@@ -189,13 +189,13 @@ export const usePageEditor = ({
             title: finalTitle,
           });
 
-          const realDocument: LobeDocument = {
+          const realPage: LobeDocument = {
             content: textContent,
             createdAt: new Date(now),
             editorData: structuredClone(editorData) || null,
             fileType: 'custom/document' as const,
             filename: finalTitle,
-            id: newDoc.id,
+            id: newPage.id,
             metadata: emoji ? { createdAt: now, emoji } : { createdAt: now },
             source: 'document',
             sourceType: DocumentSourceType.EDITOR,
@@ -206,11 +206,11 @@ export const usePageEditor = ({
           };
 
           if (currentDocId?.startsWith('temp-document-')) {
-            replaceTempDocumentWithReal(currentDocId, realDocument);
+            replaceTempDocumentWithReal(currentDocId, realPage);
           }
 
-          setCurrentDocId(newDoc.id);
-          onDocumentIdChange?.(newDoc.id);
+          setCurrentDocId(newPage.id);
+          onDocumentIdChange?.(newPage.id);
 
           refreshFileList();
 
