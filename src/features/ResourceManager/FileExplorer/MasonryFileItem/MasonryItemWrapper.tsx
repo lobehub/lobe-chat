@@ -9,7 +9,7 @@ interface MasonryItemWrapperProps {
     knowledgeBaseId?: string;
     openFile?: (id: string) => void;
     selectFileIds: string[];
-    setSelectedFileIds: (updater: (prev: string[]) => string[]) => void;
+    setSelectedFileIds: (ids: string[]) => void;
   };
   data: FileListItem;
   index: number;
@@ -27,12 +27,11 @@ const MasonryItemWrapper = memo<MasonryItemWrapperProps>(({ data: item, context 
         knowledgeBaseId={context.knowledgeBaseId}
         onOpen={context.openFile}
         onSelectedChange={(id, checked) => {
-          context.setSelectedFileIds((prev: string[]) => {
-            if (checked) {
-              return [...prev, id];
-            }
-            return prev.filter((item) => item !== id);
-          });
+          if (checked) {
+            context.setSelectedFileIds([...context.selectFileIds, id]);
+          } else {
+            context.setSelectedFileIds(context.selectFileIds.filter((item) => item !== id));
+          }
         }}
         selected={context.selectFileIds.includes(item.id)}
         {...item}

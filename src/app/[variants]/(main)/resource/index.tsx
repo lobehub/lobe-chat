@@ -145,6 +145,9 @@ const DesktopLayout = memo(() => {
   const [activeData, setActiveData] = useState<any>(null);
   const updateDocument = useFileStore((s) => s.updateDocument);
   const moveFileToFolder = useFileStore((s) => s.moveFileToFolder);
+  const selectedFileIds = useResourceManagerStore((s) => s.selectedFileIds);
+  const setSelectedFileIds = useResourceManagerStore((s) => s.setSelectedFileIds);
+  const fileList = useFileStore((s) => s.fileList);
   const theme = useTheme();
 
   const sensors = useSensors(
@@ -164,20 +167,35 @@ const DesktopLayout = memo(() => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const currentActiveData = active.data.current;
       const overData = over.data.current;
 
-      if (overData?.isFolder && currentActiveData) {
-        const isDocument =
-          currentActiveData.sourceType === 'document' ||
-          currentActiveData.fileType === 'custom/document' ||
-          currentActiveData.fileType === 'custom/folder';
+      // Check if we are dragging selected items
+      const isDraggingSelection = selectedFileIds.includes(active.id as string);
+      const itemsToMove = isDraggingSelection ? selectedFileIds : [active.id as string];
 
-        if (isDocument) {
-          updateDocument(active.id as string, { parentId: over.id as string });
-        } else {
-          moveFileToFolder(active.id as string, over.id as string);
-        }
+      if (overData?.isFolder) {
+        const pools = itemsToMove.map((id) => {
+          const item = fileList.find((f) => f.id === id);
+          if (!item) return Promise.resolve();
+
+          const isDocument =
+            item.sourceType === 'document' ||
+            item.fileType === 'custom/document' ||
+            item.fileType === 'custom/folder';
+
+          if (isDocument) {
+            return updateDocument(id, { parentId: over.id as string });
+          } else {
+            return moveFileToFolder(id, over.id as string);
+          }
+        });
+
+        Promise.all(pools).then(() => {
+          // Clear selection after successful move
+          if (isDraggingSelection) {
+            setSelectedFileIds([]);
+          }
+        });
       }
     }
     setActiveId(null);
@@ -230,11 +248,7 @@ const DesktopLayout = memo(() => {
                       <Icon icon={FileText} size={24} />
                     </Center>
                   ) : (
-                    <FileIcon
-                      fileName={activeData.name}
-                      fileType={activeData.fileType}
-                      size={24}
-                    />
+                    <FileIcon fileName={activeData.name} fileType={activeData.fileType} size={24} />
                   )}
                 </Flexbox>
                 <span
@@ -246,6 +260,22 @@ const DesktopLayout = memo(() => {
                 >
                   {activeData.name}
                 </span>
+                {selectedFileIds.includes(activeId) && selectedFileIds.length > 1 && (
+                  <div
+                    style={{
+                      background: theme.colorPrimary,
+                      borderRadius: 10,
+                      color: theme.colorTextLightSolid,
+                      fontSize: 12,
+                      height: 20,
+                      lineHeight: '20px',
+                      marginLeft: 8,
+                      paddingInline: 6,
+                    }}
+                  >
+                    {selectedFileIds.length}
+                  </div>
+                )}
               </Flexbox>
             </Flexbox>
           ) : null}

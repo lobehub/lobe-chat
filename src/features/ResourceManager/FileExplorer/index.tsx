@@ -66,7 +66,10 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
 
-  const [selectFileIds, setSelectedFileIds] = useState<string[]>([]);
+  const [selectFileIds, setSelectedFileIds] = useResourceManagerStore((s) => [
+    s.selectedFileIds,
+    s.setSelectedFileIds,
+  ]);
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isMasonryReady, setIsMasonryReady] = useState(false);
@@ -434,21 +437,17 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
                       const end = Math.max(lastSelectedIndex, clickedIndex);
                       const rangeIds = data.slice(start, end + 1).map((item) => item.id);
 
-                      setSelectedFileIds((prev) => {
-                        // Create a Set for efficient lookup
-                        const prevSet = new Set(prev);
-                        // Add all items in range
-                        rangeIds.forEach((rangeId) => prevSet.add(rangeId));
-                        return Array.from(prevSet);
-                      });
+                      const prevSet = new Set(selectFileIds);
+                      // Add all items in range
+                      rangeIds.forEach((rangeId) => prevSet.add(rangeId));
+                      setSelectedFileIds(Array.from(prevSet));
                     } else {
                       // Normal selection
-                      setSelectedFileIds((prev) => {
-                        if (checked) {
-                          return [...prev, id];
-                        }
-                        return prev.filter((item) => item !== id);
-                      });
+                      if (checked) {
+                        setSelectedFileIds([...selectFileIds, id]);
+                      } else {
+                        setSelectedFileIds(selectFileIds.filter((item) => item !== id));
+                      }
                     }
                     setLastSelectedIndex(clickedIndex);
                   }}
