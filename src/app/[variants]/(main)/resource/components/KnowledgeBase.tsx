@@ -24,7 +24,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-// TODO: Rename to Collection
 const Collection = () => {
   const { t } = useTranslation('file');
   const { styles } = useStyles();
@@ -37,7 +36,7 @@ const Collection = () => {
   const handleCreate = () => {
     open({
       onSuccess: (id) => {
-        navigate(`/knowledge/library/${id}`);
+        navigate(`/resource/library/${id}`);
       },
     });
   };
