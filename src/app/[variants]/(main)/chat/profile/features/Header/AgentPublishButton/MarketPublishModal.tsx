@@ -17,7 +17,7 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 
-import AgentInfoDescription from '../AgentInfoDescription';
+import AgentInfoDescription from '../../../Settings/features/AgentInfoDescription';
 import PublishResultModal from '../PublishResultModal';
 
 export type MarketPublishAction = 'submit' | 'upload';
