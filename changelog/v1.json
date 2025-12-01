@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Drop user.phoneNumber and reuse user.phone."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.141"
+  },
+  {
+    "children": {
       "features": ["Integrate better-auth admin plugin."]
     },
     "date": "2025-12-01",
