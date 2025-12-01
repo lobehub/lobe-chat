@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "5313d3dc-1404-45c6-822b-36416b862a75",
+  "id": "3c3f3aae-d5f5-40cc-a1ff-2245d172ba71",
   "policies": {},
   "prevId": "c571dc86-7ca8-4152-9e9f-41b3a15842f3",
   "roles": {},
@@ -1183,8 +1183,8 @@
         }
       },
       "indexes": {
-        "twoFactor_secret_idx": {
-          "name": "twoFactor_secret_idx",
+        "two_factor_secret_idx": {
+          "name": "two_factor_secret_idx",
           "columns": [
             {
               "expression": "secret",
@@ -1198,8 +1198,8 @@
           "method": "btree",
           "with": {}
         },
-        "twoFactor_userId_idx": {
-          "name": "twoFactor_userId_idx",
+        "two_factor_user_id_idx": {
+          "name": "two_factor_user_id_idx",
           "columns": [
             {
               "expression": "user_id",

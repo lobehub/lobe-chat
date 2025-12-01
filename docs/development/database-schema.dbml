@@ -180,8 +180,8 @@ table two_factor {
   user_id text [not null]
 
   indexes {
-    secret [name: 'twoFactor_secret_idx']
-    user_id [name: 'twoFactor_userId_idx']
+    secret [name: 'two_factor_secret_idx']
+    user_id [name: 'two_factor_user_id_idx']
   }
 }
 

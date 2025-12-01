@@ -874,21 +874,21 @@
   },
   {
     "sql": [
-      "CREATE TABLE IF NOT EXISTS \"two_factor\" (\n\t\"backup_codes\" text NOT NULL,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"secret\" text NOT NULL,\n\t\"user_id\" text NOT NULL\n);\n",
-      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"two_factor_enabled\" boolean DEFAULT false;",
-      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"phone_number\" text;",
-      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"phone_number_verified\" boolean;",
-      "\nDO $$ BEGIN\n  ALTER TABLE \"two_factor\" ADD CONSTRAINT \"two_factor_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\nEXCEPTION WHEN duplicate_object THEN NULL;\nEND $$;",
-      "\nCREATE INDEX IF NOT EXISTS \"two_factor_secret_idx\" ON \"two_factor\" USING btree (\"secret\");",
-      "\nCREATE INDEX IF NOT EXISTS \"two_factor_user_id_idx\" ON \"two_factor\" USING btree (\"user_id\");",
-      "\nCREATE INDEX IF NOT EXISTS \"account_userId_idx\" ON \"accounts\" USING btree (\"user_id\");",
-      "\nCREATE INDEX IF NOT EXISTS \"auth_session_userId_idx\" ON \"auth_sessions\" USING btree (\"user_id\");",
-      "\nCREATE INDEX IF NOT EXISTS \"verification_identifier_idx\" ON \"verifications\" USING btree (\"identifier\");",
-      "\nDO $$ BEGIN\n  ALTER TABLE \"users\" ADD CONSTRAINT \"users_email_unique\" UNIQUE(\"email\");\nEXCEPTION WHEN duplicate_object THEN NULL;\nEND $$;",
-      "\nDO $$ BEGIN\n  ALTER TABLE \"users\" ADD CONSTRAINT \"users_phone_number_unique\" UNIQUE(\"phone_number\");\nEXCEPTION WHEN duplicate_object THEN NULL;\nEND $$;\n"
+      "CREATE TABLE IF NOT EXISTS \"two_factor\" (\n  \"backup_codes\" text NOT NULL,\n  \"id\" text PRIMARY KEY NOT NULL,\n  \"secret\" text NOT NULL,\n  \"user_id\" text NOT NULL\n);\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"two_factor_enabled\" boolean DEFAULT false;\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"phone_number\" text;\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"phone_number_verified\" boolean;\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (\n    SELECT 1 FROM pg_constraint WHERE conname = 'two_factor_user_id_users_id_fk'\n  ) THEN\n    ALTER TABLE \"two_factor\"\n      ADD CONSTRAINT \"two_factor_user_id_users_id_fk\"\n      FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\n  END IF;\nEND $$;\n",
+      "\nCREATE INDEX IF NOT EXISTS \"two_factor_secret_idx\" ON \"two_factor\" USING btree (\"secret\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"two_factor_user_id_idx\" ON \"two_factor\" USING btree (\"user_id\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"account_userId_idx\" ON \"accounts\" USING btree (\"user_id\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"auth_session_userId_idx\" ON \"auth_sessions\" USING btree (\"user_id\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"verification_identifier_idx\" ON \"verifications\" USING btree (\"identifier\");\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique') THEN\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_email_unique\" UNIQUE (\"email\");\n  END IF;\nEND $$;\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_number_unique') THEN\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_phone_number_unique\" UNIQUE (\"phone_number\");\n  END IF;\nEND $$;\n"
     ],
     "bps": true,
-    "folderMillis": 1764560671465,
-    "hash": "c7afe8ac81a9e0d6680fa101a8d6ce3716020860de39689b8d73509e7bb966a0"
+    "folderMillis": 1764579351312,
+    "hash": "22fb7a65764b1f3e3c1ae2ce95d448685e6a01d1fb2f8c3f925c655f0824c161"
   }
 ]
