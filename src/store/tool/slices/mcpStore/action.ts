@@ -65,6 +65,71 @@ const toNonEmptyStringRecord = (input?: Record<string, any>) => {
   }, {});
 };
 
+/**
+ * Build manifest for cloud MCP connection from market data
+ * 从市场数据构建 Cloud MCP 的 manifest
+ */
+const buildCloudMcpManifest = (params: {
+  data: any;
+  plugin: { description?: string, icon?: string; identifier: string; };
+}): LobeChatPluginManifest => {
+  const { data, plugin } = params;
+
+  log('Using cloud connection, building manifest from market data');
+
+  // 从 data 中获取 tools（MCP 格式）或 api（LobeChat 格式）
+  const mcpTools = data.tools;
+  const lobeChatApi = data.api;
+
+  // 如果是 MCP 格式的 tools，需要转换为 LobeChat 的 api 格式
+  // MCP: { name, description, inputSchema }
+  // LobeChat: { name, description, parameters }
+  let apiArray: any[] = [];
+
+  if (lobeChatApi) {
+    // 已经是 LobeChat 格式，直接使用
+    apiArray = lobeChatApi;
+    log('[Cloud MCP] Using existing LobeChat API format');
+  } else if (mcpTools && Array.isArray(mcpTools)) {
+    // 转换 MCP tools 格式到 LobeChat api 格式
+    apiArray = mcpTools.map((tool: any) => ({
+      description: tool.description || '',
+      name: tool.name,
+      parameters: tool.inputSchema || {},
+    }));
+    log('[Cloud MCP] Converted %d MCP tools to LobeChat API format', apiArray.length);
+  } else {
+    console.warn('[Cloud MCP] No tools or api found in manifest data');
+  }
+
+  // 构建完整的 manifest
+  const manifest: LobeChatPluginManifest = {
+    api: apiArray,
+    author: data.author?.name || data.author || '',
+    createAt: data.createdAt || new Date().toISOString(),
+    homepage: data.homepage || '',
+    identifier: plugin.identifier,
+    manifest: data.manifestUrl || '',
+    meta: {
+      avatar: data.icon || plugin.icon,
+      description: plugin.description || data.description,
+      tags: data.tags || [],
+      title: data.name || plugin.identifier,
+    },
+    name: data.name || plugin.identifier,
+    type: 'mcp',
+    version: data.version,
+  } as unknown as LobeChatPluginManifest;
+
+  log('[Cloud MCP] Final manifest built:', {
+    apiCount: manifest.api?.length,
+    identifier: manifest.identifier,
+    version: manifest.version,
+  });
+
+  return manifest;
+};
+
 // 测试连接结果类型
 export interface TestMcpConnectionResult {
   error?: string;
@@ -139,7 +204,7 @@ export const createMCPPluginStoreSlice: StateCreator<
     const normalizedConfig = toNonEmptyStringRecord(config);
     let plugin = mcpStoreSelectors.getPluginById(identifier)(get());
 
-    // @ts-ignore
+    // @ts-expect-error
     const { haveCloudEndpoint } = plugin || {};
 
     if (!plugin || !plugin.manifestUrl) {
@@ -443,58 +508,7 @@ export const createMCPPluginStoreSlice: StateCreator<
       }
       if (connection?.type === 'cloud') {
         // 🌐 Cloud 类型：直接从市场数据构建 manifest
-        // Cloud 类型和 stdio 类似，tools 信息已经在市场数据中
-        log('Using cloud connection, building manifest from market data');
-
-        // 从 data 中获取 tools（MCP 格式）或 api（LobeChat 格式）
-        const mcpTools = (data as any).tools;
-        const lobeChatApi = (data as any).api;
-
-        // 如果是 MCP 格式的 tools，需要转换为 LobeChat 的 api 格式
-        // MCP: { name, description, inputSchema }
-        // LobeChat: { name, description, parameters }
-        let apiArray: any[] = [];
-
-        if (lobeChatApi) {
-          // 已经是 LobeChat 格式，直接使用
-          apiArray = lobeChatApi;
-          log('[Cloud MCP] Using existing LobeChat API format');
-        } else if (mcpTools && Array.isArray(mcpTools)) {
-          // 转换 MCP tools 格式到 LobeChat api 格式
-          apiArray = mcpTools.map((tool: any) => ({
-            description: tool.description || '',
-            name: tool.name,
-            parameters: tool.inputSchema || {},
-          }));
-          log('[Cloud MCP] Converted %d MCP tools to LobeChat API format', apiArray.length);
-        } else {
-          console.warn('[Cloud MCP] No tools or api found in manifest data');
-        }
-
-        // 构建完整的 manifest
-        manifest = {
-          api: apiArray,
-          author: (data as any).author?.name || (data as any).author || '',
-          createAt: (data as any).createdAt || new Date().toISOString(),
-          homepage: (data as any).homepage || '',
-          identifier: plugin.identifier,
-          manifest: (data as any).manifestUrl || '',
-          meta: {
-            avatar: (data as any).icon || plugin.icon,
-            description: plugin.description || (data as any).description,
-            tags: (data as any).tags || [],
-            title: (data as any).name || plugin.identifier,
-          },
-          name: (data as any).name || plugin.identifier,
-          type: 'mcp',
-          version: (data as any).version,
-        } as unknown as LobeChatPluginManifest;
-
-        log('[Cloud MCP] Final manifest built:', {
-          apiCount: manifest.api?.length,
-          identifier: manifest.identifier,
-          version: manifest.version,
-        });
+        manifest = buildCloudMcpManifest({ data, plugin });
       }
 
       // set version

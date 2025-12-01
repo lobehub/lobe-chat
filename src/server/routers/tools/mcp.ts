@@ -138,22 +138,4 @@ export const mcpRouter = router({
         processContentBlocks: boundProcessContentBlocks,
       });
     }),
-
-  callToolWithCloud: mcpProcedure
-    .input(
-      z.object({
-        data: z.any(), // Use the outer input
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      // Create a closure that binds fileService and userId to processContentBlocks
-      const boundProcessContentBlocks = async (blocks: ToolCallContent[]) => {
-        return processContentBlocks(blocks, ctx.fileService);
-      };
-      // Pass the validated params, toolName, args, and bound processContentBlocks to the service
-      return await mcpService.formatCloudTool({
-        data: input.data,
-        processContentBlocks: boundProcessContentBlocks,
-      });
-    }),
 });

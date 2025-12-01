@@ -7,6 +7,11 @@ import { z } from 'zod';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DiscoverService } from '@/server/services/discover';
+import { FileService } from '@/server/services/file';
+import {
+  contentBlocksToString,
+  processContentBlocks,
+} from '@/server/services/mcp/contentProcessor';
 import {
   AssistantSorts,
   McpConnectionType,
@@ -30,9 +35,14 @@ const marketProcedure = publicProcedure.use(async ({ ctx, next }) => {
 
 // Procedure with user authentication for operations requiring user access token
 const authedMarketProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next }) => {
+  const { UserModel } = await import('@/database/models/user');
+  const userModel = new UserModel(ctx.serverDB, ctx.userId);
+
   return next({
     ctx: {
       discoverService: new DiscoverService({ accessToken: ctx.marketAccessToken }),
+      fileService: new FileService(ctx.serverDB, ctx.userId),
+      userModel,
     },
   });
 });
@@ -51,14 +61,9 @@ export const marketRouter = router({
       log('callCloudMcpEndpoint input: %O', input);
 
       try {
-        // Get user access token from database
-        const { UserModel } = await import('@/database/models/user');
-        const userModel = new UserModel(ctx.serverDB, ctx.userId);
-
         // Query user_settings to get market.accessToken
-        const userState = await userModel.getUserState(async () => ({}));
+        const userState = await ctx.userModel.getUserState(async () => ({}));
         const userAccessToken = userState.settings?.market?.accessToken;
-        console.log('callCloudMcpEndpoint: userAccessToken', userAccessToken);
 
         log('callCloudMcpEndpoint: userAccessToken exists=%s', !!userAccessToken);
 
@@ -69,14 +74,29 @@ export const marketRouter = router({
           });
         }
 
-        const result = await ctx.discoverService.callCloudMcpEndpoint({
+        const cloudResult = await ctx.discoverService.callCloudMcpEndpoint({
           apiParams: input.apiParams,
           identifier: input.identifier,
           toolName: input.toolName,
           userAccessToken,
         });
 
-        return result;
+        // Format the cloud result to MCPToolCallResult format
+        // Process content blocks (upload images, etc.)
+        const newContent =
+          cloudResult?.isError || !ctx.fileService
+            ? cloudResult?.content
+            : await processContentBlocks(cloudResult?.content, ctx.fileService);
+
+        // Convert content blocks to string
+        const content = contentBlocksToString(newContent);
+        const state = { ...cloudResult, content: newContent };
+
+        if (cloudResult?.isError) {
+          return { content, state, success: true };
+        }
+
+        return { content, state, success: true };
       } catch (error) {
         log('Error calling cloud MCP endpoint: %O', error);
 

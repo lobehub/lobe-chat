@@ -86,16 +86,6 @@ class MCPService {
     const isStdio = plugin?.customParams?.mcp?.type === 'stdio';
     const isCloud = plugin?.customParams?.mcp?.type === 'cloud';
 
-    // Debug logs
-    console.log('[MCP] Tool call debug info:', {
-      apiName,
-      connectionType: plugin?.customParams?.mcp?.type,
-      identifier,
-      isCloud,
-      isDesktop,
-      isStdio,
-    });
-
     // Record call start time
     const callStartTime = Date.now();
     let success = false;
@@ -111,18 +101,12 @@ class MCPService {
 
         // Call cloud gateway via lambda market endpoint
         // Server will automatically get user access token from database
-        const cloudResult = await lambdaClient.market.callCloudMcpEndpoint.mutate({
+        // and format the result to MCPToolCallResult
+        result = await lambdaClient.market.callCloudMcpEndpoint.mutate({
           apiParams,
           identifier,
           toolName: apiName,
         });
-
-        console.log('[MCP] Cloud result:', cloudResult);
-
-        // Transform cloud result to MCPToolCallResult format
-        result = await toolsClient.mcp.callToolWithCloud.mutate({ data: cloudResult }, { signal });
-
-        console.log('result', result);
       } else if (isDesktop && isStdio) {
         // For desktop and stdio, use the desktopClient
         result = await desktopClient.mcp.callTool.mutate(data, { signal });
