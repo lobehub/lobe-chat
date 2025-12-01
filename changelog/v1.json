@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Integrate better-auth admin plugin."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.140"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-12-01",
