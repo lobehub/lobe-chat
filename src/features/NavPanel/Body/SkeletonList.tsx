@@ -5,39 +5,41 @@ import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-export const SkeletonItem = memo(() => {
-  const theme = useTheme();
+export const SkeletonItem = memo<{ height?: number; padding?: number }>(
+  ({ padding = 4, height = 36 }) => {
+    const theme = useTheme();
 
-  return (
-    <Flexbox align={'center'} flex={1} gap={8} height={36} horizontal padding={4}>
-      <Skeleton.Button
-        size={'small'}
-        style={{
-          borderRadius: theme.borderRadius,
-          height: 24,
-          maxHeight: 24,
-          maxWidth: 24,
-          minWidth: 24,
-        }}
-      />
-      <Flexbox flex={1} height={16}>
+    return (
+      <Flexbox align={'center'} flex={1} gap={8} height={height} horizontal padding={padding}>
         <Skeleton.Button
-          active
-          block
           size={'small'}
           style={{
             borderRadius: theme.borderRadius,
-            height: 16,
-            margin: 0,
-            maxHeight: 16,
-            opacity: 0.5,
-            padding: 0,
+            height: 24,
+            maxHeight: 24,
+            maxWidth: 24,
+            minWidth: 24,
           }}
         />
+        <Flexbox flex={1} height={16}>
+          <Skeleton.Button
+            active
+            block
+            size={'small'}
+            style={{
+              borderRadius: theme.borderRadius,
+              height: 16,
+              margin: 0,
+              maxHeight: 16,
+              opacity: 0.5,
+              padding: 0,
+            }}
+          />
+        </Flexbox>
       </Flexbox>
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export const SkeletonList = memo<{ rows?: number }>(({ rows = 3 }) => {
   return (
