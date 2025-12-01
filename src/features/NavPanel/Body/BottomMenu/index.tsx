@@ -1,4 +1,4 @@
-import { FolderClosed, Settings } from 'lucide-react';
+import { CompassIcon, Settings } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -17,7 +17,7 @@ interface Item {
 }
 
 const BottomMenu = memo(() => {
-  const { enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
+  const { showMarket } = useServerConfigStore(featureFlagsSelectors);
   const tab = useActiveTabKey();
 
   const navigate = useNavigate();
@@ -27,16 +27,17 @@ const BottomMenu = memo(() => {
     () =>
       [
         {
+          hidden: !showMarket,
+          icon: CompassIcon,
+          key: SidebarTabKey.Discover,
+          title: t('tab.community'),
+          url: '/discover',
+        },
+        {
           icon: Settings,
           key: SidebarTabKey.Setting,
           title: t('tab.setting'),
           url: '/settings',
-        },
-        enableKnowledgeBase && {
-          icon: FolderClosed,
-          key: SidebarTabKey.Files,
-          title: t('tab.files'),
-          url: '/resource',
         },
       ].filter(Boolean) as Item[],
     [t],

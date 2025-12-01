@@ -1,6 +1,6 @@
 'use client';
 
-import { Compass, FilePenIcon, HomeIcon, ImageIcon } from 'lucide-react';
+import { FilePenIcon, FolderClosedIcon, HomeIcon, ImageIcon, SearchIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,7 +16,7 @@ const Nav = memo(() => {
   const tab = useActiveTabKey();
   const navigate = useNavigate();
   const { t } = useTranslation('common');
-  const { showMarket, showAiImage } = useServerConfigStore(featureFlagsSelectors);
+  const { showAiImage, enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
 
   const items = useMemo(
     () => [
@@ -40,12 +40,11 @@ const Nav = memo(() => {
         title: t('tab.pages'),
         url: '/page',
       },
-      {
-        hidden: !showMarket,
-        icon: Compass,
-        key: SidebarTabKey.Discover,
-        title: t('tab.community'),
-        url: '/discover',
+      enableKnowledgeBase && {
+        icon: FolderClosedIcon,
+        key: SidebarTabKey.Files,
+        title: t('tab.resource'),
+        url: '/resource',
       },
     ],
     [t],
@@ -70,6 +69,7 @@ const Nav = memo(() => {
           />
         </Link>
       ))}
+      <NavItem icon={SearchIcon} title={t('tab.search')} />
     </Flexbox>
   );
 });
