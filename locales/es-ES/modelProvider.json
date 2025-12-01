@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Proveedor personalizado no habilitado",
       "disabled": "Proveedor no habilitado",
       "enabled": "Proveedor habilitado"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Agregar proveedor personalizado",
     "all": "Todo",
     "list": {
+      "custom": "Personalización no habilitada",
       "disabled": "No habilitado",
       "disabledActions": {
         "sort": "Ordenar por",

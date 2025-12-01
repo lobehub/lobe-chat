@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "未啟用自訂服務商",
       "disabled": "未啟用服務商",
       "enabled": "已啟用服務商"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "添加自定義服務商",
     "all": "全部",
     "list": {
+      "custom": "自訂未啟用",
       "disabled": "未啟用",
       "disabledActions": {
         "sort": "排序方式",
