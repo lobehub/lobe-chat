@@ -9,6 +9,7 @@ const displayMessages = (s: State) => s.displayMessages;
 const displayMessageIds = (s: State) => s.displayMessages.map((m) => m.id);
 const dbMessages = (s: State) => s.dbMessages;
 const messagesInit = (s: State) => s.messagesInit;
+const skipFetch = (s: State) => s.skipFetch;
 
 const getDisplayMessageById = (id: string) => (s: State) =>
   s.displayMessages.find((m) => m.id === id);
@@ -116,4 +117,5 @@ export const dataSelectors = {
   getDisplayMessageById,
   getGroupLatestMessageWithoutTools,
   messagesInit,
+  skipFetch,
 };

@@ -50,10 +50,13 @@ export interface ChatListProps {
  * Uses ConversationStore for message data and fetching.
  */
 const ChatList = memo<ChatListProps>(({ actionsBar, mobile = false, welcome, itemContent }) => {
-  // Fetch messages
+  // Fetch messages (SWR key is null when skipFetch is true)
   const context = useConversationStore((s) => s.context);
-  const useFetchMessages = useConversationStore((s) => s.useFetchMessages);
-  useFetchMessages(context);
+  const [skipFetch, useFetchMessages] = useConversationStore((s) => [
+    dataSelectors.skipFetch(s),
+    s.useFetchMessages,
+  ]);
+  useFetchMessages(context, skipFetch);
 
   // Use selectors for data
   const messagesInit = useConversationStore(dataSelectors.messagesInit);

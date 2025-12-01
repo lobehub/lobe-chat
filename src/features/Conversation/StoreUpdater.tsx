@@ -26,18 +26,25 @@ export interface StoreUpdaterProps {
    * External operation state (from ChatStore)
    */
   operationState?: OperationState;
+  /**
+   * Skip internal message fetching (when external messages are provided)
+   */
+  skipFetch?: boolean;
 }
 
 const StoreUpdater = memo<StoreUpdaterProps>(
-  ({ context, hasInitMessages, hooks, messages, onMessagesChange, operationState }) => {
+  ({ context, hasInitMessages, hooks, messages, onMessagesChange, operationState, skipFetch }) => {
     const storeApi = useConversationStoreApi();
     const useStoreUpdater = createStoreUpdater(storeApi);
 
     useStoreUpdater('context', context);
     useStoreUpdater('hooks', hooks!);
-    useStoreUpdater('messagesInit', hasInitMessages ?? false);
     useStoreUpdater('onMessagesChange', onMessagesChange);
     useStoreUpdater('operationState', operationState!);
+    useStoreUpdater('skipFetch', skipFetch!);
+
+    // When external messages are provided, mark as initialized
+    useStoreUpdater('messagesInit', skipFetch ? true : (hasInitMessages ?? false));
 
     // Sync external messages into store
     useEffect(() => {
