@@ -13,6 +13,10 @@ export interface Action {
    * Set the view mode
    */
   setMode: (mode: ResouceManagerMode) => void;
+  /**
+   * Set selected file IDs
+   */
+  setSelectedFileIds: (ids: string[]) => void;
 }
 
 export type Store = Action & State;
@@ -31,5 +35,9 @@ export const store: CreateStore = (publicState) => (set) => ({
 
   setMode: (mode) => {
     set({ mode });
+  },
+
+  setSelectedFileIds: (selectedFileIds) => {
+    set({ selectedFileIds });
   },
 });
