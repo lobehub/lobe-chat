@@ -101,6 +101,82 @@ describe('MessageModel Delete Tests', () => {
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(1);
     });
+
+    it('should update child messages parentId to deleted message parentId', async () => {
+      // Create a tree structure: A -> B -> C
+      // When B is deleted, C should have parentId = A
+      await serverDB.insert(messages).values([
+        { id: 'A', userId, role: 'user', content: 'message A', parentId: null },
+        { id: 'B', userId, role: 'assistant', content: 'message B', parentId: 'A' },
+        { id: 'C', userId, role: 'user', content: 'message C', parentId: 'B' },
+      ]);
+
+      // Delete message B
+      await messageModel.deleteMessage('B');
+
+      // Assert B is deleted
+      const deletedMessage = await serverDB.select().from(messages).where(eq(messages.id, 'B'));
+      expect(deletedMessage).toHaveLength(0);
+
+      // Assert C's parentId is now A (inherited from B's parentId)
+      const messageC = await serverDB.select().from(messages).where(eq(messages.id, 'C'));
+      expect(messageC).toHaveLength(1);
+      expect(messageC[0].parentId).toBe('A');
+
+      // Assert A still exists and is unchanged
+      const messageA = await serverDB.select().from(messages).where(eq(messages.id, 'A'));
+      expect(messageA).toHaveLength(1);
+      expect(messageA[0].parentId).toBeNull();
+    });
+
+    it('should set child messages parentId to null when deleting root message', async () => {
+      // Create a tree structure: A (root) -> B, C
+      // When A is deleted, B and C should have parentId = null
+      await serverDB.insert(messages).values([
+        { id: 'A', userId, role: 'user', content: 'message A', parentId: null },
+        { id: 'B', userId, role: 'assistant', content: 'message B', parentId: 'A' },
+        { id: 'C', userId, role: 'user', content: 'message C', parentId: 'A' },
+      ]);
+
+      // Delete root message A
+      await messageModel.deleteMessage('A');
+
+      // Assert A is deleted
+      const deletedMessage = await serverDB.select().from(messages).where(eq(messages.id, 'A'));
+      expect(deletedMessage).toHaveLength(0);
+
+      // Assert B's parentId is now null
+      const messageB = await serverDB.select().from(messages).where(eq(messages.id, 'B'));
+      expect(messageB).toHaveLength(1);
+      expect(messageB[0].parentId).toBeNull();
+
+      // Assert C's parentId is now null
+      const messageC = await serverDB.select().from(messages).where(eq(messages.id, 'C'));
+      expect(messageC).toHaveLength(1);
+      expect(messageC[0].parentId).toBeNull();
+    });
+
+    it('should only update child messages belonging to the same user', async () => {
+      // Create messages where child belongs to different user
+      await serverDB.insert(messages).values([
+        { id: 'A', userId, role: 'user', content: 'message A', parentId: null },
+        { id: 'B', userId, role: 'assistant', content: 'message B', parentId: 'A' },
+        { id: 'C', userId: otherUserId, role: 'user', content: 'message C', parentId: 'B' },
+      ]);
+
+      // Delete message B
+      await messageModel.deleteMessage('B');
+
+      // Assert B is deleted
+      const deletedMessage = await serverDB.select().from(messages).where(eq(messages.id, 'B'));
+      expect(deletedMessage).toHaveLength(0);
+
+      // Assert C's parentId is NOT updated (belongs to other user)
+      // Due to foreign key constraint with onDelete: 'set null', it will be set to null by DB
+      const messageC = await serverDB.select().from(messages).where(eq(messages.id, 'C'));
+      expect(messageC).toHaveLength(1);
+      expect(messageC[0].parentId).toBeNull();
+    });
   });
 
   describe('deleteMessages', () => {

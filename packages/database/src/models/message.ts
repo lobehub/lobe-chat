@@ -867,7 +867,14 @@ export class MessageModel {
       // If the message to be deleted is not found, return directly
       if (message.length === 0) return;
 
-      // 2. Check if the message contains tools
+      // 2. Update child messages' parentId to the current message's parentId
+      // This preserves the tree structure when deleting a node
+      await tx
+        .update(messages)
+        .set({ parentId: message[0].parentId })
+        .where(and(eq(messages.parentId, id), eq(messages.userId, this.userId)));
+
+      // 3. Check if the message contains tools
       const toolCallIds = (message[0].tools as ChatToolPayload[])
         ?.map((tool) => tool.id)
         .filter(Boolean);
@@ -875,7 +882,7 @@ export class MessageModel {
       let relatedMessageIds: string[] = [];
 
       if (toolCallIds?.length > 0) {
-        // 3. If the message contains tools, query all associated message ids
+        // 4. If the message contains tools, query all associated message ids
         const res = await tx
           .select({ id: messagePlugins.id })
           .from(messagePlugins)
@@ -884,11 +891,13 @@ export class MessageModel {
         relatedMessageIds = res.map((row) => row.id);
       }
 
-      // 4. Merge the list of message ids to be deleted
+      // 5. Merge the list of message ids to be deleted
       const messageIdsToDelete = [id, ...relatedMessageIds];
 
-      // 5. Delete all related messages
-      await tx.delete(messages).where(inArray(messages.id, messageIdsToDelete));
+      // 6. Delete all related messages
+      await tx
+        .delete(messages)
+        .where(and(eq(messages.userId, this.userId), inArray(messages.id, messageIdsToDelete)));
     });
   };
 
