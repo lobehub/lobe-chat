@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     alias: {
       '@': resolve(__dirname, './src/main'),
+      '~common': resolve(__dirname, './src/common'),
     },
     coverage: {
       all: false,
