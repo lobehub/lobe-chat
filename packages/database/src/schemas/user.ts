@@ -12,7 +12,7 @@ export const users = pgTable('users', {
   email: text('email').unique(),
 
   avatar: text('avatar'),
-  phone: text('phone'),
+  phone: text('phone').unique(),
   firstName: text('first_name'),
   lastName: text('last_name'),
   fullName: text('full_name'),
@@ -38,7 +38,6 @@ export const users = pgTable('users', {
   twoFactorEnabled: boolean('two_factor_enabled').default(false),
 
   // better-auth phone number
-  phoneNumber: text('phone_number').unique(),
   phoneNumberVerified: boolean('phone_number_verified'),
 
   ...timestamps,

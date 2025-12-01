@@ -1044,7 +1044,7 @@ table users {
   username text [unique]
   email text [unique]
   avatar text
-  phone text
+  phone text [unique]
   first_name text
   last_name text
   full_name text
@@ -1058,7 +1058,6 @@ table users {
   ban_reason text
   ban_expires "timestamp with time zone"
   two_factor_enabled boolean [default: false]
-  phone_number text [unique]
   phone_number_verified boolean
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
