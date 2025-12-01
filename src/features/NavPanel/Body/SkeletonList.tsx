@@ -5,8 +5,8 @@ import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
-export const SkeletonItem = memo<Omit<FlexboxProps, 'children'>>(
-  ({ padding = 4, height = 36, style, ...rest }) => {
+export const SkeletonItem = memo<{ avatarSize?: number } & Omit<FlexboxProps, 'children'>>(
+  ({ padding = 6, height = 36, style, avatarSize = 28, ...rest }) => {
     const theme = useTheme();
 
     return (
@@ -15,10 +15,10 @@ export const SkeletonItem = memo<Omit<FlexboxProps, 'children'>>(
           size={'small'}
           style={{
             borderRadius: theme.borderRadius,
-            height: 24,
-            maxHeight: 24,
-            maxWidth: 24,
-            minWidth: 24,
+            height: avatarSize,
+            maxHeight: avatarSize,
+            maxWidth: avatarSize,
+            minWidth: avatarSize,
             ...style,
           }}
           {...rest}

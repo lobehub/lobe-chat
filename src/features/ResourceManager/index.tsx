@@ -6,9 +6,9 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
 
+import PageExplorer from '../../app/[variants]/(main)/page/features';
+import PageEditor from '../../app/[variants]/(main)/page/features/PageEditor';
 import FileExplorer from './FileExplorer';
-import PageExplorer from './PageExplorer';
-import PageEditor from './PageExplorer/PageEditor';
 import UploadDock from './UploadDock';
 
 const ChunkDrawer = dynamic(() => import('./ChunkDrawer'), { ssr: false });

@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon } from '@lobehub/ui';
-import { FlaskConical, Github } from 'lucide-react';
+import { FlaskConical, Github, LibraryBigIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -15,7 +15,7 @@ const Footer = memo(() => {
   const { hideGitHub } = useServerConfigStore(featureFlagsSelectors);
   return (
     <Flexbox align={'center'} gap={2} horizontal justify={'space-between'} padding={8}>
-      <Flexbox align={'center'} gap={2} horizontal>
+      <Flexbox align={'center'} flex={1} gap={2} horizontal>
         {!hideGitHub && (
           <a aria-label={'GitHub'} href={GITHUB} rel="noopener noreferrer" target={'_blank'}>
             <ActionIcon icon={Github} size={16} title={'GitHub'} />
@@ -23,6 +23,11 @@ const Footer = memo(() => {
         )}
         <Link aria-label={t('labs')} to={'/labs'}>
           <ActionIcon icon={FlaskConical} size={16} title={t('labs')} />
+        </Link>
+      </Flexbox>
+      <Flexbox>
+        <Link aria-label={t('tab.resource')} to={'/resource'}>
+          <ActionIcon icon={LibraryBigIcon} size={16} title={t('tab.resource')} />
         </Link>
       </Flexbox>
     </Flexbox>

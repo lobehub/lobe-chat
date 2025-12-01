@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import DragUpload from '@/components/DragUpload';
 import { useFileStore } from '@/store/file';
 
-import PageEditorModal from '../PageExplorer/PageEditorModal';
+import PageEditorModal from '../../../app/[variants]/(main)/page/features/PageEditorModal';
 
 const hotArea = css`
   &::before {

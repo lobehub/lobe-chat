@@ -220,7 +220,7 @@ export const createDesktopRouter = () =>
               path: ':id',
             },
           ],
-          element: dynamicElement(() => import('./(main)/page/_layout/Desktop')),
+          element: dynamicElement(() => import('./(main)/page/_layout')),
           errorElement: <ErrorBoundary resetPath="/page" />,
           path: 'page',
         },

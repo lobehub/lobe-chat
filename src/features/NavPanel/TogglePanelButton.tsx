@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Tooltip } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,18 +21,17 @@ const TogglePanelButton = memo(() => {
   const { t } = useTranslation(['chat', 'hotkey']);
 
   return (
-    <Tooltip
-      hotkey={hotkey}
-      placement={'bottom'}
+    <ActionIcon
+      icon={expand ? PanelLeftClose : PanelLeftOpen}
+      id={TOGGLE_BUTTON_ID}
+      onClick={togglePanel}
+      size={DESKTOP_HEADER_ICON_SIZE}
       title={t('toggleLeftPanel.title', { ns: 'hotkey' })}
-    >
-      <ActionIcon
-        icon={expand ? PanelLeftClose : PanelLeftOpen}
-        id={TOGGLE_BUTTON_ID}
-        onClick={togglePanel}
-        size={DESKTOP_HEADER_ICON_SIZE}
-      />
-    </Tooltip>
+      tooltipProps={{
+        hotkey,
+        placement: 'bottom',
+      }}
+    />
   );
 });
 

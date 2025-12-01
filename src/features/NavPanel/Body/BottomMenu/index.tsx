@@ -1,4 +1,4 @@
-import { CompassIcon, Settings } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -7,7 +7,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import NavItem from '@/features/NavPanel/NavItem';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { SidebarTabKey } from '@/store/global/initialState';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 interface Item {
   icon: any;
@@ -17,7 +16,6 @@ interface Item {
 }
 
 const BottomMenu = memo(() => {
-  const { showMarket } = useServerConfigStore(featureFlagsSelectors);
   const tab = useActiveTabKey();
 
   const navigate = useNavigate();
@@ -26,13 +24,6 @@ const BottomMenu = memo(() => {
   const items = useMemo(
     () =>
       [
-        {
-          hidden: !showMarket,
-          icon: CompassIcon,
-          key: SidebarTabKey.Discover,
-          title: t('tab.community'),
-          url: '/discover',
-        },
         {
           icon: Settings,
           key: SidebarTabKey.Setting,
