@@ -17,6 +17,21 @@ import { FilesTabs } from '@/types/files';
 import { useFileCategory } from '../hooks/useFileCategory';
 import { useResourceManagerStore } from '../store';
 
+const EXPAND_COUNT_KEY = 'LOBE_RESOURCE_CATEGORY_EXPAND_COUNT';
+const EXPAND_THRESHOLD = 3;
+
+const getExpandCount = (): number => {
+  if (typeof window === 'undefined') return 0;
+  const count = localStorage.getItem(EXPAND_COUNT_KEY);
+  return count ? Number.parseInt(count, 10) : 0;
+};
+
+const incrementExpandCount = (): void => {
+  if (typeof window === 'undefined') return;
+  const currentCount = getExpandCount();
+  localStorage.setItem(EXPAND_COUNT_KEY, String(currentCount + 1));
+};
+
 const useStyles = createStyles(({ css, token }) => ({
   header: css`
     cursor: pointer;
@@ -41,7 +56,15 @@ const CategoryMenu = memo(() => {
   const { t } = useTranslation('file');
   const { styles, cx } = useStyles();
   const [activeKey] = useFileCategory();
-  const [showCollapsed, setShowCollapsed] = useState(activeKey !== FilesTabs.All);
+  const [showCollapsed, setShowCollapsed] = useState(() => {
+    const expandCount = getExpandCount();
+    // If user has manually expanded more than threshold times, show expanded by default
+    if (expandCount >= EXPAND_THRESHOLD) {
+      return true;
+    }
+    // Otherwise, show collapsed when on "All" tab
+    return activeKey !== FilesTabs.All;
+  });
   const navigate = useNavigate();
 
   const setMode = useResourceManagerStore((s) => s.setMode);
@@ -101,6 +124,10 @@ const CategoryMenu = memo(() => {
               icon={CaretDownFilled as any}
               onClick={(e) => {
                 e.stopPropagation();
+                // If user is manually expanding (changing from collapsed to expanded)
+                if (!showCollapsed) {
+                  incrementExpandCount();
+                }
                 setShowCollapsed(!showCollapsed);
               }}
               size={'small'}
