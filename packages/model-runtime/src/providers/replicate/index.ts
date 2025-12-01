@@ -34,6 +34,7 @@ export class LobeReplicateAI implements LobeRuntimeAI {
 
     this.client = new Replicate({
       auth: apiKey,
+      baseUrl: baseURL !== DEFAULT_BASE_URL ? baseURL : undefined,
       useFileOutput: false, // Return URLs instead of binary data
     });
 
@@ -125,13 +126,34 @@ export class LobeReplicateAI implements LobeRuntimeAI {
         }
 
         // Check if URL is accessible from internet or local
-        const isLocalUrl =
-          imageUrl.includes('localhost') ||
-          imageUrl.includes('127.0.0.1') ||
-          imageUrl.includes('.local') ||
-          imageUrl.startsWith('http://192.168.') ||
-          imageUrl.startsWith('http://10.') ||
-          imageUrl.startsWith('http://172.');
+        // Parse via URL and classify by hostname so it works for any scheme (http, https, etc.)
+        let isLocalUrl = false;
+        try {
+          const parsedUrl = new URL(imageUrl);
+          const hostname = parsedUrl.hostname;
+
+          const isLoopbackHost =
+            hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+
+          const isPrivate10Range = hostname.startsWith('10.');
+          const isPrivate192Range = hostname.startsWith('192.168.');
+
+          // 172.16.0.0 – 172.31.255.255
+          const isPrivate172Range = /^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
+
+          const isLocalTld = hostname.endsWith('.local');
+
+          isLocalUrl =
+            isLoopbackHost ||
+            isPrivate10Range ||
+            isPrivate172Range ||
+            isPrivate192Range ||
+            isLocalTld;
+        } catch {
+          // If the URL cannot be parsed as an absolute URL, treat it as local/untrusted
+          // to ensure we take the SSRF-safe path.
+          isLocalUrl = true;
+        }
 
         if (isLocalUrl) {
           this.debugLog(
@@ -187,7 +209,7 @@ export class LobeReplicateAI implements LobeRuntimeAI {
         // Use explicit aspectRatio if provided (for Redux models)
         if (aspectRatio) {
           input.aspect_ratio = aspectRatio;
-          console.log('[Replicate createImage] Set aspect_ratio from param:', aspectRatio);
+          this.debugLog('[Replicate createImage] Set aspect_ratio from param:', aspectRatio);
         } else if (width && height) {
           if (width === height) {
             input.aspect_ratio = '1:1';
@@ -291,24 +313,52 @@ export class LobeReplicateAI implements LobeRuntimeAI {
   }
 
   /**
-   * Image models supported for the initial Replicate integration
+   * Fetch image generation models from Replicate using search API
+   * Uses targeted searches for relevant model categories instead of listing all public models
    */
   async models() {
     try {
-      const modelList: Array<{ created?: number; displayName?: string; id: string }> = [];
+      const modelMap = new Map<string, { created?: number; displayName?: string; id: string }>();
 
-      // Use paginate to collect all public models accessible with the current token
-      for await (const models of this.client.paginate(() => this.client.models.list())) {
-        models.forEach((model) => {
-          modelList.push({
-            created: model.latest_version
-              ? new Date(model.latest_version.created_at).getTime()
-              : undefined,
-            displayName: model.name,
-            id: `${model.owner}/${model.name}`,
-          });
-        });
+      // Search queries for different image model categories
+      const searchQueries = [
+        'flux image generation',
+        'stable diffusion',
+        'sdxl',
+        'ideogram',
+        'image to image',
+        'text to image',
+      ];
+
+      // Search for each category and collect unique models
+      for (const query of searchQueries) {
+        try {
+          // Use paginate for search results (limited results per query)
+          for await (const models of this.client.paginate(() => this.client.models.search(query))) {
+            for (const model of models) {
+              const modelId = `${model.owner}/${model.name}`;
+              // Deduplicate by model ID
+              if (!modelMap.has(modelId)) {
+                modelMap.set(modelId, {
+                  created: model.latest_version
+                    ? new Date(model.latest_version.created_at).getTime()
+                    : undefined,
+                  displayName: model.name,
+                  id: modelId,
+                });
+              }
+            }
+            // Limit to first page of results per query to avoid too many results
+            break;
+          }
+        } catch {
+          // Continue with other searches if one fails
+          this.debugLog(`[Replicate models] Search failed for query: ${query}`);
+        }
       }
+
+      const modelList = [...modelMap.values()];
+      this.debugLog(`[Replicate models] Found ${modelList.length} unique models`);
 
       return processModelList(modelList, MODEL_LIST_CONFIGS.replicate, 'replicate');
     } catch (error) {
