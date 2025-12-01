@@ -1,3 +1,4 @@
+import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -107,7 +108,11 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ category, knowledgeBaseI
         onClick={() => isRootClickable && handleNavigate(null)}
         style={{ cursor: isRootClickable ? 'pointer' : 'default' }}
       >
-        {knowledgeBaseName || 'Knowledge Base'}
+        {knowledgeBaseName ? (
+          knowledgeBaseName
+        ) : (
+          <Skeleton.Input active size="small" style={{ height: 14, minWidth: 80, width: 80 }} />
+        )}
       </span>
 
       {folderChain.map((folder: FolderCrumb, index: number) => {
