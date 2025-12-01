@@ -160,6 +160,7 @@ export class DocumentService {
       content?: string;
       editorData?: Record<string, any>;
       metadata?: Record<string, any>;
+      parentId?: string;
       title?: string;
     },
   ) {
@@ -184,13 +185,20 @@ export class DocumentService {
       updates.metadata = params.metadata;
     }
 
+    if (params.parentId !== undefined) {
+      updates.parentId = params.parentId;
+    }
+
     const result = await this.documentModel.update(id, updates);
 
     // If title was updated and this document has an associated file, update the file name too
-    if (params.title !== undefined) {
+    if (params.title !== undefined || params.parentId !== undefined) {
       const document = await this.documentModel.findById(id);
       if (document?.fileId) {
-        await this.fileModel.update(document.fileId, { name: params.title });
+        const fileUpdates: any = {};
+        if (params.title !== undefined) fileUpdates.name = params.title;
+        if (params.parentId !== undefined) fileUpdates.parentId = params.parentId;
+        await this.fileModel.update(document.fileId, fileUpdates);
       }
     }
 

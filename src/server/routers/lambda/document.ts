@@ -116,6 +116,7 @@ export const documentRouter = router({
         editorData: z.string().optional(),
         id: z.string(),
         metadata: z.record(z.any()).optional(),
+        parentId: z.string().optional(),
         rawData: z.string().optional(),
         title: z.string().optional(),
       }),
