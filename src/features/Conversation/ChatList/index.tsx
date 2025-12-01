@@ -63,8 +63,13 @@ const ChatList = memo<ChatListProps>(({ actionsBar, mobile = false, welcome, ite
   const displayMessageIds = useConversationStore(dataSelectors.displayMessageIds);
 
   const defaultItemContent = useCallback(
-    (index: number, id: string) => <MessageItem actionsBar={actionsBar} id={id} index={index} />,
-    [actionsBar],
+    (index: number, id: string) => {
+      const isLatestItem = displayMessageIds.length === index + 1;
+      return (
+        <MessageItem actionsBar={actionsBar} id={id} index={index} isLatestItem={isLatestItem} />
+      );
+    },
+    [actionsBar, displayMessageIds.length],
   );
 
   if (!messagesInit) {
