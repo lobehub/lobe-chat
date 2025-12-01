@@ -198,6 +198,7 @@ export default {
     delAndRegenerate: '删除并重新生成',
     deleteDisabledByThreads: '存在子话题，不能删除',
     expand: '展开消息',
+    reaction: '添加表情',
     regenerate: '重新生成',
   },
 
@@ -289,6 +290,10 @@ export default {
         regenerate: '重新生成 Query',
       },
     },
+  },
+
+  reaction: {
+    more: '更多表情',
   },
 
   regenerate: '重新生成',

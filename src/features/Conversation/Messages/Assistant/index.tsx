@@ -23,6 +23,7 @@ import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { markdownElements } from '../../MarkdownElements';
 import { MessageContent } from '../../components/ChatItem';
+import { ReactionDisplay } from '../../components/Reaction';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import type { MessageActionsConfig } from '../../types';
@@ -293,6 +294,29 @@ const AssistantMessage = memo<AssistantMessageProps>(
 
     const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, index, role });
 
+    // Reaction handlers
+    const addReaction = useConversationStore((s) => s.addReaction);
+    const removeReaction = useConversationStore((s) => s.removeReaction);
+
+    const handleReactionClick = useCallback(
+      (emoji: string) => {
+        const hasReacted = metadata?.reactions?.[emoji]?.users.includes('user');
+        if (hasReacted) {
+          removeReaction(id, emoji);
+        } else {
+          addReaction(id, emoji);
+        }
+      },
+      [id, metadata?.reactions, addReaction, removeReaction],
+    );
+
+    const isReactionActive = useCallback(
+      (emoji: string) => {
+        return metadata?.reactions?.[emoji]?.users.includes('user') ?? false;
+      },
+      [metadata?.reactions],
+    );
+
     const renderMessage = useCallback(
       (editableContent: ReactNode) => (
         <AssistantMessageBody
@@ -374,6 +398,13 @@ const AssistantMessage = memo<AssistantMessageProps>(
                 variant={variant}
               />
             )}
+            {metadata?.reactions && Object.keys(metadata.reactions).length > 0 && (
+              <ReactionDisplay
+                isActive={isReactionActive}
+                onReactionClick={handleReactionClick}
+                reactions={metadata.reactions}
+              />
+            )}
           </Flexbox>
           {!disableEditing && !editing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
@@ -382,6 +413,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
                 data={item}
                 id={id}
                 index={index}
+                onReactionSelect={addReaction}
               />
             </Flexbox>
           )}
