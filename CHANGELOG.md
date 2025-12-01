@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.140](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.139...v2.0.0-next.140)
+
+<sup>Released on **2025-12-01**</sup>
+
+#### ✨ Features
+
+- **misc**: Integrate better-auth admin plugin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Integrate better-auth admin plugin, closes [#10512](https://github.com/lobehub/lobe-chat/issues/10512) ([3be78f0](https://github.com/lobehub/lobe-chat/commit/3be78f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.139](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.138...v2.0.0-next.139)
 
 <sup>Released on **2025-12-01**</sup>
