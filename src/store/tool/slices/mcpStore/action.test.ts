@@ -908,7 +908,26 @@ describe('mcpStore actions', () => {
 
         const mockManifestWithCloudEndpoint = {
           ...mockManifest,
-          cloudEndPoint: 'https://cloud.example.com/mcp-stdio',
+          cloudEndPoint: true,
+          tools: [
+            {
+              name: 'testTool',
+              description: 'Test tool description',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  param: { type: 'string' },
+                },
+              },
+            },
+          ],
+          author: 'Test Author',
+          createdAt: '2024-01-01T00:00:00Z',
+          homepage: 'https://example.com',
+          manifestUrl: 'https://example.com/manifest.json',
+          icon: 'https://example.com/icon.png',
+          description: 'Test description',
+          tags: ['test'],
           deploymentOptions: [
             {
               connection: {
@@ -933,9 +952,15 @@ describe('mcpStore actions', () => {
         const originalIsDesktop = (await import('@lobechat/const')).isDesktop;
         vi.spyOn(await import('@lobechat/const'), 'isDesktop', 'get').mockReturnValue(false);
 
+        // Create plugin with haveCloudEndpoint field
+        const mockPluginWithCloudEndpoint = {
+          ...mockPlugin,
+          haveCloudEndpoint: true,
+        } as any;
+
         act(() => {
           useToolStore.setState({
-            mcpPluginItems: [mockPlugin],
+            mcpPluginItems: [mockPluginWithCloudEndpoint],
           });
         });
 
@@ -954,7 +979,7 @@ describe('mcpStore actions', () => {
             customParams: expect.objectContaining({
               mcp: expect.objectContaining({
                 type: 'cloud',
-                cloudEndPoint: 'https://cloud.example.com/mcp-stdio',
+                cloudEndPoint: true,
               }),
             }),
           }),
