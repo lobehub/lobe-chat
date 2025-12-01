@@ -285,10 +285,18 @@ export const messageCRUDSlice: StateCreator<
     internal_dispatchMessage({ ids, type: 'deleteMessages' });
 
     // Persist to database
-    const result = await messageService.removeMessages(ids, {
-      agentId,
-      topicId: topicId ?? undefined,
-    });
+    // Use removeMessage for single message to properly handle parentId chain
+    // Use removeMessages for batch deletion (e.g., assistantGroup with children)
+    const result =
+      ids.length === 1
+        ? await messageService.removeMessage(ids[0], {
+            agentId,
+            topicId: topicId ?? undefined,
+          })
+        : await messageService.removeMessages(ids, {
+            agentId,
+            topicId: topicId ?? undefined,
+          });
 
     if (result?.success && result.messages) {
       replaceMessages(result.messages);

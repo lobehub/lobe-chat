@@ -122,8 +122,9 @@ describe('Message CRUD Actions', () => {
 
   describe('deleteMessage', () => {
     it('should delete a message', async () => {
-      const removeMessagesSpy = vi
-        .spyOn(messageServiceModule.messageService, 'removeMessages')
+      // Use removeMessage for single message deletion
+      const removeMessageSpy = vi
+        .spyOn(messageServiceModule.messageService, 'removeMessage')
         .mockResolvedValue({
           success: true,
           messages: [],
@@ -149,7 +150,7 @@ describe('Message CRUD Actions', () => {
 
       await store.getState().deleteMessage('msg-1');
 
-      expect(removeMessagesSpy).toHaveBeenCalledWith(['msg-1'], {
+      expect(removeMessageSpy).toHaveBeenCalledWith('msg-1', {
         agentId: 'test-session',
         topicId: undefined,
       });
@@ -202,6 +203,60 @@ describe('Message CRUD Actions', () => {
         ['group-1', 'child-1', 'tool-result-1'],
         expect.any(Object),
       );
+    });
+
+    it('should use removeMessage for single id and removeMessages for multiple ids', async () => {
+      const removeMessageSpy = vi
+        .spyOn(messageServiceModule.messageService, 'removeMessage')
+        .mockResolvedValue({ success: true, messages: [] });
+      const removeMessagesSpy = vi
+        .spyOn(messageServiceModule.messageService, 'removeMessages')
+        .mockResolvedValue({ success: true, messages: [] });
+
+      const store = createTestStore();
+
+      // Test single message - should use removeMessage
+      const singleMessage = {
+        id: 'single-1',
+        content: 'Single',
+        role: 'user' as const,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        meta: {},
+      };
+
+      act(() => {
+        store.getState().replaceMessages([singleMessage]);
+      });
+
+      await store.getState().deleteMessage('single-1');
+
+      expect(removeMessageSpy).toHaveBeenCalledWith('single-1', expect.any(Object));
+      expect(removeMessagesSpy).not.toHaveBeenCalled();
+
+      // Reset spies
+      removeMessageSpy.mockClear();
+      removeMessagesSpy.mockClear();
+
+      // Test assistantGroup - should use removeMessages
+      const groupMessage: UIChatMessage = {
+        id: 'group-1',
+        content: '',
+        role: 'assistantGroup',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        meta: {},
+        children: [{ id: 'child-1', content: 'Response' }],
+      };
+
+      act(() => {
+        store.getState().replaceMessages([groupMessage]);
+      });
+
+      await store.getState().deleteMessage('group-1');
+
+      expect(removeMessagesSpy).toHaveBeenCalledWith(['group-1', 'child-1'], expect.any(Object));
+      expect(removeMessageSpy).not.toHaveBeenCalled();
     });
 
     it('should do nothing if message not found', async () => {
