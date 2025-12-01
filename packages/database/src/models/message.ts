@@ -32,6 +32,7 @@ import {
   isNull,
   like,
   lte,
+  not,
   or,
   sql,
 } from 'drizzle-orm';
@@ -867,7 +868,14 @@ export class MessageModel {
       // If the message to be deleted is not found, return directly
       if (message.length === 0) return;
 
-      // 2. Check if the message contains tools
+      // 2. Update child messages' parentId to the current message's parentId
+      // This preserves the tree structure when deleting a node
+      await tx
+        .update(messages)
+        .set({ parentId: message[0].parentId })
+        .where(and(eq(messages.parentId, id), eq(messages.userId, this.userId)));
+
+      // 3. Check if the message contains tools
       const toolCallIds = (message[0].tools as ChatToolPayload[])
         ?.map((tool) => tool.id)
         .filter(Boolean);
@@ -875,7 +883,7 @@ export class MessageModel {
       let relatedMessageIds: string[] = [];
 
       if (toolCallIds?.length > 0) {
-        // 3. If the message contains tools, query all associated message ids
+        // 4. If the message contains tools, query all associated message ids
         const res = await tx
           .select({ id: messagePlugins.id })
           .from(messagePlugins)
@@ -884,18 +892,88 @@ export class MessageModel {
         relatedMessageIds = res.map((row) => row.id);
       }
 
-      // 4. Merge the list of message ids to be deleted
+      // 5. Merge the list of message ids to be deleted
       const messageIdsToDelete = [id, ...relatedMessageIds];
 
-      // 5. Delete all related messages
-      await tx.delete(messages).where(inArray(messages.id, messageIdsToDelete));
+      // 6. Delete all related messages
+      await tx
+        .delete(messages)
+        .where(and(eq(messages.userId, this.userId), inArray(messages.id, messageIdsToDelete)));
     });
   };
 
-  deleteMessages = async (ids: string[]) =>
-    this.db
-      .delete(messages)
-      .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
+  deleteMessages = async (ids: string[]) => {
+    if (ids.length === 0) return;
+
+    return this.db.transaction(async (tx) => {
+      // 1. Query all messages to be deleted with their parentId
+      const toDelete = await tx
+        .select({ id: messages.id, parentId: messages.parentId })
+        .from(messages)
+        .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
+
+      if (toDelete.length === 0) return;
+
+      // 2. Build id -> parentId map and deleteSet
+      const parentMap = new Map<string, string | null>();
+      const deleteSet = new Set<string>();
+      for (const msg of toDelete) {
+        parentMap.set(msg.id, msg.parentId);
+        deleteSet.add(msg.id);
+      }
+
+      // 3. Find the final ancestor for each deleted message (first ancestor not in deleteSet)
+      const finalAncestorMap = new Map<string, string | null>();
+
+      const findFinalAncestor = (id: string): string | null => {
+        if (finalAncestorMap.has(id)) return finalAncestorMap.get(id)!;
+
+        const parentId = parentMap.get(id);
+        if (parentId === null || parentId === undefined) {
+          finalAncestorMap.set(id, null);
+          return null;
+        }
+
+        if (!deleteSet.has(parentId)) {
+          // Parent is not being deleted, it's the final ancestor
+          finalAncestorMap.set(id, parentId);
+          return parentId;
+        }
+
+        // Parent is also being deleted, recursively find its ancestor
+        const ancestor = findFinalAncestor(parentId);
+        finalAncestorMap.set(id, ancestor);
+        return ancestor;
+      };
+
+      for (const id of deleteSet) {
+        findFinalAncestor(id);
+      }
+
+      // 4. Query child messages whose parentId points to messages being deleted
+      const children = await tx
+        .select({ id: messages.id, parentId: messages.parentId })
+        .from(messages)
+        .where(
+          and(
+            eq(messages.userId, this.userId),
+            inArray(messages.parentId, ids),
+            not(inArray(messages.id, ids)),
+          ),
+        );
+
+      // 5. Update each child's parentId to the final ancestor
+      for (const child of children) {
+        const newParentId = finalAncestorMap.get(child.parentId!) ?? null;
+        await tx.update(messages).set({ parentId: newParentId }).where(eq(messages.id, child.id));
+      }
+
+      // 6. Delete the messages
+      await tx
+        .delete(messages)
+        .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
+    });
+  };
 
   deleteMessageTranslate = async (id: string) =>
     this.db

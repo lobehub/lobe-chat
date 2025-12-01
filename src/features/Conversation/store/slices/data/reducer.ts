@@ -258,9 +258,52 @@ export const messagesReducer = (
 
     case 'deleteMessages': {
       const { ids } = payload;
-      const idsSet = new Set(ids);
+      const deleteSet = new Set(ids);
 
-      return state.filter((m) => !idsSet.has(m.id));
+      // Build parentId map for messages being deleted
+      const parentMap = new Map<string, string | null | undefined>();
+      for (const msg of state) {
+        if (deleteSet.has(msg.id)) {
+          parentMap.set(msg.id, msg.parentId);
+        }
+      }
+
+      // Find final ancestor (first ancestor not in deleteSet)
+      const finalAncestorMap = new Map<string, string | null | undefined>();
+      const findFinalAncestor = (id: string): string | null | undefined => {
+        if (finalAncestorMap.has(id)) return finalAncestorMap.get(id);
+
+        const parentId = parentMap.get(id);
+        if (parentId === null || parentId === undefined) {
+          finalAncestorMap.set(id, parentId);
+          return parentId;
+        }
+
+        if (!deleteSet.has(parentId)) {
+          finalAncestorMap.set(id, parentId);
+          return parentId;
+        }
+
+        const ancestor = findFinalAncestor(parentId);
+        finalAncestorMap.set(id, ancestor);
+        return ancestor;
+      };
+
+      for (const id of deleteSet) {
+        findFinalAncestor(id);
+      }
+
+      // Filter deleted messages and update parentId for remaining messages
+      return state
+        .filter((msg) => !deleteSet.has(msg.id))
+        .map((msg) => {
+          if (msg.parentId && deleteSet.has(msg.parentId)) {
+            const newParentId = finalAncestorMap.get(msg.parentId);
+            // Convert null to undefined to match UIChatMessage type
+            return { ...msg, parentId: newParentId ?? undefined };
+          }
+          return msg;
+        });
     }
 
     default: {
