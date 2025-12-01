@@ -3,7 +3,7 @@ import { memo } from 'react';
 import WideScreenButton from '@/app/[variants]/(main)/chat/features/WideScreenButton';
 import NavHeader from '@/features/NavHeader';
 
-import SmartAgentActionButton from './AgentPublishButton';
+import AgentPublishButton from './AgentPublishButton';
 import AutoSaveHint from './AutoSaveHint';
 
 const Header = memo(() => {
@@ -13,7 +13,7 @@ const Header = memo(() => {
       right={
         <>
           <WideScreenButton />
-          <SmartAgentActionButton />
+          <AgentPublishButton />
         </>
       }
     />
