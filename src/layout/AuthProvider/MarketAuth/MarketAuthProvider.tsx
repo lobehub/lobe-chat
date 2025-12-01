@@ -321,9 +321,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       throw new MarketAuthError('oidcNotReady', { message: 'OIDC client not initialized' });
     }
 
-    // 显示加载提示
-    const loadingMessage = message.loading(t('messages.loading'), 0);
-
     try {
       setStatus('loading');
 
@@ -371,18 +368,9 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       setSession(newSession);
       setStatus('authenticated');
 
-      // 关闭加载提示并显示成功消息
-      loadingMessage();
-      message.success(t('messages.authorized'));
-
-      console.log('[MarketAuth] Sign in completed successfully');
       return userInfo?.accountId ?? null;
     } catch (error) {
-      console.error('[MarketAuth] Sign in failed:', error);
       setStatus('unauthenticated');
-
-      // 关闭加载提示并显示错误消息
-      loadingMessage();
 
       // 根据错误类型显示不同的错误消息
       if (error instanceof MarketAuthError) {

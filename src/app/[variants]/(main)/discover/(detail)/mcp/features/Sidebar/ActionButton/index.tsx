@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { Trash2Icon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -24,7 +24,6 @@ const useStyles = createStyles(({ css }) => ({
 
 const ActionButton = memo(() => {
   const { t } = useTranslation(['discover', 'plugin']);
-  const { t: tMarketAuth } = useTranslation('marketAuth');
   const detailContext = useDetailContext();
   const { identifier, haveCloudEndpoint } = detailContext;
   const { styles } = useStyles();
@@ -45,16 +44,9 @@ const ActionButton = memo(() => {
 
     // If this is a cloud MCP and user is not authenticated, request authorization first
     if (isCloudMcp && !isAuthenticated) {
-      console.log(
-        '[MCPActionButton] Cloud MCP detected, user not authenticated, starting authorization',
-      );
-
       try {
-        message.loading({ content: tMarketAuth('messages.loading'), key: 'market-auth' });
         await signIn();
-        console.log('[MCPActionButton] Authorization successful, proceeding with installation');
-      } catch (error) {
-        console.error('[MCPActionButton] Authorization failed:', error);
+      } catch {
         return; // Don't proceed with installation if auth fails
       }
     }
