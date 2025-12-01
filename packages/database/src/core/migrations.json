@@ -890,5 +890,16 @@
     "bps": true,
     "folderMillis": 1764579351312,
     "hash": "22fb7a65764b1f3e3c1ae2ce95d448685e6a01d1fb2f8c3f925c655f0824c161"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"users\" DROP CONSTRAINT IF EXISTS \"users_phone_number_unique\";",
+      "\nALTER TABLE \"users\" DROP COLUMN IF EXISTS \"phone_number\";",
+      "\nALTER TABLE \"users\" DROP CONSTRAINT IF EXISTS \"users_phone_unique\";",
+      "\nALTER TABLE \"users\" ADD CONSTRAINT \"users_phone_unique\" UNIQUE(\"phone\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764583392443,
+    "hash": "6a43d90ee1d2e1e008d1b8206f227aa05b9a2e2a8fc8c31ec608a3716c716a6c"
   }
 ]

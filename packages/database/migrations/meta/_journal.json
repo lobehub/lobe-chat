@@ -385,6 +385,13 @@
       "when": 1764579351312,
       "tag": "0054_better_auth_two_factor",
       "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "7",
+      "when": 1764583392443,
+      "tag": "0055_rename_phone_number_to_phone",
+      "breakpoints": true
     }
   ],
   "version": "6"
