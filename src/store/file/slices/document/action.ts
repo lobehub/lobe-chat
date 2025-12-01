@@ -1,3 +1,4 @@
+import { createNanoId } from '@lobechat/utils';
 import { StateCreator } from 'zustand/vanilla';
 
 import { documentService } from '@/services/document';
@@ -109,14 +110,9 @@ export const createDocumentSlice: StateCreator<
   createFolder: async (name, parentId, knowledgeBaseId) => {
     const now = Date.now();
 
-    // Generate slug from folder name
-    const slug = name
-      .toLowerCase()
-      .trim()
-      .replaceAll(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
-      .replaceAll(/[^\w-]+/g, '') // Remove all non-word chars except hyphens
-      .replaceAll(/--+/g, '-') // Replace multiple hyphens with single hyphen
-      .replaceAll(/^-+|-+$/g, ''); // Trim hyphens from start and end
+    // Generate random 8-character slug (A-Z, a-z, 0-9)
+    const generateSlug = createNanoId(8);
+    const slug = generateSlug();
 
     const folder = await documentService.createDocument({
       content: '',
@@ -127,7 +123,7 @@ export const createDocumentSlice: StateCreator<
         createdAt: now,
       },
       parentId,
-      slug: slug || undefined, // Only include slug if it's not empty
+      slug,
       title: name,
     });
 

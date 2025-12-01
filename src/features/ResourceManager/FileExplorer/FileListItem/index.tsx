@@ -235,7 +235,16 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 navigate(`/resource/library/${baseKnowledgeBaseId}/${folderSlug}`);
               }
             } else if (isNote) {
+              setCurrentViewItemId(id);
               setMode('page');
+              setSearchParams(
+                (prev) => {
+                  const newParams = new URLSearchParams(prev);
+                  newParams.set('file', id);
+                  return newParams;
+                },
+                { replace: true },
+              );
             } else {
               // Set mode to file and store the file ID
               setCurrentViewItemId(id);

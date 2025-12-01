@@ -38,7 +38,7 @@ const Nav = memo(() => {
         icon: FilePenIcon,
         key: SidebarTabKey.Pages,
         title: t('tab.pages'),
-        url: '/pages',
+        url: '/page',
       },
       {
         hidden: !showMarket,

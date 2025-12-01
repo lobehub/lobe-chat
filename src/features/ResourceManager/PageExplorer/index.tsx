@@ -88,7 +88,6 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   useFileStore((s) => s.localDocumentMap);
   useFileStore((s) => s.documents);
 
-  // Fetch documents on mount
   useEffect(() => {
     fetchDocuments();
   }, [fetchDocuments]);

@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
 
 import FileExplorer from './FileExplorer';
-import DocumentExplorer from './PageExplorer';
+import PageExplorer from './PageExplorer';
 import PageEditor from './PageExplorer/PageEditor';
 import UploadDock from './UploadDock';
 
@@ -27,21 +27,20 @@ interface KnowledgeManagerProps {
 /**
  * Manage knowledge items. Can be all items or certian repo.
  *
- * DocumentExplorer: For the "pages" category.
- * Home: For the "home" category.
+ * PageExplorer: For the "pages" category.
  * FileExplorer: For other categories.
  */
 const ResourceManager = memo<KnowledgeManagerProps>(
   ({ knowledgeBaseId, category, onOpenFile, documentId }) => {
-    const mode = useResourceManagerStore((s) => s.mode);
+    const [mode, currentViewItemId] = useResourceManagerStore((s) => [s.mode, s.currentViewItemId]);
 
     const MainContent = useMemo(() => {
       switch (mode) {
         case 'page': {
-          return <PageEditor documentId={documentId} knowledgeBaseId={knowledgeBaseId} />;
+          return <PageEditor documentId={currentViewItemId} knowledgeBaseId={knowledgeBaseId} />;
         }
         case 'pages': {
-          return <DocumentExplorer documentId={documentId} knowledgeBaseId={knowledgeBaseId} />;
+          return <PageExplorer documentId={currentViewItemId} knowledgeBaseId={knowledgeBaseId} />;
         }
         case 'files':
         case 'file': {
