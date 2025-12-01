@@ -12,9 +12,6 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     align-self: center;
-
-    /* Leave some space for the minimap */
-    padding-inline: 12px;
     transition: width 0.25s ${token.motionEaseInOut};
   `,
 }));
@@ -36,6 +33,7 @@ const WideScreenContainer = memo<WideScreenContainerProps>(
       <Flexbox width={'100%'}>
         <Flexbox
           className={cx(styles.container, className)}
+          paddingInline={16}
           width={wideScreen ? '100%' : `min(${CONVERSATION_MIN_WIDTH}px, 100%)`}
           {...rest}
         >

@@ -7,6 +7,7 @@ import { PropsWithChildren, ReactNode, memo, useLayoutEffect, useSyncExternalSto
 
 import { TOGGLE_BUTTON_ID } from '@/features/NavPanel/TogglePanelButton';
 
+import Content from './Content';
 import { USER_DROPDOWN_ICON_ID } from './Header/components/User';
 import { useNavPanel } from './hooks/useNavPanel';
 
@@ -79,6 +80,9 @@ const NavPanel = memo(() => {
     getNavPanelSnapshot,
   );
 
+  // Use home Content as fallback when no portal content is provided
+  const activeContent = panelContent || { key: 'home', node: <Content /> };
+
   return (
     <DraggablePanel
       className={styles.panel}
@@ -93,35 +97,33 @@ const NavPanel = memo(() => {
     >
       <div style={{ height: '100%', minWidth: 240, overflow: 'hidden', position: 'relative' }}>
         <AnimatePresence initial={false} mode="popLayout">
-          {panelContent && (
-            <motion.div
-              animate={{ opacity: 1, x: 0 }}
-              exit={{
-                opacity: 0,
-                position: 'absolute',
-                x: panelContent.key === 'home' ? '-20%' : '20%',
-              }}
-              initial={{
-                opacity: 0,
-                x: panelContent.key === 'home' ? '-20%' : '20%',
-              }}
-              key={panelContent.key}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                inset: 0,
-                position: 'absolute',
-                width: '100%',
-              }}
-              transition={{
-                duration: 0.4,
-                ease: [0.4, 0, 0.2, 1],
-              }}
-            >
-              {panelContent.node}
-            </motion.div>
-          )}
+          <motion.div
+            animate={{ opacity: 1, x: 0 }}
+            exit={{
+              opacity: 0,
+              position: 'absolute',
+              x: activeContent.key === 'home' ? '-20%' : '20%',
+            }}
+            initial={{
+              opacity: 0,
+              x: activeContent.key === 'home' ? '-20%' : '20%',
+            }}
+            key={activeContent.key}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              inset: 0,
+              position: 'absolute',
+              width: '100%',
+            }}
+            transition={{
+              duration: 0.4,
+              ease: [0.4, 0, 0.2, 1],
+            }}
+          >
+            {activeContent.node}
+          </motion.div>
         </AnimatePresence>
       </div>
     </DraggablePanel>

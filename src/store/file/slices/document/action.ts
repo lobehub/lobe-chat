@@ -13,6 +13,11 @@ const ALLOWED_DOCUMENT_SOURCE_TYPES = new Set(['editor', 'file', 'api']);
 const ALLOWED_DOCUMENT_FILE_TYPES = new Set(['custom/document', 'application/pdf']);
 const EDITOR_DOCUMENT_FILE_TYPE = 'custom/document';
 
+const updateUrl = (docId: string | null) => {
+  const newPath = docId ? `/pages/${docId}` : '/pages';
+  window.history.replaceState({}, '', newPath);
+};
+
 /**
  * Check if a page should be displayed in the page list
  */
@@ -40,10 +45,18 @@ export interface DocumentAction {
    */
   createFolder: (name: string, parentId?: string, knowledgeBaseId?: string) => Promise<string>;
   /**
+   * Create a new page with optimistic update (for page explorer)
+   */
+  createNewPage: (title: string) => Promise<void>;
+  /**
    * Create a new optimistic document immediately in local map
    * Returns the temporary ID for the new document
    */
   createOptimisticDocument: (title?: string) => string;
+  /**
+   * Delete a page and update selection if needed
+   */
+  deletePage: (documentId: string) => Promise<void>;
   /**
    * Duplicate an existing document
    * Returns the created document
@@ -66,9 +79,29 @@ export interface DocumentAction {
    */
   removeTempDocument: (tempId: string) => void;
   /**
+   * Rename a page
+   */
+  renamePage: (documentId: string, title: string, emoji?: string) => Promise<void>;
+  /**
    * Replace a temp document with real document data (for smooth UX when creating documents)
    */
   replaceTempDocumentWithReal: (tempId: string, realDocument: LobeDocument) => void;
+  /**
+   * Select or deselect a page
+   */
+  selectPage: (documentId: string) => void;
+  /**
+   * Set the ID of the page being renamed
+   */
+  setRenamingPageId: (pageId: string | null) => void;
+  /**
+   * Set search keywords
+   */
+  setSearchKeywords: (keywords: string) => void;
+  /**
+   * Set selected page ID (used for external navigation)
+   */
+  setSelectedPageId: (pageId: string | null, updateHistory?: boolean) => void;
   /**
    * Update document directly (no optimistic update)
    */
@@ -136,6 +169,55 @@ export const createDocumentSlice: StateCreator<
     return folder.id;
   },
 
+  // Page explorer actions
+  createNewPage: async (title: string) => {
+    const { createOptimisticDocument, createDocument, replaceTempDocumentWithReal } = get();
+
+    // Create optimistic page immediately
+    const tempPageId = createOptimisticDocument(title);
+    set({ isCreatingNew: true, selectedPageId: tempPageId }, false, n('createNewPage/start'));
+
+    updateUrl(tempPageId);
+
+    try {
+      // Create real page
+      const newPage = await createDocument({
+        content: '',
+        title,
+      });
+
+      // Convert to LobeDocument
+      const realPage: LobeDocument = {
+        content: newPage.content || '',
+        createdAt: newPage.createdAt ? new Date(newPage.createdAt) : new Date(),
+        editorData:
+          typeof newPage.editorData === 'string'
+            ? JSON.parse(newPage.editorData)
+            : newPage.editorData || null,
+        fileType: 'custom/document',
+        filename: newPage.title || title,
+        id: newPage.id,
+        metadata: newPage.metadata || {},
+        source: 'document',
+        sourceType: DocumentSourceType.EDITOR,
+        title: newPage.title || title,
+        totalCharCount: newPage.content?.length || 0,
+        totalLineCount: 0,
+        updatedAt: newPage.updatedAt ? new Date(newPage.updatedAt) : new Date(),
+      };
+
+      // Replace optimistic with real
+      replaceTempDocumentWithReal(tempPageId, realPage);
+      set({ isCreatingNew: false, selectedPageId: newPage.id }, false, n('createNewPage/success'));
+      updateUrl(newPage.id);
+    } catch (error) {
+      console.error('Failed to create page:', error);
+      get().removeTempDocument(tempPageId);
+      set({ isCreatingNew: false, selectedPageId: null }, false, n('createNewPage/error'));
+      updateUrl(null);
+    }
+  },
+
   createOptimisticDocument: (title = 'Untitled') => {
     const { localDocumentMap } = get();
 
@@ -165,6 +247,19 @@ export const createDocumentSlice: StateCreator<
     set({ localDocumentMap: newMap }, false, n('createOptimisticDocument'));
 
     return tempId;
+  },
+
+  deletePage: async (documentId: string) => {
+    const { selectedPageId } = get();
+
+    if (selectedPageId === documentId) {
+      const updateUrl = (docId: string | null) => {
+        const newPath = docId ? `/pages/${docId}` : '/pages';
+        window.history.replaceState({}, '', newPath);
+      };
+      set({ isCreatingNew: false, selectedPageId: null }, false, n('deletePage'));
+      updateUrl(null);
+    }
   },
 
   duplicateDocument: async (documentId) => {
@@ -310,6 +405,21 @@ export const createDocumentSlice: StateCreator<
     set({ localDocumentMap: newMap }, false, n('removeTempDocument'));
   },
 
+  renamePage: async (documentId: string, title: string, emoji?: string) => {
+    const { updateDocumentOptimistically } = get();
+
+    try {
+      await updateDocumentOptimistically(documentId, {
+        metadata: { emoji },
+        title,
+      });
+    } catch (error) {
+      console.error('Failed to rename page:', error);
+    } finally {
+      set({ renamingPageId: null }, false, n('renamePage'));
+    }
+  },
+
   replaceTempDocumentWithReal: (tempId, realPage) => {
     const { localDocumentMap } = get();
     const newMap = new Map(localDocumentMap);
@@ -321,6 +431,36 @@ export const createDocumentSlice: StateCreator<
     newMap.set(realPage.id, realPage);
 
     set({ localDocumentMap: newMap }, false, n('replaceTempDocumentWithReal'));
+  },
+
+  selectPage: (documentId: string) => {
+    const { selectedPageId } = get();
+
+    if (selectedPageId === documentId) {
+      // Deselect
+      set({ isCreatingNew: false, selectedPageId: null }, false, n('selectPage/deselect'));
+      updateUrl(null);
+    } else {
+      // Select
+      set({ isCreatingNew: false, selectedPageId: documentId }, false, n('selectPage/select'));
+      updateUrl(documentId);
+    }
+  },
+
+  setRenamingPageId: (pageId: string | null) => {
+    set({ renamingPageId: pageId }, false, n('setRenamingPageId'));
+  },
+
+  setSearchKeywords: (keywords: string) => {
+    set({ searchKeywords: keywords }, false, n('setSearchKeywords'));
+  },
+
+  setSelectedPageId: (pageId: string | null, updateHistory = true) => {
+    set({ selectedPageId: pageId }, false, n('setSelectedPageId'));
+    if (updateHistory) {
+      const newPath = pageId ? `/pages/${pageId}` : '/pages';
+      window.history.replaceState({}, '', newPath);
+    }
   },
 
   updateDocument: async (id, updates) => {

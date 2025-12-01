@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import PageExplorer from '@/features/ResourceManager/PageExplorer';
+import PageExplorer from '@/app/[variants]/(main)/page/features';
 
 /**
  * Pages route - dedicated page for managing documents/pages

@@ -7,7 +7,7 @@ import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store'
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 
-import PageEditorModal from '../../PageExplorer/PageEditorModal';
+import PageEditorModal from '../../../../app/[variants]/(main)/page/features/PageEditorModal';
 import DropdownMenu from '../FileListItem/DropdownMenu';
 import DefaultFileItem from './DefaultFileItem';
 import ImageFileItem from './ImageFileItem';

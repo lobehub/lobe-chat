@@ -64,7 +64,7 @@ const ConfigPanel = memo(() => {
   }
 
   return (
-    <Flexbox gap={16} paddingInline={10}>
+    <Flexbox gap={16} padding={10}>
       <ConfigItemLayout>
         <ModelSelect />
       </ConfigItemLayout>
