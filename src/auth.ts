@@ -51,6 +51,7 @@ const getTrustedOrigins = () => {
 
   const defaults = [
     authEnv.NEXT_PUBLIC_AUTH_URL,
+    normalizeOrigin(process.env.APP_URL),
     normalizeOrigin(process.env.VERCEL_BRANCH_URL),
     normalizeOrigin(process.env.VERCEL_URL),
   ].filter(Boolean) as string[];
@@ -71,10 +72,6 @@ export const auth = betterAuth({
   baseURL: authEnv.NEXT_PUBLIC_AUTH_URL,
   secret: authEnv.AUTH_SECRET,
   trustedOrigins: getTrustedOrigins(),
-
-  database: drizzleAdapter(serverDB, {
-    provider: 'pg',
-  }),
 
   emailAndPassword: {
     autoSignIn: true,
@@ -111,6 +108,25 @@ export const auth = betterAuth({
     },
   },
 
+  database: drizzleAdapter(serverDB, {
+    provider: 'pg',
+  }),
+  user: {
+    additionalFields: {
+      username: {
+        required: false,
+        type: 'string',
+      },
+    },
+    fields: {
+      image: 'avatar',
+      // NOTE: use drizzle filed instead of db field, so use fullName instead of full_name
+      name: 'fullName',
+    },
+    modelName: 'users',
+  },
+
+  socialProviders,
   plugins: [
     admin(),
     ...(genericOAuthProviders.length > 0
@@ -140,20 +156,4 @@ export const auth = betterAuth({
         ]
       : []),
   ],
-  socialProviders,
-
-  user: {
-    additionalFields: {
-      username: {
-        required: false,
-        type: 'string',
-      },
-    },
-    fields: {
-      image: 'avatar',
-      // NOTE: use drizzle filed instead of db field, so use fullName instead of full_name
-      name: 'fullName',
-    },
-    modelName: 'users',
-  },
 });

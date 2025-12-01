@@ -17,6 +17,14 @@ const resolvePublicAuthUrl = () => {
     }
   }
 
+  if (process.env.APP_URL) {
+    try {
+      return new URL(process.env.APP_URL).origin;
+    } catch {
+      // ignore invalid APP_URL
+    }
+  }
+
   if (process.env.VERCEL_URL) {
     try {
       const normalizedVercelUrl = process.env.VERCEL_URL.startsWith('http')
