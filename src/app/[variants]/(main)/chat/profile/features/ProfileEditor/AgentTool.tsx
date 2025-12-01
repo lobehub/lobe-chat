@@ -1,8 +1,9 @@
 'use client';
 
-import { ActionIcon, Avatar, Icon, ItemType } from '@lobehub/ui';
+import { Avatar, Button, Icon, ItemType } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ArrowRight, Blocks, Store, ToyBrick } from 'lucide-react';
+import { ArrowRight, PlusIcon, Store, ToyBrick } from 'lucide-react';
 import React, { Suspense, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -10,7 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { useStore } from '@/features/AgentSetting/store';
 import ToolItem from '@/features/ChatInput/ActionBar/Tools/ToolItem';
-import Action from '@/features/ChatInput/ActionBar/components/Action';
+import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
 import PluginStore from '@/features/PluginStore';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
@@ -22,6 +23,7 @@ import PluginTag from './PluginTag';
 const AgentTool = memo(() => {
   const { t } = useTranslation('setting');
   const config = useStore((s) => s.config);
+  const theme = useTheme();
 
   // Plugin state management
   const plugins = config?.plugins || [];
@@ -128,43 +130,44 @@ const AgentTool = memo(() => {
     [builtinList, installedPluginList, plugins, enablePluginCount, t, toggleAgentPlugin],
   );
 
+  const button = (
+    <Button
+      icon={PlusIcon}
+      loading={updating}
+      size={'small'}
+      style={{ color: theme.colorTextSecondary }}
+      type={'text'}
+    >
+      {t('tools.add')}
+    </Button>
+  );
+
   return (
     <>
       {/* Plugin Selector and Tags */}
-      <Flexbox align="center" direction="horizontal" gap={12}>
-        {/* Plugin Selector Dropdown - Using Action component pattern */}
-        <Suspense fallback={<ActionIcon disabled icon={Blocks} title={t('tools.title')} />}>
-          <Action
-            dropdown={{
-              maxHeight: 500,
-              maxWidth: 480,
-              menu: { items: menuItems },
-              minWidth: 320,
-            }}
-            icon={Blocks}
-            loading={updating}
-            showTooltip={false}
-            title={t('tools.title')}
-          />
-        </Suspense>
-
-        {/* Settings Button - Opens Legacy AgentSettings Drawer */}
-
+      <Flexbox align="center" gap={8} horizontal wrap={'wrap'}>
         {/* Second Row: Selected Plugins as Tags */}
-        {plugins?.length > 0 && (
-          <Flexbox align="center" direction="horizontal" gap={8} style={{ flexWrap: 'wrap' }}>
-            {plugins?.map((pluginId) => {
-              return (
-                <PluginTag
-                  key={pluginId}
-                  onRemove={handleRemovePlugin(pluginId)}
-                  pluginId={pluginId}
-                />
-              );
-            })}
-          </Flexbox>
-        )}
+        {plugins?.map((pluginId) => {
+          return (
+            <PluginTag key={pluginId} onRemove={handleRemovePlugin(pluginId)} pluginId={pluginId} />
+          );
+        })}
+        {/* Plugin Selector Dropdown - Using Action component pattern */}
+
+        <Suspense fallback={button}>
+          <ActionDropdown
+            maxHeight={500}
+            maxWidth={480}
+            menu={{ items: menuItems }}
+            minWidth={320}
+            placement={'bottomLeft'}
+            trigger={['click']}
+          >
+            {button}
+          </ActionDropdown>
+        </Suspense>
       </Flexbox>
+
       {/* PluginStore Modal */}
       <PluginStore open={modalOpen} setOpen={setModalOpen} />
     </>

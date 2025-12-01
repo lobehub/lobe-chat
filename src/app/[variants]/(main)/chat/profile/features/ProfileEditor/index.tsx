@@ -1,9 +1,11 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
+import { Button } from '@lobehub/ui';
 import { Divider } from 'antd';
-import { Settings } from 'lucide-react';
-import { memo, useMemo, useState } from 'react';
+import { useTheme } from 'antd-style';
+import { Settings2Icon } from 'lucide-react';
+import React, { memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -19,7 +21,8 @@ import EditorCanvas from './EditorCanvas';
 const ProfileEditor = memo(() => {
   const [showSettingsDrawer, setShowSettingsDrawer] = useState(false);
   const [agentId, isLoading] = useAgentStore((s) => [s.activeAgentId, !s.isInboxAgentConfigInit]);
-
+  const theme = useTheme();
+  const { t } = useTranslation('setting');
   const config = useStore((s) => s.config);
   const [modelValue, setModelValue] = useState({
     model: config.model,
@@ -41,13 +44,23 @@ const ProfileEditor = memo(() => {
       {/* Header: Avatar + Name + Description */}
       <AgentHeader />
       {/* Config Bar: Model Selector + Settings Button */}
-      <Flexbox gap={4} horizontal justify={'flex-start'}>
+      <Flexbox
+        align={'center'}
+        gap={8}
+        horizontal
+        justify={'flex-start'}
+        style={{ marginBottom: 12 }}
+      >
         <ModelSelect onChange={handleModelChange} value={modelValue} />
-        <ActionIcon
-          icon={Settings}
+        <Button
+          icon={Settings2Icon}
           onClick={() => setShowSettingsDrawer(true)}
-          title="Advanced Settings"
-        />
+          size={'small'}
+          style={{ color: theme.colorTextSecondary }}
+          type={'text'}
+        >
+          {t('advancedSettings')}
+        </Button>
       </Flexbox>
       <AgentTool />
       <Divider />
