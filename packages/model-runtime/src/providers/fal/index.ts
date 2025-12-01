@@ -2,7 +2,6 @@ import { fal } from '@fal-ai/client';
 import debug from 'debug';
 import { pick } from 'lodash-es';
 import { RuntimeImageGenParamsValue } from 'model-bank';
-import { ClientOptions } from 'openai';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
 import { AgentRuntimeErrorType } from '../../types/error';
@@ -14,14 +13,20 @@ const log = debug('lobe-image:fal');
 
 type FluxDevOutput = Awaited<ReturnType<typeof fal.subscribe<'fal-ai/flux/dev'>>>['data'];
 
+interface LobeFalAIOptions {
+  apiKey?: string;
+  baseURL?: string;
+}
+
 export class LobeFalAI implements LobeRuntimeAI {
-  constructor({ apiKey }: ClientOptions = {}) {
+  constructor({ apiKey, baseURL }: LobeFalAIOptions = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     fal.config({
       credentials: apiKey,
+      proxyUrl: baseURL,
     });
-    log('FalAI initialized with apiKey: %s', apiKey ? '*****' : 'Not set');
+    log('FalAI initialized with apiKey: %s, baseURL: %s', apiKey ? '*****' : 'Not set', baseURL ?? 'default');
   }
 
   async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {

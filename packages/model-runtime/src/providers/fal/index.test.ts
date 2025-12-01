@@ -41,6 +41,17 @@ describe('LobeFalAI', () => {
       expect(instance).toBeInstanceOf(LobeFalAI);
       expect(mockFal.config).toHaveBeenCalledWith({
         credentials: 'test_api_key',
+        proxyUrl: undefined,
+      });
+    });
+
+    it('should correctly initialize with apiKey and baseURL', () => {
+      const customBaseURL = 'https://gateway.ai.cloudflare.com/v1/account/gateway/fal';
+      const instance = new LobeFalAI({ apiKey: 'test_api_key', baseURL: customBaseURL });
+      expect(instance).toBeInstanceOf(LobeFalAI);
+      expect(mockFal.config).toHaveBeenCalledWith({
+        credentials: 'test_api_key',
+        proxyUrl: customBaseURL,
       });
     });
 
@@ -53,6 +64,12 @@ describe('LobeFalAI', () => {
     it('should throw InvalidProviderAPIKey if apiKey is undefined', () => {
       expect(() => {
         new LobeFalAI({ apiKey: undefined });
+      }).toThrow();
+    });
+
+    it('should throw InvalidProviderAPIKey even if baseURL is provided without apiKey', () => {
+      expect(() => {
+        new LobeFalAI({ baseURL: 'https://custom.endpoint.com' });
       }).toThrow();
     });
   });

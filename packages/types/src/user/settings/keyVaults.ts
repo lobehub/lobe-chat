@@ -5,6 +5,7 @@ export interface OpenAICompatibleKeyVault {
 
 export interface FalKeyVault {
   apiKey?: string;
+  baseURL?: string;
 }
 
 export interface AzureOpenAIKeyVault {

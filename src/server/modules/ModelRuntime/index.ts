@@ -155,6 +155,15 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
 
       return { apiKey };
     }
+
+    case ModelProvider.Fal: {
+      const { FAL_API_KEY, FAL_BASE_URL } = llmConfig;
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || FAL_API_KEY);
+      const baseURL = payload?.baseURL || FAL_BASE_URL;
+
+      return baseURL ? { apiKey, baseURL } : { apiKey };
+    }
   }
 };
 
