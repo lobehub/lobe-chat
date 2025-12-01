@@ -84,12 +84,16 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
     {
       children: (
         <Select
-          optionRender={({ label, value }) => (
-            <Flexbox align={'center'} gap={8} horizontal>
-              <ProviderIcon provider={value as string} size={18} />
-              {label}
-            </Flexbox>
-          )}
+          optionRender={({ label, value }) => {
+            // Map 'router' to 'newapi' for displaying the correct icon
+            const iconProvider = value === 'router' ? 'newapi' : (value as string);
+            return (
+              <Flexbox align={'center'} gap={8} horizontal>
+                <ProviderIcon provider={iconProvider} size={18} />
+                {label}
+              </Flexbox>
+            );
+          }}
           options={CUSTOM_PROVIDER_SDK_OPTIONS}
           placeholder={t('createNewAiProvider.sdkType.placeholder')}
           variant={'filled'}

@@ -55,6 +55,44 @@ see @.cursor/rules/typescript.mdc
 - **Dev**: Translate `locales/zh-CN/namespace.json` and `locales/en-US/namespace.json` locales file only for dev preview
 - DON'T run `pnpm i18n`, let CI auto handle it
 
+## Linear Issue Management
+
+When working with Linear issues:
+
+1. **Retrieve issue details** before starting work using `mcp__linear-server__get_issue`
+2. **Check for sub-issues**: If the issue has sub-issues, retrieve and review ALL sub-issues using `mcp__linear-server__list_issues` with `parentId` filter before starting work
+3. **Update issue status** when completing tasks using `mcp__linear-server__update_issue`
+4. **MUST add completion comment** using `mcp__linear-server__create_comment`
+
+### Completion Comment (REQUIRED)
+
+**Every time you complete an issue, you MUST add a comment summarizing the work done.** This is critical for:
+
+- Team visibility and knowledge sharing
+- Code review context
+- Future reference and debugging
+
+### IMPORTANT: Per-Issue Completion Rule
+
+**When working on multiple issues (e.g., parent issue with sub-issues), you MUST update status and add comment for EACH issue IMMEDIATELY after completing it.** Do NOT wait until all issues are done to update them in batch.
+
+**Workflow for EACH individual issue:**
+
+1. Complete the implementation for this specific issue
+2. Run type check: `bun run type-check`
+3. Run related tests if applicable
+4. **IMMEDIATELY** update issue status to "Done": `mcp__linear-server__update_issue`
+5. **IMMEDIATELY** add completion comment: `mcp__linear-server__create_comment`
+6. Only then move on to the next issue
+
+**❌ Wrong approach:**
+
+- Complete Issue A → Complete Issue B → Complete Issue C → Update all statuses → Add all comments
+
+**✅ Correct approach:**
+
+- Complete Issue A → Update A status → Add A comment → Complete Issue B → Update B status → Add B comment → ...
+
 ## Rules Index
 
 Some useful project rules are listed in @.cursor/rules/rules-index.mdc

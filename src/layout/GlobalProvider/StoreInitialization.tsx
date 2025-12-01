@@ -9,14 +9,14 @@ import { createStoreUpdater } from 'zustand-utils';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { useAiInfraStore } from '@/store/aiInfra';
+import { useElectronStore } from '@/store/electron';
+import { electronSyncSelectors } from '@/store/electron/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUrlHydrationStore } from '@/store/urlHydration';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
-import { electronSyncSelectors } from '@/store/electron/selectors';
-import { useElectronStore } from '@/store/electron';
 
 const StoreInitialization = memo(() => {
   // prefetch error ns to avoid don't show error content correctly
@@ -68,7 +68,7 @@ const StoreInitialization = memo(() => {
   const isSyncActive = useElectronStore((s) => electronSyncSelectors.isSyncActive(s));
 
   // init user provider key vaults
-  useInitAiProviderKeyVaults(isLoginOnInit,isSyncActive);
+  useInitAiProviderKeyVaults(isLoginOnInit, isSyncActive);
 
   // init user state
   useInitUserState(isLoginOnInit, serverConfig, {

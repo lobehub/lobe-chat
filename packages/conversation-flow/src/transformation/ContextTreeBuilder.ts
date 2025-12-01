@@ -185,7 +185,12 @@ export class ContextTreeBuilder {
    */
   private createBranchNode(message: Message, idNode: IdNode): BranchNode {
     const activeBranchId = this.branchResolver.getActiveBranchId(message, idNode);
-    const activeBranchIndex = idNode.children.findIndex((child) => child.id === activeBranchId);
+
+    // For optimistic update (activeBranchId is undefined), use children.length as the index
+    // This indicates the branch is being created but doesn't exist yet
+    const activeBranchIndex = activeBranchId
+      ? idNode.children.findIndex((child) => child.id === activeBranchId)
+      : idNode.children.length;
 
     // Each branch is a tree starting from that child
     const branches = idNode.children.map((child) => {

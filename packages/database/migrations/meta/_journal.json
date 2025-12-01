@@ -336,6 +336,41 @@
       "when": 1763987922211,
       "tag": "0047_add_slug_document",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1764215503726,
+      "tag": "0048_add_editor_data",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1764229953081,
+      "tag": "0049_better_auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1764303057060,
+      "tag": "0050_thread_and_user_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1764335703306,
+      "tag": "0051_add_market_into_user_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1764500630663,
+      "tag": "0052_topic_and_messages",
+      "breakpoints": true
     }
   ],
   "version": "6"

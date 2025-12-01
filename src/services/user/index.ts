@@ -1,8 +1,7 @@
-import type { AdapterAccount } from 'next-auth/adapters';
 import type { PartialDeep } from 'type-fest';
 
 import { lambdaClient } from '@/libs/trpc/client';
-import { UserGuide, UserInitializationState, UserPreference } from '@/types/user';
+import { SSOProvider, UserGuide, UserInitializationState, UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 
 export class UserService {
@@ -18,7 +17,7 @@ export class UserService {
     return lambdaClient.user.getUserState.query();
   };
 
-  getUserSSOProviders = async (): Promise<AdapterAccount[]> => {
+  getUserSSOProviders = async (): Promise<SSOProvider[]> => {
     return lambdaClient.user.getUserSSOProviders.query();
   };
 
@@ -32,6 +31,10 @@ export class UserService {
 
   updateAvatar = async (avatar: string) => {
     return lambdaClient.user.updateAvatar.mutate(avatar);
+  };
+
+  updateFullName = async (fullName: string) => {
+    return lambdaClient.user.updateFullName.mutate(fullName);
   };
 
   updatePreference = async (preference: Partial<UserPreference>) => {

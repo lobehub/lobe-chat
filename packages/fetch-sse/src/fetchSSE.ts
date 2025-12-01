@@ -71,6 +71,22 @@ export interface MessageGroundingChunk {
   type: 'grounding';
 }
 
+export interface MessageReasoningPartChunk {
+  content: string;
+  mimeType?: string;
+  partType: 'text' | 'image';
+  thoughtSignature?: string;
+  type: 'reasoning_part';
+}
+
+export interface MessageContentPartChunk {
+  content: string;
+  mimeType?: string;
+  partType: 'text' | 'image';
+  thoughtSignature?: string;
+  type: 'content_part';
+}
+
 interface MessageToolCallsChunk {
   isAnimationActives?: boolean[];
   tool_calls: MessageToolCall[];
@@ -87,6 +103,8 @@ export interface FetchSSEOptions {
       | MessageTextChunk
       | MessageToolCallsChunk
       | MessageReasoningChunk
+      | MessageReasoningPartChunk
+      | MessageContentPartChunk
       | MessageGroundingChunk
       | MessageUsageChunk
       | MessageBase64ImageChunk
@@ -417,6 +435,37 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
             }
           }
 
+          break;
+        }
+
+        case 'reasoning_part': {
+          // For reasoning_part, accumulate thinking content
+          if (data.partType === 'text' && data.content) {
+            thinking += data.content;
+          }
+          options.onMessageHandle?.({
+            content: data.content,
+            mimeType: data.mimeType,
+            partType: data.partType,
+            thoughtSignature: data.thoughtSignature,
+            type: ev.event,
+          });
+          break;
+        }
+
+        case 'content_part': {
+          // For content_part, accumulate text content to output
+          // This is critical for Gemini 2.5 models which use content_part instead of text events
+          if (data.partType === 'text' && data.content) {
+            output += data.content;
+          }
+          options.onMessageHandle?.({
+            content: data.content,
+            mimeType: data.mimeType,
+            partType: data.partType,
+            thoughtSignature: data.thoughtSignature,
+            type: ev.event,
+          });
           break;
         }
 
