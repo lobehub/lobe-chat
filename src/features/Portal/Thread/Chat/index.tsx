@@ -9,6 +9,8 @@ import {
   type ConversationContext,
   ConversationProvider,
   MessageItem,
+  conversationSelectors,
+  useConversationStore,
 } from '@/features/Conversation';
 import SkeletonList from '@/features/Conversation/components/SkeletonList';
 import { useChatStore } from '@/store/chat';
@@ -22,54 +24,44 @@ interface ThreadChatProps {
 }
 
 /**
- * Thread Chat Component
- *
- * Uses ConversationProvider architecture for thread conversations.
- * Thread context is determined by:
- * - sessionId: current active session
- * - topicId: current active topic
- * - threadId: portal thread ID
+ * Inner component that uses ConversationStore for message rendering
+ * Must be inside ConversationProvider to access the store
  */
-const ThreadChat = memo<ThreadChatProps>(({ mobile }) => {
-  // Get thread context from ChatStore
-  const [activeId, activeTopicId, portalThreadId] = useChatStore((s) => [
-    s.activeId,
-    s.activeTopicId,
-    s.portalThreadId,
-  ]);
-
-  // Build ConversationContext for thread
-  const context: ConversationContext = useMemo(
-    () => ({
-      agentId: activeId,
-      threadId: portalThreadId,
-      topicId: activeTopicId,
-    }),
-    [activeId, activeTopicId, portalThreadId],
-  );
-
-  // Get thread messages from ChatStore (using existing selectors)
-  // This includes parent messages + thread child messages
-  const messages = useChatStore(threadSelectors.portalDisplayChats);
-
-  // Get messages init status
-  const isInit = useChatStore((s) => s.threadsInit);
-
-  // Get thread source message info for ThreadDivider and parent message handling
-  const threadSourceMessageId = useChatStore(threadSelectors.threadSourceMessageId);
-  const threadSourceMessageIndex = useChatStore(threadSelectors.threadSourceMessageIndex);
-
+const ThreadChatContent = memo<{ mobile?: boolean }>(({ mobile }) => {
   // Get thread-specific actionsBar config
   const actionsBarConfig = useThreadActionsBarConfig();
+
+  // Get display messages from ConversationStore to determine thread divider position
+  // With the new backend API, parent messages have threadId === null
+  // and thread messages have threadId === context.threadId
+  const displayMessages = useConversationStore(conversationSelectors.displayMessages);
+
+  // Find the last parent message (source message) - it's the last message with threadId === null
+  const threadSourceInfo = useMemo(() => {
+    // Find the index of the last parent message (threadId is null or undefined)
+    let sourceMessageIndex = -1;
+    let sourceMessageId: string | undefined;
+
+    for (const [i, msg] of displayMessages.entries()) {
+      // Parent messages don't have threadId
+      if (!msg.threadId) {
+        sourceMessageIndex = i;
+        sourceMessageId = msg.id;
+      }
+    }
+
+    return { sourceMessageId, sourceMessageIndex };
+  }, [displayMessages]);
 
   // Custom item content renderer for thread-specific features
   const itemContent = useCallback(
     (index: number, id: string) => {
       // Check if this message needs ThreadDivider (after thread source message)
-      const enableThreadDivider = threadSourceMessageId === id;
+      const enableThreadDivider = threadSourceInfo.sourceMessageId === id;
 
       // Check if this is a parent message (should be read-only)
-      const isParentMessage = index <= threadSourceMessageIndex;
+      // Parent messages are those with index <= sourceMessageIndex
+      const isParentMessage = index <= threadSourceInfo.sourceMessageIndex;
 
       return (
         <MessageItem
@@ -82,11 +74,11 @@ const ThreadChat = memo<ThreadChatProps>(({ mobile }) => {
         />
       );
     },
-    [actionsBarConfig, threadSourceMessageId, threadSourceMessageIndex],
+    [actionsBarConfig, threadSourceInfo.sourceMessageId, threadSourceInfo.sourceMessageIndex],
   );
 
   return (
-    <ConversationProvider context={context} hasInitMessages={isInit} messages={messages}>
+    <>
       <Suspense
         fallback={
           <Flexbox flex={1} height={'100%'}>
@@ -107,6 +99,57 @@ const ThreadChat = memo<ThreadChatProps>(({ mobile }) => {
         </Flexbox>
       </Suspense>
       <ChatInput leftActions={['typo', 'stt', 'portalToken']} />
+    </>
+  );
+});
+
+ThreadChatContent.displayName = 'ThreadChatContent';
+
+/**
+ * Thread Chat Component
+ *
+ * Two modes:
+ * 1. With portalThreadId: Uses ConversationProvider to fetch complete thread data from backend
+ * 2. Without portalThreadId (creating new thread): Uses main conversation's displayMessages slice
+ *
+ * Thread context is determined by:
+ * - agentId: current active agent
+ * - topicId: current active topic
+ * - threadId: portal thread ID (optional)
+ */
+const ThreadChat = memo<ThreadChatProps>(({ mobile }) => {
+  // Get thread context from ChatStore
+  const [activeAgentId, activeTopicId, portalThreadId] = useChatStore((s) => [
+    s.activeAgentId,
+    s.activeTopicId,
+    s.portalThreadId,
+  ]);
+
+  console.time('messagesFromMain');
+  // When creating new thread (no portalThreadId), get messages from main conversation
+  // Use s.portalThreadId directly to avoid stale closure
+  const messagesFromMain = useChatStore((s) =>
+    !s.portalThreadId ? threadSelectors.portalDisplayChats(s) : undefined,
+  );
+  console.timeEnd('messagesFromMain');
+
+  // Build ConversationContext for thread
+  const context: ConversationContext = useMemo(
+    () => ({
+      agentId: activeAgentId,
+      threadId: portalThreadId,
+      topicId: activeTopicId,
+    }),
+    [activeAgentId, activeTopicId, portalThreadId],
+  );
+
+  return (
+    <ConversationProvider
+      context={context}
+      messages={messagesFromMain}
+      skipFetch={!!messagesFromMain}
+    >
+      <ThreadChatContent mobile={mobile} />
     </ConversationProvider>
   );
 });

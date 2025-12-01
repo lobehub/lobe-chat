@@ -26,7 +26,6 @@ export interface ConversationProviderProps {
   /**
    * External messages to sync into the store
    * When provided, these messages will be used as the source of truth
-   * and automatically parsed for display
    */
   messages?: UIChatMessage[];
   /**
@@ -45,6 +44,7 @@ export interface ConversationProviderProps {
    * When provided, this will be synced into the store for reactive updates.
    */
   operationState?: OperationState;
+  skipFetch?: boolean;
 }
 
 /**
@@ -54,9 +54,18 @@ export interface ConversationProviderProps {
  * This enables multiple independent conversations to run simultaneously.
  */
 export const ConversationProvider = memo<ConversationProviderProps>(
-  ({ children, context, hooks = {}, hasInitMessages, messages, onMessagesChange, operationState }) => {
+  ({
+    children,
+    context,
+    hooks = {},
+    hasInitMessages,
+    messages,
+    onMessagesChange,
+    operationState,
+    skipFetch,
+  }) => {
     return (
-      <Provider createStore={() => createStore({ context, hooks })}>
+      <Provider createStore={() => createStore({ context, hooks, skipFetch })}>
         <StoreUpdater
           context={context}
           hasInitMessages={hasInitMessages}
@@ -64,6 +73,7 @@ export const ConversationProvider = memo<ConversationProviderProps>(
           messages={messages}
           onMessagesChange={onMessagesChange}
           operationState={operationState}
+          skipFetch={skipFetch}
         />
         {children}
       </Provider>

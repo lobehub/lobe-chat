@@ -33,8 +33,12 @@ export interface DataAction {
    * Fetch messages for this conversation using SWR
    *
    * @param context - Conversation context with sessionId and topicId
+   * @param skipFetch - When true, SWR key is null and no fetch occurs
    */
-  useFetchMessages: (context: ConversationContext) => SWRResponse<UIChatMessage[]>;
+  useFetchMessages: (
+    context: ConversationContext,
+    skipFetch?: boolean,
+  ) => SWRResponse<UIChatMessage[]>;
 }
 
 export const dataSlice: StateCreator<
@@ -74,11 +78,13 @@ export const dataSlice: StateCreator<
     get().onMessagesChange?.(messages);
   },
 
-  useFetchMessages: (context) => {
-    const swrKey: ConversationContext | null = context.agentId ? context : null;
+  useFetchMessages: (context, skipFetch) => {
+    // When skipFetch is true, SWR key is null - no fetch occurs
+    // This is used when external messages are provided (e.g., creating new thread)
+    const shouldFetch = !skipFetch && !!context.agentId;
 
     return useClientDataSWR<UIChatMessage[]>(
-      context.agentId ? ['CONVERSATION_FETCH_MESSAGES', swrKey] : null,
+      shouldFetch ? ['CONVERSATION_FETCH_MESSAGES', context] : null,
 
       async ([, key]: [string, ConversationContext]) => {
         return messageService.getMessages({
