@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
-import { ModelUpdateResult } from '@/store/aiInfra/slices/aiModel/action';
+import { ModelUpdateResult } from '@/store/aiInfra/slices/aiModel/types';
 
 import CreateNewModelModal from '../CreateNewModelModal';
 import { UpdateNotificationContent } from '../UpdateNotification';

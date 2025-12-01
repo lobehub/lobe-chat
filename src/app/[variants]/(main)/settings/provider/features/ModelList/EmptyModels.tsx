@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useAiInfraStore } from '@/store/aiInfra';
-import { ModelUpdateResult } from '@/store/aiInfra/slices/aiModel/action';
+import { ModelUpdateResult } from '@/store/aiInfra/slices/aiModel/types';
 
 import CreateNewModelModal from './CreateNewModelModal';
 import { UpdateNotificationContent } from './UpdateNotification';

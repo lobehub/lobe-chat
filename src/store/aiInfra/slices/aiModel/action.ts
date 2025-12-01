@@ -13,16 +13,9 @@ import { useClientDataSWR } from '@/libs/swr';
 import { aiModelService } from '@/services/aiModel';
 import { AiInfraStore } from '@/store/aiInfra/store';
 
-const FETCH_AI_PROVIDER_MODEL_LIST_KEY = 'FETCH_AI_PROVIDER_MODELS';
+import { ModelUpdateResult } from './types';
 
-export interface ModelUpdateResult {
-  /** Models that were added */
-  added: string[];
-  /** Models that were removed from remote but still exist in model-bank builtin list */
-  removedButBuiltin: string[];
-  /** Models that were actually removed */
-  removedFromList: string[];
-}
+const FETCH_AI_PROVIDER_MODEL_LIST_KEY = 'FETCH_AI_PROVIDER_MODELS';
 
 export interface AiModelAction {
   batchToggleAiModels: (ids: string[], enabled: boolean) => Promise<void>;
