@@ -11,7 +11,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
     height: 100%;
-    background: ${token.colorBgContainerSecondary};
+    background: ${token.colorBgLayout};
   `,
 }));
 

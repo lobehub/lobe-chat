@@ -1,14 +1,16 @@
-import { Flexbox } from 'react-layout-kit';
+import { useTheme } from 'antd-style';
+import { memo } from 'react';
+import { Center, Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
-import ImagePanel from '@/features/ImageSidePanel';
+import Topic from '@/app/[variants]/(main)/image/_layout/TopicGallery';
 import ImageTopicPanel from '@/features/ImageTopicPanel';
 
-import Container from './Container';
 import RegisterHotkeys from './RegisterHotkeys';
-import { LayoutProps } from './type';
+import Sidebar from './Sidebar';
 
-const Layout = ({ menu, topic }: Omit<LayoutProps, 'children'>) => {
+const Layout = memo(() => {
+  const theme = useTheme();
   return (
     <>
       <Flexbox
@@ -17,16 +19,36 @@ const Layout = ({ menu, topic }: Omit<LayoutProps, 'children'>) => {
         style={{ maxWidth: '100%', overflow: 'hidden', position: 'relative' }}
         width={'100%'}
       >
-        <ImagePanel>{menu}</ImagePanel>
-        <Container>
-          <Outlet />
-        </Container>
-        <ImageTopicPanel>{topic}</ImageTopicPanel>
+        <Sidebar />
+        <Center
+          flex={1}
+          style={{
+            background: theme.colorBgContainerSecondary,
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            position: 'relative',
+          }}
+        >
+          <Flexbox
+            gap={16}
+            height={'100%'}
+            padding={24}
+            style={{
+              maxWidth: 906,
+            }}
+            width={'100%'}
+          >
+            <Outlet />
+          </Flexbox>
+        </Center>
+        <ImageTopicPanel>
+          <Topic />
+        </ImageTopicPanel>
       </Flexbox>
       <RegisterHotkeys />
     </>
   );
-};
+});
 
 Layout.displayName = 'DesktopAiImageLayout';
 

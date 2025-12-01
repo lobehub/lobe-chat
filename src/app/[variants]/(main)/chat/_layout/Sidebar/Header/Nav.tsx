@@ -24,7 +24,7 @@ const Nav = memo(() => {
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    <Flexbox gap={1}>
+    <Flexbox gap={1} paddingInline={4}>
       {isAgentEditable && (
         <NavItem
           active={isProfileActive}

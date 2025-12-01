@@ -11,10 +11,10 @@ const NavHeader = memo<NavHeaderProps>(({ left, right, ...rest }) => {
     <Flexbox
       align={'center'}
       gap={4}
-      height={40}
+      height={44}
       horizontal
       justify={'space-between'}
-      padding={6}
+      padding={8}
       {...rest}
     >
       <Flexbox align={'center'} flex={1} gap={2} horizontal justify={'flex-start'}>
