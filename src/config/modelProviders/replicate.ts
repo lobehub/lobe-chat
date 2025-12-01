@@ -15,6 +15,7 @@ const Replicate: ModelProviderCard = {
     proxyUrl: {
       placeholder: 'https://api.replicate.com',
     },
+    sdkType: 'replicate',
     showModelFetcher: true,
   },
   url: 'https://replicate.com',
