@@ -1,5 +1,6 @@
-import { AccordionItem, Text } from '@lobehub/ui';
+import { AccordionItem, Icon, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
+import { HashIcon } from 'lucide-react';
 import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -26,12 +27,15 @@ const GroupItem = memo<GroupItemProps>(({ group, activeTopicId, activeThreadId }
   return (
     <AccordionItem
       itemKey={id}
-      paddingBlock={6}
-      paddingInline={'8px 6px'}
+      paddingBlock={4}
+      paddingInline={'8px 4px'}
       title={
-        <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-          {title || timeTitle}
-        </Text>
+        <Flexbox align="center" gap={6} horizontal style={{ overflow: 'hidden' }}>
+          <Icon icon={HashIcon} style={{ opacity: 0.5 }} />
+          <Text ellipsis fontSize={12} style={{ flex: 1 }} type={'secondary'} weight={500}>
+            {title || timeTitle}
+          </Text>
+        </Flexbox>
       }
     >
       <Flexbox gap={1} paddingBlock={1}>

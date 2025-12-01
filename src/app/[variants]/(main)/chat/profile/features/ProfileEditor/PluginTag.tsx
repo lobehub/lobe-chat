@@ -1,11 +1,11 @@
 'use client';
 
-import { Avatar } from '@lobehub/ui';
-import { Tag, Tooltip } from 'antd';
+import { Avatar, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { AlertCircle, X } from 'lucide-react';
 import React, { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { useDiscoverStore } from '@/store/discover';
@@ -18,24 +18,8 @@ const useStyles = createStyles(({ css, token }) => ({
     background: ${token.colorWarningBg};
   `,
   tag: css`
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin: 0;
-  `,
-  tagContent: css`
-    overflow: hidden;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-
-    max-width: 150px;
-    height: 26px;
-  `,
-  tagText: css`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    height: 28px !important;
+    border-radius: ${token.borderRadiusSM}px !important;
   `,
   warningIcon: css`
     flex-shrink: 0;
@@ -49,7 +33,8 @@ interface PluginTagProps {
 }
 
 const PluginTag = memo<PluginTagProps>(({ pluginId, onRemove }) => {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
+  const { t } = useTranslation('setting');
 
   // Extract identifier
   const identifier = typeof pluginId === 'string' ? pluginId : pluginId?.identifier;
@@ -103,38 +88,28 @@ const PluginTag = memo<PluginTagProps>(({ pluginId, onRemove }) => {
 
   const displayTitle = isLoading ? 'Loading...' : meta.title;
 
-  // Tooltip message - show warning for uninstalled plugins
-  const tooltipTitle = !meta.isInstalled
-    ? '当前插件暂未安装，可能会影响当前 Agent 的使用'
-    : displayTitle;
-
-  const tagContent = (
+  return (
     <Tag
-      className={`${styles.tag} ${!meta.isInstalled ? styles.notInstalledTag : ''}`}
+      className={styles.tag}
       closable
       closeIcon={<X size={12} />}
+      color={meta.isInstalled ? undefined : 'error'}
       icon={
-        !meta.isInstalled ? <AlertCircle className={styles.warningIcon} size={14} /> : undefined
+        !meta.isInstalled ? (
+          <AlertCircle className={styles.warningIcon} size={14} />
+        ) : meta.avatar && meta?.type === 'builtin' ? (
+          <Avatar avatar={meta.avatar} shape={'square'} size={16} style={{ flexShrink: 0 }} />
+        ) : (
+          <PluginAvatar avatar={meta.avatar} size={16} />
+        )
       }
       onClose={onRemove}
+      title={meta.isInstalled ? undefined : t('tools.notInstalledWarning')}
+      variant={theme.isDarkMode ? 'filled' : 'outlined'}
     >
-      <div className={styles.tagContent}>
-        {meta.avatar && (
-          // eslint-disable-next-line react/jsx-no-useless-fragment
-          <>
-            {meta?.type === 'builtin' ? (
-              <Avatar avatar={meta.avatar} size={16} style={{ flexShrink: 0 }} />
-            ) : (
-              <PluginAvatar avatar={meta.avatar} size={16} />
-            )}
-          </>
-        )}
-        <span className={styles.tagText}>{displayTitle}</span>
-      </div>
+      {!meta.isInstalled ? `${displayTitle} (${t('tools.notInstalled')})` : displayTitle}
     </Tag>
   );
-
-  return <Tooltip title={tooltipTitle}>{tagContent}</Tooltip>;
 });
 
 PluginTag.displayName = 'PluginTag';
