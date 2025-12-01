@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Benutzerdefinierter Anbieter nicht aktiviert",
       "disabled": "Dienstanbieter nicht aktiviert",
       "enabled": "Dienstanbieter aktiviert"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Benutzerdefinierten Anbieter hinzufügen",
     "all": "Alle",
     "list": {
+      "custom": "Benutzerdefiniert nicht aktiviert",
       "disabled": "Nicht aktiviert",
       "disabledActions": {
         "sort": "Sortieroptionen",

@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Niestandardowy dostawca nie został włączony",
       "disabled": "Usługa nieaktywna",
       "enabled": "Usługa aktywna"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Dodaj niestandardowego dostawcę",
     "all": "Wszystko",
     "list": {
+      "custom": "Niestandardowy nie został włączony",
       "disabled": "Nieaktywny",
       "disabledActions": {
         "sort": "Sposób sortowania",
