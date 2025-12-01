@@ -55,6 +55,13 @@ const useStyles = createStyles(({ css, token }) => ({
       opacity: 1;
     }
   `,
+  title: css`
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    padding: 14px 8px;
+  `,
   toggleButton: css`
     position: absolute;
     z-index: 10;
@@ -94,7 +101,9 @@ const Sidebar = memo(() => {
         <TogglePanelButton />
       </div>
       <Flexbox paddingInline={8}>
-        <PanelTitle desc={t('desc')} title={t('title')} />
+        <Flexbox paddingInline={4} style={{ marginBottom: 20 }}>
+          <PanelTitle desc={t('desc')} title={t('title')} />
+        </Flexbox>
         <CategoryMenu />
       </Flexbox>
       <Collection />

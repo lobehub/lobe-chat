@@ -52,6 +52,7 @@ const EditorContent = memo<EditorContentProps>(
         const result = await uploadWithProgress({
           file,
           skipCheckFileType: false,
+          source: 'page-editor',
         });
 
         if (result) {

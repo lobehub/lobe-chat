@@ -103,7 +103,7 @@ const CategoryMenu = memo(() => {
   const isHomeActive = activeKey === FilesTabs.All;
 
   return (
-    <Flexbox gap={4}>
+    <Flexbox gap={4} paddingInline={4}>
       <Flexbox
         align={'center'}
         className={cx(styles.header, isHomeActive && styles.headerActive)}
