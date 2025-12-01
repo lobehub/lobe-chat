@@ -60,14 +60,14 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface DocumentEditorPlaceholderProps {
+interface PageExplorerPlaceholderProps {
   hasPages?: boolean;
   knowledgeBaseId?: string;
   onCreateNewNote: () => void;
   onNoteCreated?: (noteId: string) => void;
 }
 
-const DocumentEditorPlaceholder = memo<DocumentEditorPlaceholderProps>(
+const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
   ({ hasPages = false, knowledgeBaseId, onCreateNewNote, onNoteCreated }) => {
     const { t } = useTranslation(['file', 'common']);
     const theme = useTheme();
@@ -82,15 +82,15 @@ const DocumentEditorPlaceholder = memo<DocumentEditorPlaceholderProps>(
         // Read markdown file content
         const content = await file.text();
 
-        // Create document with markdown content
-        const newDoc = await createDocument({
+        // Create page with markdown content
+        const newPage = await createDocument({
           content,
           knowledgeBaseId,
           title: file.name.replace(/\.md$|\.markdown$/i, ''),
         });
 
         // Notify parent component
-        onNoteCreated?.(newDoc.id);
+        onNoteCreated?.(newPage.id);
       } catch (error) {
         console.error('Failed to upload markdown:', error);
       } finally {
@@ -169,4 +169,4 @@ const DocumentEditorPlaceholder = memo<DocumentEditorPlaceholderProps>(
   },
 );
 
-export default DocumentEditorPlaceholder;
+export default PageExplorerPlaceholder;

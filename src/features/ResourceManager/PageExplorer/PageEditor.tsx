@@ -99,7 +99,7 @@ const PageEditor = memo<PageEditorPanelProps>(
             message.success(t('documentEditor.deleteSuccess'));
             onDelete?.();
           } catch (error) {
-            console.error('Failed to delete document:', error);
+            console.error('Failed to delete page:', error);
             message.error(t('documentEditor.deleteError'));
           }
         },
@@ -155,7 +155,7 @@ const PageEditor = memo<PageEditorPanelProps>(
         },
         {
           disabled: true,
-          key: 'document-info',
+          key: 'page-info',
           label: (
             <div style={{ color: theme.colorTextTertiary, fontSize: 12, lineHeight: 1.6 }}>
               <div>{t('documentEditor.wordCount', { wordCount })}</div>

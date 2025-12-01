@@ -11,7 +11,7 @@ import { Virtuoso } from 'react-virtuoso';
 import { useFileStore } from '@/store/file';
 import { DocumentSourceType, LobeDocument } from '@/types/document';
 
-import DocumentEditorPlaceholder from './DocumentEditorPlaceholder';
+import PageExplorerPlaceholder from './DocumentEditorPlaceholder';
 import DocumentListItem from './DocumentListItem';
 import DocumentListSkeleton from './DocumentListSkeleton';
 import PageEditor from './PageEditor';
@@ -21,11 +21,6 @@ const useStyles = createStyles(({ css, token }) => ({
     display: flex;
     width: 100%;
     height: 100%;
-  `,
-  documentList: css`
-    overflow-y: auto;
-    flex: 1;
-    padding-block: 4px;
   `,
   editorPanel: css`
     overflow: hidden;
@@ -53,6 +48,11 @@ const useStyles = createStyles(({ css, token }) => ({
 
     background: ${token.colorBgLayout};
   `,
+  pageList: css`
+    overflow-y: auto;
+    flex: 1;
+    padding-block: 4px;
+  `,
 }));
 
 interface DocumentExplorerProps {
@@ -66,16 +66,16 @@ const updateUrl = (docId: string | null) => {
 };
 
 /**
- * View, edit and create documents.
+ * Add a list along side the page editor to allow for quick navigation and creation of pages.
  */
 const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documentId }) => {
   const { t } = useTranslation('file');
   const { styles } = useStyles();
 
-  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
+  const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [searchKeywords, setSearchKeywords] = useState<string>('');
-  const [renamingDocumentId, setRenamingDocumentId] = useState<string | null>(null);
+  const [renamingPageId, setRenamingPageId] = useState<string | null>(null);
 
   const fetchDocuments = useFileStore((s) => s.fetchDocuments);
   const getOptimisticDocuments = useFileStore((s) => s.getOptimisticDocuments);
@@ -92,31 +92,31 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
     fetchDocuments();
   }, [fetchDocuments]);
 
-  // If documentId is provided, automatically open that document
+  // If documentId is provided, automatically open that page
   useEffect(() => {
     if (documentId) {
-      setSelectedDocumentId(documentId);
+      setSelectedPageId(documentId);
       setIsCreatingNew(false);
     }
   }, [documentId]);
 
-  // Get optimistic documents (merged local + server)
+  // Get optimistic pages (merged local + server)
   // Filter by knowledgeBaseId if provided
   // Since the API call already filters by knowledgeBaseId, we trust that data
   // But we also need to check local optimistic updates
-  // Re-compute when localDocumentMap changes to ensure list updates when documents are edited
-  const documents = getOptimisticDocuments();
+  // Re-compute when localDocumentMap changes to ensure list updates when pages are edited
+  const pages = getOptimisticDocuments();
 
-  // Filter documents based on search keywords and sort by creation date (newest first)
-  const filteredDocuments = useMemo(() => {
-    let result = documents;
+  // Filter pages based on search keywords and sort by creation date (newest first)
+  const filteredPages = useMemo(() => {
+    let result = pages;
 
     // Filter by search keywords
     if (searchKeywords.trim()) {
       const lowerKeywords = searchKeywords.toLowerCase();
-      result = documents.filter((document) => {
-        const content = document.content?.toLowerCase() || '';
-        const title = document.title?.toLowerCase() || '';
+      result = pages.filter((page) => {
+        const content = page.content?.toLowerCase() || '';
+        const title = page.title?.toLowerCase() || '';
         return content.includes(lowerKeywords) || title.includes(lowerKeywords);
       });
     }
@@ -127,15 +127,15 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
       const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
       return dateB - dateA;
     });
-  }, [documents, searchKeywords]);
+  }, [pages, searchKeywords]);
 
   const handleDocumentSelect = (documentId: string) => {
-    if (selectedDocumentId === documentId) {
-      // Deselect if clicking the same document
-      setSelectedDocumentId(null);
+    if (selectedPageId === documentId) {
+      // Deselect if clicking the same page
+      setSelectedPageId(null);
       updateUrl(null);
     } else {
-      setSelectedDocumentId(documentId);
+      setSelectedPageId(documentId);
       updateUrl(documentId);
     }
     setIsCreatingNew(false);
@@ -144,64 +144,64 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   const handleNewDocument = async () => {
     const untitledTitle = t('documentList.untitled');
 
-    // Create optimistic document immediately for instant UX
-    const tempDocumentId = createOptimisticDocument(untitledTitle);
-    setSelectedDocumentId(tempDocumentId);
+    // Create optimistic page immediately for instant UX
+    const tempPageId = createOptimisticDocument(untitledTitle);
+    setSelectedPageId(tempPageId);
     setIsCreatingNew(true);
 
     try {
-      // Create real document in background
-      const newDoc = await createDocument({
+      // Create real page in background
+      const newPage = await createDocument({
         content: '',
         knowledgeBaseId,
         title: untitledTitle,
       });
 
       // Convert DocumentItem to EditorDocument
-      const realDocument: LobeDocument = {
-        content: newDoc.content || '',
-        createdAt: newDoc.createdAt ? new Date(newDoc.createdAt) : new Date(),
+      const realPage: LobeDocument = {
+        content: newPage.content || '',
+        createdAt: newPage.createdAt ? new Date(newPage.createdAt) : new Date(),
         editorData:
-          typeof newDoc.editorData === 'string'
-            ? JSON.parse(newDoc.editorData)
-            : newDoc.editorData || null,
+          typeof newPage.editorData === 'string'
+            ? JSON.parse(newPage.editorData)
+            : newPage.editorData || null,
         fileType: 'custom/document',
-        filename: newDoc.title || untitledTitle,
-        id: newDoc.id,
-        metadata: newDoc.metadata || {},
+        filename: newPage.title || untitledTitle,
+        id: newPage.id,
+        metadata: newPage.metadata || {},
         source: 'document',
         sourceType: DocumentSourceType.EDITOR,
-        title: newDoc.title || untitledTitle,
-        totalCharCount: newDoc.content?.length || 0,
+        title: newPage.title || untitledTitle,
+        totalCharCount: newPage.content?.length || 0,
         totalLineCount: 0,
-        updatedAt: newDoc.updatedAt ? new Date(newDoc.updatedAt) : new Date(),
+        updatedAt: newPage.updatedAt ? new Date(newPage.updatedAt) : new Date(),
       };
 
-      // Replace optimistic document with real document (smooth UX, no flicker)
-      replaceTempDocumentWithReal(tempDocumentId, realDocument);
+      // Replace optimistic page with real page (smooth UX, no flicker)
+      replaceTempDocumentWithReal(tempPageId, realPage);
 
-      // Update selected document ID to real ID and update URL
-      setSelectedDocumentId(newDoc.id);
+      // Update selected page ID to real ID and update URL
+      setSelectedPageId(newPage.id);
       setIsCreatingNew(false);
-      updateUrl(newDoc.id);
+      updateUrl(newPage.id);
     } catch (error) {
-      console.error('Failed to create document:', error);
-      // On error, remove the optimistic document and deselect
-      useFileStore.getState().removeTempDocument(tempDocumentId);
-      setSelectedDocumentId(null);
+      console.error('Failed to create page:', error);
+      // On error, remove the optimistic page and deselect
+      useFileStore.getState().removeTempDocument(tempPageId);
+      setSelectedPageId(null);
       setIsCreatingNew(false);
     }
   };
 
   const handleDocumentIdChange = (newId: string) => {
-    // When a temp document gets a real ID, update the selected document ID
-    setSelectedDocumentId(newId);
+    // When a temp page gets a real ID, update the selected page ID
+    setSelectedPageId(newId);
     setIsCreatingNew(false);
     updateUrl(newId);
   };
 
   const handleRenameOpenChange = (documentId: string, open: boolean) => {
-    setRenamingDocumentId(open ? documentId : null);
+    setRenamingPageId(open ? documentId : null);
   };
 
   const handleRenameConfirm = async (documentId: string, title: string, emoji?: string) => {
@@ -213,15 +213,15 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
         title,
       });
     } catch (error) {
-      console.error('Failed to rename document:', error);
+      console.error('Failed to rename page:', error);
     } finally {
-      setRenamingDocumentId(null);
+      setRenamingPageId(null);
     }
   };
 
-  // Show list panel only if loading, has documents, or has search query
+  // Show list panel only if loading, has pages, or has search query
   const shouldShowListPanel =
-    isDocumentListLoading || filteredDocuments.length > 0 || searchKeywords.trim() !== '';
+    isDocumentListLoading || filteredPages.length > 0 || searchKeywords.trim() !== '';
 
   return (
     <div className={styles.container}>
@@ -243,10 +243,10 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
               title={t('header.newPageButton')}
             />
           </div>
-          <div className={styles.documentList}>
+          <div className={styles.pageList}>
             {isDocumentListLoading ? (
               <DocumentListSkeleton />
-            ) : filteredDocuments.length === 0 ? (
+            ) : filteredPages.length === 0 ? (
               <div
                 style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}
               >
@@ -258,24 +258,24 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                   Footer: () => (
                     <Center style={{ paddingBlock: 16 }}>
                       <Text style={{ fontSize: 12 }} type={'secondary'}>
-                        {t('documentList.pageCount', { count: filteredDocuments.length })}
+                        {t('documentList.pageCount', { count: filteredPages.length })}
                       </Text>
                     </Center>
                   ),
                 }}
-                data={filteredDocuments}
-                itemContent={(_index, document) => {
-                  const isSelected = selectedDocumentId === document.id;
-                  const isRenaming = renamingDocumentId === document.id;
+                data={filteredPages}
+                itemContent={(_index, page) => {
+                  const isSelected = selectedPageId === page.id;
+                  const isRenaming = renamingPageId === page.id;
                   return (
                     <DocumentListItem
-                      document={document}
+                      document={page}
                       isRenaming={isRenaming}
                       isSelected={isSelected}
-                      key={document.id}
+                      key={page.id}
                       onDelete={() => {
-                        if (selectedDocumentId === document.id) {
-                          setSelectedDocumentId(null);
+                        if (selectedPageId === page.id) {
+                          setSelectedPageId(null);
                           setIsCreatingNew(false);
                           updateUrl(null);
                         }
@@ -296,24 +296,24 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
 
       {/* Right Panel - Editor */}
       <div className={styles.editorPanel}>
-        {selectedDocumentId || isCreatingNew ? (
+        {selectedPageId || isCreatingNew ? (
           <PageEditor
-            documentId={selectedDocumentId || undefined}
+            documentId={selectedPageId || undefined}
             knowledgeBaseId={knowledgeBaseId}
             onDelete={() => {
-              setSelectedDocumentId(null);
+              setSelectedPageId(null);
               setIsCreatingNew(false);
               updateUrl(null);
             }}
             onDocumentIdChange={handleDocumentIdChange}
           />
         ) : (
-          <DocumentEditorPlaceholder
-            hasPages={documents.length > 0}
+          <PageExplorerPlaceholder
+            hasPages={pages.length > 0}
             knowledgeBaseId={knowledgeBaseId}
             onCreateNewNote={handleNewDocument}
             onNoteCreated={(documentId) => {
-              setSelectedDocumentId(documentId);
+              setSelectedPageId(documentId);
               setIsCreatingNew(false);
             }}
           />

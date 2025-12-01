@@ -41,6 +41,15 @@ const useStyles = createStyles(({ css, token }) => ({
     outline: 2px dashed ${token.colorPrimary};
     outline-offset: -2px;
   `,
+  rootDropZone: css`
+    min-height: 100%;
+    transition: background-color 0.2s;
+  `,
+  rootDropZoneActive: css`
+    background-color: ${token.colorFillQuaternary};
+    outline: 2px dashed ${token.colorPrimary};
+    outline-offset: -4px;
+  `,
 }));
 
 interface TreeItem {
@@ -259,6 +268,7 @@ const FileTreeItem = memo<{
 FileTreeItem.displayName = 'FileTreeItem';
 
 const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
+  const { styles, cx } = useStyles();
   const { currentFolderSlug } = useFolderPath();
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
@@ -268,6 +278,18 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   const [folderChildrenCache, setFolderChildrenCache] = useState<Map<string, TreeItem[]>>(
     new Map(),
   );
+
+  // Special droppable ID for root folder
+  const ROOT_DROP_ID = `__root__:${knowledgeBaseId}`;
+
+  const { setNodeRef: setRootDropRef, isOver: isRootDropOver } = useDroppable({
+    data: {
+      fileType: 'custom/folder',
+      isFolder: true,
+      name: 'Root',
+    },
+    id: ROOT_DROP_ID,
+  });
 
   // Fetch root level data using SWR
   const { data: rootData, isLoading } = useFetchKnowledgeItems({
@@ -372,7 +394,11 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   }
 
   return (
-    <Flexbox gap={2}>
+    <Flexbox
+      className={cx(styles.rootDropZone, isRootDropOver && styles.rootDropZoneActive)}
+      gap={2}
+      ref={setRootDropRef}
+    >
       {items.map((item) => (
         <FileTreeItem
           expandedFolders={expandedFolders}

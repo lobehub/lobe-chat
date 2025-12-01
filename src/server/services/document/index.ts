@@ -160,7 +160,7 @@ export class DocumentService {
       content?: string;
       editorData?: Record<string, any>;
       metadata?: Record<string, any>;
-      parentId?: string;
+      parentId?: string | null;
       title?: string;
     },
   ) {

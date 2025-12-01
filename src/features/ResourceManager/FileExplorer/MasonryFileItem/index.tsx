@@ -221,8 +221,8 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
 
             if (isNote) {
               // For custom notes, fetch from document service
-              const document = await documentService.getDocumentById(id);
-              const content = document?.content || '';
+              const page = await documentService.getDocumentById(id);
+              const content = page?.content || '';
 
               // Try to parse as JSON (editor's native format) and convert to markdown for preview
               try {

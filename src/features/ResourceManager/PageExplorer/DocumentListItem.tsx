@@ -95,7 +95,7 @@ interface DocumentListItemProps {
 
 const DocumentListItem = memo<DocumentListItemProps>(
   ({
-    document,
+    document: page,
     isRenaming,
     isSelected,
     onDelete,
@@ -106,21 +106,21 @@ const DocumentListItem = memo<DocumentListItemProps>(
   }) => {
     const { styles, cx } = useStyles();
 
-    const title = document.title || untitledText;
-    const emoji = document.metadata?.emoji;
+    const title = page.title || untitledText;
+    const emoji = page.metadata?.emoji;
 
     return (
       <div
         className={cx(styles.documentCard, isSelected && 'selected')}
-        onClick={() => !isRenaming && onSelect(document.id)}
+        onClick={() => !isRenaming && onSelect(page.id)}
       >
         <RenamePopover
           currentEmoji={emoji}
           currentTitle={title}
           onConfirm={(newTitle, newEmoji) => {
-            onRenameConfirm(document.id, newTitle, newEmoji);
+            onRenameConfirm(page.id, newTitle, newEmoji);
           }}
-          onOpenChange={(open) => onRenameOpenChange(document.id, open)}
+          onOpenChange={(open) => onRenameOpenChange(page.id, open)}
           open={isRenaming}
         >
           <div className={styles.documentContent}>
@@ -134,10 +134,10 @@ const DocumentListItem = memo<DocumentListItemProps>(
         </RenamePopover>
         <div className={cx(styles.documentActions, 'document-actions')}>
           <DocumentActions
-            documentContent={document.content || undefined}
-            documentId={document.id}
+            documentContent={page.content || undefined}
+            documentId={page.id}
             onDelete={onDelete}
-            onRename={() => onRenameOpenChange(document.id, true)}
+            onRename={() => onRenameOpenChange(page.id, true)}
           />
         </div>
       </div>

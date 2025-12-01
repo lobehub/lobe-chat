@@ -17,7 +17,6 @@ export type ResouceManagerMode = 'page' | 'pages' | 'files' | 'file';
 
 interface KnowledgeManagerProps {
   category?: string;
-  // Directly open a document if provided
   documentId?: string;
   knowledgeBaseId?: string;
   onOpenFile?: (id: string) => void;
