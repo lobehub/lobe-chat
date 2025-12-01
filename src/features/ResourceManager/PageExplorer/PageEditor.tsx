@@ -1,7 +1,8 @@
 'use client';
 
 import { useEditor } from '@lobehub/editor/react';
-import { ActionIcon, Button, Dropdown, Icon } from '@lobehub/ui';
+import { ActionIcon, Button, DraggablePanel, Dropdown, Icon } from '@lobehub/ui';
+import { ChatHeader } from '@lobehub/ui/chat';
 import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
@@ -12,6 +13,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { ChatInput, ChatList, ConversationProvider } from '@/features/Conversation';
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -193,76 +195,78 @@ const PageEditor = memo<PageEditorPanelProps>(
     );
 
     return (
-      <Flexbox height={'100%'} style={{ background: theme.colorBgContainer }}>
-        {/* Header */}
-        <Flexbox
-          align="center"
-          direction="horizontal"
-          gap={8}
-          paddingBlock={8}
-          paddingInline={16}
-          style={{
-            background: theme.colorBgContainer,
-          }}
-        >
-          {/* Breadcrumb - show when document has a parent folder */}
-          {pageDocument?.parentId && (
-            <PageEditorBreadcrumb
-              documentTitle={currentTitle || t('documentEditor.titlePlaceholder')}
-              knowledgeBaseId={knowledgeBaseId}
-              parentId={pageDocument.parentId}
-            />
-          )}
-
-          {/* Show icon and title only when there's no parent folder */}
-          {!pageDocument?.parentId && (
-            <>
-              {/* Icon */}
-              {currentEmoji ? (
-                <span style={{ fontSize: 20, lineHeight: 1 }}>{currentEmoji}</span>
-              ) : (
-                <Icon icon={FileText} size={20} style={{ color: theme.colorTextSecondary }} />
-              )}
-
-              {/* Title */}
-              <Flexbox
-                flex={1}
-                style={{
-                  color: theme.colorText,
-                  fontSize: 14,
-                  fontWeight: 500,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {currentTitle || t('documentEditor.titlePlaceholder')}
-              </Flexbox>
-            </>
-          )}
-
-          {/* Save Status Indicator */}
-          {saveStatus === 'saving' && (
-            <Flexbox>
-              <Icon icon={Loader2Icon} spin />
-            </Flexbox>
-          )}
-
-          {/* Last Updated Time */}
-          {lastUpdatedTime && (
-            <span
+      <ConversationProvider context={{ agentId: 'page-copilot' }}>
+        <Flexbox height={'100%'} horizontal style={{ background: 'red' }}>
+          <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
+            {/* Header */}
+            <Flexbox
+              align="center"
+              direction="horizontal"
+              gap={8}
+              paddingBlock={8}
+              paddingInline={16}
               style={{
-                color: theme.colorTextTertiary,
-                fontSize: 12,
-                whiteSpace: 'nowrap',
+                background: theme.colorBgContainer,
               }}
             >
-              {t('documentEditor.editedAt', { time: dayjs(lastUpdatedTime).fromNow() })}
-            </span>
-          )}
+              {/* Breadcrumb - show when document has a parent folder */}
+              {pageDocument?.parentId && (
+                <PageEditorBreadcrumb
+                  documentTitle={currentTitle || t('documentEditor.titlePlaceholder')}
+                  knowledgeBaseId={knowledgeBaseId}
+                  parentId={pageDocument.parentId}
+                />
+              )}
 
-          {/* Pin action */}
-          {/* <ActionIcon
+              {/* Show icon and title only when there's no parent folder */}
+              {!pageDocument?.parentId && (
+                <>
+                  {/* Icon */}
+                  {currentEmoji ? (
+                    <span style={{ fontSize: 20, lineHeight: 1 }}>{currentEmoji}</span>
+                  ) : (
+                    <Icon icon={FileText} size={20} style={{ color: theme.colorTextSecondary }} />
+                  )}
+
+                  {/* Title */}
+                  <Flexbox
+                    flex={1}
+                    style={{
+                      color: theme.colorText,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {currentTitle || t('documentEditor.titlePlaceholder')}
+                  </Flexbox>
+                </>
+              )}
+
+              {/* Save Status Indicator */}
+              {saveStatus === 'saving' && (
+                <Flexbox>
+                  <Icon icon={Loader2Icon} spin />
+                </Flexbox>
+              )}
+
+              {/* Last Updated Time */}
+              {lastUpdatedTime && (
+                <span
+                  style={{
+                    color: theme.colorTextTertiary,
+                    fontSize: 12,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {t('documentEditor.editedAt', { time: dayjs(lastUpdatedTime).fromNow() })}
+                </span>
+              )}
+
+              {/* Pin action */}
+              {/* <ActionIcon
             icon={Pin}
             onClick={() => {
               // TODO: Implement pin functionality
@@ -272,143 +276,156 @@ const PageEditor = memo<PageEditorPanelProps>(
             style={{ color: theme.colorText }}
           /> */}
 
-          {/* Three-dot menu */}
-          <Dropdown
-            menu={{
-              items: menuItems,
-              style: { minWidth: 200 },
-            }}
-            placement="bottomRight"
-            trigger={['click']}
-          >
-            <ActionIcon icon={MoreVertical} size={15.5} style={{ color: theme.colorText }} />
-          </Dropdown>
-        </Flexbox>
-
-        {/* Editor with title */}
-        <Flexbox flex={1} style={{ overflowY: 'auto' }}>
-          <Flexbox
-            paddingBlock={36}
-            style={{
-              margin: '0 auto',
-              maxWidth: 900,
-              paddingLeft: 32,
-              paddingRight: 48,
-              width: '100%',
-            }}
-          >
-            {/* Emoji and Title */}
-            <Flexbox
-              onMouseEnter={() => setIsHoveringTitle(true)}
-              onMouseLeave={() => setIsHoveringTitle(false)}
-              style={{ marginBottom: 24 }}
-            >
-              {/* Emoji picker above Choose Icon button */}
-              {(currentEmoji || showEmojiPicker) && (
-                <Flexbox style={{ marginBottom: 4 }}>
-                  <EmojiPicker
-                    allowDelete
-                    locale={locale}
-                    onChange={(emoji) => {
-                      setCurrentEmoji(emoji);
-                      setShowEmojiPicker(false);
-                      debouncedSave();
-                    }}
-                    onDelete={() => {
-                      setCurrentEmoji(undefined);
-                      setShowEmojiPicker(false);
-                      debouncedSave();
-                    }}
-                    onOpenChange={(open) => {
-                      setShowEmojiPicker(open);
-                    }}
-                    open={showEmojiPicker}
-                    size={80}
-                    style={{
-                      fontSize: 80,
-                      transform: 'translateX(-6px)',
-                    }}
-                    title={t('documentEditor.chooseIcon')}
-                    value={currentEmoji}
-                  />
-                </Flexbox>
-              )}
-
-              {/* Choose Icon button - only shown when no emoji */}
-              <Flexbox style={{ marginBottom: 12 }}>
-                <Button
-                  icon={<Icon icon={SmilePlus} />}
-                  onClick={() => {
-                    setCurrentEmoji('📄');
-                    setShowEmojiPicker(true);
-                  }}
-                  size="small"
-                  style={{
-                    opacity: isHoveringTitle && !currentEmoji && !showEmojiPicker ? 1 : 0,
-                    transform: 'translateX(-6px)',
-                    transition: `opacity ${theme.motionDurationMid} ${theme.motionEaseInOut}`,
-                    width: 'fit-content',
-                  }}
-                  type="text"
-                >
-                  {t('documentEditor.chooseIcon')}
-                </Button>
-              </Flexbox>
-
-              {/* Title Input */}
-              <Flexbox align="center" direction="horizontal" gap={8}>
-                <input
-                  onChange={(e) => {
-                    setCurrentTitle(e.target.value);
-                    debouncedSave();
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      // Save immediately and focus on the editor
-                      performSave().then(() => {
-                        editor?.focus();
-                      });
-                    }
-                  }}
-                  placeholder={t('documentEditor.titlePlaceholder')}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: theme.colorText,
-                    flex: 1,
-                    fontSize: 40,
-                    fontWeight: 700,
-                    lineHeight: 1.2,
-                    outline: 'none',
-                  }}
-                  value={currentTitle}
-                />
-              </Flexbox>
+              {/* Three-dot menu */}
+              <Dropdown
+                menu={{
+                  items: menuItems,
+                  style: { minWidth: 200 },
+                }}
+                placement="bottomRight"
+                trigger={['click']}
+              >
+                <ActionIcon icon={MoreVertical} size={15.5} style={{ color: theme.colorText }} />
+              </Dropdown>
             </Flexbox>
 
-            <div
-              onClick={() => editor?.focus()}
-              style={{
-                cursor: 'text',
-                flex: 1,
-                minHeight: '400px',
-              }}
-            >
-              <EditorContent
-                editor={editor}
-                onInit={onEditorInit}
-                onTextChange={handleContentChange}
-                placeholder={t('documentEditor.editorPlaceholder')}
+            {/* Editor with title */}
+            <Flexbox flex={1} style={{ overflowY: 'auto' }}>
+              <Flexbox
+                paddingBlock={36}
                 style={{
-                  minHeight: '400px',
-                  paddingBottom: '200px',
+                  margin: '0 auto',
+                  maxWidth: 900,
+                  paddingLeft: 32,
+                  paddingRight: 48,
+                  width: '100%',
                 }}
-              />
-            </div>
+              >
+                {/* Emoji and Title */}
+                <Flexbox
+                  onMouseEnter={() => setIsHoveringTitle(true)}
+                  onMouseLeave={() => setIsHoveringTitle(false)}
+                  style={{ marginBottom: 24 }}
+                >
+                  {/* Emoji picker above Choose Icon button */}
+                  {(currentEmoji || showEmojiPicker) && (
+                    <Flexbox style={{ marginBottom: 4 }}>
+                      <EmojiPicker
+                        allowDelete
+                        locale={locale}
+                        onChange={(emoji) => {
+                          setCurrentEmoji(emoji);
+                          setShowEmojiPicker(false);
+                          debouncedSave();
+                        }}
+                        onDelete={() => {
+                          setCurrentEmoji(undefined);
+                          setShowEmojiPicker(false);
+                          debouncedSave();
+                        }}
+                        onOpenChange={(open) => {
+                          setShowEmojiPicker(open);
+                        }}
+                        open={showEmojiPicker}
+                        size={80}
+                        style={{
+                          fontSize: 80,
+                          transform: 'translateX(-6px)',
+                        }}
+                        title={t('documentEditor.chooseIcon')}
+                        value={currentEmoji}
+                      />
+                    </Flexbox>
+                  )}
+
+                  {/* Choose Icon button - only shown when no emoji */}
+                  <Flexbox style={{ marginBottom: 12 }}>
+                    <Button
+                      icon={<Icon icon={SmilePlus} />}
+                      onClick={() => {
+                        setCurrentEmoji('📄');
+                        setShowEmojiPicker(true);
+                      }}
+                      size="small"
+                      style={{
+                        opacity: isHoveringTitle && !currentEmoji && !showEmojiPicker ? 1 : 0,
+                        transform: 'translateX(-6px)',
+                        transition: `opacity ${theme.motionDurationMid} ${theme.motionEaseInOut}`,
+                        width: 'fit-content',
+                      }}
+                      type="text"
+                    >
+                      {t('documentEditor.chooseIcon')}
+                    </Button>
+                  </Flexbox>
+
+                  {/* Title Input */}
+                  <Flexbox align="center" direction="horizontal" gap={8}>
+                    <input
+                      onChange={(e) => {
+                        setCurrentTitle(e.target.value);
+                        debouncedSave();
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          // Save immediately and focus on the editor
+                          performSave().then(() => {
+                            editor?.focus();
+                          });
+                        }
+                      }}
+                      placeholder={t('documentEditor.titlePlaceholder')}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: theme.colorText,
+                        flex: 1,
+                        fontSize: 40,
+                        fontWeight: 700,
+                        lineHeight: 1.2,
+                        outline: 'none',
+                      }}
+                      value={currentTitle}
+                    />
+                  </Flexbox>
+                </Flexbox>
+
+                <div
+                  onClick={() => editor?.focus()}
+                  style={{
+                    cursor: 'text',
+                    flex: 1,
+                    minHeight: '400px',
+                  }}
+                >
+                  <EditorContent
+                    editor={editor}
+                    onInit={onEditorInit}
+                    onTextChange={handleContentChange}
+                    placeholder={t('documentEditor.editorPlaceholder')}
+                    style={{
+                      minHeight: '400px',
+                      paddingBottom: '200px',
+                    }}
+                  />
+                </div>
+              </Flexbox>
+            </Flexbox>
           </Flexbox>
+
+          {/* Copilot */}
+          <DraggablePanel placement="right">
+            <Flexbox flex={1} height={'100%'}>
+              <ChatHeader />
+              <Flexbox flex={1} height={'100%'}>
+                <ChatList />
+              </Flexbox>
+              <ChatInput />
+            </Flexbox>
+          </DraggablePanel>
         </Flexbox>
-      </Flexbox>
+      </ConversationProvider>
     );
   },
 );

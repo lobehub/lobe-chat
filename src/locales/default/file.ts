@@ -50,6 +50,9 @@ export default {
       pin: '置顶文档',
     },
     saving: '保存中...',
+    slashCommands: {
+      image: '图片',
+    },
     titlePlaceholder: '无标题',
     wordCount: '{{wordCount}} 字',
   },
