@@ -46,6 +46,7 @@ import PerplexityProvider from './perplexity';
 import PPIOProvider from './ppio';
 import QiniuProvider from './qiniu';
 import QwenProvider from './qwen';
+import ReplicateProvider from './replicate';
 import SambaNovaProvider from './sambanova';
 import Search1APIProvider from './search1api';
 import SenseNovaProvider from './sensenova';
@@ -187,6 +188,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   InfiniAIProvider,
   AkashChatProvider,
   QiniuProvider,
+  ReplicateProvider,
   NebiusProvider,
   CometAPIProvider,
   VercelAIGatewayProvider,
