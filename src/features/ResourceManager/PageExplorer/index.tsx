@@ -298,7 +298,6 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
       <div className={styles.editorPanel}>
         {selectedPageId || isCreatingNew ? (
           <PageEditor
-            documentId={selectedPageId || undefined}
             knowledgeBaseId={knowledgeBaseId}
             onDelete={() => {
               setSelectedPageId(null);
@@ -306,6 +305,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
               updateUrl(null);
             }}
             onDocumentIdChange={handleDocumentIdChange}
+            pageId={selectedPageId || undefined}
           />
         ) : (
           <PageExplorerPlaceholder

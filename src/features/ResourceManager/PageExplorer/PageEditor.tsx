@@ -13,12 +13,14 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
+import { documentSelectors } from '@/store/file/slices/document/selectors';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
 import EditorContent from './EditorContent';
+import PageEditorBreadcrumb from './PageEditorBreadcrumb';
 import { usePageEditor } from './hooks/usePageEditor';
 
 dayjs.extend(relativeTime);
@@ -26,15 +28,18 @@ dayjs.extend(relativeTime);
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
 interface PageEditorPanelProps {
-  documentId?: string;
   knowledgeBaseId?: string;
   onDelete?: () => void;
   onDocumentIdChange?: (newId: string) => void;
   onSave?: () => void;
+  pageId?: string;
 }
 
+/**
+ * Edit a page
+ */
 const PageEditor = memo<PageEditorPanelProps>(
-  ({ documentId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete }) => {
+  ({ pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete }) => {
     const { t } = useTranslation(['file', 'common']);
     const theme = useTheme();
     const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
@@ -47,6 +52,19 @@ const PageEditor = memo<PageEditorPanelProps>(
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     const removeDocument = useFileStore((s) => s.removeDocument);
+    // Try to get document from store first
+    const currentDocument = useFileStore(documentSelectors.getDocumentById(pageId));
+    // Also fetch via SWR if not in store (for pages in folders or direct links)
+    const useFetchKnowledgeItem = useFileStore((s) => s.useFetchKnowledgeItem);
+    const { data: fetchedDocument } = useFetchKnowledgeItem(pageId);
+
+    // Use whichever is available (renamed to avoid shadowing global document)
+    const pageDocument = currentDocument || fetchedDocument;
+
+    console.log('currentDocument', currentDocument);
+    console.log('fetchedDocument', fetchedDocument);
+    console.log('pageDocument (final)', pageDocument);
+    console.log('pageId', pageId);
 
     const {
       currentDocId,
@@ -63,7 +81,7 @@ const PageEditor = memo<PageEditorPanelProps>(
       onEditorInit,
     } = usePageEditor({
       autoSave: true,
-      documentId,
+      documentId: pageId,
       editor,
       knowledgeBaseId,
       onDocumentIdChange,
@@ -187,27 +205,41 @@ const PageEditor = memo<PageEditorPanelProps>(
             background: theme.colorBgContainer,
           }}
         >
-          {/* Icon */}
-          {currentEmoji ? (
-            <span style={{ fontSize: 20, lineHeight: 1 }}>{currentEmoji}</span>
-          ) : (
-            <Icon icon={FileText} size={20} style={{ color: theme.colorTextSecondary }} />
+          {/* Breadcrumb - show when document has a parent folder */}
+          {pageDocument?.parentId && (
+            <PageEditorBreadcrumb
+              documentTitle={currentTitle || t('documentEditor.titlePlaceholder')}
+              knowledgeBaseId={knowledgeBaseId}
+              parentId={pageDocument.parentId}
+            />
           )}
 
-          {/* Title */}
-          <Flexbox
-            flex={1}
-            style={{
-              color: theme.colorText,
-              fontSize: 14,
-              fontWeight: 500,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {currentTitle || t('documentEditor.titlePlaceholder')}
-          </Flexbox>
+          {/* Show icon and title only when there's no parent folder */}
+          {!pageDocument?.parentId && (
+            <>
+              {/* Icon */}
+              {currentEmoji ? (
+                <span style={{ fontSize: 20, lineHeight: 1 }}>{currentEmoji}</span>
+              ) : (
+                <Icon icon={FileText} size={20} style={{ color: theme.colorTextSecondary }} />
+              )}
+
+              {/* Title */}
+              <Flexbox
+                flex={1}
+                style={{
+                  color: theme.colorText,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {currentTitle || t('documentEditor.titlePlaceholder')}
+              </Flexbox>
+            </>
+          )}
 
           {/* Save Status Indicator */}
           {saveStatus === 'saving' && (

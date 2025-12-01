@@ -36,7 +36,7 @@ const ResourceManager = memo<KnowledgeManagerProps>(
     const MainContent = useMemo(() => {
       switch (mode) {
         case 'page': {
-          return <PageEditor documentId={currentViewItemId} knowledgeBaseId={knowledgeBaseId} />;
+          return <PageEditor knowledgeBaseId={knowledgeBaseId} pageId={currentViewItemId} />;
         }
         case 'pages': {
           return <PageExplorer documentId={currentViewItemId} knowledgeBaseId={knowledgeBaseId} />;

@@ -6,7 +6,7 @@ import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { motion } from 'framer-motion';
 import { FileText, FolderIcon, FolderOpenIcon } from 'lucide-react';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useReducer } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +17,27 @@ import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';
 
 import TreeSkeleton from './TreeSkeleton';
+
+// Module-level state to persist expansion across re-renders
+const treeState = new Map<
+  string,
+  {
+    expandedFolders: Set<string>;
+    folderChildrenCache: Map<string, any[]>;
+    loadedFolders: Set<string>;
+  }
+>();
+
+const getTreeState = (knowledgeBaseId: string) => {
+  if (!treeState.has(knowledgeBaseId)) {
+    treeState.set(knowledgeBaseId, {
+      expandedFolders: new Set(),
+      folderChildrenCache: new Map(),
+      loadedFolders: new Set(),
+    });
+  }
+  return treeState.get(knowledgeBaseId)!;
+};
 
 const useStyles = createStyles(({ css, token }) => ({
   fileItem: css`
@@ -76,6 +97,7 @@ const FileTreeItem = memo<{
   onLoadFolder: (_: string) => Promise<void>;
   onToggleFolder: (_: string) => void;
   selectedKey: string | null;
+  updateKey?: number;
 }>(
   ({
     item,
@@ -86,6 +108,7 @@ const FileTreeItem = memo<{
     onLoadFolder,
     selectedKey,
     knowledgeBaseId,
+    updateKey,
   }) => {
     const { styles, cx } = useStyles();
     const navigate = useNavigate();
@@ -160,6 +183,7 @@ const FileTreeItem = memo<{
           >
             <motion.div
               animate={{ rotate: isExpanded ? 0 : -90 }}
+              initial={false}
               transition={{ duration: 0.2, ease: 'easeInOut' }}
             >
               <ActionIcon
@@ -197,7 +221,7 @@ const FileTreeItem = memo<{
           {isExpanded && item.children && item.children.length > 0 && (
             <motion.div
               animate={{ height: 'auto', opacity: 1 }}
-              initial={{ height: 0, opacity: 0 }}
+              initial={false}
               style={{ overflow: 'hidden' }}
               transition={{ duration: 0.2, ease: 'easeInOut' }}
             >
@@ -213,6 +237,7 @@ const FileTreeItem = memo<{
                     onLoadFolder={onLoadFolder}
                     onToggleFolder={onToggleFolder}
                     selectedKey={selectedKey}
+                    updateKey={updateKey}
                   />
                 ))}
               </Flexbox>
@@ -273,11 +298,12 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
 
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
-  const [loadedFolders, setLoadedFolders] = useState<Set<string>>(new Set());
-  const [folderChildrenCache, setFolderChildrenCache] = useState<Map<string, TreeItem[]>>(
-    new Map(),
-  );
+  // Force re-render when tree state changes
+  const [updateKey, forceUpdate] = useReducer((x) => x + 1, 0);
+
+  // Get the persisted state for this knowledge base
+  const state = getTreeState(knowledgeBaseId);
+  const { expandedFolders, loadedFolders, folderChildrenCache } = state;
 
   // Special droppable ID for root folder
   const ROOT_DROP_ID = `__root__:${knowledgeBaseId}`;
@@ -329,14 +355,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
     });
 
     return sortItems(mappedItems);
-  }, [rootData, sortItems, folderChildrenCache]);
-
-  // Clear folder cache when root data changes (e.g., when a folder is deleted)
-  useEffect(() => {
-    setFolderChildrenCache(new Map());
-    setLoadedFolders(new Set());
-    setExpandedFolders(new Set());
-  }, [rootData]);
+  }, [rootData, sortItems, folderChildrenCache, updateKey]);
 
   const handleLoadFolder = useCallback(
     async (folderId: string) => {
@@ -363,31 +382,30 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
         const sortedChildren = sortItems(childItems);
 
         // Store children in cache
-        setFolderChildrenCache((prev) => {
-          const next = new Map(prev);
-          next.set(folderId, sortedChildren);
-          return next;
-        });
+        state.folderChildrenCache.set(folderId, sortedChildren);
+        state.loadedFolders.add(folderId);
 
-        setLoadedFolders((prev) => new Set([...prev, folderId]));
+        // Trigger re-render
+        forceUpdate();
       } catch (error) {
         console.error('Failed to load folder contents:', error);
       }
     },
-    [knowledgeBaseId, loadedFolders, sortItems],
+    [knowledgeBaseId, loadedFolders, sortItems, state, forceUpdate],
   );
 
-  const handleToggleFolder = useCallback((folderId: string) => {
-    setExpandedFolders((prev) => {
-      const next = new Set(prev);
-      if (next.has(folderId)) {
-        next.delete(folderId);
+  const handleToggleFolder = useCallback(
+    (folderId: string) => {
+      if (state.expandedFolders.has(folderId)) {
+        state.expandedFolders.delete(folderId);
       } else {
-        next.add(folderId);
+        state.expandedFolders.add(folderId);
       }
-      return next;
-    });
-  }, []);
+      // Trigger re-render
+      forceUpdate();
+    },
+    [state, forceUpdate],
+  );
 
   if (isLoading) {
     return <TreeSkeleton />;
@@ -409,6 +427,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
           onLoadFolder={handleLoadFolder}
           onToggleFolder={handleToggleFolder}
           selectedKey={currentFolderSlug}
+          updateKey={updateKey}
         />
       ))}
     </Flexbox>
