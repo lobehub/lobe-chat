@@ -2,6 +2,7 @@
   "about": {
     "title": "Über"
   },
+  "advancedSettings": "Erweiterte Einstellungen",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Profilbild",
@@ -40,6 +41,11 @@
       "unset": "Nicht festgelegt",
       "untitled": "Unbenannter Assistent"
     }
+  },
+  "agentProfile": {
+    "latest": "Neueste Version geladen",
+    "saved": "Gespeichert",
+    "saving": "Automatisches Speichern..."
   },
   "agentTab": {
     "chat": "Chat-Präferenz",
@@ -663,6 +669,7 @@
     "identifier": "Assistenten-Bezeichner (identifier)",
     "metaMiss": "Bitte vervollständigen Sie die Assistenteninformationen, einschließlich Name, Beschreibung und Tags, bevor Sie sie einreichen.",
     "placeholder": "Geben Sie die Kennung des Assistenten ein, die eindeutig sein muss, z. B. Web-Entwicklung",
+    "success": "Assistent erfolgreich übermittelt",
     "tooltips": "Auf dem Assistentenmarkt teilen"
   },
   "submitFooter": {
@@ -771,10 +778,13 @@
     "tts": "Sprachdienste"
   },
   "tools": {
+    "add": "Plugin integrieren",
     "builtins": {
       "groupName": "Integriert"
     },
     "disabled": "Das aktuelle Modell unterstützt keine Funktionsaufrufe und kann keine Plugins verwenden",
+    "notInstalled": "Nicht installiert",
+    "notInstalledWarning": "Das aktuelle Plugin ist nicht installiert, was die Nutzung des Assistenten beeinträchtigen könnte",
     "plugins": {
       "enabled": "Aktiviert: {{num}}",
       "groupName": "Plugins",

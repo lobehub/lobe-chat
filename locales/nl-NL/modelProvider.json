@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Aangepaste provider niet ingeschakeld",
       "disabled": "Dienstverlener niet ingeschakeld",
       "enabled": "Dienstverlener ingeschakeld"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Voeg aangepaste provider toe",
     "all": "Alles",
     "list": {
+      "custom": "Aangepaste provider niet ingeschakeld",
       "disabled": "Niet ingeschakeld",
       "disabledActions": {
         "sort": "Sorteervolgorde",

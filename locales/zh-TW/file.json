@@ -50,6 +50,9 @@
       "pin": "置頂文件"
     },
     "saving": "儲存中...",
+    "slashCommands": {
+      "image": "圖片"
+    },
     "titlePlaceholder": "無標題",
     "wordCount": "{{wordCount}} 字"
   },

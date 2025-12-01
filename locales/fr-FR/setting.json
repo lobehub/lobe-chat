@@ -2,6 +2,7 @@
   "about": {
     "title": "À propos"
   },
+  "advancedSettings": "Paramètres avancés",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -40,6 +41,11 @@
       "unset": "Non défini",
       "untitled": "Assistant sans titre"
     }
+  },
+  "agentProfile": {
+    "latest": "Dernière version chargée",
+    "saved": "Enregistré",
+    "saving": "Enregistrement automatique en cours..."
   },
   "agentTab": {
     "chat": "Préférences de discussion",
@@ -663,6 +669,7 @@
     "identifier": "Identifiant de l'assistant (identifier)",
     "metaMiss": "Veuillez compléter les informations de l'agent avant de soumettre. Elles doivent inclure le nom, la description et les balises.",
     "placeholder": "Veuillez entrer l'identifiant de l'agent, qui doit être unique, par exemple développement-web",
+    "success": "Assistant soumis avec succès",
     "tooltips": "Partager sur le marché des agents"
   },
   "submitFooter": {
@@ -771,10 +778,13 @@
     "tts": "Service vocal"
   },
   "tools": {
+    "add": "Intégrer un plugin",
     "builtins": {
       "groupName": "Intégré"
     },
     "disabled": "Ce modèle ne prend pas en charge les appels de fonction et ne peut pas utiliser de plugins",
+    "notInstalled": "Non installé",
+    "notInstalledWarning": "Le plugin actuel n'est pas installé, ce qui pourrait affecter le fonctionnement de l'assistant",
     "plugins": {
       "enabled": "Activé {{num}}",
       "groupName": "Plugins",

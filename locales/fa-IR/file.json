@@ -50,6 +50,9 @@
       "pin": "سند را سنجاق کن"
     },
     "saving": "در حال ذخیره‌سازی...",
+    "slashCommands": {
+      "image": "تصویر"
+    },
     "titlePlaceholder": "بدون عنوان",
     "wordCount": "{{wordCount}} کلمه"
   },

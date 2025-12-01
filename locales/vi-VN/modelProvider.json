@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Chưa kích hoạt nhà cung cấp tùy chỉnh",
       "disabled": "Nhà cung cấp chưa được kích hoạt",
       "enabled": "Nhà cung cấp đã được kích hoạt"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Thêm nhà cung cấp tùy chỉnh",
     "all": "Tất cả",
     "list": {
+      "custom": "Tùy chỉnh chưa được kích hoạt",
       "disabled": "Chưa kích hoạt",
       "disabledActions": {
         "sort": "Cách sắp xếp",

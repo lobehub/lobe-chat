@@ -2,6 +2,7 @@
   "about": {
     "title": "O nas"
   },
+  "advancedSettings": "Ustawienia zaawansowane",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Awatar",
@@ -40,6 +41,11 @@
       "unset": "Nieustawione",
       "untitled": "Asystent bez nazwy"
     }
+  },
+  "agentProfile": {
+    "latest": "Załadowano najnowszą wersję",
+    "saved": "Zapisano",
+    "saving": "Automatyczne zapisywanie..."
   },
   "agentTab": {
     "chat": "Preferencje czatu",
@@ -663,6 +669,7 @@
     "identifier": "Identyfikator asystenta (identifier)",
     "metaMiss": "Proszę uzupełnić informacje o asystencie przed przesłaniem, należy podać nazwę, opis i tagi",
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
+    "success": "Asystent został pomyślnie przesłany",
     "tooltips": "Udostępnij na rynku asystentów"
   },
   "submitFooter": {
@@ -771,10 +778,13 @@
     "tts": "Usługa głosowa"
   },
   "tools": {
+    "add": "Zintegruj wtyczkę",
     "builtins": {
       "groupName": "Wbudowane"
     },
     "disabled": "Aktualny model nie obsługuje wywołań funkcji i nie można użyć wtyczki",
+    "notInstalled": "Nie zainstalowano",
+    "notInstalledWarning": "Aktualna wtyczka nie została zainstalowana, co może wpłynąć na działanie asystenta",
     "plugins": {
       "enabled": "Włączone {{num}}",
       "groupName": "Wtyczki",

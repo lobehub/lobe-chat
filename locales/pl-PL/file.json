@@ -50,6 +50,9 @@
       "pin": "Przypnij dokument"
     },
     "saving": "Zapisywanie...",
+    "slashCommands": {
+      "image": "Obraz"
+    },
     "titlePlaceholder": "Bez tytułu",
     "wordCount": "{{wordCount}} słów"
   },

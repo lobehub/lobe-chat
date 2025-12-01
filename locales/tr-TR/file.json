@@ -50,6 +50,9 @@
       "pin": "Belgeyi Sabitle"
     },
     "saving": "Kaydediliyor...",
+    "slashCommands": {
+      "image": "Görsel"
+    },
     "titlePlaceholder": "Başlıksız",
     "wordCount": "{{wordCount}} kelime"
   },

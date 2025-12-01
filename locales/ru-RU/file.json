@@ -50,6 +50,9 @@
       "pin": "Закрепить документ"
     },
     "saving": "Сохранение...",
+    "slashCommands": {
+      "image": "Изображение"
+    },
     "titlePlaceholder": "Без названия",
     "wordCount": "{{wordCount}} слов"
   },

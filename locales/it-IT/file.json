@@ -50,6 +50,9 @@
       "pin": "Fissa documento"
     },
     "saving": "Salvataggio in corso...",
+    "slashCommands": {
+      "image": "Immagine"
+    },
     "titlePlaceholder": "Senza titolo",
     "wordCount": "{{wordCount}} parole"
   },

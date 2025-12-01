@@ -2,6 +2,7 @@
   "about": {
     "title": "About"
   },
+  "advancedSettings": "Advanced Settings",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -40,6 +41,11 @@
       "unset": "Not Set",
       "untitled": "Untitled Agent"
     }
+  },
+  "agentProfile": {
+    "latest": "Latest version loaded",
+    "saved": "Saved",
+    "saving": "Auto-saving..."
   },
   "agentTab": {
     "chat": "Chat Preferences",
@@ -663,6 +669,7 @@
     "identifier": "Agent Identifier",
     "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags",
     "placeholder": "Enter a unique identifier for the assistant, e.g. web-development",
+    "success": "Agent submitted successfully",
     "tooltips": "Share to the assistant marketplace"
   },
   "submitFooter": {
@@ -771,10 +778,13 @@
     "tts": "Text-to-Speech"
   },
   "tools": {
+    "add": "Integrate Plugin",
     "builtins": {
       "groupName": "Built-ins"
     },
     "disabled": "The current model does not support function calls and cannot use the plugin",
+    "notInstalled": "Not Installed",
+    "notInstalledWarning": "This plugin is not currently installed, which may affect the assistant's functionality",
     "plugins": {
       "enabled": "Enabled: {{num}}",
       "groupName": "Plugins",

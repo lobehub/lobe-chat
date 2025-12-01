@@ -50,6 +50,9 @@
       "pin": "Dokument anheften"
     },
     "saving": "Speichern...",
+    "slashCommands": {
+      "image": "Bild"
+    },
     "titlePlaceholder": "Ohne Titel",
     "wordCount": "{{wordCount}} Wörter"
   },

@@ -2,6 +2,7 @@
   "about": {
     "title": "關於"
   },
+  "advancedSettings": "進階設定",
   "agentInfoDescription": {
     "basic": {
       "avatar": "頭像",
@@ -40,6 +41,11 @@
       "unset": "未設定",
       "untitled": "未命名助手"
     }
+  },
+  "agentProfile": {
+    "latest": "已載入最新版本",
+    "saved": "已儲存",
+    "saving": "自動儲存中..."
   },
   "agentTab": {
     "chat": "聊天偏好",
@@ -663,6 +669,7 @@
     "identifier": "助手識別碼（identifier）",
     "metaMiss": "請補全助手信息後提交，需要包含名稱、描述和標籤",
     "placeholder": "請輸入助手的標識符，需要是唯一的，比如 web-development",
+    "success": "助手提交成功",
     "tooltips": "分享到助手市場"
   },
   "submitFooter": {
@@ -771,10 +778,13 @@
     "tts": "語音服務"
   },
   "tools": {
+    "add": "整合外掛",
     "builtins": {
       "groupName": "內置"
     },
     "disabled": "當前模型不支持函數調用，無法使用插件",
+    "notInstalled": "未安裝",
+    "notInstalledWarning": "目前尚未安裝此外掛，可能會影響助手的使用",
     "plugins": {
       "enabled": "已啟用 {{num}}",
       "groupName": "插件",

@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "Vẽ tranh AI",
+    "aiImage": "Vẽ tranh",
     "audio": "Âm thanh",
     "chat": "Trò chuyện",
     "community": "Cộng đồng",
     "discover": "Khám phá",
     "files": "Tệp",
     "home": "Trang chủ",
-    "image": "Hình ảnh",
     "knowledgeBase": "Cơ sở tri thức",
     "me": "Tôi",
     "pages": "Tài liệu",
+    "resource": "Tài nguyên",
     "search": "Tìm kiếm",
     "setting": "Cài đặt",
     "video": "Video"

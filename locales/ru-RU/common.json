@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "ИИ Рисование",
+    "aiImage": "Рисование",
     "audio": "Аудио",
     "chat": "Чат",
     "community": "Сообщество",
     "discover": "Открыть",
     "files": "Файлы",
     "home": "Главная",
-    "image": "Изображение",
     "knowledgeBase": "База знаний",
     "me": "я",
     "pages": "Документы",
+    "resource": "Ресурсы",
     "search": "Поиск",
     "setting": "Настройки",
     "video": "Видео"

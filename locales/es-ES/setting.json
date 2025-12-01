@@ -2,6 +2,7 @@
   "about": {
     "title": "Acerca de"
   },
+  "advancedSettings": "Configuración avanzada",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -40,6 +41,11 @@
       "unset": "No configurado",
       "untitled": "Asistente sin título"
     }
+  },
+  "agentProfile": {
+    "latest": "Última versión cargada",
+    "saved": "Guardado",
+    "saving": "Guardado automático..."
   },
   "agentTab": {
     "chat": "Preferencias de chat",
@@ -663,6 +669,7 @@
     "identifier": "Identificador del asistente (identifier)",
     "metaMiss": "Por favor complete la información del asistente antes de enviar, debe incluir nombre, descripción y etiquetas",
     "placeholder": "Ingrese el identificador único del asistente, por ejemplo desarrollo-web",
+    "success": "Asistente enviado con éxito",
     "tooltips": "Compartir en el mercado de asistentes"
   },
   "submitFooter": {
@@ -771,10 +778,13 @@
     "tts": "Servicio de voz"
   },
   "tools": {
+    "add": "Integrar complemento",
     "builtins": {
       "groupName": "Incorporados"
     },
     "disabled": "El modelo actual no admite llamadas de función y no se puede utilizar el complemento",
+    "notInstalled": "No instalado",
+    "notInstalledWarning": "El complemento actual no está instalado, lo que podría afectar el uso del asistente",
     "plugins": {
       "enabled": "Habilitados {{num}}",
       "groupName": "Complementos",

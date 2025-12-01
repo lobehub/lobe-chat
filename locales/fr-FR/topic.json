@@ -1,5 +1,6 @@
 {
   "actions": {
+    "addNewTopic": "Nouveau sujet",
     "autoRename": "Renommage intelligent",
     "confirmRemoveAll": "Vous allez supprimer tous les sujets. Cette action est irréversible, veuillez agir avec prudence.",
     "confirmRemoveTopic": "Vous allez supprimer ce sujet. Cette action est irréversible, veuillez agir avec prudence.",

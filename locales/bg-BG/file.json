@@ -50,6 +50,9 @@
       "pin": "Закачане на документа"
     },
     "saving": "Запазване...",
+    "slashCommands": {
+      "image": "Изображение"
+    },
     "titlePlaceholder": "Без заглавие",
     "wordCount": "{{wordCount}} думи"
   },
