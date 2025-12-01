@@ -7,7 +7,7 @@ import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useUploadFilesValidation } from '../../hooks/useUploadFilesValidation';
+import { useUploadFilesValidation } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useUploadFilesValidation';
 
 // ======== Types ======== //
 

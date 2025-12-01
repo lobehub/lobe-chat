@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 
-import AspectRatioSelect from '../../../components/AspectRatioSelect';
+import AspectRatioSelect from './AspectRatioSelect';
 
 const styles = {
   aspectRatioSelect: {

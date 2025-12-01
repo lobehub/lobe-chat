@@ -1,8 +1,7 @@
 'use client';
 
 import { Text } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
-import { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -11,9 +10,9 @@ import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 import { useImageStore } from '@/store/image/store';
 
+import ImageConfigSkeleton from './ImageConfigSkeleton';
 import CfgSliderInput from './components/CfgSliderInput';
 import DimensionControlGroup from './components/DimensionControlGroup';
-import ImageConfigSkeleton from './components/ImageConfigSkeleton';
 import ImageNum from './components/ImageNum';
 import ImageUrl from './components/ImageUrl';
 import ImageUrlsUpload from './components/ImageUrlsUpload';
@@ -42,15 +41,11 @@ const isSupportedParamSelector = imageGenerationConfigSelectors.isSupportedParam
 
 const ConfigPanel = memo(() => {
   const { t } = useTranslation('image');
-  const theme = useTheme();
 
   // Initialize image configuration
   useFetchAiImageConfig();
 
   // All hooks must be called before any early returns
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [isScrollable, setIsScrollable] = useState(false);
-
   const isInit = useImageStore((s) => s.isInit);
   const isSupportImageUrl = useImageStore(isSupportedParamSelector('imageUrl'));
   const isSupportSize = useImageStore(isSupportedParamSelector('size'));
@@ -63,86 +58,13 @@ const ConfigPanel = memo(() => {
 
   const { showDimensionControl } = useDimensionControl();
 
-  // Check if content exceeds container height and needs scrolling
-  const checkScrollable = useCallback(() => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      const hasScrollbar = container.scrollHeight > container.clientHeight;
-      setIsScrollable(hasScrollbar);
-    }
-  }, []);
-
-  // Re-check when content changes
-  useEffect(() => {
-    checkScrollable();
-  }, [
-    checkScrollable,
-    isSupportImageUrl,
-    isSupportSize,
-    isSupportQuality,
-    isSupportResolution,
-    isSupportSeed,
-    isSupportSteps,
-    isSupportCfg,
-    isSupportImageUrls,
-    showDimensionControl,
-  ]);
-
-  // Setup observers for container changes
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    // Initial check
-    checkScrollable();
-
-    // Use ResizeObserver for container size changes
-    const resizeObserver = new ResizeObserver(checkScrollable);
-    resizeObserver.observe(container);
-
-    // Use MutationObserver for content changes
-    const mutationObserver = new MutationObserver(checkScrollable);
-    mutationObserver.observe(container, { childList: true, subtree: true });
-
-    return () => {
-      resizeObserver.disconnect();
-      mutationObserver.disconnect();
-    };
-  }, [checkScrollable]);
-
-  // Memoize sticky styles to prevent unnecessary re-renders
-  const stickyStyles = useMemo(
-    () => ({
-      bottom: 0,
-      position: 'sticky' as const,
-      zIndex: 1,
-      ...(isScrollable && {
-        backgroundColor: theme.colorBgContainer,
-        borderTop: `1px solid ${theme.colorBorder}`,
-        // Use negative margin to extend background to container edges
-        marginLeft: -12,
-        marginRight: -12,
-        marginTop: 20,
-        // Add back internal padding
-        paddingLeft: 12,
-        paddingRight: 12,
-      }),
-    }),
-    [isScrollable, theme.colorBgContainer, theme.colorBorder],
-  );
-
   // Show loading state if not initialized
   if (!isInit) {
     return <ImageConfigSkeleton />;
   }
 
   return (
-    <Flexbox
-      gap={32}
-      padding="12px 12px 0 12px"
-      ref={scrollContainerRef}
-      style={{ height: '100%', overflow: 'auto' }}
-    >
+    <Flexbox gap={16} paddingInline={10}>
       <ConfigItemLayout>
         <ModelSelect />
       </ConfigItemLayout>
@@ -197,11 +119,9 @@ const ConfigPanel = memo(() => {
         </ConfigItemLayout>
       )}
 
-      <Flexbox padding="12px 0" style={stickyStyles}>
-        <ConfigItemLayout label={t('config.imageNum.label')}>
-          <ImageNum />
-        </ConfigItemLayout>
-      </Flexbox>
+      <ConfigItemLayout label={t('config.imageNum.label')}>
+        <ImageNum />
+      </ConfigItemLayout>
     </Flexbox>
   );
 });

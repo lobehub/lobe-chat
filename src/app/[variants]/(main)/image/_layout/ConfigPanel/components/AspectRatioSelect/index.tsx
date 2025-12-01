@@ -16,19 +16,20 @@ export interface AspectRatioSelectProps extends Omit<GridProps, 'children' | 'on
 const AspectRatioSelect = memo<AspectRatioSelectProps>(
   ({ options, onChange, value, defaultValue, ...rest }) => {
     const theme = useTheme();
-    const [active, setActive] = useMergeState('', {
-      defaultValue,
+    const [active, setActive] = useMergeState('1:1', {
+      defaultValue: defaultValue || '1:1',
       onChange,
       value,
     });
+
     return (
       <Block padding={4} variant={'filled'} {...rest}>
         <Grid gap={4} maxItemWidth={48} rows={16}>
           {options?.map((item) => {
-            const isActive = active === item.value;
             const [width, height] = item.value.split(':').map(Number);
             const isWidthGreater = width > height;
-
+            const isEqual = width === height;
+            const isActive = isEqual ? item.value === '1:1' : active === item.value;
             return (
               <Block
                 align={'center'}

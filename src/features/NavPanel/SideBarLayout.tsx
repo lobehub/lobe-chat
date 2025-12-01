@@ -1,6 +1,8 @@
 import { ScrollShadow } from '@lobehub/ui';
-import { ReactNode, memo } from 'react';
+import { ReactNode, Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+
+import SkeletonList, { SkeletonItem } from '@/features/NavPanel/Body/SkeletonList';
 
 interface SidbarLayoutProps {
   body?: ReactNode;
@@ -11,11 +13,11 @@ interface SidbarLayoutProps {
 const SideBarLayout = memo<SidbarLayoutProps>(({ header, body, footer }) => {
   return (
     <Flexbox gap={4} style={{ height: '100%', overflow: 'hidden' }}>
-      {header}
+      <Suspense fallback={<SkeletonItem height={44} />}>{header}</Suspense>
       <ScrollShadow size={2} style={{ height: '100%' }}>
-        {body}
+        <Suspense fallback={<SkeletonList paddingBlock={8} />}>{body}</Suspense>
       </ScrollShadow>
-      {footer}
+      <Suspense>{footer}</Suspense>
     </Flexbox>
   );
 });

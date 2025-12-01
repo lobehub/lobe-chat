@@ -1,8 +1,8 @@
 import { memo } from 'react';
 
+import { useAutoDimensions } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useAutoDimensions';
 import { useGenerationConfigParam } from '@/store/image/slices/generationConfig/hooks';
 
-import { useAutoDimensions } from '../hooks/useAutoDimensions';
 import ImageUpload from './ImageUpload';
 import MultiImagesUpload from './MultiImagesUpload';
 

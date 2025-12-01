@@ -3,10 +3,10 @@
 import { Skeleton } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
-export const SkeletonItem = memo<{ height?: number; padding?: number }>(
-  ({ padding = 4, height = 36 }) => {
+export const SkeletonItem = memo<Omit<FlexboxProps, 'children'>>(
+  ({ padding = 4, height = 36, style, ...rest }) => {
     const theme = useTheme();
 
     return (
@@ -19,7 +19,9 @@ export const SkeletonItem = memo<{ height?: number; padding?: number }>(
             maxHeight: 24,
             maxWidth: 24,
             minWidth: 24,
+            ...style,
           }}
+          {...rest}
         />
         <Flexbox flex={1} height={16}>
           <Skeleton.Button
@@ -41,14 +43,16 @@ export const SkeletonItem = memo<{ height?: number; padding?: number }>(
   },
 );
 
-export const SkeletonList = memo<{ rows?: number }>(({ rows = 3 }) => {
-  return (
-    <Flexbox gap={2}>
-      {Array.from({ length: rows }).map((_, i) => (
-        <SkeletonItem key={i} />
-      ))}
-    </Flexbox>
-  );
-});
+export const SkeletonList = memo<{ rows?: number } & Omit<FlexboxProps, 'children'>>(
+  ({ rows = 3, ...rest }) => {
+    return (
+      <Flexbox gap={2} {...rest}>
+        {Array.from({ length: rows }).map((_, i) => (
+          <SkeletonItem key={i} />
+        ))}
+      </Flexbox>
+    );
+  },
+);
 
 export default SkeletonList;

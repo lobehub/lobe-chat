@@ -8,13 +8,13 @@ import React, { type FC, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
+import { CONFIG_PANEL_WIDTH } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/constants';
+import { useDragAndDrop } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useDragAndDrop';
+import { useUploadFilesValidation } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useUploadFilesValidation';
+import { useConfigPanelStyles } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/style';
 import { useFileStore } from '@/store/file';
 import { FileUploadStatus } from '@/types/files/upload';
 
-import { CONFIG_PANEL_WIDTH } from '../../constants';
-import { useDragAndDrop } from '../../hooks/useDragAndDrop';
-import { useUploadFilesValidation } from '../../hooks/useUploadFilesValidation';
-import { useConfigPanelStyles } from '../../style';
 import ImageManageModal, { type ImageItem } from './ImageManageModal';
 
 // ======== Business Types ======== //
@@ -145,15 +145,14 @@ const useStyles = createStyles(({ css, token }) => {
 
       width: 100%;
       height: 120px;
-      border: 2px dashed ${token.colorBorder};
+      border: 1px solid ${token.colorBorder};
       border-radius: ${token.borderRadiusLG}px;
 
-      background: ${token.colorFillAlter};
+      background: ${token.colorFillTertiary};
 
       transition: all 0.2s ease;
 
       &:hover {
-        border-color: ${token.colorPrimary};
         background: ${token.colorFillSecondary};
       }
 

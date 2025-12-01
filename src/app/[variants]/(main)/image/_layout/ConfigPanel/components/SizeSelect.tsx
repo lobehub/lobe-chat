@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import { useGenerationConfigParam } from '@/store/image/slices/generationConfig/hooks';
 
-import Select from '../../../components/SizeSelect';
+import Select from './Select';
 
 const SizeSelect = memo(() => {
   const { value, setValue, enumValues } = useGenerationConfigParam('size');
