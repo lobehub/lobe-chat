@@ -1,4 +1,15 @@
 {
+  "authorize": {
+    "cancel": "取消",
+    "confirm": "授权使用",
+    "description": {
+      "and": "和",
+      "prefix": "点击授权使用即视为同意",
+      "privacy": "隐私协议",
+      "terms": "服务条款"
+    },
+    "title": "授权确认"
+  },
   "callback": {
     "buttons": {
       "close": "关闭窗口"
@@ -33,8 +44,10 @@
     "stateMissing": "未找到授权状态，请重试。"
   },
   "messages": {
+    "authorized": "LobeHub 服务授权成功",
     "loading": "正在启动授权流程...",
     "success": {
+      "cloudMcpInstall": "授权成功！现在可以安装 Cloud MCP 插件了。",
       "submit": "授权成功！现在可以发布助手了。",
       "upload": "授权成功！现在可以发布新版本了。"
     }

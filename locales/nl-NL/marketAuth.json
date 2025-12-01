@@ -1,4 +1,15 @@
 {
+  "authorize": {
+    "cancel": "Annuleren",
+    "confirm": "Toestemming geven",
+    "description": {
+      "and": "en",
+      "prefix": "Door op 'Toestemming geven' te klikken, ga je akkoord met onze",
+      "privacy": "Privacybeleid",
+      "terms": "Servicevoorwaarden"
+    },
+    "title": "Toestemming bevestigen"
+  },
   "callback": {
     "buttons": {
       "close": "Venster sluiten"
@@ -33,8 +44,10 @@
     "stateMissing": "Autorisatiestatus niet gevonden, probeer het opnieuw."
   },
   "messages": {
+    "authorized": "LobeHub-service succesvol geautoriseerd",
     "loading": "Autorisatieproces wordt gestart...",
     "success": {
+      "cloudMcpInstall": "Toestemming succesvol! Je kunt nu de Cloud MCP-plugin installeren.",
       "submit": "Autorisatie geslaagd! Je kunt nu een assistent publiceren.",
       "upload": "Autorisatie geslaagd! Je kunt nu een nieuwe versie publiceren."
     }

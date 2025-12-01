@@ -11,7 +11,6 @@ import { Flexbox } from 'react-layout-kit';
 import MCPInstallProgress from '@/features/MCP/MCPInstallProgress';
 import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
-import { resolveMarketAuthError } from '@/layout/AuthProvider/MarketAuth/errors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/slices/plugin/selectors';
 
@@ -53,18 +52,9 @@ const ActionButton = memo(() => {
       try {
         message.loading({ content: tMarketAuth('messages.loading'), key: 'market-auth' });
         await signIn();
-        message.success({
-          content: tMarketAuth('messages.success.cloudMcpInstall'),
-          key: 'market-auth',
-        });
         console.log('[MCPActionButton] Authorization successful, proceeding with installation');
       } catch (error) {
         console.error('[MCPActionButton] Authorization failed:', error);
-        const normalizedError = resolveMarketAuthError(error);
-        message.error({
-          content: tMarketAuth(`errors.${normalizedError.code}`),
-          key: 'market-auth',
-        });
         return; // Don't proceed with installation if auth fails
       }
     }
