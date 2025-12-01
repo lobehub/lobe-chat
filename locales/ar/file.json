@@ -50,6 +50,9 @@
       "pin": "تثبيت المستند"
     },
     "saving": "جارٍ الحفظ...",
+    "slashCommands": {
+      "image": "صورة"
+    },
     "titlePlaceholder": "بدون عنوان",
     "wordCount": "{{wordCount}} كلمة"
   },

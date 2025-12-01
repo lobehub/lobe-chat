@@ -50,6 +50,9 @@
       "pin": "Pin Document"
     },
     "saving": "Saving...",
+    "slashCommands": {
+      "image": "Image"
+    },
     "titlePlaceholder": "Untitled",
     "wordCount": "{{wordCount}} words"
   },

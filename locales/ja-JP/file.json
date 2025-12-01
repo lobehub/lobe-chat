@@ -50,6 +50,9 @@
       "pin": "ドキュメントをピン留め"
     },
     "saving": "保存中...",
+    "slashCommands": {
+      "image": "画像"
+    },
     "titlePlaceholder": "無題",
     "wordCount": "{{wordCount}} 文字"
   },

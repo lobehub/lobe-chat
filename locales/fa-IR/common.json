@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "نقاشی هوش مصنوعی",
+    "aiImage": "نقاشی",
     "audio": "صوتی",
     "chat": "گفتگو",
     "community": "انجمن",
     "discover": "کشف",
     "files": "فایل‌ها",
     "home": "خانه",
-    "image": "تصویر",
     "knowledgeBase": "پایگاه دانش",
     "me": "من",
     "pages": "اسناد",
+    "resource": "منابع",
     "search": "جستجو",
     "setting": "تنظیمات",
     "video": "ویدیو"

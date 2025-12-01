@@ -2,6 +2,7 @@
   "about": {
     "title": "Về chúng tôi"
   },
+  "advancedSettings": "Cài đặt nâng cao",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Ảnh đại diện",
@@ -40,6 +41,11 @@
       "unset": "Chưa thiết lập",
       "untitled": "Trợ lý chưa có tên"
     }
+  },
+  "agentProfile": {
+    "latest": "Đã tải phiên bản mới nhất",
+    "saved": "Đã lưu",
+    "saving": "Đang tự động lưu..."
   },
   "agentTab": {
     "chat": "Tùy chọn Trò chuyện",
@@ -663,6 +669,7 @@
     "identifier": "Định danh trợ lý (identifier)",
     "metaMiss": "Vui lòng điền đầy đủ thông tin trợ lý trước khi gửi, cần bao gồm tên, mô tả và nhãn",
     "placeholder": "Vui lòng nhập nhận dạng trợ lý, cần phải duy nhất, ví dụ như phát triển web",
+    "success": "Gửi trợ lý thành công",
     "tooltips": "Chia sẻ lên thị trường trợ lý"
   },
   "submitFooter": {
@@ -771,10 +778,13 @@
     "tts": "Dịch vụ giọng nói"
   },
   "tools": {
+    "add": "Tích hợp plugin",
     "builtins": {
       "groupName": "Mở rộng tích hợp sẵn"
     },
     "disabled": "Mô hình hiện tại không hỗ trợ gọi hàm, không thể sử dụng plugin",
+    "notInstalled": "Chưa cài đặt",
+    "notInstalledWarning": "Plugin hiện tại chưa được cài đặt, có thể ảnh hưởng đến việc sử dụng trợ lý",
     "plugins": {
       "enabled": "Đã kích hoạt {{num}}",
       "groupName": "Tiện ích",

@@ -50,6 +50,9 @@
       "pin": "Document vastzetten"
     },
     "saving": "Bezig met opslaan...",
+    "slashCommands": {
+      "image": "Afbeelding"
+    },
     "titlePlaceholder": "Zonder titel",
     "wordCount": "{{wordCount}} woorden"
   },

@@ -1,5 +1,6 @@
 {
   "actions": {
+    "addNewTopic": "Crear nuevo tema",
     "autoRename": "Renombrar automáticamente",
     "confirmRemoveAll": "Se eliminarán todos los temas. Una vez eliminados, no se podrán recuperar. Por favor, actúe con precaución.",
     "confirmRemoveTopic": "Se eliminará este tema. Una vez eliminado, no se podrá recuperar. Por favor, actúe con precaución.",

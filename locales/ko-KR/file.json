@@ -50,6 +50,9 @@
       "pin": "문서 상단 고정"
     },
     "saving": "저장 중...",
+    "slashCommands": {
+      "image": "이미지"
+    },
     "titlePlaceholder": "제목 없음",
     "wordCount": "{{wordCount}}자"
   },

@@ -1,5 +1,6 @@
 {
   "actions": {
+    "addNewTopic": "新增主題",
     "autoRename": "智能重命名",
     "confirmRemoveAll": "即將刪除全部話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",

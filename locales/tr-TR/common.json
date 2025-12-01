@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "Yapay Zeka Resim",
+    "aiImage": "Çizim",
     "audio": "Ses",
     "chat": "Chat",
     "community": "Topluluk",
     "discover": "Keşfet",
     "files": "Dosyalar",
     "home": "Ana Sayfa",
-    "image": "Çizim",
     "knowledgeBase": "Bilgi Tabanı",
     "me": "ben",
     "pages": "Belgeler",
+    "resource": "Kaynaklar",
     "search": "Ara",
     "setting": "Ayarlar",
     "video": "Video"

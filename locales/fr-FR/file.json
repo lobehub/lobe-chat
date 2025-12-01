@@ -50,6 +50,9 @@
       "pin": "Épingler le document"
     },
     "saving": "Enregistrement en cours...",
+    "slashCommands": {
+      "image": "Image"
+    },
     "titlePlaceholder": "Sans titre",
     "wordCount": "{{wordCount}} mots"
   },

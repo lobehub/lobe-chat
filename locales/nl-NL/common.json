@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "AI-afbeelding",
+    "aiImage": "Schilderij",
     "audio": "Audio",
     "chat": "Chat",
     "community": "Gemeenschap",
     "discover": "Ontdekken",
     "files": "Bestanden",
     "home": "Startpagina",
-    "image": "Afbeelding",
     "knowledgeBase": "Kennisbank",
     "me": "Ik",
     "pages": "Documenten",
+    "resource": "Bronnen",
     "search": "Zoeken",
     "setting": "Instellingen",
     "video": "Video"

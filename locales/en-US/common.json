@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "AI Painting",
+    "aiImage": "Artwork",
     "audio": "Audio",
     "chat": "Chat",
     "community": "Community",
     "discover": "Discover",
     "files": "Files",
     "home": "Home",
-    "image": "Draw",
     "knowledgeBase": "Knowledge Base",
     "me": "Me",
     "pages": "Documents",
+    "resource": "Resources",
     "search": "Search",
     "setting": "Settings",
     "video": "Video"

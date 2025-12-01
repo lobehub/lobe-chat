@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "AI 画像生成",
+    "aiImage": "イラスト",
     "audio": "オーディオ",
     "chat": "チャット",
     "community": "コミュニティ",
     "discover": "発見",
     "files": "ファイル",
     "home": "ホーム",
-    "image": "画像生成",
     "knowledgeBase": "ナレッジベース",
     "me": "私",
     "pages": "ドキュメント",
+    "resource": "リソース",
     "search": "検索",
     "setting": "設定",
     "video": "ビデオ"

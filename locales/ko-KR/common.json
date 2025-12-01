@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "AI 그림",
+    "aiImage": "그림",
     "audio": "오디오",
     "chat": "채팅",
     "community": "커뮤니티",
     "discover": "탐색",
     "files": "파일",
     "home": "홈",
-    "image": "그림",
     "knowledgeBase": "지식 베이스",
     "me": "내 정보",
     "pages": "문서",
+    "resource": "자료",
     "search": "검색",
     "setting": "설정",
     "video": "비디오"

@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "Peinture IA",
+    "aiImage": "Illustration",
     "audio": "Audio",
     "chat": "Conversation",
     "community": "Communauté",
     "discover": "Découvrir",
     "files": "Fichiers",
     "home": "Accueil",
-    "image": "Image",
     "knowledgeBase": "Base de connaissances",
     "me": "moi",
     "pages": "Documents",
+    "resource": "Ressources",
     "search": "Recherche",
     "setting": "Paramètre",
     "video": "Vidéo"

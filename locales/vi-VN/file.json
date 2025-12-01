@@ -50,6 +50,9 @@
       "pin": "Ghim tài liệu"
     },
     "saving": "Đang lưu...",
+    "slashCommands": {
+      "image": "Hình ảnh"
+    },
     "titlePlaceholder": "Không có tiêu đề",
     "wordCount": "{{wordCount}} từ"
   },

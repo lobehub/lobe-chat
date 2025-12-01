@@ -362,17 +362,17 @@
     }
   },
   "tab": {
-    "aiImage": "Disegno AI",
+    "aiImage": "Disegno",
     "audio": "Audio",
     "chat": "Chat",
     "community": "Community",
     "discover": "Scopri",
     "files": "File",
     "home": "Home",
-    "image": "Disegno",
     "knowledgeBase": "Base di conoscenza",
     "me": "io",
     "pages": "Documenti",
+    "resource": "Risorse",
     "search": "Cerca",
     "setting": "Impostazioni",
     "video": "Video"

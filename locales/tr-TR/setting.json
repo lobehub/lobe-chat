@@ -2,6 +2,7 @@
   "about": {
     "title": "Hakkında"
   },
+  "advancedSettings": "Gelişmiş Ayarlar",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -40,6 +41,11 @@
       "unset": "Ayarlanmadı",
       "untitled": "İsimsiz Asistan"
     }
+  },
+  "agentProfile": {
+    "latest": "En son sürüm yüklendi",
+    "saved": "Kaydedildi",
+    "saving": "Otomatik kaydediliyor..."
   },
   "agentTab": {
     "chat": "Sohbet Tercihi",
@@ -663,6 +669,7 @@
     "identifier": "Asistan Tanımlayıcısı (identifier)",
     "metaMiss": "Lütfen göndermeden önce asistan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
+    "success": "Asistan başarıyla gönderildi",
     "tooltips": "Asistan pazarına paylaşın"
   },
   "submitFooter": {
@@ -771,10 +778,13 @@
     "tts": "Metin Seslendirme"
   },
   "tools": {
+    "add": "Eklenti Entegre Et",
     "builtins": {
       "groupName": "Dahili Araçlar"
     },
     "disabled": "Mevcut model fonksiyon çağrılarını desteklemez, eklenti kullanılamaz",
+    "notInstalled": "Yüklü değil",
+    "notInstalledWarning": "Bu eklenti henüz yüklenmedi, bu durum asistanın kullanımını etkileyebilir",
     "plugins": {
       "enabled": "Etkin: {{num}}",
       "groupName": "Eklentiler",
