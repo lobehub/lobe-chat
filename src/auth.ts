@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { serverDB } from '@lobechat/database';
+import { createNanoId, idGenerator, serverDB } from '@lobechat/database';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { admin, genericOAuth, magicLink } from 'better-auth/plugins';
@@ -127,6 +127,23 @@ export const auth = betterAuth({
   },
 
   socialProviders,
+  advanced: {
+    database: {
+      /**
+       * Align Better Auth user IDs with our shared idGenerator for consistency.
+       * Other models use the shared nanoid generator (12 chars) to keep IDs consistent project-wide.
+       */
+      generateId: ({ model }) => {
+        // Better Auth passes the model name; handle both singular and plural for safety.
+        if (model === 'user' || model === 'users') {
+          return idGenerator('user', 12);
+        }
+
+        // Other models: use shared nanoid generator (12 chars) to keep consistency.
+        return createNanoId(12)();
+      },
+    },
+  },
   plugins: [
     admin(),
     ...(genericOAuthProviders.length > 0
