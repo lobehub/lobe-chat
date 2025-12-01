@@ -10,7 +10,7 @@ interface SidbarLayoutProps {
 
 const SideBarLayout = memo<SidbarLayoutProps>(({ header, body, footer }) => {
   return (
-    <Flexbox style={{ height: '100%', overflow: 'hidden' }}>
+    <Flexbox gap={4} style={{ height: '100%', overflow: 'hidden' }}>
       {header}
       <ScrollShadow size={2} style={{ height: '100%' }}>
         {body}

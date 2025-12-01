@@ -51,7 +51,7 @@ const Nav = memo(() => {
   );
 
   return (
-    <Flexbox gap={1}>
+    <Flexbox gap={1} paddingInline={4}>
       {items.map((item) => (
         <Link
           key={item.key}

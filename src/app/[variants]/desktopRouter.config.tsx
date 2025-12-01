@@ -202,7 +202,7 @@ export const createDesktopRouter = () =>
               index: true,
             },
           ],
-          element: dynamicElement(() => import('./(main)/image/_layout/DesktopWrapper')),
+          element: dynamicElement(() => import('./(main)/image/_layout')),
           errorElement: <ErrorBoundary resetPath="/image" />,
           path: 'image',
         },

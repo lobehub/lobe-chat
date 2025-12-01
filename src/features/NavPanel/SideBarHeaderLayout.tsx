@@ -1,12 +1,13 @@
 'use client';
 
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { CSSProperties, ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import BackButton, { BACK_BUTTON_ID } from '@/features/NavPanel/BackButton';
-import User from '@/features/NavPanel/Header/components/User';
-import TogglePanelButton from '@/features/NavPanel/TogglePanelButton';
+import BackButton, { BACK_BUTTON_ID } from './BackButton';
+import User from './Header/components/User';
+import TogglePanelButton from './TogglePanelButton';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -54,55 +55,71 @@ const SlashIcon = memo<{ color?: string; size?: number; style?: CSSProperties }>
 
 interface SideBarHeaderLayoutProps {
   left?: ReactNode;
+  liteUserInfo?: boolean;
   right?: ReactNode;
+  showBack?: boolean;
 }
 
-const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(({ left, right }) => {
-  const { styles, theme } = useStyles();
+const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(
+  ({ showBack = true, liteUserInfo = true, left, right }) => {
+    const { styles, theme } = useStyles();
 
-  return (
-    <Flexbox
-      align={'center'}
-      className={styles.container}
-      flex={'none'}
-      gap={8}
-      horizontal
-      justify={'space-between'}
-      padding={2}
-    >
+    return (
       <Flexbox
         align={'center'}
-        flex={1}
-        gap={2}
+        className={styles.container}
+        flex={'none'}
+        gap={8}
         horizontal
-        style={{
-          overflow: 'hidden',
-        }}
+        justify={'space-between'}
+        padding={6}
       >
-        <BackButton
-          size={{
-            blockSize: 32,
-            size: 16,
+        <Flexbox
+          align={'center'}
+          flex={1}
+          gap={2}
+          horizontal
+          style={{
+            overflow: 'hidden',
           }}
-        />
-        <User lite />
-        <SlashIcon color={theme.colorFill} size={16} />
-        {left}
+        >
+          {showBack && (
+            <BackButton
+              size={{
+                blockSize: 32,
+                size: 16,
+              }}
+            />
+          )}
+          <User lite={liteUserInfo} />
+          {left && (
+            <>
+              <SlashIcon color={theme.colorFill} size={16} />
+              {typeof left === 'string' ? (
+                <Text ellipsis fontSize={16} weight={500}>
+                  {left}
+                </Text>
+              ) : (
+                left
+              )}
+            </>
+          )}
+        </Flexbox>
+        <Flexbox
+          align={'center'}
+          gap={2}
+          horizontal
+          justify={'flex-end'}
+          style={{
+            overflow: 'hidden',
+          }}
+        >
+          <TogglePanelButton />
+          {right}
+        </Flexbox>
       </Flexbox>
-      <Flexbox
-        align={'center'}
-        gap={2}
-        horizontal
-        justify={'flex-end'}
-        style={{
-          overflow: 'hidden',
-        }}
-      >
-        <TogglePanelButton />
-        {right}
-      </Flexbox>
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export default SideBarHeaderLayout;

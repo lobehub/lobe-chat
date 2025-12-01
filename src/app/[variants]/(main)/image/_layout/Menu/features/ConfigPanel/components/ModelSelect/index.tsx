@@ -1,4 +1,3 @@
-import { EnabledProviderWithModels } from '@lobechat/types';
 import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
@@ -12,6 +11,7 @@ import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/slices/aiProvider/selectors';
 import { useImageStore } from '@/store/image';
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';
+import { EnabledProviderWithModels } from '@/types/index';
 
 import ImageModelItem from './ImageModelItem';
 
