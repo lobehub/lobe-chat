@@ -1,4 +1,4 @@
-import { ThreadType } from './topic/thread';
+import { IThreadType } from './topic/thread';
 
 /**
  * Context for identifying a conversation or message list
@@ -52,7 +52,7 @@ export interface ConversationContext {
     /**
      * Thread type
      */
-    type: ThreadType;
+    type: IThreadType;
   };
   /**
    * Session or group ID

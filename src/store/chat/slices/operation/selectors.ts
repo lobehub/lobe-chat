@@ -256,13 +256,6 @@ const isContinuing = (s: ChatStoreState): boolean => {
 };
 
 /**
- * Check if in RAG flow (for backward compatibility)
- */
-const isInRAGFlow = (s: ChatStoreState): boolean => {
-  return hasRunningOperationType('rag')(s);
-};
-
-/**
  * Check if in search workflow (for backward compatibility)
  */
 const isInSearchWorkflow = (s: ChatStoreState): boolean => {
@@ -419,7 +412,6 @@ export const operationSelectors = {
   isAgentRuntimeRunningByContext,
   isAnyMessageLoading,
   isContinuing,
-  isInRAGFlow,
   isInSearchWorkflow,
   isMainWindowAgentRuntimeRunning,
   isMessageAborting,

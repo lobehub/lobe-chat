@@ -1,3 +1,4 @@
+import { ThreadType } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
 import { messageMapKey } from './messageMapKey';
@@ -217,6 +218,103 @@ describe('messageMapKey', () => {
       const context = { agentId: 'agent-1', topicId: 'topic-1' };
       const result = messageMapKey({ ...context, threadId: 'thread-1' });
       expect(result).toBe('agent-1_thread_thread-1');
+    });
+  });
+
+  describe('new thread mode (creating new thread)', () => {
+    it('should generate newThread key with sourceMessageId', () => {
+      const result = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+      });
+      expect(result).toBe('agent-1_newThread_msg-abc');
+    });
+
+    it('should prioritize threadId over newThread', () => {
+      const result = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        threadId: 'thread-1',
+        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+      });
+      expect(result).toBe('agent-1_thread_thread-1');
+    });
+
+    it('should fall back to topic mode when newThread has no sourceMessageId', () => {
+      const result = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        newThread: { sourceMessageId: '', type: 'continuation' },
+      });
+      expect(result).toBe('agent-1_topic-1');
+    });
+
+    it('should fall back to topic mode when newThread is undefined', () => {
+      const result = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        newThread: undefined,
+      });
+      expect(result).toBe('agent-1_topic-1');
+    });
+
+    it('should generate different keys for different sourceMessageIds', () => {
+      const key1 = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        newThread: { sourceMessageId: 'msg-1', type: 'continuation' },
+      });
+      const key2 = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        newThread: { sourceMessageId: 'msg-2', type: 'continuation' },
+      });
+      expect(key1).not.toBe(key2);
+      expect(key1).toBe('agent-1_newThread_msg-1');
+      expect(key2).toBe('agent-1_newThread_msg-2');
+    });
+
+    it('should generate different keys for newThread vs existing thread', () => {
+      const newThreadKey = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+      });
+      const existingThreadKey = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        threadId: 'thread-1',
+      });
+      expect(newThreadKey).not.toBe(existingThreadKey);
+    });
+
+    it('should generate different keys for newThread vs main conversation', () => {
+      const newThreadKey = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+      });
+      const mainKey = messageMapKey({
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+      });
+      expect(newThreadKey).not.toBe(mainKey);
+    });
+
+    it('should handle newThread with different types', () => {
+      const continuationKey = messageMapKey({
+        agentId: 'agent-1',
+        newThread: { sourceMessageId: 'msg-abc', type: ThreadType.Continuation },
+      });
+      const resendKey = messageMapKey({
+        agentId: 'agent-1',
+        // @ts-ignore
+        newThread: { sourceMessageId: 'msg-abc', type: 'resend' },
+      });
+      // Same sourceMessageId should generate same key regardless of type
+      expect(continuationKey).toBe(resendKey);
+      expect(continuationKey).toBe('agent-1_newThread_msg-abc');
     });
   });
 });

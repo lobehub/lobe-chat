@@ -4,9 +4,9 @@ import { LOADING_FLAT } from '@lobechat/const';
 import { chainSummaryTitle } from '@lobechat/prompts';
 import {
   CreateMessageParams,
+  IThreadType,
   SendThreadMessageParams,
   ThreadItem,
-  ThreadType,
   UIChatMessage,
 } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
@@ -45,7 +45,7 @@ export interface ChatThreadAction {
     message: CreateMessageParams;
     sourceMessageId: string;
     topicId: string;
-    type: ThreadType;
+    type: IThreadType;
   }) => Promise<{ threadId: string; messageId: string }>;
   openThreadCreator: (messageId: string) => void;
   openThreadInPortal: (threadId: string, sourceMessageId?: string | null) => void;
