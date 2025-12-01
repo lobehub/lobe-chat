@@ -12,6 +12,7 @@ import {
   ModelRankItem,
   NewMessageQueryParams,
   QueryMessageParams,
+  ThreadType,
   UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
@@ -19,6 +20,7 @@ import {
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
 import {
+  SQL,
   and,
   asc,
   count,
@@ -29,6 +31,7 @@ import {
   isNotNull,
   isNull,
   like,
+  lte,
   or,
   sql,
 } from 'drizzle-orm';
@@ -50,10 +53,33 @@ import {
   messageTranslates,
   messages,
   messagesFiles,
+  threads,
 } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
+
+/**
+ * Options for querying messages with relations
+ */
+export interface QueryMessagesOptions {
+  /**
+   * Current page number (0-indexed)
+   */
+  current?: number;
+  /**
+   * Number of messages per page
+   */
+  pageSize?: number;
+  /**
+   * Post-process function for file URLs
+   */
+  postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
+  /**
+   * Custom where condition for message filtering
+   */
+  where?: SQL;
+}
 
 export class MessageModel {
   private userId: string;
@@ -65,6 +91,13 @@ export class MessageModel {
   }
 
   // **************** Query *************** //
+
+  /**
+   * Query messages by params (high-level API)
+   *
+   * This is the main query method that handles common query patterns.
+   * For custom queries, use `queryWithWhere` directly.
+   */
   query = async (
     {
       agentId,
@@ -79,29 +112,56 @@ export class MessageModel {
       postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
     } = {},
   ) => {
-    const offset = current * pageSize;
-
-    // If agentId is provided, query messages that match either:
-    // 1. messages.agentId = agentId (new data with agentId stored directly)
-    // 2. messages.sessionId = associated sessionId (legacy data via agentsToSessions lookup)
-    let agentCondition;
+    // Build agent condition (handles legacy sessionId lookup)
+    let agentCondition: SQL | undefined;
     if (agentId) {
-      // Get the associated sessionId for backward compatibility with legacy data
-      const agentSession = await this.db
-        .select({ sessionId: agentsToSessions.sessionId })
-        .from(agentsToSessions)
-        .where(and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)))
-        .limit(1);
-
-      const associatedSessionId = agentSession[0]?.sessionId;
-
-      // Build condition to match both new (agentId) and legacy (sessionId) data
-      agentCondition = associatedSessionId
-        ? or(eq(messages.agentId, agentId), eq(messages.sessionId, associatedSessionId))
-        : eq(messages.agentId, agentId);
+      agentCondition = await this.buildAgentCondition(agentId);
+    } else if (sessionId) {
+      agentCondition = this.matchSession(sessionId);
     }
 
-    // 1. get basic messages
+    // For thread queries, we need to fetch complete thread data (parent + thread messages)
+    if (threadId) {
+      const threadCondition = await this.buildThreadQueryCondition(threadId);
+      return this.queryWithWhere({
+        current,
+        pageSize,
+        postProcessUrl: options.postProcessUrl,
+        // Thread queries optionally add agent/session scope if provided
+        where: agentCondition ? and(agentCondition, threadCondition) : threadCondition,
+      });
+    }
+
+    // Standard query with session/topic/group filters
+    const whereCondition = and(
+      agentCondition ?? this.matchSession(sessionId),
+      this.matchTopic(topicId),
+      this.matchGroup(groupId),
+      this.matchThread(threadId),
+    );
+
+    return this.queryWithWhere({
+      current,
+      pageSize,
+      postProcessUrl: options.postProcessUrl,
+      where: whereCondition,
+    });
+  };
+
+  /**
+   * Query messages with full relations (files, plugins, translations, etc.)
+   *
+   * This is the low-level query method that accepts a custom where condition.
+   * Use this for building custom query scenarios.
+   *
+   * @param options - Query options including where condition and pagination
+   * @returns Messages with all related data
+   */
+  queryWithWhere = async (options: QueryMessagesOptions = {}): Promise<UIChatMessage[]> => {
+    const { where, current = 0, pageSize = 1000, postProcessUrl } = options;
+    const offset = current * pageSize;
+
+    // 1. get basic messages with joins
     const result = await this.db
       .select({
         /* eslint-disable sort-keys-fix/sort-keys-fix*/
@@ -154,15 +214,7 @@ export class MessageModel {
         /* eslint-enable */
       })
       .from(messages)
-      .where(
-        and(
-          eq(messages.userId, this.userId),
-          agentCondition ?? this.matchSession(sessionId),
-          this.matchTopic(topicId),
-          this.matchGroup(groupId),
-          this.matchThread(threadId),
-        ),
-      )
+      .where(and(eq(messages.userId, this.userId), where))
       .leftJoin(messagePlugins, eq(messagePlugins.id, messages.id))
       .leftJoin(messageTranslates, eq(messageTranslates.id, messages.id))
       .leftJoin(messageTTS, eq(messageTTS.id, messages.id))
@@ -191,9 +243,7 @@ export class MessageModel {
     const relatedFileList = await Promise.all(
       rawRelatedFileList.map(async (file) => ({
         ...file,
-        url: options.postProcessUrl
-          ? await options.postProcessUrl(file.url, file as any)
-          : (file.url as string),
+        url: postProcessUrl ? await postProcessUrl(file.url, file as any) : (file.url as string),
       })),
     );
 
@@ -244,7 +294,7 @@ export class MessageModel {
       .innerJoin(files, eq(fileChunks.fileId, files.id))
       .where(inArray(messageQueryChunks.messageId, messageIds));
 
-    // 3. get relative message query
+    // 4. get relative message query
     const messageQueriesList = await this.db
       .select({
         id: messageQueries.id,
@@ -311,10 +361,113 @@ export class MessageModel {
     );
   };
 
+  /**
+   * Build where condition for thread queries
+   *
+   * Returns a condition that matches both parent messages and thread messages.
+   */
+  private buildThreadQueryCondition = async (threadId: string): Promise<SQL | undefined> => {
+    // Fetch the thread info to get sourceMessageId and type
+    const thread = await this.db.query.threads.findFirst({
+      where: and(eq(threads.id, threadId), eq(threads.userId, this.userId)),
+    });
+
+    if (!thread?.sourceMessageId || !thread?.topicId) {
+      // Fallback to simple thread query if no source message
+      return eq(messages.threadId, threadId);
+    }
+
+    // Get parent messages based on thread type
+    const parentMessages = await this.getThreadParentMessages({
+      sourceMessageId: thread.sourceMessageId,
+      threadType: thread.type as ThreadType,
+      topicId: thread.topicId,
+    });
+
+    const parentMessageIds = parentMessages.map((m) => m.id);
+
+    if (parentMessageIds.length === 0) {
+      return eq(messages.threadId, threadId);
+    }
+
+    // Match either thread messages or parent messages
+    return or(eq(messages.threadId, threadId), inArray(messages.id, parentMessageIds));
+  };
+
+  /**
+   * Build agent condition with legacy sessionId support
+   */
+  private buildAgentCondition = async (agentId: string): Promise<SQL | undefined> => {
+    // Get the associated sessionId for backward compatibility with legacy data
+    const agentSession = await this.db
+      .select({ sessionId: agentsToSessions.sessionId })
+      .from(agentsToSessions)
+      .where(and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)))
+      .limit(1);
+
+    const associatedSessionId = agentSession[0]?.sessionId;
+
+    // Build condition to match both new (agentId) and legacy (sessionId) data
+    return associatedSessionId
+      ? or(eq(messages.agentId, agentId), eq(messages.sessionId, associatedSessionId))
+      : eq(messages.agentId, agentId);
+  };
+
   findById = async (id: string) => {
     return this.db.query.messages.findFirst({
       where: and(eq(messages.id, id), eq(messages.userId, this.userId)),
     });
+  };
+
+  /**
+   * Get parent messages for a thread
+   *
+   * @param params - Parameters for getting parent messages
+   * @param params.sourceMessageId - The ID of the source message that started the thread
+   * @param params.topicId - The topic ID the thread belongs to
+   * @param params.threadType - The type of thread (Continuation or Standalone)
+   * @returns Parent messages based on thread type:
+   *   - Continuation: All messages from the topic up to and including the source message
+   *   - Standalone: Only the source message itself
+   */
+  getThreadParentMessages = async (params: {
+    sourceMessageId: string;
+    threadType: ThreadType;
+    topicId: string;
+  }): Promise<DBMessageItem[]> => {
+    const { sourceMessageId, topicId, threadType } = params;
+
+    // For Standalone type, only return the source message
+    if (threadType === ThreadType.Standalone) {
+      const sourceMessage = await this.db.query.messages.findFirst({
+        where: and(eq(messages.id, sourceMessageId), eq(messages.userId, this.userId)),
+      });
+
+      return sourceMessage ? [sourceMessage as DBMessageItem] : [];
+    }
+
+    // For Continuation type, get the source message first to know its createdAt
+    const sourceMessage = await this.db.query.messages.findFirst({
+      where: and(eq(messages.id, sourceMessageId), eq(messages.userId, this.userId)),
+    });
+
+    if (!sourceMessage) return [];
+
+    // Get all main conversation messages up to and including the source message
+    const result = await this.db
+      .select()
+      .from(messages)
+      .where(
+        and(
+          eq(messages.userId, this.userId),
+          eq(messages.topicId, topicId),
+          isNull(messages.threadId), // Only main conversation messages (not in any thread)
+          lte(messages.createdAt, sourceMessage.createdAt),
+        ),
+      )
+      .orderBy(asc(messages.createdAt));
+
+    return result as DBMessageItem[];
   };
 
   findMessageQueriesById = async (messageId: string) => {

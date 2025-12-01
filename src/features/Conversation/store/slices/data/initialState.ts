@@ -17,6 +17,11 @@ export interface DataState {
    * Whether messages have been initialized
    */
   messagesInit: boolean;
+
+  /**
+   * Skip internal message fetching (when external messages are provided)
+   */
+  skipFetch?: boolean;
 }
 
 export const dataInitialState: DataState = {

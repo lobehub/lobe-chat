@@ -36,6 +36,7 @@ export type ConversationStore = Store;
 export interface CreateStoreParams {
   context: ConversationContext;
   hooks?: ConversationHooks;
+  skipFetch?: boolean;
 }
 
 type CreateStore = (
@@ -43,11 +44,12 @@ type CreateStore = (
 ) => StateCreator<Store, [['zustand/devtools', never]]>;
 
 export const createStoreAction: CreateStore =
-  ({ context, hooks = {} }) =>
+  ({ context, hooks = {}, skipFetch }) =>
   (...params) => ({
     ...initialState,
     context,
     hooks,
+    skipFetch,
     // ===== Slices =====
     ...dataSlice(...params),
     ...generationSlice(...params),
