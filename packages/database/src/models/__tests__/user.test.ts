@@ -1,0 +1,372 @@
+import { UserPreference } from '@lobechat/types';
+import { eq } from 'drizzle-orm';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { nextauthAccounts, userSettings, users } from '../../schemas';
+import { LobeChatDatabase } from '../../type';
+import { UserModel, UserNotFoundError } from '../user';
+import { getTestDB } from './_util';
+
+const userId = 'user-model-test';
+const otherUserId = 'other-user-test';
+
+const serverDB: LobeChatDatabase = await getTestDB();
+const userModel = new UserModel(serverDB, userId);
+
+// Mock decryptor function
+const mockDecryptor = vi.fn().mockResolvedValue({});
+
+describe('UserModel', () => {
+  beforeEach(async () => {
+    await serverDB.delete(users);
+    await serverDB.insert(users).values([
+      { id: userId, email: 'test@example.com', fullName: 'Test User' },
+      { id: otherUserId, email: 'other@example.com' },
+    ]);
+  });
+
+  afterEach(async () => {
+    await serverDB.delete(users);
+    vi.clearAllMocks();
+  });
+
+  describe('getUserRegistrationDuration', () => {
+    it('should return registration duration for existing user', async () => {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      await serverDB.update(users).set({ createdAt: thirtyDaysAgo }).where(eq(users.id, userId));
+
+      const result = await userModel.getUserRegistrationDuration();
+
+      expect(result.duration).toBeGreaterThanOrEqual(30);
+      expect(result.createdAt).toBeDefined();
+      expect(result.updatedAt).toBeDefined();
+    });
+
+    it('should return default duration for non-existent user', async () => {
+      const nonExistentUserModel = new UserModel(serverDB, 'non-existent');
+
+      const result = await nonExistentUserModel.getUserRegistrationDuration();
+
+      expect(result.duration).toBe(1);
+    });
+  });
+
+  describe('getUserState', () => {
+    it('should return user state with settings', async () => {
+      // Create user settings
+      await serverDB.insert(userSettings).values({
+        id: userId,
+        general: { fontSize: 14 },
+        tts: { voice: 'default' },
+      });
+
+      const result = await userModel.getUserState(mockDecryptor);
+
+      expect(result.userId).toBe(userId);
+      expect(result.email).toBe('test@example.com');
+      expect(result.fullName).toBe('Test User');
+      expect(result.settings.general).toEqual({ fontSize: 14 });
+      expect(result.settings.tts).toEqual({ voice: 'default' });
+    });
+
+    it('should throw UserNotFoundError for non-existent user', async () => {
+      const nonExistentUserModel = new UserModel(serverDB, 'non-existent');
+
+      await expect(nonExistentUserModel.getUserState(mockDecryptor)).rejects.toThrow(
+        UserNotFoundError,
+      );
+    });
+
+    it('should handle decryptor errors gracefully', async () => {
+      await serverDB.insert(userSettings).values({
+        id: userId,
+        keyVaults: 'encrypted-data',
+      });
+
+      const failingDecryptor = vi.fn().mockRejectedValue(new Error('Decryption failed'));
+
+      const result = await userModel.getUserState(failingDecryptor);
+
+      expect(result.settings.keyVaults).toEqual({});
+    });
+  });
+
+  describe('getUserSSOProviders', () => {
+    it('should return SSO providers for user', async () => {
+      await serverDB.insert(nextauthAccounts).values({
+        userId,
+        provider: 'google',
+        providerAccountId: 'google-123',
+        type: 'oauth' as any,
+      });
+
+      const result = await userModel.getUserSSOProviders();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].provider).toBe('google');
+      expect(result[0].providerAccountId).toBe('google-123');
+    });
+
+    it('should return empty array when no SSO providers', async () => {
+      const result = await userModel.getUserSSOProviders();
+
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe('getUserSettings', () => {
+    it('should return user settings', async () => {
+      await serverDB.insert(userSettings).values({
+        id: userId,
+        general: { fontSize: 14 },
+      });
+
+      const result = await userModel.getUserSettings();
+
+      expect(result).toBeDefined();
+      expect(result?.general).toEqual({ fontSize: 14 });
+    });
+
+    it('should return undefined when no settings exist', async () => {
+      const result = await userModel.getUserSettings();
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('updateUser', () => {
+    it('should update user properties', async () => {
+      await userModel.updateUser({
+        fullName: 'Updated Name',
+        avatar: 'https://example.com/avatar.jpg',
+      });
+
+      const updated = await serverDB.query.users.findFirst({
+        where: eq(users.id, userId),
+      });
+
+      expect(updated?.fullName).toBe('Updated Name');
+      expect(updated?.avatar).toBe('https://example.com/avatar.jpg');
+    });
+  });
+
+  describe('deleteSetting', () => {
+    it('should delete user settings', async () => {
+      await serverDB.insert(userSettings).values({
+        id: userId,
+        general: { fontSize: 14 },
+      });
+
+      await userModel.deleteSetting();
+
+      const settings = await serverDB.query.userSettings.findFirst({
+        where: eq(userSettings.id, userId),
+      });
+
+      expect(settings).toBeUndefined();
+    });
+  });
+
+  describe('updateSetting', () => {
+    it('should create settings if not exist', async () => {
+      await userModel.updateSetting({
+        general: { fontSize: 16 },
+      });
+
+      const settings = await serverDB.query.userSettings.findFirst({
+        where: eq(userSettings.id, userId),
+      });
+
+      expect(settings?.general).toEqual({ fontSize: 16 });
+    });
+
+    it('should update existing settings', async () => {
+      await serverDB.insert(userSettings).values({
+        id: userId,
+        general: { fontSize: 14 },
+      });
+
+      await userModel.updateSetting({
+        general: { fontSize: 18 },
+      });
+
+      const settings = await serverDB.query.userSettings.findFirst({
+        where: eq(userSettings.id, userId),
+      });
+
+      expect(settings?.general).toEqual({ fontSize: 18 });
+    });
+  });
+
+  describe('updatePreference', () => {
+    it('should update user preference', async () => {
+      await userModel.updatePreference({
+        telemetry: false,
+      });
+
+      const user = await serverDB.query.users.findFirst({
+        where: eq(users.id, userId),
+      });
+
+      expect((user?.preference as UserPreference)?.telemetry).toBe(false);
+    });
+
+    it('should merge with existing preference', async () => {
+      await serverDB
+        .update(users)
+        .set({ preference: { telemetry: true, useCmdEnterToSend: true } })
+        .where(eq(users.id, userId));
+
+      await userModel.updatePreference({
+        telemetry: false,
+      });
+
+      const user = await serverDB.query.users.findFirst({
+        where: eq(users.id, userId),
+      });
+
+      const preference = user?.preference as UserPreference;
+      expect(preference?.telemetry).toBe(false);
+      expect(preference?.useCmdEnterToSend).toBe(true);
+    });
+
+    it('should do nothing for non-existent user', async () => {
+      const nonExistentUserModel = new UserModel(serverDB, 'non-existent');
+
+      await expect(
+        nonExistentUserModel.updatePreference({ telemetry: false }),
+      ).resolves.toBeUndefined();
+    });
+  });
+
+  describe('updateGuide', () => {
+    it('should update user guide preference', async () => {
+      await userModel.updateGuide({
+        moveSettingsToAvatar: true,
+      });
+
+      const user = await serverDB.query.users.findFirst({
+        where: eq(users.id, userId),
+      });
+
+      const preference = user?.preference as UserPreference;
+      expect(preference?.guide?.moveSettingsToAvatar).toBe(true);
+    });
+
+    it('should do nothing for non-existent user', async () => {
+      const nonExistentUserModel = new UserModel(serverDB, 'non-existent');
+
+      await expect(
+        nonExistentUserModel.updateGuide({ moveSettingsToAvatar: true }),
+      ).resolves.toBeUndefined();
+    });
+  });
+
+  describe('static methods', () => {
+    describe('makeSureUserExist', () => {
+      it('should create user if not exists', async () => {
+        await UserModel.makeSureUserExist(serverDB, 'new-user-id');
+
+        const user = await serverDB.query.users.findFirst({
+          where: eq(users.id, 'new-user-id'),
+        });
+
+        expect(user).toBeDefined();
+      });
+
+      it('should not throw if user already exists', async () => {
+        await expect(UserModel.makeSureUserExist(serverDB, userId)).resolves.not.toThrow();
+      });
+    });
+
+    describe('createUser', () => {
+      it('should create a new user', async () => {
+        const result = await UserModel.createUser(serverDB, {
+          id: 'brand-new-user',
+          email: 'new@example.com',
+        });
+
+        expect(result.duplicate).toBe(false);
+        expect(result.user?.id).toBe('brand-new-user');
+        expect(result.user?.email).toBe('new@example.com');
+      });
+
+      it('should return duplicate flag for existing user', async () => {
+        const result = await UserModel.createUser(serverDB, {
+          id: userId,
+          email: 'duplicate@example.com',
+        });
+
+        expect(result.duplicate).toBe(true);
+      });
+    });
+
+    describe('deleteUser', () => {
+      it('should delete a user', async () => {
+        await UserModel.deleteUser(serverDB, userId);
+
+        const user = await serverDB.query.users.findFirst({
+          where: eq(users.id, userId),
+        });
+
+        expect(user).toBeUndefined();
+      });
+    });
+
+    describe('findById', () => {
+      it('should find user by id', async () => {
+        const user = await UserModel.findById(serverDB, userId);
+
+        expect(user).toBeDefined();
+        expect(user?.email).toBe('test@example.com');
+      });
+
+      it('should return undefined for non-existent user', async () => {
+        const user = await UserModel.findById(serverDB, 'non-existent');
+
+        expect(user).toBeUndefined();
+      });
+    });
+
+    describe('findByEmail', () => {
+      it('should find user by email', async () => {
+        const user = await UserModel.findByEmail(serverDB, 'test@example.com');
+
+        expect(user).toBeDefined();
+        expect(user?.id).toBe(userId);
+      });
+
+      it('should return undefined for non-existent email', async () => {
+        const user = await UserModel.findByEmail(serverDB, 'nonexistent@example.com');
+
+        expect(user).toBeUndefined();
+      });
+    });
+
+    describe('getUserApiKeys', () => {
+      it('should return decrypted API keys', async () => {
+        await serverDB.insert(userSettings).values({
+          id: userId,
+          keyVaults: 'encrypted-keys',
+        });
+
+        const decryptor = vi.fn().mockResolvedValue({
+          openai: 'sk-xxx',
+        });
+
+        const result = await UserModel.getUserApiKeys(serverDB, userId, decryptor);
+
+        expect(decryptor).toHaveBeenCalledWith('encrypted-keys', userId);
+        expect(result).toEqual({ openai: 'sk-xxx' });
+      });
+
+      it('should throw UserNotFoundError when settings not found', async () => {
+        await expect(
+          UserModel.getUserApiKeys(serverDB, 'non-existent', mockDecryptor),
+        ).rejects.toThrow(UserNotFoundError);
+      });
+    });
+  });
+});

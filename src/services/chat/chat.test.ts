@@ -1062,7 +1062,7 @@ describe('ChatService', () => {
       );
     });
 
-    it('should make a POST request without response in non-openai provider payload', async () => {
+    it('should make a POST request with chatCompletion apiMode in non-openai provider payload', async () => {
       const params: Partial<ChatStreamPayload> = {
         model: 'deepseek-reasoner',
         provider: 'deepseek',
@@ -1076,6 +1076,7 @@ describe('ChatService', () => {
         stream: true,
         ...DEFAULT_AGENT_CONFIG.params,
         messages: [],
+        apiMode: 'chatCompletion',
         provider: undefined,
       };
 

@@ -165,6 +165,15 @@ export class FlatListBuilder {
           childMessages,
           this.childrenMap,
         );
+
+        // Optimistic update: activeBranchId is undefined when branch is being created
+        // In this case, just add user message without branch info and continue
+        if (!activeBranchId) {
+          flatList.push(message);
+          processedIds.add(message.id);
+          continue;
+        }
+
         const activeBranchIndex = childMessages.indexOf(activeBranchId);
         const userWithBranches = this.createUserMessageWithBranches(
           message,
@@ -247,6 +256,12 @@ export class FlatListBuilder {
         // Add the assistant message itself
         flatList.push(message);
         processedIds.add(message.id);
+
+        // Optimistic update: activeBranchId is undefined when branch is being created
+        // In this case, just add assistant message and continue (no active branch yet)
+        if (!activeBranchId) {
+          continue;
+        }
 
         // Continue with active branch and process its message
         const activeBranchMsg = this.messageMap.get(activeBranchId);

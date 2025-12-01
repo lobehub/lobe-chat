@@ -281,7 +281,10 @@ export class KnowledgeRepo {
     q,
     knowledgeBaseId,
   }: QueryFileListParams = {}): ReturnType<typeof sql> {
-    let whereConditions: any[] = [sql`${documents.userId} = ${this.userId}`];
+    let whereConditions: any[] = [
+      sql`${documents.userId} = ${this.userId}`,
+      sql`${documents.sourceType} != ${'file'}`,
+    ];
 
     // Search filter
     if (q) {
@@ -300,12 +303,9 @@ export class KnowledgeRepo {
         );
         whereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
 
-        // Exclude custom/document and source_type='file' from Documents category
+        // Exclude custom/document from Documents category
         if (category === FilesTabs.Documents) {
-          whereConditions.push(
-            sql`${documents.fileType} != ${'custom/document'}`,
-            sql`${documents.sourceType} != ${'file'}`,
-          );
+          whereConditions.push(sql`${documents.fileType} != ${'custom/document'}`);
         }
       } else if (fileTypePrefix) {
         whereConditions.push(sql`${documents.fileType} ILIKE ${`${fileTypePrefix}%`}`);

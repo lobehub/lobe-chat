@@ -1,4 +1,7 @@
-export const enableClerk = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+export const enableClerk =
+  process.env.NEXT_PUBLIC_ENABLE_CLERK_AUTH === '1'
+    ? true
+    : !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 export const enableBetterAuth = process.env.NEXT_PUBLIC_ENABLE_BETTER_AUTH === '1';
 export const enableNextAuth = process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH === '1';
 export const enableAuth = enableClerk || enableBetterAuth || enableNextAuth || false;

@@ -447,6 +447,7 @@ table messages {
   id text [pk, not null]
   role varchar(255) [not null]
   content text
+  editor_data jsonb
   reasoning jsonb
   search jsonb
   metadata jsonb
@@ -506,7 +507,7 @@ table nextauth_accounts {
   session_state text
   token_type text
   type text [not null]
-  userId text [not null]
+  user_id text [not null]
 
   indexes {
     (provider, providerAccountId) [pk]
@@ -521,17 +522,17 @@ table nextauth_authenticators {
   credentialPublicKey text [not null]
   providerAccountId text [not null]
   transports text
-  userId text [not null]
+  user_id text [not null]
 
   indexes {
-    (userId, credentialID) [pk]
+    (user_id, credentialID) [pk]
   }
 }
 
 table nextauth_sessions {
   expires timestamp [not null]
   sessionToken text [pk, not null]
-  userId text [not null]
+  user_id text [not null]
 }
 
 table nextauth_verificationtokens {
@@ -925,10 +926,12 @@ table sessions {
 table threads {
   id text [pk, not null]
   title text
+  content text
+  editor_data jsonb
   type text [not null]
-  status text [default: 'active']
+  status text
   topic_id text [not null]
-  source_message_id text [not null]
+  source_message_id text
   parent_thread_id text
   client_id text
   user_id text [not null]
@@ -959,6 +962,9 @@ table topics {
   title text
   favorite boolean [default: false]
   session_id text
+  content text
+  editor_data jsonb
+  agent_id text
   group_id text
   user_id text [not null]
   client_id text
@@ -974,6 +980,7 @@ table topics {
     (id, user_id) [name: 'topics_id_user_id_idx']
     session_id [name: 'topics_session_id_idx']
     group_id [name: 'topics_group_id_idx']
+    agent_id [name: 'topics_agent_id_idx']
   }
 }
 
@@ -1002,6 +1009,7 @@ table user_settings {
   language_model jsonb
   system_agent jsonb
   default_agent jsonb
+  market jsonb
   tool jsonb
   image jsonb
 }

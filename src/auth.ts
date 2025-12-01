@@ -11,6 +11,7 @@ import {
   getVerificationEmailTemplate,
 } from '@/libs/better-auth/email-templates';
 import { initBetterAuthSSOProviders } from '@/libs/better-auth/sso';
+import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 import { EmailService } from '@/server/services/email';
 
 // Email verification link expiration time (in seconds)
@@ -21,17 +22,55 @@ const enableMagicLink = authEnv.NEXT_PUBLIC_ENABLE_MAGIC_LINK;
 
 const { socialProviders, genericOAuthProviders } = initBetterAuthSSOProviders();
 
+/**
+ * Normalize a URL-like string to an origin with https fallback.
+ */
+const normalizeOrigin = (url?: string) => {
+  if (!url) return undefined;
+
+  try {
+    const normalizedUrl = url.startsWith('http') ? url : `https://${url}`;
+
+    return new URL(normalizedUrl).origin;
+  } catch {
+    return undefined;
+  }
+};
+
+/**
+ * Build trusted origins with env override and Vercel-aware defaults.
+ */
+const getTrustedOrigins = () => {
+  if (authEnv.AUTH_TRUSTED_ORIGINS) {
+    const originsFromEnv = authEnv.AUTH_TRUSTED_ORIGINS.split(',')
+      .map((item) => normalizeOrigin(item.trim()))
+      .filter(Boolean) as string[];
+
+    if (originsFromEnv.length > 0) return Array.from(new Set(originsFromEnv));
+  }
+
+  const defaults = [
+    authEnv.NEXT_PUBLIC_AUTH_URL,
+    normalizeOrigin(process.env.VERCEL_BRANCH_URL),
+    normalizeOrigin(process.env.VERCEL_URL),
+  ].filter(Boolean) as string[];
+
+  return defaults.length > 0 ? Array.from(new Set(defaults)) : undefined;
+};
+
 export const auth = betterAuth({
   account: {
     accountLinking: {
       allowDifferentEmails: true,
       enabled: true,
+      trustedProviders: parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS),
     },
   },
 
   // Use renamed env vars (fallback to next-auth vars is handled in src/envs/auth.ts)
   baseURL: authEnv.NEXT_PUBLIC_AUTH_URL,
   secret: authEnv.AUTH_SECRET,
+  trustedOrigins: getTrustedOrigins(),
 
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
@@ -104,14 +143,15 @@ export const auth = betterAuth({
 
   user: {
     additionalFields: {
-      fullName: {
+      username: {
         required: false,
         type: 'string',
       },
     },
     fields: {
       image: 'avatar',
-      name: 'username',
+      // NOTE: use drizzle filed instead of db field, so use fullName instead of full_name
+      name: 'fullName',
     },
     modelName: 'users',
   },
