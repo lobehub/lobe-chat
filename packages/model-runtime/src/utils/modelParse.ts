@@ -88,6 +88,18 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-', '!-max-'],
     visionKeywords: ['qvq', '-vl', '-omni'],
   },
+  replicate: {
+    imageOutputKeywords: [
+      'flux',
+      'stable-diffusion',
+      'sdxl',
+      'ideogram',
+      'canny',
+      'depth',
+      'fill',
+      'redux',
+    ],
+  },
   v0: {
     functionCallKeywords: ['v0'],
     reasoningKeywords: ['v0-1.5'],
