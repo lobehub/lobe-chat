@@ -7,6 +7,7 @@ import { CodeInterpreterManifest } from './code-interpreter';
 import { KnowledgeBaseManifest } from './knowledge-base';
 import { LocalSystemManifest } from './local-system';
 import { MemoryManifest } from './memory';
+import { AgentBuilderManifest } from './agent-builder';
 import { WebBrowsingManifest } from './web-browsing';
 
 export const builtinTools: LobeBuiltinTool[] = [
@@ -36,6 +37,10 @@ export const builtinTools: LobeBuiltinTool[] = [
   {
     identifier: CodeInterpreterManifest.identifier,
     manifest: CodeInterpreterManifest,
+    type: 'builtin',
+  },  {
+    identifier: AgentBuilderManifest.identifier,
+    manifest: AgentBuilderManifest,
     type: 'builtin',
   },
   {
