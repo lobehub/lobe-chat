@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 
 import PageExplorer from '../../app/[variants]/(main)/page/features';
 import PageEditor from '../../app/[variants]/(main)/page/features/PageEditor';

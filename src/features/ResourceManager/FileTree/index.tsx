@@ -10,8 +10,8 @@ import React, { memo, useCallback, useReducer } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
-import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
-import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
+import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import FileIcon from '@/components/FileIcon';
 import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';

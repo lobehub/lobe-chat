@@ -151,32 +151,36 @@ export const createDesktopRouter = () =>
         // Resource routes
         {
           children: [
+            // Home routes (resource list)
             {
-              element: dynamicElement(() => import('./(main)/resource')),
-              index: true,
+              children: [
+                {
+                  element: dynamicElement(() => import('./(main)/resource/(home)')),
+                  index: true,
+                },
+              ],
+              element: dynamicElement(() => import('./(main)/resource/(home)/_layout')),
             },
+            // Library routes (knowledge base detail)
             {
-              element: dynamicElement(() => import('./(main)/resource')),
-              loader: idLoader,
-              path: ':id',
-            },
-            {
-              element: dynamicElement(() => import('./(main)/resource')),
-              loader: idLoader,
-              path: 'library/:id/:slug',
-            },
-            {
-              element: dynamicElement(() => import('./(main)/resource')),
-              loader: idLoader,
+              children: [
+                {
+                  element: dynamicElement(() => import('./(main)/resource/library')),
+                  index: true,
+                  loader: idLoader,
+                },
+                {
+                  element: dynamicElement(() => import('./(main)/resource/library/[slug]')),
+                  loader: idLoader,
+                  path: ':slug',
+                },
+              ],
+
+              element: dynamicElement(() => import('./(main)/resource/library/_layout')),
               path: 'library/:id',
             },
-            {
-              element: dynamicElement(() => import('./(main)/resource')),
-              loader: idLoader,
-              path: '*',
-            },
           ],
-          element: dynamicElement(() => import('./(main)/resource/_layout/Desktop')),
+          element: dynamicElement(() => import('./(main)/resource/_layout')),
           errorElement: <ErrorBoundary resetPath="/resource" />,
           path: 'resource',
         },

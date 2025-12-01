@@ -7,7 +7,7 @@ import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 
 export const BACK_BUTTON_ID = 'lobe-back-button';
 
-const BackButton = memo<ActionIconProps>(({ onClick, ...rest }) => {
+const BackButton = memo<ActionIconProps & { to?: string }>(({ to = '/', onClick, ...rest }) => {
   const navigate = useNavigate();
 
   return (
@@ -15,7 +15,7 @@ const BackButton = memo<ActionIconProps>(({ onClick, ...rest }) => {
       icon={ChevronLeftIcon}
       id={BACK_BUTTON_ID}
       onClick={(e) => {
-        navigate('/');
+        navigate(to);
         onClick?.(e);
       }}
       size={DESKTOP_HEADER_ICON_SIZE}

@@ -54,6 +54,7 @@ const SlashIcon = memo<{ color?: string; size?: number; style?: CSSProperties }>
 );
 
 interface SideBarHeaderLayoutProps {
+  backTo?: string;
   left?: ReactNode;
   liteUserInfo?: boolean;
   right?: ReactNode;
@@ -61,7 +62,7 @@ interface SideBarHeaderLayoutProps {
 }
 
 const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(
-  ({ showBack = true, liteUserInfo = true, left, right }) => {
+  ({ backTo, showBack = true, liteUserInfo = true, left, right }) => {
     const { styles, theme } = useStyles();
 
     return (
@@ -89,6 +90,7 @@ const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(
                 blockSize: 32,
                 size: 16,
               }}
+              to={backTo}
             />
           )}
           <User lite={liteUserInfo} />
