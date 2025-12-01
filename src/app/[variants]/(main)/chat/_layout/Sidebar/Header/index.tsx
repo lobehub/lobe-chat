@@ -5,13 +5,14 @@ import { Flexbox } from 'react-layout-kit';
 
 import SideBarHeaderLayout from '@/features/NavPanel/SideBarHeaderLayout';
 
+import AddTopicButon from './AddTopicButon';
 import Agent from './Agent';
 import Nav from './Nav';
 
 const HeaderInfo = memo<PropsWithChildren>(() => {
   return (
     <Flexbox gap={2} padding={4}>
-      <SideBarHeaderLayout left={<Agent />} />
+      <SideBarHeaderLayout left={<Agent />} right={<AddTopicButon />} />
       <Nav />
     </Flexbox>
   );

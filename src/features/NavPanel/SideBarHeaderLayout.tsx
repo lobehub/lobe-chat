@@ -98,8 +98,8 @@ const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(({ left, right }) => 
           overflow: 'hidden',
         }}
       >
-        {right}
         <TogglePanelButton />
+        {right}
       </Flexbox>
     </Flexbox>
   );

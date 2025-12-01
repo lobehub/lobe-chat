@@ -25,7 +25,7 @@ const Agent = memo<PropsWithChildren>(() => {
 
   const displayTitle = isInbox ? t('inbox.title') : title || t('defaultSession', { ns: 'common' });
 
-  if (isLoading) return <SkeletonItem />;
+  if (isLoading) return <SkeletonItem height={32} padding={0} />;
 
   return (
     <SwitchPanel>
