@@ -5,7 +5,7 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
 import { MobileMainLayout } from './(main)/layouts/mobile';
-import { idLoader, slugLoader } from './loaders/routeParams';
+import { slugLoader } from './loaders/routeParams';
 
 // Create mobile router configuration
 export const createMobileRouter = () =>
@@ -141,34 +141,6 @@ export const createMobileRouter = () =>
           element: dynamicElement(() => import('./(main)/discover/_layout/Mobile/index')),
           errorElement: <ErrorBoundary resetPath="/discover" />,
           path: 'discover',
-        },
-
-        // Knowledge routes
-        {
-          children: [
-            {
-              element: dynamicElement(() => import('./(main)/resource')),
-              index: true,
-            },
-            {
-              element: dynamicElement(() => import('./(main)/resource')),
-              loader: idLoader,
-              path: ':id',
-            },
-            {
-              element: dynamicElement(() => import('./(main)/resource')),
-              loader: idLoader,
-              path: 'library/:id/*',
-            },
-            {
-              element: dynamicElement(() => import('./(main)/resource')),
-              loader: idLoader,
-              path: 'library/:id',
-            },
-          ],
-          element: dynamicElement(() => import('./(main)/resource/_layout/Mobile')),
-          errorElement: <ErrorBoundary resetPath="/resource" />,
-          path: 'resource',
         },
 
         // Settings routes

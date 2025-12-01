@@ -2,6 +2,7 @@
 
 import { ActionIcon } from '@lobehub/ui';
 import { FlaskConical, Github, LibraryBigIcon } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -13,6 +14,8 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 const Footer = memo(() => {
   const { t } = useTranslation('common');
   const { hideGitHub } = useServerConfigStore(featureFlagsSelectors);
+  const pathname = usePathname();
+  const isInResources = pathname.startsWith('/resource');
   return (
     <Flexbox align={'center'} gap={2} horizontal justify={'space-between'} padding={8}>
       <Flexbox align={'center'} flex={1} gap={2} horizontal>
@@ -26,9 +29,11 @@ const Footer = memo(() => {
         </Link>
       </Flexbox>
       <Flexbox>
-        <Link aria-label={t('tab.resource')} to={'/resource'}>
-          <ActionIcon icon={LibraryBigIcon} size={16} title={t('tab.resource')} />
-        </Link>
+        {!isInResources && (
+          <Link aria-label={t('tab.resource')} to={'/resource'}>
+            <ActionIcon icon={LibraryBigIcon} size={16} title={t('tab.resource')} />
+          </Link>
+        )}
       </Flexbox>
     </Flexbox>
   );

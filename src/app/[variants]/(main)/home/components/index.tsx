@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
-import { useFileCategory } from '@/app/[variants]/(main)/resource/hooks/useFileCategory';
+import { useFileCategory } from '@/app/[variants]/(main)/resource/features/hooks/useFileCategory';
 import { useFileStore } from '@/store/file';
 import { FilesTabs } from '@/types/files';
 

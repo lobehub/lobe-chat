@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
-import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
-import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
+import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import { useFileStore } from '@/store/file';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { FilesTabs } from '@/types/files';

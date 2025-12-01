@@ -12,8 +12,8 @@ import { Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
 
-import { useFolderPath } from '@/app/[variants]/(main)/resource/hooks/useFolderPath';
-import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/store';
+import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
