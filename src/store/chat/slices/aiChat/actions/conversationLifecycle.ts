@@ -9,6 +9,7 @@ import {
   SendMessageServerResponse,
   TraceEventType,
 } from '@lobechat/types';
+import { nanoid } from '@lobechat/utils';
 import { TRPCClientError } from '@trpc/client';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
@@ -107,9 +108,10 @@ export const conversationLifecycle: StateCreator<
     const threadId = isCreatingNewThread ? undefined : (context.threadId ?? undefined);
     // Build newThread params for server from new context format
     // Only create newThread if we have both sourceMessageId and threadType
-    const newThread = isCreatingNewThread && context.sourceMessageId && context.threadType
-      ? { sourceMessageId: context.sourceMessageId, type: context.threadType }
-      : undefined;
+    const newThread =
+      isCreatingNewThread && context.sourceMessageId && context.threadType
+        ? { sourceMessageId: context.sourceMessageId, type: context.threadType }
+        : undefined;
 
     if (!agentId) return;
 
@@ -151,6 +153,19 @@ export const conversationLifecycle: StateCreator<
     const shouldCreateNewTopic =
       !topicId && !!chatConfig.enableAutoCreateTopic && messages.length + 2 >= autoCreateThreshold;
 
+    // Create operation for send message first, so we can use operationId for optimistic updates
+    const tempId = 'tmp_' + nanoid();
+    const tempAssistantId = 'tmp_' + nanoid();
+    const { operationId, abortController } = get().startOperation({
+      type: 'sendMessage',
+      context: { agentId, topicId, threadId, messageId: tempId },
+      label: 'Send Message',
+      metadata: {
+        // Mark this as thread operation if threadId exists
+        inThread: !!threadId,
+      },
+    });
+
     // 构造服务端模式临时消息的本地媒体预览（优先使用 S3 URL）
     const filesInStore = getFileStoreState().chatUploadFileList;
     const tempImages: ChatImageItem[] = filesInStore
@@ -168,44 +183,34 @@ export const conversationLifecycle: StateCreator<
         alt: f.file?.name || f.id,
       }));
 
-    // use optimistic update to avoid the slow waiting
-    const tempId = get().optimisticCreateTmpMessage({
-      content: message,
-      // if message has attached with files, then add files to message and the agent
-      files: fileIdList,
-      role: 'user',
-      agentId,
-      // if there is topicId，then add topicId to message
-      topicId,
-      threadId,
-      imageList: tempImages.length > 0 ? tempImages : undefined,
-      videoList: tempVideos.length > 0 ? tempVideos : undefined,
-    });
-    const tempAssistantId = get().optimisticCreateTmpMessage({
-      content: LOADING_FLAT,
-      role: 'assistant',
-      agentId,
-      // if there is topicId，then add topicId to message
-      topicId,
-      threadId,
-    });
-    get().internal_toggleMessageLoading(true, tempId);
-
-    // Create operation for send message
-    const { operationId, abortController } = get().startOperation({
-      type: 'sendMessage',
-      context: {
+    // use optimistic update to avoid the slow waiting (now with operationId for correct context)
+    get().optimisticCreateTmpMessage(
+      {
+        content: message,
+        // if message has attached with files, then add files to message and the agent
+        files: fileIdList,
+        role: 'user',
         agentId,
+        // if there is topicId，then add topicId to message
         topicId,
         threadId,
-        messageId: tempId,
+        imageList: tempImages.length > 0 ? tempImages : undefined,
+        videoList: tempVideos.length > 0 ? tempVideos : undefined,
       },
-      label: 'Send Message',
-      metadata: {
-        // Mark this as thread operation if threadId exists
-        inThread: !!threadId,
+      { operationId, tempMessageId: tempId },
+    );
+    get().optimisticCreateTmpMessage(
+      {
+        content: LOADING_FLAT,
+        role: 'assistant',
+        agentId,
+        // if there is topicId，then add topicId to message
+        topicId,
+        threadId,
       },
-    });
+      { operationId, tempMessageId: tempAssistantId },
+    );
+    get().internal_toggleMessageLoading(true, tempId);
 
     // Associate temp message with operation
     get().associateMessageWithOperation(tempId, operationId);
