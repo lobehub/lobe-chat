@@ -55,7 +55,7 @@ const AgentHeader = memo(() => {
   };
 
   return (
-    <Flexbox gap={4} paddingBlock={8}>
+    <Flexbox gap={16} paddingBlock={16}>
       <EmojiPicker
         background={backgroundColor}
         customTabs={[
@@ -94,7 +94,7 @@ const AgentHeader = memo(() => {
           placement: 'bottomLeft',
         }}
         shape={'square'}
-        size={78}
+        size={72}
         value={meta.avatar}
       />
       <Input
@@ -104,7 +104,7 @@ const AgentHeader = memo(() => {
         }}
         placeholder={t('settingAgent.name.placeholder', { ns: 'setting' })}
         style={{
-          fontSize: 40,
+          fontSize: 36,
           fontWeight: 600,
           padding: 0,
           width: '100%',
