@@ -82,6 +82,12 @@
       "title": "Ripristina tutte le impostazioni"
     }
   },
+  "group": {
+    "aiConfig": "Configurazione AI",
+    "common": "Generale",
+    "profile": "Account",
+    "system": "Sistema"
+  },
   "groupTab": {
     "chat": "Chat",
     "members": "Membri",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "Informazioni",
     "agent": "Assistente predefinito",
-    "common": "Impostazioni comuni",
+    "apikey": "Gestione API Key",
+    "common": "Aspetto",
     "experiment": "实验",
     "hotkey": "Scorciatoie",
-    "image": "Disegno AI",
+    "image": "Servizio di Disegno",
     "llm": "Modello linguistico",
+    "profile": "Il mio account",
     "provider": "Fornitore di servizi AI",
     "proxy": "Proxy di rete",
+    "security": "Sicurezza",
+    "stats": "Statistiche dei dati",
     "storage": "Storage dati",
     "sync": "云端同步",
     "system-agent": "Assistente di sistema",
-    "tts": "Servizio vocale"
+    "tts": "Servizio vocale",
+    "usage": "Statistiche di utilizzo"
   },
   "tools": {
     "add": "Integra plugin",

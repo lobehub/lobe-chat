@@ -1,24 +1,33 @@
 import { isDesktop } from '@lobechat/const';
+import { Avatar } from '@lobehub/ui';
 import {
+  BadgeCentIcon,
   Brain,
+  ChartColumnBigIcon,
   Database,
   EthernetPort,
   Image as ImageIcon,
   Info,
+  KeyIcon,
   KeyboardIcon,
   Mic2,
-  Settings2,
+  PaletteIcon,
+  ShieldCheck,
   Sparkles,
+  UserCircle,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SettingsTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { useUserStore } from '@/store/user';
+import { authSelectors, userProfileSelectors } from '@/store/user/slices/auth/selectors';
 
 export enum SettingsGroupKey {
   AIConfig = 'ai-config',
   Account = 'account',
+  Profile = 'profile',
   System = 'system',
 }
 
@@ -36,16 +45,57 @@ export interface CategoryGroup {
 
 export const useCategory = () => {
   const { t } = useTranslation('setting');
+  const { t: tAuth } = useTranslation('auth');
   const mobile = useServerConfigStore((s) => s.isMobile);
-  const { enableSTT, hideDocs, showAiImage } = useServerConfigStore(featureFlagsSelectors);
-
+  const { enableSTT, hideDocs, showAiImage, showApiKeyManage } =
+    useServerConfigStore(featureFlagsSelectors);
+  const [isLoginWithClerk, avatar, username] = useUserStore((s) => [
+    authSelectors.isLoginWithClerk(s),
+    userProfileSelectors.userAvatar(s),
+    userProfileSelectors.nickName(s),
+  ]);
   const categoryGroups: CategoryGroup[] = useMemo(() => {
     const groups: CategoryGroup[] = [];
 
-    // 账号组 - 个人相关设置
-    const accountItems: CategoryItem[] = [
+    // 个人资料组 - Profile 相关设置
+    const profileItems: CategoryItem[] = [
       {
-        icon: Settings2,
+        icon: avatar ? <Avatar avatar={avatar} shape={'square'} size={26} /> : UserCircle,
+        key: SettingsTabs.Profile,
+        label: username ? username : tAuth('tab.profile'),
+      },
+      isLoginWithClerk && {
+        icon: ShieldCheck,
+        key: SettingsTabs.Security,
+        label: tAuth('tab.security'),
+      },
+      {
+        icon: ChartColumnBigIcon,
+        key: SettingsTabs.Stats,
+        label: tAuth('tab.stats'),
+      },
+      showApiKeyManage && {
+        icon: KeyIcon,
+        key: SettingsTabs.APIKey,
+        label: tAuth('tab.apikey'),
+      },
+      {
+        icon: BadgeCentIcon,
+        key: SettingsTabs.Usage,
+        label: tAuth('tab.usage'),
+      },
+    ].filter(Boolean) as CategoryItem[];
+
+    groups.push({
+      items: profileItems,
+      key: SettingsGroupKey.Profile,
+      title: t('group.profile'),
+    });
+
+    // 账号组 - 个人相关设置
+    const commonItems: CategoryItem[] = [
+      {
+        icon: PaletteIcon,
         key: SettingsTabs.Common,
         label: t('tab.common'),
       },
@@ -57,9 +107,9 @@ export const useCategory = () => {
     ].filter(Boolean) as CategoryItem[];
 
     groups.push({
-      items: accountItems,
+      items: commonItems,
       key: SettingsGroupKey.Account,
-      title: t('group.account'),
+      title: t('group.common'),
     });
 
     // AI 配置组 - AI 相关设置
@@ -118,7 +168,18 @@ export const useCategory = () => {
     });
 
     return groups;
-  }, [t, enableSTT, hideDocs, mobile, showAiImage]);
+  }, [
+    t,
+    tAuth,
+    enableSTT,
+    hideDocs,
+    mobile,
+    showAiImage,
+    showApiKeyManage,
+    isLoginWithClerk,
+    avatar,
+    username,
+  ]);
 
   return categoryGroups;
 };

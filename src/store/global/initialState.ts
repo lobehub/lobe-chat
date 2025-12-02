@@ -35,19 +35,27 @@ export enum GroupSettingsTabs {
 }
 
 export enum SettingsTabs {
+  APIKey = 'apikey',
   About = 'about',
   Agent = 'agent',
   Common = 'common',
   Hotkey = 'hotkey',
   Image = 'image',
   LLM = 'llm',
+  Profile = 'profile',
   Provider = 'provider',
   Proxy = 'proxy',
+  Security = 'security',
+  Stats = 'stats',
   Storage = 'storage',
   SystemAgent = 'system-agent',
   TTS = 'tts',
+  Usage = 'usage',
 }
 
+/**
+ * @deprecated Use SettingsTabs instead
+ */
 export enum ProfileTabs {
   APIKey = 'apikey',
   Profile = 'profile',

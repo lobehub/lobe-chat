@@ -1,19 +1,17 @@
 'use client';
 
-import React, { memo } from 'react';
+import { memo } from 'react';
 
 import { NavPanelPortal } from '@/features/NavPanel';
-import SideBarLayout from '@/features/NavPanel/SideBarLayout';
 
-import CategoryContent from './CategoryContent';
-import Header from './Header';
+import SidebarContent from './SidebarContent';
 
-const SidebarLayout = memo(() => {
+const Sidebar = memo(() => {
   return (
-    <NavPanelPortal navKey="image">
-      <SideBarLayout body={<CategoryContent />} header={<Header />} />
+    <NavPanelPortal navKey="settings">
+      <SidebarContent />
     </NavPanelPortal>
   );
 });
 
-export default SidebarLayout;
+export default Sidebar;

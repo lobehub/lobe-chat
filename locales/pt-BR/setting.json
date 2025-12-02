@@ -82,6 +82,12 @@
       "title": "Redefinir Todas as Configurações"
     }
   },
+  "group": {
+    "aiConfig": "Configuração de IA",
+    "common": "Geral",
+    "profile": "Conta",
+    "system": "Sistema"
+  },
   "groupTab": {
     "chat": "Bate-papo",
     "members": "Membros",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "Sobre",
     "agent": "Assistente Padrão",
-    "common": "Configurações Comuns",
+    "apikey": "Gerenciamento de Chave API",
+    "common": "Aparência",
     "experiment": "Experimento",
     "hotkey": "Atalhos",
-    "image": "Desenho com IA",
+    "image": "Serviço de Ilustração",
     "llm": "Modelo de Linguagem",
+    "profile": "Minha Conta",
     "provider": "Fornecedor de IA",
     "proxy": "Proxy de Rede",
+    "security": "Segurança",
+    "stats": "Estatísticas de Dados",
     "storage": "Armazenamento de Dados",
     "sync": "Sincronização na nuvem",
     "system-agent": "Assistente do Sistema",
-    "tts": "Serviço de Voz"
+    "tts": "Serviço de Voz",
+    "usage": "Estatísticas de Uso"
   },
   "tools": {
     "add": "Integrar Plugin",

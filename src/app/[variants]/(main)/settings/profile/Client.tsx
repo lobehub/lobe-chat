@@ -285,7 +285,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
     );
 
   return (
-    <Flexbox gap={0} paddingInline={mobile ? 16 : 0}>
+    <Flexbox gap={0} paddingInline={mobile ? 16 : 0} width={'100%'}>
       <Typography.Title level={4} style={{ marginBottom: 32 }}>
         {t('profile.title')}
       </Typography.Title>

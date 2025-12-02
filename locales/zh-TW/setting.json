@@ -82,6 +82,12 @@
       "title": "重置所有設定"
     }
   },
+  "group": {
+    "aiConfig": "AI 設定",
+    "common": "通用",
+    "profile": "帳號",
+    "system": "系統"
+  },
   "groupTab": {
     "chat": "聊天",
     "members": "成員",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "關於",
     "agent": "默認助手",
-    "common": "通用設置",
+    "apikey": "API 金鑰管理",
+    "common": "外觀",
     "experiment": "實驗",
     "hotkey": "快速鍵",
-    "image": "AI 繪圖",
+    "image": "繪圖服務",
     "llm": "語言模型",
+    "profile": "我的帳號",
     "provider": "AI 服務商",
     "proxy": "網路代理",
+    "security": "安全性",
+    "stats": "數據統計",
     "storage": "資料儲存",
     "sync": "雲端同步",
     "system-agent": "系統助手",
-    "tts": "語音服務"
+    "tts": "語音服務",
+    "usage": "用量統計"
   },
   "tools": {
     "add": "整合外掛",

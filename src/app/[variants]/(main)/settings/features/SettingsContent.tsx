@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -35,6 +35,22 @@ const componentMap = {
   [SettingsTabs.SystemAgent]: dynamic(() => import('../system-agent'), {
     loading: () => <Loading />,
   }),
+  // Profile related tabs
+  [SettingsTabs.Profile]: dynamic(() => import('../profile'), {
+    loading: () => <Loading />,
+  }),
+  [SettingsTabs.Stats]: dynamic(() => import('../stats'), {
+    loading: () => <Loading />,
+  }),
+  [SettingsTabs.APIKey]: dynamic(() => import('../apikey'), {
+    loading: () => <Loading />,
+  }),
+  [SettingsTabs.Security]: dynamic(() => import('../security'), {
+    loading: () => <Loading />,
+  }),
+  [SettingsTabs.Usage]: dynamic(() => import('../usage'), {
+    loading: () => <Loading />,
+  }),
 };
 
 interface SettingsContentProps {
@@ -48,7 +64,17 @@ const SettingsContent = ({ mobile, activeTab }: SettingsContentProps) => {
     if (!Component) return null;
 
     const componentProps: { mobile?: boolean } = {};
-    if ([SettingsTabs.About, SettingsTabs.Agent, SettingsTabs.Provider].includes(tab as any)) {
+    if (
+      [
+        SettingsTabs.About,
+        SettingsTabs.Agent,
+        SettingsTabs.Provider,
+        SettingsTabs.Profile,
+        SettingsTabs.Stats,
+        SettingsTabs.Security,
+        SettingsTabs.Usage,
+      ].includes(tab as any)
+    ) {
       componentProps.mobile = mobile;
     }
 
@@ -56,29 +82,28 @@ const SettingsContent = ({ mobile, activeTab }: SettingsContentProps) => {
   };
 
   if (mobile) {
-    return activeTab ? renderComponent(activeTab) : renderComponent(SettingsTabs.Common);
+    return activeTab ? renderComponent(activeTab) : renderComponent(SettingsTabs.Profile);
   }
 
-  const getDisplayStyle = (tabName: string): CSSProperties => ({
-    alignItems: 'center',
-    display: activeTab === tabName ? 'flex' : 'none',
-    flexDirection: 'column',
-    gap: 64,
-    height: '100%',
-    paddingBlock:
-      [SettingsTabs.Agent, SettingsTabs.Provider].includes(tabName as any) || mobile ? 0 : 24,
-    paddingInline:
-      [SettingsTabs.Agent, SettingsTabs.Provider].includes(tabName as any) || mobile ? 0 : 32,
-    width: '100%',
-  });
-
   return (
-    <Flexbox height={'100%'} width={'100%'}>
+    <Flexbox align={'center'} height={'100%'} width={'100%'}>
       {Object.keys(componentMap).map((tabKey) => {
+        const isProvider = tabKey === SettingsTabs.Provider;
+        if (activeTab !== tabKey) return null;
         return (
-          <div key={tabKey} style={getDisplayStyle(tabKey)}>
-            {activeTab === tabKey && renderComponent(tabKey)}
-          </div>
+          <Flexbox
+            gap={64}
+            key={tabKey}
+            paddingBlock={isProvider ? 0 : 24}
+            paddingInline={isProvider ? 0 : 32}
+            style={{
+              maxWidth: isProvider ? '100%' : 1024,
+              minHeight: '100%',
+            }}
+            width={'100%'}
+          >
+            {renderComponent(tabKey)}
+          </Flexbox>
         );
       })}
     </Flexbox>

@@ -9,7 +9,7 @@ import SettingsContent from '../features/SettingsContent';
 import Header from './_layout/Header';
 
 const Layout = () => {
-  const [activeTab] = useQueryState('active', parseAsString.withDefault(SettingsTabs.Common));
+  const [activeTab] = useQueryState('active', parseAsString.withDefault(SettingsTabs.Profile));
 
   return (
     <MobileContentLayout header={<Header />}>

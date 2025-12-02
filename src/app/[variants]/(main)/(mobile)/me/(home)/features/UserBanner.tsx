@@ -1,8 +1,8 @@
 'use client';
 
 import { memo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { enableAuth, enableNextAuth } from '@/const/auth';
 import DataStatistics from '@/features/User/DataStatistics';
@@ -20,10 +20,10 @@ const UserBanner = memo(() => {
     <Flexbox gap={12} paddingBlock={8}>
       {!enableAuth || (enableAuth && isLoginWithAuth) ? (
         <>
-          <Link style={{ color: 'inherit' }} to="/profile">
+          <Link style={{ color: 'inherit' }} to="/settings?active=profile">
             <UserInfo />
           </Link>
-          <Link style={{ color: 'inherit' }} to="/profile/stats">
+          <Link style={{ color: 'inherit' }} to="/settings?active=stats">
             <DataStatistics paddingInline={12} />
           </Link>
         </>

@@ -163,35 +163,6 @@ export const createMobileRouter = () =>
           path: 'labs',
         },
 
-        // Profile routes
-        {
-          children: [
-            {
-              element: dynamicElement(() => import('./(main)/profile/(home)')),
-              index: true,
-            },
-            {
-              element: dynamicElement(() => import('./(main)/profile/apikey/index')),
-              path: 'apikey',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/security').then((m) => m.MobileProfileSecurityPage),
-              ),
-              path: 'security',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/stats').then((m) => m.MobileProfileStatsPage),
-              ),
-              path: 'stats',
-            },
-          ],
-          element: dynamicElement(() => import('./(main)/profile/_layout/Mobile')),
-          errorElement: <ErrorBoundary resetPath="/profile" />,
-          path: 'profile',
-        },
-
         // Me routes (mobile personal center)
         {
           children: [
