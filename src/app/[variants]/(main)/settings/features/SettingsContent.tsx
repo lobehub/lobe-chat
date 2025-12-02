@@ -11,9 +11,6 @@ const componentMap = {
   [SettingsTabs.Common]: dynamic(() => import('../common'), {
     loading: () => <Loading />,
   }),
-  [SettingsTabs.Agent]: dynamic(() => import('../agent'), {
-    loading: () => <Loading />,
-  }),
   [SettingsTabs.Provider]: dynamic(() => import('../provider'), {
     loading: () => <Loading />,
   }),

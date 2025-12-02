@@ -5,7 +5,7 @@ import Footer from '@/features/Setting/Footer';
 import { parseAsString, useQueryState } from '@/hooks/useQueryParam';
 import { SettingsTabs } from '@/store/global/initialState';
 
-import SettingsContent from '../_layout/SettingsContent';
+import SettingsContent from '../features/SettingsContent';
 import Header from './_layout/Header';
 
 const Layout = () => {
