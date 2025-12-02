@@ -2,6 +2,7 @@
 
 import { createBrowserRouter, redirect } from 'react-router-dom';
 
+import Loading from '@/components/Loading/BrandTextLoading';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
 import DesktopMainLayout from './(main)/layouts/desktop';
@@ -11,6 +12,7 @@ import { agentIdLoader, idLoader, slugLoader } from './loaders/routeParams';
 export const createDesktopRouter = () =>
   createBrowserRouter([
     {
+      HydrateFallback: Loading,
       children: [
         // Chat routes
         {
@@ -189,11 +191,11 @@ export const createDesktopRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/settings/_layout/Desktop')),
+              element: dynamicElement(() => import('./(main)/settings')),
               index: true,
             },
           ],
-          element: dynamicElement(() => import('./(main)/settings/_layout/DesktopWrapper')),
+          element: dynamicElement(() => import('./(main)/settings/_layout')),
           errorElement: <ErrorBoundary resetPath="/settings" />,
           path: 'settings',
         },
@@ -235,41 +237,6 @@ export const createDesktopRouter = () =>
           path: 'labs',
         },
 
-        // Profile routes
-        {
-          children: [
-            {
-              element: dynamicElement(() => import('./(main)/profile/(home)/desktop')),
-              index: true,
-            },
-            {
-              element: dynamicElement(() => import('./(main)/profile/apikey')),
-              path: 'apikey',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/security').then((m) => m.DesktopProfileSecurityPage),
-              ),
-              path: 'security',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/stats').then((m) => m.DesktopProfileStatsPage),
-              ),
-              path: 'stats',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/usage').then((m) => m.DesktopProfileUsagePage),
-              ),
-              path: 'usage',
-            },
-          ],
-          element: dynamicElement(() => import('./(main)/profile/_layout/DesktopWrapper')),
-          errorElement: <ErrorBoundary resetPath="/profile" />,
-          path: 'profile',
-        },
-
         // changelog routes
         {
           children: [
@@ -286,8 +253,13 @@ export const createDesktopRouter = () =>
         },
         // Default route - redirect to chat
         {
-          element: dynamicElement(() => import('./(main)/home')),
-          index: true,
+          children: [
+            {
+              element: dynamicElement(() => import('./(main)/home')),
+              index: true,
+            },
+          ],
+          element: dynamicElement(() => import('./(main)/home/_layout')),
         },
         // Catch-all route
         {

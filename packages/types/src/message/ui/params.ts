@@ -10,8 +10,9 @@ import { SemanticSearchChunkSchema } from './rag';
 
 export type CreateMessageRoleType = 'user' | 'assistant' | 'tool' | 'supervisor';
 
-export interface CreateMessageParams
-  extends Partial<Omit<UIChatMessage, 'content' | 'role' | 'topicId' | 'chunksList'>> {
+export interface CreateMessageParams extends Partial<
+  Omit<UIChatMessage, 'content' | 'role' | 'topicId' | 'chunksList'>
+> {
   agentId?: string;
   content: string;
   error?: ChatMessageError | null;
@@ -100,16 +101,6 @@ export interface SendMessageParams {
    * If not provided, will be calculated from messages list.
    */
   parentId?: string;
-}
-
-export interface SendThreadMessageParams {
-  /**
-   * create a thread
-   */
-  createNewThread?: boolean;
-  // files?: UploadFileItem[];
-  message: string;
-  onlyAddUserMessage?: boolean;
 }
 
 export interface SendGroupMessageParams {

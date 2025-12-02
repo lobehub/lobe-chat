@@ -82,6 +82,12 @@
       "title": "Tüm Ayarları Sıfırla"
     }
   },
+  "group": {
+    "aiConfig": "AI Yapılandırması",
+    "common": "Genel",
+    "profile": "Hesap",
+    "system": "Sistem"
+  },
   "groupTab": {
     "chat": "Sohbet",
     "members": "Üyeler",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "Hakkında",
     "agent": "Varsayılan Asistan",
-    "common": "Genel Ayarlar",
+    "apikey": "API Anahtarı Yönetimi",
+    "common": "Görünüm",
     "experiment": "Deney",
     "hotkey": "Kısayollar",
-    "image": "AI Çizim",
+    "image": "Çizim Hizmeti",
     "llm": "Modeller",
+    "profile": "Hesabım",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "proxy": "Ağ Proxy",
+    "security": "Güvenlik",
+    "stats": "Veri İstatistikleri",
     "storage": "Veri Depolama",
     "sync": "Bulut Senkronizasyonu",
     "system-agent": "Sistem Asistanı",
-    "tts": "Metin Seslendirme"
+    "tts": "Metin Seslendirme",
+    "usage": "Kullanım İstatistikleri"
   },
   "tools": {
     "add": "Eklenti Entegre Et",

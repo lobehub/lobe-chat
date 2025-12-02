@@ -9,9 +9,12 @@ import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { HtmlPreviewAction } from '@/components/HtmlPreview';
 import { Avatar, BorderSpacing, ErrorContent, Title } from '@/components/ChatItem';
+import { HtmlPreviewAction } from '@/components/HtmlPreview';
 import MessageContent from '@/features/ChatItem/MessageContent';
+import ErrorMessageExtra, { useErrorContent } from '@/features/Conversation/Error';
+import { markdownElements } from '@/features/Conversation/MarkdownElements';
+import { normalizeThinkTags, processWithArtifact } from '@/features/Conversation/utils/markdown';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
@@ -24,10 +27,7 @@ import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
-import ErrorMessageExtra, { useErrorContent } from '@/features/Conversation/Error';
-import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
-import { normalizeThinkTags, processWithArtifact } from '@/features/Conversation/utils/markdown';
 import { AssistantActionsBar } from './Actions';
 import { AssistantMessageExtra } from './Extra';
 import { AssistantMessageBody } from './MessageBody';
@@ -186,9 +186,8 @@ const AssistantMessage = memo<AssistantMessageProps>(
       userGeneralSettingsSelectors.config,
     );
 
-    const [generating, isInRAGFlow, editing] = useChatStore((s) => [
+    const [generating, editing] = useChatStore((s) => [
       messageStateSelectors.isMessageGenerating(id)(s),
-      messageStateSelectors.isMessageInRAGFlow(id)(s),
       messageStateSelectors.isMessageEditing(id)(s),
     ]);
 
@@ -202,8 +201,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
     // remove line breaks in artifact tag to make the ast transform easier
     const message = !editing ? normalizeThinkTags(processWithArtifact(content)) : content;
 
-    // when the message is in RAG flow or the AI generating, it should be in loading state
-    const loading = isInRAGFlow || generating;
+    const loading = generating;
 
     const animated = transitionMode === 'fadeIn' && generating;
 

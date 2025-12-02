@@ -2,7 +2,6 @@
 
 import { App } from 'antd';
 import { Split } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,21 +20,11 @@ import { useChatStore } from '@/store/chat';
 export const useBranchingActionFactory = (): MessageActionFactory => {
   const { t } = useTranslation('common');
   const { message } = App.useApp();
-  const searchParams = useSearchParams();
-  const topic = searchParams.get('topic');
 
-  const openThreadCreator = useChatStore((s) => s.openThreadCreator);
-  const threadMaps = useChatStore((s) => s.threadMaps);
+  const [topic, openThreadCreator] = useChatStore((s) => [s.activeTopicId, s.openThreadCreator]);
 
   return useCallback(
     (id: string): MessageActionItem | null => {
-      // Check if message already has a thread
-      const hasThread = Object.values(threadMaps).some((threads) =>
-        threads?.some((thread) => thread.sourceMessageId === id),
-      );
-
-      if (hasThread) return null;
-
       return {
         handleClick: () => {
           if (!topic) {
@@ -49,7 +38,7 @@ export const useBranchingActionFactory = (): MessageActionFactory => {
         label: t('branching'),
       };
     },
-    [topic, openThreadCreator, threadMaps, message, t],
+    [topic, openThreadCreator],
   );
 };
 

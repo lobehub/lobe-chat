@@ -1,15 +1,36 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { Icon, Text } from '@lobehub/ui';
+import { Breadcrumb, BreadcrumbProps } from 'antd';
 import { createStyles } from 'antd-style';
-import { CSSProperties, ReactNode, memo } from 'react';
+import { ChevronRightIcon, HomeIcon } from 'lucide-react';
+import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
-import BackButton, { BACK_BUTTON_ID } from './BackButton';
-import User from './Header/components/User';
-import TogglePanelButton from './TogglePanelButton';
+import BackButton, { BACK_BUTTON_ID } from './components/BackButton';
+import TogglePanelButton from './components/TogglePanelButton';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, prefixCls }) => ({
+  breadcrumb: css`
+    ol {
+      align-items: center;
+    }
+    .${prefixCls}-breadcrumb-separator {
+      margin-inline: 4px;
+    }
+    .${prefixCls}-breadcrumb-link {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: ${token.colorTextDescription};
+    }
+    a.${prefixCls}-breadcrumb-link {
+      &:hover {
+        color: ${token.colorText};
+      }
+    }
+  `,
   container: css`
     overflow: hidden;
 
@@ -28,85 +49,80 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const SlashIcon = memo<{ color?: string; size?: number; style?: CSSProperties }>(
-  ({ style, color, size = '1em' }) => {
-    return (
-      <svg
-        color={color}
-        data-testid="geist-icon"
-        height={size}
-        stroke-linejoin="round"
-        style={{
-          ...style,
-        }}
-        viewBox="0 0 16 16"
-        width={size}
-      >
-        <path
-          clip-rule="evenodd"
-          d="M4.01526 15.3939L4.3107 14.7046L10.3107 0.704556L10.6061 0.0151978L11.9849 0.606077L11.6894 1.29544L5.68942 15.2954L5.39398 15.9848L4.01526 15.3939Z"
-          fill="currentColor"
-          fill-rule="evenodd"
-        />
-      </svg>
-    );
-  },
-);
-
 interface SideBarHeaderLayoutProps {
   backTo?: string;
+  breadcrumb?: BreadcrumbProps['items'];
   left?: ReactNode;
-  liteUserInfo?: boolean;
   right?: ReactNode;
   showBack?: boolean;
 }
 
 const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(
-  ({ backTo, showBack = true, liteUserInfo = true, left, right }) => {
-    const { styles, theme } = useStyles();
+  ({ left, right, backTo = '/', showBack = true, breadcrumb = [] }) => {
+    const { styles } = useStyles();
+    const navigate = useNavigate();
+    const leftContent = left ? (
+      <Flexbox
+        align={'center'}
+        flex={1}
+        gap={2}
+        horizontal
+        style={{
+          overflow: 'hidden',
+        }}
+      >
+        {showBack && (
+          <BackButton
+            size={{
+              blockSize: 32,
+              size: 16,
+            }}
+            to={backTo}
+          />
+        )}
+        {left && typeof left === 'string' ? (
+          <Text ellipsis fontSize={16} weight={500}>
+            {left}
+          </Text>
+        ) : (
+          left
+        )}
+      </Flexbox>
+    ) : (
+      <Flexbox flex={1} paddingInline={6}>
+        <Breadcrumb
+          className={styles.breadcrumb}
+          items={[
+            {
+              href: '/',
+              title: <Icon icon={HomeIcon} />,
+            },
+            ...breadcrumb,
+          ].map((item) => ({
+            ...item,
+            onClick: (event) => {
+              if (item.href) {
+                event.preventDefault();
+                event.stopPropagation();
+                return navigate(item.href);
+              }
+            },
+          }))}
+          separator={<Icon icon={ChevronRightIcon} />}
+        />
+      </Flexbox>
+    );
 
     return (
       <Flexbox
         align={'center'}
         className={styles.container}
         flex={'none'}
-        gap={8}
         horizontal
         justify={'space-between'}
         padding={6}
       >
-        <Flexbox
-          align={'center'}
-          flex={1}
-          gap={2}
-          horizontal
-          style={{
-            overflow: 'hidden',
-          }}
-        >
-          {showBack && (
-            <BackButton
-              size={{
-                blockSize: 32,
-                size: 16,
-              }}
-              to={backTo}
-            />
-          )}
-          <User lite={liteUserInfo} />
-          {left && (
-            <>
-              <SlashIcon color={theme.colorFill} size={16} />
-              {typeof left === 'string' ? (
-                <Text ellipsis fontSize={16} weight={500}>
-                  {left}
-                </Text>
-              ) : (
-                left
-              )}
-            </>
-          )}
-        </Flexbox>
+        {leftContent}
         <Flexbox
           align={'center'}
           gap={2}

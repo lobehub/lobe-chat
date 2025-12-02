@@ -443,12 +443,16 @@ const FileRenderItem = memo<FileRenderItemProps>(
             </div>
           </Flexbox>
         </Flexbox>
-        <Flexbox className={styles.item} width={FILE_DATE_WIDTH}>
-          {displayTime}
-        </Flexbox>
-        <Flexbox className={styles.item} width={FILE_SIZE_WIDTH}>
-          {isFolder ? '-' : formatSize(size)}
-        </Flexbox>
+        {!isDragging && (
+          <>
+            <Flexbox className={styles.item} width={FILE_DATE_WIDTH}>
+              {displayTime}
+            </Flexbox>
+            <Flexbox className={styles.item} width={FILE_SIZE_WIDTH}>
+              {isFolder ? '-' : formatSize(size)}
+            </Flexbox>
+          </>
+        )}
       </Flexbox>
     );
   },

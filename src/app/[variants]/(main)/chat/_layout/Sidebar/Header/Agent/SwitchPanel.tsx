@@ -2,9 +2,9 @@ import { Popover } from 'antd';
 import React, { PropsWithChildren, Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import List from '@/features/NavPanel/Body/Agent/List';
-import { AgentModalProvider } from '@/features/NavPanel/Body/Agent/ModalProvider';
-import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
+import List from '@/app/[variants]/(main)/home/_layout/Body/Agent/List';
+import { AgentModalProvider } from '@/app/[variants]/(main)/home/_layout/Body/Agent/ModalProvider';
+import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 
 const SwitchPanel = memo<PropsWithChildren>(({ children }) => {
   return (

@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
+import { useCreateNewModal } from '@/features/LibraryModal';
 
 import KnowledgeBaseList from './KnowledgeBaseList';
 

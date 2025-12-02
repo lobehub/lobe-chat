@@ -13,7 +13,15 @@ const Header = memo(() => {
   const { t } = useTranslation('common');
   return (
     <>
-      <SideBarHeaderLayout left={t('tab.pages')} right={<AddButton />} />
+      <SideBarHeaderLayout
+        breadcrumb={[
+          {
+            href: '/page',
+            title: t('tab.pages'),
+          },
+        ]}
+        right={<AddButton />}
+      />
       <Flexbox paddingInline={4}>
         <Search />
       </Flexbox>

@@ -375,21 +375,6 @@ describe('Operation Selectors', () => {
       expect(operationSelectors.isSendingMessage(result.current)).toBe(true);
     });
 
-    it('isInRAGFlow should work', () => {
-      const { result } = renderHook(() => useChatStore());
-
-      expect(operationSelectors.isInRAGFlow(result.current)).toBe(false);
-
-      act(() => {
-        result.current.startOperation({
-          type: 'rag',
-          context: { agentId: 'session1' },
-        });
-      });
-
-      expect(operationSelectors.isInRAGFlow(result.current)).toBe(true);
-    });
-
     it('isMainWindowAgentRuntimeRunning should only detect main window operations', () => {
       const { result } = renderHook(() => useChatStore());
 

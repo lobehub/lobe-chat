@@ -1,0 +1,107 @@
+'use client';
+
+import { FilePenIcon, HomeIcon, ImageIcon, SearchIcon, ShapesIcon } from 'lucide-react';
+import { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { useActiveTabKey } from '@/hooks/useActiveTabKey';
+import { SidebarTabKey } from '@/store/global/initialState';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
+import NavItem, { NavItemProps } from '../../../../../../../features/NavPanel/components/NavItem';
+
+interface Item {
+  hidden?: boolean | undefined;
+  icon: NavItemProps['icon'];
+  key: string;
+  onClick?: () => void;
+  title: NavItemProps['title'];
+  url?: string;
+}
+
+const Nav = memo(() => {
+  const tab = useActiveTabKey();
+  const navigate = useNavigate();
+  const { t } = useTranslation('common');
+  const { showMarket, showAiImage } = useServerConfigStore(featureFlagsSelectors);
+
+  const items: Item[] = useMemo(
+    () => [
+      {
+        icon: HomeIcon,
+        key: SidebarTabKey.Home,
+        title: t('tab.home'),
+        url: '/',
+      },
+      {
+        icon: SearchIcon,
+        key: 'search',
+        title: t('tab.search'),
+      },
+      {
+        hidden: !showAiImage,
+        icon: ImageIcon,
+        key: SidebarTabKey.Image,
+        title: t('tab.aiImage'),
+        url: '/image',
+      },
+      {
+        hidden: !showAiImage,
+        icon: FilePenIcon,
+        key: SidebarTabKey.Pages,
+        title: t('tab.pages'),
+        url: '/page',
+      },
+      {
+        hidden: !showMarket,
+        icon: ShapesIcon,
+        key: SidebarTabKey.Discover,
+        title: t('tab.community'),
+        url: '/discover',
+      },
+    ],
+    [t],
+  );
+
+  return (
+    <Flexbox gap={1} paddingInline={4}>
+      {items.map((item) => {
+        const content = (
+          <NavItem
+            active={tab === item.key}
+            hidden={item.hidden}
+            icon={item.icon}
+            onClick={item.onClick}
+            title={item.title}
+          />
+        );
+        if (!item.url) return content;
+
+        return (
+          <Link
+            key={item.key}
+            onClick={(e) => {
+              e.preventDefault();
+              item?.onClick?.();
+              if (item.url) {
+                navigate(item.url);
+              }
+            }}
+            to={item.url}
+          >
+            <NavItem
+              active={tab === item.key}
+              hidden={item.hidden}
+              icon={item.icon}
+              title={item.title}
+            />
+          </Link>
+        );
+      })}
+    </Flexbox>
+  );
+});
+
+export default Nav;

@@ -18,6 +18,10 @@ export interface DocumentState {
    */
   localDocumentMap: Map<string, LobeDocument>;
   /**
+   * Page agent ID, initialized by useInitPageAgent hook
+   */
+  pageAgentId: string | null;
+  /**
    * ID of the page being renamed (null if none)
    */
   renamingPageId: string | null;
@@ -36,6 +40,7 @@ export const initialDocumentState: DocumentState = {
   isCreatingNew: false,
   isDocumentListLoading: false,
   localDocumentMap: new Map(),
+  pageAgentId: null,
   renamingPageId: null,
   searchKeywords: '',
   selectedPageId: null,

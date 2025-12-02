@@ -9,11 +9,12 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 export enum SidebarTabKey {
   Chat = 'chat',
   Discover = 'discover',
-  Files = 'knowledge',
+  Home = 'home',
   Image = 'image',
   Knowledge = 'knowledge',
   Me = 'me',
   Pages = 'pages',
+  Resource = 'resource',
   Setting = 'settings',
 }
 
@@ -34,19 +35,27 @@ export enum GroupSettingsTabs {
 }
 
 export enum SettingsTabs {
+  APIKey = 'apikey',
   About = 'about',
   Agent = 'agent',
   Common = 'common',
   Hotkey = 'hotkey',
   Image = 'image',
   LLM = 'llm',
+  Profile = 'profile',
   Provider = 'provider',
   Proxy = 'proxy',
+  Security = 'security',
+  Stats = 'stats',
   Storage = 'storage',
   SystemAgent = 'system-agent',
   TTS = 'tts',
+  Usage = 'usage',
 }
 
+/**
+ * @deprecated Use SettingsTabs instead
+ */
 export enum ProfileTabs {
   APIKey = 'apikey',
   Profile = 'profile',

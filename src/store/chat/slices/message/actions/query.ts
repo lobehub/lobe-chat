@@ -6,7 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
 
-import { messageMapKey } from '../../../utils/messageMapKey';
+import { MessageMapKeyInput, messageMapKey } from '../../../utils/messageMapKey';
 
 const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 
@@ -58,31 +58,36 @@ export const messageQuery: StateCreator<
   },
 
   replaceMessages: (messages, params) => {
-    let agentId: string;
-    let topicId: string | null | undefined;
-    let threadId: string | null | undefined;
+    let ctx: MessageMapKeyInput;
 
-    // Priority 1: Use explicit context if provided
+    // Priority 1: Use explicit context if provided (preserving scope)
     if (params?.context) {
-      agentId = params.context.agentId ?? get().activeAgentId;
-      topicId = params.context.topicId !== undefined ? params.context.topicId : get().activeTopicId;
-      threadId = params.context.threadId;
+      ctx = {
+        agentId: params.context.agentId ?? get().activeAgentId,
+        // Preserve scope from context
+        isNew: params.context.isNew,
+
+        scope: params.context.scope,
+
+        threadId: params.context.threadId,
+        topicId:
+          params.context.topicId !== undefined ? params.context.topicId : get().activeTopicId,
+      };
     }
-    // Priority 2: Get context from operation if operationId is provided (deprecated)
+    // Priority 2: Get full context from operation if operationId is provided (deprecated)
     else if (params?.operationId) {
-      const opContext = get().internal_getSessionContext(params);
-      agentId = opContext.agentId;
-      topicId = opContext.topicId;
-      threadId = opContext.threadId;
+      ctx = get().internal_getConversationContext(params);
     }
     // Priority 3: Fallback to global state
     else {
-      agentId = get().activeAgentId;
-      topicId = get().activeTopicId;
-      threadId = get().activeThreadId;
+      ctx = {
+        agentId: get().activeAgentId,
+        threadId: get().activeThreadId,
+        topicId: get().activeTopicId,
+      };
     }
 
-    const messagesKey = messageMapKey({ agentId, threadId, topicId });
+    const messagesKey = messageMapKey(ctx);
 
     // Get raw messages from dbMessagesMap and apply reducer
     const nextDbMap = { ...get().dbMessagesMap, [messagesKey]: messages };

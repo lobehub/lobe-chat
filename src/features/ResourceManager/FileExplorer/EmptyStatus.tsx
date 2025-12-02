@@ -5,7 +5,7 @@ import { ArrowUpIcon, PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
+import { useCreateNewModal } from '@/features/LibraryModal';
 import { useFileStore } from '@/store/file';
 
 const ICON_SIZE = 80;

@@ -43,7 +43,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
         <>
           <UserInfo avatarProps={{ clickable: false }} />
 
-          <Link style={{ color: 'inherit' }} to={'/profile/stats'}>
+          <Link style={{ color: 'inherit' }} to={'/settings?active=stats'}>
             <DataStatistics />
           </Link>
         </>

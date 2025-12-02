@@ -14,7 +14,7 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
-import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
+import { useAddFilesToKnowledgeBaseModal } from '@/features/LibraryModal';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';

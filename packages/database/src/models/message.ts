@@ -8,6 +8,7 @@ import {
   ChatVideoItem,
   CreateMessageParams,
   DBMessageItem,
+  IThreadType,
   MessagePluginItem,
   ModelRankItem,
   NewMessageQueryParams,
@@ -381,7 +382,7 @@ export class MessageModel {
     // Get parent messages based on thread type
     const parentMessages = await this.getThreadParentMessages({
       sourceMessageId: thread.sourceMessageId,
-      threadType: thread.type as ThreadType,
+      threadType: thread.type as IThreadType,
       topicId: thread.topicId,
     });
 
@@ -433,7 +434,7 @@ export class MessageModel {
    */
   getThreadParentMessages = async (params: {
     sourceMessageId: string;
-    threadType: ThreadType;
+    threadType: IThreadType;
     topicId: string;
   }): Promise<DBMessageItem[]> => {
     const { sourceMessageId, topicId, threadType } = params;

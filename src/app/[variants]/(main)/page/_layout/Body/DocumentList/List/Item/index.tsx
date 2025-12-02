@@ -3,7 +3,7 @@ import { Dropdown } from '@lobehub/ui';
 import { FileTextIcon } from 'lucide-react';
 import { CSSProperties, memo, useCallback, useMemo } from 'react';
 
-import NavItem from '@/features/NavPanel/NavItem';
+import NavItem from '@/features/NavPanel/components/NavItem';
 import { documentSelectors, useFileStore } from '@/store/file';
 
 import Actions from './Actions';

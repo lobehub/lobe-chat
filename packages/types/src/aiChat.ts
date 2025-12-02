@@ -4,7 +4,7 @@ import { UIChatMessage } from './message';
 import { OpenAIChatMessage } from './openai/chat';
 import { LobeUniformTool, LobeUniformToolSchema } from './tool';
 import { ChatTopic } from './topic';
-import { ThreadType } from './topic/thread';
+import { IThreadType, ThreadType } from './topic/thread';
 
 export interface SendNewMessage {
   content: string;
@@ -24,7 +24,7 @@ export interface CreateThreadWithMessageParams {
   /** Optional thread title */
   title?: string;
   /** Thread type */
-  type: ThreadType;
+  type: IThreadType;
 }
 
 export interface SendMessageServerParams {
@@ -53,7 +53,7 @@ export const CreateThreadWithMessageSchema = z.object({
   parentThreadId: z.string().optional(),
   sourceMessageId: z.string().optional(),
   title: z.string().optional(),
-  type: z.nativeEnum(ThreadType),
+  type: z.enum([ThreadType.Continuation, ThreadType.Standalone]),
 });
 
 export const AiSendMessageServerSchema = z.object({

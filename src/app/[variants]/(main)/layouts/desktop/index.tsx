@@ -7,6 +7,7 @@ import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
+import { DndContextWrapper } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { isDesktop } from '@/const/version';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
 import TitleBar, { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
@@ -29,26 +30,28 @@ const Layout = memo(() => {
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
       {isDesktop && <TitleBar />}
       {showCloudPromotion && <CloudBanner />}
-      <Flexbox
-        height={
-          isDesktop
-            ? `calc(100% - ${TITLE_BAR_HEIGHT}px)`
-            : showCloudPromotion
-              ? `calc(100% - ${BANNER_HEIGHT}px)`
-              : '100%'
-        }
-        horizontal
-        style={{
-          borderTop: isPWA ? `1px solid ${theme.colorBorder}` : undefined,
-          position: 'relative',
-        }}
-        width={'100%'}
-      >
-        <NavPanel />
-        <DesktopLayoutContainer>
-          <Outlet />
-        </DesktopLayoutContainer>
-      </Flexbox>
+      <DndContextWrapper>
+        <Flexbox
+          height={
+            isDesktop
+              ? `calc(100% - ${TITLE_BAR_HEIGHT}px)`
+              : showCloudPromotion
+                ? `calc(100% - ${BANNER_HEIGHT}px)`
+                : '100%'
+          }
+          horizontal
+          style={{
+            borderTop: isPWA ? `1px solid ${theme.colorBorder}` : undefined,
+            position: 'relative',
+          }}
+          width={'100%'}
+        >
+          <NavPanel />
+          <DesktopLayoutContainer>
+            <Outlet />
+          </DesktopLayoutContainer>
+        </Flexbox>
+      </DndContextWrapper>
       <HotkeyHelperPanel />
       <RegisterHotkeys />
     </HotkeysProvider>

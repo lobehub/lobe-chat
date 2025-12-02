@@ -12,7 +12,14 @@ const Header = memo(() => {
 
   return (
     <>
-      <SideBarHeaderLayout left={t('tab.resource')} />
+      <SideBarHeaderLayout
+        breadcrumb={[
+          {
+            href: '/resource',
+            title: t('tab.resource'),
+          },
+        ]}
+      />
       <CategoryMenu />
     </>
   );

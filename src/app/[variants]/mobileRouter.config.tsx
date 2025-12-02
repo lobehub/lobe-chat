@@ -2,6 +2,7 @@
 
 import { createBrowserRouter, redirect } from 'react-router-dom';
 
+import Loading from '@/components/Loading/BrandTextLoading';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
 import { MobileMainLayout } from './(main)/layouts/mobile';
@@ -11,6 +12,7 @@ import { slugLoader } from './loaders/routeParams';
 export const createMobileRouter = () =>
   createBrowserRouter([
     {
+      HydrateFallback: Loading,
       children: [
         // Chat routes
         {
@@ -147,11 +149,11 @@ export const createMobileRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/settings/_layout/Mobile')),
+              element: dynamicElement(() => import('./(main)/settings/(mobile)')),
               index: true,
             },
           ],
-          element: dynamicElement(() => import('./(main)/settings/_layout/MobileWrapper')),
+          element: dynamicElement(() => import('./(main)/settings/(mobile)/_layout')),
           errorElement: <ErrorBoundary resetPath="/settings" />,
           path: 'settings',
         },
@@ -160,35 +162,6 @@ export const createMobileRouter = () =>
         {
           element: dynamicElement(() => import('./(main)/labs')),
           path: 'labs',
-        },
-
-        // Profile routes
-        {
-          children: [
-            {
-              element: dynamicElement(() => import('./(main)/profile/(home)')),
-              index: true,
-            },
-            {
-              element: dynamicElement(() => import('./(main)/profile/apikey/index')),
-              path: 'apikey',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/security').then((m) => m.MobileProfileSecurityPage),
-              ),
-              path: 'security',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/stats').then((m) => m.MobileProfileStatsPage),
-              ),
-              path: 'stats',
-            },
-          ],
-          element: dynamicElement(() => import('./(main)/profile/_layout/Mobile')),
-          errorElement: <ErrorBoundary resetPath="/profile" />,
-          path: 'profile',
         },
 
         // Me routes (mobile personal center)

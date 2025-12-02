@@ -1,3 +1,4 @@
+import { BUILTIN_AGENTS } from '@lobechat/const';
 import { and, desc, eq, inArray } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
@@ -239,5 +240,38 @@ export class AgentModel {
       .update(agents)
       .set(mergedValue)
       .where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)));
+  };
+
+  /**
+   * Get a builtin agent by slug, creating it if it doesn't exist.
+   * Builtin agents are standalone agents not bound to sessions.
+   */
+  getBuiltinAgent = async (slug: string): Promise<AgentItem | null> => {
+    // First try to find existing agent by slug
+    const existing = await this.db.query.agents.findFirst({
+      where: and(eq(agents.slug, slug), eq(agents.userId, this.userId)),
+    });
+
+    if (existing) return existing;
+
+    // Check if this is a known builtin agent
+    const builtinConfig = BUILTIN_AGENTS[slug];
+    if (!builtinConfig) {
+      return null;
+    }
+
+    // Create the builtin agent
+    const result = await this.db
+      .insert(agents)
+      .values({
+        model: builtinConfig.model,
+        provider: builtinConfig.provider,
+        slug: builtinConfig.slug,
+        userId: this.userId,
+        virtual: true,
+      })
+      .returning();
+
+    return result[0];
   };
 }
