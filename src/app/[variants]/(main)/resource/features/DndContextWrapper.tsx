@@ -1,23 +1,23 @@
 'use client';
 
 import {
-  closestCenter,
   CollisionDetection,
   DndContext,
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
-  pointerWithin,
   PointerSensor,
+  closestCenter,
+  pointerWithin,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { FileText, FolderIcon } from 'lucide-react';
-import { PropsWithChildren, memo, useMemo, useState } from 'react';
+import { PropsWithChildren, memo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { useFileStore } from '@/store/file';
@@ -124,63 +124,72 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
     >
       {children}
       {createPortal(
-        <DragOverlay>
+        <DragOverlay dropAnimation={null}>
           {activeId && activeData ? (
             <Flexbox
               align={'center'}
+              gap={12}
+              horizontal
+              paddingInline={12}
               style={{
-                background: theme.colorBgContainer,
-                border: `1px solid ${theme.colorSplit}`,
-                borderRadius: 8,
-                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                background: theme.colorBgElevated,
+                border: `1px solid ${theme.colorPrimaryBorder}`,
+                borderRadius: theme.borderRadiusLG,
+                boxShadow: theme.boxShadow,
                 cursor: 'grabbing',
-                height: 48,
-                paddingInline: 16,
-                width: 300,
+                height: 44,
+                maxWidth: 320,
+                minWidth: 200,
               }}
             >
-              <Flexbox align={'center'} horizontal>
+              <Flexbox
+                align={'center'}
+                justify={'center'}
+                style={{
+                  color: theme.colorPrimary,
+                  flexShrink: 0,
+                }}
+              >
+                {activeData.fileType === 'custom/folder' ? (
+                  <Icon icon={FolderIcon} size={20} />
+                ) : activeData.fileType === 'custom/document' ? (
+                  <Icon icon={FileText} size={20} />
+                ) : (
+                  <FileIcon fileName={activeData.name} fileType={activeData.fileType} size={20} />
+                )}
+              </Flexbox>
+              <span
+                style={{
+                  color: theme.colorText,
+                  flex: 1,
+                  fontSize: theme.fontSize,
+                  fontWeight: 500,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {activeData.name}
+              </span>
+              {selectedFileIds.includes(activeId) && selectedFileIds.length > 1 && (
                 <Flexbox
                   align={'center'}
                   justify={'center'}
-                  style={{ fontSize: 24, marginInlineEnd: 8, width: 24 }}
-                >
-                  {activeData.fileType === 'custom/folder' ? (
-                    <Icon icon={FolderIcon} size={24} />
-                  ) : activeData.fileType === 'custom/document' ? (
-                    <Center height={24} width={24}>
-                      <Icon icon={FileText} size={24} />
-                    </Center>
-                  ) : (
-                    <FileIcon fileName={activeData.name} fileType={activeData.fileType} size={24} />
-                  )}
-                </Flexbox>
-                <span
                   style={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
+                    background: theme.colorPrimary,
+                    borderRadius: theme.borderRadiusSM,
+                    color: theme.colorTextLightSolid,
+                    flexShrink: 0,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    height: 22,
+                    minWidth: 22,
+                    paddingInline: 6,
                   }}
                 >
-                  {activeData.name}
-                </span>
-                {selectedFileIds.includes(activeId) && selectedFileIds.length > 1 && (
-                  <div
-                    style={{
-                      background: theme.colorPrimary,
-                      borderRadius: 10,
-                      color: theme.colorTextLightSolid,
-                      fontSize: 12,
-                      height: 20,
-                      lineHeight: '20px',
-                      marginLeft: 8,
-                      paddingInline: 6,
-                    }}
-                  >
-                    {selectedFileIds.length}
-                  </div>
-                )}
-              </Flexbox>
+                  {selectedFileIds.length}
+                </Flexbox>
+              )}
             </Flexbox>
           ) : null}
         </DragOverlay>,
@@ -191,4 +200,3 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
 });
 
 DndContextWrapper.displayName = 'DndContextWrapper';
-
