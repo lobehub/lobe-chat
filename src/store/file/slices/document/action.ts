@@ -14,7 +14,7 @@ const ALLOWED_DOCUMENT_FILE_TYPES = new Set(['custom/document', 'application/pdf
 const EDITOR_DOCUMENT_FILE_TYPE = 'custom/document';
 
 const updateUrl = (docId: string | null) => {
-  const newPath = docId ? `/pages/${docId}` : '/pages';
+  const newPath = docId ? `/page/${docId}` : '/page';
   window.history.replaceState({}, '', newPath);
 };
 
