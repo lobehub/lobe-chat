@@ -147,9 +147,13 @@ export class UserModel {
   };
 
   updateUser = async (value: Partial<UserItem>) => {
+    // Normalize empty email to null to keep unique constraint safe
+    const normalizedEmail = value.email === '' ? null : value.email;
+    const nextValue = value.email !== undefined ? { ...value, email: normalizedEmail } : value;
+
     return this.db
       .update(users)
-      .set({ ...value, updatedAt: new Date() })
+      .set({ ...nextValue, updatedAt: new Date() })
       .where(eq(users.id, this.userId));
   };
 
@@ -203,9 +207,11 @@ export class UserModel {
       if (!!user) return { duplicate: true };
     }
 
+    const normalizedEmail = params.email === '' ? null : params.email;
+    // Normalize empty email to null to avoid duplicate empty strings
     const [user] = await db
       .insert(users)
-      .values({ ...params })
+      .values({ ...params, email: normalizedEmail })
       .returning();
 
     return { duplicate: false, user };

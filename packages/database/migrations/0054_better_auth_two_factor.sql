@@ -35,6 +35,9 @@ CREATE INDEX IF NOT EXISTS "verification_identifier_idx" ON "verifications" USIN
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique') THEN
+    -- Normalize empty emails so the unique constraint can be created safely
+    UPDATE "users" SET "email" = NULL WHERE "email" = '';
+    --> statement-breakpoint
     ALTER TABLE "users" ADD CONSTRAINT "users_email_unique" UNIQUE ("email");
   END IF;
 END $$;
