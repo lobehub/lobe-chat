@@ -6,7 +6,7 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
-import PageEditorModal from '@/features/PageEditor/PageEditorModal';
+import PageEditorModal from '@/features/PageEditor/Modal';
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 

@@ -4,11 +4,11 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import EditorContent from './EditorContent';
-import { usePageEditorContext } from './PageEditorContext';
-import PageEditorTitle from './PageEditorTitle';
+import { usePageEditorContext } from '../Context';
+import EditorContent from '../EditorContent';
+import Title from './Title';
 
-const PageEditorBody = memo(() => {
+const Body = memo(() => {
   const { t } = useTranslation('file');
   const { editor, onEditorInit, handleContentChange } = usePageEditorContext();
 
@@ -24,7 +24,7 @@ const PageEditorBody = memo(() => {
           width: '100%',
         }}
       >
-        <PageEditorTitle />
+        <Title />
 
         <div
           onClick={() => editor?.focus()}
@@ -50,4 +50,4 @@ const PageEditorBody = memo(() => {
   );
 });
 
-export default PageEditorBody;
+export default Body;
