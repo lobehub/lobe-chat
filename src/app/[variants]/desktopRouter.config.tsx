@@ -221,7 +221,7 @@ export const createDesktopRouter = () =>
               index: true,
             },
             {
-              element: dynamicElement(() => import('./(main)/page')),
+              element: dynamicElement(() => import('./(main)/page/[id]')),
               loader: idLoader,
               path: ':id',
             },

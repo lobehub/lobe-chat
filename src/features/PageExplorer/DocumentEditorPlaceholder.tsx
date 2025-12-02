@@ -6,6 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import NavHeader from '@/features/NavHeader';
 import { useFileStore } from '@/store/file';
 
 const ICON_SIZE = 80;
@@ -101,58 +102,60 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
     };
 
     return (
-      <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
-        {hasPages && (
-          <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
-            <Text as={'h4'}>{t('documentEditor.empty.title')}</Text>
-            <Text type={'secondary'}>{t('or', { ns: 'common' })}</Text>
-          </Flexbox>
-        )}
-        <Flexbox gap={12} horizontal>
-          {/* Create New Note */}
-          <Flexbox className={styles.card} onClick={onCreateNewNote} padding={16}>
-            <span className={styles.actionTitle}>
-              {t('documentEditor.empty.createNewDocument')}
-            </span>
-            <div className={styles.glow} style={{ background: theme.purple }} />
-            <FileTypeIcon
-              className={styles.icon}
-              color={theme.purple}
-              icon={<Icon color={'#fff'} icon={PlusIcon} />}
-              size={ICON_SIZE}
-              type={'file'}
-            />
-          </Flexbox>
-
-          {/* Upload Markdown File */}
-          <Upload
-            accept=".md,.markdown"
-            beforeUpload={handleUploadMarkdown}
-            disabled={isUploading}
-            multiple={false}
-            showUploadList={false}
-          >
-            <Flexbox
-              className={styles.card}
-              padding={16}
-              style={{ opacity: isUploading ? 0.5 : 1 }}
-            >
+      <>
+        <NavHeader />
+        <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
+          {hasPages && (
+            <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
+              <Text as={'h4'}>{t('documentEditor.empty.title')}</Text>
+              <Text type={'secondary'}>{t('or', { ns: 'common' })}</Text>
+            </Flexbox>
+          )}
+          <Flexbox gap={12} horizontal>
+            {/* Create New Note */}
+            <Flexbox className={styles.card} onClick={onCreateNewNote} padding={16}>
               <span className={styles.actionTitle}>
-                {isUploading ? 'Uploading...' : t('documentEditor.empty.uploadMarkdown')}
+                {t('documentEditor.empty.createNewDocument')}
               </span>
-              <div className={styles.glow} style={{ background: theme.gold }} />
+              <div className={styles.glow} style={{ background: theme.purple }} />
               <FileTypeIcon
                 className={styles.icon}
-                color={theme.gold}
-                icon={<Icon color={'#fff'} icon={ArrowUpIcon} />}
+                color={theme.purple}
+                icon={<Icon color={'#fff'} icon={PlusIcon} />}
                 size={ICON_SIZE}
                 type={'file'}
               />
             </Flexbox>
-          </Upload>
 
-          {/* Import from Notion */}
-          {/* <Flexbox className={styles.card} onClick={handleImportFromNotion} padding={16}>
+            {/* Upload Markdown File */}
+            <Upload
+              accept=".md,.markdown"
+              beforeUpload={handleUploadMarkdown}
+              disabled={isUploading}
+              multiple={false}
+              showUploadList={false}
+            >
+              <Flexbox
+                className={styles.card}
+                padding={16}
+                style={{ opacity: isUploading ? 0.5 : 1 }}
+              >
+                <span className={styles.actionTitle}>
+                  {isUploading ? 'Uploading...' : t('documentEditor.empty.uploadMarkdown')}
+                </span>
+                <div className={styles.glow} style={{ background: theme.gold }} />
+                <FileTypeIcon
+                  className={styles.icon}
+                  color={theme.gold}
+                  icon={<Icon color={'#fff'} icon={ArrowUpIcon} />}
+                  size={ICON_SIZE}
+                  type={'file'}
+                />
+              </Flexbox>
+            </Upload>
+
+            {/* Import from Notion */}
+            {/* <Flexbox className={styles.card} onClick={handleImportFromNotion} padding={16}>
           <span className={styles.actionTitle}>Import from Notion</span>
           <div className={styles.glow} style={{ background: theme.geekblue }} />
           <FileTypeIcon
@@ -163,8 +166,9 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
             type={'doc'}
           />
         </Flexbox> */}
-        </Flexbox>
-      </Center>
+          </Flexbox>
+        </Center>
+      </>
     );
   },
 );

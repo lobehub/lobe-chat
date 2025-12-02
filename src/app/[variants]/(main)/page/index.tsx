@@ -1,9 +1,10 @@
 'use client';
 
-import { memo } from 'react';
+import { Suspense, memo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import PageExplorer from '@/app/[variants]/(main)/page/features';
+import Loading from '@/components/Loading/BrandTextLoading';
+import PageExplorer from '@/features/PageExplorer';
 
 /**
  * Pages route - dedicated page for managing documents/pages
@@ -12,7 +13,11 @@ import PageExplorer from '@/app/[variants]/(main)/page/features';
 const PagesPage = memo(() => {
   const { id } = useParams<{ id: string }>();
 
-  return <PageExplorer pageId={id} />;
+  return (
+    <Suspense fallback={<Loading />}>
+      <PageExplorer pageId={id} />
+    </Suspense>
+  );
 });
 
 PagesPage.displayName = 'PagesPage';

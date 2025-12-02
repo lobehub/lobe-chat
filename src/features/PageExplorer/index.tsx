@@ -1,6 +1,5 @@
 'use client';
 
-import { createStyles } from 'antd-style';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,14 +7,6 @@ import PageEditor from '@/features/PageEditor';
 import { useFileStore } from '@/store/file';
 
 import PageExplorerPlaceholder from './DocumentEditorPlaceholder';
-
-const useStyles = createStyles(({ css, token }) => ({
-  editorPanel: css`
-    overflow: hidden;
-    flex: 1;
-    background: ${token.colorBgContainer};
-  `,
-}));
 
 interface PageExplorerProps {
   knowledgeBaseId?: string;
@@ -27,7 +18,6 @@ interface PageExplorerProps {
  */
 const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
   const { t } = useTranslation('file');
-  const { styles } = useStyles();
 
   const selectedPageId = useFileStore((s) => s.selectedPageId);
   const fetchDocuments = useFileStore((s) => s.fetchDocuments);
@@ -59,23 +49,22 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
     deletePage(docId);
   };
 
+  if (!currentPageId)
+    return (
+      <PageExplorerPlaceholder
+        hasPages={pages.length > 0}
+        knowledgeBaseId={knowledgeBaseId}
+        onCreateNewNote={handleNewDocument}
+        onNoteCreated={() => {}}
+      />
+    );
+
   return (
-    <div className={styles.editorPanel}>
-      {currentPageId ? (
-        <PageEditor
-          knowledgeBaseId={knowledgeBaseId}
-          onDelete={() => handleDelete(currentPageId)}
-          pageId={currentPageId}
-        />
-      ) : (
-        <PageExplorerPlaceholder
-          hasPages={pages.length > 0}
-          knowledgeBaseId={knowledgeBaseId}
-          onCreateNewNote={handleNewDocument}
-          onNoteCreated={() => {}}
-        />
-      )}
-    </div>
+    <PageEditor
+      knowledgeBaseId={knowledgeBaseId}
+      onDelete={() => handleDelete(currentPageId)}
+      pageId={currentPageId}
+    />
   );
 });
 
