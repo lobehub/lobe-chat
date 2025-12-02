@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support market cloud endpoint mcp."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.143"
+  },
+  {
+    "children": {
       "fixes": ["Remove internal apiMode param from chat completion API requests."]
     },
     "date": "2025-12-01",
