@@ -14,7 +14,7 @@ const Layout = () => {
         flex={1}
         height={'100vh'}
         style={{
-          background: theme.colorBgContainer,
+          background: theme.colorBgContainerSecondary,
           overflow: 'hidden',
           position: 'relative',
         }}

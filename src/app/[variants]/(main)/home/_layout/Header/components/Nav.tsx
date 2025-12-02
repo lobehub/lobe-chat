@@ -30,15 +30,15 @@ const Nav = memo(() => {
   const items: Item[] = useMemo(
     () => [
       {
+        icon: SearchIcon,
+        key: 'search',
+        title: t('tab.search'),
+      },
+      {
         icon: HomeIcon,
         key: SidebarTabKey.Home,
         title: t('tab.home'),
         url: '/',
-      },
-      {
-        icon: SearchIcon,
-        key: 'search',
-        title: t('tab.search'),
       },
       {
         hidden: !showAiImage,
