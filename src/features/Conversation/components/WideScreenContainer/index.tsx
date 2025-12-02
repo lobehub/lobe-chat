@@ -2,7 +2,7 @@
 
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { memo, useEffect } from 'react';
+import { CSSProperties, memo, useEffect } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { CONVERSATION_MIN_WIDTH } from '@/const/layoutTokens';
@@ -18,10 +18,11 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface WideScreenContainerProps extends FlexboxProps {
   onChange?: () => void;
+  wrapperStyle?: CSSProperties;
 }
 
 const WideScreenContainer = memo<WideScreenContainerProps>(
-  ({ children, className, onChange, ...rest }) => {
+  ({ children, className, onChange, wrapperStyle, ...rest }) => {
     const { cx, styles } = useStyles();
     const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
 
@@ -30,7 +31,7 @@ const WideScreenContainer = memo<WideScreenContainerProps>(
     }, [wideScreen]);
 
     return (
-      <Flexbox width={'100%'}>
+      <Flexbox style={wrapperStyle} width={'100%'}>
         <Flexbox
           className={cx(styles.container, className)}
           paddingInline={16}

@@ -5,7 +5,7 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
-import DesktopMainLayout from './(main)/layouts/desktop';
+import DesktopMainLayout from './(main)/layouts';
 import { agentIdLoader, idLoader, slugLoader } from './loaders/routeParams';
 
 // Create desktop router configuration

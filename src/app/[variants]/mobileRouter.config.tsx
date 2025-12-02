@@ -5,13 +5,14 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
-import { MobileMainLayout } from './(main)/layouts/mobile';
+import { MobileMainLayout } from './(main)/(mobile)/_layout';
 import { slugLoader } from './loaders/routeParams';
 
 // Create mobile router configuration
 export const createMobileRouter = () =>
   createBrowserRouter([
     {
+      HydrateFallback: Loading,
       children: [
         // Chat routes
         {
@@ -227,7 +228,6 @@ export const createMobileRouter = () =>
       ],
       element: <MobileMainLayout />,
       errorElement: <ErrorBoundary resetPath="/chat" />,
-      HydrateFallback: Loading,
       path: '/',
     },
   ]);
