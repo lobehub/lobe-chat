@@ -6,7 +6,7 @@ import React, { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
-import { SkeletonItem } from '@/features/NavPanel/Body/SkeletonList';
+import { SkeletonItem } from '@/features/NavPanel/components/SkeletonList';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 

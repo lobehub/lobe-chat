@@ -8,8 +8,8 @@ import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
-import BackButton, { BACK_BUTTON_ID } from './BackButton';
-import TogglePanelButton from './TogglePanelButton';
+import BackButton, { BACK_BUTTON_ID } from './components/BackButton';
+import TogglePanelButton from './components/TogglePanelButton';
 
 const useStyles = createStyles(({ css, token, prefixCls }) => ({
   breadcrumb: css`

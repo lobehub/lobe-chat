@@ -5,7 +5,7 @@ import React, { Suspense, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
+import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 

@@ -147,11 +147,11 @@ export const createMobileRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/settings/_layout/Mobile')),
+              element: dynamicElement(() => import('./(main)/settings/(mobile)')),
               index: true,
             },
           ],
-          element: dynamicElement(() => import('./(main)/settings/_layout/MobileWrapper')),
+          element: dynamicElement(() => import('./(main)/settings/(mobile)/_layout')),
           errorElement: <ErrorBoundary resetPath="/settings" />,
           path: 'settings',
         },

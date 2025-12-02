@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
+import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { documentSelectors, useFileStore } from '@/store/file';
 
 import List from './DocumentList/List';

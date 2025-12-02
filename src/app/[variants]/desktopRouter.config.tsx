@@ -189,11 +189,11 @@ export const createDesktopRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/settings/_layout/Desktop')),
+              element: dynamicElement(() => import('./(main)/settings')),
               index: true,
             },
           ],
-          element: dynamicElement(() => import('./(main)/settings/_layout/DesktopWrapper')),
+          element: dynamicElement(() => import('./(main)/settings/_layout')),
           errorElement: <ErrorBoundary resetPath="/settings" />,
           path: 'settings',
         },
@@ -286,8 +286,13 @@ export const createDesktopRouter = () =>
         },
         // Default route - redirect to chat
         {
-          element: dynamicElement(() => import('./(main)/home')),
-          index: true,
+          children: [
+            {
+              element: dynamicElement(() => import('./(main)/home')),
+              index: true,
+            },
+          ],
+          element: dynamicElement(() => import('./(main)/home/_layout')),
         },
         // Catch-all route
         {
