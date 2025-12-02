@@ -19,23 +19,23 @@ import type {
 const log = debug('lobe-store:builtin-tool:agent-builder');
 
 export interface AgentBuilderAction {
-  agentBuilder_getConfig: (id: string, params: GetAgentConfigParams) => Promise<void>;
-  agentBuilder_getMeta: (id: string, params: GetAgentMetaParams) => Promise<void>;
-  agentBuilder_setModel: (id: string, params: SetModelParams) => Promise<void>;
-  agentBuilder_setOpeningMessage: (id: string, params: SetOpeningMessageParams) => Promise<void>;
+  agentBuilder_getConfig: (id: string, params: GetAgentConfigParams) => Promise<boolean>;
+  agentBuilder_getMeta: (id: string, params: GetAgentMetaParams) => Promise<boolean>;
+  agentBuilder_setModel: (id: string, params: SetModelParams) => Promise<boolean>;
+  agentBuilder_setOpeningMessage: (id: string, params: SetOpeningMessageParams) => Promise<boolean>;
   agentBuilder_setOpeningQuestions: (
     id: string,
     params: SetOpeningQuestionsParams,
-  ) => Promise<void>;
-  agentBuilder_togglePlugin: (id: string, params: TogglePluginParams) => Promise<void>;
-  agentBuilder_updateChatConfig: (id: string, params: UpdateChatConfigParams) => Promise<void>;
-  agentBuilder_updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<void>;
-  agentBuilder_updateMeta: (id: string, params: UpdateAgentMetaParams) => Promise<void>;
+  ) => Promise<boolean>;
+  agentBuilder_togglePlugin: (id: string, params: TogglePluginParams) => Promise<boolean>;
+  agentBuilder_updateChatConfig: (id: string, params: UpdateChatConfigParams) => Promise<boolean>;
+  agentBuilder_updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<boolean>;
+  agentBuilder_updateMeta: (id: string, params: UpdateAgentMetaParams) => Promise<boolean>;
   internal_triggerAgentBuilderToolCalling: (
     id: string,
     apiName: string,
     params: any,
-  ) => Promise<void>;
+  ) => Promise<boolean>;
 }
 
 const runtime = new AgentBuilderExecutionRuntime();
@@ -56,26 +56,6 @@ export const agentBuilderSlice: StateCreator<
     return get().internal_triggerAgentBuilderToolCalling(id, 'getAgentMeta', params);
   },
 
-  // ==================== Write Operations ====================
-
-  agentBuilder_updateConfig: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentConfig', params);
-  },
-
-  agentBuilder_updateMeta: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentMeta', params);
-  },
-
-  agentBuilder_updateChatConfig: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updateChatConfig', params);
-  },
-
-  // ==================== Specific Field Operations ====================
-
-  agentBuilder_togglePlugin: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'togglePlugin', params);
-  },
-
   agentBuilder_setModel: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'setModel', params);
   },
@@ -86,6 +66,24 @@ export const agentBuilderSlice: StateCreator<
 
   agentBuilder_setOpeningQuestions: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'setOpeningQuestions', params);
+  },
+
+  // ==================== Specific Field Operations ====================
+  agentBuilder_togglePlugin: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'togglePlugin', params);
+  },
+
+  agentBuilder_updateChatConfig: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'updateChatConfig', params);
+  },
+
+  // ==================== Write Operations ====================
+  agentBuilder_updateConfig: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentConfig', params);
+  },
+
+  agentBuilder_updateMeta: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentMeta', params);
   },
 
   // ==================== Internal Helper ====================
@@ -192,6 +190,8 @@ export const agentBuilderSlice: StateCreator<
         // Update plugin error
         await get().optimisticUpdatePluginError(id, error, context);
       }
+
+      return true;
     } catch (error) {
       const err = error as Error;
 
@@ -206,7 +206,7 @@ export const agentBuilderSlice: StateCreator<
           type: 'UserAborted',
         });
         // Don't update error message for user aborts
-        return;
+        return true;
       }
 
       // Fail operation for other errors
@@ -225,6 +225,8 @@ export const agentBuilderSlice: StateCreator<
         },
         context,
       );
+
+      return true;
     }
   },
 });
