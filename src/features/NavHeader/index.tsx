@@ -11,9 +11,14 @@ interface NavHeaderProps extends Omit<FlexboxProps, 'children'> {
 
 const NavHeader = memo<NavHeaderProps>(({ left, right, ...rest }) => {
   const { expand } = useNavPanel();
+  const noContent = !left && !right;
+
+  if (noContent && expand) return;
+
   return (
     <Flexbox
       align={'center'}
+      flex={'none'}
       gap={4}
       height={44}
       horizontal

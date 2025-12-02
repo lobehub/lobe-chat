@@ -1,10 +1,11 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import React from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Fragment } from 'react';
 
 import Loading from '@/components/Loading/BrandTextLoading';
+import NavHeader from '@/features/NavHeader';
+import SettingContainer from '@/features/Setting/SettingContainer';
 import { SettingsTabs } from '@/store/global/initialState';
 
 const componentMap = {
@@ -86,27 +87,22 @@ const SettingsContent = ({ mobile, activeTab }: SettingsContentProps) => {
   }
 
   return (
-    <Flexbox align={'center'} height={'100%'} width={'100%'}>
+    <>
       {Object.keys(componentMap).map((tabKey) => {
         const isProvider = tabKey === SettingsTabs.Provider;
         if (activeTab !== tabKey) return null;
+        const content = renderComponent(tabKey);
+        if (isProvider) return <Fragment key={tabKey}>{content}</Fragment>;
         return (
-          <Flexbox
-            gap={64}
-            key={tabKey}
-            paddingBlock={isProvider ? 0 : 24}
-            paddingInline={isProvider ? 0 : 32}
-            style={{
-              maxWidth: isProvider ? '100%' : 1024,
-              minHeight: '100%',
-            }}
-            width={'100%'}
-          >
-            {renderComponent(tabKey)}
-          </Flexbox>
+          <Fragment key={tabKey}>
+            <NavHeader />
+            <SettingContainer maxWidth={1024} padding={24}>
+              {content}
+            </SettingContainer>
+          </Fragment>
         );
       })}
-    </Flexbox>
+    </>
   );
 };
 

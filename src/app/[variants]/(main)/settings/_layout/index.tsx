@@ -21,9 +21,13 @@ const Layout = memo(() => {
     >
       <SideBar />
       <Flexbox
-        height={'100%'}
-        horizontal
-        style={{ background: theme.colorBgContainer, flex: '1', position: 'relative' }}
+        flex={1}
+        height={'100vh'}
+        style={{
+          background: theme.colorBgContainer,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
       >
         <Outlet />
       </Flexbox>
