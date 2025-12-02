@@ -63,7 +63,10 @@ export const pluginTypes: StateCreator<
     // run tool api call
     // @ts-ignore
     const { [payload.apiName]: action } = get();
-    if (!action) return;
+    if (!action) {
+      console.error(`[invokeBuiltinTool] plugin Action not found: ${payload.apiName}`);
+      return;
+    }
 
     const content = safeParseJSON(payload.arguments);
 
