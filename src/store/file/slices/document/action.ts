@@ -1,6 +1,10 @@
+import { PAGE_AGENT } from '@lobechat/const';
 import { createNanoId } from '@lobechat/utils';
+import { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { useOnlyFetchOnceSWR } from '@/libs/swr';
+import { agentService } from '@/services/agent';
 import { documentService } from '@/services/document';
 import { DocumentSourceType, LobeDocument } from '@/types/document';
 import { setNamespace } from '@/utils/storeDebug';
@@ -113,6 +117,12 @@ export interface DocumentAction {
     documentId: string,
     updates: Partial<LobeDocument>,
   ) => Promise<void>;
+  /**
+   * Hook to initialize Page Agent.
+   * Fetches the builtin page-agent (creating it if it doesn't exist)
+   * and stores its ID in the DocumentStore for use by ConversationProvider.
+   */
+  useInitPageAgent: () => SWRResponse;
 }
 
 export const createDocumentSlice: StateCreator<
@@ -547,4 +557,13 @@ export const createDocumentSlice: StateCreator<
       set({ localDocumentMap: revertMap }, false, n('revertOptimisticUpdate'));
     }
   },
+
+  useInitPageAgent: () =>
+    useOnlyFetchOnceSWR(PAGE_AGENT.slug, () => agentService.getBuiltinAgent(PAGE_AGENT.slug), {
+      onSuccess: (data: { id: string } | null) => {
+        if (data) {
+          set({ pageAgentId: data.id }, false, n('useInitPageAgent/onSuccess'));
+        }
+      },
+    }),
 });

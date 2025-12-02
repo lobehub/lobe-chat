@@ -79,6 +79,14 @@ class AgentService {
   updateAgentMeta = async (agentId: string, meta: Partial<MetaData>, signal?: AbortSignal) => {
     return lambdaClient.agent.updateAgentConfig.mutate({ agentId, value: meta }, { signal });
   };
+
+  /**
+   * Get a builtin agent by slug, creating it if it doesn't exist.
+   * This is a generic interface for all builtin agents (page-copilot, inbox, etc.)
+   */
+  getBuiltinAgent = async (slug: string) => {
+    return lambdaClient.agent.getBuiltinAgent.query({ slug });
+  };
 }
 
 export const agentService = new AgentService();

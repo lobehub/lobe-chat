@@ -87,7 +87,7 @@ export const pluginOptimisticUpdate: StateCreator<
   PluginOptimisticUpdateAction
 > = (set, get) => ({
   optimisticUpdatePluginState: async (id, value, context) => {
-    const { replaceMessages, internal_getSessionContext } = get();
+    const { replaceMessages, internal_getConversationContext } = get();
 
     // optimistic update
     get().internal_dispatchMessage(
@@ -95,7 +95,7 @@ export const pluginOptimisticUpdate: StateCreator<
       context,
     );
 
-    const ctx = internal_getSessionContext(context);
+    const ctx = internal_getConversationContext(context);
 
     const result = await messageService.updateMessagePluginState(id, value, {
       agentId: ctx.agentId,
@@ -157,7 +157,7 @@ export const pluginOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdatePlugin: async (id, value, context) => {
-    const { replaceMessages, internal_getSessionContext } = get();
+    const { replaceMessages, internal_getConversationContext } = get();
 
     // optimistic update
     get().internal_dispatchMessage(
@@ -169,7 +169,7 @@ export const pluginOptimisticUpdate: StateCreator<
       context,
     );
 
-    const ctx = internal_getSessionContext(context);
+    const ctx = internal_getConversationContext(context);
 
     const result = await messageService.updateMessagePlugin(id, value, {
       agentId: ctx.agentId,
@@ -212,11 +212,11 @@ export const pluginOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdatePluginError: async (id, error, context) => {
-    const { replaceMessages, internal_getSessionContext } = get();
+    const { replaceMessages, internal_getConversationContext } = get();
 
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } }, context);
 
-    const ctx = internal_getSessionContext(context);
+    const ctx = internal_getConversationContext(context);
 
     const result = await messageService.updateMessage(
       id,
@@ -233,9 +233,10 @@ export const pluginOptimisticUpdate: StateCreator<
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || !message.tools) return;
 
-    const { internal_toggleMessageLoading, replaceMessages, internal_getSessionContext } = get();
+    const { internal_toggleMessageLoading, replaceMessages, internal_getConversationContext } =
+      get();
 
-    const ctx = internal_getSessionContext(context);
+    const ctx = internal_getConversationContext(context);
 
     internal_toggleMessageLoading(true, id);
     const result = await messageService.updateMessage(

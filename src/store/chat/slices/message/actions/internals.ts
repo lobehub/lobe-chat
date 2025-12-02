@@ -37,41 +37,17 @@ export const messageInternals: StateCreator<
 > = (set, get) => ({
   // the internal process method of the AI message
   internal_dispatchMessage: (payload, context) => {
-    let agentId: string;
-    let topicId: string | null | undefined;
-    let threadId: string | null | undefined;
+    // Get full conversation context (including scope) from operation or global state
+    const ctx = get().internal_getConversationContext(context);
+    log(
+      '[internal_dispatchMessage] context: agentId=%s, topicId=%s, threadId=%s, scope=%s',
+      ctx.agentId,
+      ctx.topicId,
+      ctx.threadId,
+      ctx.scope,
+    );
 
-    // Get context from operation if operationId is provided
-    if (context?.operationId) {
-      const operation = get().operations[context.operationId];
-      if (!operation) {
-        log('[internal_dispatchMessage] ERROR: Operation not found: %s', context.operationId);
-        throw new Error(`Operation not found: ${context.operationId}`);
-      }
-      agentId = operation.context.agentId!;
-      topicId = operation.context.topicId;
-      threadId = operation.context.threadId;
-      log(
-        '[internal_dispatchMessage] get context from operation %s: agentId=%s, topicId=%s, threadId=%s',
-        context.operationId,
-        agentId,
-        topicId,
-        threadId,
-      );
-    } else {
-      // Fallback to global state
-      agentId = get().activeAgentId;
-      topicId = get().activeTopicId;
-      threadId = get().activeThreadId;
-      log(
-        '[internal_dispatchMessage] use global context: agentId=%s, topicId=%s, threadId=%s',
-        agentId,
-        topicId,
-        threadId,
-      );
-    }
-
-    const messagesKey = messageMapKey({ agentId, threadId, topicId });
+    const messagesKey = messageMapKey(ctx);
 
     // Get raw messages from dbMessagesMap and apply reducer
     const rawMessages = get().dbMessagesMap[messagesKey] || [];

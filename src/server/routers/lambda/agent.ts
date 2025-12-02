@@ -115,6 +115,20 @@ export const agentRouter = router({
       return ctx.agentModel.getAgentConfigById(input.agentId);
     }),
 
+  /**
+   * Get a builtin agent by slug, creating it if it doesn't exist.
+   * This is a generic interface for all builtin agents (page-copilot, inbox, etc.)
+   */
+  getBuiltinAgent: agentProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      return ctx.agentService.getBuiltinAgent(input.slug);
+    }),
+
   getKnowledgeBasesAndFiles: agentProcedure
     .input(
       z.object({
