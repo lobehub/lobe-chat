@@ -5,7 +5,7 @@ import { FilePenLine } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import PageEditorModal from '../../../app/[variants]/(main)/page/features/PageEditorModal';
+import PageEditorModal from '@/features/PageEditor/PageEditorModal';
 
 const NewNoteButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const { t } = useTranslation('file');

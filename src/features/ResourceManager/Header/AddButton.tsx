@@ -8,9 +8,8 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DragUpload from '@/components/DragUpload';
+import PageEditorModal from '@/features/PageEditor/PageEditorModal';
 import { useFileStore } from '@/store/file';
-
-import PageEditorModal from '../../../app/[variants]/(main)/page/features/PageEditorModal';
 
 const hotArea = css`
   &::before {
