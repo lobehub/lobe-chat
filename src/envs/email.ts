@@ -11,6 +11,9 @@ declare global {
       SMTP_PORT?: string;
       SMTP_SECURE?: string;
       SMTP_USER?: string;
+      RESEND_API_KEY?: string;
+      RESEND_FROM?: string;
+      EMAIL_SERVICE_PROVIDER?: string;
     }
   }
 }
@@ -18,6 +21,9 @@ declare global {
 export const getEmailConfig = () => {
   return createEnv({
     server: {
+      EMAIL_SERVICE_PROVIDER: z.enum(['nodemailer', 'resend']).optional(),
+      RESEND_API_KEY: z.string().optional(),
+      RESEND_FROM: z.string().optional(),
       SMTP_HOST: z.string().optional(),
       SMTP_PORT: z.coerce.number().optional(),
       SMTP_SECURE: z.boolean().optional(),
@@ -30,6 +36,11 @@ export const getEmailConfig = () => {
       SMTP_SECURE: process.env.SMTP_SECURE === 'true',
       SMTP_USER: process.env.SMTP_USER,
       SMTP_PASS: process.env.SMTP_PASS,
+      EMAIL_SERVICE_PROVIDER: process.env.EMAIL_SERVICE_PROVIDER
+        ? process.env.EMAIL_SERVICE_PROVIDER.toLowerCase()
+        : undefined,
+      RESEND_API_KEY: process.env.RESEND_API_KEY,
+      RESEND_FROM: process.env.RESEND_FROM,
     },
   });
 };
