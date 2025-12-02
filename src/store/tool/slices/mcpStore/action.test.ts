@@ -902,6 +902,147 @@ describe('mcpStore actions', () => {
       });
     });
 
+    describe('cloudEndPoint support', () => {
+      it('should create cloud type connection when cloudEndPoint is available on web', async () => {
+        const { result } = renderHook(() => useToolStore());
+
+        const mockManifestWithCloudEndpoint = {
+          ...mockManifest,
+          cloudEndPoint: true,
+          tools: [
+            {
+              name: 'testTool',
+              description: 'Test tool description',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  param: { type: 'string' },
+                },
+              },
+            },
+          ],
+          author: 'Test Author',
+          createdAt: '2024-01-01T00:00:00Z',
+          homepage: 'https://example.com',
+          manifestUrl: 'https://example.com/manifest.json',
+          icon: 'https://example.com/icon.png',
+          description: 'Test description',
+          tags: ['test'],
+          deploymentOptions: [
+            {
+              connection: {
+                type: 'stdio',
+                configSchema: {
+                  type: 'object',
+                  properties: {
+                    API_KEY: { type: 'string' },
+                  },
+                },
+              },
+              installationMethod: 'uv',
+            },
+          ],
+        };
+
+        vi.spyOn(discoverService, 'getMCPPluginManifest').mockResolvedValue(
+          mockManifestWithCloudEndpoint as any,
+        );
+
+        // Mock isDesktop to false (web environment)
+        const originalIsDesktop = (await import('@lobechat/const')).isDesktop;
+        vi.spyOn(await import('@lobechat/const'), 'isDesktop', 'get').mockReturnValue(false);
+
+        // Create plugin with haveCloudEndpoint field
+        const mockPluginWithCloudEndpoint = {
+          ...mockPlugin,
+          haveCloudEndpoint: true,
+        } as any;
+
+        act(() => {
+          useToolStore.setState({
+            mcpPluginItems: [mockPluginWithCloudEndpoint],
+          });
+        });
+
+        const installPluginSpy = vi.spyOn(pluginService, 'installPlugin');
+
+        let installResult;
+        await act(async () => {
+          installResult = await result.current.installMCPPlugin('test-plugin');
+        });
+
+        expect(installResult).toBe(true);
+
+        // Should create cloud type connection
+        expect(installPluginSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            customParams: expect.objectContaining({
+              mcp: expect.objectContaining({
+                type: 'cloud',
+                cloudEndPoint: true,
+              }),
+            }),
+          }),
+        );
+
+        // Should NOT call stdio connection
+        expect(mcpService.getStdioMcpServerManifest).not.toHaveBeenCalled();
+        // Should NOT call checkInstallation (skipped for cloud)
+        expect(mcpService.checkInstallation).not.toHaveBeenCalled();
+
+        // Restore original isDesktop
+        vi.spyOn(await import('@lobechat/const'), 'isDesktop', 'get').mockReturnValue(
+          originalIsDesktop,
+        );
+      });
+
+      it('should use stdio deployment when cloudEndPoint is not available', async () => {
+        const { result } = renderHook(() => useToolStore());
+
+        // No cloudEndPoint in manifest
+        const mockManifestWithoutCloudEndpoint = {
+          ...mockManifest,
+          deploymentOptions: [
+            {
+              connection: {
+                type: 'stdio',
+              },
+              installationMethod: 'uv',
+            },
+          ],
+        };
+
+        vi.spyOn(discoverService, 'getMCPPluginManifest').mockResolvedValue(
+          mockManifestWithoutCloudEndpoint as any,
+        );
+
+        // Mock isDesktop to false (web environment)
+        const originalIsDesktop = (await import('@lobechat/const')).isDesktop;
+        vi.spyOn(await import('@lobechat/const'), 'isDesktop', 'get').mockReturnValue(false);
+
+        act(() => {
+          useToolStore.setState({
+            mcpPluginItems: [mockPlugin],
+          });
+        });
+
+        let installResult;
+        await act(async () => {
+          installResult = await result.current.installMCPPlugin('test-plugin');
+        });
+
+        expect(installResult).toBe(true);
+        // Should fall back to stdio
+        expect(mcpService.checkInstallation).toHaveBeenCalled();
+        expect(mcpService.getStdioMcpServerManifest).toHaveBeenCalled();
+
+        // Restore original isDesktop
+        vi.spyOn(await import('@lobechat/const'), 'isDesktop', 'get').mockReturnValue(
+          originalIsDesktop,
+        );
+      });
+    });
+
     describe('resume mode', () => {
       it('should resume installation with previous config info', async () => {
         const { result } = renderHook(() => useToolStore());

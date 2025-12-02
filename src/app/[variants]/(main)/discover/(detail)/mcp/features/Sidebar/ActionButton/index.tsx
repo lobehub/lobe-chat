@@ -10,6 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import MCPInstallProgress from '@/features/MCP/MCPInstallProgress';
 import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
+import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/slices/plugin/selectors';
 
@@ -23,9 +24,11 @@ const useStyles = createStyles(({ css }) => ({
 
 const ActionButton = memo(() => {
   const { t } = useTranslation(['discover', 'plugin']);
-  const { identifier } = useDetailContext();
+  const detailContext = useDetailContext();
+  const { identifier, haveCloudEndpoint } = detailContext;
   const { styles } = useStyles();
   const [isLoading, setIsLoading] = useState(false);
+  const { isAuthenticated, isLoading: isAuthLoading, signIn } = useMarketAuth();
 
   const [installed, installMCPPlugin, uninstallMCPPlugin] = useToolStore((s) => [
     pluginSelectors.isPluginInstalled(identifier!)(s),
@@ -33,24 +36,47 @@ const ActionButton = memo(() => {
     s.uninstallMCPPlugin,
   ]);
 
+  // Check if this is a cloud MCP plugin
+  const isCloudMcp = haveCloudEndpoint;
+
   const installPlugin = async () => {
     if (!identifier) return;
+
+    // If this is a cloud MCP and user is not authenticated, request authorization first
+    if (isCloudMcp && !isAuthenticated) {
+      try {
+        await signIn();
+      } catch {
+        return; // Don't proceed with installation if auth fails
+      }
+    }
+
+    // Proceed with installation
     setIsLoading(true);
-
-    await installMCPPlugin(identifier);
-
-    setIsLoading(false);
+    try {
+      await installMCPPlugin(identifier);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const buttonLoading = isLoading || isAuthLoading;
 
   return installed ? (
     <Flexbox gap={8} horizontal>
-      <Button block className={styles.button} disabled={isLoading} size={'large'} type={'default'}>
+      <Button
+        block
+        className={styles.button}
+        disabled={buttonLoading}
+        size={'large'}
+        type={'default'}
+      >
         {t('plugins.installed')}
       </Button>
 
       <Button
         icon={<Icon icon={Trash2Icon} size={20} />}
-        loading={isLoading}
+        loading={buttonLoading}
         onClick={async () => {
           setIsLoading(true);
           await uninstallMCPPlugin(identifier!);
@@ -68,7 +94,7 @@ const ActionButton = memo(() => {
       <Button
         block
         className={styles.button}
-        loading={isLoading}
+        loading={buttonLoading}
         onClick={installPlugin}
         size={'large'}
         type={'primary'}

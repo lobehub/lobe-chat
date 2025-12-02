@@ -1,3 +1,4 @@
+import { CURRENT_VERSION, isDesktop } from '@lobechat/const';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { PluginItem, PluginListResponse } from '@lobehub/market-sdk';
 import { TRPCClientError } from '@trpc/client';
@@ -8,7 +9,6 @@ import { gt, valid } from 'semver';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { CURRENT_VERSION, isDesktop } from '@lobechat/const';
 import { MCPErrorData } from '@/libs/mcp/types';
 import { discoverService } from '@/services/discover';
 import { mcpService } from '@/services/mcp';
@@ -63,6 +63,71 @@ const toNonEmptyStringRecord = (input?: Record<string, any>) => {
 
     return acc;
   }, {});
+};
+
+/**
+ * Build manifest for cloud MCP connection from market data
+ * 从市场数据构建 Cloud MCP 的 manifest
+ */
+const buildCloudMcpManifest = (params: {
+  data: any;
+  plugin: { description?: string, icon?: string; identifier: string; };
+}): LobeChatPluginManifest => {
+  const { data, plugin } = params;
+
+  log('Using cloud connection, building manifest from market data');
+
+  // 从 data 中获取 tools（MCP 格式）或 api（LobeChat 格式）
+  const mcpTools = data.tools;
+  const lobeChatApi = data.api;
+
+  // 如果是 MCP 格式的 tools，需要转换为 LobeChat 的 api 格式
+  // MCP: { name, description, inputSchema }
+  // LobeChat: { name, description, parameters }
+  let apiArray: any[] = [];
+
+  if (lobeChatApi) {
+    // 已经是 LobeChat 格式，直接使用
+    apiArray = lobeChatApi;
+    log('[Cloud MCP] Using existing LobeChat API format');
+  } else if (mcpTools && Array.isArray(mcpTools)) {
+    // 转换 MCP tools 格式到 LobeChat api 格式
+    apiArray = mcpTools.map((tool: any) => ({
+      description: tool.description || '',
+      name: tool.name,
+      parameters: tool.inputSchema || {},
+    }));
+    log('[Cloud MCP] Converted %d MCP tools to LobeChat API format', apiArray.length);
+  } else {
+    console.warn('[Cloud MCP] No tools or api found in manifest data');
+  }
+
+  // 构建完整的 manifest
+  const manifest: LobeChatPluginManifest = {
+    api: apiArray,
+    author: data.author?.name || data.author || '',
+    createAt: data.createdAt || new Date().toISOString(),
+    homepage: data.homepage || '',
+    identifier: plugin.identifier,
+    manifest: data.manifestUrl || '',
+    meta: {
+      avatar: data.icon || plugin.icon,
+      description: plugin.description || data.description,
+      tags: data.tags || [],
+      title: data.name || plugin.identifier,
+    },
+    name: data.name || plugin.identifier,
+    type: 'mcp',
+    version: data.version,
+  } as unknown as LobeChatPluginManifest;
+
+  log('[Cloud MCP] Final manifest built:', {
+    apiCount: manifest.api?.length,
+    identifier: manifest.identifier,
+    version: manifest.version,
+  });
+
+  return manifest;
 };
 
 // 测试连接结果类型
@@ -139,6 +204,9 @@ export const createMCPPluginStoreSlice: StateCreator<
     const normalizedConfig = toNonEmptyStringRecord(config);
     let plugin = mcpStoreSelectors.getPluginById(identifier)(get());
 
+    // @ts-expect-error
+    const { haveCloudEndpoint } = plugin || {};
+
     if (!plugin || !plugin.manifestUrl) {
       const data = await discoverService.getMcpDetail({ identifier });
       if (!data) return;
@@ -211,12 +279,18 @@ export const createMCPPluginStoreSlice: StateCreator<
           ? data.deploymentOptions
           : [];
 
-        const httpOption = deploymentOptions.find(
-          (option) => option?.connection?.url && option?.connection?.type === 'http',
-        ) ||
+        const httpOption =
           deploymentOptions.find(
-            (option) => option?.connection?.url && !option?.connection?.type,
-          );
+            (option) => option?.connection?.url && option?.connection?.type === 'http',
+          ) ||
+          deploymentOptions.find((option) => option?.connection?.url && !option?.connection?.type);
+
+        // 查找 stdio 类型的部署选项
+        const stdioOption = deploymentOptions.find(
+          (option) =>
+            option?.connection?.type === 'stdio' ||
+            (!option?.connection?.type && !option?.connection?.url),
+        );
 
         const hasNonHttpDeployment = deploymentOptions.some((option) => {
           const type = option?.connection?.type;
@@ -225,9 +299,46 @@ export const createMCPPluginStoreSlice: StateCreator<
           return type && type !== 'http';
         });
 
-        const shouldUseHttpDeployment = !!httpOption && (!hasNonHttpDeployment || !isDesktop);
+        // 🌐 检查是否有 cloudEndPoint：网页端 + stdio 类型 + 存在 haveCloudEndpoint
+        const hasCloudEndpoint = !isDesktop && stdioOption && haveCloudEndpoint;
 
-        if (shouldUseHttpDeployment && httpOption) {
+        console.log('hasCloudEndpoint', hasCloudEndpoint);
+
+        let shouldUseHttpDeployment = !!httpOption && (!hasNonHttpDeployment || !isDesktop);
+
+        if (hasCloudEndpoint) {
+          // 🌐 使用 cloudEndPoint，创建 cloud 类型的 connection
+          log('Using cloudEndPoint for stdio plugin: %s', haveCloudEndpoint);
+
+          connection = {
+            auth: stdioOption?.connection?.auth || { type: 'none' },
+            cloudEndPoint: haveCloudEndpoint,
+            headers: stdioOption?.connection?.headers,
+            type: 'cloud',
+          } as any;
+
+          log('Using cloud connection: %O', {
+            cloudEndPoint: haveCloudEndpoint,
+            type: connection.type,
+          });
+
+          const configSchema = stdioOption?.connection?.configSchema;
+          const needsConfig = doesConfigSchemaRequireInput(configSchema);
+
+          if (needsConfig && !normalizedConfig) {
+            updateMCPInstallProgress(identifier, {
+              configSchema,
+              connection,
+              manifest: data,
+              needsConfig: true,
+              progress: 50,
+              step: MCPInstallStep.CONFIGURATION_REQUIRED,
+            });
+
+            updateInstallLoadingState(identifier, undefined);
+            return false;
+          }
+        } else if (shouldUseHttpDeployment && httpOption) {
           // ✅ HTTP 类型：跳过系统依赖检查，直接使用 URL
           log('HTTP MCP detected, skipping system dependency check');
 
@@ -317,6 +428,7 @@ export const createMCPPluginStoreSlice: StateCreator<
 
       let mergedHttpHeaders: Record<string, string> | undefined;
       let mergedStdioEnv: Record<string, string> | undefined;
+      let mergedCloudHeaders: Record<string, string> | undefined;
 
       if (connection?.type === 'http') {
         const baseHeaders = toNonEmptyStringRecord(connection.headers);
@@ -335,6 +447,17 @@ export const createMCPPluginStoreSlice: StateCreator<
         if (baseEnv || normalizedConfig) {
           mergedStdioEnv = {
             ...baseEnv,
+            ...normalizedConfig,
+          };
+        }
+      }
+
+      if (connection?.type === 'cloud') {
+        const baseHeaders = toNonEmptyStringRecord(connection.headers);
+
+        if (baseHeaders || normalizedConfig) {
+          mergedCloudHeaders = {
+            ...baseHeaders,
             ...normalizedConfig,
           };
         }
@@ -383,6 +506,10 @@ export const createMCPPluginStoreSlice: StateCreator<
           abortController.signal,
         );
       }
+      if (connection?.type === 'cloud') {
+        // 🌐 Cloud 类型：直接从市场数据构建 manifest
+        manifest = buildCloudMcpManifest({ data, plugin });
+      }
 
       // set version
       if (manifest) {
@@ -425,9 +552,21 @@ export const createMCPPluginStoreSlice: StateCreator<
         return;
       }
 
+      // 更新 connection 对象，将合并后的配置写入
+      const finalConnection = { ...connection };
+      if (finalConnection.type === 'http' && mergedHttpHeaders) {
+        finalConnection.headers = mergedHttpHeaders;
+      }
+      if (finalConnection.type === 'stdio' && mergedStdioEnv) {
+        finalConnection.env = mergedStdioEnv;
+      }
+      if (finalConnection.type === 'cloud' && mergedCloudHeaders) {
+        finalConnection.headers = mergedCloudHeaders;
+      }
+
       await pluginService.installPlugin({
         // 针对 mcp 先将 connection 信息存到 customParams 字段里
-        customParams: { mcp: connection },
+        customParams: { mcp: finalConnection },
         identifier: plugin.identifier,
         manifest: manifest,
         settings: normalizedConfig,
@@ -693,7 +832,9 @@ export const createMCPPluginStoreSlice: StateCreator<
 
   useFetchMCPPluginList: (params) => {
     const locale = globalHelpers.getCurrentLanguage();
-    const requestParams = isDesktop ? params : { ...params, connectionType: McpConnectionType.http };
+    const requestParams = isDesktop
+      ? params
+      : { ...params, connectionType: McpConnectionType.http };
     const swrKeyParts = [
       'useFetchMCPPluginList',
       locale,
@@ -702,7 +843,8 @@ export const createMCPPluginStoreSlice: StateCreator<
       requestParams.q,
       requestParams.connectionType,
     ];
-    const swrKey = swrKeyParts.filter((part) => part !== undefined && part !== null && part !== '')
+    const swrKey = swrKeyParts
+      .filter((part) => part !== undefined && part !== null && part !== '')
       .join('-');
     const page = requestParams.page ?? 1;
 
