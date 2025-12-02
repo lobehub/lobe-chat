@@ -23,6 +23,8 @@ import { ChatStore } from '@/store/chat/store';
  */
 export interface OptimisticUpdateContext {
   operationId?: string;
+  /** Pre-generated temp message ID (used when ID needs to be known before creation) */
+  tempMessageId?: string;
 }
 
 /**
@@ -47,7 +49,10 @@ export interface MessageOptimisticUpdateAction {
    * create a temp message for optimistic update
    * otherwise the message will be too slow to show
    */
-  optimisticCreateTmpMessage: (params: CreateMessageParams) => string;
+  optimisticCreateTmpMessage: (
+    params: CreateMessageParams,
+    context?: OptimisticUpdateContext,
+  ) => string;
 
   /**
    * delete the message content with optimistic update
@@ -169,12 +174,13 @@ export const messageOptimisticUpdate: StateCreator<
     }
   },
 
-  optimisticCreateTmpMessage: (message) => {
+  optimisticCreateTmpMessage: (message, context) => {
     const { internal_dispatchMessage } = get();
 
     // use optimistic update to avoid the slow waiting
-    const tempId = 'tmp_' + nanoid();
-    internal_dispatchMessage({ id: tempId, type: 'createMessage', value: message });
+    // use pre-generated tempMessageId if provided, otherwise generate a new one
+    const tempId = context?.tempMessageId || 'tmp_' + nanoid();
+    internal_dispatchMessage({ id: tempId, type: 'createMessage', value: message }, context);
 
     return tempId;
   },

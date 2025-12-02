@@ -87,11 +87,11 @@ export const messageSlice: StateCreator<
     const parentId = displayMessages.length > 0 ? displayMessages.at(-1)?.id : undefined;
 
     const id = await state.createMessage({
+      agentId,
       content: message,
       files: fileList,
       parentId,
       role: 'user',
-      sessionId: agentId,
       threadId: threadId ?? undefined,
       topicId: topicId ?? undefined,
     });

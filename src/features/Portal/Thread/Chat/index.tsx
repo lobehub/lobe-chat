@@ -7,6 +7,7 @@ import {
   ChatInput,
   ChatList,
   type ConversationContext,
+  type ConversationHooks,
   ConversationProvider,
   MessageItem,
   conversationSelectors,
@@ -119,33 +120,78 @@ ThreadChatContent.displayName = 'ThreadChatContent';
  */
 const ThreadChat = memo<ThreadChatProps>(({ mobile }) => {
   // Get thread context from ChatStore
-  const [activeAgentId, activeTopicId, portalThreadId] = useChatStore((s) => [
-    s.activeAgentId,
-    s.activeTopicId,
-    s.portalThreadId,
-  ]);
+  const [activeAgentId, activeTopicId, portalThreadId, threadStartMessageId, newThreadMode] =
+    useChatStore((s) => [
+      s.activeAgentId,
+      s.activeTopicId,
+      s.portalThreadId,
+      s.threadStartMessageId,
+      s.newThreadMode,
+    ]);
 
-  console.time('messagesFromMain');
   // When creating new thread (no portalThreadId), get messages from main conversation
   // Use s.portalThreadId directly to avoid stale closure
   const messagesFromMain = useChatStore((s) =>
     !s.portalThreadId ? threadSelectors.portalDisplayChats(s) : undefined,
   );
-  console.timeEnd('messagesFromMain');
 
   // Build ConversationContext for thread
+  // When creating new thread (!portalThreadId), use isNew + scope: 'thread'
+  const isCreatingNewThread = !portalThreadId && !!threadStartMessageId;
+
   const context: ConversationContext = useMemo(
     () => ({
       agentId: activeAgentId,
+      // Use isNew + scope for new thread creation
+      isNew: isCreatingNewThread,
+      scope: 'thread',
+      // Include source message info when creating a new thread
+      sourceMessageId: isCreatingNewThread ? threadStartMessageId : undefined,
       threadId: portalThreadId,
+      threadType: isCreatingNewThread ? newThreadMode : undefined,
       topicId: activeTopicId,
     }),
-    [activeAgentId, activeTopicId, portalThreadId],
+    [
+      activeAgentId,
+      activeTopicId,
+      portalThreadId,
+      threadStartMessageId,
+      newThreadMode,
+      isCreatingNewThread,
+    ],
+  );
+  console.log('Thread Chat', context);
+
+  // Hooks to handle post-message-creation tasks for new thread
+  const hooks: ConversationHooks = useMemo(
+    () => ({
+      onAfterMessageCreate: async ({ createdThreadId }) => {
+        if (!createdThreadId) return;
+
+        const state = useChatStore.getState();
+
+        // Refresh threads list
+        await state.refreshThreads();
+        // Refresh messages to include new thread messages
+        await state.refreshMessages();
+        // Open the newly created thread in portal
+        state.openThreadInPortal(createdThreadId, threadStartMessageId);
+
+        // Summarize thread title for new thread
+        const portalThread = threadSelectors.currentPortalThread(useChatStore.getState());
+        if (portalThread) {
+          const chats = threadSelectors.portalAIChats(useChatStore.getState());
+          await useChatStore.getState().summaryThreadTitle(portalThread.id, chats);
+        }
+      },
+    }),
+    [threadStartMessageId],
   );
 
   return (
     <ConversationProvider
       context={context}
+      hooks={hooks}
       messages={messagesFromMain}
       skipFetch={!!messagesFromMain}
     >
