@@ -9,11 +9,11 @@ import { Flexbox } from 'react-layout-kit';
 import { BrandTextLoading } from '@/components/Loading';
 import { useFileStore } from '@/store/file';
 
+import Body from './Body';
+import { PageEditorProvider } from './Context';
+import Copilot from './Copilot';
 import Header from './Header';
 import PageAgentProvider from './PageAgentProvider';
-import PageEditorBody from './PageEditorBody';
-import { PageEditorProvider } from './PageEditorContext';
-import PageEditorCopilot from './PageEditorCopilot';
 
 interface PageEditorProps {
   knowledgeBaseId?: string;
@@ -47,9 +47,9 @@ const PageEditorContent = memo(() => {
     <Flexbox height={'100%'} horizontal>
       <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
         <Header />
-        <PageEditorBody />
+        <Body />
       </Flexbox>
-      <PageEditorCopilot />
+      <Copilot />
     </Flexbox>
   );
 });

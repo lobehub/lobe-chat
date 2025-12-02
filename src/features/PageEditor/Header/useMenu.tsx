@@ -5,9 +5,9 @@ import { Link2, Trash2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { usePageEditorContext } from './PageEditorContext';
+import { usePageEditorContext } from '../Context';
 
-export const usePageEditorMenu = (): { menuItems: any[] } => {
+export const useMenu = (): { menuItems: any[] } => {
   const { t } = useTranslation(['file', 'common']);
   const theme = useTheme();
 

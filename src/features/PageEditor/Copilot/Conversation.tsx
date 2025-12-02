@@ -4,7 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ChatInput, ChatList } from '@/features/Conversation';
 
-const DocumentConversation = memo(() => {
+const Conversation = memo(() => {
   return (
     <Flexbox flex={1} height={'100%'}>
       <ChatHeader />
@@ -16,4 +16,4 @@ const DocumentConversation = memo(() => {
   );
 });
 
-export default DocumentConversation;
+export default Conversation;

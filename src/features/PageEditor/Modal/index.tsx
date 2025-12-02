@@ -8,12 +8,12 @@ import { Flexbox } from 'react-layout-kit';
 
 import { message } from '@/components/AntdStaticMethods';
 
-import EditorContent from './EditorContent';
-import { usePageEditor } from './usePageEditor';
+import EditorContent from '../EditorContent';
+import { usePageEditor } from '../usePageEditor';
 
 type EditorInstance = ReturnType<typeof useEditor>;
 
-interface NoteEditorModalProps {
+interface PageEditorModalProps {
   documentId?: string;
   documentTitle?: string;
   editorData?: Record<string, any> | null;
@@ -23,7 +23,7 @@ interface NoteEditorModalProps {
   parentId?: string;
 }
 
-const PageEditorModal = memo<NoteEditorModalProps>(
+const PageEditorModal = memo<PageEditorModalProps>(
   ({
     open,
     onClose,

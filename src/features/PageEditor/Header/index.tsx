@@ -11,13 +11,13 @@ import { useTranslation } from 'react-i18next';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 
-import { usePageEditorContext } from '../PageEditorContext';
-import { usePageEditorMenu } from '../usePageEditorMenu';
-import PageEditorBreadcrumb from './PageEditorBreadcrumb';
+import { usePageEditorContext } from '../Context';
+import Breadcrumb from './Breadcrumb';
+import { useMenu } from './useMenu';
 
 dayjs.extend(relativeTime);
 
-const Index = memo(() => {
+const Header = memo(() => {
   const { t } = useTranslation('file');
   const theme = useTheme();
 
@@ -31,7 +31,7 @@ const Index = memo(() => {
     toggleChatPanel,
   } = usePageEditorContext();
 
-  const { menuItems } = usePageEditorMenu();
+  const { menuItems } = useMenu();
 
   return (
     <NavHeader
@@ -39,7 +39,7 @@ const Index = memo(() => {
         <>
           {/* Breadcrumb - show when document has a parent folder */}
           {parentId && (
-            <PageEditorBreadcrumb
+            <Breadcrumb
               documentTitle={currentTitle || t('documentEditor.titlePlaceholder')}
               knowledgeBaseId={knowledgeBaseId}
               parentId={parentId}
@@ -102,4 +102,4 @@ const Index = memo(() => {
   );
 });
 
-export default Index;
+export default Header;

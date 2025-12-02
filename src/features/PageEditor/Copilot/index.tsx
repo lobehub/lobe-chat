@@ -3,10 +3,10 @@
 import { DraggablePanel } from '@lobehub/ui';
 import { memo } from 'react';
 
-import DocumentConversation from './DocumentConversation';
-import { usePageEditorContext } from './PageEditorContext';
+import { usePageEditorContext } from '../Context';
+import Conversation from './Conversation';
 
-const PageEditorCopilot = memo(() => {
+const Copilot = memo(() => {
   const { chatPanelExpanded, setChatPanelExpanded } = usePageEditorContext();
 
   return (
@@ -17,9 +17,9 @@ const PageEditorCopilot = memo(() => {
       onExpandChange={setChatPanelExpanded}
       placement="right"
     >
-      <DocumentConversation />
+      <Conversation />
     </DraggablePanel>
   );
 });
 
-export default PageEditorCopilot;
+export default Copilot;

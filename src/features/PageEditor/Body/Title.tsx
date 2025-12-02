@@ -11,11 +11,11 @@ import { Flexbox } from 'react-layout-kit';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 
-import { usePageEditorContext } from './PageEditorContext';
+import { usePageEditorContext } from '../Context';
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
-const PageEditorTitle = memo(() => {
+const Title = memo(() => {
   const { t } = useTranslation('file');
   const theme = useTheme();
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
@@ -121,4 +121,4 @@ const PageEditorTitle = memo(() => {
   );
 });
 
-export default PageEditorTitle;
+export default Title;
