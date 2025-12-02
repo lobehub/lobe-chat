@@ -2,7 +2,7 @@
 
 import { CaretDownFilled } from '@ant-design/icons';
 import { useDroppable } from '@dnd-kit/core';
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, Block, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { motion } from 'framer-motion';
 import { FileText, FolderIcon, FolderOpenIcon } from 'lucide-react';
@@ -40,23 +40,6 @@ const getTreeState = (knowledgeBaseId: string) => {
 };
 
 const useStyles = createStyles(({ css, token }) => ({
-  fileItem: css`
-    cursor: pointer;
-
-    padding-block: 4px;
-    padding-inline: 8px;
-
-    color: ${token.colorText};
-
-    transition: background-color 0.2s;
-
-    &:hover {
-      background-color: ${token.colorFillTertiary};
-    }
-  `,
-  fileItemActive: css`
-    background-color: ${token.colorFillSecondary};
-  `,
   fileItemDragOver: css`
     background-color: ${token.colorFillSecondary} !important;
     outline: 2px dashed ${token.colorPrimary};
@@ -170,16 +153,17 @@ const FileTreeItem = memo<{
 
       return (
         <Flexbox gap={2} ref={setNodeRef}>
-          <Flexbox
+          <Block
             align={'center'}
-            className={cx(
-              styles.fileItem,
-              isActive && styles.fileItemActive,
-              isOver && styles.fileItemDragOver,
-            )}
+            className={cx(isOver && styles.fileItemDragOver)}
+            clickable
+            gap={8}
+            height={36}
             horizontal
             onClick={() => handleFolderClick(item.id, item.slug)}
-            style={{ paddingInlineStart: level * 16 + 8 }}
+            paddingInline={4}
+            style={{ paddingInlineStart: level * 16 + 4 }}
+            variant={isActive ? 'filled' : 'borderless'}
           >
             <motion.div
               animate={{ rotate: isExpanded ? 0 : -90 }}
@@ -200,14 +184,12 @@ const FileTreeItem = memo<{
               flex={1}
               gap={8}
               horizontal
-              style={{ minHeight: 28, minWidth: 0 }}
+              style={{ minHeight: 28, minWidth: 0, overflow: 'hidden' }}
             >
-              <Icon icon={isExpanded ? FolderOpenIcon : FolderIcon} size={16} />
+              <Icon icon={isExpanded ? FolderOpenIcon : FolderIcon} size={18} />
               <span
                 style={{
                   flex: 1,
-                  fontSize: 14,
-                  lineHeight: '20px',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -216,7 +198,7 @@ const FileTreeItem = memo<{
                 {item.name}
               </span>
             </Flexbox>
-          </Flexbox>
+          </Block>
 
           {isExpanded && item.children && item.children.length > 0 && (
             <motion.div
@@ -251,12 +233,16 @@ const FileTreeItem = memo<{
     const isActive = selectedKey === itemKey;
     return (
       <Flexbox gap={2}>
-        <Flexbox
+        <Block
           align={'center'}
-          className={cx(styles.fileItem, isActive && styles.fileItemActive)}
+          clickable
+          gap={8}
+          height={36}
           horizontal
           onClick={handleFileClick}
-          style={{ paddingInlineStart: level * 16 + 8 }}
+          paddingInline={4}
+          style={{ paddingInlineStart: level * 16 + 4 }}
+          variant={isActive ? 'filled' : 'borderless'}
         >
           <div style={{ width: 24 }} />
           <Flexbox
@@ -264,18 +250,16 @@ const FileTreeItem = memo<{
             flex={1}
             gap={8}
             horizontal
-            style={{ minHeight: 28, minWidth: 0 }}
+            style={{ minHeight: 28, minWidth: 0, overflow: 'hidden' }}
           >
             {item.sourceType === 'document' ? (
-              <Icon icon={FileText} size={16} />
+              <Icon icon={FileText} size={18} />
             ) : (
-              <FileIcon fileName={item.name} fileType={item.fileType} size={16} />
+              <FileIcon fileName={item.name} fileType={item.fileType} size={18} />
             )}
             <span
               style={{
                 flex: 1,
-                fontSize: 14,
-                lineHeight: '20px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
@@ -284,7 +268,7 @@ const FileTreeItem = memo<{
               {item.name}
             </span>
           </Flexbox>
-        </Flexbox>
+        </Block>
       </Flexbox>
     );
   },
@@ -415,6 +399,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
     <Flexbox
       className={cx(styles.rootDropZone, isRootDropOver && styles.rootDropZoneActive)}
       gap={2}
+      paddingInline={4}
       ref={setRootDropRef}
     >
       {items.map((item) => (
