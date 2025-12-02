@@ -3,8 +3,15 @@
 import { memo } from 'react';
 import { Outlet } from 'react-router-dom';
 
+import RegisterHotkeys from './RegisterHotkeys';
+
 const ResourceLayout = memo(() => {
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <RegisterHotkeys />
+    </>
+  );
 });
 
 ResourceLayout.displayName = 'ResourceLayout';

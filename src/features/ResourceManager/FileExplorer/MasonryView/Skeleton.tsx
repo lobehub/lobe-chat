@@ -21,7 +21,7 @@ interface MasonrySkeletonProps {
   columnCount: number;
 }
 
-const MasonrySkeleton = memo<MasonrySkeletonProps>(({ columnCount }) => {
+const MasonryViewSkeleton = memo<MasonrySkeletonProps>(({ columnCount }) => {
   const { styles } = useStyles();
   // Generate varying heights for more natural masonry look
   const heights = [180, 220, 200, 190, 240, 210, 200, 230, 180, 220, 210, 190];
@@ -58,6 +58,6 @@ const MasonrySkeleton = memo<MasonrySkeletonProps>(({ columnCount }) => {
   );
 });
 
-MasonrySkeleton.displayName = 'MasonrySkeleton';
+MasonryViewSkeleton.displayName = 'MasonryViewSkeleton';
 
-export default MasonrySkeleton;
+export default MasonryViewSkeleton;
