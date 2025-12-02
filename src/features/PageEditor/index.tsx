@@ -2,7 +2,6 @@
 
 import { useEditor } from '@lobehub/editor/react';
 import { ActionIcon, Button, DraggablePanel, Dropdown, Icon } from '@lobehub/ui';
-import { ChatHeader } from '@lobehub/ui/chat';
 import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
@@ -21,7 +20,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ChatInput, ChatList, ConversationProvider } from '@/features/Conversation';
+import { ConversationProvider } from '@/features/Conversation';
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -29,6 +28,7 @@ import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
+import DocumentConversation from './DocumentConversation';
 import EditorContent from './EditorContent';
 import PageEditorBreadcrumb from './PageEditorBreadcrumb';
 import { usePageEditor } from './usePageEditor';
@@ -424,13 +424,7 @@ const PageEditor = memo<PageEditorPanelProps>(
             onExpandChange={setChatPanelExpanded}
             placement="right"
           >
-            <Flexbox flex={1} height={'100%'}>
-              <ChatHeader />
-              <Flexbox flex={1} height={'100%'}>
-                <ChatList />
-              </Flexbox>
-              <ChatInput />
-            </Flexbox>
+            <DocumentConversation />
           </DraggablePanel>
         </Flexbox>
       </ConversationProvider>
