@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 import { BuiltinToolManifest } from '@lobechat/types';
 
 import { systemPrompt } from './systemRole';
@@ -195,8 +196,7 @@ export const DocumentManifest: BuiltinToolManifest = {
           },
           position: {
             default: 'after',
-            description:
-              'Where to insert the duplicate. Defaults to "after" the original node.',
+            description: 'Where to insert the duplicate. Defaults to "after" the original node.',
             enum: ['before', 'after'],
             type: 'string',
           },
@@ -421,7 +421,8 @@ export const DocumentManifest: BuiltinToolManifest = {
       },
     },
     {
-      description: 'Delete a column from a table. Removes the cell at the specified index from each row.',
+      description:
+        'Delete a column from a table. Removes the cell at the specified index from each row.',
       humanIntervention: 'required',
       name: DocumentApiName.deleteTableColumn,
       parameters: {
