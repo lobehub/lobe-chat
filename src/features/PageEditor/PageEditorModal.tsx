@@ -40,7 +40,7 @@ const PageEditorModal = memo<NoteEditorModalProps>(
     const [isSaving, setIsSaving] = useState(false);
     const isEditMode = !!documentId;
 
-    const { currentTitle, setCurrentTitle, performSave } = usePageEditor({
+    const { currentTitle, setCurrentTitle, performSave, handleContentChange } = usePageEditor({
       autoSave: false, // Manual save for modal
       documentId,
       editor,
@@ -75,7 +75,12 @@ const PageEditorModal = memo<NoteEditorModalProps>(
       setIsSaving(true);
 
       try {
-        await performSave({ title: currentTitle });
+        // Update title and content in local state first
+        setCurrentTitle(currentTitle);
+        // Trigger content update to ensure latest content is saved
+        handleContentChange();
+        // Then perform save
+        await performSave();
       } catch (error) {
         console.error('Failed to save note:', error);
         message.error(t('header.newNoteDialog.saveError', { ns: 'file' }));
