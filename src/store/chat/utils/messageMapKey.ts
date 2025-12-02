@@ -4,7 +4,7 @@ import { MessageMapContext, MessageMapScope } from '@lobechat/types';
  * Input context for messageMapKey function
  * Accepts agentId/topicId/threadId format with auto-detection of scope
  */
-interface MessageMapKeyInput {
+export interface MessageMapKeyInput {
   /**
    * Agent ID (maps to scopeId in main/thread scope)
    */

@@ -20,7 +20,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ConversationProvider } from '@/features/Conversation';
+import { BrandTextLoading } from '@/components/Loading';
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -30,6 +30,7 @@ import { userProfileSelectors } from '@/store/user/selectors';
 
 import DocumentConversation from './DocumentConversation';
 import EditorContent from './EditorContent';
+import PageAgentProvider from './PageAgentProvider';
 import PageEditorBreadcrumb from './PageEditorBreadcrumb';
 import { usePageEditor } from './usePageEditor';
 
@@ -56,7 +57,6 @@ const PageEditor = memo<PageEditorPanelProps>(
     const { message, modal } = App.useApp();
     const username = useUserStore(userProfileSelectors.displayUserName);
 
-    // Initialize page agent
     const useInitPageAgent = useFileStore((s) => s.useInitPageAgent);
     const pageAgentId = useFileStore((s) => s.pageAgentId);
     const { isLoading: isAgentLoading } = useInitPageAgent();
@@ -209,13 +209,14 @@ const PageEditor = memo<PageEditorPanelProps>(
         <Flexbox height={'100%'} horizontal style={{ background: theme.colorBgContainer }}>
           <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
             {/* Show loading state while agent is being initialized */}
+            <BrandTextLoading />
           </Flexbox>
         </Flexbox>
       );
     }
 
     return (
-      <ConversationProvider context={{ agentId: pageAgentId }}>
+      <PageAgentProvider pageAgentId={pageAgentId}>
         <Flexbox height={'100%'} horizontal style={{ background: 'red' }}>
           <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
             {/* Header */}
@@ -443,7 +444,7 @@ const PageEditor = memo<PageEditorPanelProps>(
             <DocumentConversation />
           </DraggablePanel>
         </Flexbox>
-      </ConversationProvider>
+      </PageAgentProvider>
     );
   },
 );
