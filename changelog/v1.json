@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Remove internal apiMode param from chat completion API requests."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.142"
+  },
+  {
+    "children": {
       "fixes": ["Drop user.phoneNumber and reuse user.phone."]
     },
     "date": "2025-12-01",

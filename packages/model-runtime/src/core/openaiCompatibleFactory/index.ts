@@ -368,8 +368,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             this,
           ) as any;
         } else {
+          // Remove internal apiMode parameter before sending to API
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { apiMode: _, ...cleanedPayload } = postPayload as any;
           const finalPayload = {
-            ...postPayload,
+            ...cleanedPayload,
             messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
             stream_options:
@@ -385,11 +388,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             console.log(JSON.stringify(finalPayload), '\n');
           }
 
-          response = await this.client.chat.completions.create(finalPayload, {
+          response = (await this.client.chat.completions.create(finalPayload, {
             // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*', ...options?.requestHeaders },
             signal: options?.signal,
-          });
+          })) as unknown as Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
         }
 
         if (postPayload.stream) {
