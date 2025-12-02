@@ -1,6 +1,6 @@
 'use client';
 
-import { CaretDownFilled } from '@ant-design/icons';
+import { CaretDownFilled, LoadingOutlined } from '@ant-design/icons';
 import { useDroppable } from '@dnd-kit/core';
 import { ActionIcon, Block, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
@@ -25,6 +25,7 @@ const treeState = new Map<
     expandedFolders: Set<string>;
     folderChildrenCache: Map<string, any[]>;
     loadedFolders: Set<string>;
+    loadingFolders: Set<string>;
   }
 >();
 
@@ -34,6 +35,7 @@ const getTreeState = (knowledgeBaseId: string) => {
       expandedFolders: new Set(),
       folderChildrenCache: new Map(),
       loadedFolders: new Set(),
+      loadingFolders: new Set(),
     });
   }
   return treeState.get(knowledgeBaseId)!;
@@ -73,10 +75,12 @@ interface FileTreeProps {
 // Recursive component to render folder and file tree
 const FileTreeItem = memo<{
   expandedFolders: Set<string>;
+  folderChildrenCache: Map<string, TreeItem[]>;
   item: TreeItem;
   knowledgeBaseId: string;
   level?: number;
   loadedFolders: Set<string>;
+  loadingFolders: Set<string>;
   onLoadFolder: (_: string) => Promise<void>;
   onToggleFolder: (_: string) => void;
   selectedKey: string | null;
@@ -87,11 +91,13 @@ const FileTreeItem = memo<{
     level = 0,
     expandedFolders,
     loadedFolders,
+    loadingFolders,
     onToggleFolder,
     onLoadFolder,
     selectedKey,
     knowledgeBaseId,
     updateKey,
+    folderChildrenCache,
   }) => {
     const { styles, cx } = useStyles();
     const navigate = useNavigate();
@@ -103,6 +109,9 @@ const FileTreeItem = memo<{
     ]);
 
     const itemKey = item.slug || item.id;
+
+    // Dynamically look up children from cache instead of using static item.children
+    const children = folderChildrenCache.get(itemKey);
 
     const { setNodeRef, isOver } = useDroppable({
       data: {
@@ -140,13 +149,14 @@ const FileTreeItem = memo<{
     if (item.isFolder) {
       const isExpanded = expandedFolders.has(itemKey);
       const isActive = selectedKey === itemKey;
+      const isLoading = loadingFolders.has(itemKey);
 
       const handleToggle = async () => {
         // Toggle folder expansion
         onToggleFolder(itemKey);
 
-        // Load children if not already loaded
-        if (!isExpanded && !loadedFolders.has(itemKey)) {
+        // Always load/refetch children when expanding
+        if (!isExpanded) {
           await onLoadFolder(itemKey);
         }
       };
@@ -165,20 +175,24 @@ const FileTreeItem = memo<{
             style={{ paddingInlineStart: level * 16 + 4 }}
             variant={isActive ? 'filled' : 'borderless'}
           >
-            <motion.div
-              animate={{ rotate: isExpanded ? 0 : -90 }}
-              initial={false}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
-            >
-              <ActionIcon
-                icon={CaretDownFilled as any}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleToggle();
-                }}
-                size={'small'}
-              />
-            </motion.div>
+            {isLoading ? (
+              <ActionIcon icon={LoadingOutlined as any} size={'small'} spin />
+            ) : (
+              <motion.div
+                animate={{ rotate: isExpanded ? 0 : -90 }}
+                initial={false}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+              >
+                <ActionIcon
+                  icon={CaretDownFilled as any}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggle();
+                  }}
+                  size={'small'}
+                />
+              </motion.div>
+            )}
             <Flexbox
               align={'center'}
               flex={1}
@@ -200,7 +214,7 @@ const FileTreeItem = memo<{
             </Flexbox>
           </Block>
 
-          {isExpanded && item.children && item.children.length > 0 && (
+          {isExpanded && children && children.length > 0 && (
             <motion.div
               animate={{ height: 'auto', opacity: 1 }}
               initial={false}
@@ -208,14 +222,16 @@ const FileTreeItem = memo<{
               transition={{ duration: 0.2, ease: 'easeInOut' }}
             >
               <Flexbox gap={2}>
-                {item.children.map((child) => (
+                {children.map((child) => (
                   <FileTreeItem
                     expandedFolders={expandedFolders}
+                    folderChildrenCache={folderChildrenCache}
                     item={child}
                     key={child.id}
                     knowledgeBaseId={knowledgeBaseId}
                     level={level + 1}
                     loadedFolders={loadedFolders}
+                    loadingFolders={loadingFolders}
                     onLoadFolder={onLoadFolder}
                     onToggleFolder={onToggleFolder}
                     selectedKey={selectedKey}
@@ -287,7 +303,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
 
   // Get the persisted state for this knowledge base
   const state = getTreeState(knowledgeBaseId);
-  const { expandedFolders, loadedFolders, folderChildrenCache } = state;
+  const { expandedFolders, loadedFolders, folderChildrenCache, loadingFolders } = state;
 
   // Special droppable ID for root folder
   const ROOT_DROP_ID = `__root__:${knowledgeBaseId}`;
@@ -323,27 +339,23 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   const items: TreeItem[] = React.useMemo(() => {
     if (!rootData) return [];
 
-    const mappedItems: TreeItem[] = rootData.map((item) => {
-      const itemKey = item.slug || item.id;
-      const children = folderChildrenCache.get(itemKey);
-
-      return {
-        children,
-        fileType: item.fileType,
-        id: item.id,
-        isFolder: item.fileType === 'custom/folder',
-        name: item.name,
-        slug: item.slug,
-        sourceType: item.sourceType,
-      };
-    });
+    const mappedItems: TreeItem[] = rootData.map((item) => ({
+      fileType: item.fileType,
+      id: item.id,
+      isFolder: item.fileType === 'custom/folder',
+      name: item.name,
+      slug: item.slug,
+      sourceType: item.sourceType,
+    }));
 
     return sortItems(mappedItems);
-  }, [rootData, sortItems, folderChildrenCache, updateKey]);
+  }, [rootData, sortItems, updateKey]);
 
   const handleLoadFolder = useCallback(
     async (folderId: string) => {
-      if (loadedFolders.has(folderId)) return;
+      // Set loading state
+      state.loadingFolders.add(folderId);
+      forceUpdate();
 
       try {
         const data = await fileService.getKnowledgeItems({
@@ -353,7 +365,6 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
         });
 
         const childItems: TreeItem[] = data.map((item) => ({
-          children: undefined,
           fileType: item.fileType,
           id: item.id,
           isFolder: item.fileType === 'custom/folder',
@@ -368,14 +379,16 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
         // Store children in cache
         state.folderChildrenCache.set(folderId, sortedChildren);
         state.loadedFolders.add(folderId);
-
-        // Trigger re-render
-        forceUpdate();
       } catch (error) {
         console.error('Failed to load folder contents:', error);
+      } finally {
+        // Clear loading state
+        state.loadingFolders.delete(folderId);
+        // Trigger re-render
+        forceUpdate();
       }
     },
-    [knowledgeBaseId, loadedFolders, sortItems, state, forceUpdate],
+    [knowledgeBaseId, sortItems, state, forceUpdate],
   );
 
   const handleToggleFolder = useCallback(
@@ -405,10 +418,12 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
       {items.map((item) => (
         <FileTreeItem
           expandedFolders={expandedFolders}
+          folderChildrenCache={folderChildrenCache}
           item={item}
           key={item.id}
           knowledgeBaseId={knowledgeBaseId}
           loadedFolders={loadedFolders}
+          loadingFolders={loadingFolders}
           onLoadFolder={handleLoadFolder}
           onToggleFolder={handleToggleFolder}
           selectedKey={currentFolderSlug}
