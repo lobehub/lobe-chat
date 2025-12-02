@@ -1,9 +1,9 @@
 import { Skeleton } from 'antd';
 import { Flexbox } from 'react-layout-kit';
 
-import { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './FileListItem';
+import { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from '../FileListItem';
 
-const FileSkeleton = () => (
+const ListViewSkeleton = () => (
   <Flexbox style={{ marginInline: 16 }}>
     {Array.from({ length: 4 }).map((_, index) => (
       <Flexbox align={'center'} distribution={'space-between'} height={48} horizontal key={index}>
@@ -22,4 +22,4 @@ const FileSkeleton = () => (
   </Flexbox>
 );
 
-export default FileSkeleton;
+export default ListViewSkeleton;

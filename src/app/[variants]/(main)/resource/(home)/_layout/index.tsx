@@ -5,8 +5,6 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
-import RegisterHotkeys from '@/app/[variants]/(main)/resource/(home)/features/RegisterHotkeys';
-
 import Sidebar from './Sidebar';
 
 const HomeLayout = memo(() => {
@@ -26,7 +24,6 @@ const HomeLayout = memo(() => {
       >
         <Outlet />
       </Flexbox>
-      <RegisterHotkeys />
     </>
   );
 });

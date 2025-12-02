@@ -34,7 +34,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface FolderBreadcrumbProps {
+interface BreadcrumbProps {
   category?: string;
   fileName?: string;
   knowledgeBaseId?: string;
@@ -46,7 +46,7 @@ interface FolderCrumb {
   slug: string;
 }
 
-const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ category, knowledgeBaseId, fileName }) => {
+const Breadcrumb = memo<BreadcrumbProps>(({ category, knowledgeBaseId, fileName }) => {
   const { styles, cx } = useStyles();
   const { t } = useTranslation('file');
   const navigate = useNavigate();
@@ -146,6 +146,6 @@ const FolderBreadcrumb = memo<FolderBreadcrumbProps>(({ category, knowledgeBaseI
   );
 });
 
-FolderBreadcrumb.displayName = 'FolderBreadcrumb';
+Breadcrumb.displayName = 'Breadcrumb';
 
-export default FolderBreadcrumb;
+export default Breadcrumb;
