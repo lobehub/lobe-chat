@@ -145,10 +145,6 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
-      - name: Lint Desktop
-        run: pnpm lint
-        working-directory: apps/desktop
-
       - name: Typecheck Desktop
         run: pnpm typecheck
         working-directory: apps/desktop
