@@ -9,10 +9,8 @@ import { useActionSWR } from '@/libs/swr';
 import { useChatStore } from '@/store/chat';
 import { displayMessageSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { HotkeyEnum, HotkeyScopeEnum } from '@/types/hotkey';
 
-import { usePinnedAgentState } from '../usePinnedAgentState';
 import { useHotkeyById } from './useHotkeyById';
 
 export const useSaveTopicHotkey = () => {
@@ -87,25 +85,6 @@ export const useDeleteLastMessageHotkey = () => {
   );
 };
 
-export const useToggleLeftPanelHotkey = () => {
-  const isZenMode = useGlobalStore((s) => s.status.zenMode);
-  const [isPinned] = usePinnedAgentState();
-  const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
-  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
-
-  return useHotkeyById(
-    HotkeyEnum.ToggleLeftPanel,
-    () =>
-      updateSystemStatus({
-        showSessionPanel: !showSessionPanel,
-      }),
-    {
-      enableOnContentEditable: true,
-      enabled: !isZenMode && !isPinned,
-    },
-  );
-};
-
 export const useToggleRightPanelHotkey = () => {
   const isZenMode = useGlobalStore((s) => s.status.zenMode);
   const toggleConfig = useGlobalStore((s) => s.toggleChatSideBar);
@@ -145,7 +124,6 @@ export const useRegisterChatHotkeys = () => {
   useOpenChatSettingsHotkey();
 
   // Layout
-  useToggleLeftPanelHotkey();
   useToggleRightPanelHotkey();
   useToggleZenModeHotkey();
 

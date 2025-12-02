@@ -1,6 +1,6 @@
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import RegisterHotkeys from './RegisterHotkeys';
@@ -13,32 +13,25 @@ const Layout = memo(() => {
     <>
       <Sidebar />
       <Flexbox
-        height={'100%'}
+        flex={1}
+        height={'100vh'}
         horizontal
-        style={{ maxWidth: '100%', overflow: 'hidden', position: 'relative' }}
-        width={'100%'}
+        style={{
+          background: theme.colorBgContainer,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
       >
-        <Center
+        <Flexbox
           flex={1}
+          height={'100vh'}
           style={{
-            background: theme.colorBgContainer,
-            overflowX: 'hidden',
-            overflowY: 'auto',
+            overflow: 'hidden',
             position: 'relative',
           }}
         >
-          <Flexbox
-            gap={16}
-            height={'100%'}
-            padding={24}
-            style={{
-              maxWidth: 906,
-            }}
-            width={'100%'}
-          >
-            <Outlet />
-          </Flexbox>
-        </Center>
+          <Outlet />
+        </Flexbox>
         <TopicSidebar />
       </Flexbox>
       <RegisterHotkeys />

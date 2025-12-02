@@ -87,6 +87,7 @@ const NavPanel = memo(() => {
     <DraggablePanel
       className={styles.panel}
       expand={expand}
+      expandable={false}
       maxWidth={400}
       minWidth={240}
       onExpandChange={handleExpand}
