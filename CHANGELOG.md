@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.145](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.144...v2.0.0-next.145)
+
+<sup>Released on **2025-12-02**</sup>
+
+#### ✨ Features
+
+- **misc**: Email provider support resend.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Email provider support resend, closes [#10557](https://github.com/lobehub/lobe-chat/issues/10557) ([7449b29](https://github.com/lobehub/lobe-chat/commit/7449b29))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.144](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.143...v2.0.0-next.144)
 
 <sup>Released on **2025-12-02**</sup>
