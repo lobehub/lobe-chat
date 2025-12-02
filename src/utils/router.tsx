@@ -85,7 +85,6 @@ export const ErrorBoundary = ({ resetPath }: { resetPath: string }) => {
   const ErrorCapture = require('@/components/Error').default;
 
   const error = useRouteError() as Error;
-  console.log('error', error);
   const navigate = useNavigate();
 
   const reset = useCallback(() => {
