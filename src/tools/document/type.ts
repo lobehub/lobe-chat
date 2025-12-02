@@ -191,8 +191,8 @@ export interface BatchUpdateState {
 }
 
 export interface WrapNodesState {
-  wrapperNodeId: string;
   wrappedNodeIds: string[];
+  wrapperNodeId: string;
 }
 
 export interface UnwrapNodeState {

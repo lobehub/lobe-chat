@@ -4,6 +4,7 @@ import { ChatHeader } from '@lobehub/ui/mobile';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { enableAuth } from '@/const/auth';
 import { useQueryState } from '@/hooks/useQueryParam';
@@ -11,7 +12,6 @@ import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { SettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
-import { useNavigate } from 'react-router-dom';
 
 const Header = memo(() => {
   const { t } = useTranslation('setting');
@@ -24,7 +24,13 @@ const Header = memo(() => {
   const isProvider = providerName ? true : false;
 
   const handleBackClick = () => {
-    console.log('gobackclick', isSessionActive, showMobileWorkspace, activeSettingsKey, providerName);
+    console.log(
+      'gobackclick',
+      isSessionActive,
+      showMobileWorkspace,
+      activeSettingsKey,
+      providerName,
+    );
     if (isSessionActive && showMobileWorkspace) {
       navigate('/agent');
     } else if (activeSettingsKey === 'provider' && providerName) {

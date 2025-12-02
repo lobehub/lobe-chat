@@ -369,18 +369,18 @@ export const usePageEditor = ({
     currentEmoji: localState.emoji,
     currentTitle: localState.title,
     // Methods
-debouncedSave,
-    
-handleContentChange,
-    
-lastUpdatedTime,
-    
+    debouncedSave,
+
+    handleContentChange,
+
+    lastUpdatedTime,
+
     onEditorInit,
     performSave,
     saveStatus,
     // Setters - update local state
-setCurrentEmoji,
-    
+    setCurrentEmoji,
+
     setCurrentTitle,
     wordCount,
   };

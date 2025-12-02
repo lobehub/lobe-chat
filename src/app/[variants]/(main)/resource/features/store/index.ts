@@ -9,6 +9,9 @@ import { store } from './action';
 export type { State } from './initialState';
 
 // Create a global store instance instead of context-based
-export const useResourceManagerStore = createWithEqualityFn(subscribeWithSelector(store()), shallow);
+export const useResourceManagerStore = createWithEqualityFn(
+  subscribeWithSelector(store()),
+  shallow,
+);
 
 export { selectors } from './selectors';

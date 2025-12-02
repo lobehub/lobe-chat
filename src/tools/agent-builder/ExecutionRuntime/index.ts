@@ -1,0 +1,450 @@
+import { BuiltinServerRuntimeOutput } from '@lobechat/types';
+
+import { getAgentStoreState } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors/selectors';
+
+import type {
+  GetAgentConfigParams,
+  GetAgentMetaParams,
+  GetConfigState,
+  GetMetaState,
+  SetModelParams,
+  SetModelState,
+  SetOpeningMessageParams,
+  SetOpeningMessageState,
+  SetOpeningQuestionsParams,
+  SetOpeningQuestionsState,
+  TogglePluginParams,
+  TogglePluginState,
+  UpdateAgentConfigParams,
+  UpdateChatConfigParams,
+  UpdateConfigState,
+  UpdateAgentMetaParams,
+  UpdateMetaState,
+} from '../types';
+
+/**
+ * Agent Builder Execution Runtime
+ * Handles the execution logic for all Agent Builder APIs
+ */
+export class AgentBuilderExecutionRuntime {
+  // ==================== Read Operations ====================
+
+  /**
+   * Get agent configuration
+   */
+  async getAgentConfig(args: GetAgentConfigParams): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const config = agentSelectors.currentAgentConfig(state);
+
+      // If specific fields are requested, filter the config
+      let filteredConfig = config;
+      if (args.fields && args.fields.length > 0) {
+        filteredConfig = Object.fromEntries(
+          Object.entries(config).filter(([key]) => args.fields!.includes(key)),
+        ) as typeof config;
+      }
+
+      const content = `Current agent configuration:\n${JSON.stringify(filteredConfig, null, 2)}`;
+
+      return {
+        content,
+        state: { config: filteredConfig } as GetConfigState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to get agent config: ${err.message}`,
+        error,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Get agent metadata
+   */
+  async getAgentMeta(args: GetAgentMetaParams): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const meta = agentSelectors.currentAgentMeta(state);
+
+      // If specific fields are requested, filter the meta
+      let filteredMeta = meta;
+      if (args.fields && args.fields.length > 0) {
+        filteredMeta = Object.fromEntries(
+          Object.entries(meta).filter(([key]) => args.fields!.includes(key)),
+        ) as typeof meta;
+      }
+
+      const content = `Current agent metadata:\n${JSON.stringify(filteredMeta, null, 2)}`;
+
+      return {
+        content,
+        state: { meta: filteredMeta } as GetMetaState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to get agent meta: ${err.message}`,
+        error,
+        success: false,
+      };
+    }
+  }
+
+  // ==================== Write Operations ====================
+
+  /**
+   * Update agent configuration (bulk update)
+   */
+  async updateAgentConfig(
+    agentId: string,
+    args: UpdateAgentConfigParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const previousConfig = agentSelectors.currentAgentConfig(state);
+
+      // Extract the fields that will be updated
+      const updatedFields = Object.keys(args.config);
+      const previousValues: Record<string, unknown> = {};
+      const newValues: Record<string, unknown> = {};
+
+      for (const field of updatedFields) {
+        previousValues[field] = (previousConfig as unknown as Record<string, unknown>)[field];
+        newValues[field] = (args.config as unknown as Record<string, unknown>)[field];
+      }
+
+      // Call the store action to update
+      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, args.config);
+
+      const content = `Successfully updated agent configuration. Updated fields: ${updatedFields.join(', ')}`;
+
+      return {
+        content,
+        state: {
+          newValues,
+          previousValues,
+          success: true,
+          updatedFields,
+        } as UpdateConfigState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to update agent config: ${err.message}`,
+        error,
+        state: {
+          newValues: {},
+          previousValues: {},
+          success: false,
+          updatedFields: [],
+        } as UpdateConfigState,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Update agent metadata
+   */
+  async updateAgentMeta(
+    agentId: string,
+    args: UpdateAgentMetaParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const previousMeta = agentSelectors.currentAgentMeta(state);
+
+      // Extract the fields that will be updated
+      const updatedFields = Object.keys(args.meta);
+      const previousValues: Record<string, unknown> = {};
+      const newValues = args.meta;
+
+      for (const field of updatedFields) {
+        previousValues[field] = (previousMeta as unknown as Record<string, unknown>)[field];
+      }
+
+      // Call the store action to update
+      await getAgentStoreState().optimisticUpdateAgentMeta(agentId, args.meta);
+
+      const content = `Successfully updated agent metadata. Updated fields: ${updatedFields.join(', ')}`;
+
+      return {
+        content,
+        state: {
+          newValues,
+          previousValues,
+          success: true,
+          updatedFields,
+        } as UpdateMetaState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to update agent meta: ${err.message}`,
+        error,
+        state: {
+          newValues: {},
+          previousValues: {},
+          success: false,
+          updatedFields: [],
+        } as UpdateMetaState,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Update chat configuration
+   */
+  async updateChatConfig(
+    agentId: string,
+    args: UpdateChatConfigParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const previousConfig = agentSelectors.currentAgentConfig(state);
+      const previousChatConfig = previousConfig.chatConfig || {};
+
+      // Extract the fields that will be updated
+      const updatedFields = Object.keys(args.chatConfig);
+      const previousValues: Record<string, unknown> = {};
+      const newValues: Record<string, unknown> = {};
+
+      for (const field of updatedFields) {
+        previousValues[field] = (previousChatConfig as unknown as Record<string, unknown>)[field];
+        newValues[field] = (args.chatConfig as unknown as Record<string, unknown>)[field];
+      }
+
+      // Call the store action to update (wrapping chatConfig inside config)
+      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+        chatConfig: args.chatConfig,
+      });
+
+      const content = `Successfully updated chat configuration. Updated fields: ${updatedFields.join(', ')}`;
+
+      return {
+        content,
+        state: {
+          newValues,
+          previousValues,
+          success: true,
+          updatedFields,
+        } as UpdateConfigState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to update chat config: ${err.message}`,
+        error,
+        state: {
+          newValues: {},
+          previousValues: {},
+          success: false,
+          updatedFields: [],
+        } as UpdateConfigState,
+        success: false,
+      };
+    }
+  }
+
+  // ==================== Specific Field Operations ====================
+
+  /**
+   * Toggle plugin (enable/disable)
+   */
+  async togglePlugin(
+    agentId: string,
+    args: TogglePluginParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const currentPlugins = agentSelectors.currentAgentPlugins(state);
+
+      const isCurrentlyEnabled = currentPlugins.includes(args.pluginId);
+      const shouldEnable = args.enabled !== undefined ? args.enabled : !isCurrentlyEnabled;
+
+      let newPlugins: string[];
+      if (shouldEnable && !isCurrentlyEnabled) {
+        // Enable: add plugin
+        newPlugins = [...currentPlugins, args.pluginId];
+      } else if (!shouldEnable && isCurrentlyEnabled) {
+        // Disable: remove plugin
+        newPlugins = currentPlugins.filter((id) => id !== args.pluginId);
+      } else {
+        // No change needed
+        newPlugins = currentPlugins;
+      }
+
+      // Update the plugins array
+      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+        plugins: newPlugins,
+      });
+
+      const action = shouldEnable ? 'enabled' : 'disabled';
+      const content = `Successfully ${action} plugin: ${args.pluginId}`;
+
+      return {
+        content,
+        state: {
+          enabled: shouldEnable,
+          pluginId: args.pluginId,
+          success: true,
+        } as TogglePluginState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to toggle plugin: ${err.message}`,
+        error,
+        state: {
+          enabled: false,
+          pluginId: args.pluginId,
+          success: false,
+        } as TogglePluginState,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Set model and provider
+   */
+  async setModel(agentId: string, args: SetModelParams): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const previousModel = agentSelectors.currentAgentModel(state);
+      const previousProvider = agentSelectors.currentAgentModelProvider(state);
+
+      // Update model and provider
+      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+        model: args.model,
+        provider: args.provider,
+      });
+
+      const content = `Successfully set model to ${args.model} (provider: ${args.provider})`;
+
+      return {
+        content,
+        state: {
+          model: args.model,
+          previousModel,
+          previousProvider,
+          provider: args.provider,
+          success: true,
+        } as SetModelState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to set model: ${err.message}`,
+        error,
+        state: {
+          model: args.model,
+          provider: args.provider,
+          success: false,
+        } as SetModelState,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Set opening message
+   */
+  async setOpeningMessage(
+    agentId: string,
+    args: SetOpeningMessageParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const previousConfig = agentSelectors.currentAgentConfig(state);
+      const previousMessage = previousConfig.openingMessage;
+
+      // Update opening message
+      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+        openingMessage: args.message,
+      });
+
+      const content = args.message
+        ? `Successfully set opening message: "${args.message}"`
+        : 'Successfully removed opening message';
+
+      return {
+        content,
+        state: {
+          message: args.message,
+          previousMessage,
+          success: true,
+        } as SetOpeningMessageState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to set opening message: ${err.message}`,
+        error,
+        state: {
+          message: args.message,
+          success: false,
+        } as SetOpeningMessageState,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Set opening questions
+   */
+  async setOpeningQuestions(
+    agentId: string,
+    args: SetOpeningQuestionsParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const previousConfig = agentSelectors.currentAgentConfig(state);
+      const previousQuestions = previousConfig.openingQuestions;
+
+      // Update opening questions
+      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+        openingQuestions: args.questions,
+      });
+
+      const content =
+        args.questions.length > 0
+          ? `Successfully set ${args.questions.length} opening questions`
+          : 'Successfully removed all opening questions';
+
+      return {
+        content,
+        state: {
+          previousQuestions,
+          questions: args.questions,
+          success: true,
+        } as SetOpeningQuestionsState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to set opening questions: ${err.message}`,
+        error,
+        state: {
+          questions: args.questions,
+          success: false,
+        } as SetOpeningQuestionsState,
+        success: false,
+      };
+    }
+  }
+}
