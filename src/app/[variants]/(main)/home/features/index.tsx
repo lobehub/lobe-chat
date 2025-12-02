@@ -19,11 +19,9 @@ import UploadEntries from './UploadEntries';
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     padding-block: 20px 48px;
-    padding-inline: 24px;
   `,
   content: css`
     width: 100%;
-    max-width: 1200px;
     margin-block: 0;
     margin-inline: auto;
   `,
