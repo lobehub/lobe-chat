@@ -12,7 +12,7 @@ import PageExplorer from '@/app/[variants]/(main)/page/features';
 const PagesPage = memo(() => {
   const { id } = useParams<{ id: string }>();
 
-  return <PageExplorer documentId={id} />;
+  return <PageExplorer pageId={id} />;
 });
 
 PagesPage.displayName = 'PagesPage';

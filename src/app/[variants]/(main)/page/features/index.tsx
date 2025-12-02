@@ -4,10 +4,10 @@ import { createStyles } from 'antd-style';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import PageEditor from '@/features/PageEditor';
 import { useFileStore } from '@/store/file';
 
 import PageExplorerPlaceholder from './DocumentEditorPlaceholder';
-import PageEditor from './PageEditor';
 
 const useStyles = createStyles(({ css, token }) => ({
   editorPanel: css`
@@ -18,14 +18,14 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface PageExplorerProps {
-  documentId?: string;
   knowledgeBaseId?: string;
+  pageId?: string;
 }
 
 /**
  * Page explorer component - renders the page editor
  */
-const PageExplorer = memo<PageExplorerProps>(({ documentId, knowledgeBaseId }) => {
+const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
   const { t } = useTranslation('file');
   const { styles } = useStyles();
 
@@ -42,13 +42,13 @@ const PageExplorer = memo<PageExplorerProps>(({ documentId, knowledgeBaseId }) =
 
   // If documentId is provided from URL, set it as selected
   useEffect(() => {
-    if (documentId && documentId !== selectedPageId) {
-      setSelectedPageId(documentId, false);
+    if (pageId && pageId !== selectedPageId) {
+      setSelectedPageId(pageId, false);
     }
-  }, [documentId]);
+  }, [pageId]);
 
   const pages = getOptimisticDocuments();
-  const currentPageId = selectedPageId || documentId;
+  const currentPageId = selectedPageId || pageId;
 
   const handleNewDocument = () => {
     const untitledTitle = t('documentList.untitled');
@@ -65,7 +65,6 @@ const PageExplorer = memo<PageExplorerProps>(({ documentId, knowledgeBaseId }) =
         <PageEditor
           knowledgeBaseId={knowledgeBaseId}
           onDelete={() => handleDelete(currentPageId)}
-          onDocumentIdChange={() => {}}
           pageId={currentPageId}
         />
       ) : (

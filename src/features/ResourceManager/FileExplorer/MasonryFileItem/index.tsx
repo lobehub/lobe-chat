@@ -6,10 +6,10 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
+import PageEditorModal from '@/features/PageEditor/PageEditorModal';
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 
-import PageEditorModal from '../../../../app/[variants]/(main)/page/features/PageEditorModal';
 import DropdownMenu from '../FileListItem/DropdownMenu';
 import DefaultFileItem from './DefaultFileItem';
 import ImageFileItem from './ImageFileItem';

@@ -52,6 +52,7 @@ export const usePageEditor = ({
   const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
 
   const isInitialLoadRef = useRef(false);
+  const lastLoadedDocIdRef = useRef<string | undefined>(undefined);
 
   // Helper function to calculate word count from text
   const calculateWordCount = useCallback((text: string) => {
@@ -64,15 +65,20 @@ export const usePageEditor = ({
     return pages.map((page) => page.pageContent).join('\n\n');
   }, []);
 
-  // Sync title and emoji when page data changes
+  // Sync title and emoji ONLY when documentId changes (new page loaded)
   useEffect(() => {
-    if (currentPage?.title !== undefined && currentPage.title !== currentTitle) {
-      setCurrentTitle(currentPage.title);
+    // Only sync when we're loading a new document
+    if (documentId !== lastLoadedDocIdRef.current) {
+      lastLoadedDocIdRef.current = documentId;
+
+      if (currentPage?.title !== undefined) {
+        setCurrentTitle(currentPage.title);
+      }
+      if (currentPage?.metadata?.emoji !== undefined) {
+        setCurrentEmoji(currentPage.metadata.emoji);
+      }
     }
-    if (currentPage && currentPage.metadata?.emoji !== currentEmoji) {
-      setCurrentEmoji(currentPage.metadata.emoji);
-    }
-  }, [currentPage?.title, currentPage?.metadata?.emoji]);
+  }, [documentId]); // Only watch documentId, not currentPage
 
   // Load page content when documentId changes
   const onEditorInit = () => {

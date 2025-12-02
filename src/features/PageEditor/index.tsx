@@ -23,7 +23,7 @@ import { userProfileSelectors } from '@/store/user/selectors';
 
 import EditorContent from './EditorContent';
 import PageEditorBreadcrumb from './PageEditorBreadcrumb';
-import { usePageEditor } from './hooks/usePageEditor';
+import { usePageEditor } from './usePageEditor';
 
 dayjs.extend(relativeTime);
 
@@ -62,11 +62,6 @@ const PageEditor = memo<PageEditorPanelProps>(
 
     // Use whichever is available (renamed to avoid shadowing global document)
     const pageDocument = currentDocument || fetchedDocument;
-
-    console.log('currentDocument', currentDocument);
-    console.log('fetchedDocument', fetchedDocument);
-    console.log('pageDocument (final)', pageDocument);
-    console.log('pageId', pageId);
 
     const {
       currentDocId,

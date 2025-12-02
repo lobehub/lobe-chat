@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import { message } from '@/components/AntdStaticMethods';
 
 import EditorContent from './EditorContent';
-import { usePageEditor } from './hooks/usePageEditor';
+import { usePageEditor } from './usePageEditor';
 
 type EditorInstance = ReturnType<typeof useEditor>;
 

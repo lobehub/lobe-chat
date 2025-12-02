@@ -5,9 +5,9 @@ import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
+import PageEditor from '@/features/PageEditor';
 
 import PageExplorer from '../../app/[variants]/(main)/page/features';
-import PageEditor from '../../app/[variants]/(main)/page/features/PageEditor';
 import FileExplorer from './FileExplorer';
 import UploadDock from './UploadDock';
 
@@ -39,7 +39,7 @@ const ResourceManager = memo<KnowledgeManagerProps>(
           return <PageEditor knowledgeBaseId={knowledgeBaseId} pageId={currentViewItemId} />;
         }
         case 'pages': {
-          return <PageExplorer documentId={currentViewItemId} knowledgeBaseId={knowledgeBaseId} />;
+          return <PageExplorer knowledgeBaseId={knowledgeBaseId} pageId={currentViewItemId} />;
         }
         case 'files':
         case 'file': {
