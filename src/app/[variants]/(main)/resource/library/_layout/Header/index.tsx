@@ -2,29 +2,26 @@
 
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { useParams } from 'react-router-dom';
 
 import SideBarHeaderLayout from '@/features/NavPanel/SideBarHeaderLayout';
 
-import AddButton from './AddButton';
-import Search from './Search';
+import LibraryHead from './LibraryHead';
 
 const Header = memo(() => {
+  const { id } = useParams<{ id: string }>();
   const { t } = useTranslation('common');
   return (
     <>
       <SideBarHeaderLayout
         breadcrumb={[
           {
-            href: '/page',
-            title: t('tab.pages'),
+            path: '/resource',
+            title: t('tab.resource'),
           },
         ]}
-        right={<AddButton />}
       />
-      <Flexbox paddingInline={4}>
-        <Search />
-      </Flexbox>
+      <LibraryHead id={id || ''} />
     </>
   );
 });

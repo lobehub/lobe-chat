@@ -5,7 +5,6 @@ import { SquarePenIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useFileStore } from '@/store/file';
 
 const AddButton = memo(() => {
@@ -22,7 +21,10 @@ const AddButton = memo(() => {
     <ActionIcon
       icon={SquarePenIcon}
       onClick={handleNewDocument}
-      size={DESKTOP_HEADER_ICON_SIZE}
+      size={{
+        blockSize: 32,
+        size: 18,
+      }}
       title={t('header.newPageButton')}
     />
   );

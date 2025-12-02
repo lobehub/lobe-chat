@@ -12,7 +12,7 @@ const Head = memo<{ id: string }>(({ id }) => {
   const name = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseNameById(id));
 
   return (
-    <Flexbox align={'center'} gap={8} horizontal>
+    <Flexbox align={'center'} gap={8} horizontal padding={6}>
       <Center style={{ minWidth: 24 }} width={24}>
         <RepoIcon />
       </Center>

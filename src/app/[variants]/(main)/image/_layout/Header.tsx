@@ -7,7 +7,16 @@ import SideBarHeaderLayout from '@/features/NavPanel/SideBarHeaderLayout';
 
 const Header = memo<PropsWithChildren>(() => {
   const { t } = useTranslation('common');
-  return <SideBarHeaderLayout left={t('tab.aiImage')} />;
+  return (
+    <SideBarHeaderLayout
+      breadcrumb={[
+        {
+          href: '/image',
+          title: t('tab.aiImage'),
+        },
+      ]}
+    />
+  );
 });
 
 export default Header;
