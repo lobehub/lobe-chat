@@ -2,13 +2,7 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { LOADING_FLAT } from '@lobechat/const';
 import { chainSummaryTitle } from '@lobechat/prompts';
-import {
-  CreateMessageParams,
-  IThreadType,
-  SendThreadMessageParams,
-  ThreadItem,
-  UIChatMessage,
-} from '@lobechat/types';
+import { CreateMessageParams, IThreadType, ThreadItem, UIChatMessage } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
@@ -33,12 +27,6 @@ export interface ChatThreadAction {
   // update
   updateThreadInputMessage: (message: string) => void;
   refreshThreads: () => Promise<void>;
-  /**
-   * Sends a new thread message to the AI chat system
-   * @deprecated Use sendMessage with context.newThread instead for unified message sending.
-   * This method will be removed in a future version.
-   */
-  sendThreadMessage: (params: SendThreadMessageParams) => Promise<void>;
   resendThreadMessage: (messageId: string) => Promise<void>;
   delAndResendThreadMessage: (messageId: string) => Promise<void>;
   createThread: (params: {
@@ -98,66 +86,6 @@ export const chatThreadMessage: StateCreator<
       'closeThreadPortal',
     );
     get().togglePortal(false);
-  },
-  /**
-   * @deprecated Use sendMessage with context.newThread instead
-   */
-  sendThreadMessage: async ({ message }) => {
-    const { activeTopicId, activeAgentId, threadStartMessageId, newThreadMode, portalThreadId } =
-      get();
-
-    if (!activeAgentId || !activeTopicId) return;
-
-    // if message is empty, then stop
-    if (!message) return;
-
-    set({ isCreatingThreadMessage: true }, false, n('creatingThreadMessage/start'));
-
-    try {
-      // Get thread messages for context
-      const messages = threadSelectors.portalAIChats(get());
-
-      // Use unified sendMessage with context.newThread for new thread creation
-      const result = await get().sendMessage({
-        message,
-        messages,
-        context: {
-          agentId: activeAgentId,
-          topicId: activeTopicId,
-          // If there's an existing thread, use it
-          threadId: portalThreadId,
-          // If no thread exists, create a new one
-          newThread:
-            !portalThreadId && threadStartMessageId
-              ? {
-                  sourceMessageId: threadStartMessageId,
-                  type: newThreadMode,
-                }
-              : undefined,
-        },
-      });
-
-      // Handle post-message-creation tasks for new thread
-      if (result?.createdThreadId) {
-        // Refresh threads list
-        await get().refreshThreads();
-        // Refresh messages to include new thread messages
-        await get().refreshMessages();
-        // Open the newly created thread in portal
-        get().openThreadInPortal(result.createdThreadId, threadStartMessageId);
-
-        // Summarize thread title for new thread
-        const portalThread = threadSelectors.currentPortalThread(get());
-        if (portalThread) {
-          const chats = threadSelectors.portalAIChats(get());
-          await get().summaryThreadTitle(portalThread.id, chats);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      set({ isCreatingThreadMessage: false }, false, n('creatingThreadMessage/stop'));
-    }
   },
   resendThreadMessage: async (messageId) => {
     // const chats = threadSelectors.portalAIChats(get());

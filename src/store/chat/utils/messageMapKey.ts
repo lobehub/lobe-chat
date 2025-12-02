@@ -11,6 +11,8 @@ interface MessageMapKeyInput {
   agentId: string;
   /**
    * Whether this is a new/creating state (for optimistic updates)
+   * For thread scope: indicates creating a new thread
+   * For main scope: indicates creating a new topic
    */
   isNew?: boolean;
   /**
@@ -46,6 +48,7 @@ const toMessageMapContext = (input: MessageMapKeyInput): MessageMapContext => {
   }
 
   // Default scope (main if not specified)
+  // isNew can be used with any scope (main for new topic, thread for new thread with explicit scope)
   return {
     isNew,
     scope: scope ?? 'main',

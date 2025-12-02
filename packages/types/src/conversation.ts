@@ -72,63 +72,68 @@ export interface MessageMapContext {
  *
  * @example
  * ```ts
- * // Basic usage
- * const context: ConversationContext = { sessionId: 'session-1' };
+ * // Basic usage - main conversation
+ * const context: ConversationContext = { agentId: 'agent-1' };
  *
  * // With topic
  * const topicContext: ConversationContext = {
- *   sessionId: 'session-1',
+ *   agentId: 'agent-1',
  *   topicId: 'topic-1'
  * };
  *
- * // With thread (highest priority)
+ * // With existing thread
  * const threadContext: ConversationContext = {
- *   sessionId: 'session-1',
+ *   agentId: 'agent-1',
  *   topicId: 'topic-1',
  *   threadId: 'thread-1'
  * };
  *
- * // Create a new thread with message
+ * // Creating a new thread (isNew + scope: 'thread')
  * const newThreadContext: ConversationContext = {
- *   sessionId: 'session-1',
+ *   agentId: 'agent-1',
  *   topicId: 'topic-1',
- *   newThread: {
- *     sourceMessageId: 'msg-1',
- *     type: ThreadType.Standalone,
- *   }
+ *   scope: 'thread',
+ *   isNew: true,
+ *   sourceMessageId: 'msg-1',
+ *   threadType: ThreadType.Standalone,
  * };
  * ```
  */
 export interface ConversationContext {
   agentId: string;
   /**
-   * Parameters for creating a new thread along with the message.
-   * If provided, a new thread will be created and the message will be added to it.
-   * The threadId will be returned in the response.
+   * Whether this is creating a new conversation (new topic or new thread)
+   * Used for optimistic updates
    */
-  newThread?: {
-    /**
-     * Parent thread ID (for nested threads)
-     */
-    parentThreadId?: string;
-    /**
-     * Source message ID that the thread is branched from
-     */
-    sourceMessageId: string;
-    /**
-     * Thread type
-     */
-    type: IThreadType;
-  };
+  isNew?: boolean;
+  /**
+   * Scope type for the conversation
+   * - 'main': Agent main conversation (default)
+   * - 'thread': Agent thread conversation
+   * - 'group': Group main conversation
+   * - 'group_agent': Agent conversation within a group
+   * @default 'main' (auto-detected based on threadId)
+   */
+  scope?: MessageMapScope;
   /**
    * Session or group ID
    */
   sessionId?: string;
   /**
+   * Source message ID that the thread is branched from
+   * Only used when creating a new thread (isNew=true, scope='thread')
+   */
+  sourceMessageId?: string;
+  /**
    * Thread ID (takes highest priority if present)
+   * When present, scope is auto-detected as 'thread'
    */
   threadId?: string | null;
-
+  /**
+   * Thread type when creating a new thread
+   * Only used when creating a new thread (isNew=true, scope='thread')
+   */
+  threadType?: IThreadType;
   /**
    * Topic ID
    */

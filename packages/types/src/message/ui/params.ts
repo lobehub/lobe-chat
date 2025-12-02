@@ -102,16 +102,6 @@ export interface SendMessageParams {
   parentId?: string;
 }
 
-export interface SendThreadMessageParams {
-  /**
-   * create a thread
-   */
-  createNewThread?: boolean;
-  // files?: UploadFileItem[];
-  message: string;
-  onlyAddUserMessage?: boolean;
-}
-
 export interface SendGroupMessageParams {
   files?: UploadFileItem[];
   groupId: string;

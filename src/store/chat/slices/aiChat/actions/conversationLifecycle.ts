@@ -101,10 +101,15 @@ export const conversationLifecycle: StateCreator<
     // Use context from params (required)
     const agentId = context.agentId;
     const topicId = context.topicId ?? undefined;
-    // If newThread is provided, threadId will be created by server
+    // If creating new thread (isNew + scope='thread'), threadId will be created by server
     // If threadId is provided, use it directly
-    const threadId = context.newThread ? undefined : (context.threadId ?? undefined);
-    const newThread = context.newThread;
+    const isCreatingNewThread = context.isNew && context.scope === 'thread';
+    const threadId = isCreatingNewThread ? undefined : (context.threadId ?? undefined);
+    // Build newThread params for server from new context format
+    // Only create newThread if we have both sourceMessageId and threadType
+    const newThread = isCreatingNewThread && context.sourceMessageId && context.threadType
+      ? { sourceMessageId: context.sourceMessageId, type: context.threadType }
+      : undefined;
 
     if (!agentId) return;
 
@@ -227,7 +232,6 @@ export const conversationLifecycle: StateCreator<
             ? {
                 sourceMessageId: newThread.sourceMessageId,
                 type: newThread.type,
-                parentThreadId: newThread.parentThreadId,
               }
             : undefined,
           newTopic: shouldCreateNewTopic
