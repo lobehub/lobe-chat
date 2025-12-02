@@ -100,12 +100,9 @@ export const conversationLifecycle: StateCreator<
     const { internal_execAgentRuntime, mainInputEditor } = get();
 
     // Use context from params (required)
-    const agentId = context.agentId;
-    const topicId = context.topicId ?? undefined;
+    const { agentId } = context;
     // If creating new thread (isNew + scope='thread'), threadId will be created by server
-    // If threadId is provided, use it directly
     const isCreatingNewThread = context.isNew && context.scope === 'thread';
-    const threadId = isCreatingNewThread ? undefined : (context.threadId ?? undefined);
     // Build newThread params for server from new context format
     // Only create newThread if we have both sourceMessageId and threadType
     const newThread =
@@ -114,6 +111,9 @@ export const conversationLifecycle: StateCreator<
         : undefined;
 
     if (!agentId) return;
+
+    // When creating new thread, override threadId to undefined (server will create it)
+    const operationContext = isCreatingNewThread ? { ...context, threadId: undefined } : context;
 
     const fileIdList = files?.map((f) => f.id);
 
@@ -151,18 +151,20 @@ export const conversationLifecycle: StateCreator<
     const autoCreateThreshold =
       chatConfig.autoCreateTopicThreshold ?? DEFAULT_AGENT_CHAT_CONFIG.autoCreateTopicThreshold;
     const shouldCreateNewTopic =
-      !topicId && !!chatConfig.enableAutoCreateTopic && messages.length + 2 >= autoCreateThreshold;
+      !context.topicId &&
+      !!chatConfig.enableAutoCreateTopic &&
+      messages.length + 2 >= autoCreateThreshold;
 
     // Create operation for send message first, so we can use operationId for optimistic updates
     const tempId = 'tmp_' + nanoid();
     const tempAssistantId = 'tmp_' + nanoid();
     const { operationId, abortController } = get().startOperation({
       type: 'sendMessage',
-      context: { agentId, topicId, threadId, messageId: tempId },
+      context: { ...operationContext, messageId: tempId },
       label: 'Send Message',
       metadata: {
         // Mark this as thread operation if threadId exists
-        inThread: !!threadId,
+        inThread: !!operationContext.threadId,
       },
     });
 
@@ -190,10 +192,10 @@ export const conversationLifecycle: StateCreator<
         // if message has attached with files, then add files to message and the agent
         files: fileIdList,
         role: 'user',
-        agentId,
+        agentId: operationContext.agentId,
         // if there is topicId，then add topicId to message
-        topicId,
-        threadId,
+        topicId: operationContext.topicId ?? undefined,
+        threadId: operationContext.threadId ?? undefined,
         imageList: tempImages.length > 0 ? tempImages : undefined,
         videoList: tempVideos.length > 0 ? tempVideos : undefined,
       },
@@ -203,10 +205,10 @@ export const conversationLifecycle: StateCreator<
       {
         content: LOADING_FLAT,
         role: 'assistant',
-        agentId,
+        agentId: operationContext.agentId,
         // if there is topicId，then add topicId to message
-        topicId,
-        threadId,
+        topicId: operationContext.topicId ?? undefined,
+        threadId: operationContext.threadId ?? undefined,
       },
       { operationId, tempMessageId: tempAssistantId },
     );
@@ -230,8 +232,8 @@ export const conversationLifecycle: StateCreator<
         {
           newUserMessage: { content: message, files: fileIdList, parentId },
           // if there is topicId，then add topicId to message
-          topicId,
-          threadId,
+          topicId: operationContext.topicId ?? undefined,
+          threadId: operationContext.threadId ?? undefined,
           // Support creating new thread along with message
           newThread: newThread
             ? {
@@ -245,14 +247,14 @@ export const conversationLifecycle: StateCreator<
                 title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
               }
             : undefined,
-          agentId,
+          agentId: operationContext.agentId,
           newAssistantMessage: { model, provider: provider! },
         },
         abortController,
       );
-      let finalTopicId = topicId;
-      // Use created threadId if a new thread was created, otherwise use original threadId
-      const finalThreadId = data.createdThreadId ?? threadId;
+      // Use created topicId/threadId if available, otherwise use original from context
+      let finalTopicId = operationContext.topicId;
+      const finalThreadId = data.createdThreadId ?? operationContext.threadId;
 
       // refresh the total data
       if (data?.topics) {
@@ -268,8 +270,10 @@ export const conversationLifecycle: StateCreator<
         get().updateOperationMetadata(operationId, { createdThreadId: data.createdThreadId });
       }
 
+      // Create final context with updated topicId/threadId from server response
+      const finalContext = { ...operationContext, topicId: finalTopicId, threadId: finalThreadId };
       get().replaceMessages(data.messages, {
-        context: { agentId, topicId: finalTopicId, threadId: finalThreadId },
+        context: finalContext,
         action: 'sendMessage/serverResponse',
       });
 
@@ -338,16 +342,16 @@ export const conversationLifecycle: StateCreator<
     // execAgentRuntime is a separate operation (child) that handles AI response generation
     get().completeOperation(operationId);
 
-    // Get final threadId (created or existing)
-    const finalThreadId = data.createdThreadId ?? threadId;
+    // Create final context for AI execution (with updated topicId/threadId from server)
+    const execContext = {
+      ...operationContext,
+      topicId: data.topicId ?? operationContext.topicId,
+      threadId: data.createdThreadId ?? operationContext.threadId,
+    };
 
     // Get the current messages to generate AI response
     const displayMessages = displayMessageSelectors.getDisplayMessagesByKey(
-      messageMapKey({
-        agentId,
-        topicId: data.topicId ?? topicId,
-        threadId: finalThreadId,
-      }),
+      messageMapKey(execContext),
     )(get());
 
     try {
@@ -355,13 +359,14 @@ export const conversationLifecycle: StateCreator<
         messages: displayMessages,
         parentMessageId: data.assistantMessageId,
         parentMessageType: 'assistant',
-        agentId,
-        topicId: data.topicId ?? topicId,
+        agentId: execContext.agentId,
+        topicId: execContext.topicId,
         parentOperationId: operationId, // Pass as parent operation
-        threadId: finalThreadId,
+        threadId: execContext.threadId ?? undefined,
         // If a new thread was created, mark as inPortalThread for consistent behavior
         inPortalThread: !!data.createdThreadId,
         skipCreateFirstMessage: true,
+        scope: execContext.scope,
       });
 
       //
@@ -405,10 +410,17 @@ export const conversationLifecycle: StateCreator<
 
     const { internal_execAgentRuntime, activeThreadId, activeAgentId, activeTopicId } = get();
 
+    // Create base context for regeneration (using global state)
+    const regenContext = {
+      agentId: activeAgentId,
+      topicId: activeTopicId,
+      threadId: activeThreadId,
+    };
+
     // Create regenerate operation
     const { operationId } = get().startOperation({
       type: 'regenerate',
-      context: { agentId: activeAgentId, topicId: activeTopicId, messageId: id },
+      context: { ...regenContext, messageId: id },
     });
 
     try {
@@ -421,10 +433,10 @@ export const conversationLifecycle: StateCreator<
         messages: contextMessages,
         parentMessageId: id,
         parentMessageType: 'user',
-        agentId: activeAgentId,
-        topicId: activeTopicId,
+        agentId: regenContext.agentId,
+        topicId: regenContext.topicId,
         traceId,
-        threadId: activeThreadId,
+        threadId: regenContext.threadId,
         parentOperationId: operationId,
       });
 
@@ -465,12 +477,19 @@ export const conversationLifecycle: StateCreator<
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
-    const { activeAgentId, activeTopicId } = get();
+    const { activeAgentId, activeTopicId, activeThreadId } = get();
+
+    // Create base context for continue operation (using global state)
+    const continueContext = {
+      agentId: activeAgentId,
+      topicId: activeTopicId,
+      threadId: activeThreadId,
+    };
 
     // Create continue operation
     const { operationId } = get().startOperation({
       type: 'continue',
-      context: { agentId: activeAgentId, topicId: activeTopicId, messageId },
+      context: { ...continueContext, messageId },
     });
 
     try {
@@ -480,8 +499,9 @@ export const conversationLifecycle: StateCreator<
         messages: chats,
         parentMessageId: id,
         parentMessageType: message.role as 'assistant' | 'tool' | 'user',
-        agentId: activeAgentId,
-        topicId: activeTopicId,
+        agentId: continueContext.agentId,
+        topicId: continueContext.topicId,
+        threadId: continueContext.threadId,
         parentOperationId: operationId,
       });
 

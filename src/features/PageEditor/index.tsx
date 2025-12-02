@@ -2,7 +2,6 @@
 
 import { useEditor } from '@lobehub/editor/react';
 import { ActionIcon, Button, DraggablePanel, Dropdown, Icon } from '@lobehub/ui';
-import { ChatHeader } from '@lobehub/ui/chat';
 import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
@@ -21,7 +20,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ChatInput, ChatList, ConversationProvider } from '@/features/Conversation';
+import { BrandTextLoading } from '@/components/Loading';
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -29,7 +28,9 @@ import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
+import DocumentConversation from './DocumentConversation';
 import EditorContent from './EditorContent';
+import PageAgentProvider from './PageAgentProvider';
 import PageEditorBreadcrumb from './PageEditorBreadcrumb';
 import { usePageEditor } from './usePageEditor';
 
@@ -55,6 +56,10 @@ const PageEditor = memo<PageEditorPanelProps>(
     const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
     const { message, modal } = App.useApp();
     const username = useUserStore(userProfileSelectors.displayUserName);
+
+    const useInitPageAgent = useFileStore((s) => s.useInitPageAgent);
+    const pageAgentId = useFileStore((s) => s.pageAgentId);
+    const { isLoading: isAgentLoading } = useInitPageAgent();
 
     const editor = useEditor();
 
@@ -198,8 +203,20 @@ const PageEditor = memo<PageEditorPanelProps>(
       [theme, wordCount, username, lastUpdatedTime, handleDelete, currentDocId, message, t],
     );
 
+    // Don't render conversation provider until agent is initialized
+    if (!pageAgentId || isAgentLoading) {
+      return (
+        <Flexbox height={'100%'} horizontal style={{ background: theme.colorBgContainer }}>
+          <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
+            {/* Show loading state while agent is being initialized */}
+            <BrandTextLoading />
+          </Flexbox>
+        </Flexbox>
+      );
+    }
+
     return (
-      <ConversationProvider context={{ agentId: 'page-copilot' }}>
+      <PageAgentProvider pageAgentId={pageAgentId}>
         <Flexbox height={'100%'} horizontal style={{ background: 'red' }}>
           <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
             {/* Header */}
@@ -424,16 +441,10 @@ const PageEditor = memo<PageEditorPanelProps>(
             onExpandChange={setChatPanelExpanded}
             placement="right"
           >
-            <Flexbox flex={1} height={'100%'}>
-              <ChatHeader />
-              <Flexbox flex={1} height={'100%'}>
-                <ChatList />
-              </Flexbox>
-              <ChatInput />
-            </Flexbox>
+            <DocumentConversation />
           </DraggablePanel>
         </Flexbox>
-      </ConversationProvider>
+      </PageAgentProvider>
     );
   },
 );

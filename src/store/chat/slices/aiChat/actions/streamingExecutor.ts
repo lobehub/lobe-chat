@@ -6,6 +6,7 @@ import {
   ChatImageItem,
   ChatToolPayload,
   MessageContentPart,
+  MessageMapScope,
   MessageToolCall,
   ModelUsage,
   TraceNameMap,
@@ -114,6 +115,10 @@ export interface StreamingExecutorAction {
      * Initial agent runtime context (for resuming execution from a specific phase)
      */
     initialContext?: AgentRuntimeContext;
+    /**
+     * Scope for message storage key (for PageAgent, etc.)
+     */
+    scope?: MessageMapScope;
   }) => Promise<void>;
 }
 
@@ -214,6 +219,8 @@ export const streamingExecutor: StateCreator<
     // Get agentId, topicId, and abortController from operation
     let agentId: string;
     let topicId: string | null | undefined;
+    let threadId: string | undefined;
+    let scope: MessageMapScope | undefined;
     let traceId: string | undefined = traceIdParam;
     let abortController: AbortController;
 
@@ -225,6 +232,8 @@ export const streamingExecutor: StateCreator<
       }
       agentId = operation.context.agentId!;
       topicId = operation.context.topicId;
+      threadId = operation.context.threadId ?? undefined;
+      scope = operation.context.scope;
       abortController = operation.abortController; // 👈 Use operation's abortController
       log(
         '[internal_fetchAIChatMessage] get context from operation %s: agentId=%s, topicId=%s, aborted=%s',
@@ -248,6 +257,9 @@ export const streamingExecutor: StateCreator<
         topicId,
       );
     }
+
+    // Create base context for child operations
+    const fetchContext = { agentId, topicId, threadId, scope };
 
     // Get agent config from params or use current
     const finalAgentConfig = agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
@@ -555,7 +567,7 @@ export const streamingExecutor: StateCreator<
               // Create reasoning operation
               const { operationId: reasoningOpId } = get().startOperation({
                 type: 'reasoning',
-                context: { agentId, topicId, messageId },
+                context: { ...fetchContext, messageId },
                 parentOperationId: operationId,
               });
               reasoningOperationId = reasoningOpId;
@@ -584,7 +596,7 @@ export const streamingExecutor: StateCreator<
 
               const { operationId: reasoningOpId } = get().startOperation({
                 type: 'reasoning',
-                context: { agentId, topicId, messageId },
+                context: { ...fetchContext, messageId },
                 parentOperationId: operationId,
               });
               reasoningOperationId = reasoningOpId;
@@ -797,20 +809,24 @@ export const streamingExecutor: StateCreator<
       agentId: paramAgentId,
       topicId: paramTopicId,
       threadId,
+      scope,
     } = params;
 
     // Use provided agentId/topicId or fallback to global state
     const { activeAgentId, activeTopicId } = get();
     const agentId = paramAgentId ?? activeAgentId;
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
-    const messageKey = messageMapKey({ agentId, topicId, threadId });
+
+    // Create a base context object for all operations and message map key
+    const context = { agentId, topicId, threadId, scope };
+    const messageKey = messageMapKey(context);
 
     // Create or use provided operation
     let operationId = params.operationId;
     if (!operationId) {
       const { operationId: newOperationId } = get().startOperation({
         type: 'execAgentRuntime',
-        context: { agentId, topicId, messageId: parentMessageId, threadId },
+        context: { ...context, messageId: parentMessageId },
         parentOperationId: params.parentOperationId, // Pass parent operation ID
         label: 'AI Generation',
         metadata: {
@@ -966,7 +982,7 @@ export const streamingExecutor: StateCreator<
               });
             }
             const finalMessages = get().messagesMap[messageKey] || [];
-            get().replaceMessages(finalMessages, { context: { agentId, topicId, threadId } });
+            get().replaceMessages(finalMessages, { context });
             break;
           }
         }
@@ -1034,9 +1050,8 @@ export const streamingExecutor: StateCreator<
 
         // Only show notification if there's content and no tools
         if (lastAssistant?.content && !lastAssistant?.tools) {
-          const { desktopNotificationService } = await import(
-            '@/services/electron/desktopNotification'
-          );
+          const { desktopNotificationService } =
+            await import('@/services/electron/desktopNotification');
 
           await desktopNotificationService.showNotification({
             body: lastAssistant.content,
