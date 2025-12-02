@@ -14,7 +14,7 @@ import {
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
+import { useAddFilesToKnowledgeBaseModal } from '@/features/LibraryModal';
 import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';

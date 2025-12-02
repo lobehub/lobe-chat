@@ -3,7 +3,7 @@ import { rgba } from 'polished';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
+import { useAddFilesToKnowledgeBaseModal } from '@/features/LibraryModal';
 import { useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
