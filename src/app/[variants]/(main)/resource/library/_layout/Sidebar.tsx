@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { NavPanelPortal } from '@/features/NavPanel';
@@ -12,12 +13,24 @@ import LibraryHead from './Header/LibraryHead';
 
 const Sidebar = memo(() => {
   const { id } = useParams<{ id: string }>();
-
+  const { t } = useTranslation('common');
   return (
     <NavPanelPortal navKey="resourceLibrary">
       <SideBarLayout
         body={<FileTree knowledgeBaseId={id || ''} />}
-        header={<SideBarHeaderLayout backTo={'/resource'} left={<LibraryHead id={id || ''} />} />}
+        header={
+          <>
+            <SideBarHeaderLayout
+              breadcrumb={[
+                {
+                  path: '/resource',
+                  title: t('tab.resource'),
+                },
+              ]}
+            />
+            <LibraryHead id={id || ''} />
+          </>
+        }
       />
     </NavPanelPortal>
   );
