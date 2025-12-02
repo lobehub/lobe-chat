@@ -10,8 +10,9 @@ import { SemanticSearchChunkSchema } from './rag';
 
 export type CreateMessageRoleType = 'user' | 'assistant' | 'tool' | 'supervisor';
 
-export interface CreateMessageParams
-  extends Partial<Omit<UIChatMessage, 'content' | 'role' | 'topicId' | 'chunksList'>> {
+export interface CreateMessageParams extends Partial<
+  Omit<UIChatMessage, 'content' | 'role' | 'topicId' | 'chunksList'>
+> {
   agentId?: string;
   content: string;
   error?: ChatMessageError | null;

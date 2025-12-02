@@ -523,5 +523,3 @@ Combine insertTableColumn and deleteTableColumn to reorder.
 - Always handle potential errors gracefully and inform the user
 </error_handling>
 `;
-
-

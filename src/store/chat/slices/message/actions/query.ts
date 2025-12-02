@@ -65,11 +65,11 @@ export const messageQuery: StateCreator<
       ctx = {
         agentId: params.context.agentId ?? get().activeAgentId,
         // Preserve scope from context
-isNew: params.context.isNew,
-        
-scope: params.context.scope,
-        
-threadId: params.context.threadId, 
+        isNew: params.context.isNew,
+
+        scope: params.context.scope,
+
+        threadId: params.context.threadId,
         topicId:
           params.context.topicId !== undefined ? params.context.topicId : get().activeTopicId,
       };

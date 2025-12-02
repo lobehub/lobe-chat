@@ -2,6 +2,7 @@ import { LobeBuiltinTool } from '@lobechat/types';
 
 import { isDesktop } from '@/const/version';
 
+import { AgentBuilderManifest } from './agent-builder';
 import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';
 import { DocumentManifest } from './document';
@@ -49,6 +50,12 @@ export const builtinTools: LobeBuiltinTool[] = [
     hidden: true,
     identifier: DocumentManifest.identifier,
     manifest: DocumentManifest,
+    type: 'builtin',
+  },
+  {
+    hidden: true,
+    identifier: AgentBuilderManifest.identifier,
+    manifest: AgentBuilderManifest,
     type: 'builtin',
   },
 ];
