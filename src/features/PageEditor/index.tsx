@@ -56,6 +56,11 @@ const PageEditor = memo<PageEditorPanelProps>(
     const { message, modal } = App.useApp();
     const username = useUserStore(userProfileSelectors.displayUserName);
 
+    // Initialize page agent
+    const useInitPageAgent = useFileStore((s) => s.useInitPageAgent);
+    const pageAgentId = useFileStore((s) => s.pageAgentId);
+    const { isLoading: isAgentLoading } = useInitPageAgent();
+
     const editor = useEditor();
 
     const [isHoveringTitle, setIsHoveringTitle] = useState(false);
@@ -198,8 +203,19 @@ const PageEditor = memo<PageEditorPanelProps>(
       [theme, wordCount, username, lastUpdatedTime, handleDelete, currentDocId, message, t],
     );
 
+    // Don't render conversation provider until agent is initialized
+    if (!pageAgentId || isAgentLoading) {
+      return (
+        <Flexbox height={'100%'} horizontal style={{ background: theme.colorBgContainer }}>
+          <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
+            {/* Show loading state while agent is being initialized */}
+          </Flexbox>
+        </Flexbox>
+      );
+    }
+
     return (
-      <ConversationProvider context={{ agentId: 'page-copilot' }}>
+      <ConversationProvider context={{ agentId: pageAgentId }}>
         <Flexbox height={'100%'} horizontal style={{ background: 'red' }}>
           <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
             {/* Header */}

@@ -32,6 +32,14 @@ export class AgentService {
   }
 
   /**
+   * Get a builtin agent by slug, creating it if it doesn't exist.
+   * This is a generic interface for all builtin agents (page-copilot, inbox, etc.)
+   */
+  async getBuiltinAgent(slug: string) {
+    return this.agentModel.getBuiltinAgent(slug);
+  }
+
+  /**
    * Update agent config and return the updated data
    * Pattern: update + query
    *
