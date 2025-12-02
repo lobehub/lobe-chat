@@ -1,4 +1,4 @@
-import { Icon, type MenuProps } from '@lobehub/ui';
+import { Avatar, type MenuProps } from '@lobehub/ui';
 import { Dropdown } from '@lobehub/ui';
 import { FileTextIcon } from 'lucide-react';
 import { CSSProperties, memo, useCallback, useMemo } from 'react';
@@ -50,9 +50,9 @@ const DocumentItem = memo<DocumentItemProps>(({ documentId, style, className }) 
   // Icon with emoji support
   const icon = useMemo(() => {
     if (emoji) {
-      return <span style={{ fontSize: 18 }}>{emoji}</span>;
+      return <Avatar avatar={emoji} size={28} />;
     }
-    return <Icon icon={FileTextIcon} />;
+    return FileTextIcon;
   }, [emoji]);
 
   const dropdownMenu: MenuProps['items'] = useDropdownMenu({

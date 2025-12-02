@@ -68,6 +68,7 @@ const Editing = memo<EditingProps>(({ documentId, title, currentEmoji, toggleEdi
                 )}
               </Block>
             )}
+            defaultAvatar={'📄'}
             locale={locale}
             onChange={setNewEmoji}
             onDelete={() => setNewEmoji(undefined)}

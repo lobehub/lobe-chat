@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import PageEditor from '@/features/PageEditor';
 
-import PageExplorer from '../../app/[variants]/(main)/page/features';
+import PageExplorer from '../PageExplorer';
 import FileExplorer from './FileExplorer';
 import UploadDock from './UploadDock';
 
