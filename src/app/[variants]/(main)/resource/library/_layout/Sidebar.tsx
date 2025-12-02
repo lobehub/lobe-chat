@@ -8,7 +8,6 @@ import SideBarHeaderLayout from '@/features/NavPanel/SideBarHeaderLayout';
 import SideBarLayout from '@/features/NavPanel/SideBarLayout';
 import FileTree from '@/features/ResourceManager/FileTree';
 
-import { ResourceManagerProvider } from '../../features/ResourceManagerProvider';
 import LibraryHead from './Header/LibraryHead';
 
 const Sidebar = memo(() => {
@@ -16,12 +15,10 @@ const Sidebar = memo(() => {
 
   return (
     <NavPanelPortal navKey="resourceLibrary">
-      <ResourceManagerProvider>
-        <SideBarLayout
-          body={<FileTree knowledgeBaseId={id || ''} />}
-          header={<SideBarHeaderLayout backTo={'/resource'} left={<LibraryHead id={id || ''} />} />}
-        />
-      </ResourceManagerProvider>
+      <SideBarLayout
+        body={<FileTree knowledgeBaseId={id || ''} />}
+        header={<SideBarHeaderLayout backTo={'/resource'} left={<LibraryHead id={id || ''} />} />}
+      />
     </NavPanelPortal>
   );
 });

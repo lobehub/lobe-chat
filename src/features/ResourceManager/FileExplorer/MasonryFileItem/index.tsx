@@ -1,3 +1,5 @@
+import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { memo, useEffect, useRef, useState } from 'react';
@@ -123,6 +125,9 @@ const useStyles = createStyles(({ css, token }) => ({
   contentWithPadding: css`
     padding: 12px;
   `,
+  dragging: css`
+    opacity: 0.5;
+  `,
   dropdown: css`
     position: absolute;
     z-index: 2;
@@ -169,6 +174,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     size,
     onOpen,
     metadata,
+    sourceType,
   }) => {
     const { styles, cx } = useStyles();
     const [markdownContent, setMarkdownContent] = useState<string>('');
@@ -181,8 +187,34 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const isImage = fileType && IMAGE_TYPES.has(fileType);
     const isMarkdown = isMarkdownFile(name, fileType);
     const isNote = isCustomNote(fileType);
+    const isFolder = fileType === 'custom/folder';
+
+    const {
+      attributes,
+      listeners,
+      setNodeRef: setDraggableRef,
+      transform,
+      isDragging,
+    } = useDraggable({
+      data: {
+        fileType,
+        isFolder,
+        name,
+        sourceType,
+      },
+      id,
+    });
 
     const cardRef = useRef<HTMLDivElement>(null);
+
+    const setNodeRef = (node: HTMLElement | null) => {
+      setDraggableRef(node);
+      cardRef.current = node as HTMLDivElement;
+    };
+
+    const dndStyle = {
+      transform: CSS.Translate.toString(transform),
+    };
     const [isInView, setIsInView] = useState(false);
 
     // Use Intersection Observer to detect when card enters viewport
@@ -258,18 +290,29 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     }, [isMarkdown, isNote, url, isInView, markdownContent, id]);
 
     return (
-      <div className={cx(styles.card, selected && styles.selected)} ref={cardRef}>
+      <div
+        className={cx(styles.card, selected && styles.selected, isDragging && styles.dragging)}
+        ref={setNodeRef}
+        style={dndStyle}
+        {...attributes}
+        {...listeners}
+      >
         <div
           className={cx('checkbox', styles.checkbox)}
           onClick={(e) => {
             e.stopPropagation();
             onSelectedChange(id, !selected);
           }}
+          onPointerDown={(e) => e.stopPropagation()}
         >
           <Checkbox checked={selected} />
         </div>
 
-        <div className={cx('dropdown', styles.dropdown)} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={cx('dropdown', styles.dropdown)}
+          onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
           <DropdownMenu
             fileType={fileType}
             filename={name}
