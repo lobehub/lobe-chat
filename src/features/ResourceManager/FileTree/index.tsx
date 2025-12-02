@@ -142,6 +142,8 @@ const FileTreeItem = memo<{
       (folderId: string, folderSlug?: string | null) => {
         const navKey = folderSlug || folderId;
         navigate(`/resource/library/${knowledgeBaseId}/${navKey}`);
+
+        setMode('files');
       },
       [knowledgeBaseId, navigate],
     );
