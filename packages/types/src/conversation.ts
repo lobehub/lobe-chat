@@ -7,7 +7,13 @@ import { IThreadType } from './topic/thread';
  * - group: Group main conversation
  * - group_agent: Agent conversation within a group
  */
-export type MessageMapScope = 'main' | 'thread' | 'group' | 'group_agent' | 'page';
+export type MessageMapScope =
+  | 'main'
+  | 'thread'
+  | 'group'
+  | 'group_agent'
+  | 'page'
+  | 'agent_builder';
 
 /**
  * Context for generating message map key with scope-driven architecture

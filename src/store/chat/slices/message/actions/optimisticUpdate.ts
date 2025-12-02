@@ -150,7 +150,7 @@ export const messageOptimisticUpdate: StateCreator<
       const result = await messageService.createMessage(message);
 
       // Use the messages returned from createMessage (already grouped)
-      const ctx = get().internal_getSessionContext(context);
+      const ctx = get().internal_getConversationContext(context);
       replaceMessages(result.messages, { context: ctx });
 
       internal_toggleMessageLoading(false, tempId);
@@ -187,7 +187,7 @@ export const messageOptimisticUpdate: StateCreator<
 
   optimisticDeleteMessage: async (id: string, context) => {
     get().internal_dispatchMessage({ id, type: 'deleteMessage' }, context);
-    const ctx = get().internal_getSessionContext(context);
+    const ctx = get().internal_getConversationContext(context);
     // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.removeMessage(id, {
       agentId: ctx.agentId,
@@ -201,7 +201,7 @@ export const messageOptimisticUpdate: StateCreator<
 
   optimisticDeleteMessages: async (ids, context) => {
     get().internal_dispatchMessage({ ids, type: 'deleteMessages' }, context);
-    const ctx = get().internal_getSessionContext(context);
+    const ctx = get().internal_getConversationContext(context);
     // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.removeMessages(ids, {
       agentId: ctx.agentId,
@@ -239,7 +239,7 @@ export const messageOptimisticUpdate: StateCreator<
       );
     }
 
-    const ctx = get().internal_getSessionContext(context);
+    const ctx = get().internal_getConversationContext(context);
 
     // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.updateMessage(
@@ -270,7 +270,7 @@ export const messageOptimisticUpdate: StateCreator<
 
   optimisticUpdateMessageError: async (id, error, context) => {
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } }, context);
-    const ctx = get().internal_getSessionContext(context);
+    const ctx = get().internal_getConversationContext(context);
     // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.updateMessage(
       id,
@@ -298,7 +298,7 @@ export const messageOptimisticUpdate: StateCreator<
       context,
     );
 
-    const ctx = get().internal_getSessionContext(context);
+    const ctx = get().internal_getConversationContext(context);
 
     // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.updateMessageMetadata(id, metadata, {
@@ -327,7 +327,7 @@ export const messageOptimisticUpdate: StateCreator<
       context,
     );
 
-    const ctx = get().internal_getSessionContext(context);
+    const ctx = get().internal_getConversationContext(context);
 
     // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.updateMessagePlugin(id, value, {
@@ -342,7 +342,7 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdateMessagePluginError: async (id, error, context) => {
-    const ctx = get().internal_getSessionContext(context);
+    const ctx = get().internal_getConversationContext(context);
     // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.updateMessagePluginError(id, error, {
       agentId: ctx.agentId,
@@ -355,7 +355,7 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdateMessageRAG: async (id, data, context) => {
-    const ctx = get().internal_getSessionContext(context);
+    const ctx = get().internal_getConversationContext(context);
     // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.updateMessageRAG(id, data, {
       agentId: ctx.agentId,

@@ -5,7 +5,7 @@ import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { MessageMapKeyInput, messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { setNamespace } from '@/utils/storeDebug';
 
 import type {
@@ -73,15 +73,13 @@ export interface OperationActions {
    * Get conversation context from operation or fallback to global state
    * This is a helper method that can be used by other slices
    *
+   * Returns full MessageMapKeyInput for consistent key generation
+   *
    * Migration Note (LOBE-1086):
    * - Only agentId is used for message association
    * - Backend handles sessionId mapping internally based on agentId
    */
-  internal_getSessionContext: (context?: { operationId?: string }) => {
-    agentId: string;
-    threadId: string | null | undefined;
-    topicId: string | null | undefined;
-  };
+  internal_getConversationContext: (context?: { operationId?: string }) => MessageMapKeyInput;
 
   /**
    * Register cancel handler for an operation
@@ -130,24 +128,26 @@ export const operationActions: StateCreator<
   [],
   OperationActions
 > = (set, get) => ({
-  internal_getSessionContext: (context) => {
+  internal_getConversationContext: (context) => {
     if (context?.operationId) {
       const operation = get().operations[context.operationId];
       if (!operation) {
-        log('[internal_getSessionContext] ERROR: Operation not found: %s', context.operationId);
+        log(
+          '[internal_getConversationContext] ERROR: Operation not found: %s',
+          context.operationId,
+        );
         throw new Error(`Operation not found: ${context.operationId}`);
       }
-      const agentId = operation.context.agentId!;
-      const topicId = operation.context.topicId;
-      const threadId = operation.context.threadId;
+      const { agentId, topicId, threadId, scope, isNew } = operation.context;
       log(
-        '[internal_getSessionContext] get from operation %s: agentId=%s, topicId=%s, threadId=%s',
+        '[internal_getConversationContext] get from operation %s: agentId=%s, topicId=%s, threadId=%s, scope=%s',
         context.operationId,
         agentId,
         topicId,
         threadId,
+        scope,
       );
-      return { agentId, topicId, threadId };
+      return { agentId: agentId!, topicId, threadId, scope, isNew };
     }
 
     // Fallback to global state
@@ -155,7 +155,7 @@ export const operationActions: StateCreator<
     const topicId = get().activeTopicId;
     const threadId = get().activeThreadId;
     log(
-      '[internal_getSessionContext] use global state: agentId=%s, topicId=%s, threadId=%s',
+      '[internal_getConversationContext] use global state: agentId=%s, topicId=%s, threadId=%s',
       agentId,
       topicId,
       threadId,

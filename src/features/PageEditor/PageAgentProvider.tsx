@@ -11,7 +11,6 @@ interface PageAgentProviderProps {
 }
 const PageAgentProvider = memo<PageAgentProviderProps>(({ pageAgentId, children }) => {
   const activeTopicId = useChatStore((s) => s.activeTopicId);
-  // Initialize page agent
 
   // Build conversation context for page agent
   // Using topic dimension for message management (1 agent can have multiple topics)
