@@ -19,7 +19,7 @@ const Body = memo(() => {
   const filteredPages = useFileStore(documentSelectors.getFilteredPages);
   const searchKeywords = useFileStore((s) => s.searchKeywords);
 
-  if (!isDocumentListLoading) return <SkeletonList />;
+  if (isDocumentListLoading) return <SkeletonList />;
 
   return (
     <Flexbox gap={1} paddingInline={4}>
