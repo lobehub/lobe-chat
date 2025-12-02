@@ -110,7 +110,12 @@ describe('setupRouteInterceptors', () => {
     it('should intercept internal link matching route pattern', async () => {
       setupRouteInterceptors();
 
-      const matchedRoute = { pathPrefix: '/desktop/devtools', targetWindow: 'devtools' };
+      const matchedRoute = {
+        description: 'Developer Tools',
+        enabled: true,
+        pathPrefix: '/desktop/devtools',
+        targetWindow: 'devtools',
+      };
       vi.mocked(findMatchingRoute).mockReturnValue(matchedRoute);
 
       const link = document.createElement('a');
@@ -142,7 +147,12 @@ describe('setupRouteInterceptors', () => {
         pathname: '/desktop/devtools/console',
       });
 
-      const matchedRoute = { pathPrefix: '/desktop/devtools', targetWindow: 'devtools' };
+      const matchedRoute = {
+        description: 'Developer Tools',
+        enabled: true,
+        pathPrefix: '/desktop/devtools',
+        targetWindow: 'devtools',
+      };
       vi.mocked(findMatchingRoute).mockReturnValue(matchedRoute);
 
       const link = document.createElement('a');
@@ -183,7 +193,12 @@ describe('setupRouteInterceptors', () => {
     it('should intercept pushState for matched routes', () => {
       setupRouteInterceptors();
 
-      const matchedRoute = { pathPrefix: '/desktop/devtools', targetWindow: 'devtools' };
+      const matchedRoute = {
+        description: 'Developer Tools',
+        enabled: true,
+        pathPrefix: '/desktop/devtools',
+        targetWindow: 'devtools',
+      };
       vi.mocked(findMatchingRoute).mockReturnValue(matchedRoute);
 
       const originalLength = history.length;
@@ -208,7 +223,12 @@ describe('setupRouteInterceptors', () => {
         pathname: '/desktop/devtools/console',
       });
 
-      const matchedRoute = { pathPrefix: '/desktop/devtools', targetWindow: 'devtools' };
+      const matchedRoute = {
+        description: 'Developer Tools',
+        enabled: true,
+        pathPrefix: '/desktop/devtools',
+        targetWindow: 'devtools',
+      };
       vi.mocked(findMatchingRoute).mockReturnValue(matchedRoute);
 
       history.pushState({}, '', '/desktop/devtools/network');
@@ -248,7 +268,12 @@ describe('setupRouteInterceptors', () => {
     it('should intercept replaceState for matched routes', () => {
       setupRouteInterceptors();
 
-      const matchedRoute = { pathPrefix: '/desktop/devtools', targetWindow: 'devtools' };
+      const matchedRoute = {
+        description: 'Developer Tools',
+        enabled: true,
+        pathPrefix: '/desktop/devtools',
+        targetWindow: 'devtools',
+      };
       vi.mocked(findMatchingRoute).mockReturnValue(matchedRoute);
 
       history.replaceState({}, '', '/desktop/devtools');
@@ -270,7 +295,12 @@ describe('setupRouteInterceptors', () => {
         pathname: '/desktop/devtools/console',
       });
 
-      const matchedRoute = { pathPrefix: '/desktop/devtools', targetWindow: 'devtools' };
+      const matchedRoute = {
+        description: 'Developer Tools',
+        enabled: true,
+        pathPrefix: '/desktop/devtools',
+        targetWindow: 'devtools',
+      };
       vi.mocked(findMatchingRoute).mockReturnValue(matchedRoute);
 
       history.replaceState({}, '', '/desktop/devtools/network');
@@ -296,7 +326,12 @@ describe('setupRouteInterceptors', () => {
       setupRouteInterceptors();
 
       // First trigger a route interception to add path to preventedPaths
-      const matchedRoute = { pathPrefix: '/desktop/devtools', targetWindow: 'devtools' };
+      const matchedRoute = {
+        description: 'Developer Tools',
+        enabled: true,
+        pathPrefix: '/desktop/devtools',
+        targetWindow: 'devtools',
+      };
       vi.mocked(findMatchingRoute).mockReturnValue(matchedRoute);
       history.pushState({}, '', '/desktop/devtools');
 
@@ -338,7 +373,12 @@ describe('setupRouteInterceptors', () => {
 
       setupRouteInterceptors();
 
-      const matchedRoute = { pathPrefix: '/desktop/devtools', targetWindow: 'devtools' };
+      const matchedRoute = {
+        description: 'Developer Tools',
+        enabled: true,
+        pathPrefix: '/desktop/devtools',
+        targetWindow: 'devtools',
+      };
       vi.mocked(findMatchingRoute).mockReturnValue(matchedRoute);
 
       history.pushState({}, '', '/desktop/devtools');
@@ -358,7 +398,12 @@ describe('setupRouteInterceptors', () => {
 
       setupRouteInterceptors();
 
-      const matchedRoute = { pathPrefix: '/desktop/devtools', targetWindow: 'devtools' };
+      const matchedRoute = {
+        description: 'Developer Tools',
+        enabled: true,
+        pathPrefix: '/desktop/devtools',
+        targetWindow: 'devtools',
+      };
       vi.mocked(findMatchingRoute).mockReturnValue(matchedRoute);
 
       history.pushState({}, '', '/desktop/devtools');

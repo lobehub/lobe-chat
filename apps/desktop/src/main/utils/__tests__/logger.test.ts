@@ -27,7 +27,7 @@ describe('logger', () => {
   });
 
   afterEach(() => {
-    delete process.env.NODE_ENV;
+    delete (process.env as NodeJS.ProcessEnv & { NODE_ENV?: string }).NODE_ENV;
     delete process.env.DEBUG_VERBOSE;
   });
 
@@ -73,7 +73,7 @@ describe('logger', () => {
 
   describe('logger.error', () => {
     it('should use electronLog.error in production', () => {
-      process.env.NODE_ENV = 'production';
+      (process.env as NodeJS.ProcessEnv & { NODE_ENV?: string }).NODE_ENV = 'production';
       const logger = createLogger('test:error');
       logger.error('error message', { error: 'details' });
 
@@ -82,7 +82,7 @@ describe('logger', () => {
     });
 
     it('should use console.error in development', () => {
-      process.env.NODE_ENV = 'development';
+      (process.env as NodeJS.ProcessEnv & { NODE_ENV?: string }).NODE_ENV = 'development';
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const logger = createLogger('test:error');
       logger.error('error message', { error: 'details' });
@@ -107,7 +107,7 @@ describe('logger', () => {
 
   describe('logger.info', () => {
     it('should use electronLog.info with namespace in production', () => {
-      process.env.NODE_ENV = 'production';
+      (process.env as NodeJS.ProcessEnv & { NODE_ENV?: string }).NODE_ENV = 'production';
       const logger = createLogger('test:info');
       logger.info('info message', { data: 'value' });
 
@@ -118,7 +118,7 @@ describe('logger', () => {
     });
 
     it('should use debug logger in development', () => {
-      process.env.NODE_ENV = 'development';
+      (process.env as NodeJS.ProcessEnv & { NODE_ENV?: string }).NODE_ENV = 'development';
       const logger = createLogger('test:info');
       logger.info('info message', { data: 'value' });
 
@@ -162,7 +162,7 @@ describe('logger', () => {
 
   describe('logger.warn', () => {
     it('should use electronLog.warn in production', () => {
-      process.env.NODE_ENV = 'production';
+      (process.env as NodeJS.ProcessEnv & { NODE_ENV?: string }).NODE_ENV = 'production';
       const logger = createLogger('test:warn');
       logger.warn('warn message', { warning: 'details' });
 
@@ -171,7 +171,7 @@ describe('logger', () => {
     });
 
     it('should not use electronLog.warn in development', () => {
-      process.env.NODE_ENV = 'development';
+      (process.env as NodeJS.ProcessEnv & { NODE_ENV?: string }).NODE_ENV = 'development';
       const logger = createLogger('test:warn');
       logger.warn('warn message');
 

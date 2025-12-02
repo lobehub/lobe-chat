@@ -242,7 +242,7 @@ describe('Tray', () => {
       const templateArg = vi.mocked(Menu.buildFromTemplate).mock.calls[0][0];
       const showMainWindowItem = templateArg.find((item: any) => item.label === 'Show Main Window');
 
-      showMainWindowItem?.click?.();
+      showMainWindowItem?.click?.(null as any, null as any, null as any);
 
       expect(mockApp.browserManager.showMainWindow).toHaveBeenCalled();
     });
@@ -253,7 +253,7 @@ describe('Tray', () => {
       const templateArg = vi.mocked(Menu.buildFromTemplate).mock.calls[0][0];
       const quitItem = templateArg.find((item: any) => item.label === 'Quit');
 
-      quitItem?.click?.();
+      quitItem?.click?.(null as any, null as any, null as any);
 
       expect(app.quit).toHaveBeenCalled();
     });

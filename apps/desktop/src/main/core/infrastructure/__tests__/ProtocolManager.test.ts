@@ -315,6 +315,7 @@ describe('ProtocolManager', () => {
     it('should show main window and dispatch to handler', async () => {
       vi.mocked(parseProtocolUrl).mockReturnValue({
         action: 'install',
+        originalUrl: 'lobehub://plugin/install?url=https://example.com',
         params: { url: 'https://example.com' },
         urlType: 'plugin',
       });
