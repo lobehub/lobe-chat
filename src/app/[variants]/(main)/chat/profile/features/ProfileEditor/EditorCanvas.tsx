@@ -71,7 +71,6 @@ const EditorCanvas = memo(() => {
     try {
       const markdownContent = editor.getDocument('markdown') as unknown as string;
       const jsonContent = editor.getDocument('json') as unknown as Record<string, any>;
-
       debouncedSave({
         editorData: structuredClone(jsonContent || {}), // Store as object, not string
         systemRole: markdownContent || '',
@@ -81,16 +80,8 @@ const EditorCanvas = memo(() => {
     }
   };
 
-  return (
-    <div
-      onClick={() => editor?.focus()}
-      style={{
-        cursor: 'text',
-        flex: 1,
-        minHeight: 480,
-        paddingBottom: 120,
-      }}
-    >
+  const MemoEditor = useMemo(() => {
+    return (
       <Editor
         content={initialLoad}
         editor={editor}
@@ -157,6 +148,20 @@ const EditorCanvas = memo(() => {
           ],
         }}
       />
+    );
+  }, [initialLoad, mentionOptions]);
+
+  return (
+    <div
+      onClick={() => editor?.focus()}
+      style={{
+        cursor: 'text',
+        flex: 1,
+        minHeight: 480,
+        paddingBottom: 120,
+      }}
+    >
+      {MemoEditor}
     </div>
   );
 });

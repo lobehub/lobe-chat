@@ -3,8 +3,9 @@
 import { Button } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { Settings2Icon } from 'lucide-react';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -20,7 +21,21 @@ import EditorCanvas from './EditorCanvas';
 
 const ProfileEditor = memo(() => {
   const [showSettingsDrawer, setShowSettingsDrawer] = useState(false);
-  const [agentId, isLoading] = useAgentStore((s) => [s.activeAgentId, !s.isInboxAgentConfigInit]);
+  const [agentId, inBoxLoading] = useAgentStore((s) => [
+    s.activeAgentId,
+    !s.isInboxAgentConfigInit,
+  ]);
+  const editorData = useStore((s) => s.config.editorData, isEqual);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (editorData === undefined) {
+      setIsLoading(true || inBoxLoading);
+    } else {
+      setIsLoading(false || inBoxLoading);
+    }
+  }, [editorData]);
+
   const theme = useTheme();
   const { t } = useTranslation('setting');
   const config = useStore((s) => s.config);
