@@ -15,7 +15,7 @@ const Header = memo(() => {
       <SideBarHeaderLayout
         breadcrumb={[
           {
-            path: '/resource',
+            href: '/resource',
             title: t('tab.resource'),
           },
         ]}
