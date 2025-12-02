@@ -159,7 +159,6 @@ describe('ConversationLifecycle actions', () => {
         useChatStore.setState({
           internal_traceMessage: internalTraceSpy,
           switchMessageBranch: switchMessageBranchSpy,
-          internal_shouldUseRAG: vi.fn().mockReturnValue(false),
         });
       });
 
