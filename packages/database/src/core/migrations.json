@@ -884,7 +884,7 @@
       "\nCREATE INDEX IF NOT EXISTS \"account_userId_idx\" ON \"accounts\" USING btree (\"user_id\");\n",
       "\nCREATE INDEX IF NOT EXISTS \"auth_session_userId_idx\" ON \"auth_sessions\" USING btree (\"user_id\");\n",
       "\nCREATE INDEX IF NOT EXISTS \"verification_identifier_idx\" ON \"verifications\" USING btree (\"identifier\");\n",
-      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique') THEN\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_email_unique\" UNIQUE (\"email\");\n  END IF;\nEND $$;\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique') THEN\n    UPDATE \"users\" SET \"email\" = NULL WHERE \"email\" = '';\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_email_unique\" UNIQUE (\"email\");\n  END IF;\nEND $$;\n",
       "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_number_unique') THEN\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_phone_number_unique\" UNIQUE (\"phone_number\");\n  END IF;\nEND $$;\n"
     ],
     "bps": true,

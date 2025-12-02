@@ -4,7 +4,7 @@ import { migrate as nodeMigrate } from 'drizzle-orm/node-postgres/migrator';
 import { join } from 'node:path';
 
 // @ts-ignore tsgo handle esm import cjs and compatibility issues
-import { DB_FAIL_INIT_HINT, PGVECTOR_HINT } from './errorHint';
+import { DB_FAIL_INIT_HINT, DUPLICATE_EMAIL_HINT, PGVECTOR_HINT } from './errorHint';
 
 // Read the `.env` file if it exists, or a file specified by the
 // dotenv_config_path parameter that's passed to Node.js
@@ -39,8 +39,12 @@ if (!isDesktop && connectionString) {
 
     const errMsg = err.message as string;
 
+    const constraint = (err as { constraint?: string })?.constraint;
+
     if (errMsg.includes('extension "vector" is not available')) {
       console.info(PGVECTOR_HINT);
+    } else if (constraint === 'users_email_unique' || errMsg.includes('users_email_unique')) {
+      console.info(DUPLICATE_EMAIL_HINT);
     } else if (errMsg.includes(`Cannot read properties of undefined (reading 'migrate')`)) {
       console.info(DB_FAIL_INIT_HINT);
     }

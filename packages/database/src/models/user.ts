@@ -149,9 +149,11 @@ export class UserModel {
   };
 
   updateUser = async (value: Partial<UserItem>) => {
+    const nextValue = UserModel.normalizeUniqueUserFields(value);
+
     return this.db
       .update(users)
-      .set({ ...value, updatedAt: new Date() })
+      .set({ ...nextValue, updatedAt: new Date() })
       .where(eq(users.id, this.userId));
   };
 
@@ -193,6 +195,26 @@ export class UserModel {
       .where(eq(users.id, this.userId));
   };
 
+  /**
+   * Normalize unique user fields so empty strings become null, keeping unique constraints safe.
+   */
+  private static normalizeUniqueUserFields = <
+    T extends { email?: string | null; phone?: string | null },
+  >(
+    value: T,
+  ) => {
+    const normalizedEmail =
+      typeof value.email === 'string' && value.email.trim() === '' ? null : value.email;
+    const normalizedPhone =
+      typeof value.phone === 'string' && value.phone.trim() === '' ? null : value.phone;
+
+    return {
+      ...value,
+      ...(value.email !== undefined ? { email: normalizedEmail } : {}),
+      ...(value.phone !== undefined ? { phone: normalizedPhone } : {}),
+    };
+  };
+
   // Static method
   static makeSureUserExist = async (db: LobeChatDatabase, userId: string) => {
     await db.insert(users).values({ id: userId }).onConflictDoNothing();
@@ -205,10 +227,8 @@ export class UserModel {
       if (!!user) return { duplicate: true };
     }
 
-    const [user] = await db
-      .insert(users)
-      .values({ ...params })
-      .returning();
+    const normalizedParams = this.normalizeUniqueUserFields(params);
+    const [user] = await db.insert(users).values(normalizedParams).returning();
 
     return { duplicate: false, user };
   };
