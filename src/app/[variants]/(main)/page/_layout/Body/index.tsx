@@ -2,7 +2,6 @@
 
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
 import { documentSelectors, useFileStore } from '@/store/file';
@@ -21,17 +20,14 @@ const Body = memo(() => {
 
   if (isDocumentListLoading) return <SkeletonList />;
 
-  return (
-    <Flexbox gap={1} paddingInline={4}>
-      {filteredPages.length === 0 ? (
-        <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>
-          {searchKeywords.trim() ? t('documentList.noResults') : t('documentList.empty')}
-        </div>
-      ) : (
-        <List />
-      )}
-    </Flexbox>
-  );
+  if (filteredPages.length === 0)
+    return (
+      <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>
+        {searchKeywords.trim() ? t('documentList.noResults') : t('documentList.empty')}
+      </div>
+    );
+
+  return <List />;
 });
 
 export default Body;
