@@ -4,10 +4,11 @@ import { LOADING_FLAT } from '@lobechat/const';
 import { Tag } from '@lobehub/ui';
 import { createStyles, css, cx, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ReactNode, memo, useCallback, useMemo } from 'react';
+import { ReactNode, Suspense, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import BubblesLoading from '@/components/BubblesLoading';
 import { Avatar, BorderSpacing, ErrorContent, Title } from '@/components/ChatItem';
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
@@ -337,44 +338,46 @@ const AssistantMessage = memo<AssistantMessageProps>(
           gap={8}
           width={'fit-content'}
         >
-          <Flexbox style={{ flex: 1, maxWidth: '100%' }}>
-            {error && (message === LOADING_FLAT || !message) ? (
-              <ErrorContent error={errorContent} message={errorMessage} placement={placement} />
-            ) : (
-              <MessageContent
-                className={messageContainer}
-                editing={editing}
-                id={id}
-                markdownProps={markdownProps}
-                message={reducted ? `*${t('hideForYou')}*` : message}
-                messageExtra={
-                  <>
-                    {errorContent && (
-                      <ErrorContent
-                        error={errorContent}
-                        message={errorMessage}
-                        placement={placement}
+          <Suspense fallback={<BubblesLoading />}>
+            <Flexbox style={{ flex: 1, maxWidth: '100%' }}>
+              {error && (message === LOADING_FLAT || !message) ? (
+                <ErrorContent error={errorContent} message={errorMessage} placement={placement} />
+              ) : (
+                <MessageContent
+                  className={messageContainer}
+                  editing={editing}
+                  id={id}
+                  markdownProps={markdownProps}
+                  message={reducted ? `*${t('hideForYou')}*` : message}
+                  messageExtra={
+                    <>
+                      {errorContent && (
+                        <ErrorContent
+                          error={errorContent}
+                          message={errorMessage}
+                          placement={placement}
+                        />
+                      )}
+                      <AssistantMessageExtra
+                        content={content}
+                        extra={extra}
+                        id={id}
+                        model={model!}
+                        performance={performance! || metadata}
+                        provider={provider!}
+                        tools={tools}
+                        usage={usage! || metadata}
                       />
-                    )}
-                    <AssistantMessageExtra
-                      content={content}
-                      extra={extra}
-                      id={id}
-                      model={model!}
-                      performance={performance! || metadata}
-                      provider={provider!}
-                      tools={tools}
-                      usage={usage! || metadata}
-                    />
-                  </>
-                }
-                onDoubleClick={onDoubleClick}
-                placement={placement}
-                renderMessage={renderMessage}
-                variant={variant}
-              />
-            )}
-          </Flexbox>
+                    </>
+                  }
+                  onDoubleClick={onDoubleClick}
+                  placement={placement}
+                  renderMessage={renderMessage}
+                  variant={variant}
+                />
+              )}
+            </Flexbox>
+          </Suspense>
           {!disableEditing && !editing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
               <AssistantActionsBar
