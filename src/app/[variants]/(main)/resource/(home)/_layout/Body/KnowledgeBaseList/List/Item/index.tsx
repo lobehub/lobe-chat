@@ -6,7 +6,7 @@ import React, { CSSProperties, memo, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import RepoIcon from '@/components/RepoIcon';
-import NavItem from '@/features/NavPanel/NavItem';
+import NavItem from '@/features/NavPanel/components/NavItem';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import Actions from './Actions';
@@ -71,25 +71,25 @@ const KnowledgeBaseItem = memo<KnowledgeBaseItemProps>(({ id, name, active, styl
 
   return (
     <Dropdown
-        menu={{
-          items: dropdownMenu,
-        }}
-        trigger={['contextMenu']}
-      >
-        <NavItem
-          actions={<Actions dropdownMenu={dropdownMenu} />}
-          active={active}
-          className={className}
-          disabled={editing}
-          icon={icon}
-          key={id}
-          loading={isLoading}
-          onClick={handleClick}
-          onDoubleClick={handleDoubleClick}
-          style={style}
-          title={editing ? <Editing id={id} name={name} toggleEditing={toggleEditing} /> : name}
-        />
-      </Dropdown>
+      menu={{
+        items: dropdownMenu,
+      }}
+      trigger={['contextMenu']}
+    >
+      <NavItem
+        actions={<Actions dropdownMenu={dropdownMenu} />}
+        active={active}
+        className={className}
+        disabled={editing}
+        icon={icon}
+        key={id}
+        loading={isLoading}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
+        style={style}
+        title={editing ? <Editing id={id} name={name} toggleEditing={toggleEditing} /> : name}
+      />
+    </Dropdown>
   );
 });
 

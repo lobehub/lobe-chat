@@ -2,7 +2,7 @@
 
 import React, { memo } from 'react';
 
-import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
+import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import EmptyStatus from './EmptyStatus';

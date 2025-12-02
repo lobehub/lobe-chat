@@ -5,10 +5,10 @@ import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren, ReactNode, memo, useLayoutEffect, useSyncExternalStore } from 'react';
 
-import { TOGGLE_BUTTON_ID } from '@/features/NavPanel/TogglePanelButton';
+import { USER_DROPDOWN_ICON_ID } from '@/app/[variants]/(main)/home/_layout/Header/components/User';
+import { TOGGLE_BUTTON_ID } from '@/features/NavPanel/components/TogglePanelButton';
 
-import Content from './Content';
-import { USER_DROPDOWN_ICON_ID } from './Header/components/User';
+import Sidebar from '../../app/[variants]/(main)/home/_layout/Sidebar';
 import { useNavPanel } from './hooks/useNavPanel';
 
 type NavPanelSnapshot = {
@@ -81,7 +81,7 @@ const NavPanel = memo(() => {
   );
 
   // Use home Content as fallback when no portal content is provided
-  const activeContent = panelContent || { key: 'home', node: <Content /> };
+  const activeContent = panelContent || { key: 'home', node: <Sidebar /> };
 
   return (
     <DraggablePanel

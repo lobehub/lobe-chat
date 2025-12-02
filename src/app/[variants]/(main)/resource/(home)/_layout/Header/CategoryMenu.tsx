@@ -1,13 +1,13 @@
 'use client';
 
-import { FileText, ImageIcon, Mic2, ShapesIcon, SquarePlay } from 'lucide-react';
+import { FileText, ImageIcon, LayoutPanelTopIcon, Mic2, SquarePlay } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useFileCategory } from '@/app/[variants]/(main)/resource/features/hooks/useFileCategory';
-import NavItem from '@/features/NavPanel/NavItem';
+import NavItem from '@/features/NavPanel/components/NavItem';
 import { FilesTabs } from '@/types/files';
 
 import { useResourceManagerStore } from '../../../features/store';
@@ -21,7 +21,7 @@ const CategoryMenu = memo(() => {
   const items = useMemo(
     () => [
       {
-        icon: ShapesIcon,
+        icon: LayoutPanelTopIcon,
         key: FilesTabs.All,
         title: t('tab.all'),
         url: '/resource',

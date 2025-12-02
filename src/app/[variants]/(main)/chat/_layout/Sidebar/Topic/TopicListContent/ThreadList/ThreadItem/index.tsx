@@ -3,7 +3,7 @@ import { TreeDownRightIcon } from '@lobehub/ui/icons';
 import { useTheme } from 'antd-style';
 import { memo, useCallback } from 'react';
 
-import NavItem from '@/features/NavPanel/NavItem';
+import NavItem from '@/features/NavPanel/components/NavItem';
 import { useChatStore } from '@/store/chat';
 
 import { useThreadNavigation } from '../../../hooks/useThreadNavigation';

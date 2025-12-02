@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useParams } from 'react-router-dom';
 import urlJoin from 'url-join';
 
-import NavItem from '@/features/NavPanel/NavItem';
+import NavItem from '@/features/NavPanel/components/NavItem';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 

@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
-import SkeletonList from '@/features/NavPanel/Body/SkeletonList';
+import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
