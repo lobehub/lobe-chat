@@ -7,7 +7,15 @@ import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { FileText, Link2, Loader2Icon, MoreVertical, SmilePlus, Trash2 } from 'lucide-react';
+import {
+  FileText,
+  Link2,
+  Loader2Icon,
+  MoreVertical,
+  SmilePlus,
+  SparklesIcon,
+  Trash2,
+} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -52,6 +60,7 @@ const PageEditor = memo<PageEditorPanelProps>(
 
     const [isHoveringTitle, setIsHoveringTitle] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [chatPanelExpanded, setChatPanelExpanded] = useState(true);
 
     const removeDocument = useFileStore((s) => s.removeDocument);
     // Try to get document from store first
@@ -260,16 +269,14 @@ const PageEditor = memo<PageEditorPanelProps>(
                 </span>
               )}
 
-              {/* Pin action */}
-              {/* <ActionIcon
-            icon={Pin}
-            onClick={() => {
-              // TODO: Implement pin functionality
-              console.log('Pin clicked');
-            }}
-            size={15.5}
-            style={{ color: theme.colorText }}
-          /> */}
+              <ActionIcon
+                icon={SparklesIcon}
+                onClick={() => {
+                  setChatPanelExpanded((prev) => !prev);
+                }}
+                size={15.5}
+                style={{ color: theme.colorText }}
+              />
 
               {/* Three-dot menu */}
               <Dropdown
@@ -410,7 +417,13 @@ const PageEditor = memo<PageEditorPanelProps>(
           </Flexbox>
 
           {/* Copilot */}
-          <DraggablePanel placement="right">
+          <DraggablePanel
+            expand={chatPanelExpanded}
+            maxWidth={600}
+            minWidth={300}
+            onExpandChange={setChatPanelExpanded}
+            placement="right"
+          >
             <Flexbox flex={1} height={'100%'}>
               <ChatHeader />
               <Flexbox flex={1} height={'100%'}>
