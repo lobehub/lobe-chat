@@ -82,6 +82,11 @@ export default {
       title: '重置所有设置',
     },
   },
+  group: {
+    account: '账号',
+    aiConfig: 'AI 配置',
+    system: '系统',
+  },
   groupTab: {
     chat: '聊天',
     members: '成员',

@@ -1,7 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import { Icon } from '@lobehub/ui';
 import {
-  Bot,
   Brain,
   Database,
   EthernetPort,
@@ -15,77 +13,112 @@ import {
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { MenuProps } from '@/components/Menu';
 import { SettingsTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
+export enum SettingsGroupKey {
+  AIConfig = 'ai-config',
+  Account = 'account',
+  System = 'system',
+}
+
+export interface CategoryItem {
+  icon: any;
+  key: SettingsTabs;
+  label: string;
+}
+
+export interface CategoryGroup {
+  items: CategoryItem[];
+  key: SettingsGroupKey;
+  title: string;
+}
 
 export const useCategory = () => {
   const { t } = useTranslation('setting');
   const mobile = useServerConfigStore((s) => s.isMobile);
   const { enableSTT, hideDocs, showAiImage } = useServerConfigStore(featureFlagsSelectors);
 
-  const cateItems: MenuProps['items'] = useMemo(
-    () =>
-      [
-        {
-          icon: <Icon icon={Settings2} />,
-          key: SettingsTabs.Common,
-          label: t('tab.common'),
-        },
-        {
-          icon: <Icon icon={Bot} />,
-          key: SettingsTabs.Agent,
-          label: t('tab.agent'),
-        },
-        !mobile && {
-          icon: <Icon icon={KeyboardIcon} />,
-          key: SettingsTabs.Hotkey,
-          label: t('tab.hotkey'),
-        },
-        {
-          type: 'divider',
-        },
-        {
-          icon: <Icon icon={Brain} />,
-          key: SettingsTabs.Provider,
-          label: t('tab.provider'),
-        },
-        showAiImage && {
-          icon: <Icon icon={ImageIcon} />,
-          key: SettingsTabs.Image,
-          label: t('tab.image'),
-        },
-        enableSTT && {
-          icon: <Icon icon={Mic2} />,
-          key: SettingsTabs.TTS,
-          label: t('tab.tts'),
-        },
-        {
-          icon: <Icon icon={Sparkles} />,
-          key: SettingsTabs.SystemAgent,
-          label: t('tab.system-agent'),
-        },
-        {
-          type: 'divider',
-        },
-        isDesktop && {
-          icon: <Icon icon={EthernetPort} />,
-          key: SettingsTabs.Proxy,
-          label: t('tab.proxy'),
-        },
-        {
-          icon: <Icon icon={Database} />,
-          key: SettingsTabs.Storage,
-          label: t('tab.storage'),
-        },
-        !hideDocs && {
-          icon: <Icon icon={Info} />,
-          key: SettingsTabs.About,
-          label: t('tab.about'),
-        },
-      ].filter(Boolean) as MenuProps['items'],
-    [t, enableSTT, hideDocs, mobile, showAiImage],
-  );
+  const categoryGroups: CategoryGroup[] = useMemo(() => {
+    const groups: CategoryGroup[] = [];
 
-  return cateItems;
+    // 账号组 - 个人相关设置
+    const accountItems: CategoryItem[] = [
+      {
+        icon: Settings2,
+        key: SettingsTabs.Common,
+        label: t('tab.common'),
+      },
+      !mobile && {
+        icon: KeyboardIcon,
+        key: SettingsTabs.Hotkey,
+        label: t('tab.hotkey'),
+      },
+    ].filter(Boolean) as CategoryItem[];
+
+    groups.push({
+      items: accountItems,
+      key: SettingsGroupKey.Account,
+      title: t('group.account'),
+    });
+
+    // AI 配置组 - AI 相关设置
+    const aiConfigItems: CategoryItem[] = [
+      {
+        icon: Brain,
+        key: SettingsTabs.Provider,
+        label: t('tab.provider'),
+      },
+      showAiImage && {
+        icon: ImageIcon,
+        key: SettingsTabs.Image,
+        label: t('tab.image'),
+      },
+      enableSTT && {
+        icon: Mic2,
+        key: SettingsTabs.TTS,
+        label: t('tab.tts'),
+      },
+      {
+        icon: Sparkles,
+        key: SettingsTabs.SystemAgent,
+        label: t('tab.system-agent'),
+      },
+    ].filter(Boolean) as CategoryItem[];
+
+    groups.push({
+      items: aiConfigItems,
+      key: SettingsGroupKey.AIConfig,
+      title: t('group.aiConfig'),
+    });
+
+    // 系统组 - 系统相关设置
+    const systemItems: CategoryItem[] = [
+      isDesktop && {
+        icon: EthernetPort,
+        key: SettingsTabs.Proxy,
+        label: t('tab.proxy'),
+      },
+      {
+        icon: Database,
+        key: SettingsTabs.Storage,
+        label: t('tab.storage'),
+      },
+      !hideDocs && {
+        icon: Info,
+        key: SettingsTabs.About,
+        label: t('tab.about'),
+      },
+    ].filter(Boolean) as CategoryItem[];
+
+    groups.push({
+      items: systemItems,
+      key: SettingsGroupKey.System,
+      title: t('group.system'),
+    });
+
+    return groups;
+  }, [t, enableSTT, hideDocs, mobile, showAiImage]);
+
+  return categoryGroups;
 };
