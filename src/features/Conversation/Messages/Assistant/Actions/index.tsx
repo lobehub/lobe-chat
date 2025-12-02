@@ -2,7 +2,9 @@ import { UIChatMessage } from '@lobechat/types';
 import { ActionIconGroup } from '@lobehub/ui';
 import type { ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui';
 import { memo, useCallback, useMemo, useState } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
+import { ReactionPicker } from '../../../components/Reaction';
 import ShareMessageModal from '../../../components/ShareMessageModal';
 import { messageStateSelectors, useConversationStore } from '../../../store';
 import type {
@@ -17,7 +19,7 @@ import { ErrorActionsBar } from './Error';
 const stripHandleClick = (item: MessageActionItemOrDivider): ActionIconGroupItemType => {
   if ('type' in item && item.type === 'divider') return item as unknown as ActionIconGroupItemType;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { handleClick, children, ...rest } = item as MessageActionItem;
+  const { handleClick: _handleClick, children, ...rest } = item as MessageActionItem;
   if (children) {
     return {
       ...rest,
@@ -52,10 +54,11 @@ interface AssistantActionsBarProps {
   data: UIChatMessage;
   id: string;
   index: number;
+  onReactionSelect?: (messageId: string, emoji: string) => void;
 }
 
 export const AssistantActionsBar = memo<AssistantActionsBarProps>(
-  ({ actionsConfig, id, data, index }) => {
+  ({ actionsConfig, id, data, index, onReactionSelect }) => {
     const { error, tools } = data;
     const [showShareModal, setShareModal] = useState(false);
 
@@ -174,11 +177,21 @@ export const AssistantActionsBar = memo<AssistantActionsBarProps>(
       [allActions],
     );
 
+    const handleReactionSelect = useCallback(
+      (emoji: string) => {
+        onReactionSelect?.(id, emoji);
+      },
+      [id, onReactionSelect],
+    );
+
     if (error) return <ErrorActionsBar actions={defaultActions} onActionClick={handleAction} />;
 
     return (
       <>
-        <ActionIconGroup items={items} menu={{ items: menu }} onActionClick={handleAction} />
+        <Flexbox gap={4} horizontal>
+          <ReactionPicker onSelect={handleReactionSelect} />
+          <ActionIconGroup items={items} menu={{ items: menu }} onActionClick={handleAction} />
+        </Flexbox>
         <ShareMessageModal
           message={data}
           onCancel={() => setShareModal(false)}

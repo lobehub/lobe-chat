@@ -556,6 +556,172 @@ describe('Message CRUD Actions', () => {
     });
   });
 
+  describe('addReaction', () => {
+    it('should add a new reaction to a message', async () => {
+      const updateMessageMetadataSpy = vi
+        .spyOn(messageServiceModule.messageService, 'updateMessageMetadata')
+        .mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+      const store = createTestStore();
+
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'msg-1',
+          value: { content: 'Hello', role: 'assistant', sessionId: 'test-session' },
+        });
+      });
+
+      await act(async () => {
+        await store.getState().addReaction('msg-1', '👍');
+      });
+
+      expect(updateMessageMetadataSpy).toHaveBeenCalledWith(
+        'msg-1',
+        { reactions: { '👍': { count: 1, users: ['user'] } } },
+        expect.any(Object),
+      );
+    });
+
+    it('should increment count when adding same reaction again', async () => {
+      const updateMessageMetadataSpy = vi
+        .spyOn(messageServiceModule.messageService, 'updateMessageMetadata')
+        .mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+      const store = createTestStore();
+
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'msg-1',
+          value: {
+            content: 'Hello',
+            role: 'assistant',
+            sessionId: 'test-session',
+            metadata: {
+              reactions: { '👍': { count: 1, users: ['user'] } },
+            },
+          },
+        });
+      });
+
+      await act(async () => {
+        await store.getState().addReaction('msg-1', '👍');
+      });
+
+      expect(updateMessageMetadataSpy).toHaveBeenCalledWith(
+        'msg-1',
+        { reactions: { '👍': { count: 2, users: ['user', 'user'] } } },
+        expect.any(Object),
+      );
+    });
+  });
+
+  describe('removeReaction', () => {
+    it('should remove a reaction when count is 1', async () => {
+      const updateMessageMetadataSpy = vi
+        .spyOn(messageServiceModule.messageService, 'updateMessageMetadata')
+        .mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+      const store = createTestStore();
+
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'msg-1',
+          value: {
+            content: 'Hello',
+            role: 'assistant',
+            sessionId: 'test-session',
+            metadata: {
+              reactions: { '👍': { count: 1, users: ['user'] } },
+            },
+          },
+        });
+      });
+
+      await act(async () => {
+        await store.getState().removeReaction('msg-1', '👍');
+      });
+
+      expect(updateMessageMetadataSpy).toHaveBeenCalledWith(
+        'msg-1',
+        { reactions: {} },
+        expect.any(Object),
+      );
+    });
+
+    it('should decrement count when count > 1', async () => {
+      const updateMessageMetadataSpy = vi
+        .spyOn(messageServiceModule.messageService, 'updateMessageMetadata')
+        .mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+      const store = createTestStore();
+
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'msg-1',
+          value: {
+            content: 'Hello',
+            role: 'assistant',
+            sessionId: 'test-session',
+            metadata: {
+              reactions: { '👍': { count: 2, users: ['user', 'user'] } },
+            },
+          },
+        });
+      });
+
+      await act(async () => {
+        await store.getState().removeReaction('msg-1', '👍');
+      });
+
+      expect(updateMessageMetadataSpy).toHaveBeenCalledWith(
+        'msg-1',
+        { reactions: { '👍': { count: 1, users: ['user'] } } },
+        expect.any(Object),
+      );
+    });
+
+    it('should do nothing if reaction does not exist', async () => {
+      const updateMessageMetadataSpy = vi
+        .spyOn(messageServiceModule.messageService, 'updateMessageMetadata')
+        .mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+      const store = createTestStore();
+
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'msg-1',
+          value: { content: 'Hello', role: 'assistant', sessionId: 'test-session' },
+        });
+      });
+
+      await act(async () => {
+        await store.getState().removeReaction('msg-1', '👍');
+      });
+
+      expect(updateMessageMetadataSpy).not.toHaveBeenCalled();
+    });
+  });
+
   describe('addToolToMessage', () => {
     it('should add tool to message', async () => {
       const updateMessageSpy = vi
