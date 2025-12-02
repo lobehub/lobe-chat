@@ -3,7 +3,6 @@
 import { memo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import SettingContainer from '@/features/Setting/SettingContainer';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import { LayoutProps } from './_layout/type';
@@ -16,11 +15,7 @@ const Layout = memo<LayoutProps>(() => {
     ? (searchParams.get('active') as SettingsTabs)
     : SettingsTabs.Profile;
 
-  return (
-    <SettingContainer maxWidth={'none'}>
-      <SettingsContent activeTab={active} mobile={false} />
-    </SettingContainer>
-  );
+  return <SettingsContent activeTab={active} mobile={false} />;
 });
 
 Layout.displayName = 'DesktopSettingsLayout';
