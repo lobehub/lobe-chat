@@ -95,37 +95,34 @@ const NavPanel = memo(() => {
       size={{ height: '100%', width }}
       style={{ overflow: 'hidden' }}
     >
-      <div style={{ height: '100%', minWidth: 240, overflow: 'hidden', position: 'relative' }}>
-        <AnimatePresence initial={false} mode="popLayout">
-          <motion.div
-            animate={{ opacity: 1, x: 0 }}
-            exit={{
-              opacity: 0,
-              position: 'absolute',
-              x: activeContent.key === 'home' ? '-20%' : '20%',
-            }}
-            initial={{
-              opacity: 0,
-              x: activeContent.key === 'home' ? '-20%' : '20%',
-            }}
-            key={activeContent.key}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-              inset: 0,
-              position: 'absolute',
-              width: '100%',
-            }}
-            transition={{
-              duration: 0.4,
-              ease: [0.4, 0, 0.2, 1],
-            }}
-          >
-            {activeContent.node}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      <AnimatePresence initial={false} mode="popLayout">
+        <motion.div
+          animate={{ opacity: 1, x: 0 }}
+          exit={{
+            opacity: 0,
+            x: '-20%',
+          }}
+          initial={{
+            opacity: 0,
+            x: 0,
+          }}
+          key={activeContent.key}
+          style={{
+            flexDirection: 'column',
+            height: '100%',
+            inset: 0,
+            minWidth: 240,
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+          transition={{
+            duration: 0.4,
+            ease: [0.4, 0, 0.2, 1],
+          }}
+        >
+          {activeContent.node}
+        </motion.div>
+      </AnimatePresence>
     </DraggablePanel>
   );
 });
