@@ -82,6 +82,12 @@
       "title": "Restablecer todas las configuraciones"
     }
   },
+  "group": {
+    "aiConfig": "Configuración de IA",
+    "common": "General",
+    "profile": "Cuenta",
+    "system": "Sistema"
+  },
   "groupTab": {
     "chat": "Chat",
     "members": "Miembros",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "Acerca de",
     "agent": "Asistente predeterminado",
-    "common": "Configuración común",
+    "apikey": "Gestión de claves API",
+    "common": "Apariencia",
     "experiment": "Experimento",
     "hotkey": "Atajos de teclado",
-    "image": "Dibujo con IA",
+    "image": "Servicio de ilustración",
     "llm": "Modelo de lenguaje",
+    "profile": "Mi cuenta",
     "provider": "Proveedor de servicios de IA",
     "proxy": "Proxy de red",
+    "security": "Seguridad",
+    "stats": "Estadísticas de datos",
     "storage": "Almacenamiento de datos",
     "sync": "Sincronización en la nube",
     "system-agent": "Asistente del sistema",
-    "tts": "Servicio de voz"
+    "tts": "Servicio de voz",
+    "usage": "Estadísticas de uso"
   },
   "tools": {
     "add": "Integrar complemento",

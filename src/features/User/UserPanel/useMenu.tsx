@@ -4,7 +4,6 @@ import { Badge } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import {
   Book,
-  CircleUserRound,
   Cloudy,
   Download,
   Feather,
@@ -21,7 +20,6 @@ import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
 import type { MenuProps } from '@/components/Menu';
-import { enableAuth } from '@/const/auth';
 import { BRANDING_EMAIL, LOBE_CHAT_CLOUD, SOCIAL_URL } from '@/const/branding';
 import { DEFAULT_DESKTOP_HOTKEY_CONFIG } from '@/const/desktop';
 import {
@@ -73,14 +71,6 @@ export const useMenu = () => {
     authSelectors.isLoginWithAuth(s),
   ]);
 
-  const profile: MenuProps['items'] = [
-    {
-      icon: <Icon icon={CircleUserRound} />,
-      key: 'profile',
-      label: <Link to="/profile">{t('userPanel.profile')}</Link>,
-    },
-  ];
-
   const settings: MenuProps['items'] = [
     {
       extra: isDesktop ? (
@@ -95,9 +85,6 @@ export const useMenu = () => {
           <NewVersionBadge showBadge={hasNewVersion}>{t('userPanel.setting')}</NewVersionBadge>
         </Link>
       ),
-    },
-    {
-      type: 'divider',
     },
   ];
 
@@ -207,7 +194,7 @@ export const useMenu = () => {
     {
       type: 'divider',
     },
-    ...(!enableAuth || (enableAuth && isLoginWithAuth) ? profile : []),
+
     ...(isLogin ? settings : []),
     /* ↓ cloud slot ↓ */
 

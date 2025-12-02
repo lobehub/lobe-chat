@@ -237,41 +237,6 @@ export const createDesktopRouter = () =>
           path: 'labs',
         },
 
-        // Profile routes
-        {
-          children: [
-            {
-              element: dynamicElement(() => import('./(main)/profile/(home)/desktop')),
-              index: true,
-            },
-            {
-              element: dynamicElement(() => import('./(main)/profile/apikey')),
-              path: 'apikey',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/security').then((m) => m.DesktopProfileSecurityPage),
-              ),
-              path: 'security',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/stats').then((m) => m.DesktopProfileStatsPage),
-              ),
-              path: 'stats',
-            },
-            {
-              element: dynamicElement(() =>
-                import('./(main)/profile/usage').then((m) => m.DesktopProfileUsagePage),
-              ),
-              path: 'usage',
-            },
-          ],
-          element: dynamicElement(() => import('./(main)/profile/_layout/DesktopWrapper')),
-          errorElement: <ErrorBoundary resetPath="/profile" />,
-          path: 'profile',
-        },
-
         // changelog routes
         {
           children: [

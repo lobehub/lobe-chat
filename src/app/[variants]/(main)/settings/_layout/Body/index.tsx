@@ -6,13 +6,12 @@ import { memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useSearchParams } from 'react-router-dom';
 
-import { withSuspense } from '@/components/withSuspense';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { SettingsTabs } from '@/store/global/initialState';
 
-import { SettingsGroupKey, useCategory } from '../hooks/useCategory';
+import { SettingsGroupKey, useCategory } from '../../hooks/useCategory';
 
-const CategoryContent = memo(() => {
+const Body = memo(() => {
   const categoryGroups = useCategory();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -20,7 +19,7 @@ const CategoryContent = memo(() => {
     {
       active: (searchParams.get('active') as SettingsTabs)
         ? (searchParams.get('active') as SettingsTabs)
-        : SettingsTabs.Common,
+        : SettingsTabs.Profile,
     },
     {
       onChange: (obj: { active: SettingsTabs; provider?: string }) => {
@@ -57,6 +56,7 @@ const CategoryContent = memo(() => {
     <Flexbox paddingInline={4}>
       <Accordion
         defaultExpandedKeys={[
+          SettingsGroupKey.Profile,
           SettingsGroupKey.Account,
           SettingsGroupKey.AIConfig,
           SettingsGroupKey.System,
@@ -75,7 +75,7 @@ const CategoryContent = memo(() => {
               </Text>
             }
           >
-            <Flexbox gap={4} paddingBlock={1}>
+            <Flexbox gap={1} paddingBlock={1}>
               {group.items.map((item) => (
                 <NavItem
                   active={activeTabState.active === item.key}
@@ -93,4 +93,4 @@ const CategoryContent = memo(() => {
   );
 });
 
-export default withSuspense(CategoryContent);
+export default Body;

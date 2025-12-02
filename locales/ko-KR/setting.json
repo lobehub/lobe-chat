@@ -82,6 +82,12 @@
       "title": "모든 설정 초기화"
     }
   },
+  "group": {
+    "aiConfig": "AI 설정",
+    "common": "일반",
+    "profile": "계정",
+    "system": "시스템"
+  },
   "groupTab": {
     "chat": "채팅",
     "members": "구성원",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "소개",
     "agent": "기본 에이전트",
-    "common": "일반 설정",
+    "apikey": "API 키 관리",
+    "common": "외관",
     "experiment": "실험",
     "hotkey": "단축키",
-    "image": "AI 그림",
+    "image": "그림 서비스",
     "llm": "언어 모델",
+    "profile": "내 계정",
     "provider": "AI 서비스 제공자",
     "proxy": "네트워크 프록시",
+    "security": "보안",
+    "stats": "데이터 통계",
     "storage": "데이터 저장소",
     "sync": "클라우드 동기화",
     "system-agent": "시스템 도우미",
-    "tts": "음성 서비스"
+    "tts": "음성 서비스",
+    "usage": "사용량 통계"
   },
   "tools": {
     "add": "플러그인 통합",

@@ -82,6 +82,12 @@
       "title": "すべての設定をリセット"
     }
   },
+  "group": {
+    "aiConfig": "AI 設定",
+    "common": "共通",
+    "profile": "アカウント",
+    "system": "システム"
+  },
   "groupTab": {
     "chat": "チャット",
     "members": "メンバー",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "について",
     "agent": "デフォルトエージェント",
-    "common": "一般設定",
+    "apikey": "APIキー管理",
+    "common": "外観",
     "experiment": "実験",
     "hotkey": "ショートカットキー",
-    "image": "AI画像生成",
+    "image": "画像生成サービス",
     "llm": "言語モデル",
+    "profile": "マイアカウント",
     "provider": "AIサービスプロバイダー",
     "proxy": "ネットワークプロキシ",
+    "security": "セキュリティ",
+    "stats": "データ統計",
     "storage": "データストレージ",
     "sync": "クラウド同期",
     "system-agent": "システムアシスタント",
-    "tts": "音声サービス"
+    "tts": "音声サービス",
+    "usage": "使用状況統計"
   },
   "tools": {
     "add": "プラグインを統合",

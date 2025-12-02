@@ -14,7 +14,7 @@ const Layout = memo<LayoutProps>(() => {
 
   const active = (searchParams.get('active') as SettingsTabs)
     ? (searchParams.get('active') as SettingsTabs)
-    : SettingsTabs.Common;
+    : SettingsTabs.Profile;
 
   return (
     <SettingContainer maxWidth={'none'}>
