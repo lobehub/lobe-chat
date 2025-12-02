@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.144](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.143...v2.0.0-next.144)
+
+<sup>Released on **2025-12-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: User email unique migration error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: User email unique migration error, closes [#10548](https://github.com/lobehub/lobe-chat/issues/10548) ([ca2a1a2](https://github.com/lobehub/lobe-chat/commit/ca2a1a2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.143](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.142...v2.0.0-next.143)
 
 <sup>Released on **2025-12-02**</sup>
