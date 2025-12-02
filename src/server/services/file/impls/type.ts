@@ -1,54 +1,54 @@
 /**
- * S3文件服务实现
+ * File service implementation interface
  */
 export interface FileServiceImpl {
   /**
-   * 创建预签名上传URL
+   * Create pre-signed upload URL
    */
   createPreSignedUrl(key: string): Promise<string>;
 
   /**
-   * 创建预签名预览URL
+   * Create pre-signed preview URL
    */
   createPreSignedUrlForPreview(key: string, expiresIn?: number): Promise<string>;
 
   /**
-   * 删除文件
+   * Delete file
    */
   deleteFile(key: string): Promise<any>;
 
   /**
-   * 批量删除文件
+   * Delete files in batch
    */
   deleteFiles(keys: string[]): Promise<any>;
 
   /**
-   * 获取文件字节数组
+   * Get file byte array
    */
   getFileByteArray(key: string): Promise<Uint8Array>;
 
   /**
-   * 获取文件内容
+   * Get file content
    */
   getFileContent(key: string): Promise<string>;
 
   /**
-   * 获取完整文件URL
+   * Get full file URL
    */
   getFullFileUrl(url?: string | null, expiresIn?: number): Promise<string>;
 
   /**
-   * 从完整URL中提取key
+   * Extract key from full URL
    */
   getKeyFromFullUrl(url: string): string;
 
   /**
-   * 上传内容
+   * Upload content
    */
   uploadContent(path: string, content: string): Promise<any>;
 
   /**
-   * 上传媒体文件
+   * Upload media file
    */
   uploadMedia(key: string, buffer: Buffer): Promise<{ key: string }>;
 }
