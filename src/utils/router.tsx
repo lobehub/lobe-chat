@@ -2,7 +2,16 @@
 
 import { DynamicOptions, Loader } from 'next/dist/shared/lib/dynamic';
 import dynamic from 'next/dynamic';
-import { ComponentType, ReactElement, createElement, memo, useCallback, useEffect } from 'react';
+import {
+  ComponentType,
+  ReactElement,
+  Suspense,
+  createElement,
+  lazy,
+  memo,
+  useCallback,
+  useEffect,
+} from 'react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -32,12 +41,27 @@ export default function dynamicPage<P = NonNullable<unknown>>(
  * // element: dynamicElement(() => import('./chat'))
  */
 export function dynamicElement<P = NonNullable<unknown>>(
-  dynamicOptions: DynamicOptions<P> | Loader<P>,
-  options?: DynamicOptions<P>,
+  importFn: () => Promise<{ default: ComponentType<P> } | ComponentType<P>>,
 ): ReactElement {
-  const Component = dynamicPage(dynamicOptions, options);
+  const LazyComponent = lazy(async () => {
+    // eslint-disable-next-line @next/next/no-assign-module-variable
+    const module = await importFn();
+    if (typeof module === 'function') {
+      return { default: module };
+    }
+    if ('default' in module) {
+      return module as { default: ComponentType<P> };
+    }
+    return { default: module as unknown as ComponentType<P> };
+  });
+
   // @ts-ignore
-  return <Component {...({} as P)} />;
+  return (
+    <Suspense fallback={<Loading />}>
+      {/* @ts-ignore */}
+      <LazyComponent {...({} as P)} />
+    </Suspense>
+  );
 }
 
 /**
@@ -57,7 +81,7 @@ export interface ErrorBoundaryProps {
   resetPath: string;
 }
 
-export const ErrorBoundary = memo<ErrorBoundaryProps>(({ resetPath }) => {
+export const ErrorBoundary = ({ resetPath }: { resetPath: string }) => {
   const ErrorCapture = require('@/components/Error').default;
 
   const error = useRouteError() as Error;
@@ -68,7 +92,7 @@ export const ErrorBoundary = memo<ErrorBoundaryProps>(({ resetPath }) => {
   }, [navigate, resetPath]);
 
   return createElement(ErrorCapture, { error, reset });
-});
+};
 
 /**
  * Component to register navigate function in global store
