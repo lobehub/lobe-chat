@@ -21,6 +21,7 @@ import { useSendMenuItems } from './useSendMenuItems';
 
 const leftActions: ActionKeys[] = [
   'typo',
+  'inputTranslate',
   'fileUpload',
   'knowledgeBase',
   '---',

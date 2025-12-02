@@ -21,6 +21,7 @@ import { useSend, useSendGroupMessage } from '../useSend';
 const leftActions: ActionKeys[] = [
   'model',
   'search',
+  'inputTranslate',
   'fileUpload',
   'knowledgeBase',
   'tools',
