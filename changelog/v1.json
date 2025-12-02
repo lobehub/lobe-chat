@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor agent slug schema."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.146"
+  },
+  {
+    "children": {
       "features": ["Email provider support resend."]
     },
     "date": "2025-12-02",
