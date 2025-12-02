@@ -6,14 +6,14 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv {
+      EMAIL_SERVICE_PROVIDER?: string;
+      RESEND_API_KEY?: string;
+      RESEND_FROM?: string;
       SMTP_HOST?: string;
       SMTP_PASS?: string;
       SMTP_PORT?: string;
       SMTP_SECURE?: string;
       SMTP_USER?: string;
-      RESEND_API_KEY?: string;
-      RESEND_FROM?: string;
-      EMAIL_SERVICE_PROVIDER?: string;
     }
   }
 }

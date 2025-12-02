@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Email provider support resend."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.145"
+  },
+  {
+    "children": {
       "fixes": ["User email unique migration error."]
     },
     "date": "2025-12-02",
