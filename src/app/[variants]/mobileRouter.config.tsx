@@ -2,6 +2,7 @@
 
 import { createBrowserRouter, redirect } from 'react-router-dom';
 
+import Loading from '@/components/Loading/BrandTextLoading';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
 import { MobileMainLayout } from './(main)/layouts/mobile';
@@ -255,6 +256,7 @@ export const createMobileRouter = () =>
       ],
       element: <MobileMainLayout />,
       errorElement: <ErrorBoundary resetPath="/chat" />,
+      HydrateFallback: Loading,
       path: '/',
     },
   ]);
