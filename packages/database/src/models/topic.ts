@@ -1,7 +1,7 @@
 import { DBMessageItem, TopicRankItem } from '@lobechat/types';
 import { and, count, desc, eq, gt, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
 
-import { TopicItem, agentsToSessions, messages, topics } from '../schemas';
+import { TopicItem, agents, agentsToSessions, messages, topics } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
@@ -205,6 +205,29 @@ export class TopicModel {
       .groupBy(topics.id)
       .orderBy(desc(sql`count`))
       .having(({ count }) => gt(count, 0))
+      .limit(limit);
+  };
+
+  /**
+   * Query recent topics with agent info for homepage display
+   */
+  queryRecent = async (limit: number = 12) => {
+    return this.db
+      .select({
+        agent: {
+          avatar: agents.avatar,
+          backgroundColor: agents.backgroundColor,
+          id: agents.id,
+          title: agents.title,
+        },
+        id: topics.id,
+        title: topics.title,
+        updatedAt: topics.updatedAt,
+      })
+      .from(topics)
+      .leftJoin(agents, eq(topics.agentId, agents.id))
+      .where(eq(topics.userId, this.userId))
+      .orderBy(desc(topics.updatedAt))
       .limit(limit);
   };
 

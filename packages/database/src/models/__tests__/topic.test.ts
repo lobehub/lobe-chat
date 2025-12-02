@@ -1549,4 +1549,133 @@ describe('TopicModel', () => {
       expect(result).toBe(3); // should return all topics if date is invalid
     });
   });
+
+  describe('queryRecent', () => {
+    it('should return recent topics with agent info', async () => {
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(agents).values([
+          {
+            id: 'agent1',
+            userId,
+            title: 'Agent 1',
+            avatar: 'avatar1.png',
+            backgroundColor: '#ff0000',
+          },
+          {
+            id: 'agent2',
+            userId,
+            title: 'Agent 2',
+            avatar: 'avatar2.png',
+            backgroundColor: '#00ff00',
+          },
+        ]);
+
+        await tx.insert(topics).values([
+          {
+            id: 'recent-topic-1',
+            title: 'Topic 1',
+            userId,
+            agentId: 'agent1',
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'recent-topic-2',
+            title: 'Topic 2',
+            userId,
+            agentId: 'agent2',
+            updatedAt: new Date('2023-02-01'),
+          },
+          {
+            id: 'recent-topic-3',
+            title: 'Topic 3',
+            userId,
+            agentId: 'agent1',
+            updatedAt: new Date('2023-03-01'),
+          },
+        ]);
+      });
+
+      const result = await topicModel.queryRecent();
+
+      expect(result).toHaveLength(3);
+      // Should be ordered by updatedAt desc
+      expect(result[0].id).toBe('recent-topic-3');
+      expect(result[0].title).toBe('Topic 3');
+      expect(result[0].agent).toEqual({
+        id: 'agent1',
+        title: 'Agent 1',
+        avatar: 'avatar1.png',
+        backgroundColor: '#ff0000',
+      });
+
+      expect(result[1].id).toBe('recent-topic-2');
+      expect(result[1].agent).toEqual({
+        id: 'agent2',
+        title: 'Agent 2',
+        avatar: 'avatar2.png',
+        backgroundColor: '#00ff00',
+      });
+    });
+
+    it('should respect limit parameter', async () => {
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(agents).values([{ id: 'limit-agent', userId, title: 'Limit Agent' }]);
+
+        await tx.insert(topics).values([
+          { id: 'limit-topic-1', title: 'Topic 1', userId, agentId: 'limit-agent' },
+          { id: 'limit-topic-2', title: 'Topic 2', userId, agentId: 'limit-agent' },
+          { id: 'limit-topic-3', title: 'Topic 3', userId, agentId: 'limit-agent' },
+        ]);
+      });
+
+      const result = await topicModel.queryRecent(2);
+
+      expect(result).toHaveLength(2);
+    });
+
+    it('should return null agent when topic has no agentId', async () => {
+      await serverDB
+        .insert(topics)
+        .values([{ id: 'no-agent-topic', title: 'Topic without agent', userId, agentId: null }]);
+
+      const result = await topicModel.queryRecent();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('no-agent-topic');
+      expect(result[0].agent).toBeNull();
+    });
+
+    it('should only return topics for current user', async () => {
+      const otherUserId = 'other-user-recent';
+
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(users).values([{ id: otherUserId }]);
+
+        await tx.insert(topics).values([
+          { id: 'user-recent-topic', title: 'User Topic', userId },
+          { id: 'other-recent-topic', title: 'Other Topic', userId: otherUserId },
+        ]);
+      });
+
+      const result = await topicModel.queryRecent();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('user-recent-topic');
+    });
+
+    it('should use default limit of 12', async () => {
+      await serverDB.transaction(async (tx) => {
+        const topicValues = Array.from({ length: 15 }, (_, i) => ({
+          id: `default-limit-topic-${i}`,
+          title: `Topic ${i}`,
+          userId,
+        }));
+        await tx.insert(topics).values(topicValues);
+      });
+
+      const result = await topicModel.queryRecent();
+
+      expect(result).toHaveLength(12);
+    });
+  });
 });

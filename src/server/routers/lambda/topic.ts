@@ -152,6 +152,12 @@ export const topicRouter = router({
     return ctx.topicModel.rank(input);
   }),
 
+  recentTopics: topicProcedure
+    .input(z.object({ limit: z.number().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      return ctx.topicModel.queryRecent(input?.limit);
+    }),
+
   removeAllTopics: topicProcedure.mutation(async ({ ctx }) => {
     return ctx.topicModel.deleteAll();
   }),
