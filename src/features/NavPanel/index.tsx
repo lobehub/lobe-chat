@@ -102,11 +102,11 @@ const NavPanel = memo(() => {
             exit={{
               opacity: 0,
               position: 'absolute',
-              x: activeContent.key === 'home' ? '-20%' : '20%',
+              x: '-20%',
             }}
             initial={{
               opacity: 0,
-              x: activeContent.key === 'home' ? '-20%' : '20%',
+              x: 0,
             }}
             key={activeContent.key}
             style={{
