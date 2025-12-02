@@ -1,15 +1,9 @@
 import { memo } from 'react';
 
-import Sidebar from './Sidebar';
-import HomeContent from './components';
+import HomeContent from './features';
 
 const Home = memo(() => {
-  return (
-    <>
-      <Sidebar />
-      <HomeContent onOpenFile={() => {}} />
-    </>
-  );
+  return <HomeContent onOpenFile={() => {}} />;
 });
 
 Home.displayName = 'Home';
