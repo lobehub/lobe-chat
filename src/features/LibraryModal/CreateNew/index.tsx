@@ -1,5 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { LibraryBig } from 'lucide-react';
+import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -7,33 +8,45 @@ import { createModal } from '@/components/FunctionModal';
 
 import CreateForm from './CreateForm';
 
-const Title = () => {
+interface ModalContentProps {
+  onClose?: () => void;
+  onSuccess?: (id: string) => void;
+}
+
+const ModalContent = memo<ModalContentProps>(({ onClose, onSuccess }) => {
   const { t } = useTranslation('knowledgeBase');
+
   return (
-    <Flexbox gap={8} horizontal>
-      <Icon icon={LibraryBig} />
-      {t('createNew.title')}
-    </Flexbox>
+    <>
+      <Flexbox gap={8} horizontal paddingBlock={16} paddingInline={16} style={{ paddingBottom: 0 }}>
+        <Icon icon={LibraryBig} />
+        {t('createNew.title')}
+      </Flexbox>
+      <Flexbox paddingInline={16} style={{ paddingBottom: 16 }}>
+        <CreateForm onClose={onClose} onSuccess={onSuccess} />
+      </Flexbox>
+    </>
   );
-};
+});
+
+ModalContent.displayName = 'KnowledgeBaseCreateModalContent';
 
 // eslint-disable-next-line unused-imports/no-unused-vars
 export const useCreateNewModal = createModal<{ onSuccess?: (id: string) => void }>(
   (instance, props) => {
     return {
       content: (
-        <Flexbox paddingInline={16} style={{ paddingBottom: 16 }}>
-          <CreateForm
+        <Suspense fallback={<div style={{ minHeight: 200 }} />}>
+          <ModalContent
             onClose={() => {
               instance.current?.destroy();
             }}
             onSuccess={props?.onSuccess}
           />
-        </Flexbox>
+        </Suspense>
       ),
       focusTriggerAfterClose: true,
       footer: false,
-      title: <Title />,
     };
   },
 );
