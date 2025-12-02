@@ -12,7 +12,6 @@ import type { ConversationContext } from '@lobechat/types';
 export type OperationType =
   // === Message sending ===
   | 'sendMessage' // Send message to server
-  | 'sendThreadMessage' // Send message in thread (deprecated, will be merged into sendMessage)
   | 'createTopic' // Auto create topic
   | 'regenerate' // Regenerate message
   | 'continue' // Continue generation

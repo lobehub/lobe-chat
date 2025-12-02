@@ -39,6 +39,7 @@ export const messageInternals: StateCreator<
   internal_dispatchMessage: (payload, context) => {
     let agentId: string;
     let topicId: string | null | undefined;
+    let threadId: string | null | undefined;
 
     // Get context from operation if operationId is provided
     if (context?.operationId) {
@@ -49,24 +50,28 @@ export const messageInternals: StateCreator<
       }
       agentId = operation.context.agentId!;
       topicId = operation.context.topicId;
+      threadId = operation.context.threadId;
       log(
-        '[internal_dispatchMessage] get context from operation %s: agentId=%s, topicId=%s',
+        '[internal_dispatchMessage] get context from operation %s: agentId=%s, topicId=%s, threadId=%s',
         context.operationId,
         agentId,
         topicId,
+        threadId,
       );
     } else {
       // Fallback to global state
       agentId = get().activeAgentId;
       topicId = get().activeTopicId;
+      threadId = get().activeThreadId;
       log(
-        '[internal_dispatchMessage] use global context: agentId=%s, topicId=%s',
+        '[internal_dispatchMessage] use global context: agentId=%s, topicId=%s, threadId=%s',
         agentId,
         topicId,
+        threadId,
       );
     }
 
-    const messagesKey = messageMapKey({ agentId, topicId });
+    const messagesKey = messageMapKey({ agentId, threadId, topicId });
 
     // Get raw messages from dbMessagesMap and apply reducer
     const rawMessages = get().dbMessagesMap[messagesKey] || [];

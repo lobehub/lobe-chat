@@ -20,7 +20,6 @@ import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import type { MessageActionsConfig } from '../../types';
 import Actions from './Actions';
-import { UserBelowMessage } from './BelowMessage';
 import { UserMessageExtra } from './Extra';
 import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
 import { UserMessageContent } from './MessageContent';
@@ -45,7 +44,7 @@ const remarkPlugins = markdownElements
 const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing, index }) => {
   const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
 
-  const { ragQuery, content, createdAt, error, role, extra, targetId } = item;
+  const { content, createdAt, error, role, extra, targetId } = item;
 
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
@@ -168,7 +167,6 @@ const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing,
               />
             </Flexbox>
           </Flexbox>
-          <UserBelowMessage content={content} id={id} ragQuery={ragQuery} />
         </Flexbox>
         {mobile && variant === 'bubble' && <BorderSpacing borderSpacing={32} />}
       </Flexbox>

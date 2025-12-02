@@ -2,6 +2,7 @@
 
 import { createBrowserRouter, redirect } from 'react-router-dom';
 
+import Loading from '@/components/Loading/BrandTextLoading';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
 import DesktopMainLayout from './(main)/layouts/desktop';
@@ -11,6 +12,7 @@ import { agentIdLoader, idLoader, slugLoader } from './loaders/routeParams';
 export const createDesktopRouter = () =>
   createBrowserRouter([
     {
+      HydrateFallback: Loading,
       children: [
         // Chat routes
         {

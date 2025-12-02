@@ -225,17 +225,17 @@ describe('aiChatSelectors', () => {
         });
       });
 
-      expect(aiChatSelectors.isSendMessageLoadingForTopic('session1_topic1')(result.current)).toBe(
-        true,
-      );
+      expect(
+        aiChatSelectors.isSendMessageLoadingForTopic('main_session1_topic1')(result.current),
+      ).toBe(true);
     });
 
     it('should return false when no sendMessage operation exists', () => {
       const { result } = renderHook(() => useChatStore());
 
-      expect(aiChatSelectors.isSendMessageLoadingForTopic('session1_topic1')(result.current)).toBe(
-        false,
-      );
+      expect(
+        aiChatSelectors.isSendMessageLoadingForTopic('main_session1_topic1')(result.current),
+      ).toBe(false);
     });
 
     it('should return false when sendMessage operation is completed', () => {
@@ -254,9 +254,9 @@ describe('aiChatSelectors', () => {
         result.current.completeOperation(opId);
       });
 
-      expect(aiChatSelectors.isSendMessageLoadingForTopic('session1_topic1')(result.current)).toBe(
-        false,
-      );
+      expect(
+        aiChatSelectors.isSendMessageLoadingForTopic('main_session1_topic1')(result.current),
+      ).toBe(false);
     });
 
     it('should distinguish between different topics', () => {
@@ -269,12 +269,12 @@ describe('aiChatSelectors', () => {
         });
       });
 
-      expect(aiChatSelectors.isSendMessageLoadingForTopic('session1_topic1')(result.current)).toBe(
-        true,
-      );
-      expect(aiChatSelectors.isSendMessageLoadingForTopic('session1_topic2')(result.current)).toBe(
-        false,
-      );
+      expect(
+        aiChatSelectors.isSendMessageLoadingForTopic('main_session1_topic1')(result.current),
+      ).toBe(true);
+      expect(
+        aiChatSelectors.isSendMessageLoadingForTopic('main_session1_topic2')(result.current),
+      ).toBe(false);
     });
   });
 });

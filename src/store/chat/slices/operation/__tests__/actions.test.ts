@@ -123,7 +123,7 @@ describe('Operation Actions', () => {
       expect(result.current.operationsByMessage.msg1).toContain(operationId!);
 
       // Check context index
-      const contextKey = 'session1_topic1';
+      const contextKey = 'main_session1_topic1';
       expect(result.current.operationsByContext[contextKey]).toContain(operationId!);
     });
   });
