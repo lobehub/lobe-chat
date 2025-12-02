@@ -82,6 +82,12 @@
       "title": "Alle instellingen resetten"
     }
   },
+  "group": {
+    "aiConfig": "AI-configuratie",
+    "common": "Algemeen",
+    "profile": "Account",
+    "system": "Systeem"
+  },
   "groupTab": {
     "chat": "Chat",
     "members": "Leden",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "Over",
     "agent": "Standaardassistent",
-    "common": "Algemene instellingen",
+    "apikey": "API-sleutelbeheer",
+    "common": "Uiterlijk",
     "experiment": "Experiment",
     "hotkey": "Sneltoetsen",
-    "image": "AI Tekeningen",
+    "image": "Tekenservice",
     "llm": "Taalmodel",
+    "profile": "Mijn account",
     "provider": "AI-dienstverlener",
     "proxy": "Netwerkproxy",
+    "security": "Beveiliging",
+    "stats": "Gegevensstatistieken",
     "storage": "Gegevensopslag",
     "sync": "Cloudsynchronisatie",
     "system-agent": "Systeemassistent",
-    "tts": "Spraakdienst"
+    "tts": "Spraakdienst",
+    "usage": "Verbruiksstatistieken"
   },
   "tools": {
     "add": "Plug-in integreren",

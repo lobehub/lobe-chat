@@ -2,9 +2,9 @@
 
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
+import utc from 'dayjs/plugin/utc';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 

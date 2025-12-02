@@ -82,6 +82,12 @@
       "title": "Zresetuj wszystkie ustawienia"
     }
   },
+  "group": {
+    "aiConfig": "Konfiguracja AI",
+    "common": "Ogólne",
+    "profile": "Konto",
+    "system": "System"
+  },
   "groupTab": {
     "chat": "Czaty",
     "members": "Członkowie",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "O nas",
     "agent": "Domyślny asystent",
-    "common": "Ustawienia ogólne",
+    "apikey": "Zarządzanie kluczami API",
+    "common": "Wygląd",
     "experiment": "Eksperyment",
     "hotkey": "Skróty klawiszowe",
-    "image": "Rysowanie AI",
+    "image": "Usługa rysowania",
     "llm": "Model językowy",
+    "profile": "Moje konto",
     "provider": "Dostawca usług AI",
     "proxy": "Proxy sieciowy",
+    "security": "Bezpieczeństwo",
+    "stats": "Statystyki danych",
     "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
     "system-agent": "System Agent",
-    "tts": "Usługa głosowa"
+    "tts": "Usługa głosowa",
+    "usage": "Statystyki zużycia"
   },
   "tools": {
     "add": "Zintegruj wtyczkę",

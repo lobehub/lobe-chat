@@ -82,6 +82,12 @@
       "title": "Reset All Settings"
     }
   },
+  "group": {
+    "aiConfig": "AI Configuration",
+    "common": "General",
+    "profile": "Account",
+    "system": "System"
+  },
   "groupTab": {
     "chat": "Chat",
     "members": "Members",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "About",
     "agent": "Default Assistant",
-    "common": "General",
+    "apikey": "API Key Management",
+    "common": "Appearance",
     "experiment": "Experiment",
     "hotkey": "Hotkeys",
-    "image": "AI Drawing",
+    "image": "Drawing Service",
     "llm": "Language Model",
+    "profile": "My Account",
     "provider": "AI Service Provider",
     "proxy": "Network Proxy",
+    "security": "Security",
+    "stats": "Data Statistics",
     "storage": "Data Storage",
     "sync": "Cloud Sync",
     "system-agent": "System Assistant",
-    "tts": "Text-to-Speech"
+    "tts": "Text-to-Speech",
+    "usage": "Usage Statistics"
   },
   "tools": {
     "add": "Integrate Plugin",

@@ -82,6 +82,12 @@
       "title": "Alle Einstellungen zurücksetzen"
     }
   },
+  "group": {
+    "aiConfig": "KI-Konfiguration",
+    "common": "Allgemein",
+    "profile": "Konto",
+    "system": "System"
+  },
   "groupTab": {
     "chat": "Chat",
     "members": "Mitglieder",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "Über",
     "agent": "Standard-Assistent",
-    "common": "Allgemeine Einstellungen",
+    "apikey": "API-Schlüsselverwaltung",
+    "common": "Erscheinungsbild",
     "experiment": "Experiment",
     "hotkey": "Tastenkombinationen",
-    "image": "AI-Zeichnung",
+    "image": "Zeichendienst",
     "llm": "Sprachmodell",
+    "profile": "Mein Konto",
     "provider": "KI-Dienstanbieter",
     "proxy": "Netzwerkproxy",
+    "security": "Sicherheit",
+    "stats": "Datenstatistik",
     "storage": "Datenspeicher",
     "sync": "Cloud-Synchronisierung",
     "system-agent": "Systemassistent",
-    "tts": "Sprachdienste"
+    "tts": "Sprachdienste",
+    "usage": "Nutzungsstatistik"
   },
   "tools": {
     "add": "Plugin integrieren",

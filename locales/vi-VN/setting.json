@@ -82,6 +82,12 @@
       "title": "Đặt lại tất cả cài đặt"
     }
   },
+  "group": {
+    "aiConfig": "Cấu hình AI",
+    "common": "Chung",
+    "profile": "Tài khoản",
+    "system": "Hệ thống"
+  },
   "groupTab": {
     "chat": "Trò chuyện",
     "members": "Thành viên",
@@ -765,17 +771,22 @@
   "tab": {
     "about": "Về chúng tôi",
     "agent": "Trợ lý mặc định",
-    "common": "Cài đặt chung",
+    "apikey": "Quản lý API Key",
+    "common": "Giao diện",
     "experiment": "Thử nghiệm",
     "hotkey": "Phím tắt",
-    "image": "Vẽ AI",
+    "image": "Dịch vụ vẽ",
     "llm": "Mô hình ngôn ngữ",
+    "profile": "Tài khoản của tôi",
     "provider": "Nhà cung cấp AI",
     "proxy": "Mạng proxy",
+    "security": "Bảo mật",
+    "stats": "Thống kê dữ liệu",
     "storage": "Lưu trữ dữ liệu",
     "sync": "Đồng bộ trên đám mây",
     "system-agent": "Trợ lý hệ thống",
-    "tts": "Dịch vụ giọng nói"
+    "tts": "Dịch vụ giọng nói",
+    "usage": "Thống kê sử dụng"
   },
   "tools": {
     "add": "Tích hợp plugin",
