@@ -81,17 +81,21 @@ When working with Linear issues:
 1. Complete the implementation for this specific issue
 2. Run type check: `bun run type-check`
 3. Run related tests if applicable
-4. **IMMEDIATELY** update issue status to "Done": `mcp__linear-server__update_issue`
-5. **IMMEDIATELY** add completion comment: `mcp__linear-server__create_comment`
-6. Only then move on to the next issue
+4. Create PR if needed
+5. **IMMEDIATELY** update issue status to **"In Review"** (NOT "Done"): `mcp__linear-server__update_issue`
+6. **IMMEDIATELY** add completion comment: `mcp__linear-server__create_comment`
+7. Only then move on to the next issue
+
+**Note:** Issue status should be set to **"In Review"** when PR is created. The status will be updated to **"Done"** only after the PR is merged (usually handled by Linear-GitHub integration or manually).
 
 **❌ Wrong approach:**
 
 - Complete Issue A → Complete Issue B → Complete Issue C → Update all statuses → Add all comments
+- Mark issue as "Done" immediately after creating PR
 
 **✅ Correct approach:**
 
-- Complete Issue A → Update A status → Add A comment → Complete Issue B → Update B status → Add B comment → ...
+- Complete Issue A → Create PR → Update A status to "In Review" → Add A comment → Complete Issue B → ...
 
 ## Rules Index
 

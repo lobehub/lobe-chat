@@ -355,6 +355,41 @@ describe('RemoteServerConfigCtr', () => {
     });
   });
 
+  describe('isNonRetryableError', () => {
+    it('should return false for null/undefined error', () => {
+      expect(controller.isNonRetryableError(undefined)).toBe(false);
+      expect(controller.isNonRetryableError('')).toBe(false);
+    });
+
+    it('should return true for OIDC error codes', () => {
+      expect(controller.isNonRetryableError('invalid_grant')).toBe(true);
+      expect(controller.isNonRetryableError('Token refresh failed: invalid_client')).toBe(true);
+      expect(controller.isNonRetryableError('unauthorized_client error')).toBe(true);
+      expect(controller.isNonRetryableError('access_denied by user')).toBe(true);
+      expect(controller.isNonRetryableError('invalid_scope requested')).toBe(true);
+    });
+
+    it('should return true for deterministic failures', () => {
+      expect(controller.isNonRetryableError('No refresh token available')).toBe(true);
+      expect(controller.isNonRetryableError('Remote server is not active or configured')).toBe(
+        true,
+      );
+      expect(controller.isNonRetryableError('Missing tokens in refresh response')).toBe(true);
+    });
+
+    it('should return false for transient/network errors', () => {
+      expect(controller.isNonRetryableError('Network error')).toBe(false);
+      expect(controller.isNonRetryableError('fetch failed')).toBe(false);
+      expect(controller.isNonRetryableError('ETIMEDOUT')).toBe(false);
+      expect(controller.isNonRetryableError('Connection refused')).toBe(false);
+    });
+
+    it('should be case insensitive', () => {
+      expect(controller.isNonRetryableError('INVALID_GRANT')).toBe(true);
+      expect(controller.isNonRetryableError('NO REFRESH TOKEN AVAILABLE')).toBe(true);
+    });
+  });
+
   describe('refreshAccessToken', () => {
     let mockFetch: ReturnType<typeof vi.fn>;
 
@@ -556,7 +591,7 @@ describe('RemoteServerConfigCtr', () => {
       expect(mockFetch).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle network errors', async () => {
+    it('should handle network errors with retry', async () => {
       const { safeStorage } = await import('electron');
       vi.mocked(safeStorage.isEncryptionAvailable).mockReturnValue(true);
       vi.mocked(safeStorage.decryptString).mockImplementation((buffer: Buffer) =>
@@ -582,7 +617,9 @@ describe('RemoteServerConfigCtr', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('Network error');
-    });
+      // With retry mechanism, fetch should be called 4 times (1 initial + 3 retries)
+      expect(mockFetch).toHaveBeenCalledTimes(4);
+    }, 15000);
   });
 
   describe('afterAppReady', () => {
