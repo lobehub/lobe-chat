@@ -1012,7 +1012,7 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-plus-2025-09-11',
+      deploymentName: 'qwen-plus-2025-12-01',
     },
     contextWindowTokens: 1_000_000,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
