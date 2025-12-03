@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
 import { migrate as neonMigrate } from 'drizzle-orm/neon-serverless/migrator';
 import { migrate as nodeMigrate } from 'drizzle-orm/node-postgres/migrator';
 import { join } from 'node:path';
@@ -6,9 +7,15 @@ import { join } from 'node:path';
 // @ts-ignore tsgo handle esm import cjs and compatibility issues
 import { DB_FAIL_INIT_HINT, DUPLICATE_EMAIL_HINT, PGVECTOR_HINT } from './errorHint';
 
-// Read the `.env` file if it exists, or a file specified by the
-// dotenv_config_path parameter that's passed to Node.js
-dotenv.config();
+// Load environment variables in priority order:
+// 1. .env (lowest priority)
+// 2. .env.[env] (medium priority, overrides .env)
+// 3. .env.[env].local (highest priority, overrides previous)
+// Use dotenv-expand to support ${var} variable expansion
+const env = process.env.NODE_ENV || 'development';
+dotenvExpand.expand(dotenv.config()); // Load .env
+dotenvExpand.expand(dotenv.config({ override: true, path: `.env.${env}` })); // Load .env.[env] and override
+dotenvExpand.expand(dotenv.config({ override: true, path: `.env.${env}.local` })); // Load .env.[env].local and override
 
 const migrationsFolder = join(__dirname, '../../packages/database/migrations');
 
