@@ -11,9 +11,11 @@ import {
   NextAuth,
   Zitadel,
 } from '@lobehub/ui/icons';
+import { Apple } from 'lucide-react';
 import React from 'react';
 
 const iconComponents: { [key: string]: React.ElementType } = {
+  'apple': Apple,
   'auth0': Auth0,
   'authelia': Authelia.Color,
   'authentik': Authentik.Color,
