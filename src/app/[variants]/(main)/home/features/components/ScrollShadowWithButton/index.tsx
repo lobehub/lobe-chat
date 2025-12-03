@@ -81,6 +81,7 @@ const ScrollShadowWithButton = memo<FlexboxProps>(({ children, ...rest }) => {
           icon={ChevronLeft}
           onClick={() => handleScroll('left')}
           shape={'circle'}
+          type={'default'}
         />
       )}
       <ScrollShadow
@@ -102,6 +103,7 @@ const ScrollShadowWithButton = memo<FlexboxProps>(({ children, ...rest }) => {
           icon={ChevronRight}
           onClick={() => handleScroll('right')}
           shape={'circle'}
+          type={'default'}
         />
       )}
     </Flexbox>
