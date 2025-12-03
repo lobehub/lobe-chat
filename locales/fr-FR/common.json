@@ -137,6 +137,8 @@
   "close": "Fermer",
   "cmdk": {
     "about": "À propos",
+    "aiModeEmptyState": "Saisissez votre question dans le champ ci-dessus pour commencer à discuter avec l'IA",
+    "aiModePlaceholder": "Posez une question à l'IA...",
     "communitySupport": "Support communautaire",
     "discover": "Découvrir",
     "knowledgeBase": "Base de connaissances",

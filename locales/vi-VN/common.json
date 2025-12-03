@@ -137,6 +137,8 @@
   "close": "Đóng",
   "cmdk": {
     "about": "Giới thiệu",
+    "aiModeEmptyState": "Nhập câu hỏi của bạn vào ô phía trên để bắt đầu trò chuyện với AI",
+    "aiModePlaceholder": "Đặt câu hỏi cho AI...",
     "communitySupport": "Hỗ trợ cộng đồng",
     "discover": "Khám phá",
     "knowledgeBase": "Cơ sở kiến thức",

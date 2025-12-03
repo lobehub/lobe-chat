@@ -60,9 +60,14 @@
     "copyContent": "Sao chép toàn bộ nội dung",
     "duplicate": "Tạo bản sao",
     "empty": "Chưa có bản thảo nào, hãy nhấn nút phía trên để tạo bản thảo đầu tiên của bạn",
+    "filter": {
+      "all": "Tất cả",
+      "onlyInPages": "Chỉ trong tài liệu"
+    },
     "noResults": "Không tìm thấy bản thảo phù hợp",
     "pageCount": "Tổng cộng {{count}} bản thảo",
     "selectNote": "Chọn một bản thảo để bắt đầu chỉnh sửa",
+    "title": "Tài liệu",
     "untitled": "Không có tiêu đề"
   },
   "empty": "Chưa có tệp/tệp tin nào được tải lên",

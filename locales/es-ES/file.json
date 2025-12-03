@@ -60,9 +60,14 @@
     "copyContent": "Copiar todo el contenido",
     "duplicate": "Crear una copia",
     "empty": "Aún no hay documentos. Haz clic en el botón de arriba para crear tu primer documento.",
+    "filter": {
+      "all": "Todo",
+      "onlyInPages": "Solo en documentos"
+    },
     "noResults": "No se encontraron documentos coincidentes",
     "pageCount": "Total de {{count}} documentos",
     "selectNote": "Selecciona un documento para comenzar a editar",
+    "title": "Documentos",
     "untitled": "Sin título"
   },
   "empty": "No hay archivos/carpetas subidos aún",

@@ -60,9 +60,14 @@
     "copyContent": "Tüm İçeriği Kopyala",
     "duplicate": "Kopyasını Oluştur",
     "empty": "Henüz bir belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
+    "filter": {
+      "all": "Tümü",
+      "onlyInPages": "Yalnızca belgelerde"
+    },
     "noResults": "Eşleşen belge bulunamadı",
     "pageCount": "Toplam {{count}} belge",
     "selectNote": "Düzenlemeye başlamak için bir belge seçin",
+    "title": "Belgeler",
     "untitled": "Başlıksız"
   },
   "empty": "Henüz yüklenmiş dosya/klasör yok",

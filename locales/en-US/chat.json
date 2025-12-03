@@ -418,6 +418,7 @@
     "checkOpenNewTopic": "Enable new topic?",
     "checkSaveCurrentMessages": "Do you want to save the current conversation as a topic?",
     "openNewTopic": "Open New Topic",
+    "recent": "Recent Topics",
     "saveCurrentMessages": "Save current session as topic"
   },
   "translate": {

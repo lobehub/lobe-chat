@@ -137,6 +137,8 @@
   "close": "Zamknij",
   "cmdk": {
     "about": "O nas",
+    "aiModeEmptyState": "Wpisz swoje pytanie w polu powyżej, aby rozpocząć rozmowę z AI",
+    "aiModePlaceholder": "Zadaj pytanie AI...",
     "communitySupport": "Wsparcie społeczności",
     "discover": "Odkrywaj",
     "knowledgeBase": "Baza wiedzy",

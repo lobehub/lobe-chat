@@ -137,6 +137,8 @@
   "close": "Затвори",
   "cmdk": {
     "about": "Относно",
+    "aiModeEmptyState": "Въведете въпроса си в полето по-горе, за да започнете разговор с AI",
+    "aiModePlaceholder": "Задайте въпрос на AI...",
     "communitySupport": "Общностна поддръжка",
     "discover": "Открий",
     "knowledgeBase": "База знания",

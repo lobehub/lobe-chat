@@ -137,6 +137,8 @@
   "close": "إغلاق",
   "cmdk": {
     "about": "حول",
+    "aiModeEmptyState": "أدخل سؤالك في الحقل أعلاه لبدء المحادثة مع الذكاء الاصطناعي",
+    "aiModePlaceholder": "اطرح سؤالاً على الذكاء الاصطناعي...",
     "communitySupport": "دعم المجتمع",
     "discover": "استكشاف",
     "knowledgeBase": "قاعدة المعرفة",

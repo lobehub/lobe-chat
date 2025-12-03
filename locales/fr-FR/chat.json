@@ -418,6 +418,7 @@
     "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
     "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
     "openNewTopic": "Ouvrir un nouveau sujet",
+    "recent": "Sujets récents",
     "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet"
   },
   "translate": {

@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "Topluluk Asistanları",
     "featuredAssistants": "Öne Çıkan Asistanlar",
     "featuredModels": "Öne Çıkan Modeller",
+    "featuredPlugins": "Öne Çıkan Eklentiler",
     "featuredProviders": "Öne Çıkan Model Sağlayıcıları",
     "featuredTools": "Öne Çıkan Araçlar",
     "more": "Daha Fazla Keşfet"

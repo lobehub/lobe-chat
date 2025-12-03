@@ -60,9 +60,14 @@
     "copyContent": "複製全文",
     "duplicate": "建立副本",
     "empty": "尚無文稿，點擊上方按鈕建立你的第一篇文稿",
+    "filter": {
+      "all": "全部",
+      "onlyInPages": "僅限於文稿中"
+    },
     "noResults": "未找到符合的文稿",
     "pageCount": "共 {{count}} 篇文稿",
     "selectNote": "選擇一篇文稿開始編輯",
+    "title": "文稿",
     "untitled": "無標題"
   },
   "empty": "暫無已上傳文件/文件夾",

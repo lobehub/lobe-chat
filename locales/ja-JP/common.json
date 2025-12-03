@@ -137,6 +137,8 @@
   "close": "閉じる",
   "cmdk": {
     "about": "概要",
+    "aiModeEmptyState": "上の入力欄に質問を入力して、AIとの対話を始めましょう",
+    "aiModePlaceholder": "AIに質問する...",
     "communitySupport": "コミュニティサポート",
     "discover": "発見",
     "knowledgeBase": "ナレッジベース",

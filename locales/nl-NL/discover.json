@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "Community-assistenten",
     "featuredAssistants": "Aanbevolen assistenten",
     "featuredModels": "Aanbevolen modellen",
+    "featuredPlugins": "Aanbevolen plug-ins",
     "featuredProviders": "Aanbevolen modelproviders",
     "featuredTools": "Aanbevolen plugins",
     "more": "Ontdek meer"

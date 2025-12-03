@@ -60,9 +60,14 @@
     "copyContent": "Kopiuj całą treść",
     "duplicate": "Utwórz kopię",
     "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć swój pierwszy dokument.",
+    "filter": {
+      "all": "Wszystkie",
+      "onlyInPages": "Tylko w dokumentach"
+    },
     "noResults": "Nie znaleziono pasujących dokumentów",
     "pageCount": "Łącznie {{count}} dokumentów",
     "selectNote": "Wybierz dokument, aby rozpocząć edycję",
+    "title": "Dokumenty",
     "untitled": "Bez tytułu"
   },
   "empty": "Brak przesłanych plików/folderów",

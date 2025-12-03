@@ -137,6 +137,8 @@
   "close": "Sluiten",
   "cmdk": {
     "about": "Over",
+    "aiModeEmptyState": "Typ je vraag in het invoerveld hierboven om een gesprek met de AI te starten",
+    "aiModePlaceholder": "Stel een vraag aan de AI...",
     "communitySupport": "Communityondersteuning",
     "discover": "Ontdekken",
     "knowledgeBase": "Kennisbank",

@@ -53,10 +53,12 @@
     "italic": "İtalik",
     "link": "Bağlantı",
     "numberList": "Numaralı liste",
+    "redo": "Yinele",
     "strikethrough": "Üstü çizili",
     "table": "tablo",
     "taskList": "Görev Listesi",
     "tex": "TeX Formülü",
-    "underline": "Altı çizili"
+    "underline": "Altı çizili",
+    "undo": "Geri Al"
   }
 }

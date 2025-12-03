@@ -137,6 +137,8 @@
   "close": "Kapat",
   "cmdk": {
     "about": "Hakkında",
+    "aiModeEmptyState": "Yukarıdaki giriş kutusuna sorunuzu yazarak yapay zeka ile sohbet etmeye başlayın",
+    "aiModePlaceholder": "Yapay zekaya soru sor...",
     "communitySupport": "Topluluk Desteği",
     "discover": "Keşfet",
     "knowledgeBase": "Bilgi Tabanı",

@@ -60,9 +60,14 @@
     "copyContent": "Copy All",
     "duplicate": "Duplicate",
     "empty": "No documents yet. Click the button above to create your first one.",
+    "filter": {
+      "all": "All",
+      "onlyInPages": "In Documents Only"
+    },
     "noResults": "No matching documents found.",
     "pageCount": "{{count}} pages in total",
     "selectNote": "Select a document to start editing",
+    "title": "Documents",
     "untitled": "Untitled"
   },
   "empty": "No files or folders have been uploaded yet.",

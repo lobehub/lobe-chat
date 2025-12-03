@@ -60,9 +60,14 @@
     "copyContent": "Gesamten Inhalt kopieren",
     "duplicate": "Kopie erstellen",
     "empty": "Noch keine Dokumente vorhanden. Klicke auf die Schaltfläche oben, um dein erstes Dokument zu erstellen.",
+    "filter": {
+      "all": "Alle",
+      "onlyInPages": "Nur in Dokumenten"
+    },
     "noResults": "Keine passenden Dokumente gefunden",
     "pageCount": "Insgesamt {{count}} Dokumente",
     "selectNote": "Wähle ein Dokument aus, um mit der Bearbeitung zu beginnen",
+    "title": "Dokumente",
     "untitled": "Ohne Titel"
   },
   "empty": "Keine hochgeladenen Dateien/Ordner vorhanden",

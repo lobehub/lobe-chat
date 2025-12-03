@@ -186,8 +186,10 @@
     }
   },
   "home": {
+    "communityAgents": "社群助手",
     "featuredAssistants": "推薦助手",
     "featuredModels": "推薦模型",
+    "featuredPlugins": "精選外掛",
     "featuredProviders": "推薦模型服務商",
     "featuredTools": "推薦插件",
     "more": "發現更多"

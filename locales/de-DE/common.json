@@ -137,6 +137,8 @@
   "close": "Schließen",
   "cmdk": {
     "about": "Über",
+    "aiModeEmptyState": "Gib deine Frage oben ein, um mit der KI zu chatten",
+    "aiModePlaceholder": "Stelle der KI eine Frage...",
     "communitySupport": "Community-Support",
     "discover": "Entdecken",
     "knowledgeBase": "Wissensdatenbank",

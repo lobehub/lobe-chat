@@ -60,9 +60,14 @@
     "copyContent": "전체 내용 복사",
     "duplicate": "복사본 만들기",
     "empty": "아직 문서가 없습니다. 위 버튼을 클릭하여 첫 번째 문서를 만들어보세요",
+    "filter": {
+      "all": "전체",
+      "onlyInPages": "문서에서만"
+    },
     "noResults": "일치하는 문서를 찾을 수 없습니다",
     "pageCount": "총 {{count}}개의 문서",
     "selectNote": "편집을 시작할 문서를 선택하세요",
+    "title": "문서",
     "untitled": "제목 없음"
   },
   "empty": "업로드된 파일/폴더가 없습니다",

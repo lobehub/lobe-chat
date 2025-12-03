@@ -137,6 +137,8 @@
   "close": "بستن",
   "cmdk": {
     "about": "درباره",
+    "aiModeEmptyState": "برای شروع گفتگو با هوش مصنوعی، سوال خود را در کادر بالا وارد کنید",
+    "aiModePlaceholder": "سوالی از هوش مصنوعی بپرسید...",
     "communitySupport": "پشتیبانی جامعه",
     "discover": "کشف",
     "knowledgeBase": "پایگاه دانش",

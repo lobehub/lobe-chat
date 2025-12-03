@@ -60,9 +60,14 @@
     "copyContent": "Volledige inhoud kopiëren",
     "duplicate": "Kopie maken",
     "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken.",
+    "filter": {
+      "all": "Alles",
+      "onlyInPages": "Alleen in documenten"
+    },
     "noResults": "Geen overeenkomende documenten gevonden",
     "pageCount": "Totaal {{count}} documenten",
     "selectNote": "Selecteer een document om te beginnen met bewerken",
+    "title": "Documenten",
     "untitled": "Zonder titel"
   },
   "empty": "Geen bestanden/mappen geüpload",
