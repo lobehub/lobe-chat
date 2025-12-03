@@ -5,13 +5,13 @@ import { Flexbox } from 'react-layout-kit';
 import Footer from '@/app/[variants]/(main)/home/_layout/Footer';
 import SkeletonList, { SkeletonItem } from '@/features/NavPanel/components/SkeletonList';
 
-interface SidbarLayoutProps {
+interface SidebarLayoutProps {
   body?: ReactNode;
   footer?: ReactNode;
   header?: ReactNode;
 }
 
-const SideBarLayout = memo<SidbarLayoutProps>(({ header, body, footer }) => {
+const SideBarLayout = memo<SidebarLayoutProps>(({ header, body, footer }) => {
   return (
     <Flexbox gap={4} style={{ height: '100%', overflow: 'hidden' }}>
       <Suspense fallback={<SkeletonItem height={44} />}>{header}</Suspense>
