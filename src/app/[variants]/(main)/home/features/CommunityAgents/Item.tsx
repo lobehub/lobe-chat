@@ -18,19 +18,20 @@ const CommunityAgentItem = memo<DiscoverAssistantItem>(
         height={RECENT_BLOCK_SIZE.AGENT.HEIGHT}
         justify={'space-between'}
         style={{
-          background: theme.colorFillQuaternary,
+          backgroundColor: theme.colorFillQuaternary,
           borderRadius: theme.borderRadiusLG,
           overflow: 'hidden',
         }}
-        variant={'borderless'}
+        variant={'filled'}
         width={RECENT_BLOCK_SIZE.AGENT.WIDTH}
       >
         <Block
           flex={1}
           padding={12}
-          shadow
           style={{
+            backgroundColor: theme.colorBgContainer,
             borderRadius: theme.borderRadiusLG,
+            boxShadow: '0 4px 8px -2px rgba(0,0,0,.02)',
             overflow: 'hidden',
           }}
           variant={'outlined'}
@@ -39,8 +40,14 @@ const CommunityAgentItem = memo<DiscoverAssistantItem>(
             {description}
           </Text>
         </Block>
-        <Flexbox align={'center'} gap={8} horizontal paddingBlock={8} paddingInline={12}>
-          <Flexbox flex={1} gap={1}>
+        <Flexbox gap={8} horizontal paddingBlock={8} paddingInline={12}>
+          <Flexbox
+            flex={1}
+            gap={1}
+            style={{
+              overflow: 'hidden',
+            }}
+          >
             <Text ellipsis fontSize={13} weight={500}>
               {title}
             </Text>
@@ -55,6 +62,8 @@ const CommunityAgentItem = memo<DiscoverAssistantItem>(
             size={36}
             style={{
               flex: 'none',
+
+              zIndex: 100,
             }}
           />
         </Flexbox>
