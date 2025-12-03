@@ -15,7 +15,7 @@ const FeaturedPluginsList = memo(() => {
 
   const { data: mcpList, isLoading } = useMcpList({
     page: 1,
-    pageSize: 6,
+    pageSize: 8,
   });
 
   // Loading state
@@ -23,7 +23,7 @@ const FeaturedPluginsList = memo(() => {
     return (
       <GroupSkeleton
         height={RECENT_BLOCK_SIZE.PLUGIN.HEIGHT}
-        rows={6}
+        rows={8}
         width={RECENT_BLOCK_SIZE.PLUGIN.WIDTH}
       />
     );

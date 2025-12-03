@@ -40,7 +40,7 @@ const FeaturedPlugins = memo(() => {
       icon={<MCP color={theme.colorTextDescription} size={18} />}
       title={t('home.featuredPlugins')}
     >
-      <Grid maxItemWidth={320} rows={4} width={'100%'}>
+      <Grid gap={12} maxItemWidth={320} rows={4} width={'100%'}>
         <Suspense
           fallback={
             <GroupSkeleton
