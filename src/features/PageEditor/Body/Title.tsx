@@ -34,43 +34,39 @@ const Title = memo(() => {
 
   return (
     <Flexbox
+      gap={16}
       onMouseEnter={() => setIsHoveringTitle(true)}
       onMouseLeave={() => setIsHoveringTitle(false)}
-      style={{ marginBottom: 24 }}
+      paddingBlock={16}
     >
       {/* Emoji picker above Choose Icon button */}
       {(currentEmoji || showEmojiPicker) && (
-        <Flexbox style={{ marginBottom: 4 }}>
-          <EmojiPicker
-            allowDelete
-            locale={locale}
-            onChange={(emoji) => {
-              setCurrentEmoji(emoji);
-              setShowEmojiPicker(false);
-              debouncedSave();
-            }}
-            onDelete={() => {
-              setCurrentEmoji(undefined);
-              setShowEmojiPicker(false);
-              debouncedSave();
-            }}
-            onOpenChange={(open) => {
-              setShowEmojiPicker(open);
-            }}
-            open={showEmojiPicker}
-            size={80}
-            style={{
-              fontSize: 80,
-              transform: 'translateX(-6px)',
-            }}
-            title={t('documentEditor.chooseIcon')}
-            value={currentEmoji}
-          />
-        </Flexbox>
+        <EmojiPicker
+          allowDelete
+          locale={locale}
+          onChange={(emoji) => {
+            setCurrentEmoji(emoji);
+            setShowEmojiPicker(false);
+            debouncedSave();
+          }}
+          onDelete={() => {
+            setCurrentEmoji(undefined);
+            setShowEmojiPicker(false);
+            debouncedSave();
+          }}
+          onOpenChange={(open) => {
+            setShowEmojiPicker(open);
+          }}
+          open={showEmojiPicker}
+          shape={'square'}
+          size={72}
+          title={t('documentEditor.chooseIcon')}
+          value={currentEmoji}
+        />
       )}
 
       {/* Choose Icon button - only shown when no emoji */}
-      <Flexbox style={{ marginBottom: 12 }}>
+      {!currentEmoji && !showEmojiPicker && (
         <Button
           icon={<Icon icon={SmilePlus} />}
           onClick={() => {
@@ -79,8 +75,7 @@ const Title = memo(() => {
           }}
           size="small"
           style={{
-            opacity: isHoveringTitle && !currentEmoji && !showEmojiPicker ? 1 : 0,
-            transform: 'translateX(-6px)',
+            opacity: isHoveringTitle ? 1 : 0,
             transition: `opacity ${theme.motionDurationMid} ${theme.motionEaseInOut}`,
             width: 'fit-content',
           }}
@@ -88,35 +83,35 @@ const Title = memo(() => {
         >
           {t('documentEditor.chooseIcon')}
         </Button>
-      </Flexbox>
+      )}
 
       {/* Title Input */}
-      <Flexbox align="center" direction="horizontal" gap={8}>
-        <input
-          onChange={(e) => {
-            setCurrentTitle(e.target.value);
-            debouncedSave();
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              handleTitleSubmit();
-            }
-          }}
-          placeholder={t('documentEditor.titlePlaceholder')}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: theme.colorText,
-            flex: 1,
-            fontSize: 40,
-            fontWeight: 700,
-            lineHeight: 1.2,
-            outline: 'none',
-          }}
-          value={currentTitle}
-        />
-      </Flexbox>
+      <input
+        onChange={(e) => {
+          setCurrentTitle(e.target.value);
+          debouncedSave();
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleTitleSubmit();
+          }
+        }}
+        placeholder={t('documentEditor.titlePlaceholder')}
+        style={{
+          background: 'transparent',
+          border: 'none',
+          color: theme.colorText,
+          flex: 1,
+          fontSize: 36,
+          fontWeight: 600,
+          lineHeight: 1.2,
+          outline: 'none',
+          padding: 0,
+          width: '100%',
+        }}
+        value={currentTitle}
+      />
     </Flexbox>
   );
 });
