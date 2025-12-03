@@ -16,13 +16,13 @@ const Actions = memo(() => {
   const items: MenuProps['items'] = useMemo(
     () => [
       {
-        icon: !showOnlyPagesNotInLibrary ? <Icon icon={Check} /> : undefined,
+        icon: <Icon icon={Check} style={{ opacity: !showOnlyPagesNotInLibrary ? 1 : 0 }} />,
         key: 'all',
         label: t('documentList.filter.all'),
         onClick: () => setShowOnlyPagesNotInLibrary(false),
       },
       {
-        icon: showOnlyPagesNotInLibrary ? <Icon icon={Check} /> : undefined,
+        icon: <Icon icon={Check} style={{ opacity: showOnlyPagesNotInLibrary ? 1 : 0 }} />,
         key: 'onlyInPages',
         label: t('documentList.filter.onlyInPages'),
         onClick: () => setShowOnlyPagesNotInLibrary(true),
