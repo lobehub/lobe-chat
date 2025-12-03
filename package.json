@@ -270,7 +270,7 @@
     "react": "^19.2.1",
     "react-confetti": "^6.4.0",
     "react-diff-view": "^3.3.2",
-    "react-dom": "19.2.0",
+    "react-dom": "^19.2.1",
     "react-fast-marquee": "^1.6.5",
     "react-hotkeys-hook": "^5.2.1",
     "react-i18next": "^15.7.4",
