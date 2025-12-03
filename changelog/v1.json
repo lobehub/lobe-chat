@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Better-auth add apple sso icon and label."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.150"
+  },
+  {
     "children": {},
     "date": "2025-12-03",
     "version": "2.0.0-next.149"
