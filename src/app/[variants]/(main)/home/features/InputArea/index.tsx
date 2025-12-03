@@ -17,7 +17,7 @@ const leftActions: ActionKeys[] = [
 
 const InputArea = memo(() => {
   return (
-    <Flexbox gap={8}>
+    <Flexbox gap={16} style={{ marginBottom: 16 }}>
       <ChatInputProvider
         chatInputEditorRef={(instance) => {
           if (!instance) return;
