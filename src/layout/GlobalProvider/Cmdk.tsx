@@ -398,9 +398,10 @@ const Cmdk = memo(() => {
               value={search}
             />
             {search.trim() && !isAiMode ? (
-              <Tag className={styles.backTag} onClick={handleAskAI}>
-                Ask AI
-              </Tag>
+              <>
+                <span style={{ fontSize: '14px', opacity: 0.6 }}>Ask AI</span>
+                <Tag>Tab</Tag>
+              </>
             ) : (
               <Tag>ESC</Tag>
             )}
