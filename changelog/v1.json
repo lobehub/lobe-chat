@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Udpate discover detail tools get & more link."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.154"
+  },
+  {
     "children": {},
     "date": "2025-12-03",
     "version": "2.0.0-next.153"
