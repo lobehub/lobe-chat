@@ -32,6 +32,17 @@ const Nav = memo(() => {
       {
         icon: SearchIcon,
         key: 'search',
+        onClick: () => {
+          // Trigger CommandPalette
+          const event = new KeyboardEvent('keydown', {
+            bubbles: true,
+            code: 'KeyK',
+            ctrlKey: false,
+            key: 'k',
+            metaKey: true,
+          });
+          document.dispatchEvent(event);
+        },
         title: t('tab.search'),
       },
       {
