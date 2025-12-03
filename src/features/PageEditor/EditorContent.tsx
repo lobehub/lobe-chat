@@ -12,6 +12,7 @@ import {
   ReactListPlugin,
   ReactMathPlugin,
   ReactTablePlugin,
+  ReactToolbarPlugin,
 } from '@lobehub/editor';
 import { Editor, useEditor } from '@lobehub/editor/react';
 import { Heading1Icon, Heading2Icon, Heading3Icon, ImageIcon, Table2Icon } from 'lucide-react';
@@ -19,6 +20,8 @@ import { CSSProperties, memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFileStore } from '@/store/file';
+
+import Toolbar from './Toolbar';
 
 type EditorInstance = ReturnType<typeof useEditor>;
 
@@ -124,6 +127,9 @@ const EditorContent = memo<EditorContentProps>(
             ReactTablePlugin,
             ReactMathPlugin,
             ReactImagePlugin,
+            Editor.withProps(ReactToolbarPlugin, {
+              children: <Toolbar editor={editor} floating />,
+            }),
           ]}
           slashOption={{
             items: [
