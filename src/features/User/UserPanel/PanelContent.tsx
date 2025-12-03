@@ -14,7 +14,6 @@ import DataStatistics from '../DataStatistics';
 import UserInfo from '../UserInfo';
 import UserLoginOrSignup from '../UserLoginOrSignup';
 import LangButton from './LangButton';
-import ThemeButton from './ThemeButton';
 import { useMenu } from './useMenu';
 
 const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
@@ -65,7 +64,6 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
         )}
         <Flexbox align={'center'} flex={'none'} gap={2} horizontal>
           <LangButton />
-          <ThemeButton />
         </Flexbox>
       </Flexbox>
     </Flexbox>

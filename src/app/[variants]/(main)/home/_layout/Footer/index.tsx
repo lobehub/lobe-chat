@@ -8,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import LabsModal from '@/components/LabsModal';
 import { GITHUB } from '@/const/url';
+import ThemeButton from '@/features/User/UserPanel/ThemeButton';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 const Footer = memo(() => {
@@ -40,6 +41,7 @@ const Footer = memo(() => {
             title={t('labs')}
           />
         </Flexbox>
+        <ThemeButton placement={'top'} size={16} />
       </Flexbox>
 
       <LabsModal onClose={handleCloseLabsModal} open={isLabsModalOpen} />
