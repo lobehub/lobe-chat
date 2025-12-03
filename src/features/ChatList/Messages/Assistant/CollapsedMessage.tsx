@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 interface CollapsedMessageProps {
   content: string;
@@ -12,12 +14,13 @@ interface CollapsedMessageProps {
 
 export const CollapsedMessage = memo<CollapsedMessageProps>(({ id, content }) => {
   const { t } = useTranslation('chat');
+  const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   const toggleMessageCollapsed = useChatStore((s) => s.toggleMessageCollapsed);
 
   return (
     <Flexbox>
       <MaskShadow>
-        <Markdown variant={'chat'}>{content?.slice(0, 100)}</Markdown>
+        <Markdown fontSize={fontSize} variant={'chat'}>{content?.slice(0, 100)}</Markdown>
       </MaskShadow>
       <Flexbox padding={4}>
         <Button

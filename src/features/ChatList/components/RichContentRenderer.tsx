@@ -2,6 +2,8 @@ import { Image, Markdown } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { MessageContentPart } from '@/types/index';
 
 interface RichContentRendererProps {
@@ -9,12 +11,13 @@ interface RichContentRendererProps {
 }
 
 export const RichContentRenderer = memo<RichContentRendererProps>(({ parts }) => {
+  const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   return (
     <Flexbox gap={8}>
       {parts.map((part, index) => {
         if (part.type === 'text') {
           return (
-            <Markdown key={index} variant="chat">
+            <Markdown key={index} fontSize={fontSize} variant="chat">
               {part.text}
             </Markdown>
           );

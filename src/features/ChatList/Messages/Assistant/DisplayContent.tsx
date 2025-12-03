@@ -6,6 +6,8 @@ import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
 import { RichContentRenderer } from '@/features/ChatList/components/RichContentRenderer';
 import { normalizeThinkTags, processWithArtifact } from '@/features/ChatList/utils/markdown';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 const MessageContent = memo<{
   addIdOnDOM?: boolean;
@@ -24,6 +26,7 @@ const MessageContent = memo<{
     isMultimodal,
     tempDisplayContent,
   }) => {
+    const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
     const message = normalizeThinkTags(processWithArtifact(content));
     if (isToolCallGenerating) return;
 
@@ -34,7 +37,7 @@ const MessageContent = memo<{
     return contentParts ? (
       <RichContentRenderer parts={contentParts} />
     ) : (
-      <Markdown {...markdownProps} variant={'chat'}>
+      <Markdown {...markdownProps} fontSize={fontSize} variant={'chat'}>
         {message}
       </Markdown>
     );

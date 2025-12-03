@@ -4,6 +4,8 @@ import { memo } from 'react';
 
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
 
@@ -21,6 +23,7 @@ interface ContentBlockProps {
 }
 
 const MessageContent = memo<ContentBlockProps>(({ content, hasTools, markdownProps }) => {
+  const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   const message = normalizeThinkTags(processWithArtifact(content));
 
   const { styles, cx } = useStyles();
@@ -35,7 +38,7 @@ const MessageContent = memo<ContentBlockProps>(({ content, hasTools, markdownPro
 
   return (
     content && (
-      <Markdown {...markdownProps} className={cx(hasTools && styles.pWithTool)} variant={'chat'}>
+      <Markdown {...markdownProps} className={cx(hasTools && styles.pWithTool)} fontSize={fontSize} variant={'chat'}>
         {message}
       </Markdown>
     )
