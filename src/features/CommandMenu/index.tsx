@@ -46,8 +46,8 @@ const CommandMenu = memo(() => {
         <Command
           className={styles.commandRoot}
           onKeyDown={(e) => {
-            // Tab key to ask AI when there's input text and not in AI mode
-            if (e.key === 'Tab' && search.trim() && !isAiMode) {
+            // Tab key to ask AI when not in AI mode
+            if (e.key === 'Tab' && !isAiMode) {
               e.preventDefault();
               handleAskAI();
               return;

@@ -72,14 +72,15 @@ export const useCommandMenu = () => {
   };
 
   const handleAskAI = () => {
-    if (!search.trim()) return;
-
-    const userMessage: ChatMessage = {
-      content: search,
-      id: Date.now().toString(),
-      role: 'user',
-    };
-    setChatMessages((prev) => [...prev, userMessage]);
+    // Allow entering AI mode even without content
+    if (search.trim()) {
+      const userMessage: ChatMessage = {
+        content: search,
+        id: Date.now().toString(),
+        role: 'user',
+      };
+      setChatMessages((prev) => [...prev, userMessage]);
+    }
     setPages([...pages, 'ai-chat']);
   };
 

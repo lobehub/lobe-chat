@@ -28,10 +28,10 @@ const CommandInput = memo<CommandInputProps>(
         <Command.Input
           autoFocus
           onValueChange={onValueChange}
-          placeholder={t('cmdk.searchPlaceholder')}
+          placeholder={isAiMode ? t('cmdk.aiModePlaceholder') : t('cmdk.searchPlaceholder')}
           value={search}
         />
-        {search.trim() && !isAiMode ? (
+        {!isAiMode && search.trim() ? (
           <>
             <span style={{ fontSize: '14px', opacity: 0.6 }}>Ask AI</span>
             <Tag>Tab</Tag>

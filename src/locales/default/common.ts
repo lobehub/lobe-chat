@@ -140,6 +140,8 @@ export default {
   close: '关闭',
   cmdk: {
     about: '关于',
+    aiModeEmptyState: '在上方输入框中输入你的问题，开始与 AI 对话',
+    aiModePlaceholder: '向 AI 提问...',
     communitySupport: '社区支持',
     discover: '发现',
     knowledgeBase: '知识库',
