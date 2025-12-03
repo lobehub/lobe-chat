@@ -13,7 +13,7 @@ const Layout = () => {
       <Sidebar />
       <Flexbox
         flex={1}
-        height={'100vh'}
+        height={'100%'}
         style={{
           background: theme.colorBgContainerSecondary,
           overflow: 'hidden',

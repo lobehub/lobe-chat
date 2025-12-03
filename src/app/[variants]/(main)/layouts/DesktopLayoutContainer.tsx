@@ -2,25 +2,24 @@ import { useTheme } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { isDesktop } from '@/const/version';
-
 const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
   const theme = useTheme();
 
-  if (!isDesktop) return children;
-
   return (
-    <Flexbox
-      style={{
-        background: theme.colorBgLayout,
-        borderInlineStart: `1px solid ${theme.colorBorderSecondary}`,
-        borderStartStartRadius: 12,
-        borderTop: `1px solid ${theme.colorBorderSecondary}`,
-        overflow: 'hidden',
-      }}
-      width={'100%'}
-    >
-      {children}
+    <Flexbox height={'100%'} padding={8} style={{ overflow: 'hidden' }} width={'100%'}>
+      <Flexbox
+        height={'100%'}
+        style={{
+          background: theme.colorBgContainer,
+          border: `1px solid ${theme.colorBorder}`,
+          borderRadius: theme.borderRadius,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+        width={'100%'}
+      >
+        {children}
+      </Flexbox>
     </Flexbox>
   );
 });

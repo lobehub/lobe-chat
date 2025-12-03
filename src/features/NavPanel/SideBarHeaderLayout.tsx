@@ -33,6 +33,7 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
   `,
   container: css`
     overflow: hidden;
+    margin-block-start: 8px;
 
     #${BACK_BUTTON_ID} {
       width: 0 !important;

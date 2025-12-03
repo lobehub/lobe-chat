@@ -93,8 +93,9 @@ const NavPanel = memo(() => {
       onExpandChange={handleExpand}
       onSizeChange={handleSizeChange}
       placement="left"
+      showBorder={false}
       size={{ height: '100%', width }}
-      style={{ overflow: 'hidden' }}
+      style={{ marginRight: expand ? -8 : 0, overflow: 'hidden', position: 'relative' }}
     >
       <AnimatePresence initial={false} mode="popLayout">
         <motion.div
