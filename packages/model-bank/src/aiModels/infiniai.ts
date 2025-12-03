@@ -6,6 +6,46 @@ const infiniaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description: 'DeepSeek-V3.2 是一个在高计算效率与卓越推理和代理性能之间取得平衡的模型。',
+    displayName: 'DeepSeek V3.2',
+    id: 'deepseek-v3.2',
+    maxOutput: 8192,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-12-02',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: 'DeepSeek-V3.2 Thinking 是 DeepSeek-V3.2 的思考模式版本，专注于推理任务。',
+    displayName: 'DeepSeek V3.2 Thinking',
+    enabled: true,
+    id: 'deepseek-v3.2-thinking',
+    maxOutput: 65_536,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-12-02',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 200_000,
@@ -55,7 +95,6 @@ const infiniaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description: 'DeepSeek-V3.2-Exp 是深度求索推出的实验性大语言模型，具有更强的推理和生成能力。',
     displayName: 'DeepSeek V3.2 Exp',
-    enabled: true,
     id: 'deepseek-v3.2-exp',
     maxOutput: 65_536,
     pricing: {
