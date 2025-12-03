@@ -14,7 +14,7 @@ import {
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAddFilesToKnowledgeBaseModal } from '@/features/LibraryModal';
+import RepoIcon from '@/components/RepoIcon';
 import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
@@ -33,7 +33,7 @@ interface DropdownMenuProps {
 
 const DropdownMenu = memo<DropdownMenuProps>(
   ({ id, knowledgeBaseId, url, filename, fileType, onRenameStart }) => {
-    const { t } = useTranslation(['components', 'common']);
+    const { t } = useTranslation(['components', 'common', 'knowledgeBase']);
     const { message, modal } = App.useApp();
 
     const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
@@ -42,27 +42,53 @@ const DropdownMenu = memo<DropdownMenuProps>(
       s.removeFileItem,
       s.refreshFileList,
     ]);
-    const [removeFilesFromKnowledgeBase] = useKnowledgeBaseStore((s) => [
-      s.removeFilesFromKnowledgeBase,
-    ]);
+    const [removeFilesFromKnowledgeBase, addFilesToKnowledgeBase, useFetchKnowledgeBaseList] =
+      useKnowledgeBaseStore((s) => [
+        s.removeFilesFromKnowledgeBase,
+        s.addFilesToKnowledgeBase,
+        s.useFetchKnowledgeBaseList,
+      ]);
+
+    const { data: knowledgeBases } = useFetchKnowledgeBaseList();
 
     const inKnowledgeBase = !!knowledgeBaseId;
-    const { open } = useAddFilesToKnowledgeBaseModal();
     const isFolder = fileType === 'custom/folder';
 
     const items = useMemo(() => {
+      // Filter out current knowledge base and create submenu items
+      const availableKnowledgeBases = (knowledgeBases || []).filter(
+        (kb) => kb.id !== knowledgeBaseId,
+      );
+
+      const addToKnowledgeBaseSubmenu: ItemType[] = availableKnowledgeBases.map((kb) => ({
+        icon: <RepoIcon />,
+        key: `add-to-kb-${kb.id}`,
+        label: <span style={{ marginLeft: 8 }}>{kb.name}</span>,
+        onClick: async ({ domEvent }) => {
+          domEvent.stopPropagation();
+          try {
+            await addFilesToKnowledgeBase(kb.id, [id]);
+            message.success(
+              t('addToKnowledgeBase.addSuccess', {
+                count: 1,
+                ns: 'knowledgeBase',
+              }),
+            );
+          } catch (e) {
+            console.error(e);
+            message.error(t('addToKnowledgeBase.error', { ns: 'knowledgeBase' }));
+          }
+        },
+      }));
+
       const knowledgeBaseActions = (
         inKnowledgeBase
           ? [
-              {
+              availableKnowledgeBases.length > 0 && {
+                children: addToKnowledgeBaseSubmenu,
                 icon: <Icon icon={BookPlusIcon} />,
                 key: 'addToOtherKnowledgeBase',
                 label: t('FileManager.actions.addToOtherKnowledgeBase'),
-                onClick: async ({ domEvent }) => {
-                  domEvent.stopPropagation();
-
-                  open({ fileIds: [id], knowledgeBaseId });
-                },
               },
               {
                 icon: <Icon icon={BookMinusIcon} />,
@@ -88,14 +114,11 @@ const DropdownMenu = memo<DropdownMenuProps>(
               },
             ]
           : [
-              {
+              availableKnowledgeBases.length > 0 && {
+                children: addToKnowledgeBaseSubmenu,
                 icon: <Icon icon={BookPlusIcon} />,
                 key: 'addToKnowledgeBase',
                 label: t('FileManager.actions.addToKnowledgeBase'),
-                onClick: async ({ domEvent }) => {
-                  domEvent.stopPropagation();
-                  open({ fileIds: [id] });
-                },
               },
             ]
       ) as ItemType[];
@@ -106,7 +129,7 @@ const DropdownMenu = memo<DropdownMenuProps>(
           {
             type: 'divider',
           },
-          {
+          inKnowledgeBase && {
             icon: <Icon icon={FolderInputIcon} />,
             key: 'moveToFolder',
             label: t('FileManager.actions.moveToFolder'),
@@ -178,7 +201,7 @@ const DropdownMenu = memo<DropdownMenuProps>(
           },
         ] as ItemType[]
       ).filter(Boolean);
-    }, [inKnowledgeBase, isFolder]);
+    }, [inKnowledgeBase, isFolder, knowledgeBases, knowledgeBaseId, id]);
 
     return (
       <>
