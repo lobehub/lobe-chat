@@ -145,7 +145,8 @@ export const auth = betterAuth({
       generateId: ({ model }) => {
         // Better Auth passes the model name; handle both singular and plural for safety.
         if (model === 'user' || model === 'users') {
-          return idGenerator('user', 12);
+          // clerk id length is 28
+          return idGenerator('user', 28);
         }
 
         // Other models: use shared nanoid generator (12 chars) to keep consistency.
