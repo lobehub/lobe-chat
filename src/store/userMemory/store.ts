@@ -1,6 +1,5 @@
 import isEqual from 'fast-deep-equal';
 import { type SWRResponse, mutate } from 'swr';
-import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { type StateCreator } from 'zustand/vanilla';
@@ -122,7 +121,7 @@ const createStore: StateCreator<UserMemoryStore, [['zustand/devtools', never]]> 
 const devtools = createDevtools('userMemory');
 
 export const useUserMemoryStore = createWithEqualityFn<UserMemoryStore>()(
-  subscribeWithSelector(devtools(createStore)),
+  devtools(createStore),
   shallow,
 );
 

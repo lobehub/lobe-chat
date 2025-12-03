@@ -1,4 +1,4 @@
-import { LibraryBigIcon, Settings } from 'lucide-react';
+import { BrainCircuit, LibraryBigIcon, Settings } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -35,6 +35,12 @@ const BottomMenu = memo(() => {
           key: SidebarTabKey.Resource,
           title: t('tab.resource'),
           url: '/resource',
+        },
+        {
+          icon: BrainCircuit,
+          key: SidebarTabKey.Memory,
+          title: t('tab.memory'),
+          url: '/memory',
         },
       ].filter(Boolean) as Item[],
     [t],
