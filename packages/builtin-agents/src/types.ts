@@ -21,8 +21,6 @@ export interface BuiltinAgentPersistConfig {
   model?: string;
   /** Default provider */
   provider?: string;
-  /** Unique identifier for the builtin agent */
-  slug: BuiltinAgentSlug;
 }
 
 /**
@@ -40,17 +38,28 @@ export interface BuiltinAgentRuntimeResult {
 export interface RuntimeContext {
   /** Current date string (e.g., "2024-12-03") */
   currentDate: string;
-  // PageAgent specific
-/** Document content for PageAgent */
+
+  /** Document content for PageAgent */
   documentContent?: string;
 
-  // AgentBuilder specific
-/** Target agent config for AgentBuilder */
+  /** Current model being used */
+  model?: string;
+
+  /** Target agent config for AgentBuilder */
   targetAgentConfig?: LobeAgentConfig;
 
   /** User's locale */
   userLocale?: string;
 }
+
+/**
+ * Runtime config - can be either a function or a plain object
+ * - Function: (ctx: RuntimeContext) => BuiltinAgentRuntimeResult
+ * - Object: BuiltinAgentRuntimeResult (static config)
+ */
+export type BuiltinAgentRuntimeConfig =
+  | ((ctx: RuntimeContext) => BuiltinAgentRuntimeResult)
+  | BuiltinAgentRuntimeResult;
 
 /**
  * Builtin Agent Definition - complete definition with persist and runtime parts
@@ -59,12 +68,18 @@ export interface BuiltinAgentDefinition {
   /**
    * Persist config - stored in database
    */
-  persist: BuiltinAgentPersistConfig;
+  persist?: BuiltinAgentPersistConfig;
 
   /**
-   * Runtime function - generates dynamic config based on context
-   * @param ctx - Runtime context with dynamic information
-   * @returns Runtime result with generated systemRole etc.
+   * Runtime config - generates dynamic config based on context
+   * Can be either:
+   * - A function that takes RuntimeContext and returns BuiltinAgentRuntimeResult
+   * - A plain BuiltinAgentRuntimeResult object (for static systemRole)
    */
-  runtime: (ctx: RuntimeContext) => BuiltinAgentRuntimeResult;
+  runtime: BuiltinAgentRuntimeConfig;
+
+  /**
+   * Unique identifier for the builtin agent
+   */
+  slug: BuiltinAgentSlug;
 }

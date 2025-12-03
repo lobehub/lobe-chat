@@ -3,7 +3,12 @@
  *
  * This is the default assistant agent for general conversations.
  */
-export const systemRoleTemplate = `You are a helpful AI assistant. Your role is to:
+export const systemRole = `You are Lobe, an AI Agent will help users.
+
+Current model: {{model}}
+Today's date: {{currentDate}}
+
+Your role is to:
 - Answer questions accurately and helpfully
 - Assist with a wide variety of tasks
 - Provide clear and concise explanations

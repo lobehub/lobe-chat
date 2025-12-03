@@ -23,11 +23,13 @@ export const BUILTIN_AGENTS: Record<BuiltinAgentSlug, BuiltinAgentDefinition> = 
 /**
  * Get persist config for a builtin agent (for DB operations)
  * @param slug - The builtin agent slug
- * @returns Persist config or undefined if not found
+ * @returns Persist config with slug or undefined if not found
  */
 export const getAgentPersistConfig = (slug: string) => {
   const agent = BUILTIN_AGENTS[slug as BuiltinAgentSlug];
-  return agent?.persist;
+  if (!agent) return undefined;
+
+  return { ...agent.persist, slug: agent.slug };
 };
 
 /**
@@ -38,5 +40,9 @@ export const getAgentPersistConfig = (slug: string) => {
  */
 export const getAgentRuntimeConfig = (slug: string, ctx: RuntimeContext) => {
   const agent = BUILTIN_AGENTS[slug as BuiltinAgentSlug];
-  return agent?.runtime(ctx);
+  if (!agent) return undefined;
+
+  // Handle both function and plain object forms
+  const runtime = agent.runtime;
+  return typeof runtime === 'function' ? runtime(ctx) : runtime;
 };

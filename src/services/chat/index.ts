@@ -198,7 +198,10 @@ class ChatService {
       // Try to get runtime config for builtin agents
       const runtimeConfig = getAgentRuntimeConfig(agentSlug, {
         currentDate: dayjs().format('YYYY-MM-DD'),
+        model: payload.model,
         // TODO: Add more context for specific builtin agents:
+        // - documentContent for page-agent
+        // - targetAgentConfig for agent-builder
       });
       if (runtimeConfig?.systemRole) {
         systemRole = runtimeConfig.systemRole;

@@ -10,16 +10,10 @@ export const PAGE_AGENT: BuiltinAgentDefinition = {
   persist: {
     model: 'claude-sonnet-4-5-20250929',
     provider: 'anthropic',
-    slug: BUILTIN_AGENT_SLUGS.pageAgent,
   },
 
   // Runtime function - generates dynamic config
-  runtime: (ctx) => ({
-    systemRole: `${systemRoleTemplate}
+  runtime: { systemRole: systemRoleTemplate },
 
-Current document:
-${ctx.documentContent || 'No document loaded'}
-
-Today's date: ${ctx.currentDate}`,
-  }),
+  slug: BUILTIN_AGENT_SLUGS.pageAgent,
 };
