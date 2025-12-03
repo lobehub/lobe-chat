@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-12-03",
+    "version": "2.0.0-next.149"
+  },
+  {
     "children": {
       "fixes": [
         "Remove apiMode param from Azure and Cloudflare provider requests, when desktop use contextMenu not work."
