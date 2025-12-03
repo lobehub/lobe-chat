@@ -158,12 +158,6 @@ export const createMobileRouter = () =>
           path: 'settings',
         },
 
-        // Labs routes
-        {
-          element: dynamicElement(() => import('./(main)/labs')),
-          path: 'labs',
-        },
-
         // Me routes (mobile personal center)
         {
           children: [

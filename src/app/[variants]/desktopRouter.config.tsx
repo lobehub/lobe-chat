@@ -231,12 +231,6 @@ export const createDesktopRouter = () =>
           path: 'page',
         },
 
-        // Labs routes
-        {
-          element: dynamicElement(() => import('./(main)/labs')),
-          path: 'labs',
-        },
-
         // changelog routes
         {
           children: [

@@ -1,5 +1,6 @@
 'use client';
 
+import { Modal } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -7,8 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors';
 
-import Hero from './components/Hero';
-import LabCard from './components/LabCard';
+import Hero from './Hero';
+import LabCard from './LabCard';
 
 interface LabItem {
   checked: boolean;
@@ -18,7 +19,12 @@ interface LabItem {
   title: string;
 }
 
-const LabsPage = memo(() => {
+interface LabsModalProps {
+  onClose: () => void;
+  open: boolean;
+}
+
+const LabsModal = memo<LabsModalProps>(({ open, onClose }) => {
   const { t } = useTranslation('labs');
 
   const [
@@ -51,24 +57,26 @@ const LabsPage = memo(() => {
   ];
 
   return (
-    <Flexbox gap={16} padding={8} style={{ alignItems: 'center', width: '100%' }}>
-      <Hero />
+    <Modal footer={null} onCancel={onClose} open={open} width={900}>
+      <Flexbox gap={16} padding={16} style={{ alignItems: 'center', width: '100%' }}>
+        <Hero />
 
-      {labItems.map((item) => (
-        <LabCard
-          checked={item.checked}
-          cover={item.cover}
-          desc={item.desc}
-          key={item.key}
-          loading={!isPreferenceInit}
-          onChange={(checked: boolean) => updateLab({ [item.key]: checked })}
-          title={item.title}
-        />
-      ))}
-    </Flexbox>
+        {labItems.map((item) => (
+          <LabCard
+            checked={item.checked}
+            cover={item.cover}
+            desc={item.desc}
+            key={item.key}
+            loading={!isPreferenceInit}
+            onChange={(checked: boolean) => updateLab({ [item.key]: checked })}
+            title={item.title}
+          />
+        ))}
+      </Flexbox>
+    </Modal>
   );
 });
 
-LabsPage.displayName = 'LabsPage';
+LabsModal.displayName = 'LabsModal';
 
-export default LabsPage;
+export default LabsModal;
