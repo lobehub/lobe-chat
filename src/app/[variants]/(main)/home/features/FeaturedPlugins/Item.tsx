@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import MetaInfo from '@/app/[variants]/(main)/discover/(list)/mcp/features/List/MetaInfo';
+import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
 import { DiscoverMcpItem } from '@/types/discover';
 
 const FeaturedPluginItem = memo<DiscoverMcpItem>(
@@ -15,6 +16,7 @@ const FeaturedPluginItem = memo<DiscoverMcpItem>(
         clickable
         flex={'none'}
         gap={12}
+        height={RECENT_BLOCK_SIZE.PLUGIN.HEIGHT}
         horizontal
         padding={12}
         style={{

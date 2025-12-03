@@ -90,7 +90,7 @@ const ScrollShadowWithButton = memo<FlexboxProps>(({ children, ...rest }) => {
         onScrollCapture={checkScrollability}
         orientation={'horizontal'}
         ref={scrollRef}
-        size={24}
+        size={16}
       >
         <Flexbox gap={12} horizontal>
           {children}

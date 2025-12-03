@@ -11,7 +11,11 @@ const Home = memo(() => {
   return (
     <>
       <NavHeader right={<WideScreenButton />} />
-      <Flexbox height={'100%'} style={{ overflowY: 'auto', position: 'relative' }} width={'100%'}>
+      <Flexbox
+        height={'100%'}
+        style={{ overflowY: 'auto', paddingBottom: '16vh', position: 'relative' }}
+        width={'100%'}
+      >
         <WideScreenContainer>
           <HomeContent />
         </WideScreenContainer>
