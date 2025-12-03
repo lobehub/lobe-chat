@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { sanitizeSVGContent } from './sanitize';
+import { sanitizeMermaidContent, sanitizeSVGContent } from './sanitize';
 
 describe('sanitizeSVGContent', () => {
   it('should preserve safe SVG elements and attributes', () => {
@@ -104,5 +104,123 @@ describe('sanitizeSVGContent', () => {
         </defs>
         <g transform="translate(50,50)">
           </g></svg>`);
+  });
+});
+
+describe('sanitizeMermaidContent', () => {
+  it('should preserve safe Mermaid diagram content', () => {
+    const safeMermaid = `
+      graph TD;
+        A[Start] --> B{Decision}
+        B -->|Yes| C[OK]
+        B -->|No| D[End]
+    `;
+
+    const sanitized = sanitizeMermaidContent(safeMermaid);
+
+    expect(sanitized).toContain('graph TD;');
+    expect(sanitized).toContain('A[Start]');
+    expect(sanitized).toContain('B{Decision}');
+  });
+
+  it('should remove XSS attack via img onerror in HTML label', () => {
+    const maliciousMermaid = `
+      graph TD;
+        A["<img src=x onerror='alert(1)'>"];
+    `;
+
+    const sanitized = sanitizeMermaidContent(maliciousMermaid);
+
+    expect(sanitized).not.toContain('onerror');
+    expect(sanitized).not.toContain('alert');
+    expect(sanitized).not.toContain('<img');
+    expect(sanitized).toContain('graph TD;');
+  });
+
+  it('should remove script tags from HTML labels', () => {
+    const maliciousMermaid = `
+      graph TD;
+        A["<script>malicious()</script>"];
+        B["Normal Label"];
+    `;
+
+    const sanitized = sanitizeMermaidContent(maliciousMermaid);
+
+    expect(sanitized).not.toContain('<script>');
+    expect(sanitized).not.toContain('malicious');
+    expect(sanitized).toContain('A[""]');
+    expect(sanitized).toContain('B["Normal Label"]');
+  });
+
+  it('should remove event handlers from HTML labels', () => {
+    const maliciousMermaid = `
+      graph TD;
+        A["<div onclick='evil()'>Click me</div>"];
+        B["<span onmouseover='hack()'>Hover</span>"];
+    `;
+
+    const sanitized = sanitizeMermaidContent(maliciousMermaid);
+
+    expect(sanitized).not.toContain('onclick');
+    expect(sanitized).not.toContain('onmouseover');
+    expect(sanitized).not.toContain('evil');
+    expect(sanitized).not.toContain('hack');
+  });
+
+  it('should handle the PoC RCE attack via electronAPI', () => {
+    // This is the actual PoC from the vulnerability report
+    const maliciousMermaid = `
+      graph TD;
+      A["<img src=x onerror='window.electronAPI.invoke(String.fromCharCode(114,117,110,67,111,109,109,97,110,100),{command:String.fromCharCode(99,97,108,99,46,101,120,101)})'>"];
+    `;
+
+    const sanitized = sanitizeMermaidContent(maliciousMermaid);
+
+    expect(sanitized).not.toContain('onerror');
+    expect(sanitized).not.toContain('electronAPI');
+    expect(sanitized).not.toContain('String.fromCharCode');
+    expect(sanitized).not.toContain('<img');
+  });
+
+  it('should preserve safe formatting tags in labels', () => {
+    const safeMermaid = `
+      graph TD;
+        A["<b>Bold</b> and <i>italic</i>"];
+        B["<strong>Strong</strong>"];
+    `;
+
+    const sanitized = sanitizeMermaidContent(safeMermaid);
+
+    expect(sanitized).toContain('<b>Bold</b>');
+    expect(sanitized).toContain('<i>italic</i>');
+    expect(sanitized).toContain('<strong>Strong</strong>');
+  });
+
+  it('should handle nested brackets correctly', () => {
+    const mermaid = `
+      graph TD;
+        A[["Subroutine"]];
+        B[("Database")];
+    `;
+
+    const sanitized = sanitizeMermaidContent(mermaid);
+
+    expect(sanitized).toContain('A[["Subroutine"]]');
+    expect(sanitized).toContain('B[("Database")]');
+  });
+
+  it('should handle empty content gracefully', () => {
+    expect(sanitizeMermaidContent('')).toBe('');
+  });
+
+  it('should handle content without HTML labels', () => {
+    const simpleMermaid = `
+      graph LR
+        A --> B --> C
+    `;
+
+    const sanitized = sanitizeMermaidContent(simpleMermaid);
+
+    expect(sanitized).toBe(simpleMermaid);
   });
 });
