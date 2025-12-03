@@ -11,7 +11,7 @@ const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
         height={'100%'}
         style={{
           background: theme.colorBgContainer,
-          border: `1px solid ${theme.colorBorder}`,
+          border: `1px solid ${theme.isDarkMode ? theme.colorBorderSecondary : theme.colorBorder}`,
           borderRadius: theme.borderRadius,
           overflow: 'hidden',
           position: 'relative',

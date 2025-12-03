@@ -15,7 +15,9 @@ const Layout = () => {
         flex={1}
         height={'100%'}
         style={{
-          background: theme.colorBgContainerSecondary,
+          background: theme.isDarkMode
+            ? `linear-gradient(to bottom, ${theme.colorBgContainer}, ${theme.colorBgContainerSecondary})`
+            : theme.colorBgContainerSecondary,
           overflow: 'hidden',
           position: 'relative',
         }}
