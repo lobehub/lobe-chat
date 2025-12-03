@@ -19,6 +19,8 @@ import { EmailService } from '@/server/services/email';
 const VERIFICATION_LINK_EXPIRES_IN = 3600;
 const MAGIC_LINK_EXPIRES_IN = 900;
 const enableMagicLink = authEnv.NEXT_PUBLIC_ENABLE_MAGIC_LINK;
+const APPLE_TRUSTED_ORIGIN = 'https://appleid.apple.com';
+const enabledSSOProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
 
 const { socialProviders, genericOAuthProviders } = initBetterAuthSSOProviders();
 
@@ -56,7 +58,14 @@ const getTrustedOrigins = () => {
     normalizeOrigin(process.env.VERCEL_URL),
   ].filter(Boolean) as string[];
 
-  return defaults.length > 0 ? Array.from(new Set(defaults)) : undefined;
+  const baseTrustedOrigins = defaults.length > 0 ? Array.from(new Set(defaults)) : undefined;
+
+  if (!enabledSSOProviders.includes('apple')) return baseTrustedOrigins;
+
+  const mergedOrigins = new Set(baseTrustedOrigins || []);
+  mergedOrigins.add(APPLE_TRUSTED_ORIGIN);
+
+  return Array.from(mergedOrigins);
 };
 
 export const auth = betterAuth({
@@ -64,7 +73,7 @@ export const auth = betterAuth({
     accountLinking: {
       allowDifferentEmails: true,
       enabled: true,
-      trustedProviders: parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS),
+      trustedProviders: enabledSSOProviders,
     },
   },
 

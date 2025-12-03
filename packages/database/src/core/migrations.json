@@ -884,12 +884,12 @@
       "\nCREATE INDEX IF NOT EXISTS \"account_userId_idx\" ON \"accounts\" USING btree (\"user_id\");\n",
       "\nCREATE INDEX IF NOT EXISTS \"auth_session_userId_idx\" ON \"auth_sessions\" USING btree (\"user_id\");\n",
       "\nCREATE INDEX IF NOT EXISTS \"verification_identifier_idx\" ON \"verifications\" USING btree (\"identifier\");\n",
-      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique') THEN\n    UPDATE \"users\" SET \"email\" = NULL WHERE \"email\" = '';\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_email_unique\" UNIQUE (\"email\");\n  END IF;\nEND $$;\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique') THEN\n    -- Normalize empty emails so the unique constraint can be created safely\n    UPDATE \"users\" SET \"email\" = NULL WHERE \"email\" = '';\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_email_unique\" UNIQUE (\"email\");\n  END IF;\nEND $$;\n",
       "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_number_unique') THEN\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_phone_number_unique\" UNIQUE (\"phone_number\");\n  END IF;\nEND $$;\n"
     ],
     "bps": true,
     "folderMillis": 1764579351312,
-    "hash": "22fb7a65764b1f3e3c1ae2ce95d448685e6a01d1fb2f8c3f925c655f0824c161"
+    "hash": "1d2536a9471bb87686b35053f98ba7762259a07c819dc4489bb4f3c7f27a4d8d"
   },
   {
     "sql": [
@@ -901,5 +901,14 @@
     "bps": true,
     "folderMillis": 1764583392443,
     "hash": "6a43d90ee1d2e1e008d1b8206f227aa05b9a2e2a8fc8c31ec608a3716c716a6c"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"agents\" DROP CONSTRAINT \"agents_slug_unique\";",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"agents_slug_user_id_unique\" ON \"agents\" USING btree (\"slug\",\"user_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764685643024,
+    "hash": "6e7ac7f964eb03efa3cb0d2fd35ded23e25c3abf955c4c2a51418f8daef54af9"
   }
 ]
