@@ -2,6 +2,8 @@ import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_SEARCH_FC_MODEL } from '@lobec
 import { describe, expect, it, vi } from 'vitest';
 
 import { AgentStoreState } from '@/store/agent/initialState';
+import { initialAgentSliceState } from '@/store/agent/slices/agent/initialState';
+import { initialBuiltinAgentSliceState } from '@/store/agent/slices/builtin/initialState';
 
 import { agentChatConfigSelectors } from './chatConfigSelectors';
 
@@ -12,15 +14,8 @@ vi.mock('@lobechat/model-runtime', () => ({
 }));
 
 const createState = (overrides: Partial<AgentStoreState> = {}): AgentStoreState => ({
-  activeAgentId: undefined,
-  agentConfigInitMap: {},
-  agentMap: {},
-  defaultAgentConfig: {} as any,
-  inboxAgentId: undefined,
-  isInboxAgentConfigInit: false,
-  showAgentSetting: false,
-  updateAgentConfigSignal: undefined,
-  updateAgentMetaSignal: undefined,
+  ...initialAgentSliceState,
+  ...initialBuiltinAgentSliceState,
   ...overrides,
 });
 
@@ -28,7 +23,7 @@ describe('agentChatConfigSelectors', () => {
   // ============ By AgentId Selectors ============ //
 
   describe('getAgentChatConfigById', () => {
-    it('should return chatConfig for specified agent', () => {
+    it('should return chatConfig for specified agent merged with defaults', () => {
       const state = createState({
         agentMap: {
           'agent-1': { chatConfig: { historyCount: 10 } },
@@ -36,28 +31,34 @@ describe('agentChatConfigSelectors', () => {
         },
       });
 
-      expect(agentChatConfigSelectors.getAgentChatConfigById('agent-1')(state)).toEqual({
+      expect(agentChatConfigSelectors.getAgentChatConfigById('agent-1')(state)).toMatchObject({
         historyCount: 10,
       });
-      expect(agentChatConfigSelectors.getAgentChatConfigById('agent-2')(state)).toEqual({
+      expect(agentChatConfigSelectors.getAgentChatConfigById('agent-2')(state)).toMatchObject({
         historyCount: 20,
       });
     });
 
-    it('should return empty object when agent has no chatConfig', () => {
+    it('should return default chatConfig when agent has no chatConfig', () => {
       const state = createState({
         agentMap: { 'agent-1': {} },
       });
 
-      expect(agentChatConfigSelectors.getAgentChatConfigById('agent-1')(state)).toEqual({});
+      // Returns merged default config, not empty object
+      expect(agentChatConfigSelectors.getAgentChatConfigById('agent-1')(state)).toMatchObject({
+        historyCount: DEFAULT_AGENT_CHAT_CONFIG.historyCount,
+      });
     });
 
-    it('should return empty object for non-existent agent', () => {
+    it('should return default chatConfig for non-existent agent', () => {
       const state = createState({
         agentMap: {},
       });
 
-      expect(agentChatConfigSelectors.getAgentChatConfigById('non-existent')(state)).toEqual({});
+      // Returns merged default config, not empty object
+      expect(agentChatConfigSelectors.getAgentChatConfigById('non-existent')(state)).toMatchObject({
+        historyCount: DEFAULT_AGENT_CHAT_CONFIG.historyCount,
+      });
     });
   });
 
@@ -175,7 +176,7 @@ describe('agentChatConfigSelectors', () => {
   // ============ Current Agent Selectors ============ //
 
   describe('currentChatConfig', () => {
-    it('should return chatConfig from current agent', () => {
+    it('should return chatConfig from current agent merged with defaults', () => {
       const state = createState({
         activeAgentId: 'agent-1',
         agentMap: {
@@ -185,16 +186,19 @@ describe('agentChatConfigSelectors', () => {
         },
       });
 
-      expect(agentChatConfigSelectors.currentChatConfig(state)).toEqual({ historyCount: 10 });
+      expect(agentChatConfigSelectors.currentChatConfig(state)).toMatchObject({ historyCount: 10 });
     });
 
-    it('should return empty object when no chatConfig', () => {
+    it('should return default chatConfig when no chatConfig specified', () => {
       const state = createState({
         activeAgentId: 'agent-1',
         agentMap: { 'agent-1': {} },
       });
 
-      expect(agentChatConfigSelectors.currentChatConfig(state)).toEqual({});
+      // Returns merged default config, not empty object
+      expect(agentChatConfigSelectors.currentChatConfig(state)).toMatchObject({
+        historyCount: DEFAULT_AGENT_CHAT_CONFIG.historyCount,
+      });
     });
   });
 
@@ -266,18 +270,18 @@ describe('agentChatConfigSelectors', () => {
   });
 
   describe('searchFCModel', () => {
-    it('should return searchFCModel from config', () => {
+    it('should return searchFCModel from config when explicitly set', () => {
       const state = createState({
         activeAgentId: 'agent-1',
         agentMap: {
           'agent-1': {
-            chatConfig: { searchFCModel: { id: 'custom-model', provider: 'openai' } },
+            chatConfig: { searchFCModel: { model: 'custom-model', provider: 'openai' } },
           } as any,
         },
       });
 
-      expect(agentChatConfigSelectors.searchFCModel(state)).toEqual({
-        id: 'custom-model',
+      expect(agentChatConfigSelectors.searchFCModel(state)).toMatchObject({
+        model: 'custom-model',
         provider: 'openai',
       });
     });
@@ -288,7 +292,9 @@ describe('agentChatConfigSelectors', () => {
         agentMap: { 'agent-1': {} },
       });
 
-      expect(agentChatConfigSelectors.searchFCModel(state)).toBe(DEFAULT_AGENT_SEARCH_FC_MODEL);
+      expect(agentChatConfigSelectors.searchFCModel(state)).toStrictEqual(
+        DEFAULT_AGENT_SEARCH_FC_MODEL,
+      );
     });
   });
 

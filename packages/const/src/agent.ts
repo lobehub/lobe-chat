@@ -25,8 +25,18 @@ export const PAGE_AGENT: BuiltinAgentConfig = {
 };
 
 /**
+ * Agent Builder - used for builtin agent settings
+ */
+export const AGENT_BUILDER: BuiltinAgentConfig = {
+  model: 'claude-sonnet-4-5-20250929',
+  provider: 'anthropic',
+  slug: 'agent-builder',
+};
+
+/**
  * All builtin agents indexed by slug
  */
 export const BUILTIN_AGENTS: Record<string, BuiltinAgentConfig> = {
+  [AGENT_BUILDER.slug]: AGENT_BUILDER,
   [PAGE_AGENT.slug]: PAGE_AGENT,
 };

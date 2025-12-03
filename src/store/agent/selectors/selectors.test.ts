@@ -1,14 +1,16 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import {
   DEFAULT_AGENT_CONFIG,
   DEFAULT_AVATAR,
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
-} from '@/const/index';
+} from '@lobechat/const';
+import { KnowledgeType } from '@lobechat/types';
+import { describe, expect, it, vi } from 'vitest';
+
 import { AgentStoreState } from '@/store/agent/initialState';
-import { KnowledgeType } from '@/types/index';
+import { initialAgentSliceState } from '@/store/agent/slices/agent/initialState';
+import { initialBuiltinAgentSliceState } from '@/store/agent/slices/builtin/initialState';
 
 import { agentSelectors, currentAgentConfig } from './selectors';
 
@@ -22,15 +24,8 @@ vi.mock('@lobehub/tts', () => ({
 }));
 
 const createState = (overrides: Partial<AgentStoreState> = {}): AgentStoreState => ({
-  activeAgentId: undefined,
-  agentConfigInitMap: {},
-  agentMap: {},
-  defaultAgentConfig: {} as any,
-  inboxAgentId: undefined,
-  isInboxAgentConfigInit: false,
-  showAgentSetting: false,
-  updateAgentConfigSignal: undefined,
-  updateAgentMetaSignal: undefined,
+  ...initialAgentSliceState,
+  ...initialBuiltinAgentSliceState,
   ...overrides,
 });
 

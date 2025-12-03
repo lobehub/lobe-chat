@@ -5,13 +5,16 @@ import { StateCreator } from 'zustand/vanilla';
 import { createDevtools } from '../middleware/createDevtools';
 import { AgentStoreState, initialState } from './initialState';
 import { AgentSliceAction, createAgentSlice } from './slices/agent';
+import { BuiltinAgentSliceAction, createBuiltinAgentSlice } from './slices/builtin';
 import { KnowledgeSliceAction, createKnowledgeSlice } from './slices/knowledge';
 import { PluginSliceAction, createPluginSlice } from './slices/plugin';
 
 //  ===============  aggregate createStoreFn ============ //
 
 export interface AgentStore
-  extends AgentSliceAction,
+  extends
+    AgentSliceAction,
+    BuiltinAgentSliceAction,
     KnowledgeSliceAction,
     PluginSliceAction,
     AgentStoreState {}
@@ -19,6 +22,7 @@ export interface AgentStore
 const createStore: StateCreator<AgentStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createAgentSlice(...parameters),
+  ...createBuiltinAgentSlice(...parameters),
   ...createKnowledgeSlice(...parameters),
   ...createPluginSlice(...parameters),
 });

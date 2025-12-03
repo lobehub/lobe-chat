@@ -13,11 +13,11 @@ import {
   LobeAgentTTSConfig,
   MetaData,
 } from '@lobechat/types';
+import { merge } from '@lobechat/utils';
 import { VoiceList } from '@lobehub/tts';
 
 import { DEFAULT_OPENING_QUESTIONS } from '@/features/AgentSetting/store/selectors';
 import { filterToolIds } from '@/helpers/toolFilters';
-import { merge } from '@/utils/merge';
 
 import type { AgentStoreState } from '../initialState';
 

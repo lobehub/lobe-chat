@@ -1,5 +1,6 @@
 'use client';
 
+import { PAGE_AGENT } from '@lobechat/const';
 import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo, useEffect } from 'react';
@@ -7,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { BrandTextLoading } from '@/components/Loading';
-import { useFileStore } from '@/store/file';
+import { useAgentStore } from '@/store/agent';
+import { builtinAgentSelectors } from '@/store/agent/selectors';
 
 import Body from './Body';
 import { PageEditorProvider } from './Context';
@@ -61,12 +63,12 @@ const PageEditor = memo<PageEditorProps>(
   ({ pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete }) => {
     const theme = useTheme();
 
-    const useInitPageAgent = useFileStore((s) => s.useInitPageAgent);
-    const pageAgentId = useFileStore((s) => s.pageAgentId);
-    const { isLoading: isAgentLoading } = useInitPageAgent();
+    const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
+    const pageAgentId = useAgentStore(builtinAgentSelectors.pageAgentId);
+    useInitBuiltinAgent(PAGE_AGENT.slug);
 
     // Don't render conversation provider until agent is initialized
-    if (!pageAgentId || isAgentLoading) {
+    if (!pageAgentId) {
       return (
         <Flexbox height={'100%'} horizontal style={{ background: theme.colorBgContainer }}>
           <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
