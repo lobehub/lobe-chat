@@ -13,6 +13,7 @@ import {
 import { initBetterAuthSSOProviders } from '@/libs/better-auth/sso';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 import { EmailService } from '@/server/services/email';
+import { UserService } from '@/server/services/user';
 
 // Email verification link expiration time (in seconds)
 // Default is 1 hour (3600 seconds) as per Better Auth documentation
@@ -120,6 +121,26 @@ export const auth = betterAuth({
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
   }),
+  /**
+   * Run user bootstrap for every newly created account (email, magic link, OAuth/social, etc.).
+   * Using Better Auth database hooks ensures we catch social flows that bypass /sign-up/* routes.
+   * Ref: https://www.better-auth.com/docs/reference/options#databasehooks
+   */
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          const userService = new UserService(serverDB);
+          await userService.initUser({
+            email: user.email,
+            id: user.id,
+            username: user.username as string | null,
+            // TODO: if add phone plugin, we should fill phone here
+          });
+        },
+      },
+    },
+  },
   user: {
     additionalFields: {
       username: {
