@@ -19,6 +19,6 @@
     "request-filtering-agent": "^3.0.2"
   },
   "devDependencies": {
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.15"
   }
 }
