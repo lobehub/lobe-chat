@@ -2,6 +2,15 @@ import { z } from 'zod';
 
 export type IdentityType = 'personal' | 'professional' | 'demographic';
 
+export interface UserMemoryItem {
+  content: string;
+  createdAt: Date;
+  id: string;
+  source?: string | null;
+  updatedAt?: Date | null;
+  userId: string;
+}
+
 export interface UserMemoryIdentity {
   accessedAt: Date;
   createdAt: Date;
