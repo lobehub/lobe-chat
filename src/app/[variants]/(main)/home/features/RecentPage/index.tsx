@@ -2,13 +2,13 @@
 
 import { ActionIcon, Dropdown, Text } from '@lobehub/ui';
 import { FileTextIcon, MoreHorizontal } from 'lucide-react';
-import { memo, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useFileCategory } from '@/app/[variants]/(main)/resource/features/hooks/useFileCategory';
-import { useFileStore } from '@/store/file';
+import { useInitRecentPage } from '@/hooks/useInitRecentPage';
 import { FilesTabs } from '@/types/files';
 
 import RecentPageList from './List';
@@ -21,23 +21,7 @@ const RecentPage = memo(() => {
   const [isDocumentsMenuOpen, setIsDocumentsMenuOpen] = useState(false);
   const [isDocumentsSectionHovered, setIsDocumentsSectionHovered] = useState(false);
 
-  const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
-
-  // Fetch all items (all categories, sorted by updatedAt)
-  const { data: allItems, isLoading } = useFetchKnowledgeItems({
-    category: FilesTabs.All,
-    sortType: 'desc',
-    sorter: 'createdAt',
-  });
-
-  // Get top 10 recent documents (filter by sourceType === 'document', exclude folders)
-  const topRecentPageList = useMemo(() => {
-    if (!allItems) return [];
-    const documents = allItems.filter(
-      (item) => item.sourceType === 'document' && item.fileType !== 'custom/folder',
-    );
-    return documents.slice(0, 10);
-  }, [allItems]);
+  const { data: topRecentPageList, isLoading } = useInitRecentPage();
 
   // Handle document click - navigate to document explorer
   const handleDocumentClick = (documentId: string) => {
@@ -48,7 +32,7 @@ const RecentPage = memo(() => {
 
   return (
     <Flexbox>
-      {(isLoading || topRecentPageList.length > 0) && (
+      {(isLoading || (topRecentPageList && topRecentPageList.length > 0)) && (
         <div
           onMouseEnter={() => {
             setIsDocumentsSectionHovered(true);
@@ -87,7 +71,7 @@ const RecentPage = memo(() => {
             </div>
           </div>
           <RecentPageList
-            documents={topRecentPageList}
+            documents={topRecentPageList || []}
             isLoading={isLoading}
             onOpenDocument={handleDocumentClick}
           />

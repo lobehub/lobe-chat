@@ -224,6 +224,7 @@ export const createSessionSlice: StateCreator<
       n('updateSearchKeywords'),
     );
   },
+
   updateSessionGroupId: async (sessionId, group) => {
     const session = sessionSelectors.getSessionById(sessionId)(get());
 

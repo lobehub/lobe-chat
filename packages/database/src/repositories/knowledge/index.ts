@@ -149,6 +149,108 @@ export class KnowledgeRepo {
   }
 
   /**
+   * Query recent items (files and documents)
+   * Returns the most recently updated items
+   */
+  async queryRecent(limit: number = 12): Promise<KnowledgeItem[]> {
+    const fileQuery = sql`
+      SELECT
+        COALESCE(d.id, f.id) as id,
+        f.name,
+        f.file_type,
+        f.size,
+        f.url,
+        f.created_at,
+        f.updated_at,
+        f.chunk_task_id,
+        f.embedding_task_id,
+        d.editor_data,
+        d.content,
+        d.slug,
+        COALESCE(d.metadata, f.metadata) as metadata,
+        'file' as source_type
+      FROM ${files} f
+      LEFT JOIN ${documents} d
+        ON f.id = d.file_id
+      WHERE f.user_id = ${this.userId}
+    `;
+
+    const documentQuery = sql`
+      SELECT
+        id,
+        COALESCE(title, filename, 'Untitled') as name,
+        file_type,
+        total_char_count as size,
+        source as url,
+        created_at,
+        updated_at,
+        NULL as chunk_task_id,
+        NULL as embedding_task_id,
+        editor_data,
+        content,
+        slug,
+        metadata,
+        'document' as source_type
+      FROM ${documents}
+      WHERE user_id = ${this.userId}
+        AND source_type != ${'file'}
+    `;
+
+    const combinedQuery = sql`
+      SELECT * FROM (
+        (${fileQuery})
+        UNION ALL
+        (${documentQuery})
+      ) as combined
+      ORDER BY updated_at DESC
+      LIMIT ${limit}
+    `;
+
+    const result = await this.db.execute(combinedQuery);
+
+    const mappedResults = result.rows.map((row: any) => {
+      // Parse editor_data if it's a string
+      let editorData = row.editor_data;
+      if (typeof editorData === 'string') {
+        try {
+          editorData = JSON.parse(editorData);
+        } catch (e) {
+          editorData = null;
+        }
+      }
+
+      // Parse metadata if it's a string
+      let metadata = row.metadata;
+      if (typeof metadata === 'string') {
+        try {
+          metadata = JSON.parse(metadata);
+        } catch (e) {
+          metadata = null;
+        }
+      }
+
+      return {
+        chunkTaskId: row.chunk_task_id,
+        content: row.content,
+        createdAt: new Date(row.created_at),
+        editorData,
+        embeddingTaskId: row.embedding_task_id,
+        fileType: row.file_type,
+        id: row.id,
+        metadata,
+        name: row.name,
+        size: Number(row.size),
+        slug: row.slug,
+        sourceType: row.source_type,
+        updatedAt: new Date(row.updated_at),
+        url: row.url,
+      };
+    });
+
+    return mappedResults;
+  }
+
+  /**
    * Delete item by id - routes to appropriate model based on sourceType
    */
   async deleteItem(id: string, sourceType: 'file' | 'document'): Promise<void> {

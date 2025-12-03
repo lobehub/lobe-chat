@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import InputArea from './InputArea';
 import RecentPage from './RecentPage';
 import RecentResource from './RecentResource';
+import RecentTopic from './RecentTopic';
 import WelcomeText from './WelcomeText';
 
 const Home = memo(() => {
@@ -14,6 +15,7 @@ const Home = memo(() => {
       <div style={{ height: '32px' }} />
       <WelcomeText />
       <InputArea />
+      <RecentTopic />
       <RecentResource />
       <RecentPage />
     </Flexbox>

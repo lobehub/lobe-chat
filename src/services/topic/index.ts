@@ -42,6 +42,10 @@ export class TopicService {
     return lambdaClient.topic.rankTopics.query(limit);
   };
 
+  getRecentTopics = async (limit?: number): Promise<ChatTopic[]> => {
+    return lambdaClient.topic.recentTopics.query({ limit }) as any;
+  };
+
   searchTopics = (keywords: string, sessionId?: string, groupId?: string): Promise<ChatTopic[]> => {
     return lambdaClient.topic.searchTopics.query({
       groupId,

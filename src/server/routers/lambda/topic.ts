@@ -155,7 +155,7 @@ export const topicRouter = router({
   recentTopics: topicProcedure
     .input(z.object({ limit: z.number().optional() }).optional())
     .query(async ({ ctx, input }) => {
-      return ctx.topicModel.queryRecent(input?.limit);
+      return ctx.topicModel.queryRecent(input?.limit ?? 12);
     }),
 
   removeAllTopics: topicProcedure.mutation(async ({ ctx }) => {

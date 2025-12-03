@@ -77,6 +77,14 @@ export class FileService {
   updateFile = async (id: string, data: { parentId?: string | null }) => {
     return lambdaClient.file.updateFile.mutate({ id, ...data });
   };
+
+  getRecentFiles = async (limit?: number) => {
+    return lambdaClient.file.recentFiles.query({ limit });
+  };
+
+  getRecentPages = async (limit?: number) => {
+    return lambdaClient.file.recentPages.query({ limit });
+  };
 }
 
 export const fileService = new FileService();

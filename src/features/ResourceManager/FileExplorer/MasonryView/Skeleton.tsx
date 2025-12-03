@@ -61,3 +61,4 @@ const MasonryViewSkeleton = memo<MasonrySkeletonProps>(({ columnCount }) => {
 MasonryViewSkeleton.displayName = 'MasonryViewSkeleton';
 
 export default MasonryViewSkeleton;
+

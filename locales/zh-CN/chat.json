@@ -418,6 +418,7 @@
     "checkOpenNewTopic": "是否开启新话题?",
     "checkSaveCurrentMessages": "是否保存当前会话为话题?",
     "openNewTopic": "开启新话题",
+    "recent": "最近话题",
     "saveCurrentMessages": "将当前会话保存为话题"
   },
   "translate": {
