@@ -36,6 +36,7 @@ export class UserService {
       email: user.email ?? undefined,
       firstName: user.firstName ?? undefined,
       lastName: user.lastName ?? undefined,
+      phone: user.phone ?? undefined,
       username: user.username ?? undefined,
     });
     analytics?.track({
