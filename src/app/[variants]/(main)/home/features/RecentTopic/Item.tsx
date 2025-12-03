@@ -59,7 +59,12 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent }) => {
             {title}
           </Text>
         </Flexbox>
-        <Time date={updatedAt} />
+        <Flexbox align={'center'} gap={8} horizontal>
+          <Time date={updatedAt} />
+          <Text ellipsis fontSize={12} type={'secondary'}>
+            {agent?.title}
+          </Text>
+        </Flexbox>
       </Flexbox>
     </Block>
   );

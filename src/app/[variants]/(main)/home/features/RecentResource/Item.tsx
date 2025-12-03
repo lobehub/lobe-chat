@@ -66,10 +66,10 @@ const RecentResourceItem = memo<RecentResourceItemProps>(({ file }) => {
         <Text ellipsis={{ rows: 2 }} style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.4 }}>
           {file.name}
         </Text>
-        <Flexbox gap={4} horizontal style={{ alignItems: 'center' }}>
+        <Flexbox align={'center'} gap={8} horizontal>
           <Time date={file.updatedAt} />
-          <Text fontSize={12} type={'secondary'}>
-            • {formatSize(file.size)}
+          <Text ellipsis fontSize={12} type={'secondary'}>
+            {formatSize(file.size)}
           </Text>
         </Flexbox>
       </Flexbox>
