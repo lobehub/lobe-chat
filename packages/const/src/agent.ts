@@ -15,13 +15,19 @@ export interface BuiltinAgentConfig {
   slug: string;
 }
 
+export const BUILTIN_AGENT_SLUGS = {
+  agentBuilder: 'agent-builder',
+  inbox: 'inbox',
+  pageAgent: 'page-agent',
+};
+
 /**
  * Page Agent - used for document editing assistance
  */
 export const PAGE_AGENT: BuiltinAgentConfig = {
   model: 'claude-sonnet-4-5-20250929',
   provider: 'anthropic',
-  slug: 'page-agent',
+  slug: BUILTIN_AGENT_SLUGS.pageAgent,
 };
 
 /**
@@ -37,6 +43,6 @@ export const AGENT_BUILDER: BuiltinAgentConfig = {
  * All builtin agents indexed by slug
  */
 export const BUILTIN_AGENTS: Record<string, BuiltinAgentConfig> = {
-  [AGENT_BUILDER.slug]: AGENT_BUILDER,
-  [PAGE_AGENT.slug]: PAGE_AGENT,
+  [BUILTIN_AGENT_SLUGS.agentBuilder]: AGENT_BUILDER,
+  [BUILTIN_AGENT_SLUGS.pageAgent]: PAGE_AGENT,
 };

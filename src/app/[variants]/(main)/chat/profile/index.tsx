@@ -1,11 +1,13 @@
 'use client';
 
+import { AGENT_BUILDER } from '@lobechat/const';
 import { DraggablePanel } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useAgentStore } from '@/store/agent';
+import { builtinAgentSelectors } from '@/store/agent/selectors';
 
 import AgentBuilderConversation from './features/AgentBuilderConversation';
 import AgentBuilderProvider from './features/AgentBuilderProvider';
@@ -16,6 +18,11 @@ import ProfileProvider from './features/ProfileProvider';
 const AgentProfile = memo(() => {
   const [chatPanelExpanded, setChatPanelExpanded] = useState(true);
   const agentId = useAgentStore((s) => s.activeAgentId);
+
+  // Initialize agent builder builtin agent
+  const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
+  const agentBuilderId = useAgentStore(builtinAgentSelectors.agentBuilderId);
+  useInitBuiltinAgent(AGENT_BUILDER.slug);
 
   return (
     <ProfileProvider>
@@ -34,7 +41,7 @@ const AgentProfile = memo(() => {
           </Flexbox>
         </Flexbox>
 
-        {agentId && (
+        {agentId && agentBuilderId && (
           <AgentBuilderProvider agentId={agentId}>
             <DraggablePanel
               expand={chatPanelExpanded}

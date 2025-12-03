@@ -41,7 +41,7 @@ export const createBuiltinAgentSlice: StateCreator<
 > = (set, get) => ({
   useInitBuiltinAgent: (slug, context) =>
     useOnlyFetchOnceSWR<{ id: string } | null>(
-      !context?.isLogin ? null : `initBuiltinAgent:${slug}`,
+      context?.isLogin === false ? null : `initBuiltinAgent:${slug}`,
       () => agentService.getBuiltinAgent(slug),
       {
         onSuccess: (data) => {
