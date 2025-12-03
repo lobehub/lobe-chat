@@ -33,6 +33,10 @@ export interface DocumentState {
    * Currently selected page ID
    */
   selectedPageId: string | null;
+  /**
+   * Filter to show only pages not in any library (false = show all pages)
+   */
+  showOnlyPagesNotInLibrary: boolean;
 }
 
 export const initialDocumentState: DocumentState = {
@@ -44,4 +48,5 @@ export const initialDocumentState: DocumentState = {
   renamingPageId: null,
   searchKeywords: '',
   selectedPageId: null,
+  showOnlyPagesNotInLibrary: false,
 };

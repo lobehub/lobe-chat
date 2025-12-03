@@ -9,19 +9,13 @@ import { documentSelectors, useFileStore } from '@/store/file';
 
 import Item from './Item';
 
-const DocumentList = memo(() => {
+/**
+ * Show pages filtered by knowledge base
+ */
+const PageList = memo(() => {
   const { t } = useTranslation('file');
 
   const filteredPages = useFileStore(documentSelectors.getFilteredPages);
-  const searchKeywords = useFileStore((s) => s.searchKeywords);
-
-  if (filteredPages.length === 0) {
-    return (
-      <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>
-        {searchKeywords.trim() ? t('documentList.noResults') : t('documentList.empty')}
-      </div>
-    );
-  }
 
   return (
     <Flexbox gap={1} paddingInline={4}>
@@ -37,4 +31,4 @@ const DocumentList = memo(() => {
   );
 });
 
-export default DocumentList;
+export default PageList;

@@ -28,14 +28,23 @@ const getFilteredPages = (s: FilesStoreState): LobeDocument[] => {
   const serverPages = s.documents.filter((doc) => !s.localDocumentMap.has(doc.id));
   const pages = [...localPages, ...serverPages];
 
-  const { searchKeywords } = s;
+  const { searchKeywords, showOnlyPagesNotInLibrary } = s;
 
   let result = pages;
+
+  // Filter by library membership
+  if (showOnlyPagesNotInLibrary) {
+    result = result.filter((page: LobeDocument) => {
+      // Show only pages that are NOT in any library
+      // Pages in a library have metadata.knowledgeBaseId set
+      return !page.metadata?.knowledgeBaseId;
+    });
+  }
 
   // Filter by search keywords
   if (searchKeywords.trim()) {
     const lowerKeywords = searchKeywords.toLowerCase();
-    result = pages.filter((page: LobeDocument) => {
+    result = result.filter((page: LobeDocument) => {
       const content = page.content?.toLowerCase() || '';
       const title = page.title?.toLowerCase() || '';
       return content.includes(lowerKeywords) || title.includes(lowerKeywords);

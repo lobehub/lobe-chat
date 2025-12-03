@@ -107,6 +107,10 @@ export interface DocumentAction {
    */
   setSelectedPageId: (pageId: string | null, updateHistory?: boolean) => void;
   /**
+   * Toggle filter to show only pages not in any library
+   */
+  setShowOnlyPagesNotInLibrary: (show: boolean) => void;
+  /**
    * Update document directly (no optimistic update)
    */
   updateDocument: (documentId: string, updates: Partial<LobeDocument>) => Promise<void>;
@@ -471,6 +475,10 @@ export const createDocumentSlice: StateCreator<
       const newPath = pageId ? `/pages/${pageId}` : '/pages';
       window.history.replaceState({}, '', newPath);
     }
+  },
+
+  setShowOnlyPagesNotInLibrary: (show: boolean) => {
+    set({ showOnlyPagesNotInLibrary: show }, false, n('setShowOnlyPagesNotInLibrary'));
   },
 
   updateDocument: async (id, updates) => {
