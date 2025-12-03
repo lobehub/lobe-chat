@@ -288,6 +288,46 @@ describe('DrizzleAdapter', () => {
       const result = await adapter.find(testId);
       expect(result).toBeUndefined();
     });
+
+    it('应该在宽限期内允许RefreshToken重用', async () => {
+      const adapter = new DrizzleAdapter('RefreshToken', serverDB);
+      const payload = {
+        accountId: testUserId,
+        clientId: testClientId,
+        grantId: testGrantId,
+      };
+      await adapter.upsert(testId, payload, 3600);
+
+      // 消费记录
+      await adapter.consume(testId);
+
+      // 在宽限期内（180秒），应该仍能找到记录
+      const result = await adapter.find(testId);
+      expect(result).toBeDefined();
+      expect(result).toEqual(payload);
+    });
+
+    it('应该在宽限期过后拒绝RefreshToken重用', async () => {
+      const adapter = new DrizzleAdapter('RefreshToken', serverDB);
+      const payload = {
+        accountId: testUserId,
+        clientId: testClientId,
+        grantId: testGrantId,
+      };
+      await adapter.upsert(testId, payload, 3600);
+
+      // 直接更新 consumedAt 为过去的时间（超过宽限期）
+      // 宽限期是 180 秒，设置为 200 秒前消费
+      const pastConsumedAt = new Date(Date.now() - 200 * 1000);
+      await serverDB
+        .update(oidcRefreshTokens)
+        .set({ consumedAt: pastConsumedAt })
+        .where(eq(oidcRefreshTokens.id, testId));
+
+      // 宽限期已过，应该返回 undefined
+      const result = await adapter.find(testId);
+      expect(result).toBeUndefined();
+    });
   });
 
   describe('findByUserCode', () => {
