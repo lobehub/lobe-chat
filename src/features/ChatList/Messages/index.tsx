@@ -12,10 +12,10 @@ import {
   removeVirtuaVisibleItem,
   upsertVirtuaVisibleItem,
 } from '@/features/ChatList/components/VirtualizedList/VirtuosoContext';
+import ContextMenu from '@/features/Conversation/components/ContextMenu';
 import { getChatStoreState, useChatStore } from '@/store/chat';
 import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
-import ContextMenu from '@/features/Conversation/components/ContextMenu';
 import History from '../components/History';
 import { useChatItemContextMenu } from '../hooks/useChatItemContextMenu';
 import AssistantMessage from './Assistant';

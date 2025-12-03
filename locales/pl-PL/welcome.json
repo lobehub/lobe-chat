@@ -1,59 +1,59 @@
 {
   "guide": {
     "agents": {
-      "replaceBtn": "Zmień",
-      "title": "Nowe zalecenia asystenta:"
+      "replaceBtn": "Zmień zestaw",
+      "title": "Nowe rekomendacje asystentów:"
     },
-    "defaultMessage": "Jestem Twoim osobistym inteligentnym asystentem {{appName}}. W czym mogę Ci teraz pomóc?<br />Jeśli potrzebujesz bardziej profesjonalnego lub dostosowanego asystenta, kliknij <plus />, aby utworzyć niestandardowego asystenta.",
-    "defaultMessageWithoutCreate": "Jestem Twoim osobistym inteligentnym asystentem {{appName}}. W czym mogę Ci teraz pomóc?",
+    "defaultMessage": "Jestem Twoim osobistym asystentem inteligentnym {{appName}}. W czym mogę Ci teraz pomóc?<br />Jeśli potrzebujesz bardziej profesjonalnego lub spersonalizowanego asystenta, kliknij <plus /> aby stworzyć własnego asystenta.",
+    "defaultMessageWithoutCreate": "Jestem Twoim osobistym asystentem inteligentnym {{appName}}. W czym mogę Ci teraz pomóc?",
     "groupActivities": {
       "analysis": {
         "codeReview": {
-          "description": "Techniczna dyskusja i przegląd kodu oraz jego zmian",
+          "description": "Dyskusje techniczne i przeglądy kodu w zespole",
           "emoji": "💻",
-          "prompt": "Przejrzyjmy razem trochę kodu. Czy możesz pomóc nam przeanalizować ten kod i wskazać miejsca do poprawy?",
+          "prompt": "Przejrzyjmy razem trochę kodu. Czy możesz pomóc nam go przeanalizować i wskazać możliwe ulepszenia?",
           "title": "Przegląd kodu"
         },
         "investment": {
-          "description": "Analiza rynku, dyskusja o strategiach inwestycyjnych i dzielenie się spostrzeżeniami finansowymi",
+          "description": "Analiza rynku, strategie inwestycyjne i wgląd finansowy",
           "emoji": "📈",
-          "prompt": "Przeanalizujmy razem rynek. Czy możesz pomóc nam omówić strategie inwestycyjne i podzielić się finansowymi spostrzeżeniami?",
+          "prompt": "Przeanalizujmy rynek razem. Czy możesz pomóc nam omówić strategie inwestycyjne i podzielić się spostrzeżeniami?",
           "title": "Klub inwestycyjny"
         },
         "research": {
-          "description": "Eksploracja koncepcji naukowych, przeprowadzanie eksperymentów i dzielenie się odkryciami",
+          "description": "Eksploracja koncepcji naukowych, eksperymenty i dzielenie się odkryciami",
           "emoji": "🔬",
-          "prompt": "Zbadajmy razem naukę! Czy możesz pomóc nam przeprowadzić eksperymenty i podzielić się naszymi odkryciami?",
+          "prompt": "Zbadajmy naukę razem! Czy możesz pomóc nam przeprowadzić eksperymenty i podzielić się odkryciami?",
           "title": "Wystawa naukowa"
         },
         "study": {
-          "description": "Wspólne sesje nauki, dyskusja nad koncepcjami i rozwiązywanie problemów",
+          "description": "Wspólna nauka, dyskusje i rozwiązywanie problemów",
           "emoji": "📚",
-          "prompt": "Utwórzmy grupę naukową. Czy możesz pomóc nam zrozumieć te koncepcje i wspólnie rozwiązać problemy?",
+          "prompt": "Stwórzmy grupę naukową. Czy możesz pomóc nam zrozumieć te koncepcje i wspólnie rozwiązywać problemy?",
           "title": "Grupa naukowa"
         }
       },
       "brainstorm": {
         "artWorkshop": {
-          "description": "Tworzenie, komentowanie i docenianie różnych form sztuki wizualnej i cyfrowej",
+          "description": "Tworzenie, omawianie i podziwianie sztuki wizualnej i cyfrowej",
           "emoji": "🖼️",
-          "prompt": "Zorganizujmy warsztaty artystyczne! Czy możesz pomóc nam tworzyć, komentować i doceniać różne formy sztuki?",
+          "prompt": "Zorganizujmy warsztaty artystyczne! Czy możesz pomóc nam tworzyć, omawiać i podziwiać różne formy sztuki?",
           "title": "Warsztaty artystyczne"
         },
         "debate": {
-          "description": "Strukturalne dyskusje i debaty na różne tematy i aktualności",
+          "description": "Strukturalne debaty i dyskusje na różne tematy i aktualności",
           "emoji": "⚖️",
-          "prompt": "Przeprowadźmy zorganizowaną debatę. Czy możesz pomóc nam zorganizować rzeczową dyskusję na ten temat?",
-          "title": "Klub debat"
+          "prompt": "Zorganizujmy debatę. Czy możesz pomóc nam przeprowadzić rzeczową dyskusję na ten temat?",
+          "title": "Klub dyskusyjny"
         },
         "designReview": {
-          "description": "Wspólne sesje feedbacku dotyczące koncepcji projektowych, prototypów lub dzieł kreatywnych",
+          "description": "Wspólne przeglądy projektów, prototypów i koncepcji",
           "emoji": "🎨",
-          "prompt": "Musimy przejrzeć kilka projektów. Czy możesz pomóc nam udzielić konstruktywnej informacji zwrotnej na temat koncepcji i prototypów?",
+          "prompt": "Musimy przejrzeć kilka projektów. Czy możesz pomóc nam udzielić konstruktywnej opinii na temat koncepcji i prototypów?",
           "title": "Przegląd projektów"
         },
         "ideation": {
-          "description": "Wieloperspektywiczne, współpracujące generowanie pomysłów i kreatywne rozwiązywanie problemów",
+          "description": "Wieloperspektywiczne burze mózgów i kreatywne rozwiązywanie problemów",
           "emoji": "🧠",
           "prompt": "Zacznijmy burzę mózgów dla projektu. Czy możesz pomóc nam wygenerować pomysły i rozwiązania?",
           "title": "Burza mózgów"
@@ -61,285 +61,137 @@
       },
       "game": {
         "debateClub": {
-          "description": "Strukturalne dyskusje i debaty na różne tematy i aktualności",
+          "description": "Strukturalne debaty i dyskusje na różne tematy i aktualności",
           "emoji": "⚖️",
-          "prompt": "Przeprowadźmy zorganizowaną debatę. Czy możesz pomóc nam zorganizować rzeczową dyskusję na ten temat?",
-          "title": "Klub debat"
+          "prompt": "Zorganizujmy debatę. Czy możesz pomóc nam przeprowadzić rzeczową dyskusję na ten temat?",
+          "title": "Klub dyskusyjny"
         },
         "gameNight": {
-          "description": "Zabawne interaktywne gry i aktywności, budujące więzi zespołowe i dostarczające rozrywki",
+          "description": "Zabawy i gry integracyjne, budujące zespół i dające radość",
           "emoji": "🎲",
-          "prompt": "Noc gier zaczyna się! Czy możesz pomóc nam zorganizować kilka zabawnych interaktywnych gier, aby zbudować więzi zespołowe?",
-          "title": "Noc gier"
+          "prompt": "Czas na wieczór gier! Czy możesz pomóc nam zorganizować zabawy integracyjne?",
+          "title": "Wieczór gier"
         },
         "modelUN": {
-          "description": "Symulacja debat ONZ i negocjacji dyplomatycznych na tematy globalne",
+          "description": "Symulacje debat ONZ i negocjacje dyplomatyczne na tematy globalne",
           "emoji": "🌍",
-          "prompt": "Zagrajmy w symulację debaty ONZ. Czy możesz pomóc nam przygotować negocjacje dyplomatyczne na temat globalnych problemów?",
+          "prompt": "Zorganizujmy symulację debaty ONZ. Czy możesz pomóc nam przeprowadzić negocjacje na temat globalnych problemów?",
           "title": "Model ONZ"
         },
         "werewolf": {
-          "description": "Gra towarzyska polegająca na dedukcji i dyskusji, w której gracze próbują zidentyfikować wilkołaki",
+          "description": "Gra towarzyska z dedukcją i strategią, w której gracze szukają wilkołaka",
           "emoji": "🐺",
-          "prompt": "Zagrajmy w grę w wilkołaka! Czy możesz pomóc nam ustalić zasady i poprowadzić tę grę towarzyską?",
-          "title": "Gra w wilkołaka"
+          "prompt": "Zagrajmy w Wilkołaka! Czy możesz pomóc nam ustalić zasady i poprowadzić grę?",
+          "title": "Wilkołak"
         }
       },
       "general": {
         "brainstorm": {
-          "description": "Wieloperspektywiczne, współpracujące generowanie pomysłów i kreatywne rozwiązywanie problemów",
+          "description": "Wieloperspektywiczne burze mózgów i kreatywne rozwiązywanie problemów",
           "emoji": "🧠",
           "prompt": "Zacznijmy burzę mózgów dla projektu. Czy możesz pomóc nam wygenerować pomysły i rozwiązania?",
           "title": "Burza mózgów"
         },
         "debate": {
-          "description": "Strukturalne dyskusje i debaty na różne tematy i aktualności",
+          "description": "Strukturalne debaty i dyskusje na różne tematy i aktualności",
           "emoji": "⚖️",
-          "prompt": "Przeprowadźmy zorganizowaną debatę. Czy możesz pomóc nam zorganizować rzeczową dyskusję na ten temat?",
-          "title": "Klub debat"
+          "prompt": "Zorganizujmy debatę. Czy możesz pomóc nam przeprowadzić rzeczową dyskusję na ten temat?",
+          "title": "Klub dyskusyjny"
         },
         "languagePractice": {
-          "description": "Ćwiczenie mówienia i nauka nowego języka z native speakerami",
+          "description": "Ćwiczenie języka z native speakerami i nauka nowych języków",
           "emoji": "🗣️",
-          "prompt": "Poćwiczmy razem nowy język. Czy możesz pomóc nam uczyć się i ćwiczyć mówienie w tym języku?",
-          "title": "Ćwiczenie językowe"
+          "prompt": "Poćwiczmy nowy język razem. Czy możesz pomóc nam w nauce i praktyce mówienia?",
+          "title": "Praktyka językowa"
         },
         "studyGroup": {
-          "description": "Wspólne sesje nauki, dyskusja nad koncepcjami i rozwiązywanie problemów",
+          "description": "Wspólna nauka, dyskusje i rozwiązywanie problemów",
           "emoji": "📚",
-          "prompt": "Utwórzmy grupę naukową. Czy możesz pomóc nam zrozumieć te koncepcje i wspólnie rozwiązać problemy?",
+          "prompt": "Stwórzmy grupę naukową. Czy możesz pomóc nam zrozumieć te koncepcje i wspólnie rozwiązywać problemy?",
           "title": "Grupa naukowa"
         }
       },
       "planning": {
         "cookingClass": {
-          "description": "Nauka i dzielenie się umiejętnościami kulinarnymi, przepisami i tradycjami gotowania",
+          "description": "Nauka i dzielenie się przepisami, technikami i tradycjami kulinarnymi",
           "emoji": "👨‍🍳",
-          "prompt": "Weźmy udział w lekcji gotowania! Czy możesz pomóc nam nauczyć się nowych przepisów i technik kulinarnych?",
-          "title": "Lekcje gotowania"
+          "prompt": "Zorganizujmy lekcję gotowania! Czy możesz pomóc nam nauczyć się nowych przepisów i technik?",
+          "title": "Lekcja gotowania"
         },
         "fitnessChallenge": {
-          "description": "Ustalanie grupowych celów fitness, dzielenie się metodami ćwiczeń i wzajemna motywacja",
+          "description": "Ustalanie celów fitness, dzielenie się ćwiczeniami i wzajemna motywacja",
           "emoji": "💪",
-          "prompt": "Zacznijmy wyzwanie fitness! Czy możesz pomóc nam ustalić cele i wzajemnie się motywować do zdrowia?",
+          "prompt": "Zacznijmy wyzwanie fitness! Czy możesz pomóc nam ustalić cele i motywować się nawzajem?",
           "title": "Wyzwanie fitness"
         },
         "planningPoker": {
-          "description": "Technika szacowania zadań projektowych i nakładu pracy za pomocą kart w metodyce Agile",
+          "description": "Technika szacowania zadań i nakładu pracy w projektach z użyciem kart",
           "emoji": "🃏",
-          "prompt": "Przeprowadzamy planowanie pokerowe dla projektu. Czy możesz pomóc nam oszacować nakład pracy tych zadań za pomocą technik Agile?",
-          "title": "Planowanie pokerowe"
+          "prompt": "Planujemy projekt za pomocą Planning Pokera. Czy możesz pomóc nam oszacować zadania metodą agile?",
+          "title": "Planning Poker"
         },
         "travelPlanning": {
           "description": "Planowanie podróży, dzielenie się doświadczeniami i odkrywanie nowych miejsc",
           "emoji": "✈️",
-          "prompt": "Zaplanujmy razem podróż! Czy możesz pomóc nam zbadać cele podróży i zaplanować trasę?",
+          "prompt": "Zaplanujmy podróż razem! Czy możesz pomóc nam zbadać miejsca i ułożyć plan podróży?",
           "title": "Planowanie podróży"
         }
       },
       "product": {
         "codeReview": {
-          "description": "Techniczna dyskusja i przegląd kodu oraz jego zmian",
+          "description": "Dyskusje techniczne i przeglądy kodu w zespole",
           "emoji": "💻",
-          "prompt": "Przejrzyjmy razem trochę kodu. Czy możesz pomóc nam przeanalizować ten kod i wskazać miejsca do poprawy?",
+          "prompt": "Przejrzyjmy razem trochę kodu. Czy możesz pomóc nam go przeanalizować i wskazać możliwe ulepszenia?",
           "title": "Przegląd kodu"
         },
         "designReview": {
-          "description": "Wspólne sesje feedbacku dotyczące koncepcji projektowych, prototypów lub dzieł kreatywnych",
+          "description": "Wspólne przeglądy projektów, prototypów i koncepcji",
           "emoji": "🎨",
-          "prompt": "Musimy przejrzeć kilka projektów. Czy możesz pomóc nam udzielić konstruktywnej informacji zwrotnej na temat koncepcji i prototypów?",
+          "prompt": "Musimy przejrzeć kilka projektów. Czy możesz pomóc nam udzielić konstruktywnej opinii na temat koncepcji i prototypów?",
           "title": "Przegląd projektów"
         },
         "sprintPlanning": {
-          "description": "Technika szacowania zadań projektowych i nakładu pracy za pomocą kart w metodyce Agile",
+          "description": "Technika szacowania zadań i nakładu pracy w projektach z użyciem kart",
           "emoji": "🃏",
-          "prompt": "Przeprowadzamy planowanie pokerowe dla projektu. Czy możesz pomóc nam oszacować nakład pracy tych zadań za pomocą technik Agile?",
-          "title": "Planowanie pokerowe"
+          "prompt": "Planujemy projekt za pomocą Planning Pokera. Czy możesz pomóc nam oszacować zadania metodą agile?",
+          "title": "Planning Poker"
         },
         "techExchange": {
-          "description": "Dyskusja o nowych technologiach, innowacjach i trendach branżowych",
+          "description": "Dyskusje o nowych technologiach, innowacjach i trendach w branży",
           "emoji": "🚀",
-          "prompt": "Zorganizujmy wymianę technologiczną! Czy możesz pomóc nam omówić nowe technologie i trendy w branży?",
+          "prompt": "Zorganizujmy wymianę technologiczną! Czy możesz pomóc nam omówić nowe technologie i trendy?",
           "title": "Wymiana technologiczna"
         }
       },
-      "title": "Zalecenia dotyczące korzystania z czatu grupowego",
+      "title": "Rekomendacje do czatu zespołowego",
       "writing": {
         "bookClub": {
-          "description": "Literackie dyskusje i analizy książek, opowiadań i dzieł literackich",
+          "description": "Dyskusje literackie i analiza książek, opowiadań i dzieł literackich",
           "emoji": "📖",
-          "prompt": "Rozpocznijmy dyskusję klubu książki. Czy możesz pomóc nam przeanalizować tę książkę i omówić jej tematy?",
+          "prompt": "Zacznijmy dyskusję w klubie książki. Czy możesz pomóc nam przeanalizować książkę i omówić jej tematykę?",
           "title": "Klub książki"
         },
         "movieClub": {
-          "description": "Wspólne oglądanie i dyskusja filmów, dokumentów i mediów wizualnych",
+          "description": "Wspólne oglądanie i omawianie filmów, dokumentów i mediów wizualnych",
           "emoji": "🎬",
-          "prompt": "Rozpocznijmy dyskusję klubu filmowego. Czy możesz pomóc nam przeanalizować ten film i omówić jego tematy?",
+          "prompt": "Zacznijmy dyskusję w klubie filmowym. Czy możesz pomóc nam przeanalizować film i omówić jego tematykę?",
           "title": "Klub filmowy"
         },
         "musicSession": {
-          "description": "Wspólne tworzenie muzyki, dzielenie się i docenianie",
+          "description": "Wspólne tworzenie, dzielenie się i słuchanie muzyki",
           "emoji": "🎵",
-          "prompt": "Zagrajmy muzyczną improwizację! Czy możesz pomóc nam tworzyć i doceniać muzykę razem?",
-          "title": "Improwizacja muzyczna"
+          "prompt": "Zróbmy muzyczną improwizację! Czy możesz pomóc nam wspólnie tworzyć i słuchać muzyki?",
+          "title": "Sesja muzyczna"
         },
         "studyGroup": {
-          "description": "Wspólne sesje nauki, dyskusja nad koncepcjami i rozwiązywanie problemów",
+          "description": "Wspólna nauka, dyskusje i rozwiązywanie problemów",
           "emoji": "📚",
-          "prompt": "Utwórzmy grupę naukową. Czy możesz pomóc nam zrozumieć te koncepcje i wspólnie rozwiązać problemy?",
+          "prompt": "Stwórzmy grupę naukową. Czy możesz pomóc nam zrozumieć te koncepcje i wspólnie rozwiązywać problemy?",
           "title": "Grupa naukowa"
         }
       }
     },
-    "groupMessage": "Witamy w czacie grupowym! Współpracuj z wieloma asystentami AI w udostępnionej przestrzeni konwersacyjnej.",
-    "groupTemplates": {
-      "analysis": {
-        "description": "Wgląd oparty na danych, dogłębne badania i analizy",
-        "members": [
-          {
-            "avatar": "📊",
-            "backgroundColor": "#E8F8F5",
-            "plugins": ["steam"],
-            "systemRole": "Specjalizujesz się w przetwarzaniu i interpretacji danych, ujawniając wzorce i trendy za pomocą wykresów i analiz statystycznych.",
-            "title": "Analityk danych"
-          },
-          {
-            "avatar": "🧑‍🔬",
-            "backgroundColor": "#E8F5FF",
-            "systemRole": "Jesteś ekspertem badawczym, odpowiedzialnym za zbieranie informacji i dogłębne badania, potrafisz analizować problemy z wielu perspektyw.",
-            "title": "Ekspert badawczy"
-          },
-          {
-            "avatar": "📈",
-            "backgroundColor": "#FFF7E8",
-            "systemRole": "Jesteś ekspertem statystycznym, biegłym w różnych metodach i modelach statystycznych, potrafisz wydobywać wartościowe spostrzeżenia biznesowe z danych.",
-            "title": "Ekspert statystyczny"
-          },
-          {
-            "avatar": "🧮",
-            "backgroundColor": "#F0F8FF",
-            "systemRole": "Jesteś analitykiem ilościowym, specjalizujesz się w modelowaniu ilościowym i ocenie ryzyka, rozwiązując złożone problemy za pomocą metod matematycznych.",
-            "title": "Analityk ilościowy"
-          }
-        ],
-        "title": "Zespół analityczny"
-      },
-      "brainstorm": {
-        "description": "Kreatywne myślenie z wielu perspektyw, pobudzanie nieograniczonych możliwości",
-        "members": [
-          {
-            "avatar": "🧠",
-            "backgroundColor": "#E8F5FF",
-            "systemRole": "Jesteś dyrektorem kreatywnym, potrafisz kierować kierunkiem kreatywnym z perspektywy makro, przekształcając abstrakcyjne koncepcje w konkretne, wykonalne pomysły.",
-            "title": "Dyrektor kreatywny"
-          },
-          {
-            "avatar": "🧑‍🔬",
-            "backgroundColor": "#FFF7E8",
-            "systemRole": "Jesteś ekspertem innowacji, odpowiedzialnym za odkrywanie nowatorskich rozwiązań i przełomowego myślenia, potrafisz myśleć poza utartymi schematami.",
-            "title": "Ekspert innowacji"
-          },
-          {
-            "avatar": "🎨",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Jesteś specjalistą myślenia projektowego, analizujesz problemy z perspektywy doświadczenia użytkownika i wizualnej prezentacji, kładąc nacisk na wizualizację kreatywności.",
-            "title": "Specjalista myślenia projektowego"
-          }
-        ],
-        "title": "Grupa burzy mózgów"
-      },
-      "game": {
-        "description": "Graj w różne wieloosobowe gry tekstowe, takie jak Wilkołak i Kto jest zdrajcą",
-        "members": [
-          null,
-          {
-            "avatar": "🧑‍🔬",
-            "backgroundColor": "#FFF7E8",
-            "systemRole": "Jesteś ekspertem w różnych wieloosobowych grach tekstowych i potrafisz grać zgodnie z zasadami gry.",
-            "title": "Gracz"
-          },
-          {
-            "avatar": "🎨",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Jesteś ekspertem w różnych wieloosobowych grach tekstowych i potrafisz grać zgodnie z zasadami gry.",
-            "title": "Gracz"
-          },
-          {
-            "avatar": "🧑‍🎨",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Jesteś ekspertem w różnych wieloosobowych grach tekstowych i potrafisz grać zgodnie z zasadami gry.",
-            "title": "Gracz"
-          }
-        ],
-        "title": "Sala gier"
-      },
-      "planning": {
-        "description": "Planowanie strategiczne i zarządzanie projektami, koordynacja całości",
-        "members": [
-          {
-            "avatar": "📋",
-            "backgroundColor": "#E8F5FF",
-            "systemRole": "Odpowiadasz za ogólne planowanie projektu, kontrolę postępów i koordynację zasobów, zapewniając terminową i wysoką jakość realizacji.",
-            "title": "Kucharz"
-          },
-          {
-            "avatar": "🎯",
-            "backgroundColor": "#FFF7E8",
-            "systemRole": "Odpowiadasz za opracowanie długoterminowej strategii, analizę rynkowych możliwości, ustalanie celów i ścieżek realizacji.",
-            "title": "Ekspert ds. zaopatrzenia surowców"
-          },
-          {
-            "avatar": "🧑‍🎨",
-            "backgroundColor": "#F0F8FF",
-            "systemRole": "Odpowiadasz za szczegółowe planowanie wykonawcze, koordynację zasobów między działami i zapewnienie wykonalności planu.",
-            "title": "Ekspert ds. rozwoju kulinarnego"
-          }
-        ],
-        "title": "Zespół ds. rozwoju kulinarnego"
-      },
-      "product": {
-        "description": "Projektowanie i rozwój produktów, tworzenie wysokiej jakości produktów",
-        "members": [
-          {
-            "avatar": "🎨",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Jesteś projektantem, specjalizujesz się w projektowaniu różnych typów produktów, potrafisz projektować zgodnie z wymaganiami produktu.",
-            "title": "Projektant"
-          },
-          {
-            "avatar": "🧑",
-            "backgroundColor": "#E8F5FF",
-            "systemRole": "Jesteś menedżerem produktu, odpowiedzialnym za planowanie, projektowanie, rozwój i utrzymanie produktu, zapewniając jego jakość i doświadczenie użytkownika.",
-            "title": "Menedżer produktu"
-          },
-          {
-            "avatar": "🧑‍💻",
-            "backgroundColor": "#E8F8F5",
-            "systemRole": "Jesteś doświadczonym inżynierem full-stack, specjalizujesz się w tworzeniu różnych typów produktów, potrafisz rozwijać produkty zgodnie z wymaganiami.",
-            "title": "Inżynier full-stack"
-          }
-        ],
-        "title": "Zespół ds. rozwoju produktu"
-      },
-      "writing": {
-        "description": "Tworzenie i redagowanie treści, tworzenie wysokiej jakości tekstów",
-        "members": [
-          {
-            "avatar": "✍️",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Jesteś biegły w tworzeniu treści w różnych stylach i potrafisz dostosować styl pisania do różnych scenariuszy i odbiorców.",
-            "title": "Autor treści"
-          },
-          {
-            "avatar": "🧑‍🎨",
-            "backgroundColor": "#E8F8F5",
-            "systemRole": "Jesteś redaktorem, odpowiedzialnym za korektę, redakcję i optymalizację tekstów, zapewniając ich dokładność, płynność i profesjonalizm.",
-            "title": "Redaktor"
-          }
-        ],
-        "title": "Krąg pisarski"
-      }
-    },
+    "groupMessage": "Witamy w czacie grupowym! Współpracuj z wieloma asystentami AI w jednej przestrzeni rozmowy.",
     "questions": {
       "moreBtn": "Dowiedz się więcej",
       "title": "Spróbuj zapytać:"
@@ -351,12 +203,53 @@
       "noon": "Dzień dobry"
     }
   },
-  "header": "Witaj",
-  "pickAgent": "Wybierz szablon asystenta lub kontynuuj",
+  "header": "Witamy",
+  "pickAgent": "Lub wybierz szablon asystenta",
   "skip": "Pomiń tworzenie",
   "slogan": {
-    "desc1": "Ożyw swoje myślenie poprzez uruchomienie klastra mózgu. Twój inteligentny asystent zawsze jest obecny.",
-    "desc2": "Stwórz swojego pierwszego asystenta. Zaczynamy!",
-    "title": "Daj sobie mądrzejszy mózg"
+    "desc1": "Uruchom klaster mózgów i rozpal iskrę kreatywności. Twój inteligentny asystent jest zawsze z Tobą.",
+    "desc2": "Stwórz swojego pierwszego asystenta i zacznijmy!",
+    "title": "Daj sobie mądrzejszy umysł"
+  },
+  "welcomeMessages": {
+    "1": "Witaj ponownie 😊",
+    "10": "Pełna produktywność!",
+    "11": "Czekam na polecenia!",
+    "12": "Długo czekałem ☕",
+    "13": "Czas działać ✅",
+    "14": "Masz nowe pytanie?",
+    "15": "Dobra robota na dziś!",
+    "16": "Ładowanie inspiracji",
+    "17": "Online i pełen energii ⚡",
+    "18": "Ruszamy! 🚀",
+    "19": "Myśli już nadążają.",
+    "2": "Hej, jestem tutaj",
+    "20": "Inspiracja nadchodzi",
+    "21": "Czekam na Twój sygnał",
+    "22": "Tryb efektywności włączony!",
+    "23": "W gotowości",
+    "24": "Gotowy na wyzwania",
+    "25": "Nowe pomysły w drodze",
+    "26": "Droga jasna, ruszamy!",
+    "27": "System online, gotowy do pomocy 💡",
+    "28": "Ładowanie dobrego nastroju",
+    "29": "Przejmij kontrolę nad rytmem 🎵",
+    "3": "Gotowy do działania!",
+    "30": "Zwiększanie wydajności …",
+    "31": "Cel na dziś: osiągnięty 🎯",
+    "32": "Więcej błysków inspiracji ✨",
+    "33": "Zadania zaktualizowane",
+    "34": "Wszystko gotowe",
+    "35": "Tryb turbo włączony",
+    "36": "Tak! Zaczynajmy 😎",
+    "37": "Czekam na Twój powrót",
+    "38": "Utrzymuj dobrą formę!",
+    "39": "Nie zapomnij o przerwie ~ 💤",
+    "4": "Miło Cię widzieć",
+    "5": "Gotowy do startu?",
+    "6": "Zostaw to mnie",
+    "7": "Idziemy dalej!",
+    "8": "Działajmy razem 💪",
+    "9": "Czas do pracy 🏃‍♂️"
   }
 }

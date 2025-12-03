@@ -10,4 +10,3 @@ const SidebarContent = memo(() => {
 });
 
 export default SidebarContent;
-
