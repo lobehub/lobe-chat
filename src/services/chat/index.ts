@@ -1,3 +1,4 @@
+import { getAgentRuntimeConfig } from '@lobechat/builtin-agents';
 import {
   FetchSSEOptions,
   fetchSSE,
@@ -7,6 +8,7 @@ import {
 import { AgentRuntimeError, ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import { ChatErrorType, TracePayload, TraceTagMap, UIChatMessage } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
+import dayjs from 'dayjs';
 import { merge } from 'lodash-es';
 import { ModelProvider } from 'model-bank';
 
@@ -188,6 +190,21 @@ class ChatService {
       }
     }
 
+    // Determine the systemRole - use runtime config for builtin agents
+    const agentSlug = agentSelectors.getAgentSlugById(targetAgentId)(agentStoreState);
+    let systemRole = agentConfig.systemRole;
+
+    if (agentSlug) {
+      // Try to get runtime config for builtin agents
+      const runtimeConfig = getAgentRuntimeConfig(agentSlug, {
+        currentDate: dayjs().format('YYYY-MM-DD'),
+        // TODO: Add more context for specific builtin agents:
+      });
+      if (runtimeConfig?.systemRole) {
+        systemRole = runtimeConfig.systemRole;
+      }
+    }
+
     // Apply context engineering with preprocessing configuration
     const oaiMessages = await contextEngineering({
       enableHistoryCount:
@@ -200,7 +217,7 @@ class ChatService {
       model: payload.model,
       provider: payload.provider!,
       sessionId: options?.trace?.sessionId,
-      systemRole: agentConfig.systemRole,
+      systemRole,
       tools: enabledToolIds,
       userMemories,
     });

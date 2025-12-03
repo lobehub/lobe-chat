@@ -210,6 +210,11 @@ const currentKnowledgeIds = (s: AgentStoreState) => {
 const isAgentConfigLoading = (s: AgentStoreState) =>
   !s.activeAgentId || !s.agentConfigInitMap[s.activeAgentId];
 
+/**
+ * Get agent's slug by ID (used to identify builtin agents)
+ */
+const getAgentSlugById = (agentId: string) => (s: AgentStoreState) => s.agentMap[agentId]?.slug;
+
 const openingQuestions = (s: AgentStoreState) =>
   currentAgentConfig(s).openingQuestions || DEFAULT_OPENING_QUESTIONS;
 const openingMessage = (s: AgentStoreState) => currentAgentConfig(s).openingMessage || '';
@@ -235,6 +240,7 @@ export const agentSelectors = {
   displayableAgentPlugins,
   getAgentConfigById,
   getAgentMetaById,
+  getAgentSlugById,
   hasEnabledKnowledge,
   hasEnabledKnowledgeBases,
   hasKnowledge,

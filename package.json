@@ -153,6 +153,7 @@
     "@khmyznikov/pwa-install": "0.3.9",
     "@langchain/community": "^0.3.57",
     "@lobechat/agent-runtime": "workspace:*",
+    "@lobechat/builtin-agents": "workspace:*",
     "@lobechat/const": "workspace:*",
     "@lobechat/context-engine": "workspace:*",
     "@lobechat/conversation-flow": "workspace:*",

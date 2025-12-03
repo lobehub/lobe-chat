@@ -1,6 +1,6 @@
 'use client';
 
-import { PAGE_AGENT } from '@lobechat/const';
+import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo, useEffect } from 'react';
@@ -65,7 +65,7 @@ const PageEditor = memo<PageEditorProps>(
 
     const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
     const pageAgentId = useAgentStore(builtinAgentSelectors.pageAgentId);
-    useInitBuiltinAgent(PAGE_AGENT.slug);
+    useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.pageAgent);
 
     // Don't render conversation provider until agent is initialized
     if (!pageAgentId) {

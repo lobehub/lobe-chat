@@ -1,4 +1,4 @@
-import { BUILTIN_AGENTS } from '@lobechat/const';
+import { getAgentPersistConfig } from '@lobechat/builtin-agents';
 import { and, desc, eq, inArray } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
@@ -255,18 +255,16 @@ export class AgentModel {
     if (existing) return existing;
 
     // Check if this is a known builtin agent
-    const builtinConfig = BUILTIN_AGENTS[slug];
-    if (!builtinConfig) {
-      return null;
-    }
+    const persistConfig = getAgentPersistConfig(slug);
+    if (!persistConfig) return null;
 
-    // Create the builtin agent
+    // Create the builtin agent with persist config
     const result = await this.db
       .insert(agents)
       .values({
-        model: builtinConfig.model,
-        provider: builtinConfig.provider,
-        slug: builtinConfig.slug,
+        model: persistConfig.model,
+        provider: persistConfig.provider,
+        slug: persistConfig.slug,
         userId: this.userId,
         virtual: true,
       })

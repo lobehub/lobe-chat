@@ -1,4 +1,4 @@
-import { AGENT_BUILDER, PAGE_AGENT } from '@lobechat/const';
+import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 
 import { AgentStoreState } from '@/store/agent/initialState';
 
@@ -10,12 +10,13 @@ const getBuiltinAgentId = (slug: string) => (s: AgentStoreState) => s.builtinAge
 /**
  * Get page agent ID (convenience selector)
  */
-const pageAgentId = (s: AgentStoreState) => s.builtinAgentIdMap[PAGE_AGENT.slug];
+const pageAgentId = (s: AgentStoreState) => s.builtinAgentIdMap[BUILTIN_AGENT_SLUGS.pageAgent];
 
 /**
  * Get agent builder ID (convenience selector)
  */
-const agentBuilderId = (s: AgentStoreState) => s.builtinAgentIdMap[AGENT_BUILDER.slug];
+const agentBuilderId = (s: AgentStoreState) =>
+  s.builtinAgentIdMap[BUILTIN_AGENT_SLUGS.agentBuilder];
 
 export const builtinAgentSelectors = {
   agentBuilderId,

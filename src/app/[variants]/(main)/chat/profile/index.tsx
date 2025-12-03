@@ -1,6 +1,6 @@
 'use client';
 
-import { AGENT_BUILDER } from '@lobechat/const';
+import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { DraggablePanel } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -22,7 +22,7 @@ const AgentProfile = memo(() => {
   // Initialize agent builder builtin agent
   const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
   const agentBuilderId = useAgentStore(builtinAgentSelectors.agentBuilderId);
-  useInitBuiltinAgent(AGENT_BUILDER.slug);
+  useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.agentBuilder);
 
   return (
     <ProfileProvider>
