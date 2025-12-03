@@ -1,6 +1,6 @@
 import { ModelRuntime } from '@lobechat/model-runtime';
 
-import { createPayloadWithKeyVaults } from '../_auth';
+import { createPayloadWithKeyVaults } from '../../_auth';
 
 export interface InitializeWithClientStoreOptions {
   payload?: any;

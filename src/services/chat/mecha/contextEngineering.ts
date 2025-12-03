@@ -25,9 +25,9 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
-import { isCanUseVideo, isCanUseVision } from './helper';
-import { UserMemoryInjector } from './providers/UserMemoryInjector';
-import type { UserMemoryInjectorConfig } from './providers/UserMemoryInjector';
+import { isCanUseVideo, isCanUseVision } from '../helper';
+import { UserMemoryInjector } from '../providers/UserMemoryInjector';
+import type { UserMemoryInjectorConfig } from '../providers/UserMemoryInjector';
 
 interface ContextEngineeringContext {
   enableHistoryCount?: boolean;

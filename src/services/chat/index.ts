@@ -1,4 +1,3 @@
-import { getAgentRuntimeConfig } from '@lobechat/builtin-agents';
 import {
   FetchSSEOptions,
   fetchSSE,
@@ -8,7 +7,6 @@ import {
 import { AgentRuntimeError, ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import { ChatErrorType, TracePayload, TraceTagMap, UIChatMessage } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
-import dayjs from 'dayjs';
 import { merge } from 'lodash-es';
 import { ModelProvider } from 'model-bank';
 
@@ -17,14 +15,9 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
 import { createAgentToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
-import { userMemoryService } from '@/services/userMemory';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
-import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
-import { getChatStoreState } from '@/store/chat';
-import { topicSelectors } from '@/store/chat/selectors';
-import { getSessionStoreState } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
@@ -33,13 +26,6 @@ import {
   userGeneralSettingsSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
-import {
-  getUserMemoryStoreState,
-  useUserMemoryStore,
-  userMemorySelectors,
-} from '@/store/userMemory';
-import { userMemoryCacheKey } from '@/store/userMemory/utils/cacheKey';
-import { createMemorySearchParams } from '@/store/userMemory/utils/searchParams';
 import { MemoryManifest } from '@/tools/memory';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
@@ -48,9 +34,15 @@ import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth } from '../_auth';
 import { API_ENDPOINTS } from '../_url';
-import { initializeWithClientStore } from './clientModelRuntime';
-import { contextEngineering } from './contextEngineering';
 import { findDeploymentName, isEnableFetchOnClient, resolveRuntimeProvider } from './helper';
+import {
+  contextEngineering,
+  getTargetAgentId,
+  initializeWithClientStore,
+  resolveAgentConfig,
+  resolveModelExtendParams,
+  resolveUserMemories,
+} from './mecha';
 import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
@@ -98,14 +90,16 @@ class ChatService {
       params,
     );
 
-    // =================== 1. preprocess tools =================== //
+    // =================== 1. resolve agent config =================== //
 
-    const agentStoreState = getAgentStoreState();
-    // Use agentId if provided, otherwise fall back to activeAgentId
-    const targetAgentId = agentId || agentStoreState.activeAgentId || '';
-    const agentConfig = agentSelectors.getAgentConfigById(targetAgentId)(agentStoreState);
-    const chatConfig =
-      agentChatConfigSelectors.getAgentChatConfigById(targetAgentId)(agentStoreState);
+    const targetAgentId = getTargetAgentId(agentId);
+
+    // Resolve agent config with builtin agent runtime config merged
+    const { agentConfig, chatConfig } = resolveAgentConfig({
+      agentId: targetAgentId,
+      model: payload.model,
+      provider: payload.provider,
+    });
 
     // Get search config with agentId for agent-specific settings
     const searchConfig = getSearchConfig(payload.model, payload.provider!, targetAgentId);
@@ -130,199 +124,43 @@ class ChatService {
     const isMemoryPluginEnabled =
       pluginIds.includes(MemoryManifest.identifier) ||
       enabledToolIds.includes(MemoryManifest.identifier);
-    let userMemories =
-      userMemorySelectors.activeUserMemories(isMemoryPluginEnabled)(getUserMemoryStoreState());
 
-    if (isMemoryPluginEnabled && !userMemories) {
-      const chatStoreState = getChatStoreState();
-      const sessionStoreState = getSessionStoreState();
-
-      const historyMessages = messages.slice(0, -1);
-      const latestHistoryMessage = [...historyMessages]
-        .reverse()
-        .find((item) => typeof item?.content === 'string' && item.content.trim().length > 0);
-      const pendingMessage = messages.at(-1);
-
-      const memoryContext = {
-        latestMessageContent: latestHistoryMessage?.content,
-        pendingMessageContent: pendingMessage?.content,
-        session: sessionSelectors.currentSession(sessionStoreState),
-        topic: topicSelectors.currentActiveTopic(chatStoreState),
-      };
-
-      useUserMemoryStore.getState().setActiveMemoryContext(memoryContext);
-
-      const updatedMemoryState = getUserMemoryStoreState();
-      const memoryParams =
-        updatedMemoryState.activeParams ?? createMemorySearchParams(memoryContext);
-
-      if (memoryParams) {
-        const key = userMemoryCacheKey(memoryParams);
-        const cachedMemories = updatedMemoryState.memoryMap[key];
-
-        if (cachedMemories) {
-          const cachedAt = updatedMemoryState.memoryFetchedAtMap[key] ?? Date.now();
-          userMemories = {
-            fetchedAt: cachedAt,
-            memories: cachedMemories,
-          };
-        } else {
-          const result = await userMemoryService.retrieveMemory(memoryParams);
-          const next = result ?? { contexts: [], experiences: [], preferences: [] };
-          const fetchedAt = Date.now();
-
-          useUserMemoryStore.setState((state) => ({
-            memoryFetchedAtMap: {
-              ...state.memoryFetchedAtMap,
-              [key]: fetchedAt,
-            },
-            memoryMap: {
-              ...state.memoryMap,
-              [key]: next,
-            },
-          }));
-
-          userMemories = {
-            fetchedAt,
-            memories: next,
-          };
-        }
-      }
-    }
-
-    // Determine the systemRole - use runtime config for builtin agents
-    const agentSlug = agentSelectors.getAgentSlugById(targetAgentId)(agentStoreState);
-    let systemRole = agentConfig.systemRole;
-
-    if (agentSlug) {
-      // Try to get runtime config for builtin agents
-      const runtimeConfig = getAgentRuntimeConfig(agentSlug, {
-        currentDate: dayjs().format('YYYY-MM-DD'),
-        model: payload.model,
-        // TODO: Add more context for specific builtin agents:
-        // - documentContent for page-agent
-        // - targetAgentConfig for agent-builder
-      });
-      if (runtimeConfig?.systemRole) {
-        systemRole = runtimeConfig.systemRole;
-      }
-    }
+    const userMemories = await resolveUserMemories({
+      isMemoryPluginEnabled,
+      messages,
+    });
 
     // Apply context engineering with preprocessing configuration
-    const oaiMessages = await contextEngineering({
+    // Note: agentConfig.systemRole is already resolved by resolveAgentConfig for builtin agents
+    const modelMessages = await contextEngineering({
       enableHistoryCount:
-        agentChatConfigSelectors.getEnableHistoryCountById(targetAgentId)(agentStoreState),
-      // include user messages
+        agentChatConfigSelectors.getEnableHistoryCountById(targetAgentId)(getAgentStoreState()),
       historyCount:
-        agentChatConfigSelectors.getHistoryCountById(targetAgentId)(agentStoreState) + 2,
+        agentChatConfigSelectors.getHistoryCountById(targetAgentId)(getAgentStoreState()) + 2,
       inputTemplate: chatConfig.inputTemplate,
       messages,
       model: payload.model,
       provider: payload.provider!,
       sessionId: options?.trace?.sessionId,
-      systemRole,
+      systemRole: agentConfig.systemRole,
       tools: enabledToolIds,
       userMemories,
     });
 
     // ============  3. process extend params   ============ //
 
-    let extendParams: Record<string, any> = {};
-    const aiInfraStoreState = getAiInfraStoreState();
-
-    const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
-      payload.model,
-      payload.provider!,
-    )(aiInfraStoreState);
-
-    // model
-    if (isModelHasExtendParams) {
-      const modelExtendParams = aiModelSelectors.modelExtendParams(
-        payload.model,
-        payload.provider!,
-      )(aiInfraStoreState);
-      // if model has extended params, then we need to check if the model can use reasoning
-
-      if (modelExtendParams!.includes('enableReasoning')) {
-        if (chatConfig.enableReasoning) {
-          extendParams.thinking = {
-            budget_tokens: chatConfig.reasoningBudgetToken || 1024,
-            type: 'enabled',
-          };
-        } else {
-          extendParams.thinking = {
-            budget_tokens: 0,
-            type: 'disabled',
-          };
-        }
-      } else if (modelExtendParams!.includes('reasoningBudgetToken')) {
-        // For models that only have reasoningBudgetToken without enableReasoning
-        extendParams.thinking = {
-          budget_tokens: chatConfig.reasoningBudgetToken || 1024,
-          type: 'enabled',
-        };
-      }
-
-      if (
-        modelExtendParams!.includes('disableContextCaching') &&
-        chatConfig.disableContextCaching
-      ) {
-        extendParams.enabledContextCaching = false;
-      }
-
-      if (modelExtendParams!.includes('reasoningEffort') && chatConfig.reasoningEffort) {
-        extendParams.reasoning_effort = chatConfig.reasoningEffort;
-      }
-
-      if (modelExtendParams!.includes('gpt5ReasoningEffort') && chatConfig.gpt5ReasoningEffort) {
-        extendParams.reasoning_effort = chatConfig.gpt5ReasoningEffort;
-      }
-
-      if (
-        modelExtendParams!.includes('gpt5_1ReasoningEffort') &&
-        chatConfig.gpt5_1ReasoningEffort
-      ) {
-        extendParams.reasoning_effort = chatConfig.gpt5_1ReasoningEffort;
-      }
-
-      if (modelExtendParams!.includes('textVerbosity') && chatConfig.textVerbosity) {
-        extendParams.verbosity = chatConfig.textVerbosity;
-      }
-
-      if (modelExtendParams!.includes('thinking') && chatConfig.thinking) {
-        extendParams.thinking = { type: chatConfig.thinking };
-      }
-
-      if (
-        modelExtendParams!.includes('thinkingBudget') &&
-        chatConfig.thinkingBudget !== undefined
-      ) {
-        extendParams.thinkingBudget = chatConfig.thinkingBudget;
-      }
-
-      if (modelExtendParams!.includes('thinkingLevel') && chatConfig.thinkingLevel) {
-        extendParams.thinkingLevel = chatConfig.thinkingLevel;
-      }
-
-      if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {
-        extendParams.urlContext = chatConfig.urlContext;
-      }
-
-      if (modelExtendParams!.includes('imageAspectRatio') && chatConfig.imageAspectRatio) {
-        extendParams.imageAspectRatio = chatConfig.imageAspectRatio;
-      }
-
-      if (modelExtendParams!.includes('imageResolution') && chatConfig.imageResolution) {
-        extendParams.imageResolution = chatConfig.imageResolution;
-      }
-    }
+    const extendParams = resolveModelExtendParams({
+      chatConfig,
+      model: payload.model,
+      provider: payload.provider!,
+    });
 
     return this.getChatCompletion(
       {
         ...params,
         ...extendParams,
         enabledSearch: searchConfig.enabledSearch && searchConfig.useModelSearch ? true : undefined,
-        messages: oaiMessages,
+        messages: modelMessages,
         // Use the chatConfig from the target agent for streaming preference
         stream: chatConfig.enableStreaming !== false,
         tools,

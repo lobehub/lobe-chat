@@ -3,9 +3,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import * as isCanUseFCModule from '@/helpers/isCanUseFC';
 
+import * as helpers from '../helper';
+import { UserMemoryInjectorConfig } from '../providers/UserMemoryInjector';
 import { contextEngineering } from './contextEngineering';
-import * as helpers from './helper';
-import { UserMemoryInjectorConfig } from './providers/UserMemoryInjector';
 
 // Mock VARIABLE_GENERATORS
 vi.mock('@/utils/client/parserPlaceholder', () => ({
