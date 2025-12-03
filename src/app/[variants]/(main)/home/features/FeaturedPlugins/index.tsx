@@ -1,0 +1,60 @@
+'use client';
+
+import { MCP } from '@lobehub/icons';
+import { ActionIcon, Dropdown, Grid } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
+import { MoreHorizontal } from 'lucide-react';
+import { Suspense, memo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+
+import GroupBlock from '../components/GroupBlock';
+import GroupSkeleton from '../components/GroupSkeleton';
+import { RECENT_BLOCK_SIZE } from '../const';
+import FeaturedPluginsList from './List';
+
+const FeaturedPlugins = memo(() => {
+  const { t } = useTranslation('discover');
+  const theme = useTheme();
+  const navigate = useNavigate();
+
+  return (
+    <GroupBlock
+      action={
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: 'all-plugins',
+                label: t('home.more'),
+                onClick: () => {
+                  navigate('/discover/mcp');
+                },
+              },
+            ],
+          }}
+        >
+          <ActionIcon icon={MoreHorizontal} size="small" />
+        </Dropdown>
+      }
+      icon={<MCP color={theme.colorTextDescription} size={18} />}
+      title={t('home.featuredPlugins')}
+    >
+      <Grid maxItemWidth={320} rows={4} width={'100%'}>
+        <Suspense
+          fallback={
+            <GroupSkeleton
+              height={RECENT_BLOCK_SIZE.PLUGIN.HEIGHT}
+              rows={6}
+              width={RECENT_BLOCK_SIZE.PLUGIN.WIDTH}
+            />
+          }
+        >
+          <FeaturedPluginsList />
+        </Suspense>
+      </Grid>
+    </GroupBlock>
+  );
+});
+
+export default FeaturedPlugins;

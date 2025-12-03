@@ -67,18 +67,7 @@ const RecentPageItem = memo<RecentPageItemProps>(({ document }) => {
           background: theme.colorFillTertiary,
           overflow: 'hidden',
         }}
-      >
-        {emoji && (
-          <Avatar
-            avatar={emoji}
-            shape={'square'}
-            size={200}
-            style={{
-              filter: 'blur(100px)',
-            }}
-          />
-        )}
-      </Center>
+      />
       <Flexbox flex={1} gap={6} justify={'space-between'} padding={12}>
         <Flexbox
           gap={6}
@@ -98,8 +87,9 @@ const RecentPageItem = memo<RecentPageItemProps>(({ document }) => {
           </Text>
           {previewText && (
             <Text
-              ellipsis={{ rows: 5 }}
-              style={{ fontSize: 13, lineHeight: 1.5 }}
+              ellipsis={{ rows: 3 }}
+              fontSize={13}
+              style={{ lineHeight: 1.5 }}
               type={'secondary'}
             >
               {previewText}

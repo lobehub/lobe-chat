@@ -1,7 +1,15 @@
 export const RECENT_BLOCK_SIZE = {
-  PAGE: {
-    HEIGHT: 240,
+  AGENT: {
+    HEIGHT: 160,
     WIDTH: 200,
+  },
+  PAGE: {
+    HEIGHT: 200,
+    WIDTH: 200,
+  },
+  PLUGIN: {
+    HEIGHT: 96,
+    WIDTH: '100%',
   },
   RESOURCE: {
     HEIGHT: 216,

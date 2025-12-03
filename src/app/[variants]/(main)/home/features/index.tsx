@@ -3,6 +3,8 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import CommunityAgents from './CommunityAgents';
+import FeaturedPlugins from './FeaturedPlugins';
 import InputArea from './InputArea';
 import RecentPage from './RecentPage';
 import RecentResource from './RecentResource';
@@ -17,6 +19,8 @@ const Home = memo(() => {
       <InputArea />
       <RecentTopic />
       <RecentPage />
+      <CommunityAgents />
+      <FeaturedPlugins />
       <RecentResource />
     </Flexbox>
   );
