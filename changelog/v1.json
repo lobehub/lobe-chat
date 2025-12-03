@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "fixes": [
+        "Remove apiMode param from Azure and Cloudflare provider requests, when desktop use contextMenu not work."
+      ]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.148"
+  },
+  {
+    "children": {
       "features": ["Support apple sso auth."]
     },
     "date": "2025-12-02",
