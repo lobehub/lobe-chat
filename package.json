@@ -239,7 +239,7 @@
     "mdast-util-to-markdown": "^2.1.2",
     "model-bank": "workspace:*",
     "nanoid": "^5.1.6",
-    "next": "16.0.5",
+    "next": "16.0.7",
     "next-auth": "5.0.0-beta.30",
     "next-mdx-remote": "^5.0.0",
     "nextjs-toploader": "^3.9.17",
