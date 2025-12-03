@@ -8,7 +8,6 @@ import { Flexbox } from 'react-layout-kit';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors';
 
-import Hero from './Hero';
 import LabCard from './LabCard';
 
 interface LabItem {
@@ -27,15 +26,10 @@ interface LabsModalProps {
 const LabsModal = memo<LabsModalProps>(({ open, onClose }) => {
   const { t } = useTranslation('labs');
 
-  const [
-    isPreferenceInit,
-    enableInputMarkdown,
-    // enableGroupChat,
-    updateLab,
-  ] = useUserStore((s) => [
+  const [isPreferenceInit, enableInputMarkdown, enableGroupChat, updateLab] = useUserStore((s) => [
     preferenceSelectors.isPreferenceInit(s),
     labPreferSelectors.enableInputMarkdown(s),
-    // labPreferSelectors.enableGroupChat(s),
+    labPreferSelectors.enableGroupChat(s),
     s.updateLab,
   ]);
 
@@ -47,20 +41,18 @@ const LabsModal = memo<LabsModalProps>(({ open, onClose }) => {
       key: 'enableInputMarkdown',
       title: t('features.inputMarkdown.title'),
     },
-    // {
-    //   checked: enableGroupChat,
-    //   cover: 'https://github.com/user-attachments/assets/72894d24-a96a-4d7c-a823-ff9e6a1a8b6d',
-    //   desc: t('features.groupChat.desc'),
-    //   key: 'groupChat',
-    //   title: t('features.groupChat.title'),
-    // },
+    {
+      checked: enableGroupChat,
+      cover: 'https://github.com/user-attachments/assets/72894d24-a96a-4d7c-a823-ff9e6a1a8b6d',
+      desc: t('features.groupChat.desc'),
+      key: 'groupChat',
+      title: t('features.groupChat.title'),
+    },
   ];
 
   return (
-    <Modal footer={null} onCancel={onClose} open={open} width={900}>
+    <Modal footer={null} onCancel={onClose} open={open} title={t('title')} width={700}>
       <Flexbox gap={16} padding={16} style={{ alignItems: 'center', width: '100%' }}>
-        <Hero />
-
         {labItems.map((item) => (
           <LabCard
             checked={item.checked}
