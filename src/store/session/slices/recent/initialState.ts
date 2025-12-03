@@ -1,5 +1,5 @@
 import { FileListItem } from '@/types/files';
-import { ChatTopic } from '@/types/topic';
+import { RecentTopic } from '@/types/topic';
 
 export interface RecentState {
   isRecentPagesInit: boolean;
@@ -7,7 +7,7 @@ export interface RecentState {
   isRecentTopicsInit: boolean;
   recentPages: any[];
   recentResources: FileListItem[];
-  recentTopics: ChatTopic[];
+  recentTopics: RecentTopic[];
 }
 
 export const initialRecentState: RecentState = {
@@ -18,4 +18,3 @@ export const initialRecentState: RecentState = {
   recentResources: [],
   recentTopics: [],
 };
-

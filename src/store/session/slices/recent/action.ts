@@ -6,7 +6,7 @@ import { useClientDataSWR } from '@/libs/swr';
 import { fileService } from '@/services/file';
 import { topicService } from '@/services/topic';
 import { FileListItem } from '@/types/files';
-import { ChatTopic } from '@/types/topic';
+import { RecentTopic } from '@/types/topic';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { SessionStore } from '../../store';
@@ -20,7 +20,7 @@ const FETCH_RECENT_PAGES_KEY = 'fetchRecentPages';
 export interface RecentAction {
   useFetchRecentPages: (isLogin: boolean | undefined) => SWRResponse<any[]>;
   useFetchRecentResources: (isLogin: boolean | undefined) => SWRResponse<FileListItem[]>;
-  useFetchRecentTopics: (isLogin: boolean | undefined) => SWRResponse<ChatTopic[]>;
+  useFetchRecentTopics: (isLogin: boolean | undefined) => SWRResponse<RecentTopic[]>;
 }
 
 export const createRecentSlice: StateCreator<
@@ -29,19 +29,19 @@ export const createRecentSlice: StateCreator<
   [],
   RecentAction
 > = (set, get) => ({
-  useFetchRecentTopics: (isLogin) =>
-    useClientDataSWR<ChatTopic[]>(
+  useFetchRecentPages: (isLogin) =>
+    useClientDataSWR<any[]>(
       // Only fetch when login status is explicitly true (not null/undefined)
-      isLogin === true ? [FETCH_RECENT_TOPICS_KEY, isLogin] : null,
-      async () => topicService.getRecentTopics(12),
+      isLogin === true ? [FETCH_RECENT_PAGES_KEY, isLogin] : null,
+      async () => fileService.getRecentPages(12),
       {
         onSuccess: (data) => {
-          if (get().isRecentTopicsInit && isEqual(get().recentTopics, data)) return;
+          if (get().isRecentPagesInit && isEqual(get().recentPages, data)) return;
 
           set(
-            { isRecentTopicsInit: true, recentTopics: data },
+            { isRecentPagesInit: true, recentPages: data },
             false,
-            n('useFetchRecentTopics/onSuccess'),
+            n('useFetchRecentPages/onSuccess'),
           );
         },
       },
@@ -65,22 +65,21 @@ export const createRecentSlice: StateCreator<
       },
     ),
 
-  useFetchRecentPages: (isLogin) =>
-    useClientDataSWR<any[]>(
+  useFetchRecentTopics: (isLogin) =>
+    useClientDataSWR<RecentTopic[]>(
       // Only fetch when login status is explicitly true (not null/undefined)
-      isLogin === true ? [FETCH_RECENT_PAGES_KEY, isLogin] : null,
-      async () => fileService.getRecentPages(12),
+      isLogin === true ? [FETCH_RECENT_TOPICS_KEY, isLogin] : null,
+      async () => topicService.getRecentTopics(12),
       {
         onSuccess: (data) => {
-          if (get().isRecentPagesInit && isEqual(get().recentPages, data)) return;
+          if (get().isRecentTopicsInit && isEqual(get().recentTopics, data)) return;
 
           set(
-            { isRecentPagesInit: true, recentPages: data },
+            { isRecentTopicsInit: true, recentTopics: data },
             false,
-            n('useFetchRecentPages/onSuccess'),
+            n('useFetchRecentTopics/onSuccess'),
           );
         },
       },
     ),
 });
-

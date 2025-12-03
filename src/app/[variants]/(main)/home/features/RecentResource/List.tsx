@@ -1,72 +1,47 @@
 'use client';
 
-import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { Link } from 'react-router-dom';
 
-import { FileListItem } from '@/types/files';
+import GroupSkeleton from '@/app/[variants]/(main)/home/features/components/GroupSkeleton';
+import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
+import { useInitRecentResource } from '@/hooks/useInitRecentResource';
 
-import RecentFileCard from './Item';
-import RecentFilesSkeleton from './Skeleton';
+import RecentResourceItem from './Item';
 
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    position: relative;
-    overflow: hidden;
-  `,
-  fadeEdge: css`
-    pointer-events: none;
-
-    position: absolute;
-    inset-block: 0 0;
-    inset-inline-end: 0;
-
-    width: 80px;
-
-    background: linear-gradient(to left, ${token.colorBgContainerSecondary}, transparent);
-  `,
-  scrollContainer: css`
-    scroll-behavior: smooth;
-
-    /* Hide scrollbar */
-    scrollbar-width: none;
-
-    overflow: auto hidden;
-    display: flex;
-    gap: 16px;
-
-    padding-block-end: 8px;
-    padding-inline-end: 80px;
-
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  `,
-}));
-
-interface RecentResourceListProps {
-  files: FileListItem[];
-  isLoading?: boolean;
-}
-
-const RecentResourceList = memo<RecentResourceListProps>(({ files, isLoading }) => {
-  const { styles } = useStyles();
+const RecentResourceList = memo(() => {
+  const { data: files, isLoading } = useInitRecentResource();
 
   if (isLoading) {
-    return <RecentFilesSkeleton />;
+    return (
+      <GroupSkeleton
+        height={RECENT_BLOCK_SIZE.RESOURCE.HEIGHT}
+        width={RECENT_BLOCK_SIZE.RESOURCE.WIDTH}
+      />
+    );
   }
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.scrollContainer}>
-        {files.map((file) => (
-          <RecentFileCard file={file} key={file.id} />
-        ))}
-      </div>
-      <div className={styles.fadeEdge} />
-    </div>
-  );
+  if (!files || files.length === 0) {
+    return null;
+  }
+
+  return files.map((file) => {
+    const isPage = file.fileType === 'text/plain';
+    const fileUrl = isPage ? `/resource/${file.id}` : `/resource?file=${file.id}`;
+
+    return (
+      <Link
+        key={file.id}
+        style={{
+          color: 'inherit',
+          textDecoration: 'none',
+        }}
+        to={fileUrl}
+      >
+        <RecentResourceItem file={file} />
+      </Link>
+    );
+  });
 });
 
 export default RecentResourceList;

@@ -214,7 +214,7 @@ export class KnowledgeRepo {
       if (typeof editorData === 'string') {
         try {
           editorData = JSON.parse(editorData);
-        } catch (e) {
+        } catch {
           editorData = null;
         }
       }
@@ -224,7 +224,7 @@ export class KnowledgeRepo {
       if (typeof metadata === 'string') {
         try {
           metadata = JSON.parse(metadata);
-        } catch (e) {
+        } catch {
           metadata = null;
         }
       }

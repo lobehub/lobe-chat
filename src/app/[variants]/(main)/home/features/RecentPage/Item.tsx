@@ -1,9 +1,14 @@
 'use client';
 
-import { createStyles } from 'antd-style';
+import { Avatar, Block, Icon, Text } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
+import { FileTextIcon } from 'lucide-react';
 import markdownToTxt from 'markdown-to-txt';
 import { memo } from 'react';
+import { Center, Flexbox } from 'react-layout-kit';
 
+import Time from '@/app/[variants]/(main)/home/features/components/Time';
+import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
 import { FileListItem } from '@/types/files';
 
 // Helper to extract title from markdown content
@@ -32,84 +37,78 @@ const getPreviewText = (item: FileListItem): string => {
   return plainText.slice(0, 200);
 };
 
-const useStyles = createStyles(({ css, token }) => ({
-  card: css`
-    cursor: pointer;
-    user-select: none;
-
-    position: relative;
-
-    overflow: hidden;
-    flex-shrink: 0;
-
-    width: 280px;
-    height: 180px;
-    border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
-
-    background: ${token.colorBgContainer};
-
-    transition: all ${token.motionDurationMid};
-
-    &:hover {
-      border-color: ${token.colorPrimary};
-      box-shadow: ${token.boxShadowTertiary};
-    }
-  `,
-  noteContent: css`
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    height: 100%;
-    padding: 12px;
-  `,
-  notePreview: css`
-    overflow: hidden;
-    display: -webkit-box;
-    flex: 1;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-
-    font-size: 13px;
-    line-height: 1.6;
-    color: ${token.colorTextSecondary};
-  `,
-  noteTitle: css`
-    overflow: hidden;
-
-    font-size: 14px;
-    font-weight: ${token.fontWeightStrong};
-    line-height: 1.4;
-    color: ${token.colorText};
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-}));
-
 interface RecentPageItemProps {
   document: FileListItem;
-  onClick: () => void;
 }
 
-const RecentPageItem = memo<RecentPageItemProps>(({ document, onClick }) => {
-  const { styles } = useStyles();
+const RecentPageItem = memo<RecentPageItemProps>(({ document }) => {
+  const theme = useTheme();
 
   const title = document.name || '';
   const previewText = getPreviewText(document);
   const emoji = document.metadata?.emoji;
 
   return (
-    <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
-      <div className={styles.noteContent}>
-        <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
-          {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
-          <div className={styles.noteTitle}>{title}</div>
-        </div>
-        {previewText && <div className={styles.notePreview}>{previewText}</div>}
-      </div>
-    </div>
+    <Block
+      clickable
+      flex={'none'}
+      height={RECENT_BLOCK_SIZE.PAGE.HEIGHT}
+      style={{
+        borderRadius: theme.borderRadiusLG,
+        overflow: 'hidden',
+      }}
+      variant={'outlined'}
+      width={RECENT_BLOCK_SIZE.PAGE.WIDTH}
+    >
+      <Center
+        flex={'none'}
+        height={44}
+        style={{
+          background: theme.colorFillTertiary,
+          overflow: 'hidden',
+        }}
+      >
+        {emoji && (
+          <Avatar
+            avatar={emoji}
+            shape={'square'}
+            size={200}
+            style={{
+              filter: 'blur(100px)',
+            }}
+          />
+        )}
+      </Center>
+      <Flexbox flex={1} gap={6} justify={'space-between'} padding={12}>
+        <Flexbox
+          gap={6}
+          style={{
+            marginTop: -32,
+          }}
+        >
+          {emoji ? (
+            <Avatar avatar={emoji} shape={'square'} size={36} />
+          ) : (
+            <Center flex={'none'} height={36} style={{ marginLeft: -8 }} width={36}>
+              <Icon color={theme.colorTextDescription} icon={FileTextIcon} size={24} />
+            </Center>
+          )}
+          <Text ellipsis={{ rows: 2 }} style={{ fontSize: 14, lineHeight: 1.4 }} weight={500}>
+            {title}
+          </Text>
+          {previewText && (
+            <Text
+              ellipsis={{ rows: 5 }}
+              style={{ fontSize: 13, lineHeight: 1.5 }}
+              type={'secondary'}
+            >
+              {previewText}
+            </Text>
+          )}
+        </Flexbox>
+        <Time date={document.updatedAt} />
+      </Flexbox>
+    </Block>
   );
 });
 

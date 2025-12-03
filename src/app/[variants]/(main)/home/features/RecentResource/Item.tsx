@@ -1,17 +1,15 @@
 'use client';
 
-import { Image as LobeImage, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import { Block, Text } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
+import Time from '@/app/[variants]/(main)/home/features/components/Time';
+import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
 import FileIcon from '@/components/FileIcon';
 import { FileListItem } from '@/types/files';
 import { formatSize } from '@/utils/format';
-
-dayjs.extend(relativeTime);
 
 const IMAGE_FILE_TYPES = new Set([
   'image/png',
@@ -22,102 +20,60 @@ const IMAGE_FILE_TYPES = new Set([
   'image/svg+xml',
 ]);
 
-const useStyles = createStyles(({ css, token }) => ({
-  card: css`
-    cursor: pointer;
-
-    position: relative;
-
-    overflow: hidden;
-    flex-shrink: 0;
-
-    width: 280px;
-    padding: 12px;
-    border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
-
-    background: ${token.colorBgContainer};
-
-    transition: all ${token.motionDurationMid};
-
-    &:hover {
-      border-color: ${token.colorPrimary};
-      box-shadow: ${token.boxShadowTertiary};
-    }
-  `,
-  iconWrapper: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    height: 160px;
-    margin-block-end: 12px;
-    border-radius: ${token.borderRadius}px;
-
-    background: ${token.colorBgLayout};
-  `,
-  imagePreview: css`
-    width: 100%;
-    height: 160px;
-    margin-block-end: 12px;
-    border-radius: ${token.borderRadius}px;
-
-    object-fit: cover;
-    background: ${token.colorBgLayout};
-  `,
-  info: css`
-    font-size: 12px;
-    color: ${token.colorTextDescription};
-  `,
-  title: css`
-    margin: 0 !important;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.4;
-  `,
-}));
-
 interface RecentResourceItemProps {
   file: FileListItem;
-  onClick?: () => void;
 }
 
-const RecentResourceItem = memo<RecentResourceItemProps>(({ file, onClick }) => {
-  const { styles } = useStyles();
+const RecentResourceItem = memo<RecentResourceItemProps>(({ file }) => {
+  const theme = useTheme();
 
   const isImage = IMAGE_FILE_TYPES.has(file.fileType);
-  const relativeTime = dayjs(file.updatedAt).fromNow();
 
   return (
-    <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
-      <Flexbox gap={12} style={{ position: 'relative' }}>
-        {/* Preview or Icon */}
+    <Block
+      clickable
+      flex={'none'}
+      height={RECENT_BLOCK_SIZE.RESOURCE.HEIGHT}
+      style={{
+        borderRadius: theme.borderRadiusLG,
+        overflow: 'hidden',
+      }}
+      variant={'outlined'}
+      width={RECENT_BLOCK_SIZE.RESOURCE.WIDTH}
+    >
+      <Center
+        flex={'none'}
+        height={126}
+        style={{ background: theme.colorFillTertiary, overflow: 'hidden' }}
+      >
         {isImage && file.url ? (
-          <LobeImage
+          <img
             alt={file.name}
-            className={styles.imagePreview}
-            preview={false}
+            height={'100%'}
             src={file.url}
+            style={{
+              objectFit: 'cover',
+            }}
+            width={'100%'}
           />
         ) : (
-          <div className={styles.iconWrapper}>
-            <FileIcon fileName={file.name} fileType={file.fileType} size={48} />
-          </div>
+          <FileIcon fileName={file.name} fileType={file.fileType} size={48} />
         )}
+      </Center>
 
-        {/* File Info */}
-        <Flexbox gap={6} style={{ overflow: 'hidden', position: 'relative' }}>
-          <Text className={styles.title} ellipsis={{ rows: 2 }}>
-            {file.name}
+      {/* File Info */}
+      <Flexbox flex={1} gap={6} justify={'space-between'} padding={12}>
+        <Text ellipsis={{ rows: 2 }} style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.4 }}>
+          {file.name}
+        </Text>
+        <Flexbox gap={4} horizontal style={{ alignItems: 'center' }}>
+          <Time date={file.updatedAt} />
+          <Text fontSize={12} type={'secondary'}>
+            • {formatSize(file.size)}
           </Text>
-          <Flexbox className={styles.info} gap={8} horizontal>
-            <span>{relativeTime}</span>
-            <span>•</span>
-            <span>{formatSize(file.size)}</span>
-          </Flexbox>
         </Flexbox>
       </Flexbox>
-    </div>
+    </Block>
   );
 });
 

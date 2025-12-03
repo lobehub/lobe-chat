@@ -1,77 +1,43 @@
 'use client';
 
-import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { Link } from 'react-router-dom';
 
-import RecentFilesSkeleton from '@/app/[variants]/(main)/home/features/RecentResource/Skeleton';
-import { FileListItem } from '@/types/files';
+import GroupSkeleton from '@/app/[variants]/(main)/home/features/components/GroupSkeleton';
+import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
+import { useInitRecentPage } from '@/hooks/useInitRecentPage';
 
-import RecentDocumentCard from './Item';
+import RecentPageItem from './Item';
 
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    position: relative;
-    overflow: hidden;
-  `,
-  fadeEdge: css`
-    pointer-events: none;
-
-    position: absolute;
-    inset-block: 0 0;
-    inset-inline-end: 0;
-
-    width: 80px;
-
-    background: linear-gradient(to left, ${token.colorBgContainerSecondary}, transparent);
-  `,
-  scrollContainer: css`
-    scroll-behavior: smooth;
-
-    /* Hide scrollbar */
-    scrollbar-width: none;
-
-    overflow: auto hidden;
-    display: flex;
-    gap: 16px;
-
-    padding-block-end: 8px;
-    padding-inline-end: 80px;
-
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  `,
-}));
-
-interface RecentPageListProps {
-  documents: FileListItem[];
-  isLoading?: boolean;
-  onOpenDocument: (id: string) => void;
-}
-
-const RecentPageList = memo<RecentPageListProps>(({ documents, isLoading, onOpenDocument }) => {
-  const { styles } = useStyles();
+const RecentPageList = memo(() => {
+  const { data: documents, isLoading } = useInitRecentPage();
 
   if (isLoading) {
-    return <RecentFilesSkeleton />;
+    return (
+      <GroupSkeleton height={RECENT_BLOCK_SIZE.PAGE.HEIGHT} width={RECENT_BLOCK_SIZE.PAGE.WIDTH} />
+    );
   }
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.scrollContainer}>
-        {documents.map((document) => (
-          <RecentDocumentCard
-            document={document}
-            key={document.id}
-            onClick={() => onOpenDocument(document.id)}
-          />
-        ))}
-      </div>
-      <div className={styles.fadeEdge} />
-    </div>
-  );
+  if (!documents || documents.length === 0) {
+    return null;
+  }
+
+  return documents.map((document) => {
+    const pageUrl = `/page/${document.id}`;
+
+    return (
+      <Link
+        key={document.id}
+        style={{
+          color: 'inherit',
+          textDecoration: 'none',
+        }}
+        to={pageUrl}
+      >
+        <RecentPageItem document={document} />
+      </Link>
+    );
+  });
 });
 
 export default RecentPageList;

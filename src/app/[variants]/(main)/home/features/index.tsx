@@ -11,13 +11,13 @@ import WelcomeText from './WelcomeText';
 
 const Home = memo(() => {
   return (
-    <Flexbox gap={24}>
+    <Flexbox gap={48}>
       <div style={{ height: '32px' }} />
       <WelcomeText />
       <InputArea />
       <RecentTopic />
-      <RecentResource />
       <RecentPage />
+      <RecentResource />
     </Flexbox>
   );
 });

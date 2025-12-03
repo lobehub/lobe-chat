@@ -1,3 +1,4 @@
+import { RecentTopic } from '@lobechat/types';
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
@@ -154,7 +155,7 @@ export const topicRouter = router({
 
   recentTopics: topicProcedure
     .input(z.object({ limit: z.number().optional() }).optional())
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }): Promise<RecentTopic[]> => {
       return ctx.topicModel.queryRecent(input?.limit ?? 12);
     }),
 

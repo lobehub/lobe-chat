@@ -64,6 +64,20 @@ export interface TopicRankItem {
   title: string | null;
 }
 
+export interface RecentTopicAgent {
+  avatar: string | null;
+  backgroundColor: string | null;
+  id: string;
+  title: string | null;
+}
+
+export interface RecentTopic {
+  agent: RecentTopicAgent | null;
+  id: string;
+  title: string | null;
+  updatedAt: Date;
+}
+
 export interface CreateTopicParams {
   favorite?: boolean;
   groupId?: string | null;

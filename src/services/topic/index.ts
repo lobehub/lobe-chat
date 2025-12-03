@@ -1,7 +1,13 @@
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
 import { BatchTaskResult } from '@/types/service';
-import { ChatTopic, CreateTopicParams, QueryTopicParams, TopicRankItem } from '@/types/topic';
+import {
+  ChatTopic,
+  CreateTopicParams,
+  QueryTopicParams,
+  RecentTopic,
+  TopicRankItem,
+} from '@/types/topic';
 
 export class TopicService {
   createTopic = (params: CreateTopicParams): Promise<string> => {
@@ -42,8 +48,8 @@ export class TopicService {
     return lambdaClient.topic.rankTopics.query(limit);
   };
 
-  getRecentTopics = async (limit?: number): Promise<ChatTopic[]> => {
-    return lambdaClient.topic.recentTopics.query({ limit }) as any;
+  getRecentTopics = async (limit?: number): Promise<RecentTopic[]> => {
+    return lambdaClient.topic.recentTopics.query({ limit });
   };
 
   searchTopics = (keywords: string, sessionId?: string, groupId?: string): Promise<ChatTopic[]> => {
