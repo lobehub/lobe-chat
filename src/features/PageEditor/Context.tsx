@@ -61,7 +61,7 @@ export const PageEditorProvider = memo<PageEditorProviderProps>(
     const { message, modal } = App.useApp();
 
     const editor = useEditor();
-    const [chatPanelExpanded, setChatPanelExpanded] = useState(true);
+    const [chatPanelExpanded, setChatPanelExpanded] = useState(false);
 
     const removeDocument = useFileStore((s) => s.removeDocument);
     const currentDocument = useFileStore(documentSelectors.getDocumentById(pageId));
