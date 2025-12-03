@@ -22,9 +22,19 @@ export interface SearchConfig {
 /**
  * Get search configuration for given model and provider
  * This centralizes the search logic that was duplicated across multiple places
+ * @param model - The model name
+ * @param provider - The provider name
+ * @param agentId - Optional agent ID to get agent-specific chat config
  */
-export const getSearchConfig = (model: string, provider: string): SearchConfig => {
-  const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+export const getSearchConfig = (
+  model: string,
+  provider: string,
+  agentId?: string,
+): SearchConfig => {
+  const agentStoreState = getAgentStoreState();
+  const targetAgentId = agentId || agentStoreState.activeAgentId || '';
+  const chatConfig =
+    agentChatConfigSelectors.getAgentChatConfigById(targetAgentId)(agentStoreState);
   const aiInfraStoreState = getAiInfraStoreState();
 
   const enabledSearch = chatConfig.searchMode !== 'off';
@@ -41,7 +51,8 @@ export const getSearchConfig = (model: string, provider: string): SearchConfig =
 
   const useModelSearch =
     ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && chatConfig.useModelBuiltinSearch) ||
-    isModelBuiltinSearchInternal || false;
+    isModelBuiltinSearchInternal ||
+    false;
 
   const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
