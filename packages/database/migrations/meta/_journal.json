@@ -392,6 +392,13 @@
       "when": 1764583392443,
       "tag": "0055_rename_phone_number_to_phone",
       "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "7",
+      "when": 1764685643024,
+      "tag": "0056_update_agent_slug_index",
+      "breakpoints": true
     }
   ],
   "version": "6"

@@ -1,11 +1,14 @@
 'use client';
 
+import { App } from 'antd';
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { MARKET_OIDC_ENDPOINTS } from '@/services/_url';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors/settings';
 
+import MarketAuthConfirmModal from './MarketAuthConfirmModal';
 import { MarketAuthError } from './errors';
 import { MarketOIDC } from './oidc';
 import { MarketAuthContextType, MarketAuthSession, MarketUserInfo, OIDCConfig } from './types';
@@ -165,10 +168,20 @@ const refreshToken = async (): Promise<boolean> => {
  * Market 授权上下文提供者
  */
 export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderProps) => {
+  const { message } = App.useApp();
+  const { t } = useTranslation('marketAuth');
+
   const [session, setSession] = useState<MarketAuthSession | null>(null);
   const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
   const [oidcClient, setOidcClient] = useState<MarketOIDC | null>(null);
   const [shouldReauthorize, setShouldReauthorize] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingSignInResolve, setPendingSignInResolve] = useState<
+    ((value: number | null) => void) | null
+  >(null);
+  const [pendingSignInReject, setPendingSignInReject] = useState<((reason?: any) => void) | null>(
+    null,
+  );
 
   // 初始化 OIDC 客户端（仅在客户端）
   useEffect(() => {
@@ -196,8 +209,56 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
    */
   const restoreSession = () => {
     console.log('[MarketAuth] Attempting to restore session');
-    const token = getTokenFromCookie();
 
+    // 优先级 1: 从 DB 中获取 token（优先级最高）
+    const dbTokens = getMarketTokensFromDB();
+    if (dbTokens?.accessToken && dbTokens?.expiresAt) {
+      // 检查 DB 中的 token 是否过期
+      if (dbTokens.expiresAt > Date.now()) {
+        console.log('[MarketAuth] Session restored from DB');
+
+        // 尝试从 sessionStorage 获取用户信息（如果有的话）
+        let userInfo: MarketUserInfo | undefined;
+        const userInfoData = sessionStorage.getItem('market_user_info');
+        if (userInfoData) {
+          try {
+            userInfo = JSON.parse(userInfoData);
+          } catch (error) {
+            console.error('[MarketAuth] Failed to parse stored user info:', error);
+          }
+        }
+
+        // 创建会话对象
+        const restoredSession: MarketAuthSession = {
+          accessToken: dbTokens.accessToken,
+          expiresAt: dbTokens.expiresAt,
+          expiresIn: Math.floor((dbTokens.expiresAt - Date.now()) / 1000),
+          scope: 'openid profile email',
+          tokenType: 'Bearer',
+          userInfo,
+        };
+
+        // 同步到 cookie 和 sessionStorage
+        setTokenToCookie(dbTokens.accessToken, restoredSession.expiresIn);
+        sessionStorage.setItem('market_auth_session', JSON.stringify(restoredSession));
+
+        setSession(restoredSession);
+        setStatus('authenticated');
+        return;
+      } else {
+        console.log('[MarketAuth] DB token has expired, will trigger re-authorization');
+        // 清理过期的 DB tokens
+        clearMarketTokensFromDB();
+        sessionStorage.removeItem('market_auth_session');
+        removeTokenFromCookie();
+        // 标记需要重新授权，等待 oidcClient 准备好
+        setShouldReauthorize(true);
+        return;
+      }
+    }
+
+    // 优先级 2: 从 cookie 和 sessionStorage 中获取（DB 中没有时的备选方案）
+    const token = getTokenFromCookie();
     if (token) {
       // 从 sessionStorage 中获取完整的会话信息
       const sessionData = sessionStorage.getItem('market_auth_session');
@@ -207,14 +268,7 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
 
           // 检查 token 是否过期
           if (parsedSession.expiresAt > Date.now()) {
-            console.log('[MarketAuth] Session restored from storage');
-
-            console.log('parsedSession', parsedSession);
-            console.log('parsedSession.userInfo', parsedSession.userInfo);
-            console.log(
-              "sessionStorage.getItem('market_user_info')",
-              sessionStorage.getItem('market_user_info'),
-            );
+            console.log('[MarketAuth] Session restored from cookie/sessionStorage');
 
             // 如果 session 中没有 userInfo，尝试从单独的存储中获取
             if (!parsedSession.userInfo) {
@@ -229,6 +283,9 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
                 setShouldReauthorize(true);
               }
             }
+
+            // 同步到 DB
+            saveMarketTokensToDB(parsedSession.accessToken, undefined, parsedSession.expiresAt);
 
             setSession(parsedSession);
             setStatus('authenticated');
@@ -254,9 +311,9 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   };
 
   /**
-   * 登录方法
+   * 实际执行登录的方法（内部使用）
    */
-  const signIn = async (): Promise<number | null> => {
+  const handleActualSignIn = async (): Promise<number | null> => {
     console.log('[MarketAuth] Starting sign in process');
 
     if (!oidcClient) {
@@ -311,12 +368,62 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       setSession(newSession);
       setStatus('authenticated');
 
-      console.log('[MarketAuth] Sign in completed successfully');
       return userInfo?.accountId ?? null;
     } catch (error) {
-      console.error('[MarketAuth] Sign in failed:', error);
       setStatus('unauthenticated');
+
+      // 根据错误类型显示不同的错误消息
+      if (error instanceof MarketAuthError) {
+        message.error(t(`errors.${error.code}`) || t('errors.general'));
+      } else {
+        message.error(t('errors.general'));
+      }
+
       throw error;
+    }
+  };
+
+  /**
+   * 登录方法（会先弹出确认对话框）
+   */
+  const signIn = async (): Promise<number | null> => {
+    return new Promise<number | null>((resolve, reject) => {
+      setPendingSignInResolve(() => resolve);
+      setPendingSignInReject(() => reject);
+      setShowConfirmModal(true);
+    });
+  };
+
+  /**
+   * 处理确认授权
+   */
+  const handleConfirmAuth = async () => {
+    setShowConfirmModal(false);
+    try {
+      const result = await handleActualSignIn();
+      if (pendingSignInResolve) {
+        pendingSignInResolve(result);
+        setPendingSignInResolve(null);
+        setPendingSignInReject(null);
+      }
+    } catch (error) {
+      if (pendingSignInReject) {
+        pendingSignInReject(error);
+        setPendingSignInResolve(null);
+        setPendingSignInReject(null);
+      }
+    }
+  };
+
+  /**
+   * 处理取消授权
+   */
+  const handleCancelAuth = () => {
+    setShowConfirmModal(false);
+    if (pendingSignInReject) {
+      pendingSignInReject(new Error('User cancelled authorization'));
+      setPendingSignInResolve(null);
+      setPendingSignInReject(null);
     }
   };
 
@@ -468,7 +575,16 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
     status,
   };
 
-  return <MarketAuthContext.Provider value={contextValue}>{children}</MarketAuthContext.Provider>;
+  return (
+    <MarketAuthContext.Provider value={contextValue}>
+      {children}
+      <MarketAuthConfirmModal
+        onCancel={handleCancelAuth}
+        onConfirm={handleConfirmAuth}
+        open={showConfirmModal}
+      />
+    </MarketAuthContext.Provider>
+  );
 };
 
 /**

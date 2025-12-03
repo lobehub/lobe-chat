@@ -89,16 +89,27 @@ When configuring OAuth providers, use the following callback URL format:
 
 ### Email Service Configuration
 
-If you want to enable email verification or password reset features, you need to configure SMTP settings:
+Used by email verification, password reset, and magic-link delivery. Choose a provider, then fill the matching variables:
 
-| Environment Variable                  | Type     | Description                                                       |
-| ------------------------------------- | -------- | ----------------------------------------------------------------- |
-| `NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION` | Optional | Set to `1` to require email verification before users can sign in |
-| `SMTP_HOST`                           | Required | SMTP server hostname (e.g., `smtp.gmail.com`)                     |
-| `SMTP_PORT`                           | Required | SMTP server port (usually `587` for TLS, `465` for SSL)           |
-| `SMTP_SECURE`                         | Optional | Set to `true` for SSL (port 465), `false` for TLS (port 587)      |
-| `SMTP_USER`                           | Required | SMTP authentication username                                      |
-| `SMTP_PASS`                           | Required | SMTP authentication password                                      |
+| Environment Variable                  | Type        | Description                                                                                                                                       |
+| ------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION` | Optional    | Set to `1` to require email verification before users can sign in                                                                                 |
+| `EMAIL_SERVICE_PROVIDER`              | Optional    | Email provider selector: `nodemailer` (default, SMTP) or `resend`                                                                                 |
+| `SMTP_HOST`                           | Required    | SMTP server hostname (e.g., `smtp.gmail.com`). Used when `EMAIL_SERVICE_PROVIDER=nodemailer`                                                      |
+| `SMTP_PORT`                           | Required    | SMTP server port (usually `587` for TLS, `465` for SSL). Used when `EMAIL_SERVICE_PROVIDER=nodemailer`                                            |
+| `SMTP_SECURE`                         | Optional    | `true` for SSL (port 465), `false` for TLS (port 587). Used when `EMAIL_SERVICE_PROVIDER=nodemailer`                                              |
+| `SMTP_USER`                           | Required    | SMTP auth username. Used when `EMAIL_SERVICE_PROVIDER=nodemailer`                                                                                 |
+| `SMTP_PASS`                           | Required    | SMTP auth password. Used when `EMAIL_SERVICE_PROVIDER=nodemailer`                                                                                 |
+| `RESEND_API_KEY`                      | Required    | Resend API key. Required when `EMAIL_SERVICE_PROVIDER=resend`                                                                                     |
+| `RESEND_FROM`                         | Recommended | Default sender address (e.g., `noreply@your-verified-domain.com`). Must be a domain verified in Resend. Used when `EMAIL_SERVICE_PROVIDER=resend` |
+
+### Magic Link (Passwordless) Login
+
+Enable BetterAuth magic-link login (depends on a working email provider above):
+
+| Environment Variable            | Type     | Description                                        |
+| ------------------------------- | -------- | -------------------------------------------------- |
+| `NEXT_PUBLIC_ENABLE_MAGIC_LINK` | Optional | Set to `1` to enable passwordless magic-link login |
 
 <Callout type={'tip'}>
   For detailed provider configuration, refer to the [Next Auth provider documentation](/docs/self-hosting/advanced/auth/next-auth) as most configurations are compatible, or visit the official [Better Auth documentation](https://www.better-auth.com/docs/introduction).

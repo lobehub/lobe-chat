@@ -30,9 +30,9 @@ describe('onStreamInvoke', () => {
 
   it('should set up stream listeners and send start event', () => {
     const params: ProxyTRPCRequestParams = {
-      input: { query: 'test' },
-      path: 'test.endpoint',
-      type: 'query',
+      headers: { 'content-type': 'application/json' },
+      method: 'POST',
+      urlPath: '/trpc/lambda/test.endpoint',
     };
 
     const callbacks = {
@@ -78,9 +78,9 @@ describe('onStreamInvoke', () => {
     };
 
     const params: ProxyTRPCRequestParams = {
-      input: {},
-      path: 'test',
-      type: 'query',
+      headers: {},
+      method: 'GET',
+      urlPath: '/trpc/test',
     };
 
     onStreamInvoke(params, callbacks);
@@ -106,9 +106,9 @@ describe('onStreamInvoke', () => {
     };
 
     const params: ProxyTRPCRequestParams = {
-      input: {},
-      path: 'test',
-      type: 'query',
+      headers: {},
+      method: 'GET',
+      urlPath: '/trpc/test',
     };
 
     onStreamInvoke(params, callbacks);
@@ -138,9 +138,9 @@ describe('onStreamInvoke', () => {
     };
 
     const params: ProxyTRPCRequestParams = {
-      input: {},
-      path: 'test',
-      type: 'query',
+      headers: {},
+      method: 'GET',
+      urlPath: '/trpc/test',
     };
 
     onStreamInvoke(params, callbacks);
@@ -179,9 +179,9 @@ describe('onStreamInvoke', () => {
     };
 
     const params: ProxyTRPCRequestParams = {
-      input: {},
-      path: 'test',
-      type: 'query',
+      headers: {},
+      method: 'GET',
+      urlPath: '/trpc/test',
     };
 
     onStreamInvoke(params, callbacks);
@@ -221,9 +221,9 @@ describe('onStreamInvoke', () => {
     };
 
     const params: ProxyTRPCRequestParams = {
-      input: {},
-      path: 'test',
-      type: 'query',
+      headers: {},
+      method: 'GET',
+      urlPath: '/trpc/test',
     };
 
     const cleanup = onStreamInvoke(params, callbacks);
@@ -255,9 +255,9 @@ describe('onStreamInvoke', () => {
     };
 
     const params: ProxyTRPCRequestParams = {
-      input: {},
-      path: 'test',
-      type: 'query',
+      headers: {},
+      method: 'GET',
+      urlPath: '/trpc/test',
     };
 
     onStreamInvoke(params, callbacks);
@@ -290,13 +290,14 @@ describe('onStreamInvoke', () => {
     };
 
     const params: ProxyTRPCRequestParams = {
-      input: {
+      body: JSON.stringify({
         filters: { active: true },
         query: 'complex query',
         sort: { field: 'date', order: 'desc' },
-      },
-      path: 'complex.nested.endpoint',
-      type: 'mutation',
+      }),
+      headers: { 'content-type': 'application/json', 'x-custom-header': 'value' },
+      method: 'POST',
+      urlPath: '/trpc/lambda/complex.nested.endpoint',
     };
 
     onStreamInvoke(params, callbacks);
@@ -316,9 +317,9 @@ describe('onStreamInvoke', () => {
     };
 
     const params: ProxyTRPCRequestParams = {
-      input: {},
-      path: 'test',
-      type: 'query',
+      headers: {},
+      method: 'GET',
+      urlPath: '/trpc/test',
     };
 
     const cleanup = onStreamInvoke(params, callbacks);
@@ -346,9 +347,9 @@ describe('onStreamInvoke', () => {
     };
 
     const params: ProxyTRPCRequestParams = {
-      input: {},
-      path: 'test',
-      type: 'query',
+      headers: {},
+      method: 'GET',
+      urlPath: '/trpc/test',
     };
 
     onStreamInvoke(params, callbacks);

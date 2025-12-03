@@ -119,6 +119,44 @@ export class DiscoverService {
     };
   }
 
+  // ============================== Call Cloud Mcp Endpoint Methods ==============================
+
+  async callCloudMcpEndpoint(params: {
+    apiParams: Record<string, any>;
+    identifier: string;
+    toolName: string;
+    userAccessToken: string;
+  }) {
+    log('callCloudMcpEndpoint: params=%O', {
+      apiParams: params.apiParams,
+      hasUserAccessToken: !!params.userAccessToken,
+      identifier: params.identifier,
+      toolName: params.toolName,
+    });
+
+    try {
+      // Call cloud gateway with user access token in Authorization header
+      const result = await this.market.plugins.callCloudGateway(
+        {
+          apiParams: params.apiParams,
+          identifier: params.identifier,
+          toolName: params.toolName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${params.userAccessToken}`,
+          },
+        },
+      );
+
+      log('callCloudMcpEndpoint: success, result=%O', result);
+      return result;
+    } catch (error) {
+      log('callCloudMcpEndpoint: error=%O', error);
+      throw error;
+    }
+  }
+
   // ============================== Helper Methods ==============================
 
   /**
@@ -539,9 +577,9 @@ export class DiscoverService {
         description: (data as any).description || data.summary,
         examples: Array.isArray((data as any).examples)
           ? (data as any).examples.map((example: any) => ({
-            content: typeof example === 'string' ? example : example.content || '',
-            role: example.role || 'user',
-          }))
+              content: typeof example === 'string' ? example : example.content || '',
+              role: example.role || 'user',
+            }))
           : [],
         homepage:
           (data as any).homepage ||
@@ -886,7 +924,10 @@ export class DiscoverService {
     const all = await this._getPluginList(locale);
     let raw = all.find((item) => item.identifier === identifier);
     if (!raw) {
-      log('getPluginDetail: plugin not found in default store for identifier=%s, trying MCP plugin', identifier);
+      log(
+        'getPluginDetail: plugin not found in default store for identifier=%s, trying MCP plugin',
+        identifier,
+      );
       try {
         const mcpDetail = await this.getMcpDetail({ identifier, locale });
         const convertedMcp: Partial<DiscoverPluginDetail> = {

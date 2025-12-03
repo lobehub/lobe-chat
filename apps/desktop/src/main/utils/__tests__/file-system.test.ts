@@ -81,7 +81,7 @@ describe('file-system', () => {
       vi.mocked(statSync).mockImplementation(() => {
         throw new Error('ENOENT: no such file or directory');
       });
-      vi.mocked(mkdirSync).mockImplementation(() => {});
+      vi.mocked(mkdirSync).mockImplementation(() => undefined);
 
       makeSureDirExist(dir);
 

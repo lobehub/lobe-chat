@@ -1,6 +1,41 @@
 [
   {
     "children": {
+      "features": ["Support apple sso auth."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.147"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent slug schema."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.146"
+  },
+  {
+    "children": {
+      "features": ["Email provider support resend."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.145"
+  },
+  {
+    "children": {
+      "fixes": ["User email unique migration error."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.144"
+  },
+  {
+    "children": {
+      "features": ["Support market cloud endpoint mcp."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.143"
+  },
+  {
+    "children": {
       "fixes": ["Remove internal apiMode param from chat completion API requests."]
     },
     "date": "2025-12-01",
