@@ -299,29 +299,23 @@ export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOp
     currentViewItemId,
     data,
     // Handlers
-handleBackToList,
-    
+    handleBackToList,
 
-handleSelectionChange,
+    handleSelectionChange,
 
-    
-    
+    isFilePreviewMode,
 
-isFilePreviewMode,
-    
+    isLoading,
 
-isLoading,
-    
-// State
-isMasonryReady,
-    
-isTransitioning,
-    
-onActionClick,
-    
-pendingRenameItemId,
+    // State
+    isMasonryReady,
 
-    
+    isTransitioning,
+
+    onActionClick,
+
+    pendingRenameItemId,
+
     selectFileIds,
     setSelectedFileIds,
     setViewMode,

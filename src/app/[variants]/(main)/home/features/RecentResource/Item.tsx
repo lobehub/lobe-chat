@@ -1,6 +1,5 @@
 'use client';
 
-import { formatSize } from '@lobechat/utils/format';
 import { Image as LobeImage, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
@@ -10,6 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { FileListItem } from '@/types/files';
+import { formatSize } from '@/utils/format';
 
 dayjs.extend(relativeTime);
 
@@ -77,12 +77,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface RecentFileCardProps {
+interface RecentResourceItemProps {
   file: FileListItem;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
-const RecentFileCard = memo<RecentFileCardProps>(({ file, onClick }) => {
+const RecentResourceItem = memo<RecentResourceItemProps>(({ file, onClick }) => {
   const { styles } = useStyles();
 
   const isImage = IMAGE_FILE_TYPES.has(file.fileType);
@@ -121,4 +121,4 @@ const RecentFileCard = memo<RecentFileCardProps>(({ file, onClick }) => {
   );
 });
 
-export default RecentFileCard;
+export default RecentResourceItem;

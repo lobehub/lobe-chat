@@ -88,12 +88,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface RecentDocumentCardProps {
+interface RecentPageItemProps {
   document: FileListItem;
   onClick: () => void;
 }
 
-const RecentDocumentCard = memo<RecentDocumentCardProps>(({ document, onClick }) => {
+const RecentPageItem = memo<RecentPageItemProps>(({ document, onClick }) => {
   const { styles } = useStyles();
 
   const title = document.name || '';
@@ -113,4 +113,4 @@ const RecentDocumentCard = memo<RecentDocumentCardProps>(({ document, onClick })
   );
 });
 
-export default RecentDocumentCard;
+export default RecentPageItem;

@@ -13,7 +13,7 @@ const Home = memo(() => {
       <NavHeader right={<WideScreenButton />} />
       <Flexbox height={'100%'} style={{ overflowY: 'auto', position: 'relative' }} width={'100%'}>
         <WideScreenContainer>
-          <HomeContent onOpenFile={() => {}} />
+          <HomeContent />
         </WideScreenContainer>
       </Flexbox>
     </>

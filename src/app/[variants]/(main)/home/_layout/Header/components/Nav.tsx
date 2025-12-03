@@ -73,6 +73,7 @@ const Nav = memo(() => {
             active={tab === item.key}
             hidden={item.hidden}
             icon={item.icon}
+            key={item.key}
             onClick={item.onClick}
             title={item.title}
           />

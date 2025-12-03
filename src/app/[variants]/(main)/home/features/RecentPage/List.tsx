@@ -3,10 +3,10 @@
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
+import RecentFilesSkeleton from '@/app/[variants]/(main)/home/features/RecentResource/Skeleton';
 import { FileListItem } from '@/types/files';
 
-import RecentDocumentCard from './RecentDocumentCard';
-import RecentFilesSkeleton from './RecentFilesSkeleton';
+import RecentDocumentCard from './Item';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -45,13 +45,13 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface RecentDocumentsProps {
+interface RecentPageListProps {
   documents: FileListItem[];
   isLoading?: boolean;
   onOpenDocument: (id: string) => void;
 }
 
-const RecentDocuments = memo<RecentDocumentsProps>(({ documents, isLoading, onOpenDocument }) => {
+const RecentPageList = memo<RecentPageListProps>(({ documents, isLoading, onOpenDocument }) => {
   const { styles } = useStyles();
 
   if (isLoading) {
@@ -74,4 +74,4 @@ const RecentDocuments = memo<RecentDocumentsProps>(({ documents, isLoading, onOp
   );
 });
 
-export default RecentDocuments;
+export default RecentPageList;

@@ -5,8 +5,8 @@ import { memo } from 'react';
 
 import { FileListItem } from '@/types/files';
 
-import RecentFileCard from './RecentFileCard';
-import RecentFilesSkeleton from './RecentFilesSkeleton';
+import RecentFileCard from './Item';
+import RecentFilesSkeleton from './Skeleton';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -45,13 +45,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface RecentFilesProps {
+interface RecentResourceListProps {
   files: FileListItem[];
   isLoading?: boolean;
-  onOpenFile: (id: string) => void;
 }
 
-const RecentFiles = memo<RecentFilesProps>(({ files, isLoading, onOpenFile }) => {
+const RecentResourceList = memo<RecentResourceListProps>(({ files, isLoading }) => {
   const { styles } = useStyles();
 
   if (isLoading) {
@@ -62,7 +61,7 @@ const RecentFiles = memo<RecentFilesProps>(({ files, isLoading, onOpenFile }) =>
     <div className={styles.container}>
       <div className={styles.scrollContainer}>
         {files.map((file) => (
-          <RecentFileCard file={file} key={file.id} onClick={() => onOpenFile(file.id)} />
+          <RecentFileCard file={file} key={file.id} />
         ))}
       </div>
       <div className={styles.fadeEdge} />
@@ -70,4 +69,4 @@ const RecentFiles = memo<RecentFilesProps>(({ files, isLoading, onOpenFile }) =>
   );
 });
 
-export default RecentFiles;
+export default RecentResourceList;
