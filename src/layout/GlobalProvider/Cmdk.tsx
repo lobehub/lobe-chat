@@ -38,6 +38,33 @@ const useStyles = createStyles(({ css, token }) => ({
       opacity: 0.8;
     }
   `,
+  chatContainer: css`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  `,
+  chatMessage: css`
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 12px;
+    border-radius: ${token.borderRadius}px;
+
+    background: ${token.colorBgContainer};
+  `,
+  chatMessageContent: css`
+    font-size: 14px;
+    line-height: 1.6;
+    color: ${token.colorText};
+  `,
+  chatMessageRole: css`
+    font-size: 12px;
+    font-weight: 500;
+    color: ${token.colorTextSecondary};
+    text-transform: uppercase;
+  `,
   commandFooter: css`
     display: flex;
     gap: 16px;
@@ -227,11 +254,18 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+interface ChatMessage {
+  content: string;
+  id: string;
+  role: 'user' | 'assistant';
+}
+
 const Cmdk = memo(() => {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [search, setSearch] = useState('');
   const [pages, setPages] = useState<string[]>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslation('common');
@@ -241,6 +275,7 @@ const Cmdk = memo(() => {
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   const page = pages.at(-1);
+  const isAiMode = page === 'ai-chat';
 
   // Ensure we're mounted on the client
   useEffect(() => {
@@ -264,11 +299,12 @@ const Cmdk = memo(() => {
     }
   }, [open]);
 
-  // Reset pages and search when opening/closing
+  // Reset pages, search, and chat when opening/closing
   useEffect(() => {
     if (open) {
       setPages([]);
       setSearch('');
+      setChatMessages([]);
     }
   }, [open]);
 
@@ -287,6 +323,19 @@ const Cmdk = memo(() => {
     setOpen(false);
   };
 
+  const handleAskAI = () => {
+    if (!search.trim()) return;
+
+    // Add user message to chat
+    const userMessage: ChatMessage = {
+      content: search,
+      id: Date.now().toString(),
+      role: 'user',
+    };
+    setChatMessages((prev) => [...prev, userMessage]);
+    setPages([...pages, 'ai-chat']);
+  };
+
   if (!mounted || !open) return null;
 
   return createPortal(
@@ -295,10 +344,23 @@ const Cmdk = memo(() => {
         <Command
           className={styles.commandRoot}
           onKeyDown={(e) => {
+            // Tab key to ask AI when there's input text and not in AI mode
+            if (e.key === 'Tab' && search.trim() && !isAiMode) {
+              e.preventDefault();
+              handleAskAI();
+              return;
+            }
             // Escape goes to previous page or closes
             if (e.key === 'Escape') {
               e.preventDefault();
               if (pages.length > 0) {
+                // If exiting AI mode, restore the last user message
+                if (isAiMode && chatMessages.length > 0) {
+                  const lastUserMessage = chatMessages.at(-1);
+                  if (lastUserMessage?.role === 'user') {
+                    setSearch(lastUserMessage.content);
+                  }
+                }
                 setPages((prev) => prev.slice(0, -1));
               } else {
                 setOpen(false);
@@ -317,7 +379,16 @@ const Cmdk = memo(() => {
               <Tag
                 className={styles.backTag}
                 icon={<ArrowLeft size={12} />}
-                onClick={() => setPages((prev) => prev.slice(0, -1))}
+                onClick={() => {
+                  // If exiting AI mode, restore the last user message
+                  if (isAiMode && chatMessages.length > 0) {
+                    const lastUserMessage = chatMessages.at(-1);
+                    if (lastUserMessage?.role === 'user') {
+                      setSearch(lastUserMessage.content);
+                    }
+                  }
+                  setPages((prev) => prev.slice(0, -1));
+                }}
               />
             )}
             <Command.Input
@@ -326,10 +397,16 @@ const Cmdk = memo(() => {
               placeholder={t('cmdk.searchPlaceholder')}
               value={search}
             />
-            <Tag>ESC</Tag>
+            {search.trim() && !isAiMode ? (
+              <Tag className={styles.backTag} onClick={handleAskAI}>
+                Ask AI
+              </Tag>
+            ) : (
+              <Tag>ESC</Tag>
+            )}
           </div>
           <Command.List>
-            <Command.Empty>{t('cmdk.noResults')}</Command.Empty>
+            {!isAiMode && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
 
             {!page && (
               <>
@@ -447,8 +524,25 @@ const Cmdk = memo(() => {
                 </Command.Item>
               </>
             )}
+
+            {isAiMode && (
+              <div className={styles.chatContainer}>
+                {chatMessages.map((message) => (
+                  <div className={styles.chatMessage} key={message.id}>
+                    <div className={styles.chatMessageRole}>{message.role}</div>
+                    <div className={styles.chatMessageContent}>{message.content}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </Command.List>
           <div className={styles.commandFooter}>
+            {search.trim() && !isAiMode && (
+              <div className={styles.kbd}>
+                <span>Tab</span>
+                <span>Ask AI</span>
+              </div>
+            )}
             <div className={styles.kbd}>
               <CornerDownLeft className={styles.kbdIcon} />
               <span>{t('cmdk.toOpen')}</span>
