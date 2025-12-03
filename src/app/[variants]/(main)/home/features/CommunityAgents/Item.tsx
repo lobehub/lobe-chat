@@ -29,7 +29,7 @@ const CommunityAgentItem = memo<DiscoverAssistantItem>(
           flex={1}
           padding={12}
           style={{
-            backgroundColor: theme.colorBgContainer,
+            backgroundColor: theme.isDarkMode ? theme.colorFillQuaternary : theme.colorBgContainer,
             borderRadius: theme.borderRadiusLG,
             boxShadow: '0 4px 8px -2px rgba(0,0,0,.02)',
             overflow: 'hidden',
