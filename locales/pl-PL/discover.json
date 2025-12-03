@@ -616,6 +616,7 @@
     "supportedProviders": "Dostawcy obsługujący ten model"
   },
   "plugins": {
+    "builtinTag": "Wbudowana wtyczka",
     "community": "Wtyczki społecznościowe",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "Zainstaluj wtyczkę",
     "installed": "Zainstalowane",
+    "legacyTag": "Starsza wersja wtyczki",
     "list": "Lista wtyczek",
     "meta": {
       "description": "Opis",
