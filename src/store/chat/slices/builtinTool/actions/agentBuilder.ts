@@ -135,11 +135,13 @@ export const agentBuilderSlice: StateCreator<
       let result;
       switch (apiName) {
         case 'getAgentConfig': {
-          result = await runtime.getAgentConfig(params as GetAgentConfigParams);
+          // Pass agentId to read operation for agent-specific config
+          result = await runtime.getAgentConfig(agentId, params as GetAgentConfigParams);
           break;
         }
         case 'getAgentMeta': {
-          result = await runtime.getAgentMeta(params as GetAgentMetaParams);
+          // Pass agentId to read operation for agent-specific meta
+          result = await runtime.getAgentMeta(agentId, params as GetAgentMetaParams);
           break;
         }
         case 'updateAgentConfig': {

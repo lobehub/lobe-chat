@@ -25,6 +25,155 @@ const createState = (overrides: Partial<AgentStoreState> = {}): AgentStoreState 
 });
 
 describe('agentChatConfigSelectors', () => {
+  // ============ By AgentId Selectors ============ //
+
+  describe('getAgentChatConfigById', () => {
+    it('should return chatConfig for specified agent', () => {
+      const state = createState({
+        agentMap: {
+          'agent-1': { chatConfig: { historyCount: 10 } },
+          'agent-2': { chatConfig: { historyCount: 20 } },
+        },
+      });
+
+      expect(agentChatConfigSelectors.getAgentChatConfigById('agent-1')(state)).toEqual({
+        historyCount: 10,
+      });
+      expect(agentChatConfigSelectors.getAgentChatConfigById('agent-2')(state)).toEqual({
+        historyCount: 20,
+      });
+    });
+
+    it('should return empty object when agent has no chatConfig', () => {
+      const state = createState({
+        agentMap: { 'agent-1': {} },
+      });
+
+      expect(agentChatConfigSelectors.getAgentChatConfigById('agent-1')(state)).toEqual({});
+    });
+
+    it('should return empty object for non-existent agent', () => {
+      const state = createState({
+        agentMap: {},
+      });
+
+      expect(agentChatConfigSelectors.getAgentChatConfigById('non-existent')(state)).toEqual({});
+    });
+  });
+
+  describe('getEnableHistoryCountById', () => {
+    it('should return false when context caching enabled and model supports it', () => {
+      const state = createState({
+        agentMap: {
+          'agent-1': {
+            chatConfig: { disableContextCaching: false, enableHistoryCount: true },
+            model: 'claude-3-5-sonnet',
+          },
+        },
+      });
+
+      expect(agentChatConfigSelectors.getEnableHistoryCountById('agent-1')(state)).toBe(false);
+    });
+
+    it('should return false when search enabled and model is claude-3-7-sonnet', () => {
+      const state = createState({
+        agentMap: {
+          'agent-1': {
+            chatConfig: {
+              disableContextCaching: true,
+              enableHistoryCount: true,
+              searchMode: 'auto',
+            },
+            model: 'claude-3-7-sonnet',
+          } as any,
+        },
+      });
+
+      expect(agentChatConfigSelectors.getEnableHistoryCountById('agent-1')(state)).toBe(false);
+    });
+
+    it('should return enableHistoryCount value when no special cases apply', () => {
+      const state = createState({
+        agentMap: {
+          'agent-1': {
+            chatConfig: {
+              disableContextCaching: true,
+              enableHistoryCount: true,
+              searchMode: 'off',
+            },
+            model: 'gpt-4',
+          },
+        },
+      });
+
+      expect(agentChatConfigSelectors.getEnableHistoryCountById('agent-1')(state)).toBe(true);
+    });
+
+    it('should work with different agents independently', () => {
+      const state = createState({
+        agentMap: {
+          'agent-1': {
+            chatConfig: { disableContextCaching: true, enableHistoryCount: true },
+            model: 'gpt-4',
+          },
+          'agent-2': {
+            chatConfig: { disableContextCaching: false, enableHistoryCount: true },
+            model: 'claude-3-5-sonnet',
+          },
+        },
+      });
+
+      expect(agentChatConfigSelectors.getEnableHistoryCountById('agent-1')(state)).toBe(true);
+      expect(agentChatConfigSelectors.getEnableHistoryCountById('agent-2')(state)).toBe(false);
+    });
+  });
+
+  describe('getHistoryCountById', () => {
+    it('should return historyCount for specified agent', () => {
+      const state = createState({
+        agentMap: {
+          'agent-1': { chatConfig: { historyCount: 5 } },
+          'agent-2': { chatConfig: { historyCount: 10 } },
+        },
+      });
+
+      expect(agentChatConfigSelectors.getHistoryCountById('agent-1')(state)).toBe(5);
+      expect(agentChatConfigSelectors.getHistoryCountById('agent-2')(state)).toBe(10);
+    });
+
+    it('should return 0 when historyCount is 0', () => {
+      const state = createState({
+        agentMap: {
+          'agent-1': { chatConfig: { historyCount: 0 } },
+        },
+      });
+
+      expect(agentChatConfigSelectors.getHistoryCountById('agent-1')(state)).toBe(0);
+    });
+
+    it('should return default when not specified', () => {
+      const state = createState({
+        agentMap: { 'agent-1': {} },
+      });
+
+      expect(agentChatConfigSelectors.getHistoryCountById('agent-1')(state)).toBe(
+        DEFAULT_AGENT_CHAT_CONFIG.historyCount,
+      );
+    });
+
+    it('should return default for non-existent agent', () => {
+      const state = createState({
+        agentMap: {},
+      });
+
+      expect(agentChatConfigSelectors.getHistoryCountById('non-existent')(state)).toBe(
+        DEFAULT_AGENT_CHAT_CONFIG.historyCount,
+      );
+    });
+  });
+
+  // ============ Current Agent Selectors ============ //
+
   describe('currentChatConfig', () => {
     it('should return chatConfig from current agent', () => {
       const state = createState({

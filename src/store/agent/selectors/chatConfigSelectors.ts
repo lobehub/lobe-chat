@@ -4,10 +4,45 @@ import { LobeAgentChatConfig } from '@lobechat/types';
 
 import { AgentStoreState } from '@/store/agent/initialState';
 
-import { currentAgentConfig } from './selectors';
+import { agentSelectors } from './selectors';
 
-export const currentAgentChatConfig = (s: AgentStoreState): LobeAgentChatConfig =>
-  currentAgentConfig(s).chatConfig || {};
+// ============ By AgentId Selectors ============ //
+
+const getAgentChatConfigById =
+  (agentId: string) =>
+  (s: AgentStoreState): LobeAgentChatConfig =>
+    agentSelectors.getAgentConfigById(agentId)(s).chatConfig || {};
+
+const getEnableHistoryCountById = (agentId: string) => (s: AgentStoreState) => {
+  const config = agentSelectors.getAgentConfigById(agentId)(s);
+  const chatConfig = getAgentChatConfigById(agentId)(s);
+
+  // 如果开启了上下文缓存，且当前模型类型匹配，则不开启历史记录
+  const enableContextCaching = !chatConfig.disableContextCaching;
+
+  if (enableContextCaching && isContextCachingModel(config.model)) return false;
+
+  // 当开启搜索时，针对 claude 3.7 sonnet 模型不开启历史记录
+  const searchMode = chatConfig.searchMode || 'off';
+  const enableSearch = searchMode !== 'off';
+
+  if (enableSearch && isThinkingWithToolClaudeModel(config.model)) return false;
+
+  return chatConfig.enableHistoryCount;
+};
+
+const getHistoryCountById =
+  (agentId: string) =>
+  (s: AgentStoreState): number => {
+    const chatConfig = getAgentChatConfigById(agentId)(s);
+
+    return chatConfig.historyCount ?? (DEFAULT_AGENT_CHAT_CONFIG.historyCount as number);
+  };
+
+// ============ Current Agent Selectors (复用 ById 方法) ============ //
+
+const currentAgentChatConfig = (s: AgentStoreState): LobeAgentChatConfig =>
+  getAgentChatConfigById(s.activeAgentId || '')(s);
 
 const agentSearchMode = (s: AgentStoreState) => currentAgentChatConfig(s).searchMode || 'off';
 const isAgentEnableSearch = (s: AgentStoreState) => agentSearchMode(s) !== 'off';
@@ -18,28 +53,10 @@ const useModelBuiltinSearch = (s: AgentStoreState) =>
 const searchFCModel = (s: AgentStoreState) =>
   currentAgentChatConfig(s).searchFCModel || DEFAULT_AGENT_SEARCH_FC_MODEL;
 
-const enableHistoryCount = (s: AgentStoreState) => {
-  const config = currentAgentConfig(s);
-  const chatConfig = currentAgentChatConfig(s);
+const enableHistoryCount = (s: AgentStoreState) =>
+  getEnableHistoryCountById(s.activeAgentId || '')(s);
 
-  // 如果开启了上下文缓存，且当前模型类型匹配，则不开启历史记录
-  const enableContextCaching = !chatConfig.disableContextCaching;
-
-  if (enableContextCaching && isContextCachingModel(config.model)) return false;
-
-  // 当开启搜索时，针对 claude 3.7 sonnet 模型不开启历史记录
-  const enableSearch = isAgentEnableSearch(s);
-
-  if (enableSearch && isThinkingWithToolClaudeModel(config.model)) return false;
-
-  return chatConfig.enableHistoryCount;
-};
-
-const historyCount = (s: AgentStoreState): number => {
-  const chatConfig = currentAgentChatConfig(s);
-
-  return chatConfig.historyCount ?? (DEFAULT_AGENT_CHAT_CONFIG.historyCount as number); // historyCount 为 0 即不携带历史消息
-};
+const historyCount = (s: AgentStoreState): number => getHistoryCountById(s.activeAgentId || '')(s);
 
 const displayMode = (s: AgentStoreState) => {
   const chatConfig = currentAgentChatConfig(s);
@@ -64,6 +81,9 @@ export const agentChatConfigSelectors = {
   displayMode,
   enableHistoryCount,
   enableHistoryDivider,
+  getAgentChatConfigById,
+  getEnableHistoryCountById,
+  getHistoryCountById,
   historyCount,
   isAgentEnableSearch,
   searchFCModel,

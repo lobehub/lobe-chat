@@ -17,9 +17,9 @@ import type {
   TogglePluginParams,
   TogglePluginState,
   UpdateAgentConfigParams,
+  UpdateAgentMetaParams,
   UpdateChatConfigParams,
   UpdateConfigState,
-  UpdateAgentMetaParams,
   UpdateMetaState,
 } from '../types';
 
@@ -33,10 +33,14 @@ export class AgentBuilderExecutionRuntime {
   /**
    * Get agent configuration
    */
-  async getAgentConfig(args: GetAgentConfigParams): Promise<BuiltinServerRuntimeOutput> {
+  async getAgentConfig(
+    agentId: string,
+    args: GetAgentConfigParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      const config = agentSelectors.currentAgentConfig(state);
+      // Use agentId to get agent config instead of currentAgentConfig
+      const config = agentSelectors.getAgentConfigById(agentId)(state);
 
       // If specific fields are requested, filter the config
       let filteredConfig = config;
@@ -66,10 +70,14 @@ export class AgentBuilderExecutionRuntime {
   /**
    * Get agent metadata
    */
-  async getAgentMeta(args: GetAgentMetaParams): Promise<BuiltinServerRuntimeOutput> {
+  async getAgentMeta(
+    agentId: string,
+    args: GetAgentMetaParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      const meta = agentSelectors.currentAgentMeta(state);
+      // Use agentId to get agent meta instead of currentAgentMeta
+      const meta = agentSelectors.getAgentMetaById(agentId)(state);
 
       // If specific fields are requested, filter the meta
       let filteredMeta = meta;
@@ -107,7 +115,8 @@ export class AgentBuilderExecutionRuntime {
   ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      const previousConfig = agentSelectors.currentAgentConfig(state);
+      // Use agentId to get agent config instead of currentAgentConfig
+      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
 
       // Extract the fields that will be updated
       const updatedFields = Object.keys(args.config);
@@ -159,7 +168,8 @@ export class AgentBuilderExecutionRuntime {
   ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      const previousMeta = agentSelectors.currentAgentMeta(state);
+      // Use agentId to get agent meta instead of currentAgentMeta
+      const previousMeta = agentSelectors.getAgentMetaById(agentId)(state);
 
       // Extract the fields that will be updated
       const updatedFields = Object.keys(args.meta);
@@ -210,7 +220,8 @@ export class AgentBuilderExecutionRuntime {
   ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      const previousConfig = agentSelectors.currentAgentConfig(state);
+      // Use agentId to get agent config instead of currentAgentConfig
+      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
       const previousChatConfig = previousConfig.chatConfig || {};
 
       // Extract the fields that will be updated
@@ -267,7 +278,9 @@ export class AgentBuilderExecutionRuntime {
   ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      const currentPlugins = agentSelectors.currentAgentPlugins(state);
+      // Use agentId to get agent plugins instead of currentAgentPlugins
+      const config = agentSelectors.getAgentConfigById(agentId)(state);
+      const currentPlugins = config.plugins || [];
 
       const isCurrentlyEnabled = currentPlugins.includes(args.pluginId);
       const shouldEnable = args.enabled !== undefined ? args.enabled : !isCurrentlyEnabled;
@@ -322,8 +335,10 @@ export class AgentBuilderExecutionRuntime {
   async setModel(agentId: string, args: SetModelParams): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      const previousModel = agentSelectors.currentAgentModel(state);
-      const previousProvider = agentSelectors.currentAgentModelProvider(state);
+      // Use agentId to get agent config instead of currentAgentModel/currentAgentModelProvider
+      const config = agentSelectors.getAgentConfigById(agentId)(state);
+      const previousModel = config.model;
+      const previousProvider = config.provider;
 
       // Update model and provider
       await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
@@ -368,7 +383,8 @@ export class AgentBuilderExecutionRuntime {
   ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      const previousConfig = agentSelectors.currentAgentConfig(state);
+      // Use agentId to get agent config instead of currentAgentConfig
+      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
       const previousMessage = previousConfig.openingMessage;
 
       // Update opening message
@@ -412,7 +428,8 @@ export class AgentBuilderExecutionRuntime {
   ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      const previousConfig = agentSelectors.currentAgentConfig(state);
+      // Use agentId to get agent config instead of currentAgentConfig
+      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
       const previousQuestions = previousConfig.openingQuestions;
 
       // Update opening questions

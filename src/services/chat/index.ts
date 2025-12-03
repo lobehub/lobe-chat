@@ -52,6 +52,7 @@ import { findDeploymentName, isEnableFetchOnClient, resolveRuntimeProvider } fro
 import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
+  agentId?: string;
   messages: UIChatMessage[];
 }
 
@@ -83,7 +84,7 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
 
 class ChatService {
   createAssistantMessage = async (
-    { plugins: enabledPlugins, messages, ...params }: GetChatCompletionPayload,
+    { plugins: enabledPlugins, messages, agentId, ...params }: GetChatCompletionPayload,
     options?: FetchOptions,
   ) => {
     const payload = merge(
@@ -95,13 +96,17 @@ class ChatService {
       params,
     );
 
-    const searchConfig = getSearchConfig(payload.model, payload.provider!);
-
     // =================== 1. preprocess tools =================== //
 
     const agentStoreState = getAgentStoreState();
-    const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(agentStoreState);
+    // Use agentId if provided, otherwise fall back to activeAgentId
+    const targetAgentId = agentId || agentStoreState.activeAgentId || '';
+    const agentConfig = agentSelectors.getAgentConfigById(targetAgentId)(agentStoreState);
+    const chatConfig =
+      agentChatConfigSelectors.getAgentChatConfigById(targetAgentId)(agentStoreState);
+
+    // Get search config with agentId for agent-specific settings
+    const searchConfig = getSearchConfig(payload.model, payload.provider!, targetAgentId);
     const pluginIds =
       enabledPlugins && enabledPlugins.length > 0
         ? [...enabledPlugins]
@@ -185,9 +190,11 @@ class ChatService {
 
     // Apply context engineering with preprocessing configuration
     const oaiMessages = await contextEngineering({
-      enableHistoryCount: agentChatConfigSelectors.enableHistoryCount(agentStoreState),
+      enableHistoryCount:
+        agentChatConfigSelectors.getEnableHistoryCountById(targetAgentId)(agentStoreState),
       // include user messages
-      historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 2,
+      historyCount:
+        agentChatConfigSelectors.getHistoryCountById(targetAgentId)(agentStoreState) + 2,
       inputTemplate: chatConfig.inputTemplate,
       messages,
       model: payload.model,
@@ -296,6 +303,8 @@ class ChatService {
         ...extendParams,
         enabledSearch: searchConfig.enabledSearch && searchConfig.useModelSearch ? true : undefined,
         messages: oaiMessages,
+        // Use the chatConfig from the target agent for streaming preference
+        stream: chatConfig.enableStreaming !== false,
         tools,
       },
       options,

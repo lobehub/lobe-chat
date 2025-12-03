@@ -143,7 +143,8 @@ export const streamingExecutor: StateCreator<
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
 
     const agentStoreState = getAgentStoreState();
-    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
+    // Use agentId to get agent config instead of currentAgentConfig
+    const agentConfigData = agentSelectors.getAgentConfigById(agentId || '')(agentStoreState);
 
     // Get tools manifest map
     const toolsEngine = createAgentToolsEngine({
@@ -261,9 +262,13 @@ export const streamingExecutor: StateCreator<
     // Create base context for child operations
     const fetchContext = { agentId, topicId, threadId, scope };
 
-    // Get agent config from params or use current
-    const finalAgentConfig = agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+    // Get agent config from params or use agentId-specific config
+    const agentStoreState = getAgentStoreState();
+    const finalAgentConfig =
+      agentConfig || agentSelectors.getAgentConfigById(agentId || '')(agentStoreState);
+    const chatConfig = agentChatConfigSelectors.getAgentChatConfigById(agentId || '')(
+      agentStoreState,
+    );
 
     // ================================== //
     //   messages uniformly preprocess    //
@@ -321,6 +326,7 @@ export const streamingExecutor: StateCreator<
     await chatService.createAssistantMessageStream({
       abortController,
       params: {
+        agentId: agentId || undefined, // Pass agentId to chatService
         messages,
         model,
         provider,
@@ -856,10 +862,11 @@ export const streamingExecutor: StateCreator<
     let messages = [...originalMessages];
 
     const agentStoreState = getAgentStoreState();
-    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
+    // Use agentId to get agent config instead of currentAgentConfig
+    const agentConfigData = agentSelectors.getAgentConfigById(agentId || '')(agentStoreState);
     const { chatConfig } = agentConfigData;
 
-    // Use current agent config
+    // Use agent config from agentId
     const model = agentConfigData.model;
     const provider = agentConfigData.provider;
 
@@ -1064,10 +1071,12 @@ export const streamingExecutor: StateCreator<
     }
 
     // Summary history if context messages is larger than historyCount
-    const historyCount = agentChatConfigSelectors.historyCount(agentStoreState);
+    const historyCount = agentChatConfigSelectors.getHistoryCountById(agentId || '')(
+      agentStoreState,
+    );
 
     if (
-      agentChatConfigSelectors.enableHistoryCount(agentStoreState) &&
+      agentChatConfigSelectors.getEnableHistoryCountById(agentId || '')(agentStoreState) &&
       chatConfig.enableCompressHistory &&
       messages.length > historyCount
     ) {
