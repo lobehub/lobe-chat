@@ -62,3 +62,22 @@ export enum TypesEnum {
   Technology = 'technology',
   Topic = 'topic',
 }
+
+export enum ActivityTypeEnum {
+  Appointment = 'appointment',
+  Call = 'call',
+  Celebration = 'celebration',
+  Class = 'class',
+  Conference = 'conference',
+  Errand = 'errand',
+  Event = 'event',
+  Exercise = 'exercise',
+  Meal = 'meal',
+  Meeting = 'meeting',
+  Other = 'other',
+  ProjectSession = 'project-session',
+  Social = 'social',
+  Task = 'task',
+  Trip = 'trip',
+  Workshop = 'workshop',
+}
