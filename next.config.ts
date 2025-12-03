@@ -1,5 +1,6 @@
 import analyzer from '@next/bundle-analyzer';
 import withSerwistInit from '@serwist/next';
+import { codeInspectorPlugin } from 'code-inspector-plugin';
 import type { NextConfig } from 'next';
 import ReactComponentName from 'react-scan/react-component-name/webpack';
 
@@ -269,7 +270,12 @@ const nextConfig: NextConfig = {
   // when external packages in dev mode with turbopack, this config will lead to bundle error
   serverExternalPackages: isProd ? ['@electric-sql/pglite', 'pdfkit'] : ['pdfkit'],
   transpilePackages: ['pdfjs-dist', 'mermaid'],
-  turbopack: {},
+  turbopack: {
+    rules: codeInspectorPlugin({
+      bundler: 'turbopack',
+      hotKeys: ['altKey'],
+    }),
+  },
 
   typescript: {
     ignoreBuildErrors: true,
