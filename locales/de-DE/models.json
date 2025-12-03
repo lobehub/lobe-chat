@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Modellanbieter: sophnet-Plattform. DeepSeek V3 Fast ist die Hochgeschwindigkeitsversion mit hohem TPS des DeepSeek V3 0324 Modells, voll funktionsfähig ohne Quantisierung, mit stärkerer Code- und mathematischer Leistungsfähigkeit und schnellerer Reaktionszeit!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 - Nicht-Denkmodus; DeepSeek-V3.1 ist ein neu eingeführtes hybrides Inferenzmodell von DeepSeek, das zwei Inferenzmodi unterstützt: Denk- und Nicht-Denkmodus, mit höherer Denkeffizienz im Vergleich zu DeepSeek-R1-0528. Durch Post-Training-Optimierung wurde die Leistung bei Agenten-Werkzeugnutzung und Agentenaufgaben deutlich verbessert."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast ist die Hochgeschwindigkeitsversion von DeepSeek V3.1 mit hoher TPS. Hybrid-Denkmodus: Durch Änderung der Chat-Vorlage kann ein Modell sowohl Denk- als auch Nicht-Denkmodus gleichzeitig unterstützen. Intelligenterer Werkzeugaufruf: Durch Post-Training-Optimierung wurde die Leistung des Modells bei Werkzeugnutzung und Agentenaufgaben signifikant verbessert."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - Denkmodus; DeepSeek-V3.1 ist ein neu eingeführtes hybrides Inferenzmodell von DeepSeek, das zwei Inferenzmodi unterstützt: Denk- und Nicht-Denkmodus, mit höherer Denkeffizienz im Vergleich zu DeepSeek-R1-0528. Durch Post-Training-Optimierung wurde die Leistung bei Agenten-Werkzeugnutzung und Agentenaufgaben deutlich verbessert."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 ist das neueste universelle Großmodell von DeepSeek, das eine hybride Inferenzarchitektur unterstützt und über stärkere Agentenfähigkeiten verfügt."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "DeepSeek V3.2 Denkmodus. Bevor die endgültige Antwort ausgegeben wird, gibt das Modell zunächst eine Gedankenkette aus, um die Genauigkeit der finalen Antwort zu verbessern."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite bietet extrem schnelle Reaktionszeiten und ein hervorragendes Preis-Leistungs-Verhältnis, um Kunden in verschiedenen Szenarien flexiblere Optionen zu bieten. Unterstützt Inferenz und Feintuning mit einem Kontextfenster von 128k."

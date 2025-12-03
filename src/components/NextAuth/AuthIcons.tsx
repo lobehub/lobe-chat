@@ -1,3 +1,4 @@
+import { SiApple } from '@icons-pack/react-simple-icons';
 import { Aws, Google, Microsoft } from '@lobehub/icons';
 import {
   Auth0,
@@ -11,11 +12,10 @@ import {
   NextAuth,
   Zitadel,
 } from '@lobehub/ui/icons';
-import { Apple } from 'lucide-react';
 import React from 'react';
 
 const iconComponents: { [key: string]: React.ElementType } = {
-  'apple': Apple,
+  'apple': SiApple,
   'auth0': Auth0,
   'authelia': Authelia.Color,
   'authentik': Authentik.Color,
