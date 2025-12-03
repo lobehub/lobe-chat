@@ -292,12 +292,12 @@ export const streamingExecutor: StateCreator<
 
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
-      (toolCalls: MessageToolCall[]) => {
+      async (toolCalls: MessageToolCall[]) => {
         internal_dispatchMessage(
           {
             id: messageId,
             type: 'updateMessage',
-            value: { tools: get().internal_transformToolCalls(toolCalls) },
+            value: { tools: await get().internal_transformToolCalls(toolCalls) },
           },
           { operationId },
         );
@@ -389,7 +389,7 @@ export const streamingExecutor: StateCreator<
             },
           }));
 
-          tools = get().internal_transformToolCalls(parsedToolCalls);
+          tools = await get().internal_transformToolCalls(parsedToolCalls);
 
           isFunctionCall = true;
         }

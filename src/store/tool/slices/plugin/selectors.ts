@@ -53,19 +53,22 @@ const installedPluginManifestList = (s: ToolStoreState) =>
     .filter((i) => !!i);
 
 const installedPluginMetaList = (s: ToolStoreState) =>
-  installedPlugins(s).map<InstallPluginMeta>((p) => ({
-    author: p.manifest?.author,
-    createdAt: p.manifest?.createdAt || (p.manifest as any)?.createAt,
-    homepage: p.manifest?.homepage,
-    identifier: p.identifier,
-    /*
-     * should remove meta
-     */
-    meta: getPluginMetaById(p.identifier)(s),
-    runtimeType: p.runtimeType,
-    type: p.source || p.type,
-    ...getPluginMetaById(p.identifier)(s),
-  }));
+  installedPlugins(s)
+    // 过滤掉 Klavis 插件（它们有自己的显示位置）
+    .filter((p) => !p.customParams?.klavis)
+    .map<InstallPluginMeta>((p) => ({
+      author: p.manifest?.author,
+      createdAt: p.manifest?.createdAt || (p.manifest as any)?.createAt,
+      homepage: p.manifest?.homepage,
+      identifier: p.identifier,
+      /*
+       * should remove meta
+       */
+      meta: getPluginMetaById(p.identifier)(s),
+      runtimeType: p.runtimeType,
+      type: p.source || p.type,
+      ...getPluginMetaById(p.identifier)(s),
+    }));
 const installedCustomPluginMetaList = (s: ToolStoreState) =>
   installedPluginMetaList(s).filter((p) => p.type === 'customPlugin');
 

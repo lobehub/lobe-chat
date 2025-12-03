@@ -88,7 +88,22 @@ class ChatService {
 
     // =================== 1. preprocess tools =================== //
 
-    const pluginIds = [...(enabledPlugins || [])];
+    let pluginIds = [...(enabledPlugins || [])];
+
+    // Expand 'klavis' to all connected Klavis tool identifiers
+    if (pluginIds.includes('klavis')) {
+      const { getToolStoreState } = await import('@/store/tool');
+      const { klavisStoreSelectors } = await import('@/store/tool/selectors');
+
+      // Remove 'klavis' and add all Klavis tool identifiers
+      pluginIds = pluginIds.filter((id) => id !== 'klavis');
+
+      const toolStoreState = getToolStoreState();
+      const klavisTools = klavisStoreSelectors.klavisAsLobeTools(toolStoreState);
+      const klavisIdentifiers = klavisTools.map((tool) => tool.identifier);
+
+      pluginIds = [...pluginIds, ...klavisIdentifiers];
+    }
 
     const toolsEngine = createAgentToolsEngine({
       model: payload.model,

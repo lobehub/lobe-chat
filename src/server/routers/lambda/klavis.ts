@@ -1,0 +1,332 @@
+import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
+import { KlavisClient } from 'klavis';
+import { z } from 'zod';
+
+import { getServerKlavisApiKey } from '@/config/klavis';
+import { PluginModel } from '@/database/models/plugin';
+import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+
+/**
+ * Global Klavis Client instance cache (server-side only)
+ */
+let klavisClientInstance: { apiKey: string; client: KlavisClient } | undefined;
+
+/**
+ * Get or create Klavis Client instance (server-side only)
+ */
+const getKlavisClient = (apiKey: string): KlavisClient => {
+  if (!klavisClientInstance || klavisClientInstance.apiKey !== apiKey) {
+    klavisClientInstance = {
+      apiKey,
+      client: new KlavisClient({ apiKey }),
+    };
+  }
+  return klavisClientInstance.client;
+};
+
+/**
+ * Klavis procedure with API key validation and database access
+ */
+const klavisProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
+  const apiKey = getServerKlavisApiKey();
+
+  if (!apiKey) {
+    throw new Error('Klavis API key is not configured on server');
+  }
+
+  const client = getKlavisClient(apiKey);
+  const pluginModel = new PluginModel(opts.ctx.serverDB, opts.ctx.userId);
+
+  return opts.next({
+    ctx: { ...opts.ctx, klavisClient: client, pluginModel },
+  });
+});
+
+export const klavisRouter = router({
+
+  /**
+   * Call a tool on a Strata server
+   */
+  callTool: klavisProcedure
+    .input(
+      z.object({
+        serverUrl: z.string(),
+        toolArgs: z.record(z.unknown()).optional(),
+        toolName: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const response = await ctx.klavisClient.mcpServer.callTools({
+        serverUrl: input.serverUrl,
+        toolArgs: input.toolArgs,
+        toolName: input.toolName,
+      });
+
+      return response;
+    }),
+
+
+
+
+  /**
+     * Complete OAuth authentication
+     * This is called after user completes OAuth in popup window
+     */
+  completeAuth: klavisProcedure
+    .input(
+      z.object({
+        serverId: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      // OAuth is handled by Klavis on their end
+      // This endpoint is mainly to trigger tool list refresh
+      return { success: true };
+    }),
+
+
+
+
+  /**
+   * Create a single MCP server instance and save to database
+   * Returns: { serverUrl, instanceId, oauthUrl? }
+   */
+  createServerInstance: klavisProcedure
+    .input(
+      z.object({
+        serverName: z.string(),
+        userId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { serverName, userId } = input;
+
+      // 创建单个服务器实例
+      const response = await ctx.klavisClient.mcpServer.createServerInstance({
+        serverName: serverName as any,
+        userId,
+      });
+
+      const { serverUrl, instanceId, oauthUrl } = response;
+
+      // 获取该服务器的工具列表
+      const toolsResponse = await ctx.klavisClient.mcpServer.getTools(serverName as any);
+      const tools = toolsResponse.tools || [];
+
+      // 保存到数据库
+      const identifier = `klavis:${serverName}`;
+      const manifest: LobeChatPluginManifest = {
+        api: tools.map((tool: any) => ({
+          description: tool.description || '',
+          name: tool.name,
+          parameters: tool.inputSchema || { properties: {}, type: 'object' },
+        })),
+        identifier,
+        meta: {
+          avatar: '🔌',
+          description: `Klavis MCP Server: ${serverName}`,
+          title: serverName,
+        },
+        type: 'default',
+      };
+
+      // 保存到数据库，包含 oauthUrl 和 isAuthenticated 状态
+      const isAuthenticated = !oauthUrl; // 如果没有 oauthUrl，说明不需要认证或已认证
+      await ctx.pluginModel.create({
+        customParams: {
+          klavis: {
+            instanceId,
+            isAuthenticated,
+            oauthUrl,
+            serverName,
+            serverUrl,
+          },
+        },
+        identifier,
+        manifest,
+        type: 'customPlugin',
+      });
+
+      return {
+        instanceId,
+        isAuthenticated,
+        oauthUrl,
+        serverName,
+        serverUrl,
+      };
+    }),
+
+
+
+
+  /**
+   * Delete a server instance
+   */
+  deleteServerInstance: klavisProcedure
+    .input(
+      z.object({
+        instanceId: z.string(),
+        serverName: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      // 调用 Klavis API 删除服务器实例
+      await ctx.klavisClient.mcpServer.deleteServerInstance(input.instanceId);
+
+      // 从数据库删除
+      const identifier = `klavis:${input.serverName}`;
+      await ctx.pluginModel.delete(identifier);
+
+      return { success: true };
+    }),
+
+  getUserIntergrations: klavisProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const response = await ctx.klavisClient.user.getUserIntegrations(input.userId);
+
+      return {
+        integrations: response.integrations,
+      };
+    }),
+
+  /**
+   * Get Klavis plugins from database
+   */
+  getKlavisPlugins: klavisProcedure.query(async ({ ctx }) => {
+    const allPlugins = await ctx.pluginModel.query();
+    // Filter plugins that have klavis customParams
+    return allPlugins.filter((plugin) => plugin.customParams?.klavis);
+  }),
+
+  /**
+   * Get server instance status from Klavis API
+   */
+  getServerInstance: klavisProcedure
+    .input(
+      z.object({
+        instanceId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const response = await ctx.klavisClient.mcpServer.getServerInstance(input.instanceId);
+      return {
+        authNeeded: response.authNeeded,
+        externalUserId: response.externalUserId,
+        instanceId: response.instanceId,
+        isAuthenticated: response.isAuthenticated,
+        oauthUrl: response.oauthUrl,
+        platform: response.platform,
+        serverName: response.serverName,
+      };
+    }),
+
+  /**
+     * List tools available on a Strata server
+     */
+  listTools: klavisProcedure
+    .input(
+      z.object({
+        serverUrl: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const response = await ctx.klavisClient.mcpServer.listTools({
+        serverUrl: input.serverUrl,
+      });
+
+      return {
+        tools: response.tools,
+      };
+    }),
+
+  /**
+   * Remove Klavis plugin from database by server name
+   */
+  removeKlavisPlugin: klavisProcedure
+    .input(
+      z.object({
+        serverName: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const identifier = `klavis:${input.serverName}`;
+      await ctx.pluginModel.delete(identifier);
+      return { success: true };
+    }),
+
+  /**
+   * Update Klavis plugin with tools and auth status in database
+   */
+  updateKlavisPlugin: klavisProcedure
+    .input(
+      z.object({
+        instanceId: z.string(),
+        isAuthenticated: z.boolean(),
+        oauthUrl: z.string().optional(),
+        serverName: z.string(),
+        serverUrl: z.string(),
+        tools: z.array(
+          z.object({
+            description: z.string().optional(),
+            inputSchema: z.any().optional(),
+            name: z.string(),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { serverName, serverUrl, instanceId, tools, isAuthenticated, oauthUrl } = input;
+      const identifier = `klavis:${serverName}`;
+
+      // 获取现有插件
+      const existingPlugin = await ctx.pluginModel.findById(identifier);
+
+      // 构建包含所有工具的 manifest
+      const manifest: LobeChatPluginManifest = {
+        api: tools.map((tool) => ({
+          description: tool.description || '',
+          name: tool.name,
+          parameters: tool.inputSchema || { properties: {}, type: 'object' },
+        })),
+        identifier,
+        meta: existingPlugin?.manifest?.meta || {
+          avatar: '🔌',
+          description: `Klavis MCP Server: ${serverName}`,
+          title: serverName,
+        },
+        type: 'default',
+      };
+
+      const customParams = {
+        klavis: {
+          instanceId,
+          isAuthenticated,
+          oauthUrl,
+          serverName,
+          serverUrl,
+        },
+      };
+
+      // 更新或创建插件
+      if (existingPlugin) {
+        await ctx.pluginModel.update(identifier, { customParams, manifest });
+      } else {
+        await ctx.pluginModel.create({
+          customParams,
+          identifier,
+          manifest,
+          type: 'customPlugin',
+        });
+      }
+
+      return { savedCount: tools.length };
+    }),
+});
+
+export type KlavisRouter = typeof klavisRouter;

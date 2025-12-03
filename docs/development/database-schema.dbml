@@ -1017,6 +1017,7 @@ table user_installed_plugins {
   manifest jsonb
   settings jsonb
   custom_params jsonb
+  source text
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

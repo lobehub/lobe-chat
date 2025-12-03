@@ -33,6 +33,11 @@ export interface PluginTypesAction {
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<string | undefined>;
 
   /**
+   * Invoke Klavis type plugin
+   */
+  invokeKlavisTypePlugin: (id: string, payload: ChatToolPayload) => Promise<string | undefined>;
+
+  /**
    * Invoke markdown type plugin
    */
   invokeMarkdownTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
@@ -80,6 +85,98 @@ export const pluginTypes: StateCreator<
     if (!data) return;
 
     return data;
+  },
+
+  invokeKlavisTypePlugin: async (id, payload) => {
+    const {
+      optimisticUpdateMessageContent,
+      optimisticUpdatePluginState,
+      optimisticUpdateMessagePluginError,
+    } = get();
+
+    // Get message to extract sessionId/topicId
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+
+    // Get abort controller from operation
+    const operationId = get().messageOperationMap[id];
+    const operation = operationId ? get().operations[operationId] : undefined;
+    const abortController = operation?.abortController;
+
+    log(
+      '[invokeKlavisTypePlugin] messageId=%s, tool=%s, operationId=%s, aborted=%s',
+      id,
+      payload.apiName,
+      operationId,
+      abortController?.signal.aborted,
+    );
+
+    try {
+      // Parse identifier to get server name
+      // Format: klavis:serverName
+      const serverName = payload.identifier.replace(/^klavis:/, '');
+
+      // Get server from tool store
+      const klavisServers = useToolStore.getState().servers || [];
+      const server = klavisServers.find((s) => s.serverName === serverName);
+
+      if (!server) {
+        throw new Error(`Klavis server not found: ${serverName}`);
+      }
+
+      // Parse arguments
+      const args = safeParseJSON(payload.arguments) || {};
+
+      // Call Klavis tool via store action
+      const result = await useToolStore.getState().callKlavisTool({
+        serverUrl: server.serverUrl,
+        toolArgs: args,
+        toolName: payload.apiName,
+      });
+
+      if (!result.success) {
+        throw new Error(result.error || 'Klavis tool execution failed');
+      }
+
+      const toolResult = result.data;
+
+      // Format result content
+      let content = '';
+      if (toolResult && typeof toolResult === 'object') {
+        // If result has content field, use it; otherwise stringify the entire result
+        content = JSON.stringify(toolResult, null, 2);
+      } else if (toolResult) {
+        content = String(toolResult);
+      }
+
+      // Update message
+      const context = operationId ? { operationId } : undefined;
+      await optimisticUpdateMessageContent(id, content, undefined, context);
+
+      log('[invokeKlavisTypePlugin] Tool execution successful, messageId=%s', id);
+
+      return content;
+    } catch (error) {
+      console.error('[invokeKlavisTypePlugin] Error:', error);
+
+      // ignore the aborted request error
+      const err = error as Error;
+      if (err.message.includes('aborted')) {
+        log('[invokeKlavisTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
+      } else {
+        const result = await messageService.updateMessageError(id, error as any, {
+          sessionId: message?.sessionId,
+          topicId: message?.topicId,
+        });
+        if (result?.success && result.messages) {
+          get().replaceMessages(result.messages, {
+            sessionId: message?.sessionId,
+            topicId: message?.topicId,
+          });
+        }
+      }
+
+      return undefined;
+    }
   },
 
   invokeMarkdownTypePlugin: async (id, payload) => {

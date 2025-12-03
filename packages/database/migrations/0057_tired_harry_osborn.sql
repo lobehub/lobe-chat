@@ -1,0 +1,1 @@
+ALTER TABLE "user_installed_plugins" ADD COLUMN "source" text;
