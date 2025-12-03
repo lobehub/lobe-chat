@@ -921,88 +921,110 @@ export class DiscoverService {
   }): Promise<DiscoverPluginDetail | undefined> => {
     log('getPluginDetail: params=%O', params);
     const { locale, identifier, withManifest } = params;
+
+    // Step 1: Try to find in legacy plugin list
     const all = await this._getPluginList(locale);
-    let raw = all.find((item) => item.identifier === identifier);
-    if (!raw) {
-      log(
-        'getPluginDetail: plugin not found in default store for identifier=%s, trying MCP plugin',
-        identifier,
-      );
-      try {
-        const mcpDetail = await this.getMcpDetail({ identifier, locale });
-        const convertedMcp: Partial<DiscoverPluginDetail> = {
-          author:
-            typeof (mcpDetail as any).author === 'object'
-              ? (mcpDetail as any).author?.name || ''
-              : (mcpDetail as any).author || '',
-          avatar: (mcpDetail as any).icon || (mcpDetail as any).avatar || '',
-          category: (mcpDetail as any).category as any,
-          createdAt: (mcpDetail as any).createdAt || '',
-          description: mcpDetail.description || '',
-          homepage: mcpDetail.homepage || '',
-          identifier: mcpDetail.identifier,
-          manifest: undefined,
-          related: mcpDetail.related.map((item) => ({
-            author:
-              typeof (item as any).author === 'object'
-                ? (item as any).author?.name || ''
-                : (item as any).author || '',
-            avatar: (item as any).icon || (item as any).avatar || '',
-            category: (item as any).category as any,
-            createdAt: (item as any).createdAt || '',
-            description: (item as any).description || '',
-            homepage: (item as any).homepage || '',
-            identifier: item.identifier,
-            manifest: undefined,
-            schemaVersion: 1,
-            tags: (item as any).tags || [],
-            title: (item as any).name || item.identifier,
-          })) as unknown as DiscoverPluginItem[],
-          schemaVersion: 1,
-          tags: (mcpDetail as any).tags || [],
-          title: (mcpDetail as any).name || mcpDetail.identifier,
-        };
-        const plugin = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), convertedMcp);
-        log('getPluginDetail: returning converted MCP plugin');
-        return plugin as DiscoverPluginDetail;
-      } catch (error) {
-        log('getPluginDetail: MCP plugin not found for identifier=%s, error=%O', identifier, error);
-        return;
+    const raw = all.find((item) => item.identifier === identifier);
+    if (raw) {
+      log('getPluginDetail: found plugin in legacy list for identifier=%s', identifier);
+      const mergedRaw = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), raw);
+      const list = await this.getPluginList({
+        category: mergedRaw.category,
+        locale,
+        page: 1,
+        pageSize: 7,
+      });
+
+      const plugin: DiscoverPluginDetail = {
+        ...mergedRaw,
+        related: list.items.filter((item) => item.identifier !== mergedRaw.identifier).slice(0, 6),
+        source: 'legacy',
+      };
+
+      if (!withManifest || !plugin?.manifest || !isString(plugin?.manifest)) {
+        log('getPluginDetail: returning legacy plugin without manifest processing');
+        return plugin;
       }
-    }
 
-    raw = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), raw);
-    const list = await this.getPluginList({
-      category: raw.category,
-      locale,
-      page: 1,
-      pageSize: 7,
-    });
-
-    let plugin = {
-      ...raw,
-      related: list.items.filter((item) => item.identifier !== raw.identifier).slice(0, 6),
-    };
-
-    if (!withManifest || !plugin?.manifest || !isString(plugin?.manifest)) {
-      log('getPluginDetail: returning plugin without manifest processing');
       return plugin;
     }
 
-    // 在 Edge Runtime 环境中使用了 Node.js 的 path 模块，但 Edge Runtime 不支持所有 Node.js API
-    // 这个函数使用了 @lobehub/chat-plugin-sdk/openapi，该包最终依赖了 @apidevtools/swagger-parser，而这个包在 Edge Runtime 环境中使用了不被支持的 Node.js path 模块。
-    // try {
-    //   const manifest = await getToolManifest(plugin.manifest);
-    //
-    //   return {
-    //     ...plugin,
-    //     manifest,
-    //   };
-    // } catch {
-    //   return plugin;
-    // }
+    // Step 2: Try to find in Market MCP plugins
+    log(
+      'getPluginDetail: plugin not found in legacy store for identifier=%s, trying MCP plugin',
+      identifier,
+    );
+    try {
+      const mcpDetail = await this.getMcpDetail({ identifier, locale });
+      const convertedMcp: Partial<DiscoverPluginDetail> = {
+        author:
+          typeof (mcpDetail as any).author === 'object'
+            ? (mcpDetail as any).author?.name || ''
+            : (mcpDetail as any).author || '',
+        avatar: (mcpDetail as any).icon || (mcpDetail as any).avatar || '',
+        category: (mcpDetail as any).category as any,
+        createdAt: (mcpDetail as any).createdAt || '',
+        description: mcpDetail.description || '',
+        homepage: mcpDetail.homepage || '',
+        identifier: mcpDetail.identifier,
+        manifest: undefined,
+        related: mcpDetail.related.map((item) => ({
+          author:
+            typeof (item as any).author === 'object'
+              ? (item as any).author?.name || ''
+              : (item as any).author || '',
+          avatar: (item as any).icon || (item as any).avatar || '',
+          category: (item as any).category as any,
+          createdAt: (item as any).createdAt || '',
+          description: (item as any).description || '',
+          homepage: (item as any).homepage || '',
+          identifier: item.identifier,
+          manifest: undefined,
+          schemaVersion: 1,
+          tags: (item as any).tags || [],
+          title: (item as any).name || item.identifier,
+        })) as unknown as DiscoverPluginItem[],
+        schemaVersion: 1,
+        source: 'market',
+        tags: (mcpDetail as any).tags || [],
+        title: (mcpDetail as any).name || mcpDetail.identifier,
+      };
+      const plugin = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), convertedMcp);
+      log('getPluginDetail: returning converted MCP plugin');
+      return plugin as DiscoverPluginDetail;
+    } catch {
+      log(
+        'getPluginDetail: MCP plugin not found for identifier=%s, trying builtin tools',
+        identifier,
+      );
+    }
 
-    return plugin;
+    // Step 3: Try to find in builtin tools
+    const { builtinTools } = await import('@/tools/index');
+    const builtinTool = builtinTools.find((tool) => tool.identifier === identifier);
+    if (builtinTool) {
+      log('getPluginDetail: found builtin tool for identifier=%s', identifier);
+      const plugin: DiscoverPluginDetail = {
+        author: 'LobeHub',
+        avatar: builtinTool.manifest.meta.avatar || '',
+        category: undefined,
+        createdAt: '',
+        description: builtinTool.manifest.meta.description || '',
+        homepage: 'https://lobehub.com',
+        identifier: builtinTool.identifier,
+        manifest: undefined,
+        related: [],
+        schemaVersion: 1,
+        source: 'builtin',
+        tags: builtinTool.manifest.meta.tags || [],
+        title: builtinTool.manifest.meta.title,
+      };
+      log('getPluginDetail: returning builtin tool plugin');
+      return plugin;
+    }
+
+    log('getPluginDetail: plugin not found anywhere for identifier=%s', identifier);
+    return;
   };
 
   getPluginIdentifiers = async (): Promise<IdentifiersResponse> => {

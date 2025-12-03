@@ -616,6 +616,7 @@
     "supportedProviders": "ارائه‌دهندگان پشتیبانی شده برای این مدل"
   },
   "plugins": {
+    "builtinTag": "افزونه داخلی",
     "community": "پلاگین‌های انجمن",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "نصب پلاگین",
     "installed": "نصب شده",
+    "legacyTag": "افزونه قدیمی",
     "list": "فهرست پلاگین‌ها",
     "meta": {
       "description": "توضیحات",
