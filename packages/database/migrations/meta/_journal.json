@@ -399,6 +399,13 @@
       "when": 1764685643024,
       "tag": "0056_update_agent_slug_index",
       "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "7",
+      "when": 1764734167674,
+      "tag": "0057_add_topic_user_memory_extract_status",
+      "breakpoints": true
     }
   ],
   "version": "6"

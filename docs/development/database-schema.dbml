@@ -1007,6 +1007,7 @@ table topics {
     session_id [name: 'topics_session_id_idx']
     group_id [name: 'topics_group_id_idx']
     agent_id [name: 'topics_agent_id_idx']
+    () [name: 'topics_extract_status_gin_idx']
   }
 }
 
