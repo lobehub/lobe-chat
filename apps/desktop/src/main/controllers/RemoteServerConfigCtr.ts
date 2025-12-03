@@ -13,12 +13,22 @@ import { ControllerModule, ipcClientEvent } from './index';
  * Non-retryable OIDC error codes
  * These errors indicate the refresh token is invalid and retry won't help
  */
-const NON_RETRYABLE_ERRORS = [
+const NON_RETRYABLE_OIDC_ERRORS = [
   'invalid_grant', // refresh token is invalid, expired, or revoked
   'invalid_client', // client configuration error
   'unauthorized_client', // client not authorized
   'access_denied', // user denied access
   'invalid_scope', // requested scope is invalid
+];
+
+/**
+ * Deterministic failures that will never succeed on retry
+ * These are permanent state issues that require user intervention
+ */
+const DETERMINISTIC_FAILURES = [
+  'no refresh token available', // refresh token is missing from storage
+  'remote server is not active or configured', // config is invalid or disabled
+  'missing tokens in refresh response', // server returned incomplete response
 ];
 
 // Create logger
@@ -259,13 +269,27 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   }
 
   /**
-   * Check if an error is non-retryable (e.g., invalid_grant means token is revoked)
+   * Check if an error is non-retryable
+   * Includes OIDC errors (e.g., invalid_grant) and deterministic failures
+   * (e.g., missing refresh token, invalid config)
    * @param error Error message to check
    * @returns true if the error should not be retried
    */
   isNonRetryableError(error?: string): boolean {
     if (!error) return false;
-    return NON_RETRYABLE_ERRORS.some((code) => error.toLowerCase().includes(code));
+    const lowerError = error.toLowerCase();
+
+    // Check OIDC error codes
+    if (NON_RETRYABLE_OIDC_ERRORS.some((code) => lowerError.includes(code))) {
+      return true;
+    }
+
+    // Check deterministic failures that require user intervention
+    if (DETERMINISTIC_FAILURES.some((msg) => lowerError.includes(msg))) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
