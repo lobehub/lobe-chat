@@ -86,6 +86,7 @@ const NavPanel = memo(() => {
   return (
     <DraggablePanel
       className={styles.panel}
+      defaultSize={{ height: '100%', width }}
       expand={expand}
       expandable={false}
       maxWidth={400}
@@ -94,7 +95,6 @@ const NavPanel = memo(() => {
       onSizeChange={handleSizeChange}
       placement="left"
       showBorder={false}
-      size={{ height: '100%', width }}
       style={{ marginRight: expand ? -8 : 0, overflow: 'hidden', position: 'relative' }}
     >
       <AnimatePresence initial={false} mode="popLayout">
