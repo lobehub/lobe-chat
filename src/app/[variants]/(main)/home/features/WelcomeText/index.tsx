@@ -1,11 +1,10 @@
 import { TypewriterEffect } from '@lobehub/ui/awesome';
-import { useTheme } from 'antd-style';
+import { LoadingDots } from '@lobehub/ui/chat';
 import { shuffle } from 'lodash-es';
 import { memo, useMemo } from 'react';
 import { Center } from 'react-layout-kit';
 
 const WelcomeText = memo(() => {
-  const theme = useTheme();
   const sentences = useMemo(
     () =>
       shuffle([
@@ -43,11 +42,14 @@ const WelcomeText = memo(() => {
       }}
     >
       <TypewriterEffect
-        cursorColor={theme.colorTextDescription}
-        deletingSpeed={32}
+        cursorCharacter={<LoadingDots size={20} variant={'pulse'} />}
+        cursorFade={false}
+        deletePauseDuration={1000}
+        deletingSpeed={48}
+        hideCursorWhileTyping={'afterTyping'}
         pauseDuration={12_000}
         sentences={sentences}
-        typingSpeed={96}
+        typingSpeed={120}
       />
     </Center>
   );
