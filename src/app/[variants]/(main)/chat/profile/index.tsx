@@ -19,16 +19,21 @@ const AgentProfile = memo(() => {
 
   return (
     <ProfileProvider>
-      <Header onToggleAgentBuilder={() => setChatPanelExpanded((prev) => !prev)} />
-      <Flexbox
-        height={'100%'}
-        horizontal
-        style={{ display: 'flex', overflowY: 'auto', position: 'relative' }}
-        width={'100%'}
-      >
-        <WideScreenContainer>
-          <ProfileEditor />
-        </WideScreenContainer>
+      <Flexbox height={'100%'} horizontal>
+        <Flexbox flex={1} height={'100%'}>
+          <Header onToggleAgentBuilder={() => setChatPanelExpanded((prev) => !prev)} />
+          <Flexbox
+            height={'100%'}
+            horizontal
+            style={{ display: 'flex', overflowY: 'auto', position: 'relative' }}
+            width={'100%'}
+          >
+            <WideScreenContainer>
+              <ProfileEditor />
+            </WideScreenContainer>
+          </Flexbox>
+        </Flexbox>
+
         {agentId && (
           <AgentBuilderProvider agentId={agentId}>
             <DraggablePanel

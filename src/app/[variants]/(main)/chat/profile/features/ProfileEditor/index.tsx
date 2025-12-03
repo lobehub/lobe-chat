@@ -3,9 +3,8 @@
 import { Button } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { Settings2Icon } from 'lucide-react';
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -13,6 +12,7 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { useStore } from '@/features/AgentSetting/store';
 import ModelSelect from '@/features/ModelSelect';
 import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 import AgentSettings from '../../Settings/features/AgentSettings';
 import AgentHeader from './AgentHeader';
@@ -21,20 +21,10 @@ import EditorCanvas from './EditorCanvas';
 
 const ProfileEditor = memo(() => {
   const [showSettingsDrawer, setShowSettingsDrawer] = useState(false);
-  const [agentId, inBoxLoading] = useAgentStore((s) => [
+  const [agentId, isLoadingConfig] = useAgentStore((s) => [
     s.activeAgentId,
-    !s.isInboxAgentConfigInit,
+    agentSelectors.isAgentConfigLoading(s),
   ]);
-  const editorData = useStore((s) => s.config.editorData, isEqual);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (editorData === undefined) {
-      setIsLoading(true || inBoxLoading);
-    } else {
-      setIsLoading(false || inBoxLoading);
-    }
-  }, [editorData]);
 
   const theme = useTheme();
   const { t } = useTranslation('setting');
@@ -52,7 +42,7 @@ const ProfileEditor = memo(() => {
     };
   }, [updateConfig]);
 
-  if (isLoading) return <Loading />;
+  if (isLoadingConfig) return <Loading />;
 
   return (
     <Flexbox
