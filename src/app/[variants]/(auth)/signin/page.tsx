@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import type { CheckUserResponseData } from '@/app/(backend)/api/auth/check-user/route';
 import { message } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { getAuthConfig } from '@/envs/auth';
@@ -162,7 +163,7 @@ export default function SignInPage() {
         method: 'POST',
       });
 
-      const data = await response.json();
+      const data: CheckUserResponseData = await response.json();
 
       if (!data.exists) {
         // User not found, redirect to signup page with email pre-filled
@@ -172,16 +173,15 @@ export default function SignInPage() {
         );
         return;
       }
-
       setEmail(values.email);
-
-      if (enableMagicLink) {
-        await handleSendMagicLink(values.email);
-        return;
-      }
 
       if (data.hasPassword) {
         setStep('password');
+        return;
+      }
+
+      if (enableMagicLink) {
+        await handleSendMagicLink(values.email);
         return;
       }
 
