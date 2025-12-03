@@ -5,7 +5,7 @@ import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { Virtuoso } from 'react-virtuoso';
+import { VList } from 'virtua';
 
 import { FileListItem as FileListItemType } from '@/types/files';
 
@@ -57,9 +57,8 @@ const ListView = memo<ListViewProps>(
             </Flexbox>
           </Flexbox>
         </Flexbox>
-        <Virtuoso
-          data={data}
-          itemContent={(index, item) => (
+        <VList data={data} style={{ flex: 1 }}>
+          {(item, index) => (
             <FileListItem
               index={index}
               key={item.id}
@@ -70,8 +69,7 @@ const ListView = memo<ListViewProps>(
               {...item}
             />
           )}
-          style={{ flex: 1 }}
-        />
+        </VList>
       </>
     );
   },
