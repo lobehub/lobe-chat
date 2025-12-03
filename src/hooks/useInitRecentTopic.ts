@@ -5,6 +5,13 @@ import { authSelectors } from '@/store/user/selectors';
 /**
  * Hook to initialize and fetch recent topics
  * Only fetches when user is logged in
+ *
+ * Usage:
+ * const { isLoading } = useInitRecentTopic();
+ *
+ * Then access data directly from store:
+ * const recentTopics = useSessionStore(recentSelectors.recentTopics);
+ * const isInit = useSessionStore(recentSelectors.isRecentTopicsInit);
  */
 export const useInitRecentTopic = () => {
   const useFetchRecentTopics = useSessionStore((s) => s.useFetchRecentTopics);
@@ -15,4 +22,3 @@ export const useInitRecentTopic = () => {
 
   return { ...data, isLoading: data.isLoading && isLogin };
 };
-

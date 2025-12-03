@@ -11,7 +11,7 @@ import WelcomeText from './WelcomeText';
 
 const Home = memo(() => {
   return (
-    <Flexbox gap={48}>
+    <Flexbox gap={48} style={{ paddingBottom: 64 }}>
       <div style={{ height: '32px' }} />
       <WelcomeText />
       <InputArea />

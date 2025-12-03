@@ -3,24 +3,23 @@ import { Link } from 'react-router-dom';
 
 import GroupSkeleton from '@/app/[variants]/(main)/home/features/components/GroupSkeleton';
 import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
-import { useInitRecentTopic } from '@/hooks/useInitRecentTopic';
+import { useSessionStore } from '@/store/session';
+import { recentSelectors } from '@/store/session/selectors';
 
 import ReactTopicItem from './Item';
 
 const RecentTopicList = memo(() => {
-  const { data: recentTopics, isLoading } = useInitRecentTopic();
+  const recentTopics = useSessionStore(recentSelectors.recentTopics);
+  const isInit = useSessionStore(recentSelectors.isRecentTopicsInit);
 
-  if (isLoading) {
+  // Loading state
+  if (!isInit) {
     return (
       <GroupSkeleton
         height={RECENT_BLOCK_SIZE.TOPIC.HEIGHT}
         width={RECENT_BLOCK_SIZE.TOPIC.WIDTH}
       />
     );
-  }
-
-  if (!recentTopics || recentTopics.length === 0) {
-    return null;
   }
 
   return recentTopics.map((topic) => {

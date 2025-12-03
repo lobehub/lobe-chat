@@ -6,6 +6,8 @@ import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFileCategory } from '@/app/[variants]/(main)/resource/features/hooks/useFileCategory';
+import { useSessionStore } from '@/store/session';
+import { recentSelectors } from '@/store/session/selectors';
 import { FilesTabs } from '@/types/files';
 
 import GroupBlock from '../components/GroupBlock';
@@ -17,6 +19,13 @@ import RecentPageList from './List';
 const RecentPage = memo(() => {
   const { t } = useTranslation('file');
   const [, setActiveKey] = useFileCategory();
+  const recentPages = useSessionStore(recentSelectors.recentPages);
+  const isInit = useSessionStore(recentSelectors.isRecentPagesInit);
+
+  // After loaded, if no data, don't render
+  if (isInit && (!recentPages || recentPages.length === 0)) {
+    return null;
+  }
 
   return (
     <GroupBlock

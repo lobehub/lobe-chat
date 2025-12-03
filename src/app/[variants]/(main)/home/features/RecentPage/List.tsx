@@ -5,21 +5,20 @@ import { Link } from 'react-router-dom';
 
 import GroupSkeleton from '@/app/[variants]/(main)/home/features/components/GroupSkeleton';
 import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
-import { useInitRecentPage } from '@/hooks/useInitRecentPage';
+import { useSessionStore } from '@/store/session';
+import { recentSelectors } from '@/store/session/selectors';
 
 import RecentPageItem from './Item';
 
 const RecentPageList = memo(() => {
-  const { data: documents, isLoading } = useInitRecentPage();
+  const documents = useSessionStore(recentSelectors.recentPages);
+  const isInit = useSessionStore(recentSelectors.isRecentPagesInit);
 
-  if (isLoading) {
+  // Loading state
+  if (!isInit) {
     return (
       <GroupSkeleton height={RECENT_BLOCK_SIZE.PAGE.HEIGHT} width={RECENT_BLOCK_SIZE.PAGE.WIDTH} />
     );
-  }
-
-  if (!documents || documents.length === 0) {
-    return null;
   }
 
   return documents.map((document) => {
