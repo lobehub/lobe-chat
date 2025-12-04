@@ -65,6 +65,15 @@ export const pluginTypes: StateCreator<
   PluginTypesAction
 > = (set, get) => ({
   invokeBuiltinTool: async (id, payload) => {
+    // Check if this is a Klavis tool by querying the tool store
+    const isKlavisServer = useToolStore
+      .getState()
+      .servers?.some((s) => s.serverName === payload.identifier);
+
+    if (isKlavisServer) {
+      return await get().invokeKlavisTypePlugin(id, payload);
+    }
+
     // run tool api call
     // @ts-ignore
     const { [payload.apiName]: action } = get();
@@ -94,6 +103,8 @@ export const pluginTypes: StateCreator<
       optimisticUpdateMessagePluginError,
     } = get();
 
+    let data: MCPToolCallResult | undefined;
+
     // Get message to extract sessionId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
@@ -111,11 +122,7 @@ export const pluginTypes: StateCreator<
     );
 
     try {
-      // Parse identifier to get server name
-      // Format: klavis:serverName
-      const serverName = payload.identifier.replace(/^klavis:/, '');
-
-      // Get server from tool store
+      const serverName = payload.identifier;
       const klavisServers = useToolStore.getState().servers || [];
       const server = klavisServers.find((s) => s.serverName === serverName);
 
@@ -137,24 +144,17 @@ export const pluginTypes: StateCreator<
         throw new Error(result.error || 'Klavis tool execution failed');
       }
 
+      // result.data is MCPToolCallProcessedResult from server
+      // Convert to MCPToolCallResult format
       const toolResult = result.data;
-
-      // Format result content
-      let content = '';
-      if (toolResult && typeof toolResult === 'object') {
-        // If result has content field, use it; otherwise stringify the entire result
-        content = JSON.stringify(toolResult, null, 2);
-      } else if (toolResult) {
-        content = String(toolResult);
+      if (toolResult) {
+        data = {
+          content: toolResult.content,
+          error: toolResult.state?.isError ? toolResult.state : undefined,
+          state: toolResult.state,
+          success: toolResult.success,
+        };
       }
-
-      // Update message
-      const context = operationId ? { operationId } : undefined;
-      await optimisticUpdateMessageContent(id, content, undefined, context);
-
-      log('[invokeKlavisTypePlugin] Tool execution successful, messageId=%s', id);
-
-      return content;
     } catch (error) {
       console.error('[invokeKlavisTypePlugin] Error:', error);
 
@@ -174,9 +174,23 @@ export const pluginTypes: StateCreator<
           });
         }
       }
-
-      return undefined;
     }
+
+    // 如果报错则结束了
+    if (!data) return;
+
+    // operationId already declared above, reuse it
+    const context = operationId ? { operationId } : undefined;
+
+    await Promise.all([
+      optimisticUpdateMessageContent(id, data.content, undefined, context),
+      (async () => {
+        if (data.success) await optimisticUpdatePluginState(id, data.state, context);
+        else await optimisticUpdateMessagePluginError(id, data.error, context);
+      })(),
+    ]);
+
+    return data.content;
   },
 
   invokeMarkdownTypePlugin: async (id, payload) => {

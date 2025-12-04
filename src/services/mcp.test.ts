@@ -108,7 +108,11 @@ describe('MCPService', () => {
       mockPluginSelectors.getInstalledPluginById.mockReturnValue(() => mockPlugin);
       mockPluginSelectors.getCustomPluginById.mockReturnValue(() => null);
 
-      const mockResult = 'test result';
+      const mockResult = {
+        content: 'test result',
+        state: { content: [{ text: 'test result', type: 'text' }] },
+        success: true,
+      };
       vi.mocked(toolsClient.mcp.callTool.mutate).mockResolvedValue(mockResult);
 
       const payload: ChatToolPayload = {
@@ -172,7 +176,11 @@ describe('MCPService', () => {
       mockPluginSelectors.getInstalledPluginById.mockReturnValue(() => null);
       mockPluginSelectors.getCustomPluginById.mockReturnValue(() => mockCustomPlugin);
 
-      const mockResult = 'custom result';
+      const mockResult = {
+        content: 'custom result',
+        state: { content: [{ text: 'custom result', type: 'text' }] },
+        success: true,
+      };
       vi.mocked(toolsClient.mcp.callTool.mutate).mockResolvedValue(mockResult);
 
       const payload: ChatToolPayload = {
@@ -210,7 +218,11 @@ describe('MCPService', () => {
       mockPluginSelectors.getInstalledPluginById.mockReturnValue(() => mockStdioPlugin);
       mockPluginSelectors.getCustomPluginById.mockReturnValue(() => null);
 
-      const mockResult = 'stdio result';
+      const mockResult = {
+        content: 'stdio result',
+        state: { content: [{ text: 'stdio result', type: 'text' }] },
+        success: true,
+      };
       vi.mocked(toolsClient.mcp.callTool.mutate).mockResolvedValue(mockResult);
 
       const payload: ChatToolPayload = {
@@ -350,7 +362,11 @@ describe('MCPService', () => {
       mockPluginSelectors.getCustomPluginById.mockReturnValue(() => null);
 
       const abortController = new AbortController();
-      const mockResult = 'result';
+      const mockResult = {
+        content: 'result',
+        state: { content: [{ text: 'result', type: 'text' }] },
+        success: true,
+      };
       vi.mocked(toolsClient.mcp.callTool.mutate).mockResolvedValue(mockResult);
 
       const payload: ChatToolPayload = {
@@ -398,7 +414,11 @@ describe('MCPService', () => {
       mockPluginSelectors.getInstalledPluginById.mockReturnValue(() => null);
       mockPluginSelectors.getCustomPluginById.mockReturnValue(() => mockCustomPlugin);
 
-      vi.mocked(toolsClient.mcp.callTool.mutate).mockResolvedValue('ok');
+      vi.mocked(toolsClient.mcp.callTool.mutate).mockResolvedValue({
+        content: 'ok',
+        state: { content: [{ text: 'ok', type: 'text' }] },
+        success: true,
+      });
 
       const payload: ChatToolPayload = {
         id: 'tool-call-8',

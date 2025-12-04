@@ -8,15 +8,25 @@ import { KlavisServer, KlavisServerStatus } from './types';
  */
 export const klavisStoreSelectors = {
   /**
-   * 获取所有 Klavis 服务器
+   * 获取所有 Klavis 服务器的 identifier 集合
    */
-  getServers: (s: ToolStore): KlavisServer[] => s.servers || [],
+  getAllServerIdentifiers: (s: ToolStore): Set<string> => {
+    const servers = s.servers || [];
+    return new Set(servers.map((server) => server.serverName));
+  },
 
   /**
-   * 根据服务器名称获取服务器
+   * 获取所有可用的工具（来自所有已连接的服务器）
    */
-  getServerByName: (serverName: string) => (s: ToolStore) =>
-    s.servers?.find((server) => server.serverName === serverName),
+  getAllTools: (s: ToolStore) => {
+    const connectedServers = klavisStoreSelectors.getConnectedServers(s);
+    return connectedServers.flatMap((server) =>
+      (server.tools || []).map((tool) => ({
+        ...tool,
+        serverName: server.serverName,
+      })),
+    );
+  },
 
   /**
    * 获取所有已连接的服务器
@@ -31,23 +41,31 @@ export const klavisStoreSelectors = {
     (s.servers || []).filter((server) => server.status === KlavisServerStatus.PENDING_AUTH),
 
   /**
+   * 根据服务器名称获取服务器
+   */
+  getServerByName: (serverName: string) => (s: ToolStore) =>
+    s.servers?.find((server) => server.serverName === serverName),
+
+  /**
+   * 获取所有 Klavis 服务器
+   */
+  getServers: (s: ToolStore): KlavisServer[] => s.servers || [],
+
+  /**
    * 检查 Klavis 是否已启用
    * 基于 NEXT_PUBLIC_KLAVIS_ENABLE 环境变量或服务端 KLAVIS_API_KEY 是否存在
    */
   isKlavisEnabled: (): boolean => isKlavisEnabled(),
 
   /**
-   * 获取所有可用的工具（来自所有已连接的服务器）
+   * 检查给定的 identifier 是否是 Klavis 服务器
    */
-  getAllTools: (s: ToolStore) => {
-    const connectedServers = klavisStoreSelectors.getConnectedServers(s);
-    return connectedServers.flatMap((server) =>
-      (server.tools || []).map((tool) => ({
-        ...tool,
-        serverName: server.serverName,
-      })),
-    );
-  },
+  isKlavisServer:
+    (identifier: string) =>
+    (s: ToolStore): boolean => {
+      const servers = s.servers || [];
+      return servers.some((server) => server.serverName === identifier);
+    },
 
   /**
    * 检查服务器是否正在加载
@@ -83,19 +101,19 @@ export const klavisStoreSelectors = {
 
       if (apis.length > 0) {
         tools.push({
-          identifier: `klavis:${server.serverName}`,
+          identifier: server.serverName,
           manifest: {
             api: apis,
             author: 'Klavis',
             homepage: 'https://klavis.ai',
-            identifier: `klavis:${server.serverName}`,
+            identifier: server.serverName,
             meta: {
               avatar: '☁️',
               description: `Klavis MCP Server: ${server.serverName}`,
               tags: ['klavis', 'mcp'],
-              title: `Klavis: ${server.serverName}`,
+              title: server.serverName,
             },
-            type: 'klavis',
+            type: 'builtin',
             version: '1.0.0',
           },
           type: 'plugin',

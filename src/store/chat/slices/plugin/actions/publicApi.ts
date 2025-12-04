@@ -111,11 +111,6 @@ export const pluginPublicApi: StateCreator<
         return await get().invokeMCPTypePlugin(id, payload);
       }
 
-      // @ts-ignore
-      case 'klavis': {
-        return await get().invokeKlavisTypePlugin(id, payload);
-      }
-
       default: {
         return await get().invokeDefaultTypePlugin(id, payload);
       }

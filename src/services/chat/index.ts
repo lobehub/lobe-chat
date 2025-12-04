@@ -116,6 +116,11 @@ class ChatService {
       toolIds: pluginIds,
     });
 
+    // Debug: Log tools structure for Klavis debugging
+    console.log('[ChatService] Final tools structure:', JSON.stringify(tools, null, 2));
+    console.log('[ChatService] Enabled tool IDs:', enabledToolIds);
+    console.log('[ChatService] Plugin IDs:', pluginIds);
+
     // ============  2. preprocess messages   ============ //
 
     const agentStoreState = getAgentStoreState();

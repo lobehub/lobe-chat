@@ -6,6 +6,7 @@ import { getServerKlavisApiKey } from '@/config/klavis';
 import { PluginModel } from '@/database/models/plugin';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { MCPService } from '@/server/services/mcp';
 
 /**
  * Global Klavis Client instance cache (server-side only)
@@ -44,7 +45,6 @@ const klavisProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
 });
 
 export const klavisRouter = router({
-
   /**
    * Call a tool on a Strata server
    */
@@ -63,30 +63,26 @@ export const klavisRouter = router({
         toolName: input.toolName,
       });
 
-      return response;
+      // Handle error case
+      if (!response.success || !response.result) {
+        return {
+          content: response.error || 'Unknown error',
+          state: {
+            content: [{ text: response.error || 'Unknown error', type: 'text' }],
+            isError: true,
+          },
+          success: false,
+        };
+      }
+
+      // Process the response using the common MCP tool call result processor
+      const processedResult = await MCPService.processToolCallResult({
+        content: (response.result.content || []) as any[],
+        isError: response.result.isError,
+      });
+
+      return processedResult;
     }),
-
-
-
-
-  /**
-     * Complete OAuth authentication
-     * This is called after user completes OAuth in popup window
-     */
-  completeAuth: klavisProcedure
-    .input(
-      z.object({
-        serverId: z.string(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      // OAuth is handled by Klavis on their end
-      // This endpoint is mainly to trigger tool list refresh
-      return { success: true };
-    }),
-
-
-
 
   /**
    * Create a single MCP server instance and save to database
@@ -114,8 +110,8 @@ export const klavisRouter = router({
       const toolsResponse = await ctx.klavisClient.mcpServer.getTools(serverName as any);
       const tools = toolsResponse.tools || [];
 
-      // 保存到数据库
-      const identifier = `klavis:${serverName}`;
+      // 保存到数据库，使用 serverName 作为 identifier
+      const identifier = serverName;
       const manifest: LobeChatPluginManifest = {
         api: tools.map((tool: any) => ({
           description: tool.description || '',
@@ -145,7 +141,8 @@ export const klavisRouter = router({
         },
         identifier,
         manifest,
-        type: 'customPlugin',
+        source: 'klavis',
+        type: 'plugin',
       });
 
       return {
@@ -156,9 +153,6 @@ export const klavisRouter = router({
         serverUrl,
       };
     }),
-
-
-
 
   /**
    * Delete a server instance
@@ -175,24 +169,10 @@ export const klavisRouter = router({
       await ctx.klavisClient.mcpServer.deleteServerInstance(input.instanceId);
 
       // 从数据库删除
-      const identifier = `klavis:${input.serverName}`;
+      const identifier = input.serverName;
       await ctx.pluginModel.delete(identifier);
 
       return { success: true };
-    }),
-
-  getUserIntergrations: klavisProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      const response = await ctx.klavisClient.user.getUserIntegrations(input.userId);
-
-      return {
-        integrations: response.integrations,
-      };
     }),
 
   /**
@@ -226,9 +206,23 @@ export const klavisRouter = router({
       };
     }),
 
+  getUserIntergrations: klavisProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const response = await ctx.klavisClient.user.getUserIntegrations(input.userId);
+
+      return {
+        integrations: response.integrations,
+      };
+    }),
+
   /**
-     * List tools available on a Strata server
-     */
+   * List tools available on a Strata server
+   */
   listTools: klavisProcedure
     .input(
       z.object({
@@ -255,7 +249,7 @@ export const klavisRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const identifier = `klavis:${input.serverName}`;
+      const identifier = input.serverName;
       await ctx.pluginModel.delete(identifier);
       return { success: true };
     }),
@@ -282,7 +276,7 @@ export const klavisRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const { serverName, serverUrl, instanceId, tools, isAuthenticated, oauthUrl } = input;
-      const identifier = `klavis:${serverName}`;
+      const identifier = serverName;
 
       // 获取现有插件
       const existingPlugin = await ctx.pluginModel.findById(identifier);
@@ -321,7 +315,8 @@ export const klavisRouter = router({
           customParams,
           identifier,
           manifest,
-          type: 'customPlugin',
+          source: 'klavis',
+          type: 'plugin',
         });
       }
 
