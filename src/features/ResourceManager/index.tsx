@@ -8,6 +8,7 @@ import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/featur
 import PageEditor from '@/features/PageEditor';
 
 import PageExplorer from '../PageExplorer';
+import FileEditor from './FileEditor';
 import FileExplorer from './FileExplorer';
 import UploadDock from './UploadDock';
 
@@ -41,8 +42,17 @@ const ResourceManager = memo<KnowledgeManagerProps>(
         case 'pages': {
           return <PageExplorer knowledgeBaseId={knowledgeBaseId} pageId={currentViewItemId} />;
         }
-        case 'files':
         case 'file': {
+          return (
+            <FileEditor
+              category={category}
+              currentViewItemId={currentViewItemId ?? ''}
+              knowledgeBaseId={knowledgeBaseId}
+              onBack={() => {}}
+            />
+          );
+        }
+        case 'files': {
           return (
             <FileExplorer
               category={category}
