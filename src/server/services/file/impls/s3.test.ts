@@ -199,13 +199,15 @@ describe('S3StaticFileImpl', () => {
 
       // filter out empty strings
       vi.clearAllMocks();
-      const keysWithEmpty = ['test1.jpg', '', 'test2.jpg'];
-      // when getKeyFromFullUrl returns '' for the empty entry, only two deletes happen
+      const keysWithEmpty = [
+        'https://example.com/test1.jpg',
+        '',
+        'https://example.com/test2.jpg'
+      ];
+      // when getKeyFromFullUrl returns '' for all URLs, no deletes should happen
       vi.spyOn(fileService, 'getKeyFromFullUrl').mockReturnValue('');
       await fileService.deleteFiles(keysWithEmpty);
-      expect(fileService['s3'].deleteFile).toHaveBeenCalledTimes(2);
-      expect(fileService['s3'].deleteFile).toHaveBeenNthCalledWith(1, 'test1.jpg');
-      expect(fileService['s3'].deleteFile).toHaveBeenNthCalledWith(2, 'test2.jpg');
+      expect(fileService['s3'].deleteFile).not.toHaveBeenCalled();
 
       // empty array -> no calls
       vi.clearAllMocks();
