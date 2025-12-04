@@ -7,6 +7,29 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-V3.2 是一款兼具高计算效率与卓越推理和 Agent 性能的模型。其方法建立在三大关键技术突破之上：DeepSeek 稀疏注意力（DSA），一种高效的注意力机制，在保持模型性能的同时显著降低了计算复杂性，并特别针对长上下文场景进行优化。',
+    displayName: 'DeepSeek V3.2 (Pro)',
+    id: 'Pro/deepseek-ai/DeepSeek-V3.2',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-12-01',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 128_000,
     description:
       'MiniMax-M2 为智能体重新定义了效率。它是一款紧凑、快速且经济高效的 MoE 模型，拥有 2300 亿总参数和 100 亿激活参数，专为编码和智能体任务的顶级性能而打造，同时保持强大的通用智能。仅需 100 亿激活参数，MiniMax-M2 就能提供与大规模模型相媲美的性能，使其成为高效率应用的理想选择。',
