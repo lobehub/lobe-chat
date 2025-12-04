@@ -16,12 +16,12 @@ import { sessionSelectors } from '@/store/session/selectors';
 import { useUserMemoryStore } from '@/store/userMemory';
 import { MemoryManifest } from '@/tools/memory';
 
+import WelcomeChatItem from './AgentWelcome';
 import ChatHydration from './ChatHydration';
 import MainChatInput from './ChatInput';
 import ChatMinimap from './ChatMinimap';
 import MessageFromUrl from './MainChatInput/MessageFromUrl';
 import ThreadHydration from './ThreadHydration';
-// import WelcomeChatItem from './AgentWelcome';
 import ZenModeToast from './ZenModeToast';
 import { useActionsBarConfig } from './useActionsBarConfig';
 
@@ -103,11 +103,7 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
         }}
         width={'100%'}
       >
-        <ChatList
-          actionsBar={actionsBarConfig}
-          mobile={mobile}
-          // welcome={<WelcomeChatItem />}
-        />
+        <ChatList actionsBar={actionsBarConfig} mobile={mobile} welcome={<WelcomeChatItem />} />
       </Flexbox>
       <MainChatInput mobile={mobile} />
       <ChatHydration />
