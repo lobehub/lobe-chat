@@ -54,10 +54,10 @@ export default {
   },
   betterAuth: {
     errors: {
-      emailInvalid: '请输入有效的邮箱地址',
-      emailNotRegistered: '该邮箱尚未注册',
+      emailInvalid: '请输入有效的邮箱地址或用户名',
+      emailNotRegistered: '该邮箱或用户名尚未注册',
       emailNotVerified: '邮箱尚未验证，请先验证邮箱',
-      emailRequired: '请输入邮箱地址',
+      emailRequired: '请输入邮箱或用户名',
       firstNameRequired: '请输入名字',
       lastNameRequired: '请输入姓氏',
       loginFailed: '登录失败，请检查邮箱和密码',
@@ -65,6 +65,7 @@ export default {
       passwordMaxLength: '密码最多不超过 64 个字符',
       passwordMinLength: '密码至少需要 8 个字符',
       passwordRequired: '请输入密码',
+      usernameNotRegistered: '该用户名尚未注册',
       usernameRequired: '请输入用户名',
     },
     resetPassword: {
@@ -99,7 +100,7 @@ export default {
       continueWithOkta: '使用 Okta 登录',
       continueWithWechat: '使用微信登录',
       continueWithZitadel: '使用 Zitadel 登录',
-      emailPlaceholder: '请输入邮箱地址',
+      emailPlaceholder: '请输入邮箱或用户名',
       emailStep: {
         subtitle: '请输入您的邮箱地址以继续',
         title: '登录',
@@ -203,10 +204,9 @@ export default {
       loading: '正在加载已绑定的第三方账户',
       providers: '连接的帐户',
       unlink: {
-        description:
-          '解绑后，您将无法使用 {{provider}} 账户"{{providerAccountId}}"登录。如果您需要重新绑定 {{provider}} 账户到当前账户，请确保 {{provider}} 账户的邮件地址为 {{email}} ，我们会在登陆时为你自动绑定到当前登录账户。',
-        forbidden: '您至少需要保留一个第三方账户绑定。',
-        title: '是否解绑该第三方账户 {{provider}} ？',
+        description: '解绑后再次使用 {{provider}} 登录需要重新授权或绑定。',
+        forbidden: '您至少需要保留一个登录方式。',
+        title: '确认解绑 {{provider}} 账户？',
       },
     },
     title: '个人资料详情',

@@ -12,14 +12,13 @@ import { userService } from '@/services/user';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
-import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { authSelectors } from '@/store/user/selectors';
 
 const providerNameStyle: CSSProperties = {
   textTransform: 'capitalize',
 };
 
 export const SSOProvidersList = memo(() => {
-  const userProfile = useUserStore(userProfileSelectors.userProfile);
   const isLoginWithBetterAuth = useUserStore(authSelectors.isLoginWithBetterAuth);
   const providers = useUserStore(authSelectors.authProviders);
   const hasPasswordAccount = useUserStore(authSelectors.hasPasswordAccount);
@@ -49,11 +48,7 @@ export const SSOProvidersList = memo(() => {
       return;
     }
     modal.confirm({
-      content: t('profile.sso.unlink.description', {
-        email: userProfile?.email || 'None',
-        provider,
-        providerAccountId,
-      }),
+      content: t('profile.sso.unlink.description', { provider }),
       okButtonProps: {
         danger: true,
       },
