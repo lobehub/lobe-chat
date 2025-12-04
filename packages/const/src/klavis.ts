@@ -1,197 +1,131 @@
 import { IconType, SiCaldotcom, SiGithub, SiLinear } from '@icons-pack/react-simple-icons';
+import { Klavis } from 'klavis';
 
 export interface KlavisServerType {
   icon: string | IconType;
-  id: string;
+  id: Klavis.McpServerName;
   label: string;
 }
 
 export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/gmail.svg',
-    id: 'gmail',
+    id: Klavis.McpServerName.Gmail,
     label: 'Gmail',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googlecalendar.svg',
-    id: 'google-calendar',
-    label: 'Google calendar',
+    id: Klavis.McpServerName.GoogleCalendar,
+    label: 'Google Calendar',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/notion.svg',
-    id: 'notion',
+    id: Klavis.McpServerName.Notion,
     label: 'Notion',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/airtable.svg',
-    id: 'airtable',
+    id: Klavis.McpServerName.Airtable,
     label: 'Airtable',
   },
   {
     icon: SiLinear,
-    id: 'linear',
+    id: Klavis.McpServerName.Linear,
     label: 'Linear',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googlesheets.svg',
-    id: 'google-sheets',
-    label: 'Google sheets',
+    id: Klavis.McpServerName.GoogleSheets,
+    label: 'Google Sheets',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googledocs.svg',
-    id: 'google-docs',
-    label: 'Google docs',
+    id: Klavis.McpServerName.GoogleDocs,
+    label: 'Google Docs',
   },
   {
     icon: SiGithub,
-    id: 'github',
-    label: 'Github',
+    id: Klavis.McpServerName.Github,
+    label: 'GitHub',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/supabase.svg',
-    id: 'supabase',
+    id: Klavis.McpServerName.Supabase,
     label: 'Supabase',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googledrive.svg',
-    id: 'google-drive',
-    label: 'Google drive',
+    id: Klavis.McpServerName.GoogleDrive,
+    label: 'Google Drive',
   },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/webflow.svg',
-  //   id: 'webflow',
-  //   label: 'Webflow',
-  // },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/paypal.svg',
-  //   id: 'paypal',
-  //   label: 'Paypal',
-  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/slack.svg',
-    id: 'slack',
+    id: Klavis.McpServerName.Slack,
     label: 'Slack',
   },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/sentry.svg',
-  //   id: 'sentry',
-  //   label: 'Sentry',
-  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/confluence.svg',
-    id: 'confluence',
+    id: Klavis.McpServerName.Confluence,
     label: 'Confluence',
   },
-  { icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/jira.svg', id: 'jira', label: 'Jira' },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/postgres.svg',
-  //   id: 'postgres',
-  //   label: 'Postgres',
-  // },
-  { icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/coda.svg', id: 'coda', label: 'Coda' },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/bigquery.svg',
-  //   id: 'bigquery',
-  //   label: 'Bigquery',
-  // },
+  {
+    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/jira.svg',
+    id: Klavis.McpServerName.Jira,
+    label: 'Jira',
+  },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/clickup.svg',
-    id: 'clickup',
-    label: 'Clickup',
+    id: Klavis.McpServerName.Clickup,
+    label: 'ClickUp',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/dropbox.svg',
-    id: 'dropbox',
+    id: Klavis.McpServerName.Dropbox,
     label: 'Dropbox',
   },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/facebook.svg',
-  //   id: 'facebook',
-  //   label: 'Facebook',
-  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/figma.svg',
-    id: 'figma',
+    id: Klavis.McpServerName.Figma,
     label: 'Figma',
   },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/firebase.svg',
-  //   id: 'firebase',
-  //   label: 'Firebase',
-  // },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googlemeet.svg',
-  //   id: 'google-meet',
-  //   label: 'Google meet',
-  // },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googletasks.svg',
-  //   id: 'google-tasks',
-  //   label: 'Google tasks',
-  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/hubspot.svg',
-    id: 'hubspot',
-    label: 'Hubspot',
+    id: Klavis.McpServerName.Hubspot,
+    label: 'HubSpot',
   },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/mysql.svg',
-  //   id: 'mysql',
-  //   label: 'Mysql',
-  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/onedrive.svg',
-    id: 'onedrive',
-    label: 'Onedrive',
+    id: Klavis.McpServerName.Onedrive,
+    label: 'OneDrive',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/outlook.svg',
-    id: 'outlook',
-    label: 'Outlook',
+    id: Klavis.McpServerName.OutlookMail,
+    label: 'Outlook Mail',
   },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/reddit.svg',
-  //   id: 'reddit',
-  //   label: 'Reddit',
-  // },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/resend.svg',
-  //   id: 'resend',
-  //   label: 'Resend',
-  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/salesforce.svg',
-    id: 'salesforce',
+    id: Klavis.McpServerName.Salesforce,
     label: 'Salesforce',
   },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/shopify.svg',
-  //   id: 'shopify',
-  //   label: 'Shopify',
-  // },
-  // {
-  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/snowflake.svg',
-  //   id: 'snowflake',
-  //   label: 'Snowflake',
-  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/whatsapp.svg',
-    id: 'whatsapp',
-    label: 'Whatsapp',
+    id: Klavis.McpServerName.Whatsapp,
+    label: 'WhatsApp',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/youtube.svg',
-    id: 'youtube',
-    label: 'Youtube',
+    id: Klavis.McpServerName.Youtube,
+    label: 'YouTube',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/zendesk.svg',
-    id: 'zendesk',
+    id: Klavis.McpServerName.Zendesk,
     label: 'Zendesk',
   },
   {
     icon: SiCaldotcom,
-    id: 'cal-com',
+    id: Klavis.McpServerName.CalCom,
     label: 'Cal.com',
   },
 ];
