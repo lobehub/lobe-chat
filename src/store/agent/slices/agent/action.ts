@@ -5,8 +5,7 @@ import type { PartialDeep } from 'type-fest';
 import { StateCreator } from 'zustand/vanilla';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { INBOX_SESSION_ID } from '@/const/session';
-import { useClientDataSWR, useOnlyFetchOnceSWR } from '@/libs/swr';
+import { useClientDataSWR } from '@/libs/swr';
 import { agentService } from '@/services/agent';
 import { useSessionStore } from '@/store/session';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
@@ -41,10 +40,6 @@ export interface AgentSliceAction {
   updateAgentConfig: (config: PartialDeep<LobeAgentConfig>) => Promise<void>;
   updateAgentMeta: (meta: Partial<MetaData>) => Promise<void>;
   useFetchAgentConfig: (isLogin: boolean | undefined, id: string) => SWRResponse<LobeAgentConfig>;
-  useInitInboxAgentStore: (
-    isLogin: boolean | undefined,
-    defaultAgentConfig?: PartialDeep<LobeAgentConfig>,
-  ) => SWRResponse<PartialDeep<LobeAgentConfig>>;
 }
 
 export const createAgentSlice: StateCreator<
@@ -103,34 +98,6 @@ export const createAgentSlice: StateCreator<
             false,
             'fetchAgentConfig',
           );
-        },
-      },
-    ),
-
-  useInitInboxAgentStore: (isLogin, defaultAgentConfig) =>
-    useOnlyFetchOnceSWR<PartialDeep<LobeAgentConfig>>(
-      // Only fetch when login status is explicitly true (not null/undefined/false)
-      isLogin === true ? 'fetchInboxAgentConfig' : null,
-      // inbox is a special case, still need to use sessionId to get config
-      async () => {
-        const data = await agentService.getSessionConfig(INBOX_SESSION_ID);
-        return data as PartialDeep<LobeAgentConfig>;
-      },
-      {
-        onSuccess: (data) => {
-          set(
-            {
-              defaultAgentConfig: merge(get().defaultAgentConfig, defaultAgentConfig),
-              inboxAgentId: data?.id,
-              isInboxAgentConfigInit: true,
-            },
-            false,
-            'initDefaultAgent',
-          );
-
-          if (data?.id) {
-            get().internal_dispatchAgentMap(data.id, data);
-          }
         },
       },
     ),

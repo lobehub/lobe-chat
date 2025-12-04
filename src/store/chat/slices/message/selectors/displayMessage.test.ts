@@ -182,7 +182,7 @@ describe('displayMessageSelectors', () => {
       act(() => {
         useAgentStore.setState({
           activeAgentId: 'inbox-agent',
-          inboxAgentId: 'inbox-agent',
+          builtinAgentIdMap: { inbox: 'inbox-agent' },
           agentMap: {
             'inbox-agent': {
               chatConfig: {

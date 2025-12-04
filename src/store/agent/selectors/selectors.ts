@@ -20,8 +20,7 @@ import { DEFAULT_OPENING_QUESTIONS } from '@/features/AgentSetting/store/selecto
 import { filterToolIds } from '@/helpers/toolFilters';
 
 import type { AgentStoreState } from '../initialState';
-
-const isInboxAgent = (s: AgentStoreState) => !!s.inboxAgentId && s.activeAgentId === s.inboxAgentId;
+import { builtinAgentSelectors } from './builtinAgentSelectors';
 
 // ==========   Meta   ============== //
 
@@ -75,8 +74,11 @@ const getAgentMetaById =
 
 // ==========   Config   ============== //
 
-const inboxAgentConfig = (s: AgentStoreState) =>
-  s.inboxAgentId ? merge(DEFAULT_AGENT_CONFIG, s.agentMap[s.inboxAgentId]) : DEFAULT_AGENT_CONFIG;
+const inboxAgentConfig = (s: AgentStoreState) => {
+  const id = builtinAgentSelectors.inboxAgentId(s);
+  // inbox 不需要合并默认配置，直接返回 agentMap 中的配置
+  return id ? (s.agentMap[id] as LobeAgentConfig) : DEFAULT_AGENT_CONFIG;
+};
 const inboxAgentModel = (s: AgentStoreState) => inboxAgentConfig(s).model;
 
 const getAgentConfigById =
@@ -248,7 +250,6 @@ export const agentSelectors = {
   inboxAgentConfig,
   inboxAgentModel,
   isAgentConfigLoading,
-  isInboxAgent,
   openingMessage,
   openingQuestions,
 };
