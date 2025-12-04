@@ -1,17 +1,12 @@
 import { Hotkey, Icon } from '@lobehub/ui';
-import { DiscordIcon } from '@lobehub/ui/icons';
 import { Badge } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import {
-  Book,
   Cloudy,
   Download,
-  Feather,
   FileClockIcon,
   HardDriveDownload,
-  LifeBuoy,
   LogOut,
-  Mail,
   Settings2,
 } from 'lucide-react';
 import { PropsWithChildren, memo } from 'react';
@@ -20,16 +15,9 @@ import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
 import type { MenuProps } from '@/components/Menu';
-import { BRANDING_EMAIL, LOBE_CHAT_CLOUD, SOCIAL_URL } from '@/const/branding';
+import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DEFAULT_DESKTOP_HOTKEY_CONFIG } from '@/const/desktop';
-import {
-  CHANGELOG,
-  DOCUMENTS_REFER_URL,
-  GITHUB_ISSUES,
-  OFFICIAL_URL,
-  UTM_SOURCE,
-  mailTo,
-} from '@/const/url';
+import { CHANGELOG, OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
 import { isDesktop } from '@/const/version';
 import DataImporter from '@/features/DataImporter';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
@@ -141,49 +129,6 @@ export const useMenu = () => {
       ) : (
         <Link to="/changelog">{t('changelog')}</Link>
       ),
-    },
-    {
-      children: [
-        {
-          icon: <Icon icon={Book} />,
-          key: 'docs',
-          label: (
-            <a href={DOCUMENTS_REFER_URL} rel="noopener noreferrer" target="_blank">
-              {t('userPanel.docs')}
-            </a>
-          ),
-        },
-        {
-          icon: <Icon icon={Feather} />,
-          key: 'feedback',
-          label: (
-            <a href={GITHUB_ISSUES} rel="noopener noreferrer" target="_blank">
-              {t('userPanel.feedback')}
-            </a>
-          ),
-        },
-        {
-          icon: <Icon icon={DiscordIcon} />,
-          key: 'discord',
-          label: (
-            <a href={SOCIAL_URL.discord} rel="noopener noreferrer" target="_blank">
-              {t('userPanel.discord')}
-            </a>
-          ),
-        },
-        {
-          icon: <Icon icon={Mail} />,
-          key: 'email',
-          label: (
-            <a href={mailTo(BRANDING_EMAIL.support)} rel="noopener noreferrer" target="_blank">
-              {t('userPanel.email')}
-            </a>
-          ),
-        },
-      ],
-      icon: <Icon icon={LifeBuoy} />,
-      key: 'help',
-      label: t('userPanel.help'),
     },
     {
       type: 'divider',
