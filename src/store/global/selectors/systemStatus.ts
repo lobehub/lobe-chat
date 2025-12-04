@@ -9,6 +9,8 @@ const topicGroupKeys = (s: GlobalState): string[] | undefined => s.status.expand
 
 const topicPageSize = (s: GlobalState): number => s.status.topicPageSize || 20;
 
+const agentPageSize = (s: GlobalState): number => s.status.agentPageSize || 20;
+
 const showSystemRole = (s: GlobalState) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalState) => s.status.mobileShowTopic;
 const mobileShowPortal = (s: GlobalState) => s.status.mobileShowPortal;
@@ -48,6 +50,7 @@ const tokenDisplayFormatShort = (s: GlobalState) =>
   s.status.tokenDisplayFormatShort !== undefined ? s.status.tokenDisplayFormatShort : true;
 
 export const systemStatusSelectors = {
+  agentPageSize,
   chatInputHeight,
   disabledModelProvidersSortType,
   disabledModelsSortType,

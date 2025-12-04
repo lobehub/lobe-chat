@@ -67,6 +67,10 @@ export enum ProfileTabs {
 }
 
 export interface SystemStatus {
+  /**
+   * number of agents (defaultList) to display
+   */
+  agentPageSize?: number;
   chatInputHeight?: number;
   disabledModelProvidersSortType?: string;
   disabledModelsSortType?: string;
@@ -150,6 +154,7 @@ export interface GlobalState {
 }
 
 export const INITIAL_STATUS = {
+  agentPageSize: 20,
   chatInputHeight: 64,
   disabledModelProvidersSortType: 'default',
   disabledModelsSortType: 'default',
