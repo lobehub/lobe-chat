@@ -32,7 +32,11 @@ interface KnowledgeManagerProps {
  */
 const ResourceManager = memo<KnowledgeManagerProps>(
   ({ knowledgeBaseId, category, onOpenFile, documentId }) => {
-    const [mode, currentViewItemId] = useResourceManagerStore((s) => [s.mode, s.currentViewItemId]);
+    const [mode, currentViewItemId, setMode] = useResourceManagerStore((s) => [
+      s.mode,
+      s.currentViewItemId,
+      s.setMode,
+    ]);
 
     const MainContent = useMemo(() => {
       switch (mode) {
@@ -48,7 +52,9 @@ const ResourceManager = memo<KnowledgeManagerProps>(
               category={category}
               currentViewItemId={currentViewItemId ?? ''}
               knowledgeBaseId={knowledgeBaseId}
-              onBack={() => {}}
+              onBack={() => {
+                setMode('files');
+              }}
             />
           );
         }
