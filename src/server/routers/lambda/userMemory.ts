@@ -1,7 +1,7 @@
 import { CreateUserMemoryIdentitySchema, UpdateUserMemoryIdentitySchema } from '@lobechat/types';
 import { z } from 'zod';
 
-import { IUserMemoryModel } from '@/database/models/userMemory';
+import { UserMemoryModel } from '@/database/models/userMemory';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 
@@ -16,42 +16,44 @@ const userMemoryProcedure = authedProcedure.use(serverDatabase).use(async (opts)
 });
 
 export const userMemoryRouter = router({
-  countMemories: userMemoryProcedure.query(async ({ ctx }) => {
-    return ctx.userMemoryModel.countMemories();
-  }),
-
   // ============ Identity CRUD ============
 
   createIdentity: userMemoryProcedure
     .input(CreateUserMemoryIdentitySchema)
     .mutation(async ({ ctx, input }) => {
-      return ctx.userMemoryModel.createIdentity(input as any);
+      return ctx.userMemoryModel.addIdentityEntry({
+        base: {},
+        identity: {
+          description: input.description,
+          episodicDate: input.episodicDate,
+          relationship: input.relationship,
+          role: input.role,
+          tags: input.extractedLabels,
+          type: input.type,
+        },
+      });
     }),
 
   deleteIdentity: userMemoryProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.userMemoryModel.deleteIdentity(input.id);
+      return ctx.userMemoryModel.removeIdentityEntry(input.id);
     }),
 
   getContexts: userMemoryProcedure.query(async ({ ctx }) => {
-    return ctx.userMemoryModel.queryContexts();
+    return ctx.userMemoryModel.searchContexts({});
   }),
 
   getExperiences: userMemoryProcedure.query(async ({ ctx }) => {
-    return ctx.userMemoryModel.queryExperiences();
+    return ctx.userMemoryModel.searchExperiences({});
   }),
 
   getIdentities: userMemoryProcedure.query(async ({ ctx }) => {
-    return ctx.userMemoryModel.queryIdentities();
-  }),
-
-  getMemories: userMemoryProcedure.query(async ({ ctx }) => {
-    return ctx.userMemoryModel.queryMemories();
+    return ctx.userMemoryModel.getAllIdentities();
   }),
 
   getPreferences: userMemoryProcedure.query(async ({ ctx }) => {
-    return ctx.userMemoryModel.queryPreferences();
+    return ctx.userMemoryModel.searchPreferences({});
   }),
 
   updateIdentity: userMemoryProcedure
@@ -62,7 +64,17 @@ export const userMemoryRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.userMemoryModel.updateIdentity(input.id, input.data as any);
+      return ctx.userMemoryModel.updateIdentityEntry({
+        identity: {
+          description: input.data.description,
+          episodicDate: input.data.episodicDate,
+          relationship: input.data.relationship,
+          role: input.data.role,
+          tags: input.data.extractedLabels,
+          type: input.data.type,
+        },
+        identityId: input.id,
+      });
     }),
 });
 

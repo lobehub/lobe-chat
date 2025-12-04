@@ -3,10 +3,6 @@ import { NewUserMemoryIdentity } from '@lobechat/types';
 import { lambdaClient } from '@/libs/trpc/client';
 
 class MemoryCRUDService {
-  countMemories = async () => {
-    return lambdaClient.userMemory.countMemories.query();
-  };
-
   createIdentity = async (data: NewUserMemoryIdentity) => {
     return lambdaClient.userMemory.createIdentity.mutate(data);
   };
@@ -25,10 +21,6 @@ class MemoryCRUDService {
 
   getIdentities = async () => {
     return lambdaClient.userMemory.getIdentities.query();
-  };
-
-  getMemories = async () => {
-    return lambdaClient.userMemory.getMemories.query();
   };
 
   getPreferences = async () => {

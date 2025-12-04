@@ -2,14 +2,14 @@ import { type SQL, and } from 'drizzle-orm';
 import { ModelProvider } from 'model-bank';
 
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
-import { IUserMemoryModel } from '@/database/models/userMemory';
-import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { UserMemoryModel } from '@/database/models/userMemory';
+import { authedProcedure,  } from '@/libs/trpc/lambda';
 import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ClientSecretPayload } from '@/types/auth';
 
-export { router };
+
 
 export const EMBEDDING_VECTOR_DIMENSION = 1024;
 
@@ -61,3 +61,5 @@ export const normalizeEmbeddable = (value?: string | null): string | undefined =
 
   return trimmed.length > 0 ? trimmed : undefined;
 };
+
+export {router} from '@/libs/trpc/lambda';

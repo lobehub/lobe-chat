@@ -2,7 +2,7 @@ import { ModelProvider } from 'model-bank';
 import { z } from 'zod';
 
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
-import { IUserMemoryModel } from '@/database/models/userMemory';
+import { UserMemoryModel } from '@/database/models/userMemory';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ClientSecretPayload } from '@/types/auth';
@@ -12,10 +12,10 @@ import { EMBEDDING_VECTOR_DIMENSION, memoryProcedure, router } from './shared';
 
 type MemorySearchContext = {
   jwtPayload: ClientSecretPayload;
-  memoryModel: IUserMemoryModel;
+  memoryModel: UserMemoryModel;
 };
 
-type MemorySearchResult = Awaited<ReturnType<IUserMemoryModel['searchWithEmbedding']>>;
+type MemorySearchResult = Awaited<ReturnType<UserMemoryModel['searchWithEmbedding']>>;
 
 const EMPTY_SEARCH_RESULT: SearchMemoryResult = {
   contexts: [],
