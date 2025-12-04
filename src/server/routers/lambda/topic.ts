@@ -224,7 +224,11 @@ export const topicRouter = router({
         // 从文件存储中删除文件
         if (deletedFiles && deletedFiles.length > 0) {
           // deleteFiles 方法会自动处理 URL 到 key 的转换
-          await fileService.deleteFiles(deletedFiles.map((file) => file.url!));
+          await fileService.deleteFiles(
+            deletedFiles
+              .map((file) => file.url)
+              .filter((url): url is string => Boolean(url))
+          );
         }
       }
 
