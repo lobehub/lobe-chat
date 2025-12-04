@@ -11,6 +11,9 @@ const enableReactScan = !!process.env.REACT_SCAN_MONITOR_API_KEY;
 const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
 const shouldUseCSP = process.env.ENABLED_CSP === '1';
 
+const isTest =
+  process.env.NODE_ENV === 'test' || process.env.TEST === '1' || process.env.E2E === '1';
+
 // if you need to proxy the api endpoint to remote server
 
 const isStandaloneMode = buildWithDocker || isDesktop;
@@ -271,10 +274,12 @@ const nextConfig: NextConfig = {
   serverExternalPackages: isProd ? ['@electric-sql/pglite', 'pdfkit'] : ['pdfkit'],
   transpilePackages: ['pdfjs-dist', 'mermaid'],
   turbopack: {
-    rules: codeInspectorPlugin({
-      bundler: 'turbopack',
-      hotKeys: ['altKey'],
-    }),
+    rules: isTest
+      ? void 0
+      : codeInspectorPlugin({
+          bundler: 'turbopack',
+          hotKeys: ['altKey'],
+        }),
   },
 
   typescript: {
