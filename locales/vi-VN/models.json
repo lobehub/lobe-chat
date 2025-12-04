@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Nhà cung cấp mô hình: nền tảng sophnet. DeepSeek V3 Fast là phiên bản tốc độ cao TPS của DeepSeek V3 0324, không lượng tử hóa, có khả năng mã hóa và toán học mạnh mẽ hơn, phản hồi nhanh hơn!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 - chế độ không suy nghĩ; DeepSeek-V3.1 là mô hình suy luận lai mới của DeepSeek, hỗ trợ hai chế độ suy luận là suy nghĩ và không suy nghĩ, hiệu quả suy nghĩ cao hơn so với DeepSeek-R1-0528. Qua tối ưu hậu huấn luyện, hiệu suất sử dụng công cụ Agent và các tác vụ tác nhân được cải thiện đáng kể."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast là phiên bản tốc độ cao TPS của DeepSeek V3.1. Chế độ suy nghĩ lai: thông qua thay đổi mẫu trò chuyện, một mô hình có thể đồng thời hỗ trợ cả chế độ suy nghĩ và không suy nghĩ. Gọi công cụ thông minh hơn: nhờ tối ưu hậu huấn luyện, mô hình thể hiện rõ rệt sự cải thiện trong việc sử dụng công cụ và các tác vụ đại lý."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - chế độ suy nghĩ; DeepSeek-V3.1 là mô hình suy luận lai mới của DeepSeek, hỗ trợ hai chế độ suy luận là suy nghĩ và không suy nghĩ, hiệu quả suy nghĩ cao hơn so với DeepSeek-R1-0528. Qua tối ưu hậu huấn luyện, hiệu suất sử dụng công cụ Agent và các tác vụ tác nhân được cải thiện đáng kể."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 là mô hình lớn chung mới nhất của DeepSeek, hỗ trợ kiến trúc suy luận hỗn hợp và có khả năng Agent mạnh mẽ hơn."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "Chế độ suy nghĩ của DeepSeek V3.2. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite sở hữu tốc độ phản hồi tối ưu, hiệu quả chi phí tốt hơn, cung cấp lựa chọn linh hoạt hơn cho các kịch bản khác nhau của khách hàng. Hỗ trợ suy luận và tinh chỉnh với cửa sổ ngữ cảnh 128k."
@@ -737,6 +728,9 @@
   "anthropic/claude-opus-4.1": {
     "description": "Opus 4.1 là mô hình cao cấp của Anthropic, được tối ưu cho lập trình, suy luận phức tạp và các tác vụ liên tục."
   },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và năng lực suy luận xuất sắc."
+  },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 là phiên bản suy luận hỗn hợp của Anthropic, cung cấp khả năng kết hợp giữa tư duy và phản hồi trực tiếp."
   },
@@ -826,6 +820,9 @@
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 là mô hình mạnh mẽ nhất của Anthropic được sử dụng để xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự trôi chảy và khả năng hiểu biết."
+  },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và năng lực suy luận xuất sắc."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 có thể tạo ra phản hồi gần như tức thì hoặc suy nghĩ từng bước kéo dài, người dùng có thể thấy rõ các quá trình này."
@@ -1670,6 +1667,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview có khả năng suy luận phức tạp mạnh mẽ, thể hiện xuất sắc trong các lĩnh vực suy luận logic, toán học, lập trình."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 là mô hình hàng đầu của Anthropic, kết hợp trí tuệ vượt trội với khả năng mở rộng, phù hợp cho các nhiệm vụ phức tạp đòi hỏi phản hồi chất lượng cao và năng lực suy luận xuất sắc."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash là mô hình suy luận hiệu suất cao của Google, phù hợp với các tác vụ đa phương thức mở rộng."
   },
@@ -2184,7 +2184,7 @@
     "description": "Kimi K2 Instruct, mô hình suy luận chính thức của Kimi, hỗ trợ ngữ cảnh dài, mã nguồn, hỏi đáp và nhiều tình huống khác."
   },
   "kimi-k2-thinking": {
-    "description": "Mô hình tư duy dài K2, hỗ trợ ngữ cảnh 256k, hỗ trợ gọi công cụ nhiều bước và tư duy, giỏi giải quyết các vấn đề phức tạp hơn."
+    "description": "Mô hình kimi-k2-thinking do Moonshot AI phát triển, là một mô hình tư duy với khả năng đại lý tổng quát và suy luận mạnh mẽ. Nó nổi bật trong việc suy luận sâu và có thể sử dụng công cụ nhiều bước để hỗ trợ giải quyết các vấn đề phức tạp."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Phiên bản tốc độ cao của mô hình tư duy dài K2, hỗ trợ ngữ cảnh 256k, giỏi suy luận sâu, tốc độ đầu ra đạt 60-100 tokens mỗi giây."

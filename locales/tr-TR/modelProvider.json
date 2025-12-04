@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Özel hizmet sağlayıcısı etkin değil",
       "disabled": "Hizmet sağlayıcı devre dışı",
       "enabled": "Hizmet sağlayıcı etkin"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Özel Hizmet Sağlayıcı Ekle",
     "all": "Tümü",
     "list": {
+      "custom": "Özel ayar etkin değil",
       "disabled": "Devre Dışı",
       "disabledActions": {
         "sort": "Sıralama Yöntemi",

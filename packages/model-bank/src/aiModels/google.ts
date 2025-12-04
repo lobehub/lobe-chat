@@ -197,6 +197,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-11-20',
     settings: {
+      extendParams: ['imageAspectRatio', 'imageResolution'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -446,6 +447,9 @@ const googleChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-08-26',
+    settings: {
+      extendParams: ['imageAspectRatio'],
+    },
     type: 'chat',
   },
   {
@@ -469,6 +473,9 @@ const googleChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-08-26',
+    settings: {
+      extendParams: ['imageAspectRatio'],
+    },
     type: 'chat',
   },
   {

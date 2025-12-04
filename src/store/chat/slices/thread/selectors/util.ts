@@ -2,7 +2,7 @@ import { ThreadType, UIChatMessage } from '@lobechat/types';
 
 export const genMessage = (
   messages: UIChatMessage[],
-  startMessageId: string | undefined,
+  startMessageId: string | null | undefined,
   threadMode?: ThreadType,
 ) => {
   if (!startMessageId) return [];

@@ -1,4 +1,15 @@
 {
+  "authorize": {
+    "cancel": "Cancel",
+    "confirm": "Authorize",
+    "description": {
+      "and": "and",
+      "prefix": "By clicking Authorize, you agree to",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "title": "Confirm Authorization"
+  },
   "callback": {
     "buttons": {
       "close": "Close Window"
@@ -33,8 +44,10 @@
     "stateMissing": "Authorization state not found. Please try again."
   },
   "messages": {
+    "authorized": "LobeHub service authorized successfully",
     "loading": "Starting authorization process...",
     "success": {
+      "cloudMcpInstall": "Authorization successful! You can now install the Cloud MCP plugin.",
       "submit": "Authorization successful! You can now publish your assistant.",
       "upload": "Authorization successful! You can now publish a new version."
     }

@@ -53,6 +53,12 @@
       "desc": "Ograniczenia oparte na mechanizmie Claude Thinking (<1>Dowiedz się więcej</1>), po włączeniu automatycznie wyłączone zostanie ograniczenie liczby wiadomości historycznych",
       "title": "Włącz głębokie myślenie"
     },
+    "imageAspectRatio": {
+      "title": "Proporcje obrazu"
+    },
+    "imageResolution": {
+      "title": "Rozdzielczość obrazu"
+    },
     "reasoningBudgetToken": {
       "title": "Token zużycia myślenia"
     },

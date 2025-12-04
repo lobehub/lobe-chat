@@ -1,4 +1,15 @@
 {
+  "authorize": {
+    "cancel": "キャンセル",
+    "confirm": "使用を許可する",
+    "description": {
+      "and": "および",
+      "prefix": "「使用を許可する」をクリックすると、以下に同意したものとみなされます：",
+      "privacy": "プライバシーポリシー",
+      "terms": "利用規約"
+    },
+    "title": "認証の確認"
+  },
   "callback": {
     "buttons": {
       "close": "ウィンドウを閉じる"
@@ -33,8 +44,10 @@
     "stateMissing": "認証状態が見つかりません。もう一度お試しください。"
   },
   "messages": {
+    "authorized": "LobeHub サービスの認証に成功しました",
     "loading": "認証プロセスを開始しています...",
     "success": {
+      "cloudMcpInstall": "許可が成功しました！これで Cloud MCP プラグインをインストールできます。",
       "submit": "認証に成功しました！アシスタントを公開できます。",
       "upload": "認証に成功しました！新しいバージョンを公開できます。"
     }

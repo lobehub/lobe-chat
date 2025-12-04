@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Dostawca modelu: platforma sophnet. DeepSeek V3 Fast to szybka wersja o wysokim TPS modelu DeepSeek V3 0324, w pełni nienkwantyzowana, z ulepszonym kodem i zdolnościami matematycznymi, zapewniająca szybszą reakcję!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 tryb bez myślenia; DeepSeek-V3.1 to nowy hybrydowy model wnioskowania od DeepSeek, obsługujący dwa tryby: myślenia i bez myślenia, z wyższą efektywnością myślenia niż DeepSeek-R1-0528. Po optymalizacji post-treningowej znacznie poprawiono użycie narzędzi agenta oraz wydajność zadań agentów."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast to szybka wersja DeepSeek V3.1 o wysokim TPS. Hybrydowy tryb myślenia: poprzez zmianę szablonu rozmowy jeden model może obsługiwać jednocześnie tryb myślenia i bez myślenia. Inteligentniejsze wywoływanie narzędzi: dzięki optymalizacji po treningu model znacząco poprawił wydajność w użyciu narzędzi i zadaniach agentów."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 tryb myślenia; DeepSeek-V3.1 to nowy hybrydowy model wnioskowania od DeepSeek, obsługujący dwa tryby: myślenia i bez myślenia, z wyższą efektywnością myślenia niż DeepSeek-R1-0528. Po optymalizacji post-treningowej znacznie poprawiono użycie narzędzi agenta oraz wydajność zadań agentów."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 to najnowszy uniwersalny model dużej skali DeepSeek, wspierający hybrydową architekturę inferencyjną i oferujący znacznie ulepszone możliwości agenta."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "Tryb myślenia DeepSeek V3.2. Przed wygenerowaniem ostatecznej odpowiedzi model najpierw przedstawia łańcuch rozumowania, co zwiększa dokładność końcowej odpowiedzi."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite oferuje niezwykle szybkie reakcje i lepszy stosunek jakości do ceny, zapewniając klientom elastyczne opcje dla różnych scenariuszy. Obsługuje wnioskowanie i dostrajanie z kontekstem do 128k."
@@ -737,6 +728,9 @@
   "anthropic/claude-opus-4.1": {
     "description": "Opus 4.1 to zaawansowany model firmy Anthropic, zoptymalizowany pod kątem programowania, złożonego wnioskowania i długotrwałych zadań."
   },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5 to flagowy model firmy Anthropic, łączący wyjątkową inteligencję z możliwością skalowania, idealny do złożonych zadań wymagających najwyższej jakości odpowiedzi i zdolności rozumowania."
+  },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 to hybrydowy model wnioskowania firmy Anthropic, łączący zdolności myślenia i działania bez myślenia."
   },
@@ -826,6 +820,9 @@
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 to najpotężniejszy model Anthropic, zaprojektowany do obsługi wysoce złożonych zadań. Wyróżnia się doskonałymi osiągami, inteligencją, płynnością i zdolnością rozumienia."
+  },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5 to flagowy model firmy Anthropic, łączący wyjątkową inteligencję z możliwością skalowania, idealny do złożonych zadań wymagających najwyższej jakości odpowiedzi i zdolności rozumowania."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 może generować niemal natychmiastowe odpowiedzi lub wydłużone, stopniowe rozważania, które użytkownik może wyraźnie obserwować."
@@ -1670,6 +1667,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview posiada silne zdolności do złożonego wnioskowania, wyróżniając się w dziedzinach takich jak wnioskowanie logiczne, matematyka i programowanie."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 to flagowy model firmy Anthropic, łączący wyjątkową inteligencję z możliwością skalowania, idealny do złożonych zadań wymagających najwyższej jakości odpowiedzi i zdolności rozumowania."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash to wysokowydajny model wnioskowania firmy Google, odpowiedni do rozszerzonych zadań multimodalnych."
   },
@@ -2184,7 +2184,7 @@
     "description": "Kimi K2 Instruct, oficjalny model wnioskowania Kimi, wspierający długi kontekst, kodowanie, pytania i inne scenariusze."
   },
   "kimi-k2-thinking": {
-    "description": "Model długiego myślenia K2, obsługuje kontekst 256k, wieloetapowe wywoływanie narzędzi i myślenie, doskonały w rozwiązywaniu złożonych problemów."
+    "description": "Model kimi-k2-thinking, opracowany przez Moonshot AI, to uniwersalny model myślenia z agentowymi zdolnościami i umiejętnością rozumowania. Doskonale radzi sobie z głębokim wnioskowaniem i potrafi korzystać z narzędzi w wielu krokach, pomagając rozwiązywać różnorodne problemy."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Szybka wersja modelu długiego myślenia K2, obsługuje kontekst 256k, specjalizuje się w głębokim wnioskowaniu, z prędkością generowania 60–100 tokenów na sekundę."

@@ -11,8 +11,8 @@ import { TempFileManager } from '@/server/utils/tempFileManager';
 import { FileServiceImpl, createFileServiceModule } from './impls';
 
 /**
- * 文件服务类
- * 使用模块化实现方式，提供文件操作服务
+ * File service class
+ * Provides file operation services using a modular implementation approach
  */
 export class FileService {
   private userId: string;
@@ -26,70 +26,70 @@ export class FileService {
   }
 
   /**
-   * 删除文件
+   * Delete file
    */
   public async deleteFile(key: string) {
     return this.impl.deleteFile(key);
   }
 
   /**
-   * 批量删除文件
+   * Delete files in batch
    */
   public async deleteFiles(keys: string[]) {
     return this.impl.deleteFiles(keys);
   }
 
   /**
-   * 获取文件内容
+   * Get file content
    */
   public async getFileContent(key: string): Promise<string> {
     return this.impl.getFileContent(key);
   }
 
   /**
-   * 获取文件字节数组
+   * Get file byte array
    */
   public async getFileByteArray(key: string): Promise<Uint8Array> {
     return this.impl.getFileByteArray(key);
   }
 
   /**
-   * 创建预签名上传URL
+   * Create pre-signed upload URL
    */
   public async createPreSignedUrl(key: string): Promise<string> {
     return this.impl.createPreSignedUrl(key);
   }
 
   /**
-   * 创建预签名预览URL
+   * Create pre-signed preview URL
    */
   public async createPreSignedUrlForPreview(key: string, expiresIn?: number): Promise<string> {
     return this.impl.createPreSignedUrlForPreview(key, expiresIn);
   }
 
   /**
-   * 上传内容
+   * Upload content
    */
   public async uploadContent(path: string, content: string) {
     return this.impl.uploadContent(path, content);
   }
 
   /**
-   * 获取完整文件URL
+   * Get full file URL
    */
   public async getFullFileUrl(url?: string | null, expiresIn?: number): Promise<string> {
     return this.impl.getFullFileUrl(url, expiresIn);
   }
 
   /**
-   * 从完整 URL中 提取 key
+   * Extract key from full URL
    */
   public getKeyFromFullUrl(url: string): string {
     return this.impl.getKeyFromFullUrl(url);
   }
 
   /**
-   * 上传媒体文件
+   * Upload media file
    */
   public async uploadMedia(key: string, buffer: Buffer): Promise<{ key: string }> {
     return this.impl.uploadMedia(key, buffer);

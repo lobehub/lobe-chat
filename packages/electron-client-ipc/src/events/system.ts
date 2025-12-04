@@ -1,6 +1,4 @@
-import { ThemeAppearance } from 'antd-style';
-
-import { ElectronAppState, ThemeMode } from '../types';
+import { ElectronAppState, ThemeAppearance, ThemeMode } from '../types';
 
 export interface SystemDispatchEvents {
   checkSystemAccessibility: () => boolean | undefined;

@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "모델 공급자는 sophnet 플랫폼입니다. DeepSeek V3 Fast는 DeepSeek V3 0324 버전의 고TPS 초고속 버전으로, 완전 비양자화되어 코드와 수학 능력이 더욱 강력하며 반응 속도가 훨씬 빠릅니다!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1-비사고 모드; DeepSeek-V3.1은 DeepSeek에서 새롭게 출시한 하이브리드 추론 모델로, 사고 모드와 비사고 모드 두 가지 추론 방식을 지원하며, DeepSeek-R1-0528보다 사고 효율이 더 높습니다. 사후 학습(Post-Training) 최적화를 통해 에이전트 도구 사용 및 에이전트 작업 성능이 크게 향상되었습니다."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast는 DeepSeek V3.1 버전의 고속 TPS 버전입니다. 하이브리드 사고 모드: 채팅 템플릿 변경을 통해 하나의 모델이 사고 모드와 비사고 모드를 동시에 지원할 수 있습니다. 더 스마트한 도구 호출: 사후 학습 최적화를 통해 모델의 도구 사용 및 에이전트 작업 성능이 현저히 향상되었습니다."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1-사고 모드; DeepSeek-V3.1은 DeepSeek에서 새롭게 출시한 하이브리드 추론 모델로, 사고 모드와 비사고 모드 두 가지 추론 방식을 지원하며, DeepSeek-R1-0528보다 사고 효율이 더 높습니다. 사후 학습(Post-Training) 최적화를 통해 에이전트 도구 사용 및 에이전트 작업 성능이 크게 향상되었습니다."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2는 DeepSeek에서 최신으로 출시한 범용 대형 모델로, 하이브리드 추론 아키텍처를 지원하며 더욱 강력한 에이전트 기능을 갖추고 있습니다."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "DeepSeek V3.2 사고 모드입니다. 최종 답변을 출력하기 전에 모델이 먼저 사고 사슬 내용을 출력하여 최종 답변의 정확성을 향상시킵니다."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite는 탁월한 응답 속도와 뛰어난 가성비를 자랑하며, 고객의 다양한 시나리오에 더 유연한 선택을 제공합니다. 128k 컨텍스트 윈도우 추론 및 미세 조정을 지원합니다."
@@ -737,6 +728,9 @@
   "anthropic/claude-opus-4.1": {
     "description": "Opus 4.1은 프로그래밍, 복잡한 추론 및 지속적인 작업에 최적화된 Anthropic의 고급 모델입니다."
   },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5는 Anthropic의 플래그십 모델로, 탁월한 지능과 확장 가능한 성능을 결합하여 최고 수준의 응답 품질과 추론 능력이 요구되는 복잡한 작업에 적합합니다."
+  },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4는 사고 기반과 비사고 기반 기능을 결합한 Anthropic의 하이브리드 추론 모델입니다."
   },
@@ -826,6 +820,9 @@
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4는 Anthropic이 매우 복잡한 작업을 처리하기 위해 개발한 가장 강력한 모델입니다. 성능, 지능, 유창성 및 이해력 면에서 뛰어난 성과를 보입니다."
+  },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5는 Anthropic의 플래그십 모델로, 탁월한 지능과 확장 가능한 성능을 결합하여 최고 수준의 응답 품질과 추론 능력이 요구되는 복잡한 작업에 적합합니다."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4는 거의 즉각적인 응답 또는 확장된 단계별 사고를 생성할 수 있으며, 사용자가 이 과정을 명확히 볼 수 있습니다."
@@ -1670,6 +1667,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview는 강력한 복잡한 추론 능력을 갖추고 있으며, 논리 추론, 수학, 프로그래밍 등 분야에서 우수한 성능을 발휘합니다."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5는 Anthropic의 플래그십 모델로, 탁월한 지능과 확장 가능한 성능을 결합하여 최고 수준의 응답 품질과 추론 능력이 요구되는 복잡한 작업에 적합합니다."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash는 Google의 고성능 추론 모델로, 확장된 멀티모달 작업에 적합합니다."
   },
@@ -2184,7 +2184,7 @@
     "description": "Kimi K2 Instruct, Kimi 공식 추론 모델로, 장기 컨텍스트, 코드, 질의응답 등 다양한 시나리오를 지원합니다."
   },
   "kimi-k2-thinking": {
-    "description": "K2 장기 사고 모델은 256k 문맥을 지원하며, 다단계 도구 호출과 사고를 통해 복잡한 문제 해결에 능숙합니다."
+    "description": "kimi-k2-thinking 모델은 Moonshot에서 제공하는 범용 에이전트 능력과 추론 능력을 갖춘 사고 모델로, 심층 추론에 능하며 다단계 도구 호출을 통해 다양한 문제 해결을 지원합니다."
   },
   "kimi-k2-thinking-turbo": {
     "description": "K2 장기 사고 모델의 고속 버전으로, 256k 문맥을 지원하며, 심층 추론에 능하고 초당 60~100 토큰의 출력 속도를 자랑합니다."

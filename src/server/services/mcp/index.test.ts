@@ -324,12 +324,13 @@ describe('MCPService', () => {
       expect(result).toHaveLength(1);
     });
 
-    it('should throw TRPCError when NoValidSessionId retry exceeds limit', async () => {
+    it('should throw original error when NoValidSessionId retry exceeds limit', async () => {
       // Fail more than 3 times
       mockClient.listTools.mockRejectedValue(new Error('NoValidSessionId'));
 
-      await expect(mcpService.listTools(mockParams)).rejects.toThrow(TRPCError);
-      expect(mockClient.listTools).toHaveBeenCalledTimes(5); // initial + 4 retry attempts (last one fails condition)
+      await expect(mcpService.listTools(mockParams)).rejects.toThrow('NoValidSessionId');
+      // async-retry: 1 initial + 3 retries = 4 attempts
+      expect(mockClient.listTools).toHaveBeenCalledTimes(4);
     });
 
     it('should throw TRPCError on other errors without retry', async () => {
@@ -338,23 +339,6 @@ describe('MCPService', () => {
 
       await expect(mcpService.listTools(mockParams)).rejects.toThrow(TRPCError);
       expect(mockClient.listTools).toHaveBeenCalledTimes(1);
-    });
-
-    it('should pass skipCache option to getClient', async () => {
-      const mockTools = [
-        {
-          name: 'tool1',
-          description: 'Test tool',
-          inputSchema: { type: 'object' },
-        },
-      ];
-
-      mockClient.listTools.mockResolvedValue(mockTools);
-
-      await mcpService.listTools(mockParams, { skipCache: true });
-
-      // Verify getClient was called with skipCache
-      expect(mcpService.getClient).toHaveBeenCalledWith(mockParams, true);
     });
 
     it('should throw TRPCError with correct error message', async () => {

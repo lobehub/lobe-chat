@@ -1,0 +1,464 @@
+import { Menu, app, shell } from 'electron';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import type { App } from '@/core/App';
+
+import { MacOSMenu } from './macOS';
+
+// Mock Electron modules
+vi.mock('electron', () => ({
+  Menu: {
+    buildFromTemplate: vi.fn((template) => ({ template })),
+    setApplicationMenu: vi.fn(),
+  },
+  app: {
+    getName: vi.fn(() => 'LobeChat'),
+    getPath: vi.fn((type: string) => {
+      if (type === 'logs') return '/path/to/logs';
+      if (type === 'userData') return '/path/to/userData';
+      if (type === 'cache') return '/path/to/cache';
+      return '/path/to/default';
+    }),
+  },
+  shell: {
+    openExternal: vi.fn(),
+    openPath: vi.fn(() => Promise.resolve('')),
+  },
+}));
+
+// Mock isDev
+vi.mock('@/const/env', () => ({
+  isDev: false,
+}));
+
+// Mock App instance
+const createMockApp = () => {
+  const mockT = vi.fn((key: string, params?: any) => {
+    const translations: Record<string, string> = {
+      'macOS.about': `About ${params?.appName || 'App'}`,
+      'common.checkUpdates': 'Check for Updates',
+      'macOS.preferences': 'Preferences',
+      'macOS.services': 'Services',
+      'macOS.hide': `Hide ${params?.appName || 'App'}`,
+      'macOS.hideOthers': 'Hide Others',
+      'macOS.unhide': 'Show All',
+      'file.quit': 'Quit',
+      'file.title': 'File',
+      'file.preferences': 'Preferences',
+      'window.close': 'Close Window',
+      'window.title': 'Window',
+      'window.minimize': 'Minimize',
+      'edit.title': 'Edit',
+      'edit.undo': 'Undo',
+      'edit.redo': 'Redo',
+      'edit.cut': 'Cut',
+      'edit.copy': 'Copy',
+      'edit.paste': 'Paste',
+      'edit.selectAll': 'Select All',
+      'edit.speech': 'Speech',
+      'edit.startSpeaking': 'Start Speaking',
+      'edit.stopSpeaking': 'Stop Speaking',
+      'edit.delete': 'Delete',
+      'view.title': 'View',
+      'view.reload': 'Reload',
+      'view.forceReload': 'Force Reload',
+      'view.resetZoom': 'Actual Size',
+      'view.zoomIn': 'Zoom In',
+      'view.zoomOut': 'Zoom Out',
+      'view.toggleFullscreen': 'Toggle Full Screen',
+      'help.title': 'Help',
+      'help.visitWebsite': 'Visit Website',
+      'help.githubRepo': 'GitHub Repository',
+      'help.reportIssue': 'Report Issue',
+      'help.about': 'About',
+      'dev.title': 'Developer',
+      'dev.devPanel': 'Dev Panel',
+      'dev.refreshMenu': 'Refresh Menu',
+      'dev.devTools': 'Developer Tools',
+      'dev.reload': 'Reload',
+      'dev.forceReload': 'Force Reload',
+      'tray.show': `Show ${params?.appName || 'App'}`,
+      'tray.quit': 'Quit',
+    };
+    return translations[key] || key;
+  });
+
+  return {
+    i18n: {
+      ns: vi.fn(() => mockT),
+    },
+    browserManager: {
+      getMainWindow: vi.fn(() => ({
+        loadUrl: vi.fn(),
+        show: vi.fn(),
+      })),
+      showMainWindow: vi.fn(),
+      retrieveByIdentifier: vi.fn(() => ({
+        show: vi.fn(),
+      })),
+    },
+    updaterManager: {
+      checkForUpdates: vi.fn(),
+      simulateUpdateAvailable: vi.fn(),
+      simulateDownloadProgress: vi.fn(),
+      simulateUpdateDownloaded: vi.fn(),
+    },
+    menuManager: {
+      rebuildAppMenu: vi.fn(),
+    },
+    storeManager: {
+      openInEditor: vi.fn(),
+    },
+  } as unknown as App;
+};
+
+describe('MacOSMenu', () => {
+  let macOSMenu: MacOSMenu;
+  let mockApp: App;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockApp = createMockApp();
+    macOSMenu = new MacOSMenu(mockApp);
+  });
+
+  describe('buildAndSetAppMenu', () => {
+    it('should build and set application menu', () => {
+      const menu = macOSMenu.buildAndSetAppMenu();
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+      expect(Menu.setApplicationMenu).toHaveBeenCalled();
+      expect(menu).toBeDefined();
+    });
+
+    it('should include developer menu when showDevItems is true', () => {
+      const menu = macOSMenu.buildAndSetAppMenu({ showDevItems: true });
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const devMenu = template.find((item: any) => item.label === 'Developer');
+      expect(devMenu).toBeDefined();
+    });
+
+    it('should not include developer menu when showDevItems is false', () => {
+      const menu = macOSMenu.buildAndSetAppMenu({ showDevItems: false });
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const devMenu = template.find((item: any) => item.label === 'Developer');
+      expect(devMenu).toBeUndefined();
+    });
+
+    it('should create menu with correct structure', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      expect(template).toBeInstanceOf(Array);
+      expect(template.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('buildContextMenu', () => {
+    it('should build chat context menu', () => {
+      const menu = macOSMenu.buildContextMenu('chat');
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+      expect(menu).toBeDefined();
+    });
+
+    it('should build editor context menu', () => {
+      const menu = macOSMenu.buildContextMenu('editor');
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+      expect(menu).toBeDefined();
+    });
+
+    it('should build default context menu for unknown type', () => {
+      const menu = macOSMenu.buildContextMenu('unknown');
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+      expect(menu).toBeDefined();
+    });
+
+    it('should pass data to chat context menu', () => {
+      const data = { messageId: '123' };
+      macOSMenu.buildContextMenu('chat', data);
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+    });
+  });
+
+  describe('buildTrayMenu', () => {
+    it('should build tray menu', () => {
+      const menu = macOSMenu.buildTrayMenu();
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+      expect(menu).toBeDefined();
+    });
+
+    it('should include show and quit items in tray menu', () => {
+      macOSMenu.buildTrayMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      expect(template.length).toBeGreaterThan(0);
+      expect(template.some((item: any) => item.label?.includes('Show'))).toBe(true);
+      expect(template.some((item: any) => item.label === 'Quit')).toBe(true);
+    });
+  });
+
+  describe('refresh', () => {
+    it('should rebuild application menu', () => {
+      macOSMenu.refresh();
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+      expect(Menu.setApplicationMenu).toHaveBeenCalled();
+    });
+
+    it('should pass options to rebuild', () => {
+      macOSMenu.refresh({ showDevItems: true });
+
+      expect(Menu.buildFromTemplate).toHaveBeenCalled();
+    });
+  });
+
+  describe('menu item click handlers', () => {
+    it('should handle check for updates click', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const appMenu = template[0];
+      const checkUpdatesItem = appMenu.submenu.find(
+        (item: any) => item.label === 'Check for Updates',
+      );
+
+      expect(checkUpdatesItem).toBeDefined();
+      checkUpdatesItem.click();
+      expect(mockApp.updaterManager.checkForUpdates).toHaveBeenCalledWith({ manual: true });
+    });
+
+    it('should handle preferences click', async () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const appMenu = template[0];
+      const preferencesItem = appMenu.submenu.find((item: any) => item.label === 'Preferences');
+
+      expect(preferencesItem).toBeDefined();
+      await preferencesItem.click();
+      expect(mockApp.browserManager.getMainWindow).toHaveBeenCalled();
+    });
+
+    it('should handle visit website click', async () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const helpMenu = template.find((item: any) => item.label === 'Help');
+      const visitWebsiteItem = helpMenu.submenu.find((item: any) => item.label === 'Visit Website');
+
+      expect(visitWebsiteItem).toBeDefined();
+      await visitWebsiteItem.click();
+      expect(shell.openExternal).toHaveBeenCalledWith('https://lobehub.com');
+    });
+
+    it('should handle github repo click', async () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const helpMenu = template.find((item: any) => item.label === 'Help');
+      const githubItem = helpMenu.submenu.find((item: any) => item.label === 'GitHub Repository');
+
+      expect(githubItem).toBeDefined();
+      await githubItem.click();
+      expect(shell.openExternal).toHaveBeenCalledWith('https://github.com/lobehub/lobe-chat');
+    });
+
+    it('should handle open logs directory click', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const helpMenu = template.find((item: any) => item.label === 'Help');
+      const logsItem = helpMenu.submenu.find((item: any) => item.label === '打开日志目录');
+
+      expect(logsItem).toBeDefined();
+      logsItem.click();
+      expect(app.getPath).toHaveBeenCalledWith('logs');
+      expect(shell.openPath).toHaveBeenCalledWith('/path/to/logs');
+    });
+
+    it('should handle tray show click', () => {
+      macOSMenu.buildTrayMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const showItem = template.find((item: any) => item.label?.includes('Show'));
+
+      expect(showItem).toBeDefined();
+      showItem.click();
+      expect(mockApp.browserManager.showMainWindow).toHaveBeenCalled();
+    });
+  });
+
+  describe('menu accelerators', () => {
+    it('should set correct accelerator for preferences', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const appMenu = template[0];
+      const preferencesItem = appMenu.submenu.find((item: any) => item.label === 'Preferences');
+
+      expect(preferencesItem.accelerator).toBe('Command+,');
+    });
+
+    it('should set correct accelerator for quit', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const appMenu = template[0];
+      const quitItem = appMenu.submenu.find((item: any) => item.label === 'Quit');
+
+      expect(quitItem.accelerator).toBe('Command+Q');
+    });
+
+    it('should set correct accelerator for copy in edit menu', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const editMenu = template.find((item: any) => item.label === 'Edit');
+      const copyItem = editMenu.submenu.find((item: any) => item.label === 'Copy');
+
+      expect(copyItem.accelerator).toBe('Command+C');
+    });
+  });
+
+  describe('developer menu items', () => {
+    it('should include dev panel in developer menu', () => {
+      macOSMenu.buildAndSetAppMenu({ showDevItems: true });
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const devMenu = template.find((item: any) => item.label === 'Developer');
+      const devPanelItem = devMenu.submenu.find((item: any) => item.label === 'Dev Panel');
+
+      expect(devPanelItem).toBeDefined();
+    });
+
+    it('should handle dev panel click', () => {
+      macOSMenu.buildAndSetAppMenu({ showDevItems: true });
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const devMenu = template.find((item: any) => item.label === 'Developer');
+      const devPanelItem = devMenu.submenu.find((item: any) => item.label === 'Dev Panel');
+
+      devPanelItem.click();
+      expect(mockApp.browserManager.retrieveByIdentifier).toHaveBeenCalledWith('devtools');
+    });
+
+    it('should handle refresh menu click', () => {
+      macOSMenu.buildAndSetAppMenu({ showDevItems: true });
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const devMenu = template.find((item: any) => item.label === 'Developer');
+      const refreshMenuItem = devMenu.submenu.find((item: any) => item.label === 'Refresh Menu');
+
+      refreshMenuItem.click();
+      expect(mockApp.menuManager.rebuildAppMenu).toHaveBeenCalled();
+    });
+
+    it('should include updater simulation submenu', () => {
+      macOSMenu.buildAndSetAppMenu({ showDevItems: true });
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const devMenu = template.find((item: any) => item.label === 'Developer');
+      const updaterMenu = devMenu.submenu.find((item: any) => item.label === '自动更新测试模拟');
+
+      expect(updaterMenu).toBeDefined();
+      expect(updaterMenu.submenu).toBeInstanceOf(Array);
+      expect(updaterMenu.submenu.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('context menu templates', () => {
+    it('should include copy and paste in chat context menu', () => {
+      macOSMenu.buildContextMenu('chat');
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const copyItem = template.find((item: any) => item.role === 'copy');
+      const pasteItem = template.find((item: any) => item.role === 'paste');
+
+      expect(copyItem).toBeDefined();
+      expect(pasteItem).toBeDefined();
+    });
+
+    it('should include cut in editor context menu but not in chat', () => {
+      macOSMenu.buildContextMenu('editor');
+      const editorTemplate = (Menu.buildFromTemplate as any).mock.calls[0][0];
+
+      vi.clearAllMocks();
+
+      macOSMenu.buildContextMenu('chat');
+      const chatTemplate = (Menu.buildFromTemplate as any).mock.calls[0][0];
+
+      const editorCutItem = editorTemplate.find((item: any) => item.role === 'cut');
+      const chatCutItem = chatTemplate.find((item: any) => item.role === 'cut');
+
+      expect(editorCutItem).toBeDefined();
+      expect(chatCutItem).toBeUndefined();
+    });
+
+    it('should include delete in editor context menu', () => {
+      macOSMenu.buildContextMenu('editor');
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const deleteItem = template.find((item: any) => item.role === 'delete');
+
+      expect(deleteItem).toBeDefined();
+    });
+  });
+
+  describe('menu roles', () => {
+    it('should set window role for window menu', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const windowMenu = template.find((item: any) => item.label === 'Window');
+
+      expect(windowMenu.role).toBe('windowMenu');
+    });
+
+    it('should set help role for help menu', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const helpMenu = template.find((item: any) => item.label === 'Help');
+
+      expect(helpMenu.role).toBe('help');
+    });
+
+    it('should set services submenu in app menu', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const appMenu = template[0];
+      const servicesItem = appMenu.submenu.find((item: any) => item.role === 'services');
+
+      expect(servicesItem).toBeDefined();
+      expect(servicesItem.label).toBe('Services');
+    });
+  });
+
+  describe('i18n integration', () => {
+    it('should use i18n for all menu labels', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      expect(mockApp.i18n.ns).toHaveBeenCalledWith('menu');
+    });
+
+    it('should pass app name to translations', () => {
+      macOSMenu.buildAndSetAppMenu();
+
+      const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
+      const appMenu = template[0];
+
+      expect(app.getName).toHaveBeenCalled();
+      expect(appMenu.label).toBe('LobeChat');
+    });
+  });
+});

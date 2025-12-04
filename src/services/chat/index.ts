@@ -203,6 +203,14 @@ class ChatService {
       if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {
         extendParams.urlContext = chatConfig.urlContext;
       }
+
+      if (modelExtendParams!.includes('imageAspectRatio') && chatConfig.imageAspectRatio) {
+        extendParams.imageAspectRatio = chatConfig.imageAspectRatio;
+      }
+
+      if (modelExtendParams!.includes('imageResolution') && chatConfig.imageResolution) {
+        extendParams.imageResolution = chatConfig.imageResolution;
+      }
     }
 
     return this.getChatCompletion(
@@ -259,11 +267,14 @@ class ChatService {
       model = findDeploymentName(model, provider);
     }
 
-    const apiMode = aiProviderSelectors.isProviderEnableResponseApi(provider)(
-      getAiInfraStoreState(),
-    )
+    // When user explicitly disables Responses API, set apiMode to 'chatCompletion'
+    // This ensures the user's preference takes priority over provider's useResponseModels config
+    // When user enables Responses API, set to 'responses' to force use Responses API
+    const apiMode: 'responses' | 'chatCompletion' = aiProviderSelectors.isProviderEnableResponseApi(
+      provider,
+    )(getAiInfraStoreState())
       ? 'responses'
-      : undefined;
+      : 'chatCompletion';
 
     // Get the chat config to check streaming preference
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());

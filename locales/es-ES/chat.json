@@ -53,6 +53,12 @@
       "desc": "Basado en las restricciones del mecanismo Claude Thinking (<1>Más información</1>), al activarlo se desactivará automáticamente el límite de mensajes históricos",
       "title": "Activar el pensamiento profundo"
     },
+    "imageAspectRatio": {
+      "title": "Relación de aspecto de la imagen"
+    },
+    "imageResolution": {
+      "title": "Resolución de la imagen"
+    },
     "reasoningBudgetToken": {
       "title": "Token de consumo de pensamiento"
     },

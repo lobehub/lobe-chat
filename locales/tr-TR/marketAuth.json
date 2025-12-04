@@ -1,4 +1,15 @@
 {
+  "authorize": {
+    "cancel": "İptal",
+    "confirm": "Kullanıma Yetki Ver",
+    "description": {
+      "and": "ve",
+      "prefix": "Kullanıma yetki ver'e tıklayarak şu şartları kabul etmiş olursunuz:",
+      "privacy": "Gizlilik Politikası",
+      "terms": "Hizmet Şartları"
+    },
+    "title": "Yetkilendirmeyi Onayla"
+  },
   "callback": {
     "buttons": {
       "close": "Pencereyi Kapat"
@@ -33,8 +44,10 @@
     "stateMissing": "Yetkilendirme durumu bulunamadı, lütfen tekrar deneyin."
   },
   "messages": {
+    "authorized": "LobeHub hizmet yetkilendirmesi başarıyla tamamlandı",
     "loading": "Yetkilendirme süreci başlatılıyor...",
     "success": {
+      "cloudMcpInstall": "Yetkilendirme başarılı! Artık Cloud MCP eklentisini yükleyebilirsiniz.",
       "submit": "Yetkilendirme başarılı! Artık asistan yayınlayabilirsiniz.",
       "upload": "Yetkilendirme başarılı! Artık yeni bir sürüm yayınlayabilirsiniz."
     }
