@@ -9,7 +9,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { BRANDING_NAME } from '@/const/index';
 import { useGreeting } from '@/hooks/useGreeting';
-// import { useIsMobile } from '@/hooks/useIsMobile';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -17,8 +17,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import AddButton from './AddButton';
-
-// import OpeningQuestions from './OpeningQuestions';
+import OpeningQuestions from './OpeningQuestions';
 
 const useStyles = createStyles(({ css, responsive }) => ({
   container: css`
@@ -48,10 +47,10 @@ const useStyles = createStyles(({ css, responsive }) => ({
 const InboxWelcome = memo(() => {
   const { t } = useTranslation(['welcome', 'chat']);
   const { styles } = useStyles();
-  // const mobile = useIsMobile();
+  const mobile = useIsMobile();
   const greeting = useGreeting();
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
-  // const openingQuestions = useAgentStore(agentSelectors.openingQuestions);
+  const openingQuestions = useAgentStore(agentSelectors.openingQuestions);
 
   const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
 
@@ -101,9 +100,9 @@ const InboxWelcome = memo(() => {
               })
             : message}
         </Markdown>
-        {/*{openingQuestions.length > 0 && (*/}
-        {/*  <OpeningQuestions mobile={mobile} questions={openingQuestions} />*/}
-        {/*)}*/}
+        {openingQuestions.length > 0 && (
+          <OpeningQuestions mobile={mobile} questions={openingQuestions} />
+        )}
       </Flexbox>
     </Center>
   );
