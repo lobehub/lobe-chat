@@ -413,6 +413,13 @@
       "when": 1764842015809,
       "tag": "0058_add_source_into_user_plugins",
       "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1764858574403,
+      "tag": "0059_add_normalized_email_indexes",
+      "breakpoints": true
     }
   ],
   "version": "6"

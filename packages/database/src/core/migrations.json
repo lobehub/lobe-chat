@@ -926,5 +926,17 @@
     "bps": true,
     "folderMillis": 1764842015809,
     "hash": "276514dc101fffc66794156f4ba644599a4ae5997a68b9e7f54452ee374bfa61"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"normalized_email\" text;",
+      "\nCREATE INDEX IF NOT EXISTS \"users_email_idx\" ON \"users\" USING btree (\"email\");",
+      "\nCREATE INDEX IF NOT EXISTS \"users_username_idx\" ON \"users\" USING btree (\"username\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"users_normalized_email_unique_idx\" ON \"users\" USING btree (\"normalized_email\");",
+      "\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764858574403,
+    "hash": "7838f9938b370867470e5e11807855253d23b11c2ac6aa9e90687844a356c949"
   }
 ]

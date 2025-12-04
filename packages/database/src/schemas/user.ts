@@ -2,46 +2,54 @@
 import { DEFAULT_PREFERENCE } from '@lobechat/const';
 import type { CustomPluginParams } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { boolean, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
+import { boolean, index, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
 import { timestamps, timestamptz, varchar255 } from './_helpers';
 
-export const users = pgTable('users', {
-  id: text('id').primaryKey().notNull(),
-  username: text('username').unique(),
-  email: text('email').unique(),
+export const users = pgTable(
+  'users',
+  {
+    id: text('id').primaryKey().notNull(),
+    username: text('username').unique(),
+    email: text('email').unique(),
+    normalizedEmail: text('normalized_email').unique(),
 
-  avatar: text('avatar'),
-  phone: text('phone').unique(),
-  firstName: text('first_name'),
-  lastName: text('last_name'),
-  fullName: text('full_name'),
+    avatar: text('avatar'),
+    phone: text('phone').unique(),
+    firstName: text('first_name'),
+    lastName: text('last_name'),
+    fullName: text('full_name'),
 
-  isOnboarded: boolean('is_onboarded').default(false),
-  // Time user was created in Clerk
-  clerkCreatedAt: timestamptz('clerk_created_at'),
+    isOnboarded: boolean('is_onboarded').default(false),
+    // Time user was created in Clerk
+    clerkCreatedAt: timestamptz('clerk_created_at'),
 
-  // Required by better-auth
-  emailVerified: boolean('email_verified').default(false).notNull(),
-  // Required by nextauth, all null allowed
-  emailVerifiedAt: timestamptz('email_verified_at'),
+    // Required by better-auth
+    emailVerified: boolean('email_verified').default(false).notNull(),
+    // Required by nextauth, all null allowed
+    emailVerifiedAt: timestamptz('email_verified_at'),
 
-  preference: jsonb('preference').$defaultFn(() => DEFAULT_PREFERENCE),
+    preference: jsonb('preference').$defaultFn(() => DEFAULT_PREFERENCE),
 
-  // better-auth admin
-  role: text('role'),
-  banned: boolean('banned').default(false),
-  banReason: text('ban_reason'),
-  banExpires: timestamptz('ban_expires'),
+    // better-auth admin
+    role: text('role'),
+    banned: boolean('banned').default(false),
+    banReason: text('ban_reason'),
+    banExpires: timestamptz('ban_expires'),
 
-  // better-auth two-factor
-  twoFactorEnabled: boolean('two_factor_enabled').default(false),
+    // better-auth two-factor
+    twoFactorEnabled: boolean('two_factor_enabled').default(false),
 
-  // better-auth phone number
-  phoneNumberVerified: boolean('phone_number_verified'),
+    // better-auth phone number
+    phoneNumberVerified: boolean('phone_number_verified'),
 
-  ...timestamps,
-});
+    ...timestamps,
+  },
+  (table) => ({
+    emailIdx: index('users_email_idx').on(table.email),
+    usernameIdx: index('users_username_idx').on(table.username),
+  }),
+);
 
 export type NewUser = typeof users.$inferInsert;
 export type UserItem = typeof users.$inferSelect;

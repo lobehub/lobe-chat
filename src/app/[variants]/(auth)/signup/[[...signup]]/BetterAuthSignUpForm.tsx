@@ -88,6 +88,21 @@ export default function BetterAuthSignUpForm() {
       });
 
       if (error) {
+        const isEmailDuplicate =
+          error.code === 'FAILED_TO_CREATE_USER' &&
+          // Postgres unique constraint violation
+          (error as any)?.details?.cause?.code === '23505';
+
+        if (isEmailDuplicate) {
+          message.error(t('betterAuth.errors.emailExists'));
+          return;
+        }
+
+        if (error.code === 'INVALID_EMAIL') {
+          message.error(t('betterAuth.errors.emailInvalid'));
+          return;
+        }
+
         message.error(error.message || t('betterAuth.signup.error'));
         return;
       }
