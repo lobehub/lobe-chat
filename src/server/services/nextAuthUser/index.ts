@@ -15,7 +15,6 @@ import {
 import { pino } from '@/libs/logger';
 import { merge } from '@/utils/merge';
 
-import { AgentService } from '../agent';
 import {
   mapAdapterUserToLobeUser,
   mapAuthenticatorQueryResutlToAdapterAuthenticator,
@@ -131,10 +130,6 @@ export class NextAuthUserService {
         name,
       }),
     );
-
-    // 3. Create an inbox session for the user
-    const agentService = new AgentService(this.db, uid);
-    await agentService.createInbox();
 
     return { ...user, id: uid };
   };
