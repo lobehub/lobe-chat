@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import DragUpload from '@/components/DragUpload';
 import PageEditorModal from '@/features/PageEditor/Modal';
 import { useFileStore } from '@/store/file';
+import { filterFilesByGitignore, findGitignoreFile, readGitignoreContent } from '@/utils/gitignore';
 
 const hotArea = css`
   &::before {
@@ -45,10 +46,63 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   };
 
   const handleFolderUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
+    let files = Array.from(event.target.files || []);
     if (files.length === 0) return;
 
-    await uploadFolderWithStructure(files, knowledgeBaseId, currentFolderId ?? undefined);
+    // Check for .gitignore file
+    const gitignoreFile = findGitignoreFile(files);
+
+    if (gitignoreFile) {
+      try {
+        const gitignoreContent = await readGitignoreContent(gitignoreFile);
+        const originalCount = files.length;
+
+        // Show confirmation modal using antd's Modal.confirm
+        const { Modal } = await import('antd');
+
+        Modal.confirm({
+          cancelText: t('header.actions.gitignore.cancel'),
+          content: t('header.actions.gitignore.content', {
+            count: originalCount,
+          }),
+          okText: t('header.actions.gitignore.apply'),
+          onCancel: async () => {
+            // Upload all files without filtering
+            await uploadFolderWithStructure(files, knowledgeBaseId, currentFolderId ?? undefined);
+          },
+          onOk: async () => {
+            // Filter files based on .gitignore
+            const filteredFiles = filterFilesByGitignore(files, gitignoreContent);
+            const ignoredCount = originalCount - filteredFiles.length;
+
+            if (ignoredCount > 0) {
+              const { message } = await import('antd');
+              message.info(
+                t('header.actions.gitignore.filtered', {
+                  ignored: ignoredCount,
+                  total: originalCount,
+                }),
+              );
+            }
+
+            await uploadFolderWithStructure(
+              filteredFiles,
+              knowledgeBaseId,
+              currentFolderId ?? undefined,
+            );
+          },
+          title: t('header.actions.gitignore.title'),
+        });
+      } catch (error) {
+        console.error('Failed to read .gitignore:', error);
+        // If reading fails, proceed without filtering
+        await uploadFolderWithStructure(files, knowledgeBaseId, currentFolderId ?? undefined);
+      }
+    } else {
+      // No .gitignore found, upload all files
+      await uploadFolderWithStructure(files, knowledgeBaseId, currentFolderId ?? undefined);
+    }
+
     // Reset input to allow re-uploading the same folder
     event.target.value = '';
   };
