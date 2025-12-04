@@ -1046,6 +1046,7 @@ table users {
   id text [pk, not null]
   username text [unique]
   email text [unique]
+  normalized_email text [unique]
   avatar text
   phone text [unique]
   first_name text

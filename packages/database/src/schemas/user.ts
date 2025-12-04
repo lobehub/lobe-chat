@@ -12,6 +12,7 @@ export const users = pgTable(
     id: text('id').primaryKey().notNull(),
     username: text('username').unique(),
     email: text('email').unique(),
+    normalizedEmail: text('normalized_email').unique(),
 
     avatar: text('avatar'),
     phone: text('phone').unique(),
