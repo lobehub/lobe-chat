@@ -341,6 +341,8 @@ export default {
       installed: '已安装',
     },
     config: {
+      addEnv: '添加环境变量',
+      addHeaders: '添加请求头',
       args: '参数',
       command: '命令',
       env: '环境变量',
@@ -360,6 +362,9 @@ export default {
         title: '⚠️ 安全风险提示',
       },
       title: '安装自定义插件',
+    },
+    install: {
+      title: '安装信息',
     },
     marketplace: {
       title: '安装第三方插件',

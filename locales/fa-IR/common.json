@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "دستیار",
-    "library": "کتابخانه"
+    "displayItems": "نمایش آیتم‌ها",
+    "library": "کتابخانه",
+    "searchAgent": "جستجوی دستیار...",
+    "searchResultEmpty": "نتیجه‌ای برای جستجو یافت نشد"
   },
   "new": "جدید",
   "oauth": "ورود با SSO",
@@ -373,6 +376,7 @@
     "home": "خانه",
     "knowledgeBase": "پایگاه دانش",
     "me": "من",
+    "memory": "حافظه",
     "pages": "اسناد",
     "resource": "منابع",
     "search": "جستجو",

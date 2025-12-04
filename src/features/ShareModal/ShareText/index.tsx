@@ -87,7 +87,7 @@ const ShareText = memo(() => {
         icon={CopyIcon}
         onClick={async () => {
           await copyToClipboard(content);
-          message.success(t('copySuccess', { defaultValue: 'Copy Success', ns: 'common' }));
+          message.success(t('copySuccess', { ns: 'common' }));
         }}
         size={isMobile ? undefined : 'large'}
         type={'primary'}

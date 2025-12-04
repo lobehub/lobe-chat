@@ -22,7 +22,7 @@ const BackBottom = memo<BackBottomProps>(({ visible, onScrollToBottom }) => {
       onClick={onScrollToBottom}
       size={'small'}
     >
-      {t('backToBottom', { defaultValue: 'Back to bottom' })}
+      {t('backToBottom')}
     </Button>
   );
 });

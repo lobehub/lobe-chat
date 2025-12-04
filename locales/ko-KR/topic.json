@@ -12,6 +12,7 @@
     "removeUnstarred": "즐겨찾기하지 않은 주제 삭제"
   },
   "defaultTitle": "기본 주제",
+  "displayItems": "항목 표시",
   "duplicateLoading": "주제 복사 중...",
   "duplicateSuccess": "주제 복사 성공",
   "favorite": "즐겨찾기",
@@ -33,6 +34,7 @@
     "desc": "왼쪽 버튼을 클릭하여 현재 대화를 역사 주제로 저장하고 새로운 대화를 시작하세요.",
     "title": "주제 목록"
   },
+  "loadMore": "더 보기",
   "searchPlaceholder": "주제 검색...",
   "searchResultEmpty": "검색 결과가 없습니다.",
   "temp": "임시",

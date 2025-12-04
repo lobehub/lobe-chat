@@ -12,6 +12,7 @@
     "removeUnstarred": "Xóa các chủ đề chưa được đánh dấu"
   },
   "defaultTitle": "Chủ đề mặc định",
+  "displayItems": "Hiển thị mục",
   "duplicateLoading": "Đang sao chép chủ đề...",
   "duplicateSuccess": "Sao chép chủ đề thành công",
   "favorite": "Yêu thích",
@@ -33,6 +34,7 @@
     "desc": "Nhấn nút bên trái để lưu cuộc trò chuyện hiện tại thành chủ đề lịch sử và bắt đầu một cuộc trò chuyện mới.",
     "title": "Danh sách chủ đề"
   },
+  "loadMore": "Xem thêm",
   "searchPlaceholder": "Tìm kiếm chủ đề...",
   "searchResultEmpty": "Không có kết quả tìm kiếm nào",
   "temp": "Tạm thời",

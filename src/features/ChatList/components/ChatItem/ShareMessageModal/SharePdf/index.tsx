@@ -70,8 +70,8 @@ const SharePdf = memo<SharePdfProps>(({ message }) => {
       {loading
         ? t('shareModal.generatingPdf')
         : pdfData
-          ? t('shareModal.regeneratePdf', { defaultValue: '重新生成 PDF' })
-          : t('shareModal.generatePdf', { defaultValue: '生成 PDF' })}
+          ? t('shareModal.regeneratePdf')
+          : t('shareModal.generatePdf')}
     </Button>
   );
 

@@ -1,10 +1,11 @@
 import { type MenuProps } from '@lobehub/ui';
 import { useMemo } from 'react';
 
-import { useSessionItemMenuItems } from '@/features/NavPanel/hooks';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
+
+import { useSessionItemMenuItems } from '../../../../hooks';
 
 interface ActionProps {
   group: string | undefined;

@@ -154,7 +154,7 @@ export interface GlobalState {
 }
 
 export const INITIAL_STATUS = {
-  agentPageSize: 20,
+  agentPageSize: 10,
   chatInputHeight: 64,
   disabledModelProvidersSortType: 'default',
   disabledModelsSortType: 'default',

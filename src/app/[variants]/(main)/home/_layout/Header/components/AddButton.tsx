@@ -1,93 +1,25 @@
-import { Dropdown, Icon, type MenuProps, Tooltip } from '@lobehub/ui';
-import { createStyles, useTheme } from 'antd-style';
-import { ChevronDownIcon, FileTextIcon, SquarePenIcon } from 'lucide-react';
+import { ActionIcon, Icon } from '@lobehub/ui';
+import { Dropdown } from 'antd';
+import { useTheme } from 'antd-style';
+import { ChevronDownIcon, FileTextIcon, PlusSquareIcon } from 'lucide-react';
 import type React from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { ChatGroupWizard } from '@/components/ChatGroupWizard';
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useFileStore } from '@/store/file';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import { useCreateMenuItems } from '../../../../../../../features/NavPanel/hooks';
-
-const useStyles = createStyles(({ css, token }) => ({
-  button: css`
-    cursor: pointer;
-    user-select: none;
-
-    display: inline-flex;
-    gap: 0;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0;
-    border: none;
-    border-radius: ${token.borderRadius}px;
-
-    color: ${token.colorTextSecondary};
-
-    background: transparent;
-
-    transition: background-color ${token.motionDurationMid};
-
-    &:hover {
-      background-color: ${token.colorFillTertiary};
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.4;
-    }
-
-    .main-icon {
-      cursor: pointer;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      padding: 4px;
-      border-radius: ${token.borderRadiusSM}px;
-      border-start-end-radius: 0;
-      border-end-end-radius: 0;
-
-      transition: background-color ${token.motionDurationMid};
-    }
-
-    .chevron-icon {
-      cursor: pointer;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      margin-inline-start: -2px;
-      padding-block: 4px;
-      padding-inline: 2px;
-      border-radius: ${token.borderRadiusSM}px;
-      border-start-start-radius: 0;
-      border-end-start-radius: 0;
-
-      transition: background-color ${token.motionDurationMid};
-    }
-
-    .main-icon:hover {
-      background-color: ${token.colorFillSecondary};
-    }
-
-    .chevron-icon:hover {
-      background-color: ${token.colorFillSecondary};
-    }
-  `,
-}));
+import { useCreateMenuItems } from '../../hooks';
 
 const AddButton = memo(() => {
   const { t: tChat } = useTranslation('chat');
   const { t: tFile } = useTranslation('file');
   const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
   const createNewPage = useFileStore((s) => s.createNewPage);
-  const { styles } = useStyles();
+
   const theme = useTheme();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -161,7 +93,7 @@ const AddButton = memo(() => {
         onClick: () => handleCreatePage(),
       },
     ].filter(Boolean);
-    return items as MenuProps['items'];
+    return items as any;
   }, [
     createAgentMenuItem,
     createGroupChatMenuItem,
@@ -175,25 +107,28 @@ const AddButton = memo(() => {
 
   return (
     <>
-      <Dropdown menu={{ items: dropdownItems || [] }} trigger={['click']}>
-        <button
-          className={styles.button}
-          disabled={isValidatingAgent || isCreatingGroup}
-          style={{ flex: 'none' }}
-          type="button"
-        >
-          <Tooltip placement="top" title={tChat('newAgent')}>
-            <span className="main-icon" onClick={handleMainIconClick}>
-              <Icon color={theme.colorIcon} icon={SquarePenIcon} size={18} />
-            </span>
-          </Tooltip>
-          <Tooltip placement="right" title={tChat('input.more')}>
-            <span className="chevron-icon">
-              <Icon color={theme.colorIcon} icon={ChevronDownIcon} size={14} />
-            </span>
-          </Tooltip>
-        </button>
-      </Dropdown>
+      <Flexbox horizontal>
+        <ActionIcon
+          icon={PlusSquareIcon}
+          loading={isValidatingAgent || isCreatingGroup}
+          onClick={handleMainIconClick}
+          size={DESKTOP_HEADER_ICON_SIZE}
+          title={tChat('newAgent')}
+        />
+        <Dropdown menu={{ items: dropdownItems || [] }}>
+          <ActionIcon
+            color={theme.colorTextQuaternary}
+            icon={ChevronDownIcon}
+            size={{ blockSize: 32, size: 14 }}
+            style={{
+              width: 16,
+            }}
+            tooltipProps={{
+              placement: 'right',
+            }}
+          />
+        </Dropdown>
+      </Flexbox>
       {enableGroupChat && (
         <ChatGroupWizard
           isCreatingFromTemplate={isCreatingGroup}

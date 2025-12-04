@@ -35,7 +35,7 @@ const Project = memo<ProjectProps>(({ itemKey }) => {
       paddingInline={'8px 4px'}
       title={
         <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-          {t('navPanel.library', { defaultValue: '资料库' })}
+          {t('navPanel.library')}
         </Text>
       }
     >
