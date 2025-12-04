@@ -438,7 +438,7 @@ export default {
           collapse: '收起',
           noChanges: '模型列表无变化',
           removed: '移除 {{count}} 个模型',
-          removedButBuiltin: '以下 {{count}} 个模型已从远端移除，但仍保留在内置列表中：{{models}}',
+          removedButBuiltin: '以下 {{count}} 个模型已从远端移除，但仍保留在内置列表中',
           removedButBuiltinTitle: '模型列表已过期',
           showMore: '展开更多 ({{count}} 个)',
           title: '模型列表已更新',

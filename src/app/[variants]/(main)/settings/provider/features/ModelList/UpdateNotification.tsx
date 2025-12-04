@@ -174,7 +174,7 @@ export const UpdateNotificationContent = memo(
             title={
               removedButBuiltin &&
               removedButBuiltin.length > 0 &&
-              t('providerModels.list.fetcher.updateResult.removedButBuiltinTitle', {
+              t('providerModels.list.fetcher.updateResult.removedButBuiltin', {
                 count: removedButBuiltin.length,
               })
             }

@@ -84,7 +84,10 @@ const ModelTitle = memo<ModelFetcherProps>(
           ),
           duration: null,
           key: notificationKey,
-          message: t('providerModels.list.fetcher.updateResult.title'),
+          message:
+            removedButBuiltin.length > 0
+              ? t('providerModels.list.fetcher.updateResult.removedButBuiltinTitle')
+              : t('providerModels.list.fetcher.updateResult.title'),
           onClose: () => {
             dismissed = true;
           },
