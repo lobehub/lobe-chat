@@ -154,7 +154,7 @@ export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = 
 export const createOpenAICompatibleRuntime = <T extends Record<string, any> = any>({
   provider,
   baseURL: DEFAULT_BASE_URL,
-  apiKey: DEFAULT_API_LEY,
+  apiKey: DEFAULT_API_KEY,
   errorType,
   debug: debugParams,
   constructorOptions,
@@ -182,7 +182,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     constructor(options: ClientOptions & Record<string, any> = {}) {
       const _options = {
         ...options,
-        apiKey: options.apiKey?.trim() || DEFAULT_API_LEY,
+        apiKey: options.apiKey?.trim() || DEFAULT_API_KEY,
         baseURL: options.baseURL?.trim() || DEFAULT_BASE_URL,
       };
       const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = _options;
@@ -346,6 +346,48 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           return this.handleResponseAPIMode(processedPayload, options);
         }
 
+        const computedBaseURL =
+          typeof this._options.baseURL === 'string' && this._options.baseURL
+            ? this._options.baseURL.trim()
+            : typeof DEFAULT_BASE_URL === 'string'
+              ? DEFAULT_BASE_URL
+              : undefined;
+        const targetBaseURL = computedBaseURL || this.baseURL;
+
+        if (targetBaseURL !== this.baseURL) {
+          const restOptions = {
+            ...(this._options as ConstructorOptions<T> & Record<string, any>),
+          } as Record<string, any>;
+          const optionApiKey = restOptions.apiKey;
+          delete restOptions.apiKey;
+          delete restOptions.baseURL;
+
+          const sanitizedApiKey = optionApiKey?.toString().trim() || DEFAULT_API_KEY;
+
+          const nextOptions = {
+            ...restOptions,
+            apiKey: sanitizedApiKey,
+            baseURL: targetBaseURL,
+          } as ConstructorOptions<T>;
+
+          const initOptions = {
+            apiKey: sanitizedApiKey,
+            baseURL: targetBaseURL,
+            ...constructorOptions,
+            ...restOptions,
+          } as ConstructorOptions<T> & Record<string, any>;
+
+          this._options = nextOptions;
+
+          if (customClient?.createClient) {
+            this.client = customClient.createClient(initOptions);
+          } else {
+            this.client = new OpenAI(initOptions);
+          }
+
+          this.baseURL = targetBaseURL;
+        }
+
         const messages = await convertOpenAIMessages(postPayload.messages);
 
         let response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
@@ -368,8 +410,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             this,
           ) as any;
         } else {
+          // Remove internal apiMode parameter before sending to API
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { apiMode: _, ...cleanedPayload } = postPayload as any;
           const finalPayload = {
-            ...postPayload,
+            ...cleanedPayload,
             messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
             stream_options:
@@ -385,11 +430,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             console.log(JSON.stringify(finalPayload), '\n');
           }
 
-          response = await this.client.chat.completions.create(finalPayload, {
+          response = (await this.client.chat.completions.create(finalPayload, {
             // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*', ...options?.requestHeaders },
             signal: options?.signal,
-          });
+          })) as unknown as Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
         }
 
         if (postPayload.stream) {

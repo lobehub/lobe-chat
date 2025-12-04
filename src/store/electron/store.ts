@@ -8,7 +8,7 @@ import { type ElectronSettingsAction, settingsSlice } from './actions/settings';
 import { type ElectronRemoteServerAction, remoteSyncSlice } from './actions/sync';
 import { type ElectronState, initialState } from './initialState';
 
-//  ===============  聚合 createStoreFn ============ //
+//  ===============  Aggregate createStoreFn ============ //
 
 export interface ElectronStore
   extends ElectronState,
@@ -27,7 +27,7 @@ const createStore: StateCreator<ElectronStore, [['zustand/devtools', never]]> = 
   ...settingsSlice(...parameters),
 });
 
-//  ===============  实装 useStore ============ //
+//  ===============  Implement useStore ============ //
 
 const devtools = createDevtools('electron');
 

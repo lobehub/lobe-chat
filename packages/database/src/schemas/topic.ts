@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import type { ChatTopicMetadata } from '@lobechat/types';
+import { sql } from 'drizzle-orm';
 import { boolean, index, jsonb, pgTable, primaryKey, text, uniqueIndex } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
@@ -39,6 +40,10 @@ export const topics = pgTable(
     index('topics_session_id_idx').on(t.sessionId),
     index('topics_group_id_idx').on(t.groupId),
     index('topics_agent_id_idx').on(t.agentId),
+    index('topics_extract_status_gin_idx').using(
+      'gin',
+      sql`(metadata->'userMemoryExtractStatus') jsonb_path_ops`,
+    ),
   ],
 );
 

@@ -1,4 +1,15 @@
 {
+  "authorize": {
+    "cancel": "取消",
+    "confirm": "授權使用",
+    "description": {
+      "and": "和",
+      "prefix": "點擊授權使用即視為同意",
+      "privacy": "隱私協議",
+      "terms": "服務條款"
+    },
+    "title": "確認授權"
+  },
   "callback": {
     "buttons": {
       "close": "關閉視窗"
@@ -33,8 +44,10 @@
     "stateMissing": "找不到授權狀態，請重試。"
   },
   "messages": {
+    "authorized": "LobeHub 服務授權成功",
     "loading": "正在啟動授權流程⋯⋯",
     "success": {
+      "cloudMcpInstall": "授權成功！現在可以安裝 Cloud MCP 外掛了。",
       "submit": "授權成功！現在可以發佈助手了。",
       "upload": "授權成功！現在可以發佈新版本了。"
     }

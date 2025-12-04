@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "カスタムプロバイダーは有効化されていません",
       "disabled": "サービスプロバイダーは無効です",
       "enabled": "サービスプロバイダーは有効です"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "カスタムサービスプロバイダーを追加",
     "all": "すべて",
     "list": {
+      "custom": "カスタムは無効です",
       "disabled": "未使用",
       "disabledActions": {
         "sort": "並び替え方法",

@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Nhà cung cấp mô hình: nền tảng sophnet. DeepSeek V3 Fast là phiên bản tốc độ cao TPS của DeepSeek V3 0324, không lượng tử hóa, có khả năng mã hóa và toán học mạnh mẽ hơn, phản hồi nhanh hơn!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 - chế độ không suy nghĩ; DeepSeek-V3.1 là mô hình suy luận lai mới của DeepSeek, hỗ trợ hai chế độ suy luận là suy nghĩ và không suy nghĩ, hiệu quả suy nghĩ cao hơn so với DeepSeek-R1-0528. Qua tối ưu hậu huấn luyện, hiệu suất sử dụng công cụ Agent và các tác vụ tác nhân được cải thiện đáng kể."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast là phiên bản tốc độ cao TPS của DeepSeek V3.1. Chế độ suy nghĩ lai: thông qua thay đổi mẫu trò chuyện, một mô hình có thể đồng thời hỗ trợ cả chế độ suy nghĩ và không suy nghĩ. Gọi công cụ thông minh hơn: nhờ tối ưu hậu huấn luyện, mô hình thể hiện rõ rệt sự cải thiện trong việc sử dụng công cụ và các tác vụ đại lý."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - chế độ suy nghĩ; DeepSeek-V3.1 là mô hình suy luận lai mới của DeepSeek, hỗ trợ hai chế độ suy luận là suy nghĩ và không suy nghĩ, hiệu quả suy nghĩ cao hơn so với DeepSeek-R1-0528. Qua tối ưu hậu huấn luyện, hiệu suất sử dụng công cụ Agent và các tác vụ tác nhân được cải thiện đáng kể."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 là mô hình lớn chung mới nhất của DeepSeek, hỗ trợ kiến trúc suy luận hỗn hợp và có khả năng Agent mạnh mẽ hơn."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "Chế độ suy nghĩ của DeepSeek V3.2. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite sở hữu tốc độ phản hồi tối ưu, hiệu quả chi phí tốt hơn, cung cấp lựa chọn linh hoạt hơn cho các kịch bản khác nhau của khách hàng. Hỗ trợ suy luận và tinh chỉnh với cửa sổ ngữ cảnh 128k."

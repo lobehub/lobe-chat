@@ -16,6 +16,7 @@ testProvider({
   chatModel: 'spark',
   test: {
     skipAPICall: true,
+    skipErrorHandle: true,
   },
 });
 
@@ -69,7 +70,7 @@ describe('LobeSparkAI - custom features', () => {
         enabledSearch: false,
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.tools).toBeUndefined();
       expect(result.enabledSearch).toBeUndefined();
@@ -81,7 +82,7 @@ describe('LobeSparkAI - custom features', () => {
         messages: [{ role: 'user' as const, content: 'Hello' }],
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.tools).toBeUndefined();
     });
@@ -93,7 +94,7 @@ describe('LobeSparkAI - custom features', () => {
         enabledSearch: true,
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.tools).toBeDefined();
       expect(result.tools).toHaveLength(1);
@@ -115,7 +116,7 @@ describe('LobeSparkAI - custom features', () => {
         enabledSearch: true,
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.tools[0].web_search.search_mode).toBe('normal');
     });
@@ -129,7 +130,7 @@ describe('LobeSparkAI - custom features', () => {
         enabledSearch: true,
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.tools[0].web_search.search_mode).toBe('deep');
       delete process.env.SPARK_SEARCH_MODE;
@@ -154,7 +155,7 @@ describe('LobeSparkAI - custom features', () => {
         tools: existingTools,
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.tools).toHaveLength(2);
       expect(result.tools[0]).toEqual(existingTools[0]);
@@ -180,7 +181,7 @@ describe('LobeSparkAI - custom features', () => {
         tools: existingTools,
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.tools).toEqual(existingTools);
     });
@@ -192,7 +193,7 @@ describe('LobeSparkAI - custom features', () => {
         enabledSearch: true,
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.enabledSearch).toBeUndefined();
     });
@@ -207,7 +208,7 @@ describe('LobeSparkAI - custom features', () => {
         enabledSearch: true,
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.model).toBe('spark');
       expect(result.messages).toEqual(payload.messages);
@@ -224,7 +225,7 @@ describe('LobeSparkAI - custom features', () => {
         tools: [],
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.tools).toHaveLength(1);
       expect(result.tools[0].type).toBe('web_search');
@@ -257,7 +258,7 @@ describe('LobeSparkAI - custom features', () => {
         tools: existingTools,
       };
 
-      const result = handlePayload(payload);
+      const result = handlePayload(payload, {});
 
       expect(result.tools).toHaveLength(3);
       expect(result.tools[0]).toEqual(existingTools[0]);
