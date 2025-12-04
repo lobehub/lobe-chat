@@ -3,7 +3,7 @@
 import { Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Center } from 'react-layout-kit';
 
 import { documentSelectors, useFileStore } from '@/store/file';
 
@@ -18,7 +18,7 @@ const PageList = memo(() => {
   const filteredPages = useFileStore(documentSelectors.getFilteredPages);
 
   return (
-    <Flexbox gap={1} paddingInline={4}>
+    <>
       {filteredPages.map((page) => (
         <Item documentId={page.id} key={page.id} />
       ))}
@@ -27,7 +27,7 @@ const PageList = memo(() => {
           {t('documentList.pageCount', { count: filteredPages.length })}
         </Text>
       </Center>
-    </Flexbox>
+    </>
   );
 });
 
