@@ -261,4 +261,36 @@ export const useStyles = createStyles(({ css, token }) => ({
       }
     }
   `,
+  skeleton: css`
+    height: 16px;
+    border-radius: ${token.borderRadiusSM}px;
+
+    background: linear-gradient(
+      90deg,
+      ${token.colorFillSecondary} 25%,
+      ${token.colorFillTertiary} 50%,
+      ${token.colorFillSecondary} 75%
+    );
+    background-size: 200% 100%;
+
+    animation: pulse 1.5s ease-in-out infinite;
+
+    @keyframes pulse {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+  `,
+  skeletonItem: css`
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    padding-block: 12px;
+    padding-inline: 16px;
+  `,
 }));

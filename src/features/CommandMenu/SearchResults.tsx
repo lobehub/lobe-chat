@@ -67,10 +67,27 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
     }
   };
 
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const getItemValue = (result: SearchResult) => {
+    const meta = [result.title, result.description, result.type === 'file' ? result.fileType : null]
+      .filter(Boolean)
+      .join(' ');
+    // Prefix with "search-result" to ensure these items rank after built-in commands
+    return `search-result ${result.type} ${meta}`.trim();
+  };
+
   if (isLoading) {
     return (
       <Command.Group heading={t('cmdk.search.searching')}>
-        <Command.Item disabled>{t('cmdk.search.loading')}</Command.Item>
+        {[1, 2, 3].map((i) => (
+          <div className={styles.skeletonItem} key={i}>
+            <div className={styles.skeleton} style={{ height: 20, width: 20 }} />
+            <div style={{ display: 'flex', flex: 1, flexDirection: 'column', gap: 4 }}>
+              <div className={styles.skeleton} style={{ width: `${60 + i * 10}%` }} />
+              <div className={styles.skeleton} style={{ height: 12, width: `${40 + i * 5}%` }} />
+            </div>
+          </div>
+        ))}
       </Command.Group>
     );
   }
@@ -92,7 +109,7 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
             <Command.Item
               key={`agent-${result.id}`}
               onSelect={() => handleNavigate(result)}
-              value={result.id}
+              value={getItemValue(result)}
             >
               <div className={styles.itemContent}>
                 <div className={styles.itemIcon}>{getIcon(result.type)}</div>
@@ -115,7 +132,7 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
             <Command.Item
               key={`topic-${result.id}`}
               onSelect={() => handleNavigate(result)}
-              value={result.id}
+              value={getItemValue(result)}
             >
               <div className={styles.itemContent}>
                 <div className={styles.itemIcon}>{getIcon(result.type)}</div>
@@ -138,7 +155,7 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
             <Command.Item
               key={`file-${result.id}`}
               onSelect={() => handleNavigate(result)}
-              value={result.id}
+              value={getItemValue(result)}
             >
               <div className={styles.itemContent}>
                 <div className={styles.itemIcon}>{getIcon(result.type)}</div>
