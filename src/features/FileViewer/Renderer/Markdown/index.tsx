@@ -9,11 +9,8 @@ import CircleLoading from '@/components/Loading/CircleLoading';
 const useStyles = createStyles(({ css, token }) => ({
   page: css`
     width: 100%;
-    padding: 24px;
-    border-radius: 4px;
-
+    padding: ${token.paddingLG}px;
     background: ${token.colorBgContainer};
-    box-shadow: ${token.boxShadowTertiary};
   `,
 }));
 
@@ -22,7 +19,12 @@ const MarkdownViewer: DocRenderer = ({ mainState: { currentDocument } }) => {
   return (
     <Flexbox className={styles.page} id="markdown-renderer">
       {!!currentDocument?.fileData ? (
-        <Highlighter language={'markdown'} showLanguage={false} variant={'borderless'}>
+        <Highlighter
+          copyable={false}
+          language={'markdown'}
+          showLanguage={false}
+          variant={'borderless'}
+        >
           {currentDocument?.fileData as string}
         </Highlighter>
       ) : (
