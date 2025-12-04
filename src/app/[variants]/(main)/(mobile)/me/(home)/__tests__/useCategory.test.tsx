@@ -60,7 +60,8 @@ describe('useCategory', () => {
     enableAuth.value = true;
     enableClerk.value = false;
 
-    const { result } = renderHook(() => useCategory(), { wrapper });
+    const mockOpenChangelogModal = vi.fn();
+    const { result } = renderHook(() => useCategory(mockOpenChangelogModal), { wrapper });
 
     act(() => {
       const items = result.current;
@@ -78,7 +79,8 @@ describe('useCategory', () => {
     });
     enableAuth.value = true;
 
-    const { result } = renderHook(() => useCategory(), { wrapper });
+    const mockOpenChangelogModal = vi.fn();
+    const { result } = renderHook(() => useCategory(mockOpenChangelogModal), { wrapper });
 
     act(() => {
       const items = result.current;
