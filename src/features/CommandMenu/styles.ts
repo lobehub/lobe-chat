@@ -164,19 +164,58 @@ export const useStyles = createStyles(({ css, token }) => ({
     border-block-end: 1px solid ${token.colorBorderSecondary};
   `,
   itemContent: css`
+    display: flex;
     flex: 1;
+    gap: 12px;
+    align-items: center;
+
     min-width: 0;
   `,
   itemDescription: css`
+    overflow: hidden;
+
     margin-block-start: 2px;
+
     font-size: 12px;
     line-height: 1.4;
     color: ${token.colorTextTertiary};
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  `,
+  itemDetails: css`
+    flex: 1;
+    min-width: 0;
+  `,
+  itemIcon: css`
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    width: 20px;
+    height: 20px;
+
+    color: ${token.colorTextSecondary};
   `,
   itemLabel: css`
     font-size: 14px;
     font-weight: 500;
     line-height: 1.4;
+  `,
+  itemTitle: css`
+    overflow: hidden;
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  `,
+  itemType: css`
+    flex-shrink: 0;
+    font-size: 11px;
+    color: ${token.colorTextTertiary};
+    text-transform: capitalize;
   `,
   kbd: css`
     display: inline-flex;
