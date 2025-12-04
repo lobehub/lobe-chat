@@ -4,13 +4,14 @@ import {
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
+  INBOX_SESSION_ID,
 } from '@lobechat/const';
 import { KnowledgeType } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AgentStoreState } from '@/store/agent/initialState';
 import { initialAgentSliceState } from '@/store/agent/slices/agent/initialState';
-import { initialBuiltinAgentSliceState } from '@/store/agent/slices/builtin/initialState';
+import { initialBuiltinAgentSliceState } from '@/store/agent/slices/builtin';
 
 import { agentSelectors, currentAgentConfig } from './selectors';
 
@@ -30,35 +31,6 @@ const createState = (overrides: Partial<AgentStoreState> = {}): AgentStoreState 
 });
 
 describe('agentSelectors', () => {
-  describe('isInboxAgent', () => {
-    it('should return true when activeAgentId matches inboxAgentId', () => {
-      const state = createState({
-        activeAgentId: 'inbox-agent',
-        inboxAgentId: 'inbox-agent',
-      });
-
-      expect(agentSelectors.isInboxAgent(state)).toBe(true);
-    });
-
-    it('should return false when activeAgentId does not match inboxAgentId', () => {
-      const state = createState({
-        activeAgentId: 'other-agent',
-        inboxAgentId: 'inbox-agent',
-      });
-
-      expect(agentSelectors.isInboxAgent(state)).toBe(false);
-    });
-
-    it('should return false when inboxAgentId is undefined', () => {
-      const state = createState({
-        activeAgentId: 'some-agent',
-        inboxAgentId: undefined,
-      });
-
-      expect(agentSelectors.isInboxAgent(state)).toBe(false);
-    });
-  });
-
   describe('currentAgentConfig', () => {
     it('should return merged config with default agent config', () => {
       const state = createState({
@@ -390,9 +362,9 @@ describe('agentSelectors', () => {
   });
 
   describe('inboxAgentConfig', () => {
-    it('should return inbox agent config merged with defaults', () => {
+    it('should return inbox agent config from builtinAgentIdMap', () => {
       const state = createState({
-        inboxAgentId: 'inbox',
+        builtinAgentIdMap: { [INBOX_SESSION_ID]: 'inbox' },
         agentMap: { inbox: { model: 'gpt-4o' } },
       });
 
@@ -401,9 +373,9 @@ describe('agentSelectors', () => {
       expect(config.model).toBe('gpt-4o');
     });
 
-    it('should return default config when no inbox agent', () => {
+    it('should return default config when inbox agent not initialized', () => {
       const state = createState({
-        inboxAgentId: undefined,
+        builtinAgentIdMap: {},
       });
 
       const config = agentSelectors.inboxAgentConfig(state);

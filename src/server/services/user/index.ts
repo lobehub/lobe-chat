@@ -6,7 +6,6 @@ import { initializeServerAnalytics } from '@/libs/analytics';
 import { pino } from '@/libs/logger';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { S3 } from '@/server/modules/S3';
-import { AgentService } from '@/server/services/agent';
 
 type CreatedUser = {
   email?: string | null;
@@ -25,9 +24,6 @@ export class UserService {
   }
 
   async initUser(user: CreatedUser) {
-    const agentService = new AgentService(this.db, user.id);
-    await agentService.createInbox();
-
     /* ↓ cloud slot ↓ */
     /* ↑ cloud slot ↑ */
 

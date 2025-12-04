@@ -31,9 +31,8 @@ beforeEach(() => {
     activeAgentId: undefined,
     agentConfigInitMap: {},
     agentMap: {},
+    builtinAgentIdMap: {},
     defaultAgentConfig: {} as any,
-    inboxAgentId: undefined,
-    isInboxAgentConfigInit: false,
     updateAgentConfigSignal: undefined,
     updateAgentMetaSignal: undefined,
   });
