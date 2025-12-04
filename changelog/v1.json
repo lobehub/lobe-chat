@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Betterauth username signin."]
+    },
+    "date": "2025-12-04",
+    "version": "2.0.0-next.159"
+  },
+  {
+    "children": {
       "fixes": ["Limit check-user response surface."]
     },
     "date": "2025-12-04",
