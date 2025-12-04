@@ -62,6 +62,7 @@ export interface ChatTopicAction {
     params: {
       agentId?: string;
       groupId?: string;
+      isInbox?: boolean;
       pageSize?: number;
     },
   ) => SWRResponse<{ items: ChatTopic[]; total: number }>;
@@ -251,11 +252,13 @@ export const chatTopic: StateCreator<
   },
 
   // query
-  useFetchTopics: (enable, { agentId, pageSize: customPageSize }) => {
+  useFetchTopics: (enable, { agentId, pageSize: customPageSize, isInbox }) => {
     const pageSize = customPageSize || 20;
+
     return useClientDataSWR<{ items: ChatTopic[]; total: number }>(
-      enable ? [SWR_USE_FETCH_TOPIC, agentId, pageSize] : null,
-      async ([, agentId, pageSize]: [string, string | undefined, number]) => {
+      enable ? [SWR_USE_FETCH_TOPIC, { agentId, isInbox, pageSize }] : null,
+      async ([, params]: [string, { agentId?: string; isInbox?: boolean; pageSize: number }]) => {
+        const { agentId, isInbox, pageSize } = params;
         if (!agentId) return { items: [], total: 0 };
 
         const currentTopics = get().topicMaps[agentId] || [];
@@ -278,6 +281,7 @@ export const chatTopic: StateCreator<
           const result = await topicService.getTopics({
             agentId,
             current: 0,
+            isInbox,
             pageSize,
           });
 
@@ -296,7 +300,7 @@ export const chatTopic: StateCreator<
         }
 
         // Otherwise fetch normally
-        return topicService.getTopics({ agentId, current: 0, pageSize });
+        return topicService.getTopics({ agentId, current: 0, isInbox, pageSize });
       },
       {
         onSuccess: async (result) => {
