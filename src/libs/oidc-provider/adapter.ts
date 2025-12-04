@@ -15,6 +15,20 @@ import { eq, sql } from 'drizzle-orm';
 // 创建 adapter 日志命名空间
 const log = debug('lobe-oidc:adapter');
 
+/**
+ * Grace period for consumed RefreshToken (in seconds)
+ *
+ * When rotateRefreshToken is enabled, the old refresh token is consumed
+ * when a new one is issued. However, if the client fails to receive/save
+ * the new token (network issues, crashes), the old token becomes unusable.
+ *
+ * This grace period allows the consumed refresh token to be reused within
+ * a short window, giving clients a chance to retry the refresh operation.
+ *
+ * Default: 180 seconds (3 minutes)
+ */
+const REFRESH_TOKEN_GRACE_PERIOD_SECONDS = 180;
+
 class OIDCAdapter {
   private db: LobeChatDatabase;
   private name: string;
@@ -278,8 +292,35 @@ class OIDCAdapter {
         return undefined;
       }
 
-      // 如果记录已被消费，返回 undefined
+      // 如果记录已被消费，检查是否在宽限期内
       if (model.consumedAt) {
+        // For RefreshToken, allow reuse within grace period
+        if (this.name === 'RefreshToken') {
+          const consumedAt = new Date(model.consumedAt);
+          const gracePeriodEnd = new Date(
+            consumedAt.getTime() + REFRESH_TOKEN_GRACE_PERIOD_SECONDS * 1000,
+          );
+          const now = new Date();
+
+          if (now <= gracePeriodEnd) {
+            // Within grace period, allow reuse for retry scenarios
+            log(
+              '[RefreshToken] Token consumed at %s but within grace period (ends %s), allowing reuse',
+              consumedAt.toISOString(),
+              gracePeriodEnd.toISOString(),
+            );
+            return model.data;
+          }
+
+          log(
+            '[RefreshToken] Token consumed at %s, grace period expired at %s, returning undefined',
+            consumedAt.toISOString(),
+            gracePeriodEnd.toISOString(),
+          );
+          return undefined;
+        }
+
+        // For other token types, consumed means invalid
         log(
           '[%s] Record already consumed (consumedAt: %s), returning undefined',
           this.name,

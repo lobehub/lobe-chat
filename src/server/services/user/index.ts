@@ -8,11 +8,44 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { S3 } from '@/server/modules/S3';
 import { AgentService } from '@/server/services/agent';
 
+type CreatedUser = {
+  email?: string | null;
+  firstName?: string | null;
+  id: string;
+  lastName?: string | null;
+  phone?: string | null;
+  username?: string | null;
+};
+
 export class UserService {
   private db: LobeChatDatabase;
 
   constructor(db: LobeChatDatabase) {
     this.db = db;
+  }
+
+  async initUser(user: CreatedUser) {
+    const agentService = new AgentService(this.db, user.id);
+    await agentService.createInbox();
+
+    /* ↓ cloud slot ↓ */
+    /* ↑ cloud slot ↑ */
+
+    const analytics = await initializeServerAnalytics();
+    analytics?.identify(user.id, {
+      email: user.email ?? undefined,
+      firstName: user.firstName ?? undefined,
+      lastName: user.lastName ?? undefined,
+      phone: user.phone ?? undefined,
+      username: user.username ?? undefined,
+    });
+    analytics?.track({
+      name: 'user_register_completed',
+      properties: {
+        spm: 'user_service.init_user.user_created',
+      },
+      userId: user.id,
+    });
   }
 
   createUser = async (id: string, params: UserJSON) => {
@@ -34,10 +67,6 @@ export class UserService {
       return index === 0;
     });
 
-    /* ↓ cloud slot ↓ */
-
-    /* ↑ cloud slot ↑ */
-
     // 2. create user in database
     await UserModel.createUser(this.db, {
       avatar: params.image_url,
@@ -50,29 +79,13 @@ export class UserService {
       username: params.username,
     });
 
-    // 3. Create an inbox session for the user
-    const agentService = new AgentService(this.db, id);
-    await agentService.createInbox();
-
-    /* ↓ cloud slot ↓ */
-
-    /* ↑ cloud slot ↑ */
-
-    //analytics
-    const analytics = await initializeServerAnalytics();
-    analytics?.identify(id, {
+    await this.initUser({
       email: email?.email_address,
       firstName: params.first_name,
+      id,
       lastName: params.last_name,
       phone: phone?.phone_number,
       username: params.username,
-    });
-    analytics?.track({
-      name: 'user_register_completed',
-      properties: {
-        spm: 'user_service.create_user.user_created',
-      },
-      userId: id,
     });
 
     return { message: 'user created', success: true };

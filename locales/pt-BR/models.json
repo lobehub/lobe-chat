@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Fornecedor do modelo: plataforma sophnet. DeepSeek V3 Fast é a versão de alta velocidade e alto TPS do DeepSeek V3 0324, totalmente não quantificada, com capacidades aprimoradas de código e matemática, respondendo de forma mais rápida!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 - modo sem pensamento; DeepSeek-V3.1 é um novo modelo híbrido de raciocínio lançado pela DeepSeek, suportando dois modos de raciocínio: com e sem pensamento, com eficiência de pensamento superior ao DeepSeek-R1-0528. Otimizado pós-treinamento, o uso de ferramentas por agentes e o desempenho em tarefas de agentes foram significativamente aprimorados."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast é a versão de alta TPS e alta velocidade do DeepSeek V3.1. Modo híbrido de pensamento: através da alteração do template de chat, um único modelo pode suportar simultaneamente os modos com e sem pensamento. Chamadas de ferramentas mais inteligentes: com otimização pós-treinamento, o desempenho do modelo no uso de ferramentas e em tarefas de agentes foi significativamente melhorado."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - modo com pensamento; DeepSeek-V3.1 é um novo modelo híbrido de raciocínio lançado pela DeepSeek, suportando dois modos de raciocínio: com e sem pensamento, com eficiência de pensamento superior ao DeepSeek-R1-0528. Otimizado pós-treinamento, o uso de ferramentas por agentes e o desempenho em tarefas de agentes foram significativamente aprimorados."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 é o mais recente modelo universal lançado pela DeepSeek, suportando uma arquitetura de inferência híbrida e possuindo capacidades de agente mais avançadas."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "Modo de pensamento do DeepSeek V3.2. Antes de fornecer a resposta final, o modelo gera uma cadeia de raciocínio para melhorar a precisão da resposta."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite oferece velocidade de resposta extrema e melhor custo-benefício, proporcionando opções mais flexíveis para diferentes cenários dos clientes. Suporta inferência e fine-tuning com janela de contexto de 128k."

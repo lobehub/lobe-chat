@@ -1,9 +1,7 @@
 import { Block } from '@lobehub/ui';
 import { Empty } from 'antd';
-import { Link } from 'react-router-dom';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import urlJoin from 'url-join';
 
 import { useDetailContext } from '../../DetailProvider';
 import PluginItem from './PluginItem';
@@ -24,11 +22,7 @@ const Plugin = memo(() => {
         const identifier =
           typeof item === 'string' ? item : (item as { identifier: string }).identifier;
 
-        return (
-          <Link key={identifier} to={urlJoin('/discover/plugin', identifier)}>
-            <PluginItem identifier={identifier} />
-          </Link>
-        );
+        return <PluginItem identifier={identifier} key={identifier} />;
       })}
     </Flexbox>
   );

@@ -291,7 +291,7 @@ class DiscoverService {
 
   // ============================== Helpers ==============================
 
-  private async injectMPToken() {
+  async injectMPToken() {
     if (typeof localStorage === 'undefined') return;
 
     // Check server-set status flag cookie

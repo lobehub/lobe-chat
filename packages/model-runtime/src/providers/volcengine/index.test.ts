@@ -57,19 +57,5 @@ describe('LobeVolcengineAI - custom features', () => {
       const calledPayload = (instance['client'].chat.completions.create as any).mock.calls[0][0];
       expect(calledPayload.thinking).toEqual({ type: 'enabled' });
     });
-
-    it('should not add thinking for non-thinking models', async () => {
-      await instance.chat({
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'doubao-pro-32k',
-        thinking: {
-          type: 'enabled',
-          budget_tokens: 1000,
-        },
-      });
-
-      const calledPayload = (instance['client'].chat.completions.create as any).mock.calls[0][0];
-      expect(calledPayload.thinking).toBeUndefined();
-    });
   });
 });

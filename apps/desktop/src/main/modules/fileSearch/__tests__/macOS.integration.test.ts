@@ -108,10 +108,10 @@ describe.skipIf(process.platform !== 'darwin')('MacOSSearchServiceImpl Integrati
 
       expect(results.length).toBeGreaterThan(0);
 
-      // Should find test files
+      // Should find test files (can be in __tests__ directory or co-located with source files)
       const testFile = results.find((r) => r.name.endsWith('.test.ts'));
       expect(testFile).toBeDefined();
-      expect(testFile!.path).toContain('__tests__');
+      expect(testFile!.path).toMatch(/(__tests__|\.test\.ts$)/);
     });
   });
 

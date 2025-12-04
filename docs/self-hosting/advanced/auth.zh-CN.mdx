@@ -37,12 +37,18 @@ LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全�
 
 要在 LobeChat 中启用 Better Auth，请设置以下环境变量：
 
-| 环境变量                             | 类型 | 描述                                               |
-| -------------------------------- | -- | ------------------------------------------------ |
-| `NEXT_PUBLIC_ENABLE_BETTER_AUTH` | 必选 | 设置为 `1` 以启用 Better Auth 服务                       |
-| `AUTH_SECRET`                    | 必选 | 用于加密会话令牌的密钥。使用以下命令生成：`openssl rand -base64 32`   |
-| `NEXT_PUBLIC_AUTH_URL`           | 可选 | 浏览器可访问的 Better Auth 回调 URL。仅在默认生成的 URL 不正确时设置    |
-| `AUTH_SSO_PROVIDERS`             | 可选 | 启用的 SSO 提供商列表，以逗号分隔，例如 `google,github,microsoft` |
+| 环境变量                             | 类型 | 描述                                                                                                               |
+| -------------------------------- | -- | ---------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_ENABLE_BETTER_AUTH` | 必选 | 设置为 `1` 以启用 Better Auth 服务                                                                                       |
+| `AUTH_SECRET`                    | 必选 | 用于加密会话令牌的密钥。使用以下命令生成：`openssl rand -base64 32`                                                                   |
+| `NEXT_PUBLIC_AUTH_URL`           | 必选 | 浏览器可访问的 Better Auth 基础 URL（例如 `http://localhost:3010`、`https://lobechat.com`）。Vercel 部署时可选（会自动从 `VERCEL_URL` 获取） |
+| `AUTH_SSO_PROVIDERS`             | 可选 | 启用的 SSO 提供商列表，以逗号分隔，例如 `google,github,microsoft`                                                                 |
+
+<Callout type={'error'}>
+  **重要提示**：Better Auth 目前仅适用于**全新部署**的场景。如果你已经使用 NextAuth 或 Clerk 并且数据库中存在用户数据，**请暂时不要切换到 Better Auth**，否则现有用户将无法登录。
+
+  我们正在开发从 NextAuth/Clerk 到 Better Auth 的用户数据迁移工具，迁移方案完成后会更新文档。相关进度请关注 [GitHub Issue #10456](https://github.com/lobehub/lobe-chat/issues/10456)。
+</Callout>
 
 <Callout type={'warning'}>
   若使用官方 Docker 镜像构建 / 部署，默认是 **开启 NextAuth、关闭 Better Auth**
@@ -81,16 +87,27 @@ LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全�
 
 ### 邮件服务配置
 
-如果需要启用邮箱验证或密码重置功能，需要配置 SMTP 设置：
+用于邮箱验证、密码重置和魔法链接发送。先选择邮件服务，再填对应变量：
 
-| 环境变量                                  | 类型 | 描述                                             |
-| ------------------------------------- | -- | ---------------------------------------------- |
-| `NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION` | 可选 | 设置为 `1` 以要求用户在登录前验证邮箱                          |
-| `SMTP_HOST`                           | 必选 | SMTP 服务器主机名（例如 `smtp.gmail.com`）               |
-| `SMTP_PORT`                           | 必选 | SMTP 服务器端口（TLS 通常为 `587`，SSL 为 `465`）          |
-| `SMTP_SECURE`                         | 可选 | SSL 设置为 `true`（端口 465），TLS 设置为 `false`（端口 587） |
-| `SMTP_USER`                           | 必选 | SMTP 认证用户名                                     |
-| `SMTP_PASS`                           | 必选 | SMTP 认证密码                                      |
+| 环境变量                                  | 类型 | 描述                                                                                        |
+| ------------------------------------- | -- | ----------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION` | 可选 | 设置为 `1` 以要求用户在登录前验证邮箱                                                                     |
+| `EMAIL_SERVICE_PROVIDER`              | 可选 | 邮件服务选择：`nodemailer`（默认，SMTP）或 `resend`                                                    |
+| `SMTP_HOST`                           | 必选 | SMTP 服务器主机名（如 `smtp.gmail.com`），仅在 `EMAIL_SERVICE_PROVIDER=nodemailer` 时需要                |
+| `SMTP_PORT`                           | 必选 | SMTP 服务器端口（TLS 通常为 `587`，SSL 为 `465`），仅在 `EMAIL_SERVICE_PROVIDER=nodemailer` 时需要          |
+| `SMTP_SECURE`                         | 可选 | SSL 设置为 `true`（端口 465），TLS 设置为 `false`（端口 587），仅在 `EMAIL_SERVICE_PROVIDER=nodemailer` 时需要 |
+| `SMTP_USER`                           | 必选 | SMTP 认证用户名，仅在 `EMAIL_SERVICE_PROVIDER=nodemailer` 时需要                                     |
+| `SMTP_PASS`                           | 必选 | SMTP 认证密码，仅在 `EMAIL_SERVICE_PROVIDER=nodemailer` 时需要                                      |
+| `RESEND_API_KEY`                      | 必选 | Resend API Key，`EMAIL_SERVICE_PROVIDER=resend` 时必填                                        |
+| `RESEND_FROM`                         | 推荐 | 默认发件人地址（如 `noreply@已验证域名`），需为 Resend 已验证域名下的邮箱，`EMAIL_SERVICE_PROVIDER=resend` 时使用        |
+
+### 魔法链接（免密）登录
+
+启用 BetterAuth 魔法链接登录（依赖上方已配置好的邮件服务）：
+
+| 环境变量                            | 类型 | 描述                |
+| ------------------------------- | -- | ----------------- |
+| `NEXT_PUBLIC_ENABLE_MAGIC_LINK` | 可选 | 设置为 `1` 以启用魔法链接登录 |
 
 <Callout type={'tip'}>
   详细的提供商配置可参考 [Next Auth 提供商文档](/zh/docs/self-hosting/advanced/auth/next-auth)（大部分配置兼容），或访问官方 [Better Auth 文档](https://www.better-auth.com/docs/introduction)。

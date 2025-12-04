@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "모델 공급자는 sophnet 플랫폼입니다. DeepSeek V3 Fast는 DeepSeek V3 0324 버전의 고TPS 초고속 버전으로, 완전 비양자화되어 코드와 수학 능력이 더욱 강력하며 반응 속도가 훨씬 빠릅니다!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1-비사고 모드; DeepSeek-V3.1은 DeepSeek에서 새롭게 출시한 하이브리드 추론 모델로, 사고 모드와 비사고 모드 두 가지 추론 방식을 지원하며, DeepSeek-R1-0528보다 사고 효율이 더 높습니다. 사후 학습(Post-Training) 최적화를 통해 에이전트 도구 사용 및 에이전트 작업 성능이 크게 향상되었습니다."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast는 DeepSeek V3.1 버전의 고속 TPS 버전입니다. 하이브리드 사고 모드: 채팅 템플릿 변경을 통해 하나의 모델이 사고 모드와 비사고 모드를 동시에 지원할 수 있습니다. 더 스마트한 도구 호출: 사후 학습 최적화를 통해 모델의 도구 사용 및 에이전트 작업 성능이 현저히 향상되었습니다."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1-사고 모드; DeepSeek-V3.1은 DeepSeek에서 새롭게 출시한 하이브리드 추론 모델로, 사고 모드와 비사고 모드 두 가지 추론 방식을 지원하며, DeepSeek-R1-0528보다 사고 효율이 더 높습니다. 사후 학습(Post-Training) 최적화를 통해 에이전트 도구 사용 및 에이전트 작업 성능이 크게 향상되었습니다."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2는 DeepSeek에서 최신으로 출시한 범용 대형 모델로, 하이브리드 추론 아키텍처를 지원하며 더욱 강력한 에이전트 기능을 갖추고 있습니다."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "DeepSeek V3.2 사고 모드입니다. 최종 답변을 출력하기 전에 모델이 먼저 사고 사슬 내용을 출력하여 최종 답변의 정확성을 향상시킵니다."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite는 탁월한 응답 속도와 뛰어난 가성비를 자랑하며, 고객의 다양한 시나리오에 더 유연한 선택을 제공합니다. 128k 컨텍스트 윈도우 추론 및 미세 조정을 지원합니다."

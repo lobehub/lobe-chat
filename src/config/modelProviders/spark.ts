@@ -12,9 +12,6 @@ const Spark: ModelProviderCard = {
   name: 'Spark',
   settings: {
     disableBrowserRequest: true,
-    proxyUrl: {
-      placeholder: 'https://spark-api-open.xf-yun.com/v1',
-    },
     responseAnimation: {
       speed: 2,
       text: 'smooth',

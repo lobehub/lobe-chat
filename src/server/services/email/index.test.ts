@@ -26,7 +26,7 @@ describe('EmailService', () => {
 
   describe('constructor', () => {
     it('should create instance with default email implementation', () => {
-      expect(createEmailServiceImpl).toHaveBeenCalledWith(undefined);
+      expect(createEmailServiceImpl).toHaveBeenCalledWith(EmailImplType.Nodemailer);
     });
 
     it('should create instance with specified implementation type', () => {

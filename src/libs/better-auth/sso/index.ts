@@ -5,6 +5,7 @@ import { authEnv } from '@/envs/auth';
 import { BUILTIN_BETTER_AUTH_PROVIDERS } from '@/libs/better-auth/constants';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 
+import Apple from './providers/apple';
 import Auth0 from './providers/auth0';
 import Authelia from './providers/authelia';
 import Authentik from './providers/authentik';
@@ -23,6 +24,7 @@ import Wechat from './providers/wechat';
 import Zitadel from './providers/zitadel';
 
 const providerDefinitions = [
+  Apple,
   Google,
   Github,
   Cognito,
@@ -102,6 +104,9 @@ export const initBetterAuthSSOProviders = () => {
     const config = definition.build(env);
 
     if (config) {
+      // the generic oidc callback url is /api/auth/oauth2/callback/{providerId}
+      // different from builtin providers' /api/auth/callback/{providerId}
+      config.redirectURI = `${authEnv.NEXT_PUBLIC_AUTH_URL || ''}/api/auth/callback/${definition.id}`;
       genericOAuthProviders.push(config);
     }
   }

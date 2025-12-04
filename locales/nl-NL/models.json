@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Modelleverancier: sophnet-platform. DeepSeek V3 Fast is de high-TPS snelle versie van DeepSeek V3 0324, volledig niet-gequantiseerd, met sterkere codeer- en wiskundige capaciteiten en snellere respons!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 - niet-denkmodus; DeepSeek-V3.1 is een nieuw hybride redeneermodel van DeepSeek dat twee redeneermodi ondersteunt: denken en niet-denken, met een hogere denkefficiëntie dan DeepSeek-R1-0528. Na post-training optimalisatie is het gebruik van agenttools en de prestaties bij agenttaken aanzienlijk verbeterd."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast is de high-TPS snellere versie van DeepSeek V3.1. Hybride denkmodus: door het wijzigen van het chattemplate kan één model zowel de denkmodus als de niet-denkmodus ondersteunen. Slimmere toolaanroepen: dankzij post-training optimalisatie zijn de prestaties van het model bij het gebruik van tools en agenttaken aanzienlijk verbeterd."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - denkmodus; DeepSeek-V3.1 is een nieuw hybride redeneermodel van DeepSeek dat twee redeneermodi ondersteunt: denken en niet-denken, met een hogere denkefficiëntie dan DeepSeek-R1-0528. Na post-training optimalisatie is het gebruik van agenttools en de prestaties bij agenttaken aanzienlijk verbeterd."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 is de nieuwste algemene grote modelrelease van DeepSeek, ondersteunt een hybride redeneersysteem en beschikt over sterkere agentmogelijkheden."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "DeepSeek V3.2 denkmodus. Voordat het model het definitieve antwoord geeft, genereert het eerst een keten van gedachten om de nauwkeurigheid van het eindantwoord te verbeteren."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite biedt een ultieme responssnelheid en een betere prijs-kwaliteitverhouding, waardoor het flexibele keuzes biedt voor verschillende klantenscenario's. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 128k."
