@@ -8,6 +8,7 @@ import { sessionSelectors } from '@/store/session/selectors';
 import { SessionDefaultGroup } from '@/types/index';
 
 import SkeletonList from '../../../../../../../../features/NavPanel/components/SkeletonList';
+import AllAgentsDrawer from '../AllAgentsDrawer';
 import Group from './Group';
 import SessionList from './List';
 import { useAgentList } from './useAgentList';
@@ -15,6 +16,11 @@ import { useAgentList } from './useAgentList';
 const AgentList = memo(() => {
   const isInit = useSessionStore(sessionSelectors.isSessionListInit);
   const { customList, pinnedList, defaultList } = useAgentList();
+
+  const [allAgentsDrawerOpen, closeAllAgentsDrawer] = useSessionStore((s) => [
+    s.allAgentsDrawerOpen,
+    s.closeAllAgentsDrawer,
+  ]);
 
   useFetchSessions();
 
@@ -40,6 +46,7 @@ const AgentList = memo(() => {
       {showDefault && (
         <SessionList dataSource={defaultList!} groupId={SessionDefaultGroup.Default} />
       )}
+      <AllAgentsDrawer onClose={closeAllAgentsDrawer} open={allAgentsDrawerOpen} />
     </>
   );
 });
