@@ -122,38 +122,26 @@ export const params = {
         reasoning: tags.includes('reasoning') || false,
         type: m.type === 'embedding' ? 'embedding' : 'chat',
         vision: tags.includes('vision') || false,
-        ...(tags.includes('reasoning') &&
-          m.id.includes('gpt-5') && {
-            settings: {
-              extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
-            },
-          }),
-        ...(tags.includes('reasoning') &&
-          m.id.includes('openai') &&
-          !m.id.includes('gpt-5') && {
-            settings: {
-              extendParams: ['reasoningEffort', 'textVerbosity'],
-            },
-          }),
-        ...(tags.includes('reasoning') &&
-          m.id.includes('claude') && {
-            settings: {
-              extendParams: ['enableReasoning', 'reasoningBudgetToken'],
-            },
-          }),
-        ...(m.id.includes('claude') &&
-          writeCacheInputPrice &&
-          writeCacheInputPrice !== 0 && {
-            settings: {
-              extendParams: ['disableContextCaching'],
-            },
-          }),
-        ...(tags.includes('reasoning') &&
-          m.id.includes('gemini-2.5') && {
-            settings: {
-              extendParams: ['reasoningBudgetToken'],
-            },
-          }),
+        // Merge all applicable extendParams for settings
+        ...(() => {
+          const extendParams: string[] = [];
+          if (tags.includes('reasoning') && m.id.includes('gpt-5')) {
+            extendParams.push('gpt5ReasoningEffort', 'textVerbosity');
+          }
+          if (tags.includes('reasoning') && m.id.includes('openai') && !m.id.includes('gpt-5')) {
+            extendParams.push('reasoningEffort', 'textVerbosity');
+          }
+          if (tags.includes('reasoning') && m.id.includes('claude')) {
+            extendParams.push('enableReasoning', 'reasoningBudgetToken');
+          }
+          if (m.id.includes('claude') && writeCacheInputPrice && writeCacheInputPrice !== 0) {
+            extendParams.push('disableContextCaching');
+          }
+          if (tags.includes('reasoning') && m.id.includes('gemini-2.5')) {
+            extendParams.push('reasoningBudgetToken');
+          }
+          return extendParams.length > 0 ? { settings: { extendParams } } : {};
+        })(),
       } as any;
     });
 

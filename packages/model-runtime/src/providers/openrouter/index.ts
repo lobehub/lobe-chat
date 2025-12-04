@@ -118,44 +118,33 @@ export const params = {
         reasoning: supported_parameters.includes('reasoning'),
         releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
         vision: inputModalities.includes('image'),
-        ...(model.description &&
-          model.description.includes('`reasoning` `enabled`') && {
-            settings: {
-              extendParams: ['enableReasoning'],
-            },
-          }),
-        ...(supported_parameters.includes('reasoning') &&
-          model.id.includes('gpt-5') && {
-            settings: {
-              extendParams: ['gpt5ReasoningEffort'],
-            },
-          }),
-        ...(supported_parameters.includes('reasoning') &&
-          model.id.includes('openai') &&
-          !model.id.includes('gpt-5') && {
-            settings: {
-              extendParams: ['reasoningEffort'],
-            },
-          }),
-        ...(supported_parameters.includes('reasoning') &&
-          model.id.includes('claude') && {
-            settings: {
-              extendParams: ['enableReasoning', 'reasoningBudgetToken'],
-            },
-          }),
-        ...(model.id.includes('claude') &&
-          writeCacheInputPrice &&
-          writeCacheInputPrice !== 0 && {
-            settings: {
-              extendParams: ['disableContextCaching'],
-            },
-          }),
-        ...(supported_parameters.includes('reasoning') &&
-          model.id.includes('gemini-2.5') && {
-            settings: {
-              extendParams: ['reasoningBudgetToken'],
-            },
-          }),
+        // Merge all applicable extendParams for settings
+        ...(() => {
+          const extendParams: string[] = [];
+          if (model.description && model.description.includes('`reasoning` `enabled`')) {
+            extendParams.push('enableReasoning');
+          }
+          if (supported_parameters.includes('reasoning') && model.id.includes('gpt-5')) {
+            extendParams.push('gpt5ReasoningEffort');
+          }
+          if (
+            supported_parameters.includes('reasoning') &&
+            model.id.includes('openai') &&
+            !model.id.includes('gpt-5')
+          ) {
+            extendParams.push('reasoningEffort');
+          }
+          if (supported_parameters.includes('reasoning') && model.id.includes('claude')) {
+            extendParams.push('enableReasoning', 'reasoningBudgetToken');
+          }
+          if (model.id.includes('claude') && writeCacheInputPrice && writeCacheInputPrice !== 0) {
+            extendParams.push('disableContextCaching');
+          }
+          if (supported_parameters.includes('reasoning') && model.id.includes('gemini-2.5')) {
+            extendParams.push('reasoningBudgetToken');
+          }
+          return extendParams.length > 0 ? { settings: { extendParams } } : {};
+        })(),
       };
     });
 
