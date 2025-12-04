@@ -102,9 +102,9 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 64, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 58, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-09-05',
@@ -130,27 +130,6 @@ const moonshotChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-02-17',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-      vision: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'kimi-thinking-preview 模型是月之暗面提供的具有多模态推理能力和通用推理能力的多模态思考模型，它擅长深度推理，帮助解决更多更难的事情',
-    displayName: 'Kimi Thinking Preview',
-    enabled: true,
-    id: 'kimi-thinking-preview',
-    pricing: {
-      currency: 'CNY',
-      units: [
-        { name: 'textInput', rate: 200, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 200, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-05-06',
     type: 'chat',
   },
   {
