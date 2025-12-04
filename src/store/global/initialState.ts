@@ -13,6 +13,7 @@ export enum SidebarTabKey {
   Image = 'image',
   Knowledge = 'knowledge',
   Me = 'me',
+  Memory = 'memory',
   Pages = 'pages',
   Resource = 'resource',
   Setting = 'settings',
@@ -58,6 +59,7 @@ export enum SettingsTabs {
  */
 export enum ProfileTabs {
   APIKey = 'apikey',
+  Memory = 'memory',
   Profile = 'profile',
   Security = 'security',
   Stats = 'stats',

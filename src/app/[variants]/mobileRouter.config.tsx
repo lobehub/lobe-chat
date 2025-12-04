@@ -158,6 +158,19 @@ export const createMobileRouter = () =>
           path: 'settings',
         },
 
+        // Memory routes
+        {
+          children: [
+            {
+              element: dynamicElement(() => import('./(main)/memory')),
+              index: true,
+            },
+          ],
+          element: dynamicElement(() => import('./(main)/memory/_layout')),
+          errorElement: <ErrorBoundary resetPath="/memory" />,
+          path: 'memory',
+        },
+
         // Me routes (mobile personal center)
         {
           children: [

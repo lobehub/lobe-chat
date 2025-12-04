@@ -34,6 +34,7 @@ import { uploadRouter } from './upload';
 import { usageRouter } from './usage';
 import { userRouter } from './user';
 import { userMemoriesRouter } from './userMemories';
+import { userMemoryRouter } from './userMemory';
 
 export const lambdaRouter = router({
   agent: agentRouter,
@@ -68,6 +69,7 @@ export const lambdaRouter = router({
   usage: usageRouter,
   user: userRouter,
   userMemories: userMemoriesRouter,
+  userMemory: userMemoryRouter,
 });
 
 export type LambdaRouter = typeof lambdaRouter;
