@@ -27,9 +27,11 @@ vi.mock('@lobechat/utils/server', () => ({
 
 vi.mock('@/database/models/userMemory', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/database/models/userMemory')>();
+  const mockUserMemoryModel: any = vi.fn();
+  mockUserMemoryModel.parseDateFromString = actual.UserMemoryModel.parseDateFromString;
   return {
     ...actual,
-    UserMemoryModel: vi.fn(),
+    UserMemoryModel: mockUserMemoryModel,
   } satisfies typeof import('@/database/models/userMemory');
 });
 

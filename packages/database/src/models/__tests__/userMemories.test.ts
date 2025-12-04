@@ -172,6 +172,54 @@ function generateRandomCreateUserMemoryPreferenceParams() {
 }
 
 describe('UserMemoryModel', () => {
+  describe('normalizeAssociations', () => {
+    it('returns null when input is not an array or contains no valid items', () => {
+      expect(UserMemoryModel.normalizeAssociations(undefined)).toBeNull();
+      expect(UserMemoryModel.normalizeAssociations('not-array')).toBeNull();
+      expect(UserMemoryModel.normalizeAssociations([null, undefined, '', '   ', 0])).toBeNull();
+    });
+
+    it('normalizes objects, JSON strings, and raw strings', () => {
+      const result = UserMemoryModel.normalizeAssociations([
+        { id: 1, name: 'object' },
+        ' { "id": 2, "name": "json" } ',
+        'raw',
+        { another: true },
+      ]);
+
+      expect(result).toEqual([
+        { id: 1, name: 'object' },
+        { id: 2, name: 'json' },
+        { value: 'raw' },
+        { another: true },
+      ]);
+    });
+  });
+
+  describe('parseDateFromString', () => {
+    it('returns null for empty, nullish, non-string, or invalid Date inputs', () => {
+      expect(UserMemoryModel.parseDateFromString()).toBeNull();
+      expect(UserMemoryModel.parseDateFromString(null)).toBeNull();
+      expect(UserMemoryModel.parseDateFromString('   ')).toBeNull();
+      expect(UserMemoryModel.parseDateFromString(123 as unknown as string)).toBeNull();
+      expect(UserMemoryModel.parseDateFromString(new Date('invalid'))).toBeNull();
+    });
+
+    it('parses valid dates from strings and returns the same valid Date instance', () => {
+      const date = new Date('2024-01-01T00:00:00.000Z');
+
+      expect(UserMemoryModel.parseDateFromString(' 2024-01-01T00:00:00.000Z ')).toEqual(date);
+      expect(UserMemoryModel.parseDateFromString(date)).toBe(date);
+    });
+
+    it('returns an invalid Date object when the input string cannot be parsed', () => {
+      const invalid = UserMemoryModel.parseDateFromString('not-a-date');
+
+      expect(invalid).toBeInstanceOf(Date);
+      expect(Number.isNaN(invalid!.getTime())).toBe(true);
+    });
+  });
+
   describe('create layered memories', () => {
     it('creates a context memory and links the base record', async () => {
       const params = generateRandomCreateUserMemoryContextParams();
