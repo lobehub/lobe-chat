@@ -69,7 +69,7 @@ export class MCPService {
     const state = { ...result, content: newContent };
 
     if (result.isError) {
-      return { content, state, success: false };
+      return { content, state, success: true };
     }
 
     return { content, state, success: true };
@@ -404,10 +404,10 @@ export class MCPService {
         description:
           metadata?.description ||
           `${identifier} MCP server has ` +
-          Object.entries(manifest)
-            .filter(([key]) => ['tools', 'prompts', 'resources'].includes(key))
-            .map(([key, item]) => `${(item as Array<any>)?.length} ${key}`)
-            .join(','),
+            Object.entries(manifest)
+              .filter(([key]) => ['tools', 'prompts', 'resources'].includes(key))
+              .map(([key, item]) => `${(item as Array<any>)?.length} ${key}`)
+              .join(','),
         title: metadata?.name || identifier,
       },
       ...manifest,
