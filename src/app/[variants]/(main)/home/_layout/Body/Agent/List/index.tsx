@@ -13,7 +13,7 @@ import Group from './Group';
 import SessionList from './List';
 import { useAgentList } from './useAgentList';
 
-const AgentList = memo(() => {
+const AgentList = memo<{ onMoreClick?: () => void }>(({ onMoreClick }) => {
   const isInit = useSessionStore(sessionSelectors.isSessionListInit);
   const { customList, pinnedList, defaultList } = useAgentList();
 
@@ -44,7 +44,11 @@ const AgentList = memo(() => {
       {showPinned && <SessionList dataSource={pinnedList!} />}
       {showCustom && <Group dataSource={customList!} />}
       {showDefault && (
-        <SessionList dataSource={defaultList!} groupId={SessionDefaultGroup.Default} />
+        <SessionList
+          dataSource={defaultList!}
+          groupId={SessionDefaultGroup.Default}
+          onMoreClick={onMoreClick}
+        />
       )}
       <AllAgentsDrawer onClose={closeAllAgentsDrawer} open={allAgentsDrawerOpen} />
     </>
