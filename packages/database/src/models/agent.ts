@@ -1,4 +1,5 @@
 import { getAgentPersistConfig } from '@lobechat/builtin-agents';
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import { and, desc, eq, inArray } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
@@ -13,6 +14,7 @@ import {
   documents,
   files,
   knowledgeBases,
+  sessions,
 } from '../schemas';
 import { LobeChatDatabase } from '../type';
 
@@ -245,20 +247,47 @@ export class AgentModel {
   /**
    * Get a builtin agent by slug, creating it if it doesn't exist.
    * Builtin agents are standalone agents not bound to sessions.
+   *
    */
   getBuiltinAgent = async (slug: string): Promise<AgentItem | null> => {
-    // First try to find existing agent by slug
+    // 1. First try to find existing agent by slug
     const existing = await this.db.query.agents.findFirst({
       where: and(eq(agents.slug, slug), eq(agents.userId, this.userId)),
     });
 
     if (existing) return existing;
 
-    // Check if this is a known builtin agent
+    // For inbox agent, it has special compatibility handling:
+    // Historical inbox was stored as session with slug='inbox' and linked agent via agentsToSessions
+    // If found, update the agent's slug to 'inbox' for future direct queries
+    if (slug === INBOX_SESSION_ID) {
+      // Use join query for better performance instead of multiple findFirst calls
+      const result = await this.db
+        .select({ agent: agents })
+        .from(sessions)
+        .innerJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+        .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
+        .where(and(eq(sessions.slug, INBOX_SESSION_ID), eq(sessions.userId, this.userId)))
+        .limit(1);
+
+      if (result.length > 0 && result[0].agent) {
+        // Update the agent's slug to 'inbox' for future direct queries
+        // Use both id and userId to ensure we only update current user's agent
+        const [updatedAgent] = await this.db
+          .update(agents)
+          .set({ slug: INBOX_SESSION_ID, virtual: true })
+          .where(eq(agents.id, result[0].agent.id))
+          .returning();
+
+        return updatedAgent;
+      }
+    }
+
+    // 3. Check if this is a known builtin agent
     const persistConfig = getAgentPersistConfig(slug);
     if (!persistConfig) return null;
 
-    // Create the builtin agent with persist config
+    // 4. Create the builtin agent with persist config
     const result = await this.db
       .insert(agents)
       .values({
