@@ -1,5 +1,6 @@
 'use client';
 
+import { SESSION_CHAT_URL } from '@lobechat/const';
 import { Empty } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
@@ -8,9 +9,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 import { VList } from 'virtua';
 
-import { SESSION_CHAT_URL } from '@/const/url';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
-import { useSwitchSession } from '@/hooks/useSwitchSession';
+import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/slices/session/selectors';
 import { LobeAgentSession, LobeSessionType, LobeSessions } from '@/types/session';
@@ -31,7 +31,7 @@ interface ContentProps {
 
 const Content = memo<ContentProps>(({ searchKeyword }) => {
   const { t } = useTranslation('common');
-  const switchSession = useSwitchSession();
+  const navigateToAgent = useNavigateToAgent();
 
   const [useSearchSessions] = useSessionStore((s) => [s.useSearchSessions]);
 
@@ -85,7 +85,7 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
             aria-label={id}
             onClick={(e) => {
               e.preventDefault();
-              switchSession((res as any).config?.id);
+              navigateToAgent((res as any).config?.id);
             }}
             to={SESSION_CHAT_URL((res as any).config?.id, false)}
           >

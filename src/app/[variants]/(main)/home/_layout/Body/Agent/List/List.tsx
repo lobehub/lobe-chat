@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import NavItem from '@/features/NavPanel/components/NavItem';
-import { useSwitchSession } from '@/hooks/useSwitchSession';
+import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { getSessionStoreState, useSessionStore } from '@/store/session';
@@ -32,7 +32,7 @@ const List = memo<SessionListProps>(
   ({ onMoreClick, dataSource, groupId, itemStyle, itemClassName }) => {
     const { t } = useTranslation('chat');
     const { analytics } = useAnalytics();
-    const switchSession = useSwitchSession();
+    const navigateToAgent = useNavigateToAgent();
     const { createAgent } = useCreateMenuItems();
 
     // Early return for empty state
@@ -40,7 +40,7 @@ const List = memo<SessionListProps>(
 
     const handleClick = useCallback(
       (agentId: string) => {
-        switchSession(agentId);
+        navigateToAgent(agentId);
 
         // Defer analytics tracking to avoid blocking UI
         if (analytics) {
@@ -81,7 +81,7 @@ const List = memo<SessionListProps>(
           }
         }
       },
-      [switchSession, analytics],
+      [navigateToAgent, analytics],
     );
 
     // Check if this is defaultList and if there are more agents

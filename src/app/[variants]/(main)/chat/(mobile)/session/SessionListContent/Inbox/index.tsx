@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
-import { useSwitchSession } from '@/hooks/useSwitchSession';
+import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
 import { getChatStoreState, useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
@@ -15,7 +15,7 @@ import ListItem from '../ListItem';
 const Inbox = memo(() => {
   const mobile = useServerConfigStore((s) => s.isMobile);
   const activeId = useSessionStore((s) => s.activeId);
-  const switchSession = useSwitchSession();
+  const navigateToAgent = useNavigateToAgent();
 
   const openNewTopicOrSaveTopic = useChatStore((s) => s.openNewTopicOrSaveTopic);
 
@@ -32,7 +32,7 @@ const Inbox = memo(() => {
             await openNewTopicOrSaveTopic();
           }
         } else {
-          switchSession(INBOX_SESSION_ID);
+          navigateToAgent(INBOX_SESSION_ID);
         }
       }}
       to={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
