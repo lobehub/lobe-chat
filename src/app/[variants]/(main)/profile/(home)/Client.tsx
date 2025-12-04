@@ -204,6 +204,7 @@ const FullNameRow = memo(() => {
 const PasswordRow = memo(() => {
   const { t } = useTranslation('auth');
   const userProfile = useUserStore(userProfileSelectors.userProfile);
+  const hasPasswordAccount = useUserStore(authSelectors.hasPasswordAccount);
   const [sending, setSending] = useState(false);
 
   const handleChangePassword = useCallback(async () => {
@@ -239,12 +240,12 @@ const PasswordRow = memo(() => {
             opacity: sending ? 0.5 : 1,
           }}
         >
-          {t('profile.changePassword')}
+          {hasPasswordAccount ? t('profile.changePassword') : t('profile.setPassword')}
         </Typography.Text>
       }
       label={t('profile.password')}
     >
-      <Typography.Text>••••••</Typography.Text>
+      <Typography.Text>{hasPasswordAccount ? '••••••' : '--'}</Typography.Text>
     </ProfileRow>
   );
 });
@@ -259,7 +260,6 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
     userProfileSelectors.userProfile(s),
     s.isLoaded,
   ]);
-  const hasPasswordAccount = useUserStore(authSelectors.hasPasswordAccount);
   const isLoadedAuthProviders = useUserStore(authSelectors.isLoadedAuthProviders);
   const fetchAuthProviders = useUserStore((s) => s.fetchAuthProviders);
 
@@ -309,8 +309,8 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
 
       <Divider style={{ margin: 0 }} />
 
-      {/* Password Row - Only for Better Auth users with credential login */}
-      {isLoginWithBetterAuth && hasPasswordAccount && (
+      {/* Password Row - For Better Auth users to change or set password */}
+      {isLoginWithBetterAuth && (
         <>
           <PasswordRow />
           <Divider style={{ margin: 0 }} />

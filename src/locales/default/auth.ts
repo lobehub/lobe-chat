@@ -194,6 +194,7 @@ export default {
     resetPasswordError: '发送密码重置链接失败',
     resetPasswordSent: '密码重置链接已发送，请检查邮箱',
     save: '保存',
+    setPassword: '设置密码',
     sso: {
       link: {
         button: '连接帐户',
