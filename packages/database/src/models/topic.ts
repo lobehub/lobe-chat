@@ -33,6 +33,11 @@ interface QueryTopicParams {
   agentId?: string | null;
   containerId?: string | null; // sessionId or groupId
   current?: number;
+  /**
+   * Whether this is an inbox agent query.
+   * When true, also includes legacy inbox topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
+   */
+  isInbox?: boolean;
   pageSize?: number;
   sessionId?: string | null;
 }
@@ -52,12 +57,19 @@ export class TopicModel {
   }
   // **************** Query *************** //
 
-  query = async ({ agentId, current = 0, pageSize = 9999, containerId }: QueryTopicParams = {}) => {
+  query = async ({
+    agentId,
+    current = 0,
+    pageSize = 9999,
+    containerId,
+    isInbox,
+  }: QueryTopicParams = {}) => {
     const offset = current * pageSize;
 
     // If agentId is provided, query topics that match either:
     // 1. topics.agentId = agentId (new data with agentId stored directly)
     // 2. topics.sessionId = associated sessionId (legacy data via agentsToSessions lookup)
+    // 3. For inbox: sessionId IS NULL AND groupId IS NULL AND agentId IS NULL (legacy inbox data)
     if (agentId) {
       // Get the associated sessionId for backward compatibility with legacy data
       const agentSession = await this.db
@@ -69,11 +81,21 @@ export class TopicModel {
       const associatedSessionId = agentSession[0]?.sessionId;
 
       // Build condition to match both new (agentId) and legacy (sessionId) data
-      const agentCondition = associatedSessionId
-        ? or(eq(topics.agentId, agentId), eq(topics.sessionId, associatedSessionId))
-        : eq(topics.agentId, agentId);
+      let agentCondition;
+      if (isInbox) {
+        // For inbox agent: also query legacy inbox topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
+        agentCondition = or(
+          eq(topics.agentId, agentId),
+          and(isNull(topics.sessionId), isNull(topics.groupId), isNull(topics.agentId)),
+        );
+      } else if (associatedSessionId) {
+        agentCondition = or(eq(topics.agentId, agentId), eq(topics.sessionId, associatedSessionId));
+      } else {
+        agentCondition = eq(topics.agentId, agentId);
+      }
 
       // Fetch items and total count in parallel
+      // Include sessionId and agentId for migration detection
       const [items, totalResult] = await Promise.all([
         this.db
           .select({
@@ -105,11 +127,13 @@ export class TopicModel {
     const [items, totalResult] = await Promise.all([
       this.db
         .select({
+          agentId: topics.agentId,
           createdAt: topics.createdAt,
           favorite: topics.favorite,
           historySummary: topics.historySummary,
           id: topics.id,
           metadata: topics.metadata,
+          sessionId: topics.sessionId,
           title: topics.title,
           updatedAt: topics.updatedAt,
         })
@@ -126,7 +150,11 @@ export class TopicModel {
         .where(whereCondition),
     ]);
 
-    return { items, total: totalResult[0].count };
+    // Remove internal fields before returning
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const cleanItems = items.map(({ agentId, sessionId, ...rest }) => rest);
+
+    return { items: cleanItems, total: totalResult[0].count };
   };
 
   findById = async (id: string) => {
@@ -181,10 +209,6 @@ export class TopicModel {
     const topicIds = topicIdsByMessages
       .map((t) => t.topicId)
       .filter((id): id is string => id !== null);
-
-    if (topicIds.length === 0) {
-      return topicsByTitle;
-    }
 
     const topicsByMessages = await this.db.query.topics.findMany({
       orderBy: [desc(topics.updatedAt)],
@@ -492,6 +516,43 @@ export class TopicModel {
       .set({ ...data, updatedAt: new Date() })
       .where(and(eq(topics.id, id), eq(topics.userId, this.userId)))
       .returning();
+  };
+
+  /**
+   * Runtime migration: backfill agentId for all legacy topics under a session or inbox
+   * Used for progressive migration so future queries don't need agentsToSessions lookup
+   *
+   */
+  migrateAgentId = async (
+    params: { agentId: string; sessionId: string } | { agentId: string; isInbox: true },
+  ) => {
+    if ('isInbox' in params && params.isInbox) {
+      // Migrate all inbox legacy topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
+      return this.db
+        .update(topics)
+        .set({ agentId: params.agentId })
+        .where(
+          and(
+            eq(topics.userId, this.userId),
+            isNull(topics.sessionId),
+            isNull(topics.groupId),
+            isNull(topics.agentId),
+          ),
+        );
+    }
+
+    // Migrate all topics with the given sessionId that don't have agentId
+    const { sessionId, agentId } = params as { agentId: string; sessionId: string };
+    return this.db
+      .update(topics)
+      .set({ agentId })
+      .where(
+        and(
+          eq(topics.userId, this.userId),
+          eq(topics.sessionId, sessionId),
+          isNull(topics.agentId),
+        ),
+      );
   };
 
   // **************** Helper *************** //
