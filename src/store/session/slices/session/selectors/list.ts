@@ -12,6 +12,15 @@ import {
 import { SessionStore } from '../../../store';
 
 const defaultSessions = (s: SessionStore): LobeSessions => s.defaultSessions;
+
+// Limit default sessions for sidebar display based on page size
+const defaultSessionsLimited =
+  (pageSize: number) =>
+  (s: SessionStore): LobeSessions =>
+    s.defaultSessions.slice(0, pageSize);
+
+const defaultSessionsCount = (s: SessionStore): number => s.defaultSessions.length;
+
 const pinnedSessions = (s: SessionStore): LobeSessions => s.pinnedSessions;
 const customSessionGroups = (s: SessionStore): CustomSessionGroup[] => s.customSessionGroups;
 
@@ -69,6 +78,8 @@ export const sessionSelectors = {
   currentSessionSafe,
   customSessionGroups,
   defaultSessions,
+  defaultSessionsCount,
+  defaultSessionsLimited,
   getSessionById,
   getSessionMetaById,
   hasCustomAgents,

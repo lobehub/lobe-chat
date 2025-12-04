@@ -1,17 +1,21 @@
 import { useAnalytics } from '@lobehub/analytics/react';
+import { MoreHorizontal } from 'lucide-react';
 import { CSSProperties, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/url';
+import NavItem from '@/features/NavPanel/components/NavItem';
 import { useCreateMenuItems } from '@/features/NavPanel/hooks';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
-import { getSessionStoreState } from '@/store/session';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
+import { getSessionStoreState, useSessionStore } from '@/store/session';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
 import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
-import { LobeSessions } from '@/types/session';
+import { LobeSessions, SessionDefaultGroup } from '@/types/session';
 
 import EmptyStatus from '../../EmptyStatus';
 import Item from './Item';
@@ -77,6 +81,14 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
     [switchSession, analytics],
   );
 
+  // Check if this is defaultList and if there are more agents
+  const isDefaultList = groupId === SessionDefaultGroup.Default;
+  const defaultSessionsCount = useSessionStore(sessionSelectors.defaultSessionsCount);
+  const agentPageSize = useGlobalStore(systemStatusSelectors.agentPageSize);
+  const openAllAgentsDrawer = useSessionStore((s) => s.openAllAgentsDrawer);
+
+  const hasMore = isDefaultList && defaultSessionsCount > agentPageSize;
+
   if (isEmpty) {
     return (
       <EmptyStatus
@@ -104,6 +116,13 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
           <Item className={itemClassName} id={id} style={itemStyle} />
         </Link>
       ))}
+      {hasMore && (
+        <NavItem
+          icon={MoreHorizontal}
+          onClick={openAllAgentsDrawer}
+          title={t('more', { defaultValue: '更多' })}
+        />
+      )}
     </Flexbox>
   );
 });
