@@ -7,7 +7,7 @@ import {
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
-import { eq } from 'drizzle-orm';
+import { and, eq, gt, or } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
 import { merge } from '@/utils/merge';
@@ -33,6 +33,16 @@ export class UserNotFoundError extends TRPCError {
     super({ code: 'UNAUTHORIZED', message: 'user not found' });
   }
 }
+
+export interface ListUsersForMemoryExtractorCursor {
+  createdAt: Date;
+  id: string;
+}
+
+export type ListUsersForMemoryExtractorOptions = {
+  cursor?: ListUsersForMemoryExtractorCursor;
+  limit?: number;
+};
 
 export class UserModel {
   private userId: string;
@@ -265,5 +275,24 @@ export class UserModel {
 
     // Decrypt keyVaults
     return await decryptor(state.settingsKeyVaults, id);
+  };
+
+  static listUsersForMemoryExtractor = (
+    db: LobeChatDatabase,
+    options: ListUsersForMemoryExtractorOptions = {},
+  ) => {
+    const cursorCondition = options.cursor
+      ? or(
+          gt(users.createdAt, options.cursor.createdAt),
+          and(eq(users.createdAt, options.cursor.createdAt), gt(users.id, options.cursor.id)),
+        )
+      : undefined;
+
+    return db.query.users.findMany({
+      columns: { createdAt: true, id: true },
+      limit: options.limit,
+      orderBy: (fields, { asc }) => [asc(fields.createdAt), asc(fields.id)],
+      where: cursorCondition,
+    });
   };
 }
