@@ -119,6 +119,10 @@ export interface SystemStatus {
    * 是否使用短格式显示 token
    */
   tokenDisplayFormatShort?: boolean;
+  /**
+   * number of topics to display per page
+   */
+  topicPageSize?: number;
   zenMode?: boolean;
 }
 
@@ -173,6 +177,7 @@ export const INITIAL_STATUS = {
   systemRoleExpandedMap: {},
   themeMode: 'auto',
   tokenDisplayFormatShort: true,
+  topicPageSize: 20,
   zenMode: false,
 } satisfies SystemStatus;
 
