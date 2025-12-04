@@ -511,7 +511,7 @@ const googleChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576,
-    description: 'Preview release (Septempber 25th, 2025) of Gemini 2.5 Flash',
+    description: 'Preview release (September 25th, 2025) of Gemini 2.5 Flash',
     displayName: 'Gemini 2.5 Flash Preview Sep 2025',
     id: 'gemini-2.5-flash-preview-09-2025',
     maxOutput: 65_536,
