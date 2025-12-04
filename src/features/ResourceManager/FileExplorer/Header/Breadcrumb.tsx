@@ -149,4 +149,3 @@ const Breadcrumb = memo<BreadcrumbProps>(({ category, knowledgeBaseId, fileName 
 Breadcrumb.displayName = 'Breadcrumb';
 
 export default Breadcrumb;
-

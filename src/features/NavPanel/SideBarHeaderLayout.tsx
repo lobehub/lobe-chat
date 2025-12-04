@@ -56,10 +56,18 @@ interface SideBarHeaderLayoutProps {
   left?: ReactNode;
   right?: ReactNode;
   showBack?: boolean;
+  showTogglePanelButton?: boolean;
 }
 
 const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(
-  ({ left, right, backTo = '/', showBack = true, breadcrumb = [] }) => {
+  ({
+    left,
+    right,
+    backTo = '/',
+    showBack = true,
+    breadcrumb = [],
+    showTogglePanelButton = true,
+  }) => {
     const { styles } = useStyles();
     const navigate = useNavigate();
     const leftContent = left ? (
@@ -133,7 +141,7 @@ const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(
             overflow: 'hidden',
           }}
         >
-          <TogglePanelButton />
+          {showTogglePanelButton && <TogglePanelButton />}
           {right}
         </Flexbox>
       </Flexbox>

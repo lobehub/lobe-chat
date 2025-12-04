@@ -1,5 +1,5 @@
 import { DBMessageItem, TopicRankItem } from '@lobechat/types';
-import { and, count, desc, eq, gt, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
+import { SQL, and, count, desc, eq, gt, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
 
 import { TopicItem, agents, agentsToSessions, messages, topics } from '../schemas';
 import { LobeChatDatabase } from '../type';
@@ -171,10 +171,35 @@ export class TopicModel {
     );
   };
   count = async (params?: {
+    agentId?: string;
+    containerId?: string | null;
     endDate?: string;
     range?: [string, string];
     startDate?: string;
   }): Promise<number> => {
+    // Build agent-specific condition if agentId is provided
+    let agentCondition: SQL | undefined;
+    if (params?.agentId) {
+      // Get the associated sessionId for backward compatibility with legacy data
+      const agentSession = await this.db
+        .select({ sessionId: agentsToSessions.sessionId })
+        .from(agentsToSessions)
+        .where(
+          and(
+            eq(agentsToSessions.agentId, params.agentId),
+            eq(agentsToSessions.userId, this.userId),
+          ),
+        )
+        .limit(1);
+
+      const associatedSessionId = agentSession[0]?.sessionId;
+
+      // Build condition to match both new (agentId) and legacy (sessionId) data
+      agentCondition = associatedSessionId
+        ? or(eq(topics.agentId, params.agentId), eq(topics.sessionId, associatedSessionId))
+        : eq(topics.agentId, params.agentId);
+    }
+
     const result = await this.db
       .select({
         count: count(topics.id),
@@ -183,6 +208,8 @@ export class TopicModel {
       .where(
         genWhere([
           eq(topics.userId, this.userId),
+          agentCondition,
+          params?.containerId ? this.matchContainer(params.containerId) : undefined,
           params?.range
             ? genRangeWhere(params.range, topics.createdAt, (date) => date.toDate())
             : undefined,
