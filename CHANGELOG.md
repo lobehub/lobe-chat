@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.143.2](https://github.com/lobehub/lobe-chat/compare/v1.143.1...v1.143.2)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix React CVE.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix React CVE, closes [#10592](https://github.com/lobehub/lobe-chat/issues/10592) ([20809b5](https://github.com/lobehub/lobe-chat/commit/20809b5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.143.1](https://github.com/lobehub/lobe-chat/compare/v1.143.0...v1.143.1)
 
 <sup>Released on **2025-12-02**</sup>
