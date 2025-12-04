@@ -1,4 +1,5 @@
 import { RecentTopic } from '@lobechat/types';
+import { after } from 'next/server';
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
@@ -131,12 +132,13 @@ export const topicRouter = router({
         agentId: z.string().nullable().optional(),
         containerId: z.string().nullable().optional(),
         current: z.number().optional(),
+        isInbox: z.boolean().optional(),
         pageSize: z.number().optional(),
         sessionId: z.string().nullable().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
-      const { sessionId, ...rest } = input;
+      const { sessionId, isInbox, ...rest } = input;
 
       // 如果提供了 sessionId 但没有 agentId，需要反向查找 agentId
       let effectiveAgentId = rest.agentId;
@@ -144,13 +146,44 @@ export const topicRouter = router({
         effectiveAgentId = await resolveAgentIdFromSession(sessionId, ctx.serverDB, ctx.userId);
       }
 
-      const result = await ctx.topicModel.query({ ...rest, agentId: effectiveAgentId });
+      const result = await ctx.topicModel.query({ ...rest, agentId: effectiveAgentId, isInbox });
 
-      // Return both items and total count
-      return {
-        items: result.items,
-        total: result.total,
+      // Runtime migration: backfill agentId for ALL legacy topics under this agent
+      const runMigration = async () => {
+        if (!effectiveAgentId) return;
+
+        // Get the associated sessionId for migration
+        const resolved = await resolveContext(
+          { agentId: effectiveAgentId },
+          ctx.serverDB,
+          ctx.userId,
+        );
+
+        const migrationParams = isInbox
+          ? { agentId: effectiveAgentId, isInbox: true as const }
+          : resolved.sessionId
+            ? { agentId: effectiveAgentId, sessionId: resolved.sessionId }
+            : null;
+
+        if (migrationParams) {
+          try {
+            await ctx.topicModel.migrateAgentId(migrationParams);
+          } catch (error) {
+            console.error('[Topic] Failed to migrate agentId:', error);
+          }
+        }
       };
+
+      try {
+        // Use Next.js after() for non-blocking execution in production
+        after(runMigration);
+      } catch {
+        // after() can only be called within Next.js request scope
+        // In test environment or other contexts, execute migration directly
+        runMigration();
+      }
+
+      return { items: result.items, total: result.total };
     }),
 
   hasTopics: topicProcedure.query(async ({ ctx }) => {

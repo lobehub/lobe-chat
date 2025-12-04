@@ -90,5 +90,10 @@ export interface QueryTopicParams {
   agentId?: string | null;
   containerId?: string | null; // sessionId or groupId
   current?: number;
+  /**
+   * Whether this is an inbox agent query.
+   * When true, also includes legacy inbox topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
+   */
+  isInbox?: boolean;
   pageSize?: number;
 }
