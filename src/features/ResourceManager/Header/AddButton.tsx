@@ -188,7 +188,12 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   return (
     <>
       <Dropdown menu={{ items }} placement="bottomRight">
-        <Button icon={Plus} type="primary">
+        <Button
+          icon={Plus}
+          size={'small'}
+          style={{ borderRadius: 8, fontSize: 13, height: 32, paddingRight: 12 }}
+          type="primary"
+        >
           {t('addLibrary')}
         </Button>
       </Dropdown>

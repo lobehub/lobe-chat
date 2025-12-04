@@ -5,7 +5,7 @@ import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import RepoIcon from '@/components/RepoIcon';
+import RepoIcon from '@/components/LibIcon';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 interface CreateFormProps {
