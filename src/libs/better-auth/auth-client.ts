@@ -1,4 +1,5 @@
 import {
+  adminClient,
   genericOAuthClient,
   inferAdditionalFields,
   magicLinkClient,
@@ -27,6 +28,7 @@ export const {
   /** The base URL of the server (optional if you're using the same domain) */
   baseURL: NEXT_PUBLIC_AUTH_URL,
   plugins: [
+    adminClient(),
     inferAdditionalFields<typeof auth>(),
     genericOAuthClient(),
     ...(enableMagicLink ? [magicLinkClient()] : []),

@@ -1,4 +1,15 @@
 {
+  "authorize": {
+    "cancel": "Anuluj",
+    "confirm": "Autoryzuj użycie",
+    "description": {
+      "and": "oraz",
+      "prefix": "Klikając „Autoryzuj użycie”, wyrażasz zgodę na",
+      "privacy": "Politykę prywatności",
+      "terms": "Warunki korzystania z usługi"
+    },
+    "title": "Potwierdź autoryzację"
+  },
   "callback": {
     "buttons": {
       "close": "Zamknij okno"
@@ -33,8 +44,10 @@
     "stateMissing": "Nie znaleziono stanu autoryzacji, spróbuj ponownie."
   },
   "messages": {
+    "authorized": "Autoryzacja usługi LobeHub zakończona pomyślnie",
     "loading": "Uruchamianie procesu autoryzacji...",
     "success": {
+      "cloudMcpInstall": "Autoryzacja zakończona sukcesem! Możesz teraz zainstalować wtyczkę Cloud MCP.",
       "submit": "Autoryzacja zakończona sukcesem! Możesz teraz opublikować asystenta.",
       "upload": "Autoryzacja zakończona sukcesem! Możesz teraz opublikować nową wersję."
     }

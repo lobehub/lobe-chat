@@ -127,6 +127,7 @@ export const useChatItemContextMenu = ({
 
   return {
     containerRef,
+    contextMenuMode,
     contextMenuState,
     handleContextMenu,
     handleMenuClick,

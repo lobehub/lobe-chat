@@ -1,4 +1,5 @@
 import { NodemailerImpl } from './nodemailer';
+import { ResendImpl } from './resend';
 import { EmailServiceImpl } from './type';
 
 /**
@@ -6,8 +7,8 @@ import { EmailServiceImpl } from './type';
  */
 export enum EmailImplType {
   Nodemailer = 'nodemailer',
+  Resend = 'resend',
   // Future providers can be added here:
-  // Resend = 'resend',
   // SendGrid = 'sendgrid',
 }
 
@@ -20,6 +21,9 @@ export const createEmailServiceImpl = (
   switch (type) {
     case EmailImplType.Nodemailer: {
       return new NodemailerImpl();
+    }
+    case EmailImplType.Resend: {
+      return new ResendImpl();
     }
 
     default: {

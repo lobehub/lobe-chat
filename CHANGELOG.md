@@ -2,6 +2,507 @@
 
 # Changelog
 
+## [Version 2.0.0-next.156](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.155...v2.0.0-next.156)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix React CVE issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix React CVE issue, closes [#10593](https://github.com/lobehub/lobe-chat/issues/10593) ([abd850f](https://github.com/lobehub/lobe-chat/commit/abd850f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.155](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.154...v2.0.0-next.155)
+
+<sup>Released on **2025-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Missing init user after user creation.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Missing init user after user creation, closes [#10587](https://github.com/lobehub/lobe-chat/issues/10587) ([0e97a42](https://github.com/lobehub/lobe-chat/commit/0e97a42))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.154](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.153...v2.0.0-next.154)
+
+<sup>Released on **2025-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Udpate discover detail tools get & more link.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Udpate discover detail tools get & more link, closes [#10586](https://github.com/lobehub/lobe-chat/issues/10586) ([8ace3f0](https://github.com/lobehub/lobe-chat/commit/8ace3f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.153](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.152...v2.0.0-next.153)
+
+<sup>Released on **2025-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **security**: Prevent prompt injection in Claude workflows.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **security**: Prevent prompt injection in Claude workflows, closes [#10585](https://github.com/lobehub/lobe-chat/issues/10585) ([87f748f](https://github.com/lobehub/lobe-chat/commit/87f748f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.152](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.151...v2.0.0-next.152)
+
+<sup>Released on **2025-12-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Optimize betterauth UX.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Optimize betterauth UX, closes [#10582](https://github.com/lobehub/lobe-chat/issues/10582) ([01a6a89](https://github.com/lobehub/lobe-chat/commit/01a6a89))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.151](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.150...v2.0.0-next.151)
+
+<sup>Released on **2025-12-03**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Unify retry logic to async-retry.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Unify retry logic to async-retry, closes [#10579](https://github.com/lobehub/lobe-chat/issues/10579) ([95f31bc](https://github.com/lobehub/lobe-chat/commit/95f31bc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.150](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.149...v2.0.0-next.150)
+
+<sup>Released on **2025-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Better-auth add apple sso icon and label.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Better-auth add apple sso icon and label, closes [#10570](https://github.com/lobehub/lobe-chat/issues/10570) ([17facd5](https://github.com/lobehub/lobe-chat/commit/17facd5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.149](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.148...v2.0.0-next.149)
+
+<sup>Released on **2025-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **desktop**: Add token refresh retry mechanism.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **desktop**: Add token refresh retry mechanism, closes [#10575](https://github.com/lobehub/lobe-chat/issues/10575) ([83fc2e8](https://github.com/lobehub/lobe-chat/commit/83fc2e8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.148](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.147...v2.0.0-next.148)
+
+<sup>Released on **2025-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove apiMode param from Azure and Cloudflare provider requests, when desktop use contextMenu not work.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove apiMode param from Azure and Cloudflare provider requests, closes [#10571](https://github.com/lobehub/lobe-chat/issues/10571) ([7e44faa](https://github.com/lobehub/lobe-chat/commit/7e44faa))
+- **misc**: When desktop use contextMenu not work, closes [#10545](https://github.com/lobehub/lobe-chat/issues/10545) ([43c4db7](https://github.com/lobehub/lobe-chat/commit/43c4db7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.147](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.146...v2.0.0-next.147)
+
+<sup>Released on **2025-12-02**</sup>
+
+#### ✨ Features
+
+- **misc**: Support apple sso auth.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support apple sso auth, closes [#10563](https://github.com/lobehub/lobe-chat/issues/10563) ([2e50313](https://github.com/lobehub/lobe-chat/commit/2e50313))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.146](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.145...v2.0.0-next.146)
+
+<sup>Released on **2025-12-02**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor agent slug schema.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor agent slug schema, closes [#10561](https://github.com/lobehub/lobe-chat/issues/10561) ([0d609d1](https://github.com/lobehub/lobe-chat/commit/0d609d1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.145](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.144...v2.0.0-next.145)
+
+<sup>Released on **2025-12-02**</sup>
+
+#### ✨ Features
+
+- **misc**: Email provider support resend.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Email provider support resend, closes [#10557](https://github.com/lobehub/lobe-chat/issues/10557) ([7449b29](https://github.com/lobehub/lobe-chat/commit/7449b29))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.144](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.143...v2.0.0-next.144)
+
+<sup>Released on **2025-12-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: User email unique migration error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: User email unique migration error, closes [#10548](https://github.com/lobehub/lobe-chat/issues/10548) ([ca2a1a2](https://github.com/lobehub/lobe-chat/commit/ca2a1a2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.143](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.142...v2.0.0-next.143)
+
+<sup>Released on **2025-12-02**</sup>
+
+#### ✨ Features
+
+- **misc**: Support market cloud endpoint mcp.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support market cloud endpoint mcp, closes [#10484](https://github.com/lobehub/lobe-chat/issues/10484) ([9c7ce44](https://github.com/lobehub/lobe-chat/commit/9c7ce44))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.142](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.141...v2.0.0-next.142)
+
+<sup>Released on **2025-12-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove internal apiMode param from chat completion API requests.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove internal apiMode param from chat completion API requests, closes [#10539](https://github.com/lobehub/lobe-chat/issues/10539) ([9498cc6](https://github.com/lobehub/lobe-chat/commit/9498cc6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.141](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.140...v2.0.0-next.141)
+
+<sup>Released on **2025-12-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Drop user.phoneNumber and reuse user.phone.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Drop user.phoneNumber and reuse user.phone, closes [#10531](https://github.com/lobehub/lobe-chat/issues/10531) ([2ab88c5](https://github.com/lobehub/lobe-chat/commit/2ab88c5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.140](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.139...v2.0.0-next.140)
+
+<sup>Released on **2025-12-01**</sup>
+
+#### ✨ Features
+
+- **misc**: Integrate better-auth admin plugin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Integrate better-auth admin plugin, closes [#10512](https://github.com/lobehub/lobe-chat/issues/10512) ([3be78f0](https://github.com/lobehub/lobe-chat/commit/3be78f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.139](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.138...v2.0.0-next.139)
+
+<sup>Released on **2025-12-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10519](https://github.com/lobehub/lobe-chat/issues/10519) ([bd9a38c](https://github.com/lobehub/lobe-chat/commit/bd9a38c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.138](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.137...v2.0.0-next.138)
+
+<sup>Released on **2025-11-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **conversation-flow**: Support optimistic update for activeBranchIndex.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **conversation-flow**: Support optimistic update for activeBranchIndex, closes [#10517](https://github.com/lobehub/lobe-chat/issues/10517) ([9b5b234](https://github.com/lobehub/lobe-chat/commit/9b5b234))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.137](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.136...v2.0.0-next.137)
+
+<sup>Released on **2025-11-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update apiMode handling in ChatService to prioritize user preferences.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update apiMode handling in ChatService to prioritize user preferences, closes [#10487](https://github.com/lobehub/lobe-chat/issues/10487) ([5483d91](https://github.com/lobehub/lobe-chat/commit/5483d91))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.136](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.135...v2.0.0-next.136)
 
 <sup>Released on **2025-11-30**</sup>

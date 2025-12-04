@@ -2,7 +2,13 @@
  * Canonical IDs of Better-Auth built-in social providers.
  * Keep this list in sync with provider definitions in `src/libs/better-auth/sso/providers`.
  */
-export const BUILTIN_BETTER_AUTH_PROVIDERS = ['google', 'github', 'cognito', 'microsoft'] as const;
+export const BUILTIN_BETTER_AUTH_PROVIDERS = [
+  'apple',
+  'google',
+  'github',
+  'cognito',
+  'microsoft',
+] as const;
 
 /**
  * Provider alias → canonical ID mapping.

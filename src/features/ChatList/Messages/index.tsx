@@ -80,6 +80,7 @@ const Item = memo<ChatListItemProps>(
       contextMenuState,
       handleContextMenu,
       hideContextMenu,
+      contextMenuMode,
     } = useChatItemContextMenu({
       editing,
       onActionClick: () => {},
@@ -140,6 +141,10 @@ const Item = memo<ChatListItemProps>(
         if (!item) return;
 
         if (isDesktop) {
+          if (contextMenuMode !== 'disabled') {
+            handleContextMenu(event);
+            return;
+          }
           const { electronSystemService } = await import('@/services/electron/system');
 
           electronSystemService.showContextMenu('chat', {

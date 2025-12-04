@@ -86,6 +86,25 @@ SMTP_USER=your-username
 SMTP_PASS=your-password
 ```
 
+### Resend
+
+If you prefer Resend, configure the following and initialize the service with `EmailImplType.Resend`:
+
+```bash
+RESEND_API_KEY=your-resend-api-key
+RESEND_FROM=noreply@example.com
+```
+
+`RESEND_FROM` is used when `from` is not provided in the payload.
+
+### Choose Provider by Environment
+
+Set `EMAIL_SERVICE_PROVIDER` to `nodemailer` or `resend` to pick the default implementation without changing code:
+
+```bash
+EMAIL_SERVICE_PROVIDER=resend
+```
+
 ### Using Well-Known Services
 
 You can also use well-known email services (Gmail, SendGrid, etc.):

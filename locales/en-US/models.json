@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Model provider: sophnet platform. DeepSeek V3 Fast is the high-TPS ultra-fast version of DeepSeek V3 0324, fully powered without quantization, featuring enhanced coding and mathematical capabilities for faster response!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 - Non-Thinking Mode; DeepSeek-V3.1 is a newly launched hybrid reasoning model by DeepSeek, supporting both thinking and non-thinking reasoning modes, with higher thinking efficiency compared to DeepSeek-R1-0528. Post-training optimization significantly enhances agent tool usage and agent task performance."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast is the high-TPS, ultra-fast version of DeepSeek V3.1. Hybrid Thinking Mode: By changing the chat template, a single model can support both thinking and non-thinking modes simultaneously. Smarter Tool Invocation: Post-training optimization significantly improves the model's performance in tool usage and agent tasks."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - Thinking Mode; DeepSeek-V3.1 is a newly launched hybrid reasoning model by DeepSeek, supporting both thinking and non-thinking reasoning modes, with higher thinking efficiency compared to DeepSeek-R1-0528. Post-training optimization significantly enhances agent tool usage and agent task performance."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 is the latest general-purpose large model released by DeepSeek, supporting a hybrid inference architecture and featuring enhanced Agent capabilities."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "DeepSeek V3.2 Thinking Mode. Before outputting the final answer, the model first generates a chain of thought to improve the accuracy of the final response."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 128k context window."

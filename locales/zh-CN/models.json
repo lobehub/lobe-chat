@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "模型供应商为：sophnet平台。DeepSeek V3 Fast 是 DeepSeek V3 0324 版本的高TPS极速版，满血非量化，代码与数学能力更强，响应更快！"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1-非思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。"
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast 是 DeepSeek V3.1版本的高TPS极速版。 混合思考模式：通过更改聊天模板，一个模型可以同时支持思考模式和非思考模式。 更智能的工具调用：通过后训练优化，模型在工具使用和代理任务中的表现显著提升。"
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1-思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。"
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 是 DeepSeek 最新发布的通用大模型，支持混合推理架构，具备更强的 Agent 能力。"
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "DeepSeek V3.2 思考模式。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持128k上下文窗口的推理和精调。"
