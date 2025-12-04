@@ -10,7 +10,7 @@ import { type CommonAction, createCommonSlice } from './slices/common/action';
 import { type PreferenceAction, createPreferenceSlice } from './slices/preference/action';
 import { type UserSettingsAction, createSettingsSlice } from './slices/settings/action';
 
-//  ===============  聚合 createStoreFn ============ //
+//  ===============  Aggregate createStoreFn ============ //
 
 export type UserStore = UserState &
   UserSettingsAction &
@@ -26,7 +26,7 @@ const createStore: StateCreator<UserStore, [['zustand/devtools', never]]> = (...
   ...createCommonSlice(...parameters),
 });
 
-//  ===============  实装 useStore ============ //
+//  ===============  Implement useStore ============ //
 
 const devtools = createDevtools('user');
 
