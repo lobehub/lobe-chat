@@ -410,8 +410,8 @@
     {
       "idx": 58,
       "version": "7",
-      "when": 1764839437759,
-      "tag": "0058_add_source_into_plugins_installed",
+      "when": 1764842015809,
+      "tag": "0058_add_source_into_user_plugins",
       "breakpoints": true
     }
   ],

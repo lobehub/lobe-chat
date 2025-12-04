@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "2ac9b390-70c4-4206-94e3-770650b38300",
+  "id": "caf450fa-63af-4c89-b2df-f12646132be8",
   "policies": {},
   "prevId": "ffb076a4-6bd6-4f2c-b62f-f4873b452076",
   "roles": {},
@@ -7278,7 +7278,7 @@
         },
         "source": {
           "name": "source",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },

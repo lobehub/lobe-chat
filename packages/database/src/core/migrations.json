@@ -920,9 +920,11 @@
     "hash": "89c134be2948d3afc360d6bac11dea0c6fd5c902bf6093ed077033adb920fd02"
   },
   {
-    "sql": ["ALTER TABLE \"user_installed_plugins\" ADD COLUMN IF NOT EXISTS \"source\" text;"],
+    "sql": [
+      "ALTER TABLE \"user_installed_plugins\" ADD COLUMN IF NOT EXISTS \"source\" varchar(255);"
+    ],
     "bps": true,
-    "folderMillis": 1764839437759,
-    "hash": "16aeb485fa181578d0af286ae2b1ec4bc00bbd824c93ef7e388e8fa9f7a997ae"
+    "folderMillis": 1764842015809,
+    "hash": "276514dc101fffc66794156f4ba644599a4ae5997a68b9e7f54452ee374bfa61"
   }
 ]
