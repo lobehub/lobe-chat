@@ -1,5 +1,3 @@
-import { isKlavisEnabled } from '@/config/klavis';
-
 import { ToolStore } from '../../store';
 import { KlavisServer, KlavisServerStatus } from './types';
 
@@ -50,12 +48,6 @@ export const klavisStoreSelectors = {
    * 获取所有 Klavis 服务器
    */
   getServers: (s: ToolStore): KlavisServer[] => s.servers || [],
-
-  /**
-   * 检查 Klavis 是否已启用
-   * 基于 NEXT_PUBLIC_KLAVIS_ENABLE 环境变量或服务端 KLAVIS_API_KEY 是否存在
-   */
-  isKlavisEnabled: (): boolean => isKlavisEnabled(),
 
   /**
    * 检查给定的 identifier 是否是 Klavis 服务器

@@ -7,7 +7,11 @@ import PluginStore from '@/features/PluginStore';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import {
+  featureFlagsSelectors,
+  serverConfigSelectors,
+  useServerConfigStore,
+} from '@/store/serverConfig';
 
 import Action from '../components/Action';
 import { useControls } from './useControls';
@@ -19,11 +23,12 @@ const Tools = memo(() => {
   const [modalOpen, setModalOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType | null>(null);
-  const { marketItems, installedPluginItems, allPlugins } = useControls({
+  const { marketItems, installedPluginItems } = useControls({
     setModalOpen,
     setUpdating,
   });
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
+  const enableKlavis = useServerConfigStore(serverConfigSelectors.enableKlavis);
   const isInitializedRef = useRef(false);
 
   // Set default tab based on installed plugins (only on first load)
@@ -80,7 +85,7 @@ const Tools = memo(() => {
               ...currentItems,
             ],
           },
-          minHeight: allPlugins.length > 10 ? '500px' : 'unset',
+          minHeight: enableKlavis ? 500 : undefined,
           minWidth: 320,
         }}
         icon={Blocks}

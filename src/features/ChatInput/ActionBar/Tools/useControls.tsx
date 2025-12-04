@@ -13,6 +13,7 @@ import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 import {
   builtinToolSelectors,
@@ -67,7 +68,7 @@ export const useControls = ({
 
   // Klavis 相关状态
   const allKlavisServers = useToolStore(klavisStoreSelectors.getServers, isEqual);
-  const isKlavisEnabledInEnv = klavisStoreSelectors.isKlavisEnabled();
+  const isKlavisEnabledInEnv = useServerConfigStore(serverConfigSelectors.enableKlavis);
   const loadUserKlavisServers = useToolStore((s) => s.loadUserKlavisServers);
 
   const [useFetchPluginStore] = useToolStore((s) => [s.useFetchPluginStore]);
@@ -275,6 +276,5 @@ export const useControls = ({
     return installedItems;
   }, [filteredBuiltinList, list, klavisServerItems, checked, togglePlugin, setUpdating, t]);
 
-  const allPlugins = [...plugins, ...klavisServerItems];
-  return { allPlugins, installedPluginItems, marketItems };
+  return { installedPluginItems, marketItems };
 };
