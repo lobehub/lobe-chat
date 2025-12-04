@@ -194,6 +194,51 @@ export interface UpdateIdentityEntryParams {
 }
 
 export class UserMemoryModel {
+  static normalizeAssociations(value?: unknown): Record<string, unknown>[] | null {
+    if (!Array.isArray(value)) return null;
+
+    const associations: Record<string, unknown>[] = [];
+
+    value.forEach((item) => {
+      if (!item) return;
+
+      if (typeof item === 'object' && !Array.isArray(item)) {
+        associations.push(item as Record<string, unknown>);
+        return;
+      }
+
+      if (typeof item === 'string') {
+        const trimmed = item.trim();
+        if (!trimmed) return;
+
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+            associations.push(parsed as Record<string, unknown>);
+            return;
+          }
+        } catch {
+          // fall through to store raw value
+        }
+
+        associations.push({ value: trimmed });
+      }
+    });
+
+    return associations.length > 0 ? associations : null;
+  }
+
+  static parseDateFromString(value?: string | Date | null): Date | null {
+    if (!value) return null;
+    if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+    if (typeof value !== 'string') return null;
+
+    const normalized = value.trim();
+    if (!normalized) return null;
+
+    return new Date(normalized);
+  }
+
   private userId: string;
   private db: LobeChatDatabase;
 

@@ -18,43 +18,43 @@ import {
 
 class UserMemoryService {
   addContextMemory = async (params: AddContextMemoryParams): Promise<AddContextMemoryResult> => {
-    return lambdaClient.userMemories.tools.addContextMemory.mutate(params);
+    return lambdaClient.userMemories.toolAddContextMemory.mutate(params);
   };
 
   addExperienceMemory = async (
     params: AddExperienceMemoryParams,
   ): Promise<AddExperienceMemoryResult> => {
-    return lambdaClient.userMemories.tools.addExperienceMemory.mutate(params);
+    return lambdaClient.userMemories.toolAddExperienceMemory.mutate(params);
   };
 
   addIdentityMemory = async (params: AddIdentityMemoryParams): Promise<AddIdentityMemoryResult> => {
-    return lambdaClient.userMemories.tools.addIdentityMemory.mutate(params);
+    return lambdaClient.userMemories.toolAddIdentityMemory.mutate(params);
   };
 
   addPreferenceMemory = async (
     params: AddPreferenceMemoryParams,
   ): Promise<AddPreferenceMemoryResult> => {
-    return lambdaClient.userMemories.tools.addPreferenceMemory.mutate(params);
+    return lambdaClient.userMemories.toolAddPreferenceMemory.mutate(params);
   };
 
   removeIdentityMemory = async (
     params: RemoveIdentityMemoryParams,
   ): Promise<RemoveIdentityMemoryResult> => {
-    return lambdaClient.userMemories.tools.removeIdentityMemory.mutate(params);
+    return lambdaClient.userMemories.toolRemoveIdentityMemory.mutate(params);
   };
 
   retrieveMemory = async (params: SearchMemoryParams): Promise<SearchMemoryResult> => {
-    return lambdaClient.userMemories.searchMemory.query(params);
+    return lambdaClient.userMemories.toolSearchMemory.query(params);
   };
 
   searchMemory = async (params: SearchMemoryParams): Promise<SearchMemoryResult> => {
-    return lambdaClient.userMemories.tools.searchMemory.query(params);
+    return lambdaClient.userMemories.toolSearchMemory.query(params);
   };
 
   updateIdentityMemory = async (
     params: UpdateIdentityMemoryParams,
   ): Promise<UpdateIdentityMemoryResult> => {
-    return lambdaClient.userMemories.tools.updateIdentityMemory.mutate(params);
+    return lambdaClient.userMemories.toolUpdateIdentityMemory.mutate(params);
   };
 }
 

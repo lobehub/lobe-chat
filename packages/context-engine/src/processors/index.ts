@@ -4,7 +4,12 @@ export { HistoryTruncateProcessor } from './HistoryTruncate';
 export { InputTemplateProcessor } from './InputTemplate';
 export { MessageCleanupProcessor } from './MessageCleanup';
 export { MessageContentProcessor } from './MessageContent';
-export { PlaceholderVariablesProcessor } from './PlaceholderVariables';
+export {
+  buildPlaceholderGenerators,
+  formatPlaceholderValues,
+  PlaceholderVariablesProcessor,
+  renderPlaceholderTemplate,
+} from './PlaceholderVariables';
 export { ToolCallProcessor } from './ToolCall';
 export { ToolMessageReorder } from './ToolMessageReorder';
 
@@ -12,5 +17,9 @@ export { ToolMessageReorder } from './ToolMessageReorder';
 export type { HistoryTruncateConfig } from './HistoryTruncate';
 export type { InputTemplateConfig } from './InputTemplate';
 export type { MessageContentConfig, UserMessageContentPart } from './MessageContent';
-export type { PlaceholderVariablesConfig } from './PlaceholderVariables';
+export type {
+  PlaceholderValue,
+  PlaceholderValueMap,
+  PlaceholderVariablesConfig,
+} from './PlaceholderVariables';
 export type { ToolCallConfig } from './ToolCall';

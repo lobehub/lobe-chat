@@ -15,6 +15,7 @@ import { CreateTopicParams, TopicModel } from '../topic';
 import { getTestDB } from './_util';
 
 const userId = 'topic-user-test';
+const userId2 = 'topic-user-2-test';
 const sessionId = 'topic-session';
 const serverDB: LobeChatDatabase = await getTestDB();
 const topicModel = new TopicModel(serverDB, userId);
@@ -25,7 +26,7 @@ describe('TopicModel', () => {
 
     // 创建测试数据
     await serverDB.transaction(async (tx) => {
-      await tx.insert(users).values({ id: userId });
+      await tx.insert(users).values([{ id: userId }, { id: userId2 }]);
       await tx.insert(sessions).values({ id: sessionId, userId });
     });
   });
@@ -1688,6 +1689,75 @@ describe('TopicModel', () => {
       const result = await topicModel.queryRecent();
 
       expect(result).toHaveLength(12);
+    });
+  });
+
+  describe('listTopicsForMemoryExtractor', () => {
+    it('should paginate pending topics and skip extracted ones by default', async () => {
+      await serverDB.insert(topics).values([
+        {
+          createdAt: new Date('2024-01-01T00:00:00Z'),
+          id: 't1',
+          metadata: {
+            userMemoryExtractStatus: 'completed',
+          },
+          userId,
+        },
+        {
+          createdAt: new Date('2024-01-02T00:00:00Z'),
+          id: 't2',
+          userId,
+        },
+        {
+          createdAt: new Date('2024-01-03T00:00:00Z'),
+          id: 't3',
+          metadata: { userMemoryExtractStatus: 'pending' },
+          userId,
+        },
+        {
+          createdAt: new Date('2024-01-04T00:00:00Z'),
+          id: 't4',
+          userId: userId2,
+        },
+      ] satisfies Array<typeof topics.$inferInsert>);
+
+      const page1 = await topicModel.listTopicsForMemoryExtractor({ limit: 1 });
+      expect(page1.map((t) => t.id)).toEqual(['t1']);
+
+      const page2 = await topicModel.listTopicsForMemoryExtractor({
+        cursor: {
+          createdAt: page1[0].createdAt,
+          id: page1[0].id,
+        },
+        limit: 5,
+      });
+
+      expect(page2.map((t) => t.id)).toEqual(['t2', 't3']);
+    });
+
+    it('should include extracted topics when ignoreExtracted is true', async () => {
+      await serverDB.insert(topics).values([
+        {
+          createdAt: new Date('2024-02-01T00:00:00Z'),
+          id: 'et1',
+          metadata: {
+            userMemoryExtractStatus: 'completed',
+          },
+          userId,
+        },
+        {
+          createdAt: new Date('2024-02-02T00:00:00Z'),
+          id: 'et2',
+          userId,
+        },
+      ] satisfies Array<typeof topics.$inferInsert>);
+
+      const rows = await topicModel.listTopicsForMemoryExtractor({
+        ignoreExtracted: true,
+        limit: 10,
+      });
+
+      expect(rows.map((t) => t.id)).toEqual(['et1', 'et2']);
     });
   });
 });
