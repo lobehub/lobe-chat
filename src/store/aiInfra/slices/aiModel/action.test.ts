@@ -345,9 +345,6 @@ describe('AiModelAction', () => {
       const { result } = renderHook(() => useStore());
       vi.spyOn(result.current, 'batchUpdateAiModels').mockResolvedValue(undefined);
       vi.spyOn(result.current, 'refreshAiModelList').mockResolvedValue(undefined);
-      const batchDeleteSpy = vi
-        .spyOn(aiModelService, 'batchDeleteRemoteModels')
-        .mockResolvedValue(undefined as any);
 
       vi.doMock('@/services/models', () => ({
         modelsService: {
