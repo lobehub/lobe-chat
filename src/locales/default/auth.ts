@@ -54,6 +54,7 @@ export default {
   },
   betterAuth: {
     errors: {
+      emailExists: '该邮箱已注册，请直接登录',
       emailInvalid: '请输入有效的邮箱地址或用户名',
       emailNotRegistered: '该邮箱或用户名尚未注册',
       emailNotVerified: '邮箱尚未验证，请先验证邮箱',
