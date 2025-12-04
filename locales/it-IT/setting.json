@@ -803,8 +803,8 @@
       "store": "Negozio dei plugin"
     },
     "tabs": {
-      "installed": "Abilitati",
-      "market": "Mercato"
+      "all": "Tutti",
+      "installed": "Abilitati"
     },
     "title": "Strumenti aggiuntivi"
   }

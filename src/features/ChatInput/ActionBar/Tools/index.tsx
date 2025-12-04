@@ -12,14 +12,17 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 import Action from '../components/Action';
 import { useControls } from './useControls';
 
-type TabType = 'market' | 'installed';
+type TabType = 'all' | 'installed';
 
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
   const [modalOpen, setModalOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType | null>(null);
-  const { marketItems, installedPluginItems } = useControls({ setModalOpen, setUpdating });
+  const { marketItems, installedPluginItems, allPlugins } = useControls({
+    setModalOpen,
+    setUpdating,
+  });
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
   const isInitializedRef = useRef(false);
 
@@ -27,7 +30,7 @@ const Tools = memo(() => {
   useEffect(() => {
     if (!isInitializedRef.current && installedPluginItems.length >= 0) {
       isInitializedRef.current = true;
-      setActiveTab(installedPluginItems.length > 0 ? 'installed' : 'market');
+      setActiveTab(installedPluginItems.length > 0 ? 'installed' : 'all');
     }
   }, [installedPluginItems.length]);
 
@@ -41,8 +44,8 @@ const Tools = memo(() => {
     return <Action disabled icon={Blocks} showTooltip={true} title={t('tools.disabled')} />;
 
   // Use effective tab for display (default to market while initializing)
-  const effectiveTab = activeTab ?? 'market';
-  const currentItems = effectiveTab === 'market' ? marketItems : installedPluginItems;
+  const effectiveTab = activeTab ?? 'all';
+  const currentItems = effectiveTab === 'all' ? marketItems : installedPluginItems;
 
   return (
     <Suspense fallback={<Action disabled icon={Blocks} title={t('tools.title')} />}>
@@ -60,8 +63,8 @@ const Tools = memo(() => {
                     onChange={(v) => setActiveTab(v as TabType)}
                     options={[
                       {
-                        label: t('tools.tabs.market', { defaultValue: 'Market' }),
-                        value: 'market',
+                        label: t('tools.tabs.all', { defaultValue: 'all' }),
+                        value: 'all',
                       },
                       {
                         label: t('tools.tabs.installed', { defaultValue: 'Installed' }),
@@ -77,6 +80,7 @@ const Tools = memo(() => {
               ...currentItems,
             ],
           },
+          minHeight: allPlugins.length > 10 ? '500px' : 'unset',
           minWidth: 320,
         }}
         icon={Blocks}

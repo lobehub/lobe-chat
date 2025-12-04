@@ -803,8 +803,8 @@
       "store": "Plugin-Store"
     },
     "tabs": {
-      "installed": "Aktiviert",
-      "market": "Marktplatz"
+      "all": "Alle",
+      "installed": "Aktiviert"
     },
     "title": "Erweiterungswerkzeuge"
   }

@@ -803,8 +803,8 @@
       "store": "プラグインストア"
     },
     "tabs": {
-      "installed": "有効化済み",
-      "market": "マーケット"
+      "all": "すべて",
+      "installed": "有効化済み"
     },
     "title": "拡張ツール"
   }

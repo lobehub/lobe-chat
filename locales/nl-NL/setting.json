@@ -803,8 +803,8 @@
       "store": "Plug-in store"
     },
     "tabs": {
-      "installed": "Ingeschakeld",
-      "market": "Marktplaats"
+      "all": "Alles",
+      "installed": "Ingeschakeld"
     },
     "title": "Uitbreidingsgereedschap"
   }

@@ -803,8 +803,8 @@
       "store": "Loja de Plugins"
     },
     "tabs": {
-      "installed": "Ativado",
-      "market": "Mercado"
+      "all": "Todos",
+      "installed": "Ativado"
     },
     "title": "Ferramentas de Extensão"
   }

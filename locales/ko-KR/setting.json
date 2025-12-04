@@ -803,8 +803,8 @@
       "store": "플러그인 스토어"
     },
     "tabs": {
-      "installed": "활성화됨",
-      "market": "마켓"
+      "all": "전체",
+      "installed": "활성화됨"
     },
     "title": "확장 도구"
   }

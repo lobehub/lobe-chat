@@ -1,9 +1,10 @@
-import { KLAVIS_SERVER_TYPES } from '@lobechat/const';
+import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
 import { Avatar, Icon, ItemType } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, Store, ToyBrick } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -21,6 +22,26 @@ import {
 
 import KlavisServerItem from './KlavisServerItem';
 import ToolItem from './ToolItem';
+
+/**
+ * Klavis 服务器图标组件
+ * 对于 string 类型的 icon，使用 Image 组件渲染
+ * 对于 IconType 类型的 icon，使用 Icon 组件渲染，并根据主题设置填充色
+ */
+const KlavisIcon = memo<KlavisServerType>(({ icon, label }) => {
+  const theme = useTheme();
+
+  if (typeof icon === 'string') {
+    return (
+      <Image alt={label} height={18} src={icon} style={{ flex: 'none' }} unoptimized width={18} />
+    );
+  }
+
+  // 使用主题色填充，在深色模式下自动适应
+  return <Icon fill={theme.colorText} icon={icon} size={18} />;
+});
+
+KlavisIcon.displayName = 'KlavisIcon';
 
 export const useControls = ({
   setModalOpen,
@@ -81,20 +102,10 @@ export const useControls = ({
     () =>
       isKlavisEnabledInEnv
         ? KLAVIS_SERVER_TYPES.map((type) => ({
-            icon: (
-              <Image
-                alt={type.label}
-                height={18}
-                src={type.icon}
-                style={{ flex: 'none' }}
-                unoptimized
-                width={18}
-              />
-            ),
+            icon: <KlavisIcon icon={type.icon} id={type.id} label={type.label} />,
             key: type.id,
             label: (
               <KlavisServerItem
-                icon={type.icon}
                 label={type.label}
                 server={getServerByName(type.id)}
                 type={type.id}
@@ -264,5 +275,6 @@ export const useControls = ({
     return installedItems;
   }, [filteredBuiltinList, list, klavisServerItems, checked, togglePlugin, setUpdating, t]);
 
-  return { installedPluginItems, marketItems };
+  const allPlugins = [...plugins, ...klavisServerItems];
+  return { allPlugins, installedPluginItems, marketItems };
 };

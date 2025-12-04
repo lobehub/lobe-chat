@@ -1,5 +1,7 @@
+import { IconType, SiCaldotcom, SiGithub, SiLinear } from '@icons-pack/react-simple-icons';
+
 export interface KlavisServerType {
-  icon: string;
+  icon: string | IconType;
   id: string;
   label: string;
 }
@@ -26,7 +28,7 @@ export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
     label: 'Airtable',
   },
   {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/linear-dark.svg',
+    icon: SiLinear,
     id: 'linear',
     label: 'Linear',
   },
@@ -41,7 +43,7 @@ export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
     label: 'Google docs',
   },
   {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/github.svg',
+    icon: SiGithub,
     id: 'github',
     label: 'Github',
   },
@@ -55,43 +57,43 @@ export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
     id: 'google-drive',
     label: 'Google drive',
   },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/webflow.svg',
-    id: 'webflow',
-    label: 'Webflow',
-  },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/paypal.svg',
-    id: 'paypal',
-    label: 'Paypal',
-  },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/webflow.svg',
+  //   id: 'webflow',
+  //   label: 'Webflow',
+  // },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/paypal.svg',
+  //   id: 'paypal',
+  //   label: 'Paypal',
+  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/slack.svg',
     id: 'slack',
     label: 'Slack',
   },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/sentry.svg',
-    id: 'sentry',
-    label: 'Sentry',
-  },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/sentry.svg',
+  //   id: 'sentry',
+  //   label: 'Sentry',
+  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/confluence.svg',
     id: 'confluence',
     label: 'Confluence',
   },
   { icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/jira.svg', id: 'jira', label: 'Jira' },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/postgres.svg',
-    id: 'postgres',
-    label: 'Postgres',
-  },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/postgres.svg',
+  //   id: 'postgres',
+  //   label: 'Postgres',
+  // },
   { icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/coda.svg', id: 'coda', label: 'Coda' },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/bigquery.svg',
-    id: 'bigquery',
-    label: 'Bigquery',
-  },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/bigquery.svg',
+  //   id: 'bigquery',
+  //   label: 'Bigquery',
+  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/clickup.svg',
     id: 'clickup',
@@ -102,41 +104,41 @@ export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
     id: 'dropbox',
     label: 'Dropbox',
   },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/facebook.svg',
-    id: 'facebook',
-    label: 'Facebook',
-  },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/facebook.svg',
+  //   id: 'facebook',
+  //   label: 'Facebook',
+  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/figma.svg',
     id: 'figma',
     label: 'Figma',
   },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/firebase.svg',
-    id: 'firebase',
-    label: 'Firebase',
-  },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googlemeet.svg',
-    id: 'google-meet',
-    label: 'Google meet',
-  },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googletasks.svg',
-    id: 'google-tasks',
-    label: 'Google tasks',
-  },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/firebase.svg',
+  //   id: 'firebase',
+  //   label: 'Firebase',
+  // },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googlemeet.svg',
+  //   id: 'google-meet',
+  //   label: 'Google meet',
+  // },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googletasks.svg',
+  //   id: 'google-tasks',
+  //   label: 'Google tasks',
+  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/hubspot.svg',
     id: 'hubspot',
     label: 'Hubspot',
   },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/mysql.svg',
-    id: 'mysql',
-    label: 'Mysql',
-  },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/mysql.svg',
+  //   id: 'mysql',
+  //   label: 'Mysql',
+  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/onedrive.svg',
     id: 'onedrive',
@@ -147,35 +149,35 @@ export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
     id: 'outlook',
     label: 'Outlook',
   },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/reddit.svg',
-    id: 'reddit',
-    label: 'Reddit',
-  },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/resend.svg',
-    id: 'resend',
-    label: 'Resend',
-  },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/reddit.svg',
+  //   id: 'reddit',
+  //   label: 'Reddit',
+  // },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/resend.svg',
+  //   id: 'resend',
+  //   label: 'Resend',
+  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/salesforce.svg',
     id: 'salesforce',
     label: 'Salesforce',
   },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/shopify.svg',
-    id: 'shopify',
-    label: 'Shopify',
-  },
-  {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/snowflake.svg',
-    id: 'snowflake',
-    label: 'Snowflake',
-  },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/shopify.svg',
+  //   id: 'shopify',
+  //   label: 'Shopify',
+  // },
+  // {
+  //   icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/snowflake.svg',
+  //   id: 'snowflake',
+  //   label: 'Snowflake',
+  // },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/whatsapp.svg',
-    id: 'whatsapp-business',
-    label: 'Whatsapp business',
+    id: 'whatsapp',
+    label: 'Whatsapp',
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/youtube.svg',
@@ -188,7 +190,7 @@ export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
     label: 'Zendesk',
   },
   {
-    icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/calcom.svg',
+    icon: SiCaldotcom,
     id: 'cal-com',
     label: 'Cal.com',
   },

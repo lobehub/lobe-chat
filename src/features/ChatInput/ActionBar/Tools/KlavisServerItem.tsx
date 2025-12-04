@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { Checkbox } from 'antd';
-import { Loader2, SquareArrowOutUpRight } from 'lucide-react';
+import { Loader2, SquareArrowOutUpRight, Unplug } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -17,7 +17,6 @@ const POLL_INTERVAL_MS = 1000; // 每秒轮询一次
 const POLL_TIMEOUT_MS = 15_000; // 15 秒超时
 
 interface KlavisServerItemProps {
-  icon: string;
   label: string;
   server?: KlavisServer;
   type: string;
@@ -37,6 +36,7 @@ const KlavisServerItem = memo<KlavisServerItemProps>(({ label, server, type }) =
   const userId = useUserStore(userProfileSelectors.userId);
   const createKlavisServer = useToolStore((s) => s.createKlavisServer);
   const refreshKlavisServerTools = useToolStore((s) => s.refreshKlavisServerTools);
+  const removeKlavisServer = useToolStore((s) => s.removeKlavisServer);
 
   // 清理所有定时器
   const cleanup = useCallback(() => {
@@ -205,6 +205,18 @@ const KlavisServerItem = memo<KlavisServerItemProps>(({ label, server, type }) =
     setIsToggling(false);
   };
 
+  const handleDisconnect = async () => {
+    if (!server) return;
+    setIsToggling(true);
+    // 如果当前已启用，先禁用
+    if (checked) {
+      await togglePlugin(pluginId);
+    }
+    // 删除服务器
+    await removeKlavisServer(server.serverName);
+    setIsToggling(false);
+  };
+
   // 渲染右侧控件
   const renderRightControl = () => {
     // 正在连接中
@@ -243,13 +255,24 @@ const KlavisServerItem = memo<KlavisServerItemProps>(({ label, server, type }) =
           return <Icon icon={Loader2} spin />;
         }
         return (
-          <Checkbox
-            checked={checked}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleToggle();
-            }}
-          />
+          <Flexbox align="center" gap={8} horizontal>
+            <Icon
+              icon={Unplug}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDisconnect();
+              }}
+              size="small"
+              style={{ cursor: 'pointer', opacity: 0.5 }}
+            />
+            <Checkbox
+              checked={checked}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggle();
+              }}
+            />
+          </Flexbox>
         );
       }
       case KlavisServerStatus.PENDING_AUTH: {

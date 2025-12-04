@@ -803,8 +803,8 @@
       "store": "Tienda de complementos"
     },
     "tabs": {
-      "installed": "Habilitado",
-      "market": "Mercado"
+      "all": "Todo",
+      "installed": "Habilitado"
     },
     "title": "Herramientas de extensión"
   }

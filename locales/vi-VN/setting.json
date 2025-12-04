@@ -803,8 +803,8 @@
       "store": "Cửa hàng tiện ích"
     },
     "tabs": {
-      "installed": "Đã bật",
-      "market": "Thị trường"
+      "all": "Tất cả",
+      "installed": "Đã bật"
     },
     "title": "Công cụ mở rộng"
   }

@@ -803,8 +803,8 @@
       "store": "Sklep z wtyczkami"
     },
     "tabs": {
-      "installed": "Włączone",
-      "market": "Rynek"
+      "all": "Wszystko",
+      "installed": "Włączone"
     },
     "title": "Narzędzia rozszerzeń"
   }

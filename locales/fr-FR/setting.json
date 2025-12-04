@@ -803,8 +803,8 @@
       "store": "Boutique de plugins"
     },
     "tabs": {
-      "installed": "Activé",
-      "market": "Marché"
+      "all": "Tous",
+      "installed": "Activé"
     },
     "title": "Outils supplémentaires"
   }

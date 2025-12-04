@@ -807,8 +807,8 @@ export default {
       store: '插件商店',
     },
     tabs: {
+      all: '全部',
       installed: '已启用',
-      market: '市场',
     },
     title: '扩展插件',
   },

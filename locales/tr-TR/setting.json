@@ -803,8 +803,8 @@
       "store": "Eklenti Mağazası"
     },
     "tabs": {
-      "installed": "Etkinleştirildi",
-      "market": "Pazar"
+      "all": "Tümü",
+      "installed": "Etkinleştirildi"
     },
     "title": "Uzantı Araçları"
   }
