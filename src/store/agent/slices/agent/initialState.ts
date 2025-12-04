@@ -10,11 +10,6 @@ export interface AgentSliceState {
   agentMap: Record<string, PartialDeep<AgentItem>>;
   agentSettingInstance?: AgentSettingsInstance | null;
   defaultAgentConfig: LobeAgentConfig;
-  /**
-   * inbox agent id, since inbox is accessed via sessionId, we need to store its agentId separately
-   */
-  inboxAgentId?: string;
-  isInboxAgentConfigInit: boolean;
   showAgentSetting: boolean;
   updateAgentChatConfigSignal?: AbortController;
   updateAgentConfigSignal?: AbortController;
@@ -25,6 +20,5 @@ export const initialAgentSliceState: AgentSliceState = {
   agentConfigInitMap: {},
   agentMap: {},
   defaultAgentConfig: DEFAULT_AGENT_CONFIG,
-  isInboxAgentConfigInit: false,
   showAgentSetting: false,
 };

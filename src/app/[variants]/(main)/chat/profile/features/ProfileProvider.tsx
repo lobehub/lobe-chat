@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next';
 
 import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 
 const ProfileProvider = memo<PropsWithChildren>(({ children }) => {
   const { t } = useTranslation('common');
   const [agentId, isLoading, title, avatar, backgroundColor, updateAgentConfig, updateAgentMeta] =
     useAgentStore((s) => [
       s.activeAgentId,
-      !s.isInboxAgentConfigInit,
+      !builtinAgentSelectors.isInboxAgentConfigInit(s),
       agentSelectors.currentAgentTitle(s),
       agentSelectors.currentAgentAvatar(s),
       agentSelectors.currentAgentBackgroundColor(s),

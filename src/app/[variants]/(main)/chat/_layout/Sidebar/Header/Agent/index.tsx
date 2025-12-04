@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { SkeletonItem } from '@/features/NavPanel/components/SkeletonList';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 
 import SwitchPanel from './SwitchPanel';
 
@@ -17,7 +17,7 @@ const Agent = memo<PropsWithChildren>(() => {
 
   const [isLoading, isInbox, title, avatar, backgroundColor] = useAgentStore((s) => [
     agentSelectors.isAgentConfigLoading(s),
-    agentSelectors.isInboxAgent(s),
+    builtinAgentSelectors.isInboxAgent(s),
     agentSelectors.currentAgentTitle(s),
     agentSelectors.currentAgentAvatar(s),
     agentSelectors.currentAgentBackgroundColor(s),

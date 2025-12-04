@@ -45,9 +45,8 @@ beforeEach(() => {
     activeAgentId: undefined,
     agentConfigInitMap: {},
     agentMap: {},
+    builtinAgentIdMap: {},
     defaultAgentConfig: {} as any,
-    inboxAgentId: undefined,
-    isInboxAgentConfigInit: false,
     updateAgentConfigSignal: undefined,
     updateAgentMetaSignal: undefined,
   });
@@ -434,69 +433,6 @@ describe('AgentSlice Actions', () => {
       expect(agentService.getAgentConfigById).toHaveBeenCalledWith('agent-1');
       expect(useAgentStore.getState().activeAgentId).toBe('agent-1');
       expect(useAgentStore.getState().agentConfigInitMap['agent-1']).toBe(true);
-    });
-  });
-
-  describe('useInitInboxAgentStore', () => {
-    it('should not fetch when isLogin is false', async () => {
-      const { result } = renderHook(() => useAgentStore().useInitInboxAgentStore(false), {
-        wrapper: withSWR,
-      });
-
-      expect(agentService.getSessionConfig).not.toHaveBeenCalled();
-      expect(result.current.data).toBeUndefined();
-    });
-
-    it('should not fetch when isLogin is undefined', async () => {
-      const { result } = renderHook(() => useAgentStore().useInitInboxAgentStore(undefined), {
-        wrapper: withSWR,
-      });
-
-      expect(agentService.getSessionConfig).not.toHaveBeenCalled();
-      expect(result.current.data).toBeUndefined();
-    });
-
-    it('should fetch inbox agent config when logged in', async () => {
-      const mockInboxConfig = {
-        id: 'inbox-agent-id',
-        model: 'gpt-4',
-      } as any;
-
-      vi.mocked(agentService.getSessionConfig).mockResolvedValueOnce(mockInboxConfig);
-
-      const { result } = renderHook(() => useAgentStore().useInitInboxAgentStore(true), {
-        wrapper: withSWR,
-      });
-
-      await waitFor(() => expect(result.current.data).toEqual(mockInboxConfig));
-
-      expect(agentService.getSessionConfig).toHaveBeenCalledWith('inbox');
-      expect(useAgentStore.getState().inboxAgentId).toBe('inbox-agent-id');
-      expect(useAgentStore.getState().isInboxAgentConfigInit).toBe(true);
-    });
-
-    it('should merge default agent config when provided', async () => {
-      const mockInboxConfig = {
-        id: 'inbox-agent-id',
-        model: 'gpt-4',
-      } as any;
-
-      const defaultConfig = {
-        model: 'default-model',
-        systemRole: 'default system role',
-      } as any;
-
-      vi.mocked(agentService.getSessionConfig).mockResolvedValueOnce(mockInboxConfig);
-
-      const { result } = renderHook(
-        () => useAgentStore().useInitInboxAgentStore(true, defaultConfig),
-        { wrapper: withSWR },
-      );
-
-      await waitFor(() => expect(result.current.data).toEqual(mockInboxConfig));
-
-      // Default config should be merged into store
-      expect(useAgentStore.getState().defaultAgentConfig).toBeDefined();
     });
   });
 });
