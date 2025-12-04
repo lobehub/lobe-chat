@@ -54,25 +54,36 @@ export class TopicModel {
         ? or(eq(topics.agentId, agentId), eq(topics.sessionId, associatedSessionId))
         : eq(topics.agentId, agentId);
 
-      return this.db
-        .select({
-          createdAt: topics.createdAt,
-          favorite: topics.favorite,
-          historySummary: topics.historySummary,
-          id: topics.id,
-          metadata: topics.metadata,
-          title: topics.title,
-          updatedAt: topics.updatedAt,
-        })
-        .from(topics)
-        .where(and(eq(topics.userId, this.userId), agentCondition))
-        .orderBy(desc(topics.favorite), desc(topics.updatedAt))
-        .limit(pageSize)
-        .offset(offset);
+      // Fetch items and total count in parallel
+      const [items, totalResult] = await Promise.all([
+        this.db
+          .select({
+            createdAt: topics.createdAt,
+            favorite: topics.favorite,
+            historySummary: topics.historySummary,
+            id: topics.id,
+            metadata: topics.metadata,
+            title: topics.title,
+            updatedAt: topics.updatedAt,
+          })
+          .from(topics)
+          .where(and(eq(topics.userId, this.userId), agentCondition))
+          .orderBy(desc(topics.favorite), desc(topics.updatedAt))
+          .limit(pageSize)
+          .offset(offset),
+        this.db
+          .select({ count: count(topics.id) })
+          .from(topics)
+          .where(and(eq(topics.userId, this.userId), agentCondition)),
+      ]);
+
+      return { items, total: totalResult[0].count };
     }
 
     // Fallback to containerId-based query (original behavior)
-    return (
+    const whereCondition = and(eq(topics.userId, this.userId), this.matchContainer(containerId));
+
+    const [items, totalResult] = await Promise.all([
       this.db
         .select({
           createdAt: topics.createdAt,
@@ -84,13 +95,19 @@ export class TopicModel {
           updatedAt: topics.updatedAt,
         })
         .from(topics)
-        .where(and(eq(topics.userId, this.userId), this.matchContainer(containerId)))
+        .where(whereCondition)
         // In boolean sorting, false is considered "smaller" than true.
         // So here we use desc to ensure that topics with favorite as true are in front.
         .orderBy(desc(topics.favorite), desc(topics.updatedAt))
         .limit(pageSize)
-        .offset(offset)
-    );
+        .offset(offset),
+      this.db
+        .select({ count: count(topics.id) })
+        .from(topics)
+        .where(whereCondition),
+    ]);
+
+    return { items, total: totalResult[0].count };
   };
 
   findById = async (id: string) => {

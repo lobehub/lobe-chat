@@ -64,7 +64,7 @@ export interface ChatTopicAction {
       groupId?: string;
       pageSize?: number;
     },
-  ) => SWRResponse<ChatTopic[]>;
+  ) => SWRResponse<{ items: ChatTopic[]; total: number }>;
   useSearchTopics: (
     keywords: string | undefined,
     params: {
@@ -253,10 +253,10 @@ export const chatTopic: StateCreator<
   // query
   useFetchTopics: (enable, { agentId, pageSize: customPageSize }) => {
     const pageSize = customPageSize || 20;
-    return useClientDataSWR<ChatTopic[]>(
+    return useClientDataSWR<{ items: ChatTopic[]; total: number }>(
       enable ? [SWR_USE_FETCH_TOPIC, agentId, pageSize] : null,
       async ([, agentId, pageSize]: [string, string | undefined, number]) => {
-        if (!agentId) return [];
+        if (!agentId) return { items: [], total: 0 };
 
         const currentTopics = get().topicMaps[agentId] || [];
         const currentLength = currentTopics.length;
@@ -275,7 +275,7 @@ export const chatTopic: StateCreator<
           );
 
           // Fetch only the additional topics needed
-          const additionalTopics = await topicService.getTopics({
+          const result = await topicService.getTopics({
             agentId,
             current: 0,
             pageSize,
@@ -292,20 +292,18 @@ export const chatTopic: StateCreator<
             n('useFetchTopics(expandingEnd)'),
           );
 
-          return additionalTopics;
+          return result;
         }
 
         // Otherwise fetch normally
         return topicService.getTopics({ agentId, current: 0, pageSize });
       },
       {
-        onSuccess: async (topics) => {
+        onSuccess: async (result) => {
           if (!agentId) return;
 
+          const { items: topics, total: totalCount } = result;
           const hasMore = topics.length >= pageSize;
-
-          // Fetch total count
-          const totalCount = await topicService.countTopics({ agentId });
 
           const nextMap = { ...get().topicMaps, [agentId]: topics };
           const nextPageMap = { ...get().topicPageMap, [agentId]: 0 };
@@ -347,23 +345,20 @@ export const chatTopic: StateCreator<
 
     try {
       const pageSize = useGlobalStore.getState().status.topicPageSize || 20;
-      const [newTopics, totalCount] = await Promise.all([
-        topicService.getTopics({
-          agentId: activeAgentId,
-          current: nextPage,
-          pageSize,
-        }),
-        topicService.countTopics({ agentId: activeAgentId }),
-      ]);
+      const result = await topicService.getTopics({
+        agentId: activeAgentId,
+        current: nextPage,
+        pageSize,
+      });
 
       const currentTopics = topicMaps[activeAgentId] || [];
-      const hasMore = newTopics.length >= pageSize;
+      const hasMore = result.items.length >= pageSize;
 
       set(
         {
-          topicCountMap: { ...get().topicCountMap, [activeAgentId]: totalCount },
+          topicCountMap: { ...get().topicCountMap, [activeAgentId]: result.total },
           topicLoadingMoreStates: { ...topicLoadingMoreStates, [activeAgentId]: false },
-          topicMaps: { ...topicMaps, [activeAgentId]: [...currentTopics, ...newTopics] },
+          topicMaps: { ...topicMaps, [activeAgentId]: [...currentTopics, ...result.items] },
           topicPageMap: { ...topicPageMap, [activeAgentId]: nextPage },
           topicsHasMore: { ...get().topicsHasMore, [activeAgentId]: hasMore },
         },
