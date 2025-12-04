@@ -200,6 +200,19 @@ export const createDesktopRouter = () =>
           path: 'settings',
         },
 
+        // Memory routes
+        {
+          children: [
+            {
+              element: dynamicElement(() => import('./(main)/memory')),
+              index: true,
+            },
+          ],
+          element: dynamicElement(() => import('./(main)/memory/_layout')),
+          errorElement: <ErrorBoundary resetPath="/memory" />,
+          path: 'memory',
+        },
+
         // Image routes
         {
           children: [
