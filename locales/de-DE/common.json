@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "Assistent",
-    "library": "Bibliothek"
+    "displayItems": "Einträge anzeigen",
+    "library": "Bibliothek",
+    "searchAgent": "Assistent durchsuchen...",
+    "searchResultEmpty": "Keine Suchergebnisse gefunden"
   },
   "new": "Neu",
   "oauth": "SSO-Anmeldung",
@@ -373,6 +376,7 @@
     "home": "Startseite",
     "knowledgeBase": "Wissensdatenbank",
     "me": "Ich",
+    "memory": "Erinnerung",
     "pages": "Dokumente",
     "resource": "Ressourcen",
     "search": "Suche",

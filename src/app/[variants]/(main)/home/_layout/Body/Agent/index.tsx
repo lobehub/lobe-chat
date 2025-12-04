@@ -5,10 +5,10 @@ import React, { Suspense, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useCreateMenuItems } from '@/features/NavPanel/hooks';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import SkeletonList from '../../../../../../../features/NavPanel/components/SkeletonList';
+import { useCreateMenuItems } from '../../hooks';
 import Actions from './Actions';
 import List from './List';
 import { useAgentModal } from './ModalProvider';
@@ -95,7 +95,7 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
       paddingInline={'8px 4px'}
       title={
         <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-          {t('navPanel.agent', { defaultValue: '助手' })}
+          {t('navPanel.agent')}
         </Text>
       }
     >

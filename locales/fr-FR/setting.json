@@ -85,7 +85,7 @@
     "desc": "Préférences et paramètres du modèle.",
     "global": "Paramètres globaux",
     "group": "Paramètres de l'équipe",
-    "groupDesc": "Gérer l'équipe d'agents et les préférences de chat",
+    "groupDesc": "Gérer les groupes et les préférences de discussion",
     "session": "Paramètres de session",
     "sessionDesc": "Paramètres de personnage et préférences de session.",
     "sessionWithName": "Paramètres de session · {{name}}",
@@ -425,7 +425,7 @@
       "placeholder": "Veuillez saisir l'invite système de l'animateur",
       "title": "Invite système de l'animateur"
     },
-    "title": "Informations sur l'équipe d'agents"
+    "title": "Informations sur le groupe"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +433,7 @@
       "title": "Autoriser les messages privés de l’assistant"
     },
     "enableSupervisor": {
-      "desc": "Activer la fonction de modérateur pour l'équipe d'agents. Le modérateur gérera le déroulement des conversations.",
+      "desc": "Activer la fonction de modérateur de groupe, le modérateur gérera le déroulement des conversations d'équipe",
       "title": "Activer le modérateur"
     },
     "maxResponseInRow": {

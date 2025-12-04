@@ -12,6 +12,7 @@
     "removeUnstarred": "Verwijder niet-gemarkeerde onderwerpen"
   },
   "defaultTitle": "Standaard onderwerp",
+  "displayItems": "Toon items",
   "duplicateLoading": "Onderwerp wordt gekopieerd...",
   "duplicateSuccess": "Onderwerp succesvol gekopieerd",
   "favorite": "Favoriet",
@@ -33,6 +34,7 @@
     "desc": "Klik op de knop aan de linkerkant om de huidige conversatie op te slaan als een historisch onderwerp en een nieuwe conversatie te starten.",
     "title": "Onderwerpenlijst"
   },
+  "loadMore": "Meer laden",
   "searchPlaceholder": "Zoek onderwerpen...",
   "searchResultEmpty": "Geen zoekresultaten gevonden",
   "temp": "Tijdelijk",

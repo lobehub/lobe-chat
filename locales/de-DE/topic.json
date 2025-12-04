@@ -12,6 +12,7 @@
     "removeUnstarred": "Nicht markierte Themen löschen"
   },
   "defaultTitle": "Standardthema",
+  "displayItems": "Einträge anzeigen",
   "duplicateLoading": "Thema wird kopiert...",
   "duplicateSuccess": "Thema erfolgreich kopiert",
   "favorite": "Favorit",
@@ -33,6 +34,7 @@
     "desc": "Klicken Sie auf die Schaltfläche links von Senden, um den aktuellen Chat als historisches Thema zu speichern und eine neue Runde des Chats zu beginnen.",
     "title": "Themenliste"
   },
+  "loadMore": "Mehr laden",
   "searchPlaceholder": "Themen suchen...",
   "searchResultEmpty": "Keine Suchergebnisse vorhanden",
   "temp": "Vorübergehend",

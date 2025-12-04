@@ -85,7 +85,7 @@
     "desc": "Voorkeuren en modelinstellingen.",
     "global": "Algemene instellingen",
     "group": "Teaminstellingen",
-    "groupDesc": "Beheer Agent-teams en chatvoorkeuren",
+    "groupDesc": "Beheer groeps- en chatvoorkeuren",
     "session": "Sessie-instellingen",
     "sessionDesc": "Rolinstellingen en sessievoorkeuren.",
     "sessionWithName": "Sessie-instellingen · {{name}}",
@@ -425,7 +425,7 @@
       "placeholder": "Voer de systeemopdracht van de host in",
       "title": "Systeemopdracht van de host"
     },
-    "title": "Agent Teaminformatie"
+    "title": "Groepsinformatie"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +433,7 @@
       "title": "Sta privéberichten van assistent toe"
     },
     "enableSupervisor": {
-      "desc": "Schakel de moderatorfunctie voor het Agent-team in. De moderator beheert het verloop van teamgesprekken.",
+      "desc": "Schakel de functie voor groepsmoderator in; de moderator beheert het verloop van teamgesprekken",
       "title": "Moderator inschakelen"
     },
     "maxResponseInRow": {

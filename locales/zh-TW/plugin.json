@@ -338,6 +338,8 @@
       "installed": "已安裝"
     },
     "config": {
+      "addEnv": "新增環境變數",
+      "addHeaders": "新增請求標頭",
       "args": "參數",
       "command": "命令",
       "env": "環境變數",
@@ -357,6 +359,9 @@
         "title": "⚠️ 安全風險提示"
       },
       "title": "安裝自定義插件"
+    },
+    "install": {
+      "title": "安裝資訊"
     },
     "marketplace": {
       "title": "安裝第三方插件",

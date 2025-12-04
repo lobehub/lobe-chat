@@ -55,7 +55,7 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
   const count = displaySessions.length;
 
   // Show loading skeleton when searching
-  if (isSearching && isSearchLoading) {
+  if (isSearching && (isSearchLoading || !searchResults)) {
     return (
       <Flexbox gap={1} paddingBlock={1} paddingInline={4}>
         <SkeletonList rows={5} />

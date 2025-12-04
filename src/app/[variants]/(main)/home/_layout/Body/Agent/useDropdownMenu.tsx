@@ -3,10 +3,11 @@ import { Hash, LucideCheck } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useCreateMenuItems } from '@/features/NavPanel/hooks';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
+import { useCreateMenuItems } from '../../hooks';
 
 interface AgentActionsDropdownMenuProps {
   handleOpenGroupWizard: () => void;
@@ -39,7 +40,7 @@ export const useAgentActionsDropdownMenu = ({
     const createSessionGroupItem = createSessionGroupMenuItem();
     const configItem = configMenuItem(openConfigGroupModal);
 
-    const pageSizeOptions = [20, 40, 60, 100];
+    const pageSizeOptions = [10, 15, 20, 40];
     const pageSizeItems = pageSizeOptions.map((size) => ({
       icon: agentPageSize === size ? <Icon icon={LucideCheck} /> : <div />,
       key: `pageSize-${size}`,
@@ -55,15 +56,15 @@ export const useAgentActionsDropdownMenu = ({
             createAgentItem,
             ...(enableGroupChat ? [createGroupChatItem] : []),
             { type: 'divider' as const },
-            createSessionGroupItem,
-            configItem,
-            { type: 'divider' as const },
             {
               children: pageSizeItems,
               icon: <Icon icon={Hash} />,
               key: 'displayItems',
               label: t('navPanel.displayItems'),
             },
+            { type: 'divider' as const },
+            createSessionGroupItem,
+            configItem,
           ]
         : []),
     ].filter(Boolean) as MenuProps['items'];

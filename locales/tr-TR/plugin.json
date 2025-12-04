@@ -338,6 +338,8 @@
       "installed": "Yüklendi"
     },
     "config": {
+      "addEnv": "Ortam Değişkeni Ekle",
+      "addHeaders": "İstek Başlığı Ekle",
       "args": "Parametreler",
       "command": "Komut",
       "env": "Ortam değişkenleri",
@@ -357,6 +359,9 @@
         "title": "⚠️ Güvenlik Uyarısı"
       },
       "title": "Özel Eklenti Yükle"
+    },
+    "install": {
+      "title": "Kurulum Bilgisi"
     },
     "marketplace": {
       "title": "Üçüncü Taraf Eklenti Yükle",
