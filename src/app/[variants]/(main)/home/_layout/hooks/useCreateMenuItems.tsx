@@ -2,7 +2,7 @@ import { Icon } from '@lobehub/ui';
 import { GroupBotSquareIcon } from '@lobehub/ui/icons';
 import { App } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
-import { BotIcon, FolderCogIcon, FolderPlus } from 'lucide-react';
+import { BotIcon, FileTextIcon, FolderCogIcon, FolderPlus } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +10,7 @@ import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { useActionSWR } from '@/libs/swr';
 import { useChatGroupStore } from '@/store/chatGroup';
+import { useFileStore } from '@/store/file';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/slices/session/selectors';
 import { LobeAgentSession } from '@/types/session';
@@ -31,6 +32,7 @@ interface CreateAgentOptions {
  */
 export const useCreateMenuItems = () => {
   const { t } = useTranslation('chat');
+  const { t: tFile } = useTranslation('file');
   const { message } = App.useApp();
   const groupTemplates = useGroupTemplates();
 
@@ -40,6 +42,7 @@ export const useCreateMenuItems = () => {
     s.refreshSessions,
   ]);
   const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
+  const createNewPage = useFileStore((s) => s.createNewPage);
 
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
@@ -286,6 +289,30 @@ export const useCreateMenuItems = () => {
     [t],
   );
 
+  /**
+   * Create page action
+   */
+  const createPage = useCallback(() => {
+    const untitledTitle = tFile('documentList.untitled');
+    createNewPage(untitledTitle);
+  }, [createNewPage, tFile]);
+
+  /**
+   * Create page menu item
+   */
+  const createPageMenuItem = useCallback(
+    (): ItemType => ({
+      icon: <Icon icon={FileTextIcon} />,
+      key: 'newPage',
+      label: t('newPage'),
+      onClick: (info) => {
+        info.domEvent?.stopPropagation();
+        createPage();
+      },
+    }),
+    [t, createPage],
+  );
+
   return {
     configMenuItem,
     createAgent,
@@ -293,6 +320,8 @@ export const useCreateMenuItems = () => {
     createGroupChatMenuItem,
     createGroupFromTemplate,
     createGroupWithMembers,
+    createPage,
+    createPageMenuItem,
     createSessionGroupMenuItem,
 
     // Loading states
