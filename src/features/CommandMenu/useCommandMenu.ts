@@ -1,7 +1,10 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 
+import type { SearchResult } from '@/database/repositories/search';
 import { useHotkeyById } from '@/hooks/useHotkeys/useHotkeyById';
+import { lambdaClient } from '@/libs/trpc/client';
 import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
@@ -24,6 +27,21 @@ export const useCommandMenu = () => {
 
   const page = pages.at(-1);
   const isAiMode = page === 'ai-chat';
+
+  // Search functionality
+  const hasSearch = search.trim().length > 0;
+  const searchQuery = search.trim();
+
+  const { data: searchResults, isLoading: isSearching } = useSWR<SearchResult[]>(
+    hasSearch && !isAiMode ? ['search', searchQuery] : null,
+    async () => {
+      return lambdaClient.search.query.query({ query: searchQuery });
+    },
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
+  );
 
   // Ensure we're mounted on the client
   useEffect(() => {
@@ -112,7 +130,9 @@ export const useCommandMenu = () => {
     handleExternalLink,
     handleNavigate,
     handleThemeChange,
+    hasSearch,
     isAiMode,
+    isSearching,
     mounted,
     navigateToPage,
     open,
@@ -120,6 +140,7 @@ export const useCommandMenu = () => {
     pages,
     pathname,
     search,
+    searchResults: searchResults || ([] as SearchResult[]),
     setOpen,
     setPages,
     setSearch,
