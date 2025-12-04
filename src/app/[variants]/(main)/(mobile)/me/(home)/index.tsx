@@ -1,21 +1,33 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Center } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
+import ChangelogModal from '@/components/ChangelogModal';
 
 import Category from './features/Category';
 import UserBanner from './features/UserBanner';
 
 const MeHomePage = memo(() => {
+  const [isChangelogModalOpen, setIsChangelogModalOpen] = useState(false);
+
+  const handleOpenChangelogModal = () => {
+    setIsChangelogModalOpen(true);
+  };
+
+  const handleCloseChangelogModal = () => {
+    setIsChangelogModalOpen(false);
+  };
+
   return (
     <>
       <UserBanner />
-      <Category />
+      <Category onOpenChangelogModal={handleOpenChangelogModal} />
       <Center padding={16}>
         <BrandWatermark />
       </Center>
+      <ChangelogModal onClose={handleCloseChangelogModal} open={isChangelogModalOpen} />
     </>
   );
 });

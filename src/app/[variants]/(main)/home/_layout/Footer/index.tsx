@@ -2,11 +2,12 @@
 
 import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
 import { DiscordIcon } from '@lobehub/ui/icons';
-import { Book, CircleHelp, Feather, FlaskConical, Github, Mail } from 'lucide-react';
+import { Book, CircleHelp, Feather, FileClockIcon, FlaskConical, Github, Mail } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import ChangelogModal from '@/components/ChangelogModal';
 import LabsModal from '@/components/LabsModal';
 import { BRANDING_EMAIL, SOCIAL_URL } from '@/const/branding';
 import { DOCUMENTS_REFER_URL, GITHUB, GITHUB_ISSUES, mailTo } from '@/const/url';
@@ -17,6 +18,7 @@ const Footer = memo(() => {
   const { t } = useTranslation('common');
   const { hideGitHub } = useServerConfigStore(featureFlagsSelectors);
   const [isLabsModalOpen, setIsLabsModalOpen] = useState(false);
+  const [isChangelogModalOpen, setIsChangelogModalOpen] = useState(false);
 
   const handleOpenLabsModal = () => {
     setIsLabsModalOpen(true);
@@ -24,6 +26,14 @@ const Footer = memo(() => {
 
   const handleCloseLabsModal = () => {
     setIsLabsModalOpen(false);
+  };
+
+  const handleOpenChangelogModal = () => {
+    setIsChangelogModalOpen(true);
+  };
+
+  const handleCloseChangelogModal = () => {
+    setIsChangelogModalOpen(false);
   };
 
   const helpMenuItems: MenuProps['items'] = useMemo(
@@ -68,6 +78,12 @@ const Footer = memo(() => {
         type: 'divider',
       },
       {
+        icon: <Icon icon={FileClockIcon} />,
+        key: 'changelog',
+        label: t('changelog'),
+        onClick: handleOpenChangelogModal,
+      },
+      {
         icon: <Icon icon={FlaskConical} />,
         key: 'labs',
         label: t('labs'),
@@ -100,6 +116,7 @@ const Footer = memo(() => {
       </Flexbox>
 
       <LabsModal onClose={handleCloseLabsModal} open={isLabsModalOpen} />
+      <ChangelogModal onClose={handleCloseChangelogModal} open={isChangelogModalOpen} />
     </>
   );
 });
