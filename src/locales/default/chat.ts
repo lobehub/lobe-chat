@@ -259,9 +259,11 @@ export default {
     senderAssistant: 'Agent',
     senderUser: '你',
   },
-  newAgent: '新建助手',
+  newAgent: '助手',
 
-  newGroupChat: '新建 Agent 团队',
+  newGroupChat: 'Agent 团队',
+
+  newPage: '文稿',
 
   noAgentsYet: '此 Agent 团队还没有成员。点击 + 按钮邀请助手。',
 
