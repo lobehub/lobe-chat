@@ -1,7 +1,8 @@
 import { ActionIcon } from '@lobehub/ui';
+import { CreateBotIcon } from '@lobehub/ui/icons';
 import { Dropdown } from 'antd';
 import { useTheme } from 'antd-style';
-import { ChevronDownIcon, PlusSquareIcon } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 import type React from 'react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -99,7 +100,7 @@ const AddButton = memo(() => {
   return (
     <Flexbox horizontal>
       <ActionIcon
-        icon={PlusSquareIcon}
+        icon={CreateBotIcon}
         loading={isValidatingAgent || isCreatingGroup}
         onClick={handleMainIconClick}
         size={DESKTOP_HEADER_ICON_SIZE}

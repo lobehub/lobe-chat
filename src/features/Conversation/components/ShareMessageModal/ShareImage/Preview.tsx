@@ -43,7 +43,7 @@ const Preview = memo<PreviewProps>(
     const { styles } = useStyles(withBackground);
     const { styles: containerStyles } = useContainerStyles();
 
-    const displayTitle = isInbox ? t('inbox.title') : title;
+    const displayTitle = isInbox ? 'Lobe AI' : title;
     const displayDesc = isInbox ? t('inbox.desc') : description;
 
     return (
