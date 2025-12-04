@@ -10,6 +10,7 @@ import { SessionDefaultGroup } from '@/types/index';
 import SkeletonList from '../../../../../../../../features/NavPanel/components/SkeletonList';
 import AllAgentsDrawer from '../AllAgentsDrawer';
 import Group from './Group';
+import InboxItem from './InboxItem';
 import SessionList from './List';
 import { useAgentList } from './useAgentList';
 
@@ -41,6 +42,7 @@ const AgentList = memo<{ onMoreClick?: () => void }>(({ onMoreClick }) => {
 
   return (
     <>
+      <InboxItem />
       {showPinned && <SessionList dataSource={pinnedList!} />}
       {showCustom && <Group dataSource={customList!} />}
       {showDefault && (
