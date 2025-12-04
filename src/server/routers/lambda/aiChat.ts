@@ -172,7 +172,7 @@ export const aiChatRouter = router({
         topicId,
       });
 
-      log('retrieved %d messages, %d topics', messages.length, topics?.length ?? 0);
+      log('retrieved %d messages, %d topics', messages.length, topics?.items?.length ?? 0);
 
       return {
         assistantMessageId: assistantMessageItem.id,

@@ -54,10 +54,10 @@ describe('TopicModel', () => {
       const result = await topicModel.query({ containerId: sessionId });
 
       // 断言结果
-      expect(result).toHaveLength(4);
-      expect(result[0].id).toBe('5'); // favorite 的 topic 应该在前面，按照 updatedAt 降序排序
-      expect(result[1].id).toBe('2');
-      expect(result[2].id).toBe('4'); // 按照 updatedAt 降序排序
+      expect(result.items).toHaveLength(4);
+      expect(result.items[0].id).toBe('5'); // favorite 的 topic 应该在前面，按照 updatedAt 降序排序
+      expect(result.items[1].id).toBe('2');
+      expect(result.items[2].id).toBe('4'); // 按照 updatedAt 降序排序
     });
 
     it('should query topics with pagination', async () => {
@@ -69,11 +69,11 @@ describe('TopicModel', () => {
       ]);
 
       // 应该返回 2 个 topics
-      const result1 = await topicModel.query({ current: 0, pageSize: 2 });
+      const { items: result1 } = await topicModel.query({ current: 0, pageSize: 2 });
       expect(result1).toHaveLength(2);
 
       // 应该只返回 1 个 topic,并且是第 2 个
-      const result2 = await topicModel.query({ current: 1, pageSize: 1 });
+      const { items: result2 } = await topicModel.query({ current: 1, pageSize: 1 });
       expect(result2).toHaveLength(1);
       expect(result2[0].id).toBe('2');
     });
@@ -95,8 +95,8 @@ describe('TopicModel', () => {
 
       // 应该只返回属于 session1 的 topic
       const result = await topicModel.query({ containerId: 'session1' });
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('1');
+      expect(result.items).toHaveLength(1);
+      expect(result.items[0].id).toBe('1');
     });
 
     it('should query topics by group ID', async () => {
@@ -133,9 +133,9 @@ describe('TopicModel', () => {
 
       const result = await topicModel.query({ containerId: 'chat-group-1' });
 
-      expect(result).toHaveLength(2);
-      expect(result[0].id).toBe('group-topic-1');
-      expect(result[1].id).toBe('group-topic-2');
+      expect(result.items).toHaveLength(2);
+      expect(result.items[0].id).toBe('group-topic-1');
+      expect(result.items[1].id).toBe('group-topic-2');
     });
 
     it('should return topics based on pagination parameters', async () => {
@@ -147,8 +147,16 @@ describe('TopicModel', () => {
       ]);
 
       // 调用 query 方法
-      const result1 = await topicModel.query({ containerId: sessionId, current: 0, pageSize: 2 });
-      const result2 = await topicModel.query({ containerId: sessionId, current: 1, pageSize: 2 });
+      const { items: result1 } = await topicModel.query({
+        containerId: sessionId,
+        current: 0,
+        pageSize: 2,
+      });
+      const { items: result2 } = await topicModel.query({
+        containerId: sessionId,
+        current: 1,
+        pageSize: 2,
+      });
 
       // 断言返回结果符合分页要求
       expect(result1).toHaveLength(2);
@@ -196,8 +204,8 @@ describe('TopicModel', () => {
         // Query with agentId should return legacy topics from the associated session
         const result = await topicModel.query({ agentId: 'agent1' });
 
-        expect(result).toHaveLength(1);
-        expect(result[0].id).toBe('topic-agent-session');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].id).toBe('topic-agent-session');
       });
 
       // ========== New data tests (topics with agentId directly) ==========
@@ -230,8 +238,8 @@ describe('TopicModel', () => {
         // Query with agentId should return topics with matching agentId
         const result = await topicModel.query({ agentId: 'new-agent-1' });
 
-        expect(result).toHaveLength(1);
-        expect(result[0].id).toBe('new-topic-1');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].id).toBe('new-topic-1');
       });
 
       // ========== Mixed data tests (both legacy and new topics) ==========
@@ -276,8 +284,12 @@ describe('TopicModel', () => {
         const result = await topicModel.query({ agentId: 'mixed-agent' });
 
         // Should return all 3 topics
-        expect(result).toHaveLength(3);
-        expect(result.map((t) => t.id).sort()).toEqual(['both-topic', 'legacy-topic', 'new-topic']);
+        expect(result.items).toHaveLength(3);
+        expect(result.items.map((t) => t.id).sort()).toEqual([
+          'both-topic',
+          'legacy-topic',
+          'new-topic',
+        ]);
       });
 
       it('should not return duplicate topics when both agentId and sessionId match', async () => {
@@ -305,8 +317,8 @@ describe('TopicModel', () => {
         const result = await topicModel.query({ agentId: 'dedup-agent' });
 
         // Should return exactly 1 topic (no duplicates)
-        expect(result).toHaveLength(1);
-        expect(result[0].id).toBe('dedup-topic');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].id).toBe('dedup-topic');
       });
 
       // ========== Edge cases ==========
@@ -331,7 +343,7 @@ describe('TopicModel', () => {
         // Query with agentId that has no session association and no direct match
         const result = await topicModel.query({ agentId: 'agent-no-match' });
 
-        expect(result).toHaveLength(0);
+        expect(result.items).toHaveLength(0);
       });
 
       it('should return topics with direct agentId match even without agentsToSessions entry', async () => {
@@ -352,8 +364,8 @@ describe('TopicModel', () => {
 
         const result = await topicModel.query({ agentId: 'orphan-agent' });
 
-        expect(result).toHaveLength(1);
-        expect(result[0].id).toBe('orphan-topic');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].id).toBe('orphan-topic');
       });
 
       // ========== User isolation tests ==========
@@ -385,8 +397,8 @@ describe('TopicModel', () => {
         const result = await topicModel.query({ agentId: 'shared-agent-name' });
 
         // Should only return current user's topic
-        expect(result).toHaveLength(1);
-        expect(result[0].id).toBe('user-topic');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].id).toBe('user-topic');
       });
 
       it('should only lookup agentsToSessions for current user', async () => {
@@ -430,8 +442,8 @@ describe('TopicModel', () => {
         const result = await topicModel.query({ agentId: 'other-user-agent' });
 
         // Should return current user's topic with matching agentId
-        expect(result).toHaveLength(1);
-        expect(result[0].id).toBe('topic-user');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].id).toBe('topic-user');
       });
 
       // ========== Pagination tests ==========
@@ -470,12 +482,12 @@ describe('TopicModel', () => {
           pageSize: 2,
         });
 
-        expect(result).toHaveLength(2);
-        expect(result[0].id).toBe('page-topic3'); // Most recent first
-        expect(result[1].id).toBe('page-topic2');
+        expect(result.items).toHaveLength(2);
+        expect(result.items[0].id).toBe('page-topic3'); // Most recent first
+        expect(result.items[1].id).toBe('page-topic2');
 
         // Second page
-        const result2 = await topicModel.query({
+        const { items: result2 } = await topicModel.query({
           agentId: 'paginate-agent',
           current: 1,
           pageSize: 2,
@@ -515,11 +527,11 @@ describe('TopicModel', () => {
 
         const result = await topicModel.query({ agentId: 'fav-agent' });
 
-        expect(result).toHaveLength(3);
+        expect(result.items).toHaveLength(3);
         // Favorites first, then by updatedAt desc
-        expect(result[0].id).toBe('fav-topic3'); // favorite=true, most recent
-        expect(result[1].id).toBe('fav-topic2'); // favorite=true, older
-        expect(result[2].id).toBe('fav-topic1'); // favorite=false
+        expect(result.items[0].id).toBe('fav-topic3'); // favorite=true, most recent
+        expect(result.items[1].id).toBe('fav-topic2'); // favorite=true, older
+        expect(result.items[2].id).toBe('fav-topic1'); // favorite=false
       });
 
       // ========== ContainerId fallback tests (preserved from original) ==========
@@ -540,8 +552,8 @@ describe('TopicModel', () => {
         // Query without agentId, only containerId
         const result = await topicModel.query({ containerId: 'container-session' });
 
-        expect(result).toHaveLength(1);
-        expect(result[0].id).toBe('container-topic');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].id).toBe('container-topic');
       });
 
       it('should ignore containerId when agentId is provided', async () => {
@@ -581,8 +593,8 @@ describe('TopicModel', () => {
           containerId: 'container-only-session',
         });
 
-        expect(result).toHaveLength(1);
-        expect(result[0].id).toBe('agent-topic');
+        expect(result.items).toHaveLength(1);
+        expect(result.items[0].id).toBe('agent-topic');
       });
     });
   });

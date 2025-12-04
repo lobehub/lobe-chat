@@ -25,7 +25,7 @@ export class TopicService {
     return lambdaClient.topic.cloneTopic.mutate({ id, newTitle });
   };
 
-  getTopics = (params: QueryTopicParams): Promise<ChatTopic[]> => {
+  getTopics = async (params: QueryTopicParams): Promise<{ items: ChatTopic[]; total: number }> => {
     return lambdaClient.topic.getTopics.query({
       ...params,
       containerId: this.toDbSessionId(params.containerId),

@@ -202,10 +202,11 @@ describe('Topic Router Integration Tests', () => {
         agentId: testAgentId,
       });
 
-      // result 是数组，不是 { data: ... } 结构
-      expect(result).toHaveLength(2);
-      expect(result.map((t) => t.title)).toContain('Topic 1');
-      expect(result.map((t) => t.title)).toContain('Topic 2');
+      // result 包含 items 和 total
+      expect(result.items).toHaveLength(2);
+      expect(result.items.map((t) => t.title)).toContain('Topic 1');
+      expect(result.items.map((t) => t.title)).toContain('Topic 2');
+      expect(result.total).toBe(2);
     });
 
     it('should resolve sessionId to agentId when only sessionId provided', async () => {
@@ -222,8 +223,9 @@ describe('Topic Router Integration Tests', () => {
         sessionId: testSessionId,
       });
 
-      expect(result).toHaveLength(1);
-      expect(result[0].title).toBe('Topic for reverse lookup');
+      expect(result.items).toHaveLength(1);
+      expect(result.items[0].title).toBe('Topic for reverse lookup');
+      expect(result.total).toBe(1);
     });
   });
 
