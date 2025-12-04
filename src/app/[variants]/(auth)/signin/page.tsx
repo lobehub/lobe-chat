@@ -33,6 +33,7 @@ const useStyles = createStyles(({ css, token }) => ({
     padding-inline: 2rem;
   `,
   container: css`
+    overflow: hidden;
     width: 360px;
     border: 1px solid ${token.colorBorder};
     border-radius: ${token.borderRadiusLG}px;
