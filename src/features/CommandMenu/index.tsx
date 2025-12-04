@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import ChatList from './ChatList';
 import MainMenu from './MainMenu';
+import SearchResults from './SearchResults';
 import ThemeMenu from './ThemeMenu';
 import CommandFooter from './components/CommandFooter';
 import CommandInput from './components/CommandInput';
@@ -24,7 +25,9 @@ const CommandMenu = memo(() => {
     handleExternalLink,
     handleNavigate,
     handleThemeChange,
+    hasSearch,
     isAiMode,
+    isSearching,
     mounted,
     navigateToPage,
     open,
@@ -32,6 +35,7 @@ const CommandMenu = memo(() => {
     pages,
     pathname,
     search,
+    searchResults,
     setOpen,
     setPages,
     setSearch,
@@ -67,7 +71,7 @@ const CommandMenu = memo(() => {
               setPages((prev) => prev.slice(0, -1));
             }
           }}
-          shouldFilter={true}
+          shouldFilter={!hasSearch}
         >
           <CommandInput
             hasPages={pages.length > 0}
@@ -79,9 +83,21 @@ const CommandMenu = memo(() => {
           />
 
           <Command.List>
-            {!isAiMode && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
+            {!isAiMode && !hasSearch && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
+            {!isAiMode && hasSearch && !isSearching && searchResults.length === 0 && (
+              <Command.Empty>{t('cmdk.noResults')}</Command.Empty>
+            )}
 
-            {!page && (
+            {hasSearch && !isAiMode && (
+              <SearchResults
+                isLoading={isSearching}
+                onClose={() => setOpen(false)}
+                results={searchResults}
+                styles={styles}
+              />
+            )}
+
+            {!hasSearch && !page && (
               <MainMenu
                 onCreateSession={handleCreateSession}
                 onExternalLink={handleExternalLink}
@@ -93,7 +109,9 @@ const CommandMenu = memo(() => {
               />
             )}
 
-            {page === 'theme' && <ThemeMenu onThemeChange={handleThemeChange} styles={styles} />}
+            {!hasSearch && page === 'theme' && (
+              <ThemeMenu onThemeChange={handleThemeChange} styles={styles} />
+            )}
 
             {isAiMode && <ChatList messages={chatMessages} styles={styles} />}
           </Command.List>
