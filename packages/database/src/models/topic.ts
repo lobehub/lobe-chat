@@ -1,5 +1,19 @@
 import { DBMessageItem, TopicRankItem } from '@lobechat/types';
-import { SQL, and, count, desc, eq, gt, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
+import {
+  SQL,
+  and,
+  count,
+  desc,
+  eq,
+  gt,
+  gte,
+  ilike,
+  inArray,
+  isNull,
+  lte,
+  or,
+  sql,
+} from 'drizzle-orm';
 
 import { TopicItem, agents, agentsToSessions, messages, topics } from '../schemas';
 import { LobeChatDatabase } from '../type';
@@ -21,6 +35,11 @@ interface QueryTopicParams {
   current?: number;
   pageSize?: number;
   sessionId?: string | null;
+}
+
+export interface ListTopicsForMemoryExtractorCursor {
+  createdAt: Date;
+  id: string;
 }
 
 export class TopicModel {
@@ -489,5 +508,45 @@ export class TopicModel {
     if (containerId) return or(eq(topics.sessionId, containerId), eq(topics.groupId, containerId));
     // If neither is provided, match topics with no session or group
     return and(isNull(topics.sessionId), isNull(topics.groupId));
+  };
+
+  listTopicsForMemoryExtractor = async (
+    options: {
+      cursor?: ListTopicsForMemoryExtractorCursor;
+      endDate?: Date;
+      ignoreExtracted?: boolean;
+      limit?: number;
+      startDate?: Date;
+    } = {},
+  ) => {
+    const cursorCondition = options.cursor
+      ? or(
+          gt(topics.createdAt, options.cursor.createdAt),
+          and(eq(topics.createdAt, options.cursor.createdAt), gt(topics.id, options.cursor.id)),
+        )
+      : undefined;
+
+    return this.db.query.topics.findMany({
+      columns: {
+        createdAt: true,
+        id: true,
+        metadata: true,
+        userId: true,
+      },
+      limit: options.limit,
+      orderBy: (fields, { asc }) => [asc(fields.createdAt), asc(fields.id)],
+      where: and(
+        eq(topics.userId, this.userId),
+        options.startDate ? gte(topics.createdAt, options.startDate) : undefined,
+        options.endDate ? lte(topics.createdAt, options.endDate) : undefined,
+        options.ignoreExtracted
+          ? undefined
+          : or(
+              isNull(topics.metadata),
+              sql`(${topics.metadata}->'memory_user_memory_extract'->>'extract_status') IS DISTINCT FROM 'completed'`,
+            ),
+        cursorCondition,
+      ),
+    });
   };
 }
