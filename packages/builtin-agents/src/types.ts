@@ -27,23 +27,25 @@ export interface BuiltinAgentPersistConfig {
  * Runtime Result - dynamically generated config, not persisted
  */
 export interface BuiltinAgentRuntimeResult {
+  /** Plugins to enable for the agent */
+  plugins?: string[];
+
   /** Dynamically generated system role */
   systemRole: string;
-  // Future extensible fields can be added here
 }
 
 /**
  * Runtime Context - context passed to runtime function
  */
 export interface RuntimeContext {
-  /** Current date string (e.g., "2024-12-03") */
-  currentDate: string;
-
   /** Document content for PageAgent */
   documentContent?: string;
 
   /** Current model being used */
   model?: string;
+
+  /** Plugins enabled for the agent */
+  plugins?: string[];
 
   /** Target agent config for AgentBuilder */
   targetAgentConfig?: LobeAgentConfig;

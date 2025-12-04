@@ -42,7 +42,7 @@ const AgentProfile = memo(() => {
         </Flexbox>
 
         {agentId && agentBuilderId && (
-          <AgentBuilderProvider agentId={agentId}>
+          <AgentBuilderProvider agentId={agentBuilderId}>
             <DraggablePanel
               expand={chatPanelExpanded}
               maxWidth={600}
