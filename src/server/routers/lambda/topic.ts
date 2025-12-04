@@ -144,7 +144,13 @@ export const topicRouter = router({
         effectiveAgentId = await resolveAgentIdFromSession(sessionId, ctx.serverDB, ctx.userId);
       }
 
-      return ctx.topicModel.query({ ...rest, agentId: effectiveAgentId });
+      const result = await ctx.topicModel.query({ ...rest, agentId: effectiveAgentId });
+
+      // Return both items and total count
+      return {
+        items: result.items,
+        total: result.total,
+      };
     }),
 
   hasTopics: topicProcedure.query(async ({ ctx }) => {
