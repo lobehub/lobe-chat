@@ -11,7 +11,7 @@ import { FileManageAction, createFileManageSlice } from './slices/fileManager';
 import { TTSFileAction, createTTSFileSlice } from './slices/tts';
 import { FileUploadAction, createFileUploadSlice } from './slices/upload/action';
 
-//  ===============  聚合 createStoreFn ============ //
+//  ===============  Aggregate createStoreFn ============ //
 
 export type FileStore = FilesStoreState &
   FileAction &
@@ -31,7 +31,7 @@ const createStore: StateCreator<FileStore, [['zustand/devtools', never]]> = (...
   ...createFileUploadSlice(...parameters),
 });
 
-//  ===============  实装 useStore ============ //
+//  ===============  Implement useStore ============ //
 const devtools = createDevtools('file');
 
 export const useFileStore = createWithEqualityFn<FileStore>()(devtools(createStore), shallow);
