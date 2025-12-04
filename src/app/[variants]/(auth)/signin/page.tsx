@@ -19,7 +19,7 @@ import { requestPasswordReset, signIn } from '@/libs/better-auth/auth-client';
 import { isBuiltinProvider, normalizeProviderId } from '@/libs/better-auth/utils/client';
 import { useServerConfigStore } from '@/store/serverConfig';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, responsive }) => ({
   backButton: css`
     cursor: pointer;
     font-size: 14px;
@@ -30,6 +30,8 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   card: css`
+    display: flex;
+    flex-direction: column;
     padding-block: 2.5rem;
     padding-inline: 2rem;
   `,
@@ -44,6 +46,11 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 1px;
     background: ${token.colorBorder};
   `,
+  dividerRow: css`
+    ${responsive.mobile} {
+      order: -1;
+    }
+  `,
   dividerText: css`
     font-size: 14px;
     color: ${token.colorTextSecondary};
@@ -52,6 +59,13 @@ const useStyles = createStyles(({ css, token }) => ({
     font-size: 14px;
     color: ${token.colorTextSecondary};
     text-align: center;
+  `,
+  emailForm: css`
+    margin-block-start: 0.5rem;
+
+    ${responsive.mobile} {
+      margin-block: 0;
+    }
   `,
   footer: css`
     padding: 1rem;
@@ -62,6 +76,12 @@ const useStyles = createStyles(({ css, token }) => ({
     text-align: center;
 
     background: ${token.colorBgElevated};
+  `,
+  socialSection: css`
+    ${responsive.mobile} {
+      order: 1;
+      margin-block-start: 1rem;
+    }
   `,
   subtitle: css`
     margin-block-start: 0.5rem;
@@ -361,13 +381,11 @@ export default function SignInPage() {
 
           {step === 'email' && (
             <>
-              <p className={styles.subtitle}>{t('betterAuth.signin.emailStep.subtitle')}</p>
-
               {/* Social Login Section Skeleton */}
               {!serverConfigInit && (
-                <Flexbox gap={12} style={{ marginTop: '2rem' }}>
+                <Flexbox className={styles.socialSection} gap={12}>
                   <Skeleton.Button active block size="large" />
-                  <Flexbox align="center" gap={12} horizontal>
+                  <Flexbox align="center" className={styles.dividerRow} gap={12} horizontal>
                     <div className={styles.divider} />
                     <Skeleton.Input active size="small" style={{ minWidth: 80, width: 80 }} />
                     <div className={styles.divider} />
@@ -377,7 +395,7 @@ export default function SignInPage() {
 
               {/* Social Login Section */}
               {serverConfigInit && oAuthSSOProviders.length > 0 && (
-                <Flexbox gap={12} style={{ marginTop: '2rem' }}>
+                <Flexbox className={styles.socialSection} gap={12}>
                   {oAuthSSOProviders.map((provider) => (
                     <Button
                       block
@@ -392,7 +410,7 @@ export default function SignInPage() {
                   ))}
 
                   {/* Divider */}
-                  <Flexbox align="center" gap={12} horizontal>
+                  <Flexbox align="center" className={styles.dividerRow} gap={12} horizontal>
                     <div className={styles.divider} />
                     <span className={styles.dividerText}>
                       {t('betterAuth.signin.orContinueWith')}
@@ -403,10 +421,10 @@ export default function SignInPage() {
               )}
 
               <Form
+                className={styles.emailForm}
                 form={form}
                 layout="vertical"
                 onFinish={handleCheckUser}
-                style={{ marginTop: '0.5rem' }}
               >
                 <Form.Item
                   name="email"
