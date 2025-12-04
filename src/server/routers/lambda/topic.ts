@@ -154,19 +154,30 @@ export const topicRouter = router({
         const fileIdsInTopic = await ctx.topicModel.getTopicFileIds(topicId);
 
         if (fileIdsInTopic.length > 0) {
+          // 批量查询所有文件的使用情况
+          const allFileUsage = await ctx.serverDB.query.messagesFiles.findMany({
+            where: (messagesFiles, { inArray, eq, and }) => {
+              return and(
+                inArray(messagesFiles.fileId, fileIdsInTopic),
+                eq(messagesFiles.userId, ctx.userId),
+              );
+            },
+          });
+
+          // 按 fileId 分组
+          const usageByFile = allFileUsage.reduce(
+            (acc, usage) => {
+              if (!acc[usage.fileId]) acc[usage.fileId] = [];
+              acc[usage.fileId].push(usage);
+              return acc;
+            },
+            {} as Record<string, typeof allFileUsage>,
+          );
+
           // 检查每个文件是否被其他话题的消息使用
           for (const fileId of fileIdsInTopic) {
-            // 查询该文件在所有消息中的使用情况
-            const fileUsage = await ctx.serverDB.query.messagesFiles.findMany({
-              where: (messagesFiles, { eq, and }) => {
-                return and(eq(messagesFiles.fileId, fileId), eq(messagesFiles.userId, ctx.userId));
-              },
-            });
-
-            // 检查是否所有使用该文件的消息都属于当前话题
-            const usedByOtherTopics = fileUsage.some(
-              (usage) => !topicMessageIds.has(usage.messageId),
-            );
+            const usages = usageByFile[fileId] || [];
+            const usedByOtherTopics = usages.some((usage) => !topicMessageIds.has(usage.messageId));
 
             // 如果文件没有被其他话题使用，标记删除
             if (!usedByOtherTopics) {

@@ -188,25 +188,39 @@ export const messageRouter = router({
 
           const fileIds = [...new Set(filesInMessages.map((f) => f.fileId))];
 
-          // 检查每个文件是否被其他消息使用
-          const messageIdSet = new Set(messageIds);
-          for (const fileId of fileIds) {
-            const fileUsage = await ctx.serverDB.query.messagesFiles.findMany({
-              where: (messagesFiles, { eq, and }) => {
+          if (fileIds.length > 0) {
+            // 批量查询所有文件的使用情况
+            const messageIdSet = new Set(messageIds);
+            const allFileUsage = await ctx.serverDB.query.messagesFiles.findMany({
+              where: (messagesFiles, { inArray, eq, and }) => {
                 return and(
-                  eq(messagesFiles.fileId, fileId),
+                  inArray(messagesFiles.fileId, fileIds),
                   eq(messagesFiles.userId, ctx.userId),
                 );
               },
             });
 
-            // 如果文件只被当前要删除的消息使用，则标记删除
-            const usedByOtherMessages = fileUsage.some(
-              (usage) => !messageIdSet.has(usage.messageId),
+            // 按 fileId 分组
+            const usageByFile = allFileUsage.reduce(
+              (acc, usage) => {
+                if (!acc[usage.fileId]) acc[usage.fileId] = [];
+                acc[usage.fileId].push(usage);
+                return acc;
+              },
+              {} as Record<string, typeof allFileUsage>,
             );
 
-            if (!usedByOtherMessages) {
-              filesToDelete.push(fileId);
+            // 检查每个文件是否被其他消息使用
+            for (const fileId of fileIds) {
+              const usages = usageByFile[fileId] || [];
+              // 如果文件只被当前要删除的消息使用，则标记删除
+              const usedByOtherMessages = usages.some(
+                (usage) => !messageIdSet.has(usage.messageId),
+              );
+
+              if (!usedByOtherMessages) {
+                filesToDelete.push(fileId);
+              }
             }
           }
         }
@@ -217,7 +231,10 @@ export const messageRouter = router({
         const fileModel = new FileModel(ctx.serverDB, ctx.userId);
         const fileService = new FileService(ctx.serverDB, ctx.userId);
 
-        const deletedFiles = await fileModel.deleteMany(filesToDelete, serverDBEnv.REMOVE_GLOBAL_FILE);
+        const deletedFiles = await fileModel.deleteMany(
+          filesToDelete,
+          serverDBEnv.REMOVE_GLOBAL_FILE,
+        );
 
         if (deletedFiles && deletedFiles.length > 0) {
           // deleteFiles 方法会自动处理 URL 到 key 的转换
