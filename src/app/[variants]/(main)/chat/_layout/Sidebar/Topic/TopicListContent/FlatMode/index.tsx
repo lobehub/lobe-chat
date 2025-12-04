@@ -1,17 +1,37 @@
 'use client';
 
 import isEqual from 'fast-deep-equal';
+import { MoreHorizontal } from 'lucide-react';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import NavItem from '@/features/NavPanel/components/NavItem';
+import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 import TopicItem from '../../List/Item';
 
 const FlatMode = memo(() => {
-  const [activeTopicId, activeThreadId] = useChatStore((s) => [s.activeTopicId, s.activeThreadId]);
-  const activeTopicList = useChatStore(topicSelectors.displayTopics, isEqual);
+  const { t } = useTranslation('topic');
+  const topicPageSize = useGlobalStore(systemStatusSelectors.topicPageSize);
+
+  const [activeTopicId, activeThreadId, hasMore, isExpandingPageSize, openAllTopicsDrawer] =
+    useChatStore((s) => [
+      s.activeTopicId,
+      s.activeThreadId,
+      topicSelectors.hasMoreTopics(s),
+      topicSelectors.isExpandingPageSize(s),
+      s.openAllTopicsDrawer,
+    ]);
+
+  const activeTopicList = useChatStore(
+    topicSelectors.displayTopicsForSidebar(topicPageSize),
+    isEqual,
+  );
 
   return (
     <Flexbox gap={1}>
@@ -25,6 +45,10 @@ const FlatMode = memo(() => {
           title={topic.title}
         />
       ))}
+      {isExpandingPageSize && <SkeletonList rows={3} />}
+      {hasMore && !isExpandingPageSize && (
+        <NavItem icon={MoreHorizontal} onClick={openAllTopicsDrawer} title={t('loadMore')} />
+      )}
     </Flexbox>
   );
 });
