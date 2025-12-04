@@ -5,10 +5,10 @@ import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { LIBRARY_URL } from '@/const/url';
-import { useProjectMenuItems } from '@/features/NavPanel/hooks';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import SkeletonList from '../../../../../../../../features/NavPanel/components/SkeletonList';
+import { useProjectMenuItems } from '../../../hooks';
 import EmptyStatus from '../../EmptyStatus';
 import Item from './Item';
 

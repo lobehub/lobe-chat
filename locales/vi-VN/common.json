@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "Trợ lý",
-    "library": "Thư viện"
+    "displayItems": "Hiển thị mục",
+    "library": "Thư viện",
+    "searchAgent": "Tìm kiếm trợ lý...",
+    "searchResultEmpty": "Không có kết quả tìm kiếm"
   },
   "new": "Mới",
   "oauth": "Đăng nhập SSO",
@@ -373,6 +376,7 @@
     "home": "Trang chủ",
     "knowledgeBase": "Cơ sở tri thức",
     "me": "Tôi",
+    "memory": "Bộ nhớ",
     "pages": "Tài liệu",
     "resource": "Tài nguyên",
     "search": "Tìm kiếm",

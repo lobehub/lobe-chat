@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "도우미",
-    "library": "자료실"
+    "displayItems": "항목 표시",
+    "library": "자료실",
+    "searchAgent": "도우미 검색...",
+    "searchResultEmpty": "검색 결과가 없습니다"
   },
   "new": "새로운",
   "oauth": "SSO 로그인",
@@ -373,6 +376,7 @@
     "home": "홈",
     "knowledgeBase": "지식 베이스",
     "me": "내 정보",
+    "memory": "기억",
     "pages": "문서",
     "resource": "자료",
     "search": "검색",

@@ -338,6 +338,8 @@
       "installed": "설치됨"
     },
     "config": {
+      "addEnv": "환경 변수 추가",
+      "addHeaders": "요청 헤더 추가",
       "args": "매개변수",
       "command": "명령어",
       "env": "환경 변수",
@@ -357,6 +359,9 @@
         "title": "⚠️ 보안 위험 경고"
       },
       "title": "사용자 정의 플러그인 설치"
+    },
+    "install": {
+      "title": "설치 정보"
     },
     "marketplace": {
       "title": "서드파티 플러그인 설치",

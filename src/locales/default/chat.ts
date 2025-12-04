@@ -23,13 +23,13 @@ export default {
   },
   clearCurrentMessages: '清空当前会话消息',
   confirmClearCurrentMessages: '即将清空当前会话消息，清空后将无法找回，请确认你的操作',
-  confirmRemoveChatGroupItemAlert: '即将删除该 Agent 团队，团队成员不受影响，请确认你的操作',
+  confirmRemoveChatGroupItemAlert: '即将删除该群组，团队成员不受影响，请确认你的操作',
   confirmRemoveGroupItemAlert: '即将删除该分组，删除后该分组的助手将移动到默认列表，请确认你的操作',
-  confirmRemoveGroupSuccess: 'Agent 团队删除成功',
+  confirmRemoveGroupSuccess: '群组删除成功',
   confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
   confirmRemoveSessionSuccess: '助手删除成功',
   defaultAgent: '自定义助手',
-  defaultGroupChat: 'Agent 团队',
+  defaultGroupChat: '群组',
   defaultList: '默认列表',
   defaultSession: '自定义助手',
   dm: {
@@ -122,7 +122,7 @@ export default {
     noTemplateMembers: '模板中没有成员',
     noTemplates: '没有可用的模板',
     searchTemplates: '搜索模板...',
-    title: '创建 Agent 团队',
+    title: '创建群组',
     useTemplate: '使用模板',
   },
 
@@ -180,7 +180,7 @@ export default {
   memberSelection: {
     addMember: '添加成员',
     allMembers: '全体成员',
-    createGroup: '创建 Agent 团队',
+    createGroup: '创建群组',
     noAvailableAgents: '没有可邀请的 Agent',
     noSelectedAgents: '还未选择 Agent',
     searchAgents: '搜索 Agent...',
@@ -259,13 +259,11 @@ export default {
     senderAssistant: 'Agent',
     senderUser: '你',
   },
-  newAgent: '助手',
+  newAgent: '创建助手',
+  newGroupChat: '创建群组',
+  newPage: '创建文稿',
 
-  newGroupChat: 'Agent 团队',
-
-  newPage: '文稿',
-
-  noAgentsYet: '此 Agent 团队还没有成员。点击 + 按钮邀请助手。',
+  noAgentsYet: '此群组还没有成员。点击 + 按钮邀请助手。',
 
   noAvailableAgents: '没有可邀请的成员',
 

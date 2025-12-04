@@ -338,6 +338,8 @@
       "installed": "Đã cài đặt"
     },
     "config": {
+      "addEnv": "Thêm biến môi trường",
+      "addHeaders": "Thêm tiêu đề yêu cầu",
       "args": "Tham số",
       "command": "Lệnh",
       "env": "Biến môi trường",
@@ -357,6 +359,9 @@
         "title": "⚠️ Cảnh báo rủi ro bảo mật"
       },
       "title": "Cài đặt plugin tùy chỉnh"
+    },
+    "install": {
+      "title": "Thông tin cài đặt"
     },
     "marketplace": {
       "title": "Cài đặt plugin bên thứ ba",

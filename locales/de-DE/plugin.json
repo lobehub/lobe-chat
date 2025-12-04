@@ -338,6 +338,8 @@
       "installed": "Installiert"
     },
     "config": {
+      "addEnv": "Umgebungsvariable hinzufügen",
+      "addHeaders": "Anfrage-Header hinzufügen",
       "args": "Parameter",
       "command": "Befehl",
       "env": "Umgebungsvariablen",
@@ -357,6 +359,9 @@
         "title": "⚠️ Sicherheitshinweis"
       },
       "title": "Benutzerdefiniertes Plugin installieren"
+    },
+    "install": {
+      "title": "Installationsinformationen"
     },
     "marketplace": {
       "title": "Drittanbieter-Plugins installieren",

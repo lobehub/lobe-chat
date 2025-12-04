@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import NavItem from '@/features/NavPanel/components/NavItem';
-import { useCreateMenuItems } from '@/features/NavPanel/hooks';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -17,6 +16,7 @@ import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { LobeSessions, SessionDefaultGroup } from '@/types/session';
 
+import { useCreateMenuItems } from '../../../hooks';
 import EmptyStatus from '../../EmptyStatus';
 import Item from './Item';
 
@@ -117,11 +117,7 @@ const List = memo<SessionListProps>(({ dataSource, groupId, itemStyle, itemClass
         </Link>
       ))}
       {hasMore && (
-        <NavItem
-          icon={MoreHorizontal}
-          onClick={openAllAgentsDrawer}
-          title={t('more', { defaultValue: '更多' })}
-        />
+        <NavItem icon={MoreHorizontal} onClick={openAllAgentsDrawer} title={t('input.more')} />
       )}
     </Flexbox>
   );

@@ -97,7 +97,7 @@
     "desc": "Preferences and model settings.",
     "global": "Global Settings",
     "group": "Team Settings",
-    "groupDesc": "Manage Agent teams and chat preferences",
+    "groupDesc": "Manage group and chat preferences",
     "session": "Session Settings",
     "sessionDesc": "Role settings and session preferences.",
     "sessionWithName": "Session Settings · {{name}}",
@@ -437,7 +437,7 @@
       "placeholder": "Please enter the host system prompt",
       "title": "Host System Prompt"
     },
-    "title": "Agent Team Information"
+    "title": "Group Information"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -445,7 +445,7 @@
       "title": "Allow Direct Messages from Assistant"
     },
     "enableSupervisor": {
-      "desc": "Enable the Agent team moderator feature. Moderators will manage the team conversation flow.",
+      "desc": "Enable the group moderator feature to manage team conversations",
       "title": "Enable Host"
     },
     "maxResponseInRow": {

@@ -12,6 +12,7 @@
     "removeUnstarred": "Eliminar temas no favoritos"
   },
   "defaultTitle": "Tema por defecto",
+  "displayItems": "Mostrar elementos",
   "duplicateLoading": "Copiando tema...",
   "duplicateSuccess": "Tema copiado con éxito",
   "favorite": "Favorito",
@@ -33,6 +34,7 @@
     "desc": "Haga clic en el botón a la izquierda para guardar la conversación actual como un tema histórico y comenzar una nueva conversación.",
     "title": "Lista de temas"
   },
+  "loadMore": "Cargar más",
   "searchPlaceholder": "Buscar temas...",
   "searchResultEmpty": "No hay resultados de búsqueda disponibles",
   "temp": "Temporal",

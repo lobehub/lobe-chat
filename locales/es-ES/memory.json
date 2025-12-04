@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "No hay recuerdos de identidad por ahora",
+    "filter": {
+      "search": "Buscar por rol, relación o descripción...",
+      "type": {
+        "all": "Todos",
+        "demographic": "Demográficos",
+        "personal": "Personales",
+        "professional": "Profesionales"
+      }
+    },
+    "list": {
+      "confirmDelete": "Confirmar eliminación",
+      "deleteCancel": "Cancelar",
+      "deleteContent": "¿Estás seguro de que deseas eliminar este recuerdo de identidad? Esta acción no se puede deshacer.",
+      "deleteOk": "Eliminar",
+      "noResults": "No se encontraron recuerdos de identidad coincidentes",
+      "updated": "Actualizado"
+    },
+    "roleCloud": {
+      "collapse": "Colapsar",
+      "expand": "Mostrar más"
+    },
+    "view": {
+      "list": "Lista",
+      "timeline": "Línea de tiempo"
+    }
+  },
+  "loading": "Cargando..."
+}
