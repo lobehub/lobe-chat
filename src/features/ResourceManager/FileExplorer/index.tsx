@@ -8,7 +8,6 @@ import Header from './Header';
 import ListView from './ListView';
 import Skeleton from './ListView/Skeleton';
 import MasonryView from './MasonryView';
-import PreviewMode from './PreviewMode';
 import { useFileExplorer } from './useFileExplorer';
 
 interface FileExplorerProps {
@@ -20,8 +19,6 @@ interface FileExplorerProps {
 const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpenFile }) => {
   const {
     // Data
-    currentFile,
-    currentViewItemId,
     data,
     isLoading,
     pendingRenameItemId,
@@ -32,28 +29,13 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
     selectFileIds,
     showEmptyStatus,
     viewMode,
-    isFilePreviewMode,
 
     // Handlers
-    handleBackToList,
     handleSelectionChange,
     onActionClick,
     setSelectedFileIds,
     setViewMode,
   } = useFileExplorer({ category, knowledgeBaseId });
-
-  // File preview mode
-  if (isFilePreviewMode && currentViewItemId) {
-    return (
-      <PreviewMode
-        category={category}
-        currentViewItemId={currentViewItemId}
-        fileName={currentFile?.name}
-        knowledgeBaseId={knowledgeBaseId}
-        onBack={handleBackToList}
-      />
-    );
-  }
 
   return (
     <Flexbox height={'100%'}>

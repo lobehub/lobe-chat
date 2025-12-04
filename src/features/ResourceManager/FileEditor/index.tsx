@@ -7,8 +7,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import FilePreviewer from '../../FilePreviewer';
-import Breadcrumb from '../Header/Breadcrumb';
+import Breadcrumb from '../FileExplorer/Header/Breadcrumb';
+import FileContent from './FileContent';
 
 interface PreviewModeProps {
   category?: string;
@@ -18,7 +18,7 @@ interface PreviewModeProps {
   onBack: () => void;
 }
 
-const PreviewMode = memo<PreviewModeProps>(
+const FileEditor = memo<PreviewModeProps>(
   ({ category, currentViewItemId, fileName, knowledgeBaseId, onBack }) => {
     const { t } = useTranslation('common');
 
@@ -41,12 +41,12 @@ const PreviewMode = memo<PreviewModeProps>(
             left: { padding: 0 },
           }}
         />
-        <Flexbox flex={1} style={{ overflow: 'hidden' }}>
-          <FilePreviewer fileId={currentViewItemId} />
+        <Flexbox flex={1} style={{ overflow: 'hidden', paddingTop: 48 }}>
+          <FileContent fileId={currentViewItemId} />
         </Flexbox>
       </Flexbox>
     );
   },
 );
 
-export default PreviewMode;
+export default FileEditor;

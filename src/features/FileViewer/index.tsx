@@ -11,6 +11,8 @@ import { FileViewRenderers } from './Renderer';
 import PDFRenderer from './Renderer/PDF';
 
 const container = css`
+  overflow: auto;
+  height: 100%;
   background: transparent !important;
 
   #proxy-renderer {
