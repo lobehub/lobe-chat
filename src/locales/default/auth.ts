@@ -102,7 +102,6 @@ export default {
       continueWithZitadel: '使用 Zitadel 登录',
       emailPlaceholder: '请输入邮箱或用户名',
       emailStep: {
-        subtitle: '请输入您的邮箱地址以继续',
         title: '登录',
       },
       error: '登录失败，请检查邮箱和密码',
