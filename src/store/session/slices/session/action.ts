@@ -45,6 +45,7 @@ export interface SessionAction {
    * reset sessions to default
    */
   clearSessions: () => Promise<void>;
+  closeAllAgentsDrawer: () => void;
   /**
    * create a new session
    * @param agent
@@ -56,6 +57,7 @@ export interface SessionAction {
   ) => Promise<string>;
 
   duplicateSession: (id: string) => Promise<void>;
+  openAllAgentsDrawer: () => void;
   triggerSessionUpdate: (id: string) => Promise<void>;
   updateSessionGroupId: (sessionId: string, groupId: string) => Promise<void>;
 
@@ -109,6 +111,10 @@ export const createSessionSlice: StateCreator<
   clearSessions: async () => {
     await sessionService.removeAllSessions();
     await get().refreshSessions();
+  },
+
+  closeAllAgentsDrawer: () => {
+    set({ allAgentsDrawerOpen: false }, false, n('closeAllAgentsDrawer'));
   },
 
   createSession: async (agent, isSwitchSession = true) => {
@@ -179,6 +185,10 @@ export const createSessionSlice: StateCreator<
     message.success(t('duplicateSession.success', { ns: 'chat' }));
 
     switchSession(newId);
+  },
+
+  openAllAgentsDrawer: () => {
+    set({ allAgentsDrawerOpen: true }, false, n('openAllAgentsDrawer'));
   },
   pinSession: async (id, pinned) => {
     await get().internal_updateSession(id, { pinned });

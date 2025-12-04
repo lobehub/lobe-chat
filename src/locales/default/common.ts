@@ -311,7 +311,10 @@ export default {
   },
   navPanel: {
     agent: '助手',
+    displayItems: '显示条目',
     library: '资料库',
+    searchAgent: '搜索助手...',
+    searchResultEmpty: '暂无搜索结果',
   },
   new: '新',
   oauth: 'SSO 登录',
