@@ -71,7 +71,7 @@ const CommandMenu = memo(() => {
               setPages((prev) => prev.slice(0, -1));
             }
           }}
-          shouldFilter={!hasSearch}
+          shouldFilter={!isAiMode}
         >
           <CommandInput
             hasPages={pages.length > 0}
@@ -83,21 +83,9 @@ const CommandMenu = memo(() => {
           />
 
           <Command.List>
-            {!isAiMode && !hasSearch && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
-            {!isAiMode && hasSearch && !isSearching && searchResults.length === 0 && (
-              <Command.Empty>{t('cmdk.noResults')}</Command.Empty>
-            )}
+            {!isAiMode && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
 
-            {hasSearch && !isAiMode && (
-              <SearchResults
-                isLoading={isSearching}
-                onClose={() => setOpen(false)}
-                results={searchResults}
-                styles={styles}
-              />
-            )}
-
-            {!hasSearch && !page && (
+            {!page && (
               <MainMenu
                 onCreateSession={handleCreateSession}
                 onExternalLink={handleExternalLink}
@@ -109,8 +97,15 @@ const CommandMenu = memo(() => {
               />
             )}
 
-            {!hasSearch && page === 'theme' && (
-              <ThemeMenu onThemeChange={handleThemeChange} styles={styles} />
+            {page === 'theme' && <ThemeMenu onThemeChange={handleThemeChange} styles={styles} />}
+
+            {!page && hasSearch && !isAiMode && (
+              <SearchResults
+                isLoading={isSearching}
+                onClose={() => setOpen(false)}
+                results={searchResults}
+                styles={styles}
+              />
             )}
 
             {isAiMode && <ChatList messages={chatMessages} styles={styles} />}
