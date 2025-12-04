@@ -41,30 +41,32 @@ const MainMenu = memo<MainMenuProps>(
 
     return (
       <>
-        {showCreateSession && (
-          <Command.Item onSelect={onCreateSession} value="new-agent">
-            <Bot className={styles.icon} />
+        <Command.Group>
+          {showCreateSession && (
+            <Command.Item onSelect={onCreateSession} value="create new agent assistant">
+              <Bot className={styles.icon} />
+              <div className={styles.itemContent}>
+                <div className={styles.itemLabel}>{t('cmdk.newAgent')}</div>
+              </div>
+            </Command.Item>
+          )}
+
+          {!pathname?.startsWith('/settings') && (
+            <Command.Item onSelect={() => onNavigate('/settings')} value="settings">
+              <Settings className={styles.icon} />
+              <div className={styles.itemContent}>
+                <div className={styles.itemLabel}>{t('cmdk.settings')}</div>
+              </div>
+            </Command.Item>
+          )}
+
+          <Command.Item onSelect={onNavigateToTheme} value="theme">
+            <Monitor className={styles.icon} />
             <div className={styles.itemContent}>
-              <div className={styles.itemLabel}>{t('cmdk.newAgent')}</div>
+              <div className={styles.itemLabel}>{t('cmdk.theme')}</div>
             </div>
           </Command.Item>
-        )}
-
-        {!pathname?.startsWith('/settings') && (
-          <Command.Item onSelect={() => onNavigate('/settings')} value="settings">
-            <Settings className={styles.icon} />
-            <div className={styles.itemContent}>
-              <div className={styles.itemLabel}>{t('cmdk.settings')}</div>
-            </div>
-          </Command.Item>
-        )}
-
-        <Command.Item onSelect={onNavigateToTheme} value="theme">
-          <Monitor className={styles.icon} />
-          <div className={styles.itemContent}>
-            <div className={styles.itemLabel}>{t('cmdk.theme')}</div>
-          </div>
-        </Command.Item>
+        </Command.Group>
 
         <Command.Group heading={t('cmdk.navigate')}>
           {!pathname?.startsWith('/discover') && (
