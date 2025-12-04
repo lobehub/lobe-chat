@@ -91,7 +91,7 @@ const ModelTitle = memo<ModelFetcherProps>(
           style: { overflow: 'hidden', position: 'relative', width: 380 },
         });
       },
-      [notification, t],
+      [notification, t, message],
     );
 
     return (
