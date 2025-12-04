@@ -131,7 +131,8 @@ export const useControls = ({
     [filteredBuiltinList, klavisServerItems, checked, togglePlugin, setUpdating],
   );
 
-  const items: ItemType[] = [
+  // 市场 tab 的 items
+  const marketItems: ItemType[] = [
     {
       children: builtinItems,
       key: 'builtins',
@@ -186,5 +187,82 @@ export const useControls = ({
     },
   ];
 
-  return items;
+  // 已安装 tab 的 items - 只显示已安装的插件
+  const installedPluginItems: ItemType[] = useMemo(() => {
+    const installedItems: ItemType[] = [];
+
+    // 已安装的 builtin 工具
+    const enabledBuiltinItems = filteredBuiltinList
+      .filter((item) => checked.includes(item.identifier))
+      .map((item) => ({
+        icon: <Avatar avatar={item.meta.avatar} size={20} style={{ flex: 'none' }} />,
+        key: item.identifier,
+        label: (
+          <ToolItem
+            checked={true}
+            id={item.identifier}
+            label={item.meta?.title}
+            onUpdate={async () => {
+              setUpdating(true);
+              await togglePlugin(item.identifier);
+              setUpdating(false);
+            }}
+          />
+        ),
+      }));
+
+    // 已连接的 Klavis 服务器（放在 builtin 里面）
+    const connectedKlavisItems = klavisServerItems.filter((item) =>
+      checked.includes(item.key as string),
+    );
+
+    // 合并 builtin 和 Klavis
+    const allBuiltinItems = [...enabledBuiltinItems, ...connectedKlavisItems];
+
+    if (allBuiltinItems.length > 0) {
+      installedItems.push({
+        children: allBuiltinItems,
+        key: 'installed-builtins',
+        label: t('tools.builtins.groupName'),
+        type: 'group',
+      });
+    }
+
+    // 已安装的插件
+    const installedPlugins = list
+      .filter((item) => checked.includes(item.identifier))
+      .map((item) => ({
+        icon: item?.avatar ? (
+          <PluginAvatar avatar={item.avatar} size={20} />
+        ) : (
+          <Icon icon={ToyBrick} size={20} />
+        ),
+        key: item.identifier,
+        label: (
+          <ToolItem
+            checked={true}
+            id={item.identifier}
+            label={item.title}
+            onUpdate={async () => {
+              setUpdating(true);
+              await togglePlugin(item.identifier);
+              setUpdating(false);
+            }}
+          />
+        ),
+      }));
+
+    if (installedPlugins.length > 0) {
+      installedItems.push({
+        children: installedPlugins,
+        key: 'installed-plugins',
+        label: t('tools.plugins.groupName'),
+        type: 'group',
+      });
+    }
+
+    return installedItems;
+  }, [filteredBuiltinList, list, klavisServerItems, checked, togglePlugin, setUpdating, t]);
+
+  return { installedPluginItems, marketItems };
 };

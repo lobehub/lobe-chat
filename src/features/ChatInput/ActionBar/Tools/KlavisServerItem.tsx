@@ -183,13 +183,12 @@ const KlavisServerItem = memo<KlavisServerItemProps>(({ label, server, type }) =
         const newPluginId = newServer.serverName;
         await togglePlugin(newPluginId);
 
-        // 检查是否需要 OAuth
-        if (newServer.oauthUrl) {
-          // 打开 OAuth 窗口并监听关闭
-          openOAuthWindow(newServer.oauthUrl, newServer.serverName);
-        } else {
-          // 不需要 OAuth，直接刷新工具列表
+        // 如果已认证，直接刷新工具列表，跳过 OAuth
+        if (newServer.isAuthenticated) {
           await refreshKlavisServerTools(newServer.serverName);
+        } else if (newServer.oauthUrl) {
+          // 需要 OAuth，打开 OAuth 窗口并监听关闭
+          openOAuthWindow(newServer.oauthUrl, newServer.serverName);
         }
       }
     } catch (error) {

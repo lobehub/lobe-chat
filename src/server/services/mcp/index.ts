@@ -57,7 +57,6 @@ export class MCPService {
   ): Promise<MCPToolCallProcessedResult> {
     // Process content blocks (upload images, etc.)
 
-    console.log('processToolCallResult - result', result);
     const newContent =
       result.isError || !processContentBlocksFn
         ? result.content

@@ -1,4 +1,4 @@
-import { produce, enableMapSet } from 'immer';
+import { enableMapSet, produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { lambdaClient } from '@/libs/trpc/client';
@@ -250,7 +250,10 @@ export const createKlavisStoreSlice: StateCreator<
 
       // 如果认证失败，删除服务器并重置状态
       if (!instanceStatus.isAuthenticated) {
-        console.log('[Klavis] Server not authenticated, removing:', serverName);
+        if (!instanceStatus.authNeeded) {
+          // 如果不需要认证，说明没问题
+          return;
+        }
 
         // 从本地状态移除
         set(

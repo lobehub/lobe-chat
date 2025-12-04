@@ -1,5 +1,6 @@
+import { Segmented } from '@lobehub/ui';
 import { Blocks } from 'lucide-react';
-import { Suspense, memo, useState } from 'react';
+import { Suspense, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PluginStore from '@/features/PluginStore';
@@ -11,12 +12,24 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 import Action from '../components/Action';
 import { useControls } from './useControls';
 
+type TabType = 'market' | 'installed';
+
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
   const [modalOpen, setModalOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
-  const items = useControls({ setModalOpen, setUpdating });
+  const [activeTab, setActiveTab] = useState<TabType | null>(null);
+  const { marketItems, installedPluginItems } = useControls({ setModalOpen, setUpdating });
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
+  const isInitializedRef = useRef(false);
+
+  // Set default tab based on installed plugins (only on first load)
+  useEffect(() => {
+    if (!isInitializedRef.current && installedPluginItems.length >= 0) {
+      isInitializedRef.current = true;
+      setActiveTab(installedPluginItems.length > 0 ? 'installed' : 'market');
+    }
+  }, [installedPluginItems.length]);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
   const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
@@ -27,13 +40,43 @@ const Tools = memo(() => {
   if (!enableFC)
     return <Action disabled icon={Blocks} showTooltip={true} title={t('tools.disabled')} />;
 
+  // Use effective tab for display (default to market while initializing)
+  const effectiveTab = activeTab ?? 'market';
+  const currentItems = effectiveTab === 'market' ? marketItems : installedPluginItems;
+
   return (
     <Suspense fallback={<Action disabled icon={Blocks} title={t('tools.title')} />}>
       <Action
         dropdown={{
           maxHeight: 500,
           maxWidth: 480,
-          menu: { items },
+          menu: {
+            items: [
+              {
+                key: 'tabs',
+                label: (
+                  <Segmented
+                    block
+                    onChange={(v) => setActiveTab(v as TabType)}
+                    options={[
+                      {
+                        label: t('tools.tabs.market', { defaultValue: 'Market' }),
+                        value: 'market',
+                      },
+                      {
+                        label: t('tools.tabs.installed', { defaultValue: 'Installed' }),
+                        value: 'installed',
+                      },
+                    ]}
+                    size="small"
+                    value={effectiveTab}
+                  />
+                ),
+                type: 'group',
+              },
+              ...currentItems,
+            ],
+          },
           minWidth: 320,
         }}
         icon={Blocks}
