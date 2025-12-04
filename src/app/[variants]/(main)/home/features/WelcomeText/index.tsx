@@ -25,11 +25,11 @@ const WelcomeText = memo(() => {
         cursorCharacter={<LoadingDots size={20} variant={'pulse'} />}
         cursorFade={false}
         deletePauseDuration={1000}
-        deletingSpeed={48}
+        deletingSpeed={44}
         hideCursorWhileTyping={'afterTyping'}
-        pauseDuration={12_000}
+        pauseDuration={16_000}
         sentences={sentences}
-        typingSpeed={120}
+        typingSpeed={88}
       />
     </Center>
   );
