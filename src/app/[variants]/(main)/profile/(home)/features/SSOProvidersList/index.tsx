@@ -22,13 +22,13 @@ export const SSOProvidersList = memo(() => {
   const userProfile = useUserStore(userProfileSelectors.userProfile);
   const isLoginWithBetterAuth = useUserStore(authSelectors.isLoginWithBetterAuth);
   const providers = useUserStore(authSelectors.authProviders);
-  const isEmailPasswordAuth = useUserStore(authSelectors.isEmailPasswordAuth);
+  const hasPasswordAccount = useUserStore(authSelectors.hasPasswordAccount);
   const refreshAuthProviders = useUserStore((s) => s.refreshAuthProviders);
   const oAuthSSOProviders = useServerConfigStore(serverConfigSelectors.oAuthSSOProviders);
   const { t } = useTranslation('auth');
 
   // Allow unlink if user has multiple SSO providers OR has email/password login
-  const allowUnlink = providers.length > 1 || isEmailPasswordAuth;
+  const allowUnlink = providers.length > 1 || hasPasswordAccount;
 
   // Get linked provider IDs for filtering
   const linkedProviderIds = useMemo(() => {

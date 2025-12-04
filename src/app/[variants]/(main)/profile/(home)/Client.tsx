@@ -259,7 +259,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
     userProfileSelectors.userProfile(s),
     s.isLoaded,
   ]);
-  const isEmailPasswordAuth = useUserStore(authSelectors.isEmailPasswordAuth);
+  const hasPasswordAccount = useUserStore(authSelectors.hasPasswordAccount);
   const isLoadedAuthProviders = useUserStore(authSelectors.isLoadedAuthProviders);
   const fetchAuthProviders = useUserStore((s) => s.fetchAuthProviders);
 
@@ -310,7 +310,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Divider style={{ margin: 0 }} />
 
       {/* Password Row - Only for Better Auth users with credential login */}
-      {isLoginWithBetterAuth && isEmailPasswordAuth && (
+      {isLoginWithBetterAuth && hasPasswordAccount && (
         <>
           <PasswordRow />
           <Divider style={{ margin: 0 }} />

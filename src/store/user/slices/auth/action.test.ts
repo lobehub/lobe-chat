@@ -66,7 +66,7 @@ afterEach(() => {
   useUserStore.setState({
     isLoadedAuthProviders: false,
     authProviders: [],
-    isEmailPasswordAuth: false,
+    hasPasswordAccount: false,
   });
 });
 
@@ -312,7 +312,7 @@ describe('createAuthSlice', () => {
 
       expect(mockBetterAuthClient.listAccounts).toHaveBeenCalled();
       expect(result.current.isLoadedAuthProviders).toBe(true);
-      expect(result.current.isEmailPasswordAuth).toBe(true);
+      expect(result.current.hasPasswordAccount).toBe(true);
     });
 
     it('should handle fetch error gracefully', async () => {
