@@ -244,20 +244,6 @@ export const createDesktopRouter = () =>
           path: 'page',
         },
 
-        // changelog routes
-        {
-          children: [
-            {
-              element: dynamicElement(() =>
-                import('./(main)/changelog').then((m) => m.DesktopPage),
-              ),
-              index: true,
-            },
-          ],
-          element: dynamicElement(() => import('./(main)/changelog/_layout/Desktop')),
-          errorElement: <ErrorBoundary resetPath="/changelog" />,
-          path: 'changelog',
-        },
         // Default route - redirect to chat
         {
           children: [

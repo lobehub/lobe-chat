@@ -206,21 +206,6 @@ export const createMobileRouter = () =>
           path: 'me',
         },
 
-        // changelog routes
-        {
-          children: [
-            {
-              element: dynamicElement(() =>
-                import('./(main)/changelog/index').then((m) => m.MobilePage),
-              ),
-              index: true,
-            },
-          ],
-          element: dynamicElement(() => import('./(main)/changelog/_layout/Mobile')),
-          errorElement: <ErrorBoundary resetPath="/changelog" />,
-          path: 'changelog',
-        },
-
         // Default route - redirect to chat
         {
           index: true,
