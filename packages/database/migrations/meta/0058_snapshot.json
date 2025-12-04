@@ -6,9 +6,9 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "ffb076a4-6bd6-4f2c-b62f-f4873b452076",
+  "id": "caf450fa-63af-4c89-b2df-f12646132be8",
   "policies": {},
-  "prevId": "8c2f4dd4-e687-4d25-b73a-30e9954b40cb",
+  "prevId": "ffb076a4-6bd6-4f2c-b62f-f4873b452076",
   "roles": {},
   "schemas": {},
   "sequences": {},
@@ -7273,6 +7273,12 @@
         "custom_params": {
           "name": "custom_params",
           "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source": {
+          "name": "source",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },

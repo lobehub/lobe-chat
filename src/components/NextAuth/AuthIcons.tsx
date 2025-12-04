@@ -1,3 +1,4 @@
+import { SiApple } from '@icons-pack/react-simple-icons';
 import { Aws, Google, Microsoft } from '@lobehub/icons';
 import {
   Auth0,
@@ -14,6 +15,7 @@ import {
 import React from 'react';
 
 const iconComponents: { [key: string]: React.ElementType } = {
+  'apple': SiApple,
   'auth0': Auth0,
   'authelia': Authelia.Color,
   'authentik': Authentik.Color,

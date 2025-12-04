@@ -616,6 +616,7 @@
     "supportedProviders": "このモデルをサポートするプロバイダー"
   },
   "plugins": {
+    "builtinTag": "内蔵プラグイン",
     "community": "コミュニティプラグイン",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "プラグインをインストール",
     "installed": "インストール済み",
+    "legacyTag": "旧バージョンプラグイン",
     "list": "プラグインリスト",
     "meta": {
       "description": "説明",

@@ -1007,6 +1007,7 @@ table topics {
     session_id [name: 'topics_session_id_idx']
     group_id [name: 'topics_group_id_idx']
     agent_id [name: 'topics_agent_id_idx']
+    () [name: 'topics_extract_status_gin_idx']
   }
 }
 
@@ -1017,7 +1018,7 @@ table user_installed_plugins {
   manifest jsonb
   settings jsonb
   custom_params jsonb
-  source text
+  source varchar(255)
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
