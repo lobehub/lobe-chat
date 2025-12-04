@@ -5,14 +5,14 @@ import { Skeleton } from 'antd';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import RepoIcon from '@/components/RepoIcon';
+import RepoIcon from '@/components/LibIcon';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 const Head = memo<{ id: string }>(({ id }) => {
   const name = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseNameById(id));
 
   return (
-    <Flexbox align={'center'} gap={8} horizontal padding={6}>
+    <Flexbox align={'center'} gap={8} horizontal paddingBlock={6} paddingInline={'10px 6px'}>
       <Center style={{ minWidth: 24 }} width={24}>
         <RepoIcon />
       </Center>
