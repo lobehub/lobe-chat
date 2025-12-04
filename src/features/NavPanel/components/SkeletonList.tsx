@@ -10,7 +10,16 @@ export const SkeletonItem = memo<{ avatarSize?: number } & Omit<FlexboxProps, 'c
     const theme = useTheme();
 
     return (
-      <Flexbox align={'center'} flex={1} gap={8} height={height} horizontal padding={padding}>
+      <Flexbox
+        align={'center'}
+        flex={1}
+        gap={8}
+        height={height}
+        horizontal
+        padding={padding}
+        style={style}
+        {...rest}
+      >
         <Skeleton.Button
           size={'small'}
           style={{
@@ -19,9 +28,7 @@ export const SkeletonItem = memo<{ avatarSize?: number } & Omit<FlexboxProps, 'c
             maxHeight: avatarSize,
             maxWidth: avatarSize,
             minWidth: avatarSize,
-            ...style,
           }}
-          {...rest}
         />
         <Flexbox flex={1} height={16}>
           <Skeleton.Button
