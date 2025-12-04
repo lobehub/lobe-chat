@@ -15,7 +15,7 @@ interface PreviewModeProps {
   currentViewItemId: string;
   fileName?: string;
   knowledgeBaseId?: string;
-  onBack: () => void;
+  onBack?: () => void;
 }
 
 const FileEditor = memo<PreviewModeProps>(
@@ -27,7 +27,7 @@ const FileEditor = memo<PreviewModeProps>(
         <ChatHeader
           left={
             <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
-              <ActionIcon icon={XIcon} onClick={onBack} title={t('back')} />
+              {onBack && <ActionIcon icon={XIcon} onClick={onBack} title={t('back')} />}
               <Flexbox align={'center'} style={{ marginLeft: 12 }}>
                 <Breadcrumb
                   category={category}
@@ -41,7 +41,7 @@ const FileEditor = memo<PreviewModeProps>(
             left: { padding: 0 },
           }}
         />
-        <Flexbox flex={1} style={{ backgroundColor: 'blue', overflow: 'hidden', paddingTop: 48 }}>
+        <Flexbox flex={1} style={{ overflow: 'hidden', paddingTop: 48 }}>
           <FileContent fileId={currentViewItemId} />
         </Flexbox>
       </Flexbox>
