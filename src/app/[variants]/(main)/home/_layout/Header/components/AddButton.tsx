@@ -1,4 +1,4 @@
-import { Dropdown, Icon, type MenuProps } from '@lobehub/ui';
+import { Dropdown, Icon, type MenuProps, Tooltip } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { ChevronDownIcon, FileTextIcon, SquarePenIcon } from 'lucide-react';
 import type React from 'react';
@@ -155,7 +155,7 @@ const AddButton = memo(() => {
       createAgentMenuItem(),
       enableGroupChat ? createGroupChatMenuItem(openModal) : null,
       {
-        icon: <Icon color={theme.colorIcon} icon={FileTextIcon} />,
+        icon: <Icon icon={FileTextIcon} />,
         key: 'newPage',
         label: tChat('newPage'),
         onClick: () => handleCreatePage(),
@@ -169,7 +169,6 @@ const AddButton = memo(() => {
     openModal,
     handleCreatePage,
     tChat,
-    theme.colorIcon,
   ]);
 
   if (!showCreateSession) return;
@@ -181,15 +180,18 @@ const AddButton = memo(() => {
           className={styles.button}
           disabled={isValidatingAgent || isCreatingGroup}
           style={{ flex: 'none' }}
-          title={tChat('newAgent')}
           type="button"
         >
-          <span className="main-icon" onClick={handleMainIconClick}>
-            <Icon color={theme.colorIcon} icon={SquarePenIcon} size={18} />
-          </span>
-          <span className="chevron-icon">
-            <Icon color={theme.colorIcon} icon={ChevronDownIcon} size={14} />
-          </span>
+          <Tooltip placement="top" title={tChat('newAgent')}>
+            <span className="main-icon" onClick={handleMainIconClick}>
+              <Icon color={theme.colorIcon} icon={SquarePenIcon} size={18} />
+            </span>
+          </Tooltip>
+          <Tooltip placement="right" title={tChat('input.more')}>
+            <span className="chevron-icon">
+              <Icon color={theme.colorIcon} icon={ChevronDownIcon} size={14} />
+            </span>
+          </Tooltip>
         </button>
       </Dropdown>
       {enableGroupChat && (
