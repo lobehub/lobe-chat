@@ -246,12 +246,23 @@ export default class AuthCtr extends ControllerModule {
             logger.info('Auto-refresh successful');
             this.broadcastTokenRefreshed();
           } else {
-            logger.error(`Auto-refresh failed: ${result.error}`);
-            // If auto-refresh fails, stop timer and clear token
-            this.stopAutoRefresh();
-            await this.remoteServerConfigCtr.clearTokens();
-            await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
-            this.broadcastAuthorizationRequired();
+            logger.error(`Auto-refresh failed after retries: ${result.error}`);
+
+            // Only clear tokens for non-retryable errors (e.g., invalid_grant)
+            // The retry mechanism in RemoteServerConfigCtr already handles transient errors
+            if (this.remoteServerConfigCtr.isNonRetryableError(result.error)) {
+              logger.warn(
+                'Non-retryable error detected, clearing tokens and requiring re-authorization',
+              );
+              this.stopAutoRefresh();
+              await this.remoteServerConfigCtr.clearTokens();
+              await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+              this.broadcastAuthorizationRequired();
+            } else {
+              // For other errors (after retries exhausted), log but don't clear tokens immediately
+              // The next refresh cycle will retry
+              logger.warn('Refresh failed but error may be transient, will retry on next cycle');
+            }
           }
         }
       } catch (error) {
@@ -335,11 +346,12 @@ export default class AuthCtr extends ControllerModule {
 
   /**
    * Refresh access token
+   * This method includes retry mechanism via RemoteServerConfigCtr.refreshAccessToken()
    */
   async refreshAccessToken() {
     logger.info('Starting to refresh access token');
     try {
-      // Call the centralized refresh logic in RemoteServerConfigCtr
+      // Call the centralized refresh logic in RemoteServerConfigCtr (includes retry)
       const result = await this.remoteServerConfigCtr.refreshAccessToken();
 
       if (result.success) {
@@ -350,25 +362,38 @@ export default class AuthCtr extends ControllerModule {
         this.startAutoRefresh();
         return { success: true };
       } else {
-        // Throw an error to be caught by the catch block below
-        // This maintains the existing behavior of clearing tokens on failure
         logger.error(`Token refresh failed via AuthCtr call: ${result.error}`);
-        throw new Error(result.error || 'Token refresh failed');
+
+        // Only clear tokens for non-retryable errors (e.g., invalid_grant)
+        if (this.remoteServerConfigCtr.isNonRetryableError(result.error)) {
+          logger.warn(
+            'Non-retryable error detected, clearing tokens and requiring re-authorization',
+          );
+          this.stopAutoRefresh();
+          await this.remoteServerConfigCtr.clearTokens();
+          await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+          this.broadcastAuthorizationRequired();
+        } else {
+          // For transient errors, don't clear tokens - allow manual retry
+          logger.warn('Refresh failed but error may be transient, tokens preserved for retry');
+        }
+
+        return { error: result.error, success: false };
       }
     } catch (error) {
-      // Keep the existing logic to clear tokens and require re-auth on failure
-      logger.error('Token refresh operation failed via AuthCtr, initiating cleanup:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Token refresh operation failed via AuthCtr:', errorMessage);
 
-      // Refresh failed, clear tokens and disable remote server
-      logger.warn('Refresh failed, clearing tokens and disabling remote server');
-      this.stopAutoRefresh();
-      await this.remoteServerConfigCtr.clearTokens();
-      await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+      // Only clear tokens for non-retryable errors
+      if (this.remoteServerConfigCtr.isNonRetryableError(errorMessage)) {
+        logger.warn('Non-retryable error in catch block, clearing tokens');
+        this.stopAutoRefresh();
+        await this.remoteServerConfigCtr.clearTokens();
+        await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+        this.broadcastAuthorizationRequired();
+      }
 
-      // Notify render process that re-authorization is required
-      this.broadcastAuthorizationRequired();
-
-      return { error: error.message, success: false };
+      return { error: errorMessage, success: false };
     }
   }
 
@@ -601,7 +626,7 @@ export default class AuthCtr extends ControllerModule {
       if (currentTime >= expiresAt) {
         logger.info('Token has expired, attempting to refresh it');
 
-        // Attempt to refresh token
+        // Attempt to refresh token (includes retry mechanism)
         const refreshResult = await this.remoteServerConfigCtr.refreshAccessToken();
         if (refreshResult.success) {
           logger.info('Token refresh successful during initialization');
@@ -611,10 +636,18 @@ export default class AuthCtr extends ControllerModule {
           return;
         } else {
           logger.error(`Token refresh failed during initialization: ${refreshResult.error}`);
-          // Clear token and require re-authorization only on refresh failure
-          await this.remoteServerConfigCtr.clearTokens();
-          await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
-          this.broadcastAuthorizationRequired();
+
+          // Only clear token for non-retryable errors
+          if (this.remoteServerConfigCtr.isNonRetryableError(refreshResult.error)) {
+            logger.warn('Non-retryable error during initialization, clearing tokens');
+            await this.remoteServerConfigCtr.clearTokens();
+            await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+            this.broadcastAuthorizationRequired();
+          } else {
+            // For transient errors, still start auto-refresh timer to retry later
+            logger.warn('Transient error during initialization, will retry via auto-refresh');
+            this.startAutoRefresh();
+          }
           return;
         }
       }

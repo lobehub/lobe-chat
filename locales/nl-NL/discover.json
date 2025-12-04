@@ -616,6 +616,7 @@
     "supportedProviders": "Providers die dit model ondersteunen"
   },
   "plugins": {
+    "builtinTag": "Ingebouwde plug-in",
     "community": "Gemeenschapsplugins",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "Plugin installeren",
     "installed": "Geïnstalleerd",
+    "legacyTag": "Verouderde plug-in",
     "list": "Pluginlijst",
     "meta": {
       "description": "Beschrijving",

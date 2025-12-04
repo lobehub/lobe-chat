@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
-import { DefaultMessage } from '../Default';
+import { DefaultMessage, MessageContentClassName } from '../Default';
 import ImageFileListViewer from '../User/ImageFileListViewer';
 import { CollapsedMessage } from './CollapsedMessage';
 import MessageContent from './DisplayContent';
@@ -71,7 +71,7 @@ export const AssistantMessageBody = memo<
     if (isCollapsed) return <CollapsedMessage content={content} id={id} />;
 
     return (
-      <Flexbox gap={8} id={id}>
+      <Flexbox className={MessageContentClassName} gap={8} id={id}>
         {showSearch && (
           <SearchGrounding citations={search?.citations} searchQueries={search?.searchQueries} />
         )}

@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Model sağlayıcısı: sophnet platformu. DeepSeek V3 Fast, DeepSeek V3 0324 sürümünün yüksek TPS hızlı versiyonudur, tam performanslı ve kuantize edilmemiştir, kodlama ve matematik yetenekleri daha güçlüdür, yanıt süresi daha hızlıdır!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1-Düşünme modu dışı; DeepSeek-V3.1, DeepSeek tarafından yeni sunulan hibrit akıl yürütme modelidir ve düşünme ile düşünmeme olmak üzere iki akıl yürütme modunu destekler. DeepSeek-R1-0528 modeline kıyasla düşünme verimliliği daha yüksektir. Sonrası eğitim optimizasyonları sayesinde, ajan araç kullanımı ve akıllı ajan görevlerinde performans önemli ölçüde artmıştır."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast, DeepSeek V3.1 sürümünün yüksek TPS hızlı versiyonudur. Hibrit düşünme modu: Sohbet şablonunu değiştirerek, tek bir model hem düşünme hem de düşünmeme modlarını destekleyebilir. Daha akıllı araç çağrısı: Sonrası eğitim optimizasyonları sayesinde model, araç kullanımı ve ajan görevlerindeki performansını belirgin şekilde artırmıştır."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1-Düşünme modu; DeepSeek-V3.1, DeepSeek tarafından yeni sunulan hibrit akıl yürütme modelidir ve düşünme ile düşünmeme olmak üzere iki akıl yürütme modunu destekler. DeepSeek-R1-0528 modeline kıyasla düşünme verimliliği daha yüksektir. Sonrası eğitim optimizasyonları sayesinde, ajan araç kullanımı ve akıllı ajan görevlerinde performans önemli ölçüde artmıştır."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2, DeepSeek'in en yeni genel modeli olup, hibrit çıkarım mimarisini destekler ve daha güçlü Agent yeteneklerine sahiptir."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "DeepSeek V3.2 Düşünme Modu. Nihai cevabı vermeden önce, model doğruluğu artırmak için bir düşünce zinciri çıktısı üretir."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite, son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."

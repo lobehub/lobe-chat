@@ -10,7 +10,7 @@ import { SessionStoreState, initialState } from './initialState';
 import { SessionAction, createSessionSlice } from './slices/session/action';
 import { SessionGroupAction, createSessionGroupSlice } from './slices/sessionGroup/action';
 
-//  ===============  聚合 createStoreFn ============ //
+//  ===============  Aggregate createStoreFn ============ //
 
 export interface SessionStore extends SessionAction, SessionGroupAction, SessionStoreState {}
 
@@ -20,7 +20,7 @@ const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (
   ...createSessionGroupSlice(...parameters),
 });
 
-//  ===============  implement useStore ============ //
+//  ===============  Implement useStore ============ //
 const devtools = createDevtools('session');
 
 export const useSessionStore = createWithEqualityFn<SessionStore>()(

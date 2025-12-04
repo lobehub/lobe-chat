@@ -2,7 +2,7 @@
 
 import { ActionIcon, Button } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
-import { Form, Input, type InputRef } from 'antd';
+import { Form, Input, type InputRef, Skeleton } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ChevronLeft, ChevronRight, Lock, Mail } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,12 +10,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import type { CheckUserResponseData } from '@/app/(backend)/api/auth/check-user/route';
 import { message } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { getAuthConfig } from '@/envs/auth';
 import { requestPasswordReset, signIn } from '@/libs/better-auth/auth-client';
 import { isBuiltinProvider, normalizeProviderId } from '@/libs/better-auth/utils/client';
-import { useUserStore } from '@/store/user';
+import { useServerConfigStore } from '@/store/serverConfig';
 
 const useStyles = createStyles(({ css, token }) => ({
   backButton: css`
@@ -97,7 +98,8 @@ export default function SignInPage() {
   const [email, setEmail] = useState('');
   const emailInputRef = useRef<InputRef>(null);
   const passwordInputRef = useRef<InputRef>(null);
-  const oAuthSSOProviders = useUserStore((s) => s.oAuthSSOProviders || []);
+  const serverConfigInit = useServerConfigStore((s) => s.serverConfigInit);
+  const oAuthSSOProviders = useServerConfigStore((s) => s.serverConfig.oAuthSSOProviders) || [];
 
   // Auto-focus input when step changes
   useEffect(() => {
@@ -162,7 +164,7 @@ export default function SignInPage() {
         method: 'POST',
       });
 
-      const data = await response.json();
+      const data: CheckUserResponseData = await response.json();
 
       if (!data.exists) {
         // User not found, redirect to signup page with email pre-filled
@@ -172,16 +174,15 @@ export default function SignInPage() {
         );
         return;
       }
-
       setEmail(values.email);
-
-      if (enableMagicLink) {
-        await handleSendMagicLink(values.email);
-        return;
-      }
 
       if (data.hasPassword) {
         setStep('password');
+        return;
+      }
+
+      if (enableMagicLink) {
+        await handleSendMagicLink(values.email);
         return;
       }
 
@@ -303,8 +304,20 @@ export default function SignInPage() {
             <>
               <p className={styles.subtitle}>{t('betterAuth.signin.emailStep.subtitle')}</p>
 
+              {/* Social Login Section Skeleton */}
+              {!serverConfigInit && (
+                <Flexbox gap={12} style={{ marginTop: '2rem' }}>
+                  <Skeleton.Button active block size="large" />
+                  <Flexbox align="center" gap={12} horizontal>
+                    <div className={styles.divider} />
+                    <Skeleton.Input active size="small" style={{ minWidth: 80, width: 80 }} />
+                    <div className={styles.divider} />
+                  </Flexbox>
+                </Flexbox>
+              )}
+
               {/* Social Login Section */}
-              {oAuthSSOProviders.length > 0 && (
+              {serverConfigInit && oAuthSSOProviders.length > 0 && (
                 <Flexbox gap={12} style={{ marginTop: '2rem' }}>
                   {oAuthSSOProviders.map((provider) => (
                     <Button

@@ -47,7 +47,8 @@ describe('invoke', () => {
     const expectedResult = { processed: true };
     mockIpcRendererInvoke.mockResolvedValue(expectedResult);
 
-    const result = await invoke('someEvent' as ClientDispatchEventKey, param1, param2, param3);
+    // Use 'as any' to bypass type checking for testing multiple parameters
+    const result = await (invoke as any)('someEvent', param1, param2, param3);
 
     expect(mockIpcRendererInvoke).toHaveBeenCalledWith('someEvent', param1, param2, param3);
     expect(mockIpcRendererInvoke).toHaveBeenCalledTimes(1);
@@ -109,7 +110,8 @@ describe('invoke', () => {
     const expectedResponse: TestResponse = { message: 'success', status: 200 };
     mockIpcRendererInvoke.mockResolvedValue(expectedResponse);
 
-    const result = await invoke('testEvent' as ClientDispatchEventKey);
+    // Use 'as any' to bypass type checking for testing with mock event
+    const result = (await (invoke as any)('testEvent')) as TestResponse;
 
     expect(result).toEqual(expectedResponse);
     expect(typeof result.message).toBe('string');

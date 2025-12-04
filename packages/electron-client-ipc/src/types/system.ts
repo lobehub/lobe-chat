@@ -25,3 +25,4 @@ export interface UserPathData {
 }
 
 export type ThemeMode = 'auto' | 'dark' | 'light';
+export type ThemeAppearance = 'dark' | 'light' | string;

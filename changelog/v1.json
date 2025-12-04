@@ -1,6 +1,109 @@
 [
   {
     "children": {
+      "improvements": ["Update Spark X1.5 model."]
+    },
+    "date": "2025-12-04",
+    "version": "2.0.0-next.157"
+  },
+  {
+    "children": {
+      "fixes": ["Fix React CVE issue."]
+    },
+    "date": "2025-12-04",
+    "version": "2.0.0-next.156"
+  },
+  {
+    "children": {
+      "fixes": ["Missing init user after user creation."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.155"
+  },
+  {
+    "children": {
+      "fixes": ["Udpate discover detail tools get & more link."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.154"
+  },
+  {
+    "children": {},
+    "date": "2025-12-03",
+    "version": "2.0.0-next.153"
+  },
+  {
+    "children": {
+      "features": ["Optimize betterauth UX."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.152"
+  },
+  {
+    "children": {
+      "improvements": ["Unify retry logic to async-retry."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.151"
+  },
+  {
+    "children": {
+      "fixes": ["Better-auth add apple sso icon and label."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.150"
+  },
+  {
+    "children": {},
+    "date": "2025-12-03",
+    "version": "2.0.0-next.149"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Remove apiMode param from Azure and Cloudflare provider requests, when desktop use contextMenu not work."
+      ]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.148"
+  },
+  {
+    "children": {
+      "features": ["Support apple sso auth."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.147"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent slug schema."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.146"
+  },
+  {
+    "children": {
+      "features": ["Email provider support resend."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.145"
+  },
+  {
+    "children": {
+      "fixes": ["User email unique migration error."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.144"
+  },
+  {
+    "children": {
+      "features": ["Support market cloud endpoint mcp."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.143"
+  },
+  {
+    "children": {
       "fixes": ["Remove internal apiMode param from chat completion API requests."]
     },
     "date": "2025-12-01",

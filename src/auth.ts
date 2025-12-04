@@ -13,12 +13,15 @@ import {
 import { initBetterAuthSSOProviders } from '@/libs/better-auth/sso';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 import { EmailService } from '@/server/services/email';
+import { UserService } from '@/server/services/user';
 
 // Email verification link expiration time (in seconds)
 // Default is 1 hour (3600 seconds) as per Better Auth documentation
 const VERIFICATION_LINK_EXPIRES_IN = 3600;
 const MAGIC_LINK_EXPIRES_IN = 900;
 const enableMagicLink = authEnv.NEXT_PUBLIC_ENABLE_MAGIC_LINK;
+const APPLE_TRUSTED_ORIGIN = 'https://appleid.apple.com';
+const enabledSSOProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
 
 const { socialProviders, genericOAuthProviders } = initBetterAuthSSOProviders();
 
@@ -56,7 +59,14 @@ const getTrustedOrigins = () => {
     normalizeOrigin(process.env.VERCEL_URL),
   ].filter(Boolean) as string[];
 
-  return defaults.length > 0 ? Array.from(new Set(defaults)) : undefined;
+  const baseTrustedOrigins = defaults.length > 0 ? Array.from(new Set(defaults)) : undefined;
+
+  if (!enabledSSOProviders.includes('apple')) return baseTrustedOrigins;
+
+  const mergedOrigins = new Set(baseTrustedOrigins || []);
+  mergedOrigins.add(APPLE_TRUSTED_ORIGIN);
+
+  return Array.from(mergedOrigins);
 };
 
 export const auth = betterAuth({
@@ -64,7 +74,7 @@ export const auth = betterAuth({
     accountLinking: {
       allowDifferentEmails: true,
       enabled: true,
-      trustedProviders: parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS),
+      trustedProviders: enabledSSOProviders,
     },
   },
 
@@ -111,6 +121,26 @@ export const auth = betterAuth({
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
   }),
+  /**
+   * Run user bootstrap for every newly created account (email, magic link, OAuth/social, etc.).
+   * Using Better Auth database hooks ensures we catch social flows that bypass /sign-up/* routes.
+   * Ref: https://www.better-auth.com/docs/reference/options#databasehooks
+   */
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          const userService = new UserService(serverDB);
+          await userService.initUser({
+            email: user.email,
+            id: user.id,
+            username: user.username as string | null,
+            // TODO: if add phone plugin, we should fill phone here
+          });
+        },
+      },
+    },
+  },
   user: {
     additionalFields: {
       username: {
@@ -136,7 +166,8 @@ export const auth = betterAuth({
       generateId: ({ model }) => {
         // Better Auth passes the model name; handle both singular and plural for safety.
         if (model === 'user' || model === 'users') {
-          return idGenerator('user', 12);
+          // clerk id length is 32
+          return idGenerator('user', 32 - 'user_'.length);
         }
 
         // Other models: use shared nanoid generator (12 chars) to keep consistency.

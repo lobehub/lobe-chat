@@ -4,6 +4,7 @@ import { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehu
 import { DeploymentOption } from '@lobehub/market-sdk';
 import { McpError } from '@modelcontextprotocol/sdk/types.js';
 import { TRPCError } from '@trpc/server';
+import retry from 'async-retry';
 import debug from 'debug';
 
 import {
@@ -36,48 +37,47 @@ export class MCPService {
   // --- MCP Interaction ---
 
   // listTools now accepts MCPClientParams
-  async listTools(
-    params: MCPClientParams,
-    { retryTime, skipCache }: { retryTime?: number; skipCache?: boolean } = {},
-  ): Promise<LobeChatPluginApi[]> {
-    const client = await this.getClient(params, skipCache); // Get client using params
+  async listTools(params: MCPClientParams): Promise<LobeChatPluginApi[]> {
     const loggableParams = this.sanitizeForLogging(params);
-    log(`Listing tools using client for params: %O`, loggableParams);
 
-    try {
-      const result = await client.listTools();
-      log(
-        `Tools listed successfully for params: %O, result count: %d`,
-        loggableParams,
-        result.length,
-      );
-      return result.map<LobeChatPluginApi>((item) => ({
-        // Assuming identifier is the unique name/id
-        description: item.description,
-        name: item.name,
-        parameters: item.inputSchema as PluginSchema,
-      }));
-    } catch (error) {
-      let nextReTryTime = retryTime || 0;
+    return retry(
+      async (bail, attemptNumber) => {
+        // Skip cache on retry attempts
+        const skipCache = attemptNumber > 1;
+        const client = await this.getClient(params, skipCache);
+        log(`Listing tools using client for params: %O (attempt ${attemptNumber})`, loggableParams);
 
-      if ((error as Error).message === 'NoValidSessionId' && nextReTryTime <= 3) {
-        if (!nextReTryTime) {
-          nextReTryTime = 1;
-        } else {
-          nextReTryTime += 1;
+        try {
+          const result = await client.listTools();
+          log(
+            `Tools listed successfully for params: %O, result count: %d`,
+            loggableParams,
+            result.length,
+          );
+          return result.map<LobeChatPluginApi>((item) => ({
+            // Assuming identifier is the unique name/id
+            description: item.description,
+            name: item.name,
+            parameters: item.inputSchema as PluginSchema,
+          }));
+        } catch (error) {
+          // Only retry for NoValidSessionId errors
+          if ((error as Error).message !== 'NoValidSessionId') {
+            console.error(`Error listing tools for params %O:`, loggableParams, error);
+            bail(
+              new TRPCError({
+                cause: error,
+                code: 'INTERNAL_SERVER_ERROR',
+                message: `Error listing tools from MCP server: ${(error as Error).message}`,
+              }),
+            );
+            return []; // This line will never be reached due to bail, but needed for type safety
+          }
+          throw error; // Rethrow to trigger retry
         }
-
-        return this.listTools(params, { retryTime: nextReTryTime, skipCache: true });
-      }
-
-      console.error(`Error listing tools for params %O:`, loggableParams, error);
-      // Propagate a TRPCError for better handling upstream
-      throw new TRPCError({
-        cause: error,
-        code: 'INTERNAL_SERVER_ERROR',
-        message: `Error listing tools from MCP server: ${(error as Error).message}`,
-      });
-    }
+      },
+      { maxRetryTime: 1000, minTimeout: 100, retries: 3 },
+    );
   }
 
   // listTools now accepts MCPClientParams

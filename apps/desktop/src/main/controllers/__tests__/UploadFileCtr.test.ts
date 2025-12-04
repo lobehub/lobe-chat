@@ -34,10 +34,9 @@ describe('UploadFileCtr', () => {
       const params = {
         hash: 'abc123',
         path: '/test/file.txt',
-        dataType: 'base64' as const,
-        data: 'dGVzdCBjb250ZW50',
+        content: new ArrayBuffer(16),
         filename: 'file.txt',
-        fileType: 'txt',
+        type: 'text/plain',
       };
       const expectedResult = { id: 'file-id-123', url: '/files/file-id-123' };
       mockFileService.uploadFile.mockResolvedValue(expectedResult);
@@ -52,10 +51,9 @@ describe('UploadFileCtr', () => {
       const params = {
         hash: 'abc123',
         path: '/test/file.txt',
-        dataType: 'base64' as const,
-        data: 'dGVzdCBjb250ZW50',
+        content: new ArrayBuffer(16),
         filename: 'file.txt',
-        fileType: 'txt',
+        type: 'text/plain',
       };
       const error = new Error('Upload failed');
       mockFileService.uploadFile.mockRejectedValue(error);
@@ -139,10 +137,9 @@ describe('UploadFileCtr', () => {
       const params = {
         hash: 'xyz789',
         path: '/test/newfile.txt',
-        dataType: 'base64' as const,
-        data: 'bmV3IGZpbGUgY29udGVudA==',
+        content: 'bmV3IGZpbGUgY29udGVudA==',
         filename: 'newfile.txt',
-        fileType: 'txt',
+        type: 'text/plain',
       };
       const expectedResult = { id: 'new-file-id', url: '/files/new-file-id' };
       mockFileService.uploadFile.mockResolvedValue(expectedResult);
@@ -157,10 +154,9 @@ describe('UploadFileCtr', () => {
       const params = {
         hash: 'xyz789',
         path: '/test/newfile.txt',
-        dataType: 'base64' as const,
-        data: 'bmV3IGZpbGUgY29udGVudA==',
+        content: 'bmV3IGZpbGUgY29udGVudA==',
         filename: 'newfile.txt',
-        fileType: 'txt',
+        type: 'text/plain',
       };
       const error = new Error('Create failed');
       mockFileService.uploadFile.mockRejectedValue(error);

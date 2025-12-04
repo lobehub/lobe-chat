@@ -1,6 +1,7 @@
 import { LobeAnthropicAI } from '../../providers/anthropic';
 import { LobeAzureAI } from '../../providers/azureai';
 import { LobeCloudflareAI } from '../../providers/cloudflare';
+import { LobeDeepSeekAI } from '../../providers/deepseek';
 import { LobeFalAI } from '../../providers/fal';
 import { LobeGoogleAI } from '../../providers/google';
 import { LobeOpenAI } from '../../providers/openai';
@@ -11,6 +12,7 @@ export const baseRuntimeMap = {
   anthropic: LobeAnthropicAI,
   azure: LobeAzureAI,
   cloudflare: LobeCloudflareAI,
+  deepseek: LobeDeepSeekAI,
   fal: LobeFalAI,
   google: LobeGoogleAI,
   openai: LobeOpenAI,

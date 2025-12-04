@@ -1,6 +1,6 @@
 table agents {
   id text [pk, not null]
-  slug varchar(100) [unique]
+  slug varchar(100)
   title varchar(255)
   description varchar(1000)
   tags jsonb [default: `[]`]
@@ -27,6 +27,7 @@ table agents {
 
   indexes {
     (client_id, user_id) [name: 'client_id_user_id_unique', unique]
+    (slug, user_id) [name: 'agents_slug_user_id_unique', unique]
     title [name: 'agents_title_idx']
     description [name: 'agents_description_idx']
   }
@@ -1006,6 +1007,7 @@ table topics {
     session_id [name: 'topics_session_id_idx']
     group_id [name: 'topics_group_id_idx']
     agent_id [name: 'topics_agent_id_idx']
+    () [name: 'topics_extract_status_gin_idx']
   }
 }
 
@@ -1016,6 +1018,7 @@ table user_installed_plugins {
   manifest jsonb
   settings jsonb
   custom_params jsonb
+  source varchar(255)
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
