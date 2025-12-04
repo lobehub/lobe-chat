@@ -926,14 +926,5 @@
     "bps": true,
     "folderMillis": 1764842015809,
     "hash": "276514dc101fffc66794156f4ba644599a4ae5997a68b9e7f54452ee374bfa61"
-  },
-  {
-    "sql": [
-      "CREATE INDEX IF NOT EXISTS \"users_email_idx\" ON \"users\" USING btree (\"email\");",
-      "\nCREATE INDEX IF NOT EXISTS \"users_username_idx\" ON \"users\" USING btree (\"username\");\n"
-    ],
-    "bps": true,
-    "folderMillis": 1764857376647,
-    "hash": "d920a716464865504b618f32ffaad98cd333525c5f54281ace072d228c96b394"
   }
 ]
