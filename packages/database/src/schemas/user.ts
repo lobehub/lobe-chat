@@ -4,7 +4,7 @@ import type { CustomPluginParams } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { boolean, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
-import { timestamps, timestamptz } from './_helpers';
+import { timestamps, timestamptz, varchar255 } from './_helpers';
 
 export const users = pgTable('users', {
   id: text('id').primaryKey().notNull(),
@@ -76,7 +76,7 @@ export const userInstalledPlugins = pgTable(
     manifest: jsonb('manifest').$type<LobeChatPluginManifest>(),
     settings: jsonb('settings'),
     customParams: jsonb('custom_params').$type<CustomPluginParams>(),
-
+    source: varchar255('source'),
     ...timestamps,
   },
   (self) => ({

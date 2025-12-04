@@ -406,6 +406,13 @@
       "when": 1764734167674,
       "tag": "0057_add_topic_user_memory_extract_status",
       "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1764842015809,
+      "tag": "0058_add_source_into_user_plugins",
+      "breakpoints": true
     }
   ],
   "version": "6"
