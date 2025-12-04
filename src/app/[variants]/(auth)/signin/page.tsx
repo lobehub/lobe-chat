@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import type { CheckUserResponseData } from '@/app/(backend)/api/auth/check-user/route';
+import type { ResolveUsernameResponseData } from '@/app/(backend)/api/auth/resolve-username/route';
 import { message } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { getAuthConfig } from '@/envs/auth';
@@ -78,11 +79,20 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const USERNAME_REGEX = /^\w+$/;
+
 type Step = 'email' | 'password';
+type IdentifierType = 'email' | 'username';
 
 interface SignInFormValues {
   email: string;
   password: string;
+}
+
+interface ResolvedEmailResult {
+  email: string;
+  identifierType: IdentifierType;
 }
 
 export default function SignInPage() {
@@ -155,12 +165,56 @@ export default function SignInPage() {
     }
   };
 
+  const resolveEmailFromIdentifier = async (
+    identifier: string,
+  ): Promise<ResolvedEmailResult | null> => {
+    const trimmedIdentifier = identifier.trim();
+
+    if (!trimmedIdentifier) return null;
+
+    const isEmailIdentifier = EMAIL_REGEX.test(trimmedIdentifier);
+
+    if (isEmailIdentifier) {
+      return { email: trimmedIdentifier.toLowerCase(), identifierType: 'email' };
+    }
+
+    if (!USERNAME_REGEX.test(trimmedIdentifier)) {
+      message.error(t('betterAuth.errors.emailInvalid'));
+      return null;
+    }
+
+    try {
+      const response = await fetch('/api/auth/resolve-username', {
+        body: JSON.stringify({ username: trimmedIdentifier }),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+      });
+
+      const data: ResolveUsernameResponseData = await response.json();
+
+      if (!response.ok || !data.exists || !data.email) {
+        message.error(t('betterAuth.errors.usernameNotRegistered'));
+        return null;
+      }
+
+      return { email: data.email, identifierType: 'username' };
+    } catch (error) {
+      console.error('Error resolving username:', error);
+      message.error(t('betterAuth.signin.error'));
+      return null;
+    }
+  };
+
   // Check if user exists
   const handleCheckUser = async (values: Pick<SignInFormValues, 'email'>) => {
     setLoading(true);
     try {
+      const resolvedEmail = await resolveEmailFromIdentifier(values.email);
+      if (!resolvedEmail) return;
+      const { email: targetEmail, identifierType } = resolvedEmail;
+
       const response = await fetch('/api/auth/check-user', {
-        body: JSON.stringify({ email: values.email }),
+        body: JSON.stringify({ email: targetEmail }),
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
       });
@@ -168,14 +222,18 @@ export default function SignInPage() {
       const data: CheckUserResponseData = await response.json();
 
       if (!data.exists) {
-        // User not found, redirect to signup page with email pre-filled
+        if (identifierType === 'username') {
+          message.error(t('betterAuth.errors.usernameNotRegistered'));
+          return;
+        }
+
         const callbackUrl = searchParams.get('callbackUrl') || '/';
         router.push(
-          `/signup?email=${encodeURIComponent(values.email)}&callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          `/signup?email=${encodeURIComponent(targetEmail)}&callbackUrl=${encodeURIComponent(callbackUrl)}`,
         );
         return;
       }
-      setEmail(values.email);
+      setEmail(targetEmail);
 
       if (data.hasPassword) {
         setStep('password');
@@ -183,7 +241,7 @@ export default function SignInPage() {
       }
 
       if (enableMagicLink) {
-        await handleSendMagicLink(values.email);
+        await handleSendMagicLink(targetEmail);
         return;
       }
 
@@ -354,7 +412,18 @@ export default function SignInPage() {
                   name="email"
                   rules={[
                     { message: t('betterAuth.errors.emailRequired'), required: true },
-                    { message: t('betterAuth.errors.emailInvalid'), type: 'email' },
+                    {
+                      validator: (_, value) => {
+                        if (!value) return Promise.resolve();
+
+                        const trimmedValue = (value as string).trim();
+                        if (EMAIL_REGEX.test(trimmedValue) || USERNAME_REGEX.test(trimmedValue)) {
+                          return Promise.resolve();
+                        }
+
+                        return Promise.reject(new Error(t('betterAuth.errors.emailInvalid')));
+                      },
+                    },
                   ]}
                   style={{ marginBottom: 0 }}
                 >
