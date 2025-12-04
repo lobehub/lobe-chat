@@ -616,6 +616,7 @@
     "supportedProviders": "이 모델을 지원하는 서비스 제공자"
   },
   "plugins": {
+    "builtinTag": "내장 플러그인",
     "community": "커뮤니티 플러그인",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "플러그인 설치",
     "installed": "설치됨",
+    "legacyTag": "구버전 플러그인",
     "list": "플러그인 목록",
     "meta": {
       "description": "설명",

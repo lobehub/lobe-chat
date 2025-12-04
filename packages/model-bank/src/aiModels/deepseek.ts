@@ -22,7 +22,7 @@ const deepseekChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-09-29',
+    releasedAt: '2025-12-01',
     type: 'chat',
   },
   {
@@ -45,7 +45,7 @@ const deepseekChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-09-29',
+    releasedAt: '2025-12-01',
     type: 'chat',
   },
 ];

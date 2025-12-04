@@ -223,3 +223,17 @@ export const buildAnthropicTools = (
     }),
   );
 };
+
+export const buildSearchTool = (): Anthropic.WebSearchTool20250305 => {
+  const maxUses = process.env.ANTHROPIC_MAX_USES;
+
+  return {
+    name: 'web_search',
+    type: 'web_search_20250305',
+    ...(maxUses &&
+      Number.isInteger(Number(maxUses)) &&
+      Number(maxUses) > 0 && {
+        max_uses: Number(maxUses),
+      }),
+  };
+};

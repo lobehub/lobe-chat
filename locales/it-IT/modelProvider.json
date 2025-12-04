@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Fornitore personalizzato non abilitato",
       "disabled": "Fornitore non attivato",
       "enabled": "Fornitore attivato"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Aggiungi fornitore personalizzato",
     "all": "Tutti",
     "list": {
+      "custom": "Personalizzazione non abilitata",
       "disabled": "Non attivato",
       "disabledActions": {
         "sort": "Ordina per",

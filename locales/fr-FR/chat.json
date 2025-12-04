@@ -53,6 +53,12 @@
       "desc": "Basé sur les restrictions du mécanisme Claude Thinking (<1>En savoir plus</1>), une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
       "title": "Activer la réflexion approfondie"
     },
+    "imageAspectRatio": {
+      "title": "Rapport largeur/hauteur de l'image"
+    },
+    "imageResolution": {
+      "title": "Résolution de l'image"
+    },
     "reasoningBudgetToken": {
       "title": "Token de consommation de réflexion"
     },

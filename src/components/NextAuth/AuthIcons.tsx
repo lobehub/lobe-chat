@@ -1,4 +1,5 @@
-import { Google } from '@lobehub/icons';
+import { SiApple } from '@icons-pack/react-simple-icons';
+import { Aws, Google, Microsoft } from '@lobehub/icons';
 import {
   Auth0,
   Authelia,
@@ -14,15 +15,18 @@ import {
 import React from 'react';
 
 const iconComponents: { [key: string]: React.ElementType } = {
+  'apple': SiApple,
   'auth0': Auth0,
   'authelia': Authelia.Color,
   'authentik': Authentik.Color,
   'casdoor': Casdoor.Color,
   'cloudflare': Cloudflare.Color,
+  'cognito': Aws.Color,
   'default': NextAuth.Color,
   'github': Github,
   'google': Google.Color,
   'logto': Logto.Color,
+  'microsoft': Microsoft.Color,
   'microsoft-entra-id': MicrosoftEntra.Color,
   'zitadel': Zitadel.Color,
 };

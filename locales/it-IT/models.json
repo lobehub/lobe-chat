@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Il fornitore del modello è la piattaforma sophnet. DeepSeek V3 Fast è la versione ad alta velocità TPS del modello DeepSeek V3 0324, completamente non quantificata, con capacità di codice e matematica potenziate e risposte più rapide!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 - modalità senza pensiero; DeepSeek-V3.1 è un nuovo modello di ragionamento ibrido lanciato da DeepSeek, che supporta due modalità di ragionamento: con e senza pensiero, con un'efficienza di pensiero superiore rispetto a DeepSeek-R1-0528. Ottimizzato post-addestramento, l'uso degli strumenti Agent e le prestazioni nei compiti degli agenti sono notevolmente migliorati."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast è la versione ad alta TPS e alta velocità del modello DeepSeek V3.1. Modalità di pensiero ibrida: modificando il template di chat, un singolo modello può supportare sia la modalità con pensiero che quella senza pensiero. Chiamata degli strumenti più intelligente: grazie all'ottimizzazione post-addestramento, le prestazioni del modello nell'uso degli strumenti e nei compiti degli agenti sono significativamente migliorate."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - modalità con pensiero; DeepSeek-V3.1 è un nuovo modello di ragionamento ibrido lanciato da DeepSeek, che supporta due modalità di ragionamento: con e senza pensiero, con un'efficienza di pensiero superiore rispetto a DeepSeek-R1-0528. Ottimizzato post-addestramento, l'uso degli strumenti Agent e le prestazioni nei compiti degli agenti sono notevolmente migliorati."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 è l'ultimo modello generale rilasciato da DeepSeek, supporta un'architettura di inferenza ibrida e possiede capacità agenti potenziate."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "Modalità di pensiero di DeepSeek V3.2. Prima di fornire la risposta finale, il modello genera una catena di pensieri per migliorare l'accuratezza della risposta."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offre una velocità di risposta eccezionale e un miglior rapporto qualità-prezzo, fornendo ai clienti scelte più flessibili per diversi scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 128k."
@@ -737,6 +728,9 @@
   "anthropic/claude-opus-4.1": {
     "description": "Opus 4.1 è un modello avanzato di Anthropic, ottimizzato per programmazione, ragionamento complesso e compiti continuativi."
   },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
+  },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 è una versione a ragionamento ibrido di Anthropic, che combina capacità cognitive e non cognitive."
   },
@@ -826,6 +820,9 @@
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 è il modello più potente di Anthropic per gestire compiti altamente complessi. Eccelle in prestazioni, intelligenza, fluidità e comprensione."
+  },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 può generare risposte quasi istantanee o un pensiero graduale prolungato, permettendo all'utente di vedere chiaramente questi processi."
@@ -1670,6 +1667,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview possiede potenti capacità di ragionamento complesso, eccellendo nei campi del ragionamento logico, della matematica e della programmazione."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash è un modello di ragionamento ad alte prestazioni di Google, adatto a compiti multimodali estesi."
   },
@@ -2184,7 +2184,7 @@
     "description": "Kimi K2 Instruct, modello ufficiale di inferenza Kimi, supporta contesto lungo, codice, Q&A e altri scenari."
   },
   "kimi-k2-thinking": {
-    "description": "Il modello K2 Thinking supporta contesto fino a 256k, chiamate multi-step di strumenti e ragionamento, eccellendo nella risoluzione di problemi complessi."
+    "description": "Il modello kimi-k2-thinking, fornito da Moonshot AI, è un modello di pensiero dotato di capacità agentiche generali e di ragionamento, eccellente nel ragionamento profondo e capace di utilizzare strumenti in più fasi per risolvere una vasta gamma di problemi complessi."
   },
   "kimi-k2-thinking-turbo": {
     "description": "Versione ad alta velocità del modello K2 Thinking, supporta contesto da 256k, eccelle nel ragionamento profondo con output a 60-100 token al secondo."

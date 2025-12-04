@@ -4,7 +4,7 @@ alwaysApply: true
 
 ## Project Description
 
-You are developing an open-source, modern-design AI chat framework: lobehub(previous lobe-chat).
+You are developing an open-source, modern-design AI Agent Workspace: LobeHub(previous LobeChat).
 
 Supported platforms:
 
@@ -16,7 +16,7 @@ logo emoji: 🤯
 
 ## Project Technologies Stack
 
-- Next.js 15
+- Next.js 16
 - react 19
 - TypeScript
 - `@lobehub/ui`, antd for component framework

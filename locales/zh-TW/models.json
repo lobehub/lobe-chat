@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "模型供應商為：sophnet平台。DeepSeek V3 Fast 是 DeepSeek V3 0324 版本的高TPS極速版，滿血非量化，代碼與數學能力更強，響應更快！"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1-非思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支援思考與非思考兩種推理模式，較 DeepSeek-R1-0528 思考效率更高。經 Post-Training 優化，Agent 工具使用與智能體任務表現大幅提升。"
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast 是 DeepSeek V3.1 版本的高 TPS 極速版。混合思考模式：透過更改聊天模板，一個模型可以同時支援思考模式和非思考模式。更智能的工具調用：透過後訓練優化，模型在工具使用和代理任務中的表現顯著提升。"
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1-思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支援思考與非思考兩種推理模式，較 DeepSeek-R1-0528 思考效率更高。經 Post-Training 優化，Agent 工具使用與智能體任務表現大幅提升。"
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 是 DeepSeek 最新發佈的通用大模型，支援混合推理架構，具備更強的 Agent 能力。"
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "DeepSeek V3.2 思考模式。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持128k上下文視窗的推理和精調。"
@@ -737,6 +728,9 @@
   "anthropic/claude-opus-4.1": {
     "description": "Opus 4.1 是 Anthropic 的高階模型，針對程式設計、複雜推理與持續任務進行優化。"
   },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5 是 Anthropic 的旗艦模型，結合了卓越的智慧與可擴展的效能，適用於需要最高品質回應與推理能力的複雜任務。"
+  },
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 是 Anthropic 的混合推理版本，提供思考與非思考的混合能力。"
   },
@@ -826,6 +820,9 @@
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 是 Anthropic 用於處理高度複雜任務的最強大模型。它在性能、智能、流暢性和理解力方面表現卓越。"
+  },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5 是 Anthropic 的旗艦模型，結合了卓越的智慧與可擴展的效能，適用於需要最高品質回應與推理能力的複雜任務。"
   },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 可以產生近乎即時的回應或延長的逐步思考，使用者可以清楚地看到這些過程。"
@@ -1670,6 +1667,9 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview具備強大的複雜推理能力，在邏輯推理、數學、程式設計等領域表現優異。"
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 是 Anthropic 的旗艦模型，結合了卓越的智慧與可擴展的效能，適用於需要最高品質回應與推理能力的複雜任務。"
+  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash 是 Google 的高效能推理模型，適用於延展性多模態任務。"
   },
@@ -2184,7 +2184,7 @@
     "description": "Kimi K2 Instruct，Kimi 官方推理模型，支援長上下文與程式碼、問答等多場景。"
   },
   "kimi-k2-thinking": {
-    "description": "K2 長思考模型，支援 256k 上下文，支援多步工具調用與思考，擅長解決更複雜的問題。"
+    "description": "kimi-k2-thinking 模型是月之暗面提供的具備通用 Agentic 能力與推理能力的思考模型，擅長深度推理，並可透過多步驟工具調用，協助解決各類難題。"
   },
   "kimi-k2-thinking-turbo": {
     "description": "K2 長思考模型的高速版本，支援 256k 上下文，擅長深度推理，輸出速度提升至每秒 60-100 tokens。"

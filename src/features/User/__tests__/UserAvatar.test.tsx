@@ -9,18 +9,29 @@ import UserAvatar from '../UserAvatar';
 
 vi.mock('zustand/traditional');
 
-// 定义一个变量来存储 enableAuth 的值
-let enableAuth = true;
+// Use vi.hoisted to ensure variables exist before vi.mock factory executes
+const { enableAuth, enableClerk, enableNextAuth } = vi.hoisted(() => ({
+  enableAuth: { value: true },
+  enableClerk: { value: false },
+  enableNextAuth: { value: false },
+}));
 
-// 模拟 @/const/auth 模块
 vi.mock('@/const/auth', () => ({
   get enableAuth() {
-    return enableAuth;
+    return enableAuth.value;
+  },
+  get enableClerk() {
+    return enableClerk.value;
+  },
+  get enableNextAuth() {
+    return enableNextAuth.value;
   },
 }));
 
 afterEach(() => {
-  enableAuth = true;
+  enableAuth.value = true;
+  enableClerk.value = false;
+  enableNextAuth.value = false;
 });
 
 describe('UserAvatar', () => {
@@ -71,7 +82,7 @@ describe('UserAvatar', () => {
 
   describe('disable Auth', () => {
     it('should show LobeChat and default avatar when the user is not logged in and disabled auth', () => {
-      enableAuth = false;
+      enableAuth.value = false;
       act(() => {
         useUserStore.setState({ enableAuth: () => false, isSignedIn: false, user: undefined });
       });

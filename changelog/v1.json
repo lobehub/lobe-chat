@@ -1,6 +1,298 @@
 [
   {
     "children": {
+      "improvements": ["Update Spark X1.5 model."]
+    },
+    "date": "2025-12-04",
+    "version": "2.0.0-next.157"
+  },
+  {
+    "children": {
+      "fixes": ["Fix React CVE issue."]
+    },
+    "date": "2025-12-04",
+    "version": "2.0.0-next.156"
+  },
+  {
+    "children": {
+      "fixes": ["Missing init user after user creation."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.155"
+  },
+  {
+    "children": {
+      "fixes": ["Udpate discover detail tools get & more link."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.154"
+  },
+  {
+    "children": {},
+    "date": "2025-12-03",
+    "version": "2.0.0-next.153"
+  },
+  {
+    "children": {
+      "features": ["Optimize betterauth UX."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.152"
+  },
+  {
+    "children": {
+      "improvements": ["Unify retry logic to async-retry."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.151"
+  },
+  {
+    "children": {
+      "fixes": ["Better-auth add apple sso icon and label."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.150"
+  },
+  {
+    "children": {},
+    "date": "2025-12-03",
+    "version": "2.0.0-next.149"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Remove apiMode param from Azure and Cloudflare provider requests, when desktop use contextMenu not work."
+      ]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.148"
+  },
+  {
+    "children": {
+      "features": ["Support apple sso auth."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.147"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent slug schema."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.146"
+  },
+  {
+    "children": {
+      "features": ["Email provider support resend."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.145"
+  },
+  {
+    "children": {
+      "fixes": ["User email unique migration error."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.144"
+  },
+  {
+    "children": {
+      "features": ["Support market cloud endpoint mcp."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.143"
+  },
+  {
+    "children": {
+      "fixes": ["Remove internal apiMode param from chat completion API requests."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.142"
+  },
+  {
+    "children": {
+      "fixes": ["Drop user.phoneNumber and reuse user.phone."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.141"
+  },
+  {
+    "children": {
+      "features": ["Integrate better-auth admin plugin."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.140"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.139"
+  },
+  {
+    "children": {},
+    "date": "2025-11-30",
+    "version": "2.0.0-next.138"
+  },
+  {
+    "children": {
+      "fixes": ["Update apiMode handling in ChatService to prioritize user preferences."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.137"
+  },
+  {
+    "children": {
+      "fixes": ["Refresh custom AI provider on selection."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.136"
+  },
+  {
+    "children": {
+      "fixes": ["Fix BetterAuth Unable to link account - untrusted provider."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.135"
+  },
+  {
+    "children": {
+      "fixes": ["Betterauth public url auto detect from VERCEL_URL."]
+    },
+    "date": "2025-11-29",
+    "version": "2.0.0-next.134"
+  },
+  {
+    "children": {
+      "fixes": ["Betterauth name should mapped to fullName."]
+    },
+    "date": "2025-11-29",
+    "version": "2.0.0-next.133"
+  },
+  {
+    "children": {
+      "fixes": ["Unable to switch to default topic."]
+    },
+    "date": "2025-11-29",
+    "version": "2.0.0-next.132"
+  },
+  {
+    "children": {
+      "fixes": ["Implement uniform callback URL for SSO providers."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.131"
+  },
+  {
+    "children": {
+      "fixes": ["Add handling for content_part and reasoning_part events in fetchSSE."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.130"
+  },
+  {
+    "children": {
+      "fixes": ["Filter out file with sourceType = file."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.129"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-28",
+    "version": "2.0.0-next.128"
+  },
+  {
+    "children": {
+      "fixes": ["Better-auth fallback next-auth providers env."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.127"
+  },
+  {
+    "children": {
+      "fixes": ["Align docker auth defaults and better-auth docs."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.126"
+  },
+  {
+    "children": {
+      "features": ["Support better-auth."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.125"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fixed the agent settings plugins pages error problem, improve topic item interaction and editing behavior."
+      ]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.124"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-27",
+    "version": "2.0.0-next.123"
+  },
+  {
+    "children": {
+      "fixes": ["Slove the publish to market the agent config error."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.122"
+  },
+  {
+    "children": {
+      "improvements": ["Add image aspect ratio and resolution settings for Nano Banana Pro."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.121"
+  },
+  {
+    "children": {
+      "fixes": ["Try to fix “TypeError: Response body object should not be disturbed or locked”."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.120"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.119"
+  },
+  {
+    "children": {
+      "fixes": ["Showing compatibility with both new and old versions of Plugins."]
+    },
+    "date": "2025-11-26",
+    "version": "2.0.0-next.118"
+  },
+  {
+    "children": {
+      "features": ["Bedrock claude model thinking support."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.117"
+  },
+  {
+    "children": {
+      "features": ["Support nano banana pro."]
+    },
+    "date": "2025-11-25",
+    "version": "2.0.0-next.116"
+  },
+  {
+    "children": {
       "features": ["Add Claude Opus 4.5 model."]
     },
     "date": "2025-11-25",

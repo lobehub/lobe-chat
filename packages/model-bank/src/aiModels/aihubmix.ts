@@ -863,17 +863,18 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
-      'DeepSeek V3.2 是 DeepSeek 最新发布的通用大模型，支持混合推理架构，具备更强的 Agent 能力。',
-    displayName: 'DeepSeek V3.2 Exp',
-    id: 'DeepSeek-V3.2-Exp',
+      'DeepSeek-V3.2 是一款高效的大语言模型，具备 DSA 稀疏注意力与强化推理能力，其核心亮点在于强大的 Agent 能力——通过大规模任务合成，将推理与真实工具调用深度融合，实现更稳健、合规、可泛化的智能体表现。',
+    displayName: 'DeepSeek V3.2',
+    id: 'deepseek-chat',
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.42, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.45, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-09-29',
+    releasedAt: '2025-12-01',
     type: 'chat',
   },
   {
@@ -884,34 +885,18 @@ const aihubmixModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'DeepSeek V3.2 思考模式。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
-    displayName: 'DeepSeek V3.2 Exp Thinking',
+    displayName: 'DeepSeek V3.2 Thinking',
     enabled: true,
-    id: 'DeepSeek-V3.2-Exp-Think',
+    id: 'deepseek-reasoner',
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.42, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.45, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-09-29',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'DeepSeek-V3.1-非思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。',
-    displayName: 'DeepSeek V3.1 (non-Think)',
-    id: 'DeepSeek-V3.1',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.56, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.68, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
+    releasedAt: '2025-12-01',
     type: 'chat',
   },
   {
@@ -963,8 +948,8 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'DeepSeek-R1',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.546, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 2.184, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
