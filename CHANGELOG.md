@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.157](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.156...v2.0.0-next.157)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Spark X1.5 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Spark X1.5 model, closes [#10103](https://github.com/lobehub/lobe-chat/issues/10103) ([d1aca26](https://github.com/lobehub/lobe-chat/commit/d1aca26))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.156](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.155...v2.0.0-next.156)
 
 <sup>Released on **2025-12-04**</sup>
