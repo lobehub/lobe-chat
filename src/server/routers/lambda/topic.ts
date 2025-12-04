@@ -85,6 +85,8 @@ export const topicRouter = router({
     .input(
       z
         .object({
+          agentId: z.string().optional(),
+          containerId: z.string().nullable().optional(),
           endDate: z.string().optional(),
           range: z.tuple([z.string(), z.string()]).optional(),
           startDate: z.string().optional(),

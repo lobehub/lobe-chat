@@ -23,4 +23,3 @@ const ListViewSkeleton = () => (
 );
 
 export default ListViewSkeleton;
-

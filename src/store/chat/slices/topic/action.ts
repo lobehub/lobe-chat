@@ -18,6 +18,7 @@ import { topicService } from '@/services/topic';
 import type { ChatStore } from '@/store/chat';
 import type { ChatStoreState } from '@/store/chat/initialState';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { useGlobalStore } from '@/store/global';
 import { globalHelpers } from '@/store/global/helpers';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -37,7 +38,10 @@ const SWR_USE_FETCH_TOPIC = 'SWR_USE_FETCH_TOPIC';
 const SWR_USE_SEARCH_TOPIC = 'SWR_USE_SEARCH_TOPIC';
 
 export interface ChatTopicAction {
+  closeAllTopicsDrawer: () => void;
   favoriteTopic: (id: string, favState: boolean) => Promise<void>;
+  loadMoreTopics: () => Promise<void>;
+  openAllTopicsDrawer: () => void;
   openNewTopicOrSaveTopic: () => Promise<void>;
   refreshTopic: () => Promise<void>;
   removeAllTopics: () => Promise<void>;
@@ -58,6 +62,7 @@ export interface ChatTopicAction {
     params: {
       agentId?: string;
       groupId?: string;
+      pageSize?: number;
     },
   ) => SWRResponse<ChatTopic[]>;
   useSearchTopics: (
@@ -81,6 +86,14 @@ export const chatTopic: StateCreator<
   [],
   ChatTopicAction
 > = (set, get) => ({
+  closeAllTopicsDrawer: () => {
+    set({ allTopicsDrawerOpen: false }, false, n('closeAllTopicsDrawer'));
+  },
+
+  openAllTopicsDrawer: () => {
+    set({ allTopicsDrawerOpen: true }, false, n('openAllTopicsDrawer'));
+  },
+
   // create
   openNewTopicOrSaveTopic: async () => {
     const { switchTopic, saveToTopic, refreshMessages, activeTopicId } = get();
@@ -238,30 +251,136 @@ export const chatTopic: StateCreator<
   },
 
   // query
-  useFetchTopics: (enable, { agentId }) =>
-    useClientDataSWR<ChatTopic[]>(
-      enable ? [SWR_USE_FETCH_TOPIC, agentId] : null,
-      async ([, agentId]: [string, string | undefined]) => topicService.getTopics({ agentId }),
+  useFetchTopics: (enable, { agentId, pageSize: customPageSize }) => {
+    const pageSize = customPageSize || 20;
+    return useClientDataSWR<ChatTopic[]>(
+      enable ? [SWR_USE_FETCH_TOPIC, agentId, pageSize] : null,
+      async ([, agentId, pageSize]: [string, string | undefined, number]) => {
+        if (!agentId) return [];
+
+        const currentTopics = get().topicMaps[agentId] || [];
+        const currentLength = currentTopics.length;
+
+        // If we already have data and new pageSize is larger, fetch incrementally
+        if (currentLength > 0 && pageSize > currentLength) {
+          set(
+            {
+              topicPageSizeExpandingStates: {
+                ...get().topicPageSizeExpandingStates,
+                [agentId]: true,
+              },
+            },
+            false,
+            n('useFetchTopics(expandingStart)'),
+          );
+
+          // Fetch only the additional topics needed
+          const additionalTopics = await topicService.getTopics({
+            agentId,
+            current: 0,
+            pageSize,
+          });
+
+          set(
+            {
+              topicPageSizeExpandingStates: {
+                ...get().topicPageSizeExpandingStates,
+                [agentId]: false,
+              },
+            },
+            false,
+            n('useFetchTopics(expandingEnd)'),
+          );
+
+          return additionalTopics;
+        }
+
+        // Otherwise fetch normally
+        return topicService.getTopics({ agentId, current: 0, pageSize });
+      },
       {
-        onSuccess: (topics) => {
+        onSuccess: async (topics) => {
           if (!agentId) return;
 
+          const hasMore = topics.length >= pageSize;
+
+          // Fetch total count
+          const totalCount = await topicService.countTopics({ agentId });
+
           const nextMap = { ...get().topicMaps, [agentId]: topics };
+          const nextPageMap = { ...get().topicPageMap, [agentId]: 0 };
+          const nextHasMoreMap = { ...get().topicsHasMore, [agentId]: hasMore };
+          const nextCountMap = { ...get().topicCountMap, [agentId]: totalCount };
 
           // no need to update map if the topics have been init and the map is the same
           if (get().topicsInit && isEqual(nextMap, get().topicMaps)) return;
 
           set(
-            { topicMaps: nextMap, topicsInit: true },
+            {
+              topicCountMap: nextCountMap,
+              topicMaps: nextMap,
+              topicPageMap: nextPageMap,
+              topicsHasMore: nextHasMoreMap,
+              topicsInit: true,
+            },
             false,
             n('useFetchTopics(success)', { containerId: agentId }),
           );
         },
       },
-    ),
+    );
+  },
+
+  loadMoreTopics: async () => {
+    const { activeAgentId, topicMaps, topicPageMap, topicLoadingMoreStates } = get();
+
+    if (!activeAgentId || topicLoadingMoreStates[activeAgentId]) return;
+
+    const currentPage = topicPageMap[activeAgentId] || 0;
+    const nextPage = currentPage + 1;
+
+    set(
+      { topicLoadingMoreStates: { ...topicLoadingMoreStates, [activeAgentId]: true } },
+      false,
+      n('loadMoreTopics(start)'),
+    );
+
+    try {
+      const pageSize = useGlobalStore.getState().status.topicPageSize || 20;
+      const [newTopics, totalCount] = await Promise.all([
+        topicService.getTopics({
+          agentId: activeAgentId,
+          current: nextPage,
+          pageSize,
+        }),
+        topicService.countTopics({ agentId: activeAgentId }),
+      ]);
+
+      const currentTopics = topicMaps[activeAgentId] || [];
+      const hasMore = newTopics.length >= pageSize;
+
+      set(
+        {
+          topicCountMap: { ...get().topicCountMap, [activeAgentId]: totalCount },
+          topicLoadingMoreStates: { ...topicLoadingMoreStates, [activeAgentId]: false },
+          topicMaps: { ...topicMaps, [activeAgentId]: [...currentTopics, ...newTopics] },
+          topicPageMap: { ...topicPageMap, [activeAgentId]: nextPage },
+          topicsHasMore: { ...get().topicsHasMore, [activeAgentId]: hasMore },
+        },
+        false,
+        n('loadMoreTopics(success)'),
+      );
+    } catch {
+      set(
+        { topicLoadingMoreStates: { ...topicLoadingMoreStates, [activeAgentId]: false } },
+        false,
+        n('loadMoreTopics(error)'),
+      );
+    }
+  },
   useSearchTopics: (keywords, { agentId, groupId }) =>
     useSWR<ChatTopic[]>(
-      [SWR_USE_SEARCH_TOPIC, keywords, agentId, groupId],
+      keywords ? [SWR_USE_SEARCH_TOPIC, keywords, agentId, groupId] : null,
       ([, keywords, agentId, groupId]: [string, string, string | undefined, string | undefined]) =>
         topicService.searchTopics(keywords, agentId, groupId),
       {

@@ -37,6 +37,8 @@ export class TopicService {
   };
 
   countTopics = async (params?: {
+    agentId?: string;
+    containerId?: string | null;
     endDate?: string;
     range?: [string, string];
     startDate?: string;
@@ -52,11 +54,11 @@ export class TopicService {
     return lambdaClient.topic.recentTopics.query({ limit });
   };
 
-  searchTopics = (keywords: string, sessionId?: string, groupId?: string): Promise<ChatTopic[]> => {
+  searchTopics = (keywords: string, agentId?: string, groupId?: string): Promise<ChatTopic[]> => {
     return lambdaClient.topic.searchTopics.query({
+      agentId,
       groupId,
       keywords,
-      sessionId: this.toDbSessionId(sessionId),
     }) as any;
   };
 

@@ -323,4 +323,3 @@ export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOp
     viewMode,
   };
 };
-

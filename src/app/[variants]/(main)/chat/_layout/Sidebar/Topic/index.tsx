@@ -1,7 +1,7 @@
 'use client';
 
 import { AccordionItem, Dropdown, Text } from '@lobehub/ui';
-import React, { Suspense, memo, useState } from 'react';
+import React, { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -19,19 +19,12 @@ interface TopicProps {
 
 const Topic = memo<TopicProps>(({ itemKey }) => {
   const { t } = useTranslation(['topic', 'common']);
-  const [topicLength] = useChatStore((s) => [topicSelectors.currentTopicLength(s)]);
-  const [showSearch, setShowSearch] = useState(false);
+  const [topicCount] = useChatStore((s) => [topicSelectors.currentTopicCount(s)]);
   const dropdownMenu = useTopicActionsDropdownMenu();
 
   return (
     <AccordionItem
-      action={
-        <Actions
-          onClear={() => setShowSearch(false)}
-          onSearch={() => setShowSearch(true)}
-          showSearch={showSearch}
-        />
-      }
+      action={<Actions />}
       headerWrapper={(header) => (
         <Dropdown
           menu={{
@@ -47,13 +40,13 @@ const Topic = memo<TopicProps>(({ itemKey }) => {
       paddingInline={'8px 4px'}
       title={
         <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-          {`${t('title')} ${topicLength > 1 ? topicLength + 1 : ''}`}
+          {`${t('title')} ${topicCount > 0 ? topicCount : ''}`}
         </Text>
       }
     >
       <Suspense fallback={<SkeletonList />}>
         <Flexbox gap={1} paddingBlock={1}>
-          <List showSearch={showSearch} />
+          <List />
         </Flexbox>
       </Suspense>
     </AccordionItem>
