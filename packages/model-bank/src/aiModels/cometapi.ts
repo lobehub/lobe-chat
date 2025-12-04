@@ -1,8 +1,8 @@
 import { AIChatModelCard } from '../types/aiModel';
 
-// 以 src/config/modelProviders/cometapi.ts 为准的 CometAPI 模型清单
+// CometAPI model list based on src/config/modelProviders/cometapi.ts
 const cometapiChatModels: AIChatModelCard[] = [
-  // GPT-5 系列
+  // GPT-5 series
   {
     abilities: { functionCall: true, vision: true },
     contextWindowTokens: 400_000,
@@ -46,7 +46,7 @@ const cometapiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
 
-  // GPT-4.1 / 4o 系列
+  // GPT-4.1 / 4o series
   {
     abilities: { functionCall: true, vision: true },
     contextWindowTokens: 1_047_576,
@@ -103,7 +103,7 @@ const cometapiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
 
-  // OpenAI o 系列
+  // OpenAI o series
   {
     abilities: { vision: true },
     contextWindowTokens: 200_000,
@@ -141,7 +141,7 @@ const cometapiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
 
-  // Anthropic Claude 系列
+  // Anthropic Claude series
   {
     abilities: { functionCall: true, vision: true },
     contextWindowTokens: 200_000,
@@ -212,7 +212,7 @@ const cometapiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
 
-  // Google Gemini 系列
+  // Google Gemini series
   {
     abilities: { functionCall: true, vision: true },
     contextWindowTokens: 1_114_112,
@@ -259,7 +259,7 @@ const cometapiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
 
-  // xAI Grok 系列
+  // xAI Grok series
   {
     abilities: { functionCall: true, vision: true },
     contextWindowTokens: 131_072,
@@ -291,7 +291,7 @@ const cometapiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
 
-  // DeepSeek 系列
+  // DeepSeek series
   {
     abilities: { functionCall: true, vision: true },
     contextWindowTokens: 128_000,

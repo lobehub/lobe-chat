@@ -65,6 +65,7 @@ export enum ModelProvider {
   Wenxin = 'wenxin',
   XAI = 'xai',
   Xinference = 'xinference',
+  ZenMux = 'zenmux',
   ZeroOne = 'zeroone',
   ZhiPu = 'zhipu',
 }

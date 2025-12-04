@@ -149,6 +149,14 @@ export interface StdioMCPParams {
   type: 'stdio';
 }
 
+export interface CloudMCPParams {
+  auth?: AuthConfig;
+  headers?: Record<string, string>;
+  name: string;
+  type: 'cloud';
+  url: string;
+}
+
 export type MCPClientParams = HttpMCPClientParams | StdioMCPParams;
 
 export type MCPErrorType =

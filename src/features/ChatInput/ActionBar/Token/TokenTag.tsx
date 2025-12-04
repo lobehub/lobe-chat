@@ -6,7 +6,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { createChatToolsEngine } from '@/helpers/toolEngineering';
+import { createAgentToolsEngine } from '@/helpers/toolEngineering';
 import { useModelContextWindowTokens } from '@/hooks/useModelContextWindowTokens';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
@@ -57,7 +57,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   const pluginIds = useAgentStore(agentSelectors.currentAgentPlugins);
 
   const toolsString = useToolStore((s) => {
-    const toolsEngine = createChatToolsEngine({ model, provider });
+    const toolsEngine = createAgentToolsEngine({ model, provider });
 
     const { tools, enabledToolIds } = toolsEngine.generateToolsDetailed({
       model,

@@ -55,10 +55,10 @@
   },
   "documentList": {
     "copyContent": "Copiar todo el contenido",
-    "documentCount": "Total de {{count}} documentos",
     "duplicate": "Crear una copia",
-    "empty": "No hay documentos. Haz clic en el botón de arriba para crear tu primer documento",
+    "empty": "Aún no hay documentos. Haz clic en el botón de arriba para crear tu primer documento.",
     "noResults": "No se encontraron documentos coincidentes",
+    "pageCount": "Total de {{count}} documentos",
     "selectNote": "Selecciona un documento para comenzar a editar",
     "untitled": "Sin título"
   },
@@ -70,7 +70,6 @@
       "uploadFile": "Subir archivo",
       "uploadFolder": "Subir carpeta"
     },
-    "newDocumentButton": "Nuevo documento",
     "newNoteDialog": {
       "cancel": "Cancelar",
       "editTitle": "Editar documento",
@@ -83,14 +82,15 @@
       "title": "Nuevo documento",
       "updateSuccess": "Documento actualizado con éxito"
     },
+    "newPageButton": "Nuevo documento",
     "uploadButton": "Subir"
   },
   "home": {
     "getStarted": "Comenzar",
     "greeting": "Comenzar",
     "quickActions": "Acciones rápidas",
-    "recentDocuments": "Documentos recientes",
     "recentFiles": "Archivos recientes",
+    "recentPages": "Páginas recientes",
     "subtitle": "Bienvenido a tu base de conocimientos. Comienza aquí a gestionar tus documentos y notas",
     "uploadEntries": {
       "files": {
@@ -102,7 +102,7 @@
       "knowledgeBase": {
         "title": "Nueva base de conocimientos"
       },
-      "newDocument": {
+      "newPage": {
         "title": "Nuevo documento"
       }
     }
@@ -116,8 +116,8 @@
     "title": "Base de conocimientos"
   },
   "menu": {
-    "allDocuments": "Todos los documentos",
-    "allFiles": "Todos los archivos"
+    "allFiles": "Todos los archivos",
+    "allPages": "Todos los documentos"
   },
   "networkError": "Error al obtener la base de conocimientos, por favor verifica la conexión a internet y vuelve a intentarlo",
   "notSupportGuide": {
@@ -142,8 +142,8 @@
     "downloadFile": "Descargar archivo",
     "unsupportedFileAndContact": "Este formato de archivo no es compatible con la vista previa en línea. Si desea solicitar una vista previa, no dude en <1>contactarnos</1>."
   },
-  "searchDocumentPlaceholder": "Buscar documentos",
   "searchFilePlaceholder": "Buscar archivo",
+  "searchPagePlaceholder": "Buscar documentos",
   "tab": {
     "all": "Todo",
     "audios": "Audios",
@@ -156,9 +156,7 @@
     "websites": "Sitios web"
   },
   "title": "Base de conocimientos",
-  "toggleLeftPanel": {
-    "title": "Mostrar/Ocultar panel izquierdo"
-  },
+  "toggleLeftPanel": "Mostrar/Ocultar panel izquierdo",
   "uploadDock": {
     "body": {
       "collapse": "Colapsar",

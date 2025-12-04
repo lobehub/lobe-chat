@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "@cucumber/cucumber": "^12.2.0",
-    "@playwright/test": "^1.56.1",
-    "playwright": "^1.56.1"
+    "@playwright/test": "^1.57.0",
+    "playwright": "^1.57.0"
   },
   "devDependencies": {
-    "@types/node": "^22.19.1",
+    "@types/node": "^24.10.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }

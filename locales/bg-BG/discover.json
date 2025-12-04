@@ -616,6 +616,7 @@
     "supportedProviders": "Доставчици, поддържащи този модел"
   },
   "plugins": {
+    "builtinTag": "Вграден плъгин",
     "community": "Обществени плъгини",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "Инсталирай плъгин",
     "installed": "Инсталиран",
+    "legacyTag": "Остарял плъгин",
     "list": "Списък с плъгини",
     "meta": {
       "description": "Описание",

@@ -210,6 +210,13 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       ) : (
         <EditableText
           editing={editing}
+          onBlur={(e) => {
+            const v = (e.target as HTMLInputElement).value;
+            if (title !== v) {
+              updateTopicTitle(id, v);
+            }
+            toggleEditing(false);
+          }}
           onChangeEnd={(v) => {
             if (title !== v) {
               updateTopicTitle(id, v);
@@ -237,6 +244,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
             className="topic-more"
             icon={MoreVertical}
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
             }}
             size={'small'}

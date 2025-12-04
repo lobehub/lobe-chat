@@ -41,6 +41,14 @@ export interface LobeAgentChatConfig {
   thinkingLevel?: 'low' | 'high';
   thinkingBudget?: number;
   /**
+   * Image aspect ratio for image generation models
+   */
+  imageAspectRatio?: string;
+  /**
+   * Image resolution for image generation models
+   */
+  imageResolution?: '1K' | '2K' | '4K';
+  /**
    * Disable context caching
    */
   disableContextCaching?: boolean;
@@ -80,6 +88,8 @@ export const AgentChatConfigSchema = z.object({
   gpt5ReasoningEffort: z.enum(['minimal', 'low', 'medium', 'high']).optional(),
   gpt5_1ReasoningEffort: z.enum(['none', 'low', 'medium', 'high']).optional(),
   historyCount: z.number().optional(),
+  imageAspectRatio: z.string().optional(),
+  imageResolution: z.enum(['1K', '2K', '4K']).optional(),
   reasoningBudgetToken: z.number().optional(),
   reasoningEffort: z.enum(['low', 'medium', 'high']).optional(),
   searchFCModel: z

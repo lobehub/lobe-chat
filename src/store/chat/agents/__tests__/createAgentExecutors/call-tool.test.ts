@@ -156,17 +156,22 @@ describe('call_tool executor', () => {
       });
 
       // Then
-      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith({
-        content: '',
-        groupId: 'group_789',
-        parentId: 'msg_parent_123',
-        plugin: toolCall,
-        role: 'tool',
-        sessionId: 'sess_123',
-        threadId: undefined,
-        tool_call_id: 'tool_call_xyz',
-        topicId: 'topic_456',
-      });
+      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          content: '',
+          groupId: 'group_789',
+          parentId: 'msg_parent_123',
+          plugin: toolCall,
+          role: 'tool',
+          sessionId: 'sess_123',
+          threadId: undefined,
+          tool_call_id: 'tool_call_xyz',
+          topicId: 'topic_456',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
+      );
     });
 
     it('should use assistant message groupId for tool message', async () => {
@@ -193,6 +198,9 @@ describe('call_tool executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           groupId: 'group_special',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });
@@ -221,6 +229,9 @@ describe('call_tool executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           parentId: 'msg_custom_parent',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });
@@ -261,6 +272,9 @@ describe('call_tool executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           plugin: toolCall,
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });
@@ -1542,6 +1556,9 @@ describe('call_tool executor', () => {
         expect.objectContaining({
           groupId: undefined,
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
       expect(result.events).toHaveLength(1);
     });
@@ -1569,6 +1586,9 @@ describe('call_tool executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           groupId: undefined,
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });
@@ -1641,6 +1661,9 @@ describe('call_tool executor', () => {
         expect.objectContaining({
           topicId: undefined,
         }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
       );
     });
 
@@ -1678,6 +1701,9 @@ describe('call_tool executor', () => {
           plugin: expect.objectContaining({
             type: 'builtin',
           }),
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
       expect(result.events).toHaveLength(1);
@@ -1767,6 +1793,9 @@ describe('call_tool executor', () => {
       expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           groupId: 'group_latest',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
         }),
       );
     });

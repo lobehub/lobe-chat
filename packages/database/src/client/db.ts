@@ -207,7 +207,7 @@ export class DatabaseManager {
     return this.db;
   }
 
-  // 初始化数据库
+  // Initialize database
   async initialize(callbacks?: DatabaseLoadingCallbacks): Promise<DrizzleInstance> {
     if (this.initPromise) return this.initPromise;
 
@@ -218,13 +218,13 @@ export class DatabaseManager {
         if (this.dbInstance) return this.dbInstance;
 
         const time = Date.now();
-        // 初始化数据库
+        // Initialize database
         this.callbacks?.onStateChange?.(DatabaseLoadingState.Initializing);
 
-        // 加载依赖
+        // Load dependencies
         const { fsBundle, PGlite, MemoryFS, IdbFs, vector } = await this.loadDependencies();
 
-        // 加载并编译 WASM 模块
+        // Load and compile WASM module
         const wasmModule = await this.loadWasmModule();
 
         const { initPgliteWorker } = await import('./pglite');
@@ -267,10 +267,10 @@ export class DatabaseManager {
         this.callbacks?.onStateChange?.(DatabaseLoadingState.Error);
         const error = e as Error;
 
-        // 查询迁移表数据
+        // Query migration table data
         let migrationsTableData: MigrationTableItem[] = [];
         try {
-          // 尝试查询迁移表
+          // Attempt to query migration table
           const drizzleMigration = new DrizzleMigrationModel(this.db as any);
           migrationsTableData = await drizzleMigration.getMigrationList();
         } catch (queryError) {
@@ -295,7 +295,7 @@ export class DatabaseManager {
     return this.initPromise;
   }
 
-  // 获取数据库实例
+  // Get database instance
   get db(): DrizzleInstance {
     if (!this.dbInstance) {
       throw new Error('Database not initialized. Please call initialize() first.');
@@ -303,7 +303,7 @@ export class DatabaseManager {
     return this.dbInstance;
   }
 
-  // 创建代理对象
+  // Create proxy object
   createProxy(): DrizzleInstance {
     return new Proxy({} as DrizzleInstance, {
       get: (target, prop) => {
@@ -313,7 +313,7 @@ export class DatabaseManager {
   }
 
   async resetDatabase(): Promise<void> {
-    // 1. 关闭现有的 PGlite 连接（如果存在）
+    // 1. Close existing PGlite connection (if exists)
     if (this.dbInstance) {
       try {
         // @ts-ignore
@@ -321,31 +321,31 @@ export class DatabaseManager {
         console.log('PGlite instance closed successfully.');
       } catch (e) {
         console.error('Error closing PGlite instance:', e);
-        // 即使关闭失败，也尝试继续删除，IndexedDB 的 onblocked 或 onerror 会处理后续问题
+        // Even if closing fails, continue with deletion attempt; IndexedDB onblocked or onerror will handle subsequent issues
       }
     }
 
-    // 2. 重置数据库实例和初始化状态
+    // 2. Reset database instance and initialization state
     this.dbInstance = null;
     this.initPromise = null;
-    this.isLocalDBSchemaSynced = false; // 重置同步状态
+    this.isLocalDBSchemaSynced = false; // Reset sync state
 
-    // 3. 删除 IndexedDB 数据库
+    // 3. Delete IndexedDB database
     return new Promise<void>((resolve, reject) => {
-      // 检查 IndexedDB 是否可用
+      // Check if IndexedDB is available
       if (typeof indexedDB === 'undefined') {
         console.warn('IndexedDB is not available, cannot delete database');
-        resolve(); // 在此环境下无法删除，直接解决
+        resolve(); // Cannot delete in this environment, resolve directly
         return;
       }
 
-      const dbName = `/pglite/${DB_NAME}`; // PGlite IdbFs 使用的路径
+      const dbName = `/pglite/${DB_NAME}`; // Path used by PGlite IdbFs
       const request = indexedDB.deleteDatabase(dbName);
 
       request.onsuccess = () => {
         console.log(`✅ Database '${dbName}' reset successfully`);
 
-        // 清除本地存储的模式哈希
+        // Clear locally stored schema hash
         if (typeof localStorage !== 'undefined') {
           localStorage.removeItem(pgliteSchemaHashCache);
         }
@@ -365,7 +365,7 @@ export class DatabaseManager {
       };
 
       request.onblocked = (event) => {
-        // 当其他打开的连接阻止数据库删除时，会触发此事件
+        // This event is triggered when other open connections block database deletion
         console.warn(
           `Deletion of database '${dbName}' is blocked. This usually means other connections (e.g., in other tabs) are still open. Event:`,
           event,
@@ -380,13 +380,13 @@ export class DatabaseManager {
   }
 }
 
-// 导出单例
+// Export singleton
 const dbManager = DatabaseManager.getInstance();
 
-// 保持原有的 clientDB 导出不变
+// Keep original clientDB export unchanged
 export const clientDB = dbManager.createProxy();
 
-// 导出初始化方法，供应用启动时使用
+// Export initialization method for application startup
 export const initializeDB = (callbacks?: DatabaseLoadingCallbacks) =>
   dbManager.initialize(callbacks);
 

@@ -251,16 +251,16 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: chat_1',
-          'event: text',
-          'data: "234"\n',
+          'event: content_part',
+          'data: {"content":"234","partType":"text"}\n',
 
           'id: chat_1',
           'event: text',
           'data: ""\n',
 
           'id: chat_1',
-          'event: text',
-          `data: "567890\\n"\n`,
+          'event: content_part',
+          `data: {"content":"567890\\n","partType":"text"}\n`,
           // stop
           'id: chat_1',
           'event: stop',
@@ -376,20 +376,20 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: chat_1',
-          'event: reasoning',
-          'data: "**Understanding the Conditional Logic**\\n\\n"\n',
+          'event: reasoning_part',
+          'data: {"content":"**Understanding the Conditional Logic**\\n\\n","inReasoning":true,"partType":"text"}\n',
 
           'id: chat_1',
-          'event: reasoning',
-          `data: "**Finalizing Interpretation**\\n\\n"\n`,
+          'event: reasoning_part',
+          `data: {"content":"**Finalizing Interpretation**\\n\\n","inReasoning":true,"partType":"text"}\n`,
 
           'id: chat_1',
-          'event: text',
-          `data: "简单来说，"\n`,
+          'event: content_part',
+          `data: {"content":"简单来说，","partType":"text"}\n`,
 
           'id: chat_1',
-          'event: text',
-          `data: "文本内容。"\n`,
+          'event: content_part',
+          `data: {"content":"文本内容。","partType":"text"}\n`,
           // stop
           'id: chat_1',
           'event: stop',
@@ -471,12 +471,12 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: chat_1',
-          'event: text',
-          'data: "234"\n',
+          'event: content_part',
+          'data: {"content":"234","partType":"text"}\n',
 
           'id: chat_1',
-          'event: text',
-          `data: "567890\\n"\n`,
+          'event: content_part',
+          `data: {"content":"567890\\n","partType":"text"}\n`,
           // stop
           'id: chat_1',
           'event: stop',
@@ -1166,8 +1166,8 @@ describe('GoogleGenerativeAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: chat_1',
-          'event: text',
-          'data: "你好！很高兴为你服务。请问有什么我可以帮你的吗？\\n\\n无论是回答问题、协助写作、翻译，还是随便聊聊，我都随时待命！"\n',
+          'event: content_part',
+          'data: {"content":"你好！很高兴为你服务。请问有什么我可以帮你的吗？\\n\\n无论是回答问题、协助写作、翻译，还是随便聊聊，我都随时待命！","partType":"text"}\n',
 
           'id: chat_1',
           'event: stop',
@@ -1237,6 +1237,498 @@ describe('GoogleGenerativeAIStream', () => {
         'event: error\n',
         `data: ${JSON.stringify(errorPayload)}\n\n`,
       ]);
+    });
+  });
+
+  describe('Thought filtering logic', () => {
+    it('should keep text and thoughtSignature when both exist in parts', async () => {
+      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+      const data = [
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: 'Here is my answer',
+                    thoughtSignature: 'sig123',
+                  },
+                ],
+                role: 'model',
+              },
+              finishReason: 'STOP',
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 10,
+            candidatesTokenCount: 5,
+            totalTokenCount: 15,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 10 }],
+            thoughtsTokenCount: 50,
+          },
+        },
+      ];
+
+      const mockGoogleStream = new ReadableStream({
+        start(controller) {
+          data.forEach((item) => {
+            controller.enqueue(item);
+          });
+          controller.close();
+        },
+      });
+
+      const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+      const chunks = await decodeStreamChunks(protocolStream);
+
+      expect(chunks).toEqual(
+        [
+          'id: chat_1',
+          'event: content_part',
+          'data: {"content":"Here is my answer","partType":"text","thoughtSignature":"sig123"}\n',
+
+          'id: chat_1',
+          'event: stop',
+          'data: "STOP"\n',
+
+          'id: chat_1',
+          'event: usage',
+          'data: {"inputTextTokens":10,"outputImageTokens":0,"outputReasoningTokens":50,"outputTextTokens":5,"totalInputTokens":10,"totalOutputTokens":55,"totalTokens":15}\n',
+        ].map((i) => i + '\n'),
+      );
+    });
+  });
+
+  describe('Multimodal parts (reasoning_part and content_part)', () => {
+    it('should handle mixed reasoning text and reasoning image parts', async () => {
+      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+      const data = [
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: "**Clarifying the Core Concept**\n\nI'm now focusing on the visual metaphor. I plan to depict Agent Runtime as a software environment that manages and executes agents' tasks, similar to how an operating system functions. I aim to create an informative and intuitive infographic.\n\n\n",
+                    thought: true,
+                  },
+                ],
+                role: 'model',
+              },
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 9,
+            totalTokenCount: 9,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 9 }],
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+          responseId: 'MRYkaeWsL5bSjMcPlsLRiQo',
+        },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: '**Developing Visual Representation**\n\nI\'m now iterating on the visual representation. The "command center" metaphor is proving useful. I\'m focusing on the interplay of the core components: the central engine coordinates perception, memory, planning, and action, with tools and plugins as extensions. The goal is to clearly show the flow of information through the system, from input to output, using visual cues. The aesthetic aims for a futuristic, tech-inspired look with glowing lines and circuit board elements, using a palette of blues, purples, and oranges.\n\n\n',
+                    thought: true,
+                  },
+                ],
+                role: 'model',
+              },
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 9,
+            totalTokenCount: 9,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 9 }],
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+          responseId: 'MRYkaeWsL5bSjMcPlsLRiQo',
+        },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: "**Constructing the Architecture**\n\nI'm presently building out the architecture of the infographic. I've broken down \"Agent Runtime\" into its core components and I'm designing the visual relationships between them.  The central engine will be the focal point, with modules for perception, memory, planning, action, and tools radiating outwards. My aim is to illustrate the workflow from input to output clearly. I'll utilize arrows to represent the flow of data and instructions between each module.\n\n\n",
+                    thought: true,
+                  },
+                ],
+                role: 'model',
+              },
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 9,
+            totalTokenCount: 9,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 9 }],
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+          responseId: 'MRYkaeWsL5bSjMcPlsLRiQo',
+        },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    inlineData: {
+                      mimeType: 'image/jpeg',
+                      data: '/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQBiUgnjeAMHrkrk/mMk8k57YpwnCsBtzkcgk+/ONuO3QE4JJ3ccuJ373EbEg5KgDkAg4xtySNrHv14HYm9ne7au7JpLRfm+vn63Emtk9FZWv1t+Ntt9L9Wj//2Q==',
+                    },
+                    thought: true,
+                  },
+                ],
+                role: 'model',
+              },
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 9,
+            totalTokenCount: 9,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 9 }],
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+          responseId: 'MRYkaeWsL5bSjMcPlsLRiQo',
+        },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: '**Constructing an Infographic**\n\nI\'ve successfully created an infographic depicting an "Agent Runtime." The design employs a tech-inspired circuit board aesthetic, placing the core engine at the center. I\'ve clearly represented six essential modules: perception, memory, planning, action, tools, and learning. Arrows and text annotations vividly illustrate the data flow and processing.\n\n\n',
+                    thought: true,
+                  },
+                ],
+                role: 'model',
+              },
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 9,
+            totalTokenCount: 9,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 9 }],
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+          responseId: 'MRYkaeWsL5bSjMcPlsLRiQo',
+        },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: "**Defining Agent Runtime Modules**\n\nI'm making progress clarifying the architecture of an \"Agent Runtime\" system. I've designed an infographic with a circuit board aesthetic, centered on the core engine. Six key modules are now visualized: perception, memory, planning, action, tools, and learning. I've incorporated arrows and annotations to show data flow effectively.\n\n\n",
+                    thought: true,
+                  },
+                ],
+                role: 'model',
+              },
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 9,
+            totalTokenCount: 9,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 9 }],
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+          responseId: 'MRYkaeWsL5bSjMcPlsLRiQo',
+        },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    inlineData: {
+                      mimeType: 'image/jpeg',
+                      data: '/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAEBAQEBAQEBA2Q==',
+                    },
+                    thoughtSignature:
+                      'EueybArjsmwB0e2Kby+QPRkacnmPuV+CqMr6tiey3M5BHLHgIiggQOMeFmnKzsoux6PI6dQMgmdbXE1OTLLcWUmUD1CgFn+C2VdI09FpHrVhxVAtSk/zFVSlsjfCuANxtkP8tCDppVZqIya0QYjzg5K1fEO0m42CZX2/MHyqL8NjzR0lT8ENdoV3RSaK2tXqPH45uIb6nGeBSuX1n2EUMzO',
+                  },
+                ],
+                role: 'model',
+              },
+              finishReason: 'STOP',
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 9,
+            candidatesTokenCount: 1358,
+            totalTokenCount: 1728,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 9 }],
+            candidatesTokensDetails: [{ modality: 'IMAGE', tokenCount: 1120 }],
+            thoughtsTokenCount: 361,
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+          responseId: 'MRYkaeWsL5bSjMcPlsLRiQo',
+        },
+      ];
+
+      const mockGoogleStream = new ReadableStream({
+        start(controller) {
+          data.forEach((item) => {
+            controller.enqueue(item);
+          });
+          controller.close();
+        },
+      });
+
+      const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+      const chunks = await decodeStreamChunks(protocolStream);
+
+      expect(chunks).toEqual(
+        [
+          // First reasoning text
+          'id: chat_1',
+          'event: reasoning_part',
+          'data: {"content":"**Clarifying the Core Concept**\\n\\nI\'m now focusing on the visual metaphor. I plan to depict Agent Runtime as a software environment that manages and executes agents\' tasks, similar to how an operating system functions. I aim to create an informative and intuitive infographic.\\n\\n\\n","inReasoning":true,"partType":"text"}\n',
+
+          // Second reasoning text
+          'id: chat_1',
+          'event: reasoning_part',
+          'data: {"content":"**Developing Visual Representation**\\n\\nI\'m now iterating on the visual representation. The \\"command center\\" metaphor is proving useful. I\'m focusing on the interplay of the core components: the central engine coordinates perception, memory, planning, and action, with tools and plugins as extensions. The goal is to clearly show the flow of information through the system, from input to output, using visual cues. The aesthetic aims for a futuristic, tech-inspired look with glowing lines and circuit board elements, using a palette of blues, purples, and oranges.\\n\\n\\n","inReasoning":true,"partType":"text"}\n',
+
+          // Third reasoning text
+          'id: chat_1',
+          'event: reasoning_part',
+          'data: {"content":"**Constructing the Architecture**\\n\\nI\'m presently building out the architecture of the infographic. I\'ve broken down \\"Agent Runtime\\" into its core components and I\'m designing the visual relationships between them.  The central engine will be the focal point, with modules for perception, memory, planning, action, and tools radiating outwards. My aim is to illustrate the workflow from input to output clearly. I\'ll utilize arrows to represent the flow of data and instructions between each module.\\n\\n\\n","inReasoning":true,"partType":"text"}\n',
+
+          // First reasoning image
+          'id: chat_1',
+          'event: reasoning_part',
+          'data: {"content":"/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQBiUgnjeAMHrkrk/mMk8k57YpwnCsBtzkcgk+/ONuO3QE4JJ3ccuJ373EbEg5KgDkAg4xtySNrHv14HYm9ne7au7JpLRfm+vn63Emtk9FZWv1t+Ntt9L9Wj//2Q==","inReasoning":true,"mimeType":"image/jpeg","partType":"image"}\n',
+
+          // Fourth reasoning text
+          'id: chat_1',
+          'event: reasoning_part',
+          'data: {"content":"**Constructing an Infographic**\\n\\nI\'ve successfully created an infographic depicting an \\"Agent Runtime.\\" The design employs a tech-inspired circuit board aesthetic, placing the core engine at the center. I\'ve clearly represented six essential modules: perception, memory, planning, action, tools, and learning. Arrows and text annotations vividly illustrate the data flow and processing.\\n\\n\\n","inReasoning":true,"partType":"text"}\n',
+
+          // Fifth reasoning text
+          'id: chat_1',
+          'event: reasoning_part',
+          'data: {"content":"**Defining Agent Runtime Modules**\\n\\nI\'m making progress clarifying the architecture of an \\"Agent Runtime\\" system. I\'ve designed an infographic with a circuit board aesthetic, centered on the core engine. Six key modules are now visualized: perception, memory, planning, action, tools, and learning. I\'ve incorporated arrows and annotations to show data flow effectively.\\n\\n\\n","inReasoning":true,"partType":"text"}\n',
+
+          // Content image (with thoughtSignature but not thought:true)
+          'id: chat_1',
+          'event: content_part',
+          'data: {"content":"/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAEBAQEBAQEBA2Q==","mimeType":"image/jpeg","partType":"image","thoughtSignature":"EueybArjsmwB0e2Kby+QPRkacnmPuV+CqMr6tiey3M5BHLHgIiggQOMeFmnKzsoux6PI6dQMgmdbXE1OTLLcWUmUD1CgFn+C2VdI09FpHrVhxVAtSk/zFVSlsjfCuANxtkP8tCDppVZqIya0QYjzg5K1fEO0m42CZX2/MHyqL8NjzR0lT8ENdoV3RSaK2tXqPH45uIb6nGeBSuX1n2EUMzO"}\n',
+
+          // stop
+          'id: chat_1',
+          'event: stop',
+          'data: "STOP"\n',
+
+          // usage
+          'id: chat_1',
+          'event: usage',
+          'data: {"inputTextTokens":9,"outputImageTokens":1120,"outputReasoningTokens":361,"outputTextTokens":238,"totalInputTokens":9,"totalOutputTokens":1719,"totalTokens":1728}\n',
+        ].map((i) => i + '\n'),
+      );
+    });
+
+    it('should handle content text and image parts without reasoning', async () => {
+      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+      const data = [
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: 'This is the description: ',
+                  },
+                ],
+                role: 'model',
+              },
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 5,
+            totalTokenCount: 5,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 5 }],
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+        },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    inlineData: {
+                      mimeType: 'image/png',
+                      data: 'iVBORw0KGgoAAAANSUhEUgAAAAUA',
+                    },
+                  },
+                ],
+                role: 'model',
+              },
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 5,
+            totalTokenCount: 5,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 5 }],
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+        },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: ' an example.',
+                  },
+                ],
+                role: 'model',
+              },
+              finishReason: 'STOP',
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 5,
+            candidatesTokenCount: 10,
+            totalTokenCount: 15,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 5 }],
+            candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 10 }],
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+        },
+      ];
+
+      const mockGoogleStream = new ReadableStream({
+        start(controller) {
+          data.forEach((item) => {
+            controller.enqueue(item);
+          });
+          controller.close();
+        },
+      });
+
+      const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+      const chunks = await decodeStreamChunks(protocolStream);
+
+      expect(chunks).toEqual(
+        [
+          'id: chat_1',
+          'event: content_part',
+          'data: {"content":"This is the description: ","partType":"text"}\n',
+
+          'id: chat_1',
+          'event: content_part',
+          'data: {"content":"iVBORw0KGgoAAAANSUhEUgAAAAUA","mimeType":"image/png","partType":"image"}\n',
+
+          'id: chat_1',
+          'event: content_part',
+          'data: {"content":" an example.","partType":"text"}\n',
+
+          'id: chat_1',
+          'event: stop',
+          'data: "STOP"\n',
+
+          'id: chat_1',
+          'event: usage',
+          'data: {"inputTextTokens":5,"outputImageTokens":0,"outputTextTokens":10,"totalInputTokens":5,"totalOutputTokens":10,"totalTokens":15}\n',
+        ].map((i) => i + '\n'),
+      );
+    });
+
+    it('should handle mixed reasoning and content parts in single chunk', async () => {
+      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+      const data = [
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: 'Analyzing the request...',
+                    thought: true,
+                  },
+                  {
+                    text: 'Here is the answer: ',
+                  },
+                  {
+                    inlineData: {
+                      mimeType: 'image/png',
+                      data: 'base64data',
+                    },
+                  },
+                ],
+                role: 'model',
+              },
+              finishReason: 'STOP',
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 10,
+            candidatesTokenCount: 20,
+            totalTokenCount: 30,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 10 }],
+            thoughtsTokenCount: 5,
+          },
+          modelVersion: 'gemini-3-pro-image-preview',
+        },
+      ];
+
+      const mockGoogleStream = new ReadableStream({
+        start(controller) {
+          data.forEach((item) => {
+            controller.enqueue(item);
+          });
+          controller.close();
+        },
+      });
+
+      const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+      const chunks = await decodeStreamChunks(protocolStream);
+
+      expect(chunks).toEqual(
+        [
+          'id: chat_1',
+          'event: reasoning_part',
+          'data: {"content":"Analyzing the request...","inReasoning":true,"partType":"text"}\n',
+
+          'id: chat_1',
+          'event: content_part',
+          'data: {"content":"Here is the answer: ","partType":"text"}\n',
+
+          'id: chat_1',
+          'event: content_part',
+          'data: {"content":"base64data","mimeType":"image/png","partType":"image"}\n',
+
+          'id: chat_1',
+          'event: stop',
+          'data: "STOP"\n',
+
+          'id: chat_1',
+          'event: usage',
+          'data: {"inputTextTokens":10,"outputImageTokens":0,"outputReasoningTokens":5,"outputTextTokens":20,"totalInputTokens":10,"totalOutputTokens":25,"totalTokens":30}\n',
+        ].map((i) => i + '\n'),
+      );
     });
   });
 });

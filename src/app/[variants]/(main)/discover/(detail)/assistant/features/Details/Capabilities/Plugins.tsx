@@ -1,9 +1,7 @@
 import { Block } from '@lobehub/ui';
 import { Empty } from 'antd';
-import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import urlJoin from 'url-join';
 
 import { useDetailContext } from '../../DetailProvider';
 import PluginItem from './PluginItem';
@@ -20,11 +18,12 @@ const Plugin = memo(() => {
 
   return (
     <Flexbox gap={8}>
-      {config?.plugins.map((item) => (
-        <Link href={urlJoin('/discover/plugin', item)} key={item}>
-          <PluginItem identifier={item} />
-        </Link>
-      ))}
+      {config?.plugins.map((item) => {
+        const identifier =
+          typeof item === 'string' ? item : (item as { identifier: string }).identifier;
+
+        return <PluginItem identifier={identifier} key={identifier} />;
+      })}
     </Flexbox>
   );
 });

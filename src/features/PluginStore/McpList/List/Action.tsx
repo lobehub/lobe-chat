@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useToolStore } from '@/store/tool';
@@ -15,13 +16,14 @@ interface ActionsProps {
 }
 
 const Actions = memo<ActionsProps>(({ identifier }) => {
-  const [installed, installing, unInstallPlugin, installMCPPlugin, cancelInstallMCPPlugin] =
+  const [installed, installing, unInstallPlugin, installMCPPlugin, cancelInstallMCPPlugin, plugin] =
     useToolStore((s) => [
       pluginSelectors.isPluginInstalled(identifier)(s),
       mcpStoreSelectors.isMCPInstalling(identifier)(s),
       s.uninstallPlugin,
       s.installMCPPlugin,
       s.cancelInstallMCPPlugin,
+      mcpStoreSelectors.getPluginById(identifier)(s),
     ]);
 
   const { t } = useTranslation('plugin');
@@ -30,6 +32,10 @@ const Actions = memo<ActionsProps>(({ identifier }) => {
     agentSelectors.currentAgentPlugins(s).includes(identifier),
   ]);
   const { modal } = App.useApp();
+  const { isAuthenticated, signIn } = useMarketAuth();
+
+  // Check if this is a cloud MCP plugin
+  const isCloudMcp = !!((plugin as any)?.cloudEndPoint || (plugin as any)?.haveCloudEndpoint);
 
   return (
     <Flexbox align={'center'} horizontal>
@@ -85,6 +91,19 @@ const Actions = memo<ActionsProps>(({ identifier }) => {
         <Button
           onClick={async (e) => {
             e.stopPropagation();
+
+            // If this is a cloud MCP and user is not authenticated, request authorization first
+            if (isCloudMcp && !isAuthenticated) {
+              console.log(
+                '[MCPListAction] Cloud MCP detected, user not authenticated, starting authorization',
+              );
+
+              try {
+                await signIn();
+              } catch {
+                return; // Don't proceed with installation if auth fails
+              }
+            }
 
             const isSuccess = await installMCPPlugin(identifier);
 

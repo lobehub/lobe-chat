@@ -21,12 +21,14 @@ interface ServerConfigState {
   isMobile?: boolean;
   segmentVariants?: string;
   serverConfig: GlobalServerConfig;
+  serverConfigInit: boolean;
 }
 
 const initialState: ServerConfigState = {
   featureFlags: mapFeatureFlagsEnvToState(DEFAULT_FEATURE_FLAGS),
   segmentVariants: '',
   serverConfig: { aiProvider: {}, telemetry: {} },
+  serverConfigInit: false,
 };
 
 //  ===============  聚合 createStoreFn ============ //

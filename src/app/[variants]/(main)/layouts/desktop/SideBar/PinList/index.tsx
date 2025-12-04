@@ -3,7 +3,9 @@ import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
@@ -93,21 +95,26 @@ const PinList = () => {
                   placement={'right'}
                   title={sessionHelpers.getTitle(item.meta)}
                 >
-                  <Flexbox
-                    className={cx(
-                      styles.ink,
-                      isPinned && activeId === item.id ? styles.inkActive : undefined,
-                    )}
+                  <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      switchAgent(item.id);
+                    }}
+                    to={SESSION_CHAT_URL(item.id)}
                   >
-                    <Avatar
-                      avatar={sessionHelpers.getAvatar(item.meta)}
-                      background={item.meta.backgroundColor}
-                      onClick={() => {
-                        switchAgent(item.id);
-                      }}
-                      size={40}
-                    />
-                  </Flexbox>
+                    <Flexbox
+                      className={cx(
+                        styles.ink,
+                        isPinned && activeId === item.id ? styles.inkActive : undefined,
+                      )}
+                    >
+                      <Avatar
+                        avatar={sessionHelpers.getAvatar(item.meta)}
+                        background={item.meta.backgroundColor}
+                        size={40}
+                      />
+                    </Flexbox>
+                  </Link>
                 </Tooltip>
               </Flexbox>
             ))}

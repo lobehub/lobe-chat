@@ -598,9 +598,43 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
+      'Claude Opus 4.5 是 Anthropic 的旗舰模型，结合了卓越的智能与可扩展性能，适合需要最高质量回应和推理能力的复杂任务。',
+    displayName: 'Claude Opus 4.5',
+    enabled: true,
+    id: 'claude-opus-4-5-20251101',
+    maxOutput: 64_000,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: { prices: { '1h': 10, '5m': 6.25 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-11-24',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
       'Claude Opus 4.1 是 Anthropic 最新的用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。',
     displayName: 'Claude Opus 4.1',
-    enabled: true,
     id: 'claude-opus-4-1-20250805',
     maxOutput: 32_000,
     pricing: {
@@ -829,17 +863,18 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
-      'DeepSeek V3.2 是 DeepSeek 最新发布的通用大模型，支持混合推理架构，具备更强的 Agent 能力。',
-    displayName: 'DeepSeek V3.2 Exp',
-    id: 'DeepSeek-V3.2-Exp',
+      'DeepSeek-V3.2 是一款高效的大语言模型，具备 DSA 稀疏注意力与强化推理能力，其核心亮点在于强大的 Agent 能力——通过大规模任务合成，将推理与真实工具调用深度融合，实现更稳健、合规、可泛化的智能体表现。',
+    displayName: 'DeepSeek V3.2',
+    id: 'deepseek-chat',
     maxOutput: 8192,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.42, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.45, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-09-29',
+    releasedAt: '2025-12-01',
     type: 'chat',
   },
   {
@@ -850,34 +885,18 @@ const aihubmixModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'DeepSeek V3.2 思考模式。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
-    displayName: 'DeepSeek V3.2 Exp Thinking',
+    displayName: 'DeepSeek V3.2 Thinking',
     enabled: true,
-    id: 'DeepSeek-V3.2-Exp-Think',
+    id: 'deepseek-reasoner',
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.42, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.45, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-09-29',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'DeepSeek-V3.1-非思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。',
-    displayName: 'DeepSeek V3.1 (non-Think)',
-    id: 'DeepSeek-V3.1',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.56, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.68, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
+    releasedAt: '2025-12-01',
     type: 'chat',
   },
   {
@@ -929,8 +948,8 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'DeepSeek-R1',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.546, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 2.184, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -1041,6 +1060,35 @@ const aihubmixModels: AIChatModelCard[] = [
     releasedAt: '2025-11-18',
     settings: {
       extendParams: ['thinkingLevel', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      imageOutput: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072 + 32_768,
+    description:
+      'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
+    displayName: 'Nano Banana Pro',
+    enabled: true,
+    id: 'gemini-3-pro-image-preview',
+    maxOutput: 32_768,
+    pricing: {
+      approximatePricePerImage: 0.134,
+      units: [
+        { name: 'imageOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-20',
+    settings: {
       searchImpl: 'params',
       searchProvider: 'google',
     },

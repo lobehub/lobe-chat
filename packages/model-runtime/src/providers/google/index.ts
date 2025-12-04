@@ -38,6 +38,8 @@ const modelsWithModalities = new Set([
   'gemini-2.0-flash-preview-image-generation',
   'gemini-2.5-flash-image-preview',
   'gemini-2.5-flash-image',
+  'gemini-3-pro-image-preview',
+  'nano-banana-pro-preview',
 ]);
 
 const modelsDisableInstuction = new Set([
@@ -51,6 +53,11 @@ const modelsDisableInstuction = new Set([
   'gemma-3-12b-it',
   'gemma-3-27b-it',
   'gemma-3n-e4b-it',
+  // ZenMux
+  'google/gemini-2.5-flash-image-free',
+  'google/gemini-2.5-flash-image',
+  'google/gemini-3-pro-image-preview-free',
+  'google/gemini-3-pro-image-preview',
 ]);
 
 const PRO_THINKING_MIN = 128;
@@ -194,7 +201,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   async chat(rawPayload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const payload = this.buildPayload(rawPayload);
-      const { model, thinkingBudget, thinkingLevel } = payload;
+      const { model, thinkingBudget, thinkingLevel, imageAspectRatio, imageResolution } = payload;
 
       // https://ai.google.dev/gemini-api/docs/thinking#set-budget
       const resolvedThinkingBudget = resolveModelThinkingBudget(model, thinkingBudget);
@@ -202,7 +209,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const thinkingConfig: ThinkingConfig = {
         includeThoughts:
           (!!thinkingBudget ||
-            (model && (model.includes('-2.5-') || model.includes('thinking')))) &&
+            !!thinkingLevel ||
+            (model &&
+              (model.includes('-3-pro-image') ||
+                model.includes('nano-banana-pro') ||
+                model.includes('thinking')))) &&
           resolvedThinkingBudget !== 0
             ? true
             : undefined,
@@ -231,6 +242,13 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const config: GenerateContentConfig = {
         abortSignal: originalSignal,
+        imageConfig:
+          modelsWithModalities.has(model) && imageAspectRatio
+            ? {
+                aspectRatio: imageAspectRatio,
+                imageSize: imageResolution,
+              }
+            : undefined,
         maxOutputTokens: payload.max_tokens,
         responseModalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
         // avoid wide sensitive words

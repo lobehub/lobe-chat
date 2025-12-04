@@ -507,5 +507,52 @@ describe('FlatListBuilder', () => {
       expect(result[1].role).toBe('assistantGroup');
       expect(result[2].id).toBe('msg-3');
     });
+
+    it('should handle optimistic update for user message with branches', () => {
+      // Scenario: User has sent a new message, activeBranchIndex points to a branch
+      // that is being created but doesn't exist yet (optimistic update)
+      const messages: Message[] = [
+        {
+          content: 'User',
+          createdAt: 0,
+          id: 'msg-1',
+          meta: {},
+          // activeBranchIndex = 2 means pointing to a not-yet-created branch (optimistic update)
+          // when there are only 2 existing children (msg-2, msg-3)
+          metadata: { activeBranchIndex: 2 },
+          role: 'user',
+          updatedAt: 0,
+        },
+        {
+          content: 'Branch 1',
+          createdAt: 0,
+          id: 'msg-2',
+          meta: {},
+          parentId: 'msg-1',
+          role: 'assistant',
+          updatedAt: 0,
+        },
+        {
+          content: 'Branch 2',
+          createdAt: 0,
+          id: 'msg-3',
+          meta: {},
+          parentId: 'msg-1',
+          role: 'assistant',
+          updatedAt: 0,
+        },
+      ];
+
+      const builder = createBuilder(messages);
+      const result = builder.flatten(messages);
+
+      // When activeBranchIndex === children.length (optimistic update),
+      // BranchResolver returns undefined, and FlatListBuilder just adds the user message
+      // without branch info and doesn't continue to any branch
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('msg-1');
+      // User message should not have branch info since we're in optimistic update mode
+      expect((result[0] as any).siblingCount).toBeUndefined();
+    });
   });
 });

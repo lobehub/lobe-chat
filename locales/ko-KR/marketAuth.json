@@ -1,4 +1,15 @@
 {
+  "authorize": {
+    "cancel": "취소",
+    "confirm": "사용 권한 부여",
+    "description": {
+      "and": "및",
+      "prefix": "사용 권한 부여를 클릭하면 다음에 동의한 것으로 간주됩니다",
+      "privacy": "개인정보 처리방침",
+      "terms": "서비스 이용약관"
+    },
+    "title": "권한 확인"
+  },
   "callback": {
     "buttons": {
       "close": "창 닫기"
@@ -33,8 +44,10 @@
     "stateMissing": "인증 상태를 찾을 수 없습니다. 다시 시도해 주세요."
   },
   "messages": {
+    "authorized": "LobeHub 서비스가 성공적으로 인증되었습니다",
     "loading": "인증 절차를 시작하는 중입니다...",
     "success": {
+      "cloudMcpInstall": "권한 부여 완료! 이제 Cloud MCP 플러그인을 설치할 수 있습니다.",
       "submit": "인증 성공! 이제 어시스턴트를 게시할 수 있습니다.",
       "upload": "인증 성공! 이제 새 버전을 게시할 수 있습니다."
     }

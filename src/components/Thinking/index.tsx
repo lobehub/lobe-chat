@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AtomIcon } from 'lucide-react';
 import { rgba } from 'polished';
-import { CSSProperties, RefObject, memo, useEffect, useRef, useState } from 'react';
+import { CSSProperties, ReactNode, RefObject, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -76,7 +76,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface ThinkingProps {
   citations?: ChatCitationItem[];
-  content?: string;
+  content?: string | ReactNode;
   duration?: number;
   style?: CSSProperties;
   thinking?: boolean;
@@ -158,7 +158,7 @@ const Thinking = memo<ThinkingProps>((props) => {
           </Flexbox>
         )}
         <Flexbox gap={4} horizontal>
-          {showDetail && content && (
+          {showDetail && content && typeof content === 'string' && (
             <div
               onClick={(event) => {
                 event.stopPropagation();

@@ -241,9 +241,18 @@ describe('search actions', () => {
     it('should update arguments and perform search', async () => {
       const { result } = renderHook(() => useChatStore());
       const spy = vi.spyOn(result.current, 'search');
-      const { triggerSearchAgain } = result.current;
 
       const messageId = 'test-message-id';
+      const operationId = 'op_test';
+
+      // Set up messageOperationMap so triggerSearchAgain can get operationId
+      useChatStore.setState({
+        messageOperationMap: {
+          [messageId]: operationId,
+        },
+      });
+
+      const { triggerSearchAgain } = result.current;
       const query: SearchQuery = {
         query: 'test query',
       };
@@ -252,7 +261,12 @@ describe('search actions', () => {
         await triggerSearchAgain(messageId, query, { aiSummary: true });
       });
 
-      expect(result.current.optimisticUpdatePluginArguments).toHaveBeenCalledWith(messageId, query);
+      expect(result.current.optimisticUpdatePluginArguments).toHaveBeenCalledWith(
+        messageId,
+        query,
+        false,
+        { operationId },
+      );
       expect(spy).toHaveBeenCalledWith(messageId, query, true);
     });
   });

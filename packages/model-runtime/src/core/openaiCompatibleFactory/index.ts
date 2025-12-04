@@ -138,10 +138,10 @@ export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = 
     useToolsCalling?: boolean;
   };
   models?:
-  | ((params: { client: OpenAI }) => Promise<ChatModelCard[]>)
-  | {
-    transformModel?: (model: OpenAI.Model) => ChatModelCard;
-  };
+    | ((params: { client: OpenAI }) => Promise<ChatModelCard[]>)
+    | {
+        transformModel?: (model: OpenAI.Model) => ChatModelCard;
+      };
   provider: string;
   responses?: {
     handlePayload?: (
@@ -235,16 +235,43 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const log = debug(`${this.logPrefix}:shouldUseResponsesAPI`);
 
-      // Priority 1: User explicitly set apiMode via switch
-      if (userApiMode === 'responses') {
-        log('using Responses API: explicit userApiMode=%s', userApiMode);
+      // Priority 0: Check built-in responsesAPIModels FIRST (highest priority)
+      // These models MUST use Responses API regardless of user settings
+      if (model && responsesAPIModels.has(model)) {
+        log('using Responses API: model %s in built-in responsesAPIModels (forced)', model);
         return true;
       }
 
-      // Priority 2: userApiMode is explicitly set to something else
-      if (userApiMode !== undefined) {
+      // Priority 1: userApiMode is explicitly set to 'chatCompletion' (user disabled the switch)
+      if (userApiMode === 'chatCompletion') {
         log('using Chat Completions API: userApiMode=%s', userApiMode);
         return false;
+      }
+
+      // Priority 2: When user enables the switch (userApiMode === 'responses')
+      // Check if useResponseModels is configured - if so, only matching models use Responses API
+      // If useResponseModels is not configured, all models use Responses API
+      if (userApiMode === 'responses') {
+        if (model && flagUseResponseModels?.length) {
+          const matches = flagUseResponseModels.some((m: string | RegExp) =>
+            typeof m === 'string' ? model.includes(m) : (m as RegExp).test(model),
+          );
+          if (matches) {
+            log(
+              'using Responses API: userApiMode=responses and model %s matches useResponseModels',
+              model,
+            );
+            return true;
+          }
+          log(
+            'using Chat Completions API: userApiMode=responses but model %s does not match useResponseModels',
+            model,
+          );
+          return false;
+        }
+        // No useResponseModels configured, use Responses API for all models
+        log('using Responses API: userApiMode=responses (no useResponseModels filter)');
+        return true;
       }
 
       // Priority 3: Explicit responseApi flag
@@ -259,7 +286,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         return true;
       }
 
-      // Priority 5: Check if model matches useResponseModels patterns
+      // Priority 5: Check if model matches useResponseModels patterns (without user switch)
       if (model && flagUseResponseModels?.length) {
         const matches = flagUseResponseModels.some((m: string | RegExp) =>
           typeof m === 'string' ? model.includes(m) : (m as RegExp).test(model),
@@ -268,12 +295,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           log('using Responses API: model %s matches useResponseModels config', model);
           return true;
         }
-      }
-
-      // Priority 6: Check built-in responsesAPIModels
-      if (model && responsesAPIModels.has(model)) {
-        log('using Responses API: model %s in built-in responsesAPIModels', model);
-        return true;
       }
 
       log('using Chat Completions API for %s', context);
@@ -317,9 +338,9 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         const postPayload = chatCompletion?.handlePayload
           ? chatCompletion.handlePayload(processedPayload, this._options)
           : ({
-            ...processedPayload,
-            stream: processedPayload.stream ?? true,
-          } as OpenAI.ChatCompletionCreateParamsStreaming);
+              ...processedPayload,
+              stream: processedPayload.stream ?? true,
+            } as OpenAI.ChatCompletionCreateParamsStreaming);
 
         if ((postPayload as any).apiMode === 'responses') {
           return this.handleResponseAPIMode(processedPayload, options);
@@ -347,8 +368,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             this,
           ) as any;
         } else {
+          // Remove internal apiMode parameter before sending to API
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { apiMode: _, ...cleanedPayload } = postPayload as any;
           const finalPayload = {
-            ...postPayload,
+            ...cleanedPayload,
             messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
             stream_options:
@@ -364,11 +388,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             console.log(JSON.stringify(finalPayload), '\n');
           }
 
-          response = await this.client.chat.completions.create(finalPayload, {
+          response = (await this.client.chat.completions.create(finalPayload, {
             // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*', ...options?.requestHeaders },
             signal: options?.signal,
-          });
+          })) as unknown as Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
         }
 
         if (postPayload.stream) {
@@ -385,13 +409,13 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           return StreamingResponse(
             chatCompletion?.handleStream
               ? chatCompletion.handleStream(prod, {
-                callbacks: streamOptions.callbacks,
-                inputStartAt,
-              })
+                  callbacks: streamOptions.callbacks,
+                  inputStartAt,
+                })
               : OpenAIStream(prod, {
-                ...streamOptions,
-                inputStartAt,
-              }),
+                  ...streamOptions,
+                  inputStartAt,
+                }),
             {
               headers: options?.headers,
             },
@@ -415,9 +439,9 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         return StreamingResponse(
           chatCompletion?.handleStream
             ? chatCompletion.handleStream(stream, {
-              callbacks: streamOptions.callbacks,
-              inputStartAt,
-            })
+                callbacks: streamOptions.callbacks,
+                inputStartAt,
+              })
             : OpenAIStream(stream, { ...streamOptions, enableStreaming: false, inputStartAt }),
           {
             headers: options?.headers,
@@ -839,11 +863,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         ...res,
         ...(reasoning || reasoning_effort
           ? {
-            reasoning: {
-              ...reasoning,
-              ...(reasoning_effort && { effort: reasoning_effort }),
-            },
-          }
+              reasoning: {
+                ...reasoning,
+                ...(reasoning_effort && { effort: reasoning_effort }),
+              },
+            }
           : {}),
         input,
         ...(max_tokens && { max_output_tokens: max_tokens }),

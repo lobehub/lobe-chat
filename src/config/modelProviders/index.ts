@@ -65,6 +65,7 @@ import VolcengineProvider from './volcengine';
 import WenxinProvider from './wenxin';
 import XAIProvider from './xai';
 import XinferenceProvider from './xinference';
+import ZenMuxProvider from './zenmux';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -193,6 +194,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   CometAPIProvider,
   VercelAIGatewayProvider,
   CerebrasProvider,
+  ZenMuxProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -270,5 +272,6 @@ export { default as VolcengineProviderCard } from './volcengine';
 export { default as WenxinProviderCard } from './wenxin';
 export { default as XAIProviderCard } from './xai';
 export { default as XinferenceProviderCard } from './xinference';
+export { default as ZenMuxProviderCard } from './zenmux';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

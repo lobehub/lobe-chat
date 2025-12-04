@@ -14,6 +14,14 @@
     "images": "تصاویر:",
     "prompt": "کلمات کلیدی"
   },
+  "lobe-knowledge-base": {
+    "readKnowledge": {
+      "meta": {
+        "chars": "تعداد نویسه‌ها",
+        "lines": "تعداد خطوط"
+      }
+    }
+  },
   "localFiles": {
     "editFile": {
       "newString": "جایگزین با",

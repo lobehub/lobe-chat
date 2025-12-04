@@ -55,11 +55,11 @@
   },
   "documentList": {
     "copyContent": "全文をコピー",
-    "documentCount": "全{{count}}件のドキュメント",
     "duplicate": "複製を作成",
-    "empty": "ドキュメントがありません。上のボタンをクリックして最初のドキュメントを作成しましょう。",
-    "noResults": "一致するドキュメントが見つかりませんでした",
-    "selectNote": "ドキュメントを選択して編集を開始",
+    "empty": "まだ文書がありません。上のボタンをクリックして最初の文書を作成しましょう",
+    "noResults": "一致する文書が見つかりませんでした",
+    "pageCount": "全 {{count}} 件の文書",
+    "selectNote": "編集を始める文書を選択してください",
     "untitled": "無題"
   },
   "empty": "アップロードされたファイル/フォルダーはありません",
@@ -70,7 +70,6 @@
       "uploadFile": "ファイルをアップロード",
       "uploadFolder": "フォルダーをアップロード"
     },
-    "newDocumentButton": "新規ドキュメント",
     "newNoteDialog": {
       "cancel": "キャンセル",
       "editTitle": "ドキュメントを編集",
@@ -83,14 +82,15 @@
       "title": "新規ドキュメント",
       "updateSuccess": "ドキュメントを更新しました"
     },
+    "newPageButton": "新しいドキュメントを作成",
     "uploadButton": "アップロード"
   },
   "home": {
     "getStarted": "はじめに",
     "greeting": "はじめに",
     "quickActions": "クイック操作",
-    "recentDocuments": "最近のドキュメント",
     "recentFiles": "最近のファイル",
+    "recentPages": "最近のドキュメント",
     "subtitle": "ナレッジベースへようこそ。ここからドキュメントの管理を始めましょう。",
     "uploadEntries": {
       "files": {
@@ -102,8 +102,8 @@
       "knowledgeBase": {
         "title": "新しいナレッジベースを作成"
       },
-      "newDocument": {
-        "title": "新規ドキュメント"
+      "newPage": {
+        "title": "新規文書の作成"
       }
     }
   },
@@ -116,8 +116,8 @@
     "title": "知識ベース"
   },
   "menu": {
-    "allDocuments": "すべてのドキュメント",
-    "allFiles": "すべてのファイル"
+    "allFiles": "すべてのファイル",
+    "allPages": "すべてのドキュメント"
   },
   "networkError": "知識ベースの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
   "notSupportGuide": {
@@ -142,8 +142,8 @@
     "downloadFile": "ファイルをダウンロード",
     "unsupportedFileAndContact": "このファイル形式はオンラインプレビューをサポートしていません。プレビューのリクエストがある場合は、ぜひ<1>ご連絡ください</1>。"
   },
-  "searchDocumentPlaceholder": "ドキュメントを検索",
   "searchFilePlaceholder": "ファイルを検索",
+  "searchPagePlaceholder": "文書を検索",
   "tab": {
     "all": "すべて",
     "audios": "音声",
@@ -156,9 +156,7 @@
     "websites": "ウェブサイト"
   },
   "title": "ナレッジベース",
-  "toggleLeftPanel": {
-    "title": "左側パネルの表示/非表示"
-  },
+  "toggleLeftPanel": "左パネルの表示/非表示を切り替え",
   "uploadDock": {
     "body": {
       "collapse": "折りたたむ",

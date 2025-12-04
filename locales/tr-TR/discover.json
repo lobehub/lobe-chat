@@ -616,6 +616,7 @@
     "supportedProviders": "Bu modeli destekleyen sağlayıcılar"
   },
   "plugins": {
+    "builtinTag": "Yerleşik Eklenti",
     "community": "Topluluk Eklentisi",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "Eklenti Yükle",
     "installed": "Yüklü",
+    "legacyTag": "Eski Sürüm Eklenti",
     "list": "Eklenti Listesi",
     "meta": {
       "description": "Açıklama",

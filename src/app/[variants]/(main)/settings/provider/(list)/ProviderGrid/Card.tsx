@@ -33,9 +33,12 @@ const ProviderCard = memo<ProviderCardProps>(
     return (
       <Flexbox className={cx(styles.container)} gap={24}>
         <Flexbox gap={12} padding={16} width={'100%'}>
-          <div onClick={() => {
-            onProviderSelect(id);
-          }} style={{ cursor: 'pointer' }}>
+          <div
+            onClick={() => {
+              onProviderSelect(id);
+            }}
+            style={{ cursor: 'pointer' }}
+          >
             <Flexbox gap={12} width={'100%'}>
               <Flexbox align={'center'} horizontal justify={'space-between'}>
                 {source === 'builtin' ? (

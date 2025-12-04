@@ -18,12 +18,25 @@ export const params = {
     handlePayload: (payload: ChatStreamPayload) => {
       const { enabledSearch, messages, temperature, tools, ...rest } = payload;
 
-      // 为 assistant 空消息添加一个空格 (#8418)
-      const filteredMessages = messages.map((message) => {
+      const filteredMessages = messages.map((message: any) => {
+        let normalizedMessage = message;
+
+        // 为 assistant 空消息添加一个空格 (#8418)
         if (message.role === 'assistant' && (!message.content || message.content === '')) {
-          return { ...message, content: ' ' };
+          normalizedMessage = { ...normalizedMessage, content: ' ' };
         }
-        return message;
+
+        // Interleaved thinking
+        if (message.role === 'assistant' && message.reasoning) {
+          const { reasoning, ...messageWithoutReasoning } = normalizedMessage;
+          return {
+            ...messageWithoutReasoning,
+            ...(!reasoning.signature && reasoning.content
+              ? { reasoning_content: reasoning.content }
+              : {}),
+          };
+        }
+        return normalizedMessage;
       });
 
       const moonshotTools = enabledSearch
