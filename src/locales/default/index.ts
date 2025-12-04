@@ -16,6 +16,7 @@ import image from './image';
 import knowledgeBase from './knowledgeBase';
 import labs from './labs';
 import marketAuth from './marketAuth';
+import memory from './memory';
 import metadata from './metadata';
 import migration from './migration';
 import modelProvider from './modelProvider';
@@ -51,6 +52,7 @@ const resources = {
   knowledgeBase,
   labs,
   marketAuth,
+  memory,
   metadata,
   migration,
   modelProvider,
