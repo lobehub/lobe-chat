@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
@@ -14,7 +13,6 @@ import { useSessionStore } from '@/store/session';
 import ListItem from '../ListItem';
 
 const Inbox = memo(() => {
-  const { t } = useTranslation('chat');
   const mobile = useServerConfigStore((s) => s.isMobile);
   const activeId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
@@ -23,7 +21,7 @@ const Inbox = memo(() => {
 
   return (
     <Link
-      aria-label={t('inbox.title')}
+      aria-label={'Lobe AI'}
       onClick={async (e) => {
         e.preventDefault();
         if (activeId === INBOX_SESSION_ID && !mobile) {
@@ -52,7 +50,7 @@ const Inbox = memo(() => {
             maskImage: `linear-gradient(90deg, #000 90%, transparent)`,
           },
         }}
-        title={t('inbox.title')}
+        title={'Lobe AI'}
       />
     </Link>
   );
