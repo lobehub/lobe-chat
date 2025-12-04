@@ -11,6 +11,11 @@ import {
   uploadFileListReducer,
 } from '@/store/file/reducers/uploadFileList';
 import { FileListItem, QueryFileListParams } from '@/types/files';
+import {
+  buildFolderTree,
+  sanitizeFolderName,
+  topologicalSortFolders,
+} from '@/utils/folderStructure';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { unzipFile } from '@/utils/unzipFile';
 
@@ -45,6 +50,12 @@ export interface FileManageAction {
 
   toggleEmbeddingIds: (ids: string[], loading?: boolean) => void;
   toggleParsingIds: (ids: string[], loading?: boolean) => void;
+
+  uploadFolderWithStructure: (
+    files: File[],
+    knowledgeBaseId?: string,
+    currentFolderId?: string,
+  ) => Promise<void>;
 
   useFetchFolderBreadcrumb: (slug?: string | null) => SWRResponse<FolderCrumb[]>;
   useFetchKnowledgeItem: (id?: string) => SWRResponse<FileListItem | undefined>;
@@ -255,6 +266,90 @@ export const createFileManageSlice: StateCreator<
 
       return { creatingChunkingTaskIds: Array.from(nextValue.values()) };
     });
+  },
+
+  uploadFolderWithStructure: async (files, knowledgeBaseId, currentFolderId) => {
+    const { dispatchDockFileList } = get();
+
+    // 1. Build folder tree from file paths
+    const { filesByFolder, folders } = buildFolderTree(files);
+
+    // 2. Sort folders by depth to ensure parents are created before children
+    const sortedFolderPaths = topologicalSortFolders(folders);
+
+    // Map to store created folder IDs: relative path -> folder ID
+    const folderIdMap = new Map<string, string>();
+
+    // 3. Create all folders sequentially (maintaining hierarchy)
+    for (const folderPath of sortedFolderPaths) {
+      const folder = folders[folderPath];
+
+      // Determine parent ID: either from previously created folder or current folder
+      const parentId = folder.parent ? folderIdMap.get(folder.parent) : currentFolderId;
+
+      // Sanitize folder name to remove invalid characters
+      const sanitizedName = sanitizeFolderName(folder.name);
+
+      // Create folder
+      const folderId = await get().createFolder(sanitizedName, parentId, knowledgeBaseId);
+
+      // Store mapping for child folders
+      folderIdMap.set(folderPath, folderId);
+    }
+
+    // 4. Prepare all file uploads with their target folder IDs
+    const allUploads: Array<{ file: File; parentId: string | undefined }> = [];
+
+    for (const [folderPath, folderFiles] of Object.entries(filesByFolder)) {
+      // Root-level files (no folder path) go to currentFolderId
+      const targetFolderId = folderPath ? folderIdMap.get(folderPath) : currentFolderId;
+
+      allUploads.push(
+        ...folderFiles.map((file) => ({
+          file,
+          parentId: targetFolderId,
+        })),
+      );
+    }
+
+    // 5. Filter out blacklisted files
+    const validUploads = allUploads.filter(
+      ({ file }) => !FILE_UPLOAD_BLACKLIST.includes(file.name),
+    );
+
+    // 6. Add all files to dock
+    dispatchDockFileList({
+      atStart: true,
+      files: validUploads.map(({ file }) => ({ file, id: file.name, status: 'pending' })),
+      type: 'addFiles',
+    });
+
+    // 7. Upload files with concurrency limit
+    const uploadResults = await pMap(
+      validUploads,
+      async ({ file, parentId }) => {
+        const result = await get().uploadWithProgress({
+          file,
+          knowledgeBaseId,
+          onStatusUpdate: dispatchDockFileList,
+          parentId,
+        });
+
+        await get().refreshFileList();
+
+        return { file, fileId: result?.id, fileType: file.type };
+      },
+      { concurrency: MAX_UPLOAD_FILE_COUNT },
+    );
+
+    // 8. Auto-embed files that support chunking
+    const fileIdsToEmbed = uploadResults
+      .filter(({ fileType, fileId }) => fileId && !isChunkingUnsupported(fileType))
+      .map(({ fileId }) => fileId!);
+
+    if (fileIdsToEmbed.length > 0) {
+      await get().parseFilesToChunks(fileIdsToEmbed, { skipExist: false });
+    }
   },
 
   useFetchFolderBreadcrumb: (slug) =>
