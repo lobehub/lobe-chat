@@ -17,7 +17,7 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
-export const useCategory = () => {
+export const useCategory = (onOpenChangelogModal: () => void) => {
   const navigate = useNavigate();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
@@ -81,7 +81,7 @@ export const useCategory = () => {
       icon: FileClockIcon,
       key: 'changelog',
       label: t('changelog'),
-      onClick: () => navigate('/changelog'),
+      onClick: onOpenChangelogModal,
     },
   ].filter(Boolean) as CellProps[];
 
