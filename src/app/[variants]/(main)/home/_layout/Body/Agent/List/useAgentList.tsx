@@ -4,6 +4,8 @@ import isEqual from 'fast-deep-equal';
 import { useMemo } from 'react';
 
 import { useFetchSessions } from '@/hooks/useFetchSessions';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/slices/session/selectors';
 import { LobeAgentSession, LobeSessionType, LobeSessions } from '@/types/session';
@@ -15,10 +17,16 @@ const filterSessionsForView = (sessions: LobeSessions): LobeSessions => {
   return sessions.filter((session) => !shouldHideSession(session));
 };
 
-export const useAgentList = () => {
+export const useAgentList = (limitDefault = true) => {
   useFetchSessions();
 
-  const defaultSessions = useSessionStore(sessionSelectors.defaultSessions, isEqual);
+  const agentPageSize = useGlobalStore(systemStatusSelectors.agentPageSize);
+  const defaultSessions = useSessionStore(
+    limitDefault
+      ? sessionSelectors.defaultSessionsLimited(agentPageSize)
+      : sessionSelectors.defaultSessions,
+    isEqual,
+  );
   const customSessionGroups = useSessionStore(sessionSelectors.customSessionGroups, isEqual);
   const pinnedSessions = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
 
