@@ -1,3 +1,4 @@
+import { SESSION_CHAT_URL } from '@lobechat/const';
 import { useAnalytics } from '@lobehub/analytics/react';
 import { Empty } from 'antd';
 import { createStyles } from 'antd-style';
@@ -7,8 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 import LazyLoad from 'react-lazy-load';
 
-import { SESSION_CHAT_URL } from '@/const/url';
-import { useSwitchSession } from '@/hooks/useSwitchSession';
+import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { getSessionStoreState, useSessionStore } from '@/store/session';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -39,7 +39,7 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
   const mobile = useServerConfigStore((s) => s.isMobile);
 
-  const switchSession = useSwitchSession();
+  const navigateToAgent = useNavigateToAgent();
 
   const isEmpty = !dataSource || dataSource.length === 0;
   return !isInit ? (
@@ -52,7 +52,7 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
           href={SESSION_CHAT_URL(id, mobile)}
           onClick={(e) => {
             e.preventDefault();
-            switchSession(id);
+            navigateToAgent(id);
 
             // Enhanced analytics tracking
             if (analytics) {
