@@ -145,15 +145,6 @@ export const UpdateNotificationContent = memo(
       };
     }, [durationMs, isHovered, onAutoClose]);
 
-    useEffect(() => {
-      return () => {
-        if (timerRef.current) {
-          window.clearInterval(timerRef.current);
-          timerRef.current = null;
-        }
-      };
-    }, []);
-
     return (
       <div
         onMouseEnter={() => setIsHovered(true)}
