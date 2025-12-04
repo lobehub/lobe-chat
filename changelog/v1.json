@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Limit check-user response surface."]
+    },
+    "date": "2025-12-04",
+    "version": "2.0.0-next.158"
+  },
+  {
+    "children": {
       "improvements": ["Update Spark X1.5 model."]
     },
     "date": "2025-12-04",
