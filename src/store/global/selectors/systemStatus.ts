@@ -9,7 +9,7 @@ const topicGroupKeys = (s: GlobalState): string[] | undefined => s.status.expand
 
 const topicPageSize = (s: GlobalState): number => s.status.topicPageSize || 20;
 
-const agentPageSize = (s: GlobalState): number => s.status.agentPageSize || 20;
+const agentPageSize = (s: GlobalState): number => s.status.agentPageSize || 10;
 
 const showSystemRole = (s: GlobalState) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalState) => s.status.mobileShowTopic;

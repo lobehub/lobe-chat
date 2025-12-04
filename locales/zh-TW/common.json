@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "助理",
-    "library": "資料庫"
+    "displayItems": "顯示項目",
+    "library": "資料庫",
+    "searchAgent": "搜尋助手...",
+    "searchResultEmpty": "暫無搜尋結果"
   },
   "new": "新增",
   "oauth": "單一登錄（SSO）",
@@ -373,6 +376,7 @@
     "home": "首頁",
     "knowledgeBase": "知識庫",
     "me": "我",
+    "memory": "記憶",
     "pages": "文稿",
     "resource": "資源",
     "search": "搜尋",

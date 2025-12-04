@@ -338,6 +338,8 @@
       "installed": "Installed"
     },
     "config": {
+      "addEnv": "Add Environment Variable",
+      "addHeaders": "Add Request Header",
       "args": "Arguments",
       "command": "Command",
       "env": "Environment Variables",
@@ -357,6 +359,9 @@
         "title": "⚠️ Security Risk Warning"
       },
       "title": "Install Custom Plugin"
+    },
+    "install": {
+      "title": "Installation Information"
     },
     "marketplace": {
       "title": "Install Third-Party Plugin",

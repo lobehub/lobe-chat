@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "Asistan",
-    "library": "Kütüphane"
+    "displayItems": "Öğeleri Göster",
+    "library": "Kütüphane",
+    "searchAgent": "Asistan Ara...",
+    "searchResultEmpty": "Arama sonucu bulunamadı"
   },
   "new": "Yeni",
   "oauth": "SSO Girişi",
@@ -373,6 +376,7 @@
     "home": "Ana Sayfa",
     "knowledgeBase": "Bilgi Tabanı",
     "me": "ben",
+    "memory": "Hafıza",
     "pages": "Belgeler",
     "resource": "Kaynaklar",
     "search": "Ara",

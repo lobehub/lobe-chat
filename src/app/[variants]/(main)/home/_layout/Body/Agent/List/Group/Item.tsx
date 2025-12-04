@@ -5,10 +5,10 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SessionList from '@/app/[variants]/(main)/home/_layout/Body/Agent/List/List';
-import { useCreateMenuItems, useSessionGroupMenuItems } from '@/features/NavPanel/hooks';
 import { useSessionStore } from '@/store/session';
 import { CustomSessionGroup } from '@/types/session';
 
+import { useCreateMenuItems, useSessionGroupMenuItems } from '../../../../hooks';
 import { useAgentModal } from '../../ModalProvider';
 import Actions from './Actions';
 import Editing from './Editing';

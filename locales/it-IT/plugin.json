@@ -338,6 +338,8 @@
       "installed": "Installato"
     },
     "config": {
+      "addEnv": "Aggiungi variabile d'ambiente",
+      "addHeaders": "Aggiungi intestazioni della richiesta",
       "args": "Parametri",
       "command": "Comando",
       "env": "Variabili d'ambiente",
@@ -357,6 +359,9 @@
         "title": "⚠️ Avviso di rischio sicurezza"
       },
       "title": "Installa plugin personalizzato"
+    },
+    "install": {
+      "title": "Informazioni di installazione"
     },
     "marketplace": {
       "title": "Installa plugin di terze parti",

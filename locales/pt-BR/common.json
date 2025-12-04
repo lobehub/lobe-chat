@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "Assistente",
-    "library": "Biblioteca"
+    "displayItems": "Exibir itens",
+    "library": "Biblioteca",
+    "searchAgent": "Buscar assistente...",
+    "searchResultEmpty": "Nenhum resultado encontrado"
   },
   "new": "Novo",
   "oauth": "Login SSO",
@@ -373,6 +376,7 @@
     "home": "Início",
     "knowledgeBase": "Base de Conhecimento",
     "me": "eu",
+    "memory": "Memória",
     "pages": "Documentos",
     "resource": "Recursos",
     "search": "Pesquisar",

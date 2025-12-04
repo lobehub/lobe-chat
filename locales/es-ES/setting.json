@@ -97,7 +97,7 @@
     "desc": "Preferencias y configuración del modelo.",
     "global": "Configuración global",
     "group": "Configuración del equipo",
-    "groupDesc": "Gestiona el equipo de agentes y las preferencias de chat",
+    "groupDesc": "Gestiona grupos y preferencias de chat",
     "session": "Configuración de la sesión",
     "sessionDesc": "Configuración de roles y preferencias de sesión.",
     "sessionWithName": "Configuración de la sesión · {{name}}",
@@ -437,7 +437,7 @@
       "placeholder": "Por favor, ingrese la indicación del sistema para el anfitrión",
       "title": "Indicación del sistema para el anfitrión"
     },
-    "title": "Información del equipo de agentes"
+    "title": "Información del grupo"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -445,7 +445,7 @@
       "title": "Permitir mensajes directos del asistente"
     },
     "enableSupervisor": {
-      "desc": "Habilita la función de moderador del equipo de agentes. El moderador gestionará el flujo de conversación del equipo",
+      "desc": "Activa la función de moderador del grupo; el moderador gestionará el flujo de conversación del equipo",
       "title": "Activar moderador"
     },
     "maxResponseInRow": {

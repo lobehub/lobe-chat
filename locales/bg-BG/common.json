@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "Асистент",
-    "library": "Библиотека"
+    "displayItems": "Показване на елементи",
+    "library": "Библиотека",
+    "searchAgent": "Търсене на асистент...",
+    "searchResultEmpty": "Няма намерени резултати"
   },
   "new": "Нов",
   "oauth": "SSO Вход",
@@ -373,6 +376,7 @@
     "home": "Начало",
     "knowledgeBase": "База знания",
     "me": "аз",
+    "memory": "Памет",
     "pages": "Документи",
     "resource": "Ресурси",
     "search": "Търсене",

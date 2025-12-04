@@ -77,7 +77,7 @@ export const useChatListActionsBar = ({
       copy: {
         icon: Copy,
         key: 'copy',
-        label: t('copy', { defaultValue: 'Copy' }),
+        label: t('copy'),
       },
       del: {
         danger: true,

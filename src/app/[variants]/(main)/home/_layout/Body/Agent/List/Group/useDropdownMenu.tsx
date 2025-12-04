@@ -1,8 +1,9 @@
 import { type MenuProps } from '@lobehub/ui';
 import { useMemo } from 'react';
 
-import { useCreateMenuItems, useSessionGroupMenuItems } from '@/features/NavPanel/hooks';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
+import { useCreateMenuItems, useSessionGroupMenuItems } from '../../../../hooks';
 
 interface GroupDropdownMenuProps {
   handleOpenMemberSelection: () => void;

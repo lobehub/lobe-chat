@@ -97,7 +97,7 @@
     "desc": "偏好與模型設定",
     "global": "全域設定",
     "group": "團隊設定",
-    "groupDesc": "管理 Agent 團隊與聊天偏好",
+    "groupDesc": "管理群組與聊天偏好",
     "session": "對話設定",
     "sessionDesc": "角色設定與會話偏好",
     "sessionWithName": "對話設定 · {{name}}",
@@ -437,7 +437,7 @@
       "placeholder": "請輸入主持人系統提示詞",
       "title": "主持人系統提示詞"
     },
-    "title": "Agent 團隊資訊"
+    "title": "群組資訊"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -445,7 +445,7 @@
       "title": "允許助手發送私訊"
     },
     "enableSupervisor": {
-      "desc": "啟用 Agent 團隊主持人功能，主持人將管理團隊對話流程",
+      "desc": "啟用群組主持人功能，主持人將管理團隊對話流程",
       "title": "啟用主持人"
     },
     "maxResponseInRow": {

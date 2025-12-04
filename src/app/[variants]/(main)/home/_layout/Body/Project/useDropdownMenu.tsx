@@ -1,7 +1,7 @@
 import { type MenuProps } from '@lobehub/ui';
 import { useMemo } from 'react';
 
-import { useProjectMenuItems } from '@/features/NavPanel/hooks';
+import { useProjectMenuItems } from '../../hooks';
 
 export const useProjectActionsDropdownMenu = (): MenuProps['items'] => {
   const { createProjectMenuItem } = useProjectMenuItems();

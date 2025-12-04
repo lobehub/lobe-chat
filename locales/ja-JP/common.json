@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "アシスタント",
-    "library": "ライブラリ"
+    "displayItems": "項目を表示",
+    "library": "ライブラリ",
+    "searchAgent": "アシスタントを検索...",
+    "searchResultEmpty": "検索結果がありません"
   },
   "new": "新規",
   "oauth": "SSO ログイン",
@@ -373,6 +376,7 @@
     "home": "ホーム",
     "knowledgeBase": "ナレッジベース",
     "me": "私",
+    "memory": "メモリー",
     "pages": "ドキュメント",
     "resource": "リソース",
     "search": "検索",

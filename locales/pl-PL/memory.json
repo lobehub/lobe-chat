@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "Brak zapisanych tożsamości",
+    "filter": {
+      "search": "Szukaj roli, relacji lub opisu...",
+      "type": {
+        "all": "Wszystkie",
+        "demographic": "Demograficzne",
+        "personal": "Osobiste",
+        "professional": "Zawodowe"
+      }
+    },
+    "list": {
+      "confirmDelete": "Potwierdź usunięcie",
+      "deleteCancel": "Anuluj",
+      "deleteContent": "Czy na pewno chcesz usunąć tę tożsamość? Tej operacji nie można cofnąć.",
+      "deleteOk": "Usuń",
+      "noResults": "Nie znaleziono pasujących tożsamości",
+      "updated": "Zaktualizowano"
+    },
+    "roleCloud": {
+      "collapse": "Zwiń",
+      "expand": "Pokaż więcej"
+    },
+    "view": {
+      "list": "Lista",
+      "timeline": "Oś czasu"
+    }
+  },
+  "loading": "Ładowanie..."
+}

@@ -97,7 +97,7 @@
     "desc": "Preferenze e impostazioni del modello.",
     "global": "Impostazioni globali",
     "group": "Impostazioni del Team",
-    "groupDesc": "Gestisci il team di agenti e le preferenze di chat",
+    "groupDesc": "Gestisci gruppi e preferenze di chat",
     "session": "Impostazioni della sessione",
     "sessionDesc": "Impostazioni del personaggio e preferenze di sessione.",
     "sessionWithName": "Impostazioni della sessione · {{name}}",
@@ -437,7 +437,7 @@
       "placeholder": "Inserisci il prompt di sistema del moderatore",
       "title": "Prompt di sistema del moderatore"
     },
-    "title": "Informazioni sul Team di Agenti"
+    "title": "Informazioni sul gruppo"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -445,7 +445,7 @@
       "title": "Consenti messaggi privati dall'assistente"
     },
     "enableSupervisor": {
-      "desc": "Abilita la funzione di supervisore del team di agenti. Il supervisore gestirà il flusso delle conversazioni del team",
+      "desc": "Abilita la funzione di moderatore del gruppo; il moderatore gestirà il flusso della conversazione del team",
       "title": "Attiva moderatore"
     },
     "maxResponseInRow": {

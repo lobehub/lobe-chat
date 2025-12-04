@@ -338,6 +338,8 @@
       "installed": "Zainstalowano"
     },
     "config": {
+      "addEnv": "Dodaj zmienną środowiskową",
+      "addHeaders": "Dodaj nagłówki żądania",
       "args": "Argumenty",
       "command": "Polecenie",
       "env": "Zmienne środowiskowe",
@@ -357,6 +359,9 @@
         "title": "⚠️ Ostrzeżenie o ryzyku bezpieczeństwa"
       },
       "title": "Zainstaluj wtyczkę niestandardową"
+    },
+    "install": {
+      "title": "Informacje o instalacji"
     },
     "marketplace": {
       "title": "Zainstaluj wtyczki zewnętrzne",

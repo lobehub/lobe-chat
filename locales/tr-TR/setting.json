@@ -97,7 +97,7 @@
     "desc": "Tercihler ve model ayarları.",
     "global": "Genel Ayarlar",
     "group": "Takım Ayarları",
-    "groupDesc": "Agent takımını ve sohbet tercihlerini yönetin",
+    "groupDesc": "Grupları ve sohbet tercihlerini yönetin",
     "session": "Oturum Ayarları",
     "sessionDesc": "Karakter ayarları ve oturum tercihleri.",
     "sessionWithName": "Oturum Ayarları · {{name}}",
@@ -437,7 +437,7 @@
       "placeholder": "Lütfen moderatör sistem istemini girin",
       "title": "Moderatör Sistem İstemi"
     },
-    "title": "Agent Takım Bilgileri"
+    "title": "Grup Bilgileri"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -445,7 +445,7 @@
       "title": "Asistanların özel mesaj göndermesine izin ver"
     },
     "enableSupervisor": {
-      "desc": "Agent takım moderatörünü etkinleştir, moderatör takım sohbet sürecini yönetecektir",
+      "desc": "Grup moderatörü özelliğini etkinleştirerek, moderatörün ekip sohbet sürecini yönetmesini sağlayın",
       "title": "Moderatörü etkinleştir"
     },
     "maxResponseInRow": {

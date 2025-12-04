@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "المساعد",
-    "library": "المكتبة"
+    "displayItems": "عرض العناصر",
+    "library": "المكتبة",
+    "searchAgent": "بحث عن مساعد...",
+    "searchResultEmpty": "لا توجد نتائج بحث"
   },
   "new": "جديد",
   "oauth": "تسجيل الدخول SSO",
@@ -373,6 +376,7 @@
     "home": "الصفحة الرئيسية",
     "knowledgeBase": "قاعدة المعرفة",
     "me": "أنا",
+    "memory": "الذاكرة",
     "pages": "المستندات",
     "resource": "الموارد",
     "search": "البحث",

@@ -192,6 +192,159 @@
       }
     },
     "groupMessage": "Benvenuto nella chat di gruppo! Collabora con più assistenti AI in uno spazio di conversazione condiviso.",
+    "groupTemplates": {
+      "analysis": {
+        "description": "Intuizioni guidate dai dati, analisi approfondite",
+        "members": [
+          {
+            "avatar": "📊",
+            "backgroundColor": "#E8F8F5",
+            "plugins": ["steam"],
+            "systemRole": "Sei esperto nell'elaborazione e interpretazione dei dati, rivelando schemi e tendenze attraverso grafici e analisi statistiche.",
+            "title": "Analista dei dati"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sei un esperto di ricerca, specializzato nella raccolta di informazioni e nell'analisi approfondita da molteplici prospettive.",
+            "title": "Esperto di ricerca"
+          },
+          {
+            "avatar": "📈",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Sei uno statistico esperto, padroneggi metodi e modelli statistici per estrarre preziose intuizioni commerciali dai dati.",
+            "title": "Esperto di statistica"
+          },
+          {
+            "avatar": "🧮",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "Sei un analista quantitativo, specializzato in modellazione quantitativa e valutazione del rischio, risolvendo problemi complessi con metodi matematici.",
+            "title": "Analista quantitativo"
+          }
+        ],
+        "title": "Squadra di analisi"
+      },
+      "brainstorm": {
+        "description": "Pensiero creativo da più prospettive, ispirazione senza limiti",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sei un direttore creativo, abile nel guidare la direzione creativa da una prospettiva macro, trasformando concetti astratti in idee concrete e realizzabili.",
+            "title": "Direttore creativo"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Sei un esperto di innovazione, specializzato nel trovare soluzioni originali e pensieri rivoluzionari, capace di pensare fuori dagli schemi.",
+            "title": "Esperto di innovazione"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sei un esperto di design thinking, affronti i problemi dal punto di vista dell’esperienza utente e della presentazione visiva, valorizzando l’espressione creativa visiva.",
+            "title": "Esperto di design thinking"
+          }
+        ],
+        "title": "Gruppo di brainstorming"
+      },
+      "game": {
+        "description": "Divertiti con giochi di parole multiplayer come Lupus in Tabula e Chi è la spia",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sei un presentatore, esperto nell'organizzare giochi di parole multiplayer e nel guidare i giocatori durante il gioco.",
+            "title": "Presentatore di giochi"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Sei esperto nel partecipare a giochi di parole multiplayer, seguendo le regole del gioco.",
+            "title": "Giocatore"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sei esperto nel partecipare a giochi di parole multiplayer, seguendo le regole del gioco.",
+            "title": "Giocatore"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sei esperto nel partecipare a giochi di parole multiplayer, seguendo le regole del gioco.",
+            "title": "Giocatore"
+          }
+        ],
+        "title": "Sala giochi"
+      },
+      "planning": {
+        "description": "Pianificazione strategica e gestione dei progetti, visione d’insieme",
+        "members": [
+          {
+            "avatar": "📋",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sei responsabile della pianificazione generale del progetto, del controllo dei tempi e del coordinamento delle risorse, garantendo il completamento puntuale e di qualità.",
+            "title": "Chef"
+          },
+          {
+            "avatar": "🎯",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Sei responsabile della pianificazione strategica a lungo termine, analizzando le opportunità di mercato e definendo obiettivi e percorsi per raggiungerli.",
+            "title": "Esperto in approvvigionamento"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "Sei responsabile della definizione di piani esecutivi dettagliati, coordinando le risorse tra i reparti per garantire la fattibilità del piano.",
+            "title": "Esperto in sviluppo gastronomico"
+          }
+        ],
+        "title": "Team di sviluppo gastronomico"
+      },
+      "product": {
+        "description": "Progettazione e sviluppo del prodotto, per creare prodotti di qualità",
+        "members": [
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sei un designer, esperto nella progettazione di vari tipi di prodotti, in grado di progettare in base alle esigenze del prodotto.",
+            "title": "Designer"
+          },
+          {
+            "avatar": "🧑",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Sei un product manager, responsabile della pianificazione, progettazione, sviluppo e manutenzione del prodotto, garantendo qualità ed esperienza utente.",
+            "title": "Product Manager"
+          },
+          {
+            "avatar": "🧑‍💻",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Sei un ingegnere full-stack esperto, abile nello sviluppo di diversi tipi di prodotti, in grado di sviluppare in base alle esigenze del prodotto.",
+            "title": "Ingegnere full-stack"
+          }
+        ],
+        "title": "Team di sviluppo prodotto"
+      },
+      "writing": {
+        "description": "Creazione e revisione di contenuti, per testi di alta qualità",
+        "members": [
+          {
+            "avatar": "✍️",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Sei esperto nella scrittura di contenuti in vari stili, capace di adattare il tono in base al contesto e al pubblico.",
+            "title": "Copywriter"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Sei un editor, responsabile della correzione, revisione e ottimizzazione dei testi, garantendo accuratezza, fluidità e professionalità.",
+            "title": "Editor"
+          }
+        ],
+        "title": "Cerchia di scrittura"
+      }
+    },
     "questions": {
       "moreBtn": "Scopri di più",
       "title": "Prova a chiedere:"
