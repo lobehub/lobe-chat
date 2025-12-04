@@ -53,6 +53,7 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
 
   const handleOpenGroupWizard = useCallback(() => {
     openGroupWizardModal({
+      isCreatingFromTemplate: isLoading,
       onCancel: closeGroupWizardModal,
       onCreateCustom: handleGroupWizardCreateCustom,
       onCreateFromTemplate: handleGroupWizardCreateFromTemplate,
@@ -62,6 +63,7 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
     closeGroupWizardModal,
     handleGroupWizardCreateFromTemplate,
     handleGroupWizardCreateCustom,
+    isLoading,
   ]);
 
   const handleOpenConfigGroupModal = useCallback(() => {

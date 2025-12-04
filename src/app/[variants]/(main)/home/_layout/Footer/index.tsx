@@ -97,24 +97,23 @@ const Footer = memo(() => {
     <>
       <Flexbox align={'center'} gap={2} horizontal justify={'space-between'} padding={8}>
         <Flexbox align={'center'} flex={1} gap={2} horizontal>
+          <Dropdown
+            menu={{
+              items: helpMenuItems,
+            }}
+            placement="topLeft"
+            trigger={['click']}
+          >
+            <ActionIcon aria-label={t('userPanel.help')} icon={CircleHelp} size={16} />
+          </Dropdown>
           {!hideGitHub && (
             <a aria-label={'GitHub'} href={GITHUB} rel="noopener noreferrer" target={'_blank'}>
               <ActionIcon icon={Github} size={16} title={'GitHub'} />
             </a>
           )}
-          <Dropdown
-            menu={{
-              items: helpMenuItems,
-            }}
-            placement="topRight"
-            trigger={['click']}
-          >
-            <ActionIcon aria-label={t('userPanel.help')} icon={CircleHelp} size={16} />
-          </Dropdown>
         </Flexbox>
         <ThemeButton placement={'top'} size={16} />
       </Flexbox>
-
       <LabsModal onClose={handleCloseLabsModal} open={isLabsModalOpen} />
       <ChangelogModal onClose={handleCloseChangelogModal} open={isChangelogModalOpen} />
     </>
