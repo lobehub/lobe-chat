@@ -98,6 +98,11 @@ export default function BetterAuthSignUpForm() {
           return;
         }
 
+        if (error.code === 'INVALID_EMAIL') {
+          message.error(t('betterAuth.errors.emailInvalid'));
+          return;
+        }
+
         message.error(error.message || t('betterAuth.signup.error'));
         return;
       }
