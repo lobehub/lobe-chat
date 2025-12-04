@@ -5,7 +5,7 @@ import { Loader2Icon } from 'lucide-react';
 import React, { CSSProperties, memo, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import RepoIcon from '@/components/RepoIcon';
+import RepoIcon from '@/components/LibIcon';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
