@@ -187,25 +187,32 @@ export const topicRouter = router({
         }
 
         // 2. 获取 Code Interpreter 插件生成的文件 ID（存储在消息 content JSON 中）
-        for (const message of topicMessages) {
-          // 查找该消息对应的 plugin 信息
-          const plugin = await ctx.serverDB.query.messagePlugins.findFirst({
-            where: (messagePlugins, { eq }) => eq(messagePlugins.id, message.id),
+        const messageIds = topicMessages.map((m) => m.id);
+        if (messageIds.length > 0) {
+          // 批量获取所有消息的 plugin 信息
+          const plugins = await ctx.serverDB.query.messagePlugins.findMany({
+            where: (messagePlugins, { inArray }) => inArray(messagePlugins.id, messageIds),
           });
 
-          // 检查是否为 Code Interpreter 插件
-          if (plugin?.identifier === CODE_INTERPRETER_IDENTIFIER && message.content) {
-            try {
-              const result: CodeInterpreterResponse = JSON.parse(message.content);
-              if (result.files) {
-                for (const file of result.files) {
-                  if (file.fileId && !filesToDelete.includes(file.fileId)) {
-                    filesToDelete.push(file.fileId);
+          const pluginMap = new Map(plugins.map((p) => [p.id, p]));
+
+          for (const message of topicMessages) {
+            const plugin = pluginMap.get(message.id);
+
+            // 检查是否为 Code Interpreter 插件
+            if (plugin?.identifier === CODE_INTERPRETER_IDENTIFIER && message.content) {
+              try {
+                const result: CodeInterpreterResponse = JSON.parse(message.content);
+                if (result.files) {
+                  for (const file of result.files) {
+                    if (file.fileId && !filesToDelete.includes(file.fileId)) {
+                      filesToDelete.push(file.fileId);
+                    }
                   }
                 }
+              } catch {
+                // 解析失败则跳过
               }
-            } catch {
-              // 解析失败则跳过
             }
           }
         }
