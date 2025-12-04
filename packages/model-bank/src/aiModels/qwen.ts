@@ -109,6 +109,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -131,6 +132,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description: 'DeepSeek V3.1 模型为混合推理架构模型，同时支持思考模式与非思考模式。',
@@ -151,6 +153,32 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'kimi-k2-thinking模型是月之暗面提供的具有通用 Agentic能力和推理能力的思考模型，它擅长深度推理，并可通过多步工具调用，帮助解决各类难题。',
+    displayName: 'Kimi K2 Thinking',
+    id: 'kimi-k2-thinking',
+    maxOutput: 16_384,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-10',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       search: true,
     },
     contextWindowTokens: 131_072,
@@ -159,7 +187,6 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Kimi K2 Instruct',
     id: 'Moonshot-Kimi-K2-Instruct',
     maxOutput: 8192,
-    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       units: [
@@ -310,7 +337,7 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     config: {
-      deploymentName: 'qwen3-coder-plus', // 支持上下文缓存
+      deploymentName: 'qwen3-coder-plus', // Supports context caching
     },
     contextWindowTokens: 1_000_000,
     description:
@@ -373,7 +400,7 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     config: {
-      deploymentName: 'qwen3-coder-flash', // 支持上下文缓存
+      deploymentName: 'qwen3-coder-flash', // Supports context caching
     },
     contextWindowTokens: 1_000_000,
     description:
@@ -984,7 +1011,7 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-plus-2025-09-11',
+      deploymentName: 'qwen-plus-2025-12-01',
     },
     contextWindowTokens: 1_000_000,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
@@ -1052,7 +1079,7 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen3-max', // 其支持上下文缓存
+      deploymentName: 'qwen3-max', // Supports context caching
     },
     contextWindowTokens: 262_144,
     description:
@@ -1119,7 +1146,7 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen3-max-preview', // 其支持上下文缓存
+      deploymentName: 'qwen3-max-preview', // Supports context caching
     },
     contextWindowTokens: 262_144,
     description: '通义千问系列效果最好的模型，适合复杂、多步骤的任务。预览版已支持思考。',
@@ -1218,7 +1245,7 @@ const qwenChatModels: AIChatModelCard[] = [
       '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
     displayName: 'Qwen Long',
     id: 'qwen-long',
-    maxOutput: 8192,
+    maxOutput: 32_768,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
@@ -1231,6 +1258,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
       vision: true,
     },
     config: {
@@ -1239,7 +1267,7 @@ const qwenChatModels: AIChatModelCard[] = [
     contextWindowTokens: 65_536,
     description:
       'Qwen-Omni 模型能够接收文本、图片、音频、视频等多种模态的组合输入，并生成文本或语音形式的回复， 提供多种拟人音色，支持多语言和方言的语音输出，可应用于文本创作、视觉识别、语音助手等场景。',
-    displayName: 'Qwen Omni Turbo',
+    displayName: 'Qwen3 Omni Flash',
     id: 'qwen3-omni-flash',
     maxOutput: 16_384,
     organization: 'Qwen',
@@ -1432,6 +1460,9 @@ const qwenChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -1473,7 +1504,7 @@ const qwenChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1499,11 +1530,12 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      vision: true,
       reasoning: true,
+      vision: true,
     },
     contextWindowTokens: 131_072,
-    description: 'Qwen3 VL 32B 思考模式（开源版），针对高难度强推理与长视频理解场景，提供顶尖的视觉+文本推理能力。',
+    description:
+      'Qwen3 VL 32B 思考模式（开源版），针对高难度强推理与长视频理解场景，提供顶尖的视觉+文本推理能力。',
     displayName: 'Qwen3 VL 32B Thinking',
     id: 'qwen3-vl-32b-thinking',
     maxOutput: 32_768,
@@ -1516,7 +1548,7 @@ const qwenChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1525,7 +1557,8 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 131_072,
-    description: 'Qwen3 VL 32B 非思考模式（Instruct），适用于非思考指令场景，保持强大的视觉理解能力。',
+    description:
+      'Qwen3 VL 32B 非思考模式（Instruct），适用于非思考指令场景，保持强大的视觉理解能力。',
     displayName: 'Qwen3 VL 32B Instruct',
     id: 'qwen3-vl-32b-instruct',
     maxOutput: 32_768,
@@ -1974,7 +2007,9 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -1994,6 +2029,10 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
     contextWindowTokens: 65_536,
     description:
       'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',

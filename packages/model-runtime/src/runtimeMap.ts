@@ -61,6 +61,7 @@ import { LobeVolcengineAI } from './providers/volcengine';
 import { LobeWenxinAI } from './providers/wenxin';
 import { LobeXAI } from './providers/xai';
 import { LobeXinferenceAI } from './providers/xinference';
+import { LobeZenMuxAI } from './providers/zenmux';
 import { LobeZeroOneAI } from './providers/zeroone';
 import { LobeZhipuAI } from './providers/zhipu';
 
@@ -111,6 +112,7 @@ export const providerRuntimeMap = {
   ppio: LobePPIOAI,
   qiniu: LobeQiniuAI,
   qwen: LobeQwenAI,
+  router: LobeNewAPIAI,
   sambanova: LobeSambaNovaAI,
   search1api: LobeSearch1API,
   sensenova: LobeSenseNovaAI,
@@ -128,6 +130,7 @@ export const providerRuntimeMap = {
   wenxin: LobeWenxinAI,
   xai: LobeXAI,
   xinference: LobeXinferenceAI,
+  zenmux: LobeZenMuxAI,
   zeroone: LobeZeroOneAI,
   zhipu: LobeZhipuAI,
 };

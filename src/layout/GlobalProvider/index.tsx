@@ -10,6 +10,7 @@ import { getAntdLocale } from '@/utils/locale';
 
 import AntdV5MonkeyPatch from './AntdV5MonkeyPatch';
 import AppTheme from './AppTheme';
+import CmdkLazy from './CmdkLazy';
 import ImportSettings from './ImportSettings';
 import Locale from './Locale';
 import QueryProvider from './Query';
@@ -65,6 +66,7 @@ const GlobalLayout = async ({
               <ImportSettings />
               {process.env.NODE_ENV === 'development' && <DevPanel />}
             </Suspense>
+            <CmdkLazy />
           </ServerConfigStoreProvider>
         </AppTheme>
       </Locale>

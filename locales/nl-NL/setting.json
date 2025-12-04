@@ -293,6 +293,12 @@
       "elegant": "Elegant",
       "title": "Reactie-animatie"
     },
+    "contextMenuMode": {
+      "default": "Standaard",
+      "desc": "Kies de weergaveoptie voor het contextmenu van chatberichten",
+      "disabled": "Niet gebruiken",
+      "title": "Contextmenu-optie"
+    },
     "neutralColor": {
       "desc": "Aangepaste grijstinten met verschillende kleurvoorkeuren",
       "title": "Neutrale kleur"

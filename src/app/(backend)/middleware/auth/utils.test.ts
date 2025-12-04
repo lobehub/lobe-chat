@@ -7,6 +7,7 @@ import { checkAuthMethod } from './utils';
 
 let enableClerkMock = false;
 let enableNextAuthMock = false;
+let enableBetterAuthMock = false;
 
 vi.mock('@/const/auth', async (importOriginal) => {
   const data = await importOriginal();
@@ -15,6 +16,9 @@ vi.mock('@/const/auth', async (importOriginal) => {
     ...(data as any),
     get enableClerk() {
       return enableClerkMock;
+    },
+    get enableBetterAuth() {
+      return enableBetterAuthMock;
     },
     get enableNextAuth() {
       return enableNextAuthMock;
@@ -65,6 +69,18 @@ describe('checkAuthMethod', () => {
     ).not.toThrow();
 
     enableNextAuthMock = false;
+  });
+
+  it('should pass with valid Better Auth session', () => {
+    enableBetterAuthMock = true;
+
+    expect(() =>
+      checkAuthMethod({
+        betterAuthAuthorized: true,
+      }),
+    ).not.toThrow();
+
+    enableBetterAuthMock = false;
   });
 
   it('should pass with valid API key', () => {

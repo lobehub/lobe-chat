@@ -14,7 +14,7 @@ import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
-import { createChatToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
+import { createAgentToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
@@ -90,7 +90,7 @@ class ChatService {
 
     const pluginIds = [...(enabledPlugins || [])];
 
-    const toolsEngine = createChatToolsEngine({
+    const toolsEngine = createAgentToolsEngine({
       model: payload.model,
       provider: payload.provider!,
     });
@@ -203,6 +203,14 @@ class ChatService {
       if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {
         extendParams.urlContext = chatConfig.urlContext;
       }
+
+      if (modelExtendParams!.includes('imageAspectRatio') && chatConfig.imageAspectRatio) {
+        extendParams.imageAspectRatio = chatConfig.imageAspectRatio;
+      }
+
+      if (modelExtendParams!.includes('imageResolution') && chatConfig.imageResolution) {
+        extendParams.imageResolution = chatConfig.imageResolution;
+      }
     }
 
     return this.getChatCompletion(
@@ -259,11 +267,14 @@ class ChatService {
       model = findDeploymentName(model, provider);
     }
 
-    const apiMode = aiProviderSelectors.isProviderEnableResponseApi(provider)(
-      getAiInfraStoreState(),
-    )
+    // When user explicitly disables Responses API, set apiMode to 'chatCompletion'
+    // This ensures the user's preference takes priority over provider's useResponseModels config
+    // When user enables Responses API, set to 'responses' to force use Responses API
+    const apiMode: 'responses' | 'chatCompletion' = aiProviderSelectors.isProviderEnableResponseApi(
+      provider,
+    )(getAiInfraStoreState())
       ? 'responses'
-      : undefined;
+      : 'chatCompletion';
 
     // Get the chat config to check streaming preference
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());

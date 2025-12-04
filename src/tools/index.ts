@@ -4,6 +4,7 @@ import { isDesktop } from '@/const/version';
 
 import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';
+import { KnowledgeBaseManifest } from './knowledge-base';
 import { LocalSystemManifest } from './local-system';
 import { WebBrowsingManifest } from './web-browsing';
 
@@ -28,6 +29,12 @@ export const builtinTools: LobeBuiltinTool[] = [
   {
     identifier: CodeInterpreterManifest.identifier,
     manifest: CodeInterpreterManifest,
+    type: 'builtin',
+  },
+  {
+    hidden: true,
+    identifier: KnowledgeBaseManifest.identifier,
+    manifest: KnowledgeBaseManifest,
     type: 'builtin',
   },
 ];

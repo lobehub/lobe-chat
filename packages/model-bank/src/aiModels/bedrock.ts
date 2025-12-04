@@ -9,6 +9,33 @@ const bedrockChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
+    description:
+      'Claude Opus 4.5 是 Anthropic 的旗舰模型，结合了卓越的智能与可扩展性能，适合需要最高质量回应和推理能力的复杂任务。',
+    displayName: 'Claude Opus 4.5',
+    enabled: true,
+    id: 'global.anthropic.claude-opus-4-5-20251101-v1:0',
+    maxOutput: 64_000,
+    pricing: {
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 25, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-24',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
     description: 'Claude Sonnet 4.5 是 Anthropic 迄今为止最智能的模型。',
     displayName: 'Claude Sonnet 4.5',
     enabled: true,
@@ -21,6 +48,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-09-29',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -31,7 +61,8 @@ const bedrockChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
-    description: 'Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。',
+    description:
+      'Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。',
     displayName: 'Claude Haiku 4.5',
     enabled: true,
     id: 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
@@ -43,6 +74,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-10-15',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   /*
@@ -77,9 +111,8 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Claude 3.7 sonnet 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
     displayName: 'Claude 3.7 Sonnet',
-    enabled: true,
     id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
-    maxOutput: 8192,
+    maxOutput: 64_000,
     pricing: {
       units: [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
@@ -87,6 +120,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-02-24',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -98,7 +134,6 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。',
     displayName: 'Claude 3.5 Sonnet',
-    enabled: true,
     id: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
     maxOutput: 8192,
     pricing: {
@@ -108,6 +143,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-10-22',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -119,7 +157,6 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。',
     displayName: 'Claude 3.5 Sonnet v2 (Inference profile)',
-    enabled: true,
     id: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
     maxOutput: 8192,
     pricing: {
@@ -129,6 +166,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-10-22',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -140,7 +180,6 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。',
     displayName: 'Claude 3.5 Sonnet 0620',
-    enabled: true,
     id: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
     maxOutput: 8192,
     pricing: {
@@ -150,6 +189,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-06-20',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -161,7 +203,6 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Claude 3 Haiku 是 Anthropic 最快、最紧凑的模型，提供近乎即时的响应速度。它可以快速回答简单的查询和请求。客户将能够构建模仿人类互动的无缝 AI 体验。Claude 3 Haiku 可以处理图像并返回文本输出，具有 200K 的上下文窗口。',
     displayName: 'Claude 3 Haiku',
-    enabled: true,
     id: 'anthropic.claude-3-haiku-20240307-v1:0',
     maxOutput: 4096,
     pricing: {
@@ -171,6 +212,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-03-07',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -182,7 +226,6 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Anthropic 的 Claude 3 Sonnet 在智能和速度之间达到了理想的平衡——特别适合企业工作负载。它以低于竞争对手的价格提供最大的效用，并被设计成为可靠的、高耐用的主力机，适用于规模化的 AI 部署。Claude 3 Sonnet 可以处理图像并返回文本输出，具有 200K 的上下文窗口。',
     displayName: 'Claude 3 Sonnet',
-    enabled: true,
     id: 'anthropic.claude-3-sonnet-20240229-v1:0',
     pricing: {
       units: [
@@ -200,7 +243,6 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Claude 3 Opus 是 Anthropic 最强大的 AI 模型，具有在高度复杂任务上的最先进性能。它可以处理开放式提示和未见过的场景，具有出色的流畅性和类人的理解能力。Claude 3 Opus 展示了生成 AI 可能性的前沿。Claude 3 Opus 可以处理图像并返回文本输出，具有 200K 的上下文窗口。',
     displayName: 'Claude 3 Opus',
-    enabled: true,
     id: 'anthropic.claude-3-opus-20240229-v1:0',
     maxOutput: 4096,
     pricing: {
@@ -210,6 +252,9 @@ const bedrockChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2024-02-29',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -246,6 +291,7 @@ const bedrockChatModels: AIChatModelCard[] = [
       '一款快速、经济且仍然非常有能力的模型，可以处理包括日常对话、文本分析、总结和文档问答在内的一系列任务。',
     displayName: 'Claude Instant',
     id: 'anthropic.claude-instant-v1',
+    maxOutput: 4096,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
@@ -262,7 +308,6 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Meta Llama 3.1 8B Instruct 的更新版，包括扩展的 128K 上下文长度、多语言性和改进的推理能力。Llama 3.1 提供的多语言大型语言模型 (LLMs) 是一组预训练的、指令调整的生成模型，包括 8B、70B 和 405B 大小 (文本输入/输出)。Llama 3.1 指令调整的文本模型 (8B、70B、405B) 专为多语言对话用例进行了优化，并在常见的行业基准测试中超过了许多可用的开源聊天模型。Llama 3.1 旨在用于多种语言的商业和研究用途。指令调整的文本模型适用于类似助手的聊天，而预训练模型可以适应各种自然语言生成任务。Llama 3.1 模型还支持利用其模型的输出来改进其他模型，包括合成数据生成和精炼。Llama 3.1 是使用优化的变压器架构的自回归语言模型。调整版本使用监督微调 (SFT) 和带有人类反馈的强化学习 (RLHF) 来符合人类对帮助性和安全性的偏好。',
     displayName: 'Llama 3.1 8B Instruct',
-    enabled: true,
     id: 'meta.llama3-1-8b-instruct-v1:0',
     pricing: {
       units: [
@@ -280,7 +325,6 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Meta Llama 3.1 70B Instruct 的更新版，包括扩展的 128K 上下文长度、多语言性和改进的推理能力。Llama 3.1 提供的多语言大型语言模型 (LLMs) 是一组预训练的、指令调整的生成模型，包括 8B、70B 和 405B 大小 (文本输入/输出)。Llama 3.1 指令调整的文本模型 (8B、70B、405B) 专为多语言对话用例进行了优化，并在常见的行业基准测试中超过了许多可用的开源聊天模型。Llama 3.1 旨在用于多种语言的商业和研究用途。指令调整的文本模型适用于类似助手的聊天，而预训练模型可以适应各种自然语言生成任务。Llama 3.1 模型还支持利用其模型的输出来改进其他模型，包括合成数据生成和精炼。Llama 3.1 是使用优化的变压器架构的自回归语言模型。调整版本使用监督微调 (SFT) 和带有人类反馈的强化学习 (RLHF) 来符合人类对帮助性和安全性的偏好。',
     displayName: 'Llama 3.1 70B Instruct',
-    enabled: true,
     id: 'meta.llama3-1-70b-instruct-v1:0',
     pricing: {
       units: [
@@ -298,7 +342,6 @@ const bedrockChatModels: AIChatModelCard[] = [
     description:
       'Meta Llama 3.1 405B Instruct 是 Llama 3.1 Instruct 模型中最大、最强大的模型，是一款高度先进的对话推理和合成数据生成模型，也可以用作在特定领域进行专业持续预训练或微调的基础。Llama 3.1 提供的多语言大型语言模型 (LLMs) 是一组预训练的、指令调整的生成模型，包括 8B、70B 和 405B 大小 (文本输入/输出)。Llama 3.1 指令调整的文本模型 (8B、70B、405B) 专为多语言对话用例进行了优化，并在常见的行业基准测试中超过了许多可用的开源聊天模型。Llama 3.1 旨在用于多种语言的商业和研究用途。指令调整的文本模型适用于类似助手的聊天，而预训练模型可以适应各种自然语言生成任务。Llama 3.1 模型还支持利用其模型的输出来改进其他模型，包括合成数据生成和精炼。Llama 3.1 是使用优化的变压器架构的自回归语言模型。调整版本使用监督微调 (SFT) 和带有人类反馈的强化学习 (RLHF) 来符合人类对帮助性和安全性的偏好。',
     displayName: 'Llama 3.1 405B Instruct',
-    enabled: true,
     id: 'meta.llama3-1-405b-instruct-v1:0',
     pricing: {
       units: [

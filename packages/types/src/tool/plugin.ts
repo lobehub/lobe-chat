@@ -25,8 +25,9 @@ export interface CustomPluginParams {
     args?: string[];
     env?: Record<string, string>;
     command?: string;
-    type: 'http' | 'stdio';
+    type: 'http' | 'stdio' | 'cloud';
     url?: string;
+    cloudEndPoint?: string; // Cloud gateway endpoint for cloud type
     // Added authentication configuration support
     auth?: {
       type: 'none' | 'bearer' | 'oauth2';

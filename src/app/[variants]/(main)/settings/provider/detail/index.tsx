@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+
 import Loading from '@/components/Loading/BrandTextLoading';
 
 const NewAPI = dynamic(() => import('./newapi'), { loading: () => <Loading />, ssr: false });
@@ -7,17 +8,26 @@ const VertexAI = dynamic(() => import('./vertexai'), { loading: () => <Loading /
 const GitHub = dynamic(() => import('./github'), { loading: () => <Loading />, ssr: false });
 const Ollama = dynamic(() => import('./ollama'), { loading: () => <Loading />, ssr: false });
 const ComfyUI = dynamic(() => import('./comfyui'), { loading: () => <Loading />, ssr: false });
-const Cloudflare = dynamic(() => import('./cloudflare'), { loading: () => <Loading />, ssr: false });
+const Cloudflare = dynamic(() => import('./cloudflare'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
 const Bedrock = dynamic(() => import('./bedrock'), { loading: () => <Loading />, ssr: false });
 const AzureAI = dynamic(() => import('./azureai'), { loading: () => <Loading />, ssr: false });
 const Azure = dynamic(() => import('./azure'), { loading: () => <Loading />, ssr: false });
-const ProviderGrid = dynamic(() => import('../(list)/ProviderGrid'), { loading: () => <Loading />, ssr: false });
-const DefaultPage = dynamic(() => import('./default/ProviderDetialPage'), { loading: () => <Loading />, ssr: false });
+const ProviderGrid = dynamic(() => import('../(list)/ProviderGrid'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+const DefaultPage = dynamic(() => import('./default/ProviderDetialPage'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
 
 type ProviderDetailPageProps = {
   id?: string | null;
   onProviderSelect: (provider: string) => void;
-}
+};
 
 const ProviderDetailPage = (props: ProviderDetailPageProps) => {
   const { id, onProviderSelect } = props;

@@ -1,7 +1,4 @@
-import type {
-  AgentInstruction,
-  AgentState,
-} from '@lobechat/agent-runtime';
+import type { AgentInstruction, AgentState } from '@lobechat/agent-runtime';
 
 import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
 import type { OperationType } from '@/store/chat/slices/operation/types';

@@ -623,6 +623,7 @@ export default {
     supportedProviders: '支持该模型的服务商',
   },
   plugins: {
+    builtinTag: '内置插件',
     community: '社区插件',
     details: {
       settings: {
@@ -637,6 +638,7 @@ export default {
     },
     install: '安装插件',
     installed: '已安装',
+    legacyTag: '旧版插件',
     list: '插件列表',
     meta: {
       description: '描述',

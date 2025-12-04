@@ -37,6 +37,14 @@
         "standard": "표준"
       }
     },
+    "resolution": {
+      "label": "해상도",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
+    },
     "seed": {
       "label": "시드",
       "random": "무작위 시드"

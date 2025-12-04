@@ -121,6 +121,37 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: `-`
 - Example: `-all,+gemini-1.5-flash-latest,+gemini-1.5-pro-latest`
 
+## Vertex AI
+
+### `VERTEXAI_CREDENTIALS`
+
+- Type: Required
+- Description: A JSON string of your Google Cloud service account key, you can get the key from [here](/docs/usage/providers/vertexai).
+- Default: -
+- Example: `{"type": "service_account", "project_id": "your-gcp-project-id", ...}`
+
+### `VERTEXAI_PROJECT`
+
+- Type: Optional
+- Description: Your Google Cloud project ID. If not set, it will be obtained from the `project_id` field in `VERTEXAI_CREDENTIALS`.
+- Default: -
+- Example: `your-gcp-project-id`
+
+### `VERTEXAI_LOCATION`
+
+- Type: Optional
+- Description: The region where your Vertex AI model is located.
+- Default: `global`
+- Example: `us-central1`
+
+
+### `VERTEXAI_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+gemini-1.5-flash-latest,+gemini-1.5-pro-latest`
+
 ## Anthropic AI
 
 ### `ANTHROPIC_API_KEY`

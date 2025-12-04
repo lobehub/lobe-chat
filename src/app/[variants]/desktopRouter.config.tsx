@@ -40,6 +40,16 @@ const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Desktop'), {
   ssr: false,
 });
 
+// Changelog components
+const ChangelogPage = dynamic(() => import('./(main)/changelog/index').then((m) => m.DesktopPage), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+const ChangelogLayout = dynamic(() => import('./(main)/changelog/_layout/Desktop'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+
 // Discover List components
 const DesktopHomePage = dynamic(
   () => import('./(main)/discover/(list)/(home)/index').then((m) => m.DesktopHomePage),
@@ -256,6 +266,7 @@ const KnowledgeErrorBoundary = createErrorBoundary('/knowledge');
 const SettingsErrorBoundary = createErrorBoundary('/settings');
 const ImageErrorBoundary = createErrorBoundary('/image');
 const ProfileErrorBoundary = createErrorBoundary('/profile');
+const ChangelogErrorBoundary = createErrorBoundary('/changelog');
 const RootErrorBoundary = createErrorBoundary('/chat'); // Root level falls back to chat
 
 // Root layout wrapper component
@@ -375,6 +386,11 @@ export const createDesktopRouter = (locale: Locales) =>
               index: true,
             },
             {
+              element: <KnowledgeHome />,
+              loader: idLoader,
+              path: ':id',
+            },
+            {
               element: <KnowledgeBasesList />,
               path: 'bases',
             },
@@ -455,6 +471,18 @@ export const createDesktopRouter = (locale: Locales) =>
           path: 'profile',
         },
 
+        // changelog routes
+        {
+          children: [
+            {
+              element: <ChangelogPage />,
+              index: true,
+            },
+          ],
+          element: <ChangelogLayout locale={locale} />,
+          errorElement: <ChangelogErrorBoundary />,
+          path: 'changelog',
+        },
         // Default route - redirect to chat
         {
           index: true,
