@@ -5,6 +5,13 @@ import { account } from '@/database/schemas/betterAuth';
 import { users } from '@/database/schemas/user';
 import { serverDB } from '@/database/server';
 
+export interface CheckUserResponseData {
+  emailVerified?: boolean;
+  exists: boolean;
+  hasPassword?: boolean;
+  providers?: string[];
+}
+
 /**
  * Check if a user exists by email
  * @param req - POST request with { email: string }
@@ -52,7 +59,7 @@ export async function POST(req: NextRequest) {
       exists: true,
       hasPassword,
       providers,
-    });
+    } satisfies CheckUserResponseData);
   } catch (error) {
     console.error('Error checking user existence:', error);
     return NextResponse.json({ error: 'Internal server error', exists: false }, { status: 500 });

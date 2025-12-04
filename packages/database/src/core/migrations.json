@@ -223,7 +223,10 @@
     "hash": "9646161fa041354714f823d726af27247bcd6e60fa3be5698c0d69f337a5700b"
   },
   {
-    "sql": ["DROP TABLE \"user_budgets\";", "\nDROP TABLE \"user_subscriptions\";"],
+    "sql": [
+      "DROP TABLE \"user_budgets\";",
+      "\nDROP TABLE \"user_subscriptions\";"
+    ],
     "bps": true,
     "folderMillis": 1729699958471,
     "hash": "7dad43a2a25d1aec82124a4e53f8d82f8505c3073f23606c1dc5d2a4598eacf9"
@@ -295,7 +298,9 @@
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
   },
   {
-    "sql": ["ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1737609172353,
     "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
@@ -510,7 +515,9 @@
     "hash": "a7ccf007fd185ff922823148d1eae6fafe652fc98d2fd2793f84a84f29e93cd1"
   },
   {
-    "sql": ["ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1749309388370,
     "hash": "39cea379f08ee4cb944875c0b67f7791387b508c2d47958bb4cd501ed1ef33eb"
@@ -628,7 +635,9 @@
     "hash": "1ba9b1f74ea13348da98d6fcdad7867ab4316ed565bf75d84d160c526cdac14b"
   },
   {
-    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"virtual\" boolean DEFAULT false;"],
+    "sql": [
+      "ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"virtual\" boolean DEFAULT false;"
+    ],
     "bps": true,
     "folderMillis": 1759116400580,
     "hash": "433ddae88e785f2db734e49a4c115eee93e60afe389f7919d66e5ba9aa159a37"
@@ -678,13 +687,17 @@
     "hash": "4bdc6505797d7a33b622498c138cfd47f637239f6905e1c484cd01d9d5f21d6b"
   },
   {
-    "sql": ["ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"image\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"image\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1760108430562,
     "hash": "ce09b301abb80f6563abc2f526bdd20b4f69bae430f09ba2179b9e3bfec43067"
   },
   {
-    "sql": ["ALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1761554153406,
     "hash": "bf2f21293e90e11cf60a784cf3ec219eafa95f7545d7d2f9d1449c0b0949599a"
@@ -764,13 +777,17 @@
     "hash": "923ccbdf46c32be9a981dabd348e6923b4a365444241e9b8cc174bf5b914cbc5"
   },
   {
-    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"market_identifier\" text;\n"],
+    "sql": [
+      "ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"market_identifier\" text;\n"
+    ],
     "bps": true,
     "folderMillis": 1762870034882,
     "hash": "4178aacb4b8892b7fd15d29209bbf9b1d1f9d7c406ba796f27542c0bcd919680"
   },
   {
-    "sql": ["ALTER TABLE \"message_plugins\" ADD COLUMN IF NOT EXISTS \"intervention\" jsonb;\n"],
+    "sql": [
+      "ALTER TABLE \"message_plugins\" ADD COLUMN IF NOT EXISTS \"intervention\" jsonb;\n"
+    ],
     "bps": true,
     "folderMillis": 1762911968658,
     "hash": "552a032cc0e595277232e70b5f9338658585bafe9481ae8346a5f322b673a68b"
@@ -799,7 +816,9 @@
     "hash": "f823b521f4d25e5dc5ab238b372727d2d2d7f0aed27b5eabc8a9608ce4e50568"
   },
   {
-    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1764215503726,
     "hash": "4188893a9083b3c7baebdbad0dd3f9d9400ede7584ca2394f5c64305dc9ec7b0"
@@ -840,9 +859,85 @@
     "hash": "2c103eee82bdf329944fb622dd9c2b9f20df80eb54f23eb9254d2285de413099"
   },
   {
-    "sql": ["ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"market\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"market\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1764335703306,
     "hash": "28c0d738c0b1fdf5fd871363be1a1477b4accbabdc140fe8dc6e9b339aae2c89"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"messages\" DROP CONSTRAINT \"messages_agent_id_agents_id_fk\";\n",
+      "\nALTER TABLE \"messages\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"content\" text;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"agent_id\" text;",
+      "\nALTER TABLE \"messages\" ADD CONSTRAINT \"messages_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"topics\" ADD CONSTRAINT \"topics_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nCREATE INDEX IF NOT EXISTS \"topics_agent_id_idx\" ON \"topics\" USING btree (\"agent_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764500630663,
+    "hash": "94721bc06910a456a4756c9b0c27ef5d7ff55b7ea8c772acf58052c0155c693b"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"auth_sessions\" ADD COLUMN IF NOT EXISTS \"impersonated_by\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"role\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"banned\" boolean DEFAULT false;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"ban_reason\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"ban_expires\" timestamp with time zone;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764511006123,
+    "hash": "523a8418ceeadbe80c34affee07cdfa2e8076e297473c55c73e74648a9be1e45"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"two_factor\" (\n  \"backup_codes\" text NOT NULL,\n  \"id\" text PRIMARY KEY NOT NULL,\n  \"secret\" text NOT NULL,\n  \"user_id\" text NOT NULL\n);\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"two_factor_enabled\" boolean DEFAULT false;\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"phone_number\" text;\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"phone_number_verified\" boolean;\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (\n    SELECT 1 FROM pg_constraint WHERE conname = 'two_factor_user_id_users_id_fk'\n  ) THEN\n    ALTER TABLE \"two_factor\"\n      ADD CONSTRAINT \"two_factor_user_id_users_id_fk\"\n      FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\n  END IF;\nEND $$;\n",
+      "\nCREATE INDEX IF NOT EXISTS \"two_factor_secret_idx\" ON \"two_factor\" USING btree (\"secret\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"two_factor_user_id_idx\" ON \"two_factor\" USING btree (\"user_id\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"account_userId_idx\" ON \"accounts\" USING btree (\"user_id\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"auth_session_userId_idx\" ON \"auth_sessions\" USING btree (\"user_id\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"verification_identifier_idx\" ON \"verifications\" USING btree (\"identifier\");\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique') THEN\n    -- Normalize empty emails so the unique constraint can be created safely\n    UPDATE \"users\" SET \"email\" = NULL WHERE \"email\" = '';\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_email_unique\" UNIQUE (\"email\");\n  END IF;\nEND $$;\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_number_unique') THEN\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_phone_number_unique\" UNIQUE (\"phone_number\");\n  END IF;\nEND $$;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764579351312,
+    "hash": "1d2536a9471bb87686b35053f98ba7762259a07c819dc4489bb4f3c7f27a4d8d"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"users\" DROP CONSTRAINT IF EXISTS \"users_phone_number_unique\";",
+      "\nALTER TABLE \"users\" DROP COLUMN IF EXISTS \"phone_number\";",
+      "\nALTER TABLE \"users\" DROP CONSTRAINT IF EXISTS \"users_phone_unique\";",
+      "\nALTER TABLE \"users\" ADD CONSTRAINT \"users_phone_unique\" UNIQUE(\"phone\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764583392443,
+    "hash": "6a43d90ee1d2e1e008d1b8206f227aa05b9a2e2a8fc8c31ec608a3716c716a6c"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"agents\" DROP CONSTRAINT \"agents_slug_unique\";",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"agents_slug_user_id_unique\" ON \"agents\" USING btree (\"slug\",\"user_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764685643024,
+    "hash": "6e7ac7f964eb03efa3cb0d2fd35ded23e25c3abf955c4c2a51418f8daef54af9"
+  },
+  {
+    "sql": [
+      "CREATE INDEX IF NOT EXISTS \"topics_extract_status_gin_idx\" ON \"topics\" USING gin ((metadata->'userMemoryExtractStatus') jsonb_path_ops);\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764734167674,
+    "hash": "89c134be2948d3afc360d6bac11dea0c6fd5c902bf6093ed077033adb920fd02"
   }
 ]

@@ -145,6 +145,9 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
+      - name: Typecheck Desktop
+        run: pnpm typecheck
+        working-directory: apps/desktop
 
       - name: Test Desktop Client
         run: pnpm test

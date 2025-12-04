@@ -46,7 +46,19 @@ export interface PluginListResponse {
   totalPages: number;
 }
 
+/**
+ * Plugin source types
+ * - legacy: From old plugin list (_getPluginList)
+ * - market: From Market SDK (getMcpDetail)
+ * - builtin: From LobeHub builtin tools
+ */
+export type PluginSource = 'legacy' | 'market' | 'builtin';
+
 export interface DiscoverPluginDetail extends Omit<DiscoverPluginItem, 'manifest'> {
   manifest?: LobeChatPluginManifest | string;
   related: DiscoverPluginItem[];
+  /**
+   * Plugin source type
+   */
+  source?: PluginSource;
 }

@@ -1,7 +1,9 @@
 // copy from https://github.com/kirill-konshin/next-electron-rsc
 import { serialize as serializeCookie } from 'cookie';
 import { type Protocol, type Session } from 'electron';
+// @ts-ignore
 import type { NextConfig } from 'next';
+// @ts-ignore
 import type NextNodeServer from 'next/dist/server/next-server';
 import assert from 'node:assert';
 import { IncomingMessage, ServerResponse } from 'node:http';
@@ -204,7 +206,7 @@ export function createHandler({
     logger.info('Initializing Next.js app for production');
 
     // https://github.com/lobehub/lobe-chat/pull/9851
-    // @ts-expect-error
+    // @ts-ignore
     // noinspection JSConstantReassignment
     process.env.NODE_ENV = 'production';
     const next = require(resolve.sync('next', { basedir: standaloneDir }));

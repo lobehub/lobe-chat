@@ -5,6 +5,7 @@ import { authEnv } from '@/envs/auth';
 import { BUILTIN_BETTER_AUTH_PROVIDERS } from '@/libs/better-auth/constants';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 
+import Apple from './providers/apple';
 import Auth0 from './providers/auth0';
 import Authelia from './providers/authelia';
 import Authentik from './providers/authentik';
@@ -23,6 +24,7 @@ import Wechat from './providers/wechat';
 import Zitadel from './providers/zitadel';
 
 const providerDefinitions = [
+  Apple,
   Google,
   Github,
   Cognito,

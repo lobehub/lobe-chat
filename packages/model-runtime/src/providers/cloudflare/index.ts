@@ -57,7 +57,9 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response> {
     try {
-      const { model, tools, ...restPayload } = payload;
+      // Remove internal apiMode parameter to prevent sending to Cloudflare API
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { model, tools, apiMode: _, ...restPayload } = payload;
       const functions = tools?.map((tool) => tool.function);
       const headers = options?.headers || {};
       if (this.apiKey) {

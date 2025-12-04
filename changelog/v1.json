@@ -1,6 +1,156 @@
 [
   {
     "children": {
+      "fixes": ["Fix React CVE issue."]
+    },
+    "date": "2025-12-04",
+    "version": "2.0.0-next.156"
+  },
+  {
+    "children": {
+      "fixes": ["Missing init user after user creation."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.155"
+  },
+  {
+    "children": {
+      "fixes": ["Udpate discover detail tools get & more link."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.154"
+  },
+  {
+    "children": {},
+    "date": "2025-12-03",
+    "version": "2.0.0-next.153"
+  },
+  {
+    "children": {
+      "features": ["Optimize betterauth UX."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.152"
+  },
+  {
+    "children": {
+      "improvements": ["Unify retry logic to async-retry."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.151"
+  },
+  {
+    "children": {
+      "fixes": ["Better-auth add apple sso icon and label."]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.150"
+  },
+  {
+    "children": {},
+    "date": "2025-12-03",
+    "version": "2.0.0-next.149"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Remove apiMode param from Azure and Cloudflare provider requests, when desktop use contextMenu not work."
+      ]
+    },
+    "date": "2025-12-03",
+    "version": "2.0.0-next.148"
+  },
+  {
+    "children": {
+      "features": ["Support apple sso auth."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.147"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent slug schema."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.146"
+  },
+  {
+    "children": {
+      "features": ["Email provider support resend."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.145"
+  },
+  {
+    "children": {
+      "fixes": ["User email unique migration error."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.144"
+  },
+  {
+    "children": {
+      "features": ["Support market cloud endpoint mcp."]
+    },
+    "date": "2025-12-02",
+    "version": "2.0.0-next.143"
+  },
+  {
+    "children": {
+      "fixes": ["Remove internal apiMode param from chat completion API requests."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.142"
+  },
+  {
+    "children": {
+      "fixes": ["Drop user.phoneNumber and reuse user.phone."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.141"
+  },
+  {
+    "children": {
+      "features": ["Integrate better-auth admin plugin."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.140"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-12-01",
+    "version": "2.0.0-next.139"
+  },
+  {
+    "children": {},
+    "date": "2025-11-30",
+    "version": "2.0.0-next.138"
+  },
+  {
+    "children": {
+      "fixes": ["Update apiMode handling in ChatService to prioritize user preferences."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.137"
+  },
+  {
+    "children": {
+      "fixes": ["Refresh custom AI provider on selection."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.136"
+  },
+  {
+    "children": {
+      "fixes": ["Fix BetterAuth Unable to link account - untrusted provider."]
+    },
+    "date": "2025-11-30",
+    "version": "2.0.0-next.135"
+  },
+  {
+    "children": {
       "fixes": ["Betterauth public url auto detect from VERCEL_URL."]
     },
     "date": "2025-11-29",

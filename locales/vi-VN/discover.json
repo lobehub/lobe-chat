@@ -616,6 +616,7 @@
     "supportedProviders": "Nhà cung cấp hỗ trợ mô hình này"
   },
   "plugins": {
+    "builtinTag": "Plugin tích hợp sẵn",
     "community": "Plugin cộng đồng",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "Cài đặt plugin",
     "installed": "Đã cài đặt",
+    "legacyTag": "Plugin phiên bản cũ",
     "list": "Danh sách plugin",
     "meta": {
       "description": "Mô tả",
