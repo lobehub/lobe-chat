@@ -1,7 +1,8 @@
+import { INBOX_SESSION_ID } from '@lobechat/const';
+import { HotkeyEnum, HotkeyScopeEnum, KeyEnum } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import { INBOX_SESSION_ID } from '@/const/session';
 import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
@@ -11,7 +12,6 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import { HotkeyEnum, HotkeyScopeEnum, KeyEnum } from '@/types/hotkey';
 
 import { useHotkeyById } from './useHotkeyById';
 
