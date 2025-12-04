@@ -1,6 +1,7 @@
 export * from './base64';
 export * from './client/cookie';
 export * from './detectChinese';
+export * from './env';
 export * from './format';
 export * from './imageToBase64';
 export * from './keyboard';
