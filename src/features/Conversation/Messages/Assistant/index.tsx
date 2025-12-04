@@ -336,10 +336,10 @@ const AssistantMessage = memo<AssistantMessageProps>(
           data-layout={'vertical'}
           direction={'vertical'}
           gap={8}
-          width={'fit-content'}
+          width={'100%'}
         >
           <Suspense fallback={<BubblesLoading />}>
-            <Flexbox style={{ flex: 1, maxWidth: '100%' }}>
+            <Flexbox style={{ flex: 1, maxWidth: '100%' }} width={'100%'}>
               {error && (message === LOADING_FLAT || !message) ? (
                 <ErrorContent error={errorContent} message={errorMessage} placement={placement} />
               ) : (
