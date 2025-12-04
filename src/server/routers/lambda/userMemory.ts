@@ -1,7 +1,7 @@
 import { CreateUserMemoryIdentitySchema, UpdateUserMemoryIdentitySchema } from '@lobechat/types';
 import { z } from 'zod';
 
-import { UserMemoryModel } from '@/database/models/userMemory';
+import { IUserMemoryModel } from '@/database/models/userMemory';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 

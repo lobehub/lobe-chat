@@ -18,7 +18,8 @@ const IdentitiesList = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const [searchValue, setSearchValue] = useState('');
   const [typeFilter, setTypeFilter] = useState<IdentityType>('all');
-  const { data: identities, isLoading } = useUserMemoryStore((s) => s.useFetchIdentities());
+  const useFetchIdentities = useUserMemoryStore((s) => s.useFetchIdentities);
+  const { data: identities, isLoading } = useFetchIdentities();
 
   const filteredIdentities = useMemo(() => {
     if (!identities) return [];
@@ -37,9 +38,7 @@ const IdentitiesList = memo<{ mobile?: boolean }>(({ mobile }) => {
         const role = identity.role?.toLowerCase() || '';
         const relationship = identity.relationship?.toLowerCase() || '';
         const description = identity.description?.toLowerCase() || '';
-        const labels = (
-          Array.isArray(identity.extractedLabels) ? identity.extractedLabels.join(' ') : ''
-        ).toLowerCase();
+        const labels = (Array.isArray(identity.tags) ? identity.tags.join(' ') : '').toLowerCase();
 
         return (
           role.includes(searchLower) ||

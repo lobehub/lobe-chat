@@ -18,10 +18,7 @@ const ContextsList = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (
     <Grid gap={16} rows={mobile ? 1 : 3}>
         {contexts.map((context) => {
-          const labels = [
-            ...(Array.isArray(context.labels) ? context.labels : []),
-            ...(Array.isArray(context.extractedLabels) ? context.extractedLabels : []),
-          ] as string[];
+          const labels = Array.isArray(context.tags) ? context.tags : [];
 
           return (
             <MemoryCard

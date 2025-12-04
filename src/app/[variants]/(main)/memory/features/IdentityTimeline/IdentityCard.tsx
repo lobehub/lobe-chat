@@ -113,9 +113,7 @@ const IdentityCard = memo<IdentityCardProps>(({ identity }) => {
   const { t } = useTranslation('memory');
   const deleteIdentity = useUserMemoryStore((s) => s.deleteIdentity);
 
-  const labels = (
-    Array.isArray(identity.extractedLabels) ? identity.extractedLabels : []
-  ) as string[];
+  const labels = Array.isArray(identity.tags) ? identity.tags : [];
 
   const isUpdated =
     identity.updatedAt &&

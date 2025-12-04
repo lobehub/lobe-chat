@@ -2,7 +2,7 @@ import { NewUserMemoryIdentity } from '@lobechat/types';
 
 import { lambdaClient } from '@/libs/trpc/client';
 
-class MemoryService {
+class MemoryCRUDService {
   countMemories = async () => {
     return lambdaClient.userMemory.countMemories.query();
   };
@@ -40,4 +40,7 @@ class MemoryService {
   };
 }
 
-export const memoryService = new MemoryService();
+export const memoryCRUDService = new MemoryCRUDService();
+
+// Backward compatibility alias
+export const memoryService = memoryCRUDService;

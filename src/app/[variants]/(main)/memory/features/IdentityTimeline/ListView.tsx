@@ -33,9 +33,7 @@ const ListView = memo<ListViewProps>(({ identities, mobile }) => {
   return (
     <Grid gap={16} rows={mobile ? 1 : 3}>
       {sortedIdentities.map((identity) => {
-        const labels = (
-          Array.isArray(identity.extractedLabels) ? identity.extractedLabels : []
-        ) as string[];
+        const labels = Array.isArray(identity.tags) ? identity.tags : [];
 
         return (
           <MemoryCard

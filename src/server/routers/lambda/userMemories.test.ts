@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getServerDB } from '@/database/core/db-adaptor';
-import { UserMemoryModel } from '@/database/models/userMemory';
+import { IUserMemoryModel } from '@/database/models/userMemory';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 
 import { userMemoriesRouter } from './userMemories';

@@ -17,13 +17,14 @@ export interface UserMemoryIdentity {
   description?: string | null;
   descriptionVector?: number[] | null;
   episodicDate?: Date | null;
-  extractedLabels?: unknown;
   id: string;
-  labels?: unknown;
+  metadata?: Record<string, unknown> | null;
   relationship?: string | null;
   role?: string | null;
+  tags?: string[] | null;
   type?: string | null;
   updatedAt: Date;
+  userId?: string | null;
   userMemoryId?: string | null;
 }
 

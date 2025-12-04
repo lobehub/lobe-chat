@@ -12,6 +12,11 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { createDevtools } from '../middleware/createDevtools';
 import { type UserMemoryStoreState, initialState } from './initialState';
+import { type BaseAction, createBaseSlice } from './slices/base';
+import { type ContextAction, createContextSlice } from './slices/context';
+import { type ExperienceAction, createExperienceSlice } from './slices/experience';
+import { type IdentityAction, createIdentitySlice } from './slices/identity';
+import { type PreferenceAction, createPreferenceSlice } from './slices/preference';
 import { userMemoryCacheKey } from './utils/cacheKey';
 
 const SWR_FETCH_USER_MEMORY = 'SWR_FETCH_USER_MEMORY';
@@ -28,10 +33,25 @@ export interface UserMemoryStoreAction {
   ) => SWRResponse<RetrieveMemoryResult>;
 }
 
-export type UserMemoryStore = UserMemoryStoreAction & UserMemoryStoreState;
+export type UserMemoryStore = UserMemoryStoreAction &
+  UserMemoryStoreState &
+  BaseAction &
+  ContextAction &
+  ExperienceAction &
+  IdentityAction &
+  PreferenceAction;
 
-const createStore: StateCreator<UserMemoryStore, [['zustand/devtools', never]]> = (set, get) => ({
+const createStore: StateCreator<UserMemoryStore, [['zustand/devtools', never]]> = (
+  set,
+  get,
+  store,
+) => ({
   ...initialState,
+  ...createBaseSlice(set, get, store),
+  ...createContextSlice(set, get, store),
+  ...createExperienceSlice(set, get, store),
+  ...createIdentitySlice(set, get, store),
+  ...createPreferenceSlice(set, get, store),
 
   refreshUserMemory: async (params) => {
     const key = userMemoryCacheKey(params);
