@@ -11,6 +11,8 @@ import { TOGGLE_BUTTON_ID } from '@/features/NavPanel/components/TogglePanelButt
 import Sidebar from '../../app/[variants]/(main)/home/_layout/Sidebar';
 import { useNavPanel } from './hooks/useNavPanel';
 
+export const NAV_PANEL_RIGHT_DRAWER_ID = 'nav-panel-drawer';
+
 type NavPanelSnapshot = {
   key: string;
   node: ReactNode;
@@ -84,48 +86,57 @@ const NavPanel = memo(() => {
   const activeContent = panelContent || { key: 'home', node: <Sidebar /> };
 
   return (
-    <DraggablePanel
-      className={styles.panel}
-      defaultSize={{ height: '100%', width }}
-      expand={expand}
-      expandable={false}
-      maxWidth={400}
-      minWidth={240}
-      onExpandChange={handleExpand}
-      onSizeChange={handleSizeChange}
-      placement="left"
-      showBorder={false}
-      style={{ marginRight: expand ? -8 : 0, overflow: 'hidden', position: 'relative' }}
-    >
-      <AnimatePresence initial={false} mode="popLayout">
-        <motion.div
-          animate={{ opacity: 1, x: 0 }}
-          exit={{
-            opacity: 0,
-            x: '-20%',
-          }}
-          initial={{
-            opacity: 0,
-            x: 0,
-          }}
-          key={activeContent.key}
-          style={{
-            flexDirection: 'column',
-            height: '100%',
-            inset: 0,
-            minWidth: 240,
-            overflow: 'hidden',
-            position: 'relative',
-          }}
-          transition={{
-            duration: 0.4,
-            ease: [0.4, 0, 0.2, 1],
-          }}
-        >
-          {activeContent.node}
-        </motion.div>
-      </AnimatePresence>
-    </DraggablePanel>
+    <>
+      <DraggablePanel
+        className={styles.panel}
+        defaultSize={{ height: '100%', width }}
+        expand={expand}
+        expandable={false}
+        maxWidth={400}
+        minWidth={240}
+        onExpandChange={handleExpand}
+        onSizeChange={handleSizeChange}
+        placement="left"
+        showBorder={false}
+      >
+        <AnimatePresence initial={false} mode="popLayout">
+          <motion.div
+            animate={{ opacity: 1, x: 0 }}
+            exit={{
+              opacity: 0,
+              x: '-20%',
+            }}
+            initial={{
+              opacity: 0,
+              x: 0,
+            }}
+            key={activeContent.key}
+            style={{
+              flexDirection: 'column',
+              height: '100%',
+              inset: 0,
+              minWidth: 240,
+              overflow: 'hidden',
+              position: 'relative',
+            }}
+            transition={{
+              duration: 0.4,
+              ease: [0.4, 0, 0.2, 1],
+            }}
+          >
+            {activeContent.node}
+          </motion.div>
+        </AnimatePresence>
+      </DraggablePanel>
+      <div
+        id={NAV_PANEL_RIGHT_DRAWER_ID}
+        style={{
+          height: '100%',
+          position: 'relative',
+          width: 0,
+        }}
+      />
+    </>
   );
 });
 

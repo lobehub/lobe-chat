@@ -1,10 +1,12 @@
 import { Icon, type MenuProps } from '@lobehub/ui';
 import { App } from 'antd';
-import { LucideCheck, Trash } from 'lucide-react';
+import { Hash, LucideCheck, Trash } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { TopicDisplayMode } from '@/types/topic';
@@ -23,6 +25,11 @@ export const useTopicActionsDropdownMenu = (): MenuProps['items'] => {
     s.updatePreference,
   ]);
 
+  const [topicPageSize, updateSystemStatus] = useGlobalStore((s) => [
+    systemStatusSelectors.topicPageSize(s),
+    s.updateSystemStatus,
+  ]);
+
   return useMemo(() => {
     const displayModeItems = Object.values(TopicDisplayMode).map((mode) => ({
       icon: topicDisplayMode === mode ? <Icon icon={LucideCheck} /> : <div />,
@@ -33,8 +40,27 @@ export const useTopicActionsDropdownMenu = (): MenuProps['items'] => {
       },
     }));
 
+    const pageSizeOptions = [20, 40, 60, 100];
+    const pageSizeItems = pageSizeOptions.map((size) => ({
+      icon: topicPageSize === size ? <Icon icon={LucideCheck} /> : <div />,
+      key: `pageSize-${size}`,
+      label: `${size} 个条目`,
+      onClick: () => {
+        updateSystemStatus({ topicPageSize: size });
+      },
+    }));
+
     return [
       ...displayModeItems,
+      {
+        type: 'divider' as const,
+      },
+      {
+        children: pageSizeItems,
+        icon: <Icon icon={Hash} />,
+        key: 'displayItems',
+        label: t('displayItems'),
+      },
       {
         type: 'divider' as const,
       },
@@ -70,5 +96,14 @@ export const useTopicActionsDropdownMenu = (): MenuProps['items'] => {
         },
       },
     ].filter(Boolean) as MenuProps['items'];
-  }, [topicDisplayMode, updatePreference, removeUnstarredTopic, removeAllTopic, t, modal]);
+  }, [
+    topicDisplayMode,
+    topicPageSize,
+    updatePreference,
+    updateSystemStatus,
+    removeUnstarredTopic,
+    removeAllTopic,
+    t,
+    modal,
+  ]);
 };

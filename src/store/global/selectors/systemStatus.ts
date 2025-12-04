@@ -7,6 +7,8 @@ const sessionGroupKeys = (s: GlobalState): string[] =>
 
 const topicGroupKeys = (s: GlobalState): string[] | undefined => s.status.expandTopicGroupKeys;
 
+const topicPageSize = (s: GlobalState): number => s.status.topicPageSize || 20;
+
 const showSystemRole = (s: GlobalState) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalState) => s.status.mobileShowTopic;
 const mobileShowPortal = (s: GlobalState) => s.status.mobileShowPortal;
@@ -75,5 +77,6 @@ export const systemStatusSelectors = {
   themeMode,
   tokenDisplayFormatShort,
   topicGroupKeys,
+  topicPageSize,
   wideScreen,
 };

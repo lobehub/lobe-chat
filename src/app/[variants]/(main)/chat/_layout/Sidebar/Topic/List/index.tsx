@@ -15,24 +15,22 @@ import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { TopicDisplayMode } from '@/types/topic';
 
+import AllTopicsDrawer from '../AllTopicsDrawer';
 import ByTimeMode from '../TopicListContent/ByTimeMode';
 import FlatMode from '../TopicListContent/FlatMode';
-import SearchResult from '../TopicListContent/SearchResult';
 
-interface TopicListProps {
-  showSearch: boolean;
-}
-
-const TopicList = memo<TopicListProps>(({ showSearch }) => {
+const TopicList = memo(() => {
   const { t } = useTranslation('topic');
   const { isDarkMode } = useThemeMode();
   const [topicsInit, topicLength] = useChatStore((s) => [
     s.topicsInit,
     topicSelectors.currentTopicLength(s),
   ]);
-  const [isUndefinedTopics, isInSearchMode] = useChatStore((s) => [
-    topicSelectors.isUndefinedTopics(s),
-    topicSelectors.isInSearchMode(s),
+  const [isUndefinedTopics] = useChatStore((s) => [topicSelectors.isUndefinedTopics(s)]);
+
+  const [allTopicsDrawerOpen, closeAllTopicsDrawer] = useChatStore((s) => [
+    s.allTopicsDrawerOpen,
+    s.closeAllTopicsDrawer,
   ]);
 
   const [visible, updateGuideState, topicDisplayMode] = useUserStore((s) => [
@@ -42,8 +40,6 @@ const TopicList = memo<TopicListProps>(({ showSearch }) => {
   ]);
 
   useFetchTopics();
-
-  if (showSearch || isInSearchMode) return <SearchResult />;
 
   // first time loading or has no data
   if (!topicsInit || isUndefinedTopics) return <SkeletonList />;
@@ -71,6 +67,7 @@ const TopicList = memo<TopicListProps>(({ showSearch }) => {
         </Flexbox>
       )}
       {topicDisplayMode === TopicDisplayMode.ByTime ? <ByTimeMode /> : <FlatMode />}
+      <AllTopicsDrawer onClose={closeAllTopicsDrawer} open={allTopicsDrawerOpen} />
     </>
   );
 });
