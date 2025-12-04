@@ -126,7 +126,9 @@ const EditorContent = memo<EditorContentProps>(
             ReactLinkHighlightPlugin,
             ReactTablePlugin,
             ReactMathPlugin,
-            ReactImagePlugin,
+            Editor.withProps(ReactImagePlugin, {
+              defaultBlockImage: true,
+            }),
             Editor.withProps(ReactToolbarPlugin, {
               children: <Toolbar editor={editor} floating />,
             }),

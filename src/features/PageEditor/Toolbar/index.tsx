@@ -6,6 +6,7 @@ import {
   ChatInputActions,
   type ChatInputActionsProps,
   CodeLanguageSelect,
+  FloatActions,
 } from '@lobehub/editor/react';
 import { Block } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
@@ -214,10 +215,8 @@ const Toolbar = memo<ToolbarProps>(({ floating, editor: editorProp, style, class
 
   if (!editor) return null;
 
-  const content = <ChatInputActions items={items} />;
-
   // Floating toolbar - just return the actions
-  if (floating) return content;
+  if (floating) return <FloatActions className={className} items={items} style={style} />;
 
   // Fixed toolbar - wrap in a styled container
   return (
@@ -237,7 +236,7 @@ const Toolbar = memo<ToolbarProps>(({ floating, editor: editorProp, style, class
       }}
       variant={'outlined'}
     >
-      {content}
+      <ChatInputActions items={items} />
     </Block>
   );
 });

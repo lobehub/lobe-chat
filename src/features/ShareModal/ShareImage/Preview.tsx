@@ -36,7 +36,7 @@ const Preview = memo<FieldType & { title?: string }>(
     const { styles } = useStyles(withBackground);
     const { styles: containerStyles } = useContainerStyles(widthMode);
 
-    const displayTitle = isInbox ? t('inbox.title') : title;
+    const displayTitle = isInbox ? 'Lobe AI' : title;
     const displayDesc = isInbox ? t('inbox.desc') : description;
 
     return (
