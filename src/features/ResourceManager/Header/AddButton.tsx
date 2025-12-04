@@ -4,7 +4,7 @@ import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FilePenLine, FileUp, FolderIcon, FolderUp, Link, Plus } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { type ChangeEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DragUpload from '@/components/DragUpload';
@@ -24,6 +24,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const { t } = useTranslation('file');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
+  const uploadFolderWithStructure = useFileStore((s) => s.uploadFolderWithStructure);
   const createFolder = useFileStore((s) => s.createFolder);
   const setPendingRenameItemId = useFileStore((s) => s.setPendingRenameItemId);
   const currentFolderId = useFileStore((s) => s.currentFolderId);
@@ -41,6 +42,15 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
     const folderId = await createFolder('Untitled', currentFolderId ?? undefined, knowledgeBaseId);
     // Trigger auto-rename
     setPendingRenameItemId(folderId);
+  };
+
+  const handleFolderUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+
+    await uploadFolderWithStructure(files, knowledgeBaseId, currentFolderId ?? undefined);
+    // Reset input to allow re-uploading the same folder
+    event.target.value = '';
   };
 
   const items = useMemo<MenuProps['items']>(
@@ -81,18 +91,9 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         icon: <Icon icon={FolderUp} />,
         key: 'upload-folder',
         label: (
-          <Upload
-            beforeUpload={async (file) => {
-              await pushDockFileList([file], knowledgeBaseId, currentFolderId ?? undefined);
-
-              return false;
-            }}
-            directory
-            multiple={true}
-            showUploadList={false}
-          >
-            <div className={cx(hotArea)}>{t('header.actions.uploadFolder')}</div>
-          </Upload>
+          <label className={cx(hotArea)} htmlFor="folder-upload-input">
+            {t('header.actions.uploadFolder')}
+          </label>
         ),
       },
       {
@@ -142,6 +143,15 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         onUploadFiles={(files) =>
           pushDockFileList(files, knowledgeBaseId, currentFolderId ?? undefined)
         }
+      />
+      <input
+        id="folder-upload-input"
+        multiple
+        onChange={handleFolderUpload}
+        style={{ display: 'none' }}
+        type="file"
+        // @ts-expect-error - webkitdirectory is not in the React types
+        webkitdirectory=""
       />
       <PageEditorModal
         knowledgeBaseId={knowledgeBaseId}
