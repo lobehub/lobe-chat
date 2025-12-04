@@ -12,6 +12,7 @@
     "removeUnstarred": "Favori Olmayan Konuları Sil"
   },
   "defaultTitle": "Varsayılan Konu",
+  "displayItems": "Öğeleri Göster",
   "duplicateLoading": "Konu Kopyalanıyor...",
   "duplicateSuccess": "Konu Başarıyla Kopyalandı",
   "favorite": "Favori",
@@ -33,6 +34,7 @@
     "desc": "Mevcut sohbeti tarihsel konu olarak kaydetmek ve yeni bir sohbet başlatmak için sol taraftaki gönder butonuna tıklayın.",
     "title": "Konu Listesi"
   },
+  "loadMore": "Daha Fazla",
   "searchPlaceholder": "Konuları Ara...",
   "searchResultEmpty": "Hiçbir arama sonucu bulunamadı",
   "temp": "Geçici",

@@ -223,7 +223,186 @@
           }
         ],
         "title": "Équipe d’analyse"
+      },
+      "brainstorm": {
+        "description": "Stimulez des idées créatives sous plusieurs angles, libérez un potentiel infini",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Vous êtes un directeur créatif, expert dans la gestion de la direction créative à un niveau macro. Vous savez transformer des concepts abstraits en idées concrètes et réalisables.",
+            "title": "Directeur créatif"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Vous êtes un expert en innovation, spécialisé dans la découverte de solutions originales et de pensées disruptives. Vous excellez à sortir des sentiers battus.",
+            "title": "Expert en innovation"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes un spécialiste du design thinking, vous abordez les problèmes du point de vue de l'expérience utilisateur et de la présentation visuelle, en mettant l'accent sur l'expression visuelle des idées.",
+            "title": "Spécialiste du design thinking"
+          }
+        ],
+        "title": "Équipe de brainstorming"
+      },
+      "game": {
+        "description": "Jouez à divers jeux de mots multijoueurs comme Loup-Garou ou Qui est l'imposteur",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Vous êtes un animateur, expert dans l'organisation de jeux de mots multijoueurs et capable de guider les joueurs tout au long du jeu.",
+            "title": "Animateur de jeu"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Vous êtes un joueur expérimenté dans les jeux de mots multijoueurs, capable de jouer selon les règles du jeu.",
+            "title": "Joueur"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes un joueur expérimenté dans les jeux de mots multijoueurs, capable de jouer selon les règles du jeu.",
+            "title": "Joueur"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes un joueur expérimenté dans les jeux de mots multijoueurs, capable de jouer selon les règles du jeu.",
+            "title": "Joueur"
+          }
+        ],
+        "title": "Salle de jeux"
+      },
+      "planning": {
+        "description": "Planification stratégique et gestion de projet, coordination globale",
+        "members": [
+          {
+            "avatar": "📋",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Vous êtes responsable de la planification globale du projet, du contrôle de l'avancement et de la coordination des ressources, garantissant une livraison de qualité dans les délais.",
+            "title": "Chef cuisinier"
+          },
+          {
+            "avatar": "🎯",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Vous êtes chargé de définir la stratégie à long terme, d'analyser les opportunités du marché et de fixer les objectifs et les moyens de les atteindre.",
+            "title": "Expert en approvisionnement"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "Vous êtes responsable de l'élaboration de plans d'exécution détaillés, de la coordination des ressources entre les départements et de la faisabilité des plans.",
+            "title": "Expert en développement culinaire"
+          }
+        ],
+        "title": "Équipe de développement culinaire"
+      },
+      "product": {
+        "description": "Conception et développement de produits, création de produits de qualité",
+        "members": [
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes designer, spécialisé dans la conception de divers types de produits, capable de répondre aux besoins spécifiques du produit.",
+            "title": "Designer"
+          },
+          {
+            "avatar": "🧑",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Vous êtes chef de produit, responsable de la planification, de la conception, du développement et de la maintenance du produit, garantissant sa qualité et son expérience utilisateur.",
+            "title": "Chef de produit"
+          },
+          {
+            "avatar": "🧑‍💻",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Vous êtes un développeur full-stack expérimenté, capable de développer différents types de produits selon les besoins.",
+            "title": "Développeur full-stack"
+          }
+        ],
+        "title": "Équipe de développement produit"
+      },
+      "writing": {
+        "description": "Création et édition de contenu, production de textes de qualité",
+        "members": [
+          {
+            "avatar": "✍️",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Vous êtes un rédacteur polyvalent, capable d'adapter votre style d'écriture à différents contextes et publics.",
+            "title": "Rédacteur de contenu"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Vous êtes éditeur, chargé de la relecture, de la correction et de l'optimisation des textes, garantissant leur précision, fluidité et professionnalisme.",
+            "title": "Éditeur"
+          }
+        ],
+        "title": "Cercle d'écriture"
       }
     }
+  },
+  "header": "Bienvenue",
+  "pickAgent": "Ou choisissez un modèle d'assistant ci-dessous",
+  "questions": {
+    "moreBtn": "En savoir plus",
+    "title": "Essayez de demander :"
+  },
+  "skip": "Passer la création",
+  "slogan": {
+    "desc1": "Activez votre cerveau collectif et faites jaillir des idées. Votre assistant intelligent est toujours là.",
+    "desc2": "Créez votre premier assistant, c’est parti ~",
+    "title": "Offrez-vous un cerveau plus intelligent"
+  },
+  "welcome": {
+    "afternoon": "Bon après-midi",
+    "morning": "Bonjour",
+    "night": "Bonsoir",
+    "noon": "Bon appétit"
+  },
+  "welcomeMessages": {
+    "1": "Bon retour 😊",
+    "10": "Productivité au maximum ~",
+    "11": "À votre service !",
+    "12": "Merci d’avoir patienté ☕",
+    "13": "Passons à l’action ✅",
+    "14": "De retour avec de nouvelles questions ?",
+    "15": "Bon travail aujourd’hui !",
+    "16": "Chargement d’inspiration en cours",
+    "17": "En ligne et à pleine puissance ⚡",
+    "18": "Décollage ! 🚀",
+    "19": "Mes pensées sont en phase.",
+    "2": "Salut, je suis là",
+    "20": "L’inspiration arrive",
+    "21": "J’attends votre appel",
+    "22": "Mode efficacité relancé !",
+    "23": "En attente",
+    "24": "Prêt à relever le défi",
+    "25": "Nouvelles idées en cours de génération",
+    "26": "La voie est claire, en route !",
+    "27": "Système en ligne, prêt à vous aider 💡",
+    "28": "Chargement de bonne humeur",
+    "29": "Prenez le rythme dès maintenant 🎵",
+    "3": "Je suis prêt !",
+    "30": "Efficacité en hausse …",
+    "31": "Objectif du jour en bonne voie 🎯",
+    "32": "Faites briller vos idées ✨",
+    "33": "Mise à jour des tâches terminée",
+    "34": "Tout est prêt",
+    "35": "Mode turbo activé",
+    "36": "Oui ! C’est parti 😎",
+    "37": "Je vous attends ici",
+    "38": "Gardez le cap !",
+    "39": "N’oubliez pas de faire une pause ~ 💤",
+    "4": "Ravi de vous voir",
+    "5": "Prêt à commencer ?",
+    "6": "Je m’occupe de tout aujourd’hui",
+    "7": "Continuons !",
+    "8": "On y va ensemble 💪",
+    "9": "C’est parti 🏃‍♂️"
   }
 }

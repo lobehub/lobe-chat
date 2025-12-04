@@ -338,6 +338,8 @@
       "installed": "Installé"
     },
     "config": {
+      "addEnv": "Ajouter une variable d'environnement",
+      "addHeaders": "Ajouter un en-tête de requête",
       "args": "Paramètres",
       "command": "Commande",
       "env": "Variables d'environnement",
@@ -357,6 +359,9 @@
         "title": "⚠️ Avertissement de risque de sécurité"
       },
       "title": "Installer un plugin personnalisé"
+    },
+    "install": {
+      "title": "Informations d'installation"
     },
     "marketplace": {
       "title": "Installer un plugin tiers",

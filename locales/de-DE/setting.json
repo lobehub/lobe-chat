@@ -85,7 +85,7 @@
     "desc": "Präferenzen und Modellkonfigurationen.",
     "global": "Global Einstellungen",
     "group": "Team-Einstellungen",
-    "groupDesc": "Verwalten Sie Agent-Teams und Chat-Einstellungen",
+    "groupDesc": "Verwalten Sie Gruppen- und Chat-Einstellungen",
     "session": "Sitzungseinstellungen",
     "sessionDesc": "Rollenkonfiguration und Sitzungspräferenzen.",
     "sessionWithName": "Sitzungseinstellungen · {{name}}",
@@ -425,7 +425,7 @@
       "placeholder": "Bitte geben Sie den Systemhinweis für den Moderator ein",
       "title": "Systemhinweis des Moderators"
     },
-    "title": "Agent-Teaminformationen"
+    "title": "Gruppeninformationen"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +433,7 @@
       "title": "Direktnachrichten vom Assistenten erlauben"
     },
     "enableSupervisor": {
-      "desc": "Aktivieren Sie die Moderatorfunktion für das Agent-Team. Moderatoren verwalten den Gesprächsverlauf des Teams.",
+      "desc": "Aktivieren Sie die Gruppenmoderator-Funktion. Moderatoren verwalten den Gesprächsverlauf des Teams.",
       "title": "Moderator aktivieren"
     },
     "maxResponseInRow": {

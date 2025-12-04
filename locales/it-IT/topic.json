@@ -12,6 +12,7 @@
     "removeUnstarred": "Elimina i temi non contrassegnati"
   },
   "defaultTitle": "Tema predefinito",
+  "displayItems": "Mostra elementi",
   "duplicateLoading": "Copia del tema in corso...",
   "duplicateSuccess": "Copia del tema riuscita",
   "favorite": "Preferito",
@@ -33,6 +34,7 @@
     "desc": "Clicca sul pulsante a sinistra per salvare la conversazione attuale come tema storico e avviare una nuova conversazione.",
     "title": "Elenco dei temi"
   },
+  "loadMore": "Carica altro",
   "searchPlaceholder": "Cerca temi...",
   "searchResultEmpty": "Nessun risultato trovato",
   "temp": "Temporaneo",

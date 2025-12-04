@@ -5,12 +5,12 @@ import { useSearchParams } from 'next/navigation';
 import { memo, use, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
 import { VirtuaContext } from '../../../components/VirtualizedList/VirtuosoContext';
 import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
 
@@ -52,7 +52,9 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
   const items = useMemo(() => {
     if (hasTools) return [delAndRegenerate, copy];
 
-    return [edit, copy, isGroupSession ? null : branching].filter(Boolean) as ActionIconGroupItemType[];
+    return [edit, copy, isGroupSession ? null : branching].filter(
+      Boolean,
+    ) as ActionIconGroupItemType[];
   }, [hasTools, isGroupSession, delAndRegenerate, copy, edit, branching]);
 
   const { t } = useTranslation('common');
@@ -95,7 +97,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
         case 'copy': {
           if (!contentBlock) return;
           await copyMessage(id, contentBlock.content);
-          message.success(t('copySuccess', { defaultValue: 'Copy Success' }));
+          message.success(t('copySuccess'));
           break;
         }
         case 'branching': {

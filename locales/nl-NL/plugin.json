@@ -338,6 +338,8 @@
       "installed": "Geïnstalleerd"
     },
     "config": {
+      "addEnv": "Omgevingsvariabele toevoegen",
+      "addHeaders": "Verzoekheaders toevoegen",
       "args": "Parameters",
       "command": "Commando",
       "env": "Omgevingsvariabelen",
@@ -357,6 +359,9 @@
         "title": "⚠️ Veiligheidswaarschuwing"
       },
       "title": "Aangepaste plugin installeren"
+    },
+    "install": {
+      "title": "Installatie-informatie"
     },
     "marketplace": {
       "title": "Derde partij plugins installeren",

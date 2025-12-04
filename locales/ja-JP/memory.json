@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "現在、記憶されているアイデンティティはありません",
+    "filter": {
+      "search": "役割、関係、または説明を検索...",
+      "type": {
+        "all": "すべて",
+        "demographic": "人口統計",
+        "personal": "個人",
+        "professional": "職業"
+      }
+    },
+    "list": {
+      "confirmDelete": "削除の確認",
+      "deleteCancel": "キャンセル",
+      "deleteContent": "このアイデンティティ記憶を削除してもよろしいですか？この操作は元に戻せません。",
+      "deleteOk": "削除",
+      "noResults": "一致するアイデンティティ記憶が見つかりませんでした",
+      "updated": "更新されました"
+    },
+    "roleCloud": {
+      "collapse": "折りたたむ",
+      "expand": "さらに表示"
+    },
+    "view": {
+      "list": "リスト",
+      "timeline": "タイムライン"
+    }
+  },
+  "loading": "読み込み中..."
+}

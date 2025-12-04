@@ -308,7 +308,10 @@
   },
   "navPanel": {
     "agent": "Assistent",
-    "library": "Bibliotheek"
+    "displayItems": "Toon items",
+    "library": "Bibliotheek",
+    "searchAgent": "Zoekassistent...",
+    "searchResultEmpty": "Geen zoekresultaten"
   },
   "new": "Nieuw",
   "oauth": "SSO inloggen",
@@ -373,6 +376,7 @@
     "home": "Startpagina",
     "knowledgeBase": "Kennisbank",
     "me": "Ik",
+    "memory": "Geheugen",
     "pages": "Documenten",
     "resource": "Bronnen",
     "search": "Zoeken",

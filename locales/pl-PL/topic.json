@@ -12,6 +12,7 @@
     "removeUnstarred": "Usuń tematy, które nie są ulubione"
   },
   "defaultTitle": "Domyślny temat",
+  "displayItems": "Wyświetl elementy",
   "duplicateLoading": "Kopiowanie tematu...",
   "duplicateSuccess": "Temat skopiowany pomyślnie",
   "favorite": "Ulubione",
@@ -33,6 +34,7 @@
     "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako temat historyczny i rozpocząć nową rozmowę.",
     "title": "Lista tematów"
   },
+  "loadMore": "Więcej",
   "searchPlaceholder": "Szukaj tematów...",
   "searchResultEmpty": "Brak wyników wyszukiwania",
   "temp": "Tymczasowy",

@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "暫無身份記憶",
+    "filter": {
+      "search": "搜尋角色、關係或描述...",
+      "type": {
+        "all": "全部",
+        "demographic": "人口統計",
+        "personal": "個人",
+        "professional": "職業"
+      }
+    },
+    "list": {
+      "confirmDelete": "確認刪除",
+      "deleteCancel": "取消",
+      "deleteContent": "確定要刪除這條身份記憶嗎？此操作無法恢復。",
+      "deleteOk": "刪除",
+      "noResults": "未找到符合的身份記憶",
+      "updated": "已更新"
+    },
+    "roleCloud": {
+      "collapse": "收起",
+      "expand": "展開更多"
+    },
+    "view": {
+      "list": "列表",
+      "timeline": "時間軸"
+    }
+  },
+  "loading": "載入中..."
+}

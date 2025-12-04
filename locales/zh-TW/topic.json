@@ -12,6 +12,7 @@
     "removeUnstarred": "刪除未收藏話題"
   },
   "defaultTitle": "預設話題",
+  "displayItems": "顯示項目",
   "duplicateLoading": "話題複製中...",
   "duplicateSuccess": "話題複製成功",
   "favorite": "收藏",
@@ -33,6 +34,7 @@
     "desc": "點擊發送左側按鈕可將當前會話保存為歷史話題，並開啟新一輪會話",
     "title": "話題列表"
   },
+  "loadMore": "載入更多",
   "searchPlaceholder": "搜尋話題...",
   "searchResultEmpty": "目前沒有搜尋結果",
   "temp": "臨時",

@@ -85,7 +85,7 @@ export default {
     desc: '偏好与模型设置',
     global: '全局设置',
     group: '团队设置',
-    groupDesc: '管理 Agent 团队与聊天偏好',
+    groupDesc: '管理群组与聊天偏好',
     session: '会话设置',
     sessionDesc: '角色设定与会话偏好',
     sessionWithName: '会话设置 · {{name}}',
@@ -429,7 +429,7 @@ export default {
       placeholder: '请输入主持人系统提示词',
       title: '主持人系统提示词',
     },
-    title: 'Agent 团队信息',
+    title: '群组信息',
   },
   settingGroupChat: {
     allowDM: {
@@ -437,7 +437,7 @@ export default {
       title: '允许助手发送私信',
     },
     enableSupervisor: {
-      desc: '启用 Agent 团队主持人功能，主持人将管理团队对话流程',
+      desc: '启用群组主持人功能，主持人将管理团队对话流程',
       title: '启用主持人',
     },
     maxResponseInRow: {

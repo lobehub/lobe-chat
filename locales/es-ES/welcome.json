@@ -192,6 +192,159 @@
       }
     },
     "groupMessage": "¡Bienvenido al chat grupal! Colabora con múltiples asistentes de IA en un espacio de conversación compartido.",
+    "groupTemplates": {
+      "analysis": {
+        "description": "Perspectivas impulsadas por datos, análisis en profundidad",
+        "members": [
+          {
+            "avatar": "📊",
+            "backgroundColor": "#E8F8F5",
+            "plugins": ["steam"],
+            "systemRole": "Eres experto en manejar e interpretar datos, revelando patrones y tendencias a través de gráficos y análisis estadísticos.",
+            "title": "Analista de Datos"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Eres un investigador especializado en la recopilación de información y el análisis profundo desde múltiples perspectivas.",
+            "title": "Especialista en Investigación"
+          },
+          {
+            "avatar": "📈",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Eres un experto en estadística, dominas diversos métodos y modelos estadísticos para extraer valiosas ideas de negocio a partir de los datos.",
+            "title": "Estadístico"
+          },
+          {
+            "avatar": "🧮",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "Eres un analista cuantitativo, especializado en modelado cuantitativo y evaluación de riesgos, resolviendo problemas complejos mediante métodos matemáticos.",
+            "title": "Analista Cuantitativo"
+          }
+        ],
+        "title": "Equipo de Análisis"
+      },
+      "brainstorm": {
+        "description": "Pensamiento creativo desde múltiples perspectivas, desatando infinitas posibilidades",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Eres un director creativo, con habilidad para dirigir la visión creativa desde una perspectiva macro y convertir conceptos abstractos en ideas ejecutables.",
+            "title": "Director Creativo"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Eres un experto en innovación, especializado en descubrir soluciones novedosas y pensamiento disruptivo, con capacidad para pensar fuera de lo convencional.",
+            "title": "Especialista en Innovación"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Eres un experto en pensamiento de diseño, enfocado en la experiencia del usuario y la presentación visual, dando importancia a la expresión visual de las ideas.",
+            "title": "Diseñador de Pensamiento"
+          }
+        ],
+        "title": "Grupo de Lluvia de Ideas"
+      },
+      "game": {
+        "description": "Disfruta de juegos de texto multijugador como Hombre Lobo o ¿Quién es el impostor?",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Eres un anfitrión experto en organizar juegos de texto multijugador, guiando a los jugadores durante la partida.",
+            "title": "Anfitrión de Juegos"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Eres hábil participando en juegos de texto multijugador, siguiendo las reglas del juego.",
+            "title": "Jugador"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Eres hábil participando en juegos de texto multijugador, siguiendo las reglas del juego.",
+            "title": "Jugador"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Eres hábil participando en juegos de texto multijugador, siguiendo las reglas del juego.",
+            "title": "Jugador"
+          }
+        ],
+        "title": "Sala de Juegos"
+      },
+      "planning": {
+        "description": "Planificación estratégica y gestión de proyectos, coordinación integral",
+        "members": [
+          {
+            "avatar": "📋",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Eres responsable de la planificación general del proyecto, control del progreso y coordinación de recursos, asegurando su finalización puntual y de calidad.",
+            "title": "Chef"
+          },
+          {
+            "avatar": "🎯",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "Eres responsable de formular planes estratégicos a largo plazo, analizar oportunidades de mercado y definir objetivos y rutas para alcanzarlos.",
+            "title": "Especialista en Compras de Ingredientes"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "Eres responsable de elaborar planes de ejecución detallados, coordinando recursos entre departamentos para garantizar su viabilidad.",
+            "title": "Especialista en Desarrollo Gastronómico"
+          }
+        ],
+        "title": "Equipo de Desarrollo Gastronómico"
+      },
+      "product": {
+        "description": "Diseño y desarrollo de productos, creando productos de alta calidad",
+        "members": [
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Eres diseñador, especializado en crear diversos tipos de productos según los requerimientos.",
+            "title": "Diseñador"
+          },
+          {
+            "avatar": "🧑",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Eres gerente de producto, responsable de la planificación, diseño, desarrollo y mantenimiento del producto, asegurando su calidad y experiencia de usuario.",
+            "title": "Gerente de Producto"
+          },
+          {
+            "avatar": "🧑‍💻",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Eres un desarrollador full-stack con experiencia, capaz de desarrollar productos de todo tipo según los requerimientos.",
+            "title": "Ingeniero Full-Stack"
+          }
+        ],
+        "title": "Equipo de Desarrollo de Producto"
+      },
+      "writing": {
+        "description": "Creación y edición de contenido, elaborando textos de calidad",
+        "members": [
+          {
+            "avatar": "✍️",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "Eres experto en redactar contenidos de diversos estilos, adaptando el tono según el contexto y la audiencia.",
+            "title": "Redactor de Contenidos"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "Eres editor, encargado de la corrección, edición y optimización de textos, asegurando precisión, fluidez y profesionalismo.",
+            "title": "Editor"
+          }
+        ],
+        "title": "Círculo de Escritura"
+      }
+    },
     "questions": {
       "moreBtn": "Saber más",
       "title": "Prueba preguntando:"

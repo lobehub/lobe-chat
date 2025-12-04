@@ -192,6 +192,159 @@
       }
     },
     "groupMessage": "歡迎使用群聊！與多位 AI 助手在共享對話空間中協作。",
+    "groupTemplates": {
+      "analysis": {
+        "description": "數據驅動洞察，深入研究分析",
+        "members": [
+          {
+            "avatar": "📊",
+            "backgroundColor": "#E8F8F5",
+            "plugins": ["steam"],
+            "systemRole": "你擅長處理與解讀數據，透過圖表與統計分析揭示數據背後的規律與趨勢。",
+            "title": "數據分析師"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "你是研究專家，專門負責資訊蒐集與深入調查，能從多個面向全面分析問題。",
+            "title": "研究專家"
+          },
+          {
+            "avatar": "📈",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "你是統計專家，精通各種統計方法與模型，能從數據中提取有價值的商業洞察。",
+            "title": "統計專家"
+          },
+          {
+            "avatar": "🧮",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "你是量化分析師，專門進行量化建模與風險評估，運用數學方法解決複雜問題。",
+            "title": "量化分析師"
+          }
+        ],
+        "title": "分析小隊"
+      },
+      "brainstorm": {
+        "description": "多元視角創意思維，激發無限可能",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "你是一位創意總監，擅長從宏觀角度掌握創意方向，能將抽象概念轉化為具體可執行的創意方案。",
+            "title": "創意總監"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "你是創新專家，專門發掘新穎的解決方案與突破性思維，善於跳脫框架思考問題。",
+            "title": "創新專家"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你是設計思維專家，從使用者體驗與視覺呈現角度思考問題，重視創意的視覺化表達。",
+            "title": "設計思維師"
+          }
+        ],
+        "title": "頭腦風暴小組"
+      },
+      "game": {
+        "description": "暢玩各種多人文字遊戲，例如狼人殺與誰是臥底",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "你是一位主持人，擅長組織各種多人文字遊戲，能引導玩家進行遊戲。",
+            "title": "遊戲主持人"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "你擅長參與各種多人文字遊戲，能依照遊戲規則進行遊戲。",
+            "title": "遊戲玩家"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你擅長參與各種多人文字遊戲，能依照遊戲規則進行遊戲。",
+            "title": "遊戲玩家"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你擅長參與各種多人文字遊戲，能依照遊戲規則進行遊戲。",
+            "title": "遊戲玩家"
+          }
+        ],
+        "title": "遊戲廳"
+      },
+      "planning": {
+        "description": "策略規劃與專案管理，統籌全局",
+        "members": [
+          {
+            "avatar": "📋",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "你負責專案的整體規劃、進度控管與資源協調，確保專案如期高品質完成。",
+            "title": "主廚"
+          },
+          {
+            "avatar": "🎯",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "你負責制定長期策略規劃，分析市場機會，設定目標與實現路徑。",
+            "title": "食材採購專家"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "你負責制定詳細的執行計畫，協調各部門資源，確保計畫具可執行性。",
+            "title": "美食研發專家"
+          }
+        ],
+        "title": "美食研發團隊"
+      },
+      "product": {
+        "description": "產品設計與開發，打造優質產品",
+        "members": [
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你是設計師，擅長設計各類型產品，能依據產品需求進行設計。",
+            "title": "設計師"
+          },
+          {
+            "avatar": "🧑",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "你是產品經理，負責產品的規劃、設計、開發與維護，確保產品品質與使用者體驗。",
+            "title": "產品經理"
+          },
+          {
+            "avatar": "🧑‍💻",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "你是經驗豐富的全端工程師，擅長開發各類型產品，能依據產品需求進行開發。",
+            "title": "全端工程師"
+          }
+        ],
+        "title": "產品研發團隊"
+      },
+      "writing": {
+        "description": "內容創作與編輯，打造優質文案",
+        "members": [
+          {
+            "avatar": "✍️",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你擅長創作各類文體內容，能依據不同情境與受眾調整寫作風格。",
+            "title": "內容寫手"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "你是編輯，負責文字的校對、潤飾與優化，確保內容的準確性、流暢性與專業性。",
+            "title": "編輯"
+          }
+        ],
+        "title": "寫作圈"
+      }
+    },
     "questions": {
       "moreBtn": "了解更多",
       "title": "試著問問："

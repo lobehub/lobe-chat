@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "Nessuna memoria d'identità disponibile",
+    "filter": {
+      "search": "Cerca ruoli, relazioni o descrizioni...",
+      "type": {
+        "all": "Tutti",
+        "demographic": "Demografico",
+        "personal": "Personale",
+        "professional": "Professionale"
+      }
+    },
+    "list": {
+      "confirmDelete": "Conferma eliminazione",
+      "deleteCancel": "Annulla",
+      "deleteContent": "Sei sicuro di voler eliminare questa memoria d'identità? Questa operazione è irreversibile.",
+      "deleteOk": "Elimina",
+      "noResults": "Nessuna memoria d'identità trovata",
+      "updated": "Aggiornato"
+    },
+    "roleCloud": {
+      "collapse": "Comprimi",
+      "expand": "Espandi di più"
+    },
+    "view": {
+      "list": "Elenco",
+      "timeline": "Cronologia"
+    }
+  },
+  "loading": "Caricamento in corso..."
+}

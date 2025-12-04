@@ -85,7 +85,7 @@
     "desc": "환경설정 및 모델 설정",
     "global": "전역 설정",
     "group": "팀 설정",
-    "groupDesc": "에이전트 팀 및 채팅 환경 설정 관리",
+    "groupDesc": "그룹 및 채팅 환경 설정 관리",
     "session": "세션 설정",
     "sessionDesc": "역할 프롬프트 및 세션 환경설정",
     "sessionWithName": "세션 설정 · {{name}}",
@@ -425,7 +425,7 @@
       "placeholder": "호스트 시스템 프롬프트를 입력하세요",
       "title": "호스트 시스템 프롬프트"
     },
-    "title": "에이전트 팀 정보"
+    "title": "그룹 정보"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +433,7 @@
       "title": "어시스턴트의 DM 허용"
     },
     "enableSupervisor": {
-      "desc": "에이전트 팀 진행자 기능을 활성화하면, 진행자가 팀 대화 흐름을 관리합니다",
+      "desc": "그룹 진행자 기능을 활성화하면 진행자가 팀 대화 흐름을 관리합니다",
       "title": "진행자 활성화"
     },
     "maxResponseInRow": {

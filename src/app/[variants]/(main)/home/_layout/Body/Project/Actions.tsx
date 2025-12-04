@@ -2,7 +2,7 @@ import { ActionIcon } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 
-import { useProjectMenuItems } from '@/features/NavPanel/hooks';
+import { useProjectMenuItems } from '../../hooks';
 
 const Actions = memo(() => {
   const { createProject } = useProjectMenuItems();
