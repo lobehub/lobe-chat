@@ -76,7 +76,7 @@ export const userInstalledPlugins = pgTable(
     manifest: jsonb('manifest').$type<LobeChatPluginManifest>(),
     settings: jsonb('settings'),
     customParams: jsonb('custom_params').$type<CustomPluginParams>(),
-
+    source: text('source'),
     ...timestamps,
   },
   (self) => ({
