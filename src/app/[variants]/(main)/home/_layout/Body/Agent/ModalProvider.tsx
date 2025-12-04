@@ -21,6 +21,7 @@ interface AgentModalContextValue {
 }
 
 interface GroupWizardCallbacks {
+  isCreatingFromTemplate?: boolean;
   onCancel?: () => void;
   onCreateCustom?: (
     selectedAgents: string[],
@@ -123,7 +124,7 @@ export const AgentModalProvider = memo<AgentModalProviderProps>(({ children }) =
       />
 
       <ChatGroupWizard
-        isCreatingFromTemplate={false}
+        isCreatingFromTemplate={groupWizardCallbacks.isCreatingFromTemplate}
         onCancel={() => {
           groupWizardCallbacks.onCancel?.();
           setGroupWizardOpen(false);
