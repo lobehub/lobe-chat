@@ -1,14 +1,7 @@
 import { Hotkey, Icon } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
-import {
-  Cloudy,
-  Download,
-  FileClockIcon,
-  HardDriveDownload,
-  LogOut,
-  Settings2,
-} from 'lucide-react';
+import { Cloudy, Download, HardDriveDownload, LogOut, Settings2 } from 'lucide-react';
 import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -17,7 +10,7 @@ import { Link } from 'react-router-dom';
 import type { MenuProps } from '@/components/Menu';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DEFAULT_DESKTOP_HOTKEY_CONFIG } from '@/const/desktop';
-import { CHANGELOG, OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
+import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
 import { isDesktop } from '@/const/version';
 import DataImporter from '@/features/DataImporter';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
@@ -118,20 +111,6 @@ export const useMenu = () => {
           {t('userPanel.cloud', { name: LOBE_CHAT_CLOUD })}
         </a>
       ),
-    },
-    {
-      icon: <Icon icon={FileClockIcon} />,
-      key: 'changelog',
-      label: isDesktop ? (
-        <a href={CHANGELOG} rel="noopener noreferrer" target="_blank">
-          {t('changelog')}
-        </a>
-      ) : (
-        <Link to="/changelog">{t('changelog')}</Link>
-      ),
-    },
-    {
-      type: 'divider',
     },
   ].filter(Boolean) as ItemType[];
 
