@@ -1,6 +1,5 @@
 import { getAgentRuntimeConfig } from '@lobechat/builtin-agents';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
-import dayjs from 'dayjs';
 
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
@@ -16,6 +15,9 @@ export interface AgentConfigResolverContext {
   documentContent?: string;
   /** Current model being used (for template variables) */
   model?: string;
+
+  /** Plugins enabled for the agent */
+  plugins?: string[];
 
   /** Current provider */
   provider?: string;
@@ -33,6 +35,8 @@ export interface ResolvedAgentConfig {
   chatConfig: LobeAgentChatConfig;
   /** Whether this is a builtin agent */
   isBuiltinAgent: boolean;
+  /** Runtime plugins for the agent */
+  plugins?: string[];
   /** The agent's slug (if builtin) */
   slug?: string;
 }
@@ -48,7 +52,7 @@ export interface ResolvedAgentConfig {
  * For regular agents, this simply returns the config from the store.
  */
 export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAgentConfig => {
-  const { agentId, model, documentContent, targetAgentConfig } = ctx;
+  const { agentId, model, documentContent, plugins, targetAgentConfig } = ctx;
 
   const agentStoreState = getAgentStoreState();
 
@@ -66,9 +70,9 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
 
   // Builtin agent - merge runtime config
   const runtimeConfig = getAgentRuntimeConfig(slug, {
-    currentDate: dayjs().format('YYYY-MM-DD'),
     documentContent,
     model,
+    plugins,
     targetAgentConfig,
   });
 
@@ -83,6 +87,7 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
     agentConfig: resolvedAgentConfig,
     chatConfig,
     isBuiltinAgent: true,
+    plugins: runtimeConfig?.plugins,
     slug,
   };
 };

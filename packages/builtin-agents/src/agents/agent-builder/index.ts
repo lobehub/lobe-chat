@@ -13,7 +13,10 @@ export const AGENT_BUILDER: BuiltinAgentDefinition = {
   },
 
   // Runtime config - static systemRole
-  runtime: { systemRole: systemRoleTemplate },
+  runtime: (ctx) => ({
+    plugins: ['lobe-agent-builder', ...(ctx.plugins || [])],
+    systemRole: systemRoleTemplate,
+  }),
 
   slug: BUILTIN_AGENT_SLUGS.agentBuilder,
 };

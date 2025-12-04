@@ -15,6 +15,7 @@ export const useInitAgentConfig = () => {
   ]);
 
   const isLogin = useUserStore(authSelectors.isLogin);
+  console.log('isLogin:', isLogin);
   const load = useLoaderData();
 
   const data = useFetchAgentConfig(isLogin, activeAgentId ?? load?.agentId);
