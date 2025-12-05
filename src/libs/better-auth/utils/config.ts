@@ -56,6 +56,11 @@ export const createSecondaryStorage = () => {
   const redisConfig = getRedisConfig();
   if (!isRedisEnabled(redisConfig)) return undefined;
 
+  console.log('[better-auth] secondary storage redis config:', {
+    prefix: redisConfig.prefix,
+    provider: redisConfig.provider,
+  });
+
   const secondaryStorageKeyPrefix = 'better-auth:';
 
   const buildKey = (key: string) => `${secondaryStorageKeyPrefix}${key}`;
@@ -80,7 +85,7 @@ export const createSecondaryStorage = () => {
     },
     set: async (key: string, value: string, ttl?: number) => {
       const redisClient = await getRedisClient();
-      if (ttl) {
+      if (typeof ttl === 'number') {
         await redisClient.set(buildKey(key), value, { ex: ttl });
         return;
       }

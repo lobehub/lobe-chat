@@ -14,7 +14,7 @@ const parseNumber = (value?: string) => {
 
 const parseRedisTls = (value?: string) => {
   if (!value) {
-    return false
+    return false;
   }
 
   const normalized = value.trim().toLowerCase();
@@ -73,6 +73,8 @@ export const getUpstashRedisConfig = (): UpstashRedisConfig | null => {
 
 export const getRedisConfig = (): RedisConfig => {
   const prefix = redisEnv.REDIS_PREFIX;
+
+  console.log('prefix', prefix);
 
   if (redisEnv.REDIS_URL) {
     return {
