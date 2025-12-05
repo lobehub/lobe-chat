@@ -123,20 +123,22 @@ const FileTreeItem = memo<{
       id: item.id,
     });
 
-    const handleFileClick = useCallback(() => {
+    const handleItemClick = useCallback(() => {
       // Open file modal using slug-based routing
       const currentPath = currentFolderSlug
         ? `/resource/library/${knowledgeBaseId}/${currentFolderSlug}`
         : `/resource/library/${knowledgeBaseId}`;
 
       setCurrentViewItemId(itemKey);
+      navigate(`${currentPath}?file=${itemKey}`);
+
       if (itemKey.startsWith('doc')) {
         setMode('page');
       } else {
-        navigate(`${currentPath}?file=${itemKey}`);
-        setMode('files');
+        // Set mode to 'file' immediately to prevent flickering to list view
+        setMode('file');
       }
-    }, [itemKey, currentFolderSlug, knowledgeBaseId, navigate]);
+    }, [itemKey, currentFolderSlug, knowledgeBaseId, navigate, setMode, setCurrentViewItemId]);
 
     const handleFolderClick = useCallback(
       (folderId: string, folderSlug?: string | null) => {
@@ -257,7 +259,7 @@ const FileTreeItem = memo<{
           gap={8}
           height={36}
           horizontal
-          onClick={handleFileClick}
+          onClick={handleItemClick}
           paddingInline={4}
           style={{ paddingInlineStart: level * 16 + 4 }}
           variant={isActive ? 'filled' : 'borderless'}

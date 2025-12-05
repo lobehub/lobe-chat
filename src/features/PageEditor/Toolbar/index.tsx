@@ -32,7 +32,7 @@ import {
 import { type CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { usePageEditorContext } from '../Context';
+import { useOptionalPageEditorContext } from '../Context';
 
 interface ToolbarProps {
   className?: string;
@@ -43,7 +43,7 @@ interface ToolbarProps {
 
 const Toolbar = memo<ToolbarProps>(({ floating, editor: editorProp, style, className }) => {
   const { t } = useTranslation('editor');
-  const context = usePageEditorContext();
+  const context = useOptionalPageEditorContext();
   const editor = editorProp || context?.editor;
   const editorState = useEditorState(editor);
   const theme = useTheme();
