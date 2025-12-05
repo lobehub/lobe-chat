@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.161](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.160...v2.0.0-next.161)
+
+<sup>Released on **2025-12-05**</sup>
+
+#### ✨ Features
+
+- **misc**: Support klavis mcp connector.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support klavis mcp connector, closes [#10584](https://github.com/lobehub/lobe-chat/issues/10584) ([e3ec79e](https://github.com/lobehub/lobe-chat/commit/e3ec79e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.160](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.159...v2.0.0-next.160)
 
 <sup>Released on **2025-12-05**</sup>
