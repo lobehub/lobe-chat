@@ -122,8 +122,8 @@ export const chatThreadMessage: StateCreator<
         onSuccess: (threads) => {
           const nextMap = { ...get().threadMaps, [topicId!]: threads };
 
-          // no need to update map if the topics have been init and the map is the same
-          if (get().topicsInit && isEqual(nextMap, get().topicMaps)) return;
+          // no need to update map if the threads have been init and the map is the same
+          if (get().threadsInit && isEqual(nextMap, get().threadMaps)) return;
 
           set(
             { threadMaps: nextMap, threadsInit: true },

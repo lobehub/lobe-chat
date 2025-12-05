@@ -14,11 +14,18 @@ vi.mock('i18next', () => ({
 
 const initialStore = initialState as ChatStore;
 
-const topicMaps = {
-  test: [
-    { id: 'topic1', name: 'Topic 1', favorite: true },
-    { id: 'topic2', name: 'Topic 2' },
-  ],
+const topicItems = [
+  { id: 'topic1', name: 'Topic 1', favorite: true },
+  { id: 'topic2', name: 'Topic 2' },
+];
+
+const topicDataMap = {
+  test: {
+    items: topicItems,
+    total: topicItems.length,
+    currentPage: 0,
+    hasMore: false,
+  },
 };
 
 describe('topicSelectors', () => {
@@ -29,10 +36,10 @@ describe('topicSelectors', () => {
     });
 
     it('should return all current topics from the store', () => {
-      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
+      const state = merge(initialStore, { topicDataMap, activeAgentId: 'test' });
 
       const topics = topicSelectors.currentTopics(state);
-      expect(topics).toEqual(topicMaps.test);
+      expect(topics).toEqual(topicItems);
     });
   });
 
@@ -43,9 +50,9 @@ describe('topicSelectors', () => {
     });
 
     it('should return the number of current topics', () => {
-      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
+      const state = merge(initialStore, { topicDataMap, activeAgentId: 'test' });
       const length = topicSelectors.currentTopicLength(state);
-      expect(length).toBe(topicMaps.test.length);
+      expect(length).toBe(topicItems.length);
     });
   });
 
@@ -57,28 +64,28 @@ describe('topicSelectors', () => {
 
     it('should return the current active topic', () => {
       const state = merge(initialStore, {
-        topicMaps,
+        topicDataMap,
         activeAgentId: 'test',
         activeTopicId: 'topic1',
       });
       const topic = topicSelectors.currentActiveTopic(state);
-      expect(topic).toEqual(topicMaps.test[0]);
+      expect(topic).toEqual(topicItems[0]);
     });
   });
 
   describe('currentUnFavTopics', () => {
     it('should return all unfavorited topics', () => {
-      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
+      const state = merge(initialStore, { topicDataMap, activeAgentId: 'test' });
       const topics = topicSelectors.currentUnFavTopics(state);
-      expect(topics).toEqual([topicMaps.test[1]]);
+      expect(topics).toEqual([topicItems[1]]);
     });
   });
 
   describe('displayTopics', () => {
     it('should return current topics if not searching', () => {
-      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
+      const state = merge(initialStore, { topicDataMap, activeAgentId: 'test' });
       const topics = topicSelectors.displayTopics(state);
-      expect(topics).toEqual(topicMaps.test);
+      expect(topics).toEqual(topicItems);
     });
   });
 
@@ -93,15 +100,15 @@ describe('topicSelectors', () => {
 
   describe('getTopicById', () => {
     it('should return undefined if topic is not found', () => {
-      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
+      const state = merge(initialStore, { topicDataMap, activeAgentId: 'test' });
       const topic = topicSelectors.getTopicById('notfound')(state);
       expect(topic).toBeUndefined();
     });
 
     it('should return the topic with the given id', () => {
-      const state = merge(initialStore, { topicMaps, activeAgentId: 'test' });
+      const state = merge(initialStore, { topicDataMap, activeAgentId: 'test' });
       const topic = topicSelectors.getTopicById('topic1')(state);
-      expect(topic).toEqual(topicMaps.test[0]);
+      expect(topic).toEqual(topicItems[0]);
     });
   });
 
@@ -119,7 +126,9 @@ describe('topicSelectors', () => {
       ];
 
       const state = merge(initialStore, {
-        topicMaps: { test: topics },
+        topicDataMap: {
+          test: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+        },
         activeAgentId: 'test',
       });
 
@@ -136,7 +145,9 @@ describe('topicSelectors', () => {
       ];
 
       const state = merge(initialStore, {
-        topicMaps: { test: topics },
+        topicDataMap: {
+          test: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+        },
         activeAgentId: 'test',
       });
 
@@ -162,7 +173,9 @@ describe('topicSelectors', () => {
       ];
 
       const state = merge(initialStore, {
-        topicMaps: { test: topics },
+        topicDataMap: {
+          test: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+        },
         activeAgentId: 'test',
       });
 
