@@ -221,6 +221,9 @@
   "MiniMax-M2": {
     "description": "Được thiết kế đặc biệt cho lập trình hiệu quả và quy trình làm việc của Agent"
   },
+  "MiniMax-M2-Stable": {
+    "description": "Được thiết kế đặc biệt cho mã hóa hiệu quả và quy trình làm việc của Agent, hỗ trợ đồng thời cao hơn, phù hợp cho mục đích thương mại."
+  },
   "MiniMax-Text-01": {
     "description": "Trong dòng mô hình MiniMax-01, chúng tôi đã thực hiện những đổi mới táo bạo: lần đầu tiên hiện thực hóa quy mô lớn cơ chế chú ý tuyến tính, kiến trúc Transformer truyền thống không còn là lựa chọn duy nhất. Mô hình này có số lượng tham số lên tới 4560 tỷ, trong đó kích hoạt một lần là 45,9 tỷ. Hiệu suất tổng hợp của mô hình tương đương với các mô hình hàng đầu quốc tế, đồng thời có khả năng xử lý hiệu quả ngữ cảnh dài nhất toàn cầu lên tới 4 triệu token, gấp 32 lần GPT-4o và 20 lần Claude-3.5-Sonnet."
   },
@@ -298,6 +301,9 @@
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 là phiên bản mới nhất và mạnh mẽ nhất của Kimi K2. Đây là một mô hình ngôn ngữ chuyên gia hỗn hợp (MoE) hàng đầu với tổng số tham số lên đến 1 nghìn tỷ và 32 tỷ tham số kích hoạt. Các đặc điểm chính của mô hình bao gồm: tăng cường trí tuệ mã hóa tác nhân, thể hiện sự cải thiện đáng kể trong các bài kiểm tra chuẩn công khai và các nhiệm vụ mã hóa tác nhân trong thế giới thực; cải tiến trải nghiệm mã hóa giao diện người dùng, nâng cao cả về tính thẩm mỹ và tính thực tiễn trong lập trình giao diện."
+  },
+  "Pro/moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking Turbo là phiên bản Turbo của dòng Kimi K2, được tối ưu hóa về tốc độ suy luận và thông lượng, đồng thời vẫn giữ được khả năng suy luận nhiều bước và gọi công cụ của K2 Thinking. Mô hình này dựa trên kiến trúc chuyên gia hỗn hợp (MoE), với tổng số tham số khoảng 1 nghìn tỷ, hỗ trợ ngữ cảnh lên đến 256K và có thể thực hiện gọi công cụ quy mô lớn một cách ổn định, phù hợp với các tình huống sản xuất yêu cầu độ trễ thấp và khả năng xử lý đồng thời cao."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview là một mô hình xử lý ngôn ngữ tự nhiên độc đáo, có khả năng xử lý hiệu quả các nhiệm vụ tạo đối thoại phức tạp và hiểu ngữ cảnh."
@@ -1052,6 +1058,9 @@
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 là mô hình mã nguồn mở hỗn hợp chuyên gia, thể hiện xuất sắc trong các nhiệm vụ mã, tương đương với GPT4-Turbo."
   },
+  "deepseek-ocr": {
+    "description": "DeepSeek-OCR là một mô hình ngôn ngữ thị giác do DeepSeek AI phát triển, tập trung vào nhận dạng ký tự quang học (OCR) và 'nén quang học theo ngữ cảnh'. Mô hình này nhằm khám phá giới hạn của việc nén thông tin ngữ cảnh từ hình ảnh, có khả năng xử lý tài liệu hiệu quả và chuyển đổi chúng thành các định dạng văn bản có cấu trúc như Markdown. Nó có thể nhận diện chính xác nội dung văn bản trong hình ảnh, đặc biệt phù hợp với các ứng dụng như số hóa tài liệu, trích xuất văn bản và xử lý có cấu trúc."
+  },
   "deepseek-r1": {
     "description": "DeepSeek-R1 là một mô hình suy diễn được điều khiển bởi học tăng cường (RL), giải quyết các vấn đề về tính lặp lại và khả năng đọc hiểu trong mô hình. Trước khi áp dụng RL, DeepSeek-R1 đã giới thiệu dữ liệu khởi động lạnh, tối ưu hóa thêm hiệu suất suy diễn. Nó thể hiện hiệu suất tương đương với OpenAI-o1 trong các nhiệm vụ toán học, mã và suy diễn, và thông qua phương pháp đào tạo được thiết kế cẩn thận, nâng cao hiệu quả tổng thể."
   },
@@ -1268,6 +1277,9 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision là mô hình suy nghĩ sâu về thị giác, thể hiện khả năng hiểu và suy luận đa phương thức tổng quát mạnh mẽ hơn trong các kịch bản như giáo dục, kiểm duyệt hình ảnh, kiểm tra và an ninh, cũng như tìm kiếm và hỏi đáp AI. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa lên đến 64k token."
   },
+  "doubao-seed-code": {
+    "description": "Doubao-Seed-Code được tối ưu hóa sâu cho các tác vụ lập trình theo hướng Agentic, hỗ trợ đa phương tiện (văn bản/hình ảnh/video) và ngữ cảnh dài 256k, tương thích với API của Anthropic, phù hợp với các tình huống lập trình, hiểu thị giác và Agent."
+  },
   "doubao-seededit-3-0-i2i-250628": {
     "description": "Mô hình tạo ảnh Doubao do đội Seed của ByteDance phát triển, hỗ trợ đầu vào văn bản và hình ảnh, cung cấp trải nghiệm tạo ảnh chất lượng cao và kiểm soát tốt. Hỗ trợ chỉnh sửa hình ảnh qua chỉ dẫn văn bản, kích thước ảnh tạo ra từ 512 đến 1536 pixel."
   },
@@ -1327,6 +1339,9 @@
   },
   "ernie-4.5-vl-28b-a3b": {
     "description": "ERNIE 4.5 VL 28B A3B, mô hình đa phương thức mã nguồn mở, hỗ trợ các nhiệm vụ hiểu và suy luận hình ảnh-văn bản."
+  },
+  "ernie-5.0-thinking-latest": {
+    "description": "Wenxin 5.0 Thinking là mô hình hàng đầu hỗ trợ toàn bộ các chế độ đầu vào, hỗ trợ mô hình hóa thống nhất văn bản, hình ảnh, âm thanh và video, với năng lực tổng thể được nâng cấp toàn diện, phù hợp với các tình huống hỏi đáp phức tạp, sáng tạo và ứng dụng Agent."
   },
   "ernie-5.0-thinking-preview": {
     "description": "Wenxin 5.0 Thinking Preview, mô hình hàng đầu toàn phương thức nguyên bản, hỗ trợ mô hình hóa thống nhất văn bản, hình ảnh, âm thanh và video, nâng cấp toàn diện năng lực tổng hợp, phù hợp với hỏi đáp phức tạp, sáng tạo và tác tử thông minh."
@@ -2198,9 +2213,6 @@
   "kimi-latest": {
     "description": "Sản phẩm trợ lý thông minh Kimi sử dụng mô hình lớn Kimi mới nhất, có thể chứa các tính năng chưa ổn định. Hỗ trợ hiểu hình ảnh, đồng thời tự động chọn mô hình 8k/32k/128k làm mô hình tính phí dựa trên độ dài ngữ cảnh yêu cầu."
   },
-  "kimi-thinking-preview": {
-    "description": "Mô hình kimi-thinking-preview do Moon's Dark Side cung cấp, có khả năng suy luận đa phương thức và suy luận tổng quát, nổi bật với khả năng suy luận sâu, giúp giải quyết nhiều vấn đề khó khăn hơn."
-  },
   "kuaishou/kat-coder-pro-v1": {
     "description": "KAT-Coder-Pro-V1 (miễn phí trong thời gian giới hạn) tập trung vào hiểu mã và lập trình tự động, dùng cho các tác vụ lập trình hiệu quả."
   },
@@ -2245,9 +2257,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Mô hình Llama 3.3 được tối ưu hóa cho các tình huống đối thoại, và đã vượt qua nhiều mô hình trò chuyện nguồn mở hiện có trong các bài kiểm tra chuẩn ngành phổ biến."
-  },
-  "llama-4-scout-17b-16e-instruct": {
-    "description": "Llama 4 Scout: Mô hình hiệu suất cao thuộc dòng Llama, lý tưởng cho các tình huống yêu cầu thông lượng cao và độ trễ thấp."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B cung cấp khả năng xử lý phức tạp vô song, được thiết kế riêng cho các dự án yêu cầu cao."
@@ -2681,6 +2690,9 @@
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 là phiên bản mới nhất và mạnh mẽ nhất của Kimi K2. Đây là một mô hình ngôn ngữ chuyên gia hỗn hợp (MoE) hàng đầu với tổng số tham số lên đến 1 nghìn tỷ và 32 tỷ tham số kích hoạt. Các đặc điểm chính của mô hình bao gồm: tăng cường trí tuệ mã hóa tác nhân, thể hiện sự cải thiện đáng kể trong các bài kiểm tra chuẩn công khai và các nhiệm vụ mã hóa tác nhân trong thế giới thực; cải tiến trải nghiệm mã hóa giao diện người dùng, nâng cao cả về tính thẩm mỹ và tính thực tiễn trong lập trình giao diện."
   },
+  "moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking là mô hình suy nghĩ mã nguồn mở mới nhất và mạnh mẽ nhất. Nó mở rộng đáng kể độ sâu suy luận nhiều bước và duy trì khả năng sử dụng công cụ ổn định trong 200–300 lần gọi liên tiếp, thiết lập tiêu chuẩn mới trong các bài kiểm tra như Humanity's Last Exam (HLE), BrowseComp và các benchmark khác. Đồng thời, K2 Thinking thể hiện xuất sắc trong lập trình, toán học, suy luận logic và các tình huống Agent. Mô hình này dựa trên kiến trúc chuyên gia hỗn hợp (MoE), với tổng số tham số khoảng 1 nghìn tỷ, hỗ trợ cửa sổ ngữ cảnh 256K và gọi công cụ."
+  },
   "moonshotai/kimi-k2": {
     "description": "Kimi K2 là mô hình ngôn ngữ chuyên gia hỗn hợp (MoE) quy mô lớn do Moonshot AI phát triển, với tổng số tham số lên đến 1 nghìn tỷ và 32 tỷ tham số kích hoạt mỗi lần truyền tiến. Nó được tối ưu cho khả năng đại lý, bao gồm sử dụng công cụ nâng cao, suy luận và tổng hợp mã."
   },
@@ -2721,7 +2733,7 @@
     "description": "Tập trung vào suy diễn nâng cao và giải quyết các vấn đề phức tạp, bao gồm các nhiệm vụ toán học và khoa học. Rất phù hợp cho các ứng dụng cần hiểu biết sâu sắc về ngữ cảnh và quy trình làm việc đại diện."
   },
   "o1-mini": {
-    "description": "o1-mini là một mô hình suy diễn nhanh chóng và tiết kiệm chi phí, được thiết kế cho các ứng dụng lập trình, toán học và khoa học. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
+    "description": "Nhỏ hơn và nhanh hơn o1-preview, tiết kiệm chi phí đến 80%, thể hiện tốt trong việc tạo mã và xử lý ngữ cảnh nhỏ."
   },
   "o1-preview": {
     "description": "Tập trung vào suy luận nâng cao và giải quyết các vấn đề phức tạp, bao gồm các bài toán và nhiệm vụ khoa học. Rất phù hợp cho những ứng dụng cần khả năng hiểu biết ngữ cảnh sâu sắc và quy trình làm việc tự chủ."
@@ -2959,9 +2971,6 @@
   },
   "qwen-3-32b": {
     "description": "Qwen 3 32B: Mô hình dòng Qwen có hiệu suất tốt trong các nhiệm vụ đa ngôn ngữ và lập trình, thích hợp cho các ứng dụng sản xuất quy mô trung bình."
-  },
-  "qwen-3-coder-480b": {
-    "description": "Qwen 3 Coder 480B: Mô hình ngữ cảnh dài dành cho sinh mã và các nhiệm vụ lập trình phức tạp."
   },
   "qwen-coder-plus": {
     "description": "Mô hình mã hóa Tongyi Qianwen."
@@ -3323,6 +3332,9 @@
   "sonar-reasoning-pro": {
     "description": "Sản phẩm API mới được hỗ trợ bởi mô hình suy diễn DeepSeek."
   },
+  "spark-x": {
+    "description": "Giới thiệu khả năng của X1.5: (1) Thêm chế độ suy nghĩ điều chỉnh động, điều khiển qua trường thinking; (2) Tăng độ dài ngữ cảnh: đầu vào và đầu ra đều 64K; (3) Hỗ trợ chức năng FunctionCall."
+  },
   "stable-diffusion-3-medium": {
     "description": "Mô hình tạo hình ảnh từ văn bản mới nhất do Stability AI phát hành. Phiên bản này kế thừa ưu điểm của thế hệ trước, cải tiến đáng kể về chất lượng hình ảnh, hiểu văn bản và đa dạng phong cách, có thể giải thích chính xác các gợi ý ngôn ngữ tự nhiên phức tạp và tạo ra hình ảnh chính xác, đa dạng hơn."
   },
@@ -3524,9 +3536,6 @@
   "x-ai/grok-code-fast-1": {
     "description": "Grok Code Fast 1 là mô hình mã nhanh của xAI, đầu ra dễ đọc và phù hợp với kỹ thuật phần mềm."
   },
-  "x1": {
-    "description": "Mô hình Spark X1 sẽ được nâng cấp thêm, trên nền tảng dẫn đầu trong các nhiệm vụ toán học trong nước, đạt được hiệu quả trong các nhiệm vụ chung như suy luận, tạo văn bản, hiểu ngôn ngữ tương đương với OpenAI o1 và DeepSeek R1."
-  },
   "xai/grok-2": {
     "description": "Grok 2 là mô hình ngôn ngữ tiên tiến với khả năng suy luận hàng đầu. Nó có năng lực vượt trội trong trò chuyện, mã hóa và suy luận, đứng trên Claude 3.5 Sonnet và GPT-4-Turbo trên bảng xếp hạng LMSYS."
   },
@@ -3592,6 +3601,9 @@
   },
   "z-ai/glm-4.6": {
     "description": "GLM 4.6 là mô hình hàng đầu của Z.AI, mở rộng độ dài ngữ cảnh và khả năng lập trình."
+  },
+  "zai-glm-4.6": {
+    "description": "Thể hiện xuất sắc trong các tác vụ lập trình và suy luận, hỗ trợ truyền dữ liệu theo luồng và gọi công cụ, phù hợp với lập trình Agentic và các tình huống suy luận phức tạp."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 là mô hình nền tảng dành cho ứng dụng tác nhân thông minh, sử dụng kiến trúc chuyên gia hỗn hợp (Mixture-of-Experts). Được tối ưu sâu trong các lĩnh vực gọi công cụ, duyệt web, kỹ thuật phần mềm và lập trình front-end, hỗ trợ tích hợp liền mạch vào các tác nhân mã như Claude Code, Roo Code. GLM-4.5 sử dụng chế độ suy luận hỗn hợp, thích ứng với nhiều kịch bản ứng dụng như suy luận phức tạp và sử dụng hàng ngày."

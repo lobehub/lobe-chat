@@ -2,6 +2,56 @@
 
 # Changelog
 
+## [Version 2.0.0-next.159](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.158...v2.0.0-next.159)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### ✨ Features
+
+- **misc**: Betterauth username signin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Betterauth username signin, closes [#10607](https://github.com/lobehub/lobe-chat/issues/10607) ([f72a5e6](https://github.com/lobehub/lobe-chat/commit/f72a5e6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.158](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.157...v2.0.0-next.158)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Limit check-user response surface.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Limit check-user response surface, closes [#10609](https://github.com/lobehub/lobe-chat/issues/10609) ([2f6d3f0](https://github.com/lobehub/lobe-chat/commit/2f6d3f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.157](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.156...v2.0.0-next.157)
 
 <sup>Released on **2025-12-04**</sup>

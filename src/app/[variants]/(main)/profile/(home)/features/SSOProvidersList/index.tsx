@@ -12,23 +12,22 @@ import { userService } from '@/services/user';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
-import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { authSelectors } from '@/store/user/selectors';
 
 const providerNameStyle: CSSProperties = {
   textTransform: 'capitalize',
 };
 
 export const SSOProvidersList = memo(() => {
-  const userProfile = useUserStore(userProfileSelectors.userProfile);
   const isLoginWithBetterAuth = useUserStore(authSelectors.isLoginWithBetterAuth);
   const providers = useUserStore(authSelectors.authProviders);
-  const isEmailPasswordAuth = useUserStore(authSelectors.isEmailPasswordAuth);
+  const hasPasswordAccount = useUserStore(authSelectors.hasPasswordAccount);
   const refreshAuthProviders = useUserStore((s) => s.refreshAuthProviders);
   const oAuthSSOProviders = useServerConfigStore(serverConfigSelectors.oAuthSSOProviders);
   const { t } = useTranslation('auth');
 
   // Allow unlink if user has multiple SSO providers OR has email/password login
-  const allowUnlink = providers.length > 1 || isEmailPasswordAuth;
+  const allowUnlink = providers.length > 1 || hasPasswordAccount;
 
   // Get linked provider IDs for filtering
   const linkedProviderIds = useMemo(() => {
@@ -49,11 +48,7 @@ export const SSOProvidersList = memo(() => {
       return;
     }
     modal.confirm({
-      content: t('profile.sso.unlink.description', {
-        email: userProfile?.email || 'None',
-        provider,
-        providerAccountId,
-      }),
+      content: t('profile.sso.unlink.description', { provider }),
       okButtonProps: {
         danger: true,
       },
