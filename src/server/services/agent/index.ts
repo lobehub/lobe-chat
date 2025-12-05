@@ -5,7 +5,7 @@ import type { PartialDeep } from 'type-fest';
 import { AgentModel } from '@/database/models/agent';
 import { SessionModel } from '@/database/models/session';
 import { getServerDefaultAgentConfig } from '@/server/globalConfig';
-import { AgentItem } from '@/types/agent';
+import { AgentItem, LobeAgentConfig } from '@/types/agent';
 import { merge } from '@/utils/merge';
 
 import { UpdateAgentResult } from './type';
@@ -47,6 +47,30 @@ export class AgentService {
   async getBuiltinAgent(slug: string) {
     const agent = await this.agentModel.getBuiltinAgent(slug);
 
+    return this.mergeDefaultConfig(agent);
+  }
+
+  /**
+   * Get agent config by ID with default config merged.
+   *
+   * The returned agent config is merged with:
+   * 1. DEFAULT_AGENT_CONFIG (hardcoded defaults)
+   * 2. Server's globalDefaultAgentConfig (from environment variable DEFAULT_AGENT_CONFIG)
+   * 3. The actual agent config from database
+   *
+   * This ensures the frontend always receives a complete config with model/provider.
+   */
+  async getAgentConfigById(agentId: string) {
+    const agent = await this.agentModel.getAgentConfigById(agentId);
+
+    return this.mergeDefaultConfig(agent);
+  }
+
+  /**
+   * Merge default config with agent config.
+   * Returns null if agent is null/undefined.
+   */
+  private mergeDefaultConfig(agent: any): LobeAgentConfig | null {
     if (!agent) return null;
 
     // Merge configs: DEFAULT_AGENT_CONFIG -> serverDefaultAgentConfig -> agent
@@ -70,8 +94,8 @@ export class AgentService {
     // 1. Execute update
     await this.agentModel.updateConfig(agentId, value);
 
-    // 2. Query and return updated data
-    const agent = await this.agentModel.getAgentConfigById(agentId);
+    // 2. Query and return updated data (with default config merged)
+    const agent = await this.getAgentConfigById(agentId);
 
     return { agent: agent as any, success: true };
   }
