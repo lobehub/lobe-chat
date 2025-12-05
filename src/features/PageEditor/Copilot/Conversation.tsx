@@ -1,13 +1,13 @@
-import { ChatHeader } from '@lobehub/ui/chat';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { ChatInput, ChatList } from '@/features/Conversation';
+import NavHeader from '@/features/NavHeader';
 
 const Conversation = memo(() => {
   return (
     <Flexbox flex={1} height={'100%'}>
-      <ChatHeader />
+      <NavHeader showTogglePanelButton={false} />
       <Flexbox flex={1} height={'100%'}>
         <ChatList />
       </Flexbox>

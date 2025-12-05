@@ -47,7 +47,7 @@ const useStyles = createStyles(({ css }) => ({
   `,
   inputFullscreen: css`
     border: none;
-    border-radius: 0;
+    border-radius: 0 !important;
   `,
 }));
 

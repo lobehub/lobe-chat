@@ -1,34 +1,27 @@
 'use client';
 
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
-import { DraggablePanel } from '@lobehub/ui';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useAgentStore } from '@/store/agent';
-import { builtinAgentSelectors } from '@/store/agent/selectors';
 
-import AgentBuilderConversation from './features/AgentBuilderConversation';
-import AgentBuilderProvider from './features/AgentBuilderProvider';
+import AgentBuilder from './features/AgentBuilder';
 import Header from './features/Header';
 import ProfileEditor from './features/ProfileEditor';
 import ProfileProvider from './features/ProfileProvider';
 
 const AgentProfile = memo(() => {
-  const [chatPanelExpanded, setChatPanelExpanded] = useState(true);
-  const agentId = useAgentStore((s) => s.activeAgentId);
-
   // Initialize agent builder builtin agent
   const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
-  const agentBuilderId = useAgentStore(builtinAgentSelectors.agentBuilderId);
   useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.agentBuilder);
 
   return (
     <ProfileProvider>
       <Flexbox height={'100%'} horizontal>
         <Flexbox flex={1} height={'100%'}>
-          <Header onToggleAgentBuilder={() => setChatPanelExpanded((prev) => !prev)} />
+          <Header />
           <Flexbox
             height={'100%'}
             horizontal
@@ -40,20 +33,7 @@ const AgentProfile = memo(() => {
             </WideScreenContainer>
           </Flexbox>
         </Flexbox>
-
-        {agentId && agentBuilderId && (
-          <AgentBuilderProvider agentId={agentBuilderId}>
-            <DraggablePanel
-              expand={chatPanelExpanded}
-              maxWidth={600}
-              minWidth={300}
-              onExpandChange={setChatPanelExpanded}
-              placement="right"
-            >
-              <AgentBuilderConversation />
-            </DraggablePanel>
-          </AgentBuilderProvider>
-        )}
+        <AgentBuilder />
       </Flexbox>
     </ProfileProvider>
   );
