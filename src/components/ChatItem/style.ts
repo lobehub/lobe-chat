@@ -1,5 +1,4 @@
 import { createStyles } from 'antd-style';
-import { rgba } from 'polished';
 
 export const useStyles = createStyles(
   (
@@ -27,10 +26,8 @@ export const useStyles = createStyles(
     const blockStylish = css`
       padding-block: 8px;
       padding-inline: 12px;
-      border: 1px solid ${rgba(token.colorBorderSecondary, 0.66)};
       border-radius: ${token.borderRadiusLG}px;
-
-      background-color: ${token.colorBgContainer};
+      background-color: ${token.colorFillTertiary};
     `;
 
     const rawStylish = css`
@@ -42,7 +39,7 @@ export const useStyles = createStyles(
       transition: background-color 100ms ${token.motionEaseOut};
     `;
 
-    const typeStylish = variant === 'bubble' ? blockStylish : rawStylish;
+    const typeStylish = placement === 'right' ? blockStylish : rawStylish;
 
     const editingStylish =
       editing &&
