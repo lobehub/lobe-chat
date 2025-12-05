@@ -284,7 +284,7 @@ describe('topic action', () => {
         expect(result.current.data).toEqual(topics);
       });
       expect(useChatStore.getState().topicsInit).toBeTruthy();
-      expect(useChatStore.getState().topicMaps).toEqual({ [sessionId]: topics });
+      expect(useChatStore.getState().topicDataMap[sessionId]?.items).toEqual(topics);
     });
   });
   describe('useSearchTopics', () => {
@@ -443,8 +443,8 @@ describe('topic action', () => {
 
       await act(async () => {
         useChatStore.setState({
-          topicMaps: {
-            [groupId]: topics,
+          topicDataMap: {
+            [groupId]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
           },
         });
       });
@@ -524,16 +524,17 @@ describe('topic action', () => {
   describe('removeUnstarredTopic', () => {
     it('should remove unstarred topics and refresh the topic list', async () => {
       const { result } = renderHook(() => useChatStore());
+      const topics = [
+        { id: 'topic-1', favorite: false },
+        { id: 'topic-2', favorite: true },
+        { id: 'topic-3', favorite: false },
+      ] as ChatTopic[];
       // Set up mock state with unstarred topics
       await act(async () => {
         useChatStore.setState({
           activeAgentId: 'abc',
-          topicMaps: {
-            abc: [
-              { id: 'topic-1', favorite: false },
-              { id: 'topic-2', favorite: true },
-              { id: 'topic-3', favorite: false },
-            ] as ChatTopic[],
+          topicDataMap: {
+            abc: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
           },
         });
       });
@@ -573,7 +574,12 @@ describe('topic action', () => {
       const topics = [{ id: 'topic-1', title: 'Test Topic' }] as ChatTopic[];
       const { result } = renderHook(() => useChatStore());
       await act(async () => {
-        useChatStore.setState({ topicMaps: { test: topics }, activeAgentId: 'test' });
+        useChatStore.setState({
+          topicDataMap: {
+            test: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+          },
+          activeAgentId: 'test',
+        });
       });
 
       // Mock the `updateTopicTitleInSummary` and `refreshTopic` for spying
@@ -642,7 +648,12 @@ describe('topic action', () => {
       const topics = [{ id: topicId, title: 'Original Topic' }] as ChatTopic[];
 
       await act(async () => {
-        useChatStore.setState({ activeAgentId: 'abc', topicMaps: { abc: topics } });
+        useChatStore.setState({
+          activeAgentId: 'abc',
+          topicDataMap: {
+            abc: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+          },
+        });
       });
 
       const cloneTopicSpy = vi.spyOn(topicService, 'cloneTopic').mockResolvedValue(newTopicId);

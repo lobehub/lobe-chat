@@ -4,8 +4,13 @@ import { ChatTopic, ChatTopicSummary, GroupedTopic } from '@/types/topic';
 import { groupTopicsByTime } from '@/utils/client/topic';
 
 import { ChatStoreState } from '../../initialState';
+import { TopicData } from './initialState';
 
-const currentTopics = (s: ChatStoreState): ChatTopic[] | undefined => s.topicMaps[s.activeAgentId];
+// Helper selector: get current agent's topic data
+const currentTopicData = (s: ChatStoreState): TopicData | undefined =>
+  s.topicDataMap[s.activeAgentId];
+
+const currentTopics = (s: ChatStoreState): ChatTopic[] | undefined => currentTopicData(s)?.items;
 
 const currentActiveTopic = (s: ChatStoreState): ChatTopic | undefined => {
   return currentTopics(s)?.find((topic) => topic.id === s.activeTopicId);
@@ -20,9 +25,9 @@ const currentFavTopics = (s: ChatStoreState): ChatTopic[] =>
 const currentUnFavTopics = (s: ChatStoreState): ChatTopic[] =>
   currentTopics(s)?.filter((s) => !s.favorite) || [];
 
-const currentTopicLength = (s: ChatStoreState): number => currentTopics(s)?.length || 0;
+const currentTopicLength = (s: ChatStoreState): number => currentTopicData(s)?.items?.length || 0;
 
-const currentTopicCount = (s: ChatStoreState): number => s.topicCountMap[s.activeAgentId] || 0;
+const currentTopicCount = (s: ChatStoreState): number => currentTopicData(s)?.total || 0;
 
 const getTopicById =
   (id: string) =>
@@ -97,18 +102,19 @@ const groupedTopicsForSidebar =
       : groupTopicsByTime(limitedTopics);
   };
 
-const hasMoreTopics = (s: ChatStoreState): boolean => s.topicsHasMore[s.activeAgentId] ?? false;
+const hasMoreTopics = (s: ChatStoreState): boolean => currentTopicData(s)?.hasMore ?? false;
 
 const isLoadingMoreTopics = (s: ChatStoreState): boolean =>
-  s.topicLoadingMoreStates[s.activeAgentId] ?? false;
+  currentTopicData(s)?.isLoadingMore ?? false;
 
 const isExpandingPageSize = (s: ChatStoreState): boolean =>
-  s.topicPageSizeExpandingStates[s.activeAgentId] ?? false;
+  currentTopicData(s)?.isExpandingPageSize ?? false;
 
 export const topicSelectors = {
   currentActiveTopic,
   currentActiveTopicSummary,
   currentTopicCount,
+  currentTopicData,
   currentTopicLength,
   currentTopics,
   currentUnFavTopics,
