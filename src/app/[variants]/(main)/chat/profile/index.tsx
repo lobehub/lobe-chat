@@ -4,8 +4,11 @@ import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Loading from '@/components/Loading/BrandTextLoading';
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
+import { useRegisterFilesHotkeys, useSaveDocumentHotkey } from '@/hooks/useHotkeys';
 import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 import AgentBuilder from './features/AgentBuilder';
 import Header from './features/Header';
@@ -15,19 +18,32 @@ import { useProfileStore } from './features/store';
 
 const ProfileArea = memo(() => {
   const editor = useProfileStore((s) => s.editor);
+  const flushSave = useProfileStore((s) => s.flushSave);
+  const isAgentConfigLoading = useAgentStore(agentSelectors.isAgentConfigLoading);
+  // Register Files scope and save document hotkey
+  useRegisterFilesHotkeys();
+  useSaveDocumentHotkey(flushSave);
+
   return (
     <Flexbox flex={1} height={'100%'}>
       <Header />
       <Flexbox
         height={'100%'}
         horizontal
-        onClick={() => editor?.focus()}
+        onClick={() => {
+          if (isAgentConfigLoading) return;
+          editor?.focus();
+        }}
         style={{ cursor: 'text', display: 'flex', overflowY: 'auto', position: 'relative' }}
         width={'100%'}
       >
-        <WideScreenContainer>
-          <ProfileEditor />
-        </WideScreenContainer>
+        {isAgentConfigLoading ? (
+          <Loading />
+        ) : (
+          <WideScreenContainer>
+            <ProfileEditor />
+          </WideScreenContainer>
+        )}
       </Flexbox>
     </Flexbox>
   );

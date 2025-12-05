@@ -9,6 +9,11 @@
       "on": "Pokaż pasek narzędzi formatowania"
     }
   },
+  "autoSave": {
+    "latest": "Załadowano najnowszą wersję",
+    "saved": "Zapisano",
+    "saving": "Automatyczne zapisywanie..."
+  },
   "cancel": "Anuluj",
   "confirm": "Potwierdź",
   "file": {

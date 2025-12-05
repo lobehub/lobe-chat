@@ -9,6 +9,11 @@
       "on": "Mostrar barra de herramientas de formato"
     }
   },
+  "autoSave": {
+    "latest": "Última versión cargada",
+    "saved": "Guardado",
+    "saving": "Guardando automáticamente..."
+  },
   "cancel": "Cancelar",
   "confirm": "Confirmar",
   "file": {

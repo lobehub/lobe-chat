@@ -96,6 +96,12 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     scopes: [HotkeyScopeEnum.Chat],
   },
   {
+    group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.SaveDocument,
+    keys: combineKeys([KeyEnum.Mod, 's']),
+    scopes: [HotkeyScopeEnum.Files],
+  },
+  {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.AddUserMessage,
     keys: combineKeys([KeyEnum.Alt, KeyEnum.Enter]),
