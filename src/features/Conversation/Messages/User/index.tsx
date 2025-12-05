@@ -12,7 +12,7 @@ import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 import { markdownElements } from '../../MarkdownElements';
 import { MessageContent, useStyles } from '../../components/ChatItem';
@@ -45,6 +45,10 @@ const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing,
   const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
 
   const { content, createdAt, error, role, extra, targetId } = item;
+
+  const { highlighterTheme, mermaidTheme, fontSize } = useUserStore(
+    userGeneralSettingsSelectors.config,
+  );
 
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
@@ -110,14 +114,22 @@ const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing,
 
   const markdownProps = useMemo(
     () => ({
+      componentProps: {
+        highlight: {
+          fullFeatured: true,
+          theme: highlighterTheme,
+        },
+        mermaid: { fullFeatured: false, theme: mermaidTheme },
+      },
       components,
       customRender: (dom: ReactNode, { text }: { text: string }) => (
         <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />
       ),
+      fontSize,
       rehypePlugins,
       remarkPlugins,
     }),
-    [displayMode],
+    [components, displayMode, highlighterTheme, mermaidTheme, fontSize],
   );
 
   return (

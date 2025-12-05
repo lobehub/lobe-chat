@@ -4,12 +4,12 @@ import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
+import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
-import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import Reasoning from '../Assistant/Reasoning';
 import ImageFileListViewer from '../User/ImageFileListViewer';
 import ErrorContent from './Error';
@@ -57,9 +57,10 @@ export const ContentBlock = memo<ContentBlockProps>((props) => {
       animated,
       componentProps: {
         highlight: {
+          fullFeatured: true,
           theme: highlighterTheme,
         },
-        mermaid: { theme: mermaidTheme },
+        mermaid: { fullFeatured: false, theme: mermaidTheme },
       },
       components,
       enableCustomFootnotes: true,
