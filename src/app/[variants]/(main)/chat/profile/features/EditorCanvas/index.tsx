@@ -21,7 +21,7 @@ import { useStore } from '@/features/AgentSetting/store';
 
 import { useMentionOptions } from '../ProfileEditor/MentionList';
 import PROMPT_TEMPLATE from '../ProfileEditor/promptTemplate.json';
-import { useProfileContext } from '../ProfileProvider';
+import { useProfileStore } from '../store';
 import TypoBar from './TypoBar';
 import { useSlashItems } from './useSlashItems';
 
@@ -37,8 +37,8 @@ const EditorCanvas = memo(() => {
   const updateConfig = useStore((s) => s.setAgentConfig);
   const [initialLoad] = useState(editorData || PROMPT_TEMPLATE);
   const mentionOptions = useMentionOptions();
-  const { editor } = useProfileContext();
-  const slashItems = useSlashItems(editor);
+  const editor = useProfileStore((s) => s.editor);
+  const slashItems = useSlashItems();
 
   const debouncedSave = useMemo(
     () =>
@@ -98,7 +98,7 @@ const EditorCanvas = memo(() => {
     >
       <Editor
         content={initialLoad}
-        editor={editor}
+        editor={editor!}
         lineEmptyPlaceholder={t('settingAgent.prompt.placeholder')}
         mentionOption={mentionOptions}
         onInit={() => setEeitorInit(true)}
@@ -114,7 +114,7 @@ const EditorCanvas = memo(() => {
           ReactMathPlugin,
           ReactMentionPlugin,
           Editor.withProps(ReactToolbarPlugin, {
-            children: <TypoBar editor={editor} />,
+            children: <TypoBar />,
           }),
         ]}
         slashOption={{

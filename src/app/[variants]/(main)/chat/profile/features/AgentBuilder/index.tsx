@@ -5,13 +5,14 @@ import { memo } from 'react';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 
-import { useProfileContext } from '../ProfileProvider';
+import { useProfileStore } from '../store';
 import AgentBuilderConversation from './AgentBuilderConversation';
 import AgentBuilderProvider from './AgentBuilderProvider';
 
 const AgentBuilder = memo(() => {
   const theme = useTheme();
-  const { chatPanelExpanded, setChatPanelExpanded } = useProfileContext();
+  const chatPanelExpanded = useProfileStore((s) => s.chatPanelExpanded);
+  const setChatPanelExpanded = useProfileStore((s) => s.setChatPanelExpanded);
   const agentId = useAgentStore((s) => s.activeAgentId);
   const agentBuilderId = useAgentStore(builtinAgentSelectors.agentBuilderId);
 

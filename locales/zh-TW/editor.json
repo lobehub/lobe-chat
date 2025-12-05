@@ -20,9 +20,17 @@
   },
   "link": {
     "edit": "編輯連結",
+    "editLinkTitle": "連結",
+    "editTextTitle": "標題",
     "open": "開啟連結",
     "placeholder": "輸入連結 URL",
     "unlink": "取消連結"
+  },
+  "markdown": {
+    "cancel": "取消",
+    "confirm": "轉換",
+    "parseMessage": "將內容轉換為 Markdown 格式，現有內容將被覆蓋，是否確認？（5 秒後自動關閉）",
+    "parseTitle": "格式化 Markdown"
   },
   "math": {
     "placeholder": "請輸入 TeX 公式"
