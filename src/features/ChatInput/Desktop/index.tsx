@@ -82,7 +82,7 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
         <Flexbox
           className={cx(styles.container, expand && styles.fullscreen)}
           gap={8}
-          paddingBlock={expand ? 0 : showFootnote ? '0 8px' : '0 12px'}
+          paddingBlock={expand ? 0 : showFootnote ? '0 12px' : '0 16px'}
         >
           <ChatInput
             defaultHeight={chatInputHeight || 32}
