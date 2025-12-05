@@ -30,7 +30,7 @@ const AgentBuilder = memo(() => {
     >
       {agentId && agentBuilderId && (
         <AgentBuilderProvider agentId={agentBuilderId}>
-          <AgentBuilderConversation />
+          <AgentBuilderConversation agentId={agentBuilderId} />
         </AgentBuilderProvider>
       )}
     </DraggablePanel>
