@@ -11,8 +11,10 @@ import UserBanner from './features/UserBanner';
 
 const MeHomePage = memo(() => {
   const [isChangelogModalOpen, setIsChangelogModalOpen] = useState(false);
+  const [shouldLoadChangelog, setShouldLoadChangelog] = useState(false);
 
   const handleOpenChangelogModal = () => {
+    setShouldLoadChangelog(true);
     setIsChangelogModalOpen(true);
   };
 
@@ -27,7 +29,11 @@ const MeHomePage = memo(() => {
       <Center padding={16}>
         <BrandWatermark />
       </Center>
-      <ChangelogModal onClose={handleCloseChangelogModal} open={isChangelogModalOpen} />
+      <ChangelogModal
+        onClose={handleCloseChangelogModal}
+        open={isChangelogModalOpen}
+        shouldLoad={shouldLoadChangelog}
+      />
     </>
   );
 });
