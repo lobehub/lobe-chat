@@ -1,16 +1,16 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { memo } from 'react';
+import { Suspense, lazy, memo } from 'react';
 
-// Lazy load the CommandMenu component with Next.js dynamic import
+// Lazy load the CommandMenu component with React lazy
 // This splits the CommandMenu code into a separate chunk that only loads when needed
-// ssr: false ensures it only loads on the client side
-const CmdkComponent = dynamic(() => import('@/features/CommandMenu'), {
-  ssr: false,
-});
+const CmdkComponent = lazy(() => import('@/features/CommandMenu'));
 
-const CmdkLazy = memo(() => <CmdkComponent />);
+const CmdkLazy = memo(() => (
+  <Suspense fallback={null}>
+    <CmdkComponent />
+  </Suspense>
+));
 
 CmdkLazy.displayName = 'CmdkLazy';
 

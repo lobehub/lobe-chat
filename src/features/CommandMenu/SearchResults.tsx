@@ -1,8 +1,8 @@
 import { Command } from 'cmdk';
 import { FileText, MessageSquare, Sparkles } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import type { SearchResult } from '@/database/repositories/search';
 
@@ -15,24 +15,24 @@ interface SearchResultsProps {
 
 const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, styles }) => {
   const { t } = useTranslation('common');
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleNavigate = (result: SearchResult) => {
     switch (result.type) {
       case 'agent': {
-        router.push(`/agent/${result.id}?agent=${result.id}`);
+        navigate(`/agent/${result.id}?agent=${result.id}`);
         break;
       }
       case 'topic': {
         if (result.sessionId) {
-          router.push(`/chat?session=${result.sessionId}&topic=${result.id}`);
+          navigate(`/chat?session=${result.sessionId}&topic=${result.id}`);
         } else {
-          router.push(`/chat?topic=${result.id}`);
+          navigate(`/chat?topic=${result.id}`);
         }
         break;
       }
       case 'file': {
-        router.push(`/files?id=${result.id}`);
+        navigate(`/files?id=${result.id}`);
         break;
       }
     }
