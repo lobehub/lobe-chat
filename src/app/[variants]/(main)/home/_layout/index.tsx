@@ -19,7 +19,6 @@ const Layout = () => {
             ? `linear-gradient(to bottom, ${theme.colorBgContainer}, ${theme.colorBgContainerSecondary})`
             : theme.colorBgContainerSecondary,
           overflow: 'hidden',
-          position: 'relative',
         }}
       >
         <Outlet />
