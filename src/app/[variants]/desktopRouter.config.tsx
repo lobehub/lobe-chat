@@ -6,7 +6,13 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
 import DesktopMainLayout from './(main)/layouts';
-import { agentIdLoader, idLoader, slugLoader } from './loaders/routeParams';
+import {
+  agentIdLoader,
+  idLoader,
+  providerIdLoader,
+  settingsTabLoader,
+  slugLoader,
+} from './loaders/routeParams';
 
 // Create desktop router configuration
 export const createDesktopRouter = () =>
@@ -191,8 +197,34 @@ export const createDesktopRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/settings')),
               index: true,
+              loader: () => redirect('/settings/profile', { status: 302 }),
+            },
+            // Provider routes with nested structure
+            {
+              children: [
+                {
+                  index: true,
+                  loader: () => redirect('/settings/provider/all', { status: 302 }),
+                },
+                {
+                  element: dynamicElement(() =>
+                    import('./(main)/settings/provider').then((m) => m.ProviderDetailPage),
+                  ),
+                  loader: providerIdLoader,
+                  path: ':providerId',
+                },
+              ],
+              element: dynamicElement(() =>
+                import('./(main)/settings/provider').then((m) => m.ProviderLayout),
+              ),
+              path: 'provider',
+            },
+            // Other settings tabs
+            {
+              element: dynamicElement(() => import('./(main)/settings')),
+              loader: settingsTabLoader,
+              path: ':tab',
             },
           ],
           element: dynamicElement(() => import('./(main)/settings/_layout')),

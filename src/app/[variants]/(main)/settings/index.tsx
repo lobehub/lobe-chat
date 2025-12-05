@@ -1,21 +1,20 @@
 'use client';
 
 import { memo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 
+import { SettingsTabParams } from '@/app/[variants]/loaders/routeParams';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import { LayoutProps } from './_layout/type';
 import SettingsContent from './features/SettingsContent';
 
 const Layout = memo<LayoutProps>(() => {
-  const [searchParams] = useSearchParams();
+  const { tab } = useLoaderData() as SettingsTabParams;
 
-  const active = (searchParams.get('active') as SettingsTabs)
-    ? (searchParams.get('active') as SettingsTabs)
-    : SettingsTabs.Profile;
+  const activeTab = (tab as SettingsTabs) || SettingsTabs.Profile;
 
-  return <SettingsContent activeTab={active} mobile={false} />;
+  return <SettingsContent activeTab={activeTab} mobile={false} />;
 });
 
 Layout.displayName = 'DesktopSettingsLayout';
