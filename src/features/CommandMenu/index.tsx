@@ -111,7 +111,7 @@ const CommandMenu = memo(() => {
             {isAiMode && <ChatList messages={chatMessages} styles={styles} />}
           </Command.List>
 
-          <CommandFooter isAiMode={isAiMode} search={search} styles={styles} />
+          <CommandFooter styles={styles} />
         </Command>
       </div>
     </div>,
