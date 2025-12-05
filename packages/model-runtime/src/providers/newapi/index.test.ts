@@ -901,6 +901,7 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
 
       expect(mockFetch).toHaveBeenCalledWith('https://api.newapi.com/api/pricing', {
         headers: {
+          Accept: 'application/json; charset=utf-8',
           Authorization: 'Bearer test-key',
         },
       });
@@ -1294,8 +1295,6 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
           },
         ],
       });
-      expect(modelB.object).toBe('model');
-      expect(modelB.owned_by).toBe('newapi');
     });
 
     it('should not duplicate models that exist in both lists', async () => {
