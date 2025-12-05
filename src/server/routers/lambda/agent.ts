@@ -112,7 +112,7 @@ export const agentRouter = router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      return ctx.agentModel.getAgentConfigById(input.agentId);
+      return ctx.agentService.getAgentConfigById(input.agentId);
     }),
 
   /**
