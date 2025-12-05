@@ -65,12 +65,8 @@ export const pluginTypes: StateCreator<
   PluginTypesAction
 > = (set, get) => ({
   invokeBuiltinTool: async (id, payload) => {
-    // Check if this is a Klavis tool by querying the tool store
-    const isKlavisServer = useToolStore
-      .getState()
-      .servers?.some((s) => s.serverName === payload.identifier);
-
-    if (isKlavisServer) {
+    // Check if this is a Klavis tool by source field
+    if (payload.source === 'klavis') {
       return await get().invokeKlavisTypePlugin(id, payload);
     }
 
@@ -122,12 +118,13 @@ export const pluginTypes: StateCreator<
     );
 
     try {
-      const serverName = payload.identifier;
+      // payload.identifier 现在是存储用的 identifier（如 'google-calendar'）
+      const identifier = payload.identifier;
       const klavisServers = useToolStore.getState().servers || [];
-      const server = klavisServers.find((s) => s.serverName === serverName);
+      const server = klavisServers.find((s) => s.identifier === identifier);
 
       if (!server) {
-        throw new Error(`Klavis server not found: ${serverName}`);
+        throw new Error(`Klavis server not found: ${identifier}`);
       }
 
       // Parse arguments

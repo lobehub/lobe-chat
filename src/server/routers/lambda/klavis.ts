@@ -21,17 +21,20 @@ const klavisProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
 export const klavisRouter = router({
   /**
    * Create a single MCP server instance and save to database
-   * Returns: { serverUrl, instanceId, oauthUrl? }
+   * Returns: { serverUrl, instanceId, oauthUrl?, identifier, serverName }
    */
   createServerInstance: klavisProcedure
     .input(
       z.object({
+        /** Identifier for storage (e.g., 'google-calendar') */
+        identifier: z.string(),
+        /** Server name for Klavis API (e.g., 'Google Calendar') */
         serverName: z.string(),
         userId: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { serverName, userId } = input;
+      const { serverName, userId, identifier } = input;
 
       // 创建单个服务器实例
       const response = await ctx.klavisClient.mcpServer.createServerInstance({
@@ -45,8 +48,7 @@ export const klavisRouter = router({
       const toolsResponse = await ctx.klavisClient.mcpServer.getTools(serverName as any);
       const tools = toolsResponse.tools || [];
 
-      // 保存到数据库，使用 serverName 作为 identifier
-      const identifier = serverName;
+      // 保存到数据库，使用传入的 identifier（格式：小写，空格替换为连字符）
       const manifest: LobeChatPluginManifest = {
         api: tools.map((tool: any) => ({
           description: tool.description || '',
@@ -81,6 +83,7 @@ export const klavisRouter = router({
       });
 
       return {
+        identifier,
         instanceId,
         isAuthenticated,
         oauthUrl,
@@ -95,17 +98,17 @@ export const klavisRouter = router({
   deleteServerInstance: klavisProcedure
     .input(
       z.object({
+        /** Identifier for storage (e.g., 'google-calendar') */
+        identifier: z.string(),
         instanceId: z.string(),
-        serverName: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
       // 调用 Klavis API 删除服务器实例
       await ctx.klavisClient.mcpServer.deleteServerInstance(input.instanceId);
 
-      // 从数据库删除
-      const identifier = input.serverName;
-      await ctx.pluginModel.delete(identifier);
+      // 从数据库删除（使用 identifier）
+      await ctx.pluginModel.delete(input.identifier);
 
       return { success: true };
     }),
@@ -156,17 +159,17 @@ export const klavisRouter = router({
     }),
 
   /**
-   * Remove Klavis plugin from database by server name
+   * Remove Klavis plugin from database by identifier
    */
   removeKlavisPlugin: klavisProcedure
     .input(
       z.object({
-        serverName: z.string(),
+        /** Identifier for storage (e.g., 'google-calendar') */
+        identifier: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const identifier = input.serverName;
-      await ctx.pluginModel.delete(identifier);
+      await ctx.pluginModel.delete(input.identifier);
       return { success: true };
     }),
 
@@ -176,9 +179,12 @@ export const klavisRouter = router({
   updateKlavisPlugin: klavisProcedure
     .input(
       z.object({
+        /** Identifier for storage (e.g., 'google-calendar') */
+        identifier: z.string(),
         instanceId: z.string(),
         isAuthenticated: z.boolean(),
         oauthUrl: z.string().optional(),
+        /** Server name for Klavis API (e.g., 'Google Calendar') */
         serverName: z.string(),
         serverUrl: z.string(),
         tools: z.array(
@@ -191,10 +197,10 @@ export const klavisRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { serverName, serverUrl, instanceId, tools, isAuthenticated, oauthUrl } = input;
-      const identifier = serverName;
+      const { identifier, serverName, serverUrl, instanceId, tools, isAuthenticated, oauthUrl } =
+        input;
 
-      // 获取现有插件
+      // 获取现有插件（使用 identifier）
       const existingPlugin = await ctx.pluginModel.findById(identifier);
 
       // 构建包含所有工具的 manifest

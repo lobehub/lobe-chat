@@ -3,129 +3,167 @@ import { Klavis } from 'klavis';
 
 export interface KlavisServerType {
   icon: string | IconType;
-  id: Klavis.McpServerName;
+  /**
+   * Identifier used for storage in database (e.g., 'google-calendar')
+   * Format: lowercase, spaces replaced with hyphens
+   */
+  identifier: string;
   label: string;
+  /**
+   * Server name used to call Klavis API (e.g., 'Google Calendar')
+   */
+  serverName: Klavis.McpServerName;
 }
+
+/**
+ * Helper to generate identifier from label
+ * Converts "Google Calendar" to "google-calendar"
+ */
+const toIdentifier = (label: string): string => label.toLowerCase().replaceAll(' ', '-');
 
 export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/gmail.svg',
-    id: Klavis.McpServerName.Gmail,
+    identifier: toIdentifier('Gmail'),
     label: 'Gmail',
+    serverName: Klavis.McpServerName.Gmail,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googlecalendar.svg',
-    id: Klavis.McpServerName.GoogleCalendar,
+    identifier: toIdentifier('Google Calendar'),
     label: 'Google Calendar',
+    serverName: Klavis.McpServerName.GoogleCalendar,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/notion.svg',
-    id: Klavis.McpServerName.Notion,
+    identifier: toIdentifier('Notion'),
     label: 'Notion',
+    serverName: Klavis.McpServerName.Notion,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/airtable.svg',
-    id: Klavis.McpServerName.Airtable,
+    identifier: toIdentifier('Airtable'),
     label: 'Airtable',
+    serverName: Klavis.McpServerName.Airtable,
   },
   {
     icon: SiLinear,
-    id: Klavis.McpServerName.Linear,
+    identifier: toIdentifier('Linear'),
     label: 'Linear',
+    serverName: Klavis.McpServerName.Linear,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googlesheets.svg',
-    id: Klavis.McpServerName.GoogleSheets,
+    identifier: toIdentifier('Google Sheets'),
     label: 'Google Sheets',
+    serverName: Klavis.McpServerName.GoogleSheets,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googledocs.svg',
-    id: Klavis.McpServerName.GoogleDocs,
+    identifier: toIdentifier('Google Docs'),
     label: 'Google Docs',
+    serverName: Klavis.McpServerName.GoogleDocs,
   },
   {
     icon: SiGithub,
-    id: Klavis.McpServerName.Github,
+    identifier: toIdentifier('GitHub'),
     label: 'GitHub',
+    serverName: Klavis.McpServerName.Github,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/supabase.svg',
-    id: Klavis.McpServerName.Supabase,
+    identifier: toIdentifier('Supabase'),
     label: 'Supabase',
+    serverName: Klavis.McpServerName.Supabase,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googledrive.svg',
-    id: Klavis.McpServerName.GoogleDrive,
+    identifier: toIdentifier('Google Drive'),
     label: 'Google Drive',
+    serverName: Klavis.McpServerName.GoogleDrive,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/slack.svg',
-    id: Klavis.McpServerName.Slack,
+    identifier: toIdentifier('Slack'),
     label: 'Slack',
+    serverName: Klavis.McpServerName.Slack,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/confluence.svg',
-    id: Klavis.McpServerName.Confluence,
+    identifier: toIdentifier('Confluence'),
     label: 'Confluence',
+    serverName: Klavis.McpServerName.Confluence,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/jira.svg',
-    id: Klavis.McpServerName.Jira,
+    identifier: toIdentifier('Jira'),
     label: 'Jira',
+    serverName: Klavis.McpServerName.Jira,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/clickup.svg',
-    id: Klavis.McpServerName.Clickup,
+    identifier: toIdentifier('ClickUp'),
     label: 'ClickUp',
+    serverName: Klavis.McpServerName.Clickup,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/dropbox.svg',
-    id: Klavis.McpServerName.Dropbox,
+    identifier: toIdentifier('Dropbox'),
     label: 'Dropbox',
+    serverName: Klavis.McpServerName.Dropbox,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/figma.svg',
-    id: Klavis.McpServerName.Figma,
+    identifier: toIdentifier('Figma'),
     label: 'Figma',
+    serverName: Klavis.McpServerName.Figma,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/hubspot.svg',
-    id: Klavis.McpServerName.Hubspot,
+    identifier: toIdentifier('HubSpot'),
     label: 'HubSpot',
+    serverName: Klavis.McpServerName.Hubspot,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/onedrive.svg',
-    id: Klavis.McpServerName.Onedrive,
+    identifier: toIdentifier('OneDrive'),
     label: 'OneDrive',
+    serverName: Klavis.McpServerName.Onedrive,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/outlook.svg',
-    id: Klavis.McpServerName.OutlookMail,
+    identifier: toIdentifier('Outlook Mail'),
     label: 'Outlook Mail',
+    serverName: Klavis.McpServerName.OutlookMail,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/salesforce.svg',
-    id: Klavis.McpServerName.Salesforce,
+    identifier: toIdentifier('Salesforce'),
     label: 'Salesforce',
+    serverName: Klavis.McpServerName.Salesforce,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/whatsapp.svg',
-    id: Klavis.McpServerName.Whatsapp,
+    identifier: toIdentifier('WhatsApp'),
     label: 'WhatsApp',
+    serverName: Klavis.McpServerName.Whatsapp,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/youtube.svg',
-    id: Klavis.McpServerName.Youtube,
+    identifier: toIdentifier('YouTube'),
     label: 'YouTube',
+    serverName: Klavis.McpServerName.Youtube,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/zendesk.svg',
-    id: Klavis.McpServerName.Zendesk,
+    identifier: toIdentifier('Zendesk'),
     label: 'Zendesk',
+    serverName: Klavis.McpServerName.Zendesk,
   },
   {
     icon: SiCaldotcom,
-    id: Klavis.McpServerName.CalCom,
+    identifier: 'cal-com',
     label: 'Cal.com',
+    serverName: Klavis.McpServerName.CalCom,
   },
 ];

@@ -40,11 +40,16 @@ export const pluginInternals: StateCreator<
     const toolStoreState = useToolStore.getState();
     const manifests: Record<string, LobeChatPluginManifest> = {};
 
+    // Track source for each identifier
+    const sourceMap: Record<string, 'builtin' | 'plugin' | 'mcp' | 'klavis'> = {};
+
     // Get all installed plugins
     const installedPlugins = pluginSelectors.installedPlugins(toolStoreState);
     for (const plugin of installedPlugins) {
       if (plugin.manifest) {
         manifests[plugin.identifier] = plugin.manifest as LobeChatPluginManifest;
+        // Check if this plugin has MCP params
+        sourceMap[plugin.identifier] = plugin.customParams?.mcp ? 'mcp' : 'plugin';
       }
     }
 
@@ -52,6 +57,7 @@ export const pluginInternals: StateCreator<
     for (const tool of builtinTools) {
       if (tool.manifest) {
         manifests[tool.identifier] = tool.manifest as LobeChatPluginManifest;
+        sourceMap[tool.identifier] = 'builtin';
       }
     }
 
@@ -60,10 +66,16 @@ export const pluginInternals: StateCreator<
     for (const tool of klavisTools) {
       if (tool.manifest) {
         manifests[tool.identifier] = tool.manifest as LobeChatPluginManifest;
+        sourceMap[tool.identifier] = 'klavis';
       }
     }
 
-    return toolNameResolver.resolve(toolCalls, manifests);
+    // Resolve tool calls and add source field
+    const resolved = toolNameResolver.resolve(toolCalls, manifests);
+    return resolved.map((payload) => ({
+      ...payload,
+      source: sourceMap[payload.identifier],
+    }));
   },
 
   internal_constructToolsCallingContext: (id: string) => {

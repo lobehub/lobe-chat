@@ -29,7 +29,7 @@ import ToolItem from './ToolItem';
  * 对于 string 类型的 icon，使用 Image 组件渲染
  * 对于 IconType 类型的 icon，使用 Icon 组件渲染，并根据主题设置填充色
  */
-const KlavisIcon = memo<KlavisServerType>(({ icon, label }) => {
+const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label }) => {
   const theme = useTheme();
 
   if (typeof icon === 'string') {
@@ -84,18 +84,24 @@ export const useControls = ({
     }
   }, [isKlavisEnabledInEnv, loadUserKlavisServers]);
 
-  // 根据服务器名称获取已连接的服务器
-  const getServerByName = (serverName: string) => {
-    return allKlavisServers.find((server) => server.serverName === serverName);
+  // 根据 identifier 获取已连接的服务器
+  const getServerByName = (identifier: string) => {
+    return allKlavisServers.find((server) => server.identifier === identifier);
   };
 
-  // 获取所有 Klavis 服务器的 identifier 集合
-  const klavisServerIdentifiers = useToolStore(klavisStoreSelectors.getAllServerIdentifiers);
-
-  // 过滤掉 builtinList 中的 klavis 工具（它们会单独显示）
+  // 获取所有 Klavis 服务器类型的 identifier 集合（用于过滤 builtinList）
+  // 这里使用 KLAVIS_SERVER_TYPES 而不是已连接的服务器，因为我们要过滤掉所有可能的 Klavis 类型
+  const allKlavisTypeIdentifiers = useMemo(
+    () => new Set(KLAVIS_SERVER_TYPES.map((type) => type.identifier)),
+    [],
+  );
+  // 过滤掉 builtinList 中的 klavis 工具（它们会单独显示在 Klavis 区域）
   const filteredBuiltinList = useMemo(
-    () => builtinList.filter((item) => !klavisServerIdentifiers.has(item.identifier)),
-    [builtinList, klavisServerIdentifiers],
+    () =>
+      isKlavisEnabledInEnv
+        ? builtinList.filter((item) => !allKlavisTypeIdentifiers.has(item.identifier))
+        : builtinList,
+    [builtinList, allKlavisTypeIdentifiers, isKlavisEnabledInEnv],
   );
 
   // Klavis 服务器列表项
@@ -103,13 +109,14 @@ export const useControls = ({
     () =>
       isKlavisEnabledInEnv
         ? KLAVIS_SERVER_TYPES.map((type) => ({
-            icon: <KlavisIcon icon={type.icon} id={type.id} label={type.label} />,
-            key: type.id,
+            icon: <KlavisIcon icon={type.icon} label={type.label} />,
+            key: type.identifier,
             label: (
               <KlavisServerItem
+                identifier={type.identifier}
                 label={type.label}
-                server={getServerByName(type.id)}
-                type={type.id}
+                server={getServerByName(type.identifier)}
+                serverName={type.serverName}
               />
             ),
           }))
