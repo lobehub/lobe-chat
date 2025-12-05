@@ -133,10 +133,11 @@ const FileTreeItem = memo<{
       if (itemKey.startsWith('doc')) {
         setMode('page');
       } else {
+        // Set mode to 'file' immediately to prevent flickering to list view
+        setMode('file');
         navigate(`${currentPath}?file=${itemKey}`);
-        setMode('files');
       }
-    }, [itemKey, currentFolderSlug, knowledgeBaseId, navigate]);
+    }, [itemKey, currentFolderSlug, knowledgeBaseId, navigate, setMode, setCurrentViewItemId]);
 
     const handleFolderClick = useCallback(
       (folderId: string, folderSlug?: string | null) => {

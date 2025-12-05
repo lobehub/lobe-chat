@@ -94,7 +94,23 @@ export const createFileManageSlice: StateCreator<
     get().toggleEmbeddingIds(fileIds, false);
   },
   moveFileToFolder: async (fileId, parentId) => {
+    // Optimistically update all file list caches
+    await mutate(
+      (key) => Array.isArray(key) && key[0] === FETCH_ALL_KNOWLEDGE_KEY,
+      async (currentData: FileListItem[] | undefined) => {
+        if (!currentData) return currentData;
+        // Update the moved file's parentId in the cache
+        return currentData.map((item) => (item.id === fileId ? { ...item, parentId } : item));
+      },
+      {
+        revalidate: false, // Don't revalidate yet
+      },
+    );
+
+    // Perform the actual update
     await fileService.updateFile(fileId, { parentId });
+
+    // Revalidate to get fresh data from server
     await get().refreshFileList();
   },
   parseFilesToChunks: async (ids: string[], params) => {
@@ -156,12 +172,16 @@ export const createFileManageSlice: StateCreator<
           parentId,
         });
 
-        await get().refreshFileList();
+        // Note: Don't refresh after each file to avoid flickering
+        // We'll refresh once at the end
 
         return { file, fileId: result?.id, fileType: file.type };
       },
       { concurrency: MAX_UPLOAD_FILE_COUNT },
     );
+
+    // Refresh the file list once after all uploads are complete
+    await get().refreshFileList();
 
     // 4. auto-embed files that support chunking
     const fileIdsToEmbed = uploadResults
@@ -201,9 +221,15 @@ export const createFileManageSlice: StateCreator<
   refreshFileList: async () => {
     // Invalidate all queries that start with FETCH_ALL_KNOWLEDGE_KEY
     // This ensures all file lists (explorer, tree, etc.) are refreshed
-    await mutate((key) => Array.isArray(key) && key[0] === FETCH_ALL_KNOWLEDGE_KEY, undefined, {
-      revalidate: true,
-    });
+    // Note: We don't pass data as undefined to avoid clearing the cache,
+    // which would cause isLoading to become true and show skeleton screen
+    await mutate(
+      (key) => Array.isArray(key) && key[0] === FETCH_ALL_KNOWLEDGE_KEY,
+      async (currentData) => currentData,
+      {
+        revalidate: true,
+      },
+    );
   },
   removeAllFiles: async () => {
     await fileService.removeAllFiles();
@@ -220,8 +246,26 @@ export const createFileManageSlice: StateCreator<
   },
 
   renameFolder: async (folderId, newName) => {
+    // Optimistically update all file list caches
+    await mutate(
+      (key) => Array.isArray(key) && key[0] === FETCH_ALL_KNOWLEDGE_KEY,
+      async (currentData: FileListItem[] | undefined) => {
+        if (!currentData) return currentData;
+        // Update the folder's name in the cache
+        return currentData.map((item) =>
+          item.id === folderId ? { ...item, name: newName } : item,
+        );
+      },
+      {
+        revalidate: false, // Don't revalidate yet
+      },
+    );
+
+    // Perform the actual update
     const { documentService } = await import('@/services/document');
     await documentService.updateDocument({ id: folderId, title: newName });
+
+    // Revalidate to get fresh data from server
     await get().refreshFileList();
   },
 
@@ -335,12 +379,16 @@ export const createFileManageSlice: StateCreator<
           parentId,
         });
 
-        await get().refreshFileList();
+        // Note: Don't refresh after each file to avoid flickering
+        // We'll refresh once at the end
 
         return { file, fileId: result?.id, fileType: file.type };
       },
       { concurrency: MAX_UPLOAD_FILE_COUNT },
     );
+
+    // Refresh the file list once after all uploads are complete
+    await get().refreshFileList();
 
     // 8. Auto-embed files that support chunking
     const fileIdsToEmbed = uploadResults

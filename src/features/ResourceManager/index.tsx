@@ -68,7 +68,7 @@ const ResourceManager = memo<KnowledgeManagerProps>(
           );
         }
       }
-    }, [mode, documentId, knowledgeBaseId, category, onOpenFile]);
+    }, [mode, currentViewItemId, documentId, knowledgeBaseId, category, onOpenFile, setMode]);
 
     return (
       <>
