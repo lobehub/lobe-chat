@@ -3,14 +3,17 @@ import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { chatConfigByIdSelectors } from '@/store/agent/selectors';
+
+import { useAgentId } from '../../hooks/useAgentId';
 
 const IMAGE_RESOLUTIONS = ['1K', '2K', '4K'] as const;
 type ImageResolution = (typeof IMAGE_RESOLUTIONS)[number];
 
 const ImageResolutionSlider = memo(() => {
+  const agentId = useAgentId();
   const [config, updateAgentChatConfig] = useAgentStore((s) => [
-    agentChatConfigSelectors.currentChatConfig(s),
+    chatConfigByIdSelectors.getChatConfigById(agentId)(s),
     s.updateAgentChatConfig,
   ]);
 

@@ -8,10 +8,11 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { SearchMode } from '@/types/search';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import FCSearchModel from './FCSearchModel';
 import ModelBuiltinSearch from './ModelBuiltinSearch';
 
@@ -64,8 +65,9 @@ interface NetworkOption {
 
 const Item = memo<NetworkOption>(({ value, description, icon, label }) => {
   const { cx, styles } = useStyles();
+  const agentId = useAgentId();
   const [mode, updateAgentChatConfig] = useAgentStore((s) => [
-    agentChatConfigSelectors.agentSearchMode(s),
+    chatConfigByIdSelectors.getSearchModeById(agentId)(s),
     s.updateAgentChatConfig,
   ]);
 
@@ -93,12 +95,13 @@ const Item = memo<NetworkOption>(({ value, description, icon, label }) => {
 
 const Controls = memo(() => {
   const { t } = useTranslation('chat');
+  const agentId = useAgentId();
   const [model, provider, useModelBuiltinSearch, searchMode, updateAgentChatConfig] = useAgentStore(
     (s) => [
-      agentSelectors.currentAgentModel(s),
-      agentSelectors.currentAgentModelProvider(s),
-      agentChatConfigSelectors.useModelBuiltinSearch(s),
-      agentChatConfigSelectors.currentChatConfig(s).searchMode,
+      agentByIdSelectors.getAgentModelById(agentId)(s),
+      agentByIdSelectors.getAgentModelProviderById(agentId)(s),
+      chatConfigByIdSelectors.getUseModelBuiltinSearchById(agentId)(s),
+      chatConfigByIdSelectors.getChatConfigById(agentId)(s).searchMode,
       s.updateAgentChatConfig,
     ],
   );

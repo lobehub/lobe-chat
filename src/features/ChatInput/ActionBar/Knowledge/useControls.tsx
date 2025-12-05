@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 import FileIcon from '@/components/FileIcon';
 import RepoIcon from '@/components/LibIcon';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import CheckboxItem from '../components/CheckbokWithLoading';
 
 export const useControls = ({
@@ -18,9 +19,13 @@ export const useControls = ({
   setUpdating: (updating: boolean) => void;
 }) => {
   const { t } = useTranslation('chat');
+  const agentId = useAgentId();
 
-  const files = useAgentStore(agentSelectors.currentAgentFiles, isEqual);
-  const knowledgeBases = useAgentStore(agentSelectors.currentAgentKnowledgeBases, isEqual);
+  const files = useAgentStore((s) => agentByIdSelectors.getAgentFilesById(agentId)(s), isEqual);
+  const knowledgeBases = useAgentStore(
+    (s) => agentByIdSelectors.getAgentKnowledgeBasesById(agentId)(s),
+    isEqual,
+  );
 
   const [toggleFile, toggleKnowledgeBase] = useAgentStore((s) => [
     s.toggleFile,
