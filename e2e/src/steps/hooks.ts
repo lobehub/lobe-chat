@@ -3,6 +3,7 @@ import { After, AfterAll, Before, BeforeAll, Status, setDefaultTimeout } from '@
 import { startWebServer, stopWebServer } from '../support/webServer';
 import { CustomWorld } from '../support/world';
 
+process.env['E2E'] = '1';
 // Set default timeout for all steps to 120 seconds
 setDefaultTimeout(120_000);
 
