@@ -12,7 +12,7 @@ import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 
 import Body from './Body';
-import { PageEditorProvider } from './Context';
+import { PageEditorProvider, usePageEditorContext } from './Context';
 import Copilot from './Copilot';
 import Header from './Header';
 import PageAgentProvider from './PageAgentProvider';
@@ -29,12 +29,14 @@ const PageEditorContent = memo(() => {
   const { t } = useTranslation('file');
   const theme = useTheme();
   const { message } = App.useApp();
+  const { performSave } = usePageEditorContext();
 
   // Handle Cmd+S / Ctrl+S keyboard shortcut
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 's') {
         e.preventDefault();
+        void performSave();
         message.info(t('documentEditor.autoSaveMessage'));
       }
     };
@@ -43,7 +45,7 @@ const PageEditorContent = memo(() => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [t, message]);
+  }, [t, message, performSave]);
 
   return (
     <Flexbox height={'100%'} horizontal>

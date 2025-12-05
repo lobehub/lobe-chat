@@ -14,8 +14,15 @@ import {
   ReactTablePlugin,
   ReactToolbarPlugin,
 } from '@lobehub/editor';
-import { Editor, useEditor } from '@lobehub/editor/react';
-import { Heading1Icon, Heading2Icon, Heading3Icon, ImageIcon, Table2Icon } from 'lucide-react';
+import { Editor, useEditor, useEditorState } from '@lobehub/editor/react';
+import {
+  Heading1Icon,
+  Heading2Icon,
+  Heading3Icon,
+  ImageIcon,
+  SquareDashedBottomCodeIcon,
+  Table2Icon,
+} from 'lucide-react';
 import { CSSProperties, memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -27,6 +34,7 @@ type EditorInstance = ReturnType<typeof useEditor>;
 
 interface EditorContentProps {
   editor: EditorInstance;
+  onBlur?: () => void;
   onInit: (editor: EditorInstance) => void;
   onTextChange?: () => void;
   placeholder?: string;
@@ -34,10 +42,11 @@ interface EditorContentProps {
 }
 
 const EditorContent = memo<EditorContentProps>(
-  ({ editor, onTextChange, placeholder, style, onInit }) => {
-    const { t } = useTranslation('file');
+  ({ editor, onTextChange, placeholder, style, onInit, onBlur }) => {
+    const { t } = useTranslation(['file', 'editor']);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
+    const editorState = useEditorState(editor);
 
     const handleImageUpload = async (file: File) => {
       if (!editor) return;
@@ -115,6 +124,7 @@ const EditorContent = memo<EditorContentProps>(
         <Editor
           content={''}
           editor={editor}
+          onBlur={onBlur}
           onInit={onInit}
           onTextChange={onTextChange}
           placeholder={placeholder || t('documentEditor.editorPlaceholder')}
@@ -165,6 +175,14 @@ const EditorContent = memo<EditorContentProps>(
                 label: 'Table',
                 onSelect: (editor) => {
                   editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns: '3', rows: '3' });
+                },
+              },
+              {
+                icon: SquareDashedBottomCodeIcon,
+                key: 'codeblock',
+                label: t('typobar.codeblock', { ns: 'editor' }),
+                onSelect: () => {
+                  editorState.codeblock();
                 },
               },
               {

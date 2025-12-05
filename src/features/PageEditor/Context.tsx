@@ -28,6 +28,7 @@ interface PageEditorContextValue {
   onEditorInit: () => void;
   pageId: string | undefined;
   parentId: string | null | undefined;
+  performSave: () => Promise<void>;
   saveStatus: 'idle' | 'saving' | 'saved';
   setChatPanelExpanded: (expanded: boolean) => void;
   setCurrentEmoji: (emoji: string | undefined) => void;
@@ -147,6 +148,7 @@ export const PageEditorProvider = memo<PageEditorProviderProps>(
       onEditorInit,
       pageId,
       parentId: pageDocument?.parentId,
+      performSave,
       saveStatus,
       setChatPanelExpanded,
       setCurrentEmoji,
