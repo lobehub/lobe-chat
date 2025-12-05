@@ -1,8 +1,8 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { createNanoId, idGenerator, serverDB } from '@lobechat/database';
-import { betterAuth } from 'better-auth/minimal';
 import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { betterAuth } from 'better-auth/minimal';
 import { admin, genericOAuth, magicLink } from 'better-auth/plugins';
 
 import { authEnv } from '@/envs/auth';
@@ -119,6 +119,12 @@ export const auth = betterAuth({
     },
   },
 
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 10 * 60, // Cache duration in seconds
+    },
+  },
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
   }),
