@@ -8,7 +8,7 @@ import { dataSelectors } from '../data/selectors';
 /**
  * Tool Interaction Actions
  *
- * Handles tool call approval, rejection, and branch switching
+ * Handles tool call approval and rejection
  */
 export interface ToolAction {
   /**
@@ -25,11 +25,6 @@ export interface ToolAction {
    * Reject a tool call
    */
   rejectToolCall: (toolMessageId: string, reason?: string) => Promise<void>;
-
-  /**
-   * Switch message branch
-   */
-  switchMessageBranch: (messageId: string, branchIndex: number) => Promise<void>;
 }
 
 export const toolSlice: StateCreator<
@@ -95,9 +90,5 @@ export const toolSlice: StateCreator<
       : 'User reject this tool calling without reason';
 
     await updateMessageContent(toolMessageId, toolContent);
-  },
-
-  switchMessageBranch: async (messageId: string, branchIndex: number) => {
-    await get().updateMessageMetadata(messageId, { activeBranchIndex: branchIndex });
   },
 });

@@ -1,3 +1,4 @@
+import { buildFolderTree, sanitizeFolderName, topologicalSortFolders } from '@lobechat/utils';
 import pMap from 'p-map';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
@@ -11,11 +12,6 @@ import {
   uploadFileListReducer,
 } from '@/store/file/reducers/uploadFileList';
 import { FileListItem, QueryFileListParams } from '@/types/files';
-import {
-  buildFolderTree,
-  sanitizeFolderName,
-  topologicalSortFolders,
-} from '@/utils/folderStructure';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { unzipFile } from '@/utils/unzipFile';
 

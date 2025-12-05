@@ -195,40 +195,4 @@ describe('Tool Actions', () => {
       expect(mockRejectAndContinueToolCalling).toHaveBeenCalledWith('tool-call-1', 'Reason');
     });
   });
-
-  describe('switchMessageBranch', () => {
-    it('should call updateMessageMetadata with branch index', async () => {
-      const context: ConversationContext = {
-        agentId: 'session-1',
-        topicId: null,
-        threadId: null,
-      };
-
-      const store = createStore({ context });
-      const updateMessageMetadataSpy = vi.spyOn(store.getState(), 'updateMessageMetadata');
-
-      await act(async () => {
-        await store.getState().switchMessageBranch('msg-1', 2);
-      });
-
-      expect(updateMessageMetadataSpy).toHaveBeenCalledWith('msg-1', { activeBranchIndex: 2 });
-    });
-
-    it('should switch to branch index 0', async () => {
-      const context: ConversationContext = {
-        agentId: 'session-1',
-        topicId: null,
-        threadId: null,
-      };
-
-      const store = createStore({ context });
-      const updateMessageMetadataSpy = vi.spyOn(store.getState(), 'updateMessageMetadata');
-
-      await act(async () => {
-        await store.getState().switchMessageBranch('msg-1', 0);
-      });
-
-      expect(updateMessageMetadataSpy).toHaveBeenCalledWith('msg-1', { activeBranchIndex: 0 });
-    });
-  });
 });
