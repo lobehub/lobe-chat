@@ -41,7 +41,7 @@ interface ToolbarProps {
   style?: CSSProperties;
 }
 
-const Toolbar = memo<ToolbarProps>(({ floating, editor: editorProp, style, className }) => {
+const TypoBar = memo<ToolbarProps>(({ floating, editor: editorProp, style, className }) => {
   const { t } = useTranslation('editor');
   const context = useOptionalPageEditorContext();
   const editor = editorProp || context?.editor;
@@ -241,6 +241,6 @@ const Toolbar = memo<ToolbarProps>(({ floating, editor: editorProp, style, class
   );
 });
 
-Toolbar.displayName = 'PageEditorToolbar';
+TypoBar.displayName = 'PageEditorToolbar';
 
-export default Toolbar;
+export default TypoBar;

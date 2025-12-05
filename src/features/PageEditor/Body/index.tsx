@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { usePageEditorContext } from '../Context';
-import EditorContent from '../EditorContent';
+import EditorCanvas from '../EditorCanvas';
 import Title from './Title';
 
 const Body = memo(() => {
@@ -15,7 +15,7 @@ const Body = memo(() => {
   return (
     <Flexbox flex={1} style={{ overflowY: 'auto' }}>
       <Title />
-      <EditorContent
+      <EditorCanvas
         editor={editor}
         onBlur={performSave}
         onInit={onEditorInit}
