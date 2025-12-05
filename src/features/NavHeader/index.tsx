@@ -8,6 +8,7 @@ interface NavHeaderProps extends Omit<FlexboxProps, 'children'> {
   children?: ReactNode;
   left?: ReactNode;
   right?: ReactNode;
+  showTogglePanelButton?: boolean;
   styles?: {
     center?: CSSProperties;
     left?: CSSProperties;
@@ -15,38 +16,40 @@ interface NavHeaderProps extends Omit<FlexboxProps, 'children'> {
   };
 }
 
-const NavHeader = memo<NavHeaderProps>(({ style, children, left, right, styles, ...rest }) => {
-  const { expand } = useNavPanel();
-  const noContent = !left && !right;
+const NavHeader = memo<NavHeaderProps>(
+  ({ showTogglePanelButton = true, style, children, left, right, styles, ...rest }) => {
+    const { expand } = useNavPanel();
+    const noContent = !left && !right;
 
-  if (noContent && expand) return;
+    if (noContent && expand) return;
 
-  return (
-    <Flexbox
-      align={'center'}
-      flex={'none'}
-      gap={4}
-      height={44}
-      horizontal
-      justify={'space-between'}
-      padding={8}
-      style={style}
-      {...rest}
-    >
-      <Flexbox align={'center'} gap={2} horizontal justify={'flex-start'} style={styles?.left}>
-        {!expand && <TogglePanelButton />}
-        {left}
-      </Flexbox>
-      {children && (
-        <Flexbox flex={1} style={styles?.center}>
-          {children}
+    return (
+      <Flexbox
+        align={'center'}
+        flex={'none'}
+        gap={4}
+        height={44}
+        horizontal
+        justify={'space-between'}
+        padding={8}
+        style={style}
+        {...rest}
+      >
+        <Flexbox align={'center'} gap={2} horizontal justify={'flex-start'} style={styles?.left}>
+          {showTogglePanelButton && !expand && <TogglePanelButton />}
+          {left}
         </Flexbox>
-      )}
-      <Flexbox align={'center'} gap={2} horizontal justify={'flex-end'} style={styles?.right}>
-        {right}
+        {children && (
+          <Flexbox flex={1} style={styles?.center}>
+            {children}
+          </Flexbox>
+        )}
+        <Flexbox align={'center'} gap={2} horizontal justify={'flex-end'} style={styles?.right}>
+          {right}
+        </Flexbox>
       </Flexbox>
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export default NavHeader;
