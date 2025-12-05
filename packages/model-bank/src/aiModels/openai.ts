@@ -89,7 +89,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-12-04',
     settings: {
-      extendParams: ['gpt5_1ReasoningEffort'],
+      extendParams: ['codexMaxReasoningEffort'],
     },
     type: 'chat',
   },
