@@ -5,6 +5,17 @@ import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { MCPService } from '@/server/services/mcp';
 
 /**
+ * Klavis procedure with client initialized in context
+ */
+const klavisProcedure = authedProcedure.use(async (opts) => {
+  const klavisClient = getKlavisClient();
+
+  return opts.next({
+    ctx: { ...opts.ctx, klavisClient },
+  });
+});
+
+/**
  * Klavis router for tools
  * Contains callTool and listTools which call external Klavis API
  */
@@ -12,7 +23,7 @@ export const klavisRouter = router({
   /**
    * Call a tool on a Klavis Strata server
    */
-  callTool: authedProcedure
+  callTool: klavisProcedure
     .input(
       z.object({
         serverUrl: z.string(),
@@ -20,10 +31,8 @@ export const klavisRouter = router({
         toolName: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
-      const klavisClient = getKlavisClient();
-
-      const response = await klavisClient.mcpServer.callTools({
+    .mutation(async ({ ctx, input }) => {
+      const response = await ctx.klavisClient.mcpServer.callTools({
         serverUrl: input.serverUrl,
         toolArgs: input.toolArgs,
         toolName: input.toolName,
@@ -53,16 +62,14 @@ export const klavisRouter = router({
   /**
    * List tools available on a Klavis Strata server
    */
-  listTools: authedProcedure
+  listTools: klavisProcedure
     .input(
       z.object({
         serverUrl: z.string(),
       }),
     )
-    .query(async ({ input }) => {
-      const klavisClient = getKlavisClient();
-
-      const response = await klavisClient.mcpServer.listTools({
+    .query(async ({ ctx, input }) => {
+      const response = await ctx.klavisClient.mcpServer.listTools({
         serverUrl: input.serverUrl,
       });
 

@@ -4,7 +4,7 @@ import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, Store, ToyBrick } from 'lucide-react';
 import Image from 'next/image';
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -69,20 +69,18 @@ export const useControls = ({
   // Klavis 相关状态
   const allKlavisServers = useToolStore(klavisStoreSelectors.getServers, isEqual);
   const isKlavisEnabledInEnv = useServerConfigStore(serverConfigSelectors.enableKlavis);
-  const loadUserKlavisServers = useToolStore((s) => s.loadUserKlavisServers);
 
-  const [useFetchPluginStore] = useToolStore((s) => [s.useFetchPluginStore]);
+  const [useFetchPluginStore, useFetchUserKlavisServers] = useToolStore((s) => [
+    s.useFetchPluginStore,
+    s.useFetchUserKlavisServers,
+  ]);
 
   useFetchPluginStore();
   useFetchInstalledPlugins();
   useCheckPluginsIsInstalled(plugins);
 
-  // 加载用户的 Klavis 集成（从数据库）
-  useEffect(() => {
-    if (isKlavisEnabledInEnv) {
-      loadUserKlavisServers();
-    }
-  }, [isKlavisEnabledInEnv, loadUserKlavisServers]);
+  // 使用 SWR 加载用户的 Klavis 集成（从数据库）
+  useFetchUserKlavisServers(isKlavisEnabledInEnv);
 
   // 根据 identifier 获取已连接的服务器
   const getServerByName = (identifier: string) => {

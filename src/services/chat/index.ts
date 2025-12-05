@@ -88,7 +88,7 @@ class ChatService {
 
     // =================== 1. preprocess tools =================== //
 
-    let pluginIds = [...(enabledPlugins || [])];
+    const pluginIds = [...(enabledPlugins || [])];
 
     const toolsEngine = createAgentToolsEngine({
       model: payload.model,

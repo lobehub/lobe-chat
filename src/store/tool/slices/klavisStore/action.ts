@@ -1,4 +1,5 @@
 import { enableMapSet, produce } from 'immer';
+import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { lambdaClient, toolsClient } from '@/libs/trpc/client';
@@ -41,11 +42,6 @@ export interface KlavisStoreAction {
   createKlavisServer: (params: CreateKlavisServerParams) => Promise<KlavisServer | undefined>;
 
   /**
-   * 从数据库加载用户的 Klavis 插件
-   */
-  loadUserKlavisServers: () => Promise<void>;
-
-  /**
    * 刷新 Klavis Server 的工具列表
    * @param identifier - 服务器标识符 (e.g., 'google-calendar')
    */
@@ -56,6 +52,12 @@ export interface KlavisStoreAction {
    * @param identifier - 服务器标识符 (e.g., 'google-calendar')
    */
   removeKlavisServer: (identifier: string) => Promise<void>;
+
+  /**
+   * 使用 SWR 获取用户的 Klavis 服务器列表
+   * @param enabled - 是否启用获取
+   */
+  useFetchUserKlavisServers: (enabled: boolean) => SWRResponse<KlavisServer[]>;
 }
 
 export const createKlavisStoreSlice: StateCreator<
@@ -84,6 +86,8 @@ export const createKlavisStoreSlice: StateCreator<
         toolArgs,
         toolName,
       });
+
+      console.log('toolsClient.klavis.callTool-response', response);
 
       set(
         produce((draft: KlavisStoreState) => {
@@ -179,57 +183,6 @@ export const createKlavisStoreSlice: StateCreator<
       );
 
       return undefined;
-    }
-  },
-
-  loadUserKlavisServers: async () => {
-    try {
-      // 从数据库加载已保存的 Klavis 插件
-      const klavisPlugins = await lambdaClient.klavis.getKlavisPlugins.query();
-
-      if (klavisPlugins.length === 0) return;
-
-      // 转换为 KlavisServer 对象
-      const serversFromDb: KlavisServer[] = klavisPlugins
-        .filter((plugin) => plugin.customParams?.klavis)
-        .map((plugin) => {
-          const klavisParams = plugin.customParams!.klavis!;
-          const tools: KlavisTool[] = (plugin.manifest?.api || []).map((api) => ({
-            description: api.description,
-            inputSchema: api.parameters as KlavisTool['inputSchema'],
-            name: api.name,
-          }));
-
-          return {
-            createdAt: Date.now(),
-            // identifier 从数据库的 plugin.identifier 获取（这是存储用的标准格式）
-            identifier: plugin.identifier,
-            instanceId: klavisParams.instanceId,
-            isAuthenticated: klavisParams.isAuthenticated,
-            oauthUrl: klavisParams.oauthUrl,
-            serverName: klavisParams.serverName,
-            serverUrl: klavisParams.serverUrl,
-            status: klavisParams.isAuthenticated
-              ? KlavisServerStatus.CONNECTED
-              : KlavisServerStatus.PENDING_AUTH,
-            tools,
-          };
-        });
-
-      if (serversFromDb.length > 0) {
-        set(
-          produce((draft: KlavisStoreState) => {
-            // 使用 identifier 检查是否已存在
-            const existingIdentifiers = new Set(draft.servers.map((s) => s.identifier));
-            const newServers = serversFromDb.filter((s) => !existingIdentifiers.has(s.identifier));
-            draft.servers = [...draft.servers, ...newServers];
-          }),
-          false,
-          n('loadUserKlavisServers'),
-        );
-      }
-    } catch (error) {
-      console.error('[Klavis] Failed to load user integrations:', error);
     }
   },
 
@@ -365,4 +318,58 @@ export const createKlavisStoreSlice: StateCreator<
       }
     }
   },
+
+  useFetchUserKlavisServers: (enabled) =>
+    useSWR<KlavisServer[]>(
+      enabled ? 'fetchUserKlavisServers' : null,
+      async () => {
+        const klavisPlugins = await lambdaClient.klavis.getKlavisPlugins.query();
+
+        if (klavisPlugins.length === 0) return [];
+
+        // 转换为 KlavisServer 对象
+        return klavisPlugins
+          .filter((plugin) => plugin.customParams?.klavis)
+          .map((plugin) => {
+            const klavisParams = plugin.customParams!.klavis!;
+            const tools: KlavisTool[] = (plugin.manifest?.api || []).map((api) => ({
+              description: api.description,
+              inputSchema: api.parameters as KlavisTool['inputSchema'],
+              name: api.name,
+            }));
+
+            return {
+              createdAt: Date.now(),
+              identifier: plugin.identifier,
+              instanceId: klavisParams.instanceId,
+              isAuthenticated: klavisParams.isAuthenticated,
+              oauthUrl: klavisParams.oauthUrl,
+              serverName: klavisParams.serverName,
+              serverUrl: klavisParams.serverUrl,
+              status: klavisParams.isAuthenticated
+                ? KlavisServerStatus.CONNECTED
+                : KlavisServerStatus.PENDING_AUTH,
+              tools,
+            };
+          });
+      },
+      {
+        fallbackData: [],
+        onSuccess: (data) => {
+          if (data.length > 0) {
+            set(
+              produce((draft: KlavisStoreState) => {
+                // 使用 identifier 检查是否已存在
+                const existingIdentifiers = new Set(draft.servers.map((s) => s.identifier));
+                const newServers = data.filter((s) => !existingIdentifiers.has(s.identifier));
+                draft.servers = [...draft.servers, ...newServers];
+              }),
+              false,
+              n('useFetchUserKlavisServers'),
+            );
+          }
+        },
+        revalidateOnFocus: false,
+      },
+    ),
 });
