@@ -6,6 +6,7 @@ import {
   layerCallDurationHistogram,
   layersCallsCounter,
 } from '@lobechat/observability-otel/api';
+import type { UserMemoryLayer } from '@lobechat/types';
 
 import {
   ContextExtractor,
@@ -24,14 +25,18 @@ import {
   MemoryExtractionProvider,
   MemoryExtractionResult,
   MemoryExtractionSourceType,
-  MemoryLayer,
   PreparedExtractionContext,
 } from '../types';
 import { resolvePromptRoot } from '../utils/path';
 
-const LAYER_ORDER: MemoryLayer[] = ['identity', 'context', 'preference', 'experience'];
+const LAYER_ORDER: UserMemoryLayer[] = [
+  'identity' as UserMemoryLayer,
+  'context' as UserMemoryLayer,
+  'preference' as UserMemoryLayer,
+  'experience' as UserMemoryLayer,
+];
 
-const LAYER_LABEL_MAP: Record<MemoryLayer, string> = {
+const LAYER_LABEL_MAP: Record<UserMemoryLayer, string> = {
   context: 'contexts',
   experience: 'experiences',
   identity: 'identities',
@@ -80,7 +85,7 @@ export class MemoryExtractAgentService {
 
     this.gatekeeper = new UserMemoryGateKeeper(gatekeeperConfig);
 
-    const buildExtractorConfig = (layer: MemoryLayer): BaseExtractorDependencies => {
+    const buildExtractorConfig = (layer: UserMemoryLayer): BaseExtractorDependencies => {
       const model = this.config.layerModels[layer];
       if (!model) {
         throw new Error(`Missing model configuration for memory layer: ${layer}`);
@@ -93,10 +98,18 @@ export class MemoryExtractAgentService {
       } satisfies BaseExtractorDependencies;
     };
 
-    this.identityExtractor = new IdentityExtractor(buildExtractorConfig('identity'));
-    this.contextExtractor = new ContextExtractor(buildExtractorConfig('context'));
-    this.experienceExtractor = new ExperienceExtractor(buildExtractorConfig('experience'));
-    this.preferenceExtractor = new PreferenceExtractor(buildExtractorConfig('preference'));
+    this.identityExtractor = new IdentityExtractor(
+      buildExtractorConfig('identity' as UserMemoryLayer),
+    );
+    this.contextExtractor = new ContextExtractor(
+      buildExtractorConfig('context' as UserMemoryLayer),
+    );
+    this.experienceExtractor = new ExperienceExtractor(
+      buildExtractorConfig('experience' as UserMemoryLayer),
+    );
+    this.preferenceExtractor = new PreferenceExtractor(
+      buildExtractorConfig('preference' as UserMemoryLayer),
+    );
 
     const defaultProvider = new ChatTopicProvider();
     this.providers.set(defaultProvider.type, defaultProvider);
@@ -122,7 +135,7 @@ export class MemoryExtractAgentService {
 
   private recordLayerCallMetrics(
     job: MemoryExtractionJob,
-    layer: MemoryLayer,
+    layer: UserMemoryLayer,
     durationMs: number,
     status: 'ok' | 'error',
   ) {
@@ -138,7 +151,7 @@ export class MemoryExtractAgentService {
 
   private async runLayerExtractor<T>(
     job: MemoryExtractionJob,
-    layer: MemoryLayer,
+    layer: UserMemoryLayer,
     extractor: () => Promise<T>,
   ): Promise<T> {
     const start = Date.now();
@@ -214,13 +227,16 @@ export class MemoryExtractAgentService {
     }
   }
 
-  private resolveLayers(decision: GatekeeperDecision): MemoryLayer[] {
+  private resolveLayers(decision: GatekeeperDecision): UserMemoryLayer[] {
     return LAYER_ORDER.filter((layer) => decision[layer]?.shouldExtract);
   }
 
-  private resolveJobLayers(decision: GatekeeperDecision, layers?: MemoryLayer[]): MemoryLayer[] {
+  private resolveJobLayers(
+    decision: GatekeeperDecision,
+    layers?: UserMemoryLayer[],
+  ): UserMemoryLayer[] {
     if (layers && layers.length > 0) {
-      const requested = new Set<MemoryLayer>(layers);
+      const requested = new Set<UserMemoryLayer>(layers);
 
       return this.resolveLayers(decision).filter((layer) => requested.has(layer));
     }
@@ -231,11 +247,11 @@ export class MemoryExtractAgentService {
   private async runLayers(
     job: MemoryExtractionJob,
     context: PreparedExtractionContext,
-    layers: MemoryLayer[],
+    layers: UserMemoryLayer[],
   ): Promise<MemoryExtractionLayerOutputs> {
     const outputs: MemoryExtractionLayerOutputs = {};
 
-    for (const layer of layers) {
+    for (const layer of layers as UserMemoryLayer[]) {
       const result = await this.runLayer(job, context, layer);
 
       switch (layer) {
@@ -267,7 +283,7 @@ export class MemoryExtractAgentService {
   private async runLayer(
     job: MemoryExtractionJob,
     context: PreparedExtractionContext,
-    layer: MemoryLayer,
+    layer: UserMemoryLayer,
   ) {
     switch (layer) {
       case 'context': {
@@ -289,19 +305,19 @@ export class MemoryExtractAgentService {
   }
 
   private async runContextLayer(job: MemoryExtractionJob, context: PreparedExtractionContext) {
-    return this.runLayerExtractor(job, 'context', () =>
+    return this.runLayerExtractor(job, 'context' as UserMemoryLayer, () =>
       this.contextExtractor.extract(context.conversation, context.options),
     );
   }
 
   private async runExperienceLayer(job: MemoryExtractionJob, context: PreparedExtractionContext) {
-    return this.runLayerExtractor(job, 'experience', () =>
+    return this.runLayerExtractor(job, 'experience' as UserMemoryLayer, () =>
       this.experienceExtractor.extract(context.conversation, context.options),
     );
   }
 
   private async runPreferenceLayer(job: MemoryExtractionJob, context: PreparedExtractionContext) {
-    return this.runLayerExtractor(job, 'preference', () =>
+    return this.runLayerExtractor(job, 'preference' as UserMemoryLayer, () =>
       this.preferenceExtractor.extract(context.conversation, context.options),
     );
   }
@@ -311,7 +327,7 @@ export class MemoryExtractAgentService {
       ...context.options,
       existingIdentitiesContext: context.existingIdentitiesContext,
     };
-    return this.runLayerExtractor(job, 'identity', () =>
+    return this.runLayerExtractor(job, 'identity' as UserMemoryLayer, () =>
       this.identityExtractor.extract(context.conversation, identityOptions),
     );
   }

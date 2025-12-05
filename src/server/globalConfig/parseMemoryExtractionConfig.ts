@@ -21,6 +21,7 @@ export interface MemoryExtractionPrivateConfig {
   agentLayerExtractor: MemoryLayerExtractorConfig;
   concurrency?: number;
   embedding: MemoryAgentConfig;
+  webhookHeaders?: Record<string, string>;
   whitelistUsers?: string[];
 }
 
@@ -114,11 +115,22 @@ export const parseMemoryExtractionConfig = (): MemoryExtractionPrivateConfig => 
     .filter(Boolean)
     .map((s) => s.trim());
 
+  const webhookHeaders = process.env.MEMORY_USER_MEMORY_WEBHOOK_HEADERS?.split(',')
+    .filter(Boolean)
+    .reduce<Record<string, string>>((acc, pair) => {
+      const [key, value] = pair.split('=').map((s) => s.trim());
+      if (key && value) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
   return {
     agentGateKeeper,
     agentLayerExtractor,
     concurrency,
     embedding,
+    webhookHeaders,
     whitelistUsers,
   };
 };
