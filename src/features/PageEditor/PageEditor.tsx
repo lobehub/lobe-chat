@@ -1,14 +1,13 @@
 'use client';
 
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
-import { App } from 'antd';
 import { useTheme } from 'antd-style';
-import { memo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { BrandTextLoading } from '@/components/Loading';
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
+import { useRegisterFilesHotkeys, useSaveDocumentHotkey } from '@/hooks/useHotkeys';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 
@@ -29,26 +28,12 @@ interface PageEditorProps {
 }
 
 const PageEditorCanvas = memo(() => {
-  const { t } = useTranslation('file');
-  const { message } = App.useApp();
-  const performSave = usePageEditorStore((s) => s.performSave);
   const editor = usePageEditorStore((s) => s.editor);
+  const flushSave = usePageEditorStore((s) => s.flushSave);
 
-  // Handle Cmd+S / Ctrl+S keyboard shortcut
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
-        e.preventDefault();
-        void performSave();
-        message.info(t('documentEditor.autoSaveMessage'));
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [t, message, performSave]);
+  // Register Files scope and save document hotkey
+  useRegisterFilesHotkeys();
+  useSaveDocumentHotkey(flushSave);
 
   return (
     <Flexbox height={'100%'} horizontal>

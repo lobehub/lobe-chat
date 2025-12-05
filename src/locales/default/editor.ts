@@ -9,6 +9,11 @@ export default {
       on: '显示格式工具栏',
     },
   },
+  autoSave: {
+    latest: '已加载最新版本',
+    saved: '已保存',
+    saving: '自动保存中...',
+  },
   cancel: '取消',
   confirm: '确认',
   file: {

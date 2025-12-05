@@ -9,6 +9,11 @@
       "on": "Toon opmaakwerkbalk"
     }
   },
+  "autoSave": {
+    "latest": "Nieuwste versie geladen",
+    "saved": "Opgeslagen",
+    "saving": "Automatisch opslaan..."
+  },
   "cancel": "Annuleren",
   "confirm": "Bevestigen",
   "file": {

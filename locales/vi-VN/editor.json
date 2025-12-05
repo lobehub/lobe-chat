@@ -9,6 +9,11 @@
       "on": "Hiển thị thanh công cụ định dạng"
     }
   },
+  "autoSave": {
+    "latest": "Đã tải phiên bản mới nhất",
+    "saved": "Đã lưu",
+    "saving": "Đang tự động lưu..."
+  },
   "cancel": "Hủy",
   "confirm": "Xác nhận",
   "file": {

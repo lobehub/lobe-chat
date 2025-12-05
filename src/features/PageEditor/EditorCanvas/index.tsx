@@ -30,7 +30,6 @@ const EditorCanvas = memo<EditorCanvasProps>(({ placeholder, style }) => {
   const editor = usePageEditorStore((s) => s.editor);
   const handleContentChange = usePageEditorStore((s) => s.handleContentChange);
   const onEditorInit = usePageEditorStore((s) => s.onEditorInit);
-  const performSave = usePageEditorStore((s) => s.performSave);
 
   const slashItems = useSlashItems(editor);
 
@@ -47,7 +46,6 @@ const EditorCanvas = memo<EditorCanvasProps>(({ placeholder, style }) => {
         content={''}
         editor={editor!}
         lineEmptyPlaceholder={placeholder || t('documentEditor.editorPlaceholder')}
-        onBlur={performSave}
         onInit={onEditorInit}
         onTextChange={handleContentChange}
         placeholder={placeholder || t('documentEditor.editorPlaceholder')}

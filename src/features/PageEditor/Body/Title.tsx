@@ -24,7 +24,6 @@ const Title = memo(() => {
   const currentTitle = usePageEditorStore((s) => s.currentTitle);
   const setCurrentEmoji = usePageEditorStore((s) => s.setCurrentEmoji);
   const setCurrentTitle = usePageEditorStore((s) => s.setCurrentTitle);
-  const debouncedSave = usePageEditorStore((s) => s.debouncedSave);
   const handleTitleSubmit = usePageEditorStore((s) => s.handleTitleSubmit);
 
   const [isHoveringTitle, setIsHoveringTitle] = useState(false);
@@ -52,12 +51,10 @@ const Title = memo(() => {
           onChange={(emoji) => {
             setCurrentEmoji(emoji);
             setShowEmojiPicker(false);
-            debouncedSave();
           }}
           onDelete={() => {
             setCurrentEmoji(undefined);
             setShowEmojiPicker(false);
-            debouncedSave();
           }}
           onOpenChange={(open) => {
             setShowEmojiPicker(open);
@@ -94,7 +91,6 @@ const Title = memo(() => {
       <Input
         onChange={(e) => {
           setCurrentTitle(e.target.value);
-          debouncedSave();
         }}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {

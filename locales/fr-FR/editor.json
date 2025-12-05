@@ -9,6 +9,11 @@
       "on": "Afficher la barre d'outils de formatage"
     }
   },
+  "autoSave": {
+    "latest": "Dernière version chargée",
+    "saved": "Enregistré",
+    "saving": "Enregistrement automatique en cours..."
+  },
   "cancel": "Annuler",
   "confirm": "Confirmer",
   "file": {
