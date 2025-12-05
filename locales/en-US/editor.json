@@ -20,9 +20,17 @@
   },
   "link": {
     "edit": "Edit link",
+    "editLinkTitle": "Link",
+    "editTextTitle": "Title",
     "open": "Open link",
     "placeholder": "Enter link URL",
     "unlink": "Unlink"
+  },
+  "markdown": {
+    "cancel": "Cancel",
+    "confirm": "Convert",
+    "parseMessage": "Convert to Markdown format. Existing content will be overwritten. Are you sure? (Closes automatically in 5 seconds)",
+    "parseTitle": "Format as Markdown"
   },
   "math": {
     "placeholder": "Please enter a TeX formula"

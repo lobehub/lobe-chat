@@ -20,9 +20,17 @@
   },
   "link": {
     "edit": "Link bewerken",
+    "editLinkTitle": "Link",
+    "editTextTitle": "Titel",
     "open": "Link openen",
     "placeholder": "Voer de URL van de link in",
     "unlink": "Link verwijderen"
+  },
+  "markdown": {
+    "cancel": "Annuleren",
+    "confirm": "Converteren",
+    "parseMessage": "Converteren naar Markdown-indeling. Bestaande inhoud wordt overschreven. Weet je het zeker? (Sluit automatisch over 5 seconden)",
+    "parseTitle": "Markdown opmaken"
   },
   "math": {
     "placeholder": "Voer TeX-formule in"

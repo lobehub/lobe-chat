@@ -6,12 +6,13 @@ import WideScreenButton from '@/app/[variants]/(main)/chat/features/WideScreenBu
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 
-import { useProfileContext } from '../ProfileProvider';
+import { useProfileStore } from '../store';
 import AgentPublishButton from './AgentPublishButton';
 import AutoSaveHint from './AutoSaveHint';
 
 const Header = memo(() => {
-  const { chatPanelExpanded, setChatPanelExpanded } = useProfileContext();
+  const chatPanelExpanded = useProfileStore((s) => s.chatPanelExpanded);
+  const setChatPanelExpanded = useProfileStore((s) => s.setChatPanelExpanded);
 
   return (
     <NavHeader
