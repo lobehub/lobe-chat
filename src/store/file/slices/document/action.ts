@@ -168,6 +168,8 @@ export const createDocumentSlice: StateCreator<
       title: name,
     });
 
+    // Refresh file list to show the new folder
+    // Note: refreshFileList now keeps cache to avoid skeleton flash
     await get().refreshFileList();
 
     return folder.id;
