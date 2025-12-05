@@ -264,9 +264,10 @@ const AssistantMessage = memo<AssistantMessageProps>(
                 </>
               );
             },
+            fullFeatured: true,
             theme: highlighterTheme,
           },
-          mermaid: { theme: mermaidTheme },
+          mermaid: { fullFeatured: false, theme: mermaidTheme },
         },
         components,
         enableCustomFootnotes: true,

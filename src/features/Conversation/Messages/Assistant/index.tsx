@@ -180,7 +180,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
     const type = useAgentStore(agentChatConfigSelectors.displayMode);
     const variant = type === 'chat' ? 'bubble' : 'docs';
 
-    const { transitionMode, highlighterTheme, mermaidTheme } = useUserStore(
+    const { transitionMode, highlighterTheme, mermaidTheme, fontSize } = useUserStore(
       userGeneralSettingsSelectors.config,
     );
 
@@ -254,7 +254,6 @@ const AssistantMessage = memo<AssistantMessageProps>(
           highlight: {
             actionsRender: ({ content, actionIconSize, language, originalNode }: any) => {
               const showHtmlPreview = isHtmlCode(content, language);
-
               return (
                 <>
                   {showHtmlPreview && <HtmlPreviewAction content={content} size={actionIconSize} />}
@@ -262,12 +261,14 @@ const AssistantMessage = memo<AssistantMessageProps>(
                 </>
               );
             },
+            fullFeatured: true,
             theme: highlighterTheme,
           },
-          mermaid: { theme: mermaidTheme },
+          mermaid: { fullFeatured: false, theme: mermaidTheme },
         },
         components,
         enableCustomFootnotes: true,
+        fontSize,
         rehypePlugins,
         remarkPlugins,
         showFootnotes:
@@ -277,7 +278,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
           // if the citations's url and title are all the same, we should not show the citations
           search?.citations.every((item) => item.title !== item.url),
       }),
-      [animated, components, role, search, highlighterTheme, mermaidTheme],
+      [animated, components, role, search, highlighterTheme, mermaidTheme, fontSize],
     );
 
     const [isInbox] = useSessionStore((s) => [sessionSelectors.isInboxSession(s)]);
