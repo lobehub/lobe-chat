@@ -76,7 +76,7 @@ const ChatInput = memo<ChatInputProps>(
     const { t } = useTranslation('chat');
 
     // ConversationStore state
-    const [activeAgentId, inputMessage, sendMessage, stopGenerating] = useConversationStore((s) => [
+    const [agentId, inputMessage, sendMessage, stopGenerating] = useConversationStore((s) => [
       s.context.agentId,
       s.inputMessage,
       s.sendMessage,
@@ -151,7 +151,7 @@ const ChatInput = memo<ChatInputProps>(
 
     return (
       <ChatInputProvider
-        agentId={activeAgentId}
+        agentId={agentId}
         chatInputEditorRef={(instance) => {
           if (instance) {
             setEditor(instance);

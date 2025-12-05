@@ -147,6 +147,16 @@
     "noResults": "Không tìm thấy kết quả phù hợp",
     "openSettings": "Mở cài đặt",
     "painting": "Vẽ bằng AI",
+    "search": {
+      "agent": "Trợ lý",
+      "agents": "Trợ lý",
+      "file": "Tệp",
+      "files": "Tệp",
+      "loading": "Đang tìm kiếm...",
+      "searching": "Kết quả tìm kiếm",
+      "topic": "Chủ đề",
+      "topics": "Chủ đề"
+    },
     "searchPlaceholder": "Nhập lệnh hoặc tìm kiếm...",
     "settings": "Cài đặt",
     "starOnGitHub": "Đánh giá sao trên GitHub",

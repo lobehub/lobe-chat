@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "連接...",
+      "gitignore": {
+        "apply": "套用規則",
+        "cancel": "忽略規則",
+        "content": "偵測到 .gitignore 檔案（共 {{count}} 個檔案），是否套用忽略規則？",
+        "filtered": "已過濾 {{ignored}} 個檔案（共 {{total}} 個檔案）",
+        "title": "偵測到 .gitignore"
+      },
       "newFolder": "新建資料夾",
       "newPage": "新增文件",
       "uploadFile": "上傳檔案",

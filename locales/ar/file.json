@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "اتصال...",
+      "gitignore": {
+        "apply": "تطبيق القواعد",
+        "cancel": "تجاهل القواعد",
+        "content": "تم اكتشاف ملف ‎.gitignore (عدد {{count}} من الملفات)، هل ترغب في تطبيق قواعد التجاهل؟",
+        "filtered": "{{ignored}} ملفًا تم تجاهله من أصل {{total}} ملفًا",
+        "title": "تم اكتشاف ‎.gitignore"
+      },
       "newFolder": "إنشاء مجلد جديد",
       "newPage": "مستند جديد",
       "uploadFile": "رفع ملف",

@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import type { ActionKeys } from '@/features/ChatInput';
 import { ChatInput, ChatList } from '@/features/Conversation';
 
 import TopicSelector from './TopicSelector';
@@ -8,6 +9,7 @@ import TopicSelector from './TopicSelector';
 interface AgentBuilderConversationProps {
   agentId: string;
 }
+const actions: ActionKeys[] = ['model'];
 
 /**
  * Agent Builder Conversation Component
@@ -22,7 +24,7 @@ const AgentBuilderConversation = memo<AgentBuilderConversationProps>(({ agentId 
       <Flexbox flex={1} style={{ overflow: 'hidden' }}>
         <ChatList />
       </Flexbox>
-      <ChatInput leftActions={['model']} />
+      <ChatInput leftActions={actions} />
     </Flexbox>
   );
 });

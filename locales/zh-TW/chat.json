@@ -246,9 +246,9 @@
     "senderAssistant": "Agent",
     "senderUser": "您"
   },
-  "newAgent": "助手",
-  "newGroupChat": "群組",
-  "newPage": "文稿",
+  "newAgent": "建立助手",
+  "newGroupChat": "建立群組",
+  "newPage": "建立文稿",
   "noAgentsYet": "此群組尚無成員。點擊 + 按鈕邀請助手。",
   "noAvailableAgents": "沒有可邀請的成員",
   "noMatchingAgents": "沒有符合的成員",

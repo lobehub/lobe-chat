@@ -246,9 +246,9 @@
     "senderAssistant": "Agent",
     "senderUser": "Bạn"
   },
-  "newAgent": "Trợ lý",
-  "newGroupChat": "Nhóm",
-  "newPage": "Tài liệu",
+  "newAgent": "Tạo trợ lý",
+  "newGroupChat": "Tạo nhóm trò chuyện",
+  "newPage": "Tạo tài liệu",
   "noAgentsYet": "Nhóm này chưa có thành viên nào. Nhấn nút + để mời trợ lý.",
   "noAvailableAgents": "Không có thành viên nào để mời",
   "noMatchingAgents": "Không tìm thấy thành viên phù hợp",

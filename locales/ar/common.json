@@ -147,6 +147,16 @@
     "noResults": "لم يتم العثور على نتائج",
     "openSettings": "فتح الإعدادات",
     "painting": "الرسم بالذكاء الاصطناعي",
+    "search": {
+      "agent": "مساعد",
+      "agents": "مساعدون",
+      "file": "ملف",
+      "files": "ملفات",
+      "loading": "جارٍ البحث...",
+      "searching": "نتائج البحث",
+      "topic": "موضوع",
+      "topics": "مواضيع"
+    },
     "searchPlaceholder": "أدخل أمرًا أو ابحث...",
     "settings": "الإعدادات",
     "starOnGitHub": "قيّمنا على GitHub",

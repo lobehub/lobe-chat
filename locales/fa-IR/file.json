@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "در حال اتصال...",
+      "gitignore": {
+        "apply": "اعمال قوانین",
+        "cancel": "نادیده گرفتن قوانین",
+        "content": "فایل .gitignore شناسایی شد (تعداد {{count}} فایل). آیا می‌خواهید قوانین نادیده‌گیری را اعمال کنید؟",
+        "filtered": "{{ignored}} فایل فیلتر شد (از مجموع {{total}} فایل)",
+        "title": ".gitignore شناسایی شد"
+      },
       "newFolder": "ایجاد پوشه جدید",
       "newPage": "ایجاد سند جدید",
       "uploadFile": "بارگذاری فایل",

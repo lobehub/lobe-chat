@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "Verbinden...",
+      "gitignore": {
+        "apply": "Regeln anwenden",
+        "cancel": "Regeln ignorieren",
+        "content": ".gitignore-Datei erkannt (insgesamt {{count}} Dateien). Möchten Sie die Ignorierregeln anwenden?",
+        "filtered": "{{ignored}} Dateien wurden gefiltert (von insgesamt {{total}} Dateien)",
+        "title": ".gitignore erkannt"
+      },
       "newFolder": "Neuen Ordner erstellen",
       "newPage": "Neues Dokument",
       "uploadFile": "Datei hochladen",

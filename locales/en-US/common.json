@@ -147,6 +147,16 @@
     "noResults": "No results found",
     "openSettings": "Open Settings",
     "painting": "AI Painting",
+    "search": {
+      "agent": "Assistant",
+      "agents": "Assistants",
+      "file": "File",
+      "files": "Files",
+      "loading": "Searching...",
+      "searching": "Search Results",
+      "topic": "Topic",
+      "topics": "Topics"
+    },
     "searchPlaceholder": "Enter a command or search...",
     "settings": "Settings",
     "starOnGitHub": "Star us on GitHub",
