@@ -147,6 +147,16 @@
     "noResults": "Ничего не найдено",
     "openSettings": "Открыть настройки",
     "painting": "AI-рисование",
+    "search": {
+      "agent": "Помощник",
+      "agents": "Помощники",
+      "file": "Файл",
+      "files": "Файлы",
+      "loading": "Поиск...",
+      "searching": "Результаты поиска",
+      "topic": "Тема",
+      "topics": "Темы"
+    },
     "searchPlaceholder": "Введите команду или выполните поиск...",
     "settings": "Настройки",
     "starOnGitHub": "Поставьте звезду на GitHub",

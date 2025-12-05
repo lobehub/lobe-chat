@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "Connect...",
+      "gitignore": {
+        "apply": "Apply Rules",
+        "cancel": "Ignore Rules",
+        "content": ".gitignore file detected ({{count}} files in total). Would you like to apply the ignore rules?",
+        "filtered": "{{ignored}} files filtered out ({{total}} files in total)",
+        "title": ".gitignore Detected"
+      },
       "newFolder": "New Folder",
       "newPage": "New Page",
       "uploadFile": "Upload File",

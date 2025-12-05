@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "Conectar...",
+      "gitignore": {
+        "apply": "Aplicar reglas",
+        "cancel": "Ignorar reglas",
+        "content": "Se ha detectado un archivo .gitignore ({{count}} archivos en total), ¿deseas aplicar las reglas de exclusión?",
+        "filtered": "{{ignored}} archivos filtrados (de un total de {{total}} archivos)",
+        "title": "Archivo .gitignore detectado"
+      },
       "newFolder": "Nueva carpeta",
       "newPage": "Nuevo documento",
       "uploadFile": "Subir archivo",

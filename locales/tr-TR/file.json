@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "Bağlan...",
+      "gitignore": {
+        "apply": "Kuralları Uygula",
+        "cancel": "Kuralları Yoksay",
+        "content": ".gitignore dosyası tespit edildi (toplam {{count}} dosya), yok sayma kurallarını uygulamak ister misiniz?",
+        "filtered": "{{total}} dosyadan {{ignored}} tanesi filtrelendi",
+        "title": ".gitignore Tespit Edildi"
+      },
       "newFolder": "Yeni Klasör",
       "newPage": "Yeni Belge",
       "uploadFile": "Dosya Yükle",

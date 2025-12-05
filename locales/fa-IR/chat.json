@@ -246,9 +246,9 @@
     "senderAssistant": "عامل",
     "senderUser": "شما"
   },
-  "newAgent": "دستیار",
-  "newGroupChat": "گروه",
-  "newPage": "سند",
+  "newAgent": "ایجاد دستیار",
+  "newGroupChat": "ایجاد گفت‌وگوی گروهی",
+  "newPage": "ایجاد سند",
   "noAgentsYet": "هنوز هیچ عضوی در این گروه وجود ندارد. برای دعوت از دستیار، روی دکمه + کلیک کنید.",
   "noAvailableAgents": "عضوی برای دعوت در دسترس نیست",
   "noMatchingAgents": "عضوی مطابق با جستجو یافت نشد",
