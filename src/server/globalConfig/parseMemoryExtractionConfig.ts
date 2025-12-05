@@ -20,7 +20,7 @@ export interface MemoryExtractionPrivateConfig {
   agentGateKeeper: MemoryAgentConfig;
   agentLayerExtractor: MemoryLayerExtractorConfig;
   concurrency?: number;
-  embedding?: MemoryAgentConfig;
+  embedding: MemoryAgentConfig;
 }
 
 const parseGateKeeperAgent = (): MemoryAgentConfig => {
