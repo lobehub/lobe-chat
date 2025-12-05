@@ -1,7 +1,7 @@
 import { Typography } from '@lobehub/ui';
 import { Image } from '@lobehub/ui/mdx';
 import { Divider } from 'antd';
-import { Fragment } from 'react';
+import { Fragment, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 import urlJoin from 'url-join';
@@ -44,7 +44,9 @@ const PostItem = ({ id, versionRange, locale, showDivider = true }: PostItemProp
           <h2 id={id}>{data.rawTitle || data.title}</h2>
         </a>
         {data.image && <Image alt={data.title} src={data.image} />}
-        <CustomMDX source={data.content} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <CustomMDX source={data.content} />
+        </Suspense>
         <VersionTag range={versionRange} />
       </Typography>
     </>
