@@ -24,8 +24,6 @@ const ChangelogModal = memo<ChangelogModalProps>(({ open, onClose }) => {
     return await changelogService.getChangelogIndex();
   });
 
-  if (!open) return null;
-
   return (
     <Modal
       destroyOnHidden
