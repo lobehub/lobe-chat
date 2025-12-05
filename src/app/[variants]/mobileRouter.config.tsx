@@ -150,6 +150,12 @@ const DiscoverLayout = dynamic(() => import('./(main)/discover/_layout/Mobile/in
   ssr: false,
 });
 
+// NotFound component
+const NotFoundPage = dynamic(() => import('@/components/404'), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+
 // Knowledge components
 const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), {
   loading: () => <Loading />,
@@ -535,7 +541,7 @@ export const createMobileRouter = (locale: Locales) =>
 
         // Catch-all route
         {
-          loader: () => redirect('/chat', { status: 302 }),
+          element: <NotFoundPage />,
           path: '*',
         },
       ],

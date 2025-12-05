@@ -775,11 +775,36 @@
       "groupName": "Predefiniti"
     },
     "disabled": "Il modello attuale non supporta le chiamate di funzione e non è possibile utilizzare il plugin",
+    "klavis": {
+      "addServer": "Aggiungi server",
+      "authCompleted": "Autenticazione completata",
+      "authFailed": "Autenticazione fallita",
+      "authRequired": "Autenticazione richiesta",
+      "connected": "Connesso",
+      "error": "Errore",
+      "groupName": "Strumenti Klavis",
+      "manage": "Gestisci Klavis",
+      "manageTitle": "Gestisci integrazione Klavis",
+      "noServers": "Nessun server connesso",
+      "notEnabled": "Servizio Klavis non abilitato",
+      "oauthRequired": "Completa l'autenticazione OAuth in una nuova finestra",
+      "pendingAuth": "In attesa di autenticazione",
+      "serverCreated": "Server creato con successo",
+      "serverCreatedFailed": "Creazione del server non riuscita",
+      "serverRemoved": "Server eliminato",
+      "servers": "server",
+      "tools": "strumenti",
+      "verifyAuth": "Ho completato l'autenticazione"
+    },
     "plugins": {
       "enabled": "Abilitato {{num}}",
       "groupName": "Plugin",
       "noEnabled": "Nessun plugin abilitato al momento",
       "store": "Negozio dei plugin"
+    },
+    "tabs": {
+      "all": "Tutti",
+      "installed": "Abilitati"
     },
     "title": "Strumenti aggiuntivi"
   }

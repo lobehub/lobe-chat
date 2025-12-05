@@ -1041,9 +1041,8 @@ export const streamingExecutor: StateCreator<
 
         // Only show notification if there's content and no tools
         if (lastAssistant?.content && !lastAssistant?.tools) {
-          const { desktopNotificationService } = await import(
-            '@/services/electron/desktopNotification'
-          );
+          const { desktopNotificationService } =
+            await import('@/services/electron/desktopNotification');
 
           await desktopNotificationService.showNotification({
             body: lastAssistant.content,

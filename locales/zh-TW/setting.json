@@ -775,11 +775,36 @@
       "groupName": "內置"
     },
     "disabled": "當前模型不支持函數調用，無法使用插件",
+    "klavis": {
+      "addServer": "新增伺服器",
+      "authCompleted": "驗證完成",
+      "authFailed": "驗證失敗",
+      "authRequired": "需要驗證",
+      "connected": "已連線",
+      "error": "錯誤",
+      "groupName": "Klavis 工具",
+      "manage": "管理 Klavis",
+      "manageTitle": "管理 Klavis 整合",
+      "noServers": "尚未連線任何伺服器",
+      "notEnabled": "Klavis 服務未啟用",
+      "oauthRequired": "請在新視窗中完成 OAuth 驗證",
+      "pendingAuth": "待驗證",
+      "serverCreated": "伺服器建立成功",
+      "serverCreatedFailed": "伺服器建立失敗",
+      "serverRemoved": "伺服器已刪除",
+      "servers": "個伺服器",
+      "tools": "個工具",
+      "verifyAuth": "我已完成驗證"
+    },
     "plugins": {
       "enabled": "已啟用 {{num}}",
       "groupName": "插件",
       "noEnabled": "暫無啟用插件",
       "store": "插件商店"
+    },
+    "tabs": {
+      "all": "全部",
+      "installed": "已啟用"
     },
     "title": "擴展工具"
   }
