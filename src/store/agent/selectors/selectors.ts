@@ -76,7 +76,8 @@ const getAgentMetaById =
 
 const inboxAgentConfig = (s: AgentStoreState) => {
   const id = builtinAgentSelectors.inboxAgentId(s);
-  // inbox 不需要合并默认配置，直接返回 agentMap 中的配置
+  // Server returns inbox config already merged with DEFAULT_AGENT_CONFIG and serverDefaultAgentConfig,
+  // so we can directly use it. Fallback to DEFAULT_AGENT_CONFIG if not initialized yet.
   return id ? (s.agentMap[id] as LobeAgentConfig) : DEFAULT_AGENT_CONFIG;
 };
 const inboxAgentModel = (s: AgentStoreState) => inboxAgentConfig(s).model;
