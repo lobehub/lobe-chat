@@ -329,7 +329,9 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
           )}
           onClick={() => {
             if (isNote) {
-              setIsNoteModalOpen(true);
+              // Switch to page view mode instead of opening modal
+              setCurrentViewItemId(id);
+              setMode('page');
             } else {
               // Set mode to file and store the file ID
               setCurrentViewItemId(id);

@@ -47,6 +47,10 @@ export const usePageEditorContext = () => {
   return context;
 };
 
+export const useOptionalPageEditorContext = () => {
+  return useContext(PageEditorContext);
+};
+
 interface PageEditorProviderProps {
   children: ReactNode;
   knowledgeBaseId?: string;
