@@ -528,9 +528,10 @@ export class TopicModel {
   ) => {
     if ('isInbox' in params && params.isInbox) {
       // Migrate all inbox legacy topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
+      // Use updatedAt: topics.updatedAt to preserve original value and bypass $onUpdate
       return this.db
         .update(topics)
-        .set({ agentId: params.agentId })
+        .set({ agentId: params.agentId, updatedAt: topics.updatedAt })
         .where(
           and(
             eq(topics.userId, this.userId),
@@ -542,10 +543,11 @@ export class TopicModel {
     }
 
     // Migrate all topics with the given sessionId that don't have agentId
+    // Use updatedAt: topics.updatedAt to preserve original value and bypass $onUpdate
     const { sessionId, agentId } = params as { agentId: string; sessionId: string };
     return this.db
       .update(topics)
-      .set({ agentId })
+      .set({ agentId, updatedAt: topics.updatedAt })
       .where(
         and(
           eq(topics.userId, this.userId),
