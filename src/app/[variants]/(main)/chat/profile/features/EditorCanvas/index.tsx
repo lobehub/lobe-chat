@@ -2,8 +2,6 @@
 
 import {
   IEditor,
-  INSERT_HEADING_COMMAND,
-  INSERT_TABLE_COMMAND,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -12,18 +10,20 @@ import {
   ReactMathPlugin,
   ReactMentionPlugin,
   ReactTablePlugin,
+  ReactToolbarPlugin,
 } from '@lobehub/editor';
 import { Editor } from '@lobehub/editor/react';
 import { debounce, isEqual } from 'lodash-es';
-import { Heading1Icon, Heading2Icon, Heading3Icon, Table2Icon } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useStore } from '@/features/AgentSetting/store';
 
+import { useMentionOptions } from '../ProfileEditor/MentionList';
+import PROMPT_TEMPLATE from '../ProfileEditor/promptTemplate.json';
 import { useProfileContext } from '../ProfileProvider';
-import { useMentionOptions } from './MentionList';
-import PROMPT_TEMPLATE from './promptTemplate.json';
+import TypoBar from './TypoBar';
+import { useSlashItems } from './useSlashItems';
 
 const SAVE_DEBOUNCE_TIME = 300; // ms
 type SavePayload = { editorData: Record<string, any>; systemRole: string };
@@ -38,6 +38,7 @@ const EditorCanvas = memo(() => {
   const [initialLoad] = useState(editorData || PROMPT_TEMPLATE);
   const mentionOptions = useMentionOptions();
   const { editor } = useProfileContext();
+  const slashItems = useSlashItems(editor);
 
   const debouncedSave = useMemo(
     () =>
@@ -89,64 +90,41 @@ const EditorCanvas = memo(() => {
   };
 
   return (
-    <Editor
-      content={initialLoad}
-      editor={editor}
-      lineEmptyPlaceholder={t('settingAgent.prompt.placeholder')}
-      mentionOption={mentionOptions}
-      onInit={() => setEeitorInit(true)}
-      onTextChange={handleChange}
-      placeholder={t('settingAgent.prompt.placeholder')}
-      plugins={[
-        ReactListPlugin,
-        ReactCodePlugin,
-        ReactCodeblockPlugin,
-        ReactHRPlugin,
-        ReactLinkHighlightPlugin,
-        ReactTablePlugin,
-        ReactMathPlugin,
-        ReactMentionPlugin,
-      ]}
-      slashOption={{
-        items: [
-          {
-            icon: Heading1Icon,
-            key: 'h1',
-            label: 'Heading 1',
-            onSelect: (editor) => {
-              editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h1' });
-            },
-          },
-          {
-            icon: Heading2Icon,
-            key: 'h2',
-            label: 'Heading 2',
-            onSelect: (editor) => {
-              editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h2' });
-            },
-          },
-          {
-            icon: Heading3Icon,
-            key: 'h3',
-            label: 'Heading 3',
-            onSelect: (editor) => {
-              editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h3' });
-            },
-          },
-          {
-            icon: Table2Icon,
-            key: 'table',
-            label: 'Table',
-            onSelect: (editor) => {
-              editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns: '3', rows: '3' });
-            },
-          },
-        ],
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
       }}
-      style={{
-        paddingBottom: 64,
-      }}
-    />
+    >
+      <Editor
+        content={initialLoad}
+        editor={editor}
+        lineEmptyPlaceholder={t('settingAgent.prompt.placeholder')}
+        mentionOption={mentionOptions}
+        onInit={() => setEeitorInit(true)}
+        onTextChange={handleChange}
+        placeholder={t('settingAgent.prompt.placeholder')}
+        plugins={[
+          ReactListPlugin,
+          ReactCodePlugin,
+          ReactCodeblockPlugin,
+          ReactHRPlugin,
+          ReactLinkHighlightPlugin,
+          ReactTablePlugin,
+          ReactMathPlugin,
+          ReactMentionPlugin,
+          Editor.withProps(ReactToolbarPlugin, {
+            children: <TypoBar editor={editor} />,
+          }),
+        ]}
+        slashOption={{
+          items: slashItems,
+        }}
+        style={{
+          paddingBottom: 64,
+        }}
+      />
+    </div>
   );
 });
 
