@@ -65,6 +65,8 @@ export const createAiModelSlice: StateCreator<
   },
   clearRemoteModels: async (provider) => {
     await aiModelService.clearRemoteModels(provider);
+    // Clear unavailableModelIds when clearing remote models
+    set({ unavailableModelIds: [] }, false, `clearRemoteModels - ${provider}`);
     await get().refreshAiModelList();
   },
   createNewAiModel: async (data) => {
@@ -109,7 +111,22 @@ export const createAiModelSlice: StateCreator<
       builtinModelIds = new Set(builtinModels?.map((m) => m.id) || []);
 
       // Check which builtin models are not in remote
-      builtinNotInRemote = [...builtinModelIds].filter((id) => !newRemoteModelIds.has(id));
+      // For models with colon (e.g., "a:b"), check if base ID "a" exists in remote
+      builtinNotInRemote = [...builtinModelIds].filter((id) => {
+        // If the model ID exists directly in remote, it's available
+        if (newRemoteModelIds.has(id)) return false;
+
+        // If the model ID contains a colon, check if the base ID (before colon) exists in remote
+        const colonIndex = id.indexOf(':');
+        if (colonIndex !== -1) {
+          const baseId = id.slice(0, colonIndex);
+          // If base ID exists in remote, consider this model as available
+          if (newRemoteModelIds.has(baseId)) return false;
+        }
+
+        // Model is not available in remote
+        return true;
+      });
 
       if (removedModels.length > 0) {
         removedModels.forEach((id) => {
@@ -153,6 +170,9 @@ export const createAiModelSlice: StateCreator<
     );
 
     await get().refreshAiModelList();
+
+    // Update unavailable model IDs in store
+    set({ unavailableModelIds: builtinNotInRemote }, false, 'fetchRemoteModelList/unavailable');
 
     // Only return result if there were changes or if this is not the first fetch
     const hasChanges =

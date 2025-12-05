@@ -151,6 +151,12 @@ describe('AiModelAction', () => {
   describe('clearRemoteModels', () => {
     it('should clear remote models for provider and refresh list', async () => {
       const { result } = renderHook(() => useStore());
+
+      // Set initial unavailableModelIds
+      act(() => {
+        useStore.setState({ unavailableModelIds: ['model-1', 'model-2'] });
+      });
+
       const refreshSpy = vi
         .spyOn(result.current, 'refreshAiModelList')
         .mockResolvedValue(undefined);
@@ -164,6 +170,8 @@ describe('AiModelAction', () => {
 
       expect(serviceSpy).toHaveBeenCalledWith('test-provider');
       expect(refreshSpy).toHaveBeenCalled();
+      // Should also clear unavailableModelIds
+      expect(result.current.unavailableModelIds).toEqual([]);
     });
   });
 
@@ -434,6 +442,41 @@ describe('AiModelAction', () => {
         expect(updateResult.removedFromList).toEqual([]);
         expect(updateResult.removedButBuiltin).toEqual([]);
         expect(updateResult.builtinNotInRemote).toBeDefined();
+      });
+    });
+
+    it('should not include model with colon suffix in builtinNotInRemote if base ID exists in remote', async () => {
+      // Mock model-bank with a model that has colon suffix
+      vi.doMock('model-bank', () => ({
+        'test-provider': [{ id: 'model-a:variant' }, { id: 'model-b' }],
+      }));
+
+      // Remote has base model 'model-a' but not 'model-a:variant'
+      const mockRemoteModels = [
+        { displayName: 'Model A', enabled: true, id: 'model-a', type: 'chat' },
+      ];
+
+      const { result } = renderHook(() => useStore());
+      vi.spyOn(result.current, 'batchUpdateAiModels').mockResolvedValue(undefined);
+      vi.spyOn(result.current, 'refreshAiModelList').mockResolvedValue(undefined);
+
+      vi.doMock('@/services/models', () => ({
+        modelsService: {
+          getModels: vi.fn().mockResolvedValue(mockRemoteModels),
+        },
+      }));
+
+      let updateResult: any;
+      await act(async () => {
+        updateResult = await result.current.fetchRemoteModelList('test-provider');
+      });
+
+      await waitFor(() => {
+        // 'model-a:variant' should NOT be in builtinNotInRemote because 'model-a' exists in remote
+        // 'model-b' SHOULD be in builtinNotInRemote because it doesn't exist in remote
+        expect(updateResult).toBeDefined();
+        expect(updateResult.builtinNotInRemote).not.toContain('model-a:variant');
+        expect(updateResult.builtinNotInRemote).toContain('model-b');
       });
     });
   });
