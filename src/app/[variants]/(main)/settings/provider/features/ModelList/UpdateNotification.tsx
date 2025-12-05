@@ -197,3 +197,4 @@ export const UpdateNotificationContent = memo(
     );
   },
 );
+UpdateNotificationContent.displayName = 'UpdateNotificationContent';
