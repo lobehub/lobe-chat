@@ -1,0 +1,40 @@
+{
+  "actions": {
+    "discord": "برای بازخورد به Discord بروید",
+    "home": "بازگشت به صفحه اصلی",
+    "retry": "ورود مجدد"
+  },
+  "codes": {
+    "ACCOUNT_ALREADY_LINKED_TO_DIFFERENT_USER": "این حساب قبلاً به کاربر دیگری متصل شده است",
+    "ACCOUNT_NOT_FOUND": "حساب مورد نظر یافت نشد",
+    "CREDENTIAL_ACCOUNT_NOT_FOUND": "حساب کاربری با این اطلاعات یافت نشد",
+    "EMAIL_CAN_NOT_BE_UPDATED": "ایمیل این حساب قابل تغییر نیست",
+    "EMAIL_NOT_VERIFIED": "لطفاً ابتدا ایمیل خود را تأیید کنید",
+    "FAILED_TO_CREATE_SESSION": "ایجاد نشست ناموفق بود",
+    "FAILED_TO_CREATE_USER": "ایجاد کاربر ناموفق بود",
+    "FAILED_TO_GET_SESSION": "دریافت نشست ناموفق بود",
+    "FAILED_TO_GET_USER_INFO": "دریافت اطلاعات کاربر ناموفق بود",
+    "FAILED_TO_UNLINK_LAST_ACCOUNT": "امکان قطع ارتباط آخرین حساب متصل وجود ندارد",
+    "FAILED_TO_UPDATE_USER": "به‌روزرسانی اطلاعات کاربر ناموفق بود",
+    "ID_TOKEN_NOT_SUPPORTED": "توکن شناسایی پشتیبانی نمی‌شود",
+    "INVALID_EMAIL": "فرمت ایمیل نادرست است",
+    "INVALID_EMAIL_OR_PASSWORD": "ایمیل یا رمز عبور اشتباه است",
+    "INVALID_PASSWORD": "فرمت رمز عبور نامعتبر است",
+    "INVALID_TOKEN": "توکن نامعتبر یا منقضی شده است",
+    "PASSWORD_TOO_LONG": "رمز عبور بیش از حد طولانی است",
+    "PASSWORD_TOO_SHORT": "رمز عبور بیش از حد کوتاه است",
+    "PROVIDER_NOT_FOUND": "پیکربندی ارائه‌دهنده هویت یافت نشد",
+    "RATE_LIMIT_EXCEEDED": "درخواست‌ها بیش از حد مجاز است، لطفاً بعداً تلاش کنید",
+    "SESSION_EXPIRED": "نشست منقضی شده است، لطفاً دوباره وارد شوید",
+    "SOCIAL_ACCOUNT_ALREADY_LINKED": "این حساب اجتماعی قبلاً به کاربر دیگری متصل شده است",
+    "UNEXPECTED_ERROR": "خطای غیرمنتظره‌ای رخ داد، لطفاً دوباره تلاش کنید",
+    "UNKNOWN": "خطای ناشناخته‌ای رخ داد، لطفاً دوباره تلاش کنید یا با پشتیبانی تماس بگیرید",
+    "USER_ALREADY_EXISTS": "کاربر از قبل وجود دارد",
+    "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "این ایمیل قبلاً استفاده شده است، لطفاً ایمیل دیگری امتحان کنید",
+    "USER_ALREADY_HAS_PASSWORD": "این حساب قبلاً رمز عبور دارد",
+    "USER_BANNED": "این کاربر مسدود شده است",
+    "USER_EMAIL_NOT_FOUND": "ایمیل مورد نظر یافت نشد",
+    "USER_NOT_FOUND": "کاربر یافت نشد"
+  },
+  "title": "خطا در احراز هویت"
+}

@@ -74,7 +74,9 @@ export const auth = betterAuth({
       });
     },
   },
-
+  onAPIError: {
+    errorURL: '/auth-error',
+  },
   session: {
     cookieCache: {
       enabled: true,
