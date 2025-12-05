@@ -19,7 +19,7 @@ import SendArea from '../SendArea';
 import TypoBar from '../TypoBar';
 import FilePreview from './FilePreview';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css }) => ({
   container: css`
     margin-block-start: -5px;
 
@@ -43,9 +43,11 @@ const useStyles = createStyles(({ css, token }) => ({
 
     width: 100%;
     height: 100%;
-    padding: 12px;
-
-    background: ${token.colorBgContainerSecondary};
+    margin-block-start: 0;
+  `,
+  inputFullscreen: css`
+    border: none;
+    border-radius: 0;
   `,
 }));
 
@@ -80,7 +82,7 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
         <Flexbox
           className={cx(styles.container, expand && styles.fullscreen)}
           gap={8}
-          paddingBlock={showFootnote ? '0 8px' : '0 12px'}
+          paddingBlock={expand ? 0 : showFootnote ? '0 8px' : '0 12px'}
         >
           <ChatInput
             defaultHeight={chatInputHeight || 32}
@@ -94,7 +96,7 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
               />
             }
             fullscreen={expand}
-            header={showTypoBar && <TypoBar />}
+            header={(expand || showTypoBar) && <TypoBar />}
             maxHeight={320}
             minHeight={36}
             onSizeChange={(height) => {
@@ -103,6 +105,7 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
             resize={true}
             slashMenuRef={slashMenuRef}
             {...inputContainerProps}
+            className={cx(expand && styles.inputFullscreen, inputContainerProps?.className)}
           >
             {expand && fileNode}
             <InputEditor />

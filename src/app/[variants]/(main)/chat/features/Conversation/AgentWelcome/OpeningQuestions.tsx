@@ -15,7 +15,6 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
     padding-block: 8px;
     padding-inline: 16px;
     border-radius: 48px;
-    background: ${token.colorBgContainer};
 
     ${responsive.mobile} {
       padding-block: 8px;
@@ -61,7 +60,7 @@ const OpeningQuestions = memo<OpeningQuestionsProps>(({ mobile, questions }) => 
               }}
               paddingBlock={8}
               paddingInline={12}
-              variant={'outlined'}
+              variant={'filled'}
             >
               {question}
             </Block>

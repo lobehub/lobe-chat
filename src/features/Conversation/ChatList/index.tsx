@@ -78,7 +78,15 @@ const ChatList = memo<ChatListProps>(({ actionsBar, mobile = false, welcome, ite
 
   if (displayMessageIds.length === 0) {
     return (
-      <WideScreenContainer flex={1} height={'100%'}>
+      <WideScreenContainer
+        style={{
+          height: '100%',
+        }}
+        wrapperStyle={{
+          minHeight: '100%',
+          overflowY: 'auto',
+        }}
+      >
         {welcome}
       </WideScreenContainer>
     );

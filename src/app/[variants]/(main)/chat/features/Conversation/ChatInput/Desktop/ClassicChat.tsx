@@ -26,7 +26,7 @@ const leftActions: ActionKeys[] = [
   'mainToken',
 ];
 
-const rightActions: ActionKeys[] = ['saveTopic'];
+const rightActions: ActionKeys[] = [];
 
 const ClassicChatInput = memo(() => {
   const { t } = useTranslation('chat');

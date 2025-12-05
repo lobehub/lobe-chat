@@ -20,7 +20,7 @@ const leftActions: ActionKeys[] = [
   'mainToken',
 ];
 
-const rightActions: ActionKeys[] = ['saveTopic'];
+const rightActions: ActionKeys[] = [];
 
 interface MainChatInputProps {
   mobile?: boolean;
