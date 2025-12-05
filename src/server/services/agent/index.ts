@@ -1,3 +1,4 @@
+import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
 import { LobeChatDatabase } from '@lobechat/database';
 import type { PartialDeep } from 'type-fest';
 
@@ -5,6 +6,7 @@ import { AgentModel } from '@/database/models/agent';
 import { SessionModel } from '@/database/models/session';
 import { getServerDefaultAgentConfig } from '@/server/globalConfig';
 import { AgentItem } from '@/types/agent';
+import { merge } from '@/utils/merge';
 
 import { UpdateAgentResult } from './type';
 
@@ -34,9 +36,23 @@ export class AgentService {
   /**
    * Get a builtin agent by slug, creating it if it doesn't exist.
    * This is a generic interface for all builtin agents (page-copilot, inbox, etc.)
+   *
+   * The returned agent config is merged with:
+   * 1. DEFAULT_AGENT_CONFIG (hardcoded defaults)
+   * 2. Server's globalDefaultAgentConfig (from environment variable DEFAULT_AGENT_CONFIG)
+   * 3. The actual agent config from database
+   *
+   * This ensures the frontend always receives a complete config with model/provider.
    */
   async getBuiltinAgent(slug: string) {
-    return this.agentModel.getBuiltinAgent(slug);
+    const agent = await this.agentModel.getBuiltinAgent(slug);
+
+    if (!agent) return null;
+
+    // Merge configs: DEFAULT_AGENT_CONFIG -> serverDefaultAgentConfig -> agent
+    // This ensures model/provider are always present
+    const serverDefaultAgentConfig = getServerDefaultAgentConfig();
+    return merge(merge(DEFAULT_AGENT_CONFIG, serverDefaultAgentConfig), agent);
   }
 
   /**
