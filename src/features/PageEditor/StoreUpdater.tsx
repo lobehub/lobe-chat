@@ -26,7 +26,6 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     const useStoreUpdater = createStoreUpdater(storeApi);
 
     const editor = usePageEditorStore((s) => s.editor);
-    const performSave = usePageEditorStore((s) => s.performSave);
     const editorState = useEditorState(editor);
 
     const currentPage = useFileStore(documentSelectors.getDocumentById(pageId));
@@ -104,17 +103,6 @@ const StoreUpdater = memo<StoreUpdaterProps>(
         console.error('[PageEditor] Failed to initialize editor content:', error);
       }
     }, [editorInit, contentInit, editor, pageId, currentPage, storeApi]);
-
-    // Auto-save interval
-    useEffect(() => {
-      if (!autoSave) return;
-
-      const interval = setInterval(() => {
-        void performSave();
-      }, 5000);
-
-      return () => clearInterval(interval);
-    }, [autoSave, performSave]);
 
     // Track editor initialization
     useEffect(() => {

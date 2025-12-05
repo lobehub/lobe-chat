@@ -18,6 +18,8 @@ export interface State extends PublicState {
   currentTitle: string;
   editor?: IEditor;
   editorState?: any; // EditorState from useEditorState hook
+  isDirty: boolean; // Track if there are unsaved changes
+  lastSavedContent: string; // Last saved content hash for comparison
   lastUpdatedTime: Date | null;
   saveStatus: 'idle' | 'saving' | 'saved';
   wordCount: number;
@@ -29,6 +31,8 @@ export const initialState: State = {
   currentDocId: undefined,
   currentEmoji: undefined,
   currentTitle: '',
+  isDirty: false,
+  lastSavedContent: '',
   lastUpdatedTime: null,
   saveStatus: 'idle',
   wordCount: 0,

@@ -9,6 +9,11 @@
       "on": "顯示格式工具列"
     }
   },
+  "autoSave": {
+    "latest": "已載入最新版本",
+    "saved": "已儲存",
+    "saving": "自動儲存中..."
+  },
   "cancel": "取消",
   "confirm": "確認",
   "file": {

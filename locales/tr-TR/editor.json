@@ -9,6 +9,11 @@
       "on": "Biçim araç çubuğunu göster"
     }
   },
+  "autoSave": {
+    "latest": "En son sürüm yüklendi",
+    "saved": "Kaydedildi",
+    "saving": "Otomatik kaydediliyor..."
+  },
   "cancel": "İptal",
   "confirm": "Onayla",
   "file": {

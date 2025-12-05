@@ -1,3 +1,5 @@
+import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT } from '@lobechat/const';
+import { debounce } from 'lodash-es';
 import { StateCreator } from 'zustand';
 
 import { documentService } from '@/services/document';
@@ -7,7 +9,7 @@ import { DocumentSourceType, LobeDocument } from '@/types/document';
 import { State, initialState } from './initialState';
 
 export interface Action {
-  debouncedSave: () => void;
+  flushSave: () => void;
   handleContentChange: () => void;
   handleCopyLink: (t: (key: string) => string, message: any) => void;
   handleDelete: (
@@ -27,212 +29,235 @@ export interface Action {
 
 export type Store = State & Action;
 
-const DEBOUNCE_TIME = 1000;
-
-let saveTimer: ReturnType<typeof setTimeout> | null = null;
-let contentChangeTimer: ReturnType<typeof setTimeout> | null = null;
+// Create debounced save function outside of store for reuse
+const createDebouncedSave = (get: () => Store) =>
+  debounce(
+    async () => {
+      try {
+        await get().performSave();
+      } catch (error) {
+        console.error('[PageEditor] Failed to auto-save:', error);
+      }
+    },
+    EDITOR_DEBOUNCE_TIME,
+    { leading: false, maxWait: EDITOR_MAX_WAIT, trailing: true },
+  );
 
 export const store: (initState?: Partial<State>) => StateCreator<Store> =
-  (initState) => (set, get) => ({
-    ...initialState,
-    ...initState,
+  (initState) => (set, get) => {
+    const debouncedSave = createDebouncedSave(get);
 
-    debouncedSave: () => {
-      if (saveTimer) {
-        clearTimeout(saveTimer);
-      }
+    return {
+      ...initialState,
+      ...initState,
 
-      saveTimer = setTimeout(() => {
-        void get().performSave();
-      }, DEBOUNCE_TIME);
-    },
+      flushSave: () => {
+        debouncedSave.flush();
+      },
 
-    handleContentChange: () => {
-      const { editor } = get();
-      if (!editor) return;
+      handleContentChange: () => {
+        const { editor, lastSavedContent } = get();
+        if (!editor) return;
 
-      if (contentChangeTimer) {
-        clearTimeout(contentChangeTimer);
-      }
-
-      contentChangeTimer = setTimeout(() => {
         try {
           const textContent = (editor.getDocument('text') as unknown as string) || '';
+          const markdownContent = (editor.getDocument('markdown') as unknown as string) || '';
           const wordCount = textContent.trim().split(/\s+/).filter(Boolean).length;
-          set({ wordCount });
+
+          // Check if content actually changed
+          const contentChanged = markdownContent !== lastSavedContent;
+
+          set({ isDirty: contentChanged, wordCount });
+
+          // Only trigger auto-save if content actually changed
+          if (contentChanged) {
+            debouncedSave();
+          }
         } catch (error) {
           console.error('[PageEditor] Failed to update content:', error);
         }
-      }, DEBOUNCE_TIME);
-    },
+      },
 
-    handleCopyLink: (t, message) => {
-      const { currentDocId } = get();
-      if (currentDocId) {
-        const url = `${window.location.origin}${window.location.pathname}`;
-        navigator.clipboard.writeText(url);
-        message.success(t('documentEditor.linkCopied'));
-      }
-    },
+      handleCopyLink: (t, message) => {
+        const { currentDocId } = get();
+        if (currentDocId) {
+          const url = `${window.location.origin}${window.location.pathname}`;
+          navigator.clipboard.writeText(url);
+          message.success(t('documentEditor.linkCopied'));
+        }
+      },
 
-    handleDelete: async (t, message, modal, onDeleteCallback) => {
-      const { currentDocId } = get();
-      if (!currentDocId) return;
+      handleDelete: async (t, message, modal, onDeleteCallback) => {
+        const { currentDocId } = get();
+        if (!currentDocId) return;
 
-      return new Promise((resolve, reject) => {
-        modal.confirm({
-          cancelText: t('cancel'),
-          content: t('documentEditor.deleteConfirm.content'),
-          okButtonProps: { danger: true },
-          okText: t('delete'),
-          onOk: async () => {
-            try {
-              const { removeDocument } = useFileStore.getState();
-              await removeDocument(currentDocId);
-              message.success(t('documentEditor.deleteSuccess'));
-              onDeleteCallback?.();
-              resolve();
-            } catch (error) {
-              console.error('Failed to delete page:', error);
-              message.error(t('documentEditor.deleteError'));
-              reject(error);
-            }
-          },
-          title: t('documentEditor.deleteConfirm.title'),
+        return new Promise((resolve, reject) => {
+          modal.confirm({
+            cancelText: t('cancel'),
+            content: t('documentEditor.deleteConfirm.content'),
+            okButtonProps: { danger: true },
+            okText: t('delete'),
+            onOk: async () => {
+              try {
+                const { removeDocument } = useFileStore.getState();
+                await removeDocument(currentDocId);
+                message.success(t('documentEditor.deleteSuccess'));
+                onDeleteCallback?.();
+                resolve();
+              } catch (error) {
+                console.error('Failed to delete page:', error);
+                message.error(t('documentEditor.deleteError'));
+                reject(error);
+              }
+            },
+            title: t('documentEditor.deleteConfirm.title'),
+          });
         });
-      });
-    },
+      },
 
-    handleTitleSubmit: async () => {
-      const { performSave, editor } = get();
-      await performSave();
-      editor?.focus();
-    },
+      handleTitleSubmit: async () => {
+        const { performSave, editor } = get();
+        await performSave();
+        editor?.focus();
+      },
 
-    onEditorInit: () => {
-      // Called when editor is initialized
-    },
+      onEditorInit: () => {
+        // Called when editor is initialized
+      },
 
-    performSave: async () => {
-      const {
-        editor,
-        currentDocId,
-        currentTitle,
-        currentEmoji,
-        knowledgeBaseId,
-        parentId,
-        onDocumentIdChange,
-        onSave,
-      } = get();
+      performSave: async () => {
+        const {
+          editor,
+          currentDocId,
+          currentTitle,
+          currentEmoji,
+          knowledgeBaseId,
+          parentId,
+          onDocumentIdChange,
+          onSave,
+          isDirty,
+        } = get();
 
-      if (!editor) return;
+        if (!editor) return;
 
-      set({ saveStatus: 'saving' });
-
-      try {
-        const editorElement = editor.getRootElement();
-        const hadFocus = editorElement?.contains(document.activeElement) ?? false;
-
-        const currentEditorData = editor.getDocument('json');
-        const currentContent = (editor.getDocument('markdown') as unknown as string) || '';
-
-        if (!currentContent?.trim()) {
-          set({ saveStatus: 'idle' });
+        // Skip save if no changes
+        if (!isDirty && currentDocId && !currentDocId.startsWith('temp-document-')) {
           return;
         }
 
-        const { updateDocumentOptimistically, replaceTempDocumentWithReal, refreshFileList } =
-          useFileStore.getState();
+        set({ saveStatus: 'saving' });
 
-        if (currentDocId && !currentDocId.startsWith('temp-document-')) {
-          await updateDocumentOptimistically(currentDocId, {
-            content: currentContent,
-            editorData: structuredClone(currentEditorData),
-            metadata: currentEmoji ? { emoji: currentEmoji } : { emoji: undefined },
-            title: currentTitle,
-            updatedAt: new Date(),
-          });
-        } else {
-          const now = Date.now();
-          const timestamp = new Date(now).toLocaleString('en-US', {
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            month: 'short',
-            year: 'numeric',
-          });
-          const finalTitle = currentTitle || `Page - ${timestamp}`;
+        try {
+          const editorElement = editor.getRootElement();
+          const hadFocus = editorElement?.contains(document.activeElement) ?? false;
 
-          const newPage = await documentService.createDocument({
-            content: currentContent,
-            editorData: JSON.stringify(currentEditorData),
-            fileType: 'custom/document',
-            knowledgeBaseId,
-            metadata: {
-              createdAt: now,
-              ...(currentEmoji ? { emoji: currentEmoji } : {}),
-            },
-            parentId,
-            title: finalTitle,
-          });
+          const currentEditorData = editor.getDocument('json');
+          const currentContent = (editor.getDocument('markdown') as unknown as string) || '';
 
-          const realPage: LobeDocument = {
-            content: currentContent,
-            createdAt: new Date(now),
-            editorData: structuredClone(currentEditorData) || null,
-            fileType: 'custom/document' as const,
-            filename: finalTitle,
-            id: newPage.id,
-            metadata: {
-              createdAt: now,
-              ...(currentEmoji ? { emoji: currentEmoji } : {}),
-            },
-            source: 'document',
-            sourceType: DocumentSourceType.EDITOR,
-            title: finalTitle,
-            totalCharCount: currentContent.length,
-            totalLineCount: 0,
-            updatedAt: new Date(now),
-          };
-
-          if (currentDocId?.startsWith('temp-document-')) {
-            replaceTempDocumentWithReal(currentDocId, realPage);
+          if (!currentContent?.trim()) {
+            set({ saveStatus: 'idle' });
+            return;
           }
 
-          set({ currentDocId: newPage.id });
-          onDocumentIdChange?.(newPage.id);
-          refreshFileList();
+          const { updateDocumentOptimistically, replaceTempDocumentWithReal, refreshFileList } =
+            useFileStore.getState();
+
+          if (currentDocId && !currentDocId.startsWith('temp-document-')) {
+            await updateDocumentOptimistically(currentDocId, {
+              content: currentContent,
+              editorData: structuredClone(currentEditorData),
+              metadata: currentEmoji ? { emoji: currentEmoji } : { emoji: undefined },
+              title: currentTitle,
+              updatedAt: new Date(),
+            });
+          } else {
+            const now = Date.now();
+            const timestamp = new Date(now).toLocaleString('en-US', {
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            });
+            const finalTitle = currentTitle || `Page - ${timestamp}`;
+
+            const newPage = await documentService.createDocument({
+              content: currentContent,
+              editorData: JSON.stringify(currentEditorData),
+              fileType: 'custom/document',
+              knowledgeBaseId,
+              metadata: {
+                createdAt: now,
+                ...(currentEmoji ? { emoji: currentEmoji } : {}),
+              },
+              parentId,
+              title: finalTitle,
+            });
+
+            const realPage: LobeDocument = {
+              content: currentContent,
+              createdAt: new Date(now),
+              editorData: structuredClone(currentEditorData) || null,
+              fileType: 'custom/document' as const,
+              filename: finalTitle,
+              id: newPage.id,
+              metadata: {
+                createdAt: now,
+                ...(currentEmoji ? { emoji: currentEmoji } : {}),
+              },
+              source: 'document',
+              sourceType: DocumentSourceType.EDITOR,
+              title: finalTitle,
+              totalCharCount: currentContent.length,
+              totalLineCount: 0,
+              updatedAt: new Date(now),
+            };
+
+            if (currentDocId?.startsWith('temp-document-')) {
+              replaceTempDocumentWithReal(currentDocId, realPage);
+            }
+
+            set({ currentDocId: newPage.id });
+            onDocumentIdChange?.(newPage.id);
+            refreshFileList();
+          }
+
+          if (hadFocus) {
+            setTimeout(() => {
+              editor?.focus();
+            }, 0);
+          }
+
+          // Mark as clean and update save status
+          set({
+            isDirty: false,
+            lastSavedContent: currentContent,
+            lastUpdatedTime: new Date(),
+            saveStatus: 'saved',
+          });
+          onSave?.();
+        } catch (error) {
+          console.error('[PageEditor] Failed to save:', error);
+          set({ saveStatus: 'idle' });
         }
+      },
 
-        if (hadFocus) {
-          setTimeout(() => {
-            editor?.focus();
-          }, 0);
-        }
+      setChatPanelExpanded: (expanded: boolean) => {
+        set({ chatPanelExpanded: expanded });
+      },
 
-        set({ lastUpdatedTime: new Date(), saveStatus: 'saved' });
-        onSave?.();
-      } catch (error) {
-        console.error('[PageEditor] Failed to save:', error);
-        set({ saveStatus: 'idle' });
-      }
-    },
+      setCurrentEmoji: (emoji: string | undefined) => {
+        set({ currentEmoji: emoji });
+        debouncedSave();
+      },
 
-    setChatPanelExpanded: (expanded: boolean) => {
-      set({ chatPanelExpanded: expanded });
-    },
+      setCurrentTitle: (title: string) => {
+        set({ currentTitle: title });
+        debouncedSave();
+      },
 
-    setCurrentEmoji: (emoji: string | undefined) => {
-      set({ currentEmoji: emoji });
-      get().debouncedSave();
-    },
-
-    setCurrentTitle: (title: string) => {
-      set({ currentTitle: title });
-      get().debouncedSave();
-    },
-
-    toggleChatPanel: () => {
-      set((state) => ({ chatPanelExpanded: !state.chatPanelExpanded }));
-    },
-  });
+      toggleChatPanel: () => {
+        set((state) => ({ chatPanelExpanded: !state.chatPanelExpanded }));
+      },
+    };
+  };

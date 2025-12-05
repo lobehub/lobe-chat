@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  IEditor,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -13,8 +12,8 @@ import {
   ReactToolbarPlugin,
 } from '@lobehub/editor';
 import { Editor } from '@lobehub/editor/react';
-import { debounce, isEqual } from 'lodash-es';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { isEqual } from 'lodash-es';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useStore } from '@/features/AgentSetting/store';
@@ -25,12 +24,9 @@ import { useProfileStore } from '../store';
 import TypoBar from './TypoBar';
 import { useSlashItems } from './useSlashItems';
 
-const SAVE_DEBOUNCE_TIME = 300; // ms
-type SavePayload = { editorData: Record<string, any>; systemRole: string };
-
 const EditorCanvas = memo(() => {
   const { t } = useTranslation('setting');
-  const [editorInit, setEeitorInit] = useState(false);
+  const [editorInit, setEditorInit] = useState(false);
   const [contentInit, setContentInit] = useState(false);
   const editorData = useStore((s) => s.config.editorData, isEqual);
   const systemRole = useStore((s) => s.config.systemRole);
@@ -38,23 +34,13 @@ const EditorCanvas = memo(() => {
   const [initialLoad] = useState(editorData || PROMPT_TEMPLATE);
   const mentionOptions = useMentionOptions();
   const editor = useProfileStore((s) => s.editor);
+  const handleContentChange = useProfileStore((s) => s.handleContentChange);
   const slashItems = useSlashItems();
 
-  const debouncedSave = useMemo(
-    () =>
-      debounce(
-        async (payload: SavePayload) => {
-          try {
-            await updateConfig(payload);
-          } catch (error: any) {
-            console.error('[EditorCanvas] Failed to save:', error);
-          }
-        },
-        SAVE_DEBOUNCE_TIME,
-        { leading: false, trailing: true },
-      ),
-    [updateConfig],
-  );
+  // Wrap handleContentChange with updateConfig
+  const handleChange = useCallback(() => {
+    handleContentChange(updateConfig);
+  }, [handleContentChange, updateConfig]);
 
   useEffect(() => {
     if (!editorInit || !editor || contentInit) return;
@@ -72,23 +58,6 @@ const EditorCanvas = memo(() => {
     }
   }, [editorInit, contentInit, editor, editorData, systemRole]);
 
-  useEffect(() => {
-    return () => debouncedSave.cancel();
-  }, [debouncedSave]);
-
-  const handleChange = (editor: IEditor) => {
-    try {
-      const markdownContent = editor.getDocument('markdown') as unknown as string;
-      const jsonContent = editor.getDocument('json') as unknown as Record<string, any>;
-      debouncedSave({
-        editorData: structuredClone(jsonContent || {}), // Store as object, not string
-        systemRole: markdownContent || '',
-      });
-    } catch (error) {
-      console.error('[EditorCanvas] Failed to read editor content:', error);
-    }
-  };
-
   return (
     <div
       onClick={(e) => {
@@ -101,7 +70,7 @@ const EditorCanvas = memo(() => {
         editor={editor!}
         lineEmptyPlaceholder={t('settingAgent.prompt.placeholder')}
         mentionOption={mentionOptions}
-        onInit={() => setEeitorInit(true)}
+        onInit={() => setEditorInit(true)}
         onTextChange={handleChange}
         placeholder={t('settingAgent.prompt.placeholder')}
         plugins={[
