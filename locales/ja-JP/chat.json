@@ -246,9 +246,9 @@
     "senderAssistant": "エージェント",
     "senderUser": "あなた"
   },
-  "newAgent": "アシスタント",
-  "newGroupChat": "グループ",
-  "newPage": "ドキュメント",
+  "newAgent": "アシスタントを作成",
+  "newGroupChat": "グループチャットを作成",
+  "newPage": "ドキュメントを作成",
   "noAgentsYet": "このグループにはまだメンバーがいません。「＋」ボタンをクリックしてアシスタントを招待してください。",
   "noAvailableAgents": "招待可能なメンバーがいません",
   "noMatchingAgents": "一致するメンバーが見つかりません",

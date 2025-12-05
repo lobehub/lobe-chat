@@ -147,6 +147,16 @@
     "noResults": "Geen resultaten gevonden",
     "openSettings": "Instellingen openen",
     "painting": "AI-schilderen",
+    "search": {
+      "agent": "Assistent",
+      "agents": "Assistenten",
+      "file": "Bestand",
+      "files": "Bestanden",
+      "loading": "Bezig met zoeken...",
+      "searching": "Zoekresultaten",
+      "topic": "Onderwerp",
+      "topics": "Onderwerpen"
+    },
     "searchPlaceholder": "Voer een commando in of zoek...",
     "settings": "Instellingen",
     "starOnGitHub": "Geef ons een ster op GitHub",

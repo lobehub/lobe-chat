@@ -147,6 +147,16 @@
     "noResults": "Brak wyników",
     "openSettings": "Otwórz ustawienia",
     "painting": "Sztuka AI",
+    "search": {
+      "agent": "Asystent",
+      "agents": "Asystenci",
+      "file": "Plik",
+      "files": "Pliki",
+      "loading": "Wyszukiwanie...",
+      "searching": "Wyniki wyszukiwania",
+      "topic": "Temat",
+      "topics": "Tematy"
+    },
     "searchPlaceholder": "Wpisz polecenie lub wyszukaj...",
     "settings": "Ustawienia",
     "starOnGitHub": "Daj nam gwiazdkę na GitHubie",

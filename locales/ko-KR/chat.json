@@ -246,9 +246,9 @@
     "senderAssistant": "에이전트",
     "senderUser": "당신"
   },
-  "newAgent": "도우미",
-  "newGroupChat": "그룹",
-  "newPage": "문서",
+  "newAgent": "도우미 만들기",
+  "newGroupChat": "그룹 채팅 만들기",
+  "newPage": "문서 만들기",
   "noAgentsYet": "이 그룹에는 아직 구성원이 없습니다. + 버튼을 눌러 도우미를 초대하세요.",
   "noAvailableAgents": "초대할 수 있는 멤버가 없습니다",
   "noMatchingAgents": "일치하는 멤버가 없습니다",

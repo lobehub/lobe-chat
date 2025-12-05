@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "接続中...",
+      "gitignore": {
+        "apply": "ルールを適用",
+        "cancel": "ルールを無視",
+        "content": ".gitignore ファイルが検出されました（合計 {{count}} 件のファイル）。無視ルールを適用しますか？",
+        "filtered": "{{total}} 件のファイルのうち {{ignored}} 件がフィルターされました",
+        "title": ".gitignore が検出されました"
+      },
       "newFolder": "新しいフォルダーを作成",
       "newPage": "新しいドキュメント",
       "uploadFile": "ファイルをアップロード",

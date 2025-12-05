@@ -147,6 +147,16 @@
     "noResults": "Няма намерени резултати",
     "openSettings": "Отвори настройките",
     "painting": "AI Рисуване",
+    "search": {
+      "agent": "Асистент",
+      "agents": "Асистенти",
+      "file": "Файл",
+      "files": "Файлове",
+      "loading": "Търсене...",
+      "searching": "Резултати от търсенето",
+      "topic": "Тема",
+      "topics": "Теми"
+    },
     "searchPlaceholder": "Въведете команда или търсене...",
     "settings": "Настройки",
     "starOnGitHub": "Дайте ни звезда в GitHub",
