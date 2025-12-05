@@ -70,10 +70,6 @@ export const PageEditorProvider = memo<PageEditorProviderProps>(
 
     const removeDocument = useFileStore((s) => s.removeDocument);
     const currentDocument = useFileStore(documentSelectors.getDocumentById(pageId));
-    const useFetchKnowledgeItem = useFileStore((s) => s.useFetchKnowledgeItem);
-    const { data: fetchedDocument } = useFetchKnowledgeItem(pageId);
-
-    const pageDocument = currentDocument || fetchedDocument;
 
     const {
       currentDocId,
@@ -151,7 +147,7 @@ export const PageEditorProvider = memo<PageEditorProviderProps>(
       lastUpdatedTime,
       onEditorInit,
       pageId,
-      parentId: pageDocument?.parentId,
+      parentId: currentDocument?.parentId,
       performSave,
       saveStatus,
       setChatPanelExpanded,
