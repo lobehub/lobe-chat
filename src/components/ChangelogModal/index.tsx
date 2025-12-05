@@ -1,6 +1,7 @@
 'use client';
 
-import { Modal } from '@lobehub/ui';
+import { Button, Modal } from '@lobehub/ui';
+import { ArrowUpRightIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -37,7 +38,18 @@ const ChangelogModal = memo<ChangelogModalProps>(({ open, onClose }) => {
           overflowY: 'auto',
         },
       }}
-      title={t('changelog')}
+      title={
+        <Flexbox align={'center'} gap={8}>
+          <Button
+            icon={<ArrowUpRightIcon size={16} />}
+            iconPosition="end"
+            onClick={onClose}
+            type="text"
+          >
+            {t('changelog')}
+          </Button>
+        </Flexbox>
+      }
       width={800}
     >
       <Flexbox gap={16} padding={16} style={{ width: '100%' }}>

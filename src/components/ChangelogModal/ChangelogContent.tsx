@@ -20,9 +20,10 @@ interface ChangelogContentProps {
 
 interface PostItemProps extends ChangelogIndexItem {
   locale: Locales;
+  showDivider?: boolean;
 }
 
-const PostItem = ({ id, versionRange, locale }: PostItemProps) => {
+const PostItem = ({ id, versionRange, locale, showDivider = true }: PostItemProps) => {
   const { data } = useSWR([`changelog-post-${id}`, locale], async () => {
     const changelogService = new ChangelogService();
     return await changelogService.getPostById(id, { locale });
@@ -32,7 +33,7 @@ const PostItem = ({ id, versionRange, locale }: PostItemProps) => {
 
   return (
     <>
-      <Divider />
+      {showDivider && <Divider />}
       <Typography headerMultiple={0.2}>
         <a
           href={urlJoin(OFFICIAL_SITE, '/changelog', id)}
@@ -56,9 +57,9 @@ const ChangelogContent = ({ data }: ChangelogContentProps) => {
 
   return (
     <>
-      {data.map((item) => (
+      {data.map((item, index) => (
         <Fragment key={item.id}>
-          <PostItem locale={locale} {...item} />
+          <PostItem locale={locale} showDivider={index !== 0} {...item} />
         </Fragment>
       ))}
     </>
