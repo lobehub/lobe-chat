@@ -28,6 +28,7 @@ import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import type { MessageActionsConfig } from '../../types';
 import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
+import MessageBranch from '../components/MessageBranch';
 import { AssistantActionsBar } from './Actions';
 import { AssistantMessageExtra } from './Extra';
 import { AssistantMessageBody } from './components/MessageBody';
@@ -158,6 +159,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
     const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
 
     const {
+      branch,
       error,
       role,
       search,
@@ -380,7 +382,14 @@ const AssistantMessage = memo<AssistantMessageProps>(
             </Flexbox>
           </Suspense>
           {!disableEditing && !editing && (
-            <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
+            <Flexbox align={'center'} horizontal role="menubar">
+              {branch && (
+                <MessageBranch
+                  activeBranchIndex={branch.activeBranchIndex}
+                  count={branch.count}
+                  messageId={id}
+                />
+              )}
               <AssistantActionsBar
                 actionsConfig={actionsConfig}
                 data={item}
