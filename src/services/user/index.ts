@@ -37,6 +37,10 @@ export class UserService {
     return lambdaClient.user.updateFullName.mutate(fullName);
   };
 
+  updateUsername = async (username: string) => {
+    return lambdaClient.user.updateUsername.mutate(username);
+  };
+
   updatePreference = async (preference: Partial<UserPreference>) => {
     return lambdaClient.user.updatePreference.mutate(preference);
   };

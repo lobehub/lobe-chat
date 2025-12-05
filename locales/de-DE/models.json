@@ -221,6 +221,9 @@
   "MiniMax-M2": {
     "description": "Speziell entwickelt für effizientes Programmieren und Agent-Workflows."
   },
+  "MiniMax-M2-Stable": {
+    "description": "Speziell entwickelt für effizientes Codieren und Agent-Workflows – höhere Parallelität, kommerzielle Nutzung möglich."
+  },
   "MiniMax-Text-01": {
     "description": "In der MiniMax-01-Serie haben wir mutige Innovationen vorgenommen: Erstmals wurde die lineare Aufmerksamkeitsmechanismus in großem Maßstab implementiert, sodass die traditionelle Transformer-Architektur nicht mehr die einzige Wahl ist. Dieses Modell hat eine Parameteranzahl von bis zu 456 Milliarden, wobei eine Aktivierung 45,9 Milliarden beträgt. Die Gesamtleistung des Modells kann mit den besten Modellen im Ausland mithalten und kann gleichzeitig effizient den weltweit längsten Kontext von 4 Millionen Tokens verarbeiten, was 32-mal so viel wie GPT-4o und 20-mal so viel wie Claude-3.5-Sonnet ist."
   },
@@ -298,6 +301,9 @@
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 ist die neueste und leistungsstärkste Version von Kimi K2. Es handelt sich um ein erstklassiges Mixture-of-Experts (MoE) Sprachmodell mit insgesamt 1 Billion Parametern und 32 Milliarden aktivierten Parametern. Die Hauptmerkmale dieses Modells umfassen: verbesserte Agenten-Codierungsintelligenz, die in öffentlichen Benchmark-Tests und realen Agenten-Codierungsaufgaben eine signifikante Leistungssteigerung zeigt; verbesserte Frontend-Codierungserfahrung mit Fortschritten in Ästhetik und Praktikabilität der Frontend-Programmierung."
+  },
+  "Pro/moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking Turbo ist die Turbo-Version der Kimi K2-Serie. Sie wurde für schnellere Inferenz und höheren Durchsatz optimiert, während die Fähigkeit zu mehrstufigem Denken und Werkzeugnutzung von K2 Thinking erhalten bleibt. Das Modell basiert auf einer Mixture-of-Experts (MoE)-Architektur mit rund 1 Billion Parametern, unterstützt nativ 256K Kontextlänge und kann stabile großskalige Werkzeugaufrufe ausführen – ideal für produktive Szenarien mit hohen Anforderungen an Latenz und Parallelität."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview ist ein innovatives Modell für die Verarbeitung natürlicher Sprache, das komplexe Aufgaben der Dialoggenerierung und des Kontextverständnisses effizient bewältigen kann."
@@ -1052,6 +1058,9 @@
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 ist ein Open-Source-Mischexperten-Code-Modell, das in Codeaufgaben hervorragende Leistungen erbringt und mit GPT4-Turbo vergleichbar ist."
   },
+  "deepseek-ocr": {
+    "description": "DeepSeek-OCR ist ein visuelles Sprachmodell von DeepSeek AI, das sich auf optische Zeichenerkennung (OCR) und 'kontextuelle optische Kompression' spezialisiert. Es zielt darauf ab, die Grenzen der Kontextkompression aus Bildern zu erforschen, verarbeitet Dokumente effizient und wandelt sie in strukturierte Textformate wie Markdown um. Es erkennt Textinhalte in Bildern präzise und eignet sich besonders für Anwendungen wie Dokumentendigitalisierung, Textextraktion und strukturierte Verarbeitung."
+  },
   "deepseek-r1": {
     "description": "DeepSeek-R1 ist ein durch verstärkendes Lernen (RL) gesteuertes Inferenzmodell, das die Probleme der Wiederholbarkeit und Lesbarkeit im Modell löst. Vor dem RL führte DeepSeek-R1 Kaltstartdaten ein, um die Inferenzleistung weiter zu optimieren. Es zeigt in mathematischen, programmierbezogenen und Inferenzaufgaben eine vergleichbare Leistung zu OpenAI-o1 und verbessert durch sorgfältig gestaltete Trainingsmethoden die Gesamteffizienz."
   },
@@ -1268,6 +1277,9 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision ist ein visuelles Tiefdenkmodell, das in Szenarien wie Bildung, Bildprüfung, Inspektion und Sicherheit sowie KI-Suchfragen eine stärkere allgemeine multimodale Verständnis- und Schlussfolgerungsfähigkeit zeigt. Unterstützt ein Kontextfenster von 256k und eine maximale Ausgabelänge von 64k Tokens."
   },
+  "doubao-seed-code": {
+    "description": "Doubao-Seed-Code ist tiefgreifend für agentenbasiertes Programmieren optimiert. Es unterstützt Multimodalität (Text/Bild/Video) und 256K langen Kontext, ist kompatibel mit der Anthropic API und eignet sich für Programmierung, visuelles Verständnis und Agent-Szenarien."
+  },
   "doubao-seededit-3-0-i2i-250628": {
     "description": "Das Doubao-Bildgenerierungsmodell wurde vom Seed-Team von ByteDance entwickelt, unterstützt Texteingaben und Bilder und bietet eine hochgradig kontrollierbare, qualitativ hochwertige Bildgenerierung. Es ermöglicht die Bildbearbeitung mittels Textanweisungen mit Bildseitenlängen zwischen 512 und 1536 Pixel."
   },
@@ -1327,6 +1339,9 @@
   },
   "ernie-4.5-vl-28b-a3b": {
     "description": "ERNIE 4.5 VL 28B A3B, ein Open-Source-Multimodalmodell für Bild-Text-Verständnis und Inferenzaufgaben."
+  },
+  "ernie-5.0-thinking-latest": {
+    "description": "Wenxin 5.0 Thinking ist ein natives, multimodales Flaggschiffmodell, das Text, Bild, Audio und Video in einem einheitlichen Modell verarbeitet. Es bietet umfassend verbesserte Fähigkeiten und eignet sich für komplexe Fragen, kreative Aufgaben und intelligente Agenten."
   },
   "ernie-5.0-thinking-preview": {
     "description": "Wenxin 5.0 Thinking Preview, ein natives, multimodales Flaggschiffmodell mit einheitlicher Modellierung von Text, Bild, Audio und Video. Umfassend verbesserte Fähigkeiten für komplexe QA, kreative Aufgaben und Agentenszenarien."
@@ -2198,9 +2213,6 @@
   "kimi-latest": {
     "description": "Das Kimi intelligente Assistenzprodukt verwendet das neueste Kimi Großmodell, das möglicherweise noch instabile Funktionen enthält. Es unterstützt die Bildverarbeitung und wählt automatisch das Abrechnungsmodell 8k/32k/128k basierend auf der Länge des angeforderten Kontexts aus."
   },
-  "kimi-thinking-preview": {
-    "description": "Das kimi-thinking-preview Modell von Moon’s Dark Side ist ein multimodales Denkmodell mit Fähigkeiten zu multimodalem und allgemeinem logischem Denken. Es ist spezialisiert auf tiefgehende Schlussfolgerungen und hilft dabei, komplexere und schwierigere Aufgaben zu lösen."
-  },
   "kuaishou/kat-coder-pro-v1": {
     "description": "KAT-Coder-Pro-V1 (zeitlich begrenzt kostenlos) ist auf Codeverständnis und automatisierte Programmierung spezialisiert – ideal für effiziente Programmieragenten."
   },
@@ -2245,9 +2257,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Das Llama 3.3 Instruct-Modell ist für Dialogszenarien optimiert und übertrifft in gängigen Branchenbenchmarks viele bestehende Open-Source-Chatmodelle."
-  },
-  "llama-4-scout-17b-16e-instruct": {
-    "description": "Llama 4 Scout: Ein leistungsstarkes Modell der Llama-Serie, optimiert für Szenarien mit hoher Verarbeitungsgeschwindigkeit und niedriger Latenz."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B bietet unvergleichliche Fähigkeiten zur Verarbeitung von Komplexität und ist maßgeschneidert für Projekte mit hohen Anforderungen."
@@ -2681,6 +2690,9 @@
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 ist die neueste und leistungsstärkste Version von Kimi K2. Es handelt sich um ein erstklassiges Mixture-of-Experts (MoE) Sprachmodell mit insgesamt 1 Billion Parametern und 32 Milliarden aktivierten Parametern. Die Hauptmerkmale dieses Modells umfassen: verbesserte Agenten-Codierungsintelligenz, die in öffentlichen Benchmark-Tests und realen Agenten-Codierungsaufgaben eine signifikante Leistungssteigerung zeigt; verbesserte Frontend-Codierungserfahrung mit Fortschritten in Ästhetik und Praktikabilität der Frontend-Programmierung."
   },
+  "moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking ist das neueste und leistungsstärkste Open-Source-Denkmodell. Es erweitert die Tiefe mehrstufiger Schlussfolgerungen erheblich und bleibt bei 200–300 aufeinanderfolgenden Werkzeugaufrufen stabil. Es setzt neue Maßstäbe in Benchmarks wie Humanity's Last Exam (HLE) und BrowseComp. K2 Thinking überzeugt in Programmierung, Mathematik, logischem Denken und Agent-Szenarien. Das Modell basiert auf einer Mixture-of-Experts (MoE)-Architektur mit rund 1 Billion Parametern, unterstützt 256K Kontextfenster und Werkzeugnutzung."
+  },
   "moonshotai/kimi-k2": {
     "description": "Kimi K2 ist ein von Moonshot AI entwickeltes großes gemischtes Experten (MoE) Sprachmodell mit insgesamt 1 Billion Parametern und 32 Milliarden aktiven Parametern pro Vorwärtsdurchlauf. Es ist auf Agentenfähigkeiten optimiert, einschließlich fortgeschrittener Werkzeugnutzung, Inferenz und Code-Synthese."
   },
@@ -2721,7 +2733,7 @@
     "description": "Konzentriert sich auf fortgeschrittene Inferenz und die Lösung komplexer Probleme, einschließlich mathematischer und wissenschaftlicher Aufgaben. Besonders geeignet für Anwendungen, die ein tiefes Verständnis des Kontexts und die Abwicklung von Arbeitsabläufen erfordern."
   },
   "o1-mini": {
-    "description": "o1-mini ist ein schnelles und kosteneffizientes Inferenzmodell, das für Programmier-, Mathematik- und Wissenschaftsanwendungen entwickelt wurde. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
+    "description": "Kleiner und schneller als o1-preview, 80 % kostengünstiger, mit guter Leistung bei Codegenerierung und Aufgaben mit kleinem Kontext."
   },
   "o1-preview": {
     "description": "Konzentriert auf fortgeschrittenes Schlussfolgern und die Lösung komplexer Probleme, einschließlich mathematischer und naturwissenschaftlicher Aufgaben. Sehr gut geeignet für Anwendungen, die ein tiefes Kontextverständnis und autonome Arbeitsabläufe benötigen."
@@ -2959,9 +2971,6 @@
   },
   "qwen-3-32b": {
     "description": "Qwen 3 32B: Ein Modell der Qwen-Serie mit starker Leistung bei mehrsprachigen und Programmieraufgaben, geeignet für mittelgroße produktive Einsätze."
-  },
-  "qwen-3-coder-480b": {
-    "description": "Qwen 3 Coder 480B: Ein Modell mit langem Kontext, das für Codegenerierung und komplexe Programmieraufgaben entwickelt wurde."
   },
   "qwen-coder-plus": {
     "description": "Tongyi Qianwen Codierungsmodell."
@@ -3323,6 +3332,9 @@
   "sonar-reasoning-pro": {
     "description": "Ein neues API-Produkt, das von dem DeepSeek-Inferenzmodell unterstützt wird."
   },
+  "spark-x": {
+    "description": "X1.5-Funktionsübersicht: (1) Neue dynamische Denkmodusanpassung über das Feld 'thinking'; (2) Erweiterte Kontextlänge: je 64K für Eingabe und Ausgabe; (3) Unterstützung für FunctionCall-Funktion."
+  },
   "stable-diffusion-3-medium": {
     "description": "Das neueste Text-zu-Bild-Großmodell von Stability AI. Diese Version verbessert signifikant Bildqualität, Textverständnis und Stilvielfalt gegenüber Vorgängerversionen, kann komplexe natürliche Sprachaufforderungen präziser interpretieren und erzeugt genauere und vielfältigere Bilder."
   },
@@ -3524,9 +3536,6 @@
   "x-ai/grok-code-fast-1": {
     "description": "Grok Code Fast 1 ist ein schnelles Codierungsmodell von xAI mit gut lesbarer und engineering-tauglicher Ausgabe."
   },
-  "x1": {
-    "description": "Das Spark X1 Modell wird weiter verbessert und erreicht in allgemeinen Aufgaben wie Schlussfolgerungen, Textgenerierung und Sprachverständnis Ergebnisse, die mit OpenAI o1 und DeepSeek R1 vergleichbar sind, basierend auf der bereits führenden Leistung in mathematischen Aufgaben."
-  },
   "xai/grok-2": {
     "description": "Grok 2 ist ein fortschrittliches Sprachmodell mit modernsten Inferenzfähigkeiten. Es bietet fortschrittliche Fähigkeiten in Chat, Codierung und Inferenz und übertrifft Claude 3.5 Sonnet und GPT-4-Turbo in der LMSYS-Rangliste."
   },
@@ -3592,6 +3601,9 @@
   },
   "z-ai/glm-4.6": {
     "description": "GLM 4.6 ist das Flaggschiffmodell von Z.AI mit erweitertem Kontext und verbesserter Codierungsleistung."
+  },
+  "zai-glm-4.6": {
+    "description": "Hervorragende Leistung bei Programmier- und Schlussfolgerungsaufgaben, unterstützt Streaming und Werkzeugaufrufe – ideal für agentenbasiertes Codieren und komplexe Denkprozesse."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 ist ein speziell für Agentenanwendungen entwickeltes Basismodell mit Mixture-of-Experts-Architektur. Es ist tief optimiert für Werkzeugaufrufe, Web-Browsing, Softwareentwicklung und Frontend-Programmierung und unterstützt nahtlos die Integration in Code-Agenten wie Claude Code und Roo Code. GLM-4.5 verwendet einen hybriden Inferenzmodus und ist für komplexe Schlussfolgerungen sowie den Alltagsgebrauch geeignet."

@@ -2,6 +2,148 @@
 
 # Changelog
 
+## [Version 2.0.0-next.160](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.159...v2.0.0-next.160)
+
+<sup>Released on **2025-12-05**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.159](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.158...v2.0.0-next.159)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### ✨ Features
+
+- **misc**: Betterauth username signin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Betterauth username signin, closes [#10607](https://github.com/lobehub/lobe-chat/issues/10607) ([f72a5e6](https://github.com/lobehub/lobe-chat/commit/f72a5e6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.158](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.157...v2.0.0-next.158)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Limit check-user response surface.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Limit check-user response surface, closes [#10609](https://github.com/lobehub/lobe-chat/issues/10609) ([2f6d3f0](https://github.com/lobehub/lobe-chat/commit/2f6d3f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.157](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.156...v2.0.0-next.157)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Spark X1.5 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Spark X1.5 model, closes [#10103](https://github.com/lobehub/lobe-chat/issues/10103) ([d1aca26](https://github.com/lobehub/lobe-chat/commit/d1aca26))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.156](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.155...v2.0.0-next.156)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix React CVE issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix React CVE issue, closes [#10593](https://github.com/lobehub/lobe-chat/issues/10593) ([abd850f](https://github.com/lobehub/lobe-chat/commit/abd850f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.155](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.154...v2.0.0-next.155)
+
+<sup>Released on **2025-12-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Missing init user after user creation.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Missing init user after user creation, closes [#10587](https://github.com/lobehub/lobe-chat/issues/10587) ([0e97a42](https://github.com/lobehub/lobe-chat/commit/0e97a42))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.154](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.153...v2.0.0-next.154)
 
 <sup>Released on **2025-12-03**</sup>

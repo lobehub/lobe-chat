@@ -199,7 +199,7 @@ export class UserModel {
    * Normalize unique user fields so empty strings become null, keeping unique constraints safe.
    */
   private static normalizeUniqueUserFields = <
-    T extends { email?: string | null; phone?: string | null },
+    T extends { email?: string | null; phone?: string | null; username?: string | null },
   >(
     value: T,
   ) => {
@@ -207,11 +207,16 @@ export class UserModel {
       typeof value.email === 'string' && value.email.trim() === '' ? null : value.email;
     const normalizedPhone =
       typeof value.phone === 'string' && value.phone.trim() === '' ? null : value.phone;
+    const normalizedUsername =
+      typeof value.username === 'string' && value.username.trim() === ''
+        ? null
+        : value.username?.trim();
 
     return {
       ...value,
       ...(value.email !== undefined ? { email: normalizedEmail } : {}),
       ...(value.phone !== undefined ? { phone: normalizedPhone } : {}),
+      ...(value.username !== undefined ? { username: normalizedUsername } : {}),
     };
   };
 
@@ -239,6 +244,13 @@ export class UserModel {
 
   static findById = async (db: LobeChatDatabase, id: string) => {
     return db.query.users.findFirst({ where: eq(users.id, id) });
+  };
+
+  static findByUsername = async (db: LobeChatDatabase, username: string) => {
+    const normalizedUsername = username.trim();
+    if (!normalizedUsername) return null;
+
+    return db.query.users.findFirst({ where: eq(users.username, normalizedUsername) });
   };
 
   static findByEmail = async (db: LobeChatDatabase, email: string) => {

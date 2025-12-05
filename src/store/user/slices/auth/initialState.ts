@@ -22,7 +22,7 @@ export interface UserAuthState {
   /**
    * Whether user registered with email/password (credential login)
    */
-  isEmailPasswordAuth?: boolean;
+  hasPasswordAccount?: boolean;
   isLoaded?: boolean;
   isLoadedAuthProviders?: boolean;
 

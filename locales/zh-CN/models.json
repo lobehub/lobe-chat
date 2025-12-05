@@ -221,6 +221,9 @@
   "MiniMax-M2": {
     "description": "专为高效编码与Agent工作流而生"
   },
+  "MiniMax-M2-Stable": {
+    "description": "专为高效编码与Agent工作流而生，更高并发，商业使用。"
+  },
   "MiniMax-Text-01": {
     "description": "在 MiniMax-01系列模型中，我们做了大胆创新：首次大规模实现线性注意力机制，传统 Transformer架构不再是唯一的选择。这个模型的参数量高达4560亿，其中单次激活459亿。模型综合性能比肩海外顶尖模型，同时能够高效处理全球最长400万token的上下文，是GPT-4o的32倍，Claude-3.5-Sonnet的20倍。"
   },
@@ -298,6 +301,9 @@
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 是 Kimi K2 最新、最强大的版本。它是一款顶尖的混合专家（MoE）语言模型，拥有 1 万亿的总参数和 320 亿的激活参数。该模型的主要特性包括：增强的智能体编码智能，在公开基准测试和真实世界的编码智能体任务中表现出显著的性能提升；改进的前端编码体验，在前端编程的美观性和实用性方面均有进步。"
+  },
+  "Pro/moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking Turbo 是 Kimi K2 系列的 Turbo 版本，针对推理速度和吞吐进行了优化，同时保留 K2 Thinking 的多步推理与工具调用能力。该模型基于混合专家（MoE）架构，总参数约 1T，原生支持 256K 上下文并可稳定执行大规模工具调用，适用于对延迟和并发有更高要求的生产场景。"
   },
   "QwQ-32B-Preview": {
     "description": "Qwen QwQ 是由 Qwen 团队开发的实验研究模型，专注于提升AI推理能力。"
@@ -1052,6 +1058,9 @@
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 是开源的混合专家代码模型，在代码任务方面表现优异，与 GPT4-Turbo 相媲美。"
   },
+  "deepseek-ocr": {
+    "description": "DeepSeek-OCR 是由深度求索（DeepSeek AI）推出的一个视觉语言模型，专注于光学字符识别（OCR）与\"上下文光学压缩\"。该模型旨在探索从图像中压缩上下文信息的边界，能够高效处理文档并将其转换为如 Markdown 等结构化文本格式。它能够准确识别图像中的文字内容，特别适用于文档数字化、文字提取和结构化处理等应用场景。"
+  },
   "deepseek-r1": {
     "description": "DeepSeek-R1 在强化学习（RL）之前引入了冷启动数据，在数学、代码和推理任务上表现可与 OpenAI-o1 相媲美。"
   },
@@ -1268,6 +1277,9 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision 视觉深度思考模型，在教育、图像审核、巡检与安防和AI 搜索问答等场景下展现出更强的通用多模态理解和推理能力。支持 256k 上下文窗口，输出长度支持最大 64k tokens。"
   },
+  "doubao-seed-code": {
+    "description": "Doubao-Seed-Code 面向 Agentic 编程任务进行了深度优化，支持多模态（文字/图片/视频）与 256k 长上下文，兼容 Anthropic API，适用于编程、视觉理解与 Agent 场景。"
+  },
   "doubao-seededit-3-0-i2i-250628": {
     "description": "Doubao图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验。支持通过文本指令编辑图像，生成图像的边长在512～1536之间。"
   },
@@ -1327,6 +1339,9 @@
   },
   "ernie-4.5-vl-28b-a3b": {
     "description": "ERNIE 4.5 VL 28B A3B，多模态开源模型，支持图文理解与推理任务。"
+  },
+  "ernie-5.0-thinking-latest": {
+    "description": "文心5.0 Thinking，原生全模态旗舰模型，支持文本、图像、音频、视频统一建模，综合能力全面升级，适用于复杂问答、创作与智能体场景。"
   },
   "ernie-5.0-thinking-preview": {
     "description": "文心5.0 Thinking 预览版，原生全模态旗舰模型，支持文本、图像、音频、视频统一建模，综合能力全面升级，适用于复杂问答、创作与智能体场景。"
@@ -2198,9 +2213,6 @@
   "kimi-latest": {
     "description": "Kimi 智能助手产品使用最新的 Kimi 大模型，可能包含尚未稳定的特性。支持图片理解，同时会自动根据请求的上下文长度选择 8k/32k/128k 模型作为计费模型"
   },
-  "kimi-thinking-preview": {
-    "description": "kimi-thinking-preview 模型是月之暗面提供的具有多模态推理能力和通用推理能力的多模态思考模型，它擅长深度推理，帮助解决更多更难的事情"
-  },
   "kuaishou/kat-coder-pro-v1": {
     "description": "KAT-Coder-Pro-V1（限时免费）专注于代码理解与自动化编程，用于高效的编程代理任务。"
   },
@@ -2245,9 +2257,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Llama 3.3 指令微调模型针对对话场景进行了优化，在常见的行业基准测试中，超越了许多现有的开源聊天模型。"
-  },
-  "llama-4-scout-17b-16e-instruct": {
-    "description": "Llama 4 Scout：高性能的 Llama 系列模型，适合需高吞吐与低延迟的场景。"
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B 提供无与伦比的复杂性处理能力，为高要求项目量身定制。"
@@ -2681,6 +2690,9 @@
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 是 Kimi K2 最新、最强大的版本。它是一款顶尖的混合专家（MoE）语言模型，拥有 1 万亿的总参数和 320 亿的激活参数。该模型的主要特性包括：增强的智能体编码智能，在公开基准测试和真实世界的编码智能体任务中表现出显著的性能提升；改进的前端编码体验，在前端编程的美观性和实用性方面均有进步。"
   },
+  "moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking 是最新、最强大的开源思考模型。它通过大幅扩展多步推理深度，并在 200–300 次连续工具调用中保持稳定的工具使用，在 Humanity's Last Exam (HLE)、BrowseComp 及其他基准测试中树立了新的标杆。同时，K2 Thinking 在编程、数学、逻辑推理和 Agent 场景中表现卓越。该模型基于混合专家（MoE）架构，总参数约 1T，支持 256K 上下文窗口并支持工具调用。"
+  },
   "moonshotai/kimi-k2": {
     "description": "Kimi K2 是由月之暗面 AI 开发的大规模混合专家 (MoE) 语言模型，具有 1 万亿总参数和每次前向传递 320 亿激活参数。它针对代理能力进行了优化，包括高级工具使用、推理和代码合成。"
   },
@@ -2721,7 +2733,7 @@
     "description": "o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。"
   },
   "o1-mini": {
-    "description": "o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。"
+    "description": "比 o1-preview 更小、更快，成本低80%，在代码生成和小上下文操作方面表现良好。"
   },
   "o1-preview": {
     "description": "专注于高级推理和解决复杂问题，包括数学和科学任务。非常适合需要深度上下文理解和自主工作流程的应用。"
@@ -2959,9 +2971,6 @@
   },
   "qwen-3-32b": {
     "description": "Qwen 3 32B：Qwen 系列在多语言与编码任务上表现优良，适合中等规模生产化使用。"
-  },
-  "qwen-3-coder-480b": {
-    "description": "Qwen 3 Coder 480B：面向代码生成与复杂编程任务的长上下文模型。"
   },
   "qwen-coder-plus": {
     "description": "通义千问代码模型。"
@@ -3323,6 +3332,9 @@
   "sonar-reasoning-pro": {
     "description": "支持搜索上下文的高级搜索产品，支持高级查询和跟进。"
   },
+  "spark-x": {
+    "description": "X1.5能力介绍：（1）新增动态调整思考模式，通过thinking 字段控制；（2）上下文长度增大：输入、输出各64K；（3）支持FunctionCall功能。"
+  },
   "stable-diffusion-3-medium": {
     "description": "由 Stability AI 推出的最新文生图大模型。这一版本在继承了前代的优点上，对图像质量、文本理解和风格多样性等方面进行了显著改进，能够更准确地解读复杂的自然语言提示，并生成更为精确和多样化的图像。"
   },
@@ -3524,9 +3536,6 @@
   "x-ai/grok-code-fast-1": {
     "description": "Grok Code Fast 1 是 xAI 的快速代码模型，输出具可读性与工程化适配。"
   },
-  "x1": {
-    "description": "Spark X1 模型将进一步升级，在原来数学任务国内领先基础上，推理、文本生成、语言理解等通用任务实现效果对标 OpenAI o1 和 DeepSeek R1。"
-  },
   "xai/grok-2": {
     "description": "Grok 2 是一个具有最先进推理能力的前沿语言模型。它在聊天、编码和推理方面具有先进能力，在 LMSYS 排行榜上优于 Claude 3.5 Sonnet 和 GPT-4-Turbo。"
   },
@@ -3592,6 +3601,9 @@
   },
   "z-ai/glm-4.6": {
     "description": "GLM 4.6 是 Z.AI 的旗舰模型，扩展了上下文长度和编码能力。"
+  },
+  "zai-glm-4.6": {
+    "description": "在编程与推理任务上表现优良，支持流式与工具调用，适合 agentic 编码与复杂推理场景。"
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 是一款专为智能体应用打造的基础模型，使用了混合专家（Mixture-of-Experts）架构。在工具调用、网页浏览、软件工程、前端编程领域进行了深度优化，支持无缝接入 Claude Code、Roo Code 等代码智能体中使用。GLM-4.5 采用混合推理模式，可以适应复杂推理和日常使用等多种应用场景。"
