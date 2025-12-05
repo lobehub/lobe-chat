@@ -5,10 +5,13 @@ import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features
 import { useChatStore } from '@/store/chat';
 
 import StarterList from './StarterList';
+import { useSend } from './useSend';
 
 const leftActions: ActionKeys[] = ['model', 'search', 'fileUpload'];
 
 const InputArea = memo(() => {
+  const { loading, send } = useSend();
+
   return (
     <Flexbox gap={16} style={{ marginBottom: 16 }}>
       <ChatInputProvider
@@ -20,10 +23,13 @@ const InputArea = memo(() => {
         onMarkdownContentChange={(content) => {
           useChatStore.setState({ inputMessage: content });
         }}
-        onSend={() => {
-          // todo
+        onSend={send}
+        sendButtonProps={{
+          disabled: loading,
+          generating: loading,
+          onStop: () => {},
+          shape: 'round',
         }}
-        sendButtonProps={{ disabled: false, generating: false, onStop: () => {}, shape: 'round' }}
       >
         <DesktopChatInput
           inputContainerProps={{
