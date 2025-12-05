@@ -14,6 +14,11 @@ vi.mock('@/database/core/db-adaptor', () => ({
   getServerDB: vi.fn(() => testDB),
 }));
 
+// Mock next/server's after() to execute callback immediately in tests
+vi.mock('next/server', () => ({
+  after: vi.fn((callback: () => void) => callback()),
+}));
+
 /**
  * Topic Router 集成测试
  *
