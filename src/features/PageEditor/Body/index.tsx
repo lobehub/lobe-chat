@@ -10,7 +10,7 @@ import Title from './Title';
 
 const Body = memo(() => {
   const { t } = useTranslation('file');
-  const { editor, onEditorInit, handleContentChange } = usePageEditorContext();
+  const { editor, onEditorInit, handleContentChange, performSave } = usePageEditorContext();
 
   return (
     <Flexbox flex={1} style={{ overflowY: 'auto' }}>
@@ -36,6 +36,7 @@ const Body = memo(() => {
         >
           <EditorContent
             editor={editor}
+            onBlur={performSave}
             onInit={onEditorInit}
             onTextChange={handleContentChange}
             placeholder={t('documentEditor.editorPlaceholder')}
