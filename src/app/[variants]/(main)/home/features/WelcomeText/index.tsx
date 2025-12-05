@@ -18,7 +18,7 @@ const WelcomeText = memo(() => {
       style={{
         fontSize: 28,
         fontWeight: 'bold',
-        marginBlock: '56px 16px',
+        marginBlock: '36px 24px',
       }}
     >
       <TypewriterEffect

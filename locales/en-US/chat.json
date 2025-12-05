@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "Search assistants...",
   "searchAgents": "Search assistants...",
   "selectedAgents": "Selected agents",
-  "sendPlaceholder": "Type your message here...",
+  "sendPlaceholder": "Ask, create, or start a task, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Group Management",
     "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",

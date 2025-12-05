@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "Zoekassistent...",
   "searchAgents": "Zoekassistent...",
   "selectedAgents": "Geselecteerde assistenten",
-  "sendPlaceholder": "Voer chatbericht in...",
+  "sendPlaceholder": "Stel een vraag, creëer iets of begin een taak, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Groepsbeheer",
     "confirmRemoveGroupAlert": "Je staat op het punt deze groep te verwijderen. Na verwijdering zullen de assistenten van deze groep worden verplaatst naar de standaardlijst. Bevestig je actie.",

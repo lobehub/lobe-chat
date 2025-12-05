@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "مساعد البحث...",
   "searchAgents": "مساعد البحث...",
   "selectedAgents": "المساعدون المختارون",
-  "sendPlaceholder": "أدخل محتوى الدردشة...",
+  "sendPlaceholder": "اطرح سؤالًا، أنشئ محتوى، أو ابدأ مهمة، <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "إدارة المجموعات",
     "confirmRemoveGroupAlert": "سيتم حذف هذه المجموعة قريبًا، وبعد الحذف، سيتم نقل مساعدي هذه المجموعة إلى القائمة الافتراضية، يرجى تأكيد إجراءك",
