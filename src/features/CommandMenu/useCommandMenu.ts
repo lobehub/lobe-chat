@@ -50,9 +50,15 @@ export const useCommandMenu = () => {
   }, []);
 
   // Register Cmd+K / Ctrl+K hotkey
-  useHotkeyById(HotkeyEnum.CommandPalette, () => {
-    setOpen((prev) => !prev);
-  });
+  useHotkeyById(
+    HotkeyEnum.CommandPalette,
+    () => {
+      setOpen((prev) => !prev);
+    },
+    {
+      enableOnContentEditable: true,
+    },
+  );
 
   // Close on Escape key and prevent body scroll
   useEffect(() => {

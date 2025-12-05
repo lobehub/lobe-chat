@@ -1,9 +1,12 @@
 'use client';
 
 import {
+  INSERT_CHECK_LIST_COMMAND,
   INSERT_HEADING_COMMAND,
   INSERT_IMAGE_COMMAND,
+  INSERT_ORDERED_LIST_COMMAND,
   INSERT_TABLE_COMMAND,
+  INSERT_UNORDERED_LIST_COMMAND,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -20,6 +23,9 @@ import {
   Heading2Icon,
   Heading3Icon,
   ImageIcon,
+  ListIcon,
+  ListOrderedIcon,
+  ListTodoIcon,
   SquareDashedBottomCodeIcon,
   Table2Icon,
 } from 'lucide-react';
@@ -192,6 +198,30 @@ const EditorContent = memo<EditorContentProps>(
                 label: t('documentEditor.slashCommands.image'),
                 onSelect: () => {
                   fileInputRef.current?.click();
+                },
+              },
+              {
+                icon: ListTodoIcon,
+                key: 'todo-list',
+                label: t('documentEditor.slashCommands.todoList'),
+                onSelect: (editor) => {
+                  editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined);
+                },
+              },
+              {
+                icon: ListIcon,
+                key: 'bulleted-list',
+                label: t('documentEditor.slashCommands.bulletedList'),
+                onSelect: (editor) => {
+                  editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+                },
+              },
+              {
+                icon: ListOrderedIcon,
+                key: 'ordered-list',
+                label: t('documentEditor.slashCommands.orderedList'),
+                onSelect: (editor) => {
+                  editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
                 },
               },
             ],
