@@ -259,6 +259,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "Kích thước hình ảnh vượt quá giới hạn 1MB, vui lòng chọn hình ảnh nhỏ hơn",
       "title": "Hình đại diện"
     },
     "backgroundColor": {
