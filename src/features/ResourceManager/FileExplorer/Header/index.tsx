@@ -2,9 +2,11 @@
 
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import NavHeader from '@/features/NavHeader';
+import { FilesTabs } from '@/types/files';
 
 import AddButton from '../../Header/AddButton';
 import BatchActionsDropdown from '../ToolBar/BatchActionsDropdown';
@@ -26,13 +28,21 @@ interface HeaderProps {
 const Header = memo<HeaderProps>(
   ({ category, knowledgeBaseId, onActionClick, onViewChange, selectCount, viewMode }) => {
     const theme = useTheme();
+    const { t } = useTranslation('file');
+
+    // If no knowledgeBaseId, show just the category name
+    const leftContent =
+      !knowledgeBaseId && category && category !== FilesTabs.All ? (
+        <Flexbox style={{ marginLeft: 8 }}>{t(`tab.${category as FilesTabs}` as any)}</Flexbox>
+      ) : (
+        <Flexbox style={{ marginLeft: 8 }}>
+          <Breadcrumb category={category} knowledgeBaseId={knowledgeBaseId} />
+        </Flexbox>
+      );
+
     return (
       <NavHeader
-        left={
-          <Flexbox style={{ marginLeft: 8 }}>
-            <Breadcrumb category={category} knowledgeBaseId={knowledgeBaseId} />
-          </Flexbox>
-        }
+        left={leftContent}
         right={
           <>
             <ExpandableSearch />
