@@ -271,6 +271,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "이미지 크기가 1MB를 초과했습니다. 더 작은 이미지를 선택해 주세요.",
       "title": "도우미 아바타"
     },
     "backgroundColor": {

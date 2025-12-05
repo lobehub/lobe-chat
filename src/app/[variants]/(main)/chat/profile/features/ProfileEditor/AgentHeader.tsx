@@ -2,19 +2,21 @@
 
 import { EmojiPicker, Icon, Input, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
-import { Skeleton } from 'antd';
+import { Skeleton, message } from 'antd';
 import { useTheme } from 'antd-style';
 import { PaletteIcon } from 'lucide-react';
-import { Suspense, memo, useEffect, useState } from 'react';
+import { Suspense, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import BackgroundSwatches from '@/features/AgentSetting/AgentMeta/BackgroundSwatches';
 import { useStore } from '@/features/AgentSetting/store';
+import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 
 const SAVE_DEBOUNCE_TIME = 500; // ms
+const MAX_AVATAR_SIZE = 1024 * 1024; // 1MB limit for server actions
 
 const AgentHeader = memo(() => {
   const { t } = useTranslation(['setting', 'common']);
@@ -25,6 +27,10 @@ const AgentHeader = memo(() => {
   const meta = useStore((s) => s.meta);
   const updateMeta = useStore((s) => s.setAgentMeta);
   const backgroundColor = meta.backgroundColor || theme.colorFillTertiary;
+
+  // File upload
+  const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
+  const [uploading, setUploading] = useState(false);
 
   // Local state for inputs (to avoid stuttering during typing)
   const [localTitle, setLocalTitle] = useState(meta.title || '');
@@ -47,6 +53,33 @@ const AgentHeader = memo(() => {
     updateMeta({ avatar: emoji });
   };
 
+  // Handle avatar upload
+  const handleAvatarUpload = useCallback(
+    async (file: File) => {
+      if (file.size > MAX_AVATAR_SIZE) {
+        message.error(t('settingAgent.avatar.sizeExceeded', { ns: 'setting' }));
+        return;
+      }
+
+      setUploading(true);
+      try {
+        const result = await uploadWithProgress({ file });
+        console.log('result', result);
+        if (result?.url) {
+          updateMeta({ avatar: result.url });
+        }
+      } finally {
+        setUploading(false);
+      }
+    },
+    [uploadWithProgress, updateMeta, t],
+  );
+
+  // Handle avatar delete
+  const handleAvatarDelete = useCallback(() => {
+    updateMeta({ avatar: undefined });
+  }, [updateMeta]);
+
   // Handle background color change (immediate save)
   const handleBackgroundColorChange = (color?: string) => {
     if (color !== undefined) {
@@ -67,6 +100,8 @@ const AgentHeader = memo(() => {
       }}
     >
       <EmojiPicker
+        allowDelete={!!meta.avatar}
+        allowUpload
         background={backgroundColor}
         customTabs={[
           {
@@ -98,8 +133,11 @@ const AgentHeader = memo(() => {
             value: 'background',
           },
         ]}
+        loading={uploading}
         locale={locale}
         onChange={handleAvatarChange}
+        onDelete={handleAvatarDelete}
+        onUpload={handleAvatarUpload}
         popupProps={{
           placement: 'bottomLeft',
         }}

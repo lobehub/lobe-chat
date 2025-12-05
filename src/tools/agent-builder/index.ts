@@ -44,6 +44,39 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
+    {
+      description:
+        'Get all available AI models and providers that can be used for the agent. Returns a list of providers with their supported models and capabilities (vision, function calling, reasoning, etc.).',
+      name: AgentBuilderApiName.getAvailableModels,
+      parameters: {
+        properties: {
+          providerId: {
+            description:
+              'Optional: filter models by a specific provider id (e.g., "openai", "anthropic", "google")',
+            type: 'string',
+          },
+        },
+        required: [],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Get all available tools (plugins and built-in tools) that can be enabled for the agent. Returns tool identifiers, names, descriptions, and types.',
+      name: AgentBuilderApiName.getAvailableTools,
+      parameters: {
+        properties: {
+          type: {
+            description:
+              'Optional: filter by tool type. "builtin" for built-in tools, "plugin" for installed plugins, "all" for both. Defaults to "all".',
+            enum: ['all', 'builtin', 'plugin'],
+            type: 'string',
+          },
+        },
+        required: [],
+        type: 'object',
+      },
+    },
 
     // ==================== Write Operations ====================
     {
@@ -217,8 +250,7 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
             type: 'string',
           },
           provider: {
-            description:
-              'The provider identifier (e.g., "openai", "anthropic", "google", "azure")',
+            description: 'The provider identifier (e.g., "openai", "anthropic", "google", "azure")',
             type: 'string',
           },
         },

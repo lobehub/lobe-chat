@@ -271,6 +271,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "حجم تصویر از محدودیت ۱ مگابایت بیشتر است، لطفاً تصویری با حجم کمتر انتخاب کنید",
       "title": "آواتار"
     },
     "backgroundColor": {

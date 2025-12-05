@@ -1,4 +1,6 @@
 import { AgentBuilderApiName } from '../types';
+import GetAvailableModels from './GetAvailableModels';
+import GetAvailableTools from './GetAvailableTools';
 import GetConfig from './GetConfig';
 import GetMeta from './GetMeta';
 import SetModel from './SetModel';
@@ -16,6 +18,8 @@ export const AgentBuilderRenders = {
   // Read operations
   [AgentBuilderApiName.getAgentConfig]: GetConfig,
   [AgentBuilderApiName.getAgentMeta]: GetMeta,
+  [AgentBuilderApiName.getAvailableModels]: GetAvailableModels,
+  [AgentBuilderApiName.getAvailableTools]: GetAvailableTools,
 
   // Write operations
   [AgentBuilderApiName.updateAgentConfig]: UpdateConfig,

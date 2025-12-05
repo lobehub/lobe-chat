@@ -271,6 +271,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "圖片大小超過 1MB 限制，請選擇較小的圖片",
       "title": "頭像"
     },
     "backgroundColor": {
