@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Icon } from '@lobehub/ui';
+import { Button, Icon, Input } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { SmilePlus } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -35,9 +35,16 @@ const Title = memo(() => {
   return (
     <Flexbox
       gap={16}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
       onMouseEnter={() => setIsHoveringTitle(true)}
       onMouseLeave={() => setIsHoveringTitle(false)}
       paddingBlock={16}
+      style={{
+        cursor: 'default',
+      }}
     >
       {/* Emoji picker above Choose Icon button */}
       {(currentEmoji || showEmojiPicker) && (
@@ -86,7 +93,7 @@ const Title = memo(() => {
       )}
 
       {/* Title Input */}
-      <input
+      <Input
         onChange={(e) => {
           setCurrentTitle(e.target.value);
           debouncedSave();
@@ -99,18 +106,13 @@ const Title = memo(() => {
         }}
         placeholder={t('documentEditor.titlePlaceholder')}
         style={{
-          background: 'transparent',
-          border: 'none',
-          color: theme.colorText,
-          flex: 1,
           fontSize: 36,
           fontWeight: 600,
-          lineHeight: 1.2,
-          outline: 'none',
           padding: 0,
           width: '100%',
         }}
         value={currentTitle}
+        variant={'borderless'}
       />
     </Flexbox>
   );
