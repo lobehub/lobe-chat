@@ -14,39 +14,14 @@ const Body = memo(() => {
 
   return (
     <Flexbox flex={1} style={{ overflowY: 'auto' }}>
-      <Flexbox
-        paddingBlock={36}
-        style={{
-          margin: '0 auto',
-          maxWidth: 900,
-          paddingLeft: 32,
-          paddingRight: 48,
-          width: '100%',
-        }}
-      >
-        <Title />
-
-        <div
-          onClick={() => editor?.focus()}
-          style={{
-            cursor: 'text',
-            flex: 1,
-            minHeight: '400px',
-          }}
-        >
-          <EditorContent
-            editor={editor}
-            onBlur={performSave}
-            onInit={onEditorInit}
-            onTextChange={handleContentChange}
-            placeholder={t('documentEditor.editorPlaceholder')}
-            style={{
-              minHeight: '400px',
-              paddingBottom: '200px',
-            }}
-          />
-        </div>
-      </Flexbox>
+      <Title />
+      <EditorContent
+        editor={editor}
+        onBlur={performSave}
+        onInit={onEditorInit}
+        onTextChange={handleContentChange}
+        placeholder={t('documentEditor.editorPlaceholder')}
+      />
     </Flexbox>
   );
 });
