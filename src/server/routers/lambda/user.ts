@@ -22,7 +22,7 @@ import { pino } from '@/libs/logger';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
-import { S3 } from '@/server/modules/S3';
+import { FileS3 } from '@/server/modules/S3';
 import { FileService } from '@/server/services/file';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 import { UserService } from '@/server/services/user';
@@ -183,7 +183,7 @@ export const userRouter = router({
         const base64Data = input.slice(commaIndex + 1);
 
         // 创建 S3 客户端
-        const s3 = new S3();
+        const s3 = new FileS3();
 
         // 使用 UUID 生成唯一文件名，防止缓存问题
         // 获取旧头像 URL, 后面删除该头像
