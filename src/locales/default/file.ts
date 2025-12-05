@@ -51,7 +51,10 @@ export default {
     },
     saving: '保存中...',
     slashCommands: {
+      bulletedList: '无序列表',
       image: '图片',
+      orderedList: '有序列表',
+      todoList: '待办列表',
     },
     titlePlaceholder: '无标题',
     wordCount: '{{wordCount}} 字',
