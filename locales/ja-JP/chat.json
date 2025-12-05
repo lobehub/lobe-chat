@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "検索アシスタント...",
   "searchAgents": "検索アシスタント...",
   "selectedAgents": "選択済みのアシスタント",
-  "sendPlaceholder": "チャット内容を入力してください...",
+  "sendPlaceholder": "質問、作成、またはタスクを開始するには、<hotkey><hotkey/>",
   "sessionGroup": {
     "config": "グループ設定",
     "confirmRemoveGroupAlert": "このグループを削除します。削除後、このグループのアシスタントはデフォルトリストに移動されます。操作を確認してください。",
