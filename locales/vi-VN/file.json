@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "Kết nối...",
+      "gitignore": {
+        "apply": "Áp dụng quy tắc",
+        "cancel": "Bỏ qua quy tắc",
+        "content": "Phát hiện tệp .gitignore (tổng cộng {{count}} tệp), bạn có muốn áp dụng quy tắc bỏ qua không?",
+        "filtered": "Đã lọc {{ignored}} tệp (trong tổng số {{total}} tệp)",
+        "title": "Phát hiện tệp .gitignore"
+      },
       "newFolder": "Tạo thư mục mới",
       "newPage": "Tạo tài liệu mới",
       "uploadFile": "Tải tệp lên",

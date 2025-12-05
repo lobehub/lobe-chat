@@ -352,9 +352,6 @@
       },
       "url": "服务地址"
     },
-    "install": {
-      "title": "安装信息"
-    },
     "custom": {
       "badge": "自定义插件",
       "security": {
@@ -362,6 +359,9 @@
         "title": "⚠️ 安全风险提示"
       },
       "title": "安装自定义插件"
+    },
+    "install": {
+      "title": "安装信息"
     },
     "marketplace": {
       "title": "安装第三方插件",

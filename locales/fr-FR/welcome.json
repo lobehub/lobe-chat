@@ -344,25 +344,25 @@
         ],
         "title": "Cercle d'écriture"
       }
+    },
+    "questions": {
+      "moreBtn": "En savoir plus",
+      "title": "Essayez de demander :"
+    },
+    "welcome": {
+      "afternoon": "Bon après-midi",
+      "morning": "Bonjour",
+      "night": "Bonsoir",
+      "noon": "Bon midi"
     }
   },
   "header": "Bienvenue",
   "pickAgent": "Ou choisissez un modèle d'assistant ci-dessous",
-  "questions": {
-    "moreBtn": "En savoir plus",
-    "title": "Essayez de demander :"
-  },
   "skip": "Passer la création",
   "slogan": {
     "desc1": "Activez votre cerveau collectif et faites jaillir des idées. Votre assistant intelligent est toujours là.",
     "desc2": "Créez votre premier assistant, c’est parti ~",
     "title": "Offrez-vous un cerveau plus intelligent"
-  },
-  "welcome": {
-    "afternoon": "Bon après-midi",
-    "morning": "Bonjour",
-    "night": "Bonsoir",
-    "noon": "Bon appétit"
   },
   "welcomeMessages": {
     "1": "Bon retour 😊",

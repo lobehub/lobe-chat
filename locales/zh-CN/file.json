@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "连接...",
+      "gitignore": {
+        "apply": "应用规则",
+        "cancel": "忽略规则",
+        "content": "检测到 .gitignore 文件（共 {{count}} 个文件），是否应用忽略规则？",
+        "filtered": "已过滤 {{ignored}} 个文件（共 {{total}} 个文件）",
+        "title": "检测到 .gitignore"
+      },
       "newFolder": "新建文件夹",
       "newPage": "新建文稿",
       "uploadFile": "上传文件",

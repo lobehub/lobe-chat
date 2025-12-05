@@ -246,9 +246,9 @@
     "senderAssistant": "الوكيل",
     "senderUser": "أنت"
   },
-  "newAgent": "مساعد",
-  "newGroupChat": "مجموعة",
-  "newPage": "مستند",
+  "newAgent": "إنشاء مساعد",
+  "newGroupChat": "إنشاء مجموعة",
+  "newPage": "إنشاء مستند",
   "noAgentsYet": "لا يوجد أعضاء في هذه المجموعة بعد. انقر على زر + لدعوة مساعد.",
   "noAvailableAgents": "لا يوجد أعضاء متاحون للدعوة",
   "noMatchingAgents": "لا يوجد أعضاء مطابقون",
