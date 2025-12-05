@@ -110,8 +110,8 @@ class ChatService {
     // Apply context engineering with preprocessing configuration
     const oaiMessages = await contextEngineering({
       enableHistoryCount: agentChatConfigSelectors.enableHistoryCount(agentStoreState),
-      // include user messages
-      historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 2,
+      // historyCount is the number of history messages, plus 1 for the current user message
+      historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 1,
       inputTemplate: chatConfig.inputTemplate,
       messages,
       model: payload.model,
