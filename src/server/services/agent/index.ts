@@ -1,5 +1,6 @@
 import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
 import { LobeChatDatabase } from '@lobechat/database';
+import { cleanObject } from '@lobechat/utils';
 import type { PartialDeep } from 'type-fest';
 
 import { AgentModel } from '@/database/models/agent';
@@ -77,7 +78,7 @@ export class AgentService {
     // This ensures model/provider are always present
     const serverDefaultAgentConfig = merge(DEFAULT_AGENT_CONFIG, getServerDefaultAgentConfig());
 
-    return merge(serverDefaultAgentConfig, agent);
+    return merge(serverDefaultAgentConfig, cleanObject(agent));
   }
 
   /**
