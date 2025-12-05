@@ -124,6 +124,7 @@ const EditorContent = memo<EditorContentProps>(
         <Editor
           content={''}
           editor={editor}
+          lineEmptyPlaceholder={placeholder || t('documentEditor.editorPlaceholder')}
           onBlur={onBlur}
           onInit={onInit}
           onTextChange={onTextChange}
@@ -195,10 +196,7 @@ const EditorContent = memo<EditorContentProps>(
               },
             ],
           }}
-          style={{
-            minHeight: '400px',
-            ...style,
-          }}
+          style={style}
           type={'text'}
         />
       </>

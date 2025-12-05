@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/**/*.ts{x,}", "next.config.mjs", "vitest.config.ts"],
+  "ignore": [
+    "**/__tests__/**",
+    "**/*.test.ts{x,}",
+    "**/*.spec.ts{x,}",
+    "**/node_modules/**",
+    "dist/**",
+    ".next/**",
+    "coverage/**",
+    "packages/**",
+    "scripts/**"
+  ],
+  "ignoreDependencies": [],
+  "ignoreExportsUsedInFile": true
+}
