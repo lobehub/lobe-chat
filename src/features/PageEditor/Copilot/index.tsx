@@ -16,6 +16,7 @@ const Copilot = memo(() => {
       minWidth={300}
       onExpandChange={setChatPanelExpanded}
       placement="right"
+      size={{ height: '100%' }}
     >
       <Conversation />
     </DraggablePanel>
