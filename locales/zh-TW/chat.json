@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "搜尋助手...",
   "searchAgents": "搜尋助手...",
   "selectedAgents": "已選擇的助理",
-  "sendPlaceholder": "輸入聊天內容...",
+  "sendPlaceholder": "詢問、創作或開始任務，<hotkey><hotkey/>",
   "sessionGroup": {
     "config": "分組管理",
     "confirmRemoveGroupAlert": "即將刪除該分組，刪除後該分組的助手將移動到預設清單，請確認你的操作",

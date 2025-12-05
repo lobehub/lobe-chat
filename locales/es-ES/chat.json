@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "Asistente de búsqueda...",
   "searchAgents": "Asistente de búsqueda...",
   "selectedAgents": "Agentes seleccionados",
-  "sendPlaceholder": "Escribe tu mensaje...",
+  "sendPlaceholder": "Haz una pregunta, crea o comienza una tarea, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Gestión de grupos",
     "confirmRemoveGroupAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción.",

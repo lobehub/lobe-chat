@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "검색 도우미...",
   "searchAgents": "검색 도우미...",
   "selectedAgents": "선택된 도우미",
-  "sendPlaceholder": "채팅 내용 입력...",
+  "sendPlaceholder": "질문하기, 창작하기 또는 작업 시작하기, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "그룹 설정",
     "confirmRemoveGroupAlert": "이 그룹을 삭제하려고 합니다. 삭제 후 이 그룹의 도우미는 기본 목록으로 이동됩니다. 작업을 확인하십시오.",
