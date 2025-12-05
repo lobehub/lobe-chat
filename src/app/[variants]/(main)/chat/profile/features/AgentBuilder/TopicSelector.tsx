@@ -1,43 +1,13 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, Tag } from '@lobehub/ui';
 import { Dropdown } from 'antd';
-import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
-import { ChevronDown, MessageSquare, MessageSquarePlus, Star } from 'lucide-react';
+import { Clock3Icon, PlusIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import NavHeader from '@/features/NavHeader';
 import { useChatStore } from '@/store/chat';
-
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    cursor: pointer;
-
-    padding-block: 8px;
-    padding-inline: 12px;
-    border-radius: 8px;
-
-    transition: background-color 0.2s;
-
-    &:hover {
-      background: ${token.colorFillSecondary};
-    }
-  `,
-  menu: css`
-    overflow-y: auto;
-    max-height: 400px;
-  `,
-  title: css`
-    overflow: hidden;
-
-    max-width: 200px;
-
-    font-size: 14px;
-    font-weight: 500;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
-}));
 
 interface TopicSelectorProps {
   agentId: string;
@@ -45,7 +15,6 @@ interface TopicSelectorProps {
 
 const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
   const { t } = useTranslation('topic');
-  const { styles, theme } = useStyles();
 
   // Fetch topics for the agent builder
   useChatStore((s) => s.useFetchTopics)(true, { agentId });
@@ -62,66 +31,47 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
     [topics, activeTopicId],
   );
 
-  const currentTitle = activeTopic?.title || t('defaultTitle');
-
-  const items = useMemo<ItemType[]>(() => {
-    const menuItems: ItemType[] = [
-      {
-        icon: <Icon icon={MessageSquarePlus} size={'small'} />,
-        key: 'new',
-        label: t('actions.addNewTopic'),
-        onClick: () => switchTopic(),
-      },
-      { type: 'divider' },
-    ];
-
-    if (!topics || topics.length === 0) {
-      menuItems.push({
-        disabled: true,
-        key: 'empty',
-        label: (
-          <Flexbox style={{ color: theme.colorTextTertiary }}>{t('searchResultEmpty')}</Flexbox>
-        ),
-      });
-      return menuItems;
-    }
-
-    // Add topic items
-    topics.forEach((topic) => {
-      menuItems.push({
-        icon: (
-          <ActionIcon
-            color={topic.favorite ? theme.colorWarning : undefined}
-            fill={topic.favorite ? theme.colorWarning : 'transparent'}
-            icon={Star}
-            size={'small'}
-          />
-        ),
+  const items = useMemo<ItemType[]>(
+    () =>
+      (topics || []).map((topic) => ({
         key: topic.id,
         label: topic.title,
         onClick: () => switchTopic(topic.id),
-      });
-    });
-
-    return menuItems;
-  }, [topics, t, theme.colorTextTertiary, theme.colorWarning, switchTopic]);
+      })),
+    [topics, t, switchTopic],
+  );
 
   return (
-    <Dropdown
-      menu={{
-        className: styles.menu,
-        items,
-        selectedKeys: activeTopicId ? [activeTopicId] : [],
-      }}
-      placement="bottomRight"
-      trigger={['click']}
-    >
-      <Flexbox align="center" className={styles.container} gap={8} horizontal>
-        <Icon icon={MessageSquare} size={'small'} />
-        <span className={styles.title}>{currentTitle}</span>
-        <Icon icon={ChevronDown} size={'small'} />
-      </Flexbox>
-    </Dropdown>
+    <NavHeader
+      left={activeTopic?.title ? <Tag>{activeTopic.title}</Tag> : undefined}
+      right={
+        <>
+          <ActionIcon
+            icon={PlusIcon}
+            onClick={() => switchTopic()}
+            size={DESKTOP_HEADER_ICON_SIZE}
+            title={t('actions.addNewTopic')}
+          />
+          <Dropdown
+            disabled={!topics || topics.length === 0}
+            menu={{
+              items,
+              selectedKeys: activeTopicId ? [activeTopicId] : [],
+            }}
+            overlayStyle={{
+              maxHeight: 600,
+              minWidth: 200,
+              overflowY: 'auto',
+            }}
+            placement="bottomRight"
+            trigger={['click']}
+          >
+            <ActionIcon disabled={!topics || topics.length === 0} icon={Clock3Icon} />
+          </Dropdown>
+        </>
+      }
+      showTogglePanelButton={false}
+    />
   );
 });
 
