@@ -38,7 +38,8 @@
     "tmp",
     "temp",
     ".temp",
-    "e2e"
+    "e2e",
+    "knip.ts"
   ],
   "include": [
     "**/*.d.ts",
