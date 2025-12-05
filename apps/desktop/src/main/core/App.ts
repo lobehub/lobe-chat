@@ -299,7 +299,7 @@ export class App {
   registerRequestHandler = (handler: CustomRequestHandler): (() => void) => {
     if (!this.registerCustomHandlerFn) {
       logger.warn('Custom request handler registration is not available');
-      return () => {};
+      return () => { };
     }
 
     logger.debug('Registering custom request handler');
