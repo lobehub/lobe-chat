@@ -4,22 +4,23 @@ import { Globe } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAgentEnableSearch } from '@/hooks/useAgentEnableSearch';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 
+import { useAgentEnableSearch } from '../../hooks/useAgentEnableSearch';
 import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 import Action from '../components/Action';
 import Controls from './Controls';
 
 const Search = memo(() => {
   const { t } = useTranslation('chat');
   const agentId = useAgentId();
-  const [isLoading, mode, updateAgentChatConfig] = useAgentStore((s) => [
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const [isLoading, mode] = useAgentStore((s) => [
     agentByIdSelectors.isAgentConfigLoadingById(agentId)(s),
     chatConfigByIdSelectors.getSearchModeById(agentId)(s),
-    s.updateAgentChatConfig,
   ]);
   const isAgentEnableSearch = useAgentEnableSearch();
   const theme = useTheme();

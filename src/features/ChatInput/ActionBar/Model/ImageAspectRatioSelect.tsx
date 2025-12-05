@@ -5,6 +5,7 @@ import { useAgentStore } from '@/store/agent';
 import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 
 const NANO_BANANA_ASPECT_RATIOS = [
   '1:1', // 1024x1024 / 2048x2048 / 4096x4096
@@ -21,10 +22,8 @@ const NANO_BANANA_ASPECT_RATIOS = [
 
 const ImageAspectRatioSelect = memo(() => {
   const agentId = useAgentId();
-  const [config, updateAgentChatConfig] = useAgentStore((s) => [
-    chatConfigByIdSelectors.getChatConfigById(agentId)(s),
-    s.updateAgentChatConfig,
-  ]);
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const config = useAgentStore((s) => chatConfigByIdSelectors.getChatConfigById(agentId)(s));
 
   const imageAspectRatio = config.imageAspectRatio || '1:1';
 
