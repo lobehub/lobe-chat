@@ -79,6 +79,16 @@ export interface ChatTopicAction {
   internal_createTopic: (params: CreateTopicParams) => Promise<string>;
   internal_updateTopic: (id: string, data: Partial<ChatTopic>) => Promise<void>;
   internal_dispatchTopic: (payload: ChatTopicDispatch, action?: any) => void;
+  internal_updateTopics: (
+    agentId: string,
+    params: {
+      append?: boolean;
+      currentPage?: number;
+      items: ChatTopic[];
+      pageSize: number;
+      total: number;
+    },
+  ) => void;
 }
 
 export const chatTopic: StateCreator<
@@ -261,16 +271,16 @@ export const chatTopic: StateCreator<
         const { agentId, isInbox, pageSize } = params;
         if (!agentId) return { items: [], total: 0 };
 
-        const currentTopics = get().topicMaps[agentId] || [];
-        const currentLength = currentTopics.length;
+        const currentData = get().topicDataMap[agentId];
+        const currentLength = currentData?.items?.length || 0;
 
         // If we already have data and new pageSize is larger, fetch incrementally
         if (currentLength > 0 && pageSize > currentLength) {
           set(
             {
-              topicPageSizeExpandingStates: {
-                ...get().topicPageSizeExpandingStates,
-                [agentId]: true,
+              topicDataMap: {
+                ...get().topicDataMap,
+                [agentId]: { ...currentData!, isExpandingPageSize: true },
               },
             },
             false,
@@ -287,9 +297,9 @@ export const chatTopic: StateCreator<
 
           set(
             {
-              topicPageSizeExpandingStates: {
-                ...get().topicPageSizeExpandingStates,
-                [agentId]: false,
+              topicDataMap: {
+                ...get().topicDataMap,
+                [agentId]: { ...get().topicDataMap[agentId]!, isExpandingPageSize: false },
               },
             },
             false,
@@ -309,20 +319,22 @@ export const chatTopic: StateCreator<
           const { items: topics, total: totalCount } = result;
           const hasMore = topics.length >= pageSize;
 
-          const nextMap = { ...get().topicMaps, [agentId]: topics };
-          const nextPageMap = { ...get().topicPageMap, [agentId]: 0 };
-          const nextHasMoreMap = { ...get().topicsHasMore, [agentId]: hasMore };
-          const nextCountMap = { ...get().topicCountMap, [agentId]: totalCount };
+          const currentData = get().topicDataMap[agentId];
 
           // no need to update map if the topics have been init and the map is the same
-          if (get().topicsInit && isEqual(nextMap, get().topicMaps)) return;
+          if (get().topicsInit && isEqual(topics, currentData?.items)) return;
 
           set(
             {
-              topicCountMap: nextCountMap,
-              topicMaps: nextMap,
-              topicPageMap: nextPageMap,
-              topicsHasMore: nextHasMoreMap,
+              topicDataMap: {
+                ...get().topicDataMap,
+                [agentId]: {
+                  currentPage: 0,
+                  hasMore,
+                  items: topics,
+                  total: totalCount,
+                },
+              },
               topicsInit: true,
             },
             false,
@@ -334,15 +346,21 @@ export const chatTopic: StateCreator<
   },
 
   loadMoreTopics: async () => {
-    const { activeAgentId, topicMaps, topicPageMap, topicLoadingMoreStates } = get();
+    const { activeAgentId, topicDataMap } = get();
+    const currentData = topicDataMap[activeAgentId];
 
-    if (!activeAgentId || topicLoadingMoreStates[activeAgentId]) return;
+    if (!activeAgentId || currentData?.isLoadingMore) return;
 
-    const currentPage = topicPageMap[activeAgentId] || 0;
+    const currentPage = currentData?.currentPage || 0;
     const nextPage = currentPage + 1;
 
     set(
-      { topicLoadingMoreStates: { ...topicLoadingMoreStates, [activeAgentId]: true } },
+      {
+        topicDataMap: {
+          ...topicDataMap,
+          [activeAgentId]: { ...currentData!, isLoadingMore: true },
+        },
+      },
       false,
       n('loadMoreTopics(start)'),
     );
@@ -355,23 +373,33 @@ export const chatTopic: StateCreator<
         pageSize,
       });
 
-      const currentTopics = topicMaps[activeAgentId] || [];
+      const currentTopics = currentData?.items || [];
       const hasMore = result.items.length >= pageSize;
 
       set(
         {
-          topicCountMap: { ...get().topicCountMap, [activeAgentId]: result.total },
-          topicLoadingMoreStates: { ...topicLoadingMoreStates, [activeAgentId]: false },
-          topicMaps: { ...topicMaps, [activeAgentId]: [...currentTopics, ...result.items] },
-          topicPageMap: { ...topicPageMap, [activeAgentId]: nextPage },
-          topicsHasMore: { ...get().topicsHasMore, [activeAgentId]: hasMore },
+          topicDataMap: {
+            ...get().topicDataMap,
+            [activeAgentId]: {
+              currentPage: nextPage,
+              hasMore,
+              isLoadingMore: false,
+              items: [...currentTopics, ...result.items],
+              total: result.total,
+            },
+          },
         },
         false,
         n('loadMoreTopics(success)'),
       );
     } catch {
       set(
-        { topicLoadingMoreStates: { ...topicLoadingMoreStates, [activeAgentId]: false } },
+        {
+          topicDataMap: {
+            ...get().topicDataMap,
+            [activeAgentId]: { ...get().topicDataMap[activeAgentId]!, isLoadingMore: false },
+          },
+        },
         false,
         n('loadMoreTopics(error)'),
       );
@@ -445,7 +473,7 @@ export const chatTopic: StateCreator<
     const { switchTopic, refreshTopic } = get();
 
     // Get topics for this specific group from the topic map
-    const groupTopics = get().topicMaps[groupId] || [];
+    const groupTopics = get().topicDataMap[groupId]?.items || [];
     const topicIds = groupTopics.map((t) => t.id);
 
     if (topicIds.length > 0) {
@@ -538,12 +566,54 @@ export const chatTopic: StateCreator<
   },
 
   internal_dispatchTopic: (payload, action) => {
-    const nextTopics = topicReducer(topicSelectors.currentTopics(get()), payload);
-    const nextMap = { ...get().topicMaps, [get().activeAgentId]: nextTopics };
+    const agentId = get().activeAgentId;
+    const currentData = get().topicDataMap[agentId];
+    const nextItems = topicReducer(currentData?.items, payload);
 
-    // no need to update map if is the same
-    if (isEqual(nextMap, get().topicMaps)) return;
+    // no need to update if is the same
+    if (isEqual(nextItems, currentData?.items)) return;
 
-    set({ topicMaps: nextMap }, false, action ?? n(`dispatchTopic/${payload.type}`));
+    set(
+      {
+        topicDataMap: {
+          ...get().topicDataMap,
+          [agentId]: {
+            ...currentData,
+            currentPage: currentData?.currentPage ?? 0,
+            hasMore: currentData?.hasMore ?? false,
+            items: nextItems,
+            total: currentData?.total ?? nextItems.length,
+          },
+        },
+      },
+      false,
+      action ?? n(`dispatchTopic/${payload.type}`),
+    );
+  },
+
+  internal_updateTopics: (agentId, params) => {
+    const { items, total, pageSize, currentPage = 0, append = false } = params;
+    const currentData = get().topicDataMap[agentId];
+
+    const nextItems = append ? [...(currentData?.items || []), ...items] : items;
+
+    set(
+      {
+        topicDataMap: {
+          ...get().topicDataMap,
+          [agentId]: {
+            currentPage,
+            hasMore: items.length >= pageSize,
+            isExpandingPageSize: false,
+            isLoadingMore: false,
+            items: nextItems,
+            total,
+          },
+        },
+        topicsInit: true,
+      },
+      false,
+      n('internal_updateTopics', { agentId, append }),
+    );
   },
 });

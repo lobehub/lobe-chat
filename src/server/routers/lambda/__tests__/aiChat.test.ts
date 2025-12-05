@@ -32,9 +32,10 @@ describe('aiChatRouter', () => {
       .fn()
       .mockResolvedValueOnce({ id: 'm-user' })
       .mockResolvedValueOnce({ id: 'm-assistant' });
-    const mockGet = vi
-      .fn()
-      .mockResolvedValue({ messages: [{ id: 'm-user' }, { id: 'm-assistant' }], topics: [{}] });
+    const mockGet = vi.fn().mockResolvedValue({
+      messages: [{ id: 'm-user' }, { id: 'm-assistant' }],
+      topics: { items: [{}], total: 1 },
+    });
 
     vi.mocked(TopicModel).mockImplementation(() => ({ create: mockCreateTopic }) as any);
     vi.mocked(MessageModel).mockImplementation(() => ({ create: mockCreateMessage }) as any);
@@ -88,7 +89,8 @@ describe('aiChatRouter', () => {
     expect(res.isCreateNewTopic).toBe(true);
     expect(res.topicId).toBe('t1');
     expect(res.messages?.length).toBe(2);
-    expect(res.topics?.length).toBe(1);
+    expect(res.topics?.items.length).toBe(1);
+    expect(res.topics?.total).toBe(1);
   });
 
   it('should reuse existing topic when topicId provided', async () => {
