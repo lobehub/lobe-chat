@@ -1,6 +1,13 @@
 import type { LobeChatDatabase } from '@lobechat/database';
 import type { ModelRuntime } from '@lobechat/model-runtime';
 
+import type {
+  ContextExtractor,
+  ExperienceExtractor,
+  IdentityExtractor,
+  PreferenceExtractor,
+} from './extractors';
+
 export type MemoryLayer = 'context' | 'experience' | 'identity' | 'preference';
 
 export interface ExtractionMessage {
@@ -39,6 +46,7 @@ export interface MemoryExtractionLLMConfig {
 
 export interface MemoryExtractionJob {
   force?: boolean;
+  layers?: MemoryLayer[];
   source: MemoryExtractionSourceType;
   sourceId: string;
   userId: string;
@@ -94,12 +102,12 @@ export interface PersistedMemoryResult {
   layers: Partial<Record<MemoryLayer, number>>;
 }
 
-export interface MemoryExtractionLogger {
-  debug(message: string, meta?: Record<string, unknown>): void;
-  error(message: string, meta?: Record<string, unknown>): void;
-  info(message: string, meta?: Record<string, unknown>): void;
-  warn(message: string, meta?: Record<string, unknown>): void;
-}
+export type MemoryExtractionLayerOutputs = Partial<{
+  context: Awaited<ReturnType<ContextExtractor['extract']>>;
+  experience: Awaited<ReturnType<ExperienceExtractor['extract']>>;
+  identity: Awaited<ReturnType<IdentityExtractor['extract']>>;
+  preference: Awaited<ReturnType<PreferenceExtractor['extract']>>;
+}>;
 
 export interface GatekeeperDecision {
   activity: MemoryLayerDecision;
@@ -115,8 +123,11 @@ export interface MemoryLayerDecision {
 }
 
 export interface MemoryExtractionResult {
-  decisions: GatekeeperDecision;
-  inserted: PersistedMemoryResult;
+  context: PreparedExtractionContext;
+  decision: GatekeeperDecision;
+  layers: MemoryLayer[];
+  outputs: MemoryExtractionLayerOutputs;
+  provider: MemoryExtractionProvider;
 }
 
 export interface TemplateProps {

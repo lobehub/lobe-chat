@@ -199,6 +199,7 @@
     "@trpc/react-query": "^11.7.2",
     "@trpc/server": "^11.7.2",
     "@upstash/redis": "^1.35.7",
+    "@upstash/workflow": "^0.2.23",
     "@vercel/analytics": "^1.6.1",
     "@vercel/edge-config": "^1.4.3",
     "@vercel/functions": "^3.3.4",
