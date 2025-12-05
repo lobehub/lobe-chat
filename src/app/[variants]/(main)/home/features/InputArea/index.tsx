@@ -10,11 +10,12 @@ import { useSend } from './useSend';
 const leftActions: ActionKeys[] = ['model', 'search', 'fileUpload'];
 
 const InputArea = memo(() => {
-  const { loading, send } = useSend();
+  const { loading, send, inboxAgentId } = useSend();
 
   return (
     <Flexbox gap={16} style={{ marginBottom: 16 }}>
       <ChatInputProvider
+        agentId={inboxAgentId}
         chatInputEditorRef={(instance) => {
           if (!instance) return;
           useChatStore.setState({ mainInputEditor: instance });

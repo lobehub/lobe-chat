@@ -10,6 +10,7 @@ import type {
   MessageActionItemOrDivider,
   MessageActionsConfig,
 } from '../../../types';
+import MessageBranch from '../../components/MessageBranch';
 import { useUserActions } from '../useUserActions';
 
 // Helper to strip handleClick from action items before passing to ActionIconGroup
@@ -149,6 +150,7 @@ interface ActionsProps {
 }
 
 const Actions = memo<ActionsProps>(({ actionsConfig, id, data, index, disableEditing }) => {
+  const { branch } = data;
   const editing = useConversationStore(messageStateSelectors.isMessageEditing(id));
 
   return (
@@ -158,6 +160,13 @@ const Actions = memo<ActionsProps>(({ actionsConfig, id, data, index, disableEdi
           <Flexbox align={'flex-start'} role="menubar">
             <UserActionsBar actionsConfig={actionsConfig} data={data} id={id} index={index} />
           </Flexbox>
+        )}
+        {branch && (
+          <MessageBranch
+            activeBranchIndex={branch.activeBranchIndex}
+            count={branch.count}
+            messageId={id}
+          />
         )}
       </Flexbox>
     )

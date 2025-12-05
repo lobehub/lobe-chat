@@ -61,18 +61,16 @@ describe('AgentMigrationRepo', () => {
       ]);
 
       // Create inbox messages without topicId
-      await serverDB
-        .insert(messages)
-        .values([
-          {
-            id: 'msg-inbox-no-topic',
-            userId,
-            role: 'user',
-            sessionId: null,
-            topicId: null,
-            agentId: null,
-          },
-        ]);
+      await serverDB.insert(messages).values([
+        {
+          id: 'msg-inbox-no-topic',
+          userId,
+          role: 'user',
+          sessionId: null,
+          topicId: null,
+          agentId: null,
+        },
+      ]);
 
       // Run migration
       await agentMigrationRepo.migrateAgentId({ agentId, isInbox: true });
@@ -329,18 +327,16 @@ describe('AgentMigrationRepo', () => {
       ]);
 
       // Create messages with sessionId but no topicId
-      await serverDB
-        .insert(messages)
-        .values([
-          {
-            id: 'session-msg-no-topic',
-            userId,
-            role: 'user',
-            sessionId,
-            topicId: null,
-            agentId: null,
-          },
-        ]);
+      await serverDB.insert(messages).values([
+        {
+          id: 'session-msg-no-topic',
+          userId,
+          role: 'user',
+          sessionId,
+          topicId: null,
+          agentId: null,
+        },
+      ]);
 
       // Run migration
       await agentMigrationRepo.migrateAgentId({ agentId, sessionId });
@@ -489,6 +485,83 @@ describe('AgentMigrationRepo', () => {
         where: eq(messages.id, 'user2-session-msg'),
       });
       expect(msg?.agentId).toBeNull();
+    });
+
+    it('should preserve messages updatedAt during session migration', async () => {
+      const agentId = 'session-agent-preserve-time';
+      await serverDB.insert(agents).values({ id: agentId, userId });
+
+      // Create legacy session topic
+      const originalTopicUpdatedAt = new Date('2024-05-20T08:00:00Z');
+      await serverDB.insert(topics).values({
+        id: 'session-topic-preserve',
+        userId,
+        sessionId,
+        agentId: null,
+        updatedAt: originalTopicUpdatedAt,
+      });
+
+      // Create messages with specific updatedAt
+      const originalMsgUpdatedAt1 = new Date('2024-06-15T11:30:00Z');
+      const originalMsgUpdatedAt2 = new Date('2024-07-01T15:45:00Z');
+      const originalMsgUpdatedAtNoTopic = new Date('2024-08-10T09:00:00Z');
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'session-msg-preserve-1',
+          userId,
+          role: 'user',
+          topicId: 'session-topic-preserve',
+          agentId: null,
+          updatedAt: originalMsgUpdatedAt1,
+        },
+        {
+          id: 'session-msg-preserve-2',
+          userId,
+          role: 'assistant',
+          topicId: 'session-topic-preserve',
+          agentId: null,
+          updatedAt: originalMsgUpdatedAt2,
+        },
+        {
+          id: 'session-msg-preserve-no-topic',
+          userId,
+          role: 'user',
+          sessionId,
+          topicId: null,
+          agentId: null,
+          updatedAt: originalMsgUpdatedAtNoTopic,
+        },
+      ]);
+
+      // Run migration
+      await agentMigrationRepo.migrateAgentId({ agentId, sessionId });
+
+      // Verify topic updatedAt is preserved
+      const migratedTopic = await serverDB.query.topics.findFirst({
+        where: eq(topics.id, 'session-topic-preserve'),
+      });
+      expect(migratedTopic?.agentId).toBe(agentId);
+      expect(migratedTopic?.updatedAt.getTime()).toBe(originalTopicUpdatedAt.getTime());
+
+      // Verify messages updatedAt are preserved
+      const msg1 = await serverDB.query.messages.findFirst({
+        where: eq(messages.id, 'session-msg-preserve-1'),
+      });
+      expect(msg1?.agentId).toBe(agentId);
+      expect(msg1?.updatedAt.getTime()).toBe(originalMsgUpdatedAt1.getTime());
+
+      const msg2 = await serverDB.query.messages.findFirst({
+        where: eq(messages.id, 'session-msg-preserve-2'),
+      });
+      expect(msg2?.agentId).toBe(agentId);
+      expect(msg2?.updatedAt.getTime()).toBe(originalMsgUpdatedAt2.getTime());
+
+      const msgNoTopic = await serverDB.query.messages.findFirst({
+        where: eq(messages.id, 'session-msg-preserve-no-topic'),
+      });
+      expect(msgNoTopic?.agentId).toBe(agentId);
+      expect(msgNoTopic?.updatedAt.getTime()).toBe(originalMsgUpdatedAtNoTopic.getTime());
     });
   });
 

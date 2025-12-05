@@ -1,5 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useClientDataSWR } from '@/libs/swr';
@@ -25,6 +25,7 @@ vi.mock('@lobechat/conversation-flow', () => ({
 vi.mock('@/services/message', () => ({
   messageService: {
     getMessages: vi.fn(),
+    updateMessageMetadata: vi.fn().mockResolvedValue({ success: true, messages: [] }),
   },
 }));
 
@@ -563,6 +564,114 @@ describe('DataSlice', () => {
         topicId: 'test-topic',
         threadId: 'test-thread',
       });
+    });
+  });
+
+  describe('switchMessageBranch', () => {
+    it('should call updateMessageMetadata on parent message with branch index', async () => {
+      const store = createTestStore();
+
+      // Set up the message in the store's dbMessages array
+      store.setState({
+        dbMessages: [
+          {
+            id: 'msg-1',
+            role: 'assistant',
+            parentId: 'parent-msg-1',
+            content: 'test',
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            meta: {},
+          },
+        ],
+      } as any);
+
+      const updateMessageMetadataSpy = vi.spyOn(store.getState(), 'updateMessageMetadata');
+
+      await act(async () => {
+        await store.getState().switchMessageBranch('msg-1', 2);
+      });
+
+      // Should update the parent's metadata, not the current message
+      expect(updateMessageMetadataSpy).toHaveBeenCalledWith('parent-msg-1', {
+        activeBranchIndex: 2,
+      });
+    });
+
+    it('should switch to branch index 0 on parent message', async () => {
+      const store = createTestStore();
+
+      // Set up the message in the store's dbMessages array
+      store.setState({
+        dbMessages: [
+          {
+            id: 'msg-1',
+            role: 'assistant',
+            parentId: 'parent-msg-1',
+            content: 'test',
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            meta: {},
+          },
+        ],
+      } as any);
+
+      const updateMessageMetadataSpy = vi.spyOn(store.getState(), 'updateMessageMetadata');
+
+      await act(async () => {
+        await store.getState().switchMessageBranch('msg-1', 0);
+      });
+
+      // Should update the parent's metadata, not the current message
+      expect(updateMessageMetadataSpy).toHaveBeenCalledWith('parent-msg-1', {
+        activeBranchIndex: 0,
+      });
+    });
+
+    it('should not update metadata if message has no parentId', async () => {
+      const store = createTestStore();
+
+      // Set up a root message without parentId
+      store.setState({
+        dbMessages: [
+          {
+            id: 'msg-1',
+            role: 'user',
+            parentId: null,
+            content: 'test',
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            meta: {},
+          },
+        ],
+      } as any);
+
+      const updateMessageMetadataSpy = vi.spyOn(store.getState(), 'updateMessageMetadata');
+
+      await act(async () => {
+        await store.getState().switchMessageBranch('msg-1', 2);
+      });
+
+      // Should not call updateMessageMetadata when there's no parent
+      expect(updateMessageMetadataSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not update metadata if message does not exist', async () => {
+      const store = createTestStore();
+
+      // No messages in store
+      store.setState({
+        dbMessages: [],
+      } as any);
+
+      const updateMessageMetadataSpy = vi.spyOn(store.getState(), 'updateMessageMetadata');
+
+      await act(async () => {
+        await store.getState().switchMessageBranch('non-existent-msg', 2);
+      });
+
+      // Should not call updateMessageMetadata when message doesn't exist
+      expect(updateMessageMetadataSpy).not.toHaveBeenCalled();
     });
   });
 });
