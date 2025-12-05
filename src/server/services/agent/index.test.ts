@@ -146,4 +146,75 @@ describe('AgentService', () => {
       expect(result?.provider).toBe('anthropic');
     });
   });
+
+  describe('getAgentConfigById', () => {
+    it('should return null if agent does not exist', async () => {
+      const mockAgentModel = {
+        getAgentConfigById: vi.fn().mockResolvedValue(null),
+      };
+
+      (AgentModel as any).mockImplementation(() => mockAgentModel);
+      (parseAgentConfig as any).mockReturnValue({});
+
+      const newService = new AgentService(mockDb, mockUserId);
+      const result = await newService.getAgentConfigById('non-existent');
+
+      expect(result).toBeNull();
+    });
+
+    it('should merge DEFAULT_AGENT_CONFIG and serverDefaultAgentConfig with agent config', async () => {
+      const mockAgent = {
+        id: 'agent-1',
+        systemRole: 'Custom system role',
+      };
+      const serverDefaultConfig = { model: 'gpt-4', params: { temperature: 0.7 } };
+
+      const mockAgentModel = {
+        getAgentConfigById: vi.fn().mockResolvedValue(mockAgent),
+      };
+
+      (AgentModel as any).mockImplementation(() => mockAgentModel);
+      (parseAgentConfig as any).mockReturnValue(serverDefaultConfig);
+
+      const newService = new AgentService(mockDb, mockUserId);
+      const result = await newService.getAgentConfigById('agent-1');
+
+      // Should have DEFAULT_AGENT_CONFIG as base
+      expect(result).toMatchObject({
+        // From DEFAULT_AGENT_CONFIG
+        chatConfig: DEFAULT_AGENT_CONFIG.chatConfig,
+        plugins: DEFAULT_AGENT_CONFIG.plugins,
+        tts: DEFAULT_AGENT_CONFIG.tts,
+        // From serverDefaultConfig (overrides DEFAULT_AGENT_CONFIG)
+        model: 'gpt-4',
+        params: { temperature: 0.7 },
+        // From mockAgent (overrides all)
+        id: 'agent-1',
+        systemRole: 'Custom system role',
+      });
+    });
+
+    it('should prioritize agent config over server default config', async () => {
+      const mockAgent = {
+        id: 'agent-1',
+        model: 'claude-3',
+        provider: 'anthropic',
+      };
+      const serverDefaultConfig = { model: 'gpt-4', provider: 'openai' };
+
+      const mockAgentModel = {
+        getAgentConfigById: vi.fn().mockResolvedValue(mockAgent),
+      };
+
+      (AgentModel as any).mockImplementation(() => mockAgentModel);
+      (parseAgentConfig as any).mockReturnValue(serverDefaultConfig);
+
+      const newService = new AgentService(mockDb, mockUserId);
+      const result = await newService.getAgentConfigById('agent-1');
+
+      // Agent config should override server default
+      expect(result?.model).toBe('claude-3');
+      expect(result?.provider).toBe('anthropic');
+    });
+  });
 });
