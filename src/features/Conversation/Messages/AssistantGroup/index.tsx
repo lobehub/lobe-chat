@@ -186,7 +186,7 @@ const GroupMessage = memo<GroupMessageProps>(
               <Usage model={model} performance={performance} provider={provider!} usage={usage} />
             )}
             {!disableEditing && (
-              <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
+              <Flexbox align={'flex-start'} role="menubar">
                 <GroupActionsBar
                   actionsConfig={actionsConfig}
                   contentBlock={lastAssistantMsg}

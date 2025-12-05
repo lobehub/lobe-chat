@@ -8,6 +8,7 @@ import { messageService } from '@/services/message';
 
 import type { Store as ConversationStore } from '../../action';
 import { type MessageDispatch, messagesReducer } from './reducer';
+import { dataSelectors } from './selectors';
 
 /**
  * Data Actions
@@ -28,6 +29,14 @@ export interface DataAction {
    * @param messages - New messages array from database
    */
   replaceMessages: (messages: UIChatMessage[]) => void;
+
+  /**
+   * Switch message branch by updating the parent's activeBranchIndex
+   *
+   * @param messageId - The current message ID (with branch indicator)
+   * @param branchIndex - The new branch index to switch to
+   */
+  switchMessageBranch: (messageId: string, branchIndex: number) => Promise<void>;
 
   /**
    * Fetch messages for this conversation using SWR
@@ -76,6 +85,19 @@ export const dataSlice: StateCreator<
 
     // Sync changes to external store (ChatStore)
     get().onMessagesChange?.(messages);
+  },
+
+  switchMessageBranch: async (messageId, branchIndex) => {
+    const state = get();
+
+    // Get the current message to find its parent
+    const message = dataSelectors.getDbMessageById(messageId)(state);
+    if (!message || !message.parentId) return;
+
+    // Update the parent's metadata.activeBranchIndex
+    // because the branch indicator is on the child message,
+    // but the activeBranchIndex is stored on the parent
+    await state.updateMessageMetadata(message.parentId, { activeBranchIndex: branchIndex });
   },
 
   useFetchMessages: (context, skipFetch) => {

@@ -44,6 +44,7 @@ export const useSend = () => {
   };
 
   return {
+    inboxAgentId,
     loading,
     send,
   };
