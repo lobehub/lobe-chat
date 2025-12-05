@@ -45,31 +45,39 @@ const ProfileEditor = memo(() => {
   if (isLoadingConfig) return <Loading />;
 
   return (
-    <Flexbox flex={1} style={{ overflowY: 'auto' }}>
-      {/* Header: Avatar + Name + Description */}
-      <AgentHeader />
-      {/* Config Bar: Model Selector + Settings Button */}
+    <>
       <Flexbox
-        align={'center'}
-        gap={8}
-        horizontal
-        justify={'flex-start'}
-        style={{ marginBottom: 12 }}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        style={{ cursor: 'default', marginBottom: 12 }}
       >
-        <Flexbox align={'center'} gap={8} horizontal>
-          <ModelSelect onChange={handleModelChange} value={modelValue} />
-          <Button
-            icon={Settings2Icon}
-            onClick={() => setShowSettingsDrawer(true)}
-            size={'small'}
-            style={{ color: theme.colorTextSecondary }}
-            type={'text'}
-          >
-            {t('advancedSettings')}
-          </Button>
+        {/* Header: Avatar + Name + Description */}
+        <AgentHeader />
+        {/* Config Bar: Model Selector + Settings Button */}
+        <Flexbox
+          align={'center'}
+          gap={8}
+          horizontal
+          justify={'flex-start'}
+          style={{ marginBottom: 12 }}
+        >
+          <Flexbox align={'center'} gap={8} horizontal>
+            <ModelSelect onChange={handleModelChange} value={modelValue} />
+            <Button
+              icon={Settings2Icon}
+              onClick={() => setShowSettingsDrawer(true)}
+              size={'small'}
+              style={{ color: theme.colorTextSecondary }}
+              type={'text'}
+            >
+              {t('advancedSettings')}
+            </Button>
+          </Flexbox>
         </Flexbox>
+        <AgentTool />
       </Flexbox>
-      <AgentTool />
       <Divider />
       {/* Main Content: Prompt Editor */}
       <EditorCanvas />
@@ -79,7 +87,7 @@ const ProfileEditor = memo(() => {
         onClose={() => setShowSettingsDrawer(false)}
         open={showSettingsDrawer}
       />
-    </Flexbox>
+    </>
   );
 });
 

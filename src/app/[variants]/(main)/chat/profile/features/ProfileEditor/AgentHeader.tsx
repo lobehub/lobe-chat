@@ -55,7 +55,17 @@ const AgentHeader = memo(() => {
   };
 
   return (
-    <Flexbox gap={16} paddingBlock={16}>
+    <Flexbox
+      gap={16}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+      paddingBlock={16}
+      style={{
+        cursor: 'default',
+      }}
+    >
       <EmojiPicker
         background={backgroundColor}
         customTabs={[
