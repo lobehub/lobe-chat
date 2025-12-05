@@ -2,9 +2,9 @@ import { ProviderIcon } from '@lobehub/icons';
 import { Avatar } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { AiProviderListItem, AiProviderSourceEnum } from '@/types/aiProvider';
 
@@ -42,9 +42,17 @@ interface ProviderItemProps extends AiProviderListItem {
 const ProviderItem = memo<ProviderItemProps>(
   ({ id, name, source, enabled, logo, onClick = () => {} }) => {
     const { styles, cx } = useStyles();
-    const [searchParams] = useSearchParams();
+    const location = useLocation();
 
-    const activeKey = searchParams.get('provider');
+    // Extract providerId from pathname: /settings/provider/xxx -> xxx
+    const activeKey = useMemo(() => {
+      const pathParts = location.pathname.split('/');
+      // pathname is like /settings/provider/all or /settings/provider/openai
+      if (pathParts.length >= 4 && pathParts[2] === 'provider') {
+        return pathParts[3];
+      }
+      return null;
+    }, [location.pathname]);
 
     const isCustom = source === AiProviderSourceEnum.Custom;
     return (
