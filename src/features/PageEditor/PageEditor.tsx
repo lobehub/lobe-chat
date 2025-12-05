@@ -1,11 +1,10 @@
 'use client';
 
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
-import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { BrandTextLoading } from '@/components/Loading';
+import Loading from '@/components/Loading/BrandTextLoading';
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useRegisterFilesHotkeys, useSaveDocumentHotkey } from '@/hooks/useHotkeys';
 import { useAgentStore } from '@/store/agent';
@@ -36,7 +35,7 @@ const PageEditorCanvas = memo(() => {
   useSaveDocumentHotkey(flushSave);
 
   return (
-    <Flexbox height={'100%'} horizontal>
+    <Flexbox height={'100%'} horizontal width={'100%'}>
       <Flexbox flex={1} height={'100%'}>
         <Header />
         <Flexbox
@@ -60,22 +59,12 @@ const PageEditorCanvas = memo(() => {
  */
 const PageEditor = memo<PageEditorProps>(
   ({ pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete, onBack }) => {
-    const theme = useTheme();
-
     const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
     const pageAgentId = useAgentStore(builtinAgentSelectors.pageAgentId);
     useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.pageAgent);
 
     // Don't render conversation provider until agent is initialized
-    if (!pageAgentId) {
-      return (
-        <Flexbox height={'100%'} horizontal style={{ background: theme.colorBgContainer }}>
-          <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
-            <BrandTextLoading />
-          </Flexbox>
-        </Flexbox>
-      );
-    }
+    if (!pageAgentId) return <Loading />;
 
     return (
       <PageAgentProvider pageAgentId={pageAgentId}>
