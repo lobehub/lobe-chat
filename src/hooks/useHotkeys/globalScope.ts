@@ -46,6 +46,21 @@ export const useToggleLeftPanelHotkey = () => {
   );
 };
 
+export const useCommandPaletteHotkey = () => {
+  const [open, updateSystemStatus] = useGlobalStore((s) => [
+    s.status.showCommandMenu,
+    s.updateSystemStatus,
+  ]);
+
+  return useHotkeyById(
+    HotkeyEnum.CommandPalette,
+    () => updateSystemStatus({ showCommandMenu: !open }),
+    {
+      enableOnContentEditable: true,
+    },
+  );
+};
+
 // 注册聚合
 
 export const useRegisterGlobalHotkeys = () => {
@@ -53,4 +68,5 @@ export const useRegisterGlobalHotkeys = () => {
   useToggleLeftPanelHotkey();
   useNavigateToChatHotkey();
   useOpenHotkeyHelperHotkey();
+  useCommandPaletteHotkey();
 };
