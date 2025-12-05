@@ -14,6 +14,7 @@ import TitleBar, { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
 import HotkeyHelperPanel from '@/features/HotkeyHelperPanel';
 import NavPanel from '@/features/NavPanel';
 import { usePlatform } from '@/hooks/usePlatform';
+import CmdkLazy from '@/layout/GlobalProvider/CmdkLazy';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { HotkeyScopeEnum } from '@/types/hotkey';
 
@@ -54,6 +55,7 @@ const Layout = memo(() => {
       </DndContextWrapper>
       <HotkeyHelperPanel />
       <RegisterHotkeys />
+      <CmdkLazy />
     </HotkeysProvider>
   );
 });

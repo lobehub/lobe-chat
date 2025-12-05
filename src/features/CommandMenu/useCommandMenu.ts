@@ -1,5 +1,5 @@
-import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import type { SearchResult } from '@/database/repositories/search';
@@ -19,8 +19,9 @@ export const useCommandMenu = () => {
   const [pages, setPages] = useState<string[]>([]);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
-  const router = useRouter();
-  const pathname = usePathname();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
   const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
   const createSession = useSessionStore((s) => s.createSession);
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
@@ -75,7 +76,7 @@ export const useCommandMenu = () => {
   }, [open]);
 
   const handleNavigate = (path: string) => {
-    router.push(path);
+    navigate(path);
     setOpen(false);
   };
 
