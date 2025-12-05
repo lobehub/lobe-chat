@@ -39,7 +39,7 @@ const AgentProfile = memo(() => {
 
   return (
     <ProfileProvider>
-      <Flexbox height={'100%'} horizontal>
+      <Flexbox height={'100%'} horizontal width={'100%'}>
         <ProfileArea />
         <AgentBuilder />
       </Flexbox>

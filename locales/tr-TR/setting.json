@@ -259,6 +259,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "Resim boyutu 1MB sınırını aştı, lütfen daha küçük bir resim seçin",
       "title": "Avatar"
     },
     "backgroundColor": {

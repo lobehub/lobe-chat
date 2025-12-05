@@ -2,10 +2,21 @@ import { BuiltinServerRuntimeOutput } from '@lobechat/types';
 
 import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors/selectors';
+import { getAiInfraStoreState } from '@/store/aiInfra';
+import { getToolStoreState } from '@/store/tool';
+import { builtinToolSelectors } from '@/store/tool/slices/builtin/selectors';
+import { pluginSelectors } from '@/store/tool/slices/plugin/selectors';
 
 import type {
+  AvailableModel,
+  AvailableProvider,
+  AvailableTool,
   GetAgentConfigParams,
   GetAgentMetaParams,
+  GetAvailableModelsParams,
+  GetAvailableModelsState,
+  GetAvailableToolsParams,
+  GetAvailableToolsState,
   GetConfigState,
   GetMetaState,
   SetModelParams,
@@ -98,6 +109,113 @@ export class AgentBuilderExecutionRuntime {
       const err = error as Error;
       return {
         content: `Failed to get agent meta: ${err.message}`,
+        error,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Get available models and providers
+   */
+  async getAvailableModels(args: GetAvailableModelsParams): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const aiInfraState = getAiInfraStoreState();
+      const enabledList = aiInfraState.enabledChatModelList || [];
+
+      // Filter by providerId if specified
+      const filteredList = args.providerId
+        ? enabledList.filter((p) => p.id === args.providerId)
+        : enabledList;
+
+      // Transform to our response format
+      const providers: AvailableProvider[] = filteredList.map((provider) => ({
+        id: provider.id,
+        models: provider.children.map(
+          (model): AvailableModel => ({
+            abilities: model.abilities
+              ? {
+                  files: model.abilities.files,
+                  functionCall: model.abilities.functionCall,
+                  reasoning: model.abilities.reasoning,
+                  vision: model.abilities.vision,
+                }
+              : undefined,
+            description: model.description,
+            id: model.id,
+            name: model.displayName || model.id,
+          }),
+        ),
+        name: provider.name,
+      }));
+
+      const totalModels = providers.reduce((sum, p) => sum + p.models.length, 0);
+      const content = `Found ${providers.length} provider(s) with ${totalModels} model(s) available.`;
+
+      return {
+        content,
+        state: { providers } as GetAvailableModelsState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to get available models: ${err.message}`,
+        error,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Get available tools (plugins and built-in tools)
+   */
+  async getAvailableTools(args: GetAvailableToolsParams): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const toolState = getToolStoreState();
+      const filterType = args.type || 'all';
+
+      const tools: AvailableTool[] = [];
+
+      // Get builtin tools
+      if (filterType === 'all' || filterType === 'builtin') {
+        const builtinTools = builtinToolSelectors.metaList(toolState);
+        for (const tool of builtinTools) {
+          tools.push({
+            author: tool.author,
+            description: tool.meta?.description,
+            identifier: tool.identifier,
+            title: tool.meta?.title || tool.identifier,
+            type: 'builtin',
+          });
+        }
+      }
+
+      // Get installed plugins
+      if (filterType === 'all' || filterType === 'plugin') {
+        const installedPlugins = pluginSelectors.installedPluginMetaList(toolState);
+        for (const plugin of installedPlugins) {
+          tools.push({
+            author: plugin.author,
+            description: plugin.description,
+            identifier: plugin.identifier,
+            title: plugin.title || plugin.identifier,
+            type: 'plugin',
+          });
+        }
+      }
+
+      const content = `Found ${tools.length} available tool(s).`;
+
+      return {
+        content,
+        state: { tools } as GetAvailableToolsState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to get available tools: ${err.message}`,
         error,
         success: false,
       };
