@@ -22,7 +22,7 @@ interface WideScreenContainerProps extends FlexboxProps {
 }
 
 const WideScreenContainer = memo<WideScreenContainerProps>(
-  ({ children, className, onChange, wrapperStyle, ...rest }) => {
+  ({ children, className, onChange, wrapperStyle, onClick, ...rest }) => {
     const { cx, styles } = useStyles();
     const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
 
@@ -31,7 +31,7 @@ const WideScreenContainer = memo<WideScreenContainerProps>(
     }, [wideScreen]);
 
     return (
-      <Flexbox style={wrapperStyle} width={'100%'}>
+      <Flexbox onClick={onClick} style={wrapperStyle} width={'100%'}>
         <Flexbox
           className={cx(styles.container, className)}
           paddingInline={16}
