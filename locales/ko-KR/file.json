@@ -51,7 +51,10 @@
     },
     "saving": "저장 중...",
     "slashCommands": {
-      "image": "이미지"
+      "bulletedList": "글머리 기호 목록",
+      "image": "이미지",
+      "orderedList": "번호 매기기 목록",
+      "todoList": "할 일 목록"
     },
     "titlePlaceholder": "제목 없음",
     "wordCount": "{{wordCount}}자"

@@ -51,7 +51,10 @@
     },
     "saving": "Enregistrement en cours...",
     "slashCommands": {
-      "image": "Image"
+      "bulletedList": "Liste à puces",
+      "image": "Image",
+      "orderedList": "Liste numérotée",
+      "todoList": "Liste de tâches"
     },
     "titlePlaceholder": "Sans titre",
     "wordCount": "{{wordCount}} mots"

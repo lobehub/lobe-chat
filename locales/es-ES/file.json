@@ -51,7 +51,10 @@
     },
     "saving": "Guardando...",
     "slashCommands": {
-      "image": "imagen"
+      "bulletedList": "Lista con viñetas",
+      "image": "imagen",
+      "orderedList": "Lista numerada",
+      "todoList": "Lista de tareas"
     },
     "titlePlaceholder": "Sin título",
     "wordCount": "{{wordCount}} palabras"

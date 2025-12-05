@@ -51,7 +51,10 @@
     },
     "saving": "جارٍ الحفظ...",
     "slashCommands": {
-      "image": "صورة"
+      "bulletedList": "قائمة غير مرتبة",
+      "image": "صورة",
+      "orderedList": "قائمة مرتبة",
+      "todoList": "قائمة المهام"
     },
     "titlePlaceholder": "بدون عنوان",
     "wordCount": "{{wordCount}} كلمة"

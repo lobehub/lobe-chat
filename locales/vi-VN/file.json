@@ -51,7 +51,10 @@
     },
     "saving": "Đang lưu...",
     "slashCommands": {
-      "image": "Hình ảnh"
+      "bulletedList": "Danh sách không thứ tự",
+      "image": "Hình ảnh",
+      "orderedList": "Danh sách có thứ tự",
+      "todoList": "Danh sách việc cần làm"
     },
     "titlePlaceholder": "Không có tiêu đề",
     "wordCount": "{{wordCount}} từ"

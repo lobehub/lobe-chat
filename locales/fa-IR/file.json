@@ -51,7 +51,10 @@
     },
     "saving": "در حال ذخیره‌سازی...",
     "slashCommands": {
-      "image": "تصویر"
+      "bulletedList": "فهرست گلوله‌ای",
+      "image": "تصویر",
+      "orderedList": "فهرست شماره‌دار",
+      "todoList": "فهرست کارها"
     },
     "titlePlaceholder": "بدون عنوان",
     "wordCount": "{{wordCount}} کلمه"

@@ -275,8 +275,8 @@
       "title": "Nombre"
     },
     "prompt": {
-      "placeholder": "Ingresa la palabra de aviso del rol",
-      "title": "Configuración del rol"
+      "placeholder": "Introduce la configuración del asistente, pulsa / para abrir el menú de comandos",
+      "title": "Configuración del asistente"
     },
     "submit": "Actualizar información del asistente",
     "tag": {

@@ -51,7 +51,10 @@
     },
     "saving": "Bezig met opslaan...",
     "slashCommands": {
-      "image": "Afbeelding"
+      "bulletedList": "Ongenummerde lijst",
+      "image": "Afbeelding",
+      "orderedList": "Genummerde lijst",
+      "todoList": "Takenlijst"
     },
     "titlePlaceholder": "Zonder titel",
     "wordCount": "{{wordCount}} woorden"

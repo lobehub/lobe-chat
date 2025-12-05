@@ -275,8 +275,8 @@
       "title": "Tên"
     },
     "prompt": {
-      "placeholder": "Vui lòng nhập từ khóa Prompt cho vai diễn",
-      "title": "Thiết lập vai diễn"
+      "placeholder": "Nhập cài đặt trợ lý, nhấn / để mở menu lệnh",
+      "title": "Cài đặt Trợ lý"
     },
     "submit": "Cập nhật thông tin trợ lý",
     "tag": {

@@ -7,9 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { message } from '@/components/AntdStaticMethods';
+import { documentService } from '@/services/document';
+import { useFileStore } from '@/store/file';
+import { DocumentSourceType, LobeDocument } from '@/types/document';
 
-import EditorCanvas from '../EditorCanvas';
-import { usePageEditor } from '../usePageEditor';
+import ModalEditorCanvas from './EditorCanvas';
 
 type EditorInstance = ReturnType<typeof useEditor>;
 
@@ -34,28 +36,14 @@ const PageEditorModal = memo<PageEditorModalProps>(
     parentId,
   }) => {
     const { t } = useTranslation('file');
-
     const editor = useEditor();
-
+    const [currentTitle, setCurrentTitle] = useState(documentTitle || '');
     const [isSaving, setIsSaving] = useState(false);
     const isEditMode = !!documentId;
 
-    const { currentTitle, setCurrentTitle, performSave, handleContentChange } = usePageEditor({
-      autoSave: false, // Manual save for modal
-      documentId,
-      editor,
-      knowledgeBaseId,
-      onSave: async () => {
-        message.success(
-          isEditMode
-            ? t('header.newNoteDialog.updateSuccess', { ns: 'file' })
-            : t('header.newNoteDialog.saveSuccess', { ns: 'file' }),
-        );
-        editor?.cleanDocument();
-        onClose();
-      },
-      parentId,
-    });
+    const updateDocumentOptimistically = useFileStore((s) => s.updateDocumentOptimistically);
+    const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
+    const refreshFileList = useFileStore((s) => s.refreshFileList);
 
     const handleClose = () => {
       editor?.cleanDocument();
@@ -75,12 +63,70 @@ const PageEditorModal = memo<PageEditorModalProps>(
       setIsSaving(true);
 
       try {
-        // Update title and content in local state first
-        setCurrentTitle(currentTitle);
-        // Trigger content update to ensure latest content is saved
-        handleContentChange();
-        // Then perform save
-        await performSave();
+        const currentEditorData = editor.getDocument('json');
+        const currentContent = (editor.getDocument('markdown') as unknown as string) || '';
+
+        if (documentId && !documentId.startsWith('temp-document-')) {
+          // Update existing document
+          await updateDocumentOptimistically(documentId, {
+            content: currentContent,
+            editorData: structuredClone(currentEditorData),
+            title: currentTitle,
+            updatedAt: new Date(),
+          });
+        } else {
+          // Create new document
+          const now = Date.now();
+          const timestamp = new Date(now).toLocaleString('en-US', {
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          });
+          const finalTitle = currentTitle || `Page - ${timestamp}`;
+
+          const newPage = await documentService.createDocument({
+            content: currentContent,
+            editorData: JSON.stringify(currentEditorData),
+            fileType: 'custom/document',
+            knowledgeBaseId,
+            parentId,
+            title: finalTitle,
+          });
+
+          const realPage: LobeDocument = {
+            content: currentContent,
+            createdAt: new Date(now),
+            editorData: structuredClone(currentEditorData) || null,
+            fileType: 'custom/document' as const,
+            filename: finalTitle,
+            id: newPage.id,
+            metadata: {
+              createdAt: now,
+            },
+            source: 'document',
+            sourceType: DocumentSourceType.EDITOR,
+            title: finalTitle,
+            totalCharCount: currentContent.length,
+            totalLineCount: 0,
+            updatedAt: new Date(now),
+          };
+
+          if (documentId?.startsWith('temp-document-')) {
+            replaceTempDocumentWithReal(documentId, realPage);
+          }
+
+          refreshFileList();
+        }
+
+        message.success(
+          isEditMode
+            ? t('header.newNoteDialog.updateSuccess', { ns: 'file' })
+            : t('header.newNoteDialog.saveSuccess', { ns: 'file' }),
+        );
+        editor?.cleanDocument();
+        onClose();
       } catch (error) {
         console.error('Failed to save note:', error);
         message.error(t('header.newNoteDialog.saveError', { ns: 'file' }));
@@ -110,7 +156,7 @@ const PageEditorModal = memo<PageEditorModalProps>(
         width={800}
       >
         <Flexbox padding={16}>
-          <EditorCanvas editor={editor} onInit={onEditorInit} style={{ minHeight: 400 }} />
+          <ModalEditorCanvas editor={editor} onInit={onEditorInit} style={{ minHeight: 400 }} />
         </Flexbox>
       </Modal>
     );

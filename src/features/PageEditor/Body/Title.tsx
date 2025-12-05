@@ -11,7 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 
-import { usePageEditorContext } from '../Context';
+import { usePageEditorStore } from '../store';
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
@@ -20,14 +20,12 @@ const Title = memo(() => {
   const theme = useTheme();
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
-  const {
-    currentEmoji,
-    currentTitle,
-    setCurrentEmoji,
-    setCurrentTitle,
-    debouncedSave,
-    handleTitleSubmit,
-  } = usePageEditorContext();
+  const currentEmoji = usePageEditorStore((s) => s.currentEmoji);
+  const currentTitle = usePageEditorStore((s) => s.currentTitle);
+  const setCurrentEmoji = usePageEditorStore((s) => s.setCurrentEmoji);
+  const setCurrentTitle = usePageEditorStore((s) => s.setCurrentTitle);
+  const debouncedSave = usePageEditorStore((s) => s.debouncedSave);
+  const handleTitleSubmit = usePageEditorStore((s) => s.handleTitleSubmit);
 
   const [isHoveringTitle, setIsHoveringTitle] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);

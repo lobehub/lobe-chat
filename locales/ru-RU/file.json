@@ -51,7 +51,10 @@
     },
     "saving": "Сохранение...",
     "slashCommands": {
-      "image": "Изображение"
+      "bulletedList": "Маркированный список",
+      "image": "Изображение",
+      "orderedList": "Нумерованный список",
+      "todoList": "Список дел"
     },
     "titlePlaceholder": "Без названия",
     "wordCount": "{{wordCount}} слов"

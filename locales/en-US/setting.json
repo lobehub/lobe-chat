@@ -275,8 +275,8 @@
       "title": "Name"
     },
     "prompt": {
-      "placeholder": "Enter role prompt word",
-      "title": "Role Setting"
+      "placeholder": "Enter assistant settings, press / to open the command menu",
+      "title": "Assistant Settings"
     },
     "submit": "Update Assistant Information",
     "tag": {
