@@ -6,13 +6,12 @@ import { useAgentStore } from '@/store/agent';
 import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 
 const ThinkingSlider = memo(() => {
   const agentId = useAgentId();
-  const [config, updateAgentChatConfig] = useAgentStore((s) => [
-    chatConfigByIdSelectors.getChatConfigById(agentId)(s),
-    s.updateAgentChatConfig,
-  ]);
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const config = useAgentStore((s) => chatConfigByIdSelectors.getChatConfigById(agentId)(s));
 
   const thinking = config.thinking || 'auto'; // Default to 'auto' if not set
 

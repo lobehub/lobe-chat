@@ -13,6 +13,7 @@ import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/
 import { SearchMode } from '@/types/search';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 import FCSearchModel from './FCSearchModel';
 import ModelBuiltinSearch from './ModelBuiltinSearch';
 
@@ -66,10 +67,8 @@ interface NetworkOption {
 const Item = memo<NetworkOption>(({ value, description, icon, label }) => {
   const { cx, styles } = useStyles();
   const agentId = useAgentId();
-  const [mode, updateAgentChatConfig] = useAgentStore((s) => [
-    chatConfigByIdSelectors.getSearchModeById(agentId)(s),
-    s.updateAgentChatConfig,
-  ]);
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const mode = useAgentStore((s) => chatConfigByIdSelectors.getSearchModeById(agentId)(s));
 
   return (
     <Flexbox
@@ -96,15 +95,14 @@ const Item = memo<NetworkOption>(({ value, description, icon, label }) => {
 const Controls = memo(() => {
   const { t } = useTranslation('chat');
   const agentId = useAgentId();
-  const [model, provider, useModelBuiltinSearch, searchMode, updateAgentChatConfig] = useAgentStore(
-    (s) => [
-      agentByIdSelectors.getAgentModelById(agentId)(s),
-      agentByIdSelectors.getAgentModelProviderById(agentId)(s),
-      chatConfigByIdSelectors.getUseModelBuiltinSearchById(agentId)(s),
-      chatConfigByIdSelectors.getChatConfigById(agentId)(s).searchMode,
-      s.updateAgentChatConfig,
-    ],
-  );
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+
+  const [model, provider, useModelBuiltinSearch, searchMode] = useAgentStore((s) => [
+    agentByIdSelectors.getAgentModelById(agentId)(s),
+    agentByIdSelectors.getAgentModelProviderById(agentId)(s),
+    chatConfigByIdSelectors.getUseModelBuiltinSearchById(agentId)(s),
+    chatConfigByIdSelectors.getChatConfigById(agentId)(s).searchMode,
+  ]);
 
   const supportFC = useAiInfraStore(aiModelSelectors.isModelSupportToolUse(model, provider));
   const isProviderHasBuiltinSearchConfig = useAiInfraStore(
