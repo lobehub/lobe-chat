@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 import PluginStore from '@/features/PluginStore';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import Action from '../components/Action';
 import { useControls } from './useControls';
 
@@ -18,8 +19,9 @@ const Tools = memo(() => {
   const items = useControls({ setModalOpen, setUpdating });
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
 
-  const model = useAgentStore(agentSelectors.currentAgentModel);
-  const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
+  const agentId = useAgentId();
+  const model = useAgentStore((s) => agentByIdSelectors.getAgentModelById(agentId)(s));
+  const provider = useAgentStore((s) => agentByIdSelectors.getAgentModelProviderById(agentId)(s));
 
   const enableFC = useModelSupportToolUse(model, provider);
 

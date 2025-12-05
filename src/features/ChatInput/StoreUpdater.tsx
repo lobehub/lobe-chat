@@ -12,6 +12,7 @@ export interface StoreUpdaterProps extends Partial<PublicState> {
 
 const StoreUpdater = memo<StoreUpdaterProps>(
   ({
+    agentId,
     chatInputEditorRef,
     mobile,
     sendButtonProps,
@@ -26,6 +27,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     const useStoreUpdater = createStoreUpdater(storeApi);
     const editor = useChatInputEditor();
 
+    useStoreUpdater('agentId', agentId);
     useStoreUpdater('mobile', mobile!);
     useStoreUpdater('sendMenu', sendMenu!);
     useStoreUpdater('mentionItems', mentionItems);

@@ -7,9 +7,10 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import Action from '../components/Action';
 import ControlsForm from './ControlsForm';
 
@@ -56,9 +57,10 @@ const ModelSwitch = memo(() => {
   const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
 
+  const agentId = useAgentId();
   const [model, provider] = useAgentStore((s) => [
-    agentSelectors.currentAgentModel(s),
-    agentSelectors.currentAgentModelProvider(s),
+    agentByIdSelectors.getAgentModelById(agentId)(s),
+    agentByIdSelectors.getAgentModelProviderById(agentId)(s),
   ]);
 
   const isModelHasExtendParams = useAiInfraStore(
