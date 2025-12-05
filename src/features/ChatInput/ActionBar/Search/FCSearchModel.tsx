@@ -5,8 +5,9 @@ import { Flexbox } from 'react-layout-kit';
 
 import InfoTooltip from '@/components/InfoTooltip';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import FunctionCallingModelSelect from './FunctionCallingModelSelect';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -34,8 +35,9 @@ const useStyles = createStyles(({ css, token }) => ({
 const FCSearchModel = memo(() => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
+  const agentId = useAgentId();
   const [searchFCModel, updateAgentChatConfig] = useAgentStore((s) => [
-    agentChatConfigSelectors.searchFCModel(s),
+    chatConfigByIdSelectors.getSearchFCModelById(agentId)(s),
     s.updateAgentChatConfig,
   ]);
   return (

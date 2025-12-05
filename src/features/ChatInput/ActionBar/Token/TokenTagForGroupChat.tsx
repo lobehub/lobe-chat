@@ -12,7 +12,7 @@ import { useModelContextWindowTokens } from '@/hooks/useModelContextWindowTokens
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -25,6 +25,7 @@ import { toolSelectors } from '@/store/tool/selectors';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import ActionPopover from '../components/ActionPopover';
 import TokenProgress from './TokenProgress';
 
@@ -39,10 +40,11 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
   const input = useChatStore((s) => s.inputMessage);
   const activeTopicId = useChatStore((s) => s.activeTopicId);
 
+  const agentId = useAgentId();
   const [model, provider] = useAgentStore((s) => {
     return [
-      agentSelectors.currentAgentModel(s) as string,
-      agentSelectors.currentAgentModelProvider(s) as string,
+      agentByIdSelectors.getAgentModelById(agentId)(s),
+      agentByIdSelectors.getAgentModelProviderById(agentId)(s),
     ];
   });
 
