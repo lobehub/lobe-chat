@@ -61,6 +61,7 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
 
   return (
     <PageEditor
+      key={currentPageId}
       knowledgeBaseId={knowledgeBaseId}
       onDelete={() => handleDelete(currentPageId)}
       pageId={currentPageId}
