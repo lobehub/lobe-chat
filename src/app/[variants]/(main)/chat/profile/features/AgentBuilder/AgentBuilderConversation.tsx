@@ -18,9 +18,7 @@ const actions: ActionKeys[] = ['model'];
 const AgentBuilderConversation = memo<AgentBuilderConversationProps>(({ agentId }) => {
   return (
     <Flexbox flex={1} height={'100%'}>
-      <Flexbox align="center" horizontal justify="flex-end" paddingBlock={8} paddingInline={12}>
-        <TopicSelector agentId={agentId} />
-      </Flexbox>
+      <TopicSelector agentId={agentId} />
       <Flexbox flex={1} style={{ overflow: 'hidden' }}>
         <ChatList />
       </Flexbox>
