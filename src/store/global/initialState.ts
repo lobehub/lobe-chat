@@ -108,6 +108,7 @@ export interface SystemStatus {
   portalWidth: number;
   sessionsWidth: number;
   showChatSideBar?: boolean;
+  showCommandMenu?: boolean;
   showFilePanel?: boolean;
   showHotkeyHelper?: boolean;
   showImagePanel?: boolean;
@@ -173,6 +174,7 @@ export const INITIAL_STATUS = {
   portalWidth: 400,
   sessionsWidth: 320,
   showChatSideBar: true,
+  showCommandMenu: false,
   showFilePanel: true,
   showHotkeyHelper: false,
   showImagePanel: true,

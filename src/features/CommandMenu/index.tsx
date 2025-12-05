@@ -19,6 +19,7 @@ const CommandMenu = memo(() => {
   const { styles } = useStyles();
   const {
     chatMessages,
+    closeCommandMenu,
     handleAskAI,
     handleBack,
     handleCreateSession,
@@ -36,7 +37,6 @@ const CommandMenu = memo(() => {
     pathname,
     search,
     searchResults,
-    setOpen,
     setPages,
     setSearch,
     showCreateSession,
@@ -45,7 +45,7 @@ const CommandMenu = memo(() => {
   if (!mounted || !open) return null;
 
   return createPortal(
-    <div className={styles.overlay} onClick={() => setOpen(false)}>
+    <div className={styles.overlay} onClick={closeCommandMenu}>
       <div onClick={(e) => e.stopPropagation()}>
         <Command
           className={styles.commandRoot}
@@ -62,7 +62,7 @@ const CommandMenu = memo(() => {
               if (pages.length > 0) {
                 handleBack();
               } else {
-                setOpen(false);
+                closeCommandMenu();
               }
             }
             // Backspace goes to previous page when search is empty
@@ -102,7 +102,7 @@ const CommandMenu = memo(() => {
             {!page && hasSearch && !isAiMode && (
               <SearchResults
                 isLoading={isSearching}
-                onClose={() => setOpen(false)}
+                onClose={closeCommandMenu}
                 results={searchResults}
                 styles={styles}
               />

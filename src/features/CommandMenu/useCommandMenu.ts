@@ -3,17 +3,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import type { SearchResult } from '@/database/repositories/search';
-import { useHotkeyById } from '@/hooks/useHotkeys/useHotkeyById';
 import { lambdaClient } from '@/libs/trpc/client';
 import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
-import { HotkeyEnum } from '@/types/hotkey';
 
 import type { ChatMessage, ThemeMode } from './types';
 
 export const useCommandMenu = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useGlobalStore((s) => [s.status.showCommandMenu, s.updateSystemStatus]);
   const [mounted, setMounted] = useState(false);
   const [search, setSearch] = useState('');
   const [pages, setPages] = useState<string[]>([]);
@@ -49,17 +47,6 @@ export const useCommandMenu = () => {
     setMounted(true);
   }, []);
 
-  // Register Cmd+K / Ctrl+K hotkey
-  useHotkeyById(
-    HotkeyEnum.CommandPalette,
-    () => {
-      setOpen((prev) => !prev);
-    },
-    {
-      enableOnContentEditable: true,
-    },
-  );
-
   // Close on Escape key and prevent body scroll
   useEffect(() => {
     if (open) {
@@ -81,19 +68,23 @@ export const useCommandMenu = () => {
     }
   }, [open]);
 
+  const closeCommandMenu = () => {
+    setOpen({ showCommandMenu: false });
+  };
+
   const handleNavigate = (path: string) => {
     navigate(path);
-    setOpen(false);
+    closeCommandMenu();
   };
 
   const handleExternalLink = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
-    setOpen(false);
+    closeCommandMenu();
   };
 
   const handleThemeChange = (theme: ThemeMode) => {
     switchThemeMode(theme);
-    setOpen(false);
+    closeCommandMenu();
   };
 
   const handleAskAI = () => {
@@ -122,7 +113,7 @@ export const useCommandMenu = () => {
 
   const handleCreateSession = () => {
     createSession();
-    setOpen(false);
+    closeCommandMenu();
   };
 
   const navigateToPage = (pageName: string) => {
@@ -131,6 +122,7 @@ export const useCommandMenu = () => {
 
   return {
     chatMessages,
+    closeCommandMenu,
     handleAskAI,
     handleBack,
     handleCreateSession,
@@ -148,7 +140,6 @@ export const useCommandMenu = () => {
     pathname,
     search,
     searchResults: searchResults || ([] as SearchResult[]),
-    setOpen,
     setPages,
     setSearch,
     showCreateSession,
