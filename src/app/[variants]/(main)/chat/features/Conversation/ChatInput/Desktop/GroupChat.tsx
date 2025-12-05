@@ -30,7 +30,7 @@ const leftActions: ActionKeys[] = [
 
 const dmLeftActions: ActionKeys[] = ['typo', 'fileUpload', 'knowledgeBase', '---', ['stt']];
 
-const rightActions: ActionKeys[] = ['saveTopic'];
+const rightActions: ActionKeys[] = [];
 
 /**
  * Message Editor for Group Chat along with DM Portal
