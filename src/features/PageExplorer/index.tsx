@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import PageEditor from '@/features/PageEditor';
 import { useFileStore } from '@/store/file';
 
-import PageExplorerPlaceholder from './DocumentEditorPlaceholder';
+import PageExplorerPlaceholder from './PageExplorerPlaceholder';
 
 interface PageExplorerProps {
   knowledgeBaseId?: string;
@@ -30,7 +30,6 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
     fetchDocuments();
   }, [fetchDocuments]);
 
-  // If documentId is provided from URL, set it as selected
   useEffect(() => {
     if (pageId && pageId !== selectedPageId) {
       setSelectedPageId(pageId, false);
@@ -61,7 +60,6 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
 
   return (
     <PageEditor
-      key={currentPageId}
       knowledgeBaseId={knowledgeBaseId}
       onDelete={() => handleDelete(currentPageId)}
       pageId={currentPageId}
