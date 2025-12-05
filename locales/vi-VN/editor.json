@@ -20,9 +20,17 @@
   },
   "link": {
     "edit": "Chỉnh sửa liên kết",
+    "editLinkTitle": "Liên kết",
+    "editTextTitle": "Tiêu đề",
     "open": "Mở liên kết",
     "placeholder": "Nhập URL liên kết",
     "unlink": "Gỡ liên kết"
+  },
+  "markdown": {
+    "cancel": "Hủy",
+    "confirm": "Chuyển đổi",
+    "parseMessage": "Chuyển sang định dạng Markdown, nội dung hiện tại sẽ bị ghi đè. Bạn có chắc chắn không? (Tự động đóng sau 5 giây)",
+    "parseTitle": "Định dạng Markdown"
   },
   "math": {
     "placeholder": "Vui lòng nhập công thức TeX"

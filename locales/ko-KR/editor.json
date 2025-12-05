@@ -20,9 +20,17 @@
   },
   "link": {
     "edit": "링크 편집",
+    "editLinkTitle": "링크",
+    "editTextTitle": "제목",
     "open": "링크 열기",
     "placeholder": "링크 URL 입력",
     "unlink": "링크 제거"
+  },
+  "markdown": {
+    "cancel": "취소",
+    "confirm": "변환",
+    "parseMessage": "Markdown 형식으로 변환하면 기존 내용이 덮어쓰여집니다. 계속하시겠습니까? (5초 후 자동으로 닫힙니다)",
+    "parseTitle": "Markdown 서식 지정"
   },
   "math": {
     "placeholder": "TeX 수식을 입력하세요"
