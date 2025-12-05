@@ -36,7 +36,10 @@ export const useDropdownMenu = ({ id, toggleEditing }: ActionProps): MenuProps['
           icon: <Icon icon={PencilLine} />,
           key: 'rename',
           label: t('rename', { ns: 'common' }),
-          onClick: () => toggleEditing(true),
+          onClick: (info: any) => {
+            info.domEvent?.stopPropagation();
+            toggleEditing(true);
+          },
         },
         { type: 'divider' },
         {

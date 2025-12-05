@@ -70,26 +70,29 @@ const KnowledgeBaseItem = memo<KnowledgeBaseItemProps>(({ id, name, active, styl
   });
 
   return (
-    <Dropdown
-      menu={{
-        items: dropdownMenu,
-      }}
-      trigger={['contextMenu']}
-    >
-      <NavItem
-        actions={<Actions dropdownMenu={dropdownMenu} />}
-        active={active}
-        className={className}
-        disabled={editing}
-        icon={icon}
-        key={id}
-        loading={isLoading}
-        onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
-        style={style}
-        title={editing ? <Editing id={id} name={name} toggleEditing={toggleEditing} /> : name}
-      />
-    </Dropdown>
+    <>
+      <Dropdown
+        menu={{
+          items: dropdownMenu,
+        }}
+        trigger={['contextMenu']}
+      >
+        <NavItem
+          actions={<Actions dropdownMenu={dropdownMenu} />}
+          active={active}
+          className={className}
+          disabled={editing}
+          icon={icon}
+          key={id}
+          loading={isLoading}
+          onClick={handleClick}
+          onDoubleClick={handleDoubleClick}
+          style={style}
+          title={name}
+        />
+      </Dropdown>
+      <Editing id={id} name={name} toggleEditing={toggleEditing} />
+    </>
   );
 });
 
