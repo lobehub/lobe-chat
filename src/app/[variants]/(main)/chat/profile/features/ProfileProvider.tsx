@@ -1,5 +1,7 @@
 'use client';
 
+import { IEditor } from '@lobehub/editor';
+import { useEditor } from '@lobehub/editor/react';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, createContext, memo, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +12,7 @@ import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 
 interface ProfileContextValue {
   chatPanelExpanded: boolean;
+  editor: IEditor;
   setChatPanelExpanded: (expanded: boolean | ((prev: boolean) => boolean)) => void;
 }
 
@@ -26,7 +29,7 @@ export const useProfileContext = () => {
 const ProfileProvider = memo<PropsWithChildren>(({ children }) => {
   const { t } = useTranslation('common');
   const [chatPanelExpanded, setChatPanelExpanded] = useState(true);
-
+  const editor = useEditor();
   const [agentId, isLoading, title, avatar, backgroundColor, updateAgentConfig, updateAgentMeta] =
     useAgentStore((s) => [
       s.activeAgentId,
@@ -40,7 +43,7 @@ const ProfileProvider = memo<PropsWithChildren>(({ children }) => {
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
 
   return (
-    <ProfileContext.Provider value={{ chatPanelExpanded, setChatPanelExpanded }}>
+    <ProfileContext.Provider value={{ chatPanelExpanded, editor, setChatPanelExpanded }}>
       <AgentSettingsProvider
         config={config}
         id={agentId}
