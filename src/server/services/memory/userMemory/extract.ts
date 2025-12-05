@@ -745,7 +745,11 @@ export class MemoryExtractionExecutor {
   ): Promise<UserPaginationResult> {
     const db = await this.db;
 
-    const rows = await UserModel.listUsersForMemoryExtractor(db, { cursor, limit });
+    const rows = await UserModel.listUsersForMemoryExtractor(db, {
+      cursor,
+      limit,
+      whitelist: this.privateConfig.whitelistUsers,
+    });
     if (!rows?.length) return { ids: [] };
 
     const last = rows.at(-1);

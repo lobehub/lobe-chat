@@ -21,6 +21,7 @@ export interface MemoryExtractionPrivateConfig {
   agentLayerExtractor: MemoryLayerExtractorConfig;
   concurrency?: number;
   embedding: MemoryAgentConfig;
+  whitelistUsers?: string[];
 }
 
 const parseGateKeeperAgent = (): MemoryAgentConfig => {
@@ -109,11 +110,16 @@ export const parseMemoryExtractionConfig = (): MemoryExtractionPrivateConfig => 
         : undefined
       : undefined;
 
+  const whitelistUsers = process.env.MEMORY_USER_MEMORY_WHITELIST_USERS?.split(',')
+    .filter(Boolean)
+    .map((s) => s.trim());
+
   return {
     agentGateKeeper,
     agentLayerExtractor,
     concurrency,
     embedding,
+    whitelistUsers,
   };
 };
 

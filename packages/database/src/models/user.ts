@@ -7,7 +7,7 @@ import {
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
-import { and, eq, gt, or } from 'drizzle-orm';
+import { and, eq, gt, inArray, or } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
 import { merge } from '@/utils/merge';
@@ -42,6 +42,7 @@ export interface ListUsersForMemoryExtractorCursor {
 export type ListUsersForMemoryExtractorOptions = {
   cursor?: ListUsersForMemoryExtractorCursor;
   limit?: number;
+  whitelist?: string[];
 };
 
 export class UserModel {
@@ -300,11 +301,18 @@ export class UserModel {
         )
       : undefined;
 
+    const whitelistCondition =
+      options.whitelist && options.whitelist.length > 0
+        ? inArray(users.id, options.whitelist)
+        : undefined;
+
+    const where = and(cursorCondition, whitelistCondition);
+
     return db.query.users.findMany({
       columns: { createdAt: true, id: true },
       limit: options.limit,
       orderBy: (fields, { asc }) => [asc(fields.createdAt), asc(fields.id)],
-      where: cursorCondition,
+      where,
     });
   };
 }
