@@ -18,15 +18,15 @@ const AgentBuilder = memo(() => {
   return (
     <DraggablePanel
       backgroundColor={theme.colorBgContainer}
+      defaultSize={{
+        height: '100%',
+      }}
       expand={chatPanelExpanded}
       expandable={false}
       maxWidth={600}
-      minWidth={400}
+      minWidth={360}
       onExpandChange={setChatPanelExpanded}
       placement="right"
-      size={{
-        height: '100%',
-      }}
     >
       {agentId && agentBuilderId && (
         <AgentBuilderProvider agentId={agentBuilderId}>
