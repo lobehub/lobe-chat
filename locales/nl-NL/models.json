@@ -221,6 +221,9 @@
   "MiniMax-M2": {
     "description": "Speciaal ontworpen voor efficiënte codering en agent-workflows."
   },
+  "MiniMax-M2-Stable": {
+    "description": "Speciaal ontworpen voor efficiënte codering en agent-workflows, met hogere gelijktijdigheid en geschikt voor commercieel gebruik."
+  },
   "MiniMax-Text-01": {
     "description": "In de MiniMax-01-serie modellen hebben we gedurfde innovaties doorgevoerd: voor het eerst op grote schaal een lineaire aandachtmechanisme geïmplementeerd, waardoor de traditionele Transformer-architectuur niet langer de enige keuze is. Dit model heeft een parameterhoeveelheid van maar liefst 456 miljard, met een enkele activatie van 45,9 miljard. De algehele prestaties van het model zijn vergelijkbaar met die van de beste modellen in het buitenland, terwijl het efficiënt de wereldwijd langste context van 4 miljoen tokens kan verwerken, wat 32 keer de capaciteit van GPT-4o en 20 keer die van Claude-3.5-Sonnet is."
   },
@@ -298,6 +301,9 @@
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 is de nieuwste en krachtigste versie van Kimi K2. Het is een toonaangevend hybride expert (MoE) taalmodel met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. De belangrijkste kenmerken van dit model zijn: verbeterde agent-coderingsintelligentie, met aanzienlijke prestatieverbeteringen in openbare benchmarktests en echte agent-coderingsopdrachten; verbeterde front-end coderingservaring, met vooruitgang in zowel esthetiek als bruikbaarheid van front-end programmeren."
+  },
+  "Pro/moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking Turbo is de Turbo-versie van de Kimi K2-serie, geoptimaliseerd voor redeneersnelheid en verwerkingssnelheid, terwijl het de mogelijkheden voor meerstapsredenering en toolgebruik van K2 Thinking behoudt. Dit model is gebaseerd op een Mixture of Experts (MoE)-architectuur met ongeveer 1 biljoen parameters, ondersteunt native 256K context en kan stabiel grootschalige toolaanroepen uitvoeren. Ideaal voor productieomgevingen met hoge eisen aan latency en gelijktijdigheid."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is een innovatief natuurlijk taalverwerkingsmodel dat efficiënt complexe dialooggeneratie en contextbegripstaken kan verwerken."
@@ -1052,6 +1058,9 @@
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 is een open-source hybride expertcode-model, presteert uitstekend in code-taken en is vergelijkbaar met GPT4-Turbo."
   },
+  "deepseek-ocr": {
+    "description": "DeepSeek-OCR is een visueel-taalkundig model ontwikkeld door DeepSeek AI, gericht op optische tekenherkenning (OCR) en 'contextuele optische compressie'. Het model is ontworpen om de grenzen van contextcompressie vanuit afbeeldingen te verkennen, en verwerkt efficiënt documenten door ze om te zetten in gestructureerde tekstformaten zoals Markdown. Het herkent nauwkeurig tekst in afbeeldingen en is bijzonder geschikt voor toepassingen zoals documentdigitalisering, teksterkenning en gestructureerde verwerking."
+  },
   "deepseek-r1": {
     "description": "DeepSeek-R1 is een op versterkend leren (RL) aangedreven inferentiemodel dat de problemen van herhaling en leesbaarheid in het model oplost. Voor RL introduceerde DeepSeek-R1 koude startdata om de inferentieprestaties verder te optimaliseren. Het presteert vergelijkbaar met OpenAI-o1 in wiskunde, code en inferentietaken, en verbetert de algehele effectiviteit door zorgvuldig ontworpen trainingsmethoden."
   },
@@ -1268,6 +1277,9 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision is een visueel diepdenkend model dat sterkere algemene multimodale begrip- en redeneervermogen toont in scenario's zoals onderwijs, beeldcontrole, inspectie en beveiliging, en AI-zoekvragen. Het ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 64k tokens."
   },
+  "doubao-seed-code": {
+    "description": "Doubao-Seed-Code is diep geoptimaliseerd voor agentic programmeertaken, ondersteunt multimodaal (tekst/afbeelding/video) en 256K lange context, compatibel met de Anthropic API. Geschikt voor programmeren, visuele interpretatie en agent-scenario's."
+  },
   "doubao-seededit-3-0-i2i-250628": {
     "description": "Doubao beeldgeneratiemodel ontwikkeld door het Seed-team van ByteDance, ondersteunt tekst- en beeldinvoer en biedt een hoog controleerbare, hoogwaardige beeldgeneratie-ervaring. Ondersteunt het bewerken van afbeeldingen via tekstinstructies, met afbeeldingsafmetingen tussen 512 en 1536 pixels."
   },
@@ -1327,6 +1339,9 @@
   },
   "ernie-4.5-vl-28b-a3b": {
     "description": "ERNIE 4.5 VL 28B A3B, een open-source multimodaal model dat beeld- en tekstbegrip en redeneertaken ondersteunt."
+  },
+  "ernie-5.0-thinking-latest": {
+    "description": "Wenxin 5.0 Thinking is een native multimodaal vlaggenschipmodel dat tekst, beeld, audio en video in één model integreert. De algehele capaciteiten zijn aanzienlijk verbeterd, waardoor het geschikt is voor complexe vraag-en-antwoord, creatieve taken en intelligente agent-toepassingen."
   },
   "ernie-5.0-thinking-preview": {
     "description": "Wenxin 5.0 Thinking Preview, een native multimodaal vlaggenschipmodel dat tekst, beeld, audio en video integreert, met uitgebreide capaciteitsupgrades voor complexe Q&A, creatie en agenttoepassingen."
@@ -2198,9 +2213,6 @@
   "kimi-latest": {
     "description": "Kimi slimme assistent product maakt gebruik van het nieuwste Kimi grote model, dat mogelijk nog niet stabiele functies bevat. Ondersteunt beeldbegrip en kiest automatisch het 8k/32k/128k model als factureringsmodel op basis van de lengte van de context van het verzoek."
   },
-  "kimi-thinking-preview": {
-    "description": "kimi-thinking-preview model is een multimodaal denkmodel met multimodale en algemene redeneervaardigheden, aangeboden door de donkere zijde van de maan. Het blinkt uit in diep redeneren en helpt bij het oplossen van complexere problemen."
-  },
   "kuaishou/kat-coder-pro-v1": {
     "description": "KAT-Coder-Pro-V1 (tijdelijk gratis) richt zich op codebegrip en geautomatiseerd programmeren, geschikt voor efficiënte programmeeragent-taken."
   },
@@ -2245,9 +2257,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Het Llama 3.3 instructie-fijnafstemmodel is geoptimaliseerd voor gesprekssituaties en overtreft vele bestaande open-source chatmodellen op veelvoorkomende industriebenchmarks."
-  },
-  "llama-4-scout-17b-16e-instruct": {
-    "description": "Llama 4 Scout: een hoogwaardig model uit de Llama-serie, geoptimaliseerd voor scenario's die hoge verwerkingssnelheid en lage latentie vereisen."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B biedt ongeëvenaarde complexiteitsverwerkingscapaciteiten, op maat gemaakt voor veeleisende projecten."
@@ -2681,6 +2690,9 @@
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 is de nieuwste en krachtigste versie van Kimi K2. Het is een toonaangevend hybride expert (MoE) taalmodel met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. De belangrijkste kenmerken van dit model zijn: verbeterde agent-coderingsintelligentie, met aanzienlijke prestatieverbeteringen in openbare benchmarktests en echte agent-coderingsopdrachten; verbeterde front-end coderingservaring, met vooruitgang in zowel esthetiek als bruikbaarheid van front-end programmeren."
   },
+  "moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking is het nieuwste en krachtigste open-source redeneermodel. Het vergroot de diepte van meerstapsredenering aanzienlijk en behoudt stabiel gebruik van tools bij 200–300 opeenvolgende aanroepen. Het heeft nieuwe standaarden gezet in benchmarks zoals Humanity's Last Exam (HLE), BrowseComp en andere. K2 Thinking blinkt uit in programmeren, wiskunde, logische redenering en agent-scenario's. Het model is gebaseerd op een Mixture of Experts (MoE)-architectuur met ongeveer 1 biljoen parameters, ondersteunt een contextvenster van 256K en toolaanroepen."
+  },
   "moonshotai/kimi-k2": {
     "description": "Kimi K2 is een grootschalig hybride expert (MoE) taalmodel ontwikkeld door Moonshot AI, met in totaal 1 biljoen parameters en 32 miljard actieve parameters per voorwaartse pass. Het is geoptimaliseerd voor agentcapaciteiten, waaronder geavanceerd toolgebruik, redeneren en code-synthese."
   },
@@ -2721,7 +2733,7 @@
     "description": "Gefocust op geavanceerd redeneren en het oplossen van complexe problemen, inclusief wiskunde en wetenschappelijke taken. Zeer geschikt voor toepassingen die diepgaand begrip van context en agentwerkstromen vereisen."
   },
   "o1-mini": {
-    "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+    "description": "Kleiner en sneller dan o1-preview, met 80% lagere kosten. Presteert goed bij codegeneratie en bewerkingen met kleine context."
   },
   "o1-preview": {
     "description": "Gespecialiseerd in geavanceerde redenering en het oplossen van complexe problemen, waaronder wiskundige en wetenschappelijke taken. Zeer geschikt voor toepassingen die een diepgaand begrip van context en autonome workflows vereisen."
@@ -2959,9 +2971,6 @@
   },
   "qwen-3-32b": {
     "description": "Qwen 3 32B: een model uit de Qwen-serie met uitstekende prestaties op meertalige en programmeertaken, geschikt voor productie op middelgrote schaal."
-  },
-  "qwen-3-coder-480b": {
-    "description": "Qwen 3 Coder 480B: een model met lange context, ontworpen voor codegeneratie en complexe programmeertaken."
   },
   "qwen-coder-plus": {
     "description": "Tongyi Qianwen codeermodel."
@@ -3323,6 +3332,9 @@
   "sonar-reasoning-pro": {
     "description": "Een nieuw API-product ondersteund door het DeepSeek redeneringsmodel."
   },
+  "spark-x": {
+    "description": "Introductie van X1.5-mogelijkheden: (1) Nieuwe dynamische aanpassing van denkmodi via het veld 'thinking'; (2) Verlengde contextlengte: 64K voor zowel input als output; (3) Ondersteuning voor FunctionCall-functionaliteit."
+  },
   "stable-diffusion-3-medium": {
     "description": "Het nieuwste tekst-naar-beeld groot model uitgebracht door Stability AI. Deze versie bouwt voort op de voordelen van eerdere generaties en verbetert aanzienlijk de beeldkwaliteit, tekstbegrip en stijlvariëteit. Het kan complexe natuurlijke taal prompts nauwkeuriger interpreteren en genereert preciezere en gevarieerdere beelden."
   },
@@ -3524,9 +3536,6 @@
   "x-ai/grok-code-fast-1": {
     "description": "Grok Code Fast 1 is het snelle codemodel van xAI, met output die goed leesbaar is en geschikt voor engineeringtoepassingen."
   },
-  "x1": {
-    "description": "Het Spark X1-model zal verder worden geüpgraded, met verbeterde prestaties in redenering, tekstgeneratie en taalbegrip, ter vergelijking met OpenAI o1 en DeepSeek R1."
-  },
   "xai/grok-2": {
     "description": "Grok 2 is een geavanceerd taalmodel met state-of-the-art redeneercapaciteiten. Het blinkt uit in chat, codering en redeneren, en presteert beter dan Claude 3.5 Sonnet en GPT-4-Turbo op de LMSYS-ranglijst."
   },
@@ -3592,6 +3601,9 @@
   },
   "z-ai/glm-4.6": {
     "description": "GLM 4.6 is het vlaggenschipmodel van Z.AI, met uitgebreide contextlengte en verbeterde coderingscapaciteiten."
+  },
+  "zai-glm-4.6": {
+    "description": "Uitstekende prestaties bij programmeer- en redeneertaken, ondersteunt streaming en toolaanroepen. Geschikt voor agentic codering en complexe redeneerscenario's."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 is een basis model speciaal ontworpen voor agenttoepassingen, gebruikmakend van een Mixture-of-Experts (MoE) architectuur. Het is diep geoptimaliseerd voor toolaanroepen, web browsing, software engineering en frontend programmeren, en ondersteunt naadloze integratie met code-agents zoals Claude Code en Roo Code. GLM-4.5 gebruikt een hybride redeneermodus en is geschikt voor complexe redenering en dagelijks gebruik."

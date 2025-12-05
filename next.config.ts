@@ -268,7 +268,7 @@ const nextConfig: NextConfig = {
 
   // when external packages in dev mode with turbopack, this config will lead to bundle error
   serverExternalPackages: isProd ? ['@electric-sql/pglite', 'pdfkit'] : ['pdfkit'],
-  transpilePackages: ['pdfjs-dist', 'mermaid'],
+  transpilePackages: ['pdfjs-dist', 'mermaid', 'better-auth-harmony'],
   turbopack: {},
 
   typescript: {

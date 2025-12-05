@@ -1046,6 +1046,7 @@ table users {
   id text [pk, not null]
   username text [unique]
   email text [unique]
+  normalized_email text [unique]
   avatar text
   phone text [unique]
   first_name text
@@ -1065,6 +1066,11 @@ table users {
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    email [name: 'users_email_idx']
+    username [name: 'users_username_idx']
+  }
 }
 
 table user_memories {

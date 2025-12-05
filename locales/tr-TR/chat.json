@@ -254,8 +254,8 @@
   "noSelectedAgents": "Henüz üye seçilmedi",
   "openInNewWindow": "Sayfayı yeni pencerede aç",
   "owner": "Grup sahibi",
-  "pin": "Pin",
-  "pinOff": "Unpin",
+  "pin": "Sabitle",
+  "pinOff": "Sabitlemeyi Kaldır",
   "rag": {
     "referenceChunks": "Referans Parçaları",
     "userQuery": {
@@ -420,8 +420,8 @@
     "clear": "Çeviriyi Temizle"
   },
   "tts": {
-    "action": "Text-to-Speech",
-    "clear": "Clear Speech"
+    "action": "Metinden Sese",
+    "clear": "Sesi Temizle"
   },
   "untitledAgent": "Adsız Asistan",
   "updateAgent": "Asistan Bilgilerini Güncelle",
