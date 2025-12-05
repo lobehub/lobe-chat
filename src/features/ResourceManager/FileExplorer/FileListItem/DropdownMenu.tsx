@@ -28,11 +28,12 @@ interface DropdownMenuProps {
   id: string;
   knowledgeBaseId?: string;
   onRenameStart?: () => void;
+  sourceType?: string;
   url: string;
 }
 
 const DropdownMenu = memo<DropdownMenuProps>(
-  ({ id, knowledgeBaseId, url, filename, fileType, onRenameStart }) => {
+  ({ id, knowledgeBaseId, url, filename, fileType, sourceType, onRenameStart }) => {
     const { t } = useTranslation(['components', 'common', 'knowledgeBase']);
     const { message, modal } = App.useApp();
 
@@ -53,6 +54,7 @@ const DropdownMenu = memo<DropdownMenuProps>(
 
     const inKnowledgeBase = !!knowledgeBaseId;
     const isFolder = fileType === 'custom/folder';
+    const isPage = sourceType === 'document' || fileType === 'custom/document';
 
     const items = useMemo(() => {
       // Filter out current knowledge base and create submenu items
@@ -157,7 +159,7 @@ const DropdownMenu = memo<DropdownMenuProps>(
               message.success(t('FileManager.actions.copyUrlSuccess'));
             },
           },
-          {
+          !isFolder && {
             icon: <Icon icon={DownloadIcon} />,
             key: 'download',
             label: t('download', { ns: 'common' }),
@@ -169,7 +171,33 @@ const DropdownMenu = memo<DropdownMenuProps>(
                 duration: 0,
                 key,
               });
-              await downloadFile(url, filename);
+
+              if (isPage) {
+                // For pages, download as markdown
+                try {
+                  const doc = await documentService.getDocumentById(id);
+                  if (doc?.content) {
+                    // Create a blob with the markdown content
+                    const blob = new Blob([doc.content], { type: 'text/markdown' });
+                    const blobUrl = URL.createObjectURL(blob);
+
+                    // Ensure filename has .md extension
+                    const mdFilename = filename.endsWith('.md') ? filename : `${filename}.md`;
+
+                    await downloadFile(blobUrl, mdFilename);
+                    URL.revokeObjectURL(blobUrl);
+                  } else {
+                    message.error('Failed to download page: no content available');
+                  }
+                } catch (error) {
+                  console.error('Failed to download page:', error);
+                  message.error('Failed to download page');
+                }
+              } else {
+                // For regular files, download from URL
+                await downloadFile(url, filename);
+              }
+
               message.destroy(key);
             },
           },
