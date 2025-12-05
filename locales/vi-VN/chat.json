@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "Trợ lý tìm kiếm...",
   "searchAgents": "Trợ lý tìm kiếm...",
   "selectedAgents": "Trợ lý đã chọn",
-  "sendPlaceholder": "Nhập nội dung trò chuyện...",
+  "sendPlaceholder": "Đặt câu hỏi, sáng tạo hoặc bắt đầu nhiệm vụ, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Quản lý nhóm",
     "confirmRemoveGroupAlert": "Bạn sẽ xóa nhóm này, sau khi xóa, trợ lý của nhóm sẽ được di chuyển vào danh sách mặc định, vui lòng xác nhận hành động của bạn",

@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "Arama Asistanı...",
   "searchAgents": "Arama asistanı...",
   "selectedAgents": "Seçili Asistanlar",
-  "sendPlaceholder": "Mesajınızı buraya yazın...",
+  "sendPlaceholder": "Soru sor, içerik oluştur veya bir göreve başla, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Grup Yönetimi",
     "confirmRemoveGroupAlert": "Bu grup silinecek, silindikten sonra bu grubun yardımcıları varsayılan listeye taşınacak, işleminizi onaylıyor musunuz?",

@@ -298,7 +298,7 @@
   "searchAgentPlaceholder": "جستجوی دستیار...",
   "searchAgents": "دستیار جستجو...",
   "selectedAgents": "دستیاران انتخاب‌شده",
-  "sendPlaceholder": "نوشتن پیام...",
+  "sendPlaceholder": "پرسیدن، خلق کردن یا شروع یک وظیفه، <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "مدیریت گروه",
     "confirmRemoveGroupAlert": "این گروه در حال حذف شدن است. پس از حذف، دستیارهای این گروه به لیست پیش‌فرض منتقل خواهند شد. لطفاً عملیات خود را تأیید کنید.",
