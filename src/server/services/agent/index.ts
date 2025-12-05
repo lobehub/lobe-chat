@@ -51,8 +51,9 @@ export class AgentService {
 
     // Merge configs: DEFAULT_AGENT_CONFIG -> serverDefaultAgentConfig -> agent
     // This ensures model/provider are always present
-    const serverDefaultAgentConfig = getServerDefaultAgentConfig();
-    return merge(merge(DEFAULT_AGENT_CONFIG, serverDefaultAgentConfig), agent);
+    const serverDefaultAgentConfig = merge(DEFAULT_AGENT_CONFIG, getServerDefaultAgentConfig());
+
+    return merge(serverDefaultAgentConfig, agent);
   }
 
   /**
