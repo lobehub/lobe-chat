@@ -13,15 +13,15 @@ const Copilot = memo(() => {
   return (
     <DraggablePanel
       backgroundColor={theme.colorBgContainer}
+      defaultSize={{
+        height: '100%',
+      }}
       expand={chatPanelExpanded}
       expandable={false}
       maxWidth={600}
-      minWidth={320}
+      minWidth={360}
       onExpandChange={setChatPanelExpanded}
       placement="right"
-      size={{
-        height: '100%',
-      }}
     >
       <Conversation />
     </DraggablePanel>
