@@ -8,11 +8,9 @@ import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { MarkdownElement, markdownElements } from '../../MarkdownElements';
-
+import { messageStateSelectors, useConversationStore } from '../../store';
 import ImageFileListViewer from '../components/ImageFileListViewer';
 import Reasoning from '../components/Reasoning';
-
-import { messageStateSelectors, useConversationStore } from '../../store';
 import ErrorContent from './Error';
 import MessageContent from './MessageContent';
 import { Tools } from './Tools';
@@ -32,12 +30,11 @@ export const ContentBlock = memo<ContentBlockProps>((props) => {
   const { id, tools, content, imageList, reasoning, error } = props;
   const showImageItems = !!imageList && imageList.length > 0;
   const isReasoning = useConversationStore(messageStateSelectors.isMessageInReasoning(id));
-
   const hasTools = tools && tools.length > 0;
   const showReasoning =
     (!!reasoning && reasoning.content?.trim() !== '') || (!reasoning && isReasoning);
 
-  const { transitionMode, highlighterTheme, mermaidTheme } = useUserStore(
+  const { transitionMode, highlighterTheme, mermaidTheme, fontSize } = useUserStore(
     userGeneralSettingsSelectors.config,
   );
 
@@ -62,16 +59,18 @@ export const ContentBlock = memo<ContentBlockProps>((props) => {
       animated,
       componentProps: {
         highlight: {
+          fullFeatured: true,
           theme: highlighterTheme,
         },
         mermaid: { theme: mermaidTheme },
       },
       components,
       enableCustomFootnotes: true,
+      fontSize,
       rehypePlugins,
       remarkPlugins,
     }),
-    [animated, components, highlighterTheme, mermaidTheme],
+    [animated, components, highlighterTheme, mermaidTheme, fontSize],
   );
 
   if (error && (content === LOADING_FLAT || !content))
