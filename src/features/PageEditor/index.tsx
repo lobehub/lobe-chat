@@ -20,6 +20,7 @@ import PageAgentProvider from './PageAgentProvider';
 
 interface PageEditorProps {
   knowledgeBaseId?: string;
+  onBack?: () => void;
   onDelete?: () => void;
   onDocumentIdChange?: (newId: string) => void;
   onSave?: () => void;
@@ -71,7 +72,7 @@ const PageEditorContent = memo(() => {
  * Edit a page
  */
 const PageEditor = memo<PageEditorProps>(
-  ({ pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete }) => {
+  ({ pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete, onBack }) => {
     const theme = useTheme();
 
     const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
@@ -93,6 +94,7 @@ const PageEditor = memo<PageEditorProps>(
       <PageAgentProvider pageAgentId={pageAgentId}>
         <PageEditorProvider
           knowledgeBaseId={knowledgeBaseId}
+          onBack={onBack}
           onDelete={onDelete}
           onDocumentIdChange={onDocumentIdChange}
           onSave={onSave}
