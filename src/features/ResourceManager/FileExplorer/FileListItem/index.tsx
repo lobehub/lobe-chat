@@ -438,6 +438,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 id={id}
                 knowledgeBaseId={knowledgeBaseId}
                 onRenameStart={isFolder ? handleRenameStart : undefined}
+                sourceType={sourceType}
                 url={url}
               />
             </div>
@@ -449,7 +450,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
               {displayTime}
             </Flexbox>
             <Flexbox className={styles.item} width={FILE_SIZE_WIDTH}>
-              {isFolder ? '-' : formatSize(size)}
+              {isFolder || isPage ? '-' : formatSize(size)}
             </Flexbox>
           </>
         )}
