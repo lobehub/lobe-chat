@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "Verbinden...",
+      "gitignore": {
+        "apply": "Regels toepassen",
+        "cancel": "Regels negeren",
+        "content": ".gitignore-bestand gedetecteerd (totaal {{count}} bestanden). Wil je de negeerregels toepassen?",
+        "filtered": "{{ignored}} bestanden gefilterd (van in totaal {{total}} bestanden)",
+        "title": ".gitignore gedetecteerd"
+      },
       "newFolder": "Nieuwe map",
       "newPage": "Nieuw document",
       "uploadFile": "Bestand uploaden",

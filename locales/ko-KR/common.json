@@ -147,6 +147,16 @@
     "noResults": "관련 결과를 찾을 수 없습니다",
     "openSettings": "설정 열기",
     "painting": "AI 그림",
+    "search": {
+      "agent": "도우미",
+      "agents": "도우미",
+      "file": "파일",
+      "files": "파일",
+      "loading": "검색 중...",
+      "searching": "검색 결과",
+      "topic": "주제",
+      "topics": "주제"
+    },
     "searchPlaceholder": "명령어 입력 또는 검색...",
     "settings": "설정",
     "starOnGitHub": "GitHub에서 Star 주기",

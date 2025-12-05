@@ -147,6 +147,16 @@
     "noResults": "Aucun résultat trouvé",
     "openSettings": "Ouvrir les paramètres",
     "painting": "Peinture IA",
+    "search": {
+      "agent": "Assistant",
+      "agents": "Assistants",
+      "file": "Fichier",
+      "files": "Fichiers",
+      "loading": "Recherche en cours...",
+      "searching": "Résultats de recherche",
+      "topic": "Sujet",
+      "topics": "Sujets"
+    },
     "searchPlaceholder": "Entrez une commande ou recherchez...",
     "settings": "Paramètres",
     "starOnGitHub": "Donnez-nous une étoile sur GitHub",

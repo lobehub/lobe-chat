@@ -147,6 +147,16 @@
     "noResults": "Sonuç bulunamadı",
     "openSettings": "Ayarları Aç",
     "painting": "Yapay Zeka Resmi",
+    "search": {
+      "agent": "Asistan",
+      "agents": "Asistanlar",
+      "file": "Dosya",
+      "files": "Dosyalar",
+      "loading": "Aranıyor...",
+      "searching": "Arama Sonuçları",
+      "topic": "Konu",
+      "topics": "Konular"
+    },
     "searchPlaceholder": "Komut girin veya arayın...",
     "settings": "Ayarlar",
     "starOnGitHub": "GitHub'da Bize Yıldız Verin",
@@ -367,8 +377,8 @@
     }
   },
   "tab": {
-    "audio": "Ses",
     "aiImage": "Yapay Zeka Resim",
+    "audio": "Ses",
     "chat": "Sohbet",
     "community": "Topluluk",
     "discover": "Keşfet",

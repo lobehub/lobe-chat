@@ -246,9 +246,9 @@
     "senderAssistant": "Agente",
     "senderUser": "Tú"
   },
-  "newAgent": "Asistente",
-  "newGroupChat": "Grupo",
-  "newPage": "Documento",
+  "newAgent": "Crear asistente",
+  "newGroupChat": "Crear grupo",
+  "newPage": "Crear documento",
   "noAgentsYet": "Este grupo aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
   "noAvailableAgents": "No hay miembros disponibles para invitar",
   "noMatchingAgents": "No se encontraron miembros coincidentes",

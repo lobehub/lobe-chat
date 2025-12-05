@@ -147,6 +147,16 @@
     "noResults": "該当する結果が見つかりませんでした",
     "openSettings": "設定を開く",
     "painting": "AI ペインティング",
+    "search": {
+      "agent": "アシスタント",
+      "agents": "アシスタント",
+      "file": "ファイル",
+      "files": "ファイル",
+      "loading": "検索中...",
+      "searching": "検索結果",
+      "topic": "トピック",
+      "topics": "トピック"
+    },
     "searchPlaceholder": "コマンドを入力または検索...",
     "settings": "設定",
     "starOnGitHub": "GitHub でスターを付ける",

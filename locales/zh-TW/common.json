@@ -147,6 +147,16 @@
     "noResults": "未找到相關結果",
     "openSettings": "開啟設定",
     "painting": "AI 繪圖",
+    "search": {
+      "agent": "助理",
+      "agents": "助理",
+      "file": "檔案",
+      "files": "檔案",
+      "loading": "搜尋中...",
+      "searching": "搜尋結果",
+      "topic": "主題",
+      "topics": "主題"
+    },
     "searchPlaceholder": "輸入指令或搜尋...",
     "settings": "設定",
     "starOnGitHub": "在 GitHub 上給我們星標",

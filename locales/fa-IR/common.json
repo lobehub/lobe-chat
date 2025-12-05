@@ -147,6 +147,16 @@
     "noResults": "نتیجه‌ای یافت نشد",
     "openSettings": "باز کردن تنظیمات",
     "painting": "نقاشی با هوش مصنوعی",
+    "search": {
+      "agent": "دستیار",
+      "agents": "دستیارها",
+      "file": "فایل",
+      "files": "فایل‌ها",
+      "loading": "در حال جستجو...",
+      "searching": "نتایج جستجو",
+      "topic": "موضوع",
+      "topics": "موضوعات"
+    },
     "searchPlaceholder": "دستور وارد کنید یا جستجو کنید...",
     "settings": "تنظیمات",
     "starOnGitHub": "به ما در GitHub ستاره بدهید",

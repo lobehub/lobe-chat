@@ -246,9 +246,9 @@
     "senderAssistant": "Agent",
     "senderUser": "Jij"
   },
-  "newAgent": "Assistent",
-  "newGroupChat": "Groep",
-  "newPage": "Document",
+  "newAgent": "Assistent aanmaken",
+  "newGroupChat": "Groepschat aanmaken",
+  "newPage": "Document aanmaken",
   "noAgentsYet": "Deze groep heeft nog geen leden. Klik op de + knop om een assistent uit te nodigen.",
   "noAvailableAgents": "Geen beschikbare leden om uit te nodigen",
   "noMatchingAgents": "Geen overeenkomende leden gevonden",

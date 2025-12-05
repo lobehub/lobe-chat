@@ -147,6 +147,16 @@
     "noResults": "Keine Ergebnisse gefunden",
     "openSettings": "Einstellungen öffnen",
     "painting": "KI-Malerei",
+    "search": {
+      "agent": "Assistent",
+      "agents": "Assistenten",
+      "file": "Datei",
+      "files": "Dateien",
+      "loading": "Wird gesucht...",
+      "searching": "Suchergebnisse",
+      "topic": "Thema",
+      "topics": "Themen"
+    },
     "searchPlaceholder": "Befehl eingeben oder suchen...",
     "settings": "Einstellungen",
     "starOnGitHub": "Gib uns einen Stern auf GitHub",

@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "Połącz...",
+      "gitignore": {
+        "apply": "Zastosuj reguły",
+        "cancel": "Ignoruj reguły",
+        "content": "Wykryto plik .gitignore (łącznie {{count}} plików). Czy chcesz zastosować reguły ignorowania?",
+        "filtered": "Odﬁltrowano {{ignored}} z {{total}} plików",
+        "title": "Wykryto plik .gitignore"
+      },
       "newFolder": "Nowy folder",
       "newPage": "Nowy dokument",
       "uploadFile": "Prześlij plik",

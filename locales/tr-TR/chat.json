@@ -246,9 +246,9 @@
     "senderAssistant": "Agent",
     "senderUser": "Sen"
   },
-  "newAgent": "Asistan",
-  "newGroupChat": "Grup",
-  "newPage": "Belge",
+  "newAgent": "Asistan Oluştur",
+  "newGroupChat": "Grup Sohbeti Oluştur",
+  "newPage": "Belge Oluştur",
   "noAgentsYet": "Bu grupta henüz üye yok. Asistan davet etmek için + düğmesine tıklayın.",
   "noAvailableAgents": "Davet edilebilecek üye yok",
   "noMatchingAgents": "Eşleşen üye bulunamadı",

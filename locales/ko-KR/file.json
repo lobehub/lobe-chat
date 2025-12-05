@@ -74,6 +74,13 @@
   "header": {
     "actions": {
       "connect": "연결 중...",
+      "gitignore": {
+        "apply": "규칙 적용",
+        "cancel": "규칙 무시",
+        "content": ".gitignore 파일이 감지되었습니다 (총 {{count}}개 파일). 무시 규칙을 적용하시겠습니까?",
+        "filtered": "{{total}}개 파일 중 {{ignored}}개가 필터링되었습니다",
+        "title": ".gitignore 파일 감지됨"
+      },
       "newFolder": "새 폴더 만들기",
       "newPage": "새 문서 만들기",
       "uploadFile": "파일 업로드",
