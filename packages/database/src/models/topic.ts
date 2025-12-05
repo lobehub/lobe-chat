@@ -518,45 +518,6 @@ export class TopicModel {
       .returning();
   };
 
-  /**
-   * Runtime migration: backfill agentId for all legacy topics under a session or inbox
-   * Used for progressive migration so future queries don't need agentsToSessions lookup
-   *
-   */
-  migrateAgentId = async (
-    params: { agentId: string; sessionId: string } | { agentId: string; isInbox: true },
-  ) => {
-    if ('isInbox' in params && params.isInbox) {
-      // Migrate all inbox legacy topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
-      // Use updatedAt: topics.updatedAt to preserve original value and bypass $onUpdate
-      return this.db
-        .update(topics)
-        .set({ agentId: params.agentId, updatedAt: topics.updatedAt })
-        .where(
-          and(
-            eq(topics.userId, this.userId),
-            isNull(topics.sessionId),
-            isNull(topics.groupId),
-            isNull(topics.agentId),
-          ),
-        );
-    }
-
-    // Migrate all topics with the given sessionId that don't have agentId
-    // Use updatedAt: topics.updatedAt to preserve original value and bypass $onUpdate
-    const { sessionId, agentId } = params as { agentId: string; sessionId: string };
-    return this.db
-      .update(topics)
-      .set({ agentId, updatedAt: topics.updatedAt })
-      .where(
-        and(
-          eq(topics.userId, this.userId),
-          eq(topics.sessionId, sessionId),
-          isNull(topics.agentId),
-        ),
-      );
-  };
-
   // **************** Helper *************** //
 
   private genId = () => idGenerator('topics');

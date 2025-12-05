@@ -3,6 +3,7 @@ import { after } from 'next/server';
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
+import { AgentMigrationRepo } from '@/database/repositories/agentMigration';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { BatchTaskResult } from '@/types/service';
@@ -14,7 +15,10 @@ const topicProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
-    ctx: { topicModel: new TopicModel(ctx.serverDB, ctx.userId) },
+    ctx: {
+      agentMigrationRepo: new AgentMigrationRepo(ctx.serverDB, ctx.userId),
+      topicModel: new TopicModel(ctx.serverDB, ctx.userId),
+    },
   });
 });
 
@@ -148,7 +152,7 @@ export const topicRouter = router({
 
       const result = await ctx.topicModel.query({ ...rest, agentId: effectiveAgentId, isInbox });
 
-      // Runtime migration: backfill agentId for ALL legacy topics under this agent
+      // Runtime migration: backfill agentId for ALL legacy topics and messages under this agent
       const runMigration = async () => {
         if (!effectiveAgentId) return;
 
@@ -167,9 +171,9 @@ export const topicRouter = router({
 
         if (migrationParams) {
           try {
-            await ctx.topicModel.migrateAgentId(migrationParams);
+            await ctx.agentMigrationRepo.migrateAgentId(migrationParams);
           } catch (error) {
-            console.error('[Topic] Failed to migrate agentId:', error);
+            console.error('[AgentMigration] Failed to migrate agentId:', error);
           }
         }
       };
