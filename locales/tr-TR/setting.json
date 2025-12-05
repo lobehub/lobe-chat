@@ -287,8 +287,8 @@
       "title": "Ad"
     },
     "prompt": {
-      "placeholder": "Prompt girin",
-      "title": "Rol Ayarı"
+      "placeholder": "Asistan ayarlarını girin, komut menüsünü açmak için / tuşuna basın",
+      "title": "Asistan Ayarları"
     },
     "submit": "Asistan bilgilerini güncelle",
     "tag": {

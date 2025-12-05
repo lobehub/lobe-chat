@@ -287,8 +287,8 @@
       "title": "Nome"
     },
     "prompt": {
-      "placeholder": "Digite a palavra de prompt do papel",
-      "title": "Configuração do papel"
+      "placeholder": "Insira a configuração do assistente, pressione / para abrir o menu de comandos",
+      "title": "Configuração do Assistente"
     },
     "submit": "Atualizar informações do assistente",
     "tag": {

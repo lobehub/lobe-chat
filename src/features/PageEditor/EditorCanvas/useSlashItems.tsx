@@ -10,7 +10,6 @@ import {
   INSERT_UNORDERED_LIST_COMMAND,
   SlashOptions,
 } from '@lobehub/editor';
-import { useEditorState } from '@lobehub/editor/react';
 import { Text } from '@lobehub/ui';
 import {
   Heading1Icon,
@@ -29,11 +28,12 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { openFileSelector } from '@/features/PageEditor/EditorCanvas/actions';
+import { usePageEditorStore } from '@/features/PageEditor/store';
 import { useFileStore } from '@/store/file';
 
-export const useSlashItems = (editor: IEditor): SlashOptions['items'] => {
+export const useSlashItems = (editor: IEditor | undefined): SlashOptions['items'] => {
   const { t } = useTranslation('editor');
-  const editorState = useEditorState(editor);
+  const editorState = usePageEditorStore((s) => s.editorState);
   const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
 
   const handleImageUpload = async (file: File) => {

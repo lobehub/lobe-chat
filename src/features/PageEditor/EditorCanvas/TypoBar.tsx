@@ -1,7 +1,6 @@
 'use client';
 
-import { HotkeyEnum, type IEditor, INSERT_HEADING_COMMAND, getHotkeyById } from '@lobehub/editor';
-import { useEditorState } from '@lobehub/editor/react';
+import { HotkeyEnum, INSERT_HEADING_COMMAND, getHotkeyById } from '@lobehub/editor';
 import {
   ChatInputActions,
   type ChatInputActionsProps,
@@ -32,20 +31,18 @@ import {
 import { type CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useOptionalPageEditorContext } from '../Context';
+import { usePageEditorStore } from '../store';
 
 interface ToolbarProps {
   className?: string;
-  editor?: IEditor;
   floating?: boolean;
   style?: CSSProperties;
 }
 
-const TypoBar = memo<ToolbarProps>(({ floating, editor: editorProp, style, className }) => {
+const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
   const { t } = useTranslation('editor');
-  const context = useOptionalPageEditorContext();
-  const editor = editorProp || context?.editor;
-  const editorState = useEditorState(editor);
+  const editor = usePageEditorStore((s) => s.editor);
+  const editorState = usePageEditorStore((s) => s.editorState);
   const theme = useTheme();
 
   const items: ChatInputActionsProps['items'] = useMemo(() => {

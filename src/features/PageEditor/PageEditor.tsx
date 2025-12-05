@@ -13,10 +13,11 @@ import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 
 import Body from './Body';
-import { PageEditorProvider, usePageEditorContext } from './Context';
 import Copilot from './Copilot';
 import Header from './Header';
 import PageAgentProvider from './PageAgentProvider';
+import { PageEditorProvider } from './PageEditorProvider';
+import { usePageEditorStore } from './store';
 
 interface PageEditorProps {
   knowledgeBaseId?: string;
@@ -27,10 +28,11 @@ interface PageEditorProps {
   pageId?: string;
 }
 
-const PageEditorContent = memo(() => {
+const PageEditorCanvas = memo(() => {
   const { t } = useTranslation('file');
   const { message } = App.useApp();
-  const { performSave, editor } = usePageEditorContext();
+  const performSave = usePageEditorStore((s) => s.performSave);
+  const editor = usePageEditorStore((s) => s.editor);
 
   // Handle Cmd+S / Ctrl+S keyboard shortcut
   useEffect(() => {
@@ -100,7 +102,7 @@ const PageEditor = memo<PageEditorProps>(
           onSave={onSave}
           pageId={pageId}
         >
-          <PageEditorContent />
+          <PageEditorCanvas />
         </PageEditorProvider>
       </PageAgentProvider>
     );

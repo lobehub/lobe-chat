@@ -51,7 +51,10 @@
     },
     "saving": "Запазване...",
     "slashCommands": {
-      "image": "Изображение"
+      "bulletedList": "Маркиран списък",
+      "image": "Изображение",
+      "orderedList": "Номериран списък",
+      "todoList": "Списък със задачи"
     },
     "titlePlaceholder": "Без заглавие",
     "wordCount": "{{wordCount}} думи"

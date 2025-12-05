@@ -287,8 +287,8 @@
       "title": "Name"
     },
     "prompt": {
-      "placeholder": "Bitte geben Sie das Rollen-Prompt-Wort ein",
-      "title": "Rollen-Einstellung"
+      "placeholder": "Assistenteneinstellungen eingeben, / für Befehlsmenü drücken",
+      "title": "Assistenteneinstellungen"
     },
     "submit": "Assistenteninformationen aktualisieren",
     "tag": {

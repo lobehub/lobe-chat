@@ -290,8 +290,8 @@ export default {
       title: '名称',
     },
     prompt: {
-      placeholder: '请输入角色 Prompt 提示词',
-      title: '角色设定',
+      placeholder: '输入助手设定，按 / 打开命令菜单',
+      title: '助手设定',
     },
     submit: '更新助手信息',
     tag: {

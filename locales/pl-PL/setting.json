@@ -287,8 +287,8 @@
       "title": "Nazwa"
     },
     "prompt": {
-      "placeholder": "Proszę wprowadzić słowo kluczowe dla roli Prompt",
-      "title": "Ustawienia roli"
+      "placeholder": "Wprowadź ustawienia asystenta, naciśnij /, aby otworzyć menu poleceń",
+      "title": "Ustawienia asystenta"
     },
     "submit": "Zaktualizuj informacje o asystencie",
     "tag": {
