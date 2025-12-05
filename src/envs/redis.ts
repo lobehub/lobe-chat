@@ -74,8 +74,6 @@ export const getUpstashRedisConfig = (): UpstashRedisConfig | null => {
 export const getRedisConfig = (): RedisConfig => {
   const prefix = redisEnv.REDIS_PREFIX;
 
-  console.log('prefix', prefix);
-
   if (redisEnv.REDIS_URL) {
     return {
       database: redisEnv.REDIS_DATABASE,

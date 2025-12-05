@@ -21,7 +21,6 @@ export class UpstashRedisProvider implements BaseRedisProvider {
   provider: 'upstash' = 'upstash';
   private client: Redis;
   private readonly prefix: string;
-  private loggedPrefix = false;
 
   constructor(options: UpstashConfig | RedisConfigNodejs) {
     const { prefix, ...clientOptions } = options as UpstashConfig & RedisConfigNodejs;
@@ -34,10 +33,6 @@ export class UpstashRedisProvider implements BaseRedisProvider {
    * Avoids re-running normalization when callers have normalized keys (e.g. mset).
    */
   private addPrefixToKey(normalizedKey: string) {
-    if (!this.loggedPrefix) {
-      this.loggedPrefix = true;
-      console.log('[redis] upstash prefix configured:', this.prefix || '(empty)');
-    }
     return `${this.prefix}${normalizedKey}`;
   }
 
