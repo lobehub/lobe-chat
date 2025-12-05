@@ -1,3 +1,10 @@
+export enum UserMemoryLayer {
+  Context = 'context',
+  Experience = 'experience',
+  Identity = 'identity',
+  Preference = 'preference',
+}
+
 export enum RelationshipEnum {
   Aunt = 'aunt',
   Brother = 'brother',
