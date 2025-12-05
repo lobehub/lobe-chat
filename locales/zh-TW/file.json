@@ -51,7 +51,10 @@
     },
     "saving": "儲存中...",
     "slashCommands": {
-      "image": "圖片"
+      "bulletedList": "項目符號清單",
+      "image": "圖片",
+      "orderedList": "編號清單",
+      "todoList": "待辦清單"
     },
     "titlePlaceholder": "無標題",
     "wordCount": "{{wordCount}} 字"

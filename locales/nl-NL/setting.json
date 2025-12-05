@@ -275,8 +275,8 @@
       "title": "Naam"
     },
     "prompt": {
-      "placeholder": "Voer rol Prompt-woord in",
-      "title": "Rolinstelling"
+      "placeholder": "Voer assistentinstellingen in, druk op / om het opdrachtmenu te openen",
+      "title": "Assistentinstellingen"
     },
     "submit": "Assistentinformatie bijwerken",
     "tag": {

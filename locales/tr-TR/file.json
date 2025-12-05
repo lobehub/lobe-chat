@@ -51,7 +51,10 @@
     },
     "saving": "Kaydediliyor...",
     "slashCommands": {
-      "image": "Görsel"
+      "bulletedList": "Madde İşaretli Liste",
+      "image": "Görsel",
+      "orderedList": "Sıralı Liste",
+      "todoList": "Yapılacaklar Listesi"
     },
     "titlePlaceholder": "Başlıksız",
     "wordCount": "{{wordCount}} kelime"

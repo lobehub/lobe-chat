@@ -51,7 +51,10 @@
     },
     "saving": "Salvataggio in corso...",
     "slashCommands": {
-      "image": "Immagine"
+      "bulletedList": "Elenco puntato",
+      "image": "Immagine",
+      "orderedList": "Elenco numerato",
+      "todoList": "Elenco delle cose da fare"
     },
     "titlePlaceholder": "Senza titolo",
     "wordCount": "{{wordCount}} parole"

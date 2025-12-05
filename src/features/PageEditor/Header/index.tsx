@@ -18,7 +18,7 @@ import WideScreenButton from '@/app/[variants]/(main)/chat/features/WideScreenBu
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 
-import { usePageEditorContext } from '../Context';
+import { usePageEditorStore } from '../store';
 import Breadcrumb from './Breadcrumb';
 import { useMenu } from './useMenu';
 
@@ -28,17 +28,14 @@ const Header = memo(() => {
   const { t } = useTranslation('file');
   const theme = useTheme();
 
-  const {
-    chatPanelExpanded,
-    currentEmoji,
-    currentTitle,
-    knowledgeBaseId,
-    lastUpdatedTime,
-    parentId,
-    onBack,
-    saveStatus,
-    toggleChatPanel,
-  } = usePageEditorContext();
+  const chatPanelExpanded = usePageEditorStore((s) => s.chatPanelExpanded);
+  const currentEmoji = usePageEditorStore((s) => s.currentEmoji);
+  const currentTitle = usePageEditorStore((s) => s.currentTitle);
+  const lastUpdatedTime = usePageEditorStore((s) => s.lastUpdatedTime);
+  const parentId = usePageEditorStore((s) => s.parentId);
+  const onBack = usePageEditorStore((s) => s.onBack);
+  const saveStatus = usePageEditorStore((s) => s.saveStatus);
+  const toggleChatPanel = usePageEditorStore((s) => s.toggleChatPanel);
 
   const { menuItems } = useMenu();
 
@@ -48,13 +45,7 @@ const Header = memo(() => {
         <>
           {onBack && <ActionIcon icon={ArrowLeftIcon} onClick={onBack} />}
           {/* Breadcrumb - show when page has a parent folder */}
-          {parentId && (
-            <Breadcrumb
-              documentTitle={currentTitle || t('documentEditor.titlePlaceholder')}
-              knowledgeBaseId={knowledgeBaseId}
-              parentId={parentId}
-            />
-          )}
+          {parentId && <Breadcrumb />}
           {/* Show icon and title only when there's no parent folder */}
           {!parentId && (
             <>

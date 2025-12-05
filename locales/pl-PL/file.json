@@ -51,7 +51,10 @@
     },
     "saving": "Zapisywanie...",
     "slashCommands": {
-      "image": "Obraz"
+      "bulletedList": "Lista punktowana",
+      "image": "Obraz",
+      "orderedList": "Lista numerowana",
+      "todoList": "Lista zadań"
     },
     "titlePlaceholder": "Bez tytułu",
     "wordCount": "{{wordCount}} słów"

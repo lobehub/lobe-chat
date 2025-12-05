@@ -275,8 +275,8 @@
       "title": "Nome"
     },
     "prompt": {
-      "placeholder": "Inserisci la parola di prompt del ruolo",
-      "title": "Impostazione del ruolo"
+      "placeholder": "Inserisci le impostazioni dell'assistente, premi / per aprire il menu dei comandi",
+      "title": "Impostazioni assistente"
     },
     "submit": "Aggiorna informazioni assistente",
     "tag": {

@@ -1,9 +1,12 @@
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
+
+import { usePageEditorStore } from '../store';
 
 const useStyles = createStyles(({ css, token }) => ({
   breadcrumb: css`
@@ -28,20 +31,19 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface BreadcrumbProps {
-  documentTitle: string;
-  knowledgeBaseId?: string;
-  parentId: string;
-}
-
 interface FolderCrumb {
   id: string;
   name: string;
   slug: string;
 }
 
-const Breadcrumb = memo<BreadcrumbProps>(({ documentTitle, knowledgeBaseId, parentId }) => {
+const Breadcrumb = memo(() => {
+  const { t } = useTranslation('file');
   const { styles, cx } = useStyles();
+
+  const currentTitle = usePageEditorStore((s) => s.currentTitle);
+  const knowledgeBaseId = usePageEditorStore((s) => s.knowledgeBaseId);
+  const parentId = usePageEditorStore((s) => s.parentId);
 
   const knowledgeBaseName = useKnowledgeBaseStore(
     knowledgeBaseSelectors.getKnowledgeBaseNameById(knowledgeBaseId || ''),
@@ -56,9 +58,11 @@ const Breadcrumb = memo<BreadcrumbProps>(({ documentTitle, knowledgeBaseId, pare
   const { data: folderChain = [] } = useFetchFolderBreadcrumb(parentFolder?.slug || null);
 
   // If no parent folder data yet, don't render
-  if (!parentFolder) {
+  if (!parentFolder || !parentId) {
     return null;
   }
+
+  const documentTitle = currentTitle || t('documentEditor.titlePlaceholder');
 
   return (
     <Flexbox align={'center'} className={styles.breadcrumb} flex={1} gap={0} horizontal>
