@@ -7,12 +7,12 @@ import { KlavisServer } from './types';
  * It's only available on the server-side.
  */
 export interface KlavisStoreState {
-  /** 已创建的 Klavis Server 列表 */
-  servers: KlavisServer[];
-  /** 正在加载的服务器 ID 集合 */
-  loadingServerIds: Set<string>;
   /** 正在执行的工具调用 ID 集合 */
   executingToolIds: Set<string>;
+  /** 正在加载的服务器 ID 集合 */
+  loadingServerIds: Set<string>;
+  /** 已创建的 Klavis Server 列表 */
+  servers: KlavisServer[];
 }
 
 /**
