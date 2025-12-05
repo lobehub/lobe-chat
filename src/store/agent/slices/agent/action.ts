@@ -37,7 +37,12 @@ export interface AgentSliceAction {
     signal?: AbortSignal,
   ) => Promise<void>;
   updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
+  updateAgentChatConfigById: (
+    agentId: string,
+    config: Partial<LobeAgentChatConfig>,
+  ) => Promise<void>;
   updateAgentConfig: (config: PartialDeep<LobeAgentConfig>) => Promise<void>;
+  updateAgentConfigById: (agentId: string, config: PartialDeep<LobeAgentConfig>) => Promise<void>;
   updateAgentMeta: (meta: Partial<MetaData>) => Promise<void>;
   useFetchAgentConfig: (isLogin: boolean | undefined, id: string) => SWRResponse<LobeAgentConfig>;
 }
@@ -56,6 +61,12 @@ export const createAgentSlice: StateCreator<
     await get().updateAgentConfig({ chatConfig: config });
   },
 
+  updateAgentChatConfigById: async (agentId, config) => {
+    if (!agentId) return;
+
+    await get().updateAgentConfigById(agentId, { chatConfig: config });
+  },
+
   updateAgentConfig: async (config) => {
     const { activeAgentId } = get();
 
@@ -64,6 +75,14 @@ export const createAgentSlice: StateCreator<
     const controller = get().internal_createAbortController('updateAgentConfigSignal');
 
     await get().optimisticUpdateAgentConfig(activeAgentId, config, controller.signal);
+  },
+
+  updateAgentConfigById: async (agentId, config) => {
+    if (!agentId) return;
+
+    const controller = get().internal_createAbortController('updateAgentConfigSignal');
+
+    await get().optimisticUpdateAgentConfig(agentId, config, controller.signal);
   },
 
   updateAgentMeta: async (meta) => {

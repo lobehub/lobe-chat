@@ -7,15 +7,16 @@ import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 import Action from '../components/Action';
 import Controls from './Controls';
 
 const History = memo(() => {
   const agentId = useAgentId();
-  const [isLoading, chatConfig, updateAgentChatConfig] = useAgentStore((s) => [
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const [isLoading, chatConfig] = useAgentStore((s) => [
     agentByIdSelectors.isAgentConfigLoadingById(agentId)(s),
     chatConfigByIdSelectors.getChatConfigById(agentId)(s),
-    s.updateAgentChatConfig,
   ]);
   const [updating, setUpdating] = useState(false);
   const { t } = useTranslation('setting');

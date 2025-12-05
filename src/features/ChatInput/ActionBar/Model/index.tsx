@@ -1,7 +1,7 @@
 import { ModelIcon } from '@lobehub/icons';
 import { createStyles } from 'antd-style';
 import { Settings2Icon } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -58,18 +58,26 @@ const ModelSwitch = memo(() => {
   const { styles, cx } = useStyles();
 
   const agentId = useAgentId();
-  const [model, provider] = useAgentStore((s) => [
+  const [model, provider, updateAgentConfigById] = useAgentStore((s) => [
     agentByIdSelectors.getAgentModelById(agentId)(s),
     agentByIdSelectors.getAgentModelProviderById(agentId)(s),
+    s.updateAgentConfigById,
   ]);
 
   const isModelHasExtendParams = useAiInfraStore(
     aiModelSelectors.isModelHasExtendParams(model, provider),
   );
 
+  const handleModelChange = useCallback(
+    async (params: { model: string; provider: string }) => {
+      await updateAgentConfigById(agentId, params);
+    },
+    [agentId, updateAgentConfigById],
+  );
+
   return (
     <Flexbox align={'center'} className={isModelHasExtendParams ? styles.container : ''} horizontal>
-      <ModelSwitchPanel>
+      <ModelSwitchPanel model={model} onModelChange={handleModelChange} provider={provider}>
         <Center
           className={cx(styles.model, isModelHasExtendParams && styles.modelWithControl)}
           height={36}

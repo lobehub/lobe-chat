@@ -8,6 +8,7 @@ import { useAgentStore } from '@/store/agent';
 import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 import FunctionCallingModelSelect from './FunctionCallingModelSelect';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -36,10 +37,10 @@ const FCSearchModel = memo(() => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const agentId = useAgentId();
-  const [searchFCModel, updateAgentChatConfig] = useAgentStore((s) => [
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const searchFCModel = useAgentStore((s) =>
     chatConfigByIdSelectors.getSearchFCModelById(agentId)(s),
-    s.updateAgentChatConfig,
-  ]);
+  );
   return (
     <Flexbox distribution={'space-between'} gap={16} horizontal padding={8}>
       <Flexbox align={'center'} gap={4} horizontal>

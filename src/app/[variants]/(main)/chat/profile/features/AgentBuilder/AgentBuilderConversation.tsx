@@ -1,7 +1,10 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import type { ActionKeys } from '@/features/ChatInput';
 import { ChatInput, ChatList } from '@/features/Conversation';
+
+const actions: ActionKeys[] = ['model'];
 
 /**
  * Agent Builder Conversation Component
@@ -13,7 +16,7 @@ const AgentBuilderConversation = memo(() => {
       <Flexbox flex={1} height={'100%'}>
         <ChatList />
       </Flexbox>
-      <ChatInput />
+      <ChatInput leftActions={actions} />
     </Flexbox>
   );
 });
