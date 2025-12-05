@@ -88,7 +88,10 @@ export interface SendMessageServerResponse {
   isCreateNewTopic: boolean;
   messages: UIChatMessage[];
   topicId: string;
-  topics?: ChatTopic[];
+  topics?: {
+    items: ChatTopic[];
+    total: number;
+  };
   userMessageId: string;
 }
 

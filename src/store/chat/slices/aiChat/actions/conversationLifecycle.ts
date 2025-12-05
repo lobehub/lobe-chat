@@ -19,6 +19,8 @@ import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { getSessionStoreState } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserMemoryStore } from '@/store/userMemory';
@@ -258,7 +260,12 @@ export const conversationLifecycle: StateCreator<
 
       // refresh the total data
       if (data?.topics) {
-        get().internal_dispatchTopic({ type: 'updateTopics', value: data.topics });
+        const pageSize = systemStatusSelectors.topicPageSize(useGlobalStore.getState());
+        get().internal_updateTopics(operationContext.agentId, {
+          items: data.topics.items,
+          pageSize,
+          total: data.topics.total,
+        });
         finalTopicId = data.topicId;
 
         // Record the created topicId in metadata (not context)
