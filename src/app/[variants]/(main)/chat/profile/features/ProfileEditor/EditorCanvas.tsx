@@ -103,6 +103,7 @@ const EditorCanvas = memo(() => {
       <Editor
         content={initialLoad}
         editor={editor}
+        lineEmptyPlaceholder={t('settingAgent.prompt.placeholder')}
         mentionOption={mentionOptions}
         onInit={() => setEeitorInit(true)}
         onTextChange={handleChange}

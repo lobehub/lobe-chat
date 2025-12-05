@@ -45,47 +45,40 @@ const ProfileEditor = memo(() => {
   if (isLoadingConfig) return <Loading />;
 
   return (
-    <Flexbox
-      height={'100%'}
-      horizontal
-      style={{ maxHeight: 'calc(100vh - 44px)', overflowY: 'scroll' }}
-    >
-      {/* Left Panel: Form UI */}
-      <Flexbox flex={1} style={{ overflowY: 'auto' }}>
-        {/* Header: Avatar + Name + Description */}
-        <AgentHeader />
-        {/* Config Bar: Model Selector + Settings Button */}
-        <Flexbox
-          align={'center'}
-          gap={8}
-          horizontal
-          justify={'flex-start'}
-          style={{ marginBottom: 12 }}
-        >
-          <Flexbox align={'center'} gap={8} horizontal>
-            <ModelSelect onChange={handleModelChange} value={modelValue} />
-            <Button
-              icon={Settings2Icon}
-              onClick={() => setShowSettingsDrawer(true)}
-              size={'small'}
-              style={{ color: theme.colorTextSecondary }}
-              type={'text'}
-            >
-              {t('advancedSettings')}
-            </Button>
-          </Flexbox>
+    <Flexbox flex={1} style={{ overflowY: 'auto' }}>
+      {/* Header: Avatar + Name + Description */}
+      <AgentHeader />
+      {/* Config Bar: Model Selector + Settings Button */}
+      <Flexbox
+        align={'center'}
+        gap={8}
+        horizontal
+        justify={'flex-start'}
+        style={{ marginBottom: 12 }}
+      >
+        <Flexbox align={'center'} gap={8} horizontal>
+          <ModelSelect onChange={handleModelChange} value={modelValue} />
+          <Button
+            icon={Settings2Icon}
+            onClick={() => setShowSettingsDrawer(true)}
+            size={'small'}
+            style={{ color: theme.colorTextSecondary }}
+            type={'text'}
+          >
+            {t('advancedSettings')}
+          </Button>
         </Flexbox>
-        <AgentTool />
-        <Divider />
-        {/* Main Content: Prompt Editor */}
-        <EditorCanvas />
-        {/* Legacy AgentSettings Drawer (opened via Settings button) */}
-        <AgentSettings
-          agentId={agentId}
-          onClose={() => setShowSettingsDrawer(false)}
-          open={showSettingsDrawer}
-        />
       </Flexbox>
+      <AgentTool />
+      <Divider />
+      {/* Main Content: Prompt Editor */}
+      <EditorCanvas />
+      {/* Legacy AgentSettings Drawer (opened via Settings button) */}
+      <AgentSettings
+        agentId={agentId}
+        onClose={() => setShowSettingsDrawer(false)}
+        open={showSettingsDrawer}
+      />
     </Flexbox>
   );
 });

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { BrandTextLoading } from '@/components/Loading';
+import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 
@@ -27,9 +28,8 @@ interface PageEditorProps {
 
 const PageEditorContent = memo(() => {
   const { t } = useTranslation('file');
-  const theme = useTheme();
   const { message } = App.useApp();
-  const { performSave } = usePageEditorContext();
+  const { performSave, editor } = usePageEditorContext();
 
   // Handle Cmd+S / Ctrl+S keyboard shortcut
   useEffect(() => {
@@ -49,9 +49,18 @@ const PageEditorContent = memo(() => {
 
   return (
     <Flexbox height={'100%'} horizontal>
-      <Flexbox flex={1} height={'100%'} style={{ background: theme.colorBgContainer }}>
+      <Flexbox flex={1} height={'100%'}>
         <Header />
-        <Body />
+        <Flexbox
+          height={'100%'}
+          horizontal
+          style={{ display: 'flex', overflowY: 'auto', position: 'relative' }}
+          width={'100%'}
+        >
+          <WideScreenContainer onClick={() => editor?.focus()} wrapperStyle={{ cursor: 'text' }}>
+            <Body />
+          </WideScreenContainer>
+        </Flexbox>
       </Flexbox>
       <Copilot />
     </Flexbox>
