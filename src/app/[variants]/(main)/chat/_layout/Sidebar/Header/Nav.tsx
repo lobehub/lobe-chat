@@ -11,11 +11,13 @@ import urlJoin from 'url-join';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
+import { useAgentStore } from '@/store/agent';
+import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 const Nav = memo(() => {
   const { t } = useTranslation('chat');
-
+  const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
   const params = useParams();
   const agentId = params.aid;
   const pathname = usePathname();
@@ -23,9 +25,11 @@ const Nav = memo(() => {
   const router = useQueryRoute();
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
 
+  const hideProfile = isInbox || !isAgentEditable;
+
   return (
     <Flexbox gap={1} paddingInline={4}>
-      {isAgentEditable && (
+      {!hideProfile && (
         <NavItem
           active={isProfileActive}
           icon={BotPromptIcon}

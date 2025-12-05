@@ -1,31 +1,32 @@
 import { ActionIcon } from '@lobehub/ui';
-import { SparklesIcon } from 'lucide-react';
+import { BotMessageSquareIcon } from 'lucide-react';
 import { memo } from 'react';
 
 import WideScreenButton from '@/app/[variants]/(main)/chat/features/WideScreenButton';
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 
+import { useProfileContext } from '../ProfileProvider';
 import AgentPublishButton from './AgentPublishButton';
 import AutoSaveHint from './AutoSaveHint';
 
-interface HeaderProps {
-  onToggleAgentBuilder?: () => void;
-}
+const Header = memo(() => {
+  const { chatPanelExpanded, setChatPanelExpanded } = useProfileContext();
 
-const Header = memo<HeaderProps>(({ onToggleAgentBuilder }) => {
   return (
     <NavHeader
       left={<AutoSaveHint />}
       right={
         <>
+          <WideScreenButton />
           <ActionIcon
+            active={chatPanelExpanded}
             aria-label="Agent Builder"
-            icon={SparklesIcon}
-            onClick={onToggleAgentBuilder}
-            size={15.5}
+            icon={BotMessageSquareIcon}
+            onClick={() => setChatPanelExpanded((prev) => !prev)}
+            size={DESKTOP_HEADER_ICON_SIZE}
             title="Agent Builder"
           />
-          <WideScreenButton />
           <AgentPublishButton />
         </>
       }

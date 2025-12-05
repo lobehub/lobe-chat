@@ -22,6 +22,7 @@ const Header = memo(() => {
   const theme = useTheme();
 
   const {
+    chatPanelExpanded,
     currentEmoji,
     currentTitle,
     knowledgeBaseId,
@@ -81,6 +82,7 @@ const Header = memo(() => {
       right={
         <>
           <ActionIcon
+            active={chatPanelExpanded}
             icon={BotMessageSquareIcon}
             onClick={toggleChatPanel}
             size={DESKTOP_HEADER_ICON_SIZE}
