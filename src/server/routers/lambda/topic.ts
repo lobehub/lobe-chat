@@ -174,13 +174,8 @@ export const topicRouter = router({
         }
       };
 
-      // In test environment, execute migration directly (after() is not available)
-      // In production, use Next.js after() for non-blocking execution
-      if (process.env.NODE_ENV === 'test') {
-        void runMigration();
-      } else {
-        after(runMigration);
-      }
+      // Use Next.js after() for non-blocking execution
+      after(runMigration);
 
       return { items: result.items, total: result.total };
     }),
