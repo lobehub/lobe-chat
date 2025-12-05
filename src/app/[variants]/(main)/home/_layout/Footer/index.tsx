@@ -18,6 +18,7 @@ const Footer = memo(() => {
   const { t } = useTranslation('common');
   const { hideGitHub } = useServerConfigStore(featureFlagsSelectors);
   const [isLabsModalOpen, setIsLabsModalOpen] = useState(false);
+  const [shouldLoadChangelog, setShouldLoadChangelog] = useState(false);
   const [isChangelogModalOpen, setIsChangelogModalOpen] = useState(false);
 
   const handleOpenLabsModal = () => {
@@ -29,6 +30,7 @@ const Footer = memo(() => {
   };
 
   const handleOpenChangelogModal = () => {
+    setShouldLoadChangelog(true);
     setIsChangelogModalOpen(true);
   };
 
@@ -115,7 +117,11 @@ const Footer = memo(() => {
         <ThemeButton placement={'top'} size={16} />
       </Flexbox>
       <LabsModal onClose={handleCloseLabsModal} open={isLabsModalOpen} />
-      <ChangelogModal onClose={handleCloseChangelogModal} open={isChangelogModalOpen} />
+      <ChangelogModal
+        onClose={handleCloseChangelogModal}
+        open={isChangelogModalOpen}
+        shouldLoad={shouldLoadChangelog}
+      />
     </>
   );
 });
