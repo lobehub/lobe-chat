@@ -1,57 +1,29 @@
 'use client';
 
-import { FluentEmoji, Markdown } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { Avatar, Markdown, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import React, { memo, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
-import { BRANDING_NAME } from '@/const/index';
-import { useGreeting } from '@/hooks/useGreeting';
+import { DEFAULT_AVATAR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
-import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import AddButton from './AddButton';
 import OpeningQuestions from './OpeningQuestions';
 
-const useStyles = createStyles(({ css, responsive }) => ({
-  container: css`
-    align-items: center;
-    ${responsive.mobile} {
-      align-items: flex-start;
-    }
-  `,
-  desc: css`
-    font-size: 14px;
-    text-align: center;
-    ${responsive.mobile} {
-      text-align: start;
-    }
-  `,
-  title: css`
-    margin-block: 0.2em 0;
-    font-size: 32px;
-    font-weight: bolder;
-    line-height: 1;
-    ${responsive.mobile} {
-      font-size: 24px;
-    }
-  `,
-}));
-
 const InboxWelcome = memo(() => {
   const { t } = useTranslation(['welcome', 'chat']);
-  const { styles } = useStyles();
   const mobile = useIsMobile();
-  const greeting = useGreeting();
+  const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
-  const openingQuestions = useAgentStore(agentSelectors.openingQuestions);
-
+  const openingQuestions = useAgentStore(agentSelectors.openingQuestions, isEqual);
+  const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
 
   const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
@@ -60,51 +32,68 @@ const InboxWelcome = memo(() => {
   });
   const openingMessage = useAgentStore(agentSelectors.openingMessage);
 
-  const showInboxWelcome = useChatStore(chatSelectors.showInboxWelcome);
-
   const message = useMemo(() => {
     if (openingMessage) return openingMessage;
     return agentSystemRoleMsg;
   }, [openingMessage, agentSystemRoleMsg, meta.description]);
 
+  const displayTitle = isInbox ? 'Lobe AI' : meta.title || t('defaultSession', { ns: 'common' });
+
   return (
-    <Center gap={12} height={'100%'} id={'safdsafdas'} padding={16} width={'100%'}>
-      <Flexbox className={styles.container} gap={16} style={{ maxWidth: 800 }} width={'100%'}>
-        <Flexbox align={'center'} gap={8} horizontal>
-          <FluentEmoji emoji={'👋'} size={40} type={'anim'} />
-          <h1 className={styles.title}>{greeting}</h1>
+    <>
+      <Flexbox flex={1} />
+      <Flexbox
+        gap={12}
+        style={{
+          paddingBottom: 'max(10vh, 32px)',
+        }}
+        width={'100%'}
+      >
+        <Avatar
+          avatar={isInbox ? DEFAULT_INBOX_AVATAR : meta.avatar || DEFAULT_AVATAR}
+          background={meta.backgroundColor}
+          shape={'square'}
+          size={78}
+        />
+        <Text fontSize={32} weight={'bold'}>
+          {displayTitle}
+        </Text>
+        <Flexbox width={'min(100%, 640px)'}>
+          <Markdown
+            customRender={(dom, context) => {
+              if (context.text.includes('<plus />')) {
+                return (
+                  <Trans
+                    components={{
+                      br: <br />,
+                      plus: <AddButton />,
+                    }}
+                    i18nKey="guide.defaultMessage"
+                    ns="welcome"
+                    values={{ appName: 'Lobe AI' }}
+                  />
+                );
+              }
+              return dom;
+            }}
+            fontSize={fontSize}
+            variant={'chat'}
+          >
+            {isInbox
+              ? t(
+                  showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate',
+                  {
+                    appName: 'Lobe AI',
+                  },
+                )
+              : message}
+          </Markdown>
         </Flexbox>
-        <Markdown
-          className={styles.desc}
-          customRender={(dom, context) => {
-            if (context.text.includes('<plus />')) {
-              return (
-                <Trans
-                  components={{
-                    br: <br />,
-                    plus: <AddButton />,
-                  }}
-                  i18nKey="guide.defaultMessage"
-                  ns="welcome"
-                  values={{ appName: BRANDING_NAME }}
-                />
-              );
-            }
-            return dom;
-          }}
-          variant={'chat'}
-        >
-          {showInboxWelcome
-            ? t(showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate', {
-                appName: BRANDING_NAME,
-              })
-            : message}
-        </Markdown>
         {openingQuestions.length > 0 && (
           <OpeningQuestions mobile={mobile} questions={openingQuestions} />
         )}
       </Flexbox>
-    </Center>
+    </>
   );
 });
 

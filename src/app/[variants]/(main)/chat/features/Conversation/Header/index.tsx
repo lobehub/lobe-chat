@@ -25,7 +25,6 @@ const Header = memo(() => {
           <ShareButton />
         </Flexbox>
       }
-      style={{ position: 'absolute', top: 0, zIndex: 100 }}
     />
   );
 });
