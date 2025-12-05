@@ -11,6 +11,7 @@ import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selec
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 
 interface SearchEngineIconProps {
   icon?: string;
@@ -35,11 +36,11 @@ const SearchEngineIcon = ({ icon }: SearchEngineIconProps) => {
 const ModelBuiltinSearch = memo(() => {
   const { t } = useTranslation('chat');
   const agentId = useAgentId();
-  const [model, provider, checked, updateAgentChatConfig] = useAgentStore((s) => [
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const [model, provider, checked] = useAgentStore((s) => [
     agentByIdSelectors.getAgentModelById(agentId)(s),
     agentByIdSelectors.getAgentModelProviderById(agentId)(s),
     chatConfigByIdSelectors.getUseModelBuiltinSearchById(agentId)(s),
-    s.updateAgentChatConfig,
   ]);
 
   const [isLoading, setLoading] = useState(false);

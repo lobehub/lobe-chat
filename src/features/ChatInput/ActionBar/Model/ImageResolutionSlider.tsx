@@ -6,16 +6,15 @@ import { useAgentStore } from '@/store/agent';
 import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 
 const IMAGE_RESOLUTIONS = ['1K', '2K', '4K'] as const;
 type ImageResolution = (typeof IMAGE_RESOLUTIONS)[number];
 
 const ImageResolutionSlider = memo(() => {
   const agentId = useAgentId();
-  const [config, updateAgentChatConfig] = useAgentStore((s) => [
-    chatConfigByIdSelectors.getChatConfigById(agentId)(s),
-    s.updateAgentChatConfig,
-  ]);
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const config = useAgentStore((s) => chatConfigByIdSelectors.getChatConfigById(agentId)(s));
 
   const imageResolution = (config.imageResolution as ImageResolution) || '1K';
 

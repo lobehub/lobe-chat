@@ -20,6 +20,7 @@ import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 
 import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 
 interface ControlsProps {
   setUpdating: (updating: boolean) => void;
@@ -145,7 +146,7 @@ const Controls = memo<ControlsProps>(({ setUpdating }) => {
   const { t } = useTranslation('setting');
   const mobile = useServerConfigStore((s) => s.isMobile);
   const agentId = useAgentId();
-  const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
+  const { updateAgentConfig } = useUpdateAgentConfig();
   const { styles } = useStyles();
 
   const config = useAgentStore((s) => agentByIdSelectors.getAgentConfigById(agentId)(s), isEqual);
