@@ -3,7 +3,6 @@
 import { EmojiPicker, Icon, Input, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { Skeleton, message } from 'antd';
-import { useTheme } from 'antd-style';
 import { PaletteIcon } from 'lucide-react';
 import { Suspense, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,13 +19,11 @@ const MAX_AVATAR_SIZE = 1024 * 1024; // 1MB limit for server actions
 
 const AgentHeader = memo(() => {
   const { t } = useTranslation(['setting', 'common']);
-  const theme = useTheme();
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
   // Get current meta from store
   const meta = useStore((s) => s.meta);
   const updateMeta = useStore((s) => s.setAgentMeta);
-  const backgroundColor = meta.backgroundColor || theme.colorFillTertiary;
 
   // File upload
   const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
@@ -102,7 +99,11 @@ const AgentHeader = memo(() => {
       <EmojiPicker
         allowDelete={!!meta.avatar}
         allowUpload
-        background={backgroundColor}
+        background={
+          meta.backgroundColor && meta.backgroundColor !== 'rgba(0,0,0,0)'
+            ? meta.backgroundColor
+            : undefined
+        }
         customTabs={[
           {
             label: (
@@ -125,7 +126,7 @@ const AgentHeader = memo(() => {
                     onChange={handleBackgroundColorChange}
                     shape={'square'}
                     size={38}
-                    value={backgroundColor}
+                    value={meta.backgroundColor}
                   />
                 </Suspense>
               </Flexbox>
