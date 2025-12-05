@@ -15,148 +15,142 @@ export interface KlavisServerType {
   serverName: Klavis.McpServerName;
 }
 
-/**
- * Helper to generate identifier from label
- * Converts "Google Calendar" to "google-calendar"
- */
-const toIdentifier = (label: string): string => label.toLowerCase().replaceAll(' ', '-');
-
 export const KLAVIS_SERVER_TYPES: KlavisServerType[] = [
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/gmail.svg',
-    identifier: toIdentifier('Gmail'),
+    identifier: 'gmail',
     label: 'Gmail',
     serverName: Klavis.McpServerName.Gmail,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googlecalendar.svg',
-    identifier: toIdentifier('Google Calendar'),
+    identifier: 'google-calendar',
     label: 'Google Calendar',
     serverName: Klavis.McpServerName.GoogleCalendar,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/notion.svg',
-    identifier: toIdentifier('Notion'),
+    identifier: 'notion',
     label: 'Notion',
     serverName: Klavis.McpServerName.Notion,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/airtable.svg',
-    identifier: toIdentifier('Airtable'),
+    identifier: 'airtable',
     label: 'Airtable',
     serverName: Klavis.McpServerName.Airtable,
   },
   {
     icon: SiLinear,
-    identifier: toIdentifier('Linear'),
+    identifier: 'linear',
     label: 'Linear',
     serverName: Klavis.McpServerName.Linear,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googlesheets.svg',
-    identifier: toIdentifier('Google Sheets'),
+    identifier: 'google-sheets',
     label: 'Google Sheets',
     serverName: Klavis.McpServerName.GoogleSheets,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googledocs.svg',
-    identifier: toIdentifier('Google Docs'),
+    identifier: 'google-docs',
     label: 'Google Docs',
     serverName: Klavis.McpServerName.GoogleDocs,
   },
   {
     icon: SiGithub,
-    identifier: toIdentifier('GitHub'),
+    identifier: 'github',
     label: 'GitHub',
     serverName: Klavis.McpServerName.Github,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/supabase.svg',
-    identifier: toIdentifier('Supabase'),
+    identifier: 'supabase',
     label: 'Supabase',
     serverName: Klavis.McpServerName.Supabase,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/googledrive.svg',
-    identifier: toIdentifier('Google Drive'),
+    identifier: 'google-drive',
     label: 'Google Drive',
     serverName: Klavis.McpServerName.GoogleDrive,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/slack.svg',
-    identifier: toIdentifier('Slack'),
+    identifier: 'slack',
     label: 'Slack',
     serverName: Klavis.McpServerName.Slack,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/confluence.svg',
-    identifier: toIdentifier('Confluence'),
+    identifier: 'confluence',
     label: 'Confluence',
     serverName: Klavis.McpServerName.Confluence,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/jira.svg',
-    identifier: toIdentifier('Jira'),
+    identifier: 'jira',
     label: 'Jira',
     serverName: Klavis.McpServerName.Jira,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/clickup.svg',
-    identifier: toIdentifier('ClickUp'),
+    identifier: 'clickup',
     label: 'ClickUp',
     serverName: Klavis.McpServerName.Clickup,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/dropbox.svg',
-    identifier: toIdentifier('Dropbox'),
+    identifier: 'dropbox',
     label: 'Dropbox',
     serverName: Klavis.McpServerName.Dropbox,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/figma.svg',
-    identifier: toIdentifier('Figma'),
+    identifier: 'figma',
     label: 'Figma',
     serverName: Klavis.McpServerName.Figma,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/hubspot.svg',
-    identifier: toIdentifier('HubSpot'),
+    identifier: 'hubspot',
     label: 'HubSpot',
     serverName: Klavis.McpServerName.Hubspot,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/onedrive.svg',
-    identifier: toIdentifier('OneDrive'),
+    identifier: 'onedrive',
     label: 'OneDrive',
     serverName: Klavis.McpServerName.Onedrive,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/outlook.svg',
-    identifier: toIdentifier('Outlook Mail'),
+    identifier: 'outlook-mail',
     label: 'Outlook Mail',
     serverName: Klavis.McpServerName.OutlookMail,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/salesforce.svg',
-    identifier: toIdentifier('Salesforce'),
+    identifier: 'salesforce',
     label: 'Salesforce',
     serverName: Klavis.McpServerName.Salesforce,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/whatsapp.svg',
-    identifier: toIdentifier('WhatsApp'),
+    identifier: 'whatsapp',
     label: 'WhatsApp',
     serverName: Klavis.McpServerName.Whatsapp,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/youtube.svg',
-    identifier: toIdentifier('YouTube'),
+    identifier: 'youtube',
     label: 'YouTube',
     serverName: Klavis.McpServerName.Youtube,
   },
   {
     icon: 'https://hub-apac-1.lobeobjects.space/assets/logos/zendesk.svg',
-    identifier: toIdentifier('Zendesk'),
+    identifier: 'zendesk',
     label: 'Zendesk',
     serverName: Klavis.McpServerName.Zendesk,
   },
