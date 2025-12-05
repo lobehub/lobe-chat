@@ -71,6 +71,7 @@ const imageProcedure = authedProcedure
   });
 
 const createImageInputSchema = z.object({
+  enabledSearch: z.boolean().optional(),
   generationTopicId: z.string(),
   imageNum: z.number(),
   model: z.string(),
@@ -92,7 +93,7 @@ export type CreateImageServicePayload = z.infer<typeof createImageInputSchema>;
 export const imageRouter = router({
   createImage: imageProcedure.input(createImageInputSchema).mutation(async ({ input, ctx }) => {
     const { userId, serverDB, asyncTaskModel, fileService } = ctx;
-    const { generationTopicId, provider, model, imageNum, params } = input;
+    const { generationTopicId, provider, model, imageNum, params, enabledSearch } = input;
 
     log('Starting image creation process, input: %O', input);
 
@@ -235,9 +236,14 @@ export const imageRouter = router({
         // 不使用 await，让任务在后台异步执行
         // 这里不应该 await 也不应该 .then.catch，让 runtime 早点释放计算资源
         asyncCaller.image.createImage({
+          enabledSearch,
+
           generationId: generation.id,
+
           model,
+
           params,
+
           provider,
           taskId: asyncTaskId, // 使用原始参数
         });
