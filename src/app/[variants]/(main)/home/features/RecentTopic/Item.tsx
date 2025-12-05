@@ -39,7 +39,6 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent }) => {
           style={{
             filter: 'blur(100px)',
           }}
-          title={agent?.title || undefined}
         />
       </Center>
       <Flexbox flex={1} gap={6} justify={'space-between'} padding={12}>
@@ -54,6 +53,7 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent }) => {
             background={agent?.backgroundColor || undefined}
             shape={'square'}
             size={36}
+            title={agent?.title || undefined}
           />
           <Text ellipsis={{ rows: 2 }} style={{ lineHeight: 1.4 }} weight={500}>
             {title}

@@ -40,6 +40,8 @@ type SavePayload = { editorData: Record<string, any>; systemRole: string };
  */
 const EditorCanvas = memo(() => {
   const { t } = useTranslation('setting');
+  const [editorInit, setEeitorInit] = useState(false);
+  const [contentInit, setContentInit] = useState(false);
   const editor = useEditor();
   const editorData = useStore((s) => s.config.editorData, isEqual);
   const systemRole = useStore((s) => s.config.systemRole);
@@ -64,6 +66,22 @@ const EditorCanvas = memo(() => {
   );
 
   useEffect(() => {
+    if (!editorInit || !editor || contentInit) return;
+    try {
+      if (editorData) {
+        editor.setDocument('json', editorData || PROMPT_TEMPLATE);
+      } else if (systemRole) {
+        editor.setDocument('markdown', systemRole);
+      } else {
+        editor.setDocument('json', PROMPT_TEMPLATE);
+      }
+      setContentInit(true);
+    } catch (error) {
+      console.error('[EditorCanvas] Failed to init editor content:', error);
+    }
+  }, [editorInit, contentInit, editor, editorData, systemRole]);
+
+  useEffect(() => {
     return () => debouncedSave.cancel();
   }, [debouncedSave]);
 
@@ -86,19 +104,7 @@ const EditorCanvas = memo(() => {
         content={initialLoad}
         editor={editor}
         mentionOption={mentionOptions}
-        onInit={(editor) => {
-          try {
-            if (editorData) {
-              editor.setDocument('json', editorData || PROMPT_TEMPLATE);
-            } else if (systemRole) {
-              editor.setDocument('markdown', systemRole);
-            } else {
-              editor.setDocument('json', PROMPT_TEMPLATE);
-            }
-          } catch (error) {
-            console.error('[EditorCanvas] Failed to init editor content:', error);
-          }
-        }}
+        onInit={() => setEeitorInit(true)}
         onTextChange={handleChange}
         placeholder={t('settingAgent.prompt.placeholder')}
         plugins={[
