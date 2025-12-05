@@ -32,6 +32,9 @@ const getFilteredPages = (s: FilesStoreState): LobeDocument[] => {
 
   let result = pages;
 
+  // Filter out documents with sourceType='file'
+  result = result.filter((page: LobeDocument) => page.sourceType !== 'file');
+
   // Filter by library membership
   if (showOnlyPagesNotInLibrary) {
     result = result.filter((page: LobeDocument) => {

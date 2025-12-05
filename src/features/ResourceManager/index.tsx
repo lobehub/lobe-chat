@@ -7,7 +7,6 @@ import { Flexbox } from 'react-layout-kit';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import PageEditor from '@/features/PageEditor';
 
-import PageExplorer from '../PageExplorer';
 import FileEditor from './FileEditor';
 import FileExplorer from './FileExplorer';
 import UploadDock from './UploadDock';
@@ -32,19 +31,23 @@ interface KnowledgeManagerProps {
  */
 const ResourceManager = memo<KnowledgeManagerProps>(
   ({ knowledgeBaseId, category, onOpenFile, documentId }) => {
-    const [mode, currentViewItemId, setMode] = useResourceManagerStore((s) => [
-      s.mode,
-      s.currentViewItemId,
-      s.setMode,
-    ]);
+    const [mode, currentViewItemId, setMode, setCurrentViewItemId] = useResourceManagerStore(
+      (s) => [s.mode, s.currentViewItemId, s.setMode, s.setCurrentViewItemId],
+    );
 
     const MainContent = useMemo(() => {
       switch (mode) {
         case 'page': {
-          return <PageEditor knowledgeBaseId={knowledgeBaseId} pageId={currentViewItemId} />;
-        }
-        case 'pages': {
-          return <PageExplorer knowledgeBaseId={knowledgeBaseId} pageId={currentViewItemId} />;
+          return (
+            <PageEditor
+              knowledgeBaseId={knowledgeBaseId}
+              onBack={() => {
+                setMode('files');
+                setCurrentViewItemId(undefined);
+              }}
+              pageId={currentViewItemId}
+            />
+          );
         }
         case 'file': {
           return (

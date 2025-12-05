@@ -25,6 +25,7 @@ interface PageEditorContextValue {
   handleTitleSubmit: () => Promise<void>;
   knowledgeBaseId: string | undefined;
   lastUpdatedTime: Date | null;
+  onBack?: () => void;
   onEditorInit: () => void;
   pageId: string | undefined;
   parentId: string | null | undefined;
@@ -54,6 +55,7 @@ export const useOptionalPageEditorContext = () => {
 interface PageEditorProviderProps {
   children: ReactNode;
   knowledgeBaseId?: string;
+  onBack?: () => void;
   onDelete?: () => void;
   onDocumentIdChange?: (newId: string) => void;
   onSave?: () => void;
@@ -61,7 +63,7 @@ interface PageEditorProviderProps {
 }
 
 export const PageEditorProvider = memo<PageEditorProviderProps>(
-  ({ children, pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete }) => {
+  ({ children, pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete, onBack }) => {
     const { t } = useTranslation(['file', 'common']);
     const { message, modal } = App.useApp();
 
@@ -145,6 +147,7 @@ export const PageEditorProvider = memo<PageEditorProviderProps>(
       handleTitleSubmit,
       knowledgeBaseId,
       lastUpdatedTime,
+      onBack,
       onEditorInit,
       pageId,
       parentId: currentDocument?.parentId,

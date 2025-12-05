@@ -153,12 +153,16 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         label: t('header.actions.newPage'),
         onClick: handleOpenNoteEditor,
       },
-      {
-        icon: <Icon icon={FolderIcon} />,
-        key: 'create-folder',
-        label: t('header.actions.newFolder'),
-        onClick: handleCreateFolder,
-      },
+      ...(knowledgeBaseId
+        ? [
+            {
+              icon: <Icon icon={FolderIcon} />,
+              key: 'create-folder',
+              label: t('header.actions.newFolder'),
+              onClick: handleCreateFolder,
+            },
+          ]
+        : []),
       {
         type: 'divider',
       },
