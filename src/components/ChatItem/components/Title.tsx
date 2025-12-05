@@ -1,3 +1,4 @@
+import { Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { CSSProperties, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -37,10 +38,14 @@ const Title = memo<TitleProps>(
         align={'center'}
         className={cx(styles.name, className)}
         direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-        gap={4}
+        gap={8}
         style={style}
       >
-        {showTitle ? avatar.title || 'untitled' : undefined}
+        {showTitle && avatar.title && (
+          <Text fontSize={14} weight={500}>
+            {avatar.title}
+          </Text>
+        )}
         {showTitle ? titleAddon : undefined}
         {time && <time>{formatTime(time)}</time>}
       </Flexbox>

@@ -5,7 +5,7 @@ import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { Avatar, BorderSpacing, Title } from '@/components/ChatItem';
+import { BorderSpacing, Title } from '@/components/ChatItem';
 import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
@@ -55,7 +55,6 @@ const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing,
 
   // Get editing and loading state from ConversationStore
   const editing = useConversationStore(messageStateSelectors.isMessageEditing(id));
-  const loading = useConversationStore(messageStateSelectors.isMessageCreating(id));
 
   // Get target name for DM indicator
   const userName = useUserStore(userProfileSelectors.nickName) || 'User';
@@ -127,14 +126,6 @@ const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing,
         direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
         gap={mobile ? 6 : 12}
       >
-        <Avatar
-          alt={title}
-          avatar={{ avatar, title }}
-          loading={loading}
-          placement={placement}
-          size={32}
-          style={{ marginTop: 6 }}
-        />
         <Flexbox
           align={placement === 'left' ? 'flex-start' : 'flex-end'}
           className={styles.messageContainer}
