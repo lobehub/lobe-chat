@@ -226,7 +226,10 @@ const EditorContent = memo<EditorContentProps>(
               },
             ],
           }}
-          style={style}
+          style={{
+            paddingBottom: 64,
+            ...style,
+          }}
           type={'text'}
         />
       </>
