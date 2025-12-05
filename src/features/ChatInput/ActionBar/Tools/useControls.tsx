@@ -12,8 +12,8 @@ import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
 import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useToolStore } from '@/store/tool';
 import {
   builtinToolSelectors,
@@ -22,6 +22,7 @@ import {
 } from '@/store/tool/selectors';
 
 import KlavisServerItem from './KlavisServerItem';
+import { useAgentId } from '../../hooks/useAgentId';
 import ToolItem from './ToolItem';
 
 /**
@@ -52,19 +53,20 @@ export const useControls = ({
   setUpdating: (updating: boolean) => void;
 }) => {
   const { t } = useTranslation('setting');
+  const agentId = useAgentId();
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const [checked, togglePlugin] = useAgentStore((s) => [
-    agentSelectors.currentAgentPlugins(s),
+    agentByIdSelectors.getAgentPluginsById(agentId)(s),
     s.togglePlugin,
   ]);
   const builtinList = useToolStore(builtinToolSelectors.metaList, isEqual);
   const enablePluginCount = useAgentStore(
     (s) =>
-      agentSelectors
-        .currentAgentPlugins(s)
+      agentByIdSelectors
+        .getAgentPluginsById(agentId)(s)
         .filter((i) => !builtinList.some((b) => b.identifier === i)).length,
   );
-  const plugins = useAgentStore((s) => agentSelectors.currentAgentPlugins(s));
+  const plugins = useAgentStore((s) => agentByIdSelectors.getAgentPluginsById(agentId)(s));
 
   // Klavis 相关状态
   const allKlavisServers = useToolStore(klavisStoreSelectors.getServers, isEqual);

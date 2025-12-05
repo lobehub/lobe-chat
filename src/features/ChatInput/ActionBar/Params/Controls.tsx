@@ -16,8 +16,10 @@ import {
   TopP,
 } from '@/features/ModelParamsControl';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
+
+import { useAgentId } from '../../hooks/useAgentId';
 
 interface ControlsProps {
   setUpdating: (updating: boolean) => void;
@@ -142,10 +144,11 @@ const PARAM_CONFIG = {
 const Controls = memo<ControlsProps>(({ setUpdating }) => {
   const { t } = useTranslation('setting');
   const mobile = useServerConfigStore((s) => s.isMobile);
+  const agentId = useAgentId();
   const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
   const { styles } = useStyles();
 
-  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
+  const config = useAgentStore((s) => agentByIdSelectors.getAgentConfigById(agentId)(s), isEqual);
   const [form] = Form.useForm();
 
   const { frequency_penalty, presence_penalty, temperature, top_p } = config.params ?? {};

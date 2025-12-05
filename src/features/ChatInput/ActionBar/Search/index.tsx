@@ -7,16 +7,18 @@ import { useTranslation } from 'react-i18next';
 import { useAgentEnableSearch } from '@/hooks/useAgentEnableSearch';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import Action from '../components/Action';
 import Controls from './Controls';
 
 const Search = memo(() => {
   const { t } = useTranslation('chat');
+  const agentId = useAgentId();
   const [isLoading, mode, updateAgentChatConfig] = useAgentStore((s) => [
-    agentSelectors.isAgentConfigLoading(s),
-    agentChatConfigSelectors.agentSearchMode(s),
+    agentByIdSelectors.isAgentConfigLoadingById(agentId)(s),
+    chatConfigByIdSelectors.getSearchModeById(agentId)(s),
     s.updateAgentChatConfig,
   ]);
   const isAgentEnableSearch = useAgentEnableSearch();

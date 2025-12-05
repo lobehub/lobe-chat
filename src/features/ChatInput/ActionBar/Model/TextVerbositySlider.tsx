@@ -3,11 +3,14 @@ import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { chatConfigByIdSelectors } from '@/store/agent/selectors';
+
+import { useAgentId } from '../../hooks/useAgentId';
 
 const TextVerbositySlider = memo(() => {
+  const agentId = useAgentId();
   const [config, updateAgentChatConfig] = useAgentStore((s) => [
-    agentChatConfigSelectors.currentChatConfig(s),
+    chatConfigByIdSelectors.getChatConfigById(agentId)(s),
     s.updateAgentChatConfig,
   ]);
 

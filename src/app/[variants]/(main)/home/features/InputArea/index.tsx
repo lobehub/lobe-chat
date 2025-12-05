@@ -6,14 +6,7 @@ import { useChatStore } from '@/store/chat';
 
 import StarterList from './StarterList';
 
-const leftActions: ActionKeys[] = [
-  'model',
-  'search',
-  'typo',
-  'fileUpload',
-  'knowledgeBase',
-  'tools',
-];
+const leftActions: ActionKeys[] = ['model', 'search', 'fileUpload'];
 
 const InputArea = memo(() => {
   return (
