@@ -20,7 +20,7 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
   const handleNavigate = (result: SearchResult) => {
     switch (result.type) {
       case 'agent': {
-        router.push(`/chat?agent=${result.id}`);
+        router.push(`/agent/${result.id}?agent=${result.id}`);
         break;
       }
       case 'topic': {
