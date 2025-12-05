@@ -775,11 +775,36 @@
       "groupName": "Wbudowane"
     },
     "disabled": "Aktualny model nie obsługuje wywołań funkcji i nie można użyć wtyczki",
+    "klavis": {
+      "addServer": "Dodaj serwer",
+      "authCompleted": "Uwierzytelnianie zakończone",
+      "authFailed": "Uwierzytelnianie nie powiodło się",
+      "authRequired": "Wymagane uwierzytelnienie",
+      "connected": "Połączono",
+      "error": "Błąd",
+      "groupName": "Narzędzia Klavis",
+      "manage": "Zarządzaj Klavis",
+      "manageTitle": "Zarządzaj integracją Klavis",
+      "noServers": "Brak połączonych serwerów",
+      "notEnabled": "Usługa Klavis nie jest włączona",
+      "oauthRequired": "Proszę zakończyć uwierzytelnianie OAuth w nowym oknie",
+      "pendingAuth": "Oczekujące uwierzytelnienie",
+      "serverCreated": "Serwer został utworzony",
+      "serverCreatedFailed": "Nie udało się utworzyć serwera",
+      "serverRemoved": "Serwer został usunięty",
+      "servers": "serwery",
+      "tools": "narzędzia",
+      "verifyAuth": "Ukończyłem uwierzytelnianie"
+    },
     "plugins": {
       "enabled": "Włączone {{num}}",
       "groupName": "Wtyczki",
       "noEnabled": "Brak włączonych wtyczek",
       "store": "Sklep z wtyczkami"
+    },
+    "tabs": {
+      "all": "Wszystko",
+      "installed": "Włączone"
     },
     "title": "Narzędzia rozszerzeń"
   }

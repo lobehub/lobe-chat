@@ -6,6 +6,7 @@ import { createDevtools } from '../middleware/createDevtools';
 import { ToolStoreState, initialState } from './initialState';
 import { BuiltinToolAction, createBuiltinToolSlice } from './slices/builtin';
 import { CustomPluginAction, createCustomPluginSlice } from './slices/customPlugin';
+import { KlavisStoreAction, createKlavisStoreSlice } from './slices/klavisStore';
 import { PluginMCPStoreAction, createMCPPluginStoreSlice } from './slices/mcpStore';
 import { PluginAction, createPluginSlice } from './slices/plugin';
 import { PluginStoreAction, createPluginStoreSlice } from './slices/oldStore';
@@ -17,7 +18,8 @@ export type ToolStore = ToolStoreState &
   PluginAction &
   PluginStoreAction &
   BuiltinToolAction &
-  PluginMCPStoreAction;
+  PluginMCPStoreAction &
+  KlavisStoreAction;
 
 const createStore: StateCreator<ToolStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
@@ -26,6 +28,7 @@ const createStore: StateCreator<ToolStore, [['zustand/devtools', never]]> = (...
   ...createPluginStoreSlice(...parameters),
   ...createBuiltinToolSlice(...parameters),
   ...createMCPPluginStoreSlice(...parameters),
+  ...createKlavisStoreSlice(...parameters),
 });
 
 //  ===============  Implement useStore ============ //

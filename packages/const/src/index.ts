@@ -3,6 +3,7 @@ export * from './branding';
 export * from './currency';
 export * from './desktop';
 export * from './discover';
+export * from './klavis';
 export * from './layoutTokens';
 export * from './message';
 export * from './meta';

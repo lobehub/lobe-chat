@@ -775,11 +775,36 @@
       "groupName": "الامتدادات المدمجة"
     },
     "disabled": "النموذج الحالي لا يدعم استدعاء الوظائف، ولا يمكن استخدام الإضافة",
+    "klavis": {
+      "addServer": "إضافة خادم",
+      "authCompleted": "اكتملت المصادقة",
+      "authFailed": "فشلت المصادقة",
+      "authRequired": "المصادقة مطلوبة",
+      "connected": "متصل",
+      "error": "خطأ",
+      "groupName": "أدوات Klavis",
+      "manage": "إدارة Klavis",
+      "manageTitle": "إدارة تكامل Klavis",
+      "noServers": "لا توجد خوادم متصلة حاليًا",
+      "notEnabled": "خدمة Klavis غير مفعّلة",
+      "oauthRequired": "يرجى إكمال مصادقة OAuth في نافذة جديدة",
+      "pendingAuth": "في انتظار المصادقة",
+      "serverCreated": "تم إنشاء الخادم بنجاح",
+      "serverCreatedFailed": "فشل في إنشاء الخادم",
+      "serverRemoved": "تم حذف الخادم",
+      "servers": "خوادم",
+      "tools": "أدوات",
+      "verifyAuth": "لقد أكملت المصادقة"
+    },
     "plugins": {
       "enabled": "ممكّنة {{num}}",
       "groupName": "الإضافات",
       "noEnabled": "لا توجد إضافات ممكّنة حاليًا",
       "store": "متجر الإضافات"
+    },
+    "tabs": {
+      "all": "الكل",
+      "installed": "مفعّلة"
     },
     "title": "أدوات الامتداد"
   }

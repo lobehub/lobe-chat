@@ -775,11 +775,36 @@
       "groupName": "Intégré"
     },
     "disabled": "Ce modèle ne prend pas en charge les appels de fonction et ne peut pas utiliser de plugins",
+    "klavis": {
+      "addServer": "Ajouter un serveur",
+      "authCompleted": "Authentification terminée",
+      "authFailed": "Échec de l'authentification",
+      "authRequired": "Authentification requise",
+      "connected": "Connecté",
+      "error": "Erreur",
+      "groupName": "Outils Klavis",
+      "manage": "Gérer Klavis",
+      "manageTitle": "Gérer l'intégration Klavis",
+      "noServers": "Aucun serveur connecté pour le moment",
+      "notEnabled": "Service Klavis non activé",
+      "oauthRequired": "Veuillez compléter l'authentification OAuth dans la nouvelle fenêtre",
+      "pendingAuth": "Authentification en attente",
+      "serverCreated": "Serveur créé avec succès",
+      "serverCreatedFailed": "Échec de la création du serveur",
+      "serverRemoved": "Serveur supprimé",
+      "servers": "serveurs",
+      "tools": "outils",
+      "verifyAuth": "J'ai terminé l'authentification"
+    },
     "plugins": {
       "enabled": "Activé {{num}}",
       "groupName": "Plugins",
       "noEnabled": "Aucun plugin activé pour le moment",
       "store": "Boutique de plugins"
+    },
+    "tabs": {
+      "all": "Tous",
+      "installed": "Activé"
     },
     "title": "Outils supplémentaires"
   }

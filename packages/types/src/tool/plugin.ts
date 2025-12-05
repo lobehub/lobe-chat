@@ -37,6 +37,16 @@ export interface CustomPluginParams {
     // Added headers configuration support
     headers?: Record<string, string>;
   };
+  /**
+   * Klavis integration parameters
+   */
+  klavis?: {
+    instanceId: string;
+    isAuthenticated: boolean;
+    oauthUrl?: string;
+    serverName: string;
+    serverUrl: string;
+  };
   avatar?: string;
   description?: string;
   /* eslint-enable */

@@ -775,11 +775,36 @@
       "groupName": "Incorporados"
     },
     "disabled": "El modelo actual no admite llamadas de función y no se puede utilizar el complemento",
+    "klavis": {
+      "addServer": "Agregar servidor",
+      "authCompleted": "Autenticación completada",
+      "authFailed": "Autenticación fallida",
+      "authRequired": "Autenticación requerida",
+      "connected": "Conectado",
+      "error": "Error",
+      "groupName": "Herramientas de Klavis",
+      "manage": "Gestionar Klavis",
+      "manageTitle": "Gestionar la integración de Klavis",
+      "noServers": "No hay servidores conectados",
+      "notEnabled": "El servicio de Klavis no está habilitado",
+      "oauthRequired": "Por favor, completa la autenticación OAuth en una nueva ventana",
+      "pendingAuth": "Autenticación pendiente",
+      "serverCreated": "Servidor creado con éxito",
+      "serverCreatedFailed": "Error al crear el servidor",
+      "serverRemoved": "Servidor eliminado",
+      "servers": "servidores",
+      "tools": "herramientas",
+      "verifyAuth": "He completado la autenticación"
+    },
     "plugins": {
       "enabled": "Habilitados {{num}}",
       "groupName": "Complementos",
       "noEnabled": "No hay complementos habilitados por el momento",
       "store": "Tienda de complementos"
+    },
+    "tabs": {
+      "all": "Todo",
+      "installed": "Habilitado"
     },
     "title": "Herramientas de extensión"
   }

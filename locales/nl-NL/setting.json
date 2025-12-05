@@ -775,11 +775,36 @@
       "groupName": "Ingebouwd"
     },
     "disabled": "Dit model ondersteunt momenteel geen functieaanroepen en kan geen plug-ins gebruiken",
+    "klavis": {
+      "addServer": "Server toevoegen",
+      "authCompleted": "Authenticatie voltooid",
+      "authFailed": "Authenticatie mislukt",
+      "authRequired": "Authenticatie vereist",
+      "connected": "Verbonden",
+      "error": "Fout",
+      "groupName": "Klavis Tools",
+      "manage": "Beheer Klavis",
+      "manageTitle": "Beheer Klavis-integratie",
+      "noServers": "Geen verbonden servers",
+      "notEnabled": "Klavis-service is niet ingeschakeld",
+      "oauthRequired": "Voltooi de OAuth-authenticatie in een nieuw venster",
+      "pendingAuth": "Authenticatie in behandeling",
+      "serverCreated": "Server succesvol aangemaakt",
+      "serverCreatedFailed": "Server aanmaken mislukt",
+      "serverRemoved": "Server verwijderd",
+      "servers": "servers",
+      "tools": "tools",
+      "verifyAuth": "Ik heb de authenticatie voltooid"
+    },
     "plugins": {
       "enabled": "Ingeschakeld {{num}}",
       "groupName": "Plug-ins",
       "noEnabled": "Geen plug-ins ingeschakeld",
       "store": "Plug-in store"
+    },
+    "tabs": {
+      "all": "Alles",
+      "installed": "Ingeschakeld"
     },
     "title": "Uitbreidingsgereedschap"
   }
