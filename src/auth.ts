@@ -1,8 +1,8 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { createNanoId, idGenerator, serverDB } from '@lobechat/database';
-import { betterAuth } from 'better-auth/minimal';
 import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { betterAuth } from 'better-auth/minimal';
 import { admin, genericOAuth, magicLink } from 'better-auth/plugins';
 
 import { authEnv } from '@/envs/auth';
@@ -12,6 +12,7 @@ import {
   getVerificationEmailTemplate,
 } from '@/libs/better-auth/email-templates';
 import { initBetterAuthSSOProviders } from '@/libs/better-auth/sso';
+import { createSecondaryStorage, getTrustedOrigins } from '@/libs/better-auth/utils/config';
 import { parseSSOProviders } from '@/libs/better-auth/utils/server';
 import { EmailService } from '@/server/services/email';
 import { UserService } from '@/server/services/user';
@@ -21,54 +22,9 @@ import { UserService } from '@/server/services/user';
 const VERIFICATION_LINK_EXPIRES_IN = 3600;
 const MAGIC_LINK_EXPIRES_IN = 900;
 const enableMagicLink = authEnv.NEXT_PUBLIC_ENABLE_MAGIC_LINK;
-const APPLE_TRUSTED_ORIGIN = 'https://appleid.apple.com';
 const enabledSSOProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
 
 const { socialProviders, genericOAuthProviders } = initBetterAuthSSOProviders();
-
-/**
- * Normalize a URL-like string to an origin with https fallback.
- */
-const normalizeOrigin = (url?: string) => {
-  if (!url) return undefined;
-
-  try {
-    const normalizedUrl = url.startsWith('http') ? url : `https://${url}`;
-
-    return new URL(normalizedUrl).origin;
-  } catch {
-    return undefined;
-  }
-};
-
-/**
- * Build trusted origins with env override and Vercel-aware defaults.
- */
-const getTrustedOrigins = () => {
-  if (authEnv.AUTH_TRUSTED_ORIGINS) {
-    const originsFromEnv = authEnv.AUTH_TRUSTED_ORIGINS.split(',')
-      .map((item) => normalizeOrigin(item.trim()))
-      .filter(Boolean) as string[];
-
-    if (originsFromEnv.length > 0) return Array.from(new Set(originsFromEnv));
-  }
-
-  const defaults = [
-    authEnv.NEXT_PUBLIC_AUTH_URL,
-    normalizeOrigin(process.env.APP_URL),
-    normalizeOrigin(process.env.VERCEL_BRANCH_URL),
-    normalizeOrigin(process.env.VERCEL_URL),
-  ].filter(Boolean) as string[];
-
-  const baseTrustedOrigins = defaults.length > 0 ? Array.from(new Set(defaults)) : undefined;
-
-  if (!enabledSSOProviders.includes('apple')) return baseTrustedOrigins;
-
-  const mergedOrigins = new Set(baseTrustedOrigins || []);
-  mergedOrigins.add(APPLE_TRUSTED_ORIGIN);
-
-  return Array.from(mergedOrigins);
-};
 
 export const auth = betterAuth({
   account: {
@@ -82,7 +38,7 @@ export const auth = betterAuth({
   // Use renamed env vars (fallback to next-auth vars is handled in src/envs/auth.ts)
   baseURL: authEnv.NEXT_PUBLIC_AUTH_URL,
   secret: authEnv.AUTH_SECRET,
-  trustedOrigins: getTrustedOrigins(),
+  trustedOrigins: getTrustedOrigins(enabledSSOProviders),
 
   emailAndPassword: {
     autoSignIn: true,
@@ -118,10 +74,19 @@ export const auth = betterAuth({
       });
     },
   },
-
+  onAPIError: {
+    errorURL: '/auth-error',
+  },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 10 * 60, // Cache duration in seconds
+    },
+  },
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
   }),
+  secondaryStorage: createSecondaryStorage(),
   /**
    * Database joins is useful when Better-Auth needs to fetch related data from multiple tables in a single query.
    * Endpoints like /get-session, /get-full-organization and many others benefit greatly from this feature,
