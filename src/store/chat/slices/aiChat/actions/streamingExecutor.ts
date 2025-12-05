@@ -292,12 +292,12 @@ export const streamingExecutor: StateCreator<
 
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
-      async (toolCalls: MessageToolCall[]) => {
+      (toolCalls: MessageToolCall[]) => {
         internal_dispatchMessage(
           {
             id: messageId,
             type: 'updateMessage',
-            value: { tools: await get().internal_transformToolCalls(toolCalls) },
+            value: { tools: get().internal_transformToolCalls(toolCalls) },
           },
           { operationId },
         );
@@ -389,7 +389,7 @@ export const streamingExecutor: StateCreator<
             },
           }));
 
-          tools = await get().internal_transformToolCalls(parsedToolCalls);
+          tools = get().internal_transformToolCalls(parsedToolCalls);
 
           isFunctionCall = true;
         }
@@ -1041,9 +1041,8 @@ export const streamingExecutor: StateCreator<
 
         // Only show notification if there's content and no tools
         if (lastAssistant?.content && !lastAssistant?.tools) {
-          const { desktopNotificationService } = await import(
-            '@/services/electron/desktopNotification'
-          );
+          const { desktopNotificationService } =
+            await import('@/services/electron/desktopNotification');
 
           await desktopNotificationService.showNotification({
             body: lastAssistant.content,

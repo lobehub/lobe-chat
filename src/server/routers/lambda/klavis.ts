@@ -1,42 +1,16 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { KlavisClient } from 'klavis';
 import { z } from 'zod';
 
-import { getServerKlavisApiKey } from '@/config/klavis';
 import { PluginModel } from '@/database/models/plugin';
+import { getKlavisClient } from '@/libs/klavis';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
-import { MCPService } from '@/server/services/mcp';
-
-/**
- * Global Klavis Client instance cache (server-side only)
- */
-let klavisClientInstance: { apiKey: string; client: KlavisClient } | undefined;
-
-/**
- * Get or create Klavis Client instance (server-side only)
- */
-const getKlavisClient = (apiKey: string): KlavisClient => {
-  if (!klavisClientInstance || klavisClientInstance.apiKey !== apiKey) {
-    klavisClientInstance = {
-      apiKey,
-      client: new KlavisClient({ apiKey }),
-    };
-  }
-  return klavisClientInstance.client;
-};
 
 /**
  * Klavis procedure with API key validation and database access
  */
 const klavisProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
-  const apiKey = getServerKlavisApiKey();
-
-  if (!apiKey) {
-    throw new Error('Klavis API key is not configured on server');
-  }
-
-  const client = getKlavisClient(apiKey);
+  const client = getKlavisClient();
   const pluginModel = new PluginModel(opts.ctx.serverDB, opts.ctx.userId);
 
   return opts.next({
@@ -45,45 +19,6 @@ const klavisProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
 });
 
 export const klavisRouter = router({
-  /**
-   * Call a tool on a Strata server
-   */
-  callTool: klavisProcedure
-    .input(
-      z.object({
-        serverUrl: z.string(),
-        toolArgs: z.record(z.unknown()).optional(),
-        toolName: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const response = await ctx.klavisClient.mcpServer.callTools({
-        serverUrl: input.serverUrl,
-        toolArgs: input.toolArgs,
-        toolName: input.toolName,
-      });
-
-      // Handle error case
-      if (!response.success || !response.result) {
-        return {
-          content: response.error || 'Unknown error',
-          state: {
-            content: [{ text: response.error || 'Unknown error', type: 'text' }],
-            isError: true,
-          },
-          success: false,
-        };
-      }
-
-      // Process the response using the common MCP tool call result processor
-      const processedResult = await MCPService.processToolCallResult({
-        content: (response.result.content || []) as any[],
-        isError: response.result.isError,
-      });
-
-      return processedResult;
-    }),
-
   /**
    * Create a single MCP server instance and save to database
    * Returns: { serverUrl, instanceId, oauthUrl? }
@@ -217,25 +152,6 @@ export const klavisRouter = router({
 
       return {
         integrations: response.integrations,
-      };
-    }),
-
-  /**
-   * List tools available on a Strata server
-   */
-  listTools: klavisProcedure
-    .input(
-      z.object({
-        serverUrl: z.string(),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      const response = await ctx.klavisClient.mcpServer.listTools({
-        serverUrl: input.serverUrl,
-      });
-
-      return {
-        tools: response.tools,
       };
     }),
 

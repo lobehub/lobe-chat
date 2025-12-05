@@ -1,7 +1,7 @@
 import { enableMapSet, produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
-import { lambdaClient } from '@/libs/trpc/client';
+import { lambdaClient, toolsClient } from '@/libs/trpc/client';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { ToolStore } from '../../store';
@@ -75,8 +75,8 @@ export const createKlavisStoreSlice: StateCreator<
     );
 
     try {
-      // 调用 tRPC 服务端接口执行工具
-      const response = await lambdaClient.klavis.callTool.mutate({
+      // 调用 tRPC 服务端接口执行工具（使用 toolsClient 以获得更长的超时时间）
+      const response = await toolsClient.klavis.callTool.mutate({
         serverUrl,
         toolArgs,
         toolName,
@@ -274,8 +274,8 @@ export const createKlavisStoreSlice: StateCreator<
         return;
       }
 
-      // 认证成功，获取工具列表
-      const response = await lambdaClient.klavis.listTools.query({
+      // 认证成功，获取工具列表（使用 toolsClient 以获得更长的超时时间）
+      const response = await toolsClient.klavis.listTools.query({
         serverUrl: server.serverUrl,
       });
 

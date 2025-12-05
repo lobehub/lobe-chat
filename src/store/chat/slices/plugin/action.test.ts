@@ -732,7 +732,7 @@ describe('ChatPluginAction', () => {
   });
 
   describe('internal_transformToolCalls', () => {
-    it('should transform tool calls correctly', async () => {
+    it('should transform tool calls correctly', () => {
       const toolCalls: MessageToolCall[] = [
         {
           id: 'tool1',
@@ -754,7 +754,7 @@ describe('ChatPluginAction', () => {
 
       const { result } = renderHook(() => useChatStore());
 
-      const transformed = await result.current.internal_transformToolCalls(toolCalls);
+      const transformed = result.current.internal_transformToolCalls(toolCalls);
 
       expect(transformed).toEqual([
         {
@@ -774,8 +774,7 @@ describe('ChatPluginAction', () => {
       ]);
     });
 
-    it('should handle MD5 hashed API names', async () => {
-      const apiName = 'testApi';
+    it('should handle MD5 hashed API names', () => {
       const resolver = new ToolNameResolver();
       // Generate a very long name to force MD5 hashing
       const longApiName =
@@ -823,7 +822,7 @@ describe('ChatPluginAction', () => {
 
       const { result } = renderHook(() => useChatStore());
 
-      const transformed = await result.current.internal_transformToolCalls(toolCalls);
+      const transformed = result.current.internal_transformToolCalls(toolCalls);
 
       expect(transformed[0].apiName).toBe(longApiName);
     });

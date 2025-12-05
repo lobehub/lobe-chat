@@ -6,7 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
-import { pluginSelectors } from '@/store/tool/selectors';
+import { klavisStoreSelectors, pluginSelectors } from '@/store/tool/selectors';
 import { builtinTools } from '@/tools';
 
 import { displayMessageSelectors } from '../../message/selectors';
@@ -19,7 +19,7 @@ export interface PluginInternalsAction {
   /**
    * Transform tool calls from runtime format to storage format
    */
-  internal_transformToolCalls: (toolCalls: MessageToolCall[]) => Promise<ChatToolPayload[]>;
+  internal_transformToolCalls: (toolCalls: MessageToolCall[]) => ChatToolPayload[];
 
   /**
    * Construct tools calling context for plugin invocation
@@ -33,7 +33,7 @@ export const pluginInternals: StateCreator<
   [],
   PluginInternalsAction
 > = (set, get) => ({
-  internal_transformToolCalls: async (toolCalls) => {
+  internal_transformToolCalls: (toolCalls) => {
     const toolNameResolver = new ToolNameResolver();
 
     // Build manifests map from tool store
@@ -56,8 +56,7 @@ export const pluginInternals: StateCreator<
     }
 
     // Get all Klavis tools
-    const { klavisStoreSelectors: klavisSel } = await import('@/store/tool/selectors');
-    const klavisTools = klavisSel.klavisAsLobeTools(toolStoreState);
+    const klavisTools = klavisStoreSelectors.klavisAsLobeTools(toolStoreState);
     for (const tool of klavisTools) {
       if (tool.manifest) {
         manifests[tool.identifier] = tool.manifest as LobeChatPluginManifest;
