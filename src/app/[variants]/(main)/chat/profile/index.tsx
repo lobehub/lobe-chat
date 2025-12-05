@@ -10,10 +10,11 @@ import { useAgentStore } from '@/store/agent';
 import AgentBuilder from './features/AgentBuilder';
 import Header from './features/Header';
 import ProfileEditor from './features/ProfileEditor';
-import ProfileProvider, { useProfileContext } from './features/ProfileProvider';
+import ProfileProvider from './features/ProfileProvider';
+import { useProfileStore } from './features/store';
 
 const ProfileArea = memo(() => {
-  const { editor } = useProfileContext();
+  const editor = useProfileStore((s) => s.editor);
   return (
     <Flexbox flex={1} height={'100%'}>
       <Header />

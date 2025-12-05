@@ -20,9 +20,17 @@
   },
   "link": {
     "edit": "تعديل الرابط",
+    "editLinkTitle": "الرابط",
+    "editTextTitle": "العنوان",
     "open": "فتح الرابط",
     "placeholder": "أدخل عنوان URL للرابط",
     "unlink": "إزالة الرابط"
+  },
+  "markdown": {
+    "cancel": "إلغاء",
+    "confirm": "تحويل",
+    "parseMessage": "سيتم تحويل المحتوى إلى تنسيق Markdown، وسيتم استبدال المحتوى الحالي. هل ترغب في المتابعة؟ (سيُغلق تلقائيًا بعد 5 ثوانٍ)",
+    "parseTitle": "تنسيق Markdown"
   },
   "math": {
     "placeholder": "يرجى إدخال معادلة TeX"

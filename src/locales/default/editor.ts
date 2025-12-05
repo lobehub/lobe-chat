@@ -20,9 +20,17 @@ export default {
   },
   link: {
     edit: '编辑链接',
+    editLinkTitle: '链接',
+    editTextTitle: '标题',
     open: '打开链接',
     placeholder: '输入链接 URL',
     unlink: '取消链接',
+  },
+  markdown: {
+    cancel: '取消',
+    confirm: '转换',
+    parseMessage: '转换为 Markdown 格式，现有内容将被覆盖，是否确认？（5 秒后自动关闭）',
+    parseTitle: '格式化 Markdown',
   },
   math: {
     placeholder: '请输入 TeX 公式',

@@ -20,9 +20,17 @@
   },
   "link": {
     "edit": "Bağlantıyı düzenle",
+    "editLinkTitle": "Bağlantı",
+    "editTextTitle": "Başlık",
     "open": "Bağlantıyı aç",
     "placeholder": "Bağlantı URL'si girin",
     "unlink": "Bağlantıyı kaldır"
+  },
+  "markdown": {
+    "cancel": "İptal",
+    "confirm": "Dönüştür",
+    "parseMessage": "İçerik Markdown formatına dönüştürülecek ve mevcut içerik üzerine yazılacak. Onaylıyor musunuz? (5 saniye içinde otomatik olarak kapanacaktır)",
+    "parseTitle": "Markdown Biçimlendir"
   },
   "math": {
     "placeholder": "Lütfen TeX formülünü girin"

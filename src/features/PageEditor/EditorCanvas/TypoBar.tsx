@@ -46,6 +46,7 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
   const theme = useTheme();
 
   const items: ChatInputActionsProps['items'] = useMemo(() => {
+    if (!editorState) return [];
     const baseItems = [
       !floating && {
         disabled: !editorState.canUndo,
@@ -210,7 +211,7 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
     return baseItems.filter(Boolean) as ChatInputActionsProps['items'];
   }, [editorState, editor, t, floating]);
 
-  if (!editor) return null;
+  if (!editorState) return null;
 
   // Floating toolbar - just return the actions
   if (floating) return <FloatActions className={className} items={items} style={style} />;

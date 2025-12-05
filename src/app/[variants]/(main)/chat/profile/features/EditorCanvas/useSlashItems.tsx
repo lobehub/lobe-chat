@@ -1,5 +1,4 @@
 import {
-  IEditor,
   INSERT_CHECK_LIST_COMMAND,
   INSERT_HEADING_COMMAND,
   INSERT_HORIZONTAL_RULE_COMMAND,
@@ -9,7 +8,6 @@ import {
   INSERT_UNORDERED_LIST_COMMAND,
   SlashOptions,
 } from '@lobehub/editor';
-import { useEditorState } from '@lobehub/editor/react';
 import { Text } from '@lobehub/ui';
 import {
   Heading1Icon,
@@ -26,9 +24,11 @@ import {
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export const useSlashItems = (editor: IEditor): SlashOptions['items'] => {
+import { useProfileStore } from '../store';
+
+export const useSlashItems = (): SlashOptions['items'] => {
   const { t } = useTranslation('editor');
-  const editorState = useEditorState(editor);
+  const editorState = useProfileStore((s) => s.editorState);
   return useMemo(() => {
     const data: SlashOptions['items'] = [
       {

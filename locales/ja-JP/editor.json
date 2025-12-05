@@ -20,9 +20,17 @@
   },
   "link": {
     "edit": "リンクを編集",
+    "editLinkTitle": "リンク",
+    "editTextTitle": "タイトル",
     "open": "リンクを開く",
     "placeholder": "リンクの URL を入力",
     "unlink": "リンクを解除"
+  },
+  "markdown": {
+    "cancel": "キャンセル",
+    "confirm": "変換",
+    "parseMessage": "Markdown形式に変換すると、現在の内容は上書きされます。よろしいですか？（5秒後に自動的に閉じます）",
+    "parseTitle": "Markdownのフォーマット"
   },
   "math": {
     "placeholder": "TeX 公式を入力してください"
