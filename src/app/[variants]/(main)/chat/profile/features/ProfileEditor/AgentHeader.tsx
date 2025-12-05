@@ -1,5 +1,6 @@
 'use client';
 
+import { EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
 import { EmojiPicker, Icon, Input, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { Skeleton, message } from 'antd';
@@ -14,7 +15,6 @@ import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 
-const SAVE_DEBOUNCE_TIME = 500; // ms
 const MAX_AVATAR_SIZE = 1024 * 1024; // 1MB limit for server actions
 
 const AgentHeader = memo(() => {
@@ -42,7 +42,7 @@ const AgentHeader = memo(() => {
     (value: string) => {
       updateMeta({ title: value });
     },
-    { wait: SAVE_DEBOUNCE_TIME },
+    { wait: EDITOR_DEBOUNCE_TIME },
   );
 
   // Handle avatar change (immediate save)

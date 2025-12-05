@@ -49,6 +49,10 @@
     "desc": "Son mesajı yeniden oluştur",
     "title": "Mesajı yeniden oluştur"
   },
+  "saveDocument": {
+    "desc": "Geçerli belgedeki tüm değişiklikleri hemen kaydet",
+    "title": "Belgeyi Kaydet"
+  },
   "saveTopic": {
     "desc": "Mevcut konuyu kaydedin ve yeni bir konu açın",
     "title": "Yeni konu aç"

@@ -9,6 +9,11 @@
       "on": "Show formatting toolbar"
     }
   },
+  "autoSave": {
+    "latest": "Latest version loaded",
+    "saved": "Saved",
+    "saving": "Auto-saving..."
+  },
   "cancel": "Cancel",
   "confirm": "Confirm",
   "file": {

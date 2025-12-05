@@ -49,6 +49,10 @@
     "desc": "Régénérer le dernier message",
     "title": "Régénérer le message"
   },
+  "saveDocument": {
+    "desc": "Enregistrez immédiatement toutes les modifications du document en cours",
+    "title": "Enregistrer le document"
+  },
   "saveTopic": {
     "desc": "Enregistrer le sujet actuel et ouvrir un nouveau sujet",
     "title": "Ouvrir un nouveau sujet"

@@ -8,7 +8,6 @@ import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Loading from '@/components/Loading/BrandTextLoading';
 import { useStore } from '@/features/AgentSetting/store';
 import ModelSelect from '@/features/ModelSelect';
 import { useAgentStore } from '@/store/agent';
@@ -28,8 +27,6 @@ const ProfileEditor = memo(() => {
 
   const config = useAgentStore(agentSelectors.currentAgentConfig);
 
-  const isAgentConfigLoading = useAgentStore(agentSelectors.isAgentConfigLoading);
-
   const updateConfig = useStore((s) => s.setAgentConfig);
 
   const handleModelChange = useMemo(() => {
@@ -37,8 +34,6 @@ const ProfileEditor = memo(() => {
       updateConfig({ model, provider });
     };
   }, [updateConfig]);
-
-  if (isAgentConfigLoading) return <Loading />;
 
   return (
     <>

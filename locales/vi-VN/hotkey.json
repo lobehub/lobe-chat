@@ -49,6 +49,10 @@
     "desc": "Tạo lại tin nhắn cuối cùng",
     "title": "Tạo lại tin nhắn"
   },
+  "saveDocument": {
+    "desc": "Lưu ngay tất cả các thay đổi của tài liệu hiện tại",
+    "title": "Lưu tài liệu"
+  },
   "saveTopic": {
     "desc": "Lưu chủ đề hiện tại và mở chủ đề mới",
     "title": "Mở chủ đề mới"
