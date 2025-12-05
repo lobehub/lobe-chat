@@ -30,7 +30,7 @@ const leftActions: ActionKeys[] = [
   'mention',
 ];
 
-const rightActions: ActionKey[] = ['saveTopic'];
+const rightActions: ActionKey[] = [];
 
 const MobileChatInput = memo(() => {
   const { t } = useTranslation('chat');
