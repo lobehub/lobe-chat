@@ -143,6 +143,9 @@ const EditorCanvas = memo(() => {
           },
         ],
       }}
+      style={{
+        paddingBottom: 64,
+      }}
     />
   );
 });
