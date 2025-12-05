@@ -1,7 +1,7 @@
 'use client';
 
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
-import { memo } from 'react';
+import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -17,10 +17,12 @@ import ProfileProvider from './features/ProfileProvider';
 import { useProfileStore } from './features/store';
 
 const ProfileArea = memo(() => {
+  // Initialize agent builder builtin agent
+  const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
   const editor = useProfileStore((s) => s.editor);
   const flushSave = useProfileStore((s) => s.flushSave);
   const isAgentConfigLoading = useAgentStore(agentSelectors.isAgentConfigLoading);
-  // Register Files scope and save document hotkey
+  useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.agentBuilder);
   useRegisterFilesHotkeys();
   useSaveDocumentHotkey(flushSave);
 
@@ -50,17 +52,15 @@ const ProfileArea = memo(() => {
 });
 
 const AgentProfile = memo(() => {
-  // Initialize agent builder builtin agent
-  const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
-  useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.agentBuilder);
-
   return (
-    <ProfileProvider>
-      <Flexbox height={'100%'} horizontal width={'100%'}>
-        <ProfileArea />
-        <AgentBuilder />
-      </Flexbox>
-    </ProfileProvider>
+    <Suspense fallback={<Loading />}>
+      <ProfileProvider>
+        <Flexbox height={'100%'} horizontal width={'100%'}>
+          <ProfileArea />
+          <AgentBuilder />
+        </Flexbox>
+      </ProfileProvider>
+    </Suspense>
   );
 });
 
