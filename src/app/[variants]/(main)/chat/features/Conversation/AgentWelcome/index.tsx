@@ -68,7 +68,7 @@ const InboxWelcome = memo(() => {
   }, [openingMessage, agentSystemRoleMsg, meta.description]);
 
   return (
-    <Center gap={12} padding={16} width={'100%'}>
+    <Center gap={12} height={'100%'} id={'safdsafdas'} padding={16} width={'100%'}>
       <Flexbox className={styles.container} gap={16} style={{ maxWidth: 800 }} width={'100%'}>
         <Flexbox align={'center'} gap={8} horizontal>
           <FluentEmoji emoji={'👋'} size={40} type={'anim'} />
