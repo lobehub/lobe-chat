@@ -21,28 +21,24 @@ import EditorCanvas from './EditorCanvas';
 
 const ProfileEditor = memo(() => {
   const [showSettingsDrawer, setShowSettingsDrawer] = useState(false);
-  const [agentId, isLoadingConfig] = useAgentStore((s) => [
-    s.activeAgentId,
-    agentSelectors.isAgentConfigLoading(s),
-  ]);
+  const [agentId] = useAgentStore((s) => [s.activeAgentId]);
 
   const theme = useTheme();
   const { t } = useTranslation('setting');
-  const config = useStore((s) => s.config);
-  const [modelValue, setModelValue] = useState({
-    model: config.model,
-    provider: config.provider,
-  });
+
+  const config = useAgentStore(agentSelectors.currentAgentConfig);
+
+  const isAgentConfigLoading = useAgentStore(agentSelectors.isAgentConfigLoading);
+
   const updateConfig = useStore((s) => s.setAgentConfig);
 
   const handleModelChange = useMemo(() => {
     return ({ model, provider }: { model: string; provider: string }) => {
-      setModelValue({ model, provider });
       updateConfig({ model, provider });
     };
   }, [updateConfig]);
 
-  if (isLoadingConfig) return <Loading />;
+  if (isAgentConfigLoading) return <Loading />;
 
   return (
     <>
@@ -64,7 +60,13 @@ const ProfileEditor = memo(() => {
           style={{ marginBottom: 12 }}
         >
           <Flexbox align={'center'} gap={8} horizontal>
-            <ModelSelect onChange={handleModelChange} value={modelValue} />
+            <ModelSelect
+              onChange={handleModelChange}
+              value={{
+                model: config.model,
+                provider: config.provider,
+              }}
+            />
             <Button
               icon={Settings2Icon}
               onClick={() => setShowSettingsDrawer(true)}

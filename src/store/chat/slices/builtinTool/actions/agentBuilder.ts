@@ -1,12 +1,13 @@
 import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
-import { dbMessageSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { AgentBuilderExecutionRuntime } from '@/tools/agent-builder/ExecutionRuntime';
 import type {
   GetAgentConfigParams,
   GetAgentMetaParams,
+  GetAvailableModelsParams,
+  GetAvailableToolsParams,
   SetModelParams,
   SetOpeningMessageParams,
   SetOpeningQuestionsParams,
@@ -19,6 +20,11 @@ import type {
 const log = debug('lobe-store:builtin-tool:agent-builder');
 
 export interface AgentBuilderAction {
+  agentBuilder_getAvailableModels: (
+    id: string,
+    params: GetAvailableModelsParams,
+  ) => Promise<boolean>;
+  agentBuilder_getAvailableTools: (id: string, params: GetAvailableToolsParams) => Promise<boolean>;
   agentBuilder_getConfig: (id: string, params: GetAgentConfigParams) => Promise<boolean>;
   agentBuilder_getMeta: (id: string, params: GetAgentMetaParams) => Promise<boolean>;
   agentBuilder_setModel: (id: string, params: SetModelParams) => Promise<boolean>;
@@ -47,6 +53,14 @@ export const agentBuilderSlice: StateCreator<
   AgentBuilderAction
 > = (set, get) => ({
   // ==================== Read Operations ====================
+
+  agentBuilder_getAvailableModels: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'getAvailableModels', params);
+  },
+
+  agentBuilder_getAvailableTools: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'getAvailableTools', params);
+  },
 
   agentBuilder_getConfig: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'getAgentConfig', params);
@@ -123,9 +137,7 @@ export const agentBuilderSlice: StateCreator<
     const context = { operationId };
 
     try {
-      // Get the current agent ID from the message or store
-      const message = dbMessageSelectors.getDbMessageById(id)(get());
-      const agentId = message?.agentId || get().activeAgentId;
+      const agentId = get().activeAgentId;
 
       if (!agentId) {
         throw new Error('No active agent found');
@@ -170,6 +182,14 @@ export const agentBuilderSlice: StateCreator<
         }
         case 'setOpeningQuestions': {
           result = await runtime.setOpeningQuestions(agentId, params as SetOpeningQuestionsParams);
+          break;
+        }
+        case 'getAvailableModels': {
+          result = await runtime.getAvailableModels(params as GetAvailableModelsParams);
+          break;
+        }
+        case 'getAvailableTools': {
+          result = await runtime.getAvailableTools(params as GetAvailableToolsParams);
           break;
         }
         default: {

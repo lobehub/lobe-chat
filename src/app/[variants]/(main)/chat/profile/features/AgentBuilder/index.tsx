@@ -21,7 +21,7 @@ const AgentBuilder = memo(() => {
       expand={chatPanelExpanded}
       expandable={false}
       maxWidth={600}
-      minWidth={320}
+      minWidth={400}
       onExpandChange={setChatPanelExpanded}
       placement="right"
       size={{
@@ -30,7 +30,7 @@ const AgentBuilder = memo(() => {
     >
       {agentId && agentBuilderId && (
         <AgentBuilderProvider agentId={agentBuilderId}>
-          <AgentBuilderConversation />
+          <AgentBuilderConversation agentId={agentBuilderId} />
         </AgentBuilderProvider>
       )}
     </DraggablePanel>

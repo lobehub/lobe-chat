@@ -262,6 +262,7 @@ export default {
 
   settingAgent: {
     avatar: {
+      sizeExceeded: '图片大小超过 1MB 限制，请选择更小的图片',
       title: '助手头像',
     },
     backgroundColor: {

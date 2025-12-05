@@ -8,6 +8,8 @@ export const AgentBuilderApiName = {
   // Read operations
   getAgentConfig: 'agentBuilder_getConfig',
   getAgentMeta: 'agentBuilder_getMeta',
+  getAvailableModels: 'agentBuilder_getAvailableModels',
+  getAvailableTools: 'agentBuilder_getAvailableTools',
 
   // Write operations
   setModel: 'agentBuilder_setModel',
@@ -92,6 +94,20 @@ export interface SetOpeningQuestionsParams {
   questions: string[];
 }
 
+export interface GetAvailableModelsParams {
+  /**
+   * Optional: filter by provider id
+   */
+  providerId?: string;
+}
+
+export interface GetAvailableToolsParams {
+  /**
+   * Optional: filter by tool type ('builtin' | 'plugin' | 'all')
+   */
+  type?: 'all' | 'builtin' | 'plugin';
+}
+
 // ============== State Types (for Render components) ==============
 
 export interface GetConfigState {
@@ -140,4 +156,38 @@ export interface SetOpeningQuestionsState {
   previousQuestions?: string[];
   questions: string[];
   success: boolean;
+}
+
+export interface AvailableModel {
+  abilities?: {
+    files?: boolean;
+    functionCall?: boolean;
+    reasoning?: boolean;
+    vision?: boolean;
+  };
+  description?: string;
+  id: string;
+  name: string;
+}
+
+export interface AvailableProvider {
+  id: string;
+  models: AvailableModel[];
+  name: string;
+}
+
+export interface GetAvailableModelsState {
+  providers: AvailableProvider[];
+}
+
+export interface AvailableTool {
+  author?: string;
+  description?: string;
+  identifier: string;
+  title: string;
+  type: 'builtin' | 'plugin';
+}
+
+export interface GetAvailableToolsState {
+  tools: AvailableTool[];
 }
