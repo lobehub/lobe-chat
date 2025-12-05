@@ -1,7 +1,6 @@
 import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
-import { dbMessageSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { AgentBuilderExecutionRuntime } from '@/tools/agent-builder/ExecutionRuntime';
 import type {
@@ -123,9 +122,7 @@ export const agentBuilderSlice: StateCreator<
     const context = { operationId };
 
     try {
-      // Get the current agent ID from the message or store
-      const message = dbMessageSelectors.getDbMessageById(id)(get());
-      const agentId = message?.agentId || get().activeAgentId;
+      const agentId = get().activeAgentId;
 
       if (!agentId) {
         throw new Error('No active agent found');

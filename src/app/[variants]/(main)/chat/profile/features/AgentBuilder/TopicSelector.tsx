@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { topicSelectors } from '@/store/chat/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -16,7 +15,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     padding-block: 8px;
     padding-inline: 12px;
-
     border-radius: 8px;
 
     transition: background-color 0.2s;
@@ -26,8 +24,8 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   menu: css`
-    max-height: 400px;
     overflow-y: auto;
+    max-height: 400px;
   `,
   title: css`
     overflow: hidden;
@@ -58,7 +56,11 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
     s.topicDataMap[agentId]?.items,
   ]);
 
-  const activeTopic = useChatStore(topicSelectors.getTopicById(activeTopicId || ''));
+  // Find active topic from the agent's topics list directly
+  const activeTopic = useMemo(
+    () => topics?.find((topic) => topic.id === activeTopicId),
+    [topics, activeTopicId],
+  );
 
   const currentTitle = activeTopic?.title || t('defaultTitle');
 
