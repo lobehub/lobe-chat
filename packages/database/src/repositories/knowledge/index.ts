@@ -454,12 +454,9 @@ export class KnowledgeRepo {
         );
         whereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
 
-        // Exclude custom/document and documents with file_id from Documents category
+        // Exclude custom/document from Documents category
         if (category === FilesTabs.Documents) {
-          whereConditions.push(
-            sql`${documents.fileType} != ${'custom/document'}`,
-            sql`${documents.fileId} IS NULL`,
-          );
+          whereConditions.push(sql`${documents.fileType} != ${'custom/document'}`);
         }
       } else if (fileTypePrefix) {
         whereConditions.push(sql`${documents.fileType} ILIKE ${`${fileTypePrefix}%`}`);
@@ -515,12 +512,11 @@ export class KnowledgeRepo {
           );
           kbWhereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
 
-          // Exclude custom/document, source_type='file', and documents with file_id from Documents category
+          // Exclude custom/document and source_type='file' from Documents category
           if (category === FilesTabs.Documents) {
             kbWhereConditions.push(
               sql`d.file_type != ${'custom/document'}`,
               sql`d.source_type != ${'file'}`,
-              sql`d.file_id IS NULL`,
             );
           }
         } else if (fileTypePrefix) {

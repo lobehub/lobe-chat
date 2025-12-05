@@ -4,7 +4,13 @@ import { ActionIcon, Avatar, Dropdown, Icon, Tag, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { BotMessageSquareIcon, CloudIcon, Loader2Icon, MoreHorizontal } from 'lucide-react';
+import {
+  ArrowLeftIcon,
+  BotMessageSquareIcon,
+  CloudIcon,
+  Loader2Icon,
+  MoreHorizontal,
+} from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -29,6 +35,7 @@ const Header = memo(() => {
     knowledgeBaseId,
     lastUpdatedTime,
     parentId,
+    onBack,
     saveStatus,
     toggleChatPanel,
   } = usePageEditorContext();
@@ -39,7 +46,8 @@ const Header = memo(() => {
     <NavHeader
       left={
         <>
-          {/* Breadcrumb - show when document has a parent folder */}
+          {onBack && <ActionIcon icon={ArrowLeftIcon} onClick={onBack} />}
+          {/* Breadcrumb - show when page has a parent folder */}
           {parentId && (
             <Breadcrumb
               documentTitle={currentTitle || t('documentEditor.titlePlaceholder')}
