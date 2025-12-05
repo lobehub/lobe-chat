@@ -97,15 +97,21 @@ export const createAiModelSlice: StateCreator<
     // Check which removed models exist in builtin model-bank
     let removedButBuiltin: string[] = [];
     let removedFromList: string[] = [];
+    let builtinNotInRemote: string[] = [];
 
-    if (removedModels.length > 0) {
-      try {
-        // Dynamic import model-bank to check builtin models
-        const modelBank = await import('model-bank');
-        // @ts-expect-error providerId is dynamic
-        const builtinModels = modelBank[providerId] as { id: string }[] | undefined;
-        const builtinModelIds = new Set(builtinModels?.map((m) => m.id) || []);
+    // Get builtin models from model-bank
+    let builtinModelIds = new Set<string>();
+    try {
+      // Dynamic import model-bank to check builtin models
+      const modelBank = await import('model-bank');
+      // @ts-expect-error providerId is dynamic
+      const builtinModels = modelBank[providerId] as { id: string }[] | undefined;
+      builtinModelIds = new Set(builtinModels?.map((m) => m.id) || []);
 
+      // Check which builtin models are not in remote
+      builtinNotInRemote = [...builtinModelIds].filter((id) => !newRemoteModelIds.has(id));
+
+      if (removedModels.length > 0) {
         removedModels.forEach((id) => {
           if (builtinModelIds.has(id)) {
             removedButBuiltin.push(id);
@@ -118,12 +124,12 @@ export const createAiModelSlice: StateCreator<
         if (removedFromList.length > 0) {
           await aiModelService.batchDeleteRemoteModels(providerId, removedFromList);
         }
-      } catch {
-        // If model-bank import fails, treat all as removable
-        removedFromList = removedModels;
-        if (removedFromList.length > 0) {
-          await aiModelService.batchDeleteRemoteModels(providerId, removedFromList);
-        }
+      }
+    } catch {
+      // If model-bank import fails, treat all as removable
+      removedFromList = removedModels;
+      if (removedFromList.length > 0) {
+        await aiModelService.batchDeleteRemoteModels(providerId, removedFromList);
       }
     }
 
@@ -150,12 +156,16 @@ export const createAiModelSlice: StateCreator<
 
     // Only return result if there were changes or if this is not the first fetch
     const hasChanges =
-      added.length > 0 || removedFromList.length > 0 || removedButBuiltin.length > 0;
+      added.length > 0 ||
+      removedFromList.length > 0 ||
+      removedButBuiltin.length > 0 ||
+      builtinNotInRemote.length > 0;
     const isFirstFetch = currentRemoteModelIds.size === 0;
 
     if (hasChanges || !isFirstFetch) {
       return {
         added,
+        builtinNotInRemote,
         removedButBuiltin,
         removedFromList,
       };

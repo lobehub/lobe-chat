@@ -9,6 +9,7 @@ export const NOTIFICATION_DURATION = 6;
 
 interface UpdateNotificationProps {
   added: string[];
+  builtinNotInRemote?: string[];
   removedButBuiltin?: string[];
   removedFromList?: string[];
 }
@@ -89,6 +90,7 @@ const TimeoutProgress = ({ percent }: { percent: number }) => {
 export const UpdateNotificationContent = memo(
   ({
     added,
+    builtinNotInRemote,
     duration = NOTIFICATION_DURATION,
     onAutoClose,
     removedButBuiltin,
@@ -176,6 +178,16 @@ export const UpdateNotificationContent = memo(
               removedButBuiltin.length > 0 &&
               t('providerModels.list.fetcher.updateResult.removedButBuiltin', {
                 count: removedButBuiltin.length,
+              })
+            }
+          />
+          <ModelList
+            models={builtinNotInRemote}
+            title={
+              builtinNotInRemote &&
+              builtinNotInRemote.length > 0 &&
+              t('providerModels.list.fetcher.updateResult.builtinNotInRemote', {
+                count: builtinNotInRemote.length,
               })
             }
           />

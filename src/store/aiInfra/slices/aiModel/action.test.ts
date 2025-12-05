@@ -433,6 +433,7 @@ describe('AiModelAction', () => {
         expect(updateResult.added).toEqual([]);
         expect(updateResult.removedFromList).toEqual([]);
         expect(updateResult.removedButBuiltin).toEqual([]);
+        expect(updateResult.builtinNotInRemote).toBeDefined();
       });
     });
   });

@@ -56,9 +56,12 @@ const ModelTitle = memo<ModelFetcherProps>(
 
     const showUpdateNotification = useCallback(
       (result: ModelUpdateResult) => {
-        const { added, removedFromList, removedButBuiltin } = result;
+        const { added, builtinNotInRemote, removedFromList, removedButBuiltin } = result;
         const hasChanges =
-          added.length > 0 || removedFromList.length > 0 || removedButBuiltin.length > 0;
+          added.length > 0 ||
+          removedFromList.length > 0 ||
+          removedButBuiltin.length > 0 ||
+          builtinNotInRemote.length > 0;
 
         if (!hasChanges) {
           message.success(t('providerModels.list.fetcher.updateResult.noChanges'));
@@ -73,26 +76,48 @@ const ModelTitle = memo<ModelFetcherProps>(
           notification.destroy(notificationKey);
         };
 
-        notification.success({
-          description: (
-            <UpdateNotificationContent
-              added={added}
-              onAutoClose={closeNotification}
-              removedButBuiltin={removedButBuiltin}
-              removedFromList={removedFromList}
-            />
-          ),
-          duration: null,
-          key: notificationKey,
-          message:
-            removedButBuiltin.length > 0
-              ? t('providerModels.list.fetcher.updateResult.removedButBuiltinTitle')
-              : t('providerModels.list.fetcher.updateResult.title'),
-          onClose: () => {
-            dismissed = true;
-          },
-          style: { overflow: 'hidden', position: 'relative', width: 380 },
-        });
+        const isOutdated = removedButBuiltin.length > 0 || builtinNotInRemote.length > 0;
+        const notificationStyle = { overflow: 'hidden', position: 'relative' as const, width: 380 };
+
+        if (isOutdated) {
+          notification.warning({
+            description: (
+              <UpdateNotificationContent
+                added={added}
+                builtinNotInRemote={builtinNotInRemote}
+                onAutoClose={closeNotification}
+                removedButBuiltin={removedButBuiltin}
+                removedFromList={removedFromList}
+              />
+            ),
+            duration: null,
+            key: notificationKey,
+            message: t('providerModels.list.fetcher.updateResult.removedButBuiltinTitle'),
+            onClose: () => {
+              dismissed = true;
+            },
+            style: notificationStyle,
+          });
+        } else {
+          notification.success({
+            description: (
+              <UpdateNotificationContent
+                added={added}
+                builtinNotInRemote={builtinNotInRemote}
+                onAutoClose={closeNotification}
+                removedButBuiltin={removedButBuiltin}
+                removedFromList={removedFromList}
+              />
+            ),
+            duration: null,
+            key: notificationKey,
+            message: t('providerModels.list.fetcher.updateResult.title'),
+            onClose: () => {
+              dismissed = true;
+            },
+            style: notificationStyle,
+          });
+        }
       },
       [notification, t, message],
     );

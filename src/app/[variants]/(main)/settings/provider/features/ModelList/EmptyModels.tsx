@@ -60,10 +60,11 @@ const EmptyState = memo<{ provider: string }>(({ provider }) => {
 
   const showUpdateNotification = useCallback(
     (result: ModelUpdateResult) => {
-      const { added } = result;
+      const { added, builtinNotInRemote } = result;
 
-      // For first fetch (empty state), only show if models were added
-      if (added.length > 0) {
+      // For first fetch (empty state), show if models were added or builtin not in remote
+      const hasChanges = added.length > 0 || (builtinNotInRemote && builtinNotInRemote.length > 0);
+      if (hasChanges) {
         const notificationKey = `model-update-${Date.now()}`;
         let dismissed = false;
         const closeNotification = () => {
@@ -72,11 +73,23 @@ const EmptyState = memo<{ provider: string }>(({ provider }) => {
           notification.destroy(notificationKey);
         };
 
-        notification.success({
-          description: <UpdateNotificationContent added={added} onAutoClose={closeNotification} />,
+        // Use warning notification for outdated (builtinNotInRemote), success for updates
+        const isOutdated = builtinNotInRemote && builtinNotInRemote.length > 0;
+        const notificationMethod = isOutdated ? notification.warning : notification.success;
+
+        notificationMethod({
+          description: (
+            <UpdateNotificationContent
+              added={added}
+              builtinNotInRemote={builtinNotInRemote}
+              onAutoClose={closeNotification}
+            />
+          ),
           duration: null,
           key: notificationKey,
-          message: t('providerModels.list.fetcher.updateResult.title'),
+          message: isOutdated
+            ? t('providerModels.list.fetcher.updateResult.removedButBuiltinTitle')
+            : t('providerModels.list.fetcher.updateResult.title'),
           onClose: () => {
             dismissed = true;
           },

@@ -435,6 +435,7 @@ export default {
         noLatestTime: '暂未获取列表',
         updateResult: {
           added: '新增 {{count}} 个模型',
+          builtinNotInRemote: '以下 {{count}} 个内置模型在远端不存在',
           collapse: '收起',
           noChanges: '模型列表无变化',
           removed: '移除 {{count}} 个模型',
