@@ -362,11 +362,32 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
       forceUpdate();
 
       try {
-        const data = await fileService.getKnowledgeItems({
-          knowledgeBaseId,
-          parentId: folderId,
-          showFilesInKnowledgeBase: false,
-        });
+        // Use SWR mutate to trigger a fetch that will be cached and shared with FileExplorer
+        const { mutate: swrMutate } = await import('swr');
+        const data = await swrMutate(
+          [
+            'useFetchKnowledgeItems',
+            {
+              knowledgeBaseId,
+              parentId: folderId,
+              showFilesInKnowledgeBase: false,
+            },
+          ],
+          () =>
+            fileService.getKnowledgeItems({
+              knowledgeBaseId,
+              parentId: folderId,
+              showFilesInKnowledgeBase: false,
+            }),
+          {
+            revalidate: false, // Don't revalidate immediately after mutation
+          },
+        );
+
+        if (!data) {
+          console.error('Failed to load folder contents: no data returned');
+          return;
+        }
 
         const childItems: TreeItem[] = data.map((item) => ({
           fileType: item.fileType,
