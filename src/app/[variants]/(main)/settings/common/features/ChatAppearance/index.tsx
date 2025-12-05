@@ -10,12 +10,13 @@ import {
   highlighterThemes,
   mermaidThemes,
 } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Skeleton, Switch } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Loader2Icon, TriangleAlert } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useUserStore } from '@/store/user';
@@ -83,6 +84,17 @@ const ChatAppearance = memo(() => {
       {
         children: <ChatPreview fontSize={general.fontSize} />,
         noStyle: true,
+      },
+      {
+        children: (
+          <Flexbox align="end">
+            <Switch />
+          </Flexbox>
+        ),
+        desc: t('settingChatAppearance.autoScroll.desc'),
+        label: t('settingChatAppearance.autoScroll.title'),
+        name: 'disableAutoScrollWhileGenerating',
+        valuePropName: 'checked',
       },
       {
         children: (
