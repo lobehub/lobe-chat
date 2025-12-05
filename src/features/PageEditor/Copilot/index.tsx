@@ -4,11 +4,12 @@ import { DraggablePanel } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 
-import { usePageEditorContext } from '../Context';
+import { usePageEditorStore } from '../store';
 import Conversation from './Conversation';
 
 const Copilot = memo(() => {
-  const { chatPanelExpanded, setChatPanelExpanded } = usePageEditorContext();
+  const chatPanelExpanded = usePageEditorStore((s) => s.chatPanelExpanded);
+  const setChatPanelExpanded = usePageEditorStore((s) => s.setChatPanelExpanded);
   const theme = useTheme();
   return (
     <DraggablePanel

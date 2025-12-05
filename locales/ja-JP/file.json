@@ -51,7 +51,10 @@
     },
     "saving": "保存中...",
     "slashCommands": {
-      "image": "画像"
+      "bulletedList": "箇条書きリスト",
+      "image": "画像",
+      "orderedList": "番号付きリスト",
+      "todoList": "やることリスト"
     },
     "titlePlaceholder": "無題",
     "wordCount": "{{wordCount}} 文字"

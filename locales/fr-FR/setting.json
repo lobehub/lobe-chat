@@ -275,8 +275,8 @@
       "title": "Nom"
     },
     "prompt": {
-      "placeholder": "Veuillez saisir le mot de prompt du rôle",
-      "title": "Paramètre du rôle"
+      "placeholder": "Saisissez les paramètres de l'assistant, appuyez sur / pour ouvrir le menu des commandes",
+      "title": "Paramètres de l'assistant"
     },
     "submit": "Mettre à jour les informations de l'assistant",
     "tag": {

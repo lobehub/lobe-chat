@@ -1,17 +1,21 @@
 import { Icon } from '@lobehub/ui';
+import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import { Link2, Trash2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { usePageEditorContext } from '../Context';
+import { usePageEditorStore, useStoreApi } from '../store';
 
 export const useMenu = (): { menuItems: any[] } => {
   const { t } = useTranslation(['file', 'common']);
+  const { message, modal } = App.useApp();
   const theme = useTheme();
+  const storeApi = useStoreApi();
 
-  const { lastUpdatedTime, handleCopyLink, handleDelete, wordCount } = usePageEditorContext();
+  const lastUpdatedTime = usePageEditorStore((s) => s.lastUpdatedTime);
+  const wordCount = usePageEditorStore((s) => s.wordCount);
 
   const menuItems = useMemo(
     () => [
@@ -19,14 +23,20 @@ export const useMenu = (): { menuItems: any[] } => {
         icon: <Icon icon={Link2} />,
         key: 'copy-link',
         label: t('documentEditor.menu.copyLink'),
-        onClick: handleCopyLink,
+        onClick: () => {
+          const state = storeApi.getState();
+          state.handleCopyLink(t as any, message);
+        },
       },
       {
         danger: true,
         icon: <Icon icon={Trash2} />,
         key: 'delete',
         label: t('delete', { ns: 'common' }),
-        onClick: handleDelete,
+        onClick: async () => {
+          const state = storeApi.getState();
+          await state.handleDelete(t as any, message, modal, state.onDelete);
+        },
       },
       {
         type: 'divider' as const,
@@ -48,7 +58,7 @@ export const useMenu = (): { menuItems: any[] } => {
         ),
       },
     ],
-    [theme, wordCount, lastUpdatedTime, handleDelete, handleCopyLink, t],
+    [theme, wordCount, lastUpdatedTime, storeApi, t, message, modal],
   );
 
   return { menuItems };

@@ -275,8 +275,8 @@
       "title": "名稱"
     },
     "prompt": {
-      "placeholder": "請輸入角色 Prompt 提示詞",
-      "title": "角色設定"
+      "placeholder": "輸入助手設定，按 / 開啟指令選單",
+      "title": "助手設定"
     },
     "submit": "更新助手資訊",
     "tag": {
