@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { message } from '@/components/AntdStaticMethods';
 
-import EditorContent from '../EditorContent';
+import EditorCanvas from '../EditorCanvas';
 import { usePageEditor } from '../usePageEditor';
 
 type EditorInstance = ReturnType<typeof useEditor>;
@@ -110,7 +110,7 @@ const PageEditorModal = memo<PageEditorModalProps>(
         width={800}
       >
         <Flexbox padding={16}>
-          <EditorContent editor={editor} onInit={onEditorInit} style={{ minHeight: 400 }} />
+          <EditorCanvas editor={editor} onInit={onEditorInit} style={{ minHeight: 400 }} />
         </Flexbox>
       </Modal>
     );
