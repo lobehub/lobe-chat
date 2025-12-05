@@ -71,6 +71,31 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'GPT-5.1 Codex Max：OpenAI 最智能的编码模型，针对长期 agentic 编码任务优化，支持推理令牌。',
+    displayName: 'GPT-5.1 Codex Max',
+    id: 'gpt-5.1-codex-max',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-12-04',
+    settings: {
+      extendParams: ['codexMaxReasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       imageOutput: true,
       reasoning: true,
       search: true,
@@ -91,7 +116,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-11-13',
     settings: {
-      extendParams: ['gpt5_1ReasoningEffort'],
+      extendParams: ['reasoningEffort'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -119,7 +144,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-11-13',
     settings: {
-      extendParams: ['gpt5_1ReasoningEffort'],
+      extendParams: ['reasoningEffort'],
       searchImpl: 'params',
     },
     type: 'chat',
