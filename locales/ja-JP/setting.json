@@ -271,6 +271,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "画像のサイズが1MBの制限を超えています。より小さい画像を選択してください。",
       "title": "アバター"
     },
     "backgroundColor": {

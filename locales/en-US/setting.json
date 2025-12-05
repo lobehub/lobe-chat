@@ -271,6 +271,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "Image size exceeds 1MB limit, please choose a smaller image",
       "title": "Avatar"
     },
     "backgroundColor": {
