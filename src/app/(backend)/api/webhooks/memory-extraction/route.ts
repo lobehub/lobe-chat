@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+import { parseMemoryExtractionConfig } from '@/server/globalConfig/parseMemoryExtractionConfig';
 import {
   MemoryExtractionExecutor,
   MemoryExtractionWorkflowService,
@@ -9,6 +10,20 @@ import {
 } from '@/server/services/memory/userMemory/extract';
 
 export const POST = async (req: Request) => {
+  const { webhookHeaders } = parseMemoryExtractionConfig();
+
+  if (webhookHeaders && Object.keys(webhookHeaders).length > 0) {
+    for (const [key, value] of Object.entries(webhookHeaders)) {
+      const headerValue = req.headers.get(key);
+      if (headerValue !== value) {
+        return NextResponse.json(
+          { error: `Unauthorized: Missing or invalid header '${key}'` },
+          { status: 403 },
+        );
+      }
+    }
+  }
+
   try {
     const json = await req.json();
     const origin = new URL(req.url).origin;

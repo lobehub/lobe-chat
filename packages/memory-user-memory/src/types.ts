@@ -1,5 +1,6 @@
 import type { LobeChatDatabase } from '@lobechat/database';
 import type { ModelRuntime } from '@lobechat/model-runtime';
+import type { UserMemoryLayer } from '@lobechat/types';
 
 import type {
   ContextExtractor,
@@ -7,8 +8,6 @@ import type {
   IdentityExtractor,
   PreferenceExtractor,
 } from './extractors';
-
-export type MemoryLayer = 'context' | 'experience' | 'identity' | 'preference';
 
 export interface ExtractionMessage {
   content: string;
@@ -40,13 +39,13 @@ export interface BaseExtractorDependencies {
 export interface MemoryExtractionLLMConfig {
   embeddingsModel?: string;
   gateModel: string;
-  layerModels: Partial<Record<MemoryLayer, string>>;
+  layerModels: Partial<Record<UserMemoryLayer, string>>;
   provider?: string;
 }
 
 export interface MemoryExtractionJob {
   force?: boolean;
-  layers?: MemoryLayer[];
+  layers?: UserMemoryLayer[];
   source: MemoryExtractionSourceType;
   sourceId: string;
   userId: string;
@@ -99,7 +98,7 @@ export interface MemoryExtractionProvider {
 
 export interface PersistedMemoryResult {
   createdIds: string[];
-  layers: Partial<Record<MemoryLayer, number>>;
+  layers: Partial<Record<UserMemoryLayer, number>>;
 }
 
 export type MemoryExtractionLayerOutputs = Partial<{
@@ -125,7 +124,7 @@ export interface MemoryLayerDecision {
 export interface MemoryExtractionResult {
   context: PreparedExtractionContext;
   decision: GatekeeperDecision;
-  layers: MemoryLayer[];
+  layers: UserMemoryLayer[];
   outputs: MemoryExtractionLayerOutputs;
   provider: MemoryExtractionProvider;
 }
