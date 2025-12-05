@@ -51,7 +51,10 @@
     },
     "saving": "Saving...",
     "slashCommands": {
-      "image": "Image"
+      "bulletedList": "Bulleted List",
+      "image": "Image",
+      "orderedList": "Ordered List",
+      "todoList": "Todo List"
     },
     "titlePlaceholder": "Untitled",
     "wordCount": "{{wordCount}} words"
