@@ -81,6 +81,7 @@ describe('ContextExtractor', () => {
     const result = extractor.buildUserPrompt(templateOptions);
     const expectedProps = extractor.getTemplateProps(templateOptions);
 
+    expect(result).not.toBe('');
     expect(result).toBe(
       renderPlaceholderTemplate(
         await readFile(new URL('../prompts/layers/context.md', import.meta.url).pathname, 'utf8'),

@@ -81,6 +81,7 @@ describe('ExperienceExtractor', () => {
     const result = (extractor as any).buildUserPrompt(templateOptions);
     const expectedProps = (extractor as any).getTemplateProps(templateOptions);
 
+    expect(result).not.toBe('');
     expect(result).toBe(
       renderPlaceholderTemplate(
         await readFile(

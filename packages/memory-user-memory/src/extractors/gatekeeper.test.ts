@@ -77,6 +77,7 @@ describe('UserMemoryGateKeeper', () => {
     const result = extractor.buildUserPrompt(templateOptions);
     const expectedProps = extractor.getTemplateProps(templateOptions);
 
+    expect(result).not.toBe('');
     expect(result).toBe(
       renderPlaceholderTemplate(
         await readFile(new URL('../prompts/gatekeeper.md', import.meta.url).pathname, 'utf8'),

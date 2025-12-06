@@ -81,6 +81,7 @@ describe('PreferenceExtractor', () => {
     const result = extractor.buildUserPrompt(templateOptions);
     const expectedProps = extractor.getTemplateProps(templateOptions);
 
+    expect(result).not.toBe('');
     expect(result).toBe(
       renderPlaceholderTemplate(
         await readFile(

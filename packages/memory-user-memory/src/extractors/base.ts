@@ -2,7 +2,7 @@ import { renderPlaceholderTemplate } from '@lobechat/context-engine';
 import type { ChatCompletionTool, GenerateObjectPayload } from '@lobechat/model-runtime';
 import { GenerateObjectSchema, ModelRuntime } from '@lobechat/model-runtime';
 import { readFile } from 'node:fs/promises';
-import path from 'node:path';
+import { join } from 'node:path';
 import { z } from 'zod';
 
 import { ExtractorOptions, ExtractorTemplateProps, TemplateProps } from '../types';
@@ -30,7 +30,7 @@ export abstract class BaseMemoryExtractor<
   constructor(config: BaseMemoryExtractorConfig) {
     this.model = config.model;
     this.runtime = config.modelRuntime;
-    this.promptRoot = config.promptRoot ?? new URL('../prompts', import.meta.url).pathname;
+    this.promptRoot = config.promptRoot ?? join(import.meta.dirname, '../prompts');
   }
 
   protected abstract getPromptFileName(): string;
@@ -62,7 +62,7 @@ export abstract class BaseMemoryExtractor<
   async ensurePromptTemplate(): Promise<void> {
     if (this.promptTemplate) return;
 
-    const filePath = path.join(this.promptRoot, this.getPromptFileName());
+    const filePath = join(this.promptRoot, this.getPromptFileName());
     this.promptTemplate = await readFile(filePath, 'utf8');
   }
 
