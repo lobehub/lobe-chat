@@ -1,1 +1,1 @@
-export { createBaseSlice, type BaseAction } from './action';
+export { type BaseAction, createBaseSlice } from './action';

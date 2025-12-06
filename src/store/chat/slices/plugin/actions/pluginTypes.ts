@@ -164,13 +164,12 @@ export const pluginTypes: StateCreator<
         log('[invokeKlavisTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
       } else {
         const result = await messageService.updateMessageError(id, error as any, {
-          sessionId: message?.sessionId,
+          agentId: message?.agentId,
           topicId: message?.topicId,
         });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
-            sessionId: message?.sessionId,
-            topicId: message?.topicId,
+            context: { agentId: message?.agentId, topicId: message?.topicId },
           });
         }
       }

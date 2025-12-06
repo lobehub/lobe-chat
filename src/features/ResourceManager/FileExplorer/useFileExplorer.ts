@@ -1,18 +1,14 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
-import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
-import { useAddFilesToKnowledgeBaseModal } from '@/features/LibraryModal';
 import { useQueryState } from '@/hooks/useQueryParam';
-import { fileManagerSelectors, useFileStore } from '@/store/file';
-import { useGlobalStore } from '@/store/global';
-import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-import { FilesTabs, SortType } from '@/types/files';
-import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
+import { useFileStore } from '@/store/file';
+import { SortType } from '@/types/files';
 
-import type { MultiSelectActionType } from './ToolBar/MultiSelectActions';
-import { ViewMode } from './ToolBar/ViewSwitcher';
+import { useFileExplorerActions } from './hooks/useFileExplorerActions';
+import { useFileExplorerData } from './hooks/useFileExplorerData';
+import { useFileExplorerSelection } from './hooks/useFileExplorerSelection';
+import { useFileExplorerView } from './hooks/useFileExplorerView';
 import { useCheckTaskStatus } from './useCheckTaskStatus';
 
 interface UseFileExplorerOptions {
@@ -21,50 +17,6 @@ interface UseFileExplorerOptions {
 }
 
 export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOptions) => {
-  const navigate = useNavigate();
-  const [, setSearchParams] = useSearchParams();
-
-  // Selection state
-  const [selectFileIds, setSelectedFileIds] = useResourceManagerStore((s) => [
-    s.selectedFileIds,
-    s.setSelectedFileIds,
-  ]);
-  const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
-
-  // View state
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isMasonryReady, setIsMasonryReady] = useState(false);
-
-  // Mode state
-  const mode = useResourceManagerStore((s) => s.mode);
-  const currentViewItemId = useResourceManagerStore((s) => s.currentViewItemId);
-  const setMode = useResourceManagerStore((s) => s.setMode);
-  const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
-
-  // Current file
-  const useFetchKnowledgeItem = useFileStore((s) => s.useFetchKnowledgeItem);
-  const { data: fetchedCurrentFile } = useFetchKnowledgeItem(currentViewItemId);
-  const currentFile =
-    useFileStore(fileManagerSelectors.getFileById(currentViewItemId)) || fetchedCurrentFile;
-
-  // View mode - always use masonry for Images category
-  const storedViewMode = useGlobalStore((s) => s.status.fileManagerViewMode);
-  const viewMode = (
-    category === FilesTabs.Images ? 'masonry' : storedViewMode || 'list'
-  ) as ViewMode;
-  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
-
-  const setViewMode = useCallback(
-    (mode: ViewMode) => {
-      setIsTransitioning(true);
-      if (mode === 'masonry') {
-        setIsMasonryReady(false);
-      }
-      updateSystemStatus({ fileManagerViewMode: mode });
-    },
-    [updateSystemStatus],
-  );
-
   // Query state
   const [query] = useQueryState('q', { clearOnDefault: true });
   const { currentFolderSlug } = useFolderPath();
@@ -78,171 +30,38 @@ export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOp
     defaultValue: SortType.Desc,
   });
 
-  // File operations
-  const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
-  const [removeFiles, parseFilesToChunks, fileList, pendingRenameItemId] = useFileStore((s) => [
-    s.removeFiles,
-    s.parseFilesToChunks,
-    s.fileList,
-    s.pendingRenameItemId,
-  ]);
-  const [removeFromKnowledgeBase, removeKnowledgeBase] = useKnowledgeBaseStore((s) => [
-    s.removeFilesFromKnowledgeBase,
-    s.removeKnowledgeBase,
-  ]);
+  // Use modular hooks
+  const { data, isLoading, isLoadingMore, hasMore, loadMore } = useFileExplorerData({
+    category,
+    currentFolderSlug,
+    knowledgeBaseId,
+    query: query ?? undefined,
+    sortType: sortType ?? undefined,
+    sorter: sorter ?? undefined,
+  });
 
-  const { open: openAddModal } = useAddFilesToKnowledgeBaseModal();
+  const { viewMode, isTransitioning, isMasonryReady, setViewMode } = useFileExplorerView(category);
 
-  // Folder operations
+  const { selectFileIds, setSelectedFileIds, handleSelectionChange } =
+    useFileExplorerSelection(data);
+
+  const { onActionClick } = useFileExplorerActions(
+    selectFileIds,
+    setSelectedFileIds,
+    knowledgeBaseId,
+  );
+
+  // Folder state management
   const setCurrentFolderId = useFileStore((s) => s.setCurrentFolderId);
   const useFetchFolderBreadcrumb = useFileStore((s) => s.useFetchFolderBreadcrumb);
   const { data: folderBreadcrumb } = useFetchFolderBreadcrumb(currentFolderSlug);
+  const pendingRenameItemId = useFileStore((s) => s.pendingRenameItemId);
 
-  // Fetch data
-  const { data: rawData, isLoading } = useFetchKnowledgeItems({
-    category,
-    knowledgeBaseId,
-    parentId: currentFolderSlug || null,
-    q: query ?? undefined,
-    showFilesInKnowledgeBase: false,
-  });
-
-  // Client-side sorting
-  const data = useMemo(() => {
-    if (!rawData) return rawData;
-
-    const sorted = [...rawData];
-    const currentSorter = sorter || 'createdAt';
-    const currentSortType = sortType || SortType.Desc;
-
-    sorted.sort((a, b) => {
-      let aValue: any;
-      let bValue: any;
-
-      switch (currentSorter) {
-        case 'name': {
-          aValue = a.name?.toLowerCase() || '';
-          bValue = b.name?.toLowerCase() || '';
-          break;
-        }
-        case 'size': {
-          aValue = a.size || 0;
-          bValue = b.size || 0;
-          break;
-        }
-        default: {
-          aValue = new Date(a.createdAt).getTime();
-          bValue = new Date(b.createdAt).getTime();
-          break;
-        }
-      }
-
-      if (currentSortType === SortType.Asc) {
-        return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-      }
-      return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
-    });
-
-    return sorted;
-  }, [rawData, sorter, sortType]);
-
+  // Check task status
   useCheckTaskStatus(data);
 
-  // Action handlers
-  const onActionClick = useCallback(
-    async (type: MultiSelectActionType) => {
-      switch (type) {
-        case 'delete': {
-          await removeFiles(selectFileIds);
-          setSelectedFileIds([]);
-          return;
-        }
-        case 'removeFromKnowledgeBase': {
-          if (!knowledgeBaseId) return;
-          await removeFromKnowledgeBase(knowledgeBaseId, selectFileIds);
-          setSelectedFileIds([]);
-          return;
-        }
-        case 'addToKnowledgeBase': {
-          openAddModal({
-            fileIds: selectFileIds,
-            onClose: () => setSelectedFileIds([]),
-          });
-          return;
-        }
-        case 'addToOtherKnowledgeBase': {
-          openAddModal({
-            fileIds: selectFileIds,
-            knowledgeBaseId,
-            onClose: () => setSelectedFileIds([]),
-          });
-          return;
-        }
-        case 'batchChunking': {
-          const chunkableFileIds = selectFileIds.filter((id) => {
-            const file = fileList.find((f) => f.id === id);
-            return file && !isChunkingUnsupported(file.fileType);
-          });
-          await parseFilesToChunks(chunkableFileIds, { skipExist: true });
-          setSelectedFileIds([]);
-          return;
-        }
-        case 'deleteLibrary': {
-          if (!knowledgeBaseId) return;
-          await removeKnowledgeBase(knowledgeBaseId);
-          navigate('/knowledge');
-          return;
-        }
-      }
-    },
-    [
-      selectFileIds,
-      knowledgeBaseId,
-      removeFiles,
-      removeFromKnowledgeBase,
-      removeKnowledgeBase,
-      parseFilesToChunks,
-      fileList,
-      openAddModal,
-      setSelectedFileIds,
-      navigate,
-    ],
-  );
-
-  const handleBackToList = useCallback(() => {
-    setMode('files');
-    setCurrentViewItemId(undefined);
-    setSearchParams((prev) => {
-      const newParams = new URLSearchParams(prev);
-      newParams.delete('file');
-      return newParams;
-    });
-  }, [setMode, setCurrentViewItemId, setSearchParams]);
-
-  const handleSelectionChange = useCallback(
-    (id: string, checked: boolean, shiftKey: boolean, clickedIndex: number) => {
-      if (shiftKey && lastSelectedIndex !== null && selectFileIds.length > 0 && data) {
-        const start = Math.min(lastSelectedIndex, clickedIndex);
-        const end = Math.max(lastSelectedIndex, clickedIndex);
-        const rangeIds = data.slice(start, end + 1).map((item) => item.id);
-
-        const prevSet = new Set(selectFileIds);
-        rangeIds.forEach((rangeId) => prevSet.add(rangeId));
-        setSelectedFileIds(Array.from(prevSet));
-      } else {
-        if (checked) {
-          setSelectedFileIds([...selectFileIds, id]);
-        } else {
-          setSelectedFileIds(selectFileIds.filter((item) => item !== id));
-        }
-      }
-      setLastSelectedIndex(clickedIndex);
-    },
-    [lastSelectedIndex, selectFileIds, data, setSelectedFileIds],
-  );
-
-  // Effects
-  React.useEffect(() => {
+  // Sync folder ID with current folder slug
+  useEffect(() => {
     if (!currentFolderSlug) {
       setCurrentFolderId(null);
     } else if (folderBreadcrumb && folderBreadcrumb.length > 0) {
@@ -251,66 +70,26 @@ export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOp
     }
   }, [currentFolderSlug, folderBreadcrumb, setCurrentFolderId]);
 
-  React.useEffect(() => {
-    if (isTransitioning && data) {
-      requestAnimationFrame(() => {
-        const timer = setTimeout(() => {
-          setIsTransitioning(false);
-        }, 100);
-        return () => clearTimeout(timer);
-      });
-    }
-  }, [isTransitioning, viewMode, data]);
-
-  React.useEffect(() => {
-    if (viewMode === 'masonry' && data && !isLoading && !isTransitioning) {
-      const timer = setTimeout(() => {
-        setIsMasonryReady(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    } else if (viewMode === 'list') {
-      setIsMasonryReady(false);
-    }
-  }, [viewMode, data, isLoading, isTransitioning]);
-
-  React.useEffect(() => {
-    if (data && selectFileIds.length > 0) {
-      const validFileIds = new Set(data.map((item) => item?.id).filter(Boolean));
-      const filteredSelection = selectFileIds.filter((id) => validFileIds.has(id));
-      if (filteredSelection.length !== selectFileIds.length) {
-        setSelectedFileIds(filteredSelection);
-      }
-    }
-  }, [data]);
-
-  React.useEffect(() => {
-    if (selectFileIds.length === 0) {
-      setLastSelectedIndex(null);
-    }
-  }, [selectFileIds.length]);
-
   const showEmptyStatus = !isLoading && data?.length === 0 && !currentFolderSlug;
-  const isFilePreviewMode = mode === 'file' && currentViewItemId;
 
   return {
     // Data
-    currentFile,
-    currentFolderSlug,
-    currentViewItemId,
     data,
     // Handlers
-    handleBackToList,
-
     handleSelectionChange,
 
-    isFilePreviewMode,
+    hasMore,
 
     isLoading,
+
+    isLoadingMore,
 
     // State
     isMasonryReady,
 
     isTransitioning,
+
+    loadMore,
 
     onActionClick,
 
