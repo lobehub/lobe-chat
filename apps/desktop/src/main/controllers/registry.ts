@@ -1,13 +1,10 @@
-import type {
-  CreateServicesResult,
-  IpcServiceConstructor,
-  MergeIpcService,
-} from '@/utils/ipc';
+import type { CreateServicesResult, IpcServiceConstructor, MergeIpcService } from '@/utils/ipc';
 
 import AuthCtr from './AuthCtr';
 import BrowserWindowsCtr from './BrowserWindowsCtr';
 import DevtoolsCtr from './DevtoolsCtr';
 import LocalFileCtr from './LocalFileCtr';
+import McpInstallCtr from './McpInstallCtr';
 import MenuController from './MenuCtr';
 import NetworkProxyCtr from './NetworkProxyCtr';
 import NotificationCtr from './NotificationCtr';
@@ -27,6 +24,7 @@ export const controllerIpcConstructors = [
   BrowserWindowsCtr,
   DevtoolsCtr,
   LocalFileCtr,
+  McpInstallCtr,
   MenuController,
   NetworkProxyCtr,
   NotificationCtr,
