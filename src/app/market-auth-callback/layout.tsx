@@ -1,9 +1,9 @@
 import { cookies, headers } from 'next/headers';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
-
+import AuthContainer from '@/app/[variants]/(auth)/_layout';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import GlobalLayout from '@/layout/GlobalProvider';
 import { Locales } from '@/locales/resources';
@@ -28,7 +28,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
       <body>
         <NuqsAdapter>
           <GlobalLayout appearance="auto" isMobile={false} locale={locale}>
-            {children}
+            <AuthContainer>{children}</AuthContainer>
           </GlobalLayout>
         </NuqsAdapter>
       </body>

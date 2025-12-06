@@ -1,68 +1,16 @@
-'use client';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { FC, PropsWithChildren } from 'react';
 
-import { Text } from '@lobehub/ui';
-import { Divider } from 'antd';
-import { useTheme } from 'antd-style';
-import { PropsWithChildren } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
+import AuthContainer from './_layout';
 
-import { ProductLogo } from '@/components/Branding';
-import LangButton from '@/features/User/UserPanel/LangButton';
-import ThemeButton from '@/features/User/UserPanel/ThemeButton';
-
-const Page = ({ children }: PropsWithChildren) => {
-  const theme = useTheme();
+const AuthLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <Flexbox
-      height={'100%'}
-      padding={8}
-      style={{
-        position: 'relative',
-      }}
-      width={'100%'}
-    >
-      <Flexbox
-        height={'100%'}
-        style={{
-          background: theme.colorBgContainer,
-          border: `1px solid ${theme.isDarkMode ? theme.colorBorderSecondary : theme.colorBorder}`,
-          borderRadius: theme.borderRadius,
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-        width={'100%'}
-      >
-        <Flexbox
-          align={'center'}
-          gap={8}
-          horizontal
-          justify={'space-between'}
-          padding={16}
-          width={'100%'}
-        >
-          <ProductLogo size={40} />
-          <Flexbox align={'center'} horizontal>
-            <LangButton placement={'bottomRight'} size={18} />
-            <Divider
-              style={{
-                height: 24,
-              }}
-              type={'vertical'}
-            />
-            <ThemeButton placement={'bottomRight'} size={18} />
-          </Flexbox>
-        </Flexbox>
-        <Center height={'100%'} padding={16} width={'100%'}>
-          {children}
-        </Center>
-        <Center padding={24}>
-          <Text align={'center'} type={'secondary'}>
-            © 2025 LobeHub, Inc. All rights reserved.
-          </Text>
-        </Center>
-      </Flexbox>
-    </Flexbox>
+    <NuqsAdapter>
+      <AuthContainer>{children}</AuthContainer>
+    </NuqsAdapter>
   );
 };
 
-export default Page;
+AuthLayout.displayName = 'AuthLayout';
+
+export default AuthLayout;
