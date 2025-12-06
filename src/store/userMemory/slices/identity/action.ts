@@ -1,9 +1,12 @@
-import { NewUserMemoryIdentity, UpdateUserMemoryIdentity } from '@lobechat/types';
+import {
+  NewUserMemoryIdentity,
+  UpdateUserMemoryIdentity,
+  UserMemoryIdentityWithoutVectors,
+} from '@lobechat/types';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { AddIdentityEntryResult } from '@/database/models/userMemory';
-import { UserMemoryIdentitiesWithoutVectors } from '@/database/schemas';
 import { useClientDataSWR } from '@/libs/swr';
 import { memoryCRUDService } from '@/services/userMemory/index';
 
@@ -15,7 +18,7 @@ export interface IdentityAction {
   createIdentity: (data: NewUserMemoryIdentity) => Promise<AddIdentityEntryResult>;
   deleteIdentity: (id: string) => Promise<void>;
   updateIdentity: (id: string, data: UpdateUserMemoryIdentity) => Promise<boolean>;
-  useFetchIdentities: () => SWRResponse<UserMemoryIdentitiesWithoutVectors[]>;
+  useFetchIdentities: () => SWRResponse<UserMemoryIdentityWithoutVectors[]>;
 }
 
 export const createIdentitySlice: StateCreator<

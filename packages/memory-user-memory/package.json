@@ -4,7 +4,8 @@
   "private": true,
   "main": "src/index.ts",
   "scripts": {
-    "gatekeeper": "tsx scripts/run-gatekeeper.ts"
+    "test": "vitest --run",
+    "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@lobechat/context-engine": "workspace:*",
@@ -12,9 +13,14 @@
     "@lobechat/prompts": "workspace:*",
     "dotenv": "^17.2.3",
     "ora": "^9.0.0",
+    "unist-builder": "^4.0.0",
+    "xast-util-to-xml": "^4.0.0",
+    "xastscript": "^4.0.0",
     "zod-to-json-schema": "^3.24.6"
   },
   "devDependencies": {
+    "@lobechat/types": "workspace:*",
+    "@types/xast": "^2.0.4",
     "tsx": "^4.20.6"
   },
   "peerDependencies": {

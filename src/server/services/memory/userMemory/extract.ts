@@ -1,21 +1,27 @@
-import { topics } from '@lobechat/database/schemas';
-import { MemoryExtractionService } from '@lobechat/memory-user-memory';
+import { messages, topics } from '@lobechat/database/schemas';
+import {
+  LobeChatTopicContextProvider,
+  LobeChatTopicResultRecorder,
+  MemoryExtractionService,
+  RetrievalUserMemoryContextProvider,
+  RetrievalUserMemoryIdentitiesProvider,
+} from '@lobechat/memory-user-memory';
 import type {
+  BuiltContext,
   MemoryExtractionJob,
   MemoryExtractionResult,
   MemoryExtractionSourceType,
   PersistedMemoryResult,
-  PreparedExtractionContext,
 } from '@lobechat/memory-user-memory';
 import { ModelRuntime } from '@lobechat/model-runtime';
-import type { Embeddings } from '@lobechat/model-runtime';
+import type { Embeddings, LLMRoleType, OpenAIChatMessage } from '@lobechat/model-runtime';
 import {
   layerEntriesHistogram,
   processedDurationHistogram,
   processedSourceCounter,
 } from '@lobechat/observability-otel/api';
 import { Client } from '@upstash/workflow';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
 import {
@@ -316,7 +322,7 @@ export class MemoryExtractionExecutor {
 
   private buildBaseMetadata(
     job: MemoryExtractionJob,
-    context: PreparedExtractionContext,
+    context: BuiltContext,
     layer: UserMemoryLayer,
     labels?: string[] | null,
   ) {
@@ -327,7 +333,6 @@ export class MemoryExtractionExecutor {
       messageIds: context.metadata.messageIds ?? [],
       source: job.source,
       sourceId: job.sourceId,
-      topicId: context.topicId,
     };
   }
 
@@ -371,7 +376,7 @@ export class MemoryExtractionExecutor {
 
   async persistContextMemories(
     job: MemoryExtractionJob,
-    context: PreparedExtractionContext,
+    context: BuiltContext,
     result: NonNullable<MemoryExtractionResult['outputs']['context']>,
     runtime: ModelRuntime,
     model: string,
@@ -429,7 +434,7 @@ export class MemoryExtractionExecutor {
 
   async persistExperienceMemories(
     job: MemoryExtractionJob,
-    context: PreparedExtractionContext,
+    context: BuiltContext,
     result: NonNullable<MemoryExtractionResult['outputs']['experience']>,
     runtime: ModelRuntime,
     model: string,
@@ -487,7 +492,7 @@ export class MemoryExtractionExecutor {
 
   async persistPreferenceMemories(
     job: MemoryExtractionJob,
-    context: PreparedExtractionContext,
+    context: BuiltContext,
     result: NonNullable<MemoryExtractionResult['outputs']['preference']>,
     runtime: ModelRuntime,
     model: string,
@@ -540,7 +545,7 @@ export class MemoryExtractionExecutor {
 
   async persistIdentityMemories(
     job: MemoryExtractionJob,
-    context: PreparedExtractionContext,
+    context: BuiltContext,
     result: NonNullable<MemoryExtractionResult['outputs']['identity']>,
     runtime: ModelRuntime,
     model: string,
@@ -619,11 +624,87 @@ export class MemoryExtractionExecutor {
     return insertedIds;
   }
 
+  async listConversationsForTopic(userId: string, topicId: string, topicUpdatedAt: Date) {
+    const db = await this.db;
+    const rows = await db
+      .select({
+        content: messages.content,
+        createdAt: messages.createdAt,
+        id: messages.id,
+        role: messages.role,
+      })
+      .from(messages)
+      .where(and(eq(messages.userId, userId), eq(messages.topicId, topicId)))
+      .orderBy(asc(messages.createdAt));
+
+    const conversation = rows
+      .filter((row) => typeof row.content === 'string' && row.content.trim().length > 0)
+      .map(
+        (row) =>
+          ({
+            content: row.content as string,
+            createdAt: row.createdAt ?? topicUpdatedAt,
+            role: (row.role ?? 'assistant') as LLMRoleType,
+          }) satisfies OpenAIChatMessage & { createdAt: Date },
+      );
+
+    if (conversation.length === 0) {
+      return [];
+    }
+
+    return conversation;
+  }
+
+  async listRelevantUserMemories(
+    job: MemoryExtractionJob,
+    runtime: ModelRuntime,
+    embeddingModel: string,
+    userId: string,
+    conversations: OpenAIChatMessage[],
+  ) {
+    const db = await this.db;
+    const userMemoryModel = new UserMemoryModel(db, userId);
+    // TODO: make topK configurable
+    const topK = 10;
+    const aggregatedContent = conversations
+      .map((msg) => `${msg.role.toUpperCase()}: ${msg.content}`)
+      .join('\n\n');
+
+    const embeddings = await runtime.embeddings({
+      dimensions: DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
+      input: [aggregatedContent],
+      model: embeddingModel,
+    });
+
+    const vector = embeddings?.[0];
+    if (vector) {
+      const retrieved = await userMemoryModel.searchWithEmbedding({
+        embedding: vector,
+        limits: { contexts: topK, experiences: topK, preferences: topK },
+      });
+
+      return retrieved;
+    }
+
+    return {
+      contexts: [],
+      experiences: [],
+      preferences: [],
+    };
+  }
+
+  async listUserMemoryIdentities(job: MemoryExtractionJob, userId: string) {
+    const db = await this.db;
+    const userMemoryModel = new UserMemoryModel(db, userId);
+
+    return userMemoryModel.getAllIdentities();
+  }
+
   async extractTopic(job: TopicExtractionJob) {
     const startTime = Date.now();
     const db = await this.db;
     const topic = await db.query.topics.findFirst({
-      columns: { createdAt: true, id: true, metadata: true, userId: true },
+      columns: { createdAt: true, id: true, metadata: true, updatedAt: true, userId: true },
       where: and(eq(topics.id, job.topicId), eq(topics.userId, job.userId)),
     });
 
@@ -638,18 +719,6 @@ export class MemoryExtractionExecutor {
       return { extracted: false, layers: {}, memoryIds: [] };
     }
 
-    const userModel = new UserModel(db, job.userId);
-    const userState = await userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
-    const keyVaults = userState.settings?.keyVaults as UserKeyVaults | undefined;
-
-    const runtimes = await this.getRuntime(job.userId, keyVaults);
-    const service = new MemoryExtractionService({
-      config: this.modelConfig,
-      db,
-      runtimes,
-    });
-
-    let extraction: MemoryExtractionResult | null = null;
     const extractionJob: MemoryExtractionJob = {
       force: job.forceAll || job.forceTopics,
       layers: job.layers,
@@ -658,31 +727,110 @@ export class MemoryExtractionExecutor {
       userId: job.userId,
     };
 
+    const userModel = new UserModel(db, job.userId);
+    const userState = await userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
+    const keyVaults = userState.settings?.keyVaults as UserKeyVaults | undefined;
+    const language = userState.settings?.general?.language;
+
+    const runtimes = await this.getRuntime(job.userId, keyVaults);
+
+    const conversations = await this.listConversationsForTopic(
+      job.userId,
+      topic.id,
+      topic.updatedAt,
+    );
+    if (!conversations || conversations.length === 0) {
+      this.recordJobMetrics(
+        {
+          force: job.forceAll || job.forceTopics,
+          layers: job.layers,
+          source: job.source,
+          sourceId: topic.id,
+          userId: job.userId,
+        },
+        'completed',
+        Date.now() - startTime,
+      );
+      return { extracted: false, layers: {}, memoryIds: [] };
+    }
+
+    const topicContextProvider = new LobeChatTopicContextProvider({
+      conversations: conversations,
+      topic: topic,
+      topicId: topic.id,
+    });
+    const topicContext = await topicContextProvider.buildContext(extractionJob);
+
+    const resultRecorder = new LobeChatTopicResultRecorder({
+      currentMetadata: topic.metadata || {},
+      database: db,
+      lastMessageAt: (conversations?.at(-1)?.createdAt || topic.updatedAt).toISOString(),
+      messageCount: conversations.length,
+      topicId: topic.id,
+    });
+
+    const retrievedMemories = await this.listRelevantUserMemories(
+      extractionJob,
+      runtimes.embeddings,
+      this.modelConfig.embeddingsModel,
+      job.userId,
+      conversations,
+    );
+    const retrievedMemoryContextProvider = new RetrievalUserMemoryContextProvider({
+      retrievedMemories,
+    });
+    const retrievalMemoryContext = await retrievedMemoryContextProvider.buildContext(extractionJob);
+
+    const retrievedMemoryIdentities = await this.listUserMemoryIdentities(
+      extractionJob,
+      job.userId,
+    );
+    const retrievedMemoryIdentitiesContextProvider = new RetrievalUserMemoryIdentitiesProvider({
+      retrievedIdentities: retrievedMemoryIdentities,
+    });
+    const retrievedIdentityContext =
+      await retrievedMemoryIdentitiesContextProvider.buildContext(extractionJob);
+
+    let extraction: MemoryExtractionResult | null = null;
+    const service = new MemoryExtractionService({
+      config: this.modelConfig,
+      db,
+      language,
+      runtimes,
+    });
+
     try {
-      extraction = await service.run(extractionJob);
+      extraction = await service.run(extractionJob, {
+        contextProvider: topicContextProvider,
+        language: language,
+        resultRecorder: resultRecorder,
+        retrievedContexts: [
+          topicContext.context,
+          retrievalMemoryContext.context,
+          retrievedIdentityContext.context,
+        ],
+        sessionDate: topic.updatedAt.toISOString(),
+        // TODO: make topK configurable
+        topK: 10,
+        username:
+          userState.fullName || `${userState.firstName} ${userState.lastName}`.trim() || 'User',
+      });
       if (!extraction) {
         this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
         return { extracted: false, layers: {}, memoryIds: [] };
       }
 
       const persistedRes = await this.persistExtraction(extractionJob, extraction, runtimes, db);
-
-      await extraction.provider.complete(extractionJob, extraction.context, persistedRes, {
-        db,
-        embeddingsModel: this.modelConfig.embeddingsModel,
-        runtime: runtimes.layerExtractor,
+      await resultRecorder.recordComplete(extractionJob, {
+        ...persistedRes,
+        processedMemoryCount: persistedRes.createdIds.length,
       });
-
       this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
 
       return { extracted: true, layers: persistedRes.layers, memoryIds: persistedRes.createdIds };
     } catch (error) {
       if (extraction) {
-        await extraction.provider.fail?.(extractionJob, extraction.context, error as Error, {
-          db,
-          embeddingsModel: this.modelConfig.embeddingsModel,
-          runtime: runtimes.layerExtractor,
-        });
+        await resultRecorder.recordFail?.(extractionJob, error as Error);
       }
       this.recordJobMetrics(extractionJob, 'failed', Date.now() - startTime);
       throw error;
@@ -700,7 +848,13 @@ export class MemoryExtractionExecutor {
       throw new Error('Direct execution requires topicIds for chat_topic sources.');
     }
 
-    const results: { extracted: boolean; layers: Record<string, number>; memoryIds: string[]; topicId: string; userId: string }[] = [];
+    const results: {
+      extracted: boolean;
+      layers: Record<string, number>;
+      memoryIds: string[];
+      topicId: string;
+      userId: string;
+    }[] = [];
 
     for (const userId of payload.userIds) {
       const topicIds = await this.filterTopicIdsForUser(userId, payload.topicIds);
@@ -889,6 +1043,12 @@ export class MemoryExtractionExecutor {
   }
 
   private async getRuntime(userId: string, keyVaults?: UserKeyVaults): Promise<RuntimeBundle> {
+    // TODO: implement a better cache eviction strategy
+    // TODO: make cache size configurable
+    if (this.runtimeCache.keys.length > 200) {
+      this.runtimeCache.clear();
+    }
+
     const cached = this.runtimeCache.get(userId);
     if (cached) return cached;
 
