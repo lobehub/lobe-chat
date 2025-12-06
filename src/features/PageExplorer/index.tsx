@@ -13,22 +13,17 @@ interface PageExplorerProps {
   pageId?: string;
 }
 
-/**
- * Page explorer component - renders the page editor
- */
 const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
   const { t } = useTranslation('file');
 
-  const selectedPageId = useFileStore((s) => s.selectedPageId);
-  const fetchDocuments = useFileStore((s) => s.fetchDocuments);
-  const getOptimisticDocuments = useFileStore((s) => s.getOptimisticDocuments);
-  const setSelectedPageId = useFileStore((s) => s.setSelectedPageId);
-  const createNewPage = useFileStore((s) => s.createNewPage);
-  const deletePage = useFileStore((s) => s.deletePage);
-
-  useEffect(() => {
-    fetchDocuments();
-  }, [fetchDocuments]);
+  const [selectedPageId, setSelectedPageId, getOptimisticDocuments, createNewPage, deletePage] =
+    useFileStore((s) => [
+      s.selectedPageId,
+      s.setSelectedPageId,
+      s.getOptimisticDocuments,
+      s.createNewPage,
+      s.deletePage,
+    ]);
 
   useEffect(() => {
     if (pageId && pageId !== selectedPageId) {
@@ -51,10 +46,9 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
   if (!currentPageId)
     return (
       <PageExplorerPlaceholder
-        hasPages={pages.length > 0}
+        hasPages={pages?.length > 0}
         knowledgeBaseId={knowledgeBaseId}
         onCreateNewNote={handleNewDocument}
-        onNoteCreated={() => {}}
       />
     );
 
