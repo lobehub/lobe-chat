@@ -42,7 +42,7 @@ const AgentBuilder = memo(() => {
           <AgentBuilderConversation agentId={agentBuilderId} />
         </AgentBuilderProvider>
       ) : (
-        <Loading />
+        <Loading debugId="AgentBuilder > Init" />
       )}
     </DraggablePanel>
   );
