@@ -48,6 +48,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
     agentChatConfigSelectors.enableHistoryCount(s),
     // need to re-render by search mode
     agentChatConfigSelectors.isAgentEnableSearch(s),
+    agentChatConfigSelectors.useModelBuiltinSearch(s),
   ]);
 
   const maxTokens = useModelContextWindowTokens(model, provider);
