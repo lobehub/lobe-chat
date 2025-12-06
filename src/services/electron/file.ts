@@ -20,7 +20,7 @@ class DesktopFileAPI {
   ): Promise<{ metadata: FileMetadata; success: boolean }> {
     const arrayBuffer = await file.arrayBuffer();
 
-    return ensureElectronIpc().upload.createFile({
+    return ensureElectronIpc().upload.uploadFile({
       content: arrayBuffer,
       filename: file.name,
       hash,
