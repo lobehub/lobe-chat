@@ -12,7 +12,7 @@ const ChatConversation = memo(() => {
   return (
     <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }} width={'100%'}>
       {showHeader && <ChatHeader />}
-      <ConversationArea mobile={false} />
+      <ConversationArea />
     </Flexbox>
   );
 });
