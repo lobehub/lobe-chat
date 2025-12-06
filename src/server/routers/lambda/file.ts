@@ -184,6 +184,78 @@ export const fileRouter = router({
   }),
 
   getKnowledgeItems: fileProcedure.input(QueryFileListSchema).query(async ({ ctx, input }) => {
+    // Use pagination-aware query if limit is provided
+    if (input.limit !== undefined) {
+      const {
+        items: knowledgeItems,
+        total,
+        hasMore,
+      } = await ctx.knowledgeRepo.queryWithPagination(input);
+
+      // Filter out folders from Documents category when in Inbox (no knowledgeBaseId)
+      const filteredItems = !input.knowledgeBaseId
+        ? knowledgeItems.filter(
+            (item) => !(item.sourceType === 'document' && item.fileType === 'custom/folder'),
+          )
+        : knowledgeItems;
+
+      // Process files (add chunk info and async task status)
+      const fileItems = filteredItems.filter((item) => item.sourceType === 'file');
+      const fileIds = fileItems.map((item) => item.id);
+      const chunks = await ctx.chunkModel.countByFileIds(fileIds);
+
+      const chunkTaskIds = fileItems.map((item) => item.chunkTaskId).filter(Boolean) as string[];
+      const chunkTasks = await ctx.asyncTaskModel.findByIds(chunkTaskIds, AsyncTaskType.Chunking);
+
+      const embeddingTaskIds = fileItems
+        .map((item) => item.embeddingTaskId)
+        .filter(Boolean) as string[];
+      const embeddingTasks = await ctx.asyncTaskModel.findByIds(
+        embeddingTaskIds,
+        AsyncTaskType.Embedding,
+      );
+
+      // Combine all items with their metadata
+      const resultItems = [] as any[];
+      for (const item of filteredItems) {
+        if (item.sourceType === 'file') {
+          const chunkTask = item.chunkTaskId
+            ? chunkTasks.find((task) => task.id === item.chunkTaskId)
+            : null;
+          const embeddingTask = item.embeddingTaskId
+            ? embeddingTasks.find((task) => task.id === item.embeddingTaskId)
+            : null;
+
+          resultItems.push({
+            ...item,
+            chunkCount: chunks.find((chunk) => chunk.id === item.id)?.count ?? null,
+            chunkingError: chunkTask?.error ?? null,
+            chunkingStatus: chunkTask?.status as AsyncTaskStatus,
+            editorData: null,
+            embeddingError: embeddingTask?.error ?? null,
+            embeddingStatus: embeddingTask?.status as AsyncTaskStatus,
+            finishEmbedding: embeddingTask?.status === AsyncTaskStatus.Success,
+            url: await ctx.fileService.getFullFileUrl(item.url!),
+          } as FileListItem);
+        } else {
+          // Document item - no chunk processing needed, includes editorData
+          const documentItem = {
+            ...item,
+            chunkCount: null,
+            chunkingError: null,
+            chunkingStatus: null,
+            embeddingError: null,
+            embeddingStatus: null,
+            finishEmbedding: false,
+          } as FileListItem;
+          resultItems.push(documentItem);
+        }
+      }
+
+      return { hasMore, items: resultItems, total };
+    }
+
+    // Fallback to non-paginated query for backward compatibility
     const knowledgeItems = await ctx.knowledgeRepo.query(input);
 
     // Filter out folders from Documents category when in Inbox (no knowledgeBaseId)
@@ -248,76 +320,6 @@ export const fileRouter = router({
 
     return resultItems;
   }),
-
-  removeAllFiles: fileProcedure.mutation(async ({ ctx }) => {
-    return ctx.fileModel.clear();
-  }),
-
-  removeFile: fileProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
-    const file = await ctx.fileModel.delete(input.id, serverDBEnv.REMOVE_GLOBAL_FILE);
-
-    if (!file) return;
-
-    // delele the file from remove from S3 if it is not used by other files
-    await ctx.fileService.deleteFile(file.url!);
-  }),
-
-  removeFileAsyncTask: fileProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        type: z.enum(['embedding', 'chunk']),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const file = await ctx.fileModel.findById(input.id);
-
-      if (!file) return;
-
-      const taskId = input.type === 'embedding' ? file.embeddingTaskId : file.chunkTaskId;
-
-      if (!taskId) return;
-
-      await ctx.asyncTaskModel.delete(taskId);
-    }),
-
-  removeFiles: fileProcedure
-    .input(z.object({ ids: z.array(z.string()) }))
-    .mutation(async ({ input, ctx }) => {
-      const needToRemoveFileList = await ctx.fileModel.deleteMany(
-        input.ids,
-        serverDBEnv.REMOVE_GLOBAL_FILE,
-      );
-
-      if (!needToRemoveFileList || needToRemoveFileList.length === 0) return;
-
-      // remove from S3
-      await ctx.fileService.deleteFiles(needToRemoveFileList.map((file) => file.url!));
-    }),
-
-  updateFile: fileProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        parentId: z.string().nullable().optional(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { id, parentId } = input;
-
-      // Resolve parentId if it's a slug (otherwise use as-is)
-      let resolvedParentId: string | null | undefined = parentId;
-      if (parentId) {
-        const docBySlug = await ctx.documentModel.findBySlug(parentId);
-        if (docBySlug) {
-          resolvedParentId = docBySlug.id;
-        }
-      }
-
-      await ctx.fileModel.update(id, { parentId: resolvedParentId });
-
-      return { success: true };
-    }),
 
   recentFiles: fileProcedure
     .input(z.object({ limit: z.number().optional() }).optional())
@@ -388,6 +390,76 @@ export const fileRouter = router({
       return allItems
         .filter((item) => item.sourceType === 'document' && item.fileType !== 'custom/folder')
         .slice(0, limit);
+    }),
+
+  removeAllFiles: fileProcedure.mutation(async ({ ctx }) => {
+    return ctx.fileModel.clear();
+  }),
+
+  removeFile: fileProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
+    const file = await ctx.fileModel.delete(input.id, serverDBEnv.REMOVE_GLOBAL_FILE);
+
+    if (!file) return;
+
+    // delele the file from remove from S3 if it is not used by other files
+    await ctx.fileService.deleteFile(file.url!);
+  }),
+
+  removeFileAsyncTask: fileProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        type: z.enum(['embedding', 'chunk']),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const file = await ctx.fileModel.findById(input.id);
+
+      if (!file) return;
+
+      const taskId = input.type === 'embedding' ? file.embeddingTaskId : file.chunkTaskId;
+
+      if (!taskId) return;
+
+      await ctx.asyncTaskModel.delete(taskId);
+    }),
+
+  removeFiles: fileProcedure
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ input, ctx }) => {
+      const needToRemoveFileList = await ctx.fileModel.deleteMany(
+        input.ids,
+        serverDBEnv.REMOVE_GLOBAL_FILE,
+      );
+
+      if (!needToRemoveFileList || needToRemoveFileList.length === 0) return;
+
+      // remove from S3
+      await ctx.fileService.deleteFiles(needToRemoveFileList.map((file) => file.url!));
+    }),
+
+  updateFile: fileProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        parentId: z.string().nullable().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, parentId } = input;
+
+      // Resolve parentId if it's a slug (otherwise use as-is)
+      let resolvedParentId: string | null | undefined = parentId;
+      if (parentId) {
+        const docBySlug = await ctx.documentModel.findBySlug(parentId);
+        if (docBySlug) {
+          resolvedParentId = docBySlug.id;
+        }
+      }
+
+      await ctx.fileModel.update(id, { parentId: resolvedParentId });
+
+      return { success: true };
     }),
 });
 

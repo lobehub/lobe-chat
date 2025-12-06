@@ -7,7 +7,7 @@ import {
   Select,
   SliderWithInput,
 } from '@lobehub/ui';
-import { Form as AntdForm, Checkbox, Switch } from 'antd';
+import { Form as AntdForm, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useEffect, useRef } from 'react';
@@ -21,24 +21,9 @@ import { selectors, useStore } from '../store';
 
 type ParamKey = 'temperature' | 'top_p' | 'presence_penalty' | 'frequency_penalty';
 
-const useStyles = createStyles(({ css, token }) => ({
-  checkbox: css`
-    .ant-checkbox-inner {
-      border-radius: 4px;
-    }
-
-    &:hover .ant-checkbox-inner {
-      border-color: ${token.colorPrimary};
-    }
-  `,
+const useStyles = createStyles(({ css }) => ({
   label: css`
     user-select: none;
-  `,
-  sliderWrapper: css`
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    width: 100%;
   `,
 }));
 
@@ -56,28 +41,29 @@ interface SliderWithCheckboxProps {
 }
 
 const SliderWithCheckbox = memo<SliderWithCheckboxProps>(
-  ({ value, onChange, disabled, checked, onToggle, styles, min, max, step }) => {
+  ({ value, onChange, disabled, checked, onToggle, min, max, step }) => {
     return (
-      <div className={styles.sliderWrapper}>
-        <Checkbox
+      <Flexbox align="center" gap={12} horizontal justify={'flex-end'} width={300}>
+        {!disabled && (
+          <div style={{ flex: 1 }}>
+            <SliderWithInput
+              disabled={disabled}
+              max={max}
+              min={min}
+              onChange={onChange}
+              step={step}
+              value={value}
+            />
+          </div>
+        )}
+        <Switch
           checked={checked}
-          className={styles.checkbox}
-          onChange={(e) => {
-            e.stopPropagation();
-            onToggle(e.target.checked);
+          onChange={(v) => {
+            onToggle(v);
           }}
+          size={checked ? 'small' : 'default'}
         />
-        <div style={{ flex: 1 }}>
-          <SliderWithInput
-            disabled={disabled}
-            max={max}
-            min={min}
-            onChange={onChange}
-            step={step}
-            value={value}
-          />
-        </div>
-      </div>
+      </Flexbox>
     );
   },
 );
@@ -240,6 +226,7 @@ const AgentModal = memo(() => {
           <InfoTooltip title={t(meta.descKey as any)} />
         </Flexbox>
       ),
+      minWidth: undefined,
       name: PARAM_NAME_MAP[key],
       tag: meta.tag,
     } satisfies FormItemProps;

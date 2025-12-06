@@ -1,1 +1,1 @@
-export { createContextSlice, type ContextAction } from './action';
+export { type ContextAction, createContextSlice } from './action';
