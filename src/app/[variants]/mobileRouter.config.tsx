@@ -6,27 +6,38 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
 
 import { MobileMainLayout } from './(main)/(mobile)/_layout';
+import MobileMeHomeLayout from './(main)/(mobile)/me/(home)/layout';
+import MobileMeProfileLayout from './(main)/(mobile)/me/profile/layout';
+import MobileMeSettingsLayout from './(main)/(mobile)/me/settings/layout';
+import MobileMemoryLayout from './(main)/memory/_layout';
+import MobileSettingsLayout from './(main)/settings/(mobile)/_layout';
 import { slugLoader } from './loaders/routeParams';
 
 // Create mobile router configuration
 export const createMobileRouter = () =>
   createBrowserRouter([
     {
-      HydrateFallback: Loading,
+      HydrateFallback: () => <Loading debugId="Mobile Router Hydration" />,
       children: [
         // Chat routes
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/chat/(mobile)')),
+              element: dynamicElement(() => import('./(main)/chat/(mobile)'), 'Mobile > Chat'),
               index: true,
             },
             {
-              element: dynamicElement(() => import('./(main)/chat/profile/Settings')),
+              element: dynamicElement(
+                () => import('./(main)/chat/profile/Settings'),
+                'Mobile > Chat > Settings',
+              ),
               path: 'settings',
             },
           ],
-          element: dynamicElement(() => import('./(main)/chat/(mobile)/_layout/Mobile')),
+          element: dynamicElement(
+            () => import('./(main)/chat/(mobile)/_layout/Mobile'),
+            'Mobile > Chat > Layout',
+          ),
           errorElement: <ErrorBoundary resetPath="/chat" />,
           path: 'chat',
         },
@@ -38,98 +49,122 @@ export const createMobileRouter = () =>
             {
               children: [
                 {
-                  element: dynamicElement(() =>
-                    import('./(main)/discover/(list)/(home)/index').then((m) => m.MobileHomePage),
+                  element: dynamicElement(
+                    () =>
+                      import('./(main)/discover/(list)/(home)/index').then((m) => m.MobileHomePage),
+                    'Mobile > Discover > List > Home',
                   ),
                   index: true,
                 },
                 {
                   children: [
                     {
-                      element: dynamicElement(() =>
-                        import('./(main)/discover/(list)/assistant/index').then(
-                          (m) => m.MobileAssistantPage,
-                        ),
+                      element: dynamicElement(
+                        () =>
+                          import('./(main)/discover/(list)/assistant/index').then(
+                            (m) => m.MobileAssistantPage,
+                          ),
+                        'Mobile > Discover > List > Assistant',
                       ),
                       path: 'assistant',
                     },
                   ],
                   element: dynamicElement(
                     () => import('./(main)/discover/(list)/assistant/_layout/Mobile'),
+                    'Mobile > Discover > List > Assistant > Layout',
                   ),
                 },
                 {
                   children: [
                     {
-                      element: dynamicElement(() =>
-                        import('./(main)/discover/(list)/model/index').then(
-                          (m) => m.MobileModelPage,
-                        ),
+                      element: dynamicElement(
+                        () =>
+                          import('./(main)/discover/(list)/model/index').then(
+                            (m) => m.MobileModelPage,
+                          ),
+                        'Mobile > Discover > List > Model',
                       ),
                       path: 'model',
                     },
                   ],
                   element: dynamicElement(
                     () => import('./(main)/discover/(list)/model/_layout/Mobile'),
+                    'Mobile > Discover > List > Model > Layout',
                   ),
                 },
                 {
-                  element: dynamicElement(() =>
-                    import('./(main)/discover/(list)/provider/index').then(
-                      (m) => m.MobileProviderPage,
-                    ),
+                  element: dynamicElement(
+                    () =>
+                      import('./(main)/discover/(list)/provider/index').then(
+                        (m) => m.MobileProviderPage,
+                      ),
+                    'Mobile > Discover > List > Provider',
                   ),
                   path: 'provider',
                 },
                 {
                   children: [
                     {
-                      element: dynamicElement(() =>
-                        import('./(main)/discover/(list)/mcp/index').then((m) => m.MobileMcpPage),
+                      element: dynamicElement(
+                        () =>
+                          import('./(main)/discover/(list)/mcp/index').then((m) => m.MobileMcpPage),
+                        'Mobile > Discover > List > MCP',
                       ),
                       path: 'mcp',
                     },
                   ],
                   element: dynamicElement(
                     () => import('./(main)/discover/(list)/mcp/_layout/Mobile'),
+                    'Mobile > Discover > List > MCP > Layout',
                   ),
                 },
               ],
               element: dynamicElement(
                 () => import('./(main)/discover/(list)/_layout/Mobile/index'),
+                'Mobile > Discover > List > Layout',
               ),
             },
             // Detail routes (with DetailLayout)
             {
               children: [
                 {
-                  element: dynamicElement(() =>
-                    import('./(main)/discover/(detail)/assistant/index').then(
-                      (m) => m.MobileDiscoverAssistantDetailPage,
-                    ),
+                  element: dynamicElement(
+                    () =>
+                      import('./(main)/discover/(detail)/assistant/index').then(
+                        (m) => m.MobileDiscoverAssistantDetailPage,
+                      ),
+                    'Mobile > Discover > Detail > Assistant',
                   ),
                   loader: slugLoader,
                   path: 'assistant/:slug',
                 },
                 {
-                  element: dynamicElement(() =>
-                    import('./(main)/discover/(detail)/model/index').then((m) => m.MobileModelPage),
+                  element: dynamicElement(
+                    () =>
+                      import('./(main)/discover/(detail)/model/index').then(
+                        (m) => m.MobileModelPage,
+                      ),
+                    'Mobile > Discover > Detail > Model',
                   ),
                   loader: slugLoader,
                   path: 'model/:slug',
                 },
                 {
-                  element: dynamicElement(() =>
-                    import('./(main)/discover/(detail)/provider/index').then(
-                      (m) => m.MobileProviderPage,
-                    ),
+                  element: dynamicElement(
+                    () =>
+                      import('./(main)/discover/(detail)/provider/index').then(
+                        (m) => m.MobileProviderPage,
+                      ),
+                    'Mobile > Discover > Detail > Provider',
                   ),
                   loader: slugLoader,
                   path: 'provider/:slug',
                 },
                 {
-                  element: dynamicElement(() =>
-                    import('./(main)/discover/(detail)/mcp/index').then((m) => m.MobileMcpPage),
+                  element: dynamicElement(
+                    () =>
+                      import('./(main)/discover/(detail)/mcp/index').then((m) => m.MobileMcpPage),
+                    'Mobile > Discover > Detail > MCP',
                   ),
                   loader: slugLoader,
                   path: 'mcp/:slug',
@@ -137,10 +172,14 @@ export const createMobileRouter = () =>
               ],
               element: dynamicElement(
                 () => import('./(main)/discover/(detail)/_layout/Mobile/index'),
+                'Mobile > Discover > Detail > Layout',
               ),
             },
           ],
-          element: dynamicElement(() => import('./(main)/discover/_layout/Mobile/index')),
+          element: dynamicElement(
+            () => import('./(main)/discover/_layout/Mobile/index'),
+            'Mobile > Discover > Layout',
+          ),
           errorElement: <ErrorBoundary resetPath="/discover" />,
           path: 'discover',
         },
@@ -149,11 +188,14 @@ export const createMobileRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/settings/(mobile)')),
+              element: dynamicElement(
+                () => import('./(main)/settings/(mobile)'),
+                'Mobile > Settings',
+              ),
               index: true,
             },
           ],
-          element: dynamicElement(() => import('./(main)/settings/(mobile)/_layout')),
+          element: <MobileSettingsLayout />,
           errorElement: <ErrorBoundary resetPath="/settings" />,
           path: 'settings',
         },
@@ -162,11 +204,11 @@ export const createMobileRouter = () =>
         {
           children: [
             {
-              element: dynamicElement(() => import('./(main)/memory')),
+              element: dynamicElement(() => import('./(main)/memory'), 'Mobile > Memory'),
               index: true,
             },
           ],
-          element: dynamicElement(() => import('./(main)/memory/_layout')),
+          element: <MobileMemoryLayout />,
           errorElement: <ErrorBoundary resetPath="/memory" />,
           path: 'memory',
         },
@@ -177,29 +219,38 @@ export const createMobileRouter = () =>
             {
               children: [
                 {
-                  element: dynamicElement(() => import('./(main)/(mobile)/me/(home)')),
+                  element: dynamicElement(
+                    () => import('./(main)/(mobile)/me/(home)'),
+                    'Mobile > Me > Home',
+                  ),
                   index: true,
                 },
               ],
-              element: dynamicElement(() => import('./(main)/(mobile)/me/(home)/layout')),
+              element: <MobileMeHomeLayout />,
             },
             {
               children: [
                 {
-                  element: dynamicElement(() => import('./(main)/(mobile)/me/profile')),
+                  element: dynamicElement(
+                    () => import('./(main)/(mobile)/me/profile'),
+                    'Mobile > Me > Profile',
+                  ),
                   path: 'profile',
                 },
               ],
-              element: dynamicElement(() => import('./(main)/(mobile)/me/profile/layout')),
+              element: <MobileMeProfileLayout />,
             },
             {
               children: [
                 {
-                  element: dynamicElement(() => import('./(main)/(mobile)/me/settings')),
+                  element: dynamicElement(
+                    () => import('./(main)/(mobile)/me/settings'),
+                    'Mobile > Me > Settings',
+                  ),
                   path: 'settings',
                 },
               ],
-              element: dynamicElement(() => import('./(main)/(mobile)/me/settings/layout')),
+              element: <MobileMeSettingsLayout />,
             },
           ],
           errorElement: <ErrorBoundary resetPath="/me" />,

@@ -2,12 +2,13 @@
 
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { memo } from 'react';
+import { Suspense, memo } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import { DndContextWrapper } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
+import Loading from '@/components/Loading/BrandTextLoading';
 import { isDesktop } from '@/const/version';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
 import TitleBar, { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
@@ -29,8 +30,10 @@ const Layout = memo(() => {
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
   return (
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
-      {isDesktop && <TitleBar />}
-      {showCloudPromotion && <CloudBanner />}
+      <Suspense fallback={null}>
+        {isDesktop && <TitleBar />}
+        {showCloudPromotion && <CloudBanner />}
+      </Suspense>
       <DndContextWrapper>
         <Flexbox
           height={
@@ -49,13 +52,17 @@ const Layout = memo(() => {
         >
           <NavPanel />
           <DesktopLayoutContainer>
-            <Outlet />
+            <Suspense fallback={<Loading debugId="DesktopMainLayout > Outlet" />}>
+              <Outlet />
+            </Suspense>
           </DesktopLayoutContainer>
         </Flexbox>
       </DndContextWrapper>
-      <HotkeyHelperPanel />
-      <RegisterHotkeys />
-      <CmdkLazy />
+      <Suspense fallback={null}>
+        <HotkeyHelperPanel />
+        <RegisterHotkeys />
+        <CmdkLazy />
+      </Suspense>
     </HotkeysProvider>
   );
 });

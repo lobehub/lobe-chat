@@ -1,7 +1,5 @@
 'use client';
 
-import { DynamicOptions, Loader } from 'next/dist/shared/lib/dynamic';
-import dynamic from 'next/dynamic';
 import {
   ComponentType,
   ReactElement,
@@ -17,17 +15,6 @@ import { useNavigate, useRouteError } from 'react-router-dom';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 
-export default function dynamicPage<P = NonNullable<unknown>>(
-  dynamicOptions: DynamicOptions<P> | Loader<P>,
-  options?: DynamicOptions<P>,
-): ComponentType<P> {
-  return dynamic(dynamicOptions, {
-    loading: () => <Loading />,
-    ssr: false,
-    ...options,
-  });
-}
-
 /**
  * Helper function to create a dynamic page element directly for router configuration
  * This eliminates the need to define const for each component
@@ -42,6 +29,7 @@ export default function dynamicPage<P = NonNullable<unknown>>(
  */
 export function dynamicElement<P = NonNullable<unknown>>(
   importFn: () => Promise<{ default: ComponentType<P> } | ComponentType<P>>,
+  debugId?: string,
 ): ReactElement {
   const LazyComponent = lazy(async () => {
     // eslint-disable-next-line @next/next/no-assign-module-variable
@@ -57,7 +45,7 @@ export function dynamicElement<P = NonNullable<unknown>>(
 
   // @ts-ignore
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<Loading debugId={debugId || 'dynamicElement'} />}>
       {/* @ts-ignore */}
       <LazyComponent {...({} as P)} />
     </Suspense>
@@ -81,7 +69,7 @@ export interface ErrorBoundaryProps {
   resetPath: string;
 }
 
-export const ErrorBoundary = ({ resetPath }: { resetPath: string }) => {
+export const ErrorBoundary = ({ resetPath }: ErrorBoundaryProps) => {
   const ErrorCapture = require('@/components/Error').default;
 
   const error = useRouteError() as Error;

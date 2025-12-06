@@ -1,11 +1,12 @@
 import { useTheme } from 'antd-style';
+import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import RecentHydration from './RecentHydration';
 import Sidebar from './Sidebar';
 
-const Layout = () => {
+const Layout = memo(() => {
   const theme = useTheme();
 
   return (
@@ -23,10 +24,12 @@ const Layout = () => {
       >
         <Outlet />
       </Flexbox>
-      <RecentHydration />
+      <Suspense fallback={null}>
+        <RecentHydration />
+      </Suspense>
     </>
   );
-};
+});
 
 Layout.displayName = 'DesktopChatLayout';
 
