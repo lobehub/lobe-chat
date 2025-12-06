@@ -7,10 +7,10 @@ import { isCustomBranding } from '@/const/version';
 import CircleLoading from '../CircleLoading';
 
 interface BrandTextLoadingProps {
-  debugId?: string;
+  debugId: string;
 }
 
-const BrandTextLoading = ({ debugId }: BrandTextLoadingProps = {}) => {
+const BrandTextLoading = ({ debugId }: BrandTextLoadingProps) => {
   if (isCustomBranding) return <CircleLoading />;
 
   return (
