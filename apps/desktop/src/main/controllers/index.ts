@@ -1,34 +1,24 @@
-import type { ClientDispatchEvents } from '@lobechat/electron-client-ipc';
 import type { ServerDispatchEvents } from '@lobechat/electron-server-ipc';
 
 import type { App } from '@/core/App';
 import { IoCContainer } from '@/core/infrastructure/IoCContainer';
 import { ShortcutActionType } from '@/shortcuts';
+import { IpcService } from '@/utils/ipc';
 
-const ipcDecorator =
-  (name: string, mode: 'client' | 'server') =>
+/**
+ * IPC server event decorator for controllers
+ */
+export const ipcServerEvent = (name: keyof ServerDispatchEvents) =>
   (target: any, methodName: string, descriptor?: any) => {
     const actions = IoCContainer.controllers.get(target.constructor) || [];
     actions.push({
       methodName,
-      mode,
+      mode: 'server' as const,
       name,
     });
     IoCContainer.controllers.set(target.constructor, actions);
     return descriptor;
   };
-
-/**
- * IPC client event decorator for controllers
- */
-export const ipcClientEvent = (method: keyof ClientDispatchEvents) =>
-  ipcDecorator(method, 'client');
-
-/**
- * IPC server event decorator for controllers
- */
-export const ipcServerEvent = (method: keyof ServerDispatchEvents) =>
-  ipcDecorator(method, 'server');
 
 const shortcutDecorator = (name: string) => (target: any, methodName: string, descriptor?: any) => {
   const actions = IoCContainer.shortcuts.get(target.constructor) || [];
@@ -68,10 +58,13 @@ interface IControllerModule {
   beforeAppReady?(): void;
 }
 
-export class ControllerModule implements IControllerModule {
+export class ControllerModule extends IpcService implements IControllerModule {
   constructor(public app: App) {
+    super();
     this.app = app;
   }
 }
 
 export type IControlModule = typeof ControllerModule;
+
+export { IpcMethod } from '@/utils/ipc';

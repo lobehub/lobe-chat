@@ -7,7 +7,7 @@ import { URL } from 'node:url';
 import { OFFICIAL_CLOUD_SERVER } from '@/const/env';
 import { createLogger } from '@/utils/logger';
 
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
 
 /**
  * Non-retryable OIDC error codes
@@ -39,6 +39,7 @@ const logger = createLogger('controllers:RemoteServerConfigCtr');
  * Used to manage custom remote LobeChat server configuration
  */
 export default class RemoteServerConfigCtr extends ControllerModule {
+  static override readonly groupName = 'remoteServer';
   /**
    * Key used to store encrypted tokens in electron-store.
    */
@@ -47,7 +48,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   /**
    * Get remote server configuration
    */
-  @ipcClientEvent('getRemoteServerConfig')
+  @IpcMethod()
   async getRemoteServerConfig() {
     logger.debug('Getting remote server configuration');
     const { storeManager } = this.app;
@@ -64,7 +65,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   /**
    * Set remote server configuration
    */
-  @ipcClientEvent('setRemoteServerConfig')
+  @IpcMethod()
   async setRemoteServerConfig(config: Partial<DataSyncConfig>) {
     logger.info(
       `Setting remote server storageMode: active=${config.active}, storageMode=${config.storageMode}, url=${config.remoteServerUrl}`,
@@ -81,7 +82,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   /**
    * Clear remote server configuration
    */
-  @ipcClientEvent('clearRemoteServerConfig')
+  @IpcMethod()
   async clearRemoteServerConfig() {
     logger.info('Clearing remote server configuration');
     const { storeManager } = this.app;
