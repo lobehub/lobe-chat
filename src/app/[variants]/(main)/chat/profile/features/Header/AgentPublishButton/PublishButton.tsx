@@ -1,5 +1,5 @@
 import { ActionIcon } from '@lobehub/ui';
-import { StoreIcon } from 'lucide-react';
+import { ShapesUploadIcon } from '@lobehub/ui/icons';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -129,7 +129,7 @@ const PublishButton = memo<MarketPublishButtonProps>(
 
     return (
       <ActionIcon
-        icon={StoreIcon}
+        icon={ShapesUploadIcon}
         loading={loading}
         onClick={handleButtonClick}
         size={HEADER_ICON_SIZE(mobile)}

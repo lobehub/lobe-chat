@@ -5,6 +5,7 @@ import { useTheme } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import MobileHeader from '@/app/[variants]/(main)/chat/(mobile)/settings/_layout/Header';
 import PageTitle from '@/components/PageTitle';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 import { useCategory } from '@/features/AgentSetting/AgentCategory/useCategory';
@@ -14,8 +15,6 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
-
-import MobileHeader from './_layout/Mobile/Header';
 
 export default memo(() => {
   const { t } = useTranslation('setting');

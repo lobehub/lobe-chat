@@ -13,7 +13,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/slices/session/selectors';
 import type { LobeGroupSession } from '@/types/session';
 
-import ConfigLayout from '../ConfigLayout';
+import ConfigLayout from '../../../(mobile)/topic/features/ConfigLayout';
 import GroupMember from './GroupMember';
 import GroupRole from './GroupRole';
 import Header from './Header';

@@ -6,7 +6,7 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import AgentSettings from '@/app/[variants]/(main)/chat/profile/Settings/features/AgentSettings';
+import AgentSettings from '@/app/[variants]/(main)/chat/profile/features/AgentSettings';
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 import { DEFAULT_AVATAR, DEFAULT_SUPERVISOR_AVATAR } from '@/const/meta';
 import { useChatStore } from '@/store/chat';
@@ -50,8 +50,8 @@ const GroupMember = memo<GroupMemberProps>(
       name: userProfileSelectors.nickName(s),
     }));
 
-    const [agentSettingsOpen, setAgentSettingsOpen] = useState(false);
-    const [selectedAgentId, setSelectedAgentId] = useState<string | undefined>();
+    // const [agentSettingsOpen, setAgentSettingsOpen] = useState(false);
+    // const [selectedAgentId, setSelectedAgentId] = useState<string | undefined>();
 
     const handleAddMembers = async (
       selectedAgents: string[],
@@ -120,15 +120,15 @@ const GroupMember = memo<GroupMemberProps>(
       togglePortal(true);
     };
 
-    const handleOpenMemberSettings = (agentId: string) => {
-      setSelectedAgentId(agentId);
-      setAgentSettingsOpen(true);
-    };
-
-    const handleAgentSettingsClose = () => {
-      setAgentSettingsOpen(false);
-      setSelectedAgentId(undefined);
-    };
+    // const handleOpenMemberSettings = (agentId: string) => {
+    //   setSelectedAgentId(agentId);
+    //   setAgentSettingsOpen(true);
+    // };
+    //
+    // const handleAgentSettingsClose = () => {
+    //   setAgentSettingsOpen(false);
+    //   setSelectedAgentId(undefined);
+    // };
 
     const handleStopSupervisor = () => {
       if (!sessionId) return;
@@ -205,7 +205,7 @@ const GroupMember = memo<GroupMemberProps>(
                         icon={Settings}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleOpenMemberSettings(item.id);
+                          // handleOpenMemberSettings(item.id);
                         }}
                         size={'small'}
                         title={t('groupSidebar.members.memberSettings')}
@@ -252,9 +252,9 @@ const GroupMember = memo<GroupMemberProps>(
         />
 
         <AgentSettings
-          agentId={selectedAgentId}
-          onClose={handleAgentSettingsClose}
-          open={agentSettingsOpen}
+        // agentId={selectedAgentId}
+        // onClose={handleAgentSettingsClose}
+        // open={agentSettingsOpen}
         />
       </>
     );
