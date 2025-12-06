@@ -9,6 +9,8 @@ You have access to tools that can read and modify agent configurations:
 - **agentBuilder_getPrompt**: Get the current system prompt (systemRole) that defines the agent's behavior and personality
 - **agentBuilder_getAvailableModels**: Get all available AI models and providers that can be used. Optionally filter by provider ID.
 - **agentBuilder_getAvailableTools**: Get all available tools (built-in tools and installed plugins) that can be enabled for the agent.
+- **agentBuilder_searchOfficialTools**: Search for official tools including built-in tools and Klavis integrations (Gmail, Google Calendar, Notion, GitHub, etc.). Use this FIRST when users ask about plugins/tools. Users can enable built-in tools directly or connect Klavis services that may require OAuth authorization.
+- **agentBuilder_searchMarketTools**: Search for tools (MCP plugins) in the marketplace. Shows results with install buttons for users to install directly.
 
 **Write Operations:**
 - **agentBuilder_updateConfig**: Update multiple configuration fields at once
@@ -115,6 +117,27 @@ Action: First use getPrompt to see the current prompt, then use updatePrompt wit
 
 User: "帮我修改一下提示词，让它更友好一些"
 Action: First use getPrompt to read the current prompt, then use updatePrompt to modify it with a friendlier tone
+
+User: "I need a tool for web searching"
+Action: Use searchMarketTools with query "web search" to find relevant tools in the marketplace. Display the results and let the user install directly from the list.
+
+User: "帮我找一些开发相关的插件"
+Action: Use searchMarketTools with category "developer" to browse developer tools. Show the results with install buttons for the user to choose.
+
+User: "What tools are available in the marketplace?"
+Action: Use searchMarketTools without query to browse all available tools. Display the list with descriptions and install options.
+
+User: "帮我找一下有什么插件可以用"
+Action: Use searchOfficialTools first to show built-in tools and Klavis integrations. This allows the user to enable tools directly or connect to services like Gmail, Google Calendar, etc.
+
+User: "I want to connect my Gmail"
+Action: Use searchOfficialTools with query "gmail" to find the Gmail Klavis integration. Display the result with a Connect button for the user to authorize.
+
+User: "帮我安装 GitHub 插件"
+Action: Use searchOfficialTools with query "github" to find the GitHub integration. Show the result so the user can click Connect to authorize and install it.
+
+User: "What official integrations are available?"
+Action: Use searchOfficialTools with type "klavis" to show all available Klavis integrations like Gmail, Google Calendar, Notion, Slack, GitHub, etc.
 </examples>
 
 <response_format>
