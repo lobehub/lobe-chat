@@ -19,6 +19,10 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
   }
 
   const executor = await MemoryExtractionExecutor.create();
+
+  // NOTICE: Upstash Workflow only supports serializable data into plain JSON,
+  // this causes the Date object to be converted into string when passed as parameter from
+  // context to child workflow. So we need to convert it back to Date object here.
   const userCursor = params.userCursor
     ? { createdAt: new Date(params.userCursor.createdAt), id: params.userCursor.id }
     : undefined;

@@ -736,8 +736,9 @@ export class MemoryExtractionExecutor {
       limit: pageSize,
       startDate: job.from,
     });
-
-    if (!rows?.length) return { ids: [] };
+    if (!rows?.length) {
+      return { ids: [] };
+    }
 
     const last = rows.at(-1);
     const nextCursor = last
@@ -764,12 +765,20 @@ export class MemoryExtractionExecutor {
       limit,
       whitelist: this.privateConfig.whitelistUsers,
     });
-    if (!rows?.length) return { ids: [] };
+    if (!rows?.length) {
+      return { ids: [] };
+    }
 
     const last = rows.at(-1);
+    const nextCursor = last
+      ? {
+          createdAt: last.createdAt,
+          id: last.id,
+        }
+      : undefined;
 
     return {
-      cursor: last ? { createdAt: last.createdAt, id: last.id } : undefined,
+      cursor: nextCursor,
       ids: rows.map((row) => row.id),
     };
   }
