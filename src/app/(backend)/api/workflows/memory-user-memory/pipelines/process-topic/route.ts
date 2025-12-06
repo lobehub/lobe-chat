@@ -21,7 +21,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
   const userId = params.userIds[0];
   const executor = await MemoryExtractionExecutor.create();
 
-  const results: { extracted: boolean; topicId: string }[] = [];
+  const results: { extracted: boolean; layers: Record<string, number>; memoryIds: string[]; topicId: string, userId: string }[] = [];
 
   for (const topicId of params.topicIds) {
     const extracted = await context.run(
@@ -39,7 +39,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
         }),
     );
 
-    results.push({ extracted, topicId });
+    results.push({ ...extracted, topicId, userId });
   }
 
   return { processed: results.length, results };
