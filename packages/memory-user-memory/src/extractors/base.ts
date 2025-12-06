@@ -81,9 +81,9 @@ export abstract class BaseMemoryExtractor<
     const payload: GenerateObjectPayload = {
       messages: [
         { content: systemPrompt, role: 'system' as const },
-        { content: userPrompt, role: 'user' as const },
         // TODO: additional messages typing issue
         ...((options?.additionalMessages || []) as GenerateObjectPayload['messages']),
+        { content: userPrompt, role: 'user' as const },
       ],
       model: this.model,
       schema: this.getSchema(options as unknown as TExtractorTemplateProps),

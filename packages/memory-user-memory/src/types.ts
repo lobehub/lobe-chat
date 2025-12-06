@@ -10,12 +10,14 @@ import type {
 
 export interface ExtractorOptions extends ExtractorTemplateProps {
   additionalMessages?: OpenAIChatMessage[];
+  messageIds?: string[];
 }
 
 export interface ExtractorTemplateProps {
   availableCategories?: string[];
   language?: string;
   retrievedContexts?: string[];
+  retrievedIdentitiesContext?: string;
   sessionDate?: string;
   topK?: number;
   username?: string;
@@ -25,7 +27,9 @@ export interface ExtractorTemplateProps {
 export type GatekeeperOptions = Pick<
   ExtractorTemplateProps,
   'language' | 'retrievedContexts' | 'topK'
->;
+> & {
+  additionalMessages?: OpenAIChatMessage[];
+};
 
 export interface BaseExtractorDependencies {
   model: string;
@@ -73,7 +77,7 @@ export interface MemoryContextProvider<
   P extends Record<string, unknown> = Record<string, unknown>,
   R extends Record<string, unknown> = Record<string, unknown>,
 > {
-  buildContext(job: MemoryExtractionJob, options: P): Promise<BuiltContext<R>>;
+  buildContext(job: MemoryExtractionJob, options?: P): Promise<BuiltContext<R>>;
 }
 
 export interface MemoryResultRecorder<T = Record<string, unknown>> {
@@ -106,10 +110,15 @@ export interface MemoryLayerDecision {
 }
 
 export interface MemoryExtractionResult {
-  context: BuiltContext;
   decision: GatekeeperDecision;
+  inputs: {
+    retrievedContexts?: string[];
+    retrievedIdentitiesContext?: string;
+  };
   layers: UserMemoryLayer[];
   outputs: MemoryExtractionLayerOutputs;
+  processedCounts: number;
+  processedLayersCount: Record<UserMemoryLayer, number>;
 }
 
 export interface TemplateProps {

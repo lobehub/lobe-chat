@@ -7,7 +7,6 @@ import {
   RetrievalUserMemoryIdentitiesProvider,
 } from '@lobechat/memory-user-memory';
 import type {
-  BuiltContext,
   MemoryExtractionJob,
   MemoryExtractionResult,
   MemoryExtractionSourceType,
@@ -322,15 +321,14 @@ export class MemoryExtractionExecutor {
 
   private buildBaseMetadata(
     job: MemoryExtractionJob,
-    context: BuiltContext,
+    messageIds: string[],
     layer: UserMemoryLayer,
     labels?: string[] | null,
   ) {
     return {
-      conversationDigest: context.metadata.conversationDigest,
       labels: labels ?? undefined,
       layer,
-      messageIds: context.metadata.messageIds ?? [],
+      messageIds,
       source: job.source,
       sourceId: job.sourceId,
     };
@@ -376,7 +374,7 @@ export class MemoryExtractionExecutor {
 
   async persistContextMemories(
     job: MemoryExtractionJob,
-    context: BuiltContext,
+    messageIds: string[],
     result: NonNullable<MemoryExtractionResult['outputs']['context']>,
     runtime: ModelRuntime,
     model: string,
@@ -393,7 +391,7 @@ export class MemoryExtractionExecutor {
       );
       const baseMetadata = this.buildBaseMetadata(
         job,
-        context,
+        messageIds,
         UserMemoryLayer.Context,
         item.withContext?.labels,
       );
@@ -434,7 +432,7 @@ export class MemoryExtractionExecutor {
 
   async persistExperienceMemories(
     job: MemoryExtractionJob,
-    context: BuiltContext,
+    messageIds: string[],
     result: NonNullable<MemoryExtractionResult['outputs']['experience']>,
     runtime: ModelRuntime,
     model: string,
@@ -454,7 +452,7 @@ export class MemoryExtractionExecutor {
         ]);
       const baseMetadata = this.buildBaseMetadata(
         job,
-        context,
+        messageIds,
         UserMemoryLayer.Experience,
         item.withExperience?.labels,
       );
@@ -492,7 +490,7 @@ export class MemoryExtractionExecutor {
 
   async persistPreferenceMemories(
     job: MemoryExtractionJob,
-    context: BuiltContext,
+    messageIds: string[],
     result: NonNullable<MemoryExtractionResult['outputs']['preference']>,
     runtime: ModelRuntime,
     model: string,
@@ -509,7 +507,7 @@ export class MemoryExtractionExecutor {
       );
       const baseMetadata = this.buildBaseMetadata(
         job,
-        context,
+        messageIds,
         UserMemoryLayer.Preference,
         item.withPreference?.extractedLabels,
       );
@@ -545,7 +543,7 @@ export class MemoryExtractionExecutor {
 
   async persistIdentityMemories(
     job: MemoryExtractionJob,
-    context: BuiltContext,
+    messageIds: string[],
     result: NonNullable<MemoryExtractionResult['outputs']['identity']>,
     runtime: ModelRuntime,
     model: string,
@@ -560,7 +558,7 @@ export class MemoryExtractionExecutor {
         const [summaryVector] = await this.generateEmbeddings(runtime, model, [args.description]);
         const metadata = this.buildBaseMetadata(
           job,
-          context,
+          messageIds,
           UserMemoryLayer.Identity,
           args.extractedLabels,
         );
@@ -602,7 +600,7 @@ export class MemoryExtractionExecutor {
             metadata: args.set.extractedLabels
               ? this.buildBaseMetadata(
                   job,
-                  context,
+                  messageIds,
                   UserMemoryLayer.Identity,
                   args.set.extractedLabels,
                 )
@@ -644,8 +642,9 @@ export class MemoryExtractionExecutor {
           ({
             content: row.content as string,
             createdAt: row.createdAt ?? topicUpdatedAt,
+            id: row.id,
             role: (row.role ?? 'assistant') as LLMRoleType,
-          }) satisfies OpenAIChatMessage & { createdAt: Date },
+          }) satisfies OpenAIChatMessage & { createdAt: Date; id: string },
       );
 
     if (conversation.length === 0) {
@@ -754,6 +753,8 @@ export class MemoryExtractionExecutor {
       return { extracted: false, layers: {}, memoryIds: [] };
     }
 
+    const messageIds = conversations.map((item) => item.id);
+
     const topicContextProvider = new LobeChatTopicContextProvider({
       conversations: conversations,
       topic: topic,
@@ -804,11 +805,8 @@ export class MemoryExtractionExecutor {
         contextProvider: topicContextProvider,
         language: language,
         resultRecorder: resultRecorder,
-        retrievedContexts: [
-          topicContext.context,
-          retrievalMemoryContext.context,
-          retrievedIdentityContext.context,
-        ],
+        retrievedContexts: [topicContext.context, retrievalMemoryContext.context],
+        retrievedIdentitiesContext: retrievedIdentityContext.context,
         sessionDate: topic.updatedAt.toISOString(),
         // TODO: make topK configurable
         topK: 10,
@@ -820,7 +818,13 @@ export class MemoryExtractionExecutor {
         return { extracted: false, layers: {}, memoryIds: [] };
       }
 
-      const persistedRes = await this.persistExtraction(extractionJob, extraction, runtimes, db);
+      const persistedRes = await this.persistExtraction(
+        extractionJob,
+        messageIds,
+        extraction,
+        runtimes,
+        db,
+      );
       await resultRecorder.recordComplete(extractionJob, {
         ...persistedRes,
         processedMemoryCount: persistedRes.createdIds.length,
@@ -976,6 +980,7 @@ export class MemoryExtractionExecutor {
 
   private async persistExtraction(
     job: MemoryExtractionJob,
+    messageIds: string[],
     extraction: MemoryExtractionResult,
     runtimes: RuntimeBundle,
     db: Awaited<ReturnType<typeof getServerDB>>,
@@ -986,7 +991,7 @@ export class MemoryExtractionExecutor {
     if (extraction.outputs.context) {
       const ids = await this.persistContextMemories(
         job,
-        extraction.context,
+        messageIds,
         extraction.outputs.context,
         runtimes.embeddings,
         this.modelConfig.embeddingsModel,
@@ -1000,7 +1005,7 @@ export class MemoryExtractionExecutor {
     if (extraction.outputs.experience) {
       const ids = await this.persistExperienceMemories(
         job,
-        extraction.context,
+        messageIds,
         extraction.outputs.experience,
         runtimes.embeddings,
         this.modelConfig.embeddingsModel,
@@ -1014,7 +1019,7 @@ export class MemoryExtractionExecutor {
     if (extraction.outputs.preference) {
       const ids = await this.persistPreferenceMemories(
         job,
-        extraction.context,
+        messageIds,
         extraction.outputs.preference,
         runtimes.embeddings,
         this.modelConfig.embeddingsModel,
@@ -1028,7 +1033,7 @@ export class MemoryExtractionExecutor {
     if (extraction.outputs.identity) {
       const ids = await this.persistIdentityMemories(
         job,
-        extraction.context,
+        messageIds,
         extraction.outputs.identity,
         runtimes.embeddings,
         this.modelConfig.embeddingsModel,

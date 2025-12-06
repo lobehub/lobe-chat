@@ -17,7 +17,6 @@ import {
 } from '../extractors';
 import {
   BaseExtractorDependencies,
-  BuiltContext,
   ExtractorOptions,
   GatekeeperDecision,
   MemoryContextProvider,
@@ -162,23 +161,35 @@ export class MemoryExtractAgentService<RO> {
     options: {
       contextProvider: MemoryContextProvider<{ topK?: number }>;
       resultRecorder?: MemoryResultRecorder<RO>;
-    } & ExtractorOptions,
+    } & ExtractorOptions & {
+        existingIdentitiesContext?: string;
+      },
   ): Promise<MemoryExtractionResult | null> {
-    const context = await options.contextProvider.buildContext(job, {});
-    if (!context) {
-      return null;
-    }
-
     try {
-      const decision = await this.runGatekeeper(job, { ...options, context });
+      const decision = await this.runGatekeeper(job, { ...options });
       const layersToExtract = this.resolveJobLayers(decision, job.layers);
-      const outputs = await this.runLayers(job, layersToExtract, { ...options, context });
+      const outputs = await this.runLayers(job, layersToExtract, { ...options });
+
+      const processedLayersCount = {
+        context: outputs.context ? outputs.context?.memories?.length : 0,
+        experience: outputs.experience ? outputs.experience?.memories?.length : 0,
+        // NOTICE: Identity layer does not process accumulatively, so we set it to 0
+        identity: 0,
+        preference: outputs.preference ? outputs.preference?.memories?.length : 0,
+      };
+
+      const processedCount = Object.values(processedLayersCount).reduce((a, b) => a + b, 0);
 
       return {
-        context,
         decision,
+        inputs: {
+          retrievedContexts: options.retrievedContexts,
+          retrievedIdentitiesContext: options.retrievedIdentitiesContext,
+        },
         layers: layersToExtract,
         outputs,
+        processedCounts: processedCount,
+        processedLayersCount: processedLayersCount,
       };
     } catch (error) {
       await options?.resultRecorder?.recordFail?.(job, error as Error);
@@ -188,15 +199,13 @@ export class MemoryExtractAgentService<RO> {
 
   private async runGatekeeper(
     job: MemoryExtractionJob,
-    options: { context: BuiltContext<{ topK?: number }> } & ExtractorOptions,
+    options: ExtractorOptions,
   ): Promise<GatekeeperDecision> {
     const start = Date.now();
 
     try {
       const decision = await this.gatekeeper.check({
         language: options.language ?? 'English',
-        retrievedContexts: options.retrievedContexts,
-        topK: options.context.metadata.topK,
       });
       this.recordGatekeeperMetrics(job, Date.now() - start, 'ok');
 
@@ -207,57 +216,43 @@ export class MemoryExtractAgentService<RO> {
     }
   }
 
-  private async runContextLayer(
-    job: MemoryExtractionJob,
-    options: { context: BuiltContext<{ topK?: number }> } & ExtractorOptions,
-  ) {
+  private async runContextLayer(job: MemoryExtractionJob, options: ExtractorOptions) {
     return this.runLayerExtractor(job, UserMemoryLayer.Context, () =>
       this.contextExtractor.structuredCall({
         ...options,
-        retrievedContexts: options.retrievedContexts,
-        topK: options.context.metadata.topK,
+        language: options.language ?? 'English',
       }),
     );
   }
 
-  private async runExperienceLayer(
-    job: MemoryExtractionJob,
-    options: { context: BuiltContext<{ topK?: number }> } & ExtractorOptions,
-  ) {
+  private async runExperienceLayer(job: MemoryExtractionJob, options: ExtractorOptions) {
     return this.runLayerExtractor(job, UserMemoryLayer.Experience, () =>
       this.experienceExtractor.structuredCall({
         ...options,
-        retrievedContexts: options.retrievedContexts,
-        topK: options.context.metadata.topK,
+        language: options.language ?? 'English',
       }),
     );
   }
 
-  private async runPreferenceLayer(
-    job: MemoryExtractionJob,
-    options: { context: BuiltContext<{ topK?: number }> } & ExtractorOptions,
-  ) {
+  private async runPreferenceLayer(job: MemoryExtractionJob, options: ExtractorOptions) {
     return this.runLayerExtractor(job, UserMemoryLayer.Preference, () =>
       this.preferenceExtractor.structuredCall({
         ...options,
-        retrievedContexts: options.retrievedContexts,
-        topK: options.context.metadata.topK,
+        language: options.language ?? 'English',
       }),
     );
   }
 
   private async runIdentityLayer(
     job: MemoryExtractionJob,
-    options: { context: BuiltContext<{ topK?: number }> } & ExtractorOptions & {
-        existingIdentitiesContext?: string;
-      },
+    options: ExtractorOptions & {
+      existingIdentitiesContext?: string;
+    },
   ) {
     return this.runLayerExtractor(job, UserMemoryLayer.Identity, () =>
       this.identityExtractor.structuredCall({
         ...options,
-        existingIdentitiesContext: options.existingIdentitiesContext,
-        retrievedContexts: options.retrievedContexts,
-        topK: options.context.metadata.topK,
+        language: options.language ?? 'English',
       }),
     );
   }
@@ -282,7 +277,9 @@ export class MemoryExtractAgentService<RO> {
   private async runLayers(
     job: MemoryExtractionJob,
     layers: UserMemoryLayer[],
-    options: { context: BuiltContext<{ topK?: number }> } & ExtractorOptions,
+    options: ExtractorOptions & {
+      existingIdentitiesContext?: string;
+    },
   ): Promise<MemoryExtractionLayerOutputs> {
     const outputs: MemoryExtractionLayerOutputs = {};
 
@@ -318,7 +315,9 @@ export class MemoryExtractAgentService<RO> {
   private async runLayer(
     job: MemoryExtractionJob,
     layer: UserMemoryLayer,
-    options: { context: BuiltContext<{ topK?: number }> } & ExtractorOptions,
+    options: ExtractorOptions & {
+      existingIdentitiesContext?: string;
+    },
   ): Promise<any> {
     switch (layer) {
       case UserMemoryLayer.Context: {
