@@ -1,4 +1,8 @@
-import type { CreateServicesResult, MergeIpcService } from '@/utils/ipc';
+import type {
+  CreateServicesResult,
+  IpcServiceConstructor,
+  MergeIpcService,
+} from '@/utils/ipc';
 
 import AuthCtr from './AuthCtr';
 import BrowserWindowsCtr from './BrowserWindowsCtr';
@@ -12,9 +16,11 @@ import RemoteServerSyncCtr from './RemoteServerSyncCtr';
 import ShellCommandCtr from './ShellCommandCtr';
 import ShortcutController from './ShortcutCtr';
 import SystemController from './SystemCtr';
+import SystemServerCtr from './SystemServerCtr';
 import TrayMenuCtr from './TrayMenuCtr';
 import UpdaterCtr from './UpdaterCtr';
 import UploadFileCtr from './UploadFileCtr';
+import UploadFileServerCtr from './UploadFileServerCtr';
 
 export const controllerIpcConstructors = [
   AuthCtr,
@@ -32,8 +38,17 @@ export const controllerIpcConstructors = [
   TrayMenuCtr,
   UpdaterCtr,
   UploadFileCtr,
-] as const;
+] as const satisfies readonly IpcServiceConstructor[];
 
 type DesktopControllerIpcConstructors = typeof controllerIpcConstructors;
 type DesktopControllerServices = CreateServicesResult<DesktopControllerIpcConstructors>;
 export type DesktopIpcServices = MergeIpcService<DesktopControllerServices>;
+
+export const controllerServerIpcConstructors = [
+  SystemServerCtr,
+  UploadFileServerCtr,
+] as const satisfies readonly IpcServiceConstructor[];
+
+type DesktopControllerServerConstructors = typeof controllerServerIpcConstructors;
+type DesktopServerControllerServices = CreateServicesResult<DesktopControllerServerConstructors>;
+export type DesktopServerIpcServices = MergeIpcService<DesktopServerControllerServices>;
