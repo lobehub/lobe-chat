@@ -3,8 +3,9 @@
 import { Button } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { Settings2Icon } from 'lucide-react';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -13,27 +14,16 @@ import ModelSelect from '@/features/ModelSelect';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
-import AgentSettings from '../../Settings/features/AgentSettings';
+import AgentSettings from '../AgentSettings';
 import EditorCanvas from '../EditorCanvas';
 import AgentHeader from './AgentHeader';
 import AgentTool from './AgentTool';
 
 const ProfileEditor = memo(() => {
-  const [showSettingsDrawer, setShowSettingsDrawer] = useState(false);
-  const [agentId] = useAgentStore((s) => [s.activeAgentId]);
-
   const theme = useTheme();
   const { t } = useTranslation('setting');
-
-  const config = useAgentStore(agentSelectors.currentAgentConfig);
-
+  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
   const updateConfig = useStore((s) => s.setAgentConfig);
-
-  const handleModelChange = useMemo(() => {
-    return ({ model, provider }: { model: string; provider: string }) => {
-      updateConfig({ model, provider });
-    };
-  }, [updateConfig]);
 
   return (
     <>
@@ -56,7 +46,7 @@ const ProfileEditor = memo(() => {
         >
           <Flexbox align={'center'} gap={8} horizontal>
             <ModelSelect
-              onChange={handleModelChange}
+              onChange={updateConfig}
               value={{
                 model: config.model,
                 provider: config.provider,
@@ -64,7 +54,7 @@ const ProfileEditor = memo(() => {
             />
             <Button
               icon={Settings2Icon}
-              onClick={() => setShowSettingsDrawer(true)}
+              onClick={() => useAgentStore.setState({ showAgentSetting: true })}
               size={'small'}
               style={{ color: theme.colorTextSecondary }}
               type={'text'}
@@ -79,11 +69,7 @@ const ProfileEditor = memo(() => {
       {/* Main Content: Prompt Editor */}
       <EditorCanvas />
       {/* Legacy AgentSettings Drawer (opened via Settings button) */}
-      <AgentSettings
-        agentId={agentId}
-        onClose={() => setShowSettingsDrawer(false)}
-        open={showSettingsDrawer}
-      />
+      <AgentSettings />
     </>
   );
 });

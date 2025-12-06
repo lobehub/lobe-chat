@@ -4,10 +4,10 @@ import { Flexbox } from 'react-layout-kit';
 import TopicSearchBar from '@/app/[variants]/(main)/chat/_layout/Sidebar/Topic/TopicSearchBar';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 
-import TopicModal from './TopicModal';
+import TopicModal from './features/TopicModal';
 
 const ConfigSwitcher = dynamic(
-  () => import('@/app/[variants]/(main)/chat/_layout/Sidebar/ConfigSwitcher'),
+  () => import('@/app/[variants]/(main)/chat/(mobile)/topic/features/ConfigSwitcher'),
   {
     loading: () => <SkeletonList />,
   },
