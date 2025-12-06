@@ -10,9 +10,21 @@ type SaveConfigPayload = {
 };
 
 export interface Action {
+  /**
+   * Append content to streaming buffer (called during streaming)
+   */
+  appendStreamingContent: (chunk: string) => void;
+  /**
+   * Finalize streaming and save to config
+   */
+  finishStreaming: (updateConfig: (payload: SaveConfigPayload) => Promise<void>) => Promise<void>;
   flushSave: () => void;
   handleContentChange: (updateConfig: (payload: SaveConfigPayload) => Promise<void>) => void;
   setChatPanelExpanded: (expanded: boolean | ((prev: boolean) => boolean)) => void;
+  /**
+   * Start streaming mode - clears editor and prepares for streaming content
+   */
+  startStreaming: () => void;
 }
 
 export type Store = State & Action;
@@ -41,6 +53,59 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
     return {
       ...initialState,
       ...initState,
+
+      appendStreamingContent: (chunk) => {
+        const currentContent = get().streamingContent || '';
+        const newContent = currentContent + chunk;
+        set({ streamingContent: newContent });
+
+        // Update editor with streaming content
+        const { editor } = get();
+        if (editor) {
+          try {
+            editor.setDocument('markdown', newContent);
+          } catch {
+            // Ignore errors during streaming updates
+          }
+        }
+      },
+
+      finishStreaming: async (updateConfig) => {
+        const { editor, streamingContent } = get();
+        if (!streamingContent) {
+          set({ streamingInProgress: false });
+          return;
+        }
+
+        // Get the final content from editor
+        let finalContent = streamingContent;
+        let editorData = {};
+
+        if (editor) {
+          try {
+            finalContent = (editor.getDocument('markdown') as unknown as string) || streamingContent;
+            editorData = editor.getDocument('json') as unknown as Record<string, any>;
+          } catch {
+            // Use streaming content if editor read fails
+          }
+        }
+
+        // Save to config
+        try {
+          await updateConfig({
+            editorData: structuredClone(editorData || {}),
+            systemRole: finalContent,
+          });
+        } catch (error) {
+          console.error('[ProfileEditor] Failed to save streaming content:', error);
+        }
+
+        // Reset streaming state
+        set({
+          streamingContent: undefined,
+          streamingInProgress: false,
+        });
+      },
 
       flushSave: () => {
         debouncedSave?.flush();
@@ -74,6 +139,24 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
         } else {
           set({ chatPanelExpanded: expanded });
         }
+      },
+
+      startStreaming: () => {
+        const { editor } = get();
+
+        // Clear editor content and prepare for streaming
+        if (editor) {
+          try {
+            editor.setDocument('markdown', '');
+          } catch {
+            // Ignore errors
+          }
+        }
+
+        set({
+          streamingContent: '',
+          streamingInProgress: true,
+        });
       },
     };
   };

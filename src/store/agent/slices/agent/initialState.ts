@@ -11,6 +11,14 @@ export interface AgentSliceState {
   agentSettingInstance?: AgentSettingsInstance | null;
   defaultAgentConfig: LobeAgentConfig;
   showAgentSetting: boolean;
+  /**
+   * Content being streamed for system role update
+   */
+  streamingSystemRole?: string;
+  /**
+   * Whether system role streaming is in progress
+   */
+  streamingSystemRoleInProgress?: boolean;
   updateAgentChatConfigSignal?: AbortController;
   updateAgentConfigSignal?: AbortController;
   updateAgentMetaSignal?: AbortController;
@@ -21,4 +29,6 @@ export const initialAgentSliceState: AgentSliceState = {
   agentMap: {},
   defaultAgentConfig: DEFAULT_AGENT_CONFIG,
   showAgentSetting: false,
+  streamingSystemRole: undefined,
+  streamingSystemRoleInProgress: false,
 };
