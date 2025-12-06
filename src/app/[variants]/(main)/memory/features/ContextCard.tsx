@@ -1,19 +1,45 @@
 'use client';
 
-import { Tag } from 'antd';
+import { ActionIcon } from '@lobehub/ui';
+import { Dropdown, Tag, Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { memo } from 'react';
+import {
+  AlertTriangle,
+  Briefcase,
+  CircleDot,
+  Globe,
+  Link2,
+  MoreHorizontal,
+  Pencil,
+  Target,
+  Trash2,
+  Users,
+} from 'lucide-react';
+import Link from 'next/link';
+import { KeyboardEvent, MouseEvent, ReactNode, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { UserMemoryContextsWithoutVectors } from '@/database/schemas';
+import { DisplayContextMemory } from '@/database/repositories/userMemory';
 
 dayjs.extend(relativeTime);
 
 const useStyles = createStyles(({ css, token }) => ({
+  actions: css`
+    position: absolute;
+    inset-block-end: 12px;
+    inset-inline-end: 16px;
+
+    opacity: 0;
+
+    transition: opacity 0.15s ease;
+  `,
   card: css`
     cursor: pointer;
+
+    position: relative;
 
     padding: 16px;
     border: 1px solid ${token.colorBorder};
@@ -26,13 +52,17 @@ const useStyles = createStyles(({ css, token }) => ({
     &:hover {
       border-color: ${token.colorPrimary};
       box-shadow: 0 2px 8px rgba(0, 0, 0, 8%);
+
+      .context-card-actions {
+        opacity: 1;
+      }
     }
   `,
-  content: css`
+  description: css`
     flex: 1;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.6;
-    color: ${token.colorText};
+    color: ${token.colorTextSecondary};
   `,
   footer: css`
     margin-block-start: 12px;
@@ -41,25 +71,41 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   scores: css`
     display: flex;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
 
     font-size: 12px;
     color: ${token.colorTextSecondary};
   `,
+  sourceInfo: css`
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    font-size: 12px;
+    color: ${token.colorTextTertiary};
+  `,
+  sourceTag: css`
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+
+    font-size: 12px;
+    color: ${token.colorTextTertiary};
+
+    &:hover {
+      color: ${token.colorTextSecondary};
+    }
+  `,
   status: css`
-    padding-block: 8px;
-    padding-inline: 12px;
+    padding-block: 4px;
+    padding-inline: 8px;
     border-radius: ${token.borderRadiusSM}px;
 
-    font-size: 13px;
+    font-size: 12px;
     color: ${token.colorTextSecondary};
 
     background: ${token.colorFillTertiary};
-  `,
-  time: css`
-    font-size: 12px;
-    color: ${token.colorTextTertiary};
   `,
   timelineCard: css`
     position: relative;
@@ -74,6 +120,10 @@ const useStyles = createStyles(({ css, token }) => ({
 
     &:hover {
       background: ${token.colorFillQuaternary};
+
+      .context-card-actions {
+        opacity: 1;
+      }
     }
   `,
   timelineDot: css`
@@ -101,6 +151,7 @@ const useStyles = createStyles(({ css, token }) => ({
   title: css`
     font-size: 14px;
     font-weight: 500;
+    line-height: 1.5;
     color: ${token.colorText};
   `,
   typeTag: css`
@@ -120,65 +171,179 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+const getTypeIcon = (type: string | null): ReactNode => {
+  const iconSize = 14;
+  switch (type?.toLowerCase()) {
+    case 'goal': {
+      return <Target size={iconSize} />;
+    }
+    case 'problem': {
+      return <AlertTriangle size={iconSize} />;
+    }
+    case 'project': {
+      return <Briefcase size={iconSize} />;
+    }
+    case 'relationship': {
+      return <Users size={iconSize} />;
+    }
+    case 'situation': {
+      return <Globe size={iconSize} />;
+    }
+    default: {
+      return <CircleDot size={iconSize} />;
+    }
+  }
+};
+
 interface ContextCardProps {
-  context: UserMemoryContextsWithoutVectors;
+  context: DisplayContextMemory;
   onClick?: () => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
   showTimeline?: boolean;
 }
 
-const ContextCard = memo<ContextCardProps>(({ context, onClick, showTimeline }) => {
-  const { styles } = useStyles();
+const ContextCard = memo<ContextCardProps>(
+  ({ context, onClick, onDelete, onEdit, showTimeline }) => {
+    const { t } = useTranslation('memory');
+    const { styles, cx } = useStyles();
 
-  const cardContent = (
-    <Flexbox gap={8} style={{ height: '100%' }}>
-      <Flexbox align="center" gap={8} horizontal justify="space-between">
-        {context.type && <span className={styles.typeTag}>{context.type}</span>}
-        {context.title && <span className={styles.title}>{context.title}</span>}
-      </Flexbox>
+    const source = context.source;
 
-      {context.description && <div className={styles.content}>{context.description}</div>}
+    const handleMenuClick = (e: { domEvent: MouseEvent | KeyboardEvent; key: string }) => {
+      e.domEvent.stopPropagation();
+      if (e.key === 'delete' && onDelete) {
+        onDelete(context.id);
+      } else if (e.key === 'edit' && onEdit) {
+        onEdit(context.id);
+      }
+    };
 
-      {context.currentStatus && <div className={styles.status}>{context.currentStatus}</div>}
+    const menuItems = [
+      {
+        icon: <Pencil size={14} />,
+        key: 'edit',
+        label: t('context.actions.edit'),
+      },
+      {
+        danger: true,
+        icon: <Trash2 size={14} />,
+        key: 'delete',
+        label: t('context.actions.delete'),
+      },
+    ];
 
-      {!showTimeline && (
-        <div className={styles.footer}>
-          <Flexbox align="center" horizontal justify="space-between">
-            <div className={styles.scores}>
-              {context.scoreImpact !== null && (
-                <Tag color="blue">Impact: {(context.scoreImpact * 10).toFixed(0)}%</Tag>
+    const cardContent = (
+      <Flexbox gap={8}>
+        <Flexbox align="center" gap={8} horizontal justify="space-between">
+          {showTimeline ? (
+            <>
+              {context.title && <div className={styles.title}>{context.title}</div>}
+              <Flexbox align="center" gap={8} horizontal>
+                {context.type && (
+                  <span className={styles.typeTag}>
+                    {getTypeIcon(context.type)}
+                    {context.type}
+                  </span>
+                )}
+              </Flexbox>
+            </>
+          ) : (
+            <>
+              {context.type && (
+                <span className={styles.typeTag}>
+                  {getTypeIcon(context.type)}
+                  {context.type}
+                </span>
               )}
-              {context.scoreUrgency !== null && (
-                <Tag color={context.scoreUrgency >= 0.7 ? 'red' : 'orange'}>
-                  Urgency: {(context.scoreUrgency * 10).toFixed(0)}%
-                </Tag>
+              {context.currentStatus && (
+                <span className={styles.status}>{context.currentStatus}</span>
               )}
-            </div>
-            {context.createdAt && (
-              <span className={styles.time}>{dayjs(context.createdAt).fromNow()}</span>
+            </>
+          )}
+        </Flexbox>
+
+        {!showTimeline && context.title && <div className={styles.title}>{context.title}</div>}
+
+        {context.description && <div className={styles.description}>{context.description}</div>}
+
+        {showTimeline ? (
+          <div className={styles.sourceInfo}>
+            {source && (
+              <Tooltip title={source.topicTitle || `Topic: ${source.topicId}`}>
+                <Link
+                  className={styles.sourceTag}
+                  href={`/agent/${source.agentId}?topicId=${source.topicId}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Link2 size={12} />
+                  {source.topicTitle || source.topicId.replace('tpc_', '').slice(0, 8)}
+                </Link>
+              </Tooltip>
             )}
-          </Flexbox>
-        </div>
-      )}
-    </Flexbox>
-  );
+          </div>
+        ) : (
+          <div className={styles.footer}>
+            <Flexbox align="center" horizontal justify="space-between">
+              <div className={styles.scores}>
+                {context.scoreImpact !== null && context.scoreImpact !== undefined && (
+                  <Tag color="blue">Impact: {((context.scoreImpact ?? 0) * 100).toFixed(0)}%</Tag>
+                )}
+                {context.scoreUrgency !== null && context.scoreUrgency !== undefined && (
+                  <Tag color={(context.scoreUrgency ?? 0) >= 0.7 ? 'red' : 'orange'}>
+                    Urgency: {((context.scoreUrgency ?? 0) * 100).toFixed(0)}%
+                  </Tag>
+                )}
+              </div>
+              <div className={styles.sourceInfo}>
+                {source && (
+                  <Tooltip title={source.topicTitle || `Topic: ${source.topicId}`}>
+                    <Link
+                      className={styles.sourceTag}
+                      href={`/agent/${source.agentId}?topicId=${source.topicId}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Link2 size={12} />
+                      {source.topicTitle || source.topicId.replace('tpc_', '').slice(0, 8)}
+                    </Link>
+                  </Tooltip>
+                )}
+                {context.createdAt && (
+                  <Tooltip title={dayjs(context.createdAt).format('YYYY-MM-DD HH:mm')}>
+                    <span>{dayjs(context.createdAt).fromNow()}</span>
+                  </Tooltip>
+                )}
+              </div>
+            </Flexbox>
+          </div>
+        )}
 
-  if (showTimeline) {
-    return (
-      <div style={{ position: 'relative' }}>
-        <div className={styles.timelineLine} />
-        <div className={styles.timelineDot} />
-        <div className={styles.timelineCard} onClick={onClick}>
-          {cardContent}
+        <Flexbox className={cx(styles.actions, 'context-card-actions')} gap={4} horizontal>
+          <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }} trigger={['click']}>
+            <ActionIcon icon={MoreHorizontal} onClick={(e) => e.stopPropagation()} size="small" />
+          </Dropdown>
+        </Flexbox>
+      </Flexbox>
+    );
+
+    if (showTimeline) {
+      return (
+        <div style={{ position: 'relative' }}>
+          <div className={styles.timelineLine} />
+          <div className={styles.timelineDot} />
+          <div className={styles.timelineCard} onClick={onClick}>
+            {cardContent}
+          </div>
         </div>
+      );
+    }
+
+    return (
+      <div className={styles.card} onClick={onClick}>
+        {cardContent}
       </div>
     );
-  }
-
-  return (
-    <div className={styles.card} onClick={onClick}>
-      {cardContent}
-    </div>
-  );
-});
+  },
+);
 
 export default ContextCard;

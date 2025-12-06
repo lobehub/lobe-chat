@@ -1,6 +1,15 @@
 {
   "context": {
-    "empty": "No context memories available"
+    "actions": {
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "defaultType": "Context",
+    "description": "Description",
+    "empty": "No context memories available",
+    "impact": "Impact",
+    "source": "Source",
+    "urgency": "Urgency"
   },
   "experience": {
     "actions": {
