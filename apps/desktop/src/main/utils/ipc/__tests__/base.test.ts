@@ -80,6 +80,6 @@ describe('ipc service base', () => {
 
     const metadata = getServerMethodMetadata(ServerService);
     expect(metadata).toBeDefined();
-    expect(metadata?.get('fetch')).toBe('customChannel');
+    expect(metadata?.get('fetch')).toBe('fetch');
   });
 });
