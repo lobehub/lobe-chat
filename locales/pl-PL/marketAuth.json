@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Anuluj",
-    "confirm": "Autoryzuj użycie",
-    "description": {
-      "and": "oraz",
-      "prefix": "Klikając „Autoryzuj użycie”, wyrażasz zgodę na",
-      "privacy": "Politykę prywatności",
-      "terms": "Warunki korzystania z usługi"
+    "confirm": "Utwórz swój profil",
+    "description": "Twój profil społecznościowy jest niezależny od konta użytkownika {{appName}}.",
+    "footer": {
+      "agreement": "Kontynuując, potwierdzasz, że zapoznałeś się i akceptujesz <terms>Regulamin</terms> oraz <privacy>Politykę prywatności</privacy>",
+      "privacy": "Polityka prywatności",
+      "terms": "Regulamin"
     },
-    "title": "Potwierdź autoryzację"
+    "subtitle": "Utwórz profil społecznościowy, aby przesyłać i zarządzać zgłoszeniami w społeczności.",
+    "title": "Utwórz profil społecznościowy"
   },
   "callback": {
     "buttons": {

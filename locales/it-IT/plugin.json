@@ -368,7 +368,7 @@
       "trustedBy": "Fornito da {{name}}",
       "unverified": {
         "title": "Plugin di terze parti non verificato",
-        "warning": "Questo plugin proviene da un marketplace di terze parti non verificato, conferma di fidarti della fonte prima di installare."
+        "warning": "Questo plugin proviene da una comunità di terze parti non verificata. Assicurati di fidarti della fonte prima di installarlo."
       },
       "verified": "Verificato"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "Queste configurazioni saranno passate come variabili d'ambiente al processo all'avvio del server MCP",
     "httpTypeNotice": "I plugin MCP di tipo HTTP non richiedono variabili d'ambiente da configurare",
     "indexUrl": {
-      "title": "Indice marketplace",
+      "title": "Indice della Comunità",
       "tooltip": "Modifica online non supportata, configura tramite variabili d'ambiente in fase di deploy"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "Salvataggio variabili d'ambiente fallito",
       "envUpdateSuccess": "Variabili d'ambiente salvate con successo"
     },
-    "modalDesc": "Configurando l'indirizzo del marketplace plugin, puoi usare un marketplace personalizzato",
+    "modalDesc": "Dopo aver configurato l'indirizzo della comunità dei plugin, potrai utilizzare una comunità personalizzata di plugin.",
     "rules": {
       "argsRequired": "Inserisci i parametri di avvio",
       "commandRequired": "Inserisci il comando di avvio",
       "urlRequired": "Inserisci l'indirizzo del servizio"
     },
     "saveSettings": "Salva impostazioni",
-    "title": "Impostazioni marketplace plugin"
+    "title": "Imposta la Comunità dei Plugin"
   },
   "showInPortal": "Visualizza i dettagli nell'area di lavoro",
   "store": {

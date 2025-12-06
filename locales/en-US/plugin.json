@@ -368,7 +368,7 @@
       "trustedBy": "Provided by {{name}}",
       "unverified": {
         "title": "Unverified Third-Party Plugin",
-        "warning": "This plugin comes from an unverified third-party marketplace. Please confirm you trust the source before installation."
+        "warning": "This plugin is from an unverified third-party community. Please ensure you trust the source before installing."
       },
       "verified": "Verified"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "These configurations will be passed as environment variables to the MCP server process at startup",
     "httpTypeNotice": "HTTP type MCP plugins currently have no environment variables to configure",
     "indexUrl": {
-      "title": "Marketplace Index",
+      "title": "Community Index",
       "tooltip": "Online editing is not supported yet, please set via environment variables during deployment"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "Failed to save environment variables",
       "envUpdateSuccess": "Environment variables saved successfully"
     },
-    "modalDesc": "After configuring the plugin marketplace address, you can use a custom plugin marketplace",
+    "modalDesc": "After configuring the plugin community address, you can use a custom plugin community.",
     "rules": {
       "argsRequired": "Please enter startup arguments",
       "commandRequired": "Please enter startup command",
       "urlRequired": "Please enter service address"
     },
     "saveSettings": "Save Settings",
-    "title": "Configure Plugin Marketplace"
+    "title": "Plugin Community Settings"
   },
   "showInPortal": "Please view details in the workspace",
   "store": {

@@ -368,7 +368,7 @@
       "trustedBy": "Bereitgestellt von {{name}}",
       "unverified": {
         "title": "Unverifiziertes Drittanbieter-Plugin",
-        "warning": "Dieses Plugin stammt aus einem unverifizierten Drittanbieter-Markt. Bitte stellen Sie vor der Installation sicher, dass Sie der Quelle vertrauen."
+        "warning": "Dieses Plugin stammt aus einer nicht verifizierten Drittanbieter-Community. Bitte stellen Sie vor der Installation sicher, dass Sie dieser Quelle vertrauen."
       },
       "verified": "Verifiziert"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "Diese Konfigurationen werden als Umgebungsvariablen beim Start des MCP-Servers an den Prozess übergeben",
     "httpTypeNotice": "HTTP-Typ MCP-Plugins benötigen derzeit keine Umgebungsvariablen-Konfiguration",
     "indexUrl": {
-      "title": "Marktindex",
+      "title": "Community-Index",
       "tooltip": "Online-Bearbeitung wird derzeit nicht unterstützt, bitte konfigurieren Sie über Umgebungsvariablen bei der Bereitstellung"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "Umgebungsvariablen konnten nicht gespeichert werden",
       "envUpdateSuccess": "Umgebungsvariablen erfolgreich gespeichert"
     },
-    "modalDesc": "Nach Konfiguration der Plugin-Marktplatz-Adresse können benutzerdefinierte Plugin-Marktplätze verwendet werden",
+    "modalDesc": "Nachdem Sie die Adresse der Plugin-Community konfiguriert haben, können Sie eine benutzerdefinierte Plugin-Community verwenden.",
     "rules": {
       "argsRequired": "Bitte Startparameter eingeben",
       "commandRequired": "Bitte Startbefehl eingeben",
       "urlRequired": "Bitte Serveradresse eingeben"
     },
     "saveSettings": "Einstellungen speichern",
-    "title": "Plugin-Marktplatz konfigurieren"
+    "title": "Plugin-Community einstellen"
   },
   "showInPortal": "Bitte Details im Arbeitsbereich ansehen",
   "store": {

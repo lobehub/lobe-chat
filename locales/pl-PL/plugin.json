@@ -368,7 +368,7 @@
       "trustedBy": "Dostarczone przez {{name}}",
       "unverified": {
         "title": "Nieweryfikowane wtyczki zewnętrzne",
-        "warning": "Ta wtyczka pochodzi z nieweryfikowanego rynku zewnętrznego, przed instalacją upewnij się, że ufasz temu źródłu."
+        "warning": "Ta wtyczka pochodzi z niezweryfikowanej społeczności zewnętrznej. Przed instalacją upewnij się, że ufasz temu źródłu."
       },
       "verified": "Zweryfikowane"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "Te ustawienia zostaną przekazane jako zmienne środowiskowe podczas uruchamiania serwera MCP",
     "httpTypeNotice": "Wtyczki MCP typu HTTP nie wymagają konfiguracji zmiennych środowiskowych",
     "indexUrl": {
-      "title": "Indeks rynku",
+      "title": "Indeks społeczności",
       "tooltip": "Edycja online nie jest obecnie obsługiwana, ustaw przez zmienne środowiskowe podczas wdrażania"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "Zapis zmiennych środowiskowych nie powiódł się",
       "envUpdateSuccess": "Zmienna środowiskowa została zapisana pomyślnie"
     },
-    "modalDesc": "Po skonfigurowaniu adresu rynku wtyczek możesz korzystać z niestandardowego rynku wtyczek",
+    "modalDesc": "Po skonfigurowaniu adresu społeczności wtyczek możesz korzystać z niestandardowej społeczności wtyczek",
     "rules": {
       "argsRequired": "Proszę wprowadzić argumenty startowe",
       "commandRequired": "Proszę wprowadzić polecenie startowe",
       "urlRequired": "Proszę wprowadzić adres usługi"
     },
     "saveSettings": "Zapisz ustawienia",
-    "title": "Ustawienia rynku wtyczek"
+    "title": "Ustawienia społeczności wtyczek"
   },
   "showInPortal": "Proszę zobaczyć szczegóły w obszarze roboczym",
   "store": {

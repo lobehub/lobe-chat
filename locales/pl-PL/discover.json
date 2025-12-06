@@ -60,9 +60,9 @@
     },
     "list": "Lista asystentów",
     "marketSource": {
-      "label": "Przełącz źródło rynku",
-      "legacy": "Stary rynek",
-      "new": "Nowy rynek"
+      "label": "Przełącz źródło społeczności",
+      "legacy": "Stara społeczność",
+      "new": "Nowa społeczność"
     },
     "more": "Więcej",
     "plugins": "Zintegrowane wtyczki",
@@ -85,7 +85,7 @@
         "subtitle": "Asystent, którego próbujesz odwiedzić, został zarchiwizowany z jednego z poniższych powodów:",
         "title": "Asystent został zarchiwizowany"
       },
-      "backToMarket": "Powrót do rynku asystentów",
+      "backToMarket": "Wróć do społeczności asystenta",
       "deprecated": {
         "reasons": {
           "official": "Asystent został usunięty przez administratorów z powodu problemów z bezpieczeństwem lub polityką",
@@ -94,9 +94,9 @@
         "subtitle": "Asystent, którego próbujesz odwiedzić, został odrzucony z jednego z poniższych powodów:",
         "title": "Asystent został odrzucony"
       },
-      "support": "W przypadku jakichkolwiek problemów skopiuj link i wyślij zapytanie na adres <1>support@lobehub.com</1>.",
+      "support": "W przypadku jakichkolwiek pytań skopiuj link i wyślij go na adres <email>support@lobehub.com</email> w celu uzyskania pomocy.",
       "unpublished": {
-        "subtitle": "Asystent, którego próbujesz odwiedzić, jest obecnie w trakcie przeglądu wersji. W razie pytań skopiuj link i wyślij zapytanie na adres <1>support@lobehub.com</1>.",
+        "subtitle": "Asystent, którego próbujesz odwiedzić, jest obecnie w trakcie przeglądu wersji. W razie wątpliwości skopiuj link i wyślij pytanie na adres <email>support@lobehub.com</email>.",
         "title": "Asystent w trakcie przeglądu"
       }
     },
@@ -144,7 +144,7 @@
   "createGuide": {
     "func1": {
       "desc1": "W oknie rozmowy przejdź do ustawień w prawym górnym rogu, aby wejść na stronę ustawień asystenta, który chcesz dodać;",
-      "desc2": "Kliknij przycisk 'Wyślij do rynku asystentów' w prawym górnym rogu.",
+      "desc2": "Kliknij przycisk w prawym górnym rogu, aby przesłać do społeczności asystenta.",
       "tag": "Metoda pierwsza",
       "title": "Zgłoś przez LobeChat"
     },
@@ -518,7 +518,7 @@
     "hero": {
       "desc": "Otwarte, możliwe do wdrożenia platformy serwerów MCP, które pomagają systemom AI łatwo uzyskać dostęp do systemów plików, baz danych, API i innych kluczowych zasobów, znacznie rozszerzając możliwości AI.",
       "subTitle": "Otwarte i gotowe do użycia",
-      "title": "Otwarte rynki MCP dla AI"
+      "title": "Otwarta społeczność MCP dla AI"
     },
     "sorts": {
       "createdAt": "Najnowsze",
@@ -531,7 +531,7 @@
       "toolsCount": "Liczba narzędzi",
       "updatedAt": "Ostatnia aktualizacja"
     },
-    "title": "Rynek MCP",
+    "title": "Społeczność MCP",
     "unvalidated": {
       "desc": "Ten serwer MCP nie został jeszcze zweryfikowany",
       "title": "Niezweryfikowany"

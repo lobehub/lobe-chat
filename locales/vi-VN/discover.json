@@ -60,9 +60,9 @@
     },
     "list": "Danh sách trợ lý",
     "marketSource": {
-      "label": "Chuyển đổi nguồn thị trường",
-      "legacy": "Thị trường cũ",
-      "new": "Thị trường mới"
+      "label": "Chuyển đổi nguồn cộng đồng",
+      "legacy": "Cộng đồng cũ",
+      "new": "Cộng đồng mới"
     },
     "more": "Thêm",
     "plugins": "Tích hợp plugin",
@@ -85,7 +85,7 @@
         "subtitle": "Trợ lý bạn đang truy cập đã bị lưu trữ vì một trong các lý do sau:",
         "title": "Trợ lý đã bị lưu trữ"
       },
-      "backToMarket": "Quay lại thị trường trợ lý",
+      "backToMarket": "Quay lại cộng đồng trợ lý",
       "deprecated": {
         "reasons": {
           "official": "Trợ lý bị gỡ bỏ do vấn đề an toàn/chính trị bởi cơ quan chính thức",
@@ -94,9 +94,9 @@
         "subtitle": "Trợ lý bạn đang truy cập đã bị từ chối vì một trong các lý do sau:",
         "title": "Trợ lý đã bị từ chối"
       },
-      "support": "Nếu gặp bất kỳ vấn đề nào, vui lòng sao chép liên kết và gửi đến <1>support@lobehub.com</1> để được hỗ trợ.",
+      "support": "Nếu có bất kỳ vấn đề nào, vui lòng sao chép liên kết và gửi đến <email>support@lobehub.com</email> để được hỗ trợ.",
       "unpublished": {
-        "subtitle": "Trợ lý bạn đang truy cập hiện đang trong quá trình kiểm duyệt phiên bản. Nếu có thắc mắc, vui lòng sao chép liên kết và gửi câu hỏi đến <1>support@lobehub.com</1> để được hỗ trợ.",
+        "subtitle": "Trợ lý bạn đang truy cập hiện đang trong quá trình kiểm duyệt phiên bản. Nếu có thắc mắc, vui lòng sao chép liên kết và gửi câu hỏi đến <email>support@lobehub.com</email> để được tư vấn.",
         "title": "Trợ lý đang chờ duyệt"
       }
     },
@@ -144,7 +144,7 @@
   "createGuide": {
     "func1": {
       "desc1": "Vào trang cài đặt của trợ lý bạn muốn gửi thông qua biểu tượng cài đặt ở góc trên bên phải trong cửa sổ trò chuyện;",
-      "desc2": "Nhấn nút gửi đến thị trường trợ lý ở góc trên bên phải.",
+      "desc2": "Nhấn nút gửi lên cộng đồng trợ lý ở góc trên bên phải.",
       "tag": "Phương pháp một",
       "title": "Gửi qua LobeChat"
     },
@@ -518,7 +518,7 @@
     "hero": {
       "desc": "Nền tảng MCP Servers mã nguồn mở, có thể triển khai, giúp hệ thống AI dễ dàng truy cập hệ thống tập tin, cơ sở dữ liệu, API và các tài nguyên quan trọng khác, mở rộng toàn diện khả năng AI của bạn.",
       "subTitle": "Mã nguồn mở & Sẵn sàng sử dụng",
-      "title": "Thị trường MCP mã nguồn mở dành cho AI"
+      "title": "Cộng đồng MCP mã nguồn mở hướng đến AI"
     },
     "sorts": {
       "createdAt": "Mới thêm",
@@ -531,7 +531,7 @@
       "toolsCount": "Số công cụ",
       "updatedAt": "Cập nhật gần nhất"
     },
-    "title": "Thị trường MCP",
+    "title": "Cộng đồng MCP",
     "unvalidated": {
       "desc": "MCP Server này chưa được xác minh",
       "title": "Chưa xác minh"

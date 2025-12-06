@@ -2,6 +2,7 @@ export default {
   about: {
     title: '关于',
   },
+  advancedSettings: '进阶配置',
   agentInfoDescription: {
     basic: {
       avatar: '头像',
@@ -75,6 +76,12 @@ export default {
       success: '已重置所有设置',
       title: '重置所有设置',
     },
+  },
+  group: {
+    aiConfig: 'AI 配置',
+    common: '通用',
+    profile: '账号',
+    system: '系统',
   },
   groupTab: {
     chat: '聊天',
@@ -218,27 +225,28 @@ export default {
       messages: {
         createVersionFailed: '版本创建失败: {{message}}',
         fetchRemoteFailed: '获取远程助手数据失败',
-        missingIdentifier: '当前助手还没有市场标识符',
-        notAuthenticated: '请先登录市场账户',
+        missingIdentifier: '当前助手还没有社区标识符',
+        notAuthenticated: '请先登录社区账户',
         publishFailed: '发布失败: {{message}}',
       },
       submitButton: '发布',
       title: {
-        submit: '分享到助手市场',
+        submit: '分享到助手社区',
         upload: '发布新版本',
       },
     },
     resultModal: {
-      message: '助手已提交审核，审核通过后将自动上线。点击「在市场查看」查看已发布的助手。',
-      view: '在市场查看',
+      message: '您创作的助手已提交审核，审核通过后将自动上线。',
+      title: '提交成功',
+      view: '前往社区查看',
     },
     submit: {
-      button: '分享到市场',
-      tooltip: '分享助手到市场',
+      button: '分享到社区',
+      tooltip: '分享助手到社区',
     },
     upload: {
       button: '发布新版本',
-      tooltip: '发布新版本到助手市场',
+      tooltip: '发布新版本到助手社区',
     },
   },
   message: {
@@ -283,7 +291,7 @@ export default {
     },
     submit: '更新助手信息',
     tag: {
-      desc: '助手标签将在助手市场中展示',
+      desc: '助手标签将在助手社区中展示',
       placeholder: '请输入标签',
       title: '标签',
     },
@@ -668,7 +676,8 @@ export default {
     identifier: '助手标识符（identifier）',
     metaMiss: '请补全助手信息后提交，需要包含名称、描述和标签',
     placeholder: '请输入助手的标识符，需要是唯一的，比如 web-development',
-    tooltips: '分享到助手市场',
+    success: '助手提交成功',
+    tooltips: '分享到助手社区',
   },
   submitFooter: {
     reset: '重置',

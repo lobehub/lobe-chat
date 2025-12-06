@@ -60,9 +60,9 @@
     },
     "list": "Lista de Assistentes",
     "marketSource": {
-      "label": "Alternar fonte do mercado",
-      "legacy": "Mercado antigo",
-      "new": "Novo mercado"
+      "label": "Alternar fonte da comunidade",
+      "legacy": "Comunidade antiga",
+      "new": "Nova comunidade"
     },
     "more": "Mais",
     "plugins": "Integrar plugins",
@@ -85,7 +85,7 @@
         "subtitle": "O assistente que você está tentando acessar foi arquivado pelos seguintes motivos possíveis:",
         "title": "Assistente arquivado"
       },
-      "backToMarket": "Voltar ao mercado de assistentes",
+      "backToMarket": "Voltar para a comunidade de assistentes",
       "deprecated": {
         "reasons": {
           "official": "O assistente foi removido oficialmente por questões de segurança/política",
@@ -94,9 +94,9 @@
         "subtitle": "O assistente que você está tentando acessar foi rejeitado pelos seguintes motivos possíveis:",
         "title": "Assistente rejeitado"
       },
-      "support": "Se tiver qualquer problema, copie o link e envie para <1>support@lobehub.com</1> para obter suporte.",
+      "support": "Se tiver qualquer dúvida, copie o link e envie para <email>support@lobehub.com</email> para obter suporte.",
       "unpublished": {
-        "subtitle": "O assistente que você está tentando acessar está passando por revisão de versão. Se tiver dúvidas, copie o link e envie para <1>support@lobehub.com</1> para obter suporte.",
+        "subtitle": "O assistente que você está acessando está passando por uma revisão de versão. Se tiver dúvidas, copie o link e envie sua pergunta para <email>support@lobehub.com</email>.",
         "title": "Assistente em revisão"
       }
     },
@@ -144,7 +144,7 @@
   "createGuide": {
     "func1": {
       "desc1": "No painel de conversa, acesse a página de configurações do assistente que você deseja enviar pelo canto superior direito;",
-      "desc2": "Clique no botão de enviar para o mercado de assistentes no canto superior direito.",
+      "desc2": "Clique no botão no canto superior direito para enviar à comunidade de assistentes.",
       "tag": "Método Um",
       "title": "Enviar através do LobeChat"
     },
@@ -518,7 +518,7 @@
     "hero": {
       "desc": "Plataforma open source e implantável de Servidores MCP que ajuda sistemas de IA a acessar facilmente sistemas de arquivos, bancos de dados, APIs e outros recursos essenciais, expandindo amplamente suas capacidades de IA.",
       "subTitle": "Open Source & Pronto para Uso",
-      "title": "Mercado Open Source MCP para IA"
+      "title": "Comunidade MCP de código aberto voltada para IA"
     },
     "sorts": {
       "createdAt": "Adicionado Recentemente",
@@ -531,7 +531,7 @@
       "toolsCount": "Número de Ferramentas",
       "updatedAt": "Atualizado Recentemente"
     },
-    "title": "Mercado MCP",
+    "title": "Comunidade MCP",
     "unvalidated": {
       "desc": "Este servidor MCP ainda não foi validado",
       "title": "Não Validado"

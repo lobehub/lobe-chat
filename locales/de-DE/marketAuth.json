@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Abbrechen",
-    "confirm": "Autorisieren",
-    "description": {
-      "and": "und",
-      "prefix": "Mit dem Klick auf „Autorisieren“ stimmen Sie den",
-      "privacy": "Datenschutzbestimmungen",
+    "confirm": "Erstelle dein Profil",
+    "description": "Dein Community-Profil ist unabhängig von deinem {{appName}}-Benutzerkonto.",
+    "footer": {
+      "agreement": "Mit dem Fortfahren bestätigst du, dass du die <terms>Nutzungsbedingungen</terms> und die <privacy>Datenschutzerklärung</privacy> gelesen und akzeptiert hast.",
+      "privacy": "Datenschutzerklärung",
       "terms": "Nutzungsbedingungen"
     },
-    "title": "Autorisierung bestätigen"
+    "subtitle": "Erstelle ein Community-Profil, um Inhalte einzureichen und deine Einreichungen zu verwalten.",
+    "title": "Community-Profil erstellen"
   },
   "callback": {
     "buttons": {

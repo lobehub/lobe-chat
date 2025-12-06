@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "İptal",
-    "confirm": "Kullanıma Yetki Ver",
-    "description": {
-      "and": "ve",
-      "prefix": "Kullanıma yetki ver'e tıklayarak şu şartları kabul etmiş olursunuz:",
+    "confirm": "Profilinizi Oluşturun",
+    "description": "Topluluk profiliniz, {{appName}} kullanıcı hesabınızdan bağımsız olarak var olur.",
+    "footer": {
+      "agreement": "Devam ederek <terms>Hizmet Şartları</terms> ve <privacy>Gizlilik Politikası</privacy>'nı anladığınızı ve kabul ettiğinizi onaylamış olursunuz.",
       "privacy": "Gizlilik Politikası",
       "terms": "Hizmet Şartları"
     },
-    "title": "Yetkilendirmeyi Onayla"
+    "subtitle": "Toplulukta içerik göndermek ve listelemeleri yönetmek için bir topluluk profili oluşturun.",
+    "title": "Topluluk Profilinizi Oluşturun"
   },
   "callback": {
     "buttons": {

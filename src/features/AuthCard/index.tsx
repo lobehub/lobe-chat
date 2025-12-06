@@ -1,16 +1,18 @@
-import { Text } from '@lobehub/ui';
-import type { PropsWithChildren, ReactNode } from 'react';
-import { Flexbox } from 'react-layout-kit';
+'use client';
 
-export interface AuthCardProps extends PropsWithChildren {
+import { Text } from '@lobehub/ui';
+import { ReactNode, memo } from 'react';
+import { Flexbox, FlexboxProps } from 'react-layout-kit';
+
+export interface AuthCardProps extends Omit<FlexboxProps, 'title'> {
   footer?: ReactNode;
   subtitle?: ReactNode;
   title?: ReactNode;
 }
 
-export const AuthCard = ({ children, title, subtitle, footer }: AuthCardProps) => {
+export const AuthCard = memo<AuthCardProps>(({ children, title, subtitle, footer, ...rest }) => {
   return (
-    <Flexbox width={'min(100%,400px)'}>
+    <Flexbox width={'min(100%,400px)'} {...rest}>
       <Flexbox gap={2}>
         {title && (
           <Text fontSize={28} weight={'bold'}>
@@ -29,6 +31,6 @@ export const AuthCard = ({ children, title, subtitle, footer }: AuthCardProps) =
       {footer}
     </Flexbox>
   );
-};
+});
 
 export default AuthCard;

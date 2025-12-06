@@ -60,9 +60,9 @@
     },
     "list": "Assistentenlijst",
     "marketSource": {
-      "label": "Wissel van marktplaats",
-      "legacy": "Oude marktplaats",
-      "new": "Nieuwe marktplaats"
+      "label": "Wissel van communitybron",
+      "legacy": "Oude community",
+      "new": "Nieuwe community"
     },
     "more": "Meer",
     "plugins": "Geïntegreerde plugins",
@@ -85,7 +85,7 @@
         "subtitle": "De assistent die je probeert te openen is gearchiveerd om een van de volgende redenen:",
         "title": "Assistent is gearchiveerd"
       },
-      "backToMarket": "Terug naar de assistentenmarktplaats",
+      "backToMarket": "Terug naar de assistentcommunity",
       "deprecated": {
         "reasons": {
           "official": "De assistent is verwijderd door officiële instanties vanwege veiligheids- of politieke redenen",
@@ -94,9 +94,9 @@
         "subtitle": "De assistent die je probeert te openen is afgewezen om een van de volgende redenen:",
         "title": "Assistent is afgewezen"
       },
-      "support": "Bij vragen of problemen, kopieer de link en stuur deze naar <1>support@lobehub.com</1> voor ondersteuning.",
+      "support": "Bij vragen, kopieer de link en stuur deze naar <email>support@lobehub.com</email> voor ondersteuning.",
       "unpublished": {
-        "subtitle": "De assistent die je probeert te openen wordt momenteel beoordeeld. Bij vragen, kopieer de link en stuur deze naar <1>support@lobehub.com</1> voor ondersteuning.",
+        "subtitle": "De assistent die je probeert te openen wordt momenteel beoordeeld. Bij vragen, kopieer de link en stuur deze naar <email>support@lobehub.com</email> voor ondersteuning.",
         "title": "Assistent in beoordeling"
       }
     },
@@ -144,7 +144,7 @@
   "createGuide": {
     "func1": {
       "desc1": "Ga naar de instellingenpagina van de assistent die je wilt indienen via de instellingen in de rechterbovenhoek van het gespreksscherm;",
-      "desc2": "Klik op de knop 'Indienen naar assistentmarkt' in de rechterbovenhoek.",
+      "desc2": "Klik rechtsboven op de knop om in te dienen bij de assistentcommunity.",
       "tag": "Methode één",
       "title": "Indienen via LobeChat"
     },
@@ -518,7 +518,7 @@
     "hero": {
       "desc": "Open source, implementeerbaar MCP-servers platform dat AI-systemen helpt eenvoudig toegang te krijgen tot bestandssystemen, databases, API's en andere essentiële bronnen, waarmee je AI-capaciteiten volledig worden uitgebreid.",
       "subTitle": "Open source & direct gebruiksklaar",
-      "title": "Open source MCP-marktplaats voor AI"
+      "title": "Open source MCP-community voor AI"
     },
     "sorts": {
       "createdAt": "Recent toegevoegd",
@@ -531,7 +531,7 @@
       "toolsCount": "Aantal tools",
       "updatedAt": "Laatst bijgewerkt"
     },
-    "title": "MCP-markt",
+    "title": "MCP-community",
     "unvalidated": {
       "desc": "Deze MCP-server is nog niet gevalideerd",
       "title": "Niet gevalideerd"
