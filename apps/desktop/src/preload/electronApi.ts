@@ -1,5 +1,5 @@
 import { electronAPI } from '@electron-toolkit/preload';
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 
 import { invoke } from './invoke';
 import { onStreamInvoke } from './streamer';
@@ -15,5 +15,8 @@ export const setupElectronApi = () => {
     console.error(error);
   }
 
-  contextBridge.exposeInMainWorld('electronAPI', { invoke, onStreamInvoke });
+  contextBridge.exposeInMainWorld('electronAPI', {
+    invoke,
+    onStreamInvoke,
+  });
 };

@@ -40,9 +40,8 @@ export const generalActionSlice: StateCreator<
 
     if (isDesktop) {
       try {
-        const { dispatch } = await import('@lobechat/electron-client-ipc');
-
-        const result = await dispatch('createMultiInstanceWindow', {
+        const { ensureElectronIpc } = await import('@/utils/electron/ipc');
+        const result = await ensureElectronIpc().windows.createMultiInstanceWindow({
           path: url,
           templateId: 'chatSingle',
           uniqueId: `chat_${sessionId}`,
@@ -70,9 +69,9 @@ export const generalActionSlice: StateCreator<
 
     if (isDesktop) {
       try {
-        const { dispatch } = await import('@lobechat/electron-client-ipc');
+        const { ensureElectronIpc } = await import('@/utils/electron/ipc');
 
-        const result = await dispatch('createMultiInstanceWindow', {
+        const result = await ensureElectronIpc().windows.createMultiInstanceWindow({
           path: url,
           templateId: 'chatSingle',
           uniqueId: `chat_${sessionId}_${topicId}`,
@@ -103,9 +102,9 @@ export const generalActionSlice: StateCreator<
     if (isDesktop && !skipBroadcast) {
       (async () => {
         try {
-          const { dispatch } = await import('@lobechat/electron-client-ipc');
+          const { ensureElectronIpc } = await import('@/utils/electron/ipc');
 
-          await dispatch('updateLocale', locale);
+          await ensureElectronIpc().system.updateLocale(locale);
         } catch (error) {
           console.error('Failed to update locale in main process:', error);
         }
@@ -120,8 +119,8 @@ export const generalActionSlice: StateCreator<
     if (isDesktop && !skipBroadcast) {
       (async () => {
         try {
-          const { dispatch } = await import('@lobechat/electron-client-ipc');
-          await dispatch('updateThemeMode', themeMode);
+          const { ensureElectronIpc } = await import('@/utils/electron/ipc');
+          await ensureElectronIpc().system.updateThemeMode(themeMode);
         } catch (error) {
           console.error('Failed to update theme in main process:', error);
         }

@@ -11,7 +11,7 @@ import {
   ProxyDispatcherManager,
   ProxyTestResult,
 } from '../modules/networkProxy';
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
 
 // Create logger
 const logger = createLogger('controllers:NetworkProxyCtr');
@@ -21,10 +21,11 @@ const logger = createLogger('controllers:NetworkProxyCtr');
  * 处理桌面应用的网络代理相关功能
  */
 export default class NetworkProxyCtr extends ControllerModule {
+  static override readonly groupName = 'networkProxy';
   /**
    * 获取代理设置
    */
-  @ipcClientEvent('getProxySettings')
+  @IpcMethod()
   async getDesktopSettings(): Promise<NetworkProxySettings> {
     try {
       const settings = this.app.storeManager.get(
@@ -45,31 +46,29 @@ export default class NetworkProxyCtr extends ControllerModule {
   /**
    * 设置代理配置
    */
-  @ipcClientEvent('setProxySettings')
-  async setProxySettings(config: NetworkProxySettings): Promise<void> {
+  @IpcMethod()
+  async setProxySettings(config: Partial<NetworkProxySettings>): Promise<void> {
     try {
-      // 验证配置
-      const validation = ProxyConfigValidator.validate(config);
-      if (!validation.isValid) {
-        const errorMessage = `Invalid proxy configuration: ${validation.errors.join(', ')}`;
-        logger.error(errorMessage);
-        throw new Error(errorMessage);
-      }
-
       // 获取当前配置
       const currentConfig = this.app.storeManager.get(
         'networkProxy',
         defaultProxySettings,
       ) as NetworkProxySettings;
 
-      // 检查是否有变化
-      if (isEqual(currentConfig, config)) {
+      // 合并配置并验证
+      const newConfig = merge({}, currentConfig, config);
+
+      const validation = ProxyConfigValidator.validate(newConfig);
+      if (!validation.isValid) {
+        const errorMessage = `Invalid proxy configuration: ${validation.errors.join(', ')}`;
+        logger.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+
+      if (isEqual(currentConfig, newConfig)) {
         logger.debug('Proxy settings unchanged, skipping update');
         return;
       }
-
-      // 合并配置
-      const newConfig = merge({}, currentConfig, config);
 
       // 应用代理设置
       await ProxyDispatcherManager.applyProxySettings(newConfig);
@@ -92,7 +91,7 @@ export default class NetworkProxyCtr extends ControllerModule {
   /**
    * 测试代理连接
    */
-  @ipcClientEvent('testProxyConnection')
+  @IpcMethod()
   async testProxyConnection(url: string): Promise<{ message?: string; success: boolean }> {
     try {
       const result = await ProxyConnectionTester.testConnection(url);
@@ -112,7 +111,7 @@ export default class NetworkProxyCtr extends ControllerModule {
   /**
    * 测试指定代理配置
    */
-  @ipcClientEvent('testProxyConfig')
+  @IpcMethod()
   async testProxyConfig({
     config,
     testUrl,
