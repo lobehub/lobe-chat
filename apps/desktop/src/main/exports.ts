@@ -1,2 +1,2 @@
-// Export types for renderer to use
-export type { DesktopIpcServices } from './controllers/registry';
+// Export types for renderer/server to use
+export type { DesktopIpcServices, DesktopServerIpcServices } from './controllers/registry';

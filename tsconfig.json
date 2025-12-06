@@ -19,7 +19,6 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "isolatedDeclarations": false,
     "jsx": "react-jsx",
     "incremental": true,
     "types": [

@@ -1,24 +1,7 @@
-import type { ServerDispatchEvents } from '@lobechat/electron-server-ipc';
-
 import type { App } from '@/core/App';
 import { IoCContainer } from '@/core/infrastructure/IoCContainer';
 import { ShortcutActionType } from '@/shortcuts';
 import { IpcService } from '@/utils/ipc';
-
-/**
- * IPC server event decorator for controllers
- */
-export const ipcServerEvent = (name: keyof ServerDispatchEvents) =>
-  (target: any, methodName: string, descriptor?: any) => {
-    const actions = IoCContainer.controllers.get(target.constructor) || [];
-    actions.push({
-      methodName,
-      mode: 'server' as const,
-      name,
-    });
-    IoCContainer.controllers.set(target.constructor, actions);
-    return descriptor;
-  };
 
 const shortcutDecorator = (name: string) => (target: any, methodName: string, descriptor?: any) => {
   const actions = IoCContainer.shortcuts.get(target.constructor) || [];
@@ -67,4 +50,4 @@ export class ControllerModule extends IpcService implements IControllerModule {
 
 export type IControlModule = typeof ControllerModule;
 
-export { IpcMethod } from '@/utils/ipc';
+export { IpcMethod, IpcServerMethod } from '@/utils/ipc';

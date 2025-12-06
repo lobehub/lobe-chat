@@ -5,8 +5,8 @@ export const ensureElectronIpc = (): DesktopIpcServices => {
   const ipc = getElectronIpc();
   if (!ipc) {
     throw new Error(
-      'electronAPI.ipc not found. Please ensure the desktop preload exposes IPC services via window.electronAPI.ipc',
+      'electronAPI.invoke not found. Ensure the preload exposes invoke via window.electronAPI.invoke',
     );
   }
-  return ipc as DesktopIpcServices;
+  return ipc;
 };

@@ -1,5 +1,6 @@
-import { ensureElectronIpc } from '@/utils/electron/ipc';
 import { FileMetadata } from '@lobechat/types';
+
+import { ensureElectronIpc } from '@/utils/electron/ipc';
 
 /**
  * Desktop application file API client service

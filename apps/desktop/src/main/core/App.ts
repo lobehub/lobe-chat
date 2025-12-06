@@ -10,6 +10,7 @@ import { buildDir, LOCAL_DATABASE_DIR, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
+import { getServerMethodMetadata } from '@/utils/ipc';
 import { createLogger } from '@/utils/logger';
 import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
 
@@ -322,10 +323,12 @@ export class App {
     const controller = new ControllerClass(this);
     this.controllers.set(ControllerClass, controller);
 
-    IoCContainer.controllers.get(ControllerClass)?.forEach((event) => {
-      this.ipcServerEventMap.set(event.name, {
+    const serverMethods = getServerMethodMetadata(ControllerClass);
+    serverMethods?.forEach((methodName, propertyKey) => {
+      const channel = `${ControllerClass.groupName}.${methodName}`;
+      this.ipcServerEventMap.set(channel, {
         controller,
-        methodName: event.methodName,
+        methodName: propertyKey,
       });
     });
 
