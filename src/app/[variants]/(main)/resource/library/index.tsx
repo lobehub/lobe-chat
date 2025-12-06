@@ -13,20 +13,30 @@ import { useResourceManagerStore } from '../features/store';
 const MainContent = memo(() => {
   const { id: knowledgeBaseId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
-  const setMode = useResourceManagerStore((s) => s.setMode);
-  const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
+  const [setMode, setCurrentViewItemId, setLibraryId] = useResourceManagerStore((s) => [
+    s.setMode,
+    s.setCurrentViewItemId,
+    s.setLibraryId,
+  ]);
 
   // Load knowledge base data
   useKnowledgeBaseItem(knowledgeBaseId || '');
 
-  // Sync URL query parameter with store on mount and when it changes
+  // Sync URL parameter with store on mount and when it changes
   useEffect(() => {
+    // Set libraryId from URL params
+    setLibraryId(knowledgeBaseId);
+
     const fileId = searchParams.get('file');
     if (fileId && !fileId.startsWith('doc')) {
       setCurrentViewItemId(fileId);
       setMode('editor');
+    } else {
+      // Reset to explorer mode when no file is selected
+      setMode('explorer');
+      setCurrentViewItemId(undefined);
     }
-  }, [searchParams, setCurrentViewItemId, setMode]);
+  }, [knowledgeBaseId, searchParams, setCurrentViewItemId, setMode, setLibraryId]);
 
   return <ResourceManager />;
 });
