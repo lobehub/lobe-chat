@@ -55,7 +55,9 @@ export interface FileManageAction {
 
   useFetchFolderBreadcrumb: (slug?: string | null) => SWRResponse<FolderCrumb[]>;
   useFetchKnowledgeItem: (id?: string) => SWRResponse<FileListItem | undefined>;
-  useFetchKnowledgeItems: (params: QueryFileListParams) => SWRResponse<FileListItem[]>;
+  useFetchKnowledgeItems: (
+    params: QueryFileListParams,
+  ) => SWRResponse<FileListItem[] | { hasMore: boolean; items: FileListItem[]; total: number }>;
 }
 
 const FETCH_ALL_KNOWLEDGE_KEY = 'useFetchKnowledgeItems';
@@ -408,13 +410,17 @@ export const createFileManageSlice: StateCreator<
     ),
 
   useFetchKnowledgeItems: (params) =>
-    useClientDataSWR<FileListItem[]>(
+    useClientDataSWR<FileListItem[] | { hasMore: boolean; items: FileListItem[]; total: number }>(
       [FETCH_ALL_KNOWLEDGE_KEY, params],
       () => serverFileService.getKnowledgeItems(params),
       {
         onSuccess: (data) => {
-          set({ fileList: data, queryListParams: params });
+          // Handle both paginated and non-paginated responses
+          const items = Array.isArray(data) ? data : data.items;
+          set({ fileList: items, queryListParams: params });
         },
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
       },
     ),
 });

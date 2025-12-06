@@ -40,16 +40,19 @@ const MoveToFolderModal = memo<MoveToFolderModalProps>(
 
         setLoading(true);
         try {
-          const data = await fileService.getKnowledgeItems({
+          const response = await fileService.getKnowledgeItems({
             knowledgeBaseId,
             parentId: null,
             showFilesInKnowledgeBase: false,
           });
 
+          // Handle both paginated and non-paginated responses
+          const data = Array.isArray(response) ? response : response.items;
+
           // Filter only folders
           const folderItems = data
-            .filter((item) => item.fileType === 'custom/folder')
-            .map((item) => ({
+            .filter((item: any) => item.fileType === 'custom/folder')
+            .map((item: any) => ({
               children: undefined,
               id: item.id,
               name: item.name,
@@ -73,16 +76,19 @@ const MoveToFolderModal = memo<MoveToFolderModalProps>(
         if (loadedFolders.has(folderId)) return;
 
         try {
-          const data = await fileService.getKnowledgeItems({
+          const response = await fileService.getKnowledgeItems({
             knowledgeBaseId,
             parentId: folderId,
             showFilesInKnowledgeBase: false,
           });
 
+          // Handle both paginated and non-paginated responses
+          const data = Array.isArray(response) ? response : response.items;
+
           // Filter only folders
           const childFolders: FolderTreeItem[] = data
-            .filter((item) => item.fileType === 'custom/folder')
-            .map((item) => ({
+            .filter((item: any) => item.fileType === 'custom/folder')
+            .map((item: any) => ({
               children: undefined,
               id: item.id,
               name: item.name,

@@ -17,25 +17,25 @@ const ContextsList = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Grid gap={16} rows={mobile ? 1 : 3}>
-        {contexts.map((context) => {
-          const labels = Array.isArray(context.tags) ? context.tags : [];
+      {contexts.map((context) => {
+        const labels = Array.isArray(context.tags) ? context.tags : [];
 
-          return (
-            <MemoryCard
-              key={context.id}
-              content={context.description || context.currentStatus}
-              footer={
-                <>
-                  {context.scoreImpact !== null && <div>Impact: {context.scoreImpact}</div>}
-                  {context.scoreUrgency !== null && <div>Urgency: {context.scoreUrgency}</div>}
-                </>
-              }
-              labels={labels}
-              title={context.title || 'Untitled Context'}
-              type={context.type || 'Context'}
-            />
-          );
-        })}
+        return (
+          <MemoryCard
+            content={context.description || context.currentStatus}
+            footer={
+              <>
+                {context.scoreImpact !== null && <div>Impact: {context.scoreImpact}</div>}
+                {context.scoreUrgency !== null && <div>Urgency: {context.scoreUrgency}</div>}
+              </>
+            }
+            key={context.id}
+            labels={labels}
+            title={context.title || 'Untitled Context'}
+            type={context.type || 'Context'}
+          />
+        );
+      })}
     </Grid>
   );
 });
