@@ -1,11 +1,15 @@
 'use client';
 
 import { Button, Icon, Tag } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import { ReactNode, memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
+
+import { SCROLL_PARENT_ID } from '../features/const';
+
+const SCROLL_CONTAINER_ID = 'lobe-mobile-scroll-container';
 
 const useStyles = createStyles(({ css, responsive, token }) => ({
   more: css`
@@ -47,7 +51,19 @@ interface TitleProps extends FlexboxProps {
 
 const Title = memo<TitleProps>(({ tag, children, moreLink, more }) => {
   const { styles } = useStyles();
+  const { mobile } = useResponsive();
   const title = <h2 className={styles.title}>{children}</h2>;
+
+  const handleMoreClick = () => {
+    if (!moreLink) return;
+
+    const scrollContainerId = mobile ? SCROLL_CONTAINER_ID : SCROLL_PARENT_ID;
+    const scrollableElement = document?.querySelector(`#${scrollContainerId}`);
+
+    if (!scrollableElement) return;
+    scrollableElement.scrollTo({ behavior: 'smooth', top: 0 });
+  };
+
   return (
     <Flexbox align={'center'} gap={16} horizontal justify={'space-between'} width={'100%'}>
       {tag ? (
@@ -59,7 +75,11 @@ const Title = memo<TitleProps>(({ tag, children, moreLink, more }) => {
         title
       )}
       {moreLink && (
-        <Link target={moreLink.startsWith('http') ? '_blank' : undefined} to={`/discover${moreLink}`}>
+        <Link
+          onClick={handleMoreClick}
+          target={moreLink.startsWith('http') ? '_blank' : undefined}
+          to={moreLink}
+        >
           <Button className={styles.more} style={{ paddingInline: 6 }} type={'text'}>
             <span>{more}</span>
             <Icon icon={ChevronRight} />
