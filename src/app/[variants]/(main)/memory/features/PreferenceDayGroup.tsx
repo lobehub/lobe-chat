@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { UserMemoryPreferencesWithoutVectors } from '@/database/schemas';
+import { DisplayPreferenceMemory } from '@/database/repositories/userMemory';
 
 import PreferenceCard from './PreferenceCard';
 
@@ -35,38 +35,44 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface PreferenceDayGroupProps {
   dayKey: string;
-  onClick?: (preference: UserMemoryPreferencesWithoutVectors) => void;
-  preferences: UserMemoryPreferencesWithoutVectors[];
+  onClick?: (preference: DisplayPreferenceMemory) => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
+  preferences: DisplayPreferenceMemory[];
 }
 
-const PreferenceDayGroup = memo<PreferenceDayGroupProps>(({ preferences, dayKey, onClick }) => {
-  const { styles } = useStyles();
+const PreferenceDayGroup = memo<PreferenceDayGroupProps>(
+  ({ preferences, dayKey, onClick, onDelete, onEdit }) => {
+    const { styles } = useStyles();
 
-  const dayName = dayjs(dayKey).format('YYYY年MM月DD日');
+    const dayName = dayjs(dayKey).format('YYYY年MM月DD日');
 
-  const sortedPreferences = [...preferences].sort((a, b) => {
-    return dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf();
-  });
+    const sortedPreferences = [...preferences].sort((a, b) => {
+      return dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf();
+    });
 
-  return (
-    <Flexbox gap={12}>
-      <Flexbox align={'center'} className={styles.dayHeader} horizontal>
-        {dayName}
-        <Center className={styles.count}>{preferences.length}</Center>
+    return (
+      <Flexbox gap={12}>
+        <Flexbox align={'center'} className={styles.dayHeader} horizontal>
+          {dayName}
+          <Center className={styles.count}>{preferences.length}</Center>
+        </Flexbox>
+
+        <Flexbox gap={8}>
+          {sortedPreferences.map((preference) => (
+            <PreferenceCard
+              key={preference.id}
+              onClick={() => onClick?.(preference)}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              preference={preference}
+              showTimeline
+            />
+          ))}
+        </Flexbox>
       </Flexbox>
-
-      <Flexbox gap={8}>
-        {sortedPreferences.map((preference) => (
-          <PreferenceCard
-            key={preference.id}
-            onClick={() => onClick?.(preference)}
-            preference={preference}
-            showTimeline
-          />
-        ))}
-      </Flexbox>
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export default PreferenceDayGroup;
