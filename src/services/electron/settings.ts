@@ -1,4 +1,5 @@
 import { NetworkProxySettings, ShortcutUpdateResult } from '@lobechat/electron-client-ipc';
+
 import { ensureElectronIpc } from '@/utils/electron/ipc';
 
 class DesktopSettingsService {
@@ -6,7 +7,7 @@ class DesktopSettingsService {
    * Get proxy settings
    */
   getProxySettings = async () => {
-    return ensureElectronIpc().networkProxy.getProxySettings();
+    return ensureElectronIpc().networkProxy.getDesktopSettings();
   };
 
   /**

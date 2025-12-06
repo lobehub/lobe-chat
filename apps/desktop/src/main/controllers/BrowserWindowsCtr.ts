@@ -60,7 +60,7 @@ export default class BrowserWindowsCtr extends ControllerModule {
   }
 
   @IpcMethod()
-  minimizeWindow(_: undefined, context?: IpcContext) {
+  minimizeWindow(_?: undefined, context?: IpcContext) {
     this.withSenderIdentifier(context, (identifier) => {
       this.app.browserManager.minimizeWindow(identifier);
     });
