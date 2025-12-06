@@ -31,6 +31,6 @@ const Layout = memo(() => {
   );
 });
 
-Layout.displayName = 'DesktopChatLayout';
+Layout.displayName = 'DesktopHomeLayout';
 
 export default Layout;
