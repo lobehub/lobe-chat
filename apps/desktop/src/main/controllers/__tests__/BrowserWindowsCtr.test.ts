@@ -7,6 +7,16 @@ import type { IpcContext } from '@/utils/ipc';
 
 import BrowserWindowsCtr from '../BrowserWindowsCtr';
 
+const { ipcMainHandleMock } = vi.hoisted(() => ({
+  ipcMainHandleMock: vi.fn(),
+}));
+
+vi.mock('electron', () => ({
+  ipcMain: {
+    handle: ipcMainHandleMock,
+  },
+}));
+
 // 模拟 App 及其依赖项
 const mockToggleVisible = vi.fn();
 const mockLoadUrl = vi.fn();
@@ -57,6 +67,7 @@ describe('BrowserWindowsCtr', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    ipcMainHandleMock.mockClear();
     browserWindowsCtr = new BrowserWindowsCtr(mockApp);
   });
 

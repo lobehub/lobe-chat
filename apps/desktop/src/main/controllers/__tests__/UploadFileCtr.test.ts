@@ -1,12 +1,30 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { App } from '@/core/App';
+import { IpcHandler } from '@/utils/ipc/base';
 
 import UploadFileCtr from '../UploadFileCtr';
 
+const { ipcHandlers, ipcMainHandleMock } = vi.hoisted(() => {
+  const handlers = new Map<string, (event: any, ...args: any[]) => any>();
+  const handle = vi.fn((channel: string, handler: any) => {
+    handlers.set(channel, handler);
+  });
+  return { ipcHandlers: handlers, ipcMainHandleMock: handle };
+});
+
+const invokeIpc = async <T = any>(channel: string, payload?: any): Promise<T> => {
+  const handler = ipcHandlers.get(channel);
+  if (!handler) throw new Error(`IPC handler for ${channel} not found`);
+
+  const fakeEvent = { sender: { id: 'test' } as any };
+  if (payload === undefined) return handler(fakeEvent);
+  return handler(fakeEvent, payload);
+};
+
 vi.mock('electron', () => ({
   ipcMain: {
-    handle: vi.fn(),
+    handle: ipcMainHandleMock,
   },
 }));
 
@@ -29,6 +47,9 @@ describe('UploadFileCtr', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    ipcHandlers.clear();
+    ipcMainHandleMock.mockClear();
+    (IpcHandler.getInstance() as any).registeredChannels?.clear();
     controller = new UploadFileCtr(mockApp);
   });
 
@@ -44,7 +65,7 @@ describe('UploadFileCtr', () => {
       const expectedResult = { id: 'file-id-123', url: '/files/file-id-123' };
       mockFileService.uploadFile.mockResolvedValue(expectedResult);
 
-      const result = await controller.uploadFile(params);
+      const result = await invokeIpc('upload.uploadFile', params);
 
       expect(result).toEqual(expectedResult);
       expect(mockFileService.uploadFile).toHaveBeenCalledWith(params);
@@ -61,7 +82,7 @@ describe('UploadFileCtr', () => {
       const error = new Error('Upload failed');
       mockFileService.uploadFile.mockRejectedValue(error);
 
-      await expect(controller.uploadFile(params)).rejects.toThrow('Upload failed');
+      await expect(invokeIpc('upload.uploadFile', params)).rejects.toThrow('Upload failed');
     });
   });
 });

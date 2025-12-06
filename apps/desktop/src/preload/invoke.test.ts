@@ -22,7 +22,7 @@ describe('invoke', () => {
 
     const result = await invoke('system.getAppVersion');
 
-    expect(mockIpcRendererInvoke).toHaveBeenCalledWith('getAppVersion');
+    expect(mockIpcRendererInvoke).toHaveBeenCalledWith('system.getAppVersion');
     expect(mockIpcRendererInvoke).toHaveBeenCalledTimes(1);
     expect(result).toEqual(expectedResult);
   });
@@ -34,7 +34,7 @@ describe('invoke', () => {
 
     const result = await invoke('windows.interceptRoute', eventData);
 
-    expect(mockIpcRendererInvoke).toHaveBeenCalledWith('interceptRoute', eventData);
+    expect(mockIpcRendererInvoke).toHaveBeenCalledWith('windows.interceptRoute', eventData);
     expect(mockIpcRendererInvoke).toHaveBeenCalledTimes(1);
     expect(result).toEqual(expectedResult);
   });
@@ -58,10 +58,8 @@ describe('invoke', () => {
     const error = new Error('IPC communication failed');
     mockIpcRendererInvoke.mockRejectedValue(error);
 
-    await expect(invoke('system.getAppVersion')).rejects.toThrow(
-      'IPC communication failed',
-    );
-    expect(mockIpcRendererInvoke).toHaveBeenCalledWith('getAppVersion');
+    await expect(invoke('system.getAppVersion')).rejects.toThrow('IPC communication failed');
+    expect(mockIpcRendererInvoke).toHaveBeenCalledWith('system.getAppVersion');
   });
 
   it('should handle ipcRenderer returning undefined', async () => {
