@@ -38,7 +38,9 @@ export const useFileExplorerData = ({
       knowledgeBaseId,
       limit: PAGE_SIZE,
       offset: 0,
-      parentId: currentFolderSlug ?? undefined,
+      // When currentFolderSlug is null/undefined (root level), explicitly pass null
+      // to indicate we want only root-level items, not undefined which means "no filter"
+      parentId: currentFolderSlug ?? null,
       q: query ?? undefined,
       showFilesInKnowledgeBase: false,
       sortType: sortType || SortType.Desc,
