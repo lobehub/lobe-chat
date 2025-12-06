@@ -40,7 +40,7 @@ const ProfileArea = memo(() => {
         width={'100%'}
       >
         {isAgentConfigLoading ? (
-          <Loading />
+          <Loading debugId="ProfileArea > AgentConfig" />
         ) : (
           <WideScreenContainer>
             <ProfileEditor />
@@ -53,7 +53,7 @@ const ProfileArea = memo(() => {
 
 const AgentProfile = memo(() => {
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<Loading debugId="AgentProfile" />}>
       <ProfileProvider>
         <Flexbox height={'100%'} horizontal width={'100%'}>
           <ProfileArea />

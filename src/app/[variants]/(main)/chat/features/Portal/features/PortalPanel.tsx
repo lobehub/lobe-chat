@@ -14,7 +14,7 @@ const PortalPanel = memo<PortalPanelProps>(({ mobile }) => {
   const Layout = mobile ? MobileLayout : DesktopLayout;
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<Loading debugId="PortalPanel" />}>
       <Layout>
         <PortalBody />
       </Layout>

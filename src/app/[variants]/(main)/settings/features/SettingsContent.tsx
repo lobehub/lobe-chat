@@ -10,47 +10,47 @@ import { SettingsTabs } from '@/store/global/initialState';
 
 const componentMap = {
   [SettingsTabs.Common]: dynamic(() => import('../common'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Common" />,
   }),
   [SettingsTabs.Provider]: dynamic(() => import('../provider'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Provider" />,
   }),
   [SettingsTabs.Image]: dynamic(() => import('../image'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Image" />,
   }),
   [SettingsTabs.TTS]: dynamic(() => import('../tts'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > TTS" />,
   }),
   [SettingsTabs.About]: dynamic(() => import('../about'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > About" />,
   }),
   [SettingsTabs.Hotkey]: dynamic(() => import('../hotkey'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Hotkey" />,
   }),
   [SettingsTabs.Proxy]: dynamic(() => import('../proxy'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Proxy" />,
   }),
   [SettingsTabs.Storage]: dynamic(() => import('../storage'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Storage" />,
   }),
   [SettingsTabs.SystemAgent]: dynamic(() => import('../system-agent'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > SystemAgent" />,
   }),
   // Profile related tabs
   [SettingsTabs.Profile]: dynamic(() => import('../profile'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Profile" />,
   }),
   [SettingsTabs.Stats]: dynamic(() => import('../stats'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Stats" />,
   }),
   [SettingsTabs.APIKey]: dynamic(() => import('../apikey'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > APIKey" />,
   }),
   [SettingsTabs.Security]: dynamic(() => import('../security'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Security" />,
   }),
   [SettingsTabs.Usage]: dynamic(() => import('../usage'), {
-    loading: () => <Loading />,
+    loading: () => <Loading debugId="Settings > Usage" />,
   }),
 };
 
