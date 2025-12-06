@@ -8,7 +8,7 @@ import { MouseEvent, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import ConfigLayout from '@/app/[variants]/(mobile)/chat/topic/features/ConfigLayout';
+import ConfigLayout from '@/app/[variants]/(mobile)/chat/features/Topic/features/ConfigLayout';
 import SidebarHeader from '@/components/SidebarHeader';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/slices/session/selectors';
