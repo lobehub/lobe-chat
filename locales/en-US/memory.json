@@ -50,9 +50,16 @@
   },
   "loading": "Loading...",
   "preference": {
+    "actions": {
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "conclusionDirectives": "Conclusion Directives",
     "defaultType": "Preference",
     "empty": "No preference memories available",
-    "priority": "Priority"
+    "priority": "Priority",
+    "source": "Source",
+    "suggestions": "Suggestions"
   },
   "viewMode": {
     "masonry": "Masonry",

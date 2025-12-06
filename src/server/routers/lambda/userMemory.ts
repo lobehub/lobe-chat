@@ -50,6 +50,10 @@ export const userMemoryRouter = router({
     return ctx.userMemoryRepo.getDisplayExperiences();
   }),
 
+  getDisplayPreferences: userMemoryProcedure.query(async ({ ctx }) => {
+    return ctx.userMemoryRepo.getDisplayPreferences();
+  }),
+
   getExperiences: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.searchExperiences({});
   }),

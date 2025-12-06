@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { UserMemoryPreferencesWithoutVectors } from '@/database/schemas';
+import { DisplayPreferenceMemory } from '@/database/repositories/userMemory';
 
 import PreferenceDayGroup from './PreferenceDayGroup';
 
@@ -26,49 +26,55 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface PreferenceTimelineViewProps {
-  onClick?: (preference: UserMemoryPreferencesWithoutVectors) => void;
-  preferences: UserMemoryPreferencesWithoutVectors[];
+  onClick?: (preference: DisplayPreferenceMemory) => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
+  preferences: DisplayPreferenceMemory[];
 }
 
-const PreferenceTimelineView = memo<PreferenceTimelineViewProps>(({ preferences, onClick }) => {
-  const { styles } = useStyles();
+const PreferenceTimelineView = memo<PreferenceTimelineViewProps>(
+  ({ preferences, onClick, onDelete, onEdit }) => {
+    const { styles } = useStyles();
 
-  const groupedByDay = useMemo(() => {
-    return preferences.reduce(
-      (acc, preference) => {
-        const date = dayjs(preference.createdAt);
-        const dayKey = date.format('YYYY-MM-DD');
+    const groupedByDay = useMemo(() => {
+      return preferences.reduce(
+        (acc, preference) => {
+          const date = dayjs(preference.createdAt);
+          const dayKey = date.format('YYYY-MM-DD');
 
-        if (!acc[dayKey]) {
-          acc[dayKey] = [];
-        }
-        acc[dayKey].push(preference);
-        return acc;
-      },
-      {} as Record<string, UserMemoryPreferencesWithoutVectors[]>,
+          if (!acc[dayKey]) {
+            acc[dayKey] = [];
+          }
+          acc[dayKey].push(preference);
+          return acc;
+        },
+        {} as Record<string, DisplayPreferenceMemory[]>,
+      );
+    }, [preferences]);
+
+    const sortedDays = useMemo(() => {
+      return Object.keys(groupedByDay).sort((a, b) => b.localeCompare(a));
+    }, [groupedByDay]);
+
+    return (
+      <div className={styles.timelineContainer}>
+        <div className={styles.timelineLine} />
+
+        <Flexbox gap={32}>
+          {sortedDays.map((dayKey) => (
+            <PreferenceDayGroup
+              dayKey={dayKey}
+              key={dayKey}
+              onClick={onClick}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              preferences={groupedByDay[dayKey]}
+            />
+          ))}
+        </Flexbox>
+      </div>
     );
-  }, [preferences]);
-
-  const sortedDays = useMemo(() => {
-    return Object.keys(groupedByDay).sort((a, b) => b.localeCompare(a));
-  }, [groupedByDay]);
-
-  return (
-    <div className={styles.timelineContainer}>
-      <div className={styles.timelineLine} />
-
-      <Flexbox gap={32}>
-        {sortedDays.map((dayKey) => (
-          <PreferenceDayGroup
-            dayKey={dayKey}
-            key={dayKey}
-            onClick={onClick}
-            preferences={groupedByDay[dayKey]}
-          />
-        ))}
-      </Flexbox>
-    </div>
-  );
-});
+  },
+);
 
 export default PreferenceTimelineView;
