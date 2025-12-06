@@ -8,6 +8,6 @@ export interface State {
 
 export const initialState: State = {
   currentViewItemId: undefined,
-  mode: 'files',
+  mode: 'explorer',
   selectedFileIds: [],
 };

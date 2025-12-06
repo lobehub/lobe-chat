@@ -136,7 +136,7 @@ const FileTreeItem = memo<{
         setMode('page');
       } else {
         // Set mode to 'file' immediately to prevent flickering to list view
-        setMode('file');
+        setMode('editor');
       }
     }, [itemKey, currentFolderSlug, knowledgeBaseId, navigate, setMode, setCurrentViewItemId]);
 
@@ -145,7 +145,7 @@ const FileTreeItem = memo<{
         const navKey = folderSlug || folderId;
         navigate(`/resource/library/${knowledgeBaseId}/${navKey}`);
 
-        setMode('files');
+        setMode('explorer');
       },
       [knowledgeBaseId, navigate],
     );

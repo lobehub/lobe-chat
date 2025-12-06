@@ -7,82 +7,62 @@ import { Flexbox } from 'react-layout-kit';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import PageEditor from '@/features/PageEditor';
 
-import FileEditor from './FileEditor';
-import FileExplorer from './FileExplorer';
-import UploadDock from './UploadDock';
+import Editor from './components/Editor';
+import Explorer from './components/Explorer';
+import UploadDock from './components/UploadDock';
 
-const ChunkDrawer = dynamic(() => import('./ChunkDrawer'), { ssr: false });
+const ChunkDrawer = dynamic(() => import('./components/ChunkDrawer'), { ssr: false });
 
-export type ResouceManagerMode = 'page' | 'pages' | 'files' | 'file';
-
-interface KnowledgeManagerProps {
-  category?: string;
-  documentId?: string;
-  knowledgeBaseId?: string;
-  onOpenFile?: (id: string) => void;
-  title: string;
-}
+export type ResouceManagerMode = 'editor' | 'explorer' | 'page';
 
 /**
- * Manage knowledge items. Can be all items or certian repo.
+ * Manage resources. Can be from a certian library.
  *
- * PageExplorer: For the "pages" category.
- * FileExplorer: For other categories.
+ * Business component, no need be reusable.
  */
-const ResourceManager = memo<KnowledgeManagerProps>(
-  ({ knowledgeBaseId, category, onOpenFile, documentId }) => {
-    const [mode, currentViewItemId, setMode, setCurrentViewItemId] = useResourceManagerStore(
-      (s) => [s.mode, s.currentViewItemId, s.setMode, s.setCurrentViewItemId],
-    );
+const ResourceManager = memo(() => {
+  const [mode, currentViewItemId, libraryId, category, setMode, setCurrentViewItemId] =
+    useResourceManagerStore((s) => [
+      s.mode,
+      s.currentViewItemId,
+      s.libraryId,
+      s.category,
+      s.setMode,
+      s.setCurrentViewItemId,
+    ]);
 
-    const MainContent = useMemo(() => {
-      switch (mode) {
-        case 'page': {
-          return (
-            <PageEditor
-              knowledgeBaseId={knowledgeBaseId}
-              onBack={() => {
-                setMode('files');
-                setCurrentViewItemId(undefined);
-              }}
-              pageId={currentViewItemId}
-            />
-          );
-        }
-        case 'file': {
-          return (
-            <FileEditor
-              category={category}
-              currentViewItemId={currentViewItemId ?? ''}
-              knowledgeBaseId={knowledgeBaseId}
-              onBack={() => {
-                setMode('files');
-              }}
-            />
-          );
-        }
-        case 'files': {
-          return (
-            <FileExplorer
-              category={category}
-              knowledgeBaseId={knowledgeBaseId}
-              onOpenFile={onOpenFile}
-            />
-          );
-        }
+  const MainContent = useMemo(() => {
+    switch (mode) {
+      case 'page': {
+        return (
+          <PageEditor
+            knowledgeBaseId={libraryId}
+            onBack={() => {
+              setMode('explorer');
+              setCurrentViewItemId(undefined);
+            }}
+            pageId={currentViewItemId}
+          />
+        );
       }
-    }, [mode, currentViewItemId, documentId, knowledgeBaseId, category, onOpenFile, setMode]);
+      case 'editor': {
+        return <Editor />;
+      }
+      case 'explorer': {
+        return <Explorer />;
+      }
+    }
+  }, [mode, currentViewItemId, libraryId, category]);
 
-    return (
-      <>
-        <Flexbox gap={12} height={'100%'}>
-          {MainContent}
-        </Flexbox>
-        <UploadDock />
-        <ChunkDrawer />
-      </>
-    );
-  },
-);
+  return (
+    <>
+      <Flexbox gap={12} height={'100%'}>
+        {MainContent}
+      </Flexbox>
+      <UploadDock />
+      <ChunkDrawer />
+    </>
+  );
+});
 
 export default ResourceManager;

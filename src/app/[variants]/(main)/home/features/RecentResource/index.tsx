@@ -4,8 +4,9 @@ import { ActionIcon, Dropdown } from '@lobehub/ui';
 import { Clock, MoreHorizontal } from 'lucide-react';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
-import { useFileCategory } from '@/app/[variants]/(main)/resource/features/hooks/useFileCategory';
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import { useSessionStore } from '@/store/session';
 import { recentSelectors } from '@/store/session/selectors';
 import { FilesTabs } from '@/types/files';
@@ -18,7 +19,8 @@ import RecentResourceList from './List';
 
 const RecentResource = memo(() => {
   const { t } = useTranslation('file');
-  const [, setActiveKey] = useFileCategory();
+  const navigate = useNavigate();
+  const setCategory = useResourceManagerStore((s) => s.setCategory);
   const recentResources = useSessionStore(recentSelectors.recentResources);
   const isInit = useSessionStore(recentSelectors.isRecentResourcesInit);
 
@@ -37,7 +39,8 @@ const RecentResource = memo(() => {
                 key: 'all-files',
                 label: t('menu.allFiles'),
                 onClick: () => {
-                  setActiveKey(FilesTabs.All);
+                  setCategory(FilesTabs.All);
+                  navigate('/resource');
                 },
               },
             ],

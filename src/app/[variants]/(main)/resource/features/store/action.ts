@@ -1,14 +1,23 @@
 import { StateCreator } from 'zustand/vanilla';
 
 import { ResouceManagerMode } from '@/features/ResourceManager';
+import { FilesTabs } from '@/types/files';
 
 import { State, initialState } from './initialState';
 
 export interface Action {
   /**
+   * Set the current file category filter
+   */
+  setCategory: (category: FilesTabs) => void;
+  /**
    * Set the current view item ID
    */
   setCurrentViewItemId: (id?: string) => void;
+  /**
+   * Set the current library ID
+   */
+  setLibraryId: (id?: string) => void;
   /**
    * Set the view mode
    */
@@ -29,8 +38,16 @@ export const store: CreateStore = (publicState) => (set) => ({
   ...initialState,
   ...publicState,
 
+  setCategory: (category) => {
+    set({ category });
+  },
+
   setCurrentViewItemId: (currentViewItemId) => {
     set({ currentViewItemId });
+  },
+
+  setLibraryId: (libraryId) => {
+    set({ libraryId });
   },
 
   setMode: (mode) => {
