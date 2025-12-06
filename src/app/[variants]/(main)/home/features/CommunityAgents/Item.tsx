@@ -62,8 +62,6 @@ const CommunityAgentItem = memo<DiscoverAssistantItem>(
             size={36}
             style={{
               flex: 'none',
-
-              zIndex: 100,
             }}
           />
         </Flexbox>
