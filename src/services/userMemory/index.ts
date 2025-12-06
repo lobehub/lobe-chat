@@ -15,6 +15,10 @@ class MemoryCRUDService {
     return lambdaClient.userMemory.getContexts.query();
   };
 
+  getDisplayExperiences = async () => {
+    return lambdaClient.userMemory.getDisplayExperiences.query();
+  };
+
   getExperiences = async () => {
     return lambdaClient.userMemory.getExperiences.query();
   };

@@ -80,3 +80,20 @@ export const providerIdLoader = ({ params }: LoaderFunctionArgs): ProviderIdPara
   }
   return { providerId: params.providerId };
 };
+
+/**
+ * Specific loader for memory type routes
+ * Returns: { type: MemoryType }
+ */
+export type MemoryType = 'identities' | 'contexts' | 'preferences' | 'experiences';
+
+export interface MemoryTypeParams {
+  type: MemoryType;
+}
+
+export const memoryTypeLoader = ({ params }: LoaderFunctionArgs): MemoryTypeParams => {
+  if (!params.type) {
+    throw new Error('Memory type parameter is required');
+  }
+  return { type: params.type as MemoryType };
+};
