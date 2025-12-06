@@ -1,14 +1,21 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { useLoaderData } from 'react-router-dom';
+
+import { MemoryType, MemoryTypeParams } from '@/app/[variants]/loaders/routeParams';
 
 import ContextsList from './features/ContextsList';
+import ExperiencesList from './features/ExperiencesList';
 import IdentitiesList from './features/IdentityTimeline';
-import MemoryTabs, { MemoryCategory } from './features/MemoryTabs';
+import MemoryTabs from './features/MemoryTabs';
+import PreferencesList from './features/PreferencesList';
 
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const [activeCategory, setActiveCategory] = useState<MemoryCategory>('identities');
+  const { type } = useLoaderData() as MemoryTypeParams;
+
+  const activeCategory: MemoryType = type || 'identities';
 
   const renderList = () => {
     switch (activeCategory) {
@@ -18,6 +25,12 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       case 'contexts': {
         return <ContextsList mobile={mobile} />;
       }
+      case 'preferences': {
+        return <PreferencesList mobile={mobile} />;
+      }
+      case 'experiences': {
+        return <ExperiencesList mobile={mobile} />;
+      }
       default: {
         return null;
       }
@@ -26,7 +39,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Flexbox gap={mobile ? 0 : 24}>
-      <MemoryTabs onChange={setActiveCategory} value={activeCategory} />
+      <MemoryTabs value={activeCategory} />
 
       {renderList()}
     </Flexbox>
