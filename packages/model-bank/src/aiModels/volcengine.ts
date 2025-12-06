@@ -62,6 +62,56 @@ const doubaoChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     config: {
+      deploymentName: 'deepseek-v3-2-251201',
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-V3.2 是深度求索推出的首个将思考融入工具使用的混合推理模型，用高效架构省算力、大规模强化学习提能力、大规模合成任务数据强泛化，三者结合性能媲美 GPT-5-High，输出长度大幅降低，显著减少了计算开销与用户等待时间。',
+    displayName: 'DeepSeek V3.2',
+    id: 'deepseek-v3.2',
+    maxOutput: 32_768,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]': 2,
+              '[0.032, 0.128]': 4,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]': 3,
+              '[0.032, 0.128]': 6,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        { name: 'textInput_cacheRead', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheWrite', rate: 0.017, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    config: {
       deploymentName: 'deepseek-v3-1-terminus',
     },
     contextWindowTokens: 131_072,
