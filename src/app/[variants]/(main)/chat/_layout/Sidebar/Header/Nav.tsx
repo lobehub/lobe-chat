@@ -13,6 +13,7 @@ import NavItem from '@/features/NavPanel/components/NavItem';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
+import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 const Nav = memo(() => {
@@ -24,7 +25,7 @@ const Nav = memo(() => {
   const isProfileActive = pathname.includes('/profile');
   const router = useQueryRoute();
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
-
+  const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
   const hideProfile = isInbox || !isAgentEditable;
 
   return (
@@ -39,7 +40,13 @@ const Nav = memo(() => {
           title={t('tab.profile')}
         />
       )}
-      <NavItem icon={SearchIcon} title={t('tab.search')} />
+      <NavItem
+        icon={SearchIcon}
+        onClick={() => {
+          toggleCommandMenu(true);
+        }}
+        title={t('tab.search')}
+      />
     </Flexbox>
   );
 });

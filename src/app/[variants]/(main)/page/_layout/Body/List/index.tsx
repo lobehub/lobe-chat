@@ -1,10 +1,12 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { MoreHorizontal } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
+import NavItem from '@/features/NavPanel/components/NavItem';
+import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { documentSelectors, useFileStore } from '@/store/file';
 
 import Item from './Item';
@@ -15,19 +17,25 @@ import Item from './Item';
 const PageList = memo(() => {
   const { t } = useTranslation('file');
 
-  const filteredPages = useFileStore(documentSelectors.getFilteredPages);
+  const filteredPages = useFileStore(documentSelectors.getFilteredPagesLimited);
+  const hasMore = useFileStore(documentSelectors.hasMoreFilteredPages);
+  const isLoadingMore = useFileStore(documentSelectors.isLoadingMoreDocuments);
+  const openAllPagesDrawer = useFileStore((s) => s.openAllPagesDrawer);
 
   return (
-    <>
+    <Flexbox gap={1}>
       {filteredPages.map((page) => (
         <Item documentId={page.id} key={page.id} />
       ))}
-      <Center style={{ paddingBlock: 16 }}>
-        <Text style={{ fontSize: 12 }} type={'secondary'}>
-          {t('documentList.pageCount', { count: filteredPages.length })}
-        </Text>
-      </Center>
-    </>
+      {isLoadingMore && <SkeletonList rows={3} />}
+      {hasMore && !isLoadingMore && (
+        <NavItem
+          icon={MoreHorizontal}
+          onClick={openAllPagesDrawer}
+          title={t('more', { defaultValue: '更多', ns: 'common' })}
+        />
+      )}
+    </Flexbox>
   );
 });
 

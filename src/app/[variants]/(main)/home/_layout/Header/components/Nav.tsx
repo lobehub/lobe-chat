@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
+import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -25,6 +26,7 @@ const Nav = memo(() => {
   const tab = useActiveTabKey();
   const navigate = useNavigate();
   const { t } = useTranslation('common');
+  const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
   const { showMarket, showAiImage } = useServerConfigStore(featureFlagsSelectors);
 
   const items: Item[] = useMemo(
@@ -33,15 +35,7 @@ const Nav = memo(() => {
         icon: SearchIcon,
         key: 'search',
         onClick: () => {
-          // Trigger CommandPalette
-          const event = new KeyboardEvent('keydown', {
-            bubbles: true,
-            code: 'KeyK',
-            ctrlKey: false,
-            key: 'k',
-            metaKey: true,
-          });
-          document.dispatchEvent(event);
+          toggleCommandMenu(true);
         },
         title: t('tab.search'),
       },
@@ -53,17 +47,17 @@ const Nav = memo(() => {
       },
       {
         hidden: !showAiImage,
-        icon: ImageIcon,
-        key: SidebarTabKey.Image,
-        title: t('tab.aiImage'),
-        url: '/image',
-      },
-      {
-        hidden: !showAiImage,
         icon: FilePenIcon,
         key: SidebarTabKey.Pages,
         title: t('tab.pages'),
         url: '/page',
+      },
+      {
+        hidden: !showAiImage,
+        icon: ImageIcon,
+        key: SidebarTabKey.Image,
+        title: t('tab.aiImage'),
+        url: '/image',
       },
       {
         hidden: !showMarket,

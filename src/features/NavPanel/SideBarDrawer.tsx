@@ -59,9 +59,13 @@ const SideBarDrawer = memo<SideBarDrawerProps>(
           <>
             <SideBarHeaderLayout
               left={
-                <Text ellipsis fontSize={14} weight={400}>
-                  {title}
-                </Text>
+                typeof title === 'string' ? (
+                  <Text ellipsis fontSize={14} style={{ paddingLeft: 4 }} weight={400}>
+                    {title}
+                  </Text>
+                ) : (
+                  title
+                )
               }
               right={
                 <>

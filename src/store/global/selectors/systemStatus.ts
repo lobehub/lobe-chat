@@ -11,6 +11,8 @@ const topicPageSize = (s: GlobalState): number => s.status.topicPageSize || 20;
 
 const agentPageSize = (s: GlobalState): number => s.status.agentPageSize || 10;
 
+const pagePageSize = (s: GlobalState): number => s.status.pagePageSize || 20;
+
 const showSystemRole = (s: GlobalState) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalState) => s.status.mobileShowTopic;
 const mobileShowPortal = (s: GlobalState) => s.status.mobileShowPortal;
@@ -66,6 +68,7 @@ export const systemStatusSelectors = {
   language,
   mobileShowPortal,
   mobileShowTopic,
+  pagePageSize,
   portalWidth,
   sessionGroupKeys,
   sessionWidth,

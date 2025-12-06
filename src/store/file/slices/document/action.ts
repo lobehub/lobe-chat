@@ -2,6 +2,7 @@ import { createNanoId } from '@lobechat/utils';
 import { StateCreator } from 'zustand/vanilla';
 
 import { documentService } from '@/services/document';
+import { useGlobalStore } from '@/store/global';
 import { DocumentSourceType, LobeDocument } from '@/types/document';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -29,6 +30,7 @@ const isAllowedDocument = (page: { fileType: string; sourceType: string }) => {
 };
 
 export interface DocumentAction {
+  closeAllPagesDrawer: () => void;
   /**
    * Create a new document with markdown content (not optimistic, waits for server response)
    * Returns the created document
@@ -63,13 +65,18 @@ export interface DocumentAction {
    */
   duplicateDocument: (documentId: string) => Promise<{ [key: string]: any; id: string }>;
   /**
-   * Fetch all documents from the server
+   * Fetch documents from the server with pagination
    */
   fetchDocuments: () => Promise<void>;
   /**
    * Get documents from local optimistic map merged with server data
    */
   getOptimisticDocuments: () => LobeDocument[];
+  /**
+   * Load more documents (next page)
+   */
+  loadMoreDocuments: () => Promise<void>;
+  openAllPagesDrawer: () => void;
   /**
    * Remove a document (deletes from documents table)
    */
@@ -125,6 +132,10 @@ export const createDocumentSlice: StateCreator<
   [],
   DocumentAction
 > = (set, get) => ({
+  closeAllPagesDrawer: () => {
+    set({ allPagesDrawerOpen: false }, false, n('closeAllPagesDrawer'));
+  },
+
   createDocument: async ({ title, content, knowledgeBaseId, parentId }) => {
     const now = Date.now();
 
@@ -176,7 +187,7 @@ export const createDocumentSlice: StateCreator<
   },
 
   // Page explorer actions
-  createNewPage: async (title: string) => {
+createNewPage: async (title: string) => {
     const { createOptimisticDocument, createDocument, replaceTempDocumentWithReal } = get();
 
     // Create optimistic page immediately
@@ -223,6 +234,7 @@ export const createDocumentSlice: StateCreator<
       updateUrl(null);
     }
   },
+
 
   createOptimisticDocument: (title = 'Untitled') => {
     const { localDocumentMap } = get();
@@ -327,12 +339,27 @@ export const createDocumentSlice: StateCreator<
     set({ isDocumentListLoading: true }, false, n('fetchDocuments/start'));
 
     try {
-      const { items: documentItems } = await documentService.queryDocuments();
-      const pages = documentItems.filter(isAllowedDocument).map((doc) => ({
+      const pageSize = useGlobalStore.getState().status.pagePageSize || 20;
+      const result = await documentService.queryDocuments({ current: 0, pageSize });
+
+      const pages = result.items.filter(isAllowedDocument).map((doc) => ({
         ...doc,
         filename: doc.filename ?? doc.title ?? 'Untitled',
       })) as LobeDocument[];
-      set({ documents: pages, isDocumentListLoading: false }, false, n('fetchDocuments/success'));
+
+      const hasMore = result.items.length >= pageSize;
+
+      set(
+        {
+          currentPage: 0,
+          documents: pages,
+          documentsTotal: result.total,
+          hasMoreDocuments: hasMore,
+          isDocumentListLoading: false,
+        },
+        false,
+        n('fetchDocuments/success'),
+      );
 
       // Sync with local map: remove temp pages that now exist on server
       const { localDocumentMap } = get();
@@ -378,6 +405,47 @@ export const createDocumentSlice: StateCreator<
     }
 
     return result;
+  },
+
+  loadMoreDocuments: async () => {
+    const { currentPage, isLoadingMoreDocuments, hasMoreDocuments } = get();
+
+    if (isLoadingMoreDocuments || !hasMoreDocuments) return;
+
+    const nextPage = currentPage + 1;
+
+    set({ isLoadingMoreDocuments: true }, false, n('loadMoreDocuments/start'));
+
+    try {
+      const pageSize = useGlobalStore.getState().status.pagePageSize || 20;
+      const result = await documentService.queryDocuments({ current: nextPage, pageSize });
+
+      const newPages = result.items.filter(isAllowedDocument).map((doc) => ({
+        ...doc,
+        filename: doc.filename ?? doc.title ?? 'Untitled',
+      })) as LobeDocument[];
+
+      const hasMore = result.items.length >= pageSize;
+
+      set(
+        {
+          currentPage: nextPage,
+          documents: [...get().documents, ...newPages],
+          documentsTotal: result.total,
+          hasMoreDocuments: hasMore,
+          isLoadingMoreDocuments: false,
+        },
+        false,
+        n('loadMoreDocuments/success'),
+      );
+    } catch (error) {
+      console.error('Failed to load more pages:', error);
+      set({ isLoadingMoreDocuments: false }, false, n('loadMoreDocuments/error'));
+    }
+  },
+
+  openAllPagesDrawer: () => {
+    set({ allPagesDrawerOpen: true }, false, n('openAllPagesDrawer'));
   },
 
   removeDocument: async (documentId) => {
