@@ -15,7 +15,7 @@ import { useFileExplorer } from './useFileExplorer';
 import { useMasonryColumnCount } from './useMasonryColumnCount';
 
 /**
- * Explore files in / within a library
+ * Explore resource items in a library
  *
  * Works with FileTree
  *

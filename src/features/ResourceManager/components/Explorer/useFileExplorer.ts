@@ -38,12 +38,14 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
   const [isMasonryReady, setIsMasonryReady] = useState(false);
 
   // Mode state
-  const mode = useResourceManagerStore((s) => s.mode);
-  const currentViewItemId = useResourceManagerStore((s) => s.currentViewItemId);
+  const [mode, setMode, currentViewItemId, setCurrentViewItemId] = useResourceManagerStore((s) => [
+    s.mode,
+    s.setMode,
+    s.currentViewItemId,
+    s.setCurrentViewItemId,
+  ]);
   const categoryFromStore = useResourceManagerStore((s) => s.category);
   const category = categoryProp ?? categoryFromStore;
-  const setMode = useResourceManagerStore((s) => s.setMode);
-  const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
 
   // Current file
   const useFetchKnowledgeItem = useFileStore((s) => s.useFetchKnowledgeItem);
