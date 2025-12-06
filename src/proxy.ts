@@ -58,6 +58,7 @@ export const config = {
     '/next-auth/(.*)',
     '/oauth(.*)',
     '/oidc(.*)',
+    '/market-auth-callback(.*)',
   ],
 };
 
@@ -222,6 +223,8 @@ const isPublicRoute = createRouteMatcher([
   '/oauth/consent/(.*)',
   '/oidc/handoff',
   '/oidc/token',
+  // market
+  '/market-auth-callback',
 ]);
 
 const isProtectedRoute = createRouteMatcher([
