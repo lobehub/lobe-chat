@@ -20,7 +20,10 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   const {
     // Data
     data,
+    hasMore,
     isLoading,
+    isLoadingMore,
+    loadMore,
     pendingRenameItemId,
 
     // State
@@ -54,7 +57,10 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
       ) : viewMode === 'list' ? (
         <ListView
           data={data}
+          hasMore={hasMore}
+          isLoadingMore={isLoadingMore}
           knowledgeBaseId={knowledgeBaseId}
+          loadMore={loadMore}
           onSelectionChange={handleSelectionChange}
           pendingRenameItemId={pendingRenameItemId}
           selectFileIds={selectFileIds}
@@ -62,9 +68,12 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
       ) : (
         <MasonryView
           data={data}
+          hasMore={hasMore}
+          isLoadingMore={isLoadingMore}
           isMasonryReady={isMasonryReady}
           isTransitioning={isTransitioning}
           knowledgeBaseId={knowledgeBaseId}
+          loadMore={loadMore}
           onOpenFile={onOpenFile}
           selectFileIds={selectFileIds}
           setSelectedFileIds={setSelectedFileIds}
