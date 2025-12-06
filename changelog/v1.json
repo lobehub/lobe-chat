@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Add smooth scroll to top on 'More' button click in Title component."]
+    },
+    "date": "2025-12-06",
+    "version": "2.0.0-next.163"
+  },
+  {
     "children": {},
     "date": "2025-12-05",
     "version": "2.0.0-next.162"
