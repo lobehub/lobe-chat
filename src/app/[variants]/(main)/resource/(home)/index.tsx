@@ -10,14 +10,15 @@ import { useResourceManagerStore } from '../features/store';
 
 const ResourceHomePage = memo(() => {
   const [searchParams] = useSearchParams();
-  const [setMode, setCurrentViewItemId, setCategory] = useResourceManagerStore((s) => [
-    s.setMode,
-    s.setCurrentViewItemId,
-    s.setCategory,
-  ]);
+  const [setMode, setCurrentViewItemId, setCategory, setLibraryId] = useResourceManagerStore(
+    (s) => [s.setMode, s.setCurrentViewItemId, s.setCategory, s.setLibraryId],
+  );
 
   // Sync URL query parameter with store on mount and when it changes
   useEffect(() => {
+    // Clear libraryId when on home route
+    setLibraryId(undefined);
+
     const categoryParam = (searchParams.get('category') as FilesTabs) || FilesTabs.All;
     setCategory(categoryParam);
 
@@ -30,7 +31,7 @@ const ResourceHomePage = memo(() => {
       setMode('explorer');
       setCurrentViewItemId(undefined);
     }
-  }, [searchParams, setCurrentViewItemId, setMode, setCategory]);
+  }, [searchParams, setCurrentViewItemId, setMode, setCategory, setLibraryId]);
 
   return <ResourceManager />;
 });
