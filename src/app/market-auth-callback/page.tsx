@@ -1,11 +1,9 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Card, Result } from 'antd';
-import { CheckCircle, Clock, ShieldX } from 'lucide-react';
+import { Button, FluentEmoji, Text } from '@lobehub/ui';
+import { Result } from 'antd';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 type CallbackStatus = 'loading' | 'success' | 'error';
 
@@ -96,13 +94,13 @@ const MarketAuthCallbackPage = () => {
   const getStatusIcon = () => {
     switch (status) {
       case 'success': {
-        return <Icon icon={CheckCircle} />;
+        return <FluentEmoji emoji={'✅'} size={96} type={'anim'} />;
       }
       case 'error': {
-        return <Icon icon={ShieldX} />;
+        return <FluentEmoji emoji={'🥵'} size={96} type={'anim'} />;
       }
       default: {
-        return <Icon icon={Clock} />;
+        return <FluentEmoji emoji={'⌛'} size={96} type={'anim'} />;
       }
     }
   };
@@ -148,48 +146,31 @@ const MarketAuthCallbackPage = () => {
   const getExtra = () => {
     if (status === 'error') {
       return (
-        <button
-          onClick={() => window.close()}
-          style={{
-            backgroundColor: '#ff4d4f',
-            border: 'none',
-            borderRadius: '6px',
-            color: 'white',
-            cursor: 'pointer',
-            fontSize: '14px',
-            padding: '8px 16px',
-          }}
-          type="button"
-        >
+        <Button block onClick={() => window.close()} size={'large'} style={{ minWidth: 240 }}>
           {t('callback.buttons.close')}
-        </button>
+        </Button>
       );
     }
     return undefined;
   };
 
   return (
-    <Center height="100vh">
-      <Card
-        style={{
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'center',
-          minHeight: 280,
-          minWidth: 500,
-          width: '100%',
-        }}
-      >
-        <Result
-          extra={getExtra()}
-          icon={getStatusIcon()}
-          status={getResultStatus()}
-          style={{ padding: 0 }}
-          subTitle={getSubTitle()}
-          title={getTitle()}
-        />
-      </Card>
-    </Center>
+    <Result
+      extra={getExtra()}
+      icon={getStatusIcon()}
+      status={getResultStatus()}
+      style={{ padding: 0 }}
+      subTitle={
+        <Text fontSize={16} type="secondary">
+          {getSubTitle()}
+        </Text>
+      }
+      title={
+        <Text fontSize={32} weight={'bold'}>
+          {getTitle()}
+        </Text>
+      }
+    />
   );
 };
 

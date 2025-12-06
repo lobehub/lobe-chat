@@ -1,7 +1,7 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import Script from 'next/script';
 import { ReactNode, Suspense } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
@@ -33,28 +33,31 @@ const RootLayout = async ({ children, params }: RootLayoutProps) => {
     <html dir={direction} lang={locale}>
       <head>
         {process.env.DEBUG_REACT_SCAN === '1' && (
-          // eslint-disable-next-line @next/next/no-sync-scripts
-          <script crossOrigin="anonymous" src="https://unpkg.com/react-scan/dist/auto.global.js" />
+          <Script
+            crossOrigin={'anonymous'}
+            src={'https://unpkg.com/react-scan/dist/auto.global.js'}
+            strategy={'lazyOnload'}
+          />
         )}
       </head>
       <body>
-        <NuqsAdapter>
-          <GlobalProvider
-            appearance={theme}
-            isMobile={isMobile}
-            locale={locale}
-            neutralColor={neutralColor}
-            primaryColor={primaryColor}
-            variants={variants}
-          >
-            <AuthProvider>{children}</AuthProvider>
-            <Suspense fallback={null}>
-              <PWAInstall />
-            </Suspense>
-          </GlobalProvider>
-        </NuqsAdapter>
-        <Analytics />
-        <Suspense fallback={null}>{inVercel && <SpeedInsights />}</Suspense>
+        <GlobalProvider
+          appearance={theme}
+          isMobile={isMobile}
+          locale={locale}
+          neutralColor={neutralColor}
+          primaryColor={primaryColor}
+          variants={variants}
+        >
+          <AuthProvider>{children}</AuthProvider>
+          <Suspense fallback={null}>
+            <PWAInstall />
+          </Suspense>
+        </GlobalProvider>
+        <Suspense fallback={null}>
+          <Analytics />
+          {inVercel && <SpeedInsights />}
+        </Suspense>
       </body>
     </html>
   );

@@ -1,5 +1,9 @@
 'use client';
 
+import { Suspense } from 'react';
+
+import Loading from '@/components/Loading/BrandTextLoading';
+
 import { SignInEmailStep } from './SignInEmailStep';
 import { SignInPasswordStep } from './SignInPasswordStep';
 import { useSignIn } from './useSignIn';
@@ -20,25 +24,29 @@ const SignInPage = () => {
     step,
   } = useSignIn();
 
-  return step === 'email' ? (
-    <SignInEmailStep
-      form={form as any}
-      loading={loading}
-      oAuthSSOProviders={oAuthSSOProviders}
-      onCheckUser={handleCheckUser}
-      onSocialSignIn={handleSocialSignIn}
-      serverConfigInit={serverConfigInit}
-      socialLoading={socialLoading}
-    />
-  ) : (
-    <SignInPasswordStep
-      email={email}
-      form={form as any}
-      loading={loading}
-      onBackToEmail={handleBackToEmail}
-      onForgotPassword={handleForgotPassword}
-      onSubmit={handleSignIn}
-    />
+  return (
+    <Suspense fallback={<Loading debugId={'Signin'} />}>
+      {step === 'email' ? (
+        <SignInEmailStep
+          form={form as any}
+          loading={loading}
+          oAuthSSOProviders={oAuthSSOProviders}
+          onCheckUser={handleCheckUser}
+          onSocialSignIn={handleSocialSignIn}
+          serverConfigInit={serverConfigInit}
+          socialLoading={socialLoading}
+        />
+      ) : (
+        <SignInPasswordStep
+          email={email}
+          form={form as any}
+          loading={loading}
+          onBackToEmail={handleBackToEmail}
+          onForgotPassword={handleForgotPassword}
+          onSubmit={handleSignIn}
+        />
+      )}
+    </Suspense>
   );
 };
 
