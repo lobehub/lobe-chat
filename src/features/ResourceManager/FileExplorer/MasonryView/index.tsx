@@ -1,31 +1,18 @@
 'use client';
 
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
-import { Spin } from 'antd';
-import { createStyles } from 'antd-style';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Center } from 'react-layout-kit';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 import { FileListItem } from '@/types/files';
 
 import MasonryItemWrapper from '../MasonryFileItem/MasonryItemWrapper';
 import Skeleton from './Skeleton';
 
-const useStyles = createStyles(({ css, token }) => ({
-  loadingMore: css`
-    padding: 16px;
-    color: ${token.colorTextSecondary};
-  `,
-}));
-
 interface MasonryViewProps {
   data: FileListItem[] | undefined;
-  hasMore?: boolean;
-  isLoadingMore?: boolean;
   isMasonryReady: boolean;
   isTransitioning: boolean;
   knowledgeBaseId?: string;
-  loadMore?: () => void;
   onOpenFile?: (id: string) => void;
   selectFileIds: string[];
   setSelectedFileIds: (ids: string[]) => void;
@@ -34,17 +21,13 @@ interface MasonryViewProps {
 const MasonryView = memo<MasonryViewProps>(
   ({
     data,
-    hasMore,
     isMasonryReady,
-    isLoadingMore,
     isTransitioning,
     knowledgeBaseId,
-    loadMore,
     onOpenFile,
     selectFileIds,
     setSelectedFileIds,
   }) => {
-    const { styles } = useStyles();
     const [columnCount, setColumnCount] = useState(4);
 
     // Update column count based on window size
@@ -63,17 +46,8 @@ const MasonryView = memo<MasonryViewProps>(
       };
 
       updateColumnCount();
-      let timeoutId: ReturnType<typeof setTimeout>;
-      const debouncedUpdate = () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(updateColumnCount, 200);
-      };
-
-      window.addEventListener('resize', debouncedUpdate);
-      return () => {
-        clearTimeout(timeoutId);
-        window.removeEventListener('resize', debouncedUpdate);
-      };
+      window.addEventListener('resize', updateColumnCount);
+      return () => window.removeEventListener('resize', updateColumnCount);
     }, []);
 
     const masonryContext = useMemo(
@@ -85,22 +59,6 @@ const MasonryView = memo<MasonryViewProps>(
       }),
       [onOpenFile, knowledgeBaseId, selectFileIds, setSelectedFileIds],
     );
-
-    // Handle scroll for infinite loading
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    const handleScroll = useCallback(() => {
-      const container = containerRef.current;
-      if (!container || !hasMore || isLoadingMore || !loadMore) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const scrolledPercentage = (scrollTop + clientHeight) / scrollHeight;
-
-      // Load more when scrolled past 80%
-      if (scrolledPercentage > 0.8) {
-        loadMore();
-      }
-    }, [hasMore, isLoadingMore, loadMore]);
 
     return (
       <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
@@ -119,8 +77,6 @@ const MasonryView = memo<MasonryViewProps>(
         )}
         {/* Masonry content - always rendered but hidden until ready */}
         <div
-          onScroll={handleScroll}
-          ref={containerRef}
           style={{
             height: '100%',
             opacity: isMasonryReady ? 1 : 0,
@@ -138,11 +94,6 @@ const MasonryView = memo<MasonryViewProps>(
                 gap: '16px',
               }}
             />
-            {isLoadingMore && (
-              <Center className={styles.loadingMore}>
-                <Spin percent={'auto'} size="small" />
-              </Center>
-            )}
           </div>
         </div>
       </div>

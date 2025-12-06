@@ -169,7 +169,10 @@ export const pluginTypes: StateCreator<
         });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
-            context: { agentId: message?.agentId, topicId: message?.topicId },
+            context: {
+              agentId: message?.agentId,
+              topicId: message?.topicId,
+            },
           });
         }
       }

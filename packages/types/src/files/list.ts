@@ -41,8 +41,6 @@ export enum SortType {
 export const QueryFileListSchema = z.object({
   category: z.string().optional(),
   knowledgeBaseId: z.string().optional(),
-  limit: z.number().int().positive().max(200).optional(),
-  offset: z.number().int().min(0).optional(),
   parentId: z.string().nullable().optional(),
   q: z.string().nullable().optional(),
   showFilesInKnowledgeBase: z.boolean().default(false),
@@ -55,17 +53,9 @@ export type QueryFileListSchemaType = z.infer<typeof QueryFileListSchema>;
 export interface QueryFileListParams {
   category?: string;
   knowledgeBaseId?: string;
-  limit?: number;
-  offset?: number;
   parentId?: string | null;
   q?: string | null;
   showFilesInKnowledgeBase?: boolean;
   sortType?: string;
   sorter?: string;
-}
-
-export interface QueryFileListResult {
-  hasMore: boolean;
-  items: FileListItem[];
-  total: number;
 }

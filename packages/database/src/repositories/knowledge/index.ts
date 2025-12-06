@@ -55,8 +55,6 @@ export class KnowledgeRepo {
     knowledgeBaseId,
     showFilesInKnowledgeBase,
     parentId,
-    limit,
-    offset,
   }: QueryFileListParams = {}): Promise<KnowledgeItem[]> {
     // If parentId is provided, check if it's a slug and resolve it to an ID
     let resolvedParentId = parentId;
@@ -99,17 +97,10 @@ export class KnowledgeRepo {
 
     // Add final ordering
     const orderClause = this.buildOrderClause(sortType, sorter);
-    let finalQuery = sql`
+    const finalQuery = sql`
       SELECT * FROM (${combinedQuery}) as combined
       ORDER BY ${orderClause}
     `;
-
-    // Add pagination if limit is specified
-    if (limit !== undefined) {
-      const limitValue = Math.min(limit, 200); // Cap at 200
-      const offsetValue = offset || 0;
-      finalQuery = sql`${finalQuery} LIMIT ${limitValue} OFFSET ${offsetValue}`;
-    }
 
     const result = await this.db.execute(finalQuery);
 
@@ -155,130 +146,6 @@ export class KnowledgeRepo {
     });
 
     return mappedResults;
-  }
-
-  /**
-   * Query combined results with pagination metadata
-   */
-  async queryWithPagination({
-    category,
-    q,
-    sortType,
-    sorter,
-    knowledgeBaseId,
-    showFilesInKnowledgeBase,
-    parentId,
-    limit = 50,
-    offset = 0,
-  }: QueryFileListParams = {}): Promise<{
-    hasMore: boolean;
-    items: KnowledgeItem[];
-    total: number;
-  }> {
-    // If parentId is provided, check if it's a slug and resolve it to an ID
-    let resolvedParentId = parentId;
-    if (parentId) {
-      // Try to find a document with this slug
-      const docBySlug = await this.documentModel.findBySlug(parentId);
-      if (docBySlug) {
-        resolvedParentId = docBySlug.id;
-      }
-      // Otherwise assume it's already an ID
-    }
-
-    // Build file query
-    const fileQuery = this.buildFileQuery({
-      category,
-      knowledgeBaseId,
-      parentId: resolvedParentId,
-      q,
-      showFilesInKnowledgeBase,
-      sortType,
-      sorter,
-    });
-
-    // Build document query (notes)
-    const documentQuery = this.buildDocumentQuery({
-      category,
-      knowledgeBaseId,
-      parentId: resolvedParentId,
-      q,
-      sortType,
-      sorter,
-    });
-
-    // Combine both queries with UNION ALL
-    const combinedQuery = sql`
-      (${fileQuery})
-      UNION ALL
-      (${documentQuery})
-    `;
-
-    // Get total count
-    const countQuery = sql`SELECT COUNT(*) as total FROM (${combinedQuery}) as combined`;
-    const countResult = await this.db.execute(countQuery);
-    const total = Number((countResult.rows[0] as any)?.total || 0);
-
-    // Add final ordering and pagination
-    const orderClause = this.buildOrderClause(sortType, sorter);
-    const limitValue = Math.min(limit, 200); // Cap at 200
-    const offsetValue = offset || 0;
-    const finalQuery = sql`
-      SELECT * FROM (${combinedQuery}) as combined
-      ORDER BY ${orderClause}
-      LIMIT ${limitValue} OFFSET ${offsetValue}
-    `;
-
-    const result = await this.db.execute(finalQuery);
-
-    const mappedResults = result.rows.map((row: any) => {
-      // Parse editor_data if it's a string (raw SQL returns JSONB as string)
-      let editorData = row.editor_data;
-      if (typeof editorData === 'string') {
-        try {
-          editorData = JSON.parse(editorData);
-        } catch (e) {
-          console.error('[KnowledgeRepo] Failed to parse editor_data:', e);
-          editorData = null;
-        }
-      }
-
-      // Parse metadata if it's a string (raw SQL returns JSONB as string)
-      let metadata = row.metadata;
-      if (typeof metadata === 'string') {
-        try {
-          metadata = JSON.parse(metadata);
-        } catch (e) {
-          console.error('[KnowledgeRepo] Failed to parse metadata:', e);
-          metadata = null;
-        }
-      }
-
-      return {
-        chunkTaskId: row.chunk_task_id,
-        content: row.content,
-        createdAt: new Date(row.created_at),
-        editorData,
-        embeddingTaskId: row.embedding_task_id,
-        fileType: row.file_type,
-        id: row.id,
-        metadata,
-        name: row.name,
-        size: Number(row.size),
-        slug: row.slug,
-        sourceType: row.source_type,
-        updatedAt: new Date(row.updated_at),
-        url: row.url,
-      };
-    });
-
-    const hasMore = offsetValue + limitValue < total;
-
-    return {
-      hasMore,
-      items: mappedResults,
-      total,
-    };
   }
 
   /**
