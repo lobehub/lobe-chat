@@ -10,6 +10,7 @@ export const AgentBuilderApiName = {
   getAgentMeta: 'agentBuilder_getMeta',
   getAvailableModels: 'agentBuilder_getAvailableModels',
   getAvailableTools: 'agentBuilder_getAvailableTools',
+  getPrompt: 'agentBuilder_getPrompt',
 
   // Write operations
   setModel: 'agentBuilder_setModel',
@@ -19,6 +20,7 @@ export const AgentBuilderApiName = {
   updateAgentConfig: 'agentBuilder_updateConfig',
   updateAgentMeta: 'agentBuilder_updateMeta',
   updateChatConfig: 'agentBuilder_updateChatConfig',
+  updatePrompt: 'agentBuilder_updatePrompt',
 } as const;
 
 // ============== Parameter Types ==============
@@ -108,6 +110,24 @@ export interface GetAvailableToolsParams {
   type?: 'all' | 'builtin' | 'plugin';
 }
 
+export interface GetPromptParams {
+  /**
+   * Optional: if true, returns a truncated version for preview
+   */
+  preview?: boolean;
+}
+
+export interface UpdatePromptParams {
+  /**
+   * The new system prompt content (markdown format)
+   */
+  prompt: string;
+  /**
+   * Whether to use streaming mode for typewriter effect
+   */
+  streaming?: boolean;
+}
+
 // ============== State Types (for Render components) ==============
 
 export interface GetConfigState {
@@ -190,4 +210,14 @@ export interface AvailableTool {
 
 export interface GetAvailableToolsState {
   tools: AvailableTool[];
+}
+
+export interface GetPromptState {
+  prompt: string;
+}
+
+export interface UpdatePromptState {
+  newPrompt: string;
+  previousPrompt?: string;
+  success: boolean;
 }

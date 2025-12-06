@@ -23,6 +23,14 @@ const FETCH_AGENT_CONFIG_KEY = 'FETCH_AGENT_CONFIG';
  * Handles agent CRUD operations (config/meta updates)
  */
 export interface AgentSliceAction {
+  /**
+   * Append content chunk to streaming system role
+   */
+  appendStreamingSystemRole: (chunk: string) => void;
+  /**
+   * Finish streaming and save final content to agent config
+   */
+  finishStreamingSystemRole: (agentId: string) => Promise<void>;
   internal_createAbortController: (key: keyof AgentSliceState) => AbortController;
   internal_dispatchAgentMap: (id: string, config: PartialDeep<LobeAgentConfig>) => void;
   internal_refreshAgentConfig: (id: string) => Promise<void>;
@@ -36,6 +44,10 @@ export interface AgentSliceAction {
     meta: Partial<MetaData>,
     signal?: AbortSignal,
   ) => Promise<void>;
+  /**
+   * Start streaming system role update
+   */
+  startStreamingSystemRole: () => void;
   updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
   updateAgentChatConfigById: (
     agentId: string,
@@ -53,6 +65,54 @@ export const createAgentSlice: StateCreator<
   [],
   AgentSliceAction
 > = (set, get) => ({
+  appendStreamingSystemRole: (chunk) => {
+    const currentContent = get().streamingSystemRole || '';
+    set(
+      { streamingSystemRole: currentContent + chunk },
+      false,
+      'appendStreamingSystemRole',
+    );
+  },
+
+  finishStreamingSystemRole: async (agentId) => {
+    const { streamingSystemRole } = get();
+
+    if (!streamingSystemRole) {
+      set(
+        { streamingSystemRoleInProgress: false },
+        false,
+        'finishStreamingSystemRole',
+      );
+      return;
+    }
+
+    // Save the final content to agent config
+    await get().optimisticUpdateAgentConfig(agentId, {
+      systemRole: streamingSystemRole,
+    });
+
+    // Reset streaming state
+    set(
+      {
+        streamingSystemRole: undefined,
+        streamingSystemRoleInProgress: false,
+      },
+      false,
+      'finishStreamingSystemRole',
+    );
+  },
+
+  startStreamingSystemRole: () => {
+    set(
+      {
+        streamingSystemRole: '',
+        streamingSystemRoleInProgress: true,
+      },
+      false,
+      'startStreamingSystemRole',
+    );
+  },
+
   updateAgentChatConfig: async (config) => {
     const { activeAgentId } = get();
 

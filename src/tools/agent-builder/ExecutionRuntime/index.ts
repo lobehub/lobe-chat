@@ -19,6 +19,8 @@ import type {
   GetAvailableToolsState,
   GetConfigState,
   GetMetaState,
+  GetPromptParams,
+  GetPromptState,
   SetModelParams,
   SetModelState,
   SetOpeningMessageParams,
@@ -32,6 +34,8 @@ import type {
   UpdateChatConfigParams,
   UpdateConfigState,
   UpdateMetaState,
+  UpdatePromptParams,
+  UpdatePromptState,
 } from '../types';
 
 /**
@@ -216,6 +220,40 @@ export class AgentBuilderExecutionRuntime {
       const err = error as Error;
       return {
         content: `Failed to get available tools: ${err.message}`,
+        error,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Get agent system prompt
+   */
+  async getPrompt(agentId: string, args: GetPromptParams): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const config = agentSelectors.getAgentConfigById(agentId)(state);
+      const prompt = config.systemRole || '';
+
+      // If preview mode, truncate the prompt
+      let displayPrompt = prompt;
+      if (args.preview && prompt.length > 500) {
+        displayPrompt = prompt.slice(0, 500) + '...';
+      }
+
+      const content = prompt
+        ? `Current system prompt (${prompt.length} characters):\n\n${displayPrompt}`
+        : 'No system prompt is currently set.';
+
+      return {
+        content,
+        state: { prompt } as GetPromptState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to get prompt: ${err.message}`,
         error,
         success: false,
       };
@@ -581,5 +619,82 @@ export class AgentBuilderExecutionRuntime {
         success: false,
       };
     }
+  }
+
+  /**
+   * Update agent system prompt
+   */
+  async updatePrompt(
+    agentId: string,
+    args: UpdatePromptParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getAgentStoreState();
+      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
+      const previousPrompt = previousConfig.systemRole;
+
+      if (args.streaming) {
+        // Use streaming mode for typewriter effect
+        await this.streamUpdatePrompt(agentId, args.prompt);
+      } else {
+        // Update the system prompt directly
+        await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+          systemRole: args.prompt,
+        });
+      }
+
+      const content = args.prompt
+        ? `Successfully updated system prompt (${args.prompt.length} characters)`
+        : 'Successfully cleared system prompt';
+
+      return {
+        content,
+        state: {
+          newPrompt: args.prompt,
+          previousPrompt,
+          success: true,
+        } as UpdatePromptState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to update prompt: ${err.message}`,
+        error,
+        state: {
+          newPrompt: args.prompt,
+          success: false,
+        } as UpdatePromptState,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Stream update prompt with typewriter effect
+   */
+  private async streamUpdatePrompt(agentId: string, prompt: string): Promise<void> {
+    const agentStore = getAgentStoreState();
+
+    // Start streaming
+    agentStore.startStreamingSystemRole();
+
+    // Simulate streaming by chunking the content
+    const chunkSize = 5; // Characters per chunk
+    const delay = 10; // Milliseconds between chunks
+
+    for (let i = 0; i < prompt.length; i += chunkSize) {
+      const chunk = prompt.slice(i, i + chunkSize);
+      agentStore.appendStreamingSystemRole(chunk);
+
+      // Small delay for typewriter effect
+      if (i + chunkSize < prompt.length) {
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    // Finish streaming and save
+    await agentStore.finishStreamingSystemRole(agentId);
   }
 }
