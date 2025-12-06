@@ -1,10 +1,12 @@
 import { and, desc, eq, inArray } from 'drizzle-orm';
 
 import {
+  UserMemoryContextsWithoutVectors,
   UserMemoryExperiencesWithoutVectors,
   UserMemoryPreferencesWithoutVectors,
   topics,
   userMemories,
+  userMemoriesContexts,
   userMemoriesExperiences,
   userMemoriesPreferences,
 } from '../../schemas';
@@ -28,6 +30,10 @@ export interface DisplayExperienceMemory extends UserMemoryExperiencesWithoutVec
 export interface DisplayPreferenceMemory extends UserMemoryPreferencesWithoutVectors {
   source: MemorySource | null;
   title: string | null;
+}
+
+export interface DisplayContextMemory extends UserMemoryContextsWithoutVectors {
+  source: MemorySource | null;
 }
 
 interface MemoryMetadata {
@@ -285,6 +291,99 @@ export class UserMemoryRepo {
           topicTitle: topic?.title ?? null,
         },
         title: memoryTitle,
+      };
+    });
+  }
+
+  /**
+   * Get display contexts with topic and agent information
+   * This is a list query ordered by createdAt, not a search query
+   */
+  async getDisplayContexts(params?: {
+    limit?: number;
+    type?: string;
+  }): Promise<DisplayContextMemory[]> {
+    const { limit = 50, type } = params ?? {};
+
+    // Build conditions
+    const conditions = [eq(userMemoriesContexts.userId, this.userId)];
+    if (type) {
+      conditions.push(eq(userMemoriesContexts.type, type));
+    }
+
+    // Query contexts directly - this is a list query, not a search
+    const contexts = await this.db
+      .select({
+        accessedAt: userMemoriesContexts.accessedAt,
+        associatedObjects: userMemoriesContexts.associatedObjects,
+        associatedSubjects: userMemoriesContexts.associatedSubjects,
+        createdAt: userMemoriesContexts.createdAt,
+        currentStatus: userMemoriesContexts.currentStatus,
+        description: userMemoriesContexts.description,
+        id: userMemoriesContexts.id,
+        metadata: userMemoriesContexts.metadata,
+        scoreImpact: userMemoriesContexts.scoreImpact,
+        scoreUrgency: userMemoriesContexts.scoreUrgency,
+        tags: userMemoriesContexts.tags,
+        title: userMemoriesContexts.title,
+        type: userMemoriesContexts.type,
+        updatedAt: userMemoriesContexts.updatedAt,
+        userId: userMemoriesContexts.userId,
+        userMemoryIds: userMemoriesContexts.userMemoryIds,
+      })
+      .from(userMemoriesContexts)
+      .where(and(...conditions))
+      .orderBy(desc(userMemoriesContexts.createdAt))
+      .limit(limit);
+
+    if (contexts.length === 0) {
+      return [];
+    }
+
+    // Extract topicIds from metadata
+    const topicIds = contexts
+      .map((ctx) => (ctx.metadata as MemoryMetadata | null)?.topicId)
+      .filter((id): id is string => !!id);
+
+    const uniqueTopicIds = [...new Set(topicIds)];
+
+    // Batch query topics to get titles and agentIds
+    const topicsData =
+      uniqueTopicIds.length > 0
+        ? await this.db
+            .select({
+              agentId: topics.agentId,
+              id: topics.id,
+              sessionId: topics.sessionId,
+              title: topics.title,
+            })
+            .from(topics)
+            .where(and(eq(topics.userId, this.userId), inArray(topics.id, uniqueTopicIds)))
+        : [];
+
+    // Create a map for quick lookup
+    const topicMap = new Map(topicsData.map((t) => [t.id, t]));
+
+    // Map contexts to display format
+    return contexts.map((ctx) => {
+      const metadata = ctx.metadata as MemoryMetadata | null;
+      const topicId = metadata?.topicId;
+      const sessionId = metadata?.sessionId;
+
+      if (!topicId) {
+        return { ...ctx, source: null };
+      }
+
+      const topic = topicMap.get(topicId);
+
+      return {
+        ...ctx,
+        source: {
+          agentId: topic?.agentId ?? null,
+          sessionId: topic?.sessionId ?? sessionId ?? null,
+          topicId,
+          topicTitle: topic?.title ?? null,
+        },
       };
     });
   }

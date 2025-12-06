@@ -1,6 +1,15 @@
 {
   "context": {
-    "empty": "暂无情境记忆"
+    "actions": {
+      "delete": "删除",
+      "edit": "编辑"
+    },
+    "defaultType": "情境",
+    "description": "描述",
+    "empty": "暂无情境记忆",
+    "impact": "影响度",
+    "source": "来源",
+    "urgency": "紧急度"
   },
   "experience": {
     "actions": {
