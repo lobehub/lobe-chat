@@ -6,10 +6,12 @@ import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors/selectors';
 import { getAiInfraStoreState } from '@/store/aiInfra';
 import { getToolStoreState } from '@/store/tool';
-import { builtinToolSelectors } from '@/store/tool/slices/builtin/selectors';
-import { KlavisServerStatus } from '@/store/tool/slices/klavisStore';
-import { klavisStoreSelectors } from '@/store/tool/slices/klavisStore/selectors';
-import { pluginSelectors } from '@/store/tool/slices/plugin/selectors';
+import {
+  builtinToolSelectors,
+  klavisStoreSelectors,
+  pluginSelectors,
+} from '@/store/tool/selectors';
+import { KlavisServerStatus } from '@/store/tool/slices/klavisStore/types';
 
 import type {
   AvailableModel,

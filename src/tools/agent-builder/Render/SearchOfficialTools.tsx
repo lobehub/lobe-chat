@@ -12,7 +12,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useToolStore } from '@/store/tool';
 import { klavisStoreSelectors } from '@/store/tool/selectors';
-import { KlavisServerStatus } from '@/store/tool/slices/klavisStore';
+import { KlavisServerStatus } from '@/store/tool/slices/klavisStore/types';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
