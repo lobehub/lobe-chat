@@ -1,11 +1,12 @@
 'use client';
 
 import { ActionIcon } from '@lobehub/ui';
-import { ChatHeader } from '@lobehub/ui/chat';
 import { XIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+
+import NavHeader from '@/features/NavHeader';
 
 import Breadcrumb from '../FileExplorer/Header/Breadcrumb';
 import FileContent from './FileContent';
@@ -24,7 +25,7 @@ const FileEditor = memo<PreviewModeProps>(
 
     return (
       <Flexbox height={'100%'}>
-        <ChatHeader
+        <NavHeader
           left={
             <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
               {onBack && <ActionIcon icon={XIcon} onClick={onBack} title={t('back')} />}
@@ -41,7 +42,7 @@ const FileEditor = memo<PreviewModeProps>(
             left: { padding: 0 },
           }}
         />
-        <Flexbox flex={1} style={{ overflow: 'hidden', paddingTop: 48 }}>
+        <Flexbox flex={1} style={{ overflow: 'hidden' }}>
           <FileContent fileId={currentViewItemId} />
         </Flexbox>
       </Flexbox>
