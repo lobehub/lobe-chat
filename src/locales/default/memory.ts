@@ -1,4 +1,24 @@
 export default {
+  context: {
+    empty: '暂无情境记忆',
+  },
+  experience: {
+    actions: {
+      delete: '删除',
+      edit: '编辑',
+    },
+    confidence: '置信度',
+    defaultType: '经验',
+    empty: '暂无经验记忆',
+    keyLearning: '关键学习',
+    situation: '情境',
+    steps: {
+      action: '采取行动',
+      outcome: '可能结果',
+      reasoning: '推理过程',
+      situation: '情境背景',
+    },
+  },
   identity: {
     empty: '暂无身份记忆',
     filter: {
@@ -28,4 +48,13 @@ export default {
     },
   },
   loading: '加载中...',
+  preference: {
+    defaultType: '偏好',
+    empty: '暂无偏好记忆',
+    priority: '优先级',
+  },
+  viewMode: {
+    masonry: '瀑布流',
+    timeline: '时间线',
+  },
 };

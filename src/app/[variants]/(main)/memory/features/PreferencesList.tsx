@@ -8,19 +8,19 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useUserMemoryStore } from '@/store/userMemory';
 
-import ContextCard from './ContextCard';
-import ContextTimelineView from './ContextTimelineView';
+import PreferenceCard from './PreferenceCard';
+import PreferenceTimelineView from './PreferenceTimelineView';
 import ViewModeSwitcher, { ViewMode } from './ViewModeSwitcher';
 
-const ContextsList = memo<{ mobile?: boolean }>(({ mobile }) => {
+const PreferencesList = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('memory');
-  const { data: contexts, isLoading } = useUserMemoryStore((s) => s.useFetchContexts());
+  const { data: preferences, isLoading } = useUserMemoryStore((s) => s.useFetchPreferences());
   const [viewMode, setViewMode] = useState<ViewMode>('masonry');
 
   if (isLoading) return <div>{t('loading')}</div>;
 
-  if (!contexts || contexts.length === 0) {
-    return <Empty description={t('context.empty')} />;
+  if (!preferences || preferences.length === 0) {
+    return <Empty description={t('preference.empty')} />;
   }
 
   return (
@@ -30,11 +30,11 @@ const ContextsList = memo<{ mobile?: boolean }>(({ mobile }) => {
       </Flexbox>
 
       {viewMode === 'timeline' ? (
-        <ContextTimelineView contexts={contexts} />
+        <PreferenceTimelineView preferences={preferences} />
       ) : (
         <Grid gap={16} rows={mobile ? 1 : 3}>
-          {contexts.map((context) => (
-            <ContextCard context={context} key={context.id} />
+          {preferences.map((preference) => (
+            <PreferenceCard key={preference.id} preference={preference} />
           ))}
         </Grid>
       )}
@@ -42,4 +42,4 @@ const ContextsList = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 });
 
-export default ContextsList;
+export default PreferencesList;

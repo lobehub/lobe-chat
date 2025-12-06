@@ -2,6 +2,7 @@ import { CreateUserMemoryIdentitySchema, UpdateUserMemoryIdentitySchema } from '
 import { z } from 'zod';
 
 import { UserMemoryModel } from '@/database/models/userMemory';
+import { UserMemoryRepo } from '@/database/repositories/userMemory';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 
@@ -11,6 +12,7 @@ const userMemoryProcedure = authedProcedure.use(serverDatabase).use(async (opts)
   return opts.next({
     ctx: {
       userMemoryModel: new UserMemoryModel(ctx.serverDB, ctx.userId),
+      userMemoryRepo: new UserMemoryRepo(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -42,6 +44,10 @@ export const userMemoryRouter = router({
 
   getContexts: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.searchContexts({});
+  }),
+
+  getDisplayExperiences: userMemoryProcedure.query(async ({ ctx }) => {
+    return ctx.userMemoryRepo.getDisplayExperiences();
   }),
 
   getExperiences: userMemoryProcedure.query(async ({ ctx }) => {

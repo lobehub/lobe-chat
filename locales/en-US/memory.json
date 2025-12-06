@@ -1,4 +1,24 @@
 {
+  "context": {
+    "empty": "No context memories available"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "confidence": "Confidence",
+    "defaultType": "Experience",
+    "empty": "No experience memories available",
+    "keyLearning": "Key Learning",
+    "situation": "Situation",
+    "steps": {
+      "action": "Action Taken",
+      "outcome": "Possible Outcome",
+      "reasoning": "Reasoning Process",
+      "situation": "Situation Context"
+    }
+  },
   "identity": {
     "empty": "No identity memories available",
     "filter": {
@@ -27,5 +47,14 @@
       "timeline": "Timeline"
     }
   },
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "preference": {
+    "defaultType": "Preference",
+    "empty": "No preference memories available",
+    "priority": "Priority"
+  },
+  "viewMode": {
+    "masonry": "Masonry",
+    "timeline": "Timeline"
+  }
 }
