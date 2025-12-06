@@ -4,6 +4,8 @@ import GetAvailableTools from './GetAvailableTools';
 import GetConfig from './GetConfig';
 import GetMeta from './GetMeta';
 import GetPrompt from './GetPrompt';
+import SearchMarketTools from './SearchMarketTools';
+import SearchOfficialTools from './SearchOfficialTools';
 import SetModel from './SetModel';
 import SetOpeningMessage from './SetOpeningMessage';
 import SetOpeningQuestions from './SetOpeningQuestions';
@@ -23,6 +25,8 @@ export const AgentBuilderRenders = {
   [AgentBuilderApiName.getAvailableModels]: GetAvailableModels,
   [AgentBuilderApiName.getAvailableTools]: GetAvailableTools,
   [AgentBuilderApiName.getPrompt]: GetPrompt,
+  [AgentBuilderApiName.searchMarketTools]: SearchMarketTools,
+  [AgentBuilderApiName.searchOfficialTools]: SearchOfficialTools,
 
   // Write operations
   [AgentBuilderApiName.updateAgentConfig]: UpdateConfig,

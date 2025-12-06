@@ -9,6 +9,8 @@ import type {
   GetAvailableModelsParams,
   GetAvailableToolsParams,
   GetPromptParams,
+  SearchMarketToolsParams,
+  SearchOfficialToolsParams,
   SetModelParams,
   SetOpeningMessageParams,
   SetOpeningQuestionsParams,
@@ -30,6 +32,11 @@ export interface AgentBuilderAction {
   agentBuilder_getConfig: (id: string, params: GetAgentConfigParams) => Promise<boolean>;
   agentBuilder_getMeta: (id: string, params: GetAgentMetaParams) => Promise<boolean>;
   agentBuilder_getPrompt: (id: string, params: GetPromptParams) => Promise<boolean>;
+  agentBuilder_searchMarketTools: (id: string, params: SearchMarketToolsParams) => Promise<boolean>;
+  agentBuilder_searchOfficialTools: (
+    id: string,
+    params: SearchOfficialToolsParams,
+  ) => Promise<boolean>;
   agentBuilder_setModel: (id: string, params: SetModelParams) => Promise<boolean>;
   agentBuilder_setOpeningMessage: (id: string, params: SetOpeningMessageParams) => Promise<boolean>;
   agentBuilder_setOpeningQuestions: (
@@ -76,6 +83,14 @@ export const agentBuilderSlice: StateCreator<
 
   agentBuilder_getPrompt: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'getPrompt', params);
+  },
+
+  agentBuilder_searchMarketTools: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'searchMarketTools', params);
+  },
+
+  agentBuilder_searchOfficialTools: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'searchOfficialTools', params);
   },
 
   agentBuilder_setModel: async (id, params) => {
@@ -208,10 +223,18 @@ export const agentBuilderSlice: StateCreator<
           result = await runtime.getPrompt(agentId, params as GetPromptParams);
           break;
         }
+        case 'searchMarketTools': {
+          result = await runtime.searchMarketTools(params as SearchMarketToolsParams);
+          break;
+        }
+        case 'searchOfficialTools': {
+          result = await runtime.searchOfficialTools(agentId, params as SearchOfficialToolsParams);
+          break;
+        }
         case 'updatePrompt': {
           result = await runtime.updatePrompt(agentId, {
             streaming: true,
-            ...params
+            ...params,
           } as UpdatePromptParams);
           break;
         }
