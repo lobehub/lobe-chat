@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useFileCategory } from '@/app/[variants]/(main)/resource/features/hooks/useFileCategory';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { FilesTabs } from '@/types/files';
 
@@ -14,9 +13,8 @@ import { useResourceManagerStore } from '../../../features/store';
 
 const CategoryMenu = memo(() => {
   const { t } = useTranslation('file');
-  const [activeKey] = useFileCategory();
+  const [activeKey, setMode] = useResourceManagerStore((s) => [s.category, s.setMode]);
   const navigate = useNavigate();
-  const setMode = useResourceManagerStore((s) => s.setMode);
 
   const items = useMemo(
     () => [
@@ -61,7 +59,7 @@ const CategoryMenu = memo(() => {
           key={item.key}
           onClick={(e) => {
             e.preventDefault();
-            setMode('files');
+            setMode('explorer');
             navigate(item.url, { replace: true });
           }}
           to={item.url}

@@ -3,24 +3,34 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
+
 import EmptyStatus from './EmptyStatus';
 import Header from './Header';
 import ListView from './ListView';
-import Skeleton from './ListView/Skeleton';
+import ListViewSkeleton from './ListView/Skeleton';
 import MasonryView from './MasonryView';
+import MasonryViewSkeleton from './MasonryView/Skeleton';
 import { useFileExplorer } from './useFileExplorer';
+import { useMasonryColumnCount } from './useMasonryColumnCount';
 
-interface FileExplorerProps {
-  category?: string;
-  knowledgeBaseId?: string;
-  onOpenFile?: (id: string) => void;
-}
+/**
+ * Explore files in / within a library
+ *
+ * Works with FileTree
+ *
+ * It's a un-reusable component for business logic only.
+ * So we depend on context, not props.
+ */
+const FileExplorer = memo(() => {
+  const libraryId = useResourceManagerStore((s) => s.libraryId);
+  const category = useResourceManagerStore((s) => s.category);
 
-const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpenFile }) => {
   const {
     // Data
     data,
     isLoading,
+    knowledgeBaseId,
     pendingRenameItemId,
 
     // State
@@ -32,25 +42,29 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
 
     // Handlers
     handleSelectionChange,
-    onActionClick,
     setSelectedFileIds,
-    setViewMode,
-  } = useFileExplorer({ category, knowledgeBaseId });
+  } = useFileExplorer({ category, libraryId });
+
+  // Calculate column count for masonry view
+  const columnCount = useMasonryColumnCount();
+
+  // Determine if skeleton should be shown
+  const showSkeleton =
+    isLoading ||
+    (viewMode === 'list' && isTransitioning) ||
+    (viewMode === 'masonry' && (isTransitioning || !isMasonryReady));
 
   return (
     <Flexbox height={'100%'}>
-      <Header
-        category={category}
-        knowledgeBaseId={knowledgeBaseId}
-        onActionClick={onActionClick}
-        onViewChange={setViewMode}
-        selectCount={selectFileIds.length}
-        viewMode={viewMode}
-      />
+      <Header />
       {showEmptyStatus ? (
         <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
-      ) : isLoading || (viewMode === 'list' && isTransitioning) ? (
-        <Skeleton />
+      ) : showSkeleton ? (
+        viewMode === 'list' ? (
+          <ListViewSkeleton />
+        ) : (
+          <MasonryViewSkeleton columnCount={columnCount} />
+        )
       ) : viewMode === 'list' ? (
         <ListView
           data={data}
@@ -63,9 +77,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
         <MasonryView
           data={data}
           isMasonryReady={isMasonryReady}
-          isTransitioning={isTransitioning}
           knowledgeBaseId={knowledgeBaseId}
-          onOpenFile={onOpenFile}
           selectFileIds={selectFileIds}
           setSelectedFileIds={setSelectedFileIds}
         />

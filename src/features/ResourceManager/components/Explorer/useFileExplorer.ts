@@ -15,14 +15,16 @@ import type { MultiSelectActionType } from './ToolBar/MultiSelectActions';
 import { ViewMode } from './ToolBar/ViewSwitcher';
 import { useCheckTaskStatus } from './useCheckTaskStatus';
 
-interface UseFileExplorerOptions {
-  category?: string;
-  knowledgeBaseId?: string;
+interface UseFileExplorerProps {
+  category?: FilesTabs;
+  libraryId?: string;
 }
 
-export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOptions) => {
+export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileExplorerProps) => {
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
+
+  const knowledgeBaseId = libraryId ?? undefined;
 
   // Selection state
   const [selectFileIds, setSelectedFileIds] = useResourceManagerStore((s) => [
@@ -38,6 +40,8 @@ export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOp
   // Mode state
   const mode = useResourceManagerStore((s) => s.mode);
   const currentViewItemId = useResourceManagerStore((s) => s.currentViewItemId);
+  const categoryFromStore = useResourceManagerStore((s) => s.category);
+  const category = categoryProp ?? categoryFromStore;
   const setMode = useResourceManagerStore((s) => s.setMode);
   const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
 
@@ -210,7 +214,7 @@ export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOp
   );
 
   const handleBackToList = useCallback(() => {
-    setMode('files');
+    setMode('explorer');
     setCurrentViewItemId(undefined);
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
@@ -290,10 +294,11 @@ export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOp
   }, [selectFileIds.length]);
 
   const showEmptyStatus = !isLoading && data?.length === 0 && !currentFolderSlug;
-  const isFilePreviewMode = mode === 'file' && currentViewItemId;
+  const isFilePreviewMode = mode === 'editor' && currentViewItemId;
 
   return {
     // Data
+    category,
     currentFile,
     currentFolderSlug,
     currentViewItemId,
@@ -311,6 +316,7 @@ export const useFileExplorer = ({ category, knowledgeBaseId }: UseFileExplorerOp
     isMasonryReady,
 
     isTransitioning,
+    knowledgeBaseId,
 
     onActionClick,
 

@@ -6,7 +6,6 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import Container from '@/app/[variants]/(main)/resource/library/features/Container';
 import NProgress from '@/components/NProgress';
 import ResourceManager from '@/features/ResourceManager';
-import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import { useKnowledgeBaseItem } from '../features/hooks/useKnowledgeItem';
 import { useResourceManagerStore } from '../features/store';
@@ -19,20 +18,17 @@ const MainContent = memo(() => {
 
   // Load knowledge base data
   useKnowledgeBaseItem(knowledgeBaseId || '');
-  const libraryName = useKnowledgeBaseStore(
-    knowledgeBaseSelectors.getKnowledgeBaseNameById(knowledgeBaseId || ''),
-  );
 
   // Sync URL query parameter with store on mount and when it changes
   useEffect(() => {
     const fileId = searchParams.get('file');
     if (fileId && !fileId.startsWith('doc')) {
       setCurrentViewItemId(fileId);
-      setMode('file');
+      setMode('editor');
     }
   }, [searchParams, setCurrentViewItemId, setMode]);
 
-  return <ResourceManager knowledgeBaseId={knowledgeBaseId || undefined} title={libraryName} />;
+  return <ResourceManager />;
 });
 
 MainContent.displayName = 'LibraryMainContent';

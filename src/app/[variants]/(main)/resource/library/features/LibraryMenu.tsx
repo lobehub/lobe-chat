@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import FileTree from '@/features/ResourceManager/FileTree';
+import FileTree from '@/features/ResourceManager/components/Tree';
 
 import Head from '../_layout/Header/LibraryHead';
 

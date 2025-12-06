@@ -87,7 +87,7 @@ const Breadcrumb = memo<BreadcrumbProps>(({ category, knowledgeBaseId, fileName 
   const handleNavigate = (slug: string | null) => {
     // If navigating while viewing a file, reset the file view mode
     if (fileName) {
-      setMode('files');
+      setMode('explorer');
       setCurrentViewItemId(undefined);
     }
 
