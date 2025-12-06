@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.163](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.162...v2.0.0-next.163)
+
+<sup>Released on **2025-12-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add smooth scroll to top on 'More' button click in Title component.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add smooth scroll to top on 'More' button click in Title component, closes [#10178](https://github.com/lobehub/lobe-chat/issues/10178) ([5ad4f0c](https://github.com/lobehub/lobe-chat/commit/5ad4f0c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.162](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.161...v2.0.0-next.162)
 
 <sup>Released on **2025-12-05**</sup>
