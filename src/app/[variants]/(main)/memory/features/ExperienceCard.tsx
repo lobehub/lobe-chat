@@ -279,11 +279,7 @@ const ExperienceCard = memo<ExperienceCardProps>(
               <Tooltip title={source.topicTitle || `Topic: ${source.topicId}`}>
                 <Link
                   className={styles.sourceTag}
-                  href={
-                    source.agentId
-                      ? `/agent/${source.agentId}?topicId=${source.topicId}`
-                      : `/chat?session=inbox&topic=${source.topicId}`
-                  }
+                  href={`/agent/${source.agentId}?topicId=${source.topicId}`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Link2 size={12} />

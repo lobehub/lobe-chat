@@ -12,6 +12,7 @@ export default {
     empty: '暂无经验记忆',
     keyLearning: '关键学习',
     situation: '情境',
+    source: '来源',
     steps: {
       action: '采取行动',
       outcome: '可能结果',
