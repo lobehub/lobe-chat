@@ -2,8 +2,37 @@ import { ThemeMode } from '@lobechat/electron-client-ipc';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { App } from '@/core/App';
+import type { IpcContext } from '@/utils/ipc';
+import { IpcHandler } from '@/utils/ipc/base';
 
 import SystemController from '../SystemCtr';
+
+const { ipcHandlers, ipcMainHandleMock } = vi.hoisted(() => {
+  const handlers = new Map<string, (event: any, ...args: any[]) => any>();
+  const handle = vi.fn((channel: string, handler: any) => {
+    handlers.set(channel, handler);
+  });
+  return { ipcHandlers: handlers, ipcMainHandleMock: handle };
+});
+
+const invokeIpc = async <T = any>(
+  channel: string,
+  payload?: any,
+  context?: Partial<IpcContext>,
+): Promise<T> => {
+  const handler = ipcHandlers.get(channel);
+  if (!handler) throw new Error(`IPC handler for ${channel} not found`);
+
+  const fakeEvent = {
+    sender: context?.sender ?? ({ id: 'test' } as any),
+  };
+
+  if (payload === undefined) {
+    return handler(fakeEvent);
+  }
+
+  return handler(fakeEvent, payload);
+};
 
 // Mock logger
 vi.mock('@/utils/logger', () => ({
@@ -22,7 +51,7 @@ vi.mock('electron', () => ({
     getPath: vi.fn((name: string) => `/mock/path/${name}`),
   },
   ipcMain: {
-    handle: vi.fn(),
+    handle: ipcMainHandleMock,
   },
   nativeTheme: {
     on: vi.fn(),
@@ -70,12 +99,15 @@ describe('SystemController', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    ipcHandlers.clear();
+    ipcMainHandleMock.mockClear();
+    (IpcHandler.getInstance() as any).registeredChannels?.clear();
     controller = new SystemController(mockApp);
   });
 
   describe('getAppState', () => {
     it('should return app state with system info', async () => {
-      const result = await controller.getAppState();
+      const result = await invokeIpc('system.getAppState');
 
       expect(result).toMatchObject({
         arch: expect.any(String),
@@ -98,7 +130,7 @@ describe('SystemController', () => {
       const { nativeTheme } = await import('electron');
       Object.defineProperty(nativeTheme, 'shouldUseDarkColors', { value: true });
 
-      const result = await controller.getAppState();
+      const result = await invokeIpc('system.getAppState');
 
       expect(result.systemAppearance).toBe('dark');
 
@@ -111,7 +143,7 @@ describe('SystemController', () => {
     it('should check accessibility on macOS', async () => {
       const { systemPreferences } = await import('electron');
 
-      controller.checkAccessibilityForMacOS();
+      await invokeIpc('system.checkAccessibilityForMacOS');
 
       expect(systemPreferences.isTrustedAccessibilityClient).toHaveBeenCalledWith(true);
     });
@@ -120,7 +152,7 @@ describe('SystemController', () => {
       const { macOS } = await import('electron-is');
       vi.mocked(macOS).mockReturnValue(false);
 
-      const result = controller.checkAccessibilityForMacOS();
+      const result = await invokeIpc('system.checkAccessibilityForMacOS');
 
       expect(result).toBeUndefined();
 
@@ -133,7 +165,7 @@ describe('SystemController', () => {
     it('should open external link', async () => {
       const { shell } = await import('electron');
 
-      await controller.openExternalLink('https://example.com');
+      await invokeIpc('system.openExternalLink', 'https://example.com');
 
       expect(shell.openExternal).toHaveBeenCalledWith('https://example.com');
     });
@@ -141,7 +173,7 @@ describe('SystemController', () => {
 
   describe('updateLocale', () => {
     it('should update locale and broadcast change', async () => {
-      const result = await controller.updateLocale('zh-CN');
+      const result = await invokeIpc('system.updateLocale', 'zh-CN');
 
       expect(mockStoreManager.set).toHaveBeenCalledWith('locale', 'zh-CN');
       expect(mockI18n.changeLanguage).toHaveBeenCalledWith('zh-CN');
@@ -152,7 +184,7 @@ describe('SystemController', () => {
     });
 
     it('should use system locale when set to auto', async () => {
-      await controller.updateLocale('auto');
+      await invokeIpc('system.updateLocale', 'auto');
 
       expect(mockI18n.changeLanguage).toHaveBeenCalledWith('en-US');
     });
@@ -162,7 +194,7 @@ describe('SystemController', () => {
     it('should update theme mode and broadcast change', async () => {
       const themeMode: ThemeMode = 'dark';
 
-      await controller.updateThemeModeHandler(themeMode);
+      await invokeIpc('system.updateThemeModeHandler', themeMode);
 
       expect(mockStoreManager.set).toHaveBeenCalledWith('themeMode', 'dark');
       expect(mockBrowserManager.broadcastToAllWindows).toHaveBeenCalledWith('themeChanged', {
