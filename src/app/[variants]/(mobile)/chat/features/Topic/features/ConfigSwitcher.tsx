@@ -7,10 +7,13 @@ import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-const GroupConfig = dynamic(() => import('../../../../(main)/chat/_layout/Sidebar/GroupConfig'), {
-  loading: () => <SkeletonList />,
-  ssr: false,
-});
+const GroupConfig = dynamic(
+  () => import('../../../../../(main)/chat/_layout/Sidebar/GroupConfig'),
+  {
+    loading: () => <SkeletonList />,
+    ssr: false,
+  },
+);
 
 const ConfigSwitcher = memo(() => {
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);

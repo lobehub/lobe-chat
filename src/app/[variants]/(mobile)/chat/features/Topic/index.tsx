@@ -7,7 +7,7 @@ import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import TopicModal from './features/TopicModal';
 
 const ConfigSwitcher = dynamic(
-  () => import('@/app/[variants]/(mobile)/chat/topic/features/ConfigSwitcher'),
+  () => import('@/app/[variants]/(mobile)/chat/features/Topic/features/ConfigSwitcher'),
   {
     loading: () => <SkeletonList />,
   },
