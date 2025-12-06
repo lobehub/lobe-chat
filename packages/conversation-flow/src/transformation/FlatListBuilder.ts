@@ -158,7 +158,8 @@ export class FlatListBuilder {
         continue;
       }
 
-      // Priority 3b: User message with branches
+      // Priority 3b: User message with branches (multiple assistant children)
+      // Branch indicator should be on the active assistant child message
       if (message.role === 'user' && childMessages.length > 1) {
         const activeBranchId = this.branchResolver.getActiveBranchIdFromMetadata(
           message,
@@ -174,14 +175,11 @@ export class FlatListBuilder {
           continue;
         }
 
-        const activeBranchIndex = childMessages.indexOf(activeBranchId);
-        const userWithBranches = this.createUserMessageWithBranches(
-          message,
-          childMessages.length,
-          activeBranchIndex,
-        );
-        flatList.push(userWithBranches);
+        // Add user message without branch (branch goes on the child)
+        flatList.push(message);
         processedIds.add(message.id);
+
+        const activeBranchIndex = childMessages.indexOf(activeBranchId);
 
         // Continue with active branch - check if it's an assistantGroup
         const activeBranchMsg = this.messageMap.get(activeBranchId);
@@ -203,13 +201,19 @@ export class FlatListBuilder {
               processedIds,
             );
 
-            // Create assistantGroup virtual message
+            // Create assistantGroup virtual message with branch metadata
             const groupMessage = this.createAssistantGroupMessage(
               assistantChain[0],
               assistantChain,
               allToolMessages,
             );
-            flatList.push(groupMessage);
+            // Add branch info to the assistantGroup message
+            const groupMessageWithBranches = this.createMessageWithBranches(
+              groupMessage,
+              childMessages.length,
+              activeBranchIndex,
+            );
+            flatList.push(groupMessageWithBranches);
 
             // Mark all as processed
             assistantChain.forEach((m) => processedIds.add(m.id));
@@ -235,8 +239,13 @@ export class FlatListBuilder {
               }
             }
           } else {
-            // Regular message (not assistantGroup)
-            flatList.push(activeBranchMsg);
+            // Regular assistant message (not assistantGroup) - add branch info
+            const activeBranchWithBranches = this.createMessageWithBranches(
+              activeBranchMsg,
+              childMessages.length,
+              activeBranchIndex,
+            );
+            flatList.push(activeBranchWithBranches);
             processedIds.add(activeBranchId);
 
             // Continue with active branch's children
@@ -246,27 +255,39 @@ export class FlatListBuilder {
         continue;
       }
 
-      // Priority 3c: Assistant message with branches
+      // Priority 3c: Assistant message with branches (multiple user children)
+      // Branch indicator should be on the active user child message
       if (message.role === 'assistant' && childMessages.length > 1) {
         const activeBranchId = this.branchResolver.getActiveBranchIdFromMetadata(
           message,
           childMessages,
           this.childrenMap,
         );
-        // Add the assistant message itself
-        flatList.push(message);
-        processedIds.add(message.id);
 
         // Optimistic update: activeBranchId is undefined when branch is being created
-        // In this case, just add assistant message and continue (no active branch yet)
+        // In this case, just add assistant message without branch info and continue
         if (!activeBranchId) {
+          flatList.push(message);
+          processedIds.add(message.id);
           continue;
         }
 
-        // Continue with active branch and process its message
+        // Add the assistant message without branch (branch goes on the child)
+        flatList.push(message);
+        processedIds.add(message.id);
+
+        const activeBranchIndex = childMessages.indexOf(activeBranchId);
+
+        // Continue with active branch and add branch info to the user child
         const activeBranchMsg = this.messageMap.get(activeBranchId);
         if (activeBranchMsg) {
-          flatList.push(activeBranchMsg);
+          // Add branch info to the active user child message
+          const activeBranchWithBranches = this.createMessageWithBranches(
+            activeBranchMsg,
+            childMessages.length,
+            activeBranchIndex,
+          );
+          flatList.push(activeBranchWithBranches);
           processedIds.add(activeBranchId);
 
           // Continue with active branch's children
@@ -563,15 +584,16 @@ export class FlatListBuilder {
   }
 
   /**
-   * Create user message with branch metadata
+   * Create message with branch metadata
+   * Used for both user and assistant messages that have multiple branches
    */
-  private createUserMessageWithBranches(
-    user: Message,
+  private createMessageWithBranches(
+    message: Message,
     count: number,
     activeBranchIndex: number,
   ): Message {
     return {
-      ...user,
+      ...message,
       branch: {
         activeBranchIndex,
         count,

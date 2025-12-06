@@ -91,13 +91,13 @@ export const messageRuntimeState: StateCreator<
   },
 
   internal_updateActiveId: (activeId: string) => {
-    const currentActiveId = get().activeId;
-    if (currentActiveId === activeId) return;
+    const currentActiveAgentId = get().activeAgentId;
+    if (currentActiveAgentId === activeId) return;
 
     // Before switching sessions, cancel all pending supervisor decisions
     get().internal_cancelAllSupervisorDecisions();
 
-    set({ activeId }, false, n(`updateActiveId/${activeId}`));
+    set({ activeAgentId: activeId, activeId }, false, n(`updateActiveId/${activeId}`));
   },
 
   internal_updateActiveSessionType: (sessionType?: 'agent' | 'group') => {

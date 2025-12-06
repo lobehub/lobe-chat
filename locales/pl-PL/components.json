@@ -19,6 +19,7 @@
       "chunkingTooltip": "Podziel plik na wiele bloków tekstowych i wektoryzuj, aby umożliwić wyszukiwanie semantyczne i rozmowy o plikach",
       "chunkingUnsupported": "Ten plik nie obsługuje podziału na części.",
       "confirmDelete": "Zaraz usuniesz ten plik. Po usunięciu nie będzie można go odzyskać, proszę potwierdź swoje działanie",
+      "confirmDeleteFolder": "Zamierzasz usunąć ten folder wraz z całą jego zawartością. Po usunięciu nie będzie można go odzyskać. Proszę potwierdź swoją decyzję.",
       "confirmDeleteMultiFiles": "Zaraz usuniesz wybrane {{count}} plików. Po usunięciu nie będzie można ich odzyskać, proszę potwierdź swoje działanie",
       "confirmRemoveFromKnowledgeBase": "Zaraz usuniesz wybrane {{count}} plików z bazy wiedzy. Po usunięciu pliki będą nadal widoczne wśród wszystkich plików, proszę potwierdź swoje działanie",
       "copyUrl": "Kopiuj link",
@@ -26,8 +27,19 @@
       "createChunkingTask": "Przygotowywanie...",
       "deleteSuccess": "Plik usunięty pomyślnie",
       "downloading": "Pobieranie pliku...",
+      "goBack": "Wróć do poprzedniej strony",
+      "goForward": "Przejdź do następnej strony",
+      "goToParent": "Przejdź do folderu nadrzędnego",
+      "moveError": "Nie udało się przenieść pliku",
+      "moveHere": "Przenieś tutaj",
+      "moveSuccess": "Plik został pomyślnie przeniesiony",
+      "moveToFolder": "Przenieś do...",
+      "moveToRoot": "Przenieś do katalogu głównego",
       "removeFromKnowledgeBase": "Usuń z bazy wiedzy",
-      "removeFromKnowledgeBaseSuccess": "Plik usunięty pomyślnie"
+      "removeFromKnowledgeBaseSuccess": "Plik usunięty pomyślnie",
+      "rename": "Zmień nazwę",
+      "renameError": "Nie udało się zmienić nazwy",
+      "renameSuccess": "Nazwa została pomyślnie zmieniona"
     },
     "bottom": "To już wszystko",
     "config": {
@@ -41,6 +53,12 @@
       },
       "or": "lub",
       "title": "Przeciągnij plik lub folder tutaj"
+    },
+    "noFolders": "Brak folderów",
+    "sort": {
+      "dateAdded": "Data dodania",
+      "name": "Nazwa",
+      "size": "Rozmiar"
     },
     "title": {
       "createdAt": "Data utworzenia",

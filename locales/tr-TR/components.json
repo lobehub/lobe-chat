@@ -19,6 +19,7 @@
       "chunkingTooltip": "Dosyayı birden fazla metin parçasına ayırıp vektörleştirdikten sonra, anlamsal arama ve dosya diyalogları için kullanılabilir",
       "chunkingUnsupported": "Bu dosya parça parça yüklemeyi desteklemiyor.",
       "confirmDelete": "Bu dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
+      "confirmDeleteFolder": "Bu klasör ve içeriği silinmek üzere. Silme işlemi geri alınamaz, lütfen işleminizi onaylayın.",
       "confirmDeleteMultiFiles": "Seçilen {{count}} dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
       "confirmRemoveFromKnowledgeBase": "Seçilen {{count}} dosya bilgi tabanından kaldırılacak, kaldırıldıktan sonra dosyalar tüm dosyalar arasında görüntülenebilir, lütfen işleminizi onaylayın",
       "copyUrl": "Bağlantıyı kopyala",
@@ -26,8 +27,19 @@
       "createChunkingTask": "Hazırlanıyor...",
       "deleteSuccess": "Dosya başarıyla silindi",
       "downloading": "Dosya indiriliyor...",
+      "goBack": "Önceki sayfaya dön",
+      "goForward": "Sonraki sayfaya git",
+      "goToParent": "Üst klasöre git",
+      "moveError": "Dosya taşınamadı",
+      "moveHere": "Buraya taşı",
+      "moveSuccess": "Dosya başarıyla taşındı",
+      "moveToFolder": "Şuraya taşı...",
+      "moveToRoot": "Kök dizine taşı",
       "removeFromKnowledgeBase": "Bilgi tabanından kaldır",
-      "removeFromKnowledgeBaseSuccess": "Dosya başarıyla kaldırıldı"
+      "removeFromKnowledgeBaseSuccess": "Dosya başarıyla kaldırıldı",
+      "rename": "Yeniden Adlandır",
+      "renameError": "Yeniden adlandırma başarısız oldu",
+      "renameSuccess": "Yeniden adlandırma başarılı"
     },
     "bottom": "Artık sona geldik",
     "config": {
@@ -41,6 +53,12 @@
       },
       "or": "veya",
       "title": "Dosyayı veya klasörü buraya sürükleyin"
+    },
+    "noFolders": "Klasör bulunamadı",
+    "sort": {
+      "dateAdded": "Eklenme tarihi",
+      "name": "Ad",
+      "size": "Boyut"
     },
     "title": {
       "createdAt": "Oluşturulma zamanı",

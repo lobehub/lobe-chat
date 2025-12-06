@@ -137,6 +137,8 @@
   "close": "Chiudi",
   "cmdk": {
     "about": "Informazioni",
+    "aiModeEmptyState": "Inserisci la tua domanda nel campo sopra per iniziare a conversare con l'AI",
+    "aiModePlaceholder": "Fai una domanda all'AI...",
     "communitySupport": "Supporto della comunità",
     "discover": "Scopri",
     "knowledgeBase": "Base di conoscenza",
@@ -145,6 +147,16 @@
     "noResults": "Nessun risultato trovato",
     "openSettings": "Apri impostazioni",
     "painting": "Disegno AI",
+    "search": {
+      "agent": "Assistente",
+      "agents": "Assistenti",
+      "file": "File",
+      "files": "File",
+      "loading": "Ricerca in corso...",
+      "searching": "Risultati della ricerca",
+      "topic": "Argomento",
+      "topics": "Argomenti"
+    },
     "searchPlaceholder": "Inserisci un comando o cerca...",
     "settings": "Impostazioni",
     "starOnGitHub": "Dacci una stella su GitHub",
@@ -304,6 +316,13 @@
     "business": "Collaborazioni commerciali",
     "support": "Supporto via email"
   },
+  "navPanel": {
+    "agent": "Assistente",
+    "displayItems": "Mostra elementi",
+    "library": "Libreria",
+    "searchAgent": "Cerca assistente...",
+    "searchResultEmpty": "Nessun risultato trovato"
+  },
   "new": "Nuovo",
   "oauth": "Accesso SSO",
   "officialSite": "Sito ufficiale",
@@ -358,13 +377,21 @@
     }
   },
   "tab": {
-    "aiImage": "Disegno AI",
+    "aiImage": "Disegno",
+    "audio": "Audio",
     "chat": "Chat",
+    "community": "Community",
     "discover": "Scopri",
     "files": "File",
+    "home": "Home",
     "knowledgeBase": "Base di conoscenza",
     "me": "io",
-    "setting": "Impostazioni"
+    "memory": "Memoria",
+    "pages": "Documenti",
+    "resource": "Risorse",
+    "search": "Cerca",
+    "setting": "Impostazioni",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Consenti",

@@ -30,8 +30,8 @@ const ProviderConfig = memo(() => {
     const tab = 'provider';
 
     if (isDesktop) {
-      const { dispatch } = await import('@lobechat/electron-client-ipc');
-      await dispatch('openSettingsWindow', {
+      const { ensureElectronIpc } = await import('@/utils/electron/ipc');
+      await ensureElectronIpc().windows.openSettingsWindow({
         searchParams,
         tab,
       });

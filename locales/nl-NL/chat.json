@@ -22,13 +22,13 @@
   },
   "clearCurrentMessages": "Huidige berichten wissen",
   "confirmClearCurrentMessages": "Huidige berichten worden gewist en kunnen niet worden hersteld. Bevestig je actie.",
-  "confirmRemoveChatGroupItemAlert": "Je staat op het punt dit Agent-team te verwijderen. De teamleden blijven behouden. Bevestig je actie alstublieft.",
+  "confirmRemoveChatGroupItemAlert": "Deze groep wordt verwijderd, maar teamleden blijven onaangetast. Bevestig je actie.",
   "confirmRemoveGroupItemAlert": "Je staat op het punt deze groep te verwijderen. Nadat de groep is verwijderd, worden de assistenten uit deze groep verplaatst naar de standaardlijst. Bevestig je actie.",
-  "confirmRemoveGroupSuccess": "Agentteam succesvol verwijderd",
+  "confirmRemoveGroupSuccess": "Groep succesvol verwijderd",
   "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan niet worden hersteld. Bevestig je actie.",
   "confirmRemoveSessionSuccess": "Sessie succesvol verwijderd",
   "defaultAgent": "Standaard assistent",
-  "defaultGroupChat": "Agentteam",
+  "defaultGroupChat": "Groep",
   "defaultList": "Standaardlijst",
   "defaultSession": "Standaard assistent",
   "dm": {
@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
+  "emptyAgentAction": "Assistent aanmaken",
   "extendParams": {
     "disableContextCaching": {
       "desc": "De kosten voor het genereren van een enkele conversatie kunnen met maximaal 90% worden verlaagd, en de responssnelheid kan tot 4 keer worden verhoogd (<1>Lees meer</1>). Wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
@@ -120,7 +121,7 @@
     "noTemplateMembers": "Geen leden in de sjabloon",
     "noTemplates": "Geen sjablonen beschikbaar",
     "searchTemplates": "Zoek sjablonen...",
-    "title": "Agentteam aanmaken",
+    "title": "Groep aanmaken",
     "useTemplate": "Sjabloon gebruiken"
   },
   "hideForYou": "Privéberichten zijn verborgen. Schakel 'Toon privéberichten' in de instellingen in om ze te bekijken.",
@@ -154,25 +155,25 @@
   "knowledgeBase": {
     "all": "Alle inhoud",
     "allFiles": "Alle bestanden",
-    "allKnowledgeBases": "Alle kennisbanken",
-    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Als je dit wilt gebruiken, schakel dan over naar serverdatabase-implementatie of gebruik de {{cloud}}-dienst.",
+    "allLibraries": "Alle bibliotheken",
+    "disabled": "De huidige implementatiemodus ondersteunt geen gesprekken met de kennisbank. Schakel over naar een server-side database-implementatie of gebruik de {{cloud}}-dienst om dit te activeren.",
     "library": {
       "action": {
         "add": "Toevoegen",
         "detail": "Details",
         "remove": "Verwijderen"
       },
-      "title": "Bestand/Kennisbank"
+      "title": "Bestanden/Bibliotheek"
     },
-    "relativeFilesOrKnowledgeBases": "Gerelateerde bestanden/kennisbanken",
+    "relativeFilesOrLibraries": "Gerelateerde bestanden/bibliotheken",
     "title": "Kennisbank",
-    "uploadGuide": "Geüploade bestanden kunnen worden bekeken in de 'Kennisbank'.",
+    "uploadGuide": "Geüploade bestanden kun je terugvinden onder 'Bronnen'.",
     "viewMore": "Bekijk meer"
   },
   "memberSelection": {
     "addMember": "Lid toevoegen",
     "allMembers": "Alle leden",
-    "createGroup": "Agent-team aanmaken",
+    "createGroup": "Groep aanmaken",
     "noAvailableAgents": "Geen beschikbare Agent om uit te nodigen",
     "noSelectedAgents": "Nog geen Agent geselecteerd",
     "searchAgents": "Zoek Agent...",
@@ -245,14 +246,15 @@
     "senderAssistant": "Agent",
     "senderUser": "Jij"
   },
-  "newAgent": "Nieuwe assistent",
-  "newGroupChat": "Nieuw Agentteam",
-  "noAgentsYet": "Dit agentteam heeft nog geen leden. Klik op de + knop om assistenten uit te nodigen.",
+  "newAgent": "Assistent aanmaken",
+  "newGroupChat": "Groepschat aanmaken",
+  "newPage": "Document aanmaken",
+  "noAgentsYet": "Deze groep heeft nog geen leden. Klik op de + knop om een assistent uit te nodigen.",
   "noAvailableAgents": "Geen beschikbare leden om uit te nodigen",
   "noMatchingAgents": "Geen overeenkomende leden gevonden",
   "noMembersYet": "Deze groep heeft nog geen leden. Klik op de + knop om assistenten uit te nodigen.",
   "noSelectedAgents": "Nog geen leden geselecteerd",
-  "openInNewWindow": "In een nieuw venster openen",
+  "openInNewWindow": "Open in een nieuw venster",
   "owner": "Groepseigenaar",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
@@ -296,7 +298,7 @@
   "searchAgentPlaceholder": "Zoekassistent...",
   "searchAgents": "Zoekassistent...",
   "selectedAgents": "Geselecteerde assistenten",
-  "sendPlaceholder": "Voer chatbericht in...",
+  "sendPlaceholder": "Stel een vraag, creëer iets of begin een taak, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Groepsbeheer",
     "confirmRemoveGroupAlert": "Je staat op het punt deze groep te verwijderen. Na verwijdering zullen de assistenten van deze groep worden verplaatst naar de standaardlijst. Bevestig je actie.",
@@ -361,6 +363,10 @@
       "title": "Taken voltooid"
     }
   },
+  "tab": {
+    "profile": "Assistentprofiel",
+    "search": "Zoeken"
+  },
   "thread": {
     "divider": "Subonderwerp",
     "threadMessageCount": "{{messageCount}} berichten",
@@ -413,6 +419,7 @@
     "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
     "checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",
     "openNewTopic": "Nieuw onderwerp openen",
+    "recent": "Recente onderwerpen",
     "saveCurrentMessages": "Huidig gesprek opslaan als onderwerp"
   },
   "translate": {

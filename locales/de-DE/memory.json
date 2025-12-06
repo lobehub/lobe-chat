@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "Keine Identitätserinnerung vorhanden",
+    "filter": {
+      "search": "Suche nach Rolle, Beziehung oder Beschreibung...",
+      "type": {
+        "all": "Alle",
+        "demographic": "Demografisch",
+        "personal": "Persönlich",
+        "professional": "Beruflich"
+      }
+    },
+    "list": {
+      "confirmDelete": "Löschen bestätigen",
+      "deleteCancel": "Abbrechen",
+      "deleteContent": "Möchten Sie diese Identitätserinnerung wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden.",
+      "deleteOk": "Löschen",
+      "noResults": "Keine passenden Identitätserinnerungen gefunden",
+      "updated": "Aktualisiert"
+    },
+    "roleCloud": {
+      "collapse": "Weniger anzeigen",
+      "expand": "Mehr anzeigen"
+    },
+    "view": {
+      "list": "Liste",
+      "timeline": "Zeitleiste"
+    }
+  },
+  "loading": "Wird geladen..."
+}

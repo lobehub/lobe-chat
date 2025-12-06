@@ -22,13 +22,13 @@
   },
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
-  "confirmRemoveChatGroupItemAlert": "Sắp xóa nhóm Agent này, các thành viên trong nhóm sẽ không bị ảnh hưởng. Vui lòng xác nhận thao tác của bạn.",
+  "confirmRemoveChatGroupItemAlert": "Sắp xóa nhóm này, các thành viên trong nhóm sẽ không bị ảnh hưởng. Vui lòng xác nhận thao tác của bạn.",
   "confirmRemoveGroupItemAlert": "Bạn sắp xóa nhóm này. Sau khi xóa, các trợ lý trong nhóm sẽ được chuyển sang danh sách mặc định. Vui lòng xác nhận hành động của bạn.",
-  "confirmRemoveGroupSuccess": "Xóa nhóm Agent thành công",
+  "confirmRemoveGroupSuccess": "Xóa nhóm thành công",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveSessionSuccess": "Xóa trợ lý thành công",
   "defaultAgent": "Trợ lý mặc định",
-  "defaultGroupChat": "Nhóm Agent",
+  "defaultGroupChat": "Nhóm",
   "defaultList": "Danh sách mặc định",
   "defaultSession": "Trợ lý mặc định",
   "dm": {
@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Bản sao",
   "emptyAgent": "Không có trợ lý",
+  "emptyAgentAction": "Tạo trợ lý",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Chi phí tạo ra một cuộc hội thoại đơn lẻ có thể giảm tới 90%, tốc độ phản hồi tăng gấp 4 lần (<1>Tìm hiểu thêm</1>). Khi bật, sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
@@ -120,7 +121,7 @@
     "noTemplateMembers": "Không có thành viên trong mẫu",
     "noTemplates": "Không có mẫu nào khả dụng",
     "searchTemplates": "Tìm kiếm mẫu...",
-    "title": "Tạo nhóm Agent",
+    "title": "Tạo nhóm",
     "useTemplate": "Sử dụng mẫu"
   },
   "hideForYou": "Nội dung tin nhắn riêng tư đã bị ẩn, vui lòng bật 【Hiển thị nội dung tin nhắn riêng tư】 trong cài đặt để xem",
@@ -154,25 +155,25 @@
   "knowledgeBase": {
     "all": "Tất cả nội dung",
     "allFiles": "Tất cả tệp",
-    "allKnowledgeBases": "Tất cả kho kiến thức",
-    "disabled": "Chế độ triển khai hiện tại không hỗ trợ đối thoại với cơ sở kiến thức. Nếu bạn muốn sử dụng, hãy chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ {{cloud}}.",
+    "allLibraries": "Tất cả thư viện",
+    "disabled": "Chế độ triển khai hiện tại không hỗ trợ hội thoại với thư viện. Để sử dụng, vui lòng chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ {{cloud}}",
     "library": {
       "action": {
         "add": "Thêm",
         "detail": "Chi tiết",
         "remove": "Xóa"
       },
-      "title": "Tệp/Kho kiến thức"
+      "title": "Tệp/Thư viện"
     },
-    "relativeFilesOrKnowledgeBases": "Tệp/Kho kiến thức liên quan",
-    "title": "Kho kiến thức",
-    "uploadGuide": "Các tệp đã tải lên có thể được xem trong 'Kho kiến thức'",
+    "relativeFilesOrLibraries": "Tệp/Thư viện liên quan",
+    "title": "Thư viện",
+    "uploadGuide": "Các tệp đã tải lên có thể được xem trong mục \"Tài nguyên\"",
     "viewMore": "Xem thêm"
   },
   "memberSelection": {
     "addMember": "Thêm thành viên",
     "allMembers": "Tất cả thành viên",
-    "createGroup": "Tạo nhóm Agent",
+    "createGroup": "Tạo nhóm",
     "noAvailableAgents": "Không có Agent nào để mời",
     "noSelectedAgents": "Chưa chọn Agent nào",
     "searchAgents": "Tìm kiếm Agent...",
@@ -245,9 +246,10 @@
     "senderAssistant": "Agent",
     "senderUser": "Bạn"
   },
-  "newAgent": "Tạo trợ lý mới",
-  "newGroupChat": "Tạo nhóm Agent mới",
-  "noAgentsYet": "Nhóm Agent này chưa có thành viên nào. Nhấn nút + để mời trợ lý.",
+  "newAgent": "Tạo trợ lý",
+  "newGroupChat": "Tạo nhóm trò chuyện",
+  "newPage": "Tạo tài liệu",
+  "noAgentsYet": "Nhóm này chưa có thành viên nào. Nhấn nút + để mời trợ lý.",
   "noAvailableAgents": "Không có thành viên nào để mời",
   "noMatchingAgents": "Không tìm thấy thành viên phù hợp",
   "noMembersYet": "Nhóm này chưa có thành viên nào. Nhấp vào nút + để mời trợ lý.",
@@ -296,7 +298,7 @@
   "searchAgentPlaceholder": "Trợ lý tìm kiếm...",
   "searchAgents": "Trợ lý tìm kiếm...",
   "selectedAgents": "Trợ lý đã chọn",
-  "sendPlaceholder": "Nhập nội dung trò chuyện...",
+  "sendPlaceholder": "Đặt câu hỏi, sáng tạo hoặc bắt đầu nhiệm vụ, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Quản lý nhóm",
     "confirmRemoveGroupAlert": "Bạn sẽ xóa nhóm này, sau khi xóa, trợ lý của nhóm sẽ được di chuyển vào danh sách mặc định, vui lòng xác nhận hành động của bạn",
@@ -361,6 +363,10 @@
       "title": "Nhiệm vụ đã hoàn thành"
     }
   },
+  "tab": {
+    "profile": "Hồ sơ trợ lý",
+    "search": "Tìm kiếm"
+  },
   "thread": {
     "divider": "Chủ đề con",
     "threadMessageCount": "{{messageCount}} tin nhắn",
@@ -413,6 +419,7 @@
     "checkOpenNewTopic": "Có muốn mở chủ đề mới không?",
     "checkSaveCurrentMessages": "Bạn có muốn lưu cuộc trò chuyện hiện tại thành chủ đề không?",
     "openNewTopic": "Mở chủ đề mới",
+    "recent": "Chủ đề gần đây",
     "saveCurrentMessages": "Lưu cuộc trò chuyện hiện tại thành chủ đề"
   },
   "translate": {

@@ -64,6 +64,20 @@ export interface TopicRankItem {
   title: string | null;
 }
 
+export interface RecentTopicAgent {
+  avatar: string | null;
+  backgroundColor: string | null;
+  id: string;
+  title: string | null;
+}
+
+export interface RecentTopic {
+  agent: RecentTopicAgent | null;
+  id: string;
+  title: string | null;
+  updatedAt: Date;
+}
+
 export interface CreateTopicParams {
   favorite?: boolean;
   groupId?: string | null;
@@ -73,7 +87,13 @@ export interface CreateTopicParams {
 }
 
 export interface QueryTopicParams {
+  agentId?: string | null;
   containerId?: string | null; // sessionId or groupId
   current?: number;
+  /**
+   * Whether this is an inbox agent query.
+   * When true, also includes legacy inbox topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
+   */
+  isInbox?: boolean;
   pageSize?: number;
 }

@@ -5,8 +5,7 @@ import { UserModel } from '@/database/models/user';
 import { initializeServerAnalytics } from '@/libs/analytics';
 import { pino } from '@/libs/logger';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
-import { S3 } from '@/server/modules/S3';
-import { AgentService } from '@/server/services/agent';
+import { FileS3 } from '@/server/modules/S3';
 
 type CreatedUser = {
   email?: string | null;
@@ -25,9 +24,6 @@ export class UserService {
   }
 
   async initUser(user: CreatedUser) {
-    const agentService = new AgentService(this.db, user.id);
-    await agentService.createInbox();
-
     /* ↓ cloud slot ↓ */
     /* ↑ cloud slot ↑ */
 
@@ -134,7 +130,7 @@ export class UserService {
   };
 
   getUserAvatar = async (id: string, image: string) => {
-    const s3 = new S3();
+    const s3 = new FileS3();
     const s3FileUrl = `user/avatar/${id}/${image}`;
 
     try {

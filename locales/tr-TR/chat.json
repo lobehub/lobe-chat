@@ -22,13 +22,13 @@
   },
   "clearCurrentMessages": "Mevcut oturum mesajlarını temizle",
   "confirmClearCurrentMessages": "Mevcut oturum mesajlarını temizlemek üzeresiniz. Temizlendikten sonra geri alınamazlar. Lütfen eyleminizi onaylayın.",
-  "confirmRemoveChatGroupItemAlert": "Bu Agent ekibi silinmek üzere, ancak ekip üyeleri etkilenmeyecek. Lütfen işleminizi onaylayın.",
+  "confirmRemoveChatGroupItemAlert": "Bu grup silinmek üzere, ekip üyeleri etkilenmeyecek. Lütfen işleminizi onaylayın.",
   "confirmRemoveGroupItemAlert": "Bu grubu silmek üzeresiniz; silindikten sonra bu gruba ait asistanlar varsayılan listeye taşınacaktır. Lütfen işlemi onaylayın.",
-  "confirmRemoveGroupSuccess": "Temsilci ekibi başarıyla silindi",
+  "confirmRemoveGroupSuccess": "Grup başarıyla silindi",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
   "confirmRemoveSessionSuccess": "Oturum başarıyla kaldırıldı",
   "defaultAgent": "Varsayılan Asistan",
-  "defaultGroupChat": "Temsilci Ekibi",
+  "defaultGroupChat": "Grup",
   "defaultList": "Varsayılan Liste",
   "defaultSession": "Varsayılan Asistan",
   "dm": {
@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
+  "emptyAgentAction": "Asistan Oluştur",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Tek bir diyalogun üretim maliyeti en fazla %90 oranında düşürülebilir, yanıt hızı 4 kat artar (<1>Daha fazla bilgi edinin</1>). Açıldığında, otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
@@ -120,7 +121,7 @@
     "noTemplateMembers": "Şablonda üye yok",
     "noTemplates": "Kullanılabilir şablon yok",
     "searchTemplates": "Şablonlarda ara...",
-    "title": "Temsilci Ekibi Oluştur",
+    "title": "Grup Oluştur",
     "useTemplate": "Şablon Kullan"
   },
   "hideForYou": "Özel mesaj içeriği gizlendi, görüntülemek için ayarlardan 【Özel Mesaj İçeriğini Göster】 seçeneğini açın",
@@ -154,25 +155,25 @@
   "knowledgeBase": {
     "all": "Tüm İçerik",
     "allFiles": "Tüm Dosyalar",
-    "allKnowledgeBases": "Tüm Bilgi Tabanları",
-    "disabled": "Mevcut dağıtım modu bilgi tabanı sohbetini desteklemiyor. Kullanmak istiyorsanız, lütfen sunucu veritabanı dağıtımına geçin veya {{cloud}} hizmetini kullanın.",
+    "allLibraries": "Tüm Kütüphaneler",
+    "disabled": "Geçerli dağıtım modu bilgi tabanı sohbetini desteklemiyor. Kullanmak için sunucu veritabanı dağıtımına geçin veya {{cloud}} hizmetini kullanın.",
     "library": {
       "action": {
         "add": "Ekle",
         "detail": "Detay",
         "remove": "Kaldır"
       },
-      "title": "Dosya/Bilgi Tabanı"
+      "title": "Dosya/Kütüphane"
     },
-    "relativeFilesOrKnowledgeBases": "İlişkili Dosyalar/Bilgi Tabanları",
+    "relativeFilesOrLibraries": "İlişkili Dosyalar/Kütüphaneler",
     "title": "Bilgi Tabanı",
-    "uploadGuide": "Yüklenen dosyaları 'Bilgi Tabanı' içinde görebilirsiniz.",
+    "uploadGuide": "Yüklediğiniz dosyaları 'Kaynaklar' bölümünde görüntüleyebilirsiniz",
     "viewMore": "Daha Fazla Gör"
   },
   "memberSelection": {
     "addMember": "Üye Ekle",
     "allMembers": "Tüm üyeler",
-    "createGroup": "Agent Ekibi Oluştur",
+    "createGroup": "Grup Oluştur",
     "noAvailableAgents": "Davet edilebilecek bir Agent yok",
     "noSelectedAgents": "Henüz bir Agent seçilmedi",
     "searchAgents": "Agent ara...",
@@ -245,14 +246,15 @@
     "senderAssistant": "Agent",
     "senderUser": "Sen"
   },
-  "newAgent": "Yeni Asistan",
-  "newGroupChat": "Yeni Temsilci Ekibi",
-  "noAgentsYet": "Bu temsilci ekibinde henüz üye yok. Asistan davet etmek için + düğmesine tıklayın.",
+  "newAgent": "Asistan Oluştur",
+  "newGroupChat": "Grup Sohbeti Oluştur",
+  "newPage": "Belge Oluştur",
+  "noAgentsYet": "Bu grupta henüz üye yok. Asistan davet etmek için + düğmesine tıklayın.",
   "noAvailableAgents": "Davet edilebilecek üye yok",
   "noMatchingAgents": "Eşleşen üye bulunamadı",
   "noMembersYet": "Bu grupta henüz üye yok. Asistanı davet etmek için + düğmesine tıklayın.",
   "noSelectedAgents": "Henüz üye seçilmedi",
-  "openInNewWindow": "Sayfayı yeni pencerede aç",
+  "openInNewWindow": "Yeni Pencerede Aç",
   "owner": "Grup sahibi",
   "pin": "Sabitle",
   "pinOff": "Sabitlemeyi Kaldır",
@@ -296,7 +298,7 @@
   "searchAgentPlaceholder": "Arama Asistanı...",
   "searchAgents": "Arama asistanı...",
   "selectedAgents": "Seçili Asistanlar",
-  "sendPlaceholder": "Mesajınızı buraya yazın...",
+  "sendPlaceholder": "Soru sor, içerik oluştur veya bir göreve başla, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Grup Yönetimi",
     "confirmRemoveGroupAlert": "Bu grup silinecek, silindikten sonra bu grubun yardımcıları varsayılan listeye taşınacak, işleminizi onaylıyor musunuz?",
@@ -361,6 +363,10 @@
       "title": "Görevler tamamlandı"
     }
   },
+  "tab": {
+    "profile": "Asistan Profili",
+    "search": "Ara"
+  },
   "thread": {
     "divider": "Alt konu",
     "threadMessageCount": "{{messageCount}} mesaj",
@@ -413,6 +419,7 @@
     "checkOpenNewTopic": "Yeni bir konu açılsın mı?",
     "checkSaveCurrentMessages": "Mevcut sohbeti konu olarak kaydetmek istiyor musunuz?",
     "openNewTopic": "Yeni Konu",
+    "recent": "Son Konular",
     "saveCurrentMessages": "Mevcut oturumu konu olarak kaydet"
   },
   "translate": {

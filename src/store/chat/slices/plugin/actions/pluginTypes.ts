@@ -73,7 +73,10 @@ export const pluginTypes: StateCreator<
     // run tool api call
     // @ts-ignore
     const { [payload.apiName]: action } = get();
-    if (!action) return;
+    if (!action) {
+      console.error(`[invokeBuiltinTool] plugin Action not found: ${payload.apiName}`);
+      return;
+    }
 
     const content = safeParseJSON(payload.arguments);
 
@@ -101,7 +104,7 @@ export const pluginTypes: StateCreator<
 
     let data: MCPToolCallResult | undefined;
 
-    // Get message to extract sessionId/topicId
+    // Get message to extract agentId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     // Get abort controller from operation
@@ -161,13 +164,12 @@ export const pluginTypes: StateCreator<
         log('[invokeKlavisTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
       } else {
         const result = await messageService.updateMessageError(id, error as any, {
-          sessionId: message?.sessionId,
+          agentId: message?.agentId,
           topicId: message?.topicId,
         });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
-            sessionId: message?.sessionId,
-            topicId: message?.topicId,
+            context: { agentId: message?.agentId, topicId: message?.topicId },
           });
         }
       }
@@ -202,7 +204,7 @@ export const pluginTypes: StateCreator<
 
     // if the plugin settings is not valid, then set the message with error type
     if (!result.valid) {
-      // Get message to extract sessionId/topicId
+      // Get message to extract agentId/topicId
       const message = dbMessageSelectors.getDbMessageById(id)(get());
       const updateResult = await messageService.updateMessageError(
         id,
@@ -215,15 +217,14 @@ export const pluginTypes: StateCreator<
           type: PluginErrorType.PluginSettingsInvalid as any,
         },
         {
-          sessionId: message?.sessionId,
+          agentId: message?.agentId,
           topicId: message?.topicId,
         },
       );
 
       if (updateResult?.success && updateResult.messages) {
         get().replaceMessages(updateResult.messages, {
-          sessionId: message?.sessionId,
-          topicId: message?.topicId,
+          context: { agentId: message?.agentId || '', topicId: message?.topicId },
         });
       }
       return;
@@ -239,7 +240,7 @@ export const pluginTypes: StateCreator<
     } = get();
     let data: MCPToolCallResult | undefined;
 
-    // Get message to extract sessionId/topicId
+    // Get message to extract agentId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     // Get abort controller from operation
@@ -272,13 +273,12 @@ export const pluginTypes: StateCreator<
         log('[invokeMCPTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
       } else {
         const result = await messageService.updateMessageError(id, error as any, {
-          sessionId: message?.sessionId,
+          agentId: message?.agentId,
           topicId: message?.topicId,
         });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
-            sessionId: message?.sessionId,
-            topicId: message?.topicId,
+            context: { agentId: message?.agentId || '', topicId: message?.topicId },
           });
         }
       }
@@ -306,7 +306,7 @@ export const pluginTypes: StateCreator<
     const { optimisticUpdateMessageContent } = get();
     let data: string;
 
-    // Get message to extract sessionId/topicId
+    // Get message to extract agentId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     // Get abort controller from operation
@@ -346,13 +346,12 @@ export const pluginTypes: StateCreator<
         );
       } else {
         const result = await messageService.updateMessageError(id, error as any, {
-          sessionId: message?.sessionId,
+          agentId: message?.agentId,
           topicId: message?.topicId,
         });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
-            sessionId: message?.sessionId,
-            topicId: message?.topicId,
+            context: { agentId: message?.agentId || '', topicId: message?.topicId },
           });
         }
       }

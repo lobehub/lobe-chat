@@ -26,6 +26,7 @@ import { marketRouter } from './market';
 import { messageRouter } from './message';
 import { pluginRouter } from './plugin';
 import { ragEvalRouter } from './ragEval';
+import { searchRouter } from './search';
 import { sessionRouter } from './session';
 import { sessionGroupRouter } from './sessionGroup';
 import { threadRouter } from './thread';
@@ -33,6 +34,8 @@ import { topicRouter } from './topic';
 import { uploadRouter } from './upload';
 import { usageRouter } from './usage';
 import { userRouter } from './user';
+import { userMemoriesRouter } from './userMemories';
+import { userMemoryRouter } from './userMemory';
 
 export const lambdaRouter = router({
   agent: agentRouter,
@@ -59,6 +62,7 @@ export const lambdaRouter = router({
   message: messageRouter,
   plugin: pluginRouter,
   ragEval: ragEvalRouter,
+  search: searchRouter,
   session: sessionRouter,
   sessionGroup: sessionGroupRouter,
   thread: threadRouter,
@@ -66,6 +70,8 @@ export const lambdaRouter = router({
   upload: uploadRouter,
   usage: usageRouter,
   user: userRouter,
+  userMemories: userMemoriesRouter,
+  userMemory: userMemoryRouter,
 });
 
 export type LambdaRouter = typeof lambdaRouter;

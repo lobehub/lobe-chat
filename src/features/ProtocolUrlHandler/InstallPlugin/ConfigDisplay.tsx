@@ -128,7 +128,7 @@ const ConfigDisplay = memo<ConfigDisplayProps>(({ schema, onConfigUpdate }) => {
       <Block className={styles.configSection} variant={'outlined'}>
         <div className={styles.configTitle}>
           <LinkIcon size={14} />
-          {t('protocolInstall.install.title', { defaultValue: '安装信息' })}
+          {t('protocolInstall.install.title')}
         </div>
 
         <div className={styles.previewContainer}>
@@ -176,15 +176,15 @@ const ConfigDisplay = memo<ConfigDisplayProps>(({ schema, onConfigUpdate }) => {
         <div className={styles.configTitle}>
           <Settings2Icon size={14} />
           {schema.config.type === 'stdio'
-            ? t('protocolInstall.config.env', { defaultValue: '环境变量' })
-            : t('protocolInstall.config.headers', { defaultValue: '请求头' })}
+            ? t('protocolInstall.config.env')
+            : t('protocolInstall.config.headers')}
         </div>
 
         <div className={styles.configEditor}>
           {/* HTTP 类型显示 Headers */}
           {schema.config.type === 'http' && (
             <KeyValueEditor
-              addButtonText={t('protocolInstall.config.addHeaders', { defaultValue: '添加请求头' })}
+              addButtonText={t('protocolInstall.config.addHeaders')}
               onChange={handleHeadersUpdate}
               style={{ border: 'none' }}
               value={currentHeaders}
@@ -194,7 +194,7 @@ const ConfigDisplay = memo<ConfigDisplayProps>(({ schema, onConfigUpdate }) => {
           {/* STDIO 类型显示环境变量 */}
           {schema.config.type === 'stdio' && (
             <KeyValueEditor
-              addButtonText={t('protocolInstall.config.addEnv', { defaultValue: '添加环境变量' })}
+              addButtonText={t('protocolInstall.config.addEnv')}
               onChange={handleEnvUpdate}
               style={{ border: 'none' }}
               value={currentEnv}

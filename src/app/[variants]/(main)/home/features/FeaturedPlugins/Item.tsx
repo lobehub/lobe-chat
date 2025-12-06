@@ -1,0 +1,60 @@
+import { Avatar, Block, Text } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
+import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
+
+import MetaInfo from '@/app/[variants]/(main)/discover/(list)/mcp/features/List/MetaInfo';
+import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
+import { DiscoverMcpItem } from '@/types/discover';
+
+const FeaturedPluginItem = memo<DiscoverMcpItem>(({ name, icon, github, installCount }) => {
+  const theme = useTheme();
+
+  return (
+    <Block
+      clickable
+      flex={'none'}
+      gap={12}
+      height={RECENT_BLOCK_SIZE.PLUGIN.HEIGHT}
+      horizontal
+      padding={12}
+      style={{
+        borderRadius: theme.borderRadiusLG,
+        overflow: 'hidden',
+        width: '100%',
+      }}
+      variant={'outlined'}
+    >
+      {/* Left side - Icon */}
+      <Avatar
+        avatar={icon}
+        shape={'square'}
+        size={48}
+        style={{
+          background: 'transparent',
+          flex: 'none',
+        }}
+      />
+
+      {/* Right side - Content */}
+      <Flexbox flex={1} gap={4} style={{ minWidth: 0 }}>
+        {/* Title and Tags */}
+        <Flexbox align={'center'} gap={8} horizontal>
+          <Text ellipsis weight={500}>
+            {name}
+          </Text>
+        </Flexbox>
+        <MetaInfo
+          installCount={installCount}
+          stars={github?.stars}
+          style={{
+            color: theme.colorTextDescription,
+            fontSize: 12,
+          }}
+        />
+      </Flexbox>
+    </Block>
+  );
+});
+
+export default FeaturedPluginItem;

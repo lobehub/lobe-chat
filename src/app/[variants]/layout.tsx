@@ -2,7 +2,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
@@ -47,14 +47,14 @@ const RootLayout = async ({ children, params }: RootLayoutProps) => {
             primaryColor={primaryColor}
             variants={variants}
           >
-            <AuthProvider>
-              {children}
-            </AuthProvider>
-            <PWAInstall />
+            <AuthProvider>{children}</AuthProvider>
+            <Suspense fallback={null}>
+              <PWAInstall />
+            </Suspense>
           </GlobalProvider>
         </NuqsAdapter>
         <Analytics />
-        {inVercel && <SpeedInsights />}
+        <Suspense fallback={null}>{inVercel && <SpeedInsights />}</Suspense>
       </body>
     </html>
   );

@@ -5,7 +5,7 @@ import { memo } from 'react';
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
 import { RichContentRenderer } from '@/features/ChatList/components/RichContentRenderer';
-import { normalizeThinkTags, processWithArtifact } from '@/features/ChatList/utils/markdown';
+import { normalizeThinkTags, processWithArtifact } from '@/features/Conversation/utils/markdown';
 
 const MessageContent = memo<{
   addIdOnDOM?: boolean;

@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "Nenhuma memória de identidade disponível",
+    "filter": {
+      "search": "Pesquisar por papel, relação ou descrição...",
+      "type": {
+        "all": "Todos",
+        "demographic": "Demográfico",
+        "personal": "Pessoal",
+        "professional": "Profissional"
+      }
+    },
+    "list": {
+      "confirmDelete": "Confirmar exclusão",
+      "deleteCancel": "Cancelar",
+      "deleteContent": "Tem certeza de que deseja excluir esta memória de identidade? Esta ação não pode ser desfeita.",
+      "deleteOk": "Excluir",
+      "noResults": "Nenhuma memória de identidade correspondente encontrada",
+      "updated": "Atualizado"
+    },
+    "roleCloud": {
+      "collapse": "Recolher",
+      "expand": "Mostrar mais"
+    },
+    "view": {
+      "list": "Lista",
+      "timeline": "Linha do tempo"
+    }
+  },
+  "loading": "Carregando..."
+}

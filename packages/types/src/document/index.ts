@@ -51,6 +51,11 @@ export interface LobeDocument {
   pages?: LobeDocumentPage[];
 
   /**
+   * Parent Folder ID
+   */
+  parentId?: string | null;
+
+  /**
    * Full path of the original file
    */
   source: string;

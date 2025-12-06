@@ -14,6 +14,7 @@ import { cleanObject } from '@/utils/object';
 import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
 import { parseFilesConfig } from './parseFilesConfig';
+import { getPublicMemoryExtractionConfig } from './parseMemoryExtractionConfig';
 
 /**
  * Get Better-Auth SSO providers list
@@ -74,6 +75,9 @@ export const getServerGlobalConfig = async () => {
     image: cleanObject({
       defaultImageNum: imageEnv.AI_IMAGE_DEFAULT_IMAGE_NUM,
     }),
+    memory: {
+      userMemory: cleanObject(getPublicMemoryExtractionConfig()),
+    },
     oAuthSSOProviders: authEnv.NEXT_PUBLIC_ENABLE_BETTER_AUTH
       ? getBetterAuthSSOProviders()
       : authEnv.NEXT_AUTH_SSO_PROVIDERS.trim().split(/[,，]/),

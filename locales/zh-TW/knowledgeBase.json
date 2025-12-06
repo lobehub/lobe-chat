@@ -2,6 +2,7 @@
   "addToKnowledgeBase": {
     "addSuccess": "文件添加成功，<1>立即查看</1>",
     "confirm": "添加",
+    "error": "新增檔案至知識庫失敗",
     "id": {
       "placeholder": "請選擇要添加的知識庫",
       "required": "請選擇知識庫",

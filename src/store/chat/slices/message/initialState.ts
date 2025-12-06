@@ -5,9 +5,9 @@ import { ChatGroupAgentItem, ChatGroupItem } from '@/database/schemas/chatGroup'
 import type { SupervisorTodoItem } from './supervisor';
 
 export interface ChatMessageState {
+  activeAgentId: string;
   /**
-   * @title 当前活动的会话
-   * @description 当前正在编辑或查看的会话
+   * @deprecated
    */
   activeId: string;
   /**
@@ -67,6 +67,7 @@ export interface ChatMessageState {
 }
 
 export const initialMessageState: ChatMessageState = {
+  activeAgentId: 'inbox',
   activeId: 'inbox',
   activeSessionType: undefined,
   dbMessagesMap: {},

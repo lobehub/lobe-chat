@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "No identity memories available",
+    "filter": {
+      "search": "Search roles, relationships, or descriptions...",
+      "type": {
+        "all": "All",
+        "demographic": "Demographic",
+        "personal": "Personal",
+        "professional": "Professional"
+      }
+    },
+    "list": {
+      "confirmDelete": "Confirm Deletion",
+      "deleteCancel": "Cancel",
+      "deleteContent": "Are you sure you want to delete this identity memory? This action cannot be undone.",
+      "deleteOk": "Delete",
+      "noResults": "No matching identity memories found",
+      "updated": "Updated"
+    },
+    "roleCloud": {
+      "collapse": "Collapse",
+      "expand": "Show More"
+    },
+    "view": {
+      "list": "List",
+      "timeline": "Timeline"
+    }
+  },
+  "loading": "Loading..."
+}

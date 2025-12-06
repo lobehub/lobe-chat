@@ -4,12 +4,12 @@ import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { VList, VListHandle } from 'virtua';
 
-import WideScreenContainer from '@/features/ChatList/components/WideScreenContainer';
+import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useChatStore } from '@/store/chat';
 import { displayMessageSelectors } from '@/store/chat/selectors';
 
 import AutoScroll from '../AutoScroll';
-import SkeletonList from '../SkeletonList';
+import SkeletonList from '../../../Conversation/components/SkeletonList';
 import { VirtuaContext, resetVirtuaVisibleItems, setVirtuaGlobalRef } from './VirtuosoContext';
 
 interface VirtualizedListProps {

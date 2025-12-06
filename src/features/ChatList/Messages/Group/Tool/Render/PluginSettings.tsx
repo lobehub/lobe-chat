@@ -12,7 +12,7 @@ import { useChatStore } from '@/store/chat';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
-import { ErrorActionContainer, useStyles } from '../../../../Error/style';
+import { ErrorActionContainer, useStyles } from '@/features/Conversation/Error/style';
 
 interface PluginSettingsProps {
   id: string;

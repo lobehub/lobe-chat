@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "キャンセル",
-    "confirm": "使用を許可する",
-    "description": {
-      "and": "および",
-      "prefix": "「使用を許可する」をクリックすると、以下に同意したものとみなされます：",
+    "confirm": "プロフィールを作成する",
+    "description": "あなたのコミュニティプロフィールは、{{appName}} のユーザーアカウントとは独立しています。",
+    "footer": {
+      "agreement": "続行することで、<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したものとみなされます。",
       "privacy": "プライバシーポリシー",
       "terms": "利用規約"
     },
-    "title": "認証の確認"
+    "subtitle": "コミュニティプロフィールを作成して、投稿や掲載情報の管理を行いましょう。",
+    "title": "コミュニティプロフィールの作成"
   },
   "callback": {
     "buttons": {

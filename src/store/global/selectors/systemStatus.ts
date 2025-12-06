@@ -5,6 +5,14 @@ export const systemStatus = (s: GlobalState) => s.status;
 const sessionGroupKeys = (s: GlobalState): string[] =>
   s.status.expandSessionGroupKeys || INITIAL_STATUS.expandSessionGroupKeys;
 
+const topicGroupKeys = (s: GlobalState): string[] | undefined => s.status.expandTopicGroupKeys;
+
+const topicPageSize = (s: GlobalState): number => s.status.topicPageSize || 20;
+
+const agentPageSize = (s: GlobalState): number => s.status.agentPageSize || 10;
+
+const pagePageSize = (s: GlobalState): number => s.status.pagePageSize || 20;
+
 const showSystemRole = (s: GlobalState) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalState) => s.status.mobileShowTopic;
 const mobileShowPortal = (s: GlobalState) => s.status.mobileShowPortal;
@@ -34,7 +42,7 @@ const getAgentSystemRoleExpanded =
   (agentId: string) =>
   (s: GlobalState): boolean => {
     const map = s.status.systemRoleExpandedMap || {};
-    return map[agentId] !== false; // 角色设定默认为展开状态
+    return map[agentId] === true; // 角色设定默认为折叠状态
   };
 
 const disabledModelProvidersSortType = (s: GlobalState) =>
@@ -44,6 +52,7 @@ const tokenDisplayFormatShort = (s: GlobalState) =>
   s.status.tokenDisplayFormatShort !== undefined ? s.status.tokenDisplayFormatShort : true;
 
 export const systemStatusSelectors = {
+  agentPageSize,
   chatInputHeight,
   disabledModelProvidersSortType,
   disabledModelsSortType,
@@ -59,6 +68,7 @@ export const systemStatusSelectors = {
   language,
   mobileShowPortal,
   mobileShowTopic,
+  pagePageSize,
   portalWidth,
   sessionGroupKeys,
   sessionWidth,
@@ -72,5 +82,7 @@ export const systemStatusSelectors = {
   systemStatus,
   themeMode,
   tokenDisplayFormatShort,
+  topicGroupKeys,
+  topicPageSize,
   wideScreen,
 };

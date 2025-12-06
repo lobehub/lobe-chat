@@ -1,6 +1,12 @@
+import { getAgentPersistConfig } from '@lobechat/builtin-agents';
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import { and, desc, eq, inArray } from 'drizzle-orm';
+import type { PartialDeep } from 'type-fest';
+
+import { merge } from '@/utils/merge';
 
 import {
+  AgentItem,
   agents,
   agentsFiles,
   agentsKnowledgeBases,
@@ -8,6 +14,7 @@ import {
   documents,
   files,
   knowledgeBases,
+  sessions,
 } from '../schemas';
 import { LobeChatDatabase } from '../type';
 
@@ -179,5 +186,119 @@ export class AgentModel {
           eq(agentsFiles.userId, this.userId),
         ),
       );
+  };
+
+  updateConfig = async (agentId: string, data: PartialDeep<AgentItem> | undefined | null) => {
+    if (!data || Object.keys(data).length === 0) return;
+
+    const agent = await this.db.query.agents.findFirst({
+      where: and(eq(agents.id, agentId), eq(agents.userId, this.userId)),
+    });
+
+    if (!agent) return;
+
+    // First process the params field: undefined means delete, null means disable flag
+    const existingParams = agent.params ?? {};
+    const updatedParams: Record<string, any> = { ...existingParams };
+
+    if (data.params) {
+      const incomingParams = data.params as Record<string, any>;
+      Object.keys(incomingParams).forEach((key) => {
+        const incomingValue = incomingParams[key];
+
+        // undefined means explicitly delete this field
+        if (incomingValue === undefined) {
+          delete updatedParams[key];
+          return;
+        }
+
+        // All other values (including null) are directly overwritten, null means disable this param on the frontend
+        updatedParams[key] = incomingValue;
+      });
+    }
+
+    // Build data to be merged, excluding params (processed separately)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { params: _params, ...restData } = data;
+    const mergedValue = merge(agent, restData);
+
+    // Apply the processed parameters
+    mergedValue.params = Object.keys(updatedParams).length > 0 ? updatedParams : undefined;
+
+    // Final cleanup: ensure no undefined or null values enter the database
+    if (mergedValue.params) {
+      const params = mergedValue.params as Record<string, any>;
+      Object.keys(params).forEach((key) => {
+        if (params[key] === undefined) {
+          delete params[key];
+        }
+      });
+      if (Object.keys(params).length === 0) {
+        mergedValue.params = undefined;
+      }
+    }
+
+    return this.db
+      .update(agents)
+      .set(mergedValue)
+      .where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)));
+  };
+
+  /**
+   * Get a builtin agent by slug, creating it if it doesn't exist.
+   * Builtin agents are standalone agents not bound to sessions.
+   *
+   */
+  getBuiltinAgent = async (slug: string): Promise<AgentItem | null> => {
+    // 1. First try to find existing agent by slug
+    const existing = await this.db.query.agents.findFirst({
+      where: and(eq(agents.slug, slug), eq(agents.userId, this.userId)),
+    });
+
+    if (existing) return existing;
+
+    // For inbox agent, it has special compatibility handling:
+    // Historical inbox was stored as session with slug='inbox' and linked agent via agentsToSessions
+    // If found, update the agent's slug to 'inbox' for future direct queries
+    if (slug === INBOX_SESSION_ID) {
+      // Use join query for better performance instead of multiple findFirst calls
+      const result = await this.db
+        .select({ agent: agents })
+        .from(sessions)
+        .innerJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+        .innerJoin(agents, eq(agentsToSessions.agentId, agents.id))
+        .where(and(eq(sessions.slug, INBOX_SESSION_ID), eq(sessions.userId, this.userId)))
+        .limit(1);
+
+      if (result.length > 0 && result[0].agent) {
+        // Update the agent's slug to 'inbox' for future direct queries
+        // Use both id and userId to ensure we only update current user's agent
+        const [updatedAgent] = await this.db
+          .update(agents)
+          .set({ slug: INBOX_SESSION_ID, virtual: true })
+          .where(eq(agents.id, result[0].agent.id))
+          .returning();
+
+        return updatedAgent;
+      }
+    }
+
+    // 3. Check if this is a known builtin agent
+    const persistConfig = getAgentPersistConfig(slug);
+    if (!persistConfig) return null;
+
+    // 4. Create the builtin agent with persist config
+    const result = await this.db
+      .insert(agents)
+      .values({
+        model: persistConfig.model,
+        provider: persistConfig.provider,
+        slug: persistConfig.slug,
+        userId: this.userId,
+        virtual: true,
+      })
+      .returning();
+
+    return result[0];
   };
 }

@@ -49,6 +49,10 @@
     "desc": "Regenerate the last message",
     "title": "Regenerate Message"
   },
+  "saveDocument": {
+    "desc": "Save all changes to the current document immediately",
+    "title": "Save Document"
+  },
   "saveTopic": {
     "desc": "Save the current topic and open a new one",
     "title": "Start a New Topic"

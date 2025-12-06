@@ -5,7 +5,7 @@ import { memo } from 'react';
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
 
-import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
+import { normalizeThinkTags, processWithArtifact } from '@/features/Conversation/utils/markdown';
 
 const useStyles = createStyles(({ css, token }) => {
   return {

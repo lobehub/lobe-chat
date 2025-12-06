@@ -6,12 +6,9 @@ import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Avatar from '@/features/ChatItem/components/Avatar';
-import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
-import MessageContent from '@/features/ChatItem/components/MessageContent';
-import Title from '@/features/ChatItem/components/Title';
-import { useStyles } from '@/features/ChatItem/style';
-import { markdownElements } from '@/features/ChatList/MarkdownElements';
+import { Avatar, BorderSpacing, Title, useStyles } from '@/components/ChatItem';
+import MessageContent from '@/features/ChatItem/MessageContent';
+import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
@@ -24,7 +21,6 @@ import { userProfileSelectors } from '@/store/user/selectors';
 
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import Actions from './Actions';
-import { UserBelowMessage } from './BelowMessage';
 import { UserMessageExtra } from './Extra';
 import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
 import { UserMessageContent } from './MessageContent';
@@ -51,7 +47,7 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
     isEqual,
   ) as UIChatMessage;
 
-  const { ragQuery, content, createdAt, error, role, extra, targetId } = item;
+  const { content, createdAt, error, role, extra, targetId } = item;
 
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
@@ -60,13 +56,10 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
 
   const displayMode = useAgentStore(agentChatConfigSelectors.displayMode);
 
-  const [editing, creating, isInRAGFlow] = useChatStore((s) => [
+  const [editing, loading] = useChatStore((s) => [
     messageStateSelectors.isMessageEditing(id)(s),
     messageStateSelectors.isMessageCreating(id)(s), // User message only cares about creation (sendMessage)
-    messageStateSelectors.isMessageInRAGFlow(id)(s),
   ]);
-
-  const loading = isInRAGFlow || creating;
 
   // Get target name for DM indicator
   const userName = useUserStore(userProfileSelectors.nickName) || 'User';
@@ -178,7 +171,6 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
               />
             </Flexbox>
           </Flexbox>
-          <UserBelowMessage content={content} id={id} ragQuery={ragQuery} />
         </Flexbox>
         {mobile && variant === 'bubble' && <BorderSpacing borderSpacing={32} />}
       </Flexbox>

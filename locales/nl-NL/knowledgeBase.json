@@ -2,6 +2,7 @@
   "addToKnowledgeBase": {
     "addSuccess": "Bestand succesvol toegevoegd, <1>direct bekijken</1>",
     "confirm": "Toevoegen",
+    "error": "Bestand toevoegen aan kennisbank mislukt",
     "id": {
       "placeholder": "Selecteer de kennisbank die u wilt toevoegen",
       "required": "Selecteer een kennisbank",

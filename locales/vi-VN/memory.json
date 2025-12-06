@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "Chưa có ký ức danh tính",
+    "filter": {
+      "search": "Tìm kiếm vai trò, mối quan hệ hoặc mô tả...",
+      "type": {
+        "all": "Tất cả",
+        "demographic": "Thống kê dân số",
+        "personal": "Cá nhân",
+        "professional": "Nghề nghiệp"
+      }
+    },
+    "list": {
+      "confirmDelete": "Xác nhận xóa",
+      "deleteCancel": "Hủy",
+      "deleteContent": "Bạn có chắc chắn muốn xóa ký ức danh tính này không? Hành động này không thể hoàn tác.",
+      "deleteOk": "Xóa",
+      "noResults": "Không tìm thấy ký ức danh tính phù hợp",
+      "updated": "Đã cập nhật"
+    },
+    "roleCloud": {
+      "collapse": "Thu gọn",
+      "expand": "Xem thêm"
+    },
+    "view": {
+      "list": "Danh sách",
+      "timeline": "Dòng thời gian"
+    }
+  },
+  "loading": "Đang tải..."
+}

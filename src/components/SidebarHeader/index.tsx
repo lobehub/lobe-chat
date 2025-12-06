@@ -22,10 +22,10 @@ const SidebarHeader = memo<SidebarHeaderProps>(({ title, style, actions, onClick
       align={'center'}
       className={styles.header}
       distribution={'space-between'}
+      flex={'none'}
       horizontal
       onClick={onClick}
-      paddingBlock={14}
-      paddingInline={16}
+      padding={8}
       style={style}
       {...rest}
     >

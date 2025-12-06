@@ -207,7 +207,7 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
       <div className={styles.preview} style={{ padding: 12 }}>
         <div className={localStyles.emptyState}>
           <Button icon={<FileText size={20} />} onClick={onGeneratePdf} size="large" type="primary">
-            {t('shareModal.generatePdf', { defaultValue: '生成 PDF' })}
+            {t('shareModal.generatePdf')}
           </Button>
         </div>
       </div>
@@ -236,9 +236,7 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
             loading={
               <div className={localStyles.documentLoading}>
                 <Spin />
-                <div className={localStyles.loadingText}>
-                  {t('shareModal.loadingPdf', { defaultValue: 'Loading PDF...' })}
-                </div>
+                <div className={localStyles.loadingText}>{t('shareModal.loadingPdf')}</div>
               </div>
             }
             onLoadSuccess={onDocumentLoadSuccess}

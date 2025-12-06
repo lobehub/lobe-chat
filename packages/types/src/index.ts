@@ -7,6 +7,7 @@ export * from './auth';
 export * from './chatGroup';
 export * from './chunk';
 export * from './clientDB';
+export * from './conversation';
 export * from './discover';
 export * from './document';
 export * from './eval';
@@ -30,6 +31,7 @@ export * from './tableViewer';
 export * from './tool';
 export * from './topic';
 export * from './user';
+export * from './userMemory';
 // FIXME: I think we need a refactor for the "openai" types
 // it more likes the UI message payload
 export * from './openai/chat';

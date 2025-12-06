@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "Henüz kimlik bilgisi yok",
+    "filter": {
+      "search": "Rol, ilişki veya açıklama ara...",
+      "type": {
+        "all": "Tümü",
+        "demographic": "Demografik",
+        "personal": "Kişisel",
+        "professional": "Mesleki"
+      }
+    },
+    "list": {
+      "confirmDelete": "Silme işlemini onayla",
+      "deleteCancel": "İptal",
+      "deleteContent": "Bu kimlik bilgisini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+      "deleteOk": "Sil",
+      "noResults": "Eşleşen kimlik bilgisi bulunamadı",
+      "updated": "Güncellendi"
+    },
+    "roleCloud": {
+      "collapse": "Daralt",
+      "expand": "Daha fazla göster"
+    },
+    "view": {
+      "list": "Liste",
+      "timeline": "Zaman çizelgesi"
+    }
+  },
+  "loading": "Yükleniyor..."
+}

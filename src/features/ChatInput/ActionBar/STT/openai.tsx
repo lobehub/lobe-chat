@@ -10,7 +10,7 @@ import { SWRConfiguration } from 'swr';
 import { createHeaderWithOpenAI } from '@/services/_header';
 import { API_ENDPOINTS } from '@/services/_url';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -18,6 +18,7 @@ import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import CommonSTT from './common';
 
 interface STTConfig extends SWRConfiguration {
@@ -26,7 +27,11 @@ interface STTConfig extends SWRConfiguration {
 
 const useOpenaiSTT = (config: STTConfig) => {
   const ttsSettings = useUserStore(settingsSelectors.currentTTS, isEqual);
-  const ttsAgentSettings = useAgentStore(agentSelectors.currentAgentTTS, isEqual);
+  const agentId = useAgentId();
+  const ttsAgentSettings = useAgentStore(
+    (s) => agentByIdSelectors.getAgentTTSById(agentId)(s),
+    isEqual,
+  );
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
   const autoStop = ttsSettings.sttAutoStop;

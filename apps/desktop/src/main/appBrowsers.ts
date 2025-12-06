@@ -12,7 +12,7 @@ export const appBrowsers = {
     identifier: 'chat',
     keepAlive: true,
     minWidth: 400,
-    path: '/chat',
+    path: '/agent',
     showOnInit: true,
     titleBarStyle: 'hidden',
     vibrancy: 'under-window',
@@ -72,7 +72,7 @@ export const windowTemplates = {
     allowMultipleInstances: true,
     autoHideMenuBar: true,
     baseIdentifier: 'chatSingle',
-    basePath: '/chat',
+    basePath: '/agent',
     height: 600,
     keepAlive: false, // Multi-instance windows don't need to stay alive
     minWidth: 400,

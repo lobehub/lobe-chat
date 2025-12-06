@@ -45,22 +45,12 @@ export const userProfileSelectors = {
   username,
 };
 
-/**
- * 使用此方法可以兼容不需要登录鉴权的情况
- */
-const isLogin = (s: UserStore) => {
-  // 如果没有开启鉴权，说明不需要登录，默认是登录态
-  if (!enableAuth) return true;
-
-  return s.isSignedIn;
-};
-
 export const authSelectors = {
   authProviders: (s: UserStore): SSOProvider[] => s.authProviders || [],
   hasPasswordAccount: (s: UserStore) => s.hasPasswordAccount ?? false,
   isLoaded: (s: UserStore) => s.isLoaded,
   isLoadedAuthProviders: (s: UserStore) => s.isLoadedAuthProviders ?? false,
-  isLogin,
+  isLogin: (s: UserStore) => s.isSignedIn,
   isLoginWithAuth: (s: UserStore) => s.isSignedIn,
   isLoginWithBetterAuth: (s: UserStore): boolean => (s.isSignedIn && enableBetterAuth) || false,
   isLoginWithClerk: (s: UserStore): boolean => (s.isSignedIn && enableClerk) || false,

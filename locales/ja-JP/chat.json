@@ -22,13 +22,13 @@
   },
   "clearCurrentMessages": "現在の会話をクリア",
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
-  "confirmRemoveChatGroupItemAlert": "このエージェントチームを削除しようとしています。チームメンバーには影響しません。操作を確認してください。",
+  "confirmRemoveChatGroupItemAlert": "このグループを削除しようとしています。チームメンバーには影響しません。操作を確認してください。",
   "confirmRemoveGroupItemAlert": "このグループを削除すると、グループ内のアシスタントはデフォルトの一覧に移動します。操作を続行してもよろしいですか？",
-  "confirmRemoveGroupSuccess": "エージェントチームの削除に成功しました",
+  "confirmRemoveGroupSuccess": "グループが正常に削除されました",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionSuccess": "セッションが正常に削除されました",
   "defaultAgent": "デフォルトエージェント",
-  "defaultGroupChat": "エージェントチーム",
+  "defaultGroupChat": "グループ",
   "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
   "dm": {
@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} のコピー",
   "emptyAgent": "エージェントがいません",
+  "emptyAgentAction": "アシスタントを作成",
   "extendParams": {
     "disableContextCaching": {
       "desc": "単一の対話生成コストは最大90%削減され、応答速度は4倍向上します（<1>詳細はこちら</1>）。有効にすると、過去のメッセージ数制限が自動的に無効になります。",
@@ -120,7 +121,7 @@
     "noTemplateMembers": "テンプレートにメンバーがいません",
     "noTemplates": "利用可能なテンプレートがありません",
     "searchTemplates": "テンプレートを検索...",
-    "title": "エージェントチームを作成",
+    "title": "グループを作成",
     "useTemplate": "テンプレートを使用する"
   },
   "hideForYou": "プライベートメッセージの内容は非表示です。設定で【プライベートメッセージの内容を表示】を有効にしてご覧ください。",
@@ -154,25 +155,25 @@
   "knowledgeBase": {
     "all": "すべてのコンテンツ",
     "allFiles": "すべてのファイル",
-    "allKnowledgeBases": "すべての知識ベース",
-    "disabled": "現在のデプロイモードでは知識ベースの対話はサポートされていません。使用するには、サーバー側のデータベースデプロイに切り替えるか、{{cloud}} サービスを利用してください。",
+    "allLibraries": "すべてのリソースライブラリ",
+    "disabled": "現在のデプロイモードではリソースライブラリとの対話はサポートされていません。ご利用になるには、サーバーサイドのデータベースデプロイに切り替えるか、{{cloud}} サービスをご利用ください。",
     "library": {
       "action": {
         "add": "追加",
         "detail": "詳細",
         "remove": "削除"
       },
-      "title": "ファイル/知識ベース"
+      "title": "ファイル／リソースライブラリ"
     },
-    "relativeFilesOrKnowledgeBases": "関連ファイル/知識ベース",
-    "title": "知識ベース",
-    "uploadGuide": "アップロードしたファイルは「知識ベース」で確認できますよ",
+    "relativeFilesOrLibraries": "関連ファイル／リソースライブラリ",
+    "title": "リソースライブラリ",
+    "uploadGuide": "アップロードしたファイルは「リソース」で確認できます",
     "viewMore": "さらに表示"
   },
   "memberSelection": {
     "addMember": "メンバーを追加",
     "allMembers": "全メンバー",
-    "createGroup": "エージェントチームを作成",
+    "createGroup": "グループを作成",
     "noAvailableAgents": "招待可能なエージェントがいません",
     "noSelectedAgents": "エージェントがまだ選択されていません",
     "searchAgents": "エージェントを検索...",
@@ -245,9 +246,10 @@
     "senderAssistant": "エージェント",
     "senderUser": "あなた"
   },
-  "newAgent": "新しいエージェント",
-  "newGroupChat": "新しいエージェントチーム",
-  "noAgentsYet": "このエージェントチームにはまだメンバーがいません。+ ボタンをクリックしてアシスタントを招待してください。",
+  "newAgent": "アシスタントを作成",
+  "newGroupChat": "グループチャットを作成",
+  "newPage": "ドキュメントを作成",
+  "noAgentsYet": "このグループにはまだメンバーがいません。「＋」ボタンをクリックしてアシスタントを招待してください。",
   "noAvailableAgents": "招待可能なメンバーがいません",
   "noMatchingAgents": "一致するメンバーが見つかりません",
   "noMembersYet": "このグループにはまだメンバーがいません。「＋」ボタンをクリックしてアシスタントを招待してください。",
@@ -296,7 +298,7 @@
   "searchAgentPlaceholder": "検索アシスタント...",
   "searchAgents": "検索アシスタント...",
   "selectedAgents": "選択済みのアシスタント",
-  "sendPlaceholder": "チャット内容を入力してください...",
+  "sendPlaceholder": "質問、作成、またはタスクを開始するには、<hotkey><hotkey/>",
   "sessionGroup": {
     "config": "グループ設定",
     "confirmRemoveGroupAlert": "このグループを削除します。削除後、このグループのアシスタントはデフォルトリストに移動されます。操作を確認してください。",
@@ -361,6 +363,10 @@
       "title": "タスク完了"
     }
   },
+  "tab": {
+    "profile": "アシスタントプロフィール",
+    "search": "検索"
+  },
   "thread": {
     "divider": "サブトピック",
     "threadMessageCount": "{{messageCount}} 件のメッセージ",
@@ -413,6 +419,7 @@
     "checkOpenNewTopic": "新しいトピックを開始しますか？",
     "checkSaveCurrentMessages": "現在の会話をトピックとして保存しますか？",
     "openNewTopic": "新しいトピックを開く",
+    "recent": "最近のトピック",
     "saveCurrentMessages": "現在の会話をトピックとして保存"
   },
   "translate": {

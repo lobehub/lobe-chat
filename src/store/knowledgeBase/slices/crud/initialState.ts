@@ -6,6 +6,7 @@ export interface KnowledgeBaseState {
   initKnowledgeBaseList: boolean;
   knowledgeBaseLoadingIds: string[];
   knowledgeBaseRenamingId?: string | null;
+  knowledgeBaseUpdatingId: string | null;
 }
 
 export const initialKnowledgeBaseState: KnowledgeBaseState = {
@@ -13,4 +14,6 @@ export const initialKnowledgeBaseState: KnowledgeBaseState = {
   activeKnowledgeBaseItems: {},
   initKnowledgeBaseList: false,
   knowledgeBaseLoadingIds: [],
+  knowledgeBaseRenamingId: null,
+  knowledgeBaseUpdatingId: null,
 };

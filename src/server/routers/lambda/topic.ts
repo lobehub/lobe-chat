@@ -1,16 +1,24 @@
+import { RecentTopic } from '@lobechat/types';
+import { after } from 'next/server';
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
-import { getServerDB } from '@/database/server';
-import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
+import { AgentMigrationRepo } from '@/database/repositories/agentMigration';
+import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { BatchTaskResult } from '@/types/service';
+
+import { resolveAgentIdFromSession, resolveContext } from './_helpers/resolveContext';
+import { basicContextSchema } from './_schema/context';
 
 const topicProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
-    ctx: { topicModel: new TopicModel(ctx.serverDB, ctx.userId) },
+    ctx: {
+      agentMigrationRepo: new AgentMigrationRepo(ctx.serverDB, ctx.userId),
+      topicModel: new TopicModel(ctx.serverDB, ctx.userId),
+    },
   });
 });
 
@@ -18,21 +26,31 @@ export const topicRouter = router({
   batchCreateTopics: topicProcedure
     .input(
       z.array(
-        z.object({
-          favorite: z.boolean().optional(),
-          id: z.string().optional(),
-          messages: z.array(z.string()).optional(),
-          sessionId: z.string().optional(),
-          title: z.string(),
-        }),
+        z
+          .object({
+            favorite: z.boolean().optional(),
+            id: z.string().optional(),
+            messages: z.array(z.string()).optional(),
+            title: z.string(),
+          })
+          .extend(basicContextSchema.shape),
       ),
     )
     .mutation(async ({ input, ctx }): Promise<BatchTaskResult> => {
-      const data = await ctx.topicModel.batchCreate(
-        input.map((item) => ({
-          ...item,
-        })) as any,
+      // 解析每个 topic 的 sessionId
+      const resolvedTopics = await Promise.all(
+        input.map(async (item) => {
+          const { agentId, ...rest } = item;
+          const resolved = await resolveContext(
+            { agentId, sessionId: rest.sessionId },
+            ctx.serverDB,
+            ctx.userId,
+          );
+          return { ...rest, sessionId: resolved.sessionId };
+        }),
       );
+
+      const data = await ctx.topicModel.batchCreate(resolvedTopics as any);
 
       return { added: data.length, ids: [], skips: [], success: true };
     }),
@@ -44,9 +62,20 @@ export const topicRouter = router({
     }),
 
   batchDeleteBySessionId: topicProcedure
-    .input(z.object({ id: z.string().nullable().optional() }))
+    .input(
+      z.object({
+        agentId: z.string().optional(),
+        id: z.string().nullable().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
-      return ctx.topicModel.batchDeleteBySessionId(input.id);
+      const resolved = await resolveContext(
+        { agentId: input.agentId, sessionId: input.id },
+        ctx.serverDB,
+        ctx.userId,
+      );
+
+      return ctx.topicModel.batchDeleteBySessionId(resolved.sessionId);
     }),
 
   cloneTopic: topicProcedure
@@ -61,6 +90,8 @@ export const topicRouter = router({
     .input(
       z
         .object({
+          agentId: z.string().optional(),
+          containerId: z.string().nullable().optional(),
           endDate: z.string().optional(),
           range: z.tuple([z.string(), z.string()]).optional(),
           startDate: z.string().optional(),
@@ -73,16 +104,24 @@ export const topicRouter = router({
 
   createTopic: topicProcedure
     .input(
-      z.object({
-        favorite: z.boolean().optional(),
-        groupId: z.string().nullable().optional(),
-        messages: z.array(z.string()).optional(),
-        sessionId: z.string().nullable().optional(),
-        title: z.string(),
-      }),
+      z
+        .object({
+          favorite: z.boolean().optional(),
+          groupId: z.string().nullable().optional(),
+          messages: z.array(z.string()).optional(),
+          title: z.string(),
+        })
+        .extend(basicContextSchema.shape),
     )
     .mutation(async ({ input, ctx }) => {
-      const data = await ctx.topicModel.create(input);
+      const { agentId, ...rest } = input;
+      const resolved = await resolveContext(
+        { agentId, sessionId: rest.sessionId },
+        ctx.serverDB,
+        ctx.userId,
+      );
+
+      const data = await ctx.topicModel.create({ ...rest, sessionId: resolved.sessionId });
 
       return data.id;
     }),
@@ -91,22 +130,58 @@ export const topicRouter = router({
     return ctx.topicModel.queryAll();
   }),
 
-  // TODO: this procedure should be used with authedProcedure
-  getTopics: publicProcedure
+  getTopics: topicProcedure
     .input(
       z.object({
+        agentId: z.string().nullable().optional(),
         containerId: z.string().nullable().optional(),
         current: z.number().optional(),
+        isInbox: z.boolean().optional(),
         pageSize: z.number().optional(),
+        sessionId: z.string().nullable().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
-      if (!ctx.userId) return [];
+      const { sessionId, isInbox, ...rest } = input;
 
-      const serverDB = await getServerDB();
-      const topicModel = new TopicModel(serverDB, ctx.userId);
+      // 如果提供了 sessionId 但没有 agentId，需要反向查找 agentId
+      let effectiveAgentId = rest.agentId;
+      if (!effectiveAgentId && sessionId) {
+        effectiveAgentId = await resolveAgentIdFromSession(sessionId, ctx.serverDB, ctx.userId);
+      }
 
-      return topicModel.query(input);
+      const result = await ctx.topicModel.query({ ...rest, agentId: effectiveAgentId, isInbox });
+
+      // Runtime migration: backfill agentId for ALL legacy topics and messages under this agent
+      const runMigration = async () => {
+        if (!effectiveAgentId) return;
+
+        // Get the associated sessionId for migration
+        const resolved = await resolveContext(
+          { agentId: effectiveAgentId },
+          ctx.serverDB,
+          ctx.userId,
+        );
+
+        const migrationParams = isInbox
+          ? { agentId: effectiveAgentId, isInbox: true as const }
+          : resolved.sessionId
+            ? { agentId: effectiveAgentId, sessionId: resolved.sessionId }
+            : null;
+
+        if (migrationParams) {
+          try {
+            await ctx.agentMigrationRepo.migrateAgentId(migrationParams);
+          } catch (error) {
+            console.error('[AgentMigration] Failed to migrate agentId:', error);
+          }
+        }
+      };
+
+      // Use Next.js after() for non-blocking execution
+      after(runMigration);
+
+      return { items: result.items, total: result.total };
     }),
 
   hasTopics: topicProcedure.query(async ({ ctx }) => {
@@ -116,6 +191,12 @@ export const topicRouter = router({
   rankTopics: topicProcedure.input(z.number().optional()).query(async ({ ctx, input }) => {
     return ctx.topicModel.rank(input);
   }),
+
+  recentTopics: topicProcedure
+    .input(z.object({ limit: z.number().optional() }).optional())
+    .query(async ({ ctx, input }): Promise<RecentTopic[]> => {
+      return ctx.topicModel.queryRecent(input?.limit ?? 12);
+    }),
 
   removeAllTopics: topicProcedure.mutation(async ({ ctx }) => {
     return ctx.topicModel.deleteAll();
@@ -130,13 +211,20 @@ export const topicRouter = router({
   searchTopics: topicProcedure
     .input(
       z.object({
+        agentId: z.string().optional(),
         groupId: z.string().nullable().optional(),
         keywords: z.string(),
         sessionId: z.string().nullable().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
-      return ctx.topicModel.queryByKeyword(input.keywords, input.sessionId);
+      const resolved = await resolveContext(
+        { agentId: input.agentId, sessionId: input.sessionId },
+        ctx.serverDB,
+        ctx.userId,
+      );
+
+      return ctx.topicModel.queryByKeyword(input.keywords, resolved.sessionId);
     }),
 
   updateTopic: topicProcedure
@@ -144,6 +232,7 @@ export const topicRouter = router({
       z.object({
         id: z.string(),
         value: z.object({
+          agentId: z.string().optional(),
           favorite: z.boolean().optional(),
           historySummary: z.string().optional(),
           messages: z.array(z.string()).optional(),
@@ -159,7 +248,16 @@ export const topicRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.topicModel.update(input.id, input.value);
+      const { agentId, ...restValue } = input.value;
+
+      // 如果提供了 agentId，解析为 sessionId
+      let resolvedSessionId = restValue.sessionId;
+      if (agentId && !resolvedSessionId) {
+        const resolved = await resolveContext({ agentId }, ctx.serverDB, ctx.userId);
+        resolvedSessionId = resolved.sessionId ?? undefined;
+      }
+
+      return ctx.topicModel.update(input.id, { ...restValue, sessionId: resolvedSessionId });
     }),
 });
 

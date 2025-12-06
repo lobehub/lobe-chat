@@ -17,12 +17,12 @@ describe('dbMessageSelectors', () => {
         { id: '5', role: 'tool', tools: [] },
       ] as UIChatMessage[];
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         dbMessagesMap: {
-          [messageMapKey('test-id')]: messages,
+          [messageMapKey({ agentId: 'test-id' })]: messages,
         },
         messagesMap: {
-          [messageMapKey('test-id')]: messages,
+          [messageMapKey({ agentId: 'test-id' })]: messages,
         },
       };
       const result = dbMessageSelectors.dbToolMessages(state as ChatStore);
@@ -36,12 +36,12 @@ describe('dbMessageSelectors', () => {
         { id: '2', role: 'assistant', content: 'Hi' },
       ] as UIChatMessage[];
       const state: Partial<ChatStore> = {
-        activeId: 'test-id',
+        activeAgentId: 'test-id',
         dbMessagesMap: {
-          [messageMapKey('test-id')]: messages,
+          [messageMapKey({ agentId: 'test-id' })]: messages,
         },
         messagesMap: {
-          [messageMapKey('test-id')]: messages,
+          [messageMapKey({ agentId: 'test-id' })]: messages,
         },
       };
       const result = dbMessageSelectors.dbToolMessages(state as ChatStore);

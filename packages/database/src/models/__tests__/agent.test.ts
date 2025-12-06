@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -483,6 +484,143 @@ describe('AgentModel', () => {
 
       // Should still be enabled
       expect(result?.enabled).toBe(true);
+    });
+  });
+
+  describe('getBuiltinAgent', () => {
+    describe('inbox compatibility', () => {
+      it('should return existing inbox agent directly if slug exists in agents table', async () => {
+        // Create an agent with slug='inbox'
+        const [agent] = await serverDB
+          .insert(agents)
+          .values({
+            slug: INBOX_SESSION_ID,
+            userId,
+            model: 'gpt-4',
+          })
+          .returning();
+
+        const result = await agentModel.getBuiltinAgent(INBOX_SESSION_ID);
+
+        expect(result).toBeDefined();
+        expect(result?.id).toBe(agent.id);
+        expect(result?.slug).toBe(INBOX_SESSION_ID);
+      });
+
+      it('should find inbox from legacy session and update agent slug', async () => {
+        // Create legacy format: session(slug=inbox) + agent(no slug) + relation
+        const [session] = await serverDB
+          .insert(sessions)
+          .values({
+            slug: INBOX_SESSION_ID,
+            userId,
+            type: 'agent',
+          })
+          .returning();
+
+        const [agent] = await serverDB
+          .insert(agents)
+          .values({
+            userId,
+            model: 'gpt-4',
+            // Note: no slug set
+          })
+          .returning();
+
+        await serverDB.insert(agentsToSessions).values({
+          sessionId: session.id,
+          agentId: agent.id,
+          userId,
+        });
+
+        const result = await agentModel.getBuiltinAgent(INBOX_SESSION_ID);
+
+        // Should return the agent and update its slug
+        expect(result).toBeDefined();
+        expect(result?.id).toBe(agent.id);
+        expect(result?.slug).toBe(INBOX_SESSION_ID);
+
+        // Verify the slug was updated in database
+        const updatedAgent = await serverDB.query.agents.findFirst({
+          where: eq(agents.id, agent.id),
+        });
+        expect(updatedAgent?.slug).toBe(INBOX_SESSION_ID);
+      });
+
+      it('should create new inbox agent if no legacy data exists', async () => {
+        const result = await agentModel.getBuiltinAgent(INBOX_SESSION_ID);
+
+        expect(result).toBeDefined();
+        expect(result?.slug).toBe(INBOX_SESSION_ID);
+        expect(result?.virtual).toBe(true);
+      });
+
+      it('should return the same agent on subsequent calls (idempotent)', async () => {
+        // First call - creates the agent
+        const result1 = await agentModel.getBuiltinAgent(INBOX_SESSION_ID);
+
+        // Second call - should return the same agent
+        const result2 = await agentModel.getBuiltinAgent(INBOX_SESSION_ID);
+
+        expect(result1?.id).toBe(result2?.id);
+        expect(result1?.slug).toBe(result2?.slug);
+      });
+
+      it('should not affect other users inbox agent', async () => {
+        // User1 creates inbox via legacy method
+        const [session] = await serverDB
+          .insert(sessions)
+          .values({
+            slug: INBOX_SESSION_ID,
+            userId,
+            type: 'agent',
+          })
+          .returning();
+
+        const [agent] = await serverDB
+          .insert(agents)
+          .values({
+            userId,
+            model: 'gpt-4',
+          })
+          .returning();
+
+        await serverDB.insert(agentsToSessions).values({
+          sessionId: session.id,
+          agentId: agent.id,
+          userId,
+        });
+
+        // User2 gets their inbox (should create a new one)
+        const result2 = await agentModel2.getBuiltinAgent(INBOX_SESSION_ID);
+
+        // User1 gets their inbox
+        const result1 = await agentModel.getBuiltinAgent(INBOX_SESSION_ID);
+
+        // Should be different agents
+        expect(result1?.id).toBe(agent.id);
+        expect(result2?.id).not.toBe(agent.id);
+
+        // Both should have slug='inbox'
+        expect(result1?.slug).toBe(INBOX_SESSION_ID);
+        expect(result2?.slug).toBe(INBOX_SESSION_ID);
+      });
+    });
+
+    describe('other builtin agents', () => {
+      it('should return null for unknown slug', async () => {
+        const result = await agentModel.getBuiltinAgent('unknown-agent-slug');
+
+        expect(result).toBeNull();
+      });
+
+      it('should create page-agent builtin agent', async () => {
+        const result = await agentModel.getBuiltinAgent('page-agent');
+
+        expect(result).toBeDefined();
+        expect(result?.slug).toBe('page-agent');
+        expect(result?.virtual).toBe(true);
+      });
     });
   });
 });

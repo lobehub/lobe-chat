@@ -29,6 +29,13 @@ export const slugLoader = ({ params }: LoaderFunctionArgs): SlugParams => {
   return { slug: params.slug };
 };
 
+export const agentIdLoader = ({ params }: LoaderFunctionArgs): { agentId: string } => {
+  if (!params.aid) {
+    throw new Error('Slug parameter is required');
+  }
+  return { agentId: params.aid };
+};
+
 /**
  * Specific loader for routes with 'id' param
  * Returns: { id: string }
@@ -42,4 +49,34 @@ export const idLoader = ({ params }: LoaderFunctionArgs): IdParams => {
     throw new Error('ID parameter is required');
   }
   return { id: params.id };
+};
+
+/**
+ * Specific loader for settings tab routes
+ * Returns: { tab: string }
+ */
+export interface SettingsTabParams {
+  tab: string;
+}
+
+export const settingsTabLoader = ({ params }: LoaderFunctionArgs): SettingsTabParams => {
+  if (!params.tab) {
+    throw new Error('Tab parameter is required');
+  }
+  return { tab: params.tab };
+};
+
+/**
+ * Specific loader for provider detail routes
+ * Returns: { providerId: string }
+ */
+export interface ProviderIdParams {
+  providerId: string;
+}
+
+export const providerIdLoader = ({ params }: LoaderFunctionArgs): ProviderIdParams => {
+  if (!params.providerId) {
+    throw new Error('Provider ID parameter is required');
+  }
+  return { providerId: params.providerId };
 };

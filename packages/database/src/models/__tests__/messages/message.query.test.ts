@@ -7,6 +7,7 @@ import { uuid } from '@/utils/uuid';
 
 import {
   agents,
+  agentsToSessions,
   chatGroups,
   chunks,
   documents,
@@ -21,6 +22,7 @@ import {
   messages,
   messagesFiles,
   sessions,
+  threads,
   topics,
   users,
 } from '../../../schemas';
@@ -781,6 +783,416 @@ describe('MessageModel Query Tests', () => {
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('msg-s1-t1');
     });
+
+    describe('query with agentId filter', () => {
+      // ========== Legacy data tests (messages with sessionId only) ==========
+      it('should query legacy messages by agentId through agentsToSessions lookup', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'session-for-agent', userId },
+            { id: 'session-other', userId },
+          ]);
+
+          await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
+
+          await trx
+            .insert(agentsToSessions)
+            .values([{ agentId: 'agent1', sessionId: 'session-for-agent', userId }]);
+
+          // Legacy messages: have sessionId but no agentId
+          await trx.insert(messages).values([
+            {
+              id: 'msg-agent-session',
+              userId,
+              sessionId: 'session-for-agent',
+              agentId: null,
+              role: 'user',
+              content: 'legacy message in agent session',
+              createdAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'msg-other-session',
+              userId,
+              sessionId: 'session-other',
+              agentId: null,
+              role: 'user',
+              content: 'message in other session',
+              createdAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with agentId should return legacy messages from the associated session
+        const result = await messageModel.query({ agentId: 'agent1' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-agent-session');
+      });
+
+      // ========== New data tests (messages with agentId directly) ==========
+      it('should query messages with direct agentId match', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(agents).values([{ id: 'agent2', userId, title: 'Agent 2' }]);
+
+          // New messages: have agentId directly stored
+          await trx.insert(messages).values([
+            {
+              id: 'msg-with-agent-id',
+              userId,
+              agentId: 'agent2',
+              sessionId: null,
+              role: 'user',
+              content: 'new message with agentId',
+              createdAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'msg-without-agent-id',
+              userId,
+              agentId: null,
+              sessionId: null,
+              role: 'user',
+              content: 'message without agentId',
+              createdAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        const result = await messageModel.query({ agentId: 'agent2' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-with-agent-id');
+      });
+
+      // ========== Mixed data tests (both legacy and new data) ==========
+      it('should query both legacy (sessionId) and new (agentId) messages using OR condition', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'session-for-mixed', userId }]);
+
+          await trx.insert(agents).values([{ id: 'agent-mixed', userId, title: 'Agent Mixed' }]);
+
+          await trx
+            .insert(agentsToSessions)
+            .values([{ agentId: 'agent-mixed', sessionId: 'session-for-mixed', userId }]);
+
+          // Mixed data: legacy message with sessionId and new message with agentId
+          await trx.insert(messages).values([
+            {
+              id: 'msg-legacy',
+              userId,
+              sessionId: 'session-for-mixed',
+              agentId: null,
+              role: 'user',
+              content: 'legacy message',
+              createdAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'msg-new',
+              userId,
+              sessionId: null,
+              agentId: 'agent-mixed',
+              role: 'user',
+              content: 'new message',
+              createdAt: new Date('2023-01-02'),
+            },
+            {
+              id: 'msg-unrelated',
+              userId,
+              sessionId: null,
+              agentId: null,
+              role: 'user',
+              content: 'unrelated message',
+              createdAt: new Date('2023-01-03'),
+            },
+          ]);
+        });
+
+        const result = await messageModel.query({ agentId: 'agent-mixed' });
+
+        // Should return both legacy and new messages
+        expect(result).toHaveLength(2);
+        const ids = result.map((m) => m.id);
+        expect(ids).toContain('msg-legacy');
+        expect(ids).toContain('msg-new');
+      });
+
+      it('should not duplicate messages when both sessionId and agentId point to the same message', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'session-dedup', userId }]);
+
+          await trx.insert(agents).values([{ id: 'agent-dedup', userId, title: 'Agent Dedup' }]);
+
+          await trx
+            .insert(agentsToSessions)
+            .values([{ agentId: 'agent-dedup', sessionId: 'session-dedup', userId }]);
+
+          // Message with both sessionId and agentId (transition period data)
+          await trx.insert(messages).values([
+            {
+              id: 'msg-both',
+              userId,
+              sessionId: 'session-dedup',
+              agentId: 'agent-dedup',
+              role: 'user',
+              content: 'message with both ids',
+              createdAt: new Date('2023-01-01'),
+            },
+          ]);
+        });
+
+        const result = await messageModel.query({ agentId: 'agent-dedup' });
+
+        // Should not duplicate - only return once
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-both');
+      });
+
+      // ========== Edge cases ==========
+      it('should return empty when agentId has no associated session and no direct messages', async () => {
+        await serverDB
+          .insert(agents)
+          .values([{ id: 'agent-no-data', userId, title: 'Agent No Data' }]);
+
+        const result = await messageModel.query({ agentId: 'agent-no-data' });
+
+        expect(result).toHaveLength(0);
+      });
+
+      it('should query messages by agentId only (no associated sessionId in agentsToSessions)', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx
+            .insert(agents)
+            .values([{ id: 'agent-no-session', userId, title: 'Agent No Session' }]);
+
+          // Message with agentId but agent has no session association
+          await trx.insert(messages).values([
+            {
+              id: 'msg-agent-only',
+              userId,
+              agentId: 'agent-no-session',
+              sessionId: null,
+              role: 'user',
+              content: 'agent only message',
+              createdAt: new Date('2023-01-01'),
+            },
+          ]);
+        });
+
+        const result = await messageModel.query({ agentId: 'agent-no-session' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-agent-only');
+      });
+
+      // ========== User isolation tests ==========
+      it('should only return messages belonging to the current user', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'session-isolation', userId },
+            { id: 'session-other-user', userId: otherUserId },
+          ]);
+
+          await trx.insert(agents).values([
+            { id: 'agent-isolation', userId, title: 'Agent Isolation' },
+            { id: 'agent-other', userId: otherUserId, title: 'Agent Other' },
+          ]);
+
+          await trx.insert(agentsToSessions).values([
+            { agentId: 'agent-isolation', sessionId: 'session-isolation', userId },
+            { agentId: 'agent-other', sessionId: 'session-other-user', userId: otherUserId },
+          ]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-user',
+              userId,
+              agentId: 'agent-isolation',
+              role: 'user',
+              content: 'user message',
+              createdAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'msg-other-user',
+              userId: otherUserId,
+              agentId: 'agent-other',
+              role: 'user',
+              content: 'other user message',
+              createdAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        const result = await messageModel.query({ agentId: 'agent-isolation' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-user');
+      });
+
+      // ========== Pagination tests ==========
+      it('should support pagination when querying by agentId', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(agents).values([{ id: 'agent-page', userId, title: 'Agent Page' }]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-page-1',
+              userId,
+              agentId: 'agent-page',
+              role: 'user',
+              content: 'page 1',
+              createdAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'msg-page-2',
+              userId,
+              agentId: 'agent-page',
+              role: 'user',
+              content: 'page 2',
+              createdAt: new Date('2023-01-02'),
+            },
+            {
+              id: 'msg-page-3',
+              userId,
+              agentId: 'agent-page',
+              role: 'user',
+              content: 'page 3',
+              createdAt: new Date('2023-01-03'),
+            },
+          ]);
+        });
+
+        const result1 = await messageModel.query({
+          agentId: 'agent-page',
+          current: 0,
+          pageSize: 2,
+        });
+        expect(result1).toHaveLength(2);
+        expect(result1[0].id).toBe('msg-page-1'); // ordered by createdAt asc
+        expect(result1[1].id).toBe('msg-page-2');
+
+        const result2 = await messageModel.query({
+          agentId: 'agent-page',
+          current: 1,
+          pageSize: 2,
+        });
+        expect(result2).toHaveLength(1);
+        expect(result2[0].id).toBe('msg-page-3');
+      });
+
+      it('should work with agentId and topicId filters combined', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'agent-session', userId }]);
+
+          await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
+
+          await trx
+            .insert(agentsToSessions)
+            .values([{ agentId: 'agent1', sessionId: 'agent-session', userId }]);
+
+          await trx.insert(topics).values([
+            { id: 'topic1', sessionId: 'agent-session', userId },
+            { id: 'topic2', sessionId: 'agent-session', userId },
+          ]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-topic1',
+              userId,
+              sessionId: 'agent-session',
+              topicId: 'topic1',
+              role: 'user',
+              content: 'message in topic1',
+              createdAt: new Date('2023-01-01'),
+            },
+            {
+              id: 'msg-topic2',
+              userId,
+              sessionId: 'agent-session',
+              topicId: 'topic2',
+              role: 'user',
+              content: 'message in topic2',
+              createdAt: new Date('2023-01-02'),
+            },
+          ]);
+        });
+
+        // Query with agentId and topicId
+        const result = await messageModel.query({ agentId: 'agent1', topicId: 'topic1' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-topic1');
+      });
+
+      it('should only lookup agentsToSessions for current user', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([
+            { id: 'user-session', userId },
+            { id: 'other-user-session', userId: otherUserId },
+          ]);
+
+          // Different agent IDs for different users (agent id is primary key)
+          await trx.insert(agents).values([
+            { id: 'user-agent', userId, title: 'User Agent' },
+            { id: 'other-user-agent', userId: otherUserId, title: 'Other User Agent' },
+          ]);
+
+          // Only create agentsToSessions for the other user
+          await trx
+            .insert(agentsToSessions)
+            .values([
+              { agentId: 'other-user-agent', sessionId: 'other-user-session', userId: otherUserId },
+            ]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-user',
+              userId,
+              sessionId: null, // inbox
+              agentId: null,
+              role: 'user',
+              content: 'user message',
+            },
+            {
+              id: 'msg-other-user',
+              userId: otherUserId,
+              sessionId: 'other-user-session',
+              role: 'user',
+              content: 'other user message',
+            },
+          ]);
+        });
+
+        // Query with other user's agentId - should not find association since it belongs to other user
+        // and no direct agentId match either
+        const result = await messageModel.query({ agentId: 'other-user-agent' });
+
+        // Should return empty (no agentId match and no session found for this user)
+        expect(result).toHaveLength(0);
+      });
+
+      // ========== Backward compatibility: sessionId query still works ==========
+      it('should still work with sessionId query (backward compatibility)', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(sessions).values([{ id: 'session-compat', userId }]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-session-compat',
+              userId,
+              sessionId: 'session-compat',
+              role: 'user',
+              content: 'message with sessionId',
+              createdAt: new Date('2023-01-01'),
+            },
+          ]);
+        });
+
+        // Query with sessionId should still work
+        const result = await messageModel.query({ sessionId: 'session-compat' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-session-compat');
+      });
+    });
   });
 
   describe('queryAll', () => {
@@ -1145,6 +1557,254 @@ describe('MessageModel Query Tests', () => {
     });
   });
 
+  describe('query messages with threadId filter', () => {
+    it('should filter messages by threadId', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create threads first due to foreign key constraint
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-1',
+            type: 'standalone',
+          },
+          {
+            id: 'thread2',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-2',
+            type: 'standalone',
+          },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-thread-1',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'message in thread 1',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg-thread-2',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread1',
+            role: 'assistant',
+            content: 'another message in thread 1',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg-thread-other',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread2',
+            role: 'user',
+            content: 'message in thread 2',
+            createdAt: new Date('2023-01-03'),
+          },
+          {
+            id: 'msg-no-thread',
+            userId,
+            sessionId: 'session1',
+            threadId: null,
+            role: 'user',
+            content: 'message without thread',
+            createdAt: new Date('2023-01-04'),
+          },
+        ]);
+      });
+
+      // Query messages in specific thread
+      const result = await messageModel.query({ sessionId: 'session1', threadId: 'thread1' });
+
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('msg-thread-1');
+      expect(result[1].id).toBe('msg-thread-2');
+    });
+
+    it('should query messages with null threadId (only non-thread messages)', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create thread first
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-1',
+            type: 'standalone',
+          },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-no-thread-1',
+            userId,
+            sessionId: 'session1',
+            threadId: null,
+            role: 'user',
+            content: 'message without thread 1',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg-no-thread-2',
+            userId,
+            sessionId: 'session1',
+            threadId: null,
+            role: 'assistant',
+            content: 'message without thread 2',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg-thread-1',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'message in thread 1',
+            createdAt: new Date('2023-01-03'),
+          },
+        ]);
+      });
+
+      // Query with explicit null threadId should return only non-thread messages
+      const result = await messageModel.query({ sessionId: 'session1', threadId: null });
+
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('msg-no-thread-1');
+      expect(result[1].id).toBe('msg-no-thread-2');
+    });
+
+    it('should query messages with combined sessionId, topicId and threadId filters', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create threads first
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-1',
+            type: 'standalone',
+          },
+          {
+            id: 'thread2',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-2',
+            type: 'standalone',
+          },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-all-filters',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'message with all filters',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg-diff-thread',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread2',
+            role: 'user',
+            content: 'message with different thread',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg-no-thread',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'message without thread',
+            createdAt: new Date('2023-01-03'),
+          },
+        ]);
+      });
+
+      // Query specific session, topic and thread combination
+      const result = await messageModel.query({
+        sessionId: 'session1',
+        topicId: 'topic1',
+        threadId: 'thread1',
+      });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('msg-all-filters');
+    });
+
+    it('should query messages by threadId with sessionId but without topicId', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create threads first
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-1',
+            type: 'standalone',
+          },
+          {
+            id: 'thread2',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'source-msg-2',
+            type: 'standalone',
+          },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg-thread-1',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'message in thread 1',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg-thread-2',
+            userId,
+            sessionId: 'session1',
+            threadId: 'thread2',
+            role: 'user',
+            content: 'message in thread 2',
+            createdAt: new Date('2023-01-02'),
+          },
+        ]);
+      });
+
+      // Query by sessionId and threadId without topicId
+      const result = await messageModel.query({ sessionId: 'session1', threadId: 'thread1' });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('msg-thread-1');
+    });
+  });
+
   describe('findMessageQueriesById', () => {
     it('should return undefined for non-existent message query', async () => {
       const result = await messageModel.findMessageQueriesById('non-existent-id');
@@ -1182,6 +1842,615 @@ describe('MessageModel Query Tests', () => {
         rewriteQuery: 'rewritten query',
         embeddings: codeEmbedding,
       });
+    });
+  });
+
+  describe('getThreadParentMessages', () => {
+    it('should return only source message for Standalone thread type', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create main conversation messages
+        await trx.insert(messages).values([
+          {
+            id: 'msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'first message',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'assistant',
+            content: 'second message',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg3',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'third message - source',
+            createdAt: new Date('2023-01-03'),
+          },
+          {
+            id: 'msg4',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'assistant',
+            content: 'fourth message',
+            createdAt: new Date('2023-01-04'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.getThreadParentMessages({
+        sourceMessageId: 'msg3',
+        topicId: 'topic1',
+        threadType: 'standalone' as any,
+      });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('msg3');
+      expect(result[0].content).toBe('third message - source');
+    });
+
+    it('should return all messages up to source message for Continuation thread type', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create main conversation messages
+        await trx.insert(messages).values([
+          {
+            id: 'msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'first message',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'assistant',
+            content: 'second message',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg3',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'third message - source',
+            createdAt: new Date('2023-01-03'),
+          },
+          {
+            id: 'msg4',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'assistant',
+            content: 'fourth message - after source',
+            createdAt: new Date('2023-01-04'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.getThreadParentMessages({
+        sourceMessageId: 'msg3',
+        topicId: 'topic1',
+        threadType: 'continuation' as any,
+      });
+
+      // Should include msg1, msg2, msg3 (up to and including source)
+      // Should NOT include msg4 (after source)
+      expect(result).toHaveLength(3);
+      expect(result[0].id).toBe('msg1');
+      expect(result[1].id).toBe('msg2');
+      expect(result[2].id).toBe('msg3');
+    });
+
+    it('should exclude messages from other threads in Continuation mode', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create thread first due to foreign key constraint
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'msg2',
+            type: 'standalone',
+          },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'main message 1',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'assistant',
+            content: 'main message 2 - source',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg-in-thread',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'message in thread',
+            createdAt: new Date('2023-01-02T12:00:00'), // Same day but in thread
+          },
+          {
+            id: 'msg3',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'main message 3 - new source',
+            createdAt: new Date('2023-01-03'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.getThreadParentMessages({
+        sourceMessageId: 'msg3',
+        topicId: 'topic1',
+        threadType: 'continuation' as any,
+      });
+
+      // Should include msg1, msg2, msg3 (main conversation only)
+      // Should NOT include msg-in-thread (belongs to another thread)
+      expect(result).toHaveLength(3);
+      expect(result.map((m) => m.id)).toEqual(['msg1', 'msg2', 'msg3']);
+    });
+
+    it('should return empty array for non-existent source message', async () => {
+      const result = await messageModel.getThreadParentMessages({
+        sourceMessageId: 'non-existent',
+        topicId: 'topic1',
+        threadType: 'continuation' as any,
+      });
+
+      expect(result).toHaveLength(0);
+    });
+
+    it('should return messages in chronological order', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Insert in non-chronological order
+        await trx.insert(messages).values([
+          {
+            id: 'msg3',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'third',
+            createdAt: new Date('2023-01-03'),
+          },
+          {
+            id: 'msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'first',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'assistant',
+            content: 'second',
+            createdAt: new Date('2023-01-02'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.getThreadParentMessages({
+        sourceMessageId: 'msg3',
+        topicId: 'topic1',
+        threadType: 'continuation' as any,
+      });
+
+      // Should be in chronological order regardless of insert order
+      expect(result).toHaveLength(3);
+      expect(result[0].id).toBe('msg1');
+      expect(result[1].id).toBe('msg2');
+      expect(result[2].id).toBe('msg3');
+    });
+  });
+
+  describe('query with threadId - complete thread data', () => {
+    it('should return parent messages + thread messages for Continuation type', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create thread with Continuation type
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'msg2',
+            type: 'continuation',
+          },
+        ]);
+
+        // Create main conversation messages (parent messages)
+        await trx.insert(messages).values([
+          {
+            id: 'msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'first message',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'assistant',
+            content: 'second message - source',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg3',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'third message - after source',
+            createdAt: new Date('2023-01-03'),
+          },
+          // Thread messages
+          {
+            id: 'thread-msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'thread message 1',
+            createdAt: new Date('2023-01-02T10:00:00'),
+          },
+          {
+            id: 'thread-msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'assistant',
+            content: 'thread message 2',
+            createdAt: new Date('2023-01-02T11:00:00'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.query({ threadId: 'thread1' });
+
+      // Should include parent messages (msg1, msg2) + thread messages (thread-msg1, thread-msg2)
+      // Should NOT include msg3 (after source message)
+      expect(result).toHaveLength(4);
+      expect(result.map((m) => m.id)).toEqual(['msg1', 'msg2', 'thread-msg1', 'thread-msg2']);
+    });
+
+    it('should return only source message + thread messages for Standalone type', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create thread with Standalone type
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'msg2',
+            type: 'standalone',
+          },
+        ]);
+
+        // Create main conversation messages
+        await trx.insert(messages).values([
+          {
+            id: 'msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'first message',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'assistant',
+            content: 'second message - source',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'msg3',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'third message',
+            createdAt: new Date('2023-01-03'),
+          },
+          // Thread messages
+          {
+            id: 'thread-msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'thread message 1',
+            createdAt: new Date('2023-01-02T10:00:00'),
+          },
+          {
+            id: 'thread-msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'assistant',
+            content: 'thread message 2',
+            createdAt: new Date('2023-01-02T11:00:00'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.query({ threadId: 'thread1' });
+
+      // For Standalone: should include only source message (msg2) + thread messages
+      // Should NOT include msg1 or msg3
+      expect(result).toHaveLength(3);
+      expect(result.map((m) => m.id)).toEqual(['msg2', 'thread-msg1', 'thread-msg2']);
+    });
+
+    it('should return messages in chronological order', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create thread
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'msg2',
+            type: 'continuation',
+          },
+        ]);
+
+        // Insert messages in non-chronological order
+        await trx.insert(messages).values([
+          {
+            id: 'thread-msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'assistant',
+            content: 'thread message 2',
+            createdAt: new Date('2023-01-02T11:00:00'),
+          },
+          {
+            id: 'msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'first message',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'thread-msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'thread message 1',
+            createdAt: new Date('2023-01-02T10:00:00'),
+          },
+          {
+            id: 'msg2',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'assistant',
+            content: 'second message - source',
+            createdAt: new Date('2023-01-02'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.query({ threadId: 'thread1' });
+
+      // Should be in chronological order: msg1 -> msg2 -> thread-msg1 -> thread-msg2
+      expect(result).toHaveLength(4);
+      expect(result[0].id).toBe('msg1');
+      expect(result[1].id).toBe('msg2');
+      expect(result[2].id).toBe('thread-msg1');
+      expect(result[3].id).toBe('thread-msg2');
+    });
+
+    it('should return only thread messages when thread has no sourceMessageId', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create thread without sourceMessageId
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: null,
+            type: 'continuation',
+          },
+        ]);
+
+        // Create messages
+        await trx.insert(messages).values([
+          {
+            id: 'msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'main message',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'thread-msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'thread message',
+            createdAt: new Date('2023-01-02'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.query({ threadId: 'thread1' });
+
+      // Should only return thread messages (fallback to original behavior)
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('thread-msg1');
+    });
+
+    it('should exclude messages from other threads', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([{ id: 'session1', userId }]);
+        await trx.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+        // Create two threads
+        await trx.insert(threads).values([
+          {
+            id: 'thread1',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'msg1',
+            type: 'continuation',
+          },
+          {
+            id: 'thread2',
+            userId,
+            topicId: 'topic1',
+            sourceMessageId: 'msg1',
+            type: 'continuation',
+          },
+        ]);
+
+        // Create messages
+        await trx.insert(messages).values([
+          {
+            id: 'msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: null,
+            role: 'user',
+            content: 'source message',
+            createdAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'thread1-msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread1',
+            role: 'user',
+            content: 'thread 1 message',
+            createdAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'thread2-msg1',
+            userId,
+            sessionId: 'session1',
+            topicId: 'topic1',
+            threadId: 'thread2',
+            role: 'user',
+            content: 'thread 2 message',
+            createdAt: new Date('2023-01-03'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.query({ threadId: 'thread1' });
+
+      // Should include parent (msg1) + thread1 messages only
+      // Should NOT include thread2 messages
+      expect(result).toHaveLength(2);
+      expect(result.map((m) => m.id)).toEqual(['msg1', 'thread1-msg1']);
     });
   });
 });

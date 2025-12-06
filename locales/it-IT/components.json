@@ -19,6 +19,7 @@
       "chunkingTooltip": "Dividi il file in più blocchi di testo e vettorizzali, utilizzabili per la ricerca semantica e il dialogo sui file",
       "chunkingUnsupported": "Questo file non supporta il frazionamento",
       "confirmDelete": "Stai per eliminare questo file. Una volta eliminato, non sarà possibile recuperarlo. Ti preghiamo di confermare l'operazione.",
+      "confirmDeleteFolder": "Stai per eliminare questa cartella e tutto il suo contenuto. L'operazione è irreversibile. Confermi di voler procedere?",
       "confirmDeleteMultiFiles": "Stai per eliminare i {{count}} file selezionati. Una volta eliminati, non sarà possibile recuperarli. Ti preghiamo di confermare l'operazione.",
       "confirmRemoveFromKnowledgeBase": "Stai per rimuovere i {{count}} file selezionati dalla base di conoscenza. I file rimarranno visibili in tutti i file. Ti preghiamo di confermare l'operazione.",
       "copyUrl": "Copia link",
@@ -26,8 +27,19 @@
       "createChunkingTask": "Preparazione in corso...",
       "deleteSuccess": "File eliminato con successo",
       "downloading": "Download del file in corso...",
+      "goBack": "Torna alla pagina precedente",
+      "goForward": "Vai alla pagina successiva",
+      "goToParent": "Vai alla cartella superiore",
+      "moveError": "Spostamento del file non riuscito",
+      "moveHere": "Sposta qui",
+      "moveSuccess": "File spostato con successo",
+      "moveToFolder": "Sposta in...",
+      "moveToRoot": "Sposta nella directory principale",
       "removeFromKnowledgeBase": "Rimuovi dalla base di conoscenza",
-      "removeFromKnowledgeBaseSuccess": "File rimosso con successo"
+      "removeFromKnowledgeBaseSuccess": "File rimosso con successo",
+      "rename": "Rinomina",
+      "renameError": "Rinomina non riuscita",
+      "renameSuccess": "Rinomina completata con successo"
     },
     "bottom": "Hai raggiunto il fondo",
     "config": {
@@ -41,6 +53,12 @@
       },
       "or": "oppure",
       "title": "Trascina qui file o cartelle"
+    },
+    "noFolders": "Nessuna cartella disponibile",
+    "sort": {
+      "dateAdded": "Data di aggiunta",
+      "name": "Nome",
+      "size": "Dimensione"
     },
     "title": {
       "createdAt": "Data di creazione",

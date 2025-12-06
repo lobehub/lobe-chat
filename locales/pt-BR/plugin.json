@@ -338,6 +338,8 @@
       "installed": "Instalado"
     },
     "config": {
+      "addEnv": "Adicionar variável de ambiente",
+      "addHeaders": "Adicionar cabeçalhos de requisição",
       "args": "Parâmetros",
       "command": "Comando",
       "env": "Variáveis de ambiente",
@@ -358,12 +360,15 @@
       },
       "title": "Instalar plugin personalizado"
     },
+    "install": {
+      "title": "Informações de instalação"
+    },
     "marketplace": {
       "title": "Instalar plugins de terceiros",
       "trustedBy": "Fornecido por {{name}}",
       "unverified": {
         "title": "Plugin de terceiros não verificado",
-        "warning": "Este plugin vem de um mercado de terceiros não verificado, por favor confirme que confia na fonte antes de instalar."
+        "warning": "Este plugin é de uma comunidade de terceiros não verificada. Certifique-se de confiar na fonte antes de instalar."
       },
       "verified": "Verificado"
     },
@@ -441,7 +446,7 @@
     "envConfigDescription": "Estas configurações serão passadas como variáveis de ambiente para o processo ao iniciar o servidor MCP",
     "httpTypeNotice": "Plugins MCP do tipo HTTP não requerem variáveis de ambiente para configuração",
     "indexUrl": {
-      "title": "Índice do mercado",
+      "title": "Índice da Comunidade",
       "tooltip": "Edição online não suportada, por favor configure via variável de ambiente durante a implantação"
     },
     "messages": {
@@ -450,14 +455,14 @@
       "envUpdateFailed": "Falha ao salvar variáveis de ambiente",
       "envUpdateSuccess": "Variáveis de ambiente salvas com sucesso"
     },
-    "modalDesc": "Após configurar o endereço do mercado de plugins, você poderá usar mercados personalizados",
+    "modalDesc": "Após configurar o endereço da comunidade de plugins, você poderá usar uma comunidade personalizada de plugins.",
     "rules": {
       "argsRequired": "Por favor, insira os parâmetros de inicialização",
       "commandRequired": "Por favor, insira o comando de inicialização",
       "urlRequired": "Por favor, insira o endereço do serviço"
     },
     "saveSettings": "Salvar configurações",
-    "title": "Configurar mercado de plugins"
+    "title": "Configurar Comunidade de Plugins"
   },
   "showInPortal": "Por favor, veja os detalhes no workspace",
   "store": {

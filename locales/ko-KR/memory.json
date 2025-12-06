@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "아직 저장된 신원 정보가 없습니다",
+    "filter": {
+      "search": "역할, 관계 또는 설명 검색...",
+      "type": {
+        "all": "전체",
+        "demographic": "인구 통계",
+        "personal": "개인",
+        "professional": "직업"
+      }
+    },
+    "list": {
+      "confirmDelete": "삭제 확인",
+      "deleteCancel": "취소",
+      "deleteContent": "이 신원 정보를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      "deleteOk": "삭제",
+      "noResults": "일치하는 신원 정보를 찾을 수 없습니다",
+      "updated": "업데이트됨"
+    },
+    "roleCloud": {
+      "collapse": "접기",
+      "expand": "더 보기"
+    },
+    "view": {
+      "list": "목록",
+      "timeline": "타임라인"
+    }
+  },
+  "loading": "로딩 중..."
+}

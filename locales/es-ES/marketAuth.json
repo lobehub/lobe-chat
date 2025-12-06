@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Cancelar",
-    "confirm": "Autorizar uso",
-    "description": {
-      "and": "y",
-      "prefix": "Al hacer clic en autorizar uso, se considera que aceptas",
-      "privacy": "la Política de Privacidad",
-      "terms": "los Términos de Servicio"
+    "confirm": "Crea tu perfil",
+    "description": "Tu perfil de comunidad es independiente de tu cuenta de usuario de {{appName}}.",
+    "footer": {
+      "agreement": "Al continuar, confirmas que has leído y aceptas los <terms>Términos y Condiciones</terms> y la <privacy>Política de Privacidad</privacy>",
+      "privacy": "Política de Privacidad",
+      "terms": "Términos del Servicio"
     },
-    "title": "Confirmar autorización"
+    "subtitle": "Crea un perfil de comunidad para enviar y gestionar tus publicaciones en la comunidad.",
+    "title": "Crear perfil de comunidad"
   },
   "callback": {
     "buttons": {

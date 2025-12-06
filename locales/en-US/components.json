@@ -19,6 +19,7 @@
       "chunkingTooltip": "Split the file into multiple text chunks and embedding them for semantic search and file dialogue.",
       "chunkingUnsupported": "This file does not support chunking.",
       "confirmDelete": "You are about to delete this file. Once deleted, it cannot be recovered. Please confirm your action.",
+      "confirmDeleteFolder": "You are about to delete this folder and all of its contents. This action cannot be undone. Please confirm your decision.",
       "confirmDeleteMultiFiles": "You are about to delete the selected {{count}} files. Once deleted, they cannot be recovered. Please confirm your action.",
       "confirmRemoveFromKnowledgeBase": "You are about to remove the selected {{count}} files from the knowledge base. They will still be viewable in all files. Please confirm your action.",
       "copyUrl": "Copy Link",
@@ -26,8 +27,19 @@
       "createChunkingTask": "Preparing...",
       "deleteSuccess": "File deleted successfully.",
       "downloading": "Downloading file...",
+      "goBack": "Go to previous page",
+      "goForward": "Go to next page",
+      "goToParent": "Go to parent folder",
+      "moveError": "Failed to move file",
+      "moveHere": "Move here",
+      "moveSuccess": "File moved successfully",
+      "moveToFolder": "Move to...",
+      "moveToRoot": "Move to root directory",
       "removeFromKnowledgeBase": "Remove from Knowledge Base",
-      "removeFromKnowledgeBaseSuccess": "File removed successfully."
+      "removeFromKnowledgeBaseSuccess": "File removed successfully.",
+      "rename": "Rename",
+      "renameError": "Rename failed",
+      "renameSuccess": "Rename successful"
     },
     "bottom": "You've reached the end.",
     "config": {
@@ -41,6 +53,12 @@
       },
       "or": "or",
       "title": "Drag files or folders here"
+    },
+    "noFolders": "No folders available",
+    "sort": {
+      "dateAdded": "Date Added",
+      "name": "Name",
+      "size": "Size"
     },
     "title": {
       "createdAt": "Created At",

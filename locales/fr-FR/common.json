@@ -137,6 +137,8 @@
   "close": "Fermer",
   "cmdk": {
     "about": "À propos",
+    "aiModeEmptyState": "Saisissez votre question dans le champ ci-dessus pour commencer à discuter avec l'IA",
+    "aiModePlaceholder": "Posez une question à l'IA...",
     "communitySupport": "Support communautaire",
     "discover": "Découvrir",
     "knowledgeBase": "Base de connaissances",
@@ -145,6 +147,16 @@
     "noResults": "Aucun résultat trouvé",
     "openSettings": "Ouvrir les paramètres",
     "painting": "Peinture IA",
+    "search": {
+      "agent": "Assistant",
+      "agents": "Assistants",
+      "file": "Fichier",
+      "files": "Fichiers",
+      "loading": "Recherche en cours...",
+      "searching": "Résultats de recherche",
+      "topic": "Sujet",
+      "topics": "Sujets"
+    },
     "searchPlaceholder": "Entrez une commande ou recherchez...",
     "settings": "Paramètres",
     "starOnGitHub": "Donnez-nous une étoile sur GitHub",
@@ -304,6 +316,13 @@
     "business": "Partenariats commerciaux",
     "support": "Support par e-mail"
   },
+  "navPanel": {
+    "agent": "Assistant",
+    "displayItems": "Afficher les éléments",
+    "library": "Bibliothèque",
+    "searchAgent": "Rechercher un assistant...",
+    "searchResultEmpty": "Aucun résultat trouvé"
+  },
   "new": "Nouveau",
   "oauth": "Connexion SSO",
   "officialSite": "Site officiel",
@@ -358,13 +377,21 @@
     }
   },
   "tab": {
-    "aiImage": "Peinture IA",
+    "aiImage": "Illustration",
+    "audio": "Audio",
     "chat": "Conversation",
+    "community": "Communauté",
     "discover": "Découvrir",
     "files": "Fichiers",
+    "home": "Accueil",
     "knowledgeBase": "Base de connaissances",
     "me": "moi",
-    "setting": "Paramètre"
+    "memory": "Mémoire",
+    "pages": "Documents",
+    "resource": "Ressources",
+    "search": "Recherche",
+    "setting": "Paramètre",
+    "video": "Vidéo"
   },
   "telemetry": {
     "allow": "Autoriser",

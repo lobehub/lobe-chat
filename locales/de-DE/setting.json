@@ -85,7 +85,7 @@
     "desc": "Präferenzen und Modellkonfigurationen.",
     "global": "Global Einstellungen",
     "group": "Team-Einstellungen",
-    "groupDesc": "Verwalten Sie Agent-Teams und Chat-Einstellungen",
+    "groupDesc": "Verwalten Sie Gruppen- und Chat-Einstellungen",
     "session": "Sitzungseinstellungen",
     "sessionDesc": "Rollenkonfiguration und Sitzungspräferenzen.",
     "sessionWithName": "Sitzungseinstellungen · {{name}}",
@@ -259,6 +259,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "Die Bildgröße überschreitet das Limit von 1 MB. Bitte wählen Sie ein kleineres Bild aus.",
       "title": "Profilbild"
     },
     "backgroundColor": {
@@ -274,8 +275,8 @@
       "title": "Name"
     },
     "prompt": {
-      "placeholder": "Bitte geben Sie das Rollen-Prompt-Wort ein",
-      "title": "Rollen-Einstellung"
+      "placeholder": "Assistenteneinstellungen eingeben, / für Befehlsmenü drücken",
+      "title": "Assistenteneinstellungen"
     },
     "submit": "Assistenteninformationen aktualisieren",
     "tag": {
@@ -425,7 +426,7 @@
       "placeholder": "Bitte geben Sie den Systemhinweis für den Moderator ein",
       "title": "Systemhinweis des Moderators"
     },
-    "title": "Agent-Teaminformationen"
+    "title": "Gruppeninformationen"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +434,7 @@
       "title": "Direktnachrichten vom Assistenten erlauben"
     },
     "enableSupervisor": {
-      "desc": "Aktivieren Sie die Moderatorfunktion für das Agent-Team. Moderatoren verwalten den Gesprächsverlauf des Teams.",
+      "desc": "Aktivieren Sie die Gruppenmoderator-Funktion. Moderatoren verwalten den Gesprächsverlauf des Teams.",
       "title": "Moderator aktivieren"
     },
     "maxResponseInRow": {

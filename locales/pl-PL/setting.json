@@ -85,7 +85,7 @@
     "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
     "group": "Ustawienia zespołu",
-    "groupDesc": "Zarządzaj zespołem Agentów i preferencjami czatu",
+    "groupDesc": "Zarządzaj grupami i preferencjami czatu",
     "session": "Ustawienia sesji",
     "sessionDesc": "Ustawienia postaci i preferencje sesji.",
     "sessionWithName": "Ustawienia sesji · {{name}}",
@@ -259,6 +259,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "Rozmiar obrazu przekracza limit 1 MB, wybierz mniejszy obraz",
       "title": "Awatar"
     },
     "backgroundColor": {
@@ -274,8 +275,8 @@
       "title": "Nazwa"
     },
     "prompt": {
-      "placeholder": "Proszę wprowadzić słowo kluczowe dla roli Prompt",
-      "title": "Ustawienia roli"
+      "placeholder": "Wprowadź ustawienia asystenta, naciśnij /, aby otworzyć menu poleceń",
+      "title": "Ustawienia asystenta"
     },
     "submit": "Zaktualizuj informacje o asystencie",
     "tag": {
@@ -425,7 +426,7 @@
       "placeholder": "Wprowadź systemową wskazówkę prowadzącego",
       "title": "Systemowa wskazówka prowadzącego"
     },
-    "title": "Informacje o zespole Agentów"
+    "title": "Informacje o grupie"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +434,7 @@
       "title": "Zezwól asystentowi na wysyłanie wiadomości prywatnych"
     },
     "enableSupervisor": {
-      "desc": "Włącz funkcję moderatora zespołu Agentów — moderator będzie zarządzać przebiegiem rozmowy",
+      "desc": "Włącz funkcję moderatora grupy, aby zarządzać przebiegiem rozmów zespołu",
       "title": "Włącz moderatora"
     },
     "maxResponseInRow": {

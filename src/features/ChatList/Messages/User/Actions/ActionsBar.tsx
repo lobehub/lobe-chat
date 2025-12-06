@@ -11,7 +11,6 @@ import { useChatStore } from '@/store/chat';
 import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 
 import { VirtuaContext } from '../../../components/VirtualizedList/VirtuosoContext';
-import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
 import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
 
 interface UserActionsProps {
@@ -26,7 +25,6 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
   const topic = searchParams.get('topic');
 
   const [
-    // isThreadMode,
     hasThread,
     isRegenerating,
     toggleMessageEditing,
@@ -37,10 +35,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     delAndRegenerateMessage,
     copyMessage,
     openThreadCreator,
-    resendThreadMessage,
-    delAndResendThreadMessage,
   ] = useChatStore((s) => [
-    // !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
     messageStateSelectors.isMessageRegenerating(id)(s),
 
@@ -52,8 +47,6 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     s.delAndRegenerateMessage,
     s.copyMessage,
     s.openThreadCreator,
-    s.resendThreadMessage,
-    s.delAndResendThreadMessage,
   ]);
 
   // const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
@@ -62,9 +55,6 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     hasThread,
     isRegenerating,
   });
-
-  const inPortalThread = use(InPortalThreadContext);
-  // const inThread = isThreadMode || inPortalThread;
 
   const items = [
     regenerate,
@@ -110,9 +100,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         }
 
         case 'regenerate': {
-          if (inPortalThread) {
-            resendThreadMessage(id);
-          } else regenerateUserMessage(id);
+          regenerateUserMessage(id);
 
           // if this message is an error message, we need to delete it
           if (data.error) deleteMessage(id);
@@ -120,11 +108,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         }
 
         case 'delAndRegenerate': {
-          if (inPortalThread) {
-            delAndResendThreadMessage(id);
-          } else {
-            delAndRegenerateMessage(id);
-          }
+          delAndRegenerateMessage(id);
           break;
         }
 
@@ -142,7 +126,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         translateMessage(id, lang);
       }
     },
-    [data.content, data.error, inPortalThread, topic],
+    [data.content, data.error, topic],
   );
 
   return (

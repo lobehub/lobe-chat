@@ -19,6 +19,7 @@ export default {
       chunkingTooltip: '将文件拆分为多个文本块并向量化后，可用于语义检索和文件对话',
       chunkingUnsupported: '该文件不支持分块',
       confirmDelete: '即将删除该文件，删除后该将无法找回，请确认你的操作',
+      confirmDeleteFolder: '即将删除该文件夹及其所有内容，删除后该将无法找回，请确认你的操作',
       confirmDeleteMultiFiles:
         '即将删除选中的 {{count}} 个文件，删除后该将无法找回，请确认你的操作',
       confirmRemoveFromKnowledgeBase:
@@ -28,8 +29,19 @@ export default {
       createChunkingTask: '准备中...',
       deleteSuccess: '文件删除成功',
       downloading: '文件下载中...',
+      goBack: '返回上一页',
+      goForward: '前进到下一页',
+      goToParent: '进入父级文件夹',
+      moveError: '移动文件失败',
+      moveHere: '移动到此处',
+      moveSuccess: '文件移动成功',
+      moveToFolder: '移动到...',
+      moveToRoot: '移动到根目录',
       removeFromKnowledgeBase: '从知识库中移除',
       removeFromKnowledgeBaseSuccess: '文件移除成功',
+      rename: '重命名',
+      renameError: '重命名失败',
+      renameSuccess: '重命名成功',
     },
     bottom: '已经到底啦',
     config: {
@@ -43,6 +55,12 @@ export default {
       },
       or: '或者',
       title: '将文件或文件夹拖到这里',
+    },
+    noFolders: '暂无文件夹',
+    sort: {
+      dateAdded: '添加日期',
+      name: '名称',
+      size: '大小',
     },
     title: {
       createdAt: '创建时间',

@@ -137,6 +137,8 @@
   "close": "Затвори",
   "cmdk": {
     "about": "Относно",
+    "aiModeEmptyState": "Въведете въпроса си в полето по-горе, за да започнете разговор с AI",
+    "aiModePlaceholder": "Задайте въпрос на AI...",
     "communitySupport": "Общностна поддръжка",
     "discover": "Открий",
     "knowledgeBase": "База знания",
@@ -145,6 +147,16 @@
     "noResults": "Няма намерени резултати",
     "openSettings": "Отвори настройките",
     "painting": "AI Рисуване",
+    "search": {
+      "agent": "Асистент",
+      "agents": "Асистенти",
+      "file": "Файл",
+      "files": "Файлове",
+      "loading": "Търсене...",
+      "searching": "Резултати от търсенето",
+      "topic": "Тема",
+      "topics": "Теми"
+    },
     "searchPlaceholder": "Въведете команда или търсене...",
     "settings": "Настройки",
     "starOnGitHub": "Дайте ни звезда в GitHub",
@@ -304,6 +316,13 @@
     "business": "Бизнес сътрудничество",
     "support": "Поддръжка по имейл"
   },
+  "navPanel": {
+    "agent": "Асистент",
+    "displayItems": "Показване на елементи",
+    "library": "Библиотека",
+    "searchAgent": "Търсене на асистент...",
+    "searchResultEmpty": "Няма намерени резултати"
+  },
   "new": "Нов",
   "oauth": "SSO Вход",
   "officialSite": "Официален сайт",
@@ -358,13 +377,21 @@
     }
   },
   "tab": {
-    "aiImage": "AI рисуване",
+    "aiImage": "Рисуване",
+    "audio": "Аудио",
     "chat": "Чат",
+    "community": "Общност",
     "discover": "Открий",
     "files": "Файлове",
+    "home": "Начало",
     "knowledgeBase": "База знания",
     "me": "аз",
-    "setting": "Настройки"
+    "memory": "Памет",
+    "pages": "Документи",
+    "resource": "Ресурси",
+    "search": "Търсене",
+    "setting": "Настройки",
+    "video": "Видео"
   },
   "telemetry": {
     "allow": "Разреши",

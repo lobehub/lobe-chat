@@ -8,6 +8,8 @@ export interface CreateDocumentParams {
   fileType?: string;
   knowledgeBaseId?: string;
   metadata?: Record<string, any>;
+  parentId?: string;
+  slug?: string;
   title: string;
 }
 
@@ -16,6 +18,7 @@ export interface UpdateDocumentParams {
   editorData?: string;
   id: string;
   metadata?: Record<string, any>;
+  parentId?: string | null;
   title?: string;
 }
 
@@ -24,8 +27,11 @@ export class DocumentService {
     return lambdaClient.document.createDocument.mutate(params);
   }
 
-  async queryDocuments(): Promise<DocumentItem[]> {
-    return lambdaClient.document.queryDocuments.query();
+  async queryDocuments(params?: {
+    current?: number;
+    pageSize?: number;
+  }): Promise<{ items: DocumentItem[]; total: number }> {
+    return lambdaClient.document.queryDocuments.query(params);
   }
 
   async getDocumentById(id: string): Promise<DocumentItem | undefined> {

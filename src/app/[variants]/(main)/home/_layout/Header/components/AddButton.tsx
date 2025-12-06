@@ -1,0 +1,123 @@
+import { ActionIcon } from '@lobehub/ui';
+import { CreateBotIcon } from '@lobehub/ui/icons';
+import { Dropdown } from 'antd';
+import { useTheme } from 'antd-style';
+import { ChevronDownIcon } from 'lucide-react';
+import type React from 'react';
+import { memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
+
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
+import { useAgentModal } from '../../Body/Agent/ModalProvider';
+import { useCreateMenuItems } from '../../hooks';
+
+const AddButton = memo(() => {
+  const { t: tChat } = useTranslation('chat');
+  const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
+
+  const theme = useTheme();
+
+  const { openGroupWizardModal, closeGroupWizardModal } = useAgentModal();
+
+  // Create menu items
+  const {
+    createAgentMenuItem,
+    createGroupChatMenuItem,
+    createPageMenuItem,
+    createAgent,
+    createGroupFromTemplate,
+    createGroupWithMembers,
+    isValidatingAgent,
+    isCreatingGroup,
+  } = useCreateMenuItems();
+
+  const handleOpenGroupWizard = useCallback(() => {
+    openGroupWizardModal({
+      isCreatingFromTemplate: isCreatingGroup,
+      onCancel: closeGroupWizardModal,
+      onCreateCustom: async (selectedAgents, hostConfig, enableSupervisor) => {
+        await createGroupWithMembers(
+          selectedAgents,
+          tChat('defaultGroupChat'),
+          hostConfig,
+          enableSupervisor,
+        );
+        closeGroupWizardModal();
+      },
+      onCreateFromTemplate: async (
+        templateId,
+        hostConfig,
+        enableSupervisor,
+        selectedMemberTitles,
+      ) => {
+        await createGroupFromTemplate(
+          templateId,
+          hostConfig,
+          enableSupervisor,
+          selectedMemberTitles,
+        );
+        closeGroupWizardModal();
+      },
+    });
+  }, [
+    openGroupWizardModal,
+    closeGroupWizardModal,
+    createGroupWithMembers,
+    createGroupFromTemplate,
+    isCreatingGroup,
+    tChat,
+  ]);
+
+  const handleMainIconClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      createAgent();
+    },
+    [createAgent],
+  );
+
+  const dropdownItems = useMemo(() => {
+    const items = [
+      createAgentMenuItem(),
+      enableGroupChat ? createGroupChatMenuItem(handleOpenGroupWizard) : null,
+      createPageMenuItem(),
+    ].filter(Boolean);
+    return items as any;
+  }, [
+    createAgentMenuItem,
+    createGroupChatMenuItem,
+    createPageMenuItem,
+    enableGroupChat,
+    handleOpenGroupWizard,
+  ]);
+
+  if (!showCreateSession) return;
+
+  return (
+    <Flexbox horizontal>
+      <ActionIcon
+        icon={CreateBotIcon}
+        loading={isValidatingAgent || isCreatingGroup}
+        onClick={handleMainIconClick}
+        size={DESKTOP_HEADER_ICON_SIZE}
+        title={tChat('newAgent')}
+      />
+      <Dropdown menu={{ items: dropdownItems || [] }}>
+        <ActionIcon
+          color={theme.colorTextQuaternary}
+          icon={ChevronDownIcon}
+          size={{ blockSize: 32, size: 14 }}
+          style={{
+            width: 16,
+          }}
+        />
+      </Dropdown>
+    </Flexbox>
+  );
+});
+
+export default AddButton;

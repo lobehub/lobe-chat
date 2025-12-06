@@ -49,6 +49,10 @@
     "desc": "Ponownie wygeneruj ostatnią wiadomość",
     "title": "Ponownie wygeneruj wiadomość"
   },
+  "saveDocument": {
+    "desc": "Natychmiast zapisz wszystkie zmiany w bieżącym dokumencie",
+    "title": "Zapisz dokument"
+  },
   "saveTopic": {
     "desc": "Zapisz bieżący temat i otwórz nowy temat",
     "title": "Rozpocznij nowy temat"

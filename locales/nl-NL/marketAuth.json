@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Annuleren",
-    "confirm": "Toestemming geven",
-    "description": {
-      "and": "en",
-      "prefix": "Door op 'Toestemming geven' te klikken, ga je akkoord met onze",
+    "confirm": "Maak je profiel aan",
+    "description": "Je communityprofiel staat los van je {{appName}} gebruikersaccount.",
+    "footer": {
+      "agreement": "Door door te gaan bevestig je dat je de <terms>Algemene Voorwaarden</terms> en het <privacy>Privacybeleid</privacy> hebt gelezen en ermee akkoord gaat.",
       "privacy": "Privacybeleid",
-      "terms": "Servicevoorwaarden"
+      "terms": "Algemene Voorwaarden"
     },
-    "title": "Autorisatie bevestigen"
+    "subtitle": "Maak een communityprofiel aan om inzendingen te doen en je bijdragen te beheren.",
+    "title": "Communityprofiel aanmaken"
   },
   "callback": {
     "buttons": {

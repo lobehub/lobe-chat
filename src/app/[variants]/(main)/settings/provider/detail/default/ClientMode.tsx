@@ -19,7 +19,7 @@ const ClientMode = memo<{ id: string }>(({ id }) => {
     aiProviderService.getAiProviderById(id),
   );
 
-  if (isLoading || !data || !data.id) return <Loading />;
+  if (isLoading || !data || !data.id) return <Loading debugId="Provider > ClientMode" />;
 
   return (
     <Flexbox gap={24} paddingBlock={8}>

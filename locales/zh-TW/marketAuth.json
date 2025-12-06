@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "取消",
-    "confirm": "授權使用",
-    "description": {
-      "and": "和",
-      "prefix": "點擊授權使用即視為同意",
-      "privacy": "隱私協議",
+    "confirm": "建立你的檔案",
+    "description": "你的社群個人檔案獨立於 {{appName}} 使用者帳號而存在。",
+    "footer": {
+      "agreement": "繼續操作即表示你確認已理解並同意<terms>服務條款</terms>與<privacy>隱私權政策</privacy>",
+      "privacy": "隱私權政策",
       "terms": "服務條款"
     },
-    "title": "確認授權"
+    "subtitle": "建立社群個人檔案，以便在社群中提交與管理上架資訊。",
+    "title": "建立社群檔案"
   },
   "callback": {
     "buttons": {

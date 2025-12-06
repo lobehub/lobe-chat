@@ -55,7 +55,7 @@ const Search = memo<StoreSearchBarProps>(() => {
         width: 'min(720px,100%)',
       }}
       value={word}
-      variant={'outlined'}
+      variant={'borderless'}
     />
   );
 });

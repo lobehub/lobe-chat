@@ -2,4 +2,4 @@ packages:
   - 'packages/**'
   - '.'
   - 'e2e'
-  - '!apps/**'
+  - 'apps/desktop/src/main'

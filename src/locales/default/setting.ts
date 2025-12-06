@@ -2,6 +2,7 @@ export default {
   about: {
     title: '关于',
   },
+  advancedSettings: '进阶配置',
   agentInfoDescription: {
     basic: {
       avatar: '头像',
@@ -76,6 +77,12 @@ export default {
       title: '重置所有设置',
     },
   },
+  group: {
+    aiConfig: 'AI 配置',
+    common: '通用',
+    profile: '账号',
+    system: '系统',
+  },
   groupTab: {
     chat: '聊天',
     members: '成员',
@@ -85,7 +92,7 @@ export default {
     desc: '偏好与模型设置',
     global: '全局设置',
     group: '团队设置',
-    groupDesc: '管理 Agent 团队与聊天偏好',
+    groupDesc: '管理群组与聊天偏好',
     session: '会话设置',
     sessionDesc: '角色设定与会话偏好',
     sessionWithName: '会话设置 · {{name}}',
@@ -218,27 +225,28 @@ export default {
       messages: {
         createVersionFailed: '版本创建失败: {{message}}',
         fetchRemoteFailed: '获取远程助手数据失败',
-        missingIdentifier: '当前助手还没有市场标识符',
-        notAuthenticated: '请先登录市场账户',
+        missingIdentifier: '当前助手还没有社区标识符',
+        notAuthenticated: '请先登录社区账户',
         publishFailed: '发布失败: {{message}}',
       },
       submitButton: '发布',
       title: {
-        submit: '分享到助手市场',
+        submit: '分享到助手社区',
         upload: '发布新版本',
       },
     },
     resultModal: {
-      message: '助手已提交审核，审核通过后将自动上线。点击「在市场查看」查看已发布的助手。',
-      view: '在市场查看',
+      message: '您创作的助手已提交审核，审核通过后将自动上线。',
+      title: '提交成功',
+      view: '前往社区查看',
     },
     submit: {
-      button: '分享到市场',
-      tooltip: '分享助手到市场',
+      button: '分享到社区',
+      tooltip: '分享助手到社区',
     },
     upload: {
       button: '发布新版本',
-      tooltip: '发布新版本到助手市场',
+      tooltip: '发布新版本到助手社区',
     },
   },
   message: {
@@ -262,6 +270,7 @@ export default {
 
   settingAgent: {
     avatar: {
+      sizeExceeded: '图片大小超过 1MB 限制，请选择更小的图片',
       title: '助手头像',
     },
     backgroundColor: {
@@ -277,12 +286,12 @@ export default {
       title: '名称',
     },
     prompt: {
-      placeholder: '请输入角色 Prompt 提示词',
-      title: '角色设定',
+      placeholder: '输入助手设定，按 / 打开命令菜单',
+      title: '助手设定',
     },
     submit: '更新助手信息',
     tag: {
-      desc: '助手标签将在助手市场中展示',
+      desc: '助手标签将在助手社区中展示',
       placeholder: '请输入标签',
       title: '标签',
     },
@@ -429,7 +438,7 @@ export default {
       placeholder: '请输入主持人系统提示词',
       title: '主持人系统提示词',
     },
-    title: 'Agent 团队信息',
+    title: '群组信息',
   },
   settingGroupChat: {
     allowDM: {
@@ -437,7 +446,7 @@ export default {
       title: '允许助手发送私信',
     },
     enableSupervisor: {
-      desc: '启用 Agent 团队主持人功能，主持人将管理团队对话流程',
+      desc: '启用群组主持人功能，主持人将管理团队对话流程',
       title: '启用主持人',
     },
     maxResponseInRow: {
@@ -667,7 +676,8 @@ export default {
     identifier: '助手标识符（identifier）',
     metaMiss: '请补全助手信息后提交，需要包含名称、描述和标签',
     placeholder: '请输入助手的标识符，需要是唯一的，比如 web-development',
-    tooltips: '分享到助手市场',
+    success: '助手提交成功',
+    tooltips: '分享到助手社区',
   },
   submitFooter: {
     reset: '重置',
@@ -762,19 +772,25 @@ export default {
   tab: {
     'about': '关于',
     'agent': '默认助手',
-    'common': '通用设置',
+    'apikey': 'API Key 管理',
+    'common': '外观',
     'experiment': '实验',
     'hotkey': '快捷键',
-    'image': 'AI 绘画',
+    'image': '绘画服务',
     'llm': '语言模型',
+    'profile': '我的账号',
     'provider': 'AI 服务商',
     'proxy': '网络代理',
+    'security': '安全',
+    'stats': '数据统计',
     'storage': '数据存储',
     'sync': '云端同步',
     'system-agent': '系统助手',
     'tts': '语音服务',
+    'usage': '用量统计',
   },
   tools: {
+    add: '集成插件',
     builtins: {
       groupName: '内置插件',
     },
@@ -800,12 +816,15 @@ export default {
       tools: '个工具',
       verifyAuth: '我已完成认证',
     },
+    notInstalled: '未安装',
+    notInstalledWarning: '当前插件暂未安装，可能会影响助手使用',
     plugins: {
       enabled: '已启用 {{num}}',
       groupName: '三方插件',
       noEnabled: '暂无启用插件',
       store: '插件商店',
     },
+
     tabs: {
       all: '全部',
       installed: '已启用',

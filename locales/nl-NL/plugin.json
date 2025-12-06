@@ -338,6 +338,8 @@
       "installed": "Geïnstalleerd"
     },
     "config": {
+      "addEnv": "Omgevingsvariabele toevoegen",
+      "addHeaders": "Verzoekheaders toevoegen",
       "args": "Parameters",
       "command": "Commando",
       "env": "Omgevingsvariabelen",
@@ -358,12 +360,15 @@
       },
       "title": "Aangepaste plugin installeren"
     },
+    "install": {
+      "title": "Installatie-informatie"
+    },
     "marketplace": {
       "title": "Derde partij plugins installeren",
       "trustedBy": "Aangeboden door {{name}}",
       "unverified": {
         "title": "Ongeverifieerde derde partij plugin",
-        "warning": "Deze plugin komt uit een niet-geverifieerde derde partij markt, bevestig dat u de bron vertrouwt voor installatie."
+        "warning": "Deze plug-in is afkomstig van een niet-geverifieerde externe community. Zorg ervoor dat u deze bron vertrouwt voordat u installeert."
       },
       "verified": "Geverifieerd"
     },
@@ -441,7 +446,7 @@
     "envConfigDescription": "Deze configuraties worden als omgevingsvariabelen doorgegeven bij het starten van de MCP-server",
     "httpTypeNotice": "HTTP-type MCP-plugins hebben momenteel geen omgevingsvariabelen nodig",
     "indexUrl": {
-      "title": "Marktindex",
+      "title": "Community-index",
       "tooltip": "Online bewerken niet ondersteund, stel in via omgevingsvariabelen bij deployment"
     },
     "messages": {
@@ -450,14 +455,14 @@
       "envUpdateFailed": "Opslaan van omgevingsvariabelen mislukt",
       "envUpdateSuccess": "Omgevingsvariabelen succesvol opgeslagen"
     },
-    "modalDesc": "Na configuratie van de pluginmarkt kunt u aangepaste pluginmarkten gebruiken",
+    "modalDesc": "Na het configureren van het adres van de plug-incommunity kunt u een aangepaste plug-incommunity gebruiken.",
     "rules": {
       "argsRequired": "Voer opstartparameters in",
       "commandRequired": "Voer opstartcommando in",
       "urlRequired": "Voer serviceadres in"
     },
     "saveSettings": "Instellingen opslaan",
-    "title": "Pluginmarkt instellingen"
+    "title": "Plug-incommunity instellen"
   },
   "showInPortal": "Bekijk details in de werkruimte",
   "store": {

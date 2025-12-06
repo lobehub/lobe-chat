@@ -274,9 +274,9 @@ describe('MessageService', () => {
   describe('createMessage', () => {
     it('should create message and return message list', async () => {
       const params = {
+        agentId: 'agent-1',
         content: 'Hello',
         role: 'user' as const,
-        sessionId: 'session-1',
       };
       const createdMessage = { id: 'msg-1', ...params };
       const mockMessages = [createdMessage, { id: 'msg-2', content: 'Hi' }];
@@ -289,14 +289,14 @@ describe('MessageService', () => {
       expect(mockMessageModel.create).toHaveBeenCalledWith(params);
       expect(mockMessageModel.query).toHaveBeenCalledWith(
         {
+          agentId: 'agent-1',
           current: 0,
           groupId: undefined,
           pageSize: 9999,
-          sessionId: 'session-1',
           topicId: undefined,
         },
         expect.objectContaining({
-          groupAssistantMessages: false,
+          postProcessUrl: expect.any(Function),
         }),
       );
       expect(result).toEqual({
@@ -307,10 +307,10 @@ describe('MessageService', () => {
 
     it('should create message with topicId and groupId', async () => {
       const params = {
+        agentId: 'agent-1',
         content: 'Hello',
         groupId: 'group-1',
         role: 'user' as const,
-        sessionId: 'session-1',
         topicId: 'topic-1',
       };
       const createdMessage = { id: 'msg-1', ...params };
@@ -323,13 +323,15 @@ describe('MessageService', () => {
 
       expect(mockMessageModel.query).toHaveBeenCalledWith(
         {
+          agentId: 'agent-1',
           current: 0,
           groupId: 'group-1',
           pageSize: 9999,
-          sessionId: 'session-1',
           topicId: 'topic-1',
         },
-        expect.anything(),
+        expect.objectContaining({
+          postProcessUrl: expect.any(Function),
+        }),
       );
       expect(result.id).toBe('msg-1');
       expect(result.messages).toEqual(mockMessages);

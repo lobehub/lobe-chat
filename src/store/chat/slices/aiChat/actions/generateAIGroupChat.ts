@@ -289,7 +289,7 @@ export const chatAiGroupChat: StateCreator<
           files: files?.map((f) => f.id),
           role: 'user',
           groupId,
-          sessionId: useSessionStore.getState().activeId,
+          agentId: useSessionStore.getState().activeId,
           topicId: activeTopicId,
           targetId: targetMemberId,
         };
@@ -392,8 +392,8 @@ export const chatAiGroupChat: StateCreator<
       const createSupervisorTodoMessage = async (todoList: SupervisorTodoItem[]) => {
         if (!groupId) return;
 
-        const sessionId = useSessionStore.getState().activeId || groupId;
-        if (!sessionId) return;
+        const agentId = useSessionStore.getState().activeId || groupId;
+        if (!agentId) return;
 
         const content = formatSupervisorTodoContent(todoList);
         const supervisorMessage: CreateMessageParams = {
@@ -402,7 +402,7 @@ export const chatAiGroupChat: StateCreator<
           provider: groupConfig.orchestratorProvider,
           groupId,
           role: 'supervisor',
-          sessionId,
+          agentId,
           topicId: currentTopicId ?? undefined,
         };
 
@@ -411,7 +411,8 @@ export const chatAiGroupChat: StateCreator<
         await optimisticCreateMessage(supervisorMessage);
       };
 
-      const messages = messagesMap[messageMapKey(groupId, currentTopicId)] || [];
+      const messages =
+        messagesMap[messageMapKey({ agentId: groupId, topicId: currentTopicId })] || [];
       const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
 
       if (messages.length === 0) return;
@@ -448,7 +449,7 @@ export const chatAiGroupChat: StateCreator<
       const realUserName = userProfileSelectors.nickName(userStoreState) || 'User';
 
       try {
-        const todoKey = messageMapKey(groupId, currentTopicId);
+        const todoKey = messageMapKey({ agentId: groupId, topicId: currentTopicId });
 
         const context: SupervisorContext = {
           allowDM: groupConfig.allowDM,
@@ -605,7 +606,8 @@ export const chatAiGroupChat: StateCreator<
       } = get();
 
       try {
-        const allMessages = messagesMap[messageMapKey(groupId, activeTopicId)] || [];
+        const allMessages =
+          messagesMap[messageMapKey({ agentId: groupId, topicId: activeTopicId })] || [];
         if (allMessages.length === 0) return;
 
         // Filter messages for this specific agent based on DM targeting rules
@@ -661,8 +663,7 @@ export const chatAiGroupChat: StateCreator<
           groupId,
           content: LOADING_FLAT,
           provider: agentProvider,
-          agentId,
-          sessionId: useSessionStore.getState().activeId,
+          agentId: agentId || useSessionStore.getState().activeId,
           topicId: activeTopicId,
           targetId: targetId, // Use targetId when provided for DM messages
         };
@@ -734,7 +735,8 @@ export const chatAiGroupChat: StateCreator<
         );
 
         // Also update error state if we have an assistant message (for consistency with single chat)
-        const currentMessages = get().messagesMap[messageMapKey(groupId, activeTopicId)] || [];
+        const currentMessages =
+          get().messagesMap[messageMapKey({ agentId: groupId, topicId: activeTopicId })] || [];
         const errorMessage = currentMessages.find(
           (m) => m.role === 'assistant' && m.agentId === agentId && m.content === LOADING_FLAT,
         );
@@ -904,7 +906,7 @@ export const chatAiGroupChat: StateCreator<
     internal_updateSupervisorTodos: (groupId, topicId, todos) => {
       if (!groupId) return;
 
-      const key = messageMapKey(groupId, topicId);
+      const key = messageMapKey({ agentId: groupId, topicId });
 
       set(
         produce((state: ChatStoreState) => {
@@ -927,7 +929,7 @@ export const chatAiGroupChat: StateCreator<
           model: groupConfig.orchestratorModel,
           provider: groupConfig.orchestratorProvider,
           groupId,
-          sessionId: useSessionStore.getState().activeId || groupId,
+          agentId: useSessionStore.getState().activeId || groupId,
           topicId: activeTopicId,
           error: {
             type: ChatErrorType.SupervisorDecisionFailed,

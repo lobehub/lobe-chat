@@ -40,7 +40,7 @@ const ChatWithModel = memo(() => {
   }));
 
   const handleLobeHubChat = () => {
-    navigate('/chat');
+    navigate('/agent');
   };
 
   if (includeLobeHub)

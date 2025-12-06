@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Cancel",
-    "confirm": "Authorize",
-    "description": {
-      "and": "and",
-      "prefix": "By clicking Authorize, you agree to",
+    "confirm": "Create Your Profile",
+    "description": "Your community profile is separate from your {{appName}} user account.",
+    "footer": {
+      "agreement": "By continuing, you confirm that you have read and agree to the <terms>Terms and Conditions</terms> and <privacy>Privacy Policy</privacy>.",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service"
     },
-    "title": "Confirm Authorization"
+    "subtitle": "Create a community profile to submit and manage listings within the community.",
+    "title": "Create Community Profile"
   },
   "callback": {
     "buttons": {

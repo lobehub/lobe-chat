@@ -36,14 +36,16 @@ export const config = {
     '/discover',
     '/discover(.*)',
     '/labs',
-    '/chat',
-    '/chat(.*)',
+    '/agent',
+    '/agent(.*)',
     '/changelog(.*)',
     '/settings(.*)',
     '/image',
-    '/knowledge',
-    '/knowledge(.*)',
+    '/resource',
+    '/resource(.*)',
     '/profile(.*)',
+    '/page',
+    '/page(.*)',
     '/me',
     '/me(.*)',
 
@@ -136,8 +138,10 @@ const defaultMiddleware = (request: NextRequest) => {
   // All SPA routes that use react-router-dom should be rewritten to just /${route}
   const spaRoutes = [
     '/chat',
+    '/agent',
     '/discover',
-    '/knowledge',
+    '/resource',
+    '/page',
     '/settings',
     '/image',
     '/labs',
@@ -201,6 +205,7 @@ const isPublicRoute = createRouteMatcher([
   // backend api
   '/api/auth(.*)',
   '/api/webhooks(.*)',
+  '/api/workflows(.*)',
   '/webapi(.*)',
   '/trpc(.*)',
   // next auth

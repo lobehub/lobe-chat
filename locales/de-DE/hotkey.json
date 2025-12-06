@@ -49,6 +49,10 @@
     "desc": "Die letzte Nachricht neu generieren",
     "title": "Nachricht neu generieren"
   },
+  "saveDocument": {
+    "desc": "Alle aktuellen Änderungen im Dokument sofort speichern",
+    "title": "Dokument speichern"
+  },
   "saveTopic": {
     "desc": "Das aktuelle Thema speichern und ein neues Thema öffnen",
     "title": "Neues Thema beginnen"

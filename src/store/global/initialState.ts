@@ -9,10 +9,13 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 export enum SidebarTabKey {
   Chat = 'chat',
   Discover = 'discover',
-  Files = 'knowledge',
+  Home = 'home',
   Image = 'image',
   Knowledge = 'knowledge',
   Me = 'me',
+  Memory = 'memory',
+  Pages = 'pages',
+  Resource = 'resource',
   Setting = 'settings',
 }
 
@@ -33,21 +36,30 @@ export enum GroupSettingsTabs {
 }
 
 export enum SettingsTabs {
+  APIKey = 'apikey',
   About = 'about',
   Agent = 'agent',
   Common = 'common',
   Hotkey = 'hotkey',
   Image = 'image',
   LLM = 'llm',
+  Profile = 'profile',
   Provider = 'provider',
   Proxy = 'proxy',
+  Security = 'security',
+  Stats = 'stats',
   Storage = 'storage',
   SystemAgent = 'system-agent',
   TTS = 'tts',
+  Usage = 'usage',
 }
 
+/**
+ * @deprecated Use SettingsTabs instead
+ */
 export enum ProfileTabs {
   APIKey = 'apikey',
+  Memory = 'memory',
   Profile = 'profile',
   Security = 'security',
   Stats = 'stats',
@@ -55,12 +67,18 @@ export enum ProfileTabs {
 }
 
 export interface SystemStatus {
+  /**
+   * number of agents (defaultList) to display
+   */
+  agentPageSize?: number;
   chatInputHeight?: number;
   disabledModelProvidersSortType?: string;
   disabledModelsSortType?: string;
   expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
+  // which topicGroup should expand
+  expandTopicGroupKeys?: string[];
   fileManagerViewMode?: 'list' | 'masonry';
   filePanelWidth: number;
   hideGemini2_5FlashImagePreviewChineseWarning?: boolean;
@@ -87,9 +105,14 @@ export interface SystemStatus {
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
   noWideScreen?: boolean;
+  /**
+   * number of pages (documents) to display per page
+   */
+  pagePageSize?: number;
   portalWidth: number;
   sessionsWidth: number;
   showChatSideBar?: boolean;
+  showCommandMenu?: boolean;
   showFilePanel?: boolean;
   showHotkeyHelper?: boolean;
   showImagePanel?: boolean;
@@ -105,6 +128,10 @@ export interface SystemStatus {
    * 是否使用短格式显示 token
    */
   tokenDisplayFormatShort?: boolean;
+  /**
+   * number of topics to display per page
+   */
+  topicPageSize?: number;
   zenMode?: boolean;
 }
 
@@ -132,6 +159,7 @@ export interface GlobalState {
 }
 
 export const INITIAL_STATUS = {
+  agentPageSize: 10,
   chatInputHeight: 64,
   disabledModelProvidersSortType: 'default',
   disabledModelsSortType: 'default',
@@ -147,9 +175,11 @@ export const INITIAL_STATUS = {
   knowledgeBaseModalViewMode: 'list' as const,
   mobileShowTopic: false,
   noWideScreen: true,
+  pagePageSize: 20,
   portalWidth: 400,
   sessionsWidth: 320,
   showChatSideBar: true,
+  showCommandMenu: false,
   showFilePanel: true,
   showHotkeyHelper: false,
   showImagePanel: true,
@@ -159,6 +189,7 @@ export const INITIAL_STATUS = {
   systemRoleExpandedMap: {},
   themeMode: 'auto',
   tokenDisplayFormatShort: true,
+  topicPageSize: 20,
   zenMode: false,
 } satisfies SystemStatus;
 

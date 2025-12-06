@@ -63,8 +63,9 @@ const normalizeMarketAgentConfig = (
 };
 
 const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { avatar, description, tags, title, config, backgroundColor, identifier } =
+  const { avatar, description, tags, title, config, backgroundColor, identifier, editorData } =
     useDetailContext();
+
   const { styles } = useStyles();
   const [isLoading, setIsLoading] = useState(false);
   const createSession = useSessionStore((s) => s.createSession);
@@ -101,7 +102,10 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
     if (!config) return;
 
     const sessionData = {
-      config: normalizeMarketAgentConfig(config),
+      config: {
+        ...normalizeMarketAgentConfig(config),
+        editorData,
+      },
       meta,
     };
 
@@ -114,7 +118,7 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
     try {
       const session = await createSessionWithMarketIdentifier(true);
       message.success(t('assistants.addAgentSuccess'));
-      navigate(SESSION_CHAT_URL(session, mobile));
+      navigate(SESSION_CHAT_URL(session!, mobile));
     } finally {
       setIsLoading(false);
     }

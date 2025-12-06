@@ -6,6 +6,7 @@ import { MessageModel } from '@/database/models/message';
 import { FileService } from '../file';
 
 interface QueryOptions {
+  agentId?: string | null;
   groupId?: string | null;
   sessionId?: string | null;
   topicId?: string | null;
@@ -50,18 +51,24 @@ export class MessageService {
 
   /**
    * Query messages and return response with success status (used after mutations)
+   * 优先使用 agentId，如果没有则使用 sessionId（向后兼容）
    */
   private async queryWithSuccess(
     options?: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
-    if (!options || (options.sessionId === undefined && options.topicId === undefined)) {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
+    if (
+      !options ||
+      (options.agentId === undefined &&
+        options.sessionId === undefined &&
+        options.topicId === undefined)
+    ) {
       return { success: true };
     }
 
-    const { sessionId, topicId, groupId } = options;
+    const { agentId, sessionId, topicId, groupId } = options;
 
     const messages = await this.messageModel.query(
-      { groupId, sessionId, topicId },
+      { agentId, groupId, sessionId, topicId },
       this.getQueryOptions(),
     );
 
@@ -76,20 +83,20 @@ export class MessageService {
    * reducing the need for separate refresh calls and improving performance.
    */
   async createMessage(params: CreateMessageParams): Promise<CreateMessageResult> {
-    // 1. Create the message
+    // 1. Create the message (使用 agentId)
     const item = await this.messageModel.create(params);
 
-    // 2. Query all messages for this session/topic
+    // 2. Query all messages for this agent/topic
+    // 使用 agentId 字段查询
     const messages = await this.messageModel.query(
       {
+        agentId: params.agentId,
         current: 0,
         groupId: params.groupId,
         pageSize: 9999,
-        sessionId: params.sessionId,
         topicId: params.topicId,
       },
       {
-        groupAssistantMessages: false,
         postProcessUrl: this.postProcessUrl,
       },
     );
@@ -145,7 +152,7 @@ export class MessageService {
     id: string,
     value: any,
     options: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     await this.messageModel.updatePluginState(id, value);
     return this.queryWithSuccess(options);
   }
@@ -158,7 +165,7 @@ export class MessageService {
     id: string,
     value: any,
     options: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     await this.messageModel.updateMessagePlugin(id, value);
     return this.queryWithSuccess(options);
   }
@@ -171,7 +178,7 @@ export class MessageService {
     id: string,
     value: UpdateMessageParams,
     options: QueryOptions,
-  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     await this.messageModel.update(id, value as any);
     return this.queryWithSuccess(options);
   }

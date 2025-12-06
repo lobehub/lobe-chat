@@ -22,13 +22,13 @@
   },
   "clearCurrentMessages": "Limpar mensagens atuais",
   "confirmClearCurrentMessages": "Você está prestes a limpar as mensagens desta sessão. Depois de limpar, não será possível recuperá-las. Por favor, confirme sua ação.",
-  "confirmRemoveChatGroupItemAlert": "Este time de Agentes será removido, mas os membros não serão afetados. Por favor, confirme sua ação.",
+  "confirmRemoveChatGroupItemAlert": "Este grupo será excluído, mas os membros da equipe não serão afetados. Por favor, confirme sua ação.",
   "confirmRemoveGroupItemAlert": "Você está prestes a excluir este grupo. Após a exclusão, os assistentes deste grupo serão movidos para a lista padrão. Por favor, confirme sua ação.",
-  "confirmRemoveGroupSuccess": "Equipe de agentes removida com sucesso",
+  "confirmRemoveGroupSuccess": "Grupo excluído com sucesso",
   "confirmRemoveSessionItemAlert": "Você está prestes a remover este assistente. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
   "confirmRemoveSessionSuccess": "Sessão removida com sucesso",
   "defaultAgent": "Assistente Padrão",
-  "defaultGroupChat": "Equipe de agentes",
+  "defaultGroupChat": "Grupo",
   "defaultList": "Lista padrão",
   "defaultSession": "Sessão Padrão",
   "dm": {
@@ -44,6 +44,7 @@
   },
   "duplicateTitle": "{{title}} Cópia",
   "emptyAgent": "Sem assistente disponível",
+  "emptyAgentAction": "Criar assistente",
   "extendParams": {
     "disableContextCaching": {
       "desc": "O custo de geração de uma única conversa pode ser reduzido em até 90%, com um aumento de 4 vezes na velocidade de resposta (<1>Saiba mais</1>). Ao ativar, o limite de mensagens históricas será desativado automaticamente.",
@@ -120,7 +121,7 @@
     "noTemplateMembers": "Nenhum membro no modelo",
     "noTemplates": "Nenhum modelo disponível",
     "searchTemplates": "Pesquisar modelos...",
-    "title": "Criar equipe de agentes",
+    "title": "Criar grupo",
     "useTemplate": "Usar modelo"
   },
   "hideForYou": "O conteúdo da mensagem privada foi ocultado, por favor ative 【Mostrar conteúdo da mensagem privada】 nas configurações para visualizar",
@@ -154,25 +155,25 @@
   "knowledgeBase": {
     "all": "Todo conteúdo",
     "allFiles": "Todos os arquivos",
-    "allKnowledgeBases": "Todos os bancos de conhecimento",
-    "disabled": "O modo de implantação atual não suporta diálogos com a base de conhecimento. Para utilizá-lo, por favor, mude para a implantação do banco de dados no servidor ou utilize o serviço {{cloud}}.",
+    "allLibraries": "Todas as bibliotecas",
+    "disabled": "O modo de implantação atual não suporta conversas com bibliotecas. Para usar esse recurso, altere para uma implantação com banco de dados no servidor ou utilize o serviço {{cloud}}",
     "library": {
       "action": {
         "add": "Adicionar",
         "detail": "Detalhes",
         "remove": "Remover"
       },
-      "title": "Arquivo/Banco de Conhecimento"
+      "title": "Arquivos/Biblioteca"
     },
-    "relativeFilesOrKnowledgeBases": "Arquivos/Bancos de Conhecimento relacionados",
-    "title": "Banco de Conhecimento",
-    "uploadGuide": "Os arquivos enviados podem ser visualizados em 'Banco de Conhecimento'.",
+    "relativeFilesOrLibraries": "Arquivos/Bibliotecas relacionadas",
+    "title": "Biblioteca",
+    "uploadGuide": "Os arquivos enviados podem ser visualizados em \"Recursos\"",
     "viewMore": "Ver mais"
   },
   "memberSelection": {
     "addMember": "Adicionar membro",
     "allMembers": "Todos os membros",
-    "createGroup": "Criar time de Agentes",
+    "createGroup": "Criar grupo",
     "noAvailableAgents": "Nenhum agente disponível para convite",
     "noSelectedAgents": "Nenhum agente selecionado ainda",
     "searchAgents": "Buscar agentes...",
@@ -245,14 +246,15 @@
     "senderAssistant": "Agente",
     "senderUser": "Você"
   },
-  "newAgent": "Novo Assistente",
-  "newGroupChat": "Nova equipe de agentes",
-  "noAgentsYet": "Esta equipe de agentes ainda não tem membros. Clique no botão + para convidar assistentes.",
+  "newAgent": "Criar Assistente",
+  "newGroupChat": "Criar Grupo",
+  "newPage": "Criar Documento",
+  "noAgentsYet": "Este grupo ainda não tem membros. Clique no botão + para convidar um assistente.",
   "noAvailableAgents": "Nenhum membro disponível para convite",
   "noMatchingAgents": "Nenhum membro correspondente encontrado",
   "noMembersYet": "Este grupo ainda não tem membros. Clique no botão + para convidar assistentes.",
   "noSelectedAgents": "Nenhum membro selecionado ainda",
-  "openInNewWindow": "Abrir em uma nova janela",
+  "openInNewWindow": "Abrir em nova janela",
   "owner": "Proprietário do grupo",
   "pin": "Fixar",
   "pinOff": "Desafixar",
@@ -296,7 +298,7 @@
   "searchAgentPlaceholder": "Assistente de busca...",
   "searchAgents": "Assistente de busca...",
   "selectedAgents": "Assistentes selecionados",
-  "sendPlaceholder": "Digite a mensagem...",
+  "sendPlaceholder": "Pergunte, crie ou inicie uma tarefa, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Gerenciar grupos",
     "confirmRemoveGroupAlert": "Você está prestes a excluir este grupo. Após a exclusão, os assistentes deste grupo serão movidos para a lista padrão. Por favor, confirme sua operação.",
@@ -361,6 +363,10 @@
       "title": "Tarefas concluídas"
     }
   },
+  "tab": {
+    "profile": "Perfil do assistente",
+    "search": "Pesquisar"
+  },
   "thread": {
     "divider": "Subtópico",
     "threadMessageCount": "{{messageCount}} mensagens",
@@ -413,6 +419,7 @@
     "checkOpenNewTopic": "Deseja abrir um novo tópico?",
     "checkSaveCurrentMessages": "Salvar a conversa atual como tópico?",
     "openNewTopic": "Abrir Novo Tópico",
+    "recent": "Tópicos Recentes",
     "saveCurrentMessages": "Salvar Mensagens Atuais como Tópico"
   },
   "translate": {

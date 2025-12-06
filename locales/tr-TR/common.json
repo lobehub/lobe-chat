@@ -137,6 +137,8 @@
   "close": "Kapat",
   "cmdk": {
     "about": "Hakkında",
+    "aiModeEmptyState": "Yukarıdaki giriş kutusuna sorunuzu yazarak yapay zeka ile sohbet etmeye başlayın",
+    "aiModePlaceholder": "Yapay zekaya soru sor...",
     "communitySupport": "Topluluk Desteği",
     "discover": "Keşfet",
     "knowledgeBase": "Bilgi Tabanı",
@@ -145,6 +147,16 @@
     "noResults": "Sonuç bulunamadı",
     "openSettings": "Ayarları Aç",
     "painting": "Yapay Zeka Resmi",
+    "search": {
+      "agent": "Asistan",
+      "agents": "Asistanlar",
+      "file": "Dosya",
+      "files": "Dosyalar",
+      "loading": "Aranıyor...",
+      "searching": "Arama Sonuçları",
+      "topic": "Konu",
+      "topics": "Konular"
+    },
     "searchPlaceholder": "Komut girin veya arayın...",
     "settings": "Ayarlar",
     "starOnGitHub": "GitHub'da Bize Yıldız Verin",
@@ -304,6 +316,13 @@
     "business": "İşbirliği",
     "support": "E-posta Desteği"
   },
+  "navPanel": {
+    "agent": "Asistan",
+    "displayItems": "Öğeleri Göster",
+    "library": "Kütüphane",
+    "searchAgent": "Asistan Ara...",
+    "searchResultEmpty": "Arama sonucu bulunamadı"
+  },
   "new": "Yeni",
   "oauth": "SSO Girişi",
   "officialSite": "Resmi Site",
@@ -359,12 +378,20 @@
   },
   "tab": {
     "aiImage": "Yapay Zeka Resim",
+    "audio": "Ses",
     "chat": "Sohbet",
+    "community": "Topluluk",
     "discover": "Keşfet",
     "files": "Dosyalar",
+    "home": "Ana Sayfa",
     "knowledgeBase": "Bilgi Tabanı",
     "me": "ben",
-    "setting": "Ayarlar"
+    "memory": "Hafıza",
+    "pages": "Belgeler",
+    "resource": "Kaynaklar",
+    "search": "Ara",
+    "setting": "Ayarlar",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "İzin ver",

@@ -10,6 +10,7 @@ interface ChatInputProviderProps extends StoreUpdaterProps {
 
 export const ChatInputProvider = memo<ChatInputProviderProps>(
   ({
+    agentId,
     children,
     leftActions,
     rightActions,
@@ -40,6 +41,7 @@ export const ChatInputProvider = memo<ChatInputProviderProps>(
         }
       >
         <StoreUpdater
+          agentId={agentId}
           chatInputEditorRef={chatInputEditorRef}
           leftActions={leftActions}
           mentionItems={mentionItems}

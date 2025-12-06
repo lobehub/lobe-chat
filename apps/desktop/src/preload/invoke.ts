@@ -1,10 +1,7 @@
-import { ClientDispatchEventKey, DispatchInvoke } from '@lobechat/electron-client-ipc';
+import { DispatchInvoke } from '@lobechat/electron-client-ipc';
 import { ipcRenderer } from 'electron';
 
 /**
  * Client-side method to invoke electron main process
  */
-export const invoke: DispatchInvoke = async <T extends ClientDispatchEventKey>(
-  event: T,
-  ...data: any[]
-) => ipcRenderer.invoke(event, ...data);
+export const invoke: DispatchInvoke = async (event, ...data) => ipcRenderer.invoke(event, ...data);

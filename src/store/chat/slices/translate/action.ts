@@ -31,7 +31,7 @@ export const chatTranslate: StateCreator<
     await get().updateMessageTranslate(id, false);
   },
   getCurrentTracePayload: (data) => ({
-    sessionId: get().activeId,
+    sessionId: get().activeAgentId,
     topicId: get().activeTopicId,
     ...data,
   }),
@@ -50,7 +50,12 @@ export const chatTranslate: StateCreator<
 
     // Create translate operation
     const { operationId } = get().startOperation({
-      context: { messageId: id, sessionId: message.sessionId, topicId: message.topicId },
+      context: {
+        agentId: message.agentId,
+        messageId: id,
+        sessionId: message.sessionId,
+        topicId: message.topicId,
+      },
       label: 'Translating message',
       type: 'translate',
     });

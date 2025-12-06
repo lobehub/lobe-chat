@@ -341,6 +341,8 @@ export default {
       installed: '已安装',
     },
     config: {
+      addEnv: '添加环境变量',
+      addHeaders: '添加请求头',
       args: '参数',
       command: '命令',
       env: '环境变量',
@@ -361,12 +363,15 @@ export default {
       },
       title: '安装自定义插件',
     },
+    install: {
+      title: '安装信息',
+    },
     marketplace: {
       title: '安装第三方插件',
       trustedBy: '由 {{name}} 提供',
       unverified: {
         title: '未经验证的第三方插件',
-        warning: '此插件来自未验证的第三方市场，安装前请确认您信任该来源。',
+        warning: '此插件来自未验证的第三方社区，安装前请确认您信任该来源。',
       },
       verified: '已验证',
     },
@@ -444,7 +449,7 @@ export default {
     envConfigDescription: '这些配置将作为环境变量在 MCP 服务器启动时传递给进程',
     httpTypeNotice: 'HTTP 类型的 MCP 插件暂无需要配置的环境变量',
     indexUrl: {
-      title: '市场索引',
+      title: '社区索引',
       tooltip: '暂不支持在线编辑，请通过部署时环境变量进行设置',
     },
     messages: {
@@ -453,14 +458,14 @@ export default {
       envUpdateFailed: '环境变量保存失败',
       envUpdateSuccess: '环境变量保存成功',
     },
-    modalDesc: '配置插件市场的地址后，可以使用自定义的插件市场',
+    modalDesc: '配置插件社区的地址后，可以使用自定义的插件社区',
     rules: {
       argsRequired: '请输入启动参数',
       commandRequired: '请输入启动命令',
       urlRequired: '请输入服务地址',
     },
     saveSettings: '保存设置',
-    title: '设置插件市场',
+    title: '设置插件社区',
   },
   showInPortal: '请在工作区中查看详情',
   store: {

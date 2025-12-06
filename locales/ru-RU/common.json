@@ -137,6 +137,8 @@
   "close": "Закрыть",
   "cmdk": {
     "about": "О нас",
+    "aiModeEmptyState": "Введите свой вопрос в поле выше, чтобы начать диалог с ИИ",
+    "aiModePlaceholder": "Задайте вопрос ИИ...",
     "communitySupport": "Поддержка сообщества",
     "discover": "Обзор",
     "knowledgeBase": "База знаний",
@@ -145,6 +147,16 @@
     "noResults": "Ничего не найдено",
     "openSettings": "Открыть настройки",
     "painting": "AI-рисование",
+    "search": {
+      "agent": "Помощник",
+      "agents": "Помощники",
+      "file": "Файл",
+      "files": "Файлы",
+      "loading": "Поиск...",
+      "searching": "Результаты поиска",
+      "topic": "Тема",
+      "topics": "Темы"
+    },
     "searchPlaceholder": "Введите команду или выполните поиск...",
     "settings": "Настройки",
     "starOnGitHub": "Поставьте звезду на GitHub",
@@ -304,6 +316,13 @@
     "business": "Деловое сотрудничество",
     "support": "Поддержка по электронной почте"
   },
+  "navPanel": {
+    "agent": "Помощник",
+    "displayItems": "Показать элементы",
+    "library": "Библиотека",
+    "searchAgent": "Поиск помощника...",
+    "searchResultEmpty": "Результаты не найдены"
+  },
   "new": "Новый",
   "oauth": "Вход через единую учетную запись (SSO)",
   "officialSite": "Официальный сайт",
@@ -358,13 +377,21 @@
     }
   },
   "tab": {
-    "aiImage": "ИИ Рисование",
+    "aiImage": "Рисование",
+    "audio": "Аудио",
     "chat": "Чат",
+    "community": "Сообщество",
     "discover": "Открыть",
     "files": "Файлы",
+    "home": "Главная",
     "knowledgeBase": "База знаний",
     "me": "я",
-    "setting": "Настройки"
+    "memory": "Память",
+    "pages": "Документы",
+    "resource": "Ресурсы",
+    "search": "Поиск",
+    "setting": "Настройки",
+    "video": "Видео"
   },
   "telemetry": {
     "allow": "Разрешить",

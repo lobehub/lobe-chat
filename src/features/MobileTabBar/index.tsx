@@ -41,7 +41,7 @@ export default memo<Props>(({ className, tabBarKey }) => {
           ),
           key: SidebarTabKey.Chat,
           onClick: () => {
-            router.push('/chat');
+            router.push('/agent');
           },
           title: t('tab.chat'),
         },

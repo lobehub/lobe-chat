@@ -3,7 +3,7 @@ import { memo, useEffect } from 'react';
 import { useChatStore } from '@/store/chat';
 import { displayMessageSelectors, operationSelectors } from '@/store/chat/selectors';
 
-import BackBottom from './BackBottom';
+import BackBottom from '@/features/Conversation/components/BackBottom';
 
 interface AutoScrollProps {
   atBottom: boolean;

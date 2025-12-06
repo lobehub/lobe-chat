@@ -49,6 +49,10 @@
     "desc": "Genereer het laatste bericht opnieuw",
     "title": "Genereer bericht opnieuw"
   },
+  "saveDocument": {
+    "desc": "Sla alle wijzigingen in het huidige document onmiddellijk op",
+    "title": "Document opslaan"
+  },
   "saveTopic": {
     "desc": "Sla het huidige onderwerp op en open een nieuw onderwerp",
     "title": "Start nieuw onderwerp"

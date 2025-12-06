@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "Aucun souvenir d'identité pour le moment",
+    "filter": {
+      "search": "Rechercher un rôle, une relation ou une description...",
+      "type": {
+        "all": "Tous",
+        "demographic": "Démographique",
+        "personal": "Personnel",
+        "professional": "Professionnel"
+      }
+    },
+    "list": {
+      "confirmDelete": "Confirmer la suppression",
+      "deleteCancel": "Annuler",
+      "deleteContent": "Êtes-vous sûr de vouloir supprimer ce souvenir d'identité ? Cette action est irréversible.",
+      "deleteOk": "Supprimer",
+      "noResults": "Aucun souvenir d'identité correspondant trouvé",
+      "updated": "Mis à jour"
+    },
+    "roleCloud": {
+      "collapse": "Réduire",
+      "expand": "Voir plus"
+    },
+    "view": {
+      "list": "Liste",
+      "timeline": "Chronologie"
+    }
+  },
+  "loading": "Chargement..."
+}

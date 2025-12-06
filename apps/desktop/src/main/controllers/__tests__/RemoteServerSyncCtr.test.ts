@@ -22,6 +22,7 @@ vi.mock('electron', () => ({
     getPath: vi.fn(() => '/mock/user/data'),
   },
   ipcMain: {
+    handle: vi.fn(),
     on: vi.fn(),
   },
 }));

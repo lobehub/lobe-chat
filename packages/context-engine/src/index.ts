@@ -13,13 +13,17 @@ export { ContextEngine } from './pipeline';
 export * from './providers';
 
 // Processors
+export type { PlaceholderValue, PlaceholderValueMap } from './processors';
 export {
+  buildPlaceholderGenerators,
+  formatPlaceholderValues,
   GroupMessageFlattenProcessor,
   HistoryTruncateProcessor,
   InputTemplateProcessor,
   MessageCleanupProcessor,
   MessageContentProcessor,
   PlaceholderVariablesProcessor,
+  renderPlaceholderTemplate,
   ToolCallProcessor,
   ToolMessageReorder,
 } from './processors';

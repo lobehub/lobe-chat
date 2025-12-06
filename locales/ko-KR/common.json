@@ -137,6 +137,8 @@
   "close": "닫기",
   "cmdk": {
     "about": "정보",
+    "aiModeEmptyState": "위의 입력창에 질문을 입력하여 AI와 대화를 시작하세요",
+    "aiModePlaceholder": "AI에게 질문하기...",
     "communitySupport": "커뮤니티 지원",
     "discover": "탐색",
     "knowledgeBase": "지식 베이스",
@@ -145,6 +147,16 @@
     "noResults": "관련 결과를 찾을 수 없습니다",
     "openSettings": "설정 열기",
     "painting": "AI 그림",
+    "search": {
+      "agent": "도우미",
+      "agents": "도우미",
+      "file": "파일",
+      "files": "파일",
+      "loading": "검색 중...",
+      "searching": "검색 결과",
+      "topic": "주제",
+      "topics": "주제"
+    },
     "searchPlaceholder": "명령어 입력 또는 검색...",
     "settings": "설정",
     "starOnGitHub": "GitHub에서 Star 주기",
@@ -304,6 +316,13 @@
     "business": "비즈니스 제휴",
     "support": "이메일 지원"
   },
+  "navPanel": {
+    "agent": "도우미",
+    "displayItems": "항목 표시",
+    "library": "자료실",
+    "searchAgent": "도우미 검색...",
+    "searchResultEmpty": "검색 결과가 없습니다"
+  },
   "new": "새로운",
   "oauth": "SSO 로그인",
   "officialSite": "공식 웹사이트",
@@ -358,13 +377,21 @@
     }
   },
   "tab": {
-    "aiImage": "AI 그림",
+    "aiImage": "그림",
+    "audio": "오디오",
     "chat": "채팅",
+    "community": "커뮤니티",
     "discover": "탐색",
     "files": "파일",
+    "home": "홈",
     "knowledgeBase": "지식 베이스",
     "me": "내 정보",
-    "setting": "설정"
+    "memory": "기억",
+    "pages": "문서",
+    "resource": "자료",
+    "search": "검색",
+    "setting": "설정",
+    "video": "비디오"
   },
   "telemetry": {
     "allow": "허용",

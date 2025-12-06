@@ -137,6 +137,8 @@
   "close": "إغلاق",
   "cmdk": {
     "about": "حول",
+    "aiModeEmptyState": "أدخل سؤالك في الحقل أعلاه لبدء المحادثة مع الذكاء الاصطناعي",
+    "aiModePlaceholder": "اطرح سؤالاً على الذكاء الاصطناعي...",
     "communitySupport": "دعم المجتمع",
     "discover": "استكشاف",
     "knowledgeBase": "قاعدة المعرفة",
@@ -145,6 +147,16 @@
     "noResults": "لم يتم العثور على نتائج",
     "openSettings": "فتح الإعدادات",
     "painting": "الرسم بالذكاء الاصطناعي",
+    "search": {
+      "agent": "مساعد",
+      "agents": "مساعدون",
+      "file": "ملف",
+      "files": "ملفات",
+      "loading": "جارٍ البحث...",
+      "searching": "نتائج البحث",
+      "topic": "موضوع",
+      "topics": "مواضيع"
+    },
     "searchPlaceholder": "أدخل أمرًا أو ابحث...",
     "settings": "الإعدادات",
     "starOnGitHub": "قيّمنا على GitHub",
@@ -304,6 +316,13 @@
     "business": "شراكات تجارية",
     "support": "الدعم عبر البريد الإلكتروني"
   },
+  "navPanel": {
+    "agent": "المساعد",
+    "displayItems": "عرض العناصر",
+    "library": "المكتبة",
+    "searchAgent": "بحث عن مساعد...",
+    "searchResultEmpty": "لا توجد نتائج بحث"
+  },
   "new": "جديد",
   "oauth": "تسجيل الدخول SSO",
   "officialSite": "الموقع الرسمي",
@@ -358,13 +377,21 @@
     }
   },
   "tab": {
-    "aiImage": "الرسم بالذكاء الاصطناعي",
+    "aiImage": "رسم",
+    "audio": "الصوت",
     "chat": "الدردشة",
+    "community": "المجتمع",
     "discover": "اكتشاف",
     "files": "ملفات",
+    "home": "الصفحة الرئيسية",
     "knowledgeBase": "قاعدة المعرفة",
     "me": "أنا",
-    "setting": "الإعدادات"
+    "memory": "الذاكرة",
+    "pages": "المستندات",
+    "resource": "الموارد",
+    "search": "البحث",
+    "setting": "الإعدادات",
+    "video": "الفيديو"
   },
   "telemetry": {
     "allow": "السماح",

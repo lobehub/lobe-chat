@@ -2,6 +2,7 @@
   "addToKnowledgeBase": {
     "addSuccess": "파일이 성공적으로 추가되었습니다. <1>지금 보기</1>",
     "confirm": "추가",
+    "error": "지식 베이스에 파일 추가 실패",
     "id": {
       "placeholder": "추가할 지식베이스를 선택하세요",
       "required": "지식베이스를 선택하세요",

@@ -273,7 +273,7 @@ describe('createPreferenceSlice', () => {
         result.current.switchBackToChat(sessionId);
       });
 
-      expect(navigate).toHaveBeenCalledWith('/chat?session=session-id');
+      expect(navigate).toHaveBeenCalledWith('/agent/session-id');
     });
   });
 

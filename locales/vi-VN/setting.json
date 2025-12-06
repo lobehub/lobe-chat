@@ -85,7 +85,7 @@
     "desc": "Thiết lập Ưu tiên và Mô hình.",
     "global": "Cài đặt toàn cầu",
     "group": "Cài đặt nhóm",
-    "groupDesc": "Quản lý nhóm Agent và tùy chọn trò chuyện",
+    "groupDesc": "Quản lý nhóm và tùy chọn trò chuyện",
     "session": "Cài đặt cuộc trò chuyện",
     "sessionDesc": "Thiết lập nhân vật và ưu tiên phiên hội thoại.",
     "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}",
@@ -259,6 +259,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "Kích thước hình ảnh vượt quá giới hạn 1MB, vui lòng chọn hình ảnh nhỏ hơn",
       "title": "Hình đại diện"
     },
     "backgroundColor": {
@@ -274,8 +275,8 @@
       "title": "Tên"
     },
     "prompt": {
-      "placeholder": "Vui lòng nhập từ khóa Prompt cho vai diễn",
-      "title": "Thiết lập vai diễn"
+      "placeholder": "Nhập cài đặt trợ lý, nhấn / để mở menu lệnh",
+      "title": "Cài đặt Trợ lý"
     },
     "submit": "Cập nhật thông tin trợ lý",
     "tag": {
@@ -425,7 +426,7 @@
       "placeholder": "Vui lòng nhập từ khóa hệ thống cho người dẫn chương trình",
       "title": "Từ khóa hệ thống người dẫn chương trình"
     },
-    "title": "Thông tin nhóm Agent"
+    "title": "Thông tin nhóm"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +434,7 @@
       "title": "Cho phép trợ lý gửi tin nhắn riêng"
     },
     "enableSupervisor": {
-      "desc": "Bật chức năng người điều phối nhóm Agent, người điều phối sẽ quản lý luồng hội thoại của nhóm",
+      "desc": "Bật chức năng người điều phối nhóm, người điều phối sẽ quản lý luồng hội thoại của nhóm",
       "title": "Bật người điều phối"
     },
     "maxResponseInRow": {

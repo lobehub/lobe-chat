@@ -9,9 +9,12 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 export const useStyles = createStyles(({ css, token }) => ({
-  panel: css`
+  content: css`
     height: 100%;
-    background: ${token.colorBgContainerSecondary};
+    background: ${token.colorBgContainer};
+  `,
+  handle: css`
+    background: ${token.colorBgContainer} !important;
   `,
 }));
 
@@ -51,7 +54,10 @@ const ImageTopicPanel = memo<PropsWithChildren>(({ children }) => {
 
   return (
     <DraggablePanel
-      className={styles.panel}
+      classNames={{
+        content: styles.content,
+        handle: styles.handle,
+      }}
       defaultSize={{ width: tmpWidth }}
       expand={showImageTopicPanel}
       maxWidth={320}

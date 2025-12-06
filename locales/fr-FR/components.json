@@ -19,6 +19,7 @@
       "chunkingTooltip": "Divisez le fichier en plusieurs blocs de texte et vectorisez-les pour une recherche sémantique et un dialogue sur le fichier",
       "chunkingUnsupported": "Ce fichier ne prend pas en charge le fractionnement",
       "confirmDelete": "Vous allez supprimer ce fichier. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
+      "confirmDeleteFolder": "Ce dossier et tout son contenu vont être supprimés. Cette action est irréversible. Veuillez confirmer votre choix.",
       "confirmDeleteMultiFiles": "Vous allez supprimer les {{count}} fichiers sélectionnés. Une fois supprimés, ils ne pourront pas être récupérés. Veuillez confirmer votre action.",
       "confirmRemoveFromKnowledgeBase": "Vous allez retirer les {{count}} fichiers sélectionnés de la base de connaissances. Une fois retirés, les fichiers resteront visibles dans tous les fichiers. Veuillez confirmer votre action.",
       "copyUrl": "Copier le lien",
@@ -26,8 +27,19 @@
       "createChunkingTask": "Préparation en cours...",
       "deleteSuccess": "Fichier supprimé avec succès",
       "downloading": "Téléchargement du fichier en cours...",
+      "goBack": "Retour à la page précédente",
+      "goForward": "Aller à la page suivante",
+      "goToParent": "Accéder au dossier parent",
+      "moveError": "Échec du déplacement du fichier",
+      "moveHere": "Déplacer ici",
+      "moveSuccess": "Fichier déplacé avec succès",
+      "moveToFolder": "Déplacer vers...",
+      "moveToRoot": "Déplacer vers le répertoire racine",
       "removeFromKnowledgeBase": "Retirer de la base de connaissances",
-      "removeFromKnowledgeBaseSuccess": "Fichier retiré avec succès"
+      "removeFromKnowledgeBaseSuccess": "Fichier retiré avec succès",
+      "rename": "Renommer",
+      "renameError": "Échec du renommage",
+      "renameSuccess": "Renommage réussi"
     },
     "bottom": "C'est tout",
     "config": {
@@ -41,6 +53,12 @@
       },
       "or": "ou",
       "title": "Faites glisser un fichier ou un dossier ici"
+    },
+    "noFolders": "Aucun dossier disponible",
+    "sort": {
+      "dateAdded": "Date d'ajout",
+      "name": "Nom",
+      "size": "Taille"
     },
     "title": {
       "createdAt": "Date de création",

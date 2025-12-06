@@ -1,14 +1,34 @@
 import { ChatTopic } from '@/types/topic';
 
+/**
+ * Unified topic data structure for each agent
+ */
+export interface TopicData {
+  currentPage: number;
+  hasMore: boolean;
+  isExpandingPageSize?: boolean;
+  isLoadingMore?: boolean;
+  items: ChatTopic[];
+  total: number;
+}
+
 export interface ChatTopicState {
   // TODO: need to add the null to the type
   activeTopicId?: string;
+  /**
+   * whether all topics drawer is open
+   */
+  allTopicsDrawerOpen: boolean;
   creatingTopic: boolean;
   inSearchingMode?: boolean;
   isSearchingTopic: boolean;
   searchTopics: ChatTopic[];
+  /**
+   * Unified topic data map for each agent
+   * Contains items, total count, pagination state, and loading states
+   */
+  topicDataMap: Record<string, TopicData>;
   topicLoadingIds: string[];
-  topicMaps: Record<string, ChatTopic[]>;
   topicRenamingId?: string;
   topicSearchKeywords: string;
   /**
@@ -19,11 +39,12 @@ export interface ChatTopicState {
 
 export const initialTopicState: ChatTopicState = {
   activeTopicId: null as any,
+  allTopicsDrawerOpen: false,
   creatingTopic: false,
   isSearchingTopic: false,
   searchTopics: [],
+  topicDataMap: {},
   topicLoadingIds: [],
-  topicMaps: {},
   topicSearchKeywords: '',
   topicsInit: false,
 };

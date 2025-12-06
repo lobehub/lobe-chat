@@ -85,7 +85,7 @@
     "desc": "Préférences et paramètres du modèle.",
     "global": "Paramètres globaux",
     "group": "Paramètres de l'équipe",
-    "groupDesc": "Gérer l'équipe d'agents et les préférences de chat",
+    "groupDesc": "Gérer les groupes et les préférences de discussion",
     "session": "Paramètres de session",
     "sessionDesc": "Paramètres de personnage et préférences de session.",
     "sessionWithName": "Paramètres de session · {{name}}",
@@ -259,6 +259,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "La taille de l’image dépasse la limite de 1 Mo. Veuillez choisir une image plus petite.",
       "title": "Avatar"
     },
     "backgroundColor": {
@@ -274,8 +275,8 @@
       "title": "Nom"
     },
     "prompt": {
-      "placeholder": "Veuillez saisir le mot de prompt du rôle",
-      "title": "Paramètre du rôle"
+      "placeholder": "Saisissez les paramètres de l'assistant, appuyez sur / pour ouvrir le menu des commandes",
+      "title": "Paramètres de l'assistant"
     },
     "submit": "Mettre à jour les informations de l'assistant",
     "tag": {
@@ -425,7 +426,7 @@
       "placeholder": "Veuillez saisir l'invite système de l'animateur",
       "title": "Invite système de l'animateur"
     },
-    "title": "Informations sur l'équipe d'agents"
+    "title": "Informations sur le groupe"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +434,7 @@
       "title": "Autoriser les messages privés de l’assistant"
     },
     "enableSupervisor": {
-      "desc": "Activer la fonction de modérateur pour l'équipe d'agents. Le modérateur gérera le déroulement des conversations.",
+      "desc": "Activer la fonction de modérateur de groupe, le modérateur gérera le déroulement des conversations d'équipe",
       "title": "Activer le modérateur"
     },
     "maxResponseInRow": {

@@ -10,24 +10,24 @@
   "discover": {
     "assistants": {
       "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, intelligent agents, automated workflows, customize your own AI / GPTs / OLLaMA intelligent assistant",
-      "title": "AI Assistants"
+      "title": "AI Assistant Community"
     },
     "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, intelligent agents, automated workflows, custom AI applications, customize your own AI application workspace",
     "mcp": {
       "description": "Search, compare, and connect to thousands of MCP Servers, enabling AI systems to easily access file systems, databases, APIs, and other essential resources, comprehensively expanding your AI capabilities.",
-      "title": "MCP Servers Marketplace"
+      "title": "MCP Servers Community"
     },
     "models": {
       "description": "Explore mainstream AI models OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
-      "title": "AI Models"
+      "title": "Model Community"
     },
     "plugins": {
       "description": "Explore chart generation, academic tools, image generation, video generation, voice generation, and automated workflows to integrate rich plugin capabilities into your assistant.",
-      "title": "AI Plugins"
+      "title": "Plugin Community"
     },
     "providers": {
       "description": "Explore leading model providers OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
-      "title": "AI Model Providers"
+      "title": "Model Service Community"
     },
     "search": "Search",
     "title": "Discover"
@@ -38,7 +38,7 @@
   },
   "plugins": {
     "description": "Search, chart generation, academic tools, image generation, video generation, voice generation, automated workflows—customize Tools Calling plugin capabilities for ChatGPT / Claude.",
-    "title": "Plugin Marketplace"
+    "title": "Plugin Community"
   },
   "welcome": {
     "description": "{{appName}} brings you the best UI experience for ChatGPT, Claude, Gemini, and OLLaMA.",

@@ -2,7 +2,7 @@
 
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import { PropsWithChildren, memo, useState } from 'react';
+import { PropsWithChildren, Suspense, memo, useState } from 'react';
 
 import { isDesktop } from '@/const/version';
 
@@ -25,22 +25,24 @@ const UserPanel = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
 
   return (
-    <UpgradeBadge showBadge={hasNewVersion}>
-      <Popover
-        arrow={false}
-        content={<PanelContent closePopover={() => setOpen(false)} />}
-        onOpenChange={setOpen}
-        open={open}
-        placement={'topRight'}
-        rootClassName={styles.popover}
-        styles={{
-          body: { padding: 0 },
-        }}
-        trigger={['click']}
-      >
-        {children}
-      </Popover>
-    </UpgradeBadge>
+    <Suspense fallback={children}>
+      <UpgradeBadge showBadge={hasNewVersion}>
+        <Popover
+          arrow={false}
+          content={<PanelContent closePopover={() => setOpen(false)} />}
+          onOpenChange={setOpen}
+          open={open}
+          placement={'topRight'}
+          rootClassName={styles.popover}
+          styles={{
+            body: { padding: 0 },
+          }}
+          trigger={['click']}
+        >
+          {children}
+        </Popover>
+      </UpgradeBadge>
+    </Suspense>
   );
 });
 

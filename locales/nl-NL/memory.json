@@ -1,0 +1,31 @@
+{
+  "identity": {
+    "empty": "Geen identiteitsherinneringen beschikbaar",
+    "filter": {
+      "search": "Zoek op rol, relatie of beschrijving...",
+      "type": {
+        "all": "Alles",
+        "demographic": "Demografisch",
+        "personal": "Persoonlijk",
+        "professional": "Professioneel"
+      }
+    },
+    "list": {
+      "confirmDelete": "Verwijdering bevestigen",
+      "deleteCancel": "Annuleren",
+      "deleteContent": "Weet je zeker dat je deze identiteitsherinnering wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+      "deleteOk": "Verwijderen",
+      "noResults": "Geen overeenkomende identiteitsherinneringen gevonden",
+      "updated": "Bijgewerkt"
+    },
+    "roleCloud": {
+      "collapse": "Inklappen",
+      "expand": "Meer weergeven"
+    },
+    "view": {
+      "list": "Lijst",
+      "timeline": "Tijdlijn"
+    }
+  },
+  "loading": "Bezig met laden..."
+}

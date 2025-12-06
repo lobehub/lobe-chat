@@ -2,6 +2,7 @@
   "addToKnowledgeBase": {
     "addSuccess": "Datei erfolgreich hinzugefügt, <1>jetzt ansehen</1>",
     "confirm": "Hinzufügen",
+    "error": "Datei konnte nicht zur Wissensdatenbank hinzugefügt werden",
     "id": {
       "placeholder": "Bitte wählen Sie die zu hinzuzufügende Wissensdatenbank",
       "required": "Bitte wählen Sie eine Wissensdatenbank",

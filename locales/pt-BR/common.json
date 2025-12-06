@@ -137,6 +137,8 @@
   "close": "Fechar",
   "cmdk": {
     "about": "Sobre",
+    "aiModeEmptyState": "Digite sua pergunta na caixa acima para começar a conversar com a IA",
+    "aiModePlaceholder": "Pergunte algo à IA...",
     "communitySupport": "Suporte da Comunidade",
     "discover": "Descobrir",
     "knowledgeBase": "Base de Conhecimento",
@@ -145,6 +147,16 @@
     "noResults": "Nenhum resultado encontrado",
     "openSettings": "Abrir Configurações",
     "painting": "Pintura com IA",
+    "search": {
+      "agent": "Assistente",
+      "agents": "Assistentes",
+      "file": "Arquivo",
+      "files": "Arquivos",
+      "loading": "Buscando...",
+      "searching": "Resultados da busca",
+      "topic": "Tópico",
+      "topics": "Tópicos"
+    },
     "searchPlaceholder": "Digite um comando ou pesquise...",
     "settings": "Configurações",
     "starOnGitHub": "Dê uma estrela no GitHub",
@@ -304,6 +316,13 @@
     "business": "Parcerias Comerciais",
     "support": "Suporte por E-mail"
   },
+  "navPanel": {
+    "agent": "Assistente",
+    "displayItems": "Exibir itens",
+    "library": "Biblioteca",
+    "searchAgent": "Buscar assistente...",
+    "searchResultEmpty": "Nenhum resultado encontrado"
+  },
   "new": "Novo",
   "oauth": "Login SSO",
   "officialSite": "Site Oficial",
@@ -358,13 +377,21 @@
     }
   },
   "tab": {
-    "aiImage": "Pintura AI",
+    "aiImage": "Desenho",
+    "audio": "Áudio",
     "chat": "Chat",
+    "community": "Comunidade",
     "discover": "Descobrir",
     "files": "Arquivos",
+    "home": "Início",
     "knowledgeBase": "Base de Conhecimento",
     "me": "eu",
-    "setting": "Configuração"
+    "memory": "Memória",
+    "pages": "Documentos",
+    "resource": "Recursos",
+    "search": "Pesquisar",
+    "setting": "Configuração",
+    "video": "Vídeo"
   },
   "telemetry": {
     "allow": "Permitir",
