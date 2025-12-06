@@ -5,6 +5,7 @@ import { Loader2Icon } from 'lucide-react';
 import React, { CSSProperties, memo, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import RepoIcon from '@/components/LibIcon';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
@@ -22,6 +23,7 @@ interface KnowledgeBaseItemProps {
 }
 
 const KnowledgeBaseItem = memo<KnowledgeBaseItemProps>(({ id, name, active, style, className }) => {
+  const setLibraryId = useResourceManagerStore((s) => s.setLibraryId);
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -44,6 +46,7 @@ const KnowledgeBaseItem = memo<KnowledgeBaseItemProps>(({ id, name, active, styl
   const handleClick = useCallback(() => {
     if (!editing) {
       navigate(`/resource/library/${id}`);
+      setLibraryId(id);
     }
   }, [editing, navigate, id]);
 

@@ -335,7 +335,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             } else {
               // Set mode to file and store the file ID
               setCurrentViewItemId(id);
-              setMode('file');
+              setMode('editor');
               // Also update URL query parameter for shareable links
               setSearchParams(
                 (prev) => {

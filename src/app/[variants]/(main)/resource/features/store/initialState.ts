@@ -1,10 +1,19 @@
 import { ResouceManagerMode } from '@/features/ResourceManager';
+import { FilesTabs } from '@/types/files';
 
 export interface State {
+  /**
+   * Current file category filter
+   */
+  category: FilesTabs;
   /**
    * Current view item ID (document ID or file ID)
    */
   currentViewItemId?: string;
+  /**
+   * Current library ID
+   */
+  libraryId?: string;
   /**
    * View mode for displaying resources
    */
@@ -16,7 +25,9 @@ export interface State {
 }
 
 export const initialState: State = {
+  category: FilesTabs.All,
   currentViewItemId: undefined,
-  mode: 'files',
+  libraryId: undefined,
+  mode: 'explorer',
   selectedFileIds: [],
 };

@@ -56,6 +56,8 @@ const PageEditorCanvas = memo(() => {
 
 /**
  * Edit a page
+ *
+ * A reusable component. Should NOT depend on context.
  */
 const PageEditor = memo<PageEditorProps>(
   ({ pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete, onBack }) => {

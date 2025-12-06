@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { NavPanelPortal } from '@/features/NavPanel';
 import SideBarLayout from '@/features/NavPanel/SideBarLayout';
-import FileTree from '@/features/ResourceManager/FileTree';
+import FileTree from '@/features/ResourceManager/components/Tree';
 
 import Header from './Header';
 
