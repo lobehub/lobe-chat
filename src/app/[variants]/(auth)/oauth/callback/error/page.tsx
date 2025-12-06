@@ -1,8 +1,7 @@
 'use client';
 
-import { Button, Highlighter, Icon } from '@lobehub/ui';
+import { Button, FluentEmoji, Highlighter, Text } from '@lobehub/ui';
 import { Result } from 'antd';
-import { ShieldX } from 'lucide-react';
 import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';
 import React, { memo } from 'react';
@@ -17,22 +16,29 @@ const FailedPage = memo(() => {
   return (
     <Result
       extra={
-        <Link href="/">
-          <Button type="primary">{t('error.backToHome')}</Button>
+        <Link href="/public">
+          <Button block size={'large'} style={{ minWidth: 240 }}>
+            {t('error.backToHome')}
+          </Button>
         </Link>
       }
-      icon={<Icon icon={ShieldX} />}
+      icon={<FluentEmoji emoji={'🥵'} size={96} type={'anim'} />}
       status="error"
       subTitle={
         <Flexbox gap={8}>
-          {t('error.desc', {
-            reason: t(`error.reason.${reason}` as any, { defaultValue: reason }),
-          })}
-
+          <Text fontSize={16} type="secondary">
+            {t('error.desc', {
+              reason: t(`error.reason.${reason}` as any, { defaultValue: reason }),
+            })}
+          </Text>
           {!!errorMessage && <Highlighter language={'log'}>{errorMessage}</Highlighter>}
         </Flexbox>
       }
-      title={t('error.title')}
+      title={
+        <Text fontSize={32} weight={'bold'}>
+          {t('error.title')}
+        </Text>
+      }
     />
   );
 });

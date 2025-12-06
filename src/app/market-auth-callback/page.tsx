@@ -159,7 +159,6 @@ const MarketAuthCallbackPage = () => {
       extra={getExtra()}
       icon={getStatusIcon()}
       status={getResultStatus()}
-      style={{ padding: 0 }}
       subTitle={
         <Text fontSize={16} type="secondary">
           {getSubTitle()}

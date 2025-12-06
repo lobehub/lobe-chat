@@ -1,13 +1,11 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
+import { Text } from '@lobehub/ui';
 import { Result } from 'antd';
-import { useTheme } from 'antd-style';
-import { LoaderCircle } from 'lucide-react';
 import { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ResultLayout from '../../../ResultLayout';
+import BrandLoading from '@/components/Loading/BrandTextLoading';
 
 interface BuiltinConsentProps {
   uid: string;
@@ -22,18 +20,13 @@ const BuiltinConsent = memo<BuiltinConsentProps>(({ uid }) => {
     formRef.current?.submit();
   }, []);
 
-  const theme = useTheme();
   return (
     <>
-      <ResultLayout>
-        <Result
-          icon={<Icon icon={LoaderCircle} spin style={{ color: theme.colorText }} />}
-          status="success"
-          style={{ padding: 0 }}
-          subTitle={t('consent.redirecting')}
-          title=""
-        />
-      </ResultLayout>
+      <Result
+        icon={<BrandLoading debugId={'ouidc'} />}
+        status="success"
+        title={<Text fontSize={14}>{t('consent.redirecting')}</Text>}
+      />
       <form action="/oidc/consent" method="post" ref={formRef} style={{ display: 'none' }}>
         <input name="uid" type="hidden" value={uid} />
         <input name="consent" type="hidden" value="accept" />
