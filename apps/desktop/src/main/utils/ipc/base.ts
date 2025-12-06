@@ -9,9 +9,10 @@ export interface IpcContext {
 
 // Metadata storage for decorated methods
 const methodMetadata = new WeakMap<any, Map<string, string>>();
+const serverMethodMetadata = new WeakMap<any, Map<string, string>>();
 
 // Decorator for IPC methods
-export function IpcMethod() {
+export function IpcMethod(channelName?: string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const { constructor } = target;
 
@@ -20,7 +21,22 @@ export function IpcMethod() {
     }
 
     const methods = methodMetadata.get(constructor)!;
-    methods.set(propertyKey, propertyKey);
+    methods.set(propertyKey, channelName || propertyKey);
+
+    return descriptor;
+  };
+}
+
+export function IpcServerMethod(channelName?: string) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const { constructor } = target;
+
+    if (!serverMethodMetadata.has(constructor)) {
+      serverMethodMetadata.set(constructor, new Map());
+    }
+
+    const methods = serverMethodMetadata.get(constructor)!;
+    methods.set(propertyKey, channelName || propertyKey);
 
     return descriptor;
   };
@@ -136,3 +152,7 @@ export function createServices<T extends readonly IpcServiceConstructor[]>(
 export type CreateServicesResult<T extends readonly IpcServiceConstructor[]> = {
   [K in T[number] as K['groupName']]: InstanceType<K>;
 };
+
+export function getServerMethodMetadata(target: IpcServiceConstructor) {
+  return serverMethodMetadata.get(target);
+}

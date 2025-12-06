@@ -21,6 +21,9 @@ vi.mock('electron', () => ({
     getLocale: vi.fn(() => 'en-US'),
     getPath: vi.fn((name: string) => `/mock/path/${name}`),
   },
+  ipcMain: {
+    handle: vi.fn(),
+  },
   nativeTheme: {
     on: vi.fn(),
     shouldUseDarkColors: false,
@@ -36,19 +39,6 @@ vi.mock('electron', () => ({
 // Mock electron-is
 vi.mock('electron-is', () => ({
   macOS: vi.fn(() => true),
-}));
-
-// Mock node:fs
-vi.mock('node:fs', () => ({
-  readFileSync: vi.fn(),
-  writeFileSync: vi.fn(),
-}));
-
-// Mock @/const/dir
-vi.mock('@/const/dir', () => ({
-  DB_SCHEMA_HASH_FILENAME: 'db-schema-hash.txt',
-  LOCAL_DATABASE_DIR: 'database',
-  userDataDir: '/mock/user/data',
 }));
 
 // Mock browserManager
@@ -179,58 +169,6 @@ describe('SystemController', () => {
         themeMode: 'dark',
       });
       expect(mockBrowserManager.handleAppThemeChange).toHaveBeenCalled();
-    });
-  });
-
-  describe('getDatabasePath', () => {
-    it('should return database path', async () => {
-      const result = await controller.getDatabasePath();
-
-      expect(result).toBe('/mock/storage/database');
-    });
-  });
-
-  describe('getDatabaseSchemaHash', () => {
-    it('should return schema hash when file exists', async () => {
-      const { readFileSync } = await import('node:fs');
-      vi.mocked(readFileSync).mockReturnValue('abc123');
-
-      const result = await controller.getDatabaseSchemaHash();
-
-      expect(result).toBe('abc123');
-    });
-
-    it('should return undefined when file does not exist', async () => {
-      const { readFileSync } = await import('node:fs');
-      vi.mocked(readFileSync).mockImplementation(() => {
-        throw new Error('File not found');
-      });
-
-      const result = await controller.getDatabaseSchemaHash();
-
-      expect(result).toBeUndefined();
-    });
-  });
-
-  describe('getUserDataPath', () => {
-    it('should return user data path', async () => {
-      const result = await controller.getUserDataPath();
-
-      expect(result).toBe('/mock/user/data');
-    });
-  });
-
-  describe('setDatabaseSchemaHash', () => {
-    it('should write schema hash to file', async () => {
-      const { writeFileSync } = await import('node:fs');
-
-      await controller.setDatabaseSchemaHash('newhash123');
-
-      expect(writeFileSync).toHaveBeenCalledWith(
-        '/mock/storage/db-schema-hash.txt',
-        'newhash123',
-        'utf8',
-      );
     });
   });
 
