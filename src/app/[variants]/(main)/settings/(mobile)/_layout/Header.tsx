@@ -49,7 +49,7 @@ const Header = memo(() => {
           title={
             <Flexbox align={'center'} gap={8} horizontal>
               <span style={{ lineHeight: 1.2 }}>
-                {isProvider ? providerName : t(`tab.${activeSettingsKey as SettingsTabs}`)}
+                {isProvider ? providerName : t(`tab.${activeSettingsKey as SettingsTabs}` as any)}
               </span>
             </Flexbox>
           }

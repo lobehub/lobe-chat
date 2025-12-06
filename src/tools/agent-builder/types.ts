@@ -11,6 +11,8 @@ export const AgentBuilderApiName = {
   getAvailableModels: 'agentBuilder_getAvailableModels',
   getAvailableTools: 'agentBuilder_getAvailableTools',
   getPrompt: 'agentBuilder_getPrompt',
+  searchMarketTools: 'agentBuilder_searchMarketTools',
+  searchOfficialTools: 'agentBuilder_searchOfficialTools',
 
   // Write operations
   setModel: 'agentBuilder_setModel',
@@ -220,4 +222,109 @@ export interface UpdatePromptState {
   newPrompt: string;
   previousPrompt?: string;
   success: boolean;
+}
+
+// ============== SearchMarketTools Types ==============
+
+export interface SearchMarketToolsParams {
+  /**
+   * Optional: filter by category (e.g., "developer", "productivity", "web-search")
+   */
+  category?: string;
+  /**
+   * Optional: number of results to return (default: 10, max: 20)
+   */
+  pageSize?: number;
+  /**
+   * Optional: search keywords to find specific tools
+   */
+  query?: string;
+}
+
+export interface MarketToolItem {
+  author?: string;
+  cloudEndPoint?: string;
+  description?: string;
+  haveCloudEndpoint?: boolean;
+  icon?: string;
+  identifier: string;
+  installed?: boolean;
+  name: string;
+  tags?: string[];
+}
+
+export interface SearchMarketToolsState {
+  query?: string;
+  tools: MarketToolItem[];
+  totalCount: number;
+}
+
+// ============== SearchOfficialTools Types ==============
+
+export interface SearchOfficialToolsParams {
+  /**
+   * Optional: search keywords to find specific tools
+   */
+  query?: string;
+  /**
+   * Optional: filter by tool type ('builtin' | 'klavis' | 'all')
+   */
+  type?: 'all' | 'builtin' | 'klavis';
+}
+
+export interface OfficialToolItem {
+  /**
+   * Tool author
+   */
+  author?: string;
+  /**
+   * Tool description
+   */
+  description?: string;
+  /**
+   * Whether the tool is enabled for current agent
+   */
+  enabled?: boolean;
+  /**
+   * Icon URL or emoji
+   */
+  icon?: string;
+  /**
+   * Tool identifier
+   */
+  identifier: string;
+  /**
+   * Whether the tool is installed/connected (for Klavis tools)
+   */
+  installed?: boolean;
+  /**
+   * Tool display name
+   */
+  name: string;
+  /**
+   * OAuth URL for Klavis tools that need authorization
+   */
+  oauthUrl?: string;
+  /**
+   * Server name for Klavis tools (used for API calls)
+   */
+  serverName?: string;
+  /**
+   * Klavis server status
+   */
+  status?: 'connected' | 'error' | 'pending_auth';
+  /**
+   * Tool type: 'builtin' for built-in tools, 'klavis' for Klavis MCP servers
+   */
+  type: 'builtin' | 'klavis';
+}
+
+export interface SearchOfficialToolsState {
+  /**
+   * Whether Klavis is enabled in the environment
+   */
+  klavisEnabled: boolean;
+  query?: string;
+  tools: OfficialToolItem[];
+  totalCount: number;
 }
