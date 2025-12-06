@@ -105,9 +105,18 @@ export const documentRouter = router({
       return lobeDocument;
     }),
 
-  queryDocuments: documentProcedure.query(async ({ ctx }) => {
-    return ctx.documentService.queryDocuments();
-  }),
+  queryDocuments: documentProcedure
+    .input(
+      z
+        .object({
+          current: z.number().optional(),
+          pageSize: z.number().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.documentService.queryDocuments(input);
+    }),
 
   updateDocument: documentProcedure
     .input(

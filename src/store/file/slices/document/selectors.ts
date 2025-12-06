@@ -1,3 +1,4 @@
+import { useGlobalStore } from '@/store/global';
 import { LobeDocument } from '@/types/document';
 
 import { FilesStoreState } from '../../initialState';
@@ -62,7 +63,38 @@ const getFilteredPages = (s: FilesStoreState): LobeDocument[] => {
   });
 };
 
+// Limited filtered pages for sidebar display
+const getFilteredPagesLimited = (s: FilesStoreState): LobeDocument[] => {
+  const pageSize = useGlobalStore.getState().status.pagePageSize || 20;
+  const allPages = getFilteredPages(s);
+  return allPages.slice(0, pageSize);
+};
+
+const hasMoreDocuments = (s: FilesStoreState): boolean => s.hasMoreDocuments;
+
+const isLoadingMoreDocuments = (s: FilesStoreState): boolean => s.isLoadingMoreDocuments;
+
+const documentsTotal = (s: FilesStoreState): number => s.documentsTotal;
+
+// Check if filtered pages have more than displayed
+const hasMoreFilteredPages = (s: FilesStoreState): boolean => {
+  const pageSize = useGlobalStore.getState().status.pagePageSize || 20;
+  const allPages = getFilteredPages(s);
+  return allPages.length > pageSize;
+};
+
+// Get total count of filtered pages
+const filteredPagesCount = (s: FilesStoreState): number => {
+  return getFilteredPages(s).length;
+};
+
 export const documentSelectors = {
+  documentsTotal,
+  filteredPagesCount,
   getDocumentById,
   getFilteredPages,
+  getFilteredPagesLimited,
+  hasMoreDocuments,
+  hasMoreFilteredPages,
+  isLoadingMoreDocuments,
 };

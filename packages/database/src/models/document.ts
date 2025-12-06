@@ -1,7 +1,12 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { and, count, desc, eq } from 'drizzle-orm';
 
 import { DocumentItem, NewDocument, documents } from '../schemas';
 import { LobeChatDatabase } from '../type';
+
+export interface QueryDocumentParams {
+  current?: number;
+  pageSize?: number;
+}
 
 export class DocumentModel {
   private userId: string;
@@ -31,11 +36,28 @@ export class DocumentModel {
     return this.db.delete(documents).where(eq(documents.userId, this.userId));
   };
 
-  query = async (): Promise<DocumentItem[]> => {
-    return this.db.query.documents.findMany({
-      orderBy: [desc(documents.updatedAt)],
-      where: eq(documents.userId, this.userId),
-    });
+  query = async ({ current = 0, pageSize = 9999 }: QueryDocumentParams = {}): Promise<{
+    items: DocumentItem[];
+    total: number;
+  }> => {
+    const offset = current * pageSize;
+    const whereCondition = eq(documents.userId, this.userId);
+
+    // Fetch items and total count in parallel
+    const [items, totalResult] = await Promise.all([
+      this.db.query.documents.findMany({
+        limit: pageSize,
+        offset,
+        orderBy: [desc(documents.updatedAt)],
+        where: whereCondition,
+      }),
+      this.db
+        .select({ count: count(documents.id) })
+        .from(documents)
+        .where(whereCondition),
+    ]);
+
+    return { items, total: totalResult[0].count };
   };
 
   findById = async (id: string): Promise<DocumentItem | undefined> => {

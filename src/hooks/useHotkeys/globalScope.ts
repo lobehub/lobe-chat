@@ -4,7 +4,6 @@ import { HotkeyEnum } from '@lobechat/types';
 import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 
 import { useHotkeyById } from './useHotkeyById';
 
@@ -31,19 +30,10 @@ export const useOpenHotkeyHelperHotkey = () => {
 };
 
 export const useToggleLeftPanelHotkey = () => {
-  const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
-  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
-
-  return useHotkeyById(
-    HotkeyEnum.ToggleLeftPanel,
-    () =>
-      updateSystemStatus({
-        showSessionPanel: !showSessionPanel,
-      }),
-    {
-      enableOnContentEditable: true,
-    },
-  );
+  const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
+  return useHotkeyById(HotkeyEnum.ToggleLeftPanel, () => toggleCommandMenu(), {
+    enableOnContentEditable: true,
+  });
 };
 
 export const useCommandPaletteHotkey = () => {

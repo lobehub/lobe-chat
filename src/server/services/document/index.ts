@@ -101,10 +101,10 @@ export class DocumentService {
   }
 
   /**
-   * Query all documents
+   * Query documents with pagination
    */
-  async queryDocuments() {
-    return this.documentModel.query();
+  async queryDocuments(params?: { current?: number; pageSize?: number }) {
+    return this.documentModel.query(params);
   }
 
   /**

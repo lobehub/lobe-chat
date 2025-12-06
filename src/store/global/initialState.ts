@@ -105,6 +105,10 @@ export interface SystemStatus {
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
   noWideScreen?: boolean;
+  /**
+   * number of pages (documents) to display per page
+   */
+  pagePageSize?: number;
   portalWidth: number;
   sessionsWidth: number;
   showChatSideBar?: boolean;
@@ -171,6 +175,7 @@ export const INITIAL_STATUS = {
   knowledgeBaseModalViewMode: 'list' as const,
   mobileShowTopic: false,
   noWideScreen: true,
+  pagePageSize: 20,
   portalWidth: 400,
   sessionsWidth: 320,
   showChatSideBar: true,
