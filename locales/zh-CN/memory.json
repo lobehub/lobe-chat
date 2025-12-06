@@ -50,9 +50,16 @@
   },
   "loading": "加载中...",
   "preference": {
+    "actions": {
+      "delete": "删除",
+      "edit": "编辑"
+    },
+    "conclusionDirectives": "结论指令",
     "defaultType": "偏好",
     "empty": "暂无偏好记忆",
-    "priority": "优先级"
+    "priority": "优先级",
+    "source": "来源",
+    "suggestions": "建议"
   },
   "viewMode": {
     "masonry": "瀑布流",
