@@ -1,8 +1,8 @@
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
-import DesktopRouter from './DesktopRouter';
-import MobileRouter from './MobileRouter';
+import MobileRouter from './(mobile)/router';
+import DesktopRouter from './router';
 
 export default async (props: DynamicLayoutProps) => {
   // Get isMobile from variants parameter on server side
@@ -15,6 +15,8 @@ export default async (props: DynamicLayoutProps) => {
   if (isMobile) {
     return <MobileRouter />;
   }
+
+  console.log(isMobile, 11_111);
 
   return <DesktopRouter />;
 };
