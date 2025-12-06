@@ -343,10 +343,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
   const items: TreeItem[] = React.useMemo(() => {
     if (!rootData) return [];
 
-    // Handle both paginated and non-paginated responses
-    const data = Array.isArray(rootData) ? rootData : rootData.items;
-
-    const mappedItems: TreeItem[] = data.map((item: any) => ({
+    const mappedItems: TreeItem[] = rootData.map((item) => ({
       fileType: item.fileType,
       id: item.id,
       isFolder: item.fileType === 'custom/folder',
@@ -392,10 +389,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
           return;
         }
 
-        // Handle both paginated and non-paginated responses
-        const items = Array.isArray(data) ? data : data.items;
-
-        const childItems: TreeItem[] = items.map((item: any) => ({
+        const childItems: TreeItem[] = data.map((item) => ({
           fileType: item.fileType,
           id: item.id,
           isFolder: item.fileType === 'custom/folder',
