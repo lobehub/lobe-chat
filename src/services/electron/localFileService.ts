@@ -23,71 +23,71 @@ import {
   RunCommandParams,
   RunCommandResult,
   WriteLocalFileParams,
-  dispatch,
 } from '@lobechat/electron-client-ipc';
+import { ensureElectronIpc } from '@/utils/electron/ipc';
 
 class LocalFileService {
   // File Operations
   async listLocalFiles(params: ListLocalFileParams): Promise<LocalFileItem[]> {
-    return dispatch('listLocalFiles', params);
+    return ensureElectronIpc().localSystem.listLocalFiles(params);
   }
 
   async readLocalFile(params: LocalReadFileParams): Promise<LocalReadFileResult> {
-    return dispatch('readLocalFile', params);
+    return ensureElectronIpc().localSystem.readLocalFile(params);
   }
 
   async readLocalFiles(params: LocalReadFilesParams): Promise<LocalReadFileResult[]> {
-    return dispatch('readLocalFiles', params);
+    return ensureElectronIpc().localSystem.readLocalFiles(params);
   }
 
   async searchLocalFiles(params: LocalSearchFilesParams): Promise<LocalFileItem[]> {
-    return dispatch('searchLocalFiles', params);
+    return ensureElectronIpc().localSystem.searchLocalFiles(params);
   }
 
   async openLocalFile(params: OpenLocalFileParams) {
-    return dispatch('openLocalFile', params);
+    return ensureElectronIpc().localSystem.openLocalFile(params);
   }
 
   async openLocalFolder(params: OpenLocalFolderParams) {
-    return dispatch('openLocalFolder', params);
+    return ensureElectronIpc().localSystem.openLocalFolder(params);
   }
 
   async moveLocalFiles(params: MoveLocalFilesParams): Promise<LocalMoveFilesResultItem[]> {
-    return dispatch('moveLocalFiles', params);
+    return ensureElectronIpc().localSystem.moveLocalFiles(params);
   }
 
   async renameLocalFile(params: RenameLocalFileParams) {
-    return dispatch('renameLocalFile', params);
+    return ensureElectronIpc().localSystem.renameLocalFile(params);
   }
 
   async writeFile(params: WriteLocalFileParams) {
-    return dispatch('writeLocalFile', params);
+    return ensureElectronIpc().localSystem.writeLocalFile(params);
   }
 
   async editLocalFile(params: EditLocalFileParams): Promise<EditLocalFileResult> {
-    return dispatch('editLocalFile', params);
+    return ensureElectronIpc().localSystem.editLocalFile(params);
   }
 
   // Shell Commands
   async runCommand(params: RunCommandParams): Promise<RunCommandResult> {
-    return dispatch('runCommand', params);
+    return ensureElectronIpc().shellCommand.runCommand(params);
   }
 
   async getCommandOutput(params: GetCommandOutputParams): Promise<GetCommandOutputResult> {
-    return dispatch('getCommandOutput', params);
+    return ensureElectronIpc().shellCommand.getCommandOutput(params);
   }
 
   async killCommand(params: KillCommandParams): Promise<KillCommandResult> {
-    return dispatch('killCommand', params);
+    return ensureElectronIpc().shellCommand.killCommand(params);
   }
 
   // Search & Find
   async grepContent(params: GrepContentParams): Promise<GrepContentResult> {
-    return dispatch('grepContent', params);
+    return ensureElectronIpc().localSystem.grepContent(params);
   }
 
   async globFiles(params: GlobFilesParams): Promise<GlobFilesResult> {
-    return dispatch('globLocalFiles', params);
+    return ensureElectronIpc().localSystem.globLocalFiles(params);
   }
 
   // Helper methods
