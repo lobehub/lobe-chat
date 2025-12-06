@@ -19,24 +19,31 @@ const MainContent = memo(() => {
     s.setLibraryId,
   ]);
 
+  const fileId = searchParams.get('file');
+
   // Load knowledge base data
   useKnowledgeBaseItem(knowledgeBaseId || '');
 
-  // Sync URL parameter with store on mount and when it changes
+  // Set libraryId from URL params (only when knowledgeBaseId changes)
   useEffect(() => {
-    // Set libraryId from URL params
     setLibraryId(knowledgeBaseId);
+  }, [knowledgeBaseId, setLibraryId]);
 
-    const fileId = searchParams.get('file');
-    if (fileId && !fileId.startsWith('doc')) {
+  // Sync file view mode from URL
+  useEffect(() => {
+    if (fileId) {
       setCurrentViewItemId(fileId);
-      setMode('editor');
+      if (fileId.startsWith('doc')) {
+        setMode('page');
+      } else {
+        setMode('editor');
+      }
     } else {
       // Reset to explorer mode when no file is selected
       setMode('explorer');
       setCurrentViewItemId(undefined);
     }
-  }, [knowledgeBaseId, searchParams, setCurrentViewItemId, setMode, setLibraryId]);
+  }, [fileId, setCurrentViewItemId, setMode]);
 
   return <ResourceManager />;
 });

@@ -14,24 +14,34 @@ const ResourceHomePage = memo(() => {
     (s) => [s.setMode, s.setCurrentViewItemId, s.setCategory, s.setLibraryId],
   );
 
-  // Sync URL query parameter with store on mount and when it changes
+  const categoryParam = (searchParams.get('category') as FilesTabs) || FilesTabs.All;
+  const fileId = searchParams.get('file');
+
+  // Clear libraryId when on home route (only once on mount)
   useEffect(() => {
-    // Clear libraryId when on home route
     setLibraryId(undefined);
+  }, [setLibraryId]);
 
-    const categoryParam = (searchParams.get('category') as FilesTabs) || FilesTabs.All;
+  // Sync category from URL
+  useEffect(() => {
     setCategory(categoryParam);
+  }, [categoryParam, setCategory]);
 
-    const fileId = searchParams.get('file');
-    if (fileId && !fileId.startsWith('doc')) {
+  // Sync file view mode from URL
+  useEffect(() => {
+    if (fileId) {
       setCurrentViewItemId(fileId);
-      setMode('editor');
+      if (fileId.startsWith('doc')) {
+        setMode('page');
+      } else {
+        setMode('editor');
+      }
     } else {
       // Reset to explorer mode when no file is selected
       setMode('explorer');
       setCurrentViewItemId(undefined);
     }
-  }, [searchParams, setCurrentViewItemId, setMode, setCategory, setLibraryId]);
+  }, [fileId, setCurrentViewItemId, setMode]);
 
   return <ResourceManager />;
 });
