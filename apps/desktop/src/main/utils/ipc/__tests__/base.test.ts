@@ -1,7 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { IpcContext } from '../base';
-import { IpcMethod, IpcServerMethod, IpcService, getServerMethodMetadata } from '../base';
+import {
+  IpcMethod,
+  IpcServerMethod,
+  IpcService,
+  getIpcContext,
+  getServerMethodMetadata,
+} from '../base';
 
 const { ipcMainHandleMock } = vi.hoisted(() => ({
   ipcMainHandleMock: vi.fn(),
@@ -24,8 +30,8 @@ describe('ipc service base', () => {
       public lastCall: { payload: string | undefined; context?: IpcContext } | null = null;
 
       @IpcMethod()
-      ping(payload?: string, context?: IpcContext) {
-        this.lastCall = { context, payload };
+      ping(payload?: string) {
+        this.lastCall = { context: getIpcContext(), payload };
         return 'pong';
       }
     }

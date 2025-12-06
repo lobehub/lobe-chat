@@ -1,4 +1,3 @@
-import type { IpcContext } from '@/utils/ipc';
 import { createLogger } from '@/utils/logger';
 
 import { ControllerModule, IpcMethod } from './index';
