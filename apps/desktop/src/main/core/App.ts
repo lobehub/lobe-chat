@@ -1,5 +1,5 @@
 import { ElectronIPCEventHandler, ElectronIPCServer } from '@lobechat/electron-server-ipc';
-import { Session, app, ipcMain, protocol } from 'electron';
+import { Session, app, protocol } from 'electron';
 import { macOS, windows } from 'electron-is';
 import { pathExistsSync, remove } from 'fs-extra';
 import os from 'node:os';
@@ -10,7 +10,6 @@ import { buildDir, LOCAL_DATABASE_DIR, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
-import { IpcClientEventSender } from '@/types/ipcClientEvent';
 import { createLogger } from '@/utils/logger';
 import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
 
@@ -95,7 +94,7 @@ export class App {
     logger.debug(`Loading ${services.length} services`);
     services.forEach((service) => this.addService(service));
 
-    this.initializeIPCEvents();
+    this.initializeServerIpcEvents();
 
     this.i18n = new I18nManager(this);
     this.browserManager = new BrowserManager(this);
@@ -268,10 +267,6 @@ export class App {
   private services = new Map<Class<any>, any>();
 
   private ipcServer: ElectronIPCServer;
-  /**
-   * events dispatched from webview layer
-   */
-  private ipcClientEventMap: IPCEventMap = new Map();
   private ipcServerEventMap: IPCEventMap = new Map();
   shortcutMethodMap: ShortcutMethodMap = new Map();
   protocolHandlerMap: ProtocolHandlerMap = new Map();
@@ -328,21 +323,10 @@ export class App {
     this.controllers.set(ControllerClass, controller);
 
     IoCContainer.controllers.get(ControllerClass)?.forEach((event) => {
-      if (event.mode === 'client') {
-        // Store all objects from event decorator in ipcClientEventMap
-        this.ipcClientEventMap.set(event.name, {
-          controller,
-          methodName: event.methodName,
-        });
-      }
-
-      if (event.mode === 'server') {
-        // Store all objects from event decorator in ipcServerEventMap
-        this.ipcServerEventMap.set(event.name, {
-          controller,
-          methodName: event.methodName,
-        });
-      }
+      this.ipcServerEventMap.set(event.name, {
+        controller,
+        methodName: event.methodName,
+      });
     });
 
     IoCContainer.shortcuts.get(ControllerClass)?.forEach((shortcut) => {
@@ -427,27 +411,8 @@ export class App {
     }
   }
 
-  private initializeIPCEvents() {
-    logger.debug('Initializing IPC events');
-    // Register batch controller client events for render side consumption
-    this.ipcClientEventMap.forEach((eventInfo, key) => {
-      const { controller, methodName } = eventInfo;
-
-      ipcMain.handle(key, async (e, data) => {
-        // 从 WebContents 获取对应的 BrowserWindow id
-        const senderIdentifier = this.browserManager.getIdentifierByWebContents(e.sender);
-        try {
-          return await controller[methodName](data, {
-            identifier: senderIdentifier,
-          } as IpcClientEventSender);
-        } catch (error) {
-          logger.error(`Error handling IPC event ${key}:`, error);
-          return { error: error.message };
-        }
-      });
-    });
-
-    // Batch register server events from controllers for next server consumption
+  private initializeServerIpcEvents() {
+    logger.debug('Initializing IPC server events');
     const ipcServerEvents = {} as ElectronIPCEventHandler;
 
     this.ipcServerEventMap.forEach((eventInfo, key) => {

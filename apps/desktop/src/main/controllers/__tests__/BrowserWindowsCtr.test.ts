@@ -3,7 +3,7 @@ import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AppBrowsersIdentifiers, BrowsersIdentifiers } from '@/appBrowsers';
 import type { App } from '@/core/App';
-import type { IpcClientEventSender } from '@/types/ipcClientEvent';
+import type { IpcContext } from '@/utils/ipc';
 
 import BrowserWindowsCtr from '../BrowserWindowsCtr';
 
@@ -16,6 +16,9 @@ const mockCloseWindow = vi.fn();
 const mockMinimizeWindow = vi.fn();
 const mockMaximizeWindow = vi.fn();
 const mockRetrieveByIdentifier = vi.fn();
+const testSenderIdentifierString: string = 'test-window-event-id';
+
+const mockGetIdentifierByWebContents = vi.fn(() => testSenderIdentifierString);
 const mockGetMainWindow = vi.fn(() => ({
   toggleVisible: mockToggleVisible,
   loadUrl: mockLoadUrl,
@@ -32,6 +35,7 @@ const { findMatchingRoute } = await import('~common/routes');
 
 const mockApp = {
   browserManager: {
+    getIdentifierByWebContents: mockGetIdentifierByWebContents,
     getMainWindow: mockGetMainWindow,
     redirectToPage: mockRedirectToPage,
     closeWindow: mockCloseWindow,
@@ -82,28 +86,29 @@ describe('BrowserWindowsCtr', () => {
     });
   });
 
-  const testSenderIdentifierString: string = 'test-window-event-id';
-  const sender: IpcClientEventSender = {
-    identifier: testSenderIdentifierString,
-  };
-
   describe('closeWindow', () => {
     it('should close the window with the given sender identifier', () => {
-      browserWindowsCtr.closeWindow(undefined, sender);
+      const context = { sender: {} as any } as IpcContext;
+      browserWindowsCtr.closeWindow(undefined, context);
+      expect(mockGetIdentifierByWebContents).toHaveBeenCalledWith(context.sender);
       expect(mockCloseWindow).toHaveBeenCalledWith(testSenderIdentifierString);
     });
   });
 
   describe('minimizeWindow', () => {
     it('should minimize the window with the given sender identifier', () => {
-      browserWindowsCtr.minimizeWindow(undefined, sender);
+      const context = { sender: {} as any } as IpcContext;
+      browserWindowsCtr.minimizeWindow(undefined, context);
+      expect(mockGetIdentifierByWebContents).toHaveBeenCalledWith(context.sender);
       expect(mockMinimizeWindow).toHaveBeenCalledWith(testSenderIdentifierString);
     });
   });
 
   describe('maximizeWindow', () => {
     it('should maximize the window with the given sender identifier', () => {
-      browserWindowsCtr.maximizeWindow(undefined, sender);
+      const context = { sender: {} as any } as IpcContext;
+      browserWindowsCtr.maximizeWindow(undefined, context);
+      expect(mockGetIdentifierByWebContents).toHaveBeenCalledWith(context.sender);
       expect(mockMaximizeWindow).toHaveBeenCalledWith(testSenderIdentifierString);
     });
   });

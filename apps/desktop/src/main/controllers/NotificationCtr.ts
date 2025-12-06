@@ -7,11 +7,12 @@ import { macOS, windows } from 'electron-is';
 
 import { createLogger } from '@/utils/logger';
 
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
 
 const logger = createLogger('controllers:NotificationCtr');
 
 export default class NotificationCtr extends ControllerModule {
+  static override readonly groupName = 'notification';
   /**
    * Set up desktop notifications after the application is ready
    */
@@ -51,7 +52,7 @@ export default class NotificationCtr extends ControllerModule {
   /**
    * Show system desktop notification (only when window is hidden)
    */
-  @ipcClientEvent('showDesktopNotification')
+  @IpcMethod()
   async showDesktopNotification(
     params: ShowDesktopNotificationParams,
   ): Promise<DesktopNotificationResult> {
@@ -126,7 +127,7 @@ export default class NotificationCtr extends ControllerModule {
   /**
    * Check if the main window is hidden
    */
-  @ipcClientEvent('isMainWindowHidden')
+  @IpcMethod()
   isMainWindowHidden(): boolean {
     try {
       const mainWindow = this.app.browserManager.getMainWindow();

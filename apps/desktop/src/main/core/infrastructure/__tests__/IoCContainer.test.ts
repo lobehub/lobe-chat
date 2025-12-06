@@ -15,7 +15,7 @@ describe('IoCContainer', () => {
 
   describe('controllers WeakMap', () => {
     it('should store controller metadata', () => {
-      const metadata = [{ methodName: 'handleMessage', mode: 'client' as const, name: 'message' }];
+      const metadata = [{ methodName: 'handleMessage', mode: 'server' as const, name: 'message' }];
 
       IoCContainer.controllers.set(TestController, metadata);
 
@@ -23,7 +23,7 @@ describe('IoCContainer', () => {
     });
 
     it('should allow multiple controllers', () => {
-      const metadata1 = [{ methodName: 'method1', mode: 'client' as const, name: 'action1' }];
+      const metadata1 = [{ methodName: 'method1', mode: 'server' as const, name: 'action1' }];
       const metadata2 = [{ methodName: 'method2', mode: 'server' as const, name: 'action2' }];
 
       IoCContainer.controllers.set(TestController, metadata1);
@@ -34,7 +34,7 @@ describe('IoCContainer', () => {
     });
 
     it('should allow overwriting controller metadata', () => {
-      const oldMetadata = [{ methodName: 'oldMethod', mode: 'client' as const, name: 'old' }];
+      const oldMetadata = [{ methodName: 'oldMethod', mode: 'server' as const, name: 'old' }];
       const newMetadata = [{ methodName: 'newMethod', mode: 'server' as const, name: 'new' }];
 
       IoCContainer.controllers.set(TestController, oldMetadata);
@@ -45,17 +45,16 @@ describe('IoCContainer', () => {
 
     it('should support multiple methods per controller', () => {
       const metadata = [
-        { methodName: 'method1', mode: 'client' as const, name: 'action1' },
+        { methodName: 'method1', mode: 'server' as const, name: 'action1' },
         { methodName: 'method2', mode: 'server' as const, name: 'action2' },
-        { methodName: 'method3', mode: 'client' as const, name: 'action3' },
+        { methodName: 'method3', mode: 'server' as const, name: 'action3' },
       ];
 
       IoCContainer.controllers.set(TestController, metadata);
 
       const stored = IoCContainer.controllers.get(TestController);
       expect(stored).toHaveLength(3);
-      expect(stored?.[0].mode).toBe('client');
-      expect(stored?.[1].mode).toBe('server');
+      expect(stored?.every((item) => item.mode === 'server')).toBe(true);
     });
   });
 

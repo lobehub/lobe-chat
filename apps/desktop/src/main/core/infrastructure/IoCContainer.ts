@@ -4,7 +4,7 @@
 export class IoCContainer {
   static controllers: WeakMap<
     any,
-    { methodName: string; mode: 'client' | 'server'; name: string }[]
+    { methodName: string; mode: 'server'; name: string }[]
   > = new WeakMap();
 
   static shortcuts: WeakMap<any, { methodName: string; name: string }[]> = new WeakMap();
