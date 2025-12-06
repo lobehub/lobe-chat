@@ -24,7 +24,11 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
 
   const executor = await MemoryExtractionExecutor.create();
 
-  const scheduleNextPage = async (userId: string, cursorCreatedAt: Date, cursorId: string) => {
+  const scheduleNextPage = async (
+    userId: string,
+    cursorCreatedAt: Date,
+    cursorId: string,
+  ) => {
     await MemoryExtractionWorkflowService.triggerProcessUserTopics({
       ...buildWorkflowPayloadInput({
         ...params,
@@ -106,7 +110,17 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
     if (!topicsFromPayload && cursor) {
       await context.run(
         `memory:user-memory:extract:users:${userId}:topics:${cursor.id}:schedule-next-batch`,
-        () => scheduleNextPage(userId, cursor.createdAt, cursor.id),
+        () => {
+          // NOTICE: Upstash Workflow only supports serializable data into plain JSON,
+          // this causes the Date object to be converted into string when passed as parameter from
+          // context to child workflow. So we need to convert it back to Date object here.
+          const createdAt = new Date(cursor.createdAt);
+          if (Number.isNaN(createdAt.getTime())) {
+            throw new Error('Invalid cursor date when scheduling next topic page');
+          }
+
+          scheduleNextPage(userId, createdAt, cursor.id)
+        },
       );
     }
   }
