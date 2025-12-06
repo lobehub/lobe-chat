@@ -60,9 +60,9 @@
     },
     "list": "助手列表",
     "marketSource": {
-      "label": "切換市集來源",
-      "legacy": "舊市集",
-      "new": "新市集"
+      "label": "切換社群來源",
+      "legacy": "舊社群",
+      "new": "新社群"
     },
     "more": "更多",
     "plugins": "集成插件",
@@ -85,7 +85,7 @@
         "subtitle": "當前訪問的助手已因以下可能原因被封存：",
         "title": "助手已被封存"
       },
-      "backToMarket": "返回助手市集",
+      "backToMarket": "返回助手社群",
       "deprecated": {
         "reasons": {
           "official": "助手因安全／政治等問題被官方下架",
@@ -94,9 +94,9 @@
         "subtitle": "當前訪問的助手已因以下可能原因被拒絕：",
         "title": "助手已被拒絕"
       },
-      "support": "如有任何問題，請複製連結並發送至 <1>support@lobehub.com</1> 進行諮詢。",
+      "support": "如有任何問題，請複製連結並發送至 <email>support@lobehub.com</email> 進行諮詢。",
       "unpublished": {
-        "subtitle": "當前訪問的助手正在進行版本審核中，如有疑問請複製連結並發送問題至 <1>support@lobehub.com</1> 進行諮詢。",
+        "subtitle": "目前訪問的助手正在進行版本審核，如有疑問請複製連結並發送至 <email>support@lobehub.com</email> 進行諮詢。",
         "title": "助手正在審核中"
       }
     },
@@ -144,7 +144,7 @@
   "createGuide": {
     "func1": {
       "desc1": "在會話窗口中通過右上角設置進入你想提交助手的設置頁面;",
-      "desc2": "點擊右上角提交到助手市場按鈕。",
+      "desc2": "點擊右上角的提交至助手社群按鈕。",
       "tag": "方法一",
       "title": "通過 LobeChat 提交"
     },
@@ -518,7 +518,7 @@
     "hero": {
       "desc": "開源、可部署的 MCP Servers 平台，幫助 AI 系統輕鬆存取檔案系統、資料庫、API 等關鍵資源，全面擴展你的 AI 能力。",
       "subTitle": "開源 & 開箱即用",
-      "title": "面向 AI 的開源 MCP 市場"
+      "title": "面向 AI 的開源 MCP 社群"
     },
     "sorts": {
       "createdAt": "最近新增",
@@ -531,7 +531,7 @@
       "toolsCount": "工具數",
       "updatedAt": "最近更新"
     },
-    "title": "MCP 市場",
+    "title": "MCP 社群",
     "unvalidated": {
       "desc": "此 MCP Server 暫未經過驗證",
       "title": "未驗證"

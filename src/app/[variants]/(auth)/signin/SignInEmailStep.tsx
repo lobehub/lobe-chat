@@ -10,7 +10,7 @@ import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { BRANDING_NAME } from '@/const/branding';
 import { PRIVACY_URL, TERMS_URL } from '@/const/url';
 
-import AuthCard from '../components/AuthCard';
+import AuthCard from '../../../../features/AuthCard';
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const USERNAME_REGEX = /^\w+$/;

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
-import AuthCard from '../components/AuthCard';
+import AuthCard from '../../../../features/AuthCard';
 import { ResetPasswordContent } from './ResetPasswordContent';
 
 const ResetPasswordPage = () => {

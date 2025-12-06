@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
-import AuthCard from '../components/AuthCard';
+import AuthCard from '../../../../features/AuthCard';
 import { VerifyEmailContent } from './VerifyEmailContent';
 
 const VerifyEmailPage = () => {

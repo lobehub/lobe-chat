@@ -368,7 +368,7 @@
       "trustedBy": "{{name}} 제공",
       "unverified": {
         "title": "검증되지 않은 서드파티 플러그인",
-        "warning": "이 플러그인은 검증되지 않은 서드파티 마켓에서 제공됩니다. 설치 전에 출처를 신뢰할 수 있는지 확인해 주세요."
+        "warning": "이 플러그인은 검증되지 않은 제3자 커뮤니티에서 제공되며, 설치 전에 해당 출처를 신뢰할 수 있는지 확인하십시오."
       },
       "verified": "검증됨"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "이 설정은 MCP 서버 시작 시 환경 변수로 프로세스에 전달됩니다",
     "httpTypeNotice": "HTTP 유형의 MCP 플러그인은 별도의 환경 변수 설정이 필요하지 않습니다",
     "indexUrl": {
-      "title": "마켓 인덱스",
+      "title": "커뮤니티 인덱스",
       "tooltip": "온라인 편집은 지원되지 않으며, 배포 시 환경 변수로 설정해 주세요"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "환경 변수 저장 실패",
       "envUpdateSuccess": "환경 변수 저장 성공"
     },
-    "modalDesc": "플러그인 마켓 주소를 설정하면 사용자 정의 마켓을 사용할 수 있습니다",
+    "modalDesc": "플러그인 커뮤니티의 주소를 설정하면 사용자 정의 커뮤니티를 사용할 수 있습니다.",
     "rules": {
       "argsRequired": "시작 매개변수를 입력해 주세요",
       "commandRequired": "시작 명령어를 입력해 주세요",
       "urlRequired": "서비스 주소를 입력해 주세요"
     },
     "saveSettings": "설정 저장",
-    "title": "플러그인 마켓 설정"
+    "title": "플러그인 커뮤니티 설정"
   },
   "showInPortal": "워크스페이스에서 자세히 보기",
   "store": {

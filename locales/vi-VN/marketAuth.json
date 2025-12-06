@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Hủy",
-    "confirm": "Ủy quyền sử dụng",
-    "description": {
-      "and": "và",
-      "prefix": "Bằng cách nhấp vào ủy quyền sử dụng, bạn đồng ý với",
+    "confirm": "Tạo hồ sơ của bạn",
+    "description": "Hồ sơ cộng đồng của bạn tồn tại độc lập với tài khoản người dùng {{appName}}.",
+    "footer": {
+      "agreement": "Bằng cách tiếp tục, bạn xác nhận rằng bạn đã hiểu và đồng ý với <terms>Điều khoản và Điều kiện</terms> và <privacy>Chính sách quyền riêng tư</privacy>",
       "privacy": "Chính sách quyền riêng tư",
       "terms": "Điều khoản dịch vụ"
     },
-    "title": "Xác nhận ủy quyền"
+    "subtitle": "Tạo hồ sơ cộng đồng để gửi và quản lý thông tin niêm yết trên cộng đồng.",
+    "title": "Tạo hồ sơ cộng đồng"
   },
   "callback": {
     "buttons": {

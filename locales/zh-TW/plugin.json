@@ -368,7 +368,7 @@
       "trustedBy": "由 {{name}} 提供",
       "unverified": {
         "title": "未經驗證的第三方插件",
-        "warning": "此插件來自未驗證的第三方市場，安裝前請確認您信任該來源。"
+        "warning": "此外掛來自未經驗證的第三方社群，安裝前請確認您信任該來源。"
       },
       "verified": "已驗證"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "這些配置將作為環境變數在 MCP 伺服器啟動時傳遞給進程",
     "httpTypeNotice": "HTTP 類型的 MCP 插件暫無需要配置的環境變數",
     "indexUrl": {
-      "title": "市場索引",
+      "title": "社群索引",
       "tooltip": "暫不支援線上編輯，請透過部署時環境變數進行設定"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "環境變數保存失敗",
       "envUpdateSuccess": "環境變數保存成功"
     },
-    "modalDesc": "配置插件市場的地址後，可以使用自定義的插件市場",
+    "modalDesc": "設定外掛社群的位址後，即可使用自訂的外掛社群",
     "rules": {
       "argsRequired": "請輸入啟動參數",
       "commandRequired": "請輸入啟動命令",
       "urlRequired": "請輸入服務地址"
     },
     "saveSettings": "保存設置",
-    "title": "設置插件市場"
+    "title": "設定外掛社群"
   },
   "showInPortal": "請在工作區中查看詳情",
   "store": {

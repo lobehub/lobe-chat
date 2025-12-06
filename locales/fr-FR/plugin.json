@@ -368,7 +368,7 @@
       "trustedBy": "Fournit par {{name}}",
       "unverified": {
         "title": "Plugin tiers non vérifié",
-        "warning": "Ce plugin provient d'un marché tiers non vérifié, veuillez confirmer que vous faites confiance à cette source avant l'installation."
+        "warning": "Ce plugin provient d'une communauté tierce non vérifiée. Veuillez vous assurer de faire confiance à cette source avant l'installation."
       },
       "verified": "Vérifié"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "Ces configurations seront transmises en tant que variables d'environnement au processus lors du démarrage du serveur MCP",
     "httpTypeNotice": "Les plugins MCP de type HTTP n'ont pas de variables d'environnement à configurer pour le moment",
     "indexUrl": {
-      "title": "Index du marché",
+      "title": "Index de la communauté",
       "tooltip": "L'édition en ligne n'est pas encore supportée, veuillez configurer via les variables d'environnement lors du déploiement"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "Échec de l'enregistrement des variables d'environnement",
       "envUpdateSuccess": "Variables d'environnement enregistrées avec succès"
     },
-    "modalDesc": "Après avoir configuré l'adresse du marché des plugins, vous pouvez utiliser un marché de plugins personnalisé",
+    "modalDesc": "Après avoir configuré l'adresse de la communauté de plugins, vous pourrez utiliser une communauté personnalisée de plugins.",
     "rules": {
       "argsRequired": "Veuillez saisir les arguments de démarrage",
       "commandRequired": "Veuillez saisir la commande de démarrage",
       "urlRequired": "Veuillez saisir l'adresse du service"
     },
     "saveSettings": "Enregistrer les paramètres",
-    "title": "Configurer le marché des plugins"
+    "title": "Configurer la communauté de plugins"
   },
   "showInPortal": "Veuillez consulter les détails dans l'espace de travail",
   "store": {

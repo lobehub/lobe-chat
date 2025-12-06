@@ -60,9 +60,9 @@
     },
     "list": "Asistan Listesi",
     "marketSource": {
-      "label": "Pazar Kaynağını Değiştir",
-      "legacy": "Eski Pazar",
-      "new": "Yeni Pazar"
+      "label": "Topluluk Kaynağını Değiştir",
+      "legacy": "Eski Topluluk",
+      "new": "Yeni Topluluk"
     },
     "more": "Daha Fazla",
     "plugins": "Entegre Eklentiler",
@@ -85,7 +85,7 @@
         "subtitle": "Erişmeye çalıştığınız asistan aşağıdaki olası nedenlerden dolayı arşivlenmiştir:",
         "title": "Asistan Arşivlendi"
       },
-      "backToMarket": "Asistan Pazarına Dön",
+      "backToMarket": "Asistan Topluluğuna Geri Dön",
       "deprecated": {
         "reasons": {
           "official": "Asistan güvenlik/siyasi nedenlerle resmi olarak yayından kaldırıldı",
@@ -94,9 +94,9 @@
         "subtitle": "Erişmeye çalıştığınız asistan aşağıdaki olası nedenlerden dolayı reddedilmiştir:",
         "title": "Asistan Reddedildi"
       },
-      "support": "Herhangi bir sorun için lütfen bağlantıyı kopyalayıp <1>support@lobehub.com</1> adresine göndererek destek alın.",
+      "support": "Herhangi bir sorunuz varsa, lütfen bağlantıyı kopyalayarak <email>support@lobehub.com</email> adresine gönderin.",
       "unpublished": {
-        "subtitle": "Erişmeye çalıştığınız asistan şu anda sürüm incelemesinde. Sorularınız varsa bağlantıyı kopyalayıp <1>support@lobehub.com</1> adresine gönderin.",
+        "subtitle": "Erişmeye çalıştığınız asistan şu anda sürüm onay sürecindedir. Sorularınız varsa bağlantıyı kopyalayarak <email>support@lobehub.com</email> adresine gönderin.",
         "title": "Asistan İnceleniyor"
       }
     },
@@ -144,7 +144,7 @@
   "createGuide": {
     "func1": {
       "desc1": "Sohbet penceresinde sağ üst köşedeki ayarlar üzerinden eklemek istediğin asistanın ayar sayfasına git;",
-      "desc2": "Sağ üst köşedeki asistan pazarına gönder butonuna tıkla.",
+      "desc2": "Sağ üst köşedeki 'Asistan Topluluğuna Gönder' düğmesine tıklayın.",
       "tag": "Yöntem 1",
       "title": "LobeChat ile Gönder"
     },
@@ -518,7 +518,7 @@
     "hero": {
       "desc": "Açık kaynaklı, dağıtılabilir MCP Sunucuları platformu; AI sistemlerinin dosya sistemi, veritabanları, API'ler ve diğer kritik kaynaklara kolay erişimini sağlar, AI yeteneklerinizi kapsamlı şekilde genişletir.",
       "subTitle": "Açık Kaynak & Kutudan Çıkar Çalışır",
-      "title": "AI için Açık Kaynak MCP Pazarı"
+      "title": "Yapay Zekâ Odaklı Açık Kaynak MCP Topluluğu"
     },
     "sorts": {
       "createdAt": "En Son Eklendi",
@@ -531,7 +531,7 @@
       "toolsCount": "Araç Sayısı",
       "updatedAt": "Son Güncelleme"
     },
-    "title": "MCP Pazarı",
+    "title": "MCP Topluluğu",
     "unvalidated": {
       "desc": "Bu MCP Sunucusu henüz doğrulanmamıştır",
       "title": "Doğrulanmamış"

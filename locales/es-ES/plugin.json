@@ -368,7 +368,7 @@
       "trustedBy": "Proporcionado por {{name}}",
       "unverified": {
         "title": "Plugin de terceros no verificado",
-        "warning": "Este plugin proviene de un mercado de terceros no verificado, por favor confirme que confía en esta fuente antes de instalar."
+        "warning": "Este complemento proviene de una comunidad de terceros no verificada. Asegúrese de confiar en esta fuente antes de instalarlo."
       },
       "verified": "Verificado"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "Estas configuraciones se pasarán como variables de entorno al iniciar el servidor MCP",
     "httpTypeNotice": "Los plugins MCP de tipo HTTP no requieren variables de entorno configurables",
     "indexUrl": {
-      "title": "Índice del mercado",
+      "title": "Índice de la comunidad",
       "tooltip": "No se soporta edición en línea, por favor configure mediante variables de entorno al desplegar"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "Error al guardar variables de entorno",
       "envUpdateSuccess": "Variables de entorno guardadas con éxito"
     },
-    "modalDesc": "Después de configurar la dirección del mercado de plugins, podrá usar mercados personalizados",
+    "modalDesc": "Después de configurar la dirección de la comunidad de complementos, podrá utilizar una comunidad personalizada de complementos.",
     "rules": {
       "argsRequired": "Por favor ingrese los parámetros de inicio",
       "commandRequired": "Por favor ingrese el comando de inicio",
       "urlRequired": "Por favor ingrese la dirección del servicio"
     },
     "saveSettings": "Guardar configuración",
-    "title": "Configurar mercado de plugins"
+    "title": "Configurar comunidad de complementos"
   },
   "showInPortal": "Por favor vea los detalles en el espacio de trabajo",
   "store": {

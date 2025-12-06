@@ -60,9 +60,9 @@
     },
     "list": "Liste des assistants",
     "marketSource": {
-      "label": "Changer de source de marché",
-      "legacy": "Ancien marché",
-      "new": "Nouveau marché"
+      "label": "Changer de source communautaire",
+      "legacy": "Ancienne communauté",
+      "new": "Nouvelle communauté"
     },
     "more": "Plus",
     "plugins": "Intégrer des plugins",
@@ -85,7 +85,7 @@
         "subtitle": "L’assistant que vous essayez d’accéder a été archivé pour l’une des raisons suivantes :",
         "title": "Assistant archivé"
       },
-      "backToMarket": "Retour au marché des assistants",
+      "backToMarket": "Retour à la communauté des assistants",
       "deprecated": {
         "reasons": {
           "official": "L’assistant a été retiré par l’équipe officielle pour des raisons de sécurité ou politiques",
@@ -94,9 +94,9 @@
         "subtitle": "L’assistant que vous essayez d’accéder a été rejeté pour l’une des raisons suivantes :",
         "title": "Assistant rejeté"
       },
-      "support": "Pour toute question, veuillez copier le lien et l’envoyer à <1>support@lobehub.com</1> pour assistance.",
+      "support": "Pour toute question, veuillez copier le lien et l’envoyer à <email>support@lobehub.com</email> pour assistance.",
       "unpublished": {
-        "subtitle": "L’assistant que vous essayez d’accéder est en cours de révision. Pour toute question, veuillez copier le lien et l’envoyer à <1>support@lobehub.com</1>.",
+        "subtitle": "L’assistant que vous consultez est en cours de révision. Si vous avez des questions, copiez le lien et envoyez-le à <email>support@lobehub.com</email> pour assistance.",
         "title": "Assistant en cours de révision"
       }
     },
@@ -144,7 +144,7 @@
   "createGuide": {
     "func1": {
       "desc1": "Accédez à la page de paramètres de l'assistant que vous souhaitez soumettre via le coin supérieur droit de la fenêtre de conversation ;",
-      "desc2": "Cliquez sur le bouton de soumission au marché des assistants dans le coin supérieur droit.",
+      "desc2": "Cliquez sur le bouton en haut à droite pour soumettre à la communauté des assistants.",
       "tag": "Méthode un",
       "title": "Soumettre via LobeChat"
     },
@@ -518,7 +518,7 @@
     "hero": {
       "desc": "Plateforme open source et déployable de serveurs MCP, aidant les systèmes d'IA à accéder facilement aux systèmes de fichiers, bases de données, API et autres ressources clés, étendant pleinement vos capacités d'IA.",
       "subTitle": "Open source & prêt à l'emploi",
-      "title": "Marché MCP open source pour l'IA"
+      "title": "Communauté MCP open source orientée IA"
     },
     "sorts": {
       "createdAt": "Ajouté récemment",
@@ -531,7 +531,7 @@
       "toolsCount": "Nombre d'outils",
       "updatedAt": "Dernière mise à jour"
     },
-    "title": "Marché MCP",
+    "title": "Communauté MCP",
     "unvalidated": {
       "desc": "Ce serveur MCP n'a pas encore été validé",
       "title": "Non validé"
