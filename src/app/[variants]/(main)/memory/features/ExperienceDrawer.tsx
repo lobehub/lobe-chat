@@ -1,10 +1,12 @@
-import { Drawer, Steps, Tag } from 'antd';
+import { Drawer, Progress, Steps, Tag, Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
+import dayjs from 'dayjs';
 import {
   Calendar,
   CircleDot,
   Cpu,
   FileText,
+  Link2,
   MapPin,
   MessageSquare,
   Settings,
@@ -12,6 +14,7 @@ import {
   Users,
   Zap,
 } from 'lucide-react';
+import Link from 'next/link';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -166,7 +169,8 @@ const ExperienceDrawer = memo<ExperienceDrawerProps>(({ experience, open, onClos
   if (!experience) return null;
 
   const tags = Array.isArray(experience.tags) ? experience.tags : [];
-  const typeLabel = experience.type || t('experience.defaultType');
+  const confidence = experience.scoreConfidence ?? 0;
+  const source = experience.source;
 
   const steps = [
     {
@@ -187,19 +191,59 @@ const ExperienceDrawer = memo<ExperienceDrawerProps>(({ experience, open, onClos
     },
   ].filter((step) => step.description);
 
+  // Use title if available, otherwise use type as fallback
+  const drawerTitle = experience.title || experience.type || t('experience.defaultType');
+
   return (
-    <Drawer
-      onClose={onClose}
-      open={open}
-      title={
-        <span className={styles.drawerTitle}>
-          {getTypeIcon(experience.type)}
-          {typeLabel}
-        </span>
-      }
-      width={480}
-    >
+    <Drawer onClose={onClose} open={open} title={drawerTitle} width={480}>
       <Flexbox gap={24}>
+        {/* Meta info: type, confidence, source, time */}
+        <div className={styles.metaInfo}>
+          <Flexbox gap={12}>
+            <Flexbox align="center" gap={16} horizontal justify="space-between">
+              {experience.type && (
+                <span className={styles.typeTag}>
+                  {getTypeIcon(experience.type)}
+                  {experience.type}
+                </span>
+              )}
+              <div className={styles.confidence}>
+                <span>{t('experience.confidence')}:</span>
+                <Progress
+                  percent={Math.round(confidence * 100)}
+                  showInfo={false}
+                  size="small"
+                  style={{ width: 60 }}
+                />
+                <span>{(confidence * 100).toFixed(0)}%</span>
+              </div>
+            </Flexbox>
+
+            <Flexbox align="center" gap={16} horizontal justify="space-between">
+              {source && (
+                <Flexbox align="center" gap={4} horizontal>
+                  <span className={styles.metaLabel}>{t('experience.source')}:</span>
+                  <Tooltip title={source.topicTitle || `Topic: ${source.topicId}`}>
+                    <Link
+                      className={styles.sourceLink}
+                      href={`/agent/${source.agentId}?topicId=${source.topicId}`}
+                    >
+                      <Link2 size={14} />
+                      {source.topicTitle || source.topicId.replace('tpc_', '').slice(0, 8)}
+                    </Link>
+                  </Tooltip>
+                </Flexbox>
+              )}
+              {experience.createdAt && (
+                <Tooltip title={dayjs(experience.createdAt).format('YYYY-MM-DD HH:mm:ss')}>
+                  <span className={styles.metaLabel}>{dayjs(experience.createdAt).fromNow()}</span>
+                </Tooltip>
+              )}
+            </Flexbox>
+          </Flexbox>
+        </div>
+
+        {/* Key Learning */}
         {experience.keyLearning && (
           <div className={styles.keyLearning}>
             <div className={styles.keyLearningHeader}>{t('experience.keyLearning')}</div>
@@ -207,6 +251,7 @@ const ExperienceDrawer = memo<ExperienceDrawerProps>(({ experience, open, onClos
           </div>
         )}
 
+        {/* SRAO Steps */}
         {steps.length > 0 && (
           <Steps
             className={styles.stepsContainer}
@@ -220,6 +265,7 @@ const ExperienceDrawer = memo<ExperienceDrawerProps>(({ experience, open, onClos
           />
         )}
 
+        {/* Tags */}
         {tags.length > 0 && (
           <div className={styles.tagsContainer}>
             {tags.map((tag, index) => (
