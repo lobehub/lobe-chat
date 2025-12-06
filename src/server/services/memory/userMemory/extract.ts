@@ -629,13 +629,13 @@ export class MemoryExtractionExecutor {
 
     if (!topic) {
       console.warn(`[memory-extraction] topic ${job.topicId} not found for user ${job.userId}`);
-      return false;
+      return { extracted: false, layers: {}, memoryIds: [] };
     }
     if ((job.from && topic.createdAt < job.from) || (job.to && topic.createdAt > job.to)) {
-      return false;
+      return { extracted: false, layers: {}, memoryIds: [] };
     }
     if (!job.forceAll && !job.forceTopics && isTopicExtracted(topic.metadata)) {
-      return false;
+      return { extracted: false, layers: {}, memoryIds: [] };
     }
 
     const userModel = new UserModel(db, job.userId);
@@ -662,12 +662,12 @@ export class MemoryExtractionExecutor {
       extraction = await service.run(extractionJob);
       if (!extraction) {
         this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
-        return false;
+        return { extracted: false, layers: {}, memoryIds: [] };
       }
 
-      const persisted = await this.persistExtraction(extractionJob, extraction, runtimes, db);
+      const persistedRes = await this.persistExtraction(extractionJob, extraction, runtimes, db);
 
-      await extraction.provider.complete(extractionJob, extraction.context, persisted, {
+      await extraction.provider.complete(extractionJob, extraction.context, persistedRes, {
         db,
         embeddingsModel: this.modelConfig.embeddingsModel,
         runtime: runtimes.layerExtractor,
@@ -675,7 +675,7 @@ export class MemoryExtractionExecutor {
 
       this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
 
-      return true;
+      return { extracted: true, layers: persistedRes.layers, memoryIds: persistedRes.createdIds };
     } catch (error) {
       if (extraction) {
         await extraction.provider.fail?.(extractionJob, extraction.context, error as Error, {
@@ -700,7 +700,7 @@ export class MemoryExtractionExecutor {
       throw new Error('Direct execution requires topicIds for chat_topic sources.');
     }
 
-    const results: { extracted: boolean; topicId: string; userId: string }[] = [];
+    const results: { extracted: boolean; layers: Record<string, number>; memoryIds: string[]; topicId: string; userId: string }[] = [];
 
     for (const userId of payload.userIds) {
       const topicIds = await this.filterTopicIdsForUser(userId, payload.topicIds);
@@ -716,7 +716,7 @@ export class MemoryExtractionExecutor {
           userId,
         });
 
-        results.push({ extracted, topicId, userId });
+        results.push({ ...extracted, topicId, userId });
       }
     }
 
