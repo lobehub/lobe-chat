@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { UserMemoryContextsWithoutVectors } from '@/database/schemas';
+import { DisplayContextMemory } from '@/database/repositories/userMemory';
 
 import ContextCard from './ContextCard';
 
@@ -34,39 +34,45 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface ContextDayGroupProps {
-  contexts: UserMemoryContextsWithoutVectors[];
+  contexts: DisplayContextMemory[];
   dayKey: string;
-  onClick?: (context: UserMemoryContextsWithoutVectors) => void;
+  onClick?: (context: DisplayContextMemory) => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
 }
 
-const ContextDayGroup = memo<ContextDayGroupProps>(({ contexts, dayKey, onClick }) => {
-  const { styles } = useStyles();
+const ContextDayGroup = memo<ContextDayGroupProps>(
+  ({ contexts, dayKey, onClick, onDelete, onEdit }) => {
+    const { styles } = useStyles();
 
-  const dayName = dayjs(dayKey).format('YYYY年MM月DD日');
+    const dayName = dayjs(dayKey).format('YYYY年MM月DD日');
 
-  const sortedContexts = [...contexts].sort((a, b) => {
-    return dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf();
-  });
+    const sortedContexts = [...contexts].sort((a, b) => {
+      return dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf();
+    });
 
-  return (
-    <Flexbox gap={12}>
-      <Flexbox align={'center'} className={styles.dayHeader} horizontal>
-        {dayName}
-        <Center className={styles.count}>{contexts.length}</Center>
+    return (
+      <Flexbox gap={12}>
+        <Flexbox align={'center'} className={styles.dayHeader} horizontal>
+          {dayName}
+          <Center className={styles.count}>{contexts.length}</Center>
+        </Flexbox>
+
+        <Flexbox gap={8}>
+          {sortedContexts.map((context) => (
+            <ContextCard
+              context={context}
+              key={context.id}
+              onClick={() => onClick?.(context)}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              showTimeline
+            />
+          ))}
+        </Flexbox>
       </Flexbox>
-
-      <Flexbox gap={8}>
-        {sortedContexts.map((context) => (
-          <ContextCard
-            context={context}
-            key={context.id}
-            onClick={() => onClick?.(context)}
-            showTimeline
-          />
-        ))}
-      </Flexbox>
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export default ContextDayGroup;
