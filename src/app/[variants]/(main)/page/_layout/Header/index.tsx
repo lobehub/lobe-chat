@@ -1,16 +1,19 @@
 'use client';
 
+import { SearchIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import SideBarHeaderLayout from '@/features/NavPanel/SideBarHeaderLayout';
+import NavItem from '@/features/NavPanel/components/NavItem';
+import { useGlobalStore } from '@/store/global';
 
 import AddButton from './AddButton';
-import Search from './Search';
 
 const Header = memo(() => {
   const { t } = useTranslation('common');
+  const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
   return (
     <>
       <SideBarHeaderLayout
@@ -23,7 +26,12 @@ const Header = memo(() => {
         right={<AddButton />}
       />
       <Flexbox paddingInline={4}>
-        <Search />
+        <NavItem
+          icon={SearchIcon}
+          key={'search'}
+          onClick={() => toggleCommandMenu(true)}
+          title={t('tab.search')}
+        />
       </Flexbox>
     </>
   );
