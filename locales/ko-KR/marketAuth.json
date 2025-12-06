@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "취소",
-    "confirm": "사용 권한 부여",
-    "description": {
-      "and": "및",
-      "prefix": "사용 권한 부여를 클릭하면 다음에 동의한 것으로 간주됩니다",
+    "confirm": "프로필 생성",
+    "description": "귀하의 커뮤니티 프로필은 {{appName}} 사용자 계정과는 별도로 존재합니다.",
+    "footer": {
+      "agreement": "계속 진행하면 <terms>이용 약관</terms> 및 <privacy>개인정보 처리방침</privacy>에 동의한 것으로 간주됩니다.",
       "privacy": "개인정보 처리방침",
-      "terms": "서비스 이용약관"
+      "terms": "이용 약관"
     },
-    "title": "권한 확인"
+    "subtitle": "커뮤니티에 정보를 제출하고 관리할 수 있도록 커뮤니티 프로필을 생성하세요.",
+    "title": "커뮤니티 프로필 생성"
   },
   "callback": {
     "buttons": {

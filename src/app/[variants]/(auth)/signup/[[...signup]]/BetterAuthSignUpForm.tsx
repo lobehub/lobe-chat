@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AuthCard } from '../../components/AuthCard';
+import { AuthCard } from '../../../../../features/AuthCard';
 import { SignUpFormValues, useSignUp } from './useSignUp';
 
 const BetterAuthSignUpForm = () => {

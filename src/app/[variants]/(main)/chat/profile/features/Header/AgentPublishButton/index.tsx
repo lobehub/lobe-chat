@@ -1,4 +1,4 @@
-import { Button } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { Loader2 } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -8,8 +8,8 @@ import { useAgentOwnershipCheck } from '@/hooks/useAgentOwnershipCheck';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
-import PublishResultModal from '../PublishResultModal';
-import MarketPublishButton from './MarketPublishButton';
+import PublishButton from './PublishButton';
+import PublishResultModal from './PublishResultModal';
 
 const AgentPublishButton = memo(() => {
   const { t } = useTranslation('setting');
@@ -41,7 +41,7 @@ const AgentPublishButton = memo(() => {
     switch (buttonType) {
       case 'upload': {
         return (
-          <MarketPublishButton
+          <PublishButton
             action="upload"
             marketIdentifier={meta?.marketIdentifier}
             onPublishSuccess={handlePublishSuccess}
@@ -51,7 +51,7 @@ const AgentPublishButton = memo(() => {
 
       case 'submit': {
         return (
-          <MarketPublishButton
+          <PublishButton
             action="submit"
             marketIdentifier={meta?.marketIdentifier}
             onPublishSuccess={handlePublishSuccess}
@@ -60,11 +60,7 @@ const AgentPublishButton = memo(() => {
       }
 
       default: {
-        return (
-          <Button disabled icon={Loader2} loading variant={'filled'}>
-            {t('checkingPermissions')}
-          </Button>
-        );
+        return <ActionIcon disabled icon={Loader2} loading title={t('checkingPermissions')} />;
       }
     }
   }, [buttonType, meta?.marketIdentifier]);

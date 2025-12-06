@@ -368,7 +368,7 @@
       "trustedBy": "Cung cấp bởi {{name}}",
       "unverified": {
         "title": "Plugin bên thứ ba chưa xác thực",
-        "warning": "Plugin này đến từ thị trường bên thứ ba chưa được xác thực, vui lòng xác nhận bạn tin tưởng nguồn trước khi cài đặt."
+        "warning": "Plugin này đến từ cộng đồng bên thứ ba chưa được xác minh, vui lòng đảm bảo bạn tin tưởng nguồn này trước khi cài đặt."
       },
       "verified": "Đã xác thực"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "Các cấu hình này sẽ được truyền dưới dạng biến môi trường khi MCP server khởi động",
     "httpTypeNotice": "Plugin MCP loại HTTP hiện chưa cần cấu hình biến môi trường",
     "indexUrl": {
-      "title": "Chỉ mục thị trường",
+      "title": "Chỉ mục cộng đồng",
       "tooltip": "Hiện chưa hỗ trợ chỉnh sửa trực tuyến, vui lòng cấu hình qua biến môi trường khi triển khai"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "Lưu biến môi trường thất bại",
       "envUpdateSuccess": "Lưu biến môi trường thành công"
     },
-    "modalDesc": "Sau khi cấu hình địa chỉ thị trường plugin, bạn có thể sử dụng thị trường plugin tùy chỉnh",
+    "modalDesc": "Sau khi cấu hình địa chỉ cộng đồng plugin, bạn có thể sử dụng cộng đồng plugin tùy chỉnh",
     "rules": {
       "argsRequired": "Vui lòng nhập tham số khởi động",
       "commandRequired": "Vui lòng nhập lệnh khởi động",
       "urlRequired": "Vui lòng nhập địa chỉ dịch vụ"
     },
     "saveSettings": "Lưu cài đặt",
-    "title": "Cài đặt thị trường plugin"
+    "title": "Cài đặt cộng đồng plugin"
   },
   "showInPortal": "Vui lòng xem chi tiết trong không gian làm việc",
   "store": {

@@ -368,7 +368,7 @@
       "trustedBy": "{{name}} tarafından sağlanmaktadır",
       "unverified": {
         "title": "Doğrulanmamış Üçüncü Taraf Eklenti",
-        "warning": "Bu eklenti doğrulanmamış üçüncü taraf pazarından gelmektedir, yüklemeden önce kaynağa güvendiğinizden emin olun."
+        "warning": "Bu eklenti doğrulanmamış üçüncü taraf bir topluluktan gelmektedir, yüklemeden önce bu kaynağa güvenip güvenmediğinizi lütfen doğrulayın."
       },
       "verified": "Doğrulanmış"
     },
@@ -446,7 +446,7 @@
     "envConfigDescription": "Bu yapılandırmalar MCP sunucusu başlatılırken ortam değişkenleri olarak sürece iletilecektir",
     "httpTypeNotice": "HTTP türündeki MCP eklentileri için yapılandırılacak ortam değişkeni yoktur",
     "indexUrl": {
-      "title": "Pazar Endeksi",
+      "title": "Topluluk Dizini",
       "tooltip": "Çevrimiçi düzenleme desteklenmiyor, lütfen dağıtım ortam değişkenleri ile ayarlayın"
     },
     "messages": {
@@ -455,14 +455,14 @@
       "envUpdateFailed": "Ortam değişkeni kaydedilemedi",
       "envUpdateSuccess": "Ortam değişkeni başarıyla kaydedildi"
     },
-    "modalDesc": "Eklenti pazar adresini yapılandırdıktan sonra, özel eklenti pazarını kullanabilirsiniz",
+    "modalDesc": "Eklenti topluluğunun adresini yapılandırdıktan sonra, özel eklenti topluluklarını kullanabilirsiniz.",
     "rules": {
       "argsRequired": "Lütfen başlatma parametrelerini girin",
       "commandRequired": "Lütfen başlatma komutunu girin",
       "urlRequired": "Lütfen sunucu adresini girin"
     },
     "saveSettings": "Ayarları Kaydet",
-    "title": "Eklenti Pazarı Ayarları"
+    "title": "Eklenti Topluluğunu Ayarla"
   },
   "showInPortal": "Detayları çalışma alanında görüntüleyin",
   "store": {

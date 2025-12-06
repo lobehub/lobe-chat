@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Annuler",
-    "confirm": "Autoriser l'utilisation",
-    "description": {
-      "and": "et",
-      "prefix": "En cliquant sur « Autoriser l'utilisation », vous acceptez",
-      "privacy": "la Politique de confidentialité",
-      "terms": "les Conditions d'utilisation"
+    "confirm": "Créer votre profil",
+    "description": "Votre profil communautaire est distinct de votre compte utilisateur {{appName}}.",
+    "footer": {
+      "agreement": "En continuant, vous confirmez avoir lu et accepté les <terms>Conditions générales</terms> et la <privacy>Politique de confidentialité</privacy>",
+      "privacy": "Politique de confidentialité",
+      "terms": "Conditions générales"
     },
-    "title": "Confirmer l'autorisation"
+    "subtitle": "Créez un profil communautaire pour soumettre et gérer les informations publiées dans la communauté.",
+    "title": "Créer un profil communautaire"
   },
   "callback": {
     "buttons": {

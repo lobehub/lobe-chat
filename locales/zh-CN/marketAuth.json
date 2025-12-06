@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "取消",
-    "confirm": "授权使用",
-    "description": {
-      "and": "和",
-      "prefix": "点击授权使用即视为同意",
-      "privacy": "隐私协议",
+    "confirm": "创建你的档案",
+    "description": "你的社区个人档案独立于 {{appName}} 用户帐号而存在。",
+    "footer": {
+      "agreement": "继续操作即表示你确认已理解并同意<terms>条款和条件</terms>和<privacy>隐私政策</privacy>",
+      "privacy": "隐私政策",
       "terms": "服务条款"
     },
-    "title": "确认授权"
+    "subtitle": "创建社区个人档案，以便在社区上提交和管理上架信息。",
+    "title": "创建社区档案"
   },
   "callback": {
     "buttons": {

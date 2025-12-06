@@ -19,7 +19,7 @@ interface MarketPublishButtonProps {
   onPublishSuccess?: (identifier: string) => void;
 }
 
-const MarketPublishButton = memo<MarketPublishButtonProps>(
+const PublishButton = memo<MarketPublishButtonProps>(
   ({ action, marketIdentifier, onPublishSuccess }) => {
     const { t } = useTranslation(['setting', 'marketAuth']);
 
@@ -139,6 +139,6 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(
   },
 );
 
-MarketPublishButton.displayName = 'MarketPublishButton';
+PublishButton.displayName = 'MarketPublishButton';
 
-export default MarketPublishButton;
+export default PublishButton;

@@ -1,10 +1,7 @@
 'use client';
 
-import {
-  ClockCircleOutlined,
-  ExclamationCircleOutlined,
-  FolderOpenOutlined,
-} from '@ant-design/icons';
+import { ExclamationCircleOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import { FluentEmoji, Text } from '@lobehub/ui';
 import { Button, Result } from 'antd';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -37,23 +34,27 @@ const StatusPage = memo<StatusPageProps>(({ status }) => {
       >
         <Result
           extra={
-            <Button onClick={handleBackToMarket} type="primary">
+            <Button onClick={handleBackToMarket} size={'large'} type="primary">
               {t('assistants.status.backToMarket')}
             </Button>
           }
-          icon={<ClockCircleOutlined style={{ color: '#faad14' }} />}
+          icon={<FluentEmoji emoji={'⌛'} size={96} type={'anim'} />}
           subTitle={
-            <div style={{ color: '#666', lineHeight: 1.6 }}>
-              <Trans i18nKey="assistants.status.unpublished.subtitle" ns="discover">
-                当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到{' '}
-                <a href="mailto:support@lobehub.com" style={{ color: '#1890ff' }}>
-                  support@lobehub.com
-                </a>{' '}
-                进行咨询。
-              </Trans>
-            </div>
+            <Text fontSize={16} type={'secondary'}>
+              <Trans
+                components={{
+                  email: <a href="mailto:support@lobehub.com">support@lobehub.com</a>,
+                }}
+                i18nKey="assistants.status.unpublished.subtitle"
+                ns="discover"
+              />
+            </Text>
           }
-          title={t('assistants.status.unpublished.title')}
+          title={
+            <Text fontSize={28} weight={'bold'}>
+              {t('assistants.status.unpublished.title')}
+            </Text>
+          }
         />
       </div>
     );
@@ -94,13 +95,13 @@ const StatusPage = memo<StatusPageProps>(({ status }) => {
               <li>{t(`assistants.status.${statusKey}.reasons.official`)}</li>
             </ul>
             <p>
-              <Trans i18nKey="assistants.status.support" ns="discover">
-                有各种问题请复制链接发送到{' '}
-                <a href="mailto:support@lobehub.com" style={{ color: '#1890ff' }}>
-                  support@lobehub.com
-                </a>{' '}
-                进行咨询。
-              </Trans>
+              <Trans
+                components={{
+                  email: <a href="mailto:support@lobehub.com">support@lobehub.com</a>,
+                }}
+                i18nKey="assistants.status.support"
+                ns="discover"
+              />
             </p>
           </div>
         }
