@@ -8,6 +8,7 @@ import type {
   GetAgentMetaParams,
   GetAvailableModelsParams,
   GetAvailableToolsParams,
+  GetPromptParams,
   SetModelParams,
   SetOpeningMessageParams,
   SetOpeningQuestionsParams,
@@ -15,6 +16,7 @@ import type {
   UpdateAgentConfigParams,
   UpdateAgentMetaParams,
   UpdateChatConfigParams,
+  UpdatePromptParams,
 } from '@/tools/agent-builder/types';
 
 const log = debug('lobe-store:builtin-tool:agent-builder');
@@ -27,6 +29,7 @@ export interface AgentBuilderAction {
   agentBuilder_getAvailableTools: (id: string, params: GetAvailableToolsParams) => Promise<boolean>;
   agentBuilder_getConfig: (id: string, params: GetAgentConfigParams) => Promise<boolean>;
   agentBuilder_getMeta: (id: string, params: GetAgentMetaParams) => Promise<boolean>;
+  agentBuilder_getPrompt: (id: string, params: GetPromptParams) => Promise<boolean>;
   agentBuilder_setModel: (id: string, params: SetModelParams) => Promise<boolean>;
   agentBuilder_setOpeningMessage: (id: string, params: SetOpeningMessageParams) => Promise<boolean>;
   agentBuilder_setOpeningQuestions: (
@@ -37,6 +40,7 @@ export interface AgentBuilderAction {
   agentBuilder_updateChatConfig: (id: string, params: UpdateChatConfigParams) => Promise<boolean>;
   agentBuilder_updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<boolean>;
   agentBuilder_updateMeta: (id: string, params: UpdateAgentMetaParams) => Promise<boolean>;
+  agentBuilder_updatePrompt: (id: string, params: UpdatePromptParams) => Promise<boolean>;
   internal_triggerAgentBuilderToolCalling: (
     id: string,
     apiName: string,
@@ -70,6 +74,10 @@ export const agentBuilderSlice: StateCreator<
     return get().internal_triggerAgentBuilderToolCalling(id, 'getAgentMeta', params);
   },
 
+  agentBuilder_getPrompt: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'getPrompt', params);
+  },
+
   agentBuilder_setModel: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'setModel', params);
   },
@@ -98,6 +106,10 @@ export const agentBuilderSlice: StateCreator<
 
   agentBuilder_updateMeta: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentMeta', params);
+  },
+
+  agentBuilder_updatePrompt: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'updatePrompt', params);
   },
 
   // ==================== Internal Helper ====================
@@ -190,6 +202,17 @@ export const agentBuilderSlice: StateCreator<
         }
         case 'getAvailableTools': {
           result = await runtime.getAvailableTools(params as GetAvailableToolsParams);
+          break;
+        }
+        case 'getPrompt': {
+          result = await runtime.getPrompt(agentId, params as GetPromptParams);
+          break;
+        }
+        case 'updatePrompt': {
+          result = await runtime.updatePrompt(agentId, {
+            streaming: true,
+            ...params
+          } as UpdatePromptParams);
           break;
         }
         default: {

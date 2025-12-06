@@ -77,6 +77,22 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
+    {
+      description:
+        "Get the current system prompt (systemRole) of the agent. This is the instruction that defines the agent's behavior and personality.",
+      name: AgentBuilderApiName.getPrompt,
+      parameters: {
+        properties: {
+          preview: {
+            description:
+              'Optional: if true, returns a truncated version (first 500 characters) for preview. Defaults to false.',
+            type: 'boolean',
+          },
+        },
+        required: [],
+        type: 'object',
+      },
+    },
 
     // ==================== Write Operations ====================
     {
@@ -212,6 +228,27 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
           },
         },
         required: ['chatConfig'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        "Update the agent's system prompt (systemRole). This is the core instruction that defines how the agent behaves, responds, and interacts with users. Use streaming mode for a typewriter effect in the editor.",
+      name: AgentBuilderApiName.updatePrompt,
+      parameters: {
+        properties: {
+          prompt: {
+            description:
+              'The new system prompt content. Supports markdown formatting. Set to empty string to clear the prompt.',
+            type: 'string',
+          },
+          streaming: {
+            description:
+              'Whether to use streaming mode for typewriter effect in the editor. Defaults to true for better UX.',
+            type: 'boolean',
+          },
+        },
+        required: ['prompt'],
         type: 'object',
       },
     },
