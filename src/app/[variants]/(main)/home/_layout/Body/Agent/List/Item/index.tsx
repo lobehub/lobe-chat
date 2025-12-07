@@ -3,13 +3,13 @@ import { Dropdown } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Loader2, PinIcon } from 'lucide-react';
 import { CSSProperties, DragEvent, memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useDropdownMenu } from '@/app/[variants]/(main)/home/_layout/Body/Agent/List/Item/useDropdownMenu';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { SidebarAgentItem, useHomeStore } from '@/store/home';
-import { useSessionStore } from '@/store/session';
 
 import NavItem from '../../../../../../../../../features/NavPanel/components/NavItem';
 import { useAgentModal } from '../../ModalProvider';
@@ -25,6 +25,7 @@ interface SessionItemProps {
 
 const SessionItem = memo<SessionItemProps>(({ item, style, className }) => {
   const { id, avatar, title, pinned, type, sessionId } = item;
+  const { t } = useTranslation('chat');
 
   const theme = useTheme();
   const { openCreateGroupModal } = useAgentModal();
@@ -36,14 +37,11 @@ const SessionItem = memo<SessionItemProps>(({ item, style, className }) => {
     s.agentUpdatingId === id,
   ]);
 
-  // Check if this agent/session is active
-  // activeId could be agentId or sessionId depending on navigation
-  const active = useSessionStore((s) => s.activeId === id || s.activeId === sessionId);
-
   // Separate loading state from chat store - only subscribe if this session is active
-  const isLoading = useChatStore(
-    useCallback((s) => (active ? operationSelectors.isAgentRuntimeRunning(s) : false), [active]),
-  );
+  const isLoading = useChatStore(operationSelectors.isAgentRuntimeRunning);
+
+  // Get display title with fallback
+  const displayTitle = title || t('untitledAgent');
 
   // Memoize event handlers
   const handleDoubleClick = useCallback(() => {
@@ -125,13 +123,13 @@ const SessionItem = memo<SessionItemProps>(({ item, style, className }) => {
           onDragEnd={handleDragEnd}
           onDragStart={handleDragStart}
           style={style}
-          title={title || ''}
+          title={displayTitle}
         />
       </Dropdown>
       <Editing
         avatar={avatar ?? undefined}
         id={id}
-        title={title || ''}
+        title={displayTitle}
         toggleEditing={toggleEditing}
       />
     </>
