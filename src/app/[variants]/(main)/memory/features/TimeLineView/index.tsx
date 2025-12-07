@@ -7,7 +7,7 @@ import { GroupedVirtuoso } from 'react-virtuoso';
 
 import { useScrollParent } from './useScrollParent';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   timelineContainer: css`
     position: relative;
     height: 100%;
@@ -20,7 +20,7 @@ const useStyles = createStyles(({ css, token }) => ({
     width: 1px;
     height: 100%;
 
-    background: ${token.colorBorder};
+    background: ${isDarkMode ? token.colorFillQuaternary : token.colorFillSecondary};
   `,
 }));
 

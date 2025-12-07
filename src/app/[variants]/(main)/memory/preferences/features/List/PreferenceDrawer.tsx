@@ -1,19 +1,9 @@
 import { Drawer, Progress, Tag, Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import {
-  AlertCircle,
-  BookOpen,
-  CircleDot,
-  Code2,
-  Heart,
-  Lightbulb,
-  Link2,
-  Settings,
-  Utensils,
-} from 'lucide-react';
+import { Lightbulb, Link2 } from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode, memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -125,33 +115,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const getTypeIcon = (type: string | null): ReactNode => {
-  const iconSize = 16;
-  switch (type?.toLowerCase()) {
-    case 'coding': {
-      return <Code2 size={iconSize} />;
-    }
-    case 'communication': {
-      return <BookOpen size={iconSize} />;
-    }
-    case 'food': {
-      return <Utensils size={iconSize} />;
-    }
-    case 'health': {
-      return <Heart size={iconSize} />;
-    }
-    case 'preference': {
-      return <Settings size={iconSize} />;
-    }
-    case 'warning': {
-      return <AlertCircle size={iconSize} />;
-    }
-    default: {
-      return <CircleDot size={iconSize} />;
-    }
-  }
-};
-
 interface PreferenceDrawerProps {
   onClose: () => void;
   open: boolean;
@@ -178,12 +141,7 @@ const PreferenceDrawer = memo<PreferenceDrawerProps>(({ preference, open, onClos
         <div className={styles.metaInfo}>
           <Flexbox gap={12}>
             <Flexbox align="center" gap={16} horizontal justify="space-between">
-              {preference.type && (
-                <span className={styles.typeTag}>
-                  {getTypeIcon(preference.type)}
-                  {preference.type}
-                </span>
-              )}
+              {preference.type && <span className={styles.typeTag}>{preference.type}</span>}
               <div className={styles.priority}>
                 <span>{t('preference.priority')}:</span>
                 <Progress

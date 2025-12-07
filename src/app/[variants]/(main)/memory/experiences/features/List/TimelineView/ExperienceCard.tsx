@@ -1,41 +1,11 @@
-import { ActionIcon, Dropdown, Tag } from '@lobehub/ui';
-import {
-  Calendar,
-  CircleDot,
-  Cpu,
-  FileText,
-  MapPin,
-  MessageSquare,
-  MoreHorizontal,
-  Pencil,
-  Settings,
-  Sparkles,
-  Trash2,
-  Users,
-  Zap,
-} from 'lucide-react';
-import { KeyboardEvent, MouseEvent, ReactNode, memo } from 'react';
+import { ActionIcon, Dropdown } from '@lobehub/ui';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import TimeLineCard from '@/app/[variants]/(main)/memory/features/TimeLineView/TimeLineCard';
 import { DisplayExperienceMemory } from '@/database/repositories/userMemory';
-
-const getTypeIcon = (type: string): ReactNode => {
-  const iconMap: Record<string, ReactNode> = {
-    accomplishment: <Sparkles size={14} />,
-    activity: <Zap size={14} />,
-    conversation: <MessageSquare size={14} />,
-    decision: <Settings size={14} />,
-    event: <Calendar size={14} />,
-    fact: <FileText size={14} />,
-    interaction: <Users size={14} />,
-    location: <MapPin size={14} />,
-    observation: <CircleDot size={14} />,
-    skill: <Cpu size={14} />,
-  };
-  return iconMap[type] || null;
-};
 
 interface ExperienceCardProps {
   experience: DisplayExperienceMemory;
@@ -77,7 +47,7 @@ const ExperienceCard = memo<ExperienceCardProps>(({ experience, onClick, onDelet
           <ActionIcon icon={MoreHorizontal} size="small" />
         </Dropdown>
       }
-      cate={experience.type && <Tag icon={getTypeIcon(experience.type)}>{experience.type}</Tag>}
+      cate={experience.type}
       hashTags={experience.tags}
       onClick={() => onClick(experience)}
       title={experience.title}
