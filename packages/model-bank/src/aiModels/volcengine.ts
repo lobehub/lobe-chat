@@ -221,7 +221,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-Seed-1.6-thinking模型思考能力大幅强化， 对比Doubao-1.5-thinking-pro，在Coding、Math、 逻辑推理等基础能力上进一步提升， 支持视觉理解。 支持 256k 上下文窗口，输出长度支持最大 16k tokens。',
     displayName: 'Doubao Seed 1.6 Thinking',
-    enabled: true,
     id: 'doubao-seed-1.6-thinking',
     maxOutput: 32_000,
     pricing: {
