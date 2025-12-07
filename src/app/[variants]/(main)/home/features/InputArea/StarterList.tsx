@@ -4,8 +4,7 @@ import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { Center } from 'react-layout-kit';
 
-import { StarterMode } from '@/store/session/slices/homeInput';
-import { useSessionStore } from '@/store/session/store';
+import { type StarterMode, useHomeStore } from '@/store/home';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`
@@ -32,7 +31,7 @@ interface StarterItem {
 const StarterList = memo(() => {
   const { styles, cx, theme } = useStyles();
 
-  const [inputActiveMode, setInputActiveMode] = useSessionStore((s) => [
+  const [inputActiveMode, setInputActiveMode] = useHomeStore((s) => [
     s.inputActiveMode,
     s.setInputActiveMode,
   ]);

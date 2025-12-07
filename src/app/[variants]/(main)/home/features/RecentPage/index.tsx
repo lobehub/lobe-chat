@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
-import { useSessionStore } from '@/store/session';
-import { recentSelectors } from '@/store/session/selectors';
+import { useHomeStore } from '@/store/home';
+import { homeRecentSelectors } from '@/store/home/selectors';
 import { FilesTabs } from '@/types/files';
 
 import GroupBlock from '../components/GroupBlock';
@@ -21,8 +21,8 @@ const RecentPage = memo(() => {
   const { t } = useTranslation('file');
   const navigate = useNavigate();
   const setCategory = useResourceManagerStore((s) => s.setCategory);
-  const recentPages = useSessionStore(recentSelectors.recentPages);
-  const isInit = useSessionStore(recentSelectors.isRecentPagesInit);
+  const recentPages = useHomeStore(homeRecentSelectors.recentPages);
+  const isInit = useHomeStore(homeRecentSelectors.isRecentPagesInit);
 
   // After loaded, if no data, don't render
   if (isInit && (!recentPages || recentPages.length === 0)) {

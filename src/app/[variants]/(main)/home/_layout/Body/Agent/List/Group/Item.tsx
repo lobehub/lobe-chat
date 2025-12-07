@@ -1,10 +1,11 @@
+import type { SidebarGroup } from '@lobechat/types';
 import { AccordionItem, Dropdown, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { HashIcon, Loader2 } from 'lucide-react';
 import React, { memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { SidebarGroup, useHomeStore } from '@/store/home';
+import { useHomeStore } from '@/store/home';
 
 import { useCreateMenuItems, useSessionGroupMenuItems } from '../../../../hooks';
 import { useAgentModal } from '../../ModalProvider';

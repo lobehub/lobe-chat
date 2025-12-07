@@ -1,4 +1,4 @@
-import { useSessionStore } from '@/store/session';
+import { useHomeStore } from '@/store/home';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -10,11 +10,11 @@ import { authSelectors } from '@/store/user/selectors';
  * const { isLoading } = useInitRecentResource();
  *
  * Then access data directly from store:
- * const recentResources = useSessionStore(recentSelectors.recentResources);
- * const isInit = useSessionStore(recentSelectors.isRecentResourcesInit);
+ * const recentResources = useHomeStore(homeRecentSelectors.recentResources);
+ * const isInit = useHomeStore(homeRecentSelectors.isRecentResourcesInit);
  */
 export const useInitRecentResource = () => {
-  const useFetchRecentResources = useSessionStore((s) => s.useFetchRecentResources);
+  const useFetchRecentResources = useHomeStore((s) => s.useFetchRecentResources);
 
   const isLogin = useUserStore(authSelectors.isLogin);
 

@@ -6,7 +6,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { homeSelectors, useHomeStore } from '@/store/home';
+import { useHomeStore } from '@/store/home';
+import { homeAgentListSelectors } from '@/store/home/selectors';
 import { SessionGroupItem } from '@/types/session';
 
 import GroupItem from './GroupItem';
@@ -30,7 +31,7 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
   // Map SidebarGroup to SessionGroupItem-like structure for the sortable list
   const sessionGroupItems = useHomeStore(
     (s) =>
-      homeSelectors.agentGroups(s).map((g) => ({
+      homeAgentListSelectors.agentGroups(s).map((g) => ({
         id: g.id,
         name: g.name,
         sort: g.sort,

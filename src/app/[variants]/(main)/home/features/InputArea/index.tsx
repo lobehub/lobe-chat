@@ -3,7 +3,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
 import { useChatStore } from '@/store/chat';
-import { useSessionStore } from '@/store/session/store';
+import { useHomeStore } from '@/store/home';
 
 import ModeHeader from './ModeHeader';
 import StarterList from './StarterList';
@@ -13,7 +13,7 @@ const leftActions: ActionKeys[] = ['model', 'search', 'fileUpload'];
 
 const InputArea = memo(() => {
   const { loading, send, inboxAgentId } = useSend();
-  const inputActiveMode = useSessionStore((s) => s.inputActiveMode);
+  const inputActiveMode = useHomeStore((s) => s.inputActiveMode);
 
   const inputContainerProps = useMemo(
     () => ({

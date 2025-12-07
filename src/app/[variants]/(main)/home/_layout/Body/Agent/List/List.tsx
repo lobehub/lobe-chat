@@ -1,3 +1,4 @@
+import type { SidebarAgentItem } from '@lobechat/types';
 import { useAnalytics } from '@lobehub/analytics/react';
 import { MoreHorizontal } from 'lucide-react';
 import { CSSProperties, memo, useCallback, useMemo } from 'react';
@@ -10,7 +11,8 @@ import NavItem from '@/features/NavPanel/components/NavItem';
 import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { SidebarAgentItem, homeSelectors, useHomeStore } from '@/store/home';
+import { useHomeStore } from '@/store/home';
+import { homeAgentListSelectors } from '@/store/home/selectors';
 import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { SessionDefaultGroup } from '@/types/session';
@@ -72,7 +74,7 @@ const List = memo<SessionListProps>(
 
     // Check if this is defaultList and if there are more agents
     const isDefaultList = groupId === SessionDefaultGroup.Default;
-    const ungroupedAgentsCount = useHomeStore(homeSelectors.ungroupedAgentsCount);
+    const ungroupedAgentsCount = useHomeStore(homeAgentListSelectors.ungroupedAgentsCount);
     const agentPageSize = useGlobalStore(systemStatusSelectors.agentPageSize);
     const openAllAgentsDrawer = useHomeStore((s) => s.openAllAgentsDrawer);
 

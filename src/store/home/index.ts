@@ -1,11 +1,5 @@
-export { homeSelectors } from './selectors';
-export { getHomeStoreState, useHomeStore } from './store';
 export type { HomeStore } from './store';
+export { getHomeStoreState, useHomeStore } from './store';
 
-// Re-export types from database repository for external usage
-export type {
-  SidebarAgentItem,
-  SidebarAgentListResponse,
-  SidebarGroup,
-  SidebarItemType,
-} from '@/database/repositories/home';
+// Re-export types from slices
+export type { StarterMode } from './slices/homeInput';

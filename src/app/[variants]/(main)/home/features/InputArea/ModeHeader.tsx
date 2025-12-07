@@ -4,8 +4,7 @@ import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon, X } from 'lucide-react
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { StarterMode } from '@/store/session/slices/homeInput';
-import { useSessionStore } from '@/store/session/store';
+import { type StarterMode, useHomeStore } from '@/store/home';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -31,7 +30,7 @@ const modeConfig: Record<NonNullable<StarterMode>, { icon: typeof BotIcon; title
 const ModeHeader = memo(() => {
   const { styles, theme } = useStyles();
 
-  const [inputActiveMode, clearInputMode] = useSessionStore((s) => [
+  const [inputActiveMode, clearInputMode] = useHomeStore((s) => [
     s.inputActiveMode,
     s.clearInputMode,
   ]);

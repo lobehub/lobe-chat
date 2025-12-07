@@ -3,7 +3,8 @@
 import { memo, useMemo } from 'react';
 
 import { useFetchAgentList } from '@/hooks/useFetchAgentList';
-import { homeSelectors, useHomeStore } from '@/store/home';
+import { useHomeStore } from '@/store/home';
+import { homeAgentListSelectors } from '@/store/home/selectors';
 import { SessionDefaultGroup } from '@/types/index';
 
 import SkeletonList from '../../../../../../../../features/NavPanel/components/SkeletonList';
@@ -14,7 +15,7 @@ import SessionList from './List';
 import { useAgentList } from './useAgentList';
 
 const AgentList = memo<{ onMoreClick?: () => void }>(({ onMoreClick }) => {
-  const isInit = useHomeStore(homeSelectors.isAgentListInit);
+  const isInit = useHomeStore(homeAgentListSelectors.isAgentListInit);
   const { customList, pinnedList, defaultList } = useAgentList();
 
   const [allAgentsDrawerOpen, closeAllAgentsDrawer] = useHomeStore((s) => [
