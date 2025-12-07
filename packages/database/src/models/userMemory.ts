@@ -4,6 +4,10 @@ import {
   MergeStrategyEnum,
   RelationshipEnum,
   TypesEnum,
+  UserMemoryContextWithoutVectors,
+  UserMemoryExperienceWithoutVectors,
+  UserMemoryIdentityWithoutVectors,
+  UserMemoryPreferenceWithoutVectors,
 } from '@lobechat/types';
 import { and, cosineDistance, desc, eq, inArray, sql } from 'drizzle-orm';
 
@@ -11,14 +15,10 @@ import { merge } from '@/utils/merge';
 
 import {
   UserMemoryContext,
-  UserMemoryContextsWithoutVectors,
   UserMemoryExperience,
-  UserMemoryExperiencesWithoutVectors,
-  UserMemoryIdentitiesWithoutVectors,
   UserMemoryIdentity,
   UserMemoryItem,
   UserMemoryPreference,
-  UserMemoryPreferencesWithoutVectors,
   userMemories,
   userMemoriesContexts,
   userMemoriesExperiences,
@@ -121,9 +121,9 @@ export interface SearchUserMemoryWithEmbeddingParams {
 }
 
 export interface UserMemorySearchAggregatedResult {
-  contexts: UserMemoryContextsWithoutVectors[];
-  experiences: UserMemoryExperiencesWithoutVectors[];
-  preferences: UserMemoryPreferencesWithoutVectors[];
+  contexts: UserMemoryContextWithoutVectors[];
+  experiences: UserMemoryExperienceWithoutVectors[];
+  preferences: UserMemoryPreferenceWithoutVectors[];
 }
 
 export interface UpdateUserMemoryVectorsParams {
@@ -787,7 +787,7 @@ export class UserMemoryModel {
     embedding?: number[];
     limit?: number;
     type?: string;
-  }): Promise<UserMemoryContextsWithoutVectors[]> => {
+  }): Promise<UserMemoryContextWithoutVectors[]> => {
     const { embedding, limit = 5, type } = params;
     if (limit <= 0) {
       return [];
@@ -838,7 +838,7 @@ export class UserMemoryModel {
     embedding?: number[];
     limit?: number;
     type?: string;
-  }): Promise<UserMemoryExperiencesWithoutVectors[]> => {
+  }): Promise<UserMemoryExperienceWithoutVectors[]> => {
     const { embedding, limit = 5, type } = params;
     if (limit <= 0) {
       return [];
@@ -888,7 +888,7 @@ export class UserMemoryModel {
     embedding?: number[];
     limit?: number;
     type?: string;
-  }): Promise<UserMemoryPreferencesWithoutVectors[]> => {
+  }): Promise<UserMemoryPreferenceWithoutVectors[]> => {
     const { embedding, limit = 5, type } = params;
     if (limit <= 0) {
       return [];
@@ -931,14 +931,14 @@ export class UserMemoryModel {
     return query.limit(limit);
   };
 
-  getAllIdentities = async (): Promise<UserMemoryIdentitiesWithoutVectors[]> => {
+  getAllIdentities = async (): Promise<UserMemoryIdentityWithoutVectors[]> => {
     return this.db.query.userMemoriesIdentities.findMany({
       orderBy: [desc(userMemoriesIdentities.createdAt)],
       where: eq(userMemoriesIdentities.userId, this.userId),
     });
   };
 
-  getIdentitiesByType = async (type: string): Promise<UserMemoryIdentitiesWithoutVectors[]> => {
+  getIdentitiesByType = async (type: string): Promise<UserMemoryIdentityWithoutVectors[]> => {
     return this.db.query.userMemoriesIdentities.findMany({
       orderBy: [desc(userMemoriesIdentities.createdAt)],
       where: and(

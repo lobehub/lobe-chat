@@ -26,12 +26,10 @@ export interface GroupedTopic {
 
 export interface TopicUserMemoryExtractRunState {
   error?: string;
-  lastConversationDigest?: string;
   lastMessageAt?: string;
   lastRunAt?: string;
   messageCount?: number;
   processedMemoryCount?: number;
-  version?: string;
 }
 
 export interface ChatTopicMetadata {

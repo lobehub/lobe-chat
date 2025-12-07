@@ -22,6 +22,12 @@ export interface UserMemoryContext extends UserMemoryTimestamps {
   userMemoryIds: string[] | null;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export type UserMemoryContextWithoutVectors = Omit<
+  UserMemoryContext,
+  'descriptionVector' | 'titleVector'
+>;
+
 export interface UserMemoryExperience extends UserMemoryTimestamps {
   action: string | null;
   actionVector: number[] | null;
@@ -35,9 +41,16 @@ export interface UserMemoryExperience extends UserMemoryTimestamps {
   situation: string | null;
   situationVector: number[] | null;
   tags: string[] | null;
+  type: string | null;
   userId: string | null;
   userMemoryId: string | null;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export type UserMemoryExperienceWithoutVectors = Omit<
+  UserMemoryExperience,
+  'actionVector' | 'keyLearningVector' | 'situationVector'
+>;
 
 export interface UserMemoryPreference extends UserMemoryTimestamps {
   conclusionDirectives: string | null;
@@ -51,3 +64,9 @@ export interface UserMemoryPreference extends UserMemoryTimestamps {
   userId: string | null;
   userMemoryId: string | null;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export type UserMemoryPreferenceWithoutVectors = Omit<
+  UserMemoryPreference,
+  'conclusionDirectivesVector'
+>;
