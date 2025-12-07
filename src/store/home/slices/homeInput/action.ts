@@ -1,9 +1,10 @@
+import type { NavigateFunction } from 'react-router-dom';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { documentService } from '@/services/document';
-import { useAgentStore } from '@/store/agent';
+import { getAgentStoreState } from '@/store/agent';
+import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
 import type { HomeStore } from '@/store/home/store';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -18,6 +19,7 @@ export interface HomeInputAction {
   sendAsResearch: (message: string) => Promise<void>;
   sendAsWrite: (message: string) => Promise<string>;
   setInputActiveMode: (mode: StarterMode) => void;
+  setNavigate: (navigate: NavigateFunction) => void;
 }
 
 export const createHomeInputSlice: StateCreator<
@@ -35,28 +37,30 @@ export const createHomeInputSlice: StateCreator<
 
     try {
       // 1. Create new Agent using useAgentStore.createAgent
-      const { createAgent } = useAgentStore.getState();
-      const result = await createAgent({
+      const agentState = getAgentStoreState();
+      const result = await agentState.createAgent({
         config: {
           systemRole: message,
           title: message?.slice(0, 50) || 'New Agent',
         },
       });
 
-      // 2. Refresh agent list
-      await get().refreshAgentList();
-
-      // 3. Navigate to Agent profile page
-      const navigate = useGlobalStore.getState().navigate;
+      // 2. Navigate to Agent profile page
+      const { navigate } = get();
       if (navigate) {
-        navigate(`/agent/${result.sessionId}/profile`);
+        navigate(`/agent/${result.agentId}/profile`);
       }
+
+      // 2. Refresh agent list
+      get().refreshAgentList();
 
       // 4. Send initial message with agentId context
       if (result.agentId) {
         const { sendMessage } = useChatStore.getState();
+        const agentBuilderId = builtinAgentSelectors.agentBuilderId(agentState);
+
         await sendMessage({
-          context: { agentId: result.agentId, scope: 'agent_builder' },
+          context: { agentId: agentBuilderId!, scope: 'agent_builder' },
           message,
         });
       }
@@ -64,7 +68,7 @@ export const createHomeInputSlice: StateCreator<
       // 5. Clear mode
       set({ inputActiveMode: null }, false, n('sendAsAgent/clearMode'));
 
-      return result.sessionId;
+      return result.agentId!;
     } finally {
       set({ homeInputLoading: false }, false, n('sendAsAgent/end'));
     }
@@ -72,7 +76,7 @@ export const createHomeInputSlice: StateCreator<
 
   sendAsImage: () => {
     // Navigate to /image page
-    const navigate = useGlobalStore.getState().navigate;
+    const { navigate } = get();
     if (navigate) {
       navigate('/image');
     }
@@ -100,7 +104,7 @@ export const createHomeInputSlice: StateCreator<
       });
 
       // 2. Navigate to Page
-      const navigate = useGlobalStore.getState().navigate;
+      const { navigate } = get();
       if (navigate) {
         navigate(`/page/${newDoc.id}`);
       }
@@ -126,5 +130,9 @@ export const createHomeInputSlice: StateCreator<
 
   setInputActiveMode: (mode) => {
     set({ inputActiveMode: mode }, false, n('setInputActiveMode', mode));
+  },
+
+  setNavigate: (navigate) => {
+    set({ navigate }, false, n('setNavigate'));
   },
 });

@@ -1,9 +1,11 @@
+import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { Button, ButtonProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { Center } from 'react-layout-kit';
 
+import { useInitBuiltinAgent } from '@/hooks/useInitBuiltinAgent';
 import { type StarterMode, useHomeStore } from '@/store/home';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -31,6 +33,8 @@ interface StarterItem {
 const StarterList = memo(() => {
   const { styles, cx, theme } = useStyles();
 
+  useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.agentBuilder);
+
   const [inputActiveMode, setInputActiveMode] = useHomeStore((s) => [
     s.inputActiveMode,
     s.setInputActiveMode,
@@ -41,7 +45,7 @@ const StarterList = memo(() => {
       {
         icon: BotIcon,
         key: 'agent',
-        title: '创建助理',
+        title: '创建 Agent',
       },
       {
         icon: PenLineIcon,
