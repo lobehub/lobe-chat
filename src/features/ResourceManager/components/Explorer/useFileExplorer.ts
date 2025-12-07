@@ -24,8 +24,6 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
 
-  const knowledgeBaseId = libraryId ?? undefined;
-
   // Selection state
   const [selectFileIds, setSelectedFileIds] = useResourceManagerStore((s) => [
     s.selectedFileIds,
@@ -107,7 +105,7 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
   // Fetch data
   const { data: rawData, isLoading } = useFetchKnowledgeItems({
     category,
-    knowledgeBaseId,
+    knowledgeBaseId: libraryId,
     parentId: currentFolderSlug || null,
     q: query ?? undefined,
     showFilesInKnowledgeBase: false,
@@ -164,8 +162,8 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
           return;
         }
         case 'removeFromKnowledgeBase': {
-          if (!knowledgeBaseId) return;
-          await removeFromKnowledgeBase(knowledgeBaseId, selectFileIds);
+          if (!libraryId) return;
+          await removeFromKnowledgeBase(libraryId, selectFileIds);
           setSelectedFileIds([]);
           return;
         }
@@ -179,7 +177,7 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
         case 'addToOtherKnowledgeBase': {
           openAddModal({
             fileIds: selectFileIds,
-            knowledgeBaseId,
+            knowledgeBaseId: libraryId,
             onClose: () => setSelectedFileIds([]),
           });
           return;
@@ -194,8 +192,8 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
           return;
         }
         case 'deleteLibrary': {
-          if (!knowledgeBaseId) return;
-          await removeKnowledgeBase(knowledgeBaseId);
+          if (!libraryId) return;
+          await removeKnowledgeBase(libraryId);
           navigate('/knowledge');
           return;
         }
@@ -203,7 +201,7 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
     },
     [
       selectFileIds,
-      knowledgeBaseId,
+      libraryId,
       removeFiles,
       removeFromKnowledgeBase,
       removeKnowledgeBase,
@@ -306,8 +304,8 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
     currentViewItemId,
     data,
     // Handlers
-handleBackToList,
-    
+    handleBackToList,
+
     handleSelectionChange,
 
     isFilePreviewMode,
@@ -315,12 +313,9 @@ handleBackToList,
     isLoading,
 
     // State
-isMasonryReady,
+    isMasonryReady,
 
-    
     isTransitioning,
-
-    knowledgeBaseId,
 
     onActionClick,
 
