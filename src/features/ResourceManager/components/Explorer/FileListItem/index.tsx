@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import FileIcon from '@/components/FileIcon';
@@ -160,6 +161,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     const isFolder = fileType === 'custom/folder';
 
     const libraryId = useResourceManagerStore((s) => s.libraryId);
+    const isDragActive = useDragActive();
 
     const {
       attributes,
@@ -177,6 +179,8 @@ const FileRenderItem = memo<FileRenderItemProps>(
       id,
     });
 
+    // Performance optimization: only activate droppable for folders during active drag
+    // Using disabled property instead of conditional hook call to comply with Rules of Hooks
     const { setNodeRef: setDroppableRef, isOver } = useDroppable({
       data: {
         fileType,
@@ -184,7 +188,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
         name,
         sourceType,
       },
-      disabled: !isFolder,
+      disabled: !isFolder || !isDragActive,
       id,
     });
 

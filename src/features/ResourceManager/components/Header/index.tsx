@@ -6,11 +6,11 @@ import { memo } from 'react';
 import AddButton from './AddButton';
 import FilesSearchBar from './FilesSearchBar';
 
-const Header = memo<{ knowledgeBaseId?: string }>(({ knowledgeBaseId }) => {
+const Header = memo<{ knowledgeBaseId?: string }>(() => {
   return (
     <ChatHeader
       left={<FilesSearchBar />}
-      right={<AddButton knowledgeBaseId={knowledgeBaseId} />}
+      right={<AddButton />}
       styles={{
         left: { padding: 0 },
       }}

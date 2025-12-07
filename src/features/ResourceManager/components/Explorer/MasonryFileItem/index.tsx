@@ -1,10 +1,11 @@
-import { useDraggable } from '@dnd-kit/core';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import PageEditorModal from '@/features/PageEditor/Modal';
 import { documentService } from '@/services/document';
@@ -125,6 +126,12 @@ const useStyles = createStyles(({ css, token }) => ({
   contentWithPadding: css`
     padding: 12px;
   `,
+  dragOver: css`
+    border-color: ${token.colorPrimary} !important;
+    background: ${token.colorFillSecondary} !important;
+    outline: 2px dashed ${token.colorPrimary};
+    outline-offset: -2px;
+  `,
   dragging: css`
     opacity: 0.5;
   `,
@@ -189,6 +196,8 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const isNote = isCustomNote(fileType);
     const isFolder = fileType === 'custom/folder';
 
+    const isDragActive = useDragActive();
+
     const {
       attributes,
       listeners,
@@ -205,10 +214,24 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
       id,
     });
 
+    // Performance optimization: only activate droppable for folders during active drag
+    // Using disabled property instead of conditional hook call to comply with Rules of Hooks
+    const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+      data: {
+        fileType,
+        isFolder,
+        name,
+        sourceType,
+      },
+      disabled: !isFolder || !isDragActive,
+      id,
+    });
+
     const cardRef = useRef<HTMLDivElement>(null);
 
     const setNodeRef = (node: HTMLElement | null) => {
       setDraggableRef(node);
+      setDroppableRef(node);
       cardRef.current = node as HTMLDivElement;
     };
 
@@ -291,7 +314,12 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
 
     return (
       <div
-        className={cx(styles.card, selected && styles.selected, isDragging && styles.dragging)}
+        className={cx(
+          styles.card,
+          selected && styles.selected,
+          isDragging && styles.dragging,
+          isOver && styles.dragOver,
+        )}
         ref={setNodeRef}
         style={dndStyle}
         {...attributes}

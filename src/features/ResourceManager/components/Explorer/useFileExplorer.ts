@@ -306,8 +306,8 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
     currentViewItemId,
     data,
     // Handlers
-    handleBackToList,
-
+handleBackToList,
+    
     handleSelectionChange,
 
     isFilePreviewMode,
@@ -315,9 +315,11 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
     isLoading,
 
     // State
-    isMasonryReady,
+isMasonryReady,
 
+    
     isTransitioning,
+
     knowledgeBaseId,
 
     onActionClick,
