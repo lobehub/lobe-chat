@@ -2,10 +2,16 @@
 
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import { Fragment, ReactNode, memo, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { ReactNode, memo, useMemo } from 'react';
+import { GroupedVirtuoso } from 'react-virtuoso';
+
+import { useScrollParent } from './useScrollParent';
 
 const useStyles = createStyles(({ css, token }) => ({
+  timelineContainer: css`
+    position: relative;
+    height: 100%;
+  `,
   timelineLine: css`
     position: absolute;
     inset-block: 0;
@@ -20,7 +26,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 export type GroupBy = 'day' | 'month';
 
-interface TimelineViewProps<T extends { createdAt: Date | string }> {
+interface TimelineViewProps<T extends { createdAt: Date | string; id: string }> {
   data: T[];
   /**
    * Custom date field extractor for grouping
@@ -32,21 +38,25 @@ interface TimelineViewProps<T extends { createdAt: Date | string }> {
    * @default 'day'
    */
   groupBy?: GroupBy;
-  renderGroup: (periodKey: string, items: T[]) => ReactNode;
+  renderHeader: (periodKey: string, itemCount: number) => ReactNode;
+  renderItem: (item: T) => ReactNode;
 }
 
-function TimelineViewInner<T extends { createdAt: Date | string }>({
+function TimelineViewInner<T extends { createdAt: Date | string; id: string }>({
   data,
   groupBy = 'day',
   getDateForGrouping,
-  renderGroup,
+  renderHeader,
+  renderItem,
 }: TimelineViewProps<T>) {
   const { styles } = useStyles();
+  const scrollParent = useScrollParent();
 
-  const groupedByPeriod = useMemo(() => {
+  const { groupCounts, sortedPeriods, groupedItems } = useMemo(() => {
     const format = groupBy === 'month' ? 'YYYY-MM' : 'YYYY-MM-DD';
 
-    return data.reduce(
+    // Group by period
+    const groupedByPeriod = data.reduce(
       (acc, item) => {
         const dateValue = getDateForGrouping ? getDateForGrouping(item) : item.createdAt;
         const date = dayjs(dateValue);
@@ -60,20 +70,58 @@ function TimelineViewInner<T extends { createdAt: Date | string }>({
       },
       {} as Record<string, T[]>,
     );
+
+    // Sort periods descending
+    const periods = Object.keys(groupedByPeriod).sort((a, b) => b.localeCompare(a));
+
+    // Create group counts and sorted items
+    const counts: number[] = [];
+    const items: T[] = [];
+
+    for (const periodKey of periods) {
+      const periodData = groupedByPeriod[periodKey];
+
+      // Sort items within period by date descending
+      const sortedItems = [...periodData].sort((a, b) => {
+        const dateA = getDateForGrouping ? getDateForGrouping(a) : a.createdAt;
+        const dateB = getDateForGrouping ? getDateForGrouping(b) : b.createdAt;
+        return dayjs(dateB).valueOf() - dayjs(dateA).valueOf();
+      });
+
+      counts.push(sortedItems.length);
+      items.push(...sortedItems);
+    }
+
+    return {
+      groupCounts: counts,
+      groupedItems: items,
+      sortedPeriods: periods,
+    };
   }, [data, groupBy, getDateForGrouping]);
 
-  const sortedPeriods = useMemo(() => {
-    return Object.keys(groupedByPeriod).sort((a, b) => b.localeCompare(a));
-  }, [groupedByPeriod]);
+  if (!data || data.length === 0) {
+    return null;
+  }
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className={styles.timelineContainer}>
       <div className={styles.timelineLine} />
-      <Flexbox gap={32}>
-        {sortedPeriods.map((periodKey) => (
-          <Fragment key={periodKey}>{renderGroup(periodKey, groupedByPeriod[periodKey])}</Fragment>
-        ))}
-      </Flexbox>
+      <GroupedVirtuoso
+        customScrollParent={scrollParent}
+        groupContent={(index) => {
+          const periodKey = sortedPeriods[index];
+          const itemCount = groupCounts[index];
+          return renderHeader(periodKey, itemCount);
+        }}
+        groupCounts={groupCounts}
+        increaseViewportBy={800}
+        itemContent={(index) => {
+          const item = groupedItems[index];
+          return renderItem(item);
+        }}
+        overscan={24}
+        style={{ minHeight: '100%' }}
+      />
     </div>
   );
 }

@@ -17,8 +17,9 @@ export const VirtuosoList = memo<VirtuosoGridProps<any, any>>(({ data, ...rest }
       }}
       customScrollParent={scrollParent}
       data={data}
+      increaseViewportBy={800}
       initialItemCount={initialItemCount}
-      overscan={400}
+      overscan={24}
       {...rest}
     />
   );
@@ -41,8 +42,9 @@ const VirtuosoGridList = memo<VirtuosoGridProps<any, any>>(
         }}
         customScrollParent={scrollParent}
         data={data}
+        increaseViewportBy={800}
         initialItemCount={maxInitialItemCount || count}
-        overscan={400}
+        overscan={24}
         {...rest}
       />
     );

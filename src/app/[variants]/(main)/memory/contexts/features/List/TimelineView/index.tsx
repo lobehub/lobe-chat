@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { DisplayContextMemory } from '@/database/repositories/userMemory';
 
 import { TimelineView as GenericTimelineView } from '../../../../features/TimeLineView';
-import { PeriodGroup } from '../../../../features/TimeLineView/PeriodGroup';
+import { PeriodHeader, TimelineItemWrapper } from '../../../../features/TimeLineView/PeriodGroup';
 import ContextCard from './ContextCard';
 
 interface ContextTimelineViewProps {
@@ -21,21 +21,18 @@ const ContextTimelineView = memo<ContextTimelineViewProps>(
       <GenericTimelineView
         data={contexts}
         groupBy="day"
-        renderGroup={(periodKey, items) => (
-          <PeriodGroup
-            groupBy="day"
-            items={items}
-            periodKey={periodKey}
-            renderItem={(context) => (
-              <ContextCard
-                context={context}
-                key={context.id}
-                onClick={() => onClick?.(context)}
-                onDelete={onDelete}
-                onEdit={onEdit}
-              />
-            )}
-          />
+        renderHeader={(periodKey, itemCount) => (
+          <PeriodHeader groupBy="day" itemCount={itemCount} periodKey={periodKey} />
+        )}
+        renderItem={(context) => (
+          <TimelineItemWrapper>
+            <ContextCard
+              context={context}
+              onClick={() => onClick?.(context)}
+              onDelete={onDelete}
+              onEdit={onEdit}
+            />
+          </TimelineItemWrapper>
         )}
       />
     );

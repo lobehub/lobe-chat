@@ -28,7 +28,6 @@ const MasonryView = memo<MasonryViewProps>(({ identities }) => {
       items={identities}
       renderItem={(identity) => {
         const labels = Array.isArray(identity.tags) ? identity.tags : [];
-
         return (
           <MemoryCard
             content={
