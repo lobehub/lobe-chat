@@ -18,6 +18,7 @@ import { generationRouter } from './generation';
 import { generationBatchRouter } from './generationBatch';
 import { generationTopicRouter } from './generationTopic';
 import { groupRouter } from './group';
+import { homeRouter } from './home';
 import { imageRouter } from './image';
 import { importerRouter } from './importer';
 import { klavisRouter } from './klavis';
@@ -54,6 +55,7 @@ export const lambdaRouter = router({
   generationTopic: generationTopicRouter,
   group: groupRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
+  home: homeRouter,
   image: imageRouter,
   importer: importerRouter,
   klavis: klavisRouter,
