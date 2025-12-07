@@ -3,6 +3,7 @@
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { memo, useMemo } from 'react';
 
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import { FileListItem } from '@/types/files';
 
 import MasonryItemWrapper from '../MasonryFileItem/MasonryItemWrapper';
@@ -11,24 +12,25 @@ import { useMasonryColumnCount } from '../useMasonryColumnCount';
 interface MasonryViewProps {
   data: FileListItem[] | undefined;
   isMasonryReady: boolean;
-  knowledgeBaseId?: string;
   onOpenFile?: (id: string) => void;
   selectFileIds: string[];
   setSelectedFileIds: (ids: string[]) => void;
 }
 
 const MasonryView = memo<MasonryViewProps>(
-  ({ data, isMasonryReady, knowledgeBaseId, onOpenFile, selectFileIds, setSelectedFileIds }) => {
+  ({ data, isMasonryReady, onOpenFile, selectFileIds, setSelectedFileIds }) => {
     const columnCount = useMasonryColumnCount();
+
+    const libraryId = useResourceManagerStore((s) => s.libraryId);
 
     const masonryContext = useMemo(
       () => ({
-        knowledgeBaseId,
+        knowledgeBaseId: libraryId,
         openFile: onOpenFile,
         selectFileIds,
         setSelectedFileIds,
       }),
-      [onOpenFile, knowledgeBaseId, selectFileIds, setSelectedFileIds],
+      [onOpenFile, libraryId, selectFileIds, setSelectedFileIds],
     );
 
     return (

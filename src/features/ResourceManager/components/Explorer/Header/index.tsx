@@ -23,16 +23,17 @@ const Header = memo(() => {
 
   const libraryId = useResourceManagerStore((s) => s.libraryId);
 
-  const { category, knowledgeBaseId, onActionClick, selectFileIds, setViewMode, viewMode } =
-    useFileExplorer({ libraryId });
+  const { category, onActionClick, selectFileIds, setViewMode, viewMode } = useFileExplorer({
+    libraryId,
+  });
 
-  // If no knowledgeBaseId, show just the category name
+  // If no libraryId, show just the category name
   const leftContent =
-    !knowledgeBaseId && category && category !== FilesTabs.All ? (
+    !libraryId && category && category !== FilesTabs.All ? (
       <Flexbox style={{ marginLeft: 8 }}>{t(`tab.${category as FilesTabs}` as any)}</Flexbox>
     ) : (
       <Flexbox style={{ marginLeft: 8 }}>
-        <Breadcrumb category={category} knowledgeBaseId={knowledgeBaseId} />
+        <Breadcrumb category={category} knowledgeBaseId={libraryId} />
       </Flexbox>
     );
 
@@ -44,8 +45,8 @@ const Header = memo(() => {
           <ExpandableSearch />
           <SortDropdown />
           <BatchActionsDropdown
-            isInKnowledgeBase={!!knowledgeBaseId}
-            knowledgeBaseId={knowledgeBaseId}
+            isInKnowledgeBase={!!libraryId}
+            knowledgeBaseId={libraryId}
             onActionClick={onActionClick}
             selectCount={selectFileIds.length}
           />
