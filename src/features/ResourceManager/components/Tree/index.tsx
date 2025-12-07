@@ -2,11 +2,12 @@
 
 import { CaretDownFilled, LoadingOutlined } from '@ant-design/icons';
 import { useDroppable } from '@dnd-kit/core';
-import { ActionIcon, Block, Icon } from '@lobehub/ui';
+import { ActionIcon, Block, Dropdown, Icon } from '@lobehub/ui';
+import { App, Input } from 'antd';
 import { createStyles } from 'antd-style';
 import { motion } from 'framer-motion';
 import { FileText, FolderIcon, FolderOpenIcon } from 'lucide-react';
-import React, { memo, useCallback, useReducer } from 'react';
+import React, { memo, useCallback, useReducer, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +17,7 @@ import FileIcon from '@/components/FileIcon';
 import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';
 
+import { useFileItemDropdown } from '../Explorer/useFileItemDropdown';
 import TreeSkeleton from './TreeSkeleton';
 
 // Module-level state to persist expansion across re-renders
@@ -66,6 +68,7 @@ interface TreeItem {
   name: string;
   slug?: string | null;
   sourceType?: string;
+  url: string;
 }
 
 interface FileTreeProps {
@@ -102,13 +105,66 @@ const FileTreeItem = memo<{
     const { styles, cx } = useStyles();
     const navigate = useNavigate();
     const { currentFolderSlug } = useFolderPath();
+    const { message } = App.useApp();
 
     const [setMode, setCurrentViewItemId] = useResourceManagerStore((s) => [
       s.setMode,
       s.setCurrentViewItemId,
     ]);
 
+    const renameFolder = useFileStore((s) => s.renameFolder);
+
+    const [isRenaming, setIsRenaming] = useState(false);
+    const [renamingValue, setRenamingValue] = useState(item.name);
+    const inputRef = useRef<any>(null);
+
     const itemKey = item.slug || item.id;
+
+    const handleRenameStart = useCallback(() => {
+      setIsRenaming(true);
+      setRenamingValue(item.name);
+      // Focus input after render
+      setTimeout(() => {
+        inputRef.current?.focus();
+        inputRef.current?.select();
+      }, 0);
+    }, [item.name]);
+
+    const handleRenameConfirm = useCallback(async () => {
+      if (!renamingValue.trim()) {
+        message.error('Folder name cannot be empty');
+        return;
+      }
+
+      if (renamingValue.trim() === item.name) {
+        setIsRenaming(false);
+        return;
+      }
+
+      try {
+        await renameFolder(item.id, renamingValue.trim());
+        message.success('Renamed successfully');
+        setIsRenaming(false);
+      } catch (error) {
+        console.error('Rename error:', error);
+        message.error('Rename failed');
+      }
+    }, [item.id, item.name, renamingValue, renameFolder, message]);
+
+    const handleRenameCancel = useCallback(() => {
+      setIsRenaming(false);
+      setRenamingValue(item.name);
+    }, [item.name]);
+
+    const { menuItems, moveModal } = useFileItemDropdown({
+      fileType: item.fileType,
+      filename: item.name,
+      id: item.id,
+      knowledgeBaseId,
+      onRenameStart: item.isFolder ? handleRenameStart : undefined,
+      sourceType: item.sourceType,
+      url: item.url,
+    });
 
     // Dynamically look up children from cache instead of using static item.children
     const children = folderChildrenCache.get(itemKey);
@@ -167,56 +223,81 @@ const FileTreeItem = memo<{
 
       return (
         <Flexbox gap={2} ref={setNodeRef}>
-          <Block
-            align={'center'}
-            className={cx(isOver && styles.fileItemDragOver)}
-            clickable
-            gap={8}
-            height={36}
-            horizontal
-            onClick={() => handleFolderClick(item.id, item.slug)}
-            paddingInline={4}
-            style={{ paddingInlineStart: level * 16 + 4 }}
-            variant={isActive ? 'filled' : 'borderless'}
-          >
-            {isLoading ? (
-              <ActionIcon icon={LoadingOutlined as any} size={'small'} spin />
-            ) : (
-              <motion.div
-                animate={{ rotate: isExpanded ? 0 : -90 }}
-                initial={false}
-                transition={{ duration: 0.2, ease: 'easeInOut' }}
-              >
-                <ActionIcon
-                  icon={CaretDownFilled as any}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleToggle();
-                  }}
-                  size={'small'}
-                />
-              </motion.div>
-            )}
-            <Flexbox
+          <Dropdown menu={{ items: menuItems }} trigger={['contextMenu']}>
+            <Block
               align={'center'}
-              flex={1}
+              className={cx(isOver && styles.fileItemDragOver)}
+              clickable
               gap={8}
+              height={36}
               horizontal
-              style={{ minHeight: 28, minWidth: 0, overflow: 'hidden' }}
+              onClick={() => handleFolderClick(item.id, item.slug)}
+              paddingInline={4}
+              style={{ paddingInlineStart: level * 16 + 4 }}
+              variant={isActive ? 'filled' : 'borderless'}
             >
-              <Icon icon={isExpanded ? FolderOpenIcon : FolderIcon} size={18} />
-              <span
-                style={{
-                  flex: 1,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
+              {isLoading ? (
+                <ActionIcon icon={LoadingOutlined as any} size={'small'} spin />
+              ) : (
+                <motion.div
+                  animate={{ rotate: isExpanded ? 0 : -90 }}
+                  initial={false}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                >
+                  <ActionIcon
+                    icon={CaretDownFilled as any}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggle();
+                    }}
+                    size={'small'}
+                  />
+                </motion.div>
+              )}
+              <Flexbox
+                align={'center'}
+                flex={1}
+                gap={8}
+                horizontal
+                style={{ minHeight: 28, minWidth: 0, overflow: 'hidden' }}
               >
-                {item.name}
-              </span>
-            </Flexbox>
-          </Block>
+                <Icon icon={isExpanded ? FolderOpenIcon : FolderIcon} size={18} />
+                {isRenaming ? (
+                  <Input
+                    onBlur={handleRenameConfirm}
+                    onChange={(e) => setRenamingValue(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleRenameConfirm();
+                      } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        handleRenameCancel();
+                      }
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    ref={inputRef}
+                    size="small"
+                    style={{ flex: 1 }}
+                    value={renamingValue}
+                  />
+                ) : (
+                  <span
+                    style={{
+                      flex: 1,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {item.name}
+                  </span>
+                )}
+              </Flexbox>
+            </Block>
+          </Dropdown>
+          {moveModal}
 
           {isExpanded && children && children.length > 0 && (
             <motion.div
@@ -253,42 +334,45 @@ const FileTreeItem = memo<{
     const isActive = selectedKey === itemKey;
     return (
       <Flexbox gap={2}>
-        <Block
-          align={'center'}
-          clickable
-          gap={8}
-          height={36}
-          horizontal
-          onClick={handleItemClick}
-          paddingInline={4}
-          style={{ paddingInlineStart: level * 16 + 4 }}
-          variant={isActive ? 'filled' : 'borderless'}
-        >
-          <div style={{ width: 24 }} />
-          <Flexbox
+        <Dropdown menu={{ items: menuItems }} trigger={['contextMenu']}>
+          <Block
             align={'center'}
-            flex={1}
+            clickable
             gap={8}
+            height={36}
             horizontal
-            style={{ minHeight: 28, minWidth: 0, overflow: 'hidden' }}
+            onClick={handleItemClick}
+            paddingInline={4}
+            style={{ paddingInlineStart: level * 16 + 4 }}
+            variant={isActive ? 'filled' : 'borderless'}
           >
-            {item.sourceType === 'document' ? (
-              <Icon icon={FileText} size={18} />
-            ) : (
-              <FileIcon fileName={item.name} fileType={item.fileType} size={18} />
-            )}
-            <span
-              style={{
-                flex: 1,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
+            <div style={{ width: 24 }} />
+            <Flexbox
+              align={'center'}
+              flex={1}
+              gap={8}
+              horizontal
+              style={{ minHeight: 28, minWidth: 0, overflow: 'hidden' }}
             >
-              {item.name}
-            </span>
-          </Flexbox>
-        </Block>
+              {item.sourceType === 'document' ? (
+                <Icon icon={FileText} size={18} />
+              ) : (
+                <FileIcon fileName={item.name} fileType={item.fileType} size={18} />
+              )}
+              <span
+                style={{
+                  flex: 1,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {item.name}
+              </span>
+            </Flexbox>
+          </Block>
+        </Dropdown>
+        {moveModal}
       </Flexbox>
     );
   },
@@ -350,6 +434,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
       name: item.name,
       slug: item.slug,
       sourceType: item.sourceType,
+      url: item.url,
     }));
 
     return sortItems(mappedItems);
@@ -396,6 +481,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
           name: item.name,
           slug: item.slug,
           sourceType: item.sourceType,
+          url: item.url,
         }));
 
         // Sort children: folders first, then files
