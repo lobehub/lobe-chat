@@ -11,6 +11,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-V3.2 是一款兼具高计算效率与卓越推理和 Agent 性能的模型。其方法建立在三大关键技术突破之上：DeepSeek 稀疏注意力（DSA），一种高效的注意力机制，在保持模型性能的同时显著降低了计算复杂性，并特别针对长上下文场景进行了优化；可扩展的强化学习框架，通过该框架，模型性能可与 GPT-5 相媲美，其高算力版本在推理能力上可与 Gemini-3.0-Pro 匹敌；以及大规模 Agent 任务合成管线，旨在将推理能力整合到工具使用场景中，从而提高在复杂交互环境中的指令遵循和泛化能力。该模型在 2025 年国际数学奥林匹克（IMO）和国际信息学奥林匹克（IOI）中取得了金牌表现。',
     displayName: 'DeepSeek V3.2',
+    enabled: true,
     id: 'deepseek-ai/DeepSeek-V3.2',
     pricing: {
       currency: 'CNY',
@@ -425,7 +426,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）发布的 V3.1 模型的更新版本，定位为混合智能体大语言模型。此次更新在保持模型原有能力的基础上，专注于修复用户反馈的问题并提升稳定性。它显著改善了语言一致性，减少了中英文混用和异常字符的出现。模型集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode），用户可通过聊天模板灵活切换以适应不同任务。作为一个重要的优化，V3.1-Terminus 增强了代码智能体（Code Agent）和搜索智能体（Search Agent）的性能，使其在工具调用和执行多步复杂任务方面更加可靠。',
     displayName: 'DeepSeek V3.1 Terminus',
-    enabled: true,
     id: 'deepseek-ai/DeepSeek-V3.1-Terminus',
     pricing: {
       currency: 'CNY',
