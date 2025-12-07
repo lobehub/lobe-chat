@@ -135,6 +135,7 @@
     "@aws-sdk/s3-request-presigner": "~3.932.0",
     "@azure-rest/ai-inference": "1.0.0-beta.5",
     "@azure/core-auth": "^1.10.1",
+    "@better-auth/expo": "^1.4.5",
     "@cfworker/json-schema": "^4.1.1",
     "@clerk/localizations": "^3.28.5",
     "@clerk/nextjs": "^6.35.5",
