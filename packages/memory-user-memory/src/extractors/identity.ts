@@ -1,10 +1,15 @@
+import { renderPlaceholderTemplate } from '@lobechat/context-engine';
 import type { ChatCompletionTool } from '@lobechat/model-runtime';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { IdentityMemory } from '../schemas';
-import { ExtractorOptions } from '../types';
+import { ExtractorOptions, ExtractorTemplateProps } from '../types';
 import { BaseMemoryExtractor } from './base';
+
+export interface IdentityExtractorTemplateProps extends ExtractorTemplateProps {
+  existingIdentitiesContext?: string;
+}
 
 export interface IdentityExtractorOptions extends ExtractorOptions {
   existingIdentitiesContext?: string;
@@ -148,6 +153,7 @@ const IdentityTools: ChatCompletionTool[] = [
 
 export class IdentityExtractor extends BaseMemoryExtractor<
   IdentityMemory,
+  IdentityExtractorTemplateProps,
   IdentityExtractorOptions
 > {
   protected getPromptFileName(): string {
@@ -167,26 +173,18 @@ export class IdentityExtractor extends BaseMemoryExtractor<
       availableCategories: options.availableCategories,
       existingIdentitiesContext: options.existingIdentitiesContext,
       language: options.language,
-      retrievedContext: options.retrievedContext,
+      retrievedContext: options.retrievedContexts?.join('\n\n') || 'No similar memories retrieved.',
       sessionDate: options.sessionDate,
       topK: options.topK,
       username: options.username,
     };
   }
 
-  protected buildUserPrompt(conversationText: string): string {
-    return [
-      'Conversation to Analyze:',
-      '---',
-      conversationText,
-      '---',
-      '',
-      'Extract identity information by calling the appropriate CRUD tools:',
-      '- Use addIdentity for genuinely new identity aspects',
-      '- Use updateIdentity when details of an existing entry change',
-      '- Use removeIdentity for incorrect, obsolete, or duplicated entries',
-      '',
-      'Call each tool multiple times as needed. Prefer updating existing entries over adding new ones to avoid duplication.',
-    ].join('\n');
+  protected buildUserPrompt(options: IdentityExtractorOptions): string {
+    if (!this.promptTemplate) {
+      throw new Error('Prompt template not loaded');
+    }
+
+    return renderPlaceholderTemplate(this.promptTemplate!, this.getTemplateProps(options));
   }
 }

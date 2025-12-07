@@ -1,5 +1,4 @@
-import type { LobeChatDatabase } from '@lobechat/database';
-import type { ModelRuntime } from '@lobechat/model-runtime';
+import type { ModelRuntime, OpenAIChatMessage } from '@lobechat/model-runtime';
 import type { UserMemoryLayer } from '@lobechat/types';
 
 import type {
@@ -9,26 +8,28 @@ import type {
   PreferenceExtractor,
 } from './extractors';
 
-export interface ExtractionMessage {
-  content: string;
-  createdAt?: Date;
-  role: string;
+export interface ExtractorOptions extends ExtractorTemplateProps {
+  additionalMessages?: OpenAIChatMessage[];
+  messageIds?: string[];
 }
 
-export interface ExtractorOptions {
+export interface ExtractorTemplateProps {
   availableCategories?: string[];
-  existingContext?: string;
   language?: string;
-  retrievedContext?: string;
+  retrievedContexts?: string[];
+  retrievedIdentitiesContext?: string;
   sessionDate?: string;
   topK?: number;
   username?: string;
 }
 
-export interface GatekeeperOptions {
-  retrievedContext?: string;
-  topK?: number;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export type GatekeeperOptions = Pick<
+  ExtractorTemplateProps,
+  'language' | 'retrievedContexts' | 'topK'
+> & {
+  additionalMessages?: OpenAIChatMessage[];
+};
 
 export interface BaseExtractorDependencies {
   model: string;
@@ -62,38 +63,26 @@ export interface MemoryExtractionSourceMetadata {
 
 export type MemoryExtractionSourceType = 'chat_topic' | 'obsidian' | 'notion' | 'lark';
 
-export interface ProviderDeps {
-  db: LobeChatDatabase;
-  embeddingsModel?: string;
-  runtime: ModelRuntime;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export type ContextOptions<P extends Record<string, unknown>> = P;
 
-export interface PreparedExtractionContext {
-  conversation: ExtractionMessage[];
-  existingIdentitiesContext?: string;
-  metadata: Record<string, unknown>;
-  options: ExtractorOptions;
-  retrievedContext?: string;
+export interface BuiltContext<T = Record<string, unknown>> {
+  context: string;
+  metadata: T;
   sourceId: string;
-  topicId?: string;
   userId: string;
 }
 
-export interface MemoryExtractionProvider {
-  complete(
-    job: MemoryExtractionJob,
-    context: PreparedExtractionContext,
-    result: PersistedMemoryResult,
-    deps: ProviderDeps,
-  ): Promise<void>;
-  fail?(
-    job: MemoryExtractionJob,
-    context: PreparedExtractionContext,
-    error: Error,
-    deps: ProviderDeps,
-  ): Promise<void>;
-  prepare(job: MemoryExtractionJob, deps: ProviderDeps): Promise<PreparedExtractionContext | null>;
-  type: MemoryExtractionSourceType;
+export interface MemoryContextProvider<
+  P extends Record<string, unknown> = Record<string, unknown>,
+  R extends Record<string, unknown> = Record<string, unknown>,
+> {
+  buildContext(job: MemoryExtractionJob, options?: P): Promise<BuiltContext<R>>;
+}
+
+export interface MemoryResultRecorder<T = Record<string, unknown>> {
+  recordComplete(job: MemoryExtractionJob, result: PersistedMemoryResult & T): Promise<void>;
+  recordFail?(job: MemoryExtractionJob, error: Error): Promise<void>;
 }
 
 export interface PersistedMemoryResult {
@@ -102,14 +91,13 @@ export interface PersistedMemoryResult {
 }
 
 export type MemoryExtractionLayerOutputs = Partial<{
-  context: Awaited<ReturnType<ContextExtractor['extract']>>;
-  experience: Awaited<ReturnType<ExperienceExtractor['extract']>>;
-  identity: Awaited<ReturnType<IdentityExtractor['extract']>>;
-  preference: Awaited<ReturnType<PreferenceExtractor['extract']>>;
+  context: Awaited<ReturnType<ContextExtractor['structuredCall']>>;
+  experience: Awaited<ReturnType<ExperienceExtractor['structuredCall']>>;
+  identity: Awaited<ReturnType<IdentityExtractor['structuredCall']>>;
+  preference: Awaited<ReturnType<PreferenceExtractor['structuredCall']>>;
 }>;
 
 export interface GatekeeperDecision {
-  activity: MemoryLayerDecision;
   context: MemoryLayerDecision;
   experience: MemoryLayerDecision;
   identity: MemoryLayerDecision;
@@ -122,11 +110,15 @@ export interface MemoryLayerDecision {
 }
 
 export interface MemoryExtractionResult {
-  context: PreparedExtractionContext;
   decision: GatekeeperDecision;
+  inputs: {
+    retrievedContexts?: string[];
+    retrievedIdentitiesContext?: string;
+  };
   layers: UserMemoryLayer[];
   outputs: MemoryExtractionLayerOutputs;
-  provider: MemoryExtractionProvider;
+  processedCounts: number;
+  processedLayersCount: Record<UserMemoryLayer, number>;
 }
 
 export interface TemplateProps {

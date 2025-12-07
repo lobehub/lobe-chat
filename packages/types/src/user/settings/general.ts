@@ -11,6 +11,7 @@ export interface UserGeneralConfig {
   contextMenuMode?: ContextMenuMode;
   fontSize: number;
   highlighterTheme?: HighlighterProps['theme'];
+  language?: string;
   mermaidTheme?: MermaidProps['theme'];
   neutralColor?: NeutralColors;
   primaryColor?: PrimaryColors;

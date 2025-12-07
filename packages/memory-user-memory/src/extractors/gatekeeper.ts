@@ -1,3 +1,4 @@
+import { renderPlaceholderTemplate } from '@lobechat/context-engine';
 import type { GenerateObjectSchema } from '@lobechat/model-runtime';
 
 import { GatekeeperResult, GatekeeperResultSchema } from '../schemas';
@@ -5,11 +6,11 @@ import { GatekeeperOptions } from '../types';
 import { BaseMemoryExtractor } from './base';
 
 export class UserMemoryGateKeeper extends BaseMemoryExtractor<GatekeeperResult, GatekeeperOptions> {
-  protected getPromptFileName(): string {
+  getPromptFileName(): string {
     return 'gatekeeper.md';
   }
 
-  protected getSchema(): GenerateObjectSchema {
+  getSchema(): GenerateObjectSchema {
     const layerDecision = {
       additionalProperties: false,
       properties: {
@@ -25,41 +26,38 @@ export class UserMemoryGateKeeper extends BaseMemoryExtractor<GatekeeperResult, 
       schema: {
         additionalProperties: false,
         properties: {
-          activity: layerDecision,
           context: layerDecision,
           experience: layerDecision,
           identity: layerDecision,
           preference: layerDecision,
         },
-        required: ['activity', 'context', 'experience', 'identity', 'preference'],
+        required: ['context', 'experience', 'identity', 'preference'],
         type: 'object' as const,
       },
       strict: true,
     };
   }
 
-  protected getResultSchema() {
+  getResultSchema() {
     return GatekeeperResultSchema;
   }
 
-  protected getTemplateProps(options: GatekeeperOptions) {
+  getTemplateProps(options: GatekeeperOptions) {
     return {
-      retrievedContext: options.retrievedContext || 'No similar memories retrieved.',
+      retrievedContext: options.retrievedContexts?.join('\n\n') || 'No similar memories retrieved.',
       topK: options.topK ?? 10,
     };
   }
 
-  protected buildUserPrompt(conversationText: string): string {
-    return [
-      'Conversation to Analyze (verbatim):',
-      '---',
-      conversationText,
-      '---',
-      'Return exactly ONE JSON object matching the schema. Write all reasoning fields in Chinese. Bias toward setting shouldExtract: false when uncertain.',
-    ].join('\n');
+  buildUserPrompt(options: GatekeeperOptions): string {
+    if (!this.promptTemplate) {
+      throw new Error('Prompt template not loaded');
+    }
+
+    return renderPlaceholderTemplate(this.promptTemplate!, this.getTemplateProps(options));
   }
 
-  async check(messages: Parameters<this['extract']>[0], options: GatekeeperOptions = {}) {
-    return this.extract(messages, options);
+  async check(options: GatekeeperOptions = {}) {
+    return this.structuredCall(options);
   }
 }
