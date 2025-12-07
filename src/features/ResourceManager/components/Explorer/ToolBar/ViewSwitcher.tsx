@@ -5,21 +5,20 @@ import { Grid3x3Icon, ListIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useViewMode } from '../hooks/useViewMode';
 import ActionIconWithChevron from './ActionIconWithChevron';
 
-export type ViewMode = 'list' | 'masonry';
-
-interface ViewSwitcherProps {
-  onViewChange: (view: ViewMode) => void;
-  view: ViewMode;
-}
-
-const ViewSwitcher = memo<ViewSwitcherProps>(({ onViewChange, view }) => {
+/**
+ * Self-contained view mode switcher with automatic URL sync
+ */
+const ViewSwitcher = memo(() => {
   const { t } = useTranslation('components');
 
-  const currentViewIcon = view === 'list' ? ListIcon : Grid3x3Icon;
+  const [viewMode, setViewMode] = useViewMode();
+
+  const currentViewIcon = viewMode === 'list' ? ListIcon : Grid3x3Icon;
   const currentViewLabel =
-    view === 'list' ? t('FileManager.view.list') : t('FileManager.view.masonry');
+    viewMode === 'list' ? t('FileManager.view.list') : t('FileManager.view.masonry');
 
   const menuItems = useMemo<MenuProps['items']>(() => {
     return [
@@ -27,20 +26,20 @@ const ViewSwitcher = memo<ViewSwitcherProps>(({ onViewChange, view }) => {
         icon: <Icon icon={ListIcon} />,
         key: 'list',
         label: t('FileManager.view.list'),
-        onClick: () => onViewChange('list'),
+        onClick: () => setViewMode('list'),
       },
       {
         icon: <Icon icon={Grid3x3Icon} />,
         key: 'masonry',
         label: t('FileManager.view.masonry'),
-        onClick: () => onViewChange('masonry'),
+        onClick: () => setViewMode('masonry'),
       },
     ];
-  }, [onViewChange, t]);
+  }, [setViewMode, t]);
 
   return (
     <Dropdown
-      menu={{ items: menuItems, selectedKeys: [view] }}
+      menu={{ items: menuItems, selectedKeys: [viewMode] }}
       placement="bottomRight"
       trigger={['click']}
     >

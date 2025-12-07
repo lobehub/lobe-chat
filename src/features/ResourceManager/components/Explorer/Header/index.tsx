@@ -21,9 +21,9 @@ const Header = memo(() => {
   const theme = useTheme();
   const { t } = useTranslation('file');
 
-  const libraryId = useResourceManagerStore((s) => s.libraryId);
+  const [libraryId] = useResourceManagerStore((s) => [s.libraryId]);
 
-  const { category, onActionClick, selectFileIds, setViewMode, viewMode } = useFileExplorer({
+  const { category, onActionClick, selectFileIds } = useFileExplorer({
     libraryId,
   });
 
@@ -50,7 +50,7 @@ const Header = memo(() => {
             onActionClick={onActionClick}
             selectCount={selectFileIds.length}
           />
-          <ViewSwitcher onViewChange={setViewMode} view={viewMode} />
+          <ViewSwitcher />
           <Flexbox style={{ marginLeft: 8 }}>
             <AddButton />
           </Flexbox>

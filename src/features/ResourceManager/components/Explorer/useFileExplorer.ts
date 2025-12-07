@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
@@ -6,13 +6,12 @@ import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/featur
 import { useAddFilesToKnowledgeBaseModal } from '@/features/LibraryModal';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
-import { useGlobalStore } from '@/store/global';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { FilesTabs, SortType } from '@/types/files';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import type { MultiSelectActionType } from './ToolBar/MultiSelectActions';
-import { ViewMode } from './ToolBar/ViewSwitcher';
+import { useFileSelection } from './hooks/useFileSelection';
 import { useCheckTaskStatus } from './useCheckTaskStatus';
 
 interface UseFileExplorerProps {
@@ -24,24 +23,19 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
 
-  // Selection state
-  const [selectFileIds, setSelectedFileIds] = useResourceManagerStore((s) => [
-    s.selectedFileIds,
-    s.setSelectedFileIds,
-  ]);
-  const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
-
   // View state
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isMasonryReady, setIsMasonryReady] = useState(false);
 
   // Mode state
-  const [mode, setMode, currentViewItemId, setCurrentViewItemId] = useResourceManagerStore((s) => [
-    s.mode,
-    s.setMode,
-    s.currentViewItemId,
-    s.setCurrentViewItemId,
-  ]);
+  const [mode, setMode, viewMode, currentViewItemId, setCurrentViewItemId] =
+    useResourceManagerStore((s) => [
+      s.mode,
+      s.setMode,
+      s.viewMode,
+      s.currentViewItemId,
+      s.setCurrentViewItemId,
+    ]);
   const categoryFromStore = useResourceManagerStore((s) => s.category);
   const category = categoryProp ?? categoryFromStore;
 
@@ -50,24 +44,6 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
   const { data: fetchedCurrentFile } = useFetchKnowledgeItem(currentViewItemId);
   const currentFile =
     useFileStore(fileManagerSelectors.getFileById(currentViewItemId)) || fetchedCurrentFile;
-
-  // View mode - always use masonry for Images category
-  const storedViewMode = useGlobalStore((s) => s.status.fileManagerViewMode);
-  const viewMode = (
-    category === FilesTabs.Images ? 'masonry' : storedViewMode || 'list'
-  ) as ViewMode;
-  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
-
-  const setViewMode = useCallback(
-    (mode: ViewMode) => {
-      setIsTransitioning(true);
-      if (mode === 'masonry') {
-        setIsMasonryReady(false);
-      }
-      updateSystemStatus({ fileManagerViewMode: mode });
-    },
-    [updateSystemStatus],
-  );
 
   // Query state
   const [query] = useQueryState('q', { clearOnDefault: true });
@@ -150,6 +126,8 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
     return sorted;
   }, [rawData, sorter, sortType]);
 
+  const { handleSelectionChange, selectFileIds, setSelectedFileIds } = useFileSelection(data);
+
   useCheckTaskStatus(data);
 
   // Action handlers
@@ -223,28 +201,6 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
     });
   }, [setMode, setCurrentViewItemId, setSearchParams]);
 
-  const handleSelectionChange = useCallback(
-    (id: string, checked: boolean, shiftKey: boolean, clickedIndex: number) => {
-      if (shiftKey && lastSelectedIndex !== null && selectFileIds.length > 0 && data) {
-        const start = Math.min(lastSelectedIndex, clickedIndex);
-        const end = Math.max(lastSelectedIndex, clickedIndex);
-        const rangeIds = data.slice(start, end + 1).map((item) => item.id);
-
-        const prevSet = new Set(selectFileIds);
-        rangeIds.forEach((rangeId) => prevSet.add(rangeId));
-        setSelectedFileIds(Array.from(prevSet));
-      } else {
-        if (checked) {
-          setSelectedFileIds([...selectFileIds, id]);
-        } else {
-          setSelectedFileIds(selectFileIds.filter((item) => item !== id));
-        }
-      }
-      setLastSelectedIndex(clickedIndex);
-    },
-    [lastSelectedIndex, selectFileIds, data, setSelectedFileIds],
-  );
-
   // Effects
   React.useEffect(() => {
     if (!currentFolderSlug) {
@@ -255,7 +211,15 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
     }
   }, [currentFolderSlug, folderBreadcrumb, setCurrentFolderId]);
 
-  React.useEffect(() => {
+  // Handle view mode transition effects
+  useEffect(() => {
+    if (viewMode === 'masonry') {
+      setIsTransitioning(true);
+      setIsMasonryReady(false);
+    }
+  }, [viewMode]);
+
+  useEffect(() => {
     if (isTransitioning && data) {
       requestAnimationFrame(() => {
         const timer = setTimeout(() => {
@@ -266,7 +230,7 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
     }
   }, [isTransitioning, viewMode, data]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (viewMode === 'masonry' && data && !isLoading && !isTransitioning) {
       const timer = setTimeout(() => {
         setIsMasonryReady(true);
@@ -276,22 +240,6 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
       setIsMasonryReady(false);
     }
   }, [viewMode, data, isLoading, isTransitioning]);
-
-  React.useEffect(() => {
-    if (data && selectFileIds.length > 0) {
-      const validFileIds = new Set(data.map((item) => item?.id).filter(Boolean));
-      const filteredSelection = selectFileIds.filter((id) => validFileIds.has(id));
-      if (filteredSelection.length !== selectFileIds.length) {
-        setSelectedFileIds(filteredSelection);
-      }
-    }
-  }, [data]);
-
-  React.useEffect(() => {
-    if (selectFileIds.length === 0) {
-      setLastSelectedIndex(null);
-    }
-  }, [selectFileIds.length]);
 
   const showEmptyStatus = !isLoading && data?.length === 0 && !currentFolderSlug;
   const isFilePreviewMode = mode === 'editor' && currentViewItemId;
@@ -323,7 +271,6 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
 
     selectFileIds,
     setSelectedFileIds,
-    setViewMode,
     showEmptyStatus,
     viewMode,
   };

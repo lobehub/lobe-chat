@@ -11,6 +11,8 @@ import {
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
+
 import ActionIconWithChevron from './ActionIconWithChevron';
 
 export type MultiSelectActionType =
@@ -30,15 +32,17 @@ interface BatchActionsDropdownProps {
 }
 
 const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
-  ({ selectCount, isInKnowledgeBase, knowledgeBaseId, onActionClick, disabled }) => {
+  ({ selectCount, onActionClick, disabled }) => {
     const { t } = useTranslation(['components', 'common', 'file']);
     const { modal, message } = App.useApp();
+
+    const libraryId = useResourceManagerStore((s) => s.libraryId);
 
     const menuItems = useMemo<MenuProps['items']>(() => {
       const items: MenuProps['items'] = [];
 
       // Show delete library option only when in a knowledge base and no files selected
-      if (isInKnowledgeBase && knowledgeBaseId && selectCount === 0) {
+      if (libraryId && selectCount === 0) {
         items.push({
           danger: true,
           icon: <Icon icon={Trash2Icon} />,
@@ -59,7 +63,7 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
         return items;
       }
 
-      if (isInKnowledgeBase) {
+      if (libraryId) {
         items.push(
           {
             icon: <Icon icon={BookMinusIcon} />,
@@ -133,7 +137,7 @@ const BatchActionsDropdown = memo<BatchActionsDropdownProps>(
       );
 
       return items;
-    }, [isInKnowledgeBase, knowledgeBaseId, selectCount, onActionClick, t, modal, message]);
+    }, [libraryId, selectCount, onActionClick, t, modal, message]);
 
     return (
       <Dropdown

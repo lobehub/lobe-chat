@@ -3,7 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { ResouceManagerMode } from '@/features/ResourceManager';
 import { FilesTabs } from '@/types/files';
 
-import { State, initialState } from './initialState';
+import { State, ViewMode, initialState } from './initialState';
 
 export interface Action {
   /**
@@ -26,6 +26,10 @@ export interface Action {
    * Set selected file IDs
    */
   setSelectedFileIds: (ids: string[]) => void;
+  /**
+   * Set the file explorer view mode
+   */
+  setViewMode: (viewMode: ViewMode) => void;
 }
 
 export type Store = Action & State;
@@ -56,5 +60,9 @@ export const store: CreateStore = (publicState) => (set) => ({
 
   setSelectedFileIds: (selectedFileIds) => {
     set({ selectedFileIds });
+  },
+
+  setViewMode: (viewMode) => {
+    set({ viewMode });
   },
 });
