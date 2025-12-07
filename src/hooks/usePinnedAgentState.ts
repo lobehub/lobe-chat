@@ -1,11 +1,11 @@
 'use client';
 
-import { useSessionStore } from '@/store/session';
+import { useAgentStore } from '@/store/agent';
 
 export const usePinnedAgentState = () => {
-  const isPinned = useSessionStore((s) => s.isAgentPinned);
-  const setAgentPinned = useSessionStore((s) => s.setAgentPinned);
-  const toggleAgentPinned = useSessionStore((s) => s.toggleAgentPinned);
+  const isPinned = useAgentStore((s) => s.isAgentPinned);
+  const setAgentPinned = useAgentStore((s) => s.setAgentPinned);
+  const toggleAgentPinned = useAgentStore((s) => s.toggleAgentPinned);
 
   return [
     isPinned,

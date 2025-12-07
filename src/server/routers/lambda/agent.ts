@@ -29,6 +29,19 @@ const agentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
 
 export const agentRouter = router({
   /**
+   * Check if an agent with the given marketIdentifier already exists
+   */
+  checkByMarketIdentifier: agentProcedure
+    .input(
+      z.object({
+        marketIdentifier: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      return ctx.agentModel.checkByMarketIdentifier(input.marketIdentifier);
+    }),
+
+  /**
    * Create a new agent with session
    * Returns the created agent ID and session ID
    */

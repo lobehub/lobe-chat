@@ -199,6 +199,17 @@ export class AgentModel {
     return this.update(agentId, {});
   };
 
+  /**
+   * Check if an agent with the given marketIdentifier already exists
+   * @returns true if exists, false otherwise
+   */
+  checkByMarketIdentifier = async (marketIdentifier: string): Promise<boolean> => {
+    const result = await this.db.query.agents.findFirst({
+      where: and(eq(agents.marketIdentifier, marketIdentifier), eq(agents.userId, this.userId)),
+    });
+    return !!result;
+  };
+
   updateConfig = async (agentId: string, data: PartialDeep<AgentItem> | undefined | null) => {
     if (!data || Object.keys(data).length === 0) return;
 

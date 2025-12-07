@@ -8,9 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import { ProductLogo } from '@/components/Branding';
 import PluginTag from '@/features/PluginTag';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 
 import pkg from '../../../../package.json';
 import { useContainerStyles } from '../style';
@@ -20,17 +18,16 @@ import { FieldType } from './type';
 
 const Preview = memo<FieldType & { title?: string }>(
   ({ title, withSystemRole, withBackground, withFooter, widthMode }) => {
-    const [model, plugins, systemRole] = useAgentStore((s) => [
-      agentSelectors.currentAgentModel(s),
-      agentSelectors.displayableAgentPlugins(s),
-      agentSelectors.currentAgentSystemRole(s),
-    ]);
-    const isInbox = useSessionStore(sessionSelectors.isInboxSession);
-    const [description, avatar, backgroundColor] = useAgentStore((s) => [
-      agentSelectors.currentAgentDescription(s),
-      agentSelectors.currentAgentAvatar(s),
-      agentSelectors.currentAgentBackgroundColor(s),
-    ]);
+    const [model, plugins, systemRole, isInbox, description, avatar, backgroundColor] =
+      useAgentStore((s) => [
+        agentSelectors.currentAgentModel(s),
+        agentSelectors.displayableAgentPlugins(s),
+        agentSelectors.currentAgentSystemRole(s),
+        builtinAgentSelectors.isInboxAgent(s),
+        agentSelectors.currentAgentDescription(s),
+        agentSelectors.currentAgentAvatar(s),
+        agentSelectors.currentAgentBackgroundColor(s),
+      ]);
 
     const { t } = useTranslation('chat');
     const { styles } = useStyles(withBackground);
