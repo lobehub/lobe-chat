@@ -44,12 +44,7 @@ const Header = memo(() => {
         <>
           <ExpandableSearch />
           <SortDropdown />
-          <BatchActionsDropdown
-            isInKnowledgeBase={!!libraryId}
-            knowledgeBaseId={libraryId}
-            onActionClick={onActionClick}
-            selectCount={selectFileIds.length}
-          />
+          <BatchActionsDropdown onActionClick={onActionClick} selectCount={selectFileIds.length} />
           <ViewSwitcher />
           <Flexbox style={{ marginLeft: 8 }}>
             <AddButton />
