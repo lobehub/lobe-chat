@@ -1,10 +1,6 @@
 import { type MenuProps } from '@lobehub/ui';
 import { useMemo } from 'react';
 
-import { useSessionStore } from '@/store/session';
-import { sessionHelpers } from '@/store/session/helpers';
-import { sessionSelectors } from '@/store/session/selectors';
-
 import { useSessionItemMenuItems } from '../../../../hooks';
 
 interface ActionProps {
@@ -12,6 +8,8 @@ interface ActionProps {
   id: string;
   openCreateGroupModal: () => void;
   parentType: 'agent' | 'group';
+  pinned: boolean;
+  sessionType?: string;
   toggleEditing: (visible?: boolean) => void;
 }
 
@@ -20,6 +18,8 @@ export const useDropdownMenu = ({
   id,
   openCreateGroupModal,
   parentType,
+  pinned,
+  sessionType,
   toggleEditing,
 }: ActionProps): MenuProps['items'] => {
   const {
@@ -31,15 +31,10 @@ export const useDropdownMenu = ({
     deleteMenuItem,
   } = useSessionItemMenuItems();
 
-  const [pin, sessionType] = useSessionStore((s) => {
-    const session = sessionSelectors.getSessionById(id)(s);
-    return [sessionHelpers.getSessionPinned(session), session.type];
-  });
-
   return useMemo(
     () =>
       [
-        pinMenuItem(id, pin ?? false, parentType),
+        pinMenuItem(id, pinned, parentType),
         renameMenuItem(toggleEditing),
         duplicateMenuItem(id),
         openInNewWindowMenuItem(id),
@@ -50,7 +45,7 @@ export const useDropdownMenu = ({
       ].filter(Boolean) as MenuProps['items'],
     [
       id,
-      pin,
+      pinned,
       parentType,
       group,
       sessionType,

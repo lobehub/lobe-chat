@@ -3,12 +3,12 @@ import React, { memo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { CustomSessionGroup } from '@/types/session';
+import { SidebarGroup } from '@/store/home';
 
 import Item from './Item';
 
 interface GroupProps {
-  dataSource: CustomSessionGroup[];
+  dataSource: SidebarGroup[];
 }
 
 const Group = memo<GroupProps>(({ dataSource }) => {

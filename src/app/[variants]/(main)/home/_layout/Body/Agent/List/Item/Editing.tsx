@@ -7,26 +7,22 @@ import { Flexbox } from 'react-layout-kit';
 import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
-import { LobeAgentSession, LobeSessionType } from '@/types/session';
+import { useHomeStore } from '@/store/home';
 
 interface EditingProps {
+  avatar?: string;
   id: string;
   title: string;
   toggleEditing: (visible?: boolean) => void;
 }
 
-const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
+const Editing = memo<EditingProps>(({ id, title, avatar, toggleEditing }) => {
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
   const { isDarkMode } = useThemeMode();
 
-  const [editing, session] = useSessionStore((s) => {
-    const sess = sessionSelectors.getSessionById(id)(s);
-    return [s.sessionRenamingId === id, sess];
-  });
+  const editing = useHomeStore((s) => s.agentRenamingId === id);
 
-  const currentAvatar = sessionMetaSelectors.getAvatar(session.meta);
+  const currentAvatar = avatar || '';
 
   const [newTitle, setNewTitle] = useState(title);
   const [newAvatar, setNewAvatar] = useState(currentAvatar);
@@ -38,29 +34,25 @@ const Editing = memo<EditingProps>(({ id, title, toggleEditing }) => {
     if (hasChanges) {
       try {
         // Set loading state
-        useSessionStore.setState({ sessionUpdatingId: id }, false, 'setSessionUpdating');
+        useHomeStore.getState().setAgentUpdatingId(id);
 
         const updates: { avatar?: string; title?: string } = {};
         if (newTitle && title !== newTitle) updates.title = newTitle;
         if (newAvatar && currentAvatar !== newAvatar) updates.avatar = newAvatar;
 
-        // Get the agentId from the session's config
-        // For agent sessions, session.config.id is the agentId
-        // optimisticUpdateAgentMeta expects agentId directly
-        const targetId =
-          session.type === LobeSessionType.Agent
-            ? ((session as LobeAgentSession).config.id ?? id)
-            : id;
-
         // Use optimisticUpdateAgentMeta to update the specific agent's meta
-        await useAgentStore.getState().optimisticUpdateAgentMeta(targetId, updates);
+        // id here is the agentId from SidebarAgentItem
+        await useAgentStore.getState().optimisticUpdateAgentMeta(id, updates);
+
+        // Refresh agent list to update sidebar display (including updatedAt)
+        await useHomeStore.getState().refreshAgentList();
       } finally {
         // Clear loading state
-        useSessionStore.setState({ sessionUpdatingId: null }, false, 'clearSessionUpdating');
+        useHomeStore.getState().setAgentUpdatingId(null);
       }
     }
     toggleEditing(false);
-  }, [newTitle, newAvatar, title, currentAvatar, id, session]);
+  }, [newTitle, newAvatar, title, currentAvatar, id, toggleEditing]);
 
   return (
     <Popover

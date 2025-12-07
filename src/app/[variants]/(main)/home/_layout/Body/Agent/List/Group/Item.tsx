@@ -4,12 +4,11 @@ import { HashIcon, Loader2 } from 'lucide-react';
 import React, { memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import SessionList from '@/app/[variants]/(main)/home/_layout/Body/Agent/List/List';
-import { useSessionStore } from '@/store/session';
-import { CustomSessionGroup } from '@/types/session';
+import { SidebarGroup, useHomeStore } from '@/store/home';
 
 import { useCreateMenuItems, useSessionGroupMenuItems } from '../../../../hooks';
 import { useAgentModal } from '../../ModalProvider';
+import SessionList from '../List';
 import Actions from './Actions';
 import Editing from './Editing';
 import { useGroupDropdownMenu } from './useDropdownMenu';
@@ -20,10 +19,10 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
-  const [editing, isUpdating] = useSessionStore((s) => [
-    s.sessionGroupRenamingId === id,
-    s.sessionGroupUpdatingId === id,
+const GroupItem = memo<SidebarGroup>(({ items, id, name }) => {
+  const [editing, isUpdating] = useHomeStore((s) => [
+    s.groupRenamingId === id,
+    s.groupUpdatingId === id,
   ]);
   const { styles } = useStyles();
 
@@ -39,11 +38,7 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
 
   const toggleEditing = useCallback(
     (visible?: boolean) => {
-      useSessionStore.setState(
-        { sessionGroupRenamingId: visible ? id : null },
-        false,
-        'toggleEditing',
-      );
+      useHomeStore.getState().setGroupRenamingId(visible ? id : null);
     },
     [id],
   );
@@ -113,7 +108,7 @@ const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
       }
     >
       <Editing id={id} name={name} toggleEditing={toggleEditing} />
-      <SessionList dataSource={children} groupId={id} itemClassName={styles.item} />
+      <SessionList dataSource={items} groupId={id} itemClassName={styles.item} />
     </AccordionItem>
   );
 });

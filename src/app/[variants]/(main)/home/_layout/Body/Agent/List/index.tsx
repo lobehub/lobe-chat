@@ -2,9 +2,8 @@
 
 import { memo, useMemo } from 'react';
 
-import { useFetchSessions } from '@/hooks/useFetchSessions';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import { useFetchAgentList } from '@/hooks/useFetchAgentList';
+import { homeSelectors, useHomeStore } from '@/store/home';
 import { SessionDefaultGroup } from '@/types/index';
 
 import SkeletonList from '../../../../../../../../features/NavPanel/components/SkeletonList';
@@ -15,15 +14,15 @@ import SessionList from './List';
 import { useAgentList } from './useAgentList';
 
 const AgentList = memo<{ onMoreClick?: () => void }>(({ onMoreClick }) => {
-  const isInit = useSessionStore(sessionSelectors.isSessionListInit);
+  const isInit = useHomeStore(homeSelectors.isAgentListInit);
   const { customList, pinnedList, defaultList } = useAgentList();
 
-  const [allAgentsDrawerOpen, closeAllAgentsDrawer] = useSessionStore((s) => [
+  const [allAgentsDrawerOpen, closeAllAgentsDrawer] = useHomeStore((s) => [
     s.allAgentsDrawerOpen,
     s.closeAllAgentsDrawer,
   ]);
 
-  useFetchSessions();
+  useFetchAgentList();
 
   // Memoize computed visibility flags to prevent unnecessary recalculations
   const { showPinned, showCustom, showDefault } = useMemo(() => {
