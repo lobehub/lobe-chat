@@ -1,7 +1,4 @@
-import { Segmented } from 'antd';
-import { Calendar, ListIcon } from 'lucide-react';
 import { memo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -10,11 +7,11 @@ import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useUserMemoryStore } from '@/store/userMemory';
 
+import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
 import FilterBar from './features/FilterBar';
-import List, { IdentityType, ViewMode } from './features/List';
+import List, { IdentityType } from './features/List';
 
 const Identities = memo(() => {
-  const { t } = useTranslation('memory');
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const [searchValue, setSearchValue] = useState('');
   const [typeFilter, setTypeFilter] = useState<IdentityType>('all');
@@ -29,19 +26,8 @@ const Identities = memo(() => {
       <NavHeader
         right={
           <>
+            <ViewModeSwitcher onChange={setViewMode} value={viewMode} />
             <WideScreenButton />
-            <Segmented
-              onChange={(value) => setViewMode(value as ViewMode)}
-              options={[
-                {
-                  icon: <Calendar size={16} />,
-                  label: t('identity.view.timeline'),
-                  value: 'timeline',
-                },
-                { icon: <ListIcon size={16} />, label: t('identity.view.list'), value: 'list' },
-              ]}
-              value={viewMode}
-            />
           </>
         }
       />

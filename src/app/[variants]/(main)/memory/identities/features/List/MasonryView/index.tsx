@@ -1,11 +1,11 @@
-import { Grid } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import type { UserMemoryIdentity } from '@/types/index';
 
+import { MasonryView as GenericMasonryView } from '../../../../features/MasonryView';
 import MemoryCard from './MemoryCard';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -15,24 +15,18 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface ListViewProps {
+interface MasonryViewProps {
   identities: UserMemoryIdentity[];
 }
 
-const ListView = memo<ListViewProps>(({ identities }) => {
+const MasonryView = memo<MasonryViewProps>(({ identities }) => {
   const { styles } = useStyles();
 
-  const sortedIdentities = useMemo(() => {
-    return [...identities].sort((a, b) => {
-      const dateA = a.episodicDate || a.createdAt;
-      const dateB = b.episodicDate || b.createdAt;
-      return dayjs(dateB).valueOf() - dayjs(dateA).valueOf();
-    });
-  }, [identities]);
-
   return (
-    <Grid gap={16} rows={3}>
-      {sortedIdentities.map((identity) => {
+    <GenericMasonryView
+      defaultColumnCount={3}
+      items={identities}
+      renderItem={(identity) => {
         const labels = Array.isArray(identity.tags) ? identity.tags : [];
 
         return (
@@ -57,15 +51,14 @@ const ListView = memo<ListViewProps>(({ identities }) => {
                 </div>
               )
             }
-            key={identity.id}
             labels={labels}
             title={identity.type || '身份'}
             type="Identity"
           />
         );
-      })}
-    </Grid>
+      }}
+    />
   );
 });
 
-export default ListView;
+export default MasonryView;

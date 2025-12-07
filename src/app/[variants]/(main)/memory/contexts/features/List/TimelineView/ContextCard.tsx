@@ -3,26 +3,26 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import TimeLineCard from '@/app/[variants]/(main)/memory/features/TimeLineView/TimeLineCard';
-import type { UserMemoryIdentity } from '@/types/index';
+import { DisplayContextMemory } from '@/database/repositories/userMemory';
 
-interface IdentityCardProps {
-  identity: UserMemoryIdentity;
-  onClick?: (identity: UserMemoryIdentity) => void;
+interface ContextCardProps {
+  context: DisplayContextMemory;
+  onClick?: () => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
 }
 
-const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onClick }) => {
+const ContextCard = memo<ContextCardProps>(({ context, onClick, onDelete, onEdit }) => {
   const { t } = useTranslation('memory');
-  const showRelationship = identity.relationship && identity.relationship !== 'self';
 
   const handleMenuClick = (info: { domEvent: MouseEvent | KeyboardEvent; key: string }) => {
     info.domEvent.stopPropagation();
     if (info.key === 'delete' && onDelete) {
-      onDelete(identity.id);
+      onDelete(context.id);
     } else if (info.key === 'edit' && onEdit) {
-      onEdit(identity.id);
+      onEdit(context.id);
     }
   };
 
@@ -30,13 +30,13 @@ const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onCl
     {
       icon: <Pencil size={14} />,
       key: 'edit',
-      label: t('experience.actions.edit'),
+      label: t('context.actions.edit'),
     },
     {
       danger: true,
       icon: <Trash2 size={14} />,
       key: 'delete',
-      label: t('experience.actions.delete'),
+      label: t('context.actions.delete'),
     },
   ];
 
@@ -47,16 +47,16 @@ const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onCl
           <ActionIcon icon={MoreHorizontal} size="small" />
         </Dropdown>
       }
-      cate={identity.type}
-      hashTags={identity.tags}
-      onClick={() => onClick?.(identity)}
-      title={identity.role}
-      titleAddon={showRelationship ? identity.relationship : undefined}
-      updatedAt={identity.updatedAt || identity.createdAt}
+      cate={context.type}
+      hashTags={context.tags}
+      onClick={onClick}
+      title={context.title}
+      titleAddon={<SourceLink source={context.source} />}
+      updatedAt={context.updatedAt || context.createdAt}
     >
-      {identity.description}
+      {context.description}
     </TimeLineCard>
   );
 });
 
-export default IdentityCard;
+export default ContextCard;

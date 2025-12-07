@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 import { UserMemoryIdentityWithoutVectors } from '@/types/userMemory';
 
-import ListView from './ListView';
+import { ViewMode } from '../../../features/ViewModeSwitcher';
+import MasonryView from './MasonryView';
 import TimelineView from './TimelineView';
 
-export type ViewMode = 'list' | 'timeline';
 export type IdentityType = 'all' | 'demographic' | 'personal' | 'professional';
 
 interface IdentitiesListProps {
@@ -57,7 +57,7 @@ const IdentitiesList = memo<IdentitiesListProps>(({ data, viewMode, typeFilter, 
 
   if (viewMode === 'timeline') return <TimelineView identities={filteredIdentities} />;
 
-  return <ListView identities={filteredIdentities} />;
+  return <MasonryView identities={filteredIdentities} />;
 });
 
 export default IdentitiesList;
