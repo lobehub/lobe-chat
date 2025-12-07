@@ -5,6 +5,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import HashTags from '../HashTags';
 import Time from '../Time';
+import { useCateColor } from '../useCateColor';
 
 const ACTION_CLASSNAME = 'memory-masonry-actions';
 
@@ -16,6 +17,7 @@ const useStyles = createStyles(({ css, token }) => ({
     cursor: pointer;
     position: relative;
     background: ${token.colorFillQuaternary};
+    box-shadow: 0 0 0 1px ${token.colorFillTertiary} inset;
     .${ACTION_CLASSNAME} {
       opacity: 0;
     }
@@ -31,7 +33,7 @@ const useStyles = createStyles(({ css, token }) => ({
 interface MasonryCardProps {
   actions?: ReactNode;
   badges?: ReactNode;
-  cate?: ReactNode;
+  cate?: string | null;
   children?: ReactNode;
   footer?: ReactNode;
   hashTags?: string[] | null;
@@ -55,21 +57,24 @@ const MasonryCard = memo<MasonryCardProps>(
     updatedAt,
   }) => {
     const { theme, cx, styles } = useStyles();
+    const cateColor = useCateColor(cate);
     return (
       <Block
         className={styles.masonryCard}
         gap={4}
         onClick={onClick}
         padding={4}
-        variant={'outlined'}
+        style={{
+          background: cateColor?.backgroundColor,
+        }}
+        variant={'filled'}
       >
         <Block
           gap={12}
           paddingBlock={16}
           paddingInline={12}
-          shadow
           style={{
-            background: theme.colorBgElevated,
+            boxShadow: `0 4px 16px -4px ${cateColor?.shadowColor || 'rgba(0, 0, 0, 0.2)'}`,
             overflow: 'hidden',
             position: 'relative',
           }}
@@ -139,7 +144,18 @@ const MasonryCard = memo<MasonryCardProps>(
           >
             {badges}
           </Flexbox>
-          <Center flex={'none'}>{cate}</Center>
+          <Center flex={'none'}>
+            <Text
+              align={'center'}
+              color={cateColor?.backgroundTextColor || theme.colorTextSecondary}
+              style={{
+                opacity: 0.5,
+              }}
+              weight={'bold'}
+            >
+              {cate?.toUpperCase() || 'CHORE'}
+            </Text>
+          </Center>
           <Flexbox
             align={'center'}
             className={cx(ACTION_CLASSNAME, styles.actions)}

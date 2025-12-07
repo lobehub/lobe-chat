@@ -1,21 +1,9 @@
 import { Drawer, Progress, Steps, Tag, Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import {
-  Calendar,
-  CircleDot,
-  Cpu,
-  FileText,
-  Link2,
-  MapPin,
-  MessageSquare,
-  Settings,
-  Sparkles,
-  Users,
-  Zap,
-} from 'lucide-react';
+import { Link2 } from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode, memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -120,42 +108,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const getTypeIcon = (type: string | null): ReactNode => {
-  const iconSize = 16;
-  switch (type?.toLowerCase()) {
-    case 'activity': {
-      return <Zap size={iconSize} />;
-    }
-    case 'context': {
-      return <MessageSquare size={iconSize} />;
-    }
-    case 'event': {
-      return <Calendar size={iconSize} />;
-    }
-    case 'fact': {
-      return <FileText size={iconSize} />;
-    }
-    case 'location': {
-      return <MapPin size={iconSize} />;
-    }
-    case 'people': {
-      return <Users size={iconSize} />;
-    }
-    case 'preference': {
-      return <Settings size={iconSize} />;
-    }
-    case 'technology': {
-      return <Cpu size={iconSize} />;
-    }
-    case 'topic': {
-      return <Sparkles size={iconSize} />;
-    }
-    default: {
-      return <CircleDot size={iconSize} />;
-    }
-  }
-};
-
 interface ExperienceDrawerProps {
   experience: DisplayExperienceMemory | null;
   onClose: () => void;
@@ -201,12 +153,7 @@ const ExperienceDrawer = memo<ExperienceDrawerProps>(({ experience, open, onClos
         <div className={styles.metaInfo}>
           <Flexbox gap={12}>
             <Flexbox align="center" gap={16} horizontal justify="space-between">
-              {experience.type && (
-                <span className={styles.typeTag}>
-                  {getTypeIcon(experience.type)}
-                  {experience.type}
-                </span>
-              )}
+              {experience.type && <span className={styles.typeTag}>{experience.type}</span>}
               <div className={styles.confidence}>
                 <span>{t('experience.confidence')}:</span>
                 <Progress
