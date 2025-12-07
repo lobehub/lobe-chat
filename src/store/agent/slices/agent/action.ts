@@ -1,3 +1,4 @@
+import { getSingletonAnalyticsOptional } from '@lobehub/analytics';
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { SWRResponse, mutate } from 'swr';
@@ -6,13 +7,13 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { useClientDataSWR } from '@/libs/swr';
-import { agentService } from '@/services/agent';
-import { useSessionStore } from '@/store/session';
+import { CreateAgentParams, CreateAgentResult, agentService } from '@/services/agent';
+import { getUserStoreState } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
-import { agentSelectors } from '../../selectors/selectors';
 import type { AgentStore } from '../../store';
 import { AgentSliceState } from './initialState';
 
@@ -27,6 +28,11 @@ export interface AgentSliceAction {
    * Append content chunk to streaming system role
    */
   appendStreamingSystemRole: (chunk: string) => void;
+  /**
+   * Create a new agent with session
+   * @returns Created agent result with agentId and sessionId
+   */
+  createAgent: (params: CreateAgentParams) => Promise<CreateAgentResult>;
   /**
    * Finish streaming and save final content to agent config
    */
@@ -72,6 +78,30 @@ export const createAgentSlice: StateCreator<
       false,
       'appendStreamingSystemRole',
     );
+  },
+
+  createAgent: async (params) => {
+    const result = await agentService.createAgent(params);
+
+    // Track new agent creation analytics
+    const analytics = getSingletonAnalyticsOptional();
+    if (analytics) {
+      const userStore = getUserStoreState();
+      const userId = userProfileSelectors.userId(userStore);
+
+      analytics.track({
+        name: 'new_agent_created',
+        properties: {
+          agent_id: result.agentId,
+          assistant_name: params.config?.title || 'Untitled Agent',
+          assistant_tags: params.config?.tags || [],
+          session_id: result.sessionId,
+          user_id: userId || 'anonymous',
+        },
+      });
+    }
+
+    return result;
   },
 
   finishStreamingSystemRole: async (agentId) => {
@@ -198,8 +228,6 @@ export const createAgentSlice: StateCreator<
   },
 
   optimisticUpdateAgentConfig: async (id, data, signal) => {
-    const prevModel = agentSelectors.currentAgentModel(get());
-
     // 1. Optimistic update (instant UI feedback)
     get().internal_dispatchAgentMap(id, data);
 
@@ -210,9 +238,6 @@ export const createAgentSlice: StateCreator<
     if (result?.success && result.agent) {
       get().internal_dispatchAgentMap(id, result.agent);
     }
-
-    // 4. Refresh sessions if model changed
-    if (prevModel !== data.model) await useSessionStore.getState().refreshSessions();
   },
 
   optimisticUpdateAgentMeta: async (id, meta, signal) => {
@@ -226,9 +251,6 @@ export const createAgentSlice: StateCreator<
     if (result?.success && result.agent) {
       get().internal_dispatchAgentMap(id, result.agent);
     }
-
-    // 4. Refresh sessions to update meta display
-    await useSessionStore.getState().refreshSessions();
   },
 
   internal_refreshAgentConfig: async (id) => {

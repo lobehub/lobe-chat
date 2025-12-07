@@ -7,6 +7,7 @@ import { FileModel } from '@/database/models/file';
 import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
 import { SessionModel } from '@/database/models/session';
 import { UserModel } from '@/database/models/user';
+import { insertAgentSchema } from '@/database/schemas';
 import { pino } from '@/libs/logger';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -27,6 +28,44 @@ const agentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
 });
 
 export const agentRouter = router({
+  /**
+   * Create a new agent with session
+   * Returns the created agent ID and session ID
+   */
+  createAgent: agentProcedure
+    .input(
+      z.object({
+        config: insertAgentSchema
+          .omit({
+            chatConfig: true,
+            openingMessage: true,
+            openingQuestions: true,
+            plugins: true,
+            tags: true,
+            tts: true,
+          })
+          .passthrough()
+          .partial(),
+        groupId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const session = await ctx.sessionModel.create({
+        config: input.config,
+        session: { groupId: input.groupId },
+        type: 'agent',
+      });
+
+      // Get the agent ID from the created session
+      const sessionWithAgent = await ctx.sessionModel.findByIdOrSlug(session.id);
+      const agentId = sessionWithAgent?.agent?.id;
+
+      return {
+        agentId,
+        sessionId: session.id,
+      };
+    }),
+
   createAgentFiles: agentProcedure
     .input(
       z.object({
