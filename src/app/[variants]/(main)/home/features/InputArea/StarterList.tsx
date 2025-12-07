@@ -65,9 +65,10 @@ const StarterList = memo(() => {
         disabled: true,
         icon: MicroscopeIcon,
         key: 'research',
-        title: '探究',
+        title: 'Deep Research',
       },
       // {
+      //   disabled: true,
       //   icon: AppWindowIcon,
       //   key: 'web',
       //   title: '编程',
