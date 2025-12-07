@@ -70,6 +70,14 @@ export default {
     source: '来源',
     suggestions: '建议',
   },
+  tab: {
+    contexts: '情境',
+    experiences: '经验',
+    home: '首页',
+    identities: '身份',
+    preferences: '偏好',
+    search: '搜索',
+  },
   viewMode: {
     masonry: '瀑布流',
     timeline: '时间线',

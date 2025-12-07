@@ -5,22 +5,26 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
+import Sidebar from './Sidebar';
+
 const DesktopMemoryLayout = memo(() => {
   const theme = useTheme();
 
   return (
-    <Flexbox
-      flex={1}
-      height={'100%'}
-      style={{
-        background: theme.colorBgContainer,
-        overflow: 'auto',
-        padding: 24,
-        position: 'relative',
-      }}
-    >
-      <Outlet />
-    </Flexbox>
+    <>
+      <Sidebar />
+      <Flexbox
+        flex={1}
+        height={'100%'}
+        style={{
+          background: theme.colorBgContainer,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+      >
+        <Outlet />
+      </Flexbox>
+    </>
   );
 });
 

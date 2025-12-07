@@ -4,7 +4,7 @@ import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-import WideScreenContainer from './WideScreenContainer';
+import WideScreenContainer from '../../WideScreenContainer';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   message: css`

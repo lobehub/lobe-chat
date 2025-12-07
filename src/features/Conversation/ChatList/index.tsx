@@ -2,10 +2,10 @@
 
 import { type ReactNode, memo, useCallback } from 'react';
 
+import WideScreenContainer from '../../WideScreenContainer';
 import MessageItem from '../Messages';
 import SkeletonList from '../components/SkeletonList';
 import VirtualizedList from '../components/VirtualizedList';
-import WideScreenContainer from '../components/WideScreenContainer';
 import { dataSelectors, useConversationStore } from '../store';
 import type { ActionsBarConfig } from '../types';
 
