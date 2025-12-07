@@ -1009,6 +1009,7 @@ describe('LobeOpenAICompatibleFactory', () => {
     describe('responses routing', () => {
       it(
         'should route to Responses API when chatCompletion.useResponse is true',
+        { timeout: 10000 },
         async () => {
           const LobeMockProviderUseResponses = createOpenAICompatibleRuntime({
             baseURL: 'https://api.test.com/v1',
@@ -1049,11 +1050,11 @@ describe('LobeOpenAICompatibleFactory', () => {
 
           expect(mockResponsesCreate).toHaveBeenCalled();
         },
-        { timeout: 10000 },
       );
 
       it(
         'should route to Responses API when model matches useResponseModels',
+        { timeout: 10000 },
         async () => {
           const LobeMockProviderUseResponseModels = createOpenAICompatibleRuntime({
             baseURL: 'https://api.test.com/v1',
@@ -1121,7 +1122,6 @@ describe('LobeOpenAICompatibleFactory', () => {
           }
           expect(spy).toHaveBeenCalledTimes(2); // Ensure no additional calls were made
         },
-        { timeout: 10000 },
       );
     });
 
