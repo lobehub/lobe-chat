@@ -25,8 +25,6 @@ export type MultiSelectActionType =
 
 interface BatchActionsDropdownProps {
   disabled?: boolean;
-  isInKnowledgeBase?: boolean;
-  knowledgeBaseId?: string;
   onActionClick: (type: MultiSelectActionType) => Promise<void>;
   selectCount: number;
 }

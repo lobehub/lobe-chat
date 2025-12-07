@@ -7,6 +7,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
+
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
     height: 40px;
@@ -28,7 +30,6 @@ export type MultiSelectActionType =
   | 'removeFromKnowledgeBase';
 
 interface MultiSelectActionsProps {
-  isInKnowledgeBase?: boolean;
   onActionClick: (type: MultiSelectActionType) => Promise<void>;
   onClickCheckbox: () => void;
   selectCount: number;
@@ -36,12 +37,15 @@ interface MultiSelectActionsProps {
 }
 
 const MultiSelectActions = memo<MultiSelectActionsProps>(
-  ({ selectCount, isInKnowledgeBase, total, onActionClick, onClickCheckbox }) => {
+  ({ selectCount, total, onActionClick, onClickCheckbox }) => {
     const { t } = useTranslation(['components', 'common']);
     const { styles } = useStyles();
 
     const isSelectedFiles = selectCount > 0;
     const { modal, message } = App.useApp();
+
+    const libraryId = useResourceManagerStore((s) => s.libraryId);
+
     return (
       <Flexbox align={'center'} gap={12} horizontal>
         <Flexbox
@@ -72,7 +76,7 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
         </Flexbox>
         {isSelectedFiles && (
           <Flexbox gap={8} horizontal>
-            {isInKnowledgeBase ? (
+            {libraryId ? (
               <>
                 <Button
                   icon={BookMinusIcon}
