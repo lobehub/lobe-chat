@@ -17,7 +17,7 @@ import FileIcon from '@/components/FileIcon';
 import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';
 
-import { useFileItemDropdown } from '../Explorer/useFileItemDropdown';
+import { useFileItemDropdown } from '../Explorer/ItemDropdown/useFileItemDropdown';
 import TreeSkeleton from './TreeSkeleton';
 
 // Module-level state to persist expansion across re-renders
@@ -80,7 +80,6 @@ const FileTreeItem = memo<{
   expandedFolders: Set<string>;
   folderChildrenCache: Map<string, TreeItem[]>;
   item: TreeItem;
-  knowledgeBaseId: string;
   level?: number;
   loadedFolders: Set<string>;
   loadingFolders: Set<string>;
@@ -98,7 +97,6 @@ const FileTreeItem = memo<{
     onToggleFolder,
     onLoadFolder,
     selectedKey,
-    knowledgeBaseId,
     updateKey,
     folderChildrenCache,
   }) => {
@@ -107,9 +105,10 @@ const FileTreeItem = memo<{
     const { currentFolderSlug } = useFolderPath();
     const { message } = App.useApp();
 
-    const [setMode, setCurrentViewItemId] = useResourceManagerStore((s) => [
+    const [setMode, setCurrentViewItemId, libraryId] = useResourceManagerStore((s) => [
       s.setMode,
       s.setCurrentViewItemId,
+      s.libraryId,
     ]);
 
     const renameFolder = useFileStore((s) => s.renameFolder);
@@ -160,7 +159,7 @@ const FileTreeItem = memo<{
       fileType: item.fileType,
       filename: item.name,
       id: item.id,
-      knowledgeBaseId,
+      knowledgeBaseId: libraryId,
       onRenameStart: item.isFolder ? handleRenameStart : undefined,
       sourceType: item.sourceType,
       url: item.url,
@@ -182,8 +181,8 @@ const FileTreeItem = memo<{
     const handleItemClick = useCallback(() => {
       // Open file modal using slug-based routing
       const currentPath = currentFolderSlug
-        ? `/resource/library/${knowledgeBaseId}/${currentFolderSlug}`
-        : `/resource/library/${knowledgeBaseId}`;
+        ? `/resource/library/${libraryId}/${currentFolderSlug}`
+        : `/resource/library/${libraryId}`;
 
       setCurrentViewItemId(itemKey);
       navigate(`${currentPath}?file=${itemKey}`);
@@ -194,16 +193,16 @@ const FileTreeItem = memo<{
         // Set mode to 'file' immediately to prevent flickering to list view
         setMode('editor');
       }
-    }, [itemKey, currentFolderSlug, knowledgeBaseId, navigate, setMode, setCurrentViewItemId]);
+    }, [itemKey, currentFolderSlug, libraryId, navigate, setMode, setCurrentViewItemId]);
 
     const handleFolderClick = useCallback(
       (folderId: string, folderSlug?: string | null) => {
         const navKey = folderSlug || folderId;
-        navigate(`/resource/library/${knowledgeBaseId}/${navKey}`);
+        navigate(`/resource/library/${libraryId}/${navKey}`);
 
         setMode('explorer');
       },
-      [knowledgeBaseId, navigate],
+      [libraryId, navigate],
     );
 
     if (item.isFolder) {
@@ -313,7 +312,6 @@ const FileTreeItem = memo<{
                     folderChildrenCache={folderChildrenCache}
                     item={child}
                     key={child.id}
-                    knowledgeBaseId={knowledgeBaseId}
                     level={level + 1}
                     loadedFolders={loadedFolders}
                     loadingFolders={loadingFolders}
@@ -380,21 +378,23 @@ const FileTreeItem = memo<{
 
 FileTreeItem.displayName = 'FileTreeItem';
 
-const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
+const FileTree = memo<FileTreeProps>(() => {
   const { styles, cx } = useStyles();
   const { currentFolderSlug } = useFolderPath();
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
 
+  const libraryId = useResourceManagerStore((s) => s.libraryId);
+
   // Force re-render when tree state changes
   const [updateKey, forceUpdate] = useReducer((x) => x + 1, 0);
 
   // Get the persisted state for this knowledge base
-  const state = getTreeState(knowledgeBaseId);
+  const state = getTreeState(libraryId || '');
   const { expandedFolders, loadedFolders, folderChildrenCache, loadingFolders } = state;
 
   // Special droppable ID for root folder
-  const ROOT_DROP_ID = `__root__:${knowledgeBaseId}`;
+  const ROOT_DROP_ID = `__root__:${libraryId}`;
 
   const { setNodeRef: setRootDropRef, isOver: isRootDropOver } = useDroppable({
     data: {
@@ -407,7 +407,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
 
   // Fetch root level data using SWR
   const { data: rootData, isLoading } = useFetchKnowledgeItems({
-    knowledgeBaseId,
+    knowledgeBaseId: libraryId,
     parentId: null,
     showFilesInKnowledgeBase: false,
   });
@@ -453,14 +453,14 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
           [
             'useFetchKnowledgeItems',
             {
-              knowledgeBaseId,
+              knowledgeBaseId: libraryId,
               parentId: folderId,
               showFilesInKnowledgeBase: false,
             },
           ],
           () =>
             fileService.getKnowledgeItems({
-              knowledgeBaseId,
+              knowledgeBaseId: libraryId,
               parentId: folderId,
               showFilesInKnowledgeBase: false,
             }),
@@ -499,7 +499,7 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
         forceUpdate();
       }
     },
-    [knowledgeBaseId, sortItems, state, forceUpdate],
+    [libraryId, sortItems, state, forceUpdate],
   );
 
   const handleToggleFolder = useCallback(
@@ -532,7 +532,6 @@ const FileTree = memo<FileTreeProps>(({ knowledgeBaseId }) => {
           folderChildrenCache={folderChildrenCache}
           item={item}
           key={item.id}
-          knowledgeBaseId={knowledgeBaseId}
           loadedFolders={loadedFolders}
           loadingFolders={loadingFolders}
           onLoadFolder={handleLoadFolder}

@@ -1,7 +1,7 @@
 import { Skeleton } from 'antd';
 import { Flexbox } from 'react-layout-kit';
 
-import { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from '../FileListItem';
+import { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './ListItem';
 
 const ListViewSkeleton = () => (
   <Flexbox style={{ marginInline: 16 }}>
