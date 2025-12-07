@@ -23,7 +23,7 @@ const hotArea = css`
   }
 `;
 
-const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
+const AddButton = () => {
   const { t } = useTranslation('file');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
@@ -35,12 +35,14 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const setMode = useResourceManagerStore((s) => s.setMode);
   const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
 
+  const libraryId = useResourceManagerStore((s) => s.libraryId);
+
   const handleOpenNoteEditor = async () => {
     // Create a new page directly and switch to page view
     const untitledTitle = t('documentList.untitled');
     const newPage = await createDocument({
       content: '',
-      knowledgeBaseId,
+      knowledgeBaseId: libraryId,
       parentId: currentFolderId ?? undefined,
       title: untitledTitle,
     });
@@ -78,7 +80,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
 
   const handleCreateFolder = async () => {
     // Create folder with "Untitled" name immediately
-    const folderId = await createFolder('Untitled', currentFolderId ?? undefined, knowledgeBaseId);
+    const folderId = await createFolder('Untitled', currentFolderId ?? undefined, libraryId);
     // Trigger auto-rename
     setPendingRenameItemId(folderId);
   };
@@ -106,7 +108,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
           okText: t('header.actions.gitignore.apply'),
           onCancel: async () => {
             // Upload all files without filtering
-            await uploadFolderWithStructure(files, knowledgeBaseId, currentFolderId ?? undefined);
+            await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
           },
           onOk: async () => {
             // Filter files based on .gitignore
@@ -123,22 +125,18 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
               );
             }
 
-            await uploadFolderWithStructure(
-              filteredFiles,
-              knowledgeBaseId,
-              currentFolderId ?? undefined,
-            );
+            await uploadFolderWithStructure(filteredFiles, libraryId, currentFolderId ?? undefined);
           },
           title: t('header.actions.gitignore.title'),
         });
       } catch (error) {
         console.error('Failed to read .gitignore:', error);
         // If reading fails, proceed without filtering
-        await uploadFolderWithStructure(files, knowledgeBaseId, currentFolderId ?? undefined);
+        await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
       }
     } else {
       // No .gitignore found, upload all files
-      await uploadFolderWithStructure(files, knowledgeBaseId, currentFolderId ?? undefined);
+      await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
     }
 
     // Reset input to allow re-uploading the same folder
@@ -153,7 +151,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         label: t('header.actions.newPage'),
         onClick: handleOpenNoteEditor,
       },
-      ...(knowledgeBaseId
+      ...(libraryId
         ? [
             {
               icon: <Icon icon={FolderIcon} />,
@@ -172,7 +170,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         label: (
           <Upload
             beforeUpload={async (file) => {
-              await pushDockFileList([file], knowledgeBaseId, currentFolderId ?? undefined);
+              await pushDockFileList([file], libraryId, currentFolderId ?? undefined);
 
               return false;
             }}
@@ -224,7 +222,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         label: t('header.actions.connect'),
       },
     ],
-    [knowledgeBaseId, currentFolderId, pushDockFileList],
+    [libraryId, currentFolderId, pushDockFileList],
   );
 
   return (
@@ -241,9 +239,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
       </Dropdown>
       <DragUpload
         enabledFiles
-        onUploadFiles={(files) =>
-          pushDockFileList(files, knowledgeBaseId, currentFolderId ?? undefined)
-        }
+        onUploadFiles={(files) => pushDockFileList(files, libraryId, currentFolderId ?? undefined)}
       />
       <input
         id="folder-upload-input"
@@ -255,7 +251,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         webkitdirectory=""
       />
       <PageEditorModal
-        knowledgeBaseId={knowledgeBaseId}
+        knowledgeBaseId={libraryId}
         onClose={handleCloseNoteEditor}
         open={isModalOpen}
         parentId={currentFolderId ?? undefined}

@@ -15,7 +15,7 @@ import {
 import { Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { FileText, FolderIcon } from 'lucide-react';
-import { PropsWithChildren, memo, useState } from 'react';
+import { PropsWithChildren, createContext, memo, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Flexbox } from 'react-layout-kit';
 
@@ -23,6 +23,18 @@ import FileIcon from '@/components/FileIcon';
 import { useFileStore } from '@/store/file';
 
 import { useResourceManagerStore } from './store';
+
+/**
+ * Context to track if drag is currently active
+ * Used to optimize droppable zones - only activate them during active drag
+ */
+const DragActiveContext = createContext<boolean>(false);
+
+/**
+ * Hook to check if drag is currently active
+ * Use this to conditionally enable droppable zones for performance optimization
+ */
+export const useDragActive = () => useContext(DragActiveContext);
 
 /**
  * Custom collision detection that prefers specific folders over root drop zones
@@ -116,86 +128,88 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
   };
 
   return (
-    <DndContext
-      collisionDetection={customCollisionDetection}
-      onDragEnd={handleDragEnd}
-      onDragStart={handleDragStart}
-      sensors={sensors}
-    >
-      {children}
-      {createPortal(
-        <DragOverlay dropAnimation={null}>
-          {activeId && activeData ? (
-            <Flexbox
-              align={'center'}
-              gap={12}
-              horizontal
-              paddingInline={12}
-              style={{
-                background: theme.colorBgElevated,
-                border: `1px solid ${theme.colorPrimaryBorder}`,
-                borderRadius: theme.borderRadiusLG,
-                boxShadow: theme.boxShadow,
-                cursor: 'grabbing',
-                height: 44,
-                maxWidth: 320,
-                minWidth: 200,
-              }}
-            >
+    <DragActiveContext.Provider value={activeId !== null}>
+      <DndContext
+        collisionDetection={customCollisionDetection}
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+        sensors={sensors}
+      >
+        {children}
+        {createPortal(
+          <DragOverlay dropAnimation={null}>
+            {activeId && activeData ? (
               <Flexbox
                 align={'center'}
-                justify={'center'}
+                gap={12}
+                horizontal
+                paddingInline={12}
                 style={{
-                  color: theme.colorPrimary,
-                  flexShrink: 0,
+                  background: theme.colorBgElevated,
+                  border: `1px solid ${theme.colorPrimaryBorder}`,
+                  borderRadius: theme.borderRadiusLG,
+                  boxShadow: theme.boxShadow,
+                  cursor: 'grabbing',
+                  height: 44,
+                  maxWidth: 320,
+                  minWidth: 200,
                 }}
               >
-                {activeData.fileType === 'custom/folder' ? (
-                  <Icon icon={FolderIcon} size={20} />
-                ) : activeData.fileType === 'custom/document' ? (
-                  <Icon icon={FileText} size={20} />
-                ) : (
-                  <FileIcon fileName={activeData.name} fileType={activeData.fileType} size={20} />
-                )}
-              </Flexbox>
-              <span
-                style={{
-                  color: theme.colorText,
-                  flex: 1,
-                  fontSize: theme.fontSize,
-                  fontWeight: 500,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {activeData.name}
-              </span>
-              {selectedFileIds.includes(activeId) && selectedFileIds.length > 1 && (
                 <Flexbox
                   align={'center'}
                   justify={'center'}
                   style={{
-                    background: theme.colorPrimary,
-                    borderRadius: theme.borderRadiusSM,
-                    color: theme.colorTextLightSolid,
+                    color: theme.colorPrimary,
                     flexShrink: 0,
-                    fontSize: 12,
-                    fontWeight: 600,
-                    height: 22,
-                    minWidth: 22,
-                    paddingInline: 6,
                   }}
                 >
-                  {selectedFileIds.length}
+                  {activeData.fileType === 'custom/folder' ? (
+                    <Icon icon={FolderIcon} size={20} />
+                  ) : activeData.fileType === 'custom/document' ? (
+                    <Icon icon={FileText} size={20} />
+                  ) : (
+                    <FileIcon fileName={activeData.name} fileType={activeData.fileType} size={20} />
+                  )}
                 </Flexbox>
-              )}
-            </Flexbox>
-          ) : null}
-        </DragOverlay>,
-        document.body,
-      )}
-    </DndContext>
+                <span
+                  style={{
+                    color: theme.colorText,
+                    flex: 1,
+                    fontSize: theme.fontSize,
+                    fontWeight: 500,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {activeData.name}
+                </span>
+                {selectedFileIds.includes(activeId) && selectedFileIds.length > 1 && (
+                  <Flexbox
+                    align={'center'}
+                    justify={'center'}
+                    style={{
+                      background: theme.colorPrimary,
+                      borderRadius: theme.borderRadiusSM,
+                      color: theme.colorTextLightSolid,
+                      flexShrink: 0,
+                      fontSize: 12,
+                      fontWeight: 600,
+                      height: 22,
+                      minWidth: 22,
+                      paddingInline: 6,
+                    }}
+                  >
+                    {selectedFileIds.length}
+                  </Flexbox>
+                )}
+              </Flexbox>
+            ) : null}
+          </DragOverlay>,
+          document.body,
+        )}
+      </DndContext>
+    </DragActiveContext.Provider>
   );
 });
 
