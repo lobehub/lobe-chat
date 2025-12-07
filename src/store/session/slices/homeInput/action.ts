@@ -51,7 +51,7 @@ export const createHomeInputSlice: StateCreator<
       // 3. Send initial message with agentId context
       const { sendMessage } = useChatStore.getState();
       await sendMessage({
-        context: { agentId: newAgentId },
+        context: { agentId: newAgentId, scope: 'agent_builder' },
         message,
       });
 
