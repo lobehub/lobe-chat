@@ -1,9 +1,29 @@
-import { LobeAgentConfig, MetaData } from '@lobechat/types';
+import { AgentItem, LobeAgentConfig, MetaData } from '@lobechat/types';
 import type { PartialDeep } from 'type-fest';
 
 import { lambdaClient } from '@/libs/trpc/client';
 
+export interface CreateAgentParams {
+  config?: PartialDeep<AgentItem>;
+  groupId?: string;
+}
+
+export interface CreateAgentResult {
+  agentId?: string;
+  sessionId: string;
+}
+
 class AgentService {
+  /**
+   * Create a new agent with session
+   */
+  createAgent = async (params: CreateAgentParams): Promise<CreateAgentResult> => {
+    return lambdaClient.agent.createAgent.mutate({
+      config: params.config as any,
+      groupId: params.groupId,
+    });
+  };
+
   createAgentKnowledgeBase = async (
     agentId: string,
     knowledgeBaseId: string,
