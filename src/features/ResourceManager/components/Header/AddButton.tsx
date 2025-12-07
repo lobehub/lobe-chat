@@ -4,12 +4,11 @@ import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FilePenLine, FileUp, FolderIcon, FolderUp, Link, Plus } from 'lucide-react';
-import { type ChangeEvent, useMemo, useState } from 'react';
+import { type ChangeEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import DragUpload from '@/components/DragUpload';
-import PageEditorModal from '@/features/PageEditor/Modal';
 import { useFileStore } from '@/store/file';
 import { DocumentSourceType } from '@/types/document';
 import { filterFilesByGitignore, findGitignoreFile, readGitignoreContent } from '@/utils/gitignore';
@@ -25,17 +24,18 @@ const hotArea = css`
 
 const AddButton = () => {
   const { t } = useTranslation('file');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
   const uploadFolderWithStructure = useFileStore((s) => s.uploadFolderWithStructure);
   const createFolder = useFileStore((s) => s.createFolder);
   const createDocument = useFileStore((s) => s.createDocument);
   const setPendingRenameItemId = useFileStore((s) => s.setPendingRenameItemId);
   const currentFolderId = useFileStore((s) => s.currentFolderId);
-  const setMode = useResourceManagerStore((s) => s.setMode);
-  const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
 
-  const libraryId = useResourceManagerStore((s) => s.libraryId);
+  const [libraryId, setCurrentViewItemId, setMode] = useResourceManagerStore((s) => [
+    s.libraryId,
+    s.setCurrentViewItemId,
+    s.setMode,
+  ]);
 
   const handleOpenNoteEditor = async () => {
     // Create a new page directly and switch to page view
@@ -72,10 +72,6 @@ const AddButton = () => {
     // Switch to page view mode
     setCurrentViewItemId(newPage.id);
     setMode('page');
-  };
-
-  const handleCloseNoteEditor = () => {
-    setIsModalOpen(false);
   };
 
   const handleCreateFolder = async () => {
@@ -249,12 +245,6 @@ const AddButton = () => {
         type="file"
         // @ts-expect-error - webkitdirectory is not in the React types
         webkitdirectory=""
-      />
-      <PageEditorModal
-        knowledgeBaseId={libraryId}
-        onClose={handleCloseNoteEditor}
-        open={isModalOpen}
-        parentId={currentFolderId ?? undefined}
       />
     </>
   );
