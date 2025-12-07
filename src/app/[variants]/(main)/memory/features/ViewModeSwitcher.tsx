@@ -1,9 +1,11 @@
 'use client';
 
-import { Segmented } from 'antd';
-import { Calendar, LayoutGrid } from 'lucide-react';
+import { ActionIcon } from '@lobehub/ui';
+import { CalendarDaysIcon, LayoutDashboardIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 
 export type ViewMode = 'timeline' | 'masonry';
 
@@ -16,22 +18,22 @@ const ViewModeSwitcher = memo<ViewModeSwitcherProps>(({ value, onChange }) => {
   const { t } = useTranslation('memory');
 
   return (
-    <Segmented
-      onChange={(v) => onChange(v as ViewMode)}
-      options={[
-        {
-          icon: <Calendar size={16} />,
-          label: t('viewMode.timeline'),
-          value: 'timeline',
-        },
-        {
-          icon: <LayoutGrid size={16} />,
-          label: t('viewMode.masonry'),
-          value: 'masonry',
-        },
-      ]}
-      value={value}
-    />
+    <>
+      <ActionIcon
+        active={value === 'timeline'}
+        icon={CalendarDaysIcon}
+        onClick={() => onChange('timeline')}
+        size={DESKTOP_HEADER_ICON_SIZE}
+        title={t('viewMode.timeline')}
+      />
+      <ActionIcon
+        active={value === 'masonry'}
+        icon={LayoutDashboardIcon}
+        onClick={() => onChange('masonry')}
+        size={DESKTOP_HEADER_ICON_SIZE}
+        title={t('viewMode.masonry')}
+      />
+    </>
   );
 });
 

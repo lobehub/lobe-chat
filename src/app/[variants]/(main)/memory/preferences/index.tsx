@@ -23,8 +23,8 @@ const Preferences = memo(() => {
       <NavHeader
         right={
           <>
-            <WideScreenButton />
             <ViewModeSwitcher onChange={setViewMode} value={viewMode} />
+            <WideScreenButton />
           </>
         }
       />
