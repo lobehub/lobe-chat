@@ -162,7 +162,7 @@ const defaultMiddleware = (request: NextRequest) => {
     ? urlJoin(url.origin, nextPathname)
     : nextPathname;
 
-  console.log('nextURL', nextURL);
+  console.log(`[rewrite] ${url.pathname} -> ${nextURL}`);
 
   logDefault('URL rewrite: %O', {
     isLocalRewrite: appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL,
