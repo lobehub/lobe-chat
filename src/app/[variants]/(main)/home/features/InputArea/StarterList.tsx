@@ -1,30 +1,41 @@
 import { Button, ButtonProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { AppWindowIcon, BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon } from 'lucide-react';
+import { memo, useCallback, useMemo } from 'react';
 import { Center } from 'react-layout-kit';
 
+import { StarterMode } from '@/store/session/slices/homeInput';
+import { useSessionStore } from '@/store/session/store';
+
 const useStyles = createStyles(({ css, token }) => ({
+  active: css`
+    border-color: ${token.colorPrimary};
+    background: ${token.colorPrimaryBg};
+  `,
   button: css`
     height: 40px;
     background: ${token.colorBgContainerSecondary};
 
     &:hover {
-      border-color: ${token.colorBorder} !important;
-      background: ${token.colorFillTertiary} !important;
+      border-color: ${token.colorBorder};
+      background: ${token.colorFillTertiary};
     }
   `,
 }));
 
 interface StarterItem {
   icon?: ButtonProps['icon'];
-  key: string;
-  onClick?: () => void;
+  key: StarterMode;
   title: string;
 }
 
 const StarterList = memo(() => {
-  const { styles, theme } = useStyles();
+  const { styles, cx, theme } = useStyles();
+
+  const [inputActiveMode, setInputActiveMode] = useSessionStore((s) => [
+    s.inputActiveMode,
+    s.setInputActiveMode,
+  ]);
 
   const items: StarterItem[] = useMemo(
     () => [
@@ -48,27 +59,39 @@ const StarterList = memo(() => {
         key: 'research',
         title: '探究',
       },
-      {
-        icon: AppWindowIcon,
-        key: 'web',
-        title: '编程',
-      },
+      // {
+      //   icon: AppWindowIcon,
+      //   key: 'web',
+      //   title: '编程',
+      // },
     ],
     [],
+  );
+
+  const handleClick = useCallback(
+    (key: StarterMode) => {
+      // Toggle mode: if clicking the active mode, clear it; otherwise set it
+      if (inputActiveMode === key) {
+        setInputActiveMode(null);
+      } else {
+        setInputActiveMode(key);
+      }
+    },
+    [inputActiveMode, setInputActiveMode],
   );
 
   return (
     <Center gap={8} horizontal>
       {items.map((item) => (
         <Button
-          className={styles.button}
+          className={cx(styles.button, inputActiveMode === item.key && styles.active)}
           icon={item.icon}
           iconProps={{
-            color: theme.colorTextSecondary,
+            color: inputActiveMode === item.key ? theme.colorPrimary : theme.colorTextSecondary,
             size: 18,
           }}
           key={item.key}
-          onClick={item.onClick}
+          onClick={() => handleClick(item.key)}
           shape={'round'}
         >
           {item.title}

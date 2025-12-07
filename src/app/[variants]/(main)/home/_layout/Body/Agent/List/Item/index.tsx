@@ -1,6 +1,7 @@
 import { ActionIcon, Icon, type MenuProps } from '@lobehub/ui';
 import { Dropdown } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { Loader2, PinIcon } from 'lucide-react';
 import { CSSProperties, DragEvent, memo, useCallback, useMemo } from 'react';
 
@@ -36,31 +37,25 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
     s.sessionRenamingId === id,
     s.sessionUpdatingId === id,
   ]);
-
   // Combine related selectors to reduce store subscriptions
-  const { active, sessionData } = useSessionStore(
-    useCallback(
-      (s) => {
-        const session = sessionSelectors.getSessionById(id)(s);
-        const meta = session.meta;
-        const isActive = s.activeId === id;
+  const { active, sessionData } = useSessionStore((s) => {
+    const session = sessionSelectors.getSessionById(id)(s);
+    const meta = session.meta;
+    const isActive = s.activeId === id;
 
-        return {
-          active: isActive,
-          sessionData: {
-            avatar: sessionMetaSelectors.getAvatar(meta),
-            avatarBackground: meta.backgroundColor,
-            group: session?.group,
-            members: (session as LobeGroupSession).members,
-            pin: sessionHelpers.getSessionPinned(session),
-            title: sessionMetaSelectors.getTitle(meta),
-            type: session.type,
-          },
-        };
+    return {
+      active: isActive,
+      sessionData: {
+        avatar: sessionMetaSelectors.getAvatar(meta),
+        avatarBackground: meta.backgroundColor,
+        group: session?.group,
+        members: (session as LobeGroupSession).members,
+        pin: sessionHelpers.getSessionPinned(session),
+        title: sessionMetaSelectors.getTitle(meta),
+        type: session.type,
       },
-      [id],
-    ),
-  );
+    };
+  }, isEqual);
 
   // Separate loading state from chat store - only subscribe if this session is active
   const isLoading = useChatStore(
