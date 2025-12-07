@@ -2,7 +2,7 @@ import { Input } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { memo, useCallback, useState } from 'react';
 
-import { useSessionStore } from '@/store/session';
+import { useHomeStore } from '@/store/home';
 
 interface EditingProps {
   id: string;
@@ -12,24 +12,24 @@ interface EditingProps {
 
 const Editing = memo<EditingProps>(({ id, name, toggleEditing }) => {
   const [newName, setNewName] = useState(name);
-  const [editing, updateSessionGroupName] = useSessionStore((s) => [
-    s.sessionGroupRenamingId === id,
-    s.updateSessionGroupName,
+  const [editing, updateGroupName] = useHomeStore((s) => [
+    s.groupRenamingId === id,
+    s.updateGroupName,
   ]);
 
   const handleUpdate = useCallback(async () => {
     if (newName && name !== newName) {
       try {
         // Set loading state
-        useSessionStore.setState({ sessionGroupUpdatingId: id }, false, 'setGroupUpdating');
-        await updateSessionGroupName(id, newName);
+        useHomeStore.getState().setGroupUpdatingId(id);
+        await updateGroupName(id, newName);
       } finally {
         // Clear loading state
-        useSessionStore.setState({ sessionGroupUpdatingId: null }, false, 'clearGroupUpdating');
+        useHomeStore.getState().setGroupUpdatingId(null);
       }
     }
     toggleEditing(false);
-  }, [newName, name, id, updateSessionGroupName, toggleEditing]);
+  }, [newName, name, id, updateGroupName, toggleEditing]);
 
   return (
     <Popover

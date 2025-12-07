@@ -1,0 +1,176 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix,typescript-sort-keys/interface */
+import { t } from 'i18next';
+import { StateCreator } from 'zustand/vanilla';
+
+import { message } from '@/components/AntdStaticMethods';
+import { INBOX_SESSION_ID } from '@/const/session';
+import { sessionService } from '@/services/session';
+import type { HomeStore } from '@/store/home/store';
+import { getSessionStoreState } from '@/store/session';
+import { SessionGroupItem } from '@/types/session';
+import { setNamespace } from '@/utils/storeDebug';
+
+const n = setNamespace('sidebarUI');
+
+export interface SidebarUIAction {
+  // ========== Agent Operations ==========
+  /**
+   * Duplicate an agent
+   */
+  duplicateAgent: (agentId: string, newTitle?: string) => Promise<void>;
+  /**
+   * Pin or unpin an agent
+   */
+  pinAgent: (agentId: string, pinned: boolean) => Promise<void>;
+  /**
+   * Remove an agent
+   */
+  removeAgent: (agentId: string) => Promise<void>;
+  /**
+   * Update agent's group
+   */
+  updateAgentGroup: (agentId: string, groupId: string | null) => Promise<void>;
+
+  // ========== Group Operations ==========
+  /**
+   * Add a new group
+   */
+  addGroup: (name: string) => Promise<string>;
+  /**
+   * Remove a group
+   */
+  removeGroup: (groupId: string) => Promise<void>;
+  /**
+   * Update group name
+   */
+  updateGroupName: (groupId: string, name: string) => Promise<void>;
+  /**
+   * Update group sort order
+   */
+  updateGroupSort: (items: SessionGroupItem[]) => Promise<void>;
+
+  // ========== UI State Actions ==========
+  /**
+   * Set agent renaming id
+   */
+  setAgentRenamingId: (id: string | null) => void;
+  /**
+   * Set agent updating id
+   */
+  setAgentUpdatingId: (id: string | null) => void;
+  /**
+   * Set group renaming id
+   */
+  setGroupRenamingId: (id: string | null) => void;
+  /**
+   * Set group updating id
+   */
+  setGroupUpdatingId: (id: string | null) => void;
+}
+
+export const createSidebarUISlice: StateCreator<
+  HomeStore,
+  [['zustand/devtools', never]],
+  [],
+  SidebarUIAction
+> = (set, get) => ({
+  // ========== Agent Operations ==========
+  duplicateAgent: async (agentId, newTitle?: string) => {
+    const messageLoadingKey = 'duplicateAgent.loading';
+
+    message.loading({
+      content: t('duplicateSession.loading', { ns: 'chat' }),
+      duration: 0,
+      key: messageLoadingKey,
+    });
+
+    // Use provided title or generate default
+    const title = newTitle ?? t('duplicateSession.title', { ns: 'chat', title: 'Agent' }) ?? 'Copy';
+    const newId = await sessionService.cloneSession(agentId, title);
+
+    if (!newId) {
+      message.destroy(messageLoadingKey);
+      message.error(t('copyFail', { ns: 'common' }));
+      return;
+    }
+
+    await get().refreshAgentList();
+    message.destroy(messageLoadingKey);
+    message.success(t('duplicateSession.success', { ns: 'chat' }));
+
+    // Switch to new session
+    const sessionStore = getSessionStoreState();
+    sessionStore.switchSession(newId);
+  },
+
+  pinAgent: async (agentId, pinned) => {
+    await sessionService.updateSession(agentId, { pinned });
+    await get().refreshAgentList();
+  },
+
+  removeAgent: async (agentId) => {
+    await sessionService.removeSession(agentId);
+    await get().refreshAgentList();
+
+    // If the active session is deleted, switch to inbox
+    const sessionStore = getSessionStoreState();
+    if (agentId === sessionStore.activeId) {
+      sessionStore.switchSession(INBOX_SESSION_ID);
+    }
+  },
+
+  updateAgentGroup: async (agentId, groupId) => {
+    await sessionService.updateSession(agentId, { group: groupId || 'default' });
+    await get().refreshAgentList();
+  },
+
+  // ========== Group Operations ==========
+  addGroup: async (name) => {
+    const id = await sessionService.createSessionGroup(name);
+    await get().refreshAgentList();
+    return id;
+  },
+
+  removeGroup: async (groupId) => {
+    await sessionService.removeSessionGroup(groupId);
+    await get().refreshAgentList();
+  },
+
+  updateGroupName: async (groupId, name) => {
+    await sessionService.updateSessionGroup(groupId, { name });
+    await get().refreshAgentList();
+  },
+
+  updateGroupSort: async (items) => {
+    const sortMap = items.map((item, index) => ({ id: item.id, sort: index }));
+
+    message.loading({
+      content: t('sessionGroup.sorting', { ns: 'chat' }),
+      duration: 0,
+      key: 'updateGroupSort',
+    });
+
+    await sessionService.updateSessionGroupOrder(sortMap);
+    message.destroy('updateGroupSort');
+    message.success(t('sessionGroup.sortSuccess', { ns: 'chat' }));
+
+    await get().refreshAgentList();
+  },
+
+  // ========== UI State Actions ==========
+  setAgentRenamingId: (id) => {
+    set({ agentRenamingId: id }, false, n('setAgentRenamingId'));
+  },
+
+  setAgentUpdatingId: (id) => {
+    set({ agentUpdatingId: id }, false, n('setAgentUpdatingId'));
+  },
+
+  setGroupRenamingId: (id) => {
+    set({ groupRenamingId: id }, false, n('setGroupRenamingId'));
+  },
+
+  setGroupUpdatingId: (id) => {
+    set({ groupUpdatingId: id }, false, n('setGroupUpdatingId'));
+  },
+});

@@ -20,8 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
-import { sessionGroupSelectors } from '@/store/session/selectors';
+import { homeSelectors, useHomeStore } from '@/store/home';
 
 const useStyles = createStyles(({ css }) => ({
   modalRoot: css`
@@ -39,13 +38,13 @@ export const useSessionItemMenuItems = () => {
   const { modal, message } = App.useApp();
 
   const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
-  const sessionCustomGroups = useSessionStore(sessionGroupSelectors.sessionGroupItems, isEqual);
+  const sessionCustomGroups = useHomeStore(homeSelectors.agentGroups, isEqual);
 
-  const [pinSession, duplicateSession, updateSessionGroup, removeSession] = useSessionStore((s) => [
-    s.pinSession,
-    s.duplicateSession,
-    s.updateSessionGroupId,
-    s.removeSession,
+  const [pinAgent, duplicateAgent, updateAgentGroup, removeAgent] = useHomeStore((s) => [
+    s.pinAgent,
+    s.duplicateAgent,
+    s.updateAgentGroup,
+    s.removeAgent,
   ]);
 
   const [pinGroup, deleteGroup] = useChatGroupStore((s) => [s.pinGroup, s.deleteGroup]);
@@ -64,12 +63,12 @@ export const useSessionItemMenuItems = () => {
           if (parentType === 'group') {
             pinGroup(id, !isPinned);
           } else {
-            pinSession(id, !isPinned);
+            pinAgent(id, !isPinned);
           }
         },
       };
     },
-    [t, pinGroup, pinSession],
+    [t, pinGroup, pinAgent],
   );
 
   /**
@@ -103,11 +102,11 @@ export const useSessionItemMenuItems = () => {
         label: t('duplicate', { ns: 'common' }),
         onClick: ({ domEvent }: any) => {
           domEvent.stopPropagation();
-          duplicateSession(id);
+          duplicateAgent(id);
         },
       };
     },
-    [t, duplicateSession],
+    [t, duplicateAgent],
   );
 
   /**
@@ -151,7 +150,7 @@ export const useSessionItemMenuItems = () => {
             key: groupId,
             label: name,
             onClick: () => {
-              updateSessionGroup(id, groupId);
+              updateAgentGroup(id, groupId);
             },
           };
         }),
@@ -160,7 +159,7 @@ export const useSessionItemMenuItems = () => {
           key: 'defaultList',
           label: t('defaultList'),
           onClick: () => {
-            updateSessionGroup(id, SessionDefaultGroup.Default);
+            updateAgentGroup(id, SessionDefaultGroup.Default);
           },
         },
         {
@@ -185,7 +184,7 @@ export const useSessionItemMenuItems = () => {
         label: t('sessionGroup.moveGroup'),
       };
     },
-    [t, sessionCustomGroups, updateSessionGroup],
+    [t, sessionCustomGroups, updateAgentGroup],
   );
 
   /**
@@ -210,7 +209,7 @@ export const useSessionItemMenuItems = () => {
                 await deleteGroup(id);
                 message.success(t('confirmRemoveGroupSuccess'));
               } else {
-                await removeSession(id);
+                await removeAgent(id);
                 message.success(t('confirmRemoveSessionSuccess'));
               }
             },
@@ -223,7 +222,7 @@ export const useSessionItemMenuItems = () => {
         },
       };
     },
-    [t, modal, styles.modalRoot, deleteGroup, message, removeSession],
+    [t, modal, styles.modalRoot, deleteGroup, message, removeAgent],
   );
 
   return {

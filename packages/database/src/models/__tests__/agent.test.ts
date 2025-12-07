@@ -443,6 +443,92 @@ describe('AgentModel', () => {
     });
   });
 
+  describe('update', () => {
+    it('should update agent fields and set updatedAt', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Original Title' })
+        .returning()
+        .then((res) => res[0]);
+
+      const originalUpdatedAt = agent.updatedAt;
+
+      // Wait a bit to ensure time difference
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      await agentModel.update(agent.id, { title: 'Updated Title', description: 'New description' });
+
+      const result = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+
+      expect(result?.title).toBe('Updated Title');
+      expect(result?.description).toBe('New description');
+      expect(result?.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
+    });
+
+    it('should not update another user agent', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Original Title' })
+        .returning()
+        .then((res) => res[0]);
+
+      await agentModel2.update(agent.id, { title: 'Hacked Title' });
+
+      const result = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+
+      expect(result?.title).toBe('Original Title');
+    });
+  });
+
+  describe('touchUpdatedAt', () => {
+    it('should only update updatedAt without changing other fields', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'My Agent', description: 'My Description' })
+        .returning()
+        .then((res) => res[0]);
+
+      const originalUpdatedAt = agent.updatedAt;
+
+      // Wait a bit to ensure time difference
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      await agentModel.touchUpdatedAt(agent.id);
+
+      const result = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+
+      expect(result?.title).toBe('My Agent');
+      expect(result?.description).toBe('My Description');
+      expect(result?.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
+    });
+
+    it('should not touch another user agent updatedAt', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'My Agent' })
+        .returning()
+        .then((res) => res[0]);
+
+      const originalUpdatedAt = agent.updatedAt;
+
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      await agentModel2.touchUpdatedAt(agent.id);
+
+      const result = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+
+      expect(result?.updatedAt.getTime()).toBe(originalUpdatedAt.getTime());
+    });
+  });
+
   describe('toggleFile', () => {
     it('should toggle the enabled status of an agent file association', async () => {
       const agent = await serverDB
@@ -484,6 +570,70 @@ describe('AgentModel', () => {
 
       // Should still be enabled
       expect(result?.enabled).toBe(true);
+    });
+  });
+
+  describe('updateConfig', () => {
+    it('should update agent config and set updatedAt', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Original Title', model: 'gpt-3.5-turbo' })
+        .returning()
+        .then((res) => res[0]);
+
+      const originalUpdatedAt = agent.updatedAt;
+
+      // Wait a bit to ensure time difference
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      await agentModel.updateConfig(agent.id, { title: 'Updated Title', model: 'gpt-4' });
+
+      const result = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+
+      expect(result?.title).toBe('Updated Title');
+      expect(result?.model).toBe('gpt-4');
+      expect(result?.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
+    });
+
+    it('should update updatedAt even when only updating meta fields like avatar', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Test Agent', avatar: 'old-avatar' })
+        .returning()
+        .then((res) => res[0]);
+
+      const originalUpdatedAt = agent.updatedAt;
+
+      // Wait a bit to ensure time difference
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      await agentModel.updateConfig(agent.id, { avatar: 'new-avatar' });
+
+      const result = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+
+      expect(result?.avatar).toBe('new-avatar');
+      expect(result?.title).toBe('Test Agent'); // Should preserve other fields
+      expect(result?.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
+    });
+
+    it('should not update another user agent', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Original Title' })
+        .returning()
+        .then((res) => res[0]);
+
+      await agentModel2.updateConfig(agent.id, { title: 'Hacked Title' });
+
+      const result = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+
+      expect(result?.title).toBe('Original Title');
     });
   });
 

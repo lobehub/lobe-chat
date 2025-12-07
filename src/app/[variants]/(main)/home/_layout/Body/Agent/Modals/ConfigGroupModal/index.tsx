@@ -6,8 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
-import { sessionGroupSelectors } from '@/store/session/selectors';
+import { homeSelectors, useHomeStore } from '@/store/home';
 import { SessionGroupItem } from '@/types/session';
 
 import GroupItem from './GroupItem';
@@ -28,11 +27,17 @@ const useStyles = createStyles(({ css, token }) => ({
 const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
-  const sessionGroupItems = useSessionStore(sessionGroupSelectors.sessionGroupItems, isEqual);
-  const [addSessionGroup, updateSessionGroupSort] = useSessionStore((s) => [
-    s.addSessionGroup,
-    s.updateSessionGroupSort,
-  ]);
+  // Map SidebarGroup to SessionGroupItem-like structure for the sortable list
+  const sessionGroupItems = useHomeStore(
+    (s) =>
+      homeSelectors.agentGroups(s).map((g) => ({
+        id: g.id,
+        name: g.name,
+        sort: g.sort,
+      })),
+    isEqual,
+  );
+  const [addGroup, updateGroupSort] = useHomeStore((s) => [s.addGroup, s.updateGroupSort]);
   const [loading, setLoading] = useState(false);
 
   return (
@@ -48,7 +53,7 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
         <SortableList
           items={sessionGroupItems}
           onChange={(items: SessionGroupItem[]) => {
-            updateSessionGroupSort(items);
+            updateGroupSort(items);
           }}
           renderItem={(item: SessionGroupItem) => (
             <SortableList.Item
@@ -69,7 +74,7 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
           loading={loading}
           onClick={async () => {
             setLoading(true);
-            await addSessionGroup(t('sessionGroup.newGroup'));
+            await addGroup(t('sessionGroup.newGroup'));
             setLoading(false);
           }}
         >

@@ -1,21 +1,15 @@
 import { ActionIcon, Icon, type MenuProps } from '@lobehub/ui';
 import { Dropdown } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { Loader2, PinIcon } from 'lucide-react';
 import { CSSProperties, DragEvent, memo, useCallback, useMemo } from 'react';
 
 import { useDropdownMenu } from '@/app/[variants]/(main)/home/_layout/Body/Agent/List/Item/useDropdownMenu';
-import { DEFAULT_AVATAR } from '@/const/meta';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
+import { SidebarAgentItem, useHomeStore } from '@/store/home';
 import { useSessionStore } from '@/store/session';
-import { sessionHelpers } from '@/store/session/helpers';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
-import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
-import { LobeGroupSession } from '@/types/session';
 
 import NavItem from '../../../../../../../../../features/NavPanel/components/NavItem';
 import { useAgentModal } from '../../ModalProvider';
@@ -25,74 +19,36 @@ import Editing from './Editing';
 
 interface SessionItemProps {
   className?: string;
-  id: string;
+  item: SidebarAgentItem;
   style?: CSSProperties;
 }
 
-const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
+const SessionItem = memo<SessionItemProps>(({ item, style, className }) => {
+  const { id, avatar, title, pinned, type, sessionId } = item;
+
   const theme = useTheme();
   const { openCreateGroupModal } = useAgentModal();
   const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
-  const [editing, isUpdating] = useSessionStore((s) => [
-    s.sessionRenamingId === id,
-    s.sessionUpdatingId === id,
-  ]);
-  // Combine related selectors to reduce store subscriptions
-  const { active, sessionData } = useSessionStore((s) => {
-    const session = sessionSelectors.getSessionById(id)(s);
-    const meta = session.meta;
-    const isActive = s.activeId === id;
 
-    return {
-      active: isActive,
-      sessionData: {
-        avatar: sessionMetaSelectors.getAvatar(meta),
-        avatarBackground: meta.backgroundColor,
-        group: session?.group,
-        members: (session as LobeGroupSession).members,
-        pin: sessionHelpers.getSessionPinned(session),
-        title: sessionMetaSelectors.getTitle(meta),
-        type: session.type,
-      },
-    };
-  }, isEqual);
+  // Get UI state from homeStore (editing, updating)
+  const [editing, isUpdating] = useHomeStore((s) => [
+    s.agentRenamingId === id,
+    s.agentUpdatingId === id,
+  ]);
+
+  // Check if this agent/session is active
+  // activeId could be agentId or sessionId depending on navigation
+  const active = useSessionStore((s) => s.activeId === id || s.activeId === sessionId);
 
   // Separate loading state from chat store - only subscribe if this session is active
   const isLoading = useChatStore(
     useCallback((s) => (active ? operationSelectors.isAgentRuntimeRunning(s) : false), [active]),
   );
 
-  // Memoize current user to avoid repeated selectors - only needed for group sessions
-  const currentUserAvatar = useUserStore(
-    useCallback(
-      (s) =>
-        sessionData.type === 'group' ? userProfileSelectors.userAvatar(s) || DEFAULT_AVATAR : '',
-      [sessionData.type],
-    ),
-  );
-
-  // Memoize session avatar computation
-  const sessionAvatar = useMemo<string | { avatar: string; background?: string }[]>(() => {
-    if (sessionData.type !== 'group') {
-      return sessionData.avatar;
-    }
-
-    return [
-      {
-        avatar: currentUserAvatar,
-        background: undefined,
-      },
-      ...(sessionData.members?.map((member) => ({
-        avatar: member.avatar || DEFAULT_AVATAR,
-        background: member.backgroundColor || undefined,
-      })) || []),
-    ];
-  }, [sessionData.type, sessionData.avatar, sessionData.members, currentUserAvatar]);
-
   // Memoize event handlers
   const handleDoubleClick = useCallback(() => {
-    openSessionInNewWindow(id);
-  }, [id, openSessionInNewWindow]);
+    openSessionInNewWindow(sessionId || id);
+  }, [id, sessionId, openSessionInNewWindow]);
 
   const handleDragStart = useCallback(
     (e: DragEvent) => {
@@ -104,10 +60,10 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
   const handleDragEnd = useCallback(
     (e: DragEvent) => {
       if (e.dataTransfer.dropEffect === 'none') {
-        openSessionInNewWindow(id);
+        openSessionInNewWindow(sessionId || id);
       }
     },
-    [id, openSessionInNewWindow],
+    [id, sessionId, openSessionInNewWindow],
   );
 
   const handleOpenCreateGroupModal = useCallback(() => {
@@ -116,11 +72,7 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
 
   const toggleEditing = useCallback(
     (visible?: boolean) => {
-      useSessionStore.setState(
-        { sessionRenamingId: visible ? id : null },
-        false,
-        'toggleSessionRenaming',
-      );
+      useHomeStore.getState().setAgentRenamingId(visible ? id : null);
     },
     [id],
   );
@@ -128,10 +80,10 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
   // Memoize pin icon
   const pinIcon = useMemo(
     () =>
-      sessionData.pin ? (
+      pinned ? (
         <ActionIcon icon={PinIcon} size={12} style={{ opacity: 0.5, pointerEvents: 'none' }} />
       ) : undefined,
-    [sessionData.pin],
+    [pinned],
   );
 
   // Memoize avatar icon (show loader when updating)
@@ -139,26 +91,16 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
     if (isUpdating) {
       return <Icon color={theme.colorTextDescription} icon={Loader2} size={18} spin />;
     }
-    return (
-      <Avatar
-        avatar={sessionAvatar}
-        avatarBackground={sessionData.avatarBackground}
-        type={sessionData.type}
-      />
-    );
-  }, [
-    isUpdating,
-    sessionAvatar,
-    sessionData.avatarBackground,
-    sessionData.type,
-    theme.colorTextDescription,
-  ]);
+    return <Avatar avatar={avatar || ''} type={type} />;
+  }, [isUpdating, avatar, type, theme.colorTextDescription]);
 
   const dropdownMenu: MenuProps['items'] = useDropdownMenu({
-    group: sessionData.group,
+    group: undefined, // TODO: pass group from parent if needed
     id,
     openCreateGroupModal: handleOpenCreateGroupModal,
-    parentType: sessionData.type,
+    parentType: type,
+    pinned: pinned ?? false,
+    sessionType: type,
     toggleEditing,
   });
 
@@ -172,7 +114,6 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
       >
         <NavItem
           actions={<Actions dropdownMenu={dropdownMenu} />}
-          active={active}
           className={className}
           disabled={editing || isUpdating}
           draggable={!editing && !isUpdating}
@@ -184,10 +125,15 @@ const SessionItem = memo<SessionItemProps>(({ id, style, className }) => {
           onDragEnd={handleDragEnd}
           onDragStart={handleDragStart}
           style={style}
-          title={sessionData.title}
+          title={title || ''}
         />
       </Dropdown>
-      <Editing id={id} title={sessionData.title} toggleEditing={toggleEditing} />
+      <Editing
+        avatar={avatar ?? undefined}
+        id={id}
+        title={title || ''}
+        toggleEditing={toggleEditing}
+      />
     </>
   );
 });
