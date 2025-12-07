@@ -24,15 +24,15 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   timelineDot: css`
     position: absolute;
-    inset-block-start: 16px;
+    inset-block-start: 22px;
     inset-inline-start: 0;
 
     width: 16px;
     height: 16px;
-    border: 1px solid ${token.colorBorderSecondary};
+    border: 1px solid ${token.colorBorder};
     border-radius: 50%;
 
-    background: ${token.colorBgContainer};
+    background: ${token.colorBgElevated};
     box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 40%);
   `,
 }));

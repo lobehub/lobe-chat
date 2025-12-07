@@ -1,51 +1,13 @@
-import { ActionIcon, Dropdown, Tag } from '@lobehub/ui';
+import { ActionIcon, Dropdown } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import {
-  AlertTriangle,
-  Briefcase,
-  CircleDot,
-  Globe,
-  MoreHorizontal,
-  Pencil,
-  Target,
-  Trash2,
-  Users,
-} from 'lucide-react';
-import { KeyboardEvent, MouseEvent, ReactNode, memo } from 'react';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import MasonryCard from '@/app/[variants]/(main)/memory/features/MasonryView/MasonryCard';
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
 import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import { DisplayContextMemory } from '@/database/repositories/userMemory';
-
-dayjs.extend(relativeTime);
-
-const getTypeIcon = (type: string | null): ReactNode => {
-  const iconSize = 14;
-  switch (type?.toLowerCase()) {
-    case 'goal': {
-      return <Target size={iconSize} />;
-    }
-    case 'problem': {
-      return <AlertTriangle size={iconSize} />;
-    }
-    case 'project': {
-      return <Briefcase size={iconSize} />;
-    }
-    case 'relationship': {
-      return <Users size={iconSize} />;
-    }
-    case 'situation': {
-      return <Globe size={iconSize} />;
-    }
-    default: {
-      return <CircleDot size={iconSize} />;
-    }
-  }
-};
 
 interface ContextCardProps {
   context: DisplayContextMemory;
@@ -101,13 +63,7 @@ const ContextCard = memo<ContextCardProps>(({ context, onClick, onDelete, onEdit
           />
         </>
       }
-      cate={
-        context.type && (
-          <Tag icon={getTypeIcon(context.type)} variant="filled">
-            {context.type}
-          </Tag>
-        )
-      }
+      cate={context.type}
       footer={<SourceLink source={context.source} />}
       onClick={onClick}
       title={context.title}

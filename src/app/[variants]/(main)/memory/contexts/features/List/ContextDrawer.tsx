@@ -3,9 +3,9 @@
 import { Drawer, Tag, Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import { AlertTriangle, Briefcase, CircleDot, Globe, Link2, Target, Users } from 'lucide-react';
+import { Link2 } from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode, memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -96,30 +96,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const getTypeIcon = (type: string | null): ReactNode => {
-  const iconSize = 16;
-  switch (type?.toLowerCase()) {
-    case 'goal': {
-      return <Target size={iconSize} />;
-    }
-    case 'problem': {
-      return <AlertTriangle size={iconSize} />;
-    }
-    case 'project': {
-      return <Briefcase size={iconSize} />;
-    }
-    case 'relationship': {
-      return <Users size={iconSize} />;
-    }
-    case 'situation': {
-      return <Globe size={iconSize} />;
-    }
-    default: {
-      return <CircleDot size={iconSize} />;
-    }
-  }
-};
-
 interface ContextDrawerProps {
   context: DisplayContextMemory | null;
   onClose: () => void;
@@ -145,12 +121,7 @@ const ContextDrawer = memo<ContextDrawerProps>(({ context, open, onClose }) => {
         <div className={styles.metaInfo}>
           <Flexbox gap={12}>
             <Flexbox align="center" gap={16} horizontal justify="space-between">
-              {context.type && (
-                <span className={styles.typeTag}>
-                  {getTypeIcon(context.type)}
-                  {context.type}
-                </span>
-              )}
+              {context.type && <span className={styles.typeTag}>{context.type}</span>}
               {context.currentStatus && (
                 <span className={styles.status}>{context.currentStatus}</span>
               )}
