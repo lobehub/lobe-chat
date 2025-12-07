@@ -76,6 +76,7 @@ export const List = memo(() => {
       }}
       data={allItems}
       endReached={loadMorePlugins}
+      increaseViewportBy={800}
       itemContent={(_, item) => (
         <Flexbox
           key={item.identifier}
@@ -88,7 +89,7 @@ export const List = memo(() => {
           <Item active={identifier === item.identifier} {...item} />
         </Flexbox>
       )}
-      overscan={400}
+      overscan={24}
       style={{ height: '100%', width: '100%' }}
       totalCount={totalCount || 0}
     />

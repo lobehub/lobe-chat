@@ -49,6 +49,7 @@ export const List = memo<ListProps>(({ keywords, identifier, setIdentifier }) =>
   return (
     <Virtuoso
       data={filteredPluginList}
+      increaseViewportBy={800}
       itemContent={(_, item) => {
         return (
           <Flexbox
@@ -67,7 +68,7 @@ export const List = memo<ListProps>(({ keywords, identifier, setIdentifier }) =>
           </Flexbox>
         );
       }}
-      overscan={400}
+      overscan={24}
       style={{ height: '100%', width: '100%' }}
       totalCount={filteredPluginList.length}
     />

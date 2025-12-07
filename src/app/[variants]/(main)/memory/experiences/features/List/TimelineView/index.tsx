@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { DisplayExperienceMemory } from '@/database/repositories/userMemory';
 
 import { TimelineView as GenericTimelineView } from '../../../../features/TimeLineView';
-import { PeriodGroup } from '../../../../features/TimeLineView/PeriodGroup';
+import { PeriodHeader, TimelineItemWrapper } from '../../../../features/TimeLineView/PeriodGroup';
 import ExperienceCard from './ExperienceCard';
 
 interface ExperienceTimelineViewProps {
@@ -21,21 +21,18 @@ const ExperienceTimelineView = memo<ExperienceTimelineViewProps>(
       <GenericTimelineView
         data={experiences}
         groupBy="day"
-        renderGroup={(periodKey, items) => (
-          <PeriodGroup
-            groupBy="day"
-            items={items}
-            periodKey={periodKey}
-            renderItem={(experience) => (
-              <ExperienceCard
-                experience={experience}
-                key={experience.id}
-                onClick={onCardClick}
-                onDelete={onDelete}
-                onEdit={onEdit}
-              />
-            )}
-          />
+        renderHeader={(periodKey, itemCount) => (
+          <PeriodHeader groupBy="day" itemCount={itemCount} periodKey={periodKey} />
+        )}
+        renderItem={(experience) => (
+          <TimelineItemWrapper>
+            <ExperienceCard
+              experience={experience}
+              onClick={onCardClick}
+              onDelete={onDelete}
+              onEdit={onEdit}
+            />
+          </TimelineItemWrapper>
         )}
       />
     );
