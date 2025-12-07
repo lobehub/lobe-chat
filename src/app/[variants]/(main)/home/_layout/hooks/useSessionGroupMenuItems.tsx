@@ -8,10 +8,9 @@ import { useTranslation } from 'react-i18next';
 
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
+import { useAgentStore } from '@/store/agent';
 import { useChatGroupStore } from '@/store/chatGroup';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/slices/session/selectors';
-import { LobeAgentSession } from '@/types/session';
+import { useHomeStore } from '@/store/home';
 
 const useStyles = createStyles(({ css }) => ({
   modalRoot: css`
@@ -34,11 +33,8 @@ export const useSessionGroupMenuItems = () => {
   const { modal, message } = App.useApp();
   const groupTemplates = useGroupTemplates();
 
-  const [removeSessionGroup, createSession, refreshSessions] = useSessionStore((s) => [
-    s.removeSessionGroup,
-    s.createSession,
-    s.refreshSessions,
-  ]);
+  const [storeCreateAgent] = useAgentStore((s) => [s.createAgent]);
+  const [removeGroup, refreshAgentList] = useHomeStore((s) => [s.removeGroup, s.refreshAgentList]);
   const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
 
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);
@@ -99,7 +95,7 @@ export const useSessionGroupMenuItems = () => {
             centered: true,
             okButtonProps: { danger: true },
             onOk: async () => {
-              await removeSessionGroup(groupId);
+              await removeGroup(groupId);
             },
             rootClassName: styles.modalRoot,
             title: t('sessionGroup.confirmRemoveGroupAlert'),
@@ -107,14 +103,15 @@ export const useSessionGroupMenuItems = () => {
         },
       };
     },
-    [t, modal, removeSessionGroup, styles.modalRoot],
+    [t, modal, removeGroup, styles.modalRoot],
   );
 
   /**
    * Create agent in group menu item
    */
   const createAgentInGroupMenuItem = useCallback(
-    (groupId: string, isPinned?: boolean): ItemType => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (groupId: string, _isPinned?: boolean): ItemType => {
       const iconElement = <Icon icon={FolderPenIcon} />;
       return {
         icon: iconElement,
@@ -128,10 +125,8 @@ export const useSessionGroupMenuItems = () => {
           setIsCreatingAgent(true);
 
           try {
-            await createSession({
-              group: groupId,
-              pinned: isPinned,
-            });
+            await storeCreateAgent({ groupId });
+            await refreshAgentList();
 
             message.destroy(key);
             message.success({ content: t('sessionGroup.createAgentSuccess') });
@@ -145,7 +140,7 @@ export const useSessionGroupMenuItems = () => {
         },
       };
     },
-    [t, message, createSession],
+    [t, message, storeCreateAgent, refreshAgentList],
   );
 
   /**
@@ -154,7 +149,7 @@ export const useSessionGroupMenuItems = () => {
    */
   const createGroupChatInGroupMenuItem = useCallback(
     (
-      groupId: string,
+      _groupId: string,
       onOpenMemberSelection: (callbacks: {
         onCancel: () => void;
         onConfirm: (
@@ -233,31 +228,27 @@ export const useSessionGroupMenuItems = () => {
 
         const memberAgentIds: string[] = [];
         for (const member of membersToCreate) {
-          const sessionId = await createSession(
-            {
-              config: {
-                plugins: member.plugins,
-                systemRole: member.systemRole,
-                virtual: true,
-              },
-              meta: {
-                avatar: member.avatar,
-                backgroundColor: member.backgroundColor,
-                description: `${member.title} - ${template.description}`,
-                title: member.title,
-              },
+          const result = await storeCreateAgent({
+            config: {
+              // MetaData fields
+avatar: member.avatar,
+              
+backgroundColor: member.backgroundColor,
+              
+description: `${member.title} - ${template.description}`,
+              
+              plugins: member.plugins,
+              systemRole: member.systemRole,
+              title: member.title,
+              virtual: true,
             },
-            false,
-          );
+          });
 
-          await refreshSessions();
+          await refreshAgentList();
 
-          const session = sessionSelectors.getSessionById(sessionId)(useSessionStore.getState());
-          if (session && session.type === 'agent') {
-            const agentSession = session as LobeAgentSession;
-            if (agentSession.config?.id) {
-              memberAgentIds.push(agentSession.config.id);
-            }
+          // Get agentId directly from createAgent result
+          if (result.agentId) {
+            memberAgentIds.push(result.agentId);
           }
         }
 
@@ -292,7 +283,7 @@ export const useSessionGroupMenuItems = () => {
         setIsCreatingGroup(false);
       }
     },
-    [groupTemplates, createSession, refreshSessions, createGroup, message, t],
+    [groupTemplates, storeCreateAgent, refreshAgentList, createGroup, message, t],
   );
 
   /**

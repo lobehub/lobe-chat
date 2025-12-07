@@ -1,6 +1,6 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, ilike, or } from 'drizzle-orm';
 
-import { agents, chatGroups, sessionGroups , agentsToSessions, sessions } from '../../schemas';
+import { agents, agentsToSessions, chatGroups, sessionGroups, sessions } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 
 export type SidebarItemType = 'agent' | 'group';
@@ -174,5 +174,85 @@ export class HomeRepository {
     }));
 
     return { groups, pinned, ungrouped };
+  }
+
+  /**
+   * Search agents and chat groups by keyword
+   * Searches in title and description fields
+   */
+  async searchAgents(keyword: string): Promise<SidebarAgentItem[]> {
+    if (!keyword.trim()) return [];
+
+    const searchPattern = `%${keyword.toLowerCase()}%`;
+
+    // 1. Search agents by title or description
+    const agentResults = await this.db
+      .select({
+        avatar: agents.avatar,
+        description: agents.description,
+        id: agents.id,
+        pinned: sessions.pinned,
+        sessionId: sessions.id,
+        title: agents.title,
+        updatedAt: agents.updatedAt,
+      })
+      .from(agents)
+      .innerJoin(agentsToSessions, eq(agents.id, agentsToSessions.agentId))
+      .innerJoin(sessions, eq(agentsToSessions.sessionId, sessions.id))
+      .where(
+        and(
+          eq(agents.userId, this.userId),
+          eq(agents.virtual, false),
+          or(ilike(agents.title, searchPattern), ilike(agents.description, searchPattern)),
+        ),
+      )
+      .orderBy(desc(agents.updatedAt));
+
+    // 2. Search chat groups by title or description
+    const chatGroupResults = await this.db
+      .select({
+        description: chatGroups.description,
+        id: chatGroups.id,
+        pinned: chatGroups.pinned,
+        title: chatGroups.title,
+        updatedAt: chatGroups.updatedAt,
+      })
+      .from(chatGroups)
+      .where(
+        and(
+          eq(chatGroups.userId, this.userId),
+          or(ilike(chatGroups.title, searchPattern), ilike(chatGroups.description, searchPattern)),
+        ),
+      )
+      .orderBy(desc(chatGroups.updatedAt));
+
+    // 3. Combine and format results
+    const results: SidebarAgentItem[] = [
+      ...agentResults.map((a) => ({
+        avatar: a.avatar,
+        description: a.description,
+        id: a.id,
+        pinned: a.pinned ?? false,
+        sessionId: a.sessionId,
+        title: a.title,
+        type: 'agent' as const,
+        updatedAt: a.updatedAt,
+      })),
+      ...chatGroupResults.map((g) => ({
+        avatar: null,
+        description: g.description,
+        id: g.id,
+        pinned: g.pinned ?? false,
+        sessionId: null,
+        title: g.title,
+        type: 'group' as const,
+        updatedAt: g.updatedAt,
+      })),
+    ];
+
+    // Sort by updatedAt descending
+    results.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+
+    return results;
   }
 }
