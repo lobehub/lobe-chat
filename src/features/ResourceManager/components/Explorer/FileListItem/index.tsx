@@ -8,17 +8,16 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon, FileText, FolderIcon } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
-import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
-import { FileListItem } from '@/types/files';
+import { type FileListItem as FileListItemType } from '@/types/files';
 import { formatSize } from '@/utils/format';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
@@ -26,15 +25,6 @@ import ChunksBadge from './ChunkTag';
 import DropdownMenu from './DropdownMenu';
 
 dayjs.extend(relativeTime);
-
-// Helper to extract title from markdown content
-const extractTitle = (content: string): string | null => {
-  if (!content) return null;
-
-  // Find first markdown header (# title)
-  const match = content.match(/^#\s+(.+)$/m);
-  return match ? match[1].trim() : null;
-};
 
 export const FILE_DATE_WIDTH = 160;
 export const FILE_SIZE_WIDTH = 140;
@@ -105,16 +95,15 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
   };
 });
 
-interface FileRenderItemProps extends FileListItem {
+interface FileListItemProps extends FileListItemType {
   index: number;
-  knowledgeBaseId?: string;
   onSelectedChange: (id: string, selected: boolean, shiftKey: boolean, index: number) => void;
   pendingRenameItemId?: string | null;
   selected?: boolean;
   slug?: string | null;
 }
 
-const FileRenderItem = memo<FileRenderItemProps>(
+const FileListItem = memo<FileListItemProps>(
   ({
     size,
     chunkingError,
@@ -130,9 +119,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     selected,
     chunkingStatus,
     onSelectedChange,
-    knowledgeBaseId,
     index,
-    content,
     metadata,
     sourceType,
     slug,
@@ -143,7 +130,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     const { message } = App.useApp();
     const navigate = useNavigate();
     const [, setSearchParams] = useSearchParams();
-    const { knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
+
     const [isCreatingFileParseTask, parseFiles, renameFolder, setPendingRenameItemId] =
       useFileStore((s) => [
         fileManagerSelectors.isCreatingFileParseTask(id)(s),
@@ -200,15 +187,6 @@ const FileRenderItem = memo<FileRenderItemProps>(
     const dndStyle = {
       transform: CSS.Translate.toString(transform),
     };
-
-    // Extract title and emoji for notes
-    const displayTitle = useMemo(() => {
-      if (isPage && content) {
-        const extractedTitle = extractTitle(content);
-        return extractedTitle || name || t('file:documentList.untitled');
-      }
-      return name;
-    }, [isPage, content, name, t]);
 
     const emoji = isPage ? metadata?.emoji : null;
 
@@ -292,10 +270,9 @@ const FileRenderItem = memo<FileRenderItemProps>(
             if (isFolder) {
               // Navigate to folder using slug-based routing (Google Drive style)
               const folderSlug = slug || id;
-              const baseKnowledgeBaseId = knowledgeBaseId || currentKnowledgeBaseId;
 
-              if (baseKnowledgeBaseId) {
-                navigate(`/resource/library/${baseKnowledgeBaseId}/${folderSlug}`);
+              if (libraryId) {
+                navigate(`/resource/library/${libraryId}/${folderSlug}`);
               }
             } else if (isPage) {
               setCurrentViewItemId(id);
@@ -381,7 +358,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 value={renamingValue}
               />
             ) : (
-              <span className={styles.name}>{displayTitle}</span>
+              <span className={styles.name}>{name || t('file:documentList.untitled')}</span>
             )}
           </Flexbox>
           <Flexbox
@@ -465,4 +442,6 @@ const FileRenderItem = memo<FileRenderItemProps>(
   },
 );
 
-export default FileRenderItem;
+FileListItem.displayName = 'FileListItem';
+
+export default FileListItem;
