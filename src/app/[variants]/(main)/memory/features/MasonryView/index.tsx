@@ -1,52 +1,5 @@
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
-import { Skeleton } from 'antd';
-import { createStyles } from 'antd-style';
 import { ReactNode, memo, useEffect, useMemo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
-
-const useStyles = createStyles(({ css }) => ({
-  container: css`
-    position: relative;
-    overflow: hidden;
-    flex: 1;
-  `,
-  masonryContainer: css`
-    overflow-y: auto;
-    height: 100%;
-  `,
-  masonryContent: css`
-    padding-block-end: 64px;
-  `,
-  skeletonContainer: css`
-    display: grid;
-    gap: 16px;
-  `,
-}));
-
-interface MasonrySkeletonProps {
-  columnCount: number;
-}
-
-const MasonrySkeleton = memo<MasonrySkeletonProps>(({ columnCount }) => {
-  const { styles } = useStyles();
-
-  return (
-    <div
-      className={styles.skeletonContainer}
-      style={{ gridTemplateColumns: `repeat(${columnCount}, 1fr)` }}
-    >
-      {Array.from({ length: 8 }).map((_, index) => (
-        <Skeleton.Node
-          active
-          key={index}
-          style={{ borderRadius: 8, height: 120 + Math.random() * 80, width: '100%' }}
-        />
-      ))}
-    </div>
-  );
-});
-
-MasonrySkeleton.displayName = 'MasonrySkeleton';
 
 interface MasonryViewProps<T> {
   /**
@@ -69,9 +22,7 @@ function MasonryViewInner<T extends { id: string }>({
   defaultColumnCount = 2,
   renderItem,
 }: MasonryViewProps<T>) {
-  const { styles } = useStyles();
   const [columnCount, setColumnCount] = useState(defaultColumnCount);
-  const [isMasonryReady, setIsMasonryReady] = useState(false);
 
   useEffect(() => {
     const updateColumnCount = () => {
@@ -93,13 +44,6 @@ function MasonryViewInner<T extends { id: string }>({
     window.addEventListener('resize', updateColumnCount);
     return () => window.removeEventListener('resize', updateColumnCount);
   }, [defaultColumnCount]);
-
-  useEffect(() => {
-    if (items && items.length > 0) {
-      const timer = setTimeout(() => setIsMasonryReady(true), 100);
-      return () => clearTimeout(timer);
-    }
-  }, [items]);
 
   const ItemWrapper = useMemo(
     () =>
@@ -123,39 +67,13 @@ function MasonryViewInner<T extends { id: string }>({
   );
 
   return (
-    <div className={styles.container}>
-      {!isMasonryReady && (
-        <div
-          style={{
-            background: 'inherit',
-            inset: 0,
-            position: 'absolute',
-            zIndex: 10,
-          }}
-        >
-          <Flexbox padding={16}>
-            <MasonrySkeleton columnCount={columnCount} />
-          </Flexbox>
-        </div>
-      )}
-      <div
-        className={styles.masonryContainer}
-        style={{
-          opacity: isMasonryReady ? 1 : 0,
-          transition: 'opacity 0.2s ease-in-out',
-        }}
-      >
-        <div className={styles.masonryContent}>
-          <VirtuosoMasonry
-            ItemContent={ItemWrapper}
-            columnCount={columnCount}
-            context={masonryContext}
-            data={items}
-            style={{ gap: '16px' }}
-          />
-        </div>
-      </div>
-    </div>
+    <VirtuosoMasonry
+      ItemContent={ItemWrapper}
+      columnCount={columnCount}
+      context={masonryContext}
+      data={items}
+      style={{ gap: 4 }}
+    />
   );
 }
 
