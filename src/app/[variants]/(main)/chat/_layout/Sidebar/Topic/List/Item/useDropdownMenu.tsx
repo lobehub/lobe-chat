@@ -5,9 +5,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { isDesktop } from '@/const/version';
+import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
 
 interface TopicItemDropdownMenuProps {
   id?: string;
@@ -22,7 +22,7 @@ export const useTopicItemDropdownMenu = ({
   const { modal } = App.useApp();
 
   const openTopicInNewWindow = useGlobalStore((s) => s.openTopicInNewWindow);
-  const activeSessionId = useSessionStore((s) => s.activeId);
+  const activeAgentId = useAgentStore((s) => s.activeAgentId);
 
   const [autoRenameTopicTitle, duplicateTopic, removeTopic] = useChatStore((s) => [
     s.autoRenameTopicTitle,
@@ -57,7 +57,7 @@ export const useTopicItemDropdownMenu = ({
               key: 'openInNewWindow',
               label: t('actions.openInNewWindow'),
               onClick: () => {
-                openTopicInNewWindow(activeSessionId, id);
+                if (activeAgentId) openTopicInNewWindow(activeAgentId, id);
               },
             },
           ]
@@ -95,7 +95,7 @@ export const useTopicItemDropdownMenu = ({
     ].filter(Boolean) as MenuProps['items'];
   }, [
     id,
-    activeSessionId,
+    activeAgentId,
     autoRenameTopicTitle,
     duplicateTopic,
     removeTopic,

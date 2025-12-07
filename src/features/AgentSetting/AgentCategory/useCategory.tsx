@@ -5,10 +5,10 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { MenuProps } from '@/components/Menu';
-import { INBOX_SESSION_ID } from '@/const/session';
+import { useAgentStore } from '@/store/agent';
+import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useSessionStore } from '@/store/session';
 
 interface UseCategoryOptions {
   mobile?: boolean;
@@ -17,8 +17,7 @@ interface UseCategoryOptions {
 export const useCategory = ({ mobile }: UseCategoryOptions = {}) => {
   const { t } = useTranslation('setting');
   const iconSize = mobile ? 20 : undefined;
-  const id = useSessionStore((s) => s.activeId);
-  const isInbox = id === INBOX_SESSION_ID;
+  const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
 
   const cateItems: MenuProps['items'] = useMemo(

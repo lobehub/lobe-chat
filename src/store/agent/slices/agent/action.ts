@@ -51,9 +51,17 @@ export interface AgentSliceAction {
     signal?: AbortSignal,
   ) => Promise<void>;
   /**
+   * Set the agent panel pinned state
+   */
+  setAgentPinned: (pinned: boolean | ((prev: boolean) => boolean)) => void;
+  /**
    * Start streaming system role update
    */
   startStreamingSystemRole: () => void;
+  /**
+   * Toggle the agent panel pinned state
+   */
+  toggleAgentPinned: () => void;
   updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
   updateAgentChatConfigById: (
     agentId: string,
@@ -73,11 +81,7 @@ export const createAgentSlice: StateCreator<
 > = (set, get) => ({
   appendStreamingSystemRole: (chunk) => {
     const currentContent = get().streamingSystemRole || '';
-    set(
-      { streamingSystemRole: currentContent + chunk },
-      false,
-      'appendStreamingSystemRole',
-    );
+    set({ streamingSystemRole: currentContent + chunk }, false, 'appendStreamingSystemRole');
   },
 
   createAgent: async (params) => {
@@ -108,11 +112,7 @@ export const createAgentSlice: StateCreator<
     const { streamingSystemRole } = get();
 
     if (!streamingSystemRole) {
-      set(
-        { streamingSystemRoleInProgress: false },
-        false,
-        'finishStreamingSystemRole',
-      );
+      set({ streamingSystemRoleInProgress: false }, false, 'finishStreamingSystemRole');
       return;
     }
 
@@ -132,6 +132,16 @@ export const createAgentSlice: StateCreator<
     );
   },
 
+  setAgentPinned: (value) => {
+    set(
+      (state) => ({
+        isAgentPinned: typeof value === 'function' ? value(state.isAgentPinned) : value,
+      }),
+      false,
+      'setAgentPinned',
+    );
+  },
+
   startStreamingSystemRole: () => {
     set(
       {
@@ -141,6 +151,10 @@ export const createAgentSlice: StateCreator<
       false,
       'startStreamingSystemRole',
     );
+  },
+
+  toggleAgentPinned: () => {
+    set((state) => ({ isAgentPinned: !state.isAgentPinned }), false, 'toggleAgentPinned');
   },
 
   updateAgentChatConfig: async (config) => {

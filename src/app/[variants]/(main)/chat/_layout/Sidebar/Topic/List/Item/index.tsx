@@ -8,9 +8,9 @@ import { Flexbox } from 'react-layout-kit';
 
 import { isDesktop } from '@/const/version';
 import NavItem from '@/features/NavPanel/components/NavItem';
+import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
 
 import ThreadList from '../../TopicListContent/ThreadList';
 import { useTopicNavigation } from '../../hooks/useTopicNavigation';
@@ -31,7 +31,7 @@ const TopicItem = memo<TopicItemProps>(({ id, title, fav, active, threadId }) =>
 
   const theme = useTheme();
   const openTopicInNewWindow = useGlobalStore((s) => s.openTopicInNewWindow);
-  const activeSessionId = useSessionStore((s) => s.activeId);
+  const activeAgentId = useAgentStore((s) => s.activeAgentId);
 
   const [editing, isLoading] = useChatStore((s) => [
     id ? s.topicRenamingId === id : false,
@@ -55,11 +55,11 @@ const TopicItem = memo<TopicItemProps>(({ id, title, fav, active, threadId }) =>
   }, [editing, id, navigateToTopic]);
 
   const handleDoubleClick = useCallback(() => {
-    if (!id) return;
+    if (!id || !activeAgentId) return;
     if (isDesktop) {
-      openTopicInNewWindow(activeSessionId, id);
+      openTopicInNewWindow(activeAgentId, id);
     }
-  }, [id, activeSessionId, openTopicInNewWindow]);
+  }, [id, activeAgentId, openTopicInNewWindow]);
 
   const dropdownMenu = useTopicItemDropdownMenu({
     id,

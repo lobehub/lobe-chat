@@ -10,6 +10,10 @@ export interface AgentSliceState {
   agentMap: Record<string, PartialDeep<AgentItem>>;
   agentSettingInstance?: AgentSettingsInstance | null;
   defaultAgentConfig: LobeAgentConfig;
+  /**
+   * Whether the agent panel is pinned (UI state)
+   */
+  isAgentPinned: boolean;
   showAgentSetting: boolean;
   /**
    * Content being streamed for system role update
@@ -28,6 +32,7 @@ export const initialAgentSliceState: AgentSliceState = {
   agentConfigInitMap: {},
   agentMap: {},
   defaultAgentConfig: DEFAULT_AGENT_CONFIG,
+  isAgentPinned: false,
   showAgentSetting: false,
   streamingSystemRole: undefined,
   streamingSystemRoleInProgress: false,
