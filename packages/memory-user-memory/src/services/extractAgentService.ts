@@ -7,6 +7,7 @@ import {
   layersCallsCounter,
 } from '@lobechat/observability-otel/api';
 import { UserMemoryLayer } from '@lobechat/types';
+import path from 'node:path';
 
 import {
   ContextExtractor,
@@ -74,7 +75,7 @@ export class MemoryExtractAgentService<RO> {
     this.config = options.config;
     this.gatekeeperRuntime = options.runtimes.gatekeeper;
     this.layerRuntime = options.runtimes.layerExtractor;
-    this.promptRoot = options.promptRoot ?? new URL('../prompts', import.meta.url).pathname;
+    this.promptRoot = options.promptRoot ?? path.resolve(__dirname, '../prompts');
 
     const gatekeeperConfig: BaseExtractorDependencies = {
       model: this.config.gateModel,
