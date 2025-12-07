@@ -22,7 +22,7 @@ import { useMasonryColumnCount } from './useMasonryColumnCount';
  * It's a un-reusable component for business logic only.
  * So we depend on context, not props.
  */
-const FileExplorer = memo(() => {
+const ResourceExplorer = memo(() => {
   const [libraryId, category] = useResourceManagerStore((s) => [s.libraryId, s.category]);
 
   const {
@@ -80,4 +80,6 @@ const FileExplorer = memo(() => {
   );
 });
 
-export default FileExplorer;
+ResourceExplorer.displayName = 'ResourceExplorer';
+
+export default ResourceExplorer;
