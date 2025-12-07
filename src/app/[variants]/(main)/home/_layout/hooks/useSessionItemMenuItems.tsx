@@ -20,7 +20,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
-import { homeSelectors, useHomeStore } from '@/store/home';
+import { useHomeStore } from '@/store/home';
+import { homeAgentListSelectors } from '@/store/home/selectors';
 
 const useStyles = createStyles(({ css }) => ({
   modalRoot: css`
@@ -38,7 +39,7 @@ export const useSessionItemMenuItems = () => {
   const { modal, message } = App.useApp();
 
   const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
-  const sessionCustomGroups = useHomeStore(homeSelectors.agentGroups, isEqual);
+  const sessionCustomGroups = useHomeStore(homeAgentListSelectors.agentGroups, isEqual);
 
   const [pinAgent, duplicateAgent, updateAgentGroup, removeAgent] = useHomeStore((s) => [
     s.pinAgent,

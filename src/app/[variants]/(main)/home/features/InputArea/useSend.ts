@@ -6,7 +6,7 @@ import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { fileChatSelectors, useFileStore } from '@/store/file';
-import { useSessionStore } from '@/store/session/store';
+import { useHomeStore } from '@/store/home';
 
 export const useSend = () => {
   const router = useQueryRoute();
@@ -14,13 +14,13 @@ export const useSend = () => {
   const sendMessage = useChatStore((s) => s.sendMessage);
   const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
 
-  const homeInputLoading = useSessionStore((s) => s.homeInputLoading);
+  const homeInputLoading = useHomeStore((s) => s.homeInputLoading);
 
   const send = useCallback(async () => {
     const { inputMessage, mainInputEditor } = useChatStore.getState();
     const fileList = fileChatSelectors.chatUploadFileList(useFileStore.getState());
     const { sendAsAgent, sendAsWrite, sendAsImage, sendAsResearch, inputActiveMode } =
-      useSessionStore.getState();
+      useHomeStore.getState();
 
     // Image mode: no input content required
     if (inputActiveMode === 'image') {

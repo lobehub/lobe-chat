@@ -1,3 +1,4 @@
+import type { SidebarAgentItem } from '@lobechat/types';
 import { ActionIcon, Icon, type MenuProps } from '@lobehub/ui';
 import { Dropdown } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
@@ -9,7 +10,7 @@ import { useDropdownMenu } from '@/app/[variants]/(main)/home/_layout/Body/Agent
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
-import { SidebarAgentItem, useHomeStore } from '@/store/home';
+import { useHomeStore } from '@/store/home';
 
 import NavItem from '../../../../../../../../../features/NavPanel/components/NavItem';
 import { useAgentModal } from '../../ModalProvider';

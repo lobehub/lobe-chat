@@ -15,6 +15,7 @@ export * from './export';
 export * from './fetch';
 export * from './files';
 export * from './generation';
+export * from './home';
 export * from './hotkey';
 export * from './importer';
 export * from './knowledgeBase';

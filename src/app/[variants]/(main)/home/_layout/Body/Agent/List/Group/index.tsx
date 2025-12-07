@@ -1,9 +1,9 @@
+import type { SidebarGroup } from '@lobechat/types';
 import { Accordion } from '@lobehub/ui';
 import React, { memo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { SidebarGroup } from '@/store/home';
 
 import Item from './Item';
 

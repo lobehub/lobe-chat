@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom';
 
 import GroupSkeleton from '@/app/[variants]/(main)/home/features/components/GroupSkeleton';
 import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
-import { useSessionStore } from '@/store/session';
-import { recentSelectors } from '@/store/session/selectors';
+import { useHomeStore } from '@/store/home';
+import { homeRecentSelectors } from '@/store/home/selectors';
 
 import RecentResourceItem from './Item';
 
 const RecentResourceList = memo(() => {
-  const files = useSessionStore(recentSelectors.recentResources);
-  const isInit = useSessionStore(recentSelectors.isRecentResourcesInit);
+  const files = useHomeStore(homeRecentSelectors.recentResources);
+  const isInit = useHomeStore(homeRecentSelectors.isRecentResourcesInit);
 
   // Loading state
   if (!isInit) {

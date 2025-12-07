@@ -1,5 +1,2 @@
-import { agentListSelectors } from './slices/agentList/selectors';
-
-export const homeSelectors = {
-  ...agentListSelectors,
-};
+export * from './slices/agentList/selectors';
+export * from './slices/recent/selectors';
