@@ -56,9 +56,7 @@ const ResourceManager = memo(() => {
 
   return (
     <>
-      <Flexbox gap={12} height={'100%'}>
-        {MainContent}
-      </Flexbox>
+      <Flexbox height={'100%'}>{MainContent}</Flexbox>
       <UploadDock />
       <ChunkDrawer />
     </>
