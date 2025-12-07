@@ -1,12 +1,12 @@
 import { Block, Icon, Tag, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import { HashIcon, Link2 } from 'lucide-react';
+import { Link2 } from 'lucide-react';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-dayjs.extend(relativeTime);
+import HashTags from '../HashTags';
+import Time from '../Time';
+
 const ACTION_CLASSNAME = 'memory-actions';
 
 const useStyles = createStyles(({ css }) => ({
@@ -62,7 +62,7 @@ const TimeLineCard = memo<TimeLineCardProps>(
             wrap={'wrap'}
           >
             {title && typeof title === 'string' ? (
-              <Text as={'h2'} ellipsis fontSize={16} style={{ margin: 0 }} weight={500}>
+              <Text as={'h2'} fontSize={16} style={{ lineHeight: 1.5, margin: 0 }} weight={500}>
                 {title}
               </Text>
             ) : (
@@ -84,37 +84,11 @@ const TimeLineCard = memo<TimeLineCardProps>(
         ) : (
           children
         )}
-        {hashTags && hashTags.length > 0 && (
-          <Flexbox gap={8} horizontal wrap="wrap">
-            {hashTags.map((tag, index) => (
-              <Tag
-                icon={<Icon icon={HashIcon} />}
-                key={index}
-                style={{
-                  color: theme.colorTextDescription,
-                  gap: 2,
-                  marginRight: 4,
-                  paddingInline: 0,
-                }}
-                variant={'borderless'}
-              >
-                {tag}
-              </Tag>
-            ))}
-          </Flexbox>
-        )}
+        <HashTags hashTags={hashTags} />
         <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
           <Flexbox align={'center'} gap={8} horizontal>
             {typeof cate === 'string' ? <Tag>{cate}</Tag> : cate}
-            {updatedAt && (
-              <Text
-                fontSize={12}
-                title={dayjs(updatedAt).format('YYYY-MM-DD HH:mm')}
-                type={'secondary'}
-              >
-                {dayjs(updatedAt).fromNow()}
-              </Text>
-            )}
+            <Time updatedAt={updatedAt} />
           </Flexbox>
           <Flexbox
             align={'center'}

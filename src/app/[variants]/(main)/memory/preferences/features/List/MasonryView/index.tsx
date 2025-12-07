@@ -15,7 +15,7 @@ interface MasonryViewProps {
 const MasonryView = memo<MasonryViewProps>(({ preferences, onClick, onDelete, onEdit }) => {
   return (
     <GenericMasonryView
-      defaultColumnCount={4}
+      defaultColumnCount={3}
       items={preferences}
       renderItem={(preference, actions) => (
         <PreferenceCard

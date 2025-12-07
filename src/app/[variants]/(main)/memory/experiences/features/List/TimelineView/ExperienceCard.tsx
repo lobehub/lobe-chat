@@ -84,7 +84,7 @@ const ExperienceCard = memo<ExperienceCardProps>(({ experience, onClick, onDelet
       titleAddon={<SourceLink source={experience.source} />}
       updatedAt={experience.updatedAt || experience.createdAt}
     >
-      {experience.situation}
+      {experience.keyLearning || experience.situation}
     </TimeLineCard>
   );
 });

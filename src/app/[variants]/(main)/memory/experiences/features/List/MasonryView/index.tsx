@@ -15,7 +15,7 @@ interface MasonryViewProps {
 const MasonryView = memo<MasonryViewProps>(({ experiences, onClick, onDelete, onEdit }) => {
   return (
     <GenericMasonryView
-      defaultColumnCount={4}
+      defaultColumnCount={3}
       items={experiences}
       renderItem={(experience, actions) => (
         <ExperienceCard
