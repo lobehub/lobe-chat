@@ -114,6 +114,13 @@ class AgentService {
   getBuiltinAgent = async (slug: string) => {
     return lambdaClient.agent.getBuiltinAgent.query({ slug });
   };
+
+  /**
+   * Remove an agent and its associated session
+   */
+  removeAgent = async (agentId: string) => {
+    return lambdaClient.agent.removeAgent.mutate({ agentId });
+  };
 }
 
 export const agentService = new AgentService();

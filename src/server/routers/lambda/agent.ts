@@ -218,6 +218,15 @@ export const agentRouter = router({
       ];
     }),
 
+  /**
+   * Remove an agent and its associated session
+   */
+  removeAgent: agentProcedure
+    .input(z.object({ agentId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.agentModel.delete(input.agentId);
+    }),
+
   toggleFile: agentProcedure
     .input(
       z.object({

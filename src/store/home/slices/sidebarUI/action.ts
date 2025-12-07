@@ -4,6 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { agentService } from '@/services/agent';
 import { sessionService } from '@/services/session';
 import type { HomeStore } from '@/store/home/store';
 import { getSessionStoreState } from '@/store/session';
@@ -109,10 +110,10 @@ export const createSidebarUISlice: StateCreator<
   },
 
   removeAgent: async (agentId) => {
-    await sessionService.removeSession(agentId);
+    await agentService.removeAgent(agentId);
     await get().refreshAgentList();
 
-    // If the active session is deleted, switch to inbox
+    // If the active agent is deleted, switch to inbox
     const sessionStore = getSessionStoreState();
     if (agentId === sessionStore.activeId) {
       sessionStore.switchSession(INBOX_SESSION_ID);

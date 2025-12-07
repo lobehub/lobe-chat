@@ -1,9 +1,11 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { Button, ButtonProps } from '@lobehub/ui';
+import { Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
 import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { Center } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { useInitBuiltinAgent } from '@/hooks/useInitBuiltinAgent';
 import { type StarterMode, useHomeStore } from '@/store/home';
@@ -25,6 +27,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface StarterItem {
+  disabled?: boolean;
   icon?: ButtonProps['icon'];
   key: StarterMode;
   title: string;
@@ -32,6 +35,7 @@ interface StarterItem {
 
 const StarterList = memo(() => {
   const { styles, cx, theme } = useStyles();
+  const navigate = useNavigate();
 
   useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.agentBuilder);
 
@@ -58,6 +62,7 @@ const StarterList = memo(() => {
         title: '绘画',
       },
       {
+        disabled: true,
         icon: MicroscopeIcon,
         key: 'research',
         title: '探究',
@@ -73,6 +78,18 @@ const StarterList = memo(() => {
 
   const handleClick = useCallback(
     (key: StarterMode) => {
+      // Special case: image mode navigates to /image page
+      if (key === 'image') {
+        navigate('/image');
+        return;
+      }
+
+      // Special case: write mode navigates to /page
+      if (key === 'write') {
+        navigate('/page');
+        return;
+      }
+
       // Toggle mode: if clicking the active mode, clear it; otherwise set it
       if (inputActiveMode === key) {
         setInputActiveMode(null);
@@ -80,26 +97,39 @@ const StarterList = memo(() => {
         setInputActiveMode(key);
       }
     },
-    [inputActiveMode, setInputActiveMode],
+    [inputActiveMode, setInputActiveMode, navigate],
   );
 
   return (
     <Center gap={8} horizontal>
-      {items.map((item) => (
-        <Button
-          className={cx(styles.button, inputActiveMode === item.key && styles.active)}
-          icon={item.icon}
-          iconProps={{
-            color: inputActiveMode === item.key ? theme.colorPrimary : theme.colorTextSecondary,
-            size: 18,
-          }}
-          key={item.key}
-          onClick={() => handleClick(item.key)}
-          shape={'round'}
-        >
-          {item.title}
-        </Button>
-      ))}
+      {items.map((item) => {
+        const button = (
+          <Button
+            className={cx(styles.button, inputActiveMode === item.key && styles.active)}
+            disabled={item.disabled}
+            icon={item.icon}
+            iconProps={{
+              color: inputActiveMode === item.key ? theme.colorPrimary : theme.colorTextSecondary,
+              size: 18,
+            }}
+            key={item.key}
+            onClick={() => handleClick(item.key)}
+            shape={'round'}
+          >
+            {item.title}
+          </Button>
+        );
+
+        if (item.disabled) {
+          return (
+            <Tooltip key={item.key} title="正在开发中">
+              {button}
+            </Tooltip>
+          );
+        }
+
+        return button;
+      })}
     </Center>
   );
 });
