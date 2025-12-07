@@ -9,7 +9,7 @@ import { VList } from 'virtua';
 
 import { FileListItem as FileListItemType } from '@/types/files';
 
-import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from '../FileListItem';
+import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './ListItem';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   header: css`

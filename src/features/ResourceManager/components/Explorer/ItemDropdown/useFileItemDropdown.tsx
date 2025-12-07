@@ -19,7 +19,7 @@ import { useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { downloadFile } from '@/utils/client/downloadFile';
 
-import MoveToFolderModal from './MoveToFolderModal';
+import MoveToFolderModal from '../MoveToFolderModal';
 
 interface UseFileItemDropdownParams {
   fileType: string;

@@ -1,11 +1,9 @@
 import { Button, Tooltip } from '@lobehub/ui';
-import { Image } from 'antd';
 import { createStyles } from 'antd-style';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
@@ -13,7 +11,7 @@ import { AsyncTaskStatus, IAsyncTaskError } from '@/types/asyncTask';
 import { formatSize } from '@/utils/format';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
-import ChunksBadge from '../FileListItem/ChunkTag';
+import ChunksBadge from '../../ListView/ListItem/ChunkTag';
 
 const useStyles = createStyles(({ css, token }) => ({
   floatingChunkBadge: css`
@@ -41,6 +39,7 @@ const useStyles = createStyles(({ css, token }) => ({
     justify-content: center;
 
     padding: 16px;
+    border-radius: ${token.borderRadiusLG}px;
 
     opacity: 0;
     background: ${token.colorBgMask};
@@ -51,33 +50,61 @@ const useStyles = createStyles(({ css, token }) => ({
       opacity: 1;
     }
   `,
-  imagePlaceholder: css`
+  iconWrapper: css`
     display: flex;
     align-items: center;
     justify-content: center;
-    background: ${token.colorFillQuaternary};
-  `,
-  imageWrapper: css`
-    position: relative;
-    width: 100%;
-    background: ${token.colorFillQuaternary};
 
-    img {
-      display: block;
-      height: auto;
-    }
-  `,
-  name: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-
+    height: 120px;
     margin-block-end: 12px;
+    border-radius: ${token.borderRadius}px;
 
-    font-weight: ${token.fontWeightStrong};
-    color: ${token.colorText};
-    word-break: break-word;
+    background: ${token.colorFillQuaternary};
+  `,
+  markdownLoading: css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 120px;
+    border-radius: ${token.borderRadiusLG}px;
+
+    font-size: 12px;
+    color: ${token.colorTextTertiary};
+
+    background: ${token.colorFillQuaternary};
+  `,
+  markdownPreview: css`
+    position: relative;
+
+    overflow: hidden;
+
+    width: 100%;
+    min-height: 120px;
+    max-height: 300px;
+    padding: 16px;
+    border-radius: ${token.borderRadiusLG}px;
+
+    font-size: 13px;
+    line-height: 1.6;
+    color: ${token.colorTextSecondary};
+    word-wrap: break-word;
+    white-space: pre-wrap;
+
+    background: ${token.colorFillQuaternary};
+
+    &::after {
+      pointer-events: none;
+      content: '';
+
+      position: absolute;
+      inset-block-end: 0;
+      inset-inline: 0;
+
+      height: 60px;
+
+      background: linear-gradient(to bottom, transparent, ${token.colorFillQuaternary});
+    }
   `,
   overlaySize: css`
     font-size: 12px;
@@ -101,7 +128,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface ImageFileItemProps {
+interface MarkdownFileItemProps {
   chunkCount?: number | null;
   chunkingError?: IAsyncTaskError | null;
   chunkingStatus?: AsyncTaskStatus | null;
@@ -110,13 +137,13 @@ interface ImageFileItemProps {
   fileType?: string;
   finishEmbedding?: boolean;
   id: string;
-  isInView: boolean;
+  isLoadingMarkdown: boolean;
+  markdownContent: string;
   name: string;
   size: number;
-  url?: string;
 }
 
-const ImageFileItem = memo<ImageFileItemProps>(
+const MarkdownFileItem = memo<MarkdownFileItemProps>(
   ({
     chunkCount,
     chunkingError,
@@ -126,14 +153,13 @@ const ImageFileItem = memo<ImageFileItemProps>(
     fileType,
     finishEmbedding,
     id,
-    isInView,
+    isLoadingMarkdown,
+    markdownContent,
     name,
     size,
-    url,
   }) => {
     const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
-    const [imageLoaded, setImageLoaded] = useState(false);
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
       fileManagerSelectors.isCreatingFileParseTask(id)(s),
       s.parseFilesToChunks,
@@ -143,54 +169,15 @@ const ImageFileItem = memo<ImageFileItemProps>(
 
     return (
       <>
-        <div className={styles.imageWrapper}>
-          {!imageLoaded && (
-            <div className={styles.imagePlaceholder}>
-              <Flexbox
-                align={'center'}
-                gap={12}
-                justify={'center'}
-                paddingBlock={24}
-                paddingInline={12}
-              >
-                <FileIcon fileName={name} fileType={fileType} size={48} />
-                <div className={styles.name} style={{ textAlign: 'center' }}>
-                  {name}
-                </div>
-                <div
-                  style={{
-                    color: 'var(--lobe-chat-text-tertiary)',
-                    fontSize: 12,
-                    textAlign: 'center',
-                  }}
-                >
-                  {formatSize(size)}
-                </div>
-              </Flexbox>
+        <div style={{ position: 'relative' }}>
+          {isLoadingMarkdown ? (
+            <div className={styles.markdownLoading}>Loading preview...</div>
+          ) : markdownContent ? (
+            <div className={styles.markdownPreview}>{markdownContent}</div>
+          ) : (
+            <div className={styles.iconWrapper}>
+              <FileIcon fileName={name} fileType={fileType} size={64} />
             </div>
-          )}
-          {isInView && url && (
-            <Image
-              alt={name}
-              loading="lazy"
-              onError={() => setImageLoaded(false)}
-              onLoad={() => setImageLoaded(true)}
-              preview={{
-                src: url,
-              }}
-              src={url}
-              style={{
-                display: 'block',
-                height: 'auto',
-                opacity: imageLoaded ? 1 : 0,
-                transition: 'opacity 0.3s',
-                width: '100%',
-              }}
-              wrapperStyle={{
-                display: 'block',
-                width: '100%',
-              }}
-            />
           )}
           {/* Hover overlay */}
           <div className={styles.hoverOverlay}>
@@ -242,4 +229,4 @@ const ImageFileItem = memo<ImageFileItemProps>(
   },
 );
 
-export default ImageFileItem;
+export default MarkdownFileItem;
