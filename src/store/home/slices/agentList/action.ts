@@ -3,7 +3,7 @@ import type { SWRResponse } from 'swr';
 import { mutate } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import type { SidebarAgentListResponse } from '@/database/repositories/home';
+import type { SidebarAgentItem, SidebarAgentListResponse } from '@/database/repositories/home';
 import { useClientDataSWR } from '@/libs/swr';
 import { homeService } from '@/services/home';
 import type { HomeStore } from '@/store/home/store';
@@ -14,6 +14,7 @@ import { mapResponseToState } from './initialState';
 const n = setNamespace('agentList');
 
 const FETCH_AGENT_LIST_KEY = 'fetchAgentList';
+const SEARCH_AGENTS_KEY = 'searchAgents';
 
 export interface AgentListAction {
   /**
@@ -32,6 +33,10 @@ export interface AgentListAction {
    * SWR hook to fetch sidebar agent list
    */
   useFetchAgentList: (isLogin: boolean | undefined) => SWRResponse<SidebarAgentListResponse>;
+  /**
+   * SWR hook to search agents by keyword
+   */
+  useSearchAgents: (keyword?: string) => SWRResponse<SidebarAgentItem[]>;
 }
 
 export const createAgentListSlice: StateCreator<
@@ -80,7 +85,13 @@ export const createAgentListSlice: StateCreator<
             n('useFetchAgentList/onSuccess'),
           );
         },
-        suspense: true,
       },
     ),
+
+  useSearchAgents: (keyword) =>
+    useClientDataSWR<SidebarAgentItem[]>([SEARCH_AGENTS_KEY, keyword], async () => {
+      if (!keyword) return [];
+
+      return homeService.searchAgents(keyword);
+    }),
 });

@@ -9,11 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { useActionSWR } from '@/libs/swr';
+import { useAgentStore } from '@/store/agent';
 import { useChatGroupStore } from '@/store/chatGroup';
 import { useFileStore } from '@/store/file';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/slices/session/selectors';
-import { LobeAgentSession } from '@/types/session';
+import { useHomeStore } from '@/store/home';
 
 interface HostConfig {
   model?: string;
@@ -36,11 +35,8 @@ export const useCreateMenuItems = () => {
   const { message } = App.useApp();
   const groupTemplates = useGroupTemplates();
 
-  const [createSession, addSessionGroup, refreshSessions] = useSessionStore((s) => [
-    s.createSession,
-    s.addSessionGroup,
-    s.refreshSessions,
-  ]);
+  const [storeCreateAgent] = useAgentStore((s) => [s.createAgent]);
+  const [addGroup, refreshAgentList] = useHomeStore((s) => [s.addGroup, s.refreshAgentList]);
   const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
   const createNewPage = useFileStore((s) => s.createNewPage);
 
@@ -50,8 +46,8 @@ export const useCreateMenuItems = () => {
 
   // SWR-based agent creation for simple cases
   const { mutate: mutateAgent, isValidating: isValidatingAgent } = useActionSWR(
-    'session.createSession',
-    (data?: Partial<LobeAgentSession>) => createSession(data),
+    'agent.createAgent',
+    () => storeCreateAgent({}),
   );
 
   /**
@@ -63,6 +59,7 @@ export const useCreateMenuItems = () => {
       // Simple creation without group/pin options - use SWR
       if (!options?.groupId && !options?.isPinned) {
         await mutateAgent();
+        await refreshAgentList();
         options?.onSuccess?.();
         return;
       }
@@ -73,10 +70,10 @@ export const useCreateMenuItems = () => {
       setIsCreatingAgent(true);
 
       try {
-        await createSession({
-          group: options.groupId,
-          pinned: options.isPinned,
+        await storeCreateAgent({
+          groupId: options.groupId,
         });
+        await refreshAgentList();
 
         message.destroy(key);
         message.success({ content: t('sessionGroup.createAgentSuccess') });
@@ -89,7 +86,7 @@ export const useCreateMenuItems = () => {
         setIsCreatingAgent(false);
       }
     },
-    [createSession, mutateAgent, message, t],
+    [storeCreateAgent, mutateAgent, refreshAgentList, message, t],
   );
 
   /**
@@ -116,31 +113,27 @@ export const useCreateMenuItems = () => {
 
         const memberAgentIds: string[] = [];
         for (const member of membersToCreate) {
-          const sessionId = await createSession(
-            {
-              config: {
-                plugins: member.plugins,
-                systemRole: member.systemRole,
-                virtual: true,
-              },
-              meta: {
-                avatar: member.avatar,
-                backgroundColor: member.backgroundColor,
-                description: `${member.title} - ${template.description}`,
-                title: member.title,
-              },
+          const result = await storeCreateAgent({
+            config: {
+              // MetaData fields
+avatar: member.avatar,
+              
+backgroundColor: member.backgroundColor,
+              
+description: `${member.title} - ${template.description}`,
+              
+              plugins: member.plugins,
+              systemRole: member.systemRole,
+              title: member.title,
+              virtual: true,
             },
-            false,
-          );
+          });
 
-          await refreshSessions();
+          await refreshAgentList();
 
-          const session = sessionSelectors.getSessionById(sessionId)(useSessionStore.getState());
-          if (session && session.type === 'agent') {
-            const agentSession = session as LobeAgentSession;
-            if (agentSession.config?.id) {
-              memberAgentIds.push(agentSession.config.id);
-            }
+          // Get agentId directly from createAgent result
+          if (result.agentId) {
+            memberAgentIds.push(result.agentId);
           }
         }
 
@@ -175,7 +168,7 @@ export const useCreateMenuItems = () => {
         setIsCreatingGroup(false);
       }
     },
-    [groupTemplates, createSession, refreshSessions, createGroup, message, t],
+    [groupTemplates, storeCreateAgent, refreshAgentList, createGroup, message, t],
   );
 
   /**
@@ -266,11 +259,11 @@ export const useCreateMenuItems = () => {
       onClick: async (info) => {
         info.domEvent?.stopPropagation();
         setIsCreatingSessionGroup(true);
-        await addSessionGroup(t('sessionGroup.newGroup'));
+        await addGroup(t('sessionGroup.newGroup'));
         setIsCreatingSessionGroup(false);
       },
     }),
-    [t, addSessionGroup],
+    [t, addGroup],
   );
 
   /**
