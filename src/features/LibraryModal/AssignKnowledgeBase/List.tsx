@@ -98,11 +98,12 @@ export const List = memo(() => {
         </Center>
       ) : viewMode === 'list' ? (
         <Virtuoso
+          increaseViewportBy={800}
           itemContent={(index) => {
             const item = data![index];
             return <Item key={item.id} {...item} />;
           }}
-          overscan={400}
+          overscan={24}
           style={{ flex: 1, marginInline: -16 }}
           totalCount={data!.length}
         />

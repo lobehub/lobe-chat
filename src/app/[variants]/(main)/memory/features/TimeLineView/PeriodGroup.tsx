@@ -15,14 +15,16 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   periodHeader: css`
     position: sticky;
-    z-index: 3;
+    z-index: 10;
     inset-block-start: 0;
+
+    color: ${token.colorTextSecondary};
+
     background: ${token.colorBgContainer};
   `,
   timelineDot: css`
     position: absolute;
-    z-index: 2;
-    inset-block-start: 18px;
+    inset-block-start: 16px;
     inset-inline-start: 0;
 
     width: 16px;
@@ -35,24 +37,13 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface PeriodGroupProps<T extends { createdAt: Date | string; id: string }> {
-  /**
-   * Custom date field extractor for sorting
-   */
-  getDateForSorting?: (item: T) => Date | string;
+interface PeriodHeaderProps {
   groupBy?: GroupBy;
-  items: T[];
+  itemCount: number;
   periodKey: string;
-  renderItem: (item: T) => ReactNode;
 }
 
-function PeriodGroupInner<T extends { createdAt: Date | string; id: string }>({
-  periodKey,
-  items,
-  groupBy = 'day',
-  getDateForSorting,
-  renderItem,
-}: PeriodGroupProps<T>) {
+export const PeriodHeader = memo<PeriodHeaderProps>(({ periodKey, itemCount, groupBy = 'day' }) => {
   const { styles } = useStyles();
 
   const periodName =
@@ -60,34 +51,25 @@ function PeriodGroupInner<T extends { createdAt: Date | string; id: string }>({
       ? dayjs(`${periodKey}-01`).format('YYYY年MM月')
       : dayjs(periodKey).format('YYYY年MM月DD日');
 
-  const sortedItems = [...items].sort((a, b) => {
-    const dateA = getDateForSorting ? getDateForSorting(a) : a.createdAt;
-    const dateB = getDateForSorting ? getDateForSorting(b) : b.createdAt;
-    return dayjs(dateB).valueOf() - dayjs(dateA).valueOf();
-  });
-
   return (
-    <Flexbox gap={12}>
-      <Flexbox
-        align={'center'}
-        className={styles.periodHeader}
-        gap={8}
-        horizontal
-        paddingBlock={12}
-      >
-        <Text weight={500}>{periodName}</Text>
-        <Tag>{items.length}</Tag>
-      </Flexbox>
-      <Flexbox gap={8}>
-        {sortedItems.map((item) => (
-          <div className={styles.itemWrapper} key={item.id}>
-            <div className={styles.timelineDot} />
-            {renderItem(item)}
-          </div>
-        ))}
-      </Flexbox>
+    <Flexbox align={'center'} className={styles.periodHeader} gap={12} horizontal paddingBlock={8}>
+      <Text weight={500}>{periodName}</Text>
+      <Tag>{itemCount}</Tag>
     </Flexbox>
   );
+});
+
+interface TimelineItemWrapperProps {
+  children: ReactNode;
 }
 
-export const PeriodGroup = memo(PeriodGroupInner) as typeof PeriodGroupInner;
+export const TimelineItemWrapper = memo<TimelineItemWrapperProps>(({ children }) => {
+  const { styles } = useStyles();
+
+  return (
+    <div className={styles.itemWrapper}>
+      <div className={styles.timelineDot} />
+      {children}
+    </div>
+  );
+});

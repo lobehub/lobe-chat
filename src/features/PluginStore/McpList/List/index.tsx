@@ -80,6 +80,7 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
       }}
       data={allItems}
       endReached={loadMoreMCPPlugins}
+      increaseViewportBy={800}
       itemContent={(_, item) => {
         return (
           <Flexbox key={item.identifier} paddingBlock={2} paddingInline={4}>
@@ -87,7 +88,7 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
           </Flexbox>
         );
       }}
-      overscan={400}
+      overscan={24}
       style={{ height: '100%', width: '100%' }}
       totalCount={totalCount || 0}
     />

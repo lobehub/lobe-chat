@@ -1,6 +1,7 @@
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';
 import Loading from '@/components/Loading/BrandTextLoading';
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
@@ -31,7 +32,12 @@ const Identities = memo(() => {
           </>
         }
       />
-      <Flexbox height={'100%'} style={{ overflowY: 'auto', paddingBottom: '16vh' }} width={'100%'}>
+      <Flexbox
+        height={'100%'}
+        id={SCROLL_PARENT_ID}
+        style={{ overflowY: 'auto', paddingBottom: '16vh' }}
+        width={'100%'}
+      >
         <WideScreenContainer gap={32} paddingBlock={48}>
           <FilterBar
             onSearch={setSearchValue}
