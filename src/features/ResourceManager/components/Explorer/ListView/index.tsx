@@ -26,7 +26,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
 interface ListViewProps {
   data: FileListItemType[] | undefined;
-  knowledgeBaseId?: string;
   onSelectionChange: (
     id: string,
     checked: boolean,
@@ -38,7 +37,7 @@ interface ListViewProps {
 }
 
 const ListView = memo<ListViewProps>(
-  ({ data, knowledgeBaseId, onSelectionChange, pendingRenameItemId, selectFileIds }) => {
+  ({ data, onSelectionChange, pendingRenameItemId, selectFileIds }) => {
     const { t } = useTranslation('components');
     const { styles } = useStyles();
 
@@ -62,7 +61,6 @@ const ListView = memo<ListViewProps>(
             <FileListItem
               index={index}
               key={item.id}
-              knowledgeBaseId={knowledgeBaseId}
               onSelectedChange={onSelectionChange}
               pendingRenameItemId={pendingRenameItemId}
               selected={selectFileIds.includes(item.id)}

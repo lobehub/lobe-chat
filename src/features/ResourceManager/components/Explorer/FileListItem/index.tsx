@@ -159,6 +159,8 @@ const FileRenderItem = memo<FileRenderItemProps>(
     const isPage = sourceType === 'document' || fileType === 'custom/document';
     const isFolder = fileType === 'custom/folder';
 
+    const libraryId = useResourceManagerStore((s) => s.libraryId);
+
     const {
       attributes,
       listeners,
@@ -436,7 +438,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 fileType={fileType}
                 filename={name}
                 id={id}
-                knowledgeBaseId={knowledgeBaseId}
+                knowledgeBaseId={libraryId}
                 onRenameStart={isFolder ? handleRenameStart : undefined}
                 sourceType={sourceType}
                 url={url}
