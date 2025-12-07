@@ -3,9 +3,9 @@
 import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import WideScreenButton from '@/app/[variants]/(main)/chat/features/WideScreenButton';
-import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import NavHeader from '@/features/NavHeader';
+import WideScreenContainer from '@/features/WideScreenContainer';
+import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 
 import ImageWorkspace from './features/ImageWorkspace';
 import SkeletonList from './features/ImageWorkspace/SkeletonList';

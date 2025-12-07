@@ -4,8 +4,8 @@ import isEqual from 'fast-deep-equal';
 import { type ReactNode, memo, useCallback, useEffect, useRef } from 'react';
 import { VList, VListHandle } from 'virtua';
 
+import WideScreenContainer from '../../../WideScreenContainer';
 import { useConversationStore, virtuaListSelectors } from '../../store';
-import WideScreenContainer from '../WideScreenContainer';
 import AutoScroll from './AutoScroll';
 
 interface VirtualizedListProps {

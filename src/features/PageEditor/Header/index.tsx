@@ -5,9 +5,9 @@ import { ArrowLeftIcon, BotMessageSquareIcon, MoreHorizontal } from 'lucide-reac
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import WideScreenButton from '@/app/[variants]/(main)/chat/features/WideScreenButton';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
+import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 
 import { usePageEditorStore } from '../store';
 import AutoSaveHint from './AutoSaveHint';

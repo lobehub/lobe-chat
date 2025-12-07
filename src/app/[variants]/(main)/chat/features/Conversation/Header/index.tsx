@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import NavHeader from '@/features/NavHeader';
 
-import WideScreenButton from '../../WideScreenButton';
+import WideScreenButton from '../../../../../../../features/WideScreenContainer/WideScreenButton';
 import ShareButton from './ShareButton';
 import Tags from './Tags';
 
