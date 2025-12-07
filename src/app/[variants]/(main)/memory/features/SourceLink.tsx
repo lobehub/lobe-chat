@@ -1,4 +1,4 @@
-import { Button, Icon } from '@lobehub/ui';
+import { Button, Icon, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Link2 } from 'lucide-react';
 import Link from 'next/link';
@@ -11,6 +11,9 @@ const SourceLink = memo<{ source?: MemorySource | null }>(({ source }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   if (!source) return;
+
+  const title = source.topicTitle || source.topicId.replace('tpc_', '').slice(0, 8);
+
   return (
     <Link
       href={`/agent/${source.agentId}?topicId=${source.topicId}`}
@@ -20,16 +23,26 @@ const SourceLink = memo<{ source?: MemorySource | null }>(({ source }) => {
         e.preventDefault();
         navigate(`/agent/${source.agentId}?topicId=${source.topicId}`);
       }}
+      style={{
+        flex: 1,
+        maxWidth: '100%',
+        overflow: 'hidden',
+      }}
     >
       <Button
         icon={<Icon icon={Link2} />}
         size={'small'}
         style={{
-          color: theme.colorTextSecondary,
+          flex: 1,
+          maxWidth: '100%',
+          overflow: 'hidden',
         }}
+        title={title}
         type={'text'}
       >
-        {source.topicTitle || source.topicId.replace('tpc_', '').slice(0, 8)}
+        <Text color={theme.colorTextSecondary} ellipsis>
+          {title}
+        </Text>
       </Button>
     </Link>
   );
