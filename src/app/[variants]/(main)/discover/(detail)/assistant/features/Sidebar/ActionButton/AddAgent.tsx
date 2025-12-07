@@ -1,5 +1,6 @@
 'use client';
 
+import type { LobeAgentConfig } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { App, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
@@ -9,8 +10,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/url';
-import { useSessionStore } from '@/store/session';
-import type { LobeAgentConfig } from '@/types/agent';
+import { agentService } from '@/services/agent';
+import { useAgentStore } from '@/store/agent';
+import { useHomeStore } from '@/store/home';
 
 import { useDetailContext } from '../../DetailProvider';
 
@@ -68,8 +70,8 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const { styles } = useStyles();
   const [isLoading, setIsLoading] = useState(false);
-  const createSession = useSessionStore((s) => s.createSession);
-  const sessions = useSessionStore((s) => s.sessions);
+  const createAgent = useAgentStore((s) => s.createAgent);
+  const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
   const { message, modal } = App.useApp();
   const navigate = useNavigate();
   const { t } = useTranslation('discover');
@@ -83,9 +85,9 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
     title,
   };
 
-  const checkDuplicateAgent = () => {
+  const checkDuplicateAgent = async () => {
     if (!identifier) return false;
-    return sessions.some((session) => session.meta?.marketIdentifier === identifier);
+    return agentService.checkByMarketIdentifier(identifier);
   };
 
   const showDuplicateConfirmation = (callback: () => void) => {
@@ -98,27 +100,31 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
     });
   };
 
-  const createSessionWithMarketIdentifier = async (isSwitchSession = true) => {
+  const createAgentWithMarketIdentifier = async (shouldNavigate = true) => {
     if (!config) return;
 
-    const sessionData = {
+    const agentData = {
       config: {
         ...normalizeMarketAgentConfig(config),
         editorData,
+        ...meta,
       },
-      meta,
     };
 
-    const session = await createSession(sessionData, isSwitchSession);
-    return session;
+    const result = await createAgent(agentData);
+    await refreshAgentList();
+    if (shouldNavigate) {
+      console.log(shouldNavigate);
+    }
+    return result;
   };
 
   const handleCreateAndConverse = async () => {
     setIsLoading(true);
     try {
-      const session = await createSessionWithMarketIdentifier(true);
+      const result = await createAgentWithMarketIdentifier(true);
       message.success(t('assistants.addAgentSuccess'));
-      navigate(SESSION_CHAT_URL(session!, mobile));
+      navigate(SESSION_CHAT_URL(result!.sessionId, mobile));
     } finally {
       setIsLoading(false);
     }
@@ -127,7 +133,7 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
   const handleCreate = async () => {
     setIsLoading(true);
     try {
-      await createSessionWithMarketIdentifier(false);
+      await createAgentWithMarketIdentifier(false);
       message.success(t('assistants.addAgentSuccess'));
     } finally {
       setIsLoading(false);
@@ -137,7 +143,8 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
   const handleAddAgentAndConverse = async () => {
     if (!config) return;
 
-    if (checkDuplicateAgent()) {
+    const isDuplicate = await checkDuplicateAgent();
+    if (isDuplicate) {
       showDuplicateConfirmation(handleCreateAndConverse);
     } else {
       await handleCreateAndConverse();
@@ -147,7 +154,8 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
   const handleAddAgent = async () => {
     if (!config) return;
 
-    if (checkDuplicateAgent()) {
+    const isDuplicate = await checkDuplicateAgent();
+    if (isDuplicate) {
       showDuplicateConfirmation(handleCreate);
     } else {
       await handleCreate();

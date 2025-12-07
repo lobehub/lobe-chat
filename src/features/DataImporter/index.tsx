@@ -11,7 +11,7 @@ import { Center } from 'react-layout-kit';
 import DataStyleModal from '@/components/DataStyleModal';
 import { importService } from '@/services/import';
 import { useChatStore } from '@/store/chat';
-import { useSessionStore } from '@/store/session';
+import { useHomeStore } from '@/store/home';
 import { ImportPgDataStructure } from '@/types/export';
 
 import ImportError from './Error';
@@ -58,7 +58,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
 
-  const refreshSessions = useSessionStore((s) => s.refreshSessions);
+  const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
   const [refreshMessages, refreshTopics] = useChatStore((s) => [s.refreshMessages, s.refreshTopic]);
 
   const [duration, setDuration] = useState(0);
@@ -205,7 +205,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
               overwriteExisting,
             });
 
-            await refreshSessions();
+            await refreshAgentList();
             await refreshMessages();
             await refreshTopics();
           }}

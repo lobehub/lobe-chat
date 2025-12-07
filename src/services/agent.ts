@@ -15,6 +15,13 @@ export interface CreateAgentResult {
 
 class AgentService {
   /**
+   * Check if an agent with the given marketIdentifier already exists
+   */
+  checkByMarketIdentifier = async (marketIdentifier: string): Promise<boolean> => {
+    return lambdaClient.agent.checkByMarketIdentifier.query({ marketIdentifier });
+  };
+
+  /**
    * Create a new agent with session
    */
   createAgent = async (params: CreateAgentParams): Promise<CreateAgentResult> => {

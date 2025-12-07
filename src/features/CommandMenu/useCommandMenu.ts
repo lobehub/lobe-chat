@@ -4,9 +4,10 @@ import useSWR from 'swr';
 
 import type { SearchResult } from '@/database/repositories/search';
 import { lambdaClient } from '@/libs/trpc/client';
+import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
+import { useHomeStore } from '@/store/home';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useSessionStore } from '@/store/session';
 
 import type { ChatMessage, ThemeMode } from './types';
 
@@ -21,7 +22,8 @@ export const useCommandMenu = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
-  const createSession = useSessionStore((s) => s.createSession);
+  const createAgent = useAgentStore((s) => s.createAgent);
+  const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   const page = pages.at(-1);
@@ -111,8 +113,9 @@ export const useCommandMenu = () => {
     setPages((prev) => prev.slice(0, -1));
   };
 
-  const handleCreateSession = () => {
-    createSession();
+  const handleCreateSession = async () => {
+    await createAgent({});
+    await refreshAgentList();
     closeCommandMenu();
   };
 
