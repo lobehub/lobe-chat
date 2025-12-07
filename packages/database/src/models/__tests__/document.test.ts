@@ -115,8 +115,8 @@ describe('DocumentModel', () => {
       const userDocs = await documentModel.query();
       const otherUserDocs = await documentModel2.query();
 
-      expect(userDocs).toHaveLength(0);
-      expect(otherUserDocs).toHaveLength(1);
+      expect(userDocs.items).toHaveLength(0);
+      expect(otherUserDocs.items).toHaveLength(1);
     });
   });
 
