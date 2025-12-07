@@ -175,6 +175,41 @@ export class AgentModel {
       );
   };
 
+  /**
+   * Delete an agent and its associated session.
+   * This will cascade delete messages, topics, etc. through the session deletion.
+   */
+  delete = async (agentId: string) => {
+    return this.db.transaction(async (trx) => {
+      // 1. Get associated session IDs
+      const links = await trx
+        .select({ sessionId: agentsToSessions.sessionId })
+        .from(agentsToSessions)
+        .where(
+          and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)),
+        );
+
+      const sessionIds = links.map((link) => link.sessionId);
+
+      // 2. Delete links in agentsToSessions
+      await trx
+        .delete(agentsToSessions)
+        .where(
+          and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)),
+        );
+
+      // 3. Delete associated sessions (this will cascade delete messages, topics, etc.)
+      if (sessionIds.length > 0) {
+        await trx
+          .delete(sessions)
+          .where(and(inArray(sessions.id, sessionIds), eq(sessions.userId, this.userId)));
+      }
+
+      // 4. Delete the agent itself
+      return trx.delete(agents).where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)));
+    });
+  };
+
   toggleFile = async (agentId: string, fileId: string, enabled?: boolean) => {
     return this.db
       .update(agentsFiles)

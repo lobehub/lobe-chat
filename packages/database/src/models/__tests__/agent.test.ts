@@ -529,6 +529,159 @@ describe('AgentModel', () => {
     });
   });
 
+  describe('delete', () => {
+    it('should delete an agent and its associated session', async () => {
+      // Create agent and session
+      const [agent] = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Test Agent' })
+        .returning();
+      const [session] = await serverDB
+        .insert(sessions)
+        .values({ userId, type: 'agent' })
+        .returning();
+      await serverDB
+        .insert(agentsToSessions)
+        .values({ agentId: agent.id, sessionId: session.id, userId });
+
+      // Delete the agent
+      await agentModel.delete(agent.id);
+
+      // Verify agent is deleted
+      const deletedAgent = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+      expect(deletedAgent).toBeUndefined();
+
+      // Verify session is deleted
+      const deletedSession = await serverDB.query.sessions.findFirst({
+        where: eq(sessions.id, session.id),
+      });
+      expect(deletedSession).toBeUndefined();
+
+      // Verify agentsToSessions link is deleted
+      const deletedLink = await serverDB.query.agentsToSessions.findFirst({
+        where: eq(agentsToSessions.agentId, agent.id),
+      });
+      expect(deletedLink).toBeUndefined();
+    });
+
+    it('should delete an agent with multiple sessions', async () => {
+      // Create agent with multiple sessions
+      const [agent] = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Multi-session Agent' })
+        .returning();
+      const [session1] = await serverDB
+        .insert(sessions)
+        .values({ userId, type: 'agent' })
+        .returning();
+      const [session2] = await serverDB
+        .insert(sessions)
+        .values({ userId, type: 'agent' })
+        .returning();
+      await serverDB.insert(agentsToSessions).values([
+        { agentId: agent.id, sessionId: session1.id, userId },
+        { agentId: agent.id, sessionId: session2.id, userId },
+      ]);
+
+      // Delete the agent
+      await agentModel.delete(agent.id);
+
+      // Verify all are deleted
+      const deletedAgent = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+      expect(deletedAgent).toBeUndefined();
+
+      const remainingSessions = await serverDB.query.sessions.findMany({
+        where: eq(sessions.userId, userId),
+      });
+      expect(remainingSessions).toHaveLength(0);
+    });
+
+    it('should delete an agent without any sessions', async () => {
+      // Create agent without session
+      const [agent] = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'No-session Agent' })
+        .returning();
+
+      // Delete the agent
+      await agentModel.delete(agent.id);
+
+      // Verify agent is deleted
+      const deletedAgent = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+      expect(deletedAgent).toBeUndefined();
+    });
+
+    it('should not delete another user agent', async () => {
+      // Create agent for user1
+      const [agent] = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'User1 Agent' })
+        .returning();
+      const [session] = await serverDB
+        .insert(sessions)
+        .values({ userId, type: 'agent' })
+        .returning();
+      await serverDB
+        .insert(agentsToSessions)
+        .values({ agentId: agent.id, sessionId: session.id, userId });
+
+      // Try to delete with user2's model
+      await agentModel2.delete(agent.id);
+
+      // Verify agent still exists
+      const existingAgent = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+      expect(existingAgent).toBeDefined();
+      expect(existingAgent?.title).toBe('User1 Agent');
+
+      // Verify session still exists
+      const existingSession = await serverDB.query.sessions.findFirst({
+        where: eq(sessions.id, session.id),
+      });
+      expect(existingSession).toBeDefined();
+    });
+
+    it('should delete agent files and knowledge bases associations', async () => {
+      // Create agent with files and knowledge bases
+      const [agent] = await serverDB
+        .insert(agents)
+        .values({ userId, title: 'Agent with knowledge' })
+        .returning();
+      await serverDB.insert(agentsFiles).values({ agentId: agent.id, fileId: '1', userId });
+      await serverDB
+        .insert(agentsKnowledgeBases)
+        .values({ agentId: agent.id, knowledgeBaseId: 'kb1', userId });
+
+      // Delete the agent
+      await agentModel.delete(agent.id);
+
+      // Verify agent is deleted
+      const deletedAgent = await serverDB.query.agents.findFirst({
+        where: eq(agents.id, agent.id),
+      });
+      expect(deletedAgent).toBeUndefined();
+
+      // Verify agentsFiles are deleted (cascade)
+      const remainingFiles = await serverDB.query.agentsFiles.findMany({
+        where: eq(agentsFiles.agentId, agent.id),
+      });
+      expect(remainingFiles).toHaveLength(0);
+
+      // Verify agentsKnowledgeBases are deleted (cascade)
+      const remainingKBs = await serverDB.query.agentsKnowledgeBases.findMany({
+        where: eq(agentsKnowledgeBases.agentId, agent.id),
+      });
+      expect(remainingKBs).toHaveLength(0);
+    });
+  });
+
   describe('toggleFile', () => {
     it('should toggle the enabled status of an agent file association', async () => {
       const agent = await serverDB
