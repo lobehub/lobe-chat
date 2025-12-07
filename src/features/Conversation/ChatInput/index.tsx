@@ -17,7 +17,7 @@ import type { SendButtonHandler, SendButtonProps } from '@/features/ChatInput/st
 import { useChatStore } from '@/store/chat';
 import { fileChatSelectors, useFileStore } from '@/store/file';
 
-import WideScreenContainer from '../components/WideScreenContainer';
+import WideScreenContainer from '../../WideScreenContainer';
 import { messageStateSelectors, useConversationStore } from '../store';
 
 export interface ChatInputProps {

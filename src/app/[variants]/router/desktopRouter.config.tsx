@@ -15,7 +15,6 @@ import DesktopPageLayout from '../(main)/page/_layout';
 import {
   agentIdLoader,
   idLoader,
-  memoryTypeLoader,
   providerIdLoader,
   settingsTabLoader,
   slugLoader,
@@ -301,13 +300,39 @@ export const createDesktopRouter = () =>
         {
           children: [
             {
+              element: dynamicElement(
+                () => import('../(main)/memory/(home)'),
+                'Desktop > Memory > Home',
+              ),
               index: true,
-              loader: () => redirect('/memory/identities', { status: 302 }),
             },
             {
-              element: dynamicElement(() => import('../(main)/memory'), 'Desktop > Memory > Type'),
-              loader: memoryTypeLoader,
-              path: ':type',
+              element: dynamicElement(
+                () => import('../(main)/memory/identities'),
+                'Desktop > Memory > Identities',
+              ),
+              path: 'identities',
+            },
+            {
+              element: dynamicElement(
+                () => import('../(main)/memory/contexts'),
+                'Desktop > Memory > Contexts',
+              ),
+              path: 'contexts',
+            },
+            {
+              element: dynamicElement(
+                () => import('../(main)/memory/preferences'),
+                'Desktop > Memory > Preferences',
+              ),
+              path: 'preferences',
+            },
+            {
+              element: dynamicElement(
+                () => import('../(main)/memory/experiences'),
+                'Desktop > Memory > Experiences',
+              ),
+              path: 'experiences',
             },
           ],
           element: <DesktopMemoryLayout />,

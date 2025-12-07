@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
-import WideScreenButton from '@/app/[variants]/(main)/chat/features/WideScreenButton';
 import NavHeader from '@/features/NavHeader';
+import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 
 import AgentBuilderToggle from './AgentBuilderToggle';
 import AgentPublishButton from './AgentPublishButton';
