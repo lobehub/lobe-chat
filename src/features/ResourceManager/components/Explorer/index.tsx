@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 
-import EmptyStatus from './EmptyStatus';
+import EmptyPlaceholder from './EmptyPlaceholder';
 import Header from './Header';
 import ListView from './ListView';
 import ListViewSkeleton from './ListView/Skeleton';
@@ -23,14 +23,12 @@ import { useMasonryColumnCount } from './useMasonryColumnCount';
  * So we depend on context, not props.
  */
 const FileExplorer = memo(() => {
-  const libraryId = useResourceManagerStore((s) => s.libraryId);
-  const category = useResourceManagerStore((s) => s.category);
+  const [libraryId, category] = useResourceManagerStore((s) => [s.libraryId, s.category]);
 
   const {
     // Data
     data,
     isLoading,
-    knowledgeBaseId,
     pendingRenameItemId,
 
     // State
@@ -45,10 +43,8 @@ const FileExplorer = memo(() => {
     setSelectedFileIds,
   } = useFileExplorer({ category, libraryId });
 
-  // Calculate column count for masonry view
   const columnCount = useMasonryColumnCount();
 
-  // Determine if skeleton should be shown
   const showSkeleton =
     isLoading ||
     (viewMode === 'list' && isTransitioning) ||
@@ -58,7 +54,7 @@ const FileExplorer = memo(() => {
     <Flexbox height={'100%'}>
       <Header />
       {showEmptyStatus ? (
-        <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
+        <EmptyPlaceholder />
       ) : showSkeleton ? (
         viewMode === 'list' ? (
           <ListViewSkeleton />
@@ -68,7 +64,6 @@ const FileExplorer = memo(() => {
       ) : viewMode === 'list' ? (
         <ListView
           data={data}
-          knowledgeBaseId={knowledgeBaseId}
           onSelectionChange={handleSelectionChange}
           pendingRenameItemId={pendingRenameItemId}
           selectFileIds={selectFileIds}
@@ -77,7 +72,6 @@ const FileExplorer = memo(() => {
         <MasonryView
           data={data}
           isMasonryReady={isMasonryReady}
-          knowledgeBaseId={knowledgeBaseId}
           selectFileIds={selectFileIds}
           setSelectedFileIds={setSelectedFileIds}
         />

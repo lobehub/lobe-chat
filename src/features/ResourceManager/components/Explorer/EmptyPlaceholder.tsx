@@ -5,6 +5,7 @@ import { ArrowUpIcon, PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import { useCreateNewModal } from '@/features/LibraryModal';
 import { useFileStore } from '@/store/file';
 
@@ -60,16 +61,14 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface EmptyStatusProps {
-  knowledgeBaseId?: string;
-  showKnowledgeBase: boolean;
-}
-const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) => {
+const EmptyPlaceholder = () => {
   const { t } = useTranslation('components');
   const theme = useTheme();
   const { styles } = useStyles();
 
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
+
+  const libraryId = useResourceManagerStore((s) => s.libraryId);
 
   const { open } = useCreateNewModal();
 
@@ -80,7 +79,7 @@ const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) =
         <Text type={'secondary'}>{t('FileManager.emptyStatus.or')}</Text>
       </Flexbox>
       <Flexbox gap={12} horizontal>
-        {showKnowledgeBase && (
+        {!libraryId && (
           <Flexbox
             className={styles.card}
             onClick={() => {
@@ -103,7 +102,7 @@ const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) =
         )}
         <Upload
           beforeUpload={async (file) => {
-            await pushDockFileList([file], knowledgeBaseId);
+            await pushDockFileList([file], libraryId);
 
             return false;
           }}
@@ -123,7 +122,7 @@ const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) =
         </Upload>
         <Upload
           beforeUpload={async (file) => {
-            await pushDockFileList([file], knowledgeBaseId);
+            await pushDockFileList([file], libraryId);
 
             return false;
           }}
@@ -150,4 +149,4 @@ const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) =
   );
 };
 
-export default EmptyStatus;
+export default EmptyPlaceholder;
