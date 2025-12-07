@@ -51,7 +51,7 @@ const Header = memo(() => {
           />
           <ViewSwitcher onViewChange={setViewMode} view={viewMode} />
           <Flexbox style={{ marginLeft: 8 }}>
-            <AddButton knowledgeBaseId={knowledgeBaseId} />
+            <AddButton />
           </Flexbox>
         </>
       }

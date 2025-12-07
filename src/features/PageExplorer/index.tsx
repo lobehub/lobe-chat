@@ -16,20 +16,31 @@ interface PageExplorerProps {
 const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
   const { t } = useTranslation('file');
 
-  const [selectedPageId, setSelectedPageId, getOptimisticDocuments, createNewPage, deletePage] =
-    useFileStore((s) => [
-      s.selectedPageId,
-      s.setSelectedPageId,
-      s.getOptimisticDocuments,
-      s.createNewPage,
-      s.deletePage,
-    ]);
+  const [
+    selectedPageId,
+    setSelectedPageId,
+    getOptimisticDocuments,
+    fetchDocuments,
+    createNewPage,
+    deletePage,
+  ] = useFileStore((s) => [
+    s.selectedPageId,
+    s.setSelectedPageId,
+    s.getOptimisticDocuments,
+    s.fetchDocuments,
+    s.createNewPage,
+    s.deletePage,
+  ]);
 
   useEffect(() => {
     if (pageId && pageId !== selectedPageId) {
       setSelectedPageId(pageId, false);
     }
   }, [pageId]);
+
+  useEffect(() => {
+    fetchDocuments();
+  }, [fetchDocuments]);
 
   const pages = getOptimisticDocuments();
   const currentPageId = selectedPageId || pageId;
