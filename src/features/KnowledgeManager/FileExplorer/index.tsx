@@ -279,8 +279,10 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
           <div
             style={{
               height: '100%',
+              inset: 0,
               opacity: isMasonryReady ? 1 : 0,
               overflowY: 'auto',
+              position: 'absolute',
               transition: 'opacity 0.2s ease-in-out',
             }}
           >
@@ -292,6 +294,7 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
                 data={data || []}
                 style={{
                   gap: '16px',
+                  overflow: 'hidden',
                 }}
               />
             </div>
