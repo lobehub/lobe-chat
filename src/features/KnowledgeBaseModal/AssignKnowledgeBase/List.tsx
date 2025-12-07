@@ -20,8 +20,9 @@ export const List = memo(() => {
   const { t } = useTranslation('file');
 
   const useFetchFilesAndKnowledgeBases = useAgentStore((s) => s.useFetchFilesAndKnowledgeBases);
+  const activeAgentId = useAgentStore((s) => s.activeAgentId);
 
-  const { isLoading, error, data } = useFetchFilesAndKnowledgeBases();
+  const { isLoading, error, data } = useFetchFilesAndKnowledgeBases(activeAgentId);
 
   const [columnCount, setColumnCount] = useState(2);
   const [isTransitioning, setIsTransitioning] = useState(false);
