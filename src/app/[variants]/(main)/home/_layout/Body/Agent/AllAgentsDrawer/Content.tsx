@@ -11,18 +11,30 @@ import { VList } from 'virtua';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
+import { SidebarAgentItem, homeSelectors, useHomeStore } from '@/store/home';
 import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/slices/session/selectors';
-import { LobeAgentSession, LobeSessionType, LobeSessions } from '@/types/session';
+import { sessionMetaSelectors } from '@/store/session/selectors';
+import { LobeAgentSession, LobeSession, LobeSessionType } from '@/types/session';
 
 import Item from '../List/Item';
 
-const shouldHideSession = (session: LobeSessions[0]) =>
-  session.type === LobeSessionType.Agent && Boolean((session as LobeAgentSession).config?.virtual);
+// Transform LobeSession to SidebarAgentItem for display
+const toSidebarAgentItem = (session: LobeSession): SidebarAgentItem => ({
+  avatar: sessionMetaSelectors.getAvatar(session.meta),
+  description: session.meta.description || null,
+  id:
+    session.type === LobeSessionType.Agent
+      ? ((session as LobeAgentSession).config?.id ?? session.id)
+      : session.id,
+  pinned: session.pinned ?? false,
+  sessionId: session.id,
+  title: session.meta.title || null,
+  type: session.type === LobeSessionType.Agent ? 'agent' : 'group',
+  updatedAt: session.updatedAt,
+});
 
-const filterSessionsForView = (sessions: LobeSessions): LobeSessions => {
-  return sessions.filter((session) => !shouldHideSession(session));
-};
+const shouldHideSession = (session: LobeSession) =>
+  session.type === LobeSessionType.Agent && Boolean((session as LobeAgentSession).config?.virtual);
 
 interface ContentProps {
   open: boolean;
@@ -39,20 +51,28 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
   const trimmedKeyword = searchKeyword.trim();
   const isSearching = trimmedKeyword.length > 0;
 
-  // Search sessions or use all default sessions
+  // Search sessions
   const { data: searchResults, isLoading: isSearchLoading } = useSearchSessions(
     isSearching ? trimmedKeyword : undefined,
   );
-  const allDefaultSessions = useSessionStore(sessionSelectors.defaultSessions, isEqual);
+
+  // Get all agents from homeStore (ungrouped agents for default view)
+  const allUngroupedAgents = useHomeStore(homeSelectors.ungroupedAgents, isEqual);
 
   // Filter and display
-  const displaySessions = useMemo(() => {
-    const sessions = isSearching ? searchResults : allDefaultSessions;
-    if (!sessions) return [];
-    return filterSessionsForView(sessions);
-  }, [isSearching, searchResults, allDefaultSessions]);
+  const displayItems = useMemo<SidebarAgentItem[]>(() => {
+    if (isSearching) {
+      // Convert search results to SidebarAgentItem format
+      if (!searchResults) return [];
+      return searchResults
+        .filter((session: LobeSession) => !shouldHideSession(session))
+        .map(toSidebarAgentItem);
+    }
+    // Use ungrouped agents from homeStore
+    return allUngroupedAgents;
+  }, [isSearching, searchResults, allUngroupedAgents]);
 
-  const count = displaySessions.length;
+  const count = displayItems.length;
 
   // Show loading skeleton when searching
   if (isSearching && (isSearchLoading || !searchResults)) {
@@ -79,17 +99,17 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
 
   return (
     <VList bufferSize={800} style={{ height: '100%' }}>
-      {displaySessions.map(({ id, ...res }) => (
-        <Flexbox gap={1} key={id} padding={'4px 8px'}>
+      {displayItems.map((item) => (
+        <Flexbox gap={1} key={item.id} padding={'4px 8px'}>
           <Link
-            aria-label={id}
+            aria-label={item.id}
             onClick={(e) => {
               e.preventDefault();
-              navigateToAgent((res as any).config?.id);
+              navigateToAgent(item.sessionId || item.id);
             }}
-            to={SESSION_CHAT_URL((res as any).config?.id, false)}
+            to={SESSION_CHAT_URL(item.sessionId || item.id, false)}
           >
-            <Item id={id} />
+            <Item item={item} />
           </Link>
         </Flexbox>
       ))}

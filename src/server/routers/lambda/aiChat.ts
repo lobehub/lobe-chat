@@ -7,6 +7,7 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
 import { LOADING_FLAT } from '@/const/message';
+import { AgentModel } from '@/database/models/agent';
 import { MessageModel } from '@/database/models/message';
 import { ThreadModel } from '@/database/models/thread';
 import { TopicModel } from '@/database/models/topic';
@@ -25,6 +26,7 @@ const aiChatProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
 
   return opts.next({
     ctx: {
+      agentModel: new AgentModel(ctx.serverDB, ctx.userId),
       aiChatService: new AiChatService(ctx.serverDB, ctx.userId),
       fileService: new FileService(ctx.serverDB, ctx.userId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId),
@@ -105,6 +107,12 @@ export const aiChatRouter = router({
         topicId = topicItem.id;
         isCreateNewTopic = true;
         log('new topic created with id: %s', topicId);
+
+        // update agent's updatedAt to reflect new activity
+        if (input.agentId) {
+          await ctx.agentModel.touchUpdatedAt(input.agentId);
+          log('agent updatedAt touched for agentId: %s', input.agentId);
+        }
       }
 
       // create thread if there should be a new thread

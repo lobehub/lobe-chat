@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
+import { useHomeStore } from '@/store/home';
 
 interface CreateGroupModalProps extends ModalProps {
   id: string;
@@ -17,10 +17,7 @@ const CreateGroupModal = memo<CreateGroupModalProps>(
 
     const toggleExpandSessionGroup = useGlobalStore((s) => s.toggleExpandSessionGroup);
     const { message } = App.useApp();
-    const [updateSessionGroup, addCustomGroup] = useSessionStore((s) => [
-      s.updateSessionGroupId,
-      s.addSessionGroup,
-    ]);
+    const [updateAgentGroup, addGroup] = useHomeStore((s) => [s.updateAgentGroup, s.addGroup]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -39,8 +36,8 @@ const CreateGroupModal = memo<CreateGroupModalProps>(
               return message.warning(t('sessionGroup.tooLong'));
 
             setLoading(true);
-            const groupId = await addCustomGroup(input);
-            await updateSessionGroup(id, groupId);
+            const groupId = await addGroup(input);
+            await updateAgentGroup(id, groupId);
             toggleExpandSessionGroup(groupId, true);
             setLoading(false);
 

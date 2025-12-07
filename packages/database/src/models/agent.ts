@@ -188,6 +188,17 @@ export class AgentModel {
       );
   };
 
+  update = async (agentId: string, data: Partial<AgentItem>) => {
+    return this.db
+      .update(agents)
+      .set({ ...data, updatedAt: new Date() })
+      .where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)));
+  };
+
+  touchUpdatedAt = async (agentId: string) => {
+    return this.update(agentId, {});
+  };
+
   updateConfig = async (agentId: string, data: PartialDeep<AgentItem> | undefined | null) => {
     if (!data || Object.keys(data).length === 0) return;
 
@@ -238,9 +249,13 @@ export class AgentModel {
       }
     }
 
+    // Remove timestamp fields to let Drizzle's $onUpdate handle them automatically
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { updatedAt: _, accessedAt: __, createdAt: ___, ...updateData } = mergedValue;
+
     return this.db
       .update(agents)
-      .set(mergedValue)
+      .set(updateData)
       .where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)));
   };
 
