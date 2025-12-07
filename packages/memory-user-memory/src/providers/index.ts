@@ -1,1 +1,5 @@
-export { ChatTopicProvider } from './chatTopic';
+export { LobeChatTopicContextProvider, LobeChatTopicResultRecorder } from './chatTopic';
+export {
+  RetrievalUserMemoryContextProvider,
+  RetrievalUserMemoryIdentitiesProvider,
+} from './existingUserMemory';
