@@ -12,7 +12,7 @@ import { AsyncTaskStatus, IAsyncTaskError } from '@/types/asyncTask';
 import { formatSize } from '@/utils/format';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
-import ChunksBadge from '../FileListItem/ChunkTag';
+import ChunksBadge from '../../ListView/ListItem/ChunkTag';
 
 const useStyles = createStyles(({ css, token }) => ({
   floatingChunkBadge: css`

@@ -1,17 +1,19 @@
 import { Button, Tooltip } from '@lobehub/ui';
+import { Image } from 'antd';
 import { createStyles } from 'antd-style';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
-import markdownToTxt from 'markdown-to-txt';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { AsyncTaskStatus, IAsyncTaskError } from '@/types/asyncTask';
+import { formatSize } from '@/utils/format';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
-import ChunksBadge from '../FileListItem/ChunkTag';
+import ChunksBadge from '../../ListView/ListItem/ChunkTag';
 
 const useStyles = createStyles(({ css, token }) => ({
   floatingChunkBadge: css`
@@ -28,91 +30,78 @@ const useStyles = createStyles(({ css, token }) => ({
 
     transition: opacity ${token.motionDurationMid};
   `,
-  iconWrapper: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  hoverOverlay: css`
+    position: absolute;
+    z-index: 1;
+    inset: 0;
 
-    height: 120px;
-    margin-block-end: 12px;
-    border-radius: ${token.borderRadius}px;
-
-    background: ${token.colorFillQuaternary};
-  `,
-  markdownLoading: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 120px;
-    border-radius: ${token.borderRadiusLG}px;
-
-    font-size: 12px;
-    color: ${token.colorTextTertiary};
-
-    background: ${token.colorFillQuaternary};
-  `,
-  noteContent: css`
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    justify-content: center;
 
-    width: 100%;
-    min-height: 120px;
     padding: 16px;
-    border-radius: ${token.borderRadiusLG}px;
 
+    opacity: 0;
+    background: ${token.colorBgMask};
+
+    transition: opacity ${token.motionDurationMid};
+
+    &:hover {
+      opacity: 1;
+    }
+  `,
+  imagePlaceholder: css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: ${token.colorFillQuaternary};
   `,
-  notePreview: css`
+  imageWrapper: css`
+    position: relative;
+    width: 100%;
+    background: ${token.colorFillQuaternary};
+
+    img {
+      display: block;
+      height: auto;
+    }
+  `,
+  name: css`
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 2;
 
-    font-size: 13px;
-    line-height: 1.6;
-    color: ${token.colorTextSecondary};
-  `,
-  noteTitle: css`
-    display: flex;
-    gap: 8px;
-    align-items: center;
+    margin-block-end: 12px;
 
-    font-size: 16px;
     font-weight: ${token.fontWeightStrong};
-    line-height: 1.4;
     color: ${token.colorText};
+    word-break: break-word;
+  `,
+  overlaySize: css`
+    font-size: 12px;
+    color: ${token.colorTextLightSolid};
+    opacity: 0.9;
+  `,
+  overlayTitle: css`
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+
+    max-width: 100%;
+    margin-block-end: 8px;
+
+    font-size: 14px;
+    font-weight: ${token.fontWeightStrong};
+    color: ${token.colorTextLightSolid};
+    text-align: center;
+    word-break: break-word;
   `,
 }));
 
-// Helper to extract title from markdown content
-const extractTitle = (content: string): string | null => {
-  if (!content) return null;
-
-  // Find first markdown header (# title)
-  const match = content.match(/^#\s+(.+)$/m);
-  return match ? match[1].trim() : null;
-};
-
-// Helper to extract preview text from note content
-const getPreviewText = (content: string): string => {
-  if (!content) return '';
-
-  // Convert markdown to plain text
-  let plainText = markdownToTxt(content);
-
-  // Remove the title line if it exists
-  const title = extractTitle(content);
-  if (title) {
-    plainText = plainText.replace(title, '').trim();
-  }
-
-  // Limit to first 400 characters for preview
-  return plainText.slice(0, 400);
-};
-
-interface NoteFileItemProps {
+interface ImageFileItemProps {
   chunkCount?: number | null;
   chunkingError?: IAsyncTaskError | null;
   chunkingStatus?: AsyncTaskStatus | null;
@@ -121,13 +110,13 @@ interface NoteFileItemProps {
   fileType?: string;
   finishEmbedding?: boolean;
   id: string;
-  isLoadingMarkdown: boolean;
-  markdownContent: string;
-  metadata?: Record<string, any> | null;
+  isInView: boolean;
   name: string;
+  size: number;
+  url?: string;
 }
 
-const NoteFileItem = memo<NoteFileItemProps>(
+const ImageFileItem = memo<ImageFileItemProps>(
   ({
     chunkCount,
     chunkingError,
@@ -137,13 +126,14 @@ const NoteFileItem = memo<NoteFileItemProps>(
     fileType,
     finishEmbedding,
     id,
-    isLoadingMarkdown,
-    markdownContent,
+    isInView,
     name,
-    metadata,
+    size,
+    url,
   }) => {
-    const { t } = useTranslation(['components', 'file']);
+    const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
+    const [imageLoaded, setImageLoaded] = useState(false);
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
       fileManagerSelectors.isCreatingFileParseTask(id)(s),
       s.parseFilesToChunks,
@@ -151,37 +141,62 @@ const NoteFileItem = memo<NoteFileItemProps>(
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType || '');
 
-    const extractedTitle = markdownContent ? extractTitle(markdownContent) : null;
-    const displayTitle = extractedTitle || name || t('file:documentList.untitled');
-    const emoji = metadata?.emoji;
-    const previewText = markdownContent ? getPreviewText(markdownContent) : '';
-
     return (
       <>
-        <div style={{ position: 'relative' }}>
-          {isLoadingMarkdown ? (
-            <div className={styles.markdownLoading}>Loading preview...</div>
-          ) : markdownContent ? (
-            <div className={styles.noteContent}>
-              <div className={styles.noteTitle}>
-                {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
-                <span>{displayTitle}</span>
-              </div>
-              {previewText ? (
-                <div className={styles.notePreview}>{previewText}</div>
-              ) : (
-                <div className={styles.notePreview}>
-                  <span style={{ color: 'var(--lobe-text-tertiary)', fontStyle: 'italic' }}>
-                    No content
-                  </span>
+        <div className={styles.imageWrapper}>
+          {!imageLoaded && (
+            <div className={styles.imagePlaceholder}>
+              <Flexbox
+                align={'center'}
+                gap={12}
+                justify={'center'}
+                paddingBlock={24}
+                paddingInline={12}
+              >
+                <FileIcon fileName={name} fileType={fileType} size={48} />
+                <div className={styles.name} style={{ textAlign: 'center' }}>
+                  {name}
                 </div>
-              )}
-            </div>
-          ) : (
-            <div className={styles.iconWrapper}>
-              <FileIcon fileName={name} fileType={fileType} size={64} />
+                <div
+                  style={{
+                    color: 'var(--lobe-chat-text-tertiary)',
+                    fontSize: 12,
+                    textAlign: 'center',
+                  }}
+                >
+                  {formatSize(size)}
+                </div>
+              </Flexbox>
             </div>
           )}
+          {isInView && url && (
+            <Image
+              alt={name}
+              loading="lazy"
+              onError={() => setImageLoaded(false)}
+              onLoad={() => setImageLoaded(true)}
+              preview={{
+                src: url,
+              }}
+              src={url}
+              style={{
+                display: 'block',
+                height: 'auto',
+                opacity: imageLoaded ? 1 : 0,
+                transition: 'opacity 0.3s',
+                width: '100%',
+              }}
+              wrapperStyle={{
+                display: 'block',
+                width: '100%',
+              }}
+            />
+          )}
+          {/* Hover overlay */}
+          <div className={styles.hoverOverlay}>
+            <div className={styles.overlayTitle}>{name}</div>
+            <div className={styles.overlaySize}>{formatSize(size)}</div>
+          </div>
         </div>
         {/* Floating chunk badge or action button */}
         {!isNull(chunkingStatus) && chunkingStatus ? (
@@ -227,4 +242,4 @@ const NoteFileItem = memo<NoteFileItemProps>(
   },
 );
 
-export default NoteFileItem;
+export default ImageFileItem;

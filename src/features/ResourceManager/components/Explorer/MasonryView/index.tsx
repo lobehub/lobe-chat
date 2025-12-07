@@ -6,8 +6,8 @@ import { memo, useMemo } from 'react';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import { FileListItem } from '@/types/files';
 
-import MasonryItemWrapper from '../MasonryFileItem/MasonryItemWrapper';
 import { useMasonryColumnCount } from '../useMasonryColumnCount';
+import MasonryItemWrapper from './MasonryFileItem/MasonryItemWrapper';
 
 interface MasonryViewProps {
   data: FileListItem[] | undefined;

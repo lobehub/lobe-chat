@@ -11,7 +11,7 @@ import PageEditorModal from '@/features/PageEditor/Modal';
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 
-import DropdownMenu from '../FileListItem/DropdownMenu';
+import DropdownMenu from '../../ItemDropdown/DropdownMenu';
 import DefaultFileItem from './DefaultFileItem';
 import ImageFileItem from './ImageFileItem';
 import MarkdownFileItem from './MarkdownFileItem';

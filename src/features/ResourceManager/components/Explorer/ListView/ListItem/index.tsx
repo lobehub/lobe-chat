@@ -21,8 +21,8 @@ import { type FileListItem as FileListItemType } from '@/types/files';
 import { formatSize } from '@/utils/format';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
+import DropdownMenu from '../../ItemDropdown/DropdownMenu';
 import ChunksBadge from './ChunkTag';
-import DropdownMenu from './DropdownMenu';
 
 dayjs.extend(relativeTime);
 

@@ -2,7 +2,7 @@ import { ActionIcon, Dropdown } from '@lobehub/ui';
 import { MoreHorizontalIcon } from 'lucide-react';
 import { memo } from 'react';
 
-import { useFileItemDropdown } from '../useFileItemDropdown';
+import { useFileItemDropdown } from './useFileItemDropdown';
 
 interface DropdownMenuProps {
   fileType: string;
