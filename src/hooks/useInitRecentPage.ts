@@ -1,4 +1,4 @@
-import { useSessionStore } from '@/store/session';
+import { useHomeStore } from '@/store/home';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -10,11 +10,11 @@ import { authSelectors } from '@/store/user/selectors';
  * const { isLoading } = useInitRecentPage();
  *
  * Then access data directly from store:
- * const recentPages = useSessionStore(recentSelectors.recentPages);
- * const isInit = useSessionStore(recentSelectors.isRecentPagesInit);
+ * const recentPages = useHomeStore(homeRecentSelectors.recentPages);
+ * const isInit = useHomeStore(homeRecentSelectors.isRecentPagesInit);
  */
 export const useInitRecentPage = () => {
-  const useFetchRecentPages = useSessionStore((s) => s.useFetchRecentPages);
+  const useFetchRecentPages = useHomeStore((s) => s.useFetchRecentPages);
 
   const isLogin = useUserStore(authSelectors.isLogin);
 

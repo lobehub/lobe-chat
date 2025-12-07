@@ -11,7 +11,8 @@ import { VList } from 'virtua';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
-import { homeSelectors, useHomeStore } from '@/store/home';
+import { useHomeStore } from '@/store/home';
+import { homeAgentListSelectors } from '@/store/home/selectors';
 
 import Item from '../List/Item';
 
@@ -35,7 +36,7 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
   );
 
   // Get all agents from homeStore (ungrouped agents for default view)
-  const allUngroupedAgents = useHomeStore(homeSelectors.ungroupedAgents, isEqual);
+  const allUngroupedAgents = useHomeStore(homeAgentListSelectors.ungroupedAgents, isEqual);
 
   // Filter and display - searchResults already returns SidebarAgentItem[]
   const displayItems = isSearching ? searchResults || [] : allUngroupedAgents;

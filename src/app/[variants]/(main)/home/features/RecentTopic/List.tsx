@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 
 import GroupSkeleton from '@/app/[variants]/(main)/home/features/components/GroupSkeleton';
 import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
-import { useSessionStore } from '@/store/session';
-import { recentSelectors } from '@/store/session/selectors';
+import { useHomeStore } from '@/store/home';
+import { homeRecentSelectors } from '@/store/home/selectors';
 
 import ReactTopicItem from './Item';
 
 const RecentTopicList = memo(() => {
-  const recentTopics = useSessionStore(recentSelectors.recentTopics);
-  const isInit = useSessionStore(recentSelectors.isRecentTopicsInit);
+  const recentTopics = useHomeStore(homeRecentSelectors.recentTopics);
+  const isInit = useHomeStore(homeRecentSelectors.isRecentTopicsInit);
 
   // Loading state
   if (!isInit) {
@@ -23,7 +23,7 @@ const RecentTopicList = memo(() => {
   }
 
   return recentTopics.map((topic) => {
-    const topicUrl = `/agent/${topic?.agent?.id || 'inbox'}?topic=${topic.id}`;
+    const topicUrl = `/agent/${topic?.agent?.id}?topic=${topic.id}`;
 
     return (
       <Link

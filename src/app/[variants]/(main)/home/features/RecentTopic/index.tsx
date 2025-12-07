@@ -2,8 +2,8 @@ import { BotMessageSquareIcon } from 'lucide-react';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSessionStore } from '@/store/session';
-import { recentSelectors } from '@/store/session/selectors';
+import { useHomeStore } from '@/store/home';
+import { homeRecentSelectors } from '@/store/home/selectors';
 
 import GroupBlock from '../components/GroupBlock';
 import GroupSkeleton from '../components/GroupSkeleton';
@@ -13,8 +13,8 @@ import RecentTopicList from './List';
 
 const RecentTopic = memo(() => {
   const { t } = useTranslation('chat');
-  const recentTopics = useSessionStore(recentSelectors.recentTopics);
-  const isInit = useSessionStore(recentSelectors.isRecentTopicsInit);
+  const recentTopics = useHomeStore(homeRecentSelectors.recentTopics);
+  const isInit = useHomeStore(homeRecentSelectors.isRecentTopicsInit);
 
   // After loaded, if no data, don't render
   if (isInit && (!recentTopics || recentTopics.length === 0)) {

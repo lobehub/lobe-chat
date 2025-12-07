@@ -1,33 +1,16 @@
+import { SidebarAgentItem, SidebarAgentListResponse, SidebarGroup } from '@lobechat/types';
 import { and, desc, eq, ilike, or } from 'drizzle-orm';
 
 import { agents, agentsToSessions, chatGroups, sessionGroups, sessions } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 
-export type SidebarItemType = 'agent' | 'group';
-
-export interface SidebarAgentItem {
-  avatar?: string | null;
-  description?: string | null;
-  id: string;
-  pinned: boolean;
-  sessionId?: string | null;
-  title: string | null;
-  type: SidebarItemType;
-  updatedAt: Date;
-}
-
-export interface SidebarGroup {
-  id: string;
-  items: SidebarAgentItem[];
-  name: string;
-  sort: number | null;
-}
-
-export interface SidebarAgentListResponse {
-  groups: SidebarGroup[];
-  pinned: SidebarAgentItem[];
-  ungrouped: SidebarAgentItem[];
-}
+// Re-export types for backward compatibility
+export type {
+  SidebarAgentItem,
+  SidebarAgentListResponse,
+  SidebarGroup,
+  SidebarItemType,
+} from '@lobechat/types';
 
 /**
  * Home Repository - provides sidebar agent list data

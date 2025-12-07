@@ -65,7 +65,7 @@ const agentCount = (s: HomeStore): number => {
   return allAgents(s).length;
 };
 
-export const agentListSelectors = {
+export const homeAgentListSelectors = {
   agentCount,
   agentGroups,
   allAgents,
