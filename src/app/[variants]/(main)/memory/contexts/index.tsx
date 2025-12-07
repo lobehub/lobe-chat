@@ -23,8 +23,8 @@ const Contexts = memo(() => {
       <NavHeader
         right={
           <>
-            <WideScreenButton />
             <ViewModeSwitcher onChange={setViewMode} value={viewMode} />
+            <WideScreenButton />
           </>
         }
       />
