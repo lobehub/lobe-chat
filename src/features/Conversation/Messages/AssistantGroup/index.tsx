@@ -8,11 +8,10 @@ import { Flexbox } from 'react-layout-kit';
 import { Avatar, BorderSpacing, Title } from '@/components/ChatItem';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 
+import { useAgentMeta } from '../../hooks';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import type { MessageActionsConfig } from '../../types';
 import Usage from '../components/Extras/Usage';
@@ -107,7 +106,7 @@ const GroupMessage = memo<GroupMessageProps>(
     const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
 
     const { usage, createdAt, children, performance, model, provider } = item;
-    const avatar = useAgentStore(agentSelectors.currentAgentMeta);
+    const avatar = useAgentMeta();
 
     const { mobile } = useResponsive();
     const placement = 'left';
@@ -116,7 +115,7 @@ const GroupMessage = memo<GroupMessageProps>(
 
     const { styles } = useStyles({ variant });
 
-    const [isInbox] = useSessionStore((s) => [sessionSelectors.isInboxSession(s)]);
+    const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
     const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
     const openChatSettings = useOpenChatSettings();
 

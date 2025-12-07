@@ -13,7 +13,7 @@ import { Avatar, BorderSpacing, ErrorContent, Title } from '@/components/ChatIte
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -24,7 +24,7 @@ import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { markdownElements } from '../../MarkdownElements';
 import { MessageContent } from '../../components/ChatItem';
-import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
+import { useAgentMeta, useDoubleClickEdit } from '../../hooks';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import type { MessageActionsConfig } from '../../types';
 import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
@@ -175,7 +175,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
       metadata,
     } = item;
 
-    const avatar = useAgentStore(agentSelectors.currentAgentMeta);
+    const avatar = useAgentMeta();
     const { t } = useTranslation('chat');
     const { mobile } = useResponsive();
     const placement = 'left';
@@ -206,9 +206,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
     const animated = transitionMode === 'fadeIn' && generating;
 
     const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
-    const currentSession = useSessionStore(sessionSelectors.currentSession);
-    const sessionId = isGroupSession && currentSession ? currentSession.id : '';
-    const groupConfig = useChatGroupStore(chatGroupSelectors.getGroupConfig(sessionId || ''));
+    const groupConfig = useChatGroupStore(chatGroupSelectors.currentGroupConfig);
 
     const reducted =
       isGroupSession && targetId !== null && targetId !== 'user' && !groupConfig?.revealDM;
@@ -283,7 +281,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
       [animated, components, role, search, highlighterTheme, mermaidTheme, fontSize],
     );
 
-    const [isInbox] = useSessionStore((s) => [sessionSelectors.isInboxSession(s)]);
+    const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
     const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
     const openChatSettings = useOpenChatSettings();
 

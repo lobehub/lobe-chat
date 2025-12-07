@@ -12,9 +12,8 @@ import { ChatItem } from '@/features/ChatItem';
 import PluginTag from '@/features/PluginTag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 
+import { useAgentMeta, useIsBuiltinAgent } from '../../../hooks';
 import { useContainerStyles } from '../style';
 import { useStyles } from './style';
 import { FieldType } from './type';
@@ -32,19 +31,15 @@ const Preview = memo<PreviewProps>(
       agentSelectors.displayableAgentPlugins(s),
     ]);
 
-    const isInbox = useSessionStore(sessionSelectors.isInboxSession);
-    const [description, avatar, backgroundColor] = useAgentStore((s) => [
-      agentSelectors.currentAgentDescription(s),
-      agentSelectors.currentAgentAvatar(s),
-      agentSelectors.currentAgentBackgroundColor(s),
-    ]);
+    const agentMeta = useAgentMeta();
+    const isBuiltinAgent = useIsBuiltinAgent();
 
     const { t } = useTranslation('chat');
     const { styles } = useStyles(withBackground);
     const { styles: containerStyles } = useContainerStyles();
 
-    const displayTitle = isInbox ? 'Lobe AI' : title;
-    const displayDesc = isInbox ? t('inbox.desc') : description;
+    const displayTitle = agentMeta.title || title;
+    const displayDesc = isBuiltinAgent ? t('inbox.desc') : agentMeta.description;
 
     return (
       <div className={containerStyles.preview}>
@@ -52,7 +47,12 @@ const Preview = memo<PreviewProps>(
           <Flexbox className={styles.container} gap={16}>
             <div className={styles.header}>
               <Flexbox align={'flex-start'} gap={12} horizontal>
-                <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
+                <Avatar
+                  avatar={agentMeta.avatar}
+                  background={agentMeta.backgroundColor}
+                  size={40}
+                  title={displayTitle}
+                />
                 <ChatHeaderTitle
                   desc={displayDesc}
                   tag={
@@ -70,7 +70,14 @@ const Preview = memo<PreviewProps>(
               style={{ paddingTop: 24, position: 'relative' }}
               width={'100%'}
             >
-              <ChatItem avatar={{ avatar, backgroundColor, title: displayTitle }} id={message.id} />
+              <ChatItem
+                avatar={{
+                  avatar: agentMeta.avatar,
+                  backgroundColor: agentMeta.backgroundColor,
+                  title: displayTitle,
+                }}
+                id={message.id}
+              />
             </Flexbox>
             {withFooter ? (
               <Flexbox align={'center'} className={styles.footer} gap={4}>
