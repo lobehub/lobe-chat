@@ -12,9 +12,8 @@ export const AgentBuilderApiName = {
   installPlugin: 'installPlugin',
   searchMarketTools: 'searchMarketTools',
   // Write operations
-  // Note: setModel, setOpeningMessage, setOpeningQuestions, updateChatConfig, updateAgentMeta are removed
+  // Note: setModel, setOpeningMessage, setOpeningQuestions, updateChatConfig, updateAgentMeta, togglePlugin are removed
   // and consolidated into updateAgentConfig
-  togglePlugin: 'togglePlugin',
   updateAgentConfig: 'updateConfig',
   updatePrompt: 'updatePrompt',
 } as const;
@@ -30,17 +29,19 @@ export interface UpdateAgentConfigParams {
    * Partial metadata to update
    */
   meta?: Partial<MetaData>;
-}
-
-export interface TogglePluginParams {
   /**
-   * Whether to enable the plugin. If not provided, toggles current state.
+   * Plugin toggle operation - will be merged into config.plugins
    */
-  enabled?: boolean;
-  /**
-   * The plugin identifier to toggle
-   */
-  pluginId: string;
+  togglePlugin?: {
+    /**
+     * Whether to enable the plugin. If not provided, toggles current state.
+     */
+    enabled?: boolean;
+    /**
+     * The plugin identifier to toggle
+     */
+    pluginId: string;
+  };
 }
 
 export interface GetAvailableModelsParams {
@@ -75,12 +76,10 @@ export interface UpdateConfigState {
     updatedFields: string[];
   };
   success: boolean;
-}
-
-export interface TogglePluginState {
-  enabled: boolean;
-  pluginId: string;
-  success: boolean;
+  togglePlugin?: {
+    enabled: boolean;
+    pluginId: string;
+  };
 }
 
 export interface AvailableModel {

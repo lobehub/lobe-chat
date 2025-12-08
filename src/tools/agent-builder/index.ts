@@ -78,7 +78,7 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
     },
     {
       description:
-        'Update agent configuration and/or metadata. Use this to change model, provider, plugins, opening message, opening questions, chat settings, model parameters, title, description, avatar, and tags. Only include fields you want to update.',
+        'Update agent configuration and/or metadata. Use this to change model, provider, plugins, opening message, opening questions, chat settings, model parameters, title, description, avatar, tags, and toggle plugins. Only include fields you want to update. Use togglePlugin to enable/disable a specific plugin.',
       name: AgentBuilderApiName.updateAgentConfig,
       parameters: {
         properties: {
@@ -113,7 +113,8 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
                 type: 'object',
               },
               plugins: {
-                description: 'Array of enabled plugin identifiers',
+                description:
+                  'Array of enabled plugin identifiers. Note: prefer using togglePlugin for single plugin changes.',
                 items: { type: 'string' },
                 type: 'array',
               },
@@ -152,6 +153,24 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
             },
             type: 'object',
           },
+          togglePlugin: {
+            description:
+              'Toggle a specific plugin on/off. This is the preferred way to enable/disable a single plugin.',
+            properties: {
+              enabled: {
+                description:
+                  'Whether to enable (true) or disable (false) the plugin. If not provided, toggles current state.',
+                type: 'boolean',
+              },
+              pluginId: {
+                description:
+                  'The identifier of the plugin to toggle (e.g., "lobe-web-browsing", "lobe-image-generation")',
+                type: 'string',
+              },
+            },
+            required: ['pluginId'],
+            type: 'object',
+          },
         },
         required: [],
         type: 'object',
@@ -175,27 +194,6 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
           },
         },
         required: ['prompt'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Enable or disable a specific plugin for the agent. If enabled is not provided, toggles the current state.',
-      name: AgentBuilderApiName.togglePlugin,
-      parameters: {
-        properties: {
-          enabled: {
-            description:
-              'Whether to enable (true) or disable (false) the plugin. If not provided, toggles current state.',
-            type: 'boolean',
-          },
-          pluginId: {
-            description:
-              'The identifier of the plugin to toggle (e.g., "lobe-web-browsing", "lobe-image-generation")',
-            type: 'string',
-          },
-        },
-        required: ['pluginId'],
         type: 'object',
       },
     },

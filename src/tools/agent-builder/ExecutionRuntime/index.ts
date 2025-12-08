@@ -26,8 +26,6 @@ import type {
   MarketToolItem,
   SearchMarketToolsParams,
   SearchMarketToolsState,
-  TogglePluginParams,
-  TogglePluginState,
   UpdateAgentConfigParams,
   UpdateConfigState,
   UpdatePromptParams,
@@ -170,6 +168,7 @@ export class AgentBuilderExecutionRuntime {
 
   /**
    * Update agent configuration and/or metadata
+   * Now also handles plugin toggle operations in a single update
    */
   async updateAgentConfig(
     agentId: string,
@@ -181,10 +180,44 @@ export class AgentBuilderExecutionRuntime {
       const resultState: UpdateConfigState = { success: true };
       const contentParts: string[] = [];
 
-      // Handle config update
-      if (args.config && Object.keys(args.config).length > 0) {
-        const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
-        const configUpdatedFields = Object.keys(args.config);
+      // Get current config for merging
+      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
+
+      // Build the final config update, merging togglePlugin into config.plugins
+      let finalConfig = args.config ? { ...args.config } : {};
+
+      // Handle togglePlugin - merge into config.plugins
+      if (args.togglePlugin) {
+        const { pluginId, enabled } = args.togglePlugin;
+        const currentPlugins = previousConfig.plugins || [];
+        const isCurrentlyEnabled = currentPlugins.includes(pluginId);
+        const shouldEnable = enabled !== undefined ? enabled : !isCurrentlyEnabled;
+
+        let newPlugins: string[];
+        if (shouldEnable && !isCurrentlyEnabled) {
+          // Enable: add plugin
+          newPlugins = [...currentPlugins, pluginId];
+        } else if (!shouldEnable && isCurrentlyEnabled) {
+          // Disable: remove plugin
+          newPlugins = currentPlugins.filter((id) => id !== pluginId);
+        } else {
+          // No change needed
+          newPlugins = currentPlugins;
+        }
+
+        // Merge plugins into finalConfig
+        finalConfig = { ...finalConfig, plugins: newPlugins };
+
+        resultState.togglePlugin = {
+          enabled: shouldEnable,
+          pluginId,
+        };
+        contentParts.push(`plugin ${pluginId} ${shouldEnable ? 'enabled' : 'disabled'}`);
+      }
+
+      // Handle config update (including merged plugins from togglePlugin)
+      if (Object.keys(finalConfig).length > 0) {
+        const configUpdatedFields = Object.keys(finalConfig);
         const configPreviousValues: Record<string, unknown> = {};
         const configNewValues: Record<string, unknown> = {};
 
@@ -192,17 +225,25 @@ export class AgentBuilderExecutionRuntime {
           configPreviousValues[field] = (previousConfig as unknown as Record<string, unknown>)[
             field
           ];
-          configNewValues[field] = (args.config as unknown as Record<string, unknown>)[field];
+          configNewValues[field] = (finalConfig as unknown as Record<string, unknown>)[field];
         }
 
-        await agentStore.optimisticUpdateAgentConfig(agentId, args.config);
+        await agentStore.optimisticUpdateAgentConfig(agentId, finalConfig);
 
-        resultState.config = {
-          newValues: configNewValues,
-          previousValues: configPreviousValues,
-          updatedFields: configUpdatedFields,
-        };
-        contentParts.push(`config fields: ${configUpdatedFields.join(', ')}`);
+        // Only add config to resultState if there are non-plugin updates
+        const nonPluginFields = configUpdatedFields.filter((f) => f !== 'plugins');
+        if (nonPluginFields.length > 0 || !args.togglePlugin) {
+          resultState.config = {
+            newValues: configNewValues,
+            previousValues: configPreviousValues,
+            updatedFields: configUpdatedFields,
+          };
+          if (!args.togglePlugin) {
+            contentParts.push(`config fields: ${configUpdatedFields.join(', ')}`);
+          } else if (nonPluginFields.length > 0) {
+            contentParts.push(`config fields: ${nonPluginFields.join(', ')}`);
+          }
+        }
       }
 
       // Handle meta update
@@ -246,66 +287,6 @@ export class AgentBuilderExecutionRuntime {
         content: `Failed to update agent: ${err.message}`,
         error,
         state: { success: false } as UpdateConfigState,
-        success: false,
-      };
-    }
-  }
-
-  /**
-   * Toggle plugin (enable/disable)
-   */
-  async togglePlugin(
-    agentId: string,
-    args: TogglePluginParams,
-  ): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const state = getAgentStoreState();
-      // Use agentId to get agent plugins instead of currentAgentPlugins
-      const config = agentSelectors.getAgentConfigById(agentId)(state);
-      const currentPlugins = config.plugins || [];
-
-      const isCurrentlyEnabled = currentPlugins.includes(args.pluginId);
-      const shouldEnable = args.enabled !== undefined ? args.enabled : !isCurrentlyEnabled;
-
-      let newPlugins: string[];
-      if (shouldEnable && !isCurrentlyEnabled) {
-        // Enable: add plugin
-        newPlugins = [...currentPlugins, args.pluginId];
-      } else if (!shouldEnable && isCurrentlyEnabled) {
-        // Disable: remove plugin
-        newPlugins = currentPlugins.filter((id) => id !== args.pluginId);
-      } else {
-        // No change needed
-        newPlugins = currentPlugins;
-      }
-
-      // Update the plugins array
-      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
-        plugins: newPlugins,
-      });
-
-      const action = shouldEnable ? 'enabled' : 'disabled';
-      const content = `Successfully ${action} plugin: ${args.pluginId}`;
-
-      return {
-        content,
-        state: {
-          enabled: shouldEnable,
-          pluginId: args.pluginId,
-          success: true,
-        } as TogglePluginState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to toggle plugin: ${err.message}`,
-        error,
-        state: {
-          enabled: false,
-          pluginId: args.pluginId,
-          success: false,
-        } as TogglePluginState,
         success: false,
       };
     }

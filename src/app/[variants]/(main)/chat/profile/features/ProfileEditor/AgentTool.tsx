@@ -51,6 +51,7 @@ const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label
 const AgentTool = memo(() => {
   const { t } = useTranslation('setting');
   const config = useStore((s) => s.config);
+
   const theme = useTheme();
 
   // Plugin state management
