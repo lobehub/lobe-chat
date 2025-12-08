@@ -10,20 +10,23 @@ import { useUserMemoryStore } from '@/store/userMemory';
 
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
 import FilterBar from './features/FilterBar';
+import IdentityRightPanel from './features/IdentityRightPanel';
 import List, { IdentityType } from './features/List';
 
-const Identities = memo(() => {
+const IdentitiesArea = memo(() => {
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const [searchValue, setSearchValue] = useState('');
   const [typeFilter, setTypeFilter] = useState<IdentityType>('all');
 
   const useFetchIdentities = useUserMemoryStore((s) => s.useFetchIdentities);
-  const { data, isLoading } = useFetchIdentities();
+  const identitiesInit = useUserMemoryStore((s) => s.identitiesInit);
 
-  if (isLoading) return <Loading debugId={'Identities'} />;
+  useFetchIdentities();
+
+  if (!identitiesInit) return <Loading debugId={'Identities'} />;
 
   return (
-    <>
+    <Flexbox flex={1} height={'100%'}>
       <NavHeader
         right={
           <>
@@ -45,15 +48,19 @@ const Identities = memo(() => {
             searchValue={searchValue}
             typeValue={typeFilter}
           />
-          <List
-            data={data || []}
-            searchValue={searchValue}
-            typeFilter={typeFilter}
-            viewMode={viewMode}
-          />
+          <List searchValue={searchValue} typeFilter={typeFilter} viewMode={viewMode} />
         </WideScreenContainer>
       </Flexbox>
-    </>
+    </Flexbox>
+  );
+});
+
+const Identities = memo(() => {
+  return (
+    <Flexbox height={'100%'} horizontal width={'100%'}>
+      <IdentitiesArea />
+      <IdentityRightPanel />
+    </Flexbox>
   );
 });
 

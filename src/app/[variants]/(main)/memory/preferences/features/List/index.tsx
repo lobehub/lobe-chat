@@ -1,37 +1,30 @@
 import { App, Empty } from 'antd';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DisplayPreferenceMemory } from '@/database/repositories/userMemory';
+import { useQueryState } from '@/hooks/useQueryParam';
+import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
 import MasonryView from './MasonryView';
-import PreferenceDrawer from './PreferenceDrawer';
 import TimelineView from './TimelineView';
 
 interface PreferencesListProps {
-  data: DisplayPreferenceMemory[];
   viewMode: ViewMode;
 }
 
-const PreferencesList = memo<PreferencesListProps>(({ data, viewMode }) => {
+const PreferencesList = memo<PreferencesListProps>(({ viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
-  const [selectedPreference, setSelectedPreference] = useState<DisplayPreferenceMemory | null>(
-    null,
-  );
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
+  const [, setPreferenceId] = useQueryState('preferenceId', { clearOnDefault: true });
+  const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
+  const preferences = useUserMemoryStore((s) => s.preferences);
   const deletePreference = useUserMemoryStore((s) => s.deletePreference);
 
-  const handleCardClick = (preference: DisplayPreferenceMemory) => {
-    setSelectedPreference(preference);
-    setDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setDrawerOpen(false);
+  const handleCardClick = (preference: any) => {
+    setPreferenceId(preference.id);
+    toggleRightPanel(true);
   };
 
   const handleDelete = (id: string) => {
@@ -48,22 +41,13 @@ const PreferencesList = memo<PreferencesListProps>(({ data, viewMode }) => {
     });
   };
 
-  if (!data || data.length === 0) return <Empty description={t('preference.empty')} />;
+  if (!preferences || preferences.length === 0)
+    return <Empty description={t('preference.empty')} />;
 
-  return (
-    <>
-      {viewMode === 'timeline' ? (
-        <TimelineView onClick={handleCardClick} onDelete={handleDelete} preferences={data} />
-      ) : (
-        <MasonryView onClick={handleCardClick} onDelete={handleDelete} preferences={data} />
-      )}
-
-      <PreferenceDrawer
-        onClose={handleDrawerClose}
-        open={drawerOpen}
-        preference={selectedPreference}
-      />
-    </>
+  return viewMode === 'timeline' ? (
+    <TimelineView onClick={handleCardClick} onDelete={handleDelete} preferences={preferences} />
+  ) : (
+    <MasonryView onClick={handleCardClick} onDelete={handleDelete} preferences={preferences} />
   );
 });
 

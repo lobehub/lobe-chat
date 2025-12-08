@@ -9,18 +9,20 @@ import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
+import ContextRightPanel from './features/ContextRightPanel';
 import List from './features/List';
 
-const Contexts = memo(() => {
+const ContextsArea = memo(() => {
   const [viewMode, setViewMode] = useState<ViewMode>('masonry');
-
   const useFetchContexts = useUserMemoryStore((s) => s.useFetchContexts);
-  const { data, isLoading } = useFetchContexts();
+  const contextsInit = useUserMemoryStore((s) => s.contextsInit);
 
-  if (isLoading) return <Loading debugId={'Contexts'} />;
+  useFetchContexts();
+
+  if (!contextsInit) return <Loading debugId={'Contexts'} />;
 
   return (
-    <>
+    <Flexbox flex={1} height={'100%'}>
       <NavHeader
         right={
           <>
@@ -36,10 +38,19 @@ const Contexts = memo(() => {
         width={'100%'}
       >
         <WideScreenContainer gap={32} paddingBlock={48}>
-          <List data={data || []} viewMode={viewMode} />
+          <List viewMode={viewMode} />
         </WideScreenContainer>
       </Flexbox>
-    </>
+    </Flexbox>
+  );
+});
+
+const Contexts = memo(() => {
+  return (
+    <Flexbox height={'100%'} horizontal width={'100%'}>
+      <ContextsArea />
+      <ContextRightPanel />
+    </Flexbox>
   );
 });
 

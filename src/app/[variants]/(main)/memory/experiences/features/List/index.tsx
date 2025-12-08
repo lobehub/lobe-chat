@@ -1,37 +1,30 @@
 import { App, Empty } from 'antd';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DisplayExperienceMemory } from '@/database/repositories/userMemory';
+import { useQueryState } from '@/hooks/useQueryParam';
+import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
-import ExperienceDrawer from './ExperienceDrawer';
 import MasonryView from './MasonryView';
 import TimelineView from './TimelineView';
 
 interface ExperiencesListProps {
-  data: DisplayExperienceMemory[];
   viewMode: ViewMode;
 }
 
-const ExperiencesList = memo<ExperiencesListProps>(({ data, viewMode }) => {
+const ExperiencesList = memo<ExperiencesListProps>(({ viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
-  const [selectedExperience, setSelectedExperience] = useState<DisplayExperienceMemory | null>(
-    null,
-  );
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
+  const [, setExperienceId] = useQueryState('experienceId', { clearOnDefault: true });
+  const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
+  const experiences = useUserMemoryStore((s) => s.experiences);
   const deleteExperience = useUserMemoryStore((s) => s.deleteExperience);
 
-  const handleCardClick = (experience: DisplayExperienceMemory) => {
-    setSelectedExperience(experience);
-    setDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setDrawerOpen(false);
+  const handleCardClick = (experience: any) => {
+    setExperienceId(experience.id);
+    toggleRightPanel(true);
   };
 
   const handleDelete = (id: string) => {
@@ -48,22 +41,13 @@ const ExperiencesList = memo<ExperiencesListProps>(({ data, viewMode }) => {
     });
   };
 
-  if (!data || data.length === 0) return <Empty description={t('experience.empty')} />;
+  if (!experiences || experiences.length === 0)
+    return <Empty description={t('experience.empty')} />;
 
-  return (
-    <>
-      {viewMode === 'timeline' ? (
-        <TimelineView experiences={data} onCardClick={handleCardClick} onDelete={handleDelete} />
-      ) : (
-        <MasonryView experiences={data} onClick={handleCardClick} onDelete={handleDelete} />
-      )}
-
-      <ExperienceDrawer
-        experience={selectedExperience}
-        onClose={handleDrawerClose}
-        open={drawerOpen}
-      />
-    </>
+  return viewMode === 'timeline' ? (
+    <TimelineView experiences={experiences} onCardClick={handleCardClick} onDelete={handleDelete} />
+  ) : (
+    <MasonryView experiences={experiences} onClick={handleCardClick} onDelete={handleDelete} />
   );
 });
 
