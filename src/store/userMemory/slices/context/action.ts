@@ -1,4 +1,4 @@
-import { SWRResponse } from 'swr';
+import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DisplayContextMemory } from '@/database/repositories/userMemory';
@@ -10,6 +10,7 @@ import { UserMemoryStore } from '../../store';
 const FETCH_CONTEXTS_KEY = 'useFetchContexts';
 
 export interface ContextAction {
+  deleteContext: (id: string) => Promise<void>;
   useFetchContexts: () => SWRResponse<DisplayContextMemory[]>;
 }
 
@@ -19,6 +20,10 @@ export const createContextSlice: StateCreator<
   [],
   ContextAction
 > = () => ({
+  deleteContext: async (id) => {
+    await memoryCRUDService.deleteContext(id);
+    await mutate(FETCH_CONTEXTS_KEY);
+  },
   useFetchContexts: () =>
     useClientDataSWR(FETCH_CONTEXTS_KEY, memoryCRUDService.getDisplayContexts),
 });

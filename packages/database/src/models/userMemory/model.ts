@@ -24,8 +24,8 @@ import {
   userMemoriesExperiences,
   userMemoriesIdentities,
   userMemoriesPreferences,
-} from '../schemas';
-import { LobeChatDatabase } from '../type';
+} from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 
 const normalizeRelationshipValue = (input: unknown): RelationshipEnum | null => {
   if (input === null) return null;
@@ -191,6 +191,60 @@ export interface UpdateIdentityEntryParams {
   identity?: IdentityEntryPayload;
   identityId: string;
   mergeStrategy?: MergeStrategyEnum;
+}
+
+export interface ContextEntryPayload {
+  associatedObjects?: Record<string, unknown>[] | null;
+  associatedSubjects?: Record<string, unknown>[] | null;
+  currentStatus?: string | null;
+  description?: string | null;
+  descriptionVector?: number[] | null;
+  metadata?: Record<string, unknown> | null;
+  scoreImpact?: number | null;
+  scoreUrgency?: number | null;
+  tags?: string[] | null;
+  title?: string | null;
+  type?: string | null;
+}
+
+export interface UpdateContextEntryParams {
+  context?: ContextEntryPayload;
+  contextId: string;
+}
+
+export interface ExperienceEntryPayload {
+  action?: string | null;
+  actionVector?: number[] | null;
+  keyLearning?: string | null;
+  keyLearningVector?: number[] | null;
+  metadata?: Record<string, unknown> | null;
+  possibleOutcome?: string | null;
+  reasoning?: string | null;
+  scoreConfidence?: number | null;
+  situation?: string | null;
+  situationVector?: number[] | null;
+  tags?: string[] | null;
+  type?: string | null;
+}
+
+export interface UpdateExperienceEntryParams {
+  experience?: ExperienceEntryPayload;
+  experienceId: string;
+}
+
+export interface PreferenceEntryPayload {
+  conclusionDirectives?: string | null;
+  conclusionDirectivesVector?: number[] | null;
+  metadata?: Record<string, unknown> | null;
+  scorePriority?: number | null;
+  suggestions?: string | null;
+  tags?: string[] | null;
+  type?: string | null;
+}
+
+export interface UpdatePreferenceEntryParams {
+  preference?: PreferenceEntryPayload;
+  preferenceId: string;
 }
 
 export class UserMemoryModel {
@@ -767,6 +821,88 @@ export class UserMemoryModel {
         .delete(userMemories)
         .where(
           and(eq(userMemories.id, identity.userMemoryId), eq(userMemories.userId, this.userId)),
+        );
+
+      return true;
+    });
+  };
+
+  removeContextEntry = async (contextId: string): Promise<boolean> => {
+    return this.db.transaction(async (tx) => {
+      const context = await tx.query.userMemoriesContexts.findFirst({
+        where: and(
+          eq(userMemoriesContexts.id, contextId),
+          eq(userMemoriesContexts.userId, this.userId),
+        ),
+      });
+
+      if (!context) {
+        return false;
+      }
+
+      // Delete associated user memories if any
+      const memoryIds = Array.isArray(context.userMemoryIds)
+        ? (context.userMemoryIds as string[])
+        : [];
+      if (memoryIds.length > 0) {
+        await tx
+          .delete(userMemories)
+          .where(and(inArray(userMemories.id, memoryIds), eq(userMemories.userId, this.userId)));
+      }
+
+      // Delete the context entry
+      await tx
+        .delete(userMemoriesContexts)
+        .where(
+          and(eq(userMemoriesContexts.id, contextId), eq(userMemoriesContexts.userId, this.userId)),
+        );
+
+      return true;
+    });
+  };
+
+  removeExperienceEntry = async (experienceId: string): Promise<boolean> => {
+    return this.db.transaction(async (tx) => {
+      const experience = await tx.query.userMemoriesExperiences.findFirst({
+        where: and(
+          eq(userMemoriesExperiences.id, experienceId),
+          eq(userMemoriesExperiences.userId, this.userId),
+        ),
+      });
+
+      if (!experience || !experience.userMemoryId) {
+        return false;
+      }
+
+      // Delete the base user memory (cascade will handle the experience)
+      await tx
+        .delete(userMemories)
+        .where(
+          and(eq(userMemories.id, experience.userMemoryId), eq(userMemories.userId, this.userId)),
+        );
+
+      return true;
+    });
+  };
+
+  removePreferenceEntry = async (preferenceId: string): Promise<boolean> => {
+    return this.db.transaction(async (tx) => {
+      const preference = await tx.query.userMemoriesPreferences.findFirst({
+        where: and(
+          eq(userMemoriesPreferences.id, preferenceId),
+          eq(userMemoriesPreferences.userId, this.userId),
+        ),
+      });
+
+      if (!preference || !preference.userMemoryId) {
+        return false;
+      }
+
+      // Delete the base user memory (cascade will handle the preference)
+      await tx
+        .delete(userMemories)
+        .where(
+          and(eq(userMemories.id, preference.userMemoryId), eq(userMemories.userId, this.userId)),
         );
 
       return true;
