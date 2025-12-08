@@ -1,7 +1,8 @@
-import { Empty } from 'antd';
+import { App, Empty } from 'antd';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useUserMemoryStore } from '@/store/userMemory';
 import { UserMemoryIdentityWithoutVectors } from '@/types/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
@@ -18,7 +19,9 @@ interface IdentitiesListProps {
 }
 
 const IdentitiesList = memo<IdentitiesListProps>(({ data, viewMode, typeFilter, searchValue }) => {
-  const { t } = useTranslation('memory');
+  const { t } = useTranslation(['memory', 'common']);
+  const { modal } = App.useApp();
+  const deleteIdentity = useUserMemoryStore((s) => s.deleteIdentity);
 
   const filteredIdentities = useMemo(() => {
     if (!data) return [];
@@ -51,13 +54,28 @@ const IdentitiesList = memo<IdentitiesListProps>(({ data, viewMode, typeFilter, 
     return filtered;
   }, [data, typeFilter, searchValue]);
 
+  const handleDelete = (id: string) => {
+    modal.confirm({
+      cancelText: t('cancel', { ns: 'common' }),
+      content: t('identity.list.deleteContent'),
+      okButtonProps: { danger: true },
+      okText: t('delete', { ns: 'common' }),
+      onOk: async () => {
+        await deleteIdentity(id);
+      },
+      title: t('identity.list.confirmDelete'),
+      type: 'warning',
+    });
+  };
+
   if (!data || data.length === 0) return <Empty description={t('identity.empty')} />;
 
   if (filteredIdentities.length === 0) return <Empty description={t('identity.list.noResults')} />;
 
-  if (viewMode === 'timeline') return <TimelineView identities={filteredIdentities} />;
+  if (viewMode === 'timeline')
+    return <TimelineView identities={filteredIdentities} onDelete={handleDelete} />;
 
-  return <MasonryView identities={filteredIdentities} />;
+  return <MasonryView identities={filteredIdentities} onDelete={handleDelete} />;
 });
 
 export default IdentitiesList;

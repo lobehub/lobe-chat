@@ -2,6 +2,12 @@ import { CreateUserMemoryIdentitySchema, UpdateUserMemoryIdentitySchema } from '
 import { z } from 'zod';
 
 import { UserMemoryModel } from '@/database/models/userMemory';
+import {
+  UserMemoryContextModel,
+  UserMemoryExperienceModel,
+  UserMemoryIdentityModel,
+  UserMemoryPreferenceModel,
+} from '@/database/models/userMemory/index';
 import { UserMemoryRepo } from '@/database/repositories/userMemory';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -11,6 +17,10 @@ const userMemoryProcedure = authedProcedure.use(serverDatabase).use(async (opts)
 
   return opts.next({
     ctx: {
+      contextModel: new UserMemoryContextModel(ctx.serverDB, ctx.userId),
+      experienceModel: new UserMemoryExperienceModel(ctx.serverDB, ctx.userId),
+      identityModel: new UserMemoryIdentityModel(ctx.serverDB, ctx.userId),
+      preferenceModel: new UserMemoryPreferenceModel(ctx.serverDB, ctx.userId),
       userMemoryModel: new UserMemoryModel(ctx.serverDB, ctx.userId),
       userMemoryRepo: new UserMemoryRepo(ctx.serverDB, ctx.userId),
     },
@@ -36,39 +46,122 @@ export const userMemoryRouter = router({
       });
     }),
 
-  deleteIdentity: userMemoryProcedure
+  // ============ Context CRUD ============
+deleteContext: userMemoryProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.contextModel.delete(input.id);
+    }),
+
+  
+// ============ Experience CRUD ============
+deleteExperience: userMemoryProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.experienceModel.delete(input.id);
+    }),
+
+  
+
+deleteIdentity: userMemoryProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.userMemoryModel.removeIdentityEntry(input.id);
     }),
 
-  getContexts: userMemoryProcedure.query(async ({ ctx }) => {
+  
+
+// ============ Preference CRUD ============
+deletePreference: userMemoryProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.preferenceModel.delete(input.id);
+    }),
+
+  
+
+
+getContexts: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.searchContexts({});
   }),
 
-  getDisplayContexts: userMemoryProcedure.query(async ({ ctx }) => {
+  
+
+
+getDisplayContexts: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryRepo.getDisplayContexts();
   }),
 
-  getDisplayExperiences: userMemoryProcedure.query(async ({ ctx }) => {
+  
+
+
+getDisplayExperiences: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryRepo.getDisplayExperiences();
   }),
 
-  getDisplayPreferences: userMemoryProcedure.query(async ({ ctx }) => {
+  
+
+
+getDisplayPreferences: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryRepo.getDisplayPreferences();
   }),
 
-  getExperiences: userMemoryProcedure.query(async ({ ctx }) => {
+  
+
+
+getExperiences: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.searchExperiences({});
   }),
 
-  getIdentities: userMemoryProcedure.query(async ({ ctx }) => {
+  
+
+  
+
+getIdentities: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.getAllIdentities();
   }),
 
-  getPreferences: userMemoryProcedure.query(async ({ ctx }) => {
+  
+
+getPreferences: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.searchPreferences({});
   }),
+
+  
+
+  
+updateContext: userMemoryProcedure
+    .input(
+      z.object({
+        data: z.object({
+          currentStatus: z.string().optional(),
+          description: z.string().optional(),
+          title: z.string().optional(),
+        }),
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.contextModel.update(input.id, input.data);
+    }),
+
+  
+updateExperience: userMemoryProcedure
+    .input(
+      z.object({
+        data: z.object({
+          action: z.string().optional(),
+          keyLearning: z.string().optional(),
+          situation: z.string().optional(),
+        }),
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.experienceModel.update(input.id, input.data);
+    }),
+
+  
 
   updateIdentity: userMemoryProcedure
     .input(
@@ -89,6 +182,20 @@ export const userMemoryRouter = router({
         },
         identityId: input.id,
       });
+    }),
+
+  updatePreference: userMemoryProcedure
+    .input(
+      z.object({
+        data: z.object({
+          conclusionDirectives: z.string().optional(),
+          suggestions: z.string().optional(),
+        }),
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.preferenceModel.update(input.id, input.data);
     }),
 });
 
