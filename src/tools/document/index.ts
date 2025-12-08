@@ -5,7 +5,10 @@ import { systemPrompt } from './systemRole';
 
 export const DocumentApiName = {
   // Initialize
-  initDocument: 'initDocument',
+  initPage: 'initPage',
+
+  // Document Metadata
+  editTitle: 'editTitle',
 
   // Basic CRUD
   createNode: 'createNode',
@@ -58,7 +61,7 @@ export const DocumentManifest: BuiltinToolManifest = {
     {
       description:
         'Initialize a new document from Markdown content. Converts the Markdown into an XML-structured document with unique IDs for each node. This should be called first before performing any other document operations.',
-      name: DocumentApiName.initDocument,
+      name: DocumentApiName.initPage,
       parameters: {
         properties: {
           markdown: {
@@ -68,6 +71,22 @@ export const DocumentManifest: BuiltinToolManifest = {
           },
         },
         required: ['markdown'],
+        type: 'object',
+      },
+    },
+    // ============ Document Metadata ============
+    {
+      description:
+        'Edit the title of the current document. The title is displayed in the document header and is stored separately from the document content.',
+      name: DocumentApiName.editTitle,
+      parameters: {
+        properties: {
+          title: {
+            description: 'The new title for the document.',
+            type: 'string',
+          },
+        },
+        required: ['title'],
         type: 'object',
       },
     },
@@ -694,7 +713,7 @@ export const DocumentManifest: BuiltinToolManifest = {
       },
     },
   ],
-  identifier: 'lobe-document',
+  identifier: 'lobe-page-agent',
   meta: {
     avatar: '📄',
     description: 'Create, read, update, and delete nodes in XML-structured documents',

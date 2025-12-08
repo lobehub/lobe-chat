@@ -4,6 +4,7 @@ import { useEditorState } from '@lobehub/editor/react';
 import React, { memo, useEffect, useRef } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { pageAgentRuntime } from '@/store/chat/slices/builtinTool/actions/pageAgent';
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
 
@@ -110,6 +111,33 @@ const StoreUpdater = memo<StoreUpdaterProps>(
         setEditorInit(true);
       }
     }, [editor, editorInit]);
+
+    // Connect editor to page agent runtime
+    useEffect(() => {
+      if (editor) {
+        pageAgentRuntime.setEditor(editor);
+      }
+      return () => {
+        pageAgentRuntime.setEditor(null);
+      };
+    }, [editor]);
+
+    // Connect title handlers to page agent runtime
+    useEffect(() => {
+      const titleSetter = (title: string) => {
+        storeApi.setState({ currentTitle: title });
+      };
+
+      const titleGetter = () => {
+        return storeApi.getState().currentTitle;
+      };
+
+      pageAgentRuntime.setTitleHandlers(titleSetter, titleGetter);
+
+      return () => {
+        pageAgentRuntime.setTitleHandlers(null, null);
+      };
+    }, [storeApi]);
 
     return null;
   },

@@ -41,6 +41,7 @@ export type OperationType =
   | 'builtinToolKnowledgeBase' // Builtin tool: knowledge base
   | 'builtinToolMemory' // Builtin tool: user memory
   | 'builtinToolAgentBuilder' // Builtin tool: agent builder
+  | 'builtinToolPageAgent' // Builtin tool: page agent (document editing)
 
   // === Group Chat ===
   | 'supervisorDecision' // Supervisor decision
