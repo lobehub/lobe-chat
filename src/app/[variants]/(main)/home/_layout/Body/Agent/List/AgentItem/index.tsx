@@ -1,31 +1,32 @@
+import { SESSION_CHAT_URL } from '@lobechat/const';
 import type { SidebarAgentItem } from '@lobechat/types';
-import { ActionIcon, Icon, type MenuProps } from '@lobehub/ui';
-import { Dropdown } from '@lobehub/ui';
+import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Loader2, PinIcon } from 'lucide-react';
 import { CSSProperties, DragEvent, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
-import { useDropdownMenu } from '@/app/[variants]/(main)/home/_layout/Body/Agent/List/Item/useDropdownMenu';
+import NavItem from '@/features/NavPanel/components/NavItem';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useHomeStore } from '@/store/home';
 
-import NavItem from '../../../../../../../../../features/NavPanel/components/NavItem';
 import { useAgentModal } from '../../ModalProvider';
-import Actions from './Actions';
+import Actions from '../Item/Actions';
+import { useDropdownMenu } from '../Item/useDropdownMenu';
 import Avatar from './Avatar';
 import Editing from './Editing';
 
-interface SessionItemProps {
+interface AgentItemProps {
   className?: string;
   item: SidebarAgentItem;
   style?: CSSProperties;
 }
 
-const SessionItem = memo<SessionItemProps>(({ item, style, className }) => {
-  const { id, avatar, title, pinned, type, sessionId } = item;
+const AgentItem = memo<AgentItemProps>(({ item, style, className }) => {
+  const { id, avatar, title, pinned, sessionId } = item;
   const { t } = useTranslation('chat');
 
   const theme = useTheme();
@@ -43,6 +44,9 @@ const SessionItem = memo<SessionItemProps>(({ item, style, className }) => {
 
   // Get display title with fallback
   const displayTitle = title || t('untitledAgent');
+
+  // Get URL for this agent
+  const agentUrl = SESSION_CHAT_URL(id, false);
 
   // Memoize event handlers
   const handleDoubleClick = useCallback(() => {
@@ -90,16 +94,16 @@ const SessionItem = memo<SessionItemProps>(({ item, style, className }) => {
     if (isUpdating) {
       return <Icon color={theme.colorTextDescription} icon={Loader2} size={18} spin />;
     }
-    return <Avatar avatar={avatar || ''} type={type} />;
-  }, [isUpdating, avatar, type, theme.colorTextDescription]);
+    return <Avatar avatar={typeof avatar === 'string' ? avatar : ''} />;
+  }, [isUpdating, avatar, theme.colorTextDescription]);
 
   const dropdownMenu: MenuProps['items'] = useDropdownMenu({
     group: undefined, // TODO: pass group from parent if needed
     id,
     openCreateGroupModal: handleOpenCreateGroupModal,
-    parentType: type,
+    parentType: 'agent',
     pinned: pinned ?? false,
-    sessionType: type,
+    sessionType: 'agent',
     toggleEditing,
   });
 
@@ -111,24 +115,26 @@ const SessionItem = memo<SessionItemProps>(({ item, style, className }) => {
         }}
         trigger={['contextMenu']}
       >
-        <NavItem
-          actions={<Actions dropdownMenu={dropdownMenu} />}
-          className={className}
-          disabled={editing || isUpdating}
-          draggable={!editing && !isUpdating}
-          extra={pinIcon}
-          icon={avatarIcon}
-          key={id}
-          loading={isLoading}
-          onDoubleClick={handleDoubleClick}
-          onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
-          style={style}
-          title={displayTitle}
-        />
+        <Link aria-label={id} to={agentUrl}>
+          <NavItem
+            actions={<Actions dropdownMenu={dropdownMenu} />}
+            className={className}
+            disabled={editing || isUpdating}
+            draggable={!editing && !isUpdating}
+            extra={pinIcon}
+            icon={avatarIcon}
+            key={id}
+            loading={isLoading}
+            onDoubleClick={handleDoubleClick}
+            onDragEnd={handleDragEnd}
+            onDragStart={handleDragStart}
+            style={style}
+            title={displayTitle}
+          />
+        </Link>
       </Dropdown>
       <Editing
-        avatar={avatar ?? undefined}
+        avatar={typeof avatar === 'string' ? avatar : undefined}
         id={id}
         title={displayTitle}
         toggleEditing={toggleEditing}
@@ -137,4 +143,4 @@ const SessionItem = memo<SessionItemProps>(({ item, style, className }) => {
   );
 });
 
-export default SessionItem;
+export default AgentItem;
