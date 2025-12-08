@@ -208,6 +208,9 @@ export const conversationControl: StateCreator<
         scope,
         initialState: state,
         initialContext: agentRuntimeContext,
+        // Pass parent operation ID to establish parent-child relationship
+        // This ensures proper cancellation propagation
+        parentOperationId: operationId,
       });
       completeOperation(operationId);
     } catch (error) {
@@ -277,7 +280,7 @@ export const conversationControl: StateCreator<
     const toolMessage = dbMessageSelectors.getDbMessageById(messageId)(get());
     if (!toolMessage) return;
 
-    const { internal_execAgentRuntime } = get();
+    const { internal_execAgentRuntime, startOperation, completeOperation } = get();
 
     // Build effective context from provided context or global state
     const effectiveContext: ConversationContext = context ?? {
@@ -287,6 +290,18 @@ export const conversationControl: StateCreator<
     };
 
     const { agentId, topicId, threadId, scope } = effectiveContext;
+
+    // Create an operation to manage the continue execution
+    const { operationId } = startOperation({
+      type: 'rejectToolCalling',
+      context: {
+        agentId,
+        topicId: topicId ?? undefined,
+        threadId: threadId ?? undefined,
+        scope,
+        messageId,
+      },
+    });
 
     // Get current messages for state construction using context
     const chatKey = messageMapKey({ agentId, topicId, threadId, scope });
@@ -319,9 +334,17 @@ export const conversationControl: StateCreator<
         scope,
         initialState: state,
         initialContext: agentRuntimeContext,
+        // Pass parent operation ID to establish parent-child relationship
+        parentOperationId: operationId,
       });
+      completeOperation(operationId);
     } catch (error) {
-      console.error('[rejectAndContinueToolCalling] Error executing agent runtime:', error);
+      const err = error as Error;
+      console.error('[rejectAndContinueToolCalling] Error executing agent runtime:', err);
+      get().failOperation(operationId, {
+        type: 'rejectToolCalling',
+        message: err.message || 'Unknown error',
+      });
     }
   },
 });
