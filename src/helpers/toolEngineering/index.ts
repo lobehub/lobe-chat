@@ -44,7 +44,6 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
   const builtinManifests = toolStoreState.builtinTools.map(
     (tool) => tool.manifest as LobeChatPluginManifest,
   );
-
   // Get Klavis tool manifests
   const klavisTools = klavisStoreSelectors.klavisAsLobeTools(toolStoreState);
   const klavisManifests = klavisTools

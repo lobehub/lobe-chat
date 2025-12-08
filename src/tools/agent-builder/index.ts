@@ -144,6 +144,29 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
     // ==================== Write Operations ====================
     {
       description:
+        'Install a plugin for the agent. This tool REQUIRES user approval before installation. For MCP marketplace plugins, it will install and enable the plugin. For Klavis tools that need OAuth, it will initiate the connection flow and wait for user to complete authorization.',
+      humanIntervention: 'required',
+      name: AgentBuilderApiName.installPlugin,
+      parameters: {
+        properties: {
+          identifier: {
+            description:
+              'The plugin identifier to install (e.g., "mcp-tavily-search", "google-calendar")',
+            type: 'string',
+          },
+          source: {
+            description:
+              'Plugin source type: "market" for MCP marketplace plugins, "official" for builtin/Klavis tools',
+            enum: ['market', 'official'],
+            type: 'string',
+          },
+        },
+        required: ['identifier', 'source'],
+        type: 'object',
+      },
+    },
+    {
+      description:
         'Update multiple agent configuration fields at once. Use this for bulk updates. For single field updates, prefer specific APIs like setModel, togglePlugin, etc.',
       name: AgentBuilderApiName.updateAgentConfig,
       parameters: {

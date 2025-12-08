@@ -32,6 +32,8 @@ import type {
   GetMetaState,
   GetPromptParams,
   GetPromptState,
+  InstallPluginParams,
+  InstallPluginState,
   MarketToolItem,
   OfficialToolItem,
   SearchMarketToolsParams,
@@ -920,5 +922,198 @@ export class AgentBuilderExecutionRuntime {
 
     // Finish streaming and save
     await agentStore.finishStreamingSystemRole(agentId);
+  }
+
+  // ==================== Plugin Installation ====================
+
+  /**
+   * Install a plugin (MCP marketplace or Klavis/Builtin)
+   * This method prepares the installation state but requires user approval
+   * to actually perform the installation.
+   */
+  async installPlugin(
+    agentId: string,
+    args: InstallPluginParams,
+  ): Promise<BuiltinServerRuntimeOutput> {
+    const { identifier, source } = args;
+
+    try {
+      const toolState = getToolStoreState();
+
+      if (source === 'official') {
+        // Check if it's a Klavis tool
+        const isKlavisEnabled =
+          typeof window !== 'undefined' &&
+          window.global_serverConfigStore?.getState()?.serverConfig?.enableKlavis;
+
+        if (isKlavisEnabled) {
+          // Check if this is a Klavis tool
+          const klavisServer = klavisStoreSelectors
+            .getServers(toolState)
+            .find((s) => s.identifier === identifier);
+
+          // Find Klavis tool info from KLAVIS_SERVER_TYPES
+          const klavisTypeInfo = KLAVIS_SERVER_TYPES.find((t) => t.identifier === identifier);
+
+          if (klavisTypeInfo) {
+            // This is a Klavis tool
+            if (klavisServer) {
+              // Server exists
+              if (klavisServer.status === KlavisServerStatus.CONNECTED) {
+                // Already connected, just enable the plugin
+                const agentState = getAgentStoreState();
+                const currentPlugins =
+                  agentSelectors.getAgentConfigById(agentId)(agentState).plugins || [];
+
+                if (!currentPlugins.includes(identifier)) {
+                  await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+                    plugins: [...currentPlugins, identifier],
+                  });
+                }
+
+                return {
+                  content: `Successfully enabled Klavis tool: ${klavisTypeInfo.label}`,
+                  state: {
+                    installed: true,
+                    isKlavis: true,
+                    pluginId: identifier,
+                    pluginName: klavisTypeInfo.label,
+                    serverStatus: 'connected',
+                    success: true,
+                  } as InstallPluginState,
+                  success: true,
+                };
+              } else if (klavisServer.status === KlavisServerStatus.PENDING_AUTH) {
+                // Needs OAuth authorization - return state requiring user approval
+                return {
+                  content: `Klavis tool "${klavisTypeInfo.label}" requires OAuth authorization. Please complete the authorization in the UI below.`,
+                  state: {
+                    awaitingApproval: true,
+                    installed: false,
+                    isKlavis: true,
+                    oauthUrl: klavisServer.oauthUrl,
+                    pluginId: identifier,
+                    pluginName: klavisTypeInfo.label,
+                    serverName: klavisTypeInfo.serverName,
+                    serverStatus: 'pending_auth',
+                    success: true,
+                  } as InstallPluginState,
+                  success: true,
+                };
+              }
+            } else {
+              // Server doesn't exist yet, return state for creating and connecting
+              return {
+                content: `Klavis tool "${klavisTypeInfo.label}" needs to be connected. Please approve to connect and authorize.`,
+                state: {
+                  awaitingApproval: true,
+                  installed: false,
+                  isKlavis: true,
+                  pluginId: identifier,
+                  pluginName: klavisTypeInfo.label,
+                  serverName: klavisTypeInfo.serverName,
+                  success: true,
+                } as InstallPluginState,
+                success: true,
+              };
+            }
+          }
+        }
+
+        // Not a Klavis tool, check if it's a builtin tool
+        const builtinTools = builtinToolSelectors.metaList(toolState);
+        const builtinTool = builtinTools.find((t) => t.identifier === identifier);
+
+        if (builtinTool) {
+          // It's a builtin tool, just enable it
+          const agentState = getAgentStoreState();
+          const currentPlugins =
+            agentSelectors.getAgentConfigById(agentId)(agentState).plugins || [];
+
+          if (!currentPlugins.includes(identifier)) {
+            await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+              plugins: [...currentPlugins, identifier],
+            });
+          }
+
+          return {
+            content: `Successfully enabled builtin tool: ${builtinTool.meta?.title || identifier}`,
+            state: {
+              installed: true,
+              pluginId: identifier,
+              pluginName: builtinTool.meta?.title || identifier,
+              success: true,
+            } as InstallPluginState,
+            success: true,
+          };
+        }
+
+        return {
+          content: `Official tool "${identifier}" not found.`,
+          error: 'Tool not found',
+          state: {
+            installed: false,
+            pluginId: identifier,
+            success: false,
+          } as InstallPluginState,
+          success: false,
+        };
+      }
+
+      // Source is 'market' - MCP marketplace plugin
+      // Check if already installed
+      const isInstalled = pluginSelectors.isPluginInstalled(identifier)(toolState);
+
+      if (isInstalled) {
+        // Already installed, just enable it for the agent
+        const agentState = getAgentStoreState();
+        const currentPlugins = agentSelectors.getAgentConfigById(agentId)(agentState).plugins || [];
+
+        if (!currentPlugins.includes(identifier)) {
+          await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+            plugins: [...currentPlugins, identifier],
+          });
+        }
+
+        const installedPlugin = pluginSelectors.getInstalledPluginById(identifier)(toolState);
+
+        return {
+          content: `Plugin "${installedPlugin?.manifest?.meta?.title || identifier}" is already installed. Enabled for current agent.`,
+          state: {
+            installed: true,
+            pluginId: identifier,
+            pluginName: installedPlugin?.manifest?.meta?.title || identifier,
+            success: true,
+          } as InstallPluginState,
+          success: true,
+        };
+      }
+
+      // Plugin needs to be installed - return state requiring approval
+      // The actual installation will happen when user approves
+      return {
+        content: `MCP plugin "${identifier}" will be installed. Please approve to continue.`,
+        state: {
+          awaitingApproval: true,
+          installed: false,
+          pluginId: identifier,
+          success: true,
+        } as InstallPluginState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to install plugin: ${err.message}`,
+        error,
+        state: {
+          error: err.message,
+          installed: false,
+          pluginId: identifier,
+          success: false,
+        } as InstallPluginState,
+        success: false,
+      };
+    }
   }
 }

@@ -1,5 +1,7 @@
 import { BuiltinIntervention } from '@lobechat/types';
 
+import { AgentBuilderManifest } from './agent-builder';
+import { AgentBuilderInterventions } from './agent-builder/Intervention';
 import { LocalSystemManifest } from './local-system';
 import { LocalSystemInterventions } from './local-system/Intervention';
 
@@ -9,6 +11,7 @@ import { LocalSystemInterventions } from './local-system/Intervention';
  * Only register APIs that have custom intervention UI
  */
 export const BuiltinToolInterventions: Record<string, Record<string, any>> = {
+  [AgentBuilderManifest.identifier]: AgentBuilderInterventions,
   [LocalSystemManifest.identifier]: LocalSystemInterventions,
 };
 

@@ -11,10 +11,13 @@ export const AgentBuilderApiName = {
   getAvailableModels: 'getAvailableModels',
   getAvailableTools: 'getAvailableTools',
   getPrompt: 'getPrompt',
-  searchMarketTools: 'searchMarketTools',
-  searchOfficialTools: 'searchOfficialTools',
-
   // Write operations
+installPlugin: 'installPlugin',
+  
+searchMarketTools: 'searchMarketTools',
+
+  
+  searchOfficialTools: 'searchOfficialTools',
   setModel: 'setModel',
   setOpeningMessage: 'setOpeningMessage',
   setOpeningQuestions: 'setOpeningQuestions',
@@ -327,4 +330,61 @@ export interface SearchOfficialToolsState {
   query?: string;
   tools: OfficialToolItem[];
   totalCount: number;
+}
+
+// ============== InstallPlugin Types ==============
+
+export interface InstallPluginParams {
+  /**
+   * Plugin identifier to install
+   */
+  identifier: string;
+  /**
+   * Plugin source type: 'market' for MCP marketplace, 'official' for builtin/klavis tools
+   */
+  source: 'market' | 'official';
+}
+
+export interface InstallPluginState {
+  /**
+   * Whether the plugin requires human approval to continue installation
+   * (e.g., Klavis tools need OAuth connection)
+   */
+  awaitingApproval?: boolean;
+  /**
+   * Error message if installation failed
+   */
+  error?: string;
+  /**
+   * Whether the plugin is installed
+   */
+  installed: boolean;
+  /**
+   * Whether the plugin is a Klavis tool that needs OAuth connection
+   */
+  isKlavis?: boolean;
+  /**
+   * Klavis OAuth URL if authorization is needed
+   */
+  oauthUrl?: string;
+  /**
+   * Plugin identifier
+   */
+  pluginId: string;
+  /**
+   * Plugin display name
+   */
+  pluginName?: string;
+  /**
+   * Klavis server name (for Klavis tools)
+   */
+  serverName?: string;
+  /**
+   * Klavis server status
+   */
+  serverStatus?: 'connected' | 'pending_auth' | 'error';
+  /**
+   * Whether the operation was successful
+   */
+  success: boolean;
 }

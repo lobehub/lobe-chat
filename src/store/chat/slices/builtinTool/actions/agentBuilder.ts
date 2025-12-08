@@ -9,6 +9,7 @@ import type {
   GetAvailableModelsParams,
   GetAvailableToolsParams,
   GetPromptParams,
+  InstallPluginParams,
   SearchMarketToolsParams,
   SearchOfficialToolsParams,
   SetModelParams,
@@ -29,6 +30,7 @@ export interface AgentBuilderAction {
   getConfig: (id: string, params: GetAgentConfigParams) => Promise<boolean>;
   getMeta: (id: string, params: GetAgentMetaParams) => Promise<boolean>;
   getPrompt: (id: string, params: GetPromptParams) => Promise<boolean>;
+  installPlugin: (id: string, params: InstallPluginParams) => Promise<boolean>;
   internal_triggerAgentBuilderToolCalling: (
     id: string,
     apiName: string,
@@ -76,13 +78,19 @@ export const agentBuilderSlice: StateCreator<
     return get().internal_triggerAgentBuilderToolCalling(id, 'getPrompt', params);
   },
 
-  // ==================== Internal Helper ====================
+  
 
-  /**
+  
+  installPlugin: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'installPlugin', params);
+  },
+
+  // ==================== Internal Helper ====================
+/**
    * Internal helper to execute agent builder tool calling operations
    * Handles operation tracking, error handling, and state updates
    */
-  internal_triggerAgentBuilderToolCalling: async (id, apiName, params) => {
+internal_triggerAgentBuilderToolCalling: async (id, apiName, params) => {
     // Get parent operationId from messageOperationMap (should be executeToolCall)
     const parentOperationId = get().messageOperationMap[id];
 
@@ -178,6 +186,10 @@ export const agentBuilderSlice: StateCreator<
         }
         case 'searchOfficialTools': {
           result = await runtime.searchOfficialTools(agentId, params as SearchOfficialToolsParams);
+          break;
+        }
+        case 'installPlugin': {
+          result = await runtime.installPlugin(agentId, params as InstallPluginParams);
           break;
         }
         case 'updatePrompt': {
