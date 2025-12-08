@@ -8,9 +8,10 @@ import IdentityCard from './IdentityCard';
 
 interface TimelineViewProps {
   identities: UserMemoryIdentity[];
+  onDelete?: (id: string) => void;
 }
 
-const TimelineView = memo<TimelineViewProps>(({ identities }) => {
+const TimelineView = memo<TimelineViewProps>(({ identities, onDelete }) => {
   return (
     <GenericTimelineView
       data={identities}
@@ -21,7 +22,7 @@ const TimelineView = memo<TimelineViewProps>(({ identities }) => {
       )}
       renderItem={(identity) => (
         <TimelineItemWrapper>
-          <IdentityCard identity={identity} />
+          <IdentityCard identity={identity} onDelete={onDelete} />
         </TimelineItemWrapper>
       )}
     />

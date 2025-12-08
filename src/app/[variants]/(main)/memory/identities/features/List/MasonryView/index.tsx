@@ -7,14 +7,15 @@ import IdentityCard from './IdentityCard';
 
 interface MasonryViewProps {
   identities: UserMemoryIdentity[];
+  onDelete?: (id: string) => void;
 }
 
-const MasonryView = memo<MasonryViewProps>(({ identities }) => {
+const MasonryView = memo<MasonryViewProps>(({ identities, onDelete }) => {
   return (
     <GenericMasonryView
       defaultColumnCount={3}
       items={identities}
-      renderItem={(identity) => <IdentityCard identity={identity} />}
+      renderItem={(identity) => <IdentityCard identity={identity} onDelete={onDelete} />}
     />
   );
 });
