@@ -10,17 +10,19 @@ import { useUserMemoryStore } from '@/store/userMemory';
 
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
 import List from './features/List';
+import PreferenceRightPanel from './features/PreferenceRightPanel';
 
-const Preferences = memo(() => {
+const PreferencesArea = memo(() => {
   const [viewMode, setViewMode] = useState<ViewMode>('masonry');
-
   const useFetchPreferences = useUserMemoryStore((s) => s.useFetchPreferences);
-  const { data, isLoading } = useFetchPreferences();
+  const preferencesInit = useUserMemoryStore((s) => s.preferencesInit);
 
-  if (isLoading) return <Loading debugId={'Preferences'} />;
+  useFetchPreferences();
+
+  if (!preferencesInit) return <Loading debugId={'Preferences'} />;
 
   return (
-    <>
+    <Flexbox flex={1} height={'100%'}>
       <NavHeader
         right={
           <>
@@ -36,10 +38,19 @@ const Preferences = memo(() => {
         width={'100%'}
       >
         <WideScreenContainer gap={32} paddingBlock={48}>
-          <List data={data || []} viewMode={viewMode} />
+          <List viewMode={viewMode} />
         </WideScreenContainer>
       </Flexbox>
-    </>
+    </Flexbox>
+  );
+});
+
+const Preferences = memo(() => {
+  return (
+    <Flexbox height={'100%'} horizontal width={'100%'}>
+      <PreferencesArea />
+      <PreferenceRightPanel />
+    </Flexbox>
   );
 });
 

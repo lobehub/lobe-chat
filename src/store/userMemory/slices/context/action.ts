@@ -8,6 +8,7 @@ import { memoryCRUDService } from '@/services/userMemory/index';
 import { UserMemoryStore } from '../../store';
 
 const FETCH_CONTEXTS_KEY = 'useFetchContexts';
+const n = (namespace: string) => namespace;
 
 export interface ContextAction {
   deleteContext: (id: string) => Promise<void>;
@@ -19,11 +20,22 @@ export const createContextSlice: StateCreator<
   [['zustand/devtools', never]],
   [],
   ContextAction
-> = () => ({
+> = (set) => ({
   deleteContext: async (id) => {
     await memoryCRUDService.deleteContext(id);
     await mutate(FETCH_CONTEXTS_KEY);
   },
   useFetchContexts: () =>
-    useClientDataSWR(FETCH_CONTEXTS_KEY, memoryCRUDService.getDisplayContexts),
+    useClientDataSWR(FETCH_CONTEXTS_KEY, memoryCRUDService.getDisplayContexts, {
+      onSuccess: (data: DisplayContextMemory[] | undefined) => {
+        set(
+          {
+            contexts: data || [],
+            contextsInit: true,
+          },
+          false,
+          n('useFetchContexts/onSuccess'),
+        );
+      },
+    }),
 });
