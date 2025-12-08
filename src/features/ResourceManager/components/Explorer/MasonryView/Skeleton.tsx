@@ -1,13 +1,22 @@
-import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
 const useStyles = createStyles(({ css, token }) => ({
   card: css`
-    padding: 12px;
-    border: 1px solid ${token.colorBorderSecondary};
     border-radius: ${token.borderRadiusLG}px;
-    background: ${token.colorBgContainer};
+    background: ${token.colorFillQuaternary};
+    animation: pulse 1.5s ease-in-out infinite;
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.6;
+      }
+    }
   `,
   grid: css`
     display: grid;
@@ -37,22 +46,13 @@ const MasonryViewSkeleton = memo<MasonrySkeletonProps>(({ columnCount }) => {
       }}
     >
       {Array.from({ length: itemCount }).map((_, index) => (
-        <div className={styles.card} key={index}>
-          <Skeleton
-            active
-            avatar={false}
-            paragraph={{
-              rows: 4,
-              width: ['100%', '90%', '70%', '50%'],
-            }}
-            style={{
-              height: heights[index % heights.length],
-            }}
-            title={{
-              width: '100%',
-            }}
-          />
-        </div>
+        <div
+          className={styles.card}
+          key={index}
+          style={{
+            height: heights[index % heights.length],
+          }}
+        />
       ))}
     </div>
   );
