@@ -1,4 +1,5 @@
 import { DEFAULT_MODEL, DEFAULT_PROVIDER, DEFAUTT_AGENT_TTS_CONFIG } from '@lobechat/const';
+import type { AgentBuilderContext } from '@lobechat/context-engine';
 import { LobeAgentTTSConfig } from '@lobechat/types';
 
 import type { AgentStoreState } from '../initialState';
@@ -43,7 +44,33 @@ const getAgentKnowledgeBasesById = (agentId: string) => (s: AgentStoreState) =>
 const isAgentConfigLoadingById = (agentId: string) => (s: AgentStoreState) =>
   !agentId || !s.agentConfigInitMap[agentId];
 
+/**
+ * Get agent builder context by agentId
+ * Used for injecting current agent config/meta into Agent Builder context
+ */
+const getAgentBuilderContextById =
+  (agentId: string) =>
+  (s: AgentStoreState): AgentBuilderContext => {
+    const config = agentSelectors.getAgentConfigById(agentId)(s);
+    const meta = agentSelectors.getAgentMetaById(agentId)(s);
+
+    return {
+      config: {
+        chatConfig: config.chatConfig,
+        model: config.model,
+        openingMessage: config.openingMessage,
+        openingQuestions: config.openingQuestions,
+        params: config.params,
+        plugins: config.plugins,
+        provider: config.provider,
+        systemRole: config.systemRole,
+      },
+      meta,
+    };
+  };
+
 export const agentByIdSelectors = {
+  getAgentBuilderContextById,
   getAgentConfigById: agentSelectors.getAgentConfigById,
   getAgentFilesById,
   getAgentKnowledgeBasesById,

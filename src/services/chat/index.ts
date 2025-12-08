@@ -16,8 +16,13 @@ import { isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
 import { createAgentToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import {
+  agentByIdSelectors,
+  agentChatConfigSelectors,
+  agentSelectors,
+} from '@/store/agent/selectors';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
+import { getChatStoreState } from '@/store/chat';
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
@@ -26,6 +31,7 @@ import {
   userGeneralSettingsSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
+import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
 import { MemoryManifest } from '@/tools/memory';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
@@ -133,9 +139,22 @@ class ChatService {
       messages,
     });
 
+    // =================== 1.2 build agent builder context =================== //
+
+    // Check if Agent Builder tool is enabled and build context for it
+    // Note: When Agent Builder is active, we need to get the context of the agent being edited,
+    // which is stored in chatStore.activeAgentId, not the targetAgentId (which is the Agent Builder itself)
+    const isAgentBuilderEnabled = enabledToolIds.includes(AGENT_BUILDER_TOOL_ID);
+    const agentBuilderContext = isAgentBuilderEnabled
+      ? agentByIdSelectors.getAgentBuilderContextById(getChatStoreState().activeAgentId || '')(
+          getAgentStoreState(),
+        )
+      : undefined;
+
     // Apply context engineering with preprocessing configuration
     // Note: agentConfig.systemRole is already resolved by resolveAgentConfig for builtin agents
     const modelMessages = await contextEngineering({
+      agentBuilderContext,
       enableHistoryCount:
         agentChatConfigSelectors.getEnableHistoryCountById(targetAgentId)(getAgentStoreState()),
       historyCount:
