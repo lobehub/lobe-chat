@@ -48,15 +48,15 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   },
   {
     group: HotkeyGroupEnum.Essential,
-    id: HotkeyEnum.ToggleZenMode,
-    keys: combineKeys([KeyEnum.Mod, KeyEnum.Backslash]),
-    scopes: [HotkeyScopeEnum.Chat],
+    id: HotkeyEnum.ToggleRightPanel,
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.BracketRight]),
+    scopes: [HotkeyScopeEnum.Global],
   },
   {
     group: HotkeyGroupEnum.Essential,
-    id: HotkeyEnum.ToggleRightPanel,
-    keys: combineKeys([KeyEnum.Mod, KeyEnum.BracketRight]),
-    scopes: [HotkeyScopeEnum.Chat, HotkeyScopeEnum.Image],
+    id: HotkeyEnum.ToggleZenMode,
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Backslash]),
+    scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Essential,
