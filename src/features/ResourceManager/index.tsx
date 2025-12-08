@@ -1,7 +1,8 @@
 'use client';
 
+import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
@@ -21,42 +22,63 @@ export type ResouceManagerMode = 'editor' | 'explorer' | 'page';
  * Business component, no need be reusable.
  */
 const ResourceManager = memo(() => {
-  const [mode, currentViewItemId, libraryId, category, setMode, setCurrentViewItemId] =
+  const theme = useTheme();
+  const [mode, currentViewItemId, libraryId, setMode, setCurrentViewItemId] =
     useResourceManagerStore((s) => [
       s.mode,
       s.currentViewItemId,
       s.libraryId,
-      s.category,
       s.setMode,
       s.setCurrentViewItemId,
     ]);
 
-  const MainContent = useMemo(() => {
-    switch (mode) {
-      case 'page': {
-        return (
-          <PageEditor
-            knowledgeBaseId={libraryId}
-            onBack={() => {
-              setMode('explorer');
-              setCurrentViewItemId(undefined);
-            }}
-            pageId={currentViewItemId}
-          />
-        );
-      }
-      case 'editor': {
-        return <Editor />;
-      }
-      case 'explorer': {
-        return <Explorer />;
-      }
-    }
-  }, [mode, currentViewItemId, libraryId, category]);
+  const handleBack = () => {
+    setMode('explorer');
+    setCurrentViewItemId(undefined);
+  };
 
   return (
     <>
-      <Flexbox height={'100%'}>{MainContent}</Flexbox>
+      <Flexbox height={'100%'} style={{ position: 'relative' }}>
+        {/* Explorer is always rendered to preserve its state */}
+        <Explorer />
+
+        {/* Editor overlay */}
+        {mode === 'editor' && (
+          <Flexbox
+            height={'100%'}
+            style={{
+              backgroundColor: theme.colorBgLayout,
+              inset: 0,
+              position: 'absolute',
+              zIndex: 1,
+            }}
+            width={'100%'}
+          >
+            <Editor />
+          </Flexbox>
+        )}
+
+        {/* PageEditor overlay */}
+        {mode === 'page' && (
+          <Flexbox
+            height={'100%'}
+            style={{
+              backgroundColor: theme.colorBgLayout,
+              inset: 0,
+              position: 'absolute',
+              zIndex: 1,
+            }}
+            width={'100%'}
+          >
+            <PageEditor
+              knowledgeBaseId={libraryId}
+              onBack={handleBack}
+              pageId={currentViewItemId}
+            />
+          </Flexbox>
+        )}
+      </Flexbox>
       <UploadDock />
       <ChunkDrawer />
     </>
