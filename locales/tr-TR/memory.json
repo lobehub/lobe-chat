@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "Sil",
+      "edit": "Düzenle"
+    },
+    "defaultType": "Bağlam",
+    "deleteConfirm": "Bu bağlam hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "deleteTitle": "Bağlam Hafızasını Sil",
+    "description": "Açıklama",
+    "empty": "Henüz bağlam hafızası yok",
+    "impact": "Etkisi",
+    "source": "Kaynak",
+    "urgency": "Aciliyet"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Sil",
+      "edit": "Düzenle"
+    },
+    "confidence": "Güven Düzeyi",
+    "defaultType": "Deneyim",
+    "deleteConfirm": "Bu deneyim hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "deleteTitle": "Deneyim Hafızasını Sil",
+    "empty": "Henüz deneyim hafızası yok",
+    "keyLearning": "Temel Öğrenim",
+    "situation": "Durum",
+    "source": "Kaynak",
+    "steps": {
+      "action": "Eylem",
+      "outcome": "Olası Sonuç",
+      "reasoning": "Muhakeme Süreci",
+      "situation": "Durum Arka Planı"
+    }
+  },
   "identity": {
     "empty": "Henüz kimlik bilgisi yok",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "Zaman çizelgesi"
     }
   },
-  "loading": "Yükleniyor..."
+  "loading": "Yükleniyor...",
+  "preference": {
+    "actions": {
+      "delete": "Sil",
+      "edit": "Düzenle"
+    },
+    "conclusionDirectives": "Sonuç Yönergeleri",
+    "defaultType": "Tercih",
+    "deleteConfirm": "Bu tercih hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "deleteTitle": "Tercih Hafızasını Sil",
+    "empty": "Henüz tercih hafızası yok",
+    "priority": "Öncelik",
+    "source": "Kaynak",
+    "suggestions": "Öneriler"
+  },
+  "tab": {
+    "contexts": "Bağlamlar",
+    "experiences": "Deneyimler",
+    "home": "Ana Sayfa",
+    "identities": "Kimlikler",
+    "preferences": "Tercihler",
+    "search": "Ara"
+  },
+  "viewMode": {
+    "masonry": "Mozaik",
+    "timeline": "Zaman Çizelgesi"
+  }
 }

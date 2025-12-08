@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Извличане на налични модели",
+        "getAvailableTools": "Извличане на налични инструменти",
+        "getConfig": "Извличане на конфигурация",
+        "getMeta": "Извличане на метаданни",
+        "getPrompt": "Извличане на системен подкана",
+        "searchMarketTools": "Търсене в магазина за плъгини",
+        "searchOfficialTools": "Търсене на официални инструменти",
+        "setModel": "Задаване на модел",
+        "setOpeningMessage": "Задаване на начално съобщение",
+        "setOpeningQuestions": "Задаване на начални въпроси",
+        "togglePlugin": "Превключване на плъгин",
+        "updateChatConfig": "Актуализиране на конфигурацията на чата",
+        "updateConfig": "Актуализиране на конфигурацията",
+        "updateMeta": "Актуализиране на метаданните",
+        "updatePrompt": "Актуализиране на системния подкана"
+      },
+      "title": "Създател на агент"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Прочети съдържанието на базата знания",
@@ -23,6 +43,41 @@
         "writeLocalFile": "Запиши файл"
       },
       "title": "Локална система"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Партидно актуализиране на възли",
+        "compareSnapshots": "Сравняване на моментни снимки",
+        "convertToList": "Преобразуване в списък",
+        "createNode": "Създаване на възел",
+        "cropImage": "Изрязване на изображение",
+        "deleteNode": "Изтриване на възел",
+        "deleteSnapshot": "Изтриване на моментна снимка",
+        "deleteTableColumn": "Изтриване на колона от таблица",
+        "deleteTableRow": "Изтриване на ред от таблица",
+        "duplicateNode": "Дублиране на възел",
+        "editTitle": "Редактиране на заглавието на документа",
+        "indentListItem": "Увеличаване на отстъпа на елемент от списък",
+        "initPage": "Инициализиране на документа",
+        "insertTableColumn": "Вмъкване на колона в таблица",
+        "insertTableRow": "Вмъкване на ред в таблица",
+        "listSnapshots": "Списък с моментни снимки",
+        "mergeNodes": "Сливане на възли",
+        "moveNode": "Преместване на възел",
+        "outdentListItem": "Намаляване на отстъпа на елемент от списък",
+        "replaceText": "Замяна на текст",
+        "resizeImage": "Преоразмеряване на изображение",
+        "restoreSnapshot": "Възстановяване на моментна снимка",
+        "rotateImage": "Завъртане на изображение",
+        "saveSnapshot": "Запазване на моментна снимка",
+        "setImageAlt": "Задаване на алтернативен текст на изображение",
+        "splitNode": "Разделяне на възел",
+        "toggleListType": "Превключване на тип списък",
+        "unwrapNode": "Разопаковане на възел",
+        "updateNode": "Актуализиране на възел",
+        "wrapNodes": "Опаковане на възли"
+      },
+      "title": "Документ"
     },
     "lobe-web-browsing": {
       "apiName": {

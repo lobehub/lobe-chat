@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "Verwijderen",
+      "edit": "Bewerken"
+    },
+    "defaultType": "Context",
+    "deleteConfirm": "Weet je zeker dat je dit contextgeheugen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "deleteTitle": "Contextgeheugen Verwijderen",
+    "description": "Beschrijving",
+    "empty": "Geen contextgeheugen beschikbaar",
+    "impact": "Impactniveau",
+    "source": "Bron",
+    "urgency": "Urgentieniveau"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Verwijderen",
+      "edit": "Bewerken"
+    },
+    "confidence": "Vertrouwensniveau",
+    "defaultType": "Ervaring",
+    "deleteConfirm": "Weet je zeker dat je dit ervaringsgeheugen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "deleteTitle": "Ervaringsgeheugen Verwijderen",
+    "empty": "Geen ervaringsgeheugen beschikbaar",
+    "keyLearning": "Belangrijkste Leerpunten",
+    "situation": "Situatie",
+    "source": "Bron",
+    "steps": {
+      "action": "Actie Ondernomen",
+      "outcome": "Mogelijke Uitkomst",
+      "reasoning": "Redenering",
+      "situation": "Situatiecontext"
+    }
+  },
   "identity": {
     "empty": "Geen identiteitsherinneringen beschikbaar",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "Tijdlijn"
     }
   },
-  "loading": "Bezig met laden..."
+  "loading": "Bezig met laden...",
+  "preference": {
+    "actions": {
+      "delete": "Verwijderen",
+      "edit": "Bewerken"
+    },
+    "conclusionDirectives": "Conclusierichtlijnen",
+    "defaultType": "Voorkeur",
+    "deleteConfirm": "Weet je zeker dat je dit voorkeurgeheugen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "deleteTitle": "Voorkeurgeheugen Verwijderen",
+    "empty": "Geen voorkeurgeheugen beschikbaar",
+    "priority": "Prioriteit",
+    "source": "Bron",
+    "suggestions": "Suggesties"
+  },
+  "tab": {
+    "contexts": "Contexten",
+    "experiences": "Ervaringen",
+    "home": "Startpagina",
+    "identities": "Identiteiten",
+    "preferences": "Voorkeuren",
+    "search": "Zoeken"
+  },
+  "viewMode": {
+    "masonry": "Metselwerk",
+    "timeline": "Tijdlijn"
+  }
 }

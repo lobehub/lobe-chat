@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "取得可用模型",
+        "getAvailableTools": "取得可用工具",
+        "getConfig": "取得設定",
+        "getMeta": "取得中繼資料",
+        "getPrompt": "取得系統提示詞",
+        "searchMarketTools": "搜尋外掛市集",
+        "searchOfficialTools": "搜尋官方工具",
+        "setModel": "設定模型",
+        "setOpeningMessage": "設定開場訊息",
+        "setOpeningQuestions": "設定開場問題",
+        "togglePlugin": "切換外掛",
+        "updateChatConfig": "更新對話設定",
+        "updateConfig": "更新設定",
+        "updateMeta": "更新中繼資料",
+        "updatePrompt": "更新系統提示詞"
+      },
+      "title": "Agent 建構器"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "讀取知識庫內容",
@@ -23,6 +43,41 @@
         "writeLocalFile": "寫入檔案"
       },
       "title": "本機系統"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "批次更新節點",
+        "compareSnapshots": "比較快照",
+        "convertToList": "轉換為清單",
+        "createNode": "建立節點",
+        "cropImage": "裁剪圖片",
+        "deleteNode": "刪除節點",
+        "deleteSnapshot": "刪除快照",
+        "deleteTableColumn": "刪除表格欄",
+        "deleteTableRow": "刪除表格列",
+        "duplicateNode": "複製節點",
+        "editTitle": "編輯文件標題",
+        "indentListItem": "縮排清單項目",
+        "initPage": "初始化文件",
+        "insertTableColumn": "插入表格欄",
+        "insertTableRow": "插入表格列",
+        "listSnapshots": "列出快照",
+        "mergeNodes": "合併節點",
+        "moveNode": "移動節點",
+        "outdentListItem": "取消縮排清單項目",
+        "replaceText": "取代文字",
+        "resizeImage": "調整圖片大小",
+        "restoreSnapshot": "還原快照",
+        "rotateImage": "旋轉圖片",
+        "saveSnapshot": "儲存快照",
+        "setImageAlt": "設定圖片替代文字",
+        "splitNode": "拆分節點",
+        "toggleListType": "切換清單類型",
+        "unwrapNode": "解開節點",
+        "updateNode": "更新節點",
+        "wrapNodes": "包裝節點"
+      },
+      "title": "文件"
     },
     "lobe-web-browsing": {
       "apiName": {

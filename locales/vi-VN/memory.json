@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "Xóa",
+      "edit": "Chỉnh sửa"
+    },
+    "defaultType": "Ngữ cảnh",
+    "deleteConfirm": "Bạn có chắc chắn muốn xóa ký ức ngữ cảnh này không? Hành động này không thể hoàn tác.",
+    "deleteTitle": "Xóa ký ức ngữ cảnh",
+    "description": "Mô tả",
+    "empty": "Chưa có ký ức ngữ cảnh nào",
+    "impact": "Mức độ ảnh hưởng",
+    "source": "Nguồn",
+    "urgency": "Mức độ khẩn cấp"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Xóa",
+      "edit": "Chỉnh sửa"
+    },
+    "confidence": "Độ tin cậy",
+    "defaultType": "Kinh nghiệm",
+    "deleteConfirm": "Bạn có chắc chắn muốn xóa ký ức kinh nghiệm này không? Hành động này không thể hoàn tác.",
+    "deleteTitle": "Xóa ký ức kinh nghiệm",
+    "empty": "Chưa có ký ức kinh nghiệm nào",
+    "keyLearning": "Bài học chính",
+    "situation": "Ngữ cảnh",
+    "source": "Nguồn",
+    "steps": {
+      "action": "Hành động đã thực hiện",
+      "outcome": "Kết quả có thể xảy ra",
+      "reasoning": "Quá trình suy luận",
+      "situation": "Bối cảnh tình huống"
+    }
+  },
   "identity": {
     "empty": "Chưa có ký ức danh tính",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "Dòng thời gian"
     }
   },
-  "loading": "Đang tải..."
+  "loading": "Đang tải...",
+  "preference": {
+    "actions": {
+      "delete": "Xóa",
+      "edit": "Chỉnh sửa"
+    },
+    "conclusionDirectives": "Chỉ dẫn kết luận",
+    "defaultType": "Sở thích",
+    "deleteConfirm": "Bạn có chắc chắn muốn xóa ký ức sở thích này không? Hành động này không thể hoàn tác.",
+    "deleteTitle": "Xóa ký ức sở thích",
+    "empty": "Chưa có ký ức sở thích nào",
+    "priority": "Mức độ ưu tiên",
+    "source": "Nguồn",
+    "suggestions": "Đề xuất"
+  },
+  "tab": {
+    "contexts": "Ngữ cảnh",
+    "experiences": "Kinh nghiệm",
+    "home": "Trang chủ",
+    "identities": "Danh tính",
+    "preferences": "Sở thích",
+    "search": "Tìm kiếm"
+  },
+  "viewMode": {
+    "masonry": "Dạng lưới",
+    "timeline": "Dòng thời gian"
+  }
 }

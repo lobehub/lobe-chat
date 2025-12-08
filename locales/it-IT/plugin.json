@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Ottieni modelli disponibili",
+        "getAvailableTools": "Ottieni strumenti disponibili",
+        "getConfig": "Ottieni configurazione",
+        "getMeta": "Ottieni metadati",
+        "getPrompt": "Ottieni prompt di sistema",
+        "searchMarketTools": "Cerca nel marketplace dei plugin",
+        "searchOfficialTools": "Cerca strumenti ufficiali",
+        "setModel": "Imposta modello",
+        "setOpeningMessage": "Imposta messaggio di apertura",
+        "setOpeningQuestions": "Imposta domande iniziali",
+        "togglePlugin": "Attiva/disattiva plugin",
+        "updateChatConfig": "Aggiorna configurazione chat",
+        "updateConfig": "Aggiorna configurazione",
+        "updateMeta": "Aggiorna metadati",
+        "updatePrompt": "Aggiorna prompt di sistema"
+      },
+      "title": "Costruttore di Agenti"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Leggi contenuti della base di conoscenza",
@@ -23,6 +43,41 @@
         "writeLocalFile": "Scrivi nel file"
       },
       "title": "Sistema locale"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Aggiornamento in batch dei nodi",
+        "compareSnapshots": "Confronta istantanee",
+        "convertToList": "Converti in elenco",
+        "createNode": "Crea nodo",
+        "cropImage": "Ritaglia immagine",
+        "deleteNode": "Elimina nodo",
+        "deleteSnapshot": "Elimina istantanea",
+        "deleteTableColumn": "Elimina colonna della tabella",
+        "deleteTableRow": "Elimina riga della tabella",
+        "duplicateNode": "Duplica nodo",
+        "editTitle": "Modifica titolo del documento",
+        "indentListItem": "Aumenta rientro elemento elenco",
+        "initPage": "Inizializza documento",
+        "insertTableColumn": "Inserisci colonna nella tabella",
+        "insertTableRow": "Inserisci riga nella tabella",
+        "listSnapshots": "Elenca istantanee",
+        "mergeNodes": "Unisci nodi",
+        "moveNode": "Sposta nodo",
+        "outdentListItem": "Riduci rientro elemento elenco",
+        "replaceText": "Sostituisci testo",
+        "resizeImage": "Ridimensiona immagine",
+        "restoreSnapshot": "Ripristina istantanea",
+        "rotateImage": "Ruota immagine",
+        "saveSnapshot": "Salva istantanea",
+        "setImageAlt": "Imposta testo alternativo immagine",
+        "splitNode": "Dividi nodo",
+        "toggleListType": "Cambia tipo di elenco",
+        "unwrapNode": "Rimuovi contenitore nodo",
+        "updateNode": "Aggiorna nodo",
+        "wrapNodes": "Raggruppa nodi"
+      },
+      "title": "Documento"
     },
     "lobe-web-browsing": {
       "apiName": {

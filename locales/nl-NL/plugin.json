@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Beschikbare modellen ophalen",
+        "getAvailableTools": "Beschikbare tools ophalen",
+        "getConfig": "Configuratie ophalen",
+        "getMeta": "Metadata ophalen",
+        "getPrompt": "Systeemprompt ophalen",
+        "searchMarketTools": "Plug-inmarkt doorzoeken",
+        "searchOfficialTools": "Officiële tools doorzoeken",
+        "setModel": "Model instellen",
+        "setOpeningMessage": "Openingsbericht instellen",
+        "setOpeningQuestions": "Openingsvragen instellen",
+        "togglePlugin": "Plug-in in-/uitschakelen",
+        "updateChatConfig": "Chatconfiguratie bijwerken",
+        "updateConfig": "Configuratie bijwerken",
+        "updateMeta": "Metadata bijwerken",
+        "updatePrompt": "Systeemprompt bijwerken"
+      },
+      "title": "Agent Builder"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Kennisbankinhoud lezen",
@@ -23,6 +43,41 @@
         "writeLocalFile": "Bestand schrijven"
       },
       "title": "Lokaal systeem"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Batchgewijs knooppunten bijwerken",
+        "compareSnapshots": "Momentopnamen vergelijken",
+        "convertToList": "Converteren naar lijst",
+        "createNode": "Knooppunt aanmaken",
+        "cropImage": "Afbeelding bijsnijden",
+        "deleteNode": "Knooppunt verwijderen",
+        "deleteSnapshot": "Momentopname verwijderen",
+        "deleteTableColumn": "Tabelkolom verwijderen",
+        "deleteTableRow": "Tabelrij verwijderen",
+        "duplicateNode": "Knooppunt dupliceren",
+        "editTitle": "Documenttitel bewerken",
+        "indentListItem": "Lijstitem inspringen",
+        "initPage": "Document initialiseren",
+        "insertTableColumn": "Tabelkolom invoegen",
+        "insertTableRow": "Tabelrij invoegen",
+        "listSnapshots": "Momentopnamen weergeven",
+        "mergeNodes": "Knooppunten samenvoegen",
+        "moveNode": "Knooppunt verplaatsen",
+        "outdentListItem": "Inspringing van lijstitem verwijderen",
+        "replaceText": "Tekst vervangen",
+        "resizeImage": "Afbeelding schalen",
+        "restoreSnapshot": "Momentopname herstellen",
+        "rotateImage": "Afbeelding roteren",
+        "saveSnapshot": "Momentopname opslaan",
+        "setImageAlt": "Alternatieve tekst voor afbeelding instellen",
+        "splitNode": "Knooppunt splitsen",
+        "toggleListType": "Lijsttype wisselen",
+        "unwrapNode": "Knooppunt uitpakken",
+        "updateNode": "Knooppunt bijwerken",
+        "wrapNodes": "Knooppunten verpakken"
+      },
+      "title": "Document"
     },
     "lobe-web-browsing": {
       "apiName": {

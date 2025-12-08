@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Verfügbare Modelle abrufen",
+        "getAvailableTools": "Verfügbare Werkzeuge abrufen",
+        "getConfig": "Konfiguration abrufen",
+        "getMeta": "Metadaten abrufen",
+        "getPrompt": "System-Prompt abrufen",
+        "searchMarketTools": "Plugin-Marktplatz durchsuchen",
+        "searchOfficialTools": "Offizielle Werkzeuge durchsuchen",
+        "setModel": "Modell festlegen",
+        "setOpeningMessage": "Begrüßungsnachricht festlegen",
+        "setOpeningQuestions": "Einstiegsfragen festlegen",
+        "togglePlugin": "Plugin umschalten",
+        "updateChatConfig": "Chat-Konfiguration aktualisieren",
+        "updateConfig": "Konfiguration aktualisieren",
+        "updateMeta": "Metadaten aktualisieren",
+        "updatePrompt": "System-Prompt aktualisieren"
+      },
+      "title": "Agenten-Builder"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Wissensdatenbank lesen",
@@ -23,6 +43,41 @@
         "writeLocalFile": "In Datei schreiben"
       },
       "title": "Lokales System"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Knoten stapelweise aktualisieren",
+        "compareSnapshots": "Schnappschüsse vergleichen",
+        "convertToList": "In Liste umwandeln",
+        "createNode": "Knoten erstellen",
+        "cropImage": "Bild zuschneiden",
+        "deleteNode": "Knoten löschen",
+        "deleteSnapshot": "Schnappschuss löschen",
+        "deleteTableColumn": "Tabellenspalte löschen",
+        "deleteTableRow": "Tabellenzeile löschen",
+        "duplicateNode": "Knoten duplizieren",
+        "editTitle": "Dokumenttitel bearbeiten",
+        "indentListItem": "Listenelement einrücken",
+        "initPage": "Dokument initialisieren",
+        "insertTableColumn": "Tabellenspalte einfügen",
+        "insertTableRow": "Tabellenzeile einfügen",
+        "listSnapshots": "Schnappschüsse auflisten",
+        "mergeNodes": "Knoten zusammenführen",
+        "moveNode": "Knoten verschieben",
+        "outdentListItem": "Einrückung des Listenelements entfernen",
+        "replaceText": "Text ersetzen",
+        "resizeImage": "Bildgröße ändern",
+        "restoreSnapshot": "Schnappschuss wiederherstellen",
+        "rotateImage": "Bild drehen",
+        "saveSnapshot": "Schnappschuss speichern",
+        "setImageAlt": "Alternativtext für Bild festlegen",
+        "splitNode": "Knoten aufteilen",
+        "toggleListType": "Listentyp umschalten",
+        "unwrapNode": "Knoten entpacken",
+        "updateNode": "Knoten aktualisieren",
+        "wrapNodes": "Knoten umschließen"
+      },
+      "title": "Dokument"
     },
     "lobe-web-browsing": {
       "apiName": {

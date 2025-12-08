@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Obtenir les modèles disponibles",
+        "getAvailableTools": "Obtenir les outils disponibles",
+        "getConfig": "Obtenir la configuration",
+        "getMeta": "Obtenir les métadonnées",
+        "getPrompt": "Obtenir l'invite système",
+        "searchMarketTools": "Rechercher dans le marché des plugins",
+        "searchOfficialTools": "Rechercher les outils officiels",
+        "setModel": "Définir le modèle",
+        "setOpeningMessage": "Définir le message d'ouverture",
+        "setOpeningQuestions": "Définir les questions d'ouverture",
+        "togglePlugin": "Activer/Désactiver le plugin",
+        "updateChatConfig": "Mettre à jour la configuration du chat",
+        "updateConfig": "Mettre à jour la configuration",
+        "updateMeta": "Mettre à jour les métadonnées",
+        "updatePrompt": "Mettre à jour l'invite système"
+      },
+      "title": "Créateur d'Agent"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Lire le contenu de la base de connaissances",
@@ -23,6 +43,41 @@
         "writeLocalFile": "Écrire dans le fichier"
       },
       "title": "Système local"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Mettre à jour en lot les nœuds",
+        "compareSnapshots": "Comparer les instantanés",
+        "convertToList": "Convertir en liste",
+        "createNode": "Créer un nœud",
+        "cropImage": "Rogner l'image",
+        "deleteNode": "Supprimer le nœud",
+        "deleteSnapshot": "Supprimer l'instantané",
+        "deleteTableColumn": "Supprimer la colonne du tableau",
+        "deleteTableRow": "Supprimer la ligne du tableau",
+        "duplicateNode": "Dupliquer le nœud",
+        "editTitle": "Modifier le titre du document",
+        "indentListItem": "Augmenter le retrait de l'élément de liste",
+        "initPage": "Initialiser le document",
+        "insertTableColumn": "Insérer une colonne dans le tableau",
+        "insertTableRow": "Insérer une ligne dans le tableau",
+        "listSnapshots": "Lister les instantanés",
+        "mergeNodes": "Fusionner les nœuds",
+        "moveNode": "Déplacer le nœud",
+        "outdentListItem": "Réduire le retrait de l'élément de liste",
+        "replaceText": "Remplacer le texte",
+        "resizeImage": "Redimensionner l'image",
+        "restoreSnapshot": "Restaurer l'instantané",
+        "rotateImage": "Faire pivoter l'image",
+        "saveSnapshot": "Enregistrer l'instantané",
+        "setImageAlt": "Définir le texte alternatif de l'image",
+        "splitNode": "Diviser le nœud",
+        "toggleListType": "Changer le type de liste",
+        "unwrapNode": "Désenvelopper le nœud",
+        "updateNode": "Mettre à jour le nœud",
+        "wrapNodes": "Envelopper les nœuds"
+      },
+      "title": "Document"
     },
     "lobe-web-browsing": {
       "apiName": {

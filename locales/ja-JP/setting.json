@@ -2,6 +2,7 @@
   "about": {
     "title": "について"
   },
+  "advancedSettings": "詳細設定",
   "agentInfoDescription": {
     "basic": {
       "avatar": "アバター",
@@ -75,6 +76,12 @@
       "success": "すべての設定がリセットされました",
       "title": "すべての設定をリセット"
     }
+  },
+  "group": {
+    "aiConfig": "AI 設定",
+    "common": "共通",
+    "profile": "アカウント",
+    "system": "システム"
   },
   "groupTab": {
     "chat": "チャット",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "バージョンの作成に失敗しました: {{message}}",
         "fetchRemoteFailed": "リモートアシスタントデータの取得に失敗しました",
-        "missingIdentifier": "現在のアシスタントにはマーケット識別子がありません",
-        "notAuthenticated": "まずマーケットアカウントにログインしてください",
+        "missingIdentifier": "このアシスタントにはまだコミュニティ識別子がありません",
+        "notAuthenticated": "まずはコミュニティアカウントにログインしてください",
         "publishFailed": "公開に失敗しました: {{message}}"
       },
       "submitButton": "公開",
       "title": {
-        "submit": "アシスタントマーケットに共有",
+        "submit": "アシスタントコミュニティに共有",
         "upload": "新しいバージョンを公開"
       }
     },
     "resultModal": {
-      "message": "アシスタントは審査に提出されました。審査に通過すると自動的に公開されます。「マーケットで確認」をクリックして公開済みのアシスタントを確認できます。",
-      "view": "マーケットで確認"
+      "message": "作成したアシスタントは審査に提出されました。審査に通過すると自動的に公開されます。",
+      "title": "送信成功",
+      "view": "コミュニティで確認"
     },
     "submit": {
-      "button": "マーケットに共有",
-      "tooltip": "アシスタントをマーケットに共有する"
+      "button": "コミュニティに共有",
+      "tooltip": "アシスタントをコミュニティに共有する"
     },
     "upload": {
       "button": "新しいバージョンを公開",
-      "tooltip": "アシスタントマーケットに新しいバージョンを公開する"
+      "tooltip": "新しいバージョンをアシスタントコミュニティに公開"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "アシスタント情報を更新",
     "tag": {
-      "desc": "アシスタントのタグはアシスタントマーケットに表示されます",
+      "desc": "アシスタントのタグはコミュニティ内で表示されます",
       "placeholder": "タグを入力してください",
       "title": "タグ"
     },
@@ -664,7 +672,8 @@
     "identifier": "アシスタント識別子（identifier）",
     "metaMiss": "エージェント情報を入力してから提出してください。名前、説明、タグが必要です。",
     "placeholder": "エージェントの識別子を入力してください。一意である必要があります。例：web-development",
-    "tooltips": "エージェントマーケットに共有"
+    "success": "アシスタントの送信が成功しました",
+    "tooltips": "アシスタントコミュニティに共有"
   },
   "submitFooter": {
     "reset": "リセット",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "について",
     "agent": "デフォルトエージェント",
-    "common": "一般設定",
+    "apikey": "APIキー管理",
+    "common": "外観",
     "experiment": "実験",
     "hotkey": "ショートカットキー",
-    "image": "AI画像生成",
+    "image": "画像生成サービス",
     "llm": "言語モデル",
+    "profile": "マイアカウント",
     "provider": "AIサービスプロバイダー",
     "proxy": "ネットワークプロキシ",
+    "security": "セキュリティ",
+    "stats": "データ統計",
     "storage": "データストレージ",
     "sync": "クラウド同期",
     "system-agent": "システムアシスタント",
-    "tts": "音声サービス"
+    "tts": "音声サービス",
+    "usage": "使用状況"
   },
   "tools": {
+    "add": "プラグインを統合",
     "builtins": {
       "groupName": "組み込み"
     },
@@ -797,6 +812,8 @@
       "tools": "個のツール",
       "verifyAuth": "認証を完了しました"
     },
+    "notInstalled": "未インストール",
+    "notInstalledWarning": "このプラグインはまだインストールされておらず、アシスタントの使用に影響する可能性があります",
     "plugins": {
       "enabled": "{{num}} が有効",
       "groupName": "プラグイン",

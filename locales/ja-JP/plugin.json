@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "利用可能なモデルを取得",
+        "getAvailableTools": "利用可能なツールを取得",
+        "getConfig": "設定を取得",
+        "getMeta": "メタデータを取得",
+        "getPrompt": "システムプロンプトを取得",
+        "searchMarketTools": "プラグインマーケットを検索",
+        "searchOfficialTools": "公式ツールを検索",
+        "setModel": "モデルを設定",
+        "setOpeningMessage": "オープニングメッセージを設定",
+        "setOpeningQuestions": "オープニング質問を設定",
+        "togglePlugin": "プラグインを切り替え",
+        "updateChatConfig": "チャット設定を更新",
+        "updateConfig": "設定を更新",
+        "updateMeta": "メタデータを更新",
+        "updatePrompt": "システムプロンプトを更新"
+      },
+      "title": "エージェントビルダー"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "ナレッジベースの内容を読み取る",
@@ -23,6 +43,41 @@
         "writeLocalFile": "ファイルに書き込む"
       },
       "title": "ローカルシステム"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "ノードを一括更新",
+        "compareSnapshots": "スナップショットを比較",
+        "convertToList": "リストに変換",
+        "createNode": "ノードを作成",
+        "cropImage": "画像をトリミング",
+        "deleteNode": "ノードを削除",
+        "deleteSnapshot": "スナップショットを削除",
+        "deleteTableColumn": "表の列を削除",
+        "deleteTableRow": "表の行を削除",
+        "duplicateNode": "ノードを複製",
+        "editTitle": "ドキュメントタイトルを編集",
+        "indentListItem": "リスト項目をインデント",
+        "initPage": "ドキュメントを初期化",
+        "insertTableColumn": "表に列を挿入",
+        "insertTableRow": "表に行を挿入",
+        "listSnapshots": "スナップショットを一覧表示",
+        "mergeNodes": "ノードを結合",
+        "moveNode": "ノードを移動",
+        "outdentListItem": "リスト項目のインデントを解除",
+        "replaceText": "テキストを置換",
+        "resizeImage": "画像サイズを変更",
+        "restoreSnapshot": "スナップショットを復元",
+        "rotateImage": "画像を回転",
+        "saveSnapshot": "スナップショットを保存",
+        "setImageAlt": "画像の代替テキストを設定",
+        "splitNode": "ノードを分割",
+        "toggleListType": "リストタイプを切り替え",
+        "unwrapNode": "ノードのラップを解除",
+        "updateNode": "ノードを更新",
+        "wrapNodes": "ノードをラップ"
+      },
+      "title": "ドキュメント"
     },
     "lobe-web-browsing": {
       "apiName": {

@@ -44,6 +44,41 @@
       },
       "title": "Local System"
     },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Batch Update Nodes",
+        "compareSnapshots": "Compare Snapshots",
+        "convertToList": "Convert to List",
+        "createNode": "Create Node",
+        "cropImage": "Crop Image",
+        "deleteNode": "Delete Node",
+        "deleteSnapshot": "Delete Snapshot",
+        "deleteTableColumn": "Delete Table Column",
+        "deleteTableRow": "Delete Table Row",
+        "duplicateNode": "Duplicate Node",
+        "editTitle": "Edit Document Title",
+        "indentListItem": "Indent List Item",
+        "initPage": "Initialize Document",
+        "insertTableColumn": "Insert Table Column",
+        "insertTableRow": "Insert Table Row",
+        "listSnapshots": "List Snapshots",
+        "mergeNodes": "Merge Nodes",
+        "moveNode": "Move Node",
+        "outdentListItem": "Outdent List Item",
+        "replaceText": "Replace Text",
+        "resizeImage": "Resize Image",
+        "restoreSnapshot": "Restore Snapshot",
+        "rotateImage": "Rotate Image",
+        "saveSnapshot": "Save Snapshot",
+        "setImageAlt": "Set Image Alt Text",
+        "splitNode": "Split Node",
+        "toggleListType": "Toggle List Type",
+        "unwrapNode": "Unwrap Node",
+        "updateNode": "Update Node",
+        "wrapNodes": "Wrap Nodes"
+      },
+      "title": "Document"
+    },
     "lobe-web-browsing": {
       "apiName": {
         "crawlMultiPages": "Read Multiple Pages",
