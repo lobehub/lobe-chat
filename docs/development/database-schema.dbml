@@ -1,5 +1,5 @@
 table agent_versions {
-  id text [pk, not null]
+  id uuid [pk, not null, default: `gen_random_uuid()`]
   agent_id text [not null]
   user_id text [not null]
   version integer [not null]

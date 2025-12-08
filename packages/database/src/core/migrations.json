@@ -962,14 +962,14 @@
   },
   {
     "sql": [
-      "CREATE TABLE \"agent_versions\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"agent_id\" text NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"version\" integer NOT NULL,\n\t\"title\" varchar(255),\n\t\"description\" varchar(1000),\n\t\"tags\" jsonb,\n\t\"editor_data\" jsonb,\n\t\"avatar\" text,\n\t\"background_color\" text,\n\t\"plugins\" jsonb,\n\t\"chat_config\" jsonb,\n\t\"few_shots\" jsonb,\n\t\"model\" text,\n\t\"params\" jsonb,\n\t\"provider\" text,\n\t\"system_role\" text,\n\t\"tts\" jsonb,\n\t\"opening_message\" text,\n\t\"opening_questions\" text[],\n\t\"change_message\" text,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
-      "\nALTER TABLE \"agent_versions\" ADD CONSTRAINT \"agent_versions_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
-      "\nALTER TABLE \"agent_versions\" ADD CONSTRAINT \"agent_versions_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
-      "\nCREATE INDEX IF NOT EXISTS \"agent_versions_agent_id_idx\" ON \"agent_versions\" USING btree (\"agent_id\");",
-      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"agent_versions_agent_version_unique\" ON \"agent_versions\" USING btree (\"agent_id\",\"version\");"
+      "CREATE TABLE IF NOT EXISTS \"agent_versions\" (\n\t\"id\" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,\n\t\"agent_id\" text NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"version\" integer NOT NULL,\n\t\"title\" varchar(255),\n\t\"description\" varchar(1000),\n\t\"tags\" jsonb,\n\t\"editor_data\" jsonb,\n\t\"avatar\" text,\n\t\"background_color\" text,\n\t\"plugins\" jsonb,\n\t\"chat_config\" jsonb,\n\t\"few_shots\" jsonb,\n\t\"model\" text,\n\t\"params\" jsonb,\n\t\"provider\" text,\n\t\"system_role\" text,\n\t\"tts\" jsonb,\n\t\"opening_message\" text,\n\t\"opening_questions\" text[],\n\t\"change_message\" text,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nDO $$\nBEGIN\n    IF NOT EXISTS (\n        SELECT 1 FROM pg_constraint WHERE conname = 'agent_versions_agent_id_agents_id_fk'\n    ) THEN\n        ALTER TABLE \"agent_versions\" ADD CONSTRAINT \"agent_versions_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;\n    END IF;\nEND $$;\n",
+      "\nDO $$\nBEGIN\n    IF NOT EXISTS (\n        SELECT 1 FROM pg_constraint WHERE conname = 'agent_versions_user_id_users_id_fk'\n    ) THEN\n        ALTER TABLE \"agent_versions\" ADD CONSTRAINT \"agent_versions_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\n    END IF;\nEND $$;\n",
+      "\nCREATE INDEX IF NOT EXISTS \"agent_versions_agent_id_idx\" ON \"agent_versions\" USING btree (\"agent_id\");\n",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"agent_versions_agent_version_unique\" ON \"agent_versions\" USING btree (\"agent_id\",\"version\");\n"
     ],
     "bps": true,
-    "folderMillis": 1765185230353,
-    "hash": "9d04b96458ce5e655f89cb6443e2fc15a0091cc556a9eab7a6005f03a37c4b90"
+    "folderMillis": 1765197497275,
+    "hash": "1541de87b912f226868ca93528205d40c5cf28121cf9faf3f20ce219b0167aa6"
   }
 ]

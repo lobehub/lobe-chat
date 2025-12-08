@@ -9,6 +9,7 @@ import {
   primaryKey,
   text,
   uniqueIndex,
+  uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
@@ -123,10 +124,7 @@ export const agentsFiles = pgTable(
 export const agentVersions = pgTable(
   'agent_versions',
   {
-    id: text('id')
-      .primaryKey()
-      .$defaultFn(() => idGenerator('agentVersions'))
-      .notNull(),
+    id: uuid('id').primaryKey().defaultRandom().notNull(),
 
     agentId: text('agent_id')
       .references(() => agents.id, { onDelete: 'cascade' })

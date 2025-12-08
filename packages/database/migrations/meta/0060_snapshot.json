@@ -1,5 +1,5 @@
 {
-  "id": "d08ccb4a-5339-456a-ae44-4c07622741d2",
+  "id": "ca66ba1b-f787-4f33-b7c0-919301b15ac9",
   "prevId": "efa7a73c-a75e-4d59-bdc9-f0e1815ded31",
   "version": "7",
   "dialect": "postgresql",
@@ -10,9 +10,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "agent_id": {
           "name": "agent_id",
