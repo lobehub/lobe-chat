@@ -1,13 +1,13 @@
 import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
+import { getAgentStoreState } from '@/store/agent';
 import { ChatStore } from '@/store/chat/store';
 import { AgentBuilderExecutionRuntime } from '@/tools/agent-builder/ExecutionRuntime';
 import type {
   GetAvailableModelsParams,
   InstallPluginParams,
   SearchMarketToolsParams,
-  TogglePluginParams,
   UpdateAgentConfigParams,
   UpdatePromptParams,
 } from '@/tools/agent-builder/types';
@@ -23,7 +23,6 @@ export interface AgentBuilderAction {
     params: any,
   ) => Promise<boolean>;
   searchMarketTools: (id: string, params: SearchMarketToolsParams) => Promise<boolean>;
-  togglePlugin: (id: string, params: TogglePluginParams) => Promise<boolean>;
   updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<boolean>;
   updatePrompt: (id: string, params: UpdatePromptParams) => Promise<boolean>;
 }
@@ -82,7 +81,10 @@ export const agentBuilderSlice: StateCreator<
     const context = { operationId };
 
     try {
-      const agentId = get().activeAgentId;
+      // Get target agent ID from AgentStore, not ChatStore
+      // ChatStore's activeAgentId is for message scoping (might be AgentBuilder's own ID)
+      // AgentStore's activeAgentId is the actual target agent being configured
+      const agentId = getAgentStoreState().activeAgentId;
 
       if (!agentId) {
         throw new Error('No active agent found');
@@ -94,10 +96,6 @@ export const agentBuilderSlice: StateCreator<
         case 'updateAgentConfig':
         case 'updateConfig': {
           result = await runtime.updateAgentConfig(agentId, params as UpdateAgentConfigParams);
-          break;
-        }
-        case 'togglePlugin': {
-          result = await runtime.togglePlugin(agentId, params as TogglePluginParams);
           break;
         }
         case 'getAvailableModels': {
@@ -181,10 +179,6 @@ export const agentBuilderSlice: StateCreator<
 
   searchMarketTools: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'searchMarketTools', params);
-  },
-
-  togglePlugin: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'togglePlugin', params);
   },
 
   // ==================== Write Operations ====================
