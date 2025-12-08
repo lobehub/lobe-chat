@@ -1,12 +1,6 @@
 // Extract method signatures from service classes
-type ExtractMethodSignature<T> = T extends (...args: any[]) => infer Output
-  ? Parameters<T> extends []
-    ? () => AlwaysPromise<Output>
-    : Parameters<T> extends [infer Payload]
-      ? undefined extends Payload
-        ? (payload?: Payload) => AlwaysPromise<Output>
-        : (payload: Payload) => AlwaysPromise<Output>
-      : never
+type ExtractMethodSignature<T> = T extends (...args: infer Args) => infer Output
+  ? (...args: Args) => AlwaysPromise<Output>
   : never;
 
 export type ExtractServiceMethods<T> = {
