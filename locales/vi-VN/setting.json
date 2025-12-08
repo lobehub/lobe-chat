@@ -2,6 +2,7 @@
   "about": {
     "title": "Về chúng tôi"
   },
+  "advancedSettings": "Cài đặt nâng cao",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Ảnh đại diện",
@@ -75,6 +76,12 @@
       "success": "Đã đặt lại tất cả cài đặt",
       "title": "Đặt lại tất cả cài đặt"
     }
+  },
+  "group": {
+    "aiConfig": "Cấu hình AI",
+    "common": "Chung",
+    "profile": "Tài khoản",
+    "system": "Hệ thống"
   },
   "groupTab": {
     "chat": "Trò chuyện",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "Tạo phiên bản thất bại: {{message}}",
         "fetchRemoteFailed": "Không thể lấy dữ liệu trợ lý từ xa",
-        "missingIdentifier": "Trợ lý hiện tại chưa có định danh thị trường",
-        "notAuthenticated": "Vui lòng đăng nhập tài khoản thị trường trước",
+        "missingIdentifier": "Trợ lý hiện tại chưa có định danh cộng đồng",
+        "notAuthenticated": "Vui lòng đăng nhập tài khoản cộng đồng trước",
         "publishFailed": "Phát hành thất bại: {{message}}"
       },
       "submitButton": "Phát hành",
       "title": {
-        "submit": "Chia sẻ lên thị trường trợ lý",
+        "submit": "Chia sẻ lên cộng đồng trợ lý",
         "upload": "Phát hành phiên bản mới"
       }
     },
     "resultModal": {
-      "message": "Trợ lý đã được gửi để kiểm duyệt, sẽ tự động hiển thị sau khi được phê duyệt. Nhấn “Xem trên thị trường” để xem trợ lý đã phát hành.",
-      "view": "Xem trên thị trường"
+      "message": "Trợ lý bạn đã tạo đã được gửi để kiểm duyệt. Sau khi được phê duyệt, nó sẽ tự động được công bố.",
+      "title": "Gửi thành công",
+      "view": "Xem trên cộng đồng"
     },
     "submit": {
-      "button": "Chia sẻ lên thị trường",
-      "tooltip": "Chia sẻ trợ lý lên thị trường"
+      "button": "Chia sẻ lên cộng đồng",
+      "tooltip": "Chia sẻ trợ lý lên cộng đồng"
     },
     "upload": {
       "button": "Phát hành phiên bản mới",
-      "tooltip": "Phát hành phiên bản mới lên thị trường trợ lý"
+      "tooltip": "Phát hành phiên bản mới lên cộng đồng trợ lý"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "Cập nhật thông tin trợ lý",
     "tag": {
-      "desc": "Thẻ trợ lý sẽ được hiển thị trong thị trường trợ lý",
+      "desc": "Thẻ trợ lý sẽ được hiển thị trong cộng đồng trợ lý",
       "placeholder": "Vui lòng nhập nhãn",
       "title": "Nhãn"
     },
@@ -664,7 +672,8 @@
     "identifier": "Định danh trợ lý (identifier)",
     "metaMiss": "Vui lòng điền đầy đủ thông tin trợ lý trước khi gửi, cần bao gồm tên, mô tả và nhãn",
     "placeholder": "Vui lòng nhập nhận dạng trợ lý, cần phải duy nhất, ví dụ như phát triển web",
-    "tooltips": "Chia sẻ lên thị trường trợ lý"
+    "success": "Gửi trợ lý thành công",
+    "tooltips": "Chia sẻ lên cộng đồng trợ lý"
   },
   "submitFooter": {
     "reset": "Đặt lại",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "Về chúng tôi",
     "agent": "Trợ lý mặc định",
-    "common": "Cài đặt chung",
+    "apikey": "Quản lý API Key",
+    "common": "Giao diện",
     "experiment": "Thử nghiệm",
     "hotkey": "Phím tắt",
-    "image": "Vẽ AI",
+    "image": "Dịch vụ vẽ",
     "llm": "Mô hình ngôn ngữ",
+    "profile": "Tài khoản của tôi",
     "provider": "Nhà cung cấp AI",
     "proxy": "Mạng proxy",
+    "security": "Bảo mật",
+    "stats": "Thống kê dữ liệu",
     "storage": "Lưu trữ dữ liệu",
     "sync": "Đồng bộ trên đám mây",
     "system-agent": "Trợ lý hệ thống",
-    "tts": "Dịch vụ giọng nói"
+    "tts": "Dịch vụ giọng nói",
+    "usage": "Thống kê sử dụng"
   },
   "tools": {
+    "add": "Tích hợp plugin",
     "builtins": {
       "groupName": "Mở rộng tích hợp sẵn"
     },
@@ -797,6 +812,8 @@
       "tools": "công cụ",
       "verifyAuth": "Tôi đã hoàn tất xác thực"
     },
+    "notInstalled": "Chưa cài đặt",
+    "notInstalledWarning": "Plugin hiện tại chưa được cài đặt, có thể ảnh hưởng đến việc sử dụng trợ lý",
     "plugins": {
       "enabled": "Đã kích hoạt {{num}}",
       "groupName": "Tiện ích",

@@ -2,6 +2,7 @@
   "about": {
     "title": "Informazioni"
   },
+  "advancedSettings": "Impostazioni avanzate",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -75,6 +76,12 @@
       "success": "Tutte le impostazioni sono state ripristinate con successo",
       "title": "Ripristina tutte le impostazioni"
     }
+  },
+  "group": {
+    "aiConfig": "Configurazione AI",
+    "common": "Generale",
+    "profile": "Account",
+    "system": "Sistema"
   },
   "groupTab": {
     "chat": "Chat",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "Creazione della versione fallita: {{message}}",
         "fetchRemoteFailed": "Impossibile recuperare i dati dell'assistente remoto",
-        "missingIdentifier": "L'assistente attuale non ha ancora un identificatore di mercato",
-        "notAuthenticated": "Accedi prima al tuo account del mercato",
+        "missingIdentifier": "L'assistente attuale non ha un identificatore della community",
+        "notAuthenticated": "Accedi prima al tuo account della community",
         "publishFailed": "Pubblicazione fallita: {{message}}"
       },
       "submitButton": "Pubblica",
       "title": {
-        "submit": "Condividi nel mercato degli assistenti",
+        "submit": "Condividi nella community degli assistenti",
         "upload": "Pubblica nuova versione"
       }
     },
     "resultModal": {
-      "message": "L'assistente è stato inviato per la revisione. Una volta approvato, sarà pubblicato automaticamente. Clicca su \"Visualizza nel mercato\" per vedere l'assistente pubblicato.",
-      "view": "Visualizza nel mercato"
+      "message": "Il tuo assistente è stato inviato per la revisione. Una volta approvato, sarà pubblicato automaticamente.",
+      "title": "Inviato con successo",
+      "view": "Vai alla community per visualizzare"
     },
     "submit": {
-      "button": "Condividi nel mercato",
-      "tooltip": "Condividi l'assistente nel mercato"
+      "button": "Condividi nella community",
+      "tooltip": "Condividi l'assistente nella community"
     },
     "upload": {
       "button": "Pubblica nuova versione",
-      "tooltip": "Pubblica una nuova versione nel mercato degli assistenti"
+      "tooltip": "Pubblica una nuova versione nella community degli assistenti"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "Aggiorna informazioni assistente",
     "tag": {
-      "desc": "Le etichette dell'assistente verranno visualizzate nel mercato degli assistenti",
+      "desc": "I tag dell'assistente saranno visibili nella community degli assistenti",
       "placeholder": "Inserisci un'etichetta",
       "title": "Etichetta"
     },
@@ -664,7 +672,8 @@
     "identifier": "Identificatore dell'assistente (identifier)",
     "metaMiss": "Si prega di completare le informazioni dell'assistente prima di inviare, è necessario includere nome, descrizione e tag",
     "placeholder": "Inserisci l'identificatore dell'assistente, deve essere univoco, ad esempio sviluppo-web",
-    "tooltips": "Condividi sul mercato degli assistenti"
+    "success": "Assistente inviato con successo",
+    "tooltips": "Condividi nella community degli assistenti"
   },
   "submitFooter": {
     "reset": "Ripristina",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "Informazioni",
     "agent": "Assistente predefinito",
-    "common": "Impostazioni comuni",
+    "apikey": "Gestione API Key",
+    "common": "Aspetto",
     "experiment": "实验",
     "hotkey": "Scorciatoie",
-    "image": "Disegno AI",
+    "image": "Servizio di disegno",
     "llm": "Modello linguistico",
+    "profile": "Il mio account",
     "provider": "Fornitore di servizi AI",
     "proxy": "Proxy di rete",
+    "security": "Sicurezza",
+    "stats": "Statistiche",
     "storage": "Storage dati",
     "sync": "云端同步",
     "system-agent": "Assistente di sistema",
-    "tts": "Servizio vocale"
+    "tts": "Servizio vocale",
+    "usage": "Statistiche di utilizzo"
   },
   "tools": {
+    "add": "Integra plugin",
     "builtins": {
       "groupName": "Predefiniti"
     },
@@ -797,6 +812,8 @@
       "tools": "strumenti",
       "verifyAuth": "Ho completato l'autenticazione"
     },
+    "notInstalled": "Non installato",
+    "notInstalledWarning": "Il plugin attuale non è installato, il che potrebbe influire sull'utilizzo dell'assistente",
     "plugins": {
       "enabled": "Abilitato {{num}}",
       "groupName": "Plugin",

@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Kullanılabilir modelleri al",
+        "getAvailableTools": "Kullanılabilir araçları al",
+        "getConfig": "Yapılandırmayı al",
+        "getMeta": "Meta verileri al",
+        "getPrompt": "Sistem istemini al",
+        "searchMarketTools": "Eklenti pazarında ara",
+        "searchOfficialTools": "Resmi araçları ara",
+        "setModel": "Modeli ayarla",
+        "setOpeningMessage": "Açılış mesajını ayarla",
+        "setOpeningQuestions": "Açılış sorularını ayarla",
+        "togglePlugin": "Eklentiyi değiştir",
+        "updateChatConfig": "Sohbet yapılandırmasını güncelle",
+        "updateConfig": "Yapılandırmayı güncelle",
+        "updateMeta": "Meta verileri güncelle",
+        "updatePrompt": "Sistem istemini güncelle"
+      },
+      "title": "Temsilci Oluşturucu"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Bilgi tabanını oku",
@@ -23,6 +43,41 @@
         "writeLocalFile": "Dosyaya yaz"
       },
       "title": "Yerel Sistem"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Düğümleri toplu güncelle",
+        "compareSnapshots": "Anlık görüntüleri karşılaştır",
+        "convertToList": "Listeye dönüştür",
+        "createNode": "Düğüm oluştur",
+        "cropImage": "Görseli kırp",
+        "deleteNode": "Düğümü sil",
+        "deleteSnapshot": "Anlık görüntüyü sil",
+        "deleteTableColumn": "Tablo sütununu sil",
+        "deleteTableRow": "Tablo satırını sil",
+        "duplicateNode": "Düğümü kopyala",
+        "editTitle": "Belge başlığını düzenle",
+        "indentListItem": "Liste öğesini girintile",
+        "initPage": "Belgeyi başlat",
+        "insertTableColumn": "Tablo sütunu ekle",
+        "insertTableRow": "Tablo satırı ekle",
+        "listSnapshots": "Anlık görüntüleri listele",
+        "mergeNodes": "Düğümleri birleştir",
+        "moveNode": "Düğümü taşı",
+        "outdentListItem": "Liste öğesinin girintisini kaldır",
+        "replaceText": "Metni değiştir",
+        "resizeImage": "Görseli yeniden boyutlandır",
+        "restoreSnapshot": "Anlık görüntüyü geri yükle",
+        "rotateImage": "Görseli döndür",
+        "saveSnapshot": "Anlık görüntüyü kaydet",
+        "setImageAlt": "Görsel alternatif metnini ayarla",
+        "splitNode": "Düğümü böl",
+        "toggleListType": "Liste türünü değiştir",
+        "unwrapNode": "Düğümün paketini aç",
+        "updateNode": "Düğümü güncelle",
+        "wrapNodes": "Düğümleri paketle"
+      },
+      "title": "Belge"
     },
     "lobe-web-browsing": {
       "apiName": {

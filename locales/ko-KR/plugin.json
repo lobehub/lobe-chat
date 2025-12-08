@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "사용 가능한 모델 가져오기",
+        "getAvailableTools": "사용 가능한 도구 가져오기",
+        "getConfig": "설정 가져오기",
+        "getMeta": "메타데이터 가져오기",
+        "getPrompt": "시스템 프롬프트 가져오기",
+        "searchMarketTools": "플러그인 마켓 검색",
+        "searchOfficialTools": "공식 도구 검색",
+        "setModel": "모델 설정",
+        "setOpeningMessage": "시작 메시지 설정",
+        "setOpeningQuestions": "시작 질문 설정",
+        "togglePlugin": "플러그인 전환",
+        "updateChatConfig": "채팅 설정 업데이트",
+        "updateConfig": "설정 업데이트",
+        "updateMeta": "메타데이터 업데이트",
+        "updatePrompt": "시스템 프롬프트 업데이트"
+      },
+      "title": "에이전트 빌더"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "지식 베이스 내용 읽기",
@@ -23,6 +43,41 @@
         "writeLocalFile": "파일 쓰기"
       },
       "title": "로컬 시스템"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "노드 일괄 업데이트",
+        "compareSnapshots": "스냅샷 비교",
+        "convertToList": "목록으로 변환",
+        "createNode": "노드 생성",
+        "cropImage": "이미지 자르기",
+        "deleteNode": "노드 삭제",
+        "deleteSnapshot": "스냅샷 삭제",
+        "deleteTableColumn": "표 열 삭제",
+        "deleteTableRow": "표 행 삭제",
+        "duplicateNode": "노드 복제",
+        "editTitle": "문서 제목 편집",
+        "indentListItem": "목록 항목 들여쓰기",
+        "initPage": "문서 초기화",
+        "insertTableColumn": "표 열 삽입",
+        "insertTableRow": "표 행 삽입",
+        "listSnapshots": "스냅샷 목록",
+        "mergeNodes": "노드 병합",
+        "moveNode": "노드 이동",
+        "outdentListItem": "목록 항목 내어쓰기",
+        "replaceText": "텍스트 교체",
+        "resizeImage": "이미지 크기 조정",
+        "restoreSnapshot": "스냅샷 복원",
+        "rotateImage": "이미지 회전",
+        "saveSnapshot": "스냅샷 저장",
+        "setImageAlt": "이미지 대체 텍스트 설정",
+        "splitNode": "노드 분할",
+        "toggleListType": "목록 유형 전환",
+        "unwrapNode": "노드 풀기",
+        "updateNode": "노드 업데이트",
+        "wrapNodes": "노드 감싸기"
+      },
+      "title": "문서"
     },
     "lobe-web-browsing": {
       "apiName": {

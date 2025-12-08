@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "Löschen",
+      "edit": "Bearbeiten"
+    },
+    "defaultType": "Kontext",
+    "deleteConfirm": "Möchten Sie diesen Kontextspeicher wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteTitle": "Kontextspeicher löschen",
+    "description": "Beschreibung",
+    "empty": "Keine Kontextspeicher vorhanden",
+    "impact": "Auswirkungsgrad",
+    "source": "Quelle",
+    "urgency": "Dringlichkeit"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Löschen",
+      "edit": "Bearbeiten"
+    },
+    "confidence": "Vertrauensgrad",
+    "defaultType": "Erfahrung",
+    "deleteConfirm": "Möchten Sie diesen Erfahrungsspeicher wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteTitle": "Erfahrungsspeicher löschen",
+    "empty": "Keine Erfahrungsspeicher vorhanden",
+    "keyLearning": "Zentrale Erkenntnis",
+    "situation": "Kontext",
+    "source": "Quelle",
+    "steps": {
+      "action": "Maßnahme",
+      "outcome": "Mögliches Ergebnis",
+      "reasoning": "Begründung",
+      "situation": "Situationshintergrund"
+    }
+  },
   "identity": {
     "empty": "Keine Identitätserinnerung vorhanden",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "Zeitleiste"
     }
   },
-  "loading": "Wird geladen..."
+  "loading": "Wird geladen...",
+  "preference": {
+    "actions": {
+      "delete": "Löschen",
+      "edit": "Bearbeiten"
+    },
+    "conclusionDirectives": "Schlussfolgerungsanweisungen",
+    "defaultType": "Präferenz",
+    "deleteConfirm": "Möchten Sie diesen Präferenzspeicher wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteTitle": "Präferenzspeicher löschen",
+    "empty": "Keine Präferenzspeicher vorhanden",
+    "priority": "Priorität",
+    "source": "Quelle",
+    "suggestions": "Vorschläge"
+  },
+  "tab": {
+    "contexts": "Kontexte",
+    "experiences": "Erfahrungen",
+    "home": "Startseite",
+    "identities": "Identitäten",
+    "preferences": "Präferenzen",
+    "search": "Suche"
+  },
+  "viewMode": {
+    "masonry": "Kachelansicht",
+    "timeline": "Zeitstrahl"
+  }
 }

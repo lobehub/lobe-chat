@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "Supprimer",
+      "edit": "Modifier"
+    },
+    "defaultType": "Contexte",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir contextuel ? Cette action est irréversible.",
+    "deleteTitle": "Supprimer le souvenir contextuel",
+    "description": "Description",
+    "empty": "Aucun souvenir contextuel pour le moment",
+    "impact": "Impact",
+    "source": "Source",
+    "urgency": "Urgence"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Supprimer",
+      "edit": "Modifier"
+    },
+    "confidence": "Niveau de confiance",
+    "defaultType": "Expérience",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir d'expérience ? Cette action est irréversible.",
+    "deleteTitle": "Supprimer le souvenir d'expérience",
+    "empty": "Aucun souvenir d'expérience pour le moment",
+    "keyLearning": "Apprentissage clé",
+    "situation": "Contexte",
+    "source": "Source",
+    "steps": {
+      "action": "Action entreprise",
+      "outcome": "Résultat possible",
+      "reasoning": "Raisonnement",
+      "situation": "Contexte de la situation"
+    }
+  },
   "identity": {
     "empty": "Aucun souvenir d'identité pour le moment",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "Chronologie"
     }
   },
-  "loading": "Chargement..."
+  "loading": "Chargement...",
+  "preference": {
+    "actions": {
+      "delete": "Supprimer",
+      "edit": "Modifier"
+    },
+    "conclusionDirectives": "Directives de conclusion",
+    "defaultType": "Préférence",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir de préférence ? Cette action est irréversible.",
+    "deleteTitle": "Supprimer le souvenir de préférence",
+    "empty": "Aucun souvenir de préférence pour le moment",
+    "priority": "Priorité",
+    "source": "Source",
+    "suggestions": "Suggestions"
+  },
+  "tab": {
+    "contexts": "Contextes",
+    "experiences": "Expériences",
+    "home": "Accueil",
+    "identities": "Identités",
+    "preferences": "Préférences",
+    "search": "Recherche"
+  },
+  "viewMode": {
+    "masonry": "Grille",
+    "timeline": "Chronologie"
+  }
 }

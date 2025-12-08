@@ -2,6 +2,7 @@
   "about": {
     "title": "Sobre"
   },
+  "advancedSettings": "Configurações Avançadas",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -75,6 +76,12 @@
       "success": "Todas as configurações foram redefinidas com sucesso",
       "title": "Redefinir Todas as Configurações"
     }
+  },
+  "group": {
+    "aiConfig": "Configuração de IA",
+    "common": "Geral",
+    "profile": "Conta",
+    "system": "Sistema"
   },
   "groupTab": {
     "chat": "Bate-papo",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "Falha ao criar versão: {{message}}",
         "fetchRemoteFailed": "Falha ao obter dados do assistente remoto",
-        "missingIdentifier": "O assistente atual ainda não possui um identificador de mercado",
-        "notAuthenticated": "Por favor, faça login na conta do mercado",
+        "missingIdentifier": "Este assistente ainda não possui um identificador da comunidade",
+        "notAuthenticated": "Por favor, faça login na sua conta da comunidade",
         "publishFailed": "Falha na publicação: {{message}}"
       },
       "submitButton": "Publicar",
       "title": {
-        "submit": "Compartilhar no Mercado de Assistentes",
+        "submit": "Compartilhar na Comunidade de Assistentes",
         "upload": "Publicar Nova Versão"
       }
     },
     "resultModal": {
-      "message": "O assistente foi enviado para revisão. Após aprovação, será publicado automaticamente. Clique em \"Ver no Mercado\" para visualizar o assistente publicado.",
-      "view": "Ver no Mercado"
+      "message": "Seu assistente foi enviado para revisão. Após aprovação, será publicado automaticamente.",
+      "title": "Enviado com Sucesso",
+      "view": "Ver na Comunidade"
     },
     "submit": {
-      "button": "Compartilhar no Mercado",
-      "tooltip": "Compartilhar assistente no mercado"
+      "button": "Compartilhar na Comunidade",
+      "tooltip": "Compartilhe seu assistente com a comunidade"
     },
     "upload": {
       "button": "Publicar Nova Versão",
-      "tooltip": "Publicar nova versão no mercado de assistentes"
+      "tooltip": "Publicar nova versão na Comunidade de Assistentes"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "Atualizar informações do assistente",
     "tag": {
-      "desc": "As etiquetas do assistente serão exibidas no mercado de assistentes",
+      "desc": "As tags do assistente serão exibidas na Comunidade de Assistentes",
       "placeholder": "Digite a etiqueta",
       "title": "Etiqueta"
     },
@@ -664,7 +672,8 @@
     "identifier": "Identificador do Assistente (identifier)",
     "metaMiss": "Por favor, complete as informações do assistente antes de enviar, incluindo nome, descrição e etiqueta",
     "placeholder": "Insira o identificador único do assistente, como por exemplo, desenvolvimento-web",
-    "tooltips": "Compartilhar no mercado de assistentes"
+    "success": "Assistente enviado com sucesso",
+    "tooltips": "Compartilhar na Comunidade de Assistentes"
   },
   "submitFooter": {
     "reset": "Redefinir",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "Sobre",
     "agent": "Assistente Padrão",
-    "common": "Configurações Comuns",
+    "apikey": "Gerenciamento de API Key",
+    "common": "Aparência",
     "experiment": "Experimento",
     "hotkey": "Atalhos",
-    "image": "Desenho com IA",
+    "image": "Serviço de Ilustração",
     "llm": "Modelo de Linguagem",
+    "profile": "Minha Conta",
     "provider": "Fornecedor de IA",
     "proxy": "Proxy de Rede",
+    "security": "Segurança",
+    "stats": "Estatísticas",
     "storage": "Armazenamento de Dados",
     "sync": "Sincronização na nuvem",
     "system-agent": "Assistente do Sistema",
-    "tts": "Serviço de Voz"
+    "tts": "Serviço de Voz",
+    "usage": "Estatísticas de Uso"
   },
   "tools": {
+    "add": "Integrar Plugin",
     "builtins": {
       "groupName": "Integrados"
     },
@@ -797,6 +812,8 @@
       "tools": "ferramentas",
       "verifyAuth": "Concluí a autenticação"
     },
+    "notInstalled": "Não Instalado",
+    "notInstalledWarning": "O plugin atual não está instalado, o que pode afetar o funcionamento do assistente",
     "plugins": {
       "enabled": "Ativado {{num}}",
       "groupName": "Plugins",

@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "削除",
+      "edit": "編集"
+    },
+    "defaultType": "コンテキスト",
+    "deleteConfirm": "このコンテキストメモリを削除してもよろしいですか？この操作は元に戻せません。",
+    "deleteTitle": "コンテキストメモリの削除",
+    "description": "説明",
+    "empty": "コンテキストメモリはありません",
+    "impact": "影響度",
+    "source": "出典",
+    "urgency": "緊急度"
+  },
+  "experience": {
+    "actions": {
+      "delete": "削除",
+      "edit": "編集"
+    },
+    "confidence": "確信度",
+    "defaultType": "経験",
+    "deleteConfirm": "この経験メモリを削除してもよろしいですか？この操作は元に戻せません。",
+    "deleteTitle": "経験メモリの削除",
+    "empty": "経験メモリはありません",
+    "keyLearning": "重要な学び",
+    "situation": "状況",
+    "source": "出典",
+    "steps": {
+      "action": "取った行動",
+      "outcome": "想定される結果",
+      "reasoning": "推論過程",
+      "situation": "状況背景"
+    }
+  },
   "identity": {
     "empty": "現在、記憶されているアイデンティティはありません",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "タイムライン"
     }
   },
-  "loading": "読み込み中..."
+  "loading": "読み込み中...",
+  "preference": {
+    "actions": {
+      "delete": "削除",
+      "edit": "編集"
+    },
+    "conclusionDirectives": "結論指示",
+    "defaultType": "好み",
+    "deleteConfirm": "この好みのメモリを削除してもよろしいですか？この操作は元に戻せません。",
+    "deleteTitle": "好みのメモリの削除",
+    "empty": "好みのメモリはありません",
+    "priority": "優先度",
+    "source": "出典",
+    "suggestions": "提案"
+  },
+  "tab": {
+    "contexts": "コンテキスト",
+    "experiences": "経験",
+    "home": "ホーム",
+    "identities": "アイデンティティ",
+    "preferences": "好み",
+    "search": "検索"
+  },
+  "viewMode": {
+    "masonry": "マルチカラム",
+    "timeline": "タイムライン"
+  }
 }

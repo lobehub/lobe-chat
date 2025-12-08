@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "刪除",
+      "edit": "編輯"
+    },
+    "defaultType": "情境",
+    "deleteConfirm": "確定要刪除此情境記憶嗎？此操作無法恢復。",
+    "deleteTitle": "刪除情境記憶",
+    "description": "描述",
+    "empty": "暫無情境記憶",
+    "impact": "影響度",
+    "source": "來源",
+    "urgency": "緊急度"
+  },
+  "experience": {
+    "actions": {
+      "delete": "刪除",
+      "edit": "編輯"
+    },
+    "confidence": "置信度",
+    "defaultType": "經驗",
+    "deleteConfirm": "確定要刪除此經驗記憶嗎？此操作無法恢復。",
+    "deleteTitle": "刪除經驗記憶",
+    "empty": "暫無經驗記憶",
+    "keyLearning": "關鍵學習",
+    "situation": "情境",
+    "source": "來源",
+    "steps": {
+      "action": "採取行動",
+      "outcome": "可能結果",
+      "reasoning": "推理過程",
+      "situation": "情境背景"
+    }
+  },
   "identity": {
     "empty": "暫無身份記憶",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "時間軸"
     }
   },
-  "loading": "載入中..."
+  "loading": "載入中...",
+  "preference": {
+    "actions": {
+      "delete": "刪除",
+      "edit": "編輯"
+    },
+    "conclusionDirectives": "結論指令",
+    "defaultType": "偏好",
+    "deleteConfirm": "確定要刪除此偏好記憶嗎？此操作無法恢復。",
+    "deleteTitle": "刪除偏好記憶",
+    "empty": "暫無偏好記憶",
+    "priority": "優先順序",
+    "source": "來源",
+    "suggestions": "建議"
+  },
+  "tab": {
+    "contexts": "情境",
+    "experiences": "經驗",
+    "home": "首頁",
+    "identities": "身份",
+    "preferences": "偏好",
+    "search": "搜尋"
+  },
+  "viewMode": {
+    "masonry": "瀑布流",
+    "timeline": "時間軸"
+  }
 }

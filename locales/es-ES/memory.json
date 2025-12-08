@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "Eliminar",
+      "edit": "Editar"
+    },
+    "defaultType": "Contexto",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta memoria de contexto? Esta acción no se puede deshacer.",
+    "deleteTitle": "Eliminar memoria de contexto",
+    "description": "Descripción",
+    "empty": "No hay memorias de contexto disponibles",
+    "impact": "Impacto",
+    "source": "Fuente",
+    "urgency": "Urgencia"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Eliminar",
+      "edit": "Editar"
+    },
+    "confidence": "Nivel de confianza",
+    "defaultType": "Experiencia",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta memoria de experiencia? Esta acción no se puede deshacer.",
+    "deleteTitle": "Eliminar memoria de experiencia",
+    "empty": "No hay memorias de experiencia disponibles",
+    "keyLearning": "Aprendizaje clave",
+    "situation": "Contexto",
+    "source": "Fuente",
+    "steps": {
+      "action": "Acción tomada",
+      "outcome": "Resultado posible",
+      "reasoning": "Razonamiento",
+      "situation": "Situación de fondo"
+    }
+  },
   "identity": {
     "empty": "No hay recuerdos de identidad por ahora",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "Línea de tiempo"
     }
   },
-  "loading": "Cargando..."
+  "loading": "Cargando...",
+  "preference": {
+    "actions": {
+      "delete": "Eliminar",
+      "edit": "Editar"
+    },
+    "conclusionDirectives": "Directrices de conclusión",
+    "defaultType": "Preferencia",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta memoria de preferencia? Esta acción no se puede deshacer.",
+    "deleteTitle": "Eliminar memoria de preferencia",
+    "empty": "No hay memorias de preferencia disponibles",
+    "priority": "Prioridad",
+    "source": "Fuente",
+    "suggestions": "Sugerencias"
+  },
+  "tab": {
+    "contexts": "Contextos",
+    "experiences": "Experiencias",
+    "home": "Inicio",
+    "identities": "Identidades",
+    "preferences": "Preferencias",
+    "search": "Buscar"
+  },
+  "viewMode": {
+    "masonry": "Mosaico",
+    "timeline": "Línea de tiempo"
+  }
 }

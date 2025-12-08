@@ -2,6 +2,7 @@
   "about": {
     "title": "Acerca de"
   },
+  "advancedSettings": "Configuración avanzada",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -75,6 +76,12 @@
       "success": "Se han restablecido todas las configuraciones",
       "title": "Restablecer todas las configuraciones"
     }
+  },
+  "group": {
+    "aiConfig": "Configuración de IA",
+    "common": "General",
+    "profile": "Cuenta",
+    "system": "Sistema"
   },
   "groupTab": {
     "chat": "Chat",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "Error al crear la versión: {{message}}",
         "fetchRemoteFailed": "Error al obtener los datos del asistente remoto",
-        "missingIdentifier": "El asistente actual no tiene un identificador de mercado",
-        "notAuthenticated": "Por favor, inicia sesión en tu cuenta del mercado",
+        "missingIdentifier": "Este asistente aún no tiene un identificador de comunidad",
+        "notAuthenticated": "Por favor, inicia sesión en tu cuenta de la comunidad",
         "publishFailed": "Error al publicar: {{message}}"
       },
       "submitButton": "Publicar",
       "title": {
-        "submit": "Compartir en el mercado de asistentes",
+        "submit": "Compartir en la comunidad de asistentes",
         "upload": "Publicar nueva versión"
       }
     },
     "resultModal": {
-      "message": "El asistente ha sido enviado para revisión. Una vez aprobado, se publicará automáticamente. Haz clic en «Ver en el mercado» para ver el asistente publicado.",
-      "view": "Ver en el mercado"
+      "message": "Tu asistente ha sido enviado para revisión. Una vez aprobado, se publicará automáticamente.",
+      "title": "Envío exitoso",
+      "view": "Ver en la comunidad"
     },
     "submit": {
-      "button": "Compartir en el mercado",
-      "tooltip": "Comparte el asistente en el mercado"
+      "button": "Compartir en la comunidad",
+      "tooltip": "Comparte tu asistente con la comunidad"
     },
     "upload": {
       "button": "Publicar nueva versión",
-      "tooltip": "Publica una nueva versión en el mercado de asistentes"
+      "tooltip": "Publicar nueva versión en la comunidad de asistentes"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "Actualizar información del asistente",
     "tag": {
-      "desc": "Las etiquetas del asistente se mostrarán en el mercado de asistentes",
+      "desc": "Las etiquetas del asistente se mostrarán en la comunidad de asistentes",
       "placeholder": "Ingresa la etiqueta",
       "title": "Etiqueta"
     },
@@ -664,7 +672,8 @@
     "identifier": "Identificador del asistente (identifier)",
     "metaMiss": "Por favor complete la información del asistente antes de enviar, debe incluir nombre, descripción y etiquetas",
     "placeholder": "Ingrese el identificador único del asistente, por ejemplo desarrollo-web",
-    "tooltips": "Compartir en el mercado de asistentes"
+    "success": "Asistente enviado con éxito",
+    "tooltips": "Compartir en la comunidad de asistentes"
   },
   "submitFooter": {
     "reset": "Restablecer",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "Acerca de",
     "agent": "Asistente predeterminado",
-    "common": "Configuración común",
+    "apikey": "Gestión de API Keys",
+    "common": "Apariencia",
     "experiment": "Experimento",
     "hotkey": "Atajos de teclado",
-    "image": "Dibujo con IA",
+    "image": "Servicio de ilustración",
     "llm": "Modelo de lenguaje",
+    "profile": "Mi cuenta",
     "provider": "Proveedor de servicios de IA",
     "proxy": "Proxy de red",
+    "security": "Seguridad",
+    "stats": "Estadísticas",
     "storage": "Almacenamiento de datos",
     "sync": "Sincronización en la nube",
     "system-agent": "Asistente del sistema",
-    "tts": "Servicio de voz"
+    "tts": "Servicio de voz",
+    "usage": "Estadísticas de uso"
   },
   "tools": {
+    "add": "Integrar complemento",
     "builtins": {
       "groupName": "Incorporados"
     },
@@ -797,6 +812,8 @@
       "tools": "herramientas",
       "verifyAuth": "He completado la autenticación"
     },
+    "notInstalled": "No instalado",
+    "notInstalledWarning": "Este complemento no está instalado, lo que podría afectar el funcionamiento del asistente",
     "plugins": {
       "enabled": "Habilitados {{num}}",
       "groupName": "Complementos",
