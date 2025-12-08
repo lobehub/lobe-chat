@@ -2,6 +2,165 @@
 
 # Changelog
 
+## [Version 2.0.0-next.163](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.162...v2.0.0-next.163)
+
+<sup>Released on **2025-12-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add smooth scroll to top on 'More' button click in Title component.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add smooth scroll to top on 'More' button click in Title component, closes [#10178](https://github.com/lobehub/lobe-chat/issues/10178) ([5ad4f0c](https://github.com/lobehub/lobe-chat/commit/5ad4f0c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.162](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.161...v2.0.0-next.162)
+
+<sup>Released on **2025-12-05**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.161](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.160...v2.0.0-next.161)
+
+<sup>Released on **2025-12-05**</sup>
+
+#### ✨ Features
+
+- **misc**: Support klavis mcp connector.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support klavis mcp connector, closes [#10584](https://github.com/lobehub/lobe-chat/issues/10584) ([e3ec79e](https://github.com/lobehub/lobe-chat/commit/e3ec79e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.160](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.159...v2.0.0-next.160)
+
+<sup>Released on **2025-12-05**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.159](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.158...v2.0.0-next.159)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### ✨ Features
+
+- **misc**: Betterauth username signin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Betterauth username signin, closes [#10607](https://github.com/lobehub/lobe-chat/issues/10607) ([f72a5e6](https://github.com/lobehub/lobe-chat/commit/f72a5e6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.158](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.157...v2.0.0-next.158)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Limit check-user response surface.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Limit check-user response surface, closes [#10609](https://github.com/lobehub/lobe-chat/issues/10609) ([2f6d3f0](https://github.com/lobehub/lobe-chat/commit/2f6d3f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.157](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.156...v2.0.0-next.157)
+
+<sup>Released on **2025-12-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Spark X1.5 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Spark X1.5 model, closes [#10103](https://github.com/lobehub/lobe-chat/issues/10103) ([d1aca26](https://github.com/lobehub/lobe-chat/commit/d1aca26))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.156](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.155...v2.0.0-next.156)
 
 <sup>Released on **2025-12-04**</sup>

@@ -775,11 +775,36 @@
       "groupName": "Mở rộng tích hợp sẵn"
     },
     "disabled": "Mô hình hiện tại không hỗ trợ gọi hàm, không thể sử dụng plugin",
+    "klavis": {
+      "addServer": "Thêm máy chủ",
+      "authCompleted": "Xác thực hoàn tất",
+      "authFailed": "Xác thực thất bại",
+      "authRequired": "Yêu cầu xác thực",
+      "connected": "Đã kết nối",
+      "error": "Lỗi",
+      "groupName": "Công cụ Klavis",
+      "manage": "Quản lý Klavis",
+      "manageTitle": "Quản lý tích hợp Klavis",
+      "noServers": "Chưa có máy chủ nào được kết nối",
+      "notEnabled": "Dịch vụ Klavis chưa được kích hoạt",
+      "oauthRequired": "Vui lòng hoàn tất xác thực OAuth trong cửa sổ mới",
+      "pendingAuth": "Đang chờ xác thực",
+      "serverCreated": "Tạo máy chủ thành công",
+      "serverCreatedFailed": "Tạo máy chủ thất bại",
+      "serverRemoved": "Máy chủ đã bị xóa",
+      "servers": "máy chủ",
+      "tools": "công cụ",
+      "verifyAuth": "Tôi đã hoàn tất xác thực"
+    },
     "plugins": {
       "enabled": "Đã kích hoạt {{num}}",
       "groupName": "Tiện ích",
       "noEnabled": "Chưa có tiện ích nào được kích hoạt",
       "store": "Cửa hàng tiện ích"
+    },
+    "tabs": {
+      "all": "Tất cả",
+      "installed": "Đã bật"
     },
     "title": "Công cụ mở rộng"
   }

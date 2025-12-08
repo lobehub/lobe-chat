@@ -57,7 +57,7 @@ const isLogin = (s: UserStore) => {
 
 export const authSelectors = {
   authProviders: (s: UserStore): SSOProvider[] => s.authProviders || [],
-  isEmailPasswordAuth: (s: UserStore) => s.isEmailPasswordAuth ?? false,
+  hasPasswordAccount: (s: UserStore) => s.hasPasswordAccount ?? false,
   isLoaded: (s: UserStore) => s.isLoaded,
   isLoadedAuthProviders: (s: UserStore) => s.isLoadedAuthProviders ?? false,
   isLogin,

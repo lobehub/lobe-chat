@@ -25,6 +25,7 @@ export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerMod
 export interface GlobalServerConfig {
   aiProvider: ServerLanguageModel;
   defaultAgent?: PartialDeep<UserDefaultAgent>;
+  enableKlavis?: boolean;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;
   /**

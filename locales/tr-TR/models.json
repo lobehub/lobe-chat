@@ -221,6 +221,9 @@
   "MiniMax-M2": {
     "description": "Verimli kodlama ve Agent iş akışları için özel olarak tasarlandı."
   },
+  "MiniMax-M2-Stable": {
+    "description": "Yüksek verimli kodlama ve Agent iş akışları için özel olarak tasarlanmıştır, daha yüksek eşzamanlılık ve ticari kullanım için uygundur."
+  },
   "MiniMax-Text-01": {
     "description": "MiniMax-01 serisi modellerinde cesur yenilikler yaptık: ilk kez büyük ölçekli lineer dikkat mekanizmasını gerçekleştirdik, geleneksel Transformer mimarisi artık tek seçenek değil. Bu modelin parametre sayısı 456 milyara kadar çıkmakta, tek bir aktivasyonda 45.9 milyar. Modelin genel performansı, yurtdışındaki en iyi modellerle karşılaştırılabilirken, dünya genelinde 4 milyon token uzunluğundaki bağlamı verimli bir şekilde işleyebilir, bu da GPT-4o'nun 32 katı, Claude-3.5-Sonnet'in 20 katıdır."
   },
@@ -298,6 +301,9 @@
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905, Kimi K2'nin en yeni ve en güçlü versiyonudur. Bu, toplamda 1 trilyon parametreye ve 32 milyar aktif parametreye sahip, üst düzey bir Hibrit Uzman (MoE) dil modelidir. Modelin başlıca özellikleri şunlardır: geliştirilmiş ajan kodlama zekası, açık benchmark testlerinde ve gerçek dünya ajan kodlama görevlerinde belirgin performans artışı; ön uç kodlama deneyiminde iyileştirmeler, ön uç programlamada estetik ve işlevsellik açısından ilerlemeler."
+  },
+  "Pro/moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking Turbo, Kimi K2 serisinin Turbo versiyonudur. Akıl yürütme hızı ve işlem hacmi açısından optimize edilmiştir ve aynı zamanda K2 Thinking’in çok adımlı akıl yürütme ve araç kullanımı yeteneklerini korur. Model, yaklaşık 1T toplam parametreye sahip karma uzman (MoE) mimarisi üzerine kuruludur, doğal olarak 256K bağlamı destekler ve büyük ölçekli araç çağrılarını istikrarlı bir şekilde gerçekleştirebilir. Gecikme ve eşzamanlılık gereksinimlerinin yüksek olduğu üretim senaryoları için uygundur."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview, karmaşık diyalog oluşturma ve bağlam anlama görevlerini etkili bir şekilde işleyebilen yenilikçi bir doğal dil işleme modelidir."
@@ -1052,6 +1058,9 @@
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2, açık kaynaklı bir karışık uzman kod modelidir, kod görevlerinde mükemmel performans sergiler ve GPT4-Turbo ile karşılaştırılabilir."
   },
+  "deepseek-ocr": {
+    "description": "DeepSeek-OCR, DeepSeek AI tarafından geliştirilen bir görsel-dil modelidir. Optik karakter tanıma (OCR) ve \"bağlamsal optik sıkıştırma\" üzerine odaklanır. Bu model, görsellerden bağlam bilgisini sıkıştırma sınırlarını keşfetmeyi amaçlar, belgeleri verimli bir şekilde işleyerek Markdown gibi yapılandırılmış metin formatlarına dönüştürebilir. Görsellerdeki metinleri doğru şekilde tanıyabilir ve özellikle belge dijitalleştirme, metin çıkarımı ve yapılandırılmış veri işleme gibi uygulamalar için uygundur."
+  },
   "deepseek-r1": {
     "description": "DeepSeek-R1, tekrarlayan öğrenme (RL) destekli bir çıkarım modelidir ve modeldeki tekrarlama ve okunabilirlik sorunlarını çözmektedir. RL'den önce, DeepSeek-R1 soğuk başlangıç verilerini tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer bir performans sergilemekte ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmaktadır."
   },
@@ -1268,6 +1277,9 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision görsel derin düşünme modeli, eğitim, görüntü denetimi, denetim ve güvenlik ile AI arama ve soru-cevap gibi senaryolarda daha güçlü genel çok modlu anlama ve akıl yürütme yetenekleri sergiler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 64k token olabilir."
   },
+  "doubao-seed-code": {
+    "description": "Doubao-Seed-Code, Agentic programlama görevleri için derinlemesine optimize edilmiştir. Çok modlu (metin/görsel/video) desteği ve 256K uzun bağlam kapasitesi sunar, Anthropic API ile uyumludur. Programlama, görsel anlama ve Agent senaryoları için uygundur."
+  },
   "doubao-seededit-3-0-i2i-250628": {
     "description": "Doubao resim oluşturma modeli, ByteDance Seed ekibi tarafından geliştirilmiştir; metin ve resim girişini destekler, yüksek kontrol ve kaliteli resim oluşturma deneyimi sunar. Metin komutlarıyla görüntü düzenlemeyi destekler ve oluşturulan görüntülerin kenar uzunluğu 512 ile 1536 piksel arasındadır."
   },
@@ -1327,6 +1339,9 @@
   },
   "ernie-4.5-vl-28b-a3b": {
     "description": "ERNIE 4.5 VL 28B A3B, çok modlu açık kaynak modeli, görsel-metin anlama ve çıkarım görevlerini destekler."
+  },
+  "ernie-5.0-thinking-latest": {
+    "description": "Wenxin 5.0 Thinking, yerel tam modlu amiral gemisi modelidir. Metin, görsel, ses ve video gibi tüm modaliteleri tek bir modelde birleştirir. Kapsamlı yetenek yükseltmeleriyle karmaşık soru-cevap, içerik üretimi ve akıllı ajan senaryoları için uygundur."
   },
   "ernie-5.0-thinking-preview": {
     "description": "Wenxin 5.0 Thinking Önizleme Sürümü, yerel tam modlu amiral gemisi modeli, metin, görsel, ses ve video için birleşik modelleme desteği sunar, karmaşık soru-cevap, yaratım ve akıllı ajan senaryoları için uygundur."
@@ -2198,9 +2213,6 @@
   "kimi-latest": {
     "description": "Kimi akıllı asistan ürünü, en son Kimi büyük modelini kullanır ve henüz kararlı olmayan özellikler içerebilir. Görüntü anlayışını desteklerken, isteğin bağlam uzunluğuna göre 8k/32k/128k modelini faturalama modeli olarak otomatik olarak seçecektir."
   },
-  "kimi-thinking-preview": {
-    "description": "kimi-thinking-preview modeli, Ay'ın karanlık yüzü tarafından sunulan çok modlu akıl yürütme ve genel akıl yürütme yeteneklerine sahip çok modlu düşünme modelidir; derin akıl yürütmede uzmandır ve daha zor sorunların çözümüne yardımcı olur."
-  },
   "kuaishou/kat-coder-pro-v1": {
     "description": "KAT-Coder-Pro-V1 (sınırlı süreli ücretsiz), kod anlama ve otomatik programlama üzerine odaklanır; verimli programlama ajan görevleri için uygundur."
   },
@@ -2245,9 +2257,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Llama 3.3 komut ince ayarlı modeli, diyalog senaryoları için optimize edilmiştir ve yaygın endüstri kıyaslamalarında birçok mevcut açık kaynaklı sohbet modelini geride bırakmaktadır."
-  },
-  "llama-4-scout-17b-16e-instruct": {
-    "description": "Llama 4 Scout: Yüksek performanslı Llama serisi modeli; yüksek işlem hacmi ve düşük gecikme gerektiren senaryolar için idealdir."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B, eşsiz karmaşıklık işleme yeteneği sunar ve yüksek talepli projeler için özel olarak tasarlanmıştır."
@@ -2681,6 +2690,9 @@
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905, Kimi K2'nin en yeni ve en güçlü versiyonudur. Bu, toplamda 1 trilyon parametreye ve 32 milyar aktif parametreye sahip, üst düzey bir Hibrit Uzman (MoE) dil modelidir. Modelin başlıca özellikleri şunlardır: geliştirilmiş ajan kodlama zekası, açık benchmark testlerinde ve gerçek dünya ajan kodlama görevlerinde belirgin performans artışı; ön uç kodlama deneyiminde iyileştirmeler, ön uç programlamada estetik ve işlevsellik açısından ilerlemeler."
   },
+  "moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking, en yeni ve en güçlü açık kaynak düşünme modelidir. Çok adımlı akıl yürütme derinliğini büyük ölçüde artırarak ve 200–300 ardışık araç çağrısı sırasında istikrarlı araç kullanımı sağlayarak Humanity's Last Exam (HLE), BrowseComp ve diğer kıyaslamalarda yeni standartlar belirlemiştir. Ayrıca programlama, matematik, mantıksal akıl yürütme ve Agent senaryolarında üstün performans sergiler. Model, yaklaşık 1T toplam parametreye sahip karma uzman (MoE) mimarisi üzerine kuruludur, 256K bağlam penceresini destekler ve araç çağrılarını destekler."
+  },
   "moonshotai/kimi-k2": {
     "description": "Kimi K2, Moonshot AI tarafından geliştirilen büyük ölçekli karma uzman (MoE) dil modeli olup, toplamda 1 trilyon parametre ve her ileri geçişte 32 milyar aktif parametreye sahiptir. Ajan yetenekleri için optimize edilmiştir; gelişmiş araç kullanımı, çıkarım ve kod sentezi içerir."
   },
@@ -2721,7 +2733,7 @@
     "description": "Gelişmiş çıkarım ve karmaşık sorunları çözmeye odaklanır, matematik ve bilim görevlerini içerir. Derin bağlam anlayışı ve aracılık iş akışları gerektiren uygulamalar için son derece uygundur."
   },
   "o1-mini": {
-    "description": "o1-mini, programlama, matematik ve bilim uygulama senaryoları için tasarlanmış hızlı ve ekonomik bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
+    "description": "o1-preview modeline göre daha küçük ve daha hızlıdır, maliyeti %80 daha düşüktür. Kod üretimi ve kısa bağlam işlemlerinde iyi performans gösterir."
   },
   "o1-preview": {
     "description": "İleri düzey muhakeme ve matematik ile fen görevleri dahil olmak üzere karmaşık sorunların çözümüne odaklanır. Derin bağlam anlayışı ve özerk iş akışları gerektiren uygulamalar için son derece uygundur."
@@ -2959,9 +2971,6 @@
   },
   "qwen-3-32b": {
     "description": "Qwen 3 32B: Qwen serisi, çok dilli ve kodlama görevlerinde üstün performans gösterir; orta ölçekli üretim kullanımı için uygundur."
-  },
-  "qwen-3-coder-480b": {
-    "description": "Qwen 3 Coder 480B: Kod üretimi ve karmaşık programlama görevleri için tasarlanmış uzun bağlamlı bir modeldir."
   },
   "qwen-coder-plus": {
     "description": "Tongyi Qianwen kodlama modeli."
@@ -3323,6 +3332,9 @@
   "sonar-reasoning-pro": {
     "description": "DeepSeek'in akıl yürütme modeli tarafından desteklenen yeni API ürünü."
   },
+  "spark-x": {
+    "description": "X1.5 Özellikleri: (1) Düşünme modunu dinamik olarak ayarlama özelliği eklendi, thinking alanı ile kontrol edilir; (2) Bağlam uzunluğu artırıldı: giriş ve çıkış için 64K; (3) FunctionCall özelliği desteklenmektedir."
+  },
   "stable-diffusion-3-medium": {
     "description": "Stability AI tarafından geliştirilen en yeni metinden görüntü oluşturma büyük modelidir. Önceki sürümlerin avantajlarını koruyarak, görüntü kalitesi, metin anlama ve stil çeşitliliği alanlarında önemli iyileştirmeler sunar. Karmaşık doğal dil istemlerini daha doğru yorumlayabilir ve daha kesin, çeşitli görüntüler oluşturabilir."
   },
@@ -3524,9 +3536,6 @@
   "x-ai/grok-code-fast-1": {
     "description": "Grok Code Fast 1, xAI'nin hızlı kodlama modelidir; okunabilirlik ve mühendislik uyumluluğu yüksek çıktılar üretir."
   },
-  "x1": {
-    "description": "Spark X1 modeli daha da geliştirilecek; önceki matematik görevlerinde ulusal liderlik temelinde, akıl yürütme, metin üretimi, dil anlama gibi genel görevlerde OpenAI o1 ve DeepSeek R1 ile karşılaştırılabilir sonuçlar elde edilecektir."
-  },
   "xai/grok-2": {
     "description": "Grok 2, en ileri çıkarım yeteneklerine sahip öncü bir dil modelidir. Sohbet, kodlama ve çıkarımda gelişmiş yetenekler sunar ve LMSYS sıralamasında Claude 3.5 Sonnet ve GPT-4-Turbo'nun önündedir."
   },
@@ -3592,6 +3601,9 @@
   },
   "z-ai/glm-4.6": {
     "description": "GLM 4.6, Z.AI'nin amiral gemisi modelidir; bağlam uzunluğunu ve kodlama yeteneklerini genişletmiştir."
+  },
+  "zai-glm-4.6": {
+    "description": "Programlama ve akıl yürütme görevlerinde üstün performans gösterir, akışlı çıktı ve araç çağrısını destekler. Agentic kodlama ve karmaşık akıl yürütme senaryoları için uygundur."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5, akıllı ajan uygulamaları için tasarlanmış temel modeldir ve Mixture-of-Experts (MoE) mimarisi kullanır. Araç çağrısı, web tarama, yazılım mühendisliği ve ön uç programlama alanlarında derin optimizasyonlar içerir. Claude Code, Roo Code gibi kod ajanlarına sorunsuz entegrasyon destekler. GLM-4.5, karmaşık çıkarım ve günlük kullanım gibi çeşitli senaryolara uyum sağlayan hibrit çıkarım moduna sahiptir."

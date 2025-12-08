@@ -12,7 +12,7 @@ import * as schema from '../schemas';
 import { LobeChatDatabase } from '../type';
 import migrations from './migrations.json';
 
-// 用于实例管理的全局对象
+// Global object for instance management
 interface LobeGlobal {
   pgDB?: LobeChatDatabase;
   pgDBInitPromise?: Promise<LobeChatDatabase>;
@@ -22,7 +22,7 @@ interface LobeGlobal {
   };
 }
 
-// 确保 globalThis 有我们的命名空间
+// Ensure globalThis has our namespace
 declare global {
   // eslint-disable-next-line no-var
   var __LOBE__: LobeGlobal;
@@ -33,20 +33,20 @@ if (!globalThis.__LOBE__) {
 }
 
 /**
- * 尝试创建一个文件锁来确保单例模式
- * 返回 true 表示成功获取锁，false 表示已有其他实例正在运行
+ * Attempt to create a file lock to ensure singleton pattern
+ * Returns true if lock acquired successfully, false if another instance is already running
  */
 const acquireLock = async (dbPath: string): Promise<boolean> => {
   try {
-    // 数据库锁文件路径
+    // Database lock file path
     const lockPath = `${dbPath}.lock`;
 
-    // 尝试创建锁文件
+    // Attempt to create lock file
     if (!fs.existsSync(lockPath)) {
-      // 创建锁文件并写入当前进程 ID
+      // Create lock file and write current process ID
       fs.writeFileSync(lockPath, process.pid.toString(), 'utf8');
 
-      // 保存锁信息到全局对象
+      // Save lock information to global object
       if (!globalThis.__LOBE__.pgDBLock) {
         globalThis.__LOBE__.pgDBLock = {
           acquired: true,
@@ -58,19 +58,19 @@ const acquireLock = async (dbPath: string): Promise<boolean> => {
       return true;
     }
 
-    // 检查锁文件是否过期（超过5分钟未更新）
+    // Check if lock file has expired (not updated for over 5 minutes)
     const stats = fs.statSync(lockPath);
     const currentTime = Date.now();
     const modifiedTime = stats.mtime.getTime();
 
-    // 如果锁文件超过5分钟未更新，视为过期锁
+    // If lock file hasn't been updated for over 5 minutes, consider it expired
     if (currentTime - modifiedTime > 5 * 60 * 1000) {
-      // 删除过期锁文件
+      // Delete expired lock file
       fs.unlinkSync(lockPath);
-      // 重新创建锁文件
+      // Recreate lock file
       fs.writeFileSync(lockPath, process.pid.toString(), 'utf8');
 
-      // 保存锁信息到全局对象
+      // Save lock information to global object
       if (!globalThis.__LOBE__.pgDBLock) {
         globalThis.__LOBE__.pgDBLock = {
           acquired: true,
@@ -91,7 +91,7 @@ const acquireLock = async (dbPath: string): Promise<boolean> => {
 };
 
 /**
- * 释放文件锁
+ * Release file lock
  */
 const releaseLock = () => {
   if (globalThis.__LOBE__.pgDBLock?.acquired && globalThis.__LOBE__.pgDBLock.lockPath) {
@@ -105,7 +105,7 @@ const releaseLock = () => {
   }
 };
 
-// 在进程退出时释放锁
+// Release lock on process exit
 process.on('exit', releaseLock);
 process.on('SIGINT', () => {
   releaseLock();
@@ -129,15 +129,15 @@ const migrateDatabase = async (db: LobeChatDatabase): Promise<void> => {
 
     console.log('schemaHash:', hash);
 
-    // 如果哈希值相同，看下表是否全了
+    // If hash is the same, check if all tables exist
     if (hash === cacheHash) {
       try {
         const drizzleMigration = new DrizzleMigrationModel(db);
 
-        // 检查数据库中是否存在表
+        // Check if tables exist in the database
         const tableCount = await drizzleMigration.getTableCounts();
 
-        // 如果表数量大于0，则认为数据库已正确初始化
+        // If table count is greater than 0, assume database is properly initialized
         if (tableCount > 0) {
           console.log('✅ Electron DB schema already synced');
           return;
@@ -152,7 +152,7 @@ const migrateDatabase = async (db: LobeChatDatabase): Promise<void> => {
     console.log('🚀 Starting Electron DB migration...');
 
     try {
-      // 执行迁移
+      // Execute migration
       // @ts-expect-error
       await db.dialect.migrate(migrations, db.session, {});
 
@@ -162,10 +162,10 @@ const migrateDatabase = async (db: LobeChatDatabase): Promise<void> => {
     } catch (error) {
       console.error('❌ Electron database schema migration failed', error);
 
-      // 尝试查询迁移表数据
+      // Attempt to query migration table data
       let migrationsTableData: MigrationTableItem[] = [];
       try {
-        // 尝试查询迁移表
+        // Attempt to query migration table
         const drizzleMigration = new DrizzleMigrationModel(db);
         migrationsTableData = await drizzleMigration.getMigrationList();
       } catch (queryError) {
@@ -184,12 +184,12 @@ const migrateDatabase = async (db: LobeChatDatabase): Promise<void> => {
 };
 
 /**
- * 检查当前是否有活跃的数据库实例，如果有则尝试关闭它
+ * Check if there's an active database instance and attempt to close it if exists
  */
 const checkAndCleanupExistingInstance = async () => {
   if (globalThis.__LOBE__.pgDB) {
     try {
-      // 尝试关闭现有的 PGlite 实例 (如果客户端有 close 方法)
+      // Attempt to close existing PGlite instance (if client has close method)
       // @ts-expect-error
       const client = globalThis.__LOBE__.pgDB?.dialect?.client;
 
@@ -198,11 +198,11 @@ const checkAndCleanupExistingInstance = async () => {
         console.log('✅ Successfully closed previous PGlite instance');
       }
 
-      // 重置全局引用
+      // Reset global reference
       globalThis.__LOBE__.pgDB = undefined;
     } catch (error) {
       console.error('❌ Failed to close previous PGlite instance:', error);
-      // 继续执行，创建新实例
+      // Continue execution and create new instance
     }
   }
 };
@@ -220,19 +220,19 @@ export const getPgliteInstance = async (): Promise<LobeChatDatabase> => {
       }),
     );
 
-    // 已经初始化完成，直接返回实例
+    // Already initialized, return instance directly
     if (globalThis.__LOBE__.pgDB) return globalThis.__LOBE__.pgDB;
 
-    // 有初始化进行中的Promise，等待它完成
+    // Initialization promise in progress, wait for it to complete
     if (globalThis.__LOBE__.pgDBInitPromise) {
       console.log('Waiting for existing initialization promise to complete');
       return globalThis.__LOBE__.pgDBInitPromise;
     }
 
-    // 防止多次调用引起的竞态条件
+    // Prevent race conditions from multiple calls
     if (isInitializing) {
       console.log('Already initializing, waiting for result');
-      // 创建新的 Promise 等待初始化完成
+      // Create new Promise to wait for initialization to complete
       return new Promise((resolve, reject) => {
         const checkInterval = setInterval(() => {
           if (globalThis.__LOBE__.pgDB) {
@@ -248,12 +248,12 @@ export const getPgliteInstance = async (): Promise<LobeChatDatabase> => {
 
     isInitializing = true;
 
-    // 创建初始化Promise并保存
+    // Create and save initialization Promise
     globalThis.__LOBE__.pgDBInitPromise = (async () => {
-      // 再次检查，以防在等待过程中已有其他调用初始化成功
+      // Check again in case another call succeeded during wait
       if (globalThis.__LOBE__.pgDB) return globalThis.__LOBE__.pgDB;
 
-      // 先获取数据库路径
+      // Get database path first
       let dbPath: string = '';
       try {
         dbPath = await electronIpcClient.getDatabasePath();
@@ -263,34 +263,34 @@ export const getPgliteInstance = async (): Promise<LobeChatDatabase> => {
 
       console.log('Database path:', dbPath);
       try {
-        // 尝试获取数据库锁
+        // Attempt to acquire database lock
         const lockAcquired = await acquireLock(dbPath);
         if (!lockAcquired) {
           throw new Error('Cannot acquire database lock. Another instance might be using it.');
         }
 
-        // 检查并清理可能存在的旧实例
+        // Check and cleanup any existing old instances
         await checkAndCleanupExistingInstance();
 
-        // 创建新的 PGlite 实例
+        // Create new PGlite instance
         console.log('Creating new PGlite instance');
         const client = new PGlite(dbPath, {
           extensions: { vector },
-          // 增加选项以提高稳定性
+          // Add options to improve stability
           relaxedDurability: true,
         });
 
-        // 等待数据库就绪
+        // Wait for database to be ready
         await client.waitReady;
         console.log('PGlite state:', client.ready);
 
-        // 创建 Drizzle 数据库实例
+        // Create Drizzle database instance
         const db = pgliteDrizzle({ client, schema }) as unknown as LobeChatDatabase;
 
-        // 执行迁移
+        // Execute migration
         await migrateDatabase(db);
 
-        // 保存实例引用
+        // Save instance reference
         globalThis.__LOBE__.pgDB = db;
 
         console.log('✅ PGlite instance successfully initialized');
@@ -298,9 +298,9 @@ export const getPgliteInstance = async (): Promise<LobeChatDatabase> => {
         return db;
       } catch (error) {
         console.error('❌ Failed to initialize PGlite instance:', error);
-        // 清空初始化Promise，允许下次重试
+        // Clear initialization Promise to allow retry next time
         globalThis.__LOBE__.pgDBInitPromise = undefined;
-        // 释放可能已获取的锁
+        // Release potentially acquired lock
         releaseLock();
         throw error;
       } finally {

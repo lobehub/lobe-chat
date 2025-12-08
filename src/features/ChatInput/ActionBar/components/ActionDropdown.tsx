@@ -22,6 +22,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 export interface ActionDropdownProps extends DropdownProps {
   maxHeight?: number | string;
   maxWidth?: number | string;
+  minHeight?: number | string;
   minWidth?: number | string;
   /**
    * 是否在挂载时预渲染弹层，避免首次触发展开时的渲染卡顿
@@ -30,7 +31,7 @@ export interface ActionDropdownProps extends DropdownProps {
 }
 
 const ActionDropdown = memo<ActionDropdownProps>(
-  ({ menu, maxHeight, minWidth, maxWidth, children, placement = 'top', ...rest }) => {
+  ({ menu, maxHeight, minWidth, maxWidth, children, placement = 'top', minHeight, ...rest }) => {
     const { cx, styles } = useStyles();
     const isMobile = useIsMobile();
 
@@ -48,6 +49,7 @@ const ActionDropdown = memo<ActionDropdownProps>(
           style: {
             maxHeight,
             maxWidth: isMobile ? undefined : maxWidth,
+            minHeight,
             minWidth: isMobile ? undefined : minWidth,
             overflowX: 'hidden',
             overflowY: 'scroll',

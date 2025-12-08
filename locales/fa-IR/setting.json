@@ -775,11 +775,36 @@
       "groupName": "افزونه‌های داخلی"
     },
     "disabled": "مدل فعلی از فراخوانی توابع پشتیبانی نمی‌کند و نمی‌توان از افزونه‌ها استفاده کرد",
+    "klavis": {
+      "addServer": "افزودن سرور",
+      "authCompleted": "احراز هویت با موفقیت انجام شد",
+      "authFailed": "احراز هویت ناموفق بود",
+      "authRequired": "احراز هویت لازم است",
+      "connected": "متصل شد",
+      "error": "خطا",
+      "groupName": "ابزارهای Klavis",
+      "manage": "مدیریت Klavis",
+      "manageTitle": "مدیریت یکپارچه‌سازی Klavis",
+      "noServers": "هیچ سرور متصلی وجود ندارد",
+      "notEnabled": "سرویس Klavis فعال نیست",
+      "oauthRequired": "لطفاً احراز هویت OAuth را در پنجره جدید کامل کنید",
+      "pendingAuth": "در انتظار احراز هویت",
+      "serverCreated": "سرور با موفقیت ایجاد شد",
+      "serverCreatedFailed": "ایجاد سرور ناموفق بود",
+      "serverRemoved": "سرور حذف شد",
+      "servers": "سرور",
+      "tools": "ابزار",
+      "verifyAuth": "احراز هویت را کامل کرده‌ام"
+    },
     "plugins": {
       "enabled": "{{num}} فعال شده است",
       "groupName": "افزونه‌های شخص ثالث",
       "noEnabled": "هیچ افزونه فعالی وجود ندارد",
       "store": "فروشگاه افزونه‌ها"
+    },
+    "tabs": {
+      "all": "همه",
+      "installed": "فعال شده"
     },
     "title": "افزونه‌های گسترش"
   }

@@ -26,6 +26,7 @@ export interface CommonAction {
   updateAvatar: (avatar: string) => Promise<void>;
   updateFullName: (fullName: string) => Promise<void>;
   updateKeyVaultConfig: (provider: string, config: any) => Promise<void>;
+  updateUsername: (username: string) => Promise<void>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
   useInitUserState: (
     isLogin: boolean | undefined,
@@ -58,6 +59,11 @@ export const createCommonSlice: StateCreator<
 
   updateKeyVaultConfig: async (provider, config) => {
     await get().setSettings({ keyVaults: { [provider]: config } });
+  },
+
+  updateUsername: async (username) => {
+    await userService.updateUsername(username);
+    await get().refreshUserState();
   },
 
   useCheckTrace: (shouldFetch) =>

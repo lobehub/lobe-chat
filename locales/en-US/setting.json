@@ -775,11 +775,36 @@
       "groupName": "Built-ins"
     },
     "disabled": "The current model does not support function calls and cannot use the plugin",
+    "klavis": {
+      "addServer": "Add Server",
+      "authCompleted": "Authentication Completed",
+      "authFailed": "Authentication Failed",
+      "authRequired": "Authentication Required",
+      "connected": "Connected",
+      "error": "Error",
+      "groupName": "Klavis Tools",
+      "manage": "Manage Klavis",
+      "manageTitle": "Manage Klavis Integration",
+      "noServers": "No connected servers",
+      "notEnabled": "Klavis service not enabled",
+      "oauthRequired": "Please complete OAuth authentication in the new window",
+      "pendingAuth": "Pending Authentication",
+      "serverCreated": "Server created successfully",
+      "serverCreatedFailed": "Failed to create server",
+      "serverRemoved": "Server removed",
+      "servers": "servers",
+      "tools": "tools",
+      "verifyAuth": "I have completed authentication"
+    },
     "plugins": {
       "enabled": "Enabled: {{num}}",
       "groupName": "Plugins",
       "noEnabled": "No plugins enabled",
       "store": "Plugin Store"
+    },
+    "tabs": {
+      "all": "All",
+      "installed": "Enabled"
     },
     "title": "Extension Tools"
   }

@@ -1,0 +1,40 @@
+{
+  "actions": {
+    "discord": "Donner votre avis sur Discord",
+    "home": "Retour à l'accueil",
+    "retry": "Se reconnecter"
+  },
+  "codes": {
+    "ACCOUNT_ALREADY_LINKED_TO_DIFFERENT_USER": "Ce compte est déjà lié à un autre utilisateur",
+    "ACCOUNT_NOT_FOUND": "Compte introuvable",
+    "CREDENTIAL_ACCOUNT_NOT_FOUND": "Compte d'identifiants introuvable",
+    "EMAIL_CAN_NOT_BE_UPDATED": "L'adresse e-mail de ce compte ne peut pas être modifiée",
+    "EMAIL_NOT_VERIFIED": "Veuillez vérifier votre adresse e-mail",
+    "FAILED_TO_CREATE_SESSION": "Échec de la création de la session",
+    "FAILED_TO_CREATE_USER": "Échec de la création de l'utilisateur",
+    "FAILED_TO_GET_SESSION": "Échec de la récupération de la session",
+    "FAILED_TO_GET_USER_INFO": "Échec de la récupération des informations utilisateur",
+    "FAILED_TO_UNLINK_LAST_ACCOUNT": "Impossible de dissocier le dernier compte lié",
+    "FAILED_TO_UPDATE_USER": "Échec de la mise à jour des informations utilisateur",
+    "ID_TOKEN_NOT_SUPPORTED": "Le jeton d'identité n'est pas pris en charge",
+    "INVALID_EMAIL": "Format d'e-mail invalide",
+    "INVALID_EMAIL_OR_PASSWORD": "E-mail ou mot de passe incorrect",
+    "INVALID_PASSWORD": "Format de mot de passe invalide",
+    "INVALID_TOKEN": "Jeton invalide ou expiré",
+    "PASSWORD_TOO_LONG": "Mot de passe trop long",
+    "PASSWORD_TOO_SHORT": "Mot de passe trop court",
+    "PROVIDER_NOT_FOUND": "Fournisseur d'identité introuvable",
+    "RATE_LIMIT_EXCEEDED": "Trop de requêtes, veuillez réessayer plus tard",
+    "SESSION_EXPIRED": "Session expirée, veuillez vous reconnecter",
+    "SOCIAL_ACCOUNT_ALREADY_LINKED": "Ce compte social est déjà lié à un autre utilisateur",
+    "UNEXPECTED_ERROR": "Une erreur inattendue est survenue, veuillez réessayer",
+    "UNKNOWN": "Une erreur inconnue est survenue, veuillez réessayer ou contacter le support",
+    "USER_ALREADY_EXISTS": "L'utilisateur existe déjà",
+    "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "Cette adresse e-mail est déjà utilisée, veuillez en essayer une autre",
+    "USER_ALREADY_HAS_PASSWORD": "Ce compte a déjà un mot de passe défini",
+    "USER_BANNED": "Cet utilisateur a été banni",
+    "USER_EMAIL_NOT_FOUND": "Adresse e-mail introuvable",
+    "USER_NOT_FOUND": "Utilisateur introuvable"
+  },
+  "title": "Erreur d'authentification"
+}

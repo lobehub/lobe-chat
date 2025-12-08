@@ -775,11 +775,36 @@
       "groupName": "Integriert"
     },
     "disabled": "Das aktuelle Modell unterstützt keine Funktionsaufrufe und kann keine Plugins verwenden",
+    "klavis": {
+      "addServer": "Server hinzufügen",
+      "authCompleted": "Authentifizierung abgeschlossen",
+      "authFailed": "Authentifizierung fehlgeschlagen",
+      "authRequired": "Authentifizierung erforderlich",
+      "connected": "Verbunden",
+      "error": "Fehler",
+      "groupName": "Klavis-Tools",
+      "manage": "Klavis verwalten",
+      "manageTitle": "Klavis-Integration verwalten",
+      "noServers": "Keine verbundenen Server",
+      "notEnabled": "Klavis-Dienst ist nicht aktiviert",
+      "oauthRequired": "Bitte schließen Sie die OAuth-Authentifizierung in einem neuen Fenster ab",
+      "pendingAuth": "Authentifizierung ausstehend",
+      "serverCreated": "Server erfolgreich erstellt",
+      "serverCreatedFailed": "Servererstellung fehlgeschlagen",
+      "serverRemoved": "Server wurde entfernt",
+      "servers": "Server",
+      "tools": "Tools",
+      "verifyAuth": "Ich habe die Authentifizierung abgeschlossen"
+    },
     "plugins": {
       "enabled": "Aktiviert: {{num}}",
       "groupName": "Plugins",
       "noEnabled": "Keine Plugins aktiviert",
       "store": "Plugin-Store"
+    },
+    "tabs": {
+      "all": "Alle",
+      "installed": "Aktiviert"
     },
     "title": "Erweiterungswerkzeuge"
   }

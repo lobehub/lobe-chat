@@ -33,7 +33,7 @@ export interface ChatStoreAction
 
 export type ChatStore = ChatStoreAction & ChatStoreState;
 
-//  ===============  聚合 createStoreFn ============ //
+//  ===============  Aggregate createStoreFn ============ //
 
 const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...params) => ({
   ...initialState,
@@ -53,7 +53,7 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   // cloud
 });
 
-//  ===============  实装 useStore ============ //
+//  ===============  Implement useStore ============ //
 const devtools = createDevtools('chat');
 
 export const useChatStore = createWithEqualityFn<ChatStore>()(

@@ -31,7 +31,7 @@ const initialState: ServerConfigState = {
   serverConfigInit: false,
 };
 
-//  ===============  聚合 createStoreFn ============ //
+//  ===============  Aggregate createStoreFn ============ //
 
 export interface ServerConfigStore extends ServerConfigState, ServerConfigAction {}
 
@@ -46,7 +46,7 @@ const createStore: CreateStore =
     ...createServerConfigSlice(...params),
   });
 
-//  ===============  实装 useStore ============ //
+//  ===============  Implement useStore ============ //
 
 let store: StoreApi<ServerConfigStore>;
 

@@ -775,11 +775,36 @@
       "groupName": "組み込み"
     },
     "disabled": "現在のモデルは関数呼び出しをサポートしていません。プラグインを使用できません",
+    "klavis": {
+      "addServer": "サーバーを追加",
+      "authCompleted": "認証完了",
+      "authFailed": "認証に失敗しました",
+      "authRequired": "認証が必要です",
+      "connected": "接続済み",
+      "error": "エラー",
+      "groupName": "Klavis ツール",
+      "manage": "Klavis を管理",
+      "manageTitle": "Klavis 統合を管理",
+      "noServers": "接続されているサーバーはありません",
+      "notEnabled": "Klavis サービスは有効化されていません",
+      "oauthRequired": "新しいウィンドウで OAuth 認証を完了してください",
+      "pendingAuth": "認証待ち",
+      "serverCreated": "サーバーが正常に作成されました",
+      "serverCreatedFailed": "サーバーの作成に失敗しました",
+      "serverRemoved": "サーバーが削除されました",
+      "servers": "台のサーバー",
+      "tools": "個のツール",
+      "verifyAuth": "認証を完了しました"
+    },
     "plugins": {
       "enabled": "{{num}} が有効",
       "groupName": "プラグイン",
       "noEnabled": "有効なプラグインはありません",
       "store": "プラグインストア"
+    },
+    "tabs": {
+      "all": "すべて",
+      "installed": "有効化済み"
     },
     "title": "拡張ツール"
   }
