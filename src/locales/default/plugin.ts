@@ -1,5 +1,25 @@
 export default {
   builtins: {
+    'lobe-agent-builder': {
+      apiName: {
+        getAvailableModels: '获取可用模型',
+        getAvailableTools: '获取可用工具',
+        getConfig: '获取配置',
+        getMeta: '获取元数据',
+        getPrompt: '获取系统提示词',
+        searchMarketTools: '搜索插件市场',
+        searchOfficialTools: '搜索官方工具',
+        setModel: '设置模型',
+        setOpeningMessage: '设置开场消息',
+        setOpeningQuestions: '设置开场问题',
+        togglePlugin: '切换插件',
+        updateChatConfig: '更新对话配置',
+        updateConfig: '更新配置',
+        updateMeta: '更新元数据',
+        updatePrompt: '更新系统提示词',
+      },
+      title: 'Agent Builder',
+    },
     'lobe-knowledge-base': {
       apiName: {
         readKnowledge: '读取知识库内容',

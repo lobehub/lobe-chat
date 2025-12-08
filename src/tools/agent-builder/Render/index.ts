@@ -4,6 +4,7 @@ import GetAvailableTools from './GetAvailableTools';
 import GetConfig from './GetConfig';
 import GetMeta from './GetMeta';
 import GetPrompt from './GetPrompt';
+import InstallPlugin from './InstallPlugin';
 import SearchMarketTools from './SearchMarketTools';
 import SearchOfficialTools from './SearchOfficialTools';
 import SetModel from './SetModel';
@@ -29,6 +30,7 @@ export const AgentBuilderRenders = {
   [AgentBuilderApiName.searchOfficialTools]: SearchOfficialTools,
 
   // Write operations
+  [AgentBuilderApiName.installPlugin]: InstallPlugin,
   [AgentBuilderApiName.updateAgentConfig]: UpdateConfig,
   [AgentBuilderApiName.updateAgentMeta]: UpdateMeta,
   [AgentBuilderApiName.updateChatConfig]: UpdateChatConfig,
