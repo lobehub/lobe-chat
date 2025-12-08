@@ -21,6 +21,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { createAgentToolsEngine } from '@/helpers/toolEngineering';
 import { chatService } from '@/services/chat';
+import { resolveAgentConfig } from '@/services/chat/mecha';
 import { messageService } from '@/services/message';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getAgentStoreState } from '@/store/agent/store';
@@ -142,9 +143,11 @@ export const streamingExecutor: StateCreator<
     const agentId = paramAgentId ?? activeAgentId;
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
 
-    const agentStoreState = getAgentStoreState();
-    // Use agentId to get agent config instead of currentAgentConfig
-    const agentConfigData = agentSelectors.getAgentConfigById(agentId || '')(agentStoreState);
+    // Resolve agent config with builtin agent runtime config merged
+    // This ensures runtime plugins (e.g., 'lobe-agent-builder' for Agent Builder) are included
+    const { agentConfig: agentConfigData, plugins: pluginIds } = resolveAgentConfig({
+      agentId: agentId || '',
+    });
 
     // Get tools manifest map
     const toolsEngine = createAgentToolsEngine({
@@ -154,7 +157,7 @@ export const streamingExecutor: StateCreator<
     const { enabledToolIds } = toolsEngine.generateToolsDetailed({
       model: agentConfigData.model,
       provider: agentConfigData.provider!,
-      toolIds: agentConfigData.plugins,
+      toolIds: pluginIds,
     });
     const toolManifestMap = Object.fromEntries(
       toolsEngine.getEnabledPluginManifests(enabledToolIds).entries(),
