@@ -67,6 +67,7 @@ const ResourceExplorer = memo(() => {
           onSelectionChange={handleSelectionChange}
           pendingRenameItemId={pendingRenameItemId}
           selectFileIds={selectFileIds}
+          setSelectedFileIds={setSelectedFileIds}
         />
       ) : (
         <MasonryView
