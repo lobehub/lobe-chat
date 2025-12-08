@@ -70,12 +70,12 @@
     "title": "Troca rápida de assistente"
   },
   "toggleLeftPanel": {
-    "desc": "Mostrar ou ocultar o painel de assistente à esquerda",
-    "title": "Mostrar/Ocultar painel do assistente"
+    "desc": "Mostrar ou ocultar o painel esquerdo",
+    "title": "Mostrar/Ocultar Painel Esquerdo"
   },
   "toggleRightPanel": {
-    "desc": "Mostrar ou ocultar o painel de tópicos à direita",
-    "title": "Mostrar/Ocultar painel de tópicos"
+    "desc": "Mostrar ou ocultar o painel direito",
+    "title": "Mostrar/Ocultar Painel Direito"
   },
   "toggleZenMode": {
     "desc": "No modo de foco, exibe apenas a conversa atual, ocultando outras interfaces",

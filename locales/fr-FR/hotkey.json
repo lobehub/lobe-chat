@@ -70,12 +70,12 @@
     "title": "Changer rapidement d'assistant"
   },
   "toggleLeftPanel": {
-    "desc": "Afficher ou masquer le panneau d'assistance à gauche",
-    "title": "Afficher/masquer le panneau de l'assistant"
+    "desc": "Afficher ou masquer le panneau de gauche",
+    "title": "Afficher/Masquer le panneau de gauche"
   },
   "toggleRightPanel": {
-    "desc": "Afficher ou masquer le panneau de sujets à droite",
-    "title": "Afficher/masquer le panneau de sujet"
+    "desc": "Afficher ou masquer le panneau de droite",
+    "title": "Afficher/Masquer le panneau de droite"
   },
   "toggleZenMode": {
     "desc": "En mode concentration, n'afficher que la conversation actuelle, masquer les autres interfaces",

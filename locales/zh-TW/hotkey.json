@@ -70,12 +70,12 @@
     "title": "快捷切換助手"
   },
   "toggleLeftPanel": {
-    "desc": "顯示或隱藏左側助手面板",
-    "title": "顯示/隱藏助手面板"
+    "desc": "顯示或隱藏左側面板",
+    "title": "顯示/隱藏左側面板"
   },
   "toggleRightPanel": {
-    "desc": "顯示或隱藏右側話題面板",
-    "title": "顯示/隱藏話題面板"
+    "desc": "顯示或隱藏右側面板",
+    "title": "顯示/隱藏右側面板"
   },
   "toggleZenMode": {
     "desc": "專注模式下，只顯示當前會話，隱藏其他 UI",

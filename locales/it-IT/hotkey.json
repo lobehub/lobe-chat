@@ -70,12 +70,12 @@
     "title": "Cambia assistente rapidamente"
   },
   "toggleLeftPanel": {
-    "desc": "Mostra o nascondi il pannello assistente a sinistra",
-    "title": "Mostra/Nascondi pannello assistente"
+    "desc": "Mostra o nasconde il pannello di sinistra",
+    "title": "Mostra/Nascondi pannello di sinistra"
   },
   "toggleRightPanel": {
-    "desc": "Mostra o nascondi il pannello argomenti a destra",
-    "title": "Mostra/Nascondi pannello argomenti"
+    "desc": "Mostra o nasconde il pannello di destra",
+    "title": "Mostra/Nascondi pannello di destra"
   },
   "toggleZenMode": {
     "desc": "In modalità concentrazione, mostra solo la conversazione attuale, nascondendo altre interfacce",
