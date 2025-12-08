@@ -2,6 +2,7 @@
 export { AgentBuilderContextInjector } from './AgentBuilderContextInjector';
 export { HistorySummaryProvider } from './HistorySummary';
 export { KnowledgeInjector } from './KnowledgeInjector';
+export { PageEditorContextInjector } from './PageEditorContextInjector';
 export { SystemRoleInjector } from './SystemRoleInjector';
 export { ToolSystemRoleProvider } from './ToolSystemRole';
 
@@ -13,5 +14,9 @@ export type {
 } from './AgentBuilderContextInjector';
 export type { HistorySummaryConfig } from './HistorySummary';
 export type { KnowledgeInjectorConfig } from './KnowledgeInjector';
+export type {
+  PageEditorContext,
+  PageEditorContextInjectorConfig,
+} from './PageEditorContextInjector';
 export type { SystemRoleInjectorConfig } from './SystemRoleInjector';
 export type { ToolSystemRoleConfig } from './ToolSystemRole';

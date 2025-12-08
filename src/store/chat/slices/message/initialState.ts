@@ -11,6 +11,11 @@ export interface ChatMessageState {
    */
   activeId: string;
   /**
+   * Active page/document ID when Page Agent is active
+   * Used for injecting current page context into the conversation
+   */
+  activePageId?: string;
+  /**
    * Type of the currently active session ('agent' | 'group')
    * Derived from session.type, used for caching to avoid repeated lookups
    */
@@ -69,6 +74,7 @@ export interface ChatMessageState {
 export const initialMessageState: ChatMessageState = {
   activeAgentId: 'inbox',
   activeId: 'inbox',
+  activePageId: undefined,
   activeSessionType: undefined,
   dbMessagesMap: {},
   groupAgentMaps: {},

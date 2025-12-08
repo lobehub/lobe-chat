@@ -10,6 +10,8 @@ import {
   KnowledgeInjector,
   MessageCleanupProcessor,
   MessageContentProcessor,
+  PageEditorContext,
+  PageEditorContextInjector,
   PlaceholderVariablesProcessor,
   SystemRoleInjector,
   ToolCallProcessor,
@@ -27,6 +29,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
+import { PAGE_AGENT_TOOL_ID } from '@/tools/document/const';
 
 import { isCanUseVideo, isCanUseVision } from '../helper';
 import { UserMemoryInjector } from '../providers/UserMemoryInjector';
@@ -41,6 +44,8 @@ interface ContextEngineeringContext {
   inputTemplate?: string;
   messages: UIChatMessage[];
   model: string;
+  /** Page Editor context for injecting current page/document info */
+  pageEditorContext?: PageEditorContext;
   provider: string;
   sessionId?: string;
   systemRole?: string;
@@ -61,11 +66,21 @@ export const contextEngineering = async ({
   historyCount,
   historySummary,
   agentBuilderContext,
+  pageEditorContext,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   const toolNameResolver = new ToolNameResolver();
 
+  console.log('[contextEngineering] tools:', tools);
+  console.log('[contextEngineering] pageEditorContext:', pageEditorContext);
+
   // Check if Agent Builder tool is enabled
   const isAgentBuilderEnabled = tools?.includes(AGENT_BUILDER_TOOL_ID) ?? false;
+
+  // Check if Page Agent tool is enabled
+  const isPageAgentEnabled = tools?.includes(PAGE_AGENT_TOOL_ID) ?? false;
+
+  console.log('[contextEngineering] isAgentBuilderEnabled:', isAgentBuilderEnabled);
+  console.log('[contextEngineering] isPageAgentEnabled:', isPageAgentEnabled);
 
   // Get enabled agent files with content and knowledge bases from agent store
   const agentStoreState = getAgentStoreState();
@@ -99,7 +114,19 @@ export const contextEngineering = async ({
         enabled: isAgentBuilderEnabled,
       }),
 
-      // 5. Tool system role injection
+      // 5. Page Editor context injection (current page/document content for editing)
+      (() => {
+        console.log('[contextEngineering] Creating PageEditorContextInjector with:', {
+          enabled: isPageAgentEnabled,
+          pageContext: pageEditorContext,
+        });
+        return new PageEditorContextInjector({
+          enabled: isPageAgentEnabled,
+          pageContext: pageEditorContext,
+        });
+      })(),
+
+      // 6. Tool system role injection
       new ToolSystemRoleProvider({
         getToolSystemRoles: (tools) => toolSelectors.enabledSystemRoles(tools)(getToolStoreState()),
         isCanUseFC,
@@ -108,25 +135,25 @@ export const contextEngineering = async ({
         tools,
       }),
 
-      // 6. History summary injection
+      // 7. History summary injection
       new HistorySummaryProvider({
         formatHistorySummary: historySummaryPrompt,
         historySummary: historySummary,
       }),
 
-      // 7. User memory injection
+      // 8. User memory injection
       new UserMemoryInjector(userMemories ?? {}),
 
-      // 8. Input template processing
+      // 9. Input template processing
       new InputTemplateProcessor({ inputTemplate }),
 
-      // 9. Placeholder variables processing
+      // 10. Placeholder variables processing
       new PlaceholderVariablesProcessor({ variableGenerators: VARIABLE_GENERATORS }),
 
-      // 10. Group message flatten (convert role=group to standard assistant + tool messages)
+      // 11. Group message flatten (convert role=group to standard assistant + tool messages)
       new GroupMessageFlattenProcessor(),
 
-      // 11. Message content processing
+      // 12. Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: true, includeFileUrl: !isDesktop },
         isCanUseVideo,
@@ -135,7 +162,7 @@ export const contextEngineering = async ({
         provider,
       }),
 
-      // 12. Tool call processing
+      // 13. Tool call processing
       new ToolCallProcessor({
         genToolCallingName: toolNameResolver.generate.bind(toolNameResolver),
         isCanUseFC,
@@ -143,10 +170,10 @@ export const contextEngineering = async ({
         provider,
       }),
 
-      // 13. Tool message reordering
+      // 14. Tool message reordering
       new ToolMessageReorder(),
 
-      // 14. Message cleanup (final step, keep only necessary fields)
+      // 15. Message cleanup (final step, keep only necessary fields)
       new MessageCleanupProcessor(),
     ],
   });
