@@ -36,11 +36,11 @@ describe('createPreferenceSlice', () => {
       const { result } = renderHook(() => useGlobalStore());
 
       act(() => {
-        useGlobalStore.getState().updateSystemStatus({ showRightSideBar: false });
+        useGlobalStore.getState().updateSystemStatus({ showRightPanel: false });
         result.current.toggleRightPanel();
       });
 
-      expect(result.current.status.showRightSideBar).toBe(true);
+      expect(result.current.status.showRightPanel).toBe(true);
     });
     it('should set chat sidebar to specified value', () => {
       const { result } = renderHook(() => useGlobalStore());
@@ -50,13 +50,13 @@ describe('createPreferenceSlice', () => {
         result.current.toggleRightPanel(true);
       });
 
-      expect(result.current.status.showRightSideBar).toBe(true);
+      expect(result.current.status.showRightPanel).toBe(true);
 
       act(() => {
         result.current.toggleRightPanel(false);
       });
 
-      expect(result.current.status.showRightSideBar).toBe(false);
+      expect(result.current.status.showRightPanel).toBe(false);
     });
   });
 

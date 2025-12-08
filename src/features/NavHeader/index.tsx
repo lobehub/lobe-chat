@@ -1,7 +1,7 @@
 import { CSSProperties, ReactNode, memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
-import TogglePanelButton from '@/features/NavPanel/components/TogglePanelButton';
+import ToggleLeftPanelButton from '@/features/NavPanel/ToggleLeftPanelButton';
 import { useNavPanel } from '@/features/NavPanel/hooks/useNavPanel';
 
 interface NavHeaderProps extends Omit<FlexboxProps, 'children'> {
@@ -36,7 +36,7 @@ const NavHeader = memo<NavHeaderProps>(
         {...rest}
       >
         <Flexbox align={'center'} gap={2} horizontal justify={'flex-start'} style={styles?.left}>
-          {showTogglePanelButton && !expand && <TogglePanelButton />}
+          {showTogglePanelButton && !expand && <ToggleLeftPanelButton />}
           {left}
         </Flexbox>
         {children && (

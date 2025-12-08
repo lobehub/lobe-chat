@@ -117,7 +117,7 @@ export interface SystemStatus {
   showImagePanel?: boolean;
   showImageTopicPanel?: boolean;
   showLeftPanel?: boolean;
-  showRightSideBar?: boolean;
+  showRightPanel?: boolean;
   showSystemRole?: boolean;
   systemRoleExpandedMap: Record<string, boolean>;
   /**
@@ -184,7 +184,7 @@ export const INITIAL_STATUS = {
   showImagePanel: true,
   showImageTopicPanel: true,
   showLeftPanel: true,
-  showRightSideBar: true,
+  showRightPanel: true,
   showSystemRole: false,
   systemRoleExpandedMap: {},
   themeMode: 'auto',

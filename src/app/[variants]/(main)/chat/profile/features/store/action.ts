@@ -20,7 +20,6 @@ export interface Action {
   finishStreaming: (updateConfig: (payload: SaveConfigPayload) => Promise<void>) => Promise<void>;
   flushSave: () => void;
   handleContentChange: (updateConfig: (payload: SaveConfigPayload) => Promise<void>) => void;
-  setChatPanelExpanded: (expanded: boolean | ((prev: boolean) => boolean)) => void;
   /**
    * Start streaming mode - clears editor and prepares for streaming content
    */
@@ -83,7 +82,8 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
 
         if (editor) {
           try {
-            finalContent = (editor.getDocument('markdown') as unknown as string) || streamingContent;
+            finalContent =
+              (editor.getDocument('markdown') as unknown as string) || streamingContent;
             editorData = editor.getDocument('json') as unknown as Record<string, any>;
           } catch {
             // Use streaming content if editor read fails
@@ -132,15 +132,6 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
           console.error('[ProfileEditor] Failed to read editor content:', error);
         }
       },
-
-      setChatPanelExpanded: (expanded) => {
-        if (typeof expanded === 'function') {
-          set((state) => ({ chatPanelExpanded: expanded(state.chatPanelExpanded) }));
-        } else {
-          set({ chatPanelExpanded: expanded });
-        }
-      },
-
       startStreaming: () => {
         const { editor } = get();
 
