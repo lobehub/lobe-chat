@@ -6,16 +6,19 @@ import { AgentBuilderAction, agentBuilderSlice } from './agentBuilder';
 import { ChatCodeInterpreterAction, codeInterpreterSlice } from './interpreter';
 import { KnowledgeBaseAction, knowledgeBaseSlice } from './knowledgeBase';
 import { LocalFileAction, localSystemSlice } from './localSystem';
+import { PageAgentAction, pageAgentSlice } from './pageAgent';
 import { SearchAction, searchSlice } from './search';
 import { UserMemoryAction, userMemorySlice } from './userMemory';
 
 export interface ChatBuiltinToolAction
-  extends SearchAction,
+  extends
+    SearchAction,
     LocalFileAction,
     ChatCodeInterpreterAction,
     KnowledgeBaseAction,
     UserMemoryAction,
-    AgentBuilderAction {}
+    AgentBuilderAction,
+    PageAgentAction {}
 
 export const chatToolSlice: StateCreator<
   ChatStore,
@@ -29,4 +32,5 @@ export const chatToolSlice: StateCreator<
   ...knowledgeBaseSlice(...params),
   ...userMemorySlice(...params),
   ...agentBuilderSlice(...params),
+  ...pageAgentSlice(...params),
 });

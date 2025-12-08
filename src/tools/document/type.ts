@@ -6,6 +6,11 @@ export interface InitDocumentArgs {
   markdown: string;
 }
 
+// ============ Document Metadata Args ============
+export interface EditTitleArgs {
+  title: string;
+}
+
 // Common node types in XML document
 export type NodeType =
   | 'p'
@@ -340,6 +345,12 @@ export interface ConvertToListState {
 export interface InitDocumentState {
   nodeCount: number;
   rootId: string;
+}
+
+// ============ Document Metadata State ============
+export interface EditTitleState {
+  newTitle: string;
+  previousTitle: string;
 }
 
 // ============ Snapshot Operations State ============

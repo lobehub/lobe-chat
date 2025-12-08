@@ -13,7 +13,10 @@ export const PAGE_AGENT: BuiltinAgentDefinition = {
   },
 
   // Runtime function - generates dynamic config
-  runtime: { systemRole: systemRoleTemplate },
+  runtime: (ctx) => ({
+    plugins: ['lobe-page-agent', ...(ctx.plugins || [])],
+    systemRole: systemRoleTemplate,
+  }),
 
   slug: BUILTIN_AGENT_SLUGS.pageAgent,
 };
