@@ -143,6 +143,7 @@ const defaultMiddleware = (request: NextRequest) => {
     '/discover',
     '/resource',
     '/page',
+    '/group',
     '/settings',
     '/image',
     '/labs',
