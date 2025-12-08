@@ -37,6 +37,17 @@ const FileEditor = memo<PreviewModeProps>(({ fileName, knowledgeBaseId }) => {
       <NavHeader
         left={
           <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
+            <Flexbox align={'center'} style={{ marginLeft: 12 }}>
+              <Breadcrumb
+                category={category}
+                fileName={fileName}
+                knowledgeBaseId={knowledgeBaseId}
+              />
+            </Flexbox>
+          </Flexbox>
+        }
+        right={
+          <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
             <ActionIcon
               icon={XIcon}
               onClick={() => {
@@ -45,13 +56,6 @@ const FileEditor = memo<PreviewModeProps>(({ fileName, knowledgeBaseId }) => {
               }}
               title={t('back')}
             />
-            <Flexbox align={'center'} style={{ marginLeft: 12 }}>
-              <Breadcrumb
-                category={category}
-                fileName={fileName}
-                knowledgeBaseId={knowledgeBaseId}
-              />
-            </Flexbox>
           </Flexbox>
         }
         styles={{
