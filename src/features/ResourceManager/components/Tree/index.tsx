@@ -1,7 +1,8 @@
 'use client';
 
 import { CaretDownFilled, LoadingOutlined } from '@ant-design/icons';
-import { useDroppable } from '@dnd-kit/core';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 import { ActionIcon, Block, Dropdown, Icon } from '@lobehub/ui';
 import { App, Input } from 'antd';
 import { createStyles } from 'antd-style';
@@ -11,6 +12,7 @@ import React, { memo, useCallback, useReducer, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
+import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import FileIcon from '@/components/FileIcon';
@@ -44,6 +46,9 @@ const getTreeState = (knowledgeBaseId: string) => {
 };
 
 const useStyles = createStyles(({ css, token }) => ({
+  dragging: css`
+    opacity: 0.5;
+  `,
   fileItemDragOver: css`
     background-color: ${token.colorFillSecondary} !important;
     outline: 2px dashed ${token.colorPrimary};
@@ -168,15 +173,43 @@ const FileTreeItem = memo<{
     // Dynamically look up children from cache instead of using static item.children
     const children = folderChildrenCache.get(itemKey);
 
-    const { setNodeRef, isOver } = useDroppable({
+    const isDragActive = useDragActive();
+
+    const {
+      attributes,
+      listeners,
+      setNodeRef: setDraggableRef,
+      transform,
+      isDragging,
+    } = useDraggable({
       data: {
-        fileType: 'custom/folder',
-        isFolder: true,
+        fileType: item.fileType,
+        isFolder: item.isFolder,
         name: item.name,
+        sourceType: item.sourceType,
       },
-      disabled: !item.isFolder,
       id: item.id,
     });
+
+    const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+      data: {
+        fileType: item.fileType,
+        isFolder: item.isFolder,
+        name: item.name,
+        sourceType: item.sourceType,
+      },
+      disabled: !item.isFolder || !isDragActive,
+      id: item.id,
+    });
+
+    const setNodeRef = (node: HTMLElement | null) => {
+      setDraggableRef(node);
+      setDroppableRef(node);
+    };
+
+    const dndStyle = {
+      transform: CSS.Translate.toString(transform),
+    };
 
     const handleItemClick = useCallback(() => {
       // Open file modal using slug-based routing
@@ -221,19 +254,25 @@ const FileTreeItem = memo<{
       };
 
       return (
-        <Flexbox gap={2} ref={setNodeRef}>
+        <Flexbox gap={2}>
           <Dropdown menu={{ items: menuItems }} trigger={['contextMenu']}>
             <Block
               align={'center'}
-              className={cx(isOver && styles.fileItemDragOver)}
+              className={cx(isOver && styles.fileItemDragOver, isDragging && styles.dragging)}
               clickable
               gap={8}
               height={36}
               horizontal
               onClick={() => handleFolderClick(item.id, item.slug)}
               paddingInline={4}
-              style={{ paddingInlineStart: level * 16 + 4 }}
+              ref={setNodeRef}
+              style={{
+                paddingInlineStart: level * 16 + 4,
+                ...dndStyle,
+              }}
               variant={isActive ? 'filled' : 'borderless'}
+              {...attributes}
+              {...listeners}
             >
               {isLoading ? (
                 <ActionIcon icon={LoadingOutlined as any} size={'small'} spin />
@@ -335,14 +374,21 @@ const FileTreeItem = memo<{
         <Dropdown menu={{ items: menuItems }} trigger={['contextMenu']}>
           <Block
             align={'center'}
+            className={cx(isDragging && styles.dragging)}
             clickable
             gap={8}
             height={36}
             horizontal
             onClick={handleItemClick}
             paddingInline={4}
-            style={{ paddingInlineStart: level * 16 + 4 }}
+            ref={setNodeRef}
+            style={{
+              paddingInlineStart: level * 16 + 4,
+              ...dndStyle,
+            }}
             variant={isActive ? 'filled' : 'borderless'}
+            {...attributes}
+            {...listeners}
           >
             <div style={{ width: 24 }} />
             <Flexbox
@@ -378,6 +424,9 @@ const FileTreeItem = memo<{
 
 FileTreeItem.displayName = 'FileTreeItem';
 
+/**
+ * As a sidebar along with the Explorer to work
+ */
 const FileTree = memo<FileTreeProps>(() => {
   const { styles, cx } = useStyles();
   const { currentFolderSlug } = useFolderPath();
