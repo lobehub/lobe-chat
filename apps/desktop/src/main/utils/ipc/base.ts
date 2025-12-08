@@ -56,9 +56,9 @@ export class IpcHandler {
     return IpcHandler.instance;
   }
 
-  registerMethod<TInput, TOutput>(
+  registerMethod<TArgs extends unknown[], TOutput>(
     channel: string,
-    handler: (payload: TInput) => Promise<TOutput> | TOutput,
+    handler: (...args: TArgs) => Promise<TOutput> | TOutput,
   ) {
     if (this.registeredChannels.has(channel)) {
       return; // Already registered
@@ -74,8 +74,8 @@ export class IpcHandler {
 
       return ipcContextStorage.run(context, async () => {
         try {
-          const payload = args.length > 0 ? (args[0] as TInput) : (undefined as TInput);
-          return await handler(payload);
+          const typedArgs = args as TArgs;
+          return await handler(...typedArgs);
         } catch (error) {
           console.error(`Error in IPC method ${channel}:`, error);
           throw error;
@@ -113,9 +113,9 @@ export abstract class IpcService {
     }
   }
 
-  protected registerMethod<TInput, TOutput>(
+  protected registerMethod<TArgs extends unknown[], TOutput>(
     methodName: string,
-    handler: (payload: TInput) => Promise<TOutput> | TOutput,
+    handler: (...args: TArgs) => Promise<TOutput> | TOutput,
   ) {
     const groupName = (this.constructor as typeof IpcService).groupName;
     const channel = `${groupName}.${methodName}`;
