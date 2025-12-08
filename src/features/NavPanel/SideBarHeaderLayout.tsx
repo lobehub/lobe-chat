@@ -8,8 +8,8 @@ import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
+import ToggleLeftPanelButton from './ToggleLeftPanelButton';
 import BackButton, { BACK_BUTTON_ID } from './components/BackButton';
-import TogglePanelButton from './components/TogglePanelButton';
 
 const useStyles = createStyles(({ css, token, prefixCls }) => ({
   breadcrumb: css`
@@ -141,7 +141,7 @@ const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(
             overflow: 'hidden',
           }}
         >
-          {showTogglePanelButton && <TogglePanelButton />}
+          {showTogglePanelButton && <ToggleLeftPanelButton />}
           {right}
         </Flexbox>
       </Flexbox>

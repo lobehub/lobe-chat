@@ -93,10 +93,9 @@ export const globalWorkspaceSlice: StateCreator<
   },
 
   toggleRightPanel: (newValue) => {
-    const showRightSideBar =
-      typeof newValue === 'boolean' ? newValue : !get().status.showRightSideBar;
+    const showRightPanel = typeof newValue === 'boolean' ? newValue : !get().status.showRightPanel;
 
-    get().updateSystemStatus({ showRightSideBar }, n('toggleRightPanel', newValue));
+    get().updateSystemStatus({ showRightPanel }, n('toggleRightPanel', newValue));
   },
   toggleSystemRole: (newValue) => {
     const showSystemRole = typeof newValue === 'boolean' ? newValue : !get().status.mobileShowTopic;

@@ -21,10 +21,8 @@ export interface Action {
   handleTitleSubmit: () => Promise<void>;
   onEditorInit: () => void;
   performSave: () => Promise<void>;
-  setChatPanelExpanded: (expanded: boolean) => void;
   setCurrentEmoji: (emoji: string | undefined) => void;
   setCurrentTitle: (title: string) => void;
-  toggleChatPanel: () => void;
 }
 
 export type Store = State & Action;
@@ -242,10 +240,6 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
         }
       },
 
-      setChatPanelExpanded: (expanded: boolean) => {
-        set({ chatPanelExpanded: expanded });
-      },
-
       setCurrentEmoji: (emoji: string | undefined) => {
         set({ currentEmoji: emoji });
         debouncedSave();
@@ -254,10 +248,6 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
       setCurrentTitle: (title: string) => {
         set({ currentTitle: title });
         debouncedSave();
-      },
-
-      toggleChatPanel: () => {
-        set((state) => ({ chatPanelExpanded: !state.chatPanelExpanded }));
       },
     };
   };
