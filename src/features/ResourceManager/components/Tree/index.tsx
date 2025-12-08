@@ -247,8 +247,8 @@ const FileTreeItem = memo<{
         // Toggle folder expansion
         onToggleFolder(itemKey);
 
-        // Always load/refetch children when expanding
-        if (!isExpanded) {
+        // Only load if not already cached
+        if (!isExpanded && !folderChildrenCache.has(itemKey)) {
           await onLoadFolder(itemKey);
         }
       };
