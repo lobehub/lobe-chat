@@ -102,12 +102,15 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
 
         const pools = itemsToMove.map((id) => {
           const item = fileList.find((f) => f.id === id);
-          if (!item) return Promise.resolve();
+
+          // Fallback to active drag data if item not in fileList (e.g., from tree lazy-loaded folders)
+          const itemData = item || (id === active.id ? active.data.current : null);
+          if (!itemData) return Promise.resolve();
 
           const isDocument =
-            item.sourceType === 'document' ||
-            item.fileType === 'custom/document' ||
-            item.fileType === 'custom/folder';
+            itemData.sourceType === 'document' ||
+            itemData.fileType === 'custom/document' ||
+            itemData.fileType === 'custom/folder';
 
           if (isDocument) {
             return updateDocument(id, { parentId: targetParentId });
