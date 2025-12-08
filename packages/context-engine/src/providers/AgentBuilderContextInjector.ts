@@ -18,6 +18,24 @@ const escapeXml = (str: string): string => {
 };
 
 /**
+ * Official tool item for Agent Builder context
+ */
+export interface OfficialToolItem {
+  /** Tool description */
+  description?: string;
+  /** Whether the tool is enabled for current agent */
+  enabled?: boolean;
+  /** Tool identifier */
+  identifier: string;
+  /** Whether the tool is installed/connected */
+  installed?: boolean;
+  /** Tool display name */
+  name: string;
+  /** Tool type: 'builtin' for built-in tools, 'klavis' for Klavis MCP servers */
+  type: 'builtin' | 'klavis';
+}
+
+/**
  * Agent context for Agent Builder
  */
 export interface AgentBuilderContext {
@@ -40,6 +58,8 @@ export interface AgentBuilderContext {
     tags?: string[];
     title?: string;
   };
+  /** Available official tools (builtin tools and Klavis integrations) */
+  officialTools?: OfficialToolItem[];
 }
 
 export interface AgentBuilderContextInjectorConfig {
@@ -83,7 +103,9 @@ const defaultFormatAgentContext = (context: AgentBuilderContext): string => {
         `  <model provider="${context.config.provider || 'unknown'}">${context.config.model}</model>`,
       );
     if (context.config.plugins && context.config.plugins.length > 0)
-      configFields.push(`  <plugins>${context.config.plugins.join(', ')}</plugins>`);
+      configFields.push(
+        `  <enabled_plugins>${context.config.plugins.join(', ')}</enabled_plugins>`,
+      );
     if (context.config.openingMessage)
       configFields.push(
         `  <openingMessage>${escapeXml(context.config.openingMessage)}</openingMessage>`,
@@ -110,12 +132,54 @@ const defaultFormatAgentContext = (context: AgentBuilderContext): string => {
     }
   }
 
+  // Add official tools section
+  if (context.officialTools && context.officialTools.length > 0) {
+    const builtinTools = context.officialTools.filter((t) => t.type === 'builtin');
+    const klavisTools = context.officialTools.filter((t) => t.type === 'klavis');
+
+    const toolsSections: string[] = [];
+
+    if (builtinTools.length > 0) {
+      const builtinItems = builtinTools
+        .map((t) => {
+          const attrs = [`id="${t.identifier}"`, `enabled="${t.enabled ? 'true' : 'false'}"`].join(
+            ' ',
+          );
+          const desc = t.description ? ` - ${escapeXml(t.description)}` : '';
+          return `    <tool ${attrs}>${escapeXml(t.name)}${desc}</tool>`;
+        })
+        .join('\n');
+      toolsSections.push(`  <builtin_tools>\n${builtinItems}\n  </builtin_tools>`);
+    }
+
+    if (klavisTools.length > 0) {
+      const klavisItems = klavisTools
+        .map((t) => {
+          const attrs = [
+            `id="${t.identifier}"`,
+            `installed="${t.installed ? 'true' : 'false'}"`,
+            `enabled="${t.enabled ? 'true' : 'false'}"`,
+          ].join(' ');
+          const desc = t.description ? ` - ${escapeXml(t.description)}` : '';
+          return `    <tool ${attrs}>${escapeXml(t.name)}${desc}</tool>`;
+        })
+        .join('\n');
+      toolsSections.push(`  <klavis_tools>\n${klavisItems}\n  </klavis_tools>`);
+    }
+
+    if (toolsSections.length > 0) {
+      parts.push(
+        `<available_official_tools>\n${toolsSections.join('\n')}\n</available_official_tools>`,
+      );
+    }
+  }
+
   if (parts.length === 0) {
     return '';
   }
 
   return `<current_agent_context>
-<instruction>This is the current agent's configuration context. Use this information when the user asks about or wants to modify agent settings.</instruction>
+<instruction>This is the current agent's configuration context. Use this information when the user asks about or wants to modify agent settings. Use togglePlugin to enable/disable tools, or installPlugin to install new tools.</instruction>
 ${parts.join('\n')}
 </current_agent_context>`;
 };

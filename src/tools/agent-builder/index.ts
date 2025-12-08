@@ -49,28 +49,8 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
-    {
-      description:
-        'Search for official tools including built-in tools and Klavis integrations (Gmail, Google Calendar, Notion, GitHub, etc.). Use this FIRST when users ask for tools/plugins. Users can enable built-in tools or connect Klavis services that require OAuth authorization.',
-      name: AgentBuilderApiName.searchOfficialTools,
-      parameters: {
-        properties: {
-          query: {
-            description:
-              'Optional: search keywords to find specific tools (e.g., "gmail", "calendar", "github").',
-            type: 'string',
-          },
-          type: {
-            description:
-              'Optional: filter by tool type. "builtin" for built-in tools only, "klavis" for Klavis integrations only, "all" for both. Defaults to "all".',
-            enum: ['all', 'builtin', 'klavis'],
-            type: 'string',
-          },
-        },
-        required: [],
-        type: 'object',
-      },
-    },
+    // Note: searchOfficialTools is removed because official tools are now
+    // automatically injected into the conversation context
 
     // ==================== Write Operations ====================
     {
@@ -98,7 +78,7 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
     },
     {
       description:
-        'Update multiple agent configuration fields at once. Use this for bulk updates. For single field updates, prefer specific APIs like setModel, togglePlugin, etc.',
+        'Update agent configuration fields. Use this to change model, provider, plugins, opening message, opening questions, chat settings, and model parameters. Only include fields you want to update.',
       name: AgentBuilderApiName.updateAgentConfig,
       parameters: {
         properties: {
@@ -107,24 +87,29 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
               'Partial agent configuration object. Only include fields you want to update.',
             properties: {
               chatConfig: {
-                description: 'Chat configuration settings',
+                description:
+                  'Chat configuration settings (historyCount, enableHistoryCount, enableAutoCreateTopic, autoCreateTopicThreshold, enableCompressHistory, enableStreaming, enableReasoning, displayMode)',
                 type: 'object',
               },
               model: {
-                description: 'The AI model identifier',
+                description:
+                  'The AI model identifier (e.g., "gpt-4o", "gpt-4o-mini", "claude-3-5-sonnet-20241022", "gemini-1.5-pro")',
                 type: 'string',
               },
               openingMessage: {
-                description: 'Opening message for new conversations',
+                description:
+                  'Opening message for new conversations. Set to empty string to remove.',
                 type: 'string',
               },
               openingQuestions: {
-                description: 'Array of suggested opening questions',
+                description:
+                  'Array of suggested opening questions. Set to empty array to remove all.',
                 items: { type: 'string' },
                 type: 'array',
               },
               params: {
-                description: 'Model parameters like temperature, top_p, etc.',
+                description:
+                  'Model parameters like temperature (0-2), top_p (0-1), frequency_penalty (0-2), presence_penalty (0-2)',
                 type: 'object',
               },
               plugins: {
@@ -133,7 +118,8 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
                 type: 'array',
               },
               provider: {
-                description: 'The AI provider identifier',
+                description:
+                  'The AI provider identifier (e.g., "openai", "anthropic", "google", "azure")',
                 type: 'string',
               },
             },
@@ -184,56 +170,6 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
     },
     {
       description:
-        'Update chat-specific configuration settings like history count, auto-topic creation, streaming, etc.',
-      name: AgentBuilderApiName.updateChatConfig,
-      parameters: {
-        properties: {
-          chatConfig: {
-            description: 'Partial chat configuration object.',
-            properties: {
-              autoCreateTopicThreshold: {
-                description: 'Number of messages before auto-creating a topic',
-                type: 'number',
-              },
-              displayMode: {
-                description: 'Display mode for messages',
-                enum: ['chat', 'docs'],
-                type: 'string',
-              },
-              enableAutoCreateTopic: {
-                description: 'Whether to automatically create topics',
-                type: 'boolean',
-              },
-              enableCompressHistory: {
-                description: 'Whether to compress long conversation history',
-                type: 'boolean',
-              },
-              enableHistoryCount: {
-                description: 'Whether to limit history count',
-                type: 'boolean',
-              },
-              enableReasoning: {
-                description: 'Whether to enable reasoning/thinking mode',
-                type: 'boolean',
-              },
-              enableStreaming: {
-                description: 'Whether to enable streaming output',
-                type: 'boolean',
-              },
-              historyCount: {
-                description: 'Number of historical messages to include in context',
-                type: 'number',
-              },
-            },
-            type: 'object',
-          },
-        },
-        required: ['chatConfig'],
-        type: 'object',
-      },
-    },
-    {
-      description:
         "Update the agent's system prompt (systemRole). This is the core instruction that defines how the agent behaves, responds, and interacts with users. Use streaming mode for a typewriter effect in the editor.",
       name: AgentBuilderApiName.updatePrompt,
       parameters: {
@@ -253,8 +189,6 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
-
-    // ==================== Specific Field Operations ====================
     {
       description:
         'Enable or disable a specific plugin for the agent. If enabled is not provided, toggles the current state.',
@@ -273,61 +207,6 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
           },
         },
         required: ['pluginId'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Set the AI model and provider for the agent. This determines which AI model will be used for conversations.',
-      name: AgentBuilderApiName.setModel,
-      parameters: {
-        properties: {
-          model: {
-            description:
-              'The model identifier (e.g., "gpt-4o", "gpt-4o-mini", "claude-3-5-sonnet-20241022", "gemini-1.5-pro")',
-            type: 'string',
-          },
-          provider: {
-            description: 'The provider identifier (e.g., "openai", "anthropic", "google", "azure")',
-            type: 'string',
-          },
-        },
-        required: ['model', 'provider'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Set the opening message that is displayed when a user starts a new conversation with the agent.',
-      name: AgentBuilderApiName.setOpeningMessage,
-      parameters: {
-        properties: {
-          message: {
-            description:
-              'The opening message text. Can include markdown formatting. Set to empty string to remove.',
-            type: 'string',
-          },
-        },
-        required: ['message'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Set the suggested opening questions that help users get started with the agent.',
-      name: AgentBuilderApiName.setOpeningQuestions,
-      parameters: {
-        properties: {
-          questions: {
-            description:
-              'Array of suggested questions. Set to empty array to remove all questions.',
-            items: {
-              type: 'string',
-            },
-            type: 'array',
-          },
-        },
-        required: ['questions'],
         type: 'object',
       },
     },
