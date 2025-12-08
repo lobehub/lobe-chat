@@ -1,13 +1,31 @@
 import { ActionIcon, Tag } from '@lobehub/ui';
 import { Dropdown } from 'antd';
+import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { Clock3Icon, PlusIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 import { useChatStore } from '@/store/chat';
+
+dayjs.extend(relativeTime);
+
+const useStyles = createStyles(({ css, token }) => ({
+  time: css`
+    font-size: 12px;
+    color: ${token.colorTextTertiary};
+  `,
+  title: css`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  `,
+}));
 
 interface TopicSelectorProps {
   agentId: string;
@@ -15,6 +33,7 @@ interface TopicSelectorProps {
 
 const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
   const { t } = useTranslation('topic');
+  const { styles } = useStyles();
 
   // Fetch topics for the agent builder
   useChatStore((s) => s.useFetchTopics)(true, { agentId });
@@ -33,12 +52,24 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
 
   const items = useMemo<ItemType[]>(
     () =>
-      (topics || []).map((topic) => ({
-        key: topic.id,
-        label: topic.title,
-        onClick: () => switchTopic(topic.id),
-      })),
-    [topics, t, switchTopic],
+      (topics || []).map((topic) => {
+        const displayTime =
+          dayjs().diff(dayjs(topic.updatedAt), 'd') < 7
+            ? dayjs(topic.updatedAt).fromNow()
+            : dayjs(topic.updatedAt).format('YYYY-MM-DD');
+
+        return {
+          key: topic.id,
+          label: (
+            <Flexbox gap={4} horizontal justify="space-between" width="100%">
+              <span className={styles.title}>{topic.title}</span>
+              <span className={styles.time}>{displayTime}</span>
+            </Flexbox>
+          ),
+          onClick: () => switchTopic(topic.id),
+        };
+      }),
+    [topics, switchTopic, styles],
   );
 
   return (
@@ -57,12 +88,9 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
             menu={{
               items,
               selectedKeys: activeTopicId ? [activeTopicId] : [],
+              style: { maxHeight: 400, overflowY: 'auto' },
             }}
-            overlayStyle={{
-              maxHeight: 600,
-              minWidth: 200,
-              overflowY: 'auto',
-            }}
+            overlayStyle={{ minWidth: 280 }}
             placement="bottomRight"
             trigger={['click']}
           >
