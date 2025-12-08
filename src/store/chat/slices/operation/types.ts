@@ -33,6 +33,9 @@ export type OperationType =
   // === (sub-operations) ===
   | 'createToolMessage' // Create tool message (sub-operation of executeToolCall)
   | 'executeToolCall' // Execute tool call (sub-operation of toolCalling)
+  // === Tool intervention ===
+  | 'approveToolCalling' // Approve tool intervention
+  | 'rejectToolCalling' // Reject tool intervention
   // === (sub-operations of executeToolCall) ===
   | 'pluginApi' // Plugin API call
   | 'builtinToolSearch' // Builtin tool: search

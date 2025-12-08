@@ -66,7 +66,7 @@ describe('Tool Actions', () => {
   });
 
   describe('approveToolCall', () => {
-    it('should approve a tool call', async () => {
+    it('should pass entire context object to ChatStore.approveToolCalling', async () => {
       const context: ConversationContext = {
         agentId: 'session-1',
         topicId: null,
@@ -79,7 +79,26 @@ describe('Tool Actions', () => {
         await store.getState().approveToolCall('tool-call-1', 'group-1');
       });
 
-      expect(mockApproveToolCalling).toHaveBeenCalledWith('tool-call-1', 'group-1');
+      // Verify context is passed as third argument
+      expect(mockApproveToolCalling).toHaveBeenCalledWith('tool-call-1', 'group-1', context);
+    });
+
+    it('should pass agent_builder scope context correctly', async () => {
+      const context: ConversationContext = {
+        agentId: 'builder-agent',
+        topicId: 'builder-topic',
+        threadId: 'builder-thread',
+        scope: 'agent_builder',
+      };
+
+      const store = createStore({ context });
+
+      await act(async () => {
+        await store.getState().approveToolCall('tool-call-1', 'group-1');
+      });
+
+      // Verify entire context object is passed (including scope)
+      expect(mockApproveToolCalling).toHaveBeenCalledWith('tool-call-1', 'group-1', context);
     });
 
     it('should call onToolApproved hook before approval', async () => {
@@ -98,7 +117,7 @@ describe('Tool Actions', () => {
       });
 
       expect(onToolApproved).toHaveBeenCalledWith('tool-call-1');
-      expect(mockApproveToolCalling).toHaveBeenCalledWith('tool-call-1', 'group-1');
+      expect(mockApproveToolCalling).toHaveBeenCalledWith('tool-call-1', 'group-1', context);
     });
 
     it('should respect onToolApproved hook returning false', async () => {
@@ -179,7 +198,7 @@ describe('Tool Actions', () => {
   });
 
   describe('rejectAndContinueToolCall', () => {
-    it('should reject and continue tool call', async () => {
+    it('should pass entire context object to ChatStore.rejectAndContinueToolCalling', async () => {
       const context: ConversationContext = {
         agentId: 'session-1',
         topicId: null,
@@ -192,7 +211,55 @@ describe('Tool Actions', () => {
         await store.getState().rejectAndContinueToolCall('tool-call-1', 'Reason');
       });
 
-      expect(mockRejectAndContinueToolCalling).toHaveBeenCalledWith('tool-call-1', 'Reason');
+      // Verify context is passed as third argument
+      expect(mockRejectAndContinueToolCalling).toHaveBeenCalledWith(
+        'tool-call-1',
+        'Reason',
+        context,
+      );
+    });
+
+    it('should pass agent_builder scope context correctly', async () => {
+      const context: ConversationContext = {
+        agentId: 'builder-agent',
+        topicId: 'builder-topic',
+        threadId: 'builder-thread',
+        scope: 'agent_builder',
+      };
+
+      const store = createStore({ context });
+
+      await act(async () => {
+        await store.getState().rejectAndContinueToolCall('tool-call-1', 'User rejected');
+      });
+
+      // Verify entire context object is passed (including scope)
+      expect(mockRejectAndContinueToolCalling).toHaveBeenCalledWith(
+        'tool-call-1',
+        'User rejected',
+        context,
+      );
+    });
+
+    it('should pass context with undefined reason', async () => {
+      const context: ConversationContext = {
+        agentId: 'builder-agent',
+        topicId: null,
+        threadId: null,
+      };
+
+      const store = createStore({ context });
+
+      await act(async () => {
+        await store.getState().rejectAndContinueToolCall('tool-call-1');
+      });
+
+      // Verify context is passed even with undefined reason
+      expect(mockRejectAndContinueToolCalling).toHaveBeenCalledWith(
+        'tool-call-1',
+        undefined,
+        context,
+      );
     });
   });
 });

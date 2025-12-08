@@ -1,9 +1,10 @@
+import { ConversationContext } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useChatStore } from '../../../../store';
 import { messageMapKey } from '../../../../utils/messageMapKey';
-import { TEST_IDS } from './fixtures';
+import { TEST_IDS, createMockMessage } from './fixtures';
 import { resetTestEnvironment } from './helpers';
 
 // Keep zustand mock as it's needed globally
@@ -365,6 +366,320 @@ describe('ConversationControl actions', () => {
       expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, {
         activeBranchIndex: branchIndex,
       });
+    });
+  });
+
+  describe('approveToolCalling', () => {
+    it('should use provided context instead of global state', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      // Setup: global activeAgentId = 'global-agent'
+      const globalAgentId = 'global-agent';
+      const builderAgentId = 'builder-agent';
+      const builderTopicId = 'builder-topic';
+
+      // Create tool message
+      const toolMessage = createMockMessage({
+        id: 'tool-msg-1',
+        role: 'tool',
+        plugin: { identifier: 'test-plugin', type: 'default', arguments: '{}', apiName: 'test' },
+      });
+
+      // Setup store with global context and builder context messages
+      const globalKey = messageMapKey({ agentId: globalAgentId, topicId: null });
+      const builderKey = messageMapKey({
+        agentId: builderAgentId,
+        topicId: builderTopicId,
+        scope: 'agent_builder',
+      });
+
+      act(() => {
+        useChatStore.setState({
+          activeAgentId: globalAgentId,
+          activeTopicId: undefined,
+          dbMessagesMap: {
+            [globalKey]: [createMockMessage({ id: 'global-msg', role: 'user' })],
+            [builderKey]: [toolMessage],
+          },
+          messagesMap: {
+            [globalKey]: [createMockMessage({ id: 'global-msg', role: 'user' })],
+            [builderKey]: [toolMessage],
+          },
+        });
+      });
+
+      // Mock internal methods
+      const optimisticUpdatePluginSpy = vi
+        .spyOn(result.current, 'optimisticUpdatePlugin')
+        .mockResolvedValue(undefined);
+      const internal_createAgentStateSpy = vi
+        .spyOn(result.current, 'internal_createAgentState')
+        .mockReturnValue({
+          state: {} as any,
+          context: { phase: 'init' } as any,
+        });
+      const internal_execAgentRuntimeSpy = vi
+        .spyOn(result.current, 'internal_execAgentRuntime')
+        .mockResolvedValue(undefined);
+
+      // Call with builder context
+      const context: ConversationContext = {
+        agentId: builderAgentId,
+        topicId: builderTopicId,
+        scope: 'agent_builder',
+      };
+
+      await act(async () => {
+        await result.current.approveToolCalling('tool-msg-1', 'group-1', context);
+      });
+
+      // Verify internal_createAgentState was called with builder context
+      expect(internal_createAgentStateSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: builderAgentId,
+          topicId: builderTopicId,
+        }),
+      );
+
+      // Verify internal_execAgentRuntime was called with builder context
+      expect(internal_execAgentRuntimeSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: builderAgentId,
+          topicId: builderTopicId,
+          scope: 'agent_builder',
+        }),
+      );
+    });
+
+    it('should fallback to global state when context not provided', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      const globalAgentId = 'global-agent';
+      const globalTopicId = 'global-topic';
+
+      // Create tool message
+      const toolMessage = createMockMessage({
+        id: 'tool-msg-1',
+        role: 'tool',
+        plugin: { identifier: 'test-plugin', type: 'default', arguments: '{}', apiName: 'test' },
+      });
+
+      const globalKey = messageMapKey({ agentId: globalAgentId, topicId: globalTopicId });
+
+      act(() => {
+        useChatStore.setState({
+          activeAgentId: globalAgentId,
+          activeTopicId: globalTopicId,
+          activeThreadId: undefined,
+          dbMessagesMap: {
+            [globalKey]: [toolMessage],
+          },
+          messagesMap: {
+            [globalKey]: [toolMessage],
+          },
+        });
+      });
+
+      // Mock internal methods
+      vi.spyOn(result.current, 'optimisticUpdatePlugin').mockResolvedValue(undefined);
+      const internal_createAgentStateSpy = vi
+        .spyOn(result.current, 'internal_createAgentState')
+        .mockReturnValue({
+          state: {} as any,
+          context: { phase: 'init' } as any,
+        });
+      const internal_execAgentRuntimeSpy = vi
+        .spyOn(result.current, 'internal_execAgentRuntime')
+        .mockResolvedValue(undefined);
+
+      // Call without context (should use global state)
+      await act(async () => {
+        await result.current.approveToolCalling('tool-msg-1', 'group-1');
+      });
+
+      // Verify internal_createAgentState was called with global context
+      expect(internal_createAgentStateSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: globalAgentId,
+          topicId: globalTopicId,
+        }),
+      );
+
+      // Verify internal_execAgentRuntime was called with global context
+      expect(internal_execAgentRuntimeSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: globalAgentId,
+          topicId: globalTopicId,
+        }),
+      );
+    });
+
+    it('should not execute when tool message not found', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        useChatStore.setState({
+          activeAgentId: 'test-agent',
+          activeTopicId: undefined,
+          dbMessagesMap: {},
+          messagesMap: {},
+        });
+      });
+
+      const internal_execAgentRuntimeSpy = vi
+        .spyOn(result.current, 'internal_execAgentRuntime')
+        .mockResolvedValue(undefined);
+
+      await act(async () => {
+        await result.current.approveToolCalling('non-existent-msg', 'group-1');
+      });
+
+      // Should not call internal_execAgentRuntime when tool message not found
+      expect(internal_execAgentRuntimeSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('rejectAndContinueToolCalling', () => {
+    it('should use provided context instead of global state', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      const globalAgentId = 'global-agent';
+      const builderAgentId = 'builder-agent';
+      const builderTopicId = 'builder-topic';
+
+      // Create tool message
+      const toolMessage = createMockMessage({
+        id: 'tool-msg-1',
+        role: 'tool',
+        plugin: { identifier: 'test-plugin', type: 'default', arguments: '{}', apiName: 'test' },
+      });
+
+      const globalKey = messageMapKey({ agentId: globalAgentId, topicId: null });
+      const builderKey = messageMapKey({
+        agentId: builderAgentId,
+        topicId: builderTopicId,
+        scope: 'agent_builder',
+      });
+
+      act(() => {
+        useChatStore.setState({
+          activeAgentId: globalAgentId,
+          activeTopicId: undefined,
+          dbMessagesMap: {
+            [globalKey]: [createMockMessage({ id: 'global-msg', role: 'user' })],
+            [builderKey]: [toolMessage],
+          },
+          messagesMap: {
+            [globalKey]: [createMockMessage({ id: 'global-msg', role: 'user' })],
+            [builderKey]: [toolMessage],
+          },
+        });
+      });
+
+      // Mock internal methods
+      vi.spyOn(result.current, 'optimisticUpdatePlugin').mockResolvedValue(undefined);
+      vi.spyOn(result.current, 'optimisticUpdateMessageContent').mockResolvedValue(undefined);
+      const internal_createAgentStateSpy = vi
+        .spyOn(result.current, 'internal_createAgentState')
+        .mockReturnValue({
+          state: {} as any,
+          context: { phase: 'init' } as any,
+        });
+      const internal_execAgentRuntimeSpy = vi
+        .spyOn(result.current, 'internal_execAgentRuntime')
+        .mockResolvedValue(undefined);
+
+      // Call with builder context
+      const context: ConversationContext = {
+        agentId: builderAgentId,
+        topicId: builderTopicId,
+        scope: 'agent_builder',
+      };
+
+      await act(async () => {
+        await result.current.rejectAndContinueToolCalling('tool-msg-1', 'User rejected', context);
+      });
+
+      // Verify internal_createAgentState was called with builder context
+      expect(internal_createAgentStateSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: builderAgentId,
+          topicId: builderTopicId,
+        }),
+      );
+
+      // Verify internal_execAgentRuntime was called with builder context
+      expect(internal_execAgentRuntimeSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: builderAgentId,
+          topicId: builderTopicId,
+          scope: 'agent_builder',
+        }),
+      );
+    });
+
+    it('should fallback to global state when context not provided', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      const globalAgentId = 'global-agent';
+      const globalTopicId = 'global-topic';
+
+      // Create tool message
+      const toolMessage = createMockMessage({
+        id: 'tool-msg-1',
+        role: 'tool',
+        plugin: { identifier: 'test-plugin', type: 'default', arguments: '{}', apiName: 'test' },
+      });
+
+      const globalKey = messageMapKey({ agentId: globalAgentId, topicId: globalTopicId });
+
+      act(() => {
+        useChatStore.setState({
+          activeAgentId: globalAgentId,
+          activeTopicId: globalTopicId,
+          activeThreadId: undefined,
+          dbMessagesMap: {
+            [globalKey]: [toolMessage],
+          },
+          messagesMap: {
+            [globalKey]: [toolMessage],
+          },
+        });
+      });
+
+      // Mock internal methods
+      vi.spyOn(result.current, 'optimisticUpdatePlugin').mockResolvedValue(undefined);
+      vi.spyOn(result.current, 'optimisticUpdateMessageContent').mockResolvedValue(undefined);
+      const internal_createAgentStateSpy = vi
+        .spyOn(result.current, 'internal_createAgentState')
+        .mockReturnValue({
+          state: {} as any,
+          context: { phase: 'init' } as any,
+        });
+      const internal_execAgentRuntimeSpy = vi
+        .spyOn(result.current, 'internal_execAgentRuntime')
+        .mockResolvedValue(undefined);
+
+      // Call without context
+      await act(async () => {
+        await result.current.rejectAndContinueToolCalling('tool-msg-1', 'User rejected');
+      });
+
+      // Verify internal_createAgentState was called with global context
+      expect(internal_createAgentStateSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: globalAgentId,
+          topicId: globalTopicId,
+        }),
+      );
+
+      // Verify internal_execAgentRuntime was called with global context
+      expect(internal_execAgentRuntimeSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: globalAgentId,
+          topicId: globalTopicId,
+        }),
+      );
     });
   });
 });

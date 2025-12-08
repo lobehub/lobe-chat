@@ -35,7 +35,7 @@ export const toolSlice: StateCreator<
 > = (set, get) => ({
   approveToolCall: async (toolMessageId: string, assistantGroupId: string) => {
     const state = get();
-    const { hooks } = state;
+    const { hooks, context } = state;
 
     // ===== Hook: onToolApproved =====
     if (hooks.onToolApproved) {
@@ -43,9 +43,9 @@ export const toolSlice: StateCreator<
       if (shouldProceed === false) return;
     }
 
-    // Delegate to global ChatStore for now as it requires agent runtime execution
+    // Delegate to global ChatStore with context for correct conversation scope
     const chatStore = useChatStore.getState();
-    await chatStore.approveToolCalling(toolMessageId, assistantGroupId);
+    await chatStore.approveToolCalling(toolMessageId, assistantGroupId, context);
 
     // ===== Hook: onToolCallComplete =====
     if (hooks.onToolCallComplete) {
@@ -54,13 +54,14 @@ export const toolSlice: StateCreator<
   },
 
   rejectAndContinueToolCall: async (toolMessageId: string, reason?: string) => {
+    const { context } = get();
+
     // First reject the tool call
     await get().rejectToolCall(toolMessageId, reason);
 
-    // Then delegate to ChatStore to continue the conversation
-    // as it requires agent runtime execution
+    // Then delegate to ChatStore to continue the conversation with context
     const chatStore = useChatStore.getState();
-    await chatStore.rejectAndContinueToolCalling(toolMessageId, reason);
+    await chatStore.rejectAndContinueToolCalling(toolMessageId, reason, context);
   },
 
   rejectToolCall: async (toolMessageId: string, reason?: string) => {
