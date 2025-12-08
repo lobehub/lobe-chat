@@ -74,12 +74,12 @@ const hotkey: HotkeyI18nTranslations & {
     title: '快捷切换助手',
   },
   toggleLeftPanel: {
-    desc: '显示或隐藏左侧助手面板',
-    title: '显示/隐藏助手面板',
+    desc: '显示或隐藏左侧面板',
+    title: '显示/隐藏左侧面板',
   },
   toggleRightPanel: {
-    desc: '显示或隐藏右侧话题面板',
-    title: '显示/隐藏话题面板',
+    desc: '显示或隐藏右侧面板',
+    title: '显示/隐藏右侧面板',
   },
   toggleZenMode: {
     desc: '专注模式下，只显示当前会话，隐藏其他 UI',

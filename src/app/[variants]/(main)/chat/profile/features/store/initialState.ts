@@ -4,7 +4,6 @@ import { IEditor } from '@lobehub/editor';
 export interface PublicState {}
 
 export interface State extends PublicState {
-  chatPanelExpanded: boolean;
   editor?: IEditor;
   editorState?: any; // EditorState from useEditorState hook
   /**
@@ -18,7 +17,6 @@ export interface State extends PublicState {
 }
 
 export const initialState: State = {
-  chatPanelExpanded: true,
   streamingContent: undefined,
   streamingInProgress: false,
 };

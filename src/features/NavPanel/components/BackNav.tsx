@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 
-import TogglePanelButton from './TogglePanelButton';
+import ToggleLeftPanelButton from '../ToggleLeftPanelButton';
 
 const useStyles = createStyles(({ css, token }) => ({
   button: css`
@@ -54,7 +54,7 @@ const BackNav = memo<PropsWithChildren>(({ children }) => {
   return (
     <Flexbox align={'center'} gap={4} horizontal justify={'space-between'} padding={8}>
       {leftContent}
-      <TogglePanelButton />
+      <ToggleLeftPanelButton />
     </Flexbox>
   );
 });

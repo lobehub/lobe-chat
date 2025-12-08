@@ -12,7 +12,6 @@ export interface PublicState {
 }
 
 export interface State extends PublicState {
-  chatPanelExpanded: boolean;
   currentDocId: string | undefined;
   currentEmoji: string | undefined;
   currentTitle: string;
@@ -27,7 +26,6 @@ export interface State extends PublicState {
 
 export const initialState: State = {
   autoSave: true,
-  chatPanelExpanded: false,
   currentDocId: undefined,
   currentEmoji: undefined,
   currentTitle: '',

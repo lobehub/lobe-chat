@@ -16,7 +16,7 @@ const pagePageSize = (s: GlobalState): number => s.status.pagePageSize || 20;
 const showSystemRole = (s: GlobalState) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalState) => s.status.mobileShowTopic;
 const mobileShowPortal = (s: GlobalState) => s.status.mobileShowPortal;
-const showRightSideBar = (s: GlobalState) => !s.status.zenMode && s.status.showRightSideBar;
+const showRightPanel = (s: GlobalState) => !s.status.zenMode && s.status.showRightPanel;
 const showLeftPanel = (s: GlobalState) => !s.status.zenMode && s.status.showLeftPanel;
 const showFilePanel = (s: GlobalState) => s.status.showFilePanel;
 const showImagePanel = (s: GlobalState) => s.status.showImagePanel;
@@ -77,7 +77,7 @@ export const systemStatusSelectors = {
   showImagePanel,
   showImageTopicPanel,
   showLeftPanel,
-  showRightSideBar,
+  showRightPanel,
   showSystemRole,
   systemStatus,
   themeMode,
