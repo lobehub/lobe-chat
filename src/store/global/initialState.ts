@@ -102,6 +102,7 @@ export interface SystemStatus {
    */
   lastSelectedImageProvider?: string;
   latestChangelogId?: string;
+  leftPanelWidth: number;
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
   noWideScreen?: boolean;
@@ -110,14 +111,13 @@ export interface SystemStatus {
    */
   pagePageSize?: number;
   portalWidth: number;
-  sessionsWidth: number;
-  showChatSideBar?: boolean;
   showCommandMenu?: boolean;
   showFilePanel?: boolean;
   showHotkeyHelper?: boolean;
   showImagePanel?: boolean;
   showImageTopicPanel?: boolean;
-  showSessionPanel?: boolean;
+  showLeftPanel?: boolean;
+  showRightSideBar?: boolean;
   showSystemRole?: boolean;
   systemRoleExpandedMap: Record<string, boolean>;
   /**
@@ -173,18 +173,18 @@ export const INITIAL_STATUS = {
   imagePanelWidth: 320,
   imageTopicPanelWidth: 80,
   knowledgeBaseModalViewMode: 'list' as const,
+  leftPanelWidth: 320,
   mobileShowTopic: false,
   noWideScreen: true,
   pagePageSize: 20,
   portalWidth: 400,
-  sessionsWidth: 320,
-  showChatSideBar: true,
   showCommandMenu: false,
   showFilePanel: true,
   showHotkeyHelper: false,
   showImagePanel: true,
   showImageTopicPanel: true,
-  showSessionPanel: true,
+  showLeftPanel: true,
+  showRightSideBar: true,
   showSystemRole: false,
   systemRoleExpandedMap: {},
   themeMode: 'auto',

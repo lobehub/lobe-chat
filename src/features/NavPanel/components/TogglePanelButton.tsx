@@ -24,7 +24,7 @@ const TogglePanelButton = memo(() => {
     <ActionIcon
       icon={expand ? PanelLeftClose : PanelLeftOpen}
       id={TOGGLE_BUTTON_ID}
-      onClick={togglePanel}
+      onClick={() => togglePanel()}
       size={DESKTOP_HEADER_ICON_SIZE}
       title={t('toggleLeftPanel.title', { ns: 'hotkey' })}
       tooltipProps={{

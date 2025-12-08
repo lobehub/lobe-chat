@@ -7,7 +7,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 
 const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
   const theme = useTheme();
-  const [expand] = useGlobalStore((s) => [systemStatusSelectors.showSessionPanel(s)]);
+  const [expand] = useGlobalStore((s) => [systemStatusSelectors.showLeftPanel(s)]);
 
   return (
     <Flexbox
