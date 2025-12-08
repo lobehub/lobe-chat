@@ -1,3 +1,4 @@
+import { AgentBuilderManifest } from './agent-builder';
 import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';
 import { DocumentManifest } from './document';
@@ -6,6 +7,7 @@ import { LocalSystemManifest } from './local-system';
 import { WebBrowsingManifest } from './web-browsing';
 
 export const builtinToolIdentifiers: string[] = [
+  AgentBuilderManifest.identifier,
   ArtifactsManifest.identifier,
   LocalSystemManifest.identifier,
   WebBrowsingManifest.identifier,

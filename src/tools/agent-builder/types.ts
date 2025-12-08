@@ -6,23 +6,26 @@ import type { PartialDeep } from 'type-fest';
  */
 export const AgentBuilderApiName = {
   // Read operations
-  getAgentConfig: 'agentBuilder_getConfig',
-  getAgentMeta: 'agentBuilder_getMeta',
-  getAvailableModels: 'agentBuilder_getAvailableModels',
-  getAvailableTools: 'agentBuilder_getAvailableTools',
-  getPrompt: 'agentBuilder_getPrompt',
-  searchMarketTools: 'agentBuilder_searchMarketTools',
-  searchOfficialTools: 'agentBuilder_searchOfficialTools',
-
+  getAgentConfig: 'getConfig',
+  getAgentMeta: 'getMeta',
+  getAvailableModels: 'getAvailableModels',
+  getAvailableTools: 'getAvailableTools',
+  getPrompt: 'getPrompt',
   // Write operations
-  setModel: 'agentBuilder_setModel',
-  setOpeningMessage: 'agentBuilder_setOpeningMessage',
-  setOpeningQuestions: 'agentBuilder_setOpeningQuestions',
-  togglePlugin: 'agentBuilder_togglePlugin',
-  updateAgentConfig: 'agentBuilder_updateConfig',
-  updateAgentMeta: 'agentBuilder_updateMeta',
-  updateChatConfig: 'agentBuilder_updateChatConfig',
-  updatePrompt: 'agentBuilder_updatePrompt',
+installPlugin: 'installPlugin',
+  
+searchMarketTools: 'searchMarketTools',
+
+  
+  searchOfficialTools: 'searchOfficialTools',
+  setModel: 'setModel',
+  setOpeningMessage: 'setOpeningMessage',
+  setOpeningQuestions: 'setOpeningQuestions',
+  togglePlugin: 'togglePlugin',
+  updateAgentConfig: 'updateConfig',
+  updateAgentMeta: 'updateMeta',
+  updateChatConfig: 'updateChatConfig',
+  updatePrompt: 'updatePrompt',
 } as const;
 
 // ============== Parameter Types ==============
@@ -327,4 +330,61 @@ export interface SearchOfficialToolsState {
   query?: string;
   tools: OfficialToolItem[];
   totalCount: number;
+}
+
+// ============== InstallPlugin Types ==============
+
+export interface InstallPluginParams {
+  /**
+   * Plugin identifier to install
+   */
+  identifier: string;
+  /**
+   * Plugin source type: 'market' for MCP marketplace, 'official' for builtin/klavis tools
+   */
+  source: 'market' | 'official';
+}
+
+export interface InstallPluginState {
+  /**
+   * Whether the plugin requires human approval to continue installation
+   * (e.g., Klavis tools need OAuth connection)
+   */
+  awaitingApproval?: boolean;
+  /**
+   * Error message if installation failed
+   */
+  error?: string;
+  /**
+   * Whether the plugin is installed
+   */
+  installed: boolean;
+  /**
+   * Whether the plugin is a Klavis tool that needs OAuth connection
+   */
+  isKlavis?: boolean;
+  /**
+   * Klavis OAuth URL if authorization is needed
+   */
+  oauthUrl?: string;
+  /**
+   * Plugin identifier
+   */
+  pluginId: string;
+  /**
+   * Plugin display name
+   */
+  pluginName?: string;
+  /**
+   * Klavis server name (for Klavis tools)
+   */
+  serverName?: string;
+  /**
+   * Klavis server status
+   */
+  serverStatus?: 'connected' | 'pending_auth' | 'error';
+  /**
+   * Whether the operation was successful
+   */
+  success: boolean;
 }

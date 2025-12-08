@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Get Available Models",
+        "getAvailableTools": "Get Available Tools",
+        "getConfig": "Get Configuration",
+        "getMeta": "Get Metadata",
+        "getPrompt": "Get System Prompt",
+        "searchMarketTools": "Search Plugin Market",
+        "searchOfficialTools": "Search Official Tools",
+        "setModel": "Set Model",
+        "setOpeningMessage": "Set Opening Message",
+        "setOpeningQuestions": "Set Opening Questions",
+        "togglePlugin": "Toggle Plugin",
+        "updateChatConfig": "Update Chat Config",
+        "updateConfig": "Update Configuration",
+        "updateMeta": "Update Metadata",
+        "updatePrompt": "Update System Prompt"
+      },
+      "title": "Agent Builder"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Read Knowledge Base Content",
