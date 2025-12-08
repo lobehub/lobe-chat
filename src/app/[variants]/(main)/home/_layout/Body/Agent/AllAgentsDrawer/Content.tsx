@@ -1,20 +1,18 @@
 'use client';
 
-import { SESSION_CHAT_URL } from '@lobechat/const';
 import { Empty } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-import { Link } from 'react-router-dom';
 import { VList } from 'virtua';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
-import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
 import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
 
-import Item from '../List/Item';
+import GroupItem from '../List/AgentGroupItem';
+import AgentItem from '../List/AgentItem';
 
 interface ContentProps {
   open: boolean;
@@ -23,7 +21,6 @@ interface ContentProps {
 
 const Content = memo<ContentProps>(({ searchKeyword }) => {
   const { t } = useTranslation('common');
-  const navigateToAgent = useNavigateToAgent();
 
   // Use server-side search if there's a keyword
   const trimmedKeyword = searchKeyword.trim();
@@ -70,16 +67,7 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
     <VList bufferSize={800} style={{ height: '100%' }}>
       {displayItems.map((item) => (
         <Flexbox gap={1} key={item.id} padding={'4px 8px'}>
-          <Link
-            aria-label={item.id}
-            onClick={(e) => {
-              e.preventDefault();
-              navigateToAgent(item.sessionId || item.id);
-            }}
-            to={SESSION_CHAT_URL(item.sessionId || item.id, false)}
-          >
-            <Item item={item} />
-          </Link>
+          {item.type === 'group' ? <GroupItem item={item} /> : <AgentItem item={item} />}
         </Flexbox>
       ))}
     </VList>

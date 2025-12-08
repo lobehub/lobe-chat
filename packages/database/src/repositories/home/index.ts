@@ -1,7 +1,14 @@
 import { SidebarAgentItem, SidebarAgentListResponse, SidebarGroup } from '@lobechat/types';
-import { and, desc, eq, ilike, or } from 'drizzle-orm';
+import { and, desc, eq, ilike, inArray, or } from 'drizzle-orm';
 
-import { agents, agentsToSessions, chatGroups, sessionGroups, sessions } from '../../schemas';
+import {
+  agents,
+  agentsToSessions,
+  chatGroups,
+  chatGroupsAgents,
+  sessionGroups,
+  sessions,
+} from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 
 // Re-export types for backward compatibility
@@ -60,6 +67,34 @@ export class HomeRepository {
       .where(eq(chatGroups.userId, this.userId))
       .orderBy(desc(chatGroups.updatedAt));
 
+    // 2.1 Query member avatars for each chat group
+    const chatGroupIds = chatGroupList.map((g) => g.id);
+    const memberAvatarsMap = new Map<string, Array<{ avatar: string; background?: string }>>();
+
+    if (chatGroupIds.length > 0) {
+      const memberAvatars = await this.db
+        .select({
+          avatar: agents.avatar,
+          backgroundColor: agents.backgroundColor,
+          chatGroupId: chatGroupsAgents.chatGroupId,
+        })
+        .from(chatGroupsAgents)
+        .innerJoin(agents, eq(chatGroupsAgents.agentId, agents.id))
+        .where(inArray(chatGroupsAgents.chatGroupId, chatGroupIds))
+        .orderBy(chatGroupsAgents.order);
+
+      for (const member of memberAvatars) {
+        const existing = memberAvatarsMap.get(member.chatGroupId) || [];
+        if (member.avatar) {
+          existing.push({
+            avatar: member.avatar,
+            background: member.backgroundColor ?? undefined,
+          });
+        }
+        memberAvatarsMap.set(member.chatGroupId, existing);
+      }
+    }
+
     // 3. Query all sessionGroups (user-defined folders)
     const groupList = await this.db
       .select({
@@ -72,7 +107,7 @@ export class HomeRepository {
       .orderBy(sessionGroups.sort);
 
     // 4. Process and categorize
-    return this.processAgentList(agentList, chatGroupList, groupList);
+    return this.processAgentList(agentList, chatGroupList, groupList, memberAvatarsMap);
   }
 
   private processAgentList(
@@ -99,6 +134,7 @@ export class HomeRepository {
       name: string;
       sort: number | null;
     }>,
+    memberAvatarsMap: Map<string, Array<{ avatar: string; background?: string }>>,
   ): SidebarAgentListResponse {
     // Convert to unified format
     const allItems: Array<SidebarAgentItem & { groupId: string | null }> = [
@@ -114,7 +150,7 @@ export class HomeRepository {
         updatedAt: a.updatedAt,
       })),
       ...chatGroupItems.map((g) => ({
-        avatar: null,
+        avatar: memberAvatarsMap.get(g.id) ?? null,
         description: g.description,
         groupId: g.groupId,
         id: g.id,
@@ -209,6 +245,34 @@ export class HomeRepository {
       )
       .orderBy(desc(chatGroups.updatedAt));
 
+    // 2.1 Query member avatars for matching chat groups
+    const chatGroupIds = chatGroupResults.map((g) => g.id);
+    const memberAvatarsMap = new Map<string, Array<{ avatar: string; background?: string }>>();
+
+    if (chatGroupIds.length > 0) {
+      const memberAvatars = await this.db
+        .select({
+          avatar: agents.avatar,
+          backgroundColor: agents.backgroundColor,
+          chatGroupId: chatGroupsAgents.chatGroupId,
+        })
+        .from(chatGroupsAgents)
+        .innerJoin(agents, eq(chatGroupsAgents.agentId, agents.id))
+        .where(inArray(chatGroupsAgents.chatGroupId, chatGroupIds))
+        .orderBy(chatGroupsAgents.order);
+
+      for (const member of memberAvatars) {
+        const existing = memberAvatarsMap.get(member.chatGroupId) || [];
+        if (member.avatar) {
+          existing.push({
+            avatar: member.avatar,
+            background: member.backgroundColor ?? undefined,
+          });
+        }
+        memberAvatarsMap.set(member.chatGroupId, existing);
+      }
+    }
+
     // 3. Combine and format results
     const results: SidebarAgentItem[] = [
       ...agentResults.map((a) => ({
@@ -222,7 +286,7 @@ export class HomeRepository {
         updatedAt: a.updatedAt,
       })),
       ...chatGroupResults.map((g) => ({
-        avatar: null,
+        avatar: memberAvatarsMap.get(g.id) ?? null,
         description: g.description,
         id: g.id,
         pinned: g.pinned ?? false,

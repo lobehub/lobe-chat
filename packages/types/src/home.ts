@@ -4,10 +4,24 @@
 export type SidebarItemType = 'agent' | 'group';
 
 /**
+ * Avatar item for group members
+ */
+export interface GroupMemberAvatar {
+  avatar: string;
+  background?: string;
+}
+
+/**
  * Sidebar agent item - represents an agent or chat group in the sidebar
  */
 export interface SidebarAgentItem {
-  avatar?: string | null;
+  /**
+   * Avatar can be:
+   * - string: single avatar for agents
+   * - GroupMemberAvatar[]: array of member avatars for groups
+   * - null: no avatar
+   */
+  avatar?: GroupMemberAvatar[] | string | null;
   description?: string | null;
   id: string;
   pinned: boolean;
