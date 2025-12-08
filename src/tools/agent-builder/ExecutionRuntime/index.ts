@@ -21,17 +21,8 @@ import { KlavisServerStatus } from '@/store/tool/slices/klavisStore/types';
 import type {
   AvailableModel,
   AvailableProvider,
-  AvailableTool,
-  GetAgentConfigParams,
-  GetAgentMetaParams,
   GetAvailableModelsParams,
   GetAvailableModelsState,
-  GetAvailableToolsParams,
-  GetAvailableToolsState,
-  GetConfigState,
-  GetMetaState,
-  GetPromptParams,
-  GetPromptState,
   InstallPluginParams,
   InstallPluginState,
   MarketToolItem,
@@ -60,83 +51,12 @@ import type {
 /**
  * Agent Builder Execution Runtime
  * Handles the execution logic for all Agent Builder APIs
+ *
+ * Note: getAgentConfig, getAgentMeta, getPrompt, getAvailableTools are removed
+ * because the current agent context is now automatically injected into the conversation
  */
 export class AgentBuilderExecutionRuntime {
   // ==================== Read Operations ====================
-
-  /**
-   * Get agent configuration
-   */
-  async getAgentConfig(
-    agentId: string,
-    args: GetAgentConfigParams,
-  ): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const state = getAgentStoreState();
-      // Use agentId to get agent config instead of currentAgentConfig
-      const config = agentSelectors.getAgentConfigById(agentId)(state);
-
-      // If specific fields are requested, filter the config
-      let filteredConfig = config;
-      if (args.fields && args.fields.length > 0) {
-        filteredConfig = Object.fromEntries(
-          Object.entries(config).filter(([key]) => args.fields!.includes(key)),
-        ) as typeof config;
-      }
-
-      const content = `Current agent configuration:\n${JSON.stringify(filteredConfig, null, 2)}`;
-
-      return {
-        content,
-        state: { config: filteredConfig } as GetConfigState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to get agent config: ${err.message}`,
-        error,
-        success: false,
-      };
-    }
-  }
-
-  /**
-   * Get agent metadata
-   */
-  async getAgentMeta(
-    agentId: string,
-    args: GetAgentMetaParams,
-  ): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const state = getAgentStoreState();
-      // Use agentId to get agent meta instead of currentAgentMeta
-      const meta = agentSelectors.getAgentMetaById(agentId)(state);
-
-      // If specific fields are requested, filter the meta
-      let filteredMeta = meta;
-      if (args.fields && args.fields.length > 0) {
-        filteredMeta = Object.fromEntries(
-          Object.entries(meta).filter(([key]) => args.fields!.includes(key)),
-        ) as typeof meta;
-      }
-
-      const content = `Current agent metadata:\n${JSON.stringify(filteredMeta, null, 2)}`;
-
-      return {
-        content,
-        state: { meta: filteredMeta } as GetMetaState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to get agent meta: ${err.message}`,
-        error,
-        success: false,
-      };
-    }
-  }
 
   /**
    * Get available models and providers
@@ -187,95 +107,6 @@ export class AgentBuilderExecutionRuntime {
       const err = error as Error;
       return {
         content: `Failed to get available models: ${err.message}`,
-        error,
-        success: false,
-      };
-    }
-  }
-
-  /**
-   * Get available tools (plugins and built-in tools)
-   */
-  async getAvailableTools(args: GetAvailableToolsParams): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const toolState = getToolStoreState();
-      const filterType = args.type || 'all';
-
-      const tools: AvailableTool[] = [];
-
-      // Get builtin tools
-      if (filterType === 'all' || filterType === 'builtin') {
-        const builtinTools = builtinToolSelectors.metaList(toolState);
-        for (const tool of builtinTools) {
-          tools.push({
-            author: tool.author,
-            description: tool.meta?.description,
-            identifier: tool.identifier,
-            title: tool.meta?.title || tool.identifier,
-            type: 'builtin',
-          });
-        }
-      }
-
-      // Get installed plugins
-      if (filterType === 'all' || filterType === 'plugin') {
-        const installedPlugins = pluginSelectors.installedPluginMetaList(toolState);
-        for (const plugin of installedPlugins) {
-          tools.push({
-            author: plugin.author,
-            description: plugin.description,
-            identifier: plugin.identifier,
-            title: plugin.title || plugin.identifier,
-            type: 'plugin',
-          });
-        }
-      }
-
-      const content = `Found ${tools.length} available tool(s).`;
-
-      return {
-        content,
-        state: { tools } as GetAvailableToolsState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to get available tools: ${err.message}`,
-        error,
-        success: false,
-      };
-    }
-  }
-
-  /**
-   * Get agent system prompt
-   */
-  async getPrompt(agentId: string, args: GetPromptParams): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const state = getAgentStoreState();
-      const config = agentSelectors.getAgentConfigById(agentId)(state);
-      const prompt = config.systemRole || '';
-
-      // If preview mode, truncate the prompt
-      let displayPrompt = prompt;
-      if (args.preview && prompt.length > 500) {
-        displayPrompt = prompt.slice(0, 500) + '...';
-      }
-
-      const content = prompt
-        ? `Current system prompt (${prompt.length} characters):\n\n${displayPrompt}`
-        : 'No system prompt is currently set.';
-
-      return {
-        content,
-        state: { prompt } as GetPromptState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to get prompt: ${err.message}`,
         error,
         success: false,
       };

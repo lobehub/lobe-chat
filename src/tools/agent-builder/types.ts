@@ -6,18 +6,13 @@ import type { PartialDeep } from 'type-fest';
  */
 export const AgentBuilderApiName = {
   // Read operations
-  getAgentConfig: 'getConfig',
-  getAgentMeta: 'getMeta',
+  // Note: getAgentConfig, getAgentMeta, getPrompt, getAvailableTools are removed
+  // because the current agent context is now automatically injected
   getAvailableModels: 'getAvailableModels',
-  getAvailableTools: 'getAvailableTools',
-  getPrompt: 'getPrompt',
-  // Write operations
-installPlugin: 'installPlugin',
-  
-searchMarketTools: 'searchMarketTools',
-
-  
+  installPlugin: 'installPlugin',
+  searchMarketTools: 'searchMarketTools',
   searchOfficialTools: 'searchOfficialTools',
+  // Write operations
   setModel: 'setModel',
   setOpeningMessage: 'setOpeningMessage',
   setOpeningQuestions: 'setOpeningQuestions',
@@ -29,20 +24,6 @@ searchMarketTools: 'searchMarketTools',
 } as const;
 
 // ============== Parameter Types ==============
-
-export interface GetAgentConfigParams {
-  /**
-   * Optional: specific fields to retrieve. If not provided, returns all config.
-   */
-  fields?: string[];
-}
-
-export interface GetAgentMetaParams {
-  /**
-   * Optional: specific fields to retrieve. If not provided, returns all meta.
-   */
-  fields?: string[];
-}
 
 export interface UpdateAgentConfigParams {
   /**
@@ -108,20 +89,6 @@ export interface GetAvailableModelsParams {
   providerId?: string;
 }
 
-export interface GetAvailableToolsParams {
-  /**
-   * Optional: filter by tool type ('builtin' | 'plugin' | 'all')
-   */
-  type?: 'all' | 'builtin' | 'plugin';
-}
-
-export interface GetPromptParams {
-  /**
-   * Optional: if true, returns a truncated version for preview
-   */
-  preview?: boolean;
-}
-
 export interface UpdatePromptParams {
   /**
    * The new system prompt content (markdown format)
@@ -134,14 +101,6 @@ export interface UpdatePromptParams {
 }
 
 // ============== State Types (for Render components) ==============
-
-export interface GetConfigState {
-  config: LobeAgentConfig;
-}
-
-export interface GetMetaState {
-  meta: MetaData;
-}
 
 export interface UpdateConfigState {
   newValues: Record<string, any>;
@@ -203,22 +162,6 @@ export interface AvailableProvider {
 
 export interface GetAvailableModelsState {
   providers: AvailableProvider[];
-}
-
-export interface AvailableTool {
-  author?: string;
-  description?: string;
-  identifier: string;
-  title: string;
-  type: 'builtin' | 'plugin';
-}
-
-export interface GetAvailableToolsState {
-  tools: AvailableTool[];
-}
-
-export interface GetPromptState {
-  prompt: string;
 }
 
 export interface UpdatePromptState {

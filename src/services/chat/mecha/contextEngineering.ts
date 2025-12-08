@@ -1,5 +1,7 @@
 import { isDesktop } from '@lobechat/const';
 import {
+  AgentBuilderContext,
+  AgentBuilderContextInjector,
   ContextEngine,
   GroupMessageFlattenProcessor,
   HistorySummaryProvider,
@@ -24,12 +26,15 @@ import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
+import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
 
 import { isCanUseVideo, isCanUseVision } from '../helper';
 import { UserMemoryInjector } from '../providers/UserMemoryInjector';
 import type { UserMemoryInjectorConfig } from '../providers/UserMemoryInjector';
 
 interface ContextEngineeringContext {
+  /** Agent Builder context for injecting current agent info */
+  agentBuilderContext?: AgentBuilderContext;
   enableHistoryCount?: boolean;
   historyCount?: number;
   historySummary?: string;
@@ -55,8 +60,12 @@ export const contextEngineering = async ({
   enableHistoryCount,
   historyCount,
   historySummary,
+  agentBuilderContext,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   const toolNameResolver = new ToolNameResolver();
+
+  // Check if Agent Builder tool is enabled
+  const isAgentBuilderEnabled = tools?.includes(AGENT_BUILDER_TOOL_ID) ?? false;
 
   // Get enabled agent files with content and knowledge bases from agent store
   const agentStoreState = getAgentStoreState();
@@ -84,7 +93,13 @@ export const contextEngineering = async ({
       // 3. Knowledge injection (full content for agent files + metadata for knowledge bases)
       new KnowledgeInjector({ fileContents, knowledgeBases }),
 
-      // 4. Tool system role injection
+      // 4. Agent Builder context injection (current agent config/meta for editing)
+      new AgentBuilderContextInjector({
+        agentContext: agentBuilderContext,
+        enabled: isAgentBuilderEnabled,
+      }),
+
+      // 5. Tool system role injection
       new ToolSystemRoleProvider({
         getToolSystemRoles: (tools) => toolSelectors.enabledSystemRoles(tools)(getToolStoreState()),
         isCanUseFC,
@@ -93,25 +108,25 @@ export const contextEngineering = async ({
         tools,
       }),
 
-      // 5. History summary injection
+      // 6. History summary injection
       new HistorySummaryProvider({
         formatHistorySummary: historySummaryPrompt,
         historySummary: historySummary,
       }),
 
-      // 6. User memory injection
+      // 7. User memory injection
       new UserMemoryInjector(userMemories ?? {}),
 
-      // 7. Input template processing
+      // 8. Input template processing
       new InputTemplateProcessor({ inputTemplate }),
 
-      // 8. Placeholder variables processing
+      // 9. Placeholder variables processing
       new PlaceholderVariablesProcessor({ variableGenerators: VARIABLE_GENERATORS }),
 
-      // 9. Group message flatten (convert role=group to standard assistant + tool messages)
+      // 10. Group message flatten (convert role=group to standard assistant + tool messages)
       new GroupMessageFlattenProcessor(),
 
-      // 10. Message content processing
+      // 11. Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: true, includeFileUrl: !isDesktop },
         isCanUseVideo,
@@ -120,7 +135,7 @@ export const contextEngineering = async ({
         provider,
       }),
 
-      // 11. Tool call processing
+      // 12. Tool call processing
       new ToolCallProcessor({
         genToolCallingName: toolNameResolver.generate.bind(toolNameResolver),
         isCanUseFC,
@@ -128,10 +143,10 @@ export const contextEngineering = async ({
         provider,
       }),
 
-      // 12. Tool message reordering
+      // 13. Tool message reordering
       new ToolMessageReorder(),
 
-      // 13. Message cleanup (final step, keep only necessary fields)
+      // 14. Message cleanup (final step, keep only necessary fields)
       new MessageCleanupProcessor(),
     ],
   });
