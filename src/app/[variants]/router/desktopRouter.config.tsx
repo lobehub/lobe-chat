@@ -14,6 +14,7 @@ import DesktopMemoryLayout from '../(main)/memory/_layout';
 import DesktopPageLayout from '../(main)/page/_layout';
 import {
   agentIdLoader,
+  groupIdLoader,
   idLoader,
   providerIdLoader,
   settingsTabLoader,
@@ -26,7 +27,7 @@ export const createDesktopRouter = () =>
     {
       HydrateFallback: () => <Loading debugId="Desktop Router Hydration" />,
       children: [
-        // Chat routes
+        // Chat routes (agent)
         {
           children: [
             {
@@ -54,6 +55,29 @@ export const createDesktopRouter = () =>
             },
           ],
           path: 'agent',
+        },
+
+        // Group chat routes
+        {
+          children: [
+            {
+              index: true,
+              loader: () => redirect('/', { status: 302 }),
+            },
+            {
+              children: [
+                {
+                  element: dynamicElement(() => import('../(main)/chat'), 'Desktop > Group Chat'),
+                  index: true,
+                },
+              ],
+              element: <DesktopChatLayout />,
+              errorElement: <ErrorBoundary resetPath="/group" />,
+              loader: groupIdLoader,
+              path: ':gid',
+            },
+          ],
+          path: 'group',
         },
 
         // Discover routes with nested structure
