@@ -24,35 +24,26 @@ import type {
 const log = debug('lobe-store:builtin-tool:agent-builder');
 
 export interface AgentBuilderAction {
-  agentBuilder_getAvailableModels: (
-    id: string,
-    params: GetAvailableModelsParams,
-  ) => Promise<boolean>;
-  agentBuilder_getAvailableTools: (id: string, params: GetAvailableToolsParams) => Promise<boolean>;
-  agentBuilder_getConfig: (id: string, params: GetAgentConfigParams) => Promise<boolean>;
-  agentBuilder_getMeta: (id: string, params: GetAgentMetaParams) => Promise<boolean>;
-  agentBuilder_getPrompt: (id: string, params: GetPromptParams) => Promise<boolean>;
-  agentBuilder_searchMarketTools: (id: string, params: SearchMarketToolsParams) => Promise<boolean>;
-  agentBuilder_searchOfficialTools: (
-    id: string,
-    params: SearchOfficialToolsParams,
-  ) => Promise<boolean>;
-  agentBuilder_setModel: (id: string, params: SetModelParams) => Promise<boolean>;
-  agentBuilder_setOpeningMessage: (id: string, params: SetOpeningMessageParams) => Promise<boolean>;
-  agentBuilder_setOpeningQuestions: (
-    id: string,
-    params: SetOpeningQuestionsParams,
-  ) => Promise<boolean>;
-  agentBuilder_togglePlugin: (id: string, params: TogglePluginParams) => Promise<boolean>;
-  agentBuilder_updateChatConfig: (id: string, params: UpdateChatConfigParams) => Promise<boolean>;
-  agentBuilder_updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<boolean>;
-  agentBuilder_updateMeta: (id: string, params: UpdateAgentMetaParams) => Promise<boolean>;
-  agentBuilder_updatePrompt: (id: string, params: UpdatePromptParams) => Promise<boolean>;
+  getAvailableModels: (id: string, params: GetAvailableModelsParams) => Promise<boolean>;
+  getAvailableTools: (id: string, params: GetAvailableToolsParams) => Promise<boolean>;
+  getConfig: (id: string, params: GetAgentConfigParams) => Promise<boolean>;
+  getMeta: (id: string, params: GetAgentMetaParams) => Promise<boolean>;
+  getPrompt: (id: string, params: GetPromptParams) => Promise<boolean>;
   internal_triggerAgentBuilderToolCalling: (
     id: string,
     apiName: string,
     params: any,
   ) => Promise<boolean>;
+  searchMarketTools: (id: string, params: SearchMarketToolsParams) => Promise<boolean>;
+  searchOfficialTools: (id: string, params: SearchOfficialToolsParams) => Promise<boolean>;
+  setModel: (id: string, params: SetModelParams) => Promise<boolean>;
+  setOpeningMessage: (id: string, params: SetOpeningMessageParams) => Promise<boolean>;
+  setOpeningQuestions: (id: string, params: SetOpeningQuestionsParams) => Promise<boolean>;
+  togglePlugin: (id: string, params: TogglePluginParams) => Promise<boolean>;
+  updateChatConfig: (id: string, params: UpdateChatConfigParams) => Promise<boolean>;
+  updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<boolean>;
+  updateMeta: (id: string, params: UpdateAgentMetaParams) => Promise<boolean>;
+  updatePrompt: (id: string, params: UpdatePromptParams) => Promise<boolean>;
 }
 
 const runtime = new AgentBuilderExecutionRuntime();
@@ -65,66 +56,24 @@ export const agentBuilderSlice: StateCreator<
 > = (set, get) => ({
   // ==================== Read Operations ====================
 
-  agentBuilder_getAvailableModels: async (id, params) => {
+  getAvailableModels: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'getAvailableModels', params);
   },
 
-  agentBuilder_getAvailableTools: async (id, params) => {
+  getAvailableTools: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'getAvailableTools', params);
   },
 
-  agentBuilder_getConfig: async (id, params) => {
+  getConfig: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'getAgentConfig', params);
   },
 
-  agentBuilder_getMeta: async (id, params) => {
+  getMeta: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'getAgentMeta', params);
   },
 
-  agentBuilder_getPrompt: async (id, params) => {
+  getPrompt: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'getPrompt', params);
-  },
-
-  agentBuilder_searchMarketTools: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'searchMarketTools', params);
-  },
-
-  agentBuilder_searchOfficialTools: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'searchOfficialTools', params);
-  },
-
-  agentBuilder_setModel: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'setModel', params);
-  },
-
-  agentBuilder_setOpeningMessage: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'setOpeningMessage', params);
-  },
-
-  agentBuilder_setOpeningQuestions: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'setOpeningQuestions', params);
-  },
-
-  // ==================== Specific Field Operations ====================
-  agentBuilder_togglePlugin: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'togglePlugin', params);
-  },
-
-  agentBuilder_updateChatConfig: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updateChatConfig', params);
-  },
-
-  // ==================== Write Operations ====================
-  agentBuilder_updateConfig: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentConfig', params);
-  },
-
-  agentBuilder_updateMeta: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentMeta', params);
-  },
-
-  agentBuilder_updatePrompt: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updatePrompt', params);
   },
 
   // ==================== Internal Helper ====================
@@ -296,5 +245,47 @@ export const agentBuilderSlice: StateCreator<
 
       return true;
     }
+  },
+
+  searchMarketTools: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'searchMarketTools', params);
+  },
+
+  searchOfficialTools: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'searchOfficialTools', params);
+  },
+
+  setModel: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'setModel', params);
+  },
+
+  setOpeningMessage: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'setOpeningMessage', params);
+  },
+
+  setOpeningQuestions: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'setOpeningQuestions', params);
+  },
+
+  // ==================== Specific Field Operations ====================
+  togglePlugin: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'togglePlugin', params);
+  },
+
+  updateChatConfig: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'updateChatConfig', params);
+  },
+
+  // ==================== Write Operations ====================
+  updateConfig: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentConfig', params);
+  },
+
+  updateMeta: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentMeta', params);
+  },
+
+  updatePrompt: async (id, params) => {
+    return get().internal_triggerAgentBuilderToolCalling(id, 'updatePrompt', params);
   },
 });

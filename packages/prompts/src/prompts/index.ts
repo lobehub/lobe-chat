@@ -1,3 +1,4 @@
+export * from './agentBuilder';
 export * from './chatMessages';
 export * from './files';
 export * from './groupChat';

@@ -1,4 +1,9 @@
 import { KLAVIS_SERVER_TYPES } from '@lobechat/const';
+import {
+  marketToolsResultsPrompt,
+  modelsResultsPrompt,
+  officialToolsResultsPrompt,
+} from '@lobechat/prompts';
 import { BuiltinServerRuntimeOutput } from '@lobechat/types';
 
 import { discoverService } from '@/services/discover';
@@ -166,10 +171,13 @@ export class AgentBuilderExecutionRuntime {
       }));
 
       const totalModels = providers.reduce((sum, p) => sum + p.models.length, 0);
-      const content = `Found ${providers.length} provider(s) with ${totalModels} model(s) available.`;
+
+      // Convert to XML format to provide detailed model list to agent
+      const xmlContent = modelsResultsPrompt(providers);
+      const summary = `Found ${providers.length} provider(s) with ${totalModels} model(s) available.\n\n${xmlContent}`;
 
       return {
-        content,
+        content: summary,
         state: { providers } as GetAvailableModelsState,
         success: true,
       };
@@ -305,13 +313,17 @@ export class AgentBuilderExecutionRuntime {
       const installedCount = tools.filter((t) => t.installed).length;
       const notInstalledCount = tools.length - installedCount;
 
-      let content = `Found ${response.totalCount} tool(s) in the marketplace.`;
+      let summary = `Found ${response.totalCount} tool(s) in the marketplace.`;
       if (args.query) {
-        content = `Found ${response.totalCount} tool(s) matching "${args.query}".`;
+        summary = `Found ${response.totalCount} tool(s) matching "${args.query}".`;
       }
       if (installedCount > 0) {
-        content += ` ${installedCount} already installed, ${notInstalledCount} available to install.`;
+        summary += ` ${installedCount} already installed, ${notInstalledCount} available to install.`;
       }
+
+      // Convert to XML format to provide detailed tool list to agent
+      const xmlContent = marketToolsResultsPrompt(tools);
+      const content = `${summary}\n\n${xmlContent}`;
 
       return {
         content,
@@ -438,15 +450,19 @@ export class AgentBuilderExecutionRuntime {
       const enabledCount = tools.filter((t) => t.enabled).length;
       const installedCount = tools.filter((t) => t.installed).length;
 
-      let content = `Found ${tools.length} official tool(s).`;
+      let summary = `Found ${tools.length} official tool(s).`;
       if (query) {
-        content = `Found ${tools.length} official tool(s) matching "${args.query}".`;
+        summary = `Found ${tools.length} official tool(s) matching "${args.query}".`;
       }
-      content += ` ${installedCount} installed, ${enabledCount} enabled.`;
+      summary += ` ${installedCount} installed, ${enabledCount} enabled.`;
 
       if (isKlavisEnabled) {
-        content += ' Klavis integrations are available.';
+        summary += ' Klavis integrations are available.';
       }
+
+      // Convert to XML format to provide detailed tool list to agent
+      const xmlContent = officialToolsResultsPrompt(tools);
+      const content = `${summary}\n\n${xmlContent}`;
 
       return {
         content,

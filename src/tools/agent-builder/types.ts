@@ -6,23 +6,23 @@ import type { PartialDeep } from 'type-fest';
  */
 export const AgentBuilderApiName = {
   // Read operations
-  getAgentConfig: 'agentBuilder_getConfig',
-  getAgentMeta: 'agentBuilder_getMeta',
-  getAvailableModels: 'agentBuilder_getAvailableModels',
-  getAvailableTools: 'agentBuilder_getAvailableTools',
-  getPrompt: 'agentBuilder_getPrompt',
-  searchMarketTools: 'agentBuilder_searchMarketTools',
-  searchOfficialTools: 'agentBuilder_searchOfficialTools',
+  getAgentConfig: 'getConfig',
+  getAgentMeta: 'getMeta',
+  getAvailableModels: 'getAvailableModels',
+  getAvailableTools: 'getAvailableTools',
+  getPrompt: 'getPrompt',
+  searchMarketTools: 'searchMarketTools',
+  searchOfficialTools: 'searchOfficialTools',
 
   // Write operations
-  setModel: 'agentBuilder_setModel',
-  setOpeningMessage: 'agentBuilder_setOpeningMessage',
-  setOpeningQuestions: 'agentBuilder_setOpeningQuestions',
-  togglePlugin: 'agentBuilder_togglePlugin',
-  updateAgentConfig: 'agentBuilder_updateConfig',
-  updateAgentMeta: 'agentBuilder_updateMeta',
-  updateChatConfig: 'agentBuilder_updateChatConfig',
-  updatePrompt: 'agentBuilder_updatePrompt',
+  setModel: 'setModel',
+  setOpeningMessage: 'setOpeningMessage',
+  setOpeningQuestions: 'setOpeningQuestions',
+  togglePlugin: 'togglePlugin',
+  updateAgentConfig: 'updateConfig',
+  updateAgentMeta: 'updateMeta',
+  updateChatConfig: 'updateChatConfig',
+  updatePrompt: 'updatePrompt',
 } as const;
 
 // ============== Parameter Types ==============
