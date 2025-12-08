@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update link handling in PlanTag component to use react-router-dom."]
+    },
+    "date": "2025-12-08",
+    "version": "2.0.0-next.164"
+  },
+  {
+    "children": {
       "fixes": ["Add smooth scroll to top on 'More' button click in Title component."]
     },
     "date": "2025-12-06",
