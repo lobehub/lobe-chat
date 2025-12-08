@@ -3,6 +3,7 @@ import type { LobeAgentChatConfig, LobeAgentTTSConfig } from '@lobechat/types';
 import {
   boolean,
   index,
+  integer,
   jsonb,
   pgTable,
   primaryKey,
@@ -13,7 +14,7 @@ import {
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator, randomSlug } from '../utils/idGenerator';
-import { timestamps } from './_helpers';
+import { createdAt, timestamps } from './_helpers';
 import { files, knowledgeBases } from './file';
 import { users } from './user';
 
@@ -117,3 +118,60 @@ export const agentsFiles = pgTable(
     index('agents_files_agent_id_idx').on(t.agentId),
   ],
 );
+
+// Agent versions table for tracking agent configuration history
+export const agentVersions = pgTable(
+  'agent_versions',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => idGenerator('agentVersions'))
+      .notNull(),
+
+    agentId: text('agent_id')
+      .references(() => agents.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    version: integer('version').notNull(),
+
+    // Snapshot of agent configuration at this version
+    title: varchar('title', { length: 255 }),
+    description: varchar('description', { length: 1000 }),
+    tags: jsonb('tags').$type<string[]>(),
+    editorData: jsonb('editor_data'),
+    avatar: text('avatar'),
+    backgroundColor: text('background_color'),
+
+    plugins: jsonb('plugins').$type<string[]>(),
+
+    chatConfig: jsonb('chat_config').$type<LobeAgentChatConfig>(),
+
+    fewShots: jsonb('few_shots'),
+    model: text('model'),
+    params: jsonb('params'),
+    provider: text('provider'),
+    systemRole: text('system_role'),
+    tts: jsonb('tts').$type<LobeAgentTTSConfig>(),
+
+    openingMessage: text('opening_message'),
+    openingQuestions: text('opening_questions').array(),
+
+    // Change information
+    changeMessage: text('change_message'),
+
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index('agent_versions_agent_id_idx').on(t.agentId),
+    uniqueIndex('agent_versions_agent_version_unique').on(t.agentId, t.version),
+  ],
+);
+
+export const insertAgentVersionSchema = createInsertSchema(agentVersions);
+
+export type NewAgentVersion = typeof agentVersions.$inferInsert;
+export type AgentVersionItem = typeof agentVersions.$inferSelect;
