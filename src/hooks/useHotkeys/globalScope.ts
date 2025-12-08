@@ -30,25 +30,30 @@ export const useOpenHotkeyHelperHotkey = () => {
 };
 
 export const useToggleLeftPanelHotkey = () => {
-  const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
-  return useHotkeyById(HotkeyEnum.ToggleLeftPanel, () => toggleCommandMenu(), {
+  const isZenMode = useGlobalStore((s) => s.status.zenMode);
+  const toggleLeftPanel = useGlobalStore((s) => s.toggleLeftPanel);
+  return useHotkeyById(HotkeyEnum.ToggleLeftPanel, () => toggleLeftPanel(), {
     enableOnContentEditable: true,
+    enabled: !isZenMode,
+  });
+};
+
+export const useToggleRightPanelHotkey = () => {
+  const isZenMode = useGlobalStore((s) => s.status.zenMode);
+  const toggleConfig = useGlobalStore((s) => s.toggleRightPanel);
+
+  return useHotkeyById(HotkeyEnum.ToggleRightPanel, () => toggleConfig(), {
+    enableOnContentEditable: true,
+    enabled: !isZenMode,
   });
 };
 
 export const useCommandPaletteHotkey = () => {
-  const [open, updateSystemStatus] = useGlobalStore((s) => [
-    s.status.showCommandMenu,
-    s.updateSystemStatus,
-  ]);
+  const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
 
-  return useHotkeyById(
-    HotkeyEnum.CommandPalette,
-    () => updateSystemStatus({ showCommandMenu: !open }),
-    {
-      enableOnContentEditable: true,
-    },
-  );
+  return useHotkeyById(HotkeyEnum.CommandPalette, () => toggleCommandMenu(), {
+    enableOnContentEditable: true,
+  });
 };
 
 // 注册聚合
@@ -56,6 +61,7 @@ export const useCommandPaletteHotkey = () => {
 export const useRegisterGlobalHotkeys = () => {
   // 全局自动注册不需要 enableScope
   useToggleLeftPanelHotkey();
+  useToggleRightPanelHotkey();
   useNavigateToChatHotkey();
   useOpenHotkeyHelperHotkey();
   useCommandPaletteHotkey();

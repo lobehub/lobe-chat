@@ -75,7 +75,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const NavPanel = memo(() => {
   const { styles } = useStyles();
-  const { expand, handleSizeChange, width, handleExpand } = useNavPanel();
+  const { expand, handleSizeChange, width, togglePanel } = useNavPanel();
   const panelContent = useSyncExternalStore(
     subscribeNavPanel,
     getNavPanelSnapshot,
@@ -94,7 +94,7 @@ const NavPanel = memo(() => {
         expandable={false}
         maxWidth={400}
         minWidth={240}
-        onExpandChange={handleExpand}
+        onExpandChange={(expand) => togglePanel(expand)}
         onSizeChange={handleSizeChange}
         placement="left"
         showBorder={false}
