@@ -3,6 +3,9 @@
     "title": "Cambiar modelo"
   },
   "active": "Activo",
+  "agentBuilder": {
+    "welcome": "Hola, soy **Lobe AI**, tu experto en configuración de asistentes. Cuéntame qué tipo de asistente necesitas y te ayudaré a configurarlo."
+  },
   "agentDefaultMessage": "Hola, soy **{{name}}**. Puedes comenzar a hablar conmigo de inmediato o ir a [Configuración del asistente]({{url}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, ¿en qué puedo ayudarte?",
   "agentDefaultMessageWithoutEdit": "Hola, soy **{{name}}**, ¿en qué puedo ayudarte?",

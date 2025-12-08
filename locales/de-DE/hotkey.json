@@ -70,12 +70,12 @@
     "title": "Schnell zwischen Assistenten wechseln"
   },
   "toggleLeftPanel": {
-    "desc": "Linkes Hilfepanel ein- oder ausblenden",
-    "title": "Assistentenpanel ein-/ausblenden"
+    "desc": "Linke Seitenleiste ein- oder ausblenden",
+    "title": "Linke Seitenleiste ein-/ausblenden"
   },
   "toggleRightPanel": {
-    "desc": "Rechtes Themenpanel ein- oder ausblenden",
-    "title": "Themenpanel ein-/ausblenden"
+    "desc": "Rechte Seitenleiste ein- oder ausblenden",
+    "title": "Rechte Seitenleiste ein-/ausblenden"
   },
   "toggleZenMode": {
     "desc": "Im Fokusmodus nur die aktuelle Sitzung anzeigen, andere UI ausblenden",

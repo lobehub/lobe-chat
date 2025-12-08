@@ -4,6 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import type { ActionKeys } from '@/features/ChatInput';
 import { ChatInput, ChatList } from '@/features/Conversation';
 
+import AgentBuilderWelcome from './AgentBuilderWelcome';
 import TopicSelector from './TopicSelector';
 
 interface AgentBuilderConversationProps {
@@ -20,7 +21,7 @@ const AgentBuilderConversation = memo<AgentBuilderConversationProps>(({ agentId 
     <Flexbox flex={1} height={'100%'}>
       <TopicSelector agentId={agentId} />
       <Flexbox flex={1} style={{ overflow: 'hidden' }}>
-        <ChatList />
+        <ChatList welcome={<AgentBuilderWelcome />} />
       </Flexbox>
       <ChatInput leftActions={actions} />
     </Flexbox>

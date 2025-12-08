@@ -42,6 +42,7 @@ const EditorCanvas = memo(() => {
   const streamingSystemRole = useAgentStore((s) => s.streamingSystemRole);
   const streamingInProgress = useAgentStore((s) => s.streamingSystemRoleInProgress);
   const prevStreamingRef = useRef<string | undefined>(undefined);
+  const wasStreamingRef = useRef(false);
 
   // Wrap handleContentChange with updateConfig
   const handleChange = useCallback(() => {
@@ -68,6 +69,19 @@ const EditorCanvas = memo(() => {
       }
     }
   }, [editor, editorInit, streamingSystemRole, streamingInProgress]);
+
+  // Trigger save when streaming ends
+  useEffect(() => {
+    if (wasStreamingRef.current && !streamingInProgress && editor && editorInit) {
+      // Streaming just ended, wait for editor to update its internal state then save
+      // This ensures editorData (json) is properly updated from the markdown content
+      const timer = setTimeout(() => {
+        handleContentChange(updateConfig);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+    wasStreamingRef.current = !!streamingInProgress;
+  }, [streamingInProgress, editor, editorInit, handleContentChange, updateConfig]);
 
   useEffect(() => {
     if (!editorInit || !editor || contentInit) return;

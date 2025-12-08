@@ -3,6 +3,9 @@
     "title": "模型"
   },
   "active": "活躍",
+  "agentBuilder": {
+    "welcome": "你好，我是 **Lobe AI**，你的助手設定專家。告訴我你想要什麼樣的助手，我會幫你設定好。"
+  },
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即與我開始對話，也可以前往 [助手設定]({{url}}) 完善我的資訊。",
   "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，有什麼我可以幫忙的嗎？",
   "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，有什麼我可以幫忙的嗎？",

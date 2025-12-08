@@ -3,6 +3,9 @@
     "title": "Model Değiştir"
   },
   "active": "Aktif",
+  "agentBuilder": {
+    "welcome": "Merhaba, ben **Lobe AI**, asistan yapılandırma uzmanınızım. Nasıl bir asistan istediğinizi bana söyleyin, sizin için ayarlayayım."
+  },
   "agentDefaultMessage": "Merhaba, ben **{{name}}**. Hemen benimle konuşmaya başlayabilir veya [Asistan Ayarları]({{url}}) sayfasına giderek bilgilerimi güncelleyebilirsin.",
   "agentDefaultMessageWithSystemRole": "Merhaba, ben **{{name}}**. Size nasıl yardımcı olabilirim?",
   "agentDefaultMessageWithoutEdit": "Merhaba, ben **{{name}}**. Size nasıl yardımcı olabilirim?",
