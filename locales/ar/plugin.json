@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "الحصول على النماذج المتاحة",
+        "getAvailableTools": "الحصول على الأدوات المتاحة",
+        "getConfig": "الحصول على الإعدادات",
+        "getMeta": "الحصول على البيانات الوصفية",
+        "getPrompt": "الحصول على التعليمات النظامية",
+        "searchMarketTools": "البحث في سوق الإضافات",
+        "searchOfficialTools": "البحث عن الأدوات الرسمية",
+        "setModel": "تعيين النموذج",
+        "setOpeningMessage": "تعيين رسالة البداية",
+        "setOpeningQuestions": "تعيين أسئلة البداية",
+        "togglePlugin": "تبديل الإضافة",
+        "updateChatConfig": "تحديث إعدادات المحادثة",
+        "updateConfig": "تحديث الإعدادات",
+        "updateMeta": "تحديث البيانات الوصفية",
+        "updatePrompt": "تحديث التعليمات النظامية"
+      },
+      "title": "منشئ الوكيل"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "قراءة محتوى قاعدة المعرفة",
@@ -23,6 +43,41 @@
         "writeLocalFile": "كتابة إلى الملف"
       },
       "title": "النظام المحلي"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "تحديث الدُفعة للعُقد",
+        "compareSnapshots": "مقارنة اللقطات",
+        "convertToList": "تحويل إلى قائمة",
+        "createNode": "إنشاء عقدة",
+        "cropImage": "اقتصاص الصورة",
+        "deleteNode": "حذف العقدة",
+        "deleteSnapshot": "حذف اللقطة",
+        "deleteTableColumn": "حذف عمود الجدول",
+        "deleteTableRow": "حذف صف الجدول",
+        "duplicateNode": "نسخ العقدة",
+        "editTitle": "تحرير عنوان المستند",
+        "indentListItem": "زيادة المسافة البادئة لعنصر القائمة",
+        "initPage": "تهيئة المستند",
+        "insertTableColumn": "إدراج عمود في الجدول",
+        "insertTableRow": "إدراج صف في الجدول",
+        "listSnapshots": "عرض اللقطات",
+        "mergeNodes": "دمج العقد",
+        "moveNode": "نقل العقدة",
+        "outdentListItem": "تقليل المسافة البادئة لعنصر القائمة",
+        "replaceText": "استبدال النص",
+        "resizeImage": "تغيير حجم الصورة",
+        "restoreSnapshot": "استعادة اللقطة",
+        "rotateImage": "تدوير الصورة",
+        "saveSnapshot": "حفظ اللقطة",
+        "setImageAlt": "تعيين النص البديل للصورة",
+        "splitNode": "تقسيم العقدة",
+        "toggleListType": "تبديل نوع القائمة",
+        "unwrapNode": "إلغاء تغليف العقدة",
+        "updateNode": "تحديث العقدة",
+        "wrapNodes": "تغليف العقد"
+      },
+      "title": "المستند"
     },
     "lobe-web-browsing": {
       "apiName": {

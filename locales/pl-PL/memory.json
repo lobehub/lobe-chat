@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "Usuń",
+      "edit": "Edytuj"
+    },
+    "defaultType": "Kontekst",
+    "deleteConfirm": "Czy na pewno chcesz usunąć tę pamięć kontekstową? Tej operacji nie można cofnąć.",
+    "deleteTitle": "Usuń pamięć kontekstową",
+    "description": "Opis",
+    "empty": "Brak zapisanych kontekstów",
+    "impact": "Wpływ",
+    "source": "Źródło",
+    "urgency": "Pilność"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Usuń",
+      "edit": "Edytuj"
+    },
+    "confidence": "Pewność",
+    "defaultType": "Doświadczenie",
+    "deleteConfirm": "Czy na pewno chcesz usunąć to doświadczenie? Tej operacji nie można cofnąć.",
+    "deleteTitle": "Usuń doświadczenie",
+    "empty": "Brak zapisanych doświadczeń",
+    "keyLearning": "Kluczowa lekcja",
+    "situation": "Sytuacja",
+    "source": "Źródło",
+    "steps": {
+      "action": "Podjęte działanie",
+      "outcome": "Możliwy rezultat",
+      "reasoning": "Tok rozumowania",
+      "situation": "Tło sytuacyjne"
+    }
+  },
   "identity": {
     "empty": "Brak zapisanych tożsamości",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "Oś czasu"
     }
   },
-  "loading": "Ładowanie..."
+  "loading": "Ładowanie...",
+  "preference": {
+    "actions": {
+      "delete": "Usuń",
+      "edit": "Edytuj"
+    },
+    "conclusionDirectives": "Wytyczne końcowe",
+    "defaultType": "Preferencja",
+    "deleteConfirm": "Czy na pewno chcesz usunąć tę preferencję? Tej operacji nie można cofnąć.",
+    "deleteTitle": "Usuń preferencję",
+    "empty": "Brak zapisanych preferencji",
+    "priority": "Priorytet",
+    "source": "Źródło",
+    "suggestions": "Sugestie"
+  },
+  "tab": {
+    "contexts": "Konteksty",
+    "experiences": "Doświadczenia",
+    "home": "Strona główna",
+    "identities": "Tożsamości",
+    "preferences": "Preferencje",
+    "search": "Szukaj"
+  },
+  "viewMode": {
+    "masonry": "Układ mozaikowy",
+    "timeline": "Oś czasu"
+  }
 }

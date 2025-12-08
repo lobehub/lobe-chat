@@ -2,6 +2,7 @@
   "about": {
     "title": "Hakkında"
   },
+  "advancedSettings": "Gelişmiş Ayarlar",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -75,6 +76,12 @@
       "success": "Tüm ayarlar sıfırlandı",
       "title": "Tüm Ayarları Sıfırla"
     }
+  },
+  "group": {
+    "aiConfig": "Yapay Zeka Ayarları",
+    "common": "Genel",
+    "profile": "Hesap",
+    "system": "Sistem"
   },
   "groupTab": {
     "chat": "Sohbet",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "Sürüm oluşturulamadı: {{message}}",
         "fetchRemoteFailed": "Uzak asistan verileri alınamadı",
-        "missingIdentifier": "Bu asistana henüz bir pazar tanımlayıcısı atanmadı",
-        "notAuthenticated": "Lütfen önce pazar hesabınıza giriş yapın",
+        "missingIdentifier": "Bu asistanın henüz bir topluluk tanımlayıcısı yok",
+        "notAuthenticated": "Lütfen önce topluluk hesabınıza giriş yapın",
         "publishFailed": "Yayımlama başarısız: {{message}}"
       },
       "submitButton": "Yayımla",
       "title": {
-        "submit": "Asistan Pazarında Paylaş",
+        "submit": "Asistan Topluluğunda Paylaş",
         "upload": "Yeni Sürüm Yayımla"
       }
     },
     "resultModal": {
-      "message": "Asistan incelemeye gönderildi, onaylandıktan sonra otomatik olarak yayımlanacaktır. Yayımlanan asistanı görmek için 'Pazarda Görüntüle'ye tıklayın.",
-      "view": "Pazarda Görüntüle"
+      "message": "Oluşturduğunuz asistan incelemeye gönderildi, onaylandıktan sonra otomatik olarak yayınlanacaktır.",
+      "title": "Başarıyla Gönderildi",
+      "view": "Toplulukta Görüntüle"
     },
     "submit": {
-      "button": "Pazarda Paylaş",
-      "tooltip": "Asistanı pazarda paylaş"
+      "button": "Toplulukta Paylaş",
+      "tooltip": "Asistanı toplulukta paylaş"
     },
     "upload": {
       "button": "Yeni Sürüm Yayımla",
-      "tooltip": "Asistan pazarına yeni sürüm yayımla"
+      "tooltip": "Asistan Topluluğuna Yeni Sürüm Yayınla"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "Asistan bilgilerini güncelle",
     "tag": {
-      "desc": "Asistan etiketleri, asistan pazarında gösterilecektir",
+      "desc": "Asistan etiketleri, Asistan Topluluğunda görüntülenecektir",
       "placeholder": "Etiket girin",
       "title": "Etiket"
     },
@@ -664,7 +672,8 @@
     "identifier": "Asistan Tanımlayıcısı (identifier)",
     "metaMiss": "Lütfen göndermeden önce asistan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
-    "tooltips": "Asistan pazarına paylaşın"
+    "success": "Asistan başarıyla gönderildi",
+    "tooltips": "Asistanı Asistan Topluluğunda paylaş"
   },
   "submitFooter": {
     "reset": "Sıfırla",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "Hakkında",
     "agent": "Varsayılan Asistan",
-    "common": "Genel Ayarlar",
+    "apikey": "API Anahtarı Yönetimi",
+    "common": "Görünüm",
     "experiment": "Deney",
     "hotkey": "Kısayollar",
-    "image": "AI Çizim",
+    "image": "Görsel Hizmeti",
     "llm": "Modeller",
+    "profile": "Hesabım",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "proxy": "Ağ Proxy",
+    "security": "Güvenlik",
+    "stats": "İstatistikler",
     "storage": "Veri Depolama",
     "sync": "Bulut Senkronizasyonu",
     "system-agent": "Sistem Asistanı",
-    "tts": "Metin Seslendirme"
+    "tts": "Metin Seslendirme",
+    "usage": "Kullanım İstatistikleri"
   },
   "tools": {
+    "add": "Eklenti Entegrasyonu",
     "builtins": {
       "groupName": "Dahili Araçlar"
     },
@@ -797,6 +812,8 @@
       "tools": "araç",
       "verifyAuth": "Kimlik doğrulamayı tamamladım"
     },
+    "notInstalled": "Yüklenmedi",
+    "notInstalledWarning": "Bu eklenti henüz yüklenmedi, bu durum asistanın kullanımını etkileyebilir",
     "plugins": {
       "enabled": "Etkin: {{num}}",
       "groupName": "Eklentiler",

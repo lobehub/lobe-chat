@@ -2,6 +2,7 @@
   "about": {
     "title": "Über"
   },
+  "advancedSettings": "Erweiterte Einstellungen",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Profilbild",
@@ -75,6 +76,12 @@
       "success": "Alle Einstellungen wurden zurückgesetzt",
       "title": "Alle Einstellungen zurücksetzen"
     }
+  },
+  "group": {
+    "aiConfig": "KI-Konfiguration",
+    "common": "Allgemein",
+    "profile": "Konto",
+    "system": "System"
   },
   "groupTab": {
     "chat": "Chat",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "Versionserstellung fehlgeschlagen: {{message}}",
         "fetchRemoteFailed": "Fehler beim Abrufen der entfernten Assistentendaten",
-        "missingIdentifier": "Der aktuelle Assistent hat noch keinen Markt-Bezeichner",
-        "notAuthenticated": "Bitte melden Sie sich zuerst mit Ihrem Marktkonto an",
+        "missingIdentifier": "Dieser Assistent hat noch keine Community-Kennung",
+        "notAuthenticated": "Bitte melden Sie sich zuerst mit Ihrem Community-Konto an",
         "publishFailed": "Veröffentlichung fehlgeschlagen: {{message}}"
       },
       "submitButton": "Veröffentlichen",
       "title": {
-        "submit": "Im Assistenten-Markt teilen",
+        "submit": "In der Assistenten-Community teilen",
         "upload": "Neue Version veröffentlichen"
       }
     },
     "resultModal": {
-      "message": "Der Assistent wurde zur Überprüfung eingereicht. Nach erfolgreicher Prüfung wird er automatisch veröffentlicht. Klicken Sie auf „Im Markt ansehen“, um den veröffentlichten Assistenten zu sehen.",
-      "view": "Im Markt ansehen"
+      "message": "Ihr erstellter Assistent wurde zur Überprüfung eingereicht und wird nach erfolgreicher Prüfung automatisch veröffentlicht.",
+      "title": "Erfolgreich eingereicht",
+      "view": "In der Community ansehen"
     },
     "submit": {
-      "button": "Im Markt teilen",
-      "tooltip": "Assistent im Markt veröffentlichen"
+      "button": "In der Community teilen",
+      "tooltip": "Assistent in der Community veröffentlichen"
     },
     "upload": {
       "button": "Neue Version veröffentlichen",
-      "tooltip": "Neue Version im Assistenten-Markt veröffentlichen"
+      "tooltip": "Neue Version in der Assistenten-Community veröffentlichen"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "Assistenteninformationen aktualisieren",
     "tag": {
-      "desc": "Die Assistenten-Tags werden im Assistentenmarkt angezeigt",
+      "desc": "Die Tags des Assistenten werden in der Assistenten-Community angezeigt",
       "placeholder": "Bitte geben Sie ein Tag ein",
       "title": "Tag"
     },
@@ -664,7 +672,8 @@
     "identifier": "Assistenten-Bezeichner (identifier)",
     "metaMiss": "Bitte vervollständigen Sie die Assistenteninformationen, einschließlich Name, Beschreibung und Tags, bevor Sie sie einreichen.",
     "placeholder": "Geben Sie die Kennung des Assistenten ein, die eindeutig sein muss, z. B. Web-Entwicklung",
-    "tooltips": "Auf dem Assistentenmarkt teilen"
+    "success": "Assistent erfolgreich eingereicht",
+    "tooltips": "In der Assistenten-Community teilen"
   },
   "submitFooter": {
     "reset": "Zurücksetzen",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "Über",
     "agent": "Standard-Assistent",
-    "common": "Allgemeine Einstellungen",
+    "apikey": "API-Schlüsselverwaltung",
+    "common": "Erscheinungsbild",
     "experiment": "Experiment",
     "hotkey": "Tastenkombinationen",
-    "image": "AI-Zeichnung",
+    "image": "Bildgenerierungsdienst",
     "llm": "Sprachmodell",
+    "profile": "Mein Konto",
     "provider": "KI-Dienstanbieter",
     "proxy": "Netzwerkproxy",
+    "security": "Sicherheit",
+    "stats": "Statistiken",
     "storage": "Datenspeicher",
     "sync": "Cloud-Synchronisierung",
     "system-agent": "Systemassistent",
-    "tts": "Sprachdienste"
+    "tts": "Sprachdienste",
+    "usage": "Nutzungsstatistik"
   },
   "tools": {
+    "add": "Plugin integrieren",
     "builtins": {
       "groupName": "Integriert"
     },
@@ -797,6 +812,8 @@
       "tools": "Tools",
       "verifyAuth": "Ich habe die Authentifizierung abgeschlossen"
     },
+    "notInstalled": "Nicht installiert",
+    "notInstalledWarning": "Dieses Plugin ist derzeit nicht installiert und könnte die Nutzung des Assistenten beeinträchtigen",
     "plugins": {
       "enabled": "Aktiviert: {{num}}",
       "groupName": "Plugins",

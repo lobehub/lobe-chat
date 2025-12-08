@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "Elimina",
+      "edit": "Modifica"
+    },
+    "defaultType": "Contesto",
+    "deleteConfirm": "Sei sicuro di voler eliminare questa memoria contestuale? Questa azione è irreversibile.",
+    "deleteTitle": "Elimina memoria contestuale",
+    "description": "Descrizione",
+    "empty": "Nessuna memoria contestuale disponibile",
+    "impact": "Impatto",
+    "source": "Fonte",
+    "urgency": "Urgenza"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Elimina",
+      "edit": "Modifica"
+    },
+    "confidence": "Fiducia",
+    "defaultType": "Esperienza",
+    "deleteConfirm": "Sei sicuro di voler eliminare questa memoria esperienziale? Questa azione è irreversibile.",
+    "deleteTitle": "Elimina memoria esperienziale",
+    "empty": "Nessuna memoria esperienziale disponibile",
+    "keyLearning": "Apprendimento chiave",
+    "situation": "Contesto",
+    "source": "Fonte",
+    "steps": {
+      "action": "Azione intrapresa",
+      "outcome": "Risultato possibile",
+      "reasoning": "Ragionamento",
+      "situation": "Contesto di fondo"
+    }
+  },
   "identity": {
     "empty": "Nessuna memoria d'identità disponibile",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "Cronologia"
     }
   },
-  "loading": "Caricamento in corso..."
+  "loading": "Caricamento in corso...",
+  "preference": {
+    "actions": {
+      "delete": "Elimina",
+      "edit": "Modifica"
+    },
+    "conclusionDirectives": "Direttive conclusive",
+    "defaultType": "Preferenza",
+    "deleteConfirm": "Sei sicuro di voler eliminare questa memoria di preferenza? Questa azione è irreversibile.",
+    "deleteTitle": "Elimina memoria di preferenza",
+    "empty": "Nessuna memoria di preferenza disponibile",
+    "priority": "Priorità",
+    "source": "Fonte",
+    "suggestions": "Suggerimenti"
+  },
+  "tab": {
+    "contexts": "Contesti",
+    "experiences": "Esperienze",
+    "home": "Home",
+    "identities": "Identità",
+    "preferences": "Preferenze",
+    "search": "Cerca"
+  },
+  "viewMode": {
+    "masonry": "Griglia fluida",
+    "timeline": "Cronologia"
+  }
 }

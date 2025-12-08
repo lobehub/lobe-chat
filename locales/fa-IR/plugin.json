@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "دریافت مدل‌های در دسترس",
+        "getAvailableTools": "دریافت ابزارهای در دسترس",
+        "getConfig": "دریافت پیکربندی",
+        "getMeta": "دریافت فراداده",
+        "getPrompt": "دریافت پیام سیستم",
+        "searchMarketTools": "جستجوی افزونه‌ها در بازار",
+        "searchOfficialTools": "جستجوی ابزارهای رسمی",
+        "setModel": "تنظیم مدل",
+        "setOpeningMessage": "تنظیم پیام آغازین",
+        "setOpeningQuestions": "تنظیم سوالات آغازین",
+        "togglePlugin": "تغییر وضعیت افزونه",
+        "updateChatConfig": "به‌روزرسانی پیکربندی گفتگو",
+        "updateConfig": "به‌روزرسانی پیکربندی",
+        "updateMeta": "به‌روزرسانی فراداده",
+        "updatePrompt": "به‌روزرسانی پیام سیستم"
+      },
+      "title": "سازنده عامل"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "خواندن محتوای پایگاه دانش",
@@ -23,6 +43,41 @@
         "writeLocalFile": "نوشتن در فایل"
       },
       "title": "سیستم محلی"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "به‌روزرسانی گروهی گره‌ها",
+        "compareSnapshots": "مقایسه عکس‌های فوری",
+        "convertToList": "تبدیل به فهرست",
+        "createNode": "ایجاد گره",
+        "cropImage": "برش تصویر",
+        "deleteNode": "حذف گره",
+        "deleteSnapshot": "حذف عکس فوری",
+        "deleteTableColumn": "حذف ستون جدول",
+        "deleteTableRow": "حذف ردیف جدول",
+        "duplicateNode": "تکثیر گره",
+        "editTitle": "ویرایش عنوان سند",
+        "indentListItem": "افزایش تورفتگی مورد فهرست",
+        "initPage": "راه‌اندازی سند",
+        "insertTableColumn": "درج ستون جدول",
+        "insertTableRow": "درج ردیف جدول",
+        "listSnapshots": "فهرست عکس‌های فوری",
+        "mergeNodes": "ادغام گره‌ها",
+        "moveNode": "جابجایی گره",
+        "outdentListItem": "کاهش تورفتگی مورد فهرست",
+        "replaceText": "جایگزینی متن",
+        "resizeImage": "تغییر اندازه تصویر",
+        "restoreSnapshot": "بازیابی عکس فوری",
+        "rotateImage": "چرخش تصویر",
+        "saveSnapshot": "ذخیره عکس فوری",
+        "setImageAlt": "تنظیم متن جایگزین تصویر",
+        "splitNode": "تقسیم گره",
+        "toggleListType": "تغییر نوع فهرست",
+        "unwrapNode": "باز کردن گره",
+        "updateNode": "به‌روزرسانی گره",
+        "wrapNodes": "بسته‌بندی گره‌ها"
+      },
+      "title": "سند"
     },
     "lobe-web-browsing": {
       "apiName": {

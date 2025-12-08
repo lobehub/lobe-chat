@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Pobierz dostępne modele",
+        "getAvailableTools": "Pobierz dostępne narzędzia",
+        "getConfig": "Pobierz konfigurację",
+        "getMeta": "Pobierz metadane",
+        "getPrompt": "Pobierz podpowiedź systemową",
+        "searchMarketTools": "Szukaj w sklepie z wtyczkami",
+        "searchOfficialTools": "Szukaj oficjalnych narzędzi",
+        "setModel": "Ustaw model",
+        "setOpeningMessage": "Ustaw wiadomość powitalną",
+        "setOpeningQuestions": "Ustaw pytania początkowe",
+        "togglePlugin": "Przełącz wtyczkę",
+        "updateChatConfig": "Zaktualizuj konfigurację czatu",
+        "updateConfig": "Zaktualizuj konfigurację",
+        "updateMeta": "Zaktualizuj metadane",
+        "updatePrompt": "Zaktualizuj podpowiedź systemową"
+      },
+      "title": "Kreator Agenta"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Odczytaj zawartość bazy wiedzy",
@@ -23,6 +43,41 @@
         "writeLocalFile": "Zapisz plik"
       },
       "title": "System lokalny"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Zbiorcza aktualizacja węzłów",
+        "compareSnapshots": "Porównaj migawki",
+        "convertToList": "Konwertuj na listę",
+        "createNode": "Utwórz węzeł",
+        "cropImage": "Przytnij obraz",
+        "deleteNode": "Usuń węzeł",
+        "deleteSnapshot": "Usuń migawkę",
+        "deleteTableColumn": "Usuń kolumnę tabeli",
+        "deleteTableRow": "Usuń wiersz tabeli",
+        "duplicateNode": "Duplikuj węzeł",
+        "editTitle": "Edytuj tytuł dokumentu",
+        "indentListItem": "Zwiększ wcięcie elementu listy",
+        "initPage": "Zainicjuj dokument",
+        "insertTableColumn": "Wstaw kolumnę do tabeli",
+        "insertTableRow": "Wstaw wiersz do tabeli",
+        "listSnapshots": "Wyświetl migawki",
+        "mergeNodes": "Scal węzły",
+        "moveNode": "Przenieś węzeł",
+        "outdentListItem": "Zmniejsz wcięcie elementu listy",
+        "replaceText": "Zamień tekst",
+        "resizeImage": "Zmień rozmiar obrazu",
+        "restoreSnapshot": "Przywróć migawkę",
+        "rotateImage": "Obróć obraz",
+        "saveSnapshot": "Zapisz migawkę",
+        "setImageAlt": "Ustaw tekst alternatywny obrazu",
+        "splitNode": "Podziel węzeł",
+        "toggleListType": "Przełącz typ listy",
+        "unwrapNode": "Rozpakuj węzeł",
+        "updateNode": "Zaktualizuj węzeł",
+        "wrapNodes": "Opakuj węzły"
+      },
+      "title": "Dokument"
     },
     "lobe-web-browsing": {
       "apiName": {

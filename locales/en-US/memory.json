@@ -5,6 +5,8 @@
       "edit": "Edit"
     },
     "defaultType": "Context",
+    "deleteConfirm": "Are you sure you want to delete this contextual memory? This action cannot be undone.",
+    "deleteTitle": "Delete Contextual Memory",
     "description": "Description",
     "empty": "No context memories available",
     "impact": "Impact",
@@ -18,6 +20,8 @@
     },
     "confidence": "Confidence",
     "defaultType": "Experience",
+    "deleteConfirm": "Are you sure you want to delete this experiential memory? This action cannot be undone.",
+    "deleteTitle": "Delete Experiential Memory",
     "empty": "No experience memories available",
     "keyLearning": "Key Learning",
     "situation": "Situation",
@@ -65,10 +69,20 @@
     },
     "conclusionDirectives": "Conclusion Directives",
     "defaultType": "Preference",
+    "deleteConfirm": "Are you sure you want to delete this preference memory? This action cannot be undone.",
+    "deleteTitle": "Delete Preference Memory",
     "empty": "No preference memories available",
     "priority": "Priority",
     "source": "Source",
     "suggestions": "Suggestions"
+  },
+  "tab": {
+    "contexts": "Contexts",
+    "experiences": "Experiences",
+    "home": "Home",
+    "identities": "Identities",
+    "preferences": "Preferences",
+    "search": "Search"
   },
   "viewMode": {
     "masonry": "Masonry",

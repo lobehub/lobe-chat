@@ -2,6 +2,7 @@
   "about": {
     "title": "정보"
   },
+  "advancedSettings": "고급 설정",
   "agentInfoDescription": {
     "basic": {
       "avatar": "아바타",
@@ -75,6 +76,12 @@
       "success": "모든 설정이 초기화되었습니다",
       "title": "모든 설정 초기화"
     }
+  },
+  "group": {
+    "aiConfig": "AI 설정",
+    "common": "일반",
+    "profile": "계정",
+    "system": "시스템"
   },
   "groupTab": {
     "chat": "채팅",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "버전 생성 실패: {{message}}",
         "fetchRemoteFailed": "원격 도우미 데이터를 가져오는 데 실패했습니다",
-        "missingIdentifier": "현재 도우미에 마켓 식별자가 없습니다",
-        "notAuthenticated": "먼저 마켓 계정에 로그인해 주세요",
+        "missingIdentifier": "현재 어시스턴트에 커뮤니티 식별자가 없습니다",
+        "notAuthenticated": "먼저 커뮤니티 계정에 로그인해 주세요",
         "publishFailed": "게시 실패: {{message}}"
       },
       "submitButton": "게시",
       "title": {
-        "submit": "도우미 마켓에 공유",
+        "submit": "어시스턴트 커뮤니티에 공유",
         "upload": "새 버전 게시"
       }
     },
     "resultModal": {
-      "message": "도우미가 심사 대기 중입니다. 심사 통과 후 자동으로 게시됩니다. '마켓에서 보기'를 클릭하여 게시된 도우미를 확인하세요.",
-      "view": "마켓에서 보기"
+      "message": "작성하신 어시스턴트가 심사에 제출되었습니다. 심사 통과 후 자동으로 게시됩니다.",
+      "title": "제출 완료",
+      "view": "커뮤니티에서 보기"
     },
     "submit": {
-      "button": "마켓에 공유",
-      "tooltip": "도우미를 마켓에 공유합니다"
+      "button": "커뮤니티에 공유",
+      "tooltip": "어시스턴트를 커뮤니티에 공유합니다"
     },
     "upload": {
       "button": "새 버전 게시",
-      "tooltip": "도우미 마켓에 새 버전을 게시합니다"
+      "tooltip": "어시스턴트 커뮤니티에 새 버전 게시"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "도우미 정보 업데이트",
     "tag": {
-      "desc": "도우미 마켓에 표시될 태그입니다",
+      "desc": "어시스턴트 태그는 어시스턴트 커뮤니티에 표시됩니다",
       "placeholder": "태그를 입력하세요",
       "title": "태그"
     },
@@ -664,7 +672,8 @@
     "identifier": "도우미 식별자(identifier)",
     "metaMiss": "에이전트 정보를 입력한 후 제출하십시오. 이름, 설명 및 태그를 포함해야 합니다.",
     "placeholder": "에이전트 식별자를 입력하세요. 고유해야 하며, 예: 웹 개발",
-    "tooltips": "에이전트 마켓에 공유"
+    "success": "어시스턴트 제출 완료",
+    "tooltips": "어시스턴트를 어시스턴트 커뮤니티에 공유"
   },
   "submitFooter": {
     "reset": "초기화",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "소개",
     "agent": "기본 에이전트",
-    "common": "일반 설정",
+    "apikey": "API 키 관리",
+    "common": "외관",
     "experiment": "실험",
     "hotkey": "단축키",
-    "image": "AI 그림",
+    "image": "그림 서비스",
     "llm": "언어 모델",
+    "profile": "내 계정",
     "provider": "AI 서비스 제공자",
     "proxy": "네트워크 프록시",
+    "security": "보안",
+    "stats": "데이터 통계",
     "storage": "데이터 저장소",
     "sync": "클라우드 동기화",
     "system-agent": "시스템 도우미",
-    "tts": "음성 서비스"
+    "tts": "음성 서비스",
+    "usage": "사용량 통계"
   },
   "tools": {
+    "add": "플러그인 통합",
     "builtins": {
       "groupName": "내장"
     },
@@ -797,6 +812,8 @@
       "tools": "개의 도구",
       "verifyAuth": "인증을 완료했습니다"
     },
+    "notInstalled": "설치되지 않음",
+    "notInstalledWarning": "현재 플러그인이 설치되지 않아 어시스턴트 사용에 영향을 줄 수 있습니다",
     "plugins": {
       "enabled": "활성화됨 {{num}}",
       "groupName": "플러그인",

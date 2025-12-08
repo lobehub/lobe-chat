@@ -2,6 +2,7 @@
   "about": {
     "title": "Over"
   },
+  "advancedSettings": "Geavanceerde instellingen",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Profielfoto",
@@ -75,6 +76,12 @@
       "success": "Alle instellingen zijn succesvol gereset",
       "title": "Alle instellingen resetten"
     }
+  },
+  "group": {
+    "aiConfig": "AI-configuratie",
+    "common": "Algemeen",
+    "profile": "Account",
+    "system": "Systeem"
   },
   "groupTab": {
     "chat": "Chat",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "Versie aanmaken mislukt: {{message}}",
         "fetchRemoteFailed": "Ophalen van externe assistentgegevens mislukt",
-        "missingIdentifier": "Deze assistent heeft nog geen marktplaatsidentifier",
-        "notAuthenticated": "Log eerst in op je marktplaatsaccount",
+        "missingIdentifier": "Deze assistent heeft nog geen community-identificatie",
+        "notAuthenticated": "Log eerst in op je community-account",
         "publishFailed": "Publicatie mislukt: {{message}}"
       },
       "submitButton": "Publiceren",
       "title": {
-        "submit": "Delen op de assistentenmarktplaats",
+        "submit": "Delen met de assistentengemeenschap",
         "upload": "Nieuwe versie publiceren"
       }
     },
     "resultModal": {
-      "message": "De assistent is ter beoordeling ingediend. Na goedkeuring wordt deze automatisch gepubliceerd. Klik op 'Bekijk in marktplaats' om de gepubliceerde assistent te bekijken.",
-      "view": "Bekijk in marktplaats"
+      "message": "Je assistent is ter beoordeling ingediend. Na goedkeuring wordt deze automatisch gepubliceerd.",
+      "title": "Succesvol ingediend",
+      "view": "Bekijk in de community"
     },
     "submit": {
-      "button": "Delen op marktplaats",
-      "tooltip": "Deel de assistent op de marktplaats"
+      "button": "Delen met de community",
+      "tooltip": "Deel je assistent met de community"
     },
     "upload": {
       "button": "Nieuwe versie publiceren",
-      "tooltip": "Publiceer een nieuwe versie op de assistentenmarktplaats"
+      "tooltip": "Publiceer een nieuwe versie naar de assistentengemeenschap"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "Assistentinformatie bijwerken",
     "tag": {
-      "desc": "Assistentlabels worden weergegeven in de assistentmarkt",
+      "desc": "Assistent-tags worden weergegeven in de assistentengemeenschap",
       "placeholder": "Voer tag in",
       "title": "Tag"
     },
@@ -664,7 +672,8 @@
     "identifier": "Assistentidentifier (identifier)",
     "metaMiss": "Vul alstublieft de assistentinformatie in voordat u deze indient. Dit moet de naam, beschrijving en labels bevatten",
     "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
-    "tooltips": "Delen op de assistentenmarkt"
+    "success": "Assistent succesvol ingediend",
+    "tooltips": "Delen met de assistentengemeenschap"
   },
   "submitFooter": {
     "reset": "Resetten",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "Over",
     "agent": "Standaardassistent",
-    "common": "Algemene instellingen",
+    "apikey": "API-sleutelbeheer",
+    "common": "Uiterlijk",
     "experiment": "Experiment",
     "hotkey": "Sneltoetsen",
-    "image": "AI Tekeningen",
+    "image": "Tekenservice",
     "llm": "Taalmodel",
+    "profile": "Mijn account",
     "provider": "AI-dienstverlener",
     "proxy": "Netwerkproxy",
+    "security": "Beveiliging",
+    "stats": "Statistieken",
     "storage": "Gegevensopslag",
     "sync": "Cloudsynchronisatie",
     "system-agent": "Systeemassistent",
-    "tts": "Spraakdienst"
+    "tts": "Spraakdienst",
+    "usage": "Gebruiksoverzicht"
   },
   "tools": {
+    "add": "Plug-in integreren",
     "builtins": {
       "groupName": "Ingebouwd"
     },
@@ -797,6 +812,8 @@
       "tools": "tools",
       "verifyAuth": "Ik heb de authenticatie voltooid"
     },
+    "notInstalled": "Niet geïnstalleerd",
+    "notInstalledWarning": "Deze plug-in is momenteel niet geïnstalleerd, wat de werking van de assistent kan beïnvloeden",
     "plugins": {
       "enabled": "Ingeschakeld {{num}}",
       "groupName": "Plug-ins",

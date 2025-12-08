@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "삭제",
+      "edit": "편집"
+    },
+    "defaultType": "상황",
+    "deleteConfirm": "이 상황 기억을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "deleteTitle": "상황 기억 삭제",
+    "description": "설명",
+    "empty": "상황 기억이 없습니다",
+    "impact": "영향도",
+    "source": "출처",
+    "urgency": "긴급도"
+  },
+  "experience": {
+    "actions": {
+      "delete": "삭제",
+      "edit": "편집"
+    },
+    "confidence": "신뢰도",
+    "defaultType": "경험",
+    "deleteConfirm": "이 경험 기억을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "deleteTitle": "경험 기억 삭제",
+    "empty": "경험 기억이 없습니다",
+    "keyLearning": "핵심 학습",
+    "situation": "상황",
+    "source": "출처",
+    "steps": {
+      "action": "행동 취하기",
+      "outcome": "예상 결과",
+      "reasoning": "추론 과정",
+      "situation": "상황 배경"
+    }
+  },
   "identity": {
     "empty": "아직 저장된 신원 정보가 없습니다",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "타임라인"
     }
   },
-  "loading": "로딩 중..."
+  "loading": "로딩 중...",
+  "preference": {
+    "actions": {
+      "delete": "삭제",
+      "edit": "편집"
+    },
+    "conclusionDirectives": "결론 지침",
+    "defaultType": "선호",
+    "deleteConfirm": "이 선호 기억을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "deleteTitle": "선호 기억 삭제",
+    "empty": "선호 기억이 없습니다",
+    "priority": "우선순위",
+    "source": "출처",
+    "suggestions": "제안"
+  },
+  "tab": {
+    "contexts": "상황",
+    "experiences": "경험",
+    "home": "홈",
+    "identities": "정체성",
+    "preferences": "선호",
+    "search": "검색"
+  },
+  "viewMode": {
+    "masonry": "격자 보기",
+    "timeline": "타임라인"
+  }
 }

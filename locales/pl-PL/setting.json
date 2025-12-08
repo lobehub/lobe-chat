@@ -2,6 +2,7 @@
   "about": {
     "title": "O nas"
   },
+  "advancedSettings": "Ustawienia zaawansowane",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Awatar",
@@ -75,6 +76,12 @@
       "success": "Wszystkie ustawienia zostały zresetowane",
       "title": "Zresetuj wszystkie ustawienia"
     }
+  },
+  "group": {
+    "aiConfig": "Konfiguracja AI",
+    "common": "Ogólne",
+    "profile": "Konto",
+    "system": "System"
   },
   "groupTab": {
     "chat": "Czaty",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "Nie udało się utworzyć wersji: {{message}}",
         "fetchRemoteFailed": "Nie udało się pobrać danych zdalnego asystenta",
-        "missingIdentifier": "Obecny asystent nie ma identyfikatora rynkowego",
-        "notAuthenticated": "Zaloguj się na konto rynkowe",
+        "missingIdentifier": "Ten asystent nie ma jeszcze identyfikatora społeczności",
+        "notAuthenticated": "Zaloguj się na konto społeczności",
         "publishFailed": "Publikacja nie powiodła się: {{message}}"
       },
       "submitButton": "Opublikuj",
       "title": {
-        "submit": "Udostępnij w Rynku Asystentów",
+        "submit": "Udostępnij w społeczności asystentów",
         "upload": "Opublikuj nową wersję"
       }
     },
     "resultModal": {
-      "message": "Asystent został przesłany do weryfikacji. Po zatwierdzeniu zostanie automatycznie opublikowany. Kliknij „Zobacz w Rynku”, aby zobaczyć opublikowanego asystenta.",
-      "view": "Zobacz w Rynku"
+      "message": "Twój asystent został przesłany do weryfikacji. Po zatwierdzeniu zostanie automatycznie opublikowany.",
+      "title": "Przesłano pomyślnie",
+      "view": "Zobacz w społeczności"
     },
     "submit": {
-      "button": "Udostępnij w Rynku",
-      "tooltip": "Udostępnij asystenta w Rynku"
+      "button": "Udostępnij w społeczności",
+      "tooltip": "Udostępnij asystenta w społeczności"
     },
     "upload": {
       "button": "Opublikuj nową wersję",
-      "tooltip": "Opublikuj nową wersję w Rynku Asystentów"
+      "tooltip": "Opublikuj nową wersję w społeczności asystentów"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "Zaktualizuj informacje o asystencie",
     "tag": {
-      "desc": "Tagi asystenta będą wyświetlane na rynku asystentów",
+      "desc": "Tagi asystenta będą widoczne w społeczności asystentów",
       "placeholder": "Proszę wprowadzić tag",
       "title": "Tag"
     },
@@ -664,7 +672,8 @@
     "identifier": "Identyfikator asystenta (identifier)",
     "metaMiss": "Proszę uzupełnić informacje o asystencie przed przesłaniem, należy podać nazwę, opis i tagi",
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
-    "tooltips": "Udostępnij na rynku asystentów"
+    "success": "Asystent został pomyślnie przesłany",
+    "tooltips": "Udostępnij w społeczności asystentów"
   },
   "submitFooter": {
     "reset": "Resetuj",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "O nas",
     "agent": "Domyślny asystent",
-    "common": "Ustawienia ogólne",
+    "apikey": "Zarządzanie kluczami API",
+    "common": "Wygląd",
     "experiment": "Eksperyment",
     "hotkey": "Skróty klawiszowe",
-    "image": "Rysowanie AI",
+    "image": "Usługa rysowania",
     "llm": "Model językowy",
+    "profile": "Moje konto",
     "provider": "Dostawca usług AI",
     "proxy": "Proxy sieciowy",
+    "security": "Bezpieczeństwo",
+    "stats": "Statystyki danych",
     "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
     "system-agent": "System Agent",
-    "tts": "Usługa głosowa"
+    "tts": "Usługa głosowa",
+    "usage": "Statystyki użycia"
   },
   "tools": {
+    "add": "Zintegruj wtyczkę",
     "builtins": {
       "groupName": "Wbudowane"
     },
@@ -797,6 +812,8 @@
       "tools": "narzędzia",
       "verifyAuth": "Ukończyłem uwierzytelnianie"
     },
+    "notInstalled": "Nie zainstalowano",
+    "notInstalledWarning": "Ta wtyczka nie została jeszcze zainstalowana, co może wpłynąć na działanie asystenta",
     "plugins": {
       "enabled": "Włączone {{num}}",
       "groupName": "Wtyczki",

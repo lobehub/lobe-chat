@@ -2,6 +2,7 @@
   "about": {
     "title": "À propos"
   },
+  "advancedSettings": "Paramètres avancés",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -75,6 +76,12 @@
       "success": "Toutes les configurations ont été réinitialisées avec succès",
       "title": "Réinitialiser tous les paramètres"
     }
+  },
+  "group": {
+    "aiConfig": "Configuration de l'IA",
+    "common": "Général",
+    "profile": "Compte",
+    "system": "Système"
   },
   "groupTab": {
     "chat": "Discussion",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "Échec de la création de la version : {{message}}",
         "fetchRemoteFailed": "Échec de la récupération des données de l'assistant distant",
-        "missingIdentifier": "L'assistant actuel n'a pas encore d'identifiant de marché",
-        "notAuthenticated": "Veuillez vous connecter à votre compte du marché",
+        "missingIdentifier": "Cet assistant n'a pas encore d'identifiant communautaire",
+        "notAuthenticated": "Veuillez vous connecter à votre compte communautaire",
         "publishFailed": "Échec de la publication : {{message}}"
       },
       "submitButton": "Publier",
       "title": {
-        "submit": "Partager sur le marché des assistants",
+        "submit": "Partager sur la communauté des assistants",
         "upload": "Publier une nouvelle version"
       }
     },
     "resultModal": {
-      "message": "L'assistant a été soumis pour révision. Il sera mis en ligne automatiquement une fois approuvé. Cliquez sur « Voir sur le marché » pour consulter l'assistant publié.",
-      "view": "Voir sur le marché"
+      "message": "Votre assistant a été soumis pour révision. Une fois approuvé, il sera mis en ligne automatiquement.",
+      "title": "Soumission réussie",
+      "view": "Voir dans la communauté"
     },
     "submit": {
-      "button": "Partager sur le marché",
-      "tooltip": "Partager l'assistant sur le marché"
+      "button": "Partager avec la communauté",
+      "tooltip": "Partager l'assistant avec la communauté"
     },
     "upload": {
       "button": "Publier une nouvelle version",
-      "tooltip": "Publier une nouvelle version sur le marché des assistants"
+      "tooltip": "Publier une nouvelle version sur la communauté des assistants"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "Mettre à jour les informations de l'assistant",
     "tag": {
-      "desc": "Les étiquettes de l'assistant seront affichées sur le marché des assistants",
+      "desc": "Les étiquettes de l'assistant seront affichées dans la communauté des assistants",
       "placeholder": "Veuillez saisir l'étiquette",
       "title": "Étiquette"
     },
@@ -664,7 +672,8 @@
     "identifier": "Identifiant de l'assistant (identifier)",
     "metaMiss": "Veuillez compléter les informations de l'agent avant de soumettre. Elles doivent inclure le nom, la description et les balises.",
     "placeholder": "Veuillez entrer l'identifiant de l'agent, qui doit être unique, par exemple développement-web",
-    "tooltips": "Partager sur le marché des agents"
+    "success": "Assistant soumis avec succès",
+    "tooltips": "Partager sur la communauté des assistants"
   },
   "submitFooter": {
     "reset": "Réinitialiser",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "À propos",
     "agent": "Agent par défaut",
-    "common": "Paramètres généraux",
+    "apikey": "Gestion des clés API",
+    "common": "Apparence",
     "experiment": "Expérience",
     "hotkey": "Raccourcis clavier",
-    "image": "Dessin IA",
+    "image": "Service de génération d'images",
     "llm": "Modèle de langue",
+    "profile": "Mon compte",
     "provider": "Fournisseur de services d'IA",
     "proxy": "Proxy réseau",
+    "security": "Sécurité",
+    "stats": "Statistiques",
     "storage": "Stockage des données",
     "sync": "Synchronisation cloud",
     "system-agent": "Agent système",
-    "tts": "Service vocal"
+    "tts": "Service vocal",
+    "usage": "Statistiques d'utilisation"
   },
   "tools": {
+    "add": "Ajouter un plugin",
     "builtins": {
       "groupName": "Intégré"
     },
@@ -797,6 +812,8 @@
       "tools": "outils",
       "verifyAuth": "J'ai terminé l'authentification"
     },
+    "notInstalled": "Non installé",
+    "notInstalledWarning": "Le plugin n'est pas encore installé, ce qui pourrait affecter le fonctionnement de l'assistant",
     "plugins": {
       "enabled": "Activé {{num}}",
       "groupName": "Plugins",

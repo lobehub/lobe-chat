@@ -44,6 +44,41 @@
       },
       "title": "本地系统"
     },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "批量更新节点",
+        "compareSnapshots": "比较快照",
+        "convertToList": "转换为列表",
+        "createNode": "创建节点",
+        "cropImage": "裁剪图片",
+        "deleteNode": "删除节点",
+        "deleteSnapshot": "删除快照",
+        "deleteTableColumn": "删除表格列",
+        "deleteTableRow": "删除表格行",
+        "duplicateNode": "复制节点",
+        "editTitle": "编辑文档标题",
+        "indentListItem": "缩进列表项",
+        "initPage": "初始化文档",
+        "insertTableColumn": "插入表格列",
+        "insertTableRow": "插入表格行",
+        "listSnapshots": "列出快照",
+        "mergeNodes": "合并节点",
+        "moveNode": "移动节点",
+        "outdentListItem": "取消缩进列表项",
+        "replaceText": "替换文本",
+        "resizeImage": "调整图片大小",
+        "restoreSnapshot": "恢复快照",
+        "rotateImage": "旋转图片",
+        "saveSnapshot": "保存快照",
+        "setImageAlt": "设置图片替代文本",
+        "splitNode": "拆分节点",
+        "toggleListType": "切换列表类型",
+        "unwrapNode": "解包节点",
+        "updateNode": "更新节点",
+        "wrapNodes": "包装节点"
+      },
+      "title": "文档"
+    },
     "lobe-web-browsing": {
       "apiName": {
         "crawlMultiPages": "读取多个页面内容",

@@ -2,6 +2,7 @@
   "about": {
     "title": "關於"
   },
+  "advancedSettings": "進階設定",
   "agentInfoDescription": {
     "basic": {
       "avatar": "頭像",
@@ -75,6 +76,12 @@
       "success": "已重設所有設定",
       "title": "重置所有設定"
     }
+  },
+  "group": {
+    "aiConfig": "AI 設定",
+    "common": "通用",
+    "profile": "帳號",
+    "system": "系統"
   },
   "groupTab": {
     "chat": "聊天",
@@ -216,27 +223,28 @@
       "messages": {
         "createVersionFailed": "版本建立失敗：{{message}}",
         "fetchRemoteFailed": "取得遠端助手資料失敗",
-        "missingIdentifier": "目前助手尚未設定市場識別碼",
-        "notAuthenticated": "請先登入市場帳號",
+        "missingIdentifier": "目前的助手尚未設定社群識別碼",
+        "notAuthenticated": "請先登入社群帳號",
         "publishFailed": "發布失敗：{{message}}"
       },
       "submitButton": "發布",
       "title": {
-        "submit": "分享到助手市集",
+        "submit": "分享到助手社群",
         "upload": "發布新版本"
       }
     },
     "resultModal": {
-      "message": "助手已提交審核，審核通過後將自動上線。點擊「在市集查看」以查看已發布的助手。",
-      "view": "在市集查看"
+      "message": "您創作的助手已提交審核，通過後將自動上線。",
+      "title": "提交成功",
+      "view": "前往社群查看"
     },
     "submit": {
-      "button": "分享到市集",
-      "tooltip": "分享助手到市集"
+      "button": "分享到社群",
+      "tooltip": "分享助手到社群"
     },
     "upload": {
       "button": "發布新版本",
-      "tooltip": "發布新版本到助手市集"
+      "tooltip": "發佈新版本到助手社群"
     }
   },
   "message": {
@@ -280,7 +288,7 @@
     },
     "submit": "更新助手資訊",
     "tag": {
-      "desc": "助手標籤將在助手市場中展示",
+      "desc": "助手標籤將會在助手社群中顯示",
       "placeholder": "請輸入標籤",
       "title": "標籤"
     },
@@ -664,7 +672,8 @@
     "identifier": "助手識別碼（identifier）",
     "metaMiss": "請補全助手信息後提交，需要包含名稱、描述和標籤",
     "placeholder": "請輸入助手的標識符，需要是唯一的，比如 web-development",
-    "tooltips": "分享到助手市場"
+    "success": "助手提交成功",
+    "tooltips": "分享到助手社群"
   },
   "submitFooter": {
     "reset": "重置",
@@ -759,19 +768,25 @@
   "tab": {
     "about": "關於",
     "agent": "默認助手",
-    "common": "通用設置",
+    "apikey": "API Key 管理",
+    "common": "外觀",
     "experiment": "實驗",
     "hotkey": "快速鍵",
-    "image": "AI 繪圖",
+    "image": "繪圖服務",
     "llm": "語言模型",
+    "profile": "我的帳號",
     "provider": "AI 服務商",
     "proxy": "網路代理",
+    "security": "安全",
+    "stats": "數據統計",
     "storage": "資料儲存",
     "sync": "雲端同步",
     "system-agent": "系統助手",
-    "tts": "語音服務"
+    "tts": "語音服務",
+    "usage": "使用量統計"
   },
   "tools": {
+    "add": "整合外掛",
     "builtins": {
       "groupName": "內置"
     },
@@ -797,6 +812,8 @@
       "tools": "個工具",
       "verifyAuth": "我已完成驗證"
     },
+    "notInstalled": "尚未安裝",
+    "notInstalledWarning": "目前外掛尚未安裝，可能會影響助手使用",
     "plugins": {
       "enabled": "已啟用 {{num}}",
       "groupName": "插件",

@@ -1,5 +1,25 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Lấy mô hình khả dụng",
+        "getAvailableTools": "Lấy công cụ khả dụng",
+        "getConfig": "Lấy cấu hình",
+        "getMeta": "Lấy siêu dữ liệu",
+        "getPrompt": "Lấy lời nhắc hệ thống",
+        "searchMarketTools": "Tìm kiếm công cụ trên chợ",
+        "searchOfficialTools": "Tìm kiếm công cụ chính thức",
+        "setModel": "Thiết lập mô hình",
+        "setOpeningMessage": "Thiết lập tin nhắn mở đầu",
+        "setOpeningQuestions": "Thiết lập câu hỏi mở đầu",
+        "togglePlugin": "Chuyển đổi plugin",
+        "updateChatConfig": "Cập nhật cấu hình trò chuyện",
+        "updateConfig": "Cập nhật cấu hình",
+        "updateMeta": "Cập nhật siêu dữ liệu",
+        "updatePrompt": "Cập nhật lời nhắc hệ thống"
+      },
+      "title": "Trình tạo Tác nhân"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Đọc nội dung cơ sở tri thức",
@@ -23,6 +43,41 @@
         "writeLocalFile": "Ghi nội dung vào tệp"
       },
       "title": "Hệ thống cục bộ"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Cập nhật hàng loạt nút",
+        "compareSnapshots": "So sánh ảnh chụp nhanh",
+        "convertToList": "Chuyển đổi thành danh sách",
+        "createNode": "Tạo nút",
+        "cropImage": "Cắt ảnh",
+        "deleteNode": "Xóa nút",
+        "deleteSnapshot": "Xóa ảnh chụp nhanh",
+        "deleteTableColumn": "Xóa cột bảng",
+        "deleteTableRow": "Xóa hàng bảng",
+        "duplicateNode": "Nhân bản nút",
+        "editTitle": "Chỉnh sửa tiêu đề tài liệu",
+        "indentListItem": "Thụt lề mục danh sách",
+        "initPage": "Khởi tạo tài liệu",
+        "insertTableColumn": "Chèn cột bảng",
+        "insertTableRow": "Chèn hàng bảng",
+        "listSnapshots": "Liệt kê ảnh chụp nhanh",
+        "mergeNodes": "Gộp các nút",
+        "moveNode": "Di chuyển nút",
+        "outdentListItem": "Bỏ thụt lề mục danh sách",
+        "replaceText": "Thay thế văn bản",
+        "resizeImage": "Thay đổi kích thước ảnh",
+        "restoreSnapshot": "Khôi phục ảnh chụp nhanh",
+        "rotateImage": "Xoay ảnh",
+        "saveSnapshot": "Lưu ảnh chụp nhanh",
+        "setImageAlt": "Thiết lập văn bản thay thế cho ảnh",
+        "splitNode": "Tách nút",
+        "toggleListType": "Chuyển đổi loại danh sách",
+        "unwrapNode": "Gỡ bọc nút",
+        "updateNode": "Cập nhật nút",
+        "wrapNodes": "Bọc các nút"
+      },
+      "title": "Tài liệu"
     },
     "lobe-web-browsing": {
       "apiName": {

@@ -1,4 +1,38 @@
 {
+  "context": {
+    "actions": {
+      "delete": "حذف",
+      "edit": "ویرایش"
+    },
+    "defaultType": "زمینه",
+    "deleteConfirm": "آیا مطمئن هستید که می‌خواهید این حافظه زمینه‌ای را حذف کنید؟ این عملیات قابل بازگشت نیست.",
+    "deleteTitle": "حذف حافظه زمینه‌ای",
+    "description": "توضیحات",
+    "empty": "هیچ حافظه زمینه‌ای موجود نیست",
+    "impact": "درجه تأثیر",
+    "source": "منبع",
+    "urgency": "درجه فوریت"
+  },
+  "experience": {
+    "actions": {
+      "delete": "حذف",
+      "edit": "ویرایش"
+    },
+    "confidence": "درجه اطمینان",
+    "defaultType": "تجربه",
+    "deleteConfirm": "آیا مطمئن هستید که می‌خواهید این حافظه تجربی را حذف کنید؟ این عملیات قابل بازگشت نیست.",
+    "deleteTitle": "حذف حافظه تجربی",
+    "empty": "هیچ حافظه تجربی موجود نیست",
+    "keyLearning": "یادگیری کلیدی",
+    "situation": "وضعیت",
+    "source": "منبع",
+    "steps": {
+      "action": "اقدام انجام‌شده",
+      "outcome": "نتیجه احتمالی",
+      "reasoning": "فرآیند استدلال",
+      "situation": "زمینه وضعیت"
+    }
+  },
   "identity": {
     "empty": "هیچ حافظه هویتی موجود نیست",
     "filter": {
@@ -27,5 +61,31 @@
       "timeline": "خط زمانی"
     }
   },
-  "loading": "در حال بارگذاری..."
+  "loading": "در حال بارگذاری...",
+  "preference": {
+    "actions": {
+      "delete": "حذف",
+      "edit": "ویرایش"
+    },
+    "conclusionDirectives": "دستورالعمل‌های نتیجه‌گیری",
+    "defaultType": "ترجیحات",
+    "deleteConfirm": "آیا مطمئن هستید که می‌خواهید این حافظه ترجیحی را حذف کنید؟ این عملیات قابل بازگشت نیست.",
+    "deleteTitle": "حذف حافظه ترجیحی",
+    "empty": "هیچ حافظه ترجیحی موجود نیست",
+    "priority": "اولویت",
+    "source": "منبع",
+    "suggestions": "پیشنهادها"
+  },
+  "tab": {
+    "contexts": "زمینه‌ها",
+    "experiences": "تجربه‌ها",
+    "home": "خانه",
+    "identities": "هویت‌ها",
+    "preferences": "ترجیحات",
+    "search": "جستجو"
+  },
+  "viewMode": {
+    "masonry": "نمای آبشاری",
+    "timeline": "خط زمانی"
+  }
 }
