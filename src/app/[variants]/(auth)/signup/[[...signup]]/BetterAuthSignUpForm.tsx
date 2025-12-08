@@ -52,6 +52,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface SignUpFormValues {
+  confirmPassword: string;
   email: string;
   password: string;
 }
@@ -174,6 +175,28 @@ export default function BetterAuthSignUpForm() {
             >
               <Input.Password
                 placeholder={t('betterAuth.signup.passwordPlaceholder')}
+                prefix={<Lock size={16} />}
+                size="large"
+              />
+            </Form.Item>
+
+            <Form.Item
+              dependencies={['password']}
+              name="confirmPassword"
+              rules={[
+                { message: t('betterAuth.errors.confirmPasswordRequired'), required: true },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error(t('betterAuth.errors.passwordMismatch')));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password
+                placeholder={t('betterAuth.signup.confirmPasswordPlaceholder')}
                 prefix={<Lock size={16} />}
                 size="large"
               />
