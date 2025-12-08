@@ -36,6 +36,13 @@ export const agentIdLoader = ({ params }: LoaderFunctionArgs): { agentId: string
   return { agentId: params.aid };
 };
 
+export const groupIdLoader = ({ params }: LoaderFunctionArgs): { groupId: string } => {
+  if (!params.gid) {
+    throw new Error('Group ID parameter is required');
+  }
+  return { groupId: params.gid };
+};
+
 /**
  * Specific loader for routes with 'id' param
  * Returns: { id: string }
