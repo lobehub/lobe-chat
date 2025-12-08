@@ -20,7 +20,7 @@ const AddButton = memo(() => {
 
   const theme = useTheme();
 
-  const { openGroupWizardModal, closeGroupWizardModal } = useAgentModal();
+  const { openGroupWizardModal, closeGroupWizardModal, setGroupWizardLoading } = useAgentModal();
 
   // Create menu items
   const {
@@ -36,7 +36,6 @@ const AddButton = memo(() => {
 
   const handleOpenGroupWizard = useCallback(() => {
     openGroupWizardModal({
-      isCreatingFromTemplate: isCreatingGroup,
       onCancel: closeGroupWizardModal,
       onCreateCustom: async (selectedAgents, hostConfig, enableSupervisor) => {
         await createGroupWithMembers(
@@ -53,13 +52,18 @@ const AddButton = memo(() => {
         enableSupervisor,
         selectedMemberTitles,
       ) => {
-        await createGroupFromTemplate(
-          templateId,
-          hostConfig,
-          enableSupervisor,
-          selectedMemberTitles,
-        );
-        closeGroupWizardModal();
+        setGroupWizardLoading(true);
+        try {
+          await createGroupFromTemplate(
+            templateId,
+            hostConfig,
+            enableSupervisor,
+            selectedMemberTitles,
+          );
+          closeGroupWizardModal();
+        } finally {
+          setGroupWizardLoading(false);
+        }
       },
     });
   }, [
@@ -67,7 +71,7 @@ const AddButton = memo(() => {
     closeGroupWizardModal,
     createGroupWithMembers,
     createGroupFromTemplate,
-    isCreatingGroup,
+    setGroupWizardLoading,
     tChat,
   ]);
 

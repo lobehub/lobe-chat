@@ -1,7 +1,9 @@
 import { z } from 'zod';
 
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
+import { AgentModel } from '@/database/models/agent';
 import { ChatGroupModel } from '@/database/models/chatGroup';
+import { insertAgentSchema } from '@/database/schemas';
 import { insertChatGroupSchema } from '@/database/schemas/chatGroup';
 import { ChatGroupConfig } from '@/database/types/chatGroup';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
@@ -12,6 +14,7 @@ const groupProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
 
   return opts.next({
     ctx: {
+      agentModel: new AgentModel(ctx.serverDB, ctx.userId),
       chatGroupModel: new ChatGroupModel(ctx.serverDB, ctx.userId),
     },
   });
@@ -44,6 +47,59 @@ export const groupRouter = router({
         ...input,
         config: normalizeGroupConfig(input.config as ChatGroupConfig | null),
       });
+    }),
+
+  /**
+   * Create a group with virtual member agents in one request.
+   * This is the recommended way to create a group from a template.
+   * The backend will:
+   * 1. Batch create virtual agents from member configs
+   * 2. Create the group
+   * 3. Add the agents to the group
+   * Returns the groupId and created agentIds.
+   */
+  createGroupWithMembers: groupProcedure
+    .input(
+      z.object({
+        groupConfig: insertChatGroupSchema.omit({ userId: true }),
+        members: z.array(
+          insertAgentSchema
+            .omit({
+              chatConfig: true,
+              openingMessage: true,
+              openingQuestions: true,
+              tts: true,
+              userId: true,
+            })
+            .partial(),
+        ),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      // 1. Batch create virtual agents
+      const memberConfigs = input.members.map((member) => ({
+        ...member,
+        plugins: member.plugins as string[] | undefined,
+        tags: member.tags as string[] | undefined,
+        virtual: true,
+      }));
+
+      const createdAgents = await ctx.agentModel.batchCreate(memberConfigs);
+      const agentIds = createdAgents.map((agent) => agent.id);
+
+      // 2. Create group with agents
+      const { group } = await ctx.chatGroupModel.createWithAgents(
+        {
+          ...input.groupConfig,
+          config: normalizeGroupConfig(input.groupConfig.config as ChatGroupConfig | null),
+        },
+        agentIds,
+      );
+
+      return {
+        agentIds,
+        groupId: group.id,
+      };
     }),
 
   deleteGroup: groupProcedure

@@ -22,7 +22,12 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
   const { t } = useTranslation('common');
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
-  const { openGroupWizardModal, closeGroupWizardModal, openConfigGroupModal } = useAgentModal();
+  const {
+    openGroupWizardModal,
+    closeGroupWizardModal,
+    openConfigGroupModal,
+    setGroupWizardLoading,
+  } = useAgentModal();
 
   // Create menu items
   const { createGroupFromTemplate, createGroupWithMembers, isLoading } = useCreateMenuItems();
@@ -46,14 +51,24 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
       enableSupervisor?: boolean,
       selectedMemberTitles?: string[],
     ) => {
-      await createGroupFromTemplate(templateId, hostConfig, enableSupervisor, selectedMemberTitles);
+      setGroupWizardLoading(true);
+      try {
+        await createGroupFromTemplate(
+          templateId,
+          hostConfig,
+          enableSupervisor,
+          selectedMemberTitles,
+        );
+        closeGroupWizardModal();
+      } finally {
+        setGroupWizardLoading(false);
+      }
     },
-    [createGroupFromTemplate],
+    [createGroupFromTemplate, setGroupWizardLoading, closeGroupWizardModal],
   );
 
   const handleOpenGroupWizard = useCallback(() => {
     openGroupWizardModal({
-      isCreatingFromTemplate: isLoading,
       onCancel: closeGroupWizardModal,
       onCreateCustom: handleGroupWizardCreateCustom,
       onCreateFromTemplate: handleGroupWizardCreateFromTemplate,
@@ -63,7 +78,6 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
     closeGroupWizardModal,
     handleGroupWizardCreateFromTemplate,
     handleGroupWizardCreateCustom,
-    isLoading,
   ]);
 
   const handleOpenConfigGroupModal = useCallback(() => {

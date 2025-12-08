@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { useActionSWR } from '@/libs/swr';
+import { GroupMemberConfig, chatGroupService } from '@/services/chatGroup';
 import { useAgentStore } from '@/store/agent';
 import { useChatGroupStore } from '@/store/chatGroup';
 import { useFileStore } from '@/store/file';
@@ -36,8 +37,12 @@ export const useCreateMenuItems = () => {
   const groupTemplates = useGroupTemplates();
 
   const [storeCreateAgent] = useAgentStore((s) => [s.createAgent]);
-  const [addGroup, refreshAgentList] = useHomeStore((s) => [s.addGroup, s.refreshAgentList]);
-  const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
+  const [addGroup, refreshAgentList, switchToGroup] = useHomeStore((s) => [
+    s.addGroup,
+    s.refreshAgentList,
+    s.switchToGroup,
+  ]);
+  const [createGroup, loadGroups] = useChatGroupStore((s) => [s.createGroup, s.loadGroups]);
   const createNewPage = useFileStore((s) => s.createNewPage);
 
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);
@@ -91,6 +96,7 @@ export const useCreateMenuItems = () => {
 
   /**
    * Create group from template
+   * Uses backend batch creation for better performance and consistency
    */
   const createGroupFromTemplate = useCallback(
     async (
@@ -111,37 +117,17 @@ export const useCreateMenuItems = () => {
             ? template.members
             : template.members.filter((m) => selectedMemberTitles.includes(m.title));
 
-        const memberAgentIds: string[] = [];
-        for (const member of membersToCreate) {
-          const result = await storeCreateAgent({
-            config: {
-              // MetaData fields
-avatar: member.avatar,
-              
-backgroundColor: member.backgroundColor,
-              
-description: `${member.title} - ${template.description}`,
-              
-              plugins: member.plugins,
-              systemRole: member.systemRole,
-              title: member.title,
-              virtual: true,
-            },
-          });
+        // Prepare member configs for batch creation
+        const memberConfigs: GroupMemberConfig[] = membersToCreate.map((member) => ({
+          avatar: member.avatar,
+          backgroundColor: member.backgroundColor,
+          plugins: member.plugins,
+          systemRole: member.systemRole,
+          title: member.title,
+        }));
 
-          await refreshAgentList();
-
-          // Get agentId directly from createAgent result
-          if (result.agentId) {
-            memberAgentIds.push(result.agentId);
-          }
-        }
-
-        await new Promise<void>((resolve) => {
-          setTimeout(() => resolve(), 1000);
-        });
-
-        await createGroup(
+        // Use batch creation endpoint - creates all agents and group in one request
+        const { groupId } = await chatGroupService.createGroupWithMembers(
           {
             config: {
               ...(hostConfig
@@ -155,8 +141,15 @@ description: `${member.title} - ${template.description}`,
             },
             title: template.title,
           },
-          memberAgentIds,
+          memberConfigs,
         );
+
+        // Switch to the new group
+        switchToGroup(groupId);
+
+        // Refresh data after creation
+        await refreshAgentList();
+        await loadGroups();
 
         message.success({ content: t('sessionGroup.createGroupSuccess') });
         return true;
@@ -168,7 +161,7 @@ description: `${member.title} - ${template.description}`,
         setIsCreatingGroup(false);
       }
     },
-    [groupTemplates, storeCreateAgent, refreshAgentList, createGroup, message, t],
+    [groupTemplates, refreshAgentList, loadGroups, switchToGroup, message, t],
   );
 
   /**
