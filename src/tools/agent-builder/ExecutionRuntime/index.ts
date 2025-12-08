@@ -451,10 +451,8 @@ export class AgentBuilderExecutionRuntime {
    * Stream update prompt with typewriter effect
    */
   private async streamUpdatePrompt(agentId: string, prompt: string): Promise<void> {
-    const agentStore = getAgentStoreState();
-
     // Start streaming
-    agentStore.startStreamingSystemRole();
+    getAgentStoreState().startStreamingSystemRole();
 
     // Simulate streaming by chunking the content
     const chunkSize = 5; // Characters per chunk
@@ -462,7 +460,7 @@ export class AgentBuilderExecutionRuntime {
 
     for (let i = 0; i < prompt.length; i += chunkSize) {
       const chunk = prompt.slice(i, i + chunkSize);
-      agentStore.appendStreamingSystemRole(chunk);
+      getAgentStoreState().appendStreamingSystemRole(chunk);
 
       // Small delay for typewriter effect
       if (i + chunkSize < prompt.length) {
@@ -471,8 +469,8 @@ export class AgentBuilderExecutionRuntime {
       }
     }
 
-    // Finish streaming and save
-    await agentStore.finishStreamingSystemRole(agentId);
+    // Finish streaming - EditorCanvas will handle save when streaming ends
+    await getAgentStoreState().finishStreamingSystemRole(agentId);
   }
 
   // ==================== Plugin Installation ====================
