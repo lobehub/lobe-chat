@@ -78,7 +78,7 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
     },
     {
       description:
-        'Update agent configuration fields. Use this to change model, provider, plugins, opening message, opening questions, chat settings, and model parameters. Only include fields you want to update.',
+        'Update agent configuration and/or metadata. Use this to change model, provider, plugins, opening message, opening questions, chat settings, model parameters, title, description, avatar, and tags. Only include fields you want to update.',
       name: AgentBuilderApiName.updateAgentConfig,
       parameters: {
         properties: {
@@ -125,17 +125,6 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
             },
             type: 'object',
           },
-        },
-        required: ['config'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Update agent metadata like title, description, avatar, tags. Use this to change how the agent is presented to users.',
-      name: AgentBuilderApiName.updateAgentMeta,
-      parameters: {
-        properties: {
           meta: {
             description: 'Partial metadata object. Only include fields you want to update.',
             properties: {
@@ -164,7 +153,7 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
             type: 'object',
           },
         },
-        required: ['meta'],
+        required: [],
         type: 'object',
       },
     },

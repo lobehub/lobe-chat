@@ -3,6 +3,9 @@
     "title": "Przełącz model"
   },
   "active": "aktywny",
+  "agentBuilder": {
+    "welcome": "Cześć, jestem **Lobe AI**, Twój ekspert od konfiguracji asystenta. Powiedz mi, jakiego asystenta potrzebujesz, a ja pomogę Ci go skonfigurować."
+  },
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**. W czym mogę pomóc?",
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. W czym mogę pomóc?",

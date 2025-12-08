@@ -12,11 +12,10 @@ export const AgentBuilderApiName = {
   installPlugin: 'installPlugin',
   searchMarketTools: 'searchMarketTools',
   // Write operations
-  // Note: setModel, setOpeningMessage, setOpeningQuestions, updateChatConfig are removed
+  // Note: setModel, setOpeningMessage, setOpeningQuestions, updateChatConfig, updateAgentMeta are removed
   // and consolidated into updateAgentConfig
   togglePlugin: 'togglePlugin',
   updateAgentConfig: 'updateConfig',
-  updateAgentMeta: 'updateMeta',
   updatePrompt: 'updatePrompt',
 } as const;
 
@@ -26,14 +25,11 @@ export interface UpdateAgentConfigParams {
   /**
    * Partial agent configuration to update
    */
-  config: PartialDeep<LobeAgentConfig>;
-}
-
-export interface UpdateAgentMetaParams {
+  config?: PartialDeep<LobeAgentConfig>;
   /**
    * Partial metadata to update
    */
-  meta: Partial<MetaData>;
+  meta?: Partial<MetaData>;
 }
 
 export interface TogglePluginParams {
@@ -68,17 +64,17 @@ export interface UpdatePromptParams {
 // ============== State Types (for Render components) ==============
 
 export interface UpdateConfigState {
-  newValues: Record<string, any>;
-  previousValues: Record<string, any>;
+  config?: {
+    newValues: Record<string, unknown>;
+    previousValues: Record<string, unknown>;
+    updatedFields: string[];
+  };
+  meta?: {
+    newValues: Partial<MetaData>;
+    previousValues: Partial<MetaData>;
+    updatedFields: string[];
+  };
   success: boolean;
-  updatedFields: string[];
-}
-
-export interface UpdateMetaState {
-  newValues: Partial<MetaData>;
-  previousValues: Partial<MetaData>;
-  success: boolean;
-  updatedFields: string[];
 }
 
 export interface TogglePluginState {

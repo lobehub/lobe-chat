@@ -9,7 +9,6 @@ import type {
   SearchMarketToolsParams,
   TogglePluginParams,
   UpdateAgentConfigParams,
-  UpdateAgentMetaParams,
   UpdatePromptParams,
 } from '@/tools/agent-builder/types';
 
@@ -26,7 +25,6 @@ export interface AgentBuilderAction {
   searchMarketTools: (id: string, params: SearchMarketToolsParams) => Promise<boolean>;
   togglePlugin: (id: string, params: TogglePluginParams) => Promise<boolean>;
   updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<boolean>;
-  updateMeta: (id: string, params: UpdateAgentMetaParams) => Promise<boolean>;
   updatePrompt: (id: string, params: UpdatePromptParams) => Promise<boolean>;
 }
 
@@ -93,12 +91,9 @@ export const agentBuilderSlice: StateCreator<
       // Execute the runtime method
       let result;
       switch (apiName) {
-        case 'updateAgentConfig': {
+        case 'updateAgentConfig':
+        case 'updateConfig': {
           result = await runtime.updateAgentConfig(agentId, params as UpdateAgentConfigParams);
-          break;
-        }
-        case 'updateAgentMeta': {
-          result = await runtime.updateAgentMeta(agentId, params as UpdateAgentMetaParams);
           break;
         }
         case 'togglePlugin': {
@@ -194,11 +189,7 @@ export const agentBuilderSlice: StateCreator<
 
   // ==================== Write Operations ====================
   updateConfig: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentConfig', params);
-  },
-
-  updateMeta: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updateAgentMeta', params);
+    return get().internal_triggerAgentBuilderToolCalling(id, 'updateConfig', params);
   },
 
   updatePrompt: async (id, params) => {

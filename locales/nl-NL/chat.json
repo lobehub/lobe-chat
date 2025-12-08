@@ -3,6 +3,9 @@
     "title": "Modelen"
   },
   "active": "Actief",
+  "agentBuilder": {
+    "welcome": "Hallo, ik ben **Lobe AI**, jouw assistentconfiguratie-expert. Vertel me wat voor soort assistent je wilt, dan help ik je om deze in te stellen."
+  },
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
