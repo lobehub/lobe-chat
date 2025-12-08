@@ -1,3 +1,5 @@
+import { KLAVIS_SERVER_TYPES } from '@lobechat/const';
+import type { OfficialToolItem } from '@lobechat/context-engine';
 import {
   FetchSSEOptions,
   fetchSSE,
@@ -24,7 +26,11 @@ import {
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getChatStoreState } from '@/store/chat';
 import { getToolStoreState } from '@/store/tool';
-import { pluginSelectors } from '@/store/tool/selectors';
+import {
+  builtinToolSelectors,
+  klavisStoreSelectors,
+  pluginSelectors,
+} from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
 import {
   preferenceSelectors,
@@ -145,11 +151,65 @@ class ChatService {
     // Note: When Agent Builder is active, we need to get the context of the agent being edited,
     // which is stored in chatStore.activeAgentId, not the targetAgentId (which is the Agent Builder itself)
     const isAgentBuilderEnabled = enabledToolIds.includes(AGENT_BUILDER_TOOL_ID);
-    const agentBuilderContext = isAgentBuilderEnabled
-      ? agentByIdSelectors.getAgentBuilderContextById(getChatStoreState().activeAgentId || '')(
-          getAgentStoreState(),
-        )
-      : undefined;
+    let agentBuilderContext;
+
+    if (isAgentBuilderEnabled) {
+      const activeAgentId = getChatStoreState().activeAgentId || '';
+      const baseContext =
+        agentByIdSelectors.getAgentBuilderContextById(activeAgentId)(getAgentStoreState());
+
+      // Build official tools list (builtin tools + Klavis tools)
+      const toolState = getToolStoreState();
+      const enabledPlugins =
+        agentSelectors.getAgentConfigById(activeAgentId)(getAgentStoreState()).plugins || [];
+
+      const officialTools: OfficialToolItem[] = [];
+
+      // Get builtin tools (excluding Klavis tools)
+      const builtinTools = builtinToolSelectors.metaList(toolState);
+      const klavisIdentifiers = new Set(KLAVIS_SERVER_TYPES.map((t) => t.identifier));
+
+      for (const tool of builtinTools) {
+        // Skip Klavis tools in builtin list (they'll be shown separately)
+        if (klavisIdentifiers.has(tool.identifier)) continue;
+
+        officialTools.push({
+          description: tool.meta?.description,
+          enabled: enabledPlugins.includes(tool.identifier),
+          identifier: tool.identifier,
+          installed: true,
+          name: tool.meta?.title || tool.identifier,
+          type: 'builtin',
+        });
+      }
+
+      // Get Klavis tools (if enabled)
+      const isKlavisEnabled =
+        typeof window !== 'undefined' &&
+        window.global_serverConfigStore?.getState()?.serverConfig?.enableKlavis;
+
+      if (isKlavisEnabled) {
+        const allKlavisServers = klavisStoreSelectors.getServers(toolState);
+
+        for (const klavisType of KLAVIS_SERVER_TYPES) {
+          const server = allKlavisServers.find((s) => s.identifier === klavisType.identifier);
+
+          officialTools.push({
+            description: `Klavis MCP Server: ${klavisType.label}`,
+            enabled: enabledPlugins.includes(klavisType.identifier),
+            identifier: klavisType.identifier,
+            installed: !!server,
+            name: klavisType.label,
+            type: 'klavis',
+          });
+        }
+      }
+
+      agentBuilderContext = {
+        ...baseContext,
+        officialTools,
+      };
+    }
 
     // Apply context engineering with preprocessing configuration
     // Note: agentConfig.systemRole is already resolved by resolveAgentConfig for builtin agents
