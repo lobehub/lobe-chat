@@ -29,9 +29,7 @@ import type {
   TogglePluginParams,
   TogglePluginState,
   UpdateAgentConfigParams,
-  UpdateAgentMetaParams,
   UpdateConfigState,
-  UpdateMetaState,
   UpdatePromptParams,
   UpdatePromptState,
 } from '../types';
@@ -171,7 +169,7 @@ export class AgentBuilderExecutionRuntime {
   // ==================== Write Operations ====================
 
   /**
-   * Update agent configuration (bulk update)
+   * Update agent configuration and/or metadata
    */
   async updateAgentConfig(
     agentId: string,
@@ -179,97 +177,75 @@ export class AgentBuilderExecutionRuntime {
   ): Promise<BuiltinServerRuntimeOutput> {
     try {
       const state = getAgentStoreState();
-      // Use agentId to get agent config instead of currentAgentConfig
-      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
+      const agentStore = getAgentStoreState();
+      const resultState: UpdateConfigState = { success: true };
+      const contentParts: string[] = [];
 
-      // Extract the fields that will be updated
-      const updatedFields = Object.keys(args.config);
-      const previousValues: Record<string, unknown> = {};
-      const newValues: Record<string, unknown> = {};
+      // Handle config update
+      if (args.config && Object.keys(args.config).length > 0) {
+        const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
+        const configUpdatedFields = Object.keys(args.config);
+        const configPreviousValues: Record<string, unknown> = {};
+        const configNewValues: Record<string, unknown> = {};
 
-      for (const field of updatedFields) {
-        previousValues[field] = (previousConfig as unknown as Record<string, unknown>)[field];
-        newValues[field] = (args.config as unknown as Record<string, unknown>)[field];
+        for (const field of configUpdatedFields) {
+          configPreviousValues[field] = (previousConfig as unknown as Record<string, unknown>)[
+            field
+          ];
+          configNewValues[field] = (args.config as unknown as Record<string, unknown>)[field];
+        }
+
+        await agentStore.optimisticUpdateAgentConfig(agentId, args.config);
+
+        resultState.config = {
+          newValues: configNewValues,
+          previousValues: configPreviousValues,
+          updatedFields: configUpdatedFields,
+        };
+        contentParts.push(`config fields: ${configUpdatedFields.join(', ')}`);
       }
 
-      // Call the store action to update
-      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, args.config);
+      // Handle meta update
+      if (args.meta && Object.keys(args.meta).length > 0) {
+        const previousMeta = agentSelectors.getAgentMetaById(agentId)(state);
+        const metaUpdatedFields = Object.keys(args.meta);
+        const metaPreviousValues: Record<string, unknown> = {};
 
-      const content = `Successfully updated agent configuration. Updated fields: ${updatedFields.join(', ')}`;
+        for (const field of metaUpdatedFields) {
+          metaPreviousValues[field] = (previousMeta as unknown as Record<string, unknown>)[field];
+        }
+
+        await agentStore.optimisticUpdateAgentMeta(agentId, args.meta);
+
+        resultState.meta = {
+          newValues: args.meta,
+          previousValues: metaPreviousValues as Record<string, unknown>,
+          updatedFields: metaUpdatedFields,
+        };
+        contentParts.push(`meta fields: ${metaUpdatedFields.join(', ')}`);
+      }
+
+      if (contentParts.length === 0) {
+        return {
+          content: 'No fields to update.',
+          state: { success: true } as UpdateConfigState,
+          success: true,
+        };
+      }
+
+      const content = `Successfully updated agent. Updated ${contentParts.join('; ')}`;
 
       return {
         content,
-        state: {
-          newValues,
-          previousValues,
-          success: true,
-          updatedFields,
-        } as UpdateConfigState,
+        state: resultState,
         success: true,
       };
     } catch (error) {
       const err = error as Error;
       return {
-        content: `Failed to update agent config: ${err.message}`,
+        content: `Failed to update agent: ${err.message}`,
         error,
-        state: {
-          newValues: {},
-          previousValues: {},
-          success: false,
-          updatedFields: [],
-        } as UpdateConfigState,
-        success: false,
-      };
-    }
-  }
-
-  /**
-   * Update agent metadata
-   */
-  async updateAgentMeta(
-    agentId: string,
-    args: UpdateAgentMetaParams,
-  ): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const state = getAgentStoreState();
-      // Use agentId to get agent meta instead of currentAgentMeta
-      const previousMeta = agentSelectors.getAgentMetaById(agentId)(state);
-
-      // Extract the fields that will be updated
-      const updatedFields = Object.keys(args.meta);
-      const previousValues: Record<string, unknown> = {};
-      const newValues = args.meta;
-
-      for (const field of updatedFields) {
-        previousValues[field] = (previousMeta as unknown as Record<string, unknown>)[field];
-      }
-
-      // Call the store action to update
-      await getAgentStoreState().optimisticUpdateAgentMeta(agentId, args.meta);
-
-      const content = `Successfully updated agent metadata. Updated fields: ${updatedFields.join(', ')}`;
-
-      return {
-        content,
-        state: {
-          newValues,
-          previousValues,
-          success: true,
-          updatedFields,
-        } as UpdateMetaState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to update agent meta: ${err.message}`,
-        error,
-        state: {
-          newValues: {},
-          previousValues: {},
-          success: false,
-          updatedFields: [],
-        } as UpdateMetaState,
+        state: { success: false } as UpdateConfigState,
         success: false,
       };
     }
