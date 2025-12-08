@@ -4,6 +4,19 @@ export default {
   },
   active: '活跃',
   agentBuilder: {
+    installPlugin: {
+      authRequired: '云端 MCP 插件需要登录认证',
+      cancel: '取消',
+      clickApproveToConnect: '点击「批准」连接并授权此集成',
+      connectedAndEnabled: '已连接并启用',
+      connectionFailed: '连接失败',
+      installFailed: '安装失败',
+      installPlugin: '安装插件',
+      installToEnable: '安装此插件以为助手启用',
+      installedAndEnabled: '已安装并启用',
+      requiresAuth: '需要授权，点击「批准」连接',
+      retry: '重试',
+    },
     welcome: '你好，我是 **Lobe AI**，你的助手配置专家。告诉我你想要什么样的助手，我会帮你设置好。',
   },
   agentDefaultMessage:

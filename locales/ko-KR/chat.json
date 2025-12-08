@@ -4,6 +4,19 @@
   },
   "active": "활성",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "클라우드 MCP 플러그인은 로그인 인증이 필요합니다",
+      "cancel": "취소",
+      "clickApproveToConnect": "‘승인’을 클릭하여 연결하고 이 통합을 승인하세요",
+      "connectedAndEnabled": "연결됨 및 활성화됨",
+      "connectionFailed": "연결 실패",
+      "installFailed": "설치 실패",
+      "installPlugin": "플러그인 설치",
+      "installToEnable": "이 플러그인을 설치하여 도우미를 활성화하세요",
+      "installedAndEnabled": "설치됨 및 활성화됨",
+      "requiresAuth": "승인이 필요합니다. ‘승인’을 클릭하여 연결하세요",
+      "retry": "다시 시도"
+    },
     "welcome": "안녕하세요, 저는 **Lobe AI**입니다. 당신의 어시스턴트 설정 전문가예요. 어떤 어시스턴트를 원하시는지 말씀해 주세요. 제가 설정을 도와드릴게요."
   },
   "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작하시거나 [도우미 설정]({{url}})으로 가셔서 제 정보를 완성하실 수 있습니다.",

@@ -4,6 +4,19 @@
   },
   "active": "Hoạt động",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Plugin MCP đám mây yêu cầu đăng nhập xác thực",
+      "cancel": "Hủy",
+      "clickApproveToConnect": "Nhấp vào 'Phê duyệt' để kết nối và cấp quyền tích hợp này",
+      "connectedAndEnabled": "Đã kết nối và kích hoạt",
+      "connectionFailed": "Kết nối thất bại",
+      "installFailed": "Cài đặt thất bại",
+      "installPlugin": "Cài đặt plugin",
+      "installToEnable": "Cài đặt plugin này để kích hoạt cho trợ lý",
+      "installedAndEnabled": "Đã cài đặt và kích hoạt",
+      "requiresAuth": "Yêu cầu ủy quyền, nhấp vào 'Phê duyệt' để kết nối",
+      "retry": "Thử lại"
+    },
     "welcome": "Xin chào, tôi là **Lobe AI**, chuyên gia cấu hình trợ lý của bạn. Hãy cho tôi biết bạn muốn một trợ lý như thế nào, tôi sẽ giúp bạn thiết lập."
   },
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay bây giờ, hoặc bạn có thể đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",

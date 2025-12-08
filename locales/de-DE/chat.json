@@ -4,6 +4,19 @@
   },
   "active": "Aktiv",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Das Cloud-MCP-Plugin erfordert eine Anmeldung",
+      "cancel": "Abbrechen",
+      "clickApproveToConnect": "Klicken Sie auf „Genehmigen“, um die Verbindung herzustellen und diese Integration zu autorisieren",
+      "connectedAndEnabled": "Verbunden und aktiviert",
+      "connectionFailed": "Verbindung fehlgeschlagen",
+      "installFailed": "Installation fehlgeschlagen",
+      "installPlugin": "Plugin installieren",
+      "installToEnable": "Installieren Sie dieses Plugin, um den Assistenten zu aktivieren",
+      "installedAndEnabled": "Installiert und aktiviert",
+      "requiresAuth": "Autorisierung erforderlich, klicken Sie auf „Genehmigen“, um die Verbindung herzustellen",
+      "retry": "Erneut versuchen"
+    },
     "welcome": "Hallo, ich bin **Lobe AI**, dein Experte für die Konfiguration von Assistenten. Sag mir, was für einen Assistenten du dir wünschst, und ich helfe dir, ihn einzurichten."
   },
   "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir sprechen oder zu den [Assistenteneinstellungen]({{url}}) gehen, um meine Informationen zu vervollständigen.",

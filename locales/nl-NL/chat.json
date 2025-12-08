@@ -4,6 +4,19 @@
   },
   "active": "Actief",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Cloud MCP-plug-in vereist aanmelding en verificatie",
+      "cancel": "Annuleren",
+      "clickApproveToConnect": "Klik op 'Goedkeuren' om verbinding te maken en deze integratie te autoriseren",
+      "connectedAndEnabled": "Verbonden en ingeschakeld",
+      "connectionFailed": "Verbinding mislukt",
+      "installFailed": "Installatie mislukt",
+      "installPlugin": "Plug-in installeren",
+      "installToEnable": "Installeer deze plug-in om de assistent in te schakelen",
+      "installedAndEnabled": "Geïnstalleerd en ingeschakeld",
+      "requiresAuth": "Autorisatie vereist, klik op 'Goedkeuren' om verbinding te maken",
+      "retry": "Opnieuw proberen"
+    },
     "welcome": "Hallo, ik ben **Lobe AI**, jouw assistentconfiguratie-expert. Vertel me wat voor soort assistent je wilt, dan help ik je om deze in te stellen."
   },
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
