@@ -4,6 +4,7 @@ import { useEditorState } from '@lobehub/editor/react';
 import React, { memo, useEffect, useRef } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { useChatStore } from '@/store/chat';
 import { pageAgentRuntime } from '@/store/chat/slices/builtinTool/actions/pageAgent';
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
@@ -28,7 +29,9 @@ const StoreUpdater = memo<StoreUpdaterProps>(
 
     const editor = usePageEditorStore((s) => s.editor);
     const editorState = useEditorState(editor);
+    const currentDocId = usePageEditorStore((s) => s.currentDocId);
 
+    const updateActivePageId = useChatStore((s) => s.internal_updateActivePageId);
     const currentPage = useFileStore(documentSelectors.getDocumentById(pageId));
 
     const [editorInit, setEditorInit] = React.useState(false);
@@ -138,6 +141,20 @@ const StoreUpdater = memo<StoreUpdaterProps>(
         pageAgentRuntime.setTitleHandlers(null, null);
       };
     }, [storeApi]);
+
+    // Update activePageId in chat store when page changes
+    useEffect(() => {
+      // Use currentDocId (which includes temp docs) or fallback to pageId
+      const activeId = currentDocId || pageId;
+      console.log('[StoreUpdater] Updating activePageId in chat store:', activeId);
+      updateActivePageId(activeId);
+
+      // Cleanup: clear activePageId when unmounting
+      return () => {
+        console.log('[StoreUpdater] Clearing activePageId on unmount');
+        updateActivePageId(undefined);
+      };
+    }, [currentDocId, pageId, updateActivePageId]);
 
     return null;
   },

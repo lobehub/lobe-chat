@@ -25,6 +25,8 @@ import {
 } from '@/store/agent/selectors';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getChatStoreState } from '@/store/chat';
+import { useFileStore } from '@/store/file';
+import { documentSelectors } from '@/store/file/slices/document/selectors';
 import { getToolStoreState } from '@/store/tool';
 import {
   builtinToolSelectors,
@@ -38,6 +40,7 @@ import {
   userProfileSelectors,
 } from '@/store/user/selectors';
 import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
+import { PAGE_AGENT_TOOL_ID } from '@/tools/document/const';
 import { MemoryManifest } from '@/tools/memory';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
@@ -211,6 +214,49 @@ class ChatService {
       };
     }
 
+    // =================== 1.3 build page editor context =================== //
+
+    // Check if Page Agent tool is enabled and build context for it
+    const isPageAgentEnabled = enabledToolIds.includes(PAGE_AGENT_TOOL_ID);
+    let pageEditorContext;
+
+    if (isPageAgentEnabled) {
+      const activePageId = getChatStoreState().activePageId;
+      console.log('[ChatService] isPageAgentEnabled:', true);
+      console.log('[ChatService] activePageId:', activePageId);
+
+      if (activePageId) {
+        // Get document from file store
+        const fileState = useFileStore.getState();
+        const document = documentSelectors.getDocumentById(activePageId)(fileState);
+
+        console.log('[ChatService] document:', document);
+
+        if (document) {
+          pageEditorContext = {
+            content: document.content || undefined,
+            document: {
+              fileType: document.fileType,
+              id: document.id,
+              title: document.title,
+              totalCharCount: document.totalCharCount,
+              totalLineCount: document.totalLineCount,
+            },
+            editorData: document.editorData || undefined,
+          };
+          console.log('[ChatService] Built page editor context:', {
+            documentId: document.id,
+            hasContent: !!document.content,
+            hasEditorData: !!document.editorData,
+          });
+        } else {
+          console.warn('[ChatService] Document not found for activePageId:', activePageId);
+        }
+      } else {
+        console.log('[ChatService] No activePageId set');
+      }
+    }
+
     // Apply context engineering with preprocessing configuration
     // Note: agentConfig.systemRole is already resolved by resolveAgentConfig for builtin agents
     const modelMessages = await contextEngineering({
@@ -222,6 +268,7 @@ class ChatService {
       inputTemplate: chatConfig.inputTemplate,
       messages,
       model: payload.model,
+      pageEditorContext,
       provider: payload.provider!,
       sessionId: options?.trace?.sessionId,
       systemRole: agentConfig.systemRole,
