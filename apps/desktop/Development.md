@@ -278,7 +278,7 @@ export class ControllerModule implements IControllerModule {
 }
 
 export class BrowserWindowsCtr extends ControllerModule {
-  static override groupName = 'windows'
+  static override readonly groupName = 'windows' // must be readonly
 
   @IpcMethod()
   openSettingsWindow(params?: OpenSettingsWindowOptions) {
