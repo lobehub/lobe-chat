@@ -7,7 +7,6 @@ import type {
   GetAvailableModelsParams,
   InstallPluginParams,
   SearchMarketToolsParams,
-  SearchOfficialToolsParams,
   TogglePluginParams,
   UpdateAgentConfigParams,
   UpdateAgentMetaParams,
@@ -25,7 +24,6 @@ export interface AgentBuilderAction {
     params: any,
   ) => Promise<boolean>;
   searchMarketTools: (id: string, params: SearchMarketToolsParams) => Promise<boolean>;
-  searchOfficialTools: (id: string, params: SearchOfficialToolsParams) => Promise<boolean>;
   togglePlugin: (id: string, params: TogglePluginParams) => Promise<boolean>;
   updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<boolean>;
   updateMeta: (id: string, params: UpdateAgentMetaParams) => Promise<boolean>;
@@ -115,10 +113,6 @@ export const agentBuilderSlice: StateCreator<
           result = await runtime.searchMarketTools(params as SearchMarketToolsParams);
           break;
         }
-        case 'searchOfficialTools': {
-          result = await runtime.searchOfficialTools(agentId, params as SearchOfficialToolsParams);
-          break;
-        }
         case 'installPlugin': {
           result = await runtime.installPlugin(agentId, params as InstallPluginParams);
           break;
@@ -192,10 +186,6 @@ export const agentBuilderSlice: StateCreator<
 
   searchMarketTools: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'searchMarketTools', params);
-  },
-
-  searchOfficialTools: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'searchOfficialTools', params);
   },
 
   togglePlugin: async (id, params) => {

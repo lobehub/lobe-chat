@@ -9,6 +9,7 @@ export { ToolSystemRoleProvider } from './ToolSystemRole';
 export type {
   AgentBuilderContext,
   AgentBuilderContextInjectorConfig,
+  OfficialToolItem,
 } from './AgentBuilderContextInjector';
 export type { HistorySummaryConfig } from './HistorySummary';
 export type { KnowledgeInjectorConfig } from './KnowledgeInjector';

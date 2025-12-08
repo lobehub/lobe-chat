@@ -49,28 +49,8 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
-    {
-      description:
-        'Search for official tools including built-in tools and Klavis integrations (Gmail, Google Calendar, Notion, GitHub, etc.). Use this FIRST when users ask for tools/plugins. Users can enable built-in tools or connect Klavis services that require OAuth authorization.',
-      name: AgentBuilderApiName.searchOfficialTools,
-      parameters: {
-        properties: {
-          query: {
-            description:
-              'Optional: search keywords to find specific tools (e.g., "gmail", "calendar", "github").',
-            type: 'string',
-          },
-          type: {
-            description:
-              'Optional: filter by tool type. "builtin" for built-in tools only, "klavis" for Klavis integrations only, "all" for both. Defaults to "all".',
-            enum: ['all', 'builtin', 'klavis'],
-            type: 'string',
-          },
-        },
-        required: [],
-        type: 'object',
-      },
-    },
+    // Note: searchOfficialTools is removed because official tools are now
+    // automatically injected into the conversation context
 
     // ==================== Write Operations ====================
     {

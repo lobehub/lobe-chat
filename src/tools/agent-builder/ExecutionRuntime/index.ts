@@ -1,9 +1,5 @@
 import { KLAVIS_SERVER_TYPES } from '@lobechat/const';
-import {
-  marketToolsResultsPrompt,
-  modelsResultsPrompt,
-  officialToolsResultsPrompt,
-} from '@lobechat/prompts';
+import { marketToolsResultsPrompt, modelsResultsPrompt } from '@lobechat/prompts';
 import { BuiltinServerRuntimeOutput } from '@lobechat/types';
 
 import { discoverService } from '@/services/discover';
@@ -26,11 +22,8 @@ import type {
   InstallPluginParams,
   InstallPluginState,
   MarketToolItem,
-  OfficialToolItem,
   SearchMarketToolsParams,
   SearchMarketToolsState,
-  SearchOfficialToolsParams,
-  SearchOfficialToolsState,
   TogglePluginParams,
   TogglePluginState,
   UpdateAgentConfigParams,
@@ -45,7 +38,7 @@ import type {
  * Agent Builder Execution Runtime
  * Handles the execution logic for all Agent Builder APIs
  *
- * Note: getAgentConfig, getAgentMeta, getPrompt, getAvailableTools are removed
+ * Note: getAgentConfig, getAgentMeta, getPrompt, getAvailableTools, searchOfficialTools are removed
  * because the current agent context is now automatically injected into the conversation
  */
 export class AgentBuilderExecutionRuntime {
@@ -170,145 +163,8 @@ export class AgentBuilderExecutionRuntime {
     }
   }
 
-  /**
-   * Search for official tools (builtin tools and Klavis MCP servers)
-   */
-  async searchOfficialTools(
-    agentId: string,
-    args: SearchOfficialToolsParams,
-  ): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const toolState = getToolStoreState();
-      const agentState = getAgentStoreState();
-      const filterType = args.type || 'all';
-      const query = args.query?.toLowerCase();
-
-      // Check if Klavis is enabled via global store
-      const isKlavisEnabled =
-        typeof window !== 'undefined' &&
-        window.global_serverConfigStore?.getState()?.serverConfig?.enableKlavis;
-
-      // Get current agent's enabled plugins
-      const enabledPlugins = agentSelectors.getAgentConfigById(agentId)(agentState).plugins || [];
-
-      const tools: OfficialToolItem[] = [];
-
-      // Get builtin tools
-      if (filterType === 'all' || filterType === 'builtin') {
-        const builtinTools = builtinToolSelectors.metaList(toolState);
-
-        // Get all Klavis identifiers to filter them out from builtin list
-        const klavisIdentifiers = new Set(KLAVIS_SERVER_TYPES.map((t) => t.identifier));
-
-        for (const tool of builtinTools) {
-          // Skip Klavis tools in builtin list (they'll be shown separately)
-          if (klavisIdentifiers.has(tool.identifier)) continue;
-
-          // Apply search filter
-          if (query) {
-            const searchText =
-              `${tool.meta?.title || ''} ${tool.meta?.description || ''} ${tool.identifier}`.toLowerCase();
-            if (!searchText.includes(query)) continue;
-          }
-
-          tools.push({
-            author: tool.author,
-            description: tool.meta?.description,
-            enabled: enabledPlugins.includes(tool.identifier),
-            icon: tool.meta?.avatar,
-            identifier: tool.identifier,
-            installed: true, // Builtin tools are always installed
-            name: tool.meta?.title || tool.identifier,
-            type: 'builtin',
-          });
-        }
-      }
-
-      // Get Klavis tools
-      if (isKlavisEnabled && (filterType === 'all' || filterType === 'klavis')) {
-        const allKlavisServers = klavisStoreSelectors.getServers(toolState);
-
-        for (const klavisType of KLAVIS_SERVER_TYPES) {
-          // Apply search filter
-          if (query) {
-            const searchText = `${klavisType.label} ${klavisType.identifier}`.toLowerCase();
-            if (!searchText.includes(query)) continue;
-          }
-
-          // Find connected server if exists
-          const server = allKlavisServers.find((s) => s.identifier === klavisType.identifier);
-
-          // Determine status
-          let status: 'connected' | 'pending_auth' | 'error' | undefined;
-          if (server) {
-            switch (server.status) {
-              case KlavisServerStatus.CONNECTED: {
-                status = 'connected';
-                break;
-              }
-              case KlavisServerStatus.PENDING_AUTH: {
-                status = 'pending_auth';
-                break;
-              }
-              case KlavisServerStatus.ERROR: {
-                status = 'error';
-                break;
-              }
-            }
-          }
-
-          tools.push({
-            author: 'Klavis',
-            description: `Klavis MCP Server: ${klavisType.label}`,
-            enabled: enabledPlugins.includes(klavisType.identifier),
-            icon: typeof klavisType.icon === 'string' ? klavisType.icon : undefined,
-            identifier: klavisType.identifier,
-            installed: !!server,
-            name: klavisType.label,
-            oauthUrl: server?.oauthUrl,
-            serverName: klavisType.serverName,
-            status,
-            type: 'klavis',
-          });
-        }
-      }
-
-      const enabledCount = tools.filter((t) => t.enabled).length;
-      const installedCount = tools.filter((t) => t.installed).length;
-
-      let summary = `Found ${tools.length} official tool(s).`;
-      if (query) {
-        summary = `Found ${tools.length} official tool(s) matching "${args.query}".`;
-      }
-      summary += ` ${installedCount} installed, ${enabledCount} enabled.`;
-
-      if (isKlavisEnabled) {
-        summary += ' Klavis integrations are available.';
-      }
-
-      // Convert to XML format to provide detailed tool list to agent
-      const xmlContent = officialToolsResultsPrompt(tools);
-      const content = `${summary}\n\n${xmlContent}`;
-
-      return {
-        content,
-        state: {
-          klavisEnabled: isKlavisEnabled,
-          query: args.query,
-          tools,
-          totalCount: tools.length,
-        } as SearchOfficialToolsState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to search official tools: ${err.message}`,
-        error,
-        success: false,
-      };
-    }
-  }
+  // Note: searchOfficialTools is removed because official tools are now
+  // automatically injected into the conversation context via AgentBuilderContextInjector
 
   // ==================== Write Operations ====================
 

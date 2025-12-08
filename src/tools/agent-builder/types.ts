@@ -6,12 +6,11 @@ import type { PartialDeep } from 'type-fest';
  */
 export const AgentBuilderApiName = {
   // Read operations
-  // Note: getAgentConfig, getAgentMeta, getPrompt, getAvailableTools are removed
+  // Note: getAgentConfig, getAgentMeta, getPrompt, getAvailableTools, searchOfficialTools are removed
   // because the current agent context is now automatically injected
   getAvailableModels: 'getAvailableModels',
   installPlugin: 'installPlugin',
   searchMarketTools: 'searchMarketTools',
-  searchOfficialTools: 'searchOfficialTools',
   // Write operations
   // Note: setModel, setOpeningMessage, setOpeningQuestions, updateChatConfig are removed
   // and consolidated into updateAgentConfig
@@ -151,75 +150,8 @@ export interface SearchMarketToolsState {
   totalCount: number;
 }
 
-// ============== SearchOfficialTools Types ==============
-
-export interface SearchOfficialToolsParams {
-  /**
-   * Optional: search keywords to find specific tools
-   */
-  query?: string;
-  /**
-   * Optional: filter by tool type ('builtin' | 'klavis' | 'all')
-   */
-  type?: 'all' | 'builtin' | 'klavis';
-}
-
-export interface OfficialToolItem {
-  /**
-   * Tool author
-   */
-  author?: string;
-  /**
-   * Tool description
-   */
-  description?: string;
-  /**
-   * Whether the tool is enabled for current agent
-   */
-  enabled?: boolean;
-  /**
-   * Icon URL or emoji
-   */
-  icon?: string;
-  /**
-   * Tool identifier
-   */
-  identifier: string;
-  /**
-   * Whether the tool is installed/connected (for Klavis tools)
-   */
-  installed?: boolean;
-  /**
-   * Tool display name
-   */
-  name: string;
-  /**
-   * OAuth URL for Klavis tools that need authorization
-   */
-  oauthUrl?: string;
-  /**
-   * Server name for Klavis tools (used for API calls)
-   */
-  serverName?: string;
-  /**
-   * Klavis server status
-   */
-  status?: 'connected' | 'error' | 'pending_auth';
-  /**
-   * Tool type: 'builtin' for built-in tools, 'klavis' for Klavis MCP servers
-   */
-  type: 'builtin' | 'klavis';
-}
-
-export interface SearchOfficialToolsState {
-  /**
-   * Whether Klavis is enabled in the environment
-   */
-  klavisEnabled: boolean;
-  query?: string;
-  tools: OfficialToolItem[];
-  totalCount: number;
-}
+// Note: SearchOfficialTools types are removed because official tools are now
+// automatically injected into the conversation context via AgentBuilderContextInjector
 
 // ============== InstallPlugin Types ==============
 
