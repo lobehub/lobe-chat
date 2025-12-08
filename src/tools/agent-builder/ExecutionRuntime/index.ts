@@ -31,17 +31,10 @@ import type {
   SearchMarketToolsState,
   SearchOfficialToolsParams,
   SearchOfficialToolsState,
-  SetModelParams,
-  SetModelState,
-  SetOpeningMessageParams,
-  SetOpeningMessageState,
-  SetOpeningQuestionsParams,
-  SetOpeningQuestionsState,
   TogglePluginParams,
   TogglePluginState,
   UpdateAgentConfigParams,
   UpdateAgentMetaParams,
-  UpdateChatConfigParams,
   UpdateConfigState,
   UpdateMetaState,
   UpdatePromptParams,
@@ -425,64 +418,6 @@ export class AgentBuilderExecutionRuntime {
   }
 
   /**
-   * Update chat configuration
-   */
-  async updateChatConfig(
-    agentId: string,
-    args: UpdateChatConfigParams,
-  ): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const state = getAgentStoreState();
-      // Use agentId to get agent config instead of currentAgentConfig
-      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
-      const previousChatConfig = previousConfig.chatConfig || {};
-
-      // Extract the fields that will be updated
-      const updatedFields = Object.keys(args.chatConfig);
-      const previousValues: Record<string, unknown> = {};
-      const newValues: Record<string, unknown> = {};
-
-      for (const field of updatedFields) {
-        previousValues[field] = (previousChatConfig as unknown as Record<string, unknown>)[field];
-        newValues[field] = (args.chatConfig as unknown as Record<string, unknown>)[field];
-      }
-
-      // Call the store action to update (wrapping chatConfig inside config)
-      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
-        chatConfig: args.chatConfig,
-      });
-
-      const content = `Successfully updated chat configuration. Updated fields: ${updatedFields.join(', ')}`;
-
-      return {
-        content,
-        state: {
-          newValues,
-          previousValues,
-          success: true,
-          updatedFields,
-        } as UpdateConfigState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to update chat config: ${err.message}`,
-        error,
-        state: {
-          newValues: {},
-          previousValues: {},
-          success: false,
-          updatedFields: [],
-        } as UpdateConfigState,
-        success: false,
-      };
-    }
-  }
-
-  // ==================== Specific Field Operations ====================
-
-  /**
    * Toggle plugin (enable/disable)
    */
   async togglePlugin(
@@ -537,142 +472,6 @@ export class AgentBuilderExecutionRuntime {
           pluginId: args.pluginId,
           success: false,
         } as TogglePluginState,
-        success: false,
-      };
-    }
-  }
-
-  /**
-   * Set model and provider
-   */
-  async setModel(agentId: string, args: SetModelParams): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const state = getAgentStoreState();
-      // Use agentId to get agent config instead of currentAgentModel/currentAgentModelProvider
-      const config = agentSelectors.getAgentConfigById(agentId)(state);
-      const previousModel = config.model;
-      const previousProvider = config.provider;
-
-      // Update model and provider
-      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
-        model: args.model,
-        provider: args.provider,
-      });
-
-      const content = `Successfully set model to ${args.model} (provider: ${args.provider})`;
-
-      return {
-        content,
-        state: {
-          model: args.model,
-          previousModel,
-          previousProvider,
-          provider: args.provider,
-          success: true,
-        } as SetModelState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to set model: ${err.message}`,
-        error,
-        state: {
-          model: args.model,
-          provider: args.provider,
-          success: false,
-        } as SetModelState,
-        success: false,
-      };
-    }
-  }
-
-  /**
-   * Set opening message
-   */
-  async setOpeningMessage(
-    agentId: string,
-    args: SetOpeningMessageParams,
-  ): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const state = getAgentStoreState();
-      // Use agentId to get agent config instead of currentAgentConfig
-      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
-      const previousMessage = previousConfig.openingMessage;
-
-      // Update opening message
-      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
-        openingMessage: args.message,
-      });
-
-      const content = args.message
-        ? `Successfully set opening message: "${args.message}"`
-        : 'Successfully removed opening message';
-
-      return {
-        content,
-        state: {
-          message: args.message,
-          previousMessage,
-          success: true,
-        } as SetOpeningMessageState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to set opening message: ${err.message}`,
-        error,
-        state: {
-          message: args.message,
-          success: false,
-        } as SetOpeningMessageState,
-        success: false,
-      };
-    }
-  }
-
-  /**
-   * Set opening questions
-   */
-  async setOpeningQuestions(
-    agentId: string,
-    args: SetOpeningQuestionsParams,
-  ): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      const state = getAgentStoreState();
-      // Use agentId to get agent config instead of currentAgentConfig
-      const previousConfig = agentSelectors.getAgentConfigById(agentId)(state);
-      const previousQuestions = previousConfig.openingQuestions;
-
-      // Update opening questions
-      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
-        openingQuestions: args.questions,
-      });
-
-      const content =
-        args.questions.length > 0
-          ? `Successfully set ${args.questions.length} opening questions`
-          : 'Successfully removed all opening questions';
-
-      return {
-        content,
-        state: {
-          previousQuestions,
-          questions: args.questions,
-          success: true,
-        } as SetOpeningQuestionsState,
-        success: true,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to set opening questions: ${err.message}`,
-        error,
-        state: {
-          questions: args.questions,
-          success: false,
-        } as SetOpeningQuestionsState,
         success: false,
       };
     }

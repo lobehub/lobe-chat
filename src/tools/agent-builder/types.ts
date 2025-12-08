@@ -1,4 +1,4 @@
-import { LobeAgentChatConfig, LobeAgentConfig, MetaData } from '@lobechat/types';
+import { LobeAgentConfig, MetaData } from '@lobechat/types';
 import type { PartialDeep } from 'type-fest';
 
 /**
@@ -13,13 +13,11 @@ export const AgentBuilderApiName = {
   searchMarketTools: 'searchMarketTools',
   searchOfficialTools: 'searchOfficialTools',
   // Write operations
-  setModel: 'setModel',
-  setOpeningMessage: 'setOpeningMessage',
-  setOpeningQuestions: 'setOpeningQuestions',
+  // Note: setModel, setOpeningMessage, setOpeningQuestions, updateChatConfig are removed
+  // and consolidated into updateAgentConfig
   togglePlugin: 'togglePlugin',
   updateAgentConfig: 'updateConfig',
   updateAgentMeta: 'updateMeta',
-  updateChatConfig: 'updateChatConfig',
   updatePrompt: 'updatePrompt',
 } as const;
 
@@ -39,13 +37,6 @@ export interface UpdateAgentMetaParams {
   meta: Partial<MetaData>;
 }
 
-export interface UpdateChatConfigParams {
-  /**
-   * Partial chat configuration to update
-   */
-  chatConfig: Partial<LobeAgentChatConfig>;
-}
-
 export interface TogglePluginParams {
   /**
    * Whether to enable the plugin. If not provided, toggles current state.
@@ -55,31 +46,6 @@ export interface TogglePluginParams {
    * The plugin identifier to toggle
    */
   pluginId: string;
-}
-
-export interface SetModelParams {
-  /**
-   * The model identifier (e.g., "gpt-4o", "claude-3-5-sonnet")
-   */
-  model: string;
-  /**
-   * The provider identifier (e.g., "openai", "anthropic")
-   */
-  provider: string;
-}
-
-export interface SetOpeningMessageParams {
-  /**
-   * The opening message to display when starting a new conversation
-   */
-  message: string;
-}
-
-export interface SetOpeningQuestionsParams {
-  /**
-   * Array of suggested questions to display
-   */
-  questions: string[];
 }
 
 export interface GetAvailableModelsParams {
@@ -119,26 +85,6 @@ export interface UpdateMetaState {
 export interface TogglePluginState {
   enabled: boolean;
   pluginId: string;
-  success: boolean;
-}
-
-export interface SetModelState {
-  model: string;
-  previousModel?: string;
-  previousProvider?: string;
-  provider: string;
-  success: boolean;
-}
-
-export interface SetOpeningMessageState {
-  message: string;
-  previousMessage?: string;
-  success: boolean;
-}
-
-export interface SetOpeningQuestionsState {
-  previousQuestions?: string[];
-  questions: string[];
   success: boolean;
 }
 

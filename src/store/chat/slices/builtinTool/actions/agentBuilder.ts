@@ -8,13 +8,9 @@ import type {
   InstallPluginParams,
   SearchMarketToolsParams,
   SearchOfficialToolsParams,
-  SetModelParams,
-  SetOpeningMessageParams,
-  SetOpeningQuestionsParams,
   TogglePluginParams,
   UpdateAgentConfigParams,
   UpdateAgentMetaParams,
-  UpdateChatConfigParams,
   UpdatePromptParams,
 } from '@/tools/agent-builder/types';
 
@@ -30,11 +26,7 @@ export interface AgentBuilderAction {
   ) => Promise<boolean>;
   searchMarketTools: (id: string, params: SearchMarketToolsParams) => Promise<boolean>;
   searchOfficialTools: (id: string, params: SearchOfficialToolsParams) => Promise<boolean>;
-  setModel: (id: string, params: SetModelParams) => Promise<boolean>;
-  setOpeningMessage: (id: string, params: SetOpeningMessageParams) => Promise<boolean>;
-  setOpeningQuestions: (id: string, params: SetOpeningQuestionsParams) => Promise<boolean>;
   togglePlugin: (id: string, params: TogglePluginParams) => Promise<boolean>;
-  updateChatConfig: (id: string, params: UpdateChatConfigParams) => Promise<boolean>;
   updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<boolean>;
   updateMeta: (id: string, params: UpdateAgentMetaParams) => Promise<boolean>;
   updatePrompt: (id: string, params: UpdatePromptParams) => Promise<boolean>;
@@ -111,24 +103,8 @@ export const agentBuilderSlice: StateCreator<
           result = await runtime.updateAgentMeta(agentId, params as UpdateAgentMetaParams);
           break;
         }
-        case 'updateChatConfig': {
-          result = await runtime.updateChatConfig(agentId, params as UpdateChatConfigParams);
-          break;
-        }
         case 'togglePlugin': {
           result = await runtime.togglePlugin(agentId, params as TogglePluginParams);
-          break;
-        }
-        case 'setModel': {
-          result = await runtime.setModel(agentId, params as SetModelParams);
-          break;
-        }
-        case 'setOpeningMessage': {
-          result = await runtime.setOpeningMessage(agentId, params as SetOpeningMessageParams);
-          break;
-        }
-        case 'setOpeningQuestions': {
-          result = await runtime.setOpeningQuestions(agentId, params as SetOpeningQuestionsParams);
           break;
         }
         case 'getAvailableModels': {
@@ -222,25 +198,8 @@ export const agentBuilderSlice: StateCreator<
     return get().internal_triggerAgentBuilderToolCalling(id, 'searchOfficialTools', params);
   },
 
-  setModel: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'setModel', params);
-  },
-
-  setOpeningMessage: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'setOpeningMessage', params);
-  },
-
-  setOpeningQuestions: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'setOpeningQuestions', params);
-  },
-
-  // ==================== Specific Field Operations ====================
   togglePlugin: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'togglePlugin', params);
-  },
-
-  updateChatConfig: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'updateChatConfig', params);
   },
 
   // ==================== Write Operations ====================
