@@ -1,26 +1,63 @@
+import { Receiver } from '@upstash/qstash';
 import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getServerDB } from '@/database/core/db-adaptor';
+import { AgentRuntimeCoordinator } from '@/server/modules/AgentRuntime';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
 
 import { isEnableAgent } from '../isEnableAgent';
 
 const log = debug('api-route:agent:execute-step');
 
+/**
+ * Verify QStash signature using Receiver
+ * Returns true if verification is disabled or signature is valid
+ */
+async function verifyQStashSignature(request: NextRequest, rawBody: string): Promise<boolean> {
+  const currentSigningKey = process.env.QSTASH_CURRENT_SIGNING_KEY;
+  const nextSigningKey = process.env.QSTASH_NEXT_SIGNING_KEY;
+
+  // If no signing keys configured, skip verification
+  if (!currentSigningKey || !nextSigningKey) {
+    log('QStash signature verification disabled (no signing keys configured)');
+    return false;
+  }
+
+  const signature = request.headers.get('Upstash-Signature');
+  if (!signature) {
+    log('Missing Upstash-Signature header');
+    return false;
+  }
+
+  const receiver = new Receiver({ currentSigningKey, nextSigningKey: nextSigningKey });
+
+  try {
+    return await receiver.verify({ body: rawBody, signature });
+  } catch (error) {
+    log('QStash signature verification failed: %O', error);
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   if (!isEnableAgent()) {
     return NextResponse.json({ error: 'Agent features are not enabled' }, { status: 404 });
   }
 
-  // Initialize service
-  const serverDB = await getServerDB();
-  // TODO: remove userId
-  const agentRuntimeService = new AgentRuntimeService(serverDB, 'github|28616219');
-
   const startTime = Date.now();
 
-  const body = await request.json();
+  // Read raw body for signature verification (must be done before parsing JSON)
+  const rawBody = await request.text();
+
+  // Verify QStash signature
+  const isValidSignature = await verifyQStashSignature(request, rawBody);
+  if (!isValidSignature) {
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+  }
+
+  // Parse body after verification
+  const body = JSON.parse(rawBody);
   try {
     const {
       sessionId,
@@ -36,6 +73,19 @@ export async function POST(request: NextRequest) {
     }
 
     log(`[${sessionId}] Starting step ${stepIndex}`);
+
+    // Get userId from session metadata stored in Redis
+    const coordinator = new AgentRuntimeCoordinator();
+    const metadata = await coordinator.getSessionMetadata(sessionId);
+
+    if (!metadata?.userId) {
+      log(`[${sessionId}] Invalid session or no userId found`);
+      return NextResponse.json({ error: 'Invalid session or unauthorized' }, { status: 401 });
+    }
+
+    // Initialize service with userId from session metadata
+    const serverDB = await getServerDB();
+    const agentRuntimeService = new AgentRuntimeService(serverDB, metadata.userId);
 
     // 使用 AgentRuntimeService 执行步骤
     const result = await agentRuntimeService.executeStep({
