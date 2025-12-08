@@ -1,9 +1,5 @@
 import { AgentBuilderApiName } from '../types';
 import GetAvailableModels from './GetAvailableModels';
-import GetAvailableTools from './GetAvailableTools';
-import GetConfig from './GetConfig';
-import GetMeta from './GetMeta';
-import GetPrompt from './GetPrompt';
 import InstallPlugin from './InstallPlugin';
 import SearchMarketTools from './SearchMarketTools';
 import SearchOfficialTools from './SearchOfficialTools';
@@ -18,14 +14,13 @@ import UpdatePrompt from './UpdatePrompt';
 
 /**
  * Agent Builder Render Components Registry
+ *
+ * Note: GetConfig, GetMeta, GetPrompt, GetAvailableTools are removed
+ * because the current agent context is now automatically injected into the conversation
  */
 export const AgentBuilderRenders = {
   // Read operations
-  [AgentBuilderApiName.getAgentConfig]: GetConfig,
-  [AgentBuilderApiName.getAgentMeta]: GetMeta,
   [AgentBuilderApiName.getAvailableModels]: GetAvailableModels,
-  [AgentBuilderApiName.getAvailableTools]: GetAvailableTools,
-  [AgentBuilderApiName.getPrompt]: GetPrompt,
   [AgentBuilderApiName.searchMarketTools]: SearchMarketTools,
   [AgentBuilderApiName.searchOfficialTools]: SearchOfficialTools,
 

@@ -4,11 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { ChatStore } from '@/store/chat/store';
 import { AgentBuilderExecutionRuntime } from '@/tools/agent-builder/ExecutionRuntime';
 import type {
-  GetAgentConfigParams,
-  GetAgentMetaParams,
   GetAvailableModelsParams,
-  GetAvailableToolsParams,
-  GetPromptParams,
   InstallPluginParams,
   SearchMarketToolsParams,
   SearchOfficialToolsParams,
@@ -26,10 +22,6 @@ const log = debug('lobe-store:builtin-tool:agent-builder');
 
 export interface AgentBuilderAction {
   getAvailableModels: (id: string, params: GetAvailableModelsParams) => Promise<boolean>;
-  getAvailableTools: (id: string, params: GetAvailableToolsParams) => Promise<boolean>;
-  getConfig: (id: string, params: GetAgentConfigParams) => Promise<boolean>;
-  getMeta: (id: string, params: GetAgentMetaParams) => Promise<boolean>;
-  getPrompt: (id: string, params: GetPromptParams) => Promise<boolean>;
   installPlugin: (id: string, params: InstallPluginParams) => Promise<boolean>;
   internal_triggerAgentBuilderToolCalling: (
     id: string,
@@ -62,35 +54,16 @@ export const agentBuilderSlice: StateCreator<
     return get().internal_triggerAgentBuilderToolCalling(id, 'getAvailableModels', params);
   },
 
-  getAvailableTools: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'getAvailableTools', params);
-  },
-
-  getConfig: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'getAgentConfig', params);
-  },
-
-  getMeta: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'getAgentMeta', params);
-  },
-
-  getPrompt: async (id, params) => {
-    return get().internal_triggerAgentBuilderToolCalling(id, 'getPrompt', params);
-  },
-
-  
-
-  
   installPlugin: async (id, params) => {
     return get().internal_triggerAgentBuilderToolCalling(id, 'installPlugin', params);
   },
 
   // ==================== Internal Helper ====================
-/**
+  /**
    * Internal helper to execute agent builder tool calling operations
    * Handles operation tracking, error handling, and state updates
    */
-internal_triggerAgentBuilderToolCalling: async (id, apiName, params) => {
+  internal_triggerAgentBuilderToolCalling: async (id, apiName, params) => {
     // Get parent operationId from messageOperationMap (should be executeToolCall)
     const parentOperationId = get().messageOperationMap[id];
 
@@ -130,16 +103,6 @@ internal_triggerAgentBuilderToolCalling: async (id, apiName, params) => {
       // Execute the runtime method
       let result;
       switch (apiName) {
-        case 'getAgentConfig': {
-          // Pass agentId to read operation for agent-specific config
-          result = await runtime.getAgentConfig(agentId, params as GetAgentConfigParams);
-          break;
-        }
-        case 'getAgentMeta': {
-          // Pass agentId to read operation for agent-specific meta
-          result = await runtime.getAgentMeta(agentId, params as GetAgentMetaParams);
-          break;
-        }
         case 'updateAgentConfig': {
           result = await runtime.updateAgentConfig(agentId, params as UpdateAgentConfigParams);
           break;
@@ -170,14 +133,6 @@ internal_triggerAgentBuilderToolCalling: async (id, apiName, params) => {
         }
         case 'getAvailableModels': {
           result = await runtime.getAvailableModels(params as GetAvailableModelsParams);
-          break;
-        }
-        case 'getAvailableTools': {
-          result = await runtime.getAvailableTools(params as GetAvailableToolsParams);
-          break;
-        }
-        case 'getPrompt': {
-          result = await runtime.getPrompt(agentId, params as GetPromptParams);
           break;
         }
         case 'searchMarketTools': {
