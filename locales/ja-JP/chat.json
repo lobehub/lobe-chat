@@ -3,6 +3,9 @@
     "title": "モデル"
   },
   "active": "アクティブ",
+  "agentBuilder": {
+    "welcome": "こんにちは、私は **Lobe AI**、あなたのアシスタント設定スペシャリストです。どのようなアシスタントをご希望か教えてください。最適な設定をお手伝いします。"
+  },
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることもできますし、[アシスタント設定]({{url}}) に行って私の情報を充実させることもできます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です。何かお手伝いできることはありますか？",
   "agentDefaultMessageWithoutEdit": "こんにちは、私は **{{name}}** です。何かお手伝いできることはありますか？",

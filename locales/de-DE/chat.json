@@ -3,6 +3,9 @@
     "title": "Modell"
   },
   "active": "Aktiv",
+  "agentBuilder": {
+    "welcome": "Hallo, ich bin **Lobe AI**, dein Experte für die Konfiguration von Assistenten. Sag mir, was für einen Assistenten du dir wünschst, und ich helfe dir, ihn einzurichten."
+  },
   "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir sprechen oder zu den [Assistenteneinstellungen]({{url}}) gehen, um meine Informationen zu vervollständigen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**. Wie kann ich Ihnen behilflich sein?",
   "agentDefaultMessageWithoutEdit": "Hallo, ich bin **{{name}}**. Wie kann ich Ihnen behilflich sein?",

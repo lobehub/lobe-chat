@@ -70,12 +70,12 @@
     "title": "Asistanı hızlıca değiştir"
   },
   "toggleLeftPanel": {
-    "desc": "Sol yan paneli göster veya gizle",
-    "title": "Asistan panelini göster/gizle"
+    "desc": "Sol paneli göster veya gizle",
+    "title": "Sol Paneli Göster/Gizle"
   },
   "toggleRightPanel": {
-    "desc": "Sağ konu panelini göster veya gizle",
-    "title": "Konu panelini göster/gizle"
+    "desc": "Sağ paneli göster veya gizle",
+    "title": "Sağ Paneli Göster/Gizle"
   },
   "toggleZenMode": {
     "desc": "Odak modu, yalnızca mevcut oturumu gösterir, diğer UI'ları gizler",

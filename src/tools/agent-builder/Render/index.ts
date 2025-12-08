@@ -4,7 +4,6 @@ import InstallPlugin from './InstallPlugin';
 import SearchMarketTools from './SearchMarketTools';
 import TogglePlugin from './TogglePlugin';
 import UpdateConfig from './UpdateConfig';
-import UpdateMeta from './UpdateMeta';
 import UpdatePrompt from './UpdatePrompt';
 
 /**
@@ -13,7 +12,7 @@ import UpdatePrompt from './UpdatePrompt';
  * Note: Read operations (GetConfig, GetMeta, GetPrompt, GetAvailableTools, SearchOfficialTools) are removed
  * because the current agent context is now automatically injected into the conversation.
  *
- * Note: Specific field operations (SetModel, SetOpeningMessage, SetOpeningQuestions, UpdateChatConfig)
+ * Note: Specific field operations (SetModel, SetOpeningMessage, SetOpeningQuestions, UpdateChatConfig, UpdateMeta)
  * are removed and consolidated into updateAgentConfig.
  */
 export const AgentBuilderRenders = {
@@ -25,6 +24,5 @@ export const AgentBuilderRenders = {
   [AgentBuilderApiName.installPlugin]: InstallPlugin,
   [AgentBuilderApiName.togglePlugin]: TogglePlugin,
   [AgentBuilderApiName.updateAgentConfig]: UpdateConfig,
-  [AgentBuilderApiName.updateAgentMeta]: UpdateMeta,
   [AgentBuilderApiName.updatePrompt]: UpdatePrompt,
 };
