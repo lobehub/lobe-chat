@@ -2,7 +2,7 @@ import { InterceptRouteParams, OpenSettingsWindowOptions } from '@lobechat/elect
 import { findMatchingRoute } from '~common/routes';
 
 import { AppBrowsersIdentifiers, WindowTemplateIdentifiers } from '@/appBrowsers';
-import type { IpcContext } from '@/utils/ipc';
+import { getIpcContext } from '@/utils/ipc';
 
 import { ControllerModule, IpcMethod, shortcut } from './index';
 
@@ -53,22 +53,22 @@ export default class BrowserWindowsCtr extends ControllerModule {
   }
 
   @IpcMethod()
-  closeWindow(_: undefined, context?: IpcContext) {
-    this.withSenderIdentifier(context, (identifier) => {
+  closeWindow() {
+    this.withSenderIdentifier((identifier) => {
       this.app.browserManager.closeWindow(identifier);
     });
   }
 
   @IpcMethod()
-  minimizeWindow(_: undefined, context?: IpcContext) {
-    this.withSenderIdentifier(context, (identifier) => {
+  minimizeWindow() {
+    this.withSenderIdentifier((identifier) => {
       this.app.browserManager.minimizeWindow(identifier);
     });
   }
 
   @IpcMethod()
-  maximizeWindow(_: undefined, context?: IpcContext) {
-    this.withSenderIdentifier(context, (identifier) => {
+  maximizeWindow() {
+    this.withSenderIdentifier((identifier) => {
       this.app.browserManager.maximizeWindow(identifier);
     });
   }
@@ -197,7 +197,8 @@ export default class BrowserWindowsCtr extends ControllerModule {
     browser.show();
   }
 
-  private withSenderIdentifier(context: IpcContext | undefined, fn: (identifier: string) => void) {
+  private withSenderIdentifier(fn: (identifier: string) => void) {
+    const context = getIpcContext();
     if (!context) return;
     const identifier = this.app.browserManager.getIdentifierByWebContents(context.sender);
     if (!identifier) return;

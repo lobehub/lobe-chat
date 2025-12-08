@@ -1,4 +1,5 @@
 import { ElectronAppState } from '@lobechat/electron-client-ipc';
+
 import { ensureElectronIpc } from '@/utils/electron/ipc';
 
 /**
@@ -12,19 +13,19 @@ class ElectronSystemService {
    */
   async getAppState(): Promise<ElectronAppState> {
     // Calls the underlying IPC function to get data from the main process
-    return ensureElectronIpc().system.getDesktopAppState();
+    return ensureElectronIpc().system.getAppState();
   }
 
   async closeWindow(): Promise<void> {
-    return ensureElectronIpc().windows.closeWindow();
+    return ensureElectronIpc().windows.closeWindow(void 0);
   }
 
   async maximizeWindow(): Promise<void> {
-    return ensureElectronIpc().windows.maximizeWindow();
+    return ensureElectronIpc().windows.maximizeWindow(void 0);
   }
 
   async minimizeWindow(): Promise<void> {
-    return ensureElectronIpc().windows.minimizeWindow();
+    return ensureElectronIpc().windows.minimizeWindow(void 0);
   }
 
   showContextMenu = async (type: string, data?: any) => {

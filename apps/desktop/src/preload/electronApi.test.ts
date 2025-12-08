@@ -3,13 +3,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 // Mock electron modules
 const mockElectronAPI = { someAPI: 'mock-electron-api' };
 const mockContextBridgeExposeInMainWorld = vi.fn();
-const mockIpcRenderer = { invoke: vi.fn() };
 
 vi.mock('electron', () => ({
   contextBridge: {
     exposeInMainWorld: mockContextBridgeExposeInMainWorld,
   },
-  ipcRenderer: mockIpcRenderer,
 }));
 
 vi.mock('@electron-toolkit/preload', () => ({

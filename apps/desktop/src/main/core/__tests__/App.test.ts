@@ -5,6 +5,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOCAL_DATABASE_DIR } from '@/const/dir';
 
+// Import after mocks are set up
+import { App } from '../App';
+
 // Mock electron modules
 vi.mock('electron', () => ({
   app: {
@@ -24,6 +27,7 @@ vi.mock('electron', () => ({
   },
   ipcMain: {
     handle: vi.fn(),
+    on: vi.fn(),
   },
   nativeTheme: {
     on: vi.fn(),
@@ -166,9 +170,6 @@ vi.mock('@/utils/next-electron-rsc', () => ({
 vi.mock('../../controllers/*Ctr.ts', () => ({}));
 vi.mock('../../services/*Srv.ts', () => ({}));
 
-// Import after mocks are set up
-import { App } from '../App';
-
 describe('App - Database Lock Cleanup', () => {
   let appInstance: App;
   let mockLockPath: string;
@@ -177,7 +178,7 @@ describe('App - Database Lock Cleanup', () => {
     vi.clearAllMocks();
 
     // Mock glob imports to return empty arrays
-    (import.meta as any).glob = vi.fn(() => ({}));
+    import.meta.glob = vi.fn(() => ({}));
 
     mockLockPath = join('/mock/storage/path', LOCAL_DATABASE_DIR) + '.lock';
   });

@@ -46,7 +46,6 @@ declare global {
   interface Window {
     electronAPI?: {
       invoke?: DispatchInvoke;
-      ipc?: DesktopIpcServices | null;
       onStreamInvoke: (params: ProxyTRPCRequestParams, callbacks: StreamerCallbacks) => () => void;
     };
   }

@@ -1,17 +1,20 @@
 import type { IpcMainInvokeEvent, WebContents } from 'electron';
 import { ipcMain } from 'electron';
+import { AsyncLocalStorage } from 'node:async_hooks';
 
 // Base context for IPC methods
 export interface IpcContext {
-  sender: WebContents;
   event: IpcMainInvokeEvent;
+  sender: WebContents;
 }
 
 // Metadata storage for decorated methods
 const methodMetadata = new WeakMap<any, Map<string, string>>();
+const serverMethodMetadata = new WeakMap<any, Map<string, string>>();
+const ipcContextStorage = new AsyncLocalStorage<IpcContext>();
 
 // Decorator for IPC methods
-export function IpcMethod() {
+export function IpcMethod(channelName?: string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const { constructor } = target;
 
@@ -20,7 +23,22 @@ export function IpcMethod() {
     }
 
     const methods = methodMetadata.get(constructor)!;
-    methods.set(propertyKey, propertyKey);
+    methods.set(propertyKey, channelName || propertyKey);
+
+    return descriptor;
+  };
+}
+
+export function IpcServerMethod(channelName?: string) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const { constructor } = target;
+
+    if (!serverMethodMetadata.has(constructor)) {
+      serverMethodMetadata.set(constructor, new Map());
+    }
+
+    const methods = serverMethodMetadata.get(constructor)!;
+    methods.set(propertyKey, channelName || propertyKey);
 
     return descriptor;
   };
@@ -38,9 +56,9 @@ export class IpcHandler {
     return IpcHandler.instance;
   }
 
-  registerMethod<TInput, TOutput>(
+  registerMethod<TArgs extends unknown[], TOutput>(
     channel: string,
-    handler: (payload: TInput, context?: IpcContext) => Promise<TOutput> | TOutput,
+    handler: (...args: TArgs) => Promise<TOutput> | TOutput,
   ) {
     if (this.registeredChannels.has(channel)) {
       return; // Already registered
@@ -50,17 +68,19 @@ export class IpcHandler {
 
     ipcMain.handle(channel, async (event: IpcMainInvokeEvent, ...args: any[]) => {
       const context: IpcContext = {
-        sender: event.sender,
         event,
+        sender: event.sender,
       };
 
-      try {
-        const payload = args.length > 0 ? (args[0] as TInput) : (undefined as TInput);
-        return await handler(payload, context);
-      } catch (error) {
-        console.error(`Error in IPC method ${channel}:`, error);
-        throw error;
-      }
+      return ipcContextStorage.run(context, async () => {
+        try {
+          const typedArgs = args as TArgs;
+          return await handler(...typedArgs);
+        } catch (error) {
+          console.error(`Error in IPC method ${channel}:`, error);
+          throw error;
+        }
+      });
     });
   }
 
@@ -93,9 +113,9 @@ export abstract class IpcService {
     }
   }
 
-  protected registerMethod<TInput, TOutput>(
+  protected registerMethod<TArgs extends unknown[], TOutput>(
     methodName: string,
-    handler: (payload: TInput, context?: IpcContext) => Promise<TOutput> | TOutput,
+    handler: (...args: TArgs) => Promise<TOutput> | TOutput,
   ) {
     const groupName = (this.constructor as typeof IpcService).groupName;
     const channel = `${groupName}.${methodName}`;
@@ -136,3 +156,15 @@ export function createServices<T extends readonly IpcServiceConstructor[]>(
 export type CreateServicesResult<T extends readonly IpcServiceConstructor[]> = {
   [K in T[number] as K['groupName']]: InstanceType<K>;
 };
+
+export function getServerMethodMetadata(target: IpcServiceConstructor) {
+  return serverMethodMetadata.get(target);
+}
+
+export function getIpcContext() {
+  return ipcContextStorage.getStore();
+}
+
+export function runWithIpcContext<T>(context: IpcContext, callback: () => T): T {
+  return ipcContextStorage.run(context, callback);
+}

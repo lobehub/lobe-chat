@@ -5,6 +5,10 @@ import type { App } from '@/core/App';
 
 import RemoteServerConfigCtr from '../RemoteServerConfigCtr';
 
+const { ipcMainHandleMock } = vi.hoisted(() => ({
+  ipcMainHandleMock: vi.fn(),
+}));
+
 // Mock logger
 vi.mock('@/utils/logger', () => ({
   createLogger: () => ({
@@ -17,6 +21,9 @@ vi.mock('@/utils/logger', () => ({
 
 // Mock electron
 vi.mock('electron', () => ({
+  ipcMain: {
+    handle: ipcMainHandleMock,
+  },
   safeStorage: {
     decryptString: vi.fn((buffer: Buffer) => buffer.toString()),
     encryptString: vi.fn((str: string) => Buffer.from(str)),
@@ -45,6 +52,7 @@ describe('RemoteServerConfigCtr', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    ipcMainHandleMock.mockClear();
     mockStoreManager.get.mockReturnValue({
       active: false,
       storageMode: 'local',

@@ -1,5 +1,5 @@
 import { electronAPI } from '@electron-toolkit/preload';
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge } from 'electron';
 
 import { invoke } from './invoke';
 import { onStreamInvoke } from './streamer';
