@@ -6,44 +6,8 @@ import { AgentBuilderApiName } from './types';
 export const AgentBuilderManifest: BuiltinToolManifest = {
   api: [
     // ==================== Read Operations ====================
-    {
-      description:
-        'Get the complete configuration of the current agent, including model, plugins, chat settings, opening message, etc.',
-      name: AgentBuilderApiName.getAgentConfig,
-      parameters: {
-        properties: {
-          fields: {
-            description:
-              'Optional array of specific fields to retrieve. If not provided, returns all configuration fields. Available fields: model, provider, plugins, chatConfig, openingMessage, openingQuestions, params, tts',
-            items: {
-              type: 'string',
-            },
-            type: 'array',
-          },
-        },
-        required: [],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Get the metadata of the current agent, including title, description, avatar, tags, and background color.',
-      name: AgentBuilderApiName.getAgentMeta,
-      parameters: {
-        properties: {
-          fields: {
-            description:
-              'Optional array of specific fields to retrieve. If not provided, returns all metadata fields. Available fields: title, description, avatar, tags, backgroundColor',
-            items: {
-              type: 'string',
-            },
-            type: 'array',
-          },
-        },
-        required: [],
-        type: 'object',
-      },
-    },
+    // Note: getAgentConfig, getAgentMeta, getPrompt are removed because
+    // the current agent context is now automatically injected into the conversation
     {
       description:
         'Get all available AI models and providers that can be used for the agent. Returns a list of providers with their supported models and capabilities (vision, function calling, reasoning, etc.).',
@@ -54,39 +18,6 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
             description:
               'Optional: filter models by a specific provider id (e.g., "openai", "anthropic", "google")',
             type: 'string',
-          },
-        },
-        required: [],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Get all available tools (plugins and built-in tools) that can be enabled for the agent. Returns tool identifiers, names, descriptions, and types.',
-      name: AgentBuilderApiName.getAvailableTools,
-      parameters: {
-        properties: {
-          type: {
-            description:
-              'Optional: filter by tool type. "builtin" for built-in tools, "plugin" for installed plugins, "all" for both. Defaults to "all".',
-            enum: ['all', 'builtin', 'plugin'],
-            type: 'string',
-          },
-        },
-        required: [],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        "Get the current system prompt (systemRole) of the agent. This is the instruction that defines the agent's behavior and personality.",
-      name: AgentBuilderApiName.getPrompt,
-      parameters: {
-        properties: {
-          preview: {
-            description:
-              'Optional: if true, returns a truncated version (first 500 characters) for preview. Defaults to false.',
-            type: 'boolean',
           },
         },
         required: [],
