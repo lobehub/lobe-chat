@@ -4,6 +4,19 @@
   },
   "active": "Aktif",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Bulut MCP eklentisi giriş doğrulaması gerektirir",
+      "cancel": "İptal",
+      "clickApproveToConnect": "Bu entegrasyonu bağlamak ve yetkilendirmek için 'Onayla'ya tıklayın",
+      "connectedAndEnabled": "Bağlandı ve etkinleştirildi",
+      "connectionFailed": "Bağlantı başarısız",
+      "installFailed": "Kurulum başarısız",
+      "installPlugin": "Eklentiyi Yükle",
+      "installToEnable": "Asistanı etkinleştirmek için bu eklentiyi yükleyin",
+      "installedAndEnabled": "Yüklendi ve etkinleştirildi",
+      "requiresAuth": "Yetkilendirme gerekli, bağlanmak için 'Onayla'ya tıklayın",
+      "retry": "Yeniden Dene"
+    },
     "welcome": "Merhaba, ben **Lobe AI**, asistan yapılandırma uzmanınızım. Nasıl bir asistan istediğinizi bana söyleyin, sizin için ayarlayayım."
   },
   "agentDefaultMessage": "Merhaba, ben **{{name}}**. Hemen benimle konuşmaya başlayabilir veya [Asistan Ayarları]({{url}}) sayfasına giderek bilgilerimi güncelleyebilirsin.",

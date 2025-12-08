@@ -4,6 +4,19 @@
   },
   "active": "Actif",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Le plugin MCP Cloud nécessite une authentification",
+      "cancel": "Annuler",
+      "clickApproveToConnect": "Cliquez sur « Approuver » pour connecter et autoriser cette intégration",
+      "connectedAndEnabled": "Connecté et activé",
+      "connectionFailed": "Échec de la connexion",
+      "installFailed": "Échec de l'installation",
+      "installPlugin": "Installer le plugin",
+      "installToEnable": "Installez ce plugin pour activer l'assistant",
+      "installedAndEnabled": "Installé et activé",
+      "requiresAuth": "Autorisation requise, cliquez sur « Approuver » pour connecter",
+      "retry": "Réessayer"
+    },
     "welcome": "Bonjour, je suis **Lobe AI**, votre expert en configuration d’assistants. Dites-moi quel type d’assistant vous souhaitez, et je m’occuperai de le configurer pour vous."
   },
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou vous rendre dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",

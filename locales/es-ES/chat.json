@@ -4,6 +4,19 @@
   },
   "active": "Activo",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "El complemento MCP en la nube requiere autenticación",
+      "cancel": "Cancelar",
+      "clickApproveToConnect": "Haz clic en «Aprobar» para conectar y autorizar esta integración",
+      "connectedAndEnabled": "Conectado y habilitado",
+      "connectionFailed": "Conexión fallida",
+      "installFailed": "Error de instalación",
+      "installPlugin": "Instalar complemento",
+      "installToEnable": "Instala este complemento para habilitar el asistente",
+      "installedAndEnabled": "Instalado y habilitado",
+      "requiresAuth": "Se requiere autorización, haz clic en «Aprobar» para conectar",
+      "retry": "Reintentar"
+    },
     "welcome": "Hola, soy **Lobe AI**, tu experto en configuración de asistentes. Cuéntame qué tipo de asistente necesitas y te ayudaré a configurarlo."
   },
   "agentDefaultMessage": "Hola, soy **{{name}}**. Puedes comenzar a hablar conmigo de inmediato o ir a [Configuración del asistente]({{url}}) para completar mi información.",
