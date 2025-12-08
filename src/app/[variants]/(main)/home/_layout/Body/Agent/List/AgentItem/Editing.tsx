@@ -41,7 +41,6 @@ const Editing = memo<EditingProps>(({ id, title, avatar, toggleEditing }) => {
         if (newAvatar && currentAvatar !== newAvatar) updates.avatar = newAvatar;
 
         // Use optimisticUpdateAgentMeta to update the specific agent's meta
-        // id here is the agentId from SidebarAgentItem
         await useAgentStore.getState().optimisticUpdateAgentMeta(id, updates);
 
         // Refresh agent list to update sidebar display (including updatedAt)
@@ -60,7 +59,7 @@ const Editing = memo<EditingProps>(({ id, title, avatar, toggleEditing }) => {
       content={
         <Flexbox gap={4} horizontal onClick={(e) => e.stopPropagation()} style={{ width: 320 }}>
           <EmojiPicker
-            customRender={(avatar) => (
+            customRender={(avatarValue) => (
               <Block
                 align={'center'}
                 clickable
@@ -70,7 +69,7 @@ const Editing = memo<EditingProps>(({ id, title, avatar, toggleEditing }) => {
                 variant={isDarkMode ? 'filled' : 'outlined'}
                 width={36}
               >
-                <Avatar avatar={avatar} shape={'square'} size={32} />
+                <Avatar avatar={avatarValue} shape={'square'} size={32} />
               </Block>
             )}
             locale={locale}
