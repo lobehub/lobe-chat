@@ -2,6 +2,33 @@
 
 # Changelog
 
+## [Version 2.0.0-next.164](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.163...v2.0.0-next.164)
+
+<sup>Released on **2025-12-08**</sup>
+
+#### 💄 Styles
+
+- **profile**: Add mobile responsive layout and signup improvements.
+- **misc**: Update link handling in PlanTag component to use react-router-dom.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **profile**: Add mobile responsive layout and signup improvements, closes [#10669](https://github.com/lobehub/lobe-chat/issues/10669) ([1afd471](https://github.com/lobehub/lobe-chat/commit/1afd471))
+- **misc**: Update link handling in PlanTag component to use react-router-dom, closes [#10673](https://github.com/lobehub/lobe-chat/issues/10673) ([3aceeb6](https://github.com/lobehub/lobe-chat/commit/3aceeb6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.163](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.162...v2.0.0-next.163)
 
 <sup>Released on **2025-12-06**</sup>
