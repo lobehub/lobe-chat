@@ -178,7 +178,7 @@ describe('App - Database Lock Cleanup', () => {
     vi.clearAllMocks();
 
     // Mock glob imports to return empty arrays
-    (import.meta as any).glob = vi.fn(() => ({}));
+    import.meta.glob = vi.fn(() => ({}));
 
     mockLockPath = join('/mock/storage/path', LOCAL_DATABASE_DIR) + '.lock';
   });

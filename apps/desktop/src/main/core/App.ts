@@ -6,7 +6,7 @@ import os from 'node:os';
 import { join } from 'node:path';
 
 import { name } from '@/../../package.json';
-import { buildDir, LOCAL_DATABASE_DIR, nextStandaloneDir } from '@/const/dir';
+import { LOCAL_DATABASE_DIR, buildDir, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
@@ -81,7 +81,7 @@ export class App {
 
     // load controllers
     const controllers: IControlModule[] = importAll(
-      (import.meta as any).glob('@/controllers/*Ctr.ts', { eager: true }),
+      import.meta.glob('@/controllers/*Ctr.ts', { eager: true }),
     );
 
     logger.debug(`Loading ${controllers.length} controllers`);
@@ -89,7 +89,7 @@ export class App {
 
     // load services
     const services: IServiceModule[] = importAll(
-      (import.meta as any).glob('@/services/*Srv.ts', { eager: true }),
+      import.meta.glob('@/services/*Srv.ts', { eager: true }),
     );
 
     logger.debug(`Loading ${services.length} services`);
