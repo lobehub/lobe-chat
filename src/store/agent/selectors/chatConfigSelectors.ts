@@ -89,3 +89,5 @@ export const agentChatConfigSelectors = {
   searchFCModel,
   useModelBuiltinSearch,
 };
+
+console.log('agentChatConfigSelectors', agentChatConfigSelectors);
