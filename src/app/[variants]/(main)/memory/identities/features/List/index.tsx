@@ -2,8 +2,9 @@ import { App, Empty } from 'antd';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useQueryState } from '@/hooks/useQueryParam';
+import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
-import { UserMemoryIdentityWithoutVectors } from '@/types/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
 import MasonryView from './MasonryView';
@@ -12,21 +13,23 @@ import TimelineView from './TimelineView';
 export type IdentityType = 'all' | 'demographic' | 'personal' | 'professional';
 
 interface IdentitiesListProps {
-  data: UserMemoryIdentityWithoutVectors[];
   searchValue: string;
   typeFilter: IdentityType;
   viewMode: ViewMode;
 }
 
-const IdentitiesList = memo<IdentitiesListProps>(({ data, viewMode, typeFilter, searchValue }) => {
+const IdentitiesList = memo<IdentitiesListProps>(({ viewMode, typeFilter, searchValue }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
+  const [, setIdentityId] = useQueryState('identityId', { clearOnDefault: true });
+  const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
+  const identities = useUserMemoryStore((s) => s.identities);
   const deleteIdentity = useUserMemoryStore((s) => s.deleteIdentity);
 
   const filteredIdentities = useMemo(() => {
-    if (!data) return [];
+    if (!identities) return [];
 
-    let filtered = data;
+    let filtered = identities;
 
     // Type filter
     if (typeFilter !== 'all') {
@@ -52,7 +55,12 @@ const IdentitiesList = memo<IdentitiesListProps>(({ data, viewMode, typeFilter, 
     }
 
     return filtered;
-  }, [data, typeFilter, searchValue]);
+  }, [identities, typeFilter, searchValue]);
+
+  const handleCardClick = (identity: any) => {
+    setIdentityId(identity.id);
+    toggleRightPanel(true);
+  };
 
   const handleDelete = (id: string) => {
     modal.confirm({
@@ -68,14 +76,26 @@ const IdentitiesList = memo<IdentitiesListProps>(({ data, viewMode, typeFilter, 
     });
   };
 
-  if (!data || data.length === 0) return <Empty description={t('identity.empty')} />;
+  if (!identities || identities.length === 0) return <Empty description={t('identity.empty')} />;
 
   if (filteredIdentities.length === 0) return <Empty description={t('identity.list.noResults')} />;
 
   if (viewMode === 'timeline')
-    return <TimelineView identities={filteredIdentities} onDelete={handleDelete} />;
+    return (
+      <TimelineView
+        identities={filteredIdentities}
+        onClick={handleCardClick}
+        onDelete={handleDelete}
+      />
+    );
 
-  return <MasonryView identities={filteredIdentities} onDelete={handleDelete} />;
+  return (
+    <MasonryView
+      identities={filteredIdentities}
+      onClick={handleCardClick}
+      onDelete={handleDelete}
+    />
+  );
 });
 
 export default IdentitiesList;

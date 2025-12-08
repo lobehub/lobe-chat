@@ -9,18 +9,20 @@ import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
+import ExperienceRightPanel from './features/ExperienceRightPanel';
 import List from './features/List';
 
-const Experiences = memo(() => {
+const ExperiencesArea = memo(() => {
   const [viewMode, setViewMode] = useState<ViewMode>('masonry');
-
   const useFetchExperiences = useUserMemoryStore((s) => s.useFetchExperiences);
-  const { data, isLoading } = useFetchExperiences();
+  const experiencesInit = useUserMemoryStore((s) => s.experiencesInit);
 
-  if (isLoading) return <Loading debugId={'Experiences'} />;
+  useFetchExperiences();
+
+  if (!experiencesInit) return <Loading debugId={'Experiences'} />;
 
   return (
-    <>
+    <Flexbox flex={1} height={'100%'}>
       <NavHeader
         right={
           <>
@@ -36,10 +38,19 @@ const Experiences = memo(() => {
         width={'100%'}
       >
         <WideScreenContainer gap={32} paddingBlock={48}>
-          <List data={data || []} viewMode={viewMode} />
+          <List viewMode={viewMode} />
         </WideScreenContainer>
       </Flexbox>
-    </>
+    </Flexbox>
+  );
+});
+
+const Experiences = memo(() => {
+  return (
+    <Flexbox height={'100%'} horizontal width={'100%'}>
+      <ExperiencesArea />
+      <ExperienceRightPanel />
+    </Flexbox>
   );
 });
 

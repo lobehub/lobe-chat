@@ -6,20 +6,22 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
-type RightPanelProps = Omit<
+interface RightPanelProps extends Omit<
   DraggablePanelProps,
   'placement' | 'size' | 'onSizeChange' | 'onExpandChange'
->;
+> {
+  defaultWidth?: number | string;
+}
 
 const RightPanel = memo<RightPanelProps>(
-  ({ maxWidth = 600, minWidth = 300, children, ...rest }) => {
+  ({ maxWidth = 600, minWidth = 300, children, defaultWidth = 360, ...rest }) => {
     const theme = useTheme();
     const [showRightPanel, toggleRightPanel] = useGlobalStore((s) => [
       systemStatusSelectors.showRightPanel(s),
       s.toggleRightPanel,
     ]);
 
-    const [width, setWidth] = useState<string | number>(360);
+    const [width, setWidth] = useState<string | number>(defaultWidth);
 
     return (
       <DraggablePanel

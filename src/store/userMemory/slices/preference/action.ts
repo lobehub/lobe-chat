@@ -8,6 +8,7 @@ import { memoryCRUDService } from '@/services/userMemory/index';
 import { UserMemoryStore } from '../../store';
 
 const FETCH_PREFERENCES_KEY = 'useFetchPreferences';
+const n = (namespace: string) => namespace;
 
 export interface PreferenceAction {
   deletePreference: (id: string) => Promise<void>;
@@ -19,11 +20,22 @@ export const createPreferenceSlice: StateCreator<
   [['zustand/devtools', never]],
   [],
   PreferenceAction
-> = () => ({
+> = (set) => ({
   deletePreference: async (id) => {
     await memoryCRUDService.deletePreference(id);
     await mutate(FETCH_PREFERENCES_KEY);
   },
   useFetchPreferences: () =>
-    useClientDataSWR(FETCH_PREFERENCES_KEY, memoryCRUDService.getDisplayPreferences),
+    useClientDataSWR(FETCH_PREFERENCES_KEY, memoryCRUDService.getDisplayPreferences, {
+      onSuccess: (data: DisplayPreferenceMemory[] | undefined) => {
+        set(
+          {
+            preferences: data || [],
+            preferencesInit: true,
+          },
+          false,
+          n('useFetchPreferences/onSuccess'),
+        );
+      },
+    }),
 });

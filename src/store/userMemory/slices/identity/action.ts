@@ -13,6 +13,7 @@ import { memoryCRUDService } from '@/services/userMemory/index';
 import { UserMemoryStore } from '../../store';
 
 const FETCH_IDENTITIES_KEY = 'useFetchIdentities';
+const n = (namespace: string) => namespace;
 
 export interface IdentityAction {
   createIdentity: (data: NewUserMemoryIdentity) => Promise<AddIdentityEntryResult>;
@@ -26,7 +27,7 @@ export const createIdentitySlice: StateCreator<
   [['zustand/devtools', never]],
   [],
   IdentityAction
-> = () => ({
+> = (set) => ({
   createIdentity: async (data) => {
     const result = await memoryCRUDService.createIdentity(data);
     await mutate(FETCH_IDENTITIES_KEY);
@@ -44,5 +45,17 @@ export const createIdentitySlice: StateCreator<
     return result;
   },
 
-  useFetchIdentities: () => useClientDataSWR(FETCH_IDENTITIES_KEY, memoryCRUDService.getIdentities),
+  useFetchIdentities: () =>
+    useClientDataSWR(FETCH_IDENTITIES_KEY, memoryCRUDService.getIdentities, {
+      onSuccess: (data: UserMemoryIdentityWithoutVectors[] | undefined) => {
+        set(
+          {
+            identities: data || [],
+            identitiesInit: true,
+          },
+          false,
+          n('useFetchIdentities/onSuccess'),
+        );
+      },
+    }),
 });

@@ -4,9 +4,9 @@ import { Link2 } from 'lucide-react';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import CateTag from '../CateTag';
 import HashTags from '../HashTags';
 import Time from '../Time';
-import { useCateColor } from '../useCateColor';
 
 const ACTION_CLASSNAME = 'memory-actions';
 
@@ -42,7 +42,6 @@ interface TimeLineCardProps {
 const TimeLineCard = memo<TimeLineCardProps>(
   ({ title, titleAddon, cate, children, actions, onClick, updatedAt, hashTags }) => {
     const { theme, cx, styles } = useStyles();
-    const cateColor = useCateColor(cate);
     return (
       <Block
         className={styles.timelineCard}
@@ -89,17 +88,7 @@ const TimeLineCard = memo<TimeLineCardProps>(
         <HashTags hashTags={hashTags} />
         <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
           <Flexbox align={'center'} gap={8} horizontal>
-            <Tag
-              size={'large'}
-              style={{
-                background: cateColor?.backgroundColor,
-                borderRadius: 16,
-                color: cateColor?.color,
-                fontWeight: 500,
-              }}
-            >
-              {cate?.toUpperCase() || 'CHORE'}
-            </Tag>
+            <CateTag cate={cate} />
             <Time updatedAt={updatedAt} />
           </Flexbox>
           <Flexbox

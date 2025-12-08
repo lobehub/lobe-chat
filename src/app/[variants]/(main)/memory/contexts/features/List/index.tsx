@@ -1,35 +1,31 @@
 import { App, Empty } from 'antd';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DisplayContextMemory } from '@/database/repositories/userMemory';
+import { useQueryState } from '@/hooks/useQueryParam';
+import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
-import ContextDrawer from './ContextDrawer';
 import MasonryView from './MasonryView';
 import TimelineView from './TimelineView';
 
 interface ContextsListProps {
-  data: DisplayContextMemory[];
   viewMode: ViewMode;
 }
 
-const ContextsList = memo<ContextsListProps>(({ data, viewMode }) => {
+const ContextsList = memo<ContextsListProps>(({ viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
-  const [selectedContext, setSelectedContext] = useState<DisplayContextMemory | null>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
+  const [, setContextId] = useQueryState('contextId', { clearOnDefault: true });
 
+  const contexts = useUserMemoryStore((s) => s.contexts);
   const deleteContext = useUserMemoryStore((s) => s.deleteContext);
 
-  const handleCardClick = (context: DisplayContextMemory) => {
-    setSelectedContext(context);
-    setDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setDrawerOpen(false);
+  const handleCardClick = (context: any) => {
+    setContextId(context.id);
+    toggleRightPanel(true);
   };
 
   const handleDelete = (id: string) => {
@@ -46,18 +42,12 @@ const ContextsList = memo<ContextsListProps>(({ data, viewMode }) => {
     });
   };
 
-  if (!data || data.length === 0) return <Empty description={t('context.empty')} />;
+  if (!contexts || contexts.length === 0) return <Empty description={t('context.empty')} />;
 
-  return (
-    <>
-      {viewMode === 'timeline' ? (
-        <TimelineView contexts={data} onClick={handleCardClick} onDelete={handleDelete} />
-      ) : (
-        <MasonryView contexts={data} onClick={handleCardClick} onDelete={handleDelete} />
-      )}
-
-      <ContextDrawer context={selectedContext} onClose={handleDrawerClose} open={drawerOpen} />
-    </>
+  return viewMode === 'timeline' ? (
+    <TimelineView contexts={contexts} onClick={handleCardClick} onDelete={handleDelete} />
+  ) : (
+    <MasonryView contexts={contexts} onClick={handleCardClick} onDelete={handleDelete} />
   );
 });
 
