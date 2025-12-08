@@ -58,7 +58,8 @@ export const agentRouter = router({
             tts: true,
           })
           .passthrough()
-          .partial(),
+          .partial()
+          .optional(),
         groupId: z.string().optional(),
       }),
     )

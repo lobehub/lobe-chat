@@ -8,6 +8,7 @@ import { isDev } from '@/utils/env';
 import { createDevtools } from '../middleware/createDevtools';
 import { HomeStoreState, initialState } from './initialState';
 import { AgentListAction, createAgentListSlice } from './slices/agentList/action';
+import { GroupAction, createGroupSlice } from './slices/group/action';
 import { HomeInputAction, createHomeInputSlice } from './slices/homeInput/action';
 import { RecentAction, createRecentSlice } from './slices/recent/action';
 import { SidebarUIAction, createSidebarUISlice } from './slices/sidebarUI/action';
@@ -15,11 +16,18 @@ import { SidebarUIAction, createSidebarUISlice } from './slices/sidebarUI/action
 //  ===============  Aggregate createStoreFn ============ //
 
 export interface HomeStore
-  extends AgentListAction, RecentAction, HomeInputAction, SidebarUIAction, HomeStoreState {}
+  extends
+    AgentListAction,
+    GroupAction,
+    RecentAction,
+    HomeInputAction,
+    SidebarUIAction,
+    HomeStoreState {}
 
 const createStore: StateCreator<HomeStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createAgentListSlice(...parameters),
+  ...createGroupSlice(...parameters),
   ...createRecentSlice(...parameters),
   ...createHomeInputSlice(...parameters),
   ...createSidebarUISlice(...parameters),

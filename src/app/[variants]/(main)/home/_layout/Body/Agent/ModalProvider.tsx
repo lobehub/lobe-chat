@@ -18,10 +18,10 @@ interface AgentModalContextValue {
   openCreateGroupModal: (sessionId: string) => void;
   openGroupWizardModal: (callbacks: GroupWizardCallbacks) => void;
   openMemberSelectionModal: (callbacks: MemberSelectionCallbacks) => void;
+  setGroupWizardLoading: (loading: boolean) => void;
 }
 
 interface GroupWizardCallbacks {
-  isCreatingFromTemplate?: boolean;
   onCancel?: () => void;
   onCreateCustom?: (
     selectedAgents: string[],
@@ -70,6 +70,7 @@ export const AgentModalProvider = memo<AgentModalProviderProps>(({ children }) =
   // GroupWizard state
   const [groupWizardOpen, setGroupWizardOpen] = useState(false);
   const [groupWizardCallbacks, setGroupWizardCallbacks] = useState<GroupWizardCallbacks>({});
+  const [groupWizardLoading, setGroupWizardLoading] = useState(false);
 
   // MemberSelection state
   const [memberSelectionOpen, setMemberSelectionOpen] = useState(false);
@@ -101,6 +102,7 @@ export const AgentModalProvider = memo<AgentModalProviderProps>(({ children }) =
         setMemberSelectionCallbacks(callbacks);
         setMemberSelectionOpen(true);
       },
+      setGroupWizardLoading,
     }),
     [],
   );
@@ -124,7 +126,7 @@ export const AgentModalProvider = memo<AgentModalProviderProps>(({ children }) =
       />
 
       <ChatGroupWizard
-        isCreatingFromTemplate={groupWizardCallbacks.isCreatingFromTemplate}
+        isCreatingFromTemplate={groupWizardLoading}
         onCancel={() => {
           groupWizardCallbacks.onCancel?.();
           setGroupWizardOpen(false);

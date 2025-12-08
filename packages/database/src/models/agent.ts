@@ -223,6 +223,44 @@ export class AgentModel {
       );
   };
 
+  /**
+   * Create an agent record only (without creating a session).
+   * This is used for creating virtual agents (e.g., group chat members).
+   */
+  create = async (config: Partial<AgentItem>): Promise<AgentItem> => {
+    const [result] = await this.db
+      .insert(agents)
+      .values([
+        {
+          ...config,
+          model: typeof config.model === 'string' ? config.model : null,
+          userId: this.userId,
+        },
+      ])
+      .returning();
+
+    return result;
+  };
+
+  /**
+   * Batch create multiple agents (without sessions).
+   * Used for creating multiple virtual agents at once (e.g., group chat members).
+   */
+  batchCreate = async (configs: Partial<AgentItem>[]): Promise<AgentItem[]> => {
+    if (configs.length === 0) return [];
+
+    return this.db
+      .insert(agents)
+      .values(
+        configs.map((config) => ({
+          ...config,
+          model: typeof config.model === 'string' ? config.model : null,
+          userId: this.userId,
+        })),
+      )
+      .returning();
+  };
+
   update = async (agentId: string, data: Partial<AgentItem>) => {
     return this.db
       .update(agents)
