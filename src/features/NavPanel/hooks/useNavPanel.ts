@@ -8,56 +8,43 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 export const useNavPanel = () => {
-  const [expand, sessionsWidth, sessionExpandable, updatePreference] = useGlobalStore((s) => [
-    systemStatusSelectors.showSessionPanel(s),
-    systemStatusSelectors.sessionWidth(s),
-    systemStatusSelectors.showSessionPanel(s),
+  const [leftPanelWidth, sessionExpandable, togglePanel, updatePreference] = useGlobalStore((s) => [
+    systemStatusSelectors.leftPanelWidth(s),
+    systemStatusSelectors.showLeftPanel(s),
+    s.toggleLeftPanel,
     s.updateSystemStatus,
   ]);
 
-  const [tmpWidth, setWidth] = useState(sessionsWidth);
+  const [tmpWidth, setWidth] = useState(leftPanelWidth);
 
-  if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
-
-  const handleExpand = useCallback(
-    (expand: boolean) => {
-      if (isEqual(expand, sessionExpandable)) return;
-      updatePreference({ showSessionPanel: expand });
-    },
-    [sessionExpandable, updatePreference],
-  );
+  if (tmpWidth !== leftPanelWidth) setWidth(leftPanelWidth);
 
   const handleSizeChange: DraggablePanelProps['onSizeChange'] = useCallback(
     (_: any, size: any) => {
       const width = size?.width;
       if (!width || width < 64) return;
-      if (isEqual(width, sessionsWidth)) return;
+      if (isEqual(width, leftPanelWidth)) return;
       setWidth(width);
-      updatePreference({ sessionsWidth: width });
+      updatePreference({ leftPanelWidth: width });
     },
-    [sessionExpandable, sessionsWidth, updatePreference],
+    [sessionExpandable, leftPanelWidth, updatePreference],
   );
 
-  const togglePanel = useCallback(() => {
-    handleExpand(!expand);
-  }, [expand, handleExpand]);
-
   const openPanel = useCallback(() => {
-    handleExpand(true);
-  }, [handleExpand]);
+    togglePanel(true);
+  }, [togglePanel]);
 
   const closePanel = useCallback(() => {
-    handleExpand(false);
-  }, [handleExpand]);
+    togglePanel(false);
+  }, [togglePanel]);
 
   return {
     closePanel,
     defaultWidth: tmpWidth,
-    expand,
-    handleExpand,
+    expand: sessionExpandable,
     handleSizeChange,
     openPanel,
     togglePanel,
-    width: sessionsWidth,
+    width: leftPanelWidth,
   };
 };

@@ -85,16 +85,6 @@ export const useDeleteLastMessageHotkey = () => {
   );
 };
 
-export const useToggleRightPanelHotkey = () => {
-  const isZenMode = useGlobalStore((s) => s.status.zenMode);
-  const toggleConfig = useGlobalStore((s) => s.toggleChatSideBar);
-
-  return useHotkeyById(HotkeyEnum.ToggleRightPanel, () => toggleConfig(), {
-    enableOnContentEditable: true,
-    enabled: !isZenMode,
-  });
-};
-
 export const useAddUserMessageHotkey = () => {
   const { send } = useSend();
   return useHotkeyById(
@@ -124,7 +114,6 @@ export const useRegisterChatHotkeys = () => {
   useOpenChatSettingsHotkey();
 
   // Layout
-  useToggleRightPanelHotkey();
   useToggleZenModeHotkey();
 
   // Conversation
