@@ -4,6 +4,19 @@
   },
   "active": "Active",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Authentication required for cloud MCP plugins",
+      "cancel": "Cancel",
+      "clickApproveToConnect": "Click \"Approve\" to connect and authorize this integration",
+      "connectedAndEnabled": "Connected and enabled",
+      "connectionFailed": "Connection failed",
+      "installFailed": "Installation failed",
+      "installPlugin": "Install Plugin",
+      "installToEnable": "Install this plugin to enable it for the agent",
+      "installedAndEnabled": "Installed and enabled",
+      "requiresAuth": "Requires authorization. Click \"Approve\" to connect",
+      "retry": "Retry"
+    },
     "welcome": "Hello, I'm **Lobe AI**, your assistant configuration expert. Tell me what kind of assistant you want, and I'll set it up for you."
   },
   "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",

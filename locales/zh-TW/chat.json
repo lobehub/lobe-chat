@@ -4,6 +4,19 @@
   },
   "active": "活躍",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "雲端 MCP 外掛需要登入驗證",
+      "cancel": "取消",
+      "clickApproveToConnect": "點擊「批准」以連接並授權此整合",
+      "connectedAndEnabled": "已連接並啟用",
+      "connectionFailed": "連接失敗",
+      "installFailed": "安裝失敗",
+      "installPlugin": "安裝外掛",
+      "installToEnable": "安裝此外掛以啟用助手功能",
+      "installedAndEnabled": "已安裝並啟用",
+      "requiresAuth": "需要授權，請點擊「批准」以連接",
+      "retry": "重試"
+    },
     "welcome": "你好，我是 **Lobe AI**，你的助手設定專家。告訴我你想要什麼樣的助手，我會幫你設定好。"
   },
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即與我開始對話，也可以前往 [助手設定]({{url}}) 完善我的資訊。",

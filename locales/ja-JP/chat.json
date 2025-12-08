@@ -4,6 +4,19 @@
   },
   "active": "アクティブ",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "クラウドMCPプラグインにはログイン認証が必要です",
+      "cancel": "キャンセル",
+      "clickApproveToConnect": "「承認」をクリックして接続し、この統合を許可してください",
+      "connectedAndEnabled": "接続済みかつ有効化されています",
+      "connectionFailed": "接続に失敗しました",
+      "installFailed": "インストールに失敗しました",
+      "installPlugin": "プラグインをインストール",
+      "installToEnable": "このプラグインをインストールしてアシスタントを有効にしてください",
+      "installedAndEnabled": "インストール済みかつ有効化されています",
+      "requiresAuth": "認証が必要です。「承認」をクリックして接続してください",
+      "retry": "再試行"
+    },
     "welcome": "こんにちは、私は **Lobe AI**、あなたのアシスタント設定スペシャリストです。どのようなアシスタントをご希望か教えてください。最適な設定をお手伝いします。"
   },
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることもできますし、[アシスタント設定]({{url}}) に行って私の情報を充実させることもできます。",

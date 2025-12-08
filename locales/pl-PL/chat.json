@@ -4,6 +4,19 @@
   },
   "active": "aktywny",
   "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Wtyczka MCP w chmurze wymaga uwierzytelnienia",
+      "cancel": "Anuluj",
+      "clickApproveToConnect": "Kliknij „Zatwierdź”, aby połączyć i autoryzować tę integrację",
+      "connectedAndEnabled": "Połączono i włączono",
+      "connectionFailed": "Połączenie nie powiodło się",
+      "installFailed": "Instalacja nie powiodła się",
+      "installPlugin": "Zainstaluj wtyczkę",
+      "installToEnable": "Zainstaluj tę wtyczkę, aby włączyć asystenta",
+      "installedAndEnabled": "Zainstalowano i włączono",
+      "requiresAuth": "Wymaga autoryzacji, kliknij „Zatwierdź”, aby połączyć",
+      "retry": "Ponów próbę"
+    },
     "welcome": "Cześć, jestem **Lobe AI**, Twój ekspert od konfiguracji asystenta. Powiedz mi, jakiego asystenta potrzebujesz, a ja pomogę Ci go skonfigurować."
   },
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
