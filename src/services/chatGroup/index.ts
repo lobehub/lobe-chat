@@ -1,3 +1,5 @@
+import { AgentItem } from '@lobechat/types';
+
 import {
   ChatGroupAgentItem,
   ChatGroupItem,
@@ -6,11 +8,40 @@ import {
 } from '@/database/schemas';
 import { lambdaClient } from '@/libs/trpc/client';
 
+export interface GroupMemberConfig {
+  avatar?: string;
+  backgroundColor?: string;
+  description?: string;
+  model?: string;
+  plugins?: string[];
+  provider?: string;
+  systemRole?: string;
+  tags?: string[];
+  title?: string;
+}
+
 class ChatGroupService {
   createGroup = (params: Omit<NewChatGroup, 'userId'>): Promise<ChatGroupItem> => {
     return lambdaClient.group.createGroup.mutate({
       ...params,
       config: params.config as any,
+    });
+  };
+
+  /**
+   * Create a group with virtual member agents in one request.
+   * This is the recommended way to create a group from a template.
+   */
+  createGroupWithMembers = (
+    groupConfig: Omit<NewChatGroup, 'userId'>,
+    members: GroupMemberConfig[],
+  ): Promise<{ agentIds: string[]; groupId: string }> => {
+    return lambdaClient.group.createGroupWithMembers.mutate({
+      groupConfig: {
+        ...groupConfig,
+        config: groupConfig.config as any,
+      },
+      members: members as Partial<AgentItem>[],
     });
   };
 

@@ -1,3 +1,4 @@
+import { GROUP_CHAT_URL, SESSION_CHAT_URL } from '@lobechat/const';
 import type { SidebarAgentItem } from '@lobechat/types';
 import { useAnalytics } from '@lobehub/analytics/react';
 import { MoreHorizontal } from 'lucide-react';
@@ -6,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
-import { SESSION_CHAT_URL } from '@/const/url';
 import NavItem from '@/features/NavPanel/components/NavItem';
-import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
+import { useQueryRoute } from '@/hooks/useQueryRoute';
+import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useHomeStore } from '@/store/home';
@@ -33,15 +34,25 @@ const List = memo<SessionListProps>(
   ({ onMoreClick, dataSource, groupId, itemStyle, itemClassName }) => {
     const { t } = useTranslation('chat');
     const { analytics } = useAnalytics();
-    const navigateToAgent = useNavigateToAgent();
+    const router = useQueryRoute();
+    const togglePortal = useChatStore((s) => s.togglePortal);
     const { createAgent } = useCreateMenuItems();
 
     // Early return for empty state
     const isEmpty = useMemo(() => dataSource.length === 0, [dataSource.length]);
 
+    // Get URL based on item type
+    const getItemUrl = useCallback((item: SidebarAgentItem) => {
+      if (item.type === 'group') {
+        return GROUP_CHAT_URL(item.id);
+      }
+      return SESSION_CHAT_URL(item.id, false);
+    }, []);
+
     const handleClick = useCallback(
       (item: SidebarAgentItem) => {
-        navigateToAgent(item.id);
+        togglePortal(false);
+        router.push(getItemUrl(item));
 
         // Defer analytics tracking to avoid blocking UI
         if (analytics) {
@@ -69,7 +80,7 @@ const List = memo<SessionListProps>(
           }
         }
       },
-      [navigateToAgent, analytics],
+      [togglePortal, router, getItemUrl, analytics],
     );
 
     // Check if this is defaultList and if there are more agents
@@ -97,10 +108,13 @@ const List = memo<SessionListProps>(
             aria-label={item.id}
             key={item.id}
             onClick={(e) => {
+              // Allow default behavior for Cmd+Click (Mac) / Ctrl+Click (Windows/Linux) to open in new window
+              if (e.metaKey || e.ctrlKey) return;
+
               e.preventDefault();
               handleClick(item);
             }}
-            to={SESSION_CHAT_URL(item.id, false)}
+            to={getItemUrl(item)}
           >
             <Item className={itemClassName} item={item} style={itemStyle} />
           </Link>

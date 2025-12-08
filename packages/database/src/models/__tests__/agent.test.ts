@@ -790,6 +790,168 @@ describe('AgentModel', () => {
     });
   });
 
+  describe('create', () => {
+    it('should create a virtual agent without session', async () => {
+      const config = {
+        title: 'Virtual Agent',
+        description: 'A virtual group member',
+        model: 'gpt-4',
+        provider: 'openai',
+        virtual: true,
+      };
+
+      const result = await agentModel.create(config);
+
+      expect(result).toBeDefined();
+      expect(result.title).toBe('Virtual Agent');
+      expect(result.description).toBe('A virtual group member');
+      expect(result.model).toBe('gpt-4');
+      expect(result.provider).toBe('openai');
+      expect(result.virtual).toBe(true);
+      expect(result.userId).toBe(userId);
+
+      // Verify no session was created
+      const sessionLinks = await serverDB.query.agentsToSessions.findMany({
+        where: eq(agentsToSessions.agentId, result.id),
+      });
+      expect(sessionLinks).toHaveLength(0);
+    });
+
+    it('should create agent with default virtual=false', async () => {
+      const config = {
+        title: 'Normal Agent',
+      };
+
+      const result = await agentModel.create(config);
+
+      expect(result).toBeDefined();
+      expect(result.title).toBe('Normal Agent');
+      expect(result.virtual).toBe(false);
+    });
+
+    it('should create agent with all optional fields', async () => {
+      const config = {
+        title: 'Full Agent',
+        description: 'Full description',
+        avatar: 'avatar-url',
+        backgroundColor: '#ffffff',
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole: 'You are a helpful assistant',
+        tags: ['tag1', 'tag2'],
+        plugins: ['plugin1'],
+        openingMessage: 'Hello!',
+        openingQuestions: ['Question 1', 'Question 2'],
+        virtual: true,
+      };
+
+      const result = await agentModel.create(config);
+
+      expect(result.title).toBe('Full Agent');
+      expect(result.description).toBe('Full description');
+      expect(result.avatar).toBe('avatar-url');
+      expect(result.backgroundColor).toBe('#ffffff');
+      expect(result.model).toBe('gpt-4');
+      expect(result.provider).toBe('openai');
+      expect(result.systemRole).toBe('You are a helpful assistant');
+      expect(result.tags).toEqual(['tag1', 'tag2']);
+      expect(result.plugins).toEqual(['plugin1']);
+      expect(result.openingMessage).toBe('Hello!');
+      expect(result.openingQuestions).toEqual(['Question 1', 'Question 2']);
+      expect(result.virtual).toBe(true);
+    });
+
+    it('should create agent with custom id', async () => {
+      const customId = 'custom-agent-id-123';
+      const config = {
+        id: customId,
+        title: 'Custom ID Agent',
+      };
+
+      const result = await agentModel.create(config);
+
+      expect(result.id).toBe(customId);
+    });
+
+    it('should create multiple agents for the same user', async () => {
+      const agent1 = await agentModel.create({ title: 'Agent 1', virtual: true });
+      const agent2 = await agentModel.create({ title: 'Agent 2', virtual: true });
+
+      expect(agent1.id).not.toBe(agent2.id);
+
+      const allAgents = await serverDB.query.agents.findMany({
+        where: eq(agents.userId, userId),
+      });
+      expect(allAgents.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  describe('batchCreate', () => {
+    it('should batch create multiple virtual agents', async () => {
+      const configs = [
+        { title: 'Agent 1', model: 'gpt-4', virtual: true },
+        { title: 'Agent 2', model: 'gpt-3.5-turbo', virtual: true },
+        { title: 'Agent 3', model: 'claude-3', virtual: true },
+      ];
+
+      const results = await agentModel.batchCreate(configs);
+
+      expect(results).toHaveLength(3);
+      expect(results[0].title).toBe('Agent 1');
+      expect(results[1].title).toBe('Agent 2');
+      expect(results[2].title).toBe('Agent 3');
+      results.forEach((agent) => {
+        expect(agent.userId).toBe(userId);
+        expect(agent.virtual).toBe(true);
+      });
+    });
+
+    it('should return empty array for empty input', async () => {
+      const results = await agentModel.batchCreate([]);
+
+      expect(results).toEqual([]);
+    });
+
+    it('should batch create agents with different configs', async () => {
+      const configs = [
+        {
+          title: 'Full Agent',
+          description: 'Full description',
+          model: 'gpt-4',
+          provider: 'openai',
+          systemRole: 'You are helpful',
+          virtual: true,
+        },
+        {
+          title: 'Minimal Agent',
+          virtual: true,
+        },
+      ];
+
+      const results = await agentModel.batchCreate(configs);
+
+      expect(results).toHaveLength(2);
+      expect(results[0].description).toBe('Full description');
+      expect(results[0].systemRole).toBe('You are helpful');
+      expect(results[1].description).toBeNull();
+      expect(results[1].systemRole).toBeNull();
+    });
+
+    it('should handle model type conversion in batch', async () => {
+      const configs = [
+        { title: 'Agent 1', model: 'gpt-4' },
+        { title: 'Agent 2', model: undefined },
+        { title: 'Agent 3' },
+      ];
+
+      const results = await agentModel.batchCreate(configs);
+
+      expect(results[0].model).toBe('gpt-4');
+      expect(results[1].model).toBeNull();
+      expect(results[2].model).toBeNull();
+    });
+  });
+
   describe('getBuiltinAgent', () => {
     describe('inbox compatibility', () => {
       it('should return existing inbox agent directly if slug exists in agents table', async () => {
