@@ -1140,5 +1140,224 @@ describe('GeneralChatAgent', () => {
         },
       ]);
     });
+
+    it('should always require intervention for tools with "always" policy even in auto-run mode', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const alwaysTool: ChatToolPayload = {
+        id: 'call-1',
+        identifier: 'agent-builder',
+        apiName: 'installPlugin',
+        arguments: '{"identifier":"some-plugin","source":"market"}',
+        type: 'builtin',
+      };
+
+      const state = createMockState({
+        toolManifestMap: {
+          'agent-builder': {
+            identifier: 'agent-builder',
+            api: [
+              {
+                name: 'installPlugin',
+                humanIntervention: 'always', // Always requires intervention
+              },
+            ],
+          },
+        },
+        userInterventionConfig: {
+          approvalMode: 'auto-run', // User has auto-run enabled
+          allowList: [],
+        },
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [alwaysTool],
+        parentMessageId: 'msg-1',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should still require approval despite auto-run mode
+      expect(result).toEqual([
+        {
+          type: 'request_human_approve',
+          pendingToolsCalling: [alwaysTool],
+          reason: 'human_intervention_required',
+        },
+      ]);
+    });
+
+    it('should always require intervention for tools with tool-level "always" policy', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const alwaysTool: ChatToolPayload = {
+        id: 'call-1',
+        identifier: 'sensitive-plugin',
+        apiName: 'sensitiveAction',
+        arguments: '{}',
+        type: 'default',
+      };
+
+      const state = createMockState({
+        toolManifestMap: {
+          'sensitive-plugin': {
+            identifier: 'sensitive-plugin',
+            humanIntervention: 'always', // Tool-level always policy
+          },
+        },
+        userInterventionConfig: {
+          approvalMode: 'auto-run',
+          allowList: [],
+        },
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [alwaysTool],
+        parentMessageId: 'msg-1',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should require approval despite auto-run mode
+      expect(result).toEqual([
+        {
+          type: 'request_human_approve',
+          pendingToolsCalling: [alwaysTool],
+          reason: 'human_intervention_required',
+        },
+      ]);
+    });
+
+    it('should handle mixed tools with "always" and regular policies in auto-run mode', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const regularTool: ChatToolPayload = {
+        id: 'call-1',
+        identifier: 'web-search',
+        apiName: 'search',
+        arguments: '{}',
+        type: 'default',
+      };
+
+      const alwaysTool: ChatToolPayload = {
+        id: 'call-2',
+        identifier: 'agent-builder',
+        apiName: 'installPlugin',
+        arguments: '{}',
+        type: 'builtin',
+      };
+
+      const state = createMockState({
+        toolManifestMap: {
+          'web-search': {
+            identifier: 'web-search',
+            humanIntervention: 'required', // Would be bypassed by auto-run
+          },
+          'agent-builder': {
+            identifier: 'agent-builder',
+            api: [
+              {
+                name: 'installPlugin',
+                humanIntervention: 'always', // Cannot be bypassed
+              },
+            ],
+          },
+        },
+        userInterventionConfig: {
+          approvalMode: 'auto-run',
+          allowList: [],
+        },
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [regularTool, alwaysTool],
+        parentMessageId: 'msg-1',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // regularTool should execute (auto-run), alwaysTool should require approval
+      expect(result).toEqual([
+        {
+          type: 'call_tool',
+          payload: {
+            parentMessageId: 'msg-1',
+            toolCalling: regularTool,
+          },
+        },
+        {
+          type: 'request_human_approve',
+          pendingToolsCalling: [alwaysTool],
+          reason: 'human_intervention_required',
+        },
+      ]);
+    });
+
+    it('should handle "always" policy with rule-based configuration', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const toolCall: ChatToolPayload = {
+        id: 'call-1',
+        identifier: 'file-system',
+        apiName: 'writeFile',
+        arguments: '{"path":"/etc/passwd"}',
+        type: 'builtin',
+      };
+
+      const state = createMockState({
+        toolManifestMap: {
+          'file-system': {
+            identifier: 'file-system',
+            api: [
+              {
+                name: 'writeFile',
+                // Rule-based config with 'always' policy
+                humanIntervention: [{ policy: 'always' }],
+              },
+            ],
+          },
+        },
+        userInterventionConfig: {
+          approvalMode: 'auto-run',
+          allowList: [],
+        },
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [toolCall],
+        parentMessageId: 'msg-1',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should require approval due to 'always' rule
+      expect(result).toEqual([
+        {
+          type: 'request_human_approve',
+          pendingToolsCalling: [toolCall],
+          reason: 'human_intervention_required',
+        },
+      ]);
+    });
   });
 });

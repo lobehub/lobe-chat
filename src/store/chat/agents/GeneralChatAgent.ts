@@ -94,13 +94,43 @@ export class GeneralChatAgent implements Agent {
         continue;
       }
 
-      // Priority 1: User config is 'auto-run', all tools execute directly
+      // Priority 1: Check 'always' policy - overrides auto-run mode
+      // Some sensitive operations (e.g., installPlugin) must always require user confirmation
+      const config = this.getToolInterventionConfig(toolCalling, state);
+      const hasAlwaysPolicy =
+        config === 'always' ||
+        (Array.isArray(config) &&
+          config.some((rule) => {
+            // Check if the 'always' rule matches current tool args
+            if (rule.policy !== 'always') return false;
+            // If rule has match criteria, check if it matches
+            if (rule.match) {
+              return Object.entries(rule.match).every(([paramName, matcher]) => {
+                const paramValue = toolArgs[paramName];
+                if (paramValue === undefined) return false;
+                // Simple string comparison for basic matching
+                if (typeof matcher === 'string') {
+                  return String(paramValue).includes(matcher) || matcher.includes('*');
+                }
+                return true;
+              });
+            }
+            // No match criteria means it's a default 'always' rule
+            return true;
+          }));
+
+      if (hasAlwaysPolicy) {
+        toolsNeedingIntervention.push(toolCalling);
+        continue;
+      }
+
+      // Priority 2: User config is 'auto-run', all tools execute directly
       if (approvalMode === 'auto-run') {
         toolsToExecute.push(toolCalling);
         continue;
       }
 
-      // Priority 2: User config is 'allow-list', check if tool is in whitelist
+      // Priority 3: User config is 'allow-list', check if tool is in whitelist
       if (approvalMode === 'allow-list') {
         if (allowList.includes(toolKey)) {
           toolsToExecute.push(toolCalling);
@@ -110,9 +140,8 @@ export class GeneralChatAgent implements Agent {
         continue;
       }
 
-      // Priority 3: User config is 'manual' (default), use tool's own config
-      const config = this.getToolInterventionConfig(toolCalling, state);
-
+      // Priority 4: User config is 'manual' (default), use tool's own config
+      // Note: config is already retrieved above for 'always' policy check
       const policy = InterventionChecker.shouldIntervene({
         config,
         securityBlacklist,
