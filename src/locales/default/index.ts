@@ -11,6 +11,7 @@ import editor from './editor';
 import electron from './electron';
 import error from './error';
 import file from './file';
+import home from './home';
 import hotkey from './hotkey';
 import image from './image';
 import knowledgeBase from './knowledgeBase';
@@ -47,6 +48,7 @@ const resources = {
   electron,
   error,
   file,
+  home,
   hotkey,
   image,
   knowledgeBase,

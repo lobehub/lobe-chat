@@ -4,6 +4,7 @@ import { Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
 import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,16 +27,23 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+type StarterTitleKey =
+  | 'starter.createAgent'
+  | 'starter.write'
+  | 'starter.image'
+  | 'starter.deepResearch';
+
 interface StarterItem {
   disabled?: boolean;
   icon?: ButtonProps['icon'];
   key: StarterMode;
-  title: string;
+  titleKey: StarterTitleKey;
 }
 
 const StarterList = memo(() => {
   const { styles, cx, theme } = useStyles();
   const navigate = useNavigate();
+  const { t } = useTranslation('home');
 
   useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.agentBuilder);
 
@@ -49,30 +57,24 @@ const StarterList = memo(() => {
       {
         icon: BotIcon,
         key: 'agent',
-        title: '创建 Agent',
+        titleKey: 'starter.createAgent',
       },
       {
         icon: PenLineIcon,
         key: 'write',
-        title: '写作',
+        titleKey: 'starter.write',
       },
       {
         icon: ImageIcon,
         key: 'image',
-        title: '绘画',
+        titleKey: 'starter.image',
       },
       {
         disabled: true,
         icon: MicroscopeIcon,
         key: 'research',
-        title: 'Deep Research',
+        titleKey: 'starter.deepResearch',
       },
-      // {
-      //   disabled: true,
-      //   icon: AppWindowIcon,
-      //   key: 'web',
-      //   title: '编程',
-      // },
     ],
     [],
   );
@@ -117,13 +119,13 @@ const StarterList = memo(() => {
             onClick={() => handleClick(item.key)}
             shape={'round'}
           >
-            {item.title}
+            {t(item.titleKey)}
           </Button>
         );
 
         if (item.disabled) {
           return (
-            <Tooltip key={item.key} title="正在开发中">
+            <Tooltip key={item.key} title={t('starter.developing')}>
               {button}
             </Tooltip>
           );

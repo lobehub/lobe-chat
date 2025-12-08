@@ -1,0 +1,9 @@
+{
+  "starter": {
+    "createAgent": "アシスタントを作成",
+    "deepResearch": "リサーチ",
+    "developing": "開発中",
+    "image": "イラスト作成",
+    "write": "執筆"
+  }
+}
