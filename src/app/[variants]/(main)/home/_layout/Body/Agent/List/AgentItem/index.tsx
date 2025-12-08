@@ -94,7 +94,8 @@ const AgentItem = memo<AgentItemProps>(({ item, style, className }) => {
     if (isUpdating) {
       return <Icon color={theme.colorTextDescription} icon={Loader2} size={18} spin />;
     }
-    return <Avatar avatar={typeof avatar === 'string' ? avatar : ''} />;
+
+    return <Avatar avatar={typeof avatar === 'string' ? avatar : undefined} />;
   }, [isUpdating, avatar, theme.colorTextDescription]);
 
   const dropdownMenu: MenuProps['items'] = useDropdownMenu({
