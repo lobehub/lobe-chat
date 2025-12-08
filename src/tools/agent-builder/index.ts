@@ -55,8 +55,8 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
     // ==================== Write Operations ====================
     {
       description:
-        'Install a plugin for the agent. This tool REQUIRES user approval before installation. For MCP marketplace plugins, it will install and enable the plugin. For Klavis tools that need OAuth, it will initiate the connection flow and wait for user to complete authorization.',
-      humanIntervention: 'required',
+        'Install a plugin for the agent. This tool ALWAYS REQUIRES user approval before installation, even in auto-run mode. For MCP marketplace plugins, it will install and enable the plugin. For Klavis tools that need OAuth, it will initiate the connection flow and wait for user to complete authorization.',
+      humanIntervention: 'always',
       name: AgentBuilderApiName.installPlugin,
       parameters: {
         properties: {
