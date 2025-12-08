@@ -1,0 +1,9 @@
+{
+  "starter": {
+    "createAgent": "Créer un assistant",
+    "deepResearch": "Recherche approfondie",
+    "developing": "En cours de développement",
+    "image": "Illustration",
+    "write": "Rédaction"
+  }
+}

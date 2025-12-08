@@ -1,0 +1,9 @@
+{
+  "starter": {
+    "createAgent": "Tạo trợ lý",
+    "deepResearch": "Nghiên cứu chuyên sâu",
+    "developing": "Đang phát triển",
+    "image": "Vẽ tranh",
+    "write": "Viết"
+  }
+}
