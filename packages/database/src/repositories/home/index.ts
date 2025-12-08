@@ -1,4 +1,5 @@
 import { SidebarAgentItem, SidebarAgentListResponse, SidebarGroup } from '@lobechat/types';
+import { cleanObject } from '@lobechat/utils';
 import { and, desc, eq, ilike, inArray, or } from 'drizzle-orm';
 
 import {
@@ -172,15 +173,16 @@ export class HomeRepository {
 
     for (const item of allItems) {
       const { groupId, ...sidebarItem } = item;
+      const cleanedItem = cleanObject(sidebarItem) as SidebarAgentItem;
 
       if (item.pinned) {
-        pinned.push(sidebarItem);
+        pinned.push(cleanedItem);
       } else if (groupId) {
         const existing = groupedMap.get(groupId) || [];
-        existing.push(sidebarItem);
+        existing.push(cleanedItem);
         groupedMap.set(groupId, existing);
       } else {
-        ungrouped.push(sidebarItem);
+        ungrouped.push(cleanedItem);
       }
     }
 
@@ -275,27 +277,30 @@ export class HomeRepository {
 
     // 3. Combine and format results
     const results: SidebarAgentItem[] = [
-      ...agentResults.map((a) => ({
-        avatar: a.avatar,
-        description: a.description,
-        id: a.id,
-        pinned: a.pinned ?? false,
-        sessionId: a.sessionId,
-        title: a.title,
-        type: 'agent' as const,
-        updatedAt: a.updatedAt,
-      })),
-      ...chatGroupResults.map((g) => ({
-        avatar: memberAvatarsMap.get(g.id) ?? null,
-        description: g.description,
-        id: g.id,
-        pinned: g.pinned ?? false,
-        sessionId: null,
-        title: g.title,
-        type: 'group' as const,
-        updatedAt: g.updatedAt,
-      })),
-    ];
+      ...agentResults.map((a) =>
+        cleanObject({
+          avatar: a.avatar,
+          description: a.description,
+          id: a.id,
+          pinned: a.pinned ?? false,
+          sessionId: a.sessionId,
+          title: a.title,
+          type: 'agent' as const,
+          updatedAt: a.updatedAt,
+        }),
+      ),
+      ...chatGroupResults.map((g) =>
+        cleanObject({
+          avatar: memberAvatarsMap.get(g.id),
+          description: g.description,
+          id: g.id,
+          pinned: g.pinned ?? false,
+          title: g.title,
+          type: 'group' as const,
+          updatedAt: g.updatedAt,
+        }),
+      ),
+    ] as SidebarAgentItem[];
 
     // Sort by updatedAt descending
     results.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
