@@ -1,4 +1,4 @@
-import { LobeAgentChatConfig, LobeAgentConfig, MetaData } from '@lobechat/types';
+import { LobeAgentConfig, MetaData } from '@lobechat/types';
 import type { PartialDeep } from 'type-fest';
 
 /**
@@ -6,20 +6,17 @@ import type { PartialDeep } from 'type-fest';
  */
 export const AgentBuilderApiName = {
   // Read operations
-  // Note: getAgentConfig, getAgentMeta, getPrompt, getAvailableTools are removed
+  // Note: getAgentConfig, getAgentMeta, getPrompt, getAvailableTools, searchOfficialTools are removed
   // because the current agent context is now automatically injected
   getAvailableModels: 'getAvailableModels',
   installPlugin: 'installPlugin',
   searchMarketTools: 'searchMarketTools',
-  searchOfficialTools: 'searchOfficialTools',
   // Write operations
-  setModel: 'setModel',
-  setOpeningMessage: 'setOpeningMessage',
-  setOpeningQuestions: 'setOpeningQuestions',
+  // Note: setModel, setOpeningMessage, setOpeningQuestions, updateChatConfig are removed
+  // and consolidated into updateAgentConfig
   togglePlugin: 'togglePlugin',
   updateAgentConfig: 'updateConfig',
   updateAgentMeta: 'updateMeta',
-  updateChatConfig: 'updateChatConfig',
   updatePrompt: 'updatePrompt',
 } as const;
 
@@ -39,13 +36,6 @@ export interface UpdateAgentMetaParams {
   meta: Partial<MetaData>;
 }
 
-export interface UpdateChatConfigParams {
-  /**
-   * Partial chat configuration to update
-   */
-  chatConfig: Partial<LobeAgentChatConfig>;
-}
-
 export interface TogglePluginParams {
   /**
    * Whether to enable the plugin. If not provided, toggles current state.
@@ -55,31 +45,6 @@ export interface TogglePluginParams {
    * The plugin identifier to toggle
    */
   pluginId: string;
-}
-
-export interface SetModelParams {
-  /**
-   * The model identifier (e.g., "gpt-4o", "claude-3-5-sonnet")
-   */
-  model: string;
-  /**
-   * The provider identifier (e.g., "openai", "anthropic")
-   */
-  provider: string;
-}
-
-export interface SetOpeningMessageParams {
-  /**
-   * The opening message to display when starting a new conversation
-   */
-  message: string;
-}
-
-export interface SetOpeningQuestionsParams {
-  /**
-   * Array of suggested questions to display
-   */
-  questions: string[];
 }
 
 export interface GetAvailableModelsParams {
@@ -119,26 +84,6 @@ export interface UpdateMetaState {
 export interface TogglePluginState {
   enabled: boolean;
   pluginId: string;
-  success: boolean;
-}
-
-export interface SetModelState {
-  model: string;
-  previousModel?: string;
-  previousProvider?: string;
-  provider: string;
-  success: boolean;
-}
-
-export interface SetOpeningMessageState {
-  message: string;
-  previousMessage?: string;
-  success: boolean;
-}
-
-export interface SetOpeningQuestionsState {
-  previousQuestions?: string[];
-  questions: string[];
   success: boolean;
 }
 
@@ -205,75 +150,8 @@ export interface SearchMarketToolsState {
   totalCount: number;
 }
 
-// ============== SearchOfficialTools Types ==============
-
-export interface SearchOfficialToolsParams {
-  /**
-   * Optional: search keywords to find specific tools
-   */
-  query?: string;
-  /**
-   * Optional: filter by tool type ('builtin' | 'klavis' | 'all')
-   */
-  type?: 'all' | 'builtin' | 'klavis';
-}
-
-export interface OfficialToolItem {
-  /**
-   * Tool author
-   */
-  author?: string;
-  /**
-   * Tool description
-   */
-  description?: string;
-  /**
-   * Whether the tool is enabled for current agent
-   */
-  enabled?: boolean;
-  /**
-   * Icon URL or emoji
-   */
-  icon?: string;
-  /**
-   * Tool identifier
-   */
-  identifier: string;
-  /**
-   * Whether the tool is installed/connected (for Klavis tools)
-   */
-  installed?: boolean;
-  /**
-   * Tool display name
-   */
-  name: string;
-  /**
-   * OAuth URL for Klavis tools that need authorization
-   */
-  oauthUrl?: string;
-  /**
-   * Server name for Klavis tools (used for API calls)
-   */
-  serverName?: string;
-  /**
-   * Klavis server status
-   */
-  status?: 'connected' | 'error' | 'pending_auth';
-  /**
-   * Tool type: 'builtin' for built-in tools, 'klavis' for Klavis MCP servers
-   */
-  type: 'builtin' | 'klavis';
-}
-
-export interface SearchOfficialToolsState {
-  /**
-   * Whether Klavis is enabled in the environment
-   */
-  klavisEnabled: boolean;
-  query?: string;
-  tools: OfficialToolItem[];
-  totalCount: number;
-}
+// Note: SearchOfficialTools types are removed because official tools are now
+// automatically injected into the conversation context via AgentBuilderContextInjector
 
 // ============== InstallPlugin Types ==============
 
