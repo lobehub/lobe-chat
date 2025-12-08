@@ -267,7 +267,7 @@ const FileTreeItem = memo<{
               paddingInline={4}
               ref={setNodeRef}
               style={{
-                paddingInlineStart: level * 16 + 4,
+                paddingInlineStart: level * 12 + 4,
                 ...dndStyle,
               }}
               variant={isActive ? 'filled' : 'borderless'}
@@ -275,7 +275,12 @@ const FileTreeItem = memo<{
               {...listeners}
             >
               {isLoading ? (
-                <ActionIcon icon={LoadingOutlined as any} size={'small'} spin />
+                <ActionIcon
+                  icon={LoadingOutlined as any}
+                  size={'small'}
+                  spin
+                  style={{ width: 20 }}
+                />
               ) : (
                 <motion.div
                   animate={{ rotate: isExpanded ? 0 : -90 }}
@@ -289,6 +294,7 @@ const FileTreeItem = memo<{
                       handleToggle();
                     }}
                     size={'small'}
+                    style={{ width: 20 }}
                   />
                 </motion.div>
               )}
@@ -383,14 +389,14 @@ const FileTreeItem = memo<{
             paddingInline={4}
             ref={setNodeRef}
             style={{
-              paddingInlineStart: level * 16 + 4,
+              paddingInlineStart: level * 12 + 4,
               ...dndStyle,
             }}
             variant={isActive ? 'filled' : 'borderless'}
             {...attributes}
             {...listeners}
           >
-            <div style={{ width: 24 }} />
+            <div style={{ width: 20 }} />
             <Flexbox
               align={'center'}
               flex={1}
