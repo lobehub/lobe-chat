@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { MessageContentClassName } from '@/features/Conversation/Messages/Default';
-import { useChatStore } from '@/store/chat';
+import { useConversationStore } from '@/features/Conversation/store';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
@@ -51,9 +51,9 @@ const MessageContent = memo<MessageContentProps>(
       [],
     );
 
-    const [toggleMessageEditing, updateMessageContent] = useChatStore((s) => [
+    const [toggleMessageEditing, updateMessageContent] = useConversationStore((s) => [
       s.toggleMessageEditing,
-      s.modifyMessageContent,
+      s.updateMessageContent,
     ]);
     const onChange = (value: string) => {
       updateMessageContent(id, value);
