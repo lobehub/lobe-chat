@@ -2,7 +2,7 @@ import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(
   (
-    { cx, css, token, responsive },
+    { cx, css, token },
     {
       placement,
       title,
@@ -97,11 +97,6 @@ export const useStyles = createStyles(
             opacity: 1;
           }
         }
-
-        ${responsive.mobile} {
-          padding-block-start: 12px;
-          padding-inline: 8px;
-        }
       `,
       editingContainer: cx(
         editingStylish,
@@ -151,10 +146,6 @@ export const useStyles = createStyles(
           max-width: 100%;
 
           color: ${disabled ? token.colorTextSecondary : 'unset'};
-
-          ${responsive.mobile} {
-            width: 100%;
-          }
         `,
       ),
       messageContainer: cx(
@@ -164,10 +155,6 @@ export const useStyles = createStyles(
           overflow: hidden;
           max-width: 100%;
           margin-block-start: ${time ? -16 : 0}px;
-
-          ${responsive.mobile} {
-            overflow-x: auto;
-          }
         `,
       ),
       messageContent: cx(
@@ -176,10 +163,6 @@ export const useStyles = createStyles(
           position: relative;
           overflow: hidden;
           max-width: 100%;
-
-          ${responsive.mobile} {
-            flex-direction: column !important;
-          }
         `,
       ),
       messageExtra: cx('message-extra'),

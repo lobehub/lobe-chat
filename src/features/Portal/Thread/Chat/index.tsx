@@ -20,18 +20,11 @@ import { threadSelectors } from '@/store/chat/selectors';
 import ThreadDivider from './ThreadDivider';
 import { useThreadActionsBarConfig } from './useThreadActionsBarConfig';
 
-interface ThreadChatProps {
-  mobile?: boolean;
-}
-
 /**
  * Inner component that uses ConversationStore for message rendering
  * Must be inside ConversationProvider to access the store
  */
-const ThreadChatContent = memo<{ mobile?: boolean }>(({ mobile }) => {
-  // Get thread-specific actionsBar config
-  const actionsBarConfig = useThreadActionsBarConfig();
-
+const ThreadChatContent = memo(() => {
   // Get display messages from ConversationStore to determine thread divider position
   // With the new backend API, parent messages have threadId === null
   // and thread messages have threadId === context.threadId
@@ -66,7 +59,6 @@ const ThreadChatContent = memo<{ mobile?: boolean }>(({ mobile }) => {
 
       return (
         <MessageItem
-          actionsBar={actionsBarConfig}
           disableEditing={isParentMessage}
           endRender={enableThreadDivider ? <ThreadDivider /> : undefined}
           id={id}
@@ -75,7 +67,7 @@ const ThreadChatContent = memo<{ mobile?: boolean }>(({ mobile }) => {
         />
       );
     },
-    [actionsBarConfig, threadSourceInfo.sourceMessageId, threadSourceInfo.sourceMessageIndex],
+    [threadSourceInfo.sourceMessageId, threadSourceInfo.sourceMessageIndex],
   );
 
   return (
@@ -83,7 +75,7 @@ const ThreadChatContent = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Suspense
         fallback={
           <Flexbox flex={1} height={'100%'}>
-            <SkeletonList mobile={mobile} />
+            <SkeletonList />
           </Flexbox>
         }
       >
@@ -96,7 +88,7 @@ const ThreadChatContent = memo<{ mobile?: boolean }>(({ mobile }) => {
           }}
           width={'100%'}
         >
-          <ChatList itemContent={itemContent} mobile={mobile} />
+          <ChatList itemContent={itemContent} />
         </Flexbox>
       </Suspense>
       <ChatInput leftActions={['typo', 'stt', 'portalToken']} />
@@ -118,7 +110,7 @@ ThreadChatContent.displayName = 'ThreadChatContent';
  * - topicId: current active topic
  * - threadId: portal thread ID (optional)
  */
-const ThreadChat = memo<ThreadChatProps>(({ mobile }) => {
+const ThreadChat = memo(() => {
   // Get thread context from ChatStore
   const [activeAgentId, activeTopicId, portalThreadId, threadStartMessageId, newThreadMode] =
     useChatStore((s) => [
@@ -134,6 +126,9 @@ const ThreadChat = memo<ThreadChatProps>(({ mobile }) => {
   const messagesFromMain = useChatStore((s) =>
     !s.portalThreadId ? threadSelectors.portalDisplayChats(s) : undefined,
   );
+
+  // Get thread-specific actionsBar config
+  const actionsBarConfig = useThreadActionsBarConfig();
 
   // Build ConversationContext for thread
   // When creating new thread (!portalThreadId), use isNew + scope: 'thread'
@@ -190,12 +185,13 @@ const ThreadChat = memo<ThreadChatProps>(({ mobile }) => {
 
   return (
     <ConversationProvider
+      actionsBar={actionsBarConfig}
       context={context}
       hooks={hooks}
       messages={messagesFromMain}
       skipFetch={!!messagesFromMain}
     >
-      <ThreadChatContent mobile={mobile} />
+      <ThreadChatContent />
     </ConversationProvider>
   );
 });

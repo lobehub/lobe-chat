@@ -1,19 +1,15 @@
 'use client';
 
-import { useResponsive } from 'antd-style';
 import { memo, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Actions from './components/Actions';
 import Avatar from './components/Avatar';
-import BorderSpacing from './components/BorderSpacing';
 import ErrorContent from './components/ErrorContent';
 import MessageContent from './components/MessageContent';
 import Title from './components/Title';
 import { useStyles } from './style';
 import { ChatItemProps } from './type';
-
-const MOBILE_AVATAR_SIZE = 32;
 
 const ChatItem = memo<ChatItemProps>(
   ({
@@ -46,7 +42,6 @@ const ChatItem = memo<ChatItemProps>(
     id,
     ...rest
   }) => {
-    const { mobile } = useResponsive();
     const { cx, styles } = useStyles({
       disabled,
       editing,
@@ -57,7 +52,6 @@ const ChatItem = memo<ChatItemProps>(
       title: avatar.title,
     });
 
-    // 在 ChatItem 组件中添加
     const contentRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [layoutMode] = useState<'horizontal' | 'vertical'>(
@@ -68,7 +62,7 @@ const ChatItem = memo<ChatItemProps>(
       <Flexbox
         className={cx(styles.container, className)}
         direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-        gap={mobile ? 6 : 12}
+        gap={12}
         {...rest}
       >
         {showAvatar && (
@@ -80,7 +74,6 @@ const ChatItem = memo<ChatItemProps>(
             loading={loading}
             onClick={onAvatarClick}
             placement={placement}
-            size={mobile ? MOBILE_AVATAR_SIZE : undefined}
             style={{
               marginTop: showTitle ? -12 : 6,
               ...avatarProps?.style,
@@ -103,7 +96,7 @@ const ChatItem = memo<ChatItemProps>(
           <Flexbox
             align={placement === 'left' ? 'flex-start' : 'flex-end'}
             className={styles.messageContent}
-            data-layout={layoutMode} // 添加数据属性以方便样式选择
+            data-layout={layoutMode}
             direction={
               layoutMode === 'horizontal'
                 ? placement === 'left'
@@ -143,9 +136,6 @@ const ChatItem = memo<ChatItemProps>(
           </Flexbox>
           {belowMessage}
         </Flexbox>
-        {mobile && variant === 'bubble' && showAvatar && (
-          <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />
-        )}
       </Flexbox>
     );
   },

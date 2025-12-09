@@ -25,17 +25,13 @@ import ThreadHydration from './ThreadHydration';
 import ZenModeToast from './ZenModeToast';
 import { useActionsBarConfig } from './useActionsBarConfig';
 
-interface ConversationAreaProps {
-  mobile?: boolean;
-}
-
 /**
  * ConversationArea
  *
  * Main conversation area component using the new ConversationStore architecture.
  * Uses ChatList from @/features/Conversation and MainChatInput for custom features.
  */
-const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
+const Conversation = memo(() => {
   const context = useCurrentContext();
 
   const enabledPlugins = useAgentStore(agentSelectors.currentAgentPlugins);
@@ -85,6 +81,7 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
 
   return (
     <ConversationProvider
+      actionsBar={actionsBarConfig}
       context={context}
       hasInitMessages={!!messages}
       messages={messages}
@@ -103,19 +100,15 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
         }}
         width={'100%'}
       >
-        <ChatList actionsBar={actionsBarConfig} mobile={mobile} welcome={<WelcomeChatItem />} />
+        <ChatList welcome={<WelcomeChatItem />} />
       </Flexbox>
-      <MainChatInput mobile={mobile} />
+      <MainChatInput />
       <ChatHydration />
       <ThreadHydration />
-      {!mobile && (
-        <>
-          <ChatMinimap />
-          <Suspense>
-            <MessageFromUrl />
-          </Suspense>
-        </>
-      )}
+      <ChatMinimap />
+      <Suspense>
+        <MessageFromUrl />
+      </Suspense>
     </ConversationProvider>
   );
 });

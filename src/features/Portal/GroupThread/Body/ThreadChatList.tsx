@@ -3,8 +3,8 @@
 import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import VirtualizedList from '@/features/Conversation/ChatList/components/VirtualizedList';
 import SkeletonList from '@/features/Conversation/components/SkeletonList';
-import VirtualizedList from '@/features/Conversation/components/VirtualizedList';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useChatGroupStore } from '@/store/chatGroup';

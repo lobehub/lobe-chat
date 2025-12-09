@@ -1,6 +1,5 @@
 import { MarkdownProps } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
-import { useResponsive } from 'antd-style';
 import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -45,7 +44,6 @@ const MessageContent = memo<MessageContentProps>(
     const { t } = useTranslation('common');
     const { cx, styles } = useStyles({ disabled, editing, placement, primary });
     const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
-    const { mobile } = useResponsive();
     const text = useMemo(
       () => ({
         cancel: t('cancel'),
@@ -74,7 +72,6 @@ const MessageContent = memo<MessageContentProps>(
         markdownProps={markdownProps}
         onChange={onChange}
         onEditingChange={onEditingChange}
-        openModal={mobile ? editing : undefined}
         text={text}
         value={message ? String(message) : ''}
       />

@@ -7,12 +7,7 @@ import { type ReactNode, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import {
-  type ActionKeys,
-  ChatInputProvider,
-  DesktopChatInput,
-  MobileChatInput,
-} from '@/features/ChatInput';
+import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
 import type { SendButtonHandler, SendButtonProps } from '@/features/ChatInput/store/initialState';
 import { useChatStore } from '@/store/chat';
 import { fileChatSelectors, useFileStore } from '@/store/file';
@@ -22,7 +17,7 @@ import { messageStateSelectors, useConversationStore } from '../store';
 
 export interface ChatInputProps {
   /**
-   * Custom children to render instead of default Desktop/Mobile components.
+   * Custom children to render instead of default Desktop component.
    * Use this to add custom UI like error alerts, MessageFromUrl, etc.
    */
   children?: ReactNode;
@@ -34,10 +29,6 @@ export interface ChatInputProps {
    * Mention items for @ mentions (for group chat)
    */
   mentionItems?: SlashOptions['items'];
-  /**
-   * Mobile mode
-   */
-  mobile?: boolean;
   /**
    * Callback when editor instance is ready
    */
@@ -64,7 +55,6 @@ export interface ChatInputProps {
  */
 const ChatInput = memo<ChatInputProps>(
   ({
-    mobile = false,
     leftActions = [],
     rightActions = [],
     children,
@@ -131,9 +121,7 @@ const ChatInput = memo<ChatInputProps>(
       ...customSendButtonProps,
     };
 
-    const defaultContent = mobile ? (
-      <MobileChatInput />
-    ) : (
+    const defaultContent = (
       <WideScreenContainer>
         {sendMessageErrorMsg && (
           <Flexbox paddingBlock={'0 6px'} paddingInline={12}>
@@ -160,7 +148,6 @@ const ChatInput = memo<ChatInputProps>(
         }}
         leftActions={leftActions}
         mentionItems={mentionItems}
-        mobile={mobile}
         onMarkdownContentChange={updateInputMessage}
         onSend={handleSend}
         rightActions={rightActions}

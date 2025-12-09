@@ -16,7 +16,7 @@ const Body = memo(() => {
       <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
         <ThreadChatList />
       </Flexbox>
-      {activeThreadAgentId && <ChatInput mobile={false} targetMemberId={activeThreadAgentId} />}
+      {activeThreadAgentId && <ChatInput targetMemberId={activeThreadAgentId} />}
     </Flexbox>
   );
 });

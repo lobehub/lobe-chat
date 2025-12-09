@@ -22,10 +22,6 @@ const leftActions: ActionKeys[] = [
 
 const rightActions: ActionKeys[] = [];
 
-interface MainChatInputProps {
-  mobile?: boolean;
-}
-
 /**
  * MainChatInput
  *
@@ -34,13 +30,12 @@ interface MainChatInputProps {
  * including error alerts display.
  * Only adds MessageFromUrl for desktop mode.
  */
-const MainChatInput = memo<MainChatInputProps>(({ mobile = false }) => {
+const MainChatInput = memo(() => {
   const sendMenuItems = useSendMenuItems();
 
   return (
     <ChatInput
       leftActions={leftActions}
-      mobile={mobile}
       onEditorReady={(instance) => {
         // Sync to global ChatStore for compatibility with other features
         useChatStore.setState({ mainInputEditor: instance });

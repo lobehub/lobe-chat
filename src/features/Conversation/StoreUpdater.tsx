@@ -5,9 +5,18 @@ import { memo, useEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { useConversationStoreApi } from './store';
-import type { ConversationContext, ConversationHooks, OperationState } from './types';
+import type {
+  ActionsBarConfig,
+  ConversationContext,
+  ConversationHooks,
+  OperationState,
+} from './types';
 
 export interface StoreUpdaterProps {
+  /**
+   * Actions bar configuration by message type
+   */
+  actionsBar?: ActionsBarConfig;
   context: ConversationContext;
   /**
    * Whether external messages have been initialized
@@ -33,10 +42,20 @@ export interface StoreUpdaterProps {
 }
 
 const StoreUpdater = memo<StoreUpdaterProps>(
-  ({ context, hasInitMessages, hooks, messages, onMessagesChange, operationState, skipFetch }) => {
+  ({
+    actionsBar,
+    context,
+    hasInitMessages,
+    hooks,
+    messages,
+    onMessagesChange,
+    operationState,
+    skipFetch,
+  }) => {
     const storeApi = useConversationStoreApi();
     const useStoreUpdater = createStoreUpdater(storeApi);
 
+    useStoreUpdater('actionsBar', actionsBar);
     useStoreUpdater('context', context);
     useStoreUpdater('hooks', hooks!);
     useStoreUpdater('onMessagesChange', onMessagesChange);

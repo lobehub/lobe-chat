@@ -85,6 +85,7 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
 
   return (
     <ConversationProvider
+      actionsBar={actionsBarConfig}
       context={context}
       hasInitMessages={!!messages}
       messages={messages}
@@ -103,9 +104,9 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
         }}
         width={'100%'}
       >
-        <ChatList actionsBar={actionsBarConfig} mobile={mobile} welcome={<WelcomeChatItem />} />
+        <ChatList welcome={<WelcomeChatItem />} />
       </Flexbox>
-      <MainChatInput mobile={mobile} />
+      <MainChatInput />
       <ChatHydration />
       <ThreadHydration />
       {!mobile && (

@@ -24,7 +24,6 @@ import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { markdownElements } from '../../MarkdownElements';
 import { useAgentMeta, useDoubleClickEdit } from '../../hooks';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
-import type { MessageActionsConfig } from '../../types';
 import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
 import MessageBranch from '../components/MessageBranch';
 import { AssistantActionsBar } from './Actions';
@@ -43,7 +42,6 @@ const isHtmlCode = (content: string, language: string) => {
 };
 
 interface AssistantMessageProps {
-  actionsConfig?: MessageActionsConfig;
   disableEditing?: boolean;
   id: string;
   index: number;
@@ -51,9 +49,10 @@ interface AssistantMessageProps {
 }
 
 const AssistantMessage = memo<AssistantMessageProps>(
-  ({ actionsConfig, id, index, disableEditing, isLatestItem }) => {
-    // Get message from ConversationStore instead of ChatStore
+  ({ id, index, disableEditing, isLatestItem }) => {
+    // Get message and actionsConfig from ConversationStore
     const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
+    const actionsConfig = useConversationStore((s) => s.actionsBar?.assistant);
 
     const {
       branch,
