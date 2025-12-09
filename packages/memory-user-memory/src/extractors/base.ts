@@ -132,6 +132,8 @@ export abstract class BaseMemoryExtractor<
               [ATTR_GEN_AI_REQUEST_MODEL]: this.model,
               'gen_ai.input.openai.messages': serializeForSpan(payload.messages),
               'gen_ai.input.openai.schema': serializeForSpan(payload.schema),
+              'lobe-chat.memory.extractor.context': options?.retrievedContexts,
+              'lobe-chat.memory.extractor.identities_context': options?.retrievedIdentitiesContext,
             },
           },
           async (span) => {
