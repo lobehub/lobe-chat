@@ -14,7 +14,7 @@ const serverMethodMetadata = new WeakMap<any, Map<string, string>>();
 const ipcContextStorage = new AsyncLocalStorage<IpcContext>();
 
 // Decorator for IPC methods
-export function IpcMethod(channelName?: string) {
+export function IpcMethod() {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const { constructor } = target;
 
@@ -23,7 +23,7 @@ export function IpcMethod(channelName?: string) {
     }
 
     const methods = methodMetadata.get(constructor)!;
-    methods.set(propertyKey, channelName || propertyKey);
+    methods.set(propertyKey, propertyKey);
 
     return descriptor;
   };

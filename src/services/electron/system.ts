@@ -17,15 +17,15 @@ class ElectronSystemService {
   }
 
   async closeWindow(): Promise<void> {
-    return ensureElectronIpc().windows.closeWindow(void 0);
+    return ensureElectronIpc().windows.closeWindow();
   }
 
   async maximizeWindow(): Promise<void> {
-    return ensureElectronIpc().windows.maximizeWindow(void 0);
+    return ensureElectronIpc().windows.maximizeWindow();
   }
 
   async minimizeWindow(): Promise<void> {
-    return ensureElectronIpc().windows.minimizeWindow(void 0);
+    return ensureElectronIpc().windows.minimizeWindow();
   }
 
   showContextMenu = async (type: string, data?: any) => {
