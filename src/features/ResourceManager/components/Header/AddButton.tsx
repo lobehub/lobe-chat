@@ -5,11 +5,13 @@ import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FilePenLine, FileUp, FolderIcon, FolderUp, Link, Plus } from 'lucide-react';
-import { type ChangeEvent, useMemo, useRef } from 'react';
+import { type ChangeEvent, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import DragUpload from '@/components/DragUpload';
+import GuideModal from '@/components/GuideModal';
+import GuideVideo from '@/components/GuideVideo';
 import { useFileStore } from '@/store/file';
 import { DocumentSourceType } from '@/types/document';
 import { filterFilesByGitignore, findGitignoreFile, readGitignoreContent } from '@/utils/gitignore';
@@ -24,6 +26,8 @@ const hotArea = css`
   }
 `;
 
+const NOTION_GUIDE_VIDEO_SRC = 'https://hub-apac-1.lobeobjects.space/assets/notion.mp4';
+
 const AddButton = () => {
   const { t } = useTranslation('file');
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
@@ -33,6 +37,7 @@ const AddButton = () => {
   const setPendingRenameItemId = useFileStore((s) => s.setPendingRenameItemId);
   const currentFolderId = useFileStore((s) => s.currentFolderId);
   const notionInputRef = useRef<HTMLInputElement>(null);
+  const [notionGuideOpen, setNotionGuideOpen] = useState(false);
 
   const [libraryId, setCurrentViewItemId, setMode] = useResourceManagerStore((s) => [
     s.libraryId,
@@ -40,7 +45,7 @@ const AddButton = () => {
     s.setMode,
   ]);
 
-  const handleOpenNoteEditor = async () => {
+  const handleOpenNoteEditor = useCallback(async () => {
     // Create a new page directly and switch to page view
     const untitledTitle = t('documentList.untitled');
     const newPage = await createDocument({
@@ -75,213 +80,236 @@ const AddButton = () => {
     // Switch to page view mode
     setCurrentViewItemId(newPage.id);
     setMode('page');
-  };
+  }, [createDocument, currentFolderId, libraryId, setCurrentViewItemId, setMode, t]);
 
-  const handleCreateFolder = async () => {
+  const handleCreateFolder = useCallback(async () => {
     // Create folder with "Untitled" name immediately
     const folderId = await createFolder('Untitled', currentFolderId ?? undefined, libraryId);
     // Trigger auto-rename
     setPendingRenameItemId(folderId);
-  };
+  }, [createFolder, currentFolderId, libraryId, setPendingRenameItemId]);
 
-  const handleFolderUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-    let files = Array.from(event.target.files || []);
-    if (files.length === 0) return;
+  const handleFolderUpload = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      let files = Array.from(event.target.files || []);
+      if (files.length === 0) return;
 
-    // Check for .gitignore file
-    const gitignoreFile = findGitignoreFile(files);
+      // Check for .gitignore file
+      const gitignoreFile = findGitignoreFile(files);
 
-    if (gitignoreFile) {
-      try {
-        const gitignoreContent = await readGitignoreContent(gitignoreFile);
-        const originalCount = files.length;
+      if (gitignoreFile) {
+        try {
+          const gitignoreContent = await readGitignoreContent(gitignoreFile);
+          const originalCount = files.length;
 
-        // Show confirmation modal using antd's Modal.confirm
-        const { Modal } = await import('antd');
+          // Show confirmation modal using antd's Modal.confirm
+          const { Modal } = await import('antd');
 
-        Modal.confirm({
-          cancelText: t('header.actions.gitignore.cancel'),
-          content: t('header.actions.gitignore.content', {
-            count: originalCount,
-          }),
-          okText: t('header.actions.gitignore.apply'),
-          onCancel: async () => {
-            // Upload all files without filtering
-            await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
-          },
-          onOk: async () => {
-            // Filter files based on .gitignore
-            const filteredFiles = filterFilesByGitignore(files, gitignoreContent);
-            const ignoredCount = originalCount - filteredFiles.length;
+          Modal.confirm({
+            cancelText: t('header.actions.gitignore.cancel'),
+            content: t('header.actions.gitignore.content', {
+              count: originalCount,
+            }),
+            okText: t('header.actions.gitignore.apply'),
+            onCancel: async () => {
+              // Upload all files without filtering
+              await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
+            },
+            onOk: async () => {
+              // Filter files based on .gitignore
+              const filteredFiles = filterFilesByGitignore(files, gitignoreContent);
+              const ignoredCount = originalCount - filteredFiles.length;
 
-            if (ignoredCount > 0) {
-              const { message } = await import('antd');
-              message.info(
-                t('header.actions.gitignore.filtered', {
-                  ignored: ignoredCount,
-                  total: originalCount,
-                }),
+              if (ignoredCount > 0) {
+                const { message } = await import('antd');
+                message.info(
+                  t('header.actions.gitignore.filtered', {
+                    ignored: ignoredCount,
+                    total: originalCount,
+                  }),
+                );
+              }
+
+              await uploadFolderWithStructure(
+                filteredFiles,
+                libraryId,
+                currentFolderId ?? undefined,
               );
-            }
-
-            await uploadFolderWithStructure(filteredFiles, libraryId, currentFolderId ?? undefined);
-          },
-          title: t('header.actions.gitignore.title'),
-        });
-      } catch (error) {
-        console.error('Failed to read .gitignore:', error);
-        // If reading fails, proceed without filtering
+            },
+            title: t('header.actions.gitignore.title'),
+          });
+        } catch (error) {
+          console.error('Failed to read .gitignore:', error);
+          // If reading fails, proceed without filtering
+          await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
+        }
+      } else {
+        // No .gitignore found, upload all files
         await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
       }
-    } else {
-      // No .gitignore found, upload all files
-      await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
-    }
 
-    // Reset input to allow re-uploading the same folder
-    event.target.value = '';
-  };
+      // Reset input to allow re-uploading the same folder
+      event.target.value = '';
+    },
+    [currentFolderId, libraryId, t, uploadFolderWithStructure],
+  );
 
-  const handleNotionImport = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const handleNotionImport = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-    try {
-      const { message } = await import('antd');
+      try {
+        const { message } = await import('antd');
 
-      // Show loading message
-      const loadingKey = 'notion-import';
-      message.loading({
-        content: t('header.actions.notion.importing'),
-        duration: 0,
-        key: loadingKey,
-      });
+        // Show loading message
+        const loadingKey = 'notion-import';
+        message.loading({
+          content: t('header.actions.notion.importing'),
+          duration: 0,
+          key: loadingKey,
+        });
 
-      // Unzip the file
-      let files = await unzipFile(file);
+        // Unzip the file
+        let files = await unzipFile(file);
 
-      console.log(
-        'Extracted files (level 1):',
-        files.map((f) => ({ name: f.name, type: f.type })),
-      );
-
-      // Check if there are nested ZIP files (common in Notion exports)
-      const nestedZips = files.filter((f) => f.name.toLowerCase().endsWith('.zip'));
-
-      if (nestedZips.length > 0) {
         console.log(
-          'Found nested ZIPs, extracting...',
-          nestedZips.map((z) => z.name),
+          'Extracted files (level 1):',
+          files.map((f) => ({ name: f.name, type: f.type })),
         );
-        const allNestedFiles: File[] = [];
 
-        for (const zipFile of nestedZips) {
+        // Check if there are nested ZIP files (common in Notion exports)
+        const nestedZips = files.filter((f) => f.name.toLowerCase().endsWith('.zip'));
+
+        if (nestedZips.length > 0) {
+          console.log(
+            'Found nested ZIPs, extracting...',
+            nestedZips.map((z) => z.name),
+          );
+          const allNestedFiles: File[] = [];
+
+          for (const zipFile of nestedZips) {
+            try {
+              const nestedFiles = await unzipFile(zipFile);
+              console.log(
+                `Extracted from ${zipFile.name}:`,
+                nestedFiles.map((f) => ({ name: f.name, type: f.type })),
+              );
+              allNestedFiles.push(...nestedFiles);
+            } catch (error) {
+              console.error(`Failed to extract nested ZIP ${zipFile.name}:`, error);
+            }
+          }
+
+          // Replace files with nested content
+          files = allNestedFiles;
+        }
+
+        console.log(
+          'All extracted files:',
+          files.map((f) => ({ name: f.name, type: f.type })),
+        );
+
+        // Filter for markdown files (case-insensitive, support both .md and .markdown)
+        const mdFiles = files.filter((f) => {
+          const name = f.name.toLowerCase();
+          return name.endsWith('.md') || name.endsWith('.markdown');
+        });
+
+        if (mdFiles.length === 0) {
+          message.destroy(loadingKey);
+          message.warning(
+            t('header.actions.notion.noMarkdownFiles') +
+              ` (${t('header.actions.notion.foundFiles', { count: files.length })})`,
+          );
+          console.warn(
+            'No markdown files found. All files:',
+            files.map((f) => f.name),
+          );
+          return;
+        }
+
+        // Process each markdown file
+        let successCount = 0;
+        let failedCount = 0;
+
+        for (const mdFile of mdFiles) {
           try {
-            const nestedFiles = await unzipFile(zipFile);
-            console.log(
-              `Extracted from ${zipFile.name}:`,
-              nestedFiles.map((f) => ({ name: f.name, type: f.type })),
-            );
-            allNestedFiles.push(...nestedFiles);
+            // Read file content
+            let content = await mdFile.text();
+            let title = '';
+
+            // Check if first line is a heading (# Title)
+            const lines = content.split('\n');
+            const firstLine = lines[0]?.trim() || '';
+
+            if (firstLine.startsWith('#')) {
+              // Extract title from heading (remove # symbols and trim)
+              title = firstLine.replace(/^#+\s*/, '').trim();
+              // Remove the first line from content
+              content = lines.slice(1).join('\n').trim();
+            } else {
+              // Fallback to filename without extension
+              const filename = mdFile.name.split('/').pop() || 'Untitled';
+              title = filename.replace(/\.md$/, '');
+            }
+
+            // Create document
+            await createDocument({
+              content,
+              knowledgeBaseId: libraryId,
+              parentId: currentFolderId ?? undefined,
+              title,
+            });
+
+            successCount++;
           } catch (error) {
-            console.error(`Failed to extract nested ZIP ${zipFile.name}:`, error);
+            console.error(`Failed to import ${mdFile.name}:`, error);
+            failedCount++;
           }
         }
 
-        // Replace files with nested content
-        files = allNestedFiles;
-      }
-
-      console.log(
-        'All extracted files:',
-        files.map((f) => ({ name: f.name, type: f.type })),
-      );
-
-      // Filter for markdown files (case-insensitive, support both .md and .markdown)
-      const mdFiles = files.filter((f) => {
-        const name = f.name.toLowerCase();
-        return name.endsWith('.md') || name.endsWith('.markdown');
-      });
-
-      if (mdFiles.length === 0) {
+        // Show completion message
         message.destroy(loadingKey);
-        message.warning(
-          t('header.actions.notion.noMarkdownFiles') +
-            ` (${t('header.actions.notion.foundFiles', { count: files.length })})`,
-        );
-        console.warn(
-          'No markdown files found. All files:',
-          files.map((f) => f.name),
-        );
-        return;
-      }
 
-      // Process each markdown file
-      let successCount = 0;
-      let failedCount = 0;
-
-      for (const mdFile of mdFiles) {
-        try {
-          // Read file content
-          let content = await mdFile.text();
-          let title = '';
-
-          // Check if first line is a heading (# Title)
-          const lines = content.split('\n');
-          const firstLine = lines[0]?.trim() || '';
-
-          if (firstLine.startsWith('#')) {
-            // Extract title from heading (remove # symbols and trim)
-            title = firstLine.replace(/^#+\s*/, '').trim();
-            // Remove the first line from content
-            content = lines.slice(1).join('\n').trim();
-          } else {
-            // Fallback to filename without extension
-            const filename = mdFile.name.split('/').pop() || 'Untitled';
-            title = filename.replace(/\.md$/, '');
-          }
-
-          // Create document
-          await createDocument({
-            content,
-            knowledgeBaseId: libraryId,
-            parentId: currentFolderId ?? undefined,
-            title,
-          });
-
-          successCount++;
-        } catch (error) {
-          console.error(`Failed to import ${mdFile.name}:`, error);
-          failedCount++;
+        if (failedCount === 0) {
+          message.success(
+            t('header.actions.notion.success', {
+              count: successCount,
+            }),
+          );
+        } else {
+          message.warning(
+            t('header.actions.notion.partial', {
+              failed: failedCount,
+              success: successCount,
+            }),
+          );
         }
+      } catch (error) {
+        console.error('Failed to import Notion export:', error);
+        const { message } = await import('antd');
+        message.error(t('header.actions.notion.error'));
       }
 
-      // Show completion message
-      message.destroy(loadingKey);
+      // Reset input to allow re-uploading
+      event.target.value = '';
+    },
+    [createDocument, currentFolderId, libraryId, t],
+  );
 
-      if (failedCount === 0) {
-        message.success(
-          t('header.actions.notion.success', {
-            count: successCount,
-          }),
-        );
-      } else {
-        message.warning(
-          t('header.actions.notion.partial', {
-            failed: failedCount,
-            success: successCount,
-          }),
-        );
-      }
-    } catch (error) {
-      console.error('Failed to import Notion export:', error);
-      const { message } = await import('antd');
-      message.error(t('header.actions.notion.error'));
-    }
+  const handleOpenNotionGuide = useCallback(() => {
+    setNotionGuideOpen(true);
+  }, []);
 
-    // Reset input to allow re-uploading
-    event.target.value = '';
-  };
+  const handleCloseNotionGuide = useCallback(() => {
+    setNotionGuideOpen(false);
+  }, []);
+
+  const handleStartNotionImport = useCallback(() => {
+    notionInputRef.current?.click();
+    setNotionGuideOpen(false);
+  }, []);
 
   const items = useMemo<MenuProps['items']>(
     () => [
@@ -339,9 +367,7 @@ const AddButton = () => {
             icon: <Notion />,
             key: 'connect-notion',
             label: 'Notion',
-            onClick: () => {
-              notionInputRef.current?.click();
-            },
+            onClick: handleOpenNotionGuide,
           },
           {
             icon: <Icon icon={Notion} />,
@@ -365,7 +391,15 @@ const AddButton = () => {
         label: t('header.actions.connect'),
       },
     ],
-    [libraryId, currentFolderId, pushDockFileList],
+    [
+      currentFolderId,
+      handleCreateFolder,
+      handleOpenNoteEditor,
+      handleOpenNotionGuide,
+      libraryId,
+      pushDockFileList,
+      t,
+    ],
   );
 
   return (
@@ -380,6 +414,16 @@ const AddButton = () => {
           {t('addLibrary')}
         </Button>
       </Dropdown>
+      <GuideModal
+        cancelText={t('header.actions.notionGuide.cancel')}
+        cover={<GuideVideo height={269} src={NOTION_GUIDE_VIDEO_SRC} width={358} />}
+        desc={t('header.actions.notionGuide.desc')}
+        okText={t('header.actions.notionGuide.ok')}
+        onCancel={handleCloseNotionGuide}
+        onOk={handleStartNotionImport}
+        open={notionGuideOpen}
+        title={t('header.actions.notionGuide.title')}
+      />
       <DragUpload
         enabledFiles
         onUploadFiles={(files) => pushDockFileList(files, libraryId, currentFolderId ?? undefined)}
