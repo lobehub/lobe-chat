@@ -6,13 +6,12 @@ import { ChatItemProps } from '../type';
 
 export interface ActionsProps {
   actions: ChatItemProps['actions'];
-  editing?: boolean;
   placement?: ChatItemProps['placement'];
   ref?: Ref<HTMLDivElement>;
 }
 
-const Actions = memo<ActionsProps>(({ actions, placement, editing, ref }) => {
-  const { styles } = useStyles({ editing, placement });
+const Actions = memo<ActionsProps>(({ actions, placement, ref }) => {
+  const { styles } = useStyles({ placement });
 
   return (
     <Flexbox align={'flex-start'} className={styles.actions} ref={ref} role="menubar">

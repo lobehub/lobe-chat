@@ -1,10 +1,9 @@
 import { type ActionIconGroupEvent } from '@lobehub/ui';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { MSG_CONTENT_CLASSNAME } from '@/features/Conversation/ChatItem/components/MessageContent';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
-
-import { MessageContentClassName } from '../Messages/Default';
 
 interface ContextMenuState {
   position: { x: number; y: number };
@@ -48,7 +47,7 @@ export const useChatItemContextMenu = ({
       let hasMessageId = false;
 
       while (target && target !== document.body) {
-        if (target.className.includes(MessageContentClassName)) {
+        if (target.className.includes(MSG_CONTENT_CLASSNAME)) {
           hasMessageId = true;
           break;
         }

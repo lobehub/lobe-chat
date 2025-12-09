@@ -43,7 +43,6 @@ const ChatItem = memo<ChatItemProps>(
   }) => {
     const { cx, styles } = useStyles({
       disabled,
-      editing,
       placement,
       showTitle,
       time,
@@ -129,7 +128,7 @@ const ChatItem = memo<ChatItemProps>(
                 />
               )}
             </Flexbox>
-            {actions && <Actions actions={actions} editing={editing} placement={placement} />}
+            {actions && <Actions actions={actions} placement={placement} />}
           </Flexbox>
           {belowMessage}
         </Flexbox>
