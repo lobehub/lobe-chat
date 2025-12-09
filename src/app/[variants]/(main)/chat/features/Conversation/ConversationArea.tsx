@@ -18,8 +18,8 @@ import { MemoryManifest } from '@/tools/memory';
 
 import WelcomeChatItem from './AgentWelcome';
 import ChatHydration from './ChatHydration';
-import MainChatInput from './ChatInput';
 import ChatMinimap from './ChatMinimap';
+import MainChatInput from './MainChatInput';
 import MessageFromUrl from './MainChatInput/MessageFromUrl';
 import ThreadHydration from './ThreadHydration';
 import ZenModeToast from './ZenModeToast';

@@ -7,6 +7,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useConversationStore, useConversationStoreApi } from '@/features/Conversation';
+import { useAddUserMessageHotkey } from '@/hooks/useHotkeys';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum, KeyEnum } from '@/types/hotkey';
@@ -51,6 +52,8 @@ export const useSendMenuItems = (): MenuProps['items'] => {
     editor?.clearContent();
     editor?.focus();
   }, [storeApi, editor]);
+
+  useAddUserMessageHotkey(handleAddUserMessage);
 
   return useMemo(
     () => [
