@@ -1,7 +1,7 @@
-import { AgentRuntimeContext, AgentState } from '@lobechat/agent-runtime';
 import { ChatToolPayload } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
+import { AgentRuntimeContext, AgentState } from '../../types';
 import { GeneralChatAgent } from '../GeneralChatAgent';
 
 describe('GeneralChatAgent', () => {

@@ -1,9 +1,11 @@
+import type { ChatToolPayload, HumanInterventionConfig } from '@lobechat/types';
+
+import { DEFAULT_SECURITY_BLACKLIST, InterventionChecker } from '../core';
 import {
   Agent,
   AgentInstruction,
   AgentRuntimeContext,
   AgentState,
-  DEFAULT_SECURITY_BLACKLIST,
   GeneralAgentCallLLMInstructionPayload,
   GeneralAgentCallLLMResultPayload,
   GeneralAgentCallToolResultPayload,
@@ -11,9 +13,7 @@ import {
   GeneralAgentCallingToolInstructionPayload,
   GeneralAgentConfig,
   HumanAbortPayload,
-  InterventionChecker,
-} from '@lobechat/agent-runtime';
-import type { ChatToolPayload, HumanInterventionConfig } from '@lobechat/types';
+} from '../types';
 
 /**
  * ChatAgent - The "Brain" of the chat agent
