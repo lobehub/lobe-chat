@@ -108,7 +108,15 @@ export const pageAgentSlice: StateCreator<
       if (success) {
         await get().optimisticUpdatePluginState(id, state, context);
       } else {
-        await get().optimisticUpdatePluginError(id, error, context);
+        await get().optimisticUpdatePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || content,
+            type: 'PluginServerError',
+          },
+          context,
+        );
       }
 
       return true;
@@ -170,7 +178,15 @@ export const pageAgentSlice: StateCreator<
       if (success) {
         await get().optimisticUpdatePluginState(id, state, context);
       } else {
-        await get().optimisticUpdatePluginError(id, error, context);
+        await get().optimisticUpdatePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || content,
+            type: 'PluginServerError',
+          },
+          context,
+        );
       }
 
       return true;
@@ -248,7 +264,15 @@ export const pageAgentSlice: StateCreator<
       if (success) {
         await get().optimisticUpdatePluginState(id, state, context);
       } else {
-        await get().optimisticUpdatePluginError(id, error, context);
+        await get().optimisticUpdatePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || content,
+            type: 'PluginServerError',
+          },
+          context,
+        );
       }
 
       return true;
@@ -310,7 +334,15 @@ export const pageAgentSlice: StateCreator<
       if (success) {
         await get().optimisticUpdatePluginState(id, state, context);
       } else {
-        await get().optimisticUpdatePluginError(id, error, context);
+        await get().optimisticUpdatePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || content,
+            type: 'PluginServerError',
+          },
+          context,
+        );
       }
 
       return true;
@@ -443,7 +475,15 @@ export const pageAgentSlice: StateCreator<
       if (success) {
         await get().optimisticUpdatePluginState(id, state, context);
       } else {
-        await get().optimisticUpdatePluginError(id, error, context);
+        await get().optimisticUpdatePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || content,
+            type: 'PluginServerError',
+          },
+          context,
+        );
       }
 
       return true;
