@@ -54,17 +54,17 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   },
   {
     group: HotkeyGroupEnum.Essential,
-    id: HotkeyEnum.ToggleZenMode,
-    keys: combineKeys([KeyEnum.Mod, KeyEnum.Backslash]),
-    scopes: [HotkeyScopeEnum.Chat],
-  },
-  {
-    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.OpenHotkeyHelper,
     keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Shift, KeyEnum.QuestionMark]),
     scopes: [HotkeyScopeEnum.Global],
   },
   // Chat
+  {
+    group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.ToggleZenMode,
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Backslash]),
+    scopes: [HotkeyScopeEnum.Chat],
+  },
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.OpenChatSettings,
@@ -96,16 +96,10 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     scopes: [HotkeyScopeEnum.Chat],
   },
   {
-    group: HotkeyGroupEnum.Essential,
-    id: HotkeyEnum.SaveDocument,
-    keys: combineKeys([KeyEnum.Mod, 's']),
-    scopes: [HotkeyScopeEnum.Files],
-  },
-  {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.AddUserMessage,
     keys: combineKeys([KeyEnum.Alt, KeyEnum.Enter]),
-    // Not activated through Scope mode
+    scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Conversation,
@@ -119,6 +113,12 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     id: HotkeyEnum.ClearCurrentMessages,
     keys: combineKeys([KeyEnum.Alt, KeyEnum.Shift, KeyEnum.Backspace]),
     scopes: [HotkeyScopeEnum.Chat],
+  },
+  {
+    group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.SaveDocument,
+    keys: combineKeys([KeyEnum.Mod, 's']),
+    scopes: [HotkeyScopeEnum.Files],
   },
 ];
 
