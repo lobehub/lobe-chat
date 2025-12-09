@@ -3,7 +3,7 @@ import type { ModelRuntime } from '@lobechat/model-runtime';
 import { readFile } from 'node:fs/promises';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { IdentityExtractor, IdentityExtractorTemplateProps, IdentityToolName } from './identity';
+import { IdentityExtractor, IdentityExtractorTemplateProps } from './identity';
 
 const runtimeMock = { generateObject: vi.fn() } as unknown as ModelRuntime;
 
@@ -22,28 +22,46 @@ describe('IdentityExtractor', () => {
     vi.clearAllMocks();
   });
 
-  it('exposes identity tools for add/update/remove flows', () => {
+  it('builds a structured schema without registering tools', () => {
     const extractor = new IdentityExtractor({
       model: 'gpt-mock',
       modelRuntime: runtimeMock,
     });
 
     const tools = (extractor as any).getTools(templateOptions);
-    expect(tools).toHaveLength(3);
-    expect(tools?.map((tool: any) => tool.function?.name)).toEqual([
-      IdentityToolName.addIdentity,
-      IdentityToolName.updateIdentity,
-      IdentityToolName.removeIdentity,
-    ]);
+    const schema = (extractor as any).getSchema(templateOptions);
+
+    expect(tools).toBeUndefined();
+    expect(schema).toBeDefined();
+    expect(schema?.name).toContain('identity');
   });
 
-  it('does not build a generate object schema because the extractor uses tools only', () => {
+  it('uses structuredCall to invoke the runtime and parse structured results', async () => {
     const extractor = new IdentityExtractor({
       model: 'gpt-mock',
       modelRuntime: runtimeMock,
     });
+    const structuredResult = {
+      withIdentities: {
+        actions: {
+          add: [{ description: 'New identity', extractedLabels: ['tag'], type: 'personal' }],
+          remove: null,
+          update: null,
+        },
+      },
+    };
+    (runtimeMock.generateObject as any) = vi.fn().mockResolvedValue(structuredResult);
 
-    expect((extractor as any).getSchema(templateOptions)).toBeUndefined();
+    const result = await extractor.structuredCall(templateOptions);
+
+    expect(runtimeMock.generateObject).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: 'gpt-mock',
+        schema: expect.objectContaining({ name: expect.stringContaining('identity') }),
+        tools: undefined,
+      }),
+    );
+    expect(result).toEqual(structuredResult);
   });
 
   it('returns full template props from options', () => {

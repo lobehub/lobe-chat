@@ -1,4 +1,4 @@
 export * from './extractors';
 export * from './providers';
-export { MemoryExtractAgentService as MemoryExtractionService } from './services/extractAgentService';
+export { MemoryExtractionService } from './services/extractExecutor';
 export * from './types';

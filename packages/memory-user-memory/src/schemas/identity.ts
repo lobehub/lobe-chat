@@ -1,9 +1,8 @@
 import { z } from 'zod';
 
-/**
- * Relationship enum for identity
- */
-const RelationshipEnum = z.enum([
+import { MemoryTypeEnum } from './common';
+
+export const RELATIONSHIP_ENUM = [
   'self',
   'father',
   'mother',
@@ -34,89 +33,77 @@ const RelationshipEnum = z.enum([
   'nephew',
   'niece',
   'other',
-]);
+] as const;
 
-/**
- * Identity type enum
- */
+const RelationshipEnum = z.enum(RELATIONSHIP_ENUM);
 const IdentityTypeEnum = z.enum(['professional', 'personal', 'demographic']);
+const MergeStrategyEnum = z.enum(['replace', 'merge']);
 
-/**
- * Add identity tool arguments
- */
-const AddIdentityArgsSchema = z.object({
-  description: z.string(),
-  episodicDate: z.string().nullable().optional(),
-  extractedLabels: z.array(z.string()).optional(),
-  relationship: RelationshipEnum.nullable().optional(),
-  role: z.string().nullable().optional(),
-  scoreConfidence: z.number().nullable().optional(),
-  sourceEvidence: z.string().nullable().optional(),
-  type: IdentityTypeEnum.optional(),
-});
-
-/**
- * Update identity tool arguments
- */
-const UpdateIdentityArgsSchema = z.object({
-  id: z.string(),
-  mergeStrategy: z.enum(['replace', 'merge']),
-  set: z.object({
-    description: z.string().optional(),
+const AddIdentityActionSchema = z
+  .object({
+    description: z.string(),
     episodicDate: z.string().nullable().optional(),
     extractedLabels: z.array(z.string()).optional(),
     relationship: RelationshipEnum.nullable().optional(),
     role: z.string().nullable().optional(),
     scoreConfidence: z.number().nullable().optional(),
     sourceEvidence: z.string().nullable().optional(),
-    type: z.string().nullable().optional(),
-  }),
-});
+    type: IdentityTypeEnum,
+  })
+  .strict();
 
-/**
- * Remove identity tool arguments
- */
-const RemoveIdentityArgsSchema = z.object({
-  id: z.string(),
-  reason: z.string(),
-});
+const UpdateIdentityActionSchema = z
+  .object({
+    id: z.string(),
+    mergeStrategy: MergeStrategyEnum,
+    set: z
+      .object({
+        description: z.string().optional(),
+        episodicDate: z.string().nullable().optional(),
+        extractedLabels: z.array(z.string()).optional(),
+        relationship: RelationshipEnum.nullable().optional(),
+        role: z.string().nullable().optional(),
+        scoreConfidence: z.number().nullable().optional(),
+        sourceEvidence: z.string().nullable().optional(),
+        type: IdentityTypeEnum.nullable().optional(),
+      })
+      .strict(),
+  })
+  .strict();
 
-/**
- * Identity tool call schema - using discriminated union for type safety
- */
-const AddIdentityToolCallSchema = z.object({
-  arguments: AddIdentityArgsSchema,
-  id: z.string().optional(),
-  name: z.literal('addIdentity'),
-  type: z.literal('function').optional(),
-});
+const RemoveIdentityActionSchema = z
+  .object({
+    id: z.string(),
+    reason: z.string(),
+  })
+  .strict();
 
-const UpdateIdentityToolCallSchema = z.object({
-  arguments: UpdateIdentityArgsSchema,
-  id: z.string().optional(),
-  name: z.literal('updateIdentity'),
-  type: z.literal('function').optional(),
-});
+const IdentityActionsSchema = z
+  .object({
+    add: z.array(AddIdentityActionSchema).nullable(),
+    remove: z.array(RemoveIdentityActionSchema).nullable(),
+    update: z.array(UpdateIdentityActionSchema).nullable(),
+  })
+  .strict();
 
-const RemoveIdentityToolCallSchema = z.object({
-  arguments: RemoveIdentityArgsSchema,
-  id: z.string().optional(),
-  name: z.literal('removeIdentity'),
-  type: z.literal('function').optional(),
-});
-
-const IdentityToolCallSchema = z.discriminatedUnion('name', [
-  AddIdentityToolCallSchema,
-  UpdateIdentityToolCallSchema,
-  RemoveIdentityToolCallSchema,
-]);
-
-/**
- * Identity memory schema - array of tool calls
- */
-export const IdentityMemorySchema = z.array(IdentityToolCallSchema);
+export const IdentityMemorySchema = z
+  .object({
+    details: z.string().optional().describe('Optional detailed information'),
+    memoryCategory: z.string().describe('Memory category'),
+    memoryLayer: z.literal('context').describe('Memory layer'),
+    memoryType: MemoryTypeEnum.describe('Memory type'),
+    summary: z.string().describe('Concise overview of this specific memory'),
+    title: z.string().describe('Brief descriptive title'),
+    withIdentities: z
+      .object({
+        actions: IdentityActionsSchema,
+      })
+      .strict(),
+  })
+  .strict();
 
 export type IdentityMemory = z.infer<typeof IdentityMemorySchema>;
-export type AddIdentityArgs = z.infer<typeof AddIdentityArgsSchema>;
-export type UpdateIdentityArgs = z.infer<typeof UpdateIdentityArgsSchema>;
-export type RemoveIdentityArgs = z.infer<typeof RemoveIdentityArgsSchema>;
+export type IdentityActions = z.infer<typeof IdentityActionsSchema>;
+export type AddIdentityAction = z.infer<typeof AddIdentityActionSchema>;
+export type UpdateIdentityAction = z.infer<typeof UpdateIdentityActionSchema>;
+export type RemoveIdentityAction = z.infer<typeof RemoveIdentityActionSchema>;
