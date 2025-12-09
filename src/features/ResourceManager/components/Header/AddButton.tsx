@@ -222,11 +222,23 @@ const AddButton = () => {
       for (const mdFile of mdFiles) {
         try {
           // Read file content
-          const content = await mdFile.text();
+          let content = await mdFile.text();
+          let title = '';
 
-          // Extract filename without extension for title
-          const filename = mdFile.name.split('/').pop() || 'Untitled';
-          const title = filename.replace(/\.md$/, '');
+          // Check if first line is a heading (# Title)
+          const lines = content.split('\n');
+          const firstLine = lines[0]?.trim() || '';
+
+          if (firstLine.startsWith('#')) {
+            // Extract title from heading (remove # symbols and trim)
+            title = firstLine.replace(/^#+\s*/, '').trim();
+            // Remove the first line from content
+            content = lines.slice(1).join('\n').trim();
+          } else {
+            // Fallback to filename without extension
+            const filename = mdFile.name.split('/').pop() || 'Untitled';
+            title = filename.replace(/\.md$/, '');
+          }
 
           // Create document
           await createDocument({
