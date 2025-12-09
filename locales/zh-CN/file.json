@@ -86,6 +86,14 @@
       },
       "newFolder": "新建文件夹",
       "newPage": "新建文稿",
+      "notion": {
+        "error": "导入 Notion 文件失败",
+        "foundFiles": "找到 {{count}} 个文件",
+        "importing": "正在导入 Notion 文件...",
+        "noMarkdownFiles": "未在 ZIP 文件中找到 Markdown 文件",
+        "partial": "已成功导入 {{success}} 个文件，失败 {{failed}} 个",
+        "success": "成功导入 {{count}} 个文件"
+      },
       "uploadFile": "上传文件",
       "uploadFolder": "上传文件夹"
     },

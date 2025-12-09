@@ -270,4 +270,161 @@ describe('PageAgentExecutionRuntime - Node CRUD Operations', () => {
       expect(documentState.root.children).toHaveLength(2);
     });
   });
+
+  describe('Table Operations', () => {
+    beforeEach(() => {
+      // Set up a document with a table
+      documentState = {
+        root: {
+          children: [
+            {
+              children: [
+                {
+                  children: [
+                    { children: [{ text: 'Header 1', type: 'text' }], type: 'tablecell' },
+                    { children: [{ text: 'Header 2', type: 'text' }], type: 'tablecell' },
+                    { children: [{ text: 'Header 3', type: 'text' }], type: 'tablecell' },
+                  ],
+                  type: 'tablerow',
+                },
+                {
+                  children: [
+                    { children: [{ text: 'Cell 1', type: 'text' }], type: 'tablecell' },
+                    { children: [{ text: 'Cell 2', type: 'text' }], type: 'tablecell' },
+                    { children: [{ text: 'Cell 3', type: 'text' }], type: 'tablecell' },
+                  ],
+                  type: 'tablerow',
+                },
+              ],
+              type: 'table',
+            },
+          ],
+          type: 'root',
+        },
+      };
+    });
+
+    describe('insertTableRow', () => {
+      it('should insert a row at the end of table', async () => {
+        const result = await runtime.insertTableRow({
+          cells: ['New 1', 'New 2', 'New 3'],
+          tableId: 'node_0',
+        });
+
+        expect(result.success).toBe(true);
+        expect(documentState.root.children[0].children).toHaveLength(3);
+        const newRow = documentState.root.children[0].children[2];
+        expect(newRow.type).toBe('tablerow');
+        expect(newRow.children[0].children[0].text).toBe('New 1');
+      });
+
+      it('should insert a row before a reference row', async () => {
+        const result = await runtime.insertTableRow({
+          cells: ['Inserted 1', 'Inserted 2', 'Inserted 3'],
+          position: 'before',
+          referenceRowId: 'node_0_1',
+          tableId: 'node_0',
+        });
+
+        expect(result.success).toBe(true);
+        expect(documentState.root.children[0].children).toHaveLength(3);
+        const insertedRow = documentState.root.children[0].children[1];
+        expect(insertedRow.children[0].children[0].text).toBe('Inserted 1');
+      });
+
+      it('should insert a row with empty cells if no content provided', async () => {
+        const result = await runtime.insertTableRow({
+          tableId: 'node_0',
+        });
+
+        expect(result.success).toBe(true);
+        const newRow = documentState.root.children[0].children[2];
+        expect(newRow.children).toHaveLength(3);
+        expect(newRow.children[0].children).toHaveLength(0);
+      });
+    });
+
+    describe('insertTableColumn', () => {
+      it('should insert a column at specified index', async () => {
+        const result = await runtime.insertTableColumn({
+          cells: ['Header 4', 'Cell 4'],
+          columnIndex: 1,
+          tableId: 'node_0',
+        });
+
+        expect(result.success).toBe(true);
+        expect(documentState.root.children[0].children[0].children).toHaveLength(4);
+        expect(documentState.root.children[0].children[0].children[1].children[0].text).toBe(
+          'Header 4',
+        );
+        expect(documentState.root.children[0].children[1].children[1].children[0].text).toBe(
+          'Cell 4',
+        );
+      });
+
+      it('should insert a column at the end with index -1', async () => {
+        const result = await runtime.insertTableColumn({
+          cells: ['Header 4', 'Cell 4'],
+          columnIndex: -1,
+          tableId: 'node_0',
+        });
+
+        expect(result.success).toBe(true);
+        expect(documentState.root.children[0].children[0].children).toHaveLength(4);
+        const lastCell = documentState.root.children[0].children[0].children[3];
+        expect(lastCell.children[0].text).toBe('Header 4');
+      });
+    });
+
+    describe('deleteTableRow', () => {
+      it('should delete a row by ID', async () => {
+        const result = await runtime.deleteTableRow({
+          rowId: 'node_0_1',
+        });
+
+        expect(result.success).toBe(true);
+        expect(documentState.root.children[0].children).toHaveLength(1);
+        expect(documentState.root.children[0].children[0].children[0].children[0].text).toBe(
+          'Header 1',
+        );
+      });
+
+      it('should fail when row ID is invalid', async () => {
+        const result = await runtime.deleteTableRow({
+          rowId: 'node_0_99',
+        });
+
+        expect(result.success).toBe(false);
+        expect(result.content).toContain('not found');
+      });
+    });
+
+    describe('deleteTableColumn', () => {
+      it('should delete a column at specified index', async () => {
+        const result = await runtime.deleteTableColumn({
+          columnIndex: 1,
+          tableId: 'node_0',
+        });
+
+        expect(result.success).toBe(true);
+        expect(documentState.root.children[0].children[0].children).toHaveLength(2);
+        expect(documentState.root.children[0].children[0].children[0].children[0].text).toBe(
+          'Header 1',
+        );
+        expect(documentState.root.children[0].children[0].children[1].children[0].text).toBe(
+          'Header 3',
+        );
+      });
+
+      it('should fail when table not found', async () => {
+        const result = await runtime.deleteTableColumn({
+          columnIndex: 0,
+          tableId: 'node_99',
+        });
+
+        expect(result.success).toBe(false);
+        expect(result.content).toContain('not found');
+      });
+    });
+  });
 });
