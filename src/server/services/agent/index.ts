@@ -1,13 +1,12 @@
 import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
 import { LobeChatDatabase } from '@lobechat/database';
-import { cleanObject } from '@lobechat/utils';
+import { AgentItem, LobeAgentConfig } from '@lobechat/types';
+import { cleanObject, merge } from '@lobechat/utils';
 import type { PartialDeep } from 'type-fest';
 
 import { AgentModel } from '@/database/models/agent';
 import { SessionModel } from '@/database/models/session';
 import { getServerDefaultAgentConfig } from '@/server/globalConfig';
-import { AgentItem, LobeAgentConfig } from '@/types/agent';
-import { merge } from '@/utils/merge';
 
 import { UpdateAgentResult } from './type';
 

@@ -1,25 +1,25 @@
-import { AgentRuntime, AgentRuntimeContext, AgentState } from '@lobechat/agent-runtime';
+import {
+  AgentRuntime,
+  AgentRuntimeContext,
+  AgentState,
+  GeneralChatAgent,
+} from '@lobechat/agent-runtime';
 import debug from 'debug';
 import urlJoin from 'url-join';
 
-import { AgentModel } from '@/database/models/agent';
 import { MessageModel } from '@/database/models/message';
-import { PluginModel } from '@/database/models/plugin';
 import { LobeChatDatabase } from '@/database/type';
 import {
   AgentRuntimeCoordinator,
-  GeneralAgent,
+  type AgentRuntimeCoordinatorOptions,
   StreamEventManager,
 } from '@/server/modules/AgentRuntime';
+import { InMemoryStreamEventManager } from '@/server/modules/AgentRuntime/InMemoryStreamEventManager';
 import {
   RuntimeExecutorContext,
   createRuntimeExecutors,
 } from '@/server/modules/AgentRuntime/RuntimeExecutors';
-import {
-  type ServerAgentToolsContext,
-  createServerAgentToolsEngine,
-  serverMessagesEngine,
-} from '@/server/modules/Mecha';
+import type { IStreamEventManager } from '@/server/modules/AgentRuntime/types';
 import { mcpService } from '@/server/services/mcp';
 import { PluginGatewayService } from '@/server/services/pluginGateway';
 import { QueueService } from '@/server/services/queue';
@@ -33,22 +33,48 @@ import type {
   OperationCreationResult,
   OperationStatusResult,
   PendingInterventionsResult,
-  RunByAgentIdParams,
-  RunByAgentIdResult,
   StartExecutionParams,
   StartExecutionResult,
 } from './types';
 
 const log = debug('lobe-server:agent-runtime-service');
 
+export interface AgentRuntimeServiceOptions {
+  /**
+   * Coordinator 配置选项
+   * 可以注入自定义的 stateManager 和 streamEventManager
+   */
+  coordinatorOptions?: AgentRuntimeCoordinatorOptions;
+  /**
+   * 自定义 QueueService
+   * 设置为 null 时禁用队列调度（用于同步执行测试）
+   */
+  queueService?: QueueService | null;
+  /**
+   * 自定义 StreamEventManager
+   */
+  streamEventManager?: IStreamEventManager;
+}
+
 /**
  * Agent Runtime Service
  * 封装 Agent 执行相关的逻辑，提供统一的服务接口
+ *
+ * 支持依赖注入，可以使用内存实现进行测试：
+ * ```ts
+ * const service = new AgentRuntimeService(db, userId, {
+ *   coordinatorOptions: {
+ *     stateManager: new InMemoryAgentStateManager(),
+ *     streamEventManager: new InMemoryStreamEventManager(),
+ *   },
+ *   queueService: null, // 禁用队列，使用 executeSync
+ * });
+ * ```
  */
 export class AgentRuntimeService {
   private coordinator: AgentRuntimeCoordinator;
-  private streamManager: StreamEventManager;
-  private queueService: QueueService;
+  private streamManager: IStreamEventManager;
+  private queueService: QueueService | null;
   private toolExecutionService: ToolExecutionService;
   private get baseURL() {
     const baseUrl =
@@ -57,20 +83,17 @@ export class AgentRuntimeService {
     return urlJoin(baseUrl, '/api/workflows/agent');
   }
   private userId: string;
-  private db: LobeChatDatabase;
   private messageModel: MessageModel;
-  private agentModel: AgentModel;
-  private pluginModel: PluginModel;
 
-  constructor(db: LobeChatDatabase, userId: string) {
-    this.coordinator = new AgentRuntimeCoordinator();
-    this.streamManager = new StreamEventManager();
-    this.queueService = new QueueService();
+  constructor(db: LobeChatDatabase, userId: string, options?: AgentRuntimeServiceOptions) {
+    this.coordinator = new AgentRuntimeCoordinator(options?.coordinatorOptions);
+    this.streamManager =
+      options?.streamEventManager ??
+      options?.coordinatorOptions?.streamEventManager ??
+      new InMemoryStreamEventManager();
+    this.queueService = options?.queueService === null ? null : (options?.queueService ?? new QueueService());
     this.userId = userId;
-    this.db = db;
     this.messageModel = new MessageModel(db, this.userId);
-    this.agentModel = new AgentModel(db, this.userId);
-    this.pluginModel = new PluginModel(db, this.userId);
 
     // Initialize ToolExecutionService with dependencies
     const pluginGatewayService = new PluginGatewayService();
@@ -135,8 +158,8 @@ export class AgentRuntimeService {
       let messageId: string | undefined;
       let autoStarted = false;
 
-      // 只有在 autoStart 为 true 时才调度第一步执行
-      if (autoStart) {
+      // 只有在 autoStart 为 true 且 queueService 存在时才调度第一步执行
+      if (autoStart && this.queueService) {
         messageId = await this.queueService.scheduleMessage({
           context: initialContext,
           delay: 50, // 短延迟启动
@@ -237,7 +260,7 @@ export class AgentRuntimeService {
 
       log('[%s] Step %d completed', operationId, stepIndex);
 
-      if (shouldContinue && stepResult.nextContext) {
+      if (shouldContinue && stepResult.nextContext && this.queueService) {
         const nextStepIndex = stepIndex + 1;
         const delay = this.calculateStepDelay(stepResult);
         const priority = this.calculatePriority(stepResult);
@@ -519,22 +542,26 @@ export class AgentRuntimeService {
         status: 'running',
       });
 
-      // 调度执行
-      const messageId = await this.queueService.scheduleMessage({
-        context: executionContext,
-        delay,
-        endpoint: `${this.baseURL}/run`,
-        operationId,
-        priority,
-        stepIndex: currentState.stepCount || 0,
-      });
-
-      log('Scheduled execution for operation %s (messageId: %s)', operationId, messageId);
+      // 调度执行（如果队列服务可用）
+      let messageId: string | undefined;
+      if (this.queueService) {
+        messageId = await this.queueService.scheduleMessage({
+          context: executionContext,
+          delay,
+          endpoint: `${this.baseURL}/run`,
+          operationId,
+          priority,
+          stepIndex: currentState.stepCount || 0,
+        });
+        log('Scheduled execution for operation %s (messageId: %s)', operationId, messageId);
+      } else {
+        log('Queue service disabled, skipping schedule for operation %s', operationId);
+      }
 
       return {
         messageId,
         operationId,
-        scheduled: true,
+        scheduled: !!messageId,
         success: true,
       };
     } catch (error) {
@@ -553,7 +580,7 @@ export class AgentRuntimeService {
     operationId: string;
     rejectionReason?: string;
     stepIndex: number;
-  }): Promise<{ messageId: string }> {
+  }): Promise<{ messageId?: string }> {
     const { operationId, stepIndex, action, approvedToolCall, humanInput, rejectionReason } =
       params;
 
@@ -565,18 +592,22 @@ export class AgentRuntimeService {
         action,
       );
 
-      // 高优先级调度执行
-      const messageId = await this.queueService.scheduleMessage({
-        context: undefined, // 会从状态管理器中获取
-        delay: 100,
-        endpoint: `${this.baseURL}/run`,
-        operationId,
-        payload: { approvedToolCall, humanInput, rejectionReason },
-        priority: 'high',
-        stepIndex,
-      });
-
-      log('Scheduled immediate execution for operation %s (messageId: %s)', operationId, messageId);
+      // 高优先级调度执行（如果队列服务可用）
+      let messageId: string | undefined;
+      if (this.queueService) {
+        messageId = await this.queueService.scheduleMessage({
+          context: undefined, // 会从状态管理器中获取
+          delay: 100,
+          endpoint: `${this.baseURL}/run`,
+          operationId,
+          payload: { approvedToolCall, humanInput, rejectionReason },
+          priority: 'high',
+          stepIndex,
+        });
+        log('Scheduled immediate execution for operation %s (messageId: %s)', operationId, messageId);
+      } else {
+        log('Queue service disabled, skipping schedule for operation %s', operationId);
+      }
 
       return { messageId };
     } catch (error) {
@@ -598,7 +629,7 @@ export class AgentRuntimeService {
     stepIndex: number;
   }) {
     // 创建 Durable Agent 实例
-    const agent = new GeneralAgent({
+    const agent = new GeneralChatAgent({
       agentConfig: metadata?.agentConfig,
       modelRuntimeConfig: metadata?.modelRuntimeConfig,
       operationId,
@@ -714,201 +745,112 @@ export class AgentRuntimeService {
   }
 
   /**
-   * Run agent by agent ID with just a prompt
+   * 同步执行 Agent 操作直到完成
    *
-   * This is a simplified API that only requires agentId and prompt.
-   * All necessary data (agent config, tools, messages) will be fetched from the database.
+   * 用于测试场景，不依赖 QueueService，直接在当前进程中执行所有步骤。
    *
-   * Architecture:
-   * runByAgentId(agentId, prompt)
-   *   → AgentModel.getAgentConfigById(agentId)
-   *   → ServerMechaModule.AgentToolsEngine(config)
-   *   → ServerMechaModule.ContextEngineering(input, config, messages)
-   *   → createOperation(...)
+   * @param operationId 操作 ID
+   * @param options 执行选项
+   * @returns 最终状态
+   *
+   * @example
+   * ```ts
+   * // 创建操作（不自动启动队列）
+   * const result = await service.createOperation({ ...params, autoStart: false });
+   *
+   * // 同步执行到完成
+   * const finalState = await service.executeSync(result.operationId);
+   * expect(finalState.status).toBe('done');
+   * ```
    */
-  async runByAgentId(params: RunByAgentIdParams): Promise<RunByAgentIdResult> {
-    const { agentId, prompt, appContext, autoStart = true, existingMessageIds = [] } = params;
+  async executeSync(
+    operationId: string,
+    options?: {
+      /** 初始上下文（如果不提供，从状态中推断） */
+      initialContext?: AgentRuntimeContext;
+      /** 最大步数限制，防止无限循环 */
+      maxSteps?: number;
+      /** 每步执行后的回调（用于调试） */
+      onStepComplete?: (stepIndex: number, state: AgentState) => void;
+    },
+  ): Promise<AgentState> {
+    const { maxSteps = 100, onStepComplete, initialContext } = options ?? {};
 
-    log('runByAgentId: agentId=%s, prompt=%s', agentId, prompt.slice(0, 50));
+    log('[%s] Starting sync execution (maxSteps: %d)', operationId, maxSteps);
 
-    try {
-      // 1. Get agent configuration from database
-      const agentConfig = await this.agentModel.getAgentConfigById(agentId);
-      if (!agentConfig) {
-        throw new Error(`Agent not found: ${agentId}`);
-      }
+    // 加载初始状态
+    const initialState = await this.coordinator.loadAgentState(operationId);
+    if (!initialState) {
+      throw new Error(`Agent state not found for operation ${operationId}`);
+    }
 
-      log('runByAgentId: got agent config for %s', agentId);
+    let state: AgentState = initialState;
 
-      // Extract model and provider from agent config
-      const model = agentConfig.model || 'gpt-4o-mini';
-      const provider = agentConfig.provider || 'openai';
-
-      // 2. Get installed plugins from database
-      const installedPlugins = await this.pluginModel.query();
-      log('runByAgentId: got %d installed plugins', installedPlugins.length);
-
-      // 3. Get model abilities from model-bank for function calling support check
-      const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
-      const modelInfo = LOBE_DEFAULT_MODEL_LIST.find(
-        (m) => m.id === model && m.providerId === provider,
-      );
-      const isModelSupportToolUse = (m: string, p: string) => {
-        const info = LOBE_DEFAULT_MODEL_LIST.find((item) => item.id === m && item.providerId === p);
-        return info?.abilities?.functionCall ?? true;
-      };
-
-      // 4. Create tools using Server AgentToolsEngine
-      const hasEnabledKnowledgeBases =
-        agentConfig.knowledgeBases?.some(
-          (kb: { enabled?: boolean | null }) => kb.enabled === true,
-        ) ?? false;
-
-      const toolsContext: ServerAgentToolsContext = {
-        installedPlugins,
-        isModelSupportToolUse,
-      };
-
-      const toolsEngine = createServerAgentToolsEngine(toolsContext, {
-        agentConfig: {
-          chatConfig: agentConfig.chatConfig ?? undefined,
-          plugins: agentConfig.plugins ?? undefined,
-        },
-        hasEnabledKnowledgeBases,
-        model,
-        provider,
-      });
-
-      // Generate tools and manifest map
-      const pluginIds = agentConfig.plugins || [];
-      const toolsResult = toolsEngine.generateToolsDetailed({
-        model,
-        provider,
-        toolIds: pluginIds,
-      });
-
-      const tools = toolsResult.tools;
-
-      // Get manifest map and convert from Map to Record
-      const manifestMap = toolsEngine.getEnabledPluginManifests(pluginIds);
-      const toolManifestMap: Record<string, any> = {};
-      manifestMap.forEach((manifest, id) => {
-        toolManifestMap[id] = manifest;
-      });
-
-      log('runByAgentId: generated %d tools', tools?.length ?? 0);
-
-      // 5. Get existing messages if provided
-      let historyMessages: any[] = [];
-      if (existingMessageIds.length > 0) {
-        // Query messages by session/topic from appContext
-        historyMessages = await this.messageModel.query({
-          sessionId: appContext?.sessionId,
-          topicId: appContext?.topicId ?? undefined,
-        });
-        // Filter to only include specified message IDs if needed
-        if (existingMessageIds.length > 0) {
-          const idSet = new Set(existingMessageIds);
-          historyMessages = historyMessages.filter((msg) => idSet.has(msg.id));
-        }
-      }
-
-      // 6. Create user message for the prompt
-      const userMessage = {
-        content: prompt,
-        createdAt: new Date(),
-        id: `user_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
-        role: 'user' as const,
-        updatedAt: new Date(),
-      };
-
-      // Combine history messages with user message
-      const allMessages = [...historyMessages, userMessage];
-
-      // 7. Process messages using Server ContextEngineering
-      const processedMessages = await serverMessagesEngine({
-        capabilities: {
-          isCanUseFC: isModelSupportToolUse,
-          isCanUseVideo: () => modelInfo?.abilities?.video ?? false,
-          isCanUseVision: () => modelInfo?.abilities?.vision ?? true,
-        },
-        enableHistoryCount: agentConfig.chatConfig?.enableHistoryCount ?? undefined,
-        historyCount: agentConfig.chatConfig?.historyCount ?? undefined,
-        knowledge: {
-          fileContents: agentConfig.files
-            ?.filter((f: { enabled?: boolean | null }) => f.enabled === true)
-            .map((f: { content?: string | null, id?: string; name?: string; }) => ({
-              content: f.content ?? '',
-              fileId: f.id ?? '',
-              filename: f.name ?? '',
-            })),
-          knowledgeBases: agentConfig.knowledgeBases
-            ?.filter((kb: { enabled?: boolean | null }) => kb.enabled === true)
-            .map((kb: { id?: string; name?: string }) => ({
-              id: kb.id ?? '',
-              name: kb.name ?? '',
-            })),
-        },
-        messages: allMessages,
-        model,
-        provider,
-        systemRole: agentConfig.systemRole ?? undefined,
-        toolsConfig: {
-          tools: pluginIds,
-        },
-      });
-
-      log('runByAgentId: processed %d messages', processedMessages.length);
-
-      // 8. Generate operation ID
-      const operationId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
-
-      // 9. Create initial context
-      const initialContext: AgentRuntimeContext = {
-        payload: {
-          isFirstMessage: true,
-          message: [{ content: prompt }],
-        },
+    // 构建初始上下文
+    let context: AgentRuntimeContext | undefined =
+      initialContext ??
+      ({
+        payload: {},
         phase: 'user_input' as const,
         session: {
-          messageCount: processedMessages.length,
+          messageCount: state.messages?.length ?? 0,
           sessionId: operationId,
-          status: 'idle' as const,
-          stepCount: 0,
+          status: state.status,
+          stepCount: state.stepCount,
         },
-      };
+      } as AgentRuntimeContext);
 
-      // 10. Create operation using existing createOperation method
-      const result = await this.createOperation({
-        agentConfig,
-        appContext: {
-          sessionId: appContext?.sessionId,
-          threadId: appContext?.threadId,
-          topicId: appContext?.topicId,
-        },
-        autoStart,
-        initialContext,
-        initialMessages: processedMessages,
-        modelRuntimeConfig: { model, provider },
+    let stepIndex = state.stepCount;
+
+    // 执行循环
+    while (stepIndex < maxSteps) {
+      // 检查终止条件
+      if (state.status === 'done' || state.status === 'error' || state.status === 'interrupted') {
+        log('[%s] Sync execution finished with status: %s', operationId, state.status);
+        break;
+      }
+
+      // 检查是否需要人工干预
+      if (state.status === 'waiting_for_human') {
+        log('[%s] Sync execution paused: waiting for human intervention', operationId);
+        break;
+      }
+
+      // 执行一步
+      log('[%s] Executing step %d', operationId, stepIndex);
+      const result = await this.executeStep({
+        context,
         operationId,
-        toolManifestMap,
-        tools,
-        userId: this.userId,
+        stepIndex,
       });
 
-      log('runByAgentId: created operation %s (autoStarted: %s)', operationId, result.autoStarted);
+      state = result.state as AgentState;
+      context = result.stepResult.nextContext;
+      stepIndex++;
 
-      return {
-        autoStarted: result.autoStarted,
-        createdAt: new Date().toISOString(),
-        messageId: result.messageId,
-        operationId,
-        status: 'created',
-        success: true,
-      };
-    } catch (error) {
-      log('runByAgentId failed: %O', error);
-      throw error;
+      // 回调
+      if (onStepComplete) {
+        onStepComplete(stepIndex, state);
+      }
+
+      // 检查是否应该继续
+      if (!this.shouldContinueExecution(state, context)) {
+        log('[%s] Sync execution stopped: shouldContinue=false', operationId);
+        break;
+      }
     }
+
+    if (stepIndex >= maxSteps) {
+      log('[%s] Sync execution stopped: reached maxSteps (%d)', operationId, maxSteps);
+    }
+
+    return state;
+  }
+
+  /**
+   * 获取 Coordinator 实例（用于测试）
+   */
+  getCoordinator(): AgentRuntimeCoordinator {
+    return this.coordinator;
   }
 }
