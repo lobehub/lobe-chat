@@ -2,7 +2,6 @@ import isEqual from 'fast-deep-equal';
 import { useEffect } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 
-import { useSend } from '@/app/[variants]/(main)/chat/features/Conversation/ChatInput/useSend';
 import { useClearCurrentMessages } from '@/features/ChatInput/ActionBar/Clear';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useActionSWR } from '@/libs/swr';
@@ -85,12 +84,11 @@ export const useDeleteLastMessageHotkey = () => {
   );
 };
 
-export const useAddUserMessageHotkey = () => {
-  const { send } = useSend();
+export const useAddUserMessageHotkey = (send: () => void) => {
   return useHotkeyById(
     HotkeyEnum.AddUserMessage,
     () => {
-      send({ onlyAddUserMessage: true });
+      send();
     },
     {
       enableOnContentEditable: true,
@@ -121,7 +119,6 @@ export const useRegisterChatHotkeys = () => {
   useDeleteAndRegenerateMessageHotkey();
   useDeleteLastMessageHotkey();
   useSaveTopicHotkey();
-  useAddUserMessageHotkey();
   useClearCurrentMessagesHotkey();
 
   useEffect(() => {

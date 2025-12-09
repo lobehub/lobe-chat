@@ -86,7 +86,8 @@ export const auth = betterAuth({
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
   }),
-  secondaryStorage: createSecondaryStorage(),
+  // TODO: need an env to control
+  secondaryStorage: process.env.NODE_ENV === 'development' ? undefined : createSecondaryStorage(),
   /**
    * Database joins is useful when Better-Auth needs to fetch related data from multiple tables in a single query.
    * Endpoints like /get-session, /get-full-organization and many others benefit greatly from this feature,

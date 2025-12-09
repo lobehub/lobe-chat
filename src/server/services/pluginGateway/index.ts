@@ -1,7 +1,7 @@
 import { ChatToolPayload } from '@lobechat/types';
 import { safeParseJSON } from '@lobechat/utils';
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
-import { Gateway, GatewaySuccessResponse } from '@lobehub/chat-plugins-gateway';
+import { GatewaySuccessResponse } from '@lobehub/chat-plugins-gateway';
 import debug from 'debug';
 
 import { parserPluginSettings } from '@/app/(backend)/webapi/plugin/gateway/settings';
@@ -11,15 +11,12 @@ import { ToolExecutionContext } from '@/server/services/toolExecution/types';
 const log = debug('lobe-server:plugin-gateway-service');
 
 export class PluginGatewayService {
-  private gateway: Gateway;
+  params: { PLUGINS_INDEX_URL: string; PLUGIN_SETTINGS: string | undefined };
 
   constructor() {
     const { PLUGINS_INDEX_URL, PLUGIN_SETTINGS } = getAppConfig();
 
-    this.gateway = new Gateway({
-      defaultPluginSettings: parserPluginSettings(PLUGIN_SETTINGS),
-      pluginsIndexUrl: PLUGINS_INDEX_URL,
-    });
+    this.params = { PLUGINS_INDEX_URL, PLUGIN_SETTINGS };
   }
 
   async execute(payload: ChatToolPayload, context: ToolExecutionContext) {
@@ -36,8 +33,13 @@ export class PluginGatewayService {
         identifier,
         manifest: context.toolManifestMap[identifier] as any,
       };
+      const { Gateway } = await import('@lobehub/chat-plugins-gateway');
+      const gateway = new Gateway({
+        defaultPluginSettings: parserPluginSettings(this.params.PLUGIN_SETTINGS),
+        pluginsIndexUrl: this.params.PLUGINS_INDEX_URL,
+      });
 
-      const response = await this.gateway.execute(requestBody);
+      const response = await gateway.execute(requestBody);
 
       log('Plugin execution result: %O', response);
 
