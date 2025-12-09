@@ -104,13 +104,13 @@ describe('AgentRuntimeService', () => {
     it('should initialize with default base URL', () => {
       delete process.env.AGENT_RUNTIME_BASE_URL;
       const newService = new AgentRuntimeService(mockDb, mockUserId);
-      expect((newService as any).baseURL).toBe('http://localhost:3010/api/agent');
+      expect((newService as any).baseURL).toBe('http://localhost:3010/api/workflows/agent');
     });
 
     it('should initialize with custom base URL from environment', () => {
       process.env.AGENT_RUNTIME_BASE_URL = 'http://custom:3000';
       const newService = new AgentRuntimeService(mockDb, mockUserId);
-      expect((newService as any).baseURL).toBe('http://custom:3000/api/agent');
+      expect((newService as any).baseURL).toBe('http://custom:3000/api/workflows/agent');
     });
   });
 
@@ -154,7 +154,12 @@ describe('AgentRuntimeService', () => {
           status: 'idle',
           stepCount: 0,
           messages: [],
-          events: [],
+          metadata: {
+            agentConfig: mockParams.agentConfig,
+            modelRuntimeConfig: mockParams.modelRuntimeConfig,
+            userId: mockParams.userId,
+          },
+          toolManifestMap: {},
         }),
       );
 
@@ -168,7 +173,7 @@ describe('AgentRuntimeService', () => {
         operationId: 'test-operation-1',
         stepIndex: 0,
         context: mockParams.initialContext,
-        endpoint: 'http://localhost:3010/api/agent/run',
+        endpoint: 'http://localhost:3010/api/workflows/agent/run',
         priority: 'high',
         delay: 50,
       });
@@ -273,7 +278,7 @@ describe('AgentRuntimeService', () => {
         data: {
           stepIndex: 1,
           finalState: mockStepResult.newState,
-          nextStepScheduled: true,
+          nextStepScheduled: false, // Published before nextStepScheduled is updated
         },
       });
 
@@ -594,7 +599,7 @@ describe('AgentRuntimeService', () => {
         operationId: 'test-operation-1',
         stepIndex: 2,
         context: mockParams.context,
-        endpoint: 'http://localhost:3010/api/agent/run',
+        endpoint: 'http://localhost:3010/api/workflows/agent/run',
         priority: 'high',
         delay: 500,
       });
@@ -612,11 +617,8 @@ describe('AgentRuntimeService', () => {
         context: expect.objectContaining({
           phase: 'user_input',
           payload: expect.objectContaining({
-            sessionId: 'test-operation-1',
             isFirstMessage: true,
-            message: expect.objectContaining({
-              content: '',
-            }),
+            message: [{ content: '' }], // message is now an array
           }),
           session: expect.objectContaining({
             sessionId: 'test-operation-1',
@@ -625,7 +627,7 @@ describe('AgentRuntimeService', () => {
             messageCount: 1,
           }),
         }),
-        endpoint: 'http://localhost:3010/api/agent/run',
+        endpoint: 'http://localhost:3010/api/workflows/agent/run',
         priority: 'high', // Uses the provided priority from params
         delay: 500, // Uses the provided delay from params
       });
@@ -692,7 +694,7 @@ describe('AgentRuntimeService', () => {
         operationId: 'test-operation-1',
         stepIndex: 2,
         context: undefined,
-        endpoint: 'http://localhost:3010/api/agent/run',
+        endpoint: 'http://localhost:3010/api/workflows/agent/run',
         priority: 'high',
         delay: 100,
         payload: {
@@ -795,21 +797,21 @@ describe('AgentRuntimeService', () => {
         const delay = (service as any).calculateStepDelay({
           events: [{ type: 'llm_response' }],
         });
-        expect(delay).toBe(1000);
+        expect(delay).toBe(50);
       });
 
       it('should return longer delay for tool calls', () => {
         const delay = (service as any).calculateStepDelay({
           events: [{ type: 'tool_result' }],
         });
-        expect(delay).toBe(2000);
+        expect(delay).toBe(100);
       });
 
       it('should return exponential backoff delay for errors', () => {
         const delay = (service as any).calculateStepDelay({
           events: [{ type: 'error' }],
         });
-        expect(delay).toBe(2000);
+        expect(delay).toBe(100);
       });
     });
 
