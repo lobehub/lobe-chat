@@ -1,7 +1,6 @@
 'use client';
 
 import { memo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import PageEditor from '@/features/PageEditor';
 import { useFileStore } from '@/store/file';
@@ -13,24 +12,18 @@ interface PageExplorerProps {
   pageId?: string;
 }
 
+/**
+ * Dedicated for the /page route
+ */
 const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
-  const { t } = useTranslation('file');
-
-  const [
-    selectedPageId,
-    setSelectedPageId,
-    getOptimisticDocuments,
-    fetchDocuments,
-    createNewPage,
-    deletePage,
-  ] = useFileStore((s) => [
-    s.selectedPageId,
-    s.setSelectedPageId,
-    s.getOptimisticDocuments,
-    s.fetchDocuments,
-    s.createNewPage,
-    s.deletePage,
-  ]);
+  const [selectedPageId, setSelectedPageId, getOptimisticDocuments, fetchDocuments, deletePage] =
+    useFileStore((s) => [
+      s.selectedPageId,
+      s.setSelectedPageId,
+      s.getOptimisticDocuments,
+      s.fetchDocuments,
+      s.deletePage,
+    ]);
 
   useEffect(() => {
     if (pageId && pageId !== selectedPageId) {
@@ -45,22 +38,13 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
   const pages = getOptimisticDocuments();
   const currentPageId = selectedPageId || pageId;
 
-  const handleNewDocument = () => {
-    const untitledTitle = t('documentList.untitled');
-    createNewPage(untitledTitle);
-  };
-
   const handleDelete = (docId: string) => {
     deletePage(docId);
   };
 
   if (!currentPageId)
     return (
-      <PageExplorerPlaceholder
-        hasPages={pages?.length > 0}
-        knowledgeBaseId={knowledgeBaseId}
-        onCreateNewNote={handleNewDocument}
-      />
+      <PageExplorerPlaceholder hasPages={pages?.length > 0} knowledgeBaseId={knowledgeBaseId} />
     );
 
   return (

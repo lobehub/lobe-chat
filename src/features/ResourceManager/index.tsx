@@ -2,11 +2,15 @@
 
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { useSearchParams } from 'react-router-dom';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import PageEditor from '@/features/PageEditor';
+import { documentService } from '@/services/document';
+import { useFileStore } from '@/store/file';
+import { documentSelectors } from '@/store/file/slices/document/selectors';
 
 import Editor from './components/Editor';
 import Explorer from './components/Explorer';
@@ -23,6 +27,7 @@ export type ResouceManagerMode = 'editor' | 'explorer' | 'page';
  */
 const ResourceManager = memo(() => {
   const theme = useTheme();
+  const [, setSearchParams] = useSearchParams();
   const [mode, currentViewItemId, libraryId, setMode, setCurrentViewItemId] =
     useResourceManagerStore((s) => [
       s.mode,
@@ -32,9 +37,31 @@ const ResourceManager = memo(() => {
       s.setCurrentViewItemId,
     ]);
 
+  const currentDocument = useFileStore(documentSelectors.getDocumentById(currentViewItemId));
+
+  // Fetch specific document when switching to page mode if not already loaded
+  useEffect(() => {
+    if (mode === 'page' && currentViewItemId && !currentDocument) {
+      // Document not in store, fetch it individually
+      documentService.getDocumentById(currentViewItemId).then((doc) => {
+        if (doc) {
+          // Add the document to the store's documents array
+          useFileStore.setState((state) => ({
+            documents: [...state.documents, doc as any],
+          }));
+        }
+      });
+    }
+  }, [mode, currentViewItemId, currentDocument]);
+
   const handleBack = () => {
     setMode('explorer');
     setCurrentViewItemId(undefined);
+    // Remove the file query parameter from URL
+    setSearchParams((prev) => {
+      prev.delete('file');
+      return prev;
+    });
   };
 
   return (

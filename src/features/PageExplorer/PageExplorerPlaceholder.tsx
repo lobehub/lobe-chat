@@ -64,17 +64,18 @@ const useStyles = createStyles(({ css, token }) => ({
 interface PageExplorerPlaceholderProps {
   hasPages?: boolean;
   knowledgeBaseId?: string;
-  onCreateNewNote: () => void;
   onNoteCreated?: (noteId: string) => void;
 }
 
 const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
-  ({ hasPages = false, knowledgeBaseId, onCreateNewNote, onNoteCreated }) => {
+  ({ hasPages = false, knowledgeBaseId, onNoteCreated }) => {
     const { t } = useTranslation(['file', 'common']);
     const theme = useTheme();
     const { styles } = useStyles();
     const [isUploading, setIsUploading] = useState(false);
     const createDocument = useFileStore((s) => s.createDocument);
+
+    const [createNewPage] = useFileStore((s) => [s.createNewPage]);
 
     const handleUploadMarkdown = async (file: File) => {
       try {
@@ -113,7 +114,11 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
           )}
           <Flexbox gap={12} horizontal>
             {/* Create New Note */}
-            <Flexbox className={styles.card} onClick={onCreateNewNote} padding={16}>
+            <Flexbox
+              className={styles.card}
+              onClick={() => createNewPage(t('documentList.untitled'))}
+              padding={16}
+            >
               <span className={styles.actionTitle}>
                 {t('documentEditor.empty.createNewDocument')}
               </span>
