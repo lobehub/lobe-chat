@@ -27,7 +27,8 @@
   "sideEffects": false,
   "workspaces": [
     "packages/*",
-    "e2e"
+    "e2e",
+    "apps/desktop/src/main"
   ],
   "scripts": {
     "prebuild": "tsx scripts/prebuild.mts && npm run lint",
@@ -169,6 +170,7 @@
     "@lobehub/charts": "^2.1.2",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
+    "@lobehub/desktop-ipc-typings": "workspace:*",
     "@lobehub/editor": "^1.23.1",
     "@lobehub/icons": "^2.43.1",
     "@lobehub/market-sdk": "^0.23.2",
