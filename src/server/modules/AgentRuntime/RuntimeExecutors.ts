@@ -2,6 +2,7 @@ import {
   AgentEvent,
   AgentInstruction,
   CallLLMPayload,
+  GeneralAgentCallLLMResultPayload,
   InstructionExecutor,
   UsageCounter,
 } from '@lobechat/agent-runtime';
@@ -11,11 +12,10 @@ import { ChatToolPayload, ClientSecretPayload, MessageToolCall } from '@lobechat
 import debug from 'debug';
 
 import { MessageModel } from '@/database/models/message';
-import { GeneralAgentLLMResultPayload } from '@/server/modules/AgentRuntime/GeneralAgent';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ToolExecutionService } from '@/server/services/toolExecution';
 
-import { StreamEventManager } from './StreamEventManager';
+import type { IStreamEventManager } from './types';
 
 const log = debug('lobe-server:agent-runtime:streaming-executors');
 
@@ -30,7 +30,7 @@ export interface RuntimeExecutorContext {
   messageModel: MessageModel;
   operationId: string;
   stepIndex: number;
-  streamManager: StreamEventManager;
+  streamManager: IStreamEventManager;
   toolExecutionService: ToolExecutionService;
   userId?: string;
   userPayload?: ClientSecretPayload;
@@ -58,11 +58,11 @@ export const createRuntimeExecutors = (
 
     // create assistant message
     const assistantMessageItem = await ctx.messageModel.create({
+      agentId: state.metadata!.agentId!,
       content: '',
       model: llmPayload.model,
       provider: llmPayload.provider,
       role: 'assistant',
-      sessionId: state.metadata!.sessionId!,
       threadId: state.metadata?.threadId,
       topicId: state.metadata?.topicId,
     });
@@ -317,12 +317,11 @@ export const createRuntimeExecutors = (
             hasToolsCalling: toolsCalling.length > 0,
             result: { content, tool_calls },
             toolsCalling: toolsCalling,
-          } as GeneralAgentLLMResultPayload,
+          } as GeneralAgentCallLLMResultPayload,
           phase: 'llm_result',
           session: {
             eventCount: events.length,
             messageCount: newState.messages.length,
-            // AgentRuntimeContext requires sessionId for compatibility with @lobechat/agent-runtime
             sessionId: operationId,
             status: 'running',
             stepCount: state.stepCount + 1,
@@ -402,12 +401,12 @@ export const createRuntimeExecutors = (
       // 最终更新数据库
       try {
         await ctx.messageModel.create({
+          agentId: state.metadata!.agentId!,
           content: executionResult.content,
           plugin: chatToolPayload as any,
           pluginError: executionResult.error,
           pluginState: executionResult.state,
           role: 'tool',
-          sessionId: state.metadata!.sessionId!,
           threadId: state.metadata?.threadId,
           tool_call_id: chatToolPayload.id,
           topicId: state.metadata?.topicId,
@@ -472,7 +471,6 @@ export const createRuntimeExecutors = (
           session: {
             eventCount: events.length,
             messageCount: newState.messages.length,
-            // AgentRuntimeContext requires sessionId for compatibility with @lobechat/agent-runtime
             sessionId: operationId,
             status: 'running',
             stepCount: state.stepCount + 1,

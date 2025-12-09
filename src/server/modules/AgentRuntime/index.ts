@@ -1,5 +1,8 @@
+export type { AgentRuntimeCoordinatorOptions } from './AgentRuntimeCoordinator';
 export { AgentRuntimeCoordinator } from './AgentRuntimeCoordinator';
 export { AgentStateManager } from './AgentStateManager';
-export { GeneralAgent } from './GeneralAgent';
+export { InMemoryAgentStateManager } from './InMemoryAgentStateManager';
+export { InMemoryStreamEventManager } from './InMemoryStreamEventManager';
 export { createRuntimeExecutors } from './RuntimeExecutors';
 export { StreamEventManager } from './StreamEventManager';
+export type { IAgentStateManager, IStreamEventManager } from './types';

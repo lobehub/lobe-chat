@@ -430,13 +430,34 @@ export const aiAgentRouter = router({
         }
       }
 
-      // 7. Create user message for the prompt
+      // 7. Create user message in database
+      const userMessageRecord = await ctx.messageModel.create({
+        agentId,
+        content: prompt,
+        role: 'user',
+        topicId,
+      });
+      log('runByAgentId: created user message %s', userMessageRecord.id);
+
+      // 8. Create assistant message placeholder in database
+      const assistantMessageRecord = await ctx.messageModel.create({
+        agentId,
+        content: '',
+        model,
+        parentId: userMessageRecord.id,
+        provider,
+        role: 'assistant',
+        topicId,
+      });
+      log('runByAgentId: created assistant message placeholder %s', assistantMessageRecord.id);
+
+      // Create user message object for processing
       const userMessage = { content: prompt, role: 'user' as const };
 
       // Combine history messages with user message
       const allMessages = [...historyMessages, userMessage];
 
-      // 8. Process messages using Server ContextEngineering
+      // 9. Process messages using Server ContextEngineering
       const processedMessages = await serverMessagesEngine({
         capabilities: {
           isCanUseFC: isModelSupportToolUse,
@@ -471,10 +492,10 @@ export const aiAgentRouter = router({
 
       log('runByAgentId: processed %d messages', processedMessages.length);
 
-      // 9. Generate operation ID
+      // 10. Generate operation ID
       const operationId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 
-      // 10. Create initial context
+      // 11. Create initial context
       const initialContext: AgentRuntimeContext = {
         payload: {
           isFirstMessage: true,
@@ -489,7 +510,7 @@ export const aiAgentRouter = router({
         },
       };
 
-      // 11. Create operation using AgentRuntimeService
+      // 12. Create operation using AgentRuntimeService
       const result = await ctx.agentRuntimeService.createOperation({
         agentConfig,
         appContext: {
