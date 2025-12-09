@@ -488,6 +488,8 @@ export const aiAgentRouter = router({
         payload: {
           isFirstMessage: true,
           message: [{ content: prompt }],
+          // Pass user message ID as parentMessageId for assistant message creation
+          parentMessageId: userMessageRecord.id,
         },
         phase: 'user_input' as const,
         session: {

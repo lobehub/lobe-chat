@@ -129,6 +129,8 @@ export class AgentRuntimeService {
       // 初始化操作状态 - 先创建状态再保存
       const initialState = {
         createdAt: new Date().toISOString(),
+        // Store initialContext for executeSync to use
+        initialContext,
         lastModified: new Date().toISOString(),
         // 使用传入的初始消息
         messages: initialMessages,
@@ -794,8 +796,10 @@ export class AgentRuntimeService {
     let state: AgentState = initialState;
 
     // 构建初始上下文
+    // Priority: explicit initialContext param > saved initialContext in state > default
     let context: AgentRuntimeContext | undefined =
       initialContext ??
+      (state as any).initialContext ??
       ({
         payload: {},
         phase: 'user_input' as const,

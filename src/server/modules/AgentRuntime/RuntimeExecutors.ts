@@ -64,11 +64,15 @@ export const createRuntimeExecutors = (
 
     log(`${stagePrefix} Starting operation`);
 
+    // Get parentId from payload (parentId or parentMessageId depending on payload type)
+    const parentId = llmPayload.parentId || (llmPayload as any).parentMessageId;
+
     // create assistant message
     const assistantMessageItem = await ctx.messageModel.create({
       agentId: state.metadata!.agentId!,
       content: '',
       model,
+      parentId,
       provider,
       role: 'assistant',
       threadId: state.metadata?.threadId,
@@ -408,6 +412,7 @@ export const createRuntimeExecutors = (
         await ctx.messageModel.create({
           agentId: state.metadata!.agentId!,
           content: executionResult.content,
+          parentId: payload.parentMessageId,
           plugin: chatToolPayload as any,
           pluginError: executionResult.error,
           pluginState: executionResult.state,
