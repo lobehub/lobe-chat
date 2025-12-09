@@ -577,7 +577,7 @@ export class TopicModel {
         .toSQL(),
     );
 
-    return this.db.query.topics.findMany({
+    const res = await this.db.query.topics.findMany({
       columns: {
         createdAt: true,
         id: true,
@@ -599,5 +599,9 @@ export class TopicModel {
         cursorCondition,
       ),
     });
+
+    console.log('listTopicsForMemoryExtractor result count:', res);
+
+    return res;
   };
 }

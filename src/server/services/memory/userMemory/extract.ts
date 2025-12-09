@@ -1053,6 +1053,7 @@ export class MemoryExtractionExecutor {
       limit: pageSize,
       startDate: job.from,
     });
+    console.log('Fetched topics for user', job.userId, 'count:', rows);
     if (!rows?.length) {
       return { ids: [] };
     }
