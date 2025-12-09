@@ -10,6 +10,9 @@ interface PageEditorProviderProps extends StoreUpdaterProps {
   children: ReactNode;
 }
 
+/**
+ * Provide necessary methods and state for the page editor
+ */
 export const PageEditorProvider = memo<PageEditorProviderProps>(
   ({
     children,

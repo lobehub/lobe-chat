@@ -44,7 +44,7 @@ const AddButton = () => {
     s.setMode,
   ]);
 
-  const handleOpenNoteEditor = useCallback(async () => {
+  const handleOpenPageEditor = useCallback(async () => {
     // Create a new page directly and switch to page view
     const untitledTitle = t('documentList.untitled');
     const newPage = await createDocument({
@@ -173,7 +173,7 @@ const AddButton = () => {
         icon: <Icon icon={FilePenLine} />,
         key: 'create-note',
         label: t('header.actions.newPage'),
-        onClick: handleOpenNoteEditor,
+        onClick: handleOpenPageEditor,
       },
       ...(libraryId
         ? [
@@ -250,7 +250,7 @@ const AddButton = () => {
     [
       currentFolderId,
       handleCreateFolder,
-      handleOpenNoteEditor,
+      handleOpenPageEditor,
       handleOpenNotionGuide,
       libraryId,
       pushDockFileList,
