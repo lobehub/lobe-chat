@@ -21,25 +21,25 @@ export async function GET(request: NextRequest) {
   const streamManager = new StreamEventManager();
 
   const { searchParams } = new URL(request.url);
-  const sessionId = searchParams.get('sessionId');
+  const operationId = searchParams.get('operationId');
   const lastEventId = searchParams.get('lastEventId') || '0';
   const includeHistory = searchParams.get('includeHistory') === 'true';
 
-  if (!sessionId) {
+  if (!operationId) {
     return NextResponse.json(
       {
-        error: 'sessionId parameter is required',
+        error: 'operationId parameter is required',
       },
       { status: 400 },
     );
   }
 
-  log(`Starting SSE connection for session ${sessionId} from eventId ${lastEventId}`);
+  log(`Starting SSE connection for operation ${operationId} from eventId ${lastEventId}`);
 
   // 创建 Server-Sent Events 流
   const stream = new ReadableStream({
     cancel(reason) {
-      log(`SSE connection cancelled for session ${sessionId}:`, reason);
+      log(`SSE connection cancelled for operation ${operationId}:`, reason);
 
       // Call cleanup function
       if ((this as any)._cleanup) {
@@ -51,13 +51,13 @@ export async function GET(request: NextRequest) {
       const writer = createSSEWriter(controller);
 
       // 发送连接确认事件
-      writer.writeConnection(sessionId, lastEventId);
-      log(`SSE connection established for session ${sessionId}`);
+      writer.writeConnection(operationId, lastEventId);
+      log(`SSE connection established for operation ${operationId}`);
 
       // 如果需要，先发送历史事件
       if (includeHistory) {
         streamManager
-          .getStreamHistory(sessionId, 50)
+          .getStreamHistory(operationId, 50)
           .then((history) => {
             // 按时间顺序发送历史事件（最早的在前面）
             const sortedHistory = history.reverse();
@@ -69,10 +69,10 @@ export async function GET(request: NextRequest) {
                   // 添加 SSE 特定的字段，保持与实时事件格式一致
                   const sseEvent = {
                     ...event,
-                    sessionId,
+                    operationId,
                     timestamp: event.timestamp || Date.now(),
                   };
-                  writer.writeStreamEvent(sseEvent, sessionId);
+                  writer.writeStreamEvent(sseEvent, operationId);
                 } catch (error) {
                   console.error('[Agent Stream] Error sending history event:', error);
                 }
@@ -80,14 +80,14 @@ export async function GET(request: NextRequest) {
             });
 
             if (sortedHistory.length > 0) {
-              log(`Sent ${sortedHistory.length} historical events for session ${sessionId}`);
+              log(`Sent ${sortedHistory.length} historical events for operation ${operationId}`);
             }
           })
           .catch((error) => {
             console.error('[Agent Stream] Failed to load history:', error);
 
             try {
-              writer.writeError(error, sessionId, 'history_loading');
+              writer.writeError(error, operationId, 'history_loading');
             } catch (controllerError) {
               console.error('[Agent Stream] Failed to send error event:', controllerError);
             }
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
       const subscribeToEvents = async () => {
         try {
           await streamManager.subscribeStreamEvents(
-            sessionId,
+            operationId,
             lastEventId,
             (events) => {
               events.forEach((event) => {
@@ -109,16 +109,16 @@ export async function GET(request: NextRequest) {
                   // 添加 SSE 特定的字段
                   const sseEvent = {
                     ...event,
-                    sessionId,
+                    operationId,
                     timestamp: event.timestamp || Date.now(),
                   };
 
-                  writer.writeStreamEvent(sseEvent, sessionId);
+                  writer.writeStreamEvent(sseEvent, operationId);
 
                   // 如果收到 agent_runtime_end 事件，停止心跳并准备关闭连接
                   if (event.type === 'agent_runtime_end') {
                     log(
-                      `Agent runtime ended for session ${sessionId}, preparing to close connection`,
+                      `Agent runtime ended for operation ${operationId}, preparing to close connection`,
                     );
 
                     // 延迟关闭连接，确保客户端有时间处理最后的事件
@@ -128,7 +128,7 @@ export async function GET(request: NextRequest) {
                         cleanup();
                         controller.close();
                         log(
-                          `SSE connection closed after agent runtime end for session ${sessionId}`,
+                          `SSE connection closed after agent runtime end for operation ${operationId}`,
                         );
                       } catch (closeError) {
                         console.error('[Agent Stream] Error closing connection:', closeError);
@@ -147,7 +147,7 @@ export async function GET(request: NextRequest) {
             console.error('[Agent Stream] Subscription error:', error);
 
             try {
-              writer.writeError(error as Error, sessionId, 'stream_subscription');
+              writer.writeError(error as Error, operationId, 'stream_subscription');
             } catch (controllerError) {
               console.error('[Agent Stream] Failed to send subscription error:', controllerError);
             }
@@ -162,7 +162,7 @@ export async function GET(request: NextRequest) {
       const heartbeatInterval = setInterval(() => {
         try {
           const heartbeat = {
-            sessionId,
+            operationId,
             timestamp: Date.now(),
             type: 'heartbeat',
           };
@@ -178,7 +178,7 @@ export async function GET(request: NextRequest) {
       const cleanup = () => {
         abortController.abort();
         clearInterval(heartbeatInterval);
-        log(`SSE connection closed for session ${sessionId}`);
+        log(`SSE connection closed for operation ${operationId}`);
       };
 
       // 监听连接关闭

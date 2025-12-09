@@ -13,9 +13,9 @@ export class SimpleQueueServiceImpl implements QueueServiceImpl {
   private timeouts: Map<string, NodeJS.Timeout> = new Map();
 
   async scheduleMessage(message: QueueMessage): Promise<string> {
-    const { sessionId, stepIndex, context, endpoint, payload, delay = 1000 } = message;
+    const { operationId, stepIndex, context, endpoint, payload, delay = 1000 } = message;
 
-    const taskId = `${sessionId}_${stepIndex}_${Date.now()}`;
+    const taskId = `${operationId}_${stepIndex}_${Date.now()}`;
 
     const timeout = setTimeout(async () => {
       try {
@@ -23,8 +23,8 @@ export class SimpleQueueServiceImpl implements QueueServiceImpl {
         const response = await fetch(endpoint, {
           body: JSON.stringify({
             context,
+            operationId,
             payload,
-            sessionId,
             stepIndex,
             timestamp: Date.now(),
           }),
@@ -36,9 +36,9 @@ export class SimpleQueueServiceImpl implements QueueServiceImpl {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
-        log('Executed step %d for session %s to endpoint %s', stepIndex, sessionId, endpoint);
+        log('Executed step %d for operation %s to endpoint %s', stepIndex, operationId, endpoint);
       } catch (error) {
-        log('Failed to execute step %d for session %s: %O', stepIndex, sessionId, error);
+        log('Failed to execute step %d for operation %s: %O', stepIndex, operationId, error);
       } finally {
         this.timeouts.delete(taskId);
       }
@@ -47,9 +47,9 @@ export class SimpleQueueServiceImpl implements QueueServiceImpl {
     this.timeouts.set(taskId, timeout);
 
     log(
-      'Scheduled step %d for session %s to %s with %dms delay',
+      'Scheduled step %d for operation %s to %s with %dms delay',
       stepIndex,
-      sessionId,
+      operationId,
       endpoint,
       delay,
     );

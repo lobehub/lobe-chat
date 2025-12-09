@@ -14,7 +14,7 @@ export interface StepResult {
   stepIndex: number;
 }
 
-export interface AgentSessionMetadata {
+export interface AgentOperationMetadata {
   agentConfig?: any;
   createdAt: string;
   lastActiveAt: string;
@@ -44,15 +44,15 @@ export class AgentStateManager {
   /**
    * 保存 Agent 状态
    */
-  async saveAgentState(sessionId: string, state: AgentState): Promise<void> {
-    const stateKey = `${this.STATE_PREFIX}:${sessionId}`;
+  async saveAgentState(operationId: string, state: AgentState): Promise<void> {
+    const stateKey = `${this.STATE_PREFIX}:${operationId}`;
 
     try {
       const serializedState = JSON.stringify(state);
       await this.redis.setex(stateKey, this.DEFAULT_TTL, serializedState);
 
       // 更新元数据
-      await this.updateSessionMetadata(sessionId, {
+      await this.updateOperationMetadata(operationId, {
         lastActiveAt: new Date().toISOString(),
         status: state.status,
         totalCost: state.cost?.total || 0,
@@ -61,7 +61,7 @@ export class AgentStateManager {
 
       // 状态变更事件通过 saveStepResult 中的 events 数组记录
 
-      log('[%s] Saved state for step %d', sessionId, state.stepCount);
+      log('[%s] Saved state for step %d', operationId, state.stepCount);
     } catch (error) {
       console.error('Failed to save agent state:', error);
       throw error;
@@ -71,8 +71,8 @@ export class AgentStateManager {
   /**
    * 加载 Agent 状态
    */
-  async loadAgentState(sessionId: string): Promise<AgentState | null> {
-    const stateKey = `${this.STATE_PREFIX}:${sessionId}`;
+  async loadAgentState(operationId: string): Promise<AgentState | null> {
+    const stateKey = `${this.STATE_PREFIX}:${operationId}`;
 
     try {
       const serializedState = await this.redis.get(stateKey);
@@ -82,7 +82,7 @@ export class AgentStateManager {
       }
 
       const state = JSON.parse(serializedState) as AgentState;
-      log('[%s] Loaded state (step %d)', sessionId, state.stepCount);
+      log('[%s] Loaded state (step %d)', operationId, state.stepCount);
 
       return state;
     } catch (error) {
@@ -94,16 +94,16 @@ export class AgentStateManager {
   /**
    * 保存步骤执行结果
    */
-  async saveStepResult(sessionId: string, stepResult: StepResult): Promise<void> {
+  async saveStepResult(operationId: string, stepResult: StepResult): Promise<void> {
     const pipeline = this.redis.multi();
 
     try {
       // 保存最新状态
-      const stateKey = `${this.STATE_PREFIX}:${sessionId}`;
+      const stateKey = `${this.STATE_PREFIX}:${operationId}`;
       pipeline.setex(stateKey, this.DEFAULT_TTL, JSON.stringify(stepResult.newState));
 
       // 保存步骤历史
-      const stepsKey = `${this.STEPS_PREFIX}:${sessionId}`;
+      const stepsKey = `${this.STEPS_PREFIX}:${operationId}`;
       const stepData = {
         context: stepResult.nextContext,
         cost: stepResult.newState.cost?.total || 0,
@@ -119,16 +119,16 @@ export class AgentStateManager {
 
       // 保存步骤的事件序列到 agent_runtime_events
       if (stepResult.events && stepResult.events.length > 0) {
-        const eventsKey = `${this.EVENTS_PREFIX}:${sessionId}`;
+        const eventsKey = `${this.EVENTS_PREFIX}:${operationId}`;
 
         pipeline.lpush(eventsKey, JSON.stringify(stepResult.events));
         pipeline.ltrim(eventsKey, 0, 199); // 保留最近 200 步的事件
         pipeline.expire(eventsKey, this.DEFAULT_TTL);
       }
 
-      // 更新会话元数据
-      const metaKey = `${this.METADATA_PREFIX}:${sessionId}`;
-      const metadata: Partial<AgentSessionMetadata> = {
+      // 更新操作元数据
+      const metaKey = `${this.METADATA_PREFIX}:${operationId}`;
+      const metadata: Partial<AgentOperationMetadata> = {
         lastActiveAt: new Date().toISOString(),
         status: stepResult.newState.status,
         totalCost: stepResult.newState.cost?.total || 0,
@@ -141,7 +141,7 @@ export class AgentStateManager {
 
       log(
         '[%s:%d] Saved step result with %d events',
-        sessionId,
+        operationId,
         stepResult.stepIndex,
         stepResult.events?.length || 0,
       );
@@ -154,8 +154,8 @@ export class AgentStateManager {
   /**
    * 获取执行历史
    */
-  async getExecutionHistory(sessionId: string, limit: number = 50): Promise<any[]> {
-    const stepsKey = `${this.STEPS_PREFIX}:${sessionId}`;
+  async getExecutionHistory(operationId: string, limit: number = 50): Promise<any[]> {
+    const stepsKey = `${this.STEPS_PREFIX}:${operationId}`;
 
     try {
       const history = await this.redis.lrange(stepsKey, 0, limit - 1);
@@ -167,10 +167,10 @@ export class AgentStateManager {
   }
 
   /**
-   * 获取会话元数据
+   * 获取操作元数据
    */
-  async getSessionMetadata(sessionId: string): Promise<AgentSessionMetadata | null> {
-    const metaKey = `${this.METADATA_PREFIX}:${sessionId}`;
+  async getOperationMetadata(operationId: string): Promise<AgentOperationMetadata | null> {
+    const metaKey = `${this.METADATA_PREFIX}:${operationId}`;
 
     try {
       const metadata = await this.redis.hgetall(metaKey);
@@ -192,26 +192,26 @@ export class AgentStateManager {
         userId: metadata.userId,
       };
     } catch (error) {
-      console.error('Failed to get session metadata:', error);
+      console.error('Failed to get operation metadata:', error);
       return null;
     }
   }
 
   /**
-   * 创建新的会话元数据
+   * 创建新的操作元数据
    */
-  async createSessionMetadata(
-    sessionId: string,
+  async createOperationMetadata(
+    operationId: string,
     data: {
       agentConfig?: any;
       modelRuntimeConfig?: any;
       userId?: string;
     },
   ): Promise<void> {
-    const metaKey = `${this.METADATA_PREFIX}:${sessionId}`;
+    const metaKey = `${this.METADATA_PREFIX}:${operationId}`;
 
     try {
-      const metadata: AgentSessionMetadata = {
+      const metadata: AgentOperationMetadata = {
         agentConfig: data.agentConfig,
         createdAt: new Date().toISOString(),
         lastActiveAt: new Date().toISOString(),
@@ -239,21 +239,21 @@ export class AgentStateManager {
       await this.redis.hmset(metaKey, redisData);
       await this.redis.expire(metaKey, this.DEFAULT_TTL);
 
-      log('[%s]Created session metadata', sessionId);
+      log('[%s] Created operation metadata', operationId);
     } catch (error) {
-      console.error('Failed to create session metadata:', error);
+      console.error('Failed to create operation metadata:', error);
       throw error;
     }
   }
 
   /**
-   * 更新会话元数据
+   * 更新操作元数据
    */
-  private async updateSessionMetadata(
-    sessionId: string,
-    updates: Partial<AgentSessionMetadata>,
+  private async updateOperationMetadata(
+    operationId: string,
+    updates: Partial<AgentOperationMetadata>,
   ): Promise<void> {
-    const metaKey = `${this.METADATA_PREFIX}:${sessionId}`;
+    const metaKey = `${this.METADATA_PREFIX}:${operationId}`;
 
     try {
       const redisUpdates: Record<string, string> = {};
@@ -278,67 +278,67 @@ export class AgentStateManager {
   }
 
   /**
-   * 删除 Agent 会话的所有数据
+   * 删除 Agent 操作的所有数据
    */
-  async deleteAgentSession(sessionId: string): Promise<void> {
+  async deleteAgentOperation(operationId: string): Promise<void> {
     const keys = [
-      `${this.STATE_PREFIX}:${sessionId}`,
-      `${this.STEPS_PREFIX}:${sessionId}`,
-      `${this.METADATA_PREFIX}:${sessionId}`,
-      `${this.EVENTS_PREFIX}:${sessionId}`,
+      `${this.STATE_PREFIX}:${operationId}`,
+      `${this.STEPS_PREFIX}:${operationId}`,
+      `${this.METADATA_PREFIX}:${operationId}`,
+      `${this.EVENTS_PREFIX}:${operationId}`,
     ];
 
     try {
       await this.redis.del(...keys);
-      log('Deleted session %s', sessionId);
+      log('Deleted operation %s', operationId);
     } catch (error) {
-      console.error('Failed to delete agent session:', error);
+      console.error('Failed to delete agent operation:', error);
       throw error;
     }
   }
 
   /**
-   * 获取所有活跃会话
+   * 获取所有活跃操作
    */
-  async getActiveSessions(): Promise<string[]> {
+  async getActiveOperations(): Promise<string[]> {
     try {
       const pattern = `${this.STATE_PREFIX}:*`;
       const keys = await this.redis.keys(pattern);
       return keys.map((key) => key.replace(`${this.STATE_PREFIX}:`, ''));
     } catch (error) {
-      console.error('Failed to get active sessions:', error);
+      console.error('Failed to get active operations:', error);
       return [];
     }
   }
 
   /**
-   * 清理过期的会话数据
+   * 清理过期的操作数据
    */
-  async cleanupExpiredSessions(): Promise<number> {
+  async cleanupExpiredOperations(): Promise<number> {
     try {
-      const activeSessions = await this.getActiveSessions();
+      const activeOperations = await this.getActiveOperations();
       let cleanedCount = 0;
 
-      for (const sessionId of activeSessions) {
-        const metadata = await this.getSessionMetadata(sessionId);
+      for (const operationId of activeOperations) {
+        const metadata = await this.getOperationMetadata(operationId);
 
         if (metadata) {
           const lastActiveTime = new Date(metadata.lastActiveAt).getTime();
           const now = Date.now();
           const daysSinceActive = (now - lastActiveTime) / (1000 * 60 * 60 * 24);
 
-          // 清理超过 7 天未活跃的会话
+          // 清理超过 7 天未活跃的操作
           if (daysSinceActive > 7) {
-            await this.deleteAgentSession(sessionId);
+            await this.deleteAgentOperation(operationId);
             cleanedCount++;
           }
         }
       }
 
-      log('Cleaned up %d expired sessions', cleanedCount);
+      log('Cleaned up %d expired operations', cleanedCount);
       return cleanedCount;
     } catch (error) {
-      console.error('Failed to cleanup expired sessions:', error);
+      console.error('Failed to cleanup expired operations:', error);
       return 0;
     }
   }
@@ -347,37 +347,37 @@ export class AgentStateManager {
    * 获取统计信息
    */
   async getStats(): Promise<{
-    activeSessions: number;
-    completedSessions: number;
-    errorSessions: number;
-    totalSessions: number;
+    activeOperations: number;
+    completedOperations: number;
+    errorOperations: number;
+    totalOperations: number;
   }> {
     try {
-      const sessions = await this.getActiveSessions();
+      const operations = await this.getActiveOperations();
       const stats = {
-        activeSessions: 0,
-        completedSessions: 0,
-        errorSessions: 0,
-        totalSessions: sessions.length,
+        activeOperations: 0,
+        completedOperations: 0,
+        errorOperations: 0,
+        totalOperations: operations.length,
       };
 
-      for (const sessionId of sessions) {
-        const metadata = await this.getSessionMetadata(sessionId);
+      for (const operationId of operations) {
+        const metadata = await this.getOperationMetadata(operationId);
 
         if (metadata) {
           switch (metadata.status) {
             case 'running':
             case 'waiting_for_human': {
-              stats.activeSessions++;
+              stats.activeOperations++;
               break;
             }
             case 'done': {
-              stats.completedSessions++;
+              stats.completedOperations++;
               break;
             }
             case 'error':
             case 'interrupted': {
-              stats.errorSessions++;
+              stats.errorOperations++;
               break;
             }
           }
@@ -388,10 +388,10 @@ export class AgentStateManager {
     } catch (error) {
       console.error('Failed to get stats:', error);
       return {
-        activeSessions: 0,
-        completedSessions: 0,
-        errorSessions: 0,
-        totalSessions: 0,
+        activeOperations: 0,
+        completedOperations: 0,
+        errorOperations: 0,
+        totalOperations: 0,
       };
     }
   }

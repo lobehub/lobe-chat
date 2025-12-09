@@ -2,7 +2,7 @@ import { OpenAIChatMessage } from '@/types/openai/chat';
 
 export interface StreamEvent {
   data?: any;
-  sessionId?: string;
+  operationId?: string;
   stepIndex?: number;
   timestamp: number;
   type:
@@ -25,7 +25,7 @@ export interface StreamConnectionOptions {
   onEvent?: (event: StreamEvent) => void;
 }
 
-export interface AgentSessionRequest {
+export interface AgentOperationRequest {
   agentConfig?: {
     [key: string]: any;
     costLimit?: {
@@ -38,6 +38,7 @@ export interface AgentSessionRequest {
     humanApprovalRequired?: boolean;
     maxSteps?: number;
   };
+  appSessionId?: string;
   autoStart?: boolean;
   messages: OpenAIChatMessage[];
   modelRuntimeConfig: {
@@ -45,11 +46,10 @@ export interface AgentSessionRequest {
     model: string;
     provider: string;
   };
-  sessionId?: string;
   userMessageId: string;
 }
 
-export interface AgentSessionResponse {
+export interface AgentOperationResponse {
   autoStart: boolean;
   createdAt: string;
   firstStep?: {
@@ -57,7 +57,7 @@ export interface AgentSessionResponse {
     messageId?: string;
     scheduled: boolean;
   };
-  sessionId: string;
+  operationId: string;
   status: string;
   success: boolean;
 }
@@ -65,6 +65,6 @@ export interface AgentSessionResponse {
 export interface HumanInterventionRequest {
   action: 'approve' | 'reject' | 'input' | 'select';
   data?: any;
+  operationId: string;
   reason?: string;
-  sessionId: string;
 }

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AgentRuntimeService } from './AgentRuntimeService';
-import type { AgentExecutionParams, SessionCreationParams, StartExecutionParams } from './types';
+import type { AgentExecutionParams, OperationCreationParams, StartExecutionParams } from './types';
 
 // Mock database and models
 vi.mock('@/database/models/message', () => ({
@@ -11,14 +11,14 @@ vi.mock('@/database/models/message', () => ({
 // Mock dependencies
 vi.mock('@/server/modules/AgentRuntime', () => ({
   AgentRuntimeCoordinator: vi.fn().mockImplementation(() => ({
-    createAgentSession: vi.fn(),
+    createAgentOperation: vi.fn(),
     saveAgentState: vi.fn(),
     loadAgentState: vi.fn(),
-    getSessionMetadata: vi.fn(),
+    getOperationMetadata: vi.fn(),
     saveStepResult: vi.fn(),
     getExecutionHistory: vi.fn(),
-    getActiveSessions: vi.fn(),
-    deleteAgentSession: vi.fn(),
+    getActiveOperations: vi.fn(),
+    deleteAgentOperation: vi.fn(),
     disconnect: vi.fn(),
   })),
   StreamEventManager: vi.fn().mockImplementation(() => ({
@@ -90,17 +90,17 @@ describe('AgentRuntimeService', () => {
     });
   });
 
-  describe('createSession', () => {
-    const mockParams: SessionCreationParams = {
-      sessionId: 'test-session-1',
+  describe('createOperation', () => {
+    const mockParams: OperationCreationParams = {
+      operationId: 'test-operation-1',
       initialContext: {
         phase: 'user_input',
         payload: {
           message: { content: 'test' },
-          sessionId: 'test-session-1',
+          sessionId: 'test-operation-1',
           isFirstMessage: true,
         },
-        session: { sessionId: 'test-session-1', status: 'idle', stepCount: 0, messageCount: 0 },
+        session: { sessionId: 'test-operation-1', status: 'idle', stepCount: 0, messageCount: 0 },
       },
       appContext: {},
       agentConfig: { name: 'test-agent' },
@@ -111,22 +111,22 @@ describe('AgentRuntimeService', () => {
       initialMessages: [],
     };
 
-    it('should create session successfully with autoStart=true', async () => {
+    it('should create operation successfully with autoStart=true', async () => {
       mockQueueService.scheduleMessage.mockResolvedValueOnce('message-123');
 
-      const result = await service.createSession(mockParams);
+      const result = await service.createOperation(mockParams);
 
       expect(result).toEqual({
         success: true,
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         autoStarted: true,
         messageId: 'message-123',
       });
 
       expect(mockCoordinator.saveAgentState).toHaveBeenCalledWith(
-        'test-session-1',
+        'test-operation-1',
         expect.objectContaining({
-          sessionId: 'test-session-1',
+          operationId: 'test-operation-1',
           status: 'idle',
           stepCount: 0,
           messages: [],
@@ -134,14 +134,14 @@ describe('AgentRuntimeService', () => {
         }),
       );
 
-      expect(mockCoordinator.createAgentSession).toHaveBeenCalledWith('test-session-1', {
+      expect(mockCoordinator.createAgentOperation).toHaveBeenCalledWith('test-operation-1', {
         agentConfig: mockParams.agentConfig,
         modelRuntimeConfig: mockParams.modelRuntimeConfig,
         userId: mockParams.userId,
       });
 
       expect(mockQueueService.scheduleMessage).toHaveBeenCalledWith({
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         stepIndex: 0,
         context: mockParams.initialContext,
         endpoint: 'http://localhost:3010/api/agent/run',
@@ -150,14 +150,14 @@ describe('AgentRuntimeService', () => {
       });
     });
 
-    it('should create session successfully with autoStart=false', async () => {
+    it('should create operation successfully with autoStart=false', async () => {
       const params = { ...mockParams, autoStart: false };
 
-      const result = await service.createSession(params);
+      const result = await service.createOperation(params);
 
       expect(result).toEqual({
         success: true,
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         autoStarted: false,
         messageId: undefined,
       });
@@ -165,30 +165,35 @@ describe('AgentRuntimeService', () => {
       expect(mockQueueService.scheduleMessage).not.toHaveBeenCalled();
     });
 
-    it('should handle errors during session creation', async () => {
+    it('should handle errors during operation creation', async () => {
       mockCoordinator.saveAgentState.mockRejectedValueOnce(new Error('Database error'));
 
-      await expect(service.createSession(mockParams)).rejects.toThrow('Database error');
+      await expect(service.createOperation(mockParams)).rejects.toThrow('Database error');
     });
   });
 
   describe('executeStep', () => {
     const mockParams: AgentExecutionParams = {
-      sessionId: 'test-session-1',
+      operationId: 'test-operation-1',
       stepIndex: 1,
       context: {
         phase: 'user_input',
         payload: {
           message: { content: 'test' },
-          sessionId: 'test-session-1',
+          sessionId: 'test-operation-1',
           isFirstMessage: false,
         },
-        session: { sessionId: 'test-session-1', status: 'running', stepCount: 1, messageCount: 1 },
+        session: {
+          sessionId: 'test-operation-1',
+          status: 'running',
+          stepCount: 1,
+          messageCount: 1,
+        },
       },
     };
 
     const mockState = {
-      sessionId: 'test-session-1',
+      operationId: 'test-operation-1',
       status: 'running',
       stepCount: 1,
       messages: [],
@@ -209,7 +214,7 @@ describe('AgentRuntimeService', () => {
 
     beforeEach(() => {
       mockCoordinator.loadAgentState.mockResolvedValue(mockState);
-      mockCoordinator.getSessionMetadata.mockResolvedValue(mockMetadata);
+      mockCoordinator.getOperationMetadata.mockResolvedValue(mockMetadata);
     });
 
     it('should execute step successfully', async () => {
@@ -232,13 +237,13 @@ describe('AgentRuntimeService', () => {
         nextStepScheduled: true,
       });
 
-      expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith('test-session-1', {
+      expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith('test-operation-1', {
         type: 'step_start',
         stepIndex: 1,
         data: {},
       });
 
-      expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith('test-session-1', {
+      expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith('test-operation-1', {
         type: 'step_complete',
         stepIndex: 1,
         data: {
@@ -256,7 +261,7 @@ describe('AgentRuntimeService', () => {
       mockCoordinator.loadAgentState.mockResolvedValue(null);
 
       await expect(service.executeStep(mockParams)).rejects.toThrow(
-        'Agent state not found for session test-session-1',
+        'Agent state not found for operation test-operation-1',
       );
     });
 
@@ -267,7 +272,7 @@ describe('AgentRuntimeService', () => {
 
       await expect(service.executeStep(mockParams)).rejects.toThrow('Runtime error');
 
-      expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith('test-session-1', {
+      expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith('test-operation-1', {
         type: 'error',
         stepIndex: 1,
         data: {
@@ -316,9 +321,9 @@ describe('AgentRuntimeService', () => {
     });
   });
 
-  describe('getSessionStatus', () => {
+  describe('getOperationStatus', () => {
     const mockState = {
-      sessionId: 'test-session-1',
+      operationId: 'test-operation-1',
       status: 'running',
       stepCount: 5,
       messages: [{ content: 'msg1' }, { content: 'msg2' }],
@@ -335,17 +340,17 @@ describe('AgentRuntimeService', () => {
 
     beforeEach(() => {
       mockCoordinator.loadAgentState.mockResolvedValue(mockState);
-      mockCoordinator.getSessionMetadata.mockResolvedValue(mockMetadata);
+      mockCoordinator.getOperationMetadata.mockResolvedValue(mockMetadata);
     });
 
-    it('should get session status successfully', async () => {
-      const result = await service.getSessionStatus({
-        sessionId: 'test-session-1',
+    it('should get operation status successfully', async () => {
+      const result = await service.getOperationStatus({
+        operationId: 'test-operation-1',
         includeHistory: false,
       });
 
       expect(result).toEqual({
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         currentState: expect.objectContaining({
           status: 'running',
           stepCount: 5,
@@ -374,8 +379,8 @@ describe('AgentRuntimeService', () => {
       mockCoordinator.getExecutionHistory.mockResolvedValue(mockHistory);
       mockStreamManager.getStreamHistory.mockResolvedValue(mockEvents);
 
-      const result = await service.getSessionStatus({
-        sessionId: 'test-session-1',
+      const result = await service.getOperationStatus({
+        operationId: 'test-operation-1',
         includeHistory: true,
         historyLimit: 20,
       });
@@ -384,24 +389,24 @@ describe('AgentRuntimeService', () => {
       expect(result.recentEvents).toEqual(mockEvents.slice(0, 10));
     });
 
-    it('should handle missing session', async () => {
+    it('should handle missing operation', async () => {
       mockCoordinator.loadAgentState.mockResolvedValue(null);
-      mockCoordinator.getSessionMetadata.mockResolvedValue(null);
+      mockCoordinator.getOperationMetadata.mockResolvedValue(null);
 
       await expect(
-        service.getSessionStatus({
-          sessionId: 'nonexistent-session',
+        service.getOperationStatus({
+          operationId: 'nonexistent-operation',
         }),
-      ).rejects.toThrow('Session not found');
+      ).rejects.toThrow('Operation not found');
     });
 
-    it('should handle different session statuses', async () => {
+    it('should handle different operation statuses', async () => {
       // Test waiting_for_human status
       const waitingState = { ...mockState, status: 'waiting_for_human' };
       mockCoordinator.loadAgentState.mockResolvedValue(waitingState);
 
-      const result = await service.getSessionStatus({
-        sessionId: 'test-session-1',
+      const result = await service.getOperationStatus({
+        operationId: 'test-operation-1',
       });
 
       expect(result.isActive).toBe(true);
@@ -410,7 +415,7 @@ describe('AgentRuntimeService', () => {
   });
 
   describe('getPendingInterventions', () => {
-    it('should get pending interventions for specific session', async () => {
+    it('should get pending interventions for specific operation', async () => {
       const mockState = {
         status: 'waiting_for_human',
         pendingToolsCalling: [{ toolName: 'calculator', args: {} }],
@@ -424,10 +429,10 @@ describe('AgentRuntimeService', () => {
       };
 
       mockCoordinator.loadAgentState.mockResolvedValue(mockState);
-      mockCoordinator.getSessionMetadata.mockResolvedValue(mockMetadata);
+      mockCoordinator.getOperationMetadata.mockResolvedValue(mockMetadata);
 
       const result = await service.getPendingInterventions({
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
       });
 
       expect(result).toEqual({
@@ -435,7 +440,7 @@ describe('AgentRuntimeService', () => {
         timestamp: expect.any(String),
         pendingInterventions: [
           {
-            sessionId: 'test-session-1',
+            operationId: 'test-operation-1',
             type: 'tool_approval',
             status: 'waiting_for_human',
             stepCount: 3,
@@ -449,15 +454,15 @@ describe('AgentRuntimeService', () => {
     });
 
     it('should get pending interventions for user', async () => {
-      const mockSessions = ['session-1', 'session-2'];
-      mockCoordinator.getActiveSessions.mockResolvedValue(mockSessions);
+      const mockOperations = ['operation-1', 'operation-2'];
+      mockCoordinator.getActiveOperations.mockResolvedValue(mockOperations);
 
       // Mock metadata for filtering by userId
-      mockCoordinator.getSessionMetadata
+      mockCoordinator.getOperationMetadata
         .mockResolvedValueOnce({ userId: 'user-123' })
         .mockResolvedValueOnce({ userId: 'other-user' });
 
-      // Mock states - only first session needs intervention
+      // Mock states - only first operation needs intervention
       mockCoordinator.loadAgentState
         .mockResolvedValueOnce({
           status: 'waiting_for_human',
@@ -477,13 +482,13 @@ describe('AgentRuntimeService', () => {
 
       expect(result.totalCount).toBe(1);
       expect(result.pendingInterventions[0]).toEqual({
-        sessionId: 'session-1',
+        operationId: 'operation-1',
         type: 'human_prompt',
         status: 'waiting_for_human',
         pendingHumanPrompt: 'Please confirm',
         stepCount: 2,
         lastModified: expect.any(String),
-        userId: undefined, // getSessionMetadata is not called due to the way sessions are filtered
+        userId: undefined, // getOperationMetadata is not called due to the way operations are filtered
         modelRuntimeConfig: undefined,
       });
     });
@@ -493,10 +498,10 @@ describe('AgentRuntimeService', () => {
         status: 'running',
         stepCount: 1,
       });
-      mockCoordinator.getSessionMetadata.mockResolvedValue({ userId: 'user-123' });
+      mockCoordinator.getOperationMetadata.mockResolvedValue({ userId: 'user-123' });
 
       const result = await service.getPendingInterventions({
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
       });
 
       expect(result).toEqual({
@@ -509,22 +514,22 @@ describe('AgentRuntimeService', () => {
 
   describe('startExecution', () => {
     const mockParams: StartExecutionParams = {
-      sessionId: 'test-session-1',
+      operationId: 'test-operation-1',
       context: {
         phase: 'user_input',
         payload: {
           message: { content: 'test' },
-          sessionId: 'test-session-1',
+          sessionId: 'test-operation-1',
           isFirstMessage: false,
         },
-        session: { sessionId: 'test-session-1', status: 'idle', stepCount: 0, messageCount: 0 },
+        session: { sessionId: 'test-operation-1', status: 'idle', stepCount: 0, messageCount: 0 },
       },
       priority: 'high',
       delay: 500,
     };
 
     const mockState = {
-      sessionId: 'test-session-1',
+      operationId: 'test-operation-1',
       status: 'idle',
       stepCount: 2,
       messages: [{ content: 'msg1' }],
@@ -538,7 +543,7 @@ describe('AgentRuntimeService', () => {
     };
 
     beforeEach(() => {
-      mockCoordinator.getSessionMetadata.mockResolvedValue(mockMetadata);
+      mockCoordinator.getOperationMetadata.mockResolvedValue(mockMetadata);
       mockCoordinator.loadAgentState.mockResolvedValue(mockState);
       mockQueueService.scheduleMessage.mockResolvedValue('message-456');
     });
@@ -549,12 +554,12 @@ describe('AgentRuntimeService', () => {
       expect(result).toEqual({
         success: true,
         scheduled: true,
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         messageId: 'message-456',
       });
 
       expect(mockCoordinator.saveAgentState).toHaveBeenCalledWith(
-        'test-session-1',
+        'test-operation-1',
         expect.objectContaining({
           status: 'running',
           lastModified: expect.any(String),
@@ -562,7 +567,7 @@ describe('AgentRuntimeService', () => {
       );
 
       expect(mockQueueService.scheduleMessage).toHaveBeenCalledWith({
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         stepIndex: 2,
         context: mockParams.context,
         endpoint: 'http://localhost:3010/api/agent/run',
@@ -578,19 +583,19 @@ describe('AgentRuntimeService', () => {
       await service.startExecution(paramsWithoutContext);
 
       expect(mockQueueService.scheduleMessage).toHaveBeenCalledWith({
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         stepIndex: 2,
         context: expect.objectContaining({
           phase: 'user_input',
           payload: expect.objectContaining({
-            sessionId: 'test-session-1',
+            sessionId: 'test-operation-1',
             isFirstMessage: true,
             message: expect.objectContaining({
               content: '',
             }),
           }),
           session: expect.objectContaining({
-            sessionId: 'test-session-1',
+            sessionId: 'test-operation-1',
             status: 'idle',
             stepCount: 2,
             messageCount: 1,
@@ -602,44 +607,44 @@ describe('AgentRuntimeService', () => {
       });
     });
 
-    it('should handle session not found', async () => {
-      mockCoordinator.getSessionMetadata.mockResolvedValue(null);
+    it('should handle operation not found', async () => {
+      mockCoordinator.getOperationMetadata.mockResolvedValue(null);
 
       await expect(service.startExecution(mockParams)).rejects.toThrow(
-        'Session test-session-1 not found',
+        'Operation test-operation-1 not found',
       );
     });
 
-    it('should handle already running session', async () => {
+    it('should handle already running operation', async () => {
       mockCoordinator.loadAgentState.mockResolvedValue({
         ...mockState,
         status: 'running',
       });
 
       await expect(service.startExecution(mockParams)).rejects.toThrow(
-        'Session test-session-1 is already running',
+        'Operation test-operation-1 is already running',
       );
     });
 
-    it('should handle completed session', async () => {
+    it('should handle completed operation', async () => {
       mockCoordinator.loadAgentState.mockResolvedValue({
         ...mockState,
         status: 'done',
       });
 
       await expect(service.startExecution(mockParams)).rejects.toThrow(
-        'Session test-session-1 is already completed',
+        'Operation test-operation-1 is already completed',
       );
     });
 
-    it('should handle error state session', async () => {
+    it('should handle error state operation', async () => {
       mockCoordinator.loadAgentState.mockResolvedValue({
         ...mockState,
         status: 'error',
       });
 
       await expect(service.startExecution(mockParams)).rejects.toThrow(
-        'Session test-session-1 is in error state',
+        'Operation test-operation-1 is in error state',
       );
     });
   });
@@ -649,7 +654,7 @@ describe('AgentRuntimeService', () => {
       mockQueueService.scheduleMessage.mockResolvedValue('message-789');
 
       const result = await service.processHumanIntervention({
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         stepIndex: 2,
         action: 'approve',
         approvedToolCall: { toolName: 'calculator', args: {} },
@@ -660,7 +665,7 @@ describe('AgentRuntimeService', () => {
       });
 
       expect(mockQueueService.scheduleMessage).toHaveBeenCalledWith({
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         stepIndex: 2,
         context: undefined,
         endpoint: 'http://localhost:3010/api/agent/run',
@@ -678,7 +683,7 @@ describe('AgentRuntimeService', () => {
       mockQueueService.scheduleMessage.mockResolvedValue('message-890');
 
       await service.processHumanIntervention({
-        sessionId: 'test-session-1',
+        operationId: 'test-operation-1',
         stepIndex: 3,
         action: 'input',
         humanInput: { type: 'text', content: 'user response' },

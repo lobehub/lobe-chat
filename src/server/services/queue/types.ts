@@ -4,10 +4,10 @@ export interface QueueMessage {
   context?: AgentRuntimeContext;
   delay?: number;
   endpoint: string;
+  operationId: string;
   payload?: any;
   priority?: 'high' | 'normal' | 'low';
   retries?: number;
-  sessionId: string;
   stepIndex: number;
 }
 

@@ -1,7 +1,7 @@
 import { AgentState } from '@lobechat/agent-runtime';
 import debug from 'debug';
 
-import { AgentSessionMetadata, AgentStateManager, StepResult } from './AgentStateManager';
+import { AgentOperationMetadata, AgentStateManager, StepResult } from './AgentStateManager';
 import { StreamEventManager } from './StreamEventManager';
 
 const log = debug('lobe-server:agent-runtime:coordinator');
@@ -21,10 +21,10 @@ export class AgentRuntimeCoordinator {
   }
 
   /**
-   * 创建新的 Agent 会话并发送初始化事件
+   * 创建新的 Agent 操作并发送初始化事件
    */
-  async createAgentSession(
-    sessionId: string,
+  async createAgentOperation(
+    operationId: string,
     data: {
       agentConfig?: any;
       modelRuntimeConfig?: any;
@@ -32,19 +32,19 @@ export class AgentRuntimeCoordinator {
     },
   ): Promise<void> {
     try {
-      // 创建会话元数据
-      await this.stateManager.createSessionMetadata(sessionId, data);
+      // 创建操作元数据
+      await this.stateManager.createOperationMetadata(operationId, data);
 
       // 获取创建的元数据
-      const metadata = await this.stateManager.getSessionMetadata(sessionId);
+      const metadata = await this.stateManager.getOperationMetadata(operationId);
 
       if (metadata) {
         // 发送 agent runtime init 事件
-        await this.streamEventManager.publishAgentRuntimeInit(sessionId, metadata);
-        log('[%s] Agent session created and initialized', sessionId);
+        await this.streamEventManager.publishAgentRuntimeInit(operationId, metadata);
+        log('[%s] Agent operation created and initialized', operationId);
       }
     } catch (error) {
-      console.error('Failed to create agent session:', error);
+      console.error('Failed to create agent operation:', error);
       throw error;
     }
   }
@@ -52,17 +52,17 @@ export class AgentRuntimeCoordinator {
   /**
    * 保存 Agent 状态并处理相应事件
    */
-  async saveAgentState(sessionId: string, state: AgentState): Promise<void> {
+  async saveAgentState(operationId: string, state: AgentState): Promise<void> {
     try {
-      const previousState = await this.stateManager.loadAgentState(sessionId);
+      const previousState = await this.stateManager.loadAgentState(operationId);
 
       // 保存状态
-      await this.stateManager.saveAgentState(sessionId, state);
+      await this.stateManager.saveAgentState(operationId, state);
 
       // 如果状态变为 done，发送 agent runtime end 事件
       if (state.status === 'done' && previousState?.status !== 'done') {
-        await this.streamEventManager.publishAgentRuntimeEnd(sessionId, state.stepCount, state);
-        log('[%s] Agent runtime completed', sessionId);
+        await this.streamEventManager.publishAgentRuntimeEnd(operationId, state.stepCount, state);
+        log('[%s] Agent runtime completed', operationId);
       }
     } catch (error) {
       console.error('Failed to save agent state and handle events:', error);
@@ -73,10 +73,10 @@ export class AgentRuntimeCoordinator {
   /**
    * 保存步骤结果并处理相应事件
    */
-  async saveStepResult(sessionId: string, stepResult: StepResult): Promise<void> {
+  async saveStepResult(operationId: string, stepResult: StepResult): Promise<void> {
     try {
       // 保存步骤结果
-      await this.stateManager.saveStepResult(sessionId, stepResult);
+      await this.stateManager.saveStepResult(operationId, stepResult);
 
       // 不在这里发送 agent_runtime_end 事件，让 saveAgentState 统一处理
       // 这样确保 agent_runtime_end 是最后一个事件
@@ -89,64 +89,64 @@ export class AgentRuntimeCoordinator {
   /**
    * 获取 Agent 状态
    */
-  async loadAgentState(sessionId: string): Promise<AgentState | null> {
-    return this.stateManager.loadAgentState(sessionId);
+  async loadAgentState(operationId: string): Promise<AgentState | null> {
+    return this.stateManager.loadAgentState(operationId);
   }
 
   /**
-   * 获取会话元数据
+   * 获取操作元数据
    */
-  async getSessionMetadata(sessionId: string): Promise<AgentSessionMetadata | null> {
-    return this.stateManager.getSessionMetadata(sessionId);
+  async getOperationMetadata(operationId: string): Promise<AgentOperationMetadata | null> {
+    return this.stateManager.getOperationMetadata(operationId);
   }
 
   /**
    * 获取执行历史
    */
-  async getExecutionHistory(sessionId: string, limit?: number): Promise<any[]> {
-    return this.stateManager.getExecutionHistory(sessionId, limit);
+  async getExecutionHistory(operationId: string, limit?: number): Promise<any[]> {
+    return this.stateManager.getExecutionHistory(operationId, limit);
   }
 
   /**
-   * 删除 Agent 会话
+   * 删除 Agent 操作
    */
-  async deleteAgentSession(sessionId: string): Promise<void> {
+  async deleteAgentOperation(operationId: string): Promise<void> {
     try {
       await Promise.all([
-        this.stateManager.deleteAgentSession(sessionId),
-        this.streamEventManager.cleanupSession(sessionId),
+        this.stateManager.deleteAgentOperation(operationId),
+        this.streamEventManager.cleanupOperation(operationId),
       ]);
-      log('Agent session deleted: %s', sessionId);
+      log('Agent operation deleted: %s', operationId);
     } catch (error) {
-      console.error('Failed to delete agent session:', error);
+      console.error('Failed to delete agent operation:', error);
       throw error;
     }
   }
 
   /**
-   * 获取活跃会话
+   * 获取活跃操作
    */
-  async getActiveSessions(): Promise<string[]> {
-    return this.stateManager.getActiveSessions();
+  async getActiveOperations(): Promise<string[]> {
+    return this.stateManager.getActiveOperations();
   }
 
   /**
    * 获取统计信息
    */
   async getStats(): Promise<{
-    activeSessions: number;
-    completedSessions: number;
-    errorSessions: number;
-    totalSessions: number;
+    activeOperations: number;
+    completedOperations: number;
+    errorOperations: number;
+    totalOperations: number;
   }> {
     return this.stateManager.getStats();
   }
 
   /**
-   * 清理过期会话
+   * 清理过期操作
    */
-  async cleanupExpiredSessions(): Promise<number> {
-    return this.stateManager.cleanupExpiredSessions();
+  async cleanupExpiredOperations(): Promise<number> {
+    return this.stateManager.cleanupExpiredOperations();
   }
 
   /**

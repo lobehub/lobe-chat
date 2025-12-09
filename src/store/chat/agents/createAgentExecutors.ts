@@ -64,7 +64,7 @@ export const createAgentExecutors = (context: {
      * Creates assistant message and calls internal_fetchAIChatMessage
      */
     call_llm: async (instruction, state) => {
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
       const stagePrefix = `[${sessionLogId}][call_llm]`;
 
       const llmPayload = (instruction as AgentInstructionCallLlm)
@@ -172,7 +172,7 @@ export const createAgentExecutors = (context: {
 
       log(
         '[%s:%d] call_llm completed, finishType: %s',
-        state.sessionId,
+        state.operationId,
         state.stepCount,
         finishType,
       );
@@ -198,7 +198,7 @@ export const createAgentExecutors = (context: {
       if (finishType === 'abort') {
         log(
           '[%s:%d] call_llm aborted by user, entering human_abort phase',
-          state.sessionId,
+          state.operationId,
           state.stepCount,
         );
 
@@ -216,7 +216,7 @@ export const createAgentExecutors = (context: {
             phase: 'human_abort',
             session: {
               messageCount: newState.messages.length,
-              sessionId: state.sessionId,
+              sessionId: state.operationId,
               status: 'running',
               stepCount: state.stepCount + 1,
             },
@@ -237,7 +237,7 @@ export const createAgentExecutors = (context: {
           phase: 'llm_result',
           session: {
             messageCount: newState.messages.length,
-            sessionId: state.sessionId,
+            sessionId: state.operationId,
             status: 'running',
             stepCount: state.stepCount + 1,
           },
@@ -256,7 +256,7 @@ export const createAgentExecutors = (context: {
         .payload as GeneralAgentCallingToolInstructionPayload;
 
       const events: AgentEvent[] = [];
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
 
       log('[%s][call_tool] Executor start, payload: %O', sessionLogId, payload);
 
@@ -546,7 +546,7 @@ export const createAgentExecutors = (context: {
             session: {
               eventCount: events.length,
               messageCount: newState.messages.length,
-              sessionId: state.sessionId,
+              sessionId: state.operationId,
               status: 'running',
               stepCount: state.stepCount + 1,
             },
@@ -576,7 +576,7 @@ export const createAgentExecutors = (context: {
       >;
       const newState = structuredClone(state);
       const events: AgentEvent[] = [];
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
 
       log(
         '[%s][request_human_approve] Executor start, pending tools count: %d, reason: %s',
@@ -665,8 +665,8 @@ export const createAgentExecutors = (context: {
       );
 
       events.push({
+        operationId: newState.operationId,
         pendingToolsCalling,
-        sessionId: newState.sessionId,
         type: 'human_approve_required',
       });
 
@@ -683,7 +683,7 @@ export const createAgentExecutors = (context: {
       ).payload;
 
       const events: AgentEvent[] = [];
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
       const newState = structuredClone(state);
 
       log(
@@ -752,7 +752,7 @@ export const createAgentExecutors = (context: {
      */
     finish: async (instruction, state) => {
       const { reason, reasonDetail } = instruction as Extract<AgentInstruction, { type: 'finish' }>;
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
 
       log(`[${sessionLogId}] Finishing execution: (%s)`, reason);
 

@@ -22,10 +22,10 @@ import { BuiltinToolsExecutor } from '@/server/services/toolExecution/builtin';
 import type {
   AgentExecutionParams,
   AgentExecutionResult,
+  OperationCreationParams,
+  OperationCreationResult,
+  OperationStatusResult,
   PendingInterventionsResult,
-  SessionCreationParams,
-  SessionCreationResult,
-  SessionStatusResult,
   StartExecutionParams,
   StartExecutionResult,
 } from './types';
@@ -45,7 +45,7 @@ export class AgentRuntimeService {
     const baseUrl =
       process.env.AGENT_RUNTIME_BASE_URL || process.env.APP_URL || 'http://localhost:3010';
 
-    return urlJoin(baseUrl, '/api/agent');
+    return urlJoin(baseUrl, '/api/workflows/agent');
   }
   private userId: string;
   private db: LobeChatDatabase;
@@ -71,11 +71,11 @@ export class AgentRuntimeService {
   }
 
   /**
-   * 创建新的 Agent 会话
+   * 创建新的 Agent 操作
    */
-  async createSession(params: SessionCreationParams): Promise<SessionCreationResult> {
+  async createOperation(params: OperationCreationParams): Promise<OperationCreationResult> {
     const {
-      sessionId,
+      operationId,
       initialContext,
       agentConfig,
       modelRuntimeConfig,
@@ -88,9 +88,9 @@ export class AgentRuntimeService {
     } = params;
 
     try {
-      log('[ %s] Creating new session (autoStart: %s)', sessionId, autoStart);
+      log('[%s] Creating new operation (autoStart: %s)', operationId, autoStart);
 
-      // 初始化会话状态 - 先创建状态再保存
+      // 初始化操作状态 - 先创建状态再保存
       const initialState = {
         createdAt: new Date().toISOString(),
         lastModified: new Date().toISOString(),
@@ -102,22 +102,22 @@ export class AgentRuntimeService {
           userId,
           ...appContext,
         },
-        sessionId,
+        operationId,
         status: 'idle',
         stepCount: 0,
         toolManifestMap,
         tools,
       } as Partial<AgentState>;
 
-      // 使用协调器创建会话，自动发送初始化事件
-      await this.coordinator.createAgentSession(sessionId, {
+      // 使用协调器创建操作，自动发送初始化事件
+      await this.coordinator.createAgentOperation(operationId, {
         agentConfig,
         modelRuntimeConfig,
         userId,
       });
 
       // 保存初始状态
-      await this.coordinator.saveAgentState(sessionId, initialState as any);
+      await this.coordinator.saveAgentState(operationId, initialState as any);
 
       let messageId: string | undefined;
       let autoStarted = false;
@@ -128,19 +128,19 @@ export class AgentRuntimeService {
           context: initialContext,
           delay: 50, // 短延迟启动
           endpoint: `${this.baseURL}/run`,
+          operationId,
           priority: 'high',
-          sessionId,
           stepIndex: 0,
         });
         autoStarted = true;
-        log('[%s]Scheduled first step (messageId: %s)', sessionId, messageId);
+        log('[%s] Scheduled first step (messageId: %s)', operationId, messageId);
       } else {
-        log('[%s]created session without auto-start', sessionId);
+        log('[%s] Created operation without auto-start', operationId);
       }
 
-      return { autoStarted, messageId, sessionId, success: true };
+      return { autoStarted, messageId, operationId, success: true };
     } catch (error) {
-      log('Failed to create session %s: %O', sessionId, error);
+      log('Failed to create operation %s: %O', operationId, error);
       throw error;
     }
   }
@@ -149,32 +149,33 @@ export class AgentRuntimeService {
    * 执行 Agent 步骤
    */
   async executeStep(params: AgentExecutionParams): Promise<AgentExecutionResult> {
-    const { sessionId, stepIndex, context, humanInput, approvedToolCall, rejectionReason } = params;
+    const { operationId, stepIndex, context, humanInput, approvedToolCall, rejectionReason } =
+      params;
 
     try {
-      log(`[${sessionId}] Executing step %d`, stepIndex);
+      log('[%s] Executing step %d', operationId, stepIndex);
 
       // 发布步骤开始事件
-      await this.streamManager.publishStreamEvent(sessionId, {
+      await this.streamManager.publishStreamEvent(operationId, {
         data: {},
         stepIndex,
         type: 'step_start',
       });
 
-      // 获取会话状态和元数据
-      const [agentState, sessionMetadata] = await Promise.all([
-        this.coordinator.loadAgentState(sessionId),
-        this.coordinator.getSessionMetadata(sessionId),
+      // 获取操作状态和元数据
+      const [agentState, operationMetadata] = await Promise.all([
+        this.coordinator.loadAgentState(operationId),
+        this.coordinator.getOperationMetadata(operationId),
       ]);
 
       if (!agentState) {
-        throw new Error(`Agent state not found for session ${sessionId}`);
+        throw new Error(`Agent state not found for operation ${operationId}`);
       }
 
       // 创建 Agent 和 Runtime 实例
       const { runtime } = await this.createAgentRuntime({
-        metadata: sessionMetadata,
-        sessionId,
+        metadata: operationMetadata,
+        operationId,
         stepIndex,
       });
 
@@ -197,7 +198,7 @@ export class AgentRuntimeService {
       const stepResult = await runtime.step(currentState, currentContext);
 
       // 保存状态，协调器会自动处理事件发送
-      await this.coordinator.saveStepResult(sessionId, {
+      await this.coordinator.saveStepResult(operationId, {
         ...stepResult,
         executionTime: Date.now() - startAt,
         stepIndex, // placeholder
@@ -211,7 +212,7 @@ export class AgentRuntimeService {
       let nextStepScheduled = false;
 
       // 发布步骤完成事件
-      await this.streamManager.publishStreamEvent(sessionId, {
+      await this.streamManager.publishStreamEvent(operationId, {
         data: {
           finalState: stepResult.newState,
           nextStepScheduled,
@@ -221,7 +222,7 @@ export class AgentRuntimeService {
         type: 'step_complete',
       });
 
-      log(`[${sessionId}] Step %d completed`, stepIndex);
+      log('[%s] Step %d completed', operationId, stepIndex);
 
       if (shouldContinue && stepResult.nextContext) {
         const nextStepIndex = stepIndex + 1;
@@ -232,13 +233,13 @@ export class AgentRuntimeService {
           context: stepResult.nextContext,
           delay,
           endpoint: `${this.baseURL}/run`,
+          operationId,
           priority,
-          sessionId,
           stepIndex: nextStepIndex,
         });
         nextStepScheduled = true;
 
-        log(`[${sessionId}] Scheduled next step %d for session %s`, nextStepIndex);
+        log('[%s] Scheduled next step %d', operationId, nextStepIndex);
       }
 
       return {
@@ -248,10 +249,10 @@ export class AgentRuntimeService {
         success: true,
       };
     } catch (error) {
-      log('Step %d failed for session %s: %O', stepIndex, sessionId, error);
+      log('Step %d failed for operation %s: %O', stepIndex, operationId, error);
 
       // 发布错误事件
-      await this.streamManager.publishStreamEvent(sessionId, {
+      await this.streamManager.publishStreamEvent(operationId, {
         data: {
           error: (error as Error).message,
           phase: 'step_execution',
@@ -266,33 +267,33 @@ export class AgentRuntimeService {
   }
 
   /**
-   * 获取会话状态
+   * 获取操作状态
    */
-  async getSessionStatus(params: {
+  async getOperationStatus(params: {
     historyLimit?: number;
     includeHistory?: boolean;
-    sessionId: string;
-  }): Promise<SessionStatusResult> {
-    const { sessionId, includeHistory = false, historyLimit = 10 } = params;
+    operationId: string;
+  }): Promise<OperationStatusResult> {
+    const { operationId, includeHistory = false, historyLimit = 10 } = params;
 
     try {
-      log('Getting session status for %s', sessionId);
+      log('Getting operation status for %s', operationId);
 
       // 获取当前状态和元数据
-      const [currentState, sessionMetadata] = await Promise.all([
-        this.coordinator.loadAgentState(sessionId),
-        this.coordinator.getSessionMetadata(sessionId),
+      const [currentState, operationMetadata] = await Promise.all([
+        this.coordinator.loadAgentState(operationId),
+        this.coordinator.getOperationMetadata(operationId),
       ]);
 
-      if (!currentState || !sessionMetadata) {
-        throw new Error('Session not found');
+      if (!currentState || !operationMetadata) {
+        throw new Error('Operation not found');
       }
 
       // 获取执行历史（如果需要）
       let executionHistory;
       if (includeHistory) {
         try {
-          executionHistory = await this.coordinator.getExecutionHistory(sessionId, historyLimit);
+          executionHistory = await this.coordinator.getExecutionHistory(operationId, historyLimit);
         } catch (error) {
           log('Failed to load execution history: %O', error);
           executionHistory = [];
@@ -303,23 +304,23 @@ export class AgentRuntimeService {
       let recentEvents;
       if (includeHistory) {
         try {
-          recentEvents = await this.streamManager.getStreamHistory(sessionId, 20);
+          recentEvents = await this.streamManager.getStreamHistory(operationId, 20);
         } catch (error) {
           log('Failed to load recent events: %O', error);
           recentEvents = [];
         }
       }
 
-      // 计算会话统计信息
+      // 计算操作统计信息
       const stats = {
-        lastActiveTime: sessionMetadata.lastActiveAt
-          ? Date.now() - new Date(sessionMetadata.lastActiveAt).getTime()
+        lastActiveTime: operationMetadata.lastActiveAt
+          ? Date.now() - new Date(operationMetadata.lastActiveAt).getTime()
           : 0,
         totalCost: currentState.cost?.total || 0,
         totalMessages: currentState.messages?.length || 0,
         totalSteps: currentState.stepCount || 0,
-        uptime: sessionMetadata.createdAt
-          ? Date.now() - new Date(sessionMetadata.createdAt).getTime()
+        uptime: operationMetadata.createdAt
+          ? Date.now() - new Date(operationMetadata.createdAt).getTime()
           : 0,
       };
 
@@ -342,14 +343,14 @@ export class AgentRuntimeService {
         hasError: currentState.status === 'error',
         isActive: ['running', 'waiting_for_human'].includes(currentState.status),
         isCompleted: currentState.status === 'done',
-        metadata: sessionMetadata,
+        metadata: operationMetadata,
         needsHumanInput: currentState.status === 'waiting_for_human',
+        operationId,
         recentEvents: recentEvents?.slice(0, 10),
-        sessionId,
         stats,
       };
     } catch (error) {
-      log('Failed to get session status for %s: %O', sessionId, error);
+      log('Failed to get operation status for %s: %O', operationId, error);
       throw error;
     }
   }
@@ -358,57 +359,57 @@ export class AgentRuntimeService {
    * 获取待处理的人工干预列表
    */
   async getPendingInterventions(params: {
-    sessionId?: string;
+    operationId?: string;
     userId?: string;
   }): Promise<PendingInterventionsResult> {
-    const { sessionId, userId } = params;
+    const { operationId, userId } = params;
 
     try {
-      log('Getting pending interventions for sessionId: %s, userId: %s', sessionId, userId);
+      log('Getting pending interventions for operationId: %s, userId: %s', operationId, userId);
 
-      let sessions: string[] = [];
+      let operations: string[] = [];
 
-      if (sessionId) {
-        sessions = [sessionId];
+      if (operationId) {
+        operations = [operationId];
       } else if (userId) {
-        // 获取用户的所有活跃会话
+        // 获取用户的所有活跃操作
         try {
-          const activeSessions = await this.coordinator.getActiveSessions();
+          const activeOperations = await this.coordinator.getActiveOperations();
 
-          // 过滤出属于该用户的会话
-          const userSessions = [];
-          for (const session of activeSessions) {
+          // 过滤出属于该用户的操作
+          const userOperations = [];
+          for (const operation of activeOperations) {
             try {
-              const metadata = await this.coordinator.getSessionMetadata(session);
+              const metadata = await this.coordinator.getOperationMetadata(operation);
               if (metadata?.userId === userId) {
-                userSessions.push(session);
+                userOperations.push(operation);
               }
             } catch (error) {
-              log('Failed to get metadata for session %s: %O', session, error);
+              log('Failed to get metadata for operation %s: %O', operation, error);
             }
           }
-          sessions = userSessions;
+          operations = userOperations;
         } catch (error) {
-          log('Failed to get active sessions: %O', error);
-          sessions = [];
+          log('Failed to get active operations: %O', error);
+          operations = [];
         }
       }
 
-      // 检查每个会话的状态
+      // 检查每个操作的状态
       const pendingInterventions = [];
 
-      for (const session of sessions) {
+      for (const operation of operations) {
         try {
           const [state, metadata] = await Promise.all([
-            this.coordinator.loadAgentState(session),
-            this.coordinator.getSessionMetadata(session),
+            this.coordinator.loadAgentState(operation),
+            this.coordinator.getOperationMetadata(operation),
           ]);
 
           if (state?.status === 'waiting_for_human') {
             const intervention: any = {
               lastModified: state.lastModified,
               modelRuntimeConfig: metadata?.modelRuntimeConfig,
-              sessionId: session,
+              operationId: operation,
               status: state.status,
               stepCount: state.stepCount,
               userId: metadata?.userId,
@@ -429,7 +430,7 @@ export class AgentRuntimeService {
             pendingInterventions.push(intervention);
           }
         } catch (error) {
-          log('Failed to get state for session %s: %O', session, error);
+          log('Failed to get state for operation %s: %O', operation, error);
         }
       }
 
@@ -445,43 +446,44 @@ export class AgentRuntimeService {
   }
 
   /**
-   * 显式启动会话执行
+   * 显式启动操作执行
    */
   async startExecution(params: StartExecutionParams): Promise<StartExecutionResult> {
-    const { sessionId, context, priority = 'normal', delay = 50 } = params;
+    const { operationId, context, priority = 'normal', delay = 50 } = params;
 
     try {
-      log('Starting execution for session %s', sessionId);
+      log('Starting execution for operation %s', operationId);
 
-      // 检查会话是否存在
-      const sessionMetadata = await this.coordinator.getSessionMetadata(sessionId);
-      if (!sessionMetadata) {
-        throw new Error(`Session ${sessionId} not found`);
+      // 检查操作是否存在
+      const operationMetadata = await this.coordinator.getOperationMetadata(operationId);
+      if (!operationMetadata) {
+        throw new Error(`Operation ${operationId} not found`);
       }
 
       // 获取当前状态
-      const currentState = await this.coordinator.loadAgentState(sessionId);
+      const currentState = await this.coordinator.loadAgentState(operationId);
       if (!currentState) {
-        throw new Error(`Agent state not found for session ${sessionId}`);
+        throw new Error(`Agent state not found for operation ${operationId}`);
       }
 
-      // 检查会话状态
+      // 检查操作状态
       if (currentState.status === 'running') {
-        throw new Error(`Session ${sessionId} is already running`);
+        throw new Error(`Operation ${operationId} is already running`);
       }
 
       if (currentState.status === 'done') {
-        throw new Error(`Session ${sessionId} is already completed`);
+        throw new Error(`Operation ${operationId} is already completed`);
       }
 
       if (currentState.status === 'error') {
-        throw new Error(`Session ${sessionId} is in error state`);
+        throw new Error(`Operation ${operationId} is in error state`);
       }
 
       // 构建执行上下文
       let executionContext = context;
       if (!executionContext) {
         // 如果没有提供上下文，从元数据构建默认上下文
+        // Note: AgentRuntimeContext requires sessionId for compatibility with @lobechat/agent-runtime
         executionContext = {
           payload: {
             isFirstMessage: true,
@@ -490,15 +492,15 @@ export class AgentRuntimeService {
           phase: 'user_input' as const,
           session: {
             messageCount: currentState.messages?.length || 0,
-            sessionId,
+            sessionId: operationId,
             status: 'idle' as const,
             stepCount: currentState.stepCount || 0,
           },
         };
       }
 
-      // 更新会话状态为运行中
-      await this.coordinator.saveAgentState(sessionId, {
+      // 更新操作状态为运行中
+      await this.coordinator.saveAgentState(operationId, {
         ...currentState,
         lastModified: new Date().toISOString(),
         status: 'running',
@@ -509,21 +511,21 @@ export class AgentRuntimeService {
         context: executionContext,
         delay,
         endpoint: `${this.baseURL}/run`,
+        operationId,
         priority,
-        sessionId,
         stepIndex: currentState.stepCount || 0,
       });
 
-      log('Scheduled execution for session %s (messageId: %s)', sessionId, messageId);
+      log('Scheduled execution for operation %s (messageId: %s)', operationId, messageId);
 
       return {
         messageId,
+        operationId,
         scheduled: true,
-        sessionId,
         success: true,
       };
     } catch (error) {
-      log('Failed to start execution for session %s: %O', sessionId, error);
+      log('Failed to start execution for operation %s: %O', operationId, error);
       throw error;
     }
   }
@@ -535,16 +537,17 @@ export class AgentRuntimeService {
     action: 'approve' | 'reject' | 'input' | 'select';
     approvedToolCall?: any;
     humanInput?: any;
+    operationId: string;
     rejectionReason?: string;
-    sessionId: string;
     stepIndex: number;
   }): Promise<{ messageId: string }> {
-    const { sessionId, stepIndex, action, approvedToolCall, humanInput, rejectionReason } = params;
+    const { operationId, stepIndex, action, approvedToolCall, humanInput, rejectionReason } =
+      params;
 
     try {
       log(
-        'Processing human intervention for session %s:%d (action: %s)',
-        sessionId,
+        'Processing human intervention for operation %s:%d (action: %s)',
+        operationId,
         stepIndex,
         action,
       );
@@ -554,17 +557,17 @@ export class AgentRuntimeService {
         context: undefined, // 会从状态管理器中获取
         delay: 100,
         endpoint: `${this.baseURL}/run`,
+        operationId,
         payload: { approvedToolCall, humanInput, rejectionReason },
         priority: 'high',
-        sessionId,
         stepIndex,
       });
 
-      log('Scheduled immediate execution for session %s (messageId: %s)', sessionId, messageId);
+      log('Scheduled immediate execution for operation %s (messageId: %s)', operationId, messageId);
 
       return { messageId };
     } catch (error) {
-      log('Failed to process human intervention for session %s: %O', sessionId, error);
+      log('Failed to process human intervention for operation %s: %O', operationId, error);
       throw error;
     }
   }
@@ -574,25 +577,25 @@ export class AgentRuntimeService {
    */
   private async createAgentRuntime({
     metadata,
-    sessionId,
+    operationId,
     stepIndex,
   }: {
     metadata?: any;
-    sessionId: string;
+    operationId: string;
     stepIndex: number;
   }) {
     // 创建 Durable Agent 实例
     const agent = new GeneralAgent({
       agentConfig: metadata?.agentConfig,
       modelRuntimeConfig: metadata?.modelRuntimeConfig,
-      sessionId,
+      operationId,
       userId: metadata?.userId,
     });
 
     // 创建流式执行器上下文
     const executorContext: RuntimeExecutorContext = {
       messageModel: this.messageModel,
-      sessionId,
+      operationId,
       stepIndex,
       streamManager: this.streamManager,
       toolExecutionService: this.toolExecutionService,

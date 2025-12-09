@@ -10,8 +10,8 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 export { agentRuntimeClient } from './client';
 export * from './type';
 
-interface AgentSessionRequest {
-  agentSessionId?: string;
+interface AgentOperationRequest {
+  appSessionId?: string;
   autoStart?: boolean;
   messages: UIChatMessage[];
   threadId?: string;
@@ -20,7 +20,7 @@ interface AgentSessionRequest {
 }
 
 class AgentRuntimeService {
-  createSession = async (data: AgentSessionRequest) => {
+  createOperation = async (data: AgentOperationRequest) => {
     const agentStoreState = getAgentStoreState();
     const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
     const chatConfig = agentChatConfigSelectors.currentChatConfig(agentStoreState);
@@ -57,7 +57,7 @@ class AgentRuntimeService {
       toolsEngine.getEnabledPluginManifests(enabledToolIds).entries(),
     );
 
-    return await lambdaClient.aiAgent.createSession.mutate({
+    return await lambdaClient.aiAgent.createOperation.mutate({
       ...data,
       agentConfig: {
         enableSearch: agentChatConfigSelectors.isAgentEnableSearch(agentStoreState),
@@ -74,17 +74,10 @@ class AgentRuntimeService {
   };
 
   /**
-   * Delete a session
+   * Get operation status
    */
-  async deleteSession(sessionId: string): Promise<void> {
-    await lambdaClient.session.removeSession.mutate({ id: sessionId });
-  }
-
-  /**
-   * Get session status
-   */
-  async getSessionStatus(sessionId: string, includeHistory = false): Promise<any> {
-    return await lambdaClient.aiAgent.getSessionStatus.query({ includeHistory, sessionId });
+  async getOperationStatus(operationId: string, includeHistory = false): Promise<any> {
+    return await lambdaClient.aiAgent.getOperationStatus.query({ includeHistory, operationId });
   }
 
   /**
@@ -94,8 +87,8 @@ class AgentRuntimeService {
     return await lambdaClient.aiAgent.processHumanIntervention.mutate({
       action: request.action,
       data: request.data,
+      operationId: request.operationId,
       reason: request.reason,
-      sessionId: request.sessionId,
       stepIndex: 0, // Default to 0 since it's not provided in the request type
     });
   }

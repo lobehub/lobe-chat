@@ -27,7 +27,7 @@ describe('StreamEventManager', () => {
 
   describe('publishAgentRuntimeInit', () => {
     it('should publish agent runtime init event with correct data', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const metadata = {
         agentConfig: { test: true },
         createdAt: '2024-01-01T00:00:00.000Z',
@@ -40,11 +40,11 @@ describe('StreamEventManager', () => {
 
       mockRedis.xadd.mockResolvedValue('event-id-123');
 
-      const result = await streamManager.publishAgentRuntimeInit(sessionId, metadata);
+      const result = await streamManager.publishAgentRuntimeInit(operationId, metadata);
 
       expect(result).toBe('event-id-123');
       expect(mockRedis.xadd).toHaveBeenCalledWith(
-        `agent_runtime_stream:${sessionId}`,
+        `agent_runtime_stream:${operationId}`,
         'MAXLEN',
         '~',
         '1000',
@@ -53,8 +53,8 @@ describe('StreamEventManager', () => {
         'agent_runtime_init',
         'stepIndex',
         '0',
-        'sessionId',
-        sessionId,
+        'operationId',
+        operationId,
         'data',
         JSON.stringify(metadata),
         'timestamp',
@@ -65,7 +65,7 @@ describe('StreamEventManager', () => {
 
   describe('publishAgentRuntimeEnd', () => {
     it('should publish agent runtime end event with correct data', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const stepIndex = 5;
       const finalState = {
         cost: { total: 100 },
@@ -75,11 +75,11 @@ describe('StreamEventManager', () => {
 
       mockRedis.xadd.mockResolvedValue('event-id-456');
 
-      const result = await streamManager.publishAgentRuntimeEnd(sessionId, stepIndex, finalState);
+      const result = await streamManager.publishAgentRuntimeEnd(operationId, stepIndex, finalState);
 
       expect(result).toBe('event-id-456');
       expect(mockRedis.xadd).toHaveBeenCalledWith(
-        `agent_runtime_stream:${sessionId}`,
+        `agent_runtime_stream:${operationId}`,
         'MAXLEN',
         '~',
         '1000',
@@ -88,15 +88,15 @@ describe('StreamEventManager', () => {
         'agent_runtime_end',
         'stepIndex',
         '5',
-        'sessionId',
-        sessionId,
+        'operationId',
+        operationId,
         'data',
         JSON.stringify({
           finalState,
+          operationId,
           phase: 'execution_complete',
           reason: 'completed',
           reasonDetail: 'Agent runtime completed successfully',
-          sessionId,
         }),
         'timestamp',
         expect.any(String),
@@ -104,7 +104,7 @@ describe('StreamEventManager', () => {
     });
 
     it('should accept custom reason and reasonDetail', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const stepIndex = 3;
       const finalState = { status: 'error' };
       const reason = 'error';
@@ -113,7 +113,7 @@ describe('StreamEventManager', () => {
       mockRedis.xadd.mockResolvedValue('event-id-789');
 
       await streamManager.publishAgentRuntimeEnd(
-        sessionId,
+        operationId,
         stepIndex,
         finalState,
         reason,
@@ -131,14 +131,14 @@ describe('StreamEventManager', () => {
         expect.any(String),
         expect.any(String),
         expect.any(String),
-        sessionId,
+        operationId,
         'data',
         JSON.stringify({
           finalState,
+          operationId,
           phase: 'execution_complete',
           reason,
           reasonDetail,
-          sessionId,
         }),
         expect.any(String),
         expect.any(String),

@@ -32,46 +32,46 @@ describe('AgentStateManager', () => {
     stateManager = new AgentStateManager();
   });
 
-  describe('createSessionMetadata', () => {
-    it('should create session metadata successfully', async () => {
-      const sessionId = 'test-session-id';
+  describe('createOperationMetadata', () => {
+    it('should create operation metadata successfully', async () => {
+      const operationId = 'test-operation-id';
       const data = {
         agentConfig: { test: true },
         modelRuntimeConfig: { model: 'gpt-4' },
         userId: 'user-123',
       };
 
-      await expect(stateManager.createSessionMetadata(sessionId, data)).resolves.not.toThrow();
+      await expect(stateManager.createOperationMetadata(operationId, data)).resolves.not.toThrow();
     });
   });
 
   describe('saveAgentState', () => {
     it('should save agent state successfully', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const state = {
         cost: { total: 100 },
         status: 'done' as const,
         stepCount: 5,
       };
 
-      await expect(stateManager.saveAgentState(sessionId, state as any)).resolves.not.toThrow();
+      await expect(stateManager.saveAgentState(operationId, state as any)).resolves.not.toThrow();
     });
 
     it('should save agent state with running status', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const state = {
         cost: { total: 50 },
         status: 'running' as const,
         stepCount: 3,
       };
 
-      await expect(stateManager.saveAgentState(sessionId, state as any)).resolves.not.toThrow();
+      await expect(stateManager.saveAgentState(operationId, state as any)).resolves.not.toThrow();
     });
   });
 
   describe('saveStepResult', () => {
     it('should save step result successfully when status is done', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const stepResult = {
         executionTime: 1000,
         newState: {
@@ -83,12 +83,12 @@ describe('AgentStateManager', () => {
       };
 
       await expect(
-        stateManager.saveStepResult(sessionId, stepResult as any),
+        stateManager.saveStepResult(operationId, stepResult as any),
       ).resolves.not.toThrow();
     });
 
     it('should save step result successfully when status is not done', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const stepResult = {
         executionTime: 500,
         newState: {
@@ -100,7 +100,7 @@ describe('AgentStateManager', () => {
       };
 
       await expect(
-        stateManager.saveStepResult(sessionId, stepResult as any),
+        stateManager.saveStepResult(operationId, stepResult as any),
       ).resolves.not.toThrow();
     });
   });

@@ -28,7 +28,7 @@ const TOOL_PRICING: Record<string, number> = {
 export interface RuntimeExecutorContext {
   fileService?: any;
   messageModel: MessageModel;
-  sessionId: string;
+  operationId: string;
   stepIndex: number;
   streamManager: StreamEventManager;
   toolExecutionService: ToolExecutionService;
@@ -46,15 +46,15 @@ export const createRuntimeExecutors = (
   call_llm: async (instruction, state) => {
     const { payload } = instruction as Extract<AgentInstruction, { type: 'call_llm' }>;
     const llmPayload = payload as CallLLMPayload;
-    const { sessionId, stepIndex, streamManager } = ctx;
+    const { operationId, stepIndex, streamManager } = ctx;
     const events: AgentEvent[] = [];
 
     // 类型断言确保 payload 的正确性
-    const sessionLogId = `${sessionId}:${stepIndex}`;
+    const operationLogId = `${operationId}:${stepIndex}`;
 
-    const stagePrefix = `[${sessionLogId}][call_llm]`;
+    const stagePrefix = `[${operationLogId}][call_llm]`;
 
-    log(`${stagePrefix} Starting session`);
+    log(`${stagePrefix} Starting operation`);
 
     // create assistant message
     const assistantMessageItem = await ctx.messageModel.create({
@@ -68,7 +68,7 @@ export const createRuntimeExecutors = (
     });
 
     // 发布流式开始事件
-    await streamManager.publishStreamEvent(sessionId, {
+    await streamManager.publishStreamEvent(operationId, {
       data: {
         assistantMessage: assistantMessageItem,
         model: llmPayload.model,
@@ -121,7 +121,7 @@ export const createRuntimeExecutors = (
         textBuffer = '';
 
         if (!!delta) {
-          log(`[${sessionLogId}] flushTextBuffer:`, delta);
+          log(`[${operationLogId}] flushTextBuffer:`, delta);
 
           // 构建标准 Agent Runtime 事件
           events.push({
@@ -129,7 +129,7 @@ export const createRuntimeExecutors = (
             type: 'llm_stream',
           });
 
-          await streamManager.publishStreamChunk(sessionId, stepIndex, {
+          await streamManager.publishStreamChunk(operationId, stepIndex, {
             chunkType: 'text',
             content: delta,
           });
@@ -142,14 +142,14 @@ export const createRuntimeExecutors = (
         reasoningBuffer = '';
 
         if (!!delta) {
-          log(`[${sessionLogId}] flushReasoningBuffer:`, delta);
+          log(`[${operationLogId}] flushReasoningBuffer:`, delta);
 
           events.push({
             chunk: { text: delta, type: 'reasoning' },
             type: 'llm_stream',
           });
 
-          await streamManager.publishStreamChunk(sessionId, stepIndex, {
+          await streamManager.publishStreamChunk(operationId, stepIndex, {
             chunkType: 'reasoning',
             reasoning: delta,
           });
@@ -166,7 +166,7 @@ export const createRuntimeExecutors = (
             }
           },
           onText: async (text) => {
-            // log(`[${sessionLogId}][text]`, text);
+            // log(`[${operationLogId}][text]`, text);
             content += text;
 
             textBuffer += text;
@@ -180,7 +180,7 @@ export const createRuntimeExecutors = (
             }
           },
           onThinking: async (reasoning) => {
-            // log(`[${sessionLogId}][reasoning]`, reasoning);
+            // log(`[${operationLogId}][reasoning]`, reasoning);
             thinkingContent += reasoning;
 
             // Buffer reasoning 内容
@@ -196,7 +196,7 @@ export const createRuntimeExecutors = (
           },
           onToolsCalling: async ({ toolsCalling: raw }) => {
             const payload = new ToolNameResolver().resolve(raw, state.toolManifestMap);
-            // log(`[${sessionLogId}][toolsCalling]`, payload);
+            // log(`[${operationLogId}][toolsCalling]`, payload);
             toolsCalling = payload;
             tool_calls = raw;
 
@@ -205,7 +205,7 @@ export const createRuntimeExecutors = (
               await flushTextBuffer();
             }
 
-            await streamManager.publishStreamChunk(sessionId, stepIndex, {
+            await streamManager.publishStreamChunk(operationId, stepIndex, {
               chunkType: 'tools_calling',
               toolsCalling: payload,
             });
@@ -231,21 +231,21 @@ export const createRuntimeExecutors = (
         reasoningBufferTimer = null;
       }
 
-      log(`[${sessionLogId}] finish model-runtime calling`);
+      log(`[${operationLogId}] finish model-runtime calling`);
 
       if (thinkingContent) {
-        log(`[${sessionLogId}][reasoning]`, thinkingContent);
+        log(`[${operationLogId}][reasoning]`, thinkingContent);
       }
       if (content) {
-        log(`[${sessionLogId}][content]`, content);
+        log(`[${operationLogId}][content]`, content);
       }
       if (toolsCalling.length > 0) {
-        log(`[${sessionLogId}][toolsCalling] `, toolsCalling);
+        log(`[${operationLogId}][toolsCalling] `, toolsCalling);
       }
 
       // 日志输出 usage
       if (currentStepUsage) {
-        log(`[${sessionLogId}][usage] %O`, currentStepUsage);
+        log(`[${operationLogId}][usage] %O`, currentStepUsage);
       }
 
       // 添加一个完整的 llm_stream 事件（包含所有流式块）
@@ -255,7 +255,7 @@ export const createRuntimeExecutors = (
       });
 
       // 发布流式结束事件
-      await streamManager.publishStreamEvent(sessionId, {
+      await streamManager.publishStreamEvent(operationId, {
         data: {
           finalContent: content,
           grounding: grounding,
@@ -268,7 +268,7 @@ export const createRuntimeExecutors = (
         type: 'stream_end',
       });
 
-      log('[%s:%d] call_llm completed', sessionId, stepIndex);
+      log('[%s:%d] call_llm completed', operationId, stepIndex);
 
       // ===== 1. 先保存原始 usage 到 message.metadata =====
       try {
@@ -322,7 +322,8 @@ export const createRuntimeExecutors = (
           session: {
             eventCount: events.length,
             messageCount: newState.messages.length,
-            sessionId: state.sessionId,
+            // AgentRuntimeContext requires sessionId for compatibility with @lobechat/agent-runtime
+            sessionId: operationId,
             status: 'running',
             stepCount: state.stepCount + 1,
           },
@@ -331,7 +332,7 @@ export const createRuntimeExecutors = (
       };
     } catch (error) {
       // 发布错误事件
-      await streamManager.publishStreamEvent(sessionId, {
+      await streamManager.publishStreamEvent(operationId, {
         data: {
           error: (error as Error).message,
           phase: 'llm_execution',
@@ -341,7 +342,7 @@ export const createRuntimeExecutors = (
       });
 
       console.error(
-        `[StreamingLLMExecutor][${sessionId}:${stepIndex}] LLM execution failed:`,
+        `[StreamingLLMExecutor][${operationId}:${stepIndex}] LLM execution failed:`,
         error,
       );
       throw error;
@@ -352,14 +353,14 @@ export const createRuntimeExecutors = (
    */
   call_tool: async (instruction, state) => {
     const { payload } = instruction as Extract<AgentInstruction, { type: 'call_tool' }>;
-    const { sessionId, stepIndex, streamManager, toolExecutionService } = ctx;
+    const { operationId, stepIndex, streamManager, toolExecutionService } = ctx;
     const events: AgentEvent[] = [];
 
-    const sessionLogId = `${sessionId}:${stepIndex}`;
-    log(`[${sessionLogId}] payload: %O`, payload);
+    const operationLogId = `${operationId}:${stepIndex}`;
+    log(`[${operationLogId}] payload: %O`, payload);
 
     // 发布工具执行开始事件
-    await streamManager.publishStreamEvent(sessionId, {
+    await streamManager.publishStreamEvent(operationId, {
       data: payload,
       stepIndex,
       type: 'tool_start',
@@ -371,7 +372,7 @@ export const createRuntimeExecutors = (
 
       const toolName = `${chatToolPayload.identifier}/${chatToolPayload.apiName}`;
       // Execute tool using ToolExecutionService
-      log(`[${sessionLogId}] Executing tool ${toolName} ...`);
+      log(`[${operationLogId}] Executing tool ${toolName} ...`);
       const executionResult = await toolExecutionService.executeTool(chatToolPayload, {
         toolManifestMap: state.toolManifestMap,
         userId: ctx.userId,
@@ -381,12 +382,12 @@ export const createRuntimeExecutors = (
       const executionTime = executionResult.executionTime;
       const isSuccess = executionResult.success;
       log(
-        `[${sessionLogId}] Executing ${toolName} in ${executionTime}ms, result: %O`,
+        `[${operationLogId}] Executing ${toolName} in ${executionTime}ms, result: %O`,
         executionResult,
       );
 
       // 发布工具执行结果事件
-      await streamManager.publishStreamEvent(sessionId, {
+      await streamManager.publishStreamEvent(operationId, {
         data: {
           executionTime,
           isSuccess,
@@ -446,7 +447,7 @@ export const createRuntimeExecutors = (
 
       // 日志输出 usage
       log(
-        `[${sessionLogId}][tool usage] %s: calls=%d, time=%dms, success=%s, cost=$%s`,
+        `[${operationLogId}][tool usage] %s: calls=%d, time=%dms, success=%s, cost=$%s`,
         toolName,
         currentToolStats?.calls || 0,
         executionTime,
@@ -454,7 +455,7 @@ export const createRuntimeExecutors = (
         toolCost.toFixed(4),
       );
 
-      log('[%s:%d] Tool execution completed', sessionId, stepIndex);
+      log('[%s:%d] Tool execution completed', operationId, stepIndex);
 
       return {
         events,
@@ -471,7 +472,8 @@ export const createRuntimeExecutors = (
           session: {
             eventCount: events.length,
             messageCount: newState.messages.length,
-            sessionId: state.sessionId,
+            // AgentRuntimeContext requires sessionId for compatibility with @lobechat/agent-runtime
+            sessionId: operationId,
             status: 'running',
             stepCount: state.stepCount + 1,
           },
@@ -485,7 +487,7 @@ export const createRuntimeExecutors = (
       };
     } catch (error) {
       // 发布工具执行错误事件
-      await streamManager.publishStreamEvent(sessionId, {
+      await streamManager.publishStreamEvent(operationId, {
         data: {
           error: (error as Error).message,
           phase: 'tool_execution',
@@ -500,7 +502,7 @@ export const createRuntimeExecutors = (
       });
 
       console.error(
-        `[StreamingToolExecutor] Tool execution failed for session ${sessionId}:${stepIndex}:`,
+        `[StreamingToolExecutor] Tool execution failed for operation ${operationId}:${stepIndex}:`,
         error,
       );
 
@@ -515,12 +517,12 @@ export const createRuntimeExecutors = (
    */
   finish: async (instruction, state) => {
     const { reason, reasonDetail } = instruction as Extract<AgentInstruction, { type: 'finish' }>;
-    const { sessionId, stepIndex, streamManager } = ctx;
+    const { operationId, stepIndex, streamManager } = ctx;
 
-    log('[%s:%d] Finishing execution: (%s)', sessionId, stepIndex, reason);
+    log('[%s:%d] Finishing execution: (%s)', operationId, stepIndex, reason);
 
     // 发布执行完成事件
-    await streamManager.publishStreamEvent(sessionId, {
+    await streamManager.publishStreamEvent(operationId, {
       data: {
         finalState: { ...state, status: 'done' },
         phase: 'execution_complete',
@@ -555,12 +557,12 @@ export const createRuntimeExecutors = (
       AgentInstruction,
       { type: 'request_human_approve' }
     >;
-    const { sessionId, stepIndex, streamManager } = ctx;
+    const { operationId, stepIndex, streamManager } = ctx;
 
-    log('[%s:%d] Requesting human approval for %O', sessionId, stepIndex, pendingToolsCalling);
+    log('[%s:%d] Requesting human approval for %O', operationId, stepIndex, pendingToolsCalling);
 
     // 发布人工审批请求事件
-    await streamManager.publishStreamEvent(sessionId, {
+    await streamManager.publishStreamEvent(operationId, {
       data: {
         pendingToolsCalling,
         phase: 'human_approval',
@@ -576,16 +578,16 @@ export const createRuntimeExecutors = (
     newState.pendingToolsCalling = pendingToolsCalling;
 
     // 通过流式系统通知前端显示审批 UI
-    await streamManager.publishStreamChunk(sessionId, stepIndex, {
-      // 使用 sessionId 作为 messageId
+    await streamManager.publishStreamChunk(operationId, stepIndex, {
+      // 使用 operationId 作为 messageId
       chunkType: 'tools_calling',
       toolsCalling: pendingToolsCalling as any,
     });
 
     const events: AgentEvent[] = [
       {
+        operationId,
         pendingToolsCalling,
-        sessionId: newState.sessionId,
         type: 'human_approve_required',
       },
       {
@@ -596,7 +598,7 @@ export const createRuntimeExecutors = (
       },
     ];
 
-    log('Human approval requested for session %s:%d', sessionId, stepIndex);
+    log('Human approval requested for operation %s:%d', operationId, stepIndex);
 
     return {
       events,

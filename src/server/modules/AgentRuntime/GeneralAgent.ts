@@ -23,7 +23,7 @@ export interface ChatAgentConfig {
     model: string;
     provider: string;
   };
-  sessionId: string;
+  operationId: string;
   userId?: string;
 }
 
@@ -52,7 +52,7 @@ export class GeneralAgent {
     context: AgentRuntimeContext,
     state: AgentState,
   ): Promise<AgentInstruction | AgentInstruction[]> {
-    log(`[${this.config.sessionId}] Processing phase: %s`, context.phase);
+    log(`[${this.config.operationId}] Processing phase: %s`, context.phase);
 
     switch (context.phase) {
       case 'user_input': {
@@ -92,7 +92,7 @@ export class GeneralAgent {
           // If any tools need approval, request human intervention
           if (toolsNeedingApproval.length > 0) {
             log(
-              `[${this.config.sessionId}] Tools requiring approval: %o`,
+              `[${this.config.operationId}] Tools requiring approval: %o`,
               toolsNeedingApproval.map((t) => `${t.identifier}/${t.apiName}`),
             );
 
@@ -163,7 +163,7 @@ export class GeneralAgent {
   ): HumanInterventionPolicy {
     // No manifest means no intervention config
     if (!manifest) {
-      log(`[${this.config.sessionId}] No manifest found for tool: ${toolCall.identifier}`);
+      log(`[${this.config.operationId}] No manifest found for tool: ${toolCall.identifier}`);
       return 'never';
     }
 
@@ -179,7 +179,7 @@ export class GeneralAgent {
         toolArgs = JSON.parse(toolCall.arguments);
       } catch (error) {
         log(
-          `[${this.config.sessionId}] Failed to parse tool arguments for ${toolCall.identifier}/${toolCall.apiName}: %o`,
+          `[${this.config.operationId}] Failed to parse tool arguments for ${toolCall.identifier}/${toolCall.apiName}: %o`,
           error,
         );
       }
@@ -194,7 +194,7 @@ export class GeneralAgent {
       });
 
       log(
-        `[${this.config.sessionId}] API-level intervention check for ${toolCall.identifier}/${toolCall.apiName}: %s`,
+        `[${this.config.operationId}] API-level intervention check for ${toolCall.identifier}/${toolCall.apiName}: %s`,
         policy,
       );
 
@@ -205,7 +205,7 @@ export class GeneralAgent {
     const toolLevelPolicy = manifest.humanIntervention || 'never';
 
     log(
-      `[${this.config.sessionId}] Tool-level intervention check for ${toolCall.identifier}/${toolCall.apiName}: %s`,
+      `[${this.config.operationId}] Tool-level intervention check for ${toolCall.identifier}/${toolCall.apiName}: %s`,
       toolLevelPolicy,
     );
 

@@ -11,7 +11,7 @@ describe('GeneralChatAgent', () => {
   };
 
   const createMockState = (overrides?: Partial<AgentState>): AgentState => ({
-    sessionId: 'test-session',
+    operationId: 'test-session',
     status: 'running',
     messages: [],
     toolManifestMap: {},
@@ -45,6 +45,7 @@ describe('GeneralChatAgent', () => {
     phase,
     payload,
     session: {
+      // Note: AgentRuntimeContext.session uses sessionId for backward compatibility
       sessionId: 'test-session',
       messageCount: 0,
       status: 'running',
@@ -56,7 +57,7 @@ describe('GeneralChatAgent', () => {
     it('should return call_llm instruction for init phase', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -80,7 +81,7 @@ describe('GeneralChatAgent', () => {
     it('should return call_llm instruction for user_input phase', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -107,7 +108,7 @@ describe('GeneralChatAgent', () => {
     it('should return finish when no tool calls', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -130,7 +131,7 @@ describe('GeneralChatAgent', () => {
     it('should return call_tool for single tool that does not need intervention', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -173,7 +174,7 @@ describe('GeneralChatAgent', () => {
     it('should return call_tools_batch for multiple tools that do not need intervention', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -223,7 +224,7 @@ describe('GeneralChatAgent', () => {
     it('should handle invalid JSON in tool arguments gracefully', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -267,7 +268,7 @@ describe('GeneralChatAgent', () => {
     it('should return request_human_approve for tools requiring intervention', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -308,7 +309,7 @@ describe('GeneralChatAgent', () => {
     it('should return both call_tools_batch and request_human_approve for mixed tools', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -370,7 +371,7 @@ describe('GeneralChatAgent', () => {
     it('should return call_llm when no pending tools', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -404,7 +405,7 @@ describe('GeneralChatAgent', () => {
     it('should return request_human_approve when there are pending tools', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -450,7 +451,7 @@ describe('GeneralChatAgent', () => {
     it('should return call_llm when no pending tools', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -484,7 +485,7 @@ describe('GeneralChatAgent', () => {
     it('should return request_human_approve when there are pending tools', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -531,7 +532,7 @@ describe('GeneralChatAgent', () => {
     it('should return finish instruction with error details', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -553,7 +554,7 @@ describe('GeneralChatAgent', () => {
     it('should handle error without message', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -574,7 +575,7 @@ describe('GeneralChatAgent', () => {
     it('should handle abort at llm_result phase when state is interrupted', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -613,7 +614,7 @@ describe('GeneralChatAgent', () => {
     it('should handle abort at tool_result phase when state is interrupted', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -663,7 +664,7 @@ describe('GeneralChatAgent', () => {
     it('should return finish when state is interrupted with no tools', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -690,7 +691,7 @@ describe('GeneralChatAgent', () => {
     it('should continue normal flow when state is not interrupted', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -733,7 +734,7 @@ describe('GeneralChatAgent', () => {
     it('should handle abort at human_abort phase when state is interrupted', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -776,7 +777,7 @@ describe('GeneralChatAgent', () => {
     it('should return resolve_aborted_tools when there are pending tool calls', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -820,7 +821,7 @@ describe('GeneralChatAgent', () => {
     it('should return finish when there are no tool calls', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -845,7 +846,7 @@ describe('GeneralChatAgent', () => {
     it('should return finish when toolsCalling is undefined', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -869,7 +870,7 @@ describe('GeneralChatAgent', () => {
     it('should return finish when toolsCalling is empty array', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -896,7 +897,7 @@ describe('GeneralChatAgent', () => {
     it('should return finish instruction for unknown phase', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -917,7 +918,7 @@ describe('GeneralChatAgent', () => {
     it('should check intervention at API level when configured', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -971,7 +972,7 @@ describe('GeneralChatAgent', () => {
     it('should execute all tools when user approvalMode is auto-run', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -1019,7 +1020,7 @@ describe('GeneralChatAgent', () => {
     it('should respect allowList when approvalMode is allow-list', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -1080,7 +1081,7 @@ describe('GeneralChatAgent', () => {
     it('should use tool config when approvalMode is manual', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -1144,7 +1145,7 @@ describe('GeneralChatAgent', () => {
     it('should always require intervention for tools with "always" policy even in auto-run mode', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -1195,7 +1196,7 @@ describe('GeneralChatAgent', () => {
     it('should always require intervention for tools with tool-level "always" policy', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -1241,7 +1242,7 @@ describe('GeneralChatAgent', () => {
     it('should handle mixed tools with "always" and regular policies in auto-run mode', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 
@@ -1311,7 +1312,7 @@ describe('GeneralChatAgent', () => {
     it('should handle "always" policy with rule-based configuration', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },
-        sessionId: 'test-session',
+        operationId: 'test-session',
         modelRuntimeConfig: mockModelRuntimeConfig,
       });
 

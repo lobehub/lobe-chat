@@ -9,7 +9,7 @@ const log = debug('lobe-server:agent-runtime:stream-event-manager');
 export interface StreamEvent {
   data: any;
   id?: string; // Redis Stream event ID
-  sessionId: string;
+  operationId: string;
   stepIndex: number;
   timestamp: number;
   type:
@@ -50,14 +50,14 @@ export class StreamEventManager {
    * 发布流式事件到 Redis Stream
    */
   async publishStreamEvent(
-    sessionId: string,
-    event: Omit<StreamEvent, 'sessionId' | 'timestamp'>,
+    operationId: string,
+    event: Omit<StreamEvent, 'operationId' | 'timestamp'>,
   ): Promise<string> {
-    const streamKey = `${this.STREAM_PREFIX}:${sessionId}`;
+    const streamKey = `${this.STREAM_PREFIX}:${operationId}`;
 
     const eventData: StreamEvent = {
       ...event,
-      sessionId,
+      operationId,
       timestamp: Date.now(),
     };
 
@@ -72,8 +72,8 @@ export class StreamEventManager {
         eventData.type,
         'stepIndex',
         eventData.stepIndex.toString(),
-        'sessionId',
-        eventData.sessionId,
+        'operationId',
+        eventData.operationId,
         'data',
         JSON.stringify(eventData.data),
         'timestamp',
@@ -83,7 +83,12 @@ export class StreamEventManager {
       // 设置过期时间
       await this.redis.expire(streamKey, this.STREAM_RETENTION);
 
-      log('Published event %s for session %s:%d', eventData.type, sessionId, eventData.stepIndex);
+      log(
+        'Published event %s for operation %s:%d',
+        eventData.type,
+        operationId,
+        eventData.stepIndex,
+      );
 
       return eventId as string;
     } catch (error) {
@@ -96,11 +101,11 @@ export class StreamEventManager {
    * 发布流式内容块
    */
   async publishStreamChunk(
-    sessionId: string,
+    operationId: string,
     stepIndex: number,
     chunkData: StreamChunkData,
   ): Promise<string> {
-    return this.publishStreamEvent(sessionId, {
+    return this.publishStreamEvent(operationId, {
       data: chunkData,
       stepIndex,
       type: 'stream_chunk',
@@ -110,8 +115,8 @@ export class StreamEventManager {
   /**
    * 发布 Agent 运行时初始化事件
    */
-  async publishAgentRuntimeInit(sessionId: string, initialState: any): Promise<string> {
-    return this.publishStreamEvent(sessionId, {
+  async publishAgentRuntimeInit(operationId: string, initialState: any): Promise<string> {
+    return this.publishStreamEvent(operationId, {
       data: initialState,
       stepIndex: 0,
       type: 'agent_runtime_init',
@@ -122,19 +127,19 @@ export class StreamEventManager {
    * 发布 Agent 运行时结束事件
    */
   async publishAgentRuntimeEnd(
-    sessionId: string,
+    operationId: string,
     stepIndex: number,
     finalState: any,
     reason?: string,
     reasonDetail?: string,
   ): Promise<string> {
-    return this.publishStreamEvent(sessionId, {
+    return this.publishStreamEvent(operationId, {
       data: {
         finalState,
+        operationId,
         phase: 'execution_complete',
         reason: reason || 'completed',
         reasonDetail: reasonDetail || 'Agent runtime completed successfully',
-        sessionId,
       },
       stepIndex,
       type: 'agent_runtime_end',
@@ -145,15 +150,15 @@ export class StreamEventManager {
    * 订阅流式事件（用于 WebSocket/SSE）
    */
   async subscribeStreamEvents(
-    sessionId: string,
+    operationId: string,
     lastEventId: string = '0',
     onEvents: (events: StreamEvent[]) => void,
     signal?: AbortSignal,
   ): Promise<void> {
-    const streamKey = `${this.STREAM_PREFIX}:${sessionId}`;
+    const streamKey = `${this.STREAM_PREFIX}:${operationId}`;
     let currentLastId = lastEventId;
 
-    log('Starting subscription for session %s from %s', sessionId, lastEventId);
+    log('Starting subscription for operation %s from %s', operationId, lastEventId);
 
     while (!signal?.aborted) {
       try {
@@ -211,14 +216,14 @@ export class StreamEventManager {
       }
     }
 
-    log('Subscription ended for session %s', sessionId);
+    log('Subscription ended for operation %s', operationId);
   }
 
   /**
    * 获取流式事件历史
    */
-  async getStreamHistory(sessionId: string, count: number = 100): Promise<StreamEvent[]> {
-    const streamKey = `${this.STREAM_PREFIX}:${sessionId}`;
+  async getStreamHistory(operationId: string, count: number = 100): Promise<StreamEvent[]> {
+    const streamKey = `${this.STREAM_PREFIX}:${operationId}`;
 
     try {
       const results = await this.redis.xrevrange(streamKey, '+', '-', 'COUNT', count);
@@ -248,29 +253,29 @@ export class StreamEventManager {
   }
 
   /**
-   * 清理会话的流式数据
+   * 清理操作的流式数据
    */
-  async cleanupSession(sessionId: string): Promise<void> {
-    const streamKey = `${this.STREAM_PREFIX}:${sessionId}`;
+  async cleanupOperation(operationId: string): Promise<void> {
+    const streamKey = `${this.STREAM_PREFIX}:${operationId}`;
 
     try {
       await this.redis.del(streamKey);
-      log('Cleaned up session %s', sessionId);
+      log('Cleaned up operation %s', operationId);
     } catch (error) {
-      console.error('[StreamEventManager] Failed to cleanup session:', error);
+      console.error('[StreamEventManager] Failed to cleanup operation:', error);
     }
   }
 
   /**
-   * 获取活跃会话数量
+   * 获取活跃操作数量
    */
-  async getActiveSessionsCount(): Promise<number> {
+  async getActiveOperationsCount(): Promise<number> {
     try {
       const pattern = `${this.STREAM_PREFIX}:*`;
       const keys = await this.redis.keys(pattern);
       return keys.length;
     } catch (error) {
-      console.error('[StreamEventManager] Failed to get active sessions count:', error);
+      console.error('[StreamEventManager] Failed to get active operations count:', error);
       return 0;
     }
   }

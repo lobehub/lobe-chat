@@ -3,11 +3,16 @@ import { safeParseJSON } from '@lobechat/utils';
 import debug from 'debug';
 
 import { SearchService } from '@/server/services/search';
-import { BuiltinToolServerRuntimes } from '@/tools/executionRuntimes';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
+import { WebBrowsingExecutionRuntime } from '@/tools/web-browsing/ExecutionRuntime';
 
 import { IToolExecutor, ToolExecutionContext, ToolExecutionResult } from './types';
 
 const log = debug('lobe-server:builtin-tools-executor');
+
+const BuiltinToolServerRuntimes: Record<string, any> = {
+  [WebBrowsingManifest.identifier]: WebBrowsingExecutionRuntime,
+};
 
 export class BuiltinToolsExecutor implements IToolExecutor {
   async execute(

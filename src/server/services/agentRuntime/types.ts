@@ -5,8 +5,8 @@ export interface AgentExecutionParams {
   approvedToolCall?: any;
   context?: AgentRuntimeContext;
   humanInput?: any;
+  operationId: string;
   rejectionReason?: string;
-  sessionId: string;
   stepIndex: number;
 }
 
@@ -17,7 +17,7 @@ export interface AgentExecutionResult {
   success: boolean;
 }
 
-export interface SessionCreationParams {
+export interface OperationCreationParams {
   agentConfig?: any;
   appContext: {
     sessionId?: string;
@@ -28,20 +28,20 @@ export interface SessionCreationParams {
   initialContext: AgentRuntimeContext;
   initialMessages?: any[];
   modelRuntimeConfig?: any;
-  sessionId: string;
+  operationId: string;
   toolManifestMap: Record<string, LobeToolManifest>;
   tools?: any[];
   userId?: string;
 }
 
-export interface SessionCreationResult {
+export interface OperationCreationResult {
   autoStarted: boolean;
   messageId?: string;
-  sessionId: string;
+  operationId: string;
   success: boolean;
 }
 
-export interface SessionStatusResult {
+export interface OperationStatusResult {
   currentState: {
     cost?: any;
     costLimit?: any;
@@ -62,8 +62,8 @@ export interface SessionStatusResult {
   isCompleted: boolean;
   metadata: any;
   needsHumanInput: boolean;
+  operationId: string;
   recentEvents?: any[];
-  sessionId: string;
   stats: {
     lastActiveTime: number;
     totalCost: number;
@@ -77,10 +77,10 @@ export interface PendingInterventionsResult {
   pendingInterventions: Array<{
     lastModified: string;
     modelRuntimeConfig?: any;
+    operationId: string;
     pendingHumanPrompt?: any;
     pendingHumanSelect?: any;
     pendingToolsCalling?: any[];
-    sessionId: string;
     status: string;
     stepCount: number;
     type: 'tool_approval' | 'human_prompt' | 'human_select';
@@ -93,13 +93,13 @@ export interface PendingInterventionsResult {
 export interface StartExecutionParams {
   context?: AgentRuntimeContext;
   delay?: number;
+  operationId: string;
   priority?: 'high' | 'normal' | 'low';
-  sessionId: string;
 }
 
 export interface StartExecutionResult {
   messageId: string;
+  operationId: string;
   scheduled: boolean;
-  sessionId: string;
   success: boolean;
 }

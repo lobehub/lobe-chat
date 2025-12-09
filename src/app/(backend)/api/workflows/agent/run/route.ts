@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
   const body = JSON.parse(rawBody);
   try {
     const {
-      sessionId,
+      operationId,
       stepIndex = 0,
       context,
       humanInput,
@@ -68,22 +68,22 @@ export async function POST(request: NextRequest) {
       rejectionReason,
     } = body;
 
-    if (!sessionId) {
-      return NextResponse.json({ error: 'sessionId is required' }, { status: 400 });
+    if (!operationId) {
+      return NextResponse.json({ error: 'operationId is required' }, { status: 400 });
     }
 
-    log(`[${sessionId}] Starting step ${stepIndex}`);
+    log(`[${operationId}] Starting step ${stepIndex}`);
 
-    // Get userId from session metadata stored in Redis
+    // Get userId from operation metadata stored in Redis
     const coordinator = new AgentRuntimeCoordinator();
-    const metadata = await coordinator.getSessionMetadata(sessionId);
+    const metadata = await coordinator.getOperationMetadata(operationId);
 
     if (!metadata?.userId) {
-      log(`[${sessionId}] Invalid session or no userId found`);
-      return NextResponse.json({ error: 'Invalid session or unauthorized' }, { status: 401 });
+      log(`[${operationId}] Invalid operation or no userId found`);
+      return NextResponse.json({ error: 'Invalid operation or unauthorized' }, { status: 401 });
     }
 
-    // Initialize service with userId from session metadata
+    // Initialize service with userId from operation metadata
     const serverDB = await getServerDB();
     const agentRuntimeService = new AgentRuntimeService(serverDB, metadata.userId);
 
@@ -92,8 +92,8 @@ export async function POST(request: NextRequest) {
       approvedToolCall,
       context,
       humanInput,
+      operationId,
       rejectionReason,
-      sessionId,
       stepIndex,
     });
 
@@ -105,10 +105,10 @@ export async function POST(request: NextRequest) {
       executionTime,
       nextStepIndex: result.nextStepScheduled ? stepIndex + 1 : undefined,
       nextStepScheduled: result.nextStepScheduled,
+      operationId,
       pendingApproval: result.state.pendingToolsCalling,
       pendingPrompt: result.state.pendingHumanPrompt,
       pendingSelect: result.state.pendingHumanSelect,
-      sessionId,
       status: result.state.status,
       stepIndex,
       success: result.success,
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     };
 
     log(
-      `[${sessionId}] Step ${stepIndex} completed (${executionTime}ms, status: ${result.state.status})`,
+      `[${operationId}] Step ${stepIndex} completed (${executionTime}ms, status: ${result.state.status})`,
     );
 
     return NextResponse.json(responseData);
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
       {
         error: error.message,
         executionTime,
-        sessionId: body?.sessionId,
+        operationId: body?.operationId,
         stepIndex: body?.stepIndex || 0,
       },
       { status: 500 },

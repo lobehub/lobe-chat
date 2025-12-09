@@ -15,7 +15,7 @@ class AgentRuntimeClient {
    * Create a streaming connection to receive real-time agent events
    */
   createStreamConnection(
-    sessionId: string,
+    operationId: string,
     options: StreamConnectionOptions = {},
   ): AbortController {
     const {
@@ -30,7 +30,7 @@ class AgentRuntimeClient {
     const params = new URLSearchParams({
       includeHistory: includeHistory.toString(),
       lastEventId,
-      sessionId,
+      operationId,
     });
 
     const controller = new AbortController();
@@ -41,11 +41,11 @@ class AgentRuntimeClient {
         'Last-Event-ID': lastEventId,
       },
       onclose: () => {
-        log(`Stream connection closed for session ${sessionId}`);
+        log(`Stream connection closed for operation ${operationId}`);
         onDisconnect?.();
       },
       onerror: (error) => {
-        console.error(`[AgentClientService] Stream error for session ${sessionId}:`, error);
+        console.error(`[AgentClientService] Stream error for operation ${operationId}:`, error);
         onError?.(error instanceof Error ? error : new Error('Stream connection error'));
       },
       onmessage: (event) => {
@@ -61,7 +61,7 @@ class AgentRuntimeClient {
       },
       onopen: async (response) => {
         if (response.ok) {
-          log(`Stream connection opened for session ${sessionId}`);
+          log(`Stream connection opened for operation ${operationId}`);
           onConnect?.();
         } else {
           throw new Error(`Failed to open stream: ${response.status} ${response.statusText}`);

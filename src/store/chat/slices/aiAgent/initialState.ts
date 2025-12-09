@@ -1,12 +1,12 @@
-export interface AgentSessionInfo {
+export interface AgentOperationInfo {
   error?: string;
   eventSource?: EventSource;
   lastEventId?: string;
   needsHumanInput?: boolean;
+  operationId: string;
   pendingApproval?: any[];
   pendingPrompt?: any;
   pendingSelect?: any;
-  sessionId: string;
   status: string;
   stepCount: number;
   totalCost?: number;
@@ -14,11 +14,11 @@ export interface AgentSessionInfo {
 
 export interface ChatAIAgentState {
   /**
-   * Agent sessions map, keyed by messageId (assistantMessageId)
+   * Agent operations map, keyed by messageId (assistantMessageId)
    */
-  agentSessions: Record<string, AgentSessionInfo>;
+  agentOperations: Record<string, AgentOperationInfo>;
 }
 
 export const initialAiAgentState: ChatAIAgentState = {
-  agentSessions: {},
+  agentOperations: {},
 };

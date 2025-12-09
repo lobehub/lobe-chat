@@ -10,10 +10,10 @@ import { AgentRuntimeService } from '@/server/services/agentRuntime';
 
 const log = debug('lobe-server:ai-agent-router');
 
-// Zod schemas for agent session operations
-const CreateAgentSessionSchema = z.object({
+// Zod schemas for agent operation
+const CreateAgentOperationSchema = z.object({
   agentConfig: z.record(z.any()).optional().default({}),
-  agentSessionId: z.string().optional(),
+  appSessionId: z.string().optional(),
   autoStart: z.boolean().optional().default(true),
   messages: z.array(z.any()).optional().default([]),
   modelRuntimeConfig: z.object({
@@ -27,10 +27,10 @@ const CreateAgentSessionSchema = z.object({
   userId: z.string().optional(),
 });
 
-const GetSessionStatusSchema = z.object({
+const GetOperationStatusSchema = z.object({
   historyLimit: z.number().optional().default(10),
   includeHistory: z.boolean().optional().default(false),
-  sessionId: z.string(),
+  operationId: z.string(),
 });
 
 const ProcessHumanInterventionSchema = z.object({
@@ -42,25 +42,25 @@ const ProcessHumanInterventionSchema = z.object({
       selection: z.any().optional(),
     })
     .optional(),
+  operationId: z.string(),
   reason: z.string().optional(),
-  sessionId: z.string(),
   stepIndex: z.number().optional().default(0),
 });
 
 const GetPendingInterventionsSchema = z
   .object({
-    sessionId: z.string().optional(),
+    operationId: z.string().optional(),
     userId: z.string().optional(),
   })
-  .refine((data) => data.sessionId || data.userId, {
-    message: 'Either sessionId or userId must be provided',
+  .refine((data) => data.operationId || data.userId, {
+    message: 'Either operationId or userId must be provided',
   });
 
 const StartExecutionSchema = z.object({
   context: z.any().optional(),
   delay: z.number().optional().default(1000),
+  operationId: z.string(),
   priority: z.enum(['high', 'normal', 'low']).optional().default('normal'),
-  sessionId: z.string(),
 });
 
 const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
@@ -74,8 +74,8 @@ const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) =>
 });
 
 export const aiAgentRouter = router({
-  createSession: aiAgentProcedure
-    .input(CreateAgentSessionSchema)
+  createOperation: aiAgentProcedure
+    .input(CreateAgentOperationSchema)
     .mutation(async ({ input, ctx }) => {
       if (!isEnableAgent()) {
         throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
@@ -83,7 +83,7 @@ export const aiAgentRouter = router({
 
       const {
         agentConfig = {},
-        agentSessionId,
+        appSessionId,
         autoStart = true,
         messages = [],
         modelRuntimeConfig,
@@ -102,10 +102,10 @@ export const aiAgentRouter = router({
         });
       }
 
-      // Generate runtime session ID
-      const runtimeSessionId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+      // Generate runtime operation ID
+      const operationId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 
-      log(`Creating session ${runtimeSessionId} for user ${ctx.userId}`);
+      log(`Creating operation ${operationId} for user ${ctx.userId}`);
 
       // Create initial context
       const initialContext: AgentRuntimeContext = {
@@ -113,17 +113,17 @@ export const aiAgentRouter = router({
         phase: 'user_input' as const,
         session: {
           messageCount: messages.length,
-          sessionId: runtimeSessionId,
+          sessionId: operationId,
           status: 'idle' as const,
           stepCount: 0,
         },
       };
 
-      // Create session using AgentRuntimeService
-      const result = await ctx.agentRuntimeService.createSession({
+      // Create operation using AgentRuntimeService
+      const result = await ctx.agentRuntimeService.createOperation({
         agentConfig,
         appContext: {
-          sessionId: agentSessionId,
+          sessionId: appSessionId,
           threadId,
           topicId,
         },
@@ -131,7 +131,7 @@ export const aiAgentRouter = router({
         initialContext,
         initialMessages: messages,
         modelRuntimeConfig,
-        sessionId: runtimeSessionId,
+        operationId,
         toolManifestMap,
         tools,
         userId: ctx.userId,
@@ -146,20 +146,45 @@ export const aiAgentRouter = router({
         };
 
         log(
-          `Session ${runtimeSessionId} created and first step scheduled (messageId: ${result.messageId})`,
+          `Operation ${operationId} created and first step scheduled (messageId: ${result.messageId})`,
         );
       } else {
-        log(`Session ${runtimeSessionId} created without auto-start`);
+        log(`Operation ${operationId} created without auto-start`);
       }
 
       return {
         autoStart,
         createdAt: new Date().toISOString(),
         firstStep: firstStepResult,
-        sessionId: runtimeSessionId,
+        operationId,
         status: 'created',
         success: true,
       };
+    }),
+
+  getOperationStatus: aiAgentProcedure
+    .input(GetOperationStatusSchema)
+    .query(async ({ input, ctx }) => {
+      if (!isEnableAgent()) {
+        throw new Error('Agent features are not enabled');
+      }
+
+      const { historyLimit, includeHistory, operationId } = input;
+
+      if (!operationId) {
+        throw new Error('operationId parameter is required');
+      }
+
+      log('Getting operation status for %s', operationId);
+
+      // Get operation status using AgentRuntimeService
+      const operationStatus = await ctx.agentRuntimeService.getOperationStatus({
+        historyLimit,
+        includeHistory,
+        operationId,
+      });
+
+      return operationStatus;
     }),
 
   getPendingInterventions: aiAgentProcedure
@@ -169,41 +194,18 @@ export const aiAgentRouter = router({
         throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
       }
 
-      const { sessionId, userId } = input;
+      const { operationId, userId } = input;
 
-      log('Getting pending interventions for sessionId: %s, userId: %s', sessionId, userId);
+      log('Getting pending interventions for operationId: %s, userId: %s', operationId, userId);
 
       // Get pending interventions using AgentRuntimeService
       const result = await ctx.agentRuntimeService.getPendingInterventions({
-        sessionId: sessionId || undefined,
+        operationId: operationId || undefined,
         userId: userId || undefined,
       });
 
       return result;
     }),
-
-  getSessionStatus: aiAgentProcedure.input(GetSessionStatusSchema).query(async ({ input, ctx }) => {
-    if (!isEnableAgent()) {
-      throw new Error('Agent features are not enabled');
-    }
-
-    const { historyLimit, includeHistory, sessionId } = input;
-
-    if (!sessionId) {
-      throw new Error('sessionId parameter is required');
-    }
-
-    log('Getting session status for %s', sessionId);
-
-    // Get session status using AgentRuntimeService
-    const sessionStatus = await ctx.agentRuntimeService.getSessionStatus({
-      historyLimit,
-      includeHistory,
-      sessionId,
-    });
-
-    return sessionStatus;
-  }),
 
   processHumanIntervention: aiAgentProcedure
     .input(ProcessHumanInterventionSchema)
@@ -212,14 +214,14 @@ export const aiAgentRouter = router({
         throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
       }
 
-      const { sessionId, action, data, reason, stepIndex } = input;
+      const { operationId, action, data, reason, stepIndex } = input;
 
-      log(`Processing ${action} for session ${sessionId}`);
+      log(`Processing ${action} for operation ${operationId}`);
 
       // Build intervention parameters
       let interventionParams: any = {
         action,
-        sessionId,
+        operationId,
         stepIndex,
       };
 
@@ -266,8 +268,8 @@ export const aiAgentRouter = router({
       return {
         action,
         message: `Human intervention processed successfully. Execution resumed.`,
+        operationId,
         scheduledMessageId: result.messageId,
-        sessionId,
         success: true,
         timestamp: new Date().toISOString(),
       };
@@ -278,16 +280,16 @@ export const aiAgentRouter = router({
       throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
     }
 
-    const { sessionId, context, priority, delay } = input;
+    const { operationId, context, priority, delay } = input;
 
-    log('Starting execution for session %s', sessionId);
+    log('Starting execution for operation %s', operationId);
 
     // Start execution using AgentRuntimeService
     const result = await ctx.agentRuntimeService.startExecution({
       context,
       delay,
+      operationId,
       priority,
-      sessionId,
     });
 
     return {

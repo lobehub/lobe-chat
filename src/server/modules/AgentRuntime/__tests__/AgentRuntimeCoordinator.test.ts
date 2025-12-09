@@ -7,13 +7,13 @@ import { StreamEventManager } from '../StreamEventManager';
 // Mock AgentStateManager
 vi.mock('../AgentStateManager', () => ({
   AgentStateManager: vi.fn(() => ({
-    cleanupExpiredSessions: vi.fn(),
-    createSessionMetadata: vi.fn(),
-    deleteAgentSession: vi.fn(),
+    cleanupExpiredOperations: vi.fn(),
+    createOperationMetadata: vi.fn(),
+    deleteAgentOperation: vi.fn(),
     disconnect: vi.fn(),
-    getActiveSessions: vi.fn(),
+    getActiveOperations: vi.fn(),
     getExecutionHistory: vi.fn(),
-    getSessionMetadata: vi.fn(),
+    getOperationMetadata: vi.fn(),
     getStats: vi.fn(),
     loadAgentState: vi.fn(),
     saveAgentState: vi.fn(),
@@ -24,7 +24,7 @@ vi.mock('../AgentStateManager', () => ({
 // Mock StreamEventManager
 vi.mock('../StreamEventManager', () => ({
   StreamEventManager: vi.fn(() => ({
-    cleanupSession: vi.fn(),
+    cleanupOperation: vi.fn(),
     disconnect: vi.fn(),
     publishAgentRuntimeEnd: vi.fn(),
     publishAgentRuntimeInit: vi.fn(),
@@ -43,13 +43,13 @@ describe('AgentRuntimeCoordinator', () => {
     vi.clearAllMocks();
 
     mockStateManager = {
-      cleanupExpiredSessions: vi.fn(),
-      createSessionMetadata: vi.fn(),
-      deleteAgentSession: vi.fn(),
+      cleanupExpiredOperations: vi.fn(),
+      createOperationMetadata: vi.fn(),
+      deleteAgentOperation: vi.fn(),
       disconnect: vi.fn(),
-      getActiveSessions: vi.fn(),
+      getActiveOperations: vi.fn(),
       getExecutionHistory: vi.fn(),
-      getSessionMetadata: vi.fn(),
+      getOperationMetadata: vi.fn(),
       getStats: vi.fn(),
       loadAgentState: vi.fn(),
       saveAgentState: vi.fn(),
@@ -57,7 +57,7 @@ describe('AgentRuntimeCoordinator', () => {
     };
 
     mockStreamManager = {
-      cleanupSession: vi.fn(),
+      cleanupOperation: vi.fn(),
       disconnect: vi.fn(),
       publishAgentRuntimeEnd: vi.fn(),
       publishAgentRuntimeInit: vi.fn(),
@@ -70,9 +70,9 @@ describe('AgentRuntimeCoordinator', () => {
     coordinator = new AgentRuntimeCoordinator();
   });
 
-  describe('createAgentSession', () => {
-    it('should create session metadata and publish init event', async () => {
-      const sessionId = 'test-session-id';
+  describe('createAgentOperation', () => {
+    it('should create operation metadata and publish init event', async () => {
+      const operationId = 'test-operation-id';
       const data = {
         agentConfig: { test: true },
         modelRuntimeConfig: { model: 'gpt-4' },
@@ -86,112 +86,112 @@ describe('AgentRuntimeCoordinator', () => {
         ...data,
       };
 
-      mockStateManager.getSessionMetadata.mockResolvedValue(metadata);
+      mockStateManager.getOperationMetadata.mockResolvedValue(metadata);
 
-      await coordinator.createAgentSession(sessionId, data);
+      await coordinator.createAgentOperation(operationId, data);
 
-      expect(mockStateManager.createSessionMetadata).toHaveBeenCalledWith(sessionId, data);
-      expect(mockStateManager.getSessionMetadata).toHaveBeenCalledWith(sessionId);
-      expect(mockStreamManager.publishAgentRuntimeInit).toHaveBeenCalledWith(sessionId, metadata);
+      expect(mockStateManager.createOperationMetadata).toHaveBeenCalledWith(operationId, data);
+      expect(mockStateManager.getOperationMetadata).toHaveBeenCalledWith(operationId);
+      expect(mockStreamManager.publishAgentRuntimeInit).toHaveBeenCalledWith(operationId, metadata);
     });
 
     it('should not publish init event if metadata creation fails', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const data = { userId: 'user-123' };
 
-      mockStateManager.getSessionMetadata.mockResolvedValue(null);
+      mockStateManager.getOperationMetadata.mockResolvedValue(null);
 
-      await coordinator.createAgentSession(sessionId, data);
+      await coordinator.createAgentOperation(operationId, data);
 
-      expect(mockStateManager.createSessionMetadata).toHaveBeenCalledWith(sessionId, data);
+      expect(mockStateManager.createOperationMetadata).toHaveBeenCalledWith(operationId, data);
       expect(mockStreamManager.publishAgentRuntimeInit).not.toHaveBeenCalled();
     });
   });
 
   describe('saveAgentState', () => {
     it('should save state and publish end event when status changes to done', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const previousState = { status: 'running', stepCount: 3 };
       const newState = { status: 'done', stepCount: 5 };
 
       mockStateManager.loadAgentState.mockResolvedValue(previousState);
 
-      await coordinator.saveAgentState(sessionId, newState as any);
+      await coordinator.saveAgentState(operationId, newState as any);
 
-      expect(mockStateManager.saveAgentState).toHaveBeenCalledWith(sessionId, newState);
+      expect(mockStateManager.saveAgentState).toHaveBeenCalledWith(operationId, newState);
       expect(mockStreamManager.publishAgentRuntimeEnd).toHaveBeenCalledWith(
-        sessionId,
+        operationId,
         newState.stepCount,
         newState,
       );
     });
 
     it('should not publish end event when status was already done', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const previousState = { status: 'done', stepCount: 5 };
       const newState = { status: 'done', stepCount: 5 };
 
       mockStateManager.loadAgentState.mockResolvedValue(previousState);
 
-      await coordinator.saveAgentState(sessionId, newState as any);
+      await coordinator.saveAgentState(operationId, newState as any);
 
-      expect(mockStateManager.saveAgentState).toHaveBeenCalledWith(sessionId, newState);
+      expect(mockStateManager.saveAgentState).toHaveBeenCalledWith(operationId, newState);
       expect(mockStreamManager.publishAgentRuntimeEnd).not.toHaveBeenCalled();
     });
 
     it('should not publish end event when status is not done', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const previousState = { status: 'idle', stepCount: 0 };
       const newState = { status: 'running', stepCount: 1 };
 
       mockStateManager.loadAgentState.mockResolvedValue(previousState);
 
-      await coordinator.saveAgentState(sessionId, newState as any);
+      await coordinator.saveAgentState(operationId, newState as any);
 
-      expect(mockStateManager.saveAgentState).toHaveBeenCalledWith(sessionId, newState);
+      expect(mockStateManager.saveAgentState).toHaveBeenCalledWith(operationId, newState);
       expect(mockStreamManager.publishAgentRuntimeEnd).not.toHaveBeenCalled();
     });
   });
 
   describe('saveStepResult', () => {
     it('should save step result but not publish end event (left to saveAgentState)', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const stepResult = {
         executionTime: 1000,
         newState: { status: 'done', stepCount: 5 },
         stepIndex: 5,
       };
 
-      await coordinator.saveStepResult(sessionId, stepResult as any);
+      await coordinator.saveStepResult(operationId, stepResult as any);
 
-      expect(mockStateManager.saveStepResult).toHaveBeenCalledWith(sessionId, stepResult);
+      expect(mockStateManager.saveStepResult).toHaveBeenCalledWith(operationId, stepResult);
       // agent_runtime_end 事件现在由 saveAgentState 统一处理，确保它是最后一个事件
       expect(mockStreamManager.publishAgentRuntimeEnd).not.toHaveBeenCalled();
     });
 
     it('should not publish end event when status is not done', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const stepResult = {
         executionTime: 500,
         newState: { status: 'running', stepCount: 3 },
         stepIndex: 3,
       };
 
-      await coordinator.saveStepResult(sessionId, stepResult as any);
+      await coordinator.saveStepResult(operationId, stepResult as any);
 
-      expect(mockStateManager.saveStepResult).toHaveBeenCalledWith(sessionId, stepResult);
+      expect(mockStateManager.saveStepResult).toHaveBeenCalledWith(operationId, stepResult);
       expect(mockStreamManager.publishAgentRuntimeEnd).not.toHaveBeenCalled();
     });
   });
 
-  describe('deleteAgentSession', () => {
-    it('should delete session from both state manager and stream manager', async () => {
-      const sessionId = 'test-session-id';
+  describe('deleteAgentOperation', () => {
+    it('should delete operation from both state manager and stream manager', async () => {
+      const operationId = 'test-operation-id';
 
-      await coordinator.deleteAgentSession(sessionId);
+      await coordinator.deleteAgentOperation(operationId);
 
-      expect(mockStateManager.deleteAgentSession).toHaveBeenCalledWith(sessionId);
-      expect(mockStreamManager.cleanupSession).toHaveBeenCalledWith(sessionId);
+      expect(mockStateManager.deleteAgentOperation).toHaveBeenCalledWith(operationId);
+      expect(mockStreamManager.cleanupOperation).toHaveBeenCalledWith(operationId);
     });
   });
 
@@ -206,39 +206,39 @@ describe('AgentRuntimeCoordinator', () => {
 
   describe('delegation methods', () => {
     it('should delegate loadAgentState to state manager', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const expectedState = { status: 'running' };
 
       mockStateManager.loadAgentState.mockResolvedValue(expectedState);
 
-      const result = await coordinator.loadAgentState(sessionId);
+      const result = await coordinator.loadAgentState(operationId);
 
-      expect(mockStateManager.loadAgentState).toHaveBeenCalledWith(sessionId);
+      expect(mockStateManager.loadAgentState).toHaveBeenCalledWith(operationId);
       expect(result).toBe(expectedState);
     });
 
-    it('should delegate getSessionMetadata to state manager', async () => {
-      const sessionId = 'test-session-id';
+    it('should delegate getOperationMetadata to state manager', async () => {
+      const operationId = 'test-operation-id';
       const expectedMetadata = { status: 'idle' };
 
-      mockStateManager.getSessionMetadata.mockResolvedValue(expectedMetadata);
+      mockStateManager.getOperationMetadata.mockResolvedValue(expectedMetadata);
 
-      const result = await coordinator.getSessionMetadata(sessionId);
+      const result = await coordinator.getOperationMetadata(operationId);
 
-      expect(mockStateManager.getSessionMetadata).toHaveBeenCalledWith(sessionId);
+      expect(mockStateManager.getOperationMetadata).toHaveBeenCalledWith(operationId);
       expect(result).toBe(expectedMetadata);
     });
 
     it('should delegate getExecutionHistory to state manager', async () => {
-      const sessionId = 'test-session-id';
+      const operationId = 'test-operation-id';
       const limit = 10;
       const expectedHistory = [{ step: 1 }];
 
       mockStateManager.getExecutionHistory.mockResolvedValue(expectedHistory);
 
-      const result = await coordinator.getExecutionHistory(sessionId, limit);
+      const result = await coordinator.getExecutionHistory(operationId, limit);
 
-      expect(mockStateManager.getExecutionHistory).toHaveBeenCalledWith(sessionId, limit);
+      expect(mockStateManager.getExecutionHistory).toHaveBeenCalledWith(operationId, limit);
       expect(result).toBe(expectedHistory);
     });
   });

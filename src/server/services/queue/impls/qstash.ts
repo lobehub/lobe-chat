@@ -23,7 +23,7 @@ export class QStashQueueServiceImpl implements QueueServiceImpl {
 
   async scheduleMessage(message: QueueMessage): Promise<string> {
     const {
-      sessionId,
+      operationId,
       stepIndex,
       context,
       endpoint,
@@ -37,17 +37,17 @@ export class QStashQueueServiceImpl implements QueueServiceImpl {
       const response = await this.qstashClient.publishJSON({
         body: {
           context,
+          operationId,
           payload,
           priority,
-          sessionId,
           stepIndex,
           timestamp: Date.now(),
         },
         delay: Math.ceil(delay / 1000), // 将毫秒转换为秒
         headers: {
           'Content-Type': 'application/json',
+          'X-Agent-Operation-Id': operationId,
           'X-Agent-Priority': priority,
-          'X-Agent-Session-Id': sessionId,
           'X-Agent-Step-Index': stepIndex.toString(),
         },
         retries,
@@ -55,7 +55,7 @@ export class QStashQueueServiceImpl implements QueueServiceImpl {
       });
 
       log(
-        `[${sessionId}] Scheduled step %d to %s with %dms delay (messageId: %s)`,
+        `[${operationId}] Scheduled step %d to %s with %dms delay (messageId: %s)`,
         stepIndex,
         endpoint,
         delay,
@@ -64,7 +64,7 @@ export class QStashQueueServiceImpl implements QueueServiceImpl {
 
       return 'messageId' in response ? response.messageId : `scheduled-${Date.now()}`;
     } catch (error) {
-      log('Failed to schedule step %d for session %s: %O', stepIndex, sessionId, error);
+      log('Failed to schedule step %d for operation %s: %O', stepIndex, operationId, error);
       throw error;
     }
   }
