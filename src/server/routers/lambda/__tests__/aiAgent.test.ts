@@ -62,7 +62,7 @@ vi.mock('model-bank', async (importOriginal) => {
  * AI Agent Router 集成测试
  *
  * 测试目标：
- * 1. 验证 runByAgentId 的业务逻辑
+ * 1. 验证 execAgent 的业务逻辑
  * 2. 确保 topic 创建逻辑正确
  * 3. 验证与数据库的交互
  */
@@ -112,11 +112,11 @@ describe('AI Agent Router Integration Tests', () => {
     jwtPayload: { userId },
   });
 
-  describe('runByAgentId', () => {
+  describe('execAgent', () => {
     it('should create a new topic when topicId is not provided', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const result = await caller.runByAgentId({
+      const result = await caller.execAgent({
         agentId: testAgentId,
         prompt: 'Hello, how are you?',
       });
@@ -139,7 +139,7 @@ describe('AI Agent Router Integration Tests', () => {
       const longPrompt =
         'This is a very long prompt that exceeds fifty characters and should be truncated';
 
-      await caller.runByAgentId({
+      await caller.execAgent({
         agentId: testAgentId,
         prompt: longPrompt,
       });
@@ -169,7 +169,7 @@ describe('AI Agent Router Integration Tests', () => {
         })
         .returning();
 
-      const result = await caller.runByAgentId({
+      const result = await caller.execAgent({
         agentId: testAgentId,
         prompt: 'Follow up question',
         appContext: {
@@ -192,7 +192,7 @@ describe('AI Agent Router Integration Tests', () => {
       // When agent doesn't exist, getAgentConfigById returns null,
       // which triggers NOT_FOUND error before topic creation
       await expect(
-        caller.runByAgentId({
+        caller.execAgent({
           agentId: 'non-existent-agent-id',
           prompt: 'Hello',
         }),
@@ -217,7 +217,7 @@ describe('AI Agent Router Integration Tests', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      await caller.runByAgentId({
+      await caller.execAgent({
         agentId: testAgentId,
         prompt: 'Test prompt',
         autoStart: false,
@@ -242,7 +242,7 @@ describe('AI Agent Router Integration Tests', () => {
     it('should handle autoStart=true by default', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const result = await caller.runByAgentId({
+      const result = await caller.execAgent({
         agentId: testAgentId,
         prompt: 'Hello',
       });
@@ -268,7 +268,7 @@ describe('AI Agent Router Integration Tests', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      await caller.runByAgentId({
+      await caller.execAgent({
         agentId: testAgentId,
         prompt: 'Test prompt',
         appContext: {

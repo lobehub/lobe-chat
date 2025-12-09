@@ -1,6 +1,6 @@
 import { getAgentPersistConfig } from '@lobechat/builtin-agents';
 import { INBOX_SESSION_ID } from '@lobechat/const';
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray, or } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
 import { merge } from '@/utils/merge';
@@ -30,7 +30,32 @@ export class AgentModel {
   getAgentConfigById = async (id: string) => {
     const agent = await this.db.query.agents.findFirst({ where: eq(agents.id, id) });
 
-    const knowledge = await this.getAgentAssignedKnowledge(id);
+    if (!agent) return null;
+
+    return this.enrichAgentWithKnowledge(agent);
+  };
+
+  /**
+   * Get agent config by ID or slug (single query with OR condition)
+   */
+  getAgentConfig = async (idOrSlug: string) => {
+    const agent = await this.db.query.agents.findFirst({
+      where: or(
+        eq(agents.id, idOrSlug),
+        and(eq(agents.slug, idOrSlug), eq(agents.userId, this.userId)),
+      ),
+    });
+
+    if (!agent) return null;
+
+    return this.enrichAgentWithKnowledge(agent);
+  };
+
+  /**
+   * Enrich agent with knowledge base and files data
+   */
+  private enrichAgentWithKnowledge = async (agent: AgentItem) => {
+    const knowledge = await this.getAgentAssignedKnowledge(agent.id);
 
     // Fetch document content for enabled files
     const enabledFileIds = knowledge.files
