@@ -41,11 +41,12 @@ export const agentRouter = router({
       return ctx.agentModel.checkByMarketIdentifier(input.marketIdentifier);
     }),
 
+  
   /**
    * Create a new agent with session
    * Returns the created agent ID and session ID
    */
-  createAgent: agentProcedure
+createAgent: agentProcedure
     .input(
       z.object({
         config: insertAgentSchema
@@ -80,7 +81,9 @@ export const agentRouter = router({
       };
     }),
 
-  createAgentFiles: agentProcedure
+  
+  
+createAgentFiles: agentProcedure
     .input(
       z.object({
         agentId: z.string(),
@@ -92,7 +95,8 @@ export const agentRouter = router({
       return ctx.agentModel.createAgentFiles(input.agentId, input.fileIds, input.enabled);
     }),
 
-  createAgentKnowledgeBase: agentProcedure
+  
+createAgentKnowledgeBase: agentProcedure
     .input(
       z.object({
         agentId: z.string(),
@@ -108,7 +112,8 @@ export const agentRouter = router({
       );
     }),
 
-  deleteAgentFile: agentProcedure
+  
+deleteAgentFile: agentProcedure
     .input(
       z.object({
         agentId: z.string(),
@@ -119,7 +124,8 @@ export const agentRouter = router({
       return ctx.agentModel.deleteAgentFile(input.agentId, input.fileId);
     }),
 
-  deleteAgentKnowledgeBase: agentProcedure
+  
+deleteAgentKnowledgeBase: agentProcedure
     .input(
       z.object({
         agentId: z.string(),
@@ -128,6 +134,20 @@ export const agentRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       return ctx.agentModel.deleteAgentKnowledgeBase(input.agentId, input.knowledgeBaseId);
+    }),
+
+  /**
+   * Get an agent by marketIdentifier
+   * @returns agent id if exists, null otherwise
+   */
+getAgentByMarketIdentifier: agentProcedure
+    .input(
+      z.object({
+        marketIdentifier: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      return ctx.agentModel.getAgentByMarketIdentifier(input.marketIdentifier);
     }),
 
   getAgentConfig: agentProcedure

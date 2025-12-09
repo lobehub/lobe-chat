@@ -267,6 +267,10 @@
       "description": "You haven't published any assistants to the market yet",
       "title": "No Published Assistants"
     },
+    "errors": {
+      "editFailed": "Failed to edit agent, please try again later",
+      "fetchFailed": "Failed to fetch agent details"
+    },
     "loginRequired": {
       "button": "Sign in to Market",
       "description": "Please sign in to your market account to view your published assistants",

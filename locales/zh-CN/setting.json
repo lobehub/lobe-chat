@@ -267,6 +267,10 @@
       "description": "你还没有发布任何助手到市场",
       "title": "暂无发布的助手"
     },
+    "errors": {
+      "editFailed": "编辑助手失败，请稍后重试",
+      "fetchFailed": "获取助手详情失败"
+    },
     "loginRequired": {
       "button": "登录市场账户",
       "description": "请先登录市场账户以查看你发布的助手",

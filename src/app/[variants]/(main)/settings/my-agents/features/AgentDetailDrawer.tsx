@@ -1,15 +1,19 @@
 'use client';
 
 import { Avatar, Icon, Tag, Tooltip } from '@lobehub/ui';
-import { Button, Drawer, Typography } from 'antd';
+import { App, Button, Drawer, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { CoinsIcon, DownloadIcon, ExternalLink, Pencil, Trash2 } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
+import { agentService } from '@/services/agent';
+import { discoverService } from '@/services/discover';
+import { useAgentStore } from '@/store/agent';
+import { useHomeStore } from '@/store/home';
 import { DiscoverAssistantItem } from '@/types/discover';
 import { formatIntergerNumber } from '@/utils/format';
 
@@ -57,6 +61,11 @@ const AgentDetailDrawer = memo<AgentDetailDrawerProps>(({ open, onClose, agent, 
   const { t } = useTranslation('setting');
   const { t: tDiscover } = useTranslation('discover');
   const navigate = useNavigate();
+  const { message } = App.useApp();
+
+  const [isEditLoading, setIsEditLoading] = useState(false);
+  const createAgent = useAgentStore((s) => s.createAgent);
+  const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
 
   const handleViewDetail = useCallback(() => {
     if (agent?.identifier) {
@@ -64,12 +73,59 @@ const AgentDetailDrawer = memo<AgentDetailDrawerProps>(({ open, onClose, agent, 
     }
   }, [agent?.identifier]);
 
-  const handleEdit = useCallback(() => {
-    if (agent?.identifier) {
-      navigate(urlJoin('/agent', agent.identifier, 'profile'));
-      onClose();
+  const handleEdit = useCallback(async () => {
+    if (!agent?.identifier) return;
+
+    setIsEditLoading(true);
+    try {
+      // First, try to find the local agent by market identifier
+      const localAgentId = await agentService.getAgentByMarketIdentifier(agent.identifier);
+
+      if (localAgentId) {
+        // Agent exists locally, navigate to edit
+        navigate(urlJoin('/agent', localAgentId, 'profile'));
+        onClose();
+      } else {
+        // Agent doesn't exist locally, fetch from market and create
+        const marketAgent = await discoverService.getAssistantDetail({
+          identifier: agent.identifier,
+          source: 'new',
+        });
+
+        if (!marketAgent) {
+          message.error(t('myAgents.errors.fetchFailed'));
+          return;
+        }
+
+        // Create local agent with market data
+        // Note: agentService.createAgent automatically normalizes market config (handles model as object)
+        const result = await createAgent({
+          config: {
+            ...marketAgent.config,
+            avatar: marketAgent.avatar,
+            backgroundColor: marketAgent.backgroundColor,
+            description: marketAgent.description,
+            editorData: marketAgent.editorData,
+            marketIdentifier: agent.identifier,
+            tags: marketAgent.tags,
+            title: marketAgent.title,
+          },
+        });
+
+        await refreshAgentList();
+
+        if (result.agentId) {
+          navigate(urlJoin('/agent', result.agentId, 'profile'));
+          onClose();
+        }
+      }
+    } catch (error) {
+      console.error('[AgentDetailDrawer] handleEdit error:', error);
+      message.error(t('myAgents.errors.editFailed'));
+    } finally {
+      setIsEditLoading(false);
     }
-  }, [agent?.identifier, navigate, onClose]);
+  }, [agent, navigate, onClose, createAgent, refreshAgentList, message, t]);
 
   const handleUnpublish = useCallback(() => {
     if (agent?.identifier && onUnpublish) {
@@ -153,7 +209,13 @@ const AgentDetailDrawer = memo<AgentDetailDrawerProps>(({ open, onClose, agent, 
         <Button block icon={<Icon icon={ExternalLink} />} onClick={handleViewDetail}>
           {t('myAgents.actions.viewDetail')}
         </Button>
-        <Button block icon={<Icon icon={Pencil} />} onClick={handleEdit} type="primary">
+        <Button
+          block
+          icon={<Icon icon={Pencil} />}
+          loading={isEditLoading}
+          onClick={handleEdit}
+          type="primary"
+        >
           {t('myAgents.actions.edit')}
         </Button>
         <Button block danger icon={<Icon icon={Trash2} />} onClick={handleUnpublish}>
