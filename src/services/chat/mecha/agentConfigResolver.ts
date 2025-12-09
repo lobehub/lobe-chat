@@ -35,8 +35,12 @@ export interface ResolvedAgentConfig {
   chatConfig: LobeAgentChatConfig;
   /** Whether this is a builtin agent */
   isBuiltinAgent: boolean;
-  /** Runtime plugins for the agent */
-  plugins?: string[];
+  /**
+   * Final merged plugins for the agent
+   * For builtin agents: runtime plugins (if any) or fallback to agent config plugins
+   * For regular agents: agent config plugins
+   */
+  plugins: string[];
   /** The agent's slug (if builtin) */
   slug?: string;
 }
@@ -60,12 +64,15 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
   const agentConfig = agentSelectors.getAgentConfigById(agentId)(agentStoreState);
   const chatConfig = agentChatConfigSelectors.getAgentChatConfigById(agentId)(agentStoreState);
 
+  // Base plugins from agent config
+  const basePlugins = agentConfig.plugins ?? [];
+
   // Check if this is a builtin agent
   const slug = agentSelectors.getAgentSlugById(agentId)(agentStoreState);
 
   if (!slug) {
-    // Regular agent - return config as-is
-    return { agentConfig, chatConfig, isBuiltinAgent: false };
+    // Regular agent - return config with agent's plugins
+    return { agentConfig, chatConfig, isBuiltinAgent: false, plugins: basePlugins };
   }
 
   // Builtin agent - merge runtime config
@@ -83,11 +90,17 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
     systemRole: runtimeConfig?.systemRole ?? agentConfig.systemRole,
   };
 
+  // Merge plugins: runtime plugins take priority, fallback to base plugins
+  const finalPlugins =
+    runtimeConfig?.plugins && runtimeConfig.plugins.length > 0
+      ? runtimeConfig.plugins
+      : basePlugins;
+
   return {
     agentConfig: resolvedAgentConfig,
     chatConfig,
     isBuiltinAgent: true,
-    plugins: runtimeConfig?.plugins,
+    plugins: finalPlugins,
     slug,
   };
 };
