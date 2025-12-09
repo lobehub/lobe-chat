@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Icon, Input } from '@lobehub/ui';
+import { Button, Icon, TextArea } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { SmilePlus } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -88,7 +88,8 @@ const Title = memo(() => {
       )}
 
       {/* Title Input */}
-      <Input
+      <TextArea
+        autoSize={{ minRows: 1 }}
         onChange={(e) => {
           setCurrentTitle(e.target.value);
         }}
@@ -103,6 +104,7 @@ const Title = memo(() => {
           fontSize: 36,
           fontWeight: 600,
           padding: 0,
+          resize: 'none',
           width: '100%',
         }}
         value={currentTitle}
