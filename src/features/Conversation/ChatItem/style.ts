@@ -7,13 +7,11 @@ export const useStyles = createStyles(
       placement,
       title,
       avatarSize,
-      editing,
       time,
       disabled,
     }: {
       avatarSize?: number;
       disabled?: boolean;
-      editing?: boolean;
       placement?: 'left' | 'right';
       showTitle?: boolean;
       time?: number;
@@ -33,25 +31,12 @@ export const useStyles = createStyles(
 
     const typeStylish = placement === 'right' ? blockStylish : rawStylish;
 
-    const editingStylish =
-      editing &&
-      css`
-        width: 100%;
-      `;
-
     return {
-      actions: cx(
-        css`
-          flex: none;
-          align-self: flex-end;
-          justify-content: ${placement === 'left' ? 'flex-end' : 'flex-start'};
-        `,
-        editing &&
-          css`
-            pointer-events: none !important;
-            opacity: 0 !important;
-          `,
-      ),
+      actions: css`
+        flex: none;
+        align-self: flex-end;
+        justify-content: ${placement === 'left' ? 'flex-end' : 'flex-start'};
+      `,
       avatarContainer: css`
         position: relative;
         flex: none;
@@ -97,19 +82,17 @@ export const useStyles = createStyles(
           }
         }
       `,
-      editingContainer: cx(
-        editingStylish,
-        css`
-          padding-block: 8px 12px;
-          padding-inline: 12px;
-          border: 1px solid ${token.colorBorderSecondary};
+      editingContainer: css`
+        padding-block: 8px 12px;
+        padding-inline: 12px;
+        border: 1px solid ${token.colorBorderSecondary};
 
-          &:active,
-          &:hover {
-            border-color: ${token.colorBorder};
-          }
-        `,
-      ),
+        &:active,
+        &:hover {
+          border-color: ${token.colorBorder};
+        }
+      `,
+
       editingInput: css`
         width: 100%;
       `,
@@ -147,23 +130,19 @@ export const useStyles = createStyles(
           color: ${disabled ? token.colorTextSecondary : 'unset'};
         `,
       ),
-      messageContainer: cx(
-        editingStylish,
-        css`
-          position: relative;
-          overflow: hidden;
-          max-width: 100%;
-          margin-block-start: ${time ? -16 : 0}px;
-        `,
-      ),
-      messageContent: cx(
-        editingStylish,
-        css`
-          position: relative;
-          overflow: hidden;
-          max-width: 100%;
-        `,
-      ),
+      messageContainer: css`
+        position: relative;
+        overflow: hidden;
+        max-width: 100%;
+        margin-block-start: ${time ? -16 : 0}px;
+      `,
+
+      messageContent: css`
+        position: relative;
+        overflow: hidden;
+        max-width: 100%;
+      `,
+
       messageExtra: cx('message-extra'),
       name: css`
         pointer-events: none;
