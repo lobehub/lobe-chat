@@ -1,10 +1,9 @@
 'use client';
 
 import { Icon, Tag } from '@lobehub/ui';
-import Link from 'next/link';
-import { useRouter } from 'nextjs-toploader/app';
 import qs from 'query-string';
 import { memo, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/discover/features/const';
 import { withSuspense } from '@/components/withSuspense';
@@ -17,22 +16,26 @@ import { useCategory } from './useCategory';
 
 const Category = memo(() => {
   const useAssistantCategories = useDiscoverStore((s) => s.useAssistantCategories);
-  const { category = 'all', q } = useQuery() as { category?: AssistantCategory; q?: string };
-  const { data: items = [] } = useAssistantCategories({ q });
-  const route = useRouter();
+  const {
+    category = 'all',
+    q,
+    source,
+  } = useQuery() as { category?: AssistantCategory; q?: string; source?: string };
+  const { data: items = [] } = useAssistantCategories({ q, source: source as any });
+  const navigate = useNavigate();
   const cates = useCategory();
 
   const genUrl = (key: AssistantCategory) =>
     qs.stringifyUrl(
       {
-        query: { category: key === AssistantCategory.All ? null : key, q },
+        query: { category: key === AssistantCategory.All ? null : key, q, source },
         url: '/discover/assistant',
       },
       { skipNull: true },
     );
 
   const handleClick = (key: AssistantCategory) => {
-    route.push(genUrl(key));
+    navigate(genUrl(key));
     const scrollableElement = document?.querySelector(`#${SCROLL_PARENT_ID}`);
     if (!scrollableElement) return;
     scrollableElement.scrollTo({ behavior: 'smooth', top: 0 });
@@ -71,7 +74,7 @@ const Category = memo(() => {
                 ),
           ...item,
           icon: <Icon icon={item.icon} size={18} />,
-          label: <Link href={genUrl(item.key)}>{item.label}</Link>,
+          label: <Link to={genUrl(item.key)}>{item.label}</Link>,
         };
       })}
       mode={'inline'}

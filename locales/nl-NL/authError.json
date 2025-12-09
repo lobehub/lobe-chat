@@ -1,0 +1,40 @@
+{
+  "actions": {
+    "discord": "Ga naar Discord voor feedback",
+    "home": "Terug naar de startpagina",
+    "retry": "Opnieuw inloggen"
+  },
+  "codes": {
+    "ACCOUNT_ALREADY_LINKED_TO_DIFFERENT_USER": "Dit account is al gekoppeld aan een andere gebruiker",
+    "ACCOUNT_NOT_FOUND": "Account niet gevonden",
+    "CREDENTIAL_ACCOUNT_NOT_FOUND": "Inloggegevensaccount niet gevonden",
+    "EMAIL_CAN_NOT_BE_UPDATED": "E-mailadres van dit account kan niet worden gewijzigd",
+    "EMAIL_NOT_VERIFIED": "Bevestig eerst je e-mailadres",
+    "FAILED_TO_CREATE_SESSION": "Sessie aanmaken mislukt",
+    "FAILED_TO_CREATE_USER": "Gebruiker aanmaken mislukt",
+    "FAILED_TO_GET_SESSION": "Sessie ophalen mislukt",
+    "FAILED_TO_GET_USER_INFO": "Gebruikersinformatie ophalen mislukt",
+    "FAILED_TO_UNLINK_LAST_ACCOUNT": "Kan het laatste gekoppelde account niet ontkoppelen",
+    "FAILED_TO_UPDATE_USER": "Gebruikersinformatie bijwerken mislukt",
+    "ID_TOKEN_NOT_SUPPORTED": "Deze ID-token wordt niet ondersteund",
+    "INVALID_EMAIL": "Ongeldig e-mailadresformaat",
+    "INVALID_EMAIL_OR_PASSWORD": "Ongeldig e-mailadres of wachtwoord",
+    "INVALID_PASSWORD": "Ongeldig wachtwoordformaat",
+    "INVALID_TOKEN": "Ongeldige of verlopen token",
+    "PASSWORD_TOO_LONG": "Wachtwoord is te lang",
+    "PASSWORD_TOO_SHORT": "Wachtwoord is te kort",
+    "PROVIDER_NOT_FOUND": "Identiteitsproviderconfiguratie niet gevonden",
+    "RATE_LIMIT_EXCEEDED": "Te veel verzoeken, probeer het later opnieuw",
+    "SESSION_EXPIRED": "Sessie verlopen, log opnieuw in",
+    "SOCIAL_ACCOUNT_ALREADY_LINKED": "Dit sociale account is al gekoppeld aan een andere gebruiker",
+    "UNEXPECTED_ERROR": "Er is een onverwachte fout opgetreden, probeer het opnieuw",
+    "UNKNOWN": "Er is een onbekende fout opgetreden, probeer het opnieuw of neem contact op met de ondersteuning",
+    "USER_ALREADY_EXISTS": "Gebruiker bestaat al",
+    "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "E-mailadres is al in gebruik, probeer een ander adres",
+    "USER_ALREADY_HAS_PASSWORD": "Dit account heeft al een wachtwoord ingesteld",
+    "USER_BANNED": "Deze gebruiker is geblokkeerd",
+    "USER_EMAIL_NOT_FOUND": "E-mailadres niet gevonden",
+    "USER_NOT_FOUND": "Gebruiker niet gevonden"
+  },
+  "title": "Authenticatiefout"
+}

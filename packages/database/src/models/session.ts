@@ -1,3 +1,11 @@
+import { DEFAULT_AGENT_CONFIG, DEFAULT_INBOX_AVATAR, INBOX_SESSION_ID } from '@lobechat/const';
+import {
+  ChatSessionList,
+  LobeAgentConfig,
+  LobeAgentSession,
+  LobeGroupSession,
+  SessionRankItem,
+} from '@lobechat/types';
 import {
   Column,
   and,
@@ -15,19 +23,6 @@ import {
 } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
-import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
-import { INBOX_SESSION_ID } from '@/const/session';
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { LobeChatDatabase } from '../type';
-import {
-  genEndDateWhere,
-  genRangeWhere,
-  genStartDateWhere,
-  genWhere,
-} from '../utils/genWhere';
-import { idGenerator } from '../utils/idGenerator';
-import { LobeAgentConfig } from '@/types/agent';
-import { ChatSessionList, LobeAgentSession, SessionRankItem } from '@/types/session';
 import { merge } from '@/utils/merge';
 
 import {
@@ -41,6 +36,9 @@ import {
   sessions,
   topics,
 } from '../schemas';
+import { LobeChatDatabase } from '../type';
+import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
+import { idGenerator } from '../utils/idGenerator';
 
 export class SessionModel {
   private userId: string;
@@ -55,17 +53,48 @@ export class SessionModel {
   query = async ({ current = 0, pageSize = 9999 } = {}) => {
     const offset = current * pageSize;
 
-    return this.db.query.sessions.findMany({
-      limit: pageSize,
-      offset,
-      orderBy: [desc(sessions.updatedAt)],
-      where: and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))),
-      with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
-    });
+    // Use leftJoin instead of nested with for better performance
+    const result = await this.db
+      .select({
+        // Agent fields (from agentsToSessions join)
+        agent: agents,
+        // Group fields
+        group: sessionGroups,
+        // Session fields
+        session: sessions,
+      })
+      .from(sessions)
+      .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+      .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
+      .leftJoin(sessionGroups, eq(sessions.groupId, sessionGroups.id))
+      .where(and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))))
+      .orderBy(desc(sessions.updatedAt))
+      .limit(pageSize)
+      .offset(offset);
+
+    // Group results by session (since leftJoin can create multiple rows per session)
+    // Use Map to preserve order
+    const groupedResults = new Map<string, any>();
+
+    for (const row of result) {
+      const sessionId = row.session.id;
+      if (!groupedResults.has(sessionId)) {
+        groupedResults.set(sessionId, {
+          ...row.session,
+          agentsToSessions: [],
+          group: row.group,
+        });
+      }
+      if (row.agent) {
+        groupedResults.get(sessionId)!.agentsToSessions.push({ agent: row.agent });
+      }
+    }
+
+    return Array.from(groupedResults.values());
   };
 
   queryWithGroups = async (): Promise<ChatSessionList> => {
-    // 查询所有会话
+    // Query all sessions
     const result = await this.query();
 
     const groups = await this.db.query.sessionGroups.findMany({
@@ -73,9 +102,11 @@ export class SessionModel {
       where: eq(sessions.userId, this.userId),
     });
 
+    const mappedSessions = result.map((item) => this.mapSessionItem(item as any));
+
     return {
       sessionGroups: groups as unknown as ChatSessionList['sessionGroups'],
-      sessions: result.map((item) => this.mapSessionItem(item as any)),
+      sessions: mappedSessions,
     };
   };
 
@@ -92,17 +123,28 @@ export class SessionModel {
   findByIdOrSlug = async (
     idOrSlug: string,
   ): Promise<(SessionItem & { agent: AgentItem }) | undefined> => {
-    const result = await this.db.query.sessions.findFirst({
-      where: and(
-        or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
-        eq(sessions.userId, this.userId),
-      ),
-      with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
-    });
+    // Use leftJoin instead of nested 'with' for better performance
+    const result = await this.db
+      .select({
+        agent: agents,
+        group: sessionGroups,
+        session: sessions,
+      })
+      .from(sessions)
+      .where(
+        and(
+          or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
+          eq(sessions.userId, this.userId),
+        ),
+      )
+      .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+      .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
+      .leftJoin(sessionGroups, eq(sessions.groupId, sessionGroups.id))
+      .limit(1);
 
-    if (!result) return;
+    if (!result || !result[0]) return;
 
-    return { ...result, agent: (result?.agentsToSessions?.[0] as any)?.agent } as any;
+    return { ...result[0].session, agent: result[0].agent, group: result[0].group } as any;
   };
 
   count = async (params?: {
@@ -153,7 +195,7 @@ export class SessionModel {
       .limit(limit);
   };
 
-  // TODO: 未来将 Inbox id 入库后可以直接使用 _rank 方法
+  // TODO: In the future, once Inbox ID is stored in the database, we can directly use the _rank method
   rank = async (limit: number = 10): Promise<SessionRankItem[]> => {
     const inboxResult = await this.db
       .select({
@@ -214,12 +256,69 @@ export class SessionModel {
         if (existResult) return existResult;
       }
 
+      // Extract and properly map fields for agent creation from DiscoverAssistantDetail
+      const {
+        // MetaData fields (from discover assistant)
+        title,
+        description,
+        tags = [],
+        avatar,
+        backgroundColor,
+        // LobeAgentConfig fields
+        model,
+        params,
+        systemRole,
+        provider,
+        plugins = [],
+        openingMessage,
+        openingQuestions = [],
+        // TTS config
+        tts,
+        // Chat config
+        chatConfig,
+        // Field name mapping
+        examples, // maps to fewShots
+        identifier, // maps to marketIdentifier
+        marketIdentifier,
+      } = config as any;
+      if (type === 'group') {
+        const result = await trx
+          .insert(sessions)
+          .values({
+            ...session,
+            createdAt: new Date(),
+            id,
+            slug,
+            type,
+            updatedAt: new Date(),
+            userId: this.userId,
+          })
+          .returning();
+
+        return result[0];
+      }
+
       const newAgents = await trx
         .insert(agents)
         .values({
-          ...config,
+          avatar,
+          backgroundColor,
+          chatConfig: chatConfig || {},
           createdAt: new Date(),
+          description,
+          fewShots: examples || null, // Map examples to fewShots field
           id: idGenerator('agents'),
+          marketIdentifier: identifier || marketIdentifier,
+          model: typeof model === 'string' ? model : null,
+          openingMessage,
+          openingQuestions,
+          params: params || {},
+          plugins,
+          provider,
+          systemRole,
+          tags,
+          title,
+          tts: tts || {},
           updatedAt: new Date(),
           userId: this.userId,
         })
@@ -317,7 +416,7 @@ export class SessionModel {
         .delete(agentsToSessions)
         .where(and(eq(agentsToSessions.sessionId, id), eq(agentsToSessions.userId, this.userId)));
 
-      // Delete the session
+      // Delete the session (this will cascade delete messages, topics, etc.)
       const result = await trx
         .delete(sessions)
         .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)));
@@ -382,17 +481,25 @@ export class SessionModel {
   };
 
   clearOrphanAgent = async (agentIds: string[], trx: any) => {
-    // Delete orphaned agents (those not linked to any other sessions)
-    for (const agentId of agentIds) {
-      const remaining = await trx
-        .select()
-        .from(agentsToSessions)
-        .where(eq(agentsToSessions.agentId, agentId))
-        .limit(1);
+    if (agentIds.length === 0) return;
 
-      if (remaining.length === 0) {
-        await trx.delete(agents).where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)));
-      }
+    // Batch query to find which agents still have sessions
+    const remainingLinks = (await trx
+      .select({ agentId: agentsToSessions.agentId })
+      .from(agentsToSessions)
+      .where(inArray(agentsToSessions.agentId, agentIds))) as { agentId: string }[];
+
+    const linkedAgentIds = new Set(remainingLinks.map((link) => link.agentId));
+
+    // Find orphaned agents (those not in the linked set)
+    const orphanedAgentIds = agentIds.filter((id) => !linkedAgentIds.has(id));
+
+    // Batch delete orphaned agents (this will cascade to agentsFiles, agentsKnowledgeBases, etc.)
+    // and SET NULL on messages.agentId
+    if (orphanedAgentIds.length > 0) {
+      await trx
+        .delete(agents)
+        .where(and(inArray(agents.id, orphanedAgentIds), eq(agents.userId, this.userId)));
     }
   };
 
@@ -418,7 +525,47 @@ export class SessionModel {
       );
     }
 
-    const mergedValue = merge(session.agent, data);
+    // First process the params field: undefined means delete, null means disable flag
+    const existingParams = session.agent.params ?? {};
+    const updatedParams: Record<string, any> = { ...existingParams };
+
+    if (data.params) {
+      const incomingParams = data.params as Record<string, any>;
+      Object.keys(incomingParams).forEach((key) => {
+        const incomingValue = incomingParams[key];
+
+        // undefined means explicitly delete this field
+        if (incomingValue === undefined) {
+          delete updatedParams[key];
+          return;
+        }
+
+        // All other values (including null) are directly overwritten, null means disable this param on the frontend
+        updatedParams[key] = incomingValue;
+      });
+    }
+
+    // Build data to be merged, excluding params (processed separately)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { params: _params, ...restData } = data;
+    const mergedValue = merge(session.agent, restData);
+
+    // Apply the processed parameters
+    mergedValue.params = Object.keys(updatedParams).length > 0 ? updatedParams : undefined;
+
+    // Final cleanup: ensure no undefined or null values enter the database
+    if (mergedValue.params) {
+      const params = mergedValue.params as Record<string, any>;
+      Object.keys(params).forEach((key) => {
+        if (params[key] === undefined) {
+          delete params[key];
+        }
+      });
+      if (Object.keys(params).length === 0) {
+        mergedValue.params = undefined;
+      }
+    }
+
     return this.db
       .update(agents)
       .set(mergedValue)
@@ -436,22 +583,65 @@ export class SessionModel {
     description,
     avatar,
     groupId,
+    type,
     ...res
-  }: SessionItem & { agentsToSessions?: { agent: AgentItem }[] }): LobeAgentSession => {
-    // TODO: 未来这里需要更好的实现方案，目前只取第一个
+  }: SessionItem & { agentsToSessions?: { agent: AgentItem }[] }):
+    | LobeAgentSession
+    | LobeGroupSession => {
+    const meta = {
+      avatar: avatar ?? undefined,
+      backgroundColor: backgroundColor ?? undefined,
+      description: description ?? undefined,
+      tags: undefined,
+      title: title ?? undefined,
+    };
+
+    if (type === 'group') {
+      // For group sessions, return without agent-specific fields
+      // Transform agentsToSessions to include both relationship and agent data
+      const members =
+        agentsToSessions?.map((item, index) => {
+          const member = {
+            // Start with agent properties for compatibility
+            ...item.agent,
+            // Override with ChatGroupAgentItem properties
+            agentId: item.agent.id,
+            chatGroupId: res.id,
+            enabled: true,
+            order: index,
+            role: 'participant',
+            // Keep agent timestamps for now (could be overridden if needed)
+          };
+          return member;
+        }) || [];
+
+      return {
+        ...res,
+        group: groupId,
+        members,
+        meta,
+        type: 'group',
+      } as LobeGroupSession;
+    }
+
+    // For agent sessions, include agent-specific fields
+    // TODO: Need a better implementation in the future, currently only taking the first one
     const agent = agentsToSessions?.[0]?.agent;
     return {
       ...res,
+      config: agent ? (agent as any) : { model: '', plugins: [] }, // Ensure config exists for agent sessions
       group: groupId,
       meta: {
         avatar: agent?.avatar ?? avatar ?? undefined,
         backgroundColor: agent?.backgroundColor ?? backgroundColor ?? undefined,
         description: agent?.description ?? description ?? undefined,
+        marketIdentifier: agent?.marketIdentifier ?? undefined,
         tags: agent?.tags ?? undefined,
         title: agent?.title ?? title ?? undefined,
       },
-      model: agent?.model,
-    } as any;
+      model: agent?.model || '',
+      type: 'agent',
+    } as LobeAgentSession;
   };
 
   findSessionsByKeywords = async (params: {
@@ -461,28 +651,37 @@ export class SessionModel {
   }) => {
     const { keyword, pageSize = 9999, current = 0 } = params;
     const offset = current * pageSize;
-    const results = await this.db.query.agents.findMany({
-      limit: pageSize,
-      offset,
-      orderBy: [desc(agents.updatedAt)],
-      where: and(
-        eq(agents.userId, this.userId),
-        or(
-          like(sql`lower(${agents.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
-          like(
-            sql`lower(${agents.description})` as unknown as Column,
-            `%${keyword.toLowerCase()}%`,
+
+    try {
+      const results = await this.db.query.agents.findMany({
+        limit: pageSize,
+        offset,
+        // Keep deterministic ordering for keyword search results
+        orderBy: [asc(agents.id)],
+        where: and(
+          eq(agents.userId, this.userId),
+          or(
+            like(sql`lower(${agents.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
+            like(
+              sql`lower(${agents.description})` as unknown as Column,
+              `%${keyword.toLowerCase()}%`,
+            ),
           ),
         ),
-      ),
-      with: { agentsToSessions: { columns: {}, with: { session: true } } },
-    });
-    try {
-      // @ts-expect-error
-      return results.map((item) => item.agentsToSessions[0].session);
+        with: { agentsToSessions: { columns: {}, with: { session: true } } },
+      });
+
+      // Filter and map results, ensuring valid session associations
+      return (
+        results
+          .filter((item) => item.agentsToSessions && item.agentsToSessions.length > 0)
+          // @ts-expect-error
+          .map((item) => item.agentsToSessions[0].session)
+          .filter((session) => session !== null && session !== undefined)
+      );
     } catch (e) {
-      console.error('findSessionsByKeywords error:', e);
+      console.error('findSessionsByKeywords error:', e, { keyword });
+      return [];
     }
-    return [];
   };
 }

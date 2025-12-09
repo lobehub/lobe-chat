@@ -17,64 +17,81 @@ export interface GoogleChatError {
 export type GoogleChatErrors = GoogleChatError[];
 
 /**
- * 清理错误消息，移除格式化字符和多余的空格
- * @param message - 原始错误消息
- * @returns 清理后的错误消息
+ * Clean error message by removing formatting characters and extra spaces
+ * @param message - Original error message
+ * @returns Cleaned error message
  */
 export function cleanErrorMessage(message: string): string {
   return message
-    .replaceAll(/^\*\s*/g, '') // 移除开头的星号和空格
-    .replaceAll('\\n', '\n') // 转换转义的换行符
-    .replaceAll(/\n+/g, ' ') // 将多个换行符替换为单个空格
-    .trim(); // 去除首尾空格
+    .replaceAll(/^\*\s*/g, '') // Remove leading asterisks and spaces
+    .replaceAll('\\n', '\n') // Convert escaped newlines
+    .replaceAll(/\n+/g, ' ') // Replace multiple newlines with single space
+    .trim(); // Trim leading/trailing spaces
 }
 
 /**
- * 从错误消息中提取状态码信息
- * @param message - 错误消息
- * @returns 提取的错误详情和前缀
+ * Extract status code information from error message
+ * @param message - Error message
+ * @returns Extracted error details and prefix
  */
 export function extractStatusCodeFromError(message: string): {
   errorDetails: any;
   prefix: string;
 } {
-  // 使用正则表达式匹配状态码部分 [数字 描述文本]
-  const regex = /^(.*?)(\[\d+ [^\]]+])(.*)$/;
-  const match = message.match(regex);
+  // Match status code pattern [number description text]
+  // Use string methods instead of regex to avoid ReDoS attacks
+  // We need to find a bracket that contains a status code (3-digit number followed by space and text)
 
-  if (match) {
-    const prefix = match[1].trim();
-    const statusCodeWithBrackets = match[2].trim();
-    const messageContent = match[3].trim();
+  let searchStart = 0;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const openBracketIndex = message.indexOf('[', searchStart);
+    if (openBracketIndex === -1) {
+      return { errorDetails: null, prefix: message };
+    }
 
-    // 提取状态码数字
-    const statusCodeMatch = statusCodeWithBrackets.match(/\[(\d+)/);
-    const statusCode = statusCodeMatch ? parseInt(statusCodeMatch[1]) : null;
+    const closeBracketIndex = message.indexOf(']', openBracketIndex);
+    if (closeBracketIndex === -1) {
+      return { errorDetails: null, prefix: message };
+    }
 
-    // 创建包含状态码和消息的JSON
-    const resultJson = {
-      message: messageContent,
-      statusCode: statusCode,
-      statusCodeText: statusCodeWithBrackets,
-    };
+    const bracketContent = message.slice(openBracketIndex + 1, closeBracketIndex).trim();
 
-    return {
-      errorDetails: resultJson,
-      prefix: prefix,
-    };
+    // Find the first space to separate status code from description
+    const spaceIndex = bracketContent.indexOf(' ');
+    if (spaceIndex !== -1) {
+      const statusCodeStr = bracketContent.slice(0, spaceIndex);
+      const statusCode = parseInt(statusCodeStr, 10);
+
+      // Validate that statusCode is a valid HTTP status code (3 digits)
+      if (!isNaN(statusCode) && statusCode >= 100 && statusCode < 600) {
+        const statusText = bracketContent.slice(spaceIndex + 1).trim();
+        const prefix = message.slice(0, openBracketIndex).trim();
+        const messageContent = message.slice(closeBracketIndex + 1).trim();
+
+        // Create JSON containing status code and message
+        const resultJson = {
+          message: messageContent,
+          statusCode: statusCode,
+          statusCodeText: `[${statusCode} ${statusText}]`,
+        };
+
+        return {
+          errorDetails: resultJson,
+          prefix: prefix,
+        };
+      }
+    }
+
+    // Move to next bracket
+    searchStart = openBracketIndex + 1;
   }
-
-  // 如果无法匹配，返回原始消息
-  return {
-    errorDetails: null,
-    prefix: message,
-  };
 }
 
 /**
- * 解析Google AI API返回的错误消息
- * @param message - 原始错误消息
- * @returns 解析后的错误对象和错误类型
+ * Parse error message from Google AI API
+ * @param message - Original error message
+ * @returns Parsed error object and error type
  */
 export function parseGoogleErrorMessage(message: string): ParsedError {
   const defaultError = {
@@ -82,12 +99,17 @@ export function parseGoogleErrorMessage(message: string): ParsedError {
     errorType: AgentRuntimeErrorType.ProviderBizError,
   };
 
-  // 快速识别特殊错误
+  // Quick identification of special errors
   if (message.includes('location is not supported')) {
     return { error: { message }, errorType: AgentRuntimeErrorType.LocationNotSupportError };
   }
 
-  // 统一的错误类型判断函数
+  const lowerMessage = message.toLowerCase();
+  if (lowerMessage.includes('no image generated') || lowerMessage.includes('no image data')) {
+    return { error: { message }, errorType: AgentRuntimeErrorType.ProviderNoImageGenerated };
+  }
+
+  // Unified error type determination function
   const getErrorType = (code: number | null, message: string): ILobeAgentRuntimeErrorType => {
     if (code === 400 && message.includes('API key not valid')) {
       return AgentRuntimeErrorType.InvalidProviderAPIKey;
@@ -97,30 +119,30 @@ export function parseGoogleErrorMessage(message: string): ParsedError {
     return AgentRuntimeErrorType.ProviderBizError;
   };
 
-  // 递归解析JSON，处理嵌套的JSON字符串
+  // Recursively parse JSON, handling nested JSON strings
   const parseJsonRecursively = (str: string, maxDepth: number = 5): any => {
     if (maxDepth <= 0) return null;
 
     try {
       const parsed = JSON.parse(str);
 
-      // 如果解析出的对象包含error字段
+      // If parsed object contains error field
       if (parsed && typeof parsed === 'object' && parsed.error) {
         const errorInfo = parsed.error;
 
-        // 清理错误消息
+        // Clean error message
         if (typeof errorInfo.message === 'string') {
           errorInfo.message = cleanErrorMessage(errorInfo.message);
 
-          // 如果error.message还是一个JSON字符串，继续递归解析
+          // If error.message is still a JSON string, continue recursive parsing
           try {
             const nestedResult = parseJsonRecursively(errorInfo.message, maxDepth - 1);
-            // 只有当深层结果包含带有 code 的 error 对象时，才优先返回深层结果
+            // Only return deeper result if it contains an error object with code
             if (nestedResult && nestedResult.error && nestedResult.error.code) {
               return nestedResult;
             }
           } catch {
-            // 如果嵌套解析失败，使用当前层的信息
+            // If nested parsing fails, use current layer info
           }
         }
 
@@ -133,31 +155,40 @@ export function parseGoogleErrorMessage(message: string): ParsedError {
     }
   };
 
-  // 1. 处理 "got status: UNAVAILABLE. {JSON}" 格式
-  const statusJsonMatch = message.match(/got status: (\w+)\.\s*({.*})$/);
-  if (statusJsonMatch) {
-    const statusFromMessage = statusJsonMatch[1];
-    const jsonPart = statusJsonMatch[2];
+  // 1. Handle "got status: UNAVAILABLE. {JSON}" format
+  const statusPrefix = 'got status: ';
+  const statusPrefixIndex = message.indexOf(statusPrefix);
+  if (statusPrefixIndex !== -1) {
+    const afterPrefix = message.slice(statusPrefixIndex + statusPrefix.length);
+    const dotIndex = afterPrefix.indexOf('.');
+    if (dotIndex !== -1) {
+      const statusFromMessage = afterPrefix.slice(0, dotIndex).trim();
+      const afterDot = afterPrefix.slice(dotIndex + 1).trim();
+      const braceIndex = afterDot.indexOf('{');
+      if (braceIndex !== -1) {
+        const jsonPart = afterDot.slice(braceIndex);
 
-    const parsedError = parseJsonRecursively(jsonPart);
-    if (parsedError && parsedError.error) {
-      const errorInfo = parsedError.error;
-      const finalMessage = errorInfo.message || message;
-      const finalCode = errorInfo.code || null;
-      const finalStatus = errorInfo.status || statusFromMessage;
+        const parsedError = parseJsonRecursively(jsonPart);
+        if (parsedError && parsedError.error) {
+          const errorInfo = parsedError.error;
+          const finalMessage = errorInfo.message || message;
+          const finalCode = errorInfo.code || null;
+          const finalStatus = errorInfo.status || statusFromMessage;
 
-      return {
-        error: {
-          code: finalCode,
-          message: finalMessage,
-          status: finalStatus,
-        },
-        errorType: getErrorType(finalCode, finalMessage),
-      };
+          return {
+            error: {
+              code: finalCode,
+              message: finalMessage,
+              status: finalStatus,
+            },
+            errorType: getErrorType(finalCode, finalMessage),
+          };
+        }
+      }
     }
   }
 
-  // 2. 尝试直接解析整个消息作为JSON
+  // 2. Try to parse entire message as JSON directly
   const directParsed = parseJsonRecursively(message);
   if (directParsed && directParsed.error) {
     const errorInfo = directParsed.error;
@@ -175,7 +206,7 @@ export function parseGoogleErrorMessage(message: string): ParsedError {
     };
   }
 
-  // 3. 处理嵌套JSON格式，特别是message字段包含JSON的情况
+  // 3. Handle nested JSON format, especially when message field contains JSON
   try {
     const firstLevelParsed = JSON.parse(message);
     if (firstLevelParsed && firstLevelParsed.error && firstLevelParsed.error.message) {
@@ -197,10 +228,10 @@ export function parseGoogleErrorMessage(message: string): ParsedError {
       }
     }
   } catch {
-    // 继续其他解析方式
+    // Continue with other parsing methods
   }
 
-  // 4. 原有的数组格式解析逻辑
+  // 4. Original array format parsing logic
   const startIndex = message.lastIndexOf('[');
   if (startIndex !== -1) {
     try {
@@ -214,11 +245,11 @@ export function parseGoogleErrorMessage(message: string): ParsedError {
 
       return { error: json, errorType: AgentRuntimeErrorType.ProviderBizError };
     } catch {
-      // 忽略解析错误
+      // Ignore parsing errors
     }
   }
 
-  // 5. 使用状态码提取逻辑作为最后的后备方案
+  // 5. Use status code extraction logic as last fallback
   const errorObj = extractStatusCodeFromError(message);
   if (errorObj.errorDetails) {
     return { error: errorObj.errorDetails, errorType: AgentRuntimeErrorType.ProviderBizError };

@@ -2,6 +2,45 @@
   "about": {
     "title": "About"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Avatar",
+      "description": "Description",
+      "name": "Name",
+      "tags": "Tags",
+      "title": "Agent Info"
+    },
+    "chat": {
+      "displayMode": "Display Mode",
+      "enableHistoryCount": "Enable Message History Count",
+      "historyCount": "Message History Count",
+      "no": "No",
+      "searchMode": "Search Mode",
+      "title": "Chat Preferences",
+      "yes": "Yes"
+    },
+    "model": {
+      "maxTokens": "Max Token Count",
+      "model": "Model",
+      "provider": "Provider",
+      "temperature": "Temperature",
+      "title": "Model Settings",
+      "topP": "Top P Value"
+    },
+    "plugins": {
+      "count": "Plugin Settings ({{count}})",
+      "empty": "No plugins installed yet",
+      "title": "Installed Plugins"
+    },
+    "role": {
+      "systemRole": "System Prompt",
+      "title": "Role Settings"
+    },
+    "value": {
+      "unset": "Not Set",
+      "untitled": "Untitled Agent"
+    }
+  },
   "agentTab": {
     "chat": "Chat Preferences",
     "meta": "Assistant Info",
@@ -18,6 +57,8 @@
     },
     "title": "Analytics"
   },
+  "checking": "Checking...",
+  "checkingPermissions": "Checking permissions...",
   "danger": {
     "clear": {
       "action": "Clear Now",
@@ -35,9 +76,16 @@
       "title": "Reset All Settings"
     }
   },
+  "groupTab": {
+    "chat": "Chat",
+    "members": "Members",
+    "meta": "Basic Info"
+  },
   "header": {
     "desc": "Preferences and model settings.",
     "global": "Global Settings",
+    "group": "Team Settings",
+    "groupDesc": "Manage Agent teams and chat preferences",
     "session": "Session Settings",
     "sessionDesc": "Role settings and session preferences.",
     "sessionWithName": "Session Settings · {{name}}",
@@ -139,6 +187,61 @@
     },
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Describe the key changes and improvements in this version",
+        "label": "Changelog",
+        "maxLengthError": "Changelog must not exceed 500 characters",
+        "placeholder": "Enter the changelog",
+        "required": "Please enter the changelog"
+      },
+      "comparison": {
+        "local": "Current Local Version",
+        "remote": "Currently Published Version"
+      },
+      "identifier": {
+        "extra": "The identifier serves as the unique ID for the agent. Use lowercase letters, numbers, and hyphens.",
+        "label": "Agent Identifier",
+        "lengthError": "Identifier must be between 3 and 50 characters",
+        "patternError": "Identifier can only contain lowercase letters, numbers, and hyphens",
+        "placeholder": "Enter a unique identifier for the agent, e.g., web-development",
+        "required": "Please enter the agent identifier"
+      },
+      "loading": {
+        "fetchingRemote": "Loading remote data...",
+        "submit": "Publishing agent...",
+        "upload": "Publishing new version..."
+      },
+      "messages": {
+        "createVersionFailed": "Failed to create version: {{message}}",
+        "fetchRemoteFailed": "Failed to fetch remote agent data",
+        "missingIdentifier": "This agent does not have a market identifier yet",
+        "notAuthenticated": "Please log in to your market account first",
+        "publishFailed": "Publish failed: {{message}}"
+      },
+      "submitButton": "Publish",
+      "title": {
+        "submit": "Share to Agent Market",
+        "upload": "Publish New Version"
+      }
+    },
+    "resultModal": {
+      "message": "The agent has been submitted for review. It will go live automatically once approved. Click 'View in Market' to see the published agent.",
+      "view": "View in Market"
+    },
+    "submit": {
+      "button": "Share to Market",
+      "tooltip": "Share the agent to the market"
+    },
+    "upload": {
+      "button": "Publish New Version",
+      "tooltip": "Publish a new version to the agent market"
+    }
+  },
+  "message": {
+    "success": "Update successful"
+  },
   "plugin": {
     "addMCPPlugin": "Add MCP Plugin",
     "addTooltip": "Custom Plugin",
@@ -189,6 +292,12 @@
       "disabled": "Off",
       "elegant": "Elegant",
       "title": "Response Animation"
+    },
+    "contextMenuMode": {
+      "default": "Default",
+      "desc": "Select the display mode for the chat message right-click menu",
+      "disabled": "Disabled",
+      "title": "Right-Click Menu Mode"
     },
     "neutralColor": {
       "desc": "Custom grayscale with different color tendencies",
@@ -293,6 +402,109 @@
       "title": "Theme"
     },
     "title": "General Settings"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Enter team description",
+      "title": "Team Description"
+    },
+    "name": {
+      "placeholder": "Enter team name",
+      "title": "Team Name"
+    },
+    "scene": {
+      "desc": "Select team scenario",
+      "options": {
+        "casual": "Casual",
+        "productive": "Productive"
+      },
+      "title": "Team Scenario"
+    },
+    "submit": "Update Team",
+    "systemPrompt": {
+      "placeholder": "Please enter the host system prompt",
+      "title": "Host System Prompt"
+    },
+    "title": "Agent Team Information"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "When turned off, you can still send direct messages to the assistant",
+      "title": "Allow Direct Messages from Assistant"
+    },
+    "enableSupervisor": {
+      "desc": "Enable the Agent team moderator feature. Moderators will manage the team conversation flow.",
+      "title": "Enable Host"
+    },
+    "maxResponseInRow": {
+      "desc": "Select how many consecutive messages a member can reply with. Set to 0 to disable this limit.",
+      "title": "Consecutive Reply Count"
+    },
+    "model": {
+      "desc": "Group members' messages will not be affected. Some models cannot be used as host models.",
+      "title": "Host Model"
+    },
+    "orchestratorTitle": "Host Settings",
+    "responseOrder": {
+      "desc": "Agents will respond in the order set in the chat",
+      "options": {
+        "natural": "Natural",
+        "sequential": "Sequential"
+      },
+      "placeholder": "Select reply order",
+      "title": "Reply Order"
+    },
+    "responseSpeed": {
+      "desc": "Control the overall pace of the conversation",
+      "options": {
+        "fast": "Fast",
+        "medium": "Medium",
+        "slow": "Slow"
+      },
+      "placeholder": "Select reply speed",
+      "title": "Reply Speed"
+    },
+    "revealDM": {
+      "desc": "Make private messages sent to other members visible to you.",
+      "title": "Show Private Messages"
+    },
+    "submit": "Update Settings",
+    "systemPrompt": {
+      "desc": "Custom system prompt for the group chat host. This may affect the default host behavior.",
+      "placeholder": "Please enter a custom host system prompt...",
+      "title": "Host System Prompt"
+    },
+    "title": "Chat Settings"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Add to Group",
+    "availableAgents": "Available Assistants",
+    "createMember": "Create Member",
+    "defaultAgent": "Custom Assistant",
+    "disableHost": "Disable Host Assistant",
+    "edit": "Edit Member",
+    "empty": "There are no members in this team yet. Click the + button to add members.",
+    "enableHost": "Enable Host Assistant",
+    "groupHost": "Group Host",
+    "groupMembers": "Group Members",
+    "host": {
+      "description": "When the host is in the group, the chat runs automatically, suitable for brainstorming tasks.",
+      "title": "Host"
+    },
+    "noAvailableAgents": "No available assistants",
+    "noDescription": "No description",
+    "noMembersInGroup": "No members in the group",
+    "owner": "You (Owner)",
+    "remove": "Remove Member",
+    "removeFromGroup": "Remove from Group",
+    "you": "You"
+  },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Set the default number of images generated when creating a new task in the image generation panel.",
+      "label": "Default Image Count",
+      "title": "AI Drawing Settings"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -448,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Submit Assistant",
-    "identifier": "Assistant Identifier",
+    "identifier": "Agent Identifier",
     "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags",
     "placeholder": "Enter a unique identifier for the assistant, e.g. web-development",
     "tooltips": "Share to the assistant marketplace"
@@ -546,9 +758,10 @@
   "tab": {
     "about": "About",
     "agent": "Default Assistant",
-    "common": "Common Settings",
+    "common": "General",
     "experiment": "Experiment",
     "hotkey": "Hotkeys",
+    "image": "AI Drawing",
     "llm": "Language Model",
     "provider": "AI Service Provider",
     "proxy": "Network Proxy",
@@ -562,11 +775,36 @@
       "groupName": "Built-ins"
     },
     "disabled": "The current model does not support function calls and cannot use the plugin",
+    "klavis": {
+      "addServer": "Add Server",
+      "authCompleted": "Authentication Completed",
+      "authFailed": "Authentication Failed",
+      "authRequired": "Authentication Required",
+      "connected": "Connected",
+      "error": "Error",
+      "groupName": "Klavis Tools",
+      "manage": "Manage Klavis",
+      "manageTitle": "Manage Klavis Integration",
+      "noServers": "No connected servers",
+      "notEnabled": "Klavis service not enabled",
+      "oauthRequired": "Please complete OAuth authentication in the new window",
+      "pendingAuth": "Pending Authentication",
+      "serverCreated": "Server created successfully",
+      "serverCreatedFailed": "Failed to create server",
+      "serverRemoved": "Server removed",
+      "servers": "servers",
+      "tools": "tools",
+      "verifyAuth": "I have completed authentication"
+    },
     "plugins": {
       "enabled": "Enabled: {{num}}",
       "groupName": "Plugins",
       "noEnabled": "No plugins enabled",
       "store": "Plugin Store"
+    },
+    "tabs": {
+      "all": "All",
+      "installed": "Enabled"
     },
     "title": "Extension Tools"
   }

@@ -1,12 +1,15 @@
 import { z } from 'zod';
 
-import { ChatMessage } from './message';
+import { UIChatMessage } from './message';
+import { OpenAIChatMessage } from './openai/chat';
+import { LobeUniformTool, LobeUniformToolSchema } from './tool';
 import { ChatTopic } from './topic';
 
 export interface SendNewMessage {
   content: string;
   // if message has attached with files, then add files to message and the agent
   files?: string[];
+  parentId?: string;
 }
 
 export interface SendMessageServerParams {
@@ -39,6 +42,7 @@ export const AiSendMessageServerSchema = z.object({
   newUserMessage: z.object({
     content: z.string(),
     files: z.array(z.string()).optional(),
+    parentId: z.string().optional(),
   }),
   sessionId: z.string().optional(),
   threadId: z.string().optional(),
@@ -47,9 +51,58 @@ export const AiSendMessageServerSchema = z.object({
 
 export interface SendMessageServerResponse {
   assistantMessageId: string;
-  isCreatNewTopic: boolean;
-  messages: ChatMessage[];
+  isCreateNewTopic: boolean;
+  messages: UIChatMessage[];
   topicId: string;
   topics?: ChatTopic[];
   userMessageId: string;
+}
+
+export const StructureSchema = z.object({
+  description: z.string().optional(),
+  name: z.string(),
+  schema: z.object({
+    $defs: z.any().optional(),
+    additionalProperties: z.boolean().optional(),
+    properties: z.record(z.string(), z.any()),
+    required: z.array(z.string()).optional(),
+    type: z.literal('object'),
+  }),
+  strict: z.boolean().optional(),
+});
+
+export const StructureOutputSchema = z.object({
+  keyVaultsPayload: z.string(),
+  messages: z.array(z.any()),
+  model: z.string(),
+  provider: z.string(),
+  schema: StructureSchema.optional(),
+  tools: z
+    .array(z.object({ function: LobeUniformToolSchema, type: z.literal('function') }))
+    .optional(),
+});
+
+interface IStructureSchema {
+  description: string;
+  name: string;
+  schema: {
+    additionalProperties?: boolean;
+    properties: Record<string, any>;
+    required?: string[];
+    type: 'object';
+  };
+  strict?: boolean;
+}
+
+export interface StructureOutputParams {
+  keyVaultsPayload: string;
+  messages: OpenAIChatMessage[];
+  model: string;
+  provider: string;
+  schema?: IStructureSchema;
+  systemRole?: string;
+  tools?: {
+    function: LobeUniformTool;
+    type: 'function';
+  }[];
 }

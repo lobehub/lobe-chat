@@ -1,3 +1,10 @@
+import type {
+  AiProviderDetailItem,
+  AiProviderListItem,
+  AiProviderRuntimeState,
+  EnabledProvider,
+  ProviderConfig,
+} from '@lobechat/types';
 import { isEmpty } from 'lodash-es';
 import {
   AIChatModelCard,
@@ -8,13 +15,6 @@ import {
 import pMap from 'p-map';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import {
-  AiProviderDetailItem,
-  AiProviderListItem,
-  AiProviderRuntimeState,
-  EnabledProvider,
-} from '@/types/aiProvider';
-import { ProviderConfig } from '@/types/user/settings';
 import { merge, mergeArrayById } from '@/utils/merge';
 
 import { AiModelModel } from '../../models/aiModel';
@@ -22,6 +22,104 @@ import { AiProviderModel } from '../../models/aiProvider';
 import { LobeChatDatabase } from '../../type';
 
 type DecryptUserKeyVaults = (encryptKeyVaultsStr: string | null) => Promise<any>;
+
+/**
+ * Provider-level search defaults (only used when built-in models don't provide settings.searchImpl and settings.searchProvider)
+ * Note: Not stored in DB, only injected during read
+ */
+const PROVIDER_SEARCH_DEFAULTS: Record<
+  string,
+  { searchImpl?: 'tool' | 'params' | 'internal'; searchProvider?: string }
+> = {
+  ai360: { searchImpl: 'params' },
+  aihubmix: { searchImpl: 'params' },
+  anthropic: { searchImpl: 'params' },
+  baichuan: { searchImpl: 'params' },
+  default: { searchImpl: 'params' },
+  google: { searchImpl: 'params', searchProvider: 'google' },
+  hunyuan: { searchImpl: 'params' },
+  jina: { searchImpl: 'internal' },
+  minimax: { searchImpl: 'params' },
+  // openai: defaults to params, but -search- models use internal as special case
+  openai: { searchImpl: 'params' },
+  // perplexity: defaults to internal
+  perplexity: { searchImpl: 'internal' },
+  qwen: { searchImpl: 'params' },
+  spark: { searchImpl: 'params' }, // Some models (like max-32k) will prioritize built-in if marked as internal
+  stepfun: { searchImpl: 'params' },
+  vertexai: { searchImpl: 'params', searchProvider: 'google' },
+  wenxin: { searchImpl: 'params' },
+  xai: { searchImpl: 'params' },
+  zhipu: { searchImpl: 'params' },
+};
+
+// Special model configuration - model-level settings override provider defaults
+const MODEL_SEARCH_DEFAULTS: Record<
+  string,
+  Record<string, { searchImpl?: 'tool' | 'params' | 'internal'; searchProvider?: string }>
+> = {
+  openai: {
+    'gpt-4o-mini-search-preview': { searchImpl: 'internal' },
+    'gpt-4o-search-preview': { searchImpl: 'internal' },
+    // Add other special model configurations here
+  },
+  spark: {
+    'max-32k': { searchImpl: 'internal' },
+  },
+  // Add special model configurations for other providers here
+};
+
+// Infer default settings based on providerId + modelId
+const inferProviderSearchDefaults = (
+  providerId: string | undefined,
+  modelId: string,
+): { searchImpl?: 'tool' | 'params' | 'internal'; searchProvider?: string } => {
+  const modelSpecificConfig = providerId ? MODEL_SEARCH_DEFAULTS[providerId]?.[modelId] : undefined;
+  if (modelSpecificConfig) {
+    return modelSpecificConfig;
+  }
+
+  return (providerId && PROVIDER_SEARCH_DEFAULTS[providerId]) || PROVIDER_SEARCH_DEFAULTS.default;
+};
+
+// Only inject settings during read; add or remove search-related fields in settings based on abilities.search
+const injectSearchSettings = (providerId: string, item: any) => {
+  const abilities = item?.abilities || {};
+
+  // Model explicitly disables search capability: remove search-related fields from settings to prevent UI from showing built-in search
+  if (abilities.search === false) {
+    if (item?.settings?.searchImpl || item?.settings?.searchProvider) {
+      const next = { ...item } as any;
+      if (next.settings) {
+        // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
+        const { searchImpl, searchProvider, ...restSettings } = next.settings;
+        next.settings = Object.keys(restSettings).length > 0 ? restSettings : undefined;
+      }
+      return next;
+    }
+    return item;
+  }
+
+  // Model explicitly enables search capability: add search-related fields to settings
+  else if (abilities.search === true) {
+    // If built-in (local) model already has either field, preserve it without overriding
+    if (item?.settings?.searchImpl || item?.settings?.searchProvider) return item;
+
+    // Otherwise use providerId + modelId
+    const searchSettings = inferProviderSearchDefaults(providerId, item.id);
+
+    return {
+      ...item,
+      settings: {
+        ...item.settings,
+        ...searchSettings,
+      },
+    };
+  }
+
+  // Compatibility for legacy versions where database doesn't store abilities.search field
+  return item;
+};
 
 export class AiInfraRepos {
   private userId: string;
@@ -48,7 +146,7 @@ export class AiInfraRepos {
   getAiProviderList = async () => {
     const userProviders = await this.aiProviderModel.getAiProviderList();
 
-    // 1. 先创建一个基于 DEFAULT_MODEL_PROVIDER_LIST id 顺序的映射
+    // 1. First create a mapping based on DEFAULT_MODEL_PROVIDER_LIST id order
     const orderMap = new Map(DEFAULT_MODEL_PROVIDER_LIST.map((item, index) => [item.id, index]));
 
     const builtinProviders = DEFAULT_MODEL_PROVIDER_LIST.map((item) => ({
@@ -63,7 +161,7 @@ export class AiInfraRepos {
 
     const mergedProviders = mergeArrayById(builtinProviders, userProviders);
 
-    // 3. 根据 orderMap 排序
+    // 3. Sort based on orderMap
     return mergedProviders.sort((a, b) => {
       const orderA = orderMap.get(a.id) ?? Number.MAX_SAFE_INTEGER;
       const orderB = orderMap.get(b.id) ?? Number.MAX_SAFE_INTEGER;
@@ -107,6 +205,7 @@ export class AiInfraRepos {
           .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
             const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
 
+            // User hasn't modified local model
             if (!user)
               return {
                 ...item,
@@ -114,7 +213,7 @@ export class AiInfraRepos {
                 providerId: provider.id,
               };
 
-            return {
+            const mergedModel = {
               ...item,
               abilities: !isEmpty(user.abilities) ? user.abilities : item.abilities || {},
               config: !isEmpty(user.config) ? user.config : item.config,
@@ -126,10 +225,11 @@ export class AiInfraRepos {
               enabled: typeof user.enabled === 'boolean' ? user.enabled : item.enabled,
               id: item.id,
               providerId: provider.id,
-              settings: item.settings,
+              settings: user.settings || item.settings,
               sort: user.sort || undefined,
-              type: item.type,
+              type: user.type || item.type,
             };
+            return injectSearchSettings(provider.id, mergedModel); // User modified local model, check search settings
           })
           .filter((item) => (filterEnabled ? item.enabled : true));
       },
@@ -137,13 +237,16 @@ export class AiInfraRepos {
     );
 
     const enabledProviderIds = new Set(enabledProviders.map((item) => item.id));
-
-    return [
-      ...builtinModelList.flat(),
-      ...allModels.filter((item) =>
+    // User database models, check search settings
+    const appendedUserModels = allModels
+      .filter((item) =>
         filterEnabled ? enabledProviderIds.has(item.providerId) && item.enabled : true,
-      ),
-    ].sort((a, b) => (a?.sort || -1) - (b?.sort || -1)) as EnabledAiModel[];
+      )
+      .map((item) => injectSearchSettings(item.providerId, item));
+
+    return [...builtinModelList.flat(), ...appendedUserModels].sort(
+      (a, b) => (a?.sort || -1) - (b?.sort || -1),
+    ) as EnabledAiModel[];
   };
 
   getAiProviderRuntimeState = async (
@@ -181,12 +284,14 @@ export class AiInfraRepos {
 
     const defaultModels: AiProviderModelListItem[] =
       (await this.fetchBuiltinModels(providerId)) || [];
+    // Not modifying search settings here doesn't affect usage, but done for data consistency on get
+    const mergedModel = mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
 
-    return mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
+    return mergedModel.map((m) => injectSearchSettings(providerId, m));
   };
 
   /**
-   * use in the `/settings/provider/[id]` page
+   * use in the `/settings?active=provider&provider=[id]` page
    */
   getAiProviderDetail = async (id: string, decryptor?: DecryptUserKeyVaults) => {
     const config = await this.aiProviderModel.getAiProviderById(id, decryptor);

@@ -3,6 +3,7 @@ title: LobeChat Model Service Providers - Environment Variables and Configuratio
 description: >-
   Learn about the environment variables and configuration settings for various model service providers like OpenAI, Google AI, AWS Bedrock, Ollama, Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
 
+
 tags:
   - Model Service Providers
   - Environment Variables
@@ -114,6 +115,37 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Example: `https://api.genai.gd.edu.kg/google`
 
 ### `GOOGLE_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+gemini-1.5-flash-latest,+gemini-1.5-pro-latest`
+
+## Vertex AI
+
+### `VERTEXAI_CREDENTIALS`
+
+- Type: Required
+- Description: A JSON string of your Google Cloud service account key, you can get the key from [here](/docs/usage/providers/vertexai).
+- Default: -
+- Example: `{"type": "service_account", "project_id": "your-gcp-project-id", ...}`
+
+### `VERTEXAI_PROJECT`
+
+- Type: Optional
+- Description: Your Google Cloud project ID. If not set, it will be obtained from the `project_id` field in `VERTEXAI_CREDENTIALS`.
+- Default: -
+- Example: `your-gcp-project-id`
+
+### `VERTEXAI_LOCATION`
+
+- Type: Optional
+- Description: The region where your Vertex AI model is located.
+- Default: `global`
+- Example: `us-central1`
+
+
+### `VERTEXAI_MODEL_LIST`
 
 - Type: Optional
 - Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
@@ -646,18 +678,70 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Type: Optional
 - Description: Used to control the FAL model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
 - Default: `-`
-- Example: `-all,+flux/schnell,+flux-pro/kontext=FLUX.1 Kontext [pro]`
+- Example: `-all,+fal-ai/flux/schnell,+fal-ai/flux-pro/kontext=FLUX.1 Kontext [pro]`
 
-The above example disables all models first, then enables `flux/schnell` and `flux-pro/kontext` (displayed as `FLUX.1 Kontext [pro]`).
+The above example disables all models first, then enables `fal-ai/flux/schnell` and `fal-ai/flux-pro/kontext` (displayed as `FLUX.1 Kontext [pro]`).
 
-## BFL
+## ComfyUI
 
-### `ENABLED_BFL`
+### `ENABLED_COMFYUI`
 
 - Type: Optional
-- Description: Enables BFL as a model provider by default. Set to `0` to disable the BFL service.
+- Description: Enables ComfyUI as a model provider by default. Set to `0` to disable the ComfyUI service.
 - Default: `1`
 - Example: `0`
+
+### `COMFYUI_BASE_URL`
+
+- Type: Optional
+- Description: The base URL address of the ComfyUI service
+- Default: `http://localhost:8188`
+- Example: `http://192.168.1.100:8188` or `https://my-comfyui-server.com`
+
+### `COMFYUI_AUTH_TYPE`
+
+- Type: Optional
+- Description: The authentication type for ComfyUI, supporting 4 authentication methods
+  - `none`: No authentication (default)
+  - `basic`: Basic authentication (username + password)
+  - `bearer`: Bearer Token authentication (API key)
+  - `custom`: Custom request header authentication
+- Default: `none`
+- Example: `basic`
+
+### `COMFYUI_API_KEY`
+
+- Type: Optional
+- Description: The API key used when the authentication type is `bearer`
+- Default: -
+- Example: `sk-xxxxxx...xxxxxx`
+
+### `COMFYUI_USERNAME`
+
+- Type: Optional
+- Description: The username used when the authentication type is `basic`
+- Default: -
+- Example: `admin`
+
+### `COMFYUI_PASSWORD`
+
+- Type: Optional
+- Description: The password used when the authentication type is `basic`
+- Default: -
+- Example: `password123`
+
+### `COMFYUI_CUSTOM_HEADERS`
+
+- Type: Optional
+- Description: Custom request headers used when the authentication type is `custom`, requires JSON format string
+- Default: -
+- Example: `{"X-Auth-Token": "your-token", "X-Custom-Header": "value"}`
+
+<Callout type={'info'}>
+  ComfyUI supports multiple authentication methods. Please choose the appropriate authentication type and corresponding authentication parameters according to your ComfyUI service configuration. If your ComfyUI service has no authentication set up, you can skip configuring authentication-related environment variables.
+</Callout>
+
+## BFL
 
 ### `BFL_API_KEY`
 
@@ -692,5 +776,53 @@ The above example disables all models first, then enables `flux-pro-1.1` and `fl
 - Example: `https://your-newapi-server.com/`
 
 NewAPI is a multi-provider model aggregation service that supports automatic model routing based on provider detection. It offers cost management features and provides a single endpoint for accessing models from multiple providers including OpenAI, Anthropic, Google, and more. Learn more about NewAPI at [https://github.com/Calcium-Ion/new-api](https://github.com/Calcium-Ion/new-api).
+
+## Vercel AI Gateway
+
+### `VERCELAIGATEWAY_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Vercel AI Gateway service.
+- Default: -
+- Example: `vck_xxxxxx...xxxxxx`
+
+### `VERCELAIGATEWAY_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the Vercel AI Gateway model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
+- Default: `-`
+- Example: `-all,+vercel-model-1,+vercel-model-2=vercel-special`
+
+## Cerebras
+
+### `CEREBRAS_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Cerebras service.
+- Default: -
+- Example: `csk-xxxxxx...xxxxxx`
+
+### `CEREBRAS_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the Cerebras model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
+- Default: `-`
+- Example: `-all,+cerebras-model-1,+cerebras-model-2=cerebras-special`
+
+## AiHubMix
+
+### `AIHUBMIX_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the AiHubMix service.
+- Default: -
+- Example: `sk-xxxxxx...xxxxxx`
+
+### `AIHUBMIX_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the AiHubMix model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
+- Default: `-`
+- Example: `-all,+claude-opus-4-1-20250805,+claude-opus-4-20250514=claude-opus-4`
 
 [model-list]: /docs/self-hosting/advanced/model-list

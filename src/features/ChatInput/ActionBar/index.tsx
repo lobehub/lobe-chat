@@ -1,6 +1,11 @@
 import { ChatInputActions, type ChatInputActionsProps } from '@lobehub/editor/react';
 import { memo, useMemo } from 'react';
 
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/slices/preference/selectors';
+
 import { ActionKeys, actionMap } from '../ActionBar/config';
 import { useChatInputStore } from '../store';
 
@@ -35,10 +40,31 @@ const mapActionsToItems = (keys: ActionKeys[]): ChatInputActionsProps['items'] =
   });
 
 const ActionToolbar = memo(() => {
-  const leftActions = useChatInputStore((s) => s.leftActions);
+  const [expandInputActionbar, toggleExpandInputActionbar] = useGlobalStore((s) => [
+    systemStatusSelectors.expandInputActionbar(s),
+    s.toggleExpandInputActionbar,
+  ]);
+  const enableRichRender = useUserStore(labPreferSelectors.enableInputMarkdown);
+
+  const leftActions = useChatInputStore((s) =>
+    s.leftActions.filter((item) => (enableRichRender ? true : item !== 'typo')),
+  );
+
   const mobile = useChatInputStore((s) => s.mobile);
+
   const items = useMemo(() => mapActionsToItems(leftActions), [leftActions]);
-  return <ChatInputActions collapseOffset={mobile ? 48 : 80} items={items} />;
+
+  return (
+    <ChatInputActions
+      collapseOffset={mobile ? 48 : 80}
+      defaultGroupCollapse={true}
+      groupCollapse={!expandInputActionbar}
+      items={items}
+      onGroupCollapseChange={(v) => {
+        toggleExpandInputActionbar(!v);
+      }}
+    />
+  );
 });
 
 export default ActionToolbar;

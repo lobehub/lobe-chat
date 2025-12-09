@@ -1,4 +1,6 @@
-import { enableClerk, enableNextAuth } from '@/const/auth';
+import { headers } from 'next/headers';
+
+import { enableBetterAuth, enableClerk, enableNextAuth } from '@/const/auth';
 import { DESKTOP_USER_ID } from '@/const/desktop';
 import { isDesktop } from '@/const/version';
 
@@ -9,6 +11,21 @@ export const getUserAuth = async () => {
     const clerkAuth = new ClerkAuth();
 
     return await clerkAuth.getAuth();
+  }
+
+  if (enableBetterAuth) {
+    const { auth: betterAuth } = await import('@/auth');
+
+    const currentHeaders = await headers();
+    const requestHeaders = Object.fromEntries(currentHeaders.entries());
+
+    const session = await betterAuth.api.getSession({
+      headers: requestHeaders,
+    });
+
+    const userId = session?.user?.id;
+
+    return { betterAuth: session, userId };
   }
 
   if (enableNextAuth) {
@@ -29,9 +46,9 @@ export const getUserAuth = async () => {
 };
 
 /**
- * 从授权头中提取 Bearer Token
- * @param authHeader - 授权头 (例如 "Bearer xxx")
- * @returns Bearer Token 或 null（如果授权头无效或不存在）
+ * Extract Bearer Token from authorization header
+ * @param authHeader - Authorization header (e.g. "Bearer xxx")
+ * @returns Bearer Token or null (if authorization header is invalid or does not exist)
  */
 export const extractBearerToken = (authHeader?: string | null): string | null => {
   if (!authHeader) return null;
@@ -51,9 +68,9 @@ export const extractBearerToken = (authHeader?: string | null): string | null =>
 };
 
 /**
- * 从 Oidc-Auth header 中提取 JWT token
- * @param authHeader - Oidc-Auth header 值 (例如 "Oidc-Auth xxx")
- * @returns JWT token 或 null（如果授权头无效或不存在）
+ * Extract JWT token from Oidc-Auth header
+ * @param authHeader - Oidc-Auth header value (e.g. "Oidc-Auth xxx")
+ * @returns JWT token or null (if authorization header is invalid or does not exist)
  */
 export const extractOidcAuthToken = (authHeader?: string | null): string | null => {
   if (!authHeader) return null;

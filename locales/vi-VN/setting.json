@@ -2,6 +2,45 @@
   "about": {
     "title": "Về chúng tôi"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Ảnh đại diện",
+      "description": "Mô tả",
+      "name": "Tên",
+      "tags": "Thẻ",
+      "title": "Thông tin trợ lý"
+    },
+    "chat": {
+      "displayMode": "Chế độ hiển thị",
+      "enableHistoryCount": "Bật đếm tin nhắn lịch sử",
+      "historyCount": "Số lượng tin nhắn lịch sử",
+      "no": "Không",
+      "searchMode": "Chế độ tìm kiếm",
+      "title": "Tùy chọn trò chuyện",
+      "yes": "Có"
+    },
+    "model": {
+      "maxTokens": "Số lượng Token tối đa",
+      "model": "Mô hình",
+      "provider": "Nhà cung cấp",
+      "temperature": "Nhiệt độ",
+      "title": "Cài đặt mô hình",
+      "topP": "Giá trị Top P"
+    },
+    "plugins": {
+      "count": "Cài đặt plugin ({{count}})",
+      "empty": "Chưa cài đặt plugin nào",
+      "title": "Plugin đã cài đặt"
+    },
+    "role": {
+      "systemRole": "Lời nhắc hệ thống",
+      "title": "Cài đặt vai trò"
+    },
+    "value": {
+      "unset": "Chưa thiết lập",
+      "untitled": "Trợ lý chưa có tên"
+    }
+  },
   "agentTab": {
     "chat": "Tùy chọn Trò chuyện",
     "meta": "Thông tin Trợ lý",
@@ -18,6 +57,8 @@
     },
     "title": "Thống kê dữ liệu"
   },
+  "checking": "Đang kiểm tra...",
+  "checkingPermissions": "Đang kiểm tra quyền...",
   "danger": {
     "clear": {
       "action": "Xóa ngay",
@@ -35,9 +76,16 @@
       "title": "Đặt lại tất cả cài đặt"
     }
   },
+  "groupTab": {
+    "chat": "Trò chuyện",
+    "members": "Thành viên",
+    "meta": "Thông tin cơ bản"
+  },
   "header": {
     "desc": "Thiết lập Ưu tiên và Mô hình.",
     "global": "Cài đặt toàn cầu",
+    "group": "Cài đặt nhóm",
+    "groupDesc": "Quản lý nhóm Agent và tùy chọn trò chuyện",
     "session": "Cài đặt cuộc trò chuyện",
     "sessionDesc": "Thiết lập nhân vật và ưu tiên phiên hội thoại.",
     "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}",
@@ -139,6 +187,61 @@
     },
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Mô tả những thay đổi và cải tiến chính trong phiên bản này",
+        "label": "Nhật ký thay đổi",
+        "maxLengthError": "Nhật ký thay đổi không được vượt quá 500 ký tự",
+        "placeholder": "Vui lòng nhập nhật ký thay đổi",
+        "required": "Vui lòng nhập nhật ký thay đổi"
+      },
+      "comparison": {
+        "local": "Phiên bản hiện tại trên máy",
+        "remote": "Phiên bản đã phát hành"
+      },
+      "identifier": {
+        "extra": "Định danh sẽ là mã định danh duy nhất của trợ lý, nên sử dụng chữ thường, số và dấu gạch ngang",
+        "label": "Định danh trợ lý",
+        "lengthError": "Độ dài định danh phải từ 3 đến 50 ký tự",
+        "patternError": "Định danh chỉ được chứa chữ thường, số và dấu gạch ngang",
+        "placeholder": "Vui lòng nhập định danh duy nhất cho trợ lý, ví dụ: web-development",
+        "required": "Vui lòng nhập định danh trợ lý"
+      },
+      "loading": {
+        "fetchingRemote": "Đang tải dữ liệu từ xa...",
+        "submit": "Đang phát hành trợ lý...",
+        "upload": "Đang phát hành phiên bản mới..."
+      },
+      "messages": {
+        "createVersionFailed": "Tạo phiên bản thất bại: {{message}}",
+        "fetchRemoteFailed": "Không thể lấy dữ liệu trợ lý từ xa",
+        "missingIdentifier": "Trợ lý hiện tại chưa có định danh thị trường",
+        "notAuthenticated": "Vui lòng đăng nhập tài khoản thị trường trước",
+        "publishFailed": "Phát hành thất bại: {{message}}"
+      },
+      "submitButton": "Phát hành",
+      "title": {
+        "submit": "Chia sẻ lên thị trường trợ lý",
+        "upload": "Phát hành phiên bản mới"
+      }
+    },
+    "resultModal": {
+      "message": "Trợ lý đã được gửi để kiểm duyệt, sẽ tự động hiển thị sau khi được phê duyệt. Nhấn “Xem trên thị trường” để xem trợ lý đã phát hành.",
+      "view": "Xem trên thị trường"
+    },
+    "submit": {
+      "button": "Chia sẻ lên thị trường",
+      "tooltip": "Chia sẻ trợ lý lên thị trường"
+    },
+    "upload": {
+      "button": "Phát hành phiên bản mới",
+      "tooltip": "Phát hành phiên bản mới lên thị trường trợ lý"
+    }
+  },
+  "message": {
+    "success": "Cập nhật thành công"
+  },
   "plugin": {
     "addMCPPlugin": "Thêm plugin MCP",
     "addTooltip": "Thêm tiện ích",
@@ -189,6 +292,12 @@
       "disabled": "Tắt",
       "elegant": "Thanh lịch",
       "title": "Hoạt ảnh phản hồi"
+    },
+    "contextMenuMode": {
+      "default": "Mặc định",
+      "desc": "Chọn phương án hiển thị menu chuột phải cho tin nhắn trò chuyện",
+      "disabled": "Không sử dụng",
+      "title": "Phương án menu chuột phải"
     },
     "neutralColor": {
       "desc": "Tùy chỉnh thang độ xám với các xu hướng màu sắc khác nhau",
@@ -293,6 +402,109 @@
       "title": "Chủ đề"
     },
     "title": "Cài đặt chung"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Vui lòng nhập mô tả nhóm",
+      "title": "Mô tả nhóm"
+    },
+    "name": {
+      "placeholder": "Vui lòng nhập tên nhóm",
+      "title": "Tên nhóm"
+    },
+    "scene": {
+      "desc": "Chọn ngữ cảnh nhóm",
+      "options": {
+        "casual": "Thư giãn",
+        "productive": "Năng suất"
+      },
+      "title": "Ngữ cảnh nhóm"
+    },
+    "submit": "Cập nhật nhóm",
+    "systemPrompt": {
+      "placeholder": "Vui lòng nhập từ khóa hệ thống cho người dẫn chương trình",
+      "title": "Từ khóa hệ thống người dẫn chương trình"
+    },
+    "title": "Thông tin nhóm Agent"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Sau khi tắt, bạn vẫn có thể chủ động gửi tin nhắn riêng cho trợ lý",
+      "title": "Cho phép trợ lý gửi tin nhắn riêng"
+    },
+    "enableSupervisor": {
+      "desc": "Bật chức năng người điều phối nhóm Agent, người điều phối sẽ quản lý luồng hội thoại của nhóm",
+      "title": "Bật người điều phối"
+    },
+    "maxResponseInRow": {
+      "desc": "Chọn số lượng tin nhắn thành viên có thể trả lời liên tiếp. Đặt là 0 để vô hiệu hóa giới hạn này.",
+      "title": "Số tin nhắn trả lời liên tiếp"
+    },
+    "model": {
+      "desc": "Phát ngôn của thành viên nhóm sẽ không bị ảnh hưởng. Một số mô hình không thể được sử dụng làm mô hình điều phối.",
+      "title": "Mô hình người dẫn chương trình"
+    },
+    "orchestratorTitle": "Cài đặt người dẫn chương trình",
+    "responseOrder": {
+      "desc": "Các Agent sẽ phản hồi theo thứ tự đã thiết lập trong cuộc trò chuyện",
+      "options": {
+        "natural": "Tự nhiên",
+        "sequential": "Tuần tự"
+      },
+      "placeholder": "Chọn thứ tự trả lời",
+      "title": "Thứ tự trả lời"
+    },
+    "responseSpeed": {
+      "desc": "Kiểm soát tốc độ tiến hành tổng thể của cuộc trò chuyện",
+      "options": {
+        "fast": "Nhanh",
+        "medium": "Trung bình",
+        "slow": "Chậm"
+      },
+      "placeholder": "Chọn tốc độ trả lời",
+      "title": "Tốc độ trả lời"
+    },
+    "revealDM": {
+      "desc": "Hiển thị nội dung tin nhắn riêng gửi cho các thành viên khác cho bạn xem.",
+      "title": "Hiển thị nội dung tin nhắn riêng"
+    },
+    "submit": "Cập nhật cài đặt",
+    "systemPrompt": {
+      "desc": "Từ khóa hệ thống tùy chỉnh cho người dẫn chương trình trong cuộc trò chuyện nhóm. Điều này có thể ảnh hưởng đến hành vi mặc định của người dẫn.",
+      "placeholder": "Vui lòng nhập từ khóa hệ thống người dẫn chương trình tùy chỉnh...",
+      "title": "Từ khóa hệ thống người dẫn chương trình"
+    },
+    "title": "Cài đặt trò chuyện"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Thêm vào nhóm",
+    "availableAgents": "Trợ lý có sẵn",
+    "createMember": "Tạo thành viên",
+    "defaultAgent": "Trợ lý tùy chỉnh",
+    "disableHost": "Tắt trợ lý chủ trì",
+    "edit": "Chỉnh sửa thành viên",
+    "empty": "Hiện chưa có thành viên nào trong nhóm. Nhấn nút + để thêm thành viên.",
+    "enableHost": "Bật trợ lý chủ trì",
+    "groupHost": "Chủ trì nhóm",
+    "groupMembers": "Thành viên nhóm",
+    "host": {
+      "description": "Khi chủ trì có mặt trong nhóm, trò chuyện nhóm sẽ được tự động hóa, phù hợp với các nhiệm vụ sáng tạo.",
+      "title": "Chủ trì"
+    },
+    "noAvailableAgents": "Không có trợ lý khả dụng",
+    "noDescription": "Chưa có mô tả",
+    "noMembersInGroup": "Nhóm chưa có thành viên",
+    "owner": "Bạn (chủ sở hữu)",
+    "remove": "Xóa thành viên",
+    "removeFromGroup": "Loại khỏi nhóm",
+    "you": "Bạn"
+  },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Thiết lập số lượng hình ảnh mặc định được tạo khi bắt đầu một tác vụ mới trong bảng tạo hình ảnh.",
+      "label": "Số lượng hình ảnh mặc định",
+      "title": "Cài đặt Vẽ AI"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -448,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Gửi trợ lý",
-    "identifier": "Nhận dạng trợ lý",
+    "identifier": "Định danh trợ lý (identifier)",
     "metaMiss": "Vui lòng điền đầy đủ thông tin trợ lý trước khi gửi, cần bao gồm tên, mô tả và nhãn",
     "placeholder": "Vui lòng nhập nhận dạng trợ lý, cần phải duy nhất, ví dụ như phát triển web",
     "tooltips": "Chia sẻ lên thị trường trợ lý"
@@ -549,6 +761,7 @@
     "common": "Cài đặt chung",
     "experiment": "Thử nghiệm",
     "hotkey": "Phím tắt",
+    "image": "Vẽ AI",
     "llm": "Mô hình ngôn ngữ",
     "provider": "Nhà cung cấp AI",
     "proxy": "Mạng proxy",
@@ -562,11 +775,36 @@
       "groupName": "Mở rộng tích hợp sẵn"
     },
     "disabled": "Mô hình hiện tại không hỗ trợ gọi hàm, không thể sử dụng plugin",
+    "klavis": {
+      "addServer": "Thêm máy chủ",
+      "authCompleted": "Xác thực hoàn tất",
+      "authFailed": "Xác thực thất bại",
+      "authRequired": "Yêu cầu xác thực",
+      "connected": "Đã kết nối",
+      "error": "Lỗi",
+      "groupName": "Công cụ Klavis",
+      "manage": "Quản lý Klavis",
+      "manageTitle": "Quản lý tích hợp Klavis",
+      "noServers": "Chưa có máy chủ nào được kết nối",
+      "notEnabled": "Dịch vụ Klavis chưa được kích hoạt",
+      "oauthRequired": "Vui lòng hoàn tất xác thực OAuth trong cửa sổ mới",
+      "pendingAuth": "Đang chờ xác thực",
+      "serverCreated": "Tạo máy chủ thành công",
+      "serverCreatedFailed": "Tạo máy chủ thất bại",
+      "serverRemoved": "Máy chủ đã bị xóa",
+      "servers": "máy chủ",
+      "tools": "công cụ",
+      "verifyAuth": "Tôi đã hoàn tất xác thực"
+    },
     "plugins": {
       "enabled": "Đã kích hoạt {{num}}",
       "groupName": "Tiện ích",
       "noEnabled": "Chưa có tiện ích nào được kích hoạt",
       "store": "Cửa hàng tiện ích"
+    },
+    "tabs": {
+      "all": "Tất cả",
+      "installed": "Đã bật"
     },
     "title": "Công cụ mở rộng"
   }

@@ -1,9 +1,18 @@
 import { UserJSON } from '@clerk/backend';
+import { enableClerk, isDesktop } from '@lobechat/const';
+import {
+  NextAuthAccountSchame,
+  UserGuideSchema,
+  UserInitializationState,
+  UserPreference,
+  UserPreferenceSchema,
+  UserSettings,
+  UserSettingsSchema,
+} from '@lobechat/types';
+import { TRPCError } from '@trpc/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
-import { enableClerk } from '@/const/auth';
-import { isDesktop } from '@/const/version';
 import { MessageModel } from '@/database/models/message';
 import { SessionModel } from '@/database/models/session';
 import { UserModel, UserNotFoundError } from '@/database/models/user';
@@ -16,20 +25,21 @@ import { S3 } from '@/server/modules/S3';
 import { FileService } from '@/server/services/file';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 import { UserService } from '@/server/services/user';
-import {
-  NextAuthAccountSchame,
-  UserGuideSchema,
-  UserInitializationState,
-  UserPreference,
-} from '@/types/user';
-import { UserSettings } from '@/types/user/settings';
+
+const usernameSchema = z
+  .string()
+  .trim()
+  .min(1, { message: 'USERNAME_REQUIRED' })
+  .regex(/^\w+$/, { message: 'USERNAME_INVALID' });
 
 const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next }) => {
   return next({
     ctx: {
       clerkAuth: new ClerkAuth(),
       fileService: new FileService(ctx.serverDB, ctx.userId),
+      messageModel: new MessageModel(ctx.serverDB, ctx.userId),
       nextAuthUserService: new NextAuthUserService(ctx.serverDB),
+      sessionModel: new SessionModel(ctx.serverDB, ctx.userId),
       userModel: new UserModel(ctx.serverDB, ctx.userId),
     },
   });
@@ -96,12 +106,12 @@ export const userRouter = router({
       }
     }
 
-    const messageModel = new MessageModel(ctx.serverDB, ctx.userId);
-    const hasMoreThan4Messages = await messageModel.hasMoreThanN(4);
-
-    const sessionModel = new SessionModel(ctx.serverDB, ctx.userId);
-    const hasAnyMessages = await messageModel.hasMoreThanN(0);
-    const hasExtraSession = await sessionModel.hasMoreThanN(1);
+    // Run all count queries in parallel
+    const [hasMoreThan4Messages, hasAnyMessages, hasExtraSession] = await Promise.all([
+      ctx.messageModel.hasMoreThanN(4),
+      ctx.messageModel.hasMoreThanN(0),
+      ctx.sessionModel.hasMoreThanN(1),
+    ]);
 
     return {
       avatar: state.avatar,
@@ -195,34 +205,47 @@ export const userRouter = router({
     return ctx.userModel.updateUser({ avatar: input });
   }),
 
+  updateFullName: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    return ctx.userModel.updateUser({ fullName: input });
+  }),
+
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updateGuide(input);
   }),
 
-  updatePreference: userProcedure.input(z.any()).mutation(async ({ ctx, input }) => {
+  updatePreference: userProcedure.input(UserPreferenceSchema).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updatePreference(input);
   }),
 
-  updateSettings: userProcedure
-    .input(z.object({}).passthrough())
-    .mutation(async ({ ctx, input }) => {
-      const { keyVaults, ...res } = input as Partial<UserSettings>;
+  updateSettings: userProcedure.input(UserSettingsSchema).mutation(async ({ ctx, input }) => {
+    const { keyVaults, ...res } = input as Partial<UserSettings>;
 
-      // Encrypt keyVaults
-      let encryptedKeyVaults: string | null = null;
+    // Encrypt keyVaults
+    let encryptedKeyVaults: string | null = null;
 
-      if (keyVaults) {
-        // TODO: better to add a validation
-        const data = JSON.stringify(keyVaults);
-        const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+    if (keyVaults) {
+      // TODO: better to add a validation
+      const data = JSON.stringify(keyVaults);
+      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
 
-        encryptedKeyVaults = await gateKeeper.encrypt(data);
-      }
+      encryptedKeyVaults = await gateKeeper.encrypt(data);
+    }
 
-      const nextValue = { ...res, keyVaults: encryptedKeyVaults };
+    const nextValue = { ...res, keyVaults: encryptedKeyVaults };
 
-      return ctx.userModel.updateSetting(nextValue);
-    }),
+    return ctx.userModel.updateSetting(nextValue);
+  }),
+
+  updateUsername: userProcedure.input(usernameSchema).mutation(async ({ ctx, input }) => {
+    const username = input.trim();
+
+    const existedUser = await UserModel.findByUsername(ctx.serverDB, username);
+    if (existedUser && existedUser.id !== ctx.userId) {
+      throw new TRPCError({ code: 'CONFLICT', message: 'USERNAME_TAKEN' });
+    }
+
+    return ctx.userModel.updateUser({ username });
+  }),
 });
 
 export type UserRouter = typeof userRouter;

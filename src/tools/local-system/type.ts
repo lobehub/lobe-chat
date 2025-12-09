@@ -1,7 +1,12 @@
 import {
+  GetCommandOutputResult,
+  GlobFilesResult,
+  GrepContentResult,
+  KillCommandResult,
   LocalFileItem,
   LocalMoveFilesResultItem,
   LocalReadFileResult,
+  RunCommandResult,
 } from '@lobechat/electron-client-ipc';
 
 export interface FileResult {
@@ -48,4 +53,39 @@ export interface LocalRenameFileState {
   newPath: string;
   oldPath: string;
   success: boolean;
+}
+
+// Shell Command States
+export interface RunCommandState {
+  message: string;
+  result: RunCommandResult;
+}
+
+export interface GetCommandOutputState {
+  message: string;
+  result: GetCommandOutputResult;
+}
+
+export interface KillCommandState {
+  message: string;
+  result: KillCommandResult;
+}
+
+// Search & Find States
+export interface GrepContentState {
+  message: string;
+  result: GrepContentResult;
+}
+
+export interface GlobFilesState {
+  message: string;
+  result: GlobFilesResult;
+}
+
+// Edit State
+export interface EditLocalFileState {
+  diffText?: string;
+  linesAdded?: number;
+  linesDeleted?: number;
+  replacements: number;
 }

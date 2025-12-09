@@ -1,3 +1,4 @@
+import { UIChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -5,9 +6,8 @@ import { chatService } from '@/services/chat';
 import { ragService } from '@/services/rag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors, dbMessageSelectors, displayMessageSelectors } from '@/store/chat/selectors';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import { ChatMessage } from '@/types/message';
 import { QueryRewriteSystemAgent } from '@/types/user/settings';
 
 import { useChatStore } from '../../../../store';
@@ -49,7 +49,7 @@ describe('chatRAG actions', () => {
       act(() => {
         useChatStore.setState({
           messagesMap: {
-            default: [{ id: messageId }] as ChatMessage[],
+            default: [{ id: messageId }] as UIChatMessage[],
           },
         });
       });
@@ -59,93 +59,6 @@ describe('chatRAG actions', () => {
       });
 
       expect(ragService.deleteMessageRagQuery).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('internal_retrieveChunks', () => {
-    it('should retrieve chunks with existing ragQuery', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const messageId = 'message-id';
-      const existingRagQuery = 'existing-query';
-      const userQuery = 'user-query';
-
-      // Mock the message with existing ragQuery
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(
-        () =>
-          ({
-            id: messageId,
-            ragQuery: existingRagQuery,
-          }) as ChatMessage,
-      );
-
-      // Mock the semantic search response
-      (ragService.semanticSearchForChat as Mock).mockResolvedValue({
-        chunks: [{ id: 'chunk-1' }],
-        queryId: 'query-id',
-      });
-
-      vi.spyOn(agentSelectors, 'currentKnowledgeIds').mockReturnValue({
-        fileIds: [],
-        knowledgeBaseIds: [],
-      });
-
-      const result1 = await act(async () => {
-        return await result.current.internal_retrieveChunks(messageId, userQuery, []);
-      });
-
-      expect(result1).toEqual({
-        chunks: [{ id: 'chunk-1' }],
-        queryId: 'query-id',
-        rewriteQuery: existingRagQuery,
-      });
-      expect(ragService.semanticSearchForChat).toHaveBeenCalledWith(
-        expect.objectContaining({
-          rewriteQuery: existingRagQuery,
-          userQuery,
-        }),
-      );
-    });
-
-    it('should rewrite query if no existing ragQuery', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const messageId = 'message-id';
-      const userQuery = 'user-query';
-      const rewrittenQuery = 'rewritten-query';
-
-      // Mock the message without ragQuery
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(
-        () =>
-          ({
-            id: messageId,
-          }) as ChatMessage,
-      );
-
-      // Mock the rewrite query function
-      vi.spyOn(result.current, 'internal_rewriteQuery').mockResolvedValueOnce(rewrittenQuery);
-
-      // Mock the semantic search response
-      (ragService.semanticSearchForChat as Mock).mockResolvedValue({
-        chunks: [{ id: 'chunk-1' }],
-        queryId: 'query-id',
-      });
-
-      vi.spyOn(agentSelectors, 'currentKnowledgeIds').mockReturnValue({
-        fileIds: [],
-        knowledgeBaseIds: [],
-      });
-
-      const result2 = await act(async () => {
-        return await result.current.internal_retrieveChunks(messageId, userQuery, ['message']);
-      });
-
-      expect(result2).toEqual({
-        chunks: [{ id: 'chunk-1' }],
-        queryId: 'query-id',
-        rewriteQuery: rewrittenQuery,
-      });
-      expect(result.current.internal_rewriteQuery).toHaveBeenCalledWith(messageId, userQuery, [
-        'message',
-      ]);
     });
   });
 
@@ -220,7 +133,7 @@ describe('chatRAG actions', () => {
     it('should not rewrite if message not found', async () => {
       const { result } = renderHook(() => useChatStore());
 
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(() => undefined);
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(() => undefined);
       const rewriteSpy = vi.spyOn(result.current, 'internal_rewriteQuery');
 
       await act(async () => {
@@ -235,17 +148,17 @@ describe('chatRAG actions', () => {
       const messageId = 'message-id';
       const content = 'message content';
 
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(
         () =>
           ({
             id: messageId,
             content,
-          }) as ChatMessage,
+          }) as UIChatMessage,
       );
 
-      vi.spyOn(chatSelectors, 'mainAIChatsWithHistoryConfig').mockReturnValue([
+      vi.spyOn(displayMessageSelectors, 'mainAIChatsWithHistoryConfig').mockReturnValue([
         { content: 'history' },
-      ] as ChatMessage[]);
+      ] as UIChatMessage[]);
 
       const rewriteSpy = vi.spyOn(result.current, 'internal_rewriteQuery');
       const deleteSpy = vi.spyOn(result.current, 'deleteUserMessageRagQuery');

@@ -5,6 +5,9 @@
       "lock": "Verrouiller le rapport hauteur/largeur",
       "unlock": "Déverrouiller le rapport hauteur/largeur"
     },
+    "cfg": {
+      "label": "Intensité de guidage"
+    },
     "header": {
       "desc": "Description simple, création immédiate",
       "title": "Peinture"
@@ -26,6 +29,21 @@
     },
     "prompt": {
       "placeholder": "Décrivez ce que vous souhaitez générer"
+    },
+    "quality": {
+      "label": "Qualité de l'image",
+      "options": {
+        "hd": "Haute définition",
+        "standard": "Standard"
+      }
+    },
+    "resolution": {
+      "label": "Résolution",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
     },
     "seed": {
       "label": "Graine",

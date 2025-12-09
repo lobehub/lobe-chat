@@ -81,6 +81,12 @@
     "522": "Przykro nam, połączenie z serwerem wygasło, nie udało się odpowiedzieć na Twoje żądanie na czas. Może to być spowodowane niestabilnością sieci lub tym, że serwer jest tymczasowo niedostępny. Proszę spróbować później, staramy się przywrócić usługi.",
     "524": "Przykro nam, serwer przekroczył czas oczekiwania na odpowiedź, być może z powodu zbyt wolnej reakcji. Proszę spróbować później.",
     "AgentRuntimeError": "Wystąpił błąd wykonania modelu językowego Lobe, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
+    "ComfyUIBizError": "Wystąpił błąd podczas żądania do usługi ComfyUI. Sprawdź poniższe informacje lub spróbuj ponownie.",
+    "ComfyUIEmptyResult": "ComfyUI nie wygenerował żadnego obrazu. Sprawdź konfigurację modelu lub spróbuj ponownie.",
+    "ComfyUIModelError": "Nie udało się załadować modelu ComfyUI. Sprawdź, czy plik modelu istnieje.",
+    "ComfyUIServiceUnavailable": "Nie udało się połączyć z usługą ComfyUI. Sprawdź, czy ComfyUI działa poprawnie lub czy adres usługi jest poprawnie skonfigurowany.",
+    "ComfyUIUploadFailed": "Nie udało się przesłać obrazu do ComfyUI. Sprawdź połączenie z serwerem lub spróbuj ponownie.",
+    "ComfyUIWorkflowError": "Wykonanie przepływu pracy ComfyUI nie powiodło się. Sprawdź konfigurację przepływu.",
     "ConnectionCheckFailed": "Odpowiedź jest pusta. Sprawdź, czy na końcu adresu proxy API nie brakuje `/v1`",
     "CreateMessageError": "Przykro nam, wiadomość nie została wysłana poprawnie. Proszę skopiować treść i spróbować ponownie, po odświeżeniu strony ta wiadomość nie zostanie zachowana.",
     "ExceededContextWindow": "Aktualna zawartość żądania przekracza długość, którą model może przetworzyć. Proszę zmniejszyć ilość treści i spróbować ponownie.",
@@ -96,10 +102,11 @@
       "SPII": "Twoja treść może zawierać wrażliwe dane osobowe. Aby chronić prywatność, usuń te informacje i spróbuj ponownie.",
       "default": "Treść została zablokowana: {{blockReason}}. Dostosuj proszę zapytanie i spróbuj ponownie."
     },
-    "InsufficientQuota": "Przykro nam, limit dla tego klucza został osiągnięty. Proszę sprawdzić saldo konta lub zwiększyć limit klucza i spróbować ponownie.",
+    "InsufficientQuota": "Przepraszamy, limit przydziału (quota) dla tego klucza został osiągnięty. Proszę sprawdzić, czy saldo konta jest wystarczające lub zwiększyć przydział klucza i spróbować ponownie.",
     "InvalidAccessCode": "Nieprawidłowy kod dostępu: Hasło jest nieprawidłowe lub puste. Proszę wprowadzić poprawne hasło dostępu lub dodać niestandardowy klucz API.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
     "InvalidClerkUser": "Przepraszamy, nie jesteś obecnie zalogowany. Proszę najpierw zalogować się lub zarejestrować, aby kontynuować.",
+    "InvalidComfyUIArgs": "Nieprawidłowa konfiguracja ComfyUI. Sprawdź ustawienia i spróbuj ponownie.",
     "InvalidGithubToken": "Token dostępu osobistego do GitHub jest niewłaściwy lub pusty. Proszę sprawdzić Token dostępu osobistego do GitHub i spróbować ponownie.",
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
     "InvalidProviderAPIKey": "{{provider}} Klucz API jest nieprawidłowy lub pusty. Sprawdź Klucz API {{provider}} i spróbuj ponownie.",
@@ -124,7 +131,7 @@
     "PluginServerError": "Błąd zwrócony przez serwer wtyczki. Proszę sprawdź plik opisowy wtyczki, konfigurację wtyczki lub implementację serwera zgodnie z poniższymi informacjami o błędzie",
     "PluginSettingsInvalid": "Ta wtyczka wymaga poprawnej konfiguracji przed użyciem. Proszę sprawdź, czy Twoja konfiguracja jest poprawna",
     "ProviderBizError": "Wystąpił błąd usługi {{provider}}, proszę sprawdzić poniższe informacje lub spróbować ponownie",
-    "QuotaLimitReached": "Przykro nam, bieżące zużycie tokenów lub liczba żądań osiągnęła limit kwoty dla tego klucza. Proszę zwiększyć limit kwoty dla tego klucza lub spróbować ponownie później.",
+    "QuotaLimitReached": "Przepraszamy, bieżące zużycie tokenów lub liczba żądań osiągnęły limit przydziału (quota) dla tego klucza. Proszę zwiększyć przydział klucza lub spróbować ponownie później.",
     "StreamChunkError": "Błąd analizy bloku wiadomości w żądaniu strumieniowym. Proszę sprawdzić, czy aktualny interfejs API jest zgodny z normami, lub skontaktować się z dostawcą API w celu uzyskania informacji.",
     "SubscriptionKeyMismatch": "Przepraszamy, z powodu sporadycznych awarii systemu, bieżące zużycie subskrypcji jest tymczasowo nieaktywne. Proszę kliknąć przycisk poniżej, aby przywrócić subskrypcję lub skontaktować się z nami drogą mailową w celu uzyskania wsparcia.",
     "SubscriptionPlanLimit": "Twoje punkty subskrypcyjne zostały wyczerpane, nie możesz korzystać z tej funkcji. Proszę zaktualizować do wyższego planu lub skonfigurować API modelu niestandardowego, aby kontynuować korzystanie.",
@@ -133,6 +140,9 @@
   },
   "stt": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
+  },
+  "supervisor": {
+    "decisionFailed": "Moderator grupy nie działa. Sprawdź konfigurację moderatora, aby upewnić się, że poprawnie ustawiono model, klucz API i adres API."
   },
   "testConnectionFailed": "Test połączenia nie powiódł się: {{error}}",
   "tts": {
@@ -146,6 +156,11 @@
       "title": "Użyj niestandardowego Klucza API {{name}}"
     },
     "closeMessage": "Zamknij komunikat",
+    "comfyui": {
+      "description": "Wprowadź poprawne dane uwierzytelniające {{name}}, aby rozpocząć generowanie obrazów.",
+      "modifyBaseUrl": "Zmień adres usługi Comfy UI",
+      "title": "Potwierdź dane uwierzytelniające {{name}}"
+    },
     "confirm": "Potwierdź i spróbuj ponownie",
     "oauth": {
       "description": "Administrator włączył jednolite uwierzytelnianie logowania. Kliknij poniższy przycisk, aby się zalogować i odblokować aplikację.",

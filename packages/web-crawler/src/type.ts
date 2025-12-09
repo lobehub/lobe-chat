@@ -10,13 +10,13 @@ export interface CrawlSuccessResult {
 
 export interface CrawlErrorResult {
   content: string;
-  errorMessage: string;
-  errorType: string;
-  url: string;
+  errorMessage?: string;
+  errorType?: string;
+  url?: string;
 }
 
 export interface FilterOptions {
-  // 是否启用Readability
+  // Whether to enable Readability
   enableReadability?: boolean;
 
   pureText?: boolean;
@@ -34,11 +34,18 @@ export type CrawlImpl<Params = object> = (
 ) => Promise<CrawlSuccessResult | undefined>;
 
 export interface CrawlUrlRule {
-  // 内容过滤配置（可选）
+  // Content filtering configuration (optional)
   filterOptions?: FilterOptions;
   impls?: CrawlImplType[];
-  // URL匹配模式，仅支持正则表达式
+  // URL matching pattern, only supports regular expressions
   urlPattern: string;
-  // URL转换模板（可选），如果提供则进行URL转换
+  // URL transformation template (optional), performs URL conversion if provided
   urlTransform?: string;
+}
+
+export interface CrawlUniformResult {
+  crawler: string;
+  data: CrawlSuccessResult | CrawlErrorResult;
+  originalUrl: string;
+  transformedUrl?: string;
 }

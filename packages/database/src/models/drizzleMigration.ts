@@ -1,7 +1,7 @@
+import { MigrationTableItem } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '../type';
-import { MigrationTableItem } from '@/types/clientDB';
 
 export class DrizzleMigrationModel {
   private db: LobeChatDatabase;
@@ -11,7 +11,7 @@ export class DrizzleMigrationModel {
   }
 
   getTableCounts = async () => {
-    // 这里使用 pg_tables 系统表查询用户表数量
+    // Use pg_tables system table to query the number of user tables
     const result = await this.db.execute(
       sql`
         SELECT COUNT(*) as table_count

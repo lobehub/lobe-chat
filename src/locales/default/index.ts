@@ -1,4 +1,5 @@
 import auth from './auth';
+import authError from './authError';
 import changelog from './changelog';
 import chat from './chat';
 import clerk from './clerk';
@@ -13,6 +14,8 @@ import file from './file';
 import hotkey from './hotkey';
 import image from './image';
 import knowledgeBase from './knowledgeBase';
+import labs from './labs';
+import marketAuth from './marketAuth';
 import metadata from './metadata';
 import migration from './migration';
 import modelProvider from './modelProvider';
@@ -31,6 +34,7 @@ import welcome from './welcome';
 
 const resources = {
   auth,
+  authError,
   changelog,
   chat,
   clerk,
@@ -45,6 +49,8 @@ const resources = {
   hotkey,
   image,
   knowledgeBase,
+  labs,
+  marketAuth,
   metadata,
   migration,
   modelProvider,

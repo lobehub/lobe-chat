@@ -5,9 +5,10 @@ import { aiProviderSelectors } from '../selectors';
 describe('aiProviderSelectors', () => {
   const mockState: any = {
     aiProviderList: [
-      { id: 'provider1', enabled: true, sort: 1 },
-      { id: 'provider2', enabled: false, sort: 2 },
-      { id: 'provider3', enabled: true, sort: 0 },
+      { id: 'provider1', enabled: true, sort: 1, source: 'builtin' },
+      { id: 'provider2', enabled: false, sort: 2, source: 'builtin' },
+      { id: 'provider3', enabled: true, sort: 0, source: 'builtin' },
+      { id: 'custom1', enabled: false, sort: 3, source: 'custom' },
     ],
     aiProviderDetail: {
       id: 'provider1',
@@ -56,16 +57,23 @@ describe('aiProviderSelectors', () => {
     it('should return enabled providers sorted by sort', () => {
       const result = aiProviderSelectors.enabledAiProviderList(mockState);
       expect(result).toEqual([
-        { id: 'provider3', enabled: true, sort: 0 },
-        { id: 'provider1', enabled: true, sort: 1 },
+        { id: 'provider3', enabled: true, sort: 0, source: 'builtin' },
+        { id: 'provider1', enabled: true, sort: 1, source: 'builtin' },
       ]);
     });
   });
 
   describe('disabledAiProviderList', () => {
-    it('should return disabled providers', () => {
+    it('should return disabled builtin providers', () => {
       const result = aiProviderSelectors.disabledAiProviderList(mockState);
-      expect(result).toEqual([{ id: 'provider2', enabled: false, sort: 2 }]);
+      expect(result).toEqual([{ id: 'provider2', enabled: false, sort: 2, source: 'builtin' }]);
+    });
+  });
+
+  describe('disabledCustomAiProviderList', () => {
+    it('should return disabled custom providers', () => {
+      const result = aiProviderSelectors.disabledCustomAiProviderList(mockState);
+      expect(result).toEqual([{ id: 'custom1', enabled: false, sort: 3, source: 'custom' }]);
     });
   });
 
@@ -242,6 +250,68 @@ describe('aiProviderSelectors', () => {
 
     it('should return false if no search mode exists', () => {
       expect(aiProviderSelectors.isProviderHasBuiltinSearchConfig('provider2')(mockState)).toBe(
+        false,
+      );
+    });
+  });
+
+  describe('isProviderEnableResponseApi', () => {
+    it('should return true when config explicitly sets enableResponseApi to true', () => {
+      const state = {
+        ...mockState,
+        aiProviderRuntimeConfig: {
+          test: {
+            config: { enableResponseApi: true },
+            keyVaults: {},
+            settings: {},
+          },
+        },
+      };
+      expect(aiProviderSelectors.isProviderEnableResponseApi('test')(state)).toBe(true);
+    });
+
+    it('should return false when config explicitly sets enableResponseApi to false', () => {
+      const state = {
+        ...mockState,
+        aiProviderRuntimeConfig: {
+          test: {
+            config: { enableResponseApi: false },
+            keyVaults: {},
+            settings: {},
+          },
+        },
+      };
+      expect(aiProviderSelectors.isProviderEnableResponseApi('test')(state)).toBe(false);
+    });
+
+    it('should return true by default for openai provider', () => {
+      const state = {
+        ...mockState,
+        aiProviderRuntimeConfig: {
+          openai: {
+            keyVaults: {},
+            settings: {},
+          },
+        },
+      };
+      expect(aiProviderSelectors.isProviderEnableResponseApi('openai')(state)).toBe(true);
+    });
+
+    it('should return false by default for non-openai provider', () => {
+      const state = {
+        ...mockState,
+        aiProviderRuntimeConfig: {
+          anthropic: {
+            keyVaults: {},
+            settings: {},
+          },
+        },
+      };
+      expect(aiProviderSelectors.isProviderEnableResponseApi('anthropic')(state)).toBe(false);
+    });
+
+    it('should return false for provider without config', () => {
+      expect(aiProviderSelectors.isProviderEnableResponseApi('non-existing')(mockState)).toBe(
         false,
       );
     });

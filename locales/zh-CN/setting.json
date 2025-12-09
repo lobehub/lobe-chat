@@ -2,6 +2,45 @@
   "about": {
     "title": "关于"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "头像",
+      "description": "描述",
+      "name": "名称",
+      "tags": "标签",
+      "title": "助手信息"
+    },
+    "chat": {
+      "displayMode": "展示模式",
+      "enableHistoryCount": "启用历史消息计数",
+      "historyCount": "历史消息数量",
+      "no": "否",
+      "searchMode": "搜索模式",
+      "title": "聊天偏好",
+      "yes": "是"
+    },
+    "model": {
+      "maxTokens": "最大 Token 数",
+      "model": "模型",
+      "provider": "服务商",
+      "temperature": "温度",
+      "title": "模型设置",
+      "topP": "Top P 值"
+    },
+    "plugins": {
+      "count": "插件设置（{{count}}）",
+      "empty": "尚未安装插件",
+      "title": "已安装插件"
+    },
+    "role": {
+      "systemRole": "系统提示词",
+      "title": "角色设置"
+    },
+    "value": {
+      "unset": "未设置",
+      "untitled": "未命名助手"
+    }
+  },
   "agentTab": {
     "chat": "聊天偏好",
     "meta": "助手信息",
@@ -18,6 +57,8 @@
     },
     "title": "数据统计"
   },
+  "checking": "检查中...",
+  "checkingPermissions": "检查权限中...",
   "danger": {
     "clear": {
       "action": "立即清除",
@@ -35,9 +76,16 @@
       "title": "重置所有设置"
     }
   },
+  "groupTab": {
+    "chat": "聊天",
+    "members": "成员",
+    "meta": "基本信息"
+  },
   "header": {
     "desc": "偏好与模型设置",
     "global": "全局设置",
+    "group": "团队设置",
+    "groupDesc": "管理 Agent 团队与聊天偏好",
     "session": "会话设置",
     "sessionDesc": "角色设定与会话偏好",
     "sessionWithName": "会话设置 · {{name}}",
@@ -139,6 +187,61 @@
     },
     "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "描述此版本的主要变更和改进",
+        "label": "变更日志",
+        "maxLengthError": "变更日志不能超过500个字符",
+        "placeholder": "请输入变更日志",
+        "required": "请输入变更日志"
+      },
+      "comparison": {
+        "local": "本地当前版本",
+        "remote": "当前发布版本"
+      },
+      "identifier": {
+        "extra": "标识符将作为助手的唯一标识，建议使用小写字母、数字和连字符",
+        "label": "助手标识符",
+        "lengthError": "标识符长度应在3-50个字符之间",
+        "patternError": "标识符只能包含小写字母、数字和连字符",
+        "placeholder": "请输入助手的唯一标识符，如: web-development",
+        "required": "请输入助手标识符"
+      },
+      "loading": {
+        "fetchingRemote": "正在加载远程数据...",
+        "submit": "正在发布助手...",
+        "upload": "正在发布新版本..."
+      },
+      "messages": {
+        "createVersionFailed": "版本创建失败: {{message}}",
+        "fetchRemoteFailed": "获取远程助手数据失败",
+        "missingIdentifier": "当前助手还没有市场标识符",
+        "notAuthenticated": "请先登录市场账户",
+        "publishFailed": "发布失败: {{message}}"
+      },
+      "submitButton": "发布",
+      "title": {
+        "submit": "分享到助手市场",
+        "upload": "发布新版本"
+      }
+    },
+    "resultModal": {
+      "message": "助手已提交审核，审核通过后将自动上线。点击「在市场查看」查看已发布的助手。",
+      "view": "在市场查看"
+    },
+    "submit": {
+      "button": "分享到市场",
+      "tooltip": "分享助手到市场"
+    },
+    "upload": {
+      "button": "发布新版本",
+      "tooltip": "发布新版本到助手市场"
+    }
+  },
+  "message": {
+    "success": "更新成功"
+  },
   "plugin": {
     "addMCPPlugin": "添加 MCP 插件",
     "addTooltip": "自定义插件",
@@ -189,6 +292,12 @@
       "disabled": "关闭",
       "elegant": "优雅",
       "title": "响应动画"
+    },
+    "contextMenuMode": {
+      "default": "默认",
+      "desc": "选择聊天消息右键菜单的显示方案",
+      "disabled": "不使用",
+      "title": "右键菜单方案"
     },
     "neutralColor": {
       "desc": "不同色彩倾向的灰阶自定义",
@@ -293,6 +402,109 @@
       "title": "主题"
     },
     "title": "通用设置"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "请输入团队描述",
+      "title": "团队描述"
+    },
+    "name": {
+      "placeholder": "请输入团队名称",
+      "title": "团队名称"
+    },
+    "scene": {
+      "desc": "选择团队场景",
+      "options": {
+        "casual": "休闲",
+        "productive": "生产力"
+      },
+      "title": "团队场景"
+    },
+    "submit": "更新团队",
+    "systemPrompt": {
+      "placeholder": "请输入主持人系统提示词",
+      "title": "主持人系统提示词"
+    },
+    "title": "Agent 团队信息"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "关闭后，你仍然可以主动向助手发送私信",
+      "title": "允许助手发送私信"
+    },
+    "enableSupervisor": {
+      "desc": "启用 Agent 团队主持人功能，主持人将管理团队对话流程",
+      "title": "启用主持人"
+    },
+    "maxResponseInRow": {
+      "desc": "选择成员可以连续回复多少条消息。设置为 0 则禁用此限制。",
+      "title": "连续回复消息数"
+    },
+    "model": {
+      "desc": "群成员发言不受影响。部分模型无法作为主持人模型使用。",
+      "title": "主持人模型"
+    },
+    "orchestratorTitle": "主持人设置",
+    "responseOrder": {
+      "desc": "代理将按照在聊天中设置的顺序进行回复",
+      "options": {
+        "natural": "自然",
+        "sequential": "顺序"
+      },
+      "placeholder": "选择回复顺序",
+      "title": "回复顺序"
+    },
+    "responseSpeed": {
+      "desc": "控制聊天的整体进行速度",
+      "options": {
+        "fast": "快速",
+        "medium": "中等",
+        "slow": "慢速"
+      },
+      "placeholder": "选择回复速度",
+      "title": "回复速度"
+    },
+    "revealDM": {
+      "desc": "使发送给其他成员的私信内容对你可见。",
+      "title": "显示私信内容"
+    },
+    "submit": "更新设置",
+    "systemPrompt": {
+      "desc": "群聊对话主持人的自定义系统提示词。这可能影响默认的主持人行为。",
+      "placeholder": "请输入自定义主持人系统提示词...",
+      "title": "主持人系统提示词"
+    },
+    "title": "聊天设置"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "加入群组",
+    "availableAgents": "可用助手",
+    "createMember": "创建成员",
+    "defaultAgent": "自定义助手",
+    "disableHost": "关闭主持助手",
+    "edit": "编辑成员",
+    "empty": "该团队中暂无成员。点击 + 按钮添加成员。",
+    "enableHost": "启用主持助手",
+    "groupHost": "群主持",
+    "groupMembers": "群组成员",
+    "host": {
+      "description": "主持人在群组中时，群聊将自动化运行，适合发散性任务。",
+      "title": "主持人"
+    },
+    "noAvailableAgents": "暂无可用助手",
+    "noDescription": "暂无描述",
+    "noMembersInGroup": "群组暂无成员",
+    "owner": "你（所有者）",
+    "remove": "移除成员",
+    "removeFromGroup": "移出群组",
+    "you": "你"
+  },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "设置图像生成面板在创建新任务时的默认图片数量。",
+      "label": "默认图片数量",
+      "title": "AI 绘画设置"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -448,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "提交助手",
-    "identifier": "identifier 助手标识符",
+    "identifier": "助手标识符（identifier）",
     "metaMiss": "请补全助手信息后提交，需要包含名称、描述和标签",
     "placeholder": "请输入助手的标识符，需要是唯一的，比如 web-development",
     "tooltips": "分享到助手市场"
@@ -549,6 +761,7 @@
     "common": "通用设置",
     "experiment": "实验",
     "hotkey": "快捷键",
+    "image": "AI 绘画",
     "llm": "语言模型",
     "provider": "AI 服务商",
     "proxy": "网络代理",
@@ -562,11 +775,36 @@
       "groupName": "内置插件"
     },
     "disabled": "当前模型不支持函数调用，无法使用插件",
+    "klavis": {
+      "addServer": "添加服务器",
+      "authCompleted": "认证完成",
+      "authFailed": "认证失败",
+      "authRequired": "需要认证",
+      "connected": "已连接",
+      "error": "错误",
+      "groupName": "Klavis 工具",
+      "manage": "管理 Klavis",
+      "manageTitle": "管理 Klavis 集成",
+      "noServers": "暂无连接的服务器",
+      "notEnabled": "Klavis 服务未启用",
+      "oauthRequired": "请在新窗口中完成 OAuth 认证",
+      "pendingAuth": "待认证",
+      "serverCreated": "服务器创建成功",
+      "serverCreatedFailed": "服务器创建失败",
+      "serverRemoved": "服务器已删除",
+      "servers": "个服务器",
+      "tools": "个工具",
+      "verifyAuth": "我已完成认证"
+    },
     "plugins": {
       "enabled": "已启用 {{num}}",
       "groupName": "三方插件",
       "noEnabled": "暂无启用插件",
       "store": "插件商店"
+    },
+    "tabs": {
+      "all": "全部",
+      "installed": "已启用"
     },
     "title": "扩展插件"
   }

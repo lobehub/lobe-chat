@@ -1,7 +1,10 @@
+import { CheckMcpInstallResult, CustomPluginMetadata } from '@lobechat/types';
+import { safeParseJSON } from '@lobechat/utils';
 import { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehub/chat-plugin-sdk';
 import { DeploymentOption } from '@lobehub/market-sdk';
 import { McpError } from '@modelcontextprotocol/sdk/types.js';
 import { TRPCError } from '@trpc/server';
+import retry from 'async-retry';
 import debug from 'debug';
 
 import {
@@ -12,18 +15,65 @@ import {
   McpTool,
   StdioMCPParams,
 } from '@/libs/mcp';
-import { mcpSystemDepsCheckService } from '@/server/services/mcp/deps';
-import { CheckMcpInstallResult } from '@/types/plugins';
-import { CustomPluginMetadata } from '@/types/tool/plugin';
-import { safeParseJSON } from '@/utils/safeParseJSON';
+
+import { ProcessContentBlocksFn, contentBlocksToString } from './contentProcessor';
+import { mcpSystemDepsCheckService } from './deps';
 
 const log = debug('lobe-mcp:service');
 
+/**
+ * MCP Tool call raw result type
+ */
+export interface MCPToolCallRawResult {
+  content: any[];
+  isError?: boolean;
+}
+
+/**
+ * MCP Tool call processed result type
+ */
+export interface MCPToolCallProcessedResult {
+  content: string;
+  error?: Error;
+  state: {
+    content: any[];
+    isError?: boolean;
+  };
+  success: boolean;
+}
+
 // Removed MCPConnection interface as it's no longer needed
 
-class MCPService {
+export class MCPService {
   // Store instances of the custom MCPClient, keyed by serialized MCPClientParams
   private clients: Map<string, MCPClient> = new Map();
+
+  /**
+   * Process MCP tool call result with content blocks processing
+   * This is a common utility method that can be used by both internal MCP calls and external services (e.g., Klavis)
+   */
+  static async processToolCallResult(
+    result: MCPToolCallRawResult,
+    processContentBlocksFn?: ProcessContentBlocksFn,
+  ): Promise<MCPToolCallProcessedResult> {
+    // Process content blocks (upload images, etc.)
+
+    const newContent =
+      result.isError || !processContentBlocksFn
+        ? result.content
+        : await processContentBlocksFn(result.content);
+
+    // Convert content blocks to string
+    const content = contentBlocksToString(newContent);
+
+    const state = { ...result, content: newContent };
+
+    if (result.isError) {
+      return { content, state, success: true };
+    }
+
+    return { content, state, success: true };
+  }
 
   private sanitizeForLogging = <T extends Record<string, any>>(obj: T): Omit<T, 'env'> => {
     if (!obj) return obj;
@@ -36,32 +86,46 @@ class MCPService {
 
   // listTools now accepts MCPClientParams
   async listTools(params: MCPClientParams): Promise<LobeChatPluginApi[]> {
-    const client = await this.getClient(params); // Get client using params
     const loggableParams = this.sanitizeForLogging(params);
-    log(`Listing tools using client for params: %O`, loggableParams);
 
-    try {
-      const result = await client.listTools();
-      log(
-        `Tools listed successfully for params: %O, result count: %d`,
-        loggableParams,
-        result.length,
-      );
-      return result.map<LobeChatPluginApi>((item) => ({
-        // Assuming identifier is the unique name/id
-        description: item.description,
-        name: item.name,
-        parameters: item.inputSchema as PluginSchema,
-      }));
-    } catch (error) {
-      console.error(`Error listing tools for params %O:`, loggableParams, error);
-      // Propagate a TRPCError for better handling upstream
-      throw new TRPCError({
-        cause: error,
-        code: 'INTERNAL_SERVER_ERROR',
-        message: `Error listing tools from MCP server: ${(error as Error).message}`,
-      });
-    }
+    return retry(
+      async (bail, attemptNumber) => {
+        // Skip cache on retry attempts
+        const skipCache = attemptNumber > 1;
+        const client = await this.getClient(params, skipCache);
+        log(`Listing tools using client for params: %O (attempt ${attemptNumber})`, loggableParams);
+
+        try {
+          const result = await client.listTools();
+          log(
+            `Tools listed successfully for params: %O, result count: %d`,
+            loggableParams,
+            result.length,
+          );
+          return result.map<LobeChatPluginApi>((item) => ({
+            // Assuming identifier is the unique name/id
+            description: item.description,
+            name: item.name,
+            parameters: item.inputSchema as PluginSchema,
+          }));
+        } catch (error) {
+          // Only retry for NoValidSessionId errors
+          if ((error as Error).message !== 'NoValidSessionId') {
+            console.error(`Error listing tools for params %O:`, loggableParams, error);
+            bail(
+              new TRPCError({
+                cause: error,
+                code: 'INTERNAL_SERVER_ERROR',
+                message: `Error listing tools from MCP server: ${(error as Error).message}`,
+              }),
+            );
+            return []; // This line will never be reached due to bail, but needed for type safety
+          }
+          throw error; // Rethrow to trigger retry
+        }
+      },
+      { maxRetryTime: 1000, minTimeout: 100, retries: 3 },
+    );
   }
 
   // listTools now accepts MCPClientParams
@@ -139,12 +203,24 @@ class MCPService {
     }
   }
 
-  // callTool now accepts MCPClientParams, toolName, and args
-  async callTool(params: MCPClientParams, toolName: string, argsStr: any): Promise<any> {
-    const client = await this.getClient(params); // Get client using params
+  // callTool now accepts an object with clientParams, toolName, argsStr, and processContentBlocks
+  async callTool(options: {
+    argsStr: any;
+    clientParams: MCPClientParams;
+    processContentBlocks?: ProcessContentBlocksFn;
+    toolName: string;
+  }): Promise<any> {
+    const {
+      clientParams,
+      toolName,
+      argsStr,
+      processContentBlocks: processContentBlocksFn,
+    } = options;
+
+    const client = await this.getClient(clientParams); // Get client using params
 
     const args = safeParseJSON(argsStr);
-    const loggableParams = this.sanitizeForLogging(params);
+    const loggableParams = this.sanitizeForLogging(clientParams);
 
     log(
       `Calling tool "${toolName}" using client for params: %O with args: %O`,
@@ -155,39 +231,38 @@ class MCPService {
     try {
       // Delegate the call to the MCPClient instance
       const result = await client.callTool(toolName, args); // Pass args directly
+
+      // Use the common processing method
+      const processedResult = await MCPService.processToolCallResult(
+        result,
+        processContentBlocksFn,
+      );
+
       log(
         `Tool "${toolName}" called successfully for params: %O, result: %O`,
         loggableParams,
-        result,
+        processedResult.state,
       );
-      const { content, isError } = result;
 
-      if (isError) return result;
-
-      const data = content as { text: string; type: 'text' }[];
-
-      if (!data || data.length === 0) return data;
-
-      if (data.length > 1) return data;
-
-      const text = data[0]?.text;
-      if (!text) return data;
-
-      // try to get json object, which will be stringify in the client
-      const json = safeParseJSON(text);
-      if (json) return json;
-
-      return text;
+      return processedResult;
     } catch (error) {
       if (error instanceof McpError) {
         const mcpError = error as McpError;
 
-        return mcpError.message;
+        return {
+          content: mcpError.message,
+          error: error,
+          state: {
+            content: [{ text: mcpError.message, type: 'text' }],
+            isError: true,
+          },
+          success: false,
+        };
       }
 
       console.error(
         `Error calling tool "${toolName}" for params %O:`,
-        this.sanitizeForLogging(params),
+        this.sanitizeForLogging(clientParams),
         error,
       );
       // Propagate a TRPCError
@@ -200,10 +275,10 @@ class MCPService {
   }
 
   // Private method to get or initialize a client based on parameters
-  private async getClient(params: MCPClientParams): Promise<MCPClient> {
+  private async getClient(params: MCPClientParams, skipCache = false): Promise<MCPClient> {
     const key = this.serializeParams(params); // Use custom serialization
 
-    if (this.clients.has(key)) {
+    if (!skipCache && this.clients.has(key)) {
       return this.clients.get(key)!;
     }
 
@@ -221,7 +296,7 @@ class MCPService {
     } catch (error) {
       console.error(`Failed to initialize MCP client:`, error);
 
-      // 保留完整的错误信息，特别是详细的 stderr 输出
+      // Preserve complete error information, especially detailed stderr output
       const errorMessage = error instanceof Error ? error.message : String(error);
 
       if (typeof error === 'object' && !!error && 'data' in error) {
@@ -232,7 +307,7 @@ class MCPService {
         });
       }
 
-      // 记录详细的错误信息用于调试
+      // Log detailed error information for debugging
       log('Detailed initialization error: %O', {
         error: errorMessage,
         params: this.sanitizeForLogging(params),
@@ -242,7 +317,7 @@ class MCPService {
       throw new TRPCError({
         cause: error,
         code: 'INTERNAL_SERVER_ERROR',
-        message: errorMessage, // 直接使用完整的错误信息
+        message: errorMessage, // Use complete error message directly
       });
     }
   }
@@ -278,12 +353,12 @@ class MCPService {
   ): Promise<LobeChatPluginManifest> {
     const mcpParams = { name: identifier, type: 'http' as const, url };
 
-    // 如果有认证信息，添加到参数中
+    // Add authentication info to parameters if available
     if (auth) {
       (mcpParams as any).auth = auth;
     }
 
-    // 如果有 headers 信息，添加到参数中
+    // Add headers info to parameters if available
     if (headers) {
       (mcpParams as any).headers = headers;
     }
@@ -354,23 +429,23 @@ class MCPService {
       log('Checking MCP plugin installation status: %O', loggableInput);
       const results = [];
 
-      // 检查每个部署选项
+      // Check each deployment option
       for (const option of input.deploymentOptions) {
-        // 使用系统依赖检查服务检查部署选项
+        // Use system dependency check service to check deployment option
         const result = await mcpSystemDepsCheckService.checkDeployOption(option);
         results.push(result);
       }
 
-      // 找出推荐的或第一个可安装的选项
+      // Find the recommended or first installable option
       const recommendedResult = results.find((r) => r.isRecommended && r.allDependenciesMet);
       const firstInstallableResult = results.find((r) => r.allDependenciesMet);
 
-      // 返回推荐的结果，或第一个可安装的结果，或第一个结果
+      // Return the recommended result, or the first installable result, or the first result
       const bestResult = recommendedResult || firstInstallableResult || results[0];
 
       log('Check completed, best result: %O', bestResult);
 
-      // 构造返回结果，确保包含配置检查信息
+      // Construct return result, ensure configuration check information is included
       const checkResult: CheckMcpInstallResult = {
         ...bestResult,
         allOptions: results,
@@ -378,7 +453,7 @@ class MCPService {
         success: true,
       };
 
-      // 如果最佳结果需要配置，确保在顶层设置相关字段
+      // If the best result requires configuration, ensure related fields are set at the top level
       if (bestResult?.needsConfig) {
         checkResult.needsConfig = true;
         checkResult.configSchema = bestResult.configSchema;

@@ -6,15 +6,20 @@ import { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } fr
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useFetchAiImageConfig } from '@/hooks/useFetchAiImageConfig';
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 import { useImageStore } from '@/store/image/store';
 
+import CfgSliderInput from './components/CfgSliderInput';
 import DimensionControlGroup from './components/DimensionControlGroup';
+import ImageConfigSkeleton from './components/ImageConfigSkeleton';
 import ImageNum from './components/ImageNum';
 import ImageUrl from './components/ImageUrl';
 import ImageUrlsUpload from './components/ImageUrlsUpload';
 import ModelSelect from './components/ModelSelect';
+import QualitySelect from './components/QualitySelect';
+import ResolutionSelect from './components/ResolutionSelect';
 import SeedNumberInput from './components/SeedNumberInput';
 import SizeSelect from './components/SizeSelect';
 import StepsSliderInput from './components/StepsSliderInput';
@@ -38,13 +43,22 @@ const isSupportedParamSelector = imageGenerationConfigSelectors.isSupportedParam
 const ConfigPanel = memo(() => {
   const { t } = useTranslation('image');
   const theme = useTheme();
+
+  // Initialize image configuration
+  useFetchAiImageConfig();
+
+  // All hooks must be called before any early returns
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = useState(false);
 
+  const isInit = useImageStore((s) => s.isInit);
   const isSupportImageUrl = useImageStore(isSupportedParamSelector('imageUrl'));
   const isSupportSize = useImageStore(isSupportedParamSelector('size'));
+  const isSupportQuality = useImageStore(isSupportedParamSelector('quality'));
+  const isSupportResolution = useImageStore(isSupportedParamSelector('resolution'));
   const isSupportSeed = useImageStore(isSupportedParamSelector('seed'));
   const isSupportSteps = useImageStore(isSupportedParamSelector('steps'));
+  const isSupportCfg = useImageStore(isSupportedParamSelector('cfg'));
   const isSupportImageUrls = useImageStore(isSupportedParamSelector('imageUrls'));
 
   const { showDimensionControl } = useDimensionControl();
@@ -65,8 +79,11 @@ const ConfigPanel = memo(() => {
     checkScrollable,
     isSupportImageUrl,
     isSupportSize,
+    isSupportQuality,
+    isSupportResolution,
     isSupportSeed,
     isSupportSteps,
+    isSupportCfg,
     isSupportImageUrls,
     showDimensionControl,
   ]);
@@ -103,8 +120,7 @@ const ConfigPanel = memo(() => {
         backgroundColor: theme.colorBgContainer,
         borderTop: `1px solid ${theme.colorBorder}`,
         // Use negative margin to extend background to container edges
-marginLeft: -12,
-        
+        marginLeft: -12,
         marginRight: -12,
         marginTop: 20,
         // Add back internal padding
@@ -114,6 +130,11 @@ marginLeft: -12,
     }),
     [isScrollable, theme.colorBgContainer, theme.colorBorder],
   );
+
+  // Show loading state if not initialized
+  if (!isInit) {
+    return <ImageConfigSkeleton />;
+  }
 
   return (
     <Flexbox
@@ -144,11 +165,29 @@ marginLeft: -12,
         </ConfigItemLayout>
       )}
 
+      {isSupportQuality && (
+        <ConfigItemLayout label={t('config.quality.label')}>
+          <QualitySelect />
+        </ConfigItemLayout>
+      )}
+
+      {isSupportResolution && (
+        <ConfigItemLayout label={t('config.resolution.label')}>
+          <ResolutionSelect />
+        </ConfigItemLayout>
+      )}
+
       {showDimensionControl && <DimensionControlGroup />}
 
       {isSupportSteps && (
         <ConfigItemLayout label={t('config.steps.label')}>
           <StepsSliderInput />
+        </ConfigItemLayout>
+      )}
+
+      {isSupportCfg && (
+        <ConfigItemLayout label={t('config.cfg.label')}>
+          <CfgSliderInput />
         </ConfigItemLayout>
       )}
 

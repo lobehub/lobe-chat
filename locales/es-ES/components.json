@@ -1,8 +1,8 @@
 {
   "ArgsInput": {
     "addArgument": "Añadir argumento",
-    "argumentPlaceholder": "Argumento {{index}}",
-    "enterFirstArgument": "Introduce el primer argumento..."
+    "argumentPlaceholder": "Parámetro {{index}}",
+    "enterFirstArgument": "Introduce el primer parámetro..."
   },
   "DragUpload": {
     "dragDesc": "Arrastra los archivos aquí, se admite la carga de múltiples imágenes.",
@@ -50,6 +50,10 @@
     "total": {
       "fileCount": "Total {{count}} elementos",
       "selectedCount": "Seleccionados {{count}} elementos"
+    },
+    "view": {
+      "list": "Vista de lista",
+      "masonry": "Vista de cuadrícula"
     }
   },
   "FileParsingStatus": {
@@ -102,6 +106,12 @@
     "keyPlaceholder": "Clave",
     "valuePlaceholder": "Valor"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Abrir",
+      "showInFolder": "Mostrar en la carpeta"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Sin límite"
   },
@@ -114,6 +124,7 @@
       "reasoning": "Este modelo admite un pensamiento profundo",
       "search": "Este modelo admite búsqueda en línea",
       "tokens": "Este modelo admite un máximo de {{tokens}} tokens por sesión.",
+      "video": "Este modelo admite reconocimiento de video",
       "vision": "Este modelo admite el reconocimiento visual."
     },
     "removed": "El modelo no está en la lista, se eliminará automáticamente si se cancela la selección"
@@ -144,10 +155,10 @@
       "uploadingWithCount": "{{completed}}/{{total}} subidas"
     },
     "validation": {
-      "fileSizeExceeded": "El tamaño del archivo supera el límite permitido",
+      "fileSizeExceeded": "El tamaño del archivo excede el límite",
       "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) supera el tamaño máximo permitido de {{maxSize}}",
       "fileSizeExceededMultiple": "{{count}} archivos superan el tamaño máximo permitido de {{maxSize}}: {{fileList}}",
-      "imageCountExceeded": "Se ha superado el límite de imágenes permitido"
+      "imageCountExceeded": "Se ha excedido el límite de imágenes"
     }
   },
   "OllamaSetupGuide": {

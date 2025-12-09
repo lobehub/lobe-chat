@@ -2,6 +2,45 @@
   "about": {
     "title": "Über"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Profilbild",
+      "description": "Beschreibung",
+      "name": "Name",
+      "tags": "Stichworte",
+      "title": "Assistenteninformationen"
+    },
+    "chat": {
+      "displayMode": "Anzeigemodus",
+      "enableHistoryCount": "Anzahl vergangener Nachrichten aktivieren",
+      "historyCount": "Anzahl vergangener Nachrichten",
+      "no": "Nein",
+      "searchMode": "Suchmodus",
+      "title": "Chat-Einstellungen",
+      "yes": "Ja"
+    },
+    "model": {
+      "maxTokens": "Maximale Token-Anzahl",
+      "model": "Modell",
+      "provider": "Anbieter",
+      "temperature": "Temperatur",
+      "title": "Modelleinstellungen",
+      "topP": "Top-P-Wert"
+    },
+    "plugins": {
+      "count": "Plugin-Einstellungen ({{count}})",
+      "empty": "Noch keine Plugins installiert",
+      "title": "Installierte Plugins"
+    },
+    "role": {
+      "systemRole": "System-Prompt",
+      "title": "Rollen-Einstellungen"
+    },
+    "value": {
+      "unset": "Nicht festgelegt",
+      "untitled": "Unbenannter Assistent"
+    }
+  },
   "agentTab": {
     "chat": "Chat-Präferenz",
     "meta": "Assistenteninformation",
@@ -18,6 +57,8 @@
     },
     "title": "Analytics"
   },
+  "checking": "Überprüfung läuft...",
+  "checkingPermissions": "Berechtigungen werden überprüft...",
   "danger": {
     "clear": {
       "action": "Alle löschen",
@@ -35,9 +76,16 @@
       "title": "Alle Einstellungen zurücksetzen"
     }
   },
+  "groupTab": {
+    "chat": "Chat",
+    "members": "Mitglieder",
+    "meta": "Grundinformationen"
+  },
   "header": {
     "desc": "Präferenzen und Modellkonfigurationen.",
     "global": "Global Einstellungen",
+    "group": "Team-Einstellungen",
+    "groupDesc": "Verwalten Sie Agent-Teams und Chat-Einstellungen",
     "session": "Sitzungseinstellungen",
     "sessionDesc": "Rollenkonfiguration und Sitzungspräferenzen.",
     "sessionWithName": "Sitzungseinstellungen · {{name}}",
@@ -139,6 +187,61 @@
     },
     "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Beschreiben Sie die wichtigsten Änderungen und Verbesserungen in dieser Version",
+        "label": "Änderungsprotokoll",
+        "maxLengthError": "Das Änderungsprotokoll darf maximal 500 Zeichen enthalten",
+        "placeholder": "Bitte geben Sie das Änderungsprotokoll ein",
+        "required": "Bitte geben Sie das Änderungsprotokoll ein"
+      },
+      "comparison": {
+        "local": "Lokale aktuelle Version",
+        "remote": "Veröffentlichte Version"
+      },
+      "identifier": {
+        "extra": "Der Bezeichner dient als eindeutige Kennung des Assistenten. Verwenden Sie Kleinbuchstaben, Zahlen und Bindestriche.",
+        "label": "Assistenten-Bezeichner",
+        "lengthError": "Die Länge des Bezeichners muss zwischen 3 und 50 Zeichen liegen",
+        "patternError": "Der Bezeichner darf nur Kleinbuchstaben, Zahlen und Bindestriche enthalten",
+        "placeholder": "Bitte geben Sie einen eindeutigen Bezeichner ein, z. B.: web-entwicklung",
+        "required": "Bitte geben Sie den Bezeichner des Assistenten ein"
+      },
+      "loading": {
+        "fetchingRemote": "Lade entfernte Daten...",
+        "submit": "Assistent wird veröffentlicht...",
+        "upload": "Neue Version wird veröffentlicht..."
+      },
+      "messages": {
+        "createVersionFailed": "Versionserstellung fehlgeschlagen: {{message}}",
+        "fetchRemoteFailed": "Fehler beim Abrufen der entfernten Assistentendaten",
+        "missingIdentifier": "Der aktuelle Assistent hat noch keinen Markt-Bezeichner",
+        "notAuthenticated": "Bitte melden Sie sich zuerst mit Ihrem Marktkonto an",
+        "publishFailed": "Veröffentlichung fehlgeschlagen: {{message}}"
+      },
+      "submitButton": "Veröffentlichen",
+      "title": {
+        "submit": "Im Assistenten-Markt teilen",
+        "upload": "Neue Version veröffentlichen"
+      }
+    },
+    "resultModal": {
+      "message": "Der Assistent wurde zur Überprüfung eingereicht. Nach erfolgreicher Prüfung wird er automatisch veröffentlicht. Klicken Sie auf „Im Markt ansehen“, um den veröffentlichten Assistenten zu sehen.",
+      "view": "Im Markt ansehen"
+    },
+    "submit": {
+      "button": "Im Markt teilen",
+      "tooltip": "Assistent im Markt veröffentlichen"
+    },
+    "upload": {
+      "button": "Neue Version veröffentlichen",
+      "tooltip": "Neue Version im Assistenten-Markt veröffentlichen"
+    }
+  },
+  "message": {
+    "success": "Erfolgreich aktualisiert"
+  },
   "plugin": {
     "addMCPPlugin": "MCP-Plugin hinzufügen",
     "addTooltip": "Benutzerdefiniertes Plugin",
@@ -189,6 +292,12 @@
       "disabled": "Aus",
       "elegant": "Elegant",
       "title": "Reaktionsanimation"
+    },
+    "contextMenuMode": {
+      "default": "Standard",
+      "desc": "Wählen Sie das Anzeigeformat des Kontextmenüs für Chatnachrichten",
+      "disabled": "Nicht verwenden",
+      "title": "Kontextmenü-Option"
     },
     "neutralColor": {
       "desc": "Anpassung der Graustufen mit unterschiedlichen Farbneigungen",
@@ -293,6 +402,109 @@
       "title": "Thema"
     },
     "title": "Allgemeine Einstellungen"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Bitte geben Sie eine Team-Beschreibung ein",
+      "title": "Team-Beschreibung"
+    },
+    "name": {
+      "placeholder": "Bitte geben Sie einen Teamnamen ein",
+      "title": "Teamname"
+    },
+    "scene": {
+      "desc": "Wählen Sie ein Teamszenario",
+      "options": {
+        "casual": "Freizeit",
+        "productive": "Produktivität"
+      },
+      "title": "Teamszenario"
+    },
+    "submit": "Team aktualisieren",
+    "systemPrompt": {
+      "placeholder": "Bitte geben Sie den Systemhinweis für den Moderator ein",
+      "title": "Systemhinweis des Moderators"
+    },
+    "title": "Agent-Teaminformationen"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Wenn deaktiviert, kannst du dem Assistenten weiterhin direkt Nachrichten senden",
+      "title": "Direktnachrichten vom Assistenten erlauben"
+    },
+    "enableSupervisor": {
+      "desc": "Aktivieren Sie die Moderatorfunktion für das Agent-Team. Moderatoren verwalten den Gesprächsverlauf des Teams.",
+      "title": "Moderator aktivieren"
+    },
+    "maxResponseInRow": {
+      "desc": "Wählen Sie, wie viele Nachrichten ein Mitglied hintereinander antworten kann. Setzen Sie auf 0, um diese Begrenzung zu deaktivieren.",
+      "title": "Anzahl der aufeinanderfolgenden Antworten"
+    },
+    "model": {
+      "desc": "Beiträge von Gruppenmitgliedern bleiben unbeeinträchtigt. Einige Modelle können nicht als Moderatoren verwendet werden.",
+      "title": "Moderator-Modell"
+    },
+    "orchestratorTitle": "Moderatoreinstellungen",
+    "responseOrder": {
+      "desc": "Agenten antworten in der im Chat festgelegten Reihenfolge",
+      "options": {
+        "natural": "Natürlich",
+        "sequential": "Sequenziell"
+      },
+      "placeholder": "Antwortreihenfolge wählen",
+      "title": "Antwortreihenfolge"
+    },
+    "responseSpeed": {
+      "desc": "Steuern Sie die allgemeine Geschwindigkeit des Gesprächs",
+      "options": {
+        "fast": "Schnell",
+        "medium": "Mittel",
+        "slow": "Langsam"
+      },
+      "placeholder": "Antwortgeschwindigkeit wählen",
+      "title": "Antwortgeschwindigkeit"
+    },
+    "revealDM": {
+      "desc": "Macht private Nachrichten, die an andere Mitglieder gesendet wurden, für Sie sichtbar.",
+      "title": "Private Nachrichten anzeigen"
+    },
+    "submit": "Einstellungen aktualisieren",
+    "systemPrompt": {
+      "desc": "Benutzerdefinierter Systemhinweis für den Moderator des Gruppenchats. Dies kann das Standardverhalten des Moderators beeinflussen.",
+      "placeholder": "Bitte geben Sie einen benutzerdefinierten Systemhinweis für den Moderator ein...",
+      "title": "Systemhinweis des Moderators"
+    },
+    "title": "Chat-Einstellungen"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Zur Gruppe hinzufügen",
+    "availableAgents": "Verfügbare Assistenten",
+    "createMember": "Mitglied erstellen",
+    "defaultAgent": "Benutzerdefinierter Assistent",
+    "disableHost": "Moderator-Assistent deaktivieren",
+    "edit": "Mitglieder bearbeiten",
+    "empty": "Dieses Team hat derzeit keine Mitglieder. Klicken Sie auf die + Schaltfläche, um Mitglieder hinzuzufügen.",
+    "enableHost": "Moderator-Assistent aktivieren",
+    "groupHost": "Gruppenmoderator",
+    "groupMembers": "Gruppenmitglieder",
+    "host": {
+      "description": "Wenn der Moderator in der Gruppe ist, läuft der Gruppenchat automatisiert, geeignet für kreative Aufgaben.",
+      "title": "Moderator"
+    },
+    "noAvailableAgents": "Keine verfügbaren Assistenten",
+    "noDescription": "Keine Beschreibung vorhanden",
+    "noMembersInGroup": "Keine Mitglieder in der Gruppe",
+    "owner": "Sie (Eigentümer)",
+    "remove": "Mitglied entfernen",
+    "removeFromGroup": "Aus der Gruppe entfernen",
+    "you": "Sie"
+  },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Legen Sie die Standardanzahl der Bilder fest, die beim Erstellen einer neuen Aufgabe im Bildgenerierungs-Panel erzeugt werden.",
+      "label": "Standardanzahl der Bilder",
+      "title": "AI-Zeichnungseinstellungen"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -448,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Assistent einreichen",
-    "identifier": "Assistenten-Kennung",
+    "identifier": "Assistenten-Bezeichner (identifier)",
     "metaMiss": "Bitte vervollständigen Sie die Assistenteninformationen, einschließlich Name, Beschreibung und Tags, bevor Sie sie einreichen.",
     "placeholder": "Geben Sie die Kennung des Assistenten ein, die eindeutig sein muss, z. B. Web-Entwicklung",
     "tooltips": "Auf dem Assistentenmarkt teilen"
@@ -549,6 +761,7 @@
     "common": "Allgemeine Einstellungen",
     "experiment": "Experiment",
     "hotkey": "Tastenkombinationen",
+    "image": "AI-Zeichnung",
     "llm": "Sprachmodell",
     "provider": "KI-Dienstanbieter",
     "proxy": "Netzwerkproxy",
@@ -562,11 +775,36 @@
       "groupName": "Integriert"
     },
     "disabled": "Das aktuelle Modell unterstützt keine Funktionsaufrufe und kann keine Plugins verwenden",
+    "klavis": {
+      "addServer": "Server hinzufügen",
+      "authCompleted": "Authentifizierung abgeschlossen",
+      "authFailed": "Authentifizierung fehlgeschlagen",
+      "authRequired": "Authentifizierung erforderlich",
+      "connected": "Verbunden",
+      "error": "Fehler",
+      "groupName": "Klavis-Tools",
+      "manage": "Klavis verwalten",
+      "manageTitle": "Klavis-Integration verwalten",
+      "noServers": "Keine verbundenen Server",
+      "notEnabled": "Klavis-Dienst ist nicht aktiviert",
+      "oauthRequired": "Bitte schließen Sie die OAuth-Authentifizierung in einem neuen Fenster ab",
+      "pendingAuth": "Authentifizierung ausstehend",
+      "serverCreated": "Server erfolgreich erstellt",
+      "serverCreatedFailed": "Servererstellung fehlgeschlagen",
+      "serverRemoved": "Server wurde entfernt",
+      "servers": "Server",
+      "tools": "Tools",
+      "verifyAuth": "Ich habe die Authentifizierung abgeschlossen"
+    },
     "plugins": {
       "enabled": "Aktiviert: {{num}}",
       "groupName": "Plugins",
       "noEnabled": "Keine Plugins aktiviert",
       "store": "Plugin-Store"
+    },
+    "tabs": {
+      "all": "Alle",
+      "installed": "Aktiviert"
     },
     "title": "Erweiterungswerkzeuge"
   }

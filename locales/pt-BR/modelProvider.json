@@ -82,6 +82,58 @@
       "title": "ID da conta do Cloudflare / Endereço da API"
     }
   },
+  "comfyui": {
+    "apiKey": {
+      "desc": "Chave de API necessária para autenticação via Token Bearer",
+      "placeholder": "Insira a chave de API",
+      "required": "Por favor, insira a chave de API",
+      "title": "Chave de API"
+    },
+    "authType": {
+      "desc": "Selecione o método de autenticação com o servidor ComfyUI",
+      "options": {
+        "basic": "Usuário/Senha",
+        "bearer": "Bearer (Chave de API)",
+        "custom": "Cabeçalhos personalizados",
+        "none": "Sem autenticação"
+      },
+      "placeholder": "Selecione o tipo de autenticação",
+      "title": "Tipo de autenticação"
+    },
+    "baseURL": {
+      "desc": "Endereço de acesso web do ComfyUI",
+      "placeholder": "http://127.0.0.1:8000",
+      "required": "Por favor, insira o endereço do serviço ComfyUI",
+      "title": "Endereço do serviço ComfyUI"
+    },
+    "checker": {
+      "desc": "Testar se a conexão está configurada corretamente",
+      "title": "Verificação de conectividade"
+    },
+    "customHeaders": {
+      "addButton": "Adicionar cabeçalho",
+      "deleteTooltip": "Remover este cabeçalho",
+      "desc": "Cabeçalhos necessários para autenticação personalizada, no formato chave-valor",
+      "duplicateKeyError": "Os nomes das chaves dos cabeçalhos não podem se repetir",
+      "keyPlaceholder": "Nome da chave",
+      "required": "Por favor, insira os cabeçalhos personalizados",
+      "title": "Cabeçalhos personalizados",
+      "valuePlaceholder": "Valor"
+    },
+    "password": {
+      "desc": "Senha necessária para autenticação básica",
+      "placeholder": "Insira a senha",
+      "required": "Por favor, insira a senha",
+      "title": "Senha"
+    },
+    "title": "ComfyUI",
+    "username": {
+      "desc": "Nome de usuário necessário para autenticação básica",
+      "placeholder": "Insira o nome de usuário",
+      "required": "Por favor, insira o nome de usuário",
+      "title": "Nome de usuário"
+    }
+  },
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Por favor, insira sua API Key",
@@ -138,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Serviço personalizado não ativado",
       "disabled": "Fornecedor não habilitado",
       "enabled": "Fornecedor habilitado"
     }
@@ -146,7 +199,14 @@
     "addCustomProvider": "Adicionar Provedor Personalizado",
     "all": "Todos",
     "list": {
+      "custom": "Personalização não ativada",
       "disabled": "Desativado",
+      "disabledActions": {
+        "sort": "Ordenar por",
+        "sortAlphabetical": "Ordenar alfabeticamente",
+        "sortAlphabeticalDesc": "Ordenar em ordem alfabética reversa",
+        "sortDefault": "Ordem padrão"
+      },
       "enabled": "Ativado"
     },
     "notFound": "Nenhum resultado encontrado",
@@ -237,7 +297,7 @@
       },
       "helpDoc": "Tutorial de Configuração",
       "responsesApi": {
-        "desc": "Adota o novo padrão de formato de requisição da OpenAI, desbloqueando recursos avançados como cadeias de raciocínio",
+        "desc": "Adota o novo formato de solicitação da OpenAI, desbloqueando recursos avançados como Cadeia de Raciocínio (disponível apenas para modelos da OpenAI)",
         "title": "Usar o padrão Responses API"
       },
       "waitingForMore": "Mais modelos estão <1>planejados para integração</1>, fique atento"
@@ -284,15 +344,42 @@
           "placeholder": "Insira o ID do modelo, por exemplo, gpt-4o ou claude-3.5-sonnet",
           "title": "ID do Modelo"
         },
+        "imageOutput": {
+          "extra": "Esta configuração ativará apenas a capacidade do modelo de gerar imagens. O efeito real depende totalmente do próprio modelo. Teste por conta própria se o modelo possui capacidade utilizável de geração de imagens.",
+          "title": "Suporte à geração de imagens"
+        },
         "modalTitle": "Configuração do Modelo Personalizado",
         "reasoning": {
           "extra": "Esta configuração ativará apenas a capacidade de pensamento profundo do modelo, e o efeito específico depende totalmente do próprio modelo. Por favor, teste se este modelo possui a capacidade de pensamento profundo utilizável.",
           "title": "Suporte a Pensamento Profundo"
         },
+        "search": {
+          "extra": "Esta configuração ativará apenas a capacidade de busca online do mecanismo de busca interno do modelo. A compatibilidade com o mecanismo de busca interno depende do próprio modelo. Teste por conta própria se o mecanismo de busca interno do modelo é utilizável.",
+          "title": "Suporte à busca online"
+        },
         "tokens": {
           "extra": "Configurar o número máximo de tokens suportados pelo modelo",
           "title": "Janela de contexto máxima",
           "unlimited": "Ilimitado"
+        },
+        "type": {
+          "extra": "Diferentes tipos de modelos possuem cenários de uso e capacidades diferenciadas",
+          "options": {
+            "chat": "Conversa",
+            "embedding": "Vetorização",
+            "image": "Geração de imagem",
+            "realtime": "Conversa em tempo real",
+            "stt": "Reconhecimento de voz para texto",
+            "text2music": "Texto para música",
+            "text2video": "Texto para vídeo",
+            "tts": "Síntese de voz"
+          },
+          "placeholder": "Por favor, selecione o tipo de modelo",
+          "title": "Tipo de modelo"
+        },
+        "video": {
+          "extra": "Esta configuração ativará apenas a configuração de reconhecimento de vídeo no aplicativo. A compatibilidade com o reconhecimento depende totalmente do próprio modelo. Teste por conta própria se o modelo possui capacidade utilizável de reconhecimento de vídeo.",
+          "title": "Suporte ao reconhecimento de vídeo"
         },
         "vision": {
           "extra": "Esta configuração apenas habilitará a configuração de upload de imagens no aplicativo, se o reconhecimento for suportado depende do modelo em si, teste a capacidade de reconhecimento visual desse modelo.",
@@ -312,7 +399,13 @@
       "addNew": "Adicionar Modelo",
       "disabled": "Não habilitado",
       "disabledActions": {
-        "showMore": "Mostrar tudo"
+        "showMore": "Mostrar tudo",
+        "sort": "Ordenar por",
+        "sortAlphabetical": "Ordenar alfabeticamente",
+        "sortAlphabeticalDesc": "Ordenar em ordem alfabética reversa",
+        "sortDefault": "Ordem padrão",
+        "sortReleasedAt": "Ordenar por data de lançamento mais antiga",
+        "sortReleasedAtDesc": "Ordenar por data de lançamento mais recente"
       },
       "empty": {
         "desc": "Por favor, crie um modelo personalizado ou importe um modelo para começar a usar.",
@@ -372,6 +465,11 @@
       "desc": "Insira suas Chaves do Vertex AI",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Chaves do Vertex AI"
+    },
+    "region": {
+      "desc": "Selecione a região do serviço Vertex AI. Alguns modelos, como o Gemini 2.5, estão disponíveis apenas em regiões específicas (como global)",
+      "placeholder": "Selecione a região",
+      "title": "Região do Vertex AI"
     }
   },
   "zeroone": {

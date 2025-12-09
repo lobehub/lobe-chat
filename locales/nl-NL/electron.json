@@ -92,14 +92,15 @@
     "installLater": "Bij de volgende opstarten bijwerken",
     "isLatestVersion": "Je hebt de nieuwste versie",
     "isLatestVersionDesc": "Geweldig, de versie {{version}} die je gebruikt is de meest recente versie.",
-    "later": "Later bijwerken",
+    "later": "Later",
     "newVersionAvailable": "Nieuwe versie beschikbaar",
     "newVersionAvailableDesc": "Nieuwe versie {{version}} gevonden, wilt u deze nu downloaden?",
     "restartAndInstall": "Installeer de update en herstart",
     "updateError": "Updatefout",
-    "updateReady": "Update gereed",
+    "updateReady": "Er is een nieuwe versie beschikbaar",
     "updateReadyDesc": "Nieuwe versie {{version}} is gedownload, herstart de applicatie om de installatie te voltooien.",
-    "upgradeNow": "Nu bijwerken"
+    "upgradeNow": "Nu bijwerken",
+    "willInstallLater": "De update wordt bij de volgende start geïnstalleerd"
   },
   "waitingOAuth": {
     "cancel": "Annuleren",

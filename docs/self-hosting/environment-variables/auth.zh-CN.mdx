@@ -1,9 +1,10 @@
 ---
 title: LobeChat 身份验证服务设置
-description: 了解如何配置 LobeChat 的身份验证服务环境变量。
+description: 了解如何配置 LobeChat 的身份验证服务环境变量，包括 Better Auth、OAuth SSO、NextAuth 设置等。
 tags:
   - LobeChat
   - 身份验证服务
+  - Better Auth
   - 单点登录
   - Next Auth
   - Clerk
@@ -12,6 +13,191 @@ tags:
 # 身份验证服务
 
 LobeChat 在部署时提供了完善的身份验证服务能力，以下是相关的环境变量，你可以使用这些环境变量轻松定义需要在 LobeChat 中开启的身份验证服务。
+
+## Better Auth
+
+### 通用设置
+
+#### `NEXT_PUBLIC_ENABLE_BETTER_AUTH`
+
+- 类型：必选
+- 描述：设置为 `1` 以启用 Better Auth 服务。启用后，将使用 Better Auth 进行身份验证，而非 Next Auth 或 Clerk。
+- 默认值：`-`
+- 示例：`1`
+
+#### `AUTH_SECRET`
+
+- 类型：必选
+- 描述：用于加密会话令牌的密钥，Better Auth 和 Next Auth 共享。使用以下命令生成：`openssl rand -base64 32`
+- 默认值：`-`
+- 示例：`Tfhi2t2pelSMEA8eaV61KaqPNEndFFdMIxDaJnS1CUI=`
+
+#### `NEXT_PUBLIC_AUTH_URL`
+
+- 类型：可选
+- 描述：浏览器可访问的 Better Auth 回调 URL。仅在默认生成的 URL 不正确时设置。
+- 默认值：`-`
+- 示例：`https://example.com`
+
+#### `NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION`
+
+- 类型：可选
+- 描述：设置为 `1` 以要求用户在登录前验证邮箱。用户注册后必须验证邮箱地址。
+- 默认值：`0`
+- 示例：`1`
+
+#### `AUTH_SSO_PROVIDERS`
+
+- 类型：可选
+- 描述：启用的 SSO 提供商列表，以逗号分隔。顺序决定了登录页面上提供商的显示顺序。
+- 默认值：`-`
+- 示例：`google,github,microsoft,cognito`
+
+### 邮件服务（SMTP）
+
+启用邮箱验证和密码重置功能需要配置以下设置。
+
+#### `SMTP_HOST`
+
+- 类型：必选（用于邮件功能）
+- 描述：SMTP 服务器主机名。
+- 默认值：`-`
+- 示例：`smtp.gmail.com`
+
+#### `SMTP_PORT`
+
+- 类型：必选（用于邮件功能）
+- 描述：SMTP 服务器端口。TLS 通常为 `587`，SSL 为 `465`。
+- 默认值：`-`
+- 示例：`587`
+
+#### `SMTP_SECURE`
+
+- 类型：可选
+- 描述：是否使用安全连接。端口 465（SSL）设置为 `true`，端口 587（TLS）设置为 `false`。
+- 默认值：`false`
+- 示例：`false`
+
+#### `SMTP_USER`
+
+- 类型：必选（用于邮件功能）
+- 描述：SMTP 认证用户名，通常是您的邮箱地址。
+- 默认值：`-`
+- 示例：`your-email@example.com`
+
+#### `SMTP_PASS`
+
+- 类型：必选（用于邮件功能）
+- 描述：SMTP 认证密码。Gmail 需使用应用专用密码。
+- 默认值：`-`
+- 示例：`your-app-specific-password`
+
+### Google
+
+#### `AUTH_GOOGLE_ID`
+
+- 类型：必选
+- 描述：Google OAuth 应用的 Client ID。在 [Google Cloud Console](https://console.cloud.google.com/apis/credentials) 获取。
+- 默认值：`-`
+- 示例：`123456789.apps.googleusercontent.com`
+
+#### `AUTH_GOOGLE_SECRET`
+
+- 类型：必选
+- 描述：Google OAuth 应用的 Client Secret。
+- 默认值：`-`
+- 示例：`GOCSPX-xxxxxxxxxxxxxxxxxxxx`
+
+### GitHub
+
+#### `AUTH_GITHUB_ID`
+
+- 类型：必选
+- 描述：GitHub OAuth 应用的 Client ID。在 [GitHub Developer Settings](https://github.com/settings/developers) 获取。
+- 默认值：`-`
+- 示例：`Ov23xxxxxxxxxxxxx`
+
+#### `AUTH_GITHUB_SECRET`
+
+- 类型：必选
+- 描述：GitHub OAuth 应用的 Client Secret。
+- 默认值：`-`
+- 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### Microsoft
+
+#### `AUTH_MICROSOFT_ID`
+
+- 类型：必选
+- 描述：Microsoft Entra ID（Azure AD）应用的 Client ID。在 [Azure 门户](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade) 获取。
+- 默认值：`-`
+- 示例：`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+
+#### `AUTH_MICROSOFT_SECRET`
+
+- 类型：必选
+- 描述：Microsoft Entra ID 应用的 Client Secret。
+- 默认值：`-`
+- 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### AWS Cognito
+
+#### `AUTH_COGNITO_ID`
+
+- 类型：必选
+- 描述：AWS Cognito 用户池应用客户端的 Client ID。在 [AWS Cognito 控制台](https://console.aws.amazon.com/cognito) 获取。
+- 默认值：`-`
+- 示例：`xxxxxxxxxxxxxxxxxxxxx`
+
+#### `AUTH_COGNITO_SECRET`
+
+- 类型：必选
+- 描述：AWS Cognito 应用客户端的 Client Secret。
+- 默认值：`-`
+- 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+#### `AUTH_COGNITO_ISSUER`
+
+- 类型：必选
+- 描述：Cognito 用户池的颁发者 URL。格式：`https://cognito-idp.{region}.amazonaws.com/{userPoolId}`
+- 默认值：`-`
+- 示例：`https://cognito-idp.us-east-1.amazonaws.com/us-east-1_xxxxxxxxx`
+
+### 飞书
+
+#### `AUTH_FEISHU_APP_ID`
+
+- 类型：必选
+- 描述：飞书应用的 App ID。在 [飞书开放平台](https://open.feishu.cn/app) 获取。
+- 默认值：`-`
+- 示例：`cli_xxxxxxxxxxxxxxxx`
+
+#### `AUTH_FEISHU_APP_SECRET`
+
+- 类型：必选
+- 描述：飞书应用的 App Secret。
+- 默认值：`-`
+- 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### 微信
+
+#### `AUTH_WECHAT_ID`
+
+- 类型：必选
+- 描述：微信开放平台应用的 App ID。在 [微信开放平台](https://open.weixin.qq.com/) 获取。
+- 默认值：`-`
+- 示例：`wxxxxxxxxxxxxxxxxxxx`
+
+#### `AUTH_WECHAT_SECRET`
+
+- 类型：必选
+- 描述：微信应用的 App Secret。
+- 默认值：`-`
+- 示例：`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+<Callout type={'info'}>
+  其他基于 OIDC 的提供商（Auth0、Authelia、Authentik、Casdoor、Cloudflare Zero Trust、Keycloak、Logto、Okta、ZITADEL、Generic OIDC）的环境变量配置与 Next Auth 相同。详情请参阅下方的 [Next Auth 章节](#next-auth)。
+</Callout>
 
 ## Next Auth
 

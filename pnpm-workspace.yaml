@@ -1,4 +1,5 @@
 packages:
   - 'packages/**'
   - '.'
-  - '!apps/**'
+  - 'e2e'
+  - 'apps/desktop/src/main'

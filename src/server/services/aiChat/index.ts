@@ -1,6 +1,7 @@
+import { LobeChatDatabase } from '@lobechat/database';
+
 import { MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
-import { LobeChatDatabase } from '@/database/type';
 import { FileService } from '@/server/services/file';
 
 export class AiChatService {
@@ -28,7 +29,7 @@ export class AiChatService {
       this.messageModel.query(params, {
         postProcessUrl: (path) => this.fileService.getFullFileUrl(path),
       }),
-      params.includeTopic ? this.topicModel.query({ sessionId: params.sessionId }) : undefined,
+      params.includeTopic ? this.topicModel.query({ containerId: params.sessionId }) : undefined,
     ]);
 
     return { messages, topics };

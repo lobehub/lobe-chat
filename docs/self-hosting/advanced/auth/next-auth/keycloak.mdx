@@ -108,12 +108,12 @@ If you deploy using a public network, this guide assumes:
 
   | Environment Variable      | Type     | Description                                                                                                                                                                              |
   | ------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `NEXT_AUTH_SECRET`        | Required | Key used to encrypt Auth.js session tokens. You can generate a key using: `openssl rand -base64 32`                                                                                      |
+  | `AUTH_SECRET`             | Required | Key used to encrypt Auth.js session tokens. You can generate a key using: `openssl rand -base64 32`                                                                                      |
   | `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for LobeChat. For Keycloak, fill in `keycloak`.                                                                                                       |
   | `AUTH_KEYCLOAK_ID`        | Required | Keycloak client ID                                                                                                                                                                       |
   | `AUTH_KEYCLOAK_SECRET`    | Required | Keycloak client secret                                                                                                                                                                   |
   | `AUTH_KEYCLOAK_ISSUER`    | Required | OpenID Connect issuer URL for the Keycloak provider, in the format `{keycloak_url}/realms/{realm_name}`                                                                                  |
-  | `NEXTAUTH_URL`            | Required | This URL specifies the callback address for Auth.js during OAuth verification. Only needed when the default generated redirect address is incorrect. `https://lobe.example.com/api/auth` |
+  | `AUTH_URL`                | Required | This URL specifies the callback address for Auth.js during OAuth verification. Only needed when the default generated redirect address is incorrect. `https://lobe.example.com/api/auth` |
 
   <Callout type={'tip'}>
     Visit [📘 Environment Variables](/zh/docs/self-hosting/environment-variables/auth#keycloak) for details on related variables.

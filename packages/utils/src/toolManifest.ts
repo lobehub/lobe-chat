@@ -1,12 +1,10 @@
-import { ChatCompletionTool , OpenAIPluginManifest } from '@lobechat/types';
+import { OpenAIPluginManifest } from '@lobechat/types';
 import { LobeChatPluginManifest, pluginManifestSchema } from '@lobehub/chat-plugin-sdk';
-import { uniqBy } from 'lodash-es';
 
 import { API_ENDPOINTS } from '@/services/_url';
-import { genToolCallingName } from '@/utils/toolCall';
 
 const fetchJSON = async <T = any>(url: string, proxy = false): Promise<T> => {
-  // 2. 发送请求
+  // 2. Send request
   let res: Response;
   try {
     res = await (proxy ? fetch(API_ENDPOINTS.proxy, { body: url, method: 'POST' }) : fetch(url));
@@ -82,12 +80,12 @@ export const getToolManifest = async (
   url?: string,
   useProxy: boolean = false,
 ): Promise<LobeChatPluginManifest> => {
-  // 1. valid plugin
+  // 1. Validate plugin
   if (!url) {
     throw new TypeError('noManifest');
   }
 
-  // 2. 发送请求
+  // 2. Send request
   let data = await fetchJSON<LobeChatPluginManifest>(url, useProxy);
 
   // @ts-ignore
@@ -96,7 +94,7 @@ export const getToolManifest = async (
   if (data['description_for_model']) {
     data = convertOpenAIManifestToLobeManifest(data as any);
   }
-  // 3. 校验插件文件格式规范
+  // 3. Validate plugin file format specification
   const parser = pluginManifestSchema.safeParse(data);
 
   if (!parser.success) {
@@ -107,36 +105,22 @@ export const getToolManifest = async (
   if (parser.data.openapi) {
     const openapiJson = await fetchJSON(parser.data.openapi, useProxy);
 
-    try {
-      const { OpenAPIConvertor } = await import('@lobehub/chat-plugin-sdk/openapi');
+    // avoid https://github.com/lobehub/lobe-chat/issues/9059
+    if (typeof window !== 'undefined') {
+      try {
+        const { OpenAPIConvertor } = await import('@lobehub/chat-plugin-sdk/openapi');
 
-      const convertor = new OpenAPIConvertor(openapiJson);
-      const openAPIs = await convertor.convertOpenAPIToPluginSchema();
+        const convertor = new OpenAPIConvertor(openapiJson);
+        const openAPIs = await convertor.convertOpenAPIToPluginSchema();
 
-      data.api = [...data.api, ...openAPIs];
+        data.api = [...data.api, ...openAPIs];
 
-      data.settings = await convertor.convertAuthToSettingsSchema(data.settings);
-    } catch (error) {
-      throw new TypeError('openAPIInvalid', { cause: error });
+        data.settings = await convertor.convertAuthToSettingsSchema(data.settings);
+      } catch (error) {
+        throw new TypeError('openAPIInvalid', { cause: error });
+      }
     }
   }
 
   return data;
-};
-
-/**
- *
- */
-export const convertPluginManifestToToolsCalling = (
-  manifests: LobeChatPluginManifest[],
-): ChatCompletionTool[] => {
-  const list = manifests.flatMap((manifest) =>
-    manifest.api.map((m) => ({
-      description: m.description,
-      name: genToolCallingName(manifest.identifier, m.name, manifest.type),
-      parameters: m.parameters,
-    })),
-  );
-
-  return uniqBy(list, 'name').map((i) => ({ function: i, type: 'function' }));
 };

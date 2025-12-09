@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { ChatGroupModel } from '@/database/models/chatGroup';
 import { SessionModel } from '@/database/models/session';
 import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
@@ -9,7 +10,7 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';
 import { BatchTaskResult } from '@/types/service';
-import { ChatSessionList } from '@/types/session';
+import { ChatSessionList, LobeGroupSession } from '@/types/session';
 
 const sessionProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -96,12 +97,33 @@ export const sessionRouter = router({
     }),
 
   getGroupedSessions: publicProcedure.query(async ({ ctx }): Promise<ChatSessionList> => {
-    if (!ctx.userId) return { sessionGroups: [], sessions: [] };
+    const userId = ctx.userId;
+    if (!userId) return { sessionGroups: [], sessions: [] };
 
     const serverDB = await getServerDB();
-    const sessionModel = new SessionModel(serverDB, ctx.userId!);
+    const sessionModel = new SessionModel(serverDB, userId);
+    const chatGroupModel = new ChatGroupModel(serverDB, userId);
 
-    return sessionModel.queryWithGroups();
+    const [{ sessions, sessionGroups }, chatGroups] = await Promise.all([
+      sessionModel.queryWithGroups(),
+      chatGroupModel.queryWithMemberDetails(),
+    ]);
+
+    const groupSessions: LobeGroupSession[] = chatGroups.map((group) => {
+      const { title, description, avatar, backgroundColor, groupId, ...rest } = group;
+      return {
+        ...rest,
+        group: groupId, // Map groupId to group for consistent API
+        meta: { avatar, backgroundColor, description, title },
+        type: 'group',
+      };
+    });
+
+    const allSessions = [...sessions, ...groupSessions].sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    );
+
+    return { sessionGroups, sessions: allSessions };
   }),
 
   getSessions: sessionProcedure

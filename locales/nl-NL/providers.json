@@ -30,13 +30,22 @@
     "description": "Bedrock is een dienst van Amazon AWS die zich richt op het bieden van geavanceerde AI-taalmodellen en visuele modellen voor bedrijven. De modellenfamilie omvat de Claude-serie van Anthropic, de Llama 3.1-serie van Meta, en meer, met opties variërend van lichtgewicht tot hoge prestaties, en ondersteunt tekstgeneratie, dialogen, beeldverwerking en meer, geschikt voor bedrijfsapplicaties van verschillende schalen en behoeften."
   },
   "bfl": {
-    "description": "Een toonaangevend, grensverleggend onderzoeksinstituut voor kunstmatige intelligentie dat de visuele infrastructuur van morgen bouwt."
+    "description": "Een toonaangevend, grensverleggend onderzoeksinstituut voor kunstmatige intelligentie dat de visuele infrastructuur van morgen opbouwt."
+  },
+  "cerebras": {
+    "description": "Cerebras is een AI-inferentieplatform gebaseerd op het speciale CS-3-systeem, ontworpen om 's werelds snelste, realtime reagerende en hoog-throughput LLM-diensten te leveren. Het is speciaal ontwikkeld om vertragingen te elimineren en complexe AI-workflows te versnellen, zoals realtime codegeneratie en agenttaken."
   },
   "cloudflare": {
     "description": "Voer machine learning-modellen aan, aangedreven door serverloze GPU's, uit op het wereldwijde netwerk van Cloudflare."
   },
   "cohere": {
     "description": "Cohere biedt u de meest geavanceerde meertalige modellen, geavanceerde zoekfunctionaliteit en een op maat gemaakt AI-werkruimte voor moderne bedrijven - alles geïntegreerd in een veilig platform."
+  },
+  "cometapi": {
+    "description": "CometAPI is een serviceplatform dat diverse geavanceerde modelinterfaces aanbiedt, met ondersteuning voor OpenAI, Anthropic, Google en meer. Het is geschikt voor uiteenlopende ontwikkelings- en toepassingsbehoeften. Gebruikers kunnen flexibel het beste model en de beste prijs kiezen op basis van hun eigen behoeften, wat bijdraagt aan een verbeterde AI-ervaring."
+  },
+  "comfyui": {
+    "description": "Een krachtige open-source workflow-engine voor het genereren van afbeeldingen, video en audio. Ondersteunt geavanceerde modellen zoals SD, FLUX, Qwen, Hunyuan en WAN, en biedt mogelijkheden voor node-gebaseerde workflowbewerking en private implementatie."
   },
   "deepseek": {
     "description": "DeepSeek is een bedrijf dat zich richt op onderzoek en toepassing van kunstmatige intelligentietechnologie, en hun nieuwste model DeepSeek-V2.5 combineert algemene dialoog- en codeverwerkingscapaciteiten, met significante verbeteringen in het afstemmen op menselijke voorkeuren, schrijfopdrachten en het volgen van instructies."
@@ -107,6 +116,9 @@
   "ollama": {
     "description": "De modellen van Ollama bestrijken een breed scala aan gebieden, waaronder codegeneratie, wiskundige berekeningen, meertalige verwerking en interactieve dialogen, en voldoen aan de diverse behoeften van bedrijfs- en lokale implementaties."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud biedt officieel beheerde inferentiediensten, waarmee u direct toegang krijgt tot de Ollama-modelbibliotheek en ondersteuning voor OpenAI-compatibele interfaces."
+  },
   "openai": {
     "description": "OpenAI is 's werelds toonaangevende onderzoeksinstituut op het gebied van kunstmatige intelligentie, wiens ontwikkelde modellen zoals de GPT-serie de grenzen van natuurlijke taalverwerking verleggen. OpenAI streeft ernaar verschillende industrieën te transformeren door middel van innovatieve en efficiënte AI-oplossingen. Hun producten bieden opmerkelijke prestaties en kosteneffectiviteit, en worden op grote schaal gebruikt in onderzoek, commercie en innovatieve toepassingen."
   },
@@ -158,6 +170,9 @@
   "v0": {
     "description": "v0 is een pair programming-assistent; je hoeft alleen je ideeën in natuurlijke taal te beschrijven, en het genereert code en gebruikersinterfaces (UI) voor je project."
   },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway biedt een uniforme API voor toegang tot meer dan 100 modellen, waarmee u via één enkele endpoint modellen van verschillende aanbieders zoals OpenAI, Anthropic en Google kunt gebruiken. Ondersteunt budgetinstellingen, gebruiksmonitoring, verzoekbelastingbalancering en failover."
+  },
   "vertexai": {
     "description": "De Gemini-serie van Google is zijn meest geavanceerde, algemene AI-modellen, ontwikkeld door Google DeepMind. Deze modellen zijn ontworpen voor multimodale toepassingen en ondersteunen naadloze begrip en verwerking van tekst, code, afbeeldingen, audio en video. Ze zijn geschikt voor verschillende omgevingen, van datacenters tot mobiele apparaten, en verbeteren aanzienlijk de efficiëntie en toepasbaarheid van AI-modellen."
   },
@@ -175,6 +190,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference) is een open-source platform dat is ontworpen om de uitvoering en integratie van verschillende AI-modellen te vereenvoudigen. Met Xinference kunt u inferentie uitvoeren met behulp van elke open-source LLM, embeddingsmodel of multimodaal model in een cloud- of lokale omgeving, en krachtige AI-toepassingen creëren."
+  },
+  "zenmux": {
+    "description": "ZenMux is een geïntegreerd platform voor AI-diensten dat ondersteuning biedt voor diverse toonaangevende AI-serviceinterfaces zoals OpenAI, Anthropic en Google VertexAI. Het biedt flexibele routeringsmogelijkheden, zodat u eenvoudig kunt schakelen tussen en beheren van verschillende AI-modellen."
   },
   "zeroone": {
     "description": "01.AI richt zich op kunstmatige intelligentietechnologie in het tijdperk van AI 2.0, en bevordert sterk de innovatie en toepassing van 'mens + kunstmatige intelligentie', met behulp van krachtige modellen en geavanceerde AI-technologie om de productiviteit van de mens te verbeteren en technologische capaciteiten te realiseren."

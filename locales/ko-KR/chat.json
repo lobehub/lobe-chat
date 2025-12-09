@@ -2,8 +2,9 @@
   "ModelSwitch": {
     "title": "모델"
   },
+  "active": "활성",
   "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작하시거나 [도우미 설정]({{url}})으로 가셔서 제 정보를 완성하실 수 있습니다.",
-  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
+  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해 봅시다!",
   "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해보세요!",
   "agents": "도우미",
   "artifact": {
@@ -13,17 +14,29 @@
     "thought": "사고 과정",
     "unknownTitle": "제목 없음"
   },
+  "availableAgents": "사용 가능한 도우미",
   "backToBottom": "하단으로 이동",
   "chatList": {
+    "expandMessage": "메시지 펼치기",
     "longMessageDetail": "자세히 보기"
   },
   "clearCurrentMessages": "현재 대화 지우기",
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
+  "confirmRemoveChatGroupItemAlert": "이 Agent 팀을 삭제하려고 합니다. 팀 구성원에게는 영향이 없습니다. 계속하시겠습니까?",
+  "confirmRemoveGroupItemAlert": "해당 그룹을 삭제하려고 합니다. 삭제하면 해당 그룹의 어시스턴트가 기본 목록으로 이동합니다. 계속 진행하시겠습니까?",
+  "confirmRemoveGroupSuccess": "에이전트 팀이 성공적으로 삭제되었습니다",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionSuccess": "도우미가 성공적으로 삭제되었습니다",
   "defaultAgent": "기본 도우미",
+  "defaultGroupChat": "에이전트 팀",
   "defaultList": "기본 목록",
   "defaultSession": "기본 도우미",
+  "dm": {
+    "placeholder": "당신과 {{agentTitle}}의 개인 메시지가 여기에 표시됩니다.",
+    "tooltip": "개인 메시지 보내기",
+    "visibleTo": "{{target}}만 볼 수 있습니다",
+    "you": "당신"
+  },
   "duplicateSession": {
     "loading": "복사 중...",
     "success": "복사 성공",
@@ -40,6 +53,12 @@
       "desc": "Claude Thinking 메커니즘에 기반한 제한 (<1>자세히 알아보기</1>), 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
       "title": "심층 사고 활성화"
     },
+    "imageAspectRatio": {
+      "title": "이미지 가로세로 비율"
+    },
+    "imageResolution": {
+      "title": "이미지 해상도"
+    },
     "reasoningBudgetToken": {
       "title": "사고 소모 토큰"
     },
@@ -52,17 +71,65 @@
     "thinking": {
       "title": "심층 사고 스위치"
     },
+    "thinkingLevel": {
+      "title": "사고 수준"
+    },
     "title": "모델 확장 기능",
     "urlContext": {
       "desc": "활성화하면 실제 웹페이지 컨텍스트 내용을 얻기 위해 웹 링크를 자동으로 분석합니다",
       "title": "웹 링크 내용 추출"
     }
   },
+  "group": {
+    "desc": "여러 AI 어시스턴트와 공유된 대화 공간에서 협업합니다.",
+    "memberTooltip": "그룹에 {{count}}명의 구성원이 있습니다.",
+    "orchestratorThinking": "주최자가 생각 중입니다...",
+    "removeMember": "멤버 제거",
+    "title": "그룹"
+  },
+  "groupDescription": "팀 설명",
+  "groupSidebar": {
+    "members": {
+      "addMember": "멤버 추가",
+      "memberSettings": "멤버 설정",
+      "orchestrator": "주최자",
+      "orchestratorThinking": "주최자가 생각 중입니다...",
+      "removeMember": "멤버 제거",
+      "stopOrchestrator": "생각 중지",
+      "triggerOrchestrator": "그룹 채팅 시작"
+    },
+    "tabs": {
+      "host": "호스트",
+      "members": "멤버",
+      "role": "설정"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "기존 도우미 선택...",
+    "createGroup": "팀 만들기",
+    "existingMembers": "기존 Agent",
+    "groupMembers": "이 도우미들도 귀하의 목록에 추가됩니다",
+    "host": {
+      "description": "팀이 자율적으로 운영되도록 설정합니다",
+      "title": "호스트 활성화",
+      "tooltip": "팀 호스트를 비활성화하면, 멤버가 응답할 수 있도록 수동으로 @멘션해야 합니다"
+    },
+    "memberCount": "{{count}}명 멤버",
+    "noMatchingTemplates": "일치하는 템플릿이 없습니다",
+    "noSelectedTemplates": "선택된 템플릿이 없습니다",
+    "noTemplateMembers": "템플릿에 멤버가 없습니다",
+    "noTemplates": "사용 가능한 템플릿이 없습니다",
+    "searchTemplates": "템플릿 검색...",
+    "title": "에이전트 팀 생성",
+    "useTemplate": "템플릿 사용"
+  },
+  "hideForYou": "개인 메시지 내용이 숨겨져 있습니다. 설정에서 【개인 메시지 내용 표시】를 켜서 확인하세요.",
   "history": {
     "title": "도우미는 마지막 {{count}}개의 메시지만 기억합니다."
   },
   "historyRange": "대화 기록 범위",
   "historySummary": "역사 메시지 요약",
+  "inactive": "비활성",
   "inbox": {
     "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끌어내는 인공지능 비서입니다. 여기서 모든 것에 대해 대화합니다.",
     "title": "무작위 대화"
@@ -77,11 +144,13 @@
     "sendWithCmdEnter": "<key/> 키를 눌러 전송",
     "sendWithEnter": "<key/> 키를 눌러 전송",
     "stop": "중지",
-    "warp": "줄바꿈"
+    "warp": "줄바꿈",
+    "warpWithKey": "<key/> 키를 눌러 줄 바꿈"
   },
   "intentUnderstanding": {
     "title": "귀하의 의도를 이해하고 분석하는 중입니다..."
   },
+  "inviteMembers": "구성원 초대",
   "knowledgeBase": {
     "all": "모든 내용",
     "allFiles": "모든 파일",
@@ -100,12 +169,32 @@
     "uploadGuide": "업로드한 파일은 '지식 베이스'에서 확인할 수 있습니다.",
     "viewMore": "더 보기"
   },
+  "memberSelection": {
+    "addMember": "멤버 추가",
+    "allMembers": "전체 멤버",
+    "createGroup": "Agent 팀 만들기",
+    "noAvailableAgents": "초대할 수 있는 에이전트가 없습니다",
+    "noSelectedAgents": "선택된 에이전트가 없습니다",
+    "searchAgents": "에이전트 검색...",
+    "setInitialMembers": "팀 구성원 선택"
+  },
+  "members": "구성원",
+  "mention": {
+    "title": "멤버 언급"
+  },
   "messageAction": {
+    "collapse": "메시지 접기",
+    "continueGeneration": "계속 생성하기",
     "delAndRegenerate": "삭제하고 다시 생성",
     "deleteDisabledByThreads": "하위 주제가 존재하여 삭제할 수 없습니다.",
+    "expand": "메시지 펼치기",
     "regenerate": "다시 생성"
   },
   "messages": {
+    "dm": {
+      "sentTo": "{{name}}만 볼 수 있습니다",
+      "title": "쪽지"
+    },
     "modelCard": {
       "credit": "포인트",
       "creditPricing": "가격",
@@ -149,7 +238,22 @@
       "total": "총 소모"
     }
   },
+  "minimap": {
+    "jumpToMessage": "{{index}}번째 메시지로 이동",
+    "nextMessage": "다음 메시지",
+    "previousMessage": "이전 메시지",
+    "senderAssistant": "에이전트",
+    "senderUser": "당신"
+  },
   "newAgent": "새 도우미",
+  "newGroupChat": "새 에이전트 팀",
+  "noAgentsYet": "이 에이전트 팀에는 아직 멤버가 없습니다. + 버튼을 눌러 어시스턴트를 초대하세요.",
+  "noAvailableAgents": "초대할 수 있는 멤버가 없습니다",
+  "noMatchingAgents": "일치하는 멤버가 없습니다",
+  "noMembersYet": "이 그룹에는 아직 구성원이 없습니다. + 버튼을 눌러 어시스턴트를 초대하세요.",
+  "noSelectedAgents": "아직 멤버를 선택하지 않았습니다",
+  "openInNewWindow": "새 창에서 열기",
+  "owner": "그룹 소유자",
   "pin": "고정",
   "pinOff": "고정 해제",
   "rag": {
@@ -190,12 +294,16 @@
     "title": "연결 검색"
   },
   "searchAgentPlaceholder": "검색 도우미...",
+  "searchAgents": "검색 도우미...",
+  "selectedAgents": "선택된 도우미",
   "sendPlaceholder": "채팅 내용 입력...",
   "sessionGroup": {
     "config": "그룹 설정",
     "confirmRemoveGroupAlert": "이 그룹을 삭제하려고 합니다. 삭제 후 이 그룹의 도우미는 기본 목록으로 이동됩니다. 작업을 확인하십시오.",
     "createAgentSuccess": "에이전트 생성 성공",
     "createGroup": "새 그룹 추가",
+    "createGroupFailed": "그룹 채팅 생성 실패",
+    "createGroupSuccess": "그룹 채팅 생성 성공",
     "createSuccess": "생성 성공",
     "creatingAgent": "에이전트 생성 중...",
     "inputPlaceholder": "그룹 이름을 입력하세요...",
@@ -210,14 +318,32 @@
   "shareModal": {
     "copy": "복사",
     "download": "스크린샷 다운로드",
+    "downloadError": "다운로드 실패",
     "downloadFile": "파일 다운로드",
+    "downloadPdf": "PDF 다운로드",
+    "downloadSuccess": "다운로드 성공",
+    "exportPdf": "PDF로 내보내기",
     "exportTitle": "기본 제목",
+    "generatePdf": "PDF 생성",
+    "generatingPdf": "PDF 생성 중...",
     "imageType": "이미지 형식",
     "includeTool": "플러그인 메시지 포함",
     "includeUser": "사용자 메시지 포함",
+    "loadingPdf": "PDF 로드 중...",
+    "noPdfData": "PDF 데이터가 없습니다",
+    "pdf": "PDF",
+    "pdfErrorDescription": "PDF 생성 중 오류가 발생했습니다. 다시 시도해 주세요.",
+    "pdfGenerationError": "PDF 생성 실패",
+    "pdfReady": "PDF가 준비되었습니다",
+    "regeneratePdf": "PDF 다시 생성",
     "screenshot": "스크린샷",
     "settings": "내보내기 설정",
     "text": "텍스트",
+    "widthMode": {
+      "label": "너비 모드",
+      "narrow": "좁은 화면 모드",
+      "wide": "넓은 화면 모드"
+    },
     "withBackground": "배경 이미지 포함",
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",
@@ -228,6 +354,12 @@
     "action": "음성 입력",
     "loading": "인식 중...",
     "prettifying": "정제 중..."
+  },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "모든 작업이 완료되었습니다",
+      "title": "작업 완료"
+    }
   },
   "thread": {
     "divider": "하위 주제",
@@ -242,6 +374,7 @@
     "chats": "채팅 메시지",
     "historySummary": "역사 요약",
     "rest": "남은 사용량",
+    "supervisor": "그룹 주최자",
     "systemRole": "시스템 역할",
     "title": "컨텍스트 세부 정보",
     "tools": "도구 설정",
@@ -252,6 +385,29 @@
     "overload": "한도 초과",
     "remained": "남음",
     "used": "사용됨"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "승인",
+      "approveAndRemember": "승인 및 기억하기",
+      "approveOnce": "이번만 승인",
+      "mode": {
+        "allowList": "허용 목록",
+        "allowListDesc": "승인된 도구만 자동 실행",
+        "autoRun": "자동 승인",
+        "autoRunDesc": "모든 도구 실행 자동 승인",
+        "manual": "수동",
+        "manualDesc": "매번 호출 시 수동 승인 필요"
+      },
+      "reject": "거부",
+      "rejectAndContinue": "거부 후 다시 실행",
+      "rejectOnly": "거부",
+      "rejectReasonPlaceholder": "거부 사유를 입력하면 에이전트가 이해하고 이후 행동을 최적화하는 데 도움이 됩니다",
+      "rejectTitle": "이번 도구 호출 거부",
+      "rejectedWithReason": "이번 도구 호출이 다음 사유로 거부됨: {{reason}}",
+      "toolAbort": "이번 도구 호출이 사용자에 의해 취소되었습니다",
+      "toolRejected": "이번 도구 호출이 거부되었습니다"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "새 주제를 열까요?",
@@ -267,6 +423,7 @@
     "action": "음성 읽기",
     "clear": "음성 삭제"
   },
+  "untitledAgent": "이름 없는 에이전트",
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
     "action": {
@@ -280,6 +437,7 @@
       "actionFiletip": "파일 업로드",
       "actionTooltip": "업로드",
       "disabled": "현재 모델은 시각 인식 및 파일 분석을 지원하지 않습니다. 모델을 변경한 후 사용하세요.",
+      "fileNotSupported": "브라우저 모드에서는 파일 업로드를 지원하지 않으며, 이미지 업로드만 가능합니다",
       "visionNotSupported": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경한 후 사용해 주세요"
     },
     "preview": {
@@ -288,7 +446,11 @@
         "pending": "업로드 준비 중...",
         "processing": "파일 처리 중..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "비디오 파일 크기는 20MB를 초과할 수 없습니다. 현재 파일 크기: {{actualSize}}"
     }
   },
+  "you": "당신",
   "zenMode": "집중 모드"
 }

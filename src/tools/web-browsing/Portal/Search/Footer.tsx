@@ -4,15 +4,17 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors, operationSelectors } from '@/store/chat/selectors';
 
 const Footer = () => {
-  const [messageId, isAIGenerating, triggerAIMessage, saveSearchResult] = useChatStore((s) => [
-    chatPortalSelectors.toolMessageId(s),
-    chatSelectors.isAIGenerating(s),
-    s.triggerAIMessage,
-    s.saveSearchResult,
-  ]);
+  const [messageId, isAgentRuntimeRunning, triggerAIMessage, saveSearchResult] = useChatStore(
+    (s) => [
+      chatPortalSelectors.toolMessageId(s),
+      operationSelectors.isAgentRuntimeRunning(s),
+      s.triggerAIMessage,
+      s.saveSearchResult,
+    ],
+  );
 
   const { t } = useTranslation('tool');
 
@@ -20,7 +22,7 @@ const Footer = () => {
     <Flexbox gap={8} horizontal paddingBlock={12} paddingInline={12}>
       <Button
         icon={LucideNotepadText}
-        loading={isAIGenerating}
+        loading={isAgentRuntimeRunning}
         onClick={() => {
           if (!messageId) return;
 
@@ -31,7 +33,7 @@ const Footer = () => {
       </Button>
       <ActionIcon
         icon={PlusSquareIcon}
-        loading={isAIGenerating}
+        loading={isAgentRuntimeRunning}
         onClick={() => {
           if (!messageId) return;
 

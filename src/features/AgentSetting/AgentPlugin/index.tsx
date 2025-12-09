@@ -4,7 +4,7 @@ import { Avatar, Button, Form, type FormGroupItemType, Tag, Tooltip } from '@lob
 import { Empty, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideTrash2, Store } from 'lucide-react';
-import Link from 'next/link';
+import { Link, useNavigate } from 'react-router-dom';
 import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -29,13 +29,15 @@ const AgentPlugin = memo(() => {
 
   const [showStore, setShowStore] = useState(false);
 
+  const navigate = useNavigate();
+
   const [userEnabledPlugins, toggleAgentPlugin] = useStore((s) => [
     s.config.plugins || [],
     s.toggleAgentPlugin,
   ]);
 
-  const { showDalle } = useServerConfigStore(featureFlagsSelectors);
-  const installedPlugins = useToolStore(toolSelectors.metaList(showDalle), isEqual);
+  const { showMarket } = useServerConfigStore(featureFlagsSelectors);
+  const installedPlugins = useToolStore(toolSelectors.metaList, isEqual);
 
   const { isLoading } = useFetchInstalledPlugins();
 
@@ -112,16 +114,18 @@ const AgentPlugin = memo(() => {
           />
         </Tooltip>
       ) : null}
-      <Tooltip title={t('plugin.store')}>
-        <Button
-          icon={Store}
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowStore(true);
-          }}
-          size={'small'}
-        />
-      </Tooltip>
+      {showMarket ? (
+        <Tooltip title={t('plugin.store')}>
+          <Button
+            icon={Store}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowStore(true);
+            }}
+            size={'small'}
+          />
+        </Tooltip>
+      ) : null}
     </Space.Compact>
   );
 
@@ -132,11 +136,13 @@ const AgentPlugin = memo(() => {
           <Trans i18nKey={'plugin.empty'} ns={'setting'}>
             暂无安装插件，
             <Link
-              href={'/'}
               onClick={(e) => {
+                e.stopPropagation();
                 e.preventDefault();
                 setShowStore(true);
+                navigate('/discover/mcp');
               }}
+              to={'/discover/mcp'}
             >
               前往插件市场
             </Link>
@@ -149,7 +155,13 @@ const AgentPlugin = memo(() => {
   );
 
   const plugin: FormGroupItemType = {
-    children: isLoading ? loadingSkeleton : isEmpty ? empty : [...deprecatedList, ...list],
+    children: isLoading
+      ? loadingSkeleton
+      : isEmpty
+        ? showMarket
+          ? empty
+          : []
+        : [...deprecatedList, ...list],
     extra,
     title: t('settingPlugin.title'),
   };

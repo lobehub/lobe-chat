@@ -1,4 +1,5 @@
 import { DataSyncConfig } from '@lobechat/electron-client-ipc';
+import retry from 'async-retry';
 import { safeStorage } from 'electron';
 import querystring from 'node:querystring';
 import { URL } from 'node:url';
@@ -6,7 +7,29 @@ import { URL } from 'node:url';
 import { OFFICIAL_CLOUD_SERVER } from '@/const/env';
 import { createLogger } from '@/utils/logger';
 
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
+
+/**
+ * Non-retryable OIDC error codes
+ * These errors indicate the refresh token is invalid and retry won't help
+ */
+const NON_RETRYABLE_OIDC_ERRORS = [
+  'invalid_grant', // refresh token is invalid, expired, or revoked
+  'invalid_client', // client configuration error
+  'unauthorized_client', // client not authorized
+  'access_denied', // user denied access
+  'invalid_scope', // requested scope is invalid
+];
+
+/**
+ * Deterministic failures that will never succeed on retry
+ * These are permanent state issues that require user intervention
+ */
+const DETERMINISTIC_FAILURES = [
+  'no refresh token available', // refresh token is missing from storage
+  'remote server is not active or configured', // config is invalid or disabled
+  'missing tokens in refresh response', // server returned incomplete response
+];
 
 // Create logger
 const logger = createLogger('controllers:RemoteServerConfigCtr');
@@ -16,6 +39,7 @@ const logger = createLogger('controllers:RemoteServerConfigCtr');
  * Used to manage custom remote LobeChat server configuration
  */
 export default class RemoteServerConfigCtr extends ControllerModule {
+  static override readonly groupName = 'remoteServer';
   /**
    * Key used to store encrypted tokens in electron-store.
    */
@@ -24,7 +48,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   /**
    * Get remote server configuration
    */
-  @ipcClientEvent('getRemoteServerConfig')
+  @IpcMethod()
   async getRemoteServerConfig() {
     logger.debug('Getting remote server configuration');
     const { storeManager } = this.app;
@@ -41,7 +65,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   /**
    * Set remote server configuration
    */
-  @ipcClientEvent('setRemoteServerConfig')
+  @IpcMethod()
   async setRemoteServerConfig(config: Partial<DataSyncConfig>) {
     logger.info(
       `Setting remote server storageMode: active=${config.active}, storageMode=${config.storageMode}, url=${config.remoteServerUrl}`,
@@ -58,7 +82,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   /**
    * Clear remote server configuration
    */
-  @ipcClientEvent('clearRemoteServerConfig')
+  @IpcMethod()
   async clearRemoteServerConfig() {
     logger.info('Clearing remote server configuration');
     const { storeManager } = this.app;
@@ -246,9 +270,34 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   }
 
   /**
-   * 刷新访问令牌
-   * 使用存储的刷新令牌获取新的访问令牌
+   * Check if an error is non-retryable
+   * Includes OIDC errors (e.g., invalid_grant) and deterministic failures
+   * (e.g., missing refresh token, invalid config)
+   * @param error Error message to check
+   * @returns true if the error should not be retried
+   */
+  isNonRetryableError(error?: string): boolean {
+    if (!error) return false;
+    const lowerError = error.toLowerCase();
+
+    // Check OIDC error codes
+    if (NON_RETRYABLE_OIDC_ERRORS.some((code) => lowerError.includes(code))) {
+      return true;
+    }
+
+    // Check deterministic failures that require user intervention
+    if (DETERMINISTIC_FAILURES.some((msg) => lowerError.includes(msg))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Refresh access token with retry mechanism
+   * Use stored refresh token to obtain a new access token
    * Handles concurrent requests by returning the existing refresh promise if one is in progress.
+   * Retries up to 3 times with exponential backoff for transient errors.
    */
   async refreshAccessToken(): Promise<{ error?: string; success: boolean }> {
     // If a refresh is already in progress, return the existing promise
@@ -257,12 +306,60 @@ export default class RemoteServerConfigCtr extends ControllerModule {
       return this.refreshPromise;
     }
 
-    // Start a new refresh operation
-    logger.info('Initiating new token refresh operation.');
-    this.refreshPromise = this.performTokenRefresh();
+    // Start a new refresh operation with retry
+    logger.info('Initiating new token refresh operation with retry.');
+    this.refreshPromise = this.performTokenRefreshWithRetry();
 
     // Return the promise so callers can wait
     return this.refreshPromise;
+  }
+
+  /**
+   * Performs token refresh with retry mechanism
+   * Uses exponential backoff: 1s, 2s, 4s
+   */
+  private async performTokenRefreshWithRetry(): Promise<{ error?: string; success: boolean }> {
+    try {
+      return await retry(
+        async (bail, attemptNumber) => {
+          logger.debug(`Token refresh attempt ${attemptNumber}/3`);
+
+          const result = await this.performTokenRefresh();
+
+          if (result.success) {
+            return result;
+          }
+
+          // Check if error is non-retryable
+          if (this.isNonRetryableError(result.error)) {
+            logger.warn(`Non-retryable error encountered: ${result.error}`);
+            // Use bail to stop retrying immediately
+            bail(new Error(result.error));
+            return result; // This won't be reached, but TypeScript needs it
+          }
+
+          // Throw error to trigger retry for transient errors
+          throw new Error(result.error);
+        },
+        {
+          factor: 2, // Exponential backoff factor
+          maxTimeout: 4000, // Max wait time between retries: 4s
+          minTimeout: 1000, // Min wait time between retries: 1s
+          onRetry: (err: Error, attempt: number) => {
+            logger.info(`Token refresh retry ${attempt}/3: ${err.message}`);
+          },
+          retries: 3, // Total retry attempts
+        },
+      );
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Token refresh failed after all retries:', errorMessage);
+      return { error: errorMessage, success: false };
+    } finally {
+      // Ensure the promise reference is cleared once the operation completes
+      logger.debug('Clearing the refresh promise reference.');
+      this.refreshPromise = null;
+    }
   }
 
   /**
@@ -271,27 +368,27 @@ export default class RemoteServerConfigCtr extends ControllerModule {
    */
   private async performTokenRefresh(): Promise<{ error?: string; success: boolean }> {
     try {
-      // 获取配置信息
+      // Get configuration information
       const config = await this.getRemoteServerConfig();
 
       if (!config.remoteServerUrl || !config.active) {
         logger.warn('Remote server not active or configured, skipping refresh.');
-        return { error: '远程服务器未激活或未配置', success: false };
+        return { error: 'Remote server is not active or configured', success: false };
       }
 
-      // 获取刷新令牌
+      // Get refresh token
       const refreshToken = await this.getRefreshToken();
       if (!refreshToken) {
         logger.error('No refresh token available for refresh operation.');
-        return { error: '没有可用的刷新令牌', success: false };
+        return { error: 'No refresh token available', success: false };
       }
 
-      // 构造刷新请求
+      // Construct refresh request
       const remoteUrl = await this.getRemoteServerUrl(config);
 
       const tokenUrl = new URL('/oidc/token', remoteUrl);
 
-      // 构造请求体
+      // Construct request body
       const body = querystring.stringify({
         client_id: 'lobehub-desktop',
         grant_type: 'refresh_token',
@@ -300,7 +397,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
 
       logger.debug(`Sending token refresh request to ${tokenUrl.toString()}`);
 
-      // 发送请求
+      // Send request
       const response = await fetch(tokenUrl.toString(), {
         body,
         headers: {
@@ -310,25 +407,25 @@ export default class RemoteServerConfigCtr extends ControllerModule {
       });
 
       if (!response.ok) {
-        // 尝试解析错误响应
+        // Try to parse error response
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage = `刷新令牌失败: ${response.status} ${response.statusText} ${
+        const errorMessage = `Token refresh failed: ${response.status} ${response.statusText} ${
           errorData.error_description || errorData.error || ''
         }`.trim();
         logger.error(errorMessage, errorData);
         return { error: errorMessage, success: false };
       }
 
-      // 解析响应
+      // Parse response
       const data = await response.json();
 
-      // 检查响应中是否包含必要令牌
+      // Check if response contains necessary tokens
       if (!data.access_token || !data.refresh_token) {
         logger.error('Refresh response missing access_token or refresh_token', data);
-        return { error: '刷新响应中缺少令牌', success: false };
+        return { error: 'Missing tokens in refresh response', success: false };
       }
 
-      // 保存新令牌
+      // Save new tokens
       logger.info('Token refresh successful, saving new tokens.');
       await this.saveTokens(data.access_token, data.refresh_token, data.expires_in);
 
@@ -336,11 +433,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       logger.error('Exception during token refresh operation:', errorMessage, error);
-      return { error: `刷新令牌时发生异常: ${errorMessage}`, success: false };
-    } finally {
-      // Ensure the promise reference is cleared once the operation completes
-      logger.debug('Clearing the refresh promise reference.');
-      this.refreshPromise = null;
+      return { error: `Exception occurred during token refresh: ${errorMessage}`, success: false };
     }
   }
 

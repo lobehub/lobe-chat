@@ -1,7 +1,7 @@
 import { ChatErrorType } from '@lobechat/types';
 import OpenAI from 'openai';
 
-import { getLLMConfig } from '@/config/llm';
+import { getLLMConfig } from '@/envs/llm';
 
 // create OpenAI instance
 export const createOpenai = (userApiKey: string | null, endpoint?: string | null) => {

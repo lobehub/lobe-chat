@@ -1,5 +1,5 @@
 // Define supported file types - consider using an enum or const assertion
-export type SupportedFileType = 'pdf' | 'docx' | 'txt' | 'excel' | 'pptx'; // | 'pptx' | 'latex' | 'epub' | 'code' | 'markdown';
+export type SupportedFileType = 'pdf' | 'doc' | 'docx' | 'txt' | 'excel' | 'pptx'; // | 'pptx' | 'latex' | 'epub' | 'code' | 'markdown';
 
 /**
  * 代表一个完整的已加载文件，包含文件级信息和其所有页面/块。

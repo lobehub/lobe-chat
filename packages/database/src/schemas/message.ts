@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import { GroundingSearch, ModelReasoning, ToolIntervention } from '@lobechat/types';
 import {
   boolean,
   index,
@@ -10,20 +11,67 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
-import { createSelectSchema } from 'drizzle-zod';
-
-import { ModelReasoning } from '@/types/message';
-import { GroundingSearch } from '@/types/search';
+import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '../utils/idGenerator';
-import { timestamps } from './_helpers';
+import { timestamps, varchar255 } from './_helpers';
 import { agents } from './agent';
+import { chatGroups } from './chatGroup';
 import { files } from './file';
 import { chunks, embeddings } from './rag';
 import { sessions } from './session';
 import { threads, topics } from './topic';
 import { users } from './user';
-import { chatGroups } from './chatGroup';
+
+/**
+ * Message groups table for multi-models parallel conversations
+ * Allows multiple AI models to respond to the same user message in parallel
+ */
+// @ts-ignore
+export const messageGroups = pgTable(
+  'message_groups',
+  {
+    id: varchar255('id')
+      .primaryKey()
+      .$defaultFn(() => idGenerator('messageGroups'))
+      .notNull(),
+
+    // Association - only needs topic level
+    topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    // Support nested structure
+    // @ts-ignore
+    parentGroupId: varchar255('parent_group_id').references(() => messageGroups.id, {
+      onDelete: 'cascade',
+    }),
+
+    // Associated user message
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    parentMessageId: text('parent_message_id').references(() => messages.id, {
+      onDelete: 'cascade',
+    }),
+
+    // Metadata
+    title: varchar255('title'),
+    description: text('description'),
+
+    clientId: varchar255('client_id'),
+
+    ...timestamps,
+  },
+  (t) => [
+    uniqueIndex('message_groups_client_id_user_id_unique').on(t.clientId, t.userId),
+    index('message_groups_topic_id_idx').on(t.topicId),
+  ],
+);
+
+export const insertMessageGroupSchema = createInsertSchema(messageGroups);
+
+export type NewMessageGroup = typeof messageGroups.$inferInsert;
+export type MessageGroupItem = typeof messageGroups.$inferSelect;
 
 // @ts-ignore
 export const messages = pgTable(
@@ -33,8 +81,9 @@ export const messages = pgTable(
       .$defaultFn(() => idGenerator('messages'))
       .primaryKey(),
 
-    role: text('role', { enum: ['user', 'system', 'assistant', 'tool'] }).notNull(),
+    role: varchar255('role').notNull(),
     content: text('content'),
+    editorData: jsonb('editor_data'),
     reasoning: jsonb('reasoning').$type<ModelReasoning>(),
     search: jsonb('search').$type<GroundingSearch>(),
     metadata: jsonb('metadata'),
@@ -56,6 +105,9 @@ export const messages = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
+    /**
+     * we might deprecate sessionId in the future
+     */
     sessionId: text('session_id').references(() => sessions.id, { onDelete: 'cascade' }),
     topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }),
     threadId: text('thread_id').references(() => threads.id, { onDelete: 'cascade' }),
@@ -63,23 +115,29 @@ export const messages = pgTable(
     parentId: text('parent_id').references(() => messages.id, { onDelete: 'set null' }),
     quotaId: text('quota_id').references(() => messages.id, { onDelete: 'set null' }),
 
-    // used for group chat
-    agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
+    agentId: text('agent_id').references(() => agents.id, { onDelete: 'cascade' }),
     groupId: text('group_id').references(() => chatGroups.id, { onDelete: 'set null' }),
     // targetId can be an agent ID, "user", or null - no FK constraint
     targetId: text('target_id'),
+
+    // used for multi-models parallel
+    messageGroupId: varchar255('message_group_id').references(() => messageGroups.id, {
+      onDelete: 'cascade',
+    }),
     ...timestamps,
   },
-  (table) => ({
-    createdAtIdx: index('messages_created_at_idx').on(table.createdAt),
-    messageClientIdUnique: uniqueIndex('message_client_id_user_unique').on(
-      table.clientId,
-      table.userId,
-    ),
-    topicIdIdx: index('messages_topic_id_idx').on(table.topicId),
-    parentIdIdx: index('messages_parent_id_idx').on(table.parentId),
-    quotaIdIdx: index('messages_quota_id_idx').on(table.quotaId),
-  }),
+  (table) => [
+    index('messages_created_at_idx').on(table.createdAt),
+    uniqueIndex('message_client_id_user_unique').on(table.clientId, table.userId),
+    index('messages_topic_id_idx').on(table.topicId),
+    index('messages_parent_id_idx').on(table.parentId),
+    index('messages_quota_id_idx').on(table.quotaId),
+
+    index('messages_user_id_idx').on(table.userId),
+    index('messages_session_id_idx').on(table.sessionId),
+    index('messages_thread_id_idx').on(table.threadId),
+    index('messages_agent_id_idx').on(table.agentId),
+  ],
 );
 
 // if the message container a plugin
@@ -91,10 +149,10 @@ export const messagePlugins = pgTable(
       .primaryKey(),
 
     toolCallId: text('tool_call_id'),
-    type: text('type', {
-      enum: ['default', 'markdown', 'standalone', 'builtin'],
-    }).default('default'),
+    type: text('type').default('default'),
 
+    // Human intervention fields
+    intervention: jsonb('intervention').$type<ToolIntervention>(),
     apiName: text('api_name'),
     arguments: text('arguments'),
     identifier: text('identifier'),
@@ -112,9 +170,6 @@ export const messagePlugins = pgTable(
     ),
   }),
 );
-
-export type MessagePluginItem = typeof messagePlugins.$inferSelect;
-export const updateMessagePluginSchema = createSelectSchema(messagePlugins);
 
 export const messageTTS = pgTable(
   'message_tts',

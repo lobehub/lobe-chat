@@ -9,13 +9,15 @@ export default defineConfig({
   test: {
     alias: {
       /* eslint-disable sort-keys-fix/sort-keys-fix */
-      '@/libs/model-runtime': resolve(__dirname, './packages/model-runtime/src'),
       '@/database/_deprecated': resolve(__dirname, './src/database/_deprecated'),
       '@/database': resolve(__dirname, './packages/database/src'),
       '@/utils/client/switchLang': resolve(__dirname, './src/utils/client/switchLang'),
       '@/const/locale': resolve(__dirname, './src/const/locale'),
       // TODO: after refactor the errorResponse, we can remove it
       '@/utils/errorResponse': resolve(__dirname, './src/utils/errorResponse'),
+      '@/utils/unzipFile': resolve(__dirname, './src/utils/unzipFile'),
+      '@/utils/server': resolve(__dirname, './src/utils/server'),
+      '@/utils/electron': resolve(__dirname, './src/utils/electron'),
       '@/utils': resolve(__dirname, './packages/utils/src'),
       '@/types': resolve(__dirname, './packages/types/src'),
       '@/const': resolve(__dirname, './packages/const/src'),
@@ -46,7 +48,9 @@ export default defineConfig({
       '**/dist/**',
       '**/build/**',
       '**/apps/desktop/**',
+      '**/apps/mobile/**',
       '**/packages/**',
+      '**/e2e/**',
     ],
     globals: true,
     server: {

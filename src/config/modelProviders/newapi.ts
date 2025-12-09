@@ -8,8 +8,12 @@ const NewAPI: ModelProviderCard = {
   id: 'newapi',
   name: 'New API',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://your.new-api-provider.com',
+    },
     sdkType: 'router',
     showModelFetcher: true,
+    supportResponsesApi: true,
   },
   url: 'https://github.com/Calcium-Ion/new-api',
 };

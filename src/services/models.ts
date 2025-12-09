@@ -1,24 +1,17 @@
-import { isDeprecatedEdition } from '@/const/version';
+import { getMessageError } from '@lobechat/fetch-sse';
+
 import { createHeaderWithAuth } from '@/services/_auth';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
-import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/selectors';
 import { ChatModelCard } from '@/types/llm';
-import { getMessageError } from '@/utils/fetch';
 
 import { API_ENDPOINTS } from './_url';
-import { initializeWithClientStore } from './chat';
+import { initializeWithClientStore } from './chat/clientModelRuntime';
+import { resolveRuntimeProvider } from './chat/helper';
 
-const isEnableFetchOnClient = (provider: string) => {
-  // TODO: remove this condition in V2.0
-  if (isDeprecatedEdition) {
-    return modelConfigSelectors.isProviderFetchOnClient(provider)(useUserStore.getState());
-  } else {
-    return aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
-  }
-};
+const isEnableFetchOnClient = (provider: string) =>
+  aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
 
-// 进度信息接口
+// Progress information interface
 export interface ModelProgressInfo {
   completed?: number;
   digest?: string;
@@ -27,31 +20,36 @@ export interface ModelProgressInfo {
   total?: number;
 }
 
-// 进度回调函数类型
+// Progress callback function type
 export type ProgressCallback = (progress: ModelProgressInfo) => void;
 export type ErrorCallback = (error: { message: string }) => void;
 
 export class ModelsService {
-  // 用于中断下载的控制器
+  // Controller for aborting downloads
   private _abortController: AbortController | null = null;
 
-  // 获取模型列表
+  // Get model list
   getModels = async (provider: string): Promise<ChatModelCard[] | undefined> => {
     const headers = await createHeaderWithAuth({
       headers: { 'Content-Type': 'application/json' },
       provider,
     });
+
+    const runtimeProvider = resolveRuntimeProvider(provider);
     try {
       /**
        * Use browser agent runtime
        */
       const enableFetchOnClient = isEnableFetchOnClient(provider);
       if (enableFetchOnClient) {
-        const agentRuntime = await initializeWithClientStore(provider);
+        const agentRuntime = await initializeWithClientStore({
+          provider,
+          runtimeProvider,
+        });
         return agentRuntime.models();
       }
 
-      const res = await fetch(API_ENDPOINTS.models(provider), { headers });
+      const res = await fetch(API_ENDPOINTS.models(runtimeProvider), { headers });
       if (!res.ok) return;
 
       return res.json();
@@ -61,14 +59,14 @@ export class ModelsService {
   };
 
   /**
-   * 下载模型并通过回调函数返回进度信息
+   * Download model and return progress info through callback
    */
   downloadModel = async (
     { model, provider }: { model: string; provider: string },
     { onProgress }: { onError?: ErrorCallback; onProgress?: ProgressCallback } = {},
   ): Promise<void> => {
     try {
-      // 创建一个新的 AbortController
+      // Create a new AbortController
       this._abortController = new AbortController();
       const signal = this._abortController.signal;
 
@@ -77,15 +75,19 @@ export class ModelsService {
         provider,
       });
 
+      const runtimeProvider = resolveRuntimeProvider(provider);
       const enableFetchOnClient = isEnableFetchOnClient(provider);
 
       console.log('enableFetchOnClient：', enableFetchOnClient);
       let res: Response;
       if (enableFetchOnClient) {
-        const agentRuntime = await initializeWithClientStore(provider);
+        const agentRuntime = await initializeWithClientStore({
+          provider,
+          runtimeProvider,
+        });
         res = (await agentRuntime.pullModel({ model }, { signal }))!;
       } else {
-        res = await fetch(API_ENDPOINTS.modelPull(provider), {
+        res = await fetch(API_ENDPOINTS.modelPull(runtimeProvider), {
           body: JSON.stringify({ model }),
           headers,
           method: 'POST',
@@ -97,12 +99,12 @@ export class ModelsService {
         throw await getMessageError(res);
       }
 
-      // 处理响应流
+      // Process response stream
       if (res.body) {
         await this.processModelPullStream(res, { onProgress });
       }
     } catch (error) {
-      // 如果是取消操作，不需要继续抛出错误
+      // If operation is canceled, no need to continue throwing error
       if (error instanceof DOMException && error.name === 'AbortError') {
         return;
       }
@@ -110,14 +112,14 @@ export class ModelsService {
       console.error('download model error:', error);
       throw error;
     } finally {
-      // 清理 AbortController
+      // Clean up AbortController
       this._abortController = null;
     }
   };
 
-  // 中断模型下载
+  // Abort model download
   abortPull = () => {
-    // 使用 AbortController 中断下载
+    // Use AbortController to abort download
     if (this._abortController) {
       this._abortController.abort();
       this._abortController = null;
@@ -125,28 +127,28 @@ export class ModelsService {
   };
 
   /**
-   * 处理模型下载流，解析进度信息并通过回调函数返回
-   * @param response 响应对象
-   * @param onProgress 进度回调函数
+   * Process model download stream, parse progress info and return via callback
+   * @param response Response object
+   * @param onProgress Progress callback function
    * @returns Promise<void>
    */
   private processModelPullStream = async (
     response: Response,
     { onProgress, onError }: { onError?: ErrorCallback; onProgress?: ProgressCallback },
   ): Promise<void> => {
-    // 处理响应流
+    // Process response stream
     const reader = response.body?.getReader();
     if (!reader) return;
 
-    // 读取和处理流数据
+    // Read and process stream data
     // eslint-disable-next-line no-constant-condition
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
 
-      // 解析进度数据
+      // Parse progress data
       const progressText = new TextDecoder().decode(value);
-      // 一行可能包含多个进度更新
+      // One line may contain multiple progress updates
       const progressUpdates = progressText.trim().split('\n');
 
       for (const update of progressUpdates) {
@@ -159,7 +161,7 @@ export class ModelsService {
         }
 
         if (progress.status === 'canceled') {
-          console.log('progress：', progress);
+          console.log('progress:', progress);
           // const abortError = new Error('abort');
           // abortError.name = 'AbortError';
           //
@@ -171,7 +173,7 @@ export class ModelsService {
           throw new Error(progress.error);
         }
 
-        // 调用进度回调
+        // Call progress callback
         if (progress.completed !== undefined || progress.status) {
           onProgress?.(progress);
         }

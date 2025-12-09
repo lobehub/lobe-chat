@@ -1,7 +1,7 @@
 import { ProgressInfo, UpdateInfo, useWatchBroadcast } from '@lobechat/electron-client-ipc';
 import { Button } from '@lobehub/ui';
 import { App, Modal, Progress, Spin } from 'antd';
-import React, { memo, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { autoUpdateService } from '@/services/electron/autoUpdate';
@@ -12,6 +12,8 @@ export const UpdateModal = memo(() => {
 
   const [isChecking, setIsChecking] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  // 仅用于手动触发的更新流程（用户从设置页点“检查更新”）
+  const manualFlowRef = useRef(false);
   const [updateAvailableInfo, setUpdateAvailableInfo] = useState<UpdateInfo | null>(null);
   const [downloadedInfo, setDownloadedInfo] = useState<UpdateInfo | null>(null);
   const [progress, setProgress] = useState<ProgressInfo | null>(null);
@@ -21,6 +23,8 @@ export const UpdateModal = memo(() => {
 
   useWatchBroadcast('manualUpdateCheckStart', () => {
     console.log('[Manual Update] Check Start');
+    manualFlowRef.current = true;
+
     setIsChecking(true);
     setUpdateAvailableInfo(null);
     setDownloadedInfo(null);
@@ -43,6 +47,8 @@ export const UpdateModal = memo(() => {
     // Only react if it's part of a manual check flow
     // No need to check isChecking here as this event is specific
     setIsChecking(false);
+    manualFlowRef.current = false;
+
     setLatestVersionInfo(info); // Set info for the modal
     // notification.success({
     //   description: t('updater.isLatestVersionDesc', { version: info.version }),
@@ -61,12 +67,15 @@ export const UpdateModal = memo(() => {
       setLatestVersionInfo(null); // Ensure other modals are closed on error
       setUpdateAvailableInfo(null);
       setDownloadedInfo(null);
+      manualFlowRef.current = false;
     }
   });
 
   useWatchBroadcast('updateDownloadStart', () => {
     console.log('[Manual Update] Download Start');
     // This event implies a manual download was triggered (likely from the 'updateAvailable' modal)
+    manualFlowRef.current = true;
+
     setIsDownloading(true);
     setUpdateAvailableInfo(null); // Hide the 'download' button modal
     setProgress({ bytesPerSecond: 0, percent: 0, total: 0, transferred: 0 }); // Reset progress
@@ -83,13 +92,15 @@ export const UpdateModal = memo(() => {
 
   useWatchBroadcast('updateDownloaded', (info: UpdateInfo) => {
     console.log('[Manual Update] Downloaded:', info);
-    // This event implies a download finished, likely the one we started manually
-    setIsChecking(false);
-    setIsDownloading(false);
-    setDownloadedInfo(info);
-    setProgress(null); // Clear progress
-    setLatestVersionInfo(null); // Ensure other modals are closed
-    setUpdateAvailableInfo(null);
+    // 仅在手动流程里展示阻塞式的“更新就绪”弹窗
+    if (manualFlowRef.current) {
+      setIsChecking(false);
+      setIsDownloading(false);
+      setDownloadedInfo(info);
+      setProgress(null); // Clear progress
+      setLatestVersionInfo(null); // Ensure other modals are closed
+      setUpdateAvailableInfo(null);
+    }
   });
 
   // --- Render Logic ---
@@ -103,12 +114,14 @@ export const UpdateModal = memo(() => {
   const handleInstallNow = () => {
     setDownloadedInfo(null); // Close modal immediately
     autoUpdateService.installNow();
+    manualFlowRef.current = false;
   };
 
   const handleInstallLater = () => {
     // No need to set state here, 'updateWillInstallLater' handles it
     autoUpdateService.installLater();
     setDownloadedInfo(null); // Close the modal after clicking
+    manualFlowRef.current = false;
   };
 
   const closeAvailableModal = () => setUpdateAvailableInfo(null);
@@ -121,6 +134,7 @@ export const UpdateModal = memo(() => {
     setDownloadedInfo(null);
     setProgress(null);
     setLatestVersionInfo(null);
+    manualFlowRef.current = false;
   };
 
   const renderCheckingModal = () => (

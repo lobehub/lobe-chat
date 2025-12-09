@@ -1,3 +1,5 @@
+/* eslint-disable typescript-sort-keys/interface */
+import { ModelUsage } from '@lobechat/types';
 import { RuntimeImageGenParams } from 'model-bank';
 
 export type CreateImagePayload = {
@@ -5,21 +7,38 @@ export type CreateImagePayload = {
   params: RuntimeImageGenParams;
 };
 
+/**
+ * Why return width and height?
+ * 1. The configured width may differ from the actual generated width, which needs to be stored in the generation asset
+ * 2. Image dimensions are needed to determine if thumbnail generation is required. Most providers return dimensions, potentially saving computation
+ */
 export type CreateImageResponse = {
   /**
-   * 图片的高度
+   * Usually the provider's CDN URL, which often expires after some time and needs to be re-requested
+   */
+  imageUrl: string;
+
+  /**
+   * Image width
+   */
+  width?: number;
+
+  /**
+   * Image height
    */
   height?: number;
 
   /**
-   * 一般是 provider 家的 cdn 地址，多数一段时间后就会失效，需要重新请求
+   * For models like GPT-image, Nano Banana which are LLMs with image output modality
    */
-  imageUrl: string;
-  // 为什么返回宽高？
-  // 1. 你给的配置宽度和真正最后生成的宽度可能并不一致，这个需要存储到 generation 的 asset 中
-  // 2. 我需要图片宽高用于计算是否需要生成缩略图，很多 provider 一般都会返回宽高，这样也许我可以省去一些计算
-  /**
-   * 图片的宽度
-   */
-  width?: number;
+  modelUsage?: ModelUsage;
 };
+
+// 新增：支持认证图片下载的运行时接口
+export interface AuthenticatedImageRuntime {
+  /**
+   * Get authentication headers for image download
+   * Used when the image server requires authentication
+   */
+  getAuthHeaders(): Record<string, string> | undefined;
+}

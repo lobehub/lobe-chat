@@ -1,8 +1,8 @@
+import { LobeChatDatabase } from '@lobechat/database';
 import { describe, expect, it, vi } from 'vitest';
 
 import { MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
-import { LobeChatDatabase } from '@/database/type';
 import { FileService } from '@/server/services/file';
 
 import { AiChatService } from '.';
@@ -32,7 +32,7 @@ describe('AiChatService', () => {
       { includeTopic: true, sessionId: 's1' },
       expect.objectContaining({ postProcessUrl: expect.any(Function) }),
     );
-    expect(mockQueryTopics).toHaveBeenCalledWith({ sessionId: 's1' });
+    expect(mockQueryTopics).toHaveBeenCalledWith({ containerId: 's1' });
     expect(res.messages).toEqual([{ id: 'm1' }]);
     expect(res.topics).toEqual([{ id: 't1' }]);
   });

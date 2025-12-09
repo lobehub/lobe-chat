@@ -1,7 +1,7 @@
 import { Icon } from '@lobehub/ui';
 import { Empty } from 'antd';
 import { ServerCrash } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
@@ -25,6 +25,7 @@ export const List = memo(() => {
     searchLoading,
     useFetchPluginList,
     loadMorePlugins,
+    resetPluginList,
   ] = useToolStore((s) => [
     s.isPluginListInit,
     s.activePluginIdentifier,
@@ -35,7 +36,13 @@ export const List = memo(() => {
     s.pluginSearchLoading,
     s.useFetchPluginList,
     s.loadMorePlugins,
+    s.resetPluginList,
   ]);
+
+  // 当 keywords 变化时重置列表
+  useEffect(() => {
+    resetPluginList(keywords);
+  }, [keywords, resetPluginList]);
 
   const { isLoading, error } = useFetchPluginList({
     page: currentPage,

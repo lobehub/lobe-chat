@@ -19,10 +19,9 @@ const inVercel = process.env.VERCEL === '1';
 
 interface RootLayoutProps extends DynamicLayoutProps {
   children: ReactNode;
-  modal: ReactNode;
 }
 
-const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
+const RootLayout = async ({ children, params }: RootLayoutProps) => {
   const { variants } = await params;
 
   const { locale, isMobile, theme, primaryColor, neutralColor } =
@@ -50,7 +49,6 @@ const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
           >
             <AuthProvider>
               {children}
-              {!isMobile && modal}
             </AuthProvider>
             <PWAInstall />
           </GlobalProvider>
@@ -73,6 +71,7 @@ export const generateViewport = async (props: DynamicLayoutProps): ResolvingView
 
   return {
     ...dynamicScale,
+    colorScheme: null,
     initialScale: 1,
     minimumScale: 1,
     themeColor: [

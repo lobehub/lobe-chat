@@ -47,7 +47,7 @@ const getEnabledModelById = (id: string, provider: string) => (s: AIProviderStor
 const isModelSupportToolUse = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
 
-  return model?.abilities?.functionCall;
+  return model?.abilities?.functionCall || false;
 };
 
 const isModelSupportFiles = (id: string, provider: string) => (s: AIProviderStoreState) => {
@@ -59,7 +59,13 @@ const isModelSupportFiles = (id: string, provider: string) => (s: AIProviderStor
 const isModelSupportVision = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
 
-  return model?.abilities?.vision;
+  return model?.abilities?.vision || false;
+};
+
+const isModelSupportVideo = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.abilities?.video;
 };
 
 const isModelSupportReasoning = (id: string, provider: string) => (s: AIProviderStoreState) => {
@@ -105,6 +111,12 @@ const isModelHasBuiltinSearch = (id: string, provider: string) => (s: AIProvider
   return !!searchImpl;
 };
 
+const isModelBuiltinSearchInternal = (id: string, provider: string) => (s: AIProviderStoreState): boolean => {
+  const searchImpl = modelBuiltinSearchImpl(id, provider)(s);
+
+  return searchImpl === ModelSearchImplement.Internal;
+};
+
 const isModelHasBuiltinSearchConfig =
   (id: string, provider: string) => (s: AIProviderStoreState) => {
     const searchImpl = modelBuiltinSearchImpl(id, provider)(s);
@@ -127,6 +139,7 @@ export const aiModelSelectors = {
   getModelCard,
   hasRemoteModels,
   isEmptyAiProviderModelList,
+  isModelBuiltinSearchInternal,
   isModelEnabled,
   isModelHasBuiltinSearch,
   isModelHasBuiltinSearchConfig,
@@ -136,6 +149,7 @@ export const aiModelSelectors = {
   isModelSupportFiles,
   isModelSupportReasoning,
   isModelSupportToolUse,
+  isModelSupportVideo,
   isModelSupportVision,
   modelBuiltinSearchImpl,
   modelContextWindowTokens,

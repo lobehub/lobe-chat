@@ -2,9 +2,10 @@
   "ModelSwitch": {
     "title": "النموذج"
   },
+  "active": "نشط",
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
-  "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
-  "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، دعنا نبدأ المحادثة!",
+  "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
+  "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
   "agents": "مساعد",
   "artifact": {
     "generating": "جاري الإنشاء",
@@ -13,17 +14,29 @@
     "thought": "عملية التفكير",
     "unknownTitle": "عمل غير مسمى"
   },
+  "availableAgents": "المساعدون المتاحون",
   "backToBottom": "العودة إلى الأسفل",
   "chatList": {
+    "expandMessage": "عرض الرسائل",
     "longMessageDetail": "عرض التفاصيل"
   },
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
+  "confirmRemoveChatGroupItemAlert": "سيتم حذف فريق الوكيل هذا، ولن يتأثر الأعضاء الآخرون. يرجى تأكيد الإجراء.",
+  "confirmRemoveGroupItemAlert": "سيتم حذف هذه المجموعة قريبًا. بعد الحذف، سيُنتقل المساعدون في هذه المجموعة إلى القائمة الافتراضية. يرجى تأكيد إجراء الحذف.",
+  "confirmRemoveGroupSuccess": "تم حذف فريق الوكلاء بنجاح",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveSessionSuccess": "تم حذف المساعد بنجاح",
   "defaultAgent": "المساعد الافتراضي",
+  "defaultGroupChat": "فريق الوكلاء",
   "defaultList": "القائمة الافتراضية",
   "defaultSession": "المساعد الافتراضي",
+  "dm": {
+    "placeholder": "ستظهر رسائلك الخاصة مع {{agentTitle}} هنا.",
+    "tooltip": "أرسل رسالة خاصة",
+    "visibleTo": "مرئي فقط لـ {{target}}",
+    "you": "أنت"
+  },
   "duplicateSession": {
     "loading": "جاري النسخ...",
     "success": "تم النسخ بنجاح",
@@ -40,6 +53,12 @@
       "desc": "استنادًا إلى آلية تفكير كلود (Claude Thinking) المحدودة (<1>اعرف المزيد</1>)، عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
       "title": "تفعيل التفكير العميق"
     },
+    "imageAspectRatio": {
+      "title": "نسبة العرض إلى الارتفاع للصورة"
+    },
+    "imageResolution": {
+      "title": "دقة الصورة"
+    },
     "reasoningBudgetToken": {
       "title": "استهلاك توكن التفكير"
     },
@@ -52,17 +71,65 @@
     "thinking": {
       "title": "مفتاح التفكير العميق"
     },
+    "thinkingLevel": {
+      "title": "مستوى التفكير"
+    },
     "title": "وظائف توسيع النموذج",
     "urlContext": {
       "desc": "عند التفعيل، سيتم تحليل روابط الويب تلقائيًا للحصول على محتوى السياق الفعلي للصفحة",
       "title": "استخراج محتوى رابط الويب"
     }
   },
+  "group": {
+    "desc": "التعاون مع عدة مساعدين للذكاء الاصطناعي في مساحة محادثة مشتركة.",
+    "memberTooltip": "هناك {{count}} عضوًا في المجموعة",
+    "orchestratorThinking": "المُنسق يفكر...",
+    "removeMember": "إزالة عضو",
+    "title": "مجموعة"
+  },
+  "groupDescription": "وصف الفريق",
+  "groupSidebar": {
+    "members": {
+      "addMember": "إضافة عضو",
+      "memberSettings": "إعدادات العضو",
+      "orchestrator": "المُنسق",
+      "orchestratorThinking": "المُنسق يفكر...",
+      "removeMember": "إزالة عضو",
+      "stopOrchestrator": "إيقاف التفكير",
+      "triggerOrchestrator": "بدء المحادثة الجماعية"
+    },
+    "tabs": {
+      "host": "المضيف",
+      "members": "الأعضاء",
+      "role": "الإعداد"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "اختر المساعدين الحاليين...",
+    "createGroup": "إنشاء فريق",
+    "existingMembers": "الوكلاء الحاليون",
+    "groupMembers": "سيتم أيضًا إضافة هؤلاء المساعدين إلى قائمتك",
+    "host": {
+      "description": "تمكين الفريق من العمل بشكل مستقل",
+      "title": "تفعيل المضيف",
+      "tooltip": "إذا قمت بتعطيل المضيف، فستحتاج إلى الإشارة إلى الأعضاء يدويًا باستخدام @ لكي يتمكنوا من الرد"
+    },
+    "memberCount": "{{count}} عضو",
+    "noMatchingTemplates": "لا توجد قوالب مطابقة",
+    "noSelectedTemplates": "لم يتم اختيار أي قالب",
+    "noTemplateMembers": "لا يوجد أعضاء في القالب",
+    "noTemplates": "لا توجد قوالب متاحة",
+    "searchTemplates": "ابحث في القوالب...",
+    "title": "إنشاء فريق وكلاء",
+    "useTemplate": "استخدام القالب"
+  },
+  "hideForYou": "تم إخفاء محتوى الرسائل الخاصة، يرجى تفعيل خيار 【عرض محتوى الرسائل الخاصة】 في الإعدادات للعرض",
   "history": {
     "title": "سيتذكر المساعد آخر {{count}} رسالة فقط"
   },
   "historyRange": "نطاق التاريخ",
   "historySummary": "ملخص الرسائل التاريخية",
+  "inactive": "غير نشط",
   "inbox": {
     "desc": "قم بتشغيل مجموعة الدماغ وأشعل شرارة التفكير. مساعدك الذكي، هنا حيث يمكنك التواصل بكل شيء",
     "title": "دردشة عشوائية"
@@ -77,11 +144,13 @@
     "sendWithCmdEnter": "اضغط <key/> للإرسال",
     "sendWithEnter": "اضغط <key/> للإرسال",
     "stop": "توقف",
-    "warp": "تغيير السطر"
+    "warp": "تغيير السطر",
+    "warpWithKey": "اضغط على مفتاح <key/> للانتقال إلى السطر"
   },
   "intentUnderstanding": {
     "title": "جارٍ فهم وتحليل نواياك..."
   },
+  "inviteMembers": "دعوة الأعضاء",
   "knowledgeBase": {
     "all": "جميع المحتويات",
     "allFiles": "جميع الملفات",
@@ -100,12 +169,32 @@
     "uploadGuide": "يمكنك عرض الملفات التي تم تحميلها في «قاعدة المعرفة»",
     "viewMore": "عرض المزيد"
   },
+  "memberSelection": {
+    "addMember": "إضافة عضو",
+    "allMembers": "جميع الأعضاء",
+    "createGroup": "إنشاء فريق وكيل",
+    "noAvailableAgents": "لا يوجد وكلاء متاحون للدعوة",
+    "noSelectedAgents": "لم يتم اختيار أي وكيل بعد",
+    "searchAgents": "ابحث عن وكيل...",
+    "setInitialMembers": "اختيار أعضاء الفريق"
+  },
+  "members": "الأعضاء",
+  "mention": {
+    "title": "الإشارة إلى الأعضاء"
+  },
   "messageAction": {
+    "collapse": "إخفاء الرسائل",
+    "continueGeneration": "متابعة التوليد",
     "delAndRegenerate": "حذف وإعادة الإنشاء",
     "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
+    "expand": "عرض الرسائل",
     "regenerate": "إعادة الإنشاء"
   },
   "messages": {
+    "dm": {
+      "sentTo": "مرئي فقط لـ {{name}}",
+      "title": "الرسائل الخاصة"
+    },
     "modelCard": {
       "credit": "نقاط",
       "creditPricing": "التسعير",
@@ -149,7 +238,22 @@
       "total": "الإجمالي المستهلك"
     }
   },
+  "minimap": {
+    "jumpToMessage": "الانتقال إلى الرسالة رقم {{index}}",
+    "nextMessage": "الرسالة التالية",
+    "previousMessage": "الرسالة السابقة",
+    "senderAssistant": "الوكيل",
+    "senderUser": "أنت"
+  },
   "newAgent": "مساعد جديد",
+  "newGroupChat": "إنشاء فريق وكلاء جديد",
+  "noAgentsYet": "لا يوجد أعضاء في هذا الفريق بعد. انقر على زر + لدعوة مساعد.",
+  "noAvailableAgents": "لا يوجد أعضاء متاحون للدعوة",
+  "noMatchingAgents": "لا يوجد أعضاء مطابقون",
+  "noMembersYet": "لا يوجد أعضاء في هذه المجموعة بعد. انقر على زر + لدعوة المساعدين.",
+  "noSelectedAgents": "لم يتم اختيار أي أعضاء بعد",
+  "openInNewWindow": "افتح الصفحة في نافذة جديدة",
+  "owner": "مالك المجموعة",
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
   "rag": {
@@ -190,12 +294,16 @@
     "title": "بحث عبر الإنترنت"
   },
   "searchAgentPlaceholder": "مساعد البحث...",
+  "searchAgents": "مساعد البحث...",
+  "selectedAgents": "المساعدون المختارون",
   "sendPlaceholder": "أدخل محتوى الدردشة...",
   "sessionGroup": {
     "config": "إدارة المجموعات",
     "confirmRemoveGroupAlert": "سيتم حذف هذه المجموعة قريبًا، وبعد الحذف، سيتم نقل مساعدي هذه المجموعة إلى القائمة الافتراضية، يرجى تأكيد إجراءك",
     "createAgentSuccess": "تم إنشاء المساعد بنجاح",
     "createGroup": "إضافة مجموعة جديدة",
+    "createGroupFailed": "فشل إنشاء المحادثة الجماعية",
+    "createGroupSuccess": "تم إنشاء المحادثة الجماعية بنجاح",
     "createSuccess": "تم الإنشاء بنجاح",
     "creatingAgent": "جاري إنشاء المساعد...",
     "inputPlaceholder": "الرجاء إدخال اسم المجموعة...",
@@ -210,14 +318,32 @@
   "shareModal": {
     "copy": "نسخ",
     "download": "تحميل اللقطة",
+    "downloadError": "فشل التنزيل",
     "downloadFile": "تحميل الملف",
+    "downloadPdf": "تنزيل PDF",
+    "downloadSuccess": "تم التنزيل بنجاح",
+    "exportPdf": "تصدير إلى PDF",
     "exportTitle": "العنوان الافتراضي",
+    "generatePdf": "إنشاء ملف PDF",
+    "generatingPdf": "جارٍ إنشاء PDF...",
     "imageType": "نوع الصورة",
     "includeTool": "تضمين رسالة الأداة",
     "includeUser": "تضمين رسالة المستخدم",
+    "loadingPdf": "جارٍ تحميل ملف PDF...",
+    "noPdfData": "لا توجد بيانات PDF",
+    "pdf": "PDF",
+    "pdfErrorDescription": "حدث خطأ أثناء إنشاء PDF، يرجى المحاولة مرة أخرى",
+    "pdfGenerationError": "فشل إنشاء PDF",
+    "pdfReady": "تم تجهيز PDF",
+    "regeneratePdf": "إعادة إنشاء ملف PDF",
     "screenshot": "لقطة شاشة",
     "settings": "إعدادات التصدير",
     "text": "نص",
+    "widthMode": {
+      "label": "وضع العرض",
+      "narrow": "وضع الشاشة الضيقة",
+      "wide": "وضع الشاشة الواسعة"
+    },
     "withBackground": "تضمين صورة الخلفية",
     "withFooter": "تضمين تذييل",
     "withPluginInfo": "تضمين معلومات البرنامج المساعد",
@@ -228,6 +354,12 @@
     "action": "إدخال صوتي",
     "loading": "جارٍ التعرف...",
     "prettifying": "جارٍ التجميل..."
+  },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "تم إنجاز جميع المهام",
+      "title": "المهام المنجزة"
+    }
   },
   "thread": {
     "divider": "موضوع فرعي",
@@ -242,6 +374,7 @@
     "chats": "رسائل المحادثة",
     "historySummary": "ملخص التاريخ",
     "rest": "المتبقي",
+    "supervisor": "مُنسق المجموعة",
     "systemRole": "تعيين الدور",
     "title": "تفاصيل الرمز",
     "tools": "تعيين الإضافات",
@@ -252,6 +385,29 @@
     "overload": "تجاوز الحد",
     "remained": "متبقي",
     "used": "مستخدم"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "الموافقة",
+      "approveAndRemember": "الموافقة والتذكر",
+      "approveOnce": "الموافقة لمرة واحدة فقط",
+      "mode": {
+        "allowList": "قائمة السماح",
+        "allowListDesc": "تنفيذ الأدوات المعتمدة فقط تلقائيًا",
+        "autoRun": "الموافقة التلقائية",
+        "autoRunDesc": "الموافقة تلقائيًا على تنفيذ جميع الأدوات",
+        "manual": "يدوي",
+        "manualDesc": "يتطلب الموافقة اليدوية في كل مرة يتم فيها الاستدعاء"
+      },
+      "reject": "رفض",
+      "rejectAndContinue": "رفض ثم إعادة المحاولة",
+      "rejectOnly": "رفض",
+      "rejectReasonPlaceholder": "إدخال سبب الرفض سيساعد الوكيل على الفهم وتحسين الإجراءات المستقبلية",
+      "rejectTitle": "رفض استدعاء الأداة هذه المرة",
+      "rejectedWithReason": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي: {{reason}}",
+      "toolAbort": "تم إلغاء استدعاء الأداة من قبل المستخدم",
+      "toolRejected": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "هل ترغب في فتح موضوع جديد؟",
@@ -267,6 +423,7 @@
     "action": "قراءة صوتية",
     "clear": "مسح الصوت"
   },
+  "untitledAgent": "مساعد بدون اسم",
   "updateAgent": "تحديث معلومات المساعد",
   "upload": {
     "action": {
@@ -280,6 +437,7 @@
       "actionFiletip": "رفع ملف",
       "actionTooltip": "رفع",
       "disabled": "النموذج الحالي لا يدعم التعرف على الصور وتحليل الملفات، يرجى تغيير النموذج لاستخدامه",
+      "fileNotSupported": "وضع المتصفح لا يدعم تحميل الملفات حاليًا، يدعم الصور فقط",
       "visionNotSupported": "النموذج الحالي لا يدعم التعرف البصري، يرجى تبديل النموذج لاستخدام هذه الميزة"
     },
     "preview": {
@@ -288,7 +446,11 @@
         "pending": "يتم التحضير للتحميل...",
         "processing": "يتم معالجة الملف..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "لا يمكن أن يتجاوز حجم ملف الفيديو 20 ميغابايت، حجم الملف الحالي هو {{actualSize}}"
     }
   },
+  "you": "أنت",
   "zenMode": "وضع التركيز"
 }

@@ -15,6 +15,7 @@ import {
   McpPrompt,
   McpResource,
   McpTool,
+  ToolCallResult,
   createMCPError,
 } from './types';
 
@@ -317,7 +318,12 @@ export class MCPClient {
       log('Listed tools: %O', tools);
       return tools as McpTool[];
     } catch (e) {
-      log('Listed tools error: %O', e);
+      console.error('Listed tools error: %O', e);
+
+      if ((e as Error).message.includes('No valid session ID provided')) {
+        throw new Error('NoValidSessionId');
+      }
+
       return [];
     }
   }
@@ -369,12 +375,12 @@ export class MCPClient {
     return manifest;
   }
 
-  async callTool(toolName: string, args: any) {
+  async callTool(toolName: string, args: any): Promise<ToolCallResult> {
     log('Calling tool: %s with args: %O, timeout: %O', toolName, args, MCP_TOOL_TIMEOUT);
     const result = await this.mcp.callTool({ arguments: args, name: toolName }, undefined, {
       timeout: MCP_TOOL_TIMEOUT,
     });
     log('Tool call result: %O', result);
-    return result;
+    return result as ToolCallResult;
   }
 }

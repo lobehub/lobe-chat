@@ -50,6 +50,10 @@
     "total": {
       "fileCount": "共 {{count}} 項",
       "selectedCount": "已選 {{count}} 項"
+    },
+    "view": {
+      "list": "清單檢視",
+      "masonry": "網格檢視"
     }
   },
   "FileParsingStatus": {
@@ -102,6 +106,12 @@
     "keyPlaceholder": "鍵",
     "valuePlaceholder": "值"
   },
+  "LocalFile": {
+    "action": {
+      "open": "開啟",
+      "showInFolder": "在資料夾中顯示"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "無限制"
   },
@@ -114,6 +124,7 @@
       "reasoning": "該模型支持深度思考",
       "search": "該模型支援聯網搜尋",
       "tokens": "該模型單一會話最多支援 {{tokens}} Tokens",
+      "video": "該模型支援影片識別",
       "vision": "該模型支援視覺辨識"
     },
     "removed": "該模型不在清單中，若取消選取將會自動移除"

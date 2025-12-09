@@ -7,12 +7,426 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 262_144,
+    description:
+      "Kimi K2 Thinking 是最新、最强大的开源思考模型。它通过大幅扩展多步推理深度，并在 200–300 次连续工具调用中保持稳定的工具使用，在 Humanity's Last Exam (HLE)、BrowseComp 及其他基准测试中树立了新的标杆。同时，K2 Thinking 在编程、数学、逻辑推理和 Agent 场景中表现卓越。该模型基于混合专家（MoE）架构，总参数约 1T，支持 256K 上下文窗口并支持工具调用。",
+    displayName: 'Kimi K2 Thinking',
+    id: 'moonshotai/Kimi-K2-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-07',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Kimi K2 Thinking Turbo 是 Kimi K2 系列的 Turbo 版本，针对推理速度和吞吐进行了优化，同时保留 K2 Thinking 的多步推理与工具调用能力。该模型基于混合专家（MoE）架构，总参数约 1T，原生支持 256K 上下文并可稳定执行大规模工具调用，适用于对延迟和并发有更高要求的生产场景。',
+    displayName: 'Kimi K2 Thinking (Pro)',
+    id: 'Pro/moonshotai/Kimi-K2-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 32, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-07',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'MiniMax-M2 为智能体重新定义了效率。它是一款紧凑、快速且经济高效的 MoE 模型，拥有 2300 亿总参数和 100 亿激活参数，专为编码和智能体任务的顶级性能而打造，同时保持强大的通用智能。仅需 100 亿激活参数，MiniMax-M2 就能提供与大规模模型相媲美的性能，使其成为高效率应用的理想选择。',
+    displayName: 'MiniMax-M2',
+    id: 'MiniMaxAI/MiniMax-M2',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-VL-32B-Instruct 是阿里巴巴通义千问团队推出的视觉语言模型，在多个视觉语言基准测试中取得了领先的 SOTA 性能。该模型支持百万像素级别的高分辨率图像输入，并具备强大的通用视觉理解、多语言 OCR、细粒度视觉定位和视觉对话能力。作为 Qwen3 系列中的视觉语言模型，它能够处理复杂的多模态任务，支持工具调用和前缀续写等高级功能。',
+    displayName: 'Qwen3 VL 32B Instruct',
+    id: 'Qwen/Qwen3-VL-32B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-21',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-VL-32B-Thinking 是阿里巴巴通义千问团队推出的视觉语言模型中一个为复杂视觉推理任务特别优化的版本。该模型内置了"思考模式"，使其在回答问题前能够生成详细的中间推理步骤，从而显著增强其在需要多步逻辑、规划和复杂推理的任务上的表现。该模型支持百万像素级别的高分辨率图像输入，具备强大的通用视觉理解、多语言 OCR、细粒度视觉定位和视觉对话能力，并支持工具调用和前缀续写等功能。',
+    displayName: 'Qwen3 VL 32B Thinking',
+    id: 'Qwen/Qwen3-VL-32B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-21',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 8192,
+    description:
+      'DeepSeek-OCR 是由深度求索（DeepSeek AI）推出的一个视觉语言模型，专注于光学字符识别（OCR）与"上下文光学压缩"。该模型旨在探索从图像中压缩上下文信息的边界，能够高效处理文档并将其转换为如 Markdown 等结构化文本格式。它能够准确识别图像中的文字内容，特别适用于文档数字化、文字提取和结构化处理等应用场景。',
+    displayName: 'DeepSeek OCR',
+    id: 'deepseek-ai/DeepSeek-OCR',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-20',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'Qwen3-Omni-30B-A3B-Instruct 是阿里巴巴通义千问团队最新 Qwen3 系列中的一员。它是一个拥有 300 亿总参数和 30 亿激活参数的混合专家（MoE）模型，在保持强大性能的同时有效降低了推理成本。该模型在高质量、多来源、多语言的数据上进行训练，具备强大的通用能力，支持全模态输入处理，包括文本、图像、音频和视频，能够理解和生成跨模态的内容。',
+    displayName: 'Qwen3 Omni 30B A3B Instruct',
+    id: 'Qwen/Qwen3-Omni-30B-A3B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-22',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'Qwen3-Omni-30B-A3B-Thinking 是 Qwen3-Omni 全模态模型中的核心"思考者"（Thinker）组件。它专门负责处理包括文本、音频、图像和视频在内的多模态输入，并执行复杂的思维链推理。作为推理的大脑，该模型将所有输入统一到通用的表征空间中，实现跨模态的深度理解和复杂推理能力。该模型基于混合专家（MoE）架构，拥有 300 亿总参数和 30 亿激活参数，能够在保持强大推理能力的同时优化计算效率。',
+    displayName: 'Qwen3 Omni 30B A3B Thinking',
+    id: 'Qwen/Qwen3-Omni-30B-A3B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-22',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'Qwen3-Omni-30B-A3B-Captioner 是阿里巴巴通义千问团队 Qwen3 系列中的一款视觉语言模型（VLM）。它专门用于生成高质量、详细且准确的图像描述。该模型基于 300 亿总参数的混合专家（MoE）架构，能够深入理解图像内容并将其转化为自然流畅的文字描述。它在图像细节捕捉、场景理解、物体识别和关系推理等方面表现卓越，特别适合需要精确图像理解和描述生成的应用场景。',
+    displayName: 'Qwen3 Omni 30B A3B Captioner',
+    id: 'Qwen/Qwen3-Omni-30B-A3B-Captioner',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-22',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768,
+    description:
+      '混元翻译模型（Hunyuan Translation Model）由一个翻译模型 Hunyuan-MT-7B 和一个集成模型 Hunyuan-MT-Chimera 组成。Hunyuan-MT-7B 是一个拥有 70 亿参数的轻量级翻译模型，用于将源文本翻译成目标语言。该模型支持 33 种语言以及 5 种中国少数民族语言的互译。在 WMT25 国际机器翻译竞赛中，Hunyuan-MT-7B 在其参与的 31 个语言类别中获得了 30 个第一名，展现了其卓越的翻译能力。针对翻译场景，腾讯混元提出了一个从预训练到监督微调、再到翻译强化和集成强化的完整训练范式，使其在同等规模的模型中达到了业界领先的性能。该模型计算效率高、易于部署，适合多种应用场景。',
+    displayName: 'Hunyuan MT 7B',
+    id: 'tencent/Hunyuan-MT-7B',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-01',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'KAT-Dev（32B）是一款专为软件工程任务设计的开源 32B 参数模型。在 SWE-Bench Verified 基准测试中，它取得了 62.4% 的解决率，在所有不同规模的开源模型中排名第五。该模型通过多个阶段进行优化，包括中间训练、监督微调（SFT）与强化学习（RL），旨在为代码补全、缺陷修复、代码评审等复杂编程任务提供强大支持。',
+    displayName: 'KAT-Dev 32B',
+    id: 'Kwaipilot/KAT-Dev',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-27',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 198_000,
+    description:
+      '与 GLM-4.5 相比，GLM-4.6 带来了多项关键改进。其上下文窗口从 128K 扩展到 200K tokens，使模型能够处理更复杂的智能体任务。模型在代码基准测试中取得了更高的分数，并在 Claude Code、Cline、Roo Code 和 Kilo Code 等应用中展现了更强的真实世界性能，包括在生成视觉效果精致的前端页面方面有所改进。GLM-4.6 在推理性能上表现出明显提升，并支持在推理过程中使用工具，从而带来了更强的综合能力。它在工具使用和基于搜索的智能体方面表现更强，并且能更有效地集成到智能体框架中。在写作方面，该模型在风格和可读性上更符合人类偏好，并在角色扮演场景中表现得更自然。',
+    displayName: 'GLM-4.6',
+    id: 'zai-org/GLM-4.6',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 14, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-30',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-Next-80B-A3B-Thinking 是由阿里巴巴通义千问团队发布的、专为复杂推理任务设计的下一代基础模型。它基于创新的 Qwen3-Next 架构，该架构融合了混合注意力机制（Gated DeltaNet 与 Gated Attention）和高稀疏度混合专家（MoE）结构，旨在实现极致的训练与推理效率。作为一个总参数达 800 亿的稀疏模型，它在推理时仅激活约 30 亿参数，大幅降低了计算成本，在处理超过 32K tokens 的长上下文任务时，吞吐量比 Qwen3-32B 模型高出 10 倍以上。此“Thinking”版本专为执行数学证明、代码综合、逻辑分析和规划等高难度多步任务而优化，并默认以结构化的“思维链”形式输出推理过程。在性能上，它不仅超越了 Qwen3-32B-Thinking 等成本更高的模型，还在多个基准测试中优于 Gemini-2.5-Flash-Thinking。',
+    displayName: 'Qwen3 Next 80B A3B Thinking',
+    id: 'Qwen/Qwen3-Next-80B-A3B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-10',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3-Next-80B-A3B-Instruct 是由阿里巴巴通义千问团队发布的下一代基础模型。它基于全新的 Qwen3-Next 架构，旨在实现极致的训练和推理效率。该模型采用了创新的混合注意力机制（Gated DeltaNet 和 Gated Attention）、高稀疏度混合专家（MoE）结构以及多项训练稳定性优化。作为一个拥有 800 亿总参数的稀疏模型，它在推理时仅需激活约 30 亿参数，从而大幅降低了计算成本，并在处理超过 32K tokens 的长上下文任务时，推理吞吐量比 Qwen3-32B 模型高出 10 倍以上。此模型为指令微调版本，专为通用任务设计，不支持思维链（Thinking）模式。在性能上，它与通义千问的旗舰模型 Qwen3-235B 在部分基准测试中表现相当，尤其在超长上下文任务中展现出明显优势。',
+    displayName: 'Qwen3 Next 80B A3B Instruct',
+    id: 'Qwen/Qwen3-Next-80B-A3B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-10',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-30B-A3B-Instruct 是 Qwen3-VL 系列的指令微调版本，具有强大的视觉-语言理解与生成能力，原生支持 256K 上下文长度，适合多模态对话与图像条件生成任务。',
+    displayName: 'Qwen3 VL 30B A3B Instruct',
+    id: 'Qwen/Qwen3-VL-30B-A3B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-30B-A3B-Thinking 是 Qwen3-VL 的推理增强版本（Thinking），在多模态推理、图像到代码和复杂视觉理解任务上进行了优化，支持 256K 上下文并具备更强的链式思考能力。',
+    displayName: 'Qwen3 VL 30B A3B Thinking',
+    id: 'Qwen/Qwen3-VL-30B-A3B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.8, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-235B-A22B-Instruct 是 Qwen3-VL 系列的大型指令微调模型，基于混合专家（MoE）架构，拥有卓越的多模态理解与生成能力，原生支持 256K 上下文，适用于高并发生产级多模态服务。',
+    displayName: 'Qwen3 VL 235B A22B Instruct',
+    id: 'Qwen/Qwen3-VL-235B-A22B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-235B-A22B-Thinking 是 Qwen3-VL 系列中的旗舰思考版本，针对复杂多模态推理、长上下文推理与智能体交互进行了专项优化，适合需要深度思考与视觉推理的企业级场景。',
+    displayName: 'Qwen3 VL 235B A22B Thinking',
+    id: 'Qwen/Qwen3-VL-235B-A22B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 163_840,
     description:
-      'DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。',
-    displayName: 'DeepSeek V3.1',
+      'DeepSeek-V3.2-Exp 是 DeepSeek 发布的实验性 V3.2 版本，作为迈向下一代架构的中间探索。它在 V3.1-Terminus 的基础上引入了 DeepSeek 稀疏注意力（DeepSeek Sparse Attention，DSA）机制以提升长上下文训练与推理效率，针对工具调用、长文档理解与多步推理进行了专项优化。V3.2-Exp 为研究与产品化之间的桥梁，适合希望在高上下文预算场景中探索更高推理效率的用户。',
+    displayName: 'DeepSeek V3.2 Exp',
+    id: 'deepseek-ai/DeepSeek-V3.2-Exp',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-29',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-V3.2-Exp 是 DeepSeek 发布的实验性 V3.2 版本，作为迈向下一代架构的中间探索。它在 V3.1-Terminus 的基础上引入了 DeepSeek 稀疏注意力（DeepSeek Sparse Attention，DSA）机制以提升长上下文训练与推理效率，针对工具调用、长文档理解与多步推理进行了专项优化。V3.2-Exp 为研究与产品化之间的桥梁，适合希望在高上下文预算场景中探索更高推理效率的用户。',
+    displayName: 'DeepSeek V3.2 Exp (Pro)',
+    id: 'Pro/deepseek-ai/DeepSeek-V3.2-Exp',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-29',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）发布的 V3.1 模型的更新版本，定位为混合智能体大语言模型。此次更新在保持模型原有能力的基础上，专注于修复用户反馈的问题并提升稳定性。它显著改善了语言一致性，减少了中英文混用和异常字符的出现。模型集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode），用户可通过聊天模板灵活切换以适应不同任务。作为一个重要的优化，V3.1-Terminus 增强了代码智能体（Code Agent）和搜索智能体（Search Agent）的性能，使其在工具调用和执行多步复杂任务方面更加可靠。',
+    displayName: 'DeepSeek V3.1 Terminus',
     enabled: true,
-    id: 'deepseek-ai/DeepSeek-V3.1',
+    id: 'deepseek-ai/DeepSeek-V3.1-Terminus',
     pricing: {
       currency: 'CNY',
       units: [
@@ -32,9 +446,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 163_840,
     description:
-      'DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。',
-    displayName: 'DeepSeek V3.1 (Pro)',
-    id: 'Pro/deepseek-ai/DeepSeek-V3.1',
+      'DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）发布的 V3.1 模型的更新版本，定位为混合智能体大语言模型。此次更新在保持模型原有能力的基础上，专注于修复用户反馈的问题并提升稳定性。它显著改善了语言一致性，减少了中英文混用和异常字符的出现。模型集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode），用户可通过聊天模板灵活切换以适应不同任务。作为一个重要的优化，V3.1-Terminus 增强了代码智能体（Code Agent）和搜索智能体（Search Agent）的性能，使其在工具调用和执行多步复杂任务方面更加可靠。',
+    displayName: 'DeepSeek V3.1 Terminus (Pro)',
+    id: 'Pro/deepseek-ai/DeepSeek-V3.1-Terminus',
     pricing: {
       currency: 'CNY',
       units: [
@@ -45,6 +459,110 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-8B-Instruct 是 Qwen3 系列的视觉语言模型，基于 Qwen3-8B-Instruct 开发并在大量图文数据上训练，擅长通用视觉理解、以视觉为中心的对话以及图像中的多语言文本识别。适用于视觉问答、图像描述、多模态指令跟随与工具调用场景。',
+    displayName: 'Qwen3 VL 8B Instruct',
+    id: 'Qwen/Qwen3-VL-8B-Instruct',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-15',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-8B-Thinking 是 Qwen3 系列的视觉思考版本，针对复杂多步推理任务优化，默认在回答前生成逐步思考（thinking chain）以提高推理准确性。适合需要深度推理的视觉问答、审阅图像内容并给出详细分析的场景。',
+    displayName: 'Qwen3 VL 8B Thinking',
+    id: 'Qwen/Qwen3-VL-8B-Thinking',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-15',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Ring-flash-2.0 是一个基于 Ling-flash-2.0-base 深度优化的高性能思考模型。它采用混合专家（MoE）架构，总参数量为 100B，但在每次推理中仅激活 6.1B 参数。该模型通过独创的 icepop 算法，解决了 MoE 大模型在强化学习（RL）训练中的不稳定性难题，使其复杂推理能力在长周期训练中得以持续提升。Ring-flash-2.0 在数学竞赛、代码生成和逻辑推理等多个高难度基准测试中取得了显著突破，其性能不仅超越了 40B 参数规模以下的顶尖稠密模型，还能媲美更大规模的开源 MoE 模型及闭源的高性能思考模型。尽管该模型专注于复杂推理，它在创意写作等任务上也表现出色。此外，得益于其高效的架构设计，Ring-flash-2.0 在提供强大性能的同时，也实现了高速推理，显著降低了思考模型在高并发场景下的部署成本。',
+    displayName: 'Ring Flash 2.0',
+    id: 'inclusionAI/Ring-flash-2.0',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-19',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Ling-flash-2.0 是由蚂蚁集团百灵团队发布的 Ling 2.0 架构系列的第三款模型。它是一款混合专家（MoE）模型，总参数规模达到 1000 亿，但每个 token 仅激活 61 亿参数（非词向量激活 48 亿）。 作为一个轻量级配置的模型，Ling-flash-2.0 在多个权威评测中展现出媲美甚至超越 400 亿级别稠密（Dense）模型及更大规模 MoE 模型的性能。该模型旨在通过极致的架构设计与训练策略，在“大模型等于大参数”的共识下探索高效能的路径。',
+    displayName: 'Ling Flash 2.0',
+    id: 'inclusionAI/Ling-flash-2.0',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Ling-mini-2.0 是一款基于 MoE 架构的小尺寸高性能大语言模型。它拥有 16B 总参数，但每个 token 仅激活 1.4B（non-embedding 789M），从而实现了极高的生成速度。得益于高效的 MoE 设计与大规模高质量训练数据，尽管激活参数仅为 1.4B，Ling-mini-2.0 依然在下游任务中展现出可媲美 10B 以下 dense LLM 及更大规模 MoE 模型的顶尖性能。',
+    displayName: 'Ling Mini 2.0',
+    id: 'inclusionAI/Ling-mini-2.0',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-09',
     type: 'chat',
   },
   {
@@ -65,6 +583,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-08-20',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -86,6 +607,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-31',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -145,6 +669,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-08-11',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -165,6 +692,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -204,6 +734,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-17',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -223,11 +756,14 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 131_072,
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
     description:
-      'Kimi K2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
-    displayName: 'Kimi K2 Instruct',
-    id: 'moonshotai/Kimi-K2-Instruct',
+      'Kimi K2-Instruct-0905 是 Kimi K2 最新、最强大的版本。它是一款顶尖的混合专家（MoE）语言模型，拥有 1 万亿的总参数和 320 亿的激活参数。该模型的主要特性包括：增强的智能体编码智能，在公开基准测试和真实世界的编码智能体任务中表现出显著的性能提升；改进的前端编码体验，在前端编程的美观性和实用性方面均有进步。',
+    displayName: 'Kimi K2 0905',
+    id: 'moonshotai/Kimi-K2-Instruct-0905',
     pricing: {
       currency: 'CNY',
       units: [
@@ -235,15 +771,18 @@ const siliconcloudChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-07-11',
+    releasedAt: '2025-09-05',
     type: 'chat',
   },
   {
-    contextWindowTokens: 131_072,
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
     description:
-      'Kimi K2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
-    displayName: 'Kimi K2 Instruct (Pro)',
-    id: 'Pro/moonshotai/Kimi-K2-Instruct',
+      'Kimi K2-Instruct-0905 是 Kimi K2 最新、最强大的版本。它是一款顶尖的混合专家（MoE）语言模型，拥有 1 万亿的总参数和 320 亿的激活参数。该模型的主要特性包括：增强的智能体编码智能，在公开基准测试和真实世界的编码智能体任务中表现出显著的性能提升；改进的前端编码体验，在前端编程的美观性和实用性方面均有进步。',
+    displayName: 'Kimi K2 0905 (Pro)',
+    id: 'Pro/moonshotai/Kimi-K2-Instruct-0905',
     pricing: {
       currency: 'CNY',
       units: [
@@ -251,7 +790,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
-    releasedAt: '2025-07-11',
+    releasedAt: '2025-09-05',
     type: 'chat',
   },
   {
@@ -271,6 +810,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-17',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -290,6 +832,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-27',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -309,6 +854,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-16',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -328,6 +876,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-05-26',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -349,6 +900,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-25',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -390,6 +944,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-07-30',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -541,7 +1098,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'GLM-4.1V-9B-Thinking 是由智谱 AI 和清华大学 KEG 实验室联合发布的一款开源视觉语言模型（VLM），专为处理复杂的多模态认知任务而设计。该模型基于 GLM-4-9B-0414 基础模型，通过引入“思维链”（Chain-of-Thought）推理机制和采用强化学习策略，显著提升了其跨模态的推理能力和稳定性。',
     displayName: 'GLM-4.1V 9B Thinking (Free)',
-    enabled: true,
     id: 'THUDM/GLM-4.1V-9B-Thinking',
     pricing: {
       currency: 'CNY',
@@ -590,6 +1146,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-04-14',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -716,7 +1275,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-R1-0528-Qwen3-8B 是通过从 DeepSeek-R1-0528 模型蒸馏思维链到 Qwen3 8B Base 获得的模型。该模型在开源模型中达到了最先进（SOTA）的性能，在 AIME 2024 测试中超越了 Qwen3 8B 10%，并达到了 Qwen3-235B-thinking 的性能水平。该模型在数学推理、编程和通用逻辑等多个基准测试中表现出色，其架构与 Qwen3-8B 相同，但共享 DeepSeek-R1-0528 的分词器配置。',
     displayName: 'DeepSeek R1 0528 Qwen3 8B (Free)',
-    enabled: true,
     id: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
     pricing: {
       currency: 'CNY',
@@ -724,6 +1282,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -743,6 +1304,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -948,6 +1512,9 @@ const siliconcloudChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1244,6 +1811,52 @@ const siliconcloudImageModels: AIImageModelCard[] = [
       },
     },
     releasedAt: '2024-07-06',
+    type: 'image',
+  },
+  {
+    description:
+      'Qwen-Image 是由阿里巴巴通义千问团队发布的图像生成基础模型，拥有 200 亿参数。该模型在复杂的文本渲染和精确的图像编辑方面取得了显著进展，尤其擅长生成包含高保真度中英文文字的图像。Qwen-Image 不仅能够处理多行布局和段落级文本，还能在生成图像时保持排版的连贯性和上下文的和谐。除了卓越的文本渲染能力，该模型还支持广泛的艺术风格，从写实照片到动漫美学，能够灵活适应各种创作需求。同时，它也具备强大的图像编辑和理解能力，支持风格迁移、物体增删、细节增强、文本编辑乃至人体姿态操控等高级操作，旨在成为一个集语言、布局和图像于一体的综合性智能视觉创作与处理基础模型',
+    displayName: 'Qwen-Image',
+    enabled: true,
+    id: 'Qwen/Qwen-Image',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1328x1328',
+        enum: ['1328x1328', '1584x1056', '1140x1472', '1664x928', '928x1664'],
+      },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2025-08-04',
+    type: 'image',
+  },
+  {
+    description:
+      'Qwen-Image-Edit-2509 是由阿里巴巴通义千问团队发布的 Qwen-Image 的图像编辑最新版本。该模型基于 20B 参数的 Qwen-Image 模型进行深入训练，将其独特的文本渲染能力成功扩展至图像编辑领域，实现了对图片中文字的精准编辑。此外，Qwen-Image-Edit 采用了一种创新的架构，将输入图像同时送入 Qwen2.5-VL（用于视觉语义控制）和 VAE Encoder（用于视觉外观控制），从而兼具语义与外观的双重编辑能力。这意味着它不仅支持元素的添加、删除或修改等局部外观编辑，还支持如 IP 创作、风格迁移等需要保持语义一致性的高阶视觉语义编辑。模型在多个公开基准测试中展现了顶尖（SOTA）的性能，使其成为一个强大的图像编辑基础模型',
+    displayName: 'Qwen-Image-Edit (2509)',
+    enabled: true,
+    id: 'Qwen/Qwen-Image-Edit-2509',
+    parameters: {
+      imageUrls: {
+        default: [],
+        maxCount: 3,
+      },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2025-09-22',
     type: 'image',
   },
 ];

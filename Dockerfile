@@ -1,5 +1,5 @@
 ## Set global build ENV
-ARG NODEJS_VERSION="22"
+ARG NODEJS_VERSION="24"
 
 ## Base image for all building stages
 FROM node:${NODEJS_VERSION}-slim AS base
@@ -8,35 +8,34 @@ ARG USE_CN_MIRROR
 
 ENV DEBIAN_FRONTEND="noninteractive"
 
-RUN \
-    # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
-    if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
-        sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"; \
-    fi \
-    # Add required package
-    && apt update \
-    && apt install ca-certificates proxychains-ng -qy \
-    # Prepare required package to distroless
-    && mkdir -p /distroless/bin /distroless/etc /distroless/etc/ssl/certs /distroless/lib \
-    # Copy proxychains to distroless
-    && cp /usr/lib/$(arch)-linux-gnu/libproxychains.so.4 /distroless/lib/libproxychains.so.4 \
-    && cp /usr/lib/$(arch)-linux-gnu/libdl.so.2 /distroless/lib/libdl.so.2 \
-    && cp /usr/bin/proxychains4 /distroless/bin/proxychains \
-    && cp /etc/proxychains4.conf /distroless/etc/proxychains4.conf \
-    # Copy node to distroless
-    && cp /usr/lib/$(arch)-linux-gnu/libstdc++.so.6 /distroless/lib/libstdc++.so.6 \
-    && cp /usr/lib/$(arch)-linux-gnu/libgcc_s.so.1 /distroless/lib/libgcc_s.so.1 \
-    && cp /usr/local/bin/node /distroless/bin/node \
-    # Copy CA certificates to distroless
-    && cp /etc/ssl/certs/ca-certificates.crt /distroless/etc/ssl/certs/ca-certificates.crt \
-    # Cleanup temp files
-    && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
+RUN <<'EOF'
+set -e
+if [ "${USE_CN_MIRROR:-false}" = "true" ]; then
+    sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"
+fi
+apt update
+apt install ca-certificates proxychains-ng -qy
+mkdir -p /distroless/bin /distroless/etc /distroless/etc/ssl/certs /distroless/lib
+cp /usr/lib/$(arch)-linux-gnu/libproxychains.so.4 /distroless/lib/libproxychains.so.4
+cp /usr/lib/$(arch)-linux-gnu/libdl.so.2 /distroless/lib/libdl.so.2
+cp /usr/bin/proxychains4 /distroless/bin/proxychains
+cp /etc/proxychains4.conf /distroless/etc/proxychains4.conf
+cp /usr/lib/$(arch)-linux-gnu/libstdc++.so.6 /distroless/lib/libstdc++.so.6
+cp /usr/lib/$(arch)-linux-gnu/libgcc_s.so.1 /distroless/lib/libgcc_s.so.1
+cp /usr/local/bin/node /distroless/bin/node
+cp /etc/ssl/certs/ca-certificates.crt /distroless/etc/ssl/certs/ca-certificates.crt
+rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
+EOF
 
 ## Builder image, install all the dependencies and build the app
 FROM base AS builder
 
 ARG USE_CN_MIRROR
 ARG NEXT_PUBLIC_BASE_PATH
+ARG NEXT_PUBLIC_ENABLE_BETTER_AUTH
+ARG NEXT_PUBLIC_ENABLE_NEXT_AUTH
+ARG NEXT_PUBLIC_ENABLE_CLERK_AUTH
+ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 ARG NEXT_PUBLIC_SENTRY_DSN
 ARG NEXT_PUBLIC_ANALYTICS_POSTHOG
 ARG NEXT_PUBLIC_POSTHOG_HOST
@@ -48,12 +47,21 @@ ARG FEATURE_FLAGS
 
 ENV NEXT_PUBLIC_BASE_PATH="${NEXT_PUBLIC_BASE_PATH}" \
     FEATURE_FLAGS="${FEATURE_FLAGS}"
+
+ENV NEXT_PUBLIC_ENABLE_BETTER_AUTH="${NEXT_PUBLIC_ENABLE_BETTER_AUTH:-0}" \
+    NEXT_PUBLIC_ENABLE_NEXT_AUTH="${NEXT_PUBLIC_ENABLE_NEXT_AUTH:-1}" \
+    NEXT_PUBLIC_ENABLE_CLERK_AUTH="${NEXT_PUBLIC_ENABLE_CLERK_AUTH:-0}" \
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}" \
+    CLERK_WEBHOOK_SECRET="whsec_xxx" \
+    APP_URL="http://app.com" \
+    DATABASE_DRIVER="node" \
+    DATABASE_URL="postgres://postgres:password@localhost:5432/postgres" \
+    KEY_VAULTS_SECRET="use-for-build"
+
 # Sentry
 ENV NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
     SENTRY_ORG="" \
     SENTRY_PROJECT=""
-
-ENV APP_URL="http://app.com"
 
 # Posthog
 ENV NEXT_PUBLIC_ANALYTICS_POSTHOG="${NEXT_PUBLIC_ANALYTICS_POSTHOG}" \
@@ -73,24 +81,26 @@ WORKDIR /app
 COPY package.json pnpm-workspace.yaml ./
 COPY .npmrc ./
 COPY packages ./packages
+# bring in desktop workspace manifest so pnpm can resolve it
+COPY apps/desktop/src/main/package.json ./apps/desktop/src/main/package.json
 
-RUN \
-    # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
-    if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
-        export SENTRYCLI_CDNURL="https://npmmirror.com/mirrors/sentry-cli"; \
-        npm config set registry "https://registry.npmmirror.com/"; \
-        echo 'canvas_binary_host_mirror=https://npmmirror.com/mirrors/canvas' >> .npmrc; \
-    fi \
-    # Set the registry for corepack
-    && export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
-    # Update corepack to latest (nodejs/corepack#612)
-    && npm i -g corepack@latest \
-    # Enable corepack
-    && corepack enable \
-    # Use pnpm for corepack
-    && corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json) \
-    # Install the dependencies
-    && pnpm i
+RUN <<'EOF'
+set -e
+if [ "${USE_CN_MIRROR:-false}" = "true" ]; then
+    export SENTRYCLI_CDNURL="https://npmmirror.com/mirrors/sentry-cli"
+    npm config set registry "https://registry.npmmirror.com/"
+    echo 'canvas_binary_host_mirror=https://npmmirror.com/mirrors/canvas' >> .npmrc
+fi
+export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//')
+npm i -g corepack@latest
+corepack enable
+corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json)
+pnpm i
+mkdir -p /deps
+cd /deps
+pnpm init
+pnpm add pg drizzle-orm
+EOF
 
 COPY . .
 
@@ -106,15 +116,25 @@ COPY --from=base /distroless/ /
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
 
+# Copy database migrations
+COPY --from=builder /app/packages/database/migrations /app/migrations
+COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs
+COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
+
+# copy dependencies
+COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
+COPY --from=builder /deps/node_modules/pg /app/node_modules/pg
+COPY --from=builder /deps/node_modules/drizzle-orm /app/node_modules/drizzle-orm
+
 # Copy server launcher
 COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
 
-RUN \
-    # Add nextjs:nodejs to run the app
-    addgroup -S -g 1001 nodejs \
-    && adduser -D -G nodejs -H -S -h /app -u 1001 nextjs \
-    # Set permission for nextjs:nodejs
-    && chown -R nextjs:nodejs /app /etc/proxychains4.conf
+RUN <<'EOF'
+set -e
+addgroup -S -g 1001 nodejs
+adduser -D -G nodejs -H -S -h /app -u 1001 nextjs
+chown -R nextjs:nodejs /app /etc/proxychains4.conf
+EOF
 
 ## Production image, copy all the files and run next
 FROM scratch
@@ -126,7 +146,7 @@ ENV NODE_ENV="production" \
     NODE_OPTIONS="--dns-result-order=ipv4first --use-openssl-ca" \
     NODE_EXTRA_CA_CERTS="" \
     NODE_TLS_REJECT_UNAUTHORIZED="" \
-    SSL_CERT_DIR="/etc/ssl/certs/ca-certificates.crt"
+    SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
 
 # Make the middleware rewrite through local as default
 # refs: https://github.com/lobehub/lobe-chat/issues/5876
@@ -138,11 +158,37 @@ ENV HOSTNAME="0.0.0.0" \
 
 # General Variables
 ENV ACCESS_CODE="" \
+    APP_URL="" \
     API_KEY_SELECT_MODE="" \
     DEFAULT_AGENT_CONFIG="" \
     SYSTEM_AGENT="" \
     FEATURE_FLAGS="" \
-    PROXY_URL=""
+    PROXY_URL="" \
+    ENABLE_AUTH_PROTECTION=""
+
+# Database
+ENV KEY_VAULTS_SECRET="" \
+    DATABASE_DRIVER="node" \
+    DATABASE_URL=""
+
+# Better Auth
+ENV AUTH_SECRET="" \
+    AUTH_SSO_PROVIDERS="" \
+    NEXT_PUBLIC_AUTH_URL=""
+
+# Clerk
+ENV CLERK_SECRET_KEY="" \
+    CLERK_WEBHOOK_SECRET=""
+
+# S3
+ENV NEXT_PUBLIC_S3_DOMAIN="" \
+    S3_PUBLIC_DOMAIN="" \
+    S3_ACCESS_KEY_ID="" \
+    S3_BUCKET="" \
+    S3_ENDPOINT="" \
+    S3_SECRET_ACCESS_KEY="" \
+    S3_ENABLE_PATH_STYLE="" \
+    S3_SET_ACL=""
 
 # Model Variables
 ENV \
@@ -155,7 +201,7 @@ ENV \
     # Anthropic
     ANTHROPIC_API_KEY="" ANTHROPIC_MODEL_LIST="" ANTHROPIC_PROXY_URL="" \
     # Amazon Bedrock
-    AWS_ACCESS_KEY_ID="" AWS_SECRET_ACCESS_KEY="" AWS_REGION="" AWS_BEDROCK_MODEL_LIST="" \
+    ENABLED_AWS_BEDROCK="" AWS_ACCESS_KEY_ID="" AWS_SECRET_ACCESS_KEY="" AWS_REGION="" AWS_BEDROCK_MODEL_LIST="" \
     # Azure OpenAI
     AZURE_API_KEY="" AZURE_API_VERSION="" AZURE_ENDPOINT="" AZURE_MODEL_LIST="" \
     # Baichuan
@@ -164,6 +210,9 @@ ENV \
     CLOUDFLARE_API_KEY="" CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID="" CLOUDFLARE_MODEL_LIST="" \
     # Cohere
     COHERE_API_KEY="" COHERE_MODEL_LIST="" COHERE_PROXY_URL="" \
+    # ComfyUI
+    ENABLED_COMFYUI="" COMFYUI_BASE_URL="" COMFYUI_AUTH_TYPE="" \
+    COMFYUI_API_KEY="" COMFYUI_USERNAME="" COMFYUI_PASSWORD="" COMFYUI_CUSTOM_HEADERS="" \
     # DeepSeek
     DEEPSEEK_API_KEY="" DEEPSEEK_MODEL_LIST="" \
     # Fireworks AI
@@ -174,6 +223,8 @@ ENV \
     GITHUB_TOKEN="" GITHUB_MODEL_LIST="" \
     # Google
     GOOGLE_API_KEY="" GOOGLE_MODEL_LIST="" GOOGLE_PROXY_URL="" \
+    # Vertex AI
+    VERTEXAI_CREDENTIALS="" VERTEXAI_PROJECT="" VERTEXAI_LOCATION="" VERTEXAI_MODEL_LIST="" \
     # Groq
     GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
     # Higress
@@ -205,7 +256,7 @@ ENV \
     # Ollama
     ENABLED_OLLAMA="" OLLAMA_MODEL_LIST="" OLLAMA_PROXY_URL="" \
     # OpenAI
-    OPENAI_API_KEY="" OPENAI_MODEL_LIST="" OPENAI_PROXY_URL="" \
+    ENABLED_OPENAI="" OPENAI_API_KEY="" OPENAI_MODEL_LIST="" OPENAI_PROXY_URL="" \
     # OpenRouter
     OPENROUTER_API_KEY="" OPENROUTER_MODEL_LIST="" \
     # Perplexity
@@ -255,9 +306,13 @@ ENV \
     # 302.AI
     AI302_API_KEY="" AI302_MODEL_LIST="" \
     # FAL
-    FAL_API_KEY="" FAL_MODEL_LIST="" \
+    ENABLED_FAL="" FAL_API_KEY="" FAL_MODEL_LIST="" \
     # BFL
-    BFL_API_KEY="" BFL_MODEL_LIST=""
+    BFL_API_KEY="" BFL_MODEL_LIST="" \
+    # Vercel AI Gateway
+    VERCELAIGATEWAY_API_KEY="" VERCELAIGATEWAY_MODEL_LIST="" \
+    # Cerebras
+    CEREBRAS_API_KEY="" CEREBRAS_MODEL_LIST=""
 
 USER nextjs
 

@@ -2,9 +2,10 @@
   "ModelSwitch": {
     "title": "مدل"
   },
+  "active": "فعال",
   "agentDefaultMessage": "سلام، من **{{name}}** هستم. می‌توانید همین حالا با من گفتگو را شروع کنید یا به [تنظیمات دستیار]({{url}}) بروید و اطلاعات من را تکمیل کنید.",
-  "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، {{systemRole}}، بیایید گفتگو را شروع کنیم!",
-  "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، بیایید گفتگو را شروع کنیم!",
+  "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، چگونه می‌توانم به شما کمک کنم؟",
+  "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، چگونه می‌توانم به شما کمک کنم؟",
   "agents": "دستیار",
   "artifact": {
     "generating": "در حال تولید",
@@ -13,17 +14,29 @@
     "thought": "فرآیند تفکر",
     "unknownTitle": "اثر بدون نام"
   },
+  "availableAgents": "دستیاران در دسترس",
   "backToBottom": "بازگشت به پایین",
   "chatList": {
+    "expandMessage": "گسترش پیام",
     "longMessageDetail": "مشاهده جزئیات"
   },
   "clearCurrentMessages": "پاک کردن پیام‌های جلسه فعلی",
   "confirmClearCurrentMessages": "پیام‌های جلسه فعلی به زودی پاک خواهند شد و پس از پاک شدن قابل بازیابی نخواهند بود. لطفاً عملیات خود را تأیید کنید.",
+  "confirmRemoveChatGroupItemAlert": "این تیم Agent به‌زودی حذف خواهد شد، اما اعضای تیم تحت تأثیر قرار نمی‌گیرند. لطفاً اقدام خود را تأیید کنید.",
+  "confirmRemoveGroupItemAlert": "در حال حذف این گروه هستید؛ پس از حذف، دستیاران این گروه به فهرست پیش‌فرض منتقل خواهند شد. لطفاً عملیات خود را تأیید کنید.",
+  "confirmRemoveGroupSuccess": "تیم Agent با موفقیت حذف شد",
   "confirmRemoveSessionItemAlert": "این دستیار به زودی حذف خواهد شد و پس از حذف قابل بازیابی نخواهد بود، لطفاً عملیات خود را تأیید کنید.",
   "confirmRemoveSessionSuccess": "حذف دستیار با موفقیت انجام شد",
   "defaultAgent": "دستیار سفارشی",
+  "defaultGroupChat": "تیم Agent",
   "defaultList": "فهرست پیش‌فرض",
   "defaultSession": "دستیار سفارشی",
+  "dm": {
+    "placeholder": "پیام‌های خصوصی بین شما و {{agentTitle}} در اینجا نمایش داده می‌شوند.",
+    "tooltip": "ارسال پیام خصوصی",
+    "visibleTo": "فقط برای {{target}} قابل مشاهده است",
+    "you": "تو"
+  },
   "duplicateSession": {
     "loading": "در حال کپی کردن...",
     "success": "کپی با موفقیت انجام شد",
@@ -40,6 +53,12 @@
       "desc": "محدودیت‌های مبتنی بر مکانیزم تفکر کلاود (<1>بیشتر بدانید</1>) . با فعال‌سازی این گزینه، محدودیت تعداد پیام‌های تاریخی به‌طور خودکار غیرفعال خواهد شد",
       "title": "فعال‌سازی تفکر عمیق"
     },
+    "imageAspectRatio": {
+      "title": "نسبت عرض به ارتفاع تصویر"
+    },
+    "imageResolution": {
+      "title": "وضوح تصویر"
+    },
     "reasoningBudgetToken": {
       "title": "توکن مصرف تفکر"
     },
@@ -52,17 +71,65 @@
     "thinking": {
       "title": "کلید تفکر عمیق"
     },
+    "thinkingLevel": {
+      "title": "سطح تفکر"
+    },
     "title": "ویژگی‌های گسترش مدل",
     "urlContext": {
       "desc": "با فعال‌سازی، لینک‌های وب به‌طور خودکار تجزیه می‌شوند تا محتوای واقعی زمینه وب‌سایت به‌دست آید",
       "title": "استخراج محتوای لینک وب"
     }
   },
+  "group": {
+    "desc": "در یک فضای گفتگوی مشترک با چندین دستیار هوش مصنوعی همکاری کنید.",
+    "memberTooltip": "این گروه {{count}} عضو دارد",
+    "orchestratorThinking": "مجری در حال فکر کردن است...",
+    "removeMember": "حذف عضو",
+    "title": "گروه‌ها"
+  },
+  "groupDescription": "توضیحات تیم",
+  "groupSidebar": {
+    "members": {
+      "addMember": "افزودن عضو",
+      "memberSettings": "تنظیمات اعضا",
+      "orchestrator": "مجری",
+      "orchestratorThinking": "مجری در حال فکر کردن است...",
+      "removeMember": "حذف عضو",
+      "stopOrchestrator": "توقف فکر کردن",
+      "triggerOrchestrator": "شروع گروه چت"
+    },
+    "tabs": {
+      "host": "میزبان",
+      "members": "اعضا",
+      "role": "تنظیمات"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "انتخاب دستیاران موجود...",
+    "createGroup": "ایجاد تیم",
+    "existingMembers": "Agentهای موجود",
+    "groupMembers": "این دستیاران نیز به فهرست شما اضافه خواهند شد",
+    "host": {
+      "description": "اجازه دهید تیم به‌صورت مستقل عمل کند",
+      "title": "فعال‌سازی میزبان",
+      "tooltip": "اگر میزبان تیم غیرفعال باشد، باید به‌صورت دستی با @ اعضا را منشن کنید تا پاسخ دهند"
+    },
+    "memberCount": "{{count}} عضو",
+    "noMatchingTemplates": "هیچ قالبی مطابقت ندارد",
+    "noSelectedTemplates": "هیچ قالبی انتخاب نشده است",
+    "noTemplateMembers": "در قالب هیچ عضوی وجود ندارد",
+    "noTemplates": "هیچ قالبی در دسترس نیست",
+    "searchTemplates": "جستجوی قالب‌ها...",
+    "title": "ایجاد تیم Agent",
+    "useTemplate": "استفاده از قالب"
+  },
+  "hideForYou": "محتوای پیام خصوصی مخفی شده است، لطفاً برای مشاهده آن گزینه «نمایش محتوای پیام خصوصی» را در تنظیمات فعال کنید",
   "history": {
     "title": "دستیار فقط آخرین {{count}} پیام را به خاطر خواهد سپرد"
   },
   "historyRange": "محدوده تاریخی",
   "historySummary": "خلاصه پیام‌های تاریخی",
+  "inactive": "غیرفعال",
   "inbox": {
     "desc": "خوشه‌های مغزی را فعال کنید و جرقه‌های تفکر را برانگیزید. دستیار هوشمند شما اینجاست تا با شما در مورد هر چیزی صحبت کند.",
     "title": "گپ دوستانه"
@@ -77,11 +144,13 @@
     "sendWithCmdEnter": "برای ارسال، کلید <key/> را فشار دهید",
     "sendWithEnter": "برای ارسال، کلید <key/> را فشار دهید",
     "stop": "توقف",
-    "warp": "خط جدید"
+    "warp": "خط جدید",
+    "warpWithKey": "با فشار دادن کلید <key/> خط جدید ایجاد کنید"
   },
   "intentUnderstanding": {
     "title": "در حال درک و تحلیل نیت شما..."
   },
+  "inviteMembers": "دعوت اعضا",
   "knowledgeBase": {
     "all": "همه محتوا",
     "allFiles": "همه فایل‌ها",
@@ -100,12 +169,32 @@
     "uploadGuide": "فایل‌های آپلود شده را می‌توانید در «پایگاه دانش» مشاهده کنید.",
     "viewMore": "مشاهده بیشتر"
   },
+  "memberSelection": {
+    "addMember": "افزودن عضو",
+    "allMembers": "تمام اعضا",
+    "createGroup": "ایجاد تیم Agent",
+    "noAvailableAgents": "هیچ عاملی برای دعوت در دسترس نیست",
+    "noSelectedAgents": "هنوز عاملی انتخاب نشده است",
+    "searchAgents": "جستجوی عامل...",
+    "setInitialMembers": "انتخاب اعضای تیم"
+  },
+  "members": "اعضا",
+  "mention": {
+    "title": "ذکر اعضا"
+  },
   "messageAction": {
+    "collapse": "بستن پیام",
+    "continueGeneration": "ادامه تولید",
     "delAndRegenerate": "حذف و بازتولید",
     "deleteDisabledByThreads": "زیرموضوع وجود دارد، نمی‌توان حذف کرد",
+    "expand": "گسترش پیام",
     "regenerate": "بازتولید"
   },
   "messages": {
+    "dm": {
+      "sentTo": "فقط برای {{name}} قابل مشاهده است",
+      "title": "پیام خصوصی"
+    },
     "modelCard": {
       "credit": "اعتبار",
       "creditPricing": "قیمت گذاری",
@@ -149,7 +238,22 @@
       "total": "مجموع مصرف"
     }
   },
+  "minimap": {
+    "jumpToMessage": "رفتن به پیام شماره {{index}}",
+    "nextMessage": "پیام بعدی",
+    "previousMessage": "پیام قبلی",
+    "senderAssistant": "عامل",
+    "senderUser": "شما"
+  },
   "newAgent": "دستیار جدید",
+  "newGroupChat": "ایجاد تیم Agent جدید",
+  "noAgentsYet": "هنوز هیچ عضوی در این تیم Agent وجود ندارد. برای دعوت از دستیاران روی دکمه + کلیک کنید.",
+  "noAvailableAgents": "عضوی برای دعوت در دسترس نیست",
+  "noMatchingAgents": "عضوی مطابق با جستجو یافت نشد",
+  "noMembersYet": "این گروه هنوز عضوی ندارد. برای دعوت دستیاران، روی دکمهٔ + کلیک کنید.",
+  "noSelectedAgents": "هنوز هیچ عضوی انتخاب نشده است",
+  "openInNewWindow": "باز کردن در یک پنجره جدید",
+  "owner": "صاحب گروه",
   "pin": "سنجاق کردن",
   "pinOff": "لغو سنجاق",
   "rag": {
@@ -190,12 +294,16 @@
     "title": "جستجوی متصل"
   },
   "searchAgentPlaceholder": "جستجوی دستیار...",
+  "searchAgents": "دستیار جستجو...",
+  "selectedAgents": "دستیاران انتخاب‌شده",
   "sendPlaceholder": "نوشتن پیام...",
   "sessionGroup": {
     "config": "مدیریت گروه",
     "confirmRemoveGroupAlert": "این گروه در حال حذف شدن است. پس از حذف، دستیارهای این گروه به لیست پیش‌فرض منتقل خواهند شد. لطفاً عملیات خود را تأیید کنید.",
     "createAgentSuccess": "دستیار با موفقیت ایجاد شد",
     "createGroup": "افزودن گروه جدید",
+    "createGroupFailed": "ایجاد گروه چت ناموفق بود",
+    "createGroupSuccess": "گروه چت با موفقیت ایجاد شد",
     "createSuccess": "گروه با موفقیت ایجاد شد",
     "creatingAgent": "در حال ایجاد دستیار...",
     "inputPlaceholder": "لطفاً نام گروه را وارد کنید...",
@@ -210,14 +318,32 @@
   "shareModal": {
     "copy": "کپی",
     "download": "دانلود اسکرین‌شات",
+    "downloadError": "دانلود ناموفق بود",
     "downloadFile": "دانلود فایل",
+    "downloadPdf": "دانلود PDF",
+    "downloadSuccess": "دانلود با موفقیت انجام شد",
+    "exportPdf": "صادر کردن به PDF",
     "exportTitle": "عنوان پیش‌فرض",
+    "generatePdf": "ایجاد PDF",
+    "generatingPdf": "در حال تولید PDF...",
     "imageType": "فرمت تصویر",
     "includeTool": "شامل پیام‌های ابزار",
     "includeUser": "شامل پیام‌های کاربر",
+    "loadingPdf": "در حال بارگذاری PDF...",
+    "noPdfData": "داده‌ای برای PDF موجود نیست",
+    "pdf": "PDF",
+    "pdfErrorDescription": "خطا در تولید PDF، لطفاً دوباره تلاش کنید",
+    "pdfGenerationError": "تولید PDF ناموفق بود",
+    "pdfReady": "PDF آماده است",
+    "regeneratePdf": "تولید مجدد PDF",
     "screenshot": "اسکرین‌شات",
     "settings": "تنظیمات خروجی",
     "text": "متن",
+    "widthMode": {
+      "label": "حالت عرض",
+      "narrow": "حالت صفحه باریک",
+      "wide": "حالت صفحه عریض"
+    },
     "withBackground": "شامل تصویر پس‌زمینه",
     "withFooter": "شامل پاورقی",
     "withPluginInfo": "شامل اطلاعات افزونه",
@@ -228,6 +354,12 @@
     "action": "ورودی صوتی",
     "loading": "در حال شناسایی...",
     "prettifying": "در حال ویرایش..."
+  },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "همه وظایف انجام شده‌اند",
+      "title": "وظایف انجام شده"
+    }
   },
   "thread": {
     "divider": "زیرموضوع",
@@ -242,6 +374,7 @@
     "chats": "پیام‌های گفتگو",
     "historySummary": "خلاصه تاریخ",
     "rest": "باقی‌مانده قابل استفاده",
+    "supervisor": "مجری گروه",
     "systemRole": "تنظیم نقش",
     "title": "جزئیات پیام‌ها",
     "tools": "تنظیمات افزونه",
@@ -252,6 +385,29 @@
     "overload": "بیش از حد",
     "remained": "باقی‌مانده",
     "used": "استفاده شده"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "تأیید",
+      "approveAndRemember": "تأیید و به خاطر سپردن",
+      "approveOnce": "تأیید فقط برای این بار",
+      "mode": {
+        "allowList": "فهرست مجاز",
+        "allowListDesc": "فقط ابزارهای تأییدشده به‌صورت خودکار اجرا می‌شوند",
+        "autoRun": "تأیید خودکار",
+        "autoRunDesc": "تأیید خودکار اجرای همه ابزارها",
+        "manual": "دستی",
+        "manualDesc": "نیاز به تأیید دستی برای هر بار فراخوانی"
+      },
+      "reject": "رد کردن",
+      "rejectAndContinue": "رد کردن و تلاش مجدد برای اجرا",
+      "rejectOnly": "رد کردن",
+      "rejectReasonPlaceholder": "وارد کردن دلیل رد به Agent کمک می‌کند تا اقدامات بعدی را بهینه کند",
+      "rejectTitle": "رد این فراخوانی ابزار",
+      "rejectedWithReason": "این فراخوانی ابزار با دلیل زیر رد شد:{{reason}}",
+      "toolAbort": "این فراخوانی ابزار توسط کاربر لغو شد",
+      "toolRejected": "این فراخوانی ابزار به‌صورت دستی رد شد"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "آیا مایل به باز کردن موضوع جدید هستید؟",
@@ -267,6 +423,7 @@
     "action": "خواندن با صدا",
     "clear": "حذف صدا"
   },
+  "untitledAgent": "دستیار بدون نام",
   "updateAgent": "به‌روزرسانی اطلاعات دستیار",
   "upload": {
     "action": {
@@ -280,6 +437,7 @@
       "actionFiletip": "بارگذاری فایل",
       "actionTooltip": "بارگذاری",
       "disabled": "مدل فعلی از تشخیص بصری و تحلیل فایل پشتیبانی نمی‌کند، لطفاً مدل را تغییر دهید و دوباره امتحان کنید",
+      "fileNotSupported": "در حالت مرورگر، بارگذاری فایل پشتیبانی نمی‌شود و فقط تصاویر قابل بارگذاری هستند",
       "visionNotSupported": "مدل فعلی از شناسایی بصری پشتیبانی نمی‌کند، لطفاً مدل را تغییر دهید و دوباره امتحان کنید"
     },
     "preview": {
@@ -288,7 +446,11 @@
         "pending": "آماده برای بارگذاری...",
         "processing": "در حال پردازش فایل..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "حجم فایل ویدئویی نباید از ۲۰ مگابایت بیشتر باشد، حجم فعلی فایل {{actualSize}} است"
     }
   },
+  "you": "شما",
   "zenMode": "حالت تمرکز"
 }

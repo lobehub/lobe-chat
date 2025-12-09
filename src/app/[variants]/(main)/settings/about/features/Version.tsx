@@ -47,14 +47,14 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
         </Link>
         <Flexbox align={'flex-start'} gap={6}>
           <div style={{ fontSize: 18, fontWeight: 'bolder' }}>{BRANDING_NAME}</div>
-          <div>
+          <Flexbox gap={6} horizontal={!mobile}>
             <Tag>v{CURRENT_VERSION}</Tag>
             {hasNewVersion && (
               <Tag color={'info'}>
                 {t('upgradeVersion.newVersion', { version: `v${latestVersion}` })}
               </Tag>
             )}
-          </div>
+          </Flexbox>
         </Flexbox>
       </Flexbox>
       <Flexbox flex={mobile ? 1 : undefined} gap={8} horizontal>

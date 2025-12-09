@@ -2,9 +2,10 @@
   "ModelSwitch": {
     "title": "Model"
   },
+  "active": "Active",
   "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
-  "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
-  "agentDefaultMessageWithoutEdit": "Hello, I'm **{{name}}**, let's start chatting!",
+  "agentDefaultMessageWithSystemRole": "Hello, I am **{{name}}**. How can I assist you today?",
+  "agentDefaultMessageWithoutEdit": "Hello, I am **{{name}}**. How can I assist you today?",
   "agents": "Assistants",
   "artifact": {
     "generating": "Generating",
@@ -13,17 +14,29 @@
     "thought": "Thought",
     "unknownTitle": "Untitled Work"
   },
+  "availableAgents": "Available assistants",
   "backToBottom": "Back to bottom",
   "chatList": {
+    "expandMessage": "Expand Message",
     "longMessageDetail": "View Details"
   },
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
+  "confirmRemoveChatGroupItemAlert": "This Agent team will be deleted. Team members will not be affected. Please confirm your action.",
+  "confirmRemoveGroupItemAlert": "You are about to delete this group. After deletion, its assistants will be moved to the default list. Please confirm your action.",
+  "confirmRemoveGroupSuccess": "Agent team deleted successfully",
   "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
   "confirmRemoveSessionSuccess": "Assistant removed successfully",
   "defaultAgent": "Default Assistant",
+  "defaultGroupChat": "Agent Team",
   "defaultList": "Default List",
   "defaultSession": "Default Assistant",
+  "dm": {
+    "placeholder": "Your private messages with {{agentTitle}} will appear here.",
+    "tooltip": "Send a private message",
+    "visibleTo": "Visible to {{target}} only",
+    "you": "You"
+  },
   "duplicateSession": {
     "loading": "Copying...",
     "success": "Copy successful",
@@ -40,6 +53,12 @@
       "desc": "Based on the Claude Thinking mechanism limit (<1>Learn more</1>), enabling this will automatically disable the limit on the number of historical messages.",
       "title": "Enable Deep Thinking"
     },
+    "imageAspectRatio": {
+      "title": "Image Aspect Ratio"
+    },
+    "imageResolution": {
+      "title": "Image Resolution"
+    },
     "reasoningBudgetToken": {
       "title": "Thinking Consumption Token"
     },
@@ -52,17 +71,65 @@
     "thinking": {
       "title": "Deep Thinking Switch"
     },
+    "thinkingLevel": {
+      "title": "Level of Thinking"
+    },
     "title": "Model Extension Features",
     "urlContext": {
       "desc": "When enabled, web links will be automatically parsed to retrieve the actual webpage context content",
       "title": "Extract Webpage Link Content"
     }
   },
+  "group": {
+    "desc": "Collaborate with multiple AI assistants in a shared conversation space.",
+    "memberTooltip": "There are {{count}} members in the group",
+    "orchestratorThinking": "The host is thinking...",
+    "removeMember": "Remove Member",
+    "title": "Group"
+  },
+  "groupDescription": "Team Description",
+  "groupSidebar": {
+    "members": {
+      "addMember": "Add Member",
+      "memberSettings": "Member Settings",
+      "orchestrator": "Host",
+      "orchestratorThinking": "The host is thinking...",
+      "removeMember": "Remove Member",
+      "stopOrchestrator": "Stop Thinking",
+      "triggerOrchestrator": "Start Group Chat"
+    },
+    "tabs": {
+      "host": "Host",
+      "members": "Members",
+      "role": "Settings"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "Select existing assistants...",
+    "createGroup": "Create Team",
+    "existingMembers": "Current Agents",
+    "groupMembers": "These assistants will also be added to your list",
+    "host": {
+      "description": "Enable the team to operate independently",
+      "title": "Enable Host",
+      "tooltip": "If the team host is disabled, you'll need to manually @mention members to get their responses"
+    },
+    "memberCount": "{{count}} members",
+    "noMatchingTemplates": "No matching templates",
+    "noSelectedTemplates": "No templates selected",
+    "noTemplateMembers": "No members in the template",
+    "noTemplates": "No templates available",
+    "searchTemplates": "Search templates...",
+    "title": "Create Agent Team",
+    "useTemplate": "Use Template"
+  },
+  "hideForYou": "Direct message content is hidden. Please enable 'Show Direct Message Content' in settings to view.",
   "history": {
     "title": "The assistant will only remember the last {{count}} messages."
   },
   "historyRange": "History Range",
   "historySummary": "Historical Message Summary",
+  "inactive": "Inactive",
   "inbox": {
     "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
     "title": "Just Chat"
@@ -77,11 +144,13 @@
     "sendWithCmdEnter": "Press <key/> to send",
     "sendWithEnter": "Press <key/> to send",
     "stop": "Stop",
-    "warp": "New Line"
+    "warp": "New Line",
+    "warpWithKey": "Press <key/> to insert a line break"
   },
   "intentUnderstanding": {
     "title": "Understanding and analyzing your intent..."
   },
+  "inviteMembers": "Invite members",
   "knowledgeBase": {
     "all": "All Content",
     "allFiles": "All Files",
@@ -100,12 +169,32 @@
     "uploadGuide": "Uploaded files can be viewed in the 'Knowledge Base'.",
     "viewMore": "View More"
   },
+  "memberSelection": {
+    "addMember": "Add Member",
+    "allMembers": "All members",
+    "createGroup": "Create Agent Team",
+    "noAvailableAgents": "No available agents to invite",
+    "noSelectedAgents": "No agents selected yet",
+    "searchAgents": "Search agents...",
+    "setInitialMembers": "Select Team Members"
+  },
+  "members": "Members",
+  "mention": {
+    "title": "Mention Members"
+  },
   "messageAction": {
+    "collapse": "Collapse Message",
+    "continueGeneration": "Continue Generating",
     "delAndRegenerate": "Delete and Regenerate",
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
+    "expand": "Expand Message",
     "regenerate": "Regenerate"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Visible only to {{name}}",
+      "title": "Direct Message"
+    },
     "modelCard": {
       "credit": "Credits",
       "creditPricing": "Pricing",
@@ -149,7 +238,22 @@
       "total": "Total Consumption"
     }
   },
+  "minimap": {
+    "jumpToMessage": "Jump to message {{index}}",
+    "nextMessage": "Next message",
+    "previousMessage": "Previous message",
+    "senderAssistant": "Agent",
+    "senderUser": "You"
+  },
   "newAgent": "New Assistant",
+  "newGroupChat": "New Agent Team",
+  "noAgentsYet": "This Agent Team has no members yet. Click the + button to invite assistants.",
+  "noAvailableAgents": "No members available to invite",
+  "noMatchingAgents": "No matching members found",
+  "noMembersYet": "This group doesn't have any members yet. Click the + button to invite assistants.",
+  "noSelectedAgents": "No members selected yet",
+  "openInNewWindow": "Open in a new window",
+  "owner": "Group Owner",
   "pin": "Pin",
   "pinOff": "Unpin",
   "rag": {
@@ -190,12 +294,16 @@
     "title": "Online Search"
   },
   "searchAgentPlaceholder": "Search assistants...",
+  "searchAgents": "Search assistants...",
+  "selectedAgents": "Selected agents",
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {
     "config": "Group Management",
     "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",
     "createAgentSuccess": "Assistant created successfully",
     "createGroup": "Add New Group",
+    "createGroupFailed": "Failed to create group chat",
+    "createGroupSuccess": "Group chat created successfully",
     "createSuccess": "Created successfully",
     "creatingAgent": "Creating assistant...",
     "inputPlaceholder": "Please enter group name...",
@@ -210,14 +318,32 @@
   "shareModal": {
     "copy": "Copy",
     "download": "Download Screenshot",
+    "downloadError": "Download failed",
     "downloadFile": "Download File",
+    "downloadPdf": "Download PDF",
+    "downloadSuccess": "Download successful",
+    "exportPdf": "Export as PDF",
     "exportTitle": "Default Title",
+    "generatePdf": "Generate PDF",
+    "generatingPdf": "Generating PDF...",
     "imageType": "Image Format",
     "includeTool": "Include Plugin Messages",
     "includeUser": "Include User Messages",
+    "loadingPdf": "Loading PDF...",
+    "noPdfData": "No PDF data available",
+    "pdf": "PDF",
+    "pdfErrorDescription": "An error occurred while generating the PDF, please try again",
+    "pdfGenerationError": "PDF generation failed",
+    "pdfReady": "PDF is ready",
+    "regeneratePdf": "Regenerate PDF",
     "screenshot": "Screenshot",
     "settings": "Export Settings",
     "text": "Text",
+    "widthMode": {
+      "label": "Width Mode",
+      "narrow": "Narrow",
+      "wide": "Wide"
+    },
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",
@@ -228,6 +354,12 @@
     "action": "Voice Input",
     "loading": "Recognizing...",
     "prettifying": "Polishing..."
+  },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "All tasks completed",
+      "title": "Tasks Completed"
+    }
   },
   "thread": {
     "divider": "Subtopic",
@@ -242,6 +374,7 @@
     "chats": "Chat Messages",
     "historySummary": "History Summary",
     "rest": "Remaining",
+    "supervisor": "Group Host",
     "systemRole": "Role Settings",
     "title": "Context Details",
     "tools": "Plugin Settings",
@@ -252,6 +385,29 @@
     "overload": "Exceeded Limit",
     "remained": "Remaining",
     "used": "Used"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Approve",
+      "approveAndRemember": "Approve and Remember",
+      "approveOnce": "Approve This Time Only",
+      "mode": {
+        "allowList": "Allow List",
+        "allowListDesc": "Only automatically execute approved tools",
+        "autoRun": "Auto Approve",
+        "autoRunDesc": "Automatically approve all tool executions",
+        "manual": "Manual",
+        "manualDesc": "Manual approval required for each invocation"
+      },
+      "reject": "Reject",
+      "rejectAndContinue": "Reject and Retry",
+      "rejectOnly": "Reject",
+      "rejectReasonPlaceholder": "Providing a reason will help the Agent understand and improve future actions",
+      "rejectTitle": "Reject This Tool Invocation",
+      "rejectedWithReason": "This tool invocation was actively rejected: {{reason}}",
+      "toolAbort": "This tool invocation was canceled by the user",
+      "toolRejected": "This tool invocation was actively rejected"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Enable new topic?",
@@ -267,6 +423,7 @@
     "action": "Text-to-Speech",
     "clear": "Clear Speech"
   },
+  "untitledAgent": "Untitled Assistant",
   "updateAgent": "Update Assistant Information",
   "upload": {
     "action": {
@@ -280,6 +437,7 @@
       "actionFiletip": "Upload File",
       "actionTooltip": "Upload",
       "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature.",
+      "fileNotSupported": "File uploads are not supported in browser mode; only images are allowed.",
       "visionNotSupported": "The current model does not support visual recognition. Please switch to a different model to use this feature."
     },
     "preview": {
@@ -288,7 +446,11 @@
         "pending": "Preparing to upload...",
         "processing": "Processing file..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "Video file size must not exceed 20MB. Current file size is {{actualSize}}."
     }
   },
+  "you": "you",
   "zenMode": "Zen Mode"
 }

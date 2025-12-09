@@ -14,10 +14,19 @@ const loadingArr = Array.from({ length: 12 })
   .fill('-')
   .map((item, index) => `${index}x${item}`);
 
-const List = memo(() => {
+type ListProps = {
+  onProviderSelect: (provider: string) => void;
+};
+
+const List = memo((props: ListProps) => {
+  const { onProviderSelect } = props;
   const { t } = useTranslation('modelProvider');
   const enabledList = useAiInfraStore(aiProviderSelectors.enabledAiProviderList, isEqual);
   const disabledList = useAiInfraStore(aiProviderSelectors.disabledAiProviderList, isEqual);
+  const disabledCustomList = useAiInfraStore(
+    aiProviderSelectors.disabledCustomAiProviderList,
+    isEqual,
+  );
   const [initAiProviderList] = useAiInfraStore((s) => [s.initAiProviderList]);
 
   if (!initAiProviderList)
@@ -30,7 +39,14 @@ const List = memo(() => {
         </Flexbox>
         <Grid gap={16} rows={3}>
           {loadingArr.map((item) => (
-            <Card enabled={false} id={item} key={item} loading source={'builtin'} />
+            <Card
+              enabled={false}
+              id={item}
+              key={item}
+              loading
+              onProviderSelect={onProviderSelect}
+              source={'builtin'}
+            />
           ))}
         </Grid>
       </Flexbox>
@@ -47,10 +63,25 @@ const List = memo(() => {
         </Flexbox>
         <Grid gap={16} rows={3}>
           {enabledList.map((item) => (
-            <Card {...item} key={item.id} />
+            <Card {...item} key={item.id} onProviderSelect={onProviderSelect} />
           ))}
         </Grid>
       </Flexbox>
+      {disabledCustomList.length > 0 && (
+        <Flexbox gap={24}>
+          <Flexbox align={'center'} gap={8} horizontal>
+            <Text strong style={{ fontSize: 18 }}>
+              {t('list.title.custom')}
+            </Text>
+            <Tag>{disabledCustomList.length}</Tag>
+          </Flexbox>
+          <Grid gap={16} rows={3}>
+            {disabledCustomList.map((item) => (
+              <Card {...item} key={item.id} onProviderSelect={onProviderSelect} />
+            ))}
+          </Grid>
+        </Flexbox>
+      )}
       <Flexbox gap={24}>
         <Flexbox align={'center'} gap={8} horizontal>
           <Text strong style={{ fontSize: 18 }}>
@@ -60,7 +91,7 @@ const List = memo(() => {
         </Flexbox>
         <Grid gap={16} rows={3}>
           {disabledList.map((item) => (
-            <Card {...item} key={item.id} />
+            <Card {...item} key={item.id} onProviderSelect={onProviderSelect} />
           ))}
         </Grid>
       </Flexbox>

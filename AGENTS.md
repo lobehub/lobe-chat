@@ -2,17 +2,20 @@
 
 This document serves as a comprehensive guide for all team members when developing LobeChat.
 
+## Project Description
+
+You are developing an open-source, modern-design AI Agent Workspace: LobeHub(previous LobeChat).
+
 ## Tech Stack
 
 Built with modern technologies:
 
-- **Frontend**: Next.js 15, React 19, TypeScript
+- **Frontend**: Next.js 16, React 19, TypeScript
 - **UI Components**: Ant Design, @lobehub/ui, antd-style
 - **State Management**: Zustand, SWR
 - **Database**: PostgreSQL, PGLite, Drizzle ORM
 - **Testing**: Vitest, Testing Library
 - **Package Manager**: pnpm (monorepo structure)
-- **Build Tools**: Next.js (Turbopack in dev, Webpack in prod), Vitest
 
 ## Directory Structure
 
@@ -28,7 +31,8 @@ The project follows a well-organized monorepo structure:
 
 ### Git Workflow
 
-- Use rebase for git pull: `git pull --rebase`
+- The current release branch is `next` instead of `main` until v2.0.0 is officially released
+- Use rebase for git pull
 - Git commit messages should prefix with gitmoji
 - Git branch name format: `username/feat/feature-name`
 - Use `.github/PULL_REQUEST_TEMPLATE.md` for PR descriptions
@@ -38,30 +42,12 @@ The project follows a well-organized monorepo structure:
 - Use `pnpm` as the primary package manager
 - Use `bun` to run npm scripts
 - Use `bunx` to run executable npm packages
-- Navigate to specific packages using `cd packages/<package-name>`
 
 ### Code Style Guidelines
 
 #### TypeScript
 
-- Follow strict TypeScript practices for type safety and code quality
-- Use proper type annotations
 - Prefer interfaces over types for object shapes
-- Use generics for reusable components
-
-#### React Components
-
-- Use functional components with hooks
-- Follow the component structure guidelines
-- Use antd-style & @lobehub/ui for styling
-- Implement proper error boundaries
-
-#### Database Schema
-
-- Follow Drizzle ORM naming conventions
-- Use plural snake_case for table names
-- Implement proper foreign key relationships
-- Follow the schema style guide
 
 ### Testing Strategy
 
@@ -70,64 +56,57 @@ The project follows a well-organized monorepo structure:
 **Commands**:
 
 - Web: `bunx vitest run --silent='passed-only' '[file-path-pattern]'`
-- Packages: `cd packages/[package-name] && bunx vitest run --silent='passed-only' '[file-path-pattern]'`
+- Packages: `cd packages/[package-name] && bunx vitest run --silent='passed-only' '[file-path-pattern]'` (each subpackage contains its own vitest.config.mts)
 
 **Important Notes**:
 
 - Wrap file paths in single quotes to avoid shell expansion
-- Never run `bun run test` - this runs all tests and takes ~10 minutes
-- If a test fails twice, stop and ask for help
-- Always add tests for new code
+- Never run `bun run test` - this runs all tests and takes \~10 minutes
 
 ### Type Checking
 
 - Use `bun run type-check` to check for type errors
-- Ensure all TypeScript errors are resolved before committing
 
-### Internationalization
+### i18n
 
-- Add new keys to `src/locales/default/namespace.ts`
-- Translate at least `zh-CN` files for development preview
-- Use hierarchical nested objects, not flat keys
-- Don't run `pnpm i18n` manually (handled by CI)
+- **Keys**: Add to `src/locales/default/namespace.ts`
+- **Dev**: Translate `locales/zh-CN/namespace.json` locale file only for preview
+- DON'T run `pnpm i18n`, let CI auto handle it
 
-## Available Development Rules
+## Project Rules Index
 
-The project provides comprehensive rules in `.cursor/rules/` directory:
+All following rules are saved under `.cursor/rules/` directory:
 
-### Core Development
+### Backend
 
-- `backend-architecture.mdc` - Three-layer architecture and data flow
-- `react-component.mdc` - Component patterns and UI library usage
-- `drizzle-schema-style-guide.mdc` - Database schema conventions
-- `define-database-model.mdc` - Model templates and CRUD patterns
-- `i18n.mdc` - Internationalization workflow
+- `drizzle-schema-style-guide.mdc` – Style guide for defining Drizzle ORM schemas
 
-### State Management & UI
+### Frontend
 
-- `zustand-slice-organization.mdc` - Store organization patterns
-- `zustand-action-patterns.mdc` - Action implementation patterns
-- `packages/react-layout-kit.mdc` - Flex layout component usage
+- `react-component.mdc` – React component style guide and conventions
+- `i18n.mdc` – Internationalization guide using react-i18next
+- `typescript.mdc` – TypeScript code style guide
+- `packages/react-layout-kit.mdc` – Usage guide for react-layout-kit
 
-### Testing & Quality
+### State Management
 
-- `testing-guide/testing-guide.mdc` - Comprehensive testing strategy
-- `code-review.mdc` - Code review process and standards
+- `zustand-action-patterns.mdc` – Recommended patterns for organizing Zustand actions
+- `zustand-slice-organization.mdc` – Best practices for structuring Zustand slices
 
 ### Desktop (Electron)
 
-- `desktop-feature-implementation.mdc` - Main/renderer process patterns
-- `desktop-local-tools-implement.mdc` - Tool integration workflow
-- `desktop-menu-configuration.mdc` - Menu system configuration
-- `desktop-window-management.mdc` - Window management patterns
-- `desktop-controller-tests.mdc` - Controller testing guide
+- `desktop-feature-implementation.mdc` – Implementing new Electron desktop features
+- `desktop-controller-tests.mdc` – Desktop controller unit testing guide
+- `desktop-local-tools-implement.mdc` – Workflow to add new desktop local tools
+- `desktop-menu-configuration.mdc` – Desktop menu configuration guide
+- `desktop-window-management.mdc` – Desktop window management guide
 
-## Best Practices
+### Debugging
 
-- **Conservative for existing code, modern approaches for new features**
-- **Code Language**: Use Chinese for files with existing Chinese comments, American English for new files
-- Always add tests for new functionality
-- Follow the established patterns in the codebase
-- Use proper error handling and logging
-- Implement proper accessibility features
-- Consider internationalization from the start
+- `debug-usage.mdc` – Using the debug package and namespace conventions
+
+### Testing
+
+- `testing-guide/testing-guide.mdc` – Comprehensive testing guide for Vitest
+- `testing-guide/electron-ipc-test.mdc` – Electron IPC interface testing strategy
+- `testing-guide/db-model-test.mdc` – Database Model testing guide

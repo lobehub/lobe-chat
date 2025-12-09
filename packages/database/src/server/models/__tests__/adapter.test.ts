@@ -16,20 +16,20 @@ import {
 
 let serverDB = await getTestDBInstance();
 
-// 测试数据
+// Test data
 const testModelName = 'Session';
 const testId = 'test-id';
 const testUserId = 'test-user-id';
 const testClientId = 'test-client-id';
 const testGrantId = 'test-grant-id';
 const testUserCode = 'test-user-code';
-const testExpires = new Date(Date.now() + 3600 * 1000); // 1小时后过期
+const testExpires = new Date(Date.now() + 3600 * 1000); // Expires in 1 hour
 
 beforeEach(async () => {
-  await serverDB.insert(users).values({ id: testUserId });
+  await serverDB.insert(users).values({ id: testUserId }).onConflictDoNothing();
 });
 
-// 每次测试后清理数据
+// Clean up data after each test
 afterEach(async () => {
   await serverDB.delete(users);
   await serverDB.delete(oidcClients);
@@ -39,14 +39,14 @@ afterEach(async () => {
 
 describe('DrizzleAdapter', () => {
   describe('constructor', () => {
-    it('应该正确创建适配器实例', () => {
+    it('should create adapter instance correctly', () => {
       const adapter = new DrizzleAdapter(testModelName, serverDB);
       expect(adapter).toBeDefined();
     });
   });
 
   describe('upsert', () => {
-    it('应该为Session模型创建新记录', async () => {
+    it('should create new record for Session model', async () => {
       const adapter = new DrizzleAdapter('Session', serverDB);
       const payload = {
         accountId: testUserId,
@@ -66,7 +66,7 @@ describe('DrizzleAdapter', () => {
       expect(result?.data).toEqual(payload);
     });
 
-    it('应该为Client模型创建新记录', async () => {
+    it('should create new record for Client model', async () => {
       const adapter = new DrizzleAdapter('Client', serverDB);
       const payload = {
         client_id: testClientId,
@@ -94,7 +94,7 @@ describe('DrizzleAdapter', () => {
       expect(result?.scopes).toEqual(['openid', 'profile', 'email']);
     });
 
-    it('应该为AccessToken模型创建新记录', async () => {
+    it('should create new record for AccessToken model', async () => {
       const adapter = new DrizzleAdapter('AccessToken', serverDB);
       const payload = {
         accountId: testUserId,
@@ -118,7 +118,7 @@ describe('DrizzleAdapter', () => {
       expect(result?.data).toEqual(payload);
     });
 
-    it('应该为DeviceCode模型创建新记录并包含userCode', async () => {
+    it('should create new record for DeviceCode model with userCode', async () => {
       const adapter = new DrizzleAdapter('DeviceCode', serverDB);
       const payload = {
         clientId: testClientId,
@@ -139,30 +139,30 @@ describe('DrizzleAdapter', () => {
       expect(result?.data).toEqual(payload);
     });
 
-    it('应该更新现有的Session记录', async () => {
+    it('should update existing Session record', async () => {
       const adapter = new DrizzleAdapter('Session', serverDB);
       const initialPayload = { accountId: testUserId, cookie: 'initial-cookie' };
       const updatedPayload = { accountId: testUserId, cookie: 'updated-cookie' };
 
-      // 初始插入
+      // Initial insert
       await adapter.upsert(testId, initialPayload, 3600);
       let result = await serverDB.query.oidcSessions.findFirst({
         where: eq(oidcSessions.id, testId),
       });
       expect(result?.data).toEqual(initialPayload);
 
-      // 更新
-      await adapter.upsert(testId, updatedPayload, 7200); // 新的过期时间
+      // Update
+      await adapter.upsert(testId, updatedPayload, 7200); // New expiration time
       result = await serverDB.query.oidcSessions.findFirst({ where: eq(oidcSessions.id, testId) });
       expect(result?.data).toEqual(updatedPayload);
-      // 验证 expiresAt 是否也更新了 (大约 2 小时后)
+      // Verify expiresAt is also updated (approximately 2 hours later)
       expect(result?.expiresAt).toBeInstanceOf(Date);
       const expectedExpires = Date.now() + 7200 * 1000;
-      expect(result!.expiresAt!.getTime()).toBeGreaterThan(expectedExpires - 5000); // 允许 5 秒误差
+      expect(result!.expiresAt!.getTime()).toBeGreaterThan(expectedExpires - 5000); // Allow 5 second tolerance
       expect(result!.expiresAt!.getTime()).toBeLessThan(expectedExpires + 5000);
     });
 
-    it('应该更新现有的Client记录', async () => {
+    it('should update existing Client record', async () => {
       const adapter = new DrizzleAdapter('Client', serverDB);
       const initialPayload = {
         client_id: testClientId,
@@ -175,12 +175,12 @@ describe('DrizzleAdapter', () => {
         ...initialPayload,
         client_uri: 'https://updated.com',
         name: 'Updated Client',
-        scopes: ['openid', 'profile'], // 假设 scope 格式是空格分隔字符串
+        scopes: ['openid', 'profile'],
         scope: 'openid profile',
         redirectUris: ['https://updated.com/callback'],
       };
 
-      // 初始插入
+      // Initial insert
       await adapter.upsert(testClientId, initialPayload, 0);
       let result = await serverDB.query.oidcClients.findFirst({
         where: eq(oidcClients.id, testClientId),
@@ -190,21 +190,20 @@ describe('DrizzleAdapter', () => {
       expect(result?.clientUri).toBe('https://initial.com');
       expect(result?.scopes).toEqual(['openid']);
 
-      // 更新
+      // Update
       await adapter.upsert(testClientId, updatedPayload, 0);
       result = await serverDB.query.oidcClients.findFirst({
         where: eq(oidcClients.id, testClientId),
       });
       expect(result?.name).toBe('Updated Client');
       expect(result?.clientUri).toBe('https://updated.com');
-      expect(result?.scopes).toEqual(['openid', 'profile']); // 验证数据库中存储的是数组
+      expect(result?.scopes).toEqual(['openid', 'profile']);
       expect(result?.redirectUris).toEqual(['https://updated.com/callback']);
     });
   });
 
   describe('find', () => {
-    it('应该找到存在的记录', async () => {
-      // 先创建一个记录
+    it('should find existing record', async () => {
       const adapter = new DrizzleAdapter('Session', serverDB);
       const payload = {
         accountId: testUserId,
@@ -214,15 +213,13 @@ describe('DrizzleAdapter', () => {
 
       await adapter.upsert(testId, payload, 3600);
 
-      // 然后查找它
       const result = await adapter.find(testId);
 
       expect(result).toBeDefined();
       expect(result).toEqual(payload);
     });
 
-    it('应该为Client模型返回正确的格式', async () => {
-      // 先创建一个Client记录
+    it('should return correct format for Client model', async () => {
       const adapter = new DrizzleAdapter('Client', serverDB);
       const payload = {
         client_id: testClientId,
@@ -239,7 +236,6 @@ describe('DrizzleAdapter', () => {
 
       await adapter.upsert(testClientId, payload, 0);
 
-      // 然后查找它
       const result = await adapter.find(testClientId);
 
       expect(result).toBeDefined();
@@ -249,50 +245,87 @@ describe('DrizzleAdapter', () => {
       expect(result.scope).toBe(payload.scope);
     });
 
-    it('应该返回undefined如果记录不存在', async () => {
+    it('should return undefined if record does not exist', async () => {
       const adapter = new DrizzleAdapter('Session', serverDB);
       const result = await adapter.find('non-existent-id');
       expect(result).toBeUndefined();
     });
 
-    it('应该返回undefined如果记录已过期', async () => {
-      // 创建一个过期的记录（过期时间设为过去）
+    it('should return undefined if record is expired', async () => {
       const adapter = new DrizzleAdapter('Session', serverDB);
       const payload = {
         accountId: testUserId,
         cookie: 'cookie-value',
-        exp: Math.floor(Date.now() / 1000) - 3600, // 1小时前
+        exp: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
       };
 
-      // 负的过期时间表示立即过期
+      // Negative expiration time means immediate expiration
       await adapter.upsert(testId, payload, -1);
 
-      // 等待一小段时间确保过期
+      // Wait briefly to ensure expiration
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      // 然后查找它
       const result = await adapter.find(testId);
 
       expect(result).toBeUndefined();
     });
 
-    it('应该返回undefined如果记录已被消费', async () => {
+    it('should return undefined if record is consumed', async () => {
       const adapter = new DrizzleAdapter('AccessToken', serverDB);
       const payload = { accountId: testUserId, clientId: testClientId };
       await adapter.upsert(testId, payload, 3600);
 
-      // 消费记录
+      // Consume the record
       await adapter.consume(testId);
 
-      // 查找已消费记录
+      // Find consumed record
+      const result = await adapter.find(testId);
+      expect(result).toBeUndefined();
+    });
+
+    it('should allow RefreshToken reuse within grace period', async () => {
+      const adapter = new DrizzleAdapter('RefreshToken', serverDB);
+      const payload = {
+        accountId: testUserId,
+        clientId: testClientId,
+        grantId: testGrantId,
+      };
+      await adapter.upsert(testId, payload, 3600);
+
+      // Consume the record
+      await adapter.consume(testId);
+
+      // Within grace period (180 seconds), should still find the record
+      const result = await adapter.find(testId);
+      expect(result).toBeDefined();
+      expect(result).toEqual(payload);
+    });
+
+    it('should reject RefreshToken reuse after grace period expires', async () => {
+      const adapter = new DrizzleAdapter('RefreshToken', serverDB);
+      const payload = {
+        accountId: testUserId,
+        clientId: testClientId,
+        grantId: testGrantId,
+      };
+      await adapter.upsert(testId, payload, 3600);
+
+      // Directly update consumedAt to a past time (beyond grace period)
+      // Grace period is 180 seconds, set to 200 seconds ago
+      const pastConsumedAt = new Date(Date.now() - 200 * 1000);
+      await serverDB
+        .update(oidcRefreshTokens)
+        .set({ consumedAt: pastConsumedAt })
+        .where(eq(oidcRefreshTokens.id, testId));
+
+      // Grace period expired, should return undefined
       const result = await adapter.find(testId);
       expect(result).toBeUndefined();
     });
   });
 
   describe('findByUserCode', () => {
-    it('应该通过userCode找到DeviceCode记录', async () => {
-      // 先创建一个DeviceCode记录
+    it('should find DeviceCode record by userCode', async () => {
       const adapter = new DrizzleAdapter('DeviceCode', serverDB);
       const payload = {
         clientId: testClientId,
@@ -302,46 +335,44 @@ describe('DrizzleAdapter', () => {
 
       await adapter.upsert(testId, payload, 3600);
 
-      // 然后通过userCode查找它
       const result = await adapter.findByUserCode(testUserCode);
 
       expect(result).toBeDefined();
       expect(result).toEqual(payload);
     });
 
-    it('应该返回undefined如果DeviceCode记录已过期', async () => {
+    it('should return undefined if DeviceCode record is expired', async () => {
       const adapter = new DrizzleAdapter('DeviceCode', serverDB);
       const payload = { clientId: testClientId, userCode: testUserCode };
-      // 使用负数 expiresIn 使其立即过期
+      // Use negative expiresIn to make it expire immediately
       await adapter.upsert(testId, payload, -1);
-      await new Promise((resolve) => setTimeout(resolve, 10)); // 短暂等待确保过期
+      await new Promise((resolve) => setTimeout(resolve, 10)); // Brief wait to ensure expiration
 
       const result = await adapter.findByUserCode(testUserCode);
       expect(result).toBeUndefined();
     });
 
-    it('应该返回undefined如果DeviceCode记录已被消费', async () => {
+    it('should return undefined if DeviceCode record is consumed', async () => {
       const adapter = new DrizzleAdapter('DeviceCode', serverDB);
       const payload = { clientId: testClientId, userCode: testUserCode };
       await adapter.upsert(testId, payload, 3600);
 
-      // 消费记录
+      // Consume the record
       await adapter.consume(testId);
 
-      // 查找已消费记录
+      // Find consumed record
       const result = await adapter.findByUserCode(testUserCode);
       expect(result).toBeUndefined();
     });
 
-    it('应该在非DeviceCode模型上抛出错误', async () => {
+    it('should throw error on non-DeviceCode model', async () => {
       const adapter = new DrizzleAdapter('Session', serverDB);
       await expect(adapter.findByUserCode(testUserCode)).rejects.toThrow();
     });
   });
 
   describe('findSessionByUserId', () => {
-    it('应该通过userId找到Session记录', async () => {
-      // 先创建一个Session记录
+    it('should find Session record by userId', async () => {
       const adapter = new DrizzleAdapter('Session', serverDB);
       const payload = {
         accountId: testUserId,
@@ -351,14 +382,13 @@ describe('DrizzleAdapter', () => {
 
       await adapter.upsert(testId, payload, 3600);
 
-      // 然后通过userId查找它
       const result = await adapter.findSessionByUserId(testUserId);
 
       expect(result).toBeDefined();
       expect(result).toEqual(payload);
     });
 
-    it('应该在非Session模型上返回undefined', async () => {
+    it('should return undefined on non-Session model', async () => {
       const adapter = new DrizzleAdapter('AccessToken', serverDB);
       const result = await adapter.findSessionByUserId(testUserId);
       expect(result).toBeUndefined();
@@ -366,8 +396,7 @@ describe('DrizzleAdapter', () => {
   });
 
   describe('destroy', () => {
-    it('应该删除存在的记录', async () => {
-      // 先创建一个记录
+    it('should delete existing record', async () => {
       const adapter = new DrizzleAdapter('Session', serverDB);
       const payload = {
         accountId: testUserId,
@@ -377,16 +406,16 @@ describe('DrizzleAdapter', () => {
 
       await adapter.upsert(testId, payload, 3600);
 
-      // 确认记录存在
+      // Confirm record exists
       let result = await serverDB.query.oidcSessions.findFirst({
         where: eq(oidcSessions.id, testId),
       });
       expect(result).toBeDefined();
 
-      // 删除记录
+      // Delete record
       await adapter.destroy(testId);
 
-      // 验证记录已被删除
+      // Verify record is deleted
       result = await serverDB.query.oidcSessions.findFirst({
         where: eq(oidcSessions.id, testId),
       });
@@ -395,8 +424,7 @@ describe('DrizzleAdapter', () => {
   });
 
   describe('consume', () => {
-    it('应该标记记录为已消费', async () => {
-      // 先创建一个记录
+    it('should mark record as consumed', async () => {
       const adapter = new DrizzleAdapter('AccessToken', serverDB);
       const payload = {
         accountId: testUserId,
@@ -406,10 +434,10 @@ describe('DrizzleAdapter', () => {
 
       await adapter.upsert(testId, payload, 3600);
 
-      // 消费记录
+      // Consume the record
       await adapter.consume(testId);
 
-      // 验证记录已被标记为已消费
+      // Verify record is marked as consumed
       const result = await serverDB.query.oidcAccessTokens.findFirst({
         where: eq(oidcAccessTokens.id, testId),
       });
@@ -420,8 +448,8 @@ describe('DrizzleAdapter', () => {
   });
 
   describe('revokeByGrantId', () => {
-    it('应该撤销与指定 grantId 相关的所有记录', async () => {
-      // 创建AccessToken记录
+    it('should revoke all records associated with specified grantId', async () => {
+      // Create AccessToken record
       const accessTokenAdapter = new DrizzleAdapter('AccessToken', serverDB);
       const accessTokenPayload = {
         accountId: testUserId,
@@ -431,7 +459,7 @@ describe('DrizzleAdapter', () => {
       };
       await accessTokenAdapter.upsert(testId, accessTokenPayload, 3600);
 
-      // 创建RefreshToken记录
+      // Create RefreshToken record
       const refreshTokenAdapter = new DrizzleAdapter('RefreshToken', serverDB);
       const refreshTokenPayload = {
         accountId: testUserId,
@@ -441,10 +469,10 @@ describe('DrizzleAdapter', () => {
       };
       await refreshTokenAdapter.upsert('refresh-' + testId, refreshTokenPayload, 3600);
 
-      // 撤销与testGrantId相关的所有记录
+      // Revoke all records associated with testGrantId
       await accessTokenAdapter.revokeByGrantId(testGrantId);
 
-      // 验证记录已被删除
+      // Verify records are deleted
       const accessTokenResult = await serverDB.query.oidcAccessTokens.findFirst({
         where: eq(oidcAccessTokens.id, testId),
       });
@@ -458,16 +486,16 @@ describe('DrizzleAdapter', () => {
       expect(refreshTokenResult).toBeUndefined();
     });
 
-    it('应该在Grant模型上直接返回', async () => {
-      // Grant模型不需要通过grantId来撤销
+    it('should return directly on Grant model', async () => {
+      // Grant model does not need to be revoked by grantId
       const adapter = new DrizzleAdapter('Grant', serverDB);
       await adapter.revokeByGrantId(testGrantId);
-      // 如果没有抛出错误，测试通过
+      // Test passes if no error is thrown
     });
   });
 
   describe('createAdapterFactory', () => {
-    it('应该创建一个适配器工厂函数', () => {
+    it('should create an adapter factory function', () => {
       const factory = DrizzleAdapter.createAdapterFactory(serverDB as any);
       expect(factory).toBeDefined();
       expect(typeof factory).toBe('function');
@@ -479,9 +507,9 @@ describe('DrizzleAdapter', () => {
   });
 
   describe('getTable (indirectly via public methods)', () => {
-    it('当使用不支持的模型名称时应该抛出错误', async () => {
+    it('should throw error when using unsupported model name', async () => {
       const invalidAdapter = new DrizzleAdapter('InvalidModelName', serverDB);
-      // 调用一个会触发 getTable 的方法
+      // Call a method that triggers getTable
       await expect(invalidAdapter.find('any-id')).rejects.toThrow('不支持的模型: InvalidModelName');
       await expect(invalidAdapter.upsert('any-id', {}, 3600)).rejects.toThrow(
         '不支持的模型: InvalidModelName',

@@ -1,0 +1,18 @@
+{
+  "desc": "Burada keşfetmekte olduğumuz yeni özellikleri düzenli olarak güncelliyoruz, denemekten çekinmeyin!",
+  "features": {
+    "assistantMessageGroup": {
+      "desc": "Asistan mesajlarını ve araç çağrısı sonuçlarını gruplar hâlinde göster",
+      "title": "Asistan Mesajları Gruplama"
+    },
+    "groupChat": {
+      "desc": "Çoklu yapay zeka ajanlarıyla grup sohbeti düzenleme yeteneğini etkinleştirir.",
+      "title": "Grup Sohbeti (Çoklu Ajan)"
+    },
+    "inputMarkdown": {
+      "desc": "Giriş alanında Markdown biçimlendirmesini (kalın yazı, kod blokları, tablolar vb.) anında görüntüleyin.",
+      "title": "Giriş Kutusu Markdown Görüntüleme"
+    }
+  },
+  "title": "Deneysel Özellikler"
+}

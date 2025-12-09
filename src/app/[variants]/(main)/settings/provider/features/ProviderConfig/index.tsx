@@ -1,5 +1,6 @@
 'use client';
 
+import { AES_GCM_URL, BASE_PROVIDER_DOC_URL, FORM_STYLE, isDesktop } from '@lobechat/const';
 import { ProviderCombine } from '@lobehub/icons';
 import {
   Avatar,
@@ -21,9 +22,7 @@ import urlJoin from 'url-join';
 import { z } from 'zod';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
-import { FORM_STYLE } from '@/const/layoutTokens';
-import { AES_GCM_URL, BASE_PROVIDER_DOC_URL } from '@/const/url';
-import { isDesktop, isServerMode } from '@/const/version';
+import { SkeletonInput, SkeletonSwitch } from '@/components/Skeleton';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import {
   AiProviderDetailItem,
@@ -34,7 +33,6 @@ import {
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
 import Checker, { CheckErrorRender } from './Checker';
 import EnableSwitch from './EnableSwitch';
-import { SkeletonInput } from './SkeletonInput';
 import UpdateProviderInfo from './UpdateProviderInfo';
 
 const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
@@ -298,7 +296,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         (showApiKey && isProviderApiKeyNotEmpty));
     const clientFetchItem = showClientFetch && {
       children: isLoading ? (
-        <Skeleton.Button active className={styles.switchLoading} />
+        <SkeletonSwitch />
       ) : (
         <Switch checked={isFetchOnClient} disabled={configUpdating} />
       ),
@@ -351,7 +349,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             minWidth: undefined,
           }
         : undefined,
-      showAceGcm && isServerMode && aceGcmItem,
+      showAceGcm && aceGcmItem,
     ].filter(Boolean) as FormItemProps[];
 
     const logoUrl = data?.logo ?? logo;
@@ -424,5 +422,3 @@ const ProviderConfig = memo<ProviderConfigProps>(
 );
 
 export default ProviderConfig;
-
-export { SkeletonInput } from './SkeletonInput';

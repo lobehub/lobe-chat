@@ -6,9 +6,15 @@ import type { ModelProviderKey } from '../types';
 export interface ModelProcessorConfig {
   excludeKeywords?: readonly string[]; // 对符合的模型不添加标签
   functionCallKeywords?: readonly string[];
+  imageOutputKeywords?: readonly string[];
   reasoningKeywords?: readonly string[];
+  searchKeywords?: readonly string[];
+  videoKeywords?: readonly string[];
   visionKeywords?: readonly string[];
 }
+
+// 默认关键字：任意包含 -search 的模型 ID 视为支持联网搜索
+const DEFAULT_SEARCH_KEYWORDS = ['-search'] as const;
 
 // 模型能力标签关键词配置
 export const MODEL_LIST_CONFIGS = {
@@ -17,19 +23,45 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['-3-7', '3.7', '-4'],
     visionKeywords: ['claude'],
   },
+  comfyui: {
+    // ComfyUI models are image generation models, no chat capabilities
+    functionCallKeywords: [],
+    reasoningKeywords: [],
+    visionKeywords: [],
+  },
   deepseek: {
     functionCallKeywords: ['v3', 'r1', 'deepseek-chat'],
-    reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1'],
+    reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1', 'v3.2'],
+    visionKeywords: ['ocr'],
   },
   google: {
-    functionCallKeywords: ['gemini'],
-    reasoningKeywords: ['thinking', '-2.5-'],
+    excludeKeywords: ['tts'],
+    functionCallKeywords: ['gemini', '!-image-'],
+    imageOutputKeywords: ['-image-'],
+    reasoningKeywords: ['thinking', '-2.5-', '!-image-'],
+    searchKeywords: ['-search', '!-image-'],
+    videoKeywords: ['-2.5-', '!-image-'],
     visionKeywords: ['gemini', 'learnlm'],
+  },
+  inclusionai: {
+    functionCallKeywords: ['ling-'],
+    reasoningKeywords: ['ring-'],
+    visionKeywords: ['ming-'],
   },
   llama: {
     functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
     reasoningKeywords: [],
     visionKeywords: ['llava'],
+  },
+  longcat: {
+    functionCallKeywords: ['longcat'],
+    reasoningKeywords: ['thinking'],
+    visionKeywords: [],
+  },
+  minimax: {
+    functionCallKeywords: ['minimax'],
+    reasoningKeywords: ['-m'],
+    visionKeywords: ['-vl', 'Text-01'],
   },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
@@ -53,8 +85,8 @@ export const MODEL_LIST_CONFIGS = {
       'qwen2.5',
       'qwen3',
     ],
-    reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-'],
-    visionKeywords: ['qvq', 'vl'],
+    reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-', '!-max-'],
+    visionKeywords: ['qvq', '-vl', '-omni'],
   },
   v0: {
     functionCallKeywords: ['v0'],
@@ -66,9 +98,14 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking', 'seed', 'ui-tars'],
     visionKeywords: ['vision', '-m', 'seed', 'ui-tars'],
   },
+  wenxin: {
+    functionCallKeywords: ['ernie-5', 'ernie-x1', 'pro', 'ernie-4.5-21b-a3b-thinking'],
+    reasoningKeywords: ['thinking', 'ernie-x', 'ernie-4.5-vl-28b-a3b'],
+    visionKeywords: ['-vl', 'ernie-5.0', 'picocr', 'qianfan-composition'],
+  },
   xai: {
     functionCallKeywords: ['grok'],
-    reasoningKeywords: ['mini', 'grok-4', 'grok-code-fast'],
+    reasoningKeywords: ['mini', 'grok-4', 'grok-code-fast', '!non-reasoning'],
     visionKeywords: ['vision', 'grok-4'],
   },
   zeroone: {
@@ -85,14 +122,19 @@ export const MODEL_LIST_CONFIGS = {
 // 模型所有者 (提供商) 关键词配置
 export const MODEL_OWNER_DETECTION_CONFIG = {
   anthropic: ['claude'],
+  comfyui: ['comfyui/'], // ComfyUI models detection - all ComfyUI models have comfyui/ prefix
   deepseek: ['deepseek'],
   google: ['gemini', 'imagen'],
+  inclusionai: ['ling-', 'ming-', 'ring-'],
   llama: ['llama', 'llava'],
+  longcat: ['longcat'],
+  minimax: ['minimax'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
   v0: ['v0'],
   volcengine: ['doubao'],
+  wenxin: ['ernie', 'qianfan'],
   xai: ['grok'],
   zeroone: ['yi-'],
   zhipu: ['glm'],
@@ -279,6 +321,44 @@ const processDisplayName = (displayName: string): string => {
 };
 
 /**
+ * 获取模型提供商的本地配置
+ * @param provider 模型提供商
+ * @returns 模型提供商的本地配置
+ */
+const getProviderLocalConfig = async (provider?: ModelProviderKey): Promise<any[] | null> => {
+  let providerLocalConfig: any[] | null = null;
+  if (provider) {
+    try {
+      const modules = await import('model-bank');
+
+      providerLocalConfig = modules[provider];
+    } catch {
+      // 如果配置文件不存在或导入失败，保持为 null
+      providerLocalConfig = null;
+    }
+  }
+  return providerLocalConfig;
+};
+
+/**
+ * 获取模型本地配置
+ * @param providerLocalConfig 模型提供商的本地配置
+ * @param model 模型对象
+ * @returns 模型本地配置
+ */
+const getModelLocalEnableConfig = (
+  providerLocalConfig: any[],
+  model: { id: string },
+): any | null => {
+  // 如果提供了 providerid 且有本地配置，尝试从中获取模型的 enabled 状态
+  let providerLocalModelConfig = null;
+  if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
+    providerLocalModelConfig = providerLocalConfig.find((m) => m.id === model.id);
+  }
+  return providerLocalModelConfig;
+};
+
+/**
  * 处理模型卡片的通用逻辑
  */
 const processModelCard = (
@@ -291,6 +371,9 @@ const processModelCard = (
     visionKeywords = [],
     reasoningKeywords = [],
     excludeKeywords = [],
+    searchKeywords = DEFAULT_SEARCH_KEYWORDS,
+    imageOutputKeywords = [],
+    videoKeywords = [],
   } = config;
 
   const isExcludedModel = isKeywordListMatch(model.id.toLowerCase(), excludeKeywords);
@@ -314,13 +397,25 @@ const processModelCard = (
     return undefined;
   }
 
-  const formatPricing = (pricing?: { input?: number; output?: number; units?: any[] }) => {
+  const formatPricing = (pricing?: {
+    cachedInput?: number;
+    input?: number;
+    output?: number;
+    units?: any[];
+    writeCacheInput?: number;
+  }) => {
     if (!pricing || typeof pricing !== 'object') return undefined;
     if (Array.isArray(pricing.units)) {
       return { units: pricing.units };
     }
-    const { input, output } = pricing;
-    if (typeof input !== 'number' && typeof output !== 'number') return undefined;
+    const { input, output, cachedInput, writeCacheInput } = pricing;
+    if (
+      typeof input !== 'number' &&
+      typeof output !== 'number' &&
+      typeof cachedInput !== 'number' &&
+      typeof writeCacheInput !== 'number'
+    )
+      return undefined;
 
     const units = [];
     if (typeof input === 'number') {
@@ -339,6 +434,22 @@ const processModelCard = (
         unit: 'millionTokens' as const,
       });
     }
+    if (typeof cachedInput === 'number') {
+      units.push({
+        name: 'textInput_cacheRead' as const,
+        rate: cachedInput,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
+    if (typeof writeCacheInput === 'number') {
+      units.push({
+        name: 'textInput_cacheWrite' as const,
+        rate: writeCacheInput,
+        strategy: 'fixed' as const,
+        unit: 'millionTokens' as const,
+      });
+    }
     return { units };
   };
 
@@ -353,18 +464,32 @@ const processModelCard = (
       ((isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) ||
         false),
     id: model.id,
+    imageOutput:
+      model.imageOutput ??
+      knownModel?.abilities?.imageOutput ??
+      ((isKeywordListMatch(model.id.toLowerCase(), imageOutputKeywords) && !isExcludedModel) ||
+        false),
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
     pricing: formatPricing(model?.pricing) ?? undefined,
     reasoning:
       model.reasoning ??
       knownModel?.abilities?.reasoning ??
-      (isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) || false),
+      ((isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) && !isExcludedModel) ||
+        false),
     releasedAt: processReleasedAt(model, knownModel),
+    search:
+      model.search ??
+      knownModel?.abilities?.search ??
+      ((isKeywordListMatch(model.id.toLowerCase(), searchKeywords) && !isExcludedModel) || false),
     type: modelType,
     // current, only image model use the parameters field
     ...(modelType === 'image' && {
       parameters: model.parameters ?? knownModel?.parameters,
     }),
+    video:
+      model.video ??
+      knownModel?.abilities?.video ??
+      ((isKeywordListMatch(model.id.toLowerCase(), videoKeywords) && !isExcludedModel) || false),
     vision:
       model.vision ??
       knownModel?.abilities?.vision ??
@@ -376,7 +501,7 @@ const processModelCard = (
  * 处理单一提供商的模型列表
  * @param modelList 模型列表
  * @param config 提供商配置
- * @param provider 提供商类型（可选，用于优先匹配对应的本地配置）
+ * @param provider 提供商类型（可选，用于优先匹配对应的本地配置, 当提供了 provider 时，才会尝试从本地配置覆盖 enabled）
  * @returns 处理后的模型卡片列表
  */
 export const processModelList = async (
@@ -385,6 +510,9 @@ export const processModelList = async (
   provider?: keyof typeof MODEL_LIST_CONFIGS,
 ): Promise<ChatModelCard[]> => {
   const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
+
+  // 如果提供了 provider，尝试获取该提供商的本地配置
+  const providerLocalConfig = await getProviderLocalConfig(provider as ModelProviderKey);
 
   return Promise.all(
     modelList.map(async (model) => {
@@ -402,7 +530,24 @@ export const processModelList = async (
         );
       }
 
-      return processModelCard(model, config, knownModel);
+      const processedModel = processModelCard(model, config, knownModel);
+
+      // 如果提供了 provider 且有本地配置，尝试从中获取模型的 enabled 状态
+      const providerLocalModelConfig = getModelLocalEnableConfig(
+        providerLocalConfig as any[],
+        model,
+      );
+
+      // 如果找到了本地配置中的模型，使用其 enabled 状态
+      if (
+        processedModel &&
+        providerLocalModelConfig &&
+        typeof providerLocalModelConfig.enabled === 'boolean'
+      ) {
+        processedModel.enabled = providerLocalModelConfig.enabled;
+      }
+
+      return processedModel;
     }),
   ).then((results) => results.filter((result) => !!result));
 };
@@ -420,17 +565,7 @@ export const processMultiProviderModelList = async (
   const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   // 如果提供了 providerid，尝试获取该提供商的本地配置
-  let providerLocalConfig: any[] | null = null;
-  if (providerid) {
-    try {
-      const modules = await import('model-bank');
-
-      providerLocalConfig = modules[providerid];
-    } catch {
-      // 如果配置文件不存在或导入失败，保持为 null
-      providerLocalConfig = null;
-    }
-  }
+  const providerLocalConfig = await getProviderLocalConfig(providerid);
 
   return Promise.all(
     modelList.map(async (model) => {
@@ -448,10 +583,10 @@ export const processMultiProviderModelList = async (
       }
 
       // 如果提供了 providerid 且有本地配置，尝试从中获取模型的 enabled 状态
-      let providerLocalModelConfig = null;
-      if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
-        providerLocalModelConfig = providerLocalConfig.find((m) => m.id === model.id);
-      }
+      const providerLocalModelConfig = getModelLocalEnableConfig(
+        providerLocalConfig as any[],
+        model,
+      );
 
       const processedModel = processModelCard(model, config, knownModel);
 

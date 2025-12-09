@@ -1,14 +1,15 @@
 'use client';
 
 import { Pagination as Page } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
 import { memo } from 'react';
-import urlJoin from 'url-join';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/discover/features/const';
 import { useQuery } from '@/hooks/useQuery';
-import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
+
+const SCROLL_CONTAINER_ID = 'lobe-mobile-scroll-container';
 
 const useStyles = createStyles(({ css, token, prefixCls }) => {
   return {
@@ -36,15 +37,17 @@ interface PaginationProps {
 const Pagination = memo<PaginationProps>(({ tab, currentPage, total, pageSize }) => {
   const { styles } = useStyles();
   const { page } = useQuery();
-  const router = useQueryRoute();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { mobile } = useResponsive();
 
   const handlePageChange = (newPage: number) => {
-    router.push(urlJoin('/discover', tab), {
-      query: {
-        page: String(newPage),
-      },
-    });
-    const scrollableElement = document?.querySelector(`#${SCROLL_PARENT_ID}`);
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('page', String(newPage));
+    navigate(`/discover/${tab}?${searchParams.toString()}`);
+
+    const scrollContainerId = mobile ? SCROLL_CONTAINER_ID : SCROLL_PARENT_ID;
+    const scrollableElement = document?.querySelector(`#${scrollContainerId}`);
     if (!scrollableElement) return;
     scrollableElement.scrollTo({ behavior: 'smooth', top: 0 });
   };
@@ -53,6 +56,7 @@ const Pagination = memo<PaginationProps>(({ tab, currentPage, total, pageSize })
     <Page
       className={styles.page}
       current={page ? Number(page) : currentPage}
+      data-testid="pagination"
       onChange={handlePageChange}
       pageSize={pageSize}
       showSizeChanger={false}

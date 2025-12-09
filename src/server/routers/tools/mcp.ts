@@ -1,19 +1,17 @@
+import { isDesktop } from '@lobechat/const';
+import {
+  GetStreamableMcpServerManifestInputSchema,
+  StreamableHTTPAuthSchema,
+} from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { isDesktop, isServerMode } from '@/const/version';
-import { passwordProcedure } from '@/libs/trpc/edge';
+import { ToolCallContent } from '@/libs/mcp';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { FileService } from '@/server/services/file';
 import { mcpService } from '@/server/services/mcp';
-
-const StreamableHTTPAuthSchema = z
-  .object({
-    // Bearer Token
-    accessToken: z.string().optional(),
-    token: z.string().optional(),
-    type: z.enum(['none', 'bearer', 'oauth2']), // OAuth2 Access Token
-  })
-  .optional();
+import { processContentBlocks } from '@/server/services/mcp/contentProcessor';
 
 // Define Zod schemas for MCP Client parameters
 const httpParamsSchema = z.object({
@@ -43,24 +41,17 @@ const checkStdioEnvironment = (params: z.infer<typeof mcpClientParamsSchema>) =>
   }
 };
 
-const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
+const mcpProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next }) => {
+  return next({
+    ctx: {
+      fileService: new FileService(ctx.serverDB, ctx.userId),
+    },
+  });
+});
 
 export const mcpRouter = router({
   getStreamableMcpServerManifest: mcpProcedure
-    .input(
-      z.object({
-        auth: StreamableHTTPAuthSchema,
-        headers: z.record(z.string()).optional(),
-        identifier: z.string(),
-        metadata: z
-          .object({
-            avatar: z.string().optional(),
-            description: z.string().optional(),
-          })
-          .optional(),
-        url: z.string().url(),
-      }),
-    )
+    .input(GetStreamableMcpServerManifestInputSchema)
     .query(async ({ input }) => {
       return await mcpService.getStreamableMcpServerManifest(
         input.identifier,
@@ -114,13 +105,21 @@ export const mcpRouter = router({
         toolName: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       // Stdio check can be done here or rely on the service/client layer
       checkStdioEnvironment(input.params);
 
-      // Pass the validated params, toolName, and args to the service
-      const data = await mcpService.callTool(input.params, input.toolName, input.args);
+      // Create a closure that binds fileService and userId to processContentBlocks
+      const boundProcessContentBlocks = async (blocks: ToolCallContent[]) => {
+        return processContentBlocks(blocks, ctx.fileService);
+      };
 
-      return JSON.stringify(data);
+      // Pass the validated params, toolName, args, and bound processContentBlocks to the service
+      return await mcpService.callTool({
+        clientParams: input.params,
+        toolName: input.toolName,
+        argsStr: input.args,
+        processContentBlocks: boundProcessContentBlocks,
+      });
     }),
 });

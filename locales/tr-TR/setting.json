@@ -2,6 +2,45 @@
   "about": {
     "title": "Hakkında"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Avatar",
+      "description": "Açıklama",
+      "name": "Ad",
+      "tags": "Etiketler",
+      "title": "Asistan Bilgileri"
+    },
+    "chat": {
+      "displayMode": "Görüntüleme Modu",
+      "enableHistoryCount": "Geçmiş Mesaj Sayısını Etkinleştir",
+      "historyCount": "Geçmiş Mesaj Sayısı",
+      "no": "Hayır",
+      "searchMode": "Arama Modu",
+      "title": "Sohbet Tercihleri",
+      "yes": "Evet"
+    },
+    "model": {
+      "maxTokens": "Maksimum Token Sayısı",
+      "model": "Model",
+      "provider": "Sağlayıcı",
+      "temperature": "Sıcaklık",
+      "title": "Model Ayarları",
+      "topP": "Top P Değeri"
+    },
+    "plugins": {
+      "count": "Eklenti Ayarları ({{count}})",
+      "empty": "Henüz eklenti yüklenmedi",
+      "title": "Yüklü Eklentiler"
+    },
+    "role": {
+      "systemRole": "Sistem İpucu",
+      "title": "Rol Ayarları"
+    },
+    "value": {
+      "unset": "Ayarlanmadı",
+      "untitled": "İsimsiz Asistan"
+    }
+  },
   "agentTab": {
     "chat": "Sohbet Tercihi",
     "meta": "Asistan Bilgisi",
@@ -18,6 +57,8 @@
     },
     "title": "Analitik"
   },
+  "checking": "Kontrol ediliyor...",
+  "checkingPermissions": "İzinler kontrol ediliyor...",
   "danger": {
     "clear": {
       "action": "Temizle",
@@ -35,9 +76,16 @@
       "title": "Tüm Ayarları Sıfırla"
     }
   },
+  "groupTab": {
+    "chat": "Sohbet",
+    "members": "Üyeler",
+    "meta": "Temel Bilgiler"
+  },
   "header": {
     "desc": "Tercihler ve model ayarları.",
     "global": "Genel Ayarlar",
+    "group": "Takım Ayarları",
+    "groupDesc": "Agent takımını ve sohbet tercihlerini yönetin",
     "session": "Oturum Ayarları",
     "sessionDesc": "Karakter ayarları ve oturum tercihleri.",
     "sessionWithName": "Oturum Ayarları · {{name}}",
@@ -139,6 +187,61 @@
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Bu sürümdeki başlıca değişiklikleri ve iyileştirmeleri açıklayın",
+        "label": "Değişiklik Günlüğü",
+        "maxLengthError": "Değişiklik günlüğü 500 karakteri geçemez",
+        "placeholder": "Lütfen değişiklik günlüğünü girin",
+        "required": "Lütfen değişiklik günlüğünü girin"
+      },
+      "comparison": {
+        "local": "Yerel Mevcut Sürüm",
+        "remote": "Yayımlanmış Mevcut Sürüm"
+      },
+      "identifier": {
+        "extra": "Tanımlayıcı, asistanın benzersiz kimliği olarak kullanılacaktır. Küçük harf, rakam ve tire kullanmanız önerilir",
+        "label": "Asistan Tanımlayıcısı",
+        "lengthError": "Tanımlayıcı uzunluğu 3 ile 50 karakter arasında olmalıdır",
+        "patternError": "Tanımlayıcı yalnızca küçük harf, rakam ve tire içerebilir",
+        "placeholder": "Lütfen asistanın benzersiz tanımlayıcısını girin, örn: web-development",
+        "required": "Lütfen asistan tanımlayıcısını girin"
+      },
+      "loading": {
+        "fetchingRemote": "Uzak veriler yükleniyor...",
+        "submit": "Asistan yayımlanıyor...",
+        "upload": "Yeni sürüm yayımlanıyor..."
+      },
+      "messages": {
+        "createVersionFailed": "Sürüm oluşturulamadı: {{message}}",
+        "fetchRemoteFailed": "Uzak asistan verileri alınamadı",
+        "missingIdentifier": "Bu asistana henüz bir pazar tanımlayıcısı atanmadı",
+        "notAuthenticated": "Lütfen önce pazar hesabınıza giriş yapın",
+        "publishFailed": "Yayımlama başarısız: {{message}}"
+      },
+      "submitButton": "Yayımla",
+      "title": {
+        "submit": "Asistan Pazarında Paylaş",
+        "upload": "Yeni Sürüm Yayımla"
+      }
+    },
+    "resultModal": {
+      "message": "Asistan incelemeye gönderildi, onaylandıktan sonra otomatik olarak yayımlanacaktır. Yayımlanan asistanı görmek için 'Pazarda Görüntüle'ye tıklayın.",
+      "view": "Pazarda Görüntüle"
+    },
+    "submit": {
+      "button": "Pazarda Paylaş",
+      "tooltip": "Asistanı pazarda paylaş"
+    },
+    "upload": {
+      "button": "Yeni Sürüm Yayımla",
+      "tooltip": "Asistan pazarına yeni sürüm yayımla"
+    }
+  },
+  "message": {
+    "success": "Güncelleme başarılı"
+  },
   "plugin": {
     "addMCPPlugin": "MCP Eklentisi Ekle",
     "addTooltip": "Eklenti Ekle",
@@ -189,6 +292,12 @@
       "disabled": "Kapalı",
       "elegant": "Zarif",
       "title": "Yanıt Animasyonu"
+    },
+    "contextMenuMode": {
+      "default": "Varsayılan",
+      "desc": "Sohbet mesajları sağ tıklama menüsünün görüntüleme seçeneğini seçin",
+      "disabled": "Kullanma",
+      "title": "Sağ Tıklama Menüsü Seçeneği"
     },
     "neutralColor": {
       "desc": "Farklı renk eğilimlerine sahip gri tonları özelleştirme",
@@ -293,6 +402,109 @@
       "title": "Tema"
     },
     "title": "Genel Ayarlar"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Lütfen takım açıklamasını girin",
+      "title": "Takım Açıklaması"
+    },
+    "name": {
+      "placeholder": "Lütfen takım adını girin",
+      "title": "Takım Adı"
+    },
+    "scene": {
+      "desc": "Takım senaryosunu seçin",
+      "options": {
+        "casual": "Rahat",
+        "productive": "Verimli"
+      },
+      "title": "Takım Senaryosu"
+    },
+    "submit": "Takımı Güncelle",
+    "systemPrompt": {
+      "placeholder": "Lütfen moderatör sistem istemini girin",
+      "title": "Moderatör Sistem İstemi"
+    },
+    "title": "Agent Takım Bilgileri"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Kapattıktan sonra bile, yine de asistanlara özel mesaj gönderebilirsiniz",
+      "title": "Asistanların özel mesaj göndermesine izin ver"
+    },
+    "enableSupervisor": {
+      "desc": "Agent takım moderatörünü etkinleştir, moderatör takım sohbet sürecini yönetecektir",
+      "title": "Moderatörü etkinleştir"
+    },
+    "maxResponseInRow": {
+      "desc": "Üyelerin kaç mesajı ardışık olarak yanıtlayabileceğini seçin. 0 olarak ayarlanırsa bu kısıtlama devre dışı bırakılır.",
+      "title": "Ardışık Yanıt Mesaj Sayısı"
+    },
+    "model": {
+      "desc": "Grup üyelerinin konuşmaları etkilenmez. Bazı modeller moderatör modeli olarak kullanılamaz.",
+      "title": "Moderatör Modeli"
+    },
+    "orchestratorTitle": "Moderatör Ayarları",
+    "responseOrder": {
+      "desc": "Agent'lar sohbette belirlenen sıraya göre yanıt verecektir",
+      "options": {
+        "natural": "Doğal",
+        "sequential": "Sıralı"
+      },
+      "placeholder": "Yanıt sırasını seçin",
+      "title": "Yanıt Sırası"
+    },
+    "responseSpeed": {
+      "desc": "Sohbetin genel hızını kontrol edin",
+      "options": {
+        "fast": "Hızlı",
+        "medium": "Orta",
+        "slow": "Yavaş"
+      },
+      "placeholder": "Yanıt hızını seçin",
+      "title": "Yanıt Hızı"
+    },
+    "revealDM": {
+      "desc": "Diğer üyelere gönderilen özel mesajların içeriğini sizin için görünür yapar.",
+      "title": "Özel Mesaj İçeriğini Göster"
+    },
+    "submit": "Ayarları Güncelle",
+    "systemPrompt": {
+      "desc": "Grup sohbeti moderatörünün özel sistem istemi. Bu, varsayılan moderatör davranışını etkileyebilir.",
+      "placeholder": "Lütfen özel moderatör sistem istemini girin...",
+      "title": "Moderatör Sistem İstemi"
+    },
+    "title": "Sohbet Ayarları"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Gruba Ekle",
+    "availableAgents": "Mevcut Asistanlar",
+    "createMember": "Üye Oluştur",
+    "defaultAgent": "Özel Asistan",
+    "disableHost": "Sunucu Yardımcısını Kapat",
+    "edit": "Üyeyi Düzenle",
+    "empty": "Bu takımda henüz üye yok. Üye eklemek için + düğmesine tıklayın.",
+    "enableHost": "Sunucu Yardımcısını Etkinleştir",
+    "groupHost": "Grup Sunucusu",
+    "groupMembers": "Grup Üyeleri",
+    "host": {
+      "description": "Sunucu grupta olduğunda, grup sohbeti otomatik olarak çalışır ve yaratıcı görevler için uygundur.",
+      "title": "Sunucu"
+    },
+    "noAvailableAgents": "Mevcut asistan yok",
+    "noDescription": "Açıklama yok",
+    "noMembersInGroup": "Grup üyesi yok",
+    "owner": "Siz (Sahip)",
+    "remove": "Üyeyi Kaldır",
+    "removeFromGroup": "Grup Dışına Çıkar",
+    "you": "Siz"
+  },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Yeni bir görev oluşturulurken, görsel oluşturma panelinde varsayılan olarak üretilecek görsel sayısını ayarlayın.",
+      "label": "Varsayılan Görsel Sayısı",
+      "title": "AI Çizim Ayarları"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -448,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Asistan Gönder",
-    "identifier": "Asistan Kimliği",
+    "identifier": "Asistan Tanımlayıcısı (identifier)",
     "metaMiss": "Lütfen göndermeden önce asistan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
     "tooltips": "Asistan pazarına paylaşın"
@@ -549,6 +761,7 @@
     "common": "Genel Ayarlar",
     "experiment": "Deney",
     "hotkey": "Kısayollar",
+    "image": "AI Çizim",
     "llm": "Modeller",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "proxy": "Ağ Proxy",
@@ -562,11 +775,36 @@
       "groupName": "Dahili Araçlar"
     },
     "disabled": "Mevcut model fonksiyon çağrılarını desteklemez, eklenti kullanılamaz",
+    "klavis": {
+      "addServer": "Sunucu Ekle",
+      "authCompleted": "Kimlik Doğrulama Tamamlandı",
+      "authFailed": "Kimlik Doğrulama Başarısız",
+      "authRequired": "Kimlik Doğrulama Gerekli",
+      "connected": "Bağlandı",
+      "error": "Hata",
+      "groupName": "Klavis Araçları",
+      "manage": "Klavis'i Yönet",
+      "manageTitle": "Klavis Entegrasyonunu Yönet",
+      "noServers": "Bağlı sunucu yok",
+      "notEnabled": "Klavis hizmeti etkin değil",
+      "oauthRequired": "Lütfen yeni pencerede OAuth kimlik doğrulamasını tamamlayın",
+      "pendingAuth": "Kimlik Doğrulama Bekleniyor",
+      "serverCreated": "Sunucu başarıyla oluşturuldu",
+      "serverCreatedFailed": "Sunucu oluşturulamadı",
+      "serverRemoved": "Sunucu silindi",
+      "servers": "sunucu",
+      "tools": "araç",
+      "verifyAuth": "Kimlik doğrulamayı tamamladım"
+    },
     "plugins": {
       "enabled": "Etkin: {{num}}",
       "groupName": "Eklentiler",
       "noEnabled": "Etkin eklenti yok",
       "store": "Eklenti Mağazası"
+    },
+    "tabs": {
+      "all": "Tümü",
+      "installed": "Etkinleştirildi"
     },
     "title": "Uzantı Araçları"
   }

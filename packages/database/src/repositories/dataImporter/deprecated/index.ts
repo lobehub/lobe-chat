@@ -1,7 +1,6 @@
+import type { ImporterEntryData } from '@lobechat/types';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 
-import { ImportResult } from '@/services/import/_deprecated';
-import { ImporterEntryData } from '@/types/importer';
 import { sanitizeUTF8 } from '@/utils/sanitizeUTF8';
 
 import {
@@ -15,6 +14,13 @@ import {
   topics,
 } from '../../../schemas';
 import { LobeChatDatabase } from '../../../type';
+
+interface ImportResult {
+  added: number;
+  errors: number;
+  skips: number;
+  updated?: number;
+}
 
 export class DeprecatedDataImporterRepos {
   private userId: string;
@@ -121,7 +127,7 @@ export class DeprecatedDataImporterRepos {
           // filter out existing session, only insert new ones
           .filter((s) => query.every((q) => q.clientId !== s.id));
 
-        // 只有当需要有新的 session 时，才会插入 agent
+        // Only insert agent when new sessions are needed
         if (shouldInsertSessionAgents.length > 0) {
           const agentMapArray = await trx
             .insert(agents)
@@ -215,14 +221,14 @@ export class DeprecatedDataImporterRepos {
               parentId: null,
               provider: extra?.fromProvider,
               sessionId: sessionId ? sessionIdMap[sessionId] : null,
-              topicId: topicId ? topicIdMap[topicId] : null, // 暂时设为 NULL
+              topicId: topicId ? topicIdMap[topicId] : null, // Temporarily set to NULL
               updatedAt: new Date(updatedAt),
               userId: this.userId,
             }),
           );
 
           console.time('insert messages');
-          const BATCH_SIZE = 100; // 每批次插入的记录数
+          const BATCH_SIZE = 100; // Number of records to insert per batch
 
           for (let i = 0; i < inertValues.length; i += BATCH_SIZE) {
             const batch = inertValues.slice(i, i + BATCH_SIZE);
@@ -251,7 +257,7 @@ export class DeprecatedDataImporterRepos {
           // 3. update parentId for messages
           console.time('execute updates parentId');
           const parentIdUpdates = shouldInsertMessages
-            .filter((msg) => msg.parentId) // 只处理有 parentId 的消息
+            .filter((msg) => msg.parentId) // Only process messages with parentId
             .map((msg) => {
               if (messageIdMap[msg.parentId as string])
                 return sql`WHEN ${messages.clientId} = ${msg.id} THEN ${messageIdMap[msg.parentId as string]} `;
@@ -309,7 +315,7 @@ export class DeprecatedDataImporterRepos {
             );
           }
 
-          // TODO: 未来需要处理 TTS 和图片的插入 （目前存在 file 的部分，不方便处理）
+          // TODO: Need to handle TTS and image insertion in the future (currently difficult to handle due to file-related parts)
         }
 
         messageResult.added = shouldInsertMessages.length;

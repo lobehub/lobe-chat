@@ -5,6 +5,9 @@
       "lock": "Bloquear relación de aspecto",
       "unlock": "Desbloquear relación de aspecto"
     },
+    "cfg": {
+      "label": "Intensidad de guía"
+    },
     "header": {
       "desc": "Descripción simple, crea al instante",
       "title": "Pintura"
@@ -26,6 +29,21 @@
     },
     "prompt": {
       "placeholder": "Describe el contenido que deseas generar"
+    },
+    "quality": {
+      "label": "Calidad de imagen",
+      "options": {
+        "hd": "Alta definición",
+        "standard": "Estándar"
+      }
+    },
+    "resolution": {
+      "label": "Resolución",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
     },
     "seed": {
       "label": "Semilla",

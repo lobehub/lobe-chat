@@ -18,8 +18,8 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     const storeApi = useStoreApi();
     const useStoreUpdater = createStoreUpdater(storeApi);
 
-    useStoreUpdater('meta', meta);
-    useStoreUpdater('config', config);
+    useStoreUpdater('meta', meta!);
+    useStoreUpdater('config', config!);
     useStoreUpdater('onConfigChange', onConfigChange);
     useStoreUpdater('onMetaChange', onMetaChange);
     useStoreUpdater('loading', loading);

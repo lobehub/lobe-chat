@@ -1,4 +1,6 @@
-import { DallEImageQuality, DallEImageSize, DallEImageStyle } from '@/types/tool/dalle';
+export type DallEImageQuality = 'standard' | 'hd';
+export type DallEImageStyle = 'vivid' | 'natural';
+export type DallEImageSize = '1792x1024' | '1024x1024' | '1024x1792';
 
 export interface TextToImagePayload {
   model: string;

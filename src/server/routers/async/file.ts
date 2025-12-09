@@ -4,13 +4,13 @@ import pMap from 'p-map';
 import { z } from 'zod';
 
 import { serverDBEnv } from '@/config/db';
-import { fileEnv } from '@/config/file';
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/models/asyncTask';
 import { ChunkModel } from '@/database/models/chunk';
 import { EmbeddingModel } from '@/database/models/embedding';
 import { FileModel } from '@/database/models/file';
 import { NewChunkItem, NewEmbeddingsItem } from '@/database/schemas';
+import { fileEnv } from '@/envs/file';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
@@ -90,13 +90,8 @@ export const fileRouter = router({
           try {
             await pMap(
               requestArray,
-              async (chunks, index) => {
-                const agentRuntime = await initModelRuntimeWithUserPayload(
-                  provider,
-                  ctx.jwtPayload,
-                );
-
-                console.log(`run embedding task ${index + 1}`);
+              async (chunks) => {
+                const agentRuntime = initModelRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
                 const embeddings = await agentRuntime.embeddings({
                   dimensions: 1024,

@@ -3,7 +3,7 @@ import { GlobeOffIcon } from '@lobehub/ui/icons';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideIcon, SparkleIcon } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -93,9 +93,12 @@ const Item = memo<NetworkOption>(({ value, description, icon, label }) => {
 
 const Controls = memo(() => {
   const { t } = useTranslation('chat');
-  const [model, provider] = useAgentStore((s) => [
+  const [model, provider, useModelBuiltinSearch, searchMode, updateAgentChatConfig] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentModelProvider(s),
+    agentChatConfigSelectors.useModelBuiltinSearch(s),
+    agentChatConfigSelectors.currentChatConfig(s).searchMode,
+    s.updateAgentChatConfig,
   ]);
 
   const supportFC = useAiInfraStore(aiModelSelectors.isModelSupportToolUse(model, provider));
@@ -105,24 +108,48 @@ const Controls = memo(() => {
   const isModelHasBuiltinSearchConfig = useAiInfraStore(
     aiModelSelectors.isModelHasBuiltinSearchConfig(model, provider),
   );
+  const isModelBuiltinSearchInternal = useAiInfraStore(
+    aiModelSelectors.isModelBuiltinSearchInternal(model, provider),
+  );
+  const modelBuiltinSearchImpl = useAiInfraStore(aiModelSelectors.modelBuiltinSearchImpl(model, provider));
 
-  const options: NetworkOption[] = [
-    {
-      description: t('search.mode.off.desc'),
-      icon: GlobeOffIcon,
-      label: t('search.mode.off.title'),
-      value: 'off',
-    },
-    {
-      description: t('search.mode.auto.desc'),
-      icon: SparkleIcon,
-      label: t('search.mode.auto.title'),
-      value: 'auto',
-    },
-  ];
+  useEffect(() => {
+    if (isModelBuiltinSearchInternal && (searchMode ?? 'off') === 'off') {
+      updateAgentChatConfig({ searchMode: 'auto' });
+    }
+  }, [isModelBuiltinSearchInternal, searchMode, updateAgentChatConfig]);
 
-  const showDivider = isModelHasBuiltinSearchConfig || !supportFC;
-  const showModelBuiltinSearch = isModelHasBuiltinSearchConfig || isProviderHasBuiltinSearchConfig;
+  const options: NetworkOption[] = isModelBuiltinSearchInternal
+    ? [
+      {
+        description: t('search.mode.auto.desc'),
+        icon: SparkleIcon,
+        label: t('search.mode.auto.title'),
+        value: 'auto',
+      },
+    ]
+    : [
+      {
+        description: t('search.mode.off.desc'),
+        icon: GlobeOffIcon,
+        label: t('search.mode.off.title'),
+        value: 'off',
+      },
+      {
+        description: t('search.mode.auto.desc'),
+        icon: SparkleIcon,
+        label: t('search.mode.auto.title'),
+        value: 'auto',
+      },
+    ];
+
+  const showModelBuiltinSearch = !isModelBuiltinSearchInternal &&
+    (isModelHasBuiltinSearchConfig || isProviderHasBuiltinSearchConfig);
+
+  const showFCSearchModel =
+    !supportFC && (!modelBuiltinSearchImpl || (!isModelBuiltinSearchInternal && !useModelBuiltinSearch));
+
+  const showDivider = showModelBuiltinSearch || showFCSearchModel;
 
   return (
     <Flexbox gap={4}>
@@ -131,7 +158,7 @@ const Controls = memo(() => {
       ))}
       {showDivider && <Divider style={{ margin: 0 }} />}
       {showModelBuiltinSearch && <ModelBuiltinSearch />}
-      {!supportFC && <FCSearchModel />}
+      {showFCSearchModel && <FCSearchModel />}
     </Flexbox>
   );
 });

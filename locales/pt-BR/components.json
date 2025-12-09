@@ -1,8 +1,8 @@
 {
   "ArgsInput": {
-    "addArgument": "Adicionar argumento",
-    "argumentPlaceholder": "Argumento {{index}}",
-    "enterFirstArgument": "Digite o primeiro argumento..."
+    "addArgument": "Adicionar parâmetro",
+    "argumentPlaceholder": "Parâmetro {{index}}",
+    "enterFirstArgument": "Digite o primeiro parâmetro..."
   },
   "DragUpload": {
     "dragDesc": "Arraste os arquivos para cá, suportando o upload de várias imagens.",
@@ -50,6 +50,10 @@
     "total": {
       "fileCount": "Total de {{count}} itens",
       "selectedCount": "Selecionados {{count}} itens"
+    },
+    "view": {
+      "list": "Visualização em lista",
+      "masonry": "Visualização em grade"
     }
   },
   "FileParsingStatus": {
@@ -102,6 +106,12 @@
     "keyPlaceholder": "Chave",
     "valuePlaceholder": "Valor"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Abrir",
+      "showInFolder": "Mostrar na pasta"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Ilimitado"
   },
@@ -114,6 +124,7 @@
       "reasoning": "Este modelo suporta pensamento profundo",
       "search": "Este modelo suporta pesquisa online",
       "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão.",
+      "video": "Este modelo suporta reconhecimento de vídeo",
       "vision": "Este modelo suporta reconhecimento visual."
     },
     "removed": "Este modelo não está na lista, se for desmarcado, será removido automaticamente"
@@ -145,8 +156,8 @@
     },
     "validation": {
       "fileSizeExceeded": "Tamanho do arquivo excede o limite",
-      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) excede o limite máximo de {{maxSize}}",
-      "fileSizeExceededMultiple": "{{count}} arquivos excedem o limite máximo de {{maxSize}}: {{fileList}}",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) excede o tamanho máximo permitido de {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} arquivos excedem o tamanho máximo permitido de {{maxSize}}: {{fileList}}",
       "imageCountExceeded": "Número de imagens excede o limite"
     }
   },

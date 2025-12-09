@@ -15,13 +15,7 @@ if you have any other question, please open issue here: https://github.com/lobeh
 const DB_FAIL_INIT_HINT = `------------------------------------------------------------------------------------------
 ⚠️ Database migrate failed due to not find the db instance.
 
-1) You might not switch to server db mode, please set the env blow and try again:
-
-\`\`\`
-NEXT_PUBLIC_SERVICE_MODE=server
-\`\`\`
-
-2) if you are using docker postgres image, you may need to set DATABASE_DRIVER to node
+if you are using docker postgres image, you may need to set DATABASE_DRIVER to node
 
 \`\`\`
 DATABASE_DRIVER=node
@@ -30,7 +24,33 @@ DATABASE_DRIVER=node
 if you have any other question, please open issue here: https://github.com/lobehub/lobe-chat/issues
 `;
 
+const DUPLICATE_EMAIL_HINT = `------------------------------------------------------------------------------------------
+⚠️ Database migration failed due to duplicate email addresses in the users table.
+
+The database schema requires each email to be unique, but multiple users currently share the same email value.
+
+Recommended solutions (choose one and rerun the migration):
+
+1) Update duplicate emails to make them unique: change the conflicting email addresses to another unique email address or just change them email to NULL
+2) Remove duplicate user records (dangerously, only if safe to delete)
+
+⚠️ IMPORTANT: Always backup your database before making any changes!
+
+To find duplicate emails, run this query:
+
+\`\`\`sql
+SELECT email, COUNT(*) as count
+FROM users
+WHERE email IS NOT NULL
+GROUP BY email
+HAVING COUNT(*) > 1;
+\`\`\`
+
+If you need further assistance, please open an issue: https://github.com/lobehub/lobe-chat/issues
+`;
+
 module.exports = {
   DB_FAIL_INIT_HINT,
+  DUPLICATE_EMAIL_HINT,
   PGVECTOR_HINT,
 };

@@ -4,12 +4,33 @@ export const chainAbstractChunkText = (text: string): Partial<ChatStreamPayload>
   return {
     messages: [
       {
-        content:
-          '你是一名擅长从 chunk 中提取摘要的助理，你需要将用户的会话总结为 1~2 句话的摘要，输出成 chunk 所使用的语种',
+        content: `You are a summarization expert. Generate a concise summary from the provided text chunk.
+
+Rules:
+- Output ONLY the summary text itself, nothing else
+- NO labels, prefixes, or meta-text (like "Summary:", "摘要:", etc.)
+- NO explanations, commentary, or additional context
+- MUST be 1-2 complete sentences maximum (count carefully!)
+- MUST use the SAME language as the input text
+- Preserve technical terms, proper nouns, and code identifiers exactly as they appear
+- Focus on capturing the main topic or key information
+- Keep it concise and direct
+
+<examples>
+<input>React is a JavaScript library for building user interfaces...</input>
+<output>React is a JavaScript library developed by Facebook for building interactive user interfaces with declarative views.</output>
+
+<input>The useState hook in React allows you to add state...</input>
+<output>The useState hook in React enables functional components to manage state using a state variable and setter function.</output>
+
+<input>深度学习是机器学习的一个分支...</input>
+<output>深度学习是机器学习的一个分支，使用多层神经网络学习数据表示，在图像识别、自然语言处理等领域取得突破。</output>
+</examples>
+`,
         role: 'system',
       },
       {
-        content: `chunk: ${text}`,
+        content: text,
         role: 'user',
       },
     ],

@@ -5,6 +5,9 @@
       "lock": "Bloquear proporção",
       "unlock": "Desbloquear proporção"
     },
+    "cfg": {
+      "label": "Intensidade de Orientação"
+    },
     "header": {
       "desc": "Descrição simples, crie imediatamente",
       "title": "Pintura"
@@ -26,6 +29,21 @@
     },
     "prompt": {
       "placeholder": "Descreva o conteúdo que deseja gerar"
+    },
+    "quality": {
+      "label": "Qualidade da imagem",
+      "options": {
+        "hd": "Alta definição",
+        "standard": "Padrão"
+      }
+    },
+    "resolution": {
+      "label": "Resolução",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
     },
     "seed": {
       "label": "Semente",

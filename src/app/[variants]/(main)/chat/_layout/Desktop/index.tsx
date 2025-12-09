@@ -1,16 +1,14 @@
-import { Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { Outlet } from 'react-router-dom';
 
 import { isDesktop } from '@/const/version';
-import InitClientDB from '@/features/InitClientDB';
 import ProtocolUrlHandler from '@/features/ProtocolUrlHandler';
 
-import { LayoutProps } from '../type';
 import RegisterHotkeys from './RegisterHotkeys';
 import SessionPanel from './SessionPanel';
 import Workspace from './Workspace';
 
-const Layout = ({ children, session }: LayoutProps) => {
+const Layout = () => {
   return (
     <>
       <Flexbox
@@ -19,16 +17,15 @@ const Layout = ({ children, session }: LayoutProps) => {
         style={{ maxWidth: '100%', overflow: 'hidden', position: 'relative' }}
         width={'100%'}
       >
-        <SessionPanel>{session}</SessionPanel>
-        <Workspace>{children}</Workspace>
+        <SessionPanel />
+        <Workspace>
+          <Outlet />
+        </Workspace>
       </Flexbox>
-      {!isDesktop && <InitClientDB bottom={60} />}
       {/* ↓ cloud slot ↓ */}
 
       {/* ↑ cloud slot ↑ */}
-      <Suspense>
-        <RegisterHotkeys />
-      </Suspense>
+      <RegisterHotkeys />
       {isDesktop && <ProtocolUrlHandler />}
     </>
   );

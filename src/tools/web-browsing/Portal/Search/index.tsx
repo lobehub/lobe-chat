@@ -1,3 +1,4 @@
+import { SearchQuery, UniformSearchResponse } from '@lobechat/types';
 import { Skeleton } from 'antd';
 import { uniq } from 'lodash-es';
 import { memo } from 'react';
@@ -5,7 +6,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
-import { SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 import SearchBar from '../../components/SearchBar';
 import Footer from './Footer';

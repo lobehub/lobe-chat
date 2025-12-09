@@ -18,6 +18,7 @@
     },
     "permissionsTitle": "請求以下權限：",
     "redirectUri": "授權成功後將重定向到",
+    "redirecting": "授權成功，正在跳轉...",
     "scope": {
       "email": "訪問您的電子郵件地址",
       "offline_access": "允許客戶端訪問您的資料",

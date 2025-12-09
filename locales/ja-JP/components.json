@@ -50,6 +50,10 @@
     "total": {
       "fileCount": "合計 {{count}} 件",
       "selectedCount": "選択済み {{count}} 件"
+    },
+    "view": {
+      "list": "リスト表示",
+      "masonry": "グリッド表示"
     }
   },
   "FileParsingStatus": {
@@ -102,6 +106,12 @@
     "keyPlaceholder": "キー",
     "valuePlaceholder": "値"
   },
+  "LocalFile": {
+    "action": {
+      "open": "開く",
+      "showInFolder": "フォルダーで表示"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "無制限"
   },
@@ -114,6 +124,7 @@
       "reasoning": "このモデルは深い思考をサポートしています",
       "search": "このモデルはオンライン検索をサポートしています",
       "tokens": "このモデルは1つのセッションあたり最大{{tokens}}トークンをサポートしています。",
+      "video": "このモデルは動画認識に対応しています",
       "vision": "このモデルはビジョン認識をサポートしています。"
     },
     "removed": "選択されたモデルはリストから削除されました。選択を解除すると自動的に削除されます。"

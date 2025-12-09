@@ -1,15 +1,16 @@
 import { ElectronIPCEventHandler, ElectronIPCServer } from '@lobechat/electron-server-ipc';
-import { Session, app, ipcMain, protocol } from 'electron';
+import { Session, app, protocol } from 'electron';
 import { macOS, windows } from 'electron-is';
+import { pathExistsSync, remove } from 'fs-extra';
 import os from 'node:os';
 import { join } from 'node:path';
 
 import { name } from '@/../../package.json';
-import { buildDir, nextStandaloneDir } from '@/const/dir';
+import { LOCAL_DATABASE_DIR, buildDir, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
-import { IpcClientEventSender } from '@/types/ipcClientEvent';
+import { getServerMethodMetadata } from '@/utils/ipc';
 import { createLogger } from '@/utils/logger';
 import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
 
@@ -80,7 +81,7 @@ export class App {
 
     // load controllers
     const controllers: IControlModule[] = importAll(
-      (import.meta as any).glob('@/controllers/*Ctr.ts', { eager: true }),
+      import.meta.glob('@/controllers/*Ctr.ts', { eager: true }),
     );
 
     logger.debug(`Loading ${controllers.length} controllers`);
@@ -88,13 +89,13 @@ export class App {
 
     // load services
     const services: IServiceModule[] = importAll(
-      (import.meta as any).glob('@/services/*Srv.ts', { eager: true }),
+      import.meta.glob('@/services/*Srv.ts', { eager: true }),
     );
 
     logger.debug(`Loading ${services.length} services`);
     services.forEach((service) => this.addService(service));
 
-    this.initializeIPCEvents();
+    this.initializeServerIpcEvents();
 
     this.i18n = new I18nManager(this);
     this.browserManager = new BrowserManager(this);
@@ -128,6 +129,9 @@ export class App {
     }
 
     this.initDevBranding();
+
+    // Clean up stale database lock file before starting IPC server
+    await this.cleanupDatabaseLock();
 
     //  ==============
     await this.ipcServer.start();
@@ -264,10 +268,6 @@ export class App {
   private services = new Map<Class<any>, any>();
 
   private ipcServer: ElectronIPCServer;
-  /**
-   * events dispatched from webview layer
-   */
-  private ipcClientEventMap: IPCEventMap = new Map();
   private ipcServerEventMap: IPCEventMap = new Map();
   shortcutMethodMap: ShortcutMethodMap = new Map();
   protocolHandlerMap: ProtocolHandlerMap = new Map();
@@ -323,22 +323,13 @@ export class App {
     const controller = new ControllerClass(this);
     this.controllers.set(ControllerClass, controller);
 
-    IoCContainer.controllers.get(ControllerClass)?.forEach((event) => {
-      if (event.mode === 'client') {
-        // Store all objects from event decorator in ipcClientEventMap
-        this.ipcClientEventMap.set(event.name, {
-          controller,
-          methodName: event.methodName,
-        });
-      }
-
-      if (event.mode === 'server') {
-        // Store all objects from event decorator in ipcServerEventMap
-        this.ipcServerEventMap.set(event.name, {
-          controller,
-          methodName: event.methodName,
-        });
-      }
+    const serverMethods = getServerMethodMetadata(ControllerClass);
+    serverMethods?.forEach((methodName, propertyKey) => {
+      const channel = `${ControllerClass.groupName}.${methodName}`;
+      this.ipcServerEventMap.set(channel, {
+        controller,
+        methodName: propertyKey,
+      });
     });
 
     IoCContainer.shortcuts.get(ControllerClass)?.forEach((shortcut) => {
@@ -368,6 +359,27 @@ export class App {
     app.setName('lobehub-desktop-dev');
     if (macOS()) {
       app.dock!.setIcon(join(buildDir, 'icon-dev.png'));
+    }
+  };
+
+  /**
+   * Clean up stale database lock file from previous crashes or abnormal exits
+   */
+  private cleanupDatabaseLock = async () => {
+    try {
+      const dbPath = join(this.appStoragePath, LOCAL_DATABASE_DIR);
+      const lockPath = `${dbPath}.lock`;
+
+      if (pathExistsSync(lockPath)) {
+        logger.info(`Cleaning up stale database lock file: ${lockPath}`);
+        await remove(lockPath);
+        logger.info('Database lock file removed successfully');
+      } else {
+        logger.debug('No database lock file found, skipping cleanup');
+      }
+    } catch (error) {
+      logger.error('Failed to cleanup database lock file:', error);
+      // Non-fatal error, allow application to continue
     }
   };
 
@@ -402,27 +414,8 @@ export class App {
     }
   }
 
-  private initializeIPCEvents() {
-    logger.debug('Initializing IPC events');
-    // Register batch controller client events for render side consumption
-    this.ipcClientEventMap.forEach((eventInfo, key) => {
-      const { controller, methodName } = eventInfo;
-
-      ipcMain.handle(key, async (e, data) => {
-        // 从 WebContents 获取对应的 BrowserWindow id
-        const senderIdentifier = this.browserManager.getIdentifierByWebContents(e.sender);
-        try {
-          return await controller[methodName](data, {
-            identifier: senderIdentifier,
-          } as IpcClientEventSender);
-        } catch (error) {
-          logger.error(`Error handling IPC event ${key}:`, error);
-          return { error: error.message };
-        }
-      });
-    });
-
-    // Batch register server events from controllers for next server consumption
+  private initializeServerIpcEvents() {
+    logger.debug('Initializing IPC server events');
     const ipcServerEvents = {} as ElectronIPCEventHandler;
 
     this.ipcServerEventMap.forEach((eventInfo, key) => {

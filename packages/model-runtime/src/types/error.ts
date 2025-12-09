@@ -27,6 +27,17 @@ export const AgentRuntimeErrorType = {
 
   ConnectionCheckFailed: 'ConnectionCheckFailed',
 
+  // ******* Image Generation Error ******* //
+  ProviderNoImageGenerated: 'ProviderNoImageGenerated',
+
+  InvalidComfyUIArgs: 'InvalidComfyUIArgs',
+  ComfyUIBizError: 'ComfyUIBizError',
+  ComfyUIServiceUnavailable: 'ComfyUIServiceUnavailable',
+  ComfyUIEmptyResult: 'ComfyUIEmptyResult',
+  ComfyUIUploadFailed: 'ComfyUIUploadFailed',
+  ComfyUIWorkflowError: 'ComfyUIWorkflowError',
+  ComfyUIModelError: 'ComfyUIModelError',
+
   /**
    * @deprecated
    */

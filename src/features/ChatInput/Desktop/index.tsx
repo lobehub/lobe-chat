@@ -10,6 +10,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { useChatInputStore } from '@/features/ChatInput/store';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 import ActionBar from '../ActionBar';
 import InputEditor from '../InputEditor';
@@ -19,6 +21,8 @@ import FilePreview from './FilePreview';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
+    margin-block-start: -5px;
+
     .show-on-hover {
       opacity: 0;
     }
@@ -47,6 +51,10 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const DesktopChatInput = memo<{ showFootnote?: boolean }>(({ showFootnote }) => {
   const { t } = useTranslation('chat');
+  const [chatInputHeight, updateSystemStatus] = useGlobalStore((s) => [
+    systemStatusSelectors.chatInputHeight(s),
+    s.updateSystemStatus,
+  ]);
   const [slashMenuRef, expand, showTypoBar, editor, leftActions] = useChatInputStore((s) => [
     s.slashMenuRef,
     s.expand,
@@ -75,6 +83,7 @@ const DesktopChatInput = memo<{ showFootnote?: boolean }>(({ showFootnote }) => 
         paddingInline={12}
       >
         <ChatInput
+          defaultHeight={chatInputHeight || 32}
           footer={
             <ChatInputActionBar
               left={<ActionBar />}
@@ -86,6 +95,12 @@ const DesktopChatInput = memo<{ showFootnote?: boolean }>(({ showFootnote }) => 
           }
           fullscreen={expand}
           header={showTypoBar && <TypoBar />}
+          maxHeight={320}
+          minHeight={36}
+          onSizeChange={(height) => {
+            updateSystemStatus({ chatInputHeight: height });
+          }}
+          resize={true}
           slashMenuRef={slashMenuRef}
         >
           {expand && fileNode}

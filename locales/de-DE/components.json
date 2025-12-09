@@ -50,6 +50,10 @@
     "total": {
       "fileCount": "Insgesamt {{count}} Elemente",
       "selectedCount": "Ausgewählt {{count}} Elemente"
+    },
+    "view": {
+      "list": "Listenansicht",
+      "masonry": "Kachelansicht"
     }
   },
   "FileParsingStatus": {
@@ -102,6 +106,12 @@
     "keyPlaceholder": "Schlüssel",
     "valuePlaceholder": "Wert"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Öffnen",
+      "showInFolder": "Im Ordner anzeigen"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Unbegrenzt"
   },
@@ -114,6 +124,7 @@
       "reasoning": "Dieses Modell unterstützt tiefes Denken",
       "search": "Dieses Modell unterstützt die Online-Suche",
       "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro Sitzung.",
+      "video": "Dieses Modell unterstützt die Videoerkennung",
       "vision": "Dieses Modell unterstützt die visuelle Erkennung."
     },
     "removed": "Das Modell wurde aus der Liste entfernt. Wenn Sie die Auswahl aufheben, wird es automatisch entfernt."

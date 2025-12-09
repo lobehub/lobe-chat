@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "未お気に入りのトピックを削除しようとしています。削除後は復元できませんので、慎重に操作してください。",
     "duplicate": "コピーを作成",
     "export": "トピックをエクスポート",
+    "openInNewWindow": "新しいウィンドウで開く",
     "removeAll": "すべてのトピックを削除",
     "removeUnstarred": "未お気に入りのトピックを削除"
   },

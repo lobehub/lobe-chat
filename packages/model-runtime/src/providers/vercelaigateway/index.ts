@@ -1,0 +1,110 @@
+import { ModelProvider } from 'model-bank';
+
+import {
+  type OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
+import { processMultiProviderModelList } from '../../utils/modelParse';
+
+export interface VercelAIGatewayModelCard {
+  context_window?: number;
+  created?: number | string;
+  description?: string;
+  id: string;
+  max_tokens?: number;
+  name?: string;
+  pricing?: {
+    input?: string | number;
+    input_cache_read?: string | number;
+    input_cache_write?: string | number;
+    output?: string | number;
+  };
+  tags?: string[];
+  type?: string;
+}
+
+export const formatPrice = (price?: string | number) => {
+  if (price === undefined || price === null) return undefined;
+  const n = typeof price === 'number' ? price : Number(price);
+  if (Number.isNaN(n)) return undefined;
+  // Convert per-token price (USD) to per million tokens
+  return Number((n * 1e6).toPrecision(5));
+};
+
+export const params = {
+  baseURL: 'https://ai-gateway.vercel.sh/v1',
+  chatCompletion: {
+    handlePayload: (payload) => {
+      const { model, reasoning_effort, verbosity, ...rest } = payload;
+
+      const providerOptions: any = {};
+      if (reasoning_effort || verbosity) {
+        providerOptions.openai = {};
+        if (reasoning_effort) {
+          providerOptions.openai.reasoningEffort = reasoning_effort;
+          providerOptions.openai.reasoningSummary = 'auto';
+        }
+        if (verbosity) {
+          providerOptions.openai.textVerbosity = verbosity;
+        }
+      }
+
+      return {
+        ...rest,
+        model,
+        providerOptions,
+      } as any;
+    },
+  },
+  constructorOptions: {
+    defaultHeaders: {
+      'http-referer': 'https://lobehub.com',
+      'x-title': 'LobeHub',
+    },
+  },
+  debug: {
+    chatCompletion: () => process.env.DEBUG_VERCELAIGATEWAY_CHAT_COMPLETION === '1',
+  },
+  models: async ({ client }) => {
+    const modelsPage = (await client.models.list()) as any;
+    const modelList: VercelAIGatewayModelCard[] = modelsPage.data;
+
+    const formattedModels = (modelList || []).map((m) => {
+      const tags = Array.isArray(m.tags) ? m.tags : [];
+
+      const inputPrice = formatPrice(m.pricing?.input);
+      const outputPrice = formatPrice(m.pricing?.output);
+      const cachedInputPrice = formatPrice(m.pricing?.input_cache_read);
+      const writeCacheInputPrice = formatPrice(m.pricing?.input_cache_write);
+
+      let displayName = m.name ?? m.id;
+      if (inputPrice === 0 && outputPrice === 0) {
+        displayName += ' (free)';
+      }
+
+      return {
+        contextWindowTokens: m.context_window ?? undefined,
+        created: m.created,
+        description: m.description ?? '',
+        displayName,
+        functionCall: tags.includes('tool-use') || false,
+        id: m.id,
+        maxOutput: typeof m.max_tokens === 'number' ? m.max_tokens : undefined,
+        pricing: {
+          cachedInput: cachedInputPrice,
+          input: inputPrice,
+          output: outputPrice,
+          writeCacheInput: writeCacheInputPrice,
+        },
+        reasoning: tags.includes('reasoning') || false,
+        type: m.type === 'embedding' ? 'embedding' : 'chat',
+        vision: tags.includes('vision') || false,
+      } as any;
+    });
+
+    return await processMultiProviderModelList(formattedModels, 'vercelaigateway');
+  },
+  provider: ModelProvider.VercelAIGateway,
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime(params);

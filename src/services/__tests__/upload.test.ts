@@ -1,15 +1,27 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { fileEnv } from '@/config/file';
-import { edgeClient } from '@/libs/trpc/client';
+import { fileEnv } from '@/envs/file';
+import { lambdaClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
-import { clientS3Storage } from '@/services/file/ClientS3';
 
 import { UPLOAD_NETWORK_ERROR, uploadService } from '../upload';
 
 // Mock dependencies
+vi.mock('@lobechat/const', () => ({
+  isDesktop: false,
+  isServerMode: false,
+}));
+
+vi.mock('@lobechat/model-runtime', () => ({
+  parseDataUri: vi.fn(),
+}));
+
+vi.mock('@lobechat/utils', () => ({
+  uuid: () => 'mock-uuid',
+}));
+
 vi.mock('@/libs/trpc/client', () => ({
-  edgeClient: {
+  lambdaClient: {
     upload: {
       createS3PreSignedUrl: {
         mutate: vi.fn(),
@@ -18,14 +30,29 @@ vi.mock('@/libs/trpc/client', () => ({
   },
 }));
 
-vi.mock('@/services/file/ClientS3', () => ({
-  clientS3Storage: {
-    putObject: vi.fn(),
+vi.mock('@/store/electron', () => ({
+  getElectronStoreState: vi.fn(() => ({})),
+}));
+
+vi.mock('@/store/electron/selectors', () => ({
+  electronSyncSelectors: {
+    isSyncActive: vi.fn(() => false),
   },
 }));
 
-vi.mock('@/utils/uuid', () => ({
-  uuid: () => 'mock-uuid',
+vi.mock('@/services/electron/file', () => ({
+  desktopFileAPI: {
+    uploadFile: vi.fn(),
+  },
+}));
+
+vi.mock('js-sha256', () => ({
+  sha256: vi.fn((data) => {
+    if (data instanceof ArrayBuffer) {
+      return 'mock-hash-' + data.byteLength;
+    }
+    return 'mock-hash';
+  }),
 }));
 
 describe('UploadService', () => {
@@ -38,23 +65,205 @@ describe('UploadService', () => {
     vi.spyOn(Date, 'now').mockImplementation(() => 3600000); // 1 hour in milliseconds
   });
 
-  describe('uploadWithProgress', () => {
+  describe('uploadFileToS3', () => {
     beforeEach(() => {
-      // Mock XMLHttpRequest
+      // Mock XMLHttpRequest for server upload
       const xhrMock = {
-        upload: {
-          addEventListener: vi.fn(),
-        },
+        addEventListener: vi.fn((event, handler) => {
+          if (event === 'load') {
+            setTimeout(() => handler({ target: { status: 200 } }), 0);
+          }
+        }),
         open: vi.fn(),
         send: vi.fn(),
         setRequestHeader: vi.fn(),
-        addEventListener: vi.fn(),
         status: 200,
+        upload: {
+          addEventListener: vi.fn(),
+        },
       };
       global.XMLHttpRequest = vi.fn(() => xhrMock) as any;
 
       // Mock createS3PreSignedUrl
-      (edgeClient.upload.createS3PreSignedUrl.mutate as any).mockResolvedValue(mockPreSignUrl);
+      vi.mocked(lambdaClient.upload.createS3PreSignedUrl.mutate).mockResolvedValue(mockPreSignUrl);
+    });
+
+    it('should upload to server S3 in non-desktop mode', async () => {
+      const result = await uploadService.uploadFileToS3(mockFile, {});
+
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual({
+        date: '1',
+        dirname: `${fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/1`,
+        filename: 'mock-uuid.png',
+        path: `${fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/1/mock-uuid.png`,
+      });
+    });
+
+    it('should use custom pathname when provided', async () => {
+      const customPath = 'custom/path/file.png';
+      const result = await uploadService.uploadFileToS3(mockFile, {
+        pathname: customPath,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.data.path).toBe(customPath);
+    });
+
+    it('should use custom directory when provided', async () => {
+      const result = await uploadService.uploadFileToS3(mockFile, {
+        directory: 'custom/dir',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.data.dirname).toContain('custom/dir');
+    });
+  });
+
+  describe('uploadBase64ToS3', () => {
+    beforeEach(() => {
+      // Mock XMLHttpRequest for server upload
+      const xhrMock = {
+        addEventListener: vi.fn((event, handler) => {
+          if (event === 'load') {
+            setTimeout(() => handler({ target: { status: 200 } }), 0);
+          }
+        }),
+        open: vi.fn(),
+        send: vi.fn(),
+        setRequestHeader: vi.fn(),
+        status: 200,
+        upload: {
+          addEventListener: vi.fn(),
+        },
+      };
+      global.XMLHttpRequest = vi.fn(() => xhrMock) as any;
+
+      // Mock createS3PreSignedUrl
+      vi.mocked(lambdaClient.upload.createS3PreSignedUrl.mutate).mockResolvedValue(mockPreSignUrl);
+    });
+
+    it('should upload base64 data successfully', async () => {
+      const { parseDataUri } = await import('@lobechat/model-runtime');
+      vi.mocked(parseDataUri).mockReturnValueOnce({
+        base64: 'dGVzdA==', // "test" in base64
+        mimeType: 'image/png',
+        type: 'base64',
+      });
+
+      const { sha256 } = await import('js-sha256');
+      vi.mocked(sha256).mockReturnValue('base64-hash');
+
+      const base64Data = 'data:image/png;base64,dGVzdA==';
+      const result = await uploadService.uploadBase64ToS3(base64Data);
+
+      expect(result).toMatchObject({
+        fileType: 'image/png',
+        hash: expect.any(String),
+        metadata: expect.objectContaining({
+          path: expect.stringContaining(fileEnv.NEXT_PUBLIC_S3_FILE_PATH || ''),
+        }),
+        size: expect.any(Number),
+      });
+    });
+
+    it('should throw error for invalid base64 data', async () => {
+      const { parseDataUri } = await import('@lobechat/model-runtime');
+      vi.mocked(parseDataUri).mockReturnValueOnce({
+        base64: null,
+        mimeType: null,
+        type: 'url',
+      });
+
+      const invalidBase64 = 'not-a-base64-string';
+
+      await expect(uploadService.uploadBase64ToS3(invalidBase64)).rejects.toThrow(
+        'Invalid base64 data for image',
+      );
+    });
+
+    it('should use custom filename when provided', async () => {
+      const { parseDataUri } = await import('@lobechat/model-runtime');
+      vi.mocked(parseDataUri).mockReturnValueOnce({
+        base64: 'dGVzdA==',
+        mimeType: 'image/png',
+        type: 'base64',
+      });
+
+      const { sha256 } = await import('js-sha256');
+      vi.mocked(sha256).mockReturnValue('custom-hash');
+
+      const base64Data = 'data:image/png;base64,dGVzdA==';
+      const result = await uploadService.uploadBase64ToS3(base64Data, {
+        filename: 'custom-image',
+      });
+
+      // The filename will be regenerated with UUID, but should keep the extension
+      expect(result.metadata.filename).toMatch(/^mock-uuid\.png$/);
+    });
+  });
+
+  describe('uploadDataToS3', () => {
+    beforeEach(() => {
+      // Mock XMLHttpRequest for server upload
+      const xhrMock = {
+        addEventListener: vi.fn((event, handler) => {
+          if (event === 'load') {
+            setTimeout(() => handler({ target: { status: 200 } }), 0);
+          }
+        }),
+        open: vi.fn(),
+        send: vi.fn(),
+        setRequestHeader: vi.fn(),
+        status: 200,
+        upload: {
+          addEventListener: vi.fn(),
+        },
+      };
+      global.XMLHttpRequest = vi.fn(() => xhrMock) as any;
+
+      // Mock createS3PreSignedUrl
+      vi.mocked(lambdaClient.upload.createS3PreSignedUrl.mutate).mockResolvedValue(mockPreSignUrl);
+    });
+
+    it('should upload JSON data successfully', async () => {
+      const data = { key: 'value', number: 123 };
+      const result = await uploadService.uploadDataToS3(data);
+
+      expect(result.success).toBe(true);
+      // The filename will be regenerated with UUID
+      expect(result.data.filename).toMatch(/^mock-uuid\.json$/);
+    });
+
+    it('should use custom filename when provided', async () => {
+      const data = { test: true };
+      const result = await uploadService.uploadDataToS3(data, {
+        filename: 'custom.json',
+      });
+
+      expect(result.success).toBe(true);
+      // The filename will be regenerated with UUID, keeping the extension
+      expect(result.data.filename).toMatch(/^mock-uuid\.json$/);
+    });
+  });
+
+  describe('uploadToServerS3', () => {
+    beforeEach(() => {
+      // Mock XMLHttpRequest
+      const xhrMock = {
+        addEventListener: vi.fn(),
+        open: vi.fn(),
+        send: vi.fn(),
+        setRequestHeader: vi.fn(),
+        status: 200,
+        upload: {
+          addEventListener: vi.fn(),
+        },
+      };
+      global.XMLHttpRequest = vi.fn(() => xhrMock) as any;
+
+      // Mock createS3PreSignedUrl
+      vi.mocked(lambdaClient.upload.createS3PreSignedUrl.mutate).mockResolvedValue(mockPreSignUrl);
     });
 
     it('should upload file successfully with progress', async () => {
@@ -64,7 +273,7 @@ describe('UploadService', () => {
       // Simulate successful upload
       vi.spyOn(xhr, 'addEventListener').mockImplementation((event, handler) => {
         if (event === 'load') {
-          // @ts-ignore
+          // @ts-expect-error - mock implementation
           handler({ target: { status: 200 } });
         }
       });
@@ -79,6 +288,41 @@ describe('UploadService', () => {
       });
     });
 
+    it('should report progress during upload', async () => {
+      const onProgress = vi.fn();
+      const xhr = new XMLHttpRequest();
+
+      // Simulate progress events
+      vi.spyOn(xhr.upload, 'addEventListener').mockImplementation((event, handler) => {
+        if (event === 'progress') {
+          // @ts-expect-error - mock implementation
+          handler({
+            lengthComputable: true,
+            loaded: 500,
+            total: 1000,
+          });
+        }
+      });
+
+      vi.spyOn(xhr, 'addEventListener').mockImplementation((event, handler) => {
+        if (event === 'load') {
+          // @ts-expect-error - mock implementation
+          handler({ target: { status: 200 } });
+        }
+      });
+
+      await uploadService.uploadToServerS3(mockFile, { onProgress });
+
+      expect(onProgress).toHaveBeenCalledWith(
+        'uploading',
+        expect.objectContaining({
+          progress: expect.any(Number),
+          restTime: expect.any(Number),
+          speed: expect.any(Number),
+        }),
+      );
+    });
+
     it('should handle network error', async () => {
       const xhr = new XMLHttpRequest();
 
@@ -86,7 +330,7 @@ describe('UploadService', () => {
       vi.spyOn(xhr, 'addEventListener').mockImplementation((event, handler) => {
         if (event === 'error') {
           Object.assign(xhr, { status: 0 });
-          // @ts-ignore
+          // @ts-expect-error - mock implementation
           handler({});
         }
       });
@@ -102,31 +346,45 @@ describe('UploadService', () => {
         if (event === 'load') {
           Object.assign(xhr, { status: 400, statusText: 'Bad Request' });
 
-          // @ts-ignore
+          // @ts-expect-error - mock implementation
           handler({});
         }
       });
 
       await expect(uploadService.uploadToServerS3(mockFile, {})).rejects.toBe('Bad Request');
     });
-  });
 
-  describe('uploadToClientS3', () => {
-    it('should upload file to client S3 successfully', async () => {
-      const hash = 'test-hash';
-      const expectedResult = {
-        date: '1',
-        dirname: '',
-        filename: mockFile.name,
-        path: `client-s3://${hash}`,
-      };
+    it('should use custom directory when provided', async () => {
+      const xhr = new XMLHttpRequest();
+      vi.spyOn(xhr, 'addEventListener').mockImplementation((event, handler) => {
+        if (event === 'load') {
+          // @ts-expect-error - mock implementation
+          handler({ target: { status: 200 } });
+        }
+      });
 
-      (clientS3Storage.putObject as any).mockResolvedValue(undefined);
+      const result = await uploadService.uploadToServerS3(mockFile, {
+        directory: 'custom/dir',
+      });
 
-      const result = await uploadService['uploadToClientS3'](hash, mockFile);
+      expect(result.dirname).toContain('custom/dir');
+    });
 
-      expect(clientS3Storage.putObject).toHaveBeenCalledWith(hash, mockFile);
-      expect(result).toEqual(expectedResult);
+    it('should use custom pathname when provided', async () => {
+      const xhr = new XMLHttpRequest();
+      vi.spyOn(xhr, 'addEventListener').mockImplementation((event, handler) => {
+        if (event === 'load') {
+          // @ts-expect-error - mock implementation
+          handler({ target: { status: 200 } });
+        }
+      });
+
+      const customPath = 'custom/path/file.png';
+      const result = await uploadService.uploadToServerS3(mockFile, {
+        pathname: customPath,
+      });
+
+      expect(result.path).toBe(customPath);
     });
   });
 
@@ -140,9 +398,9 @@ describe('UploadService', () => {
       const filename = 'test.png';
       const mockArrayBuffer = new ArrayBuffer(8);
 
-      (global.fetch as any).mockResolvedValue({
+      vi.mocked(global.fetch).mockResolvedValue({
         arrayBuffer: () => Promise.resolve(mockArrayBuffer),
-      });
+      } as Response);
 
       const result = await uploadService.getImageFileByUrlWithCORS(url, filename);
 
@@ -161,9 +419,9 @@ describe('UploadService', () => {
       const fileType = 'image/jpeg';
       const mockArrayBuffer = new ArrayBuffer(8);
 
-      (global.fetch as any).mockResolvedValue({
+      vi.mocked(global.fetch).mockResolvedValue({
         arrayBuffer: () => Promise.resolve(mockArrayBuffer),
-      });
+      } as Response);
 
       const result = await uploadService.getImageFileByUrlWithCORS(url, filename, fileType);
 

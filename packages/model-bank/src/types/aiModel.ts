@@ -12,15 +12,18 @@ export const AiModelSourceEnum = {
 
 export type AiModelSourceType = (typeof AiModelSourceEnum)[keyof typeof AiModelSourceEnum];
 
-export type AiModelType =
-  | 'chat'
-  | 'embedding'
-  | 'tts'
-  | 'stt'
-  | 'image'
-  | 'text2video'
-  | 'text2music'
-  | 'realtime';
+export const AiModelTypeSchema = z.enum([
+  'chat',
+  'embedding',
+  'tts',
+  'stt',
+  'image',
+  'text2video',
+  'text2music',
+  'realtime',
+] as const);
+
+export type AiModelType = z.infer<typeof AiModelTypeSchema>;
 
 export interface ModelAbilities {
   /**
@@ -44,6 +47,10 @@ export interface ModelAbilities {
    */
   search?: boolean;
   /**
+   * whether model supports structured output
+   */
+  structuredOutput?: boolean;
+  /**
    * whether model supports video
    */
   video?: boolean;
@@ -56,39 +63,41 @@ export interface ModelAbilities {
 const AiModelAbilitiesSchema = z.object({
   // files: z.boolean().optional(),
   functionCall: z.boolean().optional(),
+  imageOutput: z.boolean().optional(),
   reasoning: z.boolean().optional(),
   search: z.boolean().optional(),
+  video: z.boolean().optional(),
   vision: z.boolean().optional(),
 });
 
-// 语言模型的设置参数
+// Language model configuration parameters
 export interface LLMParams {
   /**
-   * 控制生成文本中的惩罚系数，用于减少重复性
+   * Controls the penalty coefficient in generated text to reduce repetition
    * @default 0
    */
   frequency_penalty?: number;
   /**
-   * 生成文本的最大长度
+   * Maximum length of generated text
    */
   max_tokens?: number;
   /**
-   * 控制生成文本中的惩罚系数，用于减少主题的变化
+   * Controls the penalty coefficient in generated text to reduce topic variation
    * @default 0
    */
   presence_penalty?: number;
   /**
-   * 生成文本的随机度量，用于控制文本的创造性和多样性
+   * Random measure for generated text to control creativity and diversity
    * @default 1
    */
   reasoning_effort?: string;
   /**
-   * 生成文本的随机度量，用于控制文本的创造性和多样性
+   * Random measure for generated text to control creativity and diversity
    * @default 1
    */
   temperature?: number;
   /**
-   * 控制生成文本中最高概率的单个 token
+   * Controls the single token with highest probability in generated text
    * @default 1
    */
   top_p?: number;
@@ -133,6 +142,8 @@ export type PricingUnitName =
 
   // Image-based pricing units
   | 'imageGeneration' // for image generation models
+  | 'imageInput'
+  | 'imageInput_cacheRead'
   | 'imageOutput';
 
 export type PricingUnitType =
@@ -174,6 +185,10 @@ export interface LookupPricingUnit extends PricingUnitBase {
 export type PricingUnit = FixedPricingUnit | TieredPricingUnit | LookupPricingUnit;
 
 export interface Pricing {
+  /**
+   * Fallback approximate per-image price (USD) when detailed pricing table is unavailable
+   */
+  approximatePricePerImage?: number;
   currency?: ModelPriceCurrency;
   units: PricingUnit[];
 }
@@ -223,15 +238,19 @@ export type ExtendParamsType =
   | 'disableContextCaching'
   | 'reasoningEffort'
   | 'gpt5ReasoningEffort'
+  | 'gpt5_1ReasoningEffort'
   | 'textVerbosity'
   | 'thinking'
   | 'thinkingBudget'
+  | 'thinkingLevel'
+  | 'imageAspectRatio'
+  | 'imageResolution'
   | 'urlContext';
 
 export interface AiModelSettings {
   extendParams?: ExtendParamsType[];
   /**
-   * 模型层实现搜索的方式
+   * How the model layer implements search
    */
   searchImpl?: ModelSearchImplementType;
   searchProvider?: string;
@@ -322,6 +341,7 @@ export const CreateAiModelSchema = z.object({
   id: z.string(),
   providerId: z.string(),
   releasedAt: z.string().optional(),
+  type: AiModelTypeSchema.optional(),
 
   // checkModel: z.string().optional(),
   // homeUrl: z.string().optional(),
@@ -357,6 +377,7 @@ export const UpdateAiModelSchema = z.object({
     .optional(),
   contextWindowTokens: z.number().nullable().optional(),
   displayName: z.string().nullable().optional(),
+  type: AiModelTypeSchema.optional(),
 });
 
 export type UpdateAiModelParams = z.infer<typeof UpdateAiModelSchema>;
@@ -364,6 +385,7 @@ export type UpdateAiModelParams = z.infer<typeof UpdateAiModelSchema>;
 export interface AiModelSortMap {
   id: string;
   sort: number;
+  type?: AiModelType;
 }
 
 export const ToggleAiModelEnableSchema = z.object({
@@ -371,17 +393,28 @@ export const ToggleAiModelEnableSchema = z.object({
   id: z.string(),
   providerId: z.string(),
   source: z.enum(['builtin', 'custom', 'remote']).optional(),
+  type: AiModelTypeSchema.optional(),
 });
 
 export type ToggleAiModelEnableParams = z.infer<typeof ToggleAiModelEnableSchema>;
 
-//
-
 export interface AiModelForSelect {
   abilities: ModelAbilities;
+  /**
+   * Approximate per-image price (USD), used when exact calculation is not possible
+   */
+  approximatePricePerImage?: number;
   contextWindowTokens?: number;
+  description?: string;
   displayName?: string;
   id: string;
+  parameters?: ModelParamsSchema;
+  /**
+   * Exact per-image price (USD) calculated from pricing units
+   */
+  pricePerImage?: number;
+  pricing?: Pricing;
+  releasedAt?: string;
 }
 
 export interface EnabledAiModel {
@@ -393,6 +426,7 @@ export interface EnabledAiModel {
   id: string;
   parameters?: ModelParamsSchema;
   providerId: string;
+  releasedAt?: string;
   settings?: AiModelSettings;
   sort?: number;
   type: AiModelType;

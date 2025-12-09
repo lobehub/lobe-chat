@@ -30,13 +30,22 @@
     "description": "Bedrock é um serviço oferecido pela Amazon AWS, focado em fornecer modelos de linguagem e visão de IA avançados para empresas. Sua família de modelos inclui a série Claude da Anthropic, a série Llama 3.1 da Meta, entre outros, abrangendo uma variedade de opções, desde modelos leves até de alto desempenho, suportando geração de texto, diálogos, processamento de imagens e outras tarefas, adequando-se a aplicações empresariais de diferentes escalas e necessidades."
   },
   "bfl": {
-    "description": "Laboratório líder de pesquisa de ponta em inteligência artificial, construindo a infraestrutura visual do amanhã."
+    "description": "Laboratório de pesquisa em inteligência artificial de ponta, construindo a infraestrutura visual do amanhã."
+  },
+  "cerebras": {
+    "description": "Cerebras é uma plataforma de inferência de IA baseada em seu sistema dedicado CS-3, projetada para oferecer o serviço de LLM mais rápido do mundo, com resposta em tempo real e alta taxa de transferência. Foi desenvolvida para eliminar a latência e acelerar fluxos de trabalho complexos de IA, como geração de código em tempo real e tarefas de agentes."
   },
   "cloudflare": {
     "description": "Execute modelos de aprendizado de máquina impulsionados por GPU sem servidor na rede global da Cloudflare."
   },
   "cohere": {
     "description": "Cohere traz para você os modelos multilíngues mais avançados, funcionalidades de busca sofisticadas e um espaço de trabalho de IA personalizado para empresas modernas — tudo integrado em uma plataforma segura."
+  },
+  "cometapi": {
+    "description": "CometAPI é uma plataforma de serviços que oferece diversas interfaces de modelos avançados, suportando OpenAI, Anthropic, Google e muito mais, adequada para necessidades variadas de desenvolvimento e aplicação. Os usuários podem escolher de forma flexível o modelo e preço ideais conforme suas necessidades, promovendo uma melhor experiência com IA."
+  },
+  "comfyui": {
+    "description": "Um poderoso mecanismo de fluxo de trabalho de código aberto para geração de imagens, vídeos e áudios, compatível com modelos avançados como SD, FLUX, Qwen, Hunyuan, WAN, oferecendo edição de fluxo de trabalho baseada em nós e capacidade de implantação privada."
   },
   "deepseek": {
     "description": "A DeepSeek é uma empresa focada em pesquisa e aplicação de tecnologia de inteligência artificial, cujo modelo mais recente, DeepSeek-V2.5, combina capacidades de diálogo geral e processamento de código, alcançando melhorias significativas em alinhamento com preferências humanas, tarefas de escrita e seguimento de instruções."
@@ -107,6 +116,9 @@
   "ollama": {
     "description": "Os modelos oferecidos pela Ollama abrangem amplamente áreas como geração de código, operações matemáticas, processamento multilíngue e interações de diálogo, atendendo a diversas necessidades de implantação em nível empresarial e local."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud oferece um serviço de inferência hospedado oficialmente, com acesso imediato à biblioteca de modelos Ollama e suporte à interface compatível com OpenAI."
+  },
   "openai": {
     "description": "OpenAI é uma das principais instituições de pesquisa em inteligência artificial do mundo, cujos modelos, como a série GPT, estão na vanguarda do processamento de linguagem natural. A OpenAI se dedica a transformar vários setores por meio de soluções de IA inovadoras e eficientes. Seus produtos apresentam desempenho e custo-benefício significativos, sendo amplamente utilizados em pesquisa, negócios e aplicações inovadoras."
   },
@@ -158,6 +170,9 @@
   "v0": {
     "description": "v0 é um assistente de programação em par; basta descrever suas ideias em linguagem natural, e ele gerará código e interface de usuário (UI) para o seu projeto"
   },
+  "vercelaigateway": {
+    "description": "O Vercel AI Gateway oferece uma API unificada para acessar mais de 100 modelos, permitindo o uso de modelos de vários provedores como OpenAI, Anthropic, Google, entre outros, através de um único endpoint. Suporta configuração de orçamento, monitoramento de uso, balanceamento de carga de requisições e failover."
+  },
   "vertexai": {
     "description": "A série Gemini do Google é seu modelo de IA mais avançado e versátil, desenvolvido pelo Google DeepMind, projetado para ser multimodal, suportando compreensão e processamento sem costura de texto, código, imagens, áudio e vídeo. Adequado para uma variedade de ambientes, desde data centers até dispositivos móveis, aumentando significativamente a eficiência e a aplicabilidade dos modelos de IA."
   },
@@ -175,6 +190,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference) é uma plataforma de código aberto que simplifica a execução e integração de diversos modelos de IA. Com o Xinference, você pode utilizar qualquer LLM de código aberto, modelos de embedding e modelos multimodais para executar inferências em ambientes locais ou na nuvem, além de criar aplicações de IA poderosas."
+  },
+  "zenmux": {
+    "description": "ZenMux é uma plataforma unificada de agregação de serviços de IA, compatível com diversas interfaces de serviços de IA populares como OpenAI, Anthropic, Google VertexAI, entre outras. Oferece uma capacidade de roteamento flexível, permitindo que você alterne e gerencie facilmente diferentes modelos de IA."
   },
   "zeroone": {
     "description": "01.AI se concentra na tecnologia de inteligência artificial da era 2.0, promovendo fortemente a inovação e aplicação de 'humano + inteligência artificial', utilizando modelos poderosos e tecnologia de IA avançada para aumentar a produtividade humana e realizar a capacitação tecnológica."

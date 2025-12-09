@@ -6,14 +6,21 @@ import { createStyles } from 'antd-style';
 import { MenuIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import urlJoin from 'url-join';
+import { useNavigate } from 'react-router-dom';
 
 import Menu from '@/components/Menu';
-import { withSuspense } from '@/components/withSuspense';
-import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
 
 import { useNav } from '../../../features/useNav';
+
+const SCROLL_CONTAINER_ID = 'lobe-mobile-scroll-container';
+
+const scrollToTop = () => {
+  const scrollableElement = document?.querySelector(`#${SCROLL_CONTAINER_ID}`);
+
+  if (!scrollableElement) return;
+  scrollableElement.scrollTo({ behavior: 'smooth', top: 0 });
+};
 
 export const useStyles = createStyles(({ css, token }) => ({
   activeNavItem: css`
@@ -38,7 +45,7 @@ const Nav = memo(() => {
   const [open, setOpen] = useState(false);
   const { styles, theme } = useStyles();
   const { items, activeKey, activeItem } = useNav();
-  const router = useQueryRoute();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -46,7 +53,9 @@ const Nav = memo(() => {
         <ActionIcon
           color={theme.colorText}
           icon={MenuIcon}
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setOpen(true);
+          }}
           size={{ blockSize: 32, size: 18 }}
         />
         {activeItem?.label}
@@ -78,10 +87,11 @@ const Nav = memo(() => {
           compact
           items={items}
           onClick={({ key }) => {
+            scrollToTop();
             if (key === DiscoverTab.Home) {
-              router.push('/discover');
+              navigate('/discover');
             } else {
-              router.push(urlJoin('/discover', key));
+              navigate(`/discover/${key}`);
             }
           }}
           selectable
@@ -92,4 +102,4 @@ const Nav = memo(() => {
   );
 });
 
-export default withSuspense(Nav);
+export default Nav;

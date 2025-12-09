@@ -1,8 +1,15 @@
 name: Release CI
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
 on:
   push:
     branches:
       - main
+      - next
 
 jobs:
   release:
@@ -17,7 +24,6 @@ jobs:
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
 
-
         ports:
           - 5432:5432
 
@@ -27,14 +33,15 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24.11.1
+          package-manager-cache: false
 
       - name: Install bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       - name: Install deps
         run: bun i
@@ -47,8 +54,7 @@ jobs:
         env:
           DATABASE_TEST_URL: postgresql://postgres:postgres@localhost:5432/postgres
           DATABASE_DRIVER: node
-          NEXT_PUBLIC_SERVICE_MODE: server
-          KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
+          KEY_VAULTS_SECRET: Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
           S3_PUBLIC_DOMAIN: https://example.com
           APP_URL: https://home.com
 

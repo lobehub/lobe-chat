@@ -30,13 +30,22 @@
     "description": "Bedrock ist ein Service von Amazon AWS, der sich darauf konzentriert, Unternehmen fortschrittliche KI-Sprach- und visuelle Modelle bereitzustellen. Die Modellfamilie umfasst die Claude-Serie von Anthropic, die Llama 3.1-Serie von Meta und mehr, und bietet eine Vielzahl von Optionen von leichtgewichtig bis hochleistungsfähig, die Textgenerierung, Dialoge, Bildverarbeitung und andere Aufgaben unterstützen und für Unternehmensanwendungen unterschiedlicher Größen und Anforderungen geeignet sind."
   },
   "bfl": {
-    "description": "Ein führendes, an vorderster Front tätiges KI-Forschungslabor, das die visuelle Infrastruktur von morgen gestaltet."
+    "description": "Ein führendes, hochmodernes Forschungslabor für künstliche Intelligenz, das die visuelle Infrastruktur von morgen aufbaut."
+  },
+  "cerebras": {
+    "description": "Cerebras ist eine KI-Inferenzplattform, die auf dem spezialisierten CS-3-System basiert. Sie wurde entwickelt, um weltweit die schnellsten, in Echtzeit reagierenden und hochdurchsatzfähigen LLM-Dienste bereitzustellen. Ziel ist es, Latenzen zu eliminieren und komplexe KI-Workflows wie die Echtzeit-Codegenerierung und Agentenaufgaben zu beschleunigen."
   },
   "cloudflare": {
     "description": "Führen Sie von serverlosen GPUs betriebene Machine-Learning-Modelle im globalen Netzwerk von Cloudflare aus."
   },
   "cohere": {
     "description": "Cohere bringt Ihnen die fortschrittlichsten mehrsprachigen Modelle, leistungsstarke Suchfunktionen und einen maßgeschneiderten KI-Arbeitsbereich für moderne Unternehmen – alles integriert in einer sicheren Plattform."
+  },
+  "cometapi": {
+    "description": "CometAPI ist eine Serviceplattform, die verschiedene fortschrittliche Schnittstellen für große Modelle anbietet und OpenAI, Anthropic, Google und weitere unterstützt. Sie eignet sich für vielfältige Entwicklungs- und Anwendungsanforderungen. Nutzer können je nach Bedarf das optimale Modell und den besten Preis flexibel auswählen, um das KI-Erlebnis zu verbessern."
+  },
+  "comfyui": {
+    "description": "Leistungsstarke Open-Source-Engine für die Erstellung von Bildern, Videos und Audiodateien. Unterstützt fortschrittliche Modelle wie SD, FLUX, Qwen, Hunyuan und WAN. Bietet eine node-basierte Workflow-Bearbeitung sowie Möglichkeiten zur privaten Bereitstellung."
   },
   "deepseek": {
     "description": "DeepSeek ist ein Unternehmen, das sich auf die Forschung und Anwendung von KI-Technologien spezialisiert hat. Ihr neuestes Modell, DeepSeek-V2.5, kombiniert allgemeine Dialog- und Codeverarbeitungsfähigkeiten und hat signifikante Fortschritte in den Bereichen menschliche Präferenzanpassung, Schreibaufgaben und Befehlsbefolgung erzielt."
@@ -107,6 +116,9 @@
   "ollama": {
     "description": "Die von Ollama angebotenen Modelle decken ein breites Spektrum ab, darunter Code-Generierung, mathematische Berechnungen, mehrsprachige Verarbeitung und dialogbasierte Interaktionen, und unterstützen die vielfältigen Anforderungen an unternehmensgerechte und lokal angepasste Bereitstellungen."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud bietet offiziell gehostete Inferenzdienste, mit sofortigem Zugriff auf die Ollama-Modellbibliothek und Unterstützung für OpenAI-kompatible Schnittstellen."
+  },
   "openai": {
     "description": "OpenAI ist eine weltweit führende Forschungsinstitution im Bereich der künstlichen Intelligenz, deren entwickelte Modelle wie die GPT-Serie die Grenzen der Verarbeitung natürlicher Sprache vorantreiben. OpenAI setzt sich dafür ein, durch innovative und effiziente KI-Lösungen verschiedene Branchen zu transformieren. Ihre Produkte zeichnen sich durch herausragende Leistung und Wirtschaftlichkeit aus und finden breite Anwendung in Forschung, Wirtschaft und innovativen Anwendungen."
   },
@@ -158,6 +170,9 @@
   "v0": {
     "description": "v0 ist ein Pair-Programming-Assistent, bei dem Sie Ihre Ideen einfach in natürlicher Sprache beschreiben können, und er generiert Code und Benutzeroberflächen (UI) für Ihr Projekt."
   },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway bietet eine einheitliche API zum Zugriff auf über 100 Modelle und ermöglicht die Nutzung von Modellen verschiedener Anbieter wie OpenAI, Anthropic und Google über einen einzigen Endpunkt. Unterstützt Budgeteinstellungen, Nutzungsüberwachung, Lastenausgleich und Failover."
+  },
   "vertexai": {
     "description": "Die Gemini-Serie von Google ist das fortschrittlichste, universelle KI-Modell, das von Google DeepMind entwickelt wurde. Es ist speziell für multimodale Anwendungen konzipiert und unterstützt das nahtlose Verständnis und die Verarbeitung von Text, Code, Bildern, Audio und Video. Es eignet sich für eine Vielzahl von Umgebungen, von Rechenzentren bis hin zu mobilen Geräten, und verbessert erheblich die Effizienz und Anwendbarkeit von KI-Modellen."
   },
@@ -175,6 +190,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference) ist eine Open-Source-Plattform zur Vereinfachung der Ausführung und Integration verschiedener KI-Modelle. Mit Xinference können Sie beliebige Open-Source-LLMs, Embedding-Modelle und multimodale Modelle in der Cloud oder lokal ausführen, um leistungsstarke KI-Anwendungen zu erstellen."
+  },
+  "zenmux": {
+    "description": "ZenMux ist eine einheitliche Plattform zur Aggregation von KI-Diensten, die Schnittstellen zu führenden KI-Anbietern wie OpenAI, Anthropic und Google VertexAI unterstützt. Sie bietet flexible Routing-Funktionen, mit denen Sie mühelos zwischen verschiedenen KI-Modellen wechseln und diese verwalten können."
   },
   "zeroone": {
     "description": "01.AI konzentriert sich auf die künstliche Intelligenz-Technologie der AI 2.0-Ära und fördert aktiv die Innovation und Anwendung von 'Mensch + künstliche Intelligenz', indem sie leistungsstarke Modelle und fortschrittliche KI-Technologien einsetzt, um die Produktivität der Menschen zu steigern und technologische Befähigung zu erreichen."

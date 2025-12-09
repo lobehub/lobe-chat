@@ -82,6 +82,58 @@
       "title": "ID tài khoản Cloudflare / địa chỉ API"
     }
   },
+  "comfyui": {
+    "apiKey": {
+      "desc": "Khóa API cần thiết để xác thực Bearer Token",
+      "placeholder": "Vui lòng nhập khóa API",
+      "required": "Vui lòng nhập khóa API",
+      "title": "Khóa API"
+    },
+    "authType": {
+      "desc": "Chọn phương thức xác thực với máy chủ ComfyUI",
+      "options": {
+        "basic": "Tài khoản/Mật khẩu",
+        "bearer": "Bearer (Khóa API)",
+        "custom": "Tiêu đề yêu cầu tùy chỉnh",
+        "none": "Không cần xác thực"
+      },
+      "placeholder": "Vui lòng chọn loại xác thực",
+      "title": "Loại xác thực"
+    },
+    "baseURL": {
+      "desc": "Địa chỉ truy cập web của ComfyUI",
+      "placeholder": "http://127.0.0.1:8000",
+      "required": "Vui lòng nhập địa chỉ dịch vụ ComfyUI",
+      "title": "Địa chỉ dịch vụ ComfyUI"
+    },
+    "checker": {
+      "desc": "Kiểm tra kết nối đã được cấu hình đúng chưa",
+      "title": "Kiểm tra kết nối"
+    },
+    "customHeaders": {
+      "addButton": "Thêm tiêu đề yêu cầu",
+      "deleteTooltip": "Xóa tiêu đề yêu cầu này",
+      "desc": "Tiêu đề yêu cầu cần thiết cho phương thức xác thực tùy chỉnh, định dạng cặp khóa-giá trị",
+      "duplicateKeyError": "Tên khóa tiêu đề yêu cầu không được trùng lặp",
+      "keyPlaceholder": "Tên khóa",
+      "required": "Vui lòng nhập tiêu đề yêu cầu tùy chỉnh",
+      "title": "Tiêu đề yêu cầu tùy chỉnh",
+      "valuePlaceholder": "Giá trị"
+    },
+    "password": {
+      "desc": "Mật khẩu cần thiết cho xác thực cơ bản",
+      "placeholder": "Vui lòng nhập mật khẩu",
+      "required": "Vui lòng nhập mật khẩu",
+      "title": "Mật khẩu"
+    },
+    "title": "ComfyUI",
+    "username": {
+      "desc": "Tên người dùng cần thiết cho xác thực cơ bản",
+      "placeholder": "Vui lòng nhập tên người dùng",
+      "required": "Vui lòng nhập tên người dùng",
+      "title": "Tên người dùng"
+    }
+  },
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Vui lòng nhập API Key của bạn",
@@ -138,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Chưa kích hoạt nhà cung cấp tùy chỉnh",
       "disabled": "Nhà cung cấp chưa được kích hoạt",
       "enabled": "Nhà cung cấp đã được kích hoạt"
     }
@@ -146,7 +199,14 @@
     "addCustomProvider": "Thêm nhà cung cấp tùy chỉnh",
     "all": "Tất cả",
     "list": {
+      "custom": "Tùy chỉnh chưa được kích hoạt",
       "disabled": "Chưa kích hoạt",
+      "disabledActions": {
+        "sort": "Cách sắp xếp",
+        "sortAlphabetical": "Sắp xếp theo chữ cái",
+        "sortAlphabeticalDesc": "Sắp xếp theo chữ cái (Z-A)",
+        "sortDefault": "Sắp xếp mặc định"
+      },
       "enabled": "Đã kích hoạt"
     },
     "notFound": "Không tìm thấy kết quả tìm kiếm",
@@ -237,7 +297,7 @@
       },
       "helpDoc": "Hướng dẫn cấu hình",
       "responsesApi": {
-        "desc": "Sử dụng định dạng yêu cầu thế hệ mới của OpenAI, mở khóa các tính năng nâng cao như chuỗi suy nghĩ",
+        "desc": "Áp dụng định dạng yêu cầu thế hệ mới của OpenAI, mở khóa các tính năng nâng cao như chuỗi tư duy (chỉ hỗ trợ mô hình OpenAI)",
         "title": "Sử dụng chuẩn Responses API"
       },
       "waitingForMore": "Nhiều mô hình hơn đang <1>được lên kế hoạch</1>, xin hãy chờ đợi"
@@ -284,15 +344,42 @@
           "placeholder": "Vui lòng nhập id mô hình, ví dụ gpt-4o hoặc claude-3.5-sonnet",
           "title": "ID mô hình"
         },
+        "imageOutput": {
+          "extra": "Cấu hình này chỉ bật khả năng tạo hình ảnh của mô hình, hiệu quả cụ thể hoàn toàn phụ thuộc vào bản thân mô hình, vui lòng tự kiểm tra xem mô hình có khả năng tạo hình ảnh khả dụng hay không",
+          "title": "Hỗ trợ tạo hình ảnh"
+        },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
         "reasoning": {
           "extra": "Cấu hình này sẽ chỉ kích hoạt khả năng suy nghĩ sâu của mô hình, hiệu quả cụ thể hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra xem mô hình này có khả năng suy nghĩ sâu có thể sử dụng hay không",
           "title": "Hỗ trợ suy nghĩ sâu"
         },
+        "search": {
+          "extra": "Cấu hình này chỉ bật khả năng tìm kiếm trực tuyến của công cụ tìm kiếm tích hợp trong mô hình, việc có hỗ trợ công cụ tìm kiếm tích hợp hay không phụ thuộc vào bản thân mô hình, vui lòng tự kiểm tra khả năng sử dụng của công cụ tìm kiếm tích hợp trong mô hình",
+          "title": "Hỗ trợ tìm kiếm trực tuyến"
+        },
         "tokens": {
           "extra": "Cài đặt số Token tối đa mà mô hình hỗ trợ",
           "title": "Cửa sổ ngữ cảnh tối đa",
           "unlimited": "Không giới hạn"
+        },
+        "type": {
+          "extra": "Các loại mô hình khác nhau có các kịch bản sử dụng và khả năng khác biệt",
+          "options": {
+            "chat": "Đối thoại",
+            "embedding": "Vector hóa",
+            "image": "Tạo hình ảnh",
+            "realtime": "Đối thoại thời gian thực",
+            "stt": "Chuyển giọng nói thành văn bản",
+            "text2music": "Chuyển văn bản thành nhạc",
+            "text2video": "Chuyển văn bản thành video",
+            "tts": "Tổng hợp giọng nói"
+          },
+          "placeholder": "Vui lòng chọn loại mô hình",
+          "title": "Loại mô hình"
+        },
+        "video": {
+          "extra": "Cấu hình này chỉ bật cấu hình nhận diện video trong ứng dụng, việc có hỗ trợ nhận diện hay không hoàn toàn phụ thuộc vào bản thân mô hình, vui lòng tự kiểm tra khả năng nhận diện video của mô hình",
+          "title": "Hỗ trợ nhận diện video"
         },
         "vision": {
           "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong ứng dụng, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào mô hình, xin hãy tự kiểm tra khả năng nhận diện hình ảnh của mô hình này.",
@@ -312,7 +399,13 @@
       "addNew": "Thêm mô hình",
       "disabled": "Chưa được kích hoạt",
       "disabledActions": {
-        "showMore": "Hiển thị tất cả"
+        "showMore": "Hiển thị tất cả",
+        "sort": "Cách sắp xếp",
+        "sortAlphabetical": "Sắp xếp theo chữ cái",
+        "sortAlphabeticalDesc": "Sắp xếp theo chữ cái (Z-A)",
+        "sortDefault": "Sắp xếp mặc định",
+        "sortReleasedAt": "Sắp xếp theo ngày phát hành sớm nhất",
+        "sortReleasedAtDesc": "Sắp xếp theo ngày phát hành mới nhất"
       },
       "empty": {
         "desc": "Vui lòng tạo mô hình tùy chỉnh hoặc kéo mô hình để bắt đầu sử dụng",
@@ -372,6 +465,11 @@
       "desc": "Nhập khóa Vertex AI của bạn",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Khóa Vertex AI"
+    },
+    "region": {
+      "desc": "Chọn khu vực cho dịch vụ Vertex AI. Một số mô hình như Gemini 2.5 chỉ khả dụng ở các khu vực cụ thể (ví dụ: global)",
+      "placeholder": "Chọn khu vực",
+      "title": "Khu vực Vertex AI"
     }
   },
   "zeroone": {

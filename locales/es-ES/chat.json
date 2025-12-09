@@ -2,9 +2,10 @@
   "ModelSwitch": {
     "title": "Cambiar modelo"
   },
+  "active": "Activo",
   "agentDefaultMessage": "Hola, soy **{{name}}**. Puedes comenzar a hablar conmigo de inmediato o ir a [Configuración del asistente]({{url}}) para completar mi información.",
-  "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, {{systemRole}}, ¡comencemos a chatear!",
-  "agentDefaultMessageWithoutEdit": "¡Hola, soy **{{name}}**! Comencemos nuestra conversación.",
+  "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, ¿en qué puedo ayudarte?",
+  "agentDefaultMessageWithoutEdit": "Hola, soy **{{name}}**, ¿en qué puedo ayudarte?",
   "agents": "Asistente",
   "artifact": {
     "generating": "Generando",
@@ -13,17 +14,29 @@
     "thought": "Proceso de pensamiento",
     "unknownTitle": "Obra sin título"
   },
+  "availableAgents": "Agentes disponibles",
   "backToBottom": "Volver al fondo",
   "chatList": {
+    "expandMessage": "Expandir mensaje",
     "longMessageDetail": "Ver detalles"
   },
   "clearCurrentMessages": "Borrar mensajes actuales",
   "confirmClearCurrentMessages": "Estás a punto de borrar los mensajes de esta sesión. Una vez borrados, no se podrán recuperar. Por favor, confirma tu acción.",
+  "confirmRemoveChatGroupItemAlert": "Estás a punto de eliminar este equipo de agentes. Los miembros del equipo no se verán afectados. Por favor, confirma tu acción.",
+  "confirmRemoveGroupItemAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción",
+  "confirmRemoveGroupSuccess": "Equipo de agentes eliminado con éxito",
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
   "confirmRemoveSessionSuccess": "Asistente eliminado con éxito",
   "defaultAgent": "Asistente predeterminado",
+  "defaultGroupChat": "Equipo de agentes",
   "defaultList": "Lista predeterminada",
   "defaultSession": "Asistente predeterminado",
+  "dm": {
+    "placeholder": "Tus mensajes privados con {{agentTitle}} se mostrarán aquí.",
+    "tooltip": "Enviar mensaje privado",
+    "visibleTo": "Visible solo para {{target}}",
+    "you": "tú"
+  },
   "duplicateSession": {
     "loading": "Cargando duplicado...",
     "success": "Duplicado exitoso",
@@ -40,6 +53,12 @@
       "desc": "Basado en las restricciones del mecanismo Claude Thinking (<1>Más información</1>), al activarlo se desactivará automáticamente el límite de mensajes históricos",
       "title": "Activar el pensamiento profundo"
     },
+    "imageAspectRatio": {
+      "title": "Relación de aspecto de la imagen"
+    },
+    "imageResolution": {
+      "title": "Resolución de la imagen"
+    },
     "reasoningBudgetToken": {
       "title": "Token de consumo de pensamiento"
     },
@@ -52,17 +71,65 @@
     "thinking": {
       "title": "Interruptor de pensamiento profundo"
     },
+    "thinkingLevel": {
+      "title": "Nivel de pensamiento"
+    },
     "title": "Funcionalidad de extensión del modelo",
     "urlContext": {
       "desc": "Al activarlo, se analizarán automáticamente los enlaces web para obtener el contenido contextual real de la página",
       "title": "Extraer contenido del enlace web"
     }
   },
+  "group": {
+    "desc": "Colabora con varios asistentes de IA en un espacio de conversación compartido.",
+    "memberTooltip": "El grupo tiene {{count}} miembros",
+    "orchestratorThinking": "El anfitrión está pensando...",
+    "removeMember": "Eliminar miembro",
+    "title": "Grupo"
+  },
+  "groupDescription": "Descripción del equipo",
+  "groupSidebar": {
+    "members": {
+      "addMember": "Agregar miembro",
+      "memberSettings": "Configuración de miembros",
+      "orchestrator": "Anfitrión",
+      "orchestratorThinking": "El anfitrión está pensando...",
+      "removeMember": "Eliminar miembro",
+      "stopOrchestrator": "Detener pensamiento",
+      "triggerOrchestrator": "Iniciar chat grupal"
+    },
+    "tabs": {
+      "host": "Anfitrión",
+      "members": "Miembros",
+      "role": "Configuración"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "Selecciona asistentes existentes...",
+    "createGroup": "Crear equipo",
+    "existingMembers": "Agentes existentes",
+    "groupMembers": "Estos asistentes también se agregarán a tu lista",
+    "host": {
+      "description": "Permite que el equipo funcione de forma autónoma",
+      "title": "Activar moderador",
+      "tooltip": "Si se desactiva el moderador del equipo, deberás mencionar manualmente a los miembros con @ para que puedan responder"
+    },
+    "memberCount": "{{count}} miembros",
+    "noMatchingTemplates": "No hay plantillas que coincidan",
+    "noSelectedTemplates": "No se seleccionaron plantillas",
+    "noTemplateMembers": "No hay miembros en la plantilla",
+    "noTemplates": "No hay plantillas disponibles",
+    "searchTemplates": "Buscar plantillas...",
+    "title": "Crear equipo de agentes",
+    "useTemplate": "Usar plantilla"
+  },
+  "hideForYou": "El contenido del mensaje privado está oculto, por favor activa 【Mostrar contenido de mensajes privados】 en la configuración para verlo",
   "history": {
     "title": "El asistente solo recordará los últimos {{count}} mensajes"
   },
   "historyRange": "Rango de historial",
   "historySummary": "Resumen de mensajes históricos",
+  "inactive": "inactivo",
   "inbox": {
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
     "title": "Charla casual"
@@ -77,11 +144,13 @@
     "sendWithCmdEnter": "Presiona <key/> para enviar",
     "sendWithEnter": "Presiona <key/> para enviar",
     "stop": "Detener",
-    "warp": "Salto de línea"
+    "warp": "Salto de línea",
+    "warpWithKey": "Presione la tecla <key/> para hacer un salto de línea"
   },
   "intentUnderstanding": {
     "title": "Entendiendo y analizando su intención..."
   },
+  "inviteMembers": "Invitar a miembros",
   "knowledgeBase": {
     "all": "Todo el contenido",
     "allFiles": "Todos los archivos",
@@ -100,12 +169,32 @@
     "uploadGuide": "Los archivos subidos se pueden ver en la 'Base de conocimiento'.",
     "viewMore": "Ver más"
   },
+  "memberSelection": {
+    "addMember": "Agregar miembro",
+    "allMembers": "Todos los miembros",
+    "createGroup": "Crear equipo de agentes",
+    "noAvailableAgents": "No hay agentes disponibles para invitar",
+    "noSelectedAgents": "Aún no se ha seleccionado ningún agente",
+    "searchAgents": "Buscar agentes...",
+    "setInitialMembers": "Seleccionar miembros del equipo"
+  },
+  "members": "Miembros",
+  "mention": {
+    "title": "Mencionar miembros"
+  },
   "messageAction": {
+    "collapse": "Ocultar mensaje",
+    "continueGeneration": "Continuar generando",
     "delAndRegenerate": "Eliminar y Regenerar",
     "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
+    "expand": "Expandir mensaje",
     "regenerate": "Regenerar"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Visible solo para {{name}}",
+      "title": "Mensaje privado"
+    },
     "modelCard": {
       "credit": "Créditos",
       "creditPricing": "Precios",
@@ -149,7 +238,22 @@
       "total": "Total consumido"
     }
   },
+  "minimap": {
+    "jumpToMessage": "Ir al mensaje número {{index}}",
+    "nextMessage": "Mensaje siguiente",
+    "previousMessage": "Mensaje anterior",
+    "senderAssistant": "Agente",
+    "senderUser": "Tú"
+  },
   "newAgent": "Nuevo asistente",
+  "newGroupChat": "Nuevo equipo de agentes",
+  "noAgentsYet": "Este equipo de agentes aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
+  "noAvailableAgents": "No hay miembros disponibles para invitar",
+  "noMatchingAgents": "No se encontraron miembros coincidentes",
+  "noMembersYet": "Este grupo aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
+  "noSelectedAgents": "Aún no se han seleccionado miembros",
+  "openInNewWindow": "Abrir en una nueva ventana",
+  "owner": "Propietario del grupo",
   "pin": "Fijar",
   "pinOff": "Desfijar",
   "rag": {
@@ -190,12 +294,16 @@
     "title": "Búsqueda en línea"
   },
   "searchAgentPlaceholder": "Asistente de búsqueda...",
+  "searchAgents": "Asistente de búsqueda...",
+  "selectedAgents": "Agentes seleccionados",
   "sendPlaceholder": "Escribe tu mensaje...",
   "sessionGroup": {
     "config": "Gestión de grupos",
     "confirmRemoveGroupAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción.",
     "createAgentSuccess": "Asistente creado con éxito",
     "createGroup": "Crear nuevo grupo",
+    "createGroupFailed": "Error al crear el chat grupal",
+    "createGroupSuccess": "Chat grupal creado con éxito",
     "createSuccess": "Grupo creado con éxito",
     "creatingAgent": "Creando asistente...",
     "inputPlaceholder": "Introduce el nombre del grupo...",
@@ -210,14 +318,32 @@
   "shareModal": {
     "copy": "Copiar",
     "download": "Descargar captura de pantalla",
+    "downloadError": "Error al descargar",
     "downloadFile": "Descargar archivo",
+    "downloadPdf": "Descargar PDF",
+    "downloadSuccess": "Descarga exitosa",
+    "exportPdf": "Exportar como PDF",
     "exportTitle": "Título predeterminado",
+    "generatePdf": "Generar PDF",
+    "generatingPdf": "Generando PDF...",
     "imageType": "Tipo de imagen",
     "includeTool": "Incluir mensajes de herramientas",
     "includeUser": "Incluir mensajes de usuario",
+    "loadingPdf": "Cargando PDF...",
+    "noPdfData": "No hay datos PDF disponibles",
+    "pdf": "PDF",
+    "pdfErrorDescription": "Se produjo un error al generar el PDF, por favor inténtelo de nuevo",
+    "pdfGenerationError": "Error al generar el PDF",
+    "pdfReady": "PDF listo",
+    "regeneratePdf": "Regenerar PDF",
     "screenshot": "Captura de pantalla",
     "settings": "Configuración de exportación",
     "text": "Texto",
+    "widthMode": {
+      "label": "Modo de ancho",
+      "narrow": "Modo de pantalla estrecha",
+      "wide": "Modo de pantalla ancha"
+    },
     "withBackground": "Incluir imagen de fondo",
     "withFooter": "Incluir pie de página",
     "withPluginInfo": "Incluir información del plugin",
@@ -228,6 +354,12 @@
     "action": "Entrada de voz",
     "loading": "Reconociendo...",
     "prettifying": "Embelleciendo..."
+  },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "Todas las tareas están completadas",
+      "title": "Tareas completadas"
+    }
   },
   "thread": {
     "divider": "Subtema",
@@ -242,6 +374,7 @@
     "chats": "Mensajes de chat",
     "historySummary": "Resumen histórico",
     "rest": "Restante",
+    "supervisor": "Anfitrión del grupo",
     "systemRole": "Rol del sistema",
     "title": "Detalles del token",
     "tools": "Herramientas",
@@ -252,6 +385,29 @@
     "overload": "Excedido",
     "remained": "Restante",
     "used": "Usado"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Aprobar",
+      "approveAndRemember": "Aprobar y recordar",
+      "approveOnce": "Aprobar solo esta vez",
+      "mode": {
+        "allowList": "Lista blanca",
+        "allowListDesc": "Ejecutar automáticamente solo las herramientas aprobadas",
+        "autoRun": "Aprobación automática",
+        "autoRunDesc": "Aprobar automáticamente la ejecución de todas las herramientas",
+        "manual": "Manual",
+        "manualDesc": "Se requiere aprobación manual para cada ejecución"
+      },
+      "reject": "Rechazar",
+      "rejectAndContinue": "Rechazar y volver a intentar",
+      "rejectOnly": "Rechazar",
+      "rejectReasonPlaceholder": "Ingresar una razón ayudará al agente a comprender y mejorar futuras acciones",
+      "rejectTitle": "Rechazar esta ejecución de herramienta",
+      "rejectedWithReason": "Esta ejecución de herramienta fue rechazada: {{reason}}",
+      "toolAbort": "La llamada a la herramienta fue cancelada por el usuario",
+      "toolRejected": "Esta ejecución de herramienta fue rechazada"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "¿Abrir un nuevo tema?",
@@ -267,6 +423,7 @@
     "action": "Lectura de voz",
     "clear": "Borrar voz"
   },
+  "untitledAgent": "Asistente sin título",
   "updateAgent": "Actualizar información del asistente",
   "upload": {
     "action": {
@@ -280,6 +437,7 @@
       "actionFiletip": "Subir archivo",
       "actionTooltip": "Subir",
       "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función",
+      "fileNotSupported": "La carga de archivos no está soportada en el modo navegador, solo se permiten imágenes",
       "visionNotSupported": "El modelo actual no admite reconocimiento visual, por favor cambie de modelo para usar esta función"
     },
     "preview": {
@@ -288,7 +446,11 @@
         "pending": "Preparando para subir...",
         "processing": "Procesando archivo..."
       }
+    },
+    "validation": {
+      "videoSizeExceeded": "El tamaño del archivo de video no puede superar los 20 MB, el tamaño actual es {{actualSize}}"
     }
   },
+  "you": "tú",
   "zenMode": "Modo de concentración"
 }

@@ -30,13 +30,22 @@
     "description": "Bedrock, Amazon AWS tarafından sunulan bir hizmettir ve işletmelere gelişmiş yapay zeka dil modelleri ve görsel modeller sağlamaya odaklanmaktadır. Model ailesi, Anthropic'in Claude serisi, Meta'nın Llama 3.1 serisi gibi seçenekleri içermekte olup, metin üretimi, diyalog, görüntü işleme gibi çeşitli görevleri desteklemektedir. Farklı ölçek ve ihtiyaçlara uygun kurumsal uygulamalar için geniş bir yelpaze sunmaktadır."
   },
   "bfl": {
-    "description": "Önde gelen bir ileri düzey yapay zeka araştırma laboratuvarı; yarının görsel altyapısını inşa ediyor."
+    "description": "Öncü bir ileri düzey yapay zeka araştırma laboratuvarı, yarının görsel altyapısını inşa ediyor."
+  },
+  "cerebras": {
+    "description": "Cerebras, özel CS-3 sistemi üzerine kurulu bir yapay zeka çıkarım platformudur. Gerçek zamanlı yanıtlar ve yüksek veri işleme kapasitesiyle dünyanın en hızlı LLM hizmetini sunmayı hedefler. Gecikmeleri ortadan kaldırmak ve gerçek zamanlı kod üretimi ile aracı görevler gibi karmaşık yapay zeka iş akışlarını hızlandırmak için tasarlanmıştır."
   },
   "cloudflare": {
     "description": "Cloudflare'ın küresel ağı üzerinde sunucusuz GPU destekli makine öğrenimi modelleri çalıştırın."
   },
   "cohere": {
     "description": "Cohere, en son çok dilli modelleri, gelişmiş arama işlevselliğini ve modern işletmeler için özel olarak tasarlanmış AI çalışma alanını sunar - hepsi güvenli bir platformda entegre edilmiştir."
+  },
+  "cometapi": {
+    "description": "CometAPI, OpenAI, Anthropic, Google ve daha fazlasını destekleyen çeşitli ileri düzey büyük model arayüzleri sunan bir hizmet platformudur. Çeşitli geliştirme ve uygulama ihtiyaçlarına uygundur. Kullanıcılar, kendi ihtiyaçlarına göre en uygun modeli ve fiyatı esnek bir şekilde seçebilir, böylece yapay zeka deneyimini geliştirebilirler."
+  },
+  "comfyui": {
+    "description": "Güçlü bir açık kaynaklı görüntü, video ve ses üretim iş akışı motoru; SD, FLUX, Qwen, Hunyuan, WAN gibi ileri düzey modelleri destekler, düğüm tabanlı iş akışı düzenleme ve özelleştirilmiş dağıtım yetenekleri sunar."
   },
   "deepseek": {
     "description": "DeepSeek, yapay zeka teknolojisi araştırma ve uygulamalarına odaklanan bir şirkettir. En son modeli DeepSeek-V2.5, genel diyalog ve kod işleme yeteneklerini birleştirerek, insan tercihleriyle uyum, yazma görevleri ve talimat takibi gibi alanlarda önemli iyileştirmeler sağlamaktadır."
@@ -107,6 +116,9 @@
   "ollama": {
     "description": "Ollama'nın sunduğu modeller, kod üretimi, matematiksel işlemler, çok dilli işleme ve diyalog etkileşimi gibi alanları kapsamaktadır. Kurumsal düzeyde ve yerelleştirilmiş dağıtım için çeşitli ihtiyaçları desteklemektedir."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud, resmi olarak barındırılan çıkarım hizmetleri sunar, kutudan çıkar çıkmaz Ollama model kütüphanesine erişim sağlar ve OpenAI uyumlu arayüzleri destekler."
+  },
   "openai": {
     "description": "OpenAI, dünya çapında lider bir yapay zeka araştırma kuruluşudur. Geliştirdiği modeller, GPT serisi gibi, doğal dil işleme alanında öncü adımlar atmaktadır. OpenAI, yenilikçi ve etkili yapay zeka çözümleri ile birçok sektörü dönüştürmeyi hedeflemektedir. Ürünleri, belirgin performans ve maliyet etkinliği ile araştırma, ticaret ve yenilikçi uygulamalarda yaygın olarak kullanılmaktadır."
   },
@@ -158,6 +170,9 @@
   "v0": {
     "description": "v0, eşli programlama asistanıdır; sadece doğal dilde fikirlerinizi tanımlamanız yeterlidir, o da projeniz için kod ve kullanıcı arayüzü (UI) oluşturur"
   },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway, 100'den fazla modele erişim sağlamak için birleşik bir API sunar; tek bir uç nokta üzerinden OpenAI, Anthropic, Google ve diğer sağlayıcıların modellerini kullanmanıza olanak tanır. Bütçe ayarları, kullanım izleme, istek yük dengeleme ve hata toleransı desteklenmektedir."
+  },
   "vertexai": {
     "description": "Google'un Gemini serisi, Google DeepMind tarafından geliştirilen en gelişmiş ve genel amaçlı AI modelleridir. Çok modlu tasarım için özel olarak oluşturulmuş olup, metin, kod, görüntü, ses ve video gibi içeriklerin kesintisiz anlaşılması ve işlenmesini destekler. Veri merkezlerinden mobil cihazlara kadar çeşitli ortamlarda kullanılabilir, AI modellerinin verimliliğini ve uygulama kapsamını büyük ölçüde artırır."
   },
@@ -175,6 +190,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference), çeşitli yapay zeka modellerinin çalıştırılmasını ve entegrasyonunu kolaylaştıran açık kaynaklı bir platformdur. Xinference ile bulutta veya yerel ortamda herhangi bir açık kaynaklı LLM, gömme modeli ve çoklu modal modeli kullanarak çıkarım yapabilir ve güçlü yapay zeka uygulamaları oluşturabilirsiniz."
+  },
+  "zenmux": {
+    "description": "ZenMux, OpenAI, Anthropic, Google VertexAI gibi birçok popüler yapay zeka hizmeti arayüzünü destekleyen birleşik bir yapay zeka hizmetleri toplama platformudur. Esnek yönlendirme yetenekleri sayesinde farklı yapay zeka modelleri arasında kolayca geçiş yapabilir ve yönetebilirsiniz."
   },
   "zeroone": {
     "description": "01.AI, yapay zeka 2.0 çağının yapay zeka teknolojisine odaklanmakta ve 'insan + yapay zeka' yenilik ve uygulamalarını teşvik etmektedir. Son derece güçlü modeller ve gelişmiş yapay zeka teknolojileri kullanarak insan üretkenliğini artırmayı ve teknolojik güçlendirmeyi hedeflemektedir."

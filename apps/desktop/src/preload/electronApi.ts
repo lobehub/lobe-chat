@@ -15,5 +15,8 @@ export const setupElectronApi = () => {
     console.error(error);
   }
 
-  contextBridge.exposeInMainWorld('electronAPI', { invoke, onStreamInvoke });
+  contextBridge.exposeInMainWorld('electronAPI', {
+    invoke,
+    onStreamInvoke,
+  });
 };

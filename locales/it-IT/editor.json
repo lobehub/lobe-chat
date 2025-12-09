@@ -27,6 +27,14 @@
   "math": {
     "placeholder": "Inserisci la formula TeX"
   },
+  "slash": {
+    "h1": "Titolo di primo livello",
+    "h2": "Titolo di secondo livello",
+    "h3": "Titolo di terzo livello",
+    "hr": "Linea di separazione",
+    "table": "Tabella",
+    "tex": "Formula TeX"
+  },
   "table": {
     "delete": "Elimina tabella",
     "deleteColumn": "Elimina colonna",
@@ -46,7 +54,7 @@
     "link": "Collegamento",
     "numberList": "Elenco numerato",
     "strikethrough": "Testo barrato",
-    "table": "Inserisci tabella",
+    "table": "tabella",
     "taskList": "Elenco attività",
     "tex": "Formula TeX",
     "underline": "Sottolineato"

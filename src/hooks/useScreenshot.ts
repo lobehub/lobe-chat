@@ -1,6 +1,6 @@
 import type { SegmentedProps } from '@lobehub/ui';
+import { snapdom } from '@zumer/snapdom';
 import dayjs from 'dayjs';
-import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 import { useCallback, useState } from 'react';
 
 import { BRANDING_NAME } from '@/const/branding';
@@ -40,26 +40,6 @@ export const getImageUrl = async ({
   imageType: ImageType;
   width?: number;
 }) => {
-  let screenshotFn: any;
-  switch (imageType) {
-    case ImageType.JPG: {
-      screenshotFn = domToJpeg;
-      break;
-    }
-    case ImageType.PNG: {
-      screenshotFn = domToPng;
-      break;
-    }
-    case ImageType.SVG: {
-      screenshotFn = domToSvg;
-      break;
-    }
-    case ImageType.WEBP: {
-      screenshotFn = domToWebp;
-      break;
-    }
-  }
-
   const dom: HTMLDivElement = document.querySelector(id) as HTMLDivElement;
   let copy: HTMLDivElement = dom;
 
@@ -69,18 +49,54 @@ export const getImageUrl = async ({
     document.body.append(copy);
   }
 
-  const dataUrl = await screenshotFn(width ? copy : dom, {
-    features: {
-      // 不启用移除控制符，否则会导致 safari emoji 报错
-      removeControlCharacter: false,
-    },
+  const baseOptions = {
     scale: 2,
     width,
-  });
+  };
+
+  let blob: Blob;
+
+  if (imageType === ImageType.SVG) {
+    // For SVG, we need to use the full snapdom API to get the raw SVG string
+    const result = await snapdom(width ? copy : dom, baseOptions);
+    const svgString = result.toRaw();
+    blob = new Blob([svgString], { type: 'image/svg+xml' });
+  } else {
+    // For raster formats, use toBlob directly with type option
+    const blobType = (imageType === ImageType.JPG ? 'jpg' : imageType) as 'png' | 'jpg' | 'webp';
+    const blobResult = await snapdom.toBlob(width ? copy : dom, {
+      type: blobType,
+      useProxy: 'https://proxy.corsfix.com/?',
+    });
+
+    if (!blobResult) {
+      throw new Error('Failed to generate blob from snapdom');
+    }
+
+    blob = blobResult;
+  }
 
   if (width && copy) copy?.remove();
 
-  return dataUrl;
+  if (!blob) {
+    throw new Error('Blob is undefined');
+  }
+
+  // Convert blob to data URL using FileReader
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
+      } else {
+        reject(new Error('FileReader result is not a string'));
+      }
+    });
+    reader.addEventListener('error', () =>
+      reject(reader.error || new Error('Failed to read blob as data URL')),
+    );
+    reader.readAsDataURL(blob);
+  });
 };
 
 export const useScreenshot = ({

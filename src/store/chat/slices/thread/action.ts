@@ -1,12 +1,18 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { LOADING_FLAT, THREAD_DRAFT_ID } from '@lobechat/const';
 import { chainSummaryTitle } from '@lobechat/prompts';
+import {
+  CreateMessageParams,
+  SendThreadMessageParams,
+  ThreadItem,
+  ThreadType,
+  UIChatMessage,
+} from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOADING_FLAT, THREAD_DRAFT_ID } from '@/const/message';
-import { isDeprecatedEdition } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { threadService } from '@/services/thread';
@@ -16,8 +22,6 @@ import { globalHelpers } from '@/store/global/helpers';
 import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import { ChatMessage, CreateMessageParams, SendThreadMessageParams } from '@/types/message';
-import { ThreadItem, ThreadType } from '@/types/topic';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -43,10 +47,10 @@ export interface ChatThreadAction {
     type: ThreadType;
   }) => Promise<{ threadId: string; messageId: string }>;
   openThreadCreator: (messageId: string) => void;
-  openThreadInPortal: (threadId: string, sourceMessageId: string) => void;
+  openThreadInPortal: (threadId: string, sourceMessageId?: string | null) => void;
   closeThreadPortal: () => void;
   useFetchThreads: (enable: boolean, topicId?: string) => SWRResponse<ThreadItem[]>;
-  summaryThreadTitle: (threadId: string, messages: ChatMessage[]) => Promise<void>;
+  summaryThreadTitle: (threadId: string, messages: UIChatMessage[]) => Promise<void>;
   updateThreadTitle: (id: string, title: string) => Promise<void>;
   removeThread: (id: string) => Promise<void>;
   switchThread: (id: string) => void;
@@ -96,7 +100,7 @@ export const chatThreadMessage: StateCreator<
   },
   sendThreadMessage: async ({ message }) => {
     const {
-      internal_coreProcessMessage,
+      internal_execAgentRuntime,
       activeTopicId,
       activeId,
       threadStartMessageId,
@@ -128,7 +132,7 @@ export const chatThreadMessage: StateCreator<
     if (!portalThreadId) {
       if (!threadStartMessageId) return;
       // we need to create a temp message for optimistic update
-      tempMessageId = get().internal_createTmpMessage({
+      tempMessageId = get().optimisticCreateTmpMessage({
         ...newMessage,
         threadId: THREAD_DRAFT_ID,
       });
@@ -151,10 +155,12 @@ export const chatThreadMessage: StateCreator<
     } else {
       // if there is a thread, just append message
       // we need to create a temp message for optimistic update
-      tempMessageId = get().internal_createTmpMessage(newMessage);
+      tempMessageId = get().optimisticCreateTmpMessage(newMessage);
       get().internal_toggleMessageLoading(true, tempMessageId);
 
-      parentMessageId = await get().internal_createMessage(newMessage, { tempMessageId });
+      const result = await get().optimisticCreateMessage(newMessage, { tempMessageId });
+      if (!result) return;
+      parentMessageId = result.id;
     }
 
     get().internal_toggleMessageLoading(false, tempMessageId);
@@ -166,8 +172,12 @@ export const chatThreadMessage: StateCreator<
     // Get the current messages to generate AI response
     const messages = threadSelectors.portalAIChats(get());
 
-    await internal_coreProcessMessage(messages, parentMessageId, {
-      ragQuery: get().internal_shouldUseRAG() ? message : undefined,
+    await internal_execAgentRuntime({
+      messages,
+      parentMessageId,
+      parentMessageType: 'user',
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
       threadId: get().portalThreadId,
       inPortalThread: true,
     });
@@ -185,12 +195,12 @@ export const chatThreadMessage: StateCreator<
     }
   },
   resendThreadMessage: async (messageId) => {
-    const chats = threadSelectors.portalAIChats(get());
+    // const chats = threadSelectors.portalAIChats(get());
 
-    await get().internal_resendMessage(messageId, {
-      messages: chats,
-      threadId: get().portalThreadId,
-      inPortalThread: true,
+    await get().regenerateUserMessage(messageId, {
+      // messages: chats,
+      // threadId: get().portalThreadId,
+      // inPortalThread: true,
     });
   },
   delAndResendThreadMessage: async (id) => {
@@ -213,7 +223,7 @@ export const chatThreadMessage: StateCreator<
 
   useFetchThreads: (enable, topicId) =>
     useClientDataSWR<ThreadItem[]>(
-      enable && !!topicId && !isDeprecatedEdition ? [SWR_USE_FETCH_THREADS, topicId] : null,
+      enable && !!topicId ? [SWR_USE_FETCH_THREADS, topicId] : null,
       async ([, topicId]: [string, string]) => threadService.getThreads(topicId),
       {
         onSuccess: (threads) => {

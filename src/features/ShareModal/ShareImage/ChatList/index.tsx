@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { ChatItem } from '@/features/Conversation';
+import { ChatItem } from '@/features/ChatList';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 

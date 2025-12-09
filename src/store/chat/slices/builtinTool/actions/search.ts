@@ -1,17 +1,15 @@
+import { crawlResultsPrompt } from '@lobechat/prompts';
+import { CreateMessageParams, SEARCH_SEARXNG_NOT_CONFIG, SearchQuery } from '@lobechat/types';
+import { nanoid } from '@lobechat/utils';
+import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
 import { searchService } from '@/services/search';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
-import { CRAWL_CONTENT_LIMITED_COUNT } from '@/tools/web-browsing/const';
-import { CreateMessageParams } from '@/types/message';
-import {
-  SEARCH_SEARXNG_NOT_CONFIG,
-  SearchContent,
-  SearchQuery,
-  UniformSearchResponse,
-} from '@/types/tool/search';
-import { nanoid } from '@/utils/uuid';
+import { WebBrowsingExecutionRuntime } from '@/tools/web-browsing/ExecutionRuntime';
+
+const log = debug('lobe-store:builtin-tool');
 
 export interface SearchAction {
   crawlMultiPages: (
@@ -27,7 +25,6 @@ export interface SearchAction {
   saveSearchResult: (id: string) => Promise<void>;
   search: (id: string, data: SearchQuery, aiSummary?: boolean) => Promise<void | boolean>;
   togglePageContent: (url: string) => void;
-  toggleSearchLoading: (id: string, loading: boolean) => void;
   /**
    * 重新发起搜索
    * @description 会更新插件的 arguments 参数，然后再次搜索
@@ -39,6 +36,8 @@ export interface SearchAction {
   ) => Promise<void>;
 }
 
+const runtime = new WebBrowsingExecutionRuntime({ searchService });
+
 export const searchSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
@@ -46,38 +45,79 @@ export const searchSlice: StateCreator<
   SearchAction
 > = (set, get) => ({
   crawlMultiPages: async (id, params, aiSummary = true) => {
-    const { internal_updateMessageContent } = get();
-    get().toggleSearchLoading(id, true);
+    // Get parent operationId from messageOperationMap (should be executeToolCall)
+    const parentOperationId = get().messageOperationMap[id];
+
+    // Create child operation for crawl execution
+    // Auto-associates message with this operation via messageId in context
+    const { operationId: crawlOpId, abortController } = get().startOperation({
+      context: {
+        messageId: id,
+      },
+      metadata: {
+        startTime: Date.now(),
+        urls: params.urls,
+      },
+      parentOperationId,
+      type: 'builtinToolSearch',
+    });
+
+    log(
+      '[crawlMultiPages] messageId=%s, parentOpId=%s, crawlOpId=%s, urls=%o, aborted=%s',
+      id,
+      parentOperationId,
+      crawlOpId,
+      params.urls,
+      abortController.signal.aborted,
+    );
+
+    const context = { operationId: crawlOpId };
+
     try {
-      const response = await searchService.crawlPages(params.urls);
+      const { content, success, error, state } = await runtime.crawlMultiPages(params);
 
-      await get().updatePluginState(id, response);
-      get().toggleSearchLoading(id, false);
-      const { results } = response;
+      // Complete crawl operation
+      get().completeOperation(crawlOpId);
 
-      if (!results) return;
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
 
-      const content = results.map((item) =>
-        'errorMessage' in item
-          ? item
-          : {
-              ...item.data,
-              // if crawl too many content
-              // slice the top 10000 char
-              content: item.data.content?.slice(0, CRAWL_CONTENT_LIMITED_COUNT),
-            },
-      );
-
-      await internal_updateMessageContent(id, JSON.stringify(content));
+      if (success) {
+        await get().optimisticUpdatePluginState(id, state, context);
+      } else {
+        await get().optimisticUpdatePluginError(id, error, context);
+      }
 
       // if aiSummary is true, then trigger ai message
       return aiSummary;
     } catch (e) {
       const err = e as Error;
-      console.error(e);
-      const content = [{ ...err, errorMessage: err.message, errorType: err.name }];
 
-      await internal_updateMessageContent(id, JSON.stringify(content));
+      log('[crawlMultiPages] Error: messageId=%s, error=%s', id, err.message);
+
+      // Check if it's an abort error
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        log('[crawlMultiPages] Request aborted: messageId=%s', id);
+        // Fail crawl operation for abort
+        get().failOperation(crawlOpId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        // Don't update error message for user aborts
+        return;
+      }
+
+      // Fail crawl operation for other errors
+      get().failOperation(crawlOpId, {
+        message: err.message,
+        type: 'PluginServerError',
+      });
+
+      // For other errors, update message
+      console.error(e);
+      const content = [{ errorMessage: err.message, errorType: err.name }];
+
+      const xmlContent = crawlResultsPrompt(content);
+      await get().optimisticUpdateMessageContent(id, xmlContent, undefined, context);
     }
   },
 
@@ -88,10 +128,15 @@ export const searchSlice: StateCreator<
   },
 
   saveSearchResult: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || !message.plugin) return;
 
-    const { internal_addToolToAssistantMessage, internal_createMessage, openToolUI } = get();
+    const { optimisticAddToolToAssistantMessage, optimisticCreateMessage, openToolUI } = get();
+
+    // Get operationId from messageOperationMap
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
+
     // 1. 创建一个新的 tool call message
     const newToolCallId = `tool_call_${nanoid()}`;
 
@@ -102,112 +147,140 @@ export const searchSlice: StateCreator<
       plugin: message.plugin,
       pluginState: message.pluginState,
       role: 'tool',
-      sessionId: get().activeId,
+      sessionId: message.sessionId ?? get().activeId,
       tool_call_id: newToolCallId,
-      topicId: get().activeTopicId,
+      topicId: message.topicId !== undefined ? message.topicId : get().activeTopicId,
     };
 
     const addToolItem = async () => {
       if (!message.parentId || !message.plugin) return;
 
-      await internal_addToolToAssistantMessage(message.parentId, {
-        id: newToolCallId,
-        ...message.plugin,
-      });
+      await optimisticAddToolToAssistantMessage(
+        message.parentId,
+        {
+          id: newToolCallId,
+          ...message.plugin,
+        },
+        context,
+      );
     };
 
-    const [newMessageId] = await Promise.all([
+    const [result] = await Promise.all([
       // 1. 添加 tool message
-      internal_createMessage(toolMessage),
+      optimisticCreateMessage(toolMessage, context),
       // 2. 将这条 tool call message 插入到 ai 消息的 tools 中
       addToolItem(),
     ]);
-    if (!newMessageId) return;
+    if (!result) return;
 
     // 将新创建的 tool message 激活
-    openToolUI(newMessageId, message.plugin.identifier);
+    openToolUI(result.id, message.plugin.identifier);
   },
 
-  search: async (id, { query, ...params }, aiSummary = true) => {
-    get().toggleSearchLoading(id, true);
-    let data: UniformSearchResponse | undefined;
+  search: async (id, params, aiSummary = true) => {
+    // Get parent operationId from messageOperationMap (should be executeToolCall)
+    const parentOperationId = get().messageOperationMap[id];
+
+    // Create child operation for search execution
+    // Auto-associates message with this operation via messageId in context
+    const { operationId: searchOpId, abortController } = get().startOperation({
+      context: {
+        messageId: id,
+      },
+      metadata: {
+        query: params.query,
+        startTime: Date.now(),
+      },
+      parentOperationId,
+      type: 'builtinToolSearch',
+    });
+
+    log(
+      '[search] messageId=%s, parentOpId=%s, searchOpId=%s, aborted=%s',
+      id,
+      parentOperationId,
+      searchOpId,
+      abortController.signal.aborted,
+    );
+
+    const context = { operationId: searchOpId };
+
     try {
-      // 首次查询
-      data = await searchService.search(query, params);
+      const { content, success, error, state } = await runtime.search(params, {
+        signal: abortController.signal,
+      });
 
-      // 如果没有搜索到结果，则执行第一次重试（移除搜索引擎限制）
-      if (
-        data?.results.length === 0 &&
-        params?.searchEngines &&
-        params?.searchEngines?.length > 0
-      ) {
-        const paramsExcludeSearchEngines = {
-          ...params,
-          searchEngines: undefined,
-        };
-        data = await searchService.search(query, paramsExcludeSearchEngines);
-        get().updatePluginArguments(id, paramsExcludeSearchEngines);
-      }
+      // Complete search operation
+      get().completeOperation(searchOpId);
 
-      // 如果仍然没有搜索到结果，则执行第二次重试（移除所有限制）
-      if (data?.results.length === 0) {
-        data = await searchService.search(query);
-        get().updatePluginArguments(id, { query });
-      }
-
-      await get().updatePluginState(id, data);
-    } catch (e) {
-      if ((e as Error).message === SEARCH_SEARXNG_NOT_CONFIG) {
-        await get().internal_updateMessagePluginError(id, {
-          body: {
-            provider: 'searxng',
-          },
-          message: 'SearXNG is not configured',
-          type: 'PluginSettingsInvalid',
-        });
+      if (success) {
+        await get().optimisticUpdatePluginState(id, state, context);
       } else {
-        await get().internal_updateMessagePluginError(id, {
-          body: e,
-          message: (e as Error).message,
-          type: 'PluginServerError',
-        });
+        if ((error as Error).message === SEARCH_SEARXNG_NOT_CONFIG) {
+          await get().optimisticUpdateMessagePluginError(
+            id,
+            {
+              body: { provider: 'searxng' },
+              message: 'SearXNG is not configured',
+              type: 'PluginSettingsInvalid',
+            },
+            context,
+          );
+        } else {
+          await get().optimisticUpdateMessagePluginError(
+            id,
+            {
+              body: error,
+              message: (error as Error).message,
+              type: 'PluginServerError',
+            },
+            context,
+          );
+        }
       }
+
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
+
+      // 如果 aiSummary 为 true，则会自动触发总结
+      return aiSummary;
+    } catch (error) {
+      const err = error as Error;
+
+      log('[search] Error: messageId=%s, error=%s', id, err.message);
+
+      // Check if it's an abort error
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        log('[search] Request aborted: messageId=%s', id);
+        // Fail search operation for abort
+        get().failOperation(searchOpId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        // Don't update error message for user aborts
+        return;
+      }
+
+      // Fail search operation for other errors
+      get().failOperation(searchOpId, { message: err.message, type: 'PluginServerError' });
+
+      // For other errors, update message
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        { body: error, message: err.message, type: 'PluginServerError' },
+        context,
+      );
     }
-
-    get().toggleSearchLoading(id, false);
-
-    if (!data) return;
-
-    // add 15 search results to message content
-    const searchContent: SearchContent[] = data.results.slice(0, 15).map((item) => ({
-      title: item.title,
-      url: item.url,
-      ...(item.content && { content: item.content }),
-      ...(item.publishedDate && { publishedDate: item.publishedDate }),
-      ...(item.imgSrc && { imgSrc: item.imgSrc }),
-      ...(item.thumbnail && { thumbnail: item.thumbnail }),
-    }));
-
-    await get().internal_updateMessageContent(id, JSON.stringify(searchContent));
-
-    // 如果 aiSummary 为 true，则会自动触发总结
-    return aiSummary;
   },
   togglePageContent: (url) => {
     set({ activePageContentUrl: url });
   },
 
-  toggleSearchLoading: (id, loading) => {
-    set(
-      { searchLoading: { ...get().searchLoading, [id]: loading } },
-      false,
-      `toggleSearchLoading/${loading ? 'start' : 'end'}`,
-    );
-  },
-
   triggerSearchAgain: async (id, data, options) => {
-    get().toggleSearchLoading(id, true);
-    await get().updatePluginArguments(id, data);
+    // Get operationId from messageOperationMap to ensure proper context isolation
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
+
+    await get().optimisticUpdatePluginArguments(id, data, false, context);
 
     await get().search(id, data, options?.aiSummary);
   },

@@ -5,6 +5,9 @@
       "lock": "Blocca rapporto d'aspetto",
       "unlock": "Sblocca rapporto d'aspetto"
     },
+    "cfg": {
+      "label": "Intensità guida"
+    },
     "header": {
       "desc": "Descrizione semplice, crea subito",
       "title": "Pittura"
@@ -26,6 +29,21 @@
     },
     "prompt": {
       "placeholder": "Descrivi ciò che desideri generare"
+    },
+    "quality": {
+      "label": "Qualità immagine",
+      "options": {
+        "hd": "Alta definizione",
+        "standard": "Standard"
+      }
+    },
+    "resolution": {
+      "label": "Risoluzione",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
     },
     "seed": {
       "label": "Seed",

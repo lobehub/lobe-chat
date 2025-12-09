@@ -1,41 +1,42 @@
 import { createLogger } from '@/utils/logger';
 
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
 
 const logger = createLogger('controllers:UpdaterCtr');
 
 export default class UpdaterCtr extends ControllerModule {
+  static override readonly groupName = 'autoUpdate';
   /**
-   * 检查更新
+   * Check for updates
    */
-  @ipcClientEvent('checkUpdate')
+  @IpcMethod()
   async checkForUpdates() {
     logger.info('Check for updates requested');
     await this.app.updaterManager.checkForUpdates();
   }
 
   /**
-   * 下载更新
+   * Download update
    */
-  @ipcClientEvent('downloadUpdate')
+  @IpcMethod()
   async downloadUpdate() {
     logger.info('Download update requested');
     await this.app.updaterManager.downloadUpdate();
   }
 
   /**
-   * 关闭应用并安装更新
+   * Quit application and install update
    */
-  @ipcClientEvent('installNow')
+  @IpcMethod()
   quitAndInstallUpdate() {
     logger.info('Quit and install update requested');
     this.app.updaterManager.installNow();
   }
 
   /**
-   * 下次启动时安装更新
+   * Install update on next startup
    */
-  @ipcClientEvent('installLater')
+  @IpcMethod()
   installLater() {
     logger.info('Install later requested');
     this.app.updaterManager.installLater();

@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { genUserLLMConfig } from './genUserLLMConfig';
 
 // Mock ModelProvider enum
-vi.mock('@lobechat/model-runtime', () => ({
+vi.mock('model-bank', () => ({
   ModelProvider: {
     Ollama: 'ollama',
     OpenAI: 'openai',

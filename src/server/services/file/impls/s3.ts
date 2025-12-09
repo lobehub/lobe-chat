@@ -1,13 +1,13 @@
 import urlJoin from 'url-join';
 
-import { fileEnv } from '@/config/file';
+import { fileEnv } from '@/envs/file';
 import { S3 } from '@/server/modules/S3';
 
 import { FileServiceImpl } from './type';
 import { extractKeyFromUrlOrReturnOriginal } from './utils';
 
 /**
- * 基于S3的文件服务实现
+ * S3-based file service implementation
  */
 export class S3StaticFileImpl implements FileServiceImpl {
   private readonly s3: S3;

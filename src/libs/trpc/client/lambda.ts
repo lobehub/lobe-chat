@@ -1,14 +1,18 @@
-import { ModelProvider } from '@lobechat/model-runtime';
 import { TRPCLink, createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { observable } from '@trpc/server/observable';
 import debug from 'debug';
+import { ModelProvider } from 'model-bank';
 import superjson from 'superjson';
 
 import { isDesktop } from '@/const/version';
 import type { LambdaRouter } from '@/server/routers/lambda';
 
 const log = debug('lobe-image:lambda-client');
+
+// 401 error debouncing: prevent showing multiple login notifications in short time
+let last401Time = 0;
+const MIN_401_INTERVAL = 5000; // 5 seconds
 
 // handle error
 const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
@@ -17,24 +21,35 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
       next(op).subscribe({
         complete: () => observer.complete(),
         error: async (err) => {
+          // Check if this is an abort error and should be ignored
+          const isAbortError =
+            err.message.includes('aborted') ||
+            err.name === 'AbortError' ||
+            err.cause?.name === 'AbortError' ||
+            err.message.includes('signal is aborted without reason');
+
           const showError = (op.context?.showNotification as boolean) ?? true;
+          const status = err.data?.httpStatus as number;
 
-          if (showError) {
-            const status = err.data?.httpStatus as number;
-
+          // Don't show notifications for abort errors
+          if (showError && !isAbortError) {
             const { loginRequired } = await import('@/components/Error/loginRequiredNotification');
-            const { fetchErrorNotification } = await import(
-              '@/components/Error/fetchErrorNotification'
-            );
 
             switch (status) {
               case 401: {
-                loginRequired.redirect();
+                // Debounce: only show login notification once every 5 seconds
+                const now = Date.now();
+                if (now - last401Time > MIN_401_INTERVAL) {
+                  last401Time = now;
+                  loginRequired.redirect();
+                }
+                // Mark error as non-retryable to prevent SWR infinite retry loop
+                err.meta = { ...err.meta, shouldRetry: false };
                 break;
               }
 
               default: {
-                fetchErrorNotification.error({ errorMessage: err.message, status });
+                console.error(err);
               }
             }
           }
@@ -65,7 +80,7 @@ const customHttpBatchLink = httpBatchLink({
     // dynamic import to avoid circular dependency
     const { createHeaderWithAuth } = await import('@/services/_auth');
 
-    let provider: ModelProvider = ModelProvider.OpenAI;
+    let provider: ModelProvider | undefined;
     // for image page, we need to get the provider from the store
     log('Getting provider from store for image page: %s', location.pathname);
     if (location.pathname === '/image') {
@@ -77,8 +92,9 @@ const customHttpBatchLink = httpBatchLink({
       log('Getting provider from store for image page: %s', provider);
     }
 
-    // TODO: we need to support provider select for chat page
-    const headers = await createHeaderWithAuth({ provider });
+    // Only include provider in JWT for image operations
+    // For other operations (like knowledge base embedding), let server use its own config
+    const headers = await createHeaderWithAuth(provider ? { provider } : undefined);
     log('Headers: %O', headers);
     return headers;
   },

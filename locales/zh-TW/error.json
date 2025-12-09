@@ -81,6 +81,12 @@
     "522": "很抱歉，伺服器連接超時，未能及時響應您的請求。可能是網路不穩定或伺服器暫時無法訪問。請稍後再試，我們正在努力恢復服務。",
     "524": "很抱歉，伺服器在等回覆時超時了，可能是因為回應太慢，請稍後再試",
     "AgentRuntimeError": "Lobe 語言模型運行時執行出錯，請根據以下信息排查或重試",
+    "ComfyUIBizError": "請求 ComfyUI 服務時發生錯誤，請根據以下資訊進行排查或重試",
+    "ComfyUIEmptyResult": "ComfyUI 未產生任何圖像，請檢查模型設定或重試",
+    "ComfyUIModelError": "ComfyUI 模型載入失敗，請確認模型檔案是否存在",
+    "ComfyUIServiceUnavailable": "無法連接 ComfyUI 服務，請確認 ComfyUI 是否正常運行，或檢查服務位址設定是否正確",
+    "ComfyUIUploadFailed": "ComfyUI 圖片上傳失敗，請檢查伺服器連線或重試",
+    "ComfyUIWorkflowError": "ComfyUI 工作流程執行失敗，請檢查工作流程設定",
     "ConnectionCheckFailed": "請求返回為空，請檢查 API 代理地址末尾是否未包含 `/v1`",
     "CreateMessageError": "很抱歉，訊息未能正常發送，請複製內容後重新發送，刷新頁面後此訊息將不會保留",
     "ExceededContextWindow": "當前請求內容超出模型可處理的長度，請減少內容量後重試",
@@ -96,10 +102,11 @@
       "SPII": "您的內容可能包含敏感個人身分資訊。為保護隱私，請移除相關敏感資訊後再試。",
       "default": "內容被阻擋：{{blockReason}}。請調整您的請求內容後再試。"
     },
-    "InsufficientQuota": "很抱歉，該金鑰的配額已達上限，請檢查帳戶餘額是否充足，或增加金鑰配額後再試",
+    "InsufficientQuota": "很抱歉，該金鑰的配額已達上限，請檢查帳戶餘額是否充足，或提升金鑰配額後再試",
     "InvalidAccessCode": "密碼不正確或為空，請輸入正確的訪問密碼，或添加自定義 API 金鑰",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
     "InvalidClerkUser": "很抱歉，你當前尚未登錄，請先登錄或註冊帳號後繼續操作",
+    "InvalidComfyUIArgs": "ComfyUI 設定不正確，請檢查 ComfyUI 設定後重試",
     "InvalidGithubToken": "Github 個人存取權杖不正確或為空，請檢查 Github 個人存取權杖後再試一次",
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",
     "InvalidProviderAPIKey": "{{provider}} API 金鑰不正確或為空，請檢查 {{provider}} API 金鑰後重試",
@@ -124,7 +131,7 @@
     "PluginServerError": "外掛伺服器請求回傳錯誤。請根據下面的錯誤資訊檢查您的外掛描述檔案、外掛設定或伺服器實作",
     "PluginSettingsInvalid": "該外掛需要正確設定後才可以使用。請檢查您的設定是否正確",
     "ProviderBizError": "請求 {{provider}} 服務出錯，請根據以下資訊排查或重試",
-    "QuotaLimitReached": "很抱歉，當前 Token 用量或請求次數已達該金鑰的配額上限，請增加該金鑰的配額或稍後再試",
+    "QuotaLimitReached": "很抱歉，目前的 Token 使用量或請求次數已達該金鑰的配額上限，請提升該金鑰的配額或稍後再試",
     "StreamChunkError": "流式請求的消息塊解析錯誤，請檢查當前 API 介面是否符合標準規範，或聯繫你的 API 供應商諮詢",
     "SubscriptionKeyMismatch": "很抱歉，由於系統偶發故障，當前訂閱用量暫時失效，請點擊下方按鈕恢復訂閱，或郵件聯繫我們獲取支持",
     "SubscriptionPlanLimit": "您的訂閱積分已用盡，無法使用該功能，請升級到更高計劃，或配置自訂模型 API 後繼續使用",
@@ -133,6 +140,9 @@
   },
   "stt": {
     "responseError": "服務請求失敗，請檢查配置或重試"
+  },
+  "supervisor": {
+    "decisionFailed": "群組主持人無法工作。請檢查你的主持人設定，確保配置了正確的模型、API Key 和 API 位址。"
   },
   "testConnectionFailed": "測試連線失敗：{{error}}",
   "tts": {
@@ -146,6 +156,11 @@
       "title": "使用自定義 {{name}} API 金鑰"
     },
     "closeMessage": "關閉提示",
+    "comfyui": {
+      "description": "請輸入正確的 {{name}} 認證資訊即可開始生成圖像",
+      "modifyBaseUrl": "修改 Comfy UI 服務位址",
+      "title": "確認你的 {{name}} 認證資訊"
+    },
     "confirm": "確認並重試",
     "oauth": {
       "description": "管理員已開啟統一登錄認證，點擊下方按鈕登錄，即可解鎖應用",

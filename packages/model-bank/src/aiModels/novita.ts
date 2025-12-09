@@ -5,6 +5,86 @@ const novitaChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen3 VL 235B A22B Instruct',
+    id: 'qwen/qwen3-vl-235b-a22b-instruct',
+    maxOutput: 32_768,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen3 VL 235B A22B Thinking',
+    id: 'qwen/qwen3-vl-235b-a22b-thinking',
+    maxOutput: 32_768,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.98, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3.95, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen3 Next 80B A3B Thinking',
+    id: 'qwen/qwen3-next-80b-a3b-thinking',
+    maxOutput: 32_768,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen3 Next 80B A3B Instruct',
+    id: 'qwen/qwen3-next-80b-a3b-instruct',
+    maxOutput: 32_768,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 4096,
+    displayName: 'Qwen MT Plus',
+    id: 'qwen/qwen-mt-plus',
+    maxOutput: 2048,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
     },
     contextWindowTokens: 262_144,
     description:
@@ -26,9 +106,43 @@ const novitaChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 163_840,
-    displayName: 'DeepSeek V3.1',
+    displayName: 'Deepseek V3.2 Exp',
     enabled: true,
+    id: 'deepseek/deepseek-v3.2-exp',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.27, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.41, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'DeepSeek V3.1 Terminus',
+    id: 'deepseek/deepseek-v3.1-terminus',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.27, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'DeepSeek V3.1',
     id: 'deepseek/deepseek-v3.1',
+    maxOutput: 32_768,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.27, strategy: 'fixed', unit: 'millionTokens' },
@@ -41,13 +155,13 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 262_144,
+    contextWindowTokens: 65_536,
     displayName: 'Qwen3 Coder 480B A35B Instruct',
     id: 'qwen/qwen3-coder-480b-a35b-instruct',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.35, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.29, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -60,10 +174,11 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'OpenAI GPT OSS 120B',
     id: 'openai/gpt-oss-120b',
+    maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -77,8 +192,26 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'openai/gpt-oss-20b',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    displayName: 'GLM-4.5V',
+    id: 'zai-org/glm-4.5v',
+    maxOutput: 16_384,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -91,6 +224,7 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'GLM-4.5',
     id: 'zai-org/glm-4.5',
+    maxOutput: 98_304,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
@@ -103,9 +237,10 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 262_144,
+    contextWindowTokens: 131_072,
     displayName: 'Qwen3 235B A22B Instruct 2507',
     id: 'qwen/qwen3-235b-a22b-instruct-2507',
+    maxOutput: 16_384,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
@@ -122,6 +257,7 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Qwen3 235B A22b Thinking 2507',
     id: 'qwen/qwen3-235b-a22b-thinking-2507',
+    maxOutput: 32_768,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -181,12 +317,12 @@ const novitaChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 120_000,
-    displayName: 'ERNIE 4.5 0.3B',
-    id: 'baidu/ernie-4.5-0.3b',
+    displayName: 'ERNIE 4.5 21B A3B',
+    id: 'baidu/ernie-4.5-21B-a3b',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.28, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -194,10 +330,12 @@ const novitaChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
     },
-    contextWindowTokens: 120_000,
-    displayName: 'ERNIE 4.5 21B A3B',
-    id: 'baidu/ernie-4.5-21B-a3b',
+    contextWindowTokens: 131_072,
+    displayName: 'ERNIE 4.5 21B A3B Thinking',
+    id: 'baidu/ernie-4.5-21B-a3b-thingking',
+    maxOutput: 65_536,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
@@ -280,8 +418,8 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-4b-fp8',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.03, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -365,7 +503,6 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     displayName: 'Llama 4 Scout 17B Instruct',
-    enabled: true,
     id: 'meta-llama/llama-4-scout-17b-16e-instruct',
     pricing: {
       units: [
@@ -382,8 +519,8 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576,
     displayName: 'Llama 4 Maverick 17B Instruct',
-    enabled: true,
     id: 'meta-llama/llama-4-maverick-17b-128e-instruct-fp8',
+    maxOutput: 8192,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.17, strategy: 'fixed', unit: 'millionTokens' },
@@ -459,19 +596,6 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_768,
-    description: 'Gemma 3 1B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。',
-    displayName: 'Gemma 3 1B',
-    id: 'google/gemma-3-1b-it',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 60_288,
     description: 'Mistral Nemo 是多语言支持和高性能编程的7.3B参数模型。',
     displayName: 'Mistral Nemo',
@@ -485,19 +609,6 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_768,
-    description: 'Mistral 7B Instruct 是一款兼有速度优化和长上下文支持的高性能行业标准模型。',
-    displayName: 'Mistral 7B Instruct',
-    id: 'mistralai/mistral-7b-instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.029, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.059, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 65_535,
     description: 'WizardLM-2 8x22B 是微软AI最先进的Wizard模型，显示出极其竞争力的表现。',
     displayName: 'WizardLM-2 8x22B',
@@ -506,19 +617,6 @@ const novitaChatModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 0.62, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.62, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 16_000,
-    description: 'Dolphin Mixtral 8x22B 是一款为指令遵循、对话和编程设计的模型。',
-    displayName: 'Dolphin Mixtral 8x22B',
-    id: 'cognitivecomputations/dolphin-mixtral-8x22b',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.9, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.9, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -599,6 +697,7 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 163_840,
     displayName: 'Deepseek R1 0528',
     id: 'deepseek/deepseek-r1-0528',
+    maxOutput: 32_768,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.7, strategy: 'fixed', unit: 'millionTokens' },
@@ -657,9 +756,10 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 64_000,
+    contextWindowTokens: 32_768,
     displayName: 'Deepseek R1 Distill Qwen 14B',
     id: 'deepseek/deepseek-r1-distill-qwen-14b',
+    maxOutput: 16_384,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
@@ -697,26 +797,12 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 32_000,
-    displayName: 'Deepseek R1 Distill Llama 8B',
-    id: 'deepseek/deepseek-r1-distill-llama-8b',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.04, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
       functionCall: true,
     },
     contextWindowTokens: 32_000,
     displayName: 'Qwen2.5 72B Instruct',
     id: 'qwen/qwen-2.5-72b-instruct',
+    maxOutput: 8192,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.38, strategy: 'fixed', unit: 'millionTokens' },
@@ -770,24 +856,11 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     displayName: 'Qwen2.5 VL 72B Instruct',
-    enabled: true,
     id: 'qwen/qwen2.5-vl-72b-instruct',
     pricing: {
       units: [
         { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 131_000,
-    displayName: 'Llama 3.2 1B Instruct',
-    id: 'meta-llama/llama-3.2-1b-instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -845,21 +918,6 @@ const novitaChatModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.07, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_000,
-    displayName: 'GLM 4 32B 0414',
-    id: 'thudm/glm-4-32b-0414',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.55, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.66, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

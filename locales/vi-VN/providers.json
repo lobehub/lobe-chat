@@ -30,13 +30,22 @@
     "description": "Bedrock là dịch vụ do Amazon AWS cung cấp, tập trung vào việc cung cấp các mô hình ngôn ngữ AI và mô hình hình ảnh tiên tiến cho doanh nghiệp. Gia đình mô hình của nó bao gồm dòng Claude của Anthropic, dòng Llama 3.1 của Meta, v.v., bao quát nhiều lựa chọn từ nhẹ đến hiệu suất cao, hỗ trợ nhiều nhiệm vụ như tạo văn bản, đối thoại, xử lý hình ảnh, phù hợp cho các ứng dụng doanh nghiệp với quy mô và nhu cầu khác nhau."
   },
   "bfl": {
-    "description": "Phòng thí nghiệm nghiên cứu trí tuệ nhân tạo tiên phong dẫn đầu, kiến tạo cơ sở hạ tầng thị giác cho ngày mai."
+    "description": "Phòng thí nghiệm nghiên cứu trí tuệ nhân tạo tiên phong hàng đầu, kiến tạo hạ tầng thị giác cho ngày mai."
+  },
+  "cerebras": {
+    "description": "Cerebras là một nền tảng suy luận AI dựa trên hệ thống chuyên dụng CS-3, được thiết kế để cung cấp dịch vụ LLM nhanh nhất thế giới, phản hồi theo thời gian thực và thông lượng cao, nhằm loại bỏ độ trễ và tăng tốc các quy trình làm việc AI phức tạp như tạo mã theo thời gian thực và các tác vụ đại lý."
   },
   "cloudflare": {
     "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
   },
   "cohere": {
     "description": "Cohere mang đến cho bạn các mô hình đa ngôn ngữ tiên tiến nhất, tính năng tìm kiếm hiện đại và không gian làm việc AI được thiết kế riêng cho các doanh nghiệp hiện đại - tất cả đều được tích hợp trong một nền tảng an toàn."
+  },
+  "cometapi": {
+    "description": "CometAPI là một nền tảng dịch vụ cung cấp nhiều giao diện mô hình lớn tiên tiến, hỗ trợ OpenAI, Anthropic, Google và nhiều hơn nữa, phù hợp với các nhu cầu phát triển và ứng dụng đa dạng. Người dùng có thể linh hoạt lựa chọn mô hình và giá cả tối ưu theo nhu cầu của mình, giúp nâng cao trải nghiệm AI."
+  },
+  "comfyui": {
+    "description": "Một công cụ mã nguồn mở mạnh mẽ để tạo hình ảnh, video và âm thanh theo quy trình làm việc, hỗ trợ các mô hình tiên tiến như SD, FLUX, Qwen, Hunyuan, WAN, cung cấp khả năng chỉnh sửa quy trình làm việc theo dạng nút và triển khai riêng tư."
   },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
@@ -107,6 +116,9 @@
   "ollama": {
     "description": "Mô hình do Ollama cung cấp bao quát rộng rãi các lĩnh vực như tạo mã, tính toán toán học, xử lý đa ngôn ngữ và tương tác đối thoại, hỗ trợ nhu cầu đa dạng cho triển khai doanh nghiệp và địa phương."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud cung cấp dịch vụ suy luận được quản lý chính thức, truy cập ngay lập tức vào thư viện mô hình Ollama và hỗ trợ giao diện tương thích với OpenAI."
+  },
   "openai": {
     "description": "OpenAI là tổ chức nghiên cứu trí tuệ nhân tạo hàng đầu thế giới, với các mô hình như dòng GPT đã thúc đẩy ranh giới của xử lý ngôn ngữ tự nhiên. OpenAI cam kết thay đổi nhiều ngành công nghiệp thông qua các giải pháp AI sáng tạo và hiệu quả. Sản phẩm của họ có hiệu suất và tính kinh tế nổi bật, được sử dụng rộng rãi trong nghiên cứu, thương mại và ứng dụng đổi mới."
   },
@@ -158,6 +170,9 @@
   "v0": {
     "description": "v0 là một trợ lý lập trình theo cặp, bạn chỉ cần mô tả ý tưởng bằng ngôn ngữ tự nhiên, nó sẽ tạo mã và giao diện người dùng (UI) cho dự án của bạn"
   },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway cung cấp API thống nhất để truy cập hơn 100 mô hình, cho phép sử dụng các mô hình từ nhiều nhà cung cấp như OpenAI, Anthropic, Google chỉ qua một điểm cuối duy nhất. Hỗ trợ thiết lập ngân sách, giám sát sử dụng, cân bằng tải yêu cầu và chuyển đổi dự phòng."
+  },
   "vertexai": {
     "description": "Dòng sản phẩm Gemini của Google là mô hình AI tiên tiến và đa năng nhất của họ, được phát triển bởi Google DeepMind, được thiết kế đặc biệt cho đa phương thức, hỗ trợ hiểu và xử lý liền mạch văn bản, mã, hình ảnh, âm thanh và video. Phù hợp với nhiều môi trường từ trung tâm dữ liệu đến thiết bị di động, nâng cao đáng kể hiệu quả và tính ứng dụng của mô hình AI."
   },
@@ -175,6 +190,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference) là một nền tảng mã nguồn mở, được thiết kế để đơn giản hóa việc chạy và tích hợp các mô hình AI khác nhau. Với Xinference, bạn có thể chạy suy luận trên bất kỳ mô hình LLM mã nguồn mở, mô hình nhúng và mô hình đa phương thức nào trong môi trường đám mây hoặc cục bộ, và tạo ra các ứng dụng AI mạnh mẽ."
+  },
+  "zenmux": {
+    "description": "ZenMux là một nền tảng tổng hợp dịch vụ AI thống nhất, hỗ trợ nhiều giao diện dịch vụ AI phổ biến như OpenAI, Anthropic, Google VertexAI, v.v. Nền tảng cung cấp khả năng định tuyến linh hoạt, giúp bạn dễ dàng chuyển đổi và quản lý các mô hình AI khác nhau."
   },
   "zeroone": {
     "description": "01.AI tập trung vào công nghệ trí tuệ nhân tạo trong kỷ nguyên AI 2.0, thúc đẩy mạnh mẽ sự đổi mới và ứng dụng của \"người + trí tuệ nhân tạo\", sử dụng các mô hình mạnh mẽ và công nghệ AI tiên tiến để nâng cao năng suất của con người và thực hiện sự trao quyền công nghệ."

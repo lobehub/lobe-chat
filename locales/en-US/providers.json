@@ -30,13 +30,22 @@
     "description": "Bedrock is a service provided by Amazon AWS, focusing on delivering advanced AI language and visual models for enterprises. Its model family includes Anthropic's Claude series, Meta's Llama 3.1 series, and more, offering a range of options from lightweight to high-performance, supporting tasks such as text generation, conversation, and image processing for businesses of varying scales and needs."
   },
   "bfl": {
-    "description": "A leading, cutting-edge artificial intelligence research lab building the visual infrastructure of tomorrow."
+    "description": "A leading, cutting-edge AI research lab building the visual infrastructure of tomorrow."
+  },
+  "cerebras": {
+    "description": "Cerebras is an AI inference platform built on its dedicated CS-3 system, designed to deliver the world's fastest, real-time, high-throughput LLM services. It is specifically engineered to eliminate latency and accelerate complex AI workflows such as real-time code generation and agent-based tasks."
   },
   "cloudflare": {
     "description": "Run serverless GPU-powered machine learning models on Cloudflare's global network."
   },
   "cohere": {
     "description": "Cohere brings you cutting-edge multilingual models, advanced retrieval capabilities, and an AI workspace tailored for modern enterprises—all integrated into a secure platform."
+  },
+  "cometapi": {
+    "description": "CometAPI is a service platform offering a variety of cutting-edge large model interfaces, supporting OpenAI, Anthropic, Google, and more. It caters to diverse development and application needs, allowing users to flexibly choose the optimal model and pricing according to their requirements, enhancing the AI experience."
+  },
+  "comfyui": {
+    "description": "A powerful open-source workflow engine for generating images, videos, and audio. Supports advanced models such as SD, FLUX, Qwen, Hunyuan, and WAN, offering node-based workflow editing and private deployment capabilities."
   },
   "deepseek": {
     "description": "DeepSeek is a company focused on AI technology research and application, with its latest model DeepSeek-V2.5 integrating general dialogue and code processing capabilities, achieving significant improvements in human preference alignment, writing tasks, and instruction following."
@@ -107,6 +116,9 @@
   "ollama": {
     "description": "Ollama provides models that cover a wide range of fields, including code generation, mathematical operations, multilingual processing, and conversational interaction, catering to diverse enterprise-level and localized deployment needs."
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud offers officially hosted inference services, providing out-of-the-box access to the Ollama model library and supporting OpenAI-compatible interfaces."
+  },
   "openai": {
     "description": "OpenAI is a global leader in artificial intelligence research, with models like the GPT series pushing the frontiers of natural language processing. OpenAI is committed to transforming multiple industries through innovative and efficient AI solutions. Their products demonstrate significant performance and cost-effectiveness, widely used in research, business, and innovative applications."
   },
@@ -158,6 +170,9 @@
   "v0": {
     "description": "v0 is a pair programming assistant that generates code and user interfaces (UI) for your projects based on your natural language descriptions."
   },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway provides a unified API to access over 100 models, allowing you to use models from multiple providers such as OpenAI, Anthropic, and Google through a single endpoint. It supports budget settings, usage monitoring, request load balancing, and failover."
+  },
   "vertexai": {
     "description": "Google's Gemini series is its most advanced and versatile AI model, developed by Google DeepMind. It is designed for multimodal use, supporting seamless understanding and processing of text, code, images, audio, and video. Suitable for a variety of environments, from data centers to mobile devices, it significantly enhances the efficiency and applicability of AI models."
   },
@@ -175,6 +190,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference) is an open-source platform designed to simplify the deployment and integration of diverse AI models. With Xinference, you can leverage any open-source LLM, embedding model, or multimodal model to perform inference in cloud or on-premises environments, enabling the creation of powerful AI applications."
+  },
+  "zenmux": {
+    "description": "ZenMux is a unified AI service aggregation platform that supports a variety of mainstream AI service interfaces, including OpenAI, Anthropic, and Google VertexAI. It offers flexible routing capabilities, allowing you to easily switch between and manage different AI models."
   },
   "zeroone": {
     "description": "01.AI focuses on AI 2.0 era technologies, vigorously promoting the innovation and application of 'human + artificial intelligence', using powerful models and advanced AI technologies to enhance human productivity and achieve technological empowerment."

@@ -1,18 +1,23 @@
 import type { PartialDeep } from 'type-fest';
 
-import { IFeatureFlags } from '@/config/featureFlags';
+import { IFeatureFlagsState } from '@/config/featureFlags';
 
 import { ChatModelCard } from './llm';
-import { GlobalLLMProviderKey, UserDefaultAgent, UserSystemAgentConfig } from './user/settings';
+import {
+  GlobalLLMProviderKey,
+  UserDefaultAgent,
+  UserImageConfig,
+  UserSystemAgentConfig,
+} from './user/settings';
 
 export interface ServerModelProviderConfig {
   enabled?: boolean;
   enabledModels?: string[];
   fetchOnClient?: boolean;
   /**
-   * the model cards defined in server
+   * the model lists defined in server
    */
-  serverModelCards?: ChatModelCard[];
+  serverModelLists?: ChatModelCard[];
 }
 
 export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerModelProviderConfig>>;
@@ -20,16 +25,14 @@ export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerMod
 export interface GlobalServerConfig {
   aiProvider: ServerLanguageModel;
   defaultAgent?: PartialDeep<UserDefaultAgent>;
+  enableKlavis?: boolean;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;
   /**
    * @deprecated
    */
   enabledOAuthSSO?: boolean;
-  /**
-   * @deprecated
-   */
-  languageModel?: ServerLanguageModel;
+  image?: PartialDeep<UserImageConfig>;
   oAuthSSOProviders?: string[];
   systemAgent?: PartialDeep<UserSystemAgentConfig>;
   telemetry: {
@@ -39,5 +42,5 @@ export interface GlobalServerConfig {
 
 export interface GlobalRuntimeConfig {
   serverConfig: GlobalServerConfig;
-  serverFeatureFlags: IFeatureFlags;
+  serverFeatureFlags: IFeatureFlagsState;
 }

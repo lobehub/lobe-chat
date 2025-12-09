@@ -22,6 +22,7 @@ export interface AIProviderState {
   enabledChatModelList?: EnabledProviderWithModels[];
   enabledImageModelList?: EnabledProviderWithModels[];
   initAiProviderList: boolean;
+  isInitAiProviderRuntimeState: boolean;
   providerSearchKeyword: string;
 }
 
@@ -32,5 +33,6 @@ export const initialAIProviderState: AIProviderState = {
   aiProviderLoadingIds: [],
   aiProviderRuntimeConfig: {},
   initAiProviderList: false,
+  isInitAiProviderRuntimeState: false,
   providerSearchKeyword: '',
 };

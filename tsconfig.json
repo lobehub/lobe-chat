@@ -13,13 +13,10 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
-    "baseUrl": ".",
     "types": ["vitest/globals", "@serwist/next/typings"],
     "paths": {
-      "@/libs/model-runtime": ["./packages/model-runtime/src/index.ts"],
-      "@/libs/model-runtime/*": ["./packages/model-runtime/src/*"],
       "@/database/*": ["./packages/database/src/*", "./src/database/*"],
       "@/const/*": ["./packages/const/src/*", "./src/const/*"],
       "@/utils/*": ["./packages/utils/src/*", "./src/utils/*"],
@@ -33,6 +30,27 @@
       }
     ]
   },
-  "exclude": ["node_modules", "public/sw.js", "apps/desktop", "tmp", "temp", ".temp"],
-  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts"]
+  "exclude": [
+    "node_modules",
+    "public/sw.js",
+    "apps/desktop",
+    "apps/mobile",
+    "tmp",
+    "temp",
+    ".temp",
+    "e2e"
+  ],
+  "include": [
+    "**/*.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "./apps/desktop"
+    }
+  ]
 }

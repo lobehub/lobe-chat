@@ -10,15 +10,16 @@ import {
 } from '@lobehub/ui';
 import { App } from 'antd';
 import { BrainIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { useAiInfraStore } from '@/store/aiInfra/store';
 import { CreateAiProviderParams } from '@/types/aiProvider';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
+import { CUSTOM_PROVIDER_SDK_OPTIONS } from '../customProviderSdkOptions';
 
 interface CreateNewProviderProps {
   onClose?: () => void;
@@ -30,14 +31,29 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
   const [loading, setLoading] = useState(false);
   const createNewAiProvider = useAiInfraStore((s) => s.createNewAiProvider);
   const { message } = App.useApp();
-  const router = useRouter();
+  const navigate = useNavigate();
   const onFinish = async (values: CreateAiProviderParams) => {
     setLoading(true);
 
     try {
-      await createNewAiProvider(values);
+      // 如果 name 为空，使用 id 作为 name
+      const finalValues = {
+        ...values,
+        name: values.name || values.id,
+      };
+
+      // 只为 openai 和 router (newapi) 类型的自定义 provider 添加 supportResponsesApi: true
+      const sdkType = values.settings?.sdkType;
+      if (sdkType === 'openai' || sdkType === 'router') {
+        finalValues.settings = {
+          ...finalValues.settings,
+          supportResponsesApi: true,
+        };
+      }
+
+      await createNewAiProvider(finalValues);
       setLoading(false);
-      router.push(`/settings/provider/${values.id}`);
+      navigate(`/settings?active=provider&provider=${values.id}`);
       message.success(t('createNewAiProvider.createSuccess'));
       onClose?.();
     } catch (e) {
@@ -70,7 +86,6 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
       label: t('createNewAiProvider.name.title'),
       minWidth: 400,
       name: 'name',
-      rules: [{ message: t('createNewAiProvider.name.required'), required: true }],
     },
     {
       children: (
@@ -96,18 +111,17 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
     {
       children: (
         <Select
-          optionRender={({ label, value }) => (
-            <Flexbox align={'center'} gap={8} horizontal>
-              <ProviderIcon provider={value as string} size={18} />
-              {label}
-            </Flexbox>
-          )}
-          options={[
-            { label: 'OpenAI', value: 'openai' },
-            { label: 'Anthropic', value: 'anthropic' },
-            { label: 'Ollama', value: 'ollama' },
-            // { label: 'Azure AI', value: 'azureai' },
-          ]}
+          optionRender={({ label, value }) => {
+            // Map 'router' to 'newapi' for displaying the correct icon
+            const iconProvider = value === 'router' ? 'newapi' : (value as string);
+            return (
+              <Flexbox align={'center'} gap={8} horizontal>
+                <ProviderIcon provider={iconProvider} size={18} />
+                {label}
+              </Flexbox>
+            );
+          }}
+          options={CUSTOM_PROVIDER_SDK_OPTIONS}
           placeholder={t('createNewAiProvider.sdkType.placeholder')}
           variant={'filled'}
         />
@@ -141,7 +155,6 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
   return (
     <FormModal
       destroyOnHidden
-      height={'90%'}
       items={[
         {
           children: basicItems,

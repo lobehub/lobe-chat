@@ -1,7 +1,19 @@
+import { ModelPerformance, ModelTokensUsage, ModelUsage } from '@lobechat/types';
+
 import { MessageToolCall, MessageToolCallChunk } from './toolsCalling';
-import { ModelTokensUsage } from './usage';
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
+
+export type ChatResponseFormat =
+  | { type: 'json_object' }
+  | {
+      json_schema: {
+        name: string;
+        schema: Record<string, any>;
+        strict?: boolean;
+      };
+      type: 'json_schema';
+    };
 
 interface UserMessageContentPartThinking {
   signature: string;
@@ -21,23 +33,24 @@ interface UserMessageContentPartImage {
   type: 'image_url';
 }
 
+interface UserMessageContentPartVideo {
+  type: 'video_url';
+  video_url: { url: string };
+}
+
 export type UserMessageContentPart =
   | UserMessageContentPartText
   | UserMessageContentPartImage
+  | UserMessageContentPartVideo
   | UserMessageContentPartThinking;
 
 export interface OpenAIChatMessage {
-  /**
-   * @title 内容
-   * @description 消息内容
-   */
   content: string | UserMessageContentPart[];
-
   name?: string;
-  /**
-   * 角色
-   * @description 消息发送者的角色
-   */
+  reasoning?: {
+    content?: string;
+    duration?: number;
+  };
   role: LLMRoleType;
   tool_call_id?: string;
   tool_calls?: MessageToolCall[];
@@ -61,6 +74,14 @@ export interface ChatStreamPayload {
    * @default 0
    */
   frequency_penalty?: number;
+  /**
+   * @title Image aspect ratio for image generation
+   */
+  imageAspectRatio?: string;
+  /**
+   * @title Image resolution for image generation (e.g., '1K', '2K', '4K')
+   */
+  imageResolution?: '1K' | '2K' | '4K';
   /**
    * @title 生成文本的最大长度
    */
@@ -89,6 +110,7 @@ export interface ChatStreamPayload {
   };
   reasoning_effort?: 'minimal' | 'low' | 'medium' | 'high';
   responseMode?: 'stream' | 'json';
+  response_format?: ChatResponseFormat;
   /**
    * @title 是否开启流式请求
    * @default true
@@ -98,7 +120,7 @@ export interface ChatStreamPayload {
    * @title 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 1
    */
-  temperature: number;
+  temperature?: number;
   text?: {
     verbosity?: 'low' | 'medium' | 'high';
   };
@@ -110,6 +132,10 @@ export interface ChatStreamPayload {
     type: 'enabled' | 'disabled';
   };
   thinkingBudget?: number;
+  /**
+   * Thinking level for Gemini models (e.g., gemini-3.0-pro)
+   */
+  thinkingLevel?: 'low' | 'high';
   tool_choice?: string;
   tools?: ChatCompletionTool[];
   /**
@@ -174,12 +200,13 @@ export interface ChatCompletionTool {
   type: 'function';
 }
 
-interface OnFinishData {
+export interface OnFinishData {
   grounding?: any;
+  speed?: ModelPerformance;
   text: string;
   thinking?: string;
   toolsCalling?: MessageToolCall[];
-  usage?: ModelTokensUsage;
+  usage?: ModelUsage;
 }
 
 export interface ChatStreamCallbacks {
@@ -196,6 +223,9 @@ export interface ChatStreamCallbacks {
   onThinking?: (content: string) => Promise<void> | void;
   onToolsCalling?: (data: {
     chunk: MessageToolCallChunk[];
+    /**
+     * full tools calling array
+     */
     toolsCalling: MessageToolCall[];
   }) => Promise<void> | void;
   onUsage?: (usage: ModelTokensUsage) => Promise<void> | void;

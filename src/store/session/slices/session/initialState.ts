@@ -1,4 +1,4 @@
-import { LobeAgentSession } from '@/types/session';
+import { LobeSessions } from '@/types/session';
 
 export interface SessionState {
   /**
@@ -6,22 +6,28 @@ export interface SessionState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string;
-  defaultSessions: LobeAgentSession[];
+  defaultSessions: LobeSessions;
+  /**
+   * @title Whether the agent panel is pinned
+   * @description Controls the agent panel pinning state in the UI layout
+   */
+  isAgentPinned: boolean;
   isSearching: boolean;
   isSessionsFirstFetchFinished: boolean;
-  pinnedSessions: LobeAgentSession[];
+  pinnedSessions: LobeSessions;
   searchKeywords: string;
   sessionSearchKeywords?: string;
   /**
    * it means defaultSessions
    */
-  sessions: LobeAgentSession[];
+  sessions: LobeSessions;
   signalSessionMeta?: AbortController;
 }
 
 export const initialSessionState: SessionState = {
   activeId: 'inbox',
   defaultSessions: [],
+  isAgentPinned: false,
   isSearching: false,
   isSessionsFirstFetchFinished: false,
   pinnedSessions: [],

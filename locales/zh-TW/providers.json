@@ -30,13 +30,22 @@
     "description": "Bedrock 是亞馬遜 AWS 提供的一項服務，專注於為企業提供先進的 AI 語言模型和視覺模型。其模型家族包括 Anthropic 的 Claude 系列、Meta 的 Llama 3.1 系列等，涵蓋從輕量級到高性能的多種選擇，支持文本生成、對話、圖像處理等多種任務，適用於不同規模和需求的企業應用。"
   },
   "bfl": {
-    "description": "領先的前沿人工智慧研究實驗室，打造明日的視覺基礎設施。"
+    "description": "領先的尖端人工智慧研究實驗室，打造明日的視覺基礎建設。"
+  },
+  "cerebras": {
+    "description": "Cerebras 是一個基於其專用 CS-3 系統的 AI 推理平台，旨在提供全球最快、即時回應、高吞吐量的 LLM 服務，專為消除延遲並加速複雜的 AI 工作流程（如即時程式碼生成與代理任務）而設計。"
   },
   "cloudflare": {
     "description": "在 Cloudflare 的全球網絡上運行由無伺服器 GPU 驅動的機器學習模型。"
   },
   "cohere": {
     "description": "Cohere 為您帶來最前沿的多語言模型、先進的檢索功能以及為現代企業量身定制的 AI 工作空間 — 一切都集成在一個安全的平台中。"
+  },
+  "cometapi": {
+    "description": "CometAPI 是一個提供多種前沿大型模型介面的服務平台，支援 OpenAI、Anthropic、Google 及更多，適合多樣化的開發和應用需求。使用者可根據自身需求靈活選擇最優的模型和價格，助力 AI 體驗的提升。"
+  },
+  "comfyui": {
+    "description": "強大的開源圖像、影片、音訊生成工作流程引擎，支援 SD、FLUX、Qwen、Hunyuan、WAN 等先進模型，提供節點化工作流程編輯與私有化部署能力"
   },
   "deepseek": {
     "description": "DeepSeek 是一家專注於人工智慧技術研究和應用的公司，其最新模型 DeepSeek-V2.5 融合了通用對話和代碼處理能力，並在人類偏好對齊、寫作任務和指令跟隨等方面實現了顯著提升。"
@@ -107,6 +116,9 @@
   "ollama": {
     "description": "Ollama 提供的模型廣泛涵蓋代碼生成、數學運算、多語種處理和對話互動等領域，支持企業級和本地化部署的多樣化需求。"
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud 提供官方託管的推理服務，開箱即用地存取 Ollama 模型庫，並支援 OpenAI 相容介面。"
+  },
   "openai": {
     "description": "OpenAI 是全球領先的人工智慧研究機構，其開發的模型如 GPT 系列推動了自然語言處理的前沿。OpenAI 致力於透過創新和高效的 AI 解決方案改變多個行業。他們的產品具有顯著的性能和經濟性，廣泛用於研究、商業和創新應用。"
   },
@@ -158,6 +170,9 @@
   "v0": {
     "description": "v0 是一個配對程式設計助手，你只需用自然語言描述想法，它就能為你的專案生成程式碼和使用者介面（UI）"
   },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway 提供統一的 API 來存取 100 多個模型，透過單一端點即可使用 OpenAI、Anthropic、Google 等多個供應商的模型。支援預算設定、使用監控、請求負載平衡和故障轉移。"
+  },
   "vertexai": {
     "description": "Google 的 Gemini 系列是其最先進、通用的 AI 模型，由 Google DeepMind 打造，專為多模態設計，支持文本、程式碼、圖像、音訊和視頻的無縫理解與處理。適用於從數據中心到行動裝置的多種環境，極大提升了 AI 模型的效率與應用廣泛性。"
   },
@@ -175,6 +190,9 @@
   },
   "xinference": {
     "description": "Xorbits推論（Xinference）是一個開源平台，用於簡化各種AI模型的運行與整合。透過Xinference，您可以在雲端或本地環境中使用任何開源LLM、嵌入模型和多模態模型進行推論，並創建強大的AI應用程式。"
+  },
+  "zenmux": {
+    "description": "ZenMux 是一個統一的 AI 服務整合平台，支援 OpenAI、Anthropic、Google VertexAI 等多種主流 AI 服務介面。提供靈活的路由功能，讓您可以輕鬆切換與管理不同的 AI 模型。"
   },
   "zeroone": {
     "description": "01.AI 專注於 AI 2.0 時代的人工智慧技術，大力推動「人+人工智慧」的創新和應用，採用超強大模型和先進 AI 技術以提升人類生產力，實現技術賦能。"

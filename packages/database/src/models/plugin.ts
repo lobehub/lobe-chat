@@ -1,9 +1,8 @@
+import { LobeTool } from '@lobechat/types';
 import { and, desc, eq } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '../type';
-import { LobeTool } from '@/types/tool';
-
 import { InstalledPluginItem, NewInstalledPlugin, userInstalledPlugins } from '../schemas';
+import { LobeChatDatabase } from '../type';
 
 export class PluginModel {
   private userId: string;
@@ -17,7 +16,7 @@ export class PluginModel {
   create = async (
     params: Pick<
       NewInstalledPlugin,
-      'type' | 'identifier' | 'manifest' | 'customParams' | 'settings'
+      'type' | 'identifier' | 'manifest' | 'customParams' | 'settings' | 'source'
     >,
   ) => {
     const [result] = await this.db

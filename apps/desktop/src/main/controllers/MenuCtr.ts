@@ -1,29 +1,30 @@
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
 
 export default class MenuController extends ControllerModule {
+  static override readonly groupName = 'menu';
   /**
-   * 刷新菜单
+   * Refresh menu
    */
-  @ipcClientEvent('refreshAppMenu')
+  @IpcMethod()
   refreshAppMenu() {
-    // 注意：可能需要根据具体情况决定是否允许渲染进程刷新所有菜单
+    // Note: May need to decide whether to allow renderer process to refresh all menus based on specific circumstances
     return this.app.menuManager.refreshMenus();
   }
 
   /**
-   * 显示上下文菜单
+   * Show context menu
    */
-  @ipcClientEvent('showContextMenu')
+  @IpcMethod()
   showContextMenu(params: { data?: any; type: string }) {
     return this.app.menuManager.showContextMenu(params.type, params.data);
   }
 
   /**
-   * 设置开发菜单可见性
+   * Set development menu visibility
    */
-  @ipcClientEvent('setDevMenuVisibility')
+  @IpcMethod()
   setDevMenuVisibility(visible: boolean) {
-    // 调用 MenuManager 的方法来重建应用菜单
+    // Call MenuManager method to rebuild application menu
     return this.app.menuManager.rebuildAppMenu({ showDevItems: visible });
   }
 }

@@ -1,4 +1,5 @@
 import { WriteLocalFileParams } from '@lobechat/electron-client-ipc';
+import { BuiltinRenderProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { ChevronRight } from 'lucide-react';
@@ -7,15 +8,8 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LocalFile, LocalFolder } from '@/features/LocalFile';
-import { ChatMessagePluginError } from '@/types/message';
 
-interface WriteFileProps {
-  args: WriteLocalFileParams;
-  messageId: string;
-  pluginError: ChatMessagePluginError;
-}
-
-const WriteFile = memo<WriteFileProps>(({ args }) => {
+const WriteFile = memo<BuiltinRenderProps<WriteLocalFileParams>>(({ args }) => {
   if (!args) return <Skeleton active />;
 
   const { base, dir } = path.parse(args.path);

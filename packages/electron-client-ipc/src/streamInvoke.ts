@@ -34,7 +34,13 @@ export const streamInvoke = async (input: RequestInfo | URL, init?: RequestInit)
       },
     });
 
-    const cleanup = window.electronAPI.onStreamInvoke(params, {
+    const electronAPI = window.electronAPI;
+    if (!electronAPI || !electronAPI.onStreamInvoke) {
+      reject(new Error('[streamInvoke] window.electronAPI.onStreamInvoke is not available'));
+      return;
+    }
+
+    const cleanup = electronAPI.onStreamInvoke(params, {
       onData: (chunk) => {
         if (streamController) streamController.enqueue(chunk);
       },

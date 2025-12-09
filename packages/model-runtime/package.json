@@ -4,18 +4,21 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./vertexai": "./src/vertexai/index.ts"
+    "./vertexai": "./src/providers/vertexai/index.ts"
   },
   "scripts": {
     "test": "vitest",
-    "test:coverage": "vitest --coverage",
+    "test:coverage": "vitest --coverage --silent='passed-only'",
     "test:update": "vitest -u"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.862.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.941.0",
+    "@huggingface/inference": "^4.13.4",
+    "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
-    "debug": "^4.4.1",
+    "async-retry": "^1.3.3",
+    "debug": "^4.4.3",
     "model-bank": "workspace:*",
     "openai": "^4.104.0"
   }

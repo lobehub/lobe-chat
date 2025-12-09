@@ -1,9 +1,8 @@
+import { safeParseJSON } from '@lobechat/utils';
 import { memo } from 'react';
 
-import { BuiltinToolsRenders } from '@/tools/renders';
-import { safeParseJSON } from '@/utils/safeParseJSON';
+import { getBuiltinRender } from '@/tools/renders';
 
-import Loading from '../Loading';
 import { useParseContent } from '../useParseContent';
 
 export interface BuiltinTypeProps {
@@ -24,17 +23,12 @@ const BuiltinType = memo<BuiltinTypeProps>(
     pluginState,
     id,
     identifier,
-    loading,
     pluginError,
     apiName,
   }) => {
-    const { isJSON, data } = useParseContent(content);
+    const { data } = useParseContent(content);
 
-    if (!isJSON) {
-      return loading && <Loading />;
-    }
-
-    const Render = BuiltinToolsRenders[identifier || ''];
+    const Render = getBuiltinRender(identifier, apiName);
 
     if (!Render) return;
 
@@ -43,7 +37,7 @@ const BuiltinType = memo<BuiltinTypeProps>(
     return (
       <Render
         apiName={apiName}
-        args={args}
+        args={args || {}}
         content={data}
         identifier={identifier}
         messageId={id}

@@ -1,16 +1,15 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { relations } from 'drizzle-orm';
-import { pgTable, primaryKey, text, uuid, varchar } from 'drizzle-orm/pg-core';
+import { index, pgTable, primaryKey, text, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { createdAt } from './_helpers';
 import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
 import { asyncTasks } from './asyncTask';
 import { chatGroups, chatGroupsAgents } from './chatGroup';
-import { documentChunks, documents } from './document';
-import { files, knowledgeBases } from './file';
+import { documents, files, knowledgeBases } from './file';
 import { generationBatches, generationTopics, generations } from './generation';
-import { messages, messagesFiles } from './message';
-import { chunks, unstructuredChunks } from './rag';
+import { messageGroups, messages, messagesFiles } from './message';
+import { chunks, documentChunks, unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
 import { threads, topicDocuments, topics } from './topic';
 import { users } from './user';
@@ -28,9 +27,11 @@ export const agentsToSessions = pgTable(
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.agentId, t.sessionId] }),
-  }),
+  (t) => [
+    primaryKey({ columns: [t.agentId, t.sessionId] }),
+    index('agents_to_sessions_session_id_idx').on(t.sessionId),
+    index('agents_to_sessions_agent_id_idx').on(t.agentId),
+  ],
 );
 
 export const filesToSessions = pgTable(
@@ -103,6 +104,11 @@ export const messagesRelations = relations(messages, ({ many, one }) => ({
   thread: one(threads, {
     fields: [messages.threadId],
     references: [threads.id],
+  }),
+
+  messageGroup: one(messageGroups, {
+    fields: [messages.messageGroupId],
+    references: [messageGroups.id],
   }),
 }));
 
@@ -305,4 +311,22 @@ export const chatGroupsAgentsRelations = relations(chatGroupsAgents, ({ one }) =
     fields: [chatGroupsAgents.userId],
     references: [users.id],
   }),
+}));
+
+// Message Groups 相关关系定义
+export const messageGroupsRelations = relations(messageGroups, ({ many, one }) => ({
+  user: one(users, {
+    fields: [messageGroups.userId],
+    references: [users.id],
+  }),
+  topic: one(topics, {
+    fields: [messageGroups.topicId],
+    references: [topics.id],
+  }),
+  parentGroup: one(messageGroups, {
+    fields: [messageGroups.parentGroupId],
+    references: [messageGroups.id],
+  }),
+  childGroups: many(messageGroups),
+  messages: many(messages),
 }));

@@ -1,3 +1,4 @@
+import debug from 'debug';
 import { sha256 } from 'js-sha256';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -8,13 +9,15 @@ import { inferContentTypeFromImageUrl } from '@/utils/url';
 import { FileServiceImpl } from './type';
 import { extractKeyFromUrlOrReturnOriginal } from './utils';
 
+const log = debug('lobe-file:desktop-local');
+
 /**
- * 桌面应用本地文件服务实现
+ * Desktop application local file service implementation
  */
 export class DesktopLocalFileImpl implements FileServiceImpl {
   /**
-   * 获取本地文件的URL
-   * 通过 IPC 从主进程获取 HTTP URL
+   * Get local file URL
+   * Retrieve HTTP URL from main process via IPC
    */
   private async getLocalFileUrl(key: string): Promise<string> {
     try {
@@ -26,16 +29,16 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
   }
 
   /**
-   * 创建预签名上传URL（本地版实际上是直接返回文件路径，可能需要进一步扩展）
+   * Create pre-signed upload URL (local version directly returns file path, may need further extension)
    */
   async createPreSignedUrl(key: string): Promise<string> {
-    // 在桌面应用本地文件实现中，不需要预签名URL
-    // 直接返回文件路径
+    // In desktop application local file implementation, pre-signed URL is not needed
+    // Directly return the file path
     return key;
   }
 
   /**
-   * 创建预签名预览URL（本地版是通过HTTP路径访问本地文件）
+   * Create pre-signed preview URL (local version accesses local files via HTTP path)
    */
   async createPreSignedUrlForPreview(key: string): Promise<string> {
     return this.getLocalFileUrl(key);
@@ -46,13 +49,13 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
   }
 
   /**
-   * 批量删除文件
+   * Delete files in batch
    */
   async deleteFiles(keys: string[]): Promise<any> {
     try {
       if (!keys || keys.length === 0) return { success: true };
 
-      // 确保所有路径都是合法的desktop://路径
+      // Ensure all paths are valid desktop:// paths
       const invalidKeys = keys.filter((key) => !key.startsWith('desktop://'));
       if (invalidKeys.length > 0) {
         console.error('Invalid desktop file paths:', invalidKeys);
@@ -62,7 +65,7 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
         };
       }
 
-      // 使用electronIpcClient的专用方法
+      // Use electronIpcClient's dedicated method
       return await electronIpcClient.deleteFiles(keys);
     } catch (error) {
       console.error('Failed to delete files:', error);
@@ -79,20 +82,20 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
   }
 
   /**
-   * 获取文件字节数组
+   * Get file byte array
    */
   async getFileByteArray(key: string): Promise<Uint8Array> {
     try {
-      // 从Electron获取文件的绝对路径
+      // Get absolute file path from Electron
       const filePath = await electronIpcClient.getFilePathById(key);
 
-      // 检查文件是否存在
+      // Check if file exists
       if (!existsSync(filePath)) {
         console.error(`File not found: ${filePath}`);
         return new Uint8Array();
       }
 
-      // 读取文件内容并转换为Uint8Array
+      // Read file content and convert to Uint8Array
       const buffer = readFileSync(filePath);
       return new Uint8Array(buffer);
     } catch (e) {
@@ -102,20 +105,20 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
   }
 
   /**
-   * 获取文件内容
+   * Get file content
    */
   async getFileContent(key: string): Promise<string> {
     try {
-      // 从Electron获取文件的绝对路径
+      // Get absolute file path from Electron
       const filePath = await electronIpcClient.getFilePathById(key);
 
-      // 检查文件是否存在
+      // Check if file exists
       if (!existsSync(filePath)) {
         console.error(`File not found: ${filePath}`);
         return '';
       }
 
-      // 读取文件内容并转换为字符串
+      // Read file content and convert to string
       return readFileSync(filePath, 'utf8');
     } catch (e) {
       console.error('Failed to get file content:', e);
@@ -124,7 +127,7 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
   }
 
   /**
-   * 获取完整文件URL
+   * Get full file URL
    */
   async getFullFileUrl(url?: string | null): Promise<string> {
     if (!url) return '';
@@ -136,32 +139,32 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
   }
 
   /**
-   * 上传内容
-   * 注意：这个功能可能需要扩展Electron IPC接口
+   * Upload content
+   * Note: This feature may require extension of Electron IPC interface
    */
   async uploadContent(filePath: string, content: string): Promise<any> {
-    // 这里需要扩展electronIpcClient以支持上传文件内容
-    // 例如: return electronIpcClient.uploadContent(filePath, content);
+    // Need to extend electronIpcClient to support uploading file content
+    // For example: return electronIpcClient.uploadContent(filePath, content);
     console.warn('uploadContent not implemented for Desktop local file service', filePath, content);
     return;
   }
 
   /**
-   * 从完整URL中提取key
-   * 从 HTTP URL 中提取 desktop:// 格式的路径
+   * Extract key from full URL
+   * Extract desktop:// format path from HTTP URL
    */
   getKeyFromFullUrl(url: string): string {
     try {
       const urlObj = new URL(url);
       const pathSegments = urlObj.pathname.split('/').filter((segment) => segment !== '');
 
-      // 移除第一个路径段（desktop-file）
+      // Remove first path segment (desktop-file)
       pathSegments.shift();
 
-      // 重新组合剩余的路径段
+      // Recombine remaining path segments
       const filePath = pathSegments.join('/');
 
-      // 返回 desktop:// 格式的路径
+      // Return desktop:// format path
       return `desktop://${filePath}`;
     } catch (e) {
       console.error('[DesktopLocalFileImpl] Failed to extract key from URL:', e);
@@ -170,23 +173,23 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
   }
 
   /**
-   * 上传媒体文件
+   * Upload media file
    */
   async uploadMedia(key: string, buffer: Buffer): Promise<{ key: string }> {
     try {
-      // 将 Buffer 转换为 Base64 字符串
+      // Convert Buffer to Base64 string
       const content = buffer.toString('base64');
 
-      // 从 key 中提取文件名
+      // Extract filename from key
       const filename = path.basename(key);
 
-      // 计算文件的 SHA256 hash
+      // Calculate SHA256 hash of the file
       const hash = sha256(buffer);
 
-      // 根据文件URL推断 MIME 类型
+      // Infer MIME type from file URL
       const type = inferContentTypeFromImageUrl(key)!;
 
-      // 构造上传参数
+      // Construct upload parameters
       const uploadParams = {
         content,
         filename,
@@ -195,14 +198,14 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
         type,
       };
 
-      // 调用 electronIpcClient 上传文件
+      // Call electronIpcClient to upload file
       const result = await electronIpcClient.createFile(uploadParams);
 
       if (!result.success) {
         throw new Error('Failed to upload file via Electron IPC');
       }
 
-      console.log('[DesktopLocalFileImpl] File uploaded successfully:', result.metadata);
+      log('File uploaded successfully: %O', result.metadata);
       return { key: result.metadata.path };
     } catch (error) {
       console.error('[DesktopLocalFileImpl] Failed to upload media file:', error);

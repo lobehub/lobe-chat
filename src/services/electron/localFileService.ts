@@ -1,4 +1,14 @@
 import {
+  EditLocalFileParams,
+  EditLocalFileResult,
+  GetCommandOutputParams,
+  GetCommandOutputResult,
+  GlobFilesParams,
+  GlobFilesResult,
+  GrepContentParams,
+  GrepContentResult,
+  KillCommandParams,
+  KillCommandResult,
   ListLocalFileParams,
   LocalFileItem,
   LocalMoveFilesResultItem,
@@ -10,53 +20,88 @@ import {
   OpenLocalFileParams,
   OpenLocalFolderParams,
   RenameLocalFileParams,
+  RunCommandParams,
+  RunCommandResult,
   WriteLocalFileParams,
-  dispatch,
 } from '@lobechat/electron-client-ipc';
 
+import { ensureElectronIpc } from '@/utils/electron/ipc';
+
 class LocalFileService {
+  // File Operations
   async listLocalFiles(params: ListLocalFileParams): Promise<LocalFileItem[]> {
-    return dispatch('listLocalFiles', params);
+    return ensureElectronIpc().localSystem.listLocalFiles(params);
   }
 
   async readLocalFile(params: LocalReadFileParams): Promise<LocalReadFileResult> {
-    return dispatch('readLocalFile', params);
+    return ensureElectronIpc().localSystem.readFile(params);
   }
 
   async readLocalFiles(params: LocalReadFilesParams): Promise<LocalReadFileResult[]> {
-    return dispatch('readLocalFiles', params);
+    return ensureElectronIpc().localSystem.readFiles(params);
   }
 
   async searchLocalFiles(params: LocalSearchFilesParams): Promise<LocalFileItem[]> {
-    return dispatch('searchLocalFiles', params);
+    return ensureElectronIpc().localSystem.handleLocalFilesSearch(params);
   }
 
   async openLocalFile(params: OpenLocalFileParams) {
-    return dispatch('openLocalFile', params);
+    return ensureElectronIpc().localSystem.handleOpenLocalFile(params);
   }
 
   async openLocalFolder(params: OpenLocalFolderParams) {
-    return dispatch('openLocalFolder', params);
+    return ensureElectronIpc().localSystem.handleOpenLocalFile(params);
   }
 
   async moveLocalFiles(params: MoveLocalFilesParams): Promise<LocalMoveFilesResultItem[]> {
-    return dispatch('moveLocalFiles', params);
+    return ensureElectronIpc().localSystem.handleMoveFiles(params);
   }
 
   async renameLocalFile(params: RenameLocalFileParams) {
-    return dispatch('renameLocalFile', params);
+    return ensureElectronIpc().localSystem.handleRenameFile(params);
   }
 
   async writeFile(params: WriteLocalFileParams) {
-    return dispatch('writeLocalFile', params);
+    return ensureElectronIpc().localSystem.handleWriteFile(params);
   }
 
+  async editLocalFile(params: EditLocalFileParams): Promise<EditLocalFileResult> {
+    return ensureElectronIpc().localSystem.handleEditFile(params);
+  }
+
+  // Shell Commands
+  async runCommand(params: RunCommandParams): Promise<RunCommandResult> {
+    return ensureElectronIpc().shellCommand.handleRunCommand(params);
+  }
+
+  async getCommandOutput(params: GetCommandOutputParams): Promise<GetCommandOutputResult> {
+    return ensureElectronIpc().shellCommand.handleGetCommandOutput(params);
+  }
+
+  async killCommand(params: KillCommandParams): Promise<KillCommandResult> {
+    return ensureElectronIpc().shellCommand.handleKillCommand(params);
+  }
+
+  // Search & Find
+  async grepContent(params: GrepContentParams): Promise<GrepContentResult> {
+    return ensureElectronIpc().localSystem.handleGrepContent(params);
+  }
+
+  async globFiles(params: GlobFilesParams): Promise<GlobFilesResult> {
+    return ensureElectronIpc().localSystem.handleGlobFiles(params);
+  }
+
+  // Helper methods
   async openLocalFileOrFolder(path: string, isDirectory: boolean) {
     if (isDirectory) {
       return this.openLocalFolder({ isDirectory, path });
     } else {
       return this.openLocalFile({ path });
     }
+  }
+
+  async openFileFolder(path: string) {
+    return this.openLocalFolder({ isDirectory: false, path });
   }
 }
 

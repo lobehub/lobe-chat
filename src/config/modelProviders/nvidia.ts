@@ -10,6 +10,7 @@ const Nvidia: ModelProviderCard = {
   modelsUrl: 'https://build.nvidia.com/models',
   name: 'Nvidia',
   settings: {
+    disableBrowserRequest: true, // CORS error
     proxyUrl: {
       placeholder: 'https://integrate.api.nvidia.com/v1',
     },

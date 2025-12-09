@@ -5,6 +5,9 @@
       "lock": "アスペクト比を固定する",
       "unlock": "アスペクト比の固定を解除する"
     },
+    "cfg": {
+      "label": "ガイド強度"
+    },
     "header": {
       "desc": "簡単な説明、すぐに創作",
       "title": "絵画"
@@ -26,6 +29,21 @@
     },
     "prompt": {
       "placeholder": "生成したい内容を記述してください"
+    },
+    "quality": {
+      "label": "画像品質",
+      "options": {
+        "hd": "高精細",
+        "standard": "標準"
+      }
+    },
+    "resolution": {
+      "label": "解像度",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
     },
     "seed": {
       "label": "シード",

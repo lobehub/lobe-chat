@@ -1,10 +1,13 @@
 import { css, cx } from 'antd-style';
 
-export const oneLineEllipsis = cx(css`
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+export const lineEllipsis = (line: number) =>
+  cx(css`
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: ${line};
 
-  text-overflow: ellipsis;
-`);
+    text-overflow: ellipsis;
+  `);
+
+export const oneLineEllipsis = lineEllipsis(1);

@@ -50,6 +50,10 @@
     "total": {
       "fileCount": "Tổng cộng {{count}} mục",
       "selectedCount": "Đã chọn {{count}} mục"
+    },
+    "view": {
+      "list": "Chế độ danh sách",
+      "masonry": "Chế độ lưới"
     }
   },
   "FileParsingStatus": {
@@ -102,6 +106,12 @@
     "keyPlaceholder": "Khóa",
     "valuePlaceholder": "Giá trị"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Mở",
+      "showInFolder": "Hiển thị trong thư mục"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Không giới hạn"
   },
@@ -114,6 +124,7 @@
       "reasoning": "Mô hình này hỗ trợ tư duy sâu sắc",
       "search": "Mô hình này hỗ trợ tìm kiếm trực tuyến",
       "tokens": "Mỗi phiên của mô hình này hỗ trợ tối đa {{tokens}} Tokens",
+      "video": "Mô hình này hỗ trợ nhận dạng video",
       "vision": "Mô hình này hỗ trợ nhận diện hình ảnh"
     },
     "removed": "Mô hình này không còn trong danh sách, nếu bỏ chọn sẽ tự động xóa"

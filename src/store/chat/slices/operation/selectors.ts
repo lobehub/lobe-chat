@@ -1,0 +1,388 @@
+import type { ChatStoreState } from '@/store/chat/initialState';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+
+import type { Operation, OperationType } from './types';
+
+// === Basic Queries ===
+/**
+ * Get all operations
+ */
+const getAllOperations = (s: ChatStoreState): Operation[] => {
+  return Object.values(s.operations);
+};
+
+/**
+ * Get operations for current context (active session and topic)
+ */
+const getCurrentContextOperations = (s: ChatStoreState): Operation[] => {
+  const { activeId, activeTopicId } = s;
+  if (!activeId) return [];
+
+  const contextKey = messageMapKey(activeId, activeTopicId);
+  const operationIds = s.operationsByContext[contextKey] || [];
+  return operationIds.map((id) => s.operations[id]).filter(Boolean);
+};
+
+/**
+ * Get all running operations
+ */
+const getRunningOperations = (s: ChatStoreState): Operation[] => {
+  return Object.values(s.operations).filter((op) => op.status === 'running');
+};
+
+/**
+ * Get operation by ID
+ */
+const getOperationById =
+  (operationId: string) =>
+  (s: ChatStoreState): Operation | undefined => {
+    return s.operations[operationId];
+  };
+
+/**
+ * Get operation context from message ID
+ * Useful for automatic context retrieval
+ */
+const getOperationContextFromMessage =
+  (messageId: string) =>
+  (s: ChatStoreState): Operation['context'] | undefined => {
+    const operationId = s.messageOperationMap[messageId];
+    if (!operationId) return undefined;
+
+    const operation = s.operations[operationId];
+    return operation?.context;
+  };
+
+/**
+ * Get operations by message ID
+ */
+const getOperationsByMessage =
+  (messageId: string) =>
+  (s: ChatStoreState): Operation[] => {
+    const operationIds = s.operationsByMessage[messageId] || [];
+    return operationIds.map((id) => s.operations[id]).filter(Boolean);
+  };
+
+/**
+ * Get operations by type
+ */
+const getOperationsByType =
+  (type: OperationType) =>
+  (s: ChatStoreState): Operation[] => {
+    const operationIds = s.operationsByType[type] || [];
+    return operationIds.map((id) => s.operations[id]).filter(Boolean);
+  };
+
+// === Status Checks ===
+/**
+ * Check if there's any running operation
+ */
+const hasAnyRunningOperation = (s: ChatStoreState): boolean => {
+  return Object.values(s.operations).some((op) => op.status === 'running');
+};
+
+/**
+ * Check if there's a running operation of specific type
+ */
+const hasRunningOperationType =
+  (type: OperationType) =>
+  (s: ChatStoreState): boolean => {
+    const operationIds = s.operationsByType[type] || [];
+    return operationIds.some((id) => {
+      const op = s.operations[id];
+      return op && op.status === 'running';
+    });
+  };
+
+/**
+ * Check if can interrupt (has running operations that can be cancelled)
+ */
+const canInterrupt = (s: ChatStoreState): boolean => {
+  const currentOps = getCurrentContextOperations(s);
+  return currentOps.some((op) => op.status === 'running');
+};
+
+/**
+ * Check if can send message (no blocking operations running)
+ */
+const canSendMessage = (s: ChatStoreState): boolean => {
+  // Cannot send if there's any running operation in current context
+  const currentOps = getCurrentContextOperations(s);
+  const hasRunningOp = currentOps.some((op) => op.status === 'running');
+
+  return !hasRunningOp;
+};
+
+// === UI Helpers ===
+/**
+ * Get active operation types (for debugging/display)
+ */
+const getActiveOperationTypes = (s: ChatStoreState): OperationType[] => {
+  const runningOps = getRunningOperations(s);
+  const types = new Set(runningOps.map((op) => op.type));
+  return Array.from(types);
+};
+
+/**
+ * Get current operation label for UI display
+ * Returns the label of the most recent running operation in current context
+ */
+const getCurrentOperationLabel = (s: ChatStoreState): string => {
+  const currentOps = getCurrentContextOperations(s);
+  const runningOps = currentOps.filter((op) => op.status === 'running');
+
+  if (runningOps.length === 0) return '';
+
+  // Get the most recent running operation
+  const latestOp = runningOps.reduce((latest, op) => {
+    return op.metadata.startTime > latest.metadata.startTime ? op : latest;
+  });
+
+  return latestOp.label || latestOp.type;
+};
+
+/**
+ * Get current operation progress
+ * Returns the progress of the most recent running operation with progress info
+ */
+const getCurrentOperationProgress = (s: ChatStoreState): number | undefined => {
+  const currentOps = getCurrentContextOperations(s);
+  const runningOps = currentOps.filter((op) => op.status === 'running');
+
+  if (runningOps.length === 0) return undefined;
+
+  // Find the most recent operation with progress
+  const opsWithProgress = runningOps.filter((op) => op.metadata.progress);
+
+  if (opsWithProgress.length === 0) return undefined;
+
+  const latestOp = opsWithProgress.reduce((latest, op) => {
+    return op.metadata.startTime > latest.metadata.startTime ? op : latest;
+  });
+
+  return latestOp.metadata.progress?.percentage;
+};
+
+// === Backward Compatibility ===
+/**
+ * Check if agent runtime is running (including both main window and thread)
+ * Excludes operations that are aborting (cleaning up after cancellation)
+ */
+const isAgentRuntimeRunning = (s: ChatStoreState): boolean => {
+  const operationIds = s.operationsByType['execAgentRuntime'] || [];
+  return operationIds.some((id) => {
+    const op = s.operations[id];
+    // Exclude operations that are aborting (user already cancelled, just cleaning up)
+    return op && op.status === 'running' && !op.metadata.isAborting;
+  });
+};
+
+/**
+ * Check if agent runtime is running in main window only
+ * Used for main window UI state (e.g., send button loading)
+ * Excludes thread operations and operations from other topics to prevent cross-contamination
+ */
+const isMainWindowAgentRuntimeRunning = (s: ChatStoreState): boolean => {
+  const operationIds = s.operationsByType['execAgentRuntime'] || [];
+
+  return operationIds.some((id) => {
+    const op = s.operations[id];
+    if (!op || op.status !== 'running' || op.metadata.isAborting || op.metadata.inThread) {
+      return false;
+    }
+
+    // Session must match
+    if (s.activeId !== op.context.sessionId) return false;
+
+    // Topic comparison: normalize null/undefined (both mean "default topic")
+    // activeTopicId can be null (initial state) or undefined (after topic operations)
+    // Operation context topicId can also be null or undefined
+    const activeTopicId = s.activeTopicId ?? null;
+    const opTopicId = op.context.topicId ?? null;
+
+    return activeTopicId === opTopicId;
+  });
+};
+
+/**
+ * Check if continuing (for backward compatibility)
+ */
+const isContinuing = (s: ChatStoreState): boolean => {
+  return hasRunningOperationType('continue')(s);
+};
+
+/**
+ * Check if in RAG flow (for backward compatibility)
+ */
+const isInRAGFlow = (s: ChatStoreState): boolean => {
+  return hasRunningOperationType('rag')(s);
+};
+
+/**
+ * Check if in search workflow (for backward compatibility)
+ */
+const isInSearchWorkflow = (s: ChatStoreState): boolean => {
+  return hasRunningOperationType('searchWorkflow')(s);
+};
+
+/**
+ * Check if a specific message is being processed (any operation type)
+ */
+const isMessageProcessing =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is being generated (AI generation only)
+ * This is more specific than isMessageProcessing - only checks execAgentRuntime operations
+ */
+const isMessageGenerating =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'execAgentRuntime' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is being created (CRUD operation only)
+ * Checks message creation operations:
+ * - User messages: sendMessage
+ * - Assistant messages: createAssistantMessage
+ */
+const isMessageCreating =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some(
+      (op) =>
+        (op.type === 'sendMessage' || op.type === 'createAssistantMessage') &&
+        op.status === 'running',
+    );
+  };
+
+/**
+ * Check if any message in a list is being processed
+ */
+const isAnyMessageLoading =
+  (messageIds: string[]) =>
+  (s: ChatStoreState): boolean => {
+    return messageIds.some((id) => isMessageProcessing(id)(s));
+  };
+
+/**
+ * Check if a specific message is being regenerated
+ */
+const isMessageRegenerating =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'regenerate' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is continuing generation
+ */
+const isMessageContinuing =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'continue' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is in reasoning state
+ */
+const isMessageInReasoning =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'reasoning' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is in tool calling (plugin API invocation)
+ */
+const isMessageInToolCalling =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'toolCalling' && op.status === 'running');
+  };
+
+/**
+ * Check if currently aborting (cleaning up after user cancellation)
+ * Used to show "Cleaning up tool calls..." message
+ */
+const isAborting = (s: ChatStoreState): boolean => {
+  const currentOps = getCurrentContextOperations(s);
+  return currentOps.some((op) => op.status === 'running' && op.metadata.isAborting);
+};
+
+/**
+ * Check if a specific message is aborting
+ */
+const isMessageAborting =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.status === 'running' && op.metadata.isAborting);
+  };
+
+/**
+ * Check if regenerating (for backward compatibility)
+ */
+const isRegenerating = (s: ChatStoreState): boolean => {
+  return hasRunningOperationType('regenerate')(s);
+};
+
+/**
+ * Check if sending message (for backward compatibility)
+ * Equivalent to: hasRunningOperationType('sendMessage')
+ */
+const isSendingMessage = (s: ChatStoreState): boolean => {
+  return hasRunningOperationType('sendMessage')(s);
+};
+
+/**
+ * Operation Selectors
+ */
+export const operationSelectors = {
+  canInterrupt,
+  canSendMessage,
+  getActiveOperationTypes,
+  getAllOperations,
+  getCurrentContextOperations,
+  getCurrentOperationLabel,
+  getCurrentOperationProgress,
+  getOperationById,
+  getOperationContextFromMessage,
+  getOperationsByMessage,
+  getOperationsByType,
+  getRunningOperations,
+  hasAnyRunningOperation,
+  hasRunningOperationType,
+  /** @deprecated Use isAgentRuntimeRunning instead */
+  isAIGenerating: isAgentRuntimeRunning,
+
+  isAborting,
+
+  isAgentRuntimeRunning,
+  isAnyMessageLoading,
+  isContinuing,
+  isInRAGFlow,
+  isInSearchWorkflow,
+  isMainWindowAgentRuntimeRunning,
+  isMessageAborting,
+  isMessageContinuing,
+  isMessageCreating,
+  isMessageGenerating,
+  isMessageInReasoning,
+  isMessageInToolCalling,
+  isMessageProcessing,
+  isMessageRegenerating,
+  isRegenerating,
+  isSendingMessage,
+};

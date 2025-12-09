@@ -5,6 +5,9 @@
       "lock": "Lock Aspect Ratio",
       "unlock": "Unlock Aspect Ratio"
     },
+    "cfg": {
+      "label": "Guidance Intensity"
+    },
     "header": {
       "desc": "Brief description, create instantly",
       "title": "Painting"
@@ -26,6 +29,21 @@
     },
     "prompt": {
       "placeholder": "Describe what you want to generate"
+    },
+    "quality": {
+      "label": "Image Quality",
+      "options": {
+        "hd": "High Definition",
+        "standard": "Standard"
+      }
+    },
+    "resolution": {
+      "label": "Resolution",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
     },
     "seed": {
       "label": "Seed",

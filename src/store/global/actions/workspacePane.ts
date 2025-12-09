@@ -12,6 +12,7 @@ export interface GlobalWorkspacePaneAction {
   switchBackToChat: (sessionId?: string) => void;
   toggleAgentSystemRoleExpand: (agentId: string, expanded?: boolean) => void;
   toggleChatSideBar: (visible?: boolean) => void;
+  toggleExpandInputActionbar: (expand?: boolean) => void;
   toggleExpandSessionGroup: (id: string, expand: boolean) => void;
   toggleMobilePortal: (visible?: boolean) => void;
   toggleMobileTopic: (visible?: boolean) => void;
@@ -27,7 +28,8 @@ export const globalWorkspaceSlice: StateCreator<
   GlobalWorkspacePaneAction
 > = (set, get) => ({
   switchBackToChat: (sessionId) => {
-    get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
+    const target = SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile);
+    get().navigate?.(target);
   },
 
   toggleAgentSystemRoleExpand: (agentId, expanded) => {
@@ -50,6 +52,12 @@ export const globalWorkspaceSlice: StateCreator<
       typeof newValue === 'boolean' ? newValue : !get().status.showChatSideBar;
 
     get().updateSystemStatus({ showChatSideBar }, n('toggleAgentPanel', newValue));
+  },
+  toggleExpandInputActionbar: (newValue) => {
+    const expandInputActionbar =
+      typeof newValue === 'boolean' ? newValue : !get().status.expandInputActionbar;
+
+    get().updateSystemStatus({ expandInputActionbar }, n('toggleExpandInputActionbar', newValue));
   },
   toggleExpandSessionGroup: (id, expand) => {
     const { status } = get();
@@ -82,9 +90,9 @@ export const globalWorkspaceSlice: StateCreator<
     get().updateSystemStatus({ showSystemRole }, n('toggleMobileTopic', newValue));
   },
   toggleWideScreen: (newValue) => {
-    const wideScreen = typeof newValue === 'boolean' ? newValue : !get().status.wideScreen;
+    const wideScreen = typeof newValue === 'boolean' ? newValue : !get().status.noWideScreen;
 
-    get().updateSystemStatus({ wideScreen }, n('toggleWideScreen', newValue));
+    get().updateSystemStatus({ noWideScreen: wideScreen }, n('toggleWideScreen', newValue));
   },
   toggleZenMode: () => {
     const { status } = get();

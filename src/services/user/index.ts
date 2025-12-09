@@ -1,15 +1,61 @@
-import { isDesktop } from '@/const/version';
+import type { PartialDeep } from 'type-fest';
 
-import { ClientService as DeprecatedService } from './_deprecated';
-import { ClientService } from './client';
-import { ServerService } from './server';
+import { lambdaClient } from '@/libs/trpc/client';
+import { SSOProvider, UserGuide, UserInitializationState, UserPreference } from '@/types/user';
+import { UserSettings } from '@/types/user/settings';
 
-const clientService =
-  process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite' ? new ClientService() : new DeprecatedService();
+export class UserService {
+  getUserRegistrationDuration = async (): Promise<{
+    createdAt: string;
+    duration: number;
+    updatedAt: string;
+  }> => {
+    return lambdaClient.user.getUserRegistrationDuration.query();
+  };
 
-export const userService =
-  process.env.NEXT_PUBLIC_SERVICE_MODE === 'server' || isDesktop
-    ? new ServerService()
-    : clientService;
+  getUserState = async (): Promise<UserInitializationState> => {
+    return lambdaClient.user.getUserState.query();
+  };
 
-export const userClientService = clientService;
+  getUserSSOProviders = async (): Promise<SSOProvider[]> => {
+    return lambdaClient.user.getUserSSOProviders.query();
+  };
+
+  unlinkSSOProvider = async (provider: string, providerAccountId: string) => {
+    return lambdaClient.user.unlinkSSOProvider.mutate({ provider, providerAccountId });
+  };
+
+  makeUserOnboarded = async () => {
+    return lambdaClient.user.makeUserOnboarded.mutate();
+  };
+
+  updateAvatar = async (avatar: string) => {
+    return lambdaClient.user.updateAvatar.mutate(avatar);
+  };
+
+  updateFullName = async (fullName: string) => {
+    return lambdaClient.user.updateFullName.mutate(fullName);
+  };
+
+  updateUsername = async (username: string) => {
+    return lambdaClient.user.updateUsername.mutate(username);
+  };
+
+  updatePreference = async (preference: Partial<UserPreference>) => {
+    return lambdaClient.user.updatePreference.mutate(preference);
+  };
+
+  updateGuide = async (guide: Partial<UserGuide>) => {
+    return lambdaClient.user.updateGuide.mutate(guide);
+  };
+
+  updateUserSettings = async (value: PartialDeep<UserSettings>, signal?: AbortSignal) => {
+    return lambdaClient.user.updateSettings.mutate(value, { signal });
+  };
+
+  resetUserSettings = async () => {
+    return lambdaClient.user.resetSettings.mutate();
+  };
+}
+
+export const userService = new UserService();

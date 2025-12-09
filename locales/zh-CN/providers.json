@@ -32,11 +32,20 @@
   "bfl": {
     "description": "领先的前沿人工智能研究实验室，构建明日的视觉基础设施。"
   },
+  "cerebras": {
+    "description": "Cerebras 是一个基于其专用 CS-3 系统的 AI 推理平台，旨在提供全球最快、实时响应、高吞吐量的 LLM 服务，专为消除延迟和加速复杂的 AI 工作流（如实时代码生成和代理任务）而设计。"
+  },
   "cloudflare": {
     "description": "在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。"
   },
   "cohere": {
     "description": "Cohere 为您带来最前沿的多语言模型、先进的检索功能以及为现代企业量身定制的 AI 工作空间 — 一切都集成在一个安全的平台中。"
+  },
+  "cometapi": {
+    "description": "CometAPI 是一个提供多种前沿大模型接口的服务平台，支持 OpenAI、Anthropic、Google 及更多，适合多样化的开发和应用需求。用户可根据自身需求灵活选择最优的模型和价格，助力AI体验的提升。"
+  },
+  "comfyui": {
+    "description": "强大的开源图像、视频、音频生成工作流引擎，支持 SD FLUX Qwen Hunyuan WAN 等先进模型，提供节点化工作流编辑和私有化部署能力"
   },
   "deepseek": {
     "description": "DeepSeek 是一家专注于人工智能技术研究和应用的公司，其最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。"
@@ -107,6 +116,9 @@
   "ollama": {
     "description": "Ollama 提供的模型广泛涵盖代码生成、数学运算、多语种处理和对话互动等领域，支持企业级和本地化部署的多样化需求。"
   },
+  "ollamacloud": {
+    "description": "Ollama Cloud 提供官方托管的推理服务，开箱即用地访问 Ollama 模型库，并支持 OpenAI 兼容接口。"
+  },
   "openai": {
     "description": "OpenAI 是全球领先的人工智能研究机构，其开发的模型如GPT系列推动了自然语言处理的前沿。OpenAI 致力于通过创新和高效的AI解决方案改变多个行业。他们的产品具有显著的性能和经济性，广泛用于研究、商业和创新应用。"
   },
@@ -158,6 +170,9 @@
   "v0": {
     "description": "v0 是一个配对编程助手，你只需用自然语言描述想法，它就能为你的项目生成代码和用户界面（UI）"
   },
+  "vercelaigateway": {
+    "description": "Vercel AI Gateway 提供统一的 API 来访问 100+ 模型，通过单一端点即可使用 OpenAI、Anthropic、Google 等多个提供商的模型。支持预算设置、使用监控、请求负载均衡和故障转移。"
+  },
   "vertexai": {
     "description": "Google 的 Gemini 系列是其最先进、通用的 AI模型，由 Google DeepMind 打造，专为多模态设计，支持文本、代码、图像、音频和视频的无缝理解与处理。适用于从数据中心到移动设备的多种环境，极大提升了AI模型的效率与应用广泛性。"
   },
@@ -175,6 +190,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference) 是一个开源平台，用于简化各种 AI 模型的运行和集成。借助 Xinference，您可以使用任何开源 LLM、嵌入模型和多模态模型在云端或本地环境中运行推理，并创建强大的 AI 应用。"
+  },
+  "zenmux": {
+    "description": "ZenMux 是一个统一的 AI 服务聚合平台，支持 OpenAI、Anthropic、Google VertexAI 等多种主流 AI 服务接口。提供灵活的路由能力，让您可以轻松切换和管理不同的 AI 模型。"
   },
   "zeroone": {
     "description": "零一万物致力于推动以人为本的AI 2.0技术革命，旨在通过大语言模型创造巨大的经济和社会价值，并开创新的AI生态与商业模式。"

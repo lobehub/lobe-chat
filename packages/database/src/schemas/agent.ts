@@ -1,6 +1,8 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import type { LobeAgentChatConfig, LobeAgentTTSConfig } from '@lobechat/types';
 import {
   boolean,
+  index,
   jsonb,
   pgTable,
   primaryKey,
@@ -9,8 +11,6 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
-
-import { LobeAgentChatConfig, LobeAgentTTSConfig } from '@/types/agent';
 
 import { idGenerator, randomSlug } from '../utils/idGenerator';
 import { timestamps } from './_helpers';
@@ -28,14 +28,14 @@ export const agents = pgTable(
       .primaryKey()
       .$defaultFn(() => idGenerator('agents'))
       .notNull(),
-    slug: varchar('slug', { length: 100 })
-      .$defaultFn(() => randomSlug(4))
-      .unique(),
-    title: text('title'),
-    description: text('description'),
+    slug: varchar('slug', { length: 100 }).$defaultFn(() => randomSlug(3)),
+    title: varchar('title', { length: 255 }),
+    description: varchar('description', { length: 1000 }),
     tags: jsonb('tags').$type<string[]>().default([]),
+    editorData: jsonb('editor_data'),
     avatar: text('avatar'),
     backgroundColor: text('background_color'),
+    marketIdentifier: text('market_identifier'),
 
     plugins: jsonb('plugins').$type<string[]>().default([]),
 
@@ -54,14 +54,19 @@ export const agents = pgTable(
     systemRole: text('system_role'),
     tts: jsonb('tts').$type<LobeAgentTTSConfig>(),
 
+    virtual: boolean('virtual').default(false),
+
     openingMessage: text('opening_message'),
     openingQuestions: text('opening_questions').array().default([]),
 
     ...timestamps,
   },
-  (t) => ({
-    clientIdUnique: uniqueIndex('client_id_user_id_unique').on(t.clientId, t.userId),
-  }),
+  (t) => [
+    uniqueIndex('client_id_user_id_unique').on(t.clientId, t.userId),
+    uniqueIndex('agents_slug_user_id_unique').on(t.slug, t.userId),
+    index('agents_title_idx').on(t.title),
+    index('agents_description_idx').on(t.description),
+  ],
 );
 
 export const insertAgentSchema = createInsertSchema(agents);
@@ -85,9 +90,10 @@ export const agentsKnowledgeBases = pgTable(
 
     ...timestamps,
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.agentId, t.knowledgeBaseId] }),
-  }),
+  (t) => [
+    primaryKey({ columns: [t.agentId, t.knowledgeBaseId] }),
+    index('agents_knowledge_bases_agent_id_idx').on(t.agentId),
+  ],
 );
 
 export const agentsFiles = pgTable(
@@ -106,7 +112,8 @@ export const agentsFiles = pgTable(
 
     ...timestamps,
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.fileId, t.agentId, t.userId] }),
-  }),
+  (t) => [
+    primaryKey({ columns: [t.fileId, t.agentId, t.userId] }),
+    index('agents_files_agent_id_idx').on(t.agentId),
+  ],
 );

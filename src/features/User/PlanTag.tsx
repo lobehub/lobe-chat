@@ -1,8 +1,8 @@
 import { Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { OFFICIAL_URL } from '@/const/url';
@@ -37,12 +37,12 @@ const PlanTag = memo<PlanTagProps>(({ type = PlanType.Preview }) => {
 
   return (
     <Link
-      href={urlJoin(
+      style={{ cursor: 'pointer' }}
+      target={isDesktop ? '_blank' : undefined}
+      to={urlJoin(
         isDesktop ? OFFICIAL_URL : '/',
         isFree ? '/subscription/plans' : '/subscription/usage',
       )}
-      style={{ cursor: 'pointer' }}
-      target={isDesktop ? '_blank' : undefined}
     >
       <PlanIcon plan={type} size={22} type={'tag'} />
     </Link>

@@ -34,7 +34,7 @@ const Client = memo<{ mobile?: boolean }>(() => {
       </Title>
       <AssistantList data={assistantList.items} rows={4} />
       <div />
-      <Title more={t('home.more')} moreLink={'/discover/plugin'}>
+      <Title more={t('home.more')} moreLink={'/discover/mcp'}>
         {t('home.featuredTools')}
       </Title>
       <McpList data={mcpList.items} rows={4} />

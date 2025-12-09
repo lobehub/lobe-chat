@@ -1,6 +1,6 @@
 import { isProviderDisableBrowserRequest } from '@/config/modelProviders';
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
-import { AiProviderRuntimeConfig } from '@/types/aiProvider';
+import { AiProviderRuntimeConfig, AiProviderSourceEnum } from '@/types/aiProvider';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 // List
@@ -8,7 +8,10 @@ const enabledAiProviderList = (s: AIProviderStoreState) =>
   s.aiProviderList.filter((item) => item.enabled).sort((a, b) => a.sort! - b.sort!);
 
 const disabledAiProviderList = (s: AIProviderStoreState) =>
-  s.aiProviderList.filter((item) => !item.enabled);
+  s.aiProviderList.filter((item) => !item.enabled && item.source !== AiProviderSourceEnum.Custom);
+
+const disabledCustomAiProviderList = (s: AIProviderStoreState) =>
+  s.aiProviderList.filter((item) => !item.enabled && item.source === AiProviderSourceEnum.Custom);
 
 const enabledImageModelList = (s: AIProviderStoreState) => s.enabledImageModelList || [];
 
@@ -108,17 +111,21 @@ const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) =>
 
   if (typeof enableResponseApi === 'boolean') return enableResponseApi;
 
-  return false;
+  return id === 'openai';
 };
+
+const isInitAiProviderRuntimeState = (s: AIProviderStoreState) => !!s.isInitAiProviderRuntimeState;
 
 export const aiProviderSelectors = {
   activeProviderConfig,
   disabledAiProviderList,
+  disabledCustomAiProviderList,
   enabledAiProviderList,
   enabledImageModelList,
   isActiveProviderApiKeyNotEmpty,
   isActiveProviderEndpointNotEmpty,
   isAiProviderConfigLoading,
+  isInitAiProviderRuntimeState,
   isProviderConfigUpdating,
   isProviderEnableResponseApi,
   isProviderEnabled,

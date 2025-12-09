@@ -1,4 +1,4 @@
-import { DataSyncConfig } from '@lobechat/electron-client-ipc';
+import { DataSyncConfig, MarketAuthorizationParams } from '@lobechat/electron-client-ipc';
 import { BrowserWindow, shell } from 'electron';
 import crypto from 'node:crypto';
 import querystring from 'node:querystring';
@@ -7,46 +7,46 @@ import { URL } from 'node:url';
 import { createLogger } from '@/utils/logger';
 
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
 
 // Create logger
 const logger = createLogger('controllers:AuthCtr');
 
 /**
  * Authentication Controller
- * 使用中间页 + 轮询的方式实现 OAuth 授权流程
+ * Implements OAuth authorization flow using intermediate page + polling mechanism
  */
 export default class AuthCtr extends ControllerModule {
+  static override readonly groupName = 'auth';
   /**
-   * 远程服务器配置控制器
+   * Remote server configuration controller
    */
   private get remoteServerConfigCtr() {
     return this.app.getController(RemoteServerConfigCtr);
   }
 
   /**
-   * 当前的 PKCE 参数
+   * Current PKCE parameters
    */
   private codeVerifier: string | null = null;
   private authRequestState: string | null = null;
 
   /**
-   * 轮询相关参数
+   * Polling related parameters
    */
   // eslint-disable-next-line no-undef
   private pollingInterval: NodeJS.Timeout | null = null;
   private cachedRemoteUrl: string | null = null;
 
   /**
-   * 自动刷新定时器
+   * Auto-refresh timer
    */
   // eslint-disable-next-line no-undef
   private autoRefreshTimer: NodeJS.Timeout | null = null;
 
   /**
-   * 构造 redirect_uri，确保授权和令牌交换时使用相同的 URI
-   * @param remoteUrl 远程服务器 URL
-   * @param includeHandoffId 是否包含 handoff ID（仅在授权时需要）
+   * Construct redirect_uri, ensuring the same URI is used for authorization and token exchange
+   * @param remoteUrl Remote server URL
    */
   private constructRedirectUri(remoteUrl: string): string {
     const callbackUrl = new URL('/oidc/callback/desktop', remoteUrl);
@@ -57,11 +57,14 @@ export default class AuthCtr extends ControllerModule {
   /**
    * Request OAuth authorization
    */
-  @ipcClientEvent('requestAuthorization')
+  @IpcMethod()
   async requestAuthorization(config: DataSyncConfig) {
+    // Clear any old authorization state
+    this.clearAuthorizationState();
+
     const remoteUrl = await this.remoteServerConfigCtr.getRemoteServerUrl(config);
 
-    // 缓存远程服务器 URL 用于后续轮询
+    // Cache remote server URL for subsequent polling
     this.cachedRemoteUrl = remoteUrl;
 
     logger.info(
@@ -115,6 +118,31 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
+   * Request Market OAuth authorization (desktop)
+   */
+  @IpcMethod()
+  async requestMarketAuthorization(params: MarketAuthorizationParams) {
+    const { authUrl } = params;
+
+    if (!authUrl) {
+      const errorMessage = 'Market authorization URL is required';
+      logger.error(errorMessage);
+      return { error: errorMessage, success: false };
+    }
+
+    logger.info(`Requesting market authorization via: ${authUrl}`);
+    try {
+      await shell.openExternal(authUrl);
+      logger.debug('Opening market authorization URL in default browser');
+      return { success: true };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      logger.error('Market authorization request failed:', error);
+      return { error: message, success: false };
+    }
+  }
+
+  /**
    * 启动轮询机制获取凭证
    */
   private startPolling() {
@@ -133,7 +161,7 @@ export default class AuthCtr extends ControllerModule {
         // Check if polling has timed out
         if (Date.now() - startTime > maxPollTime) {
           logger.warn('Credential polling timed out');
-          this.stopPolling();
+          this.clearAuthorizationState();
           this.broadcastAuthorizationFailed('Authorization timed out');
           return;
         }
@@ -167,14 +195,14 @@ export default class AuthCtr extends ControllerModule {
         }
       } catch (error) {
         logger.error('Error during credential polling:', error);
-        this.stopPolling();
+        this.clearAuthorizationState();
         this.broadcastAuthorizationFailed('Polling error: ' + error.message);
       }
     }, pollInterval);
   }
 
   /**
-   * 停止轮询
+   * Stop polling
    */
   private stopPolling() {
     if (this.pollingInterval) {
@@ -184,18 +212,30 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
-   * 启动自动刷新定时器
+   * Clear authorization state
+   * Called before starting a new authorization flow or after authorization failure/timeout
+   */
+  private clearAuthorizationState() {
+    logger.debug('Clearing authorization state');
+    this.stopPolling();
+    this.codeVerifier = null;
+    this.authRequestState = null;
+    this.cachedRemoteUrl = null;
+  }
+
+  /**
+   * Start auto-refresh timer
    */
   private startAutoRefresh() {
-    // 先停止现有的定时器
+    // Stop existing timer first
     this.stopAutoRefresh();
 
-    const checkInterval = 2 * 60 * 1000; // 每 2 分钟检查一次
+    const checkInterval = 2 * 60 * 1000; // Check every 2 minutes
     logger.debug('Starting auto-refresh timer');
 
     this.autoRefreshTimer = setInterval(async () => {
       try {
-        // 检查 token 是否即将过期 (提前 5 分钟刷新)
+        // Check if token is expiring soon (refresh 5 minutes in advance)
         if (this.remoteServerConfigCtr.isTokenExpiringSoon()) {
           const expiresAt = this.remoteServerConfigCtr.getTokenExpiresAt();
           logger.info(
@@ -207,12 +247,23 @@ export default class AuthCtr extends ControllerModule {
             logger.info('Auto-refresh successful');
             this.broadcastTokenRefreshed();
           } else {
-            logger.error(`Auto-refresh failed: ${result.error}`);
-            // 如果自动刷新失败，停止定时器并清除 token
-            this.stopAutoRefresh();
-            await this.remoteServerConfigCtr.clearTokens();
-            await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
-            this.broadcastAuthorizationRequired();
+            logger.error(`Auto-refresh failed after retries: ${result.error}`);
+
+            // Only clear tokens for non-retryable errors (e.g., invalid_grant)
+            // The retry mechanism in RemoteServerConfigCtr already handles transient errors
+            if (this.remoteServerConfigCtr.isNonRetryableError(result.error)) {
+              logger.warn(
+                'Non-retryable error detected, clearing tokens and requiring re-authorization',
+              );
+              this.stopAutoRefresh();
+              await this.remoteServerConfigCtr.clearTokens();
+              await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+              this.broadcastAuthorizationRequired();
+            } else {
+              // For other errors (after retries exhausted), log but don't clear tokens immediately
+              // The next refresh cycle will retry
+              logger.warn('Refresh failed but error may be transient, will retry on next cycle');
+            }
           }
         }
       } catch (error) {
@@ -222,7 +273,7 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
-   * 停止自动刷新定时器
+   * Stop auto-refresh timer
    */
   private stopAutoRefresh() {
     if (this.autoRefreshTimer) {
@@ -233,8 +284,8 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
-   * 轮询获取凭证
-   * 直接发送 HTTP 请求到远程服务器
+   * Poll for credentials
+   * Sends HTTP request directly to remote server
    */
   private async pollForCredentials(): Promise<{ code: string; state: string } | null> {
     if (!this.authRequestState || !this.cachedRemoteUrl) {
@@ -242,17 +293,17 @@ export default class AuthCtr extends ControllerModule {
     }
 
     try {
-      // 使用缓存的远程服务器 URL
+      // Use cached remote server URL
       const remoteUrl = this.cachedRemoteUrl;
 
-      // 构造请求 URL
+      // Construct request URL
       const url = new URL('/oidc/handoff', remoteUrl);
       url.searchParams.set('id', this.authRequestState);
       url.searchParams.set('client', 'desktop');
 
       logger.debug(`Polling for credentials: ${url.toString()}`);
 
-      // 直接发送 HTTP 请求
+      // Send HTTP request directly
       const response = await fetch(url.toString(), {
         headers: {
           'Content-Type': 'application/json',
@@ -260,9 +311,9 @@ export default class AuthCtr extends ControllerModule {
         method: 'GET',
       });
 
-      // 检查响应状态
+      // Check response status
       if (response.status === 404) {
-        // 凭证还未准备好，这是正常情况
+        // Credentials not ready yet, this is normal
         return null;
       }
 
@@ -270,7 +321,7 @@ export default class AuthCtr extends ControllerModule {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      // 解析响应数据
+      // Parse response data
       const data = (await response.json()) as {
         data: {
           id: string;
@@ -296,11 +347,12 @@ export default class AuthCtr extends ControllerModule {
 
   /**
    * Refresh access token
+   * This method includes retry mechanism via RemoteServerConfigCtr.refreshAccessToken()
    */
   async refreshAccessToken() {
     logger.info('Starting to refresh access token');
     try {
-      // Call the centralized refresh logic in RemoteServerConfigCtr
+      // Call the centralized refresh logic in RemoteServerConfigCtr (includes retry)
       const result = await this.remoteServerConfigCtr.refreshAccessToken();
 
       if (result.success) {
@@ -311,25 +363,38 @@ export default class AuthCtr extends ControllerModule {
         this.startAutoRefresh();
         return { success: true };
       } else {
-        // Throw an error to be caught by the catch block below
-        // This maintains the existing behavior of clearing tokens on failure
         logger.error(`Token refresh failed via AuthCtr call: ${result.error}`);
-        throw new Error(result.error || 'Token refresh failed');
+
+        // Only clear tokens for non-retryable errors (e.g., invalid_grant)
+        if (this.remoteServerConfigCtr.isNonRetryableError(result.error)) {
+          logger.warn(
+            'Non-retryable error detected, clearing tokens and requiring re-authorization',
+          );
+          this.stopAutoRefresh();
+          await this.remoteServerConfigCtr.clearTokens();
+          await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+          this.broadcastAuthorizationRequired();
+        } else {
+          // For transient errors, don't clear tokens - allow manual retry
+          logger.warn('Refresh failed but error may be transient, tokens preserved for retry');
+        }
+
+        return { error: result.error, success: false };
       }
     } catch (error) {
-      // Keep the existing logic to clear tokens and require re-auth on failure
-      logger.error('Token refresh operation failed via AuthCtr, initiating cleanup:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Token refresh operation failed via AuthCtr:', errorMessage);
 
-      // Refresh failed, clear tokens and disable remote server
-      logger.warn('Refresh failed, clearing tokens and disabling remote server');
-      this.stopAutoRefresh();
-      await this.remoteServerConfigCtr.clearTokens();
-      await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+      // Only clear tokens for non-retryable errors
+      if (this.remoteServerConfigCtr.isNonRetryableError(errorMessage)) {
+        logger.warn('Non-retryable error in catch block, clearing tokens');
+        this.stopAutoRefresh();
+        await this.remoteServerConfigCtr.clearTokens();
+        await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+        this.broadcastAuthorizationRequired();
+      }
 
-      // Notify render process that re-authorization is required
-      this.broadcastAuthorizationRequired();
-
-      return { error: error.message, success: false };
+      return { error: errorMessage, success: false };
     }
   }
 
@@ -511,7 +576,7 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
-   * 应用启动后初始化
+   * Initialize after app is ready
    */
   afterAppReady() {
     logger.debug('AuthCtr initialized, checking for existing tokens');
@@ -519,7 +584,7 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
-   * 清理所有定时器
+   * Clean up all timers
    */
   cleanup() {
     logger.debug('Cleaning up AuthCtr timers');
@@ -528,14 +593,14 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
-   * 初始化自动刷新功能
-   * 在应用启动时检查是否有有效的 token，如果有就启动自动刷新定时器
+   * Initialize auto-refresh functionality
+   * Checks for valid token at app startup and starts auto-refresh timer if token exists
    */
   private async initializeAutoRefresh() {
     try {
       const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
 
-      // 检查是否配置了远程服务器且处于活动状态
+      // Check if remote server is configured and active
       if (!config.active || !config.remoteServerUrl) {
         logger.debug(
           'Remote server not active or configured, skipping auto-refresh initialization',
@@ -543,44 +608,52 @@ export default class AuthCtr extends ControllerModule {
         return;
       }
 
-      // 检查是否有有效的访问令牌
+      // Check if valid access token exists
       const accessToken = await this.remoteServerConfigCtr.getAccessToken();
       if (!accessToken) {
         logger.debug('No access token found, skipping auto-refresh initialization');
         return;
       }
 
-      // 检查是否有过期时间信息
+      // Check if token expiration time exists
       const expiresAt = this.remoteServerConfigCtr.getTokenExpiresAt();
       if (!expiresAt) {
         logger.debug('No token expiration time found, skipping auto-refresh initialization');
         return;
       }
 
-      // 检查 token 是否已经过期
+      // Check if token has already expired
       const currentTime = Date.now();
       if (currentTime >= expiresAt) {
         logger.info('Token has expired, attempting to refresh it');
 
-        // 尝试刷新 token
+        // Attempt to refresh token (includes retry mechanism)
         const refreshResult = await this.remoteServerConfigCtr.refreshAccessToken();
         if (refreshResult.success) {
           logger.info('Token refresh successful during initialization');
           this.broadcastTokenRefreshed();
-          // 重新启动自动刷新定时器
+          // Restart auto-refresh timer
           this.startAutoRefresh();
           return;
         } else {
           logger.error(`Token refresh failed during initialization: ${refreshResult.error}`);
-          // 只有在刷新失败时才清除 token 并要求重新授权
-          await this.remoteServerConfigCtr.clearTokens();
-          await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
-          this.broadcastAuthorizationRequired();
+
+          // Only clear token for non-retryable errors
+          if (this.remoteServerConfigCtr.isNonRetryableError(refreshResult.error)) {
+            logger.warn('Non-retryable error during initialization, clearing tokens');
+            await this.remoteServerConfigCtr.clearTokens();
+            await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+            this.broadcastAuthorizationRequired();
+          } else {
+            // For transient errors, still start auto-refresh timer to retry later
+            logger.warn('Transient error during initialization, will retry via auto-refresh');
+            this.startAutoRefresh();
+          }
           return;
         }
       }
 
-      // 启动自动刷新定时器
+      // Start auto-refresh timer
       logger.info(
         `Token is valid, starting auto-refresh timer. Token expires at: ${new Date(expiresAt).toISOString()}`,
       );

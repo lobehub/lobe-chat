@@ -101,6 +101,7 @@ describe('AssistantStore', () => {
       ok: true,
       status: 200,
       json: () => Promise.resolve({ ...mockAgents }),
+      clone: () => ({ json: () => Promise.resolve({ ...mockAgents }) }),
     });
 
     // @ts-expect-error
@@ -131,6 +132,7 @@ describe('AssistantStore', () => {
       ok: true,
       status: 200,
       json: () => Promise.resolve({ ...mockAgents }),
+      clone: () => ({ json: () => Promise.resolve({ ...mockAgents }) }),
     });
 
     // @ts-expect-error
@@ -167,6 +169,7 @@ describe('AssistantStore', () => {
         status: 200,
         ok: true,
         json: () => Promise.resolve({ ...mockAgents }),
+        clone: () => ({ json: () => Promise.resolve({ ...mockAgents }) }),
       });
 
     global.fetch = fetchMock as any;

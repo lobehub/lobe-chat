@@ -1,8 +1,10 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import {
+  index,
   integer,
   jsonb,
   pgTable,
+  primaryKey,
   text,
   uniqueIndex,
   uuid,
@@ -10,8 +12,8 @@ import {
   vector,
 } from 'drizzle-orm/pg-core';
 
-import { timestamps } from './_helpers';
-import { files } from './file';
+import { createdAt, timestamps } from './_helpers';
+import { documents, files } from './file';
 import { users } from './user';
 
 export const chunks = pgTable(
@@ -29,9 +31,10 @@ export const chunks = pgTable(
 
     ...timestamps,
   },
-  (t) => ({
-    clientIdUnique: uniqueIndex('chunks_client_id_user_id_unique').on(t.clientId, t.userId),
-  }),
+  (t) => [
+    uniqueIndex('chunks_client_id_user_id_unique').on(t.clientId, t.userId),
+    index('chunks_user_id_idx').on(t.userId),
+  ],
 );
 
 export type NewChunkItem = typeof chunks.$inferInsert & { fileId?: string };
@@ -75,10 +78,41 @@ export const embeddings = pgTable(
     clientId: text('client_id'),
     userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   },
-  (t) => ({
-    clientIdUnique: uniqueIndex('embeddings_client_id_user_id_unique').on(t.clientId, t.userId),
-  }),
+  (t) => [
+    uniqueIndex('embeddings_client_id_user_id_unique').on(t.clientId, t.userId),
+    // improve delete embeddings query
+    index('embeddings_chunk_id_idx').on(t.chunkId),
+  ],
 );
 
 export type NewEmbeddingsItem = typeof embeddings.$inferInsert;
 export type EmbeddingsSelectItem = typeof embeddings.$inferSelect;
+
+/**
+ * Document chunks table - Splits document content into chunks and associates them with the chunks table for vector retrieval
+ * Note: This table is optional, if the pages field is already being used to store document chunks, this table may not be needed
+ */
+export const documentChunks = pgTable(
+  'document_chunks',
+  {
+    documentId: varchar('document_id', { length: 30 })
+      .references(() => documents.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    chunkId: uuid('chunk_id')
+      .references(() => chunks.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    pageIndex: integer('page_index'),
+
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    createdAt: createdAt(),
+  },
+  (t) => [primaryKey({ columns: [t.documentId, t.chunkId] })],
+);
+
+export type NewDocumentChunk = typeof documentChunks.$inferInsert;
+export type DocumentChunkItem = typeof documentChunks.$inferSelect;

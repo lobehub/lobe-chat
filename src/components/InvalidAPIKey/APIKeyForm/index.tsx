@@ -1,6 +1,6 @@
-import { ModelProvider } from '@lobechat/model-runtime';
 import { ProviderIcon } from '@lobehub/icons';
 import { Button } from '@lobehub/ui';
+import { ModelProvider } from 'model-bank';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -8,6 +8,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import BedrockForm from './Bedrock';
+import ComfyUIForm from './ComfyUIForm';
 import { LoadingContext } from './LoadingContext';
 import ProviderApiKeyForm from './ProviderApiKeyForm';
 
@@ -67,9 +68,17 @@ const APIKeyForm = memo<APIKeyFormProps>(
 
     return (
       <LoadingContext value={{ loading, setLoading }}>
-        <Center gap={16} style={{ maxWidth: 300 }}>
+        <Center
+          gap={16}
+          style={{
+            maxWidth: provider === ModelProvider.ComfyUI ? 900 : 300,
+            width: provider === ModelProvider.ComfyUI ? '80%' : 'auto',
+          }}
+        >
           {provider === ModelProvider.Bedrock ? (
             <BedrockForm description={bedrockDescription} />
+          ) : provider === ModelProvider.ComfyUI ? (
+            <ComfyUIForm description={description} />
           ) : (
             <ProviderApiKeyForm
               apiKeyPlaceholder={apiKeyPlaceholder}

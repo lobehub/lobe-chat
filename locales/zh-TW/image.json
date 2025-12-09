@@ -5,6 +5,9 @@
       "lock": "鎖定寬高比",
       "unlock": "解鎖寬高比"
     },
+    "cfg": {
+      "label": "引導強度"
+    },
     "header": {
       "desc": "簡單描述，即刻創作",
       "title": "繪畫"
@@ -26,6 +29,21 @@
     },
     "prompt": {
       "placeholder": "描述你想要生成的內容"
+    },
+    "quality": {
+      "label": "圖片品質",
+      "options": {
+        "hd": "高清",
+        "standard": "標準"
+      }
+    },
+    "resolution": {
+      "label": "解析度",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
     },
     "seed": {
       "label": "種子",

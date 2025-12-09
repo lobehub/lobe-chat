@@ -5,6 +5,9 @@
       "lock": "Khóa tỷ lệ khung hình",
       "unlock": "Mở khóa tỷ lệ khung hình"
     },
+    "cfg": {
+      "label": "Cường độ hướng dẫn"
+    },
     "header": {
       "desc": "Mô tả ngắn gọn, sáng tạo ngay lập tức",
       "title": "Vẽ tranh"
@@ -26,6 +29,21 @@
     },
     "prompt": {
       "placeholder": "Mô tả nội dung bạn muốn tạo"
+    },
+    "quality": {
+      "label": "Chất lượng hình ảnh",
+      "options": {
+        "hd": "Độ nét cao",
+        "standard": "Tiêu chuẩn"
+      }
+    },
+    "resolution": {
+      "label": "Độ phân giải",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
     },
     "seed": {
       "label": "Hạt giống",

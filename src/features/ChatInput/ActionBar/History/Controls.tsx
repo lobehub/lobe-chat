@@ -1,7 +1,7 @@
 import { Form, type FormItemProps, SliderWithInput } from '@lobehub/ui';
-import { Switch } from 'antd';
+import { Switch, Form as AntdForm } from 'antd';
 import { debounce } from 'lodash-es';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAgentStore } from '@/store/agent';
@@ -13,6 +13,7 @@ interface ControlsProps {
 }
 const Controls = memo<ControlsProps>(({ updating, setUpdating }) => {
   const { t } = useTranslation('setting');
+  const [form] = AntdForm.useForm();
 
   const [historyCount, enableHistoryCount, updateAgentConfig] = useAgentStore((s) => {
     return [
@@ -21,6 +22,14 @@ const Controls = memo<ControlsProps>(({ updating, setUpdating }) => {
       s.updateAgentChatConfig,
     ];
   });
+
+  // Sync external store updates to the form without remounting to keep Switch animation
+  useEffect(() => {
+    form?.setFieldsValue({
+      enableHistoryCount,
+      historyCount,
+    });
+  }, [enableHistoryCount, historyCount, form]);
 
   let items: FormItemProps[] = [
     {
@@ -55,6 +64,7 @@ const Controls = memo<ControlsProps>(({ updating, setUpdating }) => {
 
   return (
     <Form
+      form={form}
       initialValues={{
         enableHistoryCount,
         historyCount,

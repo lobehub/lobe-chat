@@ -23,6 +23,7 @@ Desktop.ini
 .history/
 .windsurfrules
 *.code-workspace
+.vscode/sessions.json
 
 # Temporary files
 .temp/
@@ -38,6 +39,7 @@ tmp/
 .env
 .env.local
 .env*.local
+.env.development
 venv/
 .venv/
 
@@ -101,8 +103,8 @@ vertex-ai-key.json
 .local/
 .claude/
 .mcp.json
-
 CLAUDE.local.md
+.agent/
 
 # MCP tools
 .serena/**
@@ -112,3 +114,5 @@ CLAUDE.local.md
 *.ppt*
 *.doc*
 *.xls*
+
+e2e/reports

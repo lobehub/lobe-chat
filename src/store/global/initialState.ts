@@ -1,5 +1,5 @@
 import type { ThemeMode } from 'antd-style';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import type { NavigateFunction } from 'react-router-dom';
 
 import { DatabaseLoadingState, MigrationSQL, MigrationTableItem } from '@/types/clientDB';
 import { LocaleMode } from '@/types/locale';
@@ -9,8 +9,9 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 export enum SidebarTabKey {
   Chat = 'chat',
   Discover = 'discover',
-  Files = 'files',
+  Files = 'knowledge',
   Image = 'image',
+  Knowledge = 'knowledge',
   Me = 'me',
   Setting = 'settings',
 }
@@ -25,16 +26,22 @@ export enum ChatSettingsTabs {
   TTS = 'tts',
 }
 
+export enum GroupSettingsTabs {
+  Chat = 'chat',
+  Members = 'members',
+  Settings = 'settings',
+}
+
 export enum SettingsTabs {
   About = 'about',
   Agent = 'agent',
   Common = 'common',
   Hotkey = 'hotkey',
+  Image = 'image',
   LLM = 'llm',
   Provider = 'provider',
   Proxy = 'proxy',
   Storage = 'storage',
-  Sync = 'sync',
   SystemAgent = 'system-agent',
   TTS = 'tts',
 }
@@ -44,11 +51,17 @@ export enum ProfileTabs {
   Profile = 'profile',
   Security = 'security',
   Stats = 'stats',
+  Usage = 'usage',
 }
 
 export interface SystemStatus {
+  chatInputHeight?: number;
+  disabledModelProvidersSortType?: string;
+  disabledModelsSortType?: string;
+  expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
+  fileManagerViewMode?: 'list' | 'masonry';
   filePanelWidth: number;
   hideGemini2_5FlashImagePreviewChineseWarning?: boolean;
   hidePWAInstaller?: boolean;
@@ -60,10 +73,20 @@ export interface SystemStatus {
    */
   isEnablePglite?: boolean;
   isShowCredit?: boolean;
+  knowledgeBaseModalViewMode?: 'list' | 'masonry';
   language?: LocaleMode;
+  /**
+   * 记住用户最后选择的图像生成模型
+   */
+  lastSelectedImageModel?: string;
+  /**
+   * 记住用户最后选择的图像生成提供商
+   */
+  lastSelectedImageProvider?: string;
   latestChangelogId?: string;
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
+  noWideScreen?: boolean;
   portalWidth: number;
   sessionsWidth: number;
   showChatSideBar?: boolean;
@@ -78,7 +101,10 @@ export interface SystemStatus {
    * theme mode
    */
   themeMode?: ThemeMode;
-  wideScreen?: boolean;
+  /**
+   * 是否使用短格式显示 token
+   */
+  tokenDisplayFormatShort?: boolean;
   zenMode?: boolean;
 }
 
@@ -99,21 +125,28 @@ export interface GlobalState {
   isMobile?: boolean;
   isStatusInit?: boolean;
   latestVersion?: string;
-  router?: AppRouterInstance;
+  navigate?: NavigateFunction;
   sidebarKey: SidebarTabKey;
   status: SystemStatus;
   statusStorage: AsyncLocalStorage<SystemStatus>;
 }
 
 export const INITIAL_STATUS = {
+  chatInputHeight: 64,
+  disabledModelProvidersSortType: 'default',
+  disabledModelsSortType: 'default',
+  expandInputActionbar: true,
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
+  fileManagerViewMode: 'list' as const,
   filePanelWidth: 320,
   hideGemini2_5FlashImagePreviewChineseWarning: false,
   hidePWAInstaller: false,
   hideThreadLimitAlert: false,
   imagePanelWidth: 320,
   imageTopicPanelWidth: 80,
+  knowledgeBaseModalViewMode: 'list' as const,
   mobileShowTopic: false,
+  noWideScreen: true,
   portalWidth: 400,
   sessionsWidth: 320,
   showChatSideBar: true,
@@ -125,7 +158,7 @@ export const INITIAL_STATUS = {
   showSystemRole: false,
   systemRoleExpandedMap: {},
   themeMode: 'auto',
-  wideScreen: true,
+  tokenDisplayFormatShort: true,
   zenMode: false,
 } satisfies SystemStatus;
 

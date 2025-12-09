@@ -1,12 +1,13 @@
 import { Dropdown, DropdownMenuItemType, Icon } from '@lobehub/ui';
 import { Button } from 'antd';
 import { ArrowDownWideNarrow, ChevronDown } from 'lucide-react';
-import { usePathname } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useQuery } from '@/hooks/useQuery';
+import { usePathname } from '@/app/[variants]/(main)/hooks/usePathname';
+import { useQuery } from '@/app/[variants]/(main)/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
+import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import {
   AssistantSorts,
   DiscoverTab,
@@ -21,11 +22,12 @@ const SortButton = memo(() => {
   const pathname = usePathname();
   const { sort } = useQuery();
   const router = useQueryRoute();
+  const { isAuthenticated, getCurrentUserInfo } = useMarketAuth();
   const activeTab = useMemo(() => pathname.split('discover/')[1] as DiscoverTab, [pathname]);
   const items = useMemo(() => {
     switch (activeTab) {
       case DiscoverTab.Assistants: {
-        return [
+        const baseItems = [
           {
             key: AssistantSorts.CreatedAt,
             label: t('assistants.sorts.createdAt'),
@@ -51,6 +53,16 @@ const SortButton = memo(() => {
             label: t('assistants.sorts.knowledgeCount'),
           },
         ];
+
+        // Only add "My Own" option if user is authenticated
+        if (isAuthenticated) {
+          baseItems.push({
+            key: AssistantSorts.MyOwn,
+            label: t('assistants.sorts.myown'),
+          });
+        }
+
+        return baseItems;
       }
       case DiscoverTab.Plugins: {
         return [
@@ -144,7 +156,7 @@ const SortButton = memo(() => {
         return [];
       }
     }
-  }, [t, activeTab]);
+  }, [t, activeTab, isAuthenticated]);
 
   const activeItem: any = useMemo(() => {
     if (sort) {
@@ -155,11 +167,18 @@ const SortButton = memo(() => {
   }, [items, sort]);
 
   const handleSort = (config: string) => {
-    router.push(pathname, {
-      query: {
-        sort: config,
-      },
-    });
+    const query: any = { sort: config };
+
+    // If "My Own" is selected, add ownerId to query
+    if (config === AssistantSorts.MyOwn) {
+      const userInfo = getCurrentUserInfo();
+      console.log('userInfo', userInfo);
+      if (userInfo?.accountId) {
+        query.ownerId = userInfo.accountId;
+      }
+    }
+
+    router.push(pathname, { query });
   };
 
   if (items?.length === 0) return null;
@@ -174,7 +193,7 @@ const SortButton = memo(() => {
       }}
       trigger={['click', 'hover']}
     >
-      <Button icon={<Icon icon={ArrowDownWideNarrow} />} type={'text'}>
+      <Button data-testid="sort-dropdown" icon={<Icon icon={ArrowDownWideNarrow} />} type={'text'}>
         {activeItem.label}
         <Icon icon={ChevronDown} />
       </Button>

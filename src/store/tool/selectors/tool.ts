@@ -1,30 +1,18 @@
+import { ToolNameResolver } from '@lobechat/context-engine';
 import { pluginPrompts } from '@lobechat/prompts';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
 import { MetaData } from '@/types/meta';
-import { ChatCompletionTool } from '@/types/openai/chat';
 import { LobeToolMeta } from '@/types/tool/tool';
 import { globalAgentContextManager } from '@/utils/client/GlobalAgentContextManager';
 import { hydrationPrompt } from '@/utils/promptTemplate';
-import { genToolCallingName } from '@/utils/toolCall';
-import { convertPluginManifestToToolsCalling } from '@/utils/toolManifest';
 
 import { pluginHelpers } from '../helpers';
 import { ToolStoreState } from '../initialState';
 import { builtinToolSelectors } from '../slices/builtin/selectors';
 import { pluginSelectors } from '../slices/plugin/selectors';
 
-const enabledSchema =
-  (tools: string[] = []) =>
-  (s: ToolStoreState): ChatCompletionTool[] => {
-    const manifests = pluginSelectors
-      .installedPluginManifestList(s)
-      .concat(s.builtinTools.map((b) => b.manifest as LobeChatPluginManifest))
-      // 如果存在 enabledPlugins，那么只启用 enabledPlugins 中的插件
-      .filter((m) => tools.includes(m?.identifier));
-
-    return convertPluginManifestToToolsCalling(manifests);
-  };
+const toolNameResolver = new ToolNameResolver();
 
 const enabledSystemRoles =
   (tools: string[] = []) =>
@@ -50,7 +38,7 @@ const enabledSystemRoles =
         return {
           apis: manifest.api.map((m) => ({
             desc: m.description,
-            name: genToolCallingName(manifest.identifier, m.name, manifest.type),
+            name: toolNameResolver.generate(manifest.identifier, m.name, manifest.type),
           })),
           identifier: manifest.identifier,
           name: title,
@@ -65,18 +53,16 @@ const enabledSystemRoles =
     return '';
   };
 
-const metaList =
-  (showDalle?: boolean) =>
-  (s: ToolStoreState): LobeToolMeta[] => {
-    const pluginList = pluginSelectors.installedPluginMetaList(s) as LobeToolMeta[];
+const metaList = (s: ToolStoreState): LobeToolMeta[] => {
+  const pluginList = pluginSelectors.installedPluginMetaList(s) as LobeToolMeta[];
 
-    return builtinToolSelectors.metaList(showDalle)(s).concat(pluginList);
-  };
+  return builtinToolSelectors.metaList(s).concat(pluginList);
+};
 
 const getMetaById =
-  (id: string, showDalle: boolean = true) =>
+  (id: string) =>
   (s: ToolStoreState): MetaData | undefined => {
-    const item = metaList(showDalle)(s).find((m) => m.identifier === id);
+    const item = metaList(s).find((m) => m.identifier === id);
 
     if (!item) return;
 
@@ -122,7 +108,6 @@ const isToolHasUI = (id: string) => (s: ToolStoreState) => {
 };
 
 export const toolSelectors = {
-  enabledSchema,
   enabledSystemRoles,
   getManifestById,
   getManifestLoadingStatus,

@@ -5,6 +5,9 @@
       "lock": "Zablokuj proporcje",
       "unlock": "Odblokuj proporcje"
     },
+    "cfg": {
+      "label": "Siła prowadzenia"
+    },
     "header": {
       "desc": "Prosty opis, twórz natychmiast",
       "title": "Malarstwo"
@@ -26,6 +29,21 @@
     },
     "prompt": {
       "placeholder": "Opisz, co chcesz wygenerować"
+    },
+    "quality": {
+      "label": "Jakość obrazu",
+      "options": {
+        "hd": "Wysoka rozdzielczość",
+        "standard": "Standardowa"
+      }
+    },
+    "resolution": {
+      "label": "Rozdzielczość",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
     },
     "seed": {
       "label": "Ziarno",

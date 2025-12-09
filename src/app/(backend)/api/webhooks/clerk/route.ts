@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server';
 
-import { authEnv } from '@/config/auth';
-import { isServerMode } from '@/const/version';
 import { serverDB } from '@/database/server';
+import { authEnv } from '@/envs/auth';
 import { pino } from '@/libs/logger';
 import { UserService } from '@/server/services/user';
 
 import { validateRequest } from './validateRequest';
 
-if (authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH && isServerMode && !authEnv.CLERK_WEBHOOK_SECRET) {
+if (authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH && !authEnv.CLERK_WEBHOOK_SECRET) {
   throw new Error('`CLERK_WEBHOOK_SECRET` environment variable is missing');
 }
 

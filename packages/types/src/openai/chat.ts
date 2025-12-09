@@ -2,6 +2,26 @@ import { LLMRoleType } from '../llm';
 import { MessageToolCall } from '../message';
 import { OpenAIFunctionCall } from './functionCall';
 
+export type ChatResponseFormat =
+  | { type: 'json_object' }
+  | {
+      json_schema: {
+        /**
+         * Schema identifier required by OpenAI.
+         */
+        name: string;
+        /**
+         * JSON schema definition used for validation.
+         */
+        schema: Record<string, any>;
+        /**
+         * Enforce strict schema validation when true.
+         */
+        strict?: boolean;
+      };
+      type: 'json_schema';
+    };
+
 interface UserMessageContentPartText {
   text: string;
   type: 'text';
@@ -18,8 +38,8 @@ export type UserMessageContentPart = UserMessageContentPartText | UserMessageCon
 
 export interface OpenAIChatMessage {
   /**
-   * @title 内容
-   * @description 消息内容
+   * @title Content
+   * @description Message content
    */
   content: string | UserMessageContentPart[];
 
@@ -29,8 +49,8 @@ export interface OpenAIChatMessage {
   function_call?: OpenAIFunctionCall;
   name?: string;
   /**
-   * 角色
-   * @description 消息发送者的角色
+   * Role
+   * @description Role of the message sender
    */
   role: LLMRoleType;
   tool_call_id?: string;
@@ -42,36 +62,36 @@ export interface OpenAIChatMessage {
  */
 export interface ChatStreamPayload {
   /**
-   * 是否开启搜索
+   * Whether search is enabled
    */
   enabledSearch?: boolean;
   /**
-   * @title 控制生成文本中的惩罚系数，用于减少重复性
+   * @title Penalty coefficient in generated text to reduce repetitiveness
    * @default 0
    */
   frequency_penalty?: number;
   /**
-   * @title 生成文本的最大长度
+   * @title Maximum length of generated text
    */
   max_tokens?: number;
   /**
-   * @title 聊天信息列表
+   * @title List of chat messages
    */
   messages: OpenAIChatMessage[];
   /**
-   * @title 模型名称
+   * @title Model name
    */
   model: string;
   /**
-   * @title 返回的文本数量
+   * @title Number of texts to return
    */
   n?: number;
   /**
-   * 开启的插件列表
+   * List of enabled plugins
    */
   plugins?: string[];
   /**
-   * @title 控制生成文本中的惩罚系数，用于减少主题的变化
+   * @title Penalty coefficient in generated text to reduce topic changes
    * @default 0
    */
   presence_penalty?: number;
@@ -79,20 +99,22 @@ export interface ChatStreamPayload {
    * @default openai
    */
   provider?: string;
+  responseMode?: 'stream' | 'json';
+  response_format?: ChatResponseFormat;
   /**
-   * @title 是否开启流式请求
+   * @title Whether to enable streaming requests
    * @default true
    */
   stream?: boolean;
   /**
-   * @title 生成文本的随机度量，用于控制文本的创造性和多样性
+   * @title Randomness measure for generated text, used to control creativity and diversity
    * @default 1
    */
   temperature: number;
   tool_choice?: string;
   tools?: ChatCompletionTool[];
   /**
-   * @title 控制生成文本中最高概率的单个令牌
+   * @title Controls the single token with highest probability in generated text
    * @default 1
    */
   top_p?: number;

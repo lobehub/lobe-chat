@@ -2,6 +2,45 @@
   "about": {
     "title": "Acerca de"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Avatar",
+      "description": "Descripción",
+      "name": "Nombre",
+      "tags": "Etiquetas",
+      "title": "Información del Asistente"
+    },
+    "chat": {
+      "displayMode": "Modo de visualización",
+      "enableHistoryCount": "Habilitar conteo de mensajes históricos",
+      "historyCount": "Cantidad de mensajes históricos",
+      "no": "No",
+      "searchMode": "Modo de búsqueda",
+      "title": "Preferencias de chat",
+      "yes": "Sí"
+    },
+    "model": {
+      "maxTokens": "Máximo de tokens",
+      "model": "Modelo",
+      "provider": "Proveedor",
+      "temperature": "Temperatura",
+      "title": "Configuración del modelo",
+      "topP": "Valor Top P"
+    },
+    "plugins": {
+      "count": "Configuración de plugins ({{count}})",
+      "empty": "Aún no se han instalado plugins",
+      "title": "Plugins instalados"
+    },
+    "role": {
+      "systemRole": "Mensaje del sistema",
+      "title": "Configuración de rol"
+    },
+    "value": {
+      "unset": "No configurado",
+      "untitled": "Asistente sin título"
+    }
+  },
   "agentTab": {
     "chat": "Preferencias de chat",
     "meta": "Información del asistente",
@@ -18,6 +57,8 @@
     },
     "title": "Análisis de datos"
   },
+  "checking": "Comprobando...",
+  "checkingPermissions": "Verificando permisos...",
   "danger": {
     "clear": {
       "action": "Limpiar ahora",
@@ -35,9 +76,16 @@
       "title": "Restablecer todas las configuraciones"
     }
   },
+  "groupTab": {
+    "chat": "Chat",
+    "members": "Miembros",
+    "meta": "Información básica"
+  },
   "header": {
     "desc": "Preferencias y configuración del modelo.",
     "global": "Configuración global",
+    "group": "Configuración del equipo",
+    "groupDesc": "Gestiona el equipo de agentes y las preferencias de chat",
     "session": "Configuración de la sesión",
     "sessionDesc": "Configuración de roles y preferencias de sesión.",
     "sessionWithName": "Configuración de la sesión · {{name}}",
@@ -139,6 +187,61 @@
     },
     "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos!"
   },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Describe los principales cambios y mejoras de esta versión",
+        "label": "Registro de cambios",
+        "maxLengthError": "El registro de cambios no puede superar los 500 caracteres",
+        "placeholder": "Introduce el registro de cambios",
+        "required": "Por favor, introduce el registro de cambios"
+      },
+      "comparison": {
+        "local": "Versión local actual",
+        "remote": "Versión publicada actual"
+      },
+      "identifier": {
+        "extra": "El identificador será único para el asistente. Se recomienda usar letras minúsculas, números y guiones",
+        "label": "Identificador del asistente",
+        "lengthError": "La longitud del identificador debe estar entre 3 y 50 caracteres",
+        "patternError": "El identificador solo puede contener letras minúsculas, números y guiones",
+        "placeholder": "Introduce un identificador único para el asistente, por ejemplo: desarrollo-web",
+        "required": "Por favor, introduce el identificador del asistente"
+      },
+      "loading": {
+        "fetchingRemote": "Cargando datos remotos...",
+        "submit": "Publicando asistente...",
+        "upload": "Publicando nueva versión..."
+      },
+      "messages": {
+        "createVersionFailed": "Error al crear la versión: {{message}}",
+        "fetchRemoteFailed": "Error al obtener los datos del asistente remoto",
+        "missingIdentifier": "El asistente actual no tiene un identificador de mercado",
+        "notAuthenticated": "Por favor, inicia sesión en tu cuenta del mercado",
+        "publishFailed": "Error al publicar: {{message}}"
+      },
+      "submitButton": "Publicar",
+      "title": {
+        "submit": "Compartir en el mercado de asistentes",
+        "upload": "Publicar nueva versión"
+      }
+    },
+    "resultModal": {
+      "message": "El asistente ha sido enviado para revisión. Una vez aprobado, se publicará automáticamente. Haz clic en «Ver en el mercado» para ver el asistente publicado.",
+      "view": "Ver en el mercado"
+    },
+    "submit": {
+      "button": "Compartir en el mercado",
+      "tooltip": "Comparte el asistente en el mercado"
+    },
+    "upload": {
+      "button": "Publicar nueva versión",
+      "tooltip": "Publica una nueva versión en el mercado de asistentes"
+    }
+  },
+  "message": {
+    "success": "Actualización exitosa"
+  },
   "plugin": {
     "addMCPPlugin": "Agregar complemento MCP",
     "addTooltip": "Agregar complemento personalizado",
@@ -189,6 +292,12 @@
       "disabled": "Desactivado",
       "elegant": "Elegante",
       "title": "Animación de respuesta"
+    },
+    "contextMenuMode": {
+      "default": "Predeterminado",
+      "desc": "Seleccione el esquema de visualización del menú contextual en los mensajes de chat",
+      "disabled": "No usar",
+      "title": "Esquema del menú contextual"
     },
     "neutralColor": {
       "desc": "Personalización de escalas de grises con diferentes inclinaciones de color",
@@ -293,6 +402,109 @@
       "title": "Tema"
     },
     "title": "Configuración Común"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Introduce la descripción del equipo",
+      "title": "Descripción del equipo"
+    },
+    "name": {
+      "placeholder": "Introduce el nombre del equipo",
+      "title": "Nombre del equipo"
+    },
+    "scene": {
+      "desc": "Selecciona el escenario del equipo",
+      "options": {
+        "casual": "Informal",
+        "productive": "Productivo"
+      },
+      "title": "Escenario del equipo"
+    },
+    "submit": "Actualizar equipo",
+    "systemPrompt": {
+      "placeholder": "Por favor, ingrese la indicación del sistema para el anfitrión",
+      "title": "Indicación del sistema para el anfitrión"
+    },
+    "title": "Información del equipo de agentes"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Si se desactiva, aún podrás enviar mensajes directos al asistente",
+      "title": "Permitir mensajes directos del asistente"
+    },
+    "enableSupervisor": {
+      "desc": "Habilita la función de moderador del equipo de agentes. El moderador gestionará el flujo de conversación del equipo",
+      "title": "Activar moderador"
+    },
+    "maxResponseInRow": {
+      "desc": "Seleccione cuántos mensajes puede responder un miembro de forma consecutiva. Establecer en 0 desactiva esta limitación.",
+      "title": "Número de respuestas consecutivas"
+    },
+    "model": {
+      "desc": "Las intervenciones de los miembros del grupo no se verán afectadas. Algunos modelos no pueden utilizarse como moderadores.",
+      "title": "Modelo del anfitrión"
+    },
+    "orchestratorTitle": "Configuración del anfitrión",
+    "responseOrder": {
+      "desc": "Los agentes responderán en el orden establecido en el chat",
+      "options": {
+        "natural": "Natural",
+        "sequential": "Secuencial"
+      },
+      "placeholder": "Seleccione el orden de respuesta",
+      "title": "Orden de respuesta"
+    },
+    "responseSpeed": {
+      "desc": "Controla la velocidad general del chat",
+      "options": {
+        "fast": "Rápido",
+        "medium": "Medio",
+        "slow": "Lento"
+      },
+      "placeholder": "Seleccione la velocidad de respuesta",
+      "title": "Velocidad de respuesta"
+    },
+    "revealDM": {
+      "desc": "Permite ver los mensajes privados enviados a otros miembros.",
+      "title": "Mostrar contenido de mensajes privados"
+    },
+    "submit": "Actualizar configuración",
+    "systemPrompt": {
+      "desc": "Indicación personalizada del sistema para el anfitrión del chat grupal. Esto puede afectar el comportamiento predeterminado del anfitrión.",
+      "placeholder": "Por favor, ingrese una indicación personalizada para el anfitrión...",
+      "title": "Indicación del sistema para el anfitrión"
+    },
+    "title": "Configuración del chat"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Unirse al grupo",
+    "availableAgents": "Asistentes disponibles",
+    "createMember": "Crear miembro",
+    "defaultAgent": "Asistente personalizado",
+    "disableHost": "Desactivar asistente del anfitrión",
+    "edit": "Editar miembro",
+    "empty": "Este equipo no tiene miembros por el momento. Haz clic en el botón + para añadir miembros.",
+    "enableHost": "Activar asistente del anfitrión",
+    "groupHost": "Anfitrión del grupo",
+    "groupMembers": "Miembros del grupo",
+    "host": {
+      "description": "Cuando el anfitrión está en el grupo, el chat grupal se automatiza, ideal para tareas creativas.",
+      "title": "Anfitrión"
+    },
+    "noAvailableAgents": "No hay asistentes disponibles",
+    "noDescription": "Sin descripción",
+    "noMembersInGroup": "El grupo no tiene miembros",
+    "owner": "Tú (propietario)",
+    "remove": "Eliminar miembro",
+    "removeFromGroup": "Eliminar del grupo",
+    "you": "Tú"
+  },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Establece la cantidad predeterminada de imágenes al crear una nueva tarea en el panel de generación de imágenes.",
+      "label": "Cantidad de imágenes predeterminada",
+      "title": "Configuración de dibujo con IA"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -448,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Enviar asistente",
-    "identifier": "Identificador del asistente",
+    "identifier": "Identificador del asistente (identifier)",
     "metaMiss": "Por favor complete la información del asistente antes de enviar, debe incluir nombre, descripción y etiquetas",
     "placeholder": "Ingrese el identificador único del asistente, por ejemplo desarrollo-web",
     "tooltips": "Compartir en el mercado de asistentes"
@@ -549,6 +761,7 @@
     "common": "Configuración común",
     "experiment": "Experimento",
     "hotkey": "Atajos de teclado",
+    "image": "Dibujo con IA",
     "llm": "Modelo de lenguaje",
     "provider": "Proveedor de servicios de IA",
     "proxy": "Proxy de red",
@@ -562,11 +775,36 @@
       "groupName": "Incorporados"
     },
     "disabled": "El modelo actual no admite llamadas de función y no se puede utilizar el complemento",
+    "klavis": {
+      "addServer": "Agregar servidor",
+      "authCompleted": "Autenticación completada",
+      "authFailed": "Autenticación fallida",
+      "authRequired": "Autenticación requerida",
+      "connected": "Conectado",
+      "error": "Error",
+      "groupName": "Herramientas de Klavis",
+      "manage": "Gestionar Klavis",
+      "manageTitle": "Gestionar la integración de Klavis",
+      "noServers": "No hay servidores conectados",
+      "notEnabled": "El servicio de Klavis no está habilitado",
+      "oauthRequired": "Por favor, completa la autenticación OAuth en una nueva ventana",
+      "pendingAuth": "Autenticación pendiente",
+      "serverCreated": "Servidor creado con éxito",
+      "serverCreatedFailed": "Error al crear el servidor",
+      "serverRemoved": "Servidor eliminado",
+      "servers": "servidores",
+      "tools": "herramientas",
+      "verifyAuth": "He completado la autenticación"
+    },
     "plugins": {
       "enabled": "Habilitados {{num}}",
       "groupName": "Complementos",
       "noEnabled": "No hay complementos habilitados por el momento",
       "store": "Tienda de complementos"
+    },
+    "tabs": {
+      "all": "Todo",
+      "installed": "Habilitado"
     },
     "title": "Herramientas de extensión"
   }

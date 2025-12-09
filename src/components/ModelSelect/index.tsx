@@ -1,3 +1,4 @@
+import { ChatModelCard } from '@lobechat/types';
 import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { Avatar, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
@@ -9,16 +10,18 @@ import {
   LucideImage,
   LucidePaperclip,
   ToyBrick,
+  Video,
 } from 'lucide-react';
+import { ModelAbilities } from 'model-bank';
 import numeral from 'numeral';
 import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ModelAbilities } from '../../../packages/model-bank/src/types/aiModel';
 import { AiProviderSourceType } from '@/types/aiProvider';
-import { ChatModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';
+
+import NewModelBadge from './NewModelBadge';
 
 export const TAG_CLASSNAME = 'lobe-model-info-tags';
 
@@ -99,6 +102,17 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
             </Tag>
           </Tooltip>
         )}
+        {model.video && (
+          <Tooltip
+            placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
+            title={t('ModelSelect.featureTag.video')}
+          >
+            <Tag className={styles.tag} color={'magenta'} size={'small'}>
+              <Icon icon={Video} />
+            </Tag>
+          </Tooltip>
+        )}
         {model.functionCall && (
           <Tooltip
             placement={placement}
@@ -167,6 +181,7 @@ interface ModelItemRenderProps extends ChatModelCard {
 
 export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true, ...model }) => {
   const { mobile } = useResponsive();
+
   return (
     <Flexbox
       align={'center'}
@@ -190,6 +205,7 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
         <Text style={mobile ? { maxWidth: '60vw', overflowX: 'auto', whiteSpace: 'nowrap' } : {}}>
           {model.displayName || model.id}
         </Text>
+        <NewModelBadge releasedAt={model.releasedAt} />
       </Flexbox>
       {showInfoTag && <ModelInfoTags {...model} />}
     </Flexbox>

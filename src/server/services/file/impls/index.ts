@@ -5,11 +5,11 @@ import { S3StaticFileImpl } from './s3';
 import { FileServiceImpl } from './type';
 
 /**
- * 创建文件服务模块
- * 根据环境自动选择使用S3或桌面本地文件实现
+ * Create file service module
+ * Automatically selects between S3 or desktop local file implementation based on environment
  */
 export const createFileServiceModule = (): FileServiceImpl => {
-  // 如果在桌面应用环境，使用本地文件实现
+  // If in desktop application environment, use local file implementation
   if (isDesktop) {
     return new DesktopLocalFileImpl();
   }
