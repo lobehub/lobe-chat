@@ -1,4 +1,3 @@
-import { Client } from '@upstash/qstash';
 import debug from 'debug';
 
 import { HealthCheckResult, QueueMessage, QueueStats } from '../types';
@@ -10,15 +9,14 @@ const log = debug('lobe-server:service:queue:qstash');
  * QStash queue service implementation
  */
 export class QStashQueueServiceImpl implements QueueServiceImpl {
-  private qstashClient: Client;
+  private config: { publishUrl?: string; qstashToken: string };
 
   constructor(config: { publishUrl?: string; qstashToken: string }) {
     if (!config.qstashToken) {
       throw new Error('QStash token is required for queue service');
     }
 
-    this.qstashClient = new Client({ token: config.qstashToken });
-    log('Initialized QStash queue service');
+    this.config = config;
   }
 
   async scheduleMessage(message: QueueMessage): Promise<string> {
@@ -34,7 +32,10 @@ export class QStashQueueServiceImpl implements QueueServiceImpl {
     } = message;
 
     try {
-      const response = await this.qstashClient.publishJSON({
+      const { Client } = await import('@upstash/qstash');
+      log('Initialized QStash queue service');
+      const qstashClient = new Client({ token: this.config.qstashToken });
+      const response = await qstashClient.publishJSON({
         body: {
           context,
           operationId,
