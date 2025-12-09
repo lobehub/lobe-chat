@@ -86,6 +86,14 @@
       },
       "newFolder": "Yeni Klasör",
       "newPage": "Yeni Belge",
+      "notion": {
+        "error": "Notion dosyası içe aktarılamadı",
+        "foundFiles": "{{count}} dosya bulundu",
+        "importing": "Notion dosyası içe aktarılıyor...",
+        "noMarkdownFiles": "ZIP dosyasında Markdown dosyası bulunamadı",
+        "partial": "{{success}} dosya başarıyla içe aktarıldı, {{failed}} dosya başarısız oldu",
+        "success": "{{count}} dosya başarıyla içe aktarıldı"
+      },
       "uploadFile": "Dosya Yükle",
       "uploadFolder": "Klasör Yükle"
     },

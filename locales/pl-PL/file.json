@@ -86,6 +86,14 @@
       },
       "newFolder": "Nowy folder",
       "newPage": "Nowy dokument",
+      "notion": {
+        "error": "Nie udało się zaimportować pliku Notion",
+        "foundFiles": "Znaleziono {{count}} plików",
+        "importing": "Importowanie plików Notion...",
+        "noMarkdownFiles": "Nie znaleziono plików Markdown w archiwum ZIP",
+        "partial": "Pomyślnie zaimportowano {{success}} plików, niepowodzenie: {{failed}}",
+        "success": "Pomyślnie zaimportowano {{count}} plików"
+      },
       "uploadFile": "Prześlij plik",
       "uploadFolder": "Prześlij folder"
     },

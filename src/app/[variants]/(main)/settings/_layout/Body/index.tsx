@@ -40,6 +40,7 @@ const Body = memo(() => {
           SettingsGroupKey.Profile,
           SettingsGroupKey.Account,
           SettingsGroupKey.AIConfig,
+          SettingsGroupKey.Market,
           SettingsGroupKey.System,
         ]}
         gap={8}

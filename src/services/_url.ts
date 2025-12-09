@@ -42,5 +42,12 @@ export const MARKET_ENDPOINTS = {
   base: '/market',
   createAgent: '/market/agent/create',
   getAgentDetail: (identifier: string) => `/market/agent/${encodeURIComponent(identifier)}`,
+  getOwnAgents: '/market/agent/own',
   createAgentVersion: '/market/agent/versions/create',
+  // Agent status management
+  publishAgent: (identifier: string) => `/market/agent/${encodeURIComponent(identifier)}/publish`,
+  unpublishAgent: (identifier: string) =>
+    `/market/agent/${encodeURIComponent(identifier)}/unpublish`,
+  deprecateAgent: (identifier: string) =>
+    `/market/agent/${encodeURIComponent(identifier)}/deprecate`,
 };

@@ -86,6 +86,14 @@
       },
       "newFolder": "Nouveau dossier",
       "newPage": "Nouveau document",
+      "notion": {
+        "error": "Échec de l'importation du fichier Notion",
+        "foundFiles": "{{count}} fichiers trouvés",
+        "importing": "Importation des fichiers Notion en cours...",
+        "noMarkdownFiles": "Aucun fichier Markdown trouvé dans l'archive ZIP",
+        "partial": "{{success}} fichiers importés avec succès, {{failed}} échecs",
+        "success": "{{count}} fichiers importés avec succès"
+      },
       "uploadFile": "Télécharger un fichier",
       "uploadFolder": "Télécharger un dossier"
     },

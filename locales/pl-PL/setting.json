@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "Konfiguracja AI",
     "common": "Ogólne",
+    "market": "Rynek",
     "profile": "Konto",
     "system": "System"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "Pomyślnie zaktualizowano"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Anuluj",
+      "confirmDeprecate": "Potwierdź wycofanie",
+      "deprecate": "Wycofaj na stałe",
+      "deprecateConfirmContent": "Po wycofaniu asystent zostanie trwale usunięty z rynku i nie będzie można go ponownie opublikować. Ta operacja jest nieodwracalna, proszę postępować ostrożnie.",
+      "deprecateConfirmTitle": "Czy na pewno chcesz wycofać asystenta?",
+      "deprecateError": "Nie udało się wycofać asystenta",
+      "deprecateLoading": "Wycofywanie asystenta...",
+      "deprecateSuccess": "Asystent został wycofany",
+      "edit": "Edytuj agenta",
+      "publish": "Opublikuj agenta",
+      "publishError": "Nie udało się opublikować asystenta",
+      "publishLoading": "Publikowanie asystenta...",
+      "publishSuccess": "Asystent został opublikowany",
+      "unpublish": "Cofnij publikację agenta",
+      "unpublishError": "Nie udało się cofnąć publikacji asystenta",
+      "unpublishLoading": "Cofanie publikacji asystenta...",
+      "unpublishSuccess": "Asystent został usunięty z rynku",
+      "viewDetail": "Zobacz szczegóły"
+    },
+    "detail": {
+      "category": "Kategoria",
+      "description": "Opis",
+      "identifier": "Identyfikator",
+      "title": "Szczegóły asystenta"
+    },
+    "empty": {
+      "description": "Nie opublikowałeś jeszcze żadnych asystentów na rynku",
+      "title": "Brak opublikowanych asystentów"
+    },
+    "errors": {
+      "editFailed": "Nie udało się edytować asystenta, spróbuj ponownie później",
+      "fetchFailed": "Nie udało się pobrać szczegółów asystenta",
+      "notAuthenticated": "Zaloguj się na konto rynku"
+    },
+    "loginRequired": {
+      "button": "Zaloguj się na konto rynku",
+      "description": "Zaloguj się na konto rynku, aby zobaczyć swoich opublikowanych asystentów",
+      "title": "Wymagane logowanie"
+    },
+    "status": {
+      "archived": "Zarchiwizowany",
+      "deprecated": "Wycofany",
+      "published": "Opublikowany",
+      "unpublished": "Nieopublikowany"
+    },
+    "title": "Moi opublikowani asystenci"
   },
   "plugin": {
     "addMCPPlugin": "Dodaj wtyczkę MCP",
@@ -774,6 +824,7 @@
     "hotkey": "Skróty klawiszowe",
     "image": "Usługa rysowania",
     "llm": "Model językowy",
+    "my-agents": "Moi opublikowani asystenci",
     "profile": "Moje konto",
     "provider": "Dostawca usług AI",
     "proxy": "Proxy sieciowy",

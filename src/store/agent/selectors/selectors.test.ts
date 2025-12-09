@@ -109,6 +109,7 @@ describe('agentSelectors', () => {
             avatar: '🤖',
             backgroundColor: '#ff0000',
             description: 'Test agent',
+            marketIdentifier: 'test-market-id',
             tags: ['tag1', 'tag2'],
             title: 'Test Agent',
           },
@@ -121,6 +122,7 @@ describe('agentSelectors', () => {
         avatar: '🤖',
         backgroundColor: '#ff0000',
         description: 'Test agent',
+        marketIdentifier: 'test-market-id',
         tags: ['tag1', 'tag2'],
         title: 'Test Agent',
       });

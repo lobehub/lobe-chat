@@ -86,6 +86,14 @@
       },
       "newFolder": "Создать папку",
       "newPage": "Создать документ",
+      "notion": {
+        "error": "Не удалось импортировать файл Notion",
+        "foundFiles": "Найдено файлов: {{count}}",
+        "importing": "Импорт файлов Notion...",
+        "noMarkdownFiles": "В ZIP-файле не найдено файлов Markdown",
+        "partial": "Успешно импортировано: {{success}}, не удалось: {{failed}}",
+        "success": "Успешно импортировано файлов: {{count}}"
+      },
       "uploadFile": "Загрузить файл",
       "uploadFolder": "Загрузить папку"
     },

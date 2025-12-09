@@ -86,6 +86,14 @@
       },
       "newFolder": "Нова папка",
       "newPage": "Създаване на нов документ",
+      "notion": {
+        "error": "Неуспешен импорт на файл от Notion",
+        "foundFiles": "Намерени {{count}} файла",
+        "importing": "Импортиране на файл от Notion...",
+        "noMarkdownFiles": "Не са намерени Markdown файлове в ZIP архива",
+        "partial": "Успешно импортирани {{success}} файла, неуспешни {{failed}}",
+        "success": "Успешно импортирани {{count}} файла"
+      },
       "uploadFile": "Качване на файл",
       "uploadFolder": "Качване на папка"
     },

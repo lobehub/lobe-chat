@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "KI-Konfiguration",
     "common": "Allgemein",
+    "market": "Marktplatz",
     "profile": "Konto",
     "system": "System"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "Erfolgreich aktualisiert"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Abbrechen",
+      "confirmDeprecate": "Veraltete Version bestätigen",
+      "deprecate": "Dauerhaft entfernen",
+      "deprecateConfirmContent": "Nach dem Entfernen wird dieser Assistent dauerhaft aus dem Marktplatz entfernt und kann nicht erneut veröffentlicht werden. Dieser Vorgang ist unwiderruflich. Bitte seien Sie vorsichtig.",
+      "deprecateConfirmTitle": "Assistent wirklich entfernen?",
+      "deprecateError": "Assistent konnte nicht entfernt werden",
+      "deprecateLoading": "Assistent wird entfernt...",
+      "deprecateSuccess": "Assistent wurde entfernt",
+      "edit": "Assistent bearbeiten",
+      "publish": "Assistent veröffentlichen",
+      "publishError": "Veröffentlichung des Assistenten fehlgeschlagen",
+      "publishLoading": "Assistent wird veröffentlicht...",
+      "publishSuccess": "Assistent wurde veröffentlicht",
+      "unpublish": "Assistent zurückziehen",
+      "unpublishError": "Zurückziehen des Assistenten fehlgeschlagen",
+      "unpublishLoading": "Assistent wird zurückgezogen...",
+      "unpublishSuccess": "Assistent wurde zurückgezogen",
+      "viewDetail": "Details anzeigen"
+    },
+    "detail": {
+      "category": "Kategorie",
+      "description": "Beschreibung",
+      "identifier": "Bezeichner",
+      "title": "Assistenten-Details"
+    },
+    "empty": {
+      "description": "Du hast noch keinen Assistenten im Marktplatz veröffentlicht",
+      "title": "Keine veröffentlichten Assistenten"
+    },
+    "errors": {
+      "editFailed": "Bearbeiten des Assistenten fehlgeschlagen. Bitte versuche es später erneut.",
+      "fetchFailed": "Details des Assistenten konnten nicht geladen werden",
+      "notAuthenticated": "Bitte melde dich zuerst mit deinem Marktplatz-Konto an"
+    },
+    "loginRequired": {
+      "button": "Im Marktplatz anmelden",
+      "description": "Bitte melde dich mit deinem Marktplatz-Konto an, um deine veröffentlichten Assistenten zu sehen",
+      "title": "Anmeldung erforderlich"
+    },
+    "status": {
+      "archived": "Archiviert",
+      "deprecated": "Veraltet",
+      "published": "Veröffentlicht",
+      "unpublished": "Nicht veröffentlicht"
+    },
+    "title": "Meine veröffentlichten Assistenten"
   },
   "plugin": {
     "addMCPPlugin": "MCP-Plugin hinzufügen",
@@ -774,6 +824,7 @@
     "hotkey": "Tastenkombinationen",
     "image": "Bildgenerierungsdienst",
     "llm": "Sprachmodell",
+    "my-agents": "Meine veröffentlichten Assistenten",
     "profile": "Mein Konto",
     "provider": "KI-Dienstanbieter",
     "proxy": "Netzwerkproxy",

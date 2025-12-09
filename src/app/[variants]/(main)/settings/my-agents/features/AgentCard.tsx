@@ -1,27 +1,41 @@
-import { Github } from '@lobehub/icons';
-import { ActionIcon, Avatar, Block, Icon, Text } from '@lobehub/ui';
+'use client';
+
+import { Avatar, Block, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
+import { Tag as AntTag } from 'antd';
 import { createStyles } from 'antd-style';
-import { ClockIcon } from 'lucide-react';
-import qs from 'query-string';
+import { ClockIcon, CoinsIcon, DownloadIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { Link, useNavigate } from 'react-router-dom';
-import urlJoin from 'url-join';
 
 import PublishedTime from '@/components/PublishedTime';
-import { useQuery } from '@/hooks/useQuery';
-import { AssistantMarketSource, DiscoverAssistantItem } from '@/types/discover';
+import { AgentStatus, DiscoverAssistantItem } from '@/types/discover';
+import { formatIntergerNumber } from '@/utils/format';
 
-import TokenTag from './TokenTag';
+const getStatusTagColor = (status?: AgentStatus) => {
+  switch (status) {
+    case 'published': {
+      return 'green';
+    }
+    case 'unpublished': {
+      return 'orange';
+    }
+    case 'deprecated': {
+      return 'red';
+    }
+    case 'archived': {
+      return 'default';
+    }
+    default: {
+      return 'default';
+    }
+  }
+};
 
 const useStyles = createStyles(({ css, token }) => {
   return {
     author: css`
       color: ${token.colorTextDescription};
-    `,
-    code: css`
-      font-family: ${token.fontFamilyCode};
     `,
     desc: css`
       flex: 1;
@@ -37,6 +51,15 @@ const useStyles = createStyles(({ css, token }) => {
       font-size: 12px;
       color: ${token.colorTextDescription};
     `,
+    statTag: css`
+      border-radius: 4px;
+
+      font-family: ${token.fontFamilyCode};
+      font-size: 11px;
+      color: ${token.colorTextSecondary};
+
+      background: ${token.colorFillTertiary};
+    `,
     title: css`
       margin: 0 !important;
       font-size: 16px !important;
@@ -49,43 +72,34 @@ const useStyles = createStyles(({ css, token }) => {
   };
 });
 
-const AssistantItem = memo<DiscoverAssistantItem>(
+interface AgentCardProps extends DiscoverAssistantItem {
+  onClick?: () => void;
+}
+
+const AgentCard = memo<AgentCardProps>(
   ({
-    createdAt,
-    author,
     avatar,
+    backgroundColor,
     title,
     description,
+    author,
+    createdAt,
     category,
-    identifier,
     tokenUsage,
-    pluginCount,
-    knowledgeCount,
     installCount,
-    backgroundColor,
+    status,
+    onClick,
   }) => {
-    const { styles, theme } = useStyles();
-    const navigate = useNavigate();
-    const { source } = useQuery() as { source?: AssistantMarketSource };
-    const link = qs.stringifyUrl(
-      {
-        query: { source },
-        url: urlJoin('/discover/assistant', identifier),
-      },
-      { skipNull: true },
-    );
-
-    const { t } = useTranslation('discover');
+    const { styles } = useStyles();
+    const { t } = useTranslation(['discover', 'setting']);
 
     return (
       <Block
         clickable
-        data-testid="assistant-item"
         height={'100%'}
-        onClick={() => {
-          navigate(link);
-        }}
+        onClick={onClick}
         style={{
+          cursor: 'pointer',
           overflow: 'hidden',
           position: 'relative',
         }}
@@ -106,7 +120,6 @@ const AssistantItem = memo<DiscoverAssistantItem>(
             style={{
               overflow: 'hidden',
             }}
-            title={identifier}
           >
             <Avatar
               avatar={avatar}
@@ -121,36 +134,18 @@ const AssistantItem = memo<DiscoverAssistantItem>(
                 overflow: 'hidden',
               }}
             >
-              <Flexbox
-                align={'center'}
-                flex={1}
-                gap={8}
-                horizontal
-                style={{
-                  overflow: 'hidden',
-                }}
-              >
-                <Link style={{ color: 'inherit', overflow: 'hidden' }} to={link}>
-                  <Text as={'h2'} className={styles.title} ellipsis>
-                    {title}
-                  </Text>
-                </Link>
+              <Flexbox align={'center'} gap={8} horizontal>
+                <Text as={'h3'} className={styles.title} ellipsis style={{ flex: 1 }}>
+                  {title}
+                </Text>
+                {status && (
+                  <AntTag color={getStatusTagColor(status)} style={{ flexShrink: 0, margin: 0 }}>
+                    {t(`setting:myAgents.status.${status}`)}
+                  </AntTag>
+                )}
               </Flexbox>
               {author && <div className={styles.author}>{author}</div>}
             </Flexbox>
-          </Flexbox>
-          <Flexbox align={'center'} gap={4} horizontal>
-            <a
-              href={urlJoin(
-                'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
-                identifier,
-              )}
-              onClick={(e) => e.stopPropagation()}
-              rel="noopener noreferrer"
-              target={'_blank'}
-            >
-              <ActionIcon fill={theme.colorTextDescription} icon={Github} />
-            </a>
           </Flexbox>
         </Flexbox>
         <Flexbox flex={1} gap={12} paddingInline={16}>
@@ -163,12 +158,28 @@ const AssistantItem = memo<DiscoverAssistantItem>(
           >
             {description}
           </Text>
-          <TokenTag
-            installCount={installCount}
-            knowledgeCount={knowledgeCount}
-            pluginCount={pluginCount}
-            tokenUsage={tokenUsage}
-          />
+          <Flexbox align={'center'} gap={4} horizontal>
+            <Tooltip
+              placement={'top'}
+              styles={{ root: { pointerEvents: 'none' } }}
+              title={t('assistants.tokenUsage')}
+            >
+              <Tag className={styles.statTag} icon={<Icon icon={CoinsIcon} />}>
+                {formatIntergerNumber(tokenUsage)}
+              </Tag>
+            </Tooltip>
+            {installCount !== undefined && (
+              <Tooltip
+                placement={'top'}
+                styles={{ root: { pointerEvents: 'none' } }}
+                title={t('assistants.downloads')}
+              >
+                <Tag className={styles.statTag} icon={<Icon icon={DownloadIcon} />}>
+                  {formatIntergerNumber(installCount)}
+                </Tag>
+              </Tooltip>
+            )}
+          </Flexbox>
         </Flexbox>
         <Flexbox
           align={'center'}
@@ -191,7 +202,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
                 template={'MMM DD, YYYY'}
               />
             </Flexbox>
-            {t(`category.assistant.${category}` as any)}
+            {category && t(`category.assistant.${category}` as any)}
           </Flexbox>
         </Flexbox>
       </Block>
@@ -199,4 +210,4 @@ const AssistantItem = memo<DiscoverAssistantItem>(
   },
 );
 
-export default AssistantItem;
+export default AgentCard;

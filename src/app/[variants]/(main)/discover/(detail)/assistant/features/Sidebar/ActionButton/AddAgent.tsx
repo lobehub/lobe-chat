@@ -1,6 +1,5 @@
 'use client';
 
-import type { LobeAgentConfig } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { App, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
@@ -11,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import { agentService } from '@/services/agent';
+import { discoverService } from '@/services/discover';
 import { useAgentStore } from '@/store/agent';
 import { useHomeStore } from '@/store/home';
 
@@ -23,46 +23,6 @@ const useStyles = createStyles(({ css }) => ({
     }
   `,
 }));
-
-type MarketAgentModel =
-  | LobeAgentConfig['model']
-  | {
-      model: LobeAgentConfig['model'];
-      parameters?: Partial<LobeAgentConfig['params']>;
-      provider?: LobeAgentConfig['provider'];
-    };
-
-type MarketAgentConfig = Partial<Omit<LobeAgentConfig, 'model' | 'params'>> & {
-  model?: MarketAgentModel;
-  params?: Partial<LobeAgentConfig['params']>;
-};
-
-const normalizeMarketAgentConfig = (
-  config?: MarketAgentConfig,
-): Partial<LobeAgentConfig> | undefined => {
-  if (!config) return undefined;
-
-  const { model, params, ...rest } = config;
-  const normalized: Partial<LobeAgentConfig> = { ...rest };
-
-  const modelInfo = model;
-
-  const mergedParams: Partial<LobeAgentConfig['params']> = {};
-  if (typeof modelInfo === 'object' && modelInfo) {
-    Object.assign(mergedParams, modelInfo.parameters ?? {});
-    normalized.provider = normalized.provider ?? modelInfo.provider;
-    normalized.model = modelInfo.model;
-  } else {
-    normalized.model = modelInfo;
-  }
-  Object.assign(mergedParams, params ?? {});
-
-  normalized.params = Object.keys(mergedParams).length > 0 ? mergedParams : undefined;
-
-  normalized.plugins = normalized.plugins ?? [];
-
-  return normalized;
-};
 
 const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { avatar, description, tags, title, config, backgroundColor, identifier, editorData } =
@@ -103,9 +63,10 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
   const createAgentWithMarketIdentifier = async (shouldNavigate = true) => {
     if (!config) return;
 
+    // Note: agentService.createAgent automatically normalizes market config (handles model as object)
     const agentData = {
       config: {
-        ...normalizeMarketAgentConfig(config),
+        ...config,
         editorData,
         ...meta,
       },
@@ -113,6 +74,12 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
 
     const result = await createAgent(agentData);
     await refreshAgentList();
+
+    // Report agent installation to marketplace if it has a market identifier
+    if (identifier) {
+      discoverService.reportAgentInstall(identifier);
+    }
+
     if (shouldNavigate) {
       console.log(shouldNavigate);
     }
@@ -124,7 +91,7 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
     try {
       const result = await createAgentWithMarketIdentifier(true);
       message.success(t('assistants.addAgentSuccess'));
-      navigate(SESSION_CHAT_URL(result!.sessionId, mobile));
+      navigate(SESSION_CHAT_URL(result!.agentId || result!.sessionId, mobile));
     } finally {
       setIsLoading(false);
     }

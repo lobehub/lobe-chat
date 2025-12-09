@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "AI 設定",
     "common": "共通",
+    "market": "マーケット",
     "profile": "アカウント",
     "system": "システム"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "更新に成功しました"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "キャンセル",
+      "confirmDeprecate": "廃止を確認",
+      "deprecate": "永久に廃止",
+      "deprecateConfirmContent": "廃止後、このアシスタントはマーケットから永久に削除され、再掲載はできません。この操作は元に戻せませんので、慎重に行ってください。",
+      "deprecateConfirmTitle": "アシスタントを廃止しますか？",
+      "deprecateError": "アシスタントの廃止に失敗しました",
+      "deprecateLoading": "アシスタントを廃止中...",
+      "deprecateSuccess": "アシスタントが廃止されました",
+      "edit": "Agent を編集",
+      "publish": "Agent を公開",
+      "publishError": "アシスタントの公開に失敗しました",
+      "publishLoading": "アシスタントを公開中...",
+      "publishSuccess": "アシスタントが公開されました",
+      "unpublish": "Agent を非公開",
+      "unpublishError": "アシスタントの非公開に失敗しました",
+      "unpublishLoading": "アシスタントを非公開にしています...",
+      "unpublishSuccess": "アシスタントが非公開になりました",
+      "viewDetail": "詳細を見る"
+    },
+    "detail": {
+      "category": "カテゴリ",
+      "description": "説明",
+      "identifier": "識別子",
+      "title": "アシスタントの詳細"
+    },
+    "empty": {
+      "description": "まだマーケットにアシスタントを公開していません",
+      "title": "公開中のアシスタントはありません"
+    },
+    "errors": {
+      "editFailed": "アシスタントの編集に失敗しました。しばらくしてから再試行してください。",
+      "fetchFailed": "アシスタントの詳細取得に失敗しました",
+      "notAuthenticated": "まずマーケットアカウントにログインしてください"
+    },
+    "loginRequired": {
+      "button": "マーケットアカウントにログイン",
+      "description": "公開したアシスタントを見るには、まずマーケットアカウントにログインしてください",
+      "title": "ログインが必要です"
+    },
+    "status": {
+      "archived": "アーカイブ済み",
+      "deprecated": "廃止済み",
+      "published": "公開中",
+      "unpublished": "非公開"
+    },
+    "title": "自分の公開アシスタント"
   },
   "plugin": {
     "addMCPPlugin": "MCPプラグインを追加",
@@ -774,6 +824,7 @@
     "hotkey": "ショートカットキー",
     "image": "画像生成サービス",
     "llm": "言語モデル",
+    "my-agents": "自分の公開アシスタント",
     "profile": "マイアカウント",
     "provider": "AIサービスプロバイダー",
     "proxy": "ネットワークプロキシ",

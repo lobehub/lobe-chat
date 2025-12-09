@@ -83,6 +83,8 @@ export interface AgentItem {
   editorData?: any | null;
   fewShots?: any | null;
   id: string;
+  /** Market agent identifier for published agents */
+  marketIdentifier?: string | null;
   model?: string | null;
   openingMessage?: string | null;
   openingQuestions?: string[];

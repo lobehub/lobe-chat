@@ -6,6 +6,7 @@ import {
   isDesktop,
 } from '@lobechat/const';
 import {
+  AgentStatus,
   AssistantListResponse,
   AssistantMarketSource,
   AssistantQueryParams,
@@ -593,7 +594,7 @@ export class DiscoverService {
         pluginCount: (data.config as any)?.plugins?.length || (data as any).pluginCount || 0,
         readme: data.documentationUrl || '',
         schemaVersion: 1,
-        status: data.status,
+        status: (data.status as AgentStatus) || undefined,
         summary: data.summary || '',
         systemRole: (data.config as any)?.systemRole || '',
         tags: data.tags || [],
@@ -719,6 +720,7 @@ export class DiscoverService {
           description: item.description || item.summary || '',
           homepage: item.homepage || `https://lobehub.com/discover/assistant/${item.identifier}`,
           identifier: item.identifier,
+          installCount: item.installCount,
           knowledgeCount: item.knowledgeCount ?? item.config?.knowledgeBases?.length ?? 0,
           pluginCount: item.pluginCount ?? item.config?.plugins?.length ?? 0,
           schemaVersion: item.schemaVersion ?? 1,
@@ -860,6 +862,15 @@ export class DiscoverService {
    */
   reportCall = async (params: CallReportRequest) => {
     await this.market.plugins.reportCall(params);
+  };
+
+  // ============================== Agent Analytics ==============================
+
+  /**
+   * Increase agent install count in marketplace
+   */
+  increaseAgentInstallCount = async (identifier: string) => {
+    await this.market.agents.increaseInstallCount(identifier);
   };
 
   // ============================== Plugin Market ==============================

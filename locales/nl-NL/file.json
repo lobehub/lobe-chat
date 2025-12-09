@@ -86,6 +86,14 @@
       },
       "newFolder": "Nieuwe map",
       "newPage": "Nieuw document",
+      "notion": {
+        "error": "Importeren van Notion-bestand mislukt",
+        "foundFiles": "{{count}} bestanden gevonden",
+        "importing": "Bezig met importeren van Notion-bestanden...",
+        "noMarkdownFiles": "Geen Markdown-bestanden gevonden in het ZIP-bestand",
+        "partial": "{{success}} bestanden succesvol geïmporteerd, {{failed}} mislukt",
+        "success": "{{count}} bestanden succesvol geïmporteerd"
+      },
       "uploadFile": "Bestand uploaden",
       "uploadFolder": "Map uploaden"
     },

@@ -86,6 +86,14 @@
       },
       "newFolder": "新しいフォルダーを作成",
       "newPage": "新しいドキュメント",
+      "notion": {
+        "error": "Notion ファイルのインポートに失敗しました",
+        "foundFiles": "{{count}} 件のファイルが見つかりました",
+        "importing": "Notion ファイルをインポートしています...",
+        "noMarkdownFiles": "ZIP ファイル内に Markdown ファイルが見つかりませんでした",
+        "partial": "{{success}} 件のファイルを正常にインポートし、{{failed}} 件が失敗しました",
+        "success": "{{count}} 件のファイルを正常にインポートしました"
+      },
       "uploadFile": "ファイルをアップロード",
       "uploadFolder": "フォルダーをアップロード"
     },

@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "AI Configuration",
     "common": "General",
+    "market": "Market",
     "profile": "Account",
     "system": "System"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "Update successful"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Cancel",
+      "confirmDeprecate": "Confirm Deprecate",
+      "deprecate": "Deprecate Permanently",
+      "deprecateConfirmContent": "After deprecation, this agent will be permanently removed from the market and cannot be republished. This action is irreversible, please proceed with caution.",
+      "deprecateConfirmTitle": "Confirm Deprecate Agent?",
+      "deprecateError": "Failed to deprecate agent",
+      "deprecateLoading": "Deprecating agent...",
+      "deprecateSuccess": "Agent deprecated",
+      "edit": "Edit Agent",
+      "publish": "Publish Agent",
+      "publishError": "Failed to publish agent",
+      "publishLoading": "Publishing agent...",
+      "publishSuccess": "Agent published",
+      "unpublish": "Unpublish Agent",
+      "unpublishError": "Failed to unpublish agent",
+      "unpublishLoading": "Unpublishing agent...",
+      "unpublishSuccess": "Agent unpublished",
+      "viewDetail": "View Details"
+    },
+    "detail": {
+      "category": "Category",
+      "description": "Description",
+      "identifier": "Identifier",
+      "title": "Agent Details"
+    },
+    "empty": {
+      "description": "You haven't published any assistants to the market yet",
+      "title": "No Published Assistants"
+    },
+    "errors": {
+      "editFailed": "Failed to edit agent, please try again later",
+      "fetchFailed": "Failed to fetch agent details",
+      "notAuthenticated": "Please sign in to your market account first"
+    },
+    "loginRequired": {
+      "button": "Sign in to Market",
+      "description": "Please sign in to your market account to view your published assistants",
+      "title": "Sign In Required"
+    },
+    "status": {
+      "archived": "Archived",
+      "deprecated": "Deprecated",
+      "published": "Published",
+      "unpublished": "Unpublished"
+    },
+    "title": "My Published Assistants"
   },
   "plugin": {
     "addMCPPlugin": "Add MCP Plugin",
@@ -774,6 +824,7 @@
     "hotkey": "Hotkeys",
     "image": "Image Generation Service",
     "llm": "Language Model",
+    "my-agents": "My Published Assistants",
     "profile": "My Account",
     "provider": "AI Service Provider",
     "proxy": "Network Proxy",

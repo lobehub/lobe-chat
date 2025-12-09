@@ -283,6 +283,20 @@ export class AgentModel {
     return !!result;
   };
 
+  /**
+   * Get an agent by marketIdentifier
+   * If multiple agents match, returns the most recently updated one
+   * @returns agent id if exists, null otherwise
+   */
+  getAgentByMarketIdentifier = async (marketIdentifier: string): Promise<string | null> => {
+    const result = await this.db.query.agents.findFirst({
+      columns: { id: true },
+      orderBy: (agents, { desc }) => [desc(agents.updatedAt)],
+      where: and(eq(agents.marketIdentifier, marketIdentifier), eq(agents.userId, this.userId)),
+    });
+    return result?.id ?? null;
+  };
+
   updateConfig = async (agentId: string, data: PartialDeep<AgentItem> | undefined | null) => {
     if (!data || Object.keys(data).length === 0) return;
 

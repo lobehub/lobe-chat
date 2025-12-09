@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "Cấu hình AI",
     "common": "Chung",
+    "market": "Thị trường",
     "profile": "Tài khoản",
     "system": "Hệ thống"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "Cập nhật thành công"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Hủy",
+      "confirmDeprecate": "Xác nhận ngừng sử dụng",
+      "deprecate": "Ngừng sử dụng vĩnh viễn",
+      "deprecateConfirmContent": "Sau khi ngừng sử dụng, trợ lý này sẽ bị xóa vĩnh viễn khỏi thị trường và không thể được đăng lại. Hành động này không thể hoàn tác, vui lòng cẩn trọng.",
+      "deprecateConfirmTitle": "Xác nhận ngừng sử dụng trợ lý?",
+      "deprecateError": "Ngừng sử dụng trợ lý thất bại",
+      "deprecateLoading": "Đang ngừng sử dụng trợ lý...",
+      "deprecateSuccess": "Trợ lý đã được ngừng sử dụng",
+      "edit": "Chỉnh sửa Agent",
+      "publish": "Đăng Agent",
+      "publishError": "Đăng trợ lý thất bại",
+      "publishLoading": "Đang đăng trợ lý...",
+      "publishSuccess": "Trợ lý đã được đăng",
+      "unpublish": "Gỡ Agent",
+      "unpublishError": "Gỡ trợ lý thất bại",
+      "unpublishLoading": "Đang gỡ trợ lý...",
+      "unpublishSuccess": "Trợ lý đã được gỡ",
+      "viewDetail": "Xem chi tiết"
+    },
+    "detail": {
+      "category": "Phân loại",
+      "description": "Mô tả",
+      "identifier": "Định danh",
+      "title": "Chi tiết trợ lý"
+    },
+    "empty": {
+      "description": "Bạn chưa đăng bất kỳ trợ lý nào lên thị trường",
+      "title": "Chưa có trợ lý được đăng"
+    },
+    "errors": {
+      "editFailed": "Chỉnh sửa trợ lý thất bại, vui lòng thử lại sau",
+      "fetchFailed": "Lấy chi tiết trợ lý thất bại",
+      "notAuthenticated": "Vui lòng đăng nhập tài khoản thị trường trước"
+    },
+    "loginRequired": {
+      "button": "Đăng nhập tài khoản thị trường",
+      "description": "Vui lòng đăng nhập tài khoản thị trường để xem các trợ lý bạn đã đăng",
+      "title": "Cần đăng nhập"
+    },
+    "status": {
+      "archived": "Đã lưu trữ",
+      "deprecated": "Đã ngừng sử dụng",
+      "published": "Đã đăng",
+      "unpublished": "Chưa đăng"
+    },
+    "title": "Trợ lý tôi đã đăng"
   },
   "plugin": {
     "addMCPPlugin": "Thêm plugin MCP",
@@ -774,6 +824,7 @@
     "hotkey": "Phím tắt",
     "image": "Dịch vụ vẽ",
     "llm": "Mô hình ngôn ngữ",
+    "my-agents": "Trợ lý tôi đã đăng",
     "profile": "Tài khoản của tôi",
     "provider": "Nhà cung cấp AI",
     "proxy": "Mạng proxy",

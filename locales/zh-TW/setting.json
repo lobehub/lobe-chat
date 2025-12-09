@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "AI 設定",
     "common": "通用",
+    "market": "市集",
     "profile": "帳號",
     "system": "系統"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "更新成功"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "取消",
+      "confirmDeprecate": "確認廢棄",
+      "deprecate": "永久廢棄",
+      "deprecateConfirmContent": "廢棄後該助手將永久從市集移除，且無法重新上架。此操作不可逆，請謹慎操作。",
+      "deprecateConfirmTitle": "確認要廢棄助手？",
+      "deprecateError": "廢棄助手失敗",
+      "deprecateLoading": "正在廢棄助手⋯",
+      "deprecateSuccess": "助手已廢棄",
+      "edit": "前往編輯 Agent",
+      "publish": "上架 Agent",
+      "publishError": "上架助手失敗",
+      "publishLoading": "正在上架助手⋯",
+      "publishSuccess": "助手已上架",
+      "unpublish": "下架 Agent",
+      "unpublishError": "下架助手失敗",
+      "unpublishLoading": "正在下架助手⋯",
+      "unpublishSuccess": "助手已下架",
+      "viewDetail": "查看詳情"
+    },
+    "detail": {
+      "category": "分類",
+      "description": "描述",
+      "identifier": "識別碼",
+      "title": "助手詳情"
+    },
+    "empty": {
+      "description": "你尚未將任何助手發布到市集",
+      "title": "尚無已發布的助手"
+    },
+    "errors": {
+      "editFailed": "編輯助手失敗，請稍後再試",
+      "fetchFailed": "取得助手詳情失敗",
+      "notAuthenticated": "請先登入市集帳號"
+    },
+    "loginRequired": {
+      "button": "登入市集帳號",
+      "description": "請先登入市集帳號以查看你發布的助手",
+      "title": "需要登入"
+    },
+    "status": {
+      "archived": "已封存",
+      "deprecated": "已廢棄",
+      "published": "已上架",
+      "unpublished": "未上架"
+    },
+    "title": "我發布的助手"
   },
   "plugin": {
     "addMCPPlugin": "新增 MCP 外掛",
@@ -774,6 +824,7 @@
     "hotkey": "快速鍵",
     "image": "繪圖服務",
     "llm": "語言模型",
+    "my-agents": "我發布的助手",
     "profile": "我的帳號",
     "provider": "AI 服務商",
     "proxy": "網路代理",
