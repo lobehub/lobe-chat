@@ -55,7 +55,6 @@ const ChatItem = memo<ChatItemProps>(
       showTitle,
       time,
       title: avatar.title,
-      variant,
     });
 
     // 在 ChatItem 组件中添加
@@ -140,14 +139,7 @@ const ChatItem = memo<ChatItemProps>(
                 />
               )}
             </Flexbox>
-            {actions && (
-              <Actions
-                actions={actions}
-                editing={editing}
-                placement={placement}
-                variant={variant}
-              />
-            )}
+            {actions && <Actions actions={actions} editing={editing} placement={placement} />}
           </Flexbox>
           {belowMessage}
         </Flexbox>

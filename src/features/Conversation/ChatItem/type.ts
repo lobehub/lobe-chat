@@ -71,5 +71,5 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
    * @description The type of the chat item
    * @default 'bubble'
    */
-  variant?: 'bubble' | 'docs';
+  variant?: 'bubble';
 }

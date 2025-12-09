@@ -11,12 +11,12 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_SUPERVISOR_AVATAR } from '@/const/meta';
-import { ChatItem } from '@/features/ChatItem';
-import TodoList, { TodoData } from './TodoList';
+import { ChatItem } from '@/features/Conversation/ChatItem';
 import { useChatStore } from '@/store/chat';
 import { ChatErrorType } from '@/types/fetch';
 
 import { dataSelectors, useConversationStore } from '../../store';
+import TodoList, { TodoData } from './TodoList';
 
 const useStyles = createStyles(({ token, css, cx }) => ({
   modelInfo: cx(css`
@@ -185,7 +185,7 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
       renderMessage={renderErrorMessage}
       showTitle={true}
       time={updatedAt || createdAt}
-      variant={isTodoMessage || error ? 'docs' : 'bubble'}
+      variant="bubble"
     />
   );
 });

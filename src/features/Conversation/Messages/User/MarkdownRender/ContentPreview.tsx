@@ -6,7 +6,6 @@ import { useChatStore } from '@/store/chat';
 
 interface ContentPreviewProps {
   content: string;
-  displayMode: 'chat' | 'docs';
   id: string;
 }
 

@@ -83,7 +83,6 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
         changelog,
         config: {
           chatConfig: {
-            displayMode: chatConfig?.displayMode,
             enableHistoryCount: chatConfig?.enableHistoryCount,
             historyCount: chatConfig?.historyCount,
             maxTokens: agentConfig?.params?.max_tokens,
@@ -155,7 +154,6 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
     }
   }, [
     agentConfig?.params,
-    chatConfig?.displayMode,
     chatConfig?.enableHistoryCount,
     chatConfig?.historyCount,
     chatConfig?.searchMode,

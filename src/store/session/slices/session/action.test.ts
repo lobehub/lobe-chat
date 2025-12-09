@@ -77,13 +77,13 @@ describe('SessionAction', () => {
 
       await act(async () => {
         createdSessionId = await result.current.createSession({
-          config: { chatConfig: { displayMode: 'docs' } },
+          config: { chatConfig: { enableHistoryCount: true } },
         });
       });
 
       const call = vi.mocked(sessionService.createSession).mock.calls[0];
       expect(call[0]).toEqual(LobeSessionType.Agent);
-      expect(call[1]).toMatchObject({ config: { chatConfig: { displayMode: 'docs' } } });
+      expect(call[1]).toMatchObject({ config: { chatConfig: { enableHistoryCount: true } } });
 
       expect(createdSessionId).toBe(newSessionId);
     });
@@ -97,7 +97,7 @@ describe('SessionAction', () => {
 
       await act(async () => {
         createdSessionId = await result.current.createSession(
-          { config: { chatConfig: { displayMode: 'docs' } } },
+          { config: { chatConfig: { enableHistoryCount: true } } },
           false,
         );
       });

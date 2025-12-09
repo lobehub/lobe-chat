@@ -36,7 +36,6 @@ const MessageContent = memo<MessageContentProps>(
     placement,
     messageExtra,
     renderMessage,
-    variant,
     primary,
     onDoubleClick,
     markdownProps,
@@ -44,7 +43,7 @@ const MessageContent = memo<MessageContentProps>(
     className,
   }) => {
     const { t } = useTranslation('common');
-    const { cx, styles } = useStyles({ disabled, editing, placement, primary, variant });
+    const { cx, styles } = useStyles({ disabled, editing, placement, primary });
     const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
     const { mobile } = useResponsive();
     const text = useMemo(

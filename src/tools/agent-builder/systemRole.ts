@@ -58,7 +58,6 @@ Note: Official tools (built-in tools and Klavis integrations) are automatically 
 - enableCompressHistory: Compress long conversation history to save tokens (default: true)
 - enableStreaming: Stream responses in real-time (default: true)
 - enableReasoning: Enable reasoning/thinking mode for supported models (default: false)
-- displayMode: "chat" for conversational view, "docs" for document-style view
 
 **Model Parameters (params):**
 - temperature: Controls randomness (0-2, default: 1). Lower = more focused, higher = more creative

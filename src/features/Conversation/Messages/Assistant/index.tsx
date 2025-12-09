@@ -2,7 +2,6 @@
 
 import { LOADING_FLAT } from '@lobechat/const';
 import { Tag } from '@lobehub/ui';
-import { createStyles, css, cx, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, Suspense, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,14 +9,10 @@ import { Flexbox } from 'react-layout-kit';
 
 import BubblesLoading from '@/components/BubblesLoading';
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
-import Avatar from '@/features/ChatItem/components/Avatar';
-import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
-import ErrorContent from '@/features/ChatItem/components/ErrorContent';
-import MessageContent from '@/features/ChatItem/components/MessageContent';
-import Title from '@/features/ChatItem/components/Title';
+import { ChatItem } from '@/features/Conversation/ChatItem';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
+import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -39,106 +34,6 @@ import { AssistantMessageBody } from './components/MessageBody';
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
 const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
 
-const messageContainer = cx(css`
-  border: none;
-  background: none;
-`);
-
-const useStyles = createStyles(
-  (
-    { cx, css, token, responsive },
-    {
-      placement,
-      variant,
-      editing,
-    }: { editing?: boolean; placement?: 'left' | 'right'; variant?: 'bubble' | 'docs' },
-  ) => {
-    const rawContainerStylish = css`
-      margin-block-end: -16px;
-      transition: background-color 100ms ${token.motionEaseOut};
-    `;
-
-    const editingStylish =
-      editing &&
-      css`
-        width: 100%;
-      `;
-
-    return {
-      actions: cx(
-        css`
-          flex: none;
-          align-self: ${variant === 'bubble'
-            ? 'flex-end'
-            : placement === 'left'
-              ? 'flex-start'
-              : 'flex-end'};
-          justify-content: ${placement === 'left' ? 'flex-end' : 'flex-start'};
-        `,
-        editing &&
-          css`
-            pointer-events: none !important;
-            opacity: 0 !important;
-          `,
-      ),
-      container: cx(
-        variant === 'docs' && rawContainerStylish,
-        css`
-          position: relative;
-          width: 100%;
-          max-width: 100vw;
-          padding-block: 24px 12px;
-
-          @supports (content-visibility: auto) {
-            contain-intrinsic-size: auto 100lvh;
-          }
-
-          time {
-            display: inline-block;
-            white-space: nowrap;
-          }
-
-          div[role='menubar'] {
-            display: flex;
-          }
-
-          time,
-          div[role='menubar'] {
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 200ms ${token.motionEaseOut};
-          }
-
-          &:hover {
-            time,
-            div[role='menubar'] {
-              pointer-events: unset;
-              opacity: 1;
-            }
-          }
-
-          ${responsive.mobile} {
-            padding-block-start: ${variant === 'docs' ? '16px' : '12px'};
-            padding-inline: 8px;
-          }
-        `,
-      ),
-      messageContent: cx(
-        editingStylish,
-        css`
-          position: relative;
-          overflow: hidden;
-          max-width: 100%;
-
-          ${responsive.mobile} {
-            flex-direction: column !important;
-          }
-        `,
-      ),
-    };
-  },
-);
-
 const isHtmlCode = (content: string, language: string) => {
   return (
     language === 'html' ||
@@ -146,7 +41,6 @@ const isHtmlCode = (content: string, language: string) => {
     (language === '' && content.includes('<!DOCTYPE html>'))
   );
 };
-const MOBILE_AVATAR_SIZE = 32;
 
 interface AssistantMessageProps {
   actionsConfig?: MessageActionsConfig;
@@ -180,10 +74,8 @@ const AssistantMessage = memo<AssistantMessageProps>(
 
     const avatar = useAgentMeta();
     const { t } = useTranslation('chat');
-    const { mobile } = useResponsive();
     const placement = 'left';
-    const type = useAgentStore(agentChatConfigSelectors.displayMode);
-    const variant = type === 'chat' ? 'bubble' : 'docs';
+    const variant = 'bubble';
 
     const { transitionMode, highlighterTheme, mermaidTheme, fontSize } = useUserStore(
       userGeneralSettingsSelectors.config,
@@ -193,11 +85,6 @@ const AssistantMessage = memo<AssistantMessageProps>(
     const editing = useConversationStore(messageStateSelectors.isMessageEditing(id));
     const generating = useConversationStore(messageStateSelectors.isMessageGenerating(id));
 
-    const { styles } = useStyles({
-      editing,
-      placement,
-      variant,
-    });
     const errorContent = useErrorContent(error);
 
     // remove line breaks in artifact tag to make the ast transform easier
@@ -311,97 +198,77 @@ const AssistantMessage = memo<AssistantMessageProps>(
     const errorMessage = <ErrorMessageExtra data={item} />;
 
     return (
-      <Flexbox
-        className={styles.container}
-        gap={mobile ? 6 : 12}
-        style={isLatestItem ? { minHeight: 'calc(-300px + 100dvh)' } : undefined}
-      >
-        <Flexbox gap={4} horizontal>
-          <Avatar
-            alt={avatar.title || 'avatar'}
-            avatar={avatar}
-            loading={loading}
-            onClick={onAvatarClick}
-            placement={placement}
-            size={MOBILE_AVATAR_SIZE}
-          />
-          <Title
-            avatar={avatar}
-            placement={placement}
-            showTitle
-            style={{ marginBlockEnd: 0 }}
-            time={createdAt}
-            titleAddon={dmIndicator}
-          />
-        </Flexbox>
-        <Flexbox
-          align={'flex-start'}
-          className={styles.messageContent}
-          data-layout={'vertical'}
-          direction={'vertical'}
-          gap={8}
-          width={'100%'}
-        >
-          <Suspense fallback={<BubblesLoading />}>
-            <Flexbox style={{ flex: 1, maxWidth: '100%' }} width={'100%'}>
-              {error && (message === LOADING_FLAT || !message) ? (
-                <ErrorContent error={errorContent} message={errorMessage} placement={placement} />
-              ) : (
-                <MessageContent
-                  className={messageContainer}
-                  editing={editing}
+      <Suspense fallback={<BubblesLoading />}>
+        <ChatItem
+          aboveMessage={null}
+          actions={
+            !disableEditing && !editing ? (
+              <Flexbox align={'center'} horizontal role="menubar">
+                {branch && (
+                  <MessageBranch
+                    activeBranchIndex={branch.activeBranchIndex}
+                    count={branch.count}
+                    messageId={id}
+                  />
+                )}
+                <AssistantActionsBar
+                  actionsConfig={actionsConfig}
+                  data={item}
                   id={id}
-                  markdownProps={markdownProps}
-                  message={reducted ? `*${t('hideForYou')}*` : message}
-                  messageExtra={
-                    <>
-                      {errorContent && (
-                        <ErrorContent
-                          error={errorContent}
-                          message={errorMessage}
-                          placement={placement}
-                        />
-                      )}
-                      <AssistantMessageExtra
-                        content={content}
-                        extra={extra}
-                        id={id}
-                        model={model!}
-                        performance={performance! || metadata}
-                        provider={provider!}
-                        tools={tools}
-                        usage={usage! || metadata}
-                      />
-                    </>
-                  }
-                  onDoubleClick={onDoubleClick}
-                  placement={placement}
-                  renderMessage={renderMessage}
-                  variant={variant}
+                  index={index}
                 />
+              </Flexbox>
+            ) : undefined
+          }
+          avatar={avatar}
+          editing={editing}
+          error={
+            errorContent && error && (message === LOADING_FLAT || !message)
+              ? errorContent
+              : undefined
+          }
+          errorMessage={errorMessage}
+          id={id}
+          loading={loading}
+          markdownProps={markdownProps}
+          message={reducted ? `*${t('hideForYou')}*` : message}
+          messageExtra={
+            <>
+              {errorContent && !(error && (message === LOADING_FLAT || !message)) && (
+                <Flexbox
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    borderRadius: 8,
+                    padding: 0,
+                  }}
+                >
+                  {errorMessage}
+                </Flexbox>
               )}
-            </Flexbox>
-          </Suspense>
-          {!disableEditing && !editing && (
-            <Flexbox align={'center'} horizontal role="menubar">
-              {branch && (
-                <MessageBranch
-                  activeBranchIndex={branch.activeBranchIndex}
-                  count={branch.count}
-                  messageId={id}
-                />
-              )}
-              <AssistantActionsBar
-                actionsConfig={actionsConfig}
-                data={item}
+              <AssistantMessageExtra
+                content={content}
+                extra={extra}
                 id={id}
-                index={index}
+                model={model!}
+                performance={performance! || metadata}
+                provider={provider!}
+                tools={tools}
+                usage={usage! || metadata}
               />
-            </Flexbox>
-          )}
-        </Flexbox>
-        {mobile && <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />}
-      </Flexbox>
+            </>
+          }
+          onAvatarClick={onAvatarClick}
+          onDoubleClick={onDoubleClick}
+          placement={placement}
+          renderMessage={renderMessage}
+          showTitle
+          style={isLatestItem ? { minHeight: 'calc(-300px + 100dvh)' } : undefined}
+          time={createdAt}
+          titleAddon={dmIndicator}
+          variant={variant}
+        />
+      </Suspense>
     );
   },
   isEqual,
