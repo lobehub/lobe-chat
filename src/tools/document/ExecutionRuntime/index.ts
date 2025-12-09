@@ -67,6 +67,8 @@ import type {
 /**
  * Page Agent Execution Runtime
  * Handles the execution logic for all Page Agent (Document) APIs
+ *
+ * See `packages/builtin-agents/src/agents/page-agent/README.md` for more detailsd
  */
 export class PageAgentExecutionRuntime {
   private editor: IEditor | null = null;
@@ -111,7 +113,7 @@ export class PageAgentExecutionRuntime {
   // ==================== Initialize ====================
 
   /**
-   * Initialize a new document from Markdown content
+   * Replace the content from Markdown
    */
   async initPage(args: InitDocumentArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
@@ -142,10 +144,10 @@ export class PageAgentExecutionRuntime {
     }
   }
 
-  // ==================== Document Metadata ====================
+  // ==================== Metadata ====================
 
   /**
-   * Edit the document title
+   * Edit the page title
    */
   async editTitle(args: EditTitleArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
@@ -173,15 +175,196 @@ export class PageAgentExecutionRuntime {
     }
   }
 
+  // ==================== Helper Methods ====================
+
+  /**
+   * Find a node in the Lexical JSON structure by its path-based ID
+   * Node IDs are generated as "node_{path}" where path is like "0.1.2"
+   */
+  private findNodeByPath(root: any, path: number[]): any {
+    let current = root;
+    for (const index of path) {
+      if (!current.children || !current.children[index]) {
+        return null;
+      }
+      current = current.children[index];
+    }
+    return current;
+  }
+
+  /**
+   * Parse a node ID (format: "node_0_1_2") into a path array [0, 1, 2]
+   */
+  private parseNodeId(nodeId: string): number[] {
+    if (!nodeId.startsWith('node_')) {
+      throw new Error(`Invalid node ID format: ${nodeId}. Expected format: node_0_1_2`);
+    }
+    const pathStr = nodeId.slice(5);
+    if (!pathStr || pathStr.trim() === '') {
+      throw new Error(`Invalid node ID format: ${nodeId}. Expected format: node_0_1_2`);
+    }
+    return pathStr.split('_').map(Number);
+  }
+
+  /**
+   * Generate a node ID from a path array
+   */
+  private generateNodeId(path: number[]): string {
+    return `node_${path.join('_')}`;
+  }
+
+  /**
+   * Create a Lexical node structure from parameters
+   */
+  private createLexicalNode(args: CreateNodeArgs): any {
+    const lexicalType = this.mapNodeTypeToLexical(args.type);
+
+    // Handle text nodes specially
+    if (lexicalType === 'text' || args.type === 'span') {
+      return {
+        text: args.content || '',
+        type: 'text',
+        ...args.attributes,
+      };
+    }
+
+    const node: any = {
+      type: lexicalType,
+    };
+
+    // Add type-specific properties
+    if (/^h[1-6]$/.test(args.type)) {
+      node.tag = args.type;
+    }
+
+    // Add content
+    if (args.content) {
+      node.children = [
+        {
+          text: args.content,
+          type: 'text',
+        },
+      ];
+    }
+
+    // Parse and add children if provided
+    if (args.children) {
+      // For now, store as text - in a full implementation, would parse XML
+      node.children = [
+        {
+          text: args.children,
+          type: 'text',
+        },
+      ];
+    }
+
+    // Add attributes (stored in Lexical-specific fields)
+    if (args.attributes) {
+      Object.assign(node, args.attributes);
+    }
+
+    return node;
+  }
+
+  /**
+   * Map XML node types to Lexical node types
+   */
+  private mapNodeTypeToLexical(type: string): string {
+    const mapping: Record<string, string> = {
+      a: 'link',
+      blockquote: 'quote',
+      code: 'code',
+      h1: 'heading',
+      h2: 'heading',
+      h3: 'heading',
+      h4: 'heading',
+      h5: 'heading',
+      h6: 'heading',
+      img: 'image',
+      li: 'listitem',
+      ol: 'list',
+      p: 'paragraph',
+      pre: 'code',
+      span: 'text',
+      ul: 'list',
+    };
+
+    return mapping[type] || type;
+  }
+
   // ==================== Basic CRUD ====================
 
-  async createNode(_args: CreateNodeArgs): Promise<BuiltinServerRuntimeOutput> {
+  async createNode(args: CreateNodeArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
-      // TODO: Implement node creation
+      const editor = this.getEditor();
+
+      // Get current document
+      const docJson = editor.getDocument('json') as any;
+      if (!docJson || !docJson.root) {
+        throw new Error('Document not initialized');
+      }
+
+      // Create the new node
+      const newNode = this.createLexicalNode(args);
+
+      // Find the reference node and insert
+      if (args.referenceNodeId) {
+        const refPath = this.parseNodeId(args.referenceNodeId);
+        const parent = this.findNodeByPath(docJson.root, refPath.slice(0, -1)) || docJson.root;
+
+        if (!parent.children) {
+          parent.children = [];
+        }
+
+        const position = args.position || 'after';
+        const refIndex = refPath.at(-1);
+
+        if (refIndex === undefined) {
+          throw new Error('Invalid reference node path');
+        }
+
+        switch (position) {
+          case 'before': {
+            parent.children.splice(refIndex, 0, newNode);
+            break;
+          }
+          case 'after': {
+            parent.children.splice(refIndex + 1, 0, newNode);
+            break;
+          }
+          case 'prepend': {
+            const refNode = parent.children[refIndex];
+            if (!refNode.children) refNode.children = [];
+            refNode.children.unshift(newNode);
+            break;
+          }
+          case 'append': {
+            const refNode = parent.children[refIndex];
+            if (!refNode.children) refNode.children = [];
+            refNode.children.push(newNode);
+            break;
+          }
+        }
+      } else {
+        // Append to root
+        if (!docJson.root.children) {
+          docJson.root.children = [];
+        }
+        docJson.root.children.push(newNode);
+      }
+
+      // Update the document
+      editor.setDocument('json', JSON.stringify(docJson));
+
       return {
-        content: `Node creation not yet implemented`,
-        state: { createdNodeId: '' } as CreateNodeState,
-        success: false,
+        content: `Successfully created ${args.type} node${args.referenceNodeId ? ` ${args.position || 'after'} node ${args.referenceNodeId}` : ' at document root'}.`,
+        state: {
+          createdNodeId: this.generateNodeId([
+            ...(args.referenceNodeId ? this.parseNodeId(args.referenceNodeId).slice(0, -1) : []),
+            docJson.root.children.length - 1,
+          ]),
+        } as CreateNodeState,
+        success: true,
       };
     } catch (error) {
       const err = error as Error;
@@ -195,11 +378,65 @@ export class PageAgentExecutionRuntime {
 
   async updateNode(args: UpdateNodeArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
-      // TODO: Implement node update
+      const editor = this.getEditor();
+
+      // Get current document
+      const docJson = editor.getDocument('json') as any;
+      if (!docJson || !docJson.root) {
+        throw new Error('Document not initialized');
+      }
+
+      // Find the node
+      const path = this.parseNodeId(args.nodeId);
+      const node = this.findNodeByPath(docJson.root, path);
+
+      if (!node) {
+        throw new Error(`Node ${args.nodeId} not found`);
+      }
+
+      // Update content
+      if (args.content !== undefined) {
+        if (node.type === 'text') {
+          node.text = args.content;
+        } else {
+          node.children = [
+            {
+              text: args.content,
+              type: 'text',
+            },
+          ];
+        }
+      }
+
+      // Update children
+      if (args.children !== undefined) {
+        // For now, replace with text - full implementation would parse XML
+        node.children = [
+          {
+            text: args.children,
+            type: 'text',
+          },
+        ];
+      }
+
+      // Update attributes
+      if (args.attributes) {
+        for (const [key, value] of Object.entries(args.attributes)) {
+          if (value === null) {
+            delete node[key];
+          } else {
+            node[key] = value;
+          }
+        }
+      }
+
+      // Update the document
+      editor.setDocument('json', JSON.stringify(docJson));
+
       return {
-        content: `Node update not yet implemented`,
+        content: `Successfully updated node ${args.nodeId}.`,
         state: { updatedNodeId: args.nodeId } as UpdateNodeState,
-        success: false,
+        success: true,
       };
     } catch (error) {
       const err = error as Error;
@@ -213,11 +450,44 @@ export class PageAgentExecutionRuntime {
 
   async deleteNode(args: DeleteNodeArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
-      // TODO: Implement node deletion
+      const editor = this.getEditor();
+
+      // Get current document
+      const docJson = editor.getDocument('json') as any;
+      if (!docJson || !docJson.root) {
+        throw new Error('Document not initialized');
+      }
+
+      // Find the parent and remove the node
+      const path = this.parseNodeId(args.nodeId);
+      if (path.length === 0) {
+        throw new Error('Cannot delete root node');
+      }
+
+      const parentPath = path.slice(0, -1);
+      const nodeIndex = path.at(-1);
+      const parent =
+        parentPath.length === 0 ? docJson.root : this.findNodeByPath(docJson.root, parentPath);
+
+      if (nodeIndex === undefined) {
+        throw new Error('Invalid node path');
+      }
+
+      if (!parent || !parent.children || !parent.children[nodeIndex]) {
+        throw new Error(`Node ${args.nodeId} not found`);
+      }
+
+      // Remove the node
+      const deletedNode = parent.children[nodeIndex];
+      parent.children.splice(nodeIndex, 1);
+
+      // Update the document
+      editor.setDocument('json', JSON.stringify(docJson));
+
       return {
-        content: `Node deletion not yet implemented`,
+        content: `Successfully deleted ${deletedNode.type} node ${args.nodeId}.`,
         state: { deletedNodeId: args.nodeId } as DeleteNodeState,
-        success: false,
+        success: true,
       };
     } catch (error) {
       const err = error as Error;

@@ -3,6 +3,7 @@ import { debounce } from 'lodash-es';
 import { StateCreator } from 'zustand';
 
 import { documentService } from '@/services/document';
+import { pageAgentRuntime } from '@/store/chat/slices/builtinTool/actions/pageAgent';
 import { useFileStore } from '@/store/file';
 import { DocumentSourceType, LobeDocument } from '@/types/document';
 
@@ -121,6 +122,20 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
 
       onEditorInit: () => {
         // Called when editor is initialized
+        const { editor, setCurrentTitle, currentTitle } = get();
+
+        if (editor) {
+          // Connect the editor instance to the page agent runtime
+          pageAgentRuntime.setEditor(editor);
+
+          // Set up title handlers for the runtime
+          pageAgentRuntime.setTitleHandlers(
+            (title: string) => setCurrentTitle(title),
+            () => currentTitle,
+          );
+
+          console.log('[PageEditor] Connected editor to page agent runtime');
+        }
       },
 
       performSave: async () => {

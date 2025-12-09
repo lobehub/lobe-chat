@@ -18,25 +18,26 @@ const escapeXml = (str: string): string => {
 };
 
 /**
- * Generate unique node ID
+ * Generate path-based node ID
  */
-let nodeIdCounter = 0;
-const generateNodeId = (): string => {
-  nodeIdCounter++;
-  return `node_${nodeIdCounter}`;
+const generateNodeId = (path: number[]): string => {
+  return `node_${path.join('_')}`;
 };
 
 /**
  * Convert Lexical JSON format to XML format with node IDs
+ * @param node - The Lexical node to convert
+ * @param depth - Current depth in the tree (for indentation)
+ * @param path - Path to this node (array of indices from root)
  */
-const convertLexicalToXml = (node: any, depth = 0): string => {
+const convertLexicalToXml = (node: any, depth = 0, path: number[] = []): string => {
   if (!node) return '';
 
   const indent = '  '.repeat(depth);
 
   // Handle text nodes
   if (node.type === 'text') {
-    const nodeId = generateNodeId();
+    const nodeId = generateNodeId(path);
     const text = escapeXml(node.text || '');
     return `${indent}<span id="${nodeId}">${text}</span>`;
   }
@@ -44,71 +45,95 @@ const convertLexicalToXml = (node: any, depth = 0): string => {
   // Handle root node
   if (node.type === 'root') {
     const children =
-      node.children?.map((child: any) => convertLexicalToXml(child, depth)).join('\n') || '';
+      node.children
+        ?.map((child: any, index: number) => convertLexicalToXml(child, depth, [index]))
+        .join('\n') || '';
     return `<root>\n${children}\n</root>`;
   }
 
   // Handle heading nodes
   if (node.type === 'heading') {
-    const nodeId = generateNodeId();
+    const nodeId = generateNodeId(path);
     const tag = node.tag || 'h1';
     const children =
-      node.children?.map((child: any) => convertLexicalToXml(child, depth + 1)).join('\n') || '';
+      node.children
+        ?.map((child: any, index: number) =>
+          convertLexicalToXml(child, depth + 1, [...path, index]),
+        )
+        .join('\n') || '';
     return `${indent}<${tag} id="${nodeId}">\n${children}\n${indent}</${tag}>`;
   }
 
   // Handle paragraph nodes
   if (node.type === 'paragraph') {
-    const nodeId = generateNodeId();
+    const nodeId = generateNodeId(path);
     const children =
-      node.children?.map((child: any) => convertLexicalToXml(child, depth + 1)).join('\n') || '';
+      node.children
+        ?.map((child: any, index: number) =>
+          convertLexicalToXml(child, depth + 1, [...path, index]),
+        )
+        .join('\n') || '';
     return `${indent}<p id="${nodeId}">\n${children}\n${indent}</p>`;
   }
 
   // Handle list nodes
   if (node.type === 'list') {
-    const nodeId = generateNodeId();
+    const nodeId = generateNodeId(path);
     const tag = node.listType === 'bullet' || node.tag === 'ul' ? 'ul' : 'ol';
     const children =
-      node.children?.map((child: any) => convertLexicalToXml(child, depth + 1)).join('\n') || '';
+      node.children
+        ?.map((child: any, index: number) =>
+          convertLexicalToXml(child, depth + 1, [...path, index]),
+        )
+        .join('\n') || '';
     return `${indent}<${tag} id="${nodeId}">\n${children}\n${indent}</${tag}>`;
   }
 
   // Handle list item nodes
   if (node.type === 'listitem') {
-    const nodeId = generateNodeId();
+    const nodeId = generateNodeId(path);
     const children =
-      node.children?.map((child: any) => convertLexicalToXml(child, depth + 1)).join('\n') || '';
+      node.children
+        ?.map((child: any, index: number) =>
+          convertLexicalToXml(child, depth + 1, [...path, index]),
+        )
+        .join('\n') || '';
     return `${indent}<li id="${nodeId}">\n${children}\n${indent}</li>`;
   }
 
   // Handle blockquote nodes
   if (node.type === 'quote') {
-    const nodeId = generateNodeId();
+    const nodeId = generateNodeId(path);
     const children =
-      node.children?.map((child: any) => convertLexicalToXml(child, depth + 1)).join('\n') || '';
+      node.children
+        ?.map((child: any, index: number) =>
+          convertLexicalToXml(child, depth + 1, [...path, index]),
+        )
+        .join('\n') || '';
     return `${indent}<blockquote id="${nodeId}">\n${children}\n${indent}</blockquote>`;
   }
 
   // Handle code block nodes
   if (node.type === 'code') {
-    const nodeId = generateNodeId();
+    const nodeId = generateNodeId(path);
     const text = escapeXml(node.children?.map((c: any) => c.text || '').join('') || '');
     return `${indent}<pre id="${nodeId}"><code>${text}</code></pre>`;
   }
 
   // Handle link nodes
   if (node.type === 'link') {
-    const nodeId = generateNodeId();
+    const nodeId = generateNodeId(path);
     const href = escapeXml(node.url || '');
     const children =
-      node.children?.map((child: any) => convertLexicalToXml(child, depth)).join('') || '';
+      node.children
+        ?.map((child: any, index: number) => convertLexicalToXml(child, depth, [...path, index]))
+        .join('') || '';
     return `<a id="${nodeId}" href="${href}">${children}</a>`;
   }
 
   // Handle image nodes
   if (node.type === 'image') {
-    const nodeId = generateNodeId();
+    const nodeId = generateNodeId(path);
     const src = escapeXml(node.src || '');
     const alt = escapeXml(node.altText || '');
     return `${indent}<img id="${nodeId}" src="${src}" alt="${alt}" />`;
@@ -116,7 +141,9 @@ const convertLexicalToXml = (node: any, depth = 0): string => {
 
   // Fallback for unknown nodes - just process children
   if (node.children) {
-    return node.children.map((child: any) => convertLexicalToXml(child, depth)).join('\n');
+    return node.children
+      .map((child: any, index: number) => convertLexicalToXml(child, depth, [...path, index]))
+      .join('\n');
   }
 
   return '';
@@ -185,16 +212,14 @@ const defaultFormatPageContext = (context: PageEditorContext): string => {
   // Add editor data section (the XML document structure)
   if (context.editorData) {
     try {
-      // Reset node ID counter for consistent IDs
-      nodeIdCounter = 0;
-
       // Convert Lexical JSON to XML format with node IDs
       const xmlStructure = convertLexicalToXml(context.editorData.root);
 
       // Log the conversion for debugging
+      const nodeCount = context.editorData.root?.children?.length || 0;
       console.log(
-        '[PageEditorContextInjector] Converted Lexical to XML, node count:',
-        nodeIdCounter,
+        '[PageEditorContextInjector] Converted Lexical to XML, root children count:',
+        nodeCount,
       );
       console.log('[PageEditorContextInjector] XML preview:', xmlStructure.slice(0, 500));
 

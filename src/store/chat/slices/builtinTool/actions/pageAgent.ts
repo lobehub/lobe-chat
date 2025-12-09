@@ -87,8 +87,59 @@ export const pageAgentSlice: StateCreator<
 
   // ============ Basic CRUD ============
   createNode: async (id, params) => {
-    console.log('createNode', id, params);
-    return true;
+    const parentOperationId = get().messageOperationMap[id];
+
+    const { operationId } = get().startOperation({
+      context: { messageId: id },
+      metadata: { apiName: 'createNode', params, startTime: Date.now() },
+      parentOperationId,
+      type: 'builtinToolPageAgent',
+    });
+
+    const context = { operationId };
+
+    try {
+      const result = await runtime.createNode(params);
+      const { content, success, error, state } = result;
+
+      get().completeOperation(operationId);
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
+
+      if (success) {
+        await get().optimisticUpdatePluginState(id, state, context);
+      } else {
+        await get().optimisticUpdatePluginError(id, error, context);
+      }
+
+      return true;
+    } catch (error) {
+      const err = error as Error;
+
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        get().failOperation(operationId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        return true;
+      }
+
+      get().failOperation(operationId, {
+        message: err.message,
+        type: 'PluginServerError',
+      });
+
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        {
+          body: error,
+          message: err.message,
+          type: 'PluginServerError',
+        },
+        context,
+      );
+
+      return true;
+    }
   },
 
   // ============ Image Operations ============
@@ -98,8 +149,59 @@ export const pageAgentSlice: StateCreator<
   },
 
   deleteNode: async (id, params) => {
-    console.log('deleteNode', id, params);
-    return true;
+    const parentOperationId = get().messageOperationMap[id];
+
+    const { operationId } = get().startOperation({
+      context: { messageId: id },
+      metadata: { apiName: 'deleteNode', params, startTime: Date.now() },
+      parentOperationId,
+      type: 'builtinToolPageAgent',
+    });
+
+    const context = { operationId };
+
+    try {
+      const result = await runtime.deleteNode(params);
+      const { content, success, error, state } = result;
+
+      get().completeOperation(operationId);
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
+
+      if (success) {
+        await get().optimisticUpdatePluginState(id, state, context);
+      } else {
+        await get().optimisticUpdatePluginError(id, error, context);
+      }
+
+      return true;
+    } catch (error) {
+      const err = error as Error;
+
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        get().failOperation(operationId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        return true;
+      }
+
+      get().failOperation(operationId, {
+        message: err.message,
+        type: 'PluginServerError',
+      });
+
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        {
+          body: error,
+          message: err.message,
+          type: 'PluginServerError',
+        },
+        context,
+      );
+
+      return true;
+    }
   },
 
   deleteSnapshot: async (id, params) => {
@@ -320,8 +422,59 @@ export const pageAgentSlice: StateCreator<
   },
 
   updateNode: async (id, params) => {
-    console.log('updateNode', id, params);
-    return true;
+    const parentOperationId = get().messageOperationMap[id];
+
+    const { operationId } = get().startOperation({
+      context: { messageId: id },
+      metadata: { apiName: 'updateNode', params, startTime: Date.now() },
+      parentOperationId,
+      type: 'builtinToolPageAgent',
+    });
+
+    const context = { operationId };
+
+    try {
+      const result = await runtime.updateNode(params);
+      const { content, success, error, state } = result;
+
+      get().completeOperation(operationId);
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
+
+      if (success) {
+        await get().optimisticUpdatePluginState(id, state, context);
+      } else {
+        await get().optimisticUpdatePluginError(id, error, context);
+      }
+
+      return true;
+    } catch (error) {
+      const err = error as Error;
+
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        get().failOperation(operationId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        return true;
+      }
+
+      get().failOperation(operationId, {
+        message: err.message,
+        type: 'PluginServerError',
+      });
+
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        {
+          body: error,
+          message: err.message,
+          type: 'PluginServerError',
+        },
+        context,
+      );
+
+      return true;
+    }
   },
 
   wrapNodes: async (id, params) => {
