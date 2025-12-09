@@ -367,6 +367,127 @@ describe('UserMemoryModel', () => {
     });
   });
 
+  describe('remove layered entries', () => {
+    it('removes context entry and linked base memories only for current user', async () => {
+      const experienceMemory = await userMemoryModel.create(
+        generateRandomCreateUserMemoryExperienceParams(),
+      );
+      const preferenceMemory = await userMemoryModel.create(
+        generateRandomCreateUserMemoryPreferenceParams(),
+      );
+
+      const anotherUserModel = new UserMemoryModel(serverDB, userId2);
+      const otherMemory = await anotherUserModel.create(
+        generateRandomCreateUserMemoryExperienceParams(),
+      );
+
+      const contextId = idGenerator('memory');
+      await serverDB.insert(userMemoriesContexts).values({
+        description: 'context to remove',
+        id: contextId,
+        userId,
+        userMemoryIds: [experienceMemory.id, preferenceMemory.id, otherMemory.id],
+      });
+
+      const removed = await userMemoryModel.removeContextEntry(contextId);
+
+      expect(removed).toBe(true);
+      const deletedContext = await serverDB.query.userMemoriesContexts.findFirst({
+        where: eq(userMemoriesContexts.id, contextId),
+      });
+      const deletedExperience = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, experienceMemory.id),
+      });
+      const deletedPreference = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, preferenceMemory.id),
+      });
+      const otherUserMemory = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, otherMemory.id),
+      });
+
+      expect(deletedContext).toBeUndefined();
+      expect(deletedExperience).toBeUndefined();
+      expect(deletedPreference).toBeUndefined();
+      expect(otherUserMemory).toBeDefined();
+    });
+
+    it('returns false when removing a context owned by another user', async () => {
+      const anotherUserModel = new UserMemoryModel(serverDB, userId2);
+      const { context } = await anotherUserModel.createContextMemory(
+        generateRandomCreateUserMemoryContextParams(),
+      );
+
+      const removed = await userMemoryModel.removeContextEntry(context.id);
+
+      expect(removed).toBe(false);
+      const persisted = await serverDB.query.userMemoriesContexts.findFirst({
+        where: eq(userMemoriesContexts.id, context.id),
+      });
+      expect(persisted).toBeDefined();
+    });
+
+    it('removes experience entry together with its base memory', async () => {
+      const baseMemory = await userMemoryModel.create(
+        generateRandomCreateUserMemoryExperienceParams(),
+      );
+      const experienceId = idGenerator('memory');
+      await serverDB.insert(userMemoriesExperiences).values({
+        ...generateRandomCreateUserMemoryExperienceParams().experience,
+        id: experienceId,
+        userId,
+        userMemoryId: baseMemory.id,
+      });
+
+      const removed = await userMemoryModel.removeExperienceEntry(experienceId);
+
+      expect(removed).toBe(true);
+      const persistedExperience = await serverDB.query.userMemoriesExperiences.findFirst({
+        where: eq(userMemoriesExperiences.id, experienceId),
+      });
+      const persistedBase = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, baseMemory.id),
+      });
+
+      expect(persistedExperience).toBeUndefined();
+      expect(persistedBase).toBeUndefined();
+    });
+
+    it('removes preference entry and keeps other users data intact', async () => {
+      const baseMemory = await userMemoryModel.create(
+        generateRandomCreateUserMemoryPreferenceParams(),
+      );
+      const preferenceId = idGenerator('memory');
+      await serverDB.insert(userMemoriesPreferences).values({
+        ...generateRandomCreateUserMemoryPreferenceParams().preference,
+        id: preferenceId,
+        userId,
+        userMemoryId: baseMemory.id,
+      });
+
+      const anotherUserModel = new UserMemoryModel(serverDB, userId2);
+      const otherPreference = await anotherUserModel.createPreferenceMemory(
+        generateRandomCreateUserMemoryPreferenceParams(),
+      );
+
+      const removed = await userMemoryModel.removePreferenceEntry(preferenceId);
+
+      expect(removed).toBe(true);
+      const persistedPreference = await serverDB.query.userMemoriesPreferences.findFirst({
+        where: eq(userMemoriesPreferences.id, preferenceId),
+      });
+      const persistedBase = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, baseMemory.id),
+      });
+      const otherUserPreference = await serverDB.query.userMemoriesPreferences.findFirst({
+        where: eq(userMemoriesPreferences.id, otherPreference.preference.id),
+      });
+
+      expect(persistedPreference).toBeUndefined();
+      expect(persistedBase).toBeUndefined();
+      expect(otherUserPreference).toBeDefined();
+    });
+  });
+
   describe('search', () => {
     it('should return layered results with split limits', async () => {
       const experienceMemoryOne = await userMemoryModel.create(
@@ -574,6 +695,100 @@ describe('UserMemoryModel', () => {
       expect(result.contexts[0]?.id).toBe(closeContextId);
       expect(result.experiences[0]?.id).toBe(closeExperienceId);
       expect(result.preferences[0]?.id).toBe(closePreferenceId);
+    });
+  });
+
+  describe('search helpers', () => {
+    it('returns empty arrays when limit is zero or negative', async () => {
+      const contexts = await userMemoryModel.searchContexts({ limit: 0 });
+      const experiences = await userMemoryModel.searchExperiences({ limit: -1 });
+      const preferences = await userMemoryModel.searchPreferences({ limit: 0 });
+
+      expect(contexts).toEqual([]);
+      expect(experiences).toEqual([]);
+      expect(preferences).toEqual([]);
+    });
+
+    it('filters contexts by type and orders by newest when no embedding', async () => {
+      const oldContextId = idGenerator('memory');
+      const recentContextId = idGenerator('memory');
+      await serverDB.insert(userMemoriesContexts).values([
+        {
+          createdAt: new Date('2024-01-01T00:00:00.000Z'),
+          description: 'old match',
+          id: oldContextId,
+          type: 'target',
+          updatedAt: new Date('2024-01-01T00:00:00.000Z'),
+          userId,
+        },
+        {
+          createdAt: new Date('2024-02-01T00:00:00.000Z'),
+          description: 'recent match',
+          id: recentContextId,
+          type: 'target',
+          updatedAt: new Date('2024-02-01T00:00:00.000Z'),
+          userId,
+        },
+        {
+          description: 'different type',
+          id: idGenerator('memory'),
+          type: 'other',
+          userId,
+        },
+      ]);
+
+      const contexts = await userMemoryModel.searchContexts({ limit: 5, type: 'target' });
+
+      expect(contexts).toHaveLength(2);
+      expect(contexts[0]?.id).toBe(recentContextId);
+      expect(contexts[1]?.id).toBe(oldContextId);
+      contexts.forEach((context) => {
+        expect(context.type).toBe('target');
+      });
+    });
+  });
+
+  describe('queryTags', () => {
+    it('aggregates tag counts by layer and ignores empty values', async () => {
+      const now = new Date('2024-04-01T00:00:00.000Z');
+      await serverDB.insert(userMemories).values([
+        {
+          id: idGenerator('memory'),
+          lastAccessedAt: now,
+          memoryLayer: 'identity',
+          tags: ['alpha', 'beta'],
+          userId,
+        },
+        {
+          id: idGenerator('memory'),
+          lastAccessedAt: now,
+          memoryLayer: 'identity',
+          tags: ['alpha', ''],
+          userId,
+        },
+        {
+          id: idGenerator('memory'),
+          lastAccessedAt: now,
+          memoryLayer: 'experience',
+          tags: ['beta'],
+          userId,
+        },
+      ]);
+
+      await serverDB.insert(userMemories).values({
+        id: idGenerator('memory'),
+        lastAccessedAt: now,
+        memoryLayer: 'identity',
+        tags: ['alpha'],
+        userId: userId2,
+      });
+
+      const tags = await userMemoryModel.queryTags({ layers: [LayersEnum.Identity], size: 2 });
+
+      expect(tags).toEqual([
+        { count: 2, tag: 'alpha' },
+        { count: 1, tag: 'beta' },
+      ]);
     });
   });
 

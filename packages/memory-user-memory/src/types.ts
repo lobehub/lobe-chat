@@ -3,7 +3,7 @@ import type {
   ModelRuntime,
   OpenAIChatMessage,
 } from '@lobechat/model-runtime';
-import type { UserMemoryLayer } from '@lobechat/types';
+import type { LayersEnum } from '@lobechat/types';
 
 import type {
   ContextExtractor,
@@ -48,13 +48,13 @@ export interface BaseExtractorDependencies {
 export interface MemoryExtractionLLMConfig {
   embeddingsModel?: string;
   gateModel: string;
-  layerModels: Partial<Record<UserMemoryLayer, string>>;
+  layerModels: Partial<Record<LayersEnum, string>>;
   provider?: string;
 }
 
 export interface MemoryExtractionJob {
   force?: boolean;
-  layers?: UserMemoryLayer[];
+  layers?: LayersEnum[];
   source: MemoryExtractionSourceType;
   sourceId: string;
   userId: string;
@@ -95,7 +95,7 @@ export interface MemoryResultRecorder<T = Record<string, unknown>> {
 
 export interface PersistedMemoryResult {
   createdIds: string[];
-  layers: Partial<Record<UserMemoryLayer, number>>;
+  layers: Partial<Record<LayersEnum, number>>;
 }
 
 export type MemoryExtractionLayerOutputs = Partial<{
@@ -123,10 +123,10 @@ export interface MemoryExtractionResult {
     retrievedContexts?: string[];
     retrievedIdentitiesContext?: string;
   };
-  layers: UserMemoryLayer[];
+  layers: LayersEnum[];
   outputs: MemoryExtractionLayerOutputs;
   processedCounts: number;
-  processedLayersCount: Record<UserMemoryLayer, number>;
+  processedLayersCount: Record<LayersEnum, number>;
 }
 
 export interface TemplateProps {

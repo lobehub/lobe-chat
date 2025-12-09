@@ -50,7 +50,7 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { S3 } from '@/server/modules/S3';
 import type { GlobalMemoryLayer } from '@/types/serverConfig';
 import type { UserKeyVaults } from '@/types/user/settings';
-import { LayersEnum, MergeStrategyEnum, TypesEnum, UserMemoryLayer } from '@/types/userMemory';
+import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
 
 const SOURCE_ALIAS_MAP: Record<string, MemoryExtractionSourceType> = {
   chatTopic: 'chat_topic',
@@ -61,18 +61,18 @@ const SOURCE_ALIAS_MAP: Record<string, MemoryExtractionSourceType> = {
   obsidian: 'obsidian',
 };
 
-const LAYER_ALIAS = new Set<UserMemoryLayer>([
-  UserMemoryLayer.Context,
-  UserMemoryLayer.Experience,
-  UserMemoryLayer.Identity,
-  UserMemoryLayer.Preference,
+const LAYER_ALIAS = new Set<LayersEnum>([
+  LayersEnum.Context,
+  LayersEnum.Experience,
+  LayersEnum.Identity,
+  LayersEnum.Preference,
 ]);
 
-const LAYER_LABEL_MAP: Record<UserMemoryLayer, string> = {
-  [UserMemoryLayer.Context]: 'contexts',
-  [UserMemoryLayer.Experience]: 'experiences',
-  [UserMemoryLayer.Identity]: 'identities',
-  [UserMemoryLayer.Preference]: 'preferences',
+const LAYER_LABEL_MAP: Record<LayersEnum, string> = {
+  [LayersEnum.Context]: 'contexts',
+  [LayersEnum.Experience]: 'experiences',
+  [LayersEnum.Identity]: 'identities',
+  [LayersEnum.Preference]: 'preferences',
 };
 
 export interface MemoryExtractionWorkflowCursor {
@@ -89,7 +89,7 @@ export interface MemoryExtractionNormalizedPayload {
   forceAll: boolean;
   forceTopics: boolean;
   from?: Date;
-  layers: UserMemoryLayer[];
+  layers: LayersEnum[];
   /**
    * - `workflow` depends on Upstash Workflows to process the extraction asynchronously.
    * - `direct` processes the extraction within the webhook request itself.
@@ -143,11 +143,11 @@ const normalizeSources = (sources?: string[]): MemoryExtractionSourceType[] => {
   return Array.from(new Set(normalized));
 };
 
-const normalizeLayers = (layers?: string[]): UserMemoryLayer[] => {
+const normalizeLayers = (layers?: string[]): LayersEnum[] => {
   if (!layers) return [];
 
   const normalized = layers
-    .map((layer) => layer.toLowerCase() as UserMemoryLayer)
+    .map((layer) => layer.toLowerCase() as LayersEnum)
     .filter((layer) => LAYER_ALIAS.has(layer));
 
   return Array.from(new Set(normalized));
@@ -222,7 +222,7 @@ const extractCredentialsFromVault = (provider: string, keyVaults?: UserKeyVaults
 const resolveLayerModels = (
   layers: Partial<Record<GlobalMemoryLayer, string>> | undefined,
   fallback: Record<GlobalMemoryLayer, string>,
-): Record<UserMemoryLayer, string> => ({
+): Record<LayersEnum, string> => ({
   context: layers?.context ?? fallback.context,
   experience: layers?.experience ?? fallback.experience,
   identity: layers?.identity ?? fallback.identity,
@@ -263,7 +263,7 @@ export interface TopicExtractionJob {
   forceAll: boolean;
   forceTopics: boolean;
   from?: Date;
-  layers: UserMemoryLayer[];
+  layers: LayersEnum[];
   source: MemoryExtractionSourceType;
   to?: Date;
   topicId: string;
@@ -293,7 +293,7 @@ export class MemoryExtractionExecutor {
   private readonly modelConfig: {
     embeddingsModel: string;
     gateModel: string;
-    layerModels: Partial<Record<UserMemoryLayer, string>>;
+    layerModels: Partial<Record<LayersEnum, string>>;
     observabilityS3: MemoryExtractionConfig['observabilityS3'];
   };
 
@@ -333,7 +333,7 @@ export class MemoryExtractionExecutor {
   private buildBaseMetadata(
     job: MemoryExtractionJob,
     messageIds: string[],
-    layer: UserMemoryLayer,
+    layer: LayersEnum,
     labels?: string[] | null,
   ) {
     return {
@@ -403,7 +403,7 @@ export class MemoryExtractionExecutor {
       const baseMetadata = this.buildBaseMetadata(
         job,
         messageIds,
-        UserMemoryLayer.Context,
+        LayersEnum.Context,
         item.withContext?.labels,
       );
 
@@ -464,7 +464,7 @@ export class MemoryExtractionExecutor {
       const baseMetadata = this.buildBaseMetadata(
         job,
         messageIds,
-        UserMemoryLayer.Experience,
+        LayersEnum.Experience,
         item.withExperience?.labels,
       );
 
@@ -519,7 +519,7 @@ export class MemoryExtractionExecutor {
       const baseMetadata = this.buildBaseMetadata(
         job,
         messageIds,
-        UserMemoryLayer.Preference,
+        LayersEnum.Preference,
         item.withPreference?.extractedLabels,
       );
 
@@ -573,7 +573,7 @@ export class MemoryExtractionExecutor {
       const metadata = this.buildBaseMetadata(
         job,
         messageIds,
-        UserMemoryLayer.Identity,
+        LayersEnum.Identity,
         action.extractedLabels,
       );
 
@@ -612,7 +612,7 @@ export class MemoryExtractionExecutor {
           description: set.description,
           descriptionVector: descriptionVector ?? undefined,
           metadata: set.extractedLabels
-            ? this.buildBaseMetadata(job, messageIds, UserMemoryLayer.Identity, set.extractedLabels)
+            ? this.buildBaseMetadata(job, messageIds, LayersEnum.Identity, set.extractedLabels)
             : undefined,
           relationship: set.relationship ?? undefined,
           role: set.role ?? undefined,
@@ -1128,7 +1128,7 @@ export class MemoryExtractionExecutor {
     });
   }
 
-  private recordLayerEntries(job: MemoryExtractionJob, layer: UserMemoryLayer, count: number) {
+  private recordLayerEntries(job: MemoryExtractionJob, layer: LayersEnum, count: number) {
     const attributes = {
       layer: LAYER_LABEL_MAP[layer],
       source: job.source,
@@ -1145,7 +1145,7 @@ export class MemoryExtractionExecutor {
     db: Awaited<ReturnType<typeof getServerDB>>,
   ): Promise<PersistedMemoryResult> {
     const createdIds: string[] = [];
-    const perLayer: Partial<Record<UserMemoryLayer, number>> = {};
+    const perLayer: Partial<Record<LayersEnum, number>> = {};
 
     if (extraction.outputs.context) {
       const ids = await this.persistContextMemories(
@@ -1158,7 +1158,7 @@ export class MemoryExtractionExecutor {
       );
       createdIds.push(...ids);
       perLayer.context = ids.length;
-      this.recordLayerEntries(job, UserMemoryLayer.Context, ids.length);
+      this.recordLayerEntries(job, LayersEnum.Context, ids.length);
     }
 
     if (extraction.outputs.experience) {
@@ -1172,7 +1172,7 @@ export class MemoryExtractionExecutor {
       );
       createdIds.push(...ids);
       perLayer.experience = ids.length;
-      this.recordLayerEntries(job, UserMemoryLayer.Experience, ids.length);
+      this.recordLayerEntries(job, LayersEnum.Experience, ids.length);
     }
 
     if (extraction.outputs.preference) {
@@ -1186,7 +1186,7 @@ export class MemoryExtractionExecutor {
       );
       createdIds.push(...ids);
       perLayer.preference = ids.length;
-      this.recordLayerEntries(job, UserMemoryLayer.Preference, ids.length);
+      this.recordLayerEntries(job, LayersEnum.Preference, ids.length);
     }
 
     if (extraction.outputs.identity) {
@@ -1200,7 +1200,7 @@ export class MemoryExtractionExecutor {
       );
       createdIds.push(...ids);
       perLayer.identity = ids.length;
-      this.recordLayerEntries(job, UserMemoryLayer.Identity, ids.length);
+      this.recordLayerEntries(job, LayersEnum.Identity, ids.length);
     }
 
     return { createdIds, layers: perLayer };
