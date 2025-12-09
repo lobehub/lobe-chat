@@ -385,4 +385,276 @@ describe('RuntimeExecutors', () => {
       expect(payload.parentMessageId).toBeUndefined();
     });
   });
+
+  describe('resolve_aborted_tools executor', () => {
+    const createMockState = (overrides?: Partial<AgentState>): AgentState => ({
+      cost: createMockCost(),
+      createdAt: new Date().toISOString(),
+      lastModified: new Date().toISOString(),
+      maxSteps: 100,
+      messages: [],
+      metadata: {
+        agentId: 'agent-123',
+        threadId: 'thread-123',
+        topicId: 'topic-123',
+      },
+      operationId: 'op-123',
+      status: 'running',
+      stepCount: 0,
+      toolManifestMap: {},
+      usage: createMockUsage(),
+      ...overrides,
+    });
+
+    it('should create aborted tool messages for all pending tool calls', async () => {
+      const executors = createRuntimeExecutors(ctx);
+      const state = createMockState();
+
+      const instruction = {
+        payload: {
+          parentMessageId: 'assistant-msg-123',
+          toolsCalling: [
+            {
+              apiName: 'search',
+              arguments: '{"query": "test"}',
+              id: 'tool-call-1',
+              identifier: 'web-search',
+              type: 'default' as const,
+            },
+            {
+              apiName: 'crawl',
+              arguments: '{"url": "https://example.com"}',
+              id: 'tool-call-2',
+              identifier: 'web-browsing',
+              type: 'default' as const,
+            },
+          ],
+        },
+        type: 'resolve_aborted_tools' as const,
+      };
+
+      await executors.resolve_aborted_tools!(instruction, state);
+
+      // Should create two aborted tool messages
+      expect(mockMessageModel.create).toHaveBeenCalledTimes(2);
+
+      // First tool message
+      expect(mockMessageModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'agent-123',
+          content: 'Tool execution was aborted by user.',
+          parentId: 'assistant-msg-123',
+          pluginIntervention: { status: 'aborted' },
+          role: 'tool',
+          threadId: 'thread-123',
+          tool_call_id: 'tool-call-1',
+          topicId: 'topic-123',
+        }),
+      );
+
+      // Second tool message
+      expect(mockMessageModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'agent-123',
+          content: 'Tool execution was aborted by user.',
+          parentId: 'assistant-msg-123',
+          pluginIntervention: { status: 'aborted' },
+          role: 'tool',
+          threadId: 'thread-123',
+          tool_call_id: 'tool-call-2',
+          topicId: 'topic-123',
+        }),
+      );
+    });
+
+    it('should update state status to done after resolving aborted tools', async () => {
+      const executors = createRuntimeExecutors(ctx);
+      const state = createMockState({ status: 'running' });
+
+      const instruction = {
+        payload: {
+          parentMessageId: 'assistant-msg-123',
+          toolsCalling: [
+            {
+              apiName: 'search',
+              arguments: '{}',
+              id: 'tool-call-1',
+              identifier: 'web-search',
+              type: 'default' as const,
+            },
+          ],
+        },
+        type: 'resolve_aborted_tools' as const,
+      };
+
+      const result = await executors.resolve_aborted_tools!(instruction, state);
+
+      expect(result.newState.status).toBe('done');
+    });
+
+    it('should emit done event with user_aborted reason', async () => {
+      const executors = createRuntimeExecutors(ctx);
+      const state = createMockState();
+
+      const instruction = {
+        payload: {
+          parentMessageId: 'assistant-msg-123',
+          toolsCalling: [
+            {
+              apiName: 'search',
+              arguments: '{}',
+              id: 'tool-call-1',
+              identifier: 'web-search',
+              type: 'default' as const,
+            },
+          ],
+        },
+        type: 'resolve_aborted_tools' as const,
+      };
+
+      const result = await executors.resolve_aborted_tools!(instruction, state);
+
+      expect(result.events).toContainEqual(
+        expect.objectContaining({
+          reason: 'user_aborted',
+          reasonDetail: 'User aborted operation with pending tool calls',
+          type: 'done',
+        }),
+      );
+    });
+
+    it('should publish stream events for abort process', async () => {
+      const executors = createRuntimeExecutors(ctx);
+      const state = createMockState();
+
+      const instruction = {
+        payload: {
+          parentMessageId: 'assistant-msg-123',
+          toolsCalling: [
+            {
+              apiName: 'search',
+              arguments: '{}',
+              id: 'tool-call-1',
+              identifier: 'web-search',
+              type: 'default' as const,
+            },
+          ],
+        },
+        type: 'resolve_aborted_tools' as const,
+      };
+
+      await executors.resolve_aborted_tools!(instruction, state);
+
+      // Should publish step_start event for tools_aborted phase
+      expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith(
+        'op-123',
+        expect.objectContaining({
+          data: expect.objectContaining({
+            phase: 'tools_aborted',
+          }),
+          type: 'step_start',
+        }),
+      );
+
+      // Should publish step_complete event
+      expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith(
+        'op-123',
+        expect.objectContaining({
+          data: expect.objectContaining({
+            phase: 'execution_complete',
+            reason: 'user_aborted',
+          }),
+          type: 'step_complete',
+        }),
+      );
+    });
+
+    it('should add tool messages to state.messages', async () => {
+      const executors = createRuntimeExecutors(ctx);
+      const state = createMockState({ messages: [] });
+
+      const instruction = {
+        payload: {
+          parentMessageId: 'assistant-msg-123',
+          toolsCalling: [
+            {
+              apiName: 'search',
+              arguments: '{}',
+              id: 'tool-call-1',
+              identifier: 'web-search',
+              type: 'default' as const,
+            },
+            {
+              apiName: 'crawl',
+              arguments: '{}',
+              id: 'tool-call-2',
+              identifier: 'web-browsing',
+              type: 'default' as const,
+            },
+          ],
+        },
+        type: 'resolve_aborted_tools' as const,
+      };
+
+      const result = await executors.resolve_aborted_tools!(instruction, state);
+
+      expect(result.newState.messages).toHaveLength(2);
+      expect(result.newState.messages[0]).toEqual({
+        content: 'Tool execution was aborted by user.',
+        role: 'tool',
+        tool_call_id: 'tool-call-1',
+      });
+      expect(result.newState.messages[1]).toEqual({
+        content: 'Tool execution was aborted by user.',
+        role: 'tool',
+        tool_call_id: 'tool-call-2',
+      });
+    });
+
+    it('should continue processing remaining tools if one fails to create', async () => {
+      // Mock: first call succeeds, second call fails
+      mockMessageModel.create
+        .mockResolvedValueOnce({ id: 'tool-msg-1' })
+        .mockRejectedValueOnce(new Error('Database error'));
+
+      const executors = createRuntimeExecutors(ctx);
+      const state = createMockState();
+
+      const instruction = {
+        payload: {
+          parentMessageId: 'assistant-msg-123',
+          toolsCalling: [
+            {
+              apiName: 'search',
+              arguments: '{}',
+              id: 'tool-call-1',
+              identifier: 'web-search',
+              type: 'default' as const,
+            },
+            {
+              apiName: 'crawl',
+              arguments: '{}',
+              id: 'tool-call-2',
+              identifier: 'web-browsing',
+              type: 'default' as const,
+            },
+          ],
+        },
+        type: 'resolve_aborted_tools' as const,
+      };
+
+      const result = await executors.resolve_aborted_tools!(instruction, state);
+
+      // Should still complete and emit done event
+      expect(result.newState.status).toBe('done');
+      expect(result.events).toContainEqual(
+        expect.objectContaining({
+          type: 'done',
+        }),
+      );
+
+      // Only the first tool message should be added to state
+      expect(result.newState.messages).toHaveLength(1);
+    });
+  });
 });

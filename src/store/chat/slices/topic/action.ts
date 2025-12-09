@@ -524,7 +524,16 @@ export const chatTopic: StateCreator<
     );
   },
   refreshTopic: async () => {
-    return mutate([SWR_USE_FETCH_TOPIC, get().activeAgentId]);
+    const agentId = get().activeAgentId;
+    // Use matcher function to match SWR keys with the same agentId
+    // Key format: [SWR_USE_FETCH_TOPIC, { agentId, isInbox, pageSize }]
+    await mutate(
+      (key) =>
+        Array.isArray(key) &&
+        key[0] === SWR_USE_FETCH_TOPIC &&
+        typeof key[1] === 'object' &&
+        key[1]?.agentId === agentId,
+    );
   },
 
   internal_updateTopicLoading: (id, loading) => {
