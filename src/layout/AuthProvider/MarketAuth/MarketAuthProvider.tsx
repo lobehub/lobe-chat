@@ -59,6 +59,7 @@ const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null
  */
 const getMarketTokensFromDB = () => {
   const settings = settingsSelectors.currentSettings(useUserStore.getState());
+  console.log('settings', settings);
   return settings.market;
 };
 
@@ -145,6 +146,9 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
     null,
   );
 
+  // 订阅 user store 的初始化状态，当 isUserStateInit 为 true 时，settings 数据已加载完成
+  const isUserStateInit = useUserStore((s) => s.isUserStateInit);
+
   // 初始化 OIDC 客户端（仅在客户端）
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -167,10 +171,11 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   }, [isDesktop]);
 
   /**
-   * 检查并恢复会话（仅从 DB 恢复）
+   * 初始化：检查并恢复会话，获取用户信息
    */
-  const restoreSession = () => {
-    console.log('[MarketAuth] Attempting to restore session');
+  const initializeSession = async () => {
+    console.log('[MarketAuth] Initializing session...');
+    setStatus('loading');
 
     const dbTokens = getMarketTokensFromDB();
 
@@ -182,25 +187,39 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
     }
 
     // 检查 token 是否过期
-    if (dbTokens.expiresAt && dbTokens.expiresAt > Date.now()) {
-      console.log('[MarketAuth] Session restored from DB');
-
-      const restoredSession: MarketAuthSession = {
-        accessToken: dbTokens.accessToken,
-        expiresAt: dbTokens.expiresAt,
-        expiresIn: Math.floor((dbTokens.expiresAt - Date.now()) / 1000),
-        scope: 'openid profile email',
-        tokenType: 'Bearer',
-      };
-
-      setSession(restoredSession);
-      setStatus('authenticated');
-    } else {
+    if (!dbTokens.expiresAt || dbTokens.expiresAt <= Date.now()) {
       console.log('[MarketAuth] DB token has expired');
       // 清理过期的 DB tokens
-      clearMarketTokensFromDB();
+      await clearMarketTokensFromDB();
       setStatus('unauthenticated');
+      return;
     }
+
+    console.log('[MarketAuth] Valid token found, fetching user info...');
+
+    // 获取用户信息
+    const userInfo = await fetchUserInfo(dbTokens.accessToken);
+
+    if (!userInfo) {
+      // 清理无效的 token
+      await clearMarketTokensFromDB();
+      setStatus('unauthenticated');
+      return;
+    }
+
+    console.log('[MarketAuth] Session initialized successfully, accountId:', userInfo.accountId);
+
+    const restoredSession: MarketAuthSession = {
+      accessToken: dbTokens.accessToken,
+      expiresAt: dbTokens.expiresAt,
+      expiresIn: Math.floor((dbTokens.expiresAt - Date.now()) / 1000),
+      scope: 'openid profile email',
+      tokenType: 'Bearer',
+      userInfo,
+    };
+
+    setSession(restoredSession);
+    setStatus('authenticated');
   };
 
   /**
@@ -339,11 +358,14 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   };
 
   /**
-   * 初始化时恢复会话
+   * 初始化时恢复会话并获取用户信息
+   * 等待 isUserStateInit 为 true，此时 useInitUserState 的 SWR 请求已完成，settings 数据已加载
    */
   useEffect(() => {
-    restoreSession();
-  }, []);
+    if (isUserStateInit) {
+      initializeSession();
+    }
+  }, [isUserStateInit]);
 
   const contextValue: MarketAuthContextType = {
     getAccessToken,

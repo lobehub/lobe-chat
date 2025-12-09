@@ -44,6 +44,7 @@ export interface DiscoverAssistantItem extends Omit<LobeAgentSettings, 'meta'>, 
   createdAt: string;
   homepage: string;
   identifier: string;
+  installCount?: number;
   knowledgeCount: number;
   pluginCount: number;
   tokenUsage: number;

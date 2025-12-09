@@ -47,124 +47,121 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface AgentDetailDrawerProps {
   agent: DiscoverAssistantItem | null;
-  downloadCount?: number;
   onClose: () => void;
   onUnpublish?: (identifier: string) => void;
   open: boolean;
 }
 
-const AgentDetailDrawer = memo<AgentDetailDrawerProps>(
-  ({ open, onClose, agent, downloadCount, onUnpublish }) => {
-    const { styles, theme } = useStyles();
-    const { t } = useTranslation('setting');
-    const { t: tDiscover } = useTranslation('discover');
-    const navigate = useNavigate();
+const AgentDetailDrawer = memo<AgentDetailDrawerProps>(({ open, onClose, agent, onUnpublish }) => {
+  const { styles, theme } = useStyles();
+  const { t } = useTranslation('setting');
+  const { t: tDiscover } = useTranslation('discover');
+  const navigate = useNavigate();
 
-    const handleViewDetail = useCallback(() => {
-      if (agent?.identifier) {
-        window.open(urlJoin('/discover/assistant', agent.identifier), '_blank');
-      }
-    }, [agent?.identifier]);
+  const handleViewDetail = useCallback(() => {
+    if (agent?.identifier) {
+      window.open(urlJoin('/discover/assistant', agent.identifier), '_blank');
+    }
+  }, [agent?.identifier]);
 
-    const handleEdit = useCallback(() => {
-      if (agent?.identifier) {
-        navigate(urlJoin('/agent', agent.identifier, 'profile'));
-        onClose();
-      }
-    }, [agent?.identifier, navigate, onClose]);
+  const handleEdit = useCallback(() => {
+    if (agent?.identifier) {
+      navigate(urlJoin('/agent', agent.identifier, 'profile'));
+      onClose();
+    }
+  }, [agent?.identifier, navigate, onClose]);
 
-    const handleUnpublish = useCallback(() => {
-      if (agent?.identifier && onUnpublish) {
-        onUnpublish(agent.identifier);
-      }
-    }, [agent?.identifier, onUnpublish]);
+  const handleUnpublish = useCallback(() => {
+    if (agent?.identifier && onUnpublish) {
+      onUnpublish(agent.identifier);
+    }
+  }, [agent?.identifier, onUnpublish]);
 
-    if (!agent) return null;
+  if (!agent) return null;
 
-    return (
-      <Drawer
-        onClose={onClose}
-        open={open}
-        placement="right"
-        styles={{
-          body: { display: 'flex', flexDirection: 'column', padding: 0 },
-        }}
-        title={t('myAgents.detail.title')}
-        width={400}
-      >
-        <Flexbox className={styles.content} gap={16} padding={16}>
-          {/* Header with Avatar and Title */}
-          <Flexbox align="center" gap={12} horizontal>
-            <Avatar
-              avatar={agent.avatar}
-              background={agent.backgroundColor || 'transparent'}
-              size={56}
-              style={{ flex: 'none' }}
-            />
-            <Flexbox flex={1} gap={4}>
-              <Title className={styles.title} level={4}>
-                {agent.title}
-              </Title>
-              {agent.author && <Typography.Text type="secondary">{agent.author}</Typography.Text>}
-            </Flexbox>
+  return (
+    <Drawer
+      onClose={onClose}
+      open={open}
+      placement="right"
+      styles={{
+        body: { display: 'flex', flexDirection: 'column', padding: 0 },
+      }}
+      title={t('myAgents.detail.title')}
+      width={400}
+    >
+      <Flexbox className={styles.content} gap={16} padding={16}>
+        {/* Header with Avatar and Title */}
+        <Flexbox align="center" gap={12} horizontal>
+          <Avatar
+            avatar={agent.avatar}
+            background={agent.backgroundColor || 'transparent'}
+            size={56}
+            style={{ flex: 'none' }}
+          />
+          <Flexbox flex={1} gap={4}>
+            <Title className={styles.title} level={4}>
+              {agent.title}
+            </Title>
+            {agent.author && <Typography.Text type="secondary">{agent.author}</Typography.Text>}
           </Flexbox>
+        </Flexbox>
 
-          {/* Stats */}
-          <Flexbox gap={8} horizontal wrap="wrap">
-            <Tooltip title={tDiscover('assistants.tokenUsage')}>
-              <Tag className={styles.statTag} icon={<Icon icon={CoinsIcon} />}>
-                {formatIntergerNumber(agent.tokenUsage)}
+        {/* Stats */}
+        <Flexbox gap={8} horizontal wrap="wrap">
+          <Tooltip title={tDiscover('assistants.tokenUsage')}>
+            <Tag className={styles.statTag} icon={<Icon icon={CoinsIcon} />}>
+              {formatIntergerNumber(agent.tokenUsage)}
+            </Tag>
+          </Tooltip>
+          {agent.installCount !== undefined && (
+            <Tooltip title={tDiscover('assistants.downloads')}>
+              <Tag className={styles.statTag} icon={<Icon icon={DownloadIcon} />}>
+                {formatIntergerNumber(agent.installCount)}
               </Tag>
             </Tooltip>
-            {downloadCount !== undefined && (
-              <Tooltip title={tDiscover('assistants.downloads')}>
-                <Tag className={styles.statTag} icon={<Icon icon={DownloadIcon} />}>
-                  {formatIntergerNumber(downloadCount)}
-                </Tag>
-              </Tooltip>
-            )}
-          </Flexbox>
-
-          {/* Description */}
-          <Flexbox gap={8}>
-            <Typography.Text strong>{t('myAgents.detail.description')}</Typography.Text>
-            <Paragraph className={styles.description}>{agent.description}</Paragraph>
-          </Flexbox>
-
-          {/* Category */}
-          {agent.category && (
-            <Flexbox gap={8}>
-              <Typography.Text strong>{t('myAgents.detail.category')}</Typography.Text>
-              <Tag color={theme.colorPrimary}>
-                {tDiscover(`category.assistant.${agent.category}` as any)}
-              </Tag>
-            </Flexbox>
           )}
+        </Flexbox>
 
-          {/* Identifier */}
+        {/* Description */}
+        <Flexbox gap={8}>
+          <Typography.Text strong>{t('myAgents.detail.description')}</Typography.Text>
+          <Paragraph className={styles.description}>{agent.description}</Paragraph>
+        </Flexbox>
+
+        {/* Category */}
+        {agent.category && (
           <Flexbox gap={8}>
-            <Typography.Text strong>{t('myAgents.detail.identifier')}</Typography.Text>
-            <Typography.Text code copyable>
-              {agent.identifier}
-            </Typography.Text>
+            <Typography.Text strong>{t('myAgents.detail.category')}</Typography.Text>
+            <Tag color={theme.colorPrimary}>
+              {tDiscover(`category.assistant.${agent.category}` as any)}
+            </Tag>
           </Flexbox>
-        </Flexbox>
+        )}
 
-        {/* Actions */}
-        <Flexbox className={styles.actions} gap={12} padding={16}>
-          <Button block icon={<Icon icon={ExternalLink} />} onClick={handleViewDetail}>
-            {t('myAgents.actions.viewDetail')}
-          </Button>
-          <Button block icon={<Icon icon={Pencil} />} onClick={handleEdit} type="primary">
-            {t('myAgents.actions.edit')}
-          </Button>
-          <Button block danger icon={<Icon icon={Trash2} />} onClick={handleUnpublish}>
-            {t('myAgents.actions.unpublish')}
-          </Button>
+        {/* Identifier */}
+        <Flexbox gap={8}>
+          <Typography.Text strong>{t('myAgents.detail.identifier')}</Typography.Text>
+          <Typography.Text code copyable>
+            {agent.identifier}
+          </Typography.Text>
         </Flexbox>
-      </Drawer>
-    );
-  },
-);
+      </Flexbox>
+
+      {/* Actions */}
+      <Flexbox className={styles.actions} gap={12} padding={16}>
+        <Button block icon={<Icon icon={ExternalLink} />} onClick={handleViewDetail}>
+          {t('myAgents.actions.viewDetail')}
+        </Button>
+        <Button block icon={<Icon icon={Pencil} />} onClick={handleEdit} type="primary">
+          {t('myAgents.actions.edit')}
+        </Button>
+        <Button block danger icon={<Icon icon={Trash2} />} onClick={handleUnpublish}>
+          {t('myAgents.actions.unpublish')}
+        </Button>
+      </Flexbox>
+    </Drawer>
+  );
+});
 
 export default AgentDetailDrawer;

@@ -1,7 +1,7 @@
 import { MCP } from '@lobehub/icons';
 import { Icon, Tag, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { BookTextIcon, CoinsIcon } from 'lucide-react';
+import { BookTextIcon, CoinsIcon, DownloadIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -23,6 +23,7 @@ const useStyles = createStyles(({ css, token }) => {
 });
 
 interface TokenTagProps {
+  installCount?: number;
   knowledgeCount?: number;
   placement?: 'top' | 'right';
   pluginCount?: number;
@@ -30,7 +31,7 @@ interface TokenTagProps {
 }
 
 const TokenTag = memo<TokenTagProps>(
-  ({ tokenUsage, pluginCount, knowledgeCount, placement = 'right' }) => {
+  ({ tokenUsage, pluginCount, knowledgeCount, installCount, placement = 'right' }) => {
     const { styles, theme } = useStyles();
     const { t } = useTranslation('discover');
     return (
@@ -44,6 +45,17 @@ const TokenTag = memo<TokenTagProps>(
             {formatIntergerNumber(tokenUsage)}
           </Tag>
         </Tooltip>
+        {Boolean(installCount && installCount > 0) && (
+          <Tooltip
+            placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
+            title={t('assistants.downloads')}
+          >
+            <Tag className={styles.token} icon={<Icon icon={DownloadIcon} />}>
+              {formatIntergerNumber(installCount)}
+            </Tag>
+          </Tooltip>
+        )}
         {Boolean(pluginCount && pluginCount > 0) && (
           <Tooltip
             placement={placement}

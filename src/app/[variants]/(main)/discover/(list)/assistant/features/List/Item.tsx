@@ -61,9 +61,9 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     tokenUsage,
     pluginCount,
     knowledgeCount,
+    installCount,
     backgroundColor,
   }) => {
-
     const { styles, theme } = useStyles();
     const navigate = useNavigate();
     const { source } = useQuery() as { source?: AssistantMarketSource };
@@ -164,6 +164,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
             {description}
           </Text>
           <TokenTag
+            installCount={installCount}
             knowledgeCount={knowledgeCount}
             pluginCount={pluginCount}
             tokenUsage={tokenUsage}

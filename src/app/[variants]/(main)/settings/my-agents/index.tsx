@@ -63,7 +63,7 @@ const MyAgentsPage = memo(() => {
   // Fetch user's published agents
   const { data, isLoading } = useAssistantList({
     ownerId,
-    pageSize: 100,
+    pageSize: 20,
     source: 'new',
   });
 
@@ -86,11 +86,9 @@ const MyAgentsPage = memo(() => {
     await signIn();
   }, [signIn]);
 
-  // Sort agents by download count (if available) in descending order
+  // Sort agents by install count in descending order
   const sortedAgents = data?.items?.slice().sort((a, b) => {
-    // Since DiscoverAssistantItem doesn't have downloadCount, we sort by tokenUsage as a proxy
-    // In a real implementation, you would sort by actual download count
-    return (b.tokenUsage || 0) - (a.tokenUsage || 0);
+    return (b.installCount || 0) - (a.installCount || 0);
   });
 
   // Show login prompt if not authenticated

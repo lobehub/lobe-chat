@@ -52,7 +52,6 @@ const useStyles = createStyles(({ css, token }) => {
 });
 
 interface AgentCardProps extends DiscoverAssistantItem {
-  downloadCount?: number;
   onClick?: () => void;
 }
 
@@ -66,7 +65,7 @@ const AgentCard = memo<AgentCardProps>(
     createdAt,
     category,
     tokenUsage,
-    downloadCount,
+    installCount,
     onClick,
   }) => {
     const { styles } = useStyles();
@@ -140,14 +139,14 @@ const AgentCard = memo<AgentCardProps>(
                 {formatIntergerNumber(tokenUsage)}
               </Tag>
             </Tooltip>
-            {downloadCount !== undefined && (
+            {installCount !== undefined && (
               <Tooltip
                 placement={'top'}
                 styles={{ root: { pointerEvents: 'none' } }}
                 title={t('assistants.downloads')}
               >
                 <Tag className={styles.statTag} icon={<Icon icon={DownloadIcon} />}>
-                  {formatIntergerNumber(downloadCount)}
+                  {formatIntergerNumber(installCount)}
                 </Tag>
               </Tooltip>
             )}

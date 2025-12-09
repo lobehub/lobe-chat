@@ -15,6 +15,7 @@ import TitleBar, { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
 import HotkeyHelperPanel from '@/features/HotkeyHelperPanel';
 import NavPanel from '@/features/NavPanel';
 import { usePlatform } from '@/hooks/usePlatform';
+import { MarketAuthProvider } from '@/layout/AuthProvider/MarketAuth';
 import CmdkLazy from '@/layout/GlobalProvider/CmdkLazy';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { HotkeyScopeEnum } from '@/types/hotkey';
@@ -52,9 +53,11 @@ const Layout = memo(() => {
         >
           <NavPanel />
           <DesktopLayoutContainer>
-            <Suspense fallback={<Loading debugId="DesktopMainLayout > Outlet" />}>
-              <Outlet />
-            </Suspense>
+            <MarketAuthProvider isDesktop={isDesktop}>
+              <Suspense fallback={<Loading debugId="DesktopMainLayout > Outlet" />}>
+                <Outlet />
+              </Suspense>
+            </MarketAuthProvider>
           </DesktopLayoutContainer>
         </Flexbox>
       </DndContextWrapper>

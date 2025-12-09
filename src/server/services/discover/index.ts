@@ -719,6 +719,7 @@ export class DiscoverService {
           description: item.description || item.summary || '',
           homepage: item.homepage || `https://lobehub.com/discover/assistant/${item.identifier}`,
           identifier: item.identifier,
+          installCount: item.installCount,
           knowledgeCount: item.knowledgeCount ?? item.config?.knowledgeBases?.length ?? 0,
           pluginCount: item.pluginCount ?? item.config?.plugins?.length ?? 0,
           schemaVersion: item.schemaVersion ?? 1,
