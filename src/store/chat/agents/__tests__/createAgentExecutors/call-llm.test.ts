@@ -29,7 +29,7 @@ describe('call_llm executor', () => {
         provider: 'openai',
         messages: [createUserMessage()],
       });
-      const state = createInitialState({ sessionId: 'test-session' });
+      const state = createInitialState({ operationId: 'test-session' });
 
       mockStore.internal_fetchAIChatMessage = vi.fn().mockResolvedValue({
         content: 'AI response',
@@ -795,7 +795,7 @@ describe('call_llm executor', () => {
       const context = createTestContext();
       const instruction = createCallLLMInstruction();
       const state = createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         stepCount: 10,
         status: 'running',
       });
@@ -817,7 +817,7 @@ describe('call_llm executor', () => {
       });
 
       // Then
-      expect(result.newState.sessionId).toBe(state.sessionId);
+      expect(result.newState.operationId).toBe(state.operationId);
       expect(result.newState.stepCount).toBe(state.stepCount);
       expect(result.newState.status).toBe(state.status);
     });
@@ -1123,7 +1123,7 @@ describe('call_llm executor', () => {
       const mockStore = createMockStore();
       const context = createTestContext();
       const instruction = createCallLLMInstruction();
-      const state = createInitialState({ sessionId: 'custom-session-123' });
+      const state = createInitialState({ operationId: 'custom-session-123' });
 
       mockStore.internal_fetchAIChatMessage = vi.fn().mockResolvedValue({
         content: 'AI response',
@@ -1142,6 +1142,7 @@ describe('call_llm executor', () => {
       });
 
       // Then
+      // Note: AgentRuntimeContext.session uses sessionId for backward compatibility
       expect(result.nextContext!.session!.sessionId).toBe('custom-session-123');
     });
   });

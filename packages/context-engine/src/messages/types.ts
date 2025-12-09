@@ -1,0 +1,184 @@
+/* eslint-disable typescript-sort-keys/interface */
+import type { FileContent, KnowledgeBaseInfo } from '@lobechat/prompts';
+import type { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
+
+import type { AgentBuilderContext } from '../providers/AgentBuilderContextInjector';
+import type { PageEditorContext } from '../providers/PageEditorContextInjector';
+
+/**
+ * Model capability checker
+ * Injected by caller to check if model supports specific capabilities
+ */
+export interface ModelCapabilityChecker {
+  /** Check if function calling is supported */
+  isCanUseFC?: (model: string, provider: string) => boolean;
+  /** Check if video is supported */
+  isCanUseVideo?: (model: string, provider: string) => boolean;
+  /** Check if vision is supported */
+  isCanUseVision?: (model: string, provider: string) => boolean;
+}
+
+/**
+ * Knowledge configuration
+ */
+export interface KnowledgeConfig {
+  /** File contents to inject */
+  fileContents?: FileContent[];
+  /** Knowledge base metadata to inject */
+  knowledgeBases?: KnowledgeBaseInfo[];
+}
+
+/**
+ * Tools configuration
+ */
+export interface ToolsConfig {
+  /** Function to get tool system roles */
+  getToolSystemRoles?: (tools: string[]) => string | undefined;
+  /** Enabled tool IDs */
+  tools?: string[];
+}
+
+/**
+ * Variable generators for placeholder replacement
+ * Used to replace {{variable}} placeholders in messages
+ */
+export type VariableGenerators = Record<string, () => string>;
+
+/**
+ * File context configuration
+ */
+export interface FileContextConfig {
+  /** Whether to enable file context injection */
+  enabled: boolean;
+  /** Whether to include file URLs (desktop typically uses false) */
+  includeFileUrl: boolean;
+}
+
+/**
+ * User memory item interfaces
+ * Uses index signature to allow additional properties from database models
+ * Note: Properties can be null (from database) or undefined
+ */
+export interface UserMemoryContextItem {
+  description?: string | null;
+  id?: string;
+  title?: string | null;
+  [key: string]: unknown;
+}
+
+export interface UserMemoryExperienceItem {
+  id?: string;
+  keyLearning?: string | null;
+  situation?: string | null;
+  [key: string]: unknown;
+}
+
+export interface UserMemoryPreferenceItem {
+  conclusionDirectives?: string | null;
+  id?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * User memory data structure
+ * Compatible with SearchMemoryResult from @lobechat/types
+ */
+export interface UserMemoryData {
+  contexts: UserMemoryContextItem[];
+  experiences: UserMemoryExperienceItem[];
+  preferences: UserMemoryPreferenceItem[];
+}
+
+/**
+ * User memory configuration
+ */
+export interface UserMemoryConfig {
+  /** Whether user memory is enabled */
+  enabled?: boolean;
+  /** When the memories were fetched */
+  fetchedAt?: number;
+  /** User memories data */
+  memories?: UserMemoryData;
+}
+
+/**
+ * MessagesEngine main parameters
+ */
+export interface MessagesEngineParams {
+  // ========== Required parameters ==========
+  /** Original message list */
+  messages: UIChatMessage[];
+  /** Model ID */
+  model: string;
+  /** Provider ID */
+  provider: string;
+
+  // ========== Agent configuration ==========
+  /** Whether to enable history message count limit */
+  enableHistoryCount?: boolean;
+  /** Function to format history summary */
+  formatHistorySummary?: (summary: string) => string;
+  /** History message count limit */
+  historyCount?: number;
+  /** History summary content */
+  historySummary?: string;
+  /** Input template */
+  inputTemplate?: string;
+  /** System role */
+  systemRole?: string;
+
+  // ========== Capability injection (dependency injection) ==========
+  /** Model capability checker */
+  capabilities?: ModelCapabilityChecker;
+  /** Variable generators for placeholder replacement */
+  variableGenerators?: VariableGenerators;
+
+  // ========== Knowledge ==========
+  /** Knowledge configuration */
+  knowledge?: KnowledgeConfig;
+
+  // ========== Tools ==========
+  /** Tools configuration */
+  toolsConfig?: ToolsConfig;
+
+  // ========== File handling ==========
+  /** File context configuration */
+  fileContext?: FileContextConfig;
+
+  // ========== Extended contexts (both frontend and backend) ==========
+  /** Agent Builder context */
+  agentBuilderContext?: AgentBuilderContext;
+  /** Page Editor context */
+  pageEditorContext?: PageEditorContext;
+  /** User memory configuration */
+  userMemory?: UserMemoryConfig;
+}
+
+/**
+ * MessagesEngine result
+ */
+export interface MessagesEngineResult {
+  /** Processed messages in OpenAI format */
+  messages: OpenAIChatMessage[];
+  /** Processing metadata */
+  metadata: Record<string, any>;
+  /** Processing statistics */
+  stats: {
+    /** Number of processors executed */
+    processedCount: number;
+    /** Execution time for each processor */
+    processorDurations: Record<string, number>;
+    /** Total processing time in ms */
+    totalDuration: number;
+  };
+}
+
+// Re-export types for convenience
+
+
+
+
+export {type AgentBuilderContext} from '../providers/AgentBuilderContextInjector';
+export {type PageEditorContext} from '../providers/PageEditorContextInjector';
+export {type FileContent, type KnowledgeBaseInfo} from '@lobechat/prompts';
+export {type OpenAIChatMessage, type UIChatMessage} from '@lobechat/types';

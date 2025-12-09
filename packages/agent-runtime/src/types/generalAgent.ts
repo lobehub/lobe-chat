@@ -67,6 +67,6 @@ export interface GeneralAgentConfig {
     model: string;
     provider: string;
   };
-  sessionId: string;
+  operationId: string;
   userId?: string;
 }

@@ -33,7 +33,7 @@ describe('resolve_aborted_tools executor', () => {
 
       const parentMessage = createAssistantMessage();
       const instruction = createResolveAbortedToolsInstruction(toolCalls, parentMessage.id);
-      const state = createInitialState({ sessionId: 'test-session' });
+      const state = createInitialState({ operationId: 'test-session' });
 
       // When
       const result = await executeWithMockContext({
@@ -316,7 +316,7 @@ describe('resolve_aborted_tools executor', () => {
       const context = createTestContext();
       const instruction = createResolveAbortedToolsInstruction();
       const state = createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         stepCount: 10,
         messages: [{ role: 'user', content: 'test' } as any],
         cost: {
@@ -360,7 +360,7 @@ describe('resolve_aborted_tools executor', () => {
       });
 
       // Then
-      expect(result.newState.sessionId).toBe(state.sessionId);
+      expect(result.newState.operationId).toBe(state.operationId);
       expect(result.newState.stepCount).toBe(state.stepCount);
       expect(result.newState.messages).toEqual(state.messages);
       expect(result.newState.usage).toEqual(state.usage);

@@ -183,6 +183,7 @@ export const conversationControl: StateCreator<
       agentId,
       topicId,
       threadId: threadId ?? undefined,
+      operationId,
     });
 
     // 5. Override context with 'human_approved_tool' phase
@@ -314,6 +315,7 @@ export const conversationControl: StateCreator<
       agentId,
       topicId,
       threadId: threadId ?? undefined,
+      operationId,
     });
 
     // Override context with 'userInput' phase to continue as if user provided feedback

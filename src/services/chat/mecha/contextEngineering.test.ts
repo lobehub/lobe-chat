@@ -4,8 +4,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import * as isCanUseFCModule from '@/helpers/isCanUseFC';
 
 import * as helpers from '../helper';
-import { UserMemoryInjectorConfig } from '../providers/UserMemoryInjector';
 import { contextEngineering } from './contextEngineering';
+import type { UserMemoriesResult } from './memoryManager';
 
 // Mock VARIABLE_GENERATORS
 vi.mock('@/utils/client/parserPlaceholder', () => ({
@@ -448,7 +448,8 @@ describe('contextEngineering', () => {
         },
       ];
 
-      const userMemories = {
+      const userMemories: UserMemoriesResult = {
+        fetchedAt: Date.now(),
         memories: {
           contexts: [
             {
@@ -472,7 +473,7 @@ describe('contextEngineering', () => {
           experiences: [],
           preferences: [],
         },
-      } satisfies UserMemoryInjectorConfig;
+      };
 
       const result = await contextEngineering({
         userMemories,
