@@ -6,7 +6,9 @@ import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { Avatar, BorderSpacing, Title } from '@/components/ChatItem';
+import Avatar from '@/features/ChatItem/components/Avatar';
+import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
+import Title from '@/features/ChatItem/components/Title';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';

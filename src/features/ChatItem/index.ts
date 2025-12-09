@@ -1,2 +1,2 @@
 export { default as ChatItem } from './ChatItem';
-export type { ChatItemProps } from '@/components/ChatItem';
+export type { ChatItemProps } from './type';

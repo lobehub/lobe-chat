@@ -9,9 +9,12 @@ import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { Avatar, BorderSpacing, ErrorContent, Title } from '@/components/ChatItem';
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
-import MessageContent from '@/features/ChatItem/MessageContent';
+import Avatar from '@/features/ChatItem/components/Avatar';
+import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
+import ErrorContent from '@/features/ChatItem/components/ErrorContent';
+import MessageContent from '@/features/ChatItem/components/MessageContent';
+import Title from '@/features/ChatItem/components/Title';
 import ErrorMessageExtra, { useErrorContent } from '@/features/Conversation/Error';
 import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import { normalizeThinkTags, processWithArtifact } from '@/features/Conversation/utils/markdown';

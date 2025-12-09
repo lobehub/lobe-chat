@@ -9,8 +9,12 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import BubblesLoading from '@/components/BubblesLoading';
-import { Avatar, BorderSpacing, ErrorContent, Title } from '@/components/ChatItem';
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
+import Avatar from '@/features/ChatItem/components/Avatar';
+import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
+import ErrorContent from '@/features/ChatItem/components/ErrorContent';
+import MessageContent from '@/features/ChatItem/components/MessageContent';
+import Title from '@/features/ChatItem/components/Title';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
@@ -23,7 +27,6 @@ import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user
 
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { markdownElements } from '../../MarkdownElements';
-import { MessageContent } from '../../components/ChatItem';
 import { useAgentMeta, useDoubleClickEdit } from '../../hooks';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import type { MessageActionsConfig } from '../../types';

@@ -5,7 +5,10 @@ import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { BorderSpacing, Title } from '@/components/ChatItem';
+import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
+import MessageContent from '@/features/ChatItem/components/MessageContent';
+import Title from '@/features/ChatItem/components/Title';
+import { useStyles } from '@/features/ChatItem/style';
 import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
@@ -15,7 +18,6 @@ import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 import { markdownElements } from '../../MarkdownElements';
-import { MessageContent, useStyles } from '../../components/ChatItem';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import type { MessageActionsConfig } from '../../types';

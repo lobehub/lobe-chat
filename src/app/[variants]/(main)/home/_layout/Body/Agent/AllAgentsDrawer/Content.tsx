@@ -64,7 +64,10 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
   }
 
   return (
-    <VList bufferSize={800} style={{ height: '100%' }}>
+    <VList
+      bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
+      style={{ height: '100%' }}
+    >
       {displayItems.map((item) => (
         <Flexbox gap={1} key={item.id} padding={'4px 8px'}>
           {item.type === 'group' ? <GroupItem item={item} /> : <AgentItem item={item} />}

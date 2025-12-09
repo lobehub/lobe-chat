@@ -5,13 +5,13 @@ import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { type ChatItemProps, useStyles } from '@/components/ChatItem';
+import { MessageContentClassName } from '@/features/ChatList/Messages/Default';
+import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
-import { useConversationStore } from '../../../store';
-
-const MessageContentClassName = 'msg_content_flag';
+import { useStyles } from '../style';
+import { ChatItemProps } from '../type';
 
 export interface MessageContentProps {
   className?: string;
@@ -56,8 +56,7 @@ const MessageContent = memo<MessageContentProps>(
       [],
     );
 
-    // Use ConversationStore instead of ChatStore
-    const [toggleMessageEditing, updateMessageContent] = useConversationStore((s) => [
+    const [toggleMessageEditing, updateMessageContent] = useChatStore((s) => [
       s.toggleMessageEditing,
       s.modifyMessageContent,
     ]);
