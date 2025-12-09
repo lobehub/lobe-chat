@@ -269,7 +269,7 @@ const nextConfig: NextConfig = {
       ? void 0
       : codeInspectorPlugin({
           bundler: 'turbopack',
-          hotKeys: ['altKey'],
+          hotKeys: ['altKey', 'ctrlKey'],
         }),
   },
 

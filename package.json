@@ -236,7 +236,7 @@
     "i18next-resources-to-backend": "^1.2.1",
     "immer": "^10.2.0",
     "ioredis": "^5.8.2",
-    "jose": "^5.10.0",
+    "jose": "^6.1.3",
     "js-sha256": "^0.11.1",
     "jsonl-parse-stringify": "^1.0.3",
     "klavis": "^2.13.2",
@@ -433,6 +433,7 @@
       "@vercel/speed-insights"
     ],
     "overrides": {
+      "jose": "^6.1.3",
       "stylelint-config-clean-order": "7.0.0"
     }
   }

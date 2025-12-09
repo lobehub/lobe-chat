@@ -1,4 +1,3 @@
-import { Receiver } from '@upstash/qstash';
 import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -30,6 +29,7 @@ async function verifyQStashSignature(request: NextRequest, rawBody: string): Pro
     return false;
   }
 
+  const { Receiver } = await import('@upstash/qstash');
   const receiver = new Receiver({ currentSigningKey, nextSigningKey: nextSigningKey });
 
   try {

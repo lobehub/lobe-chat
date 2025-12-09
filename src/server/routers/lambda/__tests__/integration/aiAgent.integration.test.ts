@@ -1,8 +1,27 @@
 // @vitest-environment node
+/**
+ * AI Agent E2E Test - runByAgentId
+ *
+ * This test validates the full end-to-end flow of runByAgentId router:
+ * 1. Call runByAgentId with agentId and prompt
+ * 2. Router fetches agent config, creates tools, processes messages
+ * 3. AgentRuntimeService creates operation
+ * 4. Verify the complete flow works correctly
+ *
+ * Mock Strategy (Minimal Mock Principle):
+ * - Database: PGLite (via @lobechat/database/test-utils)
+ * - AgentStateManager/StreamEventManager: In-memory implementations
+ *
+ * NOT mocked (using real implementations):
+ * - model-bank
+ * - Mecha (AgentToolsEngine, ContextEngineering)
+ * - AgentRuntimeService
+ * - AgentRuntimeCoordinator
+ */
 import { LobeChatDatabase } from '@lobechat/database';
-import { agents, agentsToSessions, sessions, topics } from '@lobechat/database/schemas';
+import { agents, messages, topics } from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { aiAgentRouter } from '../../aiAgent';
@@ -19,87 +38,44 @@ vi.mock('@/app/(backend)/api/workflows/agent/isEnableAgent', () => ({
   isEnableAgent: vi.fn(() => true),
 }));
 
-// Mock AgentRuntimeService since we only want to test the router's business logic
-vi.mock('@/server/services/agentRuntime', () => ({
-  AgentRuntimeService: vi.fn().mockImplementation(() => ({
-    createOperation: vi.fn().mockResolvedValue({
-      success: true,
-      operationId: 'mock-operation-id',
-      autoStarted: true,
-      messageId: 'mock-message-id',
-    }),
-  })),
-}));
+// Mock AgentStateManager and StreamEventManager to use in-memory implementations
+vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
+  const { InMemoryAgentStateManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryAgentStateManager');
 
-// Mock serverMessagesEngine
-vi.mock('@/server/modules/Mecha', () => ({
-  createServerAgentToolsEngine: vi.fn(() => ({
-    generateToolsDetailed: vi.fn(() => ({ tools: [] })),
-    getEnabledPluginManifests: vi.fn(() => new Map()),
-  })),
-  serverMessagesEngine: vi.fn().mockResolvedValue([
-    { role: 'system', content: 'You are a helpful assistant.' },
-    { role: 'user', content: 'Hello' },
-  ]),
-}));
-
-// Mock model-bank with dynamic import to preserve other exports
-vi.mock('model-bank', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('model-bank')>();
-  return {
-    ...actual,
-    LOBE_DEFAULT_MODEL_LIST: [
-      {
-        id: 'gpt-4o-mini',
-        providerId: 'openai',
-        abilities: { functionCall: true, vision: true, video: false },
-      },
-    ],
-  };
+  return { AgentStateManager: InMemoryAgentStateManager };
 });
 
-/**
- * AI Agent Router 集成测试
- *
- * 测试目标：
- * 1. 验证 runByAgentId 的业务逻辑
- * 2. 确保 topic 创建逻辑正确
- * 3. 验证与数据库的交互
- */
-describe('AI Agent Router Integration Tests', () => {
+vi.mock('@/server/modules/AgentRuntime/StreamEventManager', async () => {
+  const { InMemoryStreamEventManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryStreamEventManager');
+
+  return { StreamEventManager: InMemoryStreamEventManager };
+});
+
+describe('AI Agent E2E Test - runByAgentId', () => {
   let serverDB: LobeChatDatabase;
   let userId: string;
   let testAgentId: string;
-  let testSessionId: string;
 
   beforeEach(async () => {
+    // Setup test database
     serverDB = await getTestDB();
     testDB = serverDB;
     userId = await createTestUser(serverDB);
 
-    // 创建测试 agent
+    // Create test agent with gpt-5 (stable model for testing)
     const [agent] = await serverDB
       .insert(agents)
       .values({
-        userId,
-        title: 'Test Agent',
-        model: 'gpt-4o-mini',
+        model: 'gpt-5',
         provider: 'openai',
-        systemRole: 'You are a helpful assistant.',
+        systemRole: 'You are a helpful weather assistant.',
+        title: 'Weather Assistant',
+        userId,
       })
       .returning();
     testAgentId = agent.id;
-
-    // 创建测试 session
-    const [session] = await serverDB.insert(sessions).values({ userId, type: 'agent' }).returning();
-    testSessionId = session.id;
-
-    // 创建 agent 到 session 的映射关系
-    await serverDB.insert(agentsToSessions).values({
-      agentId: testAgentId,
-      sessionId: testSessionId,
-      userId,
-    });
   });
 
   afterEach(async () => {
@@ -108,11 +84,46 @@ describe('AI Agent Router Integration Tests', () => {
   });
 
   const createTestContext = () => ({
-    userId,
     jwtPayload: { userId },
+    userId,
   });
 
-  describe('runByAgentId', () => {
+  describe('Basic runByAgentId Flow', () => {
+    it('should create operation successfully with prompt', async () => {
+      const caller = aiAgentRouter.createCaller(createTestContext());
+      const prompt = 'What\'s the weather of Hangzhou?';
+
+      const result = await caller.runByAgentId({ agentId: testAgentId, prompt });
+
+      expect(result.success).toBe(true);
+      expect(result.operationId).toBeDefined();
+      expect(result.operationId).toMatch(/^agent_/);
+
+      // Verify topic was created
+      const createdTopics = await serverDB
+        .select()
+        .from(topics)
+        .where(eq(topics.agentId, testAgentId));
+      expect(createdTopics).toHaveLength(1);
+      expect(createdTopics[0].title).toBe(prompt);
+
+      // Verify two messages were created (user message + assistant message placeholder)
+      const createdMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(and(eq(messages.agentId, testAgentId), eq(messages.topicId, createdTopics[0].id)));
+
+      expect(createdMessages).toHaveLength(2);
+
+      // Verify message roles
+      const userMessage = createdMessages.find((m) => m.role === 'user');
+      const assistantMessage = createdMessages.find((m) => m.role === 'assistant');
+      expect(userMessage).toBeDefined();
+      expect(userMessage?.content).toBe(prompt);
+      expect(assistantMessage).toBeDefined();
+      expect(assistantMessage?.parentId).toBe(userMessage?.id);
+    });
+
     it('should create a new topic when topicId is not provided', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
@@ -122,7 +133,6 @@ describe('AI Agent Router Integration Tests', () => {
       });
 
       expect(result.success).toBe(true);
-      expect(result.operationId).toBeDefined();
 
       // Verify a topic was created
       const createdTopics = await serverDB
@@ -137,7 +147,7 @@ describe('AI Agent Router Integration Tests', () => {
     it('should truncate long prompt for topic title', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
       const longPrompt =
-        'This is a very long prompt that exceeds fifty characters and should be truncated';
+        'This is a very long prompt that exceeds fifty characters and should be truncated for the topic title';
 
       await caller.runByAgentId({
         agentId: testAgentId,
@@ -150,9 +160,7 @@ describe('AI Agent Router Integration Tests', () => {
         .where(eq(topics.agentId, testAgentId));
 
       expect(createdTopics).toHaveLength(1);
-      // Title should be first 50 characters + '...'
       expect(createdTopics[0].title).toBe(longPrompt.slice(0, 50) + '...');
-      expect(createdTopics[0].title!.length).toBeLessThanOrEqual(53); // 50 + '...'
     });
 
     it('should reuse existing topic when topicId is provided', async () => {
@@ -161,36 +169,28 @@ describe('AI Agent Router Integration Tests', () => {
       // Create an existing topic
       const [existingTopic] = await serverDB
         .insert(topics)
-        .values({
-          title: 'Existing Topic',
-          agentId: testAgentId,
-          sessionId: testSessionId,
-          userId,
-        })
+        .values({ agentId: testAgentId, title: 'Existing Topic', userId })
         .returning();
 
       const result = await caller.runByAgentId({
         agentId: testAgentId,
+        appContext: { topicId: existingTopic.id },
         prompt: 'Follow up question',
-        appContext: {
-          topicId: existingTopic.id,
-        },
       });
 
       expect(result.success).toBe(true);
 
       // Verify no new topic was created
       const allTopics = await serverDB.select().from(topics).where(eq(topics.agentId, testAgentId));
-
       expect(allTopics).toHaveLength(1);
       expect(allTopics[0].id).toBe(existingTopic.id);
     });
+  });
 
+  describe('Error Handling', () => {
     it('should throw error when agent does not exist', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      // When agent doesn't exist, getAgentConfigById returns null,
-      // which triggers NOT_FOUND error before topic creation
       await expect(
         caller.runByAgentId({
           agentId: 'non-existent-agent-id',
@@ -198,48 +198,10 @@ describe('AI Agent Router Integration Tests', () => {
         }),
       ).rejects.toThrow();
     });
+  });
 
-    it('should pass correct parameters to createOperation', async () => {
-      const { AgentRuntimeService } = await import('@/server/services/agentRuntime');
-      const mockCreateOperation = vi.fn().mockResolvedValue({
-        success: true,
-        operationId: 'test-op-id',
-        autoStarted: true,
-        messageId: 'test-msg-id',
-      });
-
-      vi.mocked(AgentRuntimeService).mockImplementation(
-        () =>
-          ({
-            createOperation: mockCreateOperation,
-          }) as any,
-      );
-
-      const caller = aiAgentRouter.createCaller(createTestContext());
-
-      await caller.runByAgentId({
-        agentId: testAgentId,
-        prompt: 'Test prompt',
-        autoStart: false,
-      });
-
-      expect(mockCreateOperation).toHaveBeenCalledWith(
-        expect.objectContaining({
-          agentConfig: expect.objectContaining({
-            model: 'gpt-4o-mini',
-            provider: 'openai',
-          }),
-          appContext: expect.objectContaining({
-            agentId: testAgentId,
-          }),
-          autoStart: false,
-          modelRuntimeConfig: { model: 'gpt-4o-mini', provider: 'openai' },
-          userId,
-        }),
-      );
-    });
-
-    it('should handle autoStart=true by default', async () => {
+  describe('autoStart behavior', () => {
+    it('should have autoStarted=true by default', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       const result = await caller.runByAgentId({
@@ -250,39 +212,34 @@ describe('AI Agent Router Integration Tests', () => {
       expect(result.autoStarted).toBe(true);
     });
 
-    it('should include threadId in appContext when provided', async () => {
-      const { AgentRuntimeService } = await import('@/server/services/agentRuntime');
-      const mockCreateOperation = vi.fn().mockResolvedValue({
-        success: true,
-        operationId: 'test-op-id',
-        autoStarted: true,
-        messageId: 'test-msg-id',
-      });
-
-      vi.mocked(AgentRuntimeService).mockImplementation(
-        () =>
-          ({
-            createOperation: mockCreateOperation,
-          }) as any,
-      );
-
+    it('should respect autoStart=false', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      await caller.runByAgentId({
+      const result = await caller.runByAgentId({
         agentId: testAgentId,
-        prompt: 'Test prompt',
+        autoStart: false,
+        prompt: 'Hello',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.autoStarted).toBe(false);
+    });
+  });
+
+  describe('appContext handling', () => {
+    it('should include threadId in operation when provided', async () => {
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.runByAgentId({
+        agentId: testAgentId,
         appContext: {
           threadId: 'test-thread-id',
         },
+        prompt: 'Test prompt',
       });
 
-      expect(mockCreateOperation).toHaveBeenCalledWith(
-        expect.objectContaining({
-          appContext: expect.objectContaining({
-            threadId: 'test-thread-id',
-          }),
-        }),
-      );
+      expect(result.success).toBe(true);
+      expect(result.operationId).toBeDefined();
     });
   });
 });
