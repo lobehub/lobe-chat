@@ -5,7 +5,6 @@ export const useStyles = createStyles(
     { cx, css, token, responsive },
     {
       placement,
-      variant,
       title,
       avatarSize,
       editing,
@@ -20,7 +19,6 @@ export const useStyles = createStyles(
       showTitle?: boolean;
       time?: number;
       title?: string;
-      variant?: 'bubble' | 'docs';
     },
   ) => {
     const blockStylish = css`
@@ -32,11 +30,6 @@ export const useStyles = createStyles(
 
     const rawStylish = css`
       padding-block-start: ${title ? 0 : '6px'};
-    `;
-
-    const rawContainerStylish = css`
-      margin-block-end: -16px;
-      transition: background-color 100ms ${token.motionEaseOut};
     `;
 
     const typeStylish = placement === 'right' ? blockStylish : rawStylish;
@@ -51,11 +44,7 @@ export const useStyles = createStyles(
       actions: cx(
         css`
           flex: none;
-          align-self: ${variant === 'bubble'
-            ? 'flex-end'
-            : placement === 'left'
-              ? 'flex-start'
-              : 'flex-end'};
+          align-self: flex-end;
           justify-content: ${placement === 'left' ? 'flex-end' : 'flex-start'};
         `,
         editing &&
@@ -73,50 +62,47 @@ export const useStyles = createStyles(
       avatarGroupContainer: css`
         width: ${avatarSize}px;
       `,
-      container: cx(
-        variant === 'docs' && rawContainerStylish,
-        css`
-          position: relative;
+      container: css`
+        position: relative;
 
-          width: 100%;
-          max-width: 100vw;
-          padding-block: 24px 12px;
-          padding-inline: 12px;
+        width: 100%;
+        max-width: 100vw;
+        padding-block: 24px 12px;
+        padding-inline: 12px;
 
-          @supports (content-visibility: auto) {
-            contain-intrinsic-size: auto 100lvh;
-          }
+        @supports (content-visibility: auto) {
+          contain-intrinsic-size: auto 100lvh;
+        }
 
-          time {
-            display: inline-block;
-            white-space: nowrap;
-          }
+        time {
+          display: inline-block;
+          white-space: nowrap;
+        }
 
-          div[role='menubar'] {
-            display: flex;
-          }
+        div[role='menubar'] {
+          display: flex;
+        }
 
+        time,
+        div[role='menubar'] {
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 200ms ${token.motionEaseOut};
+        }
+
+        &:hover {
           time,
           div[role='menubar'] {
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 200ms ${token.motionEaseOut};
+            pointer-events: unset;
+            opacity: 1;
           }
+        }
 
-          &:hover {
-            time,
-            div[role='menubar'] {
-              pointer-events: unset;
-              opacity: 1;
-            }
-          }
-
-          ${responsive.mobile} {
-            padding-block-start: ${variant === 'docs' ? '16px' : '12px'};
-            padding-inline: 8px;
-          }
-        `,
-      ),
+        ${responsive.mobile} {
+          padding-block-start: 12px;
+          padding-inline: 8px;
+        }
+      `,
       editingContainer: cx(
         editingStylish,
         css`
@@ -129,11 +115,6 @@ export const useStyles = createStyles(
             border-color: ${token.colorBorder};
           }
         `,
-        variant === 'docs' &&
-          css`
-            border-radius: ${token.borderRadius}px;
-            background: ${token.colorFillQuaternary};
-          `,
       ),
       editingInput: css`
         width: 100%;

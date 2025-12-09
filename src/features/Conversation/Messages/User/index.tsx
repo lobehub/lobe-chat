@@ -1,17 +1,11 @@
 import { Tag } from '@lobehub/ui';
-import { useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
-import MessageContent from '@/features/ChatItem/components/MessageContent';
-import Title from '@/features/ChatItem/components/Title';
-import { useStyles } from '@/features/ChatItem/style';
+import { ChatItem } from '@/features/Conversation/ChatItem';
 import { useUserAvatar } from '@/hooks/useUserAvatar';
-import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
@@ -53,11 +47,8 @@ const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing,
   );
 
   const { t } = useTranslation('chat');
-  const { mobile } = useResponsive();
   const avatar = useUserAvatar();
   const title = useUserStore(userProfileSelectors.displayUserName);
-
-  const displayMode = useAgentStore(agentChatConfigSelectors.displayMode);
 
   // Get editing and loading state from ConversationStore
   const editing = useConversationStore(messageStateSelectors.isMessageEditing(id));
@@ -80,18 +71,8 @@ const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing,
     return <Tag>{t('dm.visibleTo', { target: targetName })}</Tag>;
   }, [targetId, userName, agents, t]);
 
-  const placement = displayMode === 'chat' ? 'right' : 'left';
-  const variant = displayMode === 'chat' ? 'bubble' : 'docs';
-
-  const { styles } = useStyles({
-    editing,
-    placement,
-    primary: true,
-    showTitle: false,
-    time: createdAt,
-    title,
-    variant,
-  });
+  const placement = 'right';
+  const variant = 'bubble';
 
   const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, index, role });
 
@@ -125,67 +106,44 @@ const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing,
       },
       components,
       customRender: (dom: ReactNode, { text }: { text: string }) => (
-        <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />
+        <UserMarkdownRender dom={dom} id={id} text={text} />
       ),
       fontSize,
       rehypePlugins,
       remarkPlugins,
     }),
-    [components, displayMode, highlighterTheme, mermaidTheme, fontSize],
+    [components, highlighterTheme, mermaidTheme, fontSize],
   );
 
   return (
-    <Flexbox className={styles.container} gap={8}>
-      <Flexbox
-        direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-        gap={mobile ? 6 : 12}
-      >
-        <Flexbox
-          align={placement === 'left' ? 'flex-start' : 'flex-end'}
-          className={styles.messageContainer}
-        >
-          <Title
-            avatar={{ avatar, title }}
-            placement={placement}
-            showTitle={false}
-            time={createdAt}
-            titleAddon={dmIndicator}
+    <ChatItem
+      avatar={{ avatar, title }}
+      belowMessage={
+        <Flexbox direction={'horizontal-reverse'}>
+          <Actions
+            actionsConfig={actionsConfig}
+            data={item}
+            disableEditing={disableEditing}
+            id={id}
+            index={index}
           />
-          <Flexbox
-            align={placement === 'left' ? 'flex-start' : 'flex-end'}
-            className={styles.messageContent}
-            direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-            gap={8}
-          >
-            <Flexbox flex={1} style={{ maxWidth: '100%', minWidth: 0 }}>
-              <MessageContent
-                editing={editing}
-                id={id}
-                markdownProps={markdownProps}
-                message={content}
-                messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
-                onDoubleClick={onDoubleClick}
-                placement={placement}
-                primary
-                renderMessage={renderMessage}
-                variant={variant}
-              />
-            </Flexbox>
-          </Flexbox>
         </Flexbox>
-        {mobile && variant === 'bubble' && <BorderSpacing borderSpacing={32} />}
-      </Flexbox>
-
-      <Flexbox direction={'horizontal-reverse'}>
-        <Actions
-          actionsConfig={actionsConfig}
-          data={item}
-          disableEditing={disableEditing}
-          id={id}
-          index={index}
-        />
-      </Flexbox>
-    </Flexbox>
+      }
+      editing={editing}
+      id={id}
+      markdownProps={markdownProps}
+      message={content}
+      messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
+      onDoubleClick={onDoubleClick}
+      placement={placement}
+      primary
+      renderMessage={renderMessage}
+      showAvatar={false}
+      showTitle={false}
+      time={createdAt}
+      titleAddon={dmIndicator}
+      variant={variant}
+    />
   );
 });
 

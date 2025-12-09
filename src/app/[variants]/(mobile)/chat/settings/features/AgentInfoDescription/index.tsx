@@ -19,7 +19,6 @@ interface AgentConfig {
 }
 
 interface ChatConfig {
-  displayMode?: string;
   enableHistoryCount?: boolean;
   historyCount?: number;
   searchMode?: string;
@@ -291,18 +290,12 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
                 title: t('agentInfoDescription.chat.enableHistoryCount'),
               },
               {
-                dataIndex: 'displayMode',
-                key: 'displayMode',
-                title: t('agentInfoDescription.chat.displayMode'),
-              },
-              {
                 dataIndex: 'searchMode',
                 key: 'searchMode',
                 title: t('agentInfoDescription.chat.searchMode'),
               },
             ]}
             dataSource={{
-              displayMode: processedChatConfig?.displayMode || unsetText,
               enableHistoryCount: processedChatConfig?.enableHistoryCount
                 ? t('agentInfoDescription.chat.yes')
                 : t('agentInfoDescription.chat.no'),

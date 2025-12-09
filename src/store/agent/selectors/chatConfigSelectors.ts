@@ -58,12 +58,6 @@ const enableHistoryCount = (s: AgentStoreState) =>
 
 const historyCount = (s: AgentStoreState): number => getHistoryCountById(s.activeAgentId || '')(s);
 
-const displayMode = (s: AgentStoreState) => {
-  const chatConfig = currentAgentChatConfig(s);
-
-  return chatConfig.displayMode || 'chat';
-};
-
 const enableHistoryDivider =
   (historyLength: number, currentIndex: number) => (s: AgentStoreState) => {
     const config = currentAgentChatConfig(s);
@@ -78,7 +72,6 @@ const enableHistoryDivider =
 export const agentChatConfigSelectors = {
   agentSearchMode,
   currentChatConfig: currentAgentChatConfig,
-  displayMode,
   enableHistoryCount,
   enableHistoryDivider,
   getAgentChatConfigById,

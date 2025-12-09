@@ -234,30 +234,6 @@ describe('agentChatConfigSelectors', () => {
     });
   });
 
-  describe('displayMode', () => {
-    it('should return displayMode from config', () => {
-      const state = createState({
-        activeAgentId: 'agent-1',
-        agentMap: {
-          'agent-1': {
-            chatConfig: { displayMode: 'docs' },
-          },
-        },
-      });
-
-      expect(agentChatConfigSelectors.displayMode(state)).toBe('docs');
-    });
-
-    it('should return "chat" as default', () => {
-      const state = createState({
-        activeAgentId: 'agent-1',
-        agentMap: { 'agent-1': {} },
-      });
-
-      expect(agentChatConfigSelectors.displayMode(state)).toBe('chat');
-    });
-  });
-
   describe('enableHistoryDivider', () => {
     it('should return true when conditions are met', () => {
       const state = createState({

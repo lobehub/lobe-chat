@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
-import { ChatItem } from '@/features/ChatItem';
+import { ChatItem } from '@/features/Conversation/ChatItem';
 import PluginTag from '@/features/PluginTag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';

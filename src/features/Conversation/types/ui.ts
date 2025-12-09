@@ -8,7 +8,6 @@ export type RenderMessage = FC<UIChatMessage & { editableContent: ReactNode }>;
 export type RenderBelowMessage = FC<UIChatMessage>;
 export type RenderMessageExtra = FC<UIChatMessage>;
 export type MarkdownCustomRender = (props: {
-  displayMode: 'chat' | 'docs';
   dom: ReactNode;
   id: string;
   text: string;
