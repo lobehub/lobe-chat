@@ -1,9 +1,12 @@
+import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
 import { ToolNameResolver } from '@lobechat/context-engine';
 import { type API, apiPrompt, toolPrompt } from '@lobechat/prompts';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { IEditor, INSERT_MENTION_COMMAND } from '@lobehub/editor';
+import { Icon, Image } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { useStore } from '@/features/AgentSetting/store';
@@ -14,6 +17,26 @@ import { hydrationPrompt } from '@/utils/promptTemplate';
 
 import MentionDropdown from './MentionDropdown';
 import { MentionListOption, MentionMetadata } from './types';
+
+// 根据 identifier 获取 Klavis 服务器类型配置
+const getKlavisServerType = (identifier: string) =>
+  KLAVIS_SERVER_TYPES.find((type) => type.identifier === identifier);
+
+/**
+ * Klavis 服务器图标组件
+ * 对于 string 类型的 icon，使用 Image 组件渲染
+ * 对于 IconType 类型的 icon，使用 Icon 组件渲染，并根据主题设置填充色
+ */
+const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label }) => {
+  const theme = useTheme();
+
+  if (typeof icon === 'string') {
+    return <Image alt={label} height={20} src={icon} style={{ flex: 'none' }} width={20} />;
+  }
+
+  // 使用主题色填充，在深色模式下自动适应
+  return <Icon fill={theme.colorText} icon={icon} size={20} />;
+});
 
 const toolNameResolver = new ToolNameResolver();
 
@@ -109,11 +132,17 @@ const useMentionOptions = () => {
         type: 'collection',
       });
 
+      // 优先使用 Klavis 图标，否则使用 PluginAvatar
+      const klavisServerType = getKlavisServerType(tool.identifier);
+      const icon = klavisServerType ? (
+        <KlavisIcon icon={klavisServerType.icon} label={klavisServerType.label} />
+      ) : (
+        <PluginAvatar alt={label} avatar={pluginHelpers.getPluginAvatar(tool.meta)} size={20} />
+      );
+
       return {
         description,
-        icon: (
-          <PluginAvatar alt={label} avatar={pluginHelpers.getPluginAvatar(tool.meta)} size={20} />
-        ),
+        icon,
         key: tool.identifier,
         label,
         metadata: createMetadata(),
