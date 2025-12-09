@@ -410,8 +410,9 @@ export const createRuntimeExecutors = (
       });
 
       // 最终更新数据库
+      let toolMessageId: string | undefined;
       try {
-        await ctx.messageModel.create({
+        const toolMessage = await ctx.messageModel.create({
           agentId: state.metadata!.agentId!,
           content: executionResult.content,
           parentId: payload.parentMessageId,
@@ -423,6 +424,7 @@ export const createRuntimeExecutors = (
           tool_call_id: chatToolPayload.id,
           topicId: state.metadata?.topicId,
         });
+        toolMessageId = toolMessage.id;
       } catch (error) {
         console.error('[StreamingToolExecutor] Failed to create tool message: %O', error);
       }
@@ -476,6 +478,8 @@ export const createRuntimeExecutors = (
             data: executionResult,
             executionTime,
             isSuccess,
+            // Pass tool message ID as parentMessageId for the next LLM call
+            parentMessageId: toolMessageId,
             toolCall: chatToolPayload,
             toolCallId: chatToolPayload.id,
           },
