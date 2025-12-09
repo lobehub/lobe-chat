@@ -758,13 +758,25 @@ describe('AI Agent E2E Test - execAgent', () => {
       expect(userMessage).toBeDefined();
       expect(userMessage?.content).toBe('杭州天气如何');
 
-      // Verify assistant messages exist
+      // Verify assistant messages exist (should have 2: one with tool call, one with final response)
       const assistantMessages = allMessages.filter((m) => m.role === 'assistant');
-      expect(assistantMessages.length).toBeGreaterThanOrEqual(1);
+      expect(assistantMessages.length).toBe(2);
 
       // Verify tool message exists
       const toolMessage = allMessages.find((m) => m.role === 'tool');
       expect(toolMessage).toBeDefined();
+
+      // Verify parentId chain: user -> assistant1 -> tool -> assistant2
+      // 1. First assistant message should have user message as parent
+      const firstAssistant = assistantMessages.find((m) => m.parentId === userMessage?.id);
+      expect(firstAssistant).toBeDefined();
+
+      // 2. Tool message should have first assistant as parent
+      expect(toolMessage?.parentId).toBe(firstAssistant?.id);
+
+      // 3. Second assistant message should have tool message as parent
+      const secondAssistant = assistantMessages.find((m) => m.parentId === toolMessage?.id);
+      expect(secondAssistant).toBeDefined();
 
       // Verify tool execution was called with correct parameters
       expect(mockExecuteTool).toHaveBeenCalled();
@@ -776,7 +788,7 @@ describe('AI Agent E2E Test - execAgent', () => {
       mockExecuteTool.mockRestore();
     });
 
-    it('should create correct parentId chain: user -> assistant -> tool', async () => {
+    it('should create correct parentId chain: user -> assistant1 -> tool -> assistant2', async () => {
       // Setup mock responses
       let callCount = 0;
       mockResponsesCreate.mockImplementation(() => {
@@ -815,28 +827,43 @@ describe('AI Agent E2E Test - execAgent', () => {
 
       expect(finalState.status).toBe('done');
 
-      // Verify parentId chain
+      // Verify complete parentId chain: user -> assistant1 -> tool -> assistant2
       const allMessages = await serverDB
         .select()
         .from(messages)
         .where(eq(messages.agentId, testAgentWithToolsId));
 
+      // Should have exactly 4 messages
+      expect(allMessages.length).toBe(4);
+
+      // 1. User message (root, no parent)
       const userMessage = allMessages.find((m) => m.role === 'user');
-      const firstAssistantMessage = allMessages.find(
+      expect(userMessage).toBeDefined();
+      expect(userMessage?.parentId).toBeNull();
+
+      // 2. First assistant message (parent: user)
+      const firstAssistant = allMessages.find(
         (m) => m.role === 'assistant' && m.parentId === userMessage?.id,
       );
+      expect(firstAssistant).toBeDefined();
+
+      // 3. Tool message (parent: first assistant)
       const toolMessage = allMessages.find((m) => m.role === 'tool');
+      expect(toolMessage).toBeDefined();
+      expect(toolMessage?.parentId).toBe(firstAssistant?.id);
 
-      expect(userMessage).toBeDefined();
-      expect(firstAssistantMessage).toBeDefined();
+      // 4. Second assistant message (parent: tool)
+      const secondAssistant = allMessages.find(
+        (m) => m.role === 'assistant' && m.parentId === toolMessage?.id,
+      );
+      expect(secondAssistant).toBeDefined();
 
-      // First assistant message should have user message as parent
-      expect(firstAssistantMessage?.parentId).toBe(userMessage?.id);
-
-      // Tool message should have assistant message as parent
-      if (toolMessage) {
-        expect(toolMessage.parentId).toBe(firstAssistantMessage?.id);
-      }
+      // Verify the chain is complete and connected
+      // user (null) -> assistant1 (user.id) -> tool (assistant1.id) -> assistant2 (tool.id)
+      expect(userMessage?.parentId).toBeNull();
+      expect(firstAssistant?.parentId).toBe(userMessage?.id);
+      expect(toolMessage?.parentId).toBe(firstAssistant?.id);
+      expect(secondAssistant?.parentId).toBe(toolMessage?.id);
 
       // Cleanup
       mockExecuteTool.mockRestore();

@@ -325,5 +325,64 @@ describe('RuntimeExecutors', () => {
         }),
       );
     });
+
+    it('should return tool message ID as parentMessageId in nextContext for parentId chain', async () => {
+      // Setup: mock messageModel.create to return a specific tool message ID
+      const toolMessageId = 'tool-msg-789';
+      mockMessageModel.create.mockResolvedValue({ id: toolMessageId });
+
+      const executors = createRuntimeExecutors(ctx);
+      const state = createMockState();
+
+      const instruction = {
+        payload: {
+          parentMessageId: 'assistant-msg-123',
+          toolCalling: {
+            apiName: 'search',
+            arguments: '{"query": "test"}',
+            id: 'tool-call-1',
+            identifier: 'lobe-web-browsing',
+            type: 'builtin' as const,
+          },
+        },
+        type: 'call_tool' as const,
+      };
+
+      const result = await executors.call_tool!(instruction, state);
+
+      // Verify nextContext.payload.parentMessageId is the tool message ID
+      // This is crucial for the parentId chain: user -> assistant -> tool -> assistant2
+      const payload = result.nextContext!.payload as { parentMessageId?: string };
+      expect(payload.parentMessageId).toBe(toolMessageId);
+      expect(result.nextContext!.phase).toBe('tool_result');
+    });
+
+    it('should return undefined parentMessageId if messageModel.create fails', async () => {
+      // Setup: mock messageModel.create to throw an error
+      mockMessageModel.create.mockRejectedValue(new Error('Database error'));
+
+      const executors = createRuntimeExecutors(ctx);
+      const state = createMockState();
+
+      const instruction = {
+        payload: {
+          parentMessageId: 'assistant-msg-123',
+          toolCalling: {
+            apiName: 'search',
+            arguments: '{}',
+            id: 'tool-call-1',
+            identifier: 'web-search',
+            type: 'default' as const,
+          },
+        },
+        type: 'call_tool' as const,
+      };
+
+      const result = await executors.call_tool!(instruction, state);
+
+      // parentMessageId should be undefined when message creation fails
+      const payload = result.nextContext!.payload as { parentMessageId?: string };
+      expect(payload.parentMessageId).toBeUndefined();
+    });
   });
 });
