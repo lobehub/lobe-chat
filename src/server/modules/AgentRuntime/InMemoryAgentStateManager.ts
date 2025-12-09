@@ -236,3 +236,8 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
     return this.events.get(operationId) ?? [];
   }
 }
+
+/**
+ * 单例实例，用于测试和本地开发环境
+ */
+export const inMemoryAgentStateManager = new InMemoryAgentStateManager();

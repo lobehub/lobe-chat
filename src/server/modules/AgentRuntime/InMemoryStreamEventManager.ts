@@ -180,6 +180,7 @@ export class InMemoryStreamEventManager implements IStreamEventManager {
   ): Promise<StreamEvent> {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         unsubscribe();
         reject(new Error(`Timeout waiting for event ${eventType}`));
       }, timeout);
@@ -208,3 +209,8 @@ export class InMemoryStreamEventManager implements IStreamEventManager {
     });
   }
 }
+
+/**
+ * 单例实例，用于测试和本地开发环境
+ */
+export const inMemoryStreamEventManager = new InMemoryStreamEventManager();

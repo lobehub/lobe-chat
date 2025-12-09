@@ -19,6 +19,15 @@ export interface AgentState {
   toolManifestMap: Record<string, any>;
 
   /**
+   * Model runtime configuration
+   * Used as fallback when call_llm instruction doesn't specify model/provider
+   */
+  modelRuntimeConfig?: {
+    model: string;
+    provider: string;
+  };
+
+  /**
    * User's global intervention configuration
    * Controls how tools requiring approval are handled
    */

@@ -12,7 +12,6 @@ import { LobeChatDatabase } from '@/database/type';
 import {
   AgentRuntimeCoordinator,
   type AgentRuntimeCoordinatorOptions,
-  StreamEventManager,
 } from '@/server/modules/AgentRuntime';
 import { InMemoryStreamEventManager } from '@/server/modules/AgentRuntime/InMemoryStreamEventManager';
 import {
@@ -91,7 +90,8 @@ export class AgentRuntimeService {
       options?.streamEventManager ??
       options?.coordinatorOptions?.streamEventManager ??
       new InMemoryStreamEventManager();
-    this.queueService = options?.queueService === null ? null : (options?.queueService ?? new QueueService());
+    this.queueService =
+      options?.queueService === null ? null : (options?.queueService ?? new QueueService());
     this.userId = userId;
     this.messageModel = new MessageModel(db, this.userId);
 
@@ -134,10 +134,13 @@ export class AgentRuntimeService {
         messages: initialMessages,
         metadata: {
           agentConfig,
+          // need be removed
           modelRuntimeConfig,
           userId,
           ...appContext,
         },
+        // modelRuntimeConfig at state level for executor fallback
+        modelRuntimeConfig,
         operationId,
         status: 'idle',
         stepCount: 0,
@@ -604,7 +607,11 @@ export class AgentRuntimeService {
           priority: 'high',
           stepIndex,
         });
-        log('Scheduled immediate execution for operation %s (messageId: %s)', operationId, messageId);
+        log(
+          'Scheduled immediate execution for operation %s (messageId: %s)',
+          operationId,
+          messageId,
+        );
       } else {
         log('Queue service disabled, skipping schedule for operation %s', operationId);
       }
