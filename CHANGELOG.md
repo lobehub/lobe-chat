@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.165](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.164...v2.0.0-next.165)
+
+<sup>Released on **2025-12-09**</sup>
+
+#### ♻ Code Refactoring
+
+- **electron-main**: Client ipc decorate.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **electron-main**: Client ipc decorate, closes [#10679](https://github.com/lobehub/lobe-chat/issues/10679) ([f74befa](https://github.com/lobehub/lobe-chat/commit/f74befa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.164](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.163...v2.0.0-next.164)
 
 <sup>Released on **2025-12-08**</sup>
