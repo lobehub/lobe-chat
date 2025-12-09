@@ -565,7 +565,7 @@ const zenmuxChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
+      functionCall: true,
     },
     contextWindowTokens: 128_000,
     description: 'DeepSeek-V3 是 DeepSeek 团队的一款高性能混合推理模型，适合复杂任务与工具集成。',
