@@ -1,5 +1,6 @@
 'use client';
 
+import { Notion } from '@lobehub/icons';
 import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
@@ -335,6 +336,7 @@ const AddButton = () => {
       {
         children: [
           {
+            icon: <Notion />,
             key: 'connect-notion',
             label: 'Notion',
             onClick: () => {
@@ -342,6 +344,7 @@ const AddButton = () => {
             },
           },
           {
+            icon: <Icon icon={Notion} />,
             key: 'connect-google-drive',
             label: 'Google Drive',
             onClick: () => {
@@ -349,6 +352,7 @@ const AddButton = () => {
             },
           },
           {
+            icon: <Icon icon={Notion} />,
             key: 'connect-onedrive',
             label: 'OneDrive',
             onClick: () => {

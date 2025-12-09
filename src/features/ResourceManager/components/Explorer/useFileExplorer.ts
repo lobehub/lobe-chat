@@ -135,7 +135,39 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
     async (type: MultiSelectActionType) => {
       switch (type) {
         case 'delete': {
-          await removeFiles(selectFileIds);
+          // Separate documents/pages from regular files
+          const documentsToDelete: string[] = [];
+          const filesToDelete: string[] = [];
+
+          selectFileIds.forEach((id) => {
+            const item = data?.find((f) => f.id === id);
+            if (!item) return;
+
+            const isPage = item.sourceType === 'document' || item.fileType === 'custom/document';
+            const isFolder = item.fileType === 'custom/folder';
+
+            if (isPage || isFolder) {
+              documentsToDelete.push(id);
+            } else {
+              filesToDelete.push(id);
+            }
+          });
+
+          // Delete documents using batch delete endpoint
+          if (documentsToDelete.length > 0) {
+            const { documentService } = await import('@/services/document');
+            await documentService.deleteDocuments(documentsToDelete);
+          }
+
+          // Delete regular files using file service
+          if (filesToDelete.length > 0) {
+            await removeFiles(filesToDelete);
+          } else {
+            // If only documents were deleted, still refresh the file list
+            const refreshFileList = useFileStore.getState().refreshFileList;
+            await refreshFileList();
+          }
+
           setSelectedFileIds([]);
           return;
         }
