@@ -86,6 +86,14 @@
       },
       "newFolder": "إنشاء مجلد جديد",
       "newPage": "مستند جديد",
+      "notion": {
+        "error": "فشل في استيراد ملف Notion",
+        "foundFiles": "تم العثور على {{count}} ملف",
+        "importing": "جارٍ استيراد ملفات Notion...",
+        "noMarkdownFiles": "لم يتم العثور على ملفات Markdown في ملف ZIP",
+        "partial": "تم استيراد {{success}} ملفًا بنجاح، وفشل {{failed}} ملفًا",
+        "success": "تم استيراد {{count}} ملفًا بنجاح"
+      },
       "uploadFile": "رفع ملف",
       "uploadFolder": "رفع مجلد"
     },

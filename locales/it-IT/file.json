@@ -86,6 +86,14 @@
       },
       "newFolder": "Nuova cartella",
       "newPage": "Nuovo documento",
+      "notion": {
+        "error": "Importazione del file Notion non riuscita",
+        "foundFiles": "Trovati {{count}} file",
+        "importing": "Importazione dei file Notion in corso...",
+        "noMarkdownFiles": "Nessun file Markdown trovato nel file ZIP",
+        "partial": "Importati con successo {{success}} file, {{failed}} non riusciti",
+        "success": "Importati con successo {{count}} file"
+      },
       "uploadFile": "Carica file",
       "uploadFolder": "Carica cartella"
     },

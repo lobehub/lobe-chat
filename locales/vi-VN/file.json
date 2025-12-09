@@ -86,6 +86,14 @@
       },
       "newFolder": "Tạo thư mục mới",
       "newPage": "Tạo tài liệu mới",
+      "notion": {
+        "error": "Không thể nhập tệp Notion",
+        "foundFiles": "Đã tìm thấy {{count}} tệp",
+        "importing": "Đang nhập tệp Notion...",
+        "noMarkdownFiles": "Không tìm thấy tệp Markdown nào trong tệp ZIP",
+        "partial": "Đã nhập thành công {{success}} tệp, thất bại {{failed}} tệp",
+        "success": "Đã nhập thành công {{count}} tệp"
+      },
       "uploadFile": "Tải tệp lên",
       "uploadFolder": "Tải thư mục lên"
     },

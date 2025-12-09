@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "Configuración de IA",
     "common": "General",
+    "market": "Mercado",
     "profile": "Cuenta",
     "system": "Sistema"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "Actualización exitosa"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Cancelar",
+      "confirmDeprecate": "Confirmar eliminación",
+      "deprecate": "Eliminar permanentemente",
+      "deprecateConfirmContent": "Una vez eliminado, este asistente será retirado permanentemente del mercado y no podrá volver a publicarse. Esta acción es irreversible, por favor procede con precaución.",
+      "deprecateConfirmTitle": "¿Confirmar eliminación del asistente?",
+      "deprecateError": "Error al eliminar el asistente",
+      "deprecateLoading": "Eliminando asistente...",
+      "deprecateSuccess": "Asistente eliminado",
+      "edit": "Editar agente",
+      "publish": "Publicar agente",
+      "publishError": "Error al publicar el asistente",
+      "publishLoading": "Publicando asistente...",
+      "publishSuccess": "Asistente publicado",
+      "unpublish": "Retirar agente",
+      "unpublishError": "Error al retirar el asistente",
+      "unpublishLoading": "Retirando asistente...",
+      "unpublishSuccess": "Asistente retirado",
+      "viewDetail": "Ver detalles"
+    },
+    "detail": {
+      "category": "Categoría",
+      "description": "Descripción",
+      "identifier": "Identificador",
+      "title": "Detalles del asistente"
+    },
+    "empty": {
+      "description": "Aún no has publicado ningún asistente en el mercado",
+      "title": "No hay asistentes publicados"
+    },
+    "errors": {
+      "editFailed": "Error al editar el asistente, por favor inténtalo de nuevo más tarde",
+      "fetchFailed": "Error al obtener los detalles del asistente",
+      "notAuthenticated": "Por favor inicia sesión en tu cuenta del mercado"
+    },
+    "loginRequired": {
+      "button": "Iniciar sesión en el mercado",
+      "description": "Inicia sesión en tu cuenta del mercado para ver los asistentes que has publicado",
+      "title": "Inicio de sesión requerido"
+    },
+    "status": {
+      "archived": "Archivado",
+      "deprecated": "Eliminado",
+      "published": "Publicado",
+      "unpublished": "No publicado"
+    },
+    "title": "Mis asistentes publicados"
   },
   "plugin": {
     "addMCPPlugin": "Agregar complemento MCP",
@@ -774,6 +824,7 @@
     "hotkey": "Atajos de teclado",
     "image": "Servicio de ilustración",
     "llm": "Modelo de lenguaje",
+    "my-agents": "Mis asistentes publicados",
     "profile": "Mi cuenta",
     "provider": "Proveedor de servicios de IA",
     "proxy": "Proxy de red",

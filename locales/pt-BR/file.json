@@ -86,6 +86,14 @@
       },
       "newFolder": "Nova pasta",
       "newPage": "Novo documento",
+      "notion": {
+        "error": "Falha ao importar arquivos do Notion",
+        "foundFiles": "{{count}} arquivos encontrados",
+        "importing": "Importando arquivos do Notion...",
+        "noMarkdownFiles": "Nenhum arquivo Markdown encontrado no arquivo ZIP",
+        "partial": "{{success}} arquivos importados com sucesso, {{failed}} falharam",
+        "success": "{{count}} arquivos importados com sucesso"
+      },
       "uploadFile": "Enviar arquivo",
       "uploadFolder": "Enviar pasta"
     },

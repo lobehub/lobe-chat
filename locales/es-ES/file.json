@@ -86,6 +86,14 @@
       },
       "newFolder": "Nueva carpeta",
       "newPage": "Nuevo documento",
+      "notion": {
+        "error": "Error al importar archivos de Notion",
+        "foundFiles": "Se encontraron {{count}} archivos",
+        "importing": "Importando archivos de Notion...",
+        "noMarkdownFiles": "No se encontraron archivos Markdown en el archivo ZIP",
+        "partial": "Se importaron correctamente {{success}} archivos, fallaron {{failed}}",
+        "success": "Se importaron correctamente {{count}} archivos"
+      },
       "uploadFile": "Subir archivo",
       "uploadFolder": "Subir carpeta"
     },

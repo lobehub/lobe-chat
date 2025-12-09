@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "Yapay Zeka Ayarları",
     "common": "Genel",
+    "market": "Pazar",
     "profile": "Hesap",
     "system": "Sistem"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "Güncelleme başarılı"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "İptal",
+      "confirmDeprecate": "Kaldırmayı Onayla",
+      "deprecate": "Kalıcı Olarak Kaldır",
+      "deprecateConfirmContent": "Kaldırıldıktan sonra bu asistan pazardan kalıcı olarak silinecek ve yeniden yayınlanamayacaktır. Bu işlem geri alınamaz, lütfen dikkatli olun.",
+      "deprecateConfirmTitle": "Asistanı kaldırmak istediğinize emin misiniz?",
+      "deprecateError": "Asistan kaldırılamadı",
+      "deprecateLoading": "Asistan kaldırılıyor...",
+      "deprecateSuccess": "Asistan kaldırıldı",
+      "edit": "Asistanı Düzenle",
+      "publish": "Asistanı Yayınla",
+      "publishError": "Asistan yayınlanamadı",
+      "publishLoading": "Asistan yayınlanıyor...",
+      "publishSuccess": "Asistan yayınlandı",
+      "unpublish": "Asistanı Yayından Kaldır",
+      "unpublishError": "Asistan yayından kaldırılamadı",
+      "unpublishLoading": "Asistan yayından kaldırılıyor...",
+      "unpublishSuccess": "Asistan yayından kaldırıldı",
+      "viewDetail": "Detayları Görüntüle"
+    },
+    "detail": {
+      "category": "Kategori",
+      "description": "Açıklama",
+      "identifier": "Tanımlayıcı",
+      "title": "Asistan Detayları"
+    },
+    "empty": {
+      "description": "Henüz pazarda yayınladığınız bir asistan bulunmuyor",
+      "title": "Yayınlanmış Asistan Yok"
+    },
+    "errors": {
+      "editFailed": "Asistan düzenlenemedi, lütfen daha sonra tekrar deneyin",
+      "fetchFailed": "Asistan detayları alınamadı",
+      "notAuthenticated": "Lütfen önce pazar hesabınıza giriş yapın"
+    },
+    "loginRequired": {
+      "button": "Pazar Hesabına Giriş Yap",
+      "description": "Yayınladığınız asistanları görüntülemek için lütfen pazar hesabınıza giriş yapın",
+      "title": "Giriş Gerekli"
+    },
+    "status": {
+      "archived": "Arşivlendi",
+      "deprecated": "Kaldırıldı",
+      "published": "Yayında",
+      "unpublished": "Yayında Değil"
+    },
+    "title": "Yayınladığım Asistanlar"
   },
   "plugin": {
     "addMCPPlugin": "MCP Eklentisi Ekle",
@@ -774,6 +824,7 @@
     "hotkey": "Kısayollar",
     "image": "Görsel Hizmeti",
     "llm": "Modeller",
+    "my-agents": "Yayınladığım Asistanlar",
     "profile": "Hesabım",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "proxy": "Ağ Proxy",
