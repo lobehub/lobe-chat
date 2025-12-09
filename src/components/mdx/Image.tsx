@@ -1,5 +1,3 @@
-'use server';
-
 import { Image } from '@lobehub/ui/mdx';
 import Img from 'next/image';
 import { getPlaiceholder } from 'plaiceholder';

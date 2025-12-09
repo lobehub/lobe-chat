@@ -41,14 +41,14 @@ const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Desktop'), {
 });
 
 // Changelog components
-const ChangelogPage = dynamic(() => import('./(main)/changelog/index').then((m) => m.DesktopPage), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-const ChangelogLayout = dynamic(() => import('./(main)/changelog/_layout/Desktop'), {
-  loading: () => <Loading />,
-  ssr: false,
-});
+// const ChangelogPage = dynamic(() => import('./(main)/changelog/index').then((m) => m.DesktopPage), {
+//   loading: () => <Loading />,
+//   ssr: false,
+// });
+// const ChangelogLayout = dynamic(() => import('./(main)/changelog/_layout/Desktop'), {
+//   loading: () => <Loading />,
+//   ssr: false,
+// });
 
 // Discover List components
 const DesktopHomePage = dynamic(
@@ -478,17 +478,17 @@ export const createDesktopRouter = (locale: Locales) =>
         },
 
         // changelog routes
-        {
-          children: [
-            {
-              element: <ChangelogPage />,
-              index: true,
-            },
-          ],
-          element: <ChangelogLayout locale={locale} />,
-          errorElement: <ChangelogErrorBoundary />,
-          path: 'changelog',
-        },
+        // {
+        //   children: [
+        //     {
+        //       element: <ChangelogPage />,
+        //       index: true,
+        //     },
+        //   ],
+        //   element: <ChangelogLayout locale={locale} />,
+        //   errorElement: <ChangelogErrorBoundary />,
+        //   path: 'changelog',
+        // },
         // Default route - redirect to chat
         {
           index: true,

@@ -26,12 +26,14 @@ const standaloneConfig: NextConfig = {
 const assetPrefix = process.env.NEXT_PUBLIC_ASSET_PREFIX;
 
 const nextConfig: NextConfig = {
-  ...(isStandaloneMode ? standaloneConfig : {}),
   assetPrefix,
+
   compiler: {
     emotion: true,
   },
+
   compress: isProd,
+
   experimental: {
     optimizePackageImports: [
       'emoji-mart',
@@ -50,6 +52,7 @@ const nextConfig: NextConfig = {
     webpackBuildWorker: true,
     webpackMemoryOptimizations: true,
   },
+
   async headers() {
     const securityHeaders = [
       {
@@ -194,12 +197,21 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
   logging: {
     fetches: {
       fullUrl: true,
       hmrRefreshes: true,
     },
   },
+  // ...(isStandaloneMode
+  //   ? standaloneConfig
+  //   : {
+  //       output: 'export',
+  //       outputFileTracingIncludes: { '*': ['public/**/*', '.next/static/**/*'] },
+  //     }),
+  output: 'export',
+  outputFileTracingIncludes: { '*': ['public/**/*', '.next/static/**/*'] },
   reactStrictMode: true,
   redirects: async () => [
     {

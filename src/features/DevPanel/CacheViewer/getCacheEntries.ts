@@ -1,5 +1,3 @@
-'use server';
-
 import { existsSync, promises } from 'node:fs';
 import pMap from 'p-map';
 import { ZodError } from 'zod';
