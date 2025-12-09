@@ -98,7 +98,7 @@ export default {
         cancel: '暂不导入',
         desc: '请先在 Notion 中导出 Markdown（ZIP），点击继续选择压缩包即可导入其中所有页面。',
         ok: '选择 Notion ZIP',
-        title: '导入 Notion 笔记',
+        title: '导入 Notion 内容',
       },
       uploadFile: '上传文件',
       uploadFolder: '上传文件夹',
