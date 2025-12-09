@@ -8,7 +8,7 @@ import type { Cost, CostLimit, Usage } from './usage';
  * This is the "passport" that can be persisted and transferred.
  */
 export interface AgentState {
-  sessionId: string;
+  operationId: string;
   // --- State Machine ---
   status: 'idle' | 'running' | 'waiting_for_human' | 'done' | 'error' | 'interrupted';
 

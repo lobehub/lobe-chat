@@ -32,7 +32,7 @@ describe('call_tool executor', () => {
       };
 
       const instruction = createCallToolInstruction(toolCall, { parentMessageId: 'msg_parent' });
-      const state = createInitialState({ sessionId: 'test-session' });
+      const state = createInitialState({ operationId: 'test-session' });
 
       // When
       const result = await executeWithMockContext({
@@ -711,7 +711,7 @@ describe('call_tool executor', () => {
       mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
 
       const instruction = createCallToolInstruction();
-      const state = createInitialState({ sessionId: 'test-session', stepCount: 5 });
+      const state = createInitialState({ operationId: 'test-session', stepCount: 5 });
 
       // Cancel parent during message creation
       mockStore.optimisticCreateMessage = vi.fn().mockImplementation(async (params) => {
@@ -1263,7 +1263,7 @@ describe('call_tool executor', () => {
       mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
 
       const instruction = createCallToolInstruction();
-      const state = createInitialState({ sessionId: 'test-session', stepCount: 10 });
+      const state = createInitialState({ operationId: 'test-session', stepCount: 10 });
 
       // When
       const result = await executeWithMockContext({
@@ -1332,7 +1332,7 @@ describe('call_tool executor', () => {
 
       const instruction = createCallToolInstruction();
       const state = createInitialState({
-        sessionId: 'preserve-session',
+        operationId: 'preserve-session',
         stepCount: 15,
         status: 'running',
         lastModified: '2024-01-01T00:00:00.000Z',
@@ -1348,7 +1348,7 @@ describe('call_tool executor', () => {
       });
 
       // Then
-      expect(result.newState.sessionId).toBe('preserve-session');
+      expect(result.newState.operationId).toBe('preserve-session');
       expect(result.newState.stepCount).toBe(15);
       expect(result.newState.status).toBe('running');
       expect(result.newState.lastModified).toBe('2024-01-01T00:00:00.000Z');
@@ -1363,7 +1363,7 @@ describe('call_tool executor', () => {
       mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
 
       const instruction = createCallToolInstruction();
-      const state = createInitialState({ sessionId: 'immutable-test', stepCount: 5 });
+      const state = createInitialState({ operationId: 'immutable-test', stepCount: 5 });
       const originalState = JSON.parse(JSON.stringify(state));
 
       // When

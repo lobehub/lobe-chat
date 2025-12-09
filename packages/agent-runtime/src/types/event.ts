@@ -36,14 +36,14 @@ export interface AgentEventToolResult {
 export interface AgentEventHumanApproveRequired {
   type: 'human_approve_required';
   pendingToolsCalling: ChatToolPayload[];
-  sessionId: string;
+  operationId: string;
 }
 
 export interface AgentEventHumanPromptRequired {
   type: 'human_prompt_required';
   metadata?: Record<string, unknown>;
   prompt: string;
-  sessionId: string;
+  operationId: string;
 }
 
 export interface AgentEventHumanSelectRequired {
@@ -52,7 +52,7 @@ export interface AgentEventHumanSelectRequired {
   multi?: boolean;
   options: { label: string; value: string }[];
   prompt?: string;
-  sessionId: string;
+  operationId: string;
 }
 
 /**

@@ -15,6 +15,7 @@ export interface LobeAgentConfig {
    */
   editorData?: any;
 
+  enableAgentMode?: boolean;
   fewShots?: FewShots;
   files?: FileItem[];
   id?: string;

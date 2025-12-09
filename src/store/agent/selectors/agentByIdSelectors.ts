@@ -44,6 +44,11 @@ const getAgentKnowledgeBasesById = (agentId: string) => (s: AgentStoreState) =>
 const isAgentConfigLoadingById = (agentId: string) => (s: AgentStoreState) =>
   !agentId || !s.agentConfigInitMap[agentId];
 
+const getAgentEnableModeById =
+  (agentId: string) =>
+  (s: AgentStoreState): boolean =>
+    agentSelectors.getAgentConfigById(agentId)(s)?.enableAgentMode || false;
+
 /**
  * Get agent builder context by agentId
  * Used for injecting current agent config/meta into Agent Builder context
@@ -72,6 +77,7 @@ const getAgentBuilderContextById =
 export const agentByIdSelectors = {
   getAgentBuilderContextById,
   getAgentConfigById: agentSelectors.getAgentConfigById,
+  getAgentEnableModeById,
   getAgentFilesById,
   getAgentKnowledgeBasesById,
   getAgentModelById,

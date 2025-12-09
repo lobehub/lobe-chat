@@ -46,13 +46,14 @@ class MockAgent implements Agent {
 function createTestContext(
   phase: AgentRuntimeContext['phase'],
   payload?: any,
-  sessionId: string = 'test-session',
+  operationId: string = 'test-session',
 ): AgentRuntimeContext {
   return {
     phase,
     payload,
     session: {
-      sessionId,
+      // Note: AgentRuntimeContext.session uses sessionId for backward compatibility
+      sessionId: operationId,
       messageCount: 1,
       status: 'idle',
       stepCount: 0,
@@ -116,7 +117,7 @@ describe('AgentRuntime', () => {
       };
 
       const runtime = new AgentRuntime(agent);
-      const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
       const toolCall = {
         id: 'call_123',
@@ -142,7 +143,7 @@ describe('AgentRuntime', () => {
       const agent = new MockAgent();
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         messages: [{ role: 'user', content: 'Hello' }],
       });
 
@@ -159,7 +160,7 @@ describe('AgentRuntime', () => {
       agent.runner = vi.fn().mockImplementation(() => Promise.reject(new Error('Agent error')));
 
       const runtime = new AgentRuntime(agent);
-      const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
       const result = await runtime.step(state);
 
@@ -179,7 +180,7 @@ describe('AgentRuntime', () => {
         const agent = new MockAgent();
         const runtime = new AgentRuntime(agent);
         const state = AgentRuntime.createInitialState({
-          sessionId: 'test-session',
+          operationId: 'test-session',
           messages: [{ role: 'user', content: 'Hello' }],
         });
 
@@ -204,7 +205,7 @@ describe('AgentRuntime', () => {
 
         const runtime = new AgentRuntime(agent);
         const state = AgentRuntime.createInitialState({
-          sessionId: 'test-session',
+          operationId: 'test-session',
           messages: [{ role: 'user', content: 'Hello' }],
         });
 
@@ -252,7 +253,7 @@ describe('AgentRuntime', () => {
 
         const runtime = new AgentRuntime(agent);
         const state = AgentRuntime.createInitialState({
-          sessionId: 'test-session',
+          operationId: 'test-session',
           messages: [{ role: 'user', content: 'Hello' }],
         });
 
@@ -286,7 +287,7 @@ describe('AgentRuntime', () => {
         };
 
         const runtime = new AgentRuntime(agent);
-        const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+        const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
         const toolCall = {
           id: 'call_123',
@@ -317,7 +318,7 @@ describe('AgentRuntime', () => {
       it('should throw error for unknown tool', async () => {
         const agent = new MockAgent();
         const runtime = new AgentRuntime(agent);
-        const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+        const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
         const toolCall = {
           id: 'call_123',
@@ -356,14 +357,14 @@ describe('AgentRuntime', () => {
         );
 
         const runtime = new AgentRuntime(agent);
-        const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+        const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
         const result = await runtime.step(state);
 
         expect(result.events).toHaveLength(1);
         expect(result.events[0]).toMatchObject({
           type: 'human_approve_required',
-          sessionId: 'test-session',
+          operationId: 'test-session',
         });
 
         expect(result.newState.status).toBe('waiting_for_human');
@@ -381,7 +382,7 @@ describe('AgentRuntime', () => {
         );
 
         const runtime = new AgentRuntime(agent);
-        const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+        const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
         const result = await runtime.step(state);
 
@@ -390,7 +391,7 @@ describe('AgentRuntime', () => {
           type: 'human_prompt_required',
           prompt: 'Please provide input',
           metadata: { key: 'value' },
-          sessionId: 'test-session',
+          operationId: 'test-session',
         });
 
         expect(result.newState.status).toBe('waiting_for_human');
@@ -415,7 +416,7 @@ describe('AgentRuntime', () => {
         );
 
         const runtime = new AgentRuntime(agent);
-        const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+        const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
         const result = await runtime.step(state);
 
@@ -428,7 +429,7 @@ describe('AgentRuntime', () => {
             { label: 'Option 2', value: 'opt2' },
           ],
           multi: false,
-          sessionId: 'test-session',
+          operationId: 'test-session',
         });
 
         expect(result.newState.status).toBe('waiting_for_human');
@@ -447,7 +448,7 @@ describe('AgentRuntime', () => {
         );
 
         const runtime = new AgentRuntime(agent);
-        const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+        const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
         const result = await runtime.step(state);
 
@@ -468,10 +469,10 @@ describe('AgentRuntime', () => {
 
   describe('createInitialState', () => {
     it('should create initial state without message', () => {
-      const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
       expect(state).toMatchObject({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         status: 'idle',
         messages: [],
         stepCount: 0,
@@ -482,7 +483,7 @@ describe('AgentRuntime', () => {
 
     it('should create initial state with message', () => {
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         messages: [{ role: 'user', content: 'Hello world' }],
       });
 
@@ -496,7 +497,7 @@ describe('AgentRuntime', () => {
 
     it('should create initial state with custom stepCount', () => {
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         stepCount: 5,
       });
 
@@ -505,7 +506,7 @@ describe('AgentRuntime', () => {
 
     it('should create initial state with maxSteps limit', () => {
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         maxSteps: 10,
       });
 
@@ -519,7 +520,7 @@ describe('AgentRuntime', () => {
       const agent = new MockAgent();
       const runtime = new AgentRuntime(agent);
 
-      let state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      let state = AgentRuntime.createInitialState({ operationId: 'test-session' });
       expect(state.stepCount).toBe(0);
 
       // First step
@@ -540,7 +541,7 @@ describe('AgentRuntime', () => {
       const runtime = new AgentRuntime(agent);
 
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         maxSteps: 3, // 允许 3 步
       });
 
@@ -580,7 +581,7 @@ describe('AgentRuntime', () => {
 
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         stepCount: 5, // Start with step 5
         messages: [{ role: 'user', content: 'test' }],
       });
@@ -606,7 +607,7 @@ describe('AgentRuntime', () => {
       const runtime = new AgentRuntime(agent);
 
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         stepCount: 3,
       });
 
@@ -638,7 +639,7 @@ describe('AgentRuntime', () => {
       const runtime = new AgentRuntime(agent);
 
       // Create interrupted state
-      let state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      let state = AgentRuntime.createInitialState({ operationId: 'test-session' });
       const interruptResult = runtime.interrupt(state, 'Test interruption');
 
       // Resume execution
@@ -659,7 +660,7 @@ describe('AgentRuntime', () => {
       const agent = new MockAgent();
       const runtime = new AgentRuntime(agent);
 
-      let state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      let state = AgentRuntime.createInitialState({ operationId: 'test-session' });
       const interruptResult = runtime.interrupt(state, 'Fatal error', false);
 
       await expect(runtime.resume(interruptResult.newState)).rejects.toThrow(
@@ -671,7 +672,7 @@ describe('AgentRuntime', () => {
       const agent = new MockAgent();
       const runtime = new AgentRuntime(agent);
 
-      const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
       await expect(runtime.resume(state)).rejects.toThrow(
         'Cannot resume: state is not interrupted',
@@ -686,7 +687,7 @@ describe('AgentRuntime', () => {
       const runtime = new AgentRuntime(agent);
 
       let state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         messages: [{ role: 'user', content: 'Hello' }],
       });
       const interruptResult = runtime.interrupt(state, 'Test interruption');
@@ -695,6 +696,7 @@ describe('AgentRuntime', () => {
         phase: 'user_input',
         payload: { message: { role: 'user', content: 'Hello' } },
         session: {
+          // Note: AgentRuntimeContext.session uses sessionId for backward compatibility
           sessionId: 'test-session',
           messageCount: 1,
           status: 'interrupted',
@@ -720,7 +722,7 @@ describe('AgentRuntime', () => {
 
   describe('Usage and Cost Tracking', () => {
     it('should initialize with zero usage and cost', () => {
-      const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
       expect(state.usage).toMatchObject({
         llm: {
@@ -816,7 +818,7 @@ describe('AgentRuntime', () => {
       const runtime = new AgentRuntime(agent);
 
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         messages: [{ role: 'user', content: 'Hello' }],
       });
 
@@ -864,7 +866,7 @@ describe('AgentRuntime', () => {
       };
 
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         messages: [{ role: 'user', content: 'Hello' }],
         costLimit,
       });
@@ -909,7 +911,7 @@ describe('AgentRuntime', () => {
       };
 
       const state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         messages: [{ role: 'user', content: 'Hello' }],
         costLimit,
       });
@@ -1004,7 +1006,7 @@ describe('AgentRuntime', () => {
 
       // Step 1: User asks question
       let state = AgentRuntime.createInitialState({
-        sessionId: 'test-session',
+        operationId: 'test-session',
         messages: [{ role: 'user', content: "What's the weather in Beijing?" }],
       });
       let result = await runtime.step(state);
@@ -1105,7 +1107,7 @@ describe('AgentRuntime', () => {
       const agent = new BatchToolAgent();
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({
-        sessionId: 'batch-test',
+        operationId: 'batch-test',
         messages: [{ role: 'user', content: 'Execute tools' }],
       });
 
@@ -1175,7 +1177,7 @@ describe('AgentRuntime', () => {
       const agent = new ArrayReturnAgent();
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({
-        sessionId: 'array-test',
+        operationId: 'array-test',
         messages: [{ role: 'user', content: 'Execute tools' }],
       });
 
@@ -1238,7 +1240,7 @@ describe('AgentRuntime', () => {
       const agent = new BlockingAgent();
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({
-        sessionId: 'blocking-test',
+        operationId: 'blocking-test',
         messages: [{ role: 'user', content: 'Execute' }],
       });
 
@@ -1319,7 +1321,7 @@ describe('AgentRuntime', () => {
       const agent = new UsageTrackingAgent();
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({
-        sessionId: 'merge-test',
+        operationId: 'merge-test',
         messages: [{ role: 'user', content: 'Execute' }],
       });
 
@@ -1340,7 +1342,7 @@ describe('AgentRuntime', () => {
       agent.runner = vi.fn().mockResolvedValue({ type: 'unknown_instruction_type' as any });
 
       const runtime = new AgentRuntime(agent);
-      const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+      const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
 
       const result = await runtime.step(state);
 
@@ -1359,7 +1361,7 @@ describe('AgentRuntime', () => {
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({
         messages: [{ role: 'user', content: 'test' }],
-        sessionId: 'test-session',
+        operationId: 'test-session',
       });
 
       const result = await runtime.step(state);
@@ -1401,7 +1403,7 @@ describe('AgentRuntime', () => {
       const state = AgentRuntime.createInitialState({
         costLimit,
         messages: [{ role: 'user', content: 'test' }],
-        sessionId: 'test-session',
+        operationId: 'test-session',
       });
 
       const result = await runtime.step(state);
@@ -1463,7 +1465,7 @@ describe('AgentRuntime', () => {
       const state = AgentRuntime.createInitialState({
         costLimit,
         messages: [{ role: 'user', content: 'test' }],
-        sessionId: 'test-session',
+        operationId: 'test-session',
       });
 
       const result = await runtime.step(state);
@@ -1536,7 +1538,7 @@ describe('AgentRuntime', () => {
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({
         messages: [{ role: 'user', content: 'Execute' }],
-        sessionId: 'cost-merge-test',
+        operationId: 'cost-merge-test',
       });
 
       const result = await runtime.step(state);
@@ -1616,7 +1618,7 @@ describe('AgentRuntime', () => {
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({
         messages: [{ role: 'user', content: 'Execute' }],
-        sessionId: 'usage-merge-test',
+        operationId: 'usage-merge-test',
       });
 
       const result = await runtime.step(state);

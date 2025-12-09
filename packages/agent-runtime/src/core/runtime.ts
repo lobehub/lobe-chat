@@ -379,7 +379,7 @@ export class AgentRuntime {
    * @returns Complete AgentState with defaults filled in
    */
   static createInitialState(
-    partialState?: Partial<AgentState> & { sessionId: string },
+    partialState?: Partial<AgentState> & { operationId: string },
   ): AgentState {
     const now = new Date().toISOString();
 
@@ -394,7 +394,7 @@ export class AgentRuntime {
       toolManifestMap: {},
       usage: AgentRuntime.createDefaultUsage(),
       // User provided values override defaults
-      ...(partialState || { sessionId: '' }),
+      ...(partialState || { operationId: '' }),
     };
   }
 
@@ -570,8 +570,8 @@ export class AgentRuntime {
 
       const events: AgentEvent[] = [
         {
+          operationId: newState.operationId,
           pendingToolsCalling,
-          sessionId: newState.sessionId,
           type: 'human_approve_required',
         },
       ];
@@ -596,8 +596,8 @@ export class AgentRuntime {
       const events: AgentEvent[] = [
         {
           metadata,
+          operationId: newState.operationId,
           prompt,
-          sessionId: newState.sessionId,
           type: 'human_prompt_required',
         },
       ];
@@ -623,9 +623,9 @@ export class AgentRuntime {
         {
           metadata,
           multi,
+          operationId: newState.operationId,
           options,
           prompt,
-          sessionId: newState.sessionId,
           type: 'human_select_required',
         },
       ];
@@ -836,11 +836,12 @@ export class AgentRuntime {
 
   /**
    * Create session context metadata - reusable helper
+   * Note: Uses sessionId in context for backwards compatibility with AgentRuntimeContext
    */
   private createSessionContext(state: AgentState) {
     return {
       messageCount: state.messages.length,
-      sessionId: state.sessionId,
+      sessionId: state.operationId,
       status: state.status,
       stepCount: state.stepCount,
     };

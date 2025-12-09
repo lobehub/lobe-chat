@@ -1,0 +1,158 @@
+import { AgentState } from '@lobechat/agent-runtime';
+import debug from 'debug';
+
+import { AgentOperationMetadata, AgentStateManager, StepResult } from './AgentStateManager';
+import { StreamEventManager } from './StreamEventManager';
+
+const log = debug('lobe-server:agent-runtime:coordinator');
+
+/**
+ * Agent Runtime Coordinator
+ * 协调 AgentStateManager 和 StreamEventManager 的操作
+ * 负责在状态变更时发送相应的事件
+ */
+export class AgentRuntimeCoordinator {
+  private stateManager: AgentStateManager;
+  private streamEventManager: StreamEventManager;
+
+  constructor() {
+    this.stateManager = new AgentStateManager();
+    this.streamEventManager = new StreamEventManager();
+  }
+
+  /**
+   * 创建新的 Agent 操作并发送初始化事件
+   */
+  async createAgentOperation(
+    operationId: string,
+    data: {
+      agentConfig?: any;
+      modelRuntimeConfig?: any;
+      userId?: string;
+    },
+  ): Promise<void> {
+    try {
+      // 创建操作元数据
+      await this.stateManager.createOperationMetadata(operationId, data);
+
+      // 获取创建的元数据
+      const metadata = await this.stateManager.getOperationMetadata(operationId);
+
+      if (metadata) {
+        // 发送 agent runtime init 事件
+        await this.streamEventManager.publishAgentRuntimeInit(operationId, metadata);
+        log('[%s] Agent operation created and initialized', operationId);
+      }
+    } catch (error) {
+      console.error('Failed to create agent operation:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 保存 Agent 状态并处理相应事件
+   */
+  async saveAgentState(operationId: string, state: AgentState): Promise<void> {
+    try {
+      const previousState = await this.stateManager.loadAgentState(operationId);
+
+      // 保存状态
+      await this.stateManager.saveAgentState(operationId, state);
+
+      // 如果状态变为 done，发送 agent runtime end 事件
+      if (state.status === 'done' && previousState?.status !== 'done') {
+        await this.streamEventManager.publishAgentRuntimeEnd(operationId, state.stepCount, state);
+        log('[%s] Agent runtime completed', operationId);
+      }
+    } catch (error) {
+      console.error('Failed to save agent state and handle events:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 保存步骤结果并处理相应事件
+   */
+  async saveStepResult(operationId: string, stepResult: StepResult): Promise<void> {
+    try {
+      // 保存步骤结果
+      await this.stateManager.saveStepResult(operationId, stepResult);
+
+      // 不在这里发送 agent_runtime_end 事件，让 saveAgentState 统一处理
+      // 这样确保 agent_runtime_end 是最后一个事件
+    } catch (error) {
+      console.error('Failed to save step result and handle events:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 获取 Agent 状态
+   */
+  async loadAgentState(operationId: string): Promise<AgentState | null> {
+    return this.stateManager.loadAgentState(operationId);
+  }
+
+  /**
+   * 获取操作元数据
+   */
+  async getOperationMetadata(operationId: string): Promise<AgentOperationMetadata | null> {
+    return this.stateManager.getOperationMetadata(operationId);
+  }
+
+  /**
+   * 获取执行历史
+   */
+  async getExecutionHistory(operationId: string, limit?: number): Promise<any[]> {
+    return this.stateManager.getExecutionHistory(operationId, limit);
+  }
+
+  /**
+   * 删除 Agent 操作
+   */
+  async deleteAgentOperation(operationId: string): Promise<void> {
+    try {
+      await Promise.all([
+        this.stateManager.deleteAgentOperation(operationId),
+        this.streamEventManager.cleanupOperation(operationId),
+      ]);
+      log('Agent operation deleted: %s', operationId);
+    } catch (error) {
+      console.error('Failed to delete agent operation:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 获取活跃操作
+   */
+  async getActiveOperations(): Promise<string[]> {
+    return this.stateManager.getActiveOperations();
+  }
+
+  /**
+   * 获取统计信息
+   */
+  async getStats(): Promise<{
+    activeOperations: number;
+    completedOperations: number;
+    errorOperations: number;
+    totalOperations: number;
+  }> {
+    return this.stateManager.getStats();
+  }
+
+  /**
+   * 清理过期操作
+   */
+  async cleanupExpiredOperations(): Promise<number> {
+    return this.stateManager.cleanupExpiredOperations();
+  }
+
+  /**
+   * 关闭连接
+   */
+  async disconnect(): Promise<void> {
+    await Promise.all([this.stateManager.disconnect(), this.streamEventManager.disconnect()]);
+  }
+}

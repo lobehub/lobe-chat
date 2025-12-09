@@ -56,6 +56,7 @@ export interface StreamingExecutorAction {
      */
     topicId?: string | null;
     threadId?: string;
+    operationId?: string;
     initialState?: AgentState;
     initialContext?: AgentRuntimeContext;
   }) => {
@@ -137,6 +138,7 @@ export const streamingExecutor: StateCreator<
     threadId,
     initialState,
     initialContext,
+    operationId,
   }) => {
     // Use provided agentId/topicId or fallback to global state
     const { activeAgentId, activeTopicId } = get();
@@ -174,7 +176,7 @@ export const streamingExecutor: StateCreator<
     const state =
       initialState ||
       AgentRuntime.createInitialState({
-        sessionId: agentId,
+        operationId: operationId ?? agentId,
         messages,
         maxSteps: 400,
         metadata: {
@@ -890,7 +892,7 @@ export const streamingExecutor: StateCreator<
 
     const agent = new GeneralChatAgent({
       agentConfig: { maxSteps: 1000 },
-      sessionId: `${messageKey}/${params.parentMessageId}`,
+      operationId: `${messageKey}/${params.parentMessageId}`,
       modelRuntimeConfig: {
         model,
         provider: provider!,
@@ -926,6 +928,7 @@ export const streamingExecutor: StateCreator<
         threadId: params.threadId,
         initialState: params.initialState,
         initialContext: params.initialContext,
+        operationId,
       });
 
     let state = initialAgentState;

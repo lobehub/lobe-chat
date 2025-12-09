@@ -1,14 +1,17 @@
-import { BaseProvider } from '@lobechat/context-engine';
-import type { PipelineContext, ProcessorOptions } from '@lobechat/context-engine';
 import { u } from 'unist-builder';
 import { toXml } from 'xast-util-to-xml';
-import { Child, x } from 'xastscript';
+import type { Child } from 'xastscript';
+import { x } from 'xastscript';
 
-import type { RetrieveMemoryResult } from '@/types/userMemory';
+import { BaseProvider } from '../base/BaseProvider';
+import type { UserMemoryData } from '../messages/types';
+import type { PipelineContext, ProcessorOptions } from '../types';
 
 export interface UserMemoryInjectorConfig {
+  /** When the memories were fetched */
   fetchedAt?: number;
-  memories?: Partial<RetrieveMemoryResult>;
+  /** User memories data */
+  memories?: UserMemoryData;
 }
 
 export class UserMemoryInjector extends BaseProvider {
@@ -32,11 +35,11 @@ export class UserMemoryInjector extends BaseProvider {
 
     const userMemoriesChildren: Child[] = [];
     if (memories.contexts) {
-      memories.contexts.forEach((context) => {
+      memories.contexts.forEach((ctx) => {
         userMemoriesChildren.push(
-          x('user_memories_context', { id: context.id || '' }, [
-            x('context_title', context.title || ''),
-            x('context_description', context.description || ''),
+          x('user_memories_context', { id: ctx.id || '' }, [
+            x('context_title', ctx.title || ''),
+            x('context_description', ctx.description || ''),
           ]),
         );
       });
