@@ -10,7 +10,7 @@ import { ModelsService } from '../models';
 vi.stubGlobal('fetch', vi.fn());
 
 vi.mock('@/const/version', () => ({
-  isDeprecatedEdition: false,
+  isDesktop: false,
 }));
 
 vi.mock('../_auth', () => ({
@@ -21,7 +21,7 @@ vi.mock('../chat/helper', () => ({
   resolveRuntimeProvider: vi.fn((provider: string) => provider),
 }));
 
-vi.mock('../chat/clientModelRuntime', () => ({
+vi.mock('../chat/mecha', () => ({
   initializeWithClientStore: vi.fn(),
 }));
 

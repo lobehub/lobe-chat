@@ -12,7 +12,7 @@ vi.mock('@/store/agent', () => ({
 
 vi.mock('@/store/agent/selectors', () => ({
   agentChatConfigSelectors: {
-    currentChatConfig: vi.fn(),
+    getAgentChatConfigById: vi.fn(),
   },
 }));
 
@@ -39,10 +39,13 @@ describe('getSearchConfig', () => {
   });
 
   it('should return correct config when search is enabled and no builtin search', () => {
-    vi.mocked(agentSelectors.agentChatConfigSelectors.currentChatConfig).mockReturnValue({
-      searchMode: 'on',
-      useModelBuiltinSearch: false,
-    } as any);
+    vi.mocked(agentSelectors.agentChatConfigSelectors.getAgentChatConfigById).mockReturnValue(
+      () =>
+        ({
+          searchMode: 'on',
+          useModelBuiltinSearch: false,
+        }) as any,
+    );
 
     vi.mocked(aiInfraSelectors.aiProviderSelectors.isProviderHasBuiltinSearch).mockReturnValue(
       () => false,
@@ -66,10 +69,13 @@ describe('getSearchConfig', () => {
   });
 
   it('should return correct config when search is disabled', () => {
-    vi.mocked(agentSelectors.agentChatConfigSelectors.currentChatConfig).mockReturnValue({
-      searchMode: 'off',
-      useModelBuiltinSearch: false,
-    } as any);
+    vi.mocked(agentSelectors.agentChatConfigSelectors.getAgentChatConfigById).mockReturnValue(
+      () =>
+        ({
+          searchMode: 'off',
+          useModelBuiltinSearch: false,
+        }) as any,
+    );
 
     const result = getSearchConfig(model, provider);
 
@@ -79,10 +85,13 @@ describe('getSearchConfig', () => {
   });
 
   it('should prefer model search when available and enabled', () => {
-    vi.mocked(agentSelectors.agentChatConfigSelectors.currentChatConfig).mockReturnValue({
-      searchMode: 'on',
-      useModelBuiltinSearch: true,
-    } as any);
+    vi.mocked(agentSelectors.agentChatConfigSelectors.getAgentChatConfigById).mockReturnValue(
+      () =>
+        ({
+          searchMode: 'on',
+          useModelBuiltinSearch: true,
+        }) as any,
+    );
 
     vi.mocked(aiInfraSelectors.aiProviderSelectors.isProviderHasBuiltinSearch).mockReturnValue(
       () => true,
@@ -106,10 +115,13 @@ describe('getSearchConfig', () => {
   });
 
   it('should use model search when model has builtin search and it is enabled', () => {
-    vi.mocked(agentSelectors.agentChatConfigSelectors.currentChatConfig).mockReturnValue({
-      searchMode: 'on',
-      useModelBuiltinSearch: true,
-    } as any);
+    vi.mocked(agentSelectors.agentChatConfigSelectors.getAgentChatConfigById).mockReturnValue(
+      () =>
+        ({
+          searchMode: 'on',
+          useModelBuiltinSearch: true,
+        }) as any,
+    );
 
     vi.mocked(aiInfraSelectors.aiProviderSelectors.isProviderHasBuiltinSearch).mockReturnValue(
       () => false,
@@ -133,10 +145,13 @@ describe('getSearchConfig', () => {
   });
 
   it('should not use model search when model has builtin search but preference is disabled', () => {
-    vi.mocked(agentSelectors.agentChatConfigSelectors.currentChatConfig).mockReturnValue({
-      searchMode: 'on',
-      useModelBuiltinSearch: false,
-    } as any);
+    vi.mocked(agentSelectors.agentChatConfigSelectors.getAgentChatConfigById).mockReturnValue(
+      () =>
+        ({
+          searchMode: 'on',
+          useModelBuiltinSearch: false,
+        }) as any,
+    );
 
     vi.mocked(aiInfraSelectors.aiProviderSelectors.isProviderHasBuiltinSearch).mockReturnValue(
       () => false,
@@ -160,10 +175,13 @@ describe('getSearchConfig', () => {
   });
 
   it('should force use model search when searchImpl is internal', () => {
-    vi.mocked(agentSelectors.agentChatConfigSelectors.currentChatConfig).mockReturnValue({
-      searchMode: 'on',
-      useModelBuiltinSearch: false,
-    } as any);
+    vi.mocked(agentSelectors.agentChatConfigSelectors.getAgentChatConfigById).mockReturnValue(
+      () =>
+        ({
+          searchMode: 'on',
+          useModelBuiltinSearch: false,
+        }) as any,
+    );
 
     vi.mocked(aiInfraSelectors.aiProviderSelectors.isProviderHasBuiltinSearch).mockReturnValue(
       () => false
