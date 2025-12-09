@@ -24,11 +24,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
 
   const executor = await MemoryExtractionExecutor.create();
 
-  const scheduleNextPage = async (
-    userId: string,
-    cursorCreatedAt: Date,
-    cursorId: string,
-  ) => {
+  const scheduleNextPage = async (userId: string, cursorCreatedAt: Date, cursorId: string) => {
     await MemoryExtractionWorkflowService.triggerProcessUserTopics({
       ...buildWorkflowPayloadInput({
         ...params,
@@ -64,6 +60,8 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
           )
         : undefined;
 
+    console.log(`User ${userId} - starting topic processing.`);
+
     const topicBatch = await context.run<{
       cursor?: ListTopicsForMemoryExtractorCursor;
       ids: string[];
@@ -82,6 +80,8 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
             TOPIC_PAGE_SIZE,
           ),
     );
+
+    console.log(`User ${userId} - fetched ${topicBatch.ids.length} topics for processing.`);
 
     const ids = topicBatch.ids;
     if (!ids.length) {
@@ -107,6 +107,8 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
       ),
     );
 
+    console.log(`User ${userId} - scheduled ${batches.length} topic batches for extraction.`);
+
     if (!topicsFromPayload && cursor) {
       await context.run(
         `memory:user-memory:extract:users:${userId}:topics:${cursor.id}:schedule-next-batch`,
@@ -119,7 +121,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
             throw new Error('Invalid cursor date when scheduling next topic page');
           }
 
-          scheduleNextPage(userId, createdAt, cursor.id)
+          scheduleNextPage(userId, createdAt, cursor.id);
         },
       );
     }
