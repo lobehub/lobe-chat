@@ -345,12 +345,12 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                             | Description                                                                                                                               |
-| -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2025-11-28**</sup>      | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                                                 |
-| [SEO](https://lobechat.com/discover/plugin/SEO)<br/><sup>By **orrenprunckun** on **2025-11-14**</sup>                      | Enter any URL and keyword and get an On-Page SEO analysis & insights!<br/>`seo`                                                           |
-| [Shopping tools](https://lobechat.com/discover/plugin/ShoppingTools)<br/><sup>By **shoppingtools** on **2025-10-27**</sup> | Search for products on eBay & AliExpress, find eBay events & coupons. Get prompt examples.<br/>`shopping` `e-bay` `ali-express` `coupons` |
-| [Web](https://lobechat.com/discover/plugin/web)<br/><sup>By **Proghit** on **2025-01-24**</sup>                            | Smart web search that reads and analyzes pages to deliver comprehensive answers from Google results.<br/>`web` `search`                   |
+| Recent Submits                                                                                                              | Description                                                                                                                               |
+| --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [AladinBooks](https://lobechat.com/discover/plugin/AladinSearchBooks)<br/><sup>By **azurewebsites** on **2025-12-08**</sup> | Search for books on Aladin.<br/>`book` `search`                                                                                           |
+| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2025-11-28**</sup>       | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                                                 |
+| [SEO](https://lobechat.com/discover/plugin/SEO)<br/><sup>By **orrenprunckun** on **2025-11-14**</sup>                       | Enter any URL and keyword and get an On-Page SEO analysis & insights!<br/>`seo`                                                           |
+| [Shopping tools](https://lobechat.com/discover/plugin/ShoppingTools)<br/><sup>By **shoppingtools** on **2025-10-27**</sup>  | Search for products on eBay & AliExpress, find eBay events & coupons. Get prompt examples.<br/>`shopping` `e-bay` `ali-express` `coupons` |
 
 > 📊 Total plugins: [<kbd>**41**</kbd>](https://lobechat.com/discover/plugins)
 
