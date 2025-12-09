@@ -139,6 +139,42 @@ const convertLexicalToXml = (node: any, depth = 0, path: number[] = []): string 
     return `${indent}<img id="${nodeId}" src="${src}" alt="${alt}" />`;
   }
 
+  // Handle table nodes
+  if (node.type === 'table') {
+    const nodeId = generateNodeId(path);
+    const children =
+      node.children
+        ?.map((child: any, index: number) =>
+          convertLexicalToXml(child, depth + 1, [...path, index]),
+        )
+        .join('\n') || '';
+    return `${indent}<table id="${nodeId}">\n${children}\n${indent}</table>`;
+  }
+
+  // Handle table row nodes
+  if (node.type === 'tablerow') {
+    const nodeId = generateNodeId(path);
+    const children =
+      node.children
+        ?.map((child: any, index: number) =>
+          convertLexicalToXml(child, depth + 1, [...path, index]),
+        )
+        .join('\n') || '';
+    return `${indent}<tr id="${nodeId}">\n${children}\n${indent}</tr>`;
+  }
+
+  // Handle table cell nodes
+  if (node.type === 'tablecell') {
+    const nodeId = generateNodeId(path);
+    const children =
+      node.children
+        ?.map((child: any, index: number) =>
+          convertLexicalToXml(child, depth + 1, [...path, index]),
+        )
+        .join('\n') || '';
+    return `${indent}<td id="${nodeId}">\n${children}\n${indent}</td>`;
+  }
+
   // Fallback for unknown nodes - just process children
   if (node.children) {
     return node.children

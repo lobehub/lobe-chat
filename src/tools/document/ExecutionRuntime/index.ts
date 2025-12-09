@@ -214,6 +214,50 @@ export class PageAgentExecutionRuntime {
   }
 
   /**
+   * Parse simple XML to Lexical nodes (for table structures)
+   */
+  private parseSimpleXmlToLexical(xml: string): any[] {
+    const result: any[] = [];
+
+    // Simple regex-based XML parsing for table structures
+    // Match tags like <tr>, <td>, <th>, etc.
+    const tagRegex = /<(\w+)[^>]*>(.*?)<\/\1>|<(\w+)[^>]*\/>/gs;
+    let match;
+
+    while ((match = tagRegex.exec(xml)) !== null) {
+      const tagName = match[1] || match[3];
+      const innerContent = match[2] || '';
+
+      // Skip thead and tbody wrappers - Lexical tables don't use these
+      if (tagName === 'thead' || tagName === 'tbody') {
+        // Just parse their children directly
+        const children = this.parseSimpleXmlToLexical(innerContent);
+        result.push(...children);
+        continue;
+      }
+
+      const node: any = {
+        type: this.mapNodeTypeToLexical(tagName),
+      };
+
+      // Recursively parse inner content if it contains more tags
+      if (innerContent && /<\w+/.test(innerContent)) {
+        node.children = this.parseSimpleXmlToLexical(innerContent);
+      } else if (innerContent.trim()) {
+        // Plain text content
+        node.children = [{ text: innerContent.trim(), type: 'text' }];
+      } else {
+        // Empty node
+        node.children = [];
+      }
+
+      result.push(node);
+    }
+
+    return result;
+  }
+
+  /**
    * Create a Lexical node structure from parameters
    */
   private createLexicalNode(args: CreateNodeArgs): any {
@@ -249,13 +293,21 @@ export class PageAgentExecutionRuntime {
 
     // Parse and add children if provided
     if (args.children) {
-      // For now, store as text - in a full implementation, would parse XML
-      node.children = [
-        {
-          text: args.children,
-          type: 'text',
-        },
-      ];
+      // For tables and complex structures, parse XML
+      if (lexicalType === 'table' || /<(tr|td|th|thead|tbody)/.test(args.children)) {
+        const parsedChildren = this.parseSimpleXmlToLexical(args.children);
+        if (parsedChildren.length > 0) {
+          node.children = parsedChildren;
+        }
+      } else {
+        // For simple cases, store as text
+        node.children = [
+          {
+            text: args.children,
+            type: 'text',
+          },
+        ];
+      }
     }
 
     // Add attributes (stored in Lexical-specific fields)
@@ -286,6 +338,12 @@ export class PageAgentExecutionRuntime {
       p: 'paragraph',
       pre: 'code',
       span: 'text',
+      table: 'table',
+      tbody: 'tablebody',
+      td: 'tablecell',
+      th: 'tablecell',
+      thead: 'tablehead',
+      tr: 'tablerow',
       ul: 'list',
     };
 
@@ -651,36 +709,96 @@ export class PageAgentExecutionRuntime {
 
   // ==================== Table Operations ====================
 
-  async deleteTableColumn(args: DeleteTableColumnArgs): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      // TODO: Implement table column deletion
-      return {
-        content: `Table column deletion not yet implemented`,
-        state: { columnIndex: args.columnIndex, deletedCellIds: [] } as DeleteTableColumnState,
-        success: false,
-      };
-    } catch (error) {
-      const err = error as Error;
-      return {
-        content: `Failed to delete table column: ${err.message}`,
-        error,
-        success: false,
-      };
-    }
+  /**
+   * Helper: Create an empty table cell
+   */
+  private createTableCell(content?: string): any {
+    return {
+      children: content
+        ? [
+            {
+              text: content,
+              type: 'text',
+            },
+          ]
+        : [],
+      type: 'tablecell',
+    };
   }
 
-  async deleteTableRow(args: DeleteTableRowArgs): Promise<BuiltinServerRuntimeOutput> {
+  /**
+   * Helper: Find table node by ID
+   */
+  private findTableNode(docJson: any, tableId: string): any {
+    const path = this.parseNodeId(tableId);
+    const table = this.findNodeByPath(docJson.root, path);
+
+    if (!table || table.type !== 'table') {
+      throw new Error(`Table ${tableId} not found`);
+    }
+
+    return table;
+  }
+
+  async insertTableRow(args: InsertTableRowArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
-      // TODO: Implement table row deletion
+      const editor = this.getEditor();
+      const docJson = editor.getDocument('json') as any;
+
+      if (!docJson || !docJson.root) {
+        throw new Error('Document not initialized');
+      }
+
+      const table = this.findTableNode(docJson, args.tableId);
+
+      // Determine column count from first row
+      const columnCount = table.children?.[0]?.children?.length || args.cells?.length || 3;
+
+      // Create new row with cells
+      const newRow: any = {
+        children: [],
+        type: 'tablerow',
+      };
+
+      // Create cells for the new row
+      for (let i = 0; i < columnCount; i++) {
+        const cellContent = args.cells?.[i] || '';
+        newRow.children.push(this.createTableCell(cellContent));
+      }
+
+      // Insert the row at the specified position
+      if (!table.children) {
+        table.children = [];
+      }
+
+      let insertIndex = table.children.length;
+
+      if (args.referenceRowId) {
+        const refPath = this.parseNodeId(args.referenceRowId);
+        const refIndex = refPath.at(-1);
+
+        if (refIndex !== undefined) {
+          insertIndex = args.position === 'before' ? refIndex : refIndex + 1;
+        }
+      }
+
+      table.children.splice(insertIndex, 0, newRow);
+
+      // Update the document
+      editor.setDocument('json', JSON.stringify(docJson));
+
+      const newRowPath = this.parseNodeId(args.tableId).concat(insertIndex);
+      const newRowId = this.generateNodeId(newRowPath);
+
       return {
-        content: `Table row deletion not yet implemented`,
-        state: { deletedRowId: args.rowId } as DeleteTableRowState,
-        success: false,
+        content: `Successfully inserted row with ${columnCount} cells into table ${args.tableId}.`,
+        state: { newRowId } as InsertTableRowState,
+        success: true,
       };
     } catch (error) {
       const err = error as Error;
       return {
-        content: `Failed to delete table row: ${err.message}`,
+        content: `Failed to insert table row: ${err.message}`,
         error,
         success: false,
       };
@@ -689,11 +807,54 @@ export class PageAgentExecutionRuntime {
 
   async insertTableColumn(args: InsertTableColumnArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
-      // TODO: Implement table column insertion
+      const editor = this.getEditor();
+      const docJson = editor.getDocument('json') as any;
+
+      if (!docJson || !docJson.root) {
+        throw new Error('Document not initialized');
+      }
+
+      const table = this.findTableNode(docJson, args.tableId);
+
+      if (!table.children || table.children.length === 0) {
+        throw new Error('Table has no rows');
+      }
+
+      const newCellIds: string[] = [];
+      const columnIndex =
+        args.columnIndex === -1 ? table.children[0].children.length : args.columnIndex;
+
+      // Add a cell to each row
+      table.children.forEach((row: any, rowIndex: number) => {
+        if (row.type !== 'tablerow') return;
+
+        if (!row.children) {
+          row.children = [];
+        }
+
+        // Determine cell content
+        let cellContent = '';
+        if (rowIndex === 0 && args.headerContent) {
+          cellContent = args.headerContent;
+        } else if (args.cells && args.cells[rowIndex]) {
+          cellContent = args.cells[rowIndex];
+        }
+
+        const newCell = this.createTableCell(cellContent);
+        row.children.splice(columnIndex, 0, newCell);
+
+        // Track the new cell ID
+        const cellPath = this.parseNodeId(args.tableId).concat(rowIndex, columnIndex);
+        newCellIds.push(this.generateNodeId(cellPath));
+      });
+
+      // Update the document
+      editor.setDocument('json', JSON.stringify(docJson));
+
       return {
-        content: `Table column insertion not yet implemented`,
-        state: { columnIndex: args.columnIndex, newCellIds: [] } as InsertTableColumnState,
-        success: false,
+        content: `Successfully inserted column at index ${columnIndex} in table ${args.tableId}.`,
+        state: { columnIndex, newCellIds } as InsertTableColumnState,
+        success: true,
       };
     } catch (error) {
       const err = error as Error;
@@ -705,18 +866,104 @@ export class PageAgentExecutionRuntime {
     }
   }
 
-  async insertTableRow(_args: InsertTableRowArgs): Promise<BuiltinServerRuntimeOutput> {
+  async deleteTableRow(args: DeleteTableRowArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
-      // TODO: Implement table row insertion
+      const editor = this.getEditor();
+      const docJson = editor.getDocument('json') as any;
+
+      if (!docJson || !docJson.root) {
+        throw new Error('Document not initialized');
+      }
+
+      // Find the row and its parent table
+      const rowPath = this.parseNodeId(args.rowId);
+      if (rowPath.length < 2) {
+        throw new Error('Invalid row ID');
+      }
+
+      const tablePath = rowPath.slice(0, -1);
+      const rowIndex = rowPath.at(-1);
+
+      if (rowIndex === undefined) {
+        throw new Error('Invalid row index');
+      }
+
+      const table = this.findNodeByPath(docJson.root, tablePath);
+
+      if (!table || table.type !== 'table') {
+        throw new Error('Parent table not found');
+      }
+
+      if (!table.children || !table.children[rowIndex]) {
+        throw new Error(`Row ${args.rowId} not found`);
+      }
+
+      // Remove the row
+      table.children.splice(rowIndex, 1);
+
+      // Update the document
+      editor.setDocument('json', JSON.stringify(docJson));
+
       return {
-        content: `Table row insertion not yet implemented`,
-        state: { newRowId: '' } as InsertTableRowState,
-        success: false,
+        content: `Successfully deleted row ${args.rowId} from table.`,
+        state: { deletedRowId: args.rowId } as DeleteTableRowState,
+        success: true,
       };
     } catch (error) {
       const err = error as Error;
       return {
-        content: `Failed to insert table row: ${err.message}`,
+        content: `Failed to delete table row: ${err.message}`,
+        error,
+        success: false,
+      };
+    }
+  }
+
+  async deleteTableColumn(args: DeleteTableColumnArgs): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const editor = this.getEditor();
+      const docJson = editor.getDocument('json') as any;
+
+      if (!docJson || !docJson.root) {
+        throw new Error('Document not initialized');
+      }
+
+      const table = this.findTableNode(docJson, args.tableId);
+
+      if (!table.children || table.children.length === 0) {
+        throw new Error('Table has no rows');
+      }
+
+      const deletedCellIds: string[] = [];
+
+      // Remove the cell at columnIndex from each row
+      table.children.forEach((row: any, rowIndex: number) => {
+        if (row.type !== 'tablerow') return;
+
+        if (!row.children || !row.children[args.columnIndex]) {
+          return;
+        }
+
+        // Track the deleted cell ID
+        const cellPath = this.parseNodeId(args.tableId).concat(rowIndex, args.columnIndex);
+        deletedCellIds.push(this.generateNodeId(cellPath));
+
+        // Remove the cell
+        row.children.splice(args.columnIndex, 1);
+      });
+
+      // Update the document
+      editor.setDocument('json', JSON.stringify(docJson));
+
+      return {
+        content: `Successfully deleted column at index ${args.columnIndex} from table ${args.tableId}.`,
+        state: { columnIndex: args.columnIndex, deletedCellIds } as DeleteTableColumnState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to delete table column: ${err.message}`,
         error,
         success: false,
       };

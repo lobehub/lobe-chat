@@ -86,6 +86,14 @@
       },
       "newFolder": "New Folder",
       "newPage": "New Page",
+      "notion": {
+        "error": "Failed to import Notion files",
+        "foundFiles": "found {{count}} files",
+        "importing": "Importing Notion files...",
+        "noMarkdownFiles": "No markdown files found in the ZIP archive",
+        "partial": "Successfully imported {{success}} files, {{failed}} failed",
+        "success": "Successfully imported {{count}} files"
+      },
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
     },

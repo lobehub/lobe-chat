@@ -83,6 +83,10 @@ const StoreUpdater = memo<StoreUpdaterProps>(
           editor.setDocument('json', JSON.stringify(currentPage.editorData));
           const textContent = currentPage.content || '';
           storeApi.setState({ wordCount: calculateWordCount(textContent) });
+        } else if (currentPage?.content && currentPage.content.trim()) {
+          // Fallback to markdown content (e.g., from Notion imports)
+          editor.setDocument('markdown', currentPage.content);
+          storeApi.setState({ wordCount: calculateWordCount(currentPage.content) });
         } else if (currentPage?.pages) {
           // Fallback to pages content
           const pagesContent = currentPage.pages
