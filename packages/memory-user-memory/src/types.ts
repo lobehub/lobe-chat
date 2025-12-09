@@ -1,4 +1,8 @@
-import type { ModelRuntime, OpenAIChatMessage } from '@lobechat/model-runtime';
+import type {
+  GenerateObjectPayload,
+  ModelRuntime,
+  OpenAIChatMessage,
+} from '@lobechat/model-runtime';
 import type { UserMemoryLayer } from '@lobechat/types';
 
 import type {
@@ -10,6 +14,10 @@ import type {
 
 export interface ExtractorOptions extends ExtractorTemplateProps {
   additionalMessages?: OpenAIChatMessage[];
+  callbacks?: {
+    onExtractRequest?: (request: GenerateObjectPayload) => Promise<void> | void;
+    onExtractResponse?: <TOutput>(response: TOutput) => Promise<void> | void;
+  };
   messageIds?: string[];
 }
 
