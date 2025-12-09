@@ -100,6 +100,7 @@
         "title": "助手正在审核中"
       }
     },
+    "downloads": "下载量",
     "suggestions": "相关推荐",
     "systemRole": "助手设定",
     "tokenUsage": "助手提示词 Token 使用量",

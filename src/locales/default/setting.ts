@@ -80,6 +80,7 @@ export default {
   group: {
     aiConfig: 'AI 配置',
     common: '通用',
+    market: '市场',
     profile: '账号',
     system: '系统',
   },
@@ -251,6 +252,29 @@ export default {
   },
   message: {
     success: '更新成功',
+  },
+  myAgents: {
+    actions: {
+      edit: '去编辑 Agent',
+      unpublish: '下架 Agent',
+      viewDetail: '查看详情',
+    },
+    detail: {
+      category: '分类',
+      description: '描述',
+      identifier: '标识符',
+      title: '助手详情',
+    },
+    empty: {
+      description: '你还没有发布任何助手到市场',
+      title: '暂无发布的助手',
+    },
+    loginRequired: {
+      button: '登录市场账户',
+      description: '请先登录市场账户以查看你发布的助手',
+      title: '需要登录',
+    },
+    title: '我发布的助手',
   },
   plugin: {
     addMCPPlugin: '添加 MCP 插件',
@@ -778,6 +802,7 @@ export default {
     'hotkey': '快捷键',
     'image': '绘画服务',
     'llm': '语言模型',
+    'my-agents': '我发布的助手',
     'profile': '我的账号',
     'provider': 'AI 服务商',
     'proxy': '网络代理',

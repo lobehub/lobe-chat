@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "AI Configuration",
     "common": "General",
+    "market": "Market",
     "profile": "Account",
     "system": "System"
   },
@@ -249,6 +250,29 @@
   },
   "message": {
     "success": "Update successful"
+  },
+  "myAgents": {
+    "actions": {
+      "edit": "Edit Agent",
+      "unpublish": "Unpublish Agent",
+      "viewDetail": "View Details"
+    },
+    "detail": {
+      "category": "Category",
+      "description": "Description",
+      "identifier": "Identifier",
+      "title": "Agent Details"
+    },
+    "empty": {
+      "description": "You haven't published any assistants to the market yet",
+      "title": "No Published Assistants"
+    },
+    "loginRequired": {
+      "button": "Sign in to Market",
+      "description": "Please sign in to your market account to view your published assistants",
+      "title": "Sign In Required"
+    },
+    "title": "My Published Assistants"
   },
   "plugin": {
     "addMCPPlugin": "Add MCP Plugin",
@@ -774,6 +798,7 @@
     "hotkey": "Hotkeys",
     "image": "Image Generation Service",
     "llm": "Language Model",
+    "my-agents": "My Published Assistants",
     "profile": "My Account",
     "provider": "AI Service Provider",
     "proxy": "Network Proxy",

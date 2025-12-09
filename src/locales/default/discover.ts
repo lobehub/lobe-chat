@@ -58,6 +58,7 @@ export default {
         title: '版本历史',
       },
     },
+    downloads: '下载量',
     list: '助手列表',
     marketSource: {
       label: '切换社区源',
