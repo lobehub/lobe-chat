@@ -14,14 +14,12 @@ import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user
 import { markdownElements } from '../../MarkdownElements';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
-import type { MessageActionsConfig } from '../../types';
 import Actions from './Actions';
 import { UserMessageExtra } from './Extra';
 import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
 import { UserMessageContent } from './MessageContent';
 
 interface UserMessageProps {
-  actionsConfig?: MessageActionsConfig;
   disableEditing?: boolean;
   id: string;
   index: number;
@@ -37,8 +35,9 @@ const remarkPlugins = markdownElements
   .map((element) => element.remarkPlugin)
   .filter(Boolean);
 
-const UserMessage = memo<UserMessageProps>(({ actionsConfig, id, disableEditing, index }) => {
+const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
   const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
+  const actionsConfig = useConversationStore((s) => s.actionsBar?.user);
 
   const { content, createdAt, error, role, extra, targetId } = item;
 

@@ -1,6 +1,11 @@
 import type { UIChatMessage } from '@lobechat/types';
 
-import type { ConversationContext, ConversationHooks, OperationState } from '../types';
+import type {
+  ActionsBarConfig,
+  ConversationContext,
+  ConversationHooks,
+  OperationState,
+} from '../types';
 import { DEFAULT_OPERATION_STATE } from '../types/operation';
 import { type DataState, dataInitialState } from './slices/data/initialState';
 import { type InputState, inputInitialState } from './slices/input/initialState';
@@ -11,6 +16,11 @@ import {
 import { type VirtuaListState, virtuaListInitialState } from './slices/virtuaList/initialState';
 
 export interface State extends DataState, InputState, MessageStateState, VirtuaListState {
+  /**
+   * Actions bar configuration by message type
+   */
+  actionsBar?: ActionsBarConfig;
+
   /**
    * Conversation context (data coordinates)
    */
@@ -39,6 +49,7 @@ export const initialState: State = {
   ...messageStateInitialState,
   ...virtuaListInitialState,
 
+  actionsBar: undefined,
   context: {
     agentId: '',
     threadId: null,

@@ -4,7 +4,6 @@ import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 
 import { useStyles } from './style';
@@ -14,15 +13,14 @@ export interface ChunkItemProps extends ChatFileChunk {
 }
 
 const ChunkItem = memo<ChunkItemProps>(({ id, fileId, similarity, text, filename, fileType }) => {
-  const { styles, cx } = useStyles();
+  const { styles } = useStyles();
   // Note: openFilePreview is a portal action, kept in ChatStore as it's a global UI state
   const openFilePreview = useChatStore((s) => s.openFilePreview);
 
-  const isMobile = useIsMobile();
   return (
     <Flexbox
       align={'center'}
-      className={cx(styles.container, isMobile && styles.mobile)}
+      className={styles.container}
       gap={4}
       horizontal
       key={id}

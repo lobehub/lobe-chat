@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import InfoTooltip from '@/components/InfoTooltip';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -29,7 +28,6 @@ interface TokenDetailProps {
 const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provider }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
-  const isMobile = useIsMobile();
 
   // 使用 systemStatus 管理短格式显示状态
   const isShortFormat = useGlobalStore(systemStatusSelectors.tokenDisplayFormatShort);
@@ -218,21 +216,18 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
         </Flexbox>
       }
       placement={'top'}
-      trigger={isMobile ? ['click'] : ['hover']}
+      trigger={['hover']}
     >
       <Center
         gap={2}
         horizontal
         onClick={(e) => {
-          // 移动端：让 Popover 处理点击事件
-          if (isMobile) return;
-
-          // 桌面端：阻止 Popover 并切换格式
+          // 阻止 Popover 并切换格式
           e.preventDefault();
           e.stopPropagation();
           updateSystemStatus({ tokenDisplayFormatShort: !isShortFormat });
         }}
-        style={{ cursor: isMobile ? 'default' : 'pointer' }}
+        style={{ cursor: 'pointer' }}
       >
         <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
         <AnimatedNumber

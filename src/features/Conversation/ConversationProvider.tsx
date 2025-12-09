@@ -6,9 +6,18 @@ import { type ReactNode, memo } from 'react';
 
 import StoreUpdater from './StoreUpdater';
 import { Provider, createStore } from './store';
-import type { ConversationContext, ConversationHooks, OperationState } from './types';
+import type {
+  ActionsBarConfig,
+  ConversationContext,
+  ConversationHooks,
+  OperationState,
+} from './types';
 
 export interface ConversationProviderProps {
+  /**
+   * Actions bar configuration by message type
+   */
+  actionsBar?: ActionsBarConfig;
   children: ReactNode;
   /**
    * Conversation context (data coordinates)
@@ -55,6 +64,7 @@ export interface ConversationProviderProps {
  */
 export const ConversationProvider = memo<ConversationProviderProps>(
   ({
+    actionsBar,
     children,
     context,
     hooks = {},
@@ -67,6 +77,7 @@ export const ConversationProvider = memo<ConversationProviderProps>(
     return (
       <Provider createStore={() => createStore({ context, hooks, skipFetch })}>
         <StoreUpdater
+          actionsBar={actionsBar}
           context={context}
           hasInitMessages={hasInitMessages}
           hooks={hooks}

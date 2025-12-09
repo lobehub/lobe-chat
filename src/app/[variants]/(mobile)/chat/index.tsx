@@ -14,7 +14,7 @@ const MobileChatPage = memo(() => {
   return (
     <>
       <PageTitle />
-      <ConversationArea mobile />
+      <ConversationArea />
       <Topic />
       <PortalPanel mobile />
       <MainInterfaceTracker />

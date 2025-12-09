@@ -5,39 +5,14 @@ import { type ReactNode, memo, useCallback } from 'react';
 import WideScreenContainer from '../../WideScreenContainer';
 import MessageItem from '../Messages';
 import SkeletonList from '../components/SkeletonList';
-import VirtualizedList from '../components/VirtualizedList';
 import { dataSelectors, useConversationStore } from '../store';
-import type { ActionsBarConfig } from '../types';
+import VirtualizedList from './components/VirtualizedList';
 
 export interface ChatListProps {
-  /**
-   * Actions bar configuration by message type.
-   * Allows customizing which actions appear in the action bar and menu
-   * for user and assistant messages.
-   *
-   * @example
-   * ```tsx
-   * actionsBar={{
-   *   user: {
-   *     bar: ['regenerate', 'edit'],
-   *     menu: ['copy', 'del'],
-   *   },
-   *   assistant: {
-   *     bar: ['copy', 'edit'],
-   *     menu: ['regenerate', 'del', 'share'],
-   *   },
-   * }}
-   * ```
-   */
-  actionsBar?: ActionsBarConfig;
   /**
    * Custom item renderer. If not provided, uses default ChatItem.
    */
   itemContent?: (index: number, id: string) => ReactNode;
-  /**
-   * Mobile mode
-   */
-  mobile?: boolean;
   /**
    * Welcome component to display when there are no messages
    */
@@ -49,7 +24,7 @@ export interface ChatListProps {
  *
  * Uses ConversationStore for message data and fetching.
  */
-const ChatList = memo<ChatListProps>(({ actionsBar, mobile = false, welcome, itemContent }) => {
+const ChatList = memo<ChatListProps>(({ welcome, itemContent }) => {
   // Fetch messages (SWR key is null when skipFetch is true)
   const context = useConversationStore((s) => s.context);
   const [skipFetch, useFetchMessages] = useConversationStore((s) => [
@@ -65,15 +40,13 @@ const ChatList = memo<ChatListProps>(({ actionsBar, mobile = false, welcome, ite
   const defaultItemContent = useCallback(
     (index: number, id: string) => {
       const isLatestItem = displayMessageIds.length === index + 1;
-      return (
-        <MessageItem actionsBar={actionsBar} id={id} index={index} isLatestItem={isLatestItem} />
-      );
+      return <MessageItem id={id} index={index} isLatestItem={isLatestItem} />;
     },
-    [actionsBar, displayMessageIds.length],
+    [displayMessageIds.length],
   );
 
   if (!messagesInit) {
-    return <SkeletonList mobile={mobile} />;
+    return <SkeletonList />;
   }
 
   if (displayMessageIds.length === 0) {
@@ -97,7 +70,6 @@ const ChatList = memo<ChatListProps>(({ actionsBar, mobile = false, welcome, ite
       dataSource={displayMessageIds}
       // isGenerating={isGenerating}
       itemContent={itemContent ?? defaultItemContent}
-      mobile={mobile}
     />
   );
 });

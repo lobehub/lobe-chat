@@ -2,9 +2,8 @@
 
 import { memo, useEffect } from 'react';
 
-import BackBottom from '../BackBottom';
-
 import { useConversationStore, virtuaListSelectors } from '../../store';
+import BackBottom from './BackBottom';
 
 interface AutoScrollProps {
   /**
@@ -24,9 +23,7 @@ const AutoScroll = memo<AutoScrollProps>(({ isGenerating }) => {
     }
   }, [atBottom, isGenerating, isScrolling, scrollToBottom]);
 
-  return (
-    <BackBottom onScrollToBottom={() => scrollToBottom(true)} visible={!atBottom} />
-  );
+  return <BackBottom onScrollToBottom={() => scrollToBottom(true)} visible={!atBottom} />;
 });
 
 AutoScroll.displayName = 'ConversationAutoScroll';

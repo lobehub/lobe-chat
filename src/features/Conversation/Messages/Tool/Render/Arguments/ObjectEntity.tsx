@@ -1,7 +1,6 @@
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { shinyTextStylish } from '@/styles/loading';
 
 import ValueCell from './ValueCell';
@@ -55,15 +54,11 @@ interface ObjectEntityProps {
 
 const ObjectEntity = memo<ObjectEntityProps>(({ hasMinWidth, shine, value, objectKey }) => {
   const { styles, cx } = useStyles();
-  const isMobile = useIsMobile();
   const formatedValue = formatValue(value);
 
   return (
     <div className={styles.row}>
-      <span
-        className={styles.key}
-        style={{ minWidth: hasMinWidth ? (isMobile ? 60 : 140) : undefined }}
-      >
+      <span className={styles.key} style={{ minWidth: hasMinWidth ? 140 : undefined }}>
         {objectKey}
       </span>
       <span className={styles.colon}>:</span>
