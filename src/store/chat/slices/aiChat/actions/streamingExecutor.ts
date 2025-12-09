@@ -1,6 +1,11 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { AgentRuntime, type AgentRuntimeContext, type AgentState } from '@lobechat/agent-runtime';
+import {
+  AgentRuntime,
+  type AgentRuntimeContext,
+  type AgentState,
+  GeneralChatAgent,
+} from '@lobechat/agent-runtime';
 import { isDesktop } from '@lobechat/const';
 import {
   ChatImageItem,
@@ -25,7 +30,6 @@ import { resolveAgentConfig } from '@/services/chat/mecha';
 import { messageService } from '@/services/message';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getAgentStoreState } from '@/store/agent/store';
-import { GeneralChatAgent } from '@/store/chat/agents/GeneralChatAgent';
 import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
