@@ -110,11 +110,8 @@ class ChatService {
     const targetAgentId = getTargetAgentId(agentId);
 
     // Resolve agent config with builtin agent runtime config merged
-    const {
-      agentConfig,
-      chatConfig,
-      plugins: runtimePlugins,
-    } = resolveAgentConfig({
+    // plugins is already merged (runtime plugins > agent config plugins)
+    const { agentConfig, chatConfig, plugins: pluginIds } = resolveAgentConfig({
       agentId: targetAgentId,
       model: payload.model,
       plugins: enabledPlugins,
@@ -123,8 +120,6 @@ class ChatService {
 
     // Get search config with agentId for agent-specific settings
     const searchConfig = getSearchConfig(payload.model, payload.provider!, targetAgentId);
-    // Priority: enabledPlugins > runtimePlugins > agentConfig.plugins
-    const pluginIds = runtimePlugins && runtimePlugins.length > 0 ? [...runtimePlugins] : [];
 
     const toolsEngine = createAgentToolsEngine({
       model: payload.model,

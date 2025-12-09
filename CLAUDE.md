@@ -44,6 +44,8 @@ see @.cursor/rules/typescript.mdc
 - wrap the file path in single quotes to avoid shell expansion
 - Never run `bun run test` etc to run tests, this will run all tests and cost about 10mins
 - If trying to fix the same test twice, but still failed, stop and ask for help.
+- **Prefer `vi.spyOn` over `vi.mock`**: When mocking modules or functions, prefer using `vi.spyOn` to mock specific functions rather than `vi.mock` to mock entire modules. This approach is more targeted, easier to maintain, and allows for better control over mock behavior in individual tests.
+- **Tests must pass type check**: After writing or modifying tests, run `bun run type-check` to ensure there are no type errors. Tests should pass both runtime execution and TypeScript type checking.
 
 ### Typecheck
 
