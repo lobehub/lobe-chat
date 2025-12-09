@@ -550,6 +550,33 @@ export class TopicModel {
         )
       : undefined;
 
+    console.log(
+      this.db.query.topics
+        .findMany({
+          columns: {
+            createdAt: true,
+            id: true,
+            metadata: true,
+            userId: true,
+          },
+          limit: options.limit,
+          orderBy: (fields, { asc }) => [asc(fields.createdAt), asc(fields.id)],
+          where: and(
+            eq(topics.userId, this.userId),
+            options.startDate ? gte(topics.createdAt, options.startDate) : undefined,
+            options.endDate ? lte(topics.createdAt, options.endDate) : undefined,
+            options.ignoreExtracted
+              ? undefined
+              : or(
+                  isNull(topics.metadata),
+                  sql`(${topics.metadata}->'memory_user_memory_extract'->>'extract_status') IS DISTINCT FROM 'completed'`,
+                ),
+            cursorCondition,
+          ),
+        })
+        .toSQL().sql,
+    );
+
     return this.db.query.topics.findMany({
       columns: {
         createdAt: true,
