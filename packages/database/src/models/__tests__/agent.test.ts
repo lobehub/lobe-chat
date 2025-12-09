@@ -80,10 +80,10 @@ describe('AgentModel', () => {
 
       const result = await agentModel.getAgentConfigById(agentId);
 
-      expect(result).toBeDefined();
-      expect(result.id).toBe(agentId);
-      expect(result.knowledgeBases).toHaveLength(1);
-      expect(result.files).toHaveLength(1);
+      expect(result).not.toBeNull();
+      expect(result!.id).toBe(agentId);
+      expect(result!.knowledgeBases).toHaveLength(1);
+      expect(result!.files).toHaveLength(1);
     });
 
     it('should fetch and include document content for enabled files', async () => {
@@ -104,10 +104,10 @@ describe('AgentModel', () => {
 
       const result = await agentModel.getAgentConfigById(agentId);
 
-      expect(result).toBeDefined();
-      expect(result.files).toHaveLength(1);
-      expect(result.files[0].content).toBe('This is document content');
-      expect(result.files[0].enabled).toBe(true);
+      expect(result).not.toBeNull();
+      expect(result!.files).toHaveLength(1);
+      expect(result!.files[0].content).toBe('This is document content');
+      expect(result!.files[0].enabled).toBe(true);
     });
 
     it('should not include content for disabled files', async () => {
@@ -128,10 +128,10 @@ describe('AgentModel', () => {
 
       const result = await agentModel.getAgentConfigById(agentId);
 
-      expect(result).toBeDefined();
-      expect(result.files).toHaveLength(1);
-      expect(result.files[0].content).toBeUndefined();
-      expect(result.files[0].enabled).toBe(false);
+      expect(result).not.toBeNull();
+      expect(result!.files).toHaveLength(1);
+      expect(result!.files[0].content).toBeUndefined();
+      expect(result!.files[0].enabled).toBe(false);
     });
 
     it('should handle files without documents', async () => {
@@ -141,9 +141,9 @@ describe('AgentModel', () => {
 
       const result = await agentModel.getAgentConfigById(agentId);
 
-      expect(result).toBeDefined();
-      expect(result.files).toHaveLength(1);
-      expect(result.files[0].content).toBeUndefined();
+      expect(result).not.toBeNull();
+      expect(result!.files).toHaveLength(1);
+      expect(result!.files[0].content).toBeUndefined();
     });
 
     it('should handle agent with no files', async () => {
@@ -152,8 +152,89 @@ describe('AgentModel', () => {
 
       const result = await agentModel.getAgentConfigById(agentId);
 
+      expect(result).not.toBeNull();
+      expect(result!.files).toHaveLength(0);
+    });
+  });
+
+  describe('getAgentConfig', () => {
+    it('should find agent by ID', async () => {
+      const agentId = 'test-agent-by-id';
+      await serverDB.insert(agents).values({ id: agentId, userId });
+
+      const result = await agentModel.getAgentConfig(agentId);
+
       expect(result).toBeDefined();
-      expect(result.files).toHaveLength(0);
+      expect(result?.id).toBe(agentId);
+    });
+
+    it('should find agent by slug when ID does not match', async () => {
+      const agentId = 'test-agent-slug';
+      const slug = 'my-agent-slug';
+      await serverDB.insert(agents).values({ id: agentId, slug, userId });
+
+      const result = await agentModel.getAgentConfig(slug);
+
+      expect(result).toBeDefined();
+      expect(result?.id).toBe(agentId);
+      expect(result?.slug).toBe(slug);
+    });
+
+    it('should return null when neither ID nor slug matches', async () => {
+      const result = await agentModel.getAgentConfig('non-existent-id-or-slug');
+
+      expect(result).toBeNull();
+    });
+
+    it('should not find agent by slug from another user', async () => {
+      const agentId = 'test-agent-other-user';
+      const slug = 'shared-slug';
+      // Create agent with same slug but different user
+      await serverDB.insert(agents).values({ id: agentId, slug, userId: userId2 });
+
+      const result = await agentModel.getAgentConfig(slug);
+
+      expect(result).toBeNull();
+    });
+
+    it('should find agent by ID even if it belongs to another user', async () => {
+      const agentId = 'test-agent-cross-user';
+      await serverDB.insert(agents).values({ id: agentId, userId: userId2 });
+
+      // ID lookup should work across users (ID is globally unique)
+      const result = await agentModel.getAgentConfig(agentId);
+
+      expect(result).toBeDefined();
+      expect(result?.id).toBe(agentId);
+    });
+
+    it('should prefer ID match over slug match', async () => {
+      // Create two agents: one with ID "abc", another with slug "abc"
+      const agent1Id = 'abc';
+      const agent2Id = 'different-id';
+      await serverDB.insert(agents).values({ id: agent1Id, userId });
+      await serverDB.insert(agents).values({ id: agent2Id, slug: 'abc', userId });
+
+      const result = await agentModel.getAgentConfig('abc');
+
+      // Should return the agent matched by ID, not slug
+      expect(result).toBeDefined();
+      expect(result?.id).toBe(agent1Id);
+    });
+
+    it('should enrich agent with knowledge when found', async () => {
+      const agentId = 'test-agent-with-knowledge';
+      await serverDB.insert(agents).values({ id: agentId, userId });
+      await serverDB
+        .insert(agentsKnowledgeBases)
+        .values({ agentId, knowledgeBaseId: 'kb1', userId });
+      await serverDB.insert(agentsFiles).values({ agentId, fileId: '1', userId });
+
+      const result = await agentModel.getAgentConfig(agentId);
+
+      expect(result).toBeDefined();
+      expect(result?.knowledgeBases).toHaveLength(1);
+      expect(result?.files).toHaveLength(1);
     });
   });
 

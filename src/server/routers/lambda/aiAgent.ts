@@ -73,28 +73,34 @@ const StartExecutionSchema = z.object({
 });
 
 /**
- * Schema for runByAgentId - simplified API that only requires agentId and prompt
+ * Schema for execAgent - simplified API that requires agent identifier (id or slug) and prompt
  * All other data (agent config, tools, messages) will be fetched from database
  */
-const RunByAgentIdSchema = z.object({
-  /** The agent ID to run */
-  agentId: z.string(),
-  /** Application context for message storage */
-  appContext: z
-    .object({
-      scope: z.string().optional().nullable(),
-      sessionId: z.string().optional(),
-      threadId: z.string().optional().nullable(),
-      topicId: z.string().optional().nullable(),
-    })
-    .optional(),
-  /** Whether to auto-start execution after creating operation */
-  autoStart: z.boolean().optional().default(true),
-  /** Optional existing message IDs to include in context */
-  existingMessageIds: z.array(z.string()).optional().default([]),
-  /** The user input/prompt */
-  prompt: z.string(),
-});
+const ExecAgentSchema = z
+  .object({
+    /** The agent ID to run (either agentId or slug is required) */
+    agentId: z.string().optional(),
+    /** Application context for message storage */
+    appContext: z
+      .object({
+        scope: z.string().optional().nullable(),
+        sessionId: z.string().optional(),
+        threadId: z.string().optional().nullable(),
+        topicId: z.string().optional().nullable(),
+      })
+      .optional(),
+    /** Whether to auto-start execution after creating operation */
+    autoStart: z.boolean().optional().default(true),
+    /** Optional existing message IDs to include in context */
+    existingMessageIds: z.array(z.string()).optional().default([]),
+    /** The user input/prompt */
+    prompt: z.string(),
+    /** The agent slug to run (either agentId or slug is required) */
+    slug: z.string().optional(),
+  })
+  .refine((data) => data.agentId || data.slug, {
+    message: 'Either agentId or slug must be provided',
+  });
 
 const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -198,6 +204,246 @@ export const aiAgentRouter = router({
         success: true,
       };
     }),
+
+  /**
+   * Execute agent with just a prompt
+   *
+   * This is a simplified API that requires agent identifier (id or slug) and prompt.
+   * All necessary data (agent config, tools, messages) will be fetched from the database.
+   *
+   * Architecture:
+   * execAgent({ agentId | slug, prompt })
+   *   → AgentModel.getAgentConfig(idOrSlug)
+   *   → ServerMechaModule.AgentToolsEngine(config)
+   *   → ServerMechaModule.ContextEngineering(input, config, messages)
+   *   → AgentRuntimeService.createOperation(...)
+   */
+  execAgent: aiAgentProcedure.input(ExecAgentSchema).mutation(async ({ input, ctx }) => {
+    if (!isEnableAgent()) {
+      throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
+    }
+
+    const { agentId, slug, prompt, appContext, autoStart = true, existingMessageIds = [] } = input;
+
+    // Determine the identifier to use (agentId takes precedence)
+    const identifier = agentId || slug!;
+
+    log('execAgent: identifier=%s, prompt=%s', identifier, prompt.slice(0, 50));
+
+    try {
+      // 1. Get agent configuration from database (supports both id and slug)
+      const agentConfig = await ctx.agentModel.getAgentConfig(identifier);
+      if (!agentConfig) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `Agent not found: ${identifier}`,
+        });
+      }
+
+      // Use actual agent ID from config for subsequent operations
+      const resolvedAgentId = agentConfig.id;
+
+      log('execAgent: got agent config for %s (id: %s)', identifier, resolvedAgentId);
+
+      // 2. Handle topic creation: if no topicId provided, create a new topic; otherwise reuse existing
+      let topicId = appContext?.topicId;
+      if (!topicId) {
+        const newTopic = await ctx.topicModel.create({
+          agentId: resolvedAgentId,
+          title: prompt.slice(0, 50) + (prompt.length > 50 ? '...' : ''),
+        });
+        topicId = newTopic.id;
+        log('execAgent: created new topic %s', topicId);
+      } else {
+        log('execAgent: reusing existing topic %s', topicId);
+      }
+
+      // Extract model and provider from agent config
+      const model = agentConfig.model!;
+      const provider = agentConfig.provider!;
+
+      // 3. Get installed plugins from database
+      const installedPlugins = await ctx.pluginModel.query();
+      log('execAgent: got %d installed plugins', installedPlugins.length);
+
+      // 4. Get model abilities from model-bank for function calling support check
+      const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
+      const modelInfo = LOBE_DEFAULT_MODEL_LIST.find(
+        (m) => m.id === model && m.providerId === provider,
+      );
+      const isModelSupportToolUse = (m: string, p: string) => {
+        const info = LOBE_DEFAULT_MODEL_LIST.find((item) => item.id === m && item.providerId === p);
+        return info?.abilities?.functionCall ?? true;
+      };
+
+      // 5. Create tools using Server AgentToolsEngine
+      const hasEnabledKnowledgeBases =
+        agentConfig.knowledgeBases?.some(
+          (kb: { enabled?: boolean | null }) => kb.enabled === true,
+        ) ?? false;
+
+      const toolsContext: ServerAgentToolsContext = {
+        installedPlugins,
+        isModelSupportToolUse,
+      };
+
+      const toolsEngine = createServerAgentToolsEngine(toolsContext, {
+        agentConfig: {
+          chatConfig: agentConfig.chatConfig ?? undefined,
+          plugins: agentConfig.plugins ?? undefined,
+        },
+        hasEnabledKnowledgeBases,
+        model,
+        provider,
+      });
+
+      // Generate tools and manifest map
+      const pluginIds = agentConfig.plugins || [];
+      const toolsResult = toolsEngine.generateToolsDetailed({
+        model,
+        provider,
+        toolIds: pluginIds,
+      });
+
+      const tools = toolsResult.tools;
+
+      // Get manifest map and convert from Map to Record
+      const manifestMap = toolsEngine.getEnabledPluginManifests(pluginIds);
+      const toolManifestMap: Record<string, any> = {};
+      manifestMap.forEach((manifest, id) => {
+        toolManifestMap[id] = manifest;
+      });
+
+      log('execAgent: generated %d tools', tools?.length ?? 0);
+
+      // 6. Get existing messages if provided
+      let historyMessages: any[] = [];
+      if (existingMessageIds.length > 0) {
+        historyMessages = await ctx.messageModel.query({
+          sessionId: appContext?.sessionId,
+          topicId: appContext?.topicId ?? undefined,
+        });
+        if (existingMessageIds.length > 0) {
+          const idSet = new Set(existingMessageIds);
+          historyMessages = historyMessages.filter((msg) => idSet.has(msg.id));
+        }
+      }
+
+      // 7. Create user message in database
+      const userMessageRecord = await ctx.messageModel.create({
+        agentId: resolvedAgentId,
+        content: prompt,
+        role: 'user',
+        topicId,
+      });
+      log('execAgent: created user message %s', userMessageRecord.id);
+
+      // Create user message object for processing
+      const userMessage = { content: prompt, role: 'user' as const };
+
+      // Combine history messages with user message
+      const allMessages = [...historyMessages, userMessage];
+
+      // 8. Process messages using Server ContextEngineering
+      const processedMessages = await serverMessagesEngine({
+        capabilities: {
+          isCanUseFC: isModelSupportToolUse,
+          isCanUseVideo: () => modelInfo?.abilities?.video ?? false,
+          isCanUseVision: () => modelInfo?.abilities?.vision ?? true,
+        },
+        enableHistoryCount: agentConfig.chatConfig?.enableHistoryCount ?? undefined,
+        historyCount: agentConfig.chatConfig?.historyCount ?? undefined,
+        knowledge: {
+          fileContents: agentConfig.files
+            ?.filter((f: { enabled?: boolean | null }) => f.enabled === true)
+            .map((f: { content?: string | null; id?: string; name?: string }) => ({
+              content: f.content ?? '',
+              fileId: f.id ?? '',
+              filename: f.name ?? '',
+            })),
+          knowledgeBases: agentConfig.knowledgeBases
+            ?.filter((kb: { enabled?: boolean | null }) => kb.enabled === true)
+            .map((kb: { id?: string; name?: string }) => ({
+              id: kb.id ?? '',
+              name: kb.name ?? '',
+            })),
+        },
+        messages: allMessages,
+        model,
+        provider,
+        systemRole: agentConfig.systemRole ?? undefined,
+        toolsConfig: {
+          tools: pluginIds,
+        },
+      });
+
+      log('execAgent: processed %d messages', processedMessages.length);
+
+      // 9. Generate operation ID
+      const operationId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+
+      // 10. Create initial context
+      const initialContext: AgentRuntimeContext = {
+        payload: {
+          isFirstMessage: true,
+          message: [{ content: prompt }],
+          // Pass user message ID as parentMessageId for assistant message creation
+          parentMessageId: userMessageRecord.id,
+        },
+        phase: 'user_input' as const,
+        session: {
+          messageCount: processedMessages.length,
+          sessionId: operationId,
+          status: 'idle' as const,
+          stepCount: 0,
+        },
+      };
+
+      // 11. Create operation using AgentRuntimeService
+      const result = await ctx.agentRuntimeService.createOperation({
+        agentConfig,
+        appContext: {
+          agentId: resolvedAgentId,
+          threadId: appContext?.threadId,
+          topicId,
+        },
+        autoStart,
+        initialContext,
+        initialMessages: processedMessages,
+        modelRuntimeConfig: { model, provider },
+        operationId,
+        toolManifestMap,
+        tools,
+        userId: ctx.userId,
+      });
+
+      log('execAgent: created operation %s (autoStarted: %s)', operationId, result.autoStarted);
+
+      return {
+        agentId: resolvedAgentId,
+        autoStarted: result.autoStarted,
+        createdAt: new Date().toISOString(),
+        message: 'Agent operation created successfully',
+        messageId: result.messageId,
+        operationId,
+        status: 'created',
+        success: true,
+        timestamp: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      log('execAgent failed: %O', error);
+
+      if (error instanceof TRPCError) {
+        throw error;
+      }
+
+      throw new TRPCError({
+        cause: error,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Failed to execute agent: ${error.message}`,
+      });
+    }
+  }),
 
   getOperationStatus: aiAgentProcedure
     .input(GetOperationStatusSchema)
@@ -311,239 +557,6 @@ export const aiAgentRouter = router({
         timestamp: new Date().toISOString(),
       };
     }),
-
-  /**
-   * Run agent by agent ID with just a prompt
-   *
-   * This is a simplified API that only requires agentId and prompt.
-   * All necessary data (agent config, tools, messages) will be fetched from the database.
-   *
-   * Architecture:
-   * runByAgentId(agentId, prompt)
-   *   → AgentModel.getAgentConfigById(agentId)
-   *   → ServerMechaModule.AgentToolsEngine(config)
-   *   → ServerMechaModule.ContextEngineering(input, config, messages)
-   *   → AgentRuntimeService.createOperation(...)
-   */
-  runByAgentId: aiAgentProcedure.input(RunByAgentIdSchema).mutation(async ({ input, ctx }) => {
-    if (!isEnableAgent()) {
-      throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
-    }
-
-    const { agentId, prompt, appContext, autoStart = true, existingMessageIds = [] } = input;
-
-    log('runByAgentId: agentId=%s, prompt=%s', agentId, prompt.slice(0, 50));
-
-    try {
-      // 1. Get agent configuration from database
-      const agentConfig = await ctx.agentModel.getAgentConfigById(agentId);
-      if (!agentConfig) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: `Agent not found: ${agentId}`,
-        });
-      }
-
-      log('runByAgentId: got agent config for %s', agentId);
-
-      // 2. Handle topic creation: if no topicId provided, create a new topic; otherwise reuse existing
-      let topicId = appContext?.topicId;
-      if (!topicId) {
-        const newTopic = await ctx.topicModel.create({
-          agentId,
-          title: prompt.slice(0, 50) + (prompt.length > 50 ? '...' : ''),
-        });
-        topicId = newTopic.id;
-        log('runByAgentId: created new topic %s', topicId);
-      } else {
-        log('runByAgentId: reusing existing topic %s', topicId);
-      }
-
-      // Extract model and provider from agent config
-      const model = agentConfig.model!;
-      const provider = agentConfig.provider!;
-
-      // 3. Get installed plugins from database
-      const installedPlugins = await ctx.pluginModel.query();
-      log('runByAgentId: got %d installed plugins', installedPlugins.length);
-
-      // 4. Get model abilities from model-bank for function calling support check
-      const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
-      const modelInfo = LOBE_DEFAULT_MODEL_LIST.find(
-        (m) => m.id === model && m.providerId === provider,
-      );
-      const isModelSupportToolUse = (m: string, p: string) => {
-        const info = LOBE_DEFAULT_MODEL_LIST.find((item) => item.id === m && item.providerId === p);
-        return info?.abilities?.functionCall ?? true;
-      };
-
-      // 5. Create tools using Server AgentToolsEngine
-      const hasEnabledKnowledgeBases =
-        agentConfig.knowledgeBases?.some(
-          (kb: { enabled?: boolean | null }) => kb.enabled === true,
-        ) ?? false;
-
-      const toolsContext: ServerAgentToolsContext = {
-        installedPlugins,
-        isModelSupportToolUse,
-      };
-
-      const toolsEngine = createServerAgentToolsEngine(toolsContext, {
-        agentConfig: {
-          chatConfig: agentConfig.chatConfig ?? undefined,
-          plugins: agentConfig.plugins ?? undefined,
-        },
-        hasEnabledKnowledgeBases,
-        model,
-        provider,
-      });
-
-      // Generate tools and manifest map
-      const pluginIds = agentConfig.plugins || [];
-      const toolsResult = toolsEngine.generateToolsDetailed({
-        model,
-        provider,
-        toolIds: pluginIds,
-      });
-
-      const tools = toolsResult.tools;
-
-      // Get manifest map and convert from Map to Record
-      const manifestMap = toolsEngine.getEnabledPluginManifests(pluginIds);
-      const toolManifestMap: Record<string, any> = {};
-      manifestMap.forEach((manifest, id) => {
-        toolManifestMap[id] = manifest;
-      });
-
-      log('runByAgentId: generated %d tools', tools?.length ?? 0);
-
-      // 6. Get existing messages if provided
-      let historyMessages: any[] = [];
-      if (existingMessageIds.length > 0) {
-        historyMessages = await ctx.messageModel.query({
-          sessionId: appContext?.sessionId,
-          topicId: appContext?.topicId ?? undefined,
-        });
-        if (existingMessageIds.length > 0) {
-          const idSet = new Set(existingMessageIds);
-          historyMessages = historyMessages.filter((msg) => idSet.has(msg.id));
-        }
-      }
-
-      // 7. Create user message in database
-      const userMessageRecord = await ctx.messageModel.create({
-        agentId,
-        content: prompt,
-        role: 'user',
-        topicId,
-      });
-      log('runByAgentId: created user message %s', userMessageRecord.id);
-
-      // Create user message object for processing
-      const userMessage = { content: prompt, role: 'user' as const };
-
-      // Combine history messages with user message
-      const allMessages = [...historyMessages, userMessage];
-
-      // 9. Process messages using Server ContextEngineering
-      const processedMessages = await serverMessagesEngine({
-        capabilities: {
-          isCanUseFC: isModelSupportToolUse,
-          isCanUseVideo: () => modelInfo?.abilities?.video ?? false,
-          isCanUseVision: () => modelInfo?.abilities?.vision ?? true,
-        },
-        enableHistoryCount: agentConfig.chatConfig?.enableHistoryCount ?? undefined,
-        historyCount: agentConfig.chatConfig?.historyCount ?? undefined,
-        knowledge: {
-          fileContents: agentConfig.files
-            ?.filter((f: { enabled?: boolean | null }) => f.enabled === true)
-            .map((f: { content?: string | null; id?: string; name?: string }) => ({
-              content: f.content ?? '',
-              fileId: f.id ?? '',
-              filename: f.name ?? '',
-            })),
-          knowledgeBases: agentConfig.knowledgeBases
-            ?.filter((kb: { enabled?: boolean | null }) => kb.enabled === true)
-            .map((kb: { id?: string; name?: string }) => ({
-              id: kb.id ?? '',
-              name: kb.name ?? '',
-            })),
-        },
-        messages: allMessages,
-        model,
-        provider,
-        systemRole: agentConfig.systemRole ?? undefined,
-        toolsConfig: {
-          tools: pluginIds,
-        },
-      });
-
-      log('runByAgentId: processed %d messages', processedMessages.length);
-
-      // 10. Generate operation ID
-      const operationId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
-
-      // 11. Create initial context
-      const initialContext: AgentRuntimeContext = {
-        payload: {
-          isFirstMessage: true,
-          message: [{ content: prompt }],
-          // Pass user message ID as parentMessageId for assistant message creation
-          parentMessageId: userMessageRecord.id,
-        },
-        phase: 'user_input' as const,
-        session: {
-          messageCount: processedMessages.length,
-          sessionId: operationId,
-          status: 'idle' as const,
-          stepCount: 0,
-        },
-      };
-
-      // 12. Create operation using AgentRuntimeService
-      const result = await ctx.agentRuntimeService.createOperation({
-        agentConfig,
-        appContext: {
-          agentId,
-          threadId: appContext?.threadId,
-          topicId,
-        },
-        autoStart,
-        initialContext,
-        initialMessages: processedMessages,
-        modelRuntimeConfig: { model, provider },
-        operationId,
-        toolManifestMap,
-        tools,
-        userId: ctx.userId,
-      });
-
-      log('runByAgentId: created operation %s (autoStarted: %s)', operationId, result.autoStarted);
-
-      return {
-        autoStarted: result.autoStarted,
-        createdAt: new Date().toISOString(),
-        message: 'Agent operation created successfully',
-        messageId: result.messageId,
-        operationId,
-        status: 'created',
-        success: true,
-        timestamp: new Date().toISOString(),
-      };
-    } catch (error: any) {
-      log('runByAgentId failed: %O', error);
-
-      if (error instanceof TRPCError) {
-        throw error;
-      }
-
-      throw new TRPCError({
-        cause: error,
-        code: 'INTERNAL_SERVER_ERROR',
-        message: `Failed to run agent: ${error.message}`,
-      });
-    }
-  }),
 
   startExecution: aiAgentProcedure.input(StartExecutionSchema).mutation(async ({ input, ctx }) => {
     if (!isEnableAgent()) {

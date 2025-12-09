@@ -324,6 +324,8 @@ export const createRuntimeExecutors = (
         nextContext: {
           payload: {
             hasToolsCalling: toolsCalling.length > 0,
+            // Pass assistant message ID as parentMessageId for tool calls
+            parentMessageId: assistantMessageItem.id,
             result: { content, tool_calls },
             toolsCalling: toolsCalling,
           } as GeneralAgentCallLLMResultPayload,
