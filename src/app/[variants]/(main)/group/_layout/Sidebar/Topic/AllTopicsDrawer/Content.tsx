@@ -161,7 +161,12 @@ const Content = memo<ContentProps>(({ open, searchKeyword }) => {
   }
 
   return (
-    <VList bufferSize={800} onScroll={handleScroll} ref={virtuaRef} style={{ height: '100%' }}>
+    <VList
+      bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
+      onScroll={handleScroll}
+      ref={virtuaRef}
+      style={{ height: '100%' }}
+    >
       {activeTopicList?.map((topic) => (
         <Flexbox gap={1} key={topic.id} padding={'4px 8px'}>
           <TopicItem

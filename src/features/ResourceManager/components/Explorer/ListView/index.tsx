@@ -84,7 +84,12 @@ const ListView = memo<ListViewProps>(
             </Flexbox>
           </Flexbox>
         </Flexbox>
-        <VList bufferSize={400} data={data} itemSize={48} style={{ height: '100%' }}>
+        <VList
+          bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
+          data={data}
+          itemSize={48}
+          style={{ height: '100%' }}
+        >
           {(item, index) => (
             <FileListItem
               index={index}
