@@ -1,25 +1,4 @@
 // @vitest-environment node
-/**
- * AI Agent E2E Test - runByAgentId
- *
- * This test validates the full end-to-end flow of runByAgentId router:
- * 1. Call runByAgentId with agentId and prompt
- * 2. Router fetches agent config, creates tools, processes messages
- * 3. AgentRuntimeService creates operation and executes LLM call
- * 4. Verify the complete flow works correctly
- *
- * Mock Strategy (Minimal Mock Principle):
- * - Database: PGLite (via @lobechat/database/test-utils)
- * - AgentStateManager/StreamEventManager: In-memory implementations
- * - OpenAI: spyOn chat.completions.create prototype
- *
- * NOT mocked (using real implementations):
- * - model-bank
- * - Mecha (AgentToolsEngine, ContextEngineering)
- * - AgentRuntimeService
- * - AgentRuntimeCoordinator
- * - ModelRuntime
- */
 import { LobeChatDatabase } from '@lobechat/database';
 import { agents, messages, topics } from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
@@ -470,6 +449,44 @@ describe('AI Agent E2E Test - runByAgentId', () => {
       expect(callArgs.model).toBe('gpt-5-pro');
       expect(callArgs.input).toBeDefined();
       expect(Array.isArray(callArgs.input)).toBe(true);
+    });
+
+    it('should set correct parentId on assistant message (user message -> assistant message)', async () => {
+      // Setup mock response
+      const responseContent = 'Response for parentId verification';
+      mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream(responseContent) as any);
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const createResult = await caller.runByAgentId({
+        agentId: testAgentId,
+        autoStart: false,
+        prompt: 'Test parentId chain',
+      });
+
+      // Execute
+      const service = new AgentRuntimeService(serverDB, userId, {
+        queueService: null,
+      });
+
+      const finalState = await service.executeSync(createResult.operationId, { maxSteps: 5 });
+      expect(finalState.status).toBe('done');
+
+      // Get all messages from database
+      const allMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.agentId, testAgentId));
+
+      // Find user and assistant messages
+      const userMessage = allMessages.find((m) => m.role === 'user');
+      const assistantMessage = allMessages.find((m) => m.role === 'assistant');
+
+      expect(userMessage).toBeDefined();
+      expect(assistantMessage).toBeDefined();
+
+      // Verify parentId chain: assistant message should have user message as parent
+      expect(assistantMessage?.parentId).toBe(userMessage?.id);
     });
   });
 });
