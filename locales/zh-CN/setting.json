@@ -803,8 +803,8 @@
       "store": "插件商店"
     },
     "tabs": {
-      "installed": "已启用",
-      "all": "全部"
+      "all": "全部",
+      "installed": "已启用"
     },
     "title": "扩展插件"
   }
