@@ -42,7 +42,6 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
 
   const publish = useCallback(async () => {
     if (!isAuthenticated || !session?.accessToken) {
-      message.error(t('marketPublish.modal.messages.notAuthenticated'));
       return { success: false };
     }
 

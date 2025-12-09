@@ -52,13 +52,7 @@ const PublishButton = memo<MarketPublishButtonProps>(
     const handleButtonClick = useCallback(async () => {
       if (!isAuthenticated) {
         try {
-          message.loading({
-            content: t('messages.loading', { ns: 'marketAuth' }),
-            key: 'market-auth',
-          });
           const accountId = await signIn();
-          message.success({ content: buttonConfig.authSuccessMessage, key: 'market-auth' });
-
           // Check ownership after authentication if marketIdentifier exists
           if (marketIdentifier && accountId !== null) {
             let accessToken = session?.accessToken;
