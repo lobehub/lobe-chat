@@ -1,4 +1,4 @@
-import type { HumanInterventionConfig } from '@lobechat/types';
+import type { HumanInterventionConfig } from '@/types/index';
 
 export interface LobeChatPluginApi {
   description: string;

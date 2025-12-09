@@ -1,5 +1,5 @@
 import { AgentRuntimeContext } from '@lobechat/agent-runtime';
-import { LobeToolManifest } from '@lobechat/context-engine/src/tools/types';
+import { LobeToolManifest } from '@lobechat/context-engine';
 
 export interface AgentExecutionParams {
   approvedToolCall?: any;

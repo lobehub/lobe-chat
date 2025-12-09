@@ -1,5 +1,6 @@
-import { ChatToolPayload, MessageToolCall } from '@lobechat/types';
 import { Md5 } from 'ts-md5';
+
+import { ChatToolPayload, MessageToolCall } from '@/types/index';
 
 import { LobeChatPluginApi, LobeToolManifest } from './types';
 

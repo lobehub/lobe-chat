@@ -1,9 +1,10 @@
 /* eslint-disable typescript-sort-keys/interface */
 import type { FileContent, KnowledgeBaseInfo } from '@lobechat/prompts';
-import type { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
 
-import type { AgentBuilderContext } from '../providers/AgentBuilderContextInjector';
-import type { PageEditorContext } from '../providers/PageEditorContextInjector';
+import type { OpenAIChatMessage, UIChatMessage } from '@/types/index';
+
+import type { AgentBuilderContext } from '../../providers/AgentBuilderContextInjector';
+import type { PageEditorContext } from '../../providers/PageEditorContextInjector';
 
 /**
  * Model capability checker
@@ -175,10 +176,7 @@ export interface MessagesEngineResult {
 
 // Re-export types for convenience
 
-
-
-
-export {type AgentBuilderContext} from '../providers/AgentBuilderContextInjector';
-export {type PageEditorContext} from '../providers/PageEditorContextInjector';
-export {type FileContent, type KnowledgeBaseInfo} from '@lobechat/prompts';
-export {type OpenAIChatMessage, type UIChatMessage} from '@lobechat/types';
+export { type AgentBuilderContext } from '../../providers/AgentBuilderContextInjector';
+export { type PageEditorContext } from '../../providers/PageEditorContextInjector';
+export { type OpenAIChatMessage, type UIChatMessage } from '@/types/index';
+export { type FileContent, type KnowledgeBaseInfo } from '@lobechat/prompts';
