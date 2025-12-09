@@ -5,6 +5,7 @@ export { KnowledgeInjector } from './KnowledgeInjector';
 export { PageEditorContextInjector } from './PageEditorContextInjector';
 export { SystemRoleInjector } from './SystemRoleInjector';
 export { ToolSystemRoleProvider } from './ToolSystemRole';
+export { UserMemoryInjector } from './UserMemoryInjector';
 
 // Re-export types
 export type {
@@ -20,3 +21,4 @@ export type {
 } from './PageEditorContextInjector';
 export type { SystemRoleInjectorConfig } from './SystemRoleInjector';
 export type { ToolSystemRoleConfig } from './ToolSystemRole';
+export type { UserMemoryInjectorConfig } from './UserMemoryInjector';
