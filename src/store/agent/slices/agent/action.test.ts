@@ -275,60 +275,8 @@ describe('AgentSlice Actions', () => {
       });
     });
 
-    it('should refresh sessions if model changed', async () => {
-      const { result } = renderHook(() => useAgentStore());
-
-      const refreshSessionsMock = vi.fn();
-      vi.mocked(useSessionStore.getState).mockReturnValue({
-        refreshSessions: refreshSessionsMock,
-      } as any);
-
-      vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { model: 'gpt-4' } as any,
-        success: true,
-      });
-
-      act(() => {
-        useAgentStore.setState({
-          activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': { model: 'gpt-3.5-turbo' } as any },
-        });
-      });
-
-      await act(async () => {
-        await result.current.optimisticUpdateAgentConfig('agent-1', { model: 'gpt-4' });
-      });
-
-      expect(refreshSessionsMock).toHaveBeenCalled();
-    });
-
-    it('should not refresh sessions if model explicitly set to same value', async () => {
-      const { result } = renderHook(() => useAgentStore());
-
-      const refreshSessionsMock = vi.fn();
-      vi.mocked(useSessionStore.getState).mockReturnValue({
-        refreshSessions: refreshSessionsMock,
-      } as any);
-
-      vi.mocked(agentService.updateAgentConfig).mockResolvedValue({
-        agent: { model: 'gpt-4' } as any,
-        success: true,
-      });
-
-      act(() => {
-        useAgentStore.setState({
-          activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': { model: 'gpt-4' } as any },
-        });
-      });
-
-      await act(async () => {
-        // Pass the same model explicitly - no change
-        await result.current.optimisticUpdateAgentConfig('agent-1', { model: 'gpt-4' });
-      });
-
-      expect(refreshSessionsMock).not.toHaveBeenCalled();
-    });
+    // Note: refreshSessions is no longer called after optimistic update
+    // as the implementation now uses API returned data directly
   });
 
   describe('optimisticUpdateAgentMeta', () => {
@@ -357,32 +305,8 @@ describe('AgentSlice Actions', () => {
       });
     });
 
-    it('should always refresh sessions after meta update', async () => {
-      const { result } = renderHook(() => useAgentStore());
-
-      const refreshSessionsMock = vi.fn();
-      vi.mocked(useSessionStore.getState).mockReturnValue({
-        refreshSessions: refreshSessionsMock,
-      } as any);
-
-      vi.mocked(agentService.updateAgentMeta).mockResolvedValue({
-        agent: { title: 'New Title' } as any,
-        success: true,
-      });
-
-      act(() => {
-        useAgentStore.setState({
-          activeAgentId: 'agent-1',
-          agentMap: { 'agent-1': {} as any },
-        });
-      });
-
-      await act(async () => {
-        await result.current.optimisticUpdateAgentMeta('agent-1', { title: 'New Title' });
-      });
-
-      expect(refreshSessionsMock).toHaveBeenCalled();
-    });
+    // Note: refreshSessions is no longer called after optimistic update
+    // as the implementation now uses API returned data directly
   });
 
   describe('useFetchAgentConfig', () => {
