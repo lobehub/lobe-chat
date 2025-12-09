@@ -71,8 +71,9 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
   const slug = agentSelectors.getAgentSlugById(agentId)(agentStoreState);
 
   if (!slug) {
-    // Regular agent - return config with agent's plugins
-    return { agentConfig, chatConfig, isBuiltinAgent: false, plugins: basePlugins };
+    // Regular agent - use provided plugins if available, fallback to agent's plugins
+    const finalPlugins = plugins && plugins.length > 0 ? plugins : basePlugins;
+    return { agentConfig, chatConfig, isBuiltinAgent: false, plugins: finalPlugins };
   }
 
   // Builtin agent - merge runtime config

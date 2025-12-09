@@ -271,8 +271,8 @@ describe('topic action', () => {
       const sessionId = 'test-session-id';
       const topics = [{ id: 'topic-id', title: 'Test Topic' }];
 
-      // Mock the topicService.getTopics to resolve with topics array
-      (topicService.getTopics as Mock).mockResolvedValue(topics);
+      // Mock the topicService.getTopics to resolve with paginated result
+      (topicService.getTopics as Mock).mockResolvedValue({ items: topics, total: topics.length });
 
       // Use the hook with the session id
       const { result } = renderHook(() =>
@@ -281,7 +281,7 @@ describe('topic action', () => {
 
       // Wait for the hook to resolve and update the state
       await waitFor(() => {
-        expect(result.current.data).toEqual(topics);
+        expect(result.current.data).toEqual({ items: topics, total: topics.length });
       });
       expect(useChatStore.getState().topicsInit).toBeTruthy();
       expect(useChatStore.getState().topicDataMap[sessionId]?.items).toEqual(topics);

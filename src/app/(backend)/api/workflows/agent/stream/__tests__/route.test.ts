@@ -37,7 +37,7 @@ describe('/api/agent/stream route', () => {
     it('should return 404 when agent features are not enabled', async () => {
       isEnableAgentSpy.mockReturnValue(false);
 
-      const request = new NextRequest('https://test.com/api/agent/stream?sessionId=test-session');
+      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
       const response = await GET(request);
 
       expect(response.status).toBe(404);
@@ -45,17 +45,17 @@ describe('/api/agent/stream route', () => {
       expect(data.error).toBe('Agent features are not enabled');
     });
 
-    it('should return 400 when sessionId parameter is missing', async () => {
+    it('should return 400 when operationId parameter is missing', async () => {
       const request = new NextRequest('https://test.com/api/agent/stream');
       const response = await GET(request);
 
       expect(response.status).toBe(400);
       const data = await response.json();
-      expect(data.error).toBe('sessionId parameter is required');
+      expect(data.error).toBe('operationId parameter is required');
     });
 
-    it('should return SSE stream with correct headers when sessionId is provided', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?sessionId=test-session');
+    it('should return SSE stream with correct headers when operationId is provided', async () => {
+      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
       const response = await GET(request);
 
       expect(response.status).toBe(200);
@@ -74,7 +74,7 @@ describe('/api/agent/stream route', () => {
   describe('Stream functionality with exact data verification', () => {
     it('should send connection event in exact SSE format', async () => {
       const request = new NextRequest(
-        'https://test.com/api/agent/stream?sessionId=test-session&lastEventId=123',
+        'https://test.com/api/agent/stream?operationId=test-operation&lastEventId=123',
       );
 
       const response = await GET(request);
@@ -116,13 +116,13 @@ describe('/api/agent/stream route', () => {
 
       // Verify exact stream format with mocked timestamp (new SSE format)
       expect(chunks).toEqual([
-        `id: conn_${MOCK_TIMESTAMP}\nevent: connected\ndata: {"lastEventId":"123","sessionId":"test-session","timestamp":${MOCK_TIMESTAMP},"type":"connected"}\n\n`,
+        `id: conn_${MOCK_TIMESTAMP}\nevent: connected\ndata: {"lastEventId":"123","operationId":"test-operation","timestamp":${MOCK_TIMESTAMP},"type":"connected"}\n\n`,
       ]);
     });
 
     it('should verify getStreamHistory with exact historical events format', async () => {
       const request = new NextRequest(
-        'https://test.com/api/agent/stream?sessionId=test-session&includeHistory=true&lastEventId=100',
+        'https://test.com/api/agent/stream?operationId=test-operation&includeHistory=true&lastEventId=100',
       );
 
       // Mock getStreamHistory to return specific events
@@ -130,19 +130,19 @@ describe('/api/agent/stream route', () => {
         {
           type: 'stream_end',
           timestamp: 300,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { messageId: 'msg3' },
         },
         {
           type: 'stream_chunk',
           timestamp: 250,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { content: 'world' },
         },
         {
           type: 'stream_start',
           timestamp: 150,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { messageId: 'msg1' },
         },
       ];
@@ -187,18 +187,18 @@ describe('/api/agent/stream route', () => {
 
       // Verify exact stream format - connection event + filtered historical events (new SSE format)
       expect(chunks).toEqual([
-        `id: conn_${MOCK_TIMESTAMP}\nevent: connected\ndata: {"lastEventId":"100","sessionId":"test-session","timestamp":${MOCK_TIMESTAMP},"type":"connected"}\n\n`,
-        `id: test-session\nevent: stream_start\ndata: {"type":"stream_start","timestamp":150,"sessionId":"test-session","data":{"messageId":"msg1"}}\n\n`,
-        `id: test-session\nevent: stream_chunk\ndata: {"type":"stream_chunk","timestamp":250,"sessionId":"test-session","data":{"content":"world"}}\n\n`,
+        `id: conn_${MOCK_TIMESTAMP}\nevent: connected\ndata: {"lastEventId":"100","operationId":"test-operation","timestamp":${MOCK_TIMESTAMP},"type":"connected"}\n\n`,
+        `id: test-operation\nevent: stream_start\ndata: {"type":"stream_start","timestamp":150,"operationId":"test-operation","data":{"messageId":"msg1"}}\n\n`,
+        `id: test-operation\nevent: stream_chunk\ndata: {"type":"stream_chunk","timestamp":250,"operationId":"test-operation","data":{"content":"world"}}\n\n`,
       ]);
 
       // Verify API calls
-      expect(mockStreamEventManager.getStreamHistory).toHaveBeenCalledWith('test-session', 50);
+      expect(mockStreamEventManager.getStreamHistory).toHaveBeenCalledWith('test-operation', 50);
     });
 
     it('should verify event filtering with exact format', async () => {
       const request = new NextRequest(
-        'https://test.com/api/agent/stream?sessionId=test-session&includeHistory=true&lastEventId=200',
+        'https://test.com/api/agent/stream?operationId=test-operation&includeHistory=true&lastEventId=200',
       );
 
       // Mock events where some should be filtered out
@@ -206,25 +206,25 @@ describe('/api/agent/stream route', () => {
         {
           type: 'stream_end',
           timestamp: 300,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { messageId: 'msg3' },
         }, // Should be included (300 > 200)
         {
           type: 'stream_chunk',
           timestamp: 250,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { content: 'world' },
         }, // Should be included (250 > 200)
         {
           type: 'stream_chunk',
           timestamp: 200,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { content: 'hello' },
         }, // Should be excluded (200 = 200)
         {
           type: 'stream_start',
           timestamp: 150,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { messageId: 'msg1' },
         }, // Should be excluded (150 < 200)
       ];
@@ -272,27 +272,27 @@ describe('/api/agent/stream route', () => {
       expect(chunks).toEqual([
         `id: conn_${MOCK_TIMESTAMP}
 event: connected
-data: {"lastEventId":"200","sessionId":"test-session","timestamp":${MOCK_TIMESTAMP},"type":"connected"}
+data: {"lastEventId":"200","operationId":"test-operation","timestamp":${MOCK_TIMESTAMP},"type":"connected"}
 
 `,
-        `id: test-session
+        `id: test-operation
 event: stream_chunk
-data: {"type":"stream_chunk","timestamp":250,"sessionId":"test-session","data":{"content":"world"}}
+data: {"type":"stream_chunk","timestamp":250,"operationId":"test-operation","data":{"content":"world"}}
 
 `,
-        `id: test-session
+        `id: test-operation
 event: stream_end
-data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"messageId":"msg3"}}
+data: {"type":"stream_end","timestamp":300,"operationId":"test-operation","data":{"messageId":"msg3"}}
 \n`,
       ]);
 
       // Verify API calls
-      expect(mockStreamEventManager.getStreamHistory).toHaveBeenCalledWith('test-session', 50);
+      expect(mockStreamEventManager.getStreamHistory).toHaveBeenCalledWith('test-operation', 50);
     });
 
     it('should handle errors with exact error event format', async () => {
       const request = new NextRequest(
-        'https://test.com/api/agent/stream?sessionId=test-session&includeHistory=true',
+        'https://test.com/api/agent/stream?operationId=test-operation&includeHistory=true',
       );
 
       // Mock getStreamHistory to reject
@@ -343,21 +343,21 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
       expect(errorChunk).toMatch(/^id: error_\d+\nevent: error\ndata: \{.*"type":"error".*\}\n\n$/);
       expect(errorChunk).toContain('"error":"Redis connection failed"');
       expect(errorChunk).toContain('"phase":"history_loading"');
-      expect(errorChunk).toContain('"sessionId":"test-session"');
+      expect(errorChunk).toContain('"operationId":"test-operation"');
       expect(errorChunk).toContain(`"timestamp":${MOCK_TIMESTAMP}`);
 
       // Verify connection event format
       expect(chunks[0]).toEqual(
-        `id: conn_${MOCK_TIMESTAMP}\nevent: connected\ndata: {"lastEventId":"0","sessionId":"test-session","timestamp":${MOCK_TIMESTAMP},"type":"connected"}\n\n`,
+        `id: conn_${MOCK_TIMESTAMP}\nevent: connected\ndata: {"lastEventId":"0","operationId":"test-operation","timestamp":${MOCK_TIMESTAMP},"type":"connected"}\n\n`,
       );
 
       // Verify getStreamHistory was called
-      expect(mockStreamEventManager.getStreamHistory).toHaveBeenCalledWith('test-session', 50);
+      expect(mockStreamEventManager.getStreamHistory).toHaveBeenCalledWith('test-operation', 50);
     });
 
     it('should verify stream subscription with exact parameters', async () => {
       const request = new NextRequest(
-        'https://test.com/api/agent/stream?sessionId=test-session&lastEventId=456',
+        'https://test.com/api/agent/stream?operationId=test-operation&lastEventId=456',
       );
 
       mockStreamEventManager.subscribeStreamEvents.mockResolvedValue(undefined);
@@ -368,7 +368,7 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
 
       // Verify exact parameter passing
       expect(mockStreamEventManager.subscribeStreamEvents).toHaveBeenCalledWith(
-        'test-session',
+        'test-operation',
         '456',
         expect.any(Function), // callback function
         expect.any(AbortSignal), // abort signal
@@ -382,7 +382,7 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
     });
 
     it('should verify default parameters with exact values', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?sessionId=test-session');
+      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
 
       mockStreamEventManager.subscribeStreamEvents.mockResolvedValue(undefined);
 
@@ -392,7 +392,7 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
 
       // Verify default values are used
       expect(mockStreamEventManager.subscribeStreamEvents).toHaveBeenCalledWith(
-        'test-session',
+        'test-operation',
         '0', // default lastEventId
         expect.any(Function),
         expect.any(AbortSignal),
@@ -403,7 +403,7 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
     });
 
     it('should verify SSE message structure with exact format specification', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?sessionId=test-session');
+      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
 
       const response = await GET(request);
       const decoder = new TextDecoder();
@@ -444,21 +444,21 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
 
       // Verify exact stream format with default lastEventId (new SSE format)
       expect(chunks).toEqual([
-        `id: conn_${MOCK_TIMESTAMP}\nevent: connected\ndata: {"lastEventId":"0","sessionId":"test-session","timestamp":${MOCK_TIMESTAMP},"type":"connected"}\n\n`,
+        `id: conn_${MOCK_TIMESTAMP}\nevent: connected\ndata: {"lastEventId":"0","operationId":"test-operation","timestamp":${MOCK_TIMESTAMP},"type":"connected"}\n\n`,
       ]);
     });
   });
 
   describe('Agent Runtime Lifecycle', () => {
     it('should verify agent runtime event handling and connection closure logic', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?sessionId=test-session');
+      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
 
       // Capture the event callback so we can test the event processing logic directly
       let capturedCallback: ((events: any[]) => void) | null = null;
       let capturedSignal: AbortSignal | null = null;
 
       mockStreamEventManager.subscribeStreamEvents.mockImplementation(
-        (sessionId, lastEventId, callback, signal) => {
+        (operationId, lastEventId, callback, signal) => {
           capturedCallback = callback;
           capturedSignal = signal;
           return Promise.resolve();
@@ -469,7 +469,7 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
 
       // Verify the subscription was set up correctly
       expect(mockStreamEventManager.subscribeStreamEvents).toHaveBeenCalledWith(
-        'test-session',
+        'test-operation',
         '0',
         expect.any(Function),
         expect.any(AbortSignal),
@@ -487,12 +487,12 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
     });
 
     it('should verify subscribeStreamEvents callback can handle agent_runtime_init events', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?sessionId=test-session');
+      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
 
       let capturedCallback: ((events: any[]) => void) | null = null;
 
       mockStreamEventManager.subscribeStreamEvents.mockImplementation(
-        (sessionId, lastEventId, callback, signal) => {
+        (operationId, lastEventId, callback, signal) => {
           capturedCallback = callback;
           return Promise.resolve();
         },
@@ -508,7 +508,7 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
       const initEvent = {
         type: 'agent_runtime_init',
         timestamp: MOCK_TIMESTAMP + 100,
-        sessionId: 'test-session',
+        operationId: 'test-operation',
         data: {
           userId: 'user-123',
           modelConfig: { model: 'gpt-4', temperature: 0.7 },
@@ -521,12 +521,12 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
     });
 
     it('should verify subscribeStreamEvents callback can handle agent_runtime_end events', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?sessionId=test-session');
+      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
 
       let capturedCallback: ((events: any[]) => void) | null = null;
 
       mockStreamEventManager.subscribeStreamEvents.mockImplementation(
-        (sessionId, lastEventId, callback, signal) => {
+        (operationId, lastEventId, callback, signal) => {
           capturedCallback = callback;
           return Promise.resolve();
         },
@@ -542,7 +542,7 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
       const endEvent = {
         type: 'agent_runtime_end',
         timestamp: MOCK_TIMESTAMP + 600,
-        sessionId: 'test-session',
+        operationId: 'test-operation',
         data: {
           totalSteps: 1,
           executionTime: 500,
@@ -555,12 +555,12 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
     });
 
     it('should verify complete agent runtime lifecycle event types are supported', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?sessionId=test-session');
+      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
 
       let capturedCallback: ((events: any[]) => void) | null = null;
 
       mockStreamEventManager.subscribeStreamEvents.mockImplementation(
-        (sessionId, lastEventId, callback, signal) => {
+        (operationId, lastEventId, callback, signal) => {
           capturedCallback = callback;
           return Promise.resolve();
         },
@@ -576,31 +576,31 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
         {
           type: 'agent_runtime_init',
           timestamp: MOCK_TIMESTAMP + 100,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { userId: 'user-123', agentType: 'assistant' },
         },
         {
           type: 'stream_start',
           timestamp: MOCK_TIMESTAMP + 200,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { messageId: 'msg-001' },
         },
         {
           type: 'stream_chunk',
           timestamp: MOCK_TIMESTAMP + 300,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { content: 'Hello world' },
         },
         {
           type: 'stream_end',
           timestamp: MOCK_TIMESTAMP + 400,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { messageId: 'msg-001' },
         },
         {
           type: 'agent_runtime_end',
           timestamp: MOCK_TIMESTAMP + 500,
-          sessionId: 'test-session',
+          operationId: 'test-operation',
           data: { status: 'completed', totalSteps: 1 },
         },
       ];
@@ -611,9 +611,9 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
   });
 
   describe('Parameter validation', () => {
-    it('should handle sessionId with special characters', async () => {
-      const sessionId = 'test-session-123_456';
-      const request = new NextRequest(`https://test.com/api/agent/stream?sessionId=${sessionId}`);
+    it('should handle operationId with special characters', async () => {
+      const operationId = 'test-operation-123_456';
+      const request = new NextRequest(`https://test.com/api/agent/stream?operationId=${operationId}`);
 
       const response = await GET(request);
 
@@ -622,7 +622,7 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
 
     it('should handle lastEventId as string number', async () => {
       const request = new NextRequest(
-        'https://test.com/api/agent/stream?sessionId=test&lastEventId=12345',
+        'https://test.com/api/agent/stream?operationId=test&lastEventId=12345',
       );
 
       const response = await GET(request);
@@ -632,7 +632,7 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
 
     it('should handle includeHistory as string boolean', async () => {
       const request = new NextRequest(
-        'https://test.com/api/agent/stream?sessionId=test&includeHistory=false',
+        'https://test.com/api/agent/stream?operationId=test&includeHistory=false',
       );
 
       const response = await GET(request);
@@ -642,13 +642,13 @@ data: {"type":"stream_end","timestamp":300,"sessionId":"test-session","data":{"m
     });
 
     it('should handle invalid URL gracefully', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?sessionId=');
+      const request = new NextRequest('https://test.com/api/agent/stream?operationId=');
 
       const response = await GET(request);
 
       expect(response.status).toBe(400);
       const data = await response.json();
-      expect(data.error).toBe('sessionId parameter is required');
+      expect(data.error).toBe('operationId parameter is required');
     });
   });
 });
