@@ -82,14 +82,15 @@ const MentionDropdown = memo<MenuRenderProps>(
             <Flexbox
               align="center"
               direction="horizontal"
-              gap={10}
+              gap={8}
               key={String(item.key)}
               onMouseDown={(e) => {
                 e.preventDefault();
                 onSelect?.(item);
               }}
               onMouseEnter={() => setActiveKey?.(String(item.key))}
-              padding={12}
+              paddingBlock={8}
+              paddingInline={12}
               ref={isActive ? activeItemRef : null}
               style={{
                 background: isActive ? theme.colorFillSecondary : undefined,
@@ -97,35 +98,17 @@ const MentionDropdown = memo<MenuRenderProps>(
               }}
             >
               {item.icon && <Flexbox style={{ flex: 'none' }}>{item?.icon as ReactNode}</Flexbox>}
-              <Flexbox gap={6} style={{ height: 40, justifyContent: 'center', minWidth: 0 }}>
-                <div
-                  style={{
-                    color: theme.colorText,
-                    fontSize: 14,
-                    fontWeight: 600,
-                    lineHeight: 1.2,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {item.label}
-                </div>
-                {item.description && (
-                  <div
-                    style={{
-                      color: theme.colorTextTertiary,
-                      fontSize: 12,
-                      lineHeight: 1.3,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {item.description}
-                  </div>
-                )}
-              </Flexbox>
+              <div
+                style={{
+                  color: theme.colorText,
+                  fontSize: 14,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {item.label}
+              </div>
             </Flexbox>
           );
         })}

@@ -1,9 +1,8 @@
 import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
-import { Avatar, Icon, ItemType } from '@lobehub/ui';
+import { Avatar, Icon, Image, ItemType } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, Store, ToyBrick } from 'lucide-react';
-import Image from 'next/image';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -12,8 +11,8 @@ import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useAgentStore } from '@/store/agent';
-import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { agentByIdSelectors } from '@/store/agent/selectors';
+import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 import {
   builtinToolSelectors,
@@ -21,8 +20,8 @@ import {
   pluginSelectors,
 } from '@/store/tool/selectors';
 
-import KlavisServerItem from './KlavisServerItem';
 import { useAgentId } from '../../hooks/useAgentId';
+import KlavisServerItem from './KlavisServerItem';
 import ToolItem from './ToolItem';
 
 /**
@@ -34,9 +33,7 @@ const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label
   const theme = useTheme();
 
   if (typeof icon === 'string') {
-    return (
-      <Image alt={label} height={18} src={icon} style={{ flex: 'none' }} unoptimized width={18} />
-    );
+    return <Image alt={label} height={18} src={icon} style={{ flex: 'none' }} width={18} />;
   }
 
   // 使用主题色填充，在深色模式下自动适应
