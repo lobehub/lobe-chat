@@ -70,9 +70,6 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
     return <Tag>{t('dm.visibleTo', { target: targetName })}</Tag>;
   }, [targetId, userName, agents, t]);
 
-  const placement = 'right';
-  const variant = 'bubble';
-
   const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, index, role });
 
   const renderMessage = useCallback(
@@ -134,14 +131,13 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
       message={content}
       messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
       onDoubleClick={onDoubleClick}
-      placement={placement}
-      primary
+      placement={'right'}
       renderMessage={renderMessage}
       showAvatar={false}
       showTitle={false}
       time={createdAt}
       titleAddon={dmIndicator}
-      variant={variant}
+      variant={'bubble'}
     />
   );
 });

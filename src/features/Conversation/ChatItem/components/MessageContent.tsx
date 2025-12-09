@@ -22,7 +22,6 @@ export interface MessageContentProps {
   messageExtra?: ChatItemProps['messageExtra'];
   onDoubleClick?: ChatItemProps['onDoubleClick'];
   placement?: ChatItemProps['placement'];
-  primary?: ChatItemProps['primary'];
   renderMessage?: ChatItemProps['renderMessage'];
   variant?: ChatItemProps['variant'];
 }
@@ -35,14 +34,13 @@ const MessageContent = memo<MessageContentProps>(
     placement,
     messageExtra,
     renderMessage,
-    primary,
     onDoubleClick,
     markdownProps,
     disabled,
     className,
   }) => {
     const { t } = useTranslation('common');
-    const { cx, styles } = useStyles({ disabled, editing, placement, primary });
+    const { cx, styles } = useStyles({ disabled, editing, placement });
     const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
     const text = useMemo(
       () => ({

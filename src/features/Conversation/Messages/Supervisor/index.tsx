@@ -150,7 +150,6 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
         }}
         loading={false}
         placement="left"
-        primary={false}
         renderMessage={() => (
           <Flexbox gap={8}>
             <TodoList data={todoData} />
@@ -181,7 +180,6 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
       loading={false}
       message={error ? undefined : content}
       placement="left"
-      primary={false}
       renderMessage={renderErrorMessage}
       showTitle={true}
       time={updatedAt || createdAt}

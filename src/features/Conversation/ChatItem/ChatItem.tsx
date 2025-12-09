@@ -18,7 +18,6 @@ const ChatItem = memo<ChatItemProps>(
     avatarProps,
     actions,
     className,
-    primary,
     loading,
     message,
     placeholderMessage = '...',
@@ -46,7 +45,6 @@ const ChatItem = memo<ChatItemProps>(
       disabled,
       editing,
       placement,
-      primary,
       showTitle,
       time,
       title: avatar.title,
@@ -126,7 +124,6 @@ const ChatItem = memo<ChatItemProps>(
                   }
                   onDoubleClick={onDoubleClick}
                   placement={placement}
-                  primary={primary}
                   renderMessage={renderMessage}
                   variant={variant}
                 />
