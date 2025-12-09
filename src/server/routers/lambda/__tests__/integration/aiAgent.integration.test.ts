@@ -77,6 +77,9 @@ vi.mock('@/server/modules/AgentRuntime/StreamEventManager', async () => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let mockResponsesCreate: any;
 
+// AgentRuntimeService must be dynamically imported after mocks are set up
+let AgentRuntimeService: typeof import('@/server/services/agentRuntime').AgentRuntimeService;
+
 describe('AI Agent E2E Test - runByAgentId', () => {
   let serverDB: LobeChatDatabase;
   let userId: string;
@@ -187,6 +190,10 @@ describe('AI Agent E2E Test - runByAgentId', () => {
     // Setup spyOn for OpenAI Responses API prototype
     // gpt-5-pro is in responsesAPIModels, so it will use responses.create
     mockResponsesCreate = vi.spyOn(OpenAI.Responses.prototype, 'create');
+
+    // Dynamically import AgentRuntimeService after mocks are set up
+    const agentRuntimeModule = await import('@/server/services/agentRuntime');
+    AgentRuntimeService = agentRuntimeModule.AgentRuntimeService;
   });
 
   afterEach(async () => {
@@ -375,7 +382,6 @@ describe('AI Agent E2E Test - runByAgentId', () => {
       expect(createResult.operationId).toBeDefined();
 
       // Now execute synchronously using the service
-      const { AgentRuntimeService } = await import('@/server/services/agentRuntime');
       const service = new AgentRuntimeService(serverDB, userId, {
         queueService: null, // Disable queue for sync execution
       });
@@ -409,7 +415,6 @@ describe('AI Agent E2E Test - runByAgentId', () => {
       });
 
       // Execute
-      const { AgentRuntimeService } = await import('@/server/services/agentRuntime');
       const service = new AgentRuntimeService(serverDB, userId, {
         queueService: null,
       });
@@ -452,14 +457,11 @@ describe('AI Agent E2E Test - runByAgentId', () => {
         prompt: 'Test model verification',
       });
 
-      const { AgentRuntimeService } = await import('@/server/services/agentRuntime');
       const service = new AgentRuntimeService(serverDB, userId, {
         queueService: null,
       });
 
       const finalState = await service.executeSync(createResult.operationId, { maxSteps: 5 });
-
-      console.log(finalState);
       expect(finalState.status).toBe('done');
 
       // Verify OpenAI Responses API was called with the correct model from state.modelRuntimeConfig
