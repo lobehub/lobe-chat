@@ -54,6 +54,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
         ? await context.run(
             `memory:user-memory:extract:users:${userId}:filter-topic-ids`,
             async () => {
+              console.log(`User ${userId} - filtering provided topic IDs for processing.`);
               const filtered = await executor.filterTopicIdsForUser(userId, params.topicIds);
               return filtered.length > 0 ? filtered : undefined;
             },
@@ -65,20 +66,24 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
     const topicBatch = await context.run<{
       cursor?: ListTopicsForMemoryExtractorCursor;
       ids: string[];
-    }>(`memory:user-memory:extract:users:${userId}:list-topics:${topicCursor?.id || 'root'}`, () =>
-      topicsFromPayload && topicsFromPayload.length > 0
-        ? Promise.resolve({ ids: topicsFromPayload })
-        : executor.getTopicsForUser(
-            {
-              cursor: topicCursor,
-              forceAll: params.forceAll,
-              forceTopics: params.forceTopics,
-              from: params.from,
-              to: params.to,
-              userId,
-            },
-            TOPIC_PAGE_SIZE,
-          ),
+    }>(
+      `memory:user-memory:extract:users:${userId}:list-topics:${topicCursor?.id || 'root'}`,
+      () => {
+        console.log(`User ${userId} - fetching topics with cursor:`, topicCursor);
+        return topicsFromPayload && topicsFromPayload.length > 0
+          ? Promise.resolve({ ids: topicsFromPayload })
+          : executor.getTopicsForUser(
+              {
+                cursor: topicCursor,
+                forceAll: params.forceAll,
+                forceTopics: params.forceTopics,
+                from: params.from,
+                to: params.to,
+                userId,
+              },
+              TOPIC_PAGE_SIZE,
+            );
+      },
     );
 
     console.log(`User ${userId} - fetched ${topicBatch.ids.length} topics for processing.`);
@@ -113,6 +118,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
       await context.run(
         `memory:user-memory:extract:users:${userId}:topics:${cursor.id}:schedule-next-batch`,
         () => {
+          console.log(`User ${userId} - scheduling next topic page with cursor:`, cursor);
           // NOTICE: Upstash Workflow only supports serializable data into plain JSON,
           // this causes the Date object to be converted into string when passed as parameter from
           // context to child workflow. So we need to convert it back to Date object here.

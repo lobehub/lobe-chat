@@ -53,6 +53,9 @@ export default defineConfig({
       '**/e2e/**',
     ],
     globals: true,
+    include: [
+      '**/packages/database/models/**'
+    ],
     server: {
       deps: {
         inline: ['vitest-canvas-mock'],
