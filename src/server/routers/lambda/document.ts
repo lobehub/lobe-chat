@@ -61,6 +61,12 @@ export const documentRouter = router({
       return ctx.documentService.deleteDocument(input.id);
     }),
 
+  deleteDocuments: documentProcedure
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.documentService.deleteDocuments(input.ids);
+    }),
+
   getDocumentById: documentProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {

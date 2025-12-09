@@ -225,7 +225,7 @@ export const useFileItemDropdown = ({
                 : t('FileManager.actions.confirmDelete'),
               okButtonProps: { danger: true },
               onOk: async () => {
-                if (isFolder) {
+                if (isFolder || isPage) {
                   await documentService.deleteDocument(id);
                   await refreshFileList();
                 } else {

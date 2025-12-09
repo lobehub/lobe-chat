@@ -152,6 +152,14 @@ export class DocumentService {
   }
 
   /**
+   * Delete multiple documents in batch
+   */
+  async deleteDocuments(ids: string[]) {
+    // Delete each document (which handles recursive deletion for folders)
+    await Promise.all(ids.map((id) => this.deleteDocument(id)));
+  }
+
+  /**
    * Update document
    */
   async updateDocument(

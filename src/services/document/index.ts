@@ -42,6 +42,10 @@ export class DocumentService {
     await lambdaClient.document.deleteDocument.mutate({ id });
   }
 
+  async deleteDocuments(ids: string[]): Promise<void> {
+    await lambdaClient.document.deleteDocuments.mutate({ ids });
+  }
+
   async updateDocument(params: UpdateDocumentParams): Promise<void> {
     await lambdaClient.document.updateDocument.mutate(params);
   }
