@@ -633,7 +633,7 @@ const FileTree = memo<FileTreeProps>(() => {
           let hasChanges = false;
 
           // The last item in breadcrumb is the immediate parent folder
-          const parentFolder = parentBreadcrumb[parentBreadcrumb.length - 1];
+          const parentFolder = parentBreadcrumb.at(-1)!;
           const parentKey = parentFolder.slug || parentFolder.id;
           parentFolderKeyRef.current = parentKey;
 
@@ -672,9 +672,10 @@ const FileTree = memo<FileTreeProps>(() => {
   // Determine which item should be highlighted
   // If viewing a file, highlight its parent folder
   // Otherwise, highlight the current folder
-  const selectedKey = currentViewItemId && parentFolderKeyRef.current
-    ? parentFolderKeyRef.current
-    : currentFolderSlug;
+  const selectedKey =
+    currentViewItemId && parentFolderKeyRef.current
+      ? parentFolderKeyRef.current
+      : currentFolderSlug;
 
   return (
     <Flexbox
