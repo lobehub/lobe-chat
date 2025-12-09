@@ -85,11 +85,11 @@ const enabledTools = [
   'editTitle',
 
   // Basic CRUD - Currently disabled for MVP
-  // 'createNode',
-  // 'updateNode',
-  // 'deleteNode',
-  // 'moveNode',
-  // 'duplicateNode',
+  'createNode',
+  'updateNode',
+  'deleteNode',
+  'moveNode',
+  'duplicateNode',
 
   // Text Operations - Currently disabled for MVP
   // 'replaceText',
@@ -122,8 +122,8 @@ const enabledTools = [
   // 'convertToList',
 
   // Snapshot Operations - Currently disabled for MVP
-  // 'saveSnapshot',
-  // 'restoreSnapshot',
+  'saveSnapshot',
+  'restoreSnapshot',
   // 'listSnapshots',
   // 'deleteSnapshot',
   // 'compareSnapshots',
@@ -220,9 +220,9 @@ Example document:
 </core_capabilities>
 
 <workflow>
-1. Call initPage with Markdown content to create a new page, then use editTitle to set the title of the page
-2. Use saveSnapshot to create a restore point before major changes (when available)
-3. Use getNode or findNodes to locate the nodes you need to work with (when available)
+1. Use saveSnapshot to create a restore point before major changes (when available)
+2. Use getNode or findNodes to locate the nodes you need to work with (when available)
+3. Use initPage to completely rewrite entire page (if required) 
 4. Identify the nodes by their IDs
 5. Perform the required operation(s)
 6. Verify changes if needed by calling getNode again (when available)
