@@ -862,6 +862,15 @@ export class DiscoverService {
     await this.market.plugins.reportCall(params);
   };
 
+  // ============================== Agent Analytics ==============================
+
+  /**
+   * Increase agent install count in marketplace
+   */
+  increaseAgentInstallCount = async (identifier: string) => {
+    await this.market.agents.increaseInstallCount(identifier);
+  };
+
   // ============================== Plugin Market ==============================
 
   private _getPluginList = async (locale?: string): Promise<DiscoverPluginItem[]> => {

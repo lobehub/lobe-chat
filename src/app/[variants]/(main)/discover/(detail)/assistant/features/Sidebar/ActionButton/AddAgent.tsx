@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import { agentService } from '@/services/agent';
+import { discoverService } from '@/services/discover';
 import { useAgentStore } from '@/store/agent';
 import { useHomeStore } from '@/store/home';
 
@@ -113,6 +114,12 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
 
     const result = await createAgent(agentData);
     await refreshAgentList();
+
+    // Report agent installation to marketplace if it has a market identifier
+    if (identifier) {
+      discoverService.reportAgentInstall(identifier);
+    }
+
     if (shouldNavigate) {
       console.log(shouldNavigate);
     }

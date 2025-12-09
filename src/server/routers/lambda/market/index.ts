@@ -641,8 +641,26 @@ export const marketRouter = router({
       }
     }),
 
+  
+  reportAgentInstall: marketProcedure
+    .input(
+      z.object({
+        identifier: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      log('reportAgentInstall input: %O', input);
+      try {
+        await ctx.discoverService.increaseAgentInstallCount(input.identifier);
+        return { success: true };
+      } catch (error) {
+        log('Error reporting agent installation: %O', error);
+        return { success: false };
+      }
+    }),
+
   // ============================== Analytics ==============================
-  reportCall: marketProcedure
+reportCall: marketProcedure
     .input(
       z.object({
         callDurationMs: z.number(),
