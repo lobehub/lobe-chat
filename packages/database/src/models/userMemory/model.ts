@@ -9,7 +9,7 @@ import {
   UserMemoryIdentityWithoutVectors,
   UserMemoryPreferenceWithoutVectors,
 } from '@lobechat/types';
-import { and, cosineDistance, desc, eq, inArray, sql } from 'drizzle-orm';
+import { and, cosineDistance, desc, eq, inArray, isNotNull, ne, sql } from 'drizzle-orm';
 
 import { merge } from '@/utils/merge';
 
@@ -245,6 +245,17 @@ export interface PreferenceEntryPayload {
 export interface UpdatePreferenceEntryParams {
   preference?: PreferenceEntryPayload;
   preferenceId: string;
+}
+
+export interface QueryTagsParams {
+  layers?: LayersEnum[];
+  page?: number;
+  size?: number;
+}
+
+export interface QueryTagsResult {
+  count: number;
+  tag: string;
 }
 
 export class UserMemoryModel {
@@ -499,6 +510,40 @@ export class UserMemoryModel {
     params: SearchUserMemoryWithEmbeddingParams,
   ): Promise<UserMemorySearchAggregatedResult> => {
     return this.search(params);
+  };
+
+  queryTags = async (params: QueryTagsParams = {}): Promise<QueryTagsResult[]> => {
+    const { layers, page = 1, size = 10 } = params;
+    const offset = (page - 1) * size;
+
+    const conditions = [eq(userMemories.userId, this.userId)];
+    if (layers && layers.length > 0) {
+      conditions.push(inArray(userMemories.memoryLayer, layers));
+    }
+
+    const unnestedTags = this.db.$with('unnested_tags').as(
+      this.db
+        .select({
+          tag: sql<string>`UNNEST(${userMemories.tags})`.as('tag'),
+        })
+        .from(userMemories)
+        .where(and(...conditions)),
+    );
+
+    const result = await this.db
+      .with(unnestedTags)
+      .select({
+        count: sql<number>`COUNT(${unnestedTags.tag})::int`.as('count'),
+        tag: unnestedTags.tag,
+      })
+      .from(unnestedTags)
+      .where(and(isNotNull(unnestedTags.tag), ne(unnestedTags.tag, '')))
+      .groupBy(unnestedTags.tag)
+      .orderBy(desc(sql<number>`count`))
+      .limit(size)
+      .offset(offset);
+
+    return result as QueryTagsResult[];
   };
 
   findById = async (id: string): Promise<UserMemoryItem | undefined> => {
