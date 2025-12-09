@@ -8,6 +8,30 @@ vi.mock('@/database/models/message', () => ({
   MessageModel: vi.fn().mockImplementation(() => ({})),
 }));
 
+// Mock ModelRuntime to avoid server-side env access
+vi.mock('@/server/modules/ModelRuntime', () => ({
+  initializeRuntimeOptions: vi.fn(),
+  ApiKeyManager: vi.fn().mockImplementation(() => ({
+    getApiKey: vi.fn(),
+    getAllApiKeys: vi.fn(),
+  })),
+}));
+
+// Mock search service to avoid server-side env access
+vi.mock('@/server/services/search', () => ({
+  searchService: {
+    search: vi.fn(),
+  },
+}));
+
+// Mock plugin gateway service to avoid server-side env access
+vi.mock('@/server/services/pluginGateway', () => ({
+  PluginGatewayService: vi.fn().mockImplementation(() => ({
+    getPluginManifest: vi.fn(),
+    executePlugin: vi.fn(),
+  })),
+}));
+
 // Mock dependencies
 vi.mock('@/server/modules/AgentRuntime', () => ({
   AgentRuntimeCoordinator: vi.fn().mockImplementation(() => ({

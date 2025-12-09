@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { agentService } from '@/services/agent';
 import { sessionService } from '@/services/session';
 import { useHomeStore } from '@/store/home';
 import { getSessionStoreState } from '@/store/session';
@@ -64,7 +65,7 @@ describe('createSidebarUISlice', () => {
   describe('removeAgent', () => {
     it('should remove an agent and refresh agent list', async () => {
       const mockAgentId = 'agent-123';
-      vi.spyOn(sessionService, 'removeSession').mockResolvedValueOnce(undefined as any);
+      vi.spyOn(agentService, 'removeAgent').mockResolvedValueOnce(undefined as any);
       const spyOnRefresh = vi.spyOn(useHomeStore.getState(), 'refreshAgentList');
 
       const { result } = renderHook(() => useHomeStore());
@@ -73,7 +74,7 @@ describe('createSidebarUISlice', () => {
         await result.current.removeAgent(mockAgentId);
       });
 
-      expect(sessionService.removeSession).toHaveBeenCalledWith(mockAgentId);
+      expect(agentService.removeAgent).toHaveBeenCalledWith(mockAgentId);
       expect(spyOnRefresh).toHaveBeenCalled();
     });
 
@@ -86,7 +87,7 @@ describe('createSidebarUISlice', () => {
         switchSession: mockSwitchSession,
       } as any);
 
-      vi.spyOn(sessionService, 'removeSession').mockResolvedValueOnce(undefined as any);
+      vi.spyOn(agentService, 'removeAgent').mockResolvedValueOnce(undefined as any);
       vi.spyOn(useHomeStore.getState(), 'refreshAgentList');
 
       const { result } = renderHook(() => useHomeStore());
