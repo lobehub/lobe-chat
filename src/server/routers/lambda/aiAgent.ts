@@ -389,6 +389,8 @@ export const aiAgentRouter = router({
           message: [{ content: prompt }],
           // Pass user message ID as parentMessageId for assistant message creation
           parentMessageId: userMessageRecord.id,
+          // Include tools for initial LLM call
+          tools,
         },
         phase: 'user_input' as const,
         session: {

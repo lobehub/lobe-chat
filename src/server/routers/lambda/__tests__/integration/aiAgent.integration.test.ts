@@ -656,12 +656,15 @@ describe('AI Agent E2E Test - execAgent', () => {
     };
 
     beforeEach(async () => {
-      // Create test agent with lobe-web-browsing plugin
+      // Create test agent with search enabled via chatConfig.searchMode
+      // The server-side AgentToolsEngine automatically injects lobe-web-browsing
+      // when searchMode is 'auto' or 'always'
       const [agentWithTools] = await serverDB
         .insert(agents)
         .values({
+          chatConfig: { autoCreateTopicThreshold: 2, searchMode: 'auto' },
           model: 'gpt-5-pro',
-          plugins: ['lobe-web-browsing'],
+          plugins: [],
           provider: 'openai',
           systemRole: 'You are a helpful assistant that can search the web.',
           title: 'Test Assistant with Web Browsing',
@@ -726,16 +729,28 @@ describe('AI Agent E2E Test - execAgent', () => {
       // Verify execution completed
       expect(finalState.status).toBe('done');
 
+      // **CRITICAL**: Verify that tools were passed to OpenAI API
+      // This ensures chatConfig.searchMode: 'auto' correctly injects lobe-web-browsing tools
+      expect(mockResponsesCreate).toHaveBeenCalled();
+      const firstCallArgs = mockResponsesCreate.mock.calls[0][0];
+      // Debug: log the call args to see what's being passed
+      expect(firstCallArgs.tools).toBeDefined();
+      expect(firstCallArgs.tools.length).toBeGreaterThan(0);
+
+      // Verify lobe-web-browsing tools are included
+      const toolNames = firstCallArgs.tools.map((t: any) => t.name || t.function?.name);
+      const hasWebBrowsingTools = toolNames.some((name: string) =>
+        name?.includes('lobe-web-browsing'),
+      );
+      expect(hasWebBrowsingTools).toBe(true);
+
       // Verify messages in database
       const allMessages = await serverDB
         .select()
         .from(messages)
         .where(eq(messages.agentId, testAgentWithToolsId));
 
-      // Debug: log all messages
-      // console.log('All messages:', allMessages.map(m => ({ role: m.role, content: m.content?.slice(0, 50), tool_call_id: m.tool_call_id })));
-
-      // Should have: user message, assistant message (with tool call), tool message (if tool was called), assistant message (final)
+      // Should have: user message, assistant message (with tool call), tool message, assistant message (final)
       expect(allMessages.length).toEqual(4);
 
       // Verify user message
@@ -747,20 +762,15 @@ describe('AI Agent E2E Test - execAgent', () => {
       const assistantMessages = allMessages.filter((m) => m.role === 'assistant');
       expect(assistantMessages.length).toBeGreaterThanOrEqual(1);
 
-      // Check if tool was called (it may not be called if tool manifest is not set up correctly)
+      // Verify tool message exists
       const toolMessage = allMessages.find((m) => m.role === 'tool');
-
       expect(toolMessage).toBeDefined();
 
-      if (mockExecuteTool.mock.calls.length > 0) {
-        // Tool was called, verify tool message exists
-        const toolCallArgs = mockExecuteTool.mock.calls[0][0];
-        expect(toolCallArgs.identifier).toBe('lobe-web-browsing');
-        expect(toolCallArgs.apiName).toBe('search');
-
-        // Note: tool_call_id may be undefined in current mock setup
-        // This is tracked for future improvement
-      }
+      // Verify tool execution was called with correct parameters
+      expect(mockExecuteTool).toHaveBeenCalled();
+      const toolCallArgs = mockExecuteTool.mock.calls[0][0];
+      expect(toolCallArgs.identifier).toBe('lobe-web-browsing');
+      expect(toolCallArgs.apiName).toBe('search');
 
       // Cleanup
       mockExecuteTool.mockRestore();
