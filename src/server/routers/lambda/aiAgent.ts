@@ -63,6 +63,29 @@ const StartExecutionSchema = z.object({
   priority: z.enum(['high', 'normal', 'low']).optional().default('normal'),
 });
 
+/**
+ * Schema for runByAgentId - simplified API that only requires agentId and prompt
+ * All other data (agent config, tools, messages) will be fetched from database
+ */
+const RunByAgentIdSchema = z.object({
+  /** The agent ID to run */
+  agentId: z.string(),
+  /** Application context for message storage */
+  appContext: z
+    .object({
+      sessionId: z.string().optional(),
+      threadId: z.string().optional().nullable(),
+      topicId: z.string().optional().nullable(),
+    })
+    .optional(),
+  /** Whether to auto-start execution after creating operation */
+  autoStart: z.boolean().optional().default(true),
+  /** Optional existing message IDs to include in context */
+  existingMessageIds: z.array(z.string()).optional().default([]),
+  /** The user input/prompt */
+  prompt: z.string(),
+});
+
 const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
@@ -275,6 +298,61 @@ export const aiAgentRouter = router({
       };
     }),
 
+  /**
+   * Run agent by agent ID with just a prompt
+   *
+   * This is a simplified API that only requires agentId and prompt.
+   * All necessary data (agent config, tools, messages) will be fetched from the database.
+   *
+   * Architecture:
+   * runByAgentId(agentId, prompt)
+   *   → AgentConfigService.getAgentConfigById(agentId)
+   *   → ServerMechaModule.AgentToolsEngine(config)
+   *   → ServerMechaModule.ContextEngineering(input, config, messages)
+   *   → AgentRuntimeService.createOperation(...)
+   */
+runByAgentId: aiAgentProcedure.input(RunByAgentIdSchema).mutation(async ({ input, ctx }) => {
+    if (!isEnableAgent()) {
+      throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
+    }
+
+    const { agentId, prompt, appContext, autoStart, existingMessageIds } = input;
+
+    log('Running agent by ID: agentId=%s, prompt=%s', agentId, prompt.slice(0, 50));
+
+    try {
+      const result = await ctx.agentRuntimeService.runByAgentId({
+        agentId,
+        appContext,
+        autoStart,
+        existingMessageIds,
+        prompt,
+      });
+
+      return {
+        ...result,
+        message: 'Agent operation created successfully',
+        timestamp: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      log('Failed to run agent by ID: %O', error);
+
+      if (error.message?.includes('Agent not found')) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: error.message,
+        });
+      }
+
+      throw new TRPCError({
+        cause: error,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Failed to run agent: ${error.message}`,
+      });
+    }
+  }),
+
+  
   startExecution: aiAgentProcedure.input(StartExecutionSchema).mutation(async ({ input, ctx }) => {
     if (!isEnableAgent()) {
       throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });

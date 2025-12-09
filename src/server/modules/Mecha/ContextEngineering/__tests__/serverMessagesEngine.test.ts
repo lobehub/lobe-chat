@@ -1,0 +1,361 @@
+import type { UIChatMessage } from '@lobechat/types';
+import { describe, expect, it, vi } from 'vitest';
+
+import { serverMessagesEngine } from '../index';
+
+describe('serverMessagesEngine', () => {
+  const createBasicMessages = (): UIChatMessage[] => [
+    {
+      content: 'Hello',
+      createdAt: Date.now(),
+      id: 'msg-1',
+      meta: {},
+      role: 'user',
+      updatedAt: Date.now(),
+    } as UIChatMessage,
+    {
+      content: 'Hi there!',
+      createdAt: Date.now(),
+      id: 'msg-2',
+      meta: {},
+      role: 'assistant',
+      updatedAt: Date.now(),
+    } as UIChatMessage,
+  ];
+
+  describe('basic functionality', () => {
+    it('should process messages with required parameters', async () => {
+      const messages = createBasicMessages();
+
+      const result = await serverMessagesEngine({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBe(2);
+      result.forEach((msg) => {
+        expect(msg).toHaveProperty('role');
+        expect(msg).toHaveProperty('content');
+        // Should be cleaned up (no extra fields)
+        expect(msg).not.toHaveProperty('createdAt');
+        expect(msg).not.toHaveProperty('updatedAt');
+      });
+    });
+
+    it('should inject system role', async () => {
+      const messages = createBasicMessages();
+      const systemRole = 'You are a helpful assistant';
+
+      const result = await serverMessagesEngine({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole,
+      });
+
+      expect(result[0].role).toBe('system');
+      expect(result[0].content).toBe(systemRole);
+    });
+
+    it('should handle empty messages', async () => {
+      const result = await serverMessagesEngine({
+        messages: [],
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('history truncation', () => {
+    it('should truncate history when enabled', async () => {
+      const messages: UIChatMessage[] = [];
+      for (let i = 0; i < 20; i++) {
+        messages.push({
+          content: `Message ${i}`,
+          createdAt: Date.now(),
+          id: `msg-${i}`,
+          meta: {},
+          role: i % 2 === 0 ? 'user' : 'assistant',
+          updatedAt: Date.now(),
+        } as UIChatMessage);
+      }
+
+      const result = await serverMessagesEngine({
+        enableHistoryCount: true,
+        historyCount: 5,
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result.length).toBeLessThanOrEqual(5);
+    });
+  });
+
+  describe('knowledge injection', () => {
+    it('should inject file contents', async () => {
+      const messages = createBasicMessages();
+
+      const result = await serverMessagesEngine({
+        knowledge: {
+          fileContents: [
+            {
+              content: 'File content here',
+              fileId: 'file-1',
+              filename: 'test.txt',
+            },
+          ],
+        },
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole: 'You are a helpful assistant',
+      });
+
+      // Should have system message with knowledge
+      const systemMessage = result.find((m) => m.role === 'system');
+      expect(systemMessage).toBeDefined();
+    });
+
+    it('should inject knowledge bases', async () => {
+      const messages = createBasicMessages();
+
+      const result = await serverMessagesEngine({
+        knowledge: {
+          knowledgeBases: [
+            {
+              description: 'Test knowledge base',
+              id: 'kb-1',
+              name: 'Test KB',
+            },
+          ],
+        },
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole: 'You are a helpful assistant',
+      });
+
+      expect(result.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('tools configuration', () => {
+    it('should handle tools system roles', async () => {
+      const messages = createBasicMessages();
+      const getToolSystemRoles = vi.fn().mockReturnValue('Tool instructions');
+
+      const result = await serverMessagesEngine({
+        capabilities: { isCanUseFC: () => true },
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        systemRole: 'Base system role',
+        toolsConfig: {
+          getToolSystemRoles,
+          tools: ['tool1', 'tool2'],
+        },
+      });
+
+      expect(getToolSystemRoles).toHaveBeenCalled();
+      expect(result.length).toBeGreaterThan(0);
+    });
+
+    it('should skip tool system role when no tools', async () => {
+      const messages = createBasicMessages();
+      const getToolSystemRoles = vi.fn();
+
+      await serverMessagesEngine({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        toolsConfig: {
+          getToolSystemRoles,
+          tools: [],
+        },
+      });
+
+      expect(getToolSystemRoles).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('capabilities injection', () => {
+    it('should use provided isCanUseFC', async () => {
+      const messages = createBasicMessages();
+      const isCanUseFC = vi.fn().mockReturnValue(true);
+
+      await serverMessagesEngine({
+        capabilities: { isCanUseFC },
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        toolsConfig: { tools: ['tool1'] },
+      });
+
+      expect(isCanUseFC).toHaveBeenCalled();
+    });
+
+    it('should default to true for capabilities when not provided', async () => {
+      const messages = createBasicMessages();
+
+      // Should not throw
+      const result = await serverMessagesEngine({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('user memory injection', () => {
+    it('should inject user memories when provided', async () => {
+      const messages = createBasicMessages();
+
+      const result = await serverMessagesEngine({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        userMemory: {
+          fetchedAt: Date.now(),
+          memories: {
+            contexts: [
+              {
+                description: 'Test context',
+                id: 'ctx-1',
+                title: 'Test',
+              },
+            ],
+            experiences: [],
+            preferences: [],
+          },
+        },
+      });
+
+      // Should have user memory in system message
+      const systemMessages = result.filter((m) => m.role === 'system');
+      expect(systemMessages.length).toBeGreaterThan(0);
+    });
+
+    it('should skip user memory when memories is undefined', async () => {
+      const messages = createBasicMessages();
+
+      const result = await serverMessagesEngine({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+        userMemory: {
+          fetchedAt: Date.now(),
+          memories: undefined,
+        },
+      });
+
+      // Should still work without memories
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('extended contexts', () => {
+    it('should inject Agent Builder context when provided', async () => {
+      const messages = createBasicMessages();
+
+      const result = await serverMessagesEngine({
+        agentBuilderContext: {
+          config: { model: 'gpt-4', systemRole: 'Test role' },
+          meta: { description: 'Test agent', title: 'Test' },
+        },
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toBeDefined();
+    });
+
+    it('should inject Page Editor context when provided', async () => {
+      const messages = createBasicMessages();
+
+      const result = await serverMessagesEngine({
+        messages,
+        model: 'gpt-4',
+        pageEditorContext: {
+          content: 'Page content',
+          document: {
+            id: 'doc-1',
+            title: 'Test Document',
+          },
+        },
+        provider: 'openai',
+      });
+
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('input template', () => {
+    it('should apply input template to user messages', async () => {
+      const messages: UIChatMessage[] = [
+        {
+          content: 'user input',
+          createdAt: Date.now(),
+          id: 'msg-1',
+          meta: {},
+          role: 'user',
+          updatedAt: Date.now(),
+        } as UIChatMessage,
+      ];
+
+      const result = await serverMessagesEngine({
+        inputTemplate: 'Please respond to: {{text}}',
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      const userMessage = result.find((m) => m.role === 'user');
+      expect(userMessage?.content).toBe('Please respond to: user input');
+    });
+  });
+
+  describe('history summary', () => {
+    it('should inject history summary when provided', async () => {
+      const messages = createBasicMessages();
+      const historySummary = 'Previous conversation about AI';
+
+      const result = await serverMessagesEngine({
+        historySummary,
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      // Should contain history summary in system message
+      const systemMessages = result.filter((m) => m.role === 'system');
+      const hasHistorySummary = systemMessages.some(
+        (m) => typeof m.content === 'string' && m.content.includes(historySummary),
+      );
+      expect(hasHistorySummary).toBe(true);
+    });
+
+    it('should use custom formatHistorySummary', async () => {
+      const messages = createBasicMessages();
+      const historySummary = 'test summary';
+      const formatHistorySummary = vi.fn((s: string) => `<custom>${s}</custom>`);
+
+      await serverMessagesEngine({
+        formatHistorySummary,
+        historySummary,
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(formatHistorySummary).toHaveBeenCalledWith(historySummary);
+    });
+  });
+});

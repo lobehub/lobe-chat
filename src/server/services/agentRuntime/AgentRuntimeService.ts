@@ -1,8 +1,10 @@
-import { AgentRuntime, AgentState } from '@lobechat/agent-runtime';
+import { AgentRuntime, AgentRuntimeContext, AgentState } from '@lobechat/agent-runtime';
 import debug from 'debug';
 import urlJoin from 'url-join';
 
+import { AgentModel } from '@/database/models/agent';
 import { MessageModel } from '@/database/models/message';
+import { PluginModel } from '@/database/models/plugin';
 import { LobeChatDatabase } from '@/database/type';
 import {
   AgentRuntimeCoordinator,
@@ -13,6 +15,11 @@ import {
   RuntimeExecutorContext,
   createRuntimeExecutors,
 } from '@/server/modules/AgentRuntime/RuntimeExecutors';
+import {
+  type ServerAgentToolsContext,
+  createServerAgentToolsEngine,
+  serverMessagesEngine,
+} from '@/server/modules/Mecha';
 import { mcpService } from '@/server/services/mcp';
 import { PluginGatewayService } from '@/server/services/pluginGateway';
 import { QueueService } from '@/server/services/queue';
@@ -26,6 +33,8 @@ import type {
   OperationCreationResult,
   OperationStatusResult,
   PendingInterventionsResult,
+  RunByAgentIdParams,
+  RunByAgentIdResult,
   StartExecutionParams,
   StartExecutionResult,
 } from './types';
@@ -50,6 +59,8 @@ export class AgentRuntimeService {
   private userId: string;
   private db: LobeChatDatabase;
   private messageModel: MessageModel;
+  private agentModel: AgentModel;
+  private pluginModel: PluginModel;
 
   constructor(db: LobeChatDatabase, userId: string) {
     this.coordinator = new AgentRuntimeCoordinator();
@@ -58,6 +69,8 @@ export class AgentRuntimeService {
     this.userId = userId;
     this.db = db;
     this.messageModel = new MessageModel(db, this.userId);
+    this.agentModel = new AgentModel(db, this.userId);
+    this.pluginModel = new PluginModel(db, this.userId);
 
     // Initialize ToolExecutionService with dependencies
     const pluginGatewayService = new PluginGatewayService();
@@ -698,5 +711,204 @@ export class AgentRuntimeService {
     }
 
     return 'normal';
+  }
+
+  /**
+   * Run agent by agent ID with just a prompt
+   *
+   * This is a simplified API that only requires agentId and prompt.
+   * All necessary data (agent config, tools, messages) will be fetched from the database.
+   *
+   * Architecture:
+   * runByAgentId(agentId, prompt)
+   *   → AgentModel.getAgentConfigById(agentId)
+   *   → ServerMechaModule.AgentToolsEngine(config)
+   *   → ServerMechaModule.ContextEngineering(input, config, messages)
+   *   → createOperation(...)
+   */
+  async runByAgentId(params: RunByAgentIdParams): Promise<RunByAgentIdResult> {
+    const { agentId, prompt, appContext, autoStart = true, existingMessageIds = [] } = params;
+
+    log('runByAgentId: agentId=%s, prompt=%s', agentId, prompt.slice(0, 50));
+
+    try {
+      // 1. Get agent configuration from database
+      const agentConfig = await this.agentModel.getAgentConfigById(agentId);
+      if (!agentConfig) {
+        throw new Error(`Agent not found: ${agentId}`);
+      }
+
+      log('runByAgentId: got agent config for %s', agentId);
+
+      // Extract model and provider from agent config
+      const model = agentConfig.model || 'gpt-4o-mini';
+      const provider = agentConfig.provider || 'openai';
+
+      // 2. Get installed plugins from database
+      const installedPlugins = await this.pluginModel.query();
+      log('runByAgentId: got %d installed plugins', installedPlugins.length);
+
+      // 3. Get model abilities from model-bank for function calling support check
+      const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
+      const modelInfo = LOBE_DEFAULT_MODEL_LIST.find(
+        (m) => m.id === model && m.providerId === provider,
+      );
+      const isModelSupportToolUse = (m: string, p: string) => {
+        const info = LOBE_DEFAULT_MODEL_LIST.find((item) => item.id === m && item.providerId === p);
+        return info?.abilities?.functionCall ?? true;
+      };
+
+      // 4. Create tools using Server AgentToolsEngine
+      const hasEnabledKnowledgeBases =
+        agentConfig.knowledgeBases?.some(
+          (kb: { enabled?: boolean | null }) => kb.enabled === true,
+        ) ?? false;
+
+      const toolsContext: ServerAgentToolsContext = {
+        installedPlugins,
+        isModelSupportToolUse,
+      };
+
+      const toolsEngine = createServerAgentToolsEngine(toolsContext, {
+        agentConfig: {
+          chatConfig: agentConfig.chatConfig ?? undefined,
+          plugins: agentConfig.plugins ?? undefined,
+        },
+        hasEnabledKnowledgeBases,
+        model,
+        provider,
+      });
+
+      // Generate tools and manifest map
+      const pluginIds = agentConfig.plugins || [];
+      const toolsResult = toolsEngine.generateToolsDetailed({
+        model,
+        provider,
+        toolIds: pluginIds,
+      });
+
+      const tools = toolsResult.tools;
+
+      // Get manifest map and convert from Map to Record
+      const manifestMap = toolsEngine.getEnabledPluginManifests(pluginIds);
+      const toolManifestMap: Record<string, any> = {};
+      manifestMap.forEach((manifest, id) => {
+        toolManifestMap[id] = manifest;
+      });
+
+      log('runByAgentId: generated %d tools', tools?.length ?? 0);
+
+      // 5. Get existing messages if provided
+      let historyMessages: any[] = [];
+      if (existingMessageIds.length > 0) {
+        // Query messages by session/topic from appContext
+        historyMessages = await this.messageModel.query({
+          sessionId: appContext?.sessionId,
+          topicId: appContext?.topicId ?? undefined,
+        });
+        // Filter to only include specified message IDs if needed
+        if (existingMessageIds.length > 0) {
+          const idSet = new Set(existingMessageIds);
+          historyMessages = historyMessages.filter((msg) => idSet.has(msg.id));
+        }
+      }
+
+      // 6. Create user message for the prompt
+      const userMessage = {
+        content: prompt,
+        createdAt: new Date(),
+        id: `user_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
+        role: 'user' as const,
+        updatedAt: new Date(),
+      };
+
+      // Combine history messages with user message
+      const allMessages = [...historyMessages, userMessage];
+
+      // 7. Process messages using Server ContextEngineering
+      const processedMessages = await serverMessagesEngine({
+        capabilities: {
+          isCanUseFC: isModelSupportToolUse,
+          isCanUseVideo: () => modelInfo?.abilities?.video ?? false,
+          isCanUseVision: () => modelInfo?.abilities?.vision ?? true,
+        },
+        enableHistoryCount: agentConfig.chatConfig?.enableHistoryCount ?? undefined,
+        historyCount: agentConfig.chatConfig?.historyCount ?? undefined,
+        knowledge: {
+          fileContents: agentConfig.files
+            ?.filter((f: { enabled?: boolean | null }) => f.enabled === true)
+            .map((f: { content?: string | null, id?: string; name?: string; }) => ({
+              content: f.content ?? '',
+              fileId: f.id ?? '',
+              filename: f.name ?? '',
+            })),
+          knowledgeBases: agentConfig.knowledgeBases
+            ?.filter((kb: { enabled?: boolean | null }) => kb.enabled === true)
+            .map((kb: { id?: string; name?: string }) => ({
+              id: kb.id ?? '',
+              name: kb.name ?? '',
+            })),
+        },
+        messages: allMessages,
+        model,
+        provider,
+        systemRole: agentConfig.systemRole ?? undefined,
+        toolsConfig: {
+          tools: pluginIds,
+        },
+      });
+
+      log('runByAgentId: processed %d messages', processedMessages.length);
+
+      // 8. Generate operation ID
+      const operationId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+
+      // 9. Create initial context
+      const initialContext: AgentRuntimeContext = {
+        payload: {
+          isFirstMessage: true,
+          message: [{ content: prompt }],
+        },
+        phase: 'user_input' as const,
+        session: {
+          messageCount: processedMessages.length,
+          sessionId: operationId,
+          status: 'idle' as const,
+          stepCount: 0,
+        },
+      };
+
+      // 10. Create operation using existing createOperation method
+      const result = await this.createOperation({
+        agentConfig,
+        appContext: {
+          sessionId: appContext?.sessionId,
+          threadId: appContext?.threadId,
+          topicId: appContext?.topicId,
+        },
+        autoStart,
+        initialContext,
+        initialMessages: processedMessages,
+        modelRuntimeConfig: { model, provider },
+        operationId,
+        toolManifestMap,
+        tools,
+        userId: this.userId,
+      });
+
+      log('runByAgentId: created operation %s (autoStarted: %s)', operationId, result.autoStarted);
+
+      return {
+        autoStarted: result.autoStarted,
+        createdAt: new Date().toISOString(),
+        messageId: result.messageId,
+        operationId,
+        status: 'created',
+        success: true,
+      };
+    } catch (error) {
+      log('runByAgentId failed: %O', error);
+      throw error;
+    }
   }
 }

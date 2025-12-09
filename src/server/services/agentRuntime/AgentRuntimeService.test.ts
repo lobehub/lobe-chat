@@ -5,7 +5,21 @@ import type { AgentExecutionParams, OperationCreationParams, StartExecutionParam
 
 // Mock database and models
 vi.mock('@/database/models/message', () => ({
-  MessageModel: vi.fn().mockImplementation(() => ({})),
+  MessageModel: vi.fn().mockImplementation(() => ({
+    query: vi.fn().mockResolvedValue([]),
+  })),
+}));
+
+vi.mock('@/database/models/agent', () => ({
+  AgentModel: vi.fn().mockImplementation(() => ({
+    getAgentConfigById: vi.fn(),
+  })),
+}));
+
+vi.mock('@/database/models/plugin', () => ({
+  PluginModel: vi.fn().mockImplementation(() => ({
+    query: vi.fn().mockResolvedValue([]),
+  })),
 }));
 
 // Mock ModelRuntime to avoid server-side env access
@@ -67,6 +81,38 @@ vi.mock('@/server/services/queue', () => ({
     scheduleMessage: vi.fn(),
   })),
 }));
+
+// Mock Mecha module
+vi.mock('@/server/modules/Mecha', () => ({
+  createServerAgentToolsEngine: vi.fn().mockReturnValue({
+    generateToolsDetailed: vi.fn().mockReturnValue({
+      tools: [],
+      enabledToolIds: [],
+      filteredTools: [],
+    }),
+    getEnabledPluginManifests: vi.fn().mockReturnValue(new Map()),
+  }),
+  serverMessagesEngine: vi.fn().mockResolvedValue([]),
+}));
+
+// Mock model-bank
+vi.mock('model-bank', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('model-bank')>();
+  return {
+    ...actual,
+    LOBE_DEFAULT_MODEL_LIST: [
+      {
+        id: 'gpt-4o-mini',
+        providerId: 'openai',
+        abilities: {
+          functionCall: true,
+          vision: true,
+          video: false,
+        },
+      },
+    ],
+  };
+});
 
 describe('AgentRuntimeService', () => {
   let service: AgentRuntimeService;
@@ -839,6 +885,161 @@ describe('AgentRuntimeService', () => {
         });
         expect(priority).toBe('normal');
       });
+    });
+  });
+
+  describe('runByAgentId', () => {
+    const mockAgentConfig = {
+      model: 'gpt-4o-mini',
+      provider: 'openai',
+      systemRole: 'You are a helpful assistant.',
+      plugins: ['test-plugin'],
+      chatConfig: {
+        enableHistoryCount: true,
+        historyCount: 10,
+        searchMode: 'on',
+      },
+      knowledgeBases: [{ id: 'kb-1', name: 'Knowledge Base 1', enabled: true }],
+      files: [{ id: 'file-1', name: 'test.txt', content: 'test content', enabled: true }],
+    };
+
+    beforeEach(() => {
+      // Setup agent model mock
+      const mockAgentModel = (service as any).agentModel;
+      mockAgentModel.getAgentConfigById = vi.fn().mockResolvedValue(mockAgentConfig);
+
+      // Setup plugin model mock
+      const mockPluginModel = (service as any).pluginModel;
+      mockPluginModel.query = vi.fn().mockResolvedValue([]);
+
+      // Setup message model mock
+      const mockMessageModel = (service as any).messageModel;
+      mockMessageModel.query = vi.fn().mockResolvedValue([]);
+
+      // Mock createOperation
+      vi.spyOn(service, 'createOperation').mockResolvedValue({
+        success: true,
+        operationId: 'test-operation-1',
+        autoStarted: true,
+        messageId: 'message-123',
+      });
+    });
+
+    it('should run agent by ID successfully', async () => {
+      const result = await service.runByAgentId({
+        agentId: 'agent-1',
+        prompt: 'Hello, how are you?',
+      });
+
+      expect(result).toEqual({
+        success: true,
+        status: 'created',
+        operationId: expect.stringContaining('agent_'),
+        autoStarted: true,
+        messageId: 'message-123',
+        createdAt: expect.any(String),
+      });
+
+      expect((service as any).agentModel.getAgentConfigById).toHaveBeenCalledWith('agent-1');
+      expect(service.createOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentConfig: mockAgentConfig,
+          modelRuntimeConfig: { model: 'gpt-4o-mini', provider: 'openai' },
+          autoStart: true,
+        }),
+      );
+    });
+
+    it('should throw error when agent not found', async () => {
+      (service as any).agentModel.getAgentConfigById = vi.fn().mockResolvedValue(null);
+
+      await expect(
+        service.runByAgentId({
+          agentId: 'non-existent',
+          prompt: 'Hello',
+        }),
+      ).rejects.toThrow('Agent not found: non-existent');
+    });
+
+    it('should use default model when not specified in agent config', async () => {
+      const configWithoutModel = { ...mockAgentConfig, model: undefined, provider: undefined };
+      (service as any).agentModel.getAgentConfigById = vi
+        .fn()
+        .mockResolvedValue(configWithoutModel);
+
+      await service.runByAgentId({
+        agentId: 'agent-1',
+        prompt: 'Hello',
+      });
+
+      expect(service.createOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          modelRuntimeConfig: { model: 'gpt-4o-mini', provider: 'openai' },
+        }),
+      );
+    });
+
+    it('should pass appContext to createOperation', async () => {
+      await service.runByAgentId({
+        agentId: 'agent-1',
+        prompt: 'Hello',
+        appContext: {
+          sessionId: 'session-1',
+          topicId: 'topic-1',
+          threadId: 'thread-1',
+        },
+      });
+
+      expect(service.createOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          appContext: {
+            sessionId: 'session-1',
+            topicId: 'topic-1',
+            threadId: 'thread-1',
+          },
+        }),
+      );
+    });
+
+    it('should support autoStart=false', async () => {
+      vi.spyOn(service, 'createOperation').mockResolvedValue({
+        success: true,
+        operationId: 'test-operation-1',
+        autoStarted: false,
+        messageId: undefined,
+      });
+
+      const result = await service.runByAgentId({
+        agentId: 'agent-1',
+        prompt: 'Hello',
+        autoStart: false,
+      });
+
+      expect(result.autoStarted).toBe(false);
+      expect(service.createOperation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          autoStart: false,
+        }),
+      );
+    });
+
+    it('should handle existing messages', async () => {
+      const existingMessages = [
+        { id: 'msg-1', role: 'user', content: 'Previous message' },
+        { id: 'msg-2', role: 'assistant', content: 'Previous response' },
+      ];
+      (service as any).messageModel.query = vi.fn().mockResolvedValue(existingMessages);
+
+      await service.runByAgentId({
+        agentId: 'agent-1',
+        prompt: 'Follow up question',
+        existingMessageIds: ['msg-1', 'msg-2'],
+        appContext: {
+          sessionId: 'session-1',
+        },
+      });
+
+      expect((service as any).messageModel.query).toHaveBeenCalled();
     });
   });
 });
