@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "Configurazione AI",
     "common": "Generale",
+    "market": "Mercato",
     "profile": "Account",
     "system": "Sistema"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "Aggiornamento riuscito"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Annulla",
+      "confirmDeprecate": "Conferma obsolescenza",
+      "deprecate": "Rendi obsoleto in modo permanente",
+      "deprecateConfirmContent": "Una volta reso obsoleto, l'assistente sarà rimosso definitivamente dal mercato e non potrà essere ripubblicato. Questa operazione è irreversibile, procedi con cautela.",
+      "deprecateConfirmTitle": "Confermare l'obsolescenza dell'assistente?",
+      "deprecateError": "Impossibile rendere obsoleto l'assistente",
+      "deprecateLoading": "Rendendo obsoleto l'assistente...",
+      "deprecateSuccess": "Assistente reso obsoleto",
+      "edit": "Modifica l'Agent",
+      "publish": "Pubblica l'Agent",
+      "publishError": "Pubblicazione dell'assistente fallita",
+      "publishLoading": "Pubblicazione dell'assistente in corso...",
+      "publishSuccess": "Assistente pubblicato con successo",
+      "unpublish": "Rimuovi l'Agent dal mercato",
+      "unpublishError": "Rimozione dell'assistente fallita",
+      "unpublishLoading": "Rimozione dell'assistente in corso...",
+      "unpublishSuccess": "Assistente rimosso dal mercato",
+      "viewDetail": "Visualizza dettagli"
+    },
+    "detail": {
+      "category": "Categoria",
+      "description": "Descrizione",
+      "identifier": "Identificatore",
+      "title": "Dettagli dell'assistente"
+    },
+    "empty": {
+      "description": "Non hai ancora pubblicato alcun assistente sul mercato",
+      "title": "Nessun assistente pubblicato"
+    },
+    "errors": {
+      "editFailed": "Modifica dell'assistente fallita, riprova più tardi",
+      "fetchFailed": "Impossibile recuperare i dettagli dell'assistente",
+      "notAuthenticated": "Accedi prima al tuo account del mercato"
+    },
+    "loginRequired": {
+      "button": "Accedi al tuo account del mercato",
+      "description": "Accedi al tuo account del mercato per visualizzare gli assistenti che hai pubblicato",
+      "title": "Accesso richiesto"
+    },
+    "status": {
+      "archived": "Archiviato",
+      "deprecated": "Obsoleto",
+      "published": "Pubblicato",
+      "unpublished": "Non pubblicato"
+    },
+    "title": "I miei assistenti pubblicati"
   },
   "plugin": {
     "addMCPPlugin": "Aggiungi plugin MCP",
@@ -774,6 +824,7 @@
     "hotkey": "Scorciatoie",
     "image": "Servizio di disegno",
     "llm": "Modello linguistico",
+    "my-agents": "I miei assistenti pubblicati",
     "profile": "Il mio account",
     "provider": "Fornitore di servizi AI",
     "proxy": "Proxy di rete",

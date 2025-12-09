@@ -86,6 +86,14 @@
       },
       "newFolder": "新建資料夾",
       "newPage": "新增文件",
+      "notion": {
+        "error": "匯入 Notion 檔案失敗",
+        "foundFiles": "找到 {{count}} 個檔案",
+        "importing": "正在匯入 Notion 檔案...",
+        "noMarkdownFiles": "在 ZIP 檔案中未找到 Markdown 檔案",
+        "partial": "已成功匯入 {{success}} 個檔案，失敗 {{failed}} 個",
+        "success": "成功匯入 {{count}} 個檔案"
+      },
       "uploadFile": "上傳檔案",
       "uploadFolder": "上傳資料夾"
     },

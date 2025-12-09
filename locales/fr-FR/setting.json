@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "Configuration de l'IA",
     "common": "Général",
+    "market": "Marché",
     "profile": "Compte",
     "system": "Système"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "Mise à jour réussie"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Annuler",
+      "confirmDeprecate": "Confirmer l’abandon",
+      "deprecate": "Abandonner définitivement",
+      "deprecateConfirmContent": "Une fois abandonné, cet assistant sera définitivement retiré du marché et ne pourra pas être remis en ligne. Cette action est irréversible, veuillez procéder avec prudence.",
+      "deprecateConfirmTitle": "Confirmer l’abandon de l’assistant ?",
+      "deprecateError": "Échec de l’abandon de l’assistant",
+      "deprecateLoading": "Abandon de l’assistant en cours...",
+      "deprecateSuccess": "Assistant abandonné avec succès",
+      "edit": "Modifier l’Agent",
+      "publish": "Publier l’Agent",
+      "publishError": "Échec de la publication de l’assistant",
+      "publishLoading": "Publication de l’assistant en cours...",
+      "publishSuccess": "Assistant publié avec succès",
+      "unpublish": "Retirer l’Agent",
+      "unpublishError": "Échec du retrait de l’assistant",
+      "unpublishLoading": "Retrait de l’assistant en cours...",
+      "unpublishSuccess": "Assistant retiré avec succès",
+      "viewDetail": "Voir les détails"
+    },
+    "detail": {
+      "category": "Catégorie",
+      "description": "Description",
+      "identifier": "Identifiant",
+      "title": "Détails de l’assistant"
+    },
+    "empty": {
+      "description": "Vous n’avez encore publié aucun assistant sur le marché",
+      "title": "Aucun assistant publié"
+    },
+    "errors": {
+      "editFailed": "Échec de la modification de l’assistant, veuillez réessayer plus tard",
+      "fetchFailed": "Échec de la récupération des détails de l’assistant",
+      "notAuthenticated": "Veuillez vous connecter à votre compte marché"
+    },
+    "loginRequired": {
+      "button": "Se connecter au compte marché",
+      "description": "Veuillez vous connecter à votre compte marché pour voir les assistants que vous avez publiés",
+      "title": "Connexion requise"
+    },
+    "status": {
+      "archived": "Archivé",
+      "deprecated": "Abandonné",
+      "published": "Publié",
+      "unpublished": "Non publié"
+    },
+    "title": "Mes assistants publiés"
   },
   "plugin": {
     "addMCPPlugin": "Ajouter un plugin MCP",
@@ -774,6 +824,7 @@
     "hotkey": "Raccourcis clavier",
     "image": "Service de génération d'images",
     "llm": "Modèle de langue",
+    "my-agents": "Mes assistants publiés",
     "profile": "Mon compte",
     "provider": "Fournisseur de services d'IA",
     "proxy": "Proxy réseau",

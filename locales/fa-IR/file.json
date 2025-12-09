@@ -86,6 +86,14 @@
       },
       "newFolder": "ایجاد پوشه جدید",
       "newPage": "ایجاد سند جدید",
+      "notion": {
+        "error": "وارد کردن فایل Notion با شکست مواجه شد",
+        "foundFiles": "{{count}} فایل پیدا شد",
+        "importing": "در حال وارد کردن فایل‌های Notion...",
+        "noMarkdownFiles": "هیچ فایل Markdown در فایل ZIP یافت نشد",
+        "partial": "{{success}} فایل با موفقیت وارد شد، {{failed}} فایل با شکست مواجه شد",
+        "success": "{{count}} فایل با موفقیت وارد شد"
+      },
       "uploadFile": "بارگذاری فایل",
       "uploadFolder": "بارگذاری پوشه"
     },

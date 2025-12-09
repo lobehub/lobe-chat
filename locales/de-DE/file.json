@@ -86,6 +86,14 @@
       },
       "newFolder": "Neuen Ordner erstellen",
       "newPage": "Neues Dokument",
+      "notion": {
+        "error": "Fehler beim Importieren der Notion-Datei",
+        "foundFiles": "{{count}} Dateien gefunden",
+        "importing": "Notion-Dateien werden importiert...",
+        "noMarkdownFiles": "Keine Markdown-Dateien in der ZIP-Datei gefunden",
+        "partial": "{{success}} Dateien erfolgreich importiert, {{failed}} fehlgeschlagen",
+        "success": "{{count}} Dateien erfolgreich importiert"
+      },
       "uploadFile": "Datei hochladen",
       "uploadFolder": "Ordner hochladen"
     },

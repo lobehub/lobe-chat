@@ -3,6 +3,44 @@ import type { PartialDeep } from 'type-fest';
 
 import { lambdaClient } from '@/libs/trpc/client';
 
+/**
+ * Market agent model can be either a string or an object with model details
+ */
+type MarketAgentModel =
+  | LobeAgentConfig['model']
+  | {
+      model: LobeAgentConfig['model'];
+      parameters?: Partial<LobeAgentConfig['params']>;
+      provider?: LobeAgentConfig['provider'];
+    };
+
+/**
+ * Normalize market agent config to standard agent config.
+ * Handles the case where market returns model as an object instead of string.
+ */
+const normalizeMarketAgentModel = (config?: PartialDeep<AgentItem>): PartialDeep<AgentItem> => {
+  if (!config) return {};
+
+  const model = config.model as MarketAgentModel | undefined;
+
+  // If model is not an object, return config as-is
+  if (typeof model !== 'object' || model === null) {
+    return config;
+  }
+
+  // Extract model info and merge parameters
+  const { model: modelName, provider: modelProvider, parameters } = model;
+  const existingParams = (config.params ?? {}) as Record<string, any>;
+  const mergedParams = { ...parameters, ...existingParams };
+
+  return {
+    ...config,
+    model: modelName,
+    params: Object.keys(mergedParams).length > 0 ? mergedParams : undefined,
+    provider: config.provider ?? modelProvider,
+  };
+};
+
 export interface CreateAgentParams {
   config?: PartialDeep<AgentItem>;
   groupId?: string;
@@ -22,11 +60,22 @@ class AgentService {
   };
 
   /**
-   * Create a new agent with session
+   * Get an agent by marketIdentifier
+   * @returns agent id if exists, null otherwise
+   */
+  getAgentByMarketIdentifier = async (marketIdentifier: string): Promise<string | null> => {
+    return lambdaClient.agent.getAgentByMarketIdentifier.query({ marketIdentifier });
+  };
+
+  /**
+   * Create a new agent with session.
+   * Automatically normalizes market agent config (handles model as object).
    */
   createAgent = async (params: CreateAgentParams): Promise<CreateAgentResult> => {
+    const normalizedConfig = normalizeMarketAgentModel(params.config);
+
     return lambdaClient.agent.createAgent.mutate({
-      config: params.config as any,
+      config: normalizedConfig as any,
       groupId: params.groupId,
     });
   };

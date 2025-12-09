@@ -80,6 +80,7 @@
   "group": {
     "aiConfig": "إعدادات الذكاء الاصطناعي",
     "common": "عام",
+    "market": "السوق",
     "profile": "الحساب",
     "system": "النظام"
   },
@@ -249,6 +250,55 @@
   },
   "message": {
     "success": "تم التحديث بنجاح"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "إلغاء",
+      "confirmDeprecate": "تأكيد الإهمال",
+      "deprecate": "إهمال دائم",
+      "deprecateConfirmContent": "بعد الإهمال، سيتم إزالة هذا المساعد نهائيًا من السوق ولن يكون من الممكن إعادة نشره. هذا الإجراء لا يمكن التراجع عنه، يرجى الحذر.",
+      "deprecateConfirmTitle": "هل تريد تأكيد إهمال المساعد؟",
+      "deprecateError": "فشل في إهمال المساعد",
+      "deprecateLoading": "جارٍ إهمال المساعد...",
+      "deprecateSuccess": "تم إهمال المساعد",
+      "edit": "تحرير المساعد",
+      "publish": "نشر المساعد",
+      "publishError": "فشل في نشر المساعد",
+      "publishLoading": "جارٍ نشر المساعد...",
+      "publishSuccess": "تم نشر المساعد",
+      "unpublish": "إلغاء نشر المساعد",
+      "unpublishError": "فشل في إلغاء نشر المساعد",
+      "unpublishLoading": "جارٍ إلغاء نشر المساعد...",
+      "unpublishSuccess": "تم إلغاء نشر المساعد",
+      "viewDetail": "عرض التفاصيل"
+    },
+    "detail": {
+      "category": "الفئة",
+      "description": "الوصف",
+      "identifier": "المعرّف",
+      "title": "تفاصيل المساعد"
+    },
+    "empty": {
+      "description": "لم تقم بنشر أي مساعد في السوق بعد",
+      "title": "لا يوجد مساعدين منشورين"
+    },
+    "errors": {
+      "editFailed": "فشل في تحرير المساعد، يرجى المحاولة لاحقًا",
+      "fetchFailed": "فشل في جلب تفاصيل المساعد",
+      "notAuthenticated": "يرجى تسجيل الدخول إلى حساب السوق أولاً"
+    },
+    "loginRequired": {
+      "button": "تسجيل الدخول إلى حساب السوق",
+      "description": "يرجى تسجيل الدخول إلى حساب السوق لعرض المساعدين الذين قمت بنشرهم",
+      "title": "تسجيل الدخول مطلوب"
+    },
+    "status": {
+      "archived": "مؤرشف",
+      "deprecated": "مهمل",
+      "published": "منشور",
+      "unpublished": "غير منشور"
+    },
+    "title": "مساعدي المنشور"
   },
   "plugin": {
     "addMCPPlugin": "إضافة مكون MCP",
@@ -774,6 +824,7 @@
     "hotkey": "اختصارات لوحة المفاتيح",
     "image": "خدمة الرسم",
     "llm": "نموذج اللغة",
+    "my-agents": "مساعدي المنشور",
     "profile": "حسابي",
     "provider": "مزود خدمة الذكاء الاصطناعي",
     "proxy": "وكيل الشبكة",
