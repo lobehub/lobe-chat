@@ -188,7 +188,7 @@ describe('HomeInputAction', () => {
       });
 
       expect(mockSendMessage).toHaveBeenCalledWith({
-        context: { agentId: 'new-agent-id' },
+        context: { agentId: 'new-agent-id', scope: 'agent_builder' },
         message: 'Test message',
       });
     });

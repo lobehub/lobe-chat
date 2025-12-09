@@ -54,11 +54,11 @@ export function createSSEWriter(controller: ReadableStreamDefaultController<stri
     /**
      * Send a connection event
      */
-    writeConnection(sessionId: string, lastEventId: string, timestamp: number = Date.now()) {
+    writeConnection(operationId: string, lastEventId: string, timestamp: number = Date.now()) {
       this.writeEvent({
         data: {
           lastEventId,
-          sessionId,
+          operationId,
           timestamp,
           type: 'connected',
         },
@@ -70,7 +70,7 @@ export function createSSEWriter(controller: ReadableStreamDefaultController<stri
     /**
      * Send an error event
      */
-    writeError(error: any, sessionId: string, phase?: string, timestamp: number = Date.now()) {
+    writeError(error: any, operationId: string, phase?: string, timestamp: number = Date.now()) {
       this.writeEvent({
         data: {
           data: {
@@ -78,7 +78,7 @@ export function createSSEWriter(controller: ReadableStreamDefaultController<stri
             phase: phase || 'unknown',
             ...(error.stack && { stack: error.stack }),
           },
-          sessionId,
+          operationId,
           timestamp,
           type: 'error',
         },
