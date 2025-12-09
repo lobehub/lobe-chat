@@ -21,43 +21,6 @@ interface MarketAuthProviderProps {
 }
 
 /**
- * 从 cookie 中获取 token
- */
-const getTokenFromCookie = (): string | null => {
-  if (typeof document === 'undefined') return null;
-
-  // eslint-disable-next-line unicorn/no-document-cookie
-  const cookies = document.cookie.split(';');
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split('=');
-    if (name === 'market-bearertoken') {
-      console.log('[MarketAuth] Found market token in cookie');
-      return value;
-    }
-  }
-  return null;
-};
-
-/**
- * 将 token 存储到 cookie
- */
-const setTokenToCookie = (token: string, expiresIn: number) => {
-  console.log('[MarketAuth] Storing token to cookie');
-  const expiresAt = new Date(Date.now() + expiresIn * 1000);
-  // eslint-disable-next-line unicorn/no-document-cookie
-  document.cookie = `market-bearertoken=${token}; expires=${expiresAt.toUTCString()}; path=/; secure; samesite=strict`;
-};
-
-/**
- * 从 cookie 中删除 token
- */
-const removeTokenFromCookie = () => {
-  console.log('[MarketAuth] Removing token from cookie');
-  // eslint-disable-next-line unicorn/no-document-cookie
-  document.cookie = 'market-bearertoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-};
-
-/**
  * 获取用户信息
  */
 const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null> => {
@@ -174,7 +137,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   const [session, setSession] = useState<MarketAuthSession | null>(null);
   const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
   const [oidcClient, setOidcClient] = useState<MarketOIDC | null>(null);
-  const [shouldReauthorize, setShouldReauthorize] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingSignInResolve, setPendingSignInResolve] = useState<
     ((value: number | null) => void) | null
@@ -205,109 +167,40 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   }, [isDesktop]);
 
   /**
-   * 检查并恢复会话
+   * 检查并恢复会话（仅从 DB 恢复）
    */
   const restoreSession = () => {
     console.log('[MarketAuth] Attempting to restore session');
 
-    // 优先级 1: 从 DB 中获取 token（优先级最高）
     const dbTokens = getMarketTokensFromDB();
-    if (dbTokens?.accessToken && dbTokens?.expiresAt) {
-      // 检查 DB 中的 token 是否过期
-      if (dbTokens.expiresAt > Date.now()) {
-        console.log('[MarketAuth] Session restored from DB');
 
-        // 尝试从 sessionStorage 获取用户信息（如果有的话）
-        let userInfo: MarketUserInfo | undefined;
-        const userInfoData = sessionStorage.getItem('market_user_info');
-        if (userInfoData) {
-          try {
-            userInfo = JSON.parse(userInfoData);
-          } catch (error) {
-            console.error('[MarketAuth] Failed to parse stored user info:', error);
-          }
-        }
-
-        // 创建会话对象
-        const restoredSession: MarketAuthSession = {
-          accessToken: dbTokens.accessToken,
-          expiresAt: dbTokens.expiresAt,
-          expiresIn: Math.floor((dbTokens.expiresAt - Date.now()) / 1000),
-          scope: 'openid profile email',
-          tokenType: 'Bearer',
-          userInfo,
-        };
-
-        // 同步到 cookie 和 sessionStorage
-        setTokenToCookie(dbTokens.accessToken, restoredSession.expiresIn);
-        sessionStorage.setItem('market_auth_session', JSON.stringify(restoredSession));
-
-        setSession(restoredSession);
-        setStatus('authenticated');
-        return;
-      } else {
-        console.log('[MarketAuth] DB token has expired, will trigger re-authorization');
-        // 清理过期的 DB tokens
-        clearMarketTokensFromDB();
-        sessionStorage.removeItem('market_auth_session');
-        removeTokenFromCookie();
-        // 标记需要重新授权，等待 oidcClient 准备好
-        setShouldReauthorize(true);
-        return;
-      }
+    // 检查 DB 中是否有 token
+    if (!dbTokens?.accessToken) {
+      console.log('[MarketAuth] No token found in DB');
+      setStatus('unauthenticated');
+      return;
     }
 
-    // 优先级 2: 从 cookie 和 sessionStorage 中获取（DB 中没有时的备选方案）
-    const token = getTokenFromCookie();
-    if (token) {
-      // 从 sessionStorage 中获取完整的会话信息
-      const sessionData = sessionStorage.getItem('market_auth_session');
-      if (sessionData) {
-        try {
-          const parsedSession = JSON.parse(sessionData) as MarketAuthSession;
+    // 检查 token 是否过期
+    if (dbTokens.expiresAt && dbTokens.expiresAt > Date.now()) {
+      console.log('[MarketAuth] Session restored from DB');
 
-          // 检查 token 是否过期
-          if (parsedSession.expiresAt > Date.now()) {
-            console.log('[MarketAuth] Session restored from cookie/sessionStorage');
+      const restoredSession: MarketAuthSession = {
+        accessToken: dbTokens.accessToken,
+        expiresAt: dbTokens.expiresAt,
+        expiresIn: Math.floor((dbTokens.expiresAt - Date.now()) / 1000),
+        scope: 'openid profile email',
+        tokenType: 'Bearer',
+      };
 
-            // 如果 session 中没有 userInfo，尝试从单独的存储中获取
-            if (!parsedSession.userInfo) {
-              const userInfoData = sessionStorage.getItem('market_user_info');
-              if (userInfoData) {
-                try {
-                  parsedSession.userInfo = JSON.parse(userInfoData);
-                } catch (error) {
-                  console.error('[MarketAuth] Failed to parse stored user info:', error);
-                }
-              } else {
-                setShouldReauthorize(true);
-              }
-            }
-
-            // 同步到 DB
-            saveMarketTokensToDB(parsedSession.accessToken, undefined, parsedSession.expiresAt);
-
-            setSession(parsedSession);
-            setStatus('authenticated');
-            return;
-          } else {
-            console.log('[MarketAuth] Stored session has expired, will trigger re-authorization');
-            sessionStorage.removeItem('market_auth_session');
-            removeTokenFromCookie();
-            // 标记需要重新授权，等待 oidcClient 准备好
-            setShouldReauthorize(true);
-            return;
-          }
-        } catch (error) {
-          console.error('[MarketAuth] Failed to parse stored session:', error);
-          sessionStorage.removeItem('market_auth_session');
-          removeTokenFromCookie();
-        }
-      }
+      setSession(restoredSession);
+      setStatus('authenticated');
+    } else {
+      console.log('[MarketAuth] DB token has expired');
+      // 清理过期的 DB tokens
+      clearMarketTokensFromDB();
+      setStatus('unauthenticated');
     }
-
-    console.log('[MarketAuth] No valid session found');
-    setStatus('unauthenticated');
   };
 
   /**
@@ -340,30 +233,18 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       const userInfo = await fetchUserInfo(tokenResponse.accessToken);
 
       // 创建会话对象
+      const expiresAt = Date.now() + tokenResponse.expiresIn * 1000;
       const newSession: MarketAuthSession = {
         accessToken: tokenResponse.accessToken,
-        expiresAt: Date.now() + tokenResponse.expiresIn * 1000,
+        expiresAt,
         expiresIn: tokenResponse.expiresIn,
         scope: tokenResponse.scope,
         tokenType: tokenResponse.tokenType as 'Bearer',
         userInfo: userInfo || undefined,
       };
 
-      // 存储 token 到 cookie 和 sessionStorage
-      setTokenToCookie(tokenResponse.accessToken, tokenResponse.expiresIn);
-      sessionStorage.setItem('market_auth_session', JSON.stringify(newSession));
-
-      // 单独存储用户信息到 sessionStorage 供其他地方使用
-      if (userInfo) {
-        sessionStorage.setItem('market_user_info', JSON.stringify(userInfo));
-      }
-
       // 存储 tokens 到 DB
-      await saveMarketTokensToDB(
-        tokenResponse.accessToken,
-        tokenResponse.refreshToken,
-        newSession.expiresAt,
-      );
+      await saveMarketTokensToDB(tokenResponse.accessToken, tokenResponse.refreshToken, expiresAt);
 
       setSession(newSession);
       setStatus('authenticated');
@@ -433,10 +314,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   const signOut = async () => {
     setSession(null);
     setStatus('unauthenticated');
-    removeTokenFromCookie();
-    sessionStorage.removeItem('market_auth_session');
-    sessionStorage.removeItem('market_user_info');
-    // 清除 DB 中的 tokens
     await clearMarketTokensFromDB();
   };
 
@@ -444,56 +321,21 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
    * 获取当前用户信息
    */
   const getCurrentUserInfo = (): MarketUserInfo | null => {
-    console.log('getCurrentUserInfo-session', session, session?.userInfo);
-    if (session?.userInfo) {
-      return session.userInfo;
-    }
-
-    // 如果 session 中没有，尝试从 sessionStorage 中获取
-    try {
-      const userInfoData = sessionStorage.getItem('market_user_info');
-      if (userInfoData) {
-        return JSON.parse(userInfoData) as MarketUserInfo;
-      }
-    } catch (error) {
-      console.error('[MarketAuth] Failed to get user info from storage:', error);
-    }
-
-    return null;
+    return session?.userInfo ?? null;
   };
 
   /**
-   * 获取 access token（优先从 DB 获取，否则从 session 获取）
+   * 获取 access token（优先从 session 获取，否则从 DB 获取）
    */
   const getAccessToken = (): string | null => {
-    // 优先从 DB 获取
-    const dbTokens = getMarketTokensFromDB();
-    if (dbTokens?.accessToken) {
-      console.log('[MarketAuth] Retrieved access token from DB');
-      return dbTokens.accessToken;
-    }
-
-    // 如果 DB 中没有，从 session 获取
+    // 优先从 session 获取（内存中的状态）
     if (session?.accessToken) {
-      console.log('[MarketAuth] Retrieved access token from session');
       return session.accessToken;
     }
 
-    // 如果 session 中也没有，尝试从 sessionStorage 获取
-    try {
-      const sessionData = sessionStorage.getItem('market_auth_session');
-      if (sessionData) {
-        const parsedSession = JSON.parse(sessionData) as MarketAuthSession;
-        if (parsedSession.accessToken) {
-          console.log('[MarketAuth] Retrieved access token from sessionStorage');
-          return parsedSession.accessToken;
-        }
-      }
-    } catch (error) {
-      console.error('[MarketAuth] Failed to get access token from sessionStorage:', error);
-    }
-
-    return null;
+    // 备选从 DB 获取
+    const dbTokens = getMarketTokensFromDB();
+    return dbTokens?.accessToken ?? null;
   };
 
   /**
@@ -502,65 +344,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   useEffect(() => {
     restoreSession();
   }, []);
-
-  /**
-   * 当需要重新授权且 OIDC 客户端准备好时，自动触发重新授权
-   */
-  useEffect(() => {
-    const handleAutoReauthorization = async () => {
-      if (shouldReauthorize && oidcClient) {
-        setShouldReauthorize(false); // 重置标识，避免重复触发
-        try {
-          setStatus('loading');
-          // 启动 OIDC 授权流程并获取授权码
-          const authResult = await oidcClient.startAuthorization();
-          // 用授权码换取访问令牌
-          const tokenResponse = await oidcClient.exchangeCodeForToken(
-            authResult.code,
-            authResult.state,
-          );
-
-          // 获取用户信息
-          const userInfo = await fetchUserInfo(tokenResponse.accessToken);
-          // 创建会话对象
-          const newSession: MarketAuthSession = {
-            accessToken: tokenResponse.accessToken,
-            expiresAt: Date.now() + tokenResponse.expiresIn * 1000,
-            expiresIn: tokenResponse.expiresIn,
-            scope: tokenResponse.scope,
-            tokenType: tokenResponse.tokenType as 'Bearer',
-            userInfo: userInfo || undefined,
-          };
-
-          // 存储 token 到 cookie 和 sessionStorage
-          setTokenToCookie(tokenResponse.accessToken, tokenResponse.expiresIn);
-          sessionStorage.setItem('market_auth_session', JSON.stringify(newSession));
-
-          // 单独存储用户信息到 sessionStorage 供其他地方使用
-          if (userInfo) {
-            sessionStorage.setItem('market_user_info', JSON.stringify(userInfo));
-          }
-
-          // 存储 tokens 到 DB
-          await saveMarketTokensToDB(
-            tokenResponse.accessToken,
-            tokenResponse.refreshToken,
-            newSession.expiresAt,
-          );
-
-          setSession(newSession);
-          setStatus('authenticated');
-
-          console.log('[MarketAuth] Auto re-authorization completed successfully');
-        } catch (error) {
-          console.error('[MarketAuth] Auto re-authorization failed:', error);
-          setStatus('unauthenticated');
-        }
-      }
-    };
-
-    handleAutoReauthorization();
-  }, [shouldReauthorize, oidcClient]);
 
   const contextValue: MarketAuthContextType = {
     getAccessToken,

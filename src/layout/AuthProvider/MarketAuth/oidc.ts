@@ -132,14 +132,6 @@ export class MarketOIDC {
       grant_type: 'authorization_code',
       redirect_uri: this.config.redirectUri,
     });
-
-    console.log('[MarketOIDC] Sending token exchange request', {
-      client_id: this.config.clientId,
-      code,
-      code_verifier: codeVerifier,
-      grant_type: 'authorization_code',
-      redirect_uri: this.config.redirectUri,
-    });
     const response = await fetch(tokenUrl, {
       body: body.toString(),
       headers: {
@@ -148,11 +140,8 @@ export class MarketOIDC {
       method: 'POST',
     });
 
-    console.log('[MarketOIDC] Token exchange response:', response);
-
     if (!response.ok) {
       const errorData = await response.json().catch(() => undefined);
-      console.log('[MarketOIDC] Token exchange error data:', errorData);
       const errorMessage =
         `Token exchange failed: ${response.status} ${response.statusText} ${errorData?.error_description || errorData?.error || ''}`.trim();
       console.error('[MarketOIDC]', errorMessage);
@@ -180,7 +169,6 @@ export class MarketOIDC {
    * 启动授权流程并返回授权结果
    */
   async startAuthorization(): Promise<{ code: string; state: string }> {
-    console.log('[MarketOIDC] Starting authorization flow');
     const authUrl = await this.buildAuthUrl();
 
     if (typeof window === 'undefined') {
