@@ -79,7 +79,7 @@
     "undici": "^7.16.0",
     "uuid": "^13.0.0",
     "vite": "^7.2.4",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.15"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
