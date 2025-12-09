@@ -64,18 +64,16 @@ const useStyles = createStyles(({ css, token }) => ({
 interface PageExplorerPlaceholderProps {
   hasPages?: boolean;
   knowledgeBaseId?: string;
-  onNoteCreated?: (noteId: string) => void;
 }
 
 const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
-  ({ hasPages = false, knowledgeBaseId, onNoteCreated }) => {
+  ({ hasPages = false, knowledgeBaseId }) => {
     const { t } = useTranslation(['file', 'common']);
+
     const theme = useTheme();
     const { styles } = useStyles();
     const [isUploading, setIsUploading] = useState(false);
     const createDocument = useFileStore((s) => s.createDocument);
-
-    const [createNewPage] = useFileStore((s) => [s.createNewPage]);
 
     const handleUploadMarkdown = async (file: File) => {
       try {
@@ -85,14 +83,11 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
         const content = await file.text();
 
         // Create page with markdown content
-        const newPage = await createDocument({
+        await createDocument({
           content,
           knowledgeBaseId,
           title: file.name.replace(/\.md$|\.markdown$/i, ''),
         });
-
-        // Notify parent component
-        onNoteCreated?.(newPage.id);
       } catch (error) {
         console.error('Failed to upload markdown:', error);
       } finally {
@@ -113,10 +108,15 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
             </Flexbox>
           )}
           <Flexbox gap={12} horizontal>
-            {/* Create New Note */}
             <Flexbox
               className={styles.card}
-              onClick={() => createNewPage(t('documentList.untitled'))}
+              onClick={() =>
+                createDocument({
+                  content: '',
+                  knowledgeBaseId,
+                  title: t('documentList.untitled'),
+                })
+              }
               padding={16}
             >
               <span className={styles.actionTitle}>
@@ -158,19 +158,6 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
                 />
               </Flexbox>
             </Upload>
-
-            {/* Import from Notion */}
-            {/* <Flexbox className={styles.card} onClick={handleImportFromNotion} padding={16}>
-          <span className={styles.actionTitle}>Import from Notion</span>
-          <div className={styles.glow} style={{ background: theme.geekblue }} />
-          <FileTypeIcon
-            className={styles.icon}
-            color={theme.geekblue}
-            icon={<Icon color={'#fff'} icon={FileTextIcon} />}
-            size={ICON_SIZE}
-            type={'doc'}
-          />
-        </Flexbox> */}
           </Flexbox>
         </Center>
       </>
