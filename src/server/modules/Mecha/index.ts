@@ -6,7 +6,7 @@
  *
  * Components:
  * - AgentToolsEngine: Server-side tools generation engine
- * - ContextEngineering: (TODO) Server-side context engineering
+ * - ContextEngineering: Server-side messages engine for context processing
  */
 
 // Agent Tools Engine
@@ -17,3 +17,13 @@ export type {
   ServerCreateAgentToolsEngineParams,
 } from './AgentToolsEngine';
 export { createServerAgentToolsEngine, createServerToolsEngine } from './AgentToolsEngine';
+
+// Context Engineering (Messages Engine)
+export type {
+  ServerKnowledgeConfig,
+  ServerMessagesEngineParams,
+  ServerModelCapabilities,
+  ServerToolsConfig,
+  ServerUserMemoryConfig,
+} from './ContextEngineering';
+export { serverMessagesEngine } from './ContextEngineering';

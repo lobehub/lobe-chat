@@ -103,3 +103,37 @@ export interface StartExecutionResult {
   scheduled: boolean;
   success: boolean;
 }
+
+/**
+ * Parameters for runByAgentId
+ * This is a simplified API that only requires agentId and prompt,
+ * all other data is fetched from database
+ */
+export interface RunByAgentIdParams {
+  /** The agent ID to run */
+  agentId: string;
+  /** Application context for message storage */
+  appContext?: {
+    sessionId?: string;
+    threadId?: string | null;
+    topicId?: string | null;
+  };
+  /** Whether to auto-start execution after creating operation */
+  autoStart?: boolean;
+  /** Optional existing messages to include in context */
+  existingMessageIds?: string[];
+  /** The user input/prompt */
+  prompt: string;
+}
+
+/**
+ * Result of runByAgentId
+ */
+export interface RunByAgentIdResult {
+  autoStarted: boolean;
+  createdAt: string;
+  messageId?: string;
+  operationId: string;
+  status: string;
+  success: boolean;
+}
