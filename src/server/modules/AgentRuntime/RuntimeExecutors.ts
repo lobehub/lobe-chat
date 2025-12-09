@@ -620,4 +620,98 @@ export const createRuntimeExecutors = (
       // 不提供 nextContext，因为需要等待人工干预
     };
   },
+
+  /**
+   * 解决被取消的工具调用
+   * 为取消的工具调用创建带有 'aborted' 干预状态的工具消息
+   */
+  resolve_aborted_tools: async (instruction, state) => {
+    const { payload } = instruction as Extract<AgentInstruction, { type: 'resolve_aborted_tools' }>;
+    const { parentMessageId, toolsCalling } = payload;
+    const { operationId, stepIndex, streamManager } = ctx;
+    const events: AgentEvent[] = [];
+
+    log('[%s:%d] Resolving %d aborted tools', operationId, stepIndex, toolsCalling.length);
+
+    // 发布工具取消事件
+    await streamManager.publishStreamEvent(operationId, {
+      data: {
+        parentMessageId,
+        phase: 'tools_aborted',
+        toolsCalling,
+      },
+      stepIndex,
+      type: 'step_start',
+    });
+
+    const newState = structuredClone(state);
+
+    // 为每个取消的工具调用创建 tool message
+    for (const toolPayload of toolsCalling) {
+      const toolName = `${toolPayload.identifier}/${toolPayload.apiName}`;
+      log('[%s:%d] Creating aborted tool message for %s', operationId, stepIndex, toolName);
+
+      try {
+        const toolMessage = await ctx.messageModel.create({
+          agentId: state.metadata!.agentId!,
+          content: 'Tool execution was aborted by user.',
+          parentId: parentMessageId,
+          plugin: toolPayload as any,
+          pluginIntervention: { status: 'aborted' },
+          role: 'tool',
+          threadId: state.metadata?.threadId,
+          tool_call_id: toolPayload.id,
+          topicId: state.metadata?.topicId,
+        });
+
+        log(
+          '[%s:%d] Created aborted tool message: %s for %s',
+          operationId,
+          stepIndex,
+          toolMessage.id,
+          toolName,
+        );
+
+        // 更新 state messages
+        newState.messages.push({
+          content: 'Tool execution was aborted by user.',
+          role: 'tool',
+          tool_call_id: toolPayload.id,
+        });
+      } catch (error) {
+        console.error(
+          '[resolve_aborted_tools] Failed to create aborted tool message for %s: %O',
+          toolName,
+          error,
+        );
+      }
+    }
+
+    log('[%s:%d] All aborted tool messages created', operationId, stepIndex);
+
+    // 标记状态为完成
+    newState.lastModified = new Date().toISOString();
+    newState.status = 'done';
+
+    // 发布完成事件
+    await streamManager.publishStreamEvent(operationId, {
+      data: {
+        finalState: newState,
+        phase: 'execution_complete',
+        reason: 'user_aborted',
+        reasonDetail: 'User aborted operation with pending tool calls',
+      },
+      stepIndex,
+      type: 'step_complete',
+    });
+
+    events.push({
+      finalState: newState,
+      reason: 'user_aborted',
+      reasonDetail: 'User aborted operation with pending tool calls',
+      type: 'done',
+    });
+
+    return { events, newState };
+  },
 });

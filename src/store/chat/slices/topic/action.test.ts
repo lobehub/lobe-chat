@@ -219,8 +219,26 @@ describe('topic action', () => {
         await result.current.refreshTopic();
       });
 
-      // Check if mutate has been called with the active session ID
-      expect(mutate).toHaveBeenCalledWith(['SWR_USE_FETCH_TOPIC', activeAgentId]);
+      // Check if mutate has been called with a matcher function
+      expect(mutate).toHaveBeenCalledWith(expect.any(Function));
+
+      // Verify the matcher function works correctly
+      const matcherFn = (mutate as Mock).mock.calls[0][0];
+      // Should match key with correct agentId
+      expect(
+        matcherFn([
+          'SWR_USE_FETCH_TOPIC',
+          { agentId: activeAgentId, isInbox: false, pageSize: 20 },
+        ]),
+      ).toBe(true);
+      // Should not match key with different agentId
+      expect(
+        matcherFn(['SWR_USE_FETCH_TOPIC', { agentId: 'other-id', isInbox: false, pageSize: 20 }]),
+      ).toBe(false);
+      // Should not match non-array keys
+      expect(matcherFn('some-string')).toBe(false);
+      // Should not match keys with wrong prefix
+      expect(matcherFn(['OTHER_KEY', { agentId: activeAgentId }])).toBe(false);
     });
 
     it('should handle errors during refreshing topics', async () => {
