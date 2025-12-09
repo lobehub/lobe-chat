@@ -4,8 +4,8 @@ import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { GatewaySuccessResponse } from '@lobehub/chat-plugins-gateway';
 import debug from 'debug';
 
-import { parserPluginSettings } from '@/app/(backend)/webapi/plugin/gateway/settings';
 import { getAppConfig } from '@/envs/app';
+import { parserPluginSettings } from '@/server/services/pluginGateway/settings';
 import { ToolExecutionContext } from '@/server/services/toolExecution/types';
 
 const log = debug('lobe-server:plugin-gateway-service');

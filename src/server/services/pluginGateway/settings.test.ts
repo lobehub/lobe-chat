@@ -99,7 +99,5 @@ describe('parserPluginSettings', () => {
       };
       expect(parserPluginSettings(input)).toEqual(expected);
     });
-
-    // ... (additional test cases as needed)
   });
 });
