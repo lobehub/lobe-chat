@@ -574,7 +574,7 @@ export class TopicModel {
             cursorCondition,
           ),
         })
-        .toSQL().sql,
+        .toSQL(),
     );
 
     return this.db.query.topics.findMany({
