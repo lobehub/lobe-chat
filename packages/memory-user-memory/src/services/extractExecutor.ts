@@ -8,7 +8,7 @@ import {
   layersCallsCounter,
   tracer,
 } from '@lobechat/observability-otel/modules/memory-user-memory';
-import { UserMemoryLayer } from '@lobechat/types';
+import { LayersEnum } from '@lobechat/types';
 
 import {
   ContextExtractor,
@@ -30,14 +30,14 @@ import {
 } from '../types';
 import { resolvePromptRoot } from '../utils/path';
 
-const LAYER_ORDER: UserMemoryLayer[] = [
-  'identity' as UserMemoryLayer,
-  'context' as UserMemoryLayer,
-  'preference' as UserMemoryLayer,
-  'experience' as UserMemoryLayer,
+const LAYER_ORDER: LayersEnum[] = [
+  'identity' as LayersEnum,
+  'context' as LayersEnum,
+  'preference' as LayersEnum,
+  'experience' as LayersEnum,
 ];
 
-const LAYER_LABEL_MAP: Record<UserMemoryLayer, string> = {
+const LAYER_LABEL_MAP: Record<LayersEnum, string> = {
   context: 'contexts',
   experience: 'experiences',
   identity: 'identities',
@@ -91,7 +91,7 @@ export class MemoryExtractionService<RO> {
 
     this.gatekeeper = new UserMemoryGateKeeper(gatekeeperConfig);
 
-    const buildExtractorConfig = (layer: UserMemoryLayer): BaseExtractorDependencies => {
+    const buildExtractorConfig = (layer: LayersEnum): BaseExtractorDependencies => {
       const model = this.config.layerModels[layer];
       if (!model) {
         throw new Error(`Missing model configuration for memory layer: ${layer}`);
@@ -104,14 +104,10 @@ export class MemoryExtractionService<RO> {
       } satisfies BaseExtractorDependencies;
     };
 
-    this.identityExtractor = new IdentityExtractor(buildExtractorConfig(UserMemoryLayer.Identity));
-    this.contextExtractor = new ContextExtractor(buildExtractorConfig(UserMemoryLayer.Context));
-    this.experienceExtractor = new ExperienceExtractor(
-      buildExtractorConfig(UserMemoryLayer.Experience),
-    );
-    this.preferenceExtractor = new PreferenceExtractor(
-      buildExtractorConfig(UserMemoryLayer.Preference),
-    );
+    this.identityExtractor = new IdentityExtractor(buildExtractorConfig(LayersEnum.Identity));
+    this.contextExtractor = new ContextExtractor(buildExtractorConfig(LayersEnum.Context));
+    this.experienceExtractor = new ExperienceExtractor(buildExtractorConfig(LayersEnum.Experience));
+    this.preferenceExtractor = new PreferenceExtractor(buildExtractorConfig(LayersEnum.Preference));
   }
 
   private recordGatekeeperMetrics(
@@ -131,7 +127,7 @@ export class MemoryExtractionService<RO> {
 
   private recordLayerCallMetrics(
     job: MemoryExtractionJob,
-    layer: UserMemoryLayer,
+    layer: LayersEnum,
     durationMs: number,
     status: 'ok' | 'error',
   ) {
@@ -148,7 +144,7 @@ export class MemoryExtractionService<RO> {
 
   private async runLayerExtractor<T>(
     job: MemoryExtractionJob,
-    layer: UserMemoryLayer,
+    layer: LayersEnum,
     extractor: () => Promise<T>,
   ): Promise<T> {
     const attributes = {
@@ -250,7 +246,7 @@ export class MemoryExtractionService<RO> {
   }
 
   private async runContextLayer(job: MemoryExtractionJob, options: ExtractorOptions) {
-    return this.runLayerExtractor(job, UserMemoryLayer.Context, () =>
+    return this.runLayerExtractor(job, LayersEnum.Context, () =>
       this.contextExtractor.structuredCall({
         ...options,
         language: options.language ?? 'English',
@@ -259,7 +255,7 @@ export class MemoryExtractionService<RO> {
   }
 
   private async runExperienceLayer(job: MemoryExtractionJob, options: ExtractorOptions) {
-    return this.runLayerExtractor(job, UserMemoryLayer.Experience, () =>
+    return this.runLayerExtractor(job, LayersEnum.Experience, () =>
       this.experienceExtractor.structuredCall({
         ...options,
         language: options.language ?? 'English',
@@ -268,7 +264,7 @@ export class MemoryExtractionService<RO> {
   }
 
   private async runPreferenceLayer(job: MemoryExtractionJob, options: ExtractorOptions) {
-    return this.runLayerExtractor(job, UserMemoryLayer.Preference, () =>
+    return this.runLayerExtractor(job, LayersEnum.Preference, () =>
       this.preferenceExtractor.structuredCall({
         ...options,
         language: options.language ?? 'English',
@@ -282,7 +278,7 @@ export class MemoryExtractionService<RO> {
       existingIdentitiesContext?: string;
     },
   ) {
-    return this.runLayerExtractor(job, UserMemoryLayer.Identity, () =>
+    return this.runLayerExtractor(job, LayersEnum.Identity, () =>
       this.identityExtractor.structuredCall({
         ...options,
         language: options.language ?? 'English',
@@ -290,16 +286,13 @@ export class MemoryExtractionService<RO> {
     );
   }
 
-  private resolveLayers(decision: GatekeeperDecision): UserMemoryLayer[] {
+  private resolveLayers(decision: GatekeeperDecision): LayersEnum[] {
     return LAYER_ORDER.filter((layer) => decision[layer]?.shouldExtract);
   }
 
-  private resolveJobLayers(
-    decision: GatekeeperDecision,
-    layers?: UserMemoryLayer[],
-  ): UserMemoryLayer[] {
+  private resolveJobLayers(decision: GatekeeperDecision, layers?: LayersEnum[]): LayersEnum[] {
     if (layers && layers.length > 0) {
-      const requested = new Set<UserMemoryLayer>(layers);
+      const requested = new Set<LayersEnum>(layers);
 
       return this.resolveLayers(decision).filter((layer) => requested.has(layer));
     }
@@ -309,30 +302,30 @@ export class MemoryExtractionService<RO> {
 
   private async runLayers(
     job: MemoryExtractionJob,
-    layers: UserMemoryLayer[],
+    layers: LayersEnum[],
     options: ExtractorOptions & {
       existingIdentitiesContext?: string;
     },
   ): Promise<MemoryExtractionLayerOutputs> {
     const outputs: MemoryExtractionLayerOutputs = {};
 
-    for (const layer of layers as UserMemoryLayer[]) {
+    for (const layer of layers as LayersEnum[]) {
       const result = await this.runLayer(job, layer, options);
 
       switch (layer) {
-        case UserMemoryLayer.Context: {
+        case LayersEnum.Context: {
           outputs.context = result as Awaited<ReturnType<ContextExtractor['structuredCall']>>;
           break;
         }
-        case UserMemoryLayer.Experience: {
+        case LayersEnum.Experience: {
           outputs.experience = result as Awaited<ReturnType<ExperienceExtractor['structuredCall']>>;
           break;
         }
-        case UserMemoryLayer.Preference: {
+        case LayersEnum.Preference: {
           outputs.preference = result as Awaited<ReturnType<PreferenceExtractor['structuredCall']>>;
           break;
         }
-        case UserMemoryLayer.Identity: {
+        case LayersEnum.Identity: {
           outputs.identity = result as Awaited<ReturnType<IdentityExtractor['structuredCall']>>;
           break;
         }
@@ -347,22 +340,22 @@ export class MemoryExtractionService<RO> {
 
   private async runLayer(
     job: MemoryExtractionJob,
-    layer: UserMemoryLayer,
+    layer: LayersEnum,
     options: ExtractorOptions & {
       existingIdentitiesContext?: string;
     },
   ): Promise<any> {
     switch (layer) {
-      case UserMemoryLayer.Context: {
+      case LayersEnum.Context: {
         return this.runContextLayer(job, options);
       }
-      case UserMemoryLayer.Experience: {
+      case LayersEnum.Experience: {
         return this.runExperienceLayer(job, options);
       }
-      case UserMemoryLayer.Preference: {
+      case LayersEnum.Preference: {
         return this.runPreferenceLayer(job, options);
       }
-      case UserMemoryLayer.Identity: {
+      case LayersEnum.Identity: {
         return this.runIdentityLayer(job, options);
       }
       default: {

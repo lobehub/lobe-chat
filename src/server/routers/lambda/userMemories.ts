@@ -30,6 +30,7 @@ import {
   searchMemorySchema,
   updateIdentityMemorySchema,
 } from '@/types/userMemory';
+import { LayersEnum } from '@/types/userMemory/shared';
 
 const EMPTY_SEARCH_RESULT: SearchMemoryResult = {
   contexts: [],
@@ -200,13 +201,30 @@ const memoryProcedure = authedProcedure
   });
 
 export const userMemoriesRouter = router({
-  // REVIEW：根据当前 topic 直接提取记忆
+  queryTags: memoryProcedure
+    .input(
+      z
+        .object({
+          layers: z.array(z.nativeEnum(LayersEnum)).optional(),
+          page: z.coerce.number().int().min(1).optional(),
+          size: z.coerce.number().int().min(1).max(100).optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        return await ctx.memoryModel.queryTags(input ?? {});
+      } catch (error) {
+        console.error('Failed to query memory tags:', error);
+        return [];
+      }
+    }),
 
+  // REVIEW：根据当前 topic 直接提取记忆
   // REVIEW： 我们需要一个既可以 cron 也可以主动用户触发进行「每日/每周/每隔一段时间的」记忆提取/生成的函数实现
   // REVIEW： 定时任务
   // 不用 tRPC，直接 server/service
   // 可以参考 https://github.com/lobehub/lobe-chat-cloud/blob/886ff2fcd44b7b00a3aa8906f84914a6dcaa1815/src/app/(backend)/cron/reset-budgets/route.ts#L214
-
   reEmbedMemories: memoryProcedure
     .input(reEmbedInputSchema.optional())
     .mutation(async ({ ctx, input }) => {

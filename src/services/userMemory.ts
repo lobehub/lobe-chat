@@ -8,6 +8,7 @@ import {
   AddIdentityMemoryResult,
   AddPreferenceMemoryParams,
   AddPreferenceMemoryResult,
+  LayersEnum,
   RemoveIdentityMemoryParams,
   RemoveIdentityMemoryResult,
   SearchMemoryParams,
@@ -49,6 +50,10 @@ class UserMemoryService {
 
   searchMemory = async (params: SearchMemoryParams): Promise<SearchMemoryResult> => {
     return lambdaClient.userMemories.toolSearchMemory.query(params);
+  };
+
+  queryTags = async (params?: { layers?: LayersEnum[]; page?: number; size?: number }) => {
+    return lambdaClient.userMemories.queryTags.query(params);
   };
 
   updateIdentityMemory = async (
