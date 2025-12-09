@@ -1,6 +1,7 @@
-import { metrics } from '@opentelemetry/api';
+import { metrics, trace } from '@opentelemetry/api';
 
 const meter = metrics.getMeter('server-services-memory-user-memory-extraction');
+export const tracer = trace.getTracer('@lobechat/memory-user-memory', '0.0.1');
 
 export const processedSourceCounter = meter.createCounter(
   'server_services_memory_user_memory_extraction_processed_source',

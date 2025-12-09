@@ -1,11 +1,13 @@
 import type { LobeChatDatabase } from '@lobechat/database';
-import { ModelRuntime } from '@lobechat/model-runtime';
+import { GenerateObjectPayload, ModelRuntime } from '@lobechat/model-runtime';
+import { SpanStatusCode } from '@lobechat/observability-otel/api';
 import {
   gateKeeperCallDurationHistogram,
   gateKeeperCallsCounter,
   layerCallDurationHistogram,
   layersCallsCounter,
-} from '@lobechat/observability-otel/api';
+  tracer,
+} from '@lobechat/observability-otel/modules/memory-user-memory';
 import { UserMemoryLayer } from '@lobechat/types';
 
 import {
@@ -49,6 +51,10 @@ export interface MemoryExtractionRuntimeOptions {
 }
 
 export interface MemoryExtractionServiceOptions {
+  callbacks?: {
+    onExtractRequest?: (request: GenerateObjectPayload) => Promise<void> | void;
+    onExtractResponse?: <TOutput>(response: TOutput) => Promise<void> | void;
+  };
   config: MemoryExtractionLLMConfig;
   db: LobeChatDatabase;
   language?: string;
@@ -56,7 +62,7 @@ export interface MemoryExtractionServiceOptions {
   runtimes: MemoryExtractionRuntimeOptions;
 }
 
-export class MemoryExtractAgentService<RO> {
+export class MemoryExtractionService<RO> {
   private readonly config: MemoryExtractionLLMConfig;
 
   private readonly gatekeeper: UserMemoryGateKeeper;
@@ -145,16 +151,42 @@ export class MemoryExtractAgentService<RO> {
     layer: UserMemoryLayer,
     extractor: () => Promise<T>,
   ): Promise<T> {
-    const start = Date.now();
-    try {
-      const result = await extractor();
-      this.recordLayerCallMetrics(job, layer, Date.now() - start, 'ok');
+    const attributes = {
+      layer: LAYER_LABEL_MAP[layer],
+      source: job.source,
+      source_id: job.sourceId,
+      user_id: job.userId,
+    };
 
-      return result;
-    } catch (error) {
-      this.recordLayerCallMetrics(job, layer, Date.now() - start, 'error');
-      throw error;
-    }
+    return tracer.startActiveSpan(
+      `run${layer.charAt(0).toUpperCase() + layer.slice(1)}LayerExtractor`,
+      { attributes },
+      async (span) => {
+        const start = Date.now();
+
+        try {
+          const result = await extractor();
+          const duration = Date.now() - start;
+
+          this.recordLayerCallMetrics(job, layer, duration, 'ok');
+          span.setStatus({ code: SpanStatusCode.OK });
+
+          return result;
+        } catch (error) {
+          const duration = Date.now() - start;
+
+          this.recordLayerCallMetrics(job, layer, duration, 'error');
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: error instanceof Error ? error.message : 'Layer extraction failed',
+          });
+          span.recordException(error as Error);
+          throw error;
+        } finally {
+          span.end();
+        }
+      },
+    );
   }
 
   async run(

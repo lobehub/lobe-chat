@@ -21,6 +21,16 @@ export interface MemoryExtractionPrivateConfig {
   agentLayerExtractor: MemoryLayerExtractorConfig;
   concurrency?: number;
   embedding: MemoryAgentConfig;
+  observabilityS3?: {
+    accessKeyId?: string;
+    bucketName?: string;
+    enabled: boolean;
+    endpoint?: string;
+    forcePathStyle?: boolean;
+    pathPrefix?: string;
+    region?: string;
+    secretAccessKey?: string;
+  };
   webhookHeaders?: Record<string, string>;
   whitelistUsers?: string[];
 }
@@ -87,6 +97,33 @@ const parseEmbeddingAgent = (
   };
 };
 
+const parseExtractorAgentObservabilityS3 = () => {
+  const accessKeyId = process.env.MEMORY_USER_MEMORY_EXTRACTOR_S3_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.MEMORY_USER_MEMORY_EXTRACTOR_S3_SECRET_ACCESS_KEY;
+  const bucketName = process.env.MEMORY_USER_MEMORY_EXTRACTOR_S3_BUCKET_NAME;
+  const region = process.env.MEMORY_USER_MEMORY_EXTRACTOR_S3_REGION;
+  const endpoint = process.env.MEMORY_USER_MEMORY_EXTRACTOR_S3_ENDPOINT;
+  const forcePathStyle = process.env.MEMORY_USER_MEMORY_EXTRACTOR_S3_FORCE_PATH_STYLE === 'true';
+  const pathPrefix = process.env.MEMORY_USER_MEMORY_EXTRACTOR_S3_PATH_PREFIX;
+
+  if (!accessKeyId || !secretAccessKey || !endpoint) {
+    return {
+      enabled: false,
+    };
+  }
+
+  return {
+    accessKeyId,
+    bucketName,
+    enabled: true,
+    endpoint,
+    forcePathStyle,
+    pathPrefix,
+    region,
+    secretAccessKey,
+  };
+};
+
 const sanitizeAgent = (agent?: MemoryAgentConfig): MemoryAgentPublicConfig | undefined => {
   if (!agent) return undefined;
   const sanitized: MemoryAgentConfig = { ...agent };
@@ -103,6 +140,7 @@ export const parseMemoryExtractionConfig = (): MemoryExtractionPrivateConfig => 
     agentLayerExtractor.provider || DEFAULT_PROVIDER,
     agentGateKeeper.apiKey || agentLayerExtractor.apiKey,
   );
+  const extractorObservabilityS3 = parseExtractorAgentObservabilityS3();
   const concurrencyRaw = process.env.MEMORY_USER_MEMORY_CONCURRENCY;
   const concurrency =
     concurrencyRaw !== undefined
@@ -130,6 +168,7 @@ export const parseMemoryExtractionConfig = (): MemoryExtractionPrivateConfig => 
     agentLayerExtractor,
     concurrency,
     embedding,
+    observabilityS3: extractorObservabilityS3,
     webhookHeaders,
     whitelistUsers,
   };

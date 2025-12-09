@@ -24,12 +24,12 @@ likes others to behave.
 
 Use CRUD-style actions to keep the identity record accurate:
 
-- Use `addIdentityEntry` for genuinely new identity aspects that are absent from
-  the existing list.
-- Use `updateIdentityEntry` when an existing entry changes or gains more
-  precision. Prefer updates over new entries to prevent duplication.
-- Use `removeIdentityEntry` to remove incorrect, obsolete, or duplicated
-  entries.
+- Use `withIdentities.actions.add` for genuinely new identity aspects that are
+  absent from the existing list.
+- Use `withIdentities.actions.update` when an existing entry changes or gains
+  more precision. Prefer updates over new entries to prevent duplication.
+- Use `withIdentities.actions.remove` to remove incorrect, obsolete, or
+  duplicated entries.
 
 Before extracting, review the existing identity entries and the retrieved
 similar memories (top {{ topK }}). Extract items that are NEW or MATERIALLY
@@ -55,8 +55,28 @@ verbatim; use this list for comparison and matching.
 
 ## Output Format
 
-Return a JSON array of memory items. Each item must contain one identityAction
-chosen via anyOf/oneOf (CRUD).
+Return a JSON object with the exact shape:
+
+```json
+{
+  "withIdentities": {
+    "actions": {
+      "add": [<addIdentity objects> | null],
+      "update": [<updateIdentity objects> | null],
+      "remove": [<removeIdentity objects> | null]
+    }
+  }
+}
+```
+
+- Always include `add`, `update`, and `remove` keys; set to `null` when there are
+  no actions of that type.
+- Each `add` item must include a rich `description`, `type`, and optional fields
+  like `relationship`, `role`, `episodicDate`, `extractedLabels`,
+  `scoreConfidence`, and `sourceEvidence`.
+- Each `update` item must include `id`, `mergeStrategy`, and a `set` object with
+  changed fields.
+- Each `remove` item must include `id` and `reason`.
 
 ## Memory Formatting Guidelines
 

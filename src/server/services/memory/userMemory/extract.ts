@@ -13,14 +13,22 @@ import type {
   PersistedMemoryResult,
 } from '@lobechat/memory-user-memory';
 import { ModelRuntime } from '@lobechat/model-runtime';
-import type { Embeddings, LLMRoleType, OpenAIChatMessage } from '@lobechat/model-runtime';
+import type {
+  Embeddings,
+  GenerateObjectPayload,
+  LLMRoleType,
+  OpenAIChatMessage,
+} from '@lobechat/model-runtime';
+import { SpanStatusCode } from '@lobechat/observability-otel/api';
 import {
   layerEntriesHistogram,
   processedDurationHistogram,
   processedSourceCounter,
-} from '@lobechat/observability-otel/api';
+  tracer,
+} from '@lobechat/observability-otel/modules/memory-user-memory';
 import { Client } from '@upstash/workflow';
 import { and, asc, eq, inArray } from 'drizzle-orm';
+import { join } from 'pathe';
 import { z } from 'zod';
 
 import {
@@ -39,6 +47,7 @@ import {
   parseMemoryExtractionConfig,
 } from '@/server/globalConfig/parseMemoryExtractionConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import { S3 } from '@/server/modules/S3';
 import type { GlobalMemoryLayer } from '@/types/serverConfig';
 import type { UserKeyVaults } from '@/types/user/settings';
 import { LayersEnum, MergeStrategyEnum, TypesEnum, UserMemoryLayer } from '@/types/userMemory';
@@ -285,6 +294,7 @@ export class MemoryExtractionExecutor {
     embeddingsModel: string;
     gateModel: string;
     layerModels: Partial<Record<UserMemoryLayer, string>>;
+    observabilityS3: MemoryExtractionConfig['observabilityS3'];
   };
 
   private readonly runtimeCache = new Map<string, RuntimeBundle>();
@@ -307,6 +317,7 @@ export class MemoryExtractionExecutor {
         publicMemoryConfig?.agentLayerExtractor.layers,
         privateConfig.agentLayerExtractor.layers,
       ),
+      observabilityS3: privateConfig.observabilityS3,
     };
   }
 
@@ -552,71 +563,68 @@ export class MemoryExtractionExecutor {
     const insertedIds: string[] = [];
     const userMemoryModel = new UserMemoryModel(db, job.userId);
 
-    for (const action of result ?? []) {
-      if (action.name === 'addIdentity') {
-        const { arguments: args } = action;
-        const [summaryVector] = await this.generateEmbeddings(runtime, model, [args.description]);
-        const metadata = this.buildBaseMetadata(
-          job,
-          messageIds,
-          UserMemoryLayer.Identity,
-          args.extractedLabels,
-        );
+    const actions = result.withIdentities?.actions;
+    const addActions = actions?.add ?? [];
+    const updateActions = actions?.update ?? [];
+    const removeActions = actions?.remove ?? [];
 
-        const res = await userMemoryModel.addIdentityEntry({
-          base: {
-            details: args.description,
-            detailsVector1024: summaryVector ?? undefined,
-            memoryCategory: 'people',
-            memoryLayer: LayersEnum.Identity,
-            memoryType: TypesEnum.People,
-            metadata,
-            summary: args.description,
-            summaryVector1024: summaryVector ?? undefined,
-          },
-          identity: {
-            description: args.description,
-            metadata,
-            relationship: args.relationship ?? undefined,
-            role: args.role ?? undefined,
-            tags: args.extractedLabels ?? undefined,
-            type: args.type ?? undefined,
-          },
-        });
+    for (const action of addActions) {
+      const [summaryVector] = await this.generateEmbeddings(runtime, model, [action.description]);
+      const metadata = this.buildBaseMetadata(
+        job,
+        messageIds,
+        UserMemoryLayer.Identity,
+        action.extractedLabels,
+      );
 
-        insertedIds.push(res.userMemoryId);
-      }
+      const res = await userMemoryModel.addIdentityEntry({
+        base: {
+          details: action.description,
+          detailsVector1024: summaryVector ?? undefined,
+          memoryCategory: 'people',
+          memoryLayer: LayersEnum.Identity,
+          memoryType: TypesEnum.People,
+          metadata,
+          summary: action.description,
+          summaryVector1024: summaryVector ?? undefined,
+        },
+        identity: {
+          description: action.description,
+          metadata,
+          relationship: action.relationship ?? undefined,
+          role: action.role ?? undefined,
+          tags: action.extractedLabels ?? undefined,
+          type: action.type ?? undefined,
+        },
+      });
 
-      if (action.name === 'updateIdentity') {
-        const { arguments: args } = action;
-        const [descriptionVector] = await this.generateEmbeddings(runtime, model, [
-          args.set.description,
-        ]);
+      insertedIds.push(res.userMemoryId);
+    }
 
-        await userMemoryModel.updateIdentityEntry({
-          identity: {
-            description: args.set.description,
-            descriptionVector: descriptionVector ?? undefined,
-            metadata: args.set.extractedLabels
-              ? this.buildBaseMetadata(
-                  job,
-                  messageIds,
-                  UserMemoryLayer.Identity,
-                  args.set.extractedLabels,
-                )
-              : undefined,
-            relationship: args.set.relationship ?? undefined,
-            role: args.set.role ?? undefined,
-            type: args.set.type ?? undefined,
-          },
-          identityId: args.id,
-          mergeStrategy: args.mergeStrategy as MergeStrategyEnum,
-        });
-      }
+    for (const action of updateActions) {
+      const { set } = action;
+      const [descriptionVector] = set.description
+        ? await this.generateEmbeddings(runtime, model, [set.description])
+        : [];
 
-      if (action.name === 'removeIdentity' && action.arguments?.id) {
-        await userMemoryModel.removeIdentityEntry(action.arguments.id);
-      }
+      await userMemoryModel.updateIdentityEntry({
+        identity: {
+          description: set.description,
+          descriptionVector: descriptionVector ?? undefined,
+          metadata: set.extractedLabels
+            ? this.buildBaseMetadata(job, messageIds, UserMemoryLayer.Identity, set.extractedLabels)
+            : undefined,
+          relationship: set.relationship ?? undefined,
+          role: set.role ?? undefined,
+          type: set.type ?? undefined,
+        },
+        identityId: action.id,
+        mergeStrategy: action.mergeStrategy as MergeStrategyEnum,
+      });
+    }
+
+    for (const action of removeActions) {
+      await userMemoryModel.removeIdentityEntry(action.id);
     }
 
     return insertedIds;
@@ -700,145 +708,296 @@ export class MemoryExtractionExecutor {
   }
 
   async extractTopic(job: TopicExtractionJob) {
-    const startTime = Date.now();
-    const db = await this.db;
-    const topic = await db.query.topics.findFirst({
-      columns: { createdAt: true, id: true, metadata: true, updatedAt: true, userId: true },
-      where: and(eq(topics.id, job.topicId), eq(topics.userId, job.userId)),
-    });
-
-    if (!topic) {
-      console.warn(`[memory-extraction] topic ${job.topicId} not found for user ${job.userId}`);
-      return { extracted: false, layers: {}, memoryIds: [] };
-    }
-    if ((job.from && topic.createdAt < job.from) || (job.to && topic.createdAt > job.to)) {
-      return { extracted: false, layers: {}, memoryIds: [] };
-    }
-    if (!job.forceAll && !job.forceTopics && isTopicExtracted(topic.metadata)) {
-      return { extracted: false, layers: {}, memoryIds: [] };
-    }
-
-    const extractionJob: MemoryExtractionJob = {
-      force: job.forceAll || job.forceTopics,
-      layers: job.layers,
+    const attributes = {
       source: job.source,
-      sourceId: topic.id,
-      userId: job.userId,
+      source_id: job.topicId,
+      user_id: job.userId,
     };
 
-    const userModel = new UserModel(db, job.userId);
-    const userState = await userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
-    const keyVaults = userState.settings?.keyVaults as UserKeyVaults | undefined;
-    const language = userState.settings?.general?.language;
-
-    const runtimes = await this.getRuntime(job.userId, keyVaults);
-
-    const conversations = await this.listConversationsForTopic(
-      job.userId,
-      topic.id,
-      topic.updatedAt,
-    );
-    if (!conversations || conversations.length === 0) {
-      this.recordJobMetrics(
+    let observabilityS3: S3 | undefined;
+    if (this.modelConfig.observabilityS3?.enabled) {
+      observabilityS3 = new S3(
+        this.modelConfig.observabilityS3?.accessKeyId,
+        this.modelConfig.observabilityS3?.secretAccessKey,
+        this.modelConfig.observabilityS3?.endpoint,
         {
-          force: job.forceAll || job.forceTopics,
-          layers: job.layers,
-          source: job.source,
-          sourceId: topic.id,
-          userId: job.userId,
+          bucket: this.modelConfig.observabilityS3?.bucketName,
+          forcePathStyle: this.modelConfig.observabilityS3?.forcePathStyle,
+          region: this.modelConfig.observabilityS3?.region,
+          setAcl: false,
         },
-        'completed',
-        Date.now() - startTime,
       );
-      return { extracted: false, layers: {}, memoryIds: [] };
     }
 
-    const messageIds = conversations.map((item) => item.id);
+    return tracer.startActiveSpan(
+      'Memory User Memory: Extract Chat Topic',
+      { attributes },
+      async (span) => {
+        const startTime = Date.now();
+        let extractionJob: MemoryExtractionJob | null = null;
+        let extraction: MemoryExtractionResult | null = null;
+        let resultRecorder: LobeChatTopicResultRecorder | null = null;
 
-    const topicContextProvider = new LobeChatTopicContextProvider({
-      conversations: conversations,
-      topic: topic,
-      topicId: topic.id,
-    });
-    const topicContext = await topicContextProvider.buildContext(extractionJob);
+        try {
+          const db = await this.db;
+          const topic = await db.query.topics.findFirst({
+            columns: { createdAt: true, id: true, metadata: true, updatedAt: true, userId: true },
+            where: and(eq(topics.id, job.topicId), eq(topics.userId, job.userId)),
+          });
 
-    const resultRecorder = new LobeChatTopicResultRecorder({
-      currentMetadata: topic.metadata || {},
-      database: db,
-      lastMessageAt: (conversations?.at(-1)?.createdAt || topic.updatedAt).toISOString(),
-      messageCount: conversations.length,
-      topicId: topic.id,
-    });
+          if (!topic) {
+            console.warn(
+              `[memory-extraction] topic ${job.topicId} not found for user ${job.userId}`,
+            );
+            span.setStatus({ code: SpanStatusCode.OK, message: 'topic_not_found' });
+            return {
+              extracted: false,
+              layers: {},
+              memoryIds: [],
+              traceId: span.spanContext().traceId,
+            };
+          }
+          if ((job.from && topic.createdAt < job.from) || (job.to && topic.createdAt > job.to)) {
+            span.setStatus({ code: SpanStatusCode.OK, message: 'topic_out_of_range' });
+            return {
+              extracted: false,
+              layers: {},
+              memoryIds: [],
+              traceId: span.spanContext().traceId,
+            };
+          }
+          if (!job.forceAll && !job.forceTopics && isTopicExtracted(topic.metadata)) {
+            span.setStatus({ code: SpanStatusCode.OK, message: 'already_extracted' });
+            return {
+              extracted: false,
+              layers: {},
+              memoryIds: [],
+              traceId: span.spanContext().traceId,
+            };
+          }
 
-    const retrievedMemories = await this.listRelevantUserMemories(
-      extractionJob,
-      runtimes.embeddings,
-      this.modelConfig.embeddingsModel,
-      job.userId,
-      conversations,
+          extractionJob = {
+            force: job.forceAll || job.forceTopics,
+            layers: job.layers,
+            source: job.source,
+            sourceId: topic.id,
+            userId: job.userId,
+          };
+
+          const userModel = new UserModel(db, job.userId);
+          const userState = await userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
+          const keyVaults = userState.settings?.keyVaults as UserKeyVaults | undefined;
+          const language = userState.settings?.general?.language;
+
+          const runtimes = await this.getRuntime(job.userId, keyVaults);
+
+          const conversations = await this.listConversationsForTopic(
+            job.userId,
+            topic.id,
+            topic.updatedAt,
+          );
+          if (!conversations || conversations.length === 0) {
+            if (extractionJob) {
+              this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
+            }
+            span.setStatus({ code: SpanStatusCode.OK, message: 'empty_conversations' });
+            return {
+              extracted: false,
+              layers: {},
+              memoryIds: [],
+              traceId: span.spanContext().traceId,
+            };
+          }
+
+          const messageIds = conversations.map((item) => item.id);
+
+          const topicContextProvider = new LobeChatTopicContextProvider({
+            conversations: conversations,
+            topic: topic,
+            topicId: topic.id,
+          });
+          const topicContext = await topicContextProvider.buildContext(extractionJob);
+
+          resultRecorder = new LobeChatTopicResultRecorder({
+            currentMetadata: topic.metadata || {},
+            database: db,
+            lastMessageAt: (conversations?.at(-1)?.createdAt || topic.updatedAt).toISOString(),
+            messageCount: conversations.length,
+            topicId: topic.id,
+          });
+
+          const retrievedMemories = await this.listRelevantUserMemories(
+            extractionJob,
+            runtimes.embeddings,
+            this.modelConfig.embeddingsModel,
+            job.userId,
+            conversations,
+          );
+          const retrievedMemoryContextProvider = new RetrievalUserMemoryContextProvider({
+            retrievedMemories,
+          });
+          const retrievalMemoryContext =
+            await retrievedMemoryContextProvider.buildContext(extractionJob);
+
+          const retrievedMemoryIdentities = await this.listUserMemoryIdentities(
+            extractionJob,
+            job.userId,
+          );
+          const retrievedMemoryIdentitiesContextProvider =
+            new RetrievalUserMemoryIdentitiesProvider({
+              retrievedIdentities: retrievedMemoryIdentities,
+            });
+          const retrievedIdentityContext =
+            await retrievedMemoryIdentitiesContextProvider.buildContext(extractionJob);
+
+          const service = new MemoryExtractionService({
+            config: this.modelConfig,
+            db,
+            language,
+            runtimes,
+          });
+
+          extraction = await service.run(extractionJob, {
+            callbacks: {
+              onExtractRequest: this.onExtractRequestHook(
+                job.userId,
+                extractionJob?.source,
+                extractionJob?.sourceId,
+                observabilityS3,
+              ),
+              onExtractResponse: this.onExtractResponseHook(
+                job.userId,
+                extractionJob?.source,
+                extractionJob?.sourceId,
+                observabilityS3,
+              ),
+            },
+            contextProvider: topicContextProvider,
+            language: language,
+            resultRecorder: resultRecorder,
+            retrievedContexts: [topicContext.context, retrievalMemoryContext.context],
+            retrievedIdentitiesContext: retrievedIdentityContext.context,
+
+            sessionDate: topic.updatedAt.toISOString(),
+            // TODO: make topK configurable
+            topK: 10,
+            username:
+              userState.fullName || `${userState.firstName} ${userState.lastName}`.trim() || 'User',
+          });
+          if (!extraction) {
+            this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
+            span.setStatus({ code: SpanStatusCode.OK, message: 'no_extraction' });
+            return {
+              extracted: false,
+              layers: {},
+              memoryIds: [],
+              traceId: span.spanContext().traceId,
+            };
+          }
+
+          const persistedRes = await this.persistExtraction(
+            extractionJob,
+            messageIds,
+            extraction,
+            runtimes,
+            db,
+          );
+          await resultRecorder.recordComplete(extractionJob, {
+            ...persistedRes,
+            processedMemoryCount: persistedRes.createdIds.length,
+          });
+          this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
+          span.setStatus({ code: SpanStatusCode.OK });
+          span.setAttribute('memory.processed_memory_count', persistedRes.createdIds.length);
+
+          return {
+            extracted: true,
+            layers: persistedRes.layers,
+            memoryIds: persistedRes.createdIds,
+            traceId: span.spanContext().traceId,
+          };
+        } catch (error) {
+          if (extraction && extractionJob && resultRecorder) {
+            await resultRecorder.recordFail?.(extractionJob, error as Error);
+          }
+          if (extractionJob) {
+            this.recordJobMetrics(extractionJob, 'failed', Date.now() - startTime);
+          }
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: error instanceof Error ? error.message : 'Extraction failed',
+          });
+          span.recordException(error as Error);
+          throw error;
+        } finally {
+          span.end();
+        }
+      },
     );
-    const retrievedMemoryContextProvider = new RetrievalUserMemoryContextProvider({
-      retrievedMemories,
-    });
-    const retrievalMemoryContext = await retrievedMemoryContextProvider.buildContext(extractionJob);
+  }
 
-    const retrievedMemoryIdentities = await this.listUserMemoryIdentities(
-      extractionJob,
-      job.userId,
-    );
-    const retrievedMemoryIdentitiesContextProvider = new RetrievalUserMemoryIdentitiesProvider({
-      retrievedIdentities: retrievedMemoryIdentities,
-    });
-    const retrievedIdentityContext =
-      await retrievedMemoryIdentitiesContextProvider.buildContext(extractionJob);
-
-    let extraction: MemoryExtractionResult | null = null;
-    const service = new MemoryExtractionService({
-      config: this.modelConfig,
-      db,
-      language,
-      runtimes,
-    });
-
-    try {
-      extraction = await service.run(extractionJob, {
-        contextProvider: topicContextProvider,
-        language: language,
-        resultRecorder: resultRecorder,
-        retrievedContexts: [topicContext.context, retrievalMemoryContext.context],
-        retrievedIdentitiesContext: retrievedIdentityContext.context,
-        sessionDate: topic.updatedAt.toISOString(),
-        // TODO: make topK configurable
-        topK: 10,
-        username:
-          userState.fullName || `${userState.firstName} ${userState.lastName}`.trim() || 'User',
-      });
-      if (!extraction) {
-        this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
-        return { extracted: false, layers: {}, memoryIds: [] };
-      }
-
-      const persistedRes = await this.persistExtraction(
-        extractionJob,
-        messageIds,
-        extraction,
-        runtimes,
-        db,
-      );
-      await resultRecorder.recordComplete(extractionJob, {
-        ...persistedRes,
-        processedMemoryCount: persistedRes.createdIds.length,
-      });
-      this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
-
-      return { extracted: true, layers: persistedRes.layers, memoryIds: persistedRes.createdIds };
-    } catch (error) {
-      if (extraction) {
-        await resultRecorder.recordFail?.(extractionJob, error as Error);
-      }
-      this.recordJobMetrics(extractionJob, 'failed', Date.now() - startTime);
-      throw error;
+  private getOnExtractHooksPath(
+    userId: string,
+    source: string,
+    sourceId: string,
+  ): string | undefined {
+    if (!this.modelConfig.observabilityS3?.enabled) {
+      return undefined;
     }
+
+    const withoutBase = `memory-extraction/${userId}/${source}/${sourceId}/`;
+    const base = this.modelConfig.observabilityS3?.pathPrefix
+      ? this.modelConfig.observabilityS3?.pathPrefix.startsWith('/')
+        ? this.modelConfig.observabilityS3?.pathPrefix.slice(1)
+        : this.modelConfig.observabilityS3?.pathPrefix
+      : '';
+
+    const key = join(`/${base}`, withoutBase);
+    return key;
+  }
+
+  onExtractRequestHook(
+    userId: string,
+    source: string,
+    sourceId: string,
+    s3?: S3,
+  ): ((payload: GenerateObjectPayload) => Promise<void>) | undefined {
+    if (!this.modelConfig.observabilityS3?.enabled) {
+      return undefined;
+    }
+
+    return async (payload: GenerateObjectPayload) => {
+      await s3!.uploadContent(
+        join(
+          this.getOnExtractHooksPath(userId, source, sourceId)!,
+          'requests',
+          `${new Date().toISOString()}.json`,
+        ),
+        JSON.stringify(payload, null, 2),
+      );
+    };
+  }
+
+  onExtractResponseHook<TOutput>(
+    userId: string,
+    source: string,
+    sourceId: string,
+    s3?: S3,
+  ): ((response: TOutput) => Promise<void>) | undefined {
+    if (!this.modelConfig.observabilityS3?.enabled) {
+      return undefined;
+    }
+
+    return async (response: TOutput) => {
+      await s3!.uploadContent(
+        join(
+          this.getOnExtractHooksPath(userId, source, sourceId)!,
+          'response',
+          `${new Date().toISOString()}.json`,
+        ),
+        JSON.stringify(response, null, 2),
+      );
+    };
   }
 
   async runDirect(payload: MemoryExtractionNormalizedPayload) {
