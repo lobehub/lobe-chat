@@ -83,9 +83,6 @@ const ModelSelect = memo<ModelSelectProps>(
         .filter(Boolean) as SelectProps['options'];
     }, [enabledList, requiredAbilities, showAbility]);
 
-    console.log('options', options);
-    console.log('enabledList', enabledList);
-
     return (
       <Select
         className={styles.select}
