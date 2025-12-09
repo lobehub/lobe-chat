@@ -51,6 +51,7 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
       : t('marketPublish.modal.loading.upload');
 
     let identifier = meta?.marketIdentifier;
+
     const changelog = generateDefaultChangelog();
 
     try {

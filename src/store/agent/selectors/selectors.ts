@@ -48,6 +48,7 @@ const currentAgentMeta = (s: AgentStoreState): MetaData => {
     avatar: data?.avatar || DEFAULT_AVATAR,
     backgroundColor: data?.backgroundColor || DEFAULT_BACKGROUND_COLOR,
     description: data?.description || undefined,
+    marketIdentifier: data?.marketIdentifier || undefined,
     tags: data?.tags,
     title: data?.title || undefined,
   };
@@ -67,6 +68,7 @@ const getAgentMetaById =
       avatar: data.avatar || DEFAULT_AVATAR,
       backgroundColor: data.backgroundColor || DEFAULT_BACKGROUND_COLOR,
       description: data.description || undefined,
+      marketIdentifier: data.marketIdentifier || undefined,
       tags: data.tags,
       title: data.title || undefined,
     };
