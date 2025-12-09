@@ -85,6 +85,46 @@ const handleAgent = async (req: NextRequest, segments: string[]) => {
     }
   }
 
+  // Get own agents (requires authentication)
+  if (action === 'own') {
+    if (req.method !== 'GET') return methodNotAllowed(['GET']);
+
+    if (!accessToken) {
+      return NextResponse.json(
+        {
+          error: 'unauthorized',
+          message: 'Authentication required to get own agents',
+          status: 'error',
+        },
+        { status: 401 },
+      );
+    }
+
+    try {
+      // Parse query parameters from the request URL
+      const url = new URL(req.url);
+      const page = url.searchParams.get('page');
+      const pageSize = url.searchParams.get('pageSize');
+
+      const response = await market.agents.getOwnAgents({
+        page: page ? parseInt(page, 10) : undefined,
+        pageSize: pageSize ? parseInt(pageSize, 10) : undefined,
+      });
+
+      return NextResponse.json(response);
+    } catch (error) {
+      console.error('[Market] Failed to get own agents:', error);
+      return NextResponse.json(
+        {
+          error: 'get_own_agents_failed',
+          message: error instanceof Error ? error.message : 'Unknown error',
+          status: 'error',
+        },
+        { status: 500 },
+      );
+    }
+  }
+
   if (action === 'versions') {
     if (rest.length !== 1 || rest[0] !== 'create') {
       return notFound('Requested agent version endpoint is not available.');
@@ -110,6 +150,47 @@ const handleAgent = async (req: NextRequest, segments: string[]) => {
       return NextResponse.json(
         {
           error: 'create_agent_version_failed',
+          message: error instanceof Error ? error.message : 'Unknown error',
+          status: 'error',
+        },
+        { status: 500 },
+      );
+    }
+  }
+
+  // Handle agent status actions: /agent/{identifier}/{action}
+  // Actions: publish, unpublish, deprecate
+  if (segments.length === 2) {
+    const [identifier, statusAction] = segments;
+
+    if (!['publish', 'unpublish', 'deprecate'].includes(statusAction)) {
+      return notFound(`Unknown agent action: ${statusAction}`);
+    }
+
+    if (req.method !== 'POST') return methodNotAllowed(['POST']);
+
+    try {
+      let response;
+      switch (statusAction) {
+        case 'publish': {
+          response = await market.agents.publish(identifier);
+          break;
+        }
+        case 'unpublish': {
+          response = await market.agents.unpublish(identifier);
+          break;
+        }
+        case 'deprecate': {
+          response = await market.agents.deprecate(identifier);
+          break;
+        }
+      }
+      return NextResponse.json(response ?? { success: true });
+    } catch (error) {
+      console.error(`[Market] Failed to ${statusAction} agent:`, error);
+      return NextResponse.json(
+        {
+          error: `${statusAction}_agent_failed`,
           message: error instanceof Error ? error.message : 'Unknown error',
           status: 'error',
         },

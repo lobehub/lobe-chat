@@ -24,6 +24,7 @@ interface MarketAuthProviderProps {
  * 获取用户信息
  */
 const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null> => {
+  console.log('accessToken', accessToken);
   try {
     const response = await fetch(MARKET_OIDC_ENDPOINTS.userinfo, {
       body: JSON.stringify({ token: accessToken }),

@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar, Block, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
+import { Tag as AntTag } from 'antd';
 import { createStyles } from 'antd-style';
 import { ClockIcon, CoinsIcon, DownloadIcon } from 'lucide-react';
 import { memo } from 'react';
@@ -8,8 +9,28 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PublishedTime from '@/components/PublishedTime';
-import { DiscoverAssistantItem } from '@/types/discover';
+import { AgentStatus, DiscoverAssistantItem } from '@/types/discover';
 import { formatIntergerNumber } from '@/utils/format';
+
+const getStatusTagColor = (status?: AgentStatus) => {
+  switch (status) {
+    case 'published': {
+      return 'green';
+    }
+    case 'unpublished': {
+      return 'orange';
+    }
+    case 'deprecated': {
+      return 'red';
+    }
+    case 'archived': {
+      return 'default';
+    }
+    default: {
+      return 'default';
+    }
+  }
+};
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -66,10 +87,11 @@ const AgentCard = memo<AgentCardProps>(
     category,
     tokenUsage,
     installCount,
+    status,
     onClick,
   }) => {
     const { styles } = useStyles();
-    const { t } = useTranslation('discover');
+    const { t } = useTranslation(['discover', 'setting']);
 
     return (
       <Block
@@ -112,9 +134,16 @@ const AgentCard = memo<AgentCardProps>(
                 overflow: 'hidden',
               }}
             >
-              <Text as={'h3'} className={styles.title} ellipsis>
-                {title}
-              </Text>
+              <Flexbox align={'center'} gap={8} horizontal>
+                <Text as={'h3'} className={styles.title} ellipsis style={{ flex: 1 }}>
+                  {title}
+                </Text>
+                {status && (
+                  <AntTag color={getStatusTagColor(status)} style={{ flexShrink: 0, margin: 0 }}>
+                    {t(`setting:myAgents.status.${status}`)}
+                  </AntTag>
+                )}
+              </Flexbox>
               {author && <div className={styles.author}>{author}</div>}
             </Flexbox>
           </Flexbox>

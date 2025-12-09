@@ -6,6 +6,7 @@ import {
   isDesktop,
 } from '@lobechat/const';
 import {
+  AgentStatus,
   AssistantListResponse,
   AssistantMarketSource,
   AssistantQueryParams,
@@ -593,7 +594,7 @@ export class DiscoverService {
         pluginCount: (data.config as any)?.plugins?.length || (data as any).pluginCount || 0,
         readme: data.documentationUrl || '',
         schemaVersion: 1,
-        status: data.status,
+        status: (data.status as AgentStatus) || undefined,
         summary: data.summary || '',
         systemRole: (data.config as any)?.systemRole || '',
         tags: data.tags || [],

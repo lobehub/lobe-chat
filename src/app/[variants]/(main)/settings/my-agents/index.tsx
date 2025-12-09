@@ -1,19 +1,23 @@
 'use client';
 
+import { AgentListResponse } from '@lobehub/market-sdk';
 import { Form, Icon, Text } from '@lobehub/ui';
-import { Button, Spin } from 'antd';
+import { App, Button, Pagination, Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import { PackageOpen } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
+import useSWR from 'swr';
 
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
-import { useDiscoverStore } from '@/store/discover';
-import { DiscoverAssistantItem } from '@/types/discover';
+import { marketApiService } from '@/services/marketApi';
+import { AgentStatus, DiscoverAssistantItem } from '@/types/discover';
 
 import AgentCard from './features/AgentCard';
-import AgentDetailDrawer from './features/AgentDetailDrawer';
+import AgentDetailDrawer, { AgentStatusAction } from './features/AgentDetailDrawer';
+
+const PAGE_SIZE = 20;
 
 const useStyles = createStyles(({ css, token }) => ({
   cardGrid: css`
@@ -47,25 +51,52 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+// AgentItem type from AgentListResponse (not exported from SDK)
+type AgentItem = AgentListResponse['items'][number];
+
+// Transform AgentItem from SDK to DiscoverAssistantItem
+const transformAgentToDiscoverItem = (agent: AgentItem): DiscoverAssistantItem => ({
+  author: (agent as any).owner?.name || '',
+  avatar: (agent as any).avatar || '',
+  category: (agent as any).category as any,
+  config: (agent as any).config || {},
+  createdAt: (agent as any).createdAt,
+  description: (agent as any).description || '',
+  homepage: (agent as any).homepage || '',
+  identifier: (agent as any).identifier,
+  installCount: (agent as any).installCount || 0,
+  knowledgeCount: (agent as any).knowledgeCount || 0,
+  pluginCount: (agent as any).pluginCount || 0,
+  status: (agent as any).status as AgentStatus | undefined,
+  tags: (agent as any).tags || [],
+  title: (agent as any).name,
+  tokenUsage: (agent as any).tokenUsage || 0,
+});
+
 const MyAgentsPage = memo(() => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
-  const { isAuthenticated, signIn, getCurrentUserInfo } = useMarketAuth();
-  const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
+  const { isAuthenticated, signIn, session } = useMarketAuth();
+  const { message } = App.useApp();
 
   const [selectedAgent, setSelectedAgent] = useState<DiscoverAssistantItem | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Get current user's account ID
-  const userInfo = getCurrentUserInfo();
-  const ownerId = userInfo?.accountId?.toString();
+  // Fetch user's own agents using getOwnAgents API with pagination
+  const { data, isLoading, mutate } = useSWR(
+    isAuthenticated && session?.accessToken
+      ? ['getOwnAgents', session.accessToken, currentPage]
+      : null,
+    async ([, accessToken, page]) => {
+      marketApiService.setAccessToken(accessToken);
+      return marketApiService.getOwnAgents({ page, pageSize: PAGE_SIZE });
+    },
+  );
 
-  // Fetch user's published agents
-  const { data, isLoading } = useAssistantList({
-    ownerId,
-    pageSize: 20,
-    source: 'new',
-  });
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+  }, []);
 
   const handleCardClick = useCallback((agent: DiscoverAssistantItem) => {
     setSelectedAgent(agent);
@@ -77,19 +108,64 @@ const MyAgentsPage = memo(() => {
     setSelectedAgent(null);
   }, []);
 
-  const handleUnpublish = useCallback((identifier: string) => {
-    // TODO: Implement unpublish functionality
-    console.log('Unpublish agent:', identifier);
-  }, []);
+  const handleStatusChange = useCallback(
+    async (identifier: string, action: AgentStatusAction) => {
+      if (!session?.accessToken) {
+        message.error(t('myAgents.errors.notAuthenticated'));
+        return;
+      }
+
+      const messageKey = `agent-status-${action}`;
+      const loadingText = t(`myAgents.actions.${action}Loading` as any);
+      const successText = t(`myAgents.actions.${action}Success` as any);
+      const errorText = t(`myAgents.actions.${action}Error` as any);
+
+      try {
+        message.loading({ content: loadingText, key: messageKey });
+        marketApiService.setAccessToken(session.accessToken);
+
+        switch (action) {
+          case 'publish': {
+            await marketApiService.publishAgent(identifier);
+            break;
+          }
+          case 'unpublish': {
+            await marketApiService.unpublishAgent(identifier);
+            break;
+          }
+          case 'deprecate': {
+            await marketApiService.deprecateAgent(identifier);
+            break;
+          }
+        }
+
+        message.success({ content: successText, key: messageKey });
+
+        // Refresh the agent list
+        mutate();
+
+        // Close drawer after successful action
+        setDrawerOpen(false);
+        setSelectedAgent(null);
+      } catch (error) {
+        console.error(`[MyAgentsPage] ${action} agent error:`, error);
+        message.error({
+          content: `${errorText}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          key: messageKey,
+        });
+      }
+    },
+    [session?.accessToken, message, t, mutate],
+  );
 
   const handleSignIn = useCallback(async () => {
     await signIn();
   }, [signIn]);
 
-  // Sort agents by install count in descending order
-  const sortedAgents = data?.items?.slice().sort((a, b) => {
-    return (b.installCount || 0) - (a.installCount || 0);
-  });
+  // Transform and sort agents by install count in descending order
+  const sortedAgents = data?.items
+    ?.map(transformAgentToDiscoverItem)
+    .sort((a, b) => (b.installCount || 0) - (a.installCount || 0));
 
   // Show login prompt if not authenticated
   if (!isAuthenticated) {
@@ -160,19 +236,30 @@ const MyAgentsPage = memo(() => {
         title={t('myAgents.title')}
         variant={'borderless'}
       >
-        <Flexbox className={styles.container} gap={16} padding={16}>
+        <Flexbox className={styles.container} gap={16}>
           <div className={styles.cardGrid}>
             {sortedAgents.map((agent) => (
               <AgentCard key={agent.identifier} onClick={() => handleCardClick(agent)} {...agent} />
             ))}
           </div>
+          {data && data.totalPages > 1 && (
+            <Flexbox align="center" justify="center" style={{ marginTop: 16 }}>
+              <Pagination
+                current={currentPage}
+                onChange={handlePageChange}
+                pageSize={PAGE_SIZE}
+                showSizeChanger={false}
+                total={data.totalCount}
+              />
+            </Flexbox>
+          )}
         </Flexbox>
       </Form.Group>
 
       <AgentDetailDrawer
         agent={selectedAgent}
         onClose={handleCloseDrawer}
-        onUnpublish={handleUnpublish}
+        onStatusChange={handleStatusChange}
         open={drawerOpen}
       />
     </>

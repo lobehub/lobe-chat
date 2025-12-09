@@ -38,6 +38,8 @@ export enum AssistantNavKey {
   Version = 'version',
 }
 
+export type AgentStatus = 'published' | 'unpublished' | 'archived' | 'deprecated';
+
 export interface DiscoverAssistantItem extends Omit<LobeAgentSettings, 'meta'>, MetaData {
   author: string;
   category?: AssistantCategory;
@@ -47,6 +49,7 @@ export interface DiscoverAssistantItem extends Omit<LobeAgentSettings, 'meta'>, 
   installCount?: number;
   knowledgeCount: number;
   pluginCount: number;
+  status?: AgentStatus;
   tokenUsage: number;
 }
 
@@ -85,6 +88,6 @@ export interface DiscoverAssistantVersion {
   createdAt?: string;
   isLatest?: boolean;
   isValidated?: boolean;
-  status?: 'published' | 'unpublished' | 'archived' | 'deprecated';
+  status?: AgentStatus;
   version: string;
 }

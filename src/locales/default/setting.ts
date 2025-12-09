@@ -255,8 +255,24 @@ export default {
   },
   myAgents: {
     actions: {
+      cancel: '取消',
+      confirmDeprecate: '确认废弃',
+      deprecate: '永久废弃',
+      deprecateConfirmContent:
+        '废弃后该助手将永久从市场移除，且无法重新上架。此操作不可逆，请谨慎操作。',
+      deprecateConfirmTitle: '确认废弃助手？',
+      deprecateError: '废弃助手失败',
+      deprecateLoading: '正在废弃助手...',
+      deprecateSuccess: '助手已废弃',
       edit: '去编辑 Agent',
+      publish: '上架 Agent',
+      publishError: '上架助手失败',
+      publishLoading: '正在上架助手...',
+      publishSuccess: '助手已上架',
       unpublish: '下架 Agent',
+      unpublishError: '下架助手失败',
+      unpublishLoading: '正在下架助手...',
+      unpublishSuccess: '助手已下架',
       viewDetail: '查看详情',
     },
     detail: {
@@ -272,11 +288,18 @@ export default {
     errors: {
       editFailed: '编辑助手失败，请稍后重试',
       fetchFailed: '获取助手详情失败',
+      notAuthenticated: '请先登录市场账户',
     },
     loginRequired: {
       button: '登录市场账户',
       description: '请先登录市场账户以查看你发布的助手',
       title: '需要登录',
+    },
+    status: {
+      archived: '已归档',
+      deprecated: '已废弃',
+      published: '已上架',
+      unpublished: '未上架',
     },
     title: '我发布的助手',
   },
