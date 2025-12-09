@@ -15,7 +15,6 @@ export const useStyles = createStyles(
       disabled?: boolean;
       editing?: boolean;
       placement?: 'left' | 'right';
-      primary?: boolean;
       showTitle?: boolean;
       time?: number;
       title?: string;

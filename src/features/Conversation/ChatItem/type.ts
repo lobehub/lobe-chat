@@ -47,10 +47,6 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
    * @default 'left'
    */
   placement?: 'left' | 'right';
-  /**
-   * @description Whether the chat item is primary
-   */
-  primary?: boolean;
   renderMessage?: (content: ReactNode) => ReactNode;
   /**
    * @description Whether to hide the avatar
