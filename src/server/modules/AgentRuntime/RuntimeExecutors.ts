@@ -49,6 +49,14 @@ export const createRuntimeExecutors = (
     const { operationId, stepIndex, streamManager } = ctx;
     const events: AgentEvent[] = [];
 
+    // Fallback to state's modelRuntimeConfig if not in payload
+    const model = llmPayload.model || state.modelRuntimeConfig?.model;
+    const provider = llmPayload.provider || state.modelRuntimeConfig?.provider;
+
+    if (!model || !provider) {
+      throw new Error('Model and provider are required for call_llm instruction');
+    }
+
     // 类型断言确保 payload 的正确性
     const operationLogId = `${operationId}:${stepIndex}`;
 
@@ -60,8 +68,8 @@ export const createRuntimeExecutors = (
     const assistantMessageItem = await ctx.messageModel.create({
       agentId: state.metadata!.agentId!,
       content: '',
-      model: llmPayload.model,
-      provider: llmPayload.provider,
+      model,
+      provider,
       role: 'assistant',
       threadId: state.metadata?.threadId,
       topicId: state.metadata?.topicId,
@@ -71,8 +79,8 @@ export const createRuntimeExecutors = (
     await streamManager.publishStreamEvent(operationId, {
       data: {
         assistantMessage: assistantMessageItem,
-        model: llmPayload.model,
-        provider: llmPayload.provider,
+        model,
+        provider,
       },
       stepIndex,
       type: 'stream_start',
@@ -88,21 +96,18 @@ export const createRuntimeExecutors = (
       let currentStepUsage: any = undefined;
 
       // 初始化 ModelRuntime
-      const modelRuntime = initModelRuntimeWithUserPayload(
-        llmPayload.provider,
-        ctx.userPayload || {},
-      );
+      const modelRuntime = initModelRuntimeWithUserPayload(provider, ctx.userPayload || {});
 
       // 构造 ChatStreamPayload
       const chatPayload = {
         messages: llmPayload.messages,
-        model: llmPayload.model,
+        model,
         tools: llmPayload.tools,
       };
 
       log(
         `${stagePrefix} calling model-runtime chat (model: %s, messages: %d, tools: %d)`,
-        llmPayload.model,
+        model,
         llmPayload.messages.length,
         llmPayload.tools?.length ?? 0,
       );
