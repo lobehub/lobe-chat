@@ -125,7 +125,7 @@ const qwenChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -148,7 +148,7 @@ const qwenChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -2029,6 +2029,7 @@ const qwenChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-05-28',
     settings: {
+      extendParams: ['reasoningBudgetToken'],
       searchImpl: 'params',
     },
     type: 'chat',
