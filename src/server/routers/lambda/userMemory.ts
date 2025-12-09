@@ -47,90 +47,61 @@ export const userMemoryRouter = router({
     }),
 
   // ============ Context CRUD ============
-deleteContext: userMemoryProcedure
+  deleteContext: userMemoryProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.contextModel.delete(input.id);
     }),
 
-  
-// ============ Experience CRUD ============
-deleteExperience: userMemoryProcedure
+  // ============ Experience CRUD ============
+  deleteExperience: userMemoryProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.experienceModel.delete(input.id);
     }),
 
-  
-
-deleteIdentity: userMemoryProcedure
+  deleteIdentity: userMemoryProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.userMemoryModel.removeIdentityEntry(input.id);
     }),
 
-  
-
-// ============ Preference CRUD ============
-deletePreference: userMemoryProcedure
+  // ============ Preference CRUD ============
+  deletePreference: userMemoryProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.preferenceModel.delete(input.id);
     }),
 
-  
-
-
-getContexts: userMemoryProcedure.query(async ({ ctx }) => {
+  getContexts: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.searchContexts({});
   }),
 
-  
-
-
-getDisplayContexts: userMemoryProcedure.query(async ({ ctx }) => {
+  getDisplayContexts: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryRepo.getDisplayContexts();
   }),
 
-  
-
-
-getDisplayExperiences: userMemoryProcedure.query(async ({ ctx }) => {
+  getDisplayExperiences: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryRepo.getDisplayExperiences();
   }),
 
-  
-
-
-getDisplayPreferences: userMemoryProcedure.query(async ({ ctx }) => {
+  getDisplayPreferences: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryRepo.getDisplayPreferences();
   }),
 
-  
-
-
-getExperiences: userMemoryProcedure.query(async ({ ctx }) => {
+  getExperiences: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.searchExperiences({});
   }),
 
-  
-
-  
-
-getIdentities: userMemoryProcedure.query(async ({ ctx }) => {
+  getIdentities: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.getAllIdentities();
   }),
 
-  
-
-getPreferences: userMemoryProcedure.query(async ({ ctx }) => {
+  getPreferences: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.searchPreferences({});
   }),
 
-  
-
-  
-updateContext: userMemoryProcedure
+  updateContext: userMemoryProcedure
     .input(
       z.object({
         data: z.object({
@@ -145,8 +116,7 @@ updateContext: userMemoryProcedure
       return ctx.contextModel.update(input.id, input.data);
     }),
 
-  
-updateExperience: userMemoryProcedure
+  updateExperience: userMemoryProcedure
     .input(
       z.object({
         data: z.object({
@@ -160,8 +130,6 @@ updateExperience: userMemoryProcedure
     .mutation(async ({ ctx, input }) => {
       return ctx.experienceModel.update(input.id, input.data);
     }),
-
-  
 
   updateIdentity: userMemoryProcedure
     .input(
