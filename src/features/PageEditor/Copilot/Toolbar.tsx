@@ -1,19 +1,20 @@
 import { ActionIcon, Tag } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import type { ItemType } from 'antd/es/menu/interface';
-import { Clock3Icon, PlusIcon } from 'lucide-react';
+import { ArrowRightFromLineIcon, Clock3Icon, PlusIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 import { useChatStore } from '@/store/chat';
+import { useGlobalStore } from '@/store/global';
 
-interface TopicSelectorProps {
+interface CopilotToolbarProps {
   agentId: string;
 }
 
-const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
+const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId }) => {
   const { t } = useTranslation('topic');
 
   // Fetch topics for the agent builder
@@ -40,6 +41,8 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
       })),
     [topics, t, switchTopic],
   );
+
+  const [toggleRightPanel] = useGlobalStore((s) => [s.toggleRightPanel]);
 
   return (
     <NavHeader
@@ -68,6 +71,11 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
           >
             <ActionIcon disabled={!topics || topics.length === 0} icon={Clock3Icon} />
           </Dropdown>
+          <ActionIcon
+            icon={ArrowRightFromLineIcon}
+            onClick={() => toggleRightPanel()}
+            size={DESKTOP_HEADER_ICON_SIZE}
+          />
         </>
       }
       showTogglePanelButton={false}
@@ -75,6 +83,6 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
   );
 });
 
-TopicSelector.displayName = 'TopicSelector';
+CopilotToolbar.displayName = 'TopicSelector';
 
-export default TopicSelector;
+export default CopilotToolbar;
