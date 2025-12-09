@@ -235,6 +235,7 @@ export class MemoryExtractionService<RO> {
     try {
       const decision = await this.gatekeeper.check({
         language: options.language ?? 'English',
+        retrievedContexts: options.retrievedContexts,
       });
       this.recordGatekeeperMetrics(job, Date.now() - start, 'ok');
 
