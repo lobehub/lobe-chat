@@ -4,7 +4,7 @@ import type { Child } from 'xastscript';
 import { x } from 'xastscript';
 
 import { BaseProvider } from '../base/BaseProvider';
-import type { UserMemoryData } from '../messages/types';
+import type { UserMemoryData } from '../engine/messages/types';
 import type { PipelineContext, ProcessorOptions } from '../types';
 
 export interface UserMemoryInjectorConfig {

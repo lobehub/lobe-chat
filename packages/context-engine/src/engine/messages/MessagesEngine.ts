@@ -1,7 +1,8 @@
-import type { OpenAIChatMessage } from '@lobechat/types';
 import debug from 'debug';
 
-import { ContextEngine } from '../pipeline';
+import type { OpenAIChatMessage } from '@/types/index';
+
+import { ContextEngine } from '../../pipeline';
 import {
   GroupMessageFlattenProcessor,
   HistoryTruncateProcessor,
@@ -11,7 +12,7 @@ import {
   PlaceholderVariablesProcessor,
   ToolCallProcessor,
   ToolMessageReorder,
-} from '../processors';
+} from '../../processors';
 import {
   AgentBuilderContextInjector,
   HistorySummaryProvider,
@@ -20,9 +21,9 @@ import {
   SystemRoleInjector,
   ToolSystemRoleProvider,
   UserMemoryInjector,
-} from '../providers';
+} from '../../providers';
+import type { ContextProcessor } from '../../types';
 import { ToolNameResolver } from '../tools';
-import type { ContextProcessor } from '../types';
 import type { MessagesEngineParams, MessagesEngineResult } from './types';
 
 const log = debug('context-engine:MessagesEngine');

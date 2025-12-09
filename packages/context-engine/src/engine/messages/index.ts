@@ -13,5 +13,9 @@ export type {
   ToolsConfig,
   UIChatMessage,
   UserMemoryConfig,
+  UserMemoryContextItem,
+  UserMemoryData,
+  UserMemoryExperienceItem,
+  UserMemoryPreferenceItem,
   VariableGenerators,
 } from './types';

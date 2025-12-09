@@ -1,5 +1,6 @@
-import type { UIChatMessage } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
+
+import type { UIChatMessage } from '@/types/index';
 
 import { MessagesEngine } from '../MessagesEngine';
 import type { MessagesEngineParams } from '../types';

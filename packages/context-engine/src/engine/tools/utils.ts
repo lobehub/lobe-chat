@@ -22,10 +22,10 @@ export const generateToolName = (
 export function validateManifest(manifest: any): manifest is LobeToolManifest {
   return Boolean(
     manifest &&
-      typeof manifest === 'object' &&
-      typeof manifest.identifier === 'string' &&
-      Array.isArray(manifest.api) &&
-      manifest.api.length > 0,
+    typeof manifest === 'object' &&
+    typeof manifest.identifier === 'string' &&
+    Array.isArray(manifest.api) &&
+    manifest.api.length > 0,
   );
 }
 
