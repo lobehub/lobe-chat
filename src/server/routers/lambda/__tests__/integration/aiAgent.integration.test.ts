@@ -223,21 +223,18 @@ describe('AI Agent E2E Test - runByAgentId', () => {
       expect(createdTopics).toHaveLength(1);
       expect(createdTopics[0].title).toBe(prompt);
 
-      // Verify two messages were created (user message + assistant message placeholder)
+      // Verify only user message was created (assistant message is created by RuntimeExecutor)
       const createdMessages = await serverDB
         .select()
         .from(messages)
         .where(and(eq(messages.agentId, testAgentId), eq(messages.topicId, createdTopics[0].id)));
 
-      expect(createdMessages).toHaveLength(2);
+      expect(createdMessages).toHaveLength(1);
 
-      // Verify message roles
+      // Verify user message
       const userMessage = createdMessages.find((m) => m.role === 'user');
-      const assistantMessage = createdMessages.find((m) => m.role === 'assistant');
       expect(userMessage).toBeDefined();
       expect(userMessage?.content).toBe(prompt);
-      expect(assistantMessage).toBeDefined();
-      expect(assistantMessage?.parentId).toBe(userMessage?.id);
     });
 
     it('should create a new topic when topicId is not provided', async () => {
@@ -398,7 +395,7 @@ describe('AI Agent E2E Test - runByAgentId', () => {
       expect(callArgs.model).toBe('gpt-5-pro');
     });
 
-    it('should have assistant response content in final state after execution', async () => {
+    it('should save assistant response content to database after execution', async () => {
       // Setup mock response for this specific test
       const responseContent = 'I am doing great, thank you for asking!';
       mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream(responseContent) as any);
@@ -428,6 +425,18 @@ describe('AI Agent E2E Test - runByAgentId', () => {
       );
       expect(assistantMessage).toBeDefined();
       expect(assistantMessage.content).toBe(responseContent);
+
+      // Also verify the database was updated
+      // Note: Router creates a placeholder assistant message, then RuntimeExecutor creates another one with content
+      const allMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.agentId, testAgentId));
+
+      // Find the assistant message that has content (created by RuntimeExecutor)
+      const dbAssistantMessageWithContent = allMessages.find((m) => m.role === 'assistant');
+      expect(dbAssistantMessageWithContent).toBeDefined();
+      expect(dbAssistantMessageWithContent?.content).toBe(responseContent);
     });
 
     it('should verify OpenAI responses.create was called with correct model', async () => {
@@ -450,6 +459,7 @@ describe('AI Agent E2E Test - runByAgentId', () => {
 
       const finalState = await service.executeSync(createResult.operationId, { maxSteps: 5 });
 
+      console.log(finalState);
       expect(finalState.status).toBe('done');
 
       // Verify OpenAI Responses API was called with the correct model from state.modelRuntimeConfig

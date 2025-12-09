@@ -439,18 +439,6 @@ export const aiAgentRouter = router({
       });
       log('runByAgentId: created user message %s', userMessageRecord.id);
 
-      // 8. Create assistant message placeholder in database
-      const assistantMessageRecord = await ctx.messageModel.create({
-        agentId,
-        content: '',
-        model,
-        parentId: userMessageRecord.id,
-        provider,
-        role: 'assistant',
-        topicId,
-      });
-      log('runByAgentId: created assistant message placeholder %s', assistantMessageRecord.id);
-
       // Create user message object for processing
       const userMessage = { content: prompt, role: 'user' as const };
 
