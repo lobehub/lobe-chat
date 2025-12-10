@@ -1,15 +1,12 @@
 import { useAnalytics } from '@lobehub/analytics/react';
-import { Empty } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 import LazyLoad from 'react-lazy-load';
 import { Link } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/index';
 import { useNavigateToAgent } from '@/hooks/useNavigateToAgent';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { getSessionStoreState, useSessionStore } from '@/store/session';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
 import { getUserStoreState } from '@/store/user';
@@ -31,12 +28,10 @@ interface SessionListProps {
   showAddButton?: boolean;
 }
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
-  const { t } = useTranslation('chat');
   const { analytics } = useAnalytics();
   const { styles } = useStyles();
 
   const isInit = useSessionStore(sessionSelectors.isSessionListInit);
-  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
   const mobile = useServerConfigStore((s) => s.isMobile);
 
   const navigateToAgent = useNavigateToAgent();
@@ -88,12 +83,8 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
         </Link>
       </LazyLoad>
     ))
-  ) : showCreateSession ? (
-    showAddButton && <AddButton groupId={groupId} />
   ) : (
-    <Center>
-      <Empty description={t('emptyAgent')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-    </Center>
+    showAddButton && <AddButton groupId={groupId} />
   );
 });
 

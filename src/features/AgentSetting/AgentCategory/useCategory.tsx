@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { MenuItemType } from 'antd/es/menu/interface';
-import { Blocks, Bot, BrainCog, Handshake, MessagesSquare, Mic2, UserCircle } from 'lucide-react';
+import { Bot, BrainCog, Handshake, MessagesSquare, Mic2, UserCircle } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +8,6 @@ import type { MenuProps } from '@/components/Menu';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { ChatSettingsTabs } from '@/store/global/initialState';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 interface UseCategoryOptions {
   mobile?: boolean;
@@ -18,7 +17,6 @@ export const useCategory = ({ mobile }: UseCategoryOptions = {}) => {
   const { t } = useTranslation('setting');
   const iconSize = mobile ? 20 : undefined;
   const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
-  const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
 
   const cateItems: MenuProps['items'] = useMemo(
     () =>
@@ -53,13 +51,8 @@ export const useCategory = ({ mobile }: UseCategoryOptions = {}) => {
           key: ChatSettingsTabs.TTS,
           label: t('agentTab.tts'),
         },
-        enablePlugins && {
-          icon: <Icon icon={Blocks} size={iconSize} />,
-          key: ChatSettingsTabs.Plugin,
-          label: t('agentTab.plugin'),
-        },
       ].filter(Boolean) as MenuProps['items'],
-    [t, isInbox, enablePlugins],
+    [t, isInbox],
   );
 
   return cateItems;

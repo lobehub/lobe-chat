@@ -5,7 +5,6 @@ import React, { Suspense, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import SkeletonList from '../../../../../../../features/NavPanel/components/SkeletonList';
 import { useCreateMenuItems } from '../../hooks';
@@ -20,7 +19,6 @@ interface AgentProps {
 
 const Agent = memo<AgentProps>(({ itemKey }) => {
   const { t } = useTranslation('common');
-  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   const {
     openGroupWizardModal,
@@ -91,21 +89,17 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
 
   return (
     <AccordionItem
-      action={showCreateSession && <Actions dropdownMenu={dropdownMenu} isLoading={isLoading} />}
-      headerWrapper={
-        showCreateSession
-          ? (header) => (
-              <Dropdown
-                menu={{
-                  items: dropdownMenu,
-                }}
-                trigger={['contextMenu']}
-              >
-                {header}
-              </Dropdown>
-            )
-          : undefined
-      }
+      action={<Actions dropdownMenu={dropdownMenu} isLoading={isLoading} />}
+      headerWrapper={(header) => (
+        <Dropdown
+          menu={{
+            items: dropdownMenu,
+          }}
+          trigger={['contextMenu']}
+        >
+          {header}
+        </Dropdown>
+      )}
       itemKey={itemKey}
       paddingBlock={4}
       paddingInline={'8px 4px'}

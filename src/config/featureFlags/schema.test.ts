@@ -158,8 +158,7 @@ describe('mapFeatureFlagsEnvToState', () => {
     const mappedState = mapFeatureFlagsEnvToState(config, userId);
 
     expect(mappedState.isAgentEditable).toBe(true); // user-123 is in allowlist
-    expect(mappedState.showCreateSession).toBe(false); // user-123 is not in allowlist
-    expect(mappedState.showDalle).toBe(true); // boolean true
+
     expect(mappedState.enableKnowledgeBase).toBe(true); // user-123 is in allowlist
   });
 
@@ -174,8 +173,6 @@ describe('mapFeatureFlagsEnvToState', () => {
     const mappedState = mapFeatureFlagsEnvToState(config, userId);
 
     expect(mappedState.isAgentEditable).toBe(false);
-    expect(mappedState.showCreateSession).toBe(false);
-    expect(mappedState.showDalle).toBe(true);
   });
 
   it('should return false for array flags when no user ID provided', () => {
@@ -187,7 +184,6 @@ describe('mapFeatureFlagsEnvToState', () => {
     const mappedState = mapFeatureFlagsEnvToState(config);
 
     expect(mappedState.isAgentEditable).toBe(false);
-    expect(mappedState.showCreateSession).toBe(true);
   });
 
   it('should handle mixed boolean and array values correctly', () => {
@@ -204,8 +200,7 @@ describe('mapFeatureFlagsEnvToState', () => {
     const mappedState = mapFeatureFlagsEnvToState(config, userId);
 
     expect(mappedState.isAgentEditable).toBe(true);
-    expect(mappedState.showCreateSession).toBe(true);
-    expect(mappedState.showDalle).toBe(false);
+
     expect(mappedState.showAiImage).toBe(false);
     expect(mappedState.enableKnowledgeBase).toBe(true);
     expect(mappedState.enableRAGEval).toBe(true);

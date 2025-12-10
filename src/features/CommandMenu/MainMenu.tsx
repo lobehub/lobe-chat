@@ -28,28 +28,18 @@ interface MainMenuProps {
 }
 
 const MainMenu = memo<MainMenuProps>(
-  ({
-    onCreateSession,
-    onExternalLink,
-    onNavigate,
-    onNavigateToTheme,
-    pathname,
-    showCreateSession,
-    styles,
-  }) => {
+  ({ onCreateSession, onExternalLink, onNavigate, onNavigateToTheme, pathname, styles }) => {
     const { t } = useTranslation('common');
 
     return (
       <>
         <Command.Group>
-          {showCreateSession && (
-            <Command.Item onSelect={onCreateSession} value="create new agent assistant">
-              <Bot className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.newAgent')}</div>
-              </div>
-            </Command.Item>
-          )}
+          <Command.Item onSelect={onCreateSession} value="create new agent assistant">
+            <Bot className={styles.icon} />
+            <div className={styles.itemContent}>
+              <div className={styles.itemLabel}>{t('cmdk.newAgent')}</div>
+            </div>
+          </Command.Item>
 
           {!pathname?.startsWith('/settings') && (
             <Command.Item onSelect={() => onNavigate('/settings')} value="settings">

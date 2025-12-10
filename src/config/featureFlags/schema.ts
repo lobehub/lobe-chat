@@ -6,7 +6,6 @@ const FeatureFlagValue = z.union([z.boolean(), z.array(z.string())]);
 
 export const FeatureFlagsSchema = z.object({
   check_updates: FeatureFlagValue.optional(),
-  pin_list: FeatureFlagValue.optional(),
 
   // settings
   provider_settings: FeatureFlagValue.optional(),
@@ -16,12 +15,8 @@ export const FeatureFlagsSchema = z.object({
 
   // profile
   api_key_manage: FeatureFlagValue.optional(),
-
-  create_session: FeatureFlagValue.optional(),
   edit_agent: FeatureFlagValue.optional(),
 
-  plugins: FeatureFlagValue.optional(),
-  dalle: FeatureFlagValue.optional(),
   ai_image: FeatureFlagValue.optional(),
   speech_to_text: FeatureFlagValue.optional(),
   token_counter: FeatureFlagValue.optional(),
@@ -66,20 +61,14 @@ export const evaluateFeatureFlag = (
 };
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
-  pin_list: false,
-
   provider_settings: true,
 
   openai_api_key: true,
   openai_proxy_url: true,
 
   api_key_manage: false,
-
-  create_session: true,
   edit_agent: true,
 
-  plugins: true,
-  dalle: true,
   ai_image: true,
 
   check_updates: true,
@@ -107,19 +96,14 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string) => {
   return {
     isAgentEditable: evaluateFeatureFlag(config.edit_agent, userId),
-
-    showCreateSession: evaluateFeatureFlag(config.create_session, userId),
     enableGroupChat: evaluateFeatureFlag(config.group_chat, userId),
     showProvider: evaluateFeatureFlag(config.provider_settings, userId),
-    showPinList: evaluateFeatureFlag(config.pin_list, userId),
 
     showOpenAIApiKey: evaluateFeatureFlag(config.openai_api_key, userId),
     showOpenAIProxyUrl: evaluateFeatureFlag(config.openai_proxy_url, userId),
 
     showApiKeyManage: evaluateFeatureFlag(config.api_key_manage, userId),
 
-    enablePlugins: evaluateFeatureFlag(config.plugins, userId),
-    showDalle: evaluateFeatureFlag(config.dalle, userId),
     showAiImage: evaluateFeatureFlag(config.ai_image, userId),
     showChangelog: evaluateFeatureFlag(config.changelog, userId),
 

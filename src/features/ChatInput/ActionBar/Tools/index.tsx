@@ -6,12 +6,8 @@ import { useTranslation } from 'react-i18next';
 import PluginStore from '@/features/PluginStore';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useAgentStore } from '@/store/agent';
-import {
-  featureFlagsSelectors,
-  serverConfigSelectors,
-  useServerConfigStore,
-} from '@/store/serverConfig';
 import { agentByIdSelectors } from '@/store/agent/selectors';
+import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { useAgentId } from '../../hooks/useAgentId';
 import Action from '../components/Action';
@@ -28,7 +24,7 @@ const Tools = memo(() => {
     setModalOpen,
     setUpdating,
   });
-  const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
+
   const enableKlavis = useServerConfigStore(serverConfigSelectors.enableKlavis);
   const isInitializedRef = useRef(false);
 
@@ -46,7 +42,6 @@ const Tools = memo(() => {
 
   const enableFC = useModelSupportToolUse(model, provider);
 
-  if (!enablePlugins) return null;
   if (!enableFC)
     return <Action disabled icon={Blocks} showTooltip={true} title={t('tools.disabled')} />;
 
