@@ -208,6 +208,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/auth(.*)',
   '/api/webhooks(.*)',
   '/api/workflows(.*)',
+  '/api/agent(.*)',
   '/webapi(.*)',
   '/trpc(.*)',
   // next auth
