@@ -1,4 +1,4 @@
-import { IdentityEntryBasePayload, IdentityEntryPayload } from '@/database/models/userMemory';
+import { IdentityEntryBasePayload, IdentityEntryPayload, UserMemoryModel } from '@/database/models/userMemory';
 import { searchMemorySchema } from '@/types/userMemory';
 import {
   ContextMemoryItemSchema,
@@ -26,8 +26,8 @@ export const toolsRouter = router({
 
         const { context, memory } = await ctx.memoryModel.createContextMemory({
           context: {
-            associatedObjects: input.withContext.associatedObjects ?? null,
-            associatedSubjects: input.withContext.associatedSubjects ?? null,
+            associatedObjects: UserMemoryModel.parseAssociatedObjects(input.withContext.associatedObjects) ?? null,
+            associatedSubjects: UserMemoryModel.parseAssociatedSubjects(input.withContext.associatedSubjects) ?? null,
             currentStatus: input.withContext.currentStatus ?? null,
             description: input.withContext.description ?? null,
             descriptionVector: contextDescriptionEmbedding ?? null,

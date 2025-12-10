@@ -280,6 +280,8 @@ export class UserMemoryModel {
     value.forEach((item) => {
       const parsed = AssociatedObjectSchema.safeParse(item)
       if (parsed.success) {
+        const extra = JSON.parse(parsed.data.extra || '{}');
+        parsed.data.extra = extra;
         associations.push(parsed.data);
       }
     });
@@ -295,6 +297,8 @@ export class UserMemoryModel {
     value.forEach((item) => {
       const parsed = AssociatedObjectSchema.safeParse(item)
       if (parsed.success) {
+        const extra = JSON.parse(parsed.data.extra || '{}');
+        parsed.data.extra = extra;
         associations.push(parsed.data);
       }
     });

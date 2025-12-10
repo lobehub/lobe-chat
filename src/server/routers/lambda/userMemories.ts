@@ -207,6 +207,24 @@ const memoryProcedure = authedProcedure
   });
 
 export const userMemoriesRouter = router({
+  queryIdentityRoles: memoryProcedure
+    .input(
+      z
+        .object({
+          page: z.coerce.number().int().min(1).optional(),
+          size: z.coerce.number().int().min(1).max(100).optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        return await ctx.memoryModel.queryIdentityRoles(input ?? {});
+      } catch (error) {
+        console.error('Failed to query identity roles:', error);
+        return { roles: [], tags: [] };
+      }
+    }),
+
   queryTags: memoryProcedure
     .input(
       z
@@ -223,24 +241,6 @@ export const userMemoriesRouter = router({
       } catch (error) {
         console.error('Failed to query memory tags:', error);
         return [];
-      }
-    }),
-
-  queryIdentityRoles: memoryProcedure
-    .input(
-      z
-        .object({
-          page: z.coerce.number().int().min(1).optional(),
-          size: z.coerce.number().int().min(1).max(100).optional(),
-        })
-        .optional(),
-    )
-    .query(async ({ ctx, input }) => {
-      try {
-        return await ctx.memoryModel.queryIdentityRoles(input ?? {});
-      } catch (error) {
-        console.error('Failed to query identity roles:', error);
-        return { roles: [], tags: [] };
       }
     }),
 
@@ -659,8 +659,8 @@ export const userMemoriesRouter = router({
 
         const { context, memory } = await ctx.memoryModel.createContextMemory({
           context: {
-            associatedObjects: input.withContext.associatedObjects ?? null,
-            associatedSubjects: input.withContext.associatedSubjects ?? null,
+            associatedObjects: UserMemoryModel.parseAssociatedObjects(input.withContext.associatedObjects) ?? null,
+            associatedSubjects: UserMemoryModel.parseAssociatedSubjects(input.withContext.associatedSubjects) ?? null,
             currentStatus: input.withContext.currentStatus ?? null,
             description: input.withContext.description ?? null,
             descriptionVector: contextDescriptionEmbedding ?? null,

@@ -23,7 +23,9 @@ export const buildGenerateObjectSchema = (
   schema: z.ZodTypeAny,
   options: BuildSchemaOptions,
 ): GenerateObjectSchema => {
-  const jsonSchema = pickMainSchema(zodToJsonSchema(schema, options.name), options.name);
+  const fullSchema = zodToJsonSchema(schema, options.name);
+
+  const jsonSchema = pickMainSchema(fullSchema, options.name);
   if (jsonSchema.type === 'object') {
     jsonSchema.additionalProperties = false;
   }
