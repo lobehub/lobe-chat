@@ -8,7 +8,42 @@ const mistralChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 262_144,
+    description:
+      'Devstral 2 是一款企业级文本模型，擅长使用工具探索代码库、编辑多个文件并为软件工程代理提供动力。',
+    displayName: 'Devstral 2',
+    id: 'devstral-2512',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-12-09',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description: 'Devstral Small 2 擅长使用工具探索代码库、编辑多个文件并为软件工程代理提供动力。',
+    displayName: 'Devstral Small 2',
+    id: 'labs-devstral-small-2512',
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-12-09',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
     description: 'Mistral Medium 3 以 8 倍的成本提供最先进的性能，并从根本上简化了企业部署。',
     displayName: 'Mistral Medium 3.1',
     enabled: true,
@@ -26,7 +61,7 @@ const mistralChatModels: AIChatModelCard[] = [
       reasoning: true,
       vision: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 131_072,
     description: 'Magistral Medium 1.2 是Mistral AI于2025年9月发布的前沿级推理模型，具有视觉支持。',
     displayName: 'Magistral Medium 1.2',
     enabled: true,
@@ -44,7 +79,7 @@ const mistralChatModels: AIChatModelCard[] = [
       reasoning: true,
       vision: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 131_072,
     description:
       'Magistral Small 1.2 是Mistral AI于2025年9月发布的开源小型推理模型，具有视觉支持。',
     displayName: 'Magistral Small 1.2',
@@ -62,7 +97,7 @@ const mistralChatModels: AIChatModelCard[] = [
       functionCall: true,
       vision: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 131_072,
     description:
       'Mistral Nemo是一个与Nvidia合作开发的12B模型，提供出色的推理和编码性能，易于集成和替换。',
     displayName: 'Mistral Nemo',
@@ -79,7 +114,7 @@ const mistralChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 131_072,
     description: 'Mistral Small是成本效益高、快速且可靠的选项，适用于翻译、摘要和情感分析等用例。',
     displayName: 'Mistral Small 3.2',
     id: 'mistral-small-latest',
