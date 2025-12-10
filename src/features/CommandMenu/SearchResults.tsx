@@ -24,8 +24,8 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
         break;
       }
       case 'topic': {
-        if (result.sessionId) {
-          navigate(`/chat?session=${result.sessionId}&topic=${result.id}`);
+        if (result.agentId) {
+          navigate(`/agent/${result.agentId}?topic=${result.id}`);
         } else {
           navigate(`/chat?topic=${result.id}`);
         }
@@ -73,7 +73,8 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
       .filter(Boolean)
       .join(' ');
     // Prefix with "search-result" to ensure these items rank after built-in commands
-    return `search-result ${result.type} ${meta}`.trim();
+    // Include ID to ensure uniqueness when multiple items have the same title
+    return `search-result ${result.type} ${result.id} ${meta}`.trim();
   };
 
   if (isLoading) {
