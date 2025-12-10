@@ -12,6 +12,7 @@ import {
   serverMessagesEngine,
 } from '@/server/modules/Mecha';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
+import { nanoid } from '@/utils/uuid';
 
 const log = debug('lobe-server:ai-agent-service');
 
@@ -245,8 +246,12 @@ export class AiAgentService {
 
     log('execAgent: processed %d messages', processedMessages.length);
 
-    // 9. Generate operation ID
-    const operationId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+    // 9. Generate operation ID: agentId_topicId_random
+    let prefix = `agent_${Date.now()}`;
+    if (agentId && topicId) prefix = `${agentId}_${topicId}`;
+
+    // Generate runtime operation ID: agentId_topicId_random
+    const operationId = `${prefix}_${nanoid(8)}`;
 
     // 10. Create initial context
     const initialContext: AgentRuntimeContext = {
