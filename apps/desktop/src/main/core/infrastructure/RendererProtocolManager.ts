@@ -90,15 +90,6 @@ export class RendererProtocolManager {
         const hostname = url.hostname;
         const isAssetRequest = this.isAssetRequest(url.pathname);
 
-        console.log('[RendererProtocolManager] hostname', hostname, this.host);
-        console.log('[RendererProtocolManager] url', url);
-        console.log('[RendererProtocolManager] request', request);
-        console.log('[RendererProtocolManager] isAssetRequest', isAssetRequest);
-        console.log(
-          '[RendererProtocolManager] resolveRendererFilePath',
-          await this.resolveRendererFilePath(url),
-        );
-
         if (hostname !== this.host) {
           return new Response('Not Found', { status: 404 });
         }
@@ -138,17 +129,21 @@ export class RendererProtocolManager {
       register();
     } else {
       // protocol.handle needs the default session, which is only available after ready
-      app.once('ready', register);
+
+      app.whenReady().then(register);
     }
   }
 
   private isAssetRequest(pathname: string) {
+    const normalizedPathname = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+    const ext = extname(normalizedPathname);
+
     return (
       pathname.startsWith('/_next/') ||
       pathname.startsWith('/static/') ||
       pathname === '/favicon.ico' ||
       pathname === '/manifest.json' ||
-      !!extname(pathname)
+      !!ext
     );
   }
 }

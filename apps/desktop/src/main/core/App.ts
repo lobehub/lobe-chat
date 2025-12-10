@@ -368,16 +368,21 @@ export class App {
   };
 
   private resolveExportFilePath(pathname: string) {
-    const normalizedPath = decodeURIComponent(pathname).replace(/^\/+/, '');
+    // Normalize by removing leading/trailing slashes so extname works as expected
+    const normalizedPath = decodeURIComponent(pathname).replace(/^\/+/, '').replace(/\/$/, '');
 
     if (!normalizedPath) return join(nextExportDir, 'index.html');
 
     const basePath = join(nextExportDir, normalizedPath);
     const ext = extname(normalizedPath);
 
-    const candidates = ext
-      ? [basePath]
-      : [`${basePath}.html`, join(basePath, 'index.html'), basePath];
+    // If the request explicitly includes an extension (e.g. html, ico, txt),
+    // treat it as a direct asset without variant injection.
+    if (ext) {
+      return pathExistsSync(basePath) ? basePath : null;
+    }
+
+    const candidates = [`${basePath}.html`, join(basePath, 'index.html'), basePath];
 
     for (const candidate of candidates) {
       if (pathExistsSync(candidate)) return candidate;
@@ -452,6 +457,7 @@ export class App {
    */
   private async resolveRendererFilePath(url: URL) {
     const pathname = url.pathname;
+    const normalizedPathname = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 
     // Static assets should be resolved from root (no variant prefix)
     if (
@@ -460,6 +466,12 @@ export class App {
       pathname === '/favicon.ico' ||
       pathname === '/manifest.json'
     ) {
+      return this.resolveExportFilePath(pathname);
+    }
+
+    // If the incoming path already contains an extension (like .html or .ico),
+    // treat it as a direct asset lookup to avoid double variant prefixes.
+    if (extname(normalizedPathname)) {
       return this.resolveExportFilePath(pathname);
     }
 

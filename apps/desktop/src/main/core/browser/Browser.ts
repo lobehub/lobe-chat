@@ -173,6 +173,7 @@ export default class Browser {
     try {
       logger.debug(`[${this.identifier}] Attempting to load URL: ${initUrl}`);
       await this._browserWindow.loadURL(initUrl);
+
       logger.debug(`[${this.identifier}] Successfully loaded URL: ${initUrl}`);
     } catch (error) {
       logger.error(`[${this.identifier}] Failed to load URL (${initUrl}):`, error);
