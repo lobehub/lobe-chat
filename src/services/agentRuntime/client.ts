@@ -9,7 +9,7 @@ const log = debug('lobe-agent-runtime:client');
  * Agent Client Service for communicating with durable agents
  */
 class AgentRuntimeClient {
-  private baseUrl = '/api/workflows/agent';
+  private baseUrl = '/api/agent';
 
   /**
    * Create a streaming connection to receive real-time agent events

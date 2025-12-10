@@ -23,7 +23,7 @@ vi.mock('@/database/core/db-adaptor', () => ({
 }));
 
 // Mock isEnableAgent to always return true for tests
-vi.mock('@/app/(backend)/api/workflows/agent/isEnableAgent', () => ({
+vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
   isEnableAgent: vi.fn(() => true),
 }));
 

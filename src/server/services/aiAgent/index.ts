@@ -53,7 +53,7 @@ export interface ExecAgentResult {
  *
  * Encapsulates agent execution logic that can be triggered via:
  * - tRPC router (aiAgent.execAgent)
- * - REST API endpoint (/api/workflows/agent)
+ * - REST API endpoint (/api/agent)
  * - Cron jobs / scheduled tasks
  */
 export class AiAgentService {
@@ -145,9 +145,8 @@ export class AiAgentService {
 
     // 5. Create tools using Server AgentToolsEngine
     const hasEnabledKnowledgeBases =
-      agentConfig.knowledgeBases?.some(
-        (kb: { enabled?: boolean | null }) => kb.enabled === true,
-      ) ?? false;
+      agentConfig.knowledgeBases?.some((kb: { enabled?: boolean | null }) => kb.enabled === true) ??
+      false;
 
     const toolsContext: ServerAgentToolsContext = {
       installedPlugins,

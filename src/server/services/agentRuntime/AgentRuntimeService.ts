@@ -79,7 +79,7 @@ export class AgentRuntimeService {
     const baseUrl =
       process.env.AGENT_RUNTIME_BASE_URL || process.env.APP_URL || 'http://localhost:3010';
 
-    return urlJoin(baseUrl, '/api/workflows/agent');
+    return urlJoin(baseUrl, '/api/agent');
   }
   private userId: string;
   private messageModel: MessageModel;

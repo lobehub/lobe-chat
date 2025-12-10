@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
-import { isEnableAgent } from '@/app/(backend)/api/workflows/agent/isEnableAgent';
+import { isEnableAgent } from '@/app/(backend)/api/agent/isEnableAgent';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
