@@ -73,7 +73,6 @@ const PageEditor = memo<PageEditorProps>(
     const pageAgentId = useAgentStore(builtinAgentSelectors.pageAgentId);
     useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.pageAgent);
 
-    // Don't render conversation provider until agent is initialized
     if (!pageAgentId) return <Loading debugId="PageEditor > PageAgent Init" />;
 
     return (

@@ -5,7 +5,7 @@ import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FilePenLine, FileUp, FolderIcon, FolderUp, Link, Plus } from 'lucide-react';
-import { type ChangeEvent, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
@@ -14,9 +14,9 @@ import GuideModal from '@/components/GuideModal';
 import GuideVideo from '@/components/GuideVideo';
 import { useFileStore } from '@/store/file';
 import { DocumentSourceType } from '@/types/document';
-import { filterFilesByGitignore, findGitignoreFile, readGitignoreContent } from '@/utils/gitignore';
 
 import useNotionImport from './hooks/useNotionImport';
+import useUploadFolder from './hooks/useUploadFolder';
 
 const hotArea = css`
   &::before {
@@ -82,76 +82,10 @@ const AddButton = () => {
   }, [createDocument, currentFolderId, libraryId, setCurrentViewItemId, setMode, t]);
 
   const handleCreateFolder = useCallback(async () => {
-    // Create folder with "Untitled" name immediately
     const folderId = await createFolder('Untitled', currentFolderId ?? undefined, libraryId);
     // Trigger auto-rename
     setPendingRenameItemId(folderId);
   }, [createFolder, currentFolderId, libraryId, setPendingRenameItemId]);
-
-  const handleFolderUpload = useCallback(
-    async (event: ChangeEvent<HTMLInputElement>) => {
-      let files = Array.from(event.target.files || []);
-      if (files.length === 0) return;
-
-      // Check for .gitignore file
-      const gitignoreFile = findGitignoreFile(files);
-
-      if (gitignoreFile) {
-        try {
-          const gitignoreContent = await readGitignoreContent(gitignoreFile);
-          const originalCount = files.length;
-
-          // Show confirmation modal using antd's Modal.confirm
-          const { Modal } = await import('antd');
-
-          Modal.confirm({
-            cancelText: t('header.actions.gitignore.cancel'),
-            content: t('header.actions.gitignore.content', {
-              count: originalCount,
-            }),
-            okText: t('header.actions.gitignore.apply'),
-            onCancel: async () => {
-              // Upload all files without filtering
-              await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
-            },
-            onOk: async () => {
-              // Filter files based on .gitignore
-              const filteredFiles = filterFilesByGitignore(files, gitignoreContent);
-              const ignoredCount = originalCount - filteredFiles.length;
-
-              if (ignoredCount > 0) {
-                const { message } = await import('antd');
-                message.info(
-                  t('header.actions.gitignore.filtered', {
-                    ignored: ignoredCount,
-                    total: originalCount,
-                  }),
-                );
-              }
-
-              await uploadFolderWithStructure(
-                filteredFiles,
-                libraryId,
-                currentFolderId ?? undefined,
-              );
-            },
-            title: t('header.actions.gitignore.title'),
-          });
-        } catch (error) {
-          console.error('Failed to read .gitignore:', error);
-          // If reading fails, proceed without filtering
-          await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
-        }
-      } else {
-        // No .gitignore found, upload all files
-        await uploadFolderWithStructure(files, libraryId, currentFolderId ?? undefined);
-      }
-
-      // Reset input to allow re-uploading the same folder
-      event.target.value = '';
-    },
-    [currentFolderId, libraryId, t, uploadFolderWithStructure],
-  );
 
   const {
     handleCloseNotionGuide,
@@ -165,6 +99,13 @@ const AddButton = () => {
     currentFolderId,
     libraryId,
     t,
+  });
+
+  const { handleFolderUpload } = useUploadFolder({
+    currentFolderId,
+    libraryId,
+    t,
+    uploadFolderWithStructure,
   });
 
   const items = useMemo<MenuProps['items']>(
