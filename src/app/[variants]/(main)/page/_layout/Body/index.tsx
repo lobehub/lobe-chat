@@ -18,6 +18,9 @@ export enum GroupKey {
   AllPages = 'all-pages',
 }
 
+/**
+ * Page list sidebar
+ */
 const Body = memo(() => {
   const { t } = useTranslation('file');
   const isDocumentListLoading = useFileStore((s) => s.isDocumentListLoading);

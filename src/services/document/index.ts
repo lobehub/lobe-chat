@@ -29,7 +29,9 @@ export class DocumentService {
 
   async queryDocuments(params?: {
     current?: number;
+    fileTypes?: string[];
     pageSize?: number;
+    sourceTypes?: string[];
   }): Promise<{ items: DocumentItem[]; total: number }> {
     return lambdaClient.document.queryDocuments.query(params);
   }

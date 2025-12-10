@@ -1,11 +1,13 @@
-import { and, count, desc, eq } from 'drizzle-orm';
+import { and, count, desc, eq, inArray } from 'drizzle-orm';
 
 import { DocumentItem, NewDocument, documents } from '../schemas';
 import { LobeChatDatabase } from '../type';
 
 export interface QueryDocumentParams {
   current?: number;
+  fileTypes?: string[];
   pageSize?: number;
+  sourceTypes?: string[];
 }
 
 export class DocumentModel {
@@ -36,12 +38,27 @@ export class DocumentModel {
     return this.db.delete(documents).where(eq(documents.userId, this.userId));
   };
 
-  query = async ({ current = 0, pageSize = 9999 }: QueryDocumentParams = {}): Promise<{
+  query = async ({
+    current = 0,
+    pageSize = 9999,
+    fileTypes,
+    sourceTypes,
+  }: QueryDocumentParams = {}): Promise<{
     items: DocumentItem[];
     total: number;
   }> => {
     const offset = current * pageSize;
-    const whereCondition = eq(documents.userId, this.userId);
+    const conditions = [eq(documents.userId, this.userId)];
+
+    if (fileTypes?.length) {
+      conditions.push(inArray(documents.fileType, fileTypes));
+    }
+
+    if (sourceTypes?.length) {
+      conditions.push(inArray(documents.sourceType, sourceTypes as ('file' | 'web' | 'api')[]));
+    }
+
+    const whereCondition = and(...conditions);
 
     // Fetch items and total count in parallel
     const [items, totalResult] = await Promise.all([

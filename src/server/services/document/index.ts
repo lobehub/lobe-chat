@@ -103,7 +103,12 @@ export class DocumentService {
   /**
    * Query documents with pagination
    */
-  async queryDocuments(params?: { current?: number; pageSize?: number }) {
+  async queryDocuments(params?: {
+    current?: number;
+    fileTypes?: string[];
+    pageSize?: number;
+    sourceTypes?: string[];
+  }) {
     return this.documentModel.query(params);
   }
 

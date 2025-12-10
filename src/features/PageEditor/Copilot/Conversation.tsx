@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import type { ActionKeys } from '@/features/ChatInput';
@@ -12,7 +12,12 @@ interface ConversationProps {
 const actions: ActionKeys[] = ['model'];
 
 const Conversation = memo<ConversationProps>(({ agentId }) => {
+  const [currentAgentId, setCurrentAgentId] = useState(agentId);
   const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    setCurrentAgentId(agentId);
+  }, [agentId]);
 
   return (
     <Flexbox
@@ -21,7 +26,11 @@ const Conversation = memo<ConversationProps>(({ agentId }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CopilotToolbar agentId={agentId} isHovered={isHovered} />
+      <CopilotToolbar
+        agentId={currentAgentId}
+        isHovered={isHovered}
+        onAgentChange={setCurrentAgentId}
+      />
       <Flexbox flex={1} style={{ overflow: 'hidden' }}>
         <ChatList />
       </Flexbox>

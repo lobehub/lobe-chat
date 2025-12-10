@@ -7,6 +7,7 @@ import { DocumentSourceType, LobeDocument } from '@/types/document';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { FileStore } from '../../store';
+import { DocumentQueryFilter } from './initialState';
 
 const n = setNamespace('document');
 
@@ -65,9 +66,10 @@ export interface DocumentAction {
    */
   duplicateDocument: (documentId: string) => Promise<{ [key: string]: any; id: string }>;
   /**
+  /**
    * Fetch documents from the server with pagination
    */
-  fetchDocuments: () => Promise<void>;
+  fetchDocuments: (params: { pageOnly?: boolean }) => Promise<void>;
   /**
    * Get documents from local optimistic map merged with server data
    */
@@ -187,7 +189,7 @@ export const createDocumentSlice: StateCreator<
   },
 
   // Page explorer actions
-createNewPage: async (title: string) => {
+  createNewPage: async (title: string) => {
     const { createOptimisticDocument, createDocument, replaceTempDocumentWithReal } = get();
 
     // Create optimistic page immediately
@@ -235,7 +237,6 @@ createNewPage: async (title: string) => {
     }
   },
 
-  
   createOptimisticDocument: (title = 'Untitled') => {
     const { localDocumentMap } = get();
 
@@ -335,12 +336,23 @@ createNewPage: async (title: string) => {
     return newPage;
   },
 
-  fetchDocuments: async () => {
+  fetchDocuments: async ({ pageOnly = false }) => {
     set({ isDocumentListLoading: true }, false, n('fetchDocuments/start'));
 
     try {
       const pageSize = useGlobalStore.getState().status.pagePageSize || 20;
-      const result = await documentService.queryDocuments({ current: 0, pageSize });
+      const queryFilters: DocumentQueryFilter | undefined = pageOnly
+        ? {
+            fileTypes: Array.from(ALLOWED_DOCUMENT_FILE_TYPES),
+            sourceTypes: Array.from(ALLOWED_DOCUMENT_SOURCE_TYPES),
+          }
+        : undefined;
+
+      const queryParams = queryFilters
+        ? { current: 0, pageSize, ...queryFilters }
+        : { current: 0, pageSize };
+
+      const result = await documentService.queryDocuments(queryParams);
 
       const pages = result.items.filter(isAllowedDocument).map((doc) => ({
         ...doc,
@@ -352,6 +364,7 @@ createNewPage: async (title: string) => {
       set(
         {
           currentPage: 0,
+          documentQueryFilter: queryFilters,
           documents: pages,
           documentsTotal: result.total,
           hasMoreDocuments: hasMore,
@@ -408,7 +421,7 @@ createNewPage: async (title: string) => {
   },
 
   loadMoreDocuments: async () => {
-    const { currentPage, isLoadingMoreDocuments, hasMoreDocuments } = get();
+    const { currentPage, isLoadingMoreDocuments, hasMoreDocuments, documentQueryFilter } = get();
 
     if (isLoadingMoreDocuments || !hasMoreDocuments) return;
 
@@ -418,7 +431,11 @@ createNewPage: async (title: string) => {
 
     try {
       const pageSize = useGlobalStore.getState().status.pagePageSize || 20;
-      const result = await documentService.queryDocuments({ current: nextPage, pageSize });
+      const queryParams = documentQueryFilter
+        ? { current: nextPage, pageSize, ...documentQueryFilter }
+        : { current: nextPage, pageSize };
+
+      const result = await documentService.queryDocuments(queryParams);
 
       const newPages = result.items.filter(isAllowedDocument).map((doc) => ({
         ...doc,
