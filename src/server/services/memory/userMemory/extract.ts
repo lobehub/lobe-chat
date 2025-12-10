@@ -825,6 +825,7 @@ export class MemoryExtractionExecutor {
             lastMessageAt: (conversations?.at(-1)?.createdAt || topic.updatedAt).toISOString(),
             messageCount: conversations.length,
             topicId: topic.id,
+            traceId: span.spanContext().traceId,
           });
 
           const retrievedMemories = await this.listRelevantUserMemories(
