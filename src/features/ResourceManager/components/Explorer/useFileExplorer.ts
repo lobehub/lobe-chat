@@ -60,11 +60,20 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
 
   // File operations
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
-  const [removeFiles, parseFilesToChunks, fileList, pendingRenameItemId] = useFileStore((s) => [
+  const [
+    removeFiles,
+    parseFilesToChunks,
+    fileList,
+    pendingRenameItemId,
+    loadMoreKnowledgeItems,
+    fileListHasMore,
+  ] = useFileStore((s) => [
     s.removeFiles,
     s.parseFilesToChunks,
     s.fileList,
     s.pendingRenameItemId,
+    s.loadMoreKnowledgeItems,
+    s.fileListHasMore,
   ]);
   const [removeFromKnowledgeBase, removeKnowledgeBase] = useKnowledgeBaseStore((s) => [
     s.removeFilesFromKnowledgeBase,
@@ -288,14 +297,21 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
 
     handleSelectionChange,
 
+    hasMore: fileListHasMore,
+
     isFilePreviewMode,
 
+    
     isLoading,
 
     // State
-    isMasonryReady,
+isMasonryReady,
 
+    
     isTransitioning,
+
+    // Pagination
+loadMoreKnowledgeItems,
 
     onActionClick,
 

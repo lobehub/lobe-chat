@@ -29,6 +29,7 @@ export interface FolderCrumb {
 export interface FileManageAction {
   dispatchDockFileList: (payload: UploadFileListDispatch) => void;
   embeddingChunks: (fileIds: string[]) => Promise<void>;
+  loadMoreKnowledgeItems: () => Promise<void>;
   moveFileToFolder: (fileId: string, parentId: string | null) => Promise<void>;
   parseFilesToChunks: (ids: string[], params?: { skipExist?: boolean }) => Promise<void>;
   pushDockFileList: (files: File[], knowledgeBaseId?: string, parentId?: string) => Promise<void>;
@@ -89,6 +90,30 @@ export const createFileManageSlice: StateCreator<
     await get().refreshFileList();
     get().toggleEmbeddingIds(fileIds, false);
   },
+
+  loadMoreKnowledgeItems: async () => {
+    const { queryListParams, fileList, fileListOffset, fileListHasMore } = get();
+
+    // Don't load if there's no more data or no params
+    if (!fileListHasMore || !queryListParams) return;
+
+    try {
+      const response = await serverFileService.getKnowledgeItems({
+        ...queryListParams,
+        limit: queryListParams.limit ?? 50,
+        offset: fileListOffset,
+      });
+
+      set({
+        fileList: [...fileList, ...response.items],
+        fileListHasMore: response.hasMore,
+        fileListOffset: fileListOffset + response.items.length,
+      });
+    } catch (error) {
+      console.error('Failed to load more knowledge items:', error);
+    }
+  },
+
   moveFileToFolder: async (fileId, parentId) => {
     // Optimistically update all file list caches
     await mutate(
@@ -410,10 +435,30 @@ export const createFileManageSlice: StateCreator<
   useFetchKnowledgeItems: (params) =>
     useClientDataSWR<FileListItem[]>(
       [FETCH_ALL_KNOWLEDGE_KEY, params],
-      () => serverFileService.getKnowledgeItems(params),
+      async () => {
+        const response = await serverFileService.getKnowledgeItems({
+          ...params,
+          limit: params.limit ?? 50,
+          offset: 0,
+        });
+        return response.items;
+      },
       {
         onSuccess: (data) => {
-          set({ fileList: data, queryListParams: params });
+          serverFileService
+            .getKnowledgeItems({
+              ...params,
+              limit: params.limit ?? 50,
+              offset: 0,
+            })
+            .then((response) => {
+              set({
+                fileList: data,
+                fileListHasMore: response.hasMore,
+                fileListOffset: data.length,
+                queryListParams: params,
+              });
+            });
         },
       },
     ),

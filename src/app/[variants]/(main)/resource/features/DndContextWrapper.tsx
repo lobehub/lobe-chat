@@ -7,8 +7,9 @@ import {
   DragOverlay,
   DragStartEvent,
   PointerSensor,
-  closestCenter,
+  closestCorners,
   pointerWithin,
+  rectIntersection,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -41,24 +42,55 @@ export const useDragActive = () => useContext(DragActiveContext);
  * This prevents root drop zones from capturing drops meant for child folders
  */
 const customCollisionDetection: CollisionDetection = (args) => {
-  // First, get all collisions using pointerWithin
+  // First, try pointerWithin for precise detection
   const pointerCollisions = pointerWithin(args);
 
-  // If there are collisions, filter out root drop zones if there are other valid targets
+  // If pointer is within a droppable, prefer non-root targets
   if (pointerCollisions.length > 0) {
     const nonRootCollisions = pointerCollisions.filter((collision) => {
       const id = collision.id;
       return typeof id !== 'string' || !id.startsWith('__root__:');
     });
 
-    // If we have non-root collisions, use those; otherwise fall back to all collisions
+    if (nonRootCollisions.length > 0) {
+      return nonRootCollisions;
+    }
+
+    return pointerCollisions;
+  }
+
+  // If no pointer collisions, try rectIntersection for more forgiving detection
+  const rectCollisions = rectIntersection(args);
+
+  if (rectCollisions.length > 0) {
+    const nonRootCollisions = rectCollisions.filter((collision) => {
+      const id = collision.id;
+      return typeof id !== 'string' || !id.startsWith('__root__:');
+    });
+
+    if (nonRootCollisions.length > 0) {
+      return nonRootCollisions;
+    }
+
+    return rectCollisions;
+  }
+
+  // Finally, fall back to closestCorners for best UX
+  const cornerCollisions = closestCorners(args);
+
+  if (cornerCollisions.length > 0) {
+    const nonRootCollisions = cornerCollisions.filter((collision) => {
+      const id = collision.id;
+      return typeof id !== 'string' || !id.startsWith('__root__:');
+    });
+
     if (nonRootCollisions.length > 0) {
       return nonRootCollisions;
     }
   }
 
-  // Fall back to closest center if no pointer collisions
-  return closestCenter(args);
+  // Last resort: return all corner collisions or empty array
+  return cornerCollisions;
 };
 
 /**

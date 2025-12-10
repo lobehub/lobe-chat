@@ -8,6 +8,8 @@ export interface FileManagerState {
   dockUploadFileList: UploadFileItem[];
   fileDetail?: FileListItem;
   fileList: FileListItem[];
+  fileListHasMore: boolean;
+  fileListOffset: number;
   pendingRenameItemId: string | null;
   queryListParams?: QueryFileListParams;
 }
@@ -18,5 +20,7 @@ export const initialFileManagerState: FileManagerState = {
   currentFolderId: undefined,
   dockUploadFileList: [],
   fileList: [],
+  fileListHasMore: false,
+  fileListOffset: 0,
   pendingRenameItemId: null,
 };

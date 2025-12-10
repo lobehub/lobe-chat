@@ -40,14 +40,14 @@ const MoveToFolderModal = memo<MoveToFolderModalProps>(
 
         setLoading(true);
         try {
-          const data = await fileService.getKnowledgeItems({
+          const response = await fileService.getKnowledgeItems({
             knowledgeBaseId,
             parentId: null,
             showFilesInKnowledgeBase: false,
           });
 
           // Filter only folders
-          const folderItems = data
+          const folderItems = response.items
             .filter((item) => item.fileType === 'custom/folder')
             .map((item) => ({
               children: undefined,
@@ -73,14 +73,14 @@ const MoveToFolderModal = memo<MoveToFolderModalProps>(
         if (loadedFolders.has(folderId)) return;
 
         try {
-          const data = await fileService.getKnowledgeItems({
+          const response = await fileService.getKnowledgeItems({
             knowledgeBaseId,
             parentId: folderId,
             showFilesInKnowledgeBase: false,
           });
 
           // Filter only folders
-          const childFolders: FolderTreeItem[] = data
+          const childFolders: FolderTreeItem[] = response.items
             .filter((item) => item.fileType === 'custom/folder')
             .map((item) => ({
               children: undefined,

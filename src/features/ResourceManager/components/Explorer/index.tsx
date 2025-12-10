@@ -38,6 +38,10 @@ const ResourceExplorer = memo(() => {
     showEmptyStatus,
     viewMode,
 
+    // Pagination
+    loadMoreKnowledgeItems,
+    hasMore,
+
     // Handlers
     handleSelectionChange,
     setSelectedFileIds,
@@ -64,6 +68,8 @@ const ResourceExplorer = memo(() => {
       ) : viewMode === 'list' ? (
         <ListView
           data={data}
+          hasMore={hasMore}
+          loadMore={loadMoreKnowledgeItems}
           onSelectionChange={handleSelectionChange}
           pendingRenameItemId={pendingRenameItemId}
           selectFileIds={selectFileIds}
@@ -72,7 +78,9 @@ const ResourceExplorer = memo(() => {
       ) : (
         <MasonryView
           data={data}
+          hasMore={hasMore}
           isMasonryReady={isMasonryReady}
+          loadMore={loadMoreKnowledgeItems}
           selectFileIds={selectFileIds}
           setSelectedFileIds={setSelectedFileIds}
         />

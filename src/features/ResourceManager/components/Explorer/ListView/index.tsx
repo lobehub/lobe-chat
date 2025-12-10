@@ -3,10 +3,10 @@
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-import { VList } from 'virtua';
+import { VList, VListHandle } from 'virtua';
 
 import { FileListItem as FileListItemType } from '@/types/files';
 
@@ -27,6 +27,8 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
 interface ListViewProps {
   data: FileListItemType[] | undefined;
+  hasMore: boolean;
+  loadMore: () => Promise<void>;
   onSelectionChange: (
     id: string,
     checked: boolean,
@@ -39,9 +41,19 @@ interface ListViewProps {
 }
 
 const ListView = memo<ListViewProps>(
-  ({ data, onSelectionChange, pendingRenameItemId, selectFileIds, setSelectedFileIds }) => {
+  ({
+    data,
+    hasMore,
+    loadMore,
+    onSelectionChange,
+    pendingRenameItemId,
+    selectFileIds,
+    setSelectedFileIds,
+  }) => {
     const { t } = useTranslation('components');
     const { styles } = useStyles();
+    const virtuaRef = useRef<VListHandle>(null);
+    const isLoadingMore = useRef(false);
 
     // Calculate select all checkbox state
     const { allSelected, indeterminate } = useMemo(() => {
@@ -61,6 +73,25 @@ const ListView = memo<ListViewProps>(
         setSelectedFileIds(data?.map((item) => item.id) || []);
       }
     };
+
+    // Handle scroll to detect when reaching bottom
+    const handleScroll = useCallback(() => {
+      const ref = virtuaRef.current;
+      if (!ref || !hasMore || isLoadingMore.current) return;
+
+      const scrollOffset = ref.scrollOffset;
+      const scrollSize = ref.scrollSize;
+      const viewportSize = ref.viewportSize;
+
+      // Trigger load more when within 200px of the bottom
+      const threshold = 200;
+      if (scrollSize - scrollOffset - viewportSize <= threshold) {
+        isLoadingMore.current = true;
+        loadMore().finally(() => {
+          isLoadingMore.current = false;
+        });
+      }
+    }, [hasMore, loadMore]);
 
     return (
       <>
@@ -88,6 +119,8 @@ const ListView = memo<ListViewProps>(
           bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
           data={data}
           itemSize={48}
+          onScroll={handleScroll}
+          ref={virtuaRef}
           style={{ height: '100%' }}
         >
           {(item, index) => (

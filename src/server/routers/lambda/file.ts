@@ -184,14 +184,25 @@ export const fileRouter = router({
   }),
 
   getKnowledgeItems: fileProcedure.input(QueryFileListSchema).query(async ({ ctx, input }) => {
-    const knowledgeItems = await ctx.knowledgeRepo.query(input);
+    // Request one more item than limit to check if there are more items
+    const limit = input.limit ?? 50;
+    const knowledgeItems = await ctx.knowledgeRepo.query({
+      ...input,
+      limit: limit + 1,
+    });
+
+    // Check if there are more items
+    const hasMore = knowledgeItems.length > limit;
+
+    // Take only the requested number of items
+    const itemsToProcess = hasMore ? knowledgeItems.slice(0, limit) : knowledgeItems;
 
     // Filter out folders from Documents category when in Inbox (no knowledgeBaseId)
     const filteredItems = !input.knowledgeBaseId
-      ? knowledgeItems.filter(
+      ? itemsToProcess.filter(
           (item) => !(item.sourceType === 'document' && item.fileType === 'custom/folder'),
         )
-      : knowledgeItems;
+      : itemsToProcess;
 
     // Process files (add chunk info and async task status)
     const fileItems = filteredItems.filter((item) => item.sourceType === 'file');
@@ -246,7 +257,10 @@ export const fileRouter = router({
       }
     }
 
-    return resultItems;
+    return {
+      hasMore,
+      items: resultItems,
+    };
   }),
 
   recentFiles: fileProcedure
