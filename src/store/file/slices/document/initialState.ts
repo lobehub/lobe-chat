@@ -1,5 +1,10 @@
 import { LobeDocument } from '@/types/document';
 
+export interface DocumentQueryFilter {
+  fileTypes?: string[];
+  sourceTypes?: string[];
+}
+
 export interface DocumentState {
   /**
    * whether all pages drawer is open
@@ -9,6 +14,10 @@ export interface DocumentState {
    * current page number (0-based)
    */
   currentPage: number;
+  /**
+   * Filters used in the last document query
+   */
+  documentQueryFilter?: DocumentQueryFilter;
   /**
    * Server documents fetched from document service
    */
@@ -58,6 +67,7 @@ export interface DocumentState {
 export const initialDocumentState: DocumentState = {
   allPagesDrawerOpen: false,
   currentPage: 0,
+  documentQueryFilter: undefined,
   documents: [],
   documentsTotal: 0,
   hasMoreDocuments: false,

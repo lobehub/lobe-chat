@@ -116,7 +116,9 @@ export const documentRouter = router({
       z
         .object({
           current: z.number().optional(),
+          fileTypes: z.array(z.string()).optional(),
           pageSize: z.number().optional(),
+          sourceTypes: z.array(z.string()).optional(),
         })
         .optional(),
     )

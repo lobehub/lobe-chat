@@ -8,16 +8,10 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import NavHeader from '@/features/NavHeader';
+import { fileManagerSelectors, useFileStore } from '@/store/file';
 
 import Breadcrumb from '../Explorer/Header/Breadcrumb';
 import FileContent from './FileContent';
-
-interface PreviewModeProps {
-  category?: string;
-  fileName?: string;
-  knowledgeBaseId?: string;
-  onBack?: () => void;
-}
 
 /**
  * View or Edit a file
@@ -25,12 +19,21 @@ interface PreviewModeProps {
  * It's a un-reusable component for business logic only.
  * So we depend on context, not props.
  */
-const FileEditor = memo<PreviewModeProps>(({ fileName, knowledgeBaseId }) => {
+const FileEditor = memo(() => {
   const { t } = useTranslation('common');
 
-  const [currentViewItemId, category, setMode, setCurrentViewItemId] = useResourceManagerStore(
-    (s) => [s.currentViewItemId, s.category, s.setMode, s.setCurrentViewItemId],
-  );
+  const [currentViewItemId, category, setMode, setCurrentViewItemId, libraryId] =
+    useResourceManagerStore((s) => [
+      s.currentViewItemId,
+      s.category,
+      s.setMode,
+      s.setCurrentViewItemId,
+      s.libraryId,
+    ]);
+
+  console.log('currentViewItemId', currentViewItemId);
+
+  const fileDetail = useFileStore(fileManagerSelectors.getFileById(currentViewItemId));
 
   return (
     <Flexbox height={'100%'}>
@@ -40,8 +43,8 @@ const FileEditor = memo<PreviewModeProps>(({ fileName, knowledgeBaseId }) => {
             <Flexbox align={'center'} style={{ marginLeft: 12 }}>
               <Breadcrumb
                 category={category}
-                fileName={fileName}
-                knowledgeBaseId={knowledgeBaseId}
+                fileName={fileDetail?.name}
+                knowledgeBaseId={libraryId}
               />
             </Flexbox>
           </Flexbox>

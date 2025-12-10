@@ -32,7 +32,7 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
   }, [pageId]);
 
   useEffect(() => {
-    fetchDocuments();
+    fetchDocuments({ pageOnly: true });
   }, [fetchDocuments]);
 
   const pages = getOptimisticDocuments();
