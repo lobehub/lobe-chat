@@ -29,7 +29,7 @@ const RelatedItem = memo<DiscoverAssistantItem>(({ avatar, title, description, i
   const { styles } = useStyles();
   return (
     <Block gap={12} horizontal key={identifier} padding={12} variant={'outlined'}>
-      <Avatar avatar={avatar} size={40} style={{ flex: 'none' }} />
+      <Avatar avatar={avatar} shape={'square'} size={40} style={{ flex: 'none' }} />
       <Flexbox
         flex={1}
         gap={6}

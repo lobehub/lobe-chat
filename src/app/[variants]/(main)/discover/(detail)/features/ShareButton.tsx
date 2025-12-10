@@ -100,7 +100,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
             }}
             width={72}
           >
-            <Avatar animation avatar={meta.avatar} shape={'circle'} size={64} />
+            <Avatar animation avatar={meta.avatar} shape={'square'} size={64} />
           </Center>
           <Center padding={12} width={'100%'}>
             <h3 style={{ fontWeight: 'bold', textAlign: 'center' }}>{meta.title}</h3>

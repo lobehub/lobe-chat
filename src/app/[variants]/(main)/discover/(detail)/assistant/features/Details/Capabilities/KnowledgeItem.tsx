@@ -29,7 +29,7 @@ const KnowledgeItem = memo<{ avatar?: string; description?: string; title: strin
 
     return (
       <Block gap={12} horizontal padding={12} variant={'outlined'}>
-        <Avatar avatar={avatar} size={40} style={{ flex: 'none' }} />
+        <Avatar avatar={avatar} shape={'square'} size={40} style={{ flex: 'none' }} />
         <Flexbox
           flex={1}
           gap={6}

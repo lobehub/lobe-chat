@@ -13,7 +13,7 @@ const GitHubAvatar = memo<GitHubAvatarProps>(({ username, size = 24 }) => {
     url: urlJoin('https://github.com', `${username}.png`),
   });
 
-  return <Avatar alt={username} avatar={url} size={size} />;
+  return <Avatar alt={username} avatar={url} shape={'square'} size={size} />;
 });
 
 export default GitHubAvatar;
