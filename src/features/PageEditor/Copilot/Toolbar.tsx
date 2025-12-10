@@ -14,6 +14,7 @@ import NavHeader from '@/features/NavHeader';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useFetchAgentList } from '@/hooks/useFetchAgentList';
+import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { useHomeStore } from '@/store/home';
@@ -140,12 +141,12 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
 interface CopilotToolbarProps {
   agentId: string;
   isHovered: boolean;
-  onAgentChange: (id: string) => void;
 }
 
-const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered, onAgentChange }) => {
+const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
   const { t } = useTranslation('topic');
   const { styles, cx } = useStyles();
+  const setActiveAgentId = useAgentStore((s) => s.setActiveAgentId);
 
   // Fetch topics for the agent builder
   useChatStore((s) => s.useFetchTopics)(true, { agentId });
@@ -178,7 +179,7 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered, onAgentC
     <NavHeader
       left={
         <Flexbox align="center" gap={8} horizontal>
-          <AgentSelector agentId={agentId} onAgentChange={onAgentChange} />
+          <AgentSelector agentId={agentId} onAgentChange={setActiveAgentId} />
           {activeTopic?.title ? (
             <Tag className={styles.topicTitle} title={activeTopic.title}>
               {activeTopic.title}

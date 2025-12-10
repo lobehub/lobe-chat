@@ -59,6 +59,10 @@ export interface AgentSliceAction {
    */
   startStreamingSystemRole: () => void;
   /**
+   * Update current active agent id
+   */
+  setActiveAgentId: (agentId?: string) => void;
+  /**
    * Toggle the agent panel pinned state
    */
   toggleAgentPinned: () => void;
@@ -150,6 +154,14 @@ export const createAgentSlice: StateCreator<
       },
       false,
       'startStreamingSystemRole',
+    );
+  },
+
+  setActiveAgentId: (agentId) => {
+    set(
+      (state) => (state.activeAgentId === agentId ? state : { activeAgentId: agentId }),
+      false,
+      'setActiveAgentId',
     );
   },
 

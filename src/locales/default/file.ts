@@ -1,6 +1,6 @@
 export default {
   addFolder: '创建文件夹',
-  addLibrary: '添加到资源库',
+  addLibrary: '添加',
   addPage: '创建文稿',
   desc: '管理你的工作、学习与生活资源。',
   detail: {
