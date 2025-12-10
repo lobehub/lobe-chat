@@ -19,15 +19,10 @@ import { useTranslation } from 'react-i18next';
 
 import { localeOptions } from '@/locales/resources';
 
-import {
-  dataSelectors,
-  messageStateSelectors,
-  useConversationStore,
-  virtuaListSelectors,
-} from '../../store';
+import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 
 export interface ActionItem extends ActionIconGroupItemType {
-  children?: Array<{ handleClick?: () => void, key: string; label: string; }>;
+  children?: Array<{ handleClick?: () => void; key: string; label: string }>;
   handleClick?: () => void | Promise<void>;
 }
 
@@ -56,7 +51,6 @@ interface UseGroupActionsParams {
 export const useGroupActions = ({
   id,
   data,
-  index,
   contentBlock,
   onOpenShareModal,
 }: UseGroupActionsParams): GroupActions => {
@@ -89,9 +83,6 @@ export const useGroupActions = ({
     s.delAndRegenerateMessage,
     s.continueGenerationMessage,
   ]);
-  const scrollToIndex = useConversationStore(
-    virtuaListSelectors.virtuaScrollMethods,
-  )?.scrollToIndex;
 
   return useMemo<GroupActions>(
     () => ({
@@ -142,7 +133,6 @@ export const useGroupActions = ({
       edit: {
         handleClick: () => {
           toggleMessageEditing(id, true);
-          scrollToIndex?.(index, { align: 'start' });
         },
         icon: Edit,
         key: 'edit',
@@ -185,7 +175,6 @@ export const useGroupActions = ({
     [
       t,
       id,
-      index,
       contentBlock,
       data.error,
       isRegenerating,
@@ -193,7 +182,6 @@ export const useGroupActions = ({
       isCollapsed,
       lastBlockId,
       toggleMessageEditing,
-      scrollToIndex,
       deleteMessage,
       regenerateAssistantMessage,
       translateMessage,

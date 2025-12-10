@@ -1,7 +1,7 @@
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 
-export const useStyles = createStyles(({ token, css, stylish, cx, responsive }) => ({
+export const useStyles = createStyles(({ token, css, stylish, cx }) => ({
   container: cx(
     stylish.blur,
     css`
@@ -13,19 +13,8 @@ export const useStyles = createStyles(({ token, css, stylish, cx, responsive }) 
       inset-inline-end: 16px;
       transform: translateY(16px);
 
-      padding-inline: 12px !important;
-      border-color: ${token.colorFillTertiary} !important;
-      border-radius: 16px !important;
-
       opacity: 0;
-      background: ${rgba(token.colorBgContainer, 0.5)};
-
-      ${responsive.mobile} {
-        inset-inline-end: 0;
-        border-inline-end: none;
-        border-start-end-radius: 0 !important;
-        border-end-end-radius: 0 !important;
-      }
+      background: ${rgba(token.colorBgElevated, 0.5)} !important;
     `,
   ),
   visible: css`

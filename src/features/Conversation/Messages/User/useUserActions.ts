@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { localeOptions } from '@/locales/resources';
 
-import { messageStateSelectors, useConversationStore, virtuaListSelectors } from '../../store';
+import { messageStateSelectors, useConversationStore } from '../../store';
 
 export interface ActionItem extends ActionIconGroupItemType {
   children?: Array<{ handleClick?: () => void; key: string; label: string }>;
@@ -31,7 +31,7 @@ interface UseUserActionsParams {
   index: number;
 }
 
-export const useUserActions = ({ id, data, index }: UseUserActionsParams): UserActions => {
+export const useUserActions = ({ id, data }: UseUserActionsParams): UserActions => {
   const { t } = useTranslation('common');
   const { message } = App.useApp();
 
@@ -47,9 +47,6 @@ export const useUserActions = ({ id, data, index }: UseUserActionsParams): UserA
       s.translateMessage,
       s.ttsMessage,
     ]);
-  const scrollToIndex = useConversationStore(
-    virtuaListSelectors.virtuaScrollMethods,
-  )?.scrollToIndex;
 
   return useMemo<UserActions>(
     () => ({
@@ -75,7 +72,6 @@ export const useUserActions = ({ id, data, index }: UseUserActionsParams): UserA
       edit: {
         handleClick: () => {
           toggleMessageEditing(id, true);
-          scrollToIndex?.(index, { align: 'start' });
         },
         icon: Edit,
         key: 'edit',
@@ -112,12 +108,10 @@ export const useUserActions = ({ id, data, index }: UseUserActionsParams): UserA
     [
       t,
       id,
-      index,
       data.content,
       data.error,
       isRegenerating,
       toggleMessageEditing,
-      scrollToIndex,
       deleteMessage,
       regenerateUserMessage,
       translateMessage,

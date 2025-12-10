@@ -4,8 +4,7 @@ export const useStyles = createStyles(({ css, token }) => {
   return {
     container: css`
       position: relative;
-      width: 100%;
-      max-width: 100vw;
+      max-width: 100%;
 
       time,
       div[role='menubar'] {

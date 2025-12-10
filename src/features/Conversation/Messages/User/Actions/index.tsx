@@ -4,7 +4,6 @@ import type { ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui'
 import { memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { messageStateSelectors, useConversationStore } from '../../../store';
 import type {
   MessageActionItem,
   MessageActionItemOrDivider,
@@ -151,25 +150,22 @@ interface ActionsProps {
 
 const Actions = memo<ActionsProps>(({ actionsConfig, id, data, index, disableEditing }) => {
   const { branch } = data;
-  const editing = useConversationStore(messageStateSelectors.isMessageEditing(id));
 
   return (
-    !editing && (
-      <Flexbox align={'center'} horizontal>
-        {!disableEditing && (
-          <Flexbox align={'flex-start'} role="menubar">
-            <UserActionsBar actionsConfig={actionsConfig} data={data} id={id} index={index} />
-          </Flexbox>
-        )}
-        {branch && (
-          <MessageBranch
-            activeBranchIndex={branch.activeBranchIndex}
-            count={branch.count}
-            messageId={id}
-          />
-        )}
-      </Flexbox>
-    )
+    <Flexbox align={'center'} horizontal>
+      {!disableEditing && (
+        <Flexbox align={'flex-start'} role="menubar">
+          <UserActionsBar actionsConfig={actionsConfig} data={data} id={id} index={index} />
+        </Flexbox>
+      )}
+      {branch && (
+        <MessageBranch
+          activeBranchIndex={branch.activeBranchIndex}
+          count={branch.count}
+          messageId={id}
+        />
+      )}
+    </Flexbox>
   );
 });
 

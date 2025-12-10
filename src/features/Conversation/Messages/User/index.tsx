@@ -2,7 +2,6 @@ import { Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { ChatItem } from '@/features/Conversation/ChatItem';
 import { useUserAvatar } from '@/hooks/useUserAvatar';
@@ -70,7 +69,7 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
     return <Tag>{t('dm.visibleTo', { target: targetName })}</Tag>;
   }, [targetId, userName, agents, t]);
 
-  const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, index, role });
+  const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, role });
 
   const renderMessage = useCallback(
     (editableContent: ReactNode) => (
@@ -113,18 +112,16 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
 
   return (
     <ChatItem
-      avatar={{ avatar, title }}
-      belowMessage={
-        <Flexbox direction={'horizontal-reverse'}>
-          <Actions
-            actionsConfig={actionsConfig}
-            data={item}
-            disableEditing={disableEditing}
-            id={id}
-            index={index}
-          />
-        </Flexbox>
+      actions={
+        <Actions
+          actionsConfig={actionsConfig}
+          data={item}
+          disableEditing={disableEditing}
+          id={id}
+          index={index}
+        />
       }
+      avatar={{ avatar, title }}
       editing={editing}
       id={id}
       markdownProps={markdownProps}
@@ -137,7 +134,6 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
       showTitle={false}
       time={createdAt}
       titleAddon={dmIndicator}
-      variant={'bubble'}
     />
   );
 });

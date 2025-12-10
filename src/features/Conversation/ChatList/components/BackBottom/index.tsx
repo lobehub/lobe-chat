@@ -1,5 +1,5 @@
-import { Button, Icon } from '@lobehub/ui';
-import { ListEnd } from 'lucide-react';
+import { ActionIcon } from '@lobehub/ui';
+import { ArrowDownIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,14 +16,19 @@ const BackBottom = memo<BackBottomProps>(({ visible, onScrollToBottom }) => {
   const { t } = useTranslation('chat');
 
   return (
-    <Button
+    <ActionIcon
       className={cx(styles.container, visible && styles.visible)}
-      icon={<Icon icon={ListEnd} />}
+      glass
+      icon={ArrowDownIcon}
       onClick={onScrollToBottom}
-      size={'small'}
-    >
-      {t('backToBottom')}
-    </Button>
+      size={{
+        blockSize: 36,
+        borderRadius: 36,
+        size: 18,
+      }}
+      title={t('backToBottom')}
+      variant={'outlined'}
+    />
   );
 });
 

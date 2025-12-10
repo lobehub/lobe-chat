@@ -49,7 +49,8 @@ const ChatItem = memo<ChatItemProps>(
     const isUser = placement === 'right';
     return (
       <Flexbox
-        className={cx(styles.container, className)}
+        align={isUser ? 'flex-end' : 'flex-start'}
+        className={cx('message-wrapper', styles.container, className)}
         gap={8}
         paddingBlock={16}
         style={{
@@ -58,7 +59,12 @@ const ChatItem = memo<ChatItemProps>(
         }}
         {...rest}
       >
-        <Flexbox align={'center'} direction={isUser ? 'horizontal-reverse' : 'horizontal'} gap={8}>
+        <Flexbox
+          align={'center'}
+          className={'message-header'}
+          direction={isUser ? 'horizontal-reverse' : 'horizontal'}
+          gap={8}
+        >
           {showAvatar && (
             <Avatar
               addon={avatarAddon}
@@ -72,29 +78,40 @@ const ChatItem = memo<ChatItemProps>(
           )}
           <Title avatar={avatar} showTitle={showTitle} time={time} titleAddon={titleAddon} />
         </Flexbox>
-        {aboveMessage}
-        {error && (message === placeholderMessage || !message) ? (
-          <ErrorContent error={error} message={errorMessage} />
-        ) : (
-          <MessageContent
-            disabled={disabled}
-            editing={editing}
-            id={id!}
-            markdownProps={markdownProps}
-            message={message}
-            messageExtra={
-              <>
-                {error && <ErrorContent error={error} message={errorMessage} />}
-                {messageExtra}
-              </>
-            }
-            onDoubleClick={onDoubleClick}
-            renderMessage={renderMessage}
-            variant={isUser ? 'bubble' : undefined}
-          />
-        )}
+        <Flexbox
+          className={'message-body'}
+          flex={1}
+          gap={8}
+          style={{
+            maxWidth: '100%',
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+        >
+          {aboveMessage}
+          {error && (message === placeholderMessage || !message) ? (
+            <ErrorContent error={error} message={errorMessage} />
+          ) : (
+            <MessageContent
+              disabled={disabled}
+              editing={editing}
+              id={id!}
+              markdownProps={markdownProps}
+              message={message}
+              messageExtra={
+                <>
+                  {error && <ErrorContent error={error} message={errorMessage} />}
+                  {messageExtra}
+                </>
+              }
+              onDoubleClick={onDoubleClick}
+              renderMessage={renderMessage}
+              variant={isUser ? 'bubble' : undefined}
+            />
+          )}
+          {belowMessage}
+        </Flexbox>
         {actions && <Actions actions={actions} />}
-        {belowMessage}
       </Flexbox>
     );
   },

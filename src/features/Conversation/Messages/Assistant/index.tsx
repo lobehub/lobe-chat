@@ -73,8 +73,6 @@ const AssistantMessage = memo<AssistantMessageProps>(
 
     const avatar = useAgentMeta();
     const { t } = useTranslation('chat');
-    const placement = 'left';
-    const variant = 'bubble';
 
     const { transitionMode, highlighterTheme, mermaidTheme, fontSize } = useUserStore(
       userGeneralSettingsSelectors.config,
@@ -182,7 +180,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
       }
     }, [isInbox]);
 
-    const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, index, role });
+    const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, role });
 
     const renderMessage = useCallback(
       (editableContent: ReactNode) => (
@@ -202,7 +200,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
           aboveMessage={null}
           actions={
             !disableEditing && !editing ? (
-              <Flexbox align={'center'} horizontal role="menubar">
+              <>
                 {branch && (
                   <MessageBranch
                     activeBranchIndex={branch.activeBranchIndex}
@@ -216,7 +214,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
                   id={id}
                   index={index}
                 />
-              </Flexbox>
+              </>
             ) : undefined
           }
           avatar={avatar}
@@ -259,13 +257,12 @@ const AssistantMessage = memo<AssistantMessageProps>(
           }
           onAvatarClick={onAvatarClick}
           onDoubleClick={onDoubleClick}
-          placement={placement}
+          placement={'left'}
           renderMessage={renderMessage}
           showTitle
           style={isLatestItem ? { minHeight: 'calc(-300px + 100dvh)' } : undefined}
           time={createdAt}
           titleAddon={dmIndicator}
-          variant={variant}
         />
       </Suspense>
     );
