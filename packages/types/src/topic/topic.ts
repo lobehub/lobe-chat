@@ -30,6 +30,7 @@ export interface TopicUserMemoryExtractRunState {
   lastRunAt?: string;
   messageCount?: number;
   processedMemoryCount?: number;
+  traceId?: string;
 }
 
 export interface ChatTopicMetadata {

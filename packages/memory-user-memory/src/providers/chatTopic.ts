@@ -34,6 +34,7 @@ export interface ChatTopicResultRecorderOptions {
   lastMessageAt?: string;
   messageCount?: number;
   topicId: string;
+  traceId?: string;
 }
 
 export class LobeChatTopicContextProvider implements MemoryContextProvider<
@@ -144,12 +145,14 @@ export class LobeChatTopicResultRecorder implements MemoryResultRecorder<{
       lastRunAt: now,
       messageCount: this.options.messageCount,
       processedMemoryCount: result.processedMemoryCount,
+      traceId: this.options.traceId,
     };
 
     memoryExtraction.lastMessageAt = this.options.lastMessageAt;
     memoryExtraction.lastRunAt = now;
     memoryExtraction.messageCount = this.options.messageCount;
     memoryExtraction.processedMemoryCount = result.processedMemoryCount;
+    memoryExtraction.traceId = this.options.traceId;
 
     const updatedMetadata: ChatTopicMetadata = {
       ...existingMetadata,
@@ -174,6 +177,7 @@ export class LobeChatTopicResultRecorder implements MemoryResultRecorder<{
       messageCount: this.options.messageCount,
       processedMemoryCount: 0,
       status: 'failed' as const,
+      traceId: this.options.traceId,
     };
 
     memoryExtraction.error = error.message;
@@ -181,6 +185,7 @@ export class LobeChatTopicResultRecorder implements MemoryResultRecorder<{
     memoryExtraction.lastRunAt = now;
     memoryExtraction.messageCount = this.options.messageCount;
     memoryExtraction.processedMemoryCount = 0;
+    memoryExtraction.traceId = this.options.traceId;
 
     const updatedMetadata: ChatTopicMetadata = {
       ...existingMetadata,
