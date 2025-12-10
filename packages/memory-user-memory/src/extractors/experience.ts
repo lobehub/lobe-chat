@@ -1,11 +1,8 @@
 import { renderPlaceholderTemplate } from '@lobechat/context-engine';
-import { z } from 'zod';
 
 import {
   ExperienceMemory,
-  ExperienceMemorySchema,
-  MEMORY_CATEGORIES,
-  MemoryTypeEnum,
+  ExperienceMemorySchema
 } from '../schemas';
 import { ExtractorTemplateProps } from '../types';
 import { buildGenerateObjectSchema } from '../utils/zod';
@@ -17,55 +14,8 @@ export class ExperienceExtractor extends BaseMemoryExtractor<ExperienceMemory> {
   }
 
   getSchema() {
-    const categories = MEMORY_CATEGORIES;
-    const categoriesEnum = z.enum(categories);
-
     return buildGenerateObjectSchema(
-      z.object({
-        memories: z.array(
-          z.object({
-            details: z.string().describe('Optional detailed information'),
-            memoryCategory: categoriesEnum.describe('Memory category'),
-            memoryLayer: z.literal('experience').describe('Memory layer'),
-            memoryType: MemoryTypeEnum.describe('Memory type'),
-            summary: z.string().describe('Concise overview of this specific memory'),
-            title: z.string().describe('Brief descriptive title'),
-            withExperience: z
-              .object({
-                action: z
-                  .string()
-                  .nullable()
-                  .describe('Narrative describing actions taken or behaviors exhibited'),
-                keyLearning: z
-                  .string()
-                  .nullable()
-                  .describe('Narrative describing key insights or lessons learned'),
-                labels: z
-                  .array(z.string())
-                  .describe('Model generated tags that summarize the experience facets'),
-                possibleOutcome: z
-                  .string()
-                  .nullable()
-                  .describe('Narrative describing potential outcomes or learnings'),
-                reasoning: z
-                  .string()
-                  .nullable()
-                  .describe('Narrative describing the thought process or motivations'),
-                scoreConfidence: z
-                  .number()
-                  .nullable()
-                  .describe(
-                    'Numeric score (0-1 or domain-specific) describing confidence in the experience details',
-                  ),
-                situation: z
-                  .string()
-                  .nullable()
-                  .describe('Narrative describing the situation or event'),
-              })
-              .strict(),
-          }),
-        ),
-      }),
+      ExperienceMemorySchema,
       { name: 'experience_extraction' },
     );
   }

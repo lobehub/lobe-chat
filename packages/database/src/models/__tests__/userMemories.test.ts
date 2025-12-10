@@ -172,26 +172,23 @@ function generateRandomCreateUserMemoryPreferenceParams() {
 }
 
 describe('UserMemoryModel', () => {
-  describe('normalizeAssociations', () => {
+  describe('parseAssociatedObjects', () => {
     it('returns null when input is not an array or contains no valid items', () => {
-      expect(UserMemoryModel.normalizeAssociations(undefined)).toBeNull();
-      expect(UserMemoryModel.normalizeAssociations('not-array')).toBeNull();
-      expect(UserMemoryModel.normalizeAssociations([null, undefined, '', '   ', 0])).toBeNull();
+      expect(UserMemoryModel.parseAssociatedObjects(undefined)).toHaveLength(0);
+      expect(UserMemoryModel.parseAssociatedObjects('not-array')).toHaveLength(0);
+      expect(UserMemoryModel.parseAssociatedObjects([null, undefined, '', '   ', 0])).toHaveLength(0);
     });
 
-    it('normalizes objects, JSON strings, and raw strings', () => {
-      const result = UserMemoryModel.normalizeAssociations([
-        { id: 1, name: 'object' },
-        ' { "id": 2, "name": "json" } ',
+    it('normalizes objects', () => {
+      const result = UserMemoryModel.parseAssociatedObjects([
+        { name: 'object' },
+        ' { "name": "json" } ',
         'raw',
         { another: true },
       ]);
 
       expect(result).toEqual([
-        { id: 1, name: 'object' },
-        { id: 2, name: 'json' },
-        { value: 'raw' },
-        { another: true },
+        { name: 'object' },
       ]);
     });
   });

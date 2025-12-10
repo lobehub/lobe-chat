@@ -1,3 +1,4 @@
+import { TypesEnum } from '@/types/userMemory';
 import { z } from 'zod';
 
 /**
@@ -35,17 +36,7 @@ export const MEMORY_TYPES = [
 /**
  * Memory type enum
  */
-export const MemoryTypeEnum = z.enum([
-  'preference',
-  'fact',
-  'context',
-  'activity',
-  'event',
-  'location',
-  'people',
-  'topic',
-  'technology',
-  'other',
-]);
+export const memoryTypeValues = Object.values(TypesEnum) as [TypesEnum, ...TypesEnum[]];
+export const MemoryTypeSchema = z.nativeEnum(TypesEnum);
 
-export type MemoryType = z.infer<typeof MemoryTypeEnum>;
+export type MemoryType = z.infer<typeof MemoryTypeSchema>;
