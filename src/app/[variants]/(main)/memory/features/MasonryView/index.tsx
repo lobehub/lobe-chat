@@ -7,6 +7,11 @@ interface MasonryViewProps<T> {
    * Will be responsive based on window width
    */
   defaultColumnCount?: number;
+  /**
+   * Function to extract metadata from item
+   * Used to get width/height info to reduce layout shift
+   */
+  getItemMetadata?: (item: T) => { height?: number, width?: number; } | null | undefined;
   items: T[];
   renderItem: (item: T, actions: ItemActions<T>) => ReactNode;
 }
@@ -21,6 +26,7 @@ function MasonryViewInner<T extends { id: string }>({
   items,
   defaultColumnCount = 2,
   renderItem,
+  getItemMetadata,
 }: MasonryViewProps<T>) {
   const [columnCount, setColumnCount] = useState(defaultColumnCount);
 
@@ -52,9 +58,24 @@ function MasonryViewInner<T extends { id: string }>({
           return null;
         }
 
-        return <div style={{ padding: '8px 4px' }}>{renderItem(item, actions)}</div>;
+        // Calculate min-height based on metadata to reduce layout shift
+        let minHeight: number | undefined;
+        if (getItemMetadata) {
+          const metadata = getItemMetadata(item);
+          if (metadata?.width && metadata?.height) {
+            // Calculate aspect ratio and set min-height
+            // Assuming a typical card width, we'll use percentage-based approach
+            const aspectRatio = metadata.height / metadata.width;
+            // Use a base width estimate (this will be adjusted by masonry layout)
+            // The actual width will be determined by the column count and container width
+            // We use a reasonable default to prevent layout shift
+            minHeight = aspectRatio * 300; // 300px is a typical card width
+          }
+        }
+
+        return <div style={{ minHeight, padding: '8px 4px' }}>{renderItem(item, actions)}</div>;
       }),
-    [renderItem],
+    [renderItem, getItemMetadata],
   );
 
   const masonryContext = useMemo<ItemActions<T>>(

@@ -192,11 +192,13 @@ const ImageFileItem = memo<ImageFileItemProps>(
               }}
             />
           )}
-          {/* Hover overlay */}
-          <div className={styles.hoverOverlay}>
-            <div className={styles.overlayTitle}>{name}</div>
-            <div className={styles.overlaySize}>{formatSize(size)}</div>
-          </div>
+          {/* Hover overlay - only show when image is loaded */}
+          {imageLoaded && (
+            <div className={styles.hoverOverlay}>
+              <div className={styles.overlayTitle}>{name}</div>
+              <div className={styles.overlaySize}>{formatSize(size)}</div>
+            </div>
+          )}
         </div>
         {/* Floating chunk badge or action button */}
         {!isNull(chunkingStatus) && chunkingStatus ? (

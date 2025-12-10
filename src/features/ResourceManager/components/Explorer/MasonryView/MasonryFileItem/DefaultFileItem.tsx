@@ -1,7 +1,7 @@
 import { Button, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { isNull } from 'lodash-es';
-import { FileBoxIcon } from 'lucide-react';
+import { FileBoxIcon, Folder } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -76,6 +76,7 @@ const DefaultFileItem = memo<DefaultFileItemProps>(
       s.parseFilesToChunks,
     ]);
 
+    const isFolder = fileType === 'custom/folder';
     const isSupportedForChunking = !isChunkingUnsupported(fileType || '');
 
     return (
@@ -88,19 +89,25 @@ const DefaultFileItem = memo<DefaultFileItemProps>(
           paddingInline={12}
           style={{ minHeight: 180 }}
         >
-          <FileIcon fileName={name} fileType={fileType} size={64} />
+          {isFolder ? (
+            <Folder size={64} strokeWidth={1.5} />
+          ) : (
+            <FileIcon fileName={name} fileType={fileType} size={64} />
+          )}
           <div className={styles.name} style={{ textAlign: 'center' }}>
             {name}
           </div>
-          <div
-            style={{
-              color: 'var(--lobe-chat-text-tertiary)',
-              fontSize: 12,
-              textAlign: 'center',
-            }}
-          >
-            {formatSize(size)}
-          </div>
+          {!isFolder && (
+            <div
+              style={{
+                color: 'var(--lobe-chat-text-tertiary)',
+                fontSize: 12,
+                textAlign: 'center',
+              }}
+            >
+              {formatSize(size)}
+            </div>
+          )}
         </Flexbox>
         {/* Floating chunk badge or action button */}
         {!isNull(chunkingStatus) && chunkingStatus ? (

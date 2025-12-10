@@ -1,3 +1,4 @@
+import { useDebounce } from 'ahooks';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -27,9 +28,12 @@ export const useCommandMenu = () => {
   const page = pages.at(-1);
   const isAiMode = page === 'ai-chat';
 
+  // Debounce search input to reduce API calls
+  const debouncedSearch = useDebounce(search, { wait: 300 });
+
   // Search functionality
-  const hasSearch = search.trim().length > 0;
-  const searchQuery = search.trim();
+  const hasSearch = debouncedSearch.trim().length > 0;
+  const searchQuery = debouncedSearch.trim();
 
   const { data: searchResults, isLoading: isSearching } = useSWR<SearchResult[]>(
     hasSearch && !isAiMode ? ['search', searchQuery] : null,
