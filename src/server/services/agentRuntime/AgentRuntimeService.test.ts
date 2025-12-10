@@ -150,13 +150,13 @@ describe('AgentRuntimeService', () => {
     it('should initialize with default base URL', () => {
       delete process.env.AGENT_RUNTIME_BASE_URL;
       const newService = new AgentRuntimeService(mockDb, mockUserId);
-      expect((newService as any).baseURL).toBe('http://localhost:3010/api/workflows/agent');
+      expect((newService as any).baseURL).toBe('http://localhost:3010/api/agent');
     });
 
     it('should initialize with custom base URL from environment', () => {
       process.env.AGENT_RUNTIME_BASE_URL = 'http://custom:3000';
       const newService = new AgentRuntimeService(mockDb, mockUserId);
-      expect((newService as any).baseURL).toBe('http://custom:3000/api/workflows/agent');
+      expect((newService as any).baseURL).toBe('http://custom:3000/api/agent');
     });
   });
 
@@ -219,7 +219,7 @@ describe('AgentRuntimeService', () => {
         operationId: 'test-operation-1',
         stepIndex: 0,
         context: mockParams.initialContext,
-        endpoint: 'http://localhost:3010/api/workflows/agent/run',
+        endpoint: 'http://localhost:3010/api/agent/run',
         priority: 'high',
         delay: 50,
       });
@@ -645,7 +645,7 @@ describe('AgentRuntimeService', () => {
         operationId: 'test-operation-1',
         stepIndex: 2,
         context: mockParams.context,
-        endpoint: 'http://localhost:3010/api/workflows/agent/run',
+        endpoint: 'http://localhost:3010/api/agent/run',
         priority: 'high',
         delay: 500,
       });
@@ -673,7 +673,7 @@ describe('AgentRuntimeService', () => {
             messageCount: 1,
           }),
         }),
-        endpoint: 'http://localhost:3010/api/workflows/agent/run',
+        endpoint: 'http://localhost:3010/api/agent/run',
         priority: 'high', // Uses the provided priority from params
         delay: 500, // Uses the provided delay from params
       });
@@ -740,7 +740,7 @@ describe('AgentRuntimeService', () => {
         operationId: 'test-operation-1',
         stepIndex: 2,
         context: undefined,
-        endpoint: 'http://localhost:3010/api/workflows/agent/run',
+        endpoint: 'http://localhost:3010/api/agent/run',
         priority: 'high',
         delay: 100,
         payload: {

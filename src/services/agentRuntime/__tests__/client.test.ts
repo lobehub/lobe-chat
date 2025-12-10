@@ -24,7 +24,7 @@ describe('AgentRuntimeClient', () => {
       });
 
       expect(mockFetchEventSource).toHaveBeenCalledWith(
-        '/api/workflows/agent/stream?includeHistory=false&lastEventId=0&operationId=agent_1758302563222_0g28qmdmu',
+        '/api/agent/stream?includeHistory=false&lastEventId=0&operationId=agent_1758302563222_0g28qmdmu',
         expect.objectContaining({
           headers: {
             'Cache-Control': 'no-cache',
@@ -200,7 +200,7 @@ describe('AgentRuntimeClient', () => {
       });
 
       expect(mockFetchEventSource).toHaveBeenCalledWith(
-        '/api/workflows/agent/stream?includeHistory=true&lastEventId=12345&operationId=test-operation-123',
+        '/api/agent/stream?includeHistory=true&lastEventId=12345&operationId=test-operation-123',
         expect.any(Object),
       );
     });
@@ -211,7 +211,7 @@ describe('AgentRuntimeClient', () => {
       agentRuntimeClient.createStreamConnection(operationId);
 
       expect(mockFetchEventSource).toHaveBeenCalledWith(
-        '/api/workflows/agent/stream?includeHistory=false&lastEventId=0&operationId=test-operation',
+        '/api/agent/stream?includeHistory=false&lastEventId=0&operationId=test-operation',
         expect.any(Object),
       );
     });

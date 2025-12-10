@@ -37,7 +37,9 @@ describe('/api/agent/stream route', () => {
     it('should return 404 when agent features are not enabled', async () => {
       isEnableAgentSpy.mockReturnValue(false);
 
-      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
       const response = await GET(request);
 
       expect(response.status).toBe(404);
@@ -55,7 +57,9 @@ describe('/api/agent/stream route', () => {
     });
 
     it('should return SSE stream with correct headers when operationId is provided', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
       const response = await GET(request);
 
       expect(response.status).toBe(200);
@@ -382,7 +386,9 @@ data: {"type":"stream_end","timestamp":300,"operationId":"test-operation","data"
     });
 
     it('should verify default parameters with exact values', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
 
       mockStreamEventManager.subscribeStreamEvents.mockResolvedValue(undefined);
 
@@ -403,7 +409,9 @@ data: {"type":"stream_end","timestamp":300,"operationId":"test-operation","data"
     });
 
     it('should verify SSE message structure with exact format specification', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
 
       const response = await GET(request);
       const decoder = new TextDecoder();
@@ -451,7 +459,9 @@ data: {"type":"stream_end","timestamp":300,"operationId":"test-operation","data"
 
   describe('Agent Runtime Lifecycle', () => {
     it('should verify agent runtime event handling and connection closure logic', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
 
       // Capture the event callback so we can test the event processing logic directly
       let capturedCallback: ((events: any[]) => void) | null = null;
@@ -487,7 +497,9 @@ data: {"type":"stream_end","timestamp":300,"operationId":"test-operation","data"
     });
 
     it('should verify subscribeStreamEvents callback can handle agent_runtime_init events', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
 
       let capturedCallback: ((events: any[]) => void) | null = null;
 
@@ -521,7 +533,9 @@ data: {"type":"stream_end","timestamp":300,"operationId":"test-operation","data"
     });
 
     it('should verify subscribeStreamEvents callback can handle agent_runtime_end events', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
 
       let capturedCallback: ((events: any[]) => void) | null = null;
 
@@ -555,7 +569,9 @@ data: {"type":"stream_end","timestamp":300,"operationId":"test-operation","data"
     });
 
     it('should verify complete agent runtime lifecycle event types are supported', async () => {
-      const request = new NextRequest('https://test.com/api/agent/stream?operationId=test-operation');
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
 
       let capturedCallback: ((events: any[]) => void) | null = null;
 
@@ -613,7 +629,9 @@ data: {"type":"stream_end","timestamp":300,"operationId":"test-operation","data"
   describe('Parameter validation', () => {
     it('should handle operationId with special characters', async () => {
       const operationId = 'test-operation-123_456';
-      const request = new NextRequest(`https://test.com/api/agent/stream?operationId=${operationId}`);
+      const request = new NextRequest(
+        `https://test.com/api/agent/stream?operationId=${operationId}`,
+      );
 
       const response = await GET(request);
 
