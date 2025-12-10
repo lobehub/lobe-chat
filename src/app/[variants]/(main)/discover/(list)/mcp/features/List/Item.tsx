@@ -111,7 +111,7 @@ const McpItem = memo<DiscoverMcpItem>(
             }}
             title={identifier}
           >
-            <Avatar avatar={icon} size={40} style={{ flex: 'none' }} />
+            <Avatar avatar={icon} shape={'square'} size={40} style={{ flex: 'none' }} />
             <Flexbox
               flex={1}
               gap={2}

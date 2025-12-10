@@ -108,7 +108,7 @@ const PluginItem = memo<PluginItemProps>(({ identifier }) => {
       padding={12}
       variant={'outlined'}
     >
-      <Avatar avatar={data.avatar} size={40} style={{ flex: 'none' }} />
+      <Avatar avatar={data.avatar} shape={'square'} size={40} style={{ flex: 'none' }} />
       <Flexbox
         flex={1}
         gap={6}

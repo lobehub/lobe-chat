@@ -128,6 +128,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
             <Avatar
               avatar={avatar}
               background={backgroundColor || 'transparent'}
+              shape={'square'}
               size={40}
               style={{ flex: 'none' }}
             />
