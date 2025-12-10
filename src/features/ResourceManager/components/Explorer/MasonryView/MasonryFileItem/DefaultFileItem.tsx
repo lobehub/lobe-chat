@@ -109,45 +109,46 @@ const DefaultFileItem = memo<DefaultFileItemProps>(
             </div>
           )}
         </Flexbox>
-        {/* Floating chunk badge or action button */}
-        {!isNull(chunkingStatus) && chunkingStatus ? (
-          <div
-            className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <ChunksBadge
-              chunkCount={chunkCount}
-              chunkingError={chunkingError}
-              chunkingStatus={chunkingStatus}
-              embeddingError={embeddingError}
-              embeddingStatus={embeddingStatus}
-              finishEmbedding={finishEmbedding}
-              id={id}
-            />
-          </div>
-        ) : (
-          isSupportedForChunking && (
-            <Tooltip title={t('FileManager.actions.chunkingTooltip')}>
-              <div
-                className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (!isCreatingFileParseTask) {
-                    parseFiles([id]);
-                  }
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                <Button
-                  icon={FileBoxIcon}
-                  loading={isCreatingFileParseTask}
-                  size={'small'}
-                  type={'text'}
-                />
-              </div>
-            </Tooltip>
-          )
-        )}
+        {/* Floating chunk badge or action button - only for files, not folders */}
+        {!isFolder &&
+          (!isNull(chunkingStatus) && chunkingStatus ? (
+            <div
+              className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ChunksBadge
+                chunkCount={chunkCount}
+                chunkingError={chunkingError}
+                chunkingStatus={chunkingStatus}
+                embeddingError={embeddingError}
+                embeddingStatus={embeddingStatus}
+                finishEmbedding={finishEmbedding}
+                id={id}
+              />
+            </div>
+          ) : (
+            isSupportedForChunking && (
+              <Tooltip title={t('FileManager.actions.chunkingTooltip')}>
+                <div
+                  className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!isCreatingFileParseTask) {
+                      parseFiles([id]);
+                    }
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Button
+                    icon={FileBoxIcon}
+                    loading={isCreatingFileParseTask}
+                    size={'small'}
+                    type={'text'}
+                  />
+                </div>
+              </Tooltip>
+            )
+          ))}
       </>
     );
   },
