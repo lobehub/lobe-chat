@@ -1,3 +1,4 @@
+import type { QueryTagsResult } from '@/database/models/userMemory';
 import type {
   DisplayContextMemory,
   DisplayExperienceMemory,
@@ -22,6 +23,8 @@ export interface UserMemoryStoreState {
   memoryMap: Record<string, RetrieveMemoryResult>;
   preferences: DisplayPreferenceMemory[];
   preferencesInit: boolean;
+  tags: QueryTagsResult[];
+  tagsInit: boolean;
 }
 
 export const initialState: UserMemoryStoreState = {
@@ -37,4 +40,6 @@ export const initialState: UserMemoryStoreState = {
   memoryMap: {},
   preferences: [],
   preferencesInit: false,
+  tags: [],
+  tagsInit: false,
 };

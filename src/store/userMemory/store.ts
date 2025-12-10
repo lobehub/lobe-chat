@@ -7,6 +7,7 @@ import { type UserMemoryStoreState, initialState } from './initialState';
 import { type BaseAction, createBaseSlice } from './slices/base';
 import { type ContextAction, createContextSlice } from './slices/context';
 import { type ExperienceAction, createExperienceSlice } from './slices/experience';
+import { type HomeAction, createHomeSlice } from './slices/home';
 import { type IdentityAction, createIdentitySlice } from './slices/identity';
 import { type PreferenceAction, createPreferenceSlice } from './slices/preference';
 
@@ -14,6 +15,7 @@ export type UserMemoryStore = UserMemoryStoreState &
   BaseAction &
   ContextAction &
   ExperienceAction &
+  HomeAction &
   IdentityAction &
   PreferenceAction;
 
@@ -26,6 +28,7 @@ const createStore: StateCreator<UserMemoryStore, [['zustand/devtools', never]]> 
   ...createBaseSlice(set, get, store),
   ...createContextSlice(set, get, store),
   ...createExperienceSlice(set, get, store),
+  ...createHomeSlice(set, get, store),
   ...createIdentitySlice(set, get, store),
   ...createPreferenceSlice(set, get, store),
 });

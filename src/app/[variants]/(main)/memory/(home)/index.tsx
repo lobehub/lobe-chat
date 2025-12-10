@@ -1,36 +1,22 @@
 import { Empty } from 'antd';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
+import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';
 import Loading from '@/components/Loading/BrandTextLoading';
 import NavHeader from '@/features/NavHeader';
+import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import RoleTagCloud from './features/RoleTagCloud';
 
-const Identities = memo(() => {
+const Home = memo(() => {
   const { t } = useTranslation('memory');
 
-  const useFetchIdentities = useUserMemoryStore((s) => s.useFetchIdentities);
-  const { data, isLoading } = useFetchIdentities();
-
-  const sortedRoles = useMemo(() => {
-    if (!data) return [];
-    const allRoles = data.reduce((acc, identity) => {
-      if (identity.role) {
-        if (!acc.has(identity.role)) {
-          acc.set(identity.role, 0);
-        }
-        acc.set(identity.role, acc.get(identity.role)! + 1);
-      }
-      return acc;
-    }, new Map<string, number>());
-
-    return Array.from(allRoles.entries())
-      .sort((a, b) => b[1] - a[1])
-      .map(([role]) => role);
-  }, [data]);
+  const useFetchTags = useUserMemoryStore((s) => s.useFetchTags);
+  const { data, isLoading } = useFetchTags();
 
   if (isLoading) return <Loading debugId={'Home'} />;
 
@@ -39,11 +25,20 @@ const Identities = memo(() => {
   }
 
   return (
-    <>
+    <Flexbox flex={1} height={'100%'}>
       <NavHeader right={<WideScreenButton />} />
-      {<RoleTagCloud roles={sortedRoles} />}
-    </>
+      <Flexbox
+        height={'100%'}
+        id={SCROLL_PARENT_ID}
+        style={{ overflowY: 'auto', paddingBottom: '16vh' }}
+        width={'100%'}
+      >
+        <WideScreenContainer gap={32} paddingBlock={48}>
+          <RoleTagCloud tags={data} />
+        </WideScreenContainer>
+      </Flexbox>
+    </Flexbox>
   );
 });
 
-export default Identities;
+export default Home;
