@@ -226,6 +226,24 @@ export const userMemoriesRouter = router({
       }
     }),
 
+  queryIdentityRoles: memoryProcedure
+    .input(
+      z
+        .object({
+          page: z.coerce.number().int().min(1).optional(),
+          size: z.coerce.number().int().min(1).max(100).optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        return await ctx.memoryModel.queryIdentityRoles(input ?? {});
+      } catch (error) {
+        console.error('Failed to query identity roles:', error);
+        return { roles: [], tags: [] };
+      }
+    }),
+
   // REVIEW：根据当前 topic 直接提取记忆
   // REVIEW： 我们需要一个既可以 cron 也可以主动用户触发进行「每日/每周/每隔一段时间的」记忆提取/生成的函数实现
   // REVIEW： 定时任务
