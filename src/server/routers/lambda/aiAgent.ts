@@ -101,7 +101,7 @@ const ExecAgentsSchema = z.object({
   /** Whether to execute tasks in parallel (default: true) */
   parallel: z.boolean().optional().default(true),
   /** Array of agent tasks to execute */
-  tasks: z.array(ExecAgentTaskSchema).min(1).max(50),
+  tasks: z.array(ExecAgentTaskSchema).min(1),
 });
 
 const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
