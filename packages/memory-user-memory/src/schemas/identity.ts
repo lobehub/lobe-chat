@@ -41,7 +41,7 @@ const IdentityTypeEnum = z.enum(['professional', 'personal', 'demographic']);
 
 export const AddIdentityActionSchema = z
   .object({
-    details: z.string().optional().describe('Optional detailed information'),
+    details: z.union([z.string(), z.null()]).describe('Optional detailed information'),
     memoryCategory: z.string().describe('Memory category'),
     memoryLayer: z.literal(LayersEnum.Identity).describe('Memory layer'),
     memoryType: MemoryTypeSchema.describe('Memory type'),
@@ -51,12 +51,12 @@ export const AddIdentityActionSchema = z
     withIdentity: z
       .object({
         description: z.string(),
-        episodicDate: z.string().nullable().optional(),
-        extractedLabels: z.array(z.string()).optional(),
-        relationship: RelationshipEnum.nullable().optional(),
-        role: z.string().nullable().optional(),
-        scoreConfidence: z.number().nullable().optional(),
-        sourceEvidence: z.string().nullable().optional(),
+        episodicDate: z.union([z.string(), z.null()]),
+        extractedLabels: z.array(z.string()),
+        relationship: RelationshipEnum,
+        role: z.string(),
+        scoreConfidence: z.number(),
+        sourceEvidence: z.union([z.string(), z.null()]),
         type: IdentityTypeEnum,
       })
       .strict(),
@@ -68,22 +68,22 @@ export const UpdateIdentityActionSchema = z
     id: z.string(),
     mergeStrategy: z.nativeEnum(MergeStrategyEnum),
     set: z.object({
-      details: z.string().optional().describe('Optional detailed information'),
-      memoryCategory: z.string().describe('Memory category'),
-      memoryType: MemoryTypeSchema.describe('Memory type'),
-      summary: z.string().describe('Concise overview of this specific memory'),
-      tags: z.array(z.string()).describe('Model generated tags that summarize the identity facets'),
-      title: z.string().describe('Brief descriptive title'),
+      details: z.union([z.string(), z.null()]).describe('Optional detailed information, use null for omitting the field'),
+      memoryCategory: z.union([z.string(), z.null()]).describe('Memory category, use null for omitting the field'),
+      memoryType: z.union([MemoryTypeSchema, z.null()]).describe('Memory type, use null for omitting the field'),
+      summary: z.union([z.string(), z.null()]).describe('Concise overview of this specific memory, use null for omitting the field'),
+      tags: z.union([z.array(z.string()), z.null()]).describe('Model generated tags that summarize the identity facets, use null for omitting the field'),
+      title: z.union([z.string(), z.null()]).describe('Brief descriptive title, use null for omitting the field'),
       withIdentity: z
         .object({
-          description: z.string().optional(),
-          episodicDate: z.string().nullable().optional(),
-          extractedLabels: z.array(z.string()).optional(),
-          relationship: RelationshipEnum.nullable().optional(),
-          role: z.string().nullable().optional(),
-          scoreConfidence: z.number().nullable().optional(),
-          sourceEvidence: z.string().nullable().optional(),
-          type: IdentityTypeEnum.nullable().optional(),
+          description: z.union([z.string(), z.null()]),
+          episodicDate: z.union([z.string(), z.null()]),
+          extractedLabels: z.union([z.array(z.string()), z.null()]),
+          relationship: z.union([RelationshipEnum, z.null()]),
+          role: z.union([z.string(), z.null()]),
+          scoreConfidence: z.union([z.number(), z.null()]),
+          sourceEvidence: z.union([z.string(), z.null()]),
+          type: z.union([IdentityTypeEnum, z.null()]),
         })
         .strict(),
     })
@@ -99,9 +99,9 @@ export const RemoveIdentityActionSchema = z
 
 export const IdentityActionsSchema = z
   .object({
-    add: z.array(AddIdentityActionSchema).nullable(),
-    remove: z.array(RemoveIdentityActionSchema).nullable(),
-    update: z.array(UpdateIdentityActionSchema).nullable(),
+    add: z.array(AddIdentityActionSchema),
+    remove: z.array(RemoveIdentityActionSchema),
+    update: z.array(UpdateIdentityActionSchema),
   })
   .strict();
 
