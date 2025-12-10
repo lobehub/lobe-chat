@@ -869,4 +869,358 @@ describe('AI Agent E2E Test - execAgent', () => {
       mockExecuteTool.mockRestore();
     });
   });
+
+  describe('Multi-Round Tool Execution', () => {
+    /**
+     * This test verifies the fix for LOBE-1657:
+     * When executing multiple rounds of batch tool calls, tool messages should not be duplicated.
+     *
+     * Scenario: LLM returns multiple tool calls in each round
+     * - Round 1: LLM -> 2 tools (search + crawl) -> tool results
+     * - Round 2: LLM -> 2 tools (search + crawl) -> tool results
+     * - Round 3: LLM -> final response
+     *
+     * Expected: 4 tool messages total (2 from round 1 + 2 from round 2), no duplicates
+     */
+    let testAgentWithToolsId: string;
+
+    // Helper to create mock streaming response with multiple tool calls
+    const createMockResponseWithMultipleTools = (roundNum: number) => {
+      const responseId = `resp_round${roundNum}_${Date.now()}`;
+      const msgItemId = `msg_round${roundNum}_${Date.now()}`;
+      const toolCallId1 = `call_search_round${roundNum}`;
+      const toolCallId2 = `call_crawl_round${roundNum}`;
+
+      const chunks = [
+        {
+          type: 'response.created',
+          response: {
+            id: responseId,
+            object: 'response',
+            created_at: Math.floor(Date.now() / 1000),
+            status: 'in_progress',
+            model: 'gpt-5-pro',
+            output: [],
+          },
+        },
+        {
+          type: 'response.output_item.added',
+          output_index: 0,
+          item: {
+            id: msgItemId,
+            type: 'message',
+            status: 'in_progress',
+            content: [],
+            role: 'assistant',
+          },
+        },
+        {
+          type: 'response.output_text.delta',
+          item_id: msgItemId,
+          output_index: 0,
+          content_index: 0,
+          delta: `Round ${roundNum}: Let me search and crawl for you.`,
+        },
+        // First tool call: search
+        {
+          type: 'response.output_item.added',
+          output_index: 1,
+          item: {
+            type: 'function_call',
+            call_id: toolCallId1,
+            name: 'lobe-web-browsing____search____builtin',
+            arguments: JSON.stringify({ query: `query_round${roundNum}` }),
+          },
+        },
+        // Second tool call: crawl
+        {
+          type: 'response.output_item.added',
+          output_index: 2,
+          item: {
+            type: 'function_call',
+            call_id: toolCallId2,
+            name: 'lobe-web-browsing____crawl____builtin',
+            arguments: JSON.stringify({ url: `https://example.com/page${roundNum}` }),
+          },
+        },
+        {
+          type: 'response.completed',
+          response: {
+            id: responseId,
+            object: 'response',
+            created_at: Math.floor(Date.now() / 1000),
+            status: 'completed',
+            model: 'gpt-5-pro',
+            output: [
+              {
+                id: msgItemId,
+                type: 'message',
+                status: 'completed',
+                content: [
+                  {
+                    type: 'output_text',
+                    text: `Round ${roundNum}: Let me search and crawl for you.`,
+                  },
+                ],
+                role: 'assistant',
+              },
+              {
+                type: 'function_call',
+                call_id: toolCallId1,
+                name: 'lobe-web-browsing____search____builtin',
+                arguments: JSON.stringify({ query: `query_round${roundNum}` }),
+              },
+              {
+                type: 'function_call',
+                call_id: toolCallId2,
+                name: 'lobe-web-browsing____crawl____builtin',
+                arguments: JSON.stringify({ url: `https://example.com/page${roundNum}` }),
+              },
+            ],
+            usage: {
+              input_tokens: 50 * roundNum,
+              output_tokens: 30,
+              total_tokens: 50 * roundNum + 30,
+            },
+          },
+        },
+      ];
+
+      return createMockResponsesStream(chunks);
+    };
+
+    // Helper to create final response (no tools)
+    const createMockFinalResponse = () => {
+      const responseId = `resp_final_${Date.now()}`;
+      const msgItemId = `msg_final_${Date.now()}`;
+      const finalContent = 'Based on my research across multiple rounds, here is the final answer.';
+
+      const chunks = [
+        {
+          type: 'response.created',
+          response: {
+            id: responseId,
+            object: 'response',
+            created_at: Math.floor(Date.now() / 1000),
+            status: 'in_progress',
+            model: 'gpt-5-pro',
+            output: [],
+          },
+        },
+        {
+          type: 'response.output_text.delta',
+          item_id: msgItemId,
+          output_index: 0,
+          content_index: 0,
+          delta: finalContent,
+        },
+        {
+          type: 'response.completed',
+          response: {
+            id: responseId,
+            object: 'response',
+            created_at: Math.floor(Date.now() / 1000),
+            status: 'completed',
+            model: 'gpt-5-pro',
+            output: [
+              {
+                id: msgItemId,
+                type: 'message',
+                status: 'completed',
+                content: [{ type: 'output_text', text: finalContent }],
+                role: 'assistant',
+              },
+            ],
+            usage: {
+              input_tokens: 200,
+              output_tokens: 50,
+              total_tokens: 250,
+            },
+          },
+        },
+      ];
+
+      return createMockResponsesStream(chunks);
+    };
+
+    beforeEach(async () => {
+      // Create test agent with search enabled via chatConfig.searchMode
+      const [agentWithTools] = await serverDB
+        .insert(agents)
+        .values({
+          chatConfig: { autoCreateTopicThreshold: 2, searchMode: 'auto' },
+          model: 'gpt-5-pro',
+          plugins: [],
+          provider: 'openai',
+          systemRole: 'You are a helpful assistant that can search and crawl the web.',
+          title: 'Test Assistant for Multi-Round Tools',
+          userId,
+        })
+        .returning();
+      testAgentWithToolsId = agentWithTools.id;
+    });
+
+    it('should not duplicate tool messages across multiple LLM rounds with batch tool execution', async () => {
+      // Setup mock responses:
+      // Round 1: LLM returns 2 tool calls (search + crawl)
+      // Round 2: LLM returns 2 more tool calls (search + crawl)
+      // Round 3: LLM returns final response
+      let callCount = 0;
+      mockResponsesCreate.mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          return Promise.resolve(createMockResponseWithMultipleTools(1) as any);
+        } else if (callCount === 2) {
+          return Promise.resolve(createMockResponseWithMultipleTools(2) as any);
+        }
+        return Promise.resolve(createMockFinalResponse() as any);
+      });
+
+      // Mock ToolExecutionService.prototype.executeTool
+      const mockExecuteTool = vi.spyOn(ToolExecutionService.prototype, 'executeTool');
+      mockExecuteTool.mockImplementation(async (toolCall) => {
+        const isSearch = toolCall.apiName === 'search';
+        return {
+          content: JSON.stringify({
+            result: isSearch ? 'Search results' : 'Crawled content',
+            tool: toolCall.apiName,
+            id: toolCall.id,
+          }),
+          error: null,
+          executionTime: 100,
+          state: {},
+          success: true,
+        };
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      // Create operation
+      const createResult = await caller.execAgent({
+        agentId: testAgentWithToolsId,
+        autoStart: false,
+        prompt: 'Please search and crawl multiple pages for comprehensive research',
+      });
+
+      expect(createResult.success).toBe(true);
+
+      // Execute
+      const service = new AgentRuntimeService(serverDB, userId, {
+        queueService: null,
+      });
+
+      const finalState = await service.executeSync(createResult.operationId, {
+        maxSteps: 15,
+      });
+
+      // Verify execution completed
+      expect(finalState.status).toBe('done');
+
+      // Get all messages from database
+      const allMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.agentId, testAgentWithToolsId));
+
+      // Verify tool message count
+      // Expected: 4 tool messages (2 from round 1 + 2 from round 2)
+      // This was the bug in LOBE-1657: duplicates caused 6+ tool messages
+      const toolMessages = allMessages.filter((m) => m.role === 'tool');
+      expect(toolMessages).toHaveLength(4);
+
+      // Extract tool call IDs from message content (since toolCallId field may not be set in DB)
+      const toolCallIdsFromContent = toolMessages
+        .map((m) => {
+          try {
+            const parsed = JSON.parse(m.content || '{}');
+            return parsed.id;
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+
+      // Verify all tool_call_ids are unique (no duplicates)
+      const uniqueToolCallIds = [...new Set(toolCallIdsFromContent)];
+      expect(toolCallIdsFromContent.length).toBe(uniqueToolCallIds.length);
+
+      // Verify expected tool_call_ids
+      expect(toolCallIdsFromContent.sort()).toEqual([
+        'call_crawl_round1',
+        'call_crawl_round2',
+        'call_search_round1',
+        'call_search_round2',
+      ]);
+
+      // Verify message structure:
+      // 1 user + 2 assistant (round 1 + round 2) + 4 tool + 1 final assistant = 8 messages
+      expect(allMessages).toHaveLength(8);
+
+      // Verify assistant messages
+      const assistantMessages = allMessages.filter((m) => m.role === 'assistant');
+      expect(assistantMessages).toHaveLength(3); // round1 + round2 + final
+
+      // Verify OpenAI API was called 3 times
+      expect(mockResponsesCreate).toHaveBeenCalledTimes(3);
+
+      // Cleanup
+      mockExecuteTool.mockRestore();
+    });
+
+    it('should maintain correct state.messages count in AgentState across tool rounds', async () => {
+      // This test verifies the state tracking is correct (not just DB)
+      let callCount = 0;
+      mockResponsesCreate.mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          return Promise.resolve(createMockResponseWithMultipleTools(1) as any);
+        } else if (callCount === 2) {
+          return Promise.resolve(createMockResponseWithMultipleTools(2) as any);
+        }
+        return Promise.resolve(createMockFinalResponse() as any);
+      });
+
+      const mockExecuteTool = vi.spyOn(ToolExecutionService.prototype, 'executeTool');
+      mockExecuteTool.mockResolvedValue({
+        content: JSON.stringify({ result: 'Tool executed' }),
+        error: null,
+        executionTime: 100,
+        state: {},
+        success: true,
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const createResult = await caller.execAgent({
+        agentId: testAgentWithToolsId,
+        autoStart: false,
+        prompt: 'Multi-round tool test',
+      });
+
+      const service = new AgentRuntimeService(serverDB, userId, {
+        queueService: null,
+      });
+
+      const finalState = await service.executeSync(createResult.operationId, {
+        maxSteps: 15,
+      });
+
+      expect(finalState.status).toBe('done');
+
+      // Verify state.messages has correct count
+      // The fix in mergeToolResults ensures no duplicate tool messages in state
+      const stateToolMessages = finalState.messages.filter(
+        (m: { role: string }) => m.role === 'tool',
+      );
+      expect(stateToolMessages).toHaveLength(4);
+
+      // Verify all tool_call_ids in state are unique
+      const stateToolCallIds = stateToolMessages.map(
+        (m: { tool_call_id: string }) => m.tool_call_id,
+      );
+      expect(new Set(stateToolCallIds).size).toBe(4);
+
+      mockExecuteTool.mockRestore();
+    });
+  });
 });
