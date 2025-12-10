@@ -107,6 +107,19 @@ COPY . .
 # run build standalone for docker version
 RUN npm run build:docker
 
+# Prepare desktop export assets for Electron packaging (if generated)
+RUN <<'EOF'
+set -e
+if [ -d "/app/out" ]; then
+    mkdir -p /app/apps/desktop/dist/next/out
+    cp -a /app/out/. /app/apps/desktop/dist/next/out/
+    echo "✅ Copied Next export output into /app/apps/desktop/dist/next/out"
+else
+    echo "ℹ️ No Next export output found at /app/out, creating empty directory"
+    mkdir -p /app/apps/desktop/dist/next/out
+fi
+EOF
+
 ## Application image, copy all the files for production
 FROM busybox:latest AS app
 
@@ -115,6 +128,8 @@ COPY --from=base /distroless/ /
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
+# Copy Next export output for desktop renderer
+COPY --from=builder /app/apps/desktop/dist/next/out /app/apps/desktop/dist/next/out
 
 # Copy database migrations
 COPY --from=builder /app/packages/database/migrations /app/migrations

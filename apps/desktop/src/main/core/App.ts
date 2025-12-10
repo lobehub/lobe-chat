@@ -1,23 +1,35 @@
+import {
+  DEFAULT_VARIANTS,
+  LOBE_LOCALE_COOKIE,
+  LOBE_THEME_APPEARANCE,
+  Locales,
+  RouteVariants,
+} from '@lobechat/desktop-bridge';
 import { ElectronIPCEventHandler, ElectronIPCServer } from '@lobechat/electron-server-ipc';
-import { Session, app, protocol } from 'electron';
+import { Session, protocol } from 'electron';
+import { app, ipcMain, session } from 'electron';
 import { macOS, windows } from 'electron-is';
 import { pathExistsSync, remove } from 'fs-extra';
 import os from 'node:os';
-import { join } from 'node:path';
+import { extname, join } from 'node:path';
 
 import { name } from '@/../../package.json';
-import { LOCAL_DATABASE_DIR, buildDir, nextStandaloneDir } from '@/const/dir';
+import { LOCAL_DATABASE_DIR, buildDir, nextExportDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
 import { getServerMethodMetadata } from '@/utils/ipc';
 import { createLogger } from '@/utils/logger';
-import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
 
 import { BrowserManager } from './browser/BrowserManager';
 import { I18nManager } from './infrastructure/I18nManager';
 import { IoCContainer } from './infrastructure/IoCContainer';
 import { ProtocolManager } from './infrastructure/ProtocolManager';
+import {
+  DEFAULT_RENDERER_PROTOCOL_HOST,
+  DEFAULT_RENDERER_PROTOCOL_SCHEME,
+  RendererProtocolManager,
+} from './infrastructure/RendererProtocolManager';
 import { StaticFileServerManager } from './infrastructure/StaticFileServerManager';
 import { StoreManager } from './infrastructure/StoreManager';
 import { UpdaterManager } from './infrastructure/UpdaterManager';
@@ -35,8 +47,10 @@ type Class<T> = new (...args: any[]) => T;
 
 const importAll = (r: any) => Object.values(r).map((v: any) => v.default);
 
+const devDefaultRendererUrl = 'http://localhost:3015';
+
 export class App {
-  nextServerUrl = 'http://localhost:3015';
+  rendererLoadedUrl: string;
 
   browserManager: BrowserManager;
   menuManager: MenuManager;
@@ -47,7 +61,13 @@ export class App {
   trayManager: TrayManager;
   staticFileServerManager: StaticFileServerManager;
   protocolManager: ProtocolManager;
+  rendererProtocolManager: RendererProtocolManager;
   chromeFlags: string[] = ['OverlayScrollbar', 'FluentOverlayScrollbar', 'FluentScrollbar'];
+  /**
+   * Escape hatch: allow testing static renderer in dev via env
+   */
+  private readonly rendererStaticOverride =
+    process.env.DESKTOP_RENDERER_STATIC === '1' || process.env.DESKTOP_RENDERER_STATIC === 'true';
 
   /**
    * whether app is in quiting
@@ -78,6 +98,17 @@ export class App {
     logger.debug('Initializing App');
     // Initialize store manager
     this.storeManager = new StoreManager(this);
+    this.rendererProtocolManager = new RendererProtocolManager({
+      getExportMimeType: this.getExportMimeType.bind(this),
+      host: DEFAULT_RENDERER_PROTOCOL_HOST,
+      nextExportDir,
+      resolveRendererFilePath: this.resolveRendererFilePath.bind(this),
+      scheme: DEFAULT_RENDERER_PROTOCOL_SCHEME,
+    });
+    this.rendererProtocolManager.registerScheme();
+
+    // Initialize rendererLoadedUrl from RendererProtocolManager
+    this.rendererLoadedUrl = this.rendererProtocolManager.getRendererUrl();
 
     // load controllers
     const controllers: IControlModule[] = importAll(
@@ -106,9 +137,9 @@ export class App {
     this.staticFileServerManager = new StaticFileServerManager(this);
     this.protocolManager = new ProtocolManager(this);
 
-    // register the schema to interceptor url
-    // it should register before app ready
-    this.registerNextHandler();
+    // Configure renderer loading strategy (dev server vs static export)
+    // should register before app ready
+    this.configureRendererLoader();
 
     // initialize protocol handlers
     this.protocolManager.initialize();
@@ -272,53 +303,6 @@ export class App {
   shortcutMethodMap: ShortcutMethodMap = new Map();
   protocolHandlerMap: ProtocolHandlerMap = new Map();
 
-  /**
-   * use in next router interceptor in prod browser render
-   */
-  nextInterceptor: (params: { session: Session }) => () => void;
-
-  /**
-   * Collection of unregister functions for custom request handlers
-   */
-  private customHandlerUnregisterFns: Array<() => void> = [];
-
-  /**
-   * Function to register custom request handler
-   */
-  private registerCustomHandlerFn?: (handler: CustomRequestHandler) => () => void;
-
-  /**
-   * Register custom request handler
-   * @param handler Custom request handler function
-   * @returns Function to unregister the handler
-   */
-  registerRequestHandler = (handler: CustomRequestHandler): (() => void) => {
-    if (!this.registerCustomHandlerFn) {
-      logger.warn('Custom request handler registration is not available');
-      return () => {};
-    }
-
-    logger.debug('Registering custom request handler');
-    const unregisterFn = this.registerCustomHandlerFn(handler);
-    this.customHandlerUnregisterFns.push(unregisterFn);
-
-    return () => {
-      unregisterFn();
-      const index = this.customHandlerUnregisterFns.indexOf(unregisterFn);
-      if (index !== -1) {
-        this.customHandlerUnregisterFns.splice(index, 1);
-      }
-    };
-  };
-
-  /**
-   * Unregister all custom request handlers
-   */
-  unregisterAllRequestHandlers = () => {
-    this.customHandlerUnregisterFns.forEach((unregister) => unregister());
-    this.customHandlerUnregisterFns = [];
-  };
-
   private addController = (ControllerClass: IControlModule) => {
     const controller = new ControllerClass(this);
     this.controllers.set(ControllerClass, controller);
@@ -383,35 +367,161 @@ export class App {
     }
   };
 
-  private registerNextHandler() {
-    logger.debug('Registering Next.js handler');
-    const handler = createHandler({
-      debug: true,
-      localhostUrl: this.nextServerUrl,
-      protocol,
-      standaloneDir: nextStandaloneDir,
-    });
+  private resolveExportFilePath(pathname: string) {
+    const normalizedPath = decodeURIComponent(pathname).replace(/^\/+/, '');
 
-    // Log output based on development or production mode
-    if (isDev) {
-      logger.info(
-        `Development mode: Custom request handler enabled, but Next.js interception disabled`,
-      );
-    } else {
-      logger.info(
-        `Production mode: ${this.nextServerUrl} will be intercepted to ${nextStandaloneDir}`,
-      );
+    if (!normalizedPath) return join(nextExportDir, 'index.html');
+
+    const basePath = join(nextExportDir, normalizedPath);
+    const ext = extname(normalizedPath);
+
+    const candidates = ext
+      ? [basePath]
+      : [`${basePath}.html`, join(basePath, 'index.html'), basePath];
+
+    for (const candidate of candidates) {
+      if (pathExistsSync(candidate)) return candidate;
     }
 
-    this.nextInterceptor = handler.createInterceptor;
+    const fallback404 = join(nextExportDir, '404.html');
+    if (pathExistsSync(fallback404)) return fallback404;
 
-    // Save custom handler registration function
-    if (handler.registerCustomHandler) {
-      this.registerCustomHandlerFn = handler.registerCustomHandler;
-      logger.debug('Custom request handler registration is available');
-    } else {
-      logger.warn('Custom request handler registration is not available');
+    return null;
+  }
+
+  private getExportMimeType(filePath: string) {
+    const ext = extname(filePath).toLowerCase();
+
+    const map: Record<string, string> = {
+      '.css': 'text/css; charset=utf-8',
+      '.gif': 'image/gif',
+      '.html': 'text/html; charset=utf-8',
+      '.ico': 'image/x-icon',
+      '.jpeg': 'image/jpeg',
+      '.jpg': 'image/jpeg',
+      '.js': 'application/javascript; charset=utf-8',
+      '.json': 'application/json; charset=utf-8',
+      '.map': 'application/json; charset=utf-8',
+      '.png': 'image/png',
+      '.svg': 'image/svg+xml; charset=utf-8',
+      '.txt': 'text/plain; charset=utf-8',
+      '.webp': 'image/webp',
+      '.woff': 'font/woff',
+      '.woff2': 'font/woff2',
+    };
+
+    return map[ext];
+  }
+
+  /**
+   * Configure renderer loading strategy for dev/prod
+   */
+  private configureRendererLoader() {
+    if (isDev && !this.rendererStaticOverride) {
+      this.rendererLoadedUrl = devDefaultRendererUrl;
+      this.setupDevRenderer();
+      return;
     }
+
+    if (isDev && this.rendererStaticOverride) {
+      logger.warn('Dev mode: DESKTOP_RENDERER_STATIC enabled, using static renderer handler');
+    }
+
+    this.setupProdRenderer();
+  }
+
+  /**
+   * Development: use Next dev server directly
+   */
+  private setupDevRenderer() {
+    logger.info('Development mode: renderer served from Next dev server, no protocol hook');
+  }
+
+  /**
+   * Production: serve static Next export assets
+   */
+  private setupProdRenderer() {
+    // Use the URL from RendererProtocolManager
+    this.rendererLoadedUrl = this.rendererProtocolManager.getRendererUrl();
+    this.rendererProtocolManager.registerHandler();
+  }
+
+  /**
+   * Resolve renderer file path in production by combining variant prefix and pathname.
+   * Falls back to default variant when cookies are missing or invalid.
+   */
+  private async resolveRendererFilePath(url: URL) {
+    const pathname = url.pathname;
+
+    // Static assets should be resolved from root (no variant prefix)
+    if (
+      pathname.startsWith('/_next/') ||
+      pathname.startsWith('/static/') ||
+      pathname === '/favicon.ico' ||
+      pathname === '/manifest.json'
+    ) {
+      return this.resolveExportFilePath(pathname);
+    }
+
+    const variant = await this.getRouteVariantFromCookies();
+    const variantPrefixedPath = `/${variant}${pathname}`;
+
+    // Try variant-specific path first, then default variant as fallback
+    return (
+      this.resolveExportFilePath(variantPrefixedPath) ||
+      this.resolveExportFilePath(`/${this.defaultRouteVariant}${pathname}`) ||
+      null
+    );
+  }
+
+  private readonly defaultRouteVariant = RouteVariants.serializeVariants(DEFAULT_VARIANTS);
+  private readonly localeCookieName = LOBE_LOCALE_COOKIE;
+  private readonly themeCookieName = LOBE_THEME_APPEARANCE;
+
+  /**
+   * Build variant string from Electron session cookies to match Next export structure.
+   * Desktop is always treated as non-mobile (0).
+   */
+  private async getRouteVariantFromCookies(): Promise<string> {
+    try {
+      const cookies = await session.defaultSession.cookies.get({
+        url: `${this.rendererLoadedUrl}/`,
+      });
+      const locale = cookies.find((c) => c.name === this.localeCookieName)?.value;
+      const themeCookie = cookies.find((c) => c.name === this.themeCookieName)?.value;
+
+      const serialized = RouteVariants.serializeVariants(
+        RouteVariants.createVariants({
+          isMobile: false,
+          locale: locale as Locales | undefined,
+          theme: themeCookie === 'dark' || themeCookie === 'light' ? themeCookie : undefined,
+        }),
+      );
+
+      return RouteVariants.serializeVariants(RouteVariants.deserializeVariants(serialized));
+    } catch (error) {
+      logger.warn('Failed to read route variant cookies, using default', error);
+      return this.defaultRouteVariant;
+    }
+  }
+
+  /**
+   * Build renderer URL with variant prefix injected into the path.
+   * In dev mode (without static override), Next.js dev server handles routing automatically.
+   * In prod or dev with static override, we need to inject variant to match export structure: /[variants]/path
+   */
+  async buildRendererUrl(path: string): Promise<string> {
+    // Ensure path starts with /
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+
+    // In dev mode without static override, use dev server directly (no variant needed)
+    if (isDev && !this.rendererStaticOverride) {
+      return `${this.rendererLoadedUrl}${cleanPath}`;
+    }
+
+    // In prod or dev with static override, inject variant for static export structure
+    const variant = await this.getRouteVariantFromCookies();
+    return `${this.rendererLoadedUrl}/${variant}.html${cleanPath}`;
   }
 
   private initializeServerIpcEvents() {
@@ -445,6 +555,5 @@ export class App {
 
     // 执行清理操作
     this.staticFileServerManager.destroy();
-    this.unregisterAllRequestHandlers();
   };
 }

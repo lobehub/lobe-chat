@@ -11,7 +11,7 @@ export const buildDir = join(mainDir, '../../build');
 
 const appPath = app.getAppPath();
 
-export const nextStandaloneDir = join(appPath, 'dist', 'next');
+export const nextExportDir = join(appPath, 'dist', 'next', 'out');
 
 export const userDataDir = app.getPath('userData');
 

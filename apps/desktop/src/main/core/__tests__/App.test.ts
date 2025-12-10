@@ -80,7 +80,7 @@ vi.mock('@/const/env', () => ({
 
 vi.mock('@/const/dir', () => ({
   buildDir: '/mock/build',
-  nextStandaloneDir: '/mock/standalone',
+  nextExportDir: '/mock/export/out',
   LOCAL_DATABASE_DIR: 'lobehub-local-db',
   appStorageDir: '/mock/storage/path',
   userDataDir: '/mock/user/data',
@@ -156,13 +156,6 @@ vi.mock('../ui/TrayManager', () => ({
   TrayManager: vi.fn().mockImplementation(() => ({
     initializeTrays: vi.fn(),
     destroyAll: vi.fn(),
-  })),
-}));
-
-vi.mock('@/utils/next-electron-rsc', () => ({
-  createHandler: vi.fn(() => ({
-    createInterceptor: vi.fn(),
-    registerCustomHandler: vi.fn(),
   })),
 }));
 

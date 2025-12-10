@@ -3,6 +3,8 @@
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "baseUrl": ".",
     "target": "ESNext",
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
@@ -13,9 +15,21 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "paths": {
-      "@/*": ["./src/main/*"],
-      "~common/*": ["./src/common/*"]
+      "@/*": [
+        "src/main/*"
+      ],
+      "~common/*": [
+        "src/common/*"
+      ],
+      "@lobechat/desktop-bridge": [
+        "../../packages/desktop-bridge/src"
+      ]
     }
   },
-  "include": ["src/main/**/*", "src/preload/**/*", "src/common/**/*", "electron-builder.js"]
+  "include": [
+    "src/main/**/*",
+    "src/preload/**/*",
+    "src/common/**/*",
+    "electron-builder.js"
+  ]
 }

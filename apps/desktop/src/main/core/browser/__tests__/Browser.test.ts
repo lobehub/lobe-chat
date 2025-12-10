@@ -107,7 +107,6 @@ describe('Browser', () => {
   let mockApp: AppCore;
   let mockStoreManagerGet: ReturnType<typeof vi.fn>;
   let mockStoreManagerSet: ReturnType<typeof vi.fn>;
-  let mockNextInterceptor: ReturnType<typeof vi.fn>;
 
   const defaultOptions: BrowserWindowOpts = {
     height: 600,
@@ -133,14 +132,12 @@ describe('Browser', () => {
     // Create mock App
     mockStoreManagerGet = vi.fn().mockReturnValue(undefined);
     mockStoreManagerSet = vi.fn();
-    mockNextInterceptor = vi.fn().mockReturnValue(vi.fn());
 
     mockApp = {
       browserManager: {
         retrieveByIdentifier: vi.fn(),
       },
       isQuiting: false,
-      nextInterceptor: mockNextInterceptor,
       nextServerUrl: 'http://localhost:3000',
       storeManager: {
         get: mockStoreManagerGet,
@@ -163,10 +160,6 @@ describe('Browser', () => {
 
     it('should create BrowserWindow on construction', () => {
       expect(MockBrowserWindow).toHaveBeenCalled();
-    });
-
-    it('should setup next interceptor', () => {
-      expect(mockNextInterceptor).toHaveBeenCalled();
     });
   });
 

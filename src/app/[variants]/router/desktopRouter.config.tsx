@@ -1,6 +1,7 @@
 'use client';
 
-import { createBrowserRouter, redirect } from 'react-router-dom';
+import { isDesktop } from '@lobechat/const';
+import { createBrowserRouter, createHashRouter, redirect } from 'react-router-dom';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import { ErrorBoundary, dynamicElement } from '@/utils/router';
@@ -23,8 +24,10 @@ import {
 } from '../loaders/routeParams';
 
 // Create desktop router configuration
-export const createDesktopRouter = () =>
-  createBrowserRouter([
+export const createDesktopRouter = () => {
+  const createRouter = isDesktop ? createHashRouter : createBrowserRouter;
+
+  return createRouter([
     {
       HydrateFallback: () => <Loading debugId="Desktop Router Hydration" />,
       children: [
@@ -423,3 +426,4 @@ export const createDesktopRouter = () =>
       path: '/',
     },
   ]);
+};

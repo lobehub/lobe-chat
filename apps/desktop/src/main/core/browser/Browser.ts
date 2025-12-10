@@ -41,7 +41,6 @@ export default class Browser {
   private app: App;
   private _browserWindow?: BrowserWindow;
   private themeListenerSetup = false;
-  private stopInterceptHandler;
   identifier: string;
   options: BrowserWindowOpts;
   private readonly windowStateKey: string;
@@ -167,7 +166,9 @@ export default class Browser {
   }
 
   loadUrl = async (path: string) => {
-    const initUrl = this.app.nextServerUrl + path;
+    const initUrl = await this.app.buildRendererUrl(path);
+
+    console.log('[Browser] initUrl', initUrl);
 
     try {
       logger.debug(`[${this.identifier}] Attempting to load URL: ${initUrl}`);
@@ -295,7 +296,6 @@ export default class Browser {
    */
   destroy() {
     logger.debug(`Destroying window instance: ${this.identifier}`);
-    this.stopInterceptHandler?.();
     this.cleanupThemeListener();
     this._browserWindow = undefined;
   }
@@ -354,11 +354,6 @@ export default class Browser {
     // Apply initial visual effects
     this.applyVisualEffects();
 
-    logger.debug(`[${this.identifier}] Setting up nextInterceptor.`);
-    this.stopInterceptHandler = this.app.nextInterceptor({
-      session: browserWindow.webContents.session,
-    });
-
     // Setup CORS bypass for local file server
     this.setupCORSBypass(browserWindow);
 
@@ -409,8 +404,7 @@ export default class Browser {
         } catch (error) {
           logger.error(`[${this.identifier}] Failed to save window state on quit:`, error);
         }
-        // Need to clean up intercept handler and theme manager
-        this.stopInterceptHandler?.();
+        // Need to clean up theme manager
         this.cleanupThemeListener();
         return;
       }
@@ -445,8 +439,7 @@ export default class Browser {
         } catch (error) {
           logger.error(`[${this.identifier}] Failed to save window state on close:`, error);
         }
-        // Need to clean up intercept handler and theme manager
-        this.stopInterceptHandler?.();
+        // Need to clean up theme manager
         this.cleanupThemeListener();
       }
     });
