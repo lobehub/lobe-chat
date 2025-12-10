@@ -252,24 +252,32 @@ export class DiscoverService {
     return result;
   };
 
-  private normalizeAuthorField = (author: unknown): string => {
-    if (!author) return '';
+  private normalizeAuthorField = (author: unknown): { name: string; userName?: string } => {
+    if (!author) return { name: '' };
 
-    if (typeof author === 'string') return author;
+    if (typeof author === 'string') return { name: author };
 
     if (typeof author === 'object') {
-      const { avatar, url, name } = author as {
+      const { avatar, url, name, userName } = author as {
         avatar?: unknown;
         name?: unknown;
         url?: unknown;
+        userName?: unknown;
       };
 
-      if (typeof name === 'string' && name.length > 0) return name;
-      if (typeof avatar === 'string' && avatar.length > 0) return avatar;
-      if (typeof url === 'string' && url.length > 0) return url;
+      const authorName =
+        (typeof name === 'string' && name.length > 0 && name) ||
+        (typeof avatar === 'string' && avatar.length > 0 && avatar) ||
+        (typeof url === 'string' && url.length > 0 && url) ||
+        '';
+
+      return {
+        name: authorName,
+        userName: typeof userName === 'string' ? userName : undefined,
+      };
     }
 
-    return '';
+    return { name: '' };
   };
 
   private isLegacySource = (source?: AssistantMarketSource) => source === 'legacy';
@@ -570,8 +578,9 @@ export class DiscoverService {
 
       const normalizedAuthor = this.normalizeAuthorField(data.author);
       const assistant = {
-        author: normalizedAuthor || (data.ownerId !== null ? `User${data.ownerId}` : 'Unknown'),
-        avatar: data.avatar || normalizedAuthor || '',
+        author:
+          normalizedAuthor.name || (data.ownerId !== null ? `User${data.ownerId}` : 'Unknown'),
+        avatar: data.avatar || normalizedAuthor.name || '',
         category: (data as any).category || 'general',
         config: data.config || {},
         createdAt: (data as any).createdAt,
@@ -601,6 +610,7 @@ export class DiscoverService {
         tags: data.tags || [],
         title: (data as any).name || (data as any).identifier,
         tokenUsage: data.tokenUsage || 0,
+        userName: normalizedAuthor.userName,
         versions:
           // @ts-ignore
           data.versions?.map((item) => ({
@@ -713,8 +723,9 @@ export class DiscoverService {
       const transformedItems: DiscoverAssistantItem[] = (data.items || []).map((item: any) => {
         const normalizedAuthor = this.normalizeAuthorField(item.author);
         return {
-          author: normalizedAuthor || (item.ownerId !== null ? `User${item.ownerId}` : 'Unknown'),
-          avatar: item.avatar || normalizedAuthor || '',
+          author:
+            normalizedAuthor.name || (item.ownerId !== null ? `User${item.ownerId}` : 'Unknown'),
+          avatar: item.avatar || normalizedAuthor.name || '',
           category: item.category || 'general',
           config: item.config || {},
           createdAt: item.createdAt || item.updatedAt || new Date().toISOString(),
@@ -728,6 +739,7 @@ export class DiscoverService {
           tags: item.tags || [],
           title: item.name || item.identifier,
           tokenUsage: item.tokenUsage || 0,
+          userName: normalizedAuthor.userName,
         };
       });
 

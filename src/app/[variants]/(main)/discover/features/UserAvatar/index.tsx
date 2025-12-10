@@ -1,9 +1,8 @@
 'use client';
 
-import { Avatar, Dropdown } from '@lobehub/ui';
+import { Avatar } from '@lobehub/ui';
 import { Button, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import { LogOut, Settings, User } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -31,8 +30,7 @@ const UserAvatar = memo(() => {
   const { styles } = useStyles();
   const navigate = useNavigate();
 
-  const { isAuthenticated, isLoading, getCurrentUserInfo, signIn, signOut, openProfileSetup } =
-    useMarketAuth();
+  const { isAuthenticated, isLoading, getCurrentUserInfo, signIn } = useMarketAuth();
 
   const userInfo = getCurrentUserInfo();
   const username = userInfo?.sub;
@@ -48,10 +46,6 @@ const UserAvatar = memo(() => {
     }
   }, [signIn]);
 
-  const handleSignOut = useCallback(async () => {
-    await signOut();
-  }, [signOut]);
-
   const handleNavigateToProfile = useCallback(() => {
     // Use userName from profile for the URL (not OIDC sub/id)
     const profileUserName = userProfile?.userName;
@@ -59,10 +53,6 @@ const UserAvatar = memo(() => {
       navigate(`/discover/user/${profileUserName}`);
     }
   }, [navigate, userProfile?.userName]);
-
-  const handleEditProfile = useCallback(() => {
-    openProfileSetup();
-  }, [openProfileSetup]);
 
   if (isLoading) {
     return <Skeleton.Avatar active size={32} />;
@@ -79,37 +69,10 @@ const UserAvatar = memo(() => {
   // Get avatar from user profile (fetched via SWR with caching)
   const avatarUrl = userProfile?.avatarUrl;
 
-  const menuItems = [
-    {
-      icon: <User size={16} />,
-      key: 'profile',
-      label: t('user.myProfile'),
-      onClick: handleNavigateToProfile,
-    },
-    {
-      icon: <Settings size={16} />,
-      key: 'editProfile',
-      label: t('user.editProfile'),
-      onClick: handleEditProfile,
-    },
-    {
-      type: 'divider' as const,
-    },
-    {
-      danger: true,
-      icon: <LogOut size={16} />,
-      key: 'logout',
-      label: t('user.logout'),
-      onClick: handleSignOut,
-    },
-  ];
-
   return (
-    <Dropdown menu={{ items: menuItems }} placement="bottomRight" trigger={['click']}>
-      <Flexbox className={styles.avatar}>
-        <Avatar avatar={avatarUrl || undefined} size={32} />
-      </Flexbox>
-    </Dropdown>
+    <Flexbox className={styles.avatar} onClick={handleNavigateToProfile}>
+      <Avatar avatar={avatarUrl || undefined} size={32} />
+    </Flexbox>
   );
 });
 

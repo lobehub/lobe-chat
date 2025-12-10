@@ -46,6 +46,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
     tokenUsage,
     pluginCount,
     knowledgeCount,
+    userName,
   } = useDetailContext();
   const { styles, theme } = useStyles();
   const { mobile = isMobile } = useResponsive();
@@ -121,9 +122,13 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
           <Flexbox align={'center'} gap={4} horizontal>
             {author && (
               <Flexbox align={'center'} gap={4} horizontal>
-                <RouterLink style={{ color: 'inherit' }} to={urlJoin('/discover/user', author)}>
-                  {author}
-                </RouterLink>
+                {userName ? (
+                  <RouterLink style={{ color: 'inherit' }} to={urlJoin('/discover/user', userName)}>
+                    {author}
+                  </RouterLink>
+                ) : (
+                  <span>{author}</span>
+                )}
                 <Link
                   href={urlJoin('https://github.com', author)}
                   onClick={(e) => e.stopPropagation()}

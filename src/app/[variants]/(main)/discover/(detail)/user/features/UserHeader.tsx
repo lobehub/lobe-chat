@@ -2,8 +2,9 @@
 
 import { Github } from '@lobehub/icons';
 import { ActionIcon, Avatar, Text, Tooltip } from '@lobehub/ui';
+import { Button } from 'antd';
 import { createStyles } from 'antd-style';
-import { Globe, Package, Twitter } from 'lucide-react';
+import { Globe, Package, Settings, Twitter } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -41,12 +42,14 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface UserHeaderProps {
   agentCount: number;
+  isOwner?: boolean;
   mobile?: boolean;
+  onEditProfile?: () => void;
   totalInstalls: number;
   user: DiscoverUserInfo;
 }
 
-const UserHeader = memo<UserHeaderProps>(({ user, agentCount, mobile }) => {
+const UserHeader = memo<UserHeaderProps>(({ user, agentCount, mobile, isOwner, onEditProfile }) => {
   const { t } = useTranslation('discover');
   const { styles, theme } = useStyles();
 
@@ -62,11 +65,18 @@ const UserHeader = memo<UserHeaderProps>(({ user, agentCount, mobile }) => {
           style={{ flexShrink: 0 }}
         />
         <Flexbox flex={1} gap={8}>
-          <Flexbox gap={4}>
-            <Text as={'h1'} className={styles.displayName}>
-              {displayName}
-            </Text>
-            <Text className={styles.username}>@{username}</Text>
+          <Flexbox align="center" gap={12} horizontal justify="space-between">
+            <Flexbox gap={4}>
+              <Text as={'h1'} className={styles.displayName}>
+                {displayName}
+              </Text>
+              <Text className={styles.username}>@{username}</Text>
+            </Flexbox>
+            {isOwner && onEditProfile && (
+              <Button icon={<Settings size={16} />} onClick={onEditProfile}>
+                {t('user.editProfile')}
+              </Button>
+            )}
           </Flexbox>
 
           {user.description && (

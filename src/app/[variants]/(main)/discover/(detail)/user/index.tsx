@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useLoaderData } from 'react-router-dom';
 
 import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
-import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
+import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/MarketAuth';
 import { marketApiService } from '@/services/marketApi';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverAssistantItem, DiscoverTab } from '@/types/discover';
@@ -31,21 +31,25 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
   const { t } = useTranslation('setting');
   const { message } = App.useApp();
 
-  const { getCurrentUserInfo, isAuthenticated, session } = useMarketAuth();
+  const { getCurrentUserInfo, isAuthenticated, session, openProfileSetup } = useMarketAuth();
 
   const useUserProfile = useDiscoverStore((s) => s.useUserProfile);
   const { data, isLoading, mutate } = useUserProfile({ username });
+
+  // Get current user's profile to check ownership by userName
+  const currentUser = getCurrentUserInfo();
+  const { data: currentUserProfile } = useMarketUserProfile(currentUser?.sub);
 
   const [selectedAgent, setSelectedAgent] = useState<DiscoverAssistantItem | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Check if the current user is viewing their own profile
-  const currentUser = getCurrentUserInfo();
   const isOwner =
     isAuthenticated &&
     !!currentUser &&
-    (currentUser.accountId === data?.user?.id ||
-      !!(data?.user?.userName && currentUser.sub?.includes(data.user.userName)));
+    !!data?.user?.userName &&
+    !!currentUserProfile?.userName &&
+    data.user.userName === currentUserProfile.userName;
 
   const handleAgentClick = useCallback(
     (agent: DiscoverAssistantItem) => {
@@ -126,7 +130,9 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
       <Flexbox gap={24}>
         <UserHeader
           agentCount={agents.length}
+          isOwner={isOwner}
           mobile={mobile}
+          onEditProfile={openProfileSetup}
           totalInstalls={totalInstalls}
           user={user}
         />

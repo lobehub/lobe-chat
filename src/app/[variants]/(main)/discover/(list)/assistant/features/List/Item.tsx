@@ -3,7 +3,7 @@ import { ActionIcon, Avatar, Block, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
 import qs from 'query-string';
-import { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,7 +18,12 @@ import TokenTag from './TokenTag';
 const useStyles = createStyles(({ css, token }) => {
   return {
     author: css`
+      cursor: pointer;
       color: ${token.colorTextDescription};
+
+      &:hover {
+        color: ${token.colorPrimary};
+      }
     `,
     code: css`
       font-family: ${token.fontFamilyCode};
@@ -63,6 +68,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     knowledgeCount,
     installCount,
     backgroundColor,
+    userName,
   }) => {
     const { styles, theme } = useStyles();
     const navigate = useNavigate();
@@ -76,6 +82,17 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     );
 
     const { t } = useTranslation('discover');
+
+    const handleAuthorClick = useCallback(
+      (e: React.MouseEvent) => {
+        e.stopPropagation();
+        // Use userName for navigation if available, otherwise don't navigate
+        if (userName) {
+          navigate(`/discover/user/${userName}`);
+        }
+      },
+      [userName, navigate],
+    );
 
     return (
       <Block
@@ -136,7 +153,15 @@ const AssistantItem = memo<DiscoverAssistantItem>(
                   </Text>
                 </Link>
               </Flexbox>
-              {author && <div className={styles.author}>{author}</div>}
+              {author && (
+                <div
+                  className={userName ? styles.author : undefined}
+                  onClick={userName ? handleAuthorClick : undefined}
+                  style={userName ? undefined : { color: 'inherit' }}
+                >
+                  {author}
+                </div>
+              )}
             </Flexbox>
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>
