@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-import { MemoryTypeEnum } from './common';
+import { MemoryTypeSchema } from './common';
+import { LayersEnum, MergeStrategyEnum } from '@/types/userMemory';
 
 export const RELATIONSHIP_ENUM = [
   'self',
@@ -37,48 +38,66 @@ export const RELATIONSHIP_ENUM = [
 
 const RelationshipEnum = z.enum(RELATIONSHIP_ENUM);
 const IdentityTypeEnum = z.enum(['professional', 'personal', 'demographic']);
-const MergeStrategyEnum = z.enum(['replace', 'merge']);
 
-const AddIdentityActionSchema = z
+export const AddIdentityActionSchema = z
   .object({
-    description: z.string(),
-    episodicDate: z.string().nullable().optional(),
-    extractedLabels: z.array(z.string()).optional(),
-    relationship: RelationshipEnum.nullable().optional(),
-    role: z.string().nullable().optional(),
-    scoreConfidence: z.number().nullable().optional(),
-    sourceEvidence: z.string().nullable().optional(),
-    type: IdentityTypeEnum,
-  })
-  .strict();
-
-const UpdateIdentityActionSchema = z
-  .object({
-    id: z.string(),
-    mergeStrategy: MergeStrategyEnum,
-    set: z
+    details: z.string().optional().describe('Optional detailed information'),
+    memoryCategory: z.string().describe('Memory category'),
+    memoryLayer: z.literal(LayersEnum.Identity).describe('Memory layer'),
+    memoryType: MemoryTypeSchema.describe('Memory type'),
+    summary: z.string().describe('Concise overview of this specific memory'),
+    tags: z.array(z.string()).describe('Model generated tags that summarize the identity facets'),
+    title: z.string().describe('Brief descriptive title'),
+    withIdentity: z
       .object({
-        description: z.string().optional(),
+        description: z.string(),
         episodicDate: z.string().nullable().optional(),
         extractedLabels: z.array(z.string()).optional(),
         relationship: RelationshipEnum.nullable().optional(),
         role: z.string().nullable().optional(),
         scoreConfidence: z.number().nullable().optional(),
         sourceEvidence: z.string().nullable().optional(),
-        type: IdentityTypeEnum.nullable().optional(),
+        type: IdentityTypeEnum,
       })
       .strict(),
   })
+  .strict()
+
+export const UpdateIdentityActionSchema = z
+  .object({
+    id: z.string(),
+    mergeStrategy: z.nativeEnum(MergeStrategyEnum),
+    set: z.object({
+      details: z.string().optional().describe('Optional detailed information'),
+      memoryCategory: z.string().describe('Memory category'),
+      memoryType: MemoryTypeSchema.describe('Memory type'),
+      summary: z.string().describe('Concise overview of this specific memory'),
+      tags: z.array(z.string()).describe('Model generated tags that summarize the identity facets'),
+      title: z.string().describe('Brief descriptive title'),
+      withIdentity: z
+        .object({
+          description: z.string().optional(),
+          episodicDate: z.string().nullable().optional(),
+          extractedLabels: z.array(z.string()).optional(),
+          relationship: RelationshipEnum.nullable().optional(),
+          role: z.string().nullable().optional(),
+          scoreConfidence: z.number().nullable().optional(),
+          sourceEvidence: z.string().nullable().optional(),
+          type: IdentityTypeEnum.nullable().optional(),
+        })
+        .strict(),
+    })
+  })
   .strict();
 
-const RemoveIdentityActionSchema = z
+export const RemoveIdentityActionSchema = z
   .object({
     id: z.string(),
     reason: z.string(),
   })
   .strict();
 
-const IdentityActionsSchema = z
+export const IdentityActionsSchema = z
   .object({
     add: z.array(AddIdentityActionSchema).nullable(),
     remove: z.array(RemoveIdentityActionSchema).nullable(),
@@ -86,23 +105,12 @@ const IdentityActionsSchema = z
   })
   .strict();
 
-export const IdentityMemorySchema = z
+export const WithIdentitySchema = z
   .object({
-    details: z.string().optional().describe('Optional detailed information'),
-    memoryCategory: z.string().describe('Memory category'),
-    memoryLayer: z.literal('context').describe('Memory layer'),
-    memoryType: MemoryTypeEnum.describe('Memory type'),
-    summary: z.string().describe('Concise overview of this specific memory'),
-    title: z.string().describe('Brief descriptive title'),
-    withIdentities: z
-      .object({
-        actions: IdentityActionsSchema,
-      })
-      .strict(),
+    actions: IdentityActionsSchema,
   })
-  .strict();
+  .strict()
 
-export type IdentityMemory = z.infer<typeof IdentityMemorySchema>;
 export type IdentityActions = z.infer<typeof IdentityActionsSchema>;
 export type AddIdentityAction = z.infer<typeof AddIdentityActionSchema>;
 export type UpdateIdentityAction = z.infer<typeof UpdateIdentityActionSchema>;

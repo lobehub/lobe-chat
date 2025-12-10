@@ -1,21 +1,20 @@
-import {
-  addContextMemorySchema,
-  addExperienceMemorySchema,
-  addIdentityMemorySchema,
-  addPreferenceMemorySchema,
-  removeIdentityMemorySchema,
-  updateIdentityMemorySchema,
-} from '@lobechat/types';
-
-import { IdentityEntryPayload } from '@/database/models/userMemory';
+import { IdentityEntryBasePayload, IdentityEntryPayload } from '@/database/models/userMemory';
 import { searchMemorySchema } from '@/types/userMemory';
+import {
+  ContextMemoryItemSchema,
+  ExperienceMemoryItemSchema,
+  PreferenceMemoryItemSchema,
+  AddIdentityActionSchema,
+  UpdateIdentityActionSchema,
+  RemoveIdentityActionSchema,
+} from '@lobechat/memory-user-memory'
 
 import { searchUserMemories } from './search';
 import { createEmbedder, getEmbeddingRuntime, memoryProcedure, router } from './shared';
 
 export const toolsRouter = router({
   addContextMemory: memoryProcedure
-    .input(addContextMemorySchema)
+    .input(ContextMemoryItemSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const { agentRuntime, embeddingModel } = await getEmbeddingRuntime(ctx.jwtPayload);
@@ -27,19 +26,19 @@ export const toolsRouter = router({
 
         const { context, memory } = await ctx.memoryModel.createContextMemory({
           context: {
-            associatedObjects: input.withContext.associatedObjects,
-            associatedSubjects: input.withContext.associatedSubjects,
-            currentStatus: input.withContext.currentStatus,
-            description: input.withContext.description,
+            associatedObjects: input.withContext.associatedObjects ?? null,
+            associatedSubjects: input.withContext.associatedSubjects ?? null,
+            currentStatus: input.withContext.currentStatus ?? null,
+            description: input.withContext.description ?? null,
             descriptionVector: contextDescriptionEmbedding ?? null,
             metadata: {},
             scoreImpact: input.withContext.scoreImpact ?? null,
             scoreUrgency: input.withContext.scoreUrgency ?? null,
-            tags: input.withContext.tags,
+            tags: input.tags ?? [],
             title: input.withContext.title ?? null,
             type: input.withContext.type ?? null,
           },
-          details: input.details,
+          details: input.details || '',
           detailsEmbedding,
           memoryCategory: input.memoryCategory,
           memoryLayer: input.memoryLayer,
@@ -65,7 +64,7 @@ export const toolsRouter = router({
     }),
 
   addExperienceMemory: memoryProcedure
-    .input(addExperienceMemorySchema)
+    .input(ExperienceMemoryItemSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const { agentRuntime, embeddingModel } = await getEmbeddingRuntime(ctx.jwtPayload);
@@ -78,7 +77,7 @@ export const toolsRouter = router({
         const keyLearningVector = await embed(input.withExperience.keyLearning);
 
         const { experience, memory } = await ctx.memoryModel.createExperienceMemory({
-          details: input.details,
+          details: input.details || '',
           detailsEmbedding,
           experience: {
             action: input.withExperience.action ?? null,
@@ -91,7 +90,7 @@ export const toolsRouter = router({
             scoreConfidence: input.withExperience.scoreConfidence ?? null,
             situation: input.withExperience.situation ?? null,
             situationVector: situationVector ?? null,
-            tags: input.withExperience.tags ?? [],
+            tags: input.tags ?? [],
             type: input.memoryType,
           },
           memoryCategory: input.memoryCategory,
@@ -118,7 +117,7 @@ export const toolsRouter = router({
     }),
 
   addIdentityMemory: memoryProcedure
-    .input(addIdentityMemorySchema)
+    .input(AddIdentityActionSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const { agentRuntime, embeddingModel } = await getEmbeddingRuntime(ctx.jwtPayload);
@@ -152,7 +151,7 @@ export const toolsRouter = router({
             metadata: Object.keys(identityMetadata).length > 0 ? identityMetadata : undefined,
             summary: input.summary,
             summaryVector1024: summaryEmbedding ?? null,
-            tags: input.withIdentity.tags,
+            tags: input.tags,
             title: input.title,
           },
           identity: {
@@ -162,7 +161,7 @@ export const toolsRouter = router({
             metadata: Object.keys(identityMetadata).length > 0 ? identityMetadata : undefined,
             relationship: input.withIdentity.relationship,
             role: input.withIdentity.role,
-            tags: input.withIdentity.tags,
+            tags: input.tags,
             type: input.withIdentity.type,
           },
         });
@@ -183,7 +182,7 @@ export const toolsRouter = router({
     }),
 
   addPreferenceMemory: memoryProcedure
-    .input(addPreferenceMemorySchema)
+    .input(PreferenceMemoryItemSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const { agentRuntime, embeddingModel } = await getEmbeddingRuntime(ctx.jwtPayload);
@@ -194,8 +193,8 @@ export const toolsRouter = router({
         const conclusionVector = await embed(input.withPreference.conclusionDirectives);
 
         const suggestionsText =
-          input.withPreference.suggestions.length > 0
-            ? input.withPreference.suggestions.join('\n')
+          input.withPreference?.suggestions?.length && input.withPreference?.suggestions?.length > 0
+            ? input.withPreference?.suggestions?.join('\n')
             : null;
 
         const metadata = {
@@ -205,18 +204,18 @@ export const toolsRouter = router({
         } satisfies Record<string, unknown>;
 
         const { memory, preference } = await ctx.memoryModel.createPreferenceMemory({
-          details: input.details,
+          details: input.details || '',
           detailsEmbedding,
           memoryCategory: input.memoryCategory,
           memoryLayer: input.memoryLayer,
           memoryType: input.memoryType,
           preference: {
-            conclusionDirectives: input.withPreference.conclusionDirectives,
+            conclusionDirectives: input.withPreference.conclusionDirectives || '',
             conclusionDirectivesVector: conclusionVector ?? null,
             metadata,
             scorePriority: input.withPreference.scorePriority ?? null,
             suggestions: suggestionsText,
-            tags: input.withPreference.tags,
+            tags: input.tags,
             type: input.memoryType,
           },
           summary: input.summary,
@@ -240,7 +239,7 @@ export const toolsRouter = router({
     }),
 
   removeIdentityMemory: memoryProcedure
-    .input(removeIdentityMemorySchema)
+    .input(RemoveIdentityActionSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const removed = await ctx.memoryModel.removeIdentityEntry(input.id);
@@ -277,74 +276,112 @@ export const toolsRouter = router({
   }),
 
   updateIdentityMemory: memoryProcedure
-    .input(updateIdentityMemorySchema)
-    .mutation(async ({ input, ctx }) => {
-      try {
-        const { agentRuntime, embeddingModel } = await getEmbeddingRuntime(ctx.jwtPayload);
-        const embed = createEmbedder(agentRuntime, embeddingModel);
+    .input(UpdateIdentityActionSchema)
+        .mutation(async ({ input, ctx }) => {
+          try {
+            const { agentRuntime, embeddingModel } = await getEmbeddingRuntime(ctx.jwtPayload);
+            const embed = createEmbedder(agentRuntime, embeddingModel);
 
-        let descriptionVector: number[] | null | undefined;
-        if (input.set.description !== undefined) {
-          const vector = await embed(input.set.description);
-          descriptionVector = vector ?? null;
-        }
+            let summaryVector1024: number[] | null | undefined;
+            if (input.set.summary !== undefined) {
+              const vector = await embed(input.set.summary);
+              summaryVector1024 = vector ?? null;
+            }
 
-        const metadataUpdates: Record<string, unknown> = {};
-        if (Object.prototype.hasOwnProperty.call(input.set, 'scoreConfidence')) {
-          metadataUpdates.scoreConfidence = input.set.scoreConfidence ?? null;
-        }
-        if (Object.prototype.hasOwnProperty.call(input.set, 'sourceEvidence')) {
-          metadataUpdates.sourceEvidence = input.set.sourceEvidence ?? null;
-        }
+            let detailsVector1024: number[] | null | undefined;
+            if (input.set.details !== undefined) {
+              const vector = await embed(input.set.details);
+              detailsVector1024 = vector ?? null;
+            }
 
-        const identityPayload: Partial<IdentityEntryPayload> = {};
-        if (input.set.description !== undefined) {
-          identityPayload.description = input.set.description;
-          identityPayload.descriptionVector = descriptionVector;
-        }
-        if (input.set.episodicDate !== undefined) {
-          identityPayload.episodicDate = input.set.episodicDate;
-        }
-        if (input.set.relationship !== undefined) {
-          identityPayload.relationship = input.set.relationship;
-        }
-        if (input.set.role !== undefined) {
-          identityPayload.role = input.set.role;
-        }
-        if (input.set.tags !== undefined) {
-          identityPayload.tags = input.set.tags;
-        }
-        if (input.set.type !== undefined) {
-          identityPayload.type = input.set.type;
-        }
-        if (Object.keys(metadataUpdates).length > 0) {
-          identityPayload.metadata = metadataUpdates;
-        }
+            let descriptionVector: number[] | null | undefined;
+            if (input.set.withIdentity.description !== undefined) {
+              const vector = await embed(input.set.withIdentity.description);
+              descriptionVector = vector ?? null;
+            }
 
-        const updated = await ctx.memoryModel.updateIdentityEntry({
-          identity: Object.keys(identityPayload).length > 0 ? identityPayload : undefined,
-          identityId: input.id,
-          mergeStrategy: input.mergeStrategy,
-        });
+            const metadataUpdates: Record<string, unknown> = {};
+            if (Object.hasOwn(input.set.withIdentity, 'scoreConfidence')) {
+              metadataUpdates.scoreConfidence = input.set.withIdentity.scoreConfidence ?? null;
+            }
+            if (Object.hasOwn(input.set.withIdentity, 'sourceEvidence')) {
+              metadataUpdates.sourceEvidence = input.set.withIdentity.sourceEvidence ?? null;
+            }
 
-        if (!updated) {
-          return {
-            message: 'Identity memory not found',
-            success: false,
-          };
-        }
+            const identityPayload: Partial<IdentityEntryPayload> = {};
+            if (input.set.withIdentity.description !== undefined) {
+              identityPayload.description = input.set.withIdentity.description;
+              identityPayload.descriptionVector = descriptionVector;
+            }
+            if (input.set.withIdentity.episodicDate !== undefined) {
+              identityPayload.episodicDate = input.set.withIdentity.episodicDate;
+            }
+            if (input.set.withIdentity.relationship !== undefined) {
+              identityPayload.relationship = input.set.withIdentity.relationship;
+            }
+            if (input.set.withIdentity.role !== undefined) {
+              identityPayload.role = input.set.withIdentity.role;
+            }
+            if (input.set.tags !== undefined) {
+              identityPayload.tags = input.set.tags;
+            }
+            if (input.set.withIdentity.type !== undefined) {
+              identityPayload.type = input.set.withIdentity.type;
+            }
+            if (Object.keys(metadataUpdates).length > 0) {
+              identityPayload.metadata = metadataUpdates;
+            }
 
-        return {
-          identityId: input.id,
-          message: 'Identity memory updated successfully',
-          success: true,
-        };
-      } catch (error) {
-        console.error('Failed to update identity memory:', error);
-        return {
-          message: `Failed to update identity memory: ${(error as Error).message}`,
-          success: false,
-        };
-      }
-    }),
+            const basePayload: Partial<IdentityEntryBasePayload> = {};
+            if (input.set.details !== undefined) {
+              basePayload.details = input.set.details;
+              basePayload.detailsVector1024 = detailsVector1024;
+            }
+            if (input.set.memoryCategory !== undefined) {
+              basePayload.memoryCategory = input.set.memoryCategory;
+            }
+            if (input.set.memoryType !== undefined) {
+              basePayload.memoryType = input.set.memoryType;
+            }
+            if (input.set.summary !== undefined) {
+              basePayload.summary = input.set.summary;
+              basePayload.summaryVector1024 = summaryVector1024;
+            }
+            if (input.set.tags !== undefined) {
+              basePayload.tags = input.set.tags;
+            }
+            if (input.set.title !== undefined) {
+              basePayload.title = input.set.title;
+            }
+            if (Object.keys(metadataUpdates).length > 0) {
+              basePayload.metadata = metadataUpdates;
+            }
+
+            const updated = await ctx.memoryModel.updateIdentityEntry({
+              base: Object.keys(basePayload).length > 0 ? basePayload : undefined,
+              identity: Object.keys(identityPayload).length > 0 ? identityPayload : undefined,
+              identityId: input.id,
+              mergeStrategy: input.mergeStrategy,
+            });
+
+            if (!updated) {
+              return {
+                message: 'Identity memory not found',
+                success: false,
+              };
+            }
+
+            return {
+              identityId: input.id,
+              message: 'Identity memory updated successfully',
+              success: true,
+            };
+          } catch (error) {
+            console.error('Failed to update identity memory:', error);
+            return {
+              message: `Failed to update identity memory: ${(error as Error).message}`,
+              success: false,
+            };
+          }
+        }),
 });
