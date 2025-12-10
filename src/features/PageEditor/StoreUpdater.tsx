@@ -71,45 +71,48 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     useEffect(() => {
       if (!editorInit || !editor || contentInit) return;
 
-      try {
-        // Helper to calculate word count
-        const calculateWordCount = (text: string) =>
-          text.trim().split(/\s+/).filter(Boolean).length;
+      // Defer editor content loading to avoid flushSync warning
+      queueMicrotask(() => {
+        try {
+          // Helper to calculate word count
+          const calculateWordCount = (text: string) =>
+            text.trim().split(/\s+/).filter(Boolean).length;
 
-        storeApi.setState({ lastUpdatedTime: null });
+          storeApi.setState({ lastUpdatedTime: null });
 
-        // Load from editorData if available
-        if (currentPage?.editorData && Object.keys(currentPage.editorData).length > 0) {
-          editor.setDocument('json', JSON.stringify(currentPage.editorData));
-          const textContent = currentPage.content || '';
-          storeApi.setState({ wordCount: calculateWordCount(textContent) });
-        } else if (currentPage?.content && currentPage.content.trim()) {
-          // Fallback to markdown content (e.g., from Notion imports)
-          editor.setDocument('markdown', currentPage.content);
-          storeApi.setState({ wordCount: calculateWordCount(currentPage.content) });
-        } else if (currentPage?.pages) {
-          // Fallback to pages content
-          const pagesContent = currentPage.pages
-            .map((page) => page.pageContent)
-            .join('\n\n')
-            .trim();
-          if (pagesContent) {
-            editor.setDocument('markdown', pagesContent);
-            storeApi.setState({ wordCount: calculateWordCount(pagesContent) });
+          // Load from editorData if available
+          if (currentPage?.editorData && Object.keys(currentPage.editorData).length > 0) {
+            editor.setDocument('json', JSON.stringify(currentPage.editorData));
+            const textContent = currentPage.content || '';
+            storeApi.setState({ wordCount: calculateWordCount(textContent) });
+          } else if (currentPage?.content && currentPage.content.trim()) {
+            // Fallback to markdown content (e.g., from Notion imports)
+            editor.setDocument('markdown', currentPage.content);
+            storeApi.setState({ wordCount: calculateWordCount(currentPage.content) });
+          } else if (currentPage?.pages) {
+            // Fallback to pages content
+            const pagesContent = currentPage.pages
+              .map((page) => page.pageContent)
+              .join('\n\n')
+              .trim();
+            if (pagesContent) {
+              editor.setDocument('markdown', pagesContent);
+              storeApi.setState({ wordCount: calculateWordCount(pagesContent) });
+            } else {
+              editor.setDocument('text', '');
+              storeApi.setState({ wordCount: 0 });
+            }
           } else {
+            // Empty document or temp page - clear editor
             editor.setDocument('text', '');
             storeApi.setState({ wordCount: 0 });
           }
-        } else {
-          // Empty document or temp page - clear editor
-          editor.setDocument('text', '');
-          storeApi.setState({ wordCount: 0 });
-        }
 
-        setContentInit(true);
-      } catch (error) {
-        console.error('[PageEditor] Failed to initialize editor content:', error);
-      }
+          setContentInit(true);
+        } catch (error) {
+          console.error('[PageEditor] Failed to initialize editor content:', error);
+        }
+      });
     }, [editorInit, contentInit, editor, pageId, currentPage, storeApi]);
 
     // Track editor initialization
