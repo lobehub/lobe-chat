@@ -16,11 +16,12 @@ const Home = memo(() => {
   const { t } = useTranslation('memory');
 
   const useFetchTags = useUserMemoryStore((s) => s.useFetchTags);
-  const { data, isLoading } = useFetchTags();
+  const roles = useUserMemoryStore((s) => s.roles);
+  const { isLoading } = useFetchTags();
 
   if (isLoading) return <Loading debugId={'Home'} />;
 
-  if (!data || data.length === 0) {
+  if (!roles || roles.length === 0) {
     return <Empty description={t('identity.empty')} />;
   }
 
@@ -38,7 +39,7 @@ const Home = memo(() => {
         style={{ overflowY: 'auto', paddingBottom: '16vh' }}
         width={'100%'}
       >
-        <RoleTagCloud tags={data} />
+        <RoleTagCloud tags={roles} />
         <WideScreenContainer gap={32} paddingBlock={48}>
           111
         </WideScreenContainer>

@@ -1,7 +1,7 @@
 import { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { QueryTagsResult } from '@/database/models/userMemory';
+import { QueryIdentityRolesResult } from '@/database/models/userMemory';
 import { useClientDataSWR } from '@/libs/swr';
 import { userMemoryService } from '@/services/userMemory';
 
@@ -11,7 +11,7 @@ const FETCH_TAGS_KEY = 'useFetchTags';
 const n = (namespace: string) => namespace;
 
 export interface HomeAction {
-  useFetchTags: () => SWRResponse<QueryTagsResult[]>;
+  useFetchTags: () => SWRResponse<QueryIdentityRolesResult>;
 }
 
 export const createHomeSlice: StateCreator<
@@ -24,19 +24,16 @@ export const createHomeSlice: StateCreator<
     useClientDataSWR(
       FETCH_TAGS_KEY,
       () =>
-        userMemoryService
-          .queryTags
-          //   {
-          //   layers: [LayersEnum.Identity],
-          //   page: 1,
-          //   size: 64,
-          // }
-          (),
+        userMemoryService.queryIdentityRoles({
+          page: 1,
+          size: 64,
+        }),
       {
-        onSuccess: (data: QueryTagsResult[] | undefined) => {
+        onSuccess: (data: QueryIdentityRolesResult | undefined) => {
           set(
             {
-              tags: data || [],
+              roles: data?.roles.map((item) => ({ count: item.count, tag: item.role })) || [],
+              tags: data?.tags || [],
               tagsInit: true,
             },
             false,

@@ -39,7 +39,7 @@ const Word = memo<WordProps>(
     const [hovered, setHovered] = useState(false);
 
     const fontProps = {
-      'fontSize': size,
+      'fontSize': size * 0.6,
       'fontWeight': 600,
       'letterSpacing': -0.05,
       'lineHeight': 1,
