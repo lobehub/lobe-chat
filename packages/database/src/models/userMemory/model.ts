@@ -261,6 +261,16 @@ export interface QueryTagsResult {
   tag: string;
 }
 
+export interface QueryIdentityRolesParams {
+  page?: number;
+  size?: number;
+}
+
+export interface QueryIdentityRolesResult {
+  roles: Array<{ count: number; role: string }>;
+  tags: Array<{ count: number; tag: string }>;
+}
+
 export class UserMemoryModel {
   static parseAssociatedObjects(value?: unknown): Record<string, unknown>[] {
     if (!Array.isArray(value)) return [];
@@ -543,6 +553,61 @@ export class UserMemoryModel {
       .offset(offset);
 
     return result as QueryTagsResult[];
+  };
+
+  queryIdentityRoles = async (
+    params: QueryIdentityRolesParams = {},
+  ): Promise<QueryIdentityRolesResult> => {
+    const { page = 1, size = 10 } = params;
+    const offset = (page - 1) * size;
+
+    const identityConditions = [eq(userMemoriesIdentities.userId, this.userId)];
+
+    const identityTags = this.db.$with('identity_tags').as(
+      this.db
+        .select({
+          tag: sql<string>`UNNEST(${userMemoriesIdentities.tags})`.as('tag'),
+        })
+        .from(userMemoriesIdentities)
+        .where(and(...identityConditions)),
+    );
+
+    const [tags, roles] = await Promise.all([
+      this.db
+        .with(identityTags)
+        .select({
+          count: sql<number>`COUNT(${identityTags.tag})::int`.as('count'),
+          tag: identityTags.tag,
+        })
+        .from(identityTags)
+        .where(and(isNotNull(identityTags.tag), ne(identityTags.tag, '')))
+        .groupBy(identityTags.tag)
+        .orderBy(desc(sql<number>`count`))
+        .limit(size)
+        .offset(offset),
+      this.db
+        .select({
+          count: sql<number>`COUNT(${userMemoriesIdentities.role})::int`.as('count'),
+          role: userMemoriesIdentities.role,
+        })
+        .from(userMemoriesIdentities)
+        .where(
+          and(
+            ...identityConditions,
+            isNotNull(userMemoriesIdentities.role),
+            ne(userMemoriesIdentities.role, ''),
+          ),
+        )
+        .groupBy(userMemoriesIdentities.role)
+        .orderBy(desc(sql<number>`count`))
+        .limit(size)
+        .offset(offset),
+    ]);
+
+    return {
+      roles: roles as QueryIdentityRolesResult['roles'],
+      tags: tags as QueryIdentityRolesResult['tags'],
+    };
   };
 
   findById = async (id: string): Promise<UserMemoryItem | undefined> => {
