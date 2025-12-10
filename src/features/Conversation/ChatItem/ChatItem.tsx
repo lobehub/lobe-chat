@@ -33,12 +33,12 @@ const ChatItem = memo<ChatItemProps>(
     onDoubleClick,
     aboveMessage,
     belowMessage,
-    markdownProps,
     showAvatar = true,
     titleAddon,
     disabled = false,
     id,
     style,
+    newScreen,
     ...rest
   }) => {
     const { cx, styles } = useStyles({
@@ -47,12 +47,21 @@ const ChatItem = memo<ChatItemProps>(
     });
 
     const isUser = placement === 'right';
+    const isEmptyMessage =
+      !message || String(message).trim() === '' || message === placeholderMessage;
+    const errorContent = <ErrorContent error={error} message={errorMessage} />;
+
     return (
       <Flexbox
         align={isUser ? 'flex-end' : 'flex-start'}
-        className={cx('message-wrapper', styles.container, className)}
+        className={cx(
+          'message-wrapper',
+          styles.container,
+          newScreen && styles.newScreen,
+          className,
+        )}
         gap={8}
-        paddingBlock={16}
+        paddingBlock={8}
         style={{
           paddingInlineStart: isUser ? 36 : 0,
           ...style,
@@ -80,23 +89,22 @@ const ChatItem = memo<ChatItemProps>(
         </Flexbox>
         <Flexbox
           className={'message-body'}
-          flex={1}
           gap={8}
           style={{
             maxWidth: '100%',
             overflow: 'hidden',
             position: 'relative',
+            width: isUser ? undefined : '100%',
           }}
         >
           {aboveMessage}
-          {error && (message === placeholderMessage || !message) ? (
-            <ErrorContent error={error} message={errorMessage} />
+          {error && isEmptyMessage ? (
+            errorContent
           ) : (
             <MessageContent
               disabled={disabled}
               editing={editing}
               id={id!}
-              markdownProps={markdownProps}
               message={message}
               messageExtra={
                 <>
@@ -111,7 +119,7 @@ const ChatItem = memo<ChatItemProps>(
           )}
           {belowMessage}
         </Flexbox>
-        {actions && <Actions actions={actions} />}
+        {actions && <Actions actions={actions} placement={placement} />}
       </Flexbox>
     );
   },

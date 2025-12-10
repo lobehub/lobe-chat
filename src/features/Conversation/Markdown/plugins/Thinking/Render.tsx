@@ -1,25 +1,37 @@
-import { ARTIFACT_THINKING_TAG } from '@lobechat/const';
 import { memo } from 'react';
 
 import Thinking from '@/components/Thinking';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
-import { dataSelectors, useConversationStore } from '../../store';
+import { dataSelectors, useConversationStore } from '../../../store';
 import { MarkdownElementProps } from '../type';
-import { isTagClosed } from '../utils';
+
+const isThinkingClosed = (input: string = '') => {
+  const openTag = `<think>`;
+  const closeTag = `</think>`;
+
+  return input.includes(openTag) && input.includes(closeTag);
+};
 
 const Render = memo<MarkdownElementProps>(({ children, id }) => {
   const [isGenerating] = useConversationStore((s) => {
     const message = dataSelectors.getDbMessageById(id)(s);
-    return [!isTagClosed(ARTIFACT_THINKING_TAG, message?.content)];
+    return [!isThinkingClosed(message?.content)];
   });
+  const citations = useConversationStore((s) => {
+    const message = dataSelectors.getDbMessageById(id)(s);
+    return message?.search?.citations;
+  });
+
   const transitionMode = useUserStore(userGeneralSettingsSelectors.transitionMode);
+
+  if (!isGenerating && !children) return;
 
   return (
     <Thinking
+      citations={citations}
       content={children as string}
-      style={{ width: isGenerating ? '100%' : undefined }}
       thinking={isGenerating}
       thinkingAnimated={transitionMode === 'fadeIn' && isGenerating}
     />

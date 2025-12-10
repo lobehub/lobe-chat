@@ -2,9 +2,9 @@
 
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { ChatItem } from '@/features/Conversation/ChatItem';
+import { useNewScreen } from '@/features/Conversation/Messages/components/useNewScreen';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
@@ -14,8 +14,8 @@ import { useAgentMeta } from '../../hooks';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import Usage from '../components/Extras/Usage';
 import { GroupActionsBar } from './Actions';
-import EditState from './EditState';
-import Group from './Group';
+import EditState from './components/EditState';
+import Group from './components/Group';
 
 interface GroupMessageProps {
   disableEditing?: boolean;
@@ -46,7 +46,9 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
   const contentId = lastAssistantMsg?.id;
 
   // Get editing state from ConversationStore
-  const isEditing = useConversationStore(messageStateSelectors.isMessageEditing(contentId || ''));
+  const editing = useConversationStore(messageStateSelectors.isMessageEditing(contentId || ''));
+  const creating = useConversationStore(messageStateSelectors.isMessageCreating(id));
+  const newScreen = useNewScreen({ creating, isLatestItem });
 
   const onAvatarClick = useCallback(() => {
     if (!isInbox) {
@@ -57,7 +59,7 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
   }, [isInbox]);
 
   // If editing, show edit state
-  if (isEditing && contentId) {
+  if (editing && contentId) {
     return <EditState content={lastAssistantMsg?.content} id={contentId} />;
   }
 
@@ -75,10 +77,11 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
         )
       }
       avatar={avatar}
+      newScreen={newScreen}
       onAvatarClick={onAvatarClick}
       placement={'left'}
       renderMessage={() => (
-        <Flexbox gap={8} width={'100%'}>
+        <>
           {children && children.length > 0 && (
             <Group
               blocks={children}
@@ -89,14 +92,12 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
               messageIndex={index}
             />
           )}
-
           {model && (
             <Usage model={model} performance={performance} provider={provider!} usage={usage} />
           )}
-        </Flexbox>
+        </>
       )}
       showTitle
-      style={isLatestItem ? { minHeight: 'calc(-300px + 100dvh)' } : undefined}
       time={createdAt}
     />
   );

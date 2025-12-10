@@ -10,8 +10,8 @@ import type {
   MessageActionItemOrDivider,
   MessageActionsConfig,
 } from '../../../types';
-import { useAssistantActions } from '../useAssistantActions';
 import { ErrorActionsBar } from './Error';
+import { useAssistantActions } from './useAssistantActions';
 
 // Helper to strip handleClick from action items before passing to ActionIconGroup
 const stripHandleClick = (item: MessageActionItemOrDivider): ActionIconGroupItemType => {

@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useUserStore } from '@/store/user';
 
 import { useConversationStore } from '../../../../../store';
-import { useGroupMessage } from '../../../GroupContext';
+import { useGroupMessage } from '../../../components/GroupContext';
 import { ApprovalMode } from './index';
 
 interface ApprovalActionsProps {

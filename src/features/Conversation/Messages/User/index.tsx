@@ -1,6 +1,6 @@
 import { Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { ReactNode, memo, useCallback, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ChatItem } from '@/features/Conversation/ChatItem';
@@ -8,15 +8,13 @@ import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
-import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { userProfileSelectors } from '@/store/user/selectors';
 
-import { markdownElements } from '../../MarkdownElements';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import Actions from './Actions';
 import { UserMessageExtra } from './Extra';
-import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
-import { UserMessageContent } from './MessageContent';
+import UserMessageContent from './components/MessageContent';
 
 interface UserMessageProps {
   disableEditing?: boolean;
@@ -24,25 +22,10 @@ interface UserMessageProps {
   index: number;
 }
 
-const rehypePlugins = markdownElements
-  .filter((s) => s.scope !== 'assistant')
-  .map((element) => element.rehypePlugin)
-  .filter(Boolean);
-
-const remarkPlugins = markdownElements
-  .filter((s) => s.scope !== 'assistant')
-  .map((element) => element.remarkPlugin)
-  .filter(Boolean);
-
 const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
   const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
   const actionsConfig = useConversationStore((s) => s.actionsBar?.user);
-
   const { content, createdAt, error, role, extra, targetId } = item;
-
-  const { highlighterTheme, mermaidTheme, fontSize } = useUserStore(
-    userGeneralSettingsSelectors.config,
-  );
 
   const { t } = useTranslation('chat');
   const avatar = useUserAvatar();
@@ -71,45 +54,6 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
 
   const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, role });
 
-  const renderMessage = useCallback(
-    (editableContent: ReactNode) => (
-      <UserMessageContent {...item} editableContent={editableContent} />
-    ),
-    [item],
-  );
-
-  const components = useMemo(
-    () =>
-      Object.fromEntries(
-        markdownElements.map((element) => {
-          const Component = element.Component;
-
-          return [element.tag, (props: any) => <Component {...props} id={id} />];
-        }),
-      ),
-    [id],
-  );
-
-  const markdownProps = useMemo(
-    () => ({
-      componentProps: {
-        highlight: {
-          fullFeatured: true,
-          theme: highlighterTheme,
-        },
-        mermaid: { fullFeatured: false, theme: mermaidTheme },
-      },
-      components,
-      customRender: (dom: ReactNode, { text }: { text: string }) => (
-        <UserMarkdownRender dom={dom} id={id} text={text} />
-      ),
-      fontSize,
-      rehypePlugins,
-      remarkPlugins,
-    }),
-    [components, highlighterTheme, mermaidTheme, fontSize],
-  );
-
   return (
     <ChatItem
       actions={
@@ -124,18 +68,17 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
       avatar={{ avatar, title }}
       editing={editing}
       id={id}
-      markdownProps={markdownProps}
       message={content}
       messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
       onDoubleClick={onDoubleClick}
       placement={'right'}
-      renderMessage={renderMessage}
+      renderMessage={() => <UserMessageContent {...item} />}
       showAvatar={false}
       showTitle={false}
       time={createdAt}
       titleAddon={dmIndicator}
     />
   );
-});
+}, isEqual);
 
 export default UserMessage;

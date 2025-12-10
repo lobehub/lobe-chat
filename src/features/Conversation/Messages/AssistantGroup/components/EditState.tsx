@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useConversationStore } from '../../store';
+import { useConversationStore } from '../../../store';
 
 export interface EditStateProps {
   content: string;

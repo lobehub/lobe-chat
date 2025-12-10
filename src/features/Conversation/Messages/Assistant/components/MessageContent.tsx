@@ -1,41 +1,22 @@
 import { LOADING_FLAT } from '@lobechat/const';
 import { UIChatMessage } from '@lobechat/types';
-import { MarkdownProps } from '@lobehub/ui';
-import { ReactNode, memo } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import BubblesLoading from '@/components/BubblesLoading';
-
-import { CollapsedMessage } from '../../AssistantGroup/CollapsedMessage';
+import { messageStateSelectors, useConversationStore } from '../../../store';
+import { CollapsedMessage } from '../../AssistantGroup/components/CollapsedMessage';
 import DisplayContent from '../../components/DisplayContent';
 import FileChunks from '../../components/FileChunks';
 import ImageFileListViewer from '../../components/ImageFileListViewer';
 import IntentUnderstanding from '../../components/IntentUnderstanding';
 import Reasoning from '../../components/Reasoning';
 import SearchGrounding from '../../components/SearchGrounding';
+import { useMarkdown } from '../useMarkdown';
 
-import { messageStateSelectors, useConversationStore } from '../../../store';
-
-export const AssistantMessageBody = memo<
-  UIChatMessage & {
-    editableContent: ReactNode;
-    markdownProps?: Omit<MarkdownProps, 'className' | 'style' | 'children'>;
-  }
->(
-  ({
-    id,
-    tools,
-    content,
-    chunksList,
-    search,
-    imageList,
-    metadata,
-    editableContent,
-    markdownProps,
-    ...props
-  }) => {
+const MessageContent = memo<UIChatMessage>(
+  ({ id, tools, content, chunksList, search, imageList, metadata, ...props }) => {
+    const markdownProps = useMarkdown(id);
     // Use ConversationStore instead of ChatStore
-    const editing = useConversationStore(messageStateSelectors.isMessageEditing(id));
     const generating = useConversationStore(messageStateSelectors.isMessageGenerating(id));
     const isCollapsed = useConversationStore(messageStateSelectors.isMessageCollapsed(id));
     const isReasoning = useConversationStore(messageStateSelectors.isMessageInReasoning(id));
@@ -55,13 +36,6 @@ export const AssistantMessageBody = memo<
       (!props.reasoning && isReasoning);
 
     const showFileChunks = !!chunksList && chunksList.length > 0;
-
-    // When editing, show editable content directly
-    if (editing) {
-      if (isToolCallGenerating) return null;
-      if (!content && !showImageItems) return <BubblesLoading />;
-      return <div id={id}>{editableContent}</div>;
-    }
 
     if (isCollapsed) return <CollapsedMessage content={content} id={id} />;
 
@@ -89,3 +63,5 @@ export const AssistantMessageBody = memo<
     );
   },
 );
+
+export default MessageContent;

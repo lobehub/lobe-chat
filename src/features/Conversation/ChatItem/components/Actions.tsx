@@ -5,15 +5,19 @@ import { ChatItemProps } from '../type';
 
 export interface ActionsProps {
   actions: ChatItemProps['actions'];
+  placement?: ChatItemProps['placement'];
 }
 
-const Actions = memo<ActionsProps>(({ actions }) => {
+const Actions = memo<ActionsProps>(({ placement, actions }) => {
+  const isUser = placement === 'right';
   return (
     <Flexbox
-      align={'flex-start'}
+      align={'center'}
+      direction={'horizontal'}
+      gap={8}
       role="menubar"
       style={{
-        alignSelf: 'flex-end',
+        alignSelf: isUser ? 'flex-end' : 'flex-start',
       }}
     >
       {actions}

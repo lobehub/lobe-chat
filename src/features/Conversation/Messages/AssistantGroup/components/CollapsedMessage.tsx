@@ -1,9 +1,11 @@
-import { Button, Markdown, MaskShadow } from '@lobehub/ui';
+import { Button, MaskShadow } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useConversationStore } from '../../store';
+import MarkdownMessage from '@/features/Conversation/Markdown';
+
+import { useConversationStore } from '../../../store';
 
 interface CollapsedMessageProps {
   content: string;
@@ -17,7 +19,7 @@ export const CollapsedMessage = memo<CollapsedMessageProps>(({ id, content }) =>
   return (
     <Flexbox>
       <MaskShadow>
-        <Markdown variant={'chat'}>{content?.slice(0, 300)}</Markdown>
+        <MarkdownMessage variant={'chat'}>{content?.slice(0, 300)}</MarkdownMessage>
       </MaskShadow>
       <Flexbox padding={4}>
         <Button

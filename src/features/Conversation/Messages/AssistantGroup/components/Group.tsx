@@ -1,10 +1,11 @@
-import { AssistantContentBlock } from '@lobechat/types';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { messageStateSelectors, useConversationStore } from '../../store';
+import { AssistantContentBlock } from '@/types/index';
+
+import { messageStateSelectors, useConversationStore } from '../../../store';
 import { CollapsedMessage } from './CollapsedMessage';
 import { GroupMessageContext } from './GroupContext';
 import GroupItem from './GroupItem';
@@ -46,14 +47,13 @@ const Group = memo<GroupChildrenProps>(
     return (
       <GroupMessageContext value={contextValue}>
         <Flexbox className={styles.container} gap={8}>
-          {blocks.map((item, index) => {
+          {blocks.map((item) => {
             return (
               <GroupItem
                 {...item}
                 contentId={contentId}
                 disableEditing={disableEditing}
-                index={index}
-                key={`${id}_${index}`}
+                key={id}
                 messageIndex={messageIndex}
               />
             );

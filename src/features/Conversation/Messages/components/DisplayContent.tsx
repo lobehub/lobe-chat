@@ -1,9 +1,10 @@
 import { deserializeParts } from '@lobechat/utils';
-import { Markdown, MarkdownProps } from '@lobehub/ui';
+import { MarkdownProps } from '@lobehub/ui';
 import { memo } from 'react';
 
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
+import MarkdownMessage from '@/features/Conversation/Markdown';
 
 import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
 import { RichContentRenderer } from './RichContentRenderer';
@@ -35,9 +36,7 @@ const DisplayContent = memo<{
     return contentParts ? (
       <RichContentRenderer parts={contentParts} />
     ) : (
-      <Markdown {...markdownProps} variant={'chat'}>
-        {message}
-      </Markdown>
+      <MarkdownMessage {...markdownProps}>{message}</MarkdownMessage>
     );
   },
 );

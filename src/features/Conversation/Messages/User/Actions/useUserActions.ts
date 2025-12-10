@@ -1,4 +1,3 @@
-import { UIChatMessage } from '@lobechat/types';
 import type { ActionIconGroupItemType } from '@lobehub/ui';
 import { copyToClipboard } from '@lobehub/ui';
 import { App } from 'antd';
@@ -7,8 +6,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { localeOptions } from '@/locales/resources';
+import { UIChatMessage } from '@/types/index';
 
-import { messageStateSelectors, useConversationStore } from '../../store';
+import { messageStateSelectors, useConversationStore } from '../../../store';
 
 export interface ActionItem extends ActionIconGroupItemType {
   children?: Array<{ handleClick?: () => void; key: string; label: string }>;

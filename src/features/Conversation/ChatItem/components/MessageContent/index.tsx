@@ -1,12 +1,9 @@
-import { Markdown, MarkdownProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { type ReactNode, Suspense, memo, useMemo } from 'react';
+import { type ReactNode, Suspense, memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useConversationStore } from '@/features/Conversation/store';
-import { useUserStore } from '@/store/user';
-import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { ChatItemProps } from '../../type';
 
@@ -39,7 +36,6 @@ export interface MessageContentProps {
   disabled?: ChatItemProps['disabled'];
   editing?: ChatItemProps['editing'];
   id: string;
-  markdownProps?: Omit<MarkdownProps, 'className' | 'style' | 'children'>;
   message?: ReactNode;
   messageExtra?: ChatItemProps['messageExtra'];
   onDoubleClick?: ChatItemProps['onDoubleClick'];
@@ -55,31 +51,31 @@ const MessageContent = memo<MessageContentProps>(
     messageExtra,
     renderMessage,
     onDoubleClick,
-    markdownProps,
     disabled,
     className,
     variant,
   }) => {
     const { cx, styles } = useStyles();
-    const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
     const [toggleMessageEditing, updateMessageContent] = useConversationStore((s) => [
       s.toggleMessageEditing,
       s.updateMessageContent,
     ]);
-    const onChange = (value: string) => {
-      updateMessageContent(id, value);
-    };
-    const onEditingChange = (edit: boolean) => toggleMessageEditing(id, edit);
 
-    const content = (
-      <Markdown fontSize={fontSize} variant={'chat'} {...markdownProps}>
-        {message ? String(message) : ''}
-      </Markdown>
+    const onChange = useCallback(
+      (value: string) => {
+        updateMessageContent(id, value);
+      },
+      [id, updateMessageContent],
+    );
+
+    const onEditingChange = useCallback(
+      (edit: boolean) => toggleMessageEditing(id, edit),
+      [id, toggleMessageEditing],
     );
 
     const messageContent = useMemo(
-      () => (renderMessage ? renderMessage(content) : content),
-      [renderMessage, content],
+      () => (renderMessage ? renderMessage(message) : message),
+      [renderMessage, message],
     );
 
     return (
@@ -92,10 +88,11 @@ const MessageContent = memo<MessageContentProps>(
             disabled && styles.disabled,
             className,
           )}
+          gap={16}
           onDoubleClick={onDoubleClick}
         >
           {messageContent}
-          {messageExtra && <div className={'message-extra'}>{messageExtra}</div>}
+          {messageExtra}
         </Flexbox>
         <Suspense fallback={null}>
           {editing && (

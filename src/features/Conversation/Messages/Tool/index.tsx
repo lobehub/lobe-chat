@@ -30,7 +30,7 @@ const Tool = memo<ToolMessageProps>(({ id, index }) => {
   };
 
   return (
-    <Flexbox gap={4} paddingBlock={12} paddingInline={12}>
+    <Flexbox gap={4} paddingBlock={12}>
       <Alert
         action={
           <Button loading={loading} onClick={handleDelete} size={'small'} type={'primary'}>
@@ -52,5 +52,6 @@ const Tool = memo<ToolMessageProps>(({ id, index }) => {
       )}
     </Flexbox>
   );
-});
+}, isEqual);
+
 export default Tool;
