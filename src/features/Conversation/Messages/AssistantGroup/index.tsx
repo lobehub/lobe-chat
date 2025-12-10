@@ -71,7 +71,6 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
             contentId={contentId}
             data={item}
             id={id}
-            index={index}
           />
         )
       }

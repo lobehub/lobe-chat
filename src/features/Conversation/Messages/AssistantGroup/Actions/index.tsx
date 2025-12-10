@@ -52,99 +52,95 @@ interface GroupActionsProps {
   contentId?: string;
   data: UIChatMessage;
   id: string;
-  index: number;
 }
 
 /**
  * Actions bar for group messages with content (has assistant message content)
  */
-const WithContentId = memo<GroupActionsProps>(
-  ({ actionsConfig, id, data, index, contentBlock }) => {
-    const { tools } = data;
-    const [showShareModal, setShareModal] = useState(false);
+const WithContentId = memo<GroupActionsProps>(({ actionsConfig, id, data, contentBlock }) => {
+  const { tools } = data;
+  const [showShareModal, setShareModal] = useState(false);
 
-    const isCollapsed = useConversationStore(messageStateSelectors.isMessageCollapsed(id));
+  const isCollapsed = useConversationStore(messageStateSelectors.isMessageCollapsed(id));
 
-    const defaultActions = useGroupActions({
-      contentBlock,
-      data,
-      id,
-      index,
-      onOpenShareModal: () => setShareModal(true),
-    });
+  const defaultActions = useGroupActions({
+    contentBlock,
+    data,
+    id,
+    onOpenShareModal: () => setShareModal(true),
+  });
 
-    const hasTools = !!tools;
+  const hasTools = !!tools;
 
-    // Get collapse/expand action based on current state
-    const collapseAction = isCollapsed ? defaultActions.expand : defaultActions.collapse;
+  // Get collapse/expand action based on current state
+  const collapseAction = isCollapsed ? defaultActions.expand : defaultActions.collapse;
 
-    // Use external config if provided, otherwise use defaults
-    const barItems =
-      actionsConfig?.bar ??
-      (hasTools
-        ? [defaultActions.delAndRegenerate, defaultActions.copy]
-        : [defaultActions.edit, defaultActions.copy]);
+  // Use external config if provided, otherwise use defaults
+  const barItems =
+    actionsConfig?.bar ??
+    (hasTools
+      ? [defaultActions.delAndRegenerate, defaultActions.copy]
+      : [defaultActions.edit, defaultActions.copy]);
 
-    const menuItems = actionsConfig?.menu ?? [
-      defaultActions.edit,
-      defaultActions.copy,
-      collapseAction,
-      defaultActions.divider,
-      defaultActions.share,
-      defaultActions.divider,
-      defaultActions.regenerate,
-      defaultActions.del,
-    ];
+  const menuItems = actionsConfig?.menu ?? [
+    defaultActions.edit,
+    defaultActions.copy,
+    collapseAction,
+    defaultActions.divider,
+    defaultActions.share,
+    defaultActions.divider,
+    defaultActions.regenerate,
+    defaultActions.del,
+  ];
 
-    // Strip handleClick for DOM safety
-    const items = useMemo(
-      () =>
-        barItems
-          .filter((item) => item && !('disabled' in item && item.disabled))
-          .map(stripHandleClick),
-      [barItems],
-    );
-    const menu = useMemo(() => menuItems.map(stripHandleClick), [menuItems]);
+  // Strip handleClick for DOM safety
+  const items = useMemo(
+    () =>
+      barItems
+        .filter((item) => item && !('disabled' in item && item.disabled))
+        .map(stripHandleClick),
+    [barItems],
+  );
+  const menu = useMemo(() => menuItems.map(stripHandleClick), [menuItems]);
 
-    // Build actions map for click handling
-    const allActions = useMemo(
-      () => buildActionsMap([...barItems, ...menuItems]),
-      [barItems, menuItems],
-    );
+  // Build actions map for click handling
+  const allActions = useMemo(
+    () => buildActionsMap([...barItems, ...menuItems]),
+    [barItems, menuItems],
+  );
 
-    const handleAction = useCallback(
-      (event: ActionIconGroupEvent) => {
-        // Handle submenu items (e.g., translate -> zh-CN)
-        if (event.keyPath && event.keyPath.length > 1) {
-          const parentKey = event.keyPath.at(-1);
-          const childKey = event.keyPath[0];
-          const parent = allActions.get(parentKey!);
-          if (parent && 'children' in parent && parent.children) {
-            const child = parent.children.find((c) => c.key === childKey);
-            child?.handleClick?.();
-            return;
-          }
+  const handleAction = useCallback(
+    (event: ActionIconGroupEvent) => {
+      // Handle submenu items (e.g., translate -> zh-CN)
+      if (event.keyPath && event.keyPath.length > 1) {
+        const parentKey = event.keyPath.at(-1);
+        const childKey = event.keyPath[0];
+        const parent = allActions.get(parentKey!);
+        if (parent && 'children' in parent && parent.children) {
+          const child = parent.children.find((c) => c.key === childKey);
+          child?.handleClick?.();
+          return;
         }
+      }
 
-        // Handle regular actions
-        const action = allActions.get(event.key);
-        action?.handleClick?.();
-      },
-      [allActions],
-    );
+      // Handle regular actions
+      const action = allActions.get(event.key);
+      action?.handleClick?.();
+    },
+    [allActions],
+  );
 
-    return (
-      <>
-        <ActionIconGroup items={items} menu={{ items: menu }} onActionClick={handleAction} />
-        <ShareMessageModal
-          message={data}
-          onCancel={() => setShareModal(false)}
-          open={showShareModal}
-        />
-      </>
-    );
-  },
-);
+  return (
+    <>
+      <ActionIconGroup items={items} menu={{ items: menu }} onActionClick={handleAction} />
+      <ShareMessageModal
+        message={data}
+        onCancel={() => setShareModal(false)}
+        open={showShareModal}
+      />
+    </>
+  );
+});
 
 WithContentId.displayName = 'GroupActionsWithContentId';
 
@@ -152,11 +148,10 @@ WithContentId.displayName = 'GroupActionsWithContentId';
  * Actions bar for group messages without content (empty assistant response)
  */
 const WithoutContentId = memo<Omit<GroupActionsProps, 'contentBlock' | 'contentId'>>(
-  ({ actionsConfig, id, data, index }) => {
+  ({ actionsConfig, id, data }) => {
     const defaultActions = useGroupActions({
       data,
       id,
-      index,
     });
 
     // Use external config if provided, otherwise use defaults
@@ -190,9 +185,8 @@ WithoutContentId.displayName = 'GroupActionsWithoutContentId';
  * Main GroupActionsBar component that renders appropriate variant
  */
 export const GroupActionsBar = memo<GroupActionsProps>(
-  ({ actionsConfig, id, data, contentBlock, index, contentId }) => {
-    if (!contentId)
-      return <WithoutContentId actionsConfig={actionsConfig} data={data} id={id} index={index} />;
+  ({ actionsConfig, id, data, contentBlock, contentId }) => {
+    if (!contentId) return <WithoutContentId actionsConfig={actionsConfig} data={data} id={id} />;
 
     return (
       <WithContentId
@@ -200,7 +194,6 @@ export const GroupActionsBar = memo<GroupActionsProps>(
         contentBlock={contentBlock}
         data={data}
         id={id}
-        index={index}
       />
     );
   },

@@ -28,7 +28,6 @@ export interface UserActions {
 interface UseUserActionsParams {
   data: UIChatMessage;
   id: string;
-  index: number;
 }
 
 export const useUserActions = ({ id, data }: UseUserActionsParams): UserActions => {
