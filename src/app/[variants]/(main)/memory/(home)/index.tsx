@@ -26,15 +26,21 @@ const Home = memo(() => {
 
   return (
     <Flexbox flex={1} height={'100%'}>
-      <NavHeader right={<WideScreenButton />} />
+      <NavHeader
+        right={<WideScreenButton />}
+        style={{
+          zIndex: 1,
+        }}
+      />
       <Flexbox
         height={'100%'}
         id={SCROLL_PARENT_ID}
         style={{ overflowY: 'auto', paddingBottom: '16vh' }}
         width={'100%'}
       >
+        <RoleTagCloud tags={data} />
         <WideScreenContainer gap={32} paddingBlock={48}>
-          <RoleTagCloud tags={data} />
+          111
         </WideScreenContainer>
       </Flexbox>
     </Flexbox>
