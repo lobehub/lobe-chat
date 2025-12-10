@@ -68,22 +68,24 @@ export const UpdateIdentityActionSchema = z
     id: z.string(),
     mergeStrategy: z.nativeEnum(MergeStrategyEnum),
     set: z.object({
-      details: z.union([z.string(), z.null()]).describe('Optional detailed information, use null for omitting the field'),
-      memoryCategory: z.union([z.string(), z.null()]).describe('Memory category, use null for omitting the field'),
-      memoryType: z.union([MemoryTypeSchema, z.null()]).describe('Memory type, use null for omitting the field'),
-      summary: z.union([z.string(), z.null()]).describe('Concise overview of this specific memory, use null for omitting the field'),
-      tags: z.union([z.array(z.string()), z.null()]).describe('Model generated tags that summarize the identity facets, use null for omitting the field'),
-      title: z.union([z.string(), z.null()]).describe('Brief descriptive title, use null for omitting the field'),
+      details: z.string().nullable().describe('Optional detailed information, use null for omitting the field'),
+      memoryCategory: z.string().nullable().describe('Memory category, use null for omitting the field'),
+      memoryType: MemoryTypeSchema.describe('Memory type, use null for omitting the field'),
+      summary: z.string().nullable().describe('Concise overview of this specific memory, use null for omitting the field'),
+      tags: z.array(z.string()).nullable().describe('Model generated tags that summarize the identity facets, use null for omitting the field'),
+      title: z.string().nullable().describe('Brief descriptive title, use null for omitting the field'),
       withIdentity: z
         .object({
-          description: z.union([z.string(), z.null()]),
-          episodicDate: z.union([z.string(), z.null()]),
-          extractedLabels: z.union([z.array(z.string()), z.null()]),
-          relationship: z.union([RelationshipEnum, z.null()]),
-          role: z.union([z.string(), z.null()]),
-          scoreConfidence: z.union([z.number(), z.null()]),
-          sourceEvidence: z.union([z.string(), z.null()]),
-          type: z.union([IdentityTypeEnum, z.null()]),
+          description: z.string().nullable(),
+          episodicDate: z.string().nullable(),
+          extractedLabels: z.array(z.string()).nullable(),
+          // TODO: OpenAI requires `required` fields to be always present, while enum fields cannot be null
+          relationship: z.string().describe(`Possible values: ${RELATIONSHIP_ENUM.join(' | ')}`).nullable(),
+          role: z.string().nullable(),
+          scoreConfidence: z.number().nullable(),
+          sourceEvidence: z.string().nullable(),
+          // TODO: OpenAI requires `required` fields to be always present, while enum fields cannot be null
+          type: z.string().describe(`Possible values: ${IdentityTypeEnum.options.join(' | ')}`).nullable(),
         })
         .strict(),
     })
