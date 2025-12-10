@@ -34,9 +34,6 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
   const { usage, createdAt, children, performance, model, provider } = item;
   const avatar = useAgentMeta();
 
-  const placement = 'left';
-  const variant = 'bubble';
-
   const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
   const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
   const openChatSettings = useOpenChatSettings();
@@ -67,22 +64,20 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
   return (
     <ChatItem
       actions={
-        !disableEditing ? (
-          <Flexbox align={'flex-start'} role="menubar">
-            <GroupActionsBar
-              actionsConfig={actionsConfig}
-              contentBlock={lastAssistantMsg}
-              contentId={contentId}
-              data={item}
-              id={id}
-              index={index}
-            />
-          </Flexbox>
-        ) : undefined
+        !disableEditing && (
+          <GroupActionsBar
+            actionsConfig={actionsConfig}
+            contentBlock={lastAssistantMsg}
+            contentId={contentId}
+            data={item}
+            id={id}
+            index={index}
+          />
+        )
       }
       avatar={avatar}
       onAvatarClick={onAvatarClick}
-      placement={placement}
+      placement={'left'}
       renderMessage={() => (
         <Flexbox gap={8} width={'100%'}>
           {children && children.length > 0 && (
@@ -104,7 +99,6 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
       showTitle
       style={isLatestItem ? { minHeight: 'calc(-300px + 100dvh)' } : undefined}
       time={createdAt}
-      variant={variant}
     />
   );
 }, isEqual);

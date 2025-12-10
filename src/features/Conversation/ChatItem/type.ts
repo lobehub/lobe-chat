@@ -63,9 +63,4 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
    */
   time?: number;
   titleAddon?: ReactNode;
-  /**
-   * @description The type of the chat item
-   * @default 'bubble'
-   */
-  variant?: 'bubble';
 }

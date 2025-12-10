@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 import { localeOptions } from '@/locales/resources';
 
-import { messageStateSelectors, useConversationStore, virtuaListSelectors } from '../../store';
+import { messageStateSelectors, useConversationStore } from '../../store';
 
 const translateStyle = css`
   .ant-dropdown-menu-sub {
@@ -30,7 +30,7 @@ const translateStyle = css`
 `;
 
 export interface ActionItem extends ActionIconGroupItemType {
-  children?: Array<{ handleClick?: () => void, key: string; label: string; }>;
+  children?: Array<{ handleClick?: () => void; key: string; label: string }>;
   handleClick?: () => void | Promise<void>;
 }
 
@@ -58,7 +58,6 @@ interface UseAssistantActionsParams {
 export const useAssistantActions = ({
   id,
   data,
-  index,
   onOpenShareModal,
 }: UseAssistantActionsParams): AssistantActions => {
   const { t } = useTranslation(['common', 'chat']);
@@ -86,9 +85,6 @@ export const useAssistantActions = ({
     s.ttsMessage,
     s.delAndRegenerateMessage,
   ]);
-  const scrollToIndex = useConversationStore(
-    virtuaListSelectors.virtuaScrollMethods,
-  )?.scrollToIndex;
 
   return useMemo<AssistantActions>(
     () => ({
@@ -127,7 +123,6 @@ export const useAssistantActions = ({
       edit: {
         handleClick: () => {
           toggleMessageEditing(id, true);
-          scrollToIndex?.(index, { align: 'start' });
         },
         icon: Edit,
         key: 'edit',
@@ -177,13 +172,11 @@ export const useAssistantActions = ({
     [
       t,
       id,
-      index,
       data.content,
       data.error,
       isRegenerating,
       isCollapsed,
       toggleMessageEditing,
-      scrollToIndex,
       deleteMessage,
       regenerateAssistantMessage,
       translateMessage,

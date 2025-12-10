@@ -1,12 +1,11 @@
 import { MouseEventHandler, useCallback } from 'react';
 
-import { useConversationStore, virtuaListSelectors } from '../store';
+import { useConversationStore } from '../store';
 
 interface UseDoubleClickEditProps {
   disableEditing?: boolean;
   error: any;
   id: string;
-  index: number;
   role: string;
 }
 
@@ -15,10 +14,8 @@ export const useDoubleClickEdit = ({
   role,
   error,
   id,
-  index,
 }: UseDoubleClickEditProps) => {
   const toggleMessageEditing = useConversationStore((s) => s.toggleMessageEditing);
-  const virtuaScrollMethods = useConversationStore(virtuaListSelectors.virtuaScrollMethods);
 
   return useCallback<MouseEventHandler<HTMLDivElement>>(
     (e) => {
@@ -32,9 +29,7 @@ export const useDoubleClickEdit = ({
         return;
 
       toggleMessageEditing(id, true);
-
-      virtuaScrollMethods?.scrollToIndex(index, { align: 'start' });
     },
-    [role, disableEditing, toggleMessageEditing, virtuaScrollMethods, id, index],
+    [role, disableEditing, toggleMessageEditing, id],
   );
 };

@@ -163,7 +163,6 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
         )}
         showTitle={true}
         time={updatedAt || createdAt}
-        variant="bubble"
       />
     );
   }
@@ -179,11 +178,10 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
       }}
       loading={false}
       message={error ? undefined : content}
-      placement="left"
+      placement={'left'}
       renderMessage={renderErrorMessage}
       showTitle={true}
       time={updatedAt || createdAt}
-      variant="bubble"
     />
   );
 });

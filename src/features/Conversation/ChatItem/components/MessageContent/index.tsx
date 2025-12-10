@@ -44,7 +44,7 @@ export interface MessageContentProps {
   messageExtra?: ChatItemProps['messageExtra'];
   onDoubleClick?: ChatItemProps['onDoubleClick'];
   renderMessage?: ChatItemProps['renderMessage'];
-  variant?: ChatItemProps['variant'];
+  variant?: 'bubble' | 'default';
 }
 
 const MessageContent = memo<MessageContentProps>(

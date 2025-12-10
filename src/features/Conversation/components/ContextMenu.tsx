@@ -211,12 +211,11 @@ const ContextMenu = memo<ContextMenuProps>(
         const item = getMessage();
         if (!item) return;
 
-        if (action.key === 'edit') {
-          toggleMessageEditing(id, true);
-          virtuaRef?.current?.scrollToIndex(index, { align: 'start' });
-        }
-
         switch (action.key) {
+          case 'edit': {
+            toggleMessageEditing(id, true);
+            break;
+          }
           case 'copy': {
             await copyMessage(id, item.content);
             message.success(t('copySuccess'));
