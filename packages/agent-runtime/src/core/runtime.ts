@@ -707,9 +707,16 @@ export class AgentRuntime {
     const allEvents: AgentEvent[] = [];
 
     // Merge all tool messages in order
+    // Get the set of tool_call_ids that already exist in baseState to avoid duplicates
+    const existingToolCallIds = new Set(
+      baseState.messages.filter((m) => m.role === 'tool').map((m) => m.tool_call_id),
+    );
+
     for (const result of results) {
-      // Extract tool role messages
-      const toolMessages = result.newState.messages.filter((m) => m.role === 'tool');
+      // Extract only NEW tool role messages (not already in baseState)
+      const toolMessages = result.newState.messages.filter(
+        (m) => m.role === 'tool' && !existingToolCallIds.has(m.tool_call_id),
+      );
       newState.messages.push(...toolMessages);
 
       // Merge events
