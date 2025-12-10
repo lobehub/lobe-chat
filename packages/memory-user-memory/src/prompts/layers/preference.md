@@ -8,6 +8,13 @@ Available memory categories: {{ availableCategories }}
 Target layer: preference
 \</user_context>
 
+## Retrieved Memory (Top {{ topK }})
+
+Use the list below to de-duplicate and decide whether you need to extract
+anything. Do not copy these verbatim; use them for comparison.
+
+{{ retrievedContext }}
+
 ## Your Task
 
 Extract **ALL** preference layer information from the conversation. Capture user
@@ -150,12 +157,6 @@ Choose the appropriate memoryType:
 3. Ensure all memories are self-contained (no pronouns, complete context)
 4. Return a JSON array conforming to the schema above
 5. Return `[]` if you find no preference memories
+6. No matter what the language of the retrieved language is, always use {{ language }} for output
 
 Respond with valid JSON without commentary.
-
-## Retrieved Memory (Top {{ topK }})
-
-Use the list below to de-duplicate and decide whether you need to extract
-anything. Do not copy these verbatim; use them for comparison.
-
-{{ retrievedContext }}

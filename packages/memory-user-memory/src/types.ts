@@ -19,6 +19,8 @@ export interface ExtractorOptions extends ExtractorTemplateProps {
     onExtractResponse?: <TOutput>(response: TOutput) => Promise<void> | void;
   };
   messageIds?: string[];
+  sourceId?: string;
+  userId?: string;
 }
 
 export interface ExtractorTemplateProps {

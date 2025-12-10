@@ -132,6 +132,10 @@ export abstract class BaseMemoryExtractor<
               [ATTR_GEN_AI_REQUEST_MODEL]: this.model,
               'lobe-chat.memory.extractor.context': options?.retrievedContexts,
               'lobe-chat.memory.extractor.identities_context': options?.retrievedIdentitiesContext,
+              'lobe-chat.memory.extractor.language': options?.language,
+              'lobe-chat.memory.extractor.source_id': options?.sourceId,
+              'lobe-chat.memory.extractor.top_k': options?.topK,
+              'lobe-chat.memory.extractor.user_id': options?.userId,
             },
           },
           async (span) => {
