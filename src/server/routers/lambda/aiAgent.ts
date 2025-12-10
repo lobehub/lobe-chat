@@ -1,6 +1,7 @@
 import { AgentRuntimeContext } from '@lobechat/agent-runtime';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { isEnableAgent } from '@/app/(backend)/api/agent/isEnableAgent';
@@ -64,11 +65,8 @@ const StartExecutionSchema = z.object({
   priority: z.enum(['high', 'normal', 'low']).optional().default('normal'),
 });
 
-/**
- * Schema for execAgent - simplified API that requires agent identifier (id or slug) and prompt
- * All other data (agent config, tools, messages) will be fetched from database
- */
-const ExecAgentSchema = z
+/** Schema for single agent task (used in both execAgent and execAgents) */
+const ExecAgentTaskSchema = z
   .object({
     /** The agent ID to run (either agentId or slug is required) */
     agentId: z.string().optional(),
@@ -94,7 +92,24 @@ const ExecAgentSchema = z
     message: 'Either agentId or slug must be provided',
   });
 
+const ExecAgentSchema = ExecAgentTaskSchema;
+
+/**
+ * Schema for execAgents - batch execution of multiple agents
+ */
+const ExecAgentsSchema = z.object({
+  /** Whether to execute tasks in parallel (default: true) */
+  parallel: z.boolean().optional().default(true),
+  /** Array of agent tasks to execute */
+  tasks: z.array(ExecAgentTaskSchema).min(1).max(50),
+});
+
 const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
+  // Check if agent features are enabled
+  if (!isEnableAgent()) {
+    throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
+  }
+
   const { ctx } = opts;
 
   return opts.next({
@@ -109,10 +124,6 @@ export const aiAgentRouter = router({
   createOperation: aiAgentProcedure
     .input(CreateAgentOperationSchema)
     .mutation(async ({ input, ctx }) => {
-      if (!isEnableAgent()) {
-        throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
-      }
-
       const {
         agentConfig = {},
         agentId,
@@ -195,10 +206,6 @@ export const aiAgentRouter = router({
     }),
 
   execAgent: aiAgentProcedure.input(ExecAgentSchema).mutation(async ({ input, ctx }) => {
-    if (!isEnableAgent()) {
-      throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
-    }
-
     const { agentId, slug, prompt, appContext, autoStart = true, existingMessageIds = [] } = input;
 
     log('execAgent: identifier=%s, prompt=%s', agentId || slug, prompt.slice(0, 50));
@@ -227,13 +234,80 @@ export const aiAgentRouter = router({
     }
   }),
 
+  /**
+   * Batch execute multiple agents
+   * Supports parallel or sequential execution
+   */
+  execAgents: aiAgentProcedure.input(ExecAgentsSchema).mutation(async ({ input, ctx }) => {
+    const { tasks, parallel = true } = input;
+
+    log('execAgents: %d tasks, parallel=%s', tasks.length, parallel);
+
+    type TaskResult = {
+      autoStarted?: boolean;
+      error?: string;
+      operationId?: string;
+      success: boolean;
+      taskIndex: number;
+    };
+
+    const executeTask = async (
+      task: (typeof tasks)[number],
+      taskIndex: number,
+    ): Promise<TaskResult> => {
+      const { agentId, slug, prompt, appContext, autoStart = true, existingMessageIds = [] } = task;
+
+      try {
+        const result = await ctx.aiAgentService.execAgent({
+          agentId,
+          appContext,
+          autoStart,
+          existingMessageIds,
+          prompt,
+          slug,
+        });
+
+        return {
+          autoStarted: result.autoStarted,
+          operationId: result.operationId,
+          success: true,
+          taskIndex,
+        };
+      } catch (error: any) {
+        log('execAgents task %d failed: %O', taskIndex, error);
+
+        return {
+          error: error.message || 'Unknown error',
+          success: false,
+          taskIndex,
+        };
+      }
+    };
+
+    // Execute tasks with pMap for concurrency control
+    // parallel=true: concurrency of 5, parallel=false: sequential (concurrency of 1)
+    const concurrency = parallel ? 5 : 1;
+
+    const results = await pMap(tasks, (task, index) => executeTask(task, index), { concurrency });
+
+    // Calculate summary
+    const succeeded = results.filter((r) => r.success).length;
+    const failed = results.filter((r) => !r.success).length;
+
+    return {
+      results,
+      success: failed === 0,
+      summary: {
+        failed,
+        succeeded,
+        total: tasks.length,
+      },
+    };
+  }),
+
   getOperationStatus: aiAgentProcedure
     .input(GetOperationStatusSchema)
     .query(async ({ input, ctx }) => {
-      if (!isEnableAgent()) {
-        throw new Error('Agent features are not enabled');
-      }
-
       const { historyLimit, includeHistory, operationId } = input;
 
       if (!operationId) {
@@ -255,10 +329,6 @@ export const aiAgentRouter = router({
   getPendingInterventions: aiAgentProcedure
     .input(GetPendingInterventionsSchema)
     .query(async ({ input, ctx }) => {
-      if (!isEnableAgent()) {
-        throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
-      }
-
       const { operationId, userId } = input;
 
       log('Getting pending interventions for operationId: %s, userId: %s', operationId, userId);
@@ -275,10 +345,6 @@ export const aiAgentRouter = router({
   processHumanIntervention: aiAgentProcedure
     .input(ProcessHumanInterventionSchema)
     .mutation(async ({ input, ctx }) => {
-      if (!isEnableAgent()) {
-        throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
-      }
-
       const { operationId, action, data, reason, stepIndex } = input;
 
       log(`Processing ${action} for operation ${operationId}`);
@@ -341,10 +407,6 @@ export const aiAgentRouter = router({
     }),
 
   startExecution: aiAgentProcedure.input(StartExecutionSchema).mutation(async ({ input, ctx }) => {
-    if (!isEnableAgent()) {
-      throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
-    }
-
     const { operationId, context, priority, delay } = input;
 
     log('Starting execution for operation %s', operationId);

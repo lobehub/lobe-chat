@@ -88,112 +88,112 @@ const createMockResponsesStream = <T>(chunks: T[]) => {
   });
 };
 
-describe('AI Agent E2E Test - execAgent', () => {
-  let serverDB: LobeChatDatabase;
-  let userId: string;
-  let testAgentId: string;
+let serverDB: LobeChatDatabase;
+let userId: string;
+let testAgentId: string;
 
-  // Helper to create mock streaming response for OpenAI Responses API
-  const createMockResponsesAPIStream = (content: string = 'Hello! How can I help you today?') => {
-    const responseId = `resp_${Date.now()}`;
-    const itemId = `msg_${Date.now()}`;
+// Helper to create mock streaming response for OpenAI Responses API
+const createMockResponsesAPIStream = (content: string = 'Hello! How can I help you today?') => {
+  const responseId = `resp_${Date.now()}`;
+  const itemId = `msg_${Date.now()}`;
 
-    const chunks = [
-      {
-        response: {
-          created_at: Math.floor(Date.now() / 1000),
-          id: responseId,
-          model: 'gpt-5-pro',
-          object: 'response',
-          output: [],
-          status: 'in_progress',
-        },
-        type: 'response.created',
-      },
-      {
-        content_index: 0,
-        delta: content,
-        item_id: itemId,
-        output_index: 0,
-        type: 'response.output_text.delta',
-      },
-      {
-        content_index: 0,
-        item_id: itemId,
-        output_index: 0,
-        text: content,
-        type: 'response.output_text.done',
-      },
-      {
-        response: {
-          created_at: Math.floor(Date.now() / 1000),
-          id: responseId,
-          model: 'gpt-5-pro',
-          object: 'response',
-          output: [
-            {
-              content: [{ text: content, type: 'output_text' }],
-              role: 'assistant',
-              type: 'message',
-            },
-          ],
-          status: 'completed',
-          usage: {
-            input_tokens: 20,
-            output_tokens: 10,
-            total_tokens: 30,
-          },
-        },
-        type: 'response.completed',
-      },
-    ];
-
-    return createMockResponsesStream(chunks);
-  };
-
-  beforeEach(async () => {
-    // Setup test database
-    serverDB = await getTestDB();
-    testDB = serverDB;
-    userId = await createTestUser(serverDB);
-
-    // Create test agent with gpt-5-pro (uses Responses API)
-    const [agent] = await serverDB
-      .insert(agents)
-      .values({
+  const chunks = [
+    {
+      response: {
+        created_at: Math.floor(Date.now() / 1000),
+        id: responseId,
         model: 'gpt-5-pro',
-        provider: 'openai',
-        systemRole: 'You are a helpful assistant.',
-        title: 'Test Assistant',
-        userId,
-      })
-      .returning();
-    testAgentId = agent.id;
+        object: 'response',
+        output: [],
+        status: 'in_progress',
+      },
+      type: 'response.created',
+    },
+    {
+      content_index: 0,
+      delta: content,
+      item_id: itemId,
+      output_index: 0,
+      type: 'response.output_text.delta',
+    },
+    {
+      content_index: 0,
+      item_id: itemId,
+      output_index: 0,
+      text: content,
+      type: 'response.output_text.done',
+    },
+    {
+      response: {
+        created_at: Math.floor(Date.now() / 1000),
+        id: responseId,
+        model: 'gpt-5-pro',
+        object: 'response',
+        output: [
+          {
+            content: [{ text: content, type: 'output_text' }],
+            role: 'assistant',
+            type: 'message',
+          },
+        ],
+        status: 'completed',
+        usage: {
+          input_tokens: 20,
+          output_tokens: 10,
+          total_tokens: 30,
+        },
+      },
+      type: 'response.completed',
+    },
+  ];
 
-    // Setup spyOn for OpenAI Responses API prototype
-    // gpt-5-pro is in responsesAPIModels, so it will use responses.create
-    mockResponsesCreate = vi.spyOn(OpenAI.Responses.prototype, 'create');
+  return createMockResponsesStream(chunks);
+};
 
-    // Dynamically import AgentRuntimeService after mocks are set up
-    const agentRuntimeModule = await import('@/server/services/agentRuntime');
-    AgentRuntimeService = agentRuntimeModule.AgentRuntimeService;
-  });
+const createTestContext = () => ({
+  jwtPayload: { userId },
+  userId,
+});
 
-  afterEach(async () => {
-    await cleanupTestUser(serverDB, userId);
-    vi.clearAllMocks();
-    vi.restoreAllMocks();
+beforeEach(async () => {
+  // Setup test database
+  serverDB = await getTestDB();
+  testDB = serverDB;
+  userId = await createTestUser(serverDB);
 
-    // Clear singleton instances for next test
-    inMemoryAgentStateManager.clear();
-    inMemoryStreamEventManager.clear();
-  });
+  // Create test agent with gpt-5-pro (uses Responses API)
+  const [agent] = await serverDB
+    .insert(agents)
+    .values({
+      model: 'gpt-5-pro',
+      provider: 'openai',
+      systemRole: 'You are a helpful assistant.',
+      title: 'Test Assistant',
+      userId,
+    })
+    .returning();
+  testAgentId = agent.id;
 
-  const createTestContext = () => ({
-    jwtPayload: { userId },
-    userId,
-  });
+  // Setup spyOn for OpenAI Responses API prototype
+  // gpt-5-pro is in responsesAPIModels, so it will use responses.create
+  mockResponsesCreate = vi.spyOn(OpenAI.Responses.prototype, 'create');
 
+  // Dynamically import AgentRuntimeService after mocks are set up
+  const agentRuntimeModule = await import('@/server/services/agentRuntime');
+  AgentRuntimeService = agentRuntimeModule.AgentRuntimeService;
+});
+
+afterEach(async () => {
+  await cleanupTestUser(serverDB, userId);
+  vi.clearAllMocks();
+  vi.restoreAllMocks();
+
+  // Clear singleton instances for next test
+  inMemoryAgentStateManager.clear();
+  inMemoryStreamEventManager.clear();
+});
+
+describe('execAgent', () => {
   describe('Basic execAgent Flow', () => {
     it('should create operation successfully with prompt', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
@@ -1222,5 +1222,165 @@ describe('AI Agent E2E Test - execAgent', () => {
 
       mockExecuteTool.mockRestore();
     });
+  });
+});
+
+describe('Batch Execution (execAgents)', () => {
+  let testAgent2Id: string;
+
+  beforeEach(async () => {
+    // Create a second test agent for batch testing
+    const [agent2] = await serverDB
+      .insert(agents)
+      .values({
+        model: 'gpt-5-pro',
+        provider: 'openai',
+        systemRole: 'You are a helpful coding assistant.',
+        title: 'Test Assistant 2',
+        userId,
+      })
+      .returning();
+    testAgent2Id = agent2.id;
+  });
+
+  it('should execute multiple agents in parallel', async () => {
+    // Setup mock response
+    const responseContent = 'Hello from batch execution!';
+    mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream(responseContent) as any);
+
+    const caller = aiAgentRouter.createCaller(createTestContext());
+
+    const result = await caller.execAgents({
+      parallel: true,
+      tasks: [
+        { agentId: testAgentId, autoStart: false, prompt: 'Task 1: Hello' },
+        { agentId: testAgent2Id, autoStart: false, prompt: 'Task 2: World' },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.results).toHaveLength(2);
+    expect(result.summary).toEqual({
+      failed: 0,
+      succeeded: 2,
+      total: 2,
+    });
+
+    // Verify each result
+    expect(result.results[0]).toMatchObject({
+      success: true,
+      taskIndex: 0,
+      operationId: expect.stringMatching(/^agent_/),
+    });
+    expect(result.results[1]).toMatchObject({
+      success: true,
+      taskIndex: 1,
+      operationId: expect.stringMatching(/^agent_/),
+    });
+
+    // Verify different operationIds
+    expect(result.results[0].operationId).not.toBe(result.results[1].operationId);
+  });
+
+  it('should execute multiple agents sequentially when parallel=false', async () => {
+    const responseContent = 'Sequential execution response';
+    mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream(responseContent) as any);
+
+    const caller = aiAgentRouter.createCaller(createTestContext());
+
+    const result = await caller.execAgents({
+      parallel: false,
+      tasks: [
+        { agentId: testAgentId, autoStart: false, prompt: 'Sequential Task 1' },
+        { agentId: testAgent2Id, autoStart: false, prompt: 'Sequential Task 2' },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.results).toHaveLength(2);
+    expect(result.summary.succeeded).toBe(2);
+  });
+
+  it('should handle partial failures gracefully', async () => {
+    mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream('Success response') as any);
+
+    const caller = aiAgentRouter.createCaller(createTestContext());
+
+    const result = await caller.execAgents({
+      tasks: [
+        { agentId: testAgentId, autoStart: false, prompt: 'Valid task' },
+        { agentId: 'non-existent-agent', autoStart: false, prompt: 'Invalid task' },
+        { agentId: testAgent2Id, autoStart: false, prompt: 'Another valid task' },
+      ],
+    });
+
+    // Overall success should be false since one task failed
+    expect(result.success).toBe(false);
+    expect(result.results).toHaveLength(3);
+
+    // First task should succeed
+    expect(result.results[0].success).toBe(true);
+    expect(result.results[0].taskIndex).toBe(0);
+
+    // Second task should fail
+    expect(result.results[1].success).toBe(false);
+    expect(result.results[1].taskIndex).toBe(1);
+    expect(result.results[1].error).toBeDefined();
+
+    // Third task should succeed
+    expect(result.results[2].success).toBe(true);
+    expect(result.results[2].taskIndex).toBe(2);
+
+    // Summary should reflect partial failure
+    expect(result.summary).toEqual({
+      failed: 1,
+      succeeded: 2,
+      total: 3,
+    });
+  });
+
+  it('should create separate topics for each task', async () => {
+    mockResponsesCreate.mockResolvedValue(
+      createMockResponsesAPIStream('Response for separate topics') as any,
+    );
+
+    const caller = aiAgentRouter.createCaller(createTestContext());
+
+    await caller.execAgents({
+      tasks: [
+        { agentId: testAgentId, autoStart: false, prompt: 'Topic 1 prompt' },
+        { agentId: testAgentId, autoStart: false, prompt: 'Topic 2 prompt' },
+      ],
+    });
+
+    // Verify topics were created
+    const createdTopics = await serverDB
+      .select()
+      .from(topics)
+      .where(eq(topics.agentId, testAgentId));
+
+    expect(createdTopics).toHaveLength(2);
+    expect(createdTopics.map((t) => t.title).sort()).toEqual(['Topic 1 prompt', 'Topic 2 prompt']);
+  });
+
+  it('should support autoStart for batch tasks', async () => {
+    mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream('Auto start test') as any);
+
+    const caller = aiAgentRouter.createCaller(createTestContext());
+
+    const result = await caller.execAgents({
+      tasks: [
+        { agentId: testAgentId, autoStart: true, prompt: 'Auto start task 1' },
+        { agentId: testAgent2Id, autoStart: false, prompt: 'Manual start task 2' },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+
+    // First task should be auto-started
+    expect(result.results[0].autoStarted).toBe(true);
+
+    // Second task should not be auto-started
+    expect(result.results[1].autoStarted).toBe(false);
   });
 });
