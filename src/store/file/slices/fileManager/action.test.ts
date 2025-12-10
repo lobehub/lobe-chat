@@ -609,11 +609,9 @@ describe('FileManagerActions', () => {
       });
 
       // The implementation now uses a key matcher function
-      expect(mutate).toHaveBeenCalledWith(
-        expect.any(Function),
-        expect.any(Function),
-        { revalidate: true },
-      );
+      expect(mutate).toHaveBeenCalledWith(expect.any(Function), expect.any(Function), {
+        revalidate: true,
+      });
     });
   });
 
@@ -866,7 +864,10 @@ describe('FileManagerActions', () => {
         },
       ];
 
-      vi.mocked(lambdaClient.file.getKnowledgeItems.query).mockResolvedValue(mockFiles);
+      vi.mocked(lambdaClient.file.getKnowledgeItems.query).mockResolvedValue({
+        hasMore: false,
+        items: mockFiles,
+      });
 
       const params = { category: 'all' as any };
       const { result: swrResult } = renderHook(
@@ -899,7 +900,10 @@ describe('FileManagerActions', () => {
         },
       ];
 
-      vi.mocked(lambdaClient.file.getKnowledgeItems.query).mockResolvedValue(mockFiles);
+      vi.mocked(lambdaClient.file.getKnowledgeItems.query).mockResolvedValue({
+        hasMore: false,
+        items: mockFiles,
+      });
 
       const params = { category: 'all' as any };
       renderHook(() => result.current.useFetchKnowledgeItems(params), { wrapper: withSWR });

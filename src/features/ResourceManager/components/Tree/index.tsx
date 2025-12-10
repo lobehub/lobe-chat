@@ -50,18 +50,12 @@ const useStyles = createStyles(({ css, token }) => ({
     opacity: 0.5;
   `,
   fileItemDragOver: css`
-    background-color: ${token.colorFillSecondary} !important;
-    outline: 2px dashed ${token.colorPrimary};
-    outline-offset: -2px;
-  `,
-  rootDropZone: css`
-    min-height: 100%;
-    transition: background-color 0.2s;
-  `,
-  rootDropZoneActive: css`
-    background-color: ${token.colorFillQuaternary};
-    outline: 2px dashed ${token.colorPrimary};
-    outline-offset: -4px;
+    color: ${token.colorBgElevated} !important;
+    background-color: ${token.colorText} !important;
+
+    * {
+      color: ${token.colorBgElevated} !important;
+    }
   `,
 }));
 
@@ -434,7 +428,6 @@ FileTreeItem.displayName = 'FileTreeItem';
  * As a sidebar along with the Explorer to work
  */
 const FileTree = memo<FileTreeProps>(() => {
-  const { styles, cx } = useStyles();
   const { currentFolderSlug } = useFolderPath();
 
   const [useFetchKnowledgeItems, useFetchFolderBreadcrumb, useFetchKnowledgeItem] = useFileStore(
@@ -461,18 +454,6 @@ const FileTree = memo<FileTreeProps>(() => {
 
   // Track parent folder key for file selection - stored in a ref to avoid hook order issues
   const parentFolderKeyRef = React.useRef<string | null>(null);
-
-  // Special droppable ID for root folder
-  const ROOT_DROP_ID = `__root__:${libraryId}`;
-
-  const { setNodeRef: setRootDropRef, isOver: isRootDropOver } = useDroppable({
-    data: {
-      fileType: 'custom/folder',
-      isFolder: true,
-      name: 'Root',
-    },
-    id: ROOT_DROP_ID,
-  });
 
   // Fetch root level data using SWR
   const { data: rootData, isLoading } = useFetchKnowledgeItems({
@@ -518,7 +499,7 @@ const FileTree = memo<FileTreeProps>(() => {
       try {
         // Use SWR mutate to trigger a fetch that will be cached and shared with FileExplorer
         const { mutate: swrMutate } = await import('swr');
-        const data = await swrMutate(
+        const response = await swrMutate(
           [
             'useFetchKnowledgeItems',
             {
@@ -538,12 +519,12 @@ const FileTree = memo<FileTreeProps>(() => {
           },
         );
 
-        if (!data) {
+        if (!response || !response.items) {
           console.error('Failed to load folder contents: no data returned');
           return;
         }
 
-        const childItems: TreeItem[] = data.map((item) => ({
+        const childItems: TreeItem[] = response.items.map((item) => ({
           fileType: item.fileType,
           id: item.id,
           isFolder: item.fileType === 'custom/folder',
@@ -678,12 +659,7 @@ const FileTree = memo<FileTreeProps>(() => {
       : currentFolderSlug;
 
   return (
-    <Flexbox
-      className={cx(styles.rootDropZone, isRootDropOver && styles.rootDropZoneActive)}
-      gap={2}
-      paddingInline={4}
-      ref={setRootDropRef}
-    >
+    <Flexbox gap={2} paddingInline={4}>
       {items.map((item) => (
         <FileTreeItem
           expandedFolders={expandedFolders}

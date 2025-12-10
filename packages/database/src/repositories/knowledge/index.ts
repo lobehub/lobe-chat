@@ -55,6 +55,8 @@ export class KnowledgeRepo {
     knowledgeBaseId,
     showFilesInKnowledgeBase,
     parentId,
+    limit = 50,
+    offset = 0,
   }: QueryFileListParams = {}): Promise<KnowledgeItem[]> {
     // If parentId is provided, check if it's a slug and resolve it to an ID
     let resolvedParentId = parentId;
@@ -95,11 +97,13 @@ export class KnowledgeRepo {
       (${documentQuery})
     `;
 
-    // Add final ordering
+    // Add final ordering and pagination
     const orderClause = this.buildOrderClause(sortType, sorter);
     const finalQuery = sql`
       SELECT * FROM (${combinedQuery}) as combined
       ORDER BY ${orderClause}
+      LIMIT ${limit}
+      OFFSET ${offset}
     `;
 
     const result = await this.db.execute(finalQuery);

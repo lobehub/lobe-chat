@@ -127,10 +127,13 @@ const useStyles = createStyles(({ css, token }) => ({
     padding: 12px;
   `,
   dragOver: css`
-    border-color: ${token.colorPrimary} !important;
-    background: ${token.colorFillSecondary} !important;
-    outline: 2px dashed ${token.colorPrimary};
-    outline-offset: -2px;
+    border-color: ${token.colorText} !important;
+    color: ${token.colorBgElevated} !important;
+    background-color: ${token.colorText} !important;
+
+    * {
+      color: ${token.colorBgElevated} !important;
+    }
   `,
   dragging: css`
     opacity: 0.5;
