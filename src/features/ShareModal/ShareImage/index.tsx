@@ -19,7 +19,7 @@ import { FieldType, WidthMode } from './type';
 const DEFAULT_FIELD_VALUE: FieldType = {
   imageType: ImageType.JPG,
   widthMode: WidthMode.Wide,
-  withBackground: true,
+  withBackground: false,
   withFooter: true,
   withPluginInfo: false,
   withSystemRole: false,
@@ -57,14 +57,14 @@ const ShareImage = memo<{ mobile?: boolean }>(() => {
       name: 'withSystemRole',
       valuePropName: 'checked',
     },
-    {
-      children: <Switch />,
-      label: t('shareModal.withBackground'),
-      layout: 'horizontal',
-      minWidth: undefined,
-      name: 'withBackground',
-      valuePropName: 'checked',
-    },
+    // {
+    //   children: <Switch />,
+    //   label: t('shareModal.withBackground'),
+    //   layout: 'horizontal',
+    //   minWidth: undefined,
+    //   name: 'withBackground',
+    //   valuePropName: 'checked',
+    // },
     {
       children: <Switch />,
       label: t('shareModal.withFooter'),

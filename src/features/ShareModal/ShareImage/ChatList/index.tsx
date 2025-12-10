@@ -18,7 +18,11 @@ const ChatList = memo(() => {
       messages={messages}
       skipFetch={true}
     >
-      <Flexbox height={'100%'} style={{ paddingTop: 24, position: 'relative' }} width={'100%'}>
+      <Flexbox
+        height={'100%'}
+        style={{ padding: 24, pointerEvents: 'none', position: 'relative' }}
+        width={'100%'}
+      >
         {ids.map((id, index) => (
           <MessageItem id={id} index={index} key={id} />
         ))}
