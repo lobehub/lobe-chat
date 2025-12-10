@@ -521,7 +521,7 @@ describe('TopicModel - Query', () => {
   });
 
   describe('queryRecent', () => {
-    it('should return recent topics with agent info', async () => {
+    it('should return recent topics with agentId and sessionId', async () => {
       await serverDB.transaction(async (tx) => {
         await tx.insert(agents).values([
           { id: 'agent1', userId, title: 'Agent 1', avatar: 'avatar1.png', backgroundColor: '#ff0000' },
@@ -539,20 +539,10 @@ describe('TopicModel - Query', () => {
       expect(result).toHaveLength(3);
       expect(result[0].id).toBe('recent-topic-3');
       expect(result[0].title).toBe('Topic 3');
-      expect(result[0].agent).toEqual({
-        id: 'agent1',
-        title: 'Agent 1',
-        avatar: 'avatar1.png',
-        backgroundColor: '#ff0000',
-      });
+      expect(result[0].agentId).toBe('agent1');
 
       expect(result[1].id).toBe('recent-topic-2');
-      expect(result[1].agent).toEqual({
-        id: 'agent2',
-        title: 'Agent 2',
-        avatar: 'avatar2.png',
-        backgroundColor: '#00ff00',
-      });
+      expect(result[1].agentId).toBe('agent2');
     });
 
     it('should respect limit parameter', async () => {
@@ -570,14 +560,14 @@ describe('TopicModel - Query', () => {
       expect(result).toHaveLength(2);
     });
 
-    it('should return null agent when topic has no agentId', async () => {
+    it('should return null agentId when topic has no agentId', async () => {
       await serverDB.insert(topics).values([{ id: 'no-agent-topic', title: 'Topic without agent', userId, agentId: null }]);
 
       const result = await topicModel.queryRecent();
 
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('no-agent-topic');
-      expect(result[0].agent).toBeNull();
+      expect(result[0].agentId).toBeNull();
     });
 
     it('should only return topics for current user', async () => {
@@ -610,6 +600,18 @@ describe('TopicModel - Query', () => {
       const result = await topicModel.queryRecent();
 
       expect(result).toHaveLength(12);
+    });
+
+    it('should return sessionId for legacy data resolution', async () => {
+      await serverDB.insert(topics).values([
+        { id: 'legacy-topic', title: 'Legacy Topic', userId, agentId: null, sessionId },
+      ]);
+
+      const result = await topicModel.queryRecent();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].sessionId).toBe(sessionId);
+      expect(result[0].agentId).toBeNull();
     });
   });
 

@@ -303,23 +303,19 @@ export class TopicModel {
   };
 
   /**
-   * Query recent topics with agent info for homepage display
+   * Query recent topics for homepage display.
+   * Returns basic topic info with agentId and sessionId for later resolution.
    */
   queryRecent = async (limit: number = 12) => {
     return this.db
       .select({
-        agent: {
-          avatar: agents.avatar,
-          backgroundColor: agents.backgroundColor,
-          id: agents.id,
-          title: agents.title,
-        },
+        agentId: topics.agentId,
         id: topics.id,
+        sessionId: topics.sessionId,
         title: topics.title,
         updatedAt: topics.updatedAt,
       })
       .from(topics)
-      .leftJoin(agents, eq(topics.agentId, agents.id))
       .where(eq(topics.userId, this.userId))
       .orderBy(desc(topics.updatedAt))
       .limit(limit);

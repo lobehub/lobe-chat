@@ -1,14 +1,20 @@
 import { RecentTopic } from '@lobechat/types';
+import { inArray } from 'drizzle-orm';
 import { after } from 'next/server';
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
 import { AgentMigrationRepo } from '@/database/repositories/agentMigration';
+import { agents } from '@/database/schemas';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { BatchTaskResult } from '@/types/service';
 
-import { resolveAgentIdFromSession, resolveContext } from './_helpers/resolveContext';
+import {
+  batchResolveAgentIdFromSessions,
+  resolveAgentIdFromSession,
+  resolveContext,
+} from './_helpers/resolveContext';
 import { basicContextSchema } from './_schema/context';
 
 const topicProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
@@ -195,7 +201,85 @@ export const topicRouter = router({
   recentTopics: topicProcedure
     .input(z.object({ limit: z.number().optional() }).optional())
     .query(async ({ ctx, input }): Promise<RecentTopic[]> => {
-      return ctx.topicModel.queryRecent(input?.limit ?? 12);
+      const recentTopics = await ctx.topicModel.queryRecent(input?.limit ?? 12);
+
+      // Find legacy topics: no agentId but has sessionId
+      const legacyTopics = recentTopics.filter(
+        (topic) => topic.agentId === null && topic.sessionId !== null,
+      );
+
+      // Batch resolve agentId for legacy topics
+      const sessionIds = [...new Set(legacyTopics.map((t) => t.sessionId!))];
+      const sessionAgentMap = await batchResolveAgentIdFromSessions(
+        sessionIds,
+        ctx.serverDB,
+        ctx.userId,
+      );
+
+      // Build agentId map: merge existing agentId with resolved ones
+      const topicAgentIdMap = new Map<string, string>();
+      for (const topic of recentTopics) {
+        if (topic.agentId) {
+          topicAgentIdMap.set(topic.id, topic.agentId);
+        } else if (topic.sessionId) {
+          const resolvedAgentId = sessionAgentMap.get(topic.sessionId);
+          if (resolvedAgentId) {
+            topicAgentIdMap.set(topic.id, resolvedAgentId);
+          }
+        }
+      }
+
+      // Collect all agentIds to fetch agent info
+      const allAgentIds = [...new Set(topicAgentIdMap.values())];
+
+      // Batch query agent info
+      const agentInfoMap = new Map<
+        string,
+        { avatar: string | null; backgroundColor: string | null; id: string; title: string | null }
+      >();
+
+      if (allAgentIds.length > 0) {
+        const agentInfos = await ctx.serverDB
+          .select({
+            avatar: agents.avatar,
+            backgroundColor: agents.backgroundColor,
+            id: agents.id,
+            title: agents.title,
+          })
+          .from(agents)
+          .where(inArray(agents.id, allAgentIds));
+
+        for (const agent of agentInfos) {
+          agentInfoMap.set(agent.id, agent);
+        }
+      }
+
+      // Runtime migration: backfill agentId for legacy topics
+      const runMigration = async () => {
+        for (const [sessionId, agentId] of sessionAgentMap) {
+          try {
+            await ctx.agentMigrationRepo.migrateAgentId({ agentId, sessionId });
+          } catch (error) {
+            console.error('[AgentMigration] Failed to migrate agentId for recentTopics:', error);
+          }
+        }
+      };
+
+      // Use Next.js after() for non-blocking execution
+      after(runMigration);
+
+      // Assemble final result
+      return recentTopics.map((topic) => {
+        const agentId = topicAgentIdMap.get(topic.id);
+        const agentInfo = agentId ? agentInfoMap.get(agentId) : null;
+
+        return {
+          agent: agentInfo ?? null,
+          id: topic.id,
+          title: topic.title,
+          updatedAt: topic.updatedAt,
+        };
+      });
     }),
 
   removeAllTopics: topicProcedure.mutation(async ({ ctx }) => {
