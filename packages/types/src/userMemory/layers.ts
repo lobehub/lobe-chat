@@ -21,8 +21,8 @@ export enum UserMemoryContextSubjectType {
 }
 
 export interface UserMemoryContext extends UserMemoryTimestamps {
-  associatedObjects: { extra?: Record<string, unknown>, name?: string, type?: UserMemoryContextObjectType }[] | null;
-  associatedSubjects: { extra?: Record<string, unknown>, name?: string, type?: UserMemoryContextSubjectType }[] | null;
+  associatedObjects: { extra?: Record<string, unknown> | null, name?: string, type?: UserMemoryContextObjectType }[] | null;
+  associatedSubjects: { extra?: Record<string, unknown> | null, name?: string, type?: UserMemoryContextSubjectType }[] | null;
   currentStatus: string | null;
   description: string | null;
   descriptionVector: number[] | null;
