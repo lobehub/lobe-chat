@@ -22,7 +22,7 @@ export const useGroupDropdownMenu = ({
   handleOpenMemberSelection,
   openConfigGroupModal,
 }: GroupDropdownMenuProps): MenuProps['items'] => {
-  const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
+  const { enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
   // Session group menu items
   const { renameGroupMenuItem, configGroupMenuItem, deleteGroupMenuItem } =
@@ -39,19 +39,14 @@ export const useGroupDropdownMenu = ({
     const deleteItem = id ? deleteGroupMenuItem(id) : null;
 
     return [
-      ...(showCreateSession
-        ? [
-            createAgentItem,
-            ...(enableGroupChat ? [createGroupChatItem] : []),
-            { type: 'divider' as const },
-          ]
-        : []),
+      createAgentItem,
+      ...(enableGroupChat ? [createGroupChatItem] : []),
+      { type: 'divider' as const },
       ...(isCustomGroup
         ? [renameItem, configItem, { type: 'divider' as const }, deleteItem]
         : [configItem]),
     ].filter(Boolean) as MenuProps['items'];
   }, [
-    showCreateSession,
     enableGroupChat,
     isCustomGroup,
     id,

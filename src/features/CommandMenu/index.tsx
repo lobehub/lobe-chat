@@ -39,7 +39,6 @@ const CommandMenu = memo(() => {
     searchResults,
     setPages,
     setSearch,
-    showCreateSession,
   } = useCommandMenu();
 
   if (!mounted || !open) return null;
@@ -92,7 +91,6 @@ const CommandMenu = memo(() => {
                 onNavigate={handleNavigate}
                 onNavigateToTheme={() => navigateToPage('theme')}
                 pathname={pathname}
-                showCreateSession={showCreateSession}
                 styles={styles}
               />
             )}

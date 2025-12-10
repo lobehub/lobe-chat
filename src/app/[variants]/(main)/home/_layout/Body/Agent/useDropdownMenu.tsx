@@ -19,7 +19,7 @@ export const useAgentActionsDropdownMenu = ({
   openConfigGroupModal,
 }: AgentActionsDropdownMenuProps): MenuProps['items'] => {
   const { t } = useTranslation('common');
-  const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
+  const { enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
   const [agentPageSize, updateSystemStatus] = useGlobalStore((s) => [
     systemStatusSelectors.agentPageSize(s),
@@ -51,25 +51,20 @@ export const useAgentActionsDropdownMenu = ({
     }));
 
     return [
-      ...(showCreateSession
-        ? [
-            createAgentItem,
-            ...(enableGroupChat ? [createGroupChatItem] : []),
-            { type: 'divider' as const },
-            {
-              children: pageSizeItems,
-              icon: <Icon icon={Hash} />,
-              key: 'displayItems',
-              label: t('navPanel.displayItems'),
-            },
-            { type: 'divider' as const },
-            createSessionGroupItem,
-            configItem,
-          ]
-        : []),
+      createAgentItem,
+      ...(enableGroupChat ? [createGroupChatItem] : []),
+      { type: 'divider' as const },
+      {
+        children: pageSizeItems,
+        icon: <Icon icon={Hash} />,
+        key: 'displayItems',
+        label: t('navPanel.displayItems'),
+      },
+      { type: 'divider' as const },
+      createSessionGroupItem,
+      configItem,
     ].filter(Boolean) as MenuProps['items'];
   }, [
-    showCreateSession,
     enableGroupChat,
     agentPageSize,
     updateSystemStatus,

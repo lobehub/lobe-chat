@@ -44,7 +44,7 @@ const Actions = memo<ActionsProps>(
 
     const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
 
-    const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
+    const { enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
     const sessionGroupConfigPublicItem: MenuItemType = {
       icon: <Icon icon={Settings2} />,
@@ -168,22 +168,16 @@ const Actions = memo<ActionsProps>(
     );
 
     const menuItems = useMemo(() => {
-      const items: MenuProps['items'] = [];
+      const items: MenuProps['items'] = [newAgentPublicItem];
 
-      if (showCreateSession) {
-        items.push(newAgentPublicItem);
-
-        if (enableGroupChat) {
-          items.push(newGroupChatItem);
-        }
-
-        items.push({ type: 'divider' });
+      if (enableGroupChat) {
+        items.push(newGroupChatItem);
       }
 
-      items.push(...tailItems);
+      items.push({ type: 'divider' }, ...tailItems);
 
       return items;
-    }, [showCreateSession, enableGroupChat, newAgentPublicItem, newGroupChatItem, tailItems]);
+    }, [enableGroupChat, newAgentPublicItem, newGroupChatItem, tailItems]);
 
     return (
       <>

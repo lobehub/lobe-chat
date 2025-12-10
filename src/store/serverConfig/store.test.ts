@@ -52,11 +52,11 @@ describe('createServerConfigStore', () => {
       store.setState({
         featureFlags: {
           ...store.getState().featureFlags,
-          showDalle: false,
+          showMarket: false,
         },
       });
     });
 
-    expect(store.getState().featureFlags.showDalle).toBeFalsy();
+    expect(store.getState().featureFlags.showMarket).toBeFalsy();
   });
 });

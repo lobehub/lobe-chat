@@ -10,7 +10,6 @@ import { DEFAULT_AVATAR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
@@ -21,7 +20,6 @@ const InboxWelcome = memo(() => {
   const { t } = useTranslation(['welcome', 'chat']);
   const mobile = useIsMobile();
   const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
-  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
   const openingQuestions = useAgentStore(agentSelectors.openingQuestions, isEqual);
   const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
@@ -79,14 +77,7 @@ const InboxWelcome = memo(() => {
             fontSize={fontSize}
             variant={'chat'}
           >
-            {isInbox
-              ? t(
-                  showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate',
-                  {
-                    appName: 'Lobe AI',
-                  },
-                )
-              : message}
+            {isInbox ? t('guide.defaultMessage', { appName: 'Lobe AI' }) : message}
           </Markdown>
         </Flexbox>
         {openingQuestions.length > 0 && (

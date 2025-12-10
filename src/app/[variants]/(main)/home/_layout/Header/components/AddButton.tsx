@@ -16,7 +16,7 @@ import { useCreateMenuItems } from '../../hooks';
 
 const AddButton = memo(() => {
   const { t: tChat } = useTranslation('chat');
-  const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
+  const { enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
   const theme = useTheme();
 
@@ -98,8 +98,6 @@ const AddButton = memo(() => {
     enableGroupChat,
     handleOpenGroupWizard,
   ]);
-
-  if (!showCreateSession) return;
 
   return (
     <Flexbox horizontal>

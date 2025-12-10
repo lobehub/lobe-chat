@@ -7,7 +7,6 @@ import { lambdaClient } from '@/libs/trpc/client';
 import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
 import { useHomeStore } from '@/store/home';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import type { ChatMessage, ThemeMode } from './types';
 
@@ -24,7 +23,6 @@ export const useCommandMenu = () => {
   const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
   const createAgent = useAgentStore((s) => s.createAgent);
   const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
-  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   const page = pages.at(-1);
   const isAiMode = page === 'ai-chat';
@@ -145,6 +143,5 @@ export const useCommandMenu = () => {
     searchResults: searchResults || ([] as SearchResult[]),
     setPages,
     setSearch,
-    showCreateSession,
   };
 };
