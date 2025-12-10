@@ -9,6 +9,7 @@ import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
 import { AiAgentService } from '@/server/services/aiAgent';
+import { nanoid } from '@/utils/uuid';
 
 const log = debug('lobe-server:ai-agent-router');
 
@@ -145,8 +146,11 @@ export const aiAgentRouter = router({
         });
       }
 
-      // Generate runtime operation ID
-      const operationId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+      let prefix = `agent_${Date.now()}`;
+      if (agentId && topicId) prefix = `${agentId}_${topicId}`;
+
+      // Generate runtime operation ID: agentId_topicId_random
+      const operationId = `${prefix}_${nanoid(8)}`;
 
       log(`Creating operation ${operationId} for user ${ctx.userId}`);
 
