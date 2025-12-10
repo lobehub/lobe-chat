@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { memo, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
@@ -163,6 +163,7 @@ interface MasonryFileItemProps extends FileListItem {
   onOpen?: (id: string) => void;
   onSelectedChange: (id: string, selected: boolean) => void;
   selected?: boolean;
+  slug?: string | null;
 }
 
 const MasonryFileItem = memo<MasonryFileItemProps>(
@@ -185,11 +186,13 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     onOpen,
     metadata,
     sourceType,
+    slug,
   }) => {
     const { styles, cx } = useStyles();
     const [markdownContent, setMarkdownContent] = useState<string>('');
     const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+    const navigate = useNavigate();
     const [, setSearchParams] = useSearchParams();
     const setMode = useResourceManagerStore((s) => s.setMode);
     const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
@@ -360,7 +363,13 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             !isImage && !isMarkdown && !isNote && styles.contentWithPadding,
           )}
           onClick={() => {
-            if (isNote) {
+            if (isFolder) {
+              // Navigate to folder using slug-based routing (Google Drive style)
+              const folderSlug = slug || id;
+              if (knowledgeBaseId) {
+                navigate(`/resource/library/${knowledgeBaseId}/${folderSlug}`);
+              }
+            } else if (isNote) {
               // Switch to page view mode instead of opening modal
               setCurrentViewItemId(id);
               setMode('page');
