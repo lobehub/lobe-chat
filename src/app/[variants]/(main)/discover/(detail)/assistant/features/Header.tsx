@@ -9,6 +9,7 @@ import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Link as RouterLink } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { formatIntergerNumber } from '@/utils/format';
@@ -119,9 +120,22 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>
             {author && (
-              <Link href={urlJoin('https://github.com', author)} target={'_blank'}>
-                {author}
-              </Link>
+              <Flexbox align={'center'} gap={4} horizontal>
+                <RouterLink style={{ color: 'inherit' }} to={urlJoin('/discover/user', author)}>
+                  {author}
+                </RouterLink>
+                <Link
+                  href={urlJoin('https://github.com', author)}
+                  onClick={(e) => e.stopPropagation()}
+                  target={'_blank'}
+                >
+                  <ActionIcon
+                    icon={Github}
+                    size={{ blockSize: 20 }}
+                    style={{ color: theme.colorTextDescription }}
+                  />
+                </Link>
+              </Flexbox>
             )}
             <Icon icon={DotIcon} />
             <PublishedTime

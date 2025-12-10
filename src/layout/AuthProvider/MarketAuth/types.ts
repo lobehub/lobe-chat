@@ -19,6 +19,25 @@ export interface MarketUserInfo {
   };
 }
 
+/**
+ * Market User Profile - Extended user information from Market SDK
+ */
+export interface MarketUserProfile {
+  avatarUrl: string | null;
+  createdAt: string;
+  description: string | null;
+  displayName: string | null;
+  id: number;
+  namespace: string;
+  socialLinks: {
+    github?: string;
+    twitter?: string;
+    website?: string;
+  } | null;
+  type: string | null;
+  userName: string | null;
+}
+
 export interface MarketAuthSession {
   accessToken: string;
   expiresAt: number;

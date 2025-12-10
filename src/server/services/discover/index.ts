@@ -22,6 +22,7 @@ import {
   DiscoverPluginItem,
   DiscoverProviderDetail,
   DiscoverProviderItem,
+  DiscoverUserProfile,
   IdentifiersResponse,
   McpListResponse,
   McpQueryParams,
@@ -40,7 +41,7 @@ import {
   getTextInputUnitRate,
   getTextOutputUnitRate,
 } from '@lobechat/utils';
-import { CategoryItem, CategoryListQuery, MarketSDK } from '@lobehub/market-sdk';
+import { CategoryItem, CategoryListQuery, MarketSDK, UserInfoResponse } from '@lobehub/market-sdk';
 import { CallReportRequest, InstallReportRequest } from '@lobehub/market-types';
 import dayjs from 'dayjs';
 import debug from 'debug';
@@ -1627,5 +1628,71 @@ export class DiscoverService {
       result.items.length,
     );
     return result;
+  };
+
+  // ============================== User Profile ==============================
+
+  /**
+   * Get user profile and their published agents by username
+   */
+  getUserInfo = async (params: {
+    locale?: string;
+    username: string;
+  }): Promise<DiscoverUserProfile | undefined> => {
+    log('getUserInfo: params=%O', params);
+    const { username, locale } = params;
+
+    try {
+      // Call Market SDK to get user info
+      const response: UserInfoResponse = await this.market.user.getUserInfo(username, { locale });
+
+      if (!response?.user) {
+        log('getUserInfo: user not found for username=%s', username);
+        return undefined;
+      }
+
+      const { user, agents } = response;
+
+      // Transform agents to DiscoverAssistantItem format
+      // Note: UserAgentItem doesn't have tags or tokenUsage, using defaults
+      const transformedAgents: DiscoverAssistantItem[] = (agents || []).map((agent) => ({
+        author: user.displayName || user.userName || user.namespace || '',
+        avatar: agent.avatar || '',
+        category: agent.category as any,
+        config: {} as any,
+        createdAt: agent.createdAt,
+        description: agent.description || '',
+        homepage: `https://lobehub.com/discover/assistant/${agent.identifier}`,
+        identifier: agent.identifier,
+        installCount: agent.installCount,
+        knowledgeCount: 0,
+        pluginCount: 0,
+        schemaVersion: 1,
+        tags: [],
+        title: agent.name || agent.identifier,
+        tokenUsage: 0,
+      }));
+
+      const result: DiscoverUserProfile = {
+        agents: transformedAgents,
+        user: {
+          avatarUrl: user.avatarUrl || null,
+          createdAt: user.createdAt,
+          description: user.meta?.description || null,
+          displayName: user.displayName || null,
+          id: user.id,
+          namespace: user.namespace,
+          socialLinks: user.meta?.socialLinks || null,
+          type: user.type || null,
+          userName: user.userName || null,
+        },
+      };
+
+      log('getUserInfo: returning user profile with %d agents', result.agents.length);
+      return result;
+    } catch (error) {
+      log('getUserInfo: error fetching user info: %O', error);
+      return undefined;
+    }
   };
 }

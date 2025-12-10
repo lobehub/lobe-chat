@@ -21,7 +21,7 @@ interface MarketAuthProviderProps {
 }
 
 /**
- * 获取用户信息
+ * 获取用户信息（从 OIDC userinfo endpoint）
  */
 const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null> => {
   console.log('accessToken', accessToken);
