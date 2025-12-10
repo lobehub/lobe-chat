@@ -1,26 +1,44 @@
+import type {
+  AddIdentityActionSchema,
+  ContextMemoryItemSchema,
+  ExperienceMemoryItemSchema,
+  PreferenceMemoryItemSchema,
+  RemoveIdentityActionSchema,
+  UpdateIdentityActionSchema,
+} from '@lobechat/memory-user-memory/schemas';
+import { z } from 'zod';
 import { StateCreator } from 'zustand/vanilla';
 
 import { userMemoryService } from '@/services/userMemory';
 import { ChatStore } from '@/store/chat/store';
 import { SearchMemoryParams } from '@/types/userMemory';
-import type {
-  ContextMemoryItemSchema,
-  ExperienceMemoryItemSchema,
-  PreferenceMemoryItemSchema,
-  AddIdentityActionSchema,
-  UpdateIdentityActionSchema,
-  RemoveIdentityActionSchema,
-} from '@lobechat/memory-user-memory'
-import { z } from 'zod';
 
 export interface UserMemoryAction {
-  addContextMemory: (id: string, params: z.infer<typeof ContextMemoryItemSchema>) => Promise<boolean>;
-  addExperienceMemory: (id: string, params: z.infer<typeof ExperienceMemoryItemSchema>) => Promise<boolean>;
-  addIdentityMemory: (id: string, params: z.infer<typeof AddIdentityActionSchema>) => Promise<boolean>;
-  addPreferenceMemory: (id: string, params: z.infer<typeof PreferenceMemoryItemSchema>) => Promise<boolean>;
-  removeIdentityMemory: (id: string, params: z.infer<typeof RemoveIdentityActionSchema>) => Promise<boolean>;
+  addContextMemory: (
+    id: string,
+    params: z.infer<typeof ContextMemoryItemSchema>,
+  ) => Promise<boolean>;
+  addExperienceMemory: (
+    id: string,
+    params: z.infer<typeof ExperienceMemoryItemSchema>,
+  ) => Promise<boolean>;
+  addIdentityMemory: (
+    id: string,
+    params: z.infer<typeof AddIdentityActionSchema>,
+  ) => Promise<boolean>;
+  addPreferenceMemory: (
+    id: string,
+    params: z.infer<typeof PreferenceMemoryItemSchema>,
+  ) => Promise<boolean>;
+  removeIdentityMemory: (
+    id: string,
+    params: z.infer<typeof RemoveIdentityActionSchema>,
+  ) => Promise<boolean>;
   searchUserMemory: (id: string, params: SearchMemoryParams) => Promise<boolean>;
-  updateIdentityMemory: (id: string, params: z.infer<typeof UpdateIdentityActionSchema>) => Promise<boolean>;
+  updateIdentityMemory: (
+    id: string,
+    params: z.infer<typeof UpdateIdentityActionSchema>,
+  ) => Promise<boolean>;
 }
 
 const runMemoryTool = async (

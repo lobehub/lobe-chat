@@ -2,6 +2,12 @@
   "name": "@lobechat/memory-user-memory",
   "version": "1.0.0",
   "private": true,
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/schemas/index.ts",
+    "./types": "./src/types.ts"
+  },
   "main": "src/index.ts",
   "scripts": {
     "test": "vitest --run",

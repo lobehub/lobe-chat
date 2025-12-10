@@ -1,3 +1,13 @@
+import type {
+  AddIdentityActionSchema,
+  ContextMemoryItemSchema,
+  ExperienceMemoryItemSchema,
+  PreferenceMemoryItemSchema,
+  RemoveIdentityActionSchema,
+  UpdateIdentityActionSchema,
+} from '@lobechat/memory-user-memory/schemas';
+import { z } from 'zod';
+
 import { lambdaClient } from '@/libs/trpc/client';
 import {
   AddContextMemoryResult,
@@ -10,20 +20,11 @@ import {
   SearchMemoryResult,
   UpdateIdentityMemoryResult,
 } from '@/types/userMemory';
-import type {
-  ContextMemoryItemSchema,
-  ExperienceMemoryItemSchema,
-  PreferenceMemoryItemSchema,
-  AddIdentityActionSchema,
-  UpdateIdentityActionSchema,
-  RemoveIdentityActionSchema,
-} from '@lobechat/memory-user-memory'
-import {
-  z
-} from 'zod';
 
 class UserMemoryService {
-  addContextMemory = async (params: z.infer<typeof ContextMemoryItemSchema>): Promise<AddContextMemoryResult> => {
+  addContextMemory = async (
+    params: z.infer<typeof ContextMemoryItemSchema>,
+  ): Promise<AddContextMemoryResult> => {
     return lambdaClient.userMemories.toolAddContextMemory.mutate(params);
   };
 
@@ -33,7 +34,9 @@ class UserMemoryService {
     return lambdaClient.userMemories.toolAddExperienceMemory.mutate(params);
   };
 
-  addIdentityMemory = async (params: z.infer<typeof AddIdentityActionSchema>): Promise<AddIdentityMemoryResult> => {
+  addIdentityMemory = async (
+    params: z.infer<typeof AddIdentityActionSchema>,
+  ): Promise<AddIdentityMemoryResult> => {
     return lambdaClient.userMemories.toolAddIdentityMemory.mutate(params);
   };
 
