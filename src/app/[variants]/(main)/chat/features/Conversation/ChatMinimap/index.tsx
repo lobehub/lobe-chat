@@ -1,8 +1,8 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Popover, Tooltip } from 'antd';
-import { createStyles, useTheme } from 'antd-style';
+import { ActionIcon, Block, Text } from '@lobehub/ui';
+import { Popover } from 'antd';
+import { createStyles } from 'antd-style';
 import debug from 'debug';
 import isEqual from 'fast-deep-equal';
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -15,32 +15,14 @@ import { conversationSelectors, useConversationStore } from '@/features/Conversa
 
 const log = debug('lobe-react:chat-minimap');
 
-const MIN_WIDTH = 16;
-const MAX_WIDTH = 30;
+const MIN_WIDTH = 12;
+const MAX_WIDTH = 24;
 const MAX_CONTENT_LENGTH = 320;
 const MIN_MESSAGES = 3;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
-    cursor: pointer;
-
-    transform: translateX(4px);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: none;
-    border-radius: 6px;
-
-    color: ${token.colorTextTertiary};
-
     opacity: 0;
-    background: none;
-
     transition: opacity 0.2s ease;
 
     &:hover {
@@ -67,33 +49,12 @@ const useStyles = createStyles(({ css, token }) => ({
     width: 32px;
   `,
   indicator: css`
-    cursor: pointer;
-
     flex-shrink: 0;
 
     min-width: ${MIN_WIDTH}px;
     height: 12px;
-    padding-block: 4px;
+    padding-block: 5px;
     padding-inline: 4px;
-    border: none;
-    border-radius: 3px;
-
-    background: none;
-
-    transition:
-      transform 0.2s ease,
-      background-color 0.2s ease,
-      box-shadow 0.2s ease;
-
-    &:hover {
-      transform: scaleX(1.05);
-      background: ${token.colorFill};
-    }
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 2px ${token.colorPrimaryBorder};
-    }
   `,
   indicatorActive: css`
     transform: scaleX(1.1);
@@ -108,9 +69,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   indicatorContentActive: css`
     background: ${token.colorPrimary};
-  `,
-  popoverContent: css`
-    max-width: 300px;
   `,
   popoverLabel: css`
     margin-block-end: 4px;
@@ -196,8 +154,6 @@ const ChatMinimap = memo(() => {
   const scrollMethods = useConversationStore(conversationSelectors.virtuaScrollMethods);
   const activeIndex = useConversationStore(conversationSelectors.activeIndex);
   const messages = useConversationStore(conversationSelectors.displayMessages, isEqual);
-
-  const theme = useTheme();
 
   const indicators = useMemo<MinimapIndicator[]>(() => {
     return messages.reduce<MinimapIndicator[]>((acc, message, virtuosoIndex) => {
@@ -298,60 +254,74 @@ const ChatMinimap = memo(() => {
         onMouseLeave={() => setIsHovered(false)}
         role={'group'}
       >
-        <Tooltip mouseEnterDelay={0.1} placement={'left'} title={t('minimap.previousMessage')}>
-          <button
-            aria-label={t('minimap.previousMessage')}
-            className={cx(styles.arrow, isHovered && styles.arrowVisible)}
-            onClick={() => handleStep('prev')}
-            type={'button'}
-          >
-            <Icon color={theme.colorTextTertiary} icon={ChevronUp} size={16} />
-          </button>
-        </Tooltip>
+        <ActionIcon
+          aria-label={t('minimap.previousMessage')}
+          className={cx(styles.arrow, isHovered && styles.arrowVisible)}
+          icon={ChevronUp}
+          onClick={() => handleStep('prev')}
+          size={14}
+        />
         <Flexbox className={styles.railContent}>
           {indicators.map(({ id, width, preview, role, virtuosoIndex }, position) => {
             const isActive = activeIndicatorPosition === position;
             const senderLabel =
               role === 'user' ? t('minimap.senderUser') : t('minimap.senderAssistant');
-
             const popoverContent = preview ? (
-              <div className={styles.popoverContent}>
-                <div className={styles.popoverLabel}>{senderLabel}</div>
-                <div className={styles.popoverText}>{preview}</div>
-              </div>
+              <>
+                <Text fontSize={12} style={{ marginBottom: 4 }} type={'secondary'} weight={500}>
+                  {senderLabel}
+                </Text>
+                <Text as={'p'} fontSize={12}>
+                  {preview}
+                </Text>
+              </>
             ) : undefined;
-
             return (
-              <Popover content={popoverContent} key={id} mouseEnterDelay={0.1} placement={'left'}>
-                <button
-                  aria-current={isActive ? 'true' : undefined}
-                  aria-label={t('minimap.jumpToMessage', { index: position + 1 })}
-                  className={styles.indicator}
-                  onClick={() => handleJump(virtuosoIndex)}
-                  style={{ width }}
-                  type={'button'}
+              <Popover
+                arrow={false}
+                content={popoverContent}
+                key={id}
+                mouseEnterDelay={0.1}
+                placement={'left'}
+                styles={{
+                  body: {
+                    width: 320,
+                  },
+                }}
+              >
+                <Block
+                  align={'flex-end'}
+                  clickable
+                  style={{ borderRadius: 4 }}
+                  variant={'borderless'}
+                  width={'100%'}
                 >
                   <div
-                    className={cx(
-                      styles.indicatorContent,
-                      isActive && styles.indicatorContentActive,
-                    )}
-                  />
-                </button>
+                    aria-current={isActive ? 'true' : undefined}
+                    aria-label={t('minimap.jumpToMessage', { index: position + 1 })}
+                    className={styles.indicator}
+                    onClick={() => handleJump(virtuosoIndex)}
+                    style={{ width }}
+                  >
+                    <div
+                      className={cx(
+                        styles.indicatorContent,
+                        isActive && styles.indicatorContentActive,
+                      )}
+                    />
+                  </div>
+                </Block>
               </Popover>
             );
           })}
         </Flexbox>
-        <Tooltip mouseEnterDelay={0.1} placement={'left'} title={t('minimap.nextMessage')}>
-          <button
-            aria-label={t('minimap.nextMessage')}
-            className={cx(styles.arrow, isHovered && styles.arrowVisible)}
-            onClick={() => handleStep('next')}
-            type={'button'}
-          >
-            <Icon icon={ChevronDown} size={16} />
-          </button>
-        </Tooltip>
+        <ActionIcon
+          aria-label={t('minimap.nextMessage')}
+          className={cx(styles.arrow, isHovered && styles.arrowVisible)}
+          icon={ChevronDown}
+          onClick={() => handleStep('next')}
+          size={14}
+        />
       </Flexbox>
     </Flexbox>
   );
