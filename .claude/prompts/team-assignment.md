@@ -12,6 +12,7 @@
 - **@sxjeru**: Model providers and configuration
 - **@cy948**: Auth Modules
 - **@rdmclin2**: Team workspace
+- **@Innei**: Electron desktop client, desktop tooling
 
 Quick reference for assigning issues based on labels.
 
@@ -28,7 +29,7 @@ Quick reference for assigning issues based on labels.
 | Label              | Owner       | Notes                                  |
 | ------------------ | ----------- | -------------------------------------- |
 | `platform:mobile`  | @sudongyuer | React Native mobile app                |
-| `platform:desktop` | @ONLY-yours | Electron desktop client (general)      |
+| `platform:desktop` | @Innei      | Electron desktop client                |
 | `platform:web`     | @ONLY-yours | Web platform (unless specific feature) |
 
 ### Feature Labels (feature:\*)
