@@ -1,7 +1,7 @@
 'use client';
 
 import { App } from 'antd';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useLoaderData } from 'react-router-dom';
@@ -10,13 +10,11 @@ import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/MarketAuth';
 import { marketApiService } from '@/services/marketApi';
 import { useDiscoverStore } from '@/store/discover';
-import { DiscoverAssistantItem, DiscoverTab } from '@/types/discover';
+import { DiscoverTab } from '@/types/discover';
 
-import AgentDetailDrawer, {
-  AgentStatusAction,
-} from '../../../settings/my-agents/features/AgentDetailDrawer';
 import NotFound from '../components/NotFound';
 import Breadcrumb from '../features/Breadcrumb';
+import { AgentStatusAction } from './features/UserAgentCard';
 import UserAgentList from './features/UserAgentList';
 import UserHeader from './features/UserHeader';
 import Loading from './loading';
@@ -40,9 +38,6 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
   const currentUser = getCurrentUserInfo();
   const { data: currentUserProfile } = useMarketUserProfile(currentUser?.sub);
 
-  const [selectedAgent, setSelectedAgent] = useState<DiscoverAssistantItem | null>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
   // Check if the current user is viewing their own profile
   const isOwner =
     isAuthenticated &&
@@ -50,21 +45,6 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
     !!data?.user?.userName &&
     !!currentUserProfile?.userName &&
     data.user.userName === currentUserProfile.userName;
-
-  const handleAgentClick = useCallback(
-    (agent: DiscoverAssistantItem) => {
-      if (isOwner) {
-        setSelectedAgent(agent);
-        setDrawerOpen(true);
-      }
-    },
-    [isOwner],
-  );
-
-  const handleCloseDrawer = useCallback(() => {
-    setDrawerOpen(false);
-    setSelectedAgent(null);
-  }, []);
 
   const handleStatusChange = useCallback(
     async (identifier: string, action: AgentStatusAction) => {
@@ -101,10 +81,6 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
 
         // Refresh the user profile
         mutate();
-
-        // Close drawer after successful action
-        setDrawerOpen(false);
-        setSelectedAgent(null);
       } catch (error) {
         console.error(`[UserDetailPage] ${action} agent error:`, error);
         message.error({
@@ -139,18 +115,9 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
         <UserAgentList
           data={agents}
           isOwner={isOwner}
-          onAgentClick={isOwner ? handleAgentClick : undefined}
+          onStatusChange={isOwner ? handleStatusChange : undefined}
         />
       </Flexbox>
-
-      {isOwner && (
-        <AgentDetailDrawer
-          agent={selectedAgent}
-          onClose={handleCloseDrawer}
-          onStatusChange={handleStatusChange}
-          open={drawerOpen}
-        />
-      )}
     </>
   );
 });

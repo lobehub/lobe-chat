@@ -1,19 +1,35 @@
 'use client';
 
 import { Avatar, Block, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
-import { Tag as AntTag } from 'antd';
+import { Tag as AntTag, App, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
-import { ClockIcon, CoinsIcon, DownloadIcon } from 'lucide-react';
+import {
+  AlertTriangle,
+  ClockIcon,
+  CoinsIcon,
+  DownloadIcon,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  MoreVerticalIcon,
+  Pencil,
+} from 'lucide-react';
 import qs from 'query-string';
-import { memo } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import PublishedTime from '@/components/PublishedTime';
+import { agentService } from '@/services/agent';
+import { discoverService } from '@/services/discover';
+import { useAgentStore } from '@/store/agent';
+import { useHomeStore } from '@/store/home';
 import { AgentStatus, DiscoverAssistantItem } from '@/types/discover';
 import { formatIntergerNumber } from '@/utils/format';
+
+export type AgentStatusAction = 'publish' | 'unpublish' | 'deprecate';
 
 const getStatusTagColor = (status?: AgentStatus) => {
   switch (status) {
@@ -50,6 +66,15 @@ const useStyles = createStyles(({ css, token }) => {
       border-block-start: 1px dashed ${token.colorBorder};
       background: ${token.colorBgContainerSecondary};
     `,
+    moreButton: css`
+      position: absolute;
+      inset-block-start: 12px;
+      inset-inline-end: 12px;
+
+      opacity: 0;
+
+      transition: opacity 0.2s;
+    `,
     secondaryDesc: css`
       font-size: 12px;
       color: ${token.colorTextDescription};
@@ -72,12 +97,17 @@ const useStyles = createStyles(({ css, token }) => {
         color: ${token.colorLink};
       }
     `,
+    wrapper: css`
+      &:hover .more-button {
+        opacity: 1;
+      }
+    `,
   };
 });
 
 interface UserAgentCardProps extends DiscoverAssistantItem {
   isOwner?: boolean;
-  onClick?: () => void;
+  onStatusChange?: (identifier: string, action: AgentStatusAction) => void;
 }
 
 const UserAgentCard = memo<UserAgentCardProps>(
@@ -93,11 +123,16 @@ const UserAgentCard = memo<UserAgentCardProps>(
     status,
     identifier,
     isOwner,
-    onClick,
+    onStatusChange,
   }) => {
     const { styles } = useStyles();
     const { t } = useTranslation(['discover', 'setting']);
     const navigate = useNavigate();
+    const { message, modal } = App.useApp();
+
+    const [, setIsEditLoading] = useState(false);
+    const createAgent = useAgentStore((s) => s.createAgent);
+    const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
 
     const link = qs.stringifyUrl(
       {
@@ -107,19 +142,123 @@ const UserAgentCard = memo<UserAgentCardProps>(
       { skipNull: true },
     );
 
-    const handleClick = () => {
-      if (onClick) {
-        onClick();
-      } else {
-        navigate(link);
+    const isPublished = status === 'published';
+
+    const handleViewDetail = useCallback(() => {
+      window.open(urlJoin('/discover/assistant', identifier), '_blank');
+    }, [identifier]);
+
+    const handleEdit = useCallback(async () => {
+      setIsEditLoading(true);
+      try {
+        // First, try to find the local agent by market identifier
+        const localAgentId = await agentService.getAgentByMarketIdentifier(identifier);
+
+        if (localAgentId) {
+          // Agent exists locally, navigate to edit
+          navigate(urlJoin('/agent', localAgentId, 'profile'));
+        } else {
+          // Agent doesn't exist locally, fetch from market and create
+          const marketAgent = await discoverService.getAssistantDetail({
+            identifier,
+            source: 'new',
+          });
+
+          if (!marketAgent) {
+            message.error(t('setting:myAgents.errors.fetchFailed'));
+            return;
+          }
+
+          // Create local agent with market data
+          const result = await createAgent({
+            config: {
+              ...marketAgent.config,
+              avatar: marketAgent.avatar,
+              backgroundColor: marketAgent.backgroundColor,
+              description: marketAgent.description,
+              editorData: marketAgent.editorData,
+              marketIdentifier: identifier,
+              tags: marketAgent.tags,
+              title: marketAgent.title,
+            },
+          });
+
+          await refreshAgentList();
+
+          if (result.agentId) {
+            navigate(urlJoin('/agent', result.agentId, 'profile'));
+          }
+        }
+      } catch (error) {
+        console.error('[UserAgentCard] handleEdit error:', error);
+        message.error(t('setting:myAgents.errors.editFailed'));
+      } finally {
+        setIsEditLoading(false);
       }
-    };
+    }, [identifier, navigate, createAgent, refreshAgentList, message, t]);
+
+    const handleStatusAction = useCallback(
+      (action: AgentStatusAction) => {
+        if (!onStatusChange) return;
+
+        // For deprecate action, show confirmation dialog
+        if (action === 'deprecate') {
+          modal.confirm({
+            cancelText: t('setting:myAgents.actions.cancel'),
+            content: t('setting:myAgents.actions.deprecateConfirmContent'),
+            okButtonProps: { danger: true },
+            okText: t('setting:myAgents.actions.confirmDeprecate'),
+            onOk: () => onStatusChange(identifier, action),
+            title: t('setting:myAgents.actions.deprecateConfirmTitle'),
+          });
+        } else {
+          onStatusChange(identifier, action);
+        }
+      },
+      [identifier, onStatusChange, modal, t],
+    );
+
+    const menuItems = isOwner
+      ? [
+          {
+            icon: <Icon icon={ExternalLink} />,
+            key: 'viewDetail',
+            label: t('setting:myAgents.actions.viewDetail'),
+            onClick: handleViewDetail,
+          },
+          {
+            icon: <Icon icon={Pencil} />,
+            key: 'edit',
+            label: t('setting:myAgents.actions.edit'),
+            onClick: handleEdit,
+          },
+          {
+            type: 'divider' as const,
+          },
+          {
+            icon: <Icon icon={isPublished ? EyeOff : Eye} />,
+            key: 'togglePublish',
+            label: isPublished
+              ? t('setting:myAgents.actions.unpublish')
+              : t('setting:myAgents.actions.publish'),
+            onClick: () => handleStatusAction(isPublished ? 'unpublish' : 'publish'),
+          },
+          {
+            danger: true,
+            icon: <Icon icon={AlertTriangle} />,
+            key: 'deprecate',
+            label: t('setting:myAgents.actions.deprecate'),
+            onClick: () => handleStatusAction('deprecate'),
+          },
+        ]
+      : [];
 
     return (
       <Block
+        className={styles.wrapper}
         clickable
         height={'100%'}
-        onClick={handleClick}
+        onClick={() => navigate(link)}
         style={{
           cursor: 'pointer',
           overflow: 'hidden',
@@ -128,6 +267,16 @@ const UserAgentCard = memo<UserAgentCardProps>(
         variant={'outlined'}
         width={'100%'}
       >
+        {isOwner && (
+          <Dropdown menu={{ items: menuItems }} trigger={['click']}>
+            <div
+              className={`more-button ${styles.moreButton}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Icon icon={MoreVerticalIcon} size={16} style={{ cursor: 'pointer' }} />
+            </div>
+          </Dropdown>
+        )}
         <Flexbox
           align={'flex-start'}
           gap={16}
