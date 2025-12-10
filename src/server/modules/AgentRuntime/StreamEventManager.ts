@@ -26,10 +26,26 @@ export interface StreamEvent {
 }
 
 export interface StreamChunkData {
-  chunkType: 'text' | 'reasoning' | 'tools_calling' | 'image' | 'grounding';
+  chunkType:
+    | 'text'
+    | 'reasoning'
+    | 'tools_calling'
+    | 'image'
+    | 'grounding'
+    | 'base64_image'
+    | 'content_part'
+    | 'reasoning_part';
   content?: string;
+  /** Multimodal content parts (text + images) */
+  contentParts?: Array<{ text: string; type: 'text' } | { image: string; type: 'image' }>;
+  /** Grounding/search data */
+  grounding?: any;
+  /** Image list for base64_image chunks */
+  imageList?: any[];
   images?: any[];
   reasoning?: string;
+  /** Multimodal reasoning parts (text + images) */
+  reasoningParts?: Array<{ text: string; type: 'text' } | { image: string; type: 'image' }>;
   toolsCalling?: ChatToolPayload[];
 }
 
