@@ -35,6 +35,10 @@ export const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextSecondary};
     text-transform: uppercase;
   `,
+  commandContainer: css`
+    display: flex;
+    flex-direction: column;
+  `,
   commandFooter: css`
     display: flex;
     gap: 16px;
@@ -148,6 +152,14 @@ export const useStyles = createStyles(({ css, token }) => ({
       margin-block: 4px;
       background: ${token.colorBorderSecondary};
     }
+  `,
+  contextTag: css`
+    cursor: default;
+    user-select: none;
+  `,
+  contextWrapper: css`
+    padding-block: 12px 6px;
+    padding-inline: 16px;
   `,
   icon: css`
     flex-shrink: 0;

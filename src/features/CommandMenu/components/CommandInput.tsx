@@ -4,7 +4,10 @@ import { ArrowLeft } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import type { Context } from '../types';
+
 interface CommandInputProps {
+  context?: Context;
   hasPages: boolean;
   isAiMode: boolean;
   onBack: () => void;
@@ -12,34 +15,43 @@ interface CommandInputProps {
   search: string;
   styles: {
     backTag: string;
+    contextTag: string;
+    contextWrapper: string;
     inputWrapper: string;
   };
 }
 
 const CommandInput = memo<CommandInputProps>(
-  ({ hasPages, isAiMode, onBack, onValueChange, search, styles }) => {
+  ({ context, hasPages, isAiMode, onBack, onValueChange, search, styles }) => {
     const { t } = useTranslation('common');
 
     return (
-      <div className={styles.inputWrapper}>
-        {hasPages && (
-          <Tag className={styles.backTag} icon={<ArrowLeft size={12} />} onClick={onBack} />
+      <>
+        {context && !hasPages && (
+          <div className={styles.contextWrapper}>
+            <Tag className={styles.contextTag}>{context.name}</Tag>
+          </div>
         )}
-        <Command.Input
-          autoFocus
-          onValueChange={onValueChange}
-          placeholder={isAiMode ? t('cmdk.aiModePlaceholder') : t('cmdk.searchPlaceholder')}
-          value={search}
-        />
-        {!isAiMode && search.trim() ? (
-          <>
-            <span style={{ fontSize: '14px', opacity: 0.6 }}>Ask AI</span>
-            <Tag>Tab</Tag>
-          </>
-        ) : (
-          <Tag>ESC</Tag>
-        )}
-      </div>
+        <div className={styles.inputWrapper}>
+          {hasPages && (
+            <Tag className={styles.backTag} icon={<ArrowLeft size={12} />} onClick={onBack} />
+          )}
+          <Command.Input
+            autoFocus
+            onValueChange={onValueChange}
+            placeholder={isAiMode ? t('cmdk.aiModePlaceholder') : t('cmdk.searchPlaceholder')}
+            value={search}
+          />
+          {!isAiMode && search.trim() ? (
+            <>
+              <span style={{ fontSize: '14px', opacity: 0.6 }}>Ask AI</span>
+              <Tag>Tab</Tag>
+            </>
+          ) : (
+            <Tag>ESC</Tag>
+          )}
+        </div>
+      </>
     );
   },
 );

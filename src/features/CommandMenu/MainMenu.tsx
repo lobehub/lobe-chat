@@ -13,7 +13,11 @@ import {
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import ContextCommands from './ContextCommands';
+import type { Context } from './types';
+
 interface MainMenuProps {
+  context?: Context;
   onCreateSession: () => void;
   onExternalLink: (url: string) => void;
   onNavigate: (path: string) => void;
@@ -28,11 +32,21 @@ interface MainMenuProps {
 }
 
 const MainMenu = memo<MainMenuProps>(
-  ({ onCreateSession, onExternalLink, onNavigate, onNavigateToTheme, pathname, styles }) => {
+  ({
+    context,
+    onCreateSession,
+    onExternalLink,
+    onNavigate,
+    onNavigateToTheme,
+    pathname,
+    styles,
+  }) => {
     const { t } = useTranslation('common');
 
     return (
       <>
+        {context && <ContextCommands context={context} onNavigate={onNavigate} styles={styles} />}
+
         <Command.Group>
           <Command.Item onSelect={onCreateSession} value="create new agent assistant">
             <Bot className={styles.icon} />

@@ -1,5 +1,5 @@
 import { useDebounce } from 'ahooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -10,6 +10,7 @@ import { useGlobalStore } from '@/store/global';
 import { useHomeStore } from '@/store/home';
 
 import type { ChatMessage, ThemeMode } from './types';
+import { detectContext } from './utils/context';
 
 export const useCommandMenu = () => {
   const [open, setOpen] = useGlobalStore((s) => [s.status.showCommandMenu, s.updateSystemStatus]);
@@ -27,6 +28,9 @@ export const useCommandMenu = () => {
 
   const page = pages.at(-1);
   const isAiMode = page === 'ai-chat';
+
+  // Detect context based on current pathname
+  const context = useMemo(() => detectContext(pathname), [pathname]);
 
   // Debounce search input to reduce API calls
   const debouncedSearch = useDebounce(search, { wait: 300 });
@@ -128,6 +132,7 @@ export const useCommandMenu = () => {
   return {
     chatMessages,
     closeCommandMenu,
+    context,
     handleAskAI,
     handleBack,
     handleCreateSession,
