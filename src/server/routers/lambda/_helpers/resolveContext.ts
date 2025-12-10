@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import { agentsToSessions } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
@@ -75,4 +75,29 @@ export const resolveAgentIdFromSession = async (
     .limit(1);
 
   return relation?.agentId;
+};
+
+/**
+ * 批量反向解析：从多个 sessionId 获取 agentId 映射
+ *
+ * 用于需要批量解析 sessionId -> agentId 的场景（如 recentTopics）
+ *
+ * @param sessionIds - session ID 数组
+ * @param db - 数据库实例
+ * @param userId - 用户 ID
+ * @returns sessionId -> agentId 的映射 Map
+ */
+export const batchResolveAgentIdFromSessions = async (
+  sessionIds: string[],
+  db: LobeChatDatabase,
+  userId: string,
+): Promise<Map<string, string>> => {
+  if (sessionIds.length === 0) return new Map();
+
+  const relations = await db
+    .select({ agentId: agentsToSessions.agentId, sessionId: agentsToSessions.sessionId })
+    .from(agentsToSessions)
+    .where(and(eq(agentsToSessions.userId, userId), inArray(agentsToSessions.sessionId, sessionIds)));
+
+  return new Map(relations.map((r) => [r.sessionId, r.agentId]));
 };

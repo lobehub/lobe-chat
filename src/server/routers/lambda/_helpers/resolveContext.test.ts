@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { resolveAgentIdFromSession, resolveContext } from './resolveContext';
+import {
+  batchResolveAgentIdFromSessions,
+  resolveAgentIdFromSession,
+  resolveContext,
+} from './resolveContext';
 
 // Mock the database module
 vi.mock('@/database/schemas', () => ({
@@ -186,6 +190,62 @@ describe('resolveContext', () => {
 
       expect(mockWhere).toHaveBeenCalled();
       // The where clause should be called with userId filter
+    });
+  });
+
+  describe('batchResolveAgentIdFromSessions', () => {
+    // Helper to create a mock database for batch queries (no limit)
+    const createBatchMockDb = (queryResult: any[] = []) => {
+      const mockWhere = vi.fn().mockResolvedValue(queryResult);
+      const mockFrom = vi.fn().mockReturnValue({ where: mockWhere });
+      const mockSelect = vi.fn().mockReturnValue({ from: mockFrom });
+
+      return {
+        select: mockSelect,
+        _mocks: { mockSelect, mockFrom, mockWhere },
+      } as any;
+    };
+
+    it('should return empty map when sessionIds is empty', async () => {
+      const mockDb = createBatchMockDb([]);
+
+      const result = await batchResolveAgentIdFromSessions([], mockDb, 'user-1');
+
+      expect(result).toBeInstanceOf(Map);
+      expect(result.size).toBe(0);
+      expect(mockDb.select).not.toHaveBeenCalled();
+    });
+
+    it('should resolve multiple sessionIds to agentIds', async () => {
+      const mockDb = createBatchMockDb([
+        { sessionId: 'session-1', agentId: 'agent-1' },
+        { sessionId: 'session-2', agentId: 'agent-2' },
+      ]);
+
+      const result = await batchResolveAgentIdFromSessions(
+        ['session-1', 'session-2'],
+        mockDb,
+        'user-1',
+      );
+
+      expect(result).toBeInstanceOf(Map);
+      expect(result.size).toBe(2);
+      expect(result.get('session-1')).toBe('agent-1');
+      expect(result.get('session-2')).toBe('agent-2');
+    });
+
+    it('should handle partial matches', async () => {
+      const mockDb = createBatchMockDb([{ sessionId: 'session-1', agentId: 'agent-1' }]);
+
+      const result = await batchResolveAgentIdFromSessions(
+        ['session-1', 'session-not-found'],
+        mockDb,
+        'user-1',
+      );
+
+      expect(result.size).toBe(1);
+      expect(result.get('session-1')).toBe('agent-1');
+      expect(result.get('session-not-found')).toBeUndefined();
     });
   });
 });
