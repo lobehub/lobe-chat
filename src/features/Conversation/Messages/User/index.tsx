@@ -72,12 +72,13 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
       messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
       onDoubleClick={onDoubleClick}
       placement={'right'}
-      renderMessage={() => <UserMessageContent {...item} />}
       showAvatar={false}
       showTitle={false}
       time={createdAt}
       titleAddon={dmIndicator}
-    />
+    >
+      <UserMessageContent {...item} />
+    </ChatItem>
   );
 }, isEqual);
 

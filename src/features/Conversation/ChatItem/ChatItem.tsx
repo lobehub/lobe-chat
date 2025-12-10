@@ -28,7 +28,7 @@ const ChatItem = memo<ChatItemProps>(
     time,
     editing,
     messageExtra,
-    renderMessage,
+    children,
     errorMessage,
     onDoubleClick,
     aboveMessage,
@@ -113,9 +113,10 @@ const ChatItem = memo<ChatItemProps>(
                 </>
               }
               onDoubleClick={onDoubleClick}
-              renderMessage={renderMessage}
               variant={isUser ? 'bubble' : undefined}
-            />
+            >
+              {children}
+            </MessageContent>
           )}
           {belowMessage}
         </Flexbox>

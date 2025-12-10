@@ -80,26 +80,23 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
       newScreen={newScreen}
       onAvatarClick={onAvatarClick}
       placement={'left'}
-      renderMessage={() => (
-        <>
-          {children && children.length > 0 && (
-            <Group
-              blocks={children}
-              content={lastAssistantMsg?.content}
-              contentId={contentId}
-              disableEditing={disableEditing}
-              id={id}
-              messageIndex={index}
-            />
-          )}
-          {model && (
-            <Usage model={model} performance={performance} provider={provider!} usage={usage} />
-          )}
-        </>
-      )}
       showTitle
       time={createdAt}
-    />
+    >
+      {children && children.length > 0 && (
+        <Group
+          blocks={children}
+          content={lastAssistantMsg?.content}
+          contentId={contentId}
+          disableEditing={disableEditing}
+          id={id}
+          messageIndex={index}
+        />
+      )}
+      {model && (
+        <Usage model={model} performance={performance} provider={provider!} usage={usage} />
+      )}
+    </ChatItem>
   );
 }, isEqual);
 

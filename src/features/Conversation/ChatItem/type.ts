@@ -11,6 +11,7 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
   avatarAddon?: ReactNode;
   avatarProps?: AvatarProps;
   belowMessage?: ReactNode;
+  children?: ReactNode;
   /**
    * @description Whether the chat item is disabled
    * @default false
@@ -47,7 +48,6 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
    * @default 'left'
    */
   placement?: 'left' | 'right';
-  renderMessage?: (message: ReactNode) => ReactNode;
   /**
    * @description Whether to hide the avatar
    * @default false
