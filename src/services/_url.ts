@@ -40,6 +40,7 @@ export const MARKET_OIDC_ENDPOINTS = {
 
 export const MARKET_ENDPOINTS = {
   base: '/market',
+  // Agent management
   createAgent: '/market/agent/create',
   getAgentDetail: (identifier: string) => `/market/agent/${encodeURIComponent(identifier)}`,
   getOwnAgents: '/market/agent/own',
@@ -50,4 +51,7 @@ export const MARKET_ENDPOINTS = {
     `/market/agent/${encodeURIComponent(identifier)}/unpublish`,
   deprecateAgent: (identifier: string) =>
     `/market/agent/${encodeURIComponent(identifier)}/deprecate`,
+  // User profile
+  getUserProfile: (username: string) => `/market/user/${encodeURIComponent(username)}`,
+  updateUserProfile: '/market/user/me',
 };

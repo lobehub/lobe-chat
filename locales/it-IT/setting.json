@@ -12,7 +12,6 @@
       "title": "Informazioni sull'assistente"
     },
     "chat": {
-      "displayMode": "Modalità di visualizzazione",
       "enableHistoryCount": "Abilita conteggio messaggi storici",
       "historyCount": "Numero di messaggi storici",
       "no": "No",

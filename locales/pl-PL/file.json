@@ -94,6 +94,12 @@
         "partial": "Pomyślnie zaimportowano {{success}} plików, niepowodzenie: {{failed}}",
         "success": "Pomyślnie zaimportowano {{count}} plików"
       },
+      "notionGuide": {
+        "cancel": "Na razie nie importuj",
+        "desc": "Najpierw wyeksportuj pliki Markdown (ZIP) z Notion, a następnie kliknij 'Kontynuuj', aby wybrać archiwum ZIP i zaimportować wszystkie strony.",
+        "ok": "Wybierz plik ZIP z Notion",
+        "title": "Importuj zawartość z Notion"
+      },
       "uploadFile": "Prześlij plik",
       "uploadFolder": "Prześlij folder"
     },

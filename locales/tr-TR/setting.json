@@ -12,7 +12,6 @@
       "title": "Asistan Bilgileri"
     },
     "chat": {
-      "displayMode": "Görüntüleme Modu",
       "enableHistoryCount": "Geçmiş Mesaj Sayısını Etkinleştir",
       "historyCount": "Geçmiş Mesaj Sayısı",
       "no": "Hayır",

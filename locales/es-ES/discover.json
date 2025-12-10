@@ -693,6 +693,18 @@
     "home": "Inicio",
     "model": "Modelo",
     "plugin": "Complemento",
-    "provider": "Proveedor de modelos"
+    "provider": "Proveedor de modelos",
+    "user": "Usuario"
+  },
+  "user": {
+    "agents": "Asistentes",
+    "downloads": "Descargas",
+    "editProfile": "Editar perfil",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "myProfile": "Mi perfil",
+    "noAgents": "Este usuario aún no ha publicado asistentes",
+    "publishedAgents": "Asistentes publicados",
+    "website": "Sitio web personal"
   }
 }

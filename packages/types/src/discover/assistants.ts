@@ -51,6 +51,7 @@ export interface DiscoverAssistantItem extends Omit<LobeAgentSettings, 'meta'>, 
   pluginCount: number;
   status?: AgentStatus;
   tokenUsage: number;
+  userName?: string;
 }
 
 export type AssistantMarketSource = 'legacy' | 'new';

@@ -12,7 +12,6 @@
       "title": "معلومات المساعد"
     },
     "chat": {
-      "displayMode": "وضع العرض",
       "enableHistoryCount": "تمكين عداد الرسائل السابقة",
       "historyCount": "عدد الرسائل السابقة",
       "no": "لا",

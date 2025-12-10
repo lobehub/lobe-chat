@@ -12,7 +12,6 @@
       "title": "도우미 정보"
     },
     "chat": {
-      "displayMode": "표시 모드",
       "enableHistoryCount": "이전 메시지 수 카운트 활성화",
       "historyCount": "이전 메시지 수",
       "no": "아니오",

@@ -52,5 +52,42 @@
       "submit": "授權成功！現在可以發佈助手了。",
       "upload": "授權成功！現在可以發佈新版本了。"
     }
+  },
+  "profileSetup": {
+    "cancel": "取消",
+    "descriptionEdit": "更新你的社群個人資料資訊。",
+    "descriptionFirstTime": "設定你的個人資料以完成社群檔案建立。",
+    "errors": {
+      "notAuthenticated": "請先登入後再操作",
+      "updateFailed": "更新個人資料失敗，請再試一次",
+      "usernameTaken": "該使用者 ID 已被使用，請選擇其他使用者 ID"
+    },
+    "fields": {
+      "description": {
+        "label": "個人簡介",
+        "maxLength": "個人簡介最多 200 個字元",
+        "placeholder": "簡單介紹一下你自己..."
+      },
+      "displayName": {
+        "label": "暱稱",
+        "maxLength": "暱稱最多 50 個字元",
+        "placeholder": "輸入你的暱稱",
+        "required": "請輸入暱稱"
+      },
+      "userName": {
+        "label": "使用者 ID",
+        "maxLength": "使用者 ID 最多 32 個字元",
+        "minLength": "使用者 ID 至少 3 個字元",
+        "pattern": "使用者 ID 只能包含英文字母、數字、底線與連字號",
+        "placeholder": "輸入你的使用者 ID",
+        "required": "請輸入使用者 ID",
+        "tooltip": "使用者 ID 是你的唯一識別碼，將用於你的個人主頁連結"
+      }
+    },
+    "getStarted": "開始使用",
+    "save": "儲存",
+    "success": "個人資料已更新",
+    "titleEdit": "編輯個人資料",
+    "titleFirstTime": "完善你的檔案"
   }
 }

@@ -52,5 +52,42 @@
       "submit": "授权成功！现在可以发布助手了。",
       "upload": "授权成功！现在可以发布新版本了。"
     }
+  },
+  "profileSetup": {
+    "cancel": "取消",
+    "descriptionEdit": "更新你的社区个人资料信息。",
+    "descriptionFirstTime": "设置你的个人资料以完成社区档案创建。",
+    "errors": {
+      "notAuthenticated": "请先登录后再操作",
+      "updateFailed": "更新个人资料失败，请重试",
+      "usernameTaken": "该用户 ID 已被使用，请选择其他用户 ID"
+    },
+    "fields": {
+      "description": {
+        "label": "个人简介",
+        "maxLength": "个人简介最多 200 个字符",
+        "placeholder": "介绍一下你自己..."
+      },
+      "displayName": {
+        "label": "昵称",
+        "maxLength": "昵称最多 50 个字符",
+        "placeholder": "输入你的昵称",
+        "required": "请输入昵称"
+      },
+      "userName": {
+        "label": "用户 ID",
+        "maxLength": "用户 ID 最多 32 个字符",
+        "minLength": "用户 ID 至少 3 个字符",
+        "pattern": "用户 ID 只能包含字母、数字、下划线和连字符",
+        "placeholder": "输入你的用户 ID",
+        "required": "请输入用户 ID",
+        "tooltip": "用户 ID 是你的唯一标识符，将用于你的个人主页链接"
+      }
+    },
+    "getStarted": "开始使用",
+    "save": "保存",
+    "success": "个人资料已更新",
+    "titleEdit": "编辑个人资料",
+    "titleFirstTime": "完善你的档案"
   }
 }
