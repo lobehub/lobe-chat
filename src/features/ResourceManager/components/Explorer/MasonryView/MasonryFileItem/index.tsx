@@ -193,7 +193,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
     const navigate = useNavigate();
-    const [, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const setMode = useResourceManagerStore((s) => s.setMode);
     const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
 
@@ -367,7 +367,14 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
               // Navigate to folder using slug-based routing (Google Drive style)
               const folderSlug = slug || id;
               if (knowledgeBaseId) {
-                navigate(`/resource/library/${knowledgeBaseId}/${folderSlug}`);
+                // Preserve existing query parameters (view and sort preferences)
+                const newParams = new URLSearchParams(searchParams);
+                // Remove 'file' parameter when navigating to folder
+                newParams.delete('file');
+
+                const queryString = newParams.toString();
+                const basePath = `/resource/library/${knowledgeBaseId}/${folderSlug}`;
+                navigate(queryString ? `${basePath}?${queryString}` : basePath);
               }
             } else if (isNote) {
               // Switch to page view mode instead of opening modal

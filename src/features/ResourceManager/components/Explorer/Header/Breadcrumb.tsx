@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
@@ -50,6 +50,7 @@ const Breadcrumb = memo<BreadcrumbProps>(({ category, knowledgeBaseId, fileName 
   const { styles, cx } = useStyles();
   const { t } = useTranslation('file');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { currentFolderSlug, knowledgeBaseId: currentKnowledgeBaseId } = useFolderPath();
 
   const setMode = useResourceManagerStore((s) => s.setMode);
@@ -91,11 +92,17 @@ const Breadcrumb = memo<BreadcrumbProps>(({ category, knowledgeBaseId, fileName 
       setCurrentViewItemId(undefined);
     }
 
-    if (slug) {
-      navigate(`/resource/library/${baseKnowledgeBaseId}/${slug}`);
-    } else {
-      navigate(`/resource/library/${baseKnowledgeBaseId}`);
-    }
+    // Preserve existing query parameters (view and sort preferences)
+    const newParams = new URLSearchParams(searchParams);
+    // Remove 'file' parameter when navigating away
+    newParams.delete('file');
+
+    const queryString = newParams.toString();
+    const basePath = slug
+      ? `/resource/library/${baseKnowledgeBaseId}/${slug}`
+      : `/resource/library/${baseKnowledgeBaseId}`;
+
+    navigate(queryString ? `${basePath}?${queryString}` : basePath);
   };
 
   const isAtRoot = folderChain.length === 0 && !fileName;
