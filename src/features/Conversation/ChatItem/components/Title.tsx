@@ -1,56 +1,38 @@
 import { Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
-import { CSSProperties, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { memo } from 'react';
 
-import { useStyles } from '../style';
 import { ChatItemProps } from '../type';
 
 export interface TitleProps {
   avatar: ChatItemProps['avatar'];
-  className?: string;
-  placement?: ChatItemProps['placement'];
   showTitle?: ChatItemProps['showTitle'];
-  style?: CSSProperties;
   time?: ChatItemProps['time'];
   titleAddon?: ChatItemProps['titleAddon'];
 }
 
-const formatTime = (time: number): string => {
-  const now = dayjs();
-  const target = dayjs(time);
-
-  if (target.isSame(now, 'day')) {
-    return target.format('HH:mm:ss');
-  } else if (target.isSame(now, 'year')) {
-    return target.format('MM-DD HH:mm:ss');
-  } else {
-    return target.format('YYYY-MM-DD HH:mm:ss');
-  }
-};
-
-const Title = memo<TitleProps>(
-  ({ showTitle, placement, time, avatar, titleAddon, className, style }) => {
-    const { styles, cx } = useStyles({ placement, showTitle, time });
-
-    return (
-      <Flexbox
-        align={'center'}
-        className={cx(styles.name, className)}
-        direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-        gap={8}
-        style={style}
-      >
-        {showTitle && avatar.title && (
-          <Text fontSize={14} weight={500}>
-            {avatar.title}
-          </Text>
-        )}
-        {showTitle ? titleAddon : undefined}
-        {time && <time>{formatTime(time)}</time>}
-      </Flexbox>
-    );
-  },
-);
+const Title = memo<TitleProps>(({ showTitle, time, avatar, titleAddon }) => {
+  return (
+    <>
+      {showTitle && avatar.title && (
+        <Text fontSize={14} weight={500}>
+          {avatar.title}
+        </Text>
+      )}
+      {showTitle ? titleAddon : undefined}
+      {time && (
+        <Text
+          aria-label="published-date"
+          as={'time'}
+          fontSize={12}
+          title={dayjs(time).format('YYYY-MM-DD HH:mm:ss')}
+          type={'secondary'}
+        >
+          {dayjs(time).fromNow()}
+        </Text>
+      )}
+    </>
+  );
+});
 
 export default Title;

@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useRef, useState } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Actions from './components/Actions';
@@ -22,7 +22,6 @@ const ChatItem = memo<ChatItemProps>(
     message,
     placeholderMessage = '...',
     placement = 'left',
-    variant = 'bubble',
     avatar,
     error,
     showTitle,
@@ -39,99 +38,63 @@ const ChatItem = memo<ChatItemProps>(
     titleAddon,
     disabled = false,
     id,
+    style,
     ...rest
   }) => {
     const { cx, styles } = useStyles({
       disabled,
       placement,
-      showTitle,
-      time,
-      title: avatar.title,
     });
 
-    const contentRef = useRef<HTMLDivElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [layoutMode] = useState<'horizontal' | 'vertical'>(
-      placement === 'right' ? 'horizontal' : 'vertical',
-    );
-
+    const isUser = placement === 'right';
     return (
       <Flexbox
         className={cx(styles.container, className)}
-        direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-        gap={12}
+        gap={8}
+        paddingBlock={16}
+        style={{
+          paddingInlineStart: isUser ? 36 : 0,
+          ...style,
+        }}
         {...rest}
       >
-        {showAvatar && (
-          <Avatar
-            {...avatarProps}
-            addon={avatarAddon}
-            alt={avatarProps?.alt || avatar.title || 'avatar'}
-            avatar={avatar}
-            loading={loading}
-            onClick={onAvatarClick}
-            placement={placement}
-            style={{
-              marginTop: showTitle ? -12 : 6,
-              ...avatarProps?.style,
-            }}
+        <Flexbox align={'center'} direction={isUser ? 'horizontal-reverse' : 'horizontal'} gap={8}>
+          {showAvatar && (
+            <Avatar
+              addon={avatarAddon}
+              alt={avatarProps?.alt || avatar.title || 'avatar'}
+              loading={loading}
+              onClick={onAvatarClick}
+              placement={placement}
+              {...avatarProps}
+              avatar={avatar}
+            />
+          )}
+          <Title avatar={avatar} showTitle={showTitle} time={time} titleAddon={titleAddon} />
+        </Flexbox>
+        {aboveMessage}
+        {error && (message === placeholderMessage || !message) ? (
+          <ErrorContent error={error} message={errorMessage} />
+        ) : (
+          <MessageContent
+            disabled={disabled}
+            editing={editing}
+            id={id!}
+            markdownProps={markdownProps}
+            message={message}
+            messageExtra={
+              <>
+                {error && <ErrorContent error={error} message={errorMessage} />}
+                {messageExtra}
+              </>
+            }
+            onDoubleClick={onDoubleClick}
+            renderMessage={renderMessage}
+            variant={isUser ? 'bubble' : undefined}
           />
         )}
-        <Flexbox
-          align={placement === 'left' ? 'flex-start' : 'flex-end'}
-          className={styles.messageContainer}
-          ref={containerRef}
-        >
-          <Title
-            avatar={avatar}
-            placement={placement}
-            showTitle={showTitle}
-            time={time}
-            titleAddon={titleAddon}
-          />
-          {aboveMessage}
-          <Flexbox
-            align={placement === 'left' ? 'flex-start' : 'flex-end'}
-            className={styles.messageContent}
-            data-layout={layoutMode}
-            direction={
-              layoutMode === 'horizontal'
-                ? placement === 'left'
-                  ? 'horizontal'
-                  : 'horizontal-reverse'
-                : 'vertical'
-            }
-            gap={8}
-          >
-            <Flexbox ref={contentRef} width={'100%'}>
-              {error && (message === placeholderMessage || !message) ? (
-                <ErrorContent error={error} message={errorMessage} placement={placement} />
-              ) : (
-                <MessageContent
-                  disabled={disabled}
-                  editing={editing}
-                  id={id!}
-                  markdownProps={markdownProps}
-                  message={message}
-                  messageExtra={
-                    <>
-                      {error && (
-                        <ErrorContent error={error} message={errorMessage} placement={placement} />
-                      )}
-                      {messageExtra}
-                    </>
-                  }
-                  onDoubleClick={onDoubleClick}
-                  placement={placement}
-                  renderMessage={renderMessage}
-                  variant={variant}
-                />
-              )}
-            </Flexbox>
-            {actions && <Actions actions={actions} placement={placement} />}
-          </Flexbox>
-          {belowMessage}
-        </Flexbox>
+        {actions && <Actions actions={actions} />}
+        {belowMessage}
       </Flexbox>
     );
   },

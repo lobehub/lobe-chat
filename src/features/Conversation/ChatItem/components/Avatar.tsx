@@ -1,8 +1,7 @@
 import { Avatar as A } from '@lobehub/ui';
 import { type CSSProperties, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Center } from 'react-layout-kit';
 
-import { useStyles } from '../style';
 import type { ChatItemProps } from '../type';
 import Loading from './Loading';
 
@@ -19,30 +18,31 @@ export interface AvatarProps {
 }
 
 const Avatar = memo<AvatarProps>(
-  ({ loading, avatar, placement, unoptimized, addon, onClick, size = 40, style, alt }) => {
-    const { styles } = useStyles({ avatarSize: size });
-    const avatarContent = (
-      <div className={styles.avatarContainer} style={style}>
+  ({ loading, avatar, placement, unoptimized, addon, onClick, size = 28, style, alt }) => {
+    return (
+      <Center
+        flex={'none'}
+        height={size}
+        style={{
+          position: 'relative',
+          ...style,
+        }}
+        width={size}
+      >
         <A
           alt={alt || avatar.title}
           animation={loading}
           avatar={avatar.avatar}
           background={avatar.backgroundColor}
           onClick={onClick}
+          shape={'square'}
           size={size}
           title={avatar.title}
           unoptimized={unoptimized}
         />
         <Loading loading={loading} placement={placement} />
-      </div>
-    );
-
-    if (!addon) return avatarContent;
-    return (
-      <Flexbox align={'center'} className={styles.avatarGroupContainer} gap={8}>
-        {avatarContent}
         {addon}
-      </Flexbox>
+      </Center>
     );
   },
 );

@@ -8,11 +8,10 @@ import { ChatItemProps } from '../type';
 export interface ErrorContentProps {
   error?: ChatItemProps['error'];
   message?: ChatItemProps['errorMessage'];
-  placement?: ChatItemProps['placement'];
 }
 
-const ErrorContent = memo<ErrorContentProps>(({ message, error, placement }) => {
-  const { styles } = useStyles({ placement });
+const ErrorContent = memo<ErrorContentProps>(({ message, error }) => {
+  const { styles } = useStyles();
 
   if (!error?.message) {
     if (!message) return null;
