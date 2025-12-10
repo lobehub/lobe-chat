@@ -256,12 +256,12 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
       },
 
       setCurrentEmoji: (emoji: string | undefined) => {
-        set({ currentEmoji: emoji });
+        set({ currentEmoji: emoji, isDirty: true });
         debouncedSave();
       },
 
       setCurrentTitle: (title: string) => {
-        set({ currentTitle: title });
+        set({ currentTitle: title, isDirty: true });
         debouncedSave();
       },
     };

@@ -163,6 +163,7 @@ const FileListItem = memo<FileListItemProps>(
         name,
         sourceType,
       },
+      disabled: !libraryId,
       id,
     });
 

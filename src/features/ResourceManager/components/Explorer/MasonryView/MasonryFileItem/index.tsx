@@ -211,6 +211,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         name,
         sourceType,
       },
+      disabled: !knowledgeBaseId,
       id,
     });
 
