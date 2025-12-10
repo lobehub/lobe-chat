@@ -312,35 +312,31 @@ export class MemoryExtractionService<RO> {
       existingIdentitiesContext?: string;
     },
   ): Promise<MemoryExtractionLayerOutputs> {
-    const outputs: MemoryExtractionLayerOutputs = {};
+    const [
+      context,
+      experience,
+      preference,
+      identity,
+    ] = await Promise.all(([
+      LayersEnum.Context,
+      LayersEnum.Experience,
+      LayersEnum.Preference,
+      LayersEnum.Identity,
+    ] as LayersEnum[])
+    .filter((layer) => layers.includes(layer))
+    .map(async (layer) => this.runLayer(job, layer, options))) as [
+      Awaited<ReturnType<ContextExtractor['structuredCall']>>,
+      Awaited<ReturnType<ExperienceExtractor['structuredCall']>>,
+      Awaited<ReturnType<PreferenceExtractor['structuredCall']>>,
+      Awaited<ReturnType<IdentityExtractor['structuredCall']>>,
+    ];
 
-    for (const layer of layers as LayersEnum[]) {
-      const result = await this.runLayer(job, layer, options);
-
-      switch (layer) {
-        case LayersEnum.Context: {
-          outputs.context = result as Awaited<ReturnType<ContextExtractor['structuredCall']>>;
-          break;
-        }
-        case LayersEnum.Experience: {
-          outputs.experience = result as Awaited<ReturnType<ExperienceExtractor['structuredCall']>>;
-          break;
-        }
-        case LayersEnum.Preference: {
-          outputs.preference = result as Awaited<ReturnType<PreferenceExtractor['structuredCall']>>;
-          break;
-        }
-        case LayersEnum.Identity: {
-          outputs.identity = result as Awaited<ReturnType<IdentityExtractor['structuredCall']>>;
-          break;
-        }
-        default: {
-          break;
-        }
-      }
+    return {
+      context,
+      experience,
+      identity,
+      preference,
     }
-
-    return outputs;
   }
 
   private async runLayer(
