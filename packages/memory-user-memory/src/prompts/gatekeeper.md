@@ -105,7 +105,7 @@ If uncertain about novelty, but information is relevant and clear, set `shouldEx
 For each memory layer (activity, identity, context, preference, experience), provide:
 
 - `shouldExtract`: Boolean indicating whether extraction is recommended
-- `reasoning`: Brief explanation of your decision (write in Chinese / 使用中文描述)
+- `reasoning`: Brief explanation of your decision (write in English)
 
 ## Retrieved Memory (Top {{ topK }})
 
