@@ -145,10 +145,12 @@ export default {
     communitySupport: '社区支持',
     discover: '发现',
     knowledgeBase: '知识库',
+    memory: '记忆',
     navigate: '导航',
     newAgent: '新建助手',
     noResults: '未找到相关结果',
     openSettings: '打开设置',
+    pages: '文稿',
     painting: 'AI 绘画',
     search: {
       agent: '助手',
