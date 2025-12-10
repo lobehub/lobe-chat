@@ -151,7 +151,7 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
         loading={false}
         placement="left"
         renderMessage={() => (
-          <Flexbox gap={8}>
+          <>
             <TodoList data={todoData} />
             {hasModelInfo && (
               <Flexbox align={'center'} className={styles.modelInfo} gap={4} horizontal>
@@ -159,7 +159,7 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
                 {provider && model ? `${provider}/${model}` : provider || model}
               </Flexbox>
             )}
-          </Flexbox>
+          </>
         )}
         showTitle={true}
         time={updatedAt || createdAt}
@@ -184,7 +184,7 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
       time={updatedAt || createdAt}
     />
   );
-});
+}, isEqual);
 
 SupervisorMessage.displayName = 'SupervisorMessage';
 

@@ -7,6 +7,7 @@ import {
   MouseEvent,
   ReactNode,
   RefObject,
+  Suspense,
   memo,
   useCallback,
   useEffect,
@@ -15,6 +16,8 @@ import {
 } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import type { VListHandle } from 'virtua';
+
+import BubblesLoading from '@/components/BubblesLoading';
 
 import ContextMenu from '../components/ContextMenu';
 import History from '../components/History';
@@ -226,7 +229,7 @@ const MessageItem = memo<MessageItemProps>(
           onContextMenu={onContextMenu}
           ref={setContainerRef}
         >
-          {renderContent()}
+          <Suspense fallback={<BubblesLoading />}>{renderContent()}</Suspense>
           {endRender}
         </Flexbox>
         <ContextMenu

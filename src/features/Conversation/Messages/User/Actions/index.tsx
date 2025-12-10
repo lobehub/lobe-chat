@@ -10,7 +10,7 @@ import type {
   MessageActionsConfig,
 } from '../../../types';
 import MessageBranch from '../../components/MessageBranch';
-import { useUserActions } from '../useUserActions';
+import { useUserActions } from './useUserActions';
 
 // Helper to strip handleClick from action items before passing to ActionIconGroup
 const stripHandleClick = (item: MessageActionItemOrDivider): ActionIconGroupItemType => {

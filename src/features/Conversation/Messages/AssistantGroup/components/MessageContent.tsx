@@ -1,11 +1,12 @@
-import { Markdown, MarkdownProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
+import MarkdownMessage from '@/features/Conversation/Markdown';
 
-import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
+import { normalizeThinkTags, processWithArtifact } from '../../../utils/markdown';
+import { useMarkdown } from '../useMarkdown';
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -17,12 +18,12 @@ const useStyles = createStyles(({ css, token }) => {
 interface ContentBlockProps {
   content: string;
   hasTools?: boolean;
-  markdownProps?: Omit<MarkdownProps, 'className' | 'style' | 'children'>;
+  id: string;
 }
 
-const MessageContent = memo<ContentBlockProps>(({ content, hasTools, markdownProps }) => {
+const MessageContent = memo<ContentBlockProps>(({ content, hasTools, id }) => {
   const message = normalizeThinkTags(processWithArtifact(content));
-
+  const markdownProps = useMarkdown(id);
   const { styles, cx } = useStyles();
 
   if (!content && !hasTools) return <BubblesLoading />;
@@ -35,9 +36,9 @@ const MessageContent = memo<ContentBlockProps>(({ content, hasTools, markdownPro
 
   return (
     content && (
-      <Markdown {...markdownProps} className={cx(hasTools && styles.pWithTool)} variant={'chat'}>
+      <MarkdownMessage {...markdownProps} className={cx(hasTools && styles.pWithTool)}>
         {message}
-      </Markdown>
+      </MarkdownMessage>
     )
   );
 });

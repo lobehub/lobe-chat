@@ -1,4 +1,4 @@
-import { AlertProps, AvatarProps, DivProps, MarkdownProps } from '@lobehub/ui';
+import { AlertProps, AvatarProps, DivProps } from '@lobehub/ui';
 import { EditableMessageProps, MetaData } from '@lobehub/ui/chat';
 import { ReactNode } from 'react';
 import { FlexboxProps } from 'react-layout-kit';
@@ -30,12 +30,12 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
    * @description Whether the chat item is in loading state
    */
   loading?: boolean;
-  markdownProps?: Omit<MarkdownProps, 'className' | 'style' | 'children'>;
   /**
    * @description The message content of the chat item
    */
   message?: ReactNode;
   messageExtra?: ReactNode;
+  newScreen?: boolean;
   onAvatarClick?: () => void;
   onDoubleClick?: DivProps['onDoubleClick'];
   /**
@@ -47,7 +47,7 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
    * @default 'left'
    */
   placement?: 'left' | 'right';
-  renderMessage?: (content: ReactNode) => ReactNode;
+  renderMessage?: (message: ReactNode) => ReactNode;
   /**
    * @description Whether to hide the avatar
    * @default false

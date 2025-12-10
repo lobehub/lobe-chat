@@ -1,5 +1,5 @@
 import { LLMRoleType, UIChatMessage } from '@lobechat/types';
-import type { ActionIconGroupItemType } from '@lobehub/ui';
+import { ActionIconGroupItemType } from '@lobehub/ui';
 import { type ChatItemProps } from '@lobehub/ui/chat';
 import { FC, ReactNode } from 'react';
 

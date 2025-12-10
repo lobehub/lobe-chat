@@ -1,7 +1,8 @@
-import { Button, Markdown, MaskShadow } from '@lobehub/ui';
+import { Button, MaskShadow } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import MarkdownMessage from '@/features/Conversation/Markdown';
 import { useChatStore } from '@/store/chat';
 
 interface ContentPreviewProps {
@@ -17,7 +18,7 @@ const ContentPreview = ({ content, id }: ContentPreviewProps) => {
   return (
     <Flexbox>
       <MaskShadow>
-        <Markdown variant={'chat'}>{content.slice(0, 1000)}</Markdown>
+        <MarkdownMessage>{content.slice(0, 1000)}</MarkdownMessage>
       </MaskShadow>
       <Flexbox padding={4}>
         <Button

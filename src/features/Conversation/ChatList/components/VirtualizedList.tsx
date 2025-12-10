@@ -124,7 +124,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, i
         onScrollEnd={handleScrollEnd}
         ref={virtuaRef}
         reverse
-        style={{ height: '100%' }}
+        style={{ height: '100%', paddingBottom: 24 }}
       >
         {(data, index) => (
           <WideScreenContainer key={data} style={{ position: 'relative' }}>

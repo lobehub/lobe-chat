@@ -49,5 +49,8 @@ export const useStyles = createStyles(({ css, token }) => {
 
       background: ${token.colorPrimary};
     `,
+    newScreen: css`
+      min-height: calc(-300px + 100dvh);
+    `,
   };
 });
