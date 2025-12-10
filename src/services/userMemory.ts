@@ -64,6 +64,10 @@ class UserMemoryService {
     return lambdaClient.userMemories.queryTags.query(params);
   };
 
+  queryIdentityRoles = async (params?: { page?: number; size?: number }) => {
+    return lambdaClient.userMemories.queryIdentityRoles.query(params);
+  };
+
   updateIdentityMemory = async (
     params: z.infer<typeof UpdateIdentityActionSchema>,
   ): Promise<UpdateIdentityMemoryResult> => {

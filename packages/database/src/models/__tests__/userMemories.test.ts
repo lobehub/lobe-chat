@@ -741,6 +741,44 @@ describe('UserMemoryModel', () => {
     });
   });
 
+  describe('queryIdentityRoles', () => {
+    it('aggregates identity tags and roles for the current user only', async () => {
+      const now = new Date('2024-04-02T00:00:00.000Z');
+      const anotherUserModel = new UserMemoryModel(serverDB, userId2);
+
+      await userMemoryModel.addIdentityEntry({
+        base: { lastAccessedAt: now, tags: [] },
+        identity: { role: 'engineer', tags: ['alpha', 'beta'] },
+      });
+      await userMemoryModel.addIdentityEntry({
+        base: { lastAccessedAt: now, tags: [] },
+        identity: { role: 'engineer', tags: ['alpha'] },
+      });
+      await userMemoryModel.addIdentityEntry({
+        base: { lastAccessedAt: now, tags: [] },
+        identity: { role: 'manager', tags: [] },
+      });
+
+      await anotherUserModel.addIdentityEntry({
+        base: { lastAccessedAt: now, tags: [] },
+        identity: { role: 'engineer', tags: ['alpha'] },
+      });
+
+      const result = await userMemoryModel.queryIdentityRoles({ size: 5 });
+
+      expect(result).toEqual({
+        roles: [
+          { count: 2, role: 'engineer' },
+          { count: 1, role: 'manager' },
+        ],
+        tags: [
+          { count: 2, tag: 'alpha' },
+          { count: 1, tag: 'beta' },
+        ],
+      });
+    });
+  });
+
   describe('queryTags', () => {
     it('aggregates tag counts by layer and ignores empty values', async () => {
       const now = new Date('2024-04-01T00:00:00.000Z');
