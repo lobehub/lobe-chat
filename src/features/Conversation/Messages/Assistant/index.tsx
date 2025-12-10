@@ -199,23 +199,21 @@ const AssistantMessage = memo<AssistantMessageProps>(
         <ChatItem
           aboveMessage={null}
           actions={
-            !disableEditing && !editing ? (
-              <>
-                {branch && (
-                  <MessageBranch
-                    activeBranchIndex={branch.activeBranchIndex}
-                    count={branch.count}
-                    messageId={id}
-                  />
-                )}
-                <AssistantActionsBar
-                  actionsConfig={actionsConfig}
-                  data={item}
-                  id={id}
-                  index={index}
+            <>
+              {branch && (
+                <MessageBranch
+                  activeBranchIndex={branch.activeBranchIndex}
+                  count={branch.count}
+                  messageId={id}
                 />
-              </>
-            ) : undefined
+              )}
+              <AssistantActionsBar
+                actionsConfig={actionsConfig}
+                data={item}
+                id={id}
+                index={index}
+              />
+            </>
           }
           avatar={avatar}
           editing={editing}

@@ -44,7 +44,6 @@ interface UseGroupActionsParams {
   contentBlock?: AssistantContentBlock;
   data: UIChatMessage;
   id: string;
-  index: number;
   onOpenShareModal?: () => void;
 }
 

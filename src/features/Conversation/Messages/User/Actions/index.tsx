@@ -51,12 +51,11 @@ interface UserActionsProps {
   data: UIChatMessage;
   disableEditing?: boolean;
   id: string;
-  index: number;
 }
 
-export const UserActionsBar = memo<UserActionsProps>(({ actionsConfig, id, data, index }) => {
+export const UserActionsBar = memo<UserActionsProps>(({ actionsConfig, id, data }) => {
   // Get default actions from hook
-  const defaultActions = useUserActions({ data, id, index });
+  const defaultActions = useUserActions({ data, id });
 
   // Create extra actions from factory functions
   const extraBarItems = useMemo(() => {
@@ -148,14 +147,14 @@ interface ActionsProps {
   index: number;
 }
 
-const Actions = memo<ActionsProps>(({ actionsConfig, id, data, index, disableEditing }) => {
+const Actions = memo<ActionsProps>(({ actionsConfig, id, data, disableEditing }) => {
   const { branch } = data;
 
   return (
     <Flexbox align={'center'} horizontal>
       {!disableEditing && (
         <Flexbox align={'flex-start'} role="menubar">
-          <UserActionsBar actionsConfig={actionsConfig} data={data} id={id} index={index} />
+          <UserActionsBar actionsConfig={actionsConfig} data={data} id={id} />
         </Flexbox>
       )}
       {branch && (
