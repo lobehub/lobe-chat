@@ -1,8 +1,9 @@
 import { renderPlaceholderTemplate } from '@lobechat/context-engine';
 
-import { IdentityMemory, IdentityMemorySchema } from '../schemas';
 import { ExtractorOptions, ExtractorTemplateProps } from '../types';
 import { BaseMemoryExtractor } from './base';
+import { buildGenerateObjectSchema } from '../utils/zod';
+import { IdentityActions, IdentityActionsSchema } from '../schemas'
 
 export interface IdentityExtractorTemplateProps extends ExtractorTemplateProps {
   existingIdentitiesContext?: string;
@@ -13,7 +14,7 @@ export interface IdentityExtractorOptions extends ExtractorOptions {
 }
 
 export class IdentityExtractor extends BaseMemoryExtractor<
-  IdentityMemory,
+  IdentityActions,
   IdentityExtractorTemplateProps,
   IdentityExtractorOptions
 > {
@@ -21,8 +22,15 @@ export class IdentityExtractor extends BaseMemoryExtractor<
     return 'layers/identity.md';
   }
 
+  getSchema() {
+      return buildGenerateObjectSchema(
+        IdentityActionsSchema,
+        { name: 'identity_extraction' },
+      );
+    }
+
   protected getResultSchema() {
-    return IdentityMemorySchema;
+    return IdentityActionsSchema;
   }
 
   protected getTemplateProps(options: IdentityExtractorOptions) {

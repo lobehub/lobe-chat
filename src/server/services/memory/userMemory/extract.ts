@@ -410,10 +410,10 @@ export class MemoryExtractionExecutor {
 
       const { memory } = await userMemoryModel.createContextMemory({
         context: {
-          associatedObjects: UserMemoryModel.normalizeAssociations(
+          associatedObjects: UserMemoryModel.parseAssociatedObjects(
             item.withContext?.associatedObjects,
           ),
-          associatedSubjects: UserMemoryModel.normalizeAssociations(
+          associatedSubjects: UserMemoryModel.parseAssociatedObjects(
             item.withContext?.associatedSubjects,
           ),
           currentStatus: item.withContext?.currentStatus ?? null,
@@ -564,38 +564,42 @@ export class MemoryExtractionExecutor {
     const insertedIds: string[] = [];
     const userMemoryModel = new UserMemoryModel(db, job.userId);
 
-    const actions = result.withIdentities?.actions;
-    const addActions = actions?.add ?? [];
-    const updateActions = actions?.update ?? [];
-    const removeActions = actions?.remove ?? [];
+    const addActions = result?.add ?? [];
+    const updateActions = result?.update ?? [];
+    const removeActions = result?.remove ?? [];
 
     for (const action of addActions) {
-      const [summaryVector] = await this.generateEmbeddings(runtime, model, [action.description]);
+      const [summaryVector, detailsVector, descriptionVector] = await this.generateEmbeddings(runtime, model, [
+        action.summary,
+        action.details,
+        action.withIdentity.description
+      ]);
       const metadata = this.buildBaseMetadata(
         job,
         messageIds,
         LayersEnum.Identity,
-        action.extractedLabels,
+        action.withIdentity?.extractedLabels,
       );
 
       const res = await userMemoryModel.addIdentityEntry({
         base: {
-          details: action.description,
-          detailsVector1024: summaryVector ?? undefined,
+          details: action.withIdentity.description,
+          detailsVector1024: detailsVector ?? undefined,
           memoryCategory: 'people',
           memoryLayer: LayersEnum.Identity,
           memoryType: TypesEnum.People,
           metadata,
-          summary: action.description,
+          summary: action.withIdentity.description,
           summaryVector1024: summaryVector ?? undefined,
         },
         identity: {
-          description: action.description,
+          description: action.withIdentity.description,
+          descriptionVector: descriptionVector ?? undefined,
           metadata,
-          relationship: action.relationship ?? undefined,
-          role: action.role ?? undefined,
-          tags: action.extractedLabels ?? undefined,
-          type: action.type ?? undefined,
+          relationship: action.withIdentity.relationship ?? undefined,
+          role: action.withIdentity.role ?? undefined,
+          tags: action.withIdentity.extractedLabels ?? undefined,
+          type: action.withIdentity.type ?? undefined,
         },
       });
 
@@ -604,20 +608,31 @@ export class MemoryExtractionExecutor {
 
     for (const action of updateActions) {
       const { set } = action;
-      const [descriptionVector] = set.description
-        ? await this.generateEmbeddings(runtime, model, [set.description])
+
+      const [summaryVector, detailsVector, descriptionVector] = set.withIdentity?.description
+        ? await this.generateEmbeddings(runtime, model, [set.summary, set.details, set.withIdentity.description])
         : [];
 
       await userMemoryModel.updateIdentityEntry({
+        base: {
+          details: set.details,
+          detailsVector1024: detailsVector ?? undefined,
+          memoryCategory: set.memoryCategory,
+          memoryType: set.memoryType,
+          summary: set.summary,
+          summaryVector1024: summaryVector ?? undefined,
+          tags: set.tags,
+          title: set.title,
+        },
         identity: {
-          description: set.description,
+          description: set.withIdentity?.description,
           descriptionVector: descriptionVector ?? undefined,
-          metadata: set.extractedLabels
-            ? this.buildBaseMetadata(job, messageIds, LayersEnum.Identity, set.extractedLabels)
+          metadata: set.withIdentity.extractedLabels
+            ? this.buildBaseMetadata(job, messageIds, LayersEnum.Identity, set.withIdentity.extractedLabels)
             : undefined,
-          relationship: set.relationship ?? undefined,
-          role: set.role ?? undefined,
-          type: set.type ?? undefined,
+          relationship: set.withIdentity.relationship ?? undefined,
+          role: set.withIdentity.role ?? undefined,
+          type: set.withIdentity.type ?? undefined,
         },
         identityId: action.id,
         mergeStrategy: action.mergeStrategy as MergeStrategyEnum,

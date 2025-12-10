@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-import { MemoryTypeEnum } from './common';
+import { MemoryTypeSchema } from './common';
+import { LayersEnum } from '@/types/userMemory';
 
 /**
  * Experience-specific fields
@@ -42,9 +43,10 @@ export const WithExperienceSchema = z.object({
 export const ExperienceMemoryItemSchema = z.object({
   details: z.string().optional().describe('Optional detailed information'),
   memoryCategory: z.string().describe('Memory category'),
-  memoryLayer: z.literal('experience').describe('Memory layer'),
-  memoryType: MemoryTypeEnum.describe('Memory type'),
+  memoryLayer: z.literal(LayersEnum.Experience).describe('Memory layer'),
+  memoryType: MemoryTypeSchema.describe('Memory type'),
   summary: z.string().describe('Concise overview of this specific memory'),
+  tags: z.array(z.string()).describe('Model generated tags that summarize the experience facets'),
   title: z.string().describe('Brief descriptive title'),
   withExperience: WithExperienceSchema,
 });

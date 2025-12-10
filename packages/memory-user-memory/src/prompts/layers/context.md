@@ -45,11 +45,8 @@ validates the output and includes:
 
 - Basic fields: title, summary, details, memoryLayer, memoryType, memoryCategory
 - Context-specific fields in withContext: title, description, extractedLabels,
-  associatedSubjects (array of strings), associatedObjects (array of strings),
-  currentStatus, type, scoreImpact, scoreUrgency
-
-**NOTE**: `associatedSubjects` and `associatedObjects` are simple string arrays
-describing involved entities.
+  associatedSubjects (array of object), associatedObjects (array of object),
+  currentStatus, type, scoreImpact, scoreUrgency.
 
 ## Memory Formatting Guidelines
 
