@@ -12,7 +12,6 @@
       "title": "Informacje o Asystencie"
     },
     "chat": {
-      "displayMode": "Tryb wyświetlania",
       "enableHistoryCount": "Włącz licznik historii wiadomości",
       "historyCount": "Liczba wiadomości w historii",
       "no": "Nie",

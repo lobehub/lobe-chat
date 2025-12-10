@@ -12,7 +12,6 @@
       "title": "助手信息"
     },
     "chat": {
-      "displayMode": "展示模式",
       "enableHistoryCount": "启用历史消息计数",
       "historyCount": "历史消息数量",
       "no": "否",

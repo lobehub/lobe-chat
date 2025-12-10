@@ -12,7 +12,6 @@
       "title": "Agent Info"
     },
     "chat": {
-      "displayMode": "Display Mode",
       "enableHistoryCount": "Enable Message History Count",
       "historyCount": "Message History Count",
       "no": "No",

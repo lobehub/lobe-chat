@@ -52,5 +52,42 @@
       "submit": "Autorisatie geslaagd! Je kunt nu een assistent publiceren.",
       "upload": "Autorisatie geslaagd! Je kunt nu een nieuwe versie publiceren."
     }
+  },
+  "profileSetup": {
+    "cancel": "Annuleren",
+    "descriptionEdit": "Werk je communityprofiel bij.",
+    "descriptionFirstTime": "Stel je profiel in om je communityprofiel aan te maken.",
+    "errors": {
+      "notAuthenticated": "Log eerst in voordat je deze actie uitvoert",
+      "updateFailed": "Bijwerken van profiel mislukt, probeer het opnieuw",
+      "usernameTaken": "Deze gebruikers-ID is al in gebruik, kies een andere"
+    },
+    "fields": {
+      "description": {
+        "label": "Persoonlijke beschrijving",
+        "maxLength": "De beschrijving mag maximaal 200 tekens bevatten",
+        "placeholder": "Vertel iets over jezelf..."
+      },
+      "displayName": {
+        "label": "Bijnaam",
+        "maxLength": "De bijnaam mag maximaal 50 tekens bevatten",
+        "placeholder": "Voer je bijnaam in",
+        "required": "Voer een bijnaam in"
+      },
+      "userName": {
+        "label": "Gebruikers-ID",
+        "maxLength": "De gebruikers-ID mag maximaal 32 tekens bevatten",
+        "minLength": "De gebruikers-ID moet minimaal 3 tekens bevatten",
+        "pattern": "De gebruikers-ID mag alleen letters, cijfers, underscores en koppeltekens bevatten",
+        "placeholder": "Voer je gebruikers-ID in",
+        "required": "Voer een gebruikers-ID in",
+        "tooltip": "Je gebruikers-ID is je unieke identificatie en wordt gebruikt in de link naar je profielpagina"
+      }
+    },
+    "getStarted": "Aan de slag",
+    "save": "Opslaan",
+    "success": "Profiel succesvol bijgewerkt",
+    "titleEdit": "Profiel bewerken",
+    "titleFirstTime": "Maak je profiel compleet"
   }
 }

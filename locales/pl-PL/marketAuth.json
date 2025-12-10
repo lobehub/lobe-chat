@@ -52,5 +52,42 @@
       "submit": "Autoryzacja zakończona sukcesem! Możesz teraz opublikować asystenta.",
       "upload": "Autoryzacja zakończona sukcesem! Możesz teraz opublikować nową wersję."
     }
+  },
+  "profileSetup": {
+    "cancel": "Anuluj",
+    "descriptionEdit": "Zaktualizuj informacje w swoim profilu społeczności.",
+    "descriptionFirstTime": "Ustaw swój profil, aby ukończyć tworzenie konta społecznościowego.",
+    "errors": {
+      "notAuthenticated": "Zaloguj się, aby kontynuować",
+      "updateFailed": "Nie udało się zaktualizować profilu, spróbuj ponownie",
+      "usernameTaken": "Ten identyfikator użytkownika jest już zajęty, wybierz inny"
+    },
+    "fields": {
+      "description": {
+        "label": "Opis profilu",
+        "maxLength": "Opis może zawierać maksymalnie 200 znaków",
+        "placeholder": "Opowiedz coś o sobie..."
+      },
+      "displayName": {
+        "label": "Pseudonim",
+        "maxLength": "Pseudonim może zawierać maksymalnie 50 znaków",
+        "placeholder": "Wprowadź swój pseudonim",
+        "required": "Wprowadź pseudonim"
+      },
+      "userName": {
+        "label": "Identyfikator użytkownika",
+        "maxLength": "Identyfikator użytkownika może zawierać maksymalnie 32 znaki",
+        "minLength": "Identyfikator użytkownika musi zawierać co najmniej 3 znaki",
+        "pattern": "Identyfikator użytkownika może zawierać tylko litery, cyfry, podkreślenia i myślniki",
+        "placeholder": "Wprowadź swój identyfikator użytkownika",
+        "required": "Wprowadź identyfikator użytkownika",
+        "tooltip": "Identyfikator użytkownika to Twój unikalny identyfikator, który będzie używany w linku do Twojego profilu"
+      }
+    },
+    "getStarted": "Rozpocznij",
+    "save": "Zapisz",
+    "success": "Profil został zaktualizowany",
+    "titleEdit": "Edytuj profil",
+    "titleFirstTime": "Uzupełnij swój profil"
   }
 }

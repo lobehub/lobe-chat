@@ -52,5 +52,42 @@
       "submit": "Autorisation réussie ! Vous pouvez maintenant publier un assistant.",
       "upload": "Autorisation réussie ! Vous pouvez maintenant publier une nouvelle version."
     }
+  },
+  "profileSetup": {
+    "cancel": "Annuler",
+    "descriptionEdit": "Mettez à jour les informations de votre profil communautaire.",
+    "descriptionFirstTime": "Configurez votre profil pour compléter la création de votre compte communautaire.",
+    "errors": {
+      "notAuthenticated": "Veuillez vous connecter avant de continuer.",
+      "updateFailed": "Échec de la mise à jour du profil. Veuillez réessayer.",
+      "usernameTaken": "Cet identifiant est déjà utilisé. Veuillez en choisir un autre."
+    },
+    "fields": {
+      "description": {
+        "label": "Présentation",
+        "maxLength": "La présentation ne peut pas dépasser 200 caractères.",
+        "placeholder": "Parlez un peu de vous..."
+      },
+      "displayName": {
+        "label": "Surnom",
+        "maxLength": "Le surnom ne peut pas dépasser 50 caractères.",
+        "placeholder": "Entrez votre surnom",
+        "required": "Veuillez entrer un surnom."
+      },
+      "userName": {
+        "label": "Identifiant",
+        "maxLength": "L’identifiant ne peut pas dépasser 32 caractères.",
+        "minLength": "L’identifiant doit comporter au moins 3 caractères.",
+        "pattern": "L’identifiant ne peut contenir que des lettres, des chiffres, des tirets bas et des tirets.",
+        "placeholder": "Entrez votre identifiant",
+        "required": "Veuillez entrer un identifiant.",
+        "tooltip": "L’identifiant est votre identifiant unique et sera utilisé dans le lien vers votre profil."
+      }
+    },
+    "getStarted": "Commencer",
+    "save": "Enregistrer",
+    "success": "Profil mis à jour avec succès",
+    "titleEdit": "Modifier le profil",
+    "titleFirstTime": "Complétez votre profil"
   }
 }

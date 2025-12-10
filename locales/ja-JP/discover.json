@@ -693,6 +693,18 @@
     "home": "ホーム",
     "model": "モデル",
     "plugin": "プラグイン",
-    "provider": "モデルサービスプロバイダー"
+    "provider": "モデルサービスプロバイダー",
+    "user": "ユーザー"
+  },
+  "user": {
+    "agents": "アシスタント",
+    "downloads": "ダウンロード",
+    "editProfile": "プロフィールを編集",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "myProfile": "マイページ",
+    "noAgents": "このユーザーはまだアシスタントを公開していません",
+    "publishedAgents": "公開したアシスタント",
+    "website": "個人ウェブサイト"
   }
 }

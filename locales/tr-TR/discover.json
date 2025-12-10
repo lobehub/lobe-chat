@@ -693,6 +693,18 @@
     "home": "Ana Sayfa",
     "model": "Model",
     "plugin": "Eklenti",
-    "provider": "Model Sağlayıcısı"
+    "provider": "Model Sağlayıcısı",
+    "user": "Kullanıcı"
+  },
+  "user": {
+    "agents": "Asistanlar",
+    "downloads": "İndirmeler",
+    "editProfile": "Profili Düzenle",
+    "login": "Giriş Yap",
+    "logout": "Çıkış Yap",
+    "myProfile": "Profilim",
+    "noAgents": "Bu kullanıcı henüz asistan yayınlamadı",
+    "publishedAgents": "Yayınlanan Asistanlar",
+    "website": "Kişisel Web Sitesi"
   }
 }

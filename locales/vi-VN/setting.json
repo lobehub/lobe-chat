@@ -12,7 +12,6 @@
       "title": "Thông tin trợ lý"
     },
     "chat": {
-      "displayMode": "Chế độ hiển thị",
       "enableHistoryCount": "Bật đếm tin nhắn lịch sử",
       "historyCount": "Số lượng tin nhắn lịch sử",
       "no": "Không",

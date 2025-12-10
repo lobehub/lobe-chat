@@ -12,7 +12,6 @@
       "title": "Assistenteninformationen"
     },
     "chat": {
-      "displayMode": "Anzeigemodus",
       "enableHistoryCount": "Anzahl vergangener Nachrichten aktivieren",
       "historyCount": "Anzahl vergangener Nachrichten",
       "no": "Nein",

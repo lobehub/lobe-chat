@@ -94,6 +94,12 @@
         "partial": "{{success}} arquivos importados com sucesso, {{failed}} falharam",
         "success": "{{count}} arquivos importados com sucesso"
       },
+      "notionGuide": {
+        "cancel": "Cancelar importação",
+        "desc": "Exporte primeiro em Markdown (ZIP) no Notion. Clique em Continuar para selecionar o arquivo compactado e importar todas as páginas.",
+        "ok": "Selecionar ZIP do Notion",
+        "title": "Importar conteúdo do Notion"
+      },
       "uploadFile": "Enviar arquivo",
       "uploadFolder": "Enviar pasta"
     },

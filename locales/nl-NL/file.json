@@ -94,6 +94,12 @@
         "partial": "{{success}} bestanden succesvol geïmporteerd, {{failed}} mislukt",
         "success": "{{count}} bestanden succesvol geïmporteerd"
       },
+      "notionGuide": {
+        "cancel": "Nu niet importeren",
+        "desc": "Exporteer eerst Markdown (ZIP) vanuit Notion. Klik op 'Doorgaan' om het ZIP-bestand te selecteren en alle pagina's te importeren.",
+        "ok": "Selecteer Notion ZIP",
+        "title": "Notion-inhoud importeren"
+      },
       "uploadFile": "Bestand uploaden",
       "uploadFolder": "Map uploaden"
     },

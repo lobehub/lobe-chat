@@ -94,6 +94,12 @@
         "partial": "Đã nhập thành công {{success}} tệp, thất bại {{failed}} tệp",
         "success": "Đã nhập thành công {{count}} tệp"
       },
+      "notionGuide": {
+        "cancel": "Tạm thời không nhập",
+        "desc": "Vui lòng xuất Markdown (ZIP) từ Notion trước, sau đó nhấp Tiếp tục để chọn tệp nén và nhập tất cả các trang.",
+        "ok": "Chọn tệp ZIP từ Notion",
+        "title": "Nhập nội dung từ Notion"
+      },
       "uploadFile": "Tải tệp lên",
       "uploadFolder": "Tải thư mục lên"
     },

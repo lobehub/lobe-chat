@@ -52,5 +52,42 @@
       "submit": "Autorisierung erfolgreich! Du kannst jetzt einen Assistenten veröffentlichen.",
       "upload": "Autorisierung erfolgreich! Du kannst jetzt eine neue Version veröffentlichen."
     }
+  },
+  "profileSetup": {
+    "cancel": "Abbrechen",
+    "descriptionEdit": "Aktualisiere deine Community-Profilinformationen.",
+    "descriptionFirstTime": "Richte dein Profil ein, um dein Community-Konto zu vervollständigen.",
+    "errors": {
+      "notAuthenticated": "Bitte melde dich an, um fortzufahren.",
+      "updateFailed": "Profilaktualisierung fehlgeschlagen. Bitte versuche es erneut.",
+      "usernameTaken": "Diese Benutzer-ID ist bereits vergeben. Bitte wähle eine andere."
+    },
+    "fields": {
+      "description": {
+        "label": "Über mich",
+        "maxLength": "Die Beschreibung darf maximal 200 Zeichen enthalten.",
+        "placeholder": "Erzähle etwas über dich..."
+      },
+      "displayName": {
+        "label": "Spitzname",
+        "maxLength": "Der Spitzname darf maximal 50 Zeichen enthalten.",
+        "placeholder": "Gib deinen Spitznamen ein",
+        "required": "Bitte gib einen Spitznamen ein"
+      },
+      "userName": {
+        "label": "Benutzer-ID",
+        "maxLength": "Die Benutzer-ID darf maximal 32 Zeichen enthalten.",
+        "minLength": "Die Benutzer-ID muss mindestens 3 Zeichen lang sein.",
+        "pattern": "Die Benutzer-ID darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten.",
+        "placeholder": "Gib deine Benutzer-ID ein",
+        "required": "Bitte gib eine Benutzer-ID ein",
+        "tooltip": "Die Benutzer-ID ist dein eindeutiger Identifikator und wird in deinem Profil-Link verwendet."
+      }
+    },
+    "getStarted": "Loslegen",
+    "save": "Speichern",
+    "success": "Profil erfolgreich aktualisiert",
+    "titleEdit": "Profil bearbeiten",
+    "titleFirstTime": "Vervollständige dein Profil"
   }
 }

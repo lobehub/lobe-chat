@@ -52,5 +52,42 @@
       "submit": "인증 성공! 이제 어시스턴트를 게시할 수 있습니다.",
       "upload": "인증 성공! 이제 새 버전을 게시할 수 있습니다."
     }
+  },
+  "profileSetup": {
+    "cancel": "취소",
+    "descriptionEdit": "커뮤니티 프로필 정보를 업데이트하세요.",
+    "descriptionFirstTime": "프로필을 설정하여 커뮤니티 프로필 생성을 완료하세요.",
+    "errors": {
+      "notAuthenticated": "먼저 로그인해 주세요.",
+      "updateFailed": "프로필 업데이트에 실패했습니다. 다시 시도해 주세요.",
+      "usernameTaken": "이미 사용 중인 사용자 ID입니다. 다른 ID를 선택해 주세요."
+    },
+    "fields": {
+      "description": {
+        "label": "자기소개",
+        "maxLength": "자기소개는 최대 200자까지 입력할 수 있습니다.",
+        "placeholder": "자신에 대해 소개해 보세요..."
+      },
+      "displayName": {
+        "label": "닉네임",
+        "maxLength": "닉네임은 최대 50자까지 입력할 수 있습니다.",
+        "placeholder": "닉네임을 입력하세요",
+        "required": "닉네임을 입력해 주세요"
+      },
+      "userName": {
+        "label": "사용자 ID",
+        "maxLength": "사용자 ID는 최대 32자까지 입력할 수 있습니다.",
+        "minLength": "사용자 ID는 최소 3자 이상이어야 합니다.",
+        "pattern": "사용자 ID는 영문자, 숫자, 밑줄(_) 및 하이픈(-)만 사용할 수 있습니다.",
+        "placeholder": "사용자 ID를 입력하세요",
+        "required": "사용자 ID를 입력해 주세요",
+        "tooltip": "사용자 ID는 고유 식별자로, 프로필 링크에 사용됩니다."
+      }
+    },
+    "getStarted": "시작하기",
+    "save": "저장",
+    "success": "프로필이 성공적으로 업데이트되었습니다.",
+    "titleEdit": "프로필 편집",
+    "titleFirstTime": "프로필을 완성하세요"
   }
 }

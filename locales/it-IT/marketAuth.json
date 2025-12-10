@@ -52,5 +52,42 @@
       "submit": "Autorizzazione riuscita! Ora puoi pubblicare l'assistente.",
       "upload": "Autorizzazione riuscita! Ora puoi pubblicare una nuova versione."
     }
+  },
+  "profileSetup": {
+    "cancel": "Annulla",
+    "descriptionEdit": "Aggiorna le informazioni del tuo profilo nella community.",
+    "descriptionFirstTime": "Configura il tuo profilo per completare la creazione dell'account nella community.",
+    "errors": {
+      "notAuthenticated": "Effettua l'accesso prima di procedere",
+      "updateFailed": "Aggiornamento del profilo non riuscito, riprova",
+      "usernameTaken": "Questo ID utente è già in uso, scegline un altro"
+    },
+    "fields": {
+      "description": {
+        "label": "Biografia",
+        "maxLength": "La biografia può contenere al massimo 200 caratteri",
+        "placeholder": "Parlaci un po' di te..."
+      },
+      "displayName": {
+        "label": "Nickname",
+        "maxLength": "Il nickname può contenere al massimo 50 caratteri",
+        "placeholder": "Inserisci il tuo nickname",
+        "required": "Il nickname è obbligatorio"
+      },
+      "userName": {
+        "label": "ID utente",
+        "maxLength": "L'ID utente può contenere al massimo 32 caratteri",
+        "minLength": "L'ID utente deve contenere almeno 3 caratteri",
+        "pattern": "L'ID utente può contenere solo lettere, numeri, trattini bassi e trattini",
+        "placeholder": "Inserisci il tuo ID utente",
+        "required": "L'ID utente è obbligatorio",
+        "tooltip": "L'ID utente è il tuo identificativo univoco e verrà utilizzato nel link al tuo profilo"
+      }
+    },
+    "getStarted": "Inizia",
+    "save": "Salva",
+    "success": "Profilo aggiornato con successo",
+    "titleEdit": "Modifica profilo",
+    "titleFirstTime": "Completa il tuo profilo"
   }
 }

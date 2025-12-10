@@ -94,6 +94,12 @@
         "partial": "Se importaron correctamente {{success}} archivos, fallaron {{failed}}",
         "success": "Se importaron correctamente {{count}} archivos"
       },
+      "notionGuide": {
+        "cancel": "No importar por ahora",
+        "desc": "Primero exporta el contenido desde Notion en formato Markdown (ZIP). Luego haz clic en continuar para seleccionar el archivo comprimido e importar todas las páginas.",
+        "ok": "Seleccionar ZIP de Notion",
+        "title": "Importar contenido de Notion"
+      },
       "uploadFile": "Subir archivo",
       "uploadFolder": "Subir carpeta"
     },
