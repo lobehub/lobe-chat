@@ -1,9 +1,16 @@
+import {
+  AddIdentityActionSchema,
+  ContextMemoryItemSchema,
+  ExperienceMemoryItemSchema,
+  PreferenceMemoryItemSchema,
+  RemoveIdentityActionSchema,
+  UpdateIdentityActionSchema,
+} from '@lobechat/memory-user-memory/schemas';
 import { PluginSchema } from '@lobehub/chat-plugin-sdk';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { BuiltinToolManifest } from '@/types/tool';
 import { searchMemorySchema } from '@/types/userMemory';
-import { ContextMemoryItemSchema, ExperienceMemoryItemSchema, PreferenceMemoryItemSchema, AddIdentityActionSchema, UpdateIdentityActionSchema, RemoveIdentityActionSchema } from '@lobechat/memory-user-memory';
 
 import { systemPrompt } from './systemRole';
 import { MemoryApiName as InternalMemoryApiName } from './types';
