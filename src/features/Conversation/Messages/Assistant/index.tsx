@@ -164,11 +164,12 @@ const AssistantMessage = memo<AssistantMessageProps>(
         onAvatarClick={onAvatarClick}
         onDoubleClick={onDoubleClick}
         placement={'left'}
-        renderMessage={() => <MessageContent {...item} />}
         showTitle
         time={createdAt}
         titleAddon={dmIndicator}
-      />
+      >
+        <MessageContent {...item} />
+      </ChatItem>
     );
   },
   isEqual,

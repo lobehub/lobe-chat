@@ -141,7 +141,6 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
     const model = item.extra?.model;
     const provider = item.extra?.provider;
     const hasModelInfo = model || provider;
-
     return (
       <ChatItem
         avatar={{
@@ -150,25 +149,19 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
         }}
         loading={false}
         placement="left"
-        renderMessage={() => (
-          <>
-            <TodoList data={todoData} />
-            {hasModelInfo && (
-              <Flexbox align={'center'} className={styles.modelInfo} gap={4} horizontal>
-                {model && <ModelIcon model={model} type={'mono'} />}
-                {provider && model ? `${provider}/${model}` : provider || model}
-              </Flexbox>
-            )}
-          </>
-        )}
         showTitle={true}
         time={updatedAt || createdAt}
-      />
+      >
+        <TodoList data={todoData} />
+        {hasModelInfo && (
+          <Flexbox align={'center'} className={styles.modelInfo} gap={4} horizontal>
+            {model && <ModelIcon model={model} type={'mono'} />}
+            {provider && model ? `${provider}/${model}` : provider || model}
+          </Flexbox>
+        )}
+      </ChatItem>
     );
   }
-
-  // Render regular supervisor message
-  const renderErrorMessage = error ? () => errorContentNode : undefined;
 
   return (
     <ChatItem
@@ -179,10 +172,11 @@ const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
       loading={false}
       message={error ? undefined : content}
       placement={'left'}
-      renderMessage={renderErrorMessage}
       showTitle={true}
       time={updatedAt || createdAt}
-    />
+    >
+      {error ? errorContentNode : undefined}
+    </ChatItem>
   );
 }, isEqual);
 

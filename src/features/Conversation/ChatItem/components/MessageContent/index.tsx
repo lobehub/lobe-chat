@@ -1,6 +1,6 @@
 import { createStyles } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { type ReactNode, Suspense, memo, useCallback, useMemo } from 'react';
+import { type ReactNode, Suspense, memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useConversationStore } from '@/features/Conversation/store';
@@ -32,6 +32,7 @@ export const useStyles = createStyles(({ css, token }) => {
 });
 
 export interface MessageContentProps {
+  children?: ReactNode;
   className?: string;
   disabled?: ChatItemProps['disabled'];
   editing?: ChatItemProps['editing'];
@@ -39,7 +40,6 @@ export interface MessageContentProps {
   message?: ReactNode;
   messageExtra?: ChatItemProps['messageExtra'];
   onDoubleClick?: ChatItemProps['onDoubleClick'];
-  renderMessage?: ChatItemProps['renderMessage'];
   variant?: 'bubble' | 'default';
 }
 
@@ -49,7 +49,7 @@ const MessageContent = memo<MessageContentProps>(
     id,
     message,
     messageExtra,
-    renderMessage,
+    children,
     onDoubleClick,
     disabled,
     className,
@@ -73,11 +73,6 @@ const MessageContent = memo<MessageContentProps>(
       [id, toggleMessageEditing],
     );
 
-    const messageContent = useMemo(
-      () => (renderMessage ? renderMessage(message) : message),
-      [renderMessage, message],
-    );
-
     return (
       <>
         <Flexbox
@@ -91,7 +86,7 @@ const MessageContent = memo<MessageContentProps>(
           gap={16}
           onDoubleClick={onDoubleClick}
         >
-          {messageContent}
+          {children || message}
           {messageExtra}
         </Flexbox>
         <Suspense fallback={null}>
