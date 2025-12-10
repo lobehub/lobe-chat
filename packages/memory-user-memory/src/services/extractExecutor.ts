@@ -29,6 +29,7 @@ import {
   MemoryResultRecorder,
 } from '../types';
 import { resolvePromptRoot } from '../utils/path';
+import { attributesCommon } from '@lobechat/observability-otel/node';
 
 const LAYER_ORDER: LayersEnum[] = [
   'identity' as LayersEnum,
@@ -119,6 +120,7 @@ export class MemoryExtractionService<RO> {
       source: job.source,
       status,
       user_id: job.userId,
+      ...attributesCommon(),
     };
 
     gateKeeperCallsCounter.add(1, attributes);
@@ -136,6 +138,7 @@ export class MemoryExtractionService<RO> {
       source: job.source,
       status,
       user_id: job.userId,
+      ...attributesCommon(),
     };
 
     layersCallsCounter.add(1, attributes);
@@ -152,6 +155,7 @@ export class MemoryExtractionService<RO> {
       source: job.source,
       source_id: job.sourceId,
       user_id: job.userId,
+      ...attributesCommon(),
     };
 
     return tracer.startActiveSpan(

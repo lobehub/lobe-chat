@@ -51,6 +51,7 @@ import { S3 } from '@/server/modules/S3';
 import type { GlobalMemoryLayer } from '@/types/serverConfig';
 import type { UserKeyVaults } from '@/types/user/settings';
 import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
+import { attributesCommon } from '@lobechat/observability-otel/node';
 
 const SOURCE_ALIAS_MAP: Record<string, MemoryExtractionSourceType> = {
   chatTopic: 'chat_topic',
@@ -1121,20 +1122,22 @@ export class MemoryExtractionExecutor {
       source: job.source,
       status,
       user_id: job.userId,
+      ...attributesCommon(),
     });
     processedDurationHistogram.record(durationMs, {
       source: job.source,
       user_id: job.userId,
+      ...attributesCommon(),
     });
   }
 
   private recordLayerEntries(job: MemoryExtractionJob, layer: LayersEnum, count: number) {
-    const attributes = {
+    layerEntriesHistogram.record(count, {
       layer: LAYER_LABEL_MAP[layer],
       source: job.source,
       user_id: job.userId,
-    };
-    layerEntriesHistogram.record(count, attributes);
+      ...attributesCommon(),
+    });
   }
 
   private async persistExtraction(
