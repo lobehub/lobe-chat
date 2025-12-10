@@ -9,6 +9,7 @@ import {
 import { ToolNameResolver } from '@lobechat/context-engine';
 import { consumeStreamUntilDone } from '@lobechat/model-runtime';
 import { ChatToolPayload, ClientSecretPayload, MessageToolCall } from '@lobechat/types';
+import { serializePartsForStorage } from '@lobechat/utils';
 import debug from 'debug';
 
 import { MessageModel } from '@/database/models/message';
@@ -99,6 +100,13 @@ export const createRuntimeExecutors = (
       let grounding: any = null;
       let currentStepUsage: any = undefined;
 
+      // Multimodal content parts tracking
+      type ContentPart = { text: string; type: 'text' } | { image: string; type: 'image' };
+      let contentParts: ContentPart[] = [];
+      let reasoningParts: ContentPart[] = [];
+      let hasContentImages = false;
+      let hasReasoningImages = false;
+
       // 初始化 ModelRuntime
       const modelRuntime = initModelRuntimeWithUserPayload(provider, ctx.userPayload || {});
 
@@ -173,6 +181,15 @@ export const createRuntimeExecutors = (
             if (data.usage) {
               currentStepUsage = data.usage;
             }
+          },
+          onGrounding: async (groundingData) => {
+            log(`[${operationLogId}][grounding] %O`, groundingData);
+            grounding = groundingData;
+
+            await streamManager.publishStreamChunk(operationId, stepIndex, {
+              chunkType: 'grounding',
+              grounding: groundingData,
+            });
           },
           onText: async (text) => {
             // log(`[${operationLogId}][text]`, text);
@@ -280,14 +297,39 @@ export const createRuntimeExecutors = (
       log('[%s:%d] call_llm completed', operationId, stepIndex);
 
       // ===== 1. 先保存原始 usage 到 message.metadata =====
+      // Determine final content - use serialized parts if has images, otherwise plain text
+      const finalContent = hasContentImages ? serializePartsForStorage(contentParts) : content;
+
+      // Determine final reasoning - handle multimodal reasoning
+      let finalReasoning: any = undefined;
+      if (hasReasoningImages) {
+        // Has images, use multimodal format
+        finalReasoning = {
+          content: serializePartsForStorage(reasoningParts),
+          isMultimodal: true,
+        };
+      } else if (thinkingContent) {
+        // Has text from reasoning but no images
+        finalReasoning = {
+          content: thinkingContent,
+        };
+      }
+
       try {
+        // Build metadata object
+        const metadata: Record<string, any> = {};
+        if (currentStepUsage && typeof currentStepUsage === 'object') {
+          Object.assign(metadata, currentStepUsage);
+        }
+        if (hasContentImages) {
+          metadata.isMultimodal = true;
+        }
+
         await ctx.messageModel.update(assistantMessageItem.id, {
-          content,
-          // 保存原始 usage，不做任何修改
-          metadata: currentStepUsage,
-          reasoning: {
-            content: thinkingContent,
-          },
+          content: finalContent,
+          imageList: imageList.length > 0 ? imageList : undefined,
+          metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
+          reasoning: finalReasoning,
           search: grounding,
           tools: toolsCalling.length > 0 ? toolsCalling : undefined,
         });
