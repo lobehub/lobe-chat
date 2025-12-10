@@ -39,7 +39,7 @@ const SkeletonList = memo(() => {
       <Skeleton
         active
         className={styles.message}
-        paragraph={{ width: ['50%', '30%'] }}
+        paragraph={{ rows: 5, width: ['30%', '90%', '80%', '90%', '50%'] }}
         title={false}
       />
     </WideScreenContainer>
