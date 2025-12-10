@@ -53,4 +53,5 @@ export const MARKET_ENDPOINTS = {
     `/market/agent/${encodeURIComponent(identifier)}/deprecate`,
   // User profile
   getUserProfile: (username: string) => `/market/user/${encodeURIComponent(username)}`,
+  updateUserProfile: '/market/user/me',
 };

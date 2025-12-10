@@ -706,6 +706,7 @@ export default {
   user: {
     agents: '助手',
     downloads: '下载',
+    editProfile: '编辑个人资料',
     login: '登录',
     logout: '退出登录',
     myProfile: '我的主页',

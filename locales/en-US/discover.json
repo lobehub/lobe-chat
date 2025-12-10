@@ -699,6 +699,7 @@
   "user": {
     "agents": "Agents",
     "downloads": "Downloads",
+    "editProfile": "Edit Profile",
     "login": "Login",
     "logout": "Logout",
     "myProfile": "My Profile",

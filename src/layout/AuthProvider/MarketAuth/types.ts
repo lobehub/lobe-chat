@@ -58,6 +58,7 @@ export interface MarketAuthContextType extends MarketAuthState {
   getAccessToken: () => string | null;
   getCurrentUserInfo: () => MarketUserInfo | null;
   getRefreshToken: () => string | null;
+  openProfileSetup: () => void;
   refreshToken: () => Promise<boolean>;
   signIn: () => Promise<number | null>;
   signOut: () => Promise<void>;

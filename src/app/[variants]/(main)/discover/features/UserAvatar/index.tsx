@@ -3,7 +3,7 @@
 import { Avatar, Dropdown } from '@lobehub/ui';
 import { Button, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, Settings, User } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -31,7 +31,8 @@ const UserAvatar = memo(() => {
   const { styles } = useStyles();
   const navigate = useNavigate();
 
-  const { isAuthenticated, isLoading, getCurrentUserInfo, signIn, signOut } = useMarketAuth();
+  const { isAuthenticated, isLoading, getCurrentUserInfo, signIn, signOut, openProfileSetup } =
+    useMarketAuth();
 
   const userInfo = getCurrentUserInfo();
   const username = userInfo?.sub;
@@ -52,10 +53,16 @@ const UserAvatar = memo(() => {
   }, [signOut]);
 
   const handleNavigateToProfile = useCallback(() => {
-    if (username) {
-      navigate(`/discover/user/${username}`);
+    // Use userName from profile for the URL (not OIDC sub/id)
+    const profileUserName = userProfile?.userName;
+    if (profileUserName) {
+      navigate(`/discover/user/${profileUserName}`);
     }
-  }, [navigate, username]);
+  }, [navigate, userProfile?.userName]);
+
+  const handleEditProfile = useCallback(() => {
+    openProfileSetup();
+  }, [openProfileSetup]);
 
   if (isLoading) {
     return <Skeleton.Avatar active size={32} />;
@@ -78,6 +85,12 @@ const UserAvatar = memo(() => {
       key: 'profile',
       label: t('user.myProfile'),
       onClick: handleNavigateToProfile,
+    },
+    {
+      icon: <Settings size={16} />,
+      key: 'editProfile',
+      label: t('user.editProfile'),
+      onClick: handleEditProfile,
     },
     {
       type: 'divider' as const,

@@ -1,17 +1,25 @@
 'use client';
 
 import { App } from 'antd';
-import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { MARKET_OIDC_ENDPOINTS } from '@/services/_url';
+import { MARKET_ENDPOINTS, MARKET_OIDC_ENDPOINTS } from '@/services/_url';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors/settings';
 
 import MarketAuthConfirmModal from './MarketAuthConfirmModal';
+import ProfileSetupModal from './ProfileSetupModal';
 import { MarketAuthError } from './errors';
 import { MarketOIDC } from './oidc';
-import { MarketAuthContextType, MarketAuthSession, MarketUserInfo, OIDCConfig } from './types';
+import {
+  MarketAuthContextType,
+  MarketAuthSession,
+  MarketUserInfo,
+  MarketUserProfile,
+  OIDCConfig,
+} from './types';
+import { useMarketUserProfile } from './useMarketUserProfile';
 
 const MarketAuthContext = createContext<MarketAuthContextType | null>(null);
 
@@ -130,6 +138,25 @@ const refreshToken = async (): Promise<boolean> => {
 };
 
 /**
+ * 检查用户是否需要设置用户名（首次登录）
+ */
+const checkNeedsProfileSetup = async (username: string): Promise<boolean> => {
+  try {
+    const response = await fetch(MARKET_ENDPOINTS.getUserProfile(username));
+    if (!response.ok) {
+      // User profile not found, needs setup
+      return true;
+    }
+    const profile = (await response.json()) as MarketUserProfile;
+    // If userName is not set, user needs to complete profile setup
+    return !profile.userName;
+  } catch {
+    // Error fetching profile, assume needs setup
+    return true;
+  }
+};
+
+/**
  * Market 授权上下文提供者
  */
 export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderProps) => {
@@ -140,6 +167,8 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
   const [oidcClient, setOidcClient] = useState<MarketOIDC | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showProfileSetupModal, setShowProfileSetupModal] = useState(false);
+  const [isFirstTimeSetup, setIsFirstTimeSetup] = useState(false);
   const [pendingSignInResolve, setPendingSignInResolve] = useState<
     ((value: number | null) => void) | null
   >(null);
@@ -269,6 +298,16 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       setSession(newSession);
       setStatus('authenticated');
 
+      // Check if user needs to set up profile (first-time login)
+      if (userInfo?.sub) {
+        const needsSetup = await checkNeedsProfileSetup(userInfo.sub);
+        if (needsSetup) {
+          console.log('[MarketAuth] First-time login detected, showing profile setup modal');
+          setIsFirstTimeSetup(true);
+          setShowProfileSetupModal(true);
+        }
+      }
+
       return userInfo?.accountId ?? null;
     } catch (error) {
       setStatus('unauthenticated');
@@ -359,6 +398,30 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   };
 
   /**
+   * 打开个人资料设置模态框（用于用户手动编辑）
+   */
+  const openProfileSetup = useCallback(() => {
+    setIsFirstTimeSetup(false);
+    setShowProfileSetupModal(true);
+  }, []);
+
+  /**
+   * 关闭个人资料设置模态框
+   */
+  const handleCloseProfileSetup = useCallback(() => {
+    setShowProfileSetupModal(false);
+    setIsFirstTimeSetup(false);
+  }, []);
+
+  /**
+   * 个人资料更新成功回调
+   */
+  const handleProfileUpdateSuccess = useCallback(() => {
+    console.log('[MarketAuth] Profile updated successfully');
+    // Profile is updated, modal will close automatically
+  }, []);
+
+  /**
    * 初始化时恢复会话并获取用户信息
    * 等待 isUserStateInit 为 true，此时 useInitUserState 的 SWR 请求已完成，settings 数据已加载
    */
@@ -374,12 +437,28 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
     getRefreshToken,
     isAuthenticated: status === 'authenticated',
     isLoading: status === 'loading',
+    openProfileSetup,
     refreshToken,
     session,
     signIn,
     signOut,
     status,
   };
+
+  // Get current user's profile for the edit modal
+  const userInfo = session?.userInfo;
+  const username = userInfo?.sub;
+  const { data: userProfile, mutate: mutateUserProfile } = useMarketUserProfile(username);
+
+  // Handle profile update success - also refresh the cached profile
+  const handleProfileSuccess = useCallback(
+    (profile: MarketUserProfile) => {
+      handleProfileUpdateSuccess();
+      // Update the SWR cache with the new profile
+      mutateUserProfile(profile, false);
+    },
+    [handleProfileUpdateSuccess, mutateUserProfile],
+  );
 
   return (
     <MarketAuthContext.Provider value={contextValue}>
@@ -388,6 +467,15 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
         onCancel={handleCancelAuth}
         onConfirm={handleConfirmAuth}
         open={showConfirmModal}
+      />
+      <ProfileSetupModal
+        accessToken={session?.accessToken ?? null}
+        defaultDisplayName={userProfile?.displayName || ''}
+        isFirstTimeSetup={isFirstTimeSetup}
+        onClose={handleCloseProfileSetup}
+        onSuccess={handleProfileSuccess}
+        open={showProfileSetupModal}
+        userProfile={userProfile}
       />
     </MarketAuthContext.Provider>
   );

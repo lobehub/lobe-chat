@@ -52,5 +52,42 @@
       "submit": "Authorization successful! You can now publish your assistant.",
       "upload": "Authorization successful! You can now publish a new version."
     }
+  },
+  "profileSetup": {
+    "cancel": "Cancel",
+    "descriptionEdit": "Update your community profile information.",
+    "descriptionFirstTime": "Set up your profile to complete your community profile.",
+    "errors": {
+      "notAuthenticated": "Please sign in first",
+      "updateFailed": "Failed to update profile. Please try again",
+      "usernameTaken": "This User ID is already taken. Please choose another"
+    },
+    "fields": {
+      "description": {
+        "label": "Bio",
+        "maxLength": "Bio must be at most 200 characters",
+        "placeholder": "Tell us about yourself..."
+      },
+      "displayName": {
+        "label": "Display Name",
+        "maxLength": "Display name must be at most 50 characters",
+        "placeholder": "Enter your display name",
+        "required": "Please enter a display name"
+      },
+      "userName": {
+        "label": "User ID",
+        "maxLength": "User ID must be at most 32 characters",
+        "minLength": "User ID must be at least 3 characters",
+        "pattern": "User ID can only contain letters, numbers, underscores, and hyphens",
+        "placeholder": "Enter your User ID",
+        "required": "Please enter a User ID",
+        "tooltip": "User ID is your unique identifier and will be used for your profile page URL"
+      }
+    },
+    "getStarted": "Get Started",
+    "save": "Save",
+    "success": "Profile updated successfully",
+    "titleEdit": "Edit Profile",
+    "titleFirstTime": "Complete Your Profile"
   }
 }
