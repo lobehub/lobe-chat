@@ -2,7 +2,9 @@ import { Command } from 'cmdk';
 import {
   BookOpen,
   Bot,
+  Brain,
   Compass,
+  FileText,
   Github,
   MessageCircle,
   Monitor,
@@ -94,6 +96,22 @@ const MainMenu = memo<MainMenuProps>(
               <BookOpen className={styles.icon} />
               <div className={styles.itemContent}>
                 <div className={styles.itemLabel}>{t('cmdk.knowledgeBase')}</div>
+              </div>
+            </Command.Item>
+          )}
+          {!pathname?.startsWith('/page') && (
+            <Command.Item onSelect={() => onNavigate('/page')} value="page documents write">
+              <FileText className={styles.icon} />
+              <div className={styles.itemContent}>
+                <div className={styles.itemLabel}>{t('cmdk.pages')}</div>
+              </div>
+            </Command.Item>
+          )}
+          {!pathname?.startsWith('/memory') && (
+            <Command.Item onSelect={() => onNavigate('/memory')} value="memory">
+              <Brain className={styles.icon} />
+              <div className={styles.itemContent}>
+                <div className={styles.itemLabel}>{t('cmdk.memory')}</div>
               </div>
             </Command.Item>
           )}
