@@ -445,6 +445,7 @@ export const marketRouter = router({
       }
     }),
 
+  
   getPluginDetail: marketProcedure
     .input(
       z.object({
@@ -467,7 +468,8 @@ export const marketRouter = router({
       }
     }),
 
-  getPluginIdentifiers: marketProcedure.query(async ({ ctx }) => {
+  
+getPluginIdentifiers: marketProcedure.query(async ({ ctx }) => {
     log('getPluginIdentifiers called');
 
     try {
@@ -481,7 +483,8 @@ export const marketRouter = router({
     }
   }),
 
-  getPluginList: marketProcedure
+  
+getPluginList: marketProcedure
     .input(
       z
         .object({
@@ -509,8 +512,9 @@ export const marketRouter = router({
       }
     }),
 
-  // ============================== Providers ==============================
-  getProviderDetail: marketProcedure
+  
+// ============================== Providers ==============================
+getProviderDetail: marketProcedure
     .input(
       z.object({
         identifier: z.string(),
@@ -532,7 +536,9 @@ export const marketRouter = router({
       }
     }),
 
-  getProviderIdentifiers: marketProcedure.query(async ({ ctx }) => {
+  
+  
+getProviderIdentifiers: marketProcedure.query(async ({ ctx }) => {
     log('getProviderIdentifiers called');
 
     try {
@@ -546,7 +552,8 @@ export const marketRouter = router({
     }
   }),
 
-  getProviderList: marketProcedure
+  
+getProviderList: marketProcedure
     .input(
       z
         .object({
@@ -569,6 +576,28 @@ export const marketRouter = router({
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch provider list',
+        });
+      }
+    }),
+
+  // ============================== User Profile ==============================
+getUserInfo: marketProcedure
+    .input(
+      z.object({
+        locale: z.string().optional(),
+        username: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      log('getUserInfo input: %O', input);
+
+      try {
+        return await ctx.discoverService.getUserInfo(input);
+      } catch (error) {
+        log('Error fetching user info: %O', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch user info',
         });
       }
     }),
@@ -644,7 +673,6 @@ export const marketRouter = router({
       }
     }),
 
-  
   reportAgentInstall: marketProcedure
     .input(
       z.object({
@@ -663,7 +691,7 @@ export const marketRouter = router({
     }),
 
   // ============================== Analytics ==============================
-reportCall: marketProcedure
+  reportCall: marketProcedure
     .input(
       z.object({
         callDurationMs: z.number(),

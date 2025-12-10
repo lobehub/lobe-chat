@@ -693,6 +693,18 @@
     "home": "Startseite",
     "model": "Modell",
     "plugin": "Plugin",
-    "provider": "Modellanbieter"
+    "provider": "Modellanbieter",
+    "user": "Benutzer"
+  },
+  "user": {
+    "agents": "Assistenten",
+    "downloads": "Downloads",
+    "editProfile": "Profil bearbeiten",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "myProfile": "Mein Profil",
+    "noAgents": "Dieser Benutzer hat noch keine Assistenten veröffentlicht",
+    "publishedAgents": "Veröffentlichte Assistenten",
+    "website": "Persönliche Webseite"
   }
 }

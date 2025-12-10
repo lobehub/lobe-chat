@@ -52,5 +52,42 @@
       "submit": "Yetkilendirme başarılı! Artık asistan yayınlayabilirsiniz.",
       "upload": "Yetkilendirme başarılı! Artık yeni bir sürüm yayınlayabilirsiniz."
     }
+  },
+  "profileSetup": {
+    "cancel": "İptal",
+    "descriptionEdit": "Topluluk profil bilgilerini güncelle.",
+    "descriptionFirstTime": "Topluluk profilini tamamlamak için bilgilerini ayarla.",
+    "errors": {
+      "notAuthenticated": "Lütfen önce giriş yap.",
+      "updateFailed": "Profil güncellenemedi, lütfen tekrar dene.",
+      "usernameTaken": "Bu kullanıcı kimliği zaten kullanılıyor, lütfen başka bir tane seç."
+    },
+    "fields": {
+      "description": {
+        "label": "Kısa Biyografi",
+        "maxLength": "Kısa biyografi en fazla 200 karakter olabilir",
+        "placeholder": "Kendinden biraz bahset..."
+      },
+      "displayName": {
+        "label": "Görünen Ad",
+        "maxLength": "Görünen ad en fazla 50 karakter olabilir",
+        "placeholder": "Görünen adını gir",
+        "required": "Lütfen görünen adını gir"
+      },
+      "userName": {
+        "label": "Kullanıcı Kimliği",
+        "maxLength": "Kullanıcı kimliği en fazla 32 karakter olabilir",
+        "minLength": "Kullanıcı kimliği en az 3 karakter olmalıdır",
+        "pattern": "Kullanıcı kimliği yalnızca harf, rakam, alt çizgi ve tire içerebilir",
+        "placeholder": "Kullanıcı kimliğini gir",
+        "required": "Lütfen kullanıcı kimliğini gir",
+        "tooltip": "Kullanıcı kimliği senin benzersiz tanımlayıcındır ve profil bağlantında kullanılacaktır"
+      }
+    },
+    "getStarted": "Başla",
+    "save": "Kaydet",
+    "success": "Profil başarıyla güncellendi",
+    "titleEdit": "Profili Düzenle",
+    "titleFirstTime": "Profilini Tamamla"
   }
 }

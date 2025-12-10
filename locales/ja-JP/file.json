@@ -94,6 +94,12 @@
         "partial": "{{success}} 件のファイルを正常にインポートし、{{failed}} 件が失敗しました",
         "success": "{{count}} 件のファイルを正常にインポートしました"
       },
+      "notionGuide": {
+        "cancel": "今はインポートしない",
+        "desc": "まず Notion で Markdown（ZIP）形式でエクスポートしてください。「続ける」をクリックしてZIPファイルを選択すると、すべてのページをインポートできます。",
+        "ok": "Notion ZIP を選択",
+        "title": "Notion コンテンツをインポート"
+      },
       "uploadFile": "ファイルをアップロード",
       "uploadFolder": "フォルダーをアップロード"
     },

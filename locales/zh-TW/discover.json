@@ -693,6 +693,18 @@
     "home": "首頁",
     "model": "模型",
     "plugin": "外掛",
-    "provider": "模型服務商"
+    "provider": "模型服務商",
+    "user": "使用者"
+  },
+  "user": {
+    "agents": "助理",
+    "downloads": "下載",
+    "editProfile": "編輯個人資料",
+    "login": "登入",
+    "logout": "登出",
+    "myProfile": "我的主頁",
+    "noAgents": "該使用者尚未發布助理",
+    "publishedAgents": "已發布的助理",
+    "website": "個人網站"
   }
 }

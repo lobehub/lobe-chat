@@ -693,6 +693,18 @@
     "home": "Trang chủ",
     "model": "Mô hình",
     "plugin": "Plugin",
-    "provider": "Nhà cung cấp mô hình"
+    "provider": "Nhà cung cấp mô hình",
+    "user": "Người dùng"
+  },
+  "user": {
+    "agents": "Trợ lý",
+    "downloads": "Tải xuống",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "myProfile": "Trang cá nhân",
+    "noAgents": "Người dùng này chưa đăng trợ lý nào",
+    "publishedAgents": "Trợ lý đã đăng",
+    "website": "Trang web cá nhân"
   }
 }

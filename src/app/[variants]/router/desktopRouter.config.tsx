@@ -203,6 +203,17 @@ export const createDesktopRouter = () =>
                   loader: slugLoader,
                   path: 'mcp/:slug',
                 },
+                {
+                  element: dynamicElement(
+                    () =>
+                      import('../(main)/discover/(detail)/user').then(
+                        (m) => m.DesktopUserDetailPage,
+                      ),
+                    'Desktop > Discover > Detail > User',
+                  ),
+                  loader: slugLoader,
+                  path: 'user/:slug',
+                },
               ],
               element: dynamicElement(
                 () => import('../(main)/discover/(detail)/_layout'),

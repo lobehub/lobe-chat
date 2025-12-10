@@ -693,6 +693,18 @@
     "home": "Accueil",
     "model": "Modèle",
     "plugin": "Plugin",
-    "provider": "Fournisseur de modèles"
+    "provider": "Fournisseur de modèles",
+    "user": "Utilisateur"
+  },
+  "user": {
+    "agents": "Assistants",
+    "downloads": "Téléchargements",
+    "editProfile": "Modifier le profil",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "myProfile": "Mon profil",
+    "noAgents": "Cet utilisateur n’a publié aucun assistant pour le moment",
+    "publishedAgents": "Assistants publiés",
+    "website": "Site personnel"
   }
 }

@@ -12,7 +12,6 @@
       "title": "Assistentinformatie"
     },
     "chat": {
-      "displayMode": "Weergavemodus",
       "enableHistoryCount": "Aantal berichten in geschiedenis inschakelen",
       "historyCount": "Aantal berichten in geschiedenis",
       "no": "Nee",

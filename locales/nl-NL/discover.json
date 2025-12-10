@@ -693,6 +693,18 @@
     "home": "Startpagina",
     "model": "Model",
     "plugin": "Plugin",
-    "provider": "Model aanbieder"
+    "provider": "Model aanbieder",
+    "user": "Gebruiker"
+  },
+  "user": {
+    "agents": "Assistenten",
+    "downloads": "Downloads",
+    "editProfile": "Profiel bewerken",
+    "login": "Inloggen",
+    "logout": "Uitloggen",
+    "myProfile": "Mijn profiel",
+    "noAgents": "Deze gebruiker heeft nog geen assistenten gepubliceerd",
+    "publishedAgents": "Gepubliceerde assistenten",
+    "website": "Persoonlijke website"
   }
 }

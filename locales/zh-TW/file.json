@@ -94,6 +94,12 @@
         "partial": "已成功匯入 {{success}} 個檔案，失敗 {{failed}} 個",
         "success": "成功匯入 {{count}} 個檔案"
       },
+      "notionGuide": {
+        "cancel": "暫不匯入",
+        "desc": "請先在 Notion 中匯出 Markdown（ZIP），點擊繼續選擇壓縮檔即可匯入其中所有頁面。",
+        "ok": "選擇 Notion ZIP",
+        "title": "匯入 Notion 內容"
+      },
       "uploadFile": "上傳檔案",
       "uploadFolder": "上傳資料夾"
     },

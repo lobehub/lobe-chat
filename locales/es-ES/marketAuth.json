@@ -52,5 +52,42 @@
       "submit": "¡Autenticación exitosa! Ahora puedes publicar asistentes.",
       "upload": "¡Autenticación exitosa! Ahora puedes publicar una nueva versión."
     }
+  },
+  "profileSetup": {
+    "cancel": "Cancelar",
+    "descriptionEdit": "Actualiza la información de tu perfil de la comunidad.",
+    "descriptionFirstTime": "Configura tu perfil para completar la creación de tu cuenta en la comunidad.",
+    "errors": {
+      "notAuthenticated": "Por favor, inicia sesión antes de continuar.",
+      "updateFailed": "No se pudo actualizar el perfil. Inténtalo de nuevo.",
+      "usernameTaken": "Este ID de usuario ya está en uso. Por favor, elige otro."
+    },
+    "fields": {
+      "description": {
+        "label": "Biografía",
+        "maxLength": "La biografía puede tener hasta 200 caracteres.",
+        "placeholder": "Cuéntanos algo sobre ti..."
+      },
+      "displayName": {
+        "label": "Nombre para mostrar",
+        "maxLength": "El nombre para mostrar puede tener hasta 50 caracteres.",
+        "placeholder": "Introduce tu nombre para mostrar",
+        "required": "Por favor, introduce un nombre para mostrar."
+      },
+      "userName": {
+        "label": "ID de usuario",
+        "maxLength": "El ID de usuario puede tener hasta 32 caracteres.",
+        "minLength": "El ID de usuario debe tener al menos 3 caracteres.",
+        "pattern": "El ID de usuario solo puede contener letras, números, guiones bajos y guiones.",
+        "placeholder": "Introduce tu ID de usuario",
+        "required": "Por favor, introduce un ID de usuario.",
+        "tooltip": "El ID de usuario es tu identificador único y se usará en el enlace a tu perfil."
+      }
+    },
+    "getStarted": "Comenzar",
+    "save": "Guardar",
+    "success": "Perfil actualizado correctamente",
+    "titleEdit": "Editar perfil",
+    "titleFirstTime": "Completa tu perfil"
   }
 }

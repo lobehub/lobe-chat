@@ -12,7 +12,6 @@
       "title": "アシスタント情報"
     },
     "chat": {
-      "displayMode": "表示モード",
       "enableHistoryCount": "履歴メッセージ数を有効にする",
       "historyCount": "履歴メッセージ数",
       "no": "いいえ",

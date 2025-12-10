@@ -12,7 +12,6 @@
       "title": "助手資訊"
     },
     "chat": {
-      "displayMode": "顯示模式",
       "enableHistoryCount": "啟用歷史訊息計數",
       "historyCount": "歷史訊息數量",
       "no": "否",

@@ -52,5 +52,42 @@
       "submit": "認証に成功しました！アシスタントを公開できます。",
       "upload": "認証に成功しました！新しいバージョンを公開できます。"
     }
+  },
+  "profileSetup": {
+    "cancel": "キャンセル",
+    "descriptionEdit": "コミュニティプロフィール情報を更新してください。",
+    "descriptionFirstTime": "プロフィールを設定して、コミュニティプロフィールの作成を完了しましょう。",
+    "errors": {
+      "notAuthenticated": "操作を行う前にログインしてください。",
+      "updateFailed": "プロフィールの更新に失敗しました。もう一度お試しください。",
+      "usernameTaken": "このユーザーIDは既に使用されています。別のユーザーIDを選んでください。"
+    },
+    "fields": {
+      "description": {
+        "label": "自己紹介",
+        "maxLength": "自己紹介は最大200文字までです。",
+        "placeholder": "あなた自身について紹介してください..."
+      },
+      "displayName": {
+        "label": "表示名",
+        "maxLength": "表示名は最大50文字までです。",
+        "placeholder": "表示名を入力してください",
+        "required": "表示名を入力してください"
+      },
+      "userName": {
+        "label": "ユーザーID",
+        "maxLength": "ユーザーIDは最大32文字までです。",
+        "minLength": "ユーザーIDは最低3文字必要です。",
+        "pattern": "ユーザーIDには英字、数字、アンダースコア、ハイフンのみ使用できます。",
+        "placeholder": "ユーザーIDを入力してください",
+        "required": "ユーザーIDを入力してください",
+        "tooltip": "ユーザーIDはあなたの一意の識別子で、プロフィールページのリンクに使用されます。"
+      }
+    },
+    "getStarted": "はじめに",
+    "save": "保存",
+    "success": "プロフィールが更新されました",
+    "titleEdit": "プロフィールを編集",
+    "titleFirstTime": "プロフィールを完成させましょう"
   }
 }

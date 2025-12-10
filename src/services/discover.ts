@@ -14,6 +14,7 @@ import {
   DiscoverModelDetail,
   DiscoverPluginDetail,
   DiscoverProviderDetail,
+  DiscoverUserProfile,
   IdentifiersResponse,
   McpListResponse,
   McpQueryParams,
@@ -302,6 +303,19 @@ class DiscoverService {
       locale,
       page: params.page ? Number(params.page) : 1,
       pageSize: params.pageSize ? Number(params.pageSize) : 20,
+    });
+  };
+
+  // ============================== User Profile ==============================
+
+  getUserInfo = async (params: {
+    locale?: string;
+    username: string;
+  }): Promise<DiscoverUserProfile | undefined> => {
+    const locale = globalHelpers.getCurrentLanguage();
+    return lambdaClient.market.getUserInfo.query({
+      locale,
+      username: params.username,
     });
   };
 

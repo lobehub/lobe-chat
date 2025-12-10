@@ -94,6 +94,12 @@
         "partial": "{{success}} dosya başarıyla içe aktarıldı, {{failed}} dosya başarısız oldu",
         "success": "{{count}} dosya başarıyla içe aktarıldı"
       },
+      "notionGuide": {
+        "cancel": "Şimdilik içe aktarılmasın",
+        "desc": "Lütfen önce Notion'da Markdown (ZIP) formatında dışa aktarın. Devam'a tıklayarak ZIP dosyasını seçip tüm sayfaları içe aktarabilirsiniz.",
+        "ok": "Notion ZIP Dosyasını Seç",
+        "title": "Notion İçeriğini İçe Aktar"
+      },
       "uploadFile": "Dosya Yükle",
       "uploadFolder": "Klasör Yükle"
     },

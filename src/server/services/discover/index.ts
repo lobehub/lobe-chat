@@ -22,6 +22,7 @@ import {
   DiscoverPluginItem,
   DiscoverProviderDetail,
   DiscoverProviderItem,
+  DiscoverUserProfile,
   IdentifiersResponse,
   McpListResponse,
   McpQueryParams,
@@ -40,7 +41,7 @@ import {
   getTextInputUnitRate,
   getTextOutputUnitRate,
 } from '@lobechat/utils';
-import { CategoryItem, CategoryListQuery, MarketSDK } from '@lobehub/market-sdk';
+import { CategoryItem, CategoryListQuery, MarketSDK, UserInfoResponse } from '@lobehub/market-sdk';
 import { CallReportRequest, InstallReportRequest } from '@lobehub/market-types';
 import dayjs from 'dayjs';
 import debug from 'debug';
@@ -251,24 +252,32 @@ export class DiscoverService {
     return result;
   };
 
-  private normalizeAuthorField = (author: unknown): string => {
-    if (!author) return '';
+  private normalizeAuthorField = (author: unknown): { name: string; userName?: string } => {
+    if (!author) return { name: '' };
 
-    if (typeof author === 'string') return author;
+    if (typeof author === 'string') return { name: author };
 
     if (typeof author === 'object') {
-      const { avatar, url, name } = author as {
+      const { avatar, url, name, userName } = author as {
         avatar?: unknown;
         name?: unknown;
         url?: unknown;
+        userName?: unknown;
       };
 
-      if (typeof name === 'string' && name.length > 0) return name;
-      if (typeof avatar === 'string' && avatar.length > 0) return avatar;
-      if (typeof url === 'string' && url.length > 0) return url;
+      const authorName =
+        (typeof name === 'string' && name.length > 0 && name) ||
+        (typeof avatar === 'string' && avatar.length > 0 && avatar) ||
+        (typeof url === 'string' && url.length > 0 && url) ||
+        '';
+
+      return {
+        name: authorName,
+        userName: typeof userName === 'string' ? userName : undefined,
+      };
     }
 
-    return '';
+    return { name: '' };
   };
 
   private isLegacySource = (source?: AssistantMarketSource) => source === 'legacy';
@@ -569,8 +578,9 @@ export class DiscoverService {
 
       const normalizedAuthor = this.normalizeAuthorField(data.author);
       const assistant = {
-        author: normalizedAuthor || (data.ownerId !== null ? `User${data.ownerId}` : 'Unknown'),
-        avatar: data.avatar || normalizedAuthor || '',
+        author:
+          normalizedAuthor.name || (data.ownerId !== null ? `User${data.ownerId}` : 'Unknown'),
+        avatar: data.avatar || normalizedAuthor.name || '',
         category: (data as any).category || 'general',
         config: data.config || {},
         createdAt: (data as any).createdAt,
@@ -600,6 +610,7 @@ export class DiscoverService {
         tags: data.tags || [],
         title: (data as any).name || (data as any).identifier,
         tokenUsage: data.tokenUsage || 0,
+        userName: normalizedAuthor.userName,
         versions:
           // @ts-ignore
           data.versions?.map((item) => ({
@@ -712,8 +723,9 @@ export class DiscoverService {
       const transformedItems: DiscoverAssistantItem[] = (data.items || []).map((item: any) => {
         const normalizedAuthor = this.normalizeAuthorField(item.author);
         return {
-          author: normalizedAuthor || (item.ownerId !== null ? `User${item.ownerId}` : 'Unknown'),
-          avatar: item.avatar || normalizedAuthor || '',
+          author:
+            normalizedAuthor.name || (item.ownerId !== null ? `User${item.ownerId}` : 'Unknown'),
+          avatar: item.avatar || normalizedAuthor.name || '',
           category: item.category || 'general',
           config: item.config || {},
           createdAt: item.createdAt || item.updatedAt || new Date().toISOString(),
@@ -727,6 +739,7 @@ export class DiscoverService {
           tags: item.tags || [],
           title: item.name || item.identifier,
           tokenUsage: item.tokenUsage || 0,
+          userName: normalizedAuthor.userName,
         };
       });
 
@@ -1627,5 +1640,71 @@ export class DiscoverService {
       result.items.length,
     );
     return result;
+  };
+
+  // ============================== User Profile ==============================
+
+  /**
+   * Get user profile and their published agents by username
+   */
+  getUserInfo = async (params: {
+    locale?: string;
+    username: string;
+  }): Promise<DiscoverUserProfile | undefined> => {
+    log('getUserInfo: params=%O', params);
+    const { username, locale } = params;
+
+    try {
+      // Call Market SDK to get user info
+      const response: UserInfoResponse = await this.market.user.getUserInfo(username, { locale });
+
+      if (!response?.user) {
+        log('getUserInfo: user not found for username=%s', username);
+        return undefined;
+      }
+
+      const { user, agents } = response;
+
+      // Transform agents to DiscoverAssistantItem format
+      // Note: UserAgentItem doesn't have tags or tokenUsage, using defaults
+      const transformedAgents: DiscoverAssistantItem[] = (agents || []).map((agent) => ({
+        author: user.displayName || user.userName || user.namespace || '',
+        avatar: agent.avatar || '',
+        category: agent.category as any,
+        config: {} as any,
+        createdAt: agent.createdAt,
+        description: agent.description || '',
+        homepage: `https://lobehub.com/discover/assistant/${agent.identifier}`,
+        identifier: agent.identifier,
+        installCount: agent.installCount,
+        knowledgeCount: 0,
+        pluginCount: 0,
+        schemaVersion: 1,
+        tags: [],
+        title: agent.name || agent.identifier,
+        tokenUsage: 0,
+      }));
+
+      const result: DiscoverUserProfile = {
+        agents: transformedAgents,
+        user: {
+          avatarUrl: user.avatarUrl || null,
+          createdAt: user.createdAt,
+          description: user.meta?.description || null,
+          displayName: user.displayName || null,
+          id: user.id,
+          namespace: user.namespace,
+          socialLinks: user.meta?.socialLinks || null,
+          type: user.type || null,
+          userName: user.userName || null,
+        },
+      };
+
+      log('getUserInfo: returning user profile with %d agents', result.agents.length);
+      return result;
+    } catch (error) {
+      log('getUserInfo: error fetching user info: %O', error);
+      return undefined;
+    }
   };
 }
