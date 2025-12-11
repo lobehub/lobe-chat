@@ -4,7 +4,6 @@ import NavHeader from '@/features/NavHeader';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 
 import AgentBuilderToggle from './AgentBuilderToggle';
-import AgentPublishButton from './AgentPublishButton';
 import AutoSaveHint from './AutoSaveHint';
 
 const Header = memo(() => {
@@ -15,7 +14,7 @@ const Header = memo(() => {
         <>
           <WideScreenButton />
           <AgentBuilderToggle />
-          <AgentPublishButton />
+          {/* TODO: Add GroupPublishButton when group publishing is supported */}
         </>
       }
     />

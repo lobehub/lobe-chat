@@ -161,6 +161,40 @@ describe('ConversationStore', () => {
 
       expect(state.context.threadId).toBe('thread-1');
     });
+
+    it('should create store with group scope context', () => {
+      const context: ConversationContext = {
+        agentId: 'agent-1',
+        groupId: 'group-1',
+        topicId: 'topic-1',
+        threadId: null,
+        scope: 'group',
+      };
+
+      const store = createStore({ context });
+      const state = store.getState();
+
+      expect(state.context.scope).toBe('group');
+      expect(state.context.groupId).toBe('group-1');
+      expect(state.context.agentId).toBe('agent-1');
+    });
+
+    it('should create store with group_agent scope context', () => {
+      const context: ConversationContext = {
+        agentId: 'agent-1',
+        groupId: 'group-1',
+        topicId: 'topic-1',
+        threadId: 'agent-topic-1',
+        scope: 'group_agent',
+      };
+
+      const store = createStore({ context });
+      const state = store.getState();
+
+      expect(state.context.scope).toBe('group_agent');
+      expect(state.context.groupId).toBe('group-1');
+      expect(state.context.threadId).toBe('agent-topic-1');
+    });
   });
 
   describe('UI Actions', () => {
@@ -291,6 +325,72 @@ describe('ConversationStore', () => {
       expect(store2.getState().inputMessage).toBe('Message 2');
       expect(store1.getState().context.agentId).toBe('session-1');
       expect(store2.getState().context.agentId).toBe('session-2');
+    });
+
+    it('should isolate stores with different scopes', () => {
+      const mainContext: ConversationContext = {
+        agentId: 'agent-1',
+        topicId: 'topic-1',
+        threadId: null,
+        scope: 'main',
+      };
+
+      const groupContext: ConversationContext = {
+        agentId: 'agent-1',
+        groupId: 'group-1',
+        topicId: 'topic-1',
+        threadId: null,
+        scope: 'group',
+      };
+
+      const store1 = createStore({ context: mainContext });
+      const store2 = createStore({ context: groupContext });
+
+      act(() => {
+        store1.getState().updateInputMessage('Main message');
+        store2.getState().updateInputMessage('Group message');
+      });
+
+      expect(store1.getState().inputMessage).toBe('Main message');
+      expect(store2.getState().inputMessage).toBe('Group message');
+      expect(store1.getState().context.scope).toBe('main');
+      expect(store2.getState().context.scope).toBe('group');
+      expect(store2.getState().context.groupId).toBe('group-1');
+    });
+
+    it('should isolate group and group_agent stores', () => {
+      const groupContext: ConversationContext = {
+        agentId: 'agent-1',
+        groupId: 'group-1',
+        topicId: 'topic-1',
+        threadId: null,
+        scope: 'group',
+      };
+
+      const groupAgentContext: ConversationContext = {
+        agentId: 'agent-1',
+        groupId: 'group-1',
+        topicId: 'topic-1',
+        threadId: 'agent-topic-1',
+        scope: 'group_agent',
+      };
+
+      const store1 = createStore({ context: groupContext });
+      const store2 = createStore({ context: groupAgentContext });
+
+      act(() => {
+        store1.getState().updateInputMessage('Group main');
+        store2.getState().updateInputMessage('Group agent');
+      });
+
+      expect(store1.getState().inputMessage).toBe('Group main');
+      expect(store2.getState().inputMessage).toBe('Group agent');
+      expect(store1.getState().context.scope).toBe('group');
+      expect(store2.getState().context.scope).toBe('group_agent');
+      expect(store1.getState().context.groupId).toBe('group-1');
+      expect(store2.getState().context.groupId).toBe('group-1');
+      expect(store1.getState().context.threadId).toBeNull();
+      expect(store2.getState().context.threadId).toBe('agent-topic-1');
     });
   });
 });

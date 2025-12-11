@@ -108,6 +108,7 @@
   "groupSidebar": {
     "members": {
       "addMember": "Add Member",
+      "enableOrchestrator": "Enable Host",
       "memberSettings": "Member Settings",
       "orchestrator": "Host",
       "orchestratorThinking": "The host is thinking...",
@@ -380,6 +381,7 @@
     }
   },
   "tab": {
+    "groupProfile": "Group Profile",
     "profile": "Assistant Profile",
     "search": "Search"
   },
@@ -447,6 +449,7 @@
     "clear": "Clear Speech"
   },
   "untitledAgent": "Untitled Assistant",
+  "untitledGroup": "Untitled Group",
   "updateAgent": "Update Assistant Information",
   "upload": {
     "action": {

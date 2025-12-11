@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { useAgentGroupStore } from '@/store/agentGroup';
-import { chatGroupSelectors } from '@/store/agentGroup/selectors';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession, LobeGroupSession, LobeSessionType } from '@/types/session';
@@ -33,7 +33,7 @@ const AgentTeamMembersSettings = memo(() => {
 
   const activeGroupId = useSessionStore((s) => s.activeId);
   const currentSession = useSessionStore(sessionSelectors.currentSession) as LobeGroupSession;
-  const groupConfig = useAgentGroupStore(chatGroupSelectors.currentGroupConfig);
+  const groupConfig = useAgentGroupStore(agentGroupSelectors.currentGroupConfig);
 
   const addAgentsToGroup = useAgentGroupStore((s) => s.addAgentsToGroup);
   const removeAgentFromGroup = useAgentGroupStore((s) => s.removeAgentFromGroup);

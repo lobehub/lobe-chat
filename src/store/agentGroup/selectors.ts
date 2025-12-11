@@ -1,32 +1,33 @@
+import type { AgentGroupDetail, AgentItem } from '@lobechat/types';
+
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG, DEFAULT_CHAT_GROUP_META_CONFIG } from '@/const/settings';
 import { ChatGroupItem } from '@/database/schemas/chatGroup';
 import { ChatStoreState } from '@/store/chat/initialState';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 import { merge } from '@/utils/merge';
 
 import { ChatGroupState, ChatGroupStore } from './initialState';
 
 const getGroupById =
   (id: string) =>
-  (s: ChatGroupState): ChatGroupItem | undefined =>
+  (s: ChatGroupState): AgentGroupDetail | undefined =>
     s.groupMap[id];
 
-const getAllGroups = (s: ChatGroupState): ChatGroupItem[] => Object.values(s.groupMap);
+const getAllGroups = (s: ChatGroupState): AgentGroupDetail[] => Object.values(s.groupMap);
 
 const isGroupsLoading = (s: ChatGroupState): boolean => s.isGroupsLoading;
 
 const isGroupsInitialized = (s: ChatGroupState): boolean => s.groupsInit;
 
-const activeGroupId = (): string | undefined => {
-  const sessionStore = useSessionStore.getState();
-  const session = sessionSelectors.currentSession(sessionStore);
+/**
+ * Get active group ID directly from agentGroup store state
+ */
+const activeGroupId = (s: ChatGroupState): string | undefined => s.activeGroupId;
 
-  return session?.type === 'group' ? session.id : undefined;
-};
-
-const currentGroup = (s: ChatGroupStore): ChatGroupItem | undefined => {
-  const groupId = activeGroupId();
+/**
+ * Get current active group
+ */
+const currentGroup = (s: ChatGroupStore): AgentGroupDetail | undefined => {
+  const groupId = s.activeGroupId;
   return groupId && s.groupMap ? s.groupMap[groupId] : undefined;
 };
 
@@ -45,13 +46,19 @@ const getGroupConfig = (groupId: string) => (s: ChatGroupStore) => {
   return merge(DEFAULT_CHAT_GROUP_CHAT_CONFIG, groupConfig || {});
 };
 
+/**
+ * Get current group config using activeGroupId from store state
+ */
 const currentGroupConfig = (s: ChatGroupStore) => {
-  const groupId = activeGroupId();
+  const groupId = s.activeGroupId;
   return groupId ? getGroupConfig(groupId)(s) : DEFAULT_CHAT_GROUP_CHAT_CONFIG;
 };
 
+/**
+ * Get current group meta using activeGroupId from store state
+ */
 const currentGroupMeta = (s: ChatGroupStore) => {
-  const groupId = activeGroupId();
+  const groupId = s.activeGroupId;
   if (!groupId) return DEFAULT_CHAT_GROUP_META_CONFIG;
 
   const group = s.groupMap?.[groupId];
@@ -61,13 +68,42 @@ const currentGroupMeta = (s: ChatGroupStore) => {
   });
 };
 
-export const chatGroupSelectors = {
+/**
+ * Get agents of a specific group by group ID
+ */
+const getGroupAgents =
+  (groupId: string) =>
+  (s: ChatGroupStore): AgentItem[] =>
+    s.groupMap?.[groupId]?.agents || [];
+
+/**
+ * Get a specific agent by ID from a specific group
+ */
+const getAgentByIdFromGroup =
+  (groupId: string, agentId: string) =>
+  (s: ChatGroupStore): AgentItem | undefined => {
+    const agents = getGroupAgents(groupId)(s);
+    return agents.find((agent) => agent.id === agentId);
+  };
+
+/**
+ * Get agent count for a specific group
+ */
+const getGroupAgentCount =
+  (groupId: string) =>
+  (s: ChatGroupStore): number =>
+    getGroupAgents(groupId)(s).length;
+
+export const agentGroupSelectors = {
   activeGroupId,
   allGroups,
   currentGroup,
   currentGroupConfig,
   currentGroupMeta,
+  getAgentByIdFromGroup,
   getAllGroups,
+  getGroupAgentCount,
+  getGroupAgents,
   getGroupById,
   getGroupByIdFromChatStore,
   getGroupConfig,
@@ -75,3 +111,6 @@ export const chatGroupSelectors = {
   isGroupsInitialized,
   isGroupsLoading,
 };
+
+// Keep backward compatibility alias
+export const chatGroupSelectors = agentGroupSelectors;

@@ -109,6 +109,7 @@ export default {
   groupSidebar: {
     members: {
       addMember: '添加成员',
+      enableOrchestrator: '启用主持人',
       memberSettings: '成员设置',
       orchestrator: '主持人',
       orchestratorThinking: '主持人正在思考中...',
@@ -141,7 +142,6 @@ export default {
     title: '创建群组',
     useTemplate: '使用模板',
   },
-
   hideForYou: '私信内容已经隐藏，请在设置中开启【显示私信内容】以查看',
 
   history: {
@@ -170,7 +170,6 @@ export default {
   intentUnderstanding: {
     title: '正在理解并分析您的意图...',
   },
-
   // Group chat related translations
   inviteMembers: '邀请成员',
 
@@ -193,6 +192,7 @@ export default {
     uploadGuide: '上传过的文件可以在「资源」中查看哦',
     viewMore: '查看更多',
   },
+
   memberSelection: {
     addMember: '添加成员',
     allMembers: '全体成员',
@@ -203,7 +203,6 @@ export default {
     setInitialMembers: '选择团队成员',
   },
   members: 'Members',
-
   mention: {
     title: '提及成员',
   },
@@ -275,10 +274,10 @@ export default {
     senderAssistant: 'Agent',
     senderUser: '你',
   },
+
   newAgent: '创建助手',
   newGroupChat: '创建群组',
   newPage: '创建文稿',
-
   noAgentsYet: '此群组还没有成员。点击 + 按钮邀请助手。',
 
   noAvailableAgents: '没有可邀请的成员',
@@ -310,6 +309,7 @@ export default {
   regenerate: '重新生成',
 
   roleAndArchive: '角色与记录',
+
   search: {
     grounding: {
       searchQueries: '搜索关键词',
@@ -405,6 +405,7 @@ export default {
     },
   },
   tab: {
+    groupProfile: '群组档案',
     profile: '助手档案',
     search: '搜索',
   },
@@ -472,6 +473,7 @@ export default {
     clear: '删除语音',
   },
   untitledAgent: '未命名助手',
+  untitledGroup: '未命名群组',
   updateAgent: '更新助理信息',
   upload: {
     action: {

@@ -1,3 +1,4 @@
+import type { AgentGroupDetail } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { mutate } from 'swr';
@@ -20,17 +21,26 @@ import {
   initialChatGroupState,
 } from './initialState';
 import { ChatGroupReducer, chatGroupReducers } from './reducers';
-import { chatGroupSelectors } from './selectors';
+import { agentGroupSelectors } from './selectors';
 
 const n = setNamespace('chatGroup');
 
 const FETCH_GROUPS_KEY = 'fetchGroups';
 const FETCH_GROUP_DETAIL_KEY = 'fetchGroupDetail';
 
-const syncChatStoreGroupMap = (groupMap: Record<string, ChatGroupItem>) => {
+/**
+ * Convert ChatGroupItem to AgentGroupDetail by adding empty agents array if not present
+ */
+const toAgentGroupDetail = (group: ChatGroupItem): AgentGroupDetail =>
+  ({
+    ...group,
+    agents: [],
+  }) as AgentGroupDetail;
+
+const syncChatStoreGroupMap = (groupMap: Record<string, AgentGroupDetail>) => {
   useChatStore.setState(
     produce((state: ChatStoreState) => {
-      state.groupMaps = groupMap;
+      state.groupMaps = groupMap as Record<string, ChatGroupItem>;
       state.groupsInit = true;
     }),
     false,
@@ -153,12 +163,17 @@ export const chatGroupAction: StateCreator<
 
       // Also rebuild and update groupMap to keep it in sync
       const groups = await chatGroupService.getGroups();
+      const currentGroupMap = get().groupMap;
       const nextGroupMap = groups.reduce(
         (map, group) => {
-          map[group.id] = group;
+          // Preserve existing agents data if available
+          const existing = currentGroupMap[group.id];
+          map[group.id] = existing
+            ? ({ ...existing, ...group } as AgentGroupDetail)
+            : toAgentGroupDetail(group);
           return map;
         },
-        {} as Record<string, ChatGroupItem>,
+        {} as Record<string, AgentGroupDetail>,
       );
 
       if (!isEqual(get().groupMap, nextGroupMap)) {
@@ -189,7 +204,7 @@ export const chatGroupAction: StateCreator<
         {} as Record<string, ChatGroupItem>,
       );
 
-      // Merge with existing map, preserving existing config if present
+      // Merge with existing map, preserving existing config and agents if present
       const mergedMap = produce(get().groupMap, (draft) => {
         for (const id of Object.keys(incomingMap)) {
           const incoming = incomingMap[id];
@@ -198,11 +213,15 @@ export const chatGroupAction: StateCreator<
             draft[id] = {
               ...existing,
               ...incoming,
+              
+              // Preserve existing agents data
+agents: existing.agents,
+              
               // Keep existing config (authoritative) if present; do not overwrite
-              config: existing.config || incoming.config,
-            } as ChatGroupItem;
+config: existing.config || incoming.config,
+            } as AgentGroupDetail;
           } else {
-            draft[id] = incoming;
+            draft[id] = toAgentGroupDetail(incoming);
           }
         }
       });
@@ -272,7 +291,7 @@ export const chatGroupAction: StateCreator<
     },
 
     updateGroupConfig: async (config) => {
-      const group = chatGroupSelectors.currentGroup(get());
+      const group = agentGroupSelectors.currentGroup(get());
       if (!group) return;
 
       const mergedConfig = {
@@ -311,7 +330,7 @@ export const chatGroupAction: StateCreator<
     },
 
     updateGroupMeta: async (meta) => {
-      const group = chatGroupSelectors.currentGroup(get());
+      const group = agentGroupSelectors.currentGroup(get());
       if (!group) return;
 
       const id = group.id;
@@ -323,22 +342,24 @@ export const chatGroupAction: StateCreator<
     },
 
     useFetchGroupDetail: (enabled, groupId) =>
-      useClientDataSWR<ChatGroupItem>(
+      useClientDataSWR<AgentGroupDetail | null>(
         enabled && groupId ? [FETCH_GROUP_DETAIL_KEY, groupId] : null,
         async ([, id]) => {
-          const group = await chatGroupService.getGroup(id as string);
-          if (!group) throw new Error(`Group ${id} not found`);
-          return group;
+          const groupDetail = await chatGroupService.getGroupDetail(id as string);
+          if (!groupDetail) throw new Error(`Group ${id} not found`);
+          return groupDetail;
         },
         {
-          onSuccess: (group) => {
-            // Update groupMap with detailed group info
-            const currentGroup = get().groupMap[group.id];
-            if (isEqual(currentGroup, group)) return;
+          onSuccess: (groupDetail) => {
+            if (!groupDetail) return;
+
+            // Update groupMap with detailed group info including agents
+            const currentGroup = get().groupMap[groupDetail.id];
+            if (isEqual(currentGroup, groupDetail)) return;
 
             const nextGroupMap = {
               ...get().groupMap,
-              [group.id]: group,
+              [groupDetail.id]: groupDetail,
             };
 
             set(
@@ -346,7 +367,7 @@ export const chatGroupAction: StateCreator<
                 groupMap: nextGroupMap,
               },
               false,
-              n('useFetchGroupDetail/onSuccess', { groupId: group.id }),
+              n('useFetchGroupDetail/onSuccess', { groupId: groupDetail.id }),
             );
 
             syncChatStoreGroupMap(nextGroupMap);
@@ -364,16 +385,18 @@ export const chatGroupAction: StateCreator<
           fallbackData: [],
           onSuccess: (groups) => {
             // Update both groups list and groupMap
-            const incomingMap = groups.reduce(
+            const currentMap = get().groupMap;
+            const nextGroupMap = groups.reduce(
               (map, group) => {
-                map[group.id] = group;
+                // Preserve existing agents data if available
+                const existing = currentMap[group.id];
+                map[group.id] = existing
+                  ? ({ ...existing, ...group } as AgentGroupDetail)
+                  : toAgentGroupDetail(group);
                 return map;
               },
-              {} as Record<string, ChatGroupItem>,
+              {} as Record<string, AgentGroupDetail>,
             );
-
-            const currentMap = get().groupMap;
-            const nextGroupMap = { ...currentMap, ...incomingMap };
 
             if (get().groupsInit && isEqual(currentMap, nextGroupMap)) {
               return;

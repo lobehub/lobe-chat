@@ -1,6 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { agents, agentsToSessions, chatGroups, messages, sessions, topics, users } from '../../../schemas';
+import {
+  agents,
+  agentsToSessions,
+  chatGroups,
+  messages,
+  sessions,
+  topics,
+  users,
+} from '../../../schemas';
 import { LobeChatDatabase } from '../../../type';
 import { TopicModel } from '../../topic';
 import { getTestDB } from '../_util';
@@ -78,16 +86,34 @@ describe('TopicModel - Query', () => {
       expect(result.items[0].id).toBe('1');
     });
 
-    it('should query topics by group ID', async () => {
+    it('should query topics by group ID using containerId (backward compatible)', async () => {
       await serverDB.transaction(async (tx) => {
         await tx.insert(chatGroups).values([
           { id: 'chat-group-1', title: 'Chat Group 1', userId },
           { id: 'chat-group-2', title: 'Chat Group 2', userId },
         ]);
         await tx.insert(topics).values([
-          { id: 'group-topic-1', userId, groupId: 'chat-group-1', favorite: true, updatedAt: new Date('2023-05-01') },
-          { id: 'group-topic-2', userId, groupId: 'chat-group-1', favorite: false, updatedAt: new Date('2023-04-01') },
-          { id: 'group-topic-3', userId, groupId: 'chat-group-2', favorite: true, updatedAt: new Date('2023-06-01') },
+          {
+            id: 'group-topic-1',
+            userId,
+            groupId: 'chat-group-1',
+            favorite: true,
+            updatedAt: new Date('2023-05-01'),
+          },
+          {
+            id: 'group-topic-2',
+            userId,
+            groupId: 'chat-group-1',
+            favorite: false,
+            updatedAt: new Date('2023-04-01'),
+          },
+          {
+            id: 'group-topic-3',
+            userId,
+            groupId: 'chat-group-2',
+            favorite: true,
+            updatedAt: new Date('2023-06-01'),
+          },
         ]);
       });
 
@@ -98,6 +124,44 @@ describe('TopicModel - Query', () => {
       expect(result.items[1].id).toBe('group-topic-2');
     });
 
+    it('should query topics by group ID using groupId parameter', async () => {
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(chatGroups).values([
+          { id: 'chat-group-3', title: 'Chat Group 3', userId },
+          { id: 'chat-group-4', title: 'Chat Group 4', userId },
+        ]);
+        await tx.insert(topics).values([
+          {
+            id: 'group-topic-4',
+            userId,
+            groupId: 'chat-group-3',
+            favorite: true,
+            updatedAt: new Date('2023-05-01'),
+          },
+          {
+            id: 'group-topic-5',
+            userId,
+            groupId: 'chat-group-3',
+            favorite: false,
+            updatedAt: new Date('2023-04-01'),
+          },
+          {
+            id: 'group-topic-6',
+            userId,
+            groupId: 'chat-group-4',
+            favorite: true,
+            updatedAt: new Date('2023-06-01'),
+          },
+        ]);
+      });
+
+      const result = await topicModel.query({ groupId: 'chat-group-3' });
+
+      expect(result.items).toHaveLength(2);
+      expect(result.items[0].id).toBe('group-topic-4');
+      expect(result.items[1].id).toBe('group-topic-5');
+    });
+
     it('should return topics based on pagination parameters', async () => {
       await serverDB.insert(topics).values([
         { id: 'topic1', sessionId, userId, updatedAt: new Date('2023-01-01') },
@@ -105,8 +169,16 @@ describe('TopicModel - Query', () => {
         { id: 'topic3', sessionId, userId, updatedAt: new Date('2023-01-03') },
       ]);
 
-      const { items: result1 } = await topicModel.query({ containerId: sessionId, current: 0, pageSize: 2 });
-      const { items: result2 } = await topicModel.query({ containerId: sessionId, current: 1, pageSize: 2 });
+      const { items: result1 } = await topicModel.query({
+        containerId: sessionId,
+        current: 0,
+        pageSize: 2,
+      });
+      const { items: result2 } = await topicModel.query({
+        containerId: sessionId,
+        current: 1,
+        pageSize: 2,
+      });
 
       expect(result1).toHaveLength(2);
       expect(result1[0].id).toBe('topic3');
@@ -125,10 +197,24 @@ describe('TopicModel - Query', () => {
           { id: 'session-other', userId },
         ]);
         await trx.insert(agents).values([{ id: 'agent1', userId, title: 'Agent 1' }]);
-        await trx.insert(agentsToSessions).values([{ agentId: 'agent1', sessionId: 'session-for-agent', userId }]);
+        await trx
+          .insert(agentsToSessions)
+          .values([{ agentId: 'agent1', sessionId: 'session-for-agent', userId }]);
         await trx.insert(topics).values([
-          { id: 'topic-agent-session', userId, sessionId: 'session-for-agent', agentId: null, updatedAt: new Date('2023-01-01') },
-          { id: 'topic-other-session', userId, sessionId: 'session-other', agentId: null, updatedAt: new Date('2023-01-02') },
+          {
+            id: 'topic-agent-session',
+            userId,
+            sessionId: 'session-for-agent',
+            agentId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'topic-other-session',
+            userId,
+            sessionId: 'session-other',
+            agentId: null,
+            updatedAt: new Date('2023-01-02'),
+          },
         ]);
       });
 
@@ -145,8 +231,20 @@ describe('TopicModel - Query', () => {
           { id: 'new-agent-2', userId, title: 'New Agent 2' },
         ]);
         await trx.insert(topics).values([
-          { id: 'new-topic-1', userId, agentId: 'new-agent-1', sessionId: null, updatedAt: new Date('2023-01-01') },
-          { id: 'new-topic-2', userId, agentId: 'new-agent-2', sessionId: null, updatedAt: new Date('2023-01-02') },
+          {
+            id: 'new-topic-1',
+            userId,
+            agentId: 'new-agent-1',
+            sessionId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'new-topic-2',
+            userId,
+            agentId: 'new-agent-2',
+            sessionId: null,
+            updatedAt: new Date('2023-01-02'),
+          },
         ]);
       });
 
@@ -160,28 +258,62 @@ describe('TopicModel - Query', () => {
       await serverDB.transaction(async (trx) => {
         await trx.insert(sessions).values([{ id: 'mixed-session', userId }]);
         await trx.insert(agents).values([{ id: 'mixed-agent', userId, title: 'Mixed Agent' }]);
-        await trx.insert(agentsToSessions).values([{ agentId: 'mixed-agent', sessionId: 'mixed-session', userId }]);
+        await trx
+          .insert(agentsToSessions)
+          .values([{ agentId: 'mixed-agent', sessionId: 'mixed-session', userId }]);
         await trx.insert(topics).values([
-          { id: 'legacy-topic', userId, sessionId: 'mixed-session', agentId: null, updatedAt: new Date('2023-01-01') },
-          { id: 'new-topic', userId, sessionId: null, agentId: 'mixed-agent', updatedAt: new Date('2023-01-02') },
-          { id: 'both-topic', userId, sessionId: 'mixed-session', agentId: 'mixed-agent', updatedAt: new Date('2023-01-03') },
+          {
+            id: 'legacy-topic',
+            userId,
+            sessionId: 'mixed-session',
+            agentId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'new-topic',
+            userId,
+            sessionId: null,
+            agentId: 'mixed-agent',
+            updatedAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'both-topic',
+            userId,
+            sessionId: 'mixed-session',
+            agentId: 'mixed-agent',
+            updatedAt: new Date('2023-01-03'),
+          },
         ]);
       });
 
       const result = await topicModel.query({ agentId: 'mixed-agent' });
 
       expect(result.items).toHaveLength(3);
-      expect(result.items.map((t) => t.id).sort()).toEqual(['both-topic', 'legacy-topic', 'new-topic']);
+      expect(result.items.map((t) => t.id).sort()).toEqual([
+        'both-topic',
+        'legacy-topic',
+        'new-topic',
+      ]);
     });
 
     it('should not return duplicate topics when both agentId and sessionId match', async () => {
       await serverDB.transaction(async (trx) => {
         await trx.insert(sessions).values([{ id: 'dedup-session', userId }]);
         await trx.insert(agents).values([{ id: 'dedup-agent', userId, title: 'Dedup Agent' }]);
-        await trx.insert(agentsToSessions).values([{ agentId: 'dedup-agent', sessionId: 'dedup-session', userId }]);
-        await trx.insert(topics).values([
-          { id: 'dedup-topic', userId, sessionId: 'dedup-session', agentId: 'dedup-agent', updatedAt: new Date('2023-01-01') },
-        ]);
+        await trx
+          .insert(agentsToSessions)
+          .values([{ agentId: 'dedup-agent', sessionId: 'dedup-session', userId }]);
+        await trx
+          .insert(topics)
+          .values([
+            {
+              id: 'dedup-topic',
+              userId,
+              sessionId: 'dedup-session',
+              agentId: 'dedup-agent',
+              updatedAt: new Date('2023-01-01'),
+            },
+          ]);
       });
 
       const result = await topicModel.query({ agentId: 'dedup-agent' });
@@ -193,8 +325,12 @@ describe('TopicModel - Query', () => {
     it('should return empty array when agentId has no associated session and no direct agentId match', async () => {
       await serverDB.transaction(async (trx) => {
         await trx.insert(sessions).values([{ id: 'session1', userId }]);
-        await trx.insert(agents).values([{ id: 'agent-no-match', userId, title: 'Agent No Match' }]);
-        await trx.insert(topics).values([{ id: 'topic-session1', userId, sessionId: 'session1', agentId: null }]);
+        await trx
+          .insert(agents)
+          .values([{ id: 'agent-no-match', userId, title: 'Agent No Match' }]);
+        await trx
+          .insert(topics)
+          .values([{ id: 'topic-session1', userId, sessionId: 'session1', agentId: null }]);
       });
 
       const result = await topicModel.query({ agentId: 'agent-no-match' });
@@ -205,7 +341,17 @@ describe('TopicModel - Query', () => {
     it('should return topics with direct agentId match even without agentsToSessions entry', async () => {
       await serverDB.transaction(async (trx) => {
         await trx.insert(agents).values([{ id: 'orphan-agent', userId, title: 'Orphan Agent' }]);
-        await trx.insert(topics).values([{ id: 'orphan-topic', userId, agentId: 'orphan-agent', sessionId: null, updatedAt: new Date('2023-01-01') }]);
+        await trx
+          .insert(topics)
+          .values([
+            {
+              id: 'orphan-topic',
+              userId,
+              agentId: 'orphan-agent',
+              sessionId: null,
+              updatedAt: new Date('2023-01-01'),
+            },
+          ]);
       });
 
       const result = await topicModel.query({ agentId: 'orphan-agent' });
@@ -245,7 +391,11 @@ describe('TopicModel - Query', () => {
           { id: 'user-agent', userId, title: 'User Agent' },
           { id: 'other-user-agent', userId: otherUserId, title: 'Other User Agent' },
         ]);
-        await trx.insert(agentsToSessions).values([{ agentId: 'other-user-agent', sessionId: 'other-user-session', userId: otherUserId }]);
+        await trx
+          .insert(agentsToSessions)
+          .values([
+            { agentId: 'other-user-agent', sessionId: 'other-user-session', userId: otherUserId },
+          ]);
         await trx.insert(topics).values([
           { id: 'topic-user', userId, agentId: 'other-user-agent' },
           { id: 'topic-other-user', userId: otherUserId, sessionId: 'other-user-session' },
@@ -260,11 +410,28 @@ describe('TopicModel - Query', () => {
 
     it('should work with agentId and pagination', async () => {
       await serverDB.transaction(async (trx) => {
-        await trx.insert(agents).values([{ id: 'paginate-agent', userId, title: 'Paginate Agent' }]);
+        await trx
+          .insert(agents)
+          .values([{ id: 'paginate-agent', userId, title: 'Paginate Agent' }]);
         await trx.insert(topics).values([
-          { id: 'page-topic1', userId, agentId: 'paginate-agent', updatedAt: new Date('2023-01-01') },
-          { id: 'page-topic2', userId, agentId: 'paginate-agent', updatedAt: new Date('2023-01-02') },
-          { id: 'page-topic3', userId, agentId: 'paginate-agent', updatedAt: new Date('2023-01-03') },
+          {
+            id: 'page-topic1',
+            userId,
+            agentId: 'paginate-agent',
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'page-topic2',
+            userId,
+            agentId: 'paginate-agent',
+            updatedAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'page-topic3',
+            userId,
+            agentId: 'paginate-agent',
+            updatedAt: new Date('2023-01-03'),
+          },
         ]);
       });
 
@@ -274,7 +441,11 @@ describe('TopicModel - Query', () => {
       expect(result.items[0].id).toBe('page-topic3');
       expect(result.items[1].id).toBe('page-topic2');
 
-      const { items: result2 } = await topicModel.query({ agentId: 'paginate-agent', current: 1, pageSize: 2 });
+      const { items: result2 } = await topicModel.query({
+        agentId: 'paginate-agent',
+        current: 1,
+        pageSize: 2,
+      });
       expect(result2).toHaveLength(1);
       expect(result2[0].id).toBe('page-topic1');
     });
@@ -283,9 +454,27 @@ describe('TopicModel - Query', () => {
       await serverDB.transaction(async (trx) => {
         await trx.insert(agents).values([{ id: 'fav-agent', userId, title: 'Fav Agent' }]);
         await trx.insert(topics).values([
-          { id: 'fav-topic1', userId, agentId: 'fav-agent', favorite: false, updatedAt: new Date('2023-01-03') },
-          { id: 'fav-topic2', userId, agentId: 'fav-agent', favorite: true, updatedAt: new Date('2023-01-01') },
-          { id: 'fav-topic3', userId, agentId: 'fav-agent', favorite: true, updatedAt: new Date('2023-01-02') },
+          {
+            id: 'fav-topic1',
+            userId,
+            agentId: 'fav-agent',
+            favorite: false,
+            updatedAt: new Date('2023-01-03'),
+          },
+          {
+            id: 'fav-topic2',
+            userId,
+            agentId: 'fav-agent',
+            favorite: true,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'fav-topic3',
+            userId,
+            agentId: 'fav-agent',
+            favorite: true,
+            updatedAt: new Date('2023-01-02'),
+          },
         ]);
       });
 
@@ -300,7 +489,16 @@ describe('TopicModel - Query', () => {
     it('should use containerId when agentId is not provided', async () => {
       await serverDB.transaction(async (trx) => {
         await trx.insert(sessions).values([{ id: 'container-session', userId }]);
-        await trx.insert(topics).values([{ id: 'container-topic', userId, sessionId: 'container-session', updatedAt: new Date('2023-01-01') }]);
+        await trx
+          .insert(topics)
+          .values([
+            {
+              id: 'container-topic',
+              userId,
+              sessionId: 'container-session',
+              updatedAt: new Date('2023-01-01'),
+            },
+          ]);
       });
 
       const result = await topicModel.query({ containerId: 'container-session' });
@@ -315,18 +513,69 @@ describe('TopicModel - Query', () => {
           { id: 'agent-only-session', userId },
           { id: 'container-only-session', userId },
         ]);
-        await trx.insert(agents).values([{ id: 'priority-agent', userId, title: 'Priority Agent' }]);
-        await trx.insert(agentsToSessions).values([{ agentId: 'priority-agent', sessionId: 'agent-only-session', userId }]);
+        await trx
+          .insert(agents)
+          .values([{ id: 'priority-agent', userId, title: 'Priority Agent' }]);
+        await trx
+          .insert(agentsToSessions)
+          .values([{ agentId: 'priority-agent', sessionId: 'agent-only-session', userId }]);
         await trx.insert(topics).values([
-          { id: 'agent-topic', userId, sessionId: 'agent-only-session', updatedAt: new Date('2023-01-01') },
-          { id: 'container-topic', userId, sessionId: 'container-only-session', updatedAt: new Date('2023-01-02') },
+          {
+            id: 'agent-topic',
+            userId,
+            sessionId: 'agent-only-session',
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'container-topic',
+            userId,
+            sessionId: 'container-only-session',
+            updatedAt: new Date('2023-01-02'),
+          },
         ]);
       });
 
-      const result = await topicModel.query({ agentId: 'priority-agent', containerId: 'container-only-session' });
+      const result = await topicModel.query({
+        agentId: 'priority-agent',
+        containerId: 'container-only-session',
+      });
 
       expect(result.items).toHaveLength(1);
       expect(result.items[0].id).toBe('agent-topic');
+    });
+
+    it('should prioritize groupId over agentId when both provided', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx
+          .insert(chatGroups)
+          .values([{ id: 'priority-group', title: 'Priority Group', userId }]);
+        await trx
+          .insert(agents)
+          .values([{ id: 'priority-agent', userId, title: 'Priority Agent' }]);
+        await trx.insert(topics).values([
+          {
+            id: 'group-topic',
+            userId,
+            groupId: 'priority-group',
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'agent-topic',
+            userId,
+            agentId: 'priority-agent',
+            updatedAt: new Date('2023-01-02'),
+          },
+        ]);
+      });
+
+      // When groupId is provided, it should only return topics for that group
+      const result = await topicModel.query({
+        groupId: 'priority-group',
+        agentId: 'priority-agent',
+      });
+
+      expect(result.items).toHaveLength(1);
+      expect(result.items[0].id).toBe('group-topic');
     });
   });
 
@@ -335,24 +584,63 @@ describe('TopicModel - Query', () => {
       await serverDB.transaction(async (trx) => {
         await trx.insert(agents).values([{ id: 'inbox-agent', userId, title: 'Inbox Agent' }]);
         await trx.insert(topics).values([
-          { id: 'legacy-inbox-1', userId, sessionId: null, groupId: null, agentId: null, updatedAt: new Date('2023-01-01') },
-          { id: 'legacy-inbox-2', userId, sessionId: null, groupId: null, agentId: null, updatedAt: new Date('2023-01-02') },
-          { id: 'new-inbox-topic', userId, sessionId: null, groupId: null, agentId: 'inbox-agent', updatedAt: new Date('2023-01-03') },
+          {
+            id: 'legacy-inbox-1',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'legacy-inbox-2',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'new-inbox-topic',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: 'inbox-agent',
+            updatedAt: new Date('2023-01-03'),
+          },
         ]);
       });
 
       const result = await topicModel.query({ agentId: 'inbox-agent', isInbox: true });
 
       expect(result.items).toHaveLength(3);
-      expect(result.items.map((t) => t.id).sort()).toEqual(['legacy-inbox-1', 'legacy-inbox-2', 'new-inbox-topic']);
+      expect(result.items.map((t) => t.id).sort()).toEqual([
+        'legacy-inbox-1',
+        'legacy-inbox-2',
+        'new-inbox-topic',
+      ]);
     });
 
     it('should NOT query legacy inbox topics when isInbox is false or undefined', async () => {
       await serverDB.transaction(async (trx) => {
         await trx.insert(agents).values([{ id: 'normal-agent', userId, title: 'Normal Agent' }]);
         await trx.insert(topics).values([
-          { id: 'legacy-inbox', userId, sessionId: null, groupId: null, agentId: null, updatedAt: new Date('2023-01-01') },
-          { id: 'normal-topic', userId, sessionId: null, groupId: null, agentId: 'normal-agent', updatedAt: new Date('2023-01-02') },
+          {
+            id: 'legacy-inbox',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'normal-topic',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: 'normal-agent',
+            updatedAt: new Date('2023-01-02'),
+          },
         ]);
       });
 
@@ -367,8 +655,22 @@ describe('TopicModel - Query', () => {
         await trx.insert(sessions).values([{ id: 'some-session', userId }]);
         await trx.insert(agents).values([{ id: 'inbox-agent-2', userId, title: 'Inbox Agent 2' }]);
         await trx.insert(topics).values([
-          { id: 'true-legacy-inbox', userId, sessionId: null, groupId: null, agentId: null, updatedAt: new Date('2023-01-01') },
-          { id: 'session-topic', userId, sessionId: 'some-session', groupId: null, agentId: null, updatedAt: new Date('2023-01-02') },
+          {
+            id: 'true-legacy-inbox',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'session-topic',
+            userId,
+            sessionId: 'some-session',
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-02'),
+          },
         ]);
       });
 
@@ -383,8 +685,22 @@ describe('TopicModel - Query', () => {
         await trx.insert(chatGroups).values([{ id: 'some-group', title: 'Some Group', userId }]);
         await trx.insert(agents).values([{ id: 'inbox-agent-3', userId, title: 'Inbox Agent 3' }]);
         await trx.insert(topics).values([
-          { id: 'true-legacy-inbox-2', userId, sessionId: null, groupId: null, agentId: null, updatedAt: new Date('2023-01-01') },
-          { id: 'group-topic', userId, sessionId: null, groupId: 'some-group', agentId: null, updatedAt: new Date('2023-01-02') },
+          {
+            id: 'true-legacy-inbox-2',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'group-topic',
+            userId,
+            sessionId: null,
+            groupId: 'some-group',
+            agentId: null,
+            updatedAt: new Date('2023-01-02'),
+          },
         ]);
       });
 
@@ -401,8 +717,22 @@ describe('TopicModel - Query', () => {
         await trx.insert(users).values([{ id: otherUserId }]);
         await trx.insert(agents).values([{ id: 'inbox-agent-4', userId, title: 'Inbox Agent 4' }]);
         await trx.insert(topics).values([
-          { id: 'my-legacy-inbox', userId, sessionId: null, groupId: null, agentId: null, updatedAt: new Date('2023-01-01') },
-          { id: 'other-legacy-inbox', userId: otherUserId, sessionId: null, groupId: null, agentId: null, updatedAt: new Date('2023-01-02') },
+          {
+            id: 'my-legacy-inbox',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'other-legacy-inbox',
+            userId: otherUserId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-02'),
+          },
         ]);
       });
 
@@ -414,20 +744,53 @@ describe('TopicModel - Query', () => {
 
     it('should work with pagination when isInbox is true', async () => {
       await serverDB.transaction(async (trx) => {
-        await trx.insert(agents).values([{ id: 'inbox-paginate', userId, title: 'Inbox Paginate' }]);
+        await trx
+          .insert(agents)
+          .values([{ id: 'inbox-paginate', userId, title: 'Inbox Paginate' }]);
         await trx.insert(topics).values([
-          { id: 'inbox-page-1', userId, sessionId: null, groupId: null, agentId: null, updatedAt: new Date('2023-01-01') },
-          { id: 'inbox-page-2', userId, sessionId: null, groupId: null, agentId: null, updatedAt: new Date('2023-01-02') },
-          { id: 'inbox-page-3', userId, sessionId: null, groupId: null, agentId: 'inbox-paginate', updatedAt: new Date('2023-01-03') },
+          {
+            id: 'inbox-page-1',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'inbox-page-2',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'inbox-page-3',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: 'inbox-paginate',
+            updatedAt: new Date('2023-01-03'),
+          },
         ]);
       });
 
-      const result1 = await topicModel.query({ agentId: 'inbox-paginate', isInbox: true, current: 0, pageSize: 2 });
+      const result1 = await topicModel.query({
+        agentId: 'inbox-paginate',
+        isInbox: true,
+        current: 0,
+        pageSize: 2,
+      });
 
       expect(result1.items).toHaveLength(2);
       expect(result1.total).toBe(3);
 
-      const result2 = await topicModel.query({ agentId: 'inbox-paginate', isInbox: true, current: 1, pageSize: 2 });
+      const result2 = await topicModel.query({
+        agentId: 'inbox-paginate',
+        isInbox: true,
+        current: 1,
+        pageSize: 2,
+      });
 
       expect(result2.items).toHaveLength(1);
     });
@@ -471,7 +834,11 @@ describe('TopicModel - Query', () => {
           { id: 'topic1', title: 'Hello world', sessionId, userId },
           { id: 'topic2', title: 'Goodbye', sessionId, userId },
         ]);
-        await tx.insert(messages).values([{ id: 'message1', role: 'assistant', content: 'abc there', topicId: 'topic1', userId }]);
+        await tx
+          .insert(messages)
+          .values([
+            { id: 'message1', role: 'assistant', content: 'abc there', topicId: 'topic1', userId },
+          ]);
       });
 
       const result = await topicModel.queryByKeyword('hello', sessionId);
@@ -486,7 +853,17 @@ describe('TopicModel - Query', () => {
           { id: 'topic1', title: 'abc world', sessionId, userId },
           { id: 'topic2', title: 'Goodbye', sessionId, userId },
         ]);
-        await tx.insert(messages).values([{ id: 'message1', role: 'assistant', content: 'Hello there', topicId: 'topic1', userId }]);
+        await tx
+          .insert(messages)
+          .values([
+            {
+              id: 'message1',
+              role: 'assistant',
+              content: 'Hello there',
+              topicId: 'topic1',
+              userId,
+            },
+          ]);
       });
 
       const result = await topicModel.queryByKeyword('hello', sessionId);
@@ -500,7 +877,11 @@ describe('TopicModel - Query', () => {
         { id: 'topic1', title: 'Hello world', userId },
         { id: 'topic2', title: 'Goodbye', sessionId, userId },
       ]);
-      await serverDB.insert(messages).values([{ id: 'message1', role: 'assistant', content: 'abc there', topicId: 'topic1', userId }]);
+      await serverDB
+        .insert(messages)
+        .values([
+          { id: 'message1', role: 'assistant', content: 'abc there', topicId: 'topic1', userId },
+        ]);
 
       const result = await topicModel.queryByKeyword('hello', sessionId);
 
@@ -509,8 +890,20 @@ describe('TopicModel - Query', () => {
 
     it('should return topics by title when message matches have null topicIds', async () => {
       await serverDB.transaction(async (tx) => {
-        await tx.insert(topics).values([{ id: 'title-match-topic', title: 'Search keyword here', sessionId, userId }]);
-        await tx.insert(messages).values([{ id: 'orphan-message', role: 'assistant', content: 'Search keyword', topicId: null, userId }]);
+        await tx
+          .insert(topics)
+          .values([{ id: 'title-match-topic', title: 'Search keyword here', sessionId, userId }]);
+        await tx
+          .insert(messages)
+          .values([
+            {
+              id: 'orphan-message',
+              role: 'assistant',
+              content: 'Search keyword',
+              topicId: null,
+              userId,
+            },
+          ]);
       });
 
       const result = await topicModel.queryByKeyword('keyword', sessionId);
@@ -524,13 +917,43 @@ describe('TopicModel - Query', () => {
     it('should return recent topics with agentId and sessionId', async () => {
       await serverDB.transaction(async (tx) => {
         await tx.insert(agents).values([
-          { id: 'agent1', userId, title: 'Agent 1', avatar: 'avatar1.png', backgroundColor: '#ff0000' },
-          { id: 'agent2', userId, title: 'Agent 2', avatar: 'avatar2.png', backgroundColor: '#00ff00' },
+          {
+            id: 'agent1',
+            userId,
+            title: 'Agent 1',
+            avatar: 'avatar1.png',
+            backgroundColor: '#ff0000',
+          },
+          {
+            id: 'agent2',
+            userId,
+            title: 'Agent 2',
+            avatar: 'avatar2.png',
+            backgroundColor: '#00ff00',
+          },
         ]);
         await tx.insert(topics).values([
-          { id: 'recent-topic-1', title: 'Topic 1', userId, agentId: 'agent1', updatedAt: new Date('2023-01-01') },
-          { id: 'recent-topic-2', title: 'Topic 2', userId, agentId: 'agent2', updatedAt: new Date('2023-02-01') },
-          { id: 'recent-topic-3', title: 'Topic 3', userId, agentId: 'agent1', updatedAt: new Date('2023-03-01') },
+          {
+            id: 'recent-topic-1',
+            title: 'Topic 1',
+            userId,
+            agentId: 'agent1',
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'recent-topic-2',
+            title: 'Topic 2',
+            userId,
+            agentId: 'agent2',
+            updatedAt: new Date('2023-02-01'),
+          },
+          {
+            id: 'recent-topic-3',
+            title: 'Topic 3',
+            userId,
+            agentId: 'agent1',
+            updatedAt: new Date('2023-03-01'),
+          },
         ]);
       });
 
@@ -561,7 +984,9 @@ describe('TopicModel - Query', () => {
     });
 
     it('should return null agentId when topic has no agentId', async () => {
-      await serverDB.insert(topics).values([{ id: 'no-agent-topic', title: 'Topic without agent', userId, agentId: null }]);
+      await serverDB
+        .insert(topics)
+        .values([{ id: 'no-agent-topic', title: 'Topic without agent', userId, agentId: null }]);
 
       const result = await topicModel.queryRecent();
 
@@ -603,9 +1028,9 @@ describe('TopicModel - Query', () => {
     });
 
     it('should return sessionId for legacy data resolution', async () => {
-      await serverDB.insert(topics).values([
-        { id: 'legacy-topic', title: 'Legacy Topic', userId, agentId: null, sessionId },
-      ]);
+      await serverDB
+        .insert(topics)
+        .values([{ id: 'legacy-topic', title: 'Legacy Topic', userId, agentId: null, sessionId }]);
 
       const result = await topicModel.queryRecent();
 
@@ -618,9 +1043,19 @@ describe('TopicModel - Query', () => {
   describe('listTopicsForMemoryExtractor', () => {
     it('should paginate pending topics and skip extracted ones by default', async () => {
       await serverDB.insert(topics).values([
-        { createdAt: new Date('2024-01-01T00:00:00Z'), id: 't1', metadata: { userMemoryExtractStatus: 'completed' }, userId },
+        {
+          createdAt: new Date('2024-01-01T00:00:00Z'),
+          id: 't1',
+          metadata: { userMemoryExtractStatus: 'completed' },
+          userId,
+        },
         { createdAt: new Date('2024-01-02T00:00:00Z'), id: 't2', userId },
-        { createdAt: new Date('2024-01-03T00:00:00Z'), id: 't3', metadata: { userMemoryExtractStatus: 'pending' }, userId },
+        {
+          createdAt: new Date('2024-01-03T00:00:00Z'),
+          id: 't3',
+          metadata: { userMemoryExtractStatus: 'pending' },
+          userId,
+        },
         { createdAt: new Date('2024-01-04T00:00:00Z'), id: 't4', userId: userId2 },
       ] satisfies Array<typeof topics.$inferInsert>);
 
@@ -636,11 +1071,19 @@ describe('TopicModel - Query', () => {
 
     it('should include extracted topics when ignoreExtracted is true', async () => {
       await serverDB.insert(topics).values([
-        { createdAt: new Date('2024-02-01T00:00:00Z'), id: 'et1', metadata: { userMemoryExtractStatus: 'completed' }, userId },
+        {
+          createdAt: new Date('2024-02-01T00:00:00Z'),
+          id: 'et1',
+          metadata: { userMemoryExtractStatus: 'completed' },
+          userId,
+        },
         { createdAt: new Date('2024-02-02T00:00:00Z'), id: 'et2', userId },
       ] satisfies Array<typeof topics.$inferInsert>);
 
-      const rows = await topicModel.listTopicsForMemoryExtractor({ ignoreExtracted: true, limit: 10 });
+      const rows = await topicModel.listTopicsForMemoryExtractor({
+        ignoreExtracted: true,
+        limit: 10,
+      });
 
       expect(rows.map((t) => t.id)).toEqual(['et1', 'et2']);
     });

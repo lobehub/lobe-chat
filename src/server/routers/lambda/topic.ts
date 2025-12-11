@@ -140,15 +140,21 @@ export const topicRouter = router({
     .input(
       z.object({
         agentId: z.string().nullable().optional(),
-        containerId: z.string().nullable().optional(),
         current: z.number().optional(),
+        groupId: z.string().nullable().optional(),
         isInbox: z.boolean().optional(),
         pageSize: z.number().optional(),
         sessionId: z.string().nullable().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
-      const { sessionId, isInbox, ...rest } = input;
+      const { sessionId, isInbox, groupId, ...rest } = input;
+
+      // If groupId is provided, query by groupId directly
+      if (groupId) {
+        const result = await ctx.topicModel.query({ groupId, ...rest });
+        return { items: result.items, total: result.total };
+      }
 
       // 如果提供了 sessionId 但没有 agentId，需要反向查找 agentId
       let effectiveAgentId = rest.agentId;

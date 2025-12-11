@@ -2,20 +2,19 @@
 
 import { Text } from '@lobehub/ui';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 
 import Avatar from './Avatar';
 
 const HeaderInfo = memo(() => {
-  const isInbox = useSessionStore(sessionSelectors.isInboxSession);
-  const title = useAgentStore(agentSelectors.currentAgentTitle);
+  const { t } = useTranslation('chat');
+  const groupMeta = useAgentGroupStore(agentGroupSelectors.currentGroupMeta);
 
-  const displayTitle = isInbox ? 'Lobe AI' : title;
+  const displayTitle = groupMeta.title || t('untitledGroup');
 
   return (
     <Flexbox

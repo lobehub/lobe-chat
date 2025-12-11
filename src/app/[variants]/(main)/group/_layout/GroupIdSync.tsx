@@ -5,11 +5,12 @@ import { useAgentGroupStore } from '@/store/agentGroup';
 import { useChatStore } from '@/store/chat';
 
 const GroupIdSync = () => {
-  const useStoreUpdater = createStoreUpdater(useAgentGroupStore);
+  const useAgentGroupStoreUpdater = createStoreUpdater(useAgentGroupStore);
   const useChatStoreUpdater = createStoreUpdater(useChatStore);
   const load = useLoaderData();
 
-  useStoreUpdater('activeGroupId', load?.groupId);
+  // Sync groupId to agentGroupStore and chatStore
+  useAgentGroupStoreUpdater('activeGroupId', load?.groupId);
   useChatStoreUpdater('activeGroupId', load?.groupId);
 
   return null;

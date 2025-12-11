@@ -18,15 +18,15 @@ import {
 import Footer from '@/features/Setting/Footer';
 import { useInitGroupConfig } from '@/hooks/useInitGroupConfig';
 import { useAgentGroupStore } from '@/store/agentGroup';
-import { chatGroupSelectors } from '@/store/agentGroup/selectors';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { GroupSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
 const AgentTeamSettingsWrapper = memo(() => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
-  const config = useAgentGroupStore(chatGroupSelectors.currentGroupConfig, isEqual);
-  const meta = useAgentGroupStore(chatGroupSelectors.currentGroupMeta, isEqual);
+  const config = useAgentGroupStore(agentGroupSelectors.currentGroupConfig, isEqual);
+  const meta = useAgentGroupStore(agentGroupSelectors.currentGroupMeta, isEqual);
   const { isLoading } = useInitGroupConfig();
 
   const [showGroupSetting, updateGroupConfig, updateGroupMeta] = useAgentGroupStore((s) => [

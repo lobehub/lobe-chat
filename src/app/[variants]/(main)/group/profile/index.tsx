@@ -5,8 +5,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import WideScreenContainer from '@/features/WideScreenContainer';
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 
 import AgentBuilder from './features/AgentBuilder';
 import Header from './features/Header';
@@ -17,7 +17,7 @@ import { useProfileStore } from './features/store';
 
 const ProfileArea = memo(() => {
   const editor = useProfileStore((s) => s.editor);
-  const isAgentConfigLoading = useAgentStore(agentSelectors.isAgentConfigLoading);
+  const isGroupsLoading = useAgentGroupStore(agentGroupSelectors.isGroupsLoading);
 
   return (
     <>
@@ -27,14 +27,14 @@ const ProfileArea = memo(() => {
           height={'100%'}
           horizontal
           onClick={() => {
-            if (isAgentConfigLoading) return;
+            if (isGroupsLoading) return;
             editor?.focus();
           }}
           style={{ cursor: 'text', display: 'flex', overflowY: 'auto', position: 'relative' }}
           width={'100%'}
         >
-          {isAgentConfigLoading ? (
-            <Loading debugId="ProfileArea > AgentConfig" />
+          {isGroupsLoading ? (
+            <Loading debugId="ProfileArea > GroupConfig" />
           ) : (
             <WideScreenContainer>
               <ProfileEditor />
@@ -49,9 +49,9 @@ const ProfileArea = memo(() => {
   );
 });
 
-const AgentProfile = memo(() => {
+const GroupProfile = memo(() => {
   return (
-    <Suspense fallback={<Loading debugId="AgentProfile" />}>
+    <Suspense fallback={<Loading debugId="GroupProfile" />}>
       <ProfileProvider>
         <Flexbox height={'100%'} horizontal width={'100%'}>
           <ProfileArea />
@@ -62,4 +62,4 @@ const AgentProfile = memo(() => {
   );
 });
 
-export default AgentProfile;
+export default GroupProfile;

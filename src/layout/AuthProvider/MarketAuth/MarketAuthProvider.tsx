@@ -32,7 +32,6 @@ interface MarketAuthProviderProps {
  * 获取用户信息（从 OIDC userinfo endpoint）
  */
 const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null> => {
-  console.log('accessToken', accessToken);
   try {
     const response = await fetch(MARKET_OIDC_ENDPOINTS.userinfo, {
       body: JSON.stringify({ token: accessToken }),
@@ -41,8 +40,6 @@ const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null
       },
       method: 'POST',
     });
-
-    console.log('[MarketAuth] User info response:', response);
 
     if (!response.ok) {
       console.error(
@@ -54,7 +51,6 @@ const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null
     }
 
     const userInfo = (await response.json()) as MarketUserInfo;
-    console.log('[MarketAuth] User info fetched successfully:', userInfo);
 
     return userInfo;
   } catch (error) {
@@ -68,7 +64,6 @@ const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null
  */
 const getMarketTokensFromDB = () => {
   const settings = settingsSelectors.currentSettings(useUserStore.getState());
-  console.log('settings', settings);
   return settings.market;
 };
 
@@ -80,7 +75,6 @@ const saveMarketTokensToDB = async (
   refreshToken?: string,
   expiresAt?: number,
 ) => {
-  console.log('[MarketAuth] Saving tokens to DB');
   try {
     await useUserStore.getState().setSettings({
       market: {
@@ -89,7 +83,6 @@ const saveMarketTokensToDB = async (
         refreshToken,
       },
     });
-    console.log('[MarketAuth] Tokens saved to DB successfully');
   } catch (error) {
     console.error('[MarketAuth] Failed to save tokens to DB:', error);
   }
@@ -99,7 +92,6 @@ const saveMarketTokensToDB = async (
  * 清除 DB 中的 market tokens
  */
 const clearMarketTokensFromDB = async () => {
-  console.log('[MarketAuth] Clearing tokens from DB');
   try {
     await useUserStore.getState().setSettings({
       market: {
@@ -108,7 +100,6 @@ const clearMarketTokensFromDB = async () => {
         refreshToken: undefined,
       },
     });
-    console.log('[MarketAuth] Tokens cleared from DB successfully');
   } catch (error) {
     console.error('[MarketAuth] Failed to clear tokens from DB:', error);
   }
@@ -121,11 +112,9 @@ const getRefreshToken = (): string | null => {
   // 优先从 DB 获取
   const dbTokens = getMarketTokensFromDB();
   if (dbTokens?.refreshToken) {
-    console.log('[MarketAuth] Retrieved refresh token from DB');
     return dbTokens.refreshToken;
   }
 
-  console.log('[MarketAuth] No refresh token found');
   return null;
 };
 
@@ -133,7 +122,6 @@ const getRefreshToken = (): string | null => {
  * 刷新令牌（暂时简化，后续可以实现 refresh token 逻辑）
  */
 const refreshToken = async (): Promise<boolean> => {
-  console.log('[MarketAuth] Refresh token not implemented yet');
   return false;
 };
 
@@ -204,28 +192,23 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
    * 初始化：检查并恢复会话，获取用户信息
    */
   const initializeSession = async () => {
-    console.log('[MarketAuth] Initializing session...');
     setStatus('loading');
 
     const dbTokens = getMarketTokensFromDB();
 
     // 检查 DB 中是否有 token
     if (!dbTokens?.accessToken) {
-      console.log('[MarketAuth] No token found in DB');
       setStatus('unauthenticated');
       return;
     }
 
     // 检查 token 是否过期
     if (!dbTokens.expiresAt || dbTokens.expiresAt <= Date.now()) {
-      console.log('[MarketAuth] DB token has expired');
       // 清理过期的 DB tokens
       await clearMarketTokensFromDB();
       setStatus('unauthenticated');
       return;
     }
-
-    console.log('[MarketAuth] Valid token found, fetching user info...');
 
     // 获取用户信息
     const userInfo = await fetchUserInfo(dbTokens.accessToken);
@@ -236,8 +219,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       setStatus('unauthenticated');
       return;
     }
-
-    console.log('[MarketAuth] Session initialized successfully, accountId:', userInfo.accountId);
 
     const restoredSession: MarketAuthSession = {
       accessToken: dbTokens.accessToken,
@@ -256,8 +237,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
    * 实际执行登录的方法（内部使用）
    */
   const handleActualSignIn = async (): Promise<number | null> => {
-    console.log('[MarketAuth] Starting sign in process');
-
     if (!oidcClient) {
       console.error('[MarketAuth] OIDC client not initialized');
       throw new MarketAuthError('oidcNotReady', { message: 'OIDC client not initialized' });
@@ -268,15 +247,12 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
 
       // 启动 OIDC 授权流程并获取授权码
       const authResult = await oidcClient.startAuthorization();
-      console.log('[MarketAuth] Authorization successful, exchanging code for token', authResult);
 
       // 用授权码换取访问令牌
       const tokenResponse = await oidcClient.exchangeCodeForToken(
         authResult.code,
         authResult.state,
       );
-
-      console.log('[MarketAuth] Token response:', tokenResponse);
 
       // 获取用户信息
       const userInfo = await fetchUserInfo(tokenResponse.accessToken);
@@ -302,7 +278,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       if (userInfo?.sub) {
         const needsSetup = await checkNeedsProfileSetup(userInfo.sub);
         if (needsSetup) {
-          console.log('[MarketAuth] First-time login detected, showing profile setup modal');
           setIsFirstTimeSetup(true);
           setShowProfileSetupModal(true);
         }
@@ -417,7 +392,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
    * 个人资料更新成功回调
    */
   const handleProfileUpdateSuccess = useCallback(() => {
-    console.log('[MarketAuth] Profile updated successfully');
     // Profile is updated, modal will close automatically
   }, []);
 

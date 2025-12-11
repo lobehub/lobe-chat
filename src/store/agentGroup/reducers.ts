@@ -1,8 +1,18 @@
+import type { AgentGroupDetail } from '@lobechat/types';
 import { produce } from 'immer';
 
 import { ChatGroupItem } from '@/database/schemas/chatGroup';
 
 import { ChatGroupState } from './initialState';
+
+/**
+ * Convert ChatGroupItem to AgentGroupDetail by adding empty agents array
+ */
+const toAgentGroupDetail = (group: ChatGroupItem): AgentGroupDetail =>
+  ({
+    ...group,
+    agents: [],
+  }) as AgentGroupDetail;
 
 export type ChatGroupReducer = (state: ChatGroupState, payload: any) => ChatGroupState;
 
@@ -11,7 +21,7 @@ export const chatGroupReducers = {
   addGroup: (state: ChatGroupState, { payload }: { payload: ChatGroupItem }) =>
     produce(state, (draft: ChatGroupState) => {
       draft.groups.push(payload);
-      draft.groupMap[payload.id] = payload;
+      draft.groupMap[payload.id] = toAgentGroupDetail(payload);
     }),
 
   // Delete a group from the list
@@ -25,13 +35,17 @@ export const chatGroupReducers = {
   loadGroups: (state: ChatGroupState, { payload }: { payload: ChatGroupItem[] }) =>
     produce(state, (draft: ChatGroupState) => {
       draft.groups = payload;
-      // Rebuild groupMap to maintain consistency
+      // Rebuild groupMap to maintain consistency, preserving existing agents data
+      const currentMap = state.groupMap;
       draft.groupMap = payload.reduce(
-        (map: Record<string, ChatGroupItem>, group: ChatGroupItem) => {
-          map[group.id] = group;
+        (map, group) => {
+          const existing = currentMap[group.id];
+          map[group.id] = existing
+            ? ({ ...existing, ...group } as AgentGroupDetail)
+            : toAgentGroupDetail(group);
           return map;
         },
-        {},
+        {} as Record<string, AgentGroupDetail>,
       );
       draft.isGroupsLoading = false;
     }),

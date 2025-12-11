@@ -5,20 +5,15 @@ import { memo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
-import { GroupMemberWithAgent } from '@/types/session';
 
 const HeaderAvatar = memo<{ size?: number }>(() => {
-  const title = useAgentStore(agentSelectors.currentAgentTitle);
-  const members = useSessionStore((s) => {
-    const session = sessionSelectors.currentSession(s);
-    return session?.type === 'group' ? session.members : undefined;
-  });
+  const groupMeta = useAgentGroupStore(agentGroupSelectors.currentGroupMeta);
+  const currentGroup = useAgentGroupStore(agentGroupSelectors.currentGroup);
+  const agents = currentGroup?.agents || [];
 
   const currentUser = useUserStore((s) => ({
     avatar: userProfileSelectors.userAvatar(s),
@@ -49,14 +44,14 @@ const HeaderAvatar = memo<{ size?: number }>(() => {
           {
             avatar: currentUser.avatar || DEFAULT_AVATAR,
           },
-          ...(members?.map((member: GroupMemberWithAgent) => ({
-            avatar: member.avatar || DEFAULT_AVATAR,
-            background: member.backgroundColor || undefined,
-          })) || []),
+          ...agents.map((agent) => ({
+            avatar: agent.avatar || DEFAULT_AVATAR,
+            background: agent.backgroundColor || undefined,
+          })),
         ]}
         cornerShape={'square'}
         size={28}
-        title={title ?? undefined}
+        title={groupMeta.title || undefined}
       />
     </Block>
   );

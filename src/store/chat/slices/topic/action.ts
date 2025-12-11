@@ -262,16 +262,22 @@ export const chatTopic: StateCreator<
   },
 
   // query
-  useFetchTopics: (enable, { agentId, pageSize: customPageSize, isInbox }) => {
+  useFetchTopics: (enable, { agentId, groupId, pageSize: customPageSize, isInbox }) => {
     const pageSize = customPageSize || 20;
+    // Use groupId or agentId as the container key for topic data map
+    const containerId = groupId || agentId;
 
     return useClientDataSWR<{ items: ChatTopic[]; total: number }>(
-      enable ? [SWR_USE_FETCH_TOPIC, { agentId, isInbox, pageSize }] : null,
-      async ([, params]: [string, { agentId?: string; isInbox?: boolean; pageSize: number }]) => {
-        const { agentId, isInbox, pageSize } = params;
-        if (!agentId) return { items: [], total: 0 };
+      enable && containerId ? [SWR_USE_FETCH_TOPIC, { agentId, groupId, isInbox, pageSize }] : null,
+      async ([, params]: [
+        string,
+        { agentId?: string; groupId?: string; isInbox?: boolean; pageSize: number },
+      ]) => {
+        const { agentId, groupId, isInbox, pageSize } = params;
+        const containerId = groupId || agentId;
+        if (!containerId) return { items: [], total: 0 };
 
-        const currentData = get().topicDataMap[agentId];
+        const currentData = get().topicDataMap[containerId];
         const currentLength = currentData?.items?.length || 0;
 
         // If we already have data and new pageSize is larger, fetch incrementally
@@ -280,7 +286,7 @@ export const chatTopic: StateCreator<
             {
               topicDataMap: {
                 ...get().topicDataMap,
-                [agentId]: { ...currentData!, isExpandingPageSize: true },
+                [containerId]: { ...currentData!, isExpandingPageSize: true },
               },
             },
             false,
@@ -291,6 +297,7 @@ export const chatTopic: StateCreator<
           const result = await topicService.getTopics({
             agentId,
             current: 0,
+            groupId,
             isInbox,
             pageSize,
           });
@@ -299,7 +306,7 @@ export const chatTopic: StateCreator<
             {
               topicDataMap: {
                 ...get().topicDataMap,
-                [agentId]: { ...get().topicDataMap[agentId]!, isExpandingPageSize: false },
+                [containerId]: { ...get().topicDataMap[containerId]!, isExpandingPageSize: false },
               },
             },
             false,
@@ -310,16 +317,16 @@ export const chatTopic: StateCreator<
         }
 
         // Otherwise fetch normally
-        return topicService.getTopics({ agentId, current: 0, isInbox, pageSize });
+        return topicService.getTopics({ agentId, current: 0, groupId, isInbox, pageSize });
       },
       {
         onSuccess: async (result) => {
-          if (!agentId) return;
+          if (!containerId) return;
 
           const { items: topics, total: totalCount } = result;
           const hasMore = topics.length >= pageSize;
 
-          const currentData = get().topicDataMap[agentId];
+          const currentData = get().topicDataMap[containerId];
 
           // no need to update map if the topics have been init and the map is the same
           if (get().topicsInit && isEqual(topics, currentData?.items)) return;
@@ -328,7 +335,7 @@ export const chatTopic: StateCreator<
             {
               topicDataMap: {
                 ...get().topicDataMap,
-                [agentId]: {
+                [containerId]: {
                   currentPage: 0,
                   hasMore,
                   items: topics,
@@ -338,7 +345,7 @@ export const chatTopic: StateCreator<
               topicsInit: true,
             },
             false,
-            n('useFetchTopics(success)', { containerId: agentId }),
+            n('useFetchTopics(success)', { containerId }),
           );
         },
       },

@@ -7,8 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import GroupInfo from '@/features/GroupInfo';
 import { useAgentGroupStore } from '@/store/agentGroup';
-import { chatGroupSelectors } from '@/store/agentGroup/selectors';
-import { useSessionStore } from '@/store/session';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { LobeSession } from '@/types/session';
 
 import { useStyles } from './style';
@@ -26,9 +25,9 @@ const GroupRole = memo<GroupRoleProps>(
     const { styles } = useStyles();
     const { t } = useTranslation('chat');
 
-    const activeGroupId = useSessionStore((s) => s.activeId);
+    const activeGroupId = useAgentGroupStore((s) => s.activeGroupId);
     const updateGroupConfig = useAgentGroupStore((s) => s.updateGroupConfig);
-    const groupConfig = useAgentGroupStore(chatGroupSelectors.currentGroupConfig);
+    const groupConfig = useAgentGroupStore(agentGroupSelectors.currentGroupConfig);
 
     const handleSystemPromptChange = async (value: string) => {
       if (!activeGroupId) return;

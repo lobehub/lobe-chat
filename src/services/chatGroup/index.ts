@@ -1,4 +1,4 @@
-import { AgentItem } from '@lobechat/types';
+import { AgentGroupDetail, AgentItem } from '@lobechat/types';
 
 import {
   ChatGroupAgentItem,
@@ -61,6 +61,10 @@ class ChatGroupService {
 
   getGroup = (id: string): Promise<ChatGroupItem | undefined> => {
     return lambdaClient.group.getGroup.query({ id });
+  };
+
+  getGroupDetail = (id: string): Promise<AgentGroupDetail | null> => {
+    return lambdaClient.group.getGroupDetail.query({ id });
   };
 
   getGroups = (): Promise<ChatGroupItem[]> => {
