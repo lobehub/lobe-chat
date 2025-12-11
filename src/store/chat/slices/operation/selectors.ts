@@ -3,6 +3,15 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import type { Operation, OperationType } from './types';
 
+/**
+ * Operation types that indicate AI is generating content
+ * Used for loading state indicators in UI
+ */
+const AI_RUNTIME_OPERATION_TYPES: OperationType[] = [
+  'execAgentRuntime', // Client-side agent execution
+  'execServerAgentRuntime', // Server-side agent execution (Group Chat)
+];
+
 // === Basic Queries ===
 /**
  * Get all operations
@@ -196,29 +205,61 @@ const hasRunningOperationByContext =
 
 /**
  * Check if agent runtime is running in a specific context
- * More specific than hasRunningOperationByContext - only checks execAgentRuntime operations
+ * Checks both client-side (execAgentRuntime) and server-side (execServerAgentRuntime) operations
  */
 const isAgentRuntimeRunningByContext =
-  (context: { agentId: string; threadId?: string | null; topicId?: string | null }) =>
+  (context: {
+    agentId?: string;
+    groupId?: string;
+    threadId?: string | null;
+    topicId?: string | null;
+  }) =>
   (s: ChatStoreState): boolean => {
-    const operations = getOperationsByContext(context)(s);
+    if (!context.agentId) return false;
+
+    const contextKey = messageMapKey({
+      agentId: context.agentId,
+      groupId: context.groupId,
+      topicId: context.topicId,
+    });
+
+    const operationIds = s.operationsByContext[contextKey] || [];
+    const operations = operationIds
+      .map((id) => s.operations[id])
+      .filter((op): op is Operation => {
+        if (!op) return false;
+        // Also filter by threadId if provided
+        const opThreadId = op.context.threadId ?? null;
+        const contextThreadId = context.threadId ?? null;
+        return opThreadId === contextThreadId;
+      });
+
     return operations.some(
-      (op) => op.type === 'execAgentRuntime' && op.status === 'running' && !op.metadata.isAborting,
+      (op) =>
+        AI_RUNTIME_OPERATION_TYPES.includes(op.type) &&
+        op.status === 'running' &&
+        !op.metadata.isAborting,
     );
   };
 
 // === Backward Compatibility ===
 /**
  * Check if agent runtime is running (including both main window and thread)
+ * Checks both client-side (execAgentRuntime) and server-side (execServerAgentRuntime) operations
  * Excludes operations that are aborting (cleaning up after cancellation)
  */
 const isAgentRuntimeRunning = (s: ChatStoreState): boolean => {
-  const operationIds = s.operationsByType['execAgentRuntime'] || [];
-  return operationIds.some((id) => {
-    const op = s.operations[id];
-    // Exclude operations that are aborting (user already cancelled, just cleaning up)
-    return op && op.status === 'running' && !op.metadata.isAborting;
-  });
+  // Check all AI runtime operation types
+  for (const type of AI_RUNTIME_OPERATION_TYPES) {
+    const operationIds = s.operationsByType[type] || [];
+    const hasRunning = operationIds.some((id) => {
+      const op = s.operations[id];
+      // Exclude operations that are aborting (user already cancelled, just cleaning up)
+      return op && op.status === 'running' && !op.metadata.isAborting;
+    });
+    if (hasRunning) return true;
+  }
+  return false;
 };
 
 /**
@@ -227,25 +268,37 @@ const isAgentRuntimeRunning = (s: ChatStoreState): boolean => {
  * Excludes thread operations and operations from other topics to prevent cross-contamination
  */
 const isMainWindowAgentRuntimeRunning = (s: ChatStoreState): boolean => {
-  const operationIds = s.operationsByType['execAgentRuntime'] || [];
+  // Check all AI runtime operation types
+  for (const type of AI_RUNTIME_OPERATION_TYPES) {
+    const operationIds = s.operationsByType[type] || [];
 
-  return operationIds.some((id) => {
-    const op = s.operations[id];
-    if (!op || op.status !== 'running' || op.metadata.isAborting || op.metadata.inThread) {
-      return false;
-    }
+    const hasRunning = operationIds.some((id) => {
+      const op = s.operations[id];
+      if (!op || op.status !== 'running' || op.metadata.isAborting || op.metadata.inThread) {
+        return false;
+      }
 
-    // Agent must match
-    if (s.activeAgentId !== op.context.agentId) return false;
+      // For group operations, check groupId
+      if (op.context.groupId) {
+        return s.activeGroupId === op.context.groupId;
+      }
 
-    // Topic comparison: normalize null/undefined (both mean "default topic")
-    // activeTopicId can be null (initial state) or undefined (after topic operations)
-    // Operation context topicId can also be null or undefined
-    const activeTopicId = s.activeTopicId ?? null;
-    const opTopicId = op.context.topicId ?? null;
+      // Agent must match
+      if (s.activeAgentId !== op.context.agentId) return false;
 
-    return activeTopicId === opTopicId;
-  });
+      // Topic comparison: normalize null/undefined (both mean "default topic")
+      // activeTopicId can be null (initial state) or undefined (after topic operations)
+      // Operation context topicId can also be null or undefined
+      const activeTopicId = s.activeTopicId ?? null;
+      const opTopicId = op.context.topicId ?? null;
+
+      return activeTopicId === opTopicId;
+    });
+
+    if (hasRunning) return true;
+  }
+
+  return false;
 };
 
 /**
@@ -274,13 +327,15 @@ const isMessageProcessing =
 
 /**
  * Check if a specific message is being generated (AI generation only)
- * This is more specific than isMessageProcessing - only checks execAgentRuntime operations
+ * Checks both client-side (execAgentRuntime) and server-side (execServerAgentRuntime) operations
  */
 const isMessageGenerating =
   (messageId: string) =>
   (s: ChatStoreState): boolean => {
     const operations = getOperationsByMessage(messageId)(s);
-    return operations.some((op) => op.type === 'execAgentRuntime' && op.status === 'running');
+    return operations.some(
+      (op) => AI_RUNTIME_OPERATION_TYPES.includes(op.type) && op.status === 'running',
+    );
   };
 
 /**

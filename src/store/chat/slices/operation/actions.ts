@@ -98,6 +98,7 @@ export interface OperationActions {
     description?: string;
     label?: string;
     metadata?: Partial<OperationMetadata>;
+    operationId?: string;
     parentOperationId?: string;
     type: OperationType;
   }) => { abortController: AbortController; operationId: string };
@@ -173,9 +174,10 @@ export const operationActions: StateCreator<
       label,
       description,
       metadata,
+      operationId: customOperationId,
     } = params;
 
-    const operationId = `op_${nanoid()}`;
+    const operationId = customOperationId || `op_${nanoid()}`;
 
     // If parent operation exists and context is not fully provided, inherit from parent
     let context: OperationContext = partialContext || {};
@@ -237,6 +239,7 @@ export const operationActions: StateCreator<
         if (context.agentId) {
           const contextKey = messageMapKey({
             agentId: context.agentId,
+            groupId: context.groupId,
             topicId: context.topicId !== undefined ? context.topicId : null,
           });
           if (!state.operationsByContext[contextKey]) {
@@ -611,6 +614,7 @@ export const operationActions: StateCreator<
           if (op.context.agentId) {
             const contextKey = messageMapKey({
               agentId: op.context.agentId,
+              groupId: op.context.groupId,
               topicId: op.context.topicId !== undefined ? op.context.topicId : null,
             });
             const contextIndex = state.operationsByContext[contextKey];

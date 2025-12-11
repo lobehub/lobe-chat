@@ -292,12 +292,13 @@ export const agentGroupSlice: StateCreator<
 
     set({ isCreatingMessage: true }, false, n('sendGroupMessage/start'));
 
-    // 0. Create operation first for correct context tracking
+    // 1. Optimistic update - create temp messages immediately for instant UI feedback
+    // No operation needed for optimistic updates
     const tempUserId = 'tmp_' + nanoid();
     const tempAssistantId = 'tmp_' + nanoid();
     const fileIds = files?.map((f) => f.id);
 
-    const { operationId } = startOperation({
+    const { operationId: optimisticOperationId } = startOperation({
       type: 'sendMessage',
       context: { ...context, messageId: tempUserId },
       label: 'Send Group Message',
@@ -314,7 +315,7 @@ export const agentGroupSlice: StateCreator<
         groupId,
         topicId: topicId ?? undefined,
       },
-      { tempMessageId: tempUserId, operationId },
+      { tempMessageId: tempUserId, operationId: optimisticOperationId },
     );
 
     // Create temp assistant message (loading state)
@@ -326,14 +327,22 @@ export const agentGroupSlice: StateCreator<
         groupId,
         topicId: topicId ?? undefined,
       },
-      { tempMessageId: tempAssistantId, operationId },
+      { tempMessageId: tempAssistantId, operationId: optimisticOperationId },
     );
 
-    // Start loading state for temp user message
+    // Start loading state for temp messages
     get().internal_toggleMessageLoading(true, tempUserId);
+    get().internal_toggleMessageLoading(true, tempAssistantId);
+
+    // 2. Create execServerAgentRuntime operation - from here starts the real Agent execution
+    const { operationId } = startOperation({
+      type: 'execServerAgentRuntime',
+      context: { ...context, topicId },
+      label: 'Execute Server Agent',
+    });
 
     try {
-      // 2. Call backend execGroupAgent - creates messages and triggers Agent
+      // 3. Call backend execGroupAgent - creates messages and triggers Agent
       const result = await lambdaClient.aiAgent.execGroupAgent.mutate({
         agentId,
         files: fileIds,
@@ -344,7 +353,7 @@ export const agentGroupSlice: StateCreator<
 
       log('execGroupAgent result: operationId=%s, topicId=%s', result.operationId, result.topicId);
 
-      // 3. Update topics if new topic was created
+      // 4. Update topics if new topic was created
       if (result.topics) {
         const pageSize = 20; // Default page size for topics
         get().internal_updateTopics(agentId, {
@@ -355,43 +364,53 @@ export const agentGroupSlice: StateCreator<
         });
       }
 
-      // 4. Replace temp messages with server messages
+      // 5. Replace temp messages with server messages
       if (result.messages) {
         get().replaceMessages(result.messages, {
           action: n('sendGroupMessage/syncMessages'),
           context: { ...context, topicId: result.topicId || topicId },
         });
+        // Pass operationId so internal_dispatchMessage can get correct context (groupId, topicId, etc.)
+        get().internal_dispatchMessage(
+          {
+            type: 'deleteMessages',
+            ids: [tempUserId, tempAssistantId],
+          },
+          { operationId: optimisticOperationId },
+        );
       }
 
-      // 5. Switch to new topic if created
+      // 6. Switch to new topic if created
       if (result.isCreateNewTopic && result.topicId) {
         await get().switchTopic(result.topicId, true);
       }
 
-      // 6. Create streaming context - assistantId will be set from stream_start event
+      // 7. Create streaming context - use assistantMessageId from backend response
       const streamContext = {
-        assistantId: '',
+        assistantId: result.assistantMessageId,
         content: '',
         reasoning: '',
-        tmpAssistantId: '', // Will be set from stream_start
+        tmpAssistantId: tempAssistantId, // Used for cleanup if needed
       };
 
-      // 7. Store agent operation
-      set(
-        produce((draft: ChatStoreState) => {
-          draft.agentOperations[result.operationId] = {
-            lastEventId: '0',
-            operationId: result.operationId,
-            status: 'created',
-            stepCount: 0,
-            totalCost: 0,
-          };
-        }),
-        false,
-        n('sendGroupMessage/createOperation'),
-      );
+      // 8. Start child operation for SSE stream using backend operationId
+      get().startOperation({
+        type: 'groupAgentStream',
+        operationId: result.operationId,
+        context: {
+          agentId,
+          groupId,
+          topicId: result.topicId || topicId,
+          messageId: result.assistantMessageId,
+        },
+        label: 'Group Agent Stream',
+        parentOperationId: operationId,
+      });
 
-      // 8. Connect to SSE stream
+      // Associate assistant message with the stream operation
+      get().associateMessageWithOperation(result.assistantMessageId, result.operationId);
+
+      // 9. Connect to SSE stream
       const eventSource = agentRuntimeClient.createStreamConnection(result.operationId, {
         includeHistory: false,
         onConnect: () => {
@@ -399,12 +418,17 @@ export const agentGroupSlice: StateCreator<
         },
         onDisconnect: () => {
           log('Stream disconnected from %s', result.operationId);
-          if (streamContext.assistantId) {
-            get().internal_cleanupAgentOperation(streamContext.assistantId);
-          }
+          // Complete both operations when stream disconnects
+          get().completeOperation(result.operationId);
+          get().completeOperation(operationId);
         },
         onError: (error: Error) => {
           log('Stream error for %s: %O', result.operationId, error);
+          // Fail the stream operation on error
+          get().failOperation(result.operationId, {
+            type: 'AgentStreamError',
+            message: error.message,
+          });
           if (streamContext.assistantId) {
             get().internal_handleAgentError(streamContext.assistantId, error.message);
           }
@@ -414,28 +438,14 @@ export const agentGroupSlice: StateCreator<
         },
       });
 
-      // 9. Save EventSource reference
-      set(
-        produce((draft: ChatStoreState) => {
-          if (draft.agentOperations[result.operationId]) {
-            draft.agentOperations[result.operationId].eventSource = eventSource;
-          }
-        }),
-        false,
-        n('sendGroupMessage/saveEventSource'),
-      );
-
-      // Complete the send operation
-      get().completeOperation(operationId);
+      // 10. Register cancel handler for aborting SSE stream
+      get().onOperationCancel(result.operationId, () => {
+        log('Cancelling SSE stream for operation %s', result.operationId);
+        eventSource.abort();
+      });
     } catch (error) {
       log('sendGroupMessage failed: %O', error);
       console.error('Failed to send group message:', error);
-
-      // Remove temp messages on error (use operationId for correct context)
-      get().internal_dispatchMessage(
-        { type: 'deleteMessages', ids: [tempUserId, tempAssistantId] },
-        { operationId },
-      );
 
       // Fail the operation
       get().failOperation(operationId, {
@@ -444,6 +454,7 @@ export const agentGroupSlice: StateCreator<
       });
     } finally {
       get().internal_toggleMessageLoading(false, tempUserId);
+      get().internal_toggleMessageLoading(false, tempAssistantId);
       set({ isCreatingMessage: false }, false, n('sendGroupMessage/end'));
     }
   },
