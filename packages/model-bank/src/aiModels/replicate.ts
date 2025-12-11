@@ -4,8 +4,7 @@ import { AIImageModelCard } from '../types';
 // https://replicate.com/black-forest-labs
 const imageModels: AIImageModelCard[] = [
   {
-    description:
-      'FLUX 1.1 Pro - Faster, better FLUX Pro with excellent image quality and prompt adherence.',
+    description: 'FLUX 1.1 Pro - 更快更优的 FLUX Pro 版本，具有出色的图像质量和提示词遵循能力。',
     displayName: 'FLUX 1.1 Pro',
     enabled: true,
     id: 'black-forest-labs/flux-1.1-pro',
@@ -24,7 +23,7 @@ const imageModels: AIImageModelCard[] = [
     type: 'image',
   },
   {
-    description: 'FLUX Schnell - Fast image generation model optimized for speed.',
+    description: 'FLUX Schnell - 专为速度优化的快速图像生成模型。',
     displayName: 'FLUX Schnell',
     enabled: true,
     id: 'black-forest-labs/flux-schnell',
@@ -43,7 +42,7 @@ const imageModels: AIImageModelCard[] = [
     type: 'image',
   },
   {
-    description: 'FLUX Dev - Development version of FLUX for non-commercial use.',
+    description: 'FLUX Dev - FLUX 开发版本，仅供非商业用途使用。',
     displayName: 'FLUX Dev',
     enabled: true,
     id: 'black-forest-labs/flux-dev',
@@ -64,7 +63,7 @@ const imageModels: AIImageModelCard[] = [
     type: 'image',
   },
   {
-    description: 'FLUX Pro - Professional FLUX model with high quality output.',
+    description: 'FLUX Pro - 专业版 FLUX 模型，输出高质量图像。',
     displayName: 'FLUX Pro',
     enabled: true,
     id: 'black-forest-labs/flux-pro',
