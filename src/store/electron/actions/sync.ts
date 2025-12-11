@@ -65,7 +65,7 @@ export const remoteSyncSlice: StateCreator<
   disconnectRemoteServer: async () => {
     set({ isConnectingServer: false });
     try {
-      await remoteServerService.setRemoteServerConfig({ active: false, storageMode: 'local' });
+      await remoteServerService.setRemoteServerConfig({ active: false, storageMode: 'cloud' });
       // 更新表单URL为空
       set({ dataSyncConfig: initialState.dataSyncConfig });
       // 刷新状态

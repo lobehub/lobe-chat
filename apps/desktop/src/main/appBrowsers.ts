@@ -26,7 +26,7 @@ export const appBrowsers = {
     maximizable: false,
     minWidth: 400,
     parentIdentifier: 'chat',
-    path: '/#desktop/devtools',
+    path: '/desktop/devtools',
     titleBarStyle: 'hiddenInset',
     vibrancy: 'under-window',
     width: 1000,
