@@ -161,6 +161,8 @@ export default {
       searching: '搜索结果',
       topic: '话题',
       topics: '话题',
+      message: '对话',
+      messages: '对话',
     },
     searchPlaceholder: '输入命令或搜索...',
     settings: '设置',

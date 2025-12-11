@@ -32,6 +32,15 @@ export const useCommandMenu = () => {
   // Detect context based on current pathname
   const context = useMemo(() => detectContext(pathname), [pathname]);
 
+  // Extract agentId from pathname when in agent context
+  const agentId = useMemo(() => {
+    if (context?.type === 'agent') {
+      const match = pathname.match(/^\/agent\/([^/?]+)/);
+      return match?.[1] || undefined;
+    }
+    return undefined;
+  }, [context, pathname]);
+
   // Debounce search input to reduce API calls
   const debouncedSearch = useDebounce(search, { wait: 300 });
 
@@ -40,9 +49,9 @@ export const useCommandMenu = () => {
   const searchQuery = debouncedSearch.trim();
 
   const { data: searchResults, isLoading: isSearching } = useSWR<SearchResult[]>(
-    hasSearch && !isAiMode ? ['search', searchQuery] : null,
+    hasSearch && !isAiMode ? ['search', searchQuery, agentId] : null,
     async () => {
-      return lambdaClient.search.query.query({ query: searchQuery });
+      return lambdaClient.search.query.query({ agentId, query: searchQuery });
     },
     {
       revalidateOnFocus: false,

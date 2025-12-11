@@ -1,9 +1,9 @@
 import { sql } from 'drizzle-orm';
 
-import { agents, documents, files, topics } from '../../schemas';
+import { agents, documents, files, messages, topics } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 
-export type SearchResultType = 'agent' | 'topic' | 'file';
+export type SearchResultType = 'agent' | 'topic' | 'file' | 'message';
 
 export interface BaseSearchResult {
   // 1=exact, 2=prefix, 3=contains
@@ -39,9 +39,23 @@ export interface FileSearchResult extends BaseSearchResult {
   url: string | null;
 }
 
-export type SearchResult = AgentSearchResult | TopicSearchResult | FileSearchResult;
+export interface MessageSearchResult extends BaseSearchResult {
+  agentId: string | null;
+  content: string;
+  model: string | null;
+  role: string;
+  topicId: string | null;
+  type: 'message';
+}
+
+export type SearchResult =
+  | AgentSearchResult
+  | TopicSearchResult
+  | FileSearchResult
+  | MessageSearchResult;
 
 export interface SearchOptions {
+  agentId?: string;
   limitPerType?: number;
   offset?: number;
   query: string;
@@ -64,7 +78,7 @@ export class SearchRepo {
    * Search across agents, topics, and files
    */
   async search(options: SearchOptions): Promise<SearchResult[]> {
-    const { query, type, limitPerType = 5 } = options;
+    const { query, type, limitPerType = 5, agentId } = options;
 
     // Early return for empty query
     if (!query || query.trim() === '') return [];
@@ -74,16 +88,26 @@ export class SearchRepo {
     const exactQuery = trimmedQuery;
     const prefixQuery = `${trimmedQuery}%`;
 
+    // Context-aware limits: prioritize topics in agent context
+    const limits = this.calculateLimits(limitPerType, type, agentId);
+
     // Build queries based on type filter
     const queries = [];
     if (!type || type === 'agent') {
-      queries.push(this.buildAgentQuery(searchTerm, exactQuery, prefixQuery, limitPerType));
+      queries.push(this.buildAgentQuery(searchTerm, exactQuery, prefixQuery, limits.agent));
     }
     if (!type || type === 'topic') {
-      queries.push(this.buildTopicQuery(searchTerm, exactQuery, prefixQuery, limitPerType));
+      queries.push(
+        this.buildTopicQuery(searchTerm, exactQuery, prefixQuery, limits.topic, agentId),
+      );
+    }
+    if (!type || type === 'message') {
+      queries.push(
+        this.buildMessageQuery(searchTerm, exactQuery, prefixQuery, limits.message, agentId),
+      );
     }
     if (!type || type === 'file') {
-      queries.push(this.buildFileQuery(searchTerm, exactQuery, prefixQuery, limitPerType));
+      queries.push(this.buildFileQuery(searchTerm, exactQuery, prefixQuery, limits.file));
     }
 
     if (queries.length === 0) return [];
@@ -101,6 +125,45 @@ export class SearchRepo {
 
     const result = await this.db.execute(finalQuery);
     return this.mapResults(result.rows as any[]);
+  }
+
+  /**
+   * Calculate result limits based on context
+   * In agent context: prioritize messages (10) and topics (5), reduce others (3 each)
+   * In general context: balanced distribution (5 each)
+   */
+  private calculateLimits(
+    baseLimit: number,
+    type?: SearchResultType,
+    agentId?: string,
+  ): { agent: number; file: number; message: number; topic: number } {
+    // If type filter is specified, use full limit for that type
+    if (type) {
+      return {
+        agent: type === 'agent' ? baseLimit : 0,
+        file: type === 'file' ? baseLimit : 0,
+        message: type === 'message' ? baseLimit : 0,
+        topic: type === 'topic' ? baseLimit : 0,
+      };
+    }
+
+    // Agent context: prioritize messages and topics
+    if (agentId) {
+      return {
+        agent: 3,
+        file: 3,
+        message: 10,
+        topic: 5,
+      };
+    }
+
+    // General context: balanced
+    return {
+      agent: baseLimit,
+      file: baseLimit,
+      message: baseLimit,
+      topic: baseLimit,
+    };
   }
 
   /**
@@ -156,15 +219,42 @@ export class SearchRepo {
   }
 
   /**
-   * Build topic search query
+   * Build topic search query with optional agent-context boosting
    * Searches: title, content, historySummary
+   * When agentId is provided:
+   * - Current agent's topics: relevance 0.5-0.7 (highest priority)
+   * - Other topics: relevance 1-3 (normal priority)
    */
   private buildTopicQuery(
     searchTerm: string,
     exactQuery: string,
     prefixQuery: string,
     limit: number,
+    agentId?: string,
   ): ReturnType<typeof sql> {
+    // Build relevance CASE statement with agent boosting
+    const relevanceCase = agentId
+      ? sql`
+          CASE
+            WHEN t.agent_id = ${agentId} THEN
+              CASE
+                WHEN t.title ILIKE ${exactQuery} THEN 0.5
+                WHEN t.title ILIKE ${prefixQuery} THEN 0.6
+                ELSE 0.7
+              END
+            WHEN t.title ILIKE ${exactQuery} THEN 1
+            WHEN t.title ILIKE ${prefixQuery} THEN 2
+            ELSE 3
+          END
+        `
+      : sql`
+          CASE
+            WHEN t.title ILIKE ${exactQuery} THEN 1
+            WHEN t.title ILIKE ${prefixQuery} THEN 2
+            ELSE 3
+          END
+        `;
+
     return sql`
       SELECT
         t.id,
@@ -177,11 +267,7 @@ export class SearchRepo {
         NULL::jsonb as tags,
         t.created_at,
         t.updated_at,
-        CASE
-          WHEN t.title ILIKE ${exactQuery} THEN 1
-          WHEN t.title ILIKE ${prefixQuery} THEN 2
-          ELSE 3
-        END as relevance,
+        ${relevanceCase} as relevance,
         t.favorite,
         t.session_id,
         t.agent_id,
@@ -196,6 +282,92 @@ export class SearchRepo {
           OR COALESCE(t.content, '') ILIKE ${searchTerm}
           OR COALESCE(t.history_summary, '') ILIKE ${searchTerm}
         )
+      ORDER BY relevance ASC, t.updated_at DESC
+      LIMIT ${limit}
+    `;
+  }
+
+  /**
+   * Build message search query with optional agent-context boosting
+   * Searches: message content (supports multi-word queries)
+   * When agentId is provided:
+   * - Current agent's messages: relevance 0.5-0.7 (highest priority)
+   * - Other messages: relevance 1-3 (normal priority)
+   */
+  private buildMessageQuery(
+    searchTerm: string,
+    exactQuery: string,
+    prefixQuery: string,
+    limit: number,
+    agentId?: string,
+  ): ReturnType<typeof sql> {
+    // Split search query into words for better multi-word search
+    const words = exactQuery
+      .trim()
+      .split(/\s+/)
+      .filter((w) => w.length > 0);
+
+    // Build WHERE clause: search for any of the words
+    const wordConditions =
+      words.length > 1
+        ? sql.join(
+            words.map((word) => sql`COALESCE(m.content, '') ILIKE ${`%${word}%`}`),
+            sql` OR `,
+          )
+        : sql`COALESCE(m.content, '') ILIKE ${searchTerm}`;
+
+    // Build relevance CASE statement with agent boosting
+    const relevanceCase = agentId
+      ? sql`
+          CASE
+            WHEN m.agent_id = ${agentId} THEN
+              CASE
+                WHEN m.content ILIKE ${exactQuery} THEN 0.5
+                WHEN m.content ILIKE ${prefixQuery} THEN 0.6
+                ELSE 0.7
+              END
+            WHEN m.content ILIKE ${exactQuery} THEN 1
+            WHEN m.content ILIKE ${prefixQuery} THEN 2
+            ELSE 3
+          END
+        `
+      : sql`
+          CASE
+            WHEN m.content ILIKE ${exactQuery} THEN 1
+            WHEN m.content ILIKE ${prefixQuery} THEN 2
+            ELSE 3
+          END
+        `;
+
+    return sql`
+      SELECT
+        m.id,
+        'message' as type,
+        CASE
+          WHEN length(m.content) > 100 THEN substring(m.content, 1, 100) || '...'
+          ELSE m.content
+        END as title,
+        COALESCE(a.title, 'General Chat') as description,
+        m.model as slug,
+        NULL::text as avatar,
+        NULL::text as background_color,
+        NULL::jsonb as tags,
+        m.created_at,
+        m.updated_at,
+        ${relevanceCase} as relevance,
+        NULL::boolean as favorite,
+        m.topic_id as session_id,
+        m.agent_id,
+        m.role as name,
+        NULL::varchar(255) as file_type,
+        NULL::integer as size,
+        NULL::text as url
+      FROM ${messages} m
+      LEFT JOIN ${agents} a ON m.agent_id = a.id
+      WHERE m.user_id = ${this.userId}
+        AND m.role != 'tool'
+        AND (${wordConditions})
+      ORDER BY relevance ASC, m.created_at DESC
       LIMIT ${limit}
     `;
   }
@@ -348,6 +520,17 @@ export class SearchRepo {
             size: Number(row.size),
             type: 'file' as const,
             url: row.url,
+          };
+        }
+        case 'message': {
+          return {
+            ...base,
+            agentId: row.agent_id,
+            content: row.description || '',
+            model: row.slug,
+            role: row.name || 'user',
+            topicId: row.session_id,
+            type: 'message' as const,
           };
         }
         default: {

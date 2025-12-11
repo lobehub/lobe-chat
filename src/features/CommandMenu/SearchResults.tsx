@@ -1,5 +1,6 @@
 import { Command } from 'cmdk';
-import { FileText, MessageSquare, Sparkles } from 'lucide-react';
+import { FileText, MessageCircle, MessageSquare, Sparkles } from 'lucide-react';
+import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +32,19 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
         }
         break;
       }
+      case 'message': {
+        // Navigate to the topic/agent where the message is
+        if (result.topicId && result.agentId) {
+          navigate(`/agent/${result.agentId}?topic=${result.topicId}#${result.id}`);
+        } else if (result.topicId) {
+          navigate(`/chat?topic=${result.topicId}#${result.id}`);
+        } else if (result.agentId) {
+          navigate(`/agent/${result.agentId}#${result.id}`);
+        } else {
+          navigate(`/chat#${result.id}`);
+        }
+        break;
+      }
       case 'file': {
         navigate(`/files?id=${result.id}`);
         break;
@@ -47,6 +61,9 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
       case 'topic': {
         return <MessageSquare size={16} />;
       }
+      case 'message': {
+        return <MessageCircle size={16} />;
+      }
       case 'file': {
         return <FileText size={16} />;
       }
@@ -60,6 +77,9 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
       }
       case 'topic': {
         return t('cmdk.search.topic');
+      }
+      case 'message': {
+        return t('cmdk.search.message');
       }
       case 'file': {
         return t('cmdk.search.file');
@@ -75,6 +95,15 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
     // Prefix with "search-result" to ensure these items rank after built-in commands
     // Include ID to ensure uniqueness when multiple items have the same title
     return `search-result ${result.type} ${result.id} ${meta}`.trim();
+  };
+
+  const getDescription = (result: SearchResult) => {
+    if (!result.description) return null;
+    // Sanitize markdown content for message search results
+    if (result.type === 'message') {
+      return markdownToTxt(result.description);
+    }
+    return result.description;
   };
 
   if (isLoading) {
@@ -98,12 +127,36 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
   }
 
   // Group results by type
+  const messageResults = results.filter((r) => r.type === 'message');
   const agentResults = results.filter((r) => r.type === 'agent');
   const topicResults = results.filter((r) => r.type === 'topic');
   const fileResults = results.filter((r) => r.type === 'file');
 
   return (
     <>
+      {messageResults.length > 0 && (
+        <Command.Group heading={t('cmdk.search.messages')}>
+          {messageResults.map((result) => (
+            <Command.Item
+              key={`message-${result.id}`}
+              onSelect={() => handleNavigate(result)}
+              value={getItemValue(result)}
+            >
+              <div className={styles.itemContent}>
+                <div className={styles.itemIcon}>{getIcon(result.type)}</div>
+                <div className={styles.itemDetails}>
+                  <div className={styles.itemTitle}>{result.title}</div>
+                  {getDescription(result) && (
+                    <div className={styles.itemDescription}>{getDescription(result)}</div>
+                  )}
+                </div>
+                <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
+              </div>
+            </Command.Item>
+          ))}
+        </Command.Group>
+      )}
+
       {agentResults.length > 0 && (
         <Command.Group heading={t('cmdk.search.agents')}>
           {agentResults.map((result) => (
@@ -116,8 +169,8 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
                 <div className={styles.itemIcon}>{getIcon(result.type)}</div>
                 <div className={styles.itemDetails}>
                   <div className={styles.itemTitle}>{result.title}</div>
-                  {result.description && (
-                    <div className={styles.itemDescription}>{result.description}</div>
+                  {getDescription(result) && (
+                    <div className={styles.itemDescription}>{getDescription(result)}</div>
                   )}
                 </div>
                 <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
@@ -139,8 +192,8 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
                 <div className={styles.itemIcon}>{getIcon(result.type)}</div>
                 <div className={styles.itemDetails}>
                   <div className={styles.itemTitle}>{result.title}</div>
-                  {result.description && (
-                    <div className={styles.itemDescription}>{result.description}</div>
+                  {getDescription(result) && (
+                    <div className={styles.itemDescription}>{getDescription(result)}</div>
                   )}
                 </div>
                 <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
