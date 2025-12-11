@@ -14,7 +14,6 @@ import ModelSelect from '@/features/ModelSelect';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
-import AgentSettings from '../AgentSettings';
 import EditorCanvas from '../EditorCanvas';
 import AgentHeader from './AgentHeader';
 import AgentTool from './AgentTool';
@@ -68,8 +67,6 @@ const ProfileEditor = memo(() => {
       <Divider />
       {/* Main Content: Prompt Editor */}
       <EditorCanvas />
-      {/* Legacy AgentSettings Drawer (opened via Settings button) */}
-      <AgentSettings />
     </>
   );
 });
