@@ -17,7 +17,8 @@ export type OperationType =
   | 'continue' // Continue generation
 
   // === AI generation ===
-  | 'execAgentRuntime' // Execute agent runtime (entire agent runtime execution)
+  | 'execAgentRuntime' // Execute agent runtime (client-side, entire agent runtime execution)
+  | 'execServerAgentRuntime' // Execute server agent runtime (server-side, e.g., Group Chat)
   | 'createAssistantMessage' // Create assistant message (sub-operation of execAgentRuntime)
   // === LLM execution (sub-operations) ===
   | 'callLLM' // Call LLM streaming response (sub-operation of execAgentRuntime)
@@ -48,7 +49,8 @@ export type OperationType =
 
   // === Group Chat ===
   | 'supervisorDecision' // Supervisor decision
-  | 'groupAgentGenerate' // Group agent generate
+  | 'groupAgentGenerate' // Group agent generate (deprecated, use groupAgentStream)
+  | 'groupAgentStream' // Group agent SSE stream (sub-operation of execServerAgentRuntime)
 
   // === Others ===
   | 'translate' // Translate message

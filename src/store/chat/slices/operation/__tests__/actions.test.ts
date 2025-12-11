@@ -955,6 +955,101 @@ describe('Operation Actions', () => {
     });
   });
 
+  describe('internal_getConversationContext', () => {
+    it('should return context from operationId when provided', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let operationId: string;
+
+      act(() => {
+        operationId = result.current.startOperation({
+          type: 'sendMessage',
+          context: { agentId: 'session1', topicId: 'topic1', threadId: 'thread1' },
+        }).operationId;
+      });
+
+      const context = result.current.internal_getConversationContext({ operationId: operationId! });
+
+      expect(context.agentId).toBe('session1');
+      expect(context.topicId).toBe('topic1');
+      expect(context.threadId).toBe('thread1');
+    });
+
+    it('should return groupId from operation context when provided', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let operationId: string;
+
+      act(() => {
+        operationId = result.current.startOperation({
+          type: 'sendMessage',
+          context: {
+            agentId: 'agent1',
+            groupId: 'group1',
+            topicId: 'topic1',
+          },
+        }).operationId;
+      });
+
+      const context = result.current.internal_getConversationContext({ operationId: operationId! });
+
+      expect(context.agentId).toBe('agent1');
+      expect(context.groupId).toBe('group1');
+      expect(context.topicId).toBe('topic1');
+    });
+
+    it('should preserve scope and isNew from operation context', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let operationId: string;
+
+      act(() => {
+        operationId = result.current.startOperation({
+          type: 'sendMessage',
+          context: {
+            agentId: 'agent1',
+            topicId: 'topic1',
+            scope: 'group',
+            isNew: true,
+          },
+        }).operationId;
+      });
+
+      const context = result.current.internal_getConversationContext({ operationId: operationId! });
+
+      expect(context.scope).toBe('group');
+      expect(context.isNew).toBe(true);
+    });
+
+    it('should fallback to global state when no operationId provided', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        useChatStore.setState({
+          activeAgentId: 'global-agent',
+          activeTopicId: 'global-topic',
+          activeThreadId: 'global-thread',
+          activeGroupId: 'global-group',
+        });
+      });
+
+      const context = result.current.internal_getConversationContext({});
+
+      expect(context.agentId).toBe('global-agent');
+      expect(context.topicId).toBe('global-topic');
+      expect(context.threadId).toBe('global-thread');
+      expect(context.groupId).toBe('global-group');
+    });
+
+    it('should throw error when operationId is invalid', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      expect(() => {
+        result.current.internal_getConversationContext({ operationId: 'invalid-op-id' });
+      }).toThrow('Operation not found');
+    });
+  });
+
   describe('cancelOperation with child operations and handlers', () => {
     it('should call handlers for both parent and child operations', async () => {
       const { result } = renderHook(() => useChatStore());

@@ -1034,4 +1034,141 @@ describe('chatMessage actions', () => {
       });
     });
   });
+
+  describe('replaceMessages with groupId context', () => {
+    it('should use groupId from context params when provided', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      const messages = [
+        { id: 'msg1', role: 'user', content: 'Hello' },
+        { id: 'msg2', role: 'assistant', content: 'Hi' },
+      ] as any;
+
+      await act(async () => {
+        result.current.replaceMessages(messages, {
+          context: {
+            agentId: 'agent1',
+            groupId: 'group1',
+            topicId: 'topic1',
+          },
+        });
+      });
+
+      // Verify the messages are stored with the group context
+      const key = messageMapKey({
+        agentId: 'agent1',
+        groupId: 'group1',
+        topicId: 'topic1',
+      });
+
+      expect(result.current.messagesMap[key]).toEqual(messages);
+    });
+
+    it('should use activeGroupId from global state when no context provided', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        useChatStore.setState({
+          activeAgentId: 'agent1',
+          activeGroupId: 'group1',
+          activeTopicId: 'topic1',
+        });
+      });
+
+      const messages = [{ id: 'msg1', role: 'user', content: 'Hello' }] as any;
+
+      await act(async () => {
+        result.current.replaceMessages(messages);
+      });
+
+      // Verify the messages are stored with the group context from global state
+      const key = messageMapKey({
+        agentId: 'agent1',
+        groupId: 'group1',
+        topicId: 'topic1',
+      });
+
+      expect(result.current.messagesMap[key]).toEqual(messages);
+    });
+
+    it('should preserve groupId from operation context', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let operationId: string;
+
+      await act(async () => {
+        // Create operation with group context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: {
+            agentId: 'agent1',
+            groupId: 'group1',
+            topicId: 'topic1',
+          },
+        });
+        operationId = op.operationId;
+
+        const messages = [{ id: 'msg1', role: 'user', content: 'Hello' }] as any;
+
+        // Use operation context via replaceMessages
+        result.current.replaceMessages(messages, {
+          context: {
+            agentId: 'agent1',
+            groupId: 'group1',
+            topicId: 'topic1',
+          },
+        });
+      });
+
+      const key = messageMapKey({
+        agentId: 'agent1',
+        groupId: 'group1',
+        topicId: 'topic1',
+      });
+
+      expect(result.current.messagesMap[key]).toBeDefined();
+    });
+
+    it('should generate different keys for same agent in different groups', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      const messages1 = [{ id: 'msg1', role: 'user', content: 'Group 1' }] as any;
+      const messages2 = [{ id: 'msg2', role: 'user', content: 'Group 2' }] as any;
+
+      await act(async () => {
+        result.current.replaceMessages(messages1, {
+          context: {
+            agentId: 'agent1',
+            groupId: 'group1',
+            topicId: 'topic1',
+          },
+        });
+
+        result.current.replaceMessages(messages2, {
+          context: {
+            agentId: 'agent1',
+            groupId: 'group2',
+            topicId: 'topic1',
+          },
+        });
+      });
+
+      const key1 = messageMapKey({
+        agentId: 'agent1',
+        groupId: 'group1',
+        topicId: 'topic1',
+      });
+
+      const key2 = messageMapKey({
+        agentId: 'agent1',
+        groupId: 'group2',
+        topicId: 'topic1',
+      });
+
+      // Different groups should have different keys and different messages
+      expect(key1).not.toBe(key2);
+      expect(result.current.messagesMap[key1]).toEqual(messages1);
+      expect(result.current.messagesMap[key2]).toEqual(messages2);
+    });
+  });
 });

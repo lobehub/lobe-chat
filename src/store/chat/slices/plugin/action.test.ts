@@ -265,6 +265,7 @@ describe('ChatPluginAction', () => {
 
       const replaceMessagesSpy = vi.fn();
       const initialState = {
+        activeAgentId: 'inbox',
         replaceMessages: replaceMessagesSpy,
       };
       useChatStore.setState(initialState);
@@ -836,6 +837,7 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useChatStore.setState({
+          activeAgentId: 'inbox',
           replaceMessages: replaceMessagesSpy,
         });
       });

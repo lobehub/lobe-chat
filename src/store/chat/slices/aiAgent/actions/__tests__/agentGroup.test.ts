@@ -59,7 +59,7 @@ const resetTestEnvironment = () => {
       messagesMap: {},
       dbMessagesMap: {},
       operations: {},
-      agentOperations: {},
+      messageOperationMap: {},
       isCreatingMessage: false,
     },
     false,
@@ -77,8 +77,10 @@ const createTestContext = (overrides = {}) => ({
 
 // Helper to create mock response from execGroupAgent
 const createMockExecGroupAgentResponse = (overrides = {}) => ({
+  assistantMessageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
   operationId: TEST_IDS.OPERATION_ID,
   topicId: TEST_IDS.TOPIC_ID,
+  userMessageId: TEST_IDS.USER_MESSAGE_ID,
   isCreateNewTopic: false,
   messages: [
     {
@@ -120,9 +122,13 @@ describe('agentGroup actions', () => {
         internal_handleAgentError: vi.fn(),
         internal_updateTopics: vi.fn(),
         replaceMessages: vi.fn(),
-        startOperation: vi.fn().mockReturnValue({ operationId: 'op-123' }),
+        startOperation: vi
+          .fn()
+          .mockReturnValueOnce({ operationId: 'op-123' })
+          .mockReturnValueOnce({ operationId: TEST_IDS.OPERATION_ID }),
         completeOperation: vi.fn(),
         failOperation: vi.fn(),
+        onOperationCancel: vi.fn(),
         switchTopic: vi.fn(),
       });
     });
@@ -202,7 +208,7 @@ describe('agentGroup actions', () => {
     });
 
     describe('optimistic update', () => {
-      it('should create operation with correct context for group messages', async () => {
+      it('should create sendMessage operation for optimistic updates and execServerAgentRuntime for agent execution', async () => {
         const { result } = renderHook(() => useChatStore());
 
         vi.mocked(lambdaClient.aiAgent.execGroupAgent.mutate).mockResolvedValue(
@@ -219,7 +225,9 @@ describe('agentGroup actions', () => {
           });
         });
 
-        expect(result.current.startOperation).toHaveBeenCalledWith(
+        // First call should be sendMessage (for optimistic updates)
+        expect(result.current.startOperation).toHaveBeenNthCalledWith(
+          1,
           expect.objectContaining({
             type: 'sendMessage',
             context: expect.objectContaining({
@@ -229,9 +237,22 @@ describe('agentGroup actions', () => {
             label: 'Send Group Message',
           }),
         );
+
+        // Second call should be execServerAgentRuntime (the main operation)
+        expect(result.current.startOperation).toHaveBeenNthCalledWith(
+          2,
+          expect.objectContaining({
+            type: 'execServerAgentRuntime',
+            context: expect.objectContaining({
+              agentId: TEST_IDS.AGENT_ID,
+              groupId: TEST_IDS.GROUP_ID,
+            }),
+            label: 'Execute Server Agent',
+          }),
+        );
       });
 
-      it('should create temp user and assistant messages with operationId', async () => {
+      it('should create temp user and assistant messages without operationId (optimistic update)', async () => {
         const { result } = renderHook(() => useChatStore());
 
         vi.mocked(lambdaClient.aiAgent.execGroupAgent.mutate).mockResolvedValue(
@@ -246,7 +267,7 @@ describe('agentGroup actions', () => {
           });
         });
 
-        // Should create temp user message
+        // Should create temp user message (no operationId for optimistic updates)
         expect(result.current.optimisticCreateTmpMessage).toHaveBeenCalledWith(
           expect.objectContaining({
             content: TEST_CONTENT.GROUP_MESSAGE,
@@ -254,18 +275,18 @@ describe('agentGroup actions', () => {
             groupId: TEST_IDS.GROUP_ID,
           }),
           expect.objectContaining({
-            operationId: 'op-123',
+            tempMessageId: expect.any(String),
           }),
         );
 
-        // Should create temp assistant message
+        // Should create temp assistant message (no operationId for optimistic updates)
         expect(result.current.optimisticCreateTmpMessage).toHaveBeenCalledWith(
           expect.objectContaining({
             role: 'assistant',
             groupId: TEST_IDS.GROUP_ID,
           }),
           expect.objectContaining({
-            operationId: 'op-123',
+            tempMessageId: expect.any(String),
           }),
         );
       });
@@ -350,6 +371,56 @@ describe('agentGroup actions', () => {
         );
       });
 
+      it('should create groupAgentStream child operation with backend operationId', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        vi.mocked(lambdaClient.aiAgent.execGroupAgent.mutate).mockResolvedValue(
+          createMockExecGroupAgentResponse(),
+        );
+        vi.mocked(agentRuntimeClient.createStreamConnection).mockReturnValue({} as any);
+
+        await act(async () => {
+          await result.current.sendGroupMessage({
+            context: createTestContext(),
+            message: TEST_CONTENT.GROUP_MESSAGE,
+          });
+        });
+
+        // Verify that startOperation was called twice:
+        // 1. For execServerAgentRuntime operation (main)
+        // 2. For groupAgentStream operation (child, with backend operationId)
+        expect(result.current.startOperation).toHaveBeenCalledTimes(2);
+        expect(result.current.startOperation).toHaveBeenNthCalledWith(
+          2,
+          expect.objectContaining({
+            type: 'groupAgentStream',
+            operationId: TEST_IDS.OPERATION_ID,
+            parentOperationId: 'op-123',
+          }),
+        );
+      });
+
+      it('should register cancel handler for SSE stream', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        vi.mocked(lambdaClient.aiAgent.execGroupAgent.mutate).mockResolvedValue(
+          createMockExecGroupAgentResponse(),
+        );
+        vi.mocked(agentRuntimeClient.createStreamConnection).mockReturnValue({} as any);
+
+        await act(async () => {
+          await result.current.sendGroupMessage({
+            context: createTestContext(),
+            message: TEST_CONTENT.GROUP_MESSAGE,
+          });
+        });
+
+        expect(result.current.onOperationCancel).toHaveBeenCalledWith(
+          TEST_IDS.OPERATION_ID,
+          expect.any(Function),
+        );
+      });
+
       it('should create stream connection with operationId', async () => {
         const { result } = renderHook(() => useChatStore());
 
@@ -377,13 +448,20 @@ describe('agentGroup actions', () => {
         );
       });
 
-      it('should complete operation on success', async () => {
+      it('should complete operations on stream disconnect', async () => {
         const { result } = renderHook(() => useChatStore());
 
         vi.mocked(lambdaClient.aiAgent.execGroupAgent.mutate).mockResolvedValue(
           createMockExecGroupAgentResponse(),
         );
-        vi.mocked(agentRuntimeClient.createStreamConnection).mockReturnValue({} as any);
+
+        let onDisconnectCallback: (() => void) | undefined;
+        vi.mocked(agentRuntimeClient.createStreamConnection).mockImplementation(
+          (_operationId, options) => {
+            onDisconnectCallback = options?.onDisconnect;
+            return {} as any;
+          },
+        );
 
         await act(async () => {
           await result.current.sendGroupMessage({
@@ -392,6 +470,13 @@ describe('agentGroup actions', () => {
           });
         });
 
+        // Simulate stream disconnect
+        await act(async () => {
+          onDisconnectCallback?.();
+        });
+
+        // Should complete both the stream operation and the main operation
+        expect(result.current.completeOperation).toHaveBeenCalledWith(TEST_IDS.OPERATION_ID);
         expect(result.current.completeOperation).toHaveBeenCalledWith('op-123');
       });
 
@@ -470,7 +555,7 @@ describe('agentGroup actions', () => {
     });
 
     describe('error handling', () => {
-      it('should remove temp messages on backend error', async () => {
+      it('should remove temp messages on backend error with correct context', async () => {
         const { result } = renderHook(() => useChatStore());
 
         const testError = new Error('Backend error');
@@ -483,14 +568,24 @@ describe('agentGroup actions', () => {
           });
         });
 
+        // Should delete both temp user and assistant messages with operationId for correct context
         expect(result.current.internal_dispatchMessage).toHaveBeenCalledWith(
           expect.objectContaining({
             type: 'deleteMessages',
+            ids: expect.arrayContaining([
+              expect.stringContaining('tmp_'),
+              expect.stringContaining('tmp_'),
+            ]),
           }),
           expect.objectContaining({
-            operationId: 'op-123',
+            operationId: 'op-123', // The first operation's ID (execServerAgentRuntime)
           }),
         );
+        // Verify exactly 2 messages are deleted
+        const deleteCall = vi
+          .mocked(result.current.internal_dispatchMessage)
+          .mock.calls.find((call) => call[0].type === 'deleteMessages');
+        expect((deleteCall?.[0] as { ids: string[] })?.ids).toHaveLength(2);
       });
 
       it('should fail operation with error details', async () => {
