@@ -53,6 +53,7 @@ const SideBarDrawer = memo<SideBarDrawerProps>(
             borderLeft: `1px solid ${theme.colorBorderSecondary}`,
             borderRight: `1px solid ${theme.colorBorderSecondary}`,
             boxShadow: `4px 0 8px -2px rgba(0,0,0,.04)`,
+            zIndex: 0,
           },
         }}
         title={

@@ -98,6 +98,9 @@ const NavPanel = memo(() => {
         onSizeChange={handleSizeChange}
         placement="left"
         showBorder={false}
+        style={{
+          zIndex: 11,
+        }}
       >
         <AnimatePresence initial={false} mode="popLayout">
           <motion.div
@@ -134,6 +137,7 @@ const NavPanel = memo(() => {
           height: '100%',
           position: 'relative',
           width: 0,
+          zIndex: 10,
         }}
       />
     </>
