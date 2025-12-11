@@ -1,3 +1,33 @@
+table agent_versions {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  agent_id text [not null]
+  user_id text [not null]
+  version integer [not null]
+  title varchar(255)
+  description varchar(1000)
+  tags jsonb
+  editor_data jsonb
+  avatar text
+  background_color text
+  plugins jsonb
+  chat_config jsonb
+  few_shots jsonb
+  model text
+  params jsonb
+  provider text
+  system_role text
+  tts jsonb
+  opening_message text
+  opening_questions text[]
+  change_message text
+  created_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    agent_id [name: 'agent_versions_agent_id_idx']
+    (agent_id, version) [name: 'agent_versions_agent_version_unique', unique]
+  }
+}
+
 table agents {
   id text [pk, not null]
   slug varchar(100)
@@ -1201,6 +1231,8 @@ ref: accounts.user_id > users.id
 ref: auth_sessions.user_id > users.id
 
 ref: two_factor.user_id > users.id
+
+ref: agent_versions.agent_id > agents.id
 
 ref: agents_files.file_id > files.id
 

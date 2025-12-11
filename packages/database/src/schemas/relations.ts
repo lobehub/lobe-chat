@@ -3,7 +3,7 @@ import { relations } from 'drizzle-orm';
 import { index, pgTable, primaryKey, text, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { createdAt } from './_helpers';
-import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
+import { agents, agentsFiles, agentsKnowledgeBases, agentVersions } from './agent';
 import { asyncTasks } from './asyncTask';
 import { chatGroups, chatGroupsAgents } from './chatGroup';
 import { documents, files, knowledgeBases } from './file';
@@ -117,6 +117,7 @@ export const agentsRelations = relations(agents, ({ many }) => ({
   knowledgeBases: many(agentsKnowledgeBases),
   files: many(agentsFiles),
   chatGroups: many(chatGroupsAgents),
+  versions: many(agentVersions),
 }));
 
 export const agentsToSessionsRelations = relations(agentsToSessions, ({ one }) => ({
@@ -159,6 +160,13 @@ export const agentsFilesRelations = relations(agentsFiles, ({ one }) => ({
   }),
   agent: one(agents, {
     fields: [agentsFiles.agentId],
+    references: [agents.id],
+  }),
+}));
+
+export const agentVersionsRelations = relations(agentVersions, ({ one }) => ({
+  agent: one(agents, {
+    fields: [agentVersions.agentId],
     references: [agents.id],
   }),
 }));
