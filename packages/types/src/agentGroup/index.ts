@@ -1,3 +1,5 @@
+import { AgentItem } from '../agent';
+
 export interface LobeChatGroupMetaConfig {
   description: string;
   title: string;
@@ -61,7 +63,19 @@ export interface ChatGroupItem {
   userId: string;
 }
 
+// Agent item with group role info
+export type AgentGroupMember = AgentItem & {
+  /**
+   * Whether this agent is the supervisor of the group
+   */
+  isSupervisor: boolean;
+};
+
 // Agent Group Detail - extends ChatGroupItem with agents
 export interface AgentGroupDetail extends ChatGroupItem {
-  agents: import('../agent').AgentItem[];
+  agents: AgentGroupMember[];
+  /**
+   * The supervisor agent ID, if exists
+   */
+  supervisorAgentId?: string;
 }

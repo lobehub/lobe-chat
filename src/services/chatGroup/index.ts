@@ -21,7 +21,13 @@ export interface GroupMemberConfig {
 }
 
 class ChatGroupService {
-  createGroup = (params: Omit<NewChatGroup, 'userId'>): Promise<ChatGroupItem> => {
+  /**
+   * Create a group with a supervisor agent.
+   * The supervisor agent is automatically created as a virtual agent.
+   */
+  createGroup = (
+    params: Omit<NewChatGroup, 'userId'>,
+  ): Promise<{ group: ChatGroupItem; supervisorAgentId: string }> => {
     return lambdaClient.group.createGroup.mutate({
       ...params,
       config: params.config as any,
@@ -31,11 +37,12 @@ class ChatGroupService {
   /**
    * Create a group with virtual member agents in one request.
    * This is the recommended way to create a group from a template.
+   * Returns groupId, supervisorAgentId, and member agentIds.
    */
   createGroupWithMembers = (
     groupConfig: Omit<NewChatGroup, 'userId'>,
     members: GroupMemberConfig[],
-  ): Promise<{ agentIds: string[]; groupId: string }> => {
+  ): Promise<{ agentIds: string[]; groupId: string; supervisorAgentId: string }> => {
     return lambdaClient.group.createGroupWithMembers.mutate({
       groupConfig: {
         ...groupConfig,

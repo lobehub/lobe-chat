@@ -42,23 +42,30 @@ export const agentGroupRouter = router({
       return ctx.chatGroupModel.addAgentsToGroup(input.groupId, input.agentIds);
     }),
 
+  /**
+   * Create a group with a supervisor agent.
+   * The supervisor agent is automatically created as a virtual agent.
+   * Returns the groupId and supervisorAgentId.
+   */
   createGroup: agentGroupProcedure
     .input(insertChatGroupSchema.omit({ userId: true }))
     .mutation(async ({ input, ctx }) => {
-      return ctx.chatGroupModel.create({
+      const { group, supervisorAgentId } = await ctx.agentGroupRepo.createGroupWithSupervisor({
         ...input,
         config: normalizeGroupConfig(input.config as ChatGroupConfig | null),
       });
+
+      return { group, supervisorAgentId };
     }),
 
   /**
    * Create a group with virtual member agents in one request.
    * This is the recommended way to create a group from a template.
    * The backend will:
-   * 1. Batch create virtual agents from member configs
-   * 2. Create the group
-   * 3. Add the agents to the group
-   * Returns the groupId and created agentIds.
+   * 1. Create a supervisor agent (virtual)
+   * 2. Batch create virtual agents from member configs
+   * 3. Create the group with supervisor and member agents
+   * Returns the groupId, supervisorAgentId, and created member agentIds.
    */
   createGroupWithMembers: agentGroupProcedure
     .input(
@@ -78,7 +85,7 @@ export const agentGroupRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      // 1. Batch create virtual agents
+      // 1. Batch create virtual member agents
       const memberConfigs = input.members.map((member) => ({
         ...member,
         plugins: member.plugins as string[] | undefined,
@@ -87,21 +94,18 @@ export const agentGroupRouter = router({
       }));
 
       const createdAgents = await ctx.agentModel.batchCreate(memberConfigs);
-      const agentIds = createdAgents.map((agent) => agent.id);
+      const memberAgentIds = createdAgents.map((agent) => agent.id);
 
-      // 2. Create group with agents
-      const { group } = await ctx.chatGroupModel.createWithAgents(
+      // 2. Create group with supervisor and member agents
+      const { group, supervisorAgentId } = await ctx.agentGroupRepo.createGroupWithSupervisor(
         {
           ...input.groupConfig,
           config: normalizeGroupConfig(input.groupConfig.config as ChatGroupConfig | null),
         },
-        agentIds,
+        memberAgentIds,
       );
 
-      return {
-        agentIds,
-        groupId: group.id,
-      };
+      return { agentIds: memberAgentIds, groupId: group.id, supervisorAgentId };
     }),
 
   deleteGroup: agentGroupProcedure
