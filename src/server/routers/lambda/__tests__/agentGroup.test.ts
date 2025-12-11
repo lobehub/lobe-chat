@@ -1,0 +1,402 @@
+// @vitest-environment node
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
+import * as AgentModelModule from '@/database/models/agent';
+import * as ChatGroupModelModule from '@/database/models/chatGroup';
+import * as AgentGroupRepoModule from '@/database/repositories/agentGroup';
+
+import { agentGroupRouter } from '../agentGroup';
+
+describe('agentGroupRouter', () => {
+  const userId = 'testUserId';
+  let mockCtx: any;
+  let agentModelMock: any;
+  let chatGroupModelMock: any;
+  let agentGroupRepoMock: any;
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+
+    agentModelMock = {
+      batchCreate: vi.fn(),
+    };
+
+    chatGroupModelMock = {
+      addAgentsToGroup: vi.fn(),
+      create: vi.fn(),
+      createWithAgents: vi.fn(),
+      delete: vi.fn(),
+      findById: vi.fn(),
+      getGroupAgents: vi.fn(),
+      queryWithMemberDetails: vi.fn(),
+      removeAgentFromGroup: vi.fn(),
+      update: vi.fn(),
+      updateAgentInGroup: vi.fn(),
+    };
+
+    agentGroupRepoMock = {
+      findByIdWithAgents: vi.fn(),
+    };
+
+    // Use vi.spyOn to mock the class constructors to return our mock instances
+    vi.spyOn(AgentModelModule, 'AgentModel').mockImplementation(() => agentModelMock as any);
+    vi.spyOn(ChatGroupModelModule, 'ChatGroupModel').mockImplementation(
+      () => chatGroupModelMock as any,
+    );
+    vi.spyOn(AgentGroupRepoModule, 'AgentGroupRepository').mockImplementation(
+      () => agentGroupRepoMock as any,
+    );
+
+    mockCtx = {
+      serverDB: {},
+      userId,
+    };
+  });
+
+  describe('createGroup', () => {
+    it('should create a group with normalized config', async () => {
+      const mockInput = {
+        title: 'Test Group',
+        description: 'Test Description',
+        config: {
+          enableSupervisor: true,
+        },
+      };
+
+      const mockCreatedGroup = {
+        id: 'group-1',
+        title: 'Test Group',
+        description: 'Test Description',
+        config: { ...DEFAULT_CHAT_GROUP_CHAT_CONFIG, enableSupervisor: true },
+      };
+
+      chatGroupModelMock.create.mockResolvedValue(mockCreatedGroup);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.createGroup(mockInput);
+
+      expect(chatGroupModelMock.create).toHaveBeenCalledWith({
+        ...mockInput,
+        config: { ...DEFAULT_CHAT_GROUP_CHAT_CONFIG, enableSupervisor: true },
+      });
+      expect(result).toEqual(mockCreatedGroup);
+    });
+
+    it('should create a group without config', async () => {
+      const mockInput = {
+        title: 'Test Group',
+      };
+
+      const mockCreatedGroup = {
+        id: 'group-1',
+        title: 'Test Group',
+      };
+
+      chatGroupModelMock.create.mockResolvedValue(mockCreatedGroup);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.createGroup(mockInput);
+
+      expect(chatGroupModelMock.create).toHaveBeenCalledWith({
+        ...mockInput,
+        config: undefined,
+      });
+      expect(result).toEqual(mockCreatedGroup);
+    });
+  });
+
+  describe('createGroupWithMembers', () => {
+    it('should create a group with virtual member agents', async () => {
+      const mockInput = {
+        groupConfig: {
+          title: 'Team Group',
+          config: { enableSupervisor: true },
+        },
+        members: [
+          { title: 'Agent 1', systemRole: 'Helper' },
+          { title: 'Agent 2', systemRole: 'Assistant' },
+        ],
+      };
+
+      const mockCreatedAgents = [{ id: 'agent-1' }, { id: 'agent-2' }];
+      const mockCreatedGroup = { id: 'group-1', title: 'Team Group' };
+
+      agentModelMock.batchCreate.mockResolvedValue(mockCreatedAgents);
+      chatGroupModelMock.createWithAgents.mockResolvedValue({ group: mockCreatedGroup });
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.createGroupWithMembers(mockInput);
+
+      expect(agentModelMock.batchCreate).toHaveBeenCalledWith([
+        { title: 'Agent 1', systemRole: 'Helper', virtual: true },
+        { title: 'Agent 2', systemRole: 'Assistant', virtual: true },
+      ]);
+      expect(chatGroupModelMock.createWithAgents).toHaveBeenCalledWith(
+        {
+          title: 'Team Group',
+          config: { ...DEFAULT_CHAT_GROUP_CHAT_CONFIG, enableSupervisor: true },
+        },
+        ['agent-1', 'agent-2'],
+      );
+      expect(result).toEqual({
+        agentIds: ['agent-1', 'agent-2'],
+        groupId: 'group-1',
+      });
+    });
+  });
+
+  describe('deleteGroup', () => {
+    it('should delete a group by id', async () => {
+      chatGroupModelMock.delete.mockResolvedValue({ id: 'group-1' });
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      await caller.deleteGroup({ id: 'group-1' });
+
+      expect(chatGroupModelMock.delete).toHaveBeenCalledWith('group-1');
+    });
+  });
+
+  describe('getGroup', () => {
+    it('should get a group by id', async () => {
+      const mockGroup = {
+        id: 'group-1',
+        title: 'Test Group',
+        config: DEFAULT_CHAT_GROUP_CHAT_CONFIG,
+      };
+
+      chatGroupModelMock.findById.mockResolvedValue(mockGroup);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.getGroup({ id: 'group-1' });
+
+      expect(chatGroupModelMock.findById).toHaveBeenCalledWith('group-1');
+      expect(result).toEqual(mockGroup);
+    });
+
+    it('should return undefined if group not found', async () => {
+      chatGroupModelMock.findById.mockResolvedValue(undefined);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.getGroup({ id: 'non-existent' });
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getGroupDetail', () => {
+    it('should get group detail with agents', async () => {
+      const mockGroupDetail = {
+        id: 'group-1',
+        title: 'Test Group',
+        config: DEFAULT_CHAT_GROUP_CHAT_CONFIG,
+        agents: [
+          { id: 'agent-1', title: 'Agent 1' },
+          { id: 'agent-2', title: 'Agent 2' },
+        ],
+      };
+
+      agentGroupRepoMock.findByIdWithAgents.mockResolvedValue(mockGroupDetail);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.getGroupDetail({ id: 'group-1' });
+
+      expect(agentGroupRepoMock.findByIdWithAgents).toHaveBeenCalledWith('group-1');
+      expect(result).toEqual(mockGroupDetail);
+    });
+
+    it('should return null if group not found', async () => {
+      agentGroupRepoMock.findByIdWithAgents.mockResolvedValue(null);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.getGroupDetail({ id: 'non-existent' });
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('getGroupAgents', () => {
+    it('should get agents of a group', async () => {
+      const mockAgents = [
+        { agentId: 'agent-1', chatGroupId: 'group-1', order: 0 },
+        { agentId: 'agent-2', chatGroupId: 'group-1', order: 1 },
+      ];
+
+      chatGroupModelMock.getGroupAgents.mockResolvedValue(mockAgents);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.getGroupAgents({ groupId: 'group-1' });
+
+      expect(chatGroupModelMock.getGroupAgents).toHaveBeenCalledWith('group-1');
+      expect(result).toEqual(mockAgents);
+    });
+  });
+
+  describe('getGroups', () => {
+    it('should get all groups with member details', async () => {
+      const mockGroups = [
+        { id: 'group-1', title: 'Group 1' },
+        { id: 'group-2', title: 'Group 2' },
+      ];
+
+      chatGroupModelMock.queryWithMemberDetails.mockResolvedValue(mockGroups);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.getGroups();
+
+      expect(chatGroupModelMock.queryWithMemberDetails).toHaveBeenCalled();
+      expect(result).toEqual(mockGroups);
+    });
+  });
+
+  describe('addAgentsToGroup', () => {
+    it('should add agents to a group', async () => {
+      const mockInput = {
+        groupId: 'group-1',
+        agentIds: ['agent-1', 'agent-2'],
+      };
+
+      const mockResult = [
+        { agentId: 'agent-1', chatGroupId: 'group-1' },
+        { agentId: 'agent-2', chatGroupId: 'group-1' },
+      ];
+
+      chatGroupModelMock.addAgentsToGroup.mockResolvedValue(mockResult);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.addAgentsToGroup(mockInput);
+
+      expect(chatGroupModelMock.addAgentsToGroup).toHaveBeenCalledWith('group-1', [
+        'agent-1',
+        'agent-2',
+      ]);
+      expect(result).toEqual(mockResult);
+    });
+  });
+
+  describe('removeAgentsFromGroup', () => {
+    it('should remove agents from a group', async () => {
+      const mockInput = {
+        groupId: 'group-1',
+        agentIds: ['agent-1', 'agent-2'],
+      };
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      await caller.removeAgentsFromGroup(mockInput);
+
+      expect(chatGroupModelMock.removeAgentFromGroup).toHaveBeenCalledTimes(2);
+      expect(chatGroupModelMock.removeAgentFromGroup).toHaveBeenNthCalledWith(
+        1,
+        'group-1',
+        'agent-1',
+      );
+      expect(chatGroupModelMock.removeAgentFromGroup).toHaveBeenNthCalledWith(
+        2,
+        'group-1',
+        'agent-2',
+      );
+    });
+  });
+
+  describe('updateAgentInGroup', () => {
+    it('should update agent in a group', async () => {
+      const mockInput = {
+        groupId: 'group-1',
+        agentId: 'agent-1',
+        updates: { order: 2, role: 'leader' },
+      };
+
+      const mockResult = {
+        agentId: 'agent-1',
+        chatGroupId: 'group-1',
+        order: 2,
+        role: 'leader',
+      };
+
+      chatGroupModelMock.updateAgentInGroup.mockResolvedValue(mockResult);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.updateAgentInGroup(mockInput);
+
+      expect(chatGroupModelMock.updateAgentInGroup).toHaveBeenCalledWith('group-1', 'agent-1', {
+        order: 2,
+        role: 'leader',
+      });
+      expect(result).toEqual(mockResult);
+    });
+
+    it('should update agent with enabled flag', async () => {
+      const mockInput = {
+        groupId: 'group-1',
+        agentId: 'agent-1',
+        updates: { enabled: false },
+      };
+
+      chatGroupModelMock.updateAgentInGroup.mockResolvedValue({});
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      await caller.updateAgentInGroup(mockInput);
+
+      expect(chatGroupModelMock.updateAgentInGroup).toHaveBeenCalledWith('group-1', 'agent-1', {
+        enabled: false,
+      });
+    });
+  });
+
+  describe('updateGroup', () => {
+    it('should update a group with normalized config', async () => {
+      const mockInput = {
+        id: 'group-1',
+        value: {
+          title: 'Updated Title',
+          config: { enableSupervisor: false },
+        },
+      };
+
+      const mockUpdatedGroup = {
+        id: 'group-1',
+        title: 'Updated Title',
+        config: { ...DEFAULT_CHAT_GROUP_CHAT_CONFIG, enableSupervisor: false },
+      };
+
+      chatGroupModelMock.update.mockResolvedValue(mockUpdatedGroup);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.updateGroup(mockInput);
+
+      expect(chatGroupModelMock.update).toHaveBeenCalledWith('group-1', {
+        title: 'Updated Title',
+        config: { ...DEFAULT_CHAT_GROUP_CHAT_CONFIG, enableSupervisor: false },
+      });
+      expect(result).toEqual(mockUpdatedGroup);
+    });
+
+    it('should update a group without config changes', async () => {
+      const mockInput = {
+        id: 'group-1',
+        value: {
+          title: 'New Title',
+          description: 'New Description',
+        },
+      };
+
+      const mockUpdatedGroup = {
+        id: 'group-1',
+        title: 'New Title',
+        description: 'New Description',
+      };
+
+      chatGroupModelMock.update.mockResolvedValue(mockUpdatedGroup);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.updateGroup(mockInput);
+
+      expect(chatGroupModelMock.update).toHaveBeenCalledWith('group-1', {
+        title: 'New Title',
+        description: 'New Description',
+        config: undefined,
+      });
+      expect(result).toEqual(mockUpdatedGroup);
+    });
+  });
+});

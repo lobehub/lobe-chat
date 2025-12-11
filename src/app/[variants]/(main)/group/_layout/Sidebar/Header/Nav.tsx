@@ -11,33 +11,29 @@ import urlJoin from 'url-join';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
-import { useAgentStore } from '@/store/agent';
-import { builtinAgentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 const Nav = memo(() => {
   const { t } = useTranslation('chat');
-  const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
   const params = useParams();
-  const agentId = params.aid;
+  const groupId = params.gid;
   const pathname = usePathname();
   const isProfileActive = pathname.includes('/profile');
   const router = useQueryRoute();
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
   const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
-  const hideProfile = isInbox || !isAgentEditable;
 
   return (
     <Flexbox gap={1} paddingInline={4}>
-      {!hideProfile && (
+      {isAgentEditable && (
         <NavItem
           active={isProfileActive}
           icon={BotPromptIcon}
           onClick={() => {
-            router.push(urlJoin('/agent', agentId!, 'profile'));
+            router.push(urlJoin('/group', groupId!, 'profile'));
           }}
-          title={t('tab.profile')}
+          title={t('tab.groupProfile')}
         />
       )}
       <NavItem

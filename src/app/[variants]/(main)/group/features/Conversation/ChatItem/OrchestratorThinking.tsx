@@ -5,9 +5,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
 import { shinyTextStylish } from '@/styles/loading';
 
 const useStyles = createStyles(({ token, css }) => ({
@@ -29,7 +29,7 @@ const useStyles = createStyles(({ token, css }) => ({
 
 const SupervisorThinkingTag = memo(() => {
   const { t } = useTranslation('chat');
-  const activeGroupId = useSessionStore((s) => s.activeId);
+  const activeGroupId = useAgentGroupStore((s) => s.activeGroupId);
   const isSupervisorLoading = useChatStore(chatSelectors.isSupervisorLoading(activeGroupId || ''));
   const cancelSupervisorDecision = useChatStore((s) => s.internal_cancelSupervisorDecision);
   const { styles } = useStyles();
@@ -45,7 +45,7 @@ const SupervisorThinkingTag = memo(() => {
         icon={StopCircle}
         onClick={(e) => {
           e.stopPropagation();
-          cancelSupervisorDecision(activeGroupId);
+          if (activeGroupId) cancelSupervisorDecision(activeGroupId);
         }}
         size={'small'}
         title={t('groupSidebar.members.stopOrchestrator')}

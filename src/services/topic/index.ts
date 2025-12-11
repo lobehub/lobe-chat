@@ -27,8 +27,11 @@ export class TopicService {
 
   getTopics = async (params: QueryTopicParams): Promise<{ items: ChatTopic[]; total: number }> => {
     return lambdaClient.topic.getTopics.query({
-      ...params,
-      containerId: this.toDbSessionId(params.containerId),
+      agentId: params.agentId,
+      current: params.current,
+      groupId: params.groupId,
+      isInbox: params.isInbox,
+      pageSize: params.pageSize,
     }) as any;
   };
 

@@ -108,6 +108,7 @@
   "groupSidebar": {
     "members": {
       "addMember": "添加成员",
+      "enableOrchestrator": "启用主持人",
       "memberSettings": "成员设置",
       "orchestrator": "主持人",
       "orchestratorThinking": "主持人正在思考中...",
@@ -380,6 +381,7 @@
     }
   },
   "tab": {
+    "groupProfile": "群组档案",
     "profile": "助手档案",
     "search": "搜索"
   },
@@ -447,6 +449,7 @@
     "clear": "删除语音"
   },
   "untitledAgent": "未命名助手",
+  "untitledGroup": "未命名群组",
   "updateAgent": "更新助理信息",
   "upload": {
     "action": {

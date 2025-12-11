@@ -35,8 +35,10 @@ describe('topicRouter', () => {
     expect(result.id).toBe('topic1');
   });
 
-  it('should handle getTopics with sessionId', async () => {
-    const mockQuery = vi.fn().mockResolvedValue([{ id: 'topic1', title: 'Test' }]);
+  it('should handle getTopics with groupId', async () => {
+    const mockQuery = vi
+      .fn()
+      .mockResolvedValue({ items: [{ id: 'topic1', title: 'Test' }], total: 1 });
     vi.mocked(TopicModel).mockImplementation(
       () =>
         ({
@@ -44,7 +46,7 @@ describe('topicRouter', () => {
         }) as any,
     );
 
-    const input = { sessionId: 'session1' };
+    const input = { groupId: 'group1' };
     const ctx = {
       topicModel: new TopicModel({} as any, 'user1'),
     };
@@ -52,7 +54,7 @@ describe('topicRouter', () => {
     const result = await ctx.topicModel.query(input);
 
     expect(mockQuery).toHaveBeenCalledWith(input);
-    expect(result).toEqual([{ id: 'topic1', title: 'Test' }]);
+    expect(result).toEqual({ items: [{ id: 'topic1', title: 'Test' }], total: 1 });
   });
 
   it('should handle deleteTopic', async () => {

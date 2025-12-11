@@ -1,10 +1,12 @@
+import type { AgentGroupDetail } from '@lobechat/types';
+
 import type { ChatGroupItem, NewChatGroup } from '@/database/schemas/chatGroup';
-import type { LobeChatGroupConfig } from '@/types/chatGroup';
+import type { LobeChatGroupConfig } from '@/types/agentGroup';
 
 export interface ChatGroupState {
   activeGroupId?: string;
   activeThreadAgentId: string;
-  groupMap: Record<string, ChatGroupItem>;
+  groupMap: Record<string, AgentGroupDetail>;
   groups: ChatGroupItem[];
   groupsInit: boolean;
   isGroupsLoading: boolean;

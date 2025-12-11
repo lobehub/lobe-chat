@@ -71,6 +71,13 @@ export const createDesktopRouter = () =>
                   element: dynamicElement(() => import('../(main)/group'), 'Desktop > Agent Group'),
                   index: true,
                 },
+                {
+                  element: dynamicElement(
+                    () => import('../(main)/group/profile'),
+                    'Desktop > Agent Group > Profile',
+                  ),
+                  path: 'profile',
+                },
               ],
               element: <DesktopGroupLayout />,
               errorElement: <ErrorBoundary resetPath="/group" />,

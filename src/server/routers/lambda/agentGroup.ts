@@ -3,17 +3,19 @@ import { z } from 'zod';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { AgentModel } from '@/database/models/agent';
 import { ChatGroupModel } from '@/database/models/chatGroup';
+import { AgentGroupRepository } from '@/database/repositories/agentGroup';
 import { insertAgentSchema } from '@/database/schemas';
 import { insertChatGroupSchema } from '@/database/schemas/chatGroup';
 import { ChatGroupConfig } from '@/database/types/chatGroup';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 
-const groupProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
+const agentGroupProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
     ctx: {
+      agentGroupRepo: new AgentGroupRepository(ctx.serverDB, ctx.userId),
       agentModel: new AgentModel(ctx.serverDB, ctx.userId),
       chatGroupModel: new ChatGroupModel(ctx.serverDB, ctx.userId),
     },
@@ -28,8 +30,8 @@ const normalizeGroupConfig = (config?: ChatGroupConfig | null): ChatGroupConfig 
       }
     : undefined;
 
-export const groupRouter = router({
-  addAgentsToGroup: groupProcedure
+export const agentGroupRouter = router({
+  addAgentsToGroup: agentGroupProcedure
     .input(
       z.object({
         agentIds: z.array(z.string()),
@@ -40,7 +42,7 @@ export const groupRouter = router({
       return ctx.chatGroupModel.addAgentsToGroup(input.groupId, input.agentIds);
     }),
 
-  createGroup: groupProcedure
+  createGroup: agentGroupProcedure
     .input(insertChatGroupSchema.omit({ userId: true }))
     .mutation(async ({ input, ctx }) => {
       return ctx.chatGroupModel.create({
@@ -58,7 +60,7 @@ export const groupRouter = router({
    * 3. Add the agents to the group
    * Returns the groupId and created agentIds.
    */
-  createGroupWithMembers: groupProcedure
+  createGroupWithMembers: agentGroupProcedure
     .input(
       z.object({
         groupConfig: insertChatGroupSchema.omit({ userId: true }),
@@ -102,27 +104,35 @@ export const groupRouter = router({
       };
     }),
 
-  deleteGroup: groupProcedure
+  deleteGroup: agentGroupProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
       return ctx.chatGroupModel.delete(input.id);
     }),
 
-  getGroup: groupProcedure.input(z.object({ id: z.string() })).query(async ({ input, ctx }) => {
-    return ctx.chatGroupModel.findById(input.id);
-  }),
+  getGroup: agentGroupProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      return ctx.chatGroupModel.findById(input.id);
+    }),
 
-  getGroupAgents: groupProcedure
+  getGroupAgents: agentGroupProcedure
     .input(z.object({ groupId: z.string() }))
     .query(async ({ input, ctx }) => {
       return ctx.chatGroupModel.getGroupAgents(input.groupId);
     }),
 
-  getGroups: groupProcedure.query(async ({ ctx }) => {
+  getGroupDetail: agentGroupProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      return ctx.agentGroupRepo.findByIdWithAgents(input.id);
+    }),
+
+  getGroups: agentGroupProcedure.query(async ({ ctx }) => {
     return ctx.chatGroupModel.queryWithMemberDetails();
   }),
 
-  removeAgentsFromGroup: groupProcedure
+  removeAgentsFromGroup: agentGroupProcedure
     .input(
       z.object({
         agentIds: z.array(z.string()),
@@ -135,7 +145,7 @@ export const groupRouter = router({
       }
     }),
 
-  updateAgentInGroup: groupProcedure
+  updateAgentInGroup: agentGroupProcedure
     .input(
       z.object({
         agentId: z.string(),
@@ -151,7 +161,7 @@ export const groupRouter = router({
       return ctx.chatGroupModel.updateAgentInGroup(input.groupId, input.agentId, input.updates);
     }),
 
-  updateGroup: groupProcedure
+  updateGroup: agentGroupProcedure
     .input(
       z.object({
         id: z.string(),
@@ -166,4 +176,4 @@ export const groupRouter = router({
     }),
 });
 
-export type GroupRouter = typeof groupRouter;
+export type AgentGroupRouter = typeof agentGroupRouter;

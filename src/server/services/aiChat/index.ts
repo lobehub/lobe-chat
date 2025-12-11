@@ -30,9 +30,7 @@ export class AiChatService {
       this.messageModel.query(params, {
         postProcessUrl: (path) => this.fileService.getFullFileUrl(path),
       }),
-      params.includeTopic
-        ? this.topicModel.query({ agentId: params.agentId, containerId: params.sessionId })
-        : undefined,
+      params.includeTopic ? this.topicModel.query({ agentId: params.agentId }) : undefined,
     ]);
 
     return { messages, topics };
