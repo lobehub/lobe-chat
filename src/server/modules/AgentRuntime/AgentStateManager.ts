@@ -31,7 +31,7 @@ export class AgentStateManager {
   private readonly STEPS_PREFIX = 'agent_runtime_steps';
   private readonly METADATA_PREFIX = 'agent_runtime_meta';
   private readonly EVENTS_PREFIX = 'agent_runtime_events';
-  private readonly DEFAULT_TTL = 12 * 3600; // 12h
+  private readonly DEFAULT_TTL = 2 * 3600; // 2h
 
   constructor() {
     const redisClient = getAgentRuntimeRedisClient();
@@ -325,10 +325,10 @@ export class AgentStateManager {
         if (metadata) {
           const lastActiveTime = new Date(metadata.lastActiveAt).getTime();
           const now = Date.now();
-          const daysSinceActive = (now - lastActiveTime) / (1000 * 60 * 60 * 24);
+          const hoursSinceActive = (now - lastActiveTime) / (1000 * 60 * 60);
 
-          // 清理超过 7 天未活跃的操作
-          if (daysSinceActive > 7) {
+          // 清理超过 2 小时未活跃的操作
+          if (hoursSinceActive > 2) {
             await this.deleteAgentOperation(operationId);
             cleanedCount++;
           }

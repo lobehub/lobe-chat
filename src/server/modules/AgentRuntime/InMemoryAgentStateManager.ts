@@ -159,10 +159,10 @@ export class InMemoryAgentStateManager implements IAgentStateManager {
       if (metadata) {
         const lastActiveTime = new Date(metadata.lastActiveAt).getTime();
         const now = Date.now();
-        const daysSinceActive = (now - lastActiveTime) / (1000 * 60 * 60 * 24);
+        const hoursSinceActive = (now - lastActiveTime) / (1000 * 60 * 60);
 
-        // 清理超过 7 天未活跃的操作
-        if (daysSinceActive > 7) {
+        // 清理超过 1 小时未活跃的操作
+        if (hoursSinceActive > 1) {
           await this.deleteAgentOperation(operationId);
           cleanedCount++;
         }
