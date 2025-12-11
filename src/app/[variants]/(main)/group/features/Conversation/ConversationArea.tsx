@@ -8,18 +8,18 @@ import { useCurrentContext } from '@/hooks/useCurrentContext';
 import { useOperationState } from '@/hooks/useOperationState';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 import { useUserMemoryStore } from '@/store/userMemory';
 import { MemoryManifest } from '@/tools/memory';
 
 import WelcomeChatItem from './AgentWelcome';
 import ChatHydration from './ChatHydration';
-import MainChatInput from './ChatInput';
 import ChatMinimap from './ChatMinimap';
+import MainChatInput from './MainChatInput';
 import MessageFromUrl from './MainChatInput/MessageFromUrl';
 import ThreadHydration from './ThreadHydration';
 import ZenModeToast from './ZenModeToast';
@@ -43,8 +43,8 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
     s.useFetchUserMemory,
     s.setActiveMemoryContext,
   ]);
-  const [currentSession, activeTopic] = [
-    useSessionStore(sessionSelectors.currentSession),
+  const [currentGroup, activeTopic] = [
+    useAgentGroupStore(agentGroupSelectors.currentGroup),
     useChatStore(topicSelectors.currentActiveTopic),
   ];
 
@@ -60,11 +60,19 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
       return;
     }
 
+    // Convert group to session format for MemorySearchSource compatibility
     setActiveMemoryContext({
-      session: currentSession,
+      session: currentGroup
+        ? {
+            meta: {
+              description: currentGroup.description,
+              title: currentGroup.title,
+            },
+          }
+        : undefined,
       topic: activeTopic,
     });
-  }, [activeTopic, currentSession, isMemoryPluginEnabled, setActiveMemoryContext]);
+  }, [activeTopic, currentGroup, isMemoryPluginEnabled, setActiveMemoryContext]);
 
   useFetchUserMemory(Boolean(isMemoryPluginEnabled && context.agentId));
 

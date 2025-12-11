@@ -10,12 +10,12 @@ import { Flexbox } from 'react-layout-kit';
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
 import WideScreenContainer from '@/features/WideScreenContainer';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors } from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 
-import { useSendGroupMessage } from '../useSend';
+// import { useSendGroupMessage } from '../ChatInput/useSend';
 import MessageFromUrl from './MessageFromUrl';
 import { useSendMenuItems } from './useSendMenuItems';
 
@@ -37,10 +37,10 @@ const rightActions: ActionKeys[] = [];
  */
 const Desktop = memo((props: { targetMemberId?: string }) => {
   const { t } = useTranslation('chat');
-  const { send, generating, disabled, stop } = useSendGroupMessage();
+  // const { send, generating, disabled, stop } = useSendGroupMessage();
 
   const isDMPortal = !!props.targetMemberId;
-  const currentGroupMemebers = useSessionStore(sessionSelectors.currentGroupAgents, isEqual);
+  const currentGroupMembers = useAgentGroupStore(agentGroupSelectors.currentGroupAgents, isEqual);
 
   const [mainInputSendErrorMsg, clearSendMessageError] = useChatStore((s) => [
     aiChatSelectors.isCurrentSendMessageError(s),
@@ -48,13 +48,13 @@ const Desktop = memo((props: { targetMemberId?: string }) => {
   ]);
 
   const mentionItems: SlashOptions['items'] = useMemo(() => {
-    if (!currentGroupMemebers) return [];
+    if (!currentGroupMembers) return [];
     return [
       {
         icon: (
           <GroupAvatar
             avatars={
-              currentGroupMemebers?.map((member) => ({
+              currentGroupMembers?.map((member) => ({
                 avatar: member.avatar || DEFAULT_AVATAR,
                 background: member.backgroundColor || undefined,
               })) || []
@@ -66,7 +66,7 @@ const Desktop = memo((props: { targetMemberId?: string }) => {
         label: t('memberSelection.allMembers'),
         metadata: { id: 'ALL_MEMBERS' },
       },
-      ...currentGroupMemebers.map((member) => ({
+      ...currentGroupMembers.map((member) => ({
         icon: (
           <Avatar
             avatar={member.avatar}
@@ -79,7 +79,7 @@ const Desktop = memo((props: { targetMemberId?: string }) => {
         metadata: { id: member.id },
       })),
     ];
-  }, [currentGroupMemebers]);
+  }, [currentGroupMembers]);
 
   const sendMenuItems = useSendMenuItems();
 
@@ -95,10 +95,10 @@ const Desktop = memo((props: { targetMemberId?: string }) => {
         useChatStore.setState({ inputMessage: content });
       }}
       onSend={() => {
-        send({ targetMemberId: props.targetMemberId });
+        // send({ targetMemberId: props.targetMemberId });
       }}
       rightActions={isDMPortal ? [] : rightActions}
-      sendButtonProps={{ disabled, generating, onStop: stop }}
+      // sendButtonProps={{ disabled, generating, onStop: stop }}
       sendMenu={{
         items: sendMenuItems,
       }}

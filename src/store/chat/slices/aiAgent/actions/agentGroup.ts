@@ -15,7 +15,8 @@ import {
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
-import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
+import { getChatGroupStoreState } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import type { ChatStoreState } from '@/store/chat/initialState';
 import {
   GroupChatSupervisor,
@@ -30,7 +31,6 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
-import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('aiAgentGroup');
@@ -254,694 +254,682 @@ export interface ChatGroupChatAction {
   ) => Promise<void>;
 }
 
+const selectGroupConfig = (groupId: string) => {
+  const agentGroupState = getChatGroupStoreState();
+  return agentGroupSelectors.getGroupConfig(groupId)(agentGroupState);
+};
+
 export const agentGroupSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
   ChatGroupChatAction
-> = (set, get) => {
-  const selectGroupConfig = (groupId: string) => {
-    const { groupMaps } = get();
-    const group = groupMaps[groupId];
+> = (set, get) => ({
+  sendGroupMessage: async ({ groupId, message, files, onlyAddUserMessage, targetMemberId }) => {
+    const {
+      optimisticCreateMessage,
+      internal_triggerSupervisorDecisionDebounced,
+      internal_setActiveGroup,
+      activeTopicId,
+    } = get();
 
-    return merge(DEFAULT_CHAT_GROUP_CHAT_CONFIG, group?.config || {});
-  };
+    if (!message.trim() && (!files || files.length === 0)) return;
 
-  return {
-    sendGroupMessage: async ({ groupId, message, files, onlyAddUserMessage, targetMemberId }) => {
-      const {
-        optimisticCreateMessage,
-        internal_triggerSupervisorDecisionDebounced,
-        internal_setActiveGroup,
-        activeTopicId,
-      } = get();
+    internal_setActiveGroup(groupId);
 
-      if (!message.trim() && (!files || files.length === 0)) return;
+    set({ isCreatingMessage: true }, false, n('creatingGroupMessage/start'));
 
-      internal_setActiveGroup(groupId);
-
-      set({ isCreatingMessage: true }, false, n('creatingGroupMessage/start'));
-
-      try {
-        const userMessage: CreateMessageParams = {
-          content: message,
-          files: files?.map((f) => f.id),
-          role: 'user',
-          groupId,
-          agentId: useSessionStore.getState().activeId,
-          topicId: activeTopicId,
-          targetId: targetMemberId,
-        };
-
-        const result = await optimisticCreateMessage(userMessage);
-
-        // if only add user message, then stop
-        if (onlyAddUserMessage) {
-          set({ isCreatingMessage: false }, false, n('creatingGroupMessage/onlyUser'));
-          return;
-        }
-
-        if (!result) return;
-        const messageId = result.id;
-
-        if (messageId) {
-          // Use the specific group's config rather than relying on active session
-          const groupConfig = selectGroupConfig(groupId);
-
-          // If supervisor is disabled, check for direct mentions and trigger them directly
-          if (!groupConfig?.enableSupervisor) {
-            const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
-            const mentionableGroupAgents: GroupMemberInfo[] = agents.map((agent) => ({
-              id: agent.id,
-              title: agent.title ?? agent.id,
-            }));
-            const mentionedAgentIds = extractMentionsFromContent(message, mentionableGroupAgents);
-
-            const candidateAgentIds = new Set(mentionedAgentIds);
-
-            if (targetMemberId && agents?.some((agent) => agent.id === targetMemberId)) {
-              candidateAgentIds.add(targetMemberId);
-            }
-
-            if (candidateAgentIds.size > 0) {
-              // Validate that mentioned agents exist in the group
-              const validMentionedAgents = [...candidateAgentIds].filter((agentId) =>
-                agents?.some((agent) => agent.id === agentId),
-              );
-
-              if (validMentionedAgents.length > 0) {
-                console.log(
-                  'Supervisor disabled, triggering direct mentions:',
-                  validMentionedAgents,
-                );
-
-                // Process mentioned agents directly without supervisor decision
-                const { internal_executeAgentResponses } = get();
-                const decisions = validMentionedAgents.map((agentId) => ({
-                  id: agentId,
-                  target: targetMemberId && agentId === targetMemberId ? 'user' : undefined,
-                }));
-
-                await internal_executeAgentResponses(groupId, decisions);
-              } else {
-                console.log('Supervisor disabled, mentioned agents not found in group');
-              }
-            } else {
-              if (targetMemberId) {
-                console.log(
-                  'Supervisor disabled and DM target not found in group, no agent responses triggered',
-                );
-              } else {
-                console.log(
-                  'Supervisor disabled and no mentions found, no agent responses triggered',
-                );
-              }
-            }
-          } else {
-            internal_triggerSupervisorDecisionDebounced(groupId);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to send group message:', error);
-      } finally {
-        set({ isCreatingMessage: false }, false, n('creatingGroupMessage/end'));
-      }
-    },
-
-    // ========= ↓ Group Chat Internal Methods ↓ ========== //
-
-    internal_triggerSupervisorDecision: async (
-      groupId: string,
-      topicId?: string | null,
-      isManualTrigger: boolean = false,
-    ) => {
-      const {
-        messagesMap,
-        internal_toggleSupervisorLoading,
-        optimisticCreateMessage,
-        supervisorTodos,
-      } = get();
-
-      // Capture topicId at invocation time to avoid leaking state after topic switches
-      const currentTopicId = typeof topicId === 'undefined' ? get().activeTopicId : topicId;
-
-      // Always read config for the provided groupId early so it can be used in createSupervisorTodoMessage
-      const groupConfig = selectGroupConfig(groupId);
-
-      const createSupervisorTodoMessage = async (todoList: SupervisorTodoItem[]) => {
-        if (!groupId) return;
-
-        const agentId = useSessionStore.getState().activeId || groupId;
-        if (!agentId) return;
-
-        const content = formatSupervisorTodoContent(todoList);
-        const supervisorMessage: CreateMessageParams = {
-          content,
-          model: groupConfig.orchestratorModel,
-          provider: groupConfig.orchestratorProvider,
-          groupId,
-          role: 'supervisor',
-          agentId,
-          topicId: currentTopicId ?? undefined,
-        };
-
-        console.log('Creating supervisor todo message:', supervisorMessage);
-
-        await optimisticCreateMessage(supervisorMessage);
+    try {
+      const userMessage: CreateMessageParams = {
+        content: message,
+        files: files?.map((f) => f.id),
+        role: 'user',
+        groupId,
+        agentId: useSessionStore.getState().activeId,
+        topicId: activeTopicId,
+        targetId: targetMemberId,
       };
 
-      const messages =
-        messagesMap[messageMapKey({ agentId: groupId, topicId: currentTopicId })] || [];
-      const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
+      const result = await optimisticCreateMessage(userMessage);
 
-      if (messages.length === 0) return;
-
-      // If supervisor is disabled, skip supervisor decision
-      if (!groupConfig?.enableSupervisor) {
-        console.log('Supervisor is disabled for this group, skipping supervisor decision');
+      // if only add user message, then stop
+      if (onlyAddUserMessage) {
+        set({ isCreatingMessage: false }, false, n('creatingGroupMessage/onlyUser'));
         return;
       }
 
-      // Skip supervisor decision if we're in the middle of tool calling sequence or exceeded maxResponseInRow (for automatic triggers only)
-      if (shouldAvoidSupervisorDecision(messages, groupConfig?.maxResponseInRow, isManualTrigger)) {
-        const reason = isManualTrigger
-          ? 'waiting for tool calling sequence to complete'
-          : 'waiting for tool calling sequence to complete or max responses exceeded';
-        console.log(`Skipping supervisor decision - ${reason}`);
-        return;
+      if (!result) return;
+      const messageId = result.id;
+
+      if (messageId) {
+        // Use the specific group's config rather than relying on active session
+        const groupConfig = selectGroupConfig(groupId);
+
+        // If supervisor is disabled, check for direct mentions and trigger them directly
+        if (!groupConfig?.enableSupervisor) {
+          const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
+          const mentionableGroupAgents: GroupMemberInfo[] = agents.map((agent) => ({
+            id: agent.id,
+            title: agent.title ?? agent.id,
+          }));
+          const mentionedAgentIds = extractMentionsFromContent(message, mentionableGroupAgents);
+
+          const candidateAgentIds = new Set(mentionedAgentIds);
+
+          if (targetMemberId && agents?.some((agent) => agent.id === targetMemberId)) {
+            candidateAgentIds.add(targetMemberId);
+          }
+
+          if (candidateAgentIds.size > 0) {
+            // Validate that mentioned agents exist in the group
+            const validMentionedAgents = [...candidateAgentIds].filter((agentId) =>
+              agents?.some((agent) => agent.id === agentId),
+            );
+
+            if (validMentionedAgents.length > 0) {
+              console.log('Supervisor disabled, triggering direct mentions:', validMentionedAgents);
+
+              // Process mentioned agents directly without supervisor decision
+              const { internal_executeAgentResponses } = get();
+              const decisions = validMentionedAgents.map((agentId) => ({
+                id: agentId,
+                target: targetMemberId && agentId === targetMemberId ? 'user' : undefined,
+              }));
+
+              await internal_executeAgentResponses(groupId, decisions);
+            } else {
+              console.log('Supervisor disabled, mentioned agents not found in group');
+            }
+          } else {
+            if (targetMemberId) {
+              console.log(
+                'Supervisor disabled and DM target not found in group, no agent responses triggered',
+              );
+            } else {
+              console.log(
+                'Supervisor disabled and no mentions found, no agent responses triggered',
+              );
+            }
+          }
+        } else {
+          internal_triggerSupervisorDecisionDebounced(groupId);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to send group message:', error);
+    } finally {
+      set({ isCreatingMessage: false }, false, n('creatingGroupMessage/end'));
+    }
+  },
+
+  // ========= ↓ Group Chat Internal Methods ↓ ========== //
+
+  internal_triggerSupervisorDecision: async (
+    groupId: string,
+    topicId?: string | null,
+    isManualTrigger: boolean = false,
+  ) => {
+    const {
+      messagesMap,
+      internal_toggleSupervisorLoading,
+      optimisticCreateMessage,
+      supervisorTodos,
+    } = get();
+
+    // Capture topicId at invocation time to avoid leaking state after topic switches
+    const currentTopicId = typeof topicId === 'undefined' ? get().activeTopicId : topicId;
+
+    // Always read config for the provided groupId early so it can be used in createSupervisorTodoMessage
+    const groupConfig = selectGroupConfig(groupId);
+
+    const createSupervisorTodoMessage = async (todoList: SupervisorTodoItem[]) => {
+      if (!groupId) return;
+
+      const agentId = useSessionStore.getState().activeId || groupId;
+      if (!agentId) return;
+
+      const content = formatSupervisorTodoContent(todoList);
+      const supervisorMessage: CreateMessageParams = {
+        content,
+        model: groupConfig.orchestratorModel,
+        provider: groupConfig.orchestratorProvider,
+        groupId,
+        role: 'supervisor',
+        agentId,
+        topicId: currentTopicId ?? undefined,
+      };
+
+      console.log('Creating supervisor todo message:', supervisorMessage);
+
+      await optimisticCreateMessage(supervisorMessage);
+    };
+
+    const messages =
+      messagesMap[messageMapKey({ agentId: groupId, topicId: currentTopicId })] || [];
+    const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
+
+    if (messages.length === 0) return;
+
+    // If supervisor is disabled, skip supervisor decision
+    if (!groupConfig?.enableSupervisor) {
+      console.log('Supervisor is disabled for this group, skipping supervisor decision');
+      return;
+    }
+
+    // Skip supervisor decision if we're in the middle of tool calling sequence or exceeded maxResponseInRow (for automatic triggers only)
+    if (shouldAvoidSupervisorDecision(messages, groupConfig?.maxResponseInRow, isManualTrigger)) {
+      const reason = isManualTrigger
+        ? 'waiting for tool calling sequence to complete'
+        : 'waiting for tool calling sequence to complete or max responses exceeded';
+      console.log(`Skipping supervisor decision - ${reason}`);
+      return;
+    }
+
+    // Create AbortController for this supervisor decision
+    const abortController = new AbortController();
+
+    // Store the AbortController in state
+    set(
+      produce((state: ChatStoreState) => {
+        state.supervisorDecisionAbortControllers[groupId] = abortController;
+      }),
+      false,
+      n(`setSupervisorAbortController/${groupId}`),
+    );
+
+    // Get real user name from user store
+    const userStoreState = getUserStoreState();
+    const realUserName = userProfileSelectors.nickName(userStoreState) || 'User';
+
+    try {
+      const todoKey = messageMapKey({ agentId: groupId, topicId: currentTopicId });
+
+      const context: SupervisorContext = {
+        allowDM: groupConfig.allowDM,
+        availableAgents: agents!,
+        groupId,
+        messages,
+        model: groupConfig.orchestratorModel,
+        provider: groupConfig.orchestratorProvider,
+        scene: groupConfig.scene,
+        userName: realUserName,
+        systemPrompt: groupConfig.systemPrompt,
+        abortController,
+        todoList: supervisorTodos?.[todoKey] || [],
+      };
+
+      internal_toggleSupervisorLoading(true, groupId);
+
+      const { decisions, todos, todoUpdated } = await supervisor.makeDecision(context);
+
+      // Turn off supervisor thinking immediately after decision is made
+      internal_toggleSupervisorLoading(false, groupId);
+
+      get().internal_updateSupervisorTodos(groupId, currentTopicId, todos);
+
+      if (todoUpdated) {
+        await createSupervisorTodoMessage(todos);
       }
 
-      // Create AbortController for this supervisor decision
-      const abortController = new AbortController();
+      console.log('Supervisor decisions:', decisions);
 
-      // Store the AbortController in state
+      if (decisions.length > 0) {
+        await get().internal_executeAgentResponses(groupId, decisions);
+      }
+    } catch (error) {
+      // Turn off supervisor thinking on error
+      internal_toggleSupervisorLoading(false, groupId);
+
+      if (
+        (error instanceof Error && error.name === 'AbortError') ||
+        (error instanceof Error && error.message.includes('The operation was aborted'))
+      ) {
+        console.log('Supervisor decision was aborted for group:', groupId);
+        // Don't create error message for intentional aborts
+      } else {
+        console.error('Supervisor decision failed:', error);
+        // Create supervisor error message to show the error to users
+        await get().internal_createSupervisorErrorMessage(
+          groupId,
+          'Supervisor Decision Failed, Please check your configuration',
+        );
+      }
+    } finally {
+      // Clean up AbortController from state
       set(
         produce((state: ChatStoreState) => {
-          state.supervisorDecisionAbortControllers[groupId] = abortController;
+          delete state.supervisorDecisionAbortControllers[groupId];
         }),
         false,
-        n(`setSupervisorAbortController/${groupId}`),
+        n(`cleanupSupervisorAbortController/${groupId}`),
       );
+    }
+  },
+
+  internal_executeAgentResponses: async (groupId: string, decisions: SupervisorDecisionList) => {
+    console.log('DEBUG: Executing agent responses with decisions:', decisions);
+    const { internal_processAgentMessage, internal_triggerSupervisorDecisionDebounced } = get();
+
+    // Read the target group's config to respect per-group settings
+    const groupConfig = selectGroupConfig(groupId);
+    const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
+
+    // Sort decisions by member order if response order is sequential
+    const sortedDecisions =
+      groupConfig?.responseOrder === 'sequential'
+        ? [...decisions].sort((a, b) => {
+            const agentA = agents?.find((agent) => agent.id === a.id);
+            const agentB = agents?.find((agent) => agent.id === b.id);
+
+            // Default to order 0 if not found or not set
+            const orderA = agentA?.order ?? 0;
+            const orderB = agentB?.order ?? 0;
+
+            return orderA - orderB;
+          })
+        : decisions;
+
+    try {
+      if (groupConfig?.responseOrder === 'sequential') {
+        // Process agents sequentially with delay
+        for (const [index, decision] of sortedDecisions.entries()) {
+          // Add delay between agents (except for the first one)
+          if (index > 0) {
+            await new Promise((resolve) => {
+              setTimeout(resolve, SEQUENTIAL_RESPONSE_DELAY);
+            });
+          }
+
+          await internal_processAgentMessage(
+            groupId,
+            decision.id,
+            decision.target,
+            decision.instruction,
+          );
+        }
+      } else {
+        // Process agents in parallel for natural response order
+        const responsePromises = sortedDecisions.map((decision) =>
+          internal_processAgentMessage(groupId, decision.id, decision.target, decision.instruction),
+        );
+        await Promise.all(responsePromises);
+      }
+
+      // Only trigger next supervisor decision after ALL agents have completed their responses
+      // This prevents rapid-fire agent responses and gives time for conversation to settle
+      if (sortedDecisions.length > 0) {
+        internal_triggerSupervisorDecisionDebounced(groupId);
+      }
+    } catch (error) {
+      console.error('Failed to execute agent responses:', error);
+      // Create supervisor error message to show the error to users
+      await get().internal_createSupervisorErrorMessage(
+        groupId,
+        error instanceof Error ? error : new Error(String(error)),
+        'Agent Response Execution Failed',
+      );
+    }
+  },
+
+  // For group member responsing
+  internal_processAgentMessage: async (
+    groupId: string,
+    agentId: string,
+    targetId?: string,
+    instruction?: string,
+  ) => {
+    console.log('DEBUG: internal_processAgentMessage called with:', {
+      groupId,
+      agentId,
+      targetId,
+      instruction,
+    });
+    const {
+      messagesMap,
+      optimisticCreateMessage,
+      internal_fetchAIChatMessage,
+      refreshMessages,
+      activeTopicId,
+      internal_dispatchMessage,
+    } = get();
+
+    try {
+      const allMessages =
+        messagesMap[messageMapKey({ agentId: groupId, topicId: activeTopicId })] || [];
+      if (allMessages.length === 0) return;
+
+      // Filter messages for this specific agent based on DM targeting rules
+      const messages = filterMessagesForAgent(allMessages, agentId);
+
+      // Get group agents and find the specific agent
+      const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
+      const agentData = agents?.find((agent) => agent.id === agentId);
+
+      if (!agentData) {
+        console.error(`Agent ${agentId} not found in group members`);
+        return;
+      }
+
+      const agentProvider = agentData.provider || undefined;
+      const agentModel = agentData.model || undefined;
+
+      console.log('DEBUG: Group chat agent data:', agentData);
+
+      if (!agentProvider || !agentModel) {
+        console.error(`No provider or model configured for agent ${agentId}`);
+        return;
+      }
+
+      // Get the individual agent's full configuration including temperature, top_p, etc.
+      // const agentStoreState = getAgentStoreState();
+      // const agentConfig = agentSelectors.getAgentConfigById(agentId)(agentStoreState);
 
       // Get real user name from user store
       const userStoreState = getUserStoreState();
       const realUserName = userProfileSelectors.nickName(userStoreState) || 'User';
 
-      try {
-        const todoKey = messageMapKey({ agentId: groupId, topicId: currentTopicId });
+      const agentTitleMap: GroupMemberInfo[] = [
+        { id: 'user', title: realUserName },
+        ...(agents || []).map((agent) => ({ id: agent.id || '', title: agent.title || '' })),
+      ];
 
-        const context: SupervisorContext = {
-          allowDM: groupConfig.allowDM,
-          availableAgents: agents!,
-          groupId,
-          messages,
-          model: groupConfig.orchestratorModel,
-          provider: groupConfig.orchestratorProvider,
-          scene: groupConfig.scene,
-          userName: realUserName,
-          systemPrompt: groupConfig.systemPrompt,
-          abortController,
-          todoList: supervisorTodos?.[todoKey] || [],
-        };
-
-        internal_toggleSupervisorLoading(true, groupId);
-
-        const { decisions, todos, todoUpdated } = await supervisor.makeDecision(context);
-
-        // Turn off supervisor thinking immediately after decision is made
-        internal_toggleSupervisorLoading(false, groupId);
-
-        get().internal_updateSupervisorTodos(groupId, currentTopicId, todos);
-
-        if (todoUpdated) {
-          await createSupervisorTodoMessage(todos);
-        }
-
-        console.log('Supervisor decisions:', decisions);
-
-        if (decisions.length > 0) {
-          await get().internal_executeAgentResponses(groupId, decisions);
-        }
-      } catch (error) {
-        // Turn off supervisor thinking on error
-        internal_toggleSupervisorLoading(false, groupId);
-
-        if (
-          (error instanceof Error && error.name === 'AbortError') ||
-          (error instanceof Error && error.message.includes('The operation was aborted'))
-        ) {
-          console.log('Supervisor decision was aborted for group:', groupId);
-          // Don't create error message for intentional aborts
-        } else {
-          console.error('Supervisor decision failed:', error);
-          // Create supervisor error message to show the error to users
-          await get().internal_createSupervisorErrorMessage(
-            groupId,
-            'Supervisor Decision Failed, Please check your configuration',
-          );
-        }
-      } finally {
-        // Clean up AbortController from state
-        set(
-          produce((state: ChatStoreState) => {
-            delete state.supervisorDecisionAbortControllers[groupId];
-          }),
-          false,
-          n(`cleanupSupervisorAbortController/${groupId}`),
-        );
-      }
-    },
-
-    internal_executeAgentResponses: async (groupId: string, decisions: SupervisorDecisionList) => {
-      console.log('DEBUG: Executing agent responses with decisions:', decisions);
-      const { internal_processAgentMessage, internal_triggerSupervisorDecisionDebounced } = get();
-
-      // Read the target group's config to respect per-group settings
-      const groupConfig = selectGroupConfig(groupId);
-      const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
-
-      // Sort decisions by member order if response order is sequential
-      const sortedDecisions =
-        groupConfig?.responseOrder === 'sequential'
-          ? [...decisions].sort((a, b) => {
-              const agentA = agents?.find((agent) => agent.id === a.id);
-              const agentB = agents?.find((agent) => agent.id === b.id);
-
-              // Default to order 0 if not found or not set
-              const orderA = agentA?.order ?? 0;
-              const orderB = agentB?.order ?? 0;
-
-              return orderA - orderB;
-            })
-          : decisions;
-
-      try {
-        if (groupConfig?.responseOrder === 'sequential') {
-          // Process agents sequentially with delay
-          for (const [index, decision] of sortedDecisions.entries()) {
-            // Add delay between agents (except for the first one)
-            if (index > 0) {
-              await new Promise((resolve) => {
-                setTimeout(resolve, SEQUENTIAL_RESPONSE_DELAY);
-              });
-            }
-
-            await internal_processAgentMessage(
-              groupId,
-              decision.id,
-              decision.target,
-              decision.instruction,
-            );
-          }
-        } else {
-          // Process agents in parallel for natural response order
-          const responsePromises = sortedDecisions.map((decision) =>
-            internal_processAgentMessage(
-              groupId,
-              decision.id,
-              decision.target,
-              decision.instruction,
-            ),
-          );
-          await Promise.all(responsePromises);
-        }
-
-        // Only trigger next supervisor decision after ALL agents have completed their responses
-        // This prevents rapid-fire agent responses and gives time for conversation to settle
-        if (sortedDecisions.length > 0) {
-          internal_triggerSupervisorDecisionDebounced(groupId);
-        }
-      } catch (error) {
-        console.error('Failed to execute agent responses:', error);
-        // Create supervisor error message to show the error to users
-        await get().internal_createSupervisorErrorMessage(
-          groupId,
-          error instanceof Error ? error : new Error(String(error)),
-          'Agent Response Execution Failed',
-        );
-      }
-    },
-
-    // For group member responsing
-    internal_processAgentMessage: async (
-      groupId: string,
-      agentId: string,
-      targetId?: string,
-      instruction?: string,
-    ) => {
-      console.log('DEBUG: internal_processAgentMessage called with:', {
-        groupId,
+      const baseSystemRole = agentData.systemRole || '';
+      const members: GroupMemberInfo[] = agentTitleMap as GroupMemberInfo[];
+      const groupChatSystemPrompt = buildGroupChatSystemPrompt({
+        groupMembers: members,
+        baseSystemRole,
         agentId,
+        messages,
         targetId,
         instruction,
       });
-      const {
-        messagesMap,
-        optimisticCreateMessage,
-        internal_fetchAIChatMessage,
-        refreshMessages,
-        activeTopicId,
-        internal_dispatchMessage,
-      } = get();
 
-      try {
-        const allMessages =
-          messagesMap[messageMapKey({ agentId: groupId, topicId: activeTopicId })] || [];
-        if (allMessages.length === 0) return;
+      // Create agent message using real agent config
+      const agentMessage: CreateMessageParams = {
+        role: 'assistant',
+        model: agentModel,
+        groupId,
+        content: LOADING_FLAT,
+        provider: agentProvider,
+        agentId: agentId || useSessionStore.getState().activeId,
+        topicId: activeTopicId,
+        targetId: targetId, // Use targetId when provided for DM messages
+      };
 
-        // Filter messages for this specific agent based on DM targeting rules
-        const messages = filterMessagesForAgent(allMessages, agentId);
+      console.log('DEBUG: Creating agent message with:', agentMessage);
 
-        // Get group agents and find the specific agent
-        const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
-        const agentData = agents?.find((agent) => agent.id === agentId);
+      const result = await optimisticCreateMessage(agentMessage);
+      if (!result) return;
+      const assistantId = result.id;
 
-        if (!agentData) {
-          console.error(`Agent ${agentId} not found in group members`);
-          return;
-        }
+      const systemMessage: UIChatMessage = {
+        id: 'group-system',
+        role: 'system',
+        content: groupChatSystemPrompt,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        meta: {},
+      };
 
-        const agentProvider = agentData.provider || undefined;
-        const agentModel = agentData.model || undefined;
+      // Add author names to messages for better context
+      const messagesWithAuthors = messages.map((msg) => {
+        const authorInfo = agentTitleMap.find((member) =>
+          msg.role === 'user' ? member.id === 'user' : member.id === msg.agentId,
+        );
+        const authorName = authorInfo?.title || (msg.role === 'user' ? realUserName : 'Unknown');
+        const authorId = msg.role === 'user' ? 'user' : msg.agentId || 'unknown';
 
-        console.log('DEBUG: Group chat agent data:', agentData);
-
-        if (!agentProvider || !agentModel) {
-          console.error(`No provider or model configured for agent ${agentId}`);
-          return;
-        }
-
-        // Get the individual agent's full configuration including temperature, top_p, etc.
-        // const agentStoreState = getAgentStoreState();
-        // const agentConfig = agentSelectors.getAgentConfigById(agentId)(agentStoreState);
-
-        // Get real user name from user store
-        const userStoreState = getUserStoreState();
-        const realUserName = userProfileSelectors.nickName(userStoreState) || 'User';
-
-        const agentTitleMap: GroupMemberInfo[] = [
-          { id: 'user', title: realUserName },
-          ...(agents || []).map((agent) => ({ id: agent.id || '', title: agent.title || '' })),
-        ];
-
-        const baseSystemRole = agentData.systemRole || '';
-        const members: GroupMemberInfo[] = agentTitleMap as GroupMemberInfo[];
-        const groupChatSystemPrompt = buildGroupChatSystemPrompt({
-          groupMembers: members,
-          baseSystemRole,
-          agentId,
-          messages,
-          targetId,
-          instruction,
-        });
-
-        // Create agent message using real agent config
-        const agentMessage: CreateMessageParams = {
-          role: 'assistant',
-          model: agentModel,
-          groupId,
-          content: LOADING_FLAT,
-          provider: agentProvider,
-          agentId: agentId || useSessionStore.getState().activeId,
-          topicId: activeTopicId,
-          targetId: targetId, // Use targetId when provided for DM messages
-        };
-
-        console.log('DEBUG: Creating agent message with:', agentMessage);
-
-        const result = await optimisticCreateMessage(agentMessage);
-        if (!result) return;
-        const assistantId = result.id;
-
-        const systemMessage: UIChatMessage = {
-          id: 'group-system',
-          role: 'system',
-          content: groupChatSystemPrompt,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          meta: {},
-        };
-
-        // Add author names to messages for better context
-        const messagesWithAuthors = messages.map((msg) => {
-          const authorInfo = agentTitleMap.find((member) =>
-            msg.role === 'user' ? member.id === 'user' : member.id === msg.agentId,
-          );
-          const authorName = authorInfo?.title || (msg.role === 'user' ? realUserName : 'Unknown');
-          const authorId = msg.role === 'user' ? 'user' : msg.agentId || 'unknown';
-
-          // Keep user message as-is
-          if (msg.role === 'user') {
-            return {
-              ...msg,
-              content: msg.content,
-            };
-          }
-
+        // Keep user message as-is
+        if (msg.role === 'user') {
           return {
             ...msg,
-            content: `<author_name_do_not_include_in_your_response name="${authorName}" id="${authorId}" />${msg.content}`,
+            content: msg.content,
           };
-        });
-
-        // TODO: Use context engineering
-        const messagesForAPI = [systemMessage, ...messagesWithAuthors];
-
-        if (assistantId) {
-          await internal_fetchAIChatMessage({
-            messageId: assistantId,
-            messages: messagesForAPI,
-            model: agentModel,
-            provider: agentProvider,
-            agentConfig: agentData,
-            traceId: `group-${groupId}-agent-${agentId}`,
-          });
         }
 
-        await refreshMessages();
+        return {
+          ...msg,
+          content: `<author_name_do_not_include_in_your_response name="${authorName}" id="${authorId}" />${msg.content}`,
+        };
+      });
 
-        // Don't trigger supervisor decision after individual agent responses
-        // This prevents infinite loops of agent responses
-        // Supervisor decisions should only be triggered after user messages or when all agents complete
-      } catch (error) {
-        console.error(`Failed to process message for agent ${agentId}:`, error);
+      // TODO: Use context engineering
+      const messagesForAPI = [systemMessage, ...messagesWithAuthors];
 
-        // Create supervisor error message to show the error to users
-        await get().internal_createSupervisorErrorMessage(
-          groupId,
-          error instanceof Error ? error : new Error(String(error)),
-          `Agent ${agentId} Response Failed`,
-        );
+      if (assistantId) {
+        await internal_fetchAIChatMessage({
+          messageId: assistantId,
+          messages: messagesForAPI,
+          model: agentModel,
+          provider: agentProvider,
+          agentConfig: agentData,
+          traceId: `group-${groupId}-agent-${agentId}`,
+        });
+      }
 
-        // Also update error state if we have an assistant message (for consistency with single chat)
-        const currentMessages =
-          get().messagesMap[messageMapKey({ agentId: groupId, topicId: activeTopicId })] || [];
-        const errorMessage = currentMessages.find(
-          (m) => m.role === 'assistant' && m.agentId === agentId && m.content === LOADING_FLAT,
-        );
+      await refreshMessages();
 
-        if (errorMessage) {
-          internal_dispatchMessage({
-            id: errorMessage.id,
-            type: 'updateMessage',
-            value: {
-              content: `Error: Failed to generate response. ${error instanceof Error ? error.message : 'Unknown error'}`,
-              error: {
-                type: ChatErrorType.CreateMessageError,
-                message: error instanceof Error ? error.message : 'Unknown error',
-              },
+      // Don't trigger supervisor decision after individual agent responses
+      // This prevents infinite loops of agent responses
+      // Supervisor decisions should only be triggered after user messages or when all agents complete
+    } catch (error) {
+      console.error(`Failed to process message for agent ${agentId}:`, error);
+
+      // Create supervisor error message to show the error to users
+      await get().internal_createSupervisorErrorMessage(
+        groupId,
+        error instanceof Error ? error : new Error(String(error)),
+        `Agent ${agentId} Response Failed`,
+      );
+
+      // Also update error state if we have an assistant message (for consistency with single chat)
+      const currentMessages =
+        get().messagesMap[messageMapKey({ agentId: groupId, topicId: activeTopicId })] || [];
+      const errorMessage = currentMessages.find(
+        (m) => m.role === 'assistant' && m.agentId === agentId && m.content === LOADING_FLAT,
+      );
+
+      if (errorMessage) {
+        internal_dispatchMessage({
+          id: errorMessage.id,
+          type: 'updateMessage',
+          value: {
+            content: `Error: Failed to generate response. ${error instanceof Error ? error.message : 'Unknown error'}`,
+            error: {
+              type: ChatErrorType.CreateMessageError,
+              message: error instanceof Error ? error.message : 'Unknown error',
             },
-          });
-        }
-      }
-    },
-
-    internal_setActiveGroup: () => {
-      // Update the active session type to 'group' when setting an active group
-      get().internal_updateActiveSessionType('group');
-    },
-
-    internal_toggleSupervisorLoading: (loading: boolean, groupId?: string) => {
-      set(
-        {
-          supervisorDecisionLoading: groupId
-            ? toggleBooleanList(get().supervisorDecisionLoading, groupId, loading)
-            : loading
-              ? get().supervisorDecisionLoading
-              : [],
-        },
-        false,
-        n(`toggleSupervisorLoading/${loading ? 'start' : 'end'}`),
-      );
-    },
-
-    internal_triggerSupervisorDecisionDebounced: (groupId: string) => {
-      const { internal_cancelSupervisorDecision, internal_triggerSupervisorDecision } = get();
-
-      internal_cancelSupervisorDecision(groupId);
-
-      // Use per-group config for debounce calculation
-      const groupConfig = selectGroupConfig(groupId);
-      const responseSpeed = groupConfig?.responseSpeed;
-      const debounceThreshold = getDebounceThreshold(responseSpeed);
-
-      console.log(
-        `Using debounce threshold: ${debounceThreshold}ms for responseSpeed: ${responseSpeed}`,
-      );
-
-      // Capture topicId at schedule time to decouple from future topic switches
-      const scheduledTopicId = get().activeTopicId;
-
-      // Set a new timer with dynamic debounce based on group settings
-      const timerId = setTimeout(async () => {
-        console.log(`Debounced supervisor decision triggered for group ${groupId}`);
-
-        // Clean up the timer from state before executing
-        set(
-          produce((state: ChatStoreState) => {
-            delete state.supervisorDebounceTimers[groupId];
-          }),
-          false,
-          n(`cleanupSupervisorTimer/${groupId}`),
-        );
-
-        try {
-          await internal_triggerSupervisorDecision(groupId, scheduledTopicId, false); // false = automatic trigger
-        } catch (error) {
-          console.error(`Failed to execute supervisor decision for group ${groupId}:`, error);
-        }
-      }, debounceThreshold);
-
-      // Store the timer in state
-      set(
-        produce((state: ChatStoreState) => {
-          state.supervisorDebounceTimers[groupId] = timerId as any;
-        }),
-        false,
-        n(`setSupervisorTimer/${groupId}`),
-      );
-    },
-
-    internal_cancelSupervisorDecision: (groupId: string) => {
-      const {
-        supervisorDebounceTimers,
-        supervisorDecisionAbortControllers,
-        internal_toggleSupervisorLoading,
-      } = get();
-      const existingTimer = supervisorDebounceTimers[groupId];
-      const existingAbortController = supervisorDecisionAbortControllers[groupId];
-
-      // Cancel pending debounced timer
-      if (existingTimer) {
-        clearTimeout(existingTimer);
-        console.log(`Cancelled pending supervisor decision timer for group ${groupId}`);
-
-        // Remove timer from state
-        set(
-          produce((state: ChatStoreState) => {
-            delete state.supervisorDebounceTimers[groupId];
-          }),
-          false,
-          n(`cancelSupervisorTimer/${groupId}`),
-        );
-      }
-
-      // Abort ongoing supervisor decision request
-      if (existingAbortController) {
-        existingAbortController.abort('User cancelled supervisor decision');
-        console.log(`Aborted ongoing supervisor decision request for group ${groupId}`);
-
-        // Remove abort controller from state
-        set(
-          produce((state: ChatStoreState) => {
-            delete state.supervisorDecisionAbortControllers[groupId];
-          }),
-          false,
-          n(`cancelSupervisorAbortController/${groupId}`),
-        );
-      }
-
-      // Stop the loading state
-      internal_toggleSupervisorLoading(false, groupId);
-      console.log(`Stopped supervisor loading state for group ${groupId}`);
-    },
-
-    internal_cancelAllSupervisorDecisions: () => {
-      const { supervisorDebounceTimers, supervisorDecisionAbortControllers } = get();
-      const timerGroupIds = Object.keys(supervisorDebounceTimers);
-      const abortControllerGroupIds = Object.keys(supervisorDecisionAbortControllers);
-
-      if (timerGroupIds.length > 0 || abortControllerGroupIds.length > 0) {
-        console.log('Cancelling all pending supervisor decisions for session change/cleanup');
-
-        // Cancel all timers
-        timerGroupIds.forEach((groupId) => {
-          const timer = supervisorDebounceTimers[groupId];
-          if (timer) {
-            clearTimeout(timer);
-          }
-        });
-
-        // Abort all ongoing requests
-        abortControllerGroupIds.forEach((groupId) => {
-          const abortController = supervisorDecisionAbortControllers[groupId];
-          if (abortController) {
-            abortController.abort('Session cleanup');
-          }
-        });
-
-        // Clear all timers and abort controllers from state
-        set(
-          {
-            supervisorDebounceTimers: {},
-            supervisorDecisionAbortControllers: {},
           },
-          false,
-          n('cancelAllSupervisorDecisions'),
-        );
+        });
       }
-    },
+    }
+  },
 
-    internal_updateSupervisorTodos: (groupId, topicId, todos) => {
-      if (!groupId) return;
+  internal_setActiveGroup: () => {
+    // Update the active session type to 'group' when setting an active group
+    get().internal_updateActiveSessionType('group');
+  },
 
-      const key = messageMapKey({ agentId: groupId, topicId });
+  internal_toggleSupervisorLoading: (loading: boolean, groupId?: string) => {
+    set(
+      {
+        supervisorDecisionLoading: groupId
+          ? toggleBooleanList(get().supervisorDecisionLoading, groupId, loading)
+          : loading
+            ? get().supervisorDecisionLoading
+            : [],
+      },
+      false,
+      n(`toggleSupervisorLoading/${loading ? 'start' : 'end'}`),
+    );
+  },
 
+  internal_triggerSupervisorDecisionDebounced: (groupId: string) => {
+    const { internal_cancelSupervisorDecision, internal_triggerSupervisorDecision } = get();
+
+    internal_cancelSupervisorDecision(groupId);
+
+    // Use per-group config for debounce calculation
+    const groupConfig = selectGroupConfig(groupId);
+    const responseSpeed = groupConfig?.responseSpeed;
+    const debounceThreshold = getDebounceThreshold(responseSpeed);
+
+    console.log(
+      `Using debounce threshold: ${debounceThreshold}ms for responseSpeed: ${responseSpeed}`,
+    );
+
+    // Capture topicId at schedule time to decouple from future topic switches
+    const scheduledTopicId = get().activeTopicId;
+
+    // Set a new timer with dynamic debounce based on group settings
+    const timerId = setTimeout(async () => {
+      console.log(`Debounced supervisor decision triggered for group ${groupId}`);
+
+      // Clean up the timer from state before executing
       set(
         produce((state: ChatStoreState) => {
-          state.supervisorTodos[key] = todos;
+          delete state.supervisorDebounceTimers[groupId];
         }),
         false,
-        n(`internal_updateSupervisorTodos/${groupId}`),
+        n(`cleanupSupervisorTimer/${groupId}`),
       );
-    },
-
-    internal_createSupervisorErrorMessage: async (groupId: string, error: Error | string) => {
-      const { optimisticCreateTmpMessage, activeTopicId } = get();
 
       try {
-        const errorMessage = error instanceof Error ? error.message : error;
-        const groupConfig = selectGroupConfig(groupId);
-
-        const supervisorMessage: CreateMessageParams = {
-          role: 'supervisor',
-          model: groupConfig.orchestratorModel,
-          provider: groupConfig.orchestratorProvider,
-          groupId,
-          agentId: useSessionStore.getState().activeId || groupId,
-          topicId: activeTopicId,
-          error: {
-            type: ChatErrorType.SupervisorDecisionFailed,
-            message: errorMessage,
-          },
-          content: LOADING_FLAT,
-        };
-
-        // Create a temporary message that only exists in UI state, no API call
-        optimisticCreateTmpMessage(supervisorMessage);
-      } catch (createError) {
-        console.error('Failed to create supervisor error message:', createError);
+        await internal_triggerSupervisorDecision(groupId, scheduledTopicId, false); // false = automatic trigger
+      } catch (error) {
+        console.error(`Failed to execute supervisor decision for group ${groupId}:`, error);
       }
-    },
-  };
-};
+    }, debounceThreshold);
+
+    // Store the timer in state
+    set(
+      produce((state: ChatStoreState) => {
+        state.supervisorDebounceTimers[groupId] = timerId as any;
+      }),
+      false,
+      n(`setSupervisorTimer/${groupId}`),
+    );
+  },
+
+  internal_cancelSupervisorDecision: (groupId: string) => {
+    const {
+      supervisorDebounceTimers,
+      supervisorDecisionAbortControllers,
+      internal_toggleSupervisorLoading,
+    } = get();
+    const existingTimer = supervisorDebounceTimers[groupId];
+    const existingAbortController = supervisorDecisionAbortControllers[groupId];
+
+    // Cancel pending debounced timer
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+      console.log(`Cancelled pending supervisor decision timer for group ${groupId}`);
+
+      // Remove timer from state
+      set(
+        produce((state: ChatStoreState) => {
+          delete state.supervisorDebounceTimers[groupId];
+        }),
+        false,
+        n(`cancelSupervisorTimer/${groupId}`),
+      );
+    }
+
+    // Abort ongoing supervisor decision request
+    if (existingAbortController) {
+      existingAbortController.abort('User cancelled supervisor decision');
+      console.log(`Aborted ongoing supervisor decision request for group ${groupId}`);
+
+      // Remove abort controller from state
+      set(
+        produce((state: ChatStoreState) => {
+          delete state.supervisorDecisionAbortControllers[groupId];
+        }),
+        false,
+        n(`cancelSupervisorAbortController/${groupId}`),
+      );
+    }
+
+    // Stop the loading state
+    internal_toggleSupervisorLoading(false, groupId);
+    console.log(`Stopped supervisor loading state for group ${groupId}`);
+  },
+
+  internal_cancelAllSupervisorDecisions: () => {
+    const { supervisorDebounceTimers, supervisorDecisionAbortControllers } = get();
+    const timerGroupIds = Object.keys(supervisorDebounceTimers);
+    const abortControllerGroupIds = Object.keys(supervisorDecisionAbortControllers);
+
+    if (timerGroupIds.length > 0 || abortControllerGroupIds.length > 0) {
+      console.log('Cancelling all pending supervisor decisions for session change/cleanup');
+
+      // Cancel all timers
+      timerGroupIds.forEach((groupId) => {
+        const timer = supervisorDebounceTimers[groupId];
+        if (timer) {
+          clearTimeout(timer);
+        }
+      });
+
+      // Abort all ongoing requests
+      abortControllerGroupIds.forEach((groupId) => {
+        const abortController = supervisorDecisionAbortControllers[groupId];
+        if (abortController) {
+          abortController.abort('Session cleanup');
+        }
+      });
+
+      // Clear all timers and abort controllers from state
+      set(
+        {
+          supervisorDebounceTimers: {},
+          supervisorDecisionAbortControllers: {},
+        },
+        false,
+        n('cancelAllSupervisorDecisions'),
+      );
+    }
+  },
+
+  internal_updateSupervisorTodos: (groupId, topicId, todos) => {
+    if (!groupId) return;
+
+    const key = messageMapKey({ agentId: groupId, topicId });
+
+    set(
+      produce((state: ChatStoreState) => {
+        state.supervisorTodos[key] = todos;
+      }),
+      false,
+      n(`internal_updateSupervisorTodos/${groupId}`),
+    );
+  },
+
+  internal_createSupervisorErrorMessage: async (groupId: string, error: Error | string) => {
+    const { optimisticCreateTmpMessage, activeTopicId } = get();
+
+    try {
+      const errorMessage = error instanceof Error ? error.message : error;
+      const groupConfig = selectGroupConfig(groupId);
+
+      const supervisorMessage: CreateMessageParams = {
+        role: 'supervisor',
+        model: groupConfig.orchestratorModel,
+        provider: groupConfig.orchestratorProvider,
+        groupId,
+        agentId: useSessionStore.getState().activeId || groupId,
+        topicId: activeTopicId,
+        error: {
+          type: ChatErrorType.SupervisorDecisionFailed,
+          message: errorMessage,
+        },
+        content: LOADING_FLAT,
+      };
+
+      // Create a temporary message that only exists in UI state, no API call
+      optimisticCreateTmpMessage(supervisorMessage);
+    } catch (createError) {
+      console.error('Failed to create supervisor error message:', createError);
+    }
+  },
+});

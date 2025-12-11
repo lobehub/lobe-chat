@@ -2,9 +2,8 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
-import { LobeGroupSession } from '@/types/session';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 
 interface TemplateMatch {
   activities: Record<string, { description: string; emoji: string; prompt: string; title: string }>;
@@ -14,18 +13,17 @@ interface TemplateMatch {
 export const useTemplateMatching = (): TemplateMatch | null => {
   const { t } = useTranslation('welcome');
   const groupTemplates = useGroupTemplates();
-  const currentSession = useSessionStore(
-    sessionSelectors.currentSession,
-  ) as LobeGroupSession | null;
+  const currentGroup = useAgentGroupStore(agentGroupSelectors.currentGroup);
+  const currentGroupAgents = useAgentGroupStore(agentGroupSelectors.currentGroupAgents);
 
   return useMemo(() => {
-    if (!currentSession || currentSession.type !== 'group') {
-      console.warn('No group session found:', { currentSession });
+    if (!currentGroup) {
+      console.warn('No group found:', { currentGroup });
       return null;
     }
 
-    const currentTitle = currentSession.meta?.title || '';
-    const currentMemberCount = currentSession.members?.length || 0;
+    const currentTitle = currentGroup.title || '';
+    const currentMemberCount = currentGroupAgents?.length || 0;
 
     // Try to match by title and member count
     for (const template of groupTemplates) {
@@ -70,5 +68,5 @@ export const useTemplateMatching = (): TemplateMatch | null => {
       }
     }
     return null;
-  }, [currentSession, groupTemplates, t]);
+  }, [currentGroup, currentGroupAgents, groupTemplates, t]);
 };

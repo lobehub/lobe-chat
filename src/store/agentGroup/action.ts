@@ -9,8 +9,6 @@ import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import type { ChatGroupItem } from '@/database/schemas/chatGroup';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatGroupService } from '@/services/chatGroup';
-import type { ChatStoreState } from '@/store/chat/initialState';
-import { useChatStore } from '@/store/chat/store';
 import { getSessionStoreState } from '@/store/session';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -36,17 +34,6 @@ const toAgentGroupDetail = (group: ChatGroupItem): AgentGroupDetail =>
     ...group,
     agents: [],
   }) as AgentGroupDetail;
-
-const syncChatStoreGroupMap = (groupMap: Record<string, AgentGroupDetail>) => {
-  useChatStore.setState(
-    produce((state: ChatStoreState) => {
-      state.groupMaps = groupMap as Record<string, ChatGroupItem>;
-      state.groupsInit = true;
-    }),
-    false,
-    n('syncGroupMap/chat'),
-  );
-};
 
 export const chatGroupAction: StateCreator<
   ChatGroupStore,
@@ -181,13 +168,10 @@ export const chatGroupAction: StateCreator<
           {
             groupMap: nextGroupMap,
             groupsInit: true,
-            isGroupsLoading: false,
           },
           false,
           n('internal_refreshGroups/updateGroupMap'),
         );
-
-        syncChatStoreGroupMap(nextGroupMap);
       }
 
       // Refresh sessions so session-related group info stays up to date
@@ -213,12 +197,12 @@ export const chatGroupAction: StateCreator<
             draft[id] = {
               ...existing,
               ...incoming,
-              
+
               // Preserve existing agents data
-agents: existing.agents,
-              
+              agents: existing.agents,
+
               // Keep existing config (authoritative) if present; do not overwrite
-config: existing.config || incoming.config,
+              config: existing.config || incoming.config,
             } as AgentGroupDetail;
           } else {
             draft[id] = toAgentGroupDetail(incoming);
@@ -230,17 +214,13 @@ config: existing.config || incoming.config,
         {
           groupMap: mergedMap,
           groupsInit: true,
-          isGroupsLoading: false,
         },
         false,
         n('internal_updateGroupMaps/chatGroup'),
       );
-
-      syncChatStoreGroupMap(mergedMap);
     },
 
     loadGroups: async () => {
-      dispatch({ payload: true, type: 'setGroupsLoading' });
       const groups = await chatGroupService.getGroups();
       dispatch({ payload: groups, type: 'loadGroups' });
     },
@@ -310,21 +290,6 @@ config: existing.config || incoming.config,
         type: 'updateGroup',
       });
 
-      // Also update the chat store's groupMaps to keep it in sync
-      useChatStore.setState(
-        produce((draft: ChatStoreState) => {
-          const existing = draft.groupMaps[group.id];
-          if (existing) {
-            draft.groupMaps[group.id] = {
-              ...existing,
-              config: mergedConfig,
-            } as ChatGroupItem;
-          }
-        }),
-        false,
-        n('updateGroupConfig/syncChatStore'),
-      );
-
       // Refresh groups to ensure consistency
       await get().internal_refreshGroups();
     },
@@ -369,8 +334,6 @@ config: existing.config || incoming.config,
               false,
               n('useFetchGroupDetail/onSuccess', { groupId: groupDetail.id }),
             );
-
-            syncChatStoreGroupMap(nextGroupMap);
           },
         },
       ),
@@ -406,13 +369,10 @@ config: existing.config || incoming.config,
               {
                 groupMap: nextGroupMap,
                 groupsInit: true,
-                isGroupsLoading: false,
               },
               false,
               n('useFetchGroups/onSuccess'),
             );
-
-            syncChatStoreGroupMap(nextGroupMap);
           },
           suspense: true,
         },
