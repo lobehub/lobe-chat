@@ -106,6 +106,9 @@ export const userRouter = router({
       }
     }
 
+    // Update last activity timestamp (fire-and-forget, user confirmed to exist at this point)
+    ctx.userModel.updateUser({ lastActiveAt: new Date() });
+
     // Run all count queries in parallel
     const [hasMoreThan4Messages, hasAnyMessages, hasExtraSession] = await Promise.all([
       ctx.messageModel.hasMoreThanN(4),

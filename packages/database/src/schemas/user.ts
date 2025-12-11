@@ -42,6 +42,7 @@ export const users = pgTable(
 
     // better-auth phone number
     phoneNumberVerified: boolean('phone_number_verified'),
+    lastActiveAt: timestamptz('last_active_at').notNull().defaultNow(),
 
     ...timestamps,
   },

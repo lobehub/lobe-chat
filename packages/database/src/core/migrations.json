@@ -938,5 +938,13 @@
     "bps": true,
     "folderMillis": 1764858574403,
     "hash": "7838f9938b370867470e5e11807855253d23b11c2ac6aa9e90687844a356c949"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"last_active_at\" timestamp with time zone DEFAULT now() NOT NULL;"
+    ],
+    "bps": true,
+    "folderMillis": 1765437218969,
+    "hash": "004923916a27bc61294eeb20738f2884f1ca43978a03aa9f0216fc849c98465b"
   }
 ]
