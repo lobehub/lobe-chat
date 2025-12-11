@@ -8,8 +8,8 @@ import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { topicMapKey } from '@/store/chat/utils/topicMapKey';
 import { useSessionStore } from '@/store/session';
-import { LobeSessionType } from '@/types/session';
 import { ChatTopic } from '@/types/topic';
 
 import { useChatStore } from '../../store';
@@ -160,36 +160,6 @@ describe('topic action', () => {
       expect(topicId).toEqual('new-topic-id');
     });
 
-    it('should reset supervisor todos after saving to topic for group sessions', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const groupId = 'group-session';
-      const todoKey = messageMapKey({ agentId: groupId, topicId: null });
-      const messages = [{ id: 'group-message-1' }] as UIChatMessage[];
-
-      await act(async () => {
-        useChatStore.setState({
-          activeAgentId: groupId,
-          activeSessionType: 'group',
-          messagesMap: {
-            [messageMapKey({ agentId: groupId })]: messages,
-          },
-          supervisorTodos: {
-            [todoKey]: [{ id: 'todo-1' } as any],
-          },
-        });
-      });
-
-      vi.spyOn(topicService, 'createTopic').mockResolvedValue('group-topic-id');
-      vi.spyOn(result.current, 'refreshTopic').mockResolvedValue(undefined);
-      const summarySpy = vi.spyOn(result.current, 'summaryTopicTitle').mockResolvedValue(undefined);
-
-      await act(async () => {
-        await result.current.saveToTopic();
-      });
-
-      expect(summarySpy).toHaveBeenCalled();
-      expect(useChatStore.getState().supervisorTodos[todoKey]).toEqual([]);
-    });
   });
   describe('refreshTopic', () => {
     beforeEach(() => {
@@ -301,8 +271,8 @@ describe('topic action', () => {
       await waitFor(() => {
         expect(result.current.data).toEqual({ items: topics, total: topics.length });
       });
-      expect(useChatStore.getState().topicsInit).toBeTruthy();
-      expect(useChatStore.getState().topicDataMap[sessionId]?.items).toEqual(topics);
+      // Verify topics are stored in topicDataMap with correct key
+      expect(useChatStore.getState().topicDataMap[topicMapKey({ agentId: sessionId })]?.items).toEqual(topics);
     });
   });
   describe('useSearchTopics', () => {
@@ -366,70 +336,6 @@ describe('topic action', () => {
       expect(refreshMessagesSpy).toHaveBeenCalled();
     });
 
-    it('should reset supervisor todos and cancel supervisor decision for group sessions', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const groupId = 'group-1';
-      const nextTopicId = 'topic-2';
-      const expectedKey = messageMapKey({ agentId: groupId, topicId: nextTopicId });
-
-      await act(async () => {
-        useChatStore.setState({
-          activeAgentId: groupId,
-          activeSessionType: 'group',
-          supervisorTodos: {
-            [messageMapKey({ agentId: groupId, topicId: null })]: [{ id: 'todo' } as any],
-          },
-        });
-      });
-
-      const cancelSpy = vi.spyOn(result.current, 'internal_cancelSupervisorDecision');
-      vi.spyOn(result.current, 'refreshMessages').mockResolvedValue(undefined);
-
-      await act(async () => {
-        await result.current.switchTopic(nextTopicId);
-      });
-
-      expect(cancelSpy).toHaveBeenCalledWith(groupId);
-      expect(useChatStore.getState().supervisorTodos[expectedKey]).toEqual([]);
-    });
-
-    it('should detect group sessions from session store when type is not cached', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const groupId = 'group-from-session';
-      const newTopicId = 'topic-session';
-      const expectedKey = messageMapKey({ agentId: groupId, topicId: newTopicId });
-
-      await act(async () => {
-        useChatStore.setState({
-          activeAgentId: groupId,
-          activeSessionType: undefined,
-          supervisorTodos: {},
-        });
-      });
-
-      useSessionStore.setState({
-        activeId: groupId,
-        sessions: [
-          {
-            id: groupId,
-            createdAt: new Date(0),
-            updatedAt: new Date(0),
-            meta: {},
-            type: LobeSessionType.Group,
-          } as any,
-        ],
-      });
-
-      const cancelSpy = vi.spyOn(result.current, 'internal_cancelSupervisorDecision');
-      vi.spyOn(result.current, 'refreshMessages').mockResolvedValue(undefined);
-
-      await act(async () => {
-        await result.current.switchTopic(newTopicId);
-      });
-
-      expect(cancelSpy).toHaveBeenCalledWith(groupId);
-      expect(useChatStore.getState().supervisorTodos[expectedKey]).toEqual([]);
-    });
   });
   describe('removeSessionTopics', () => {
     it('should remove all topics from the current session and refresh the topic list', async () => {
@@ -462,7 +368,7 @@ describe('topic action', () => {
       await act(async () => {
         useChatStore.setState({
           topicDataMap: {
-            [groupId]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+            [topicMapKey({ groupId })]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
           },
         });
       });
@@ -552,7 +458,7 @@ describe('topic action', () => {
         useChatStore.setState({
           activeAgentId: 'abc',
           topicDataMap: {
-            abc: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+            [topicMapKey({ agentId: 'abc' })]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
           },
         });
       });
@@ -594,7 +500,7 @@ describe('topic action', () => {
       await act(async () => {
         useChatStore.setState({
           topicDataMap: {
-            test: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+            [topicMapKey({ agentId: 'test' })]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
           },
           activeAgentId: 'test',
         });
@@ -669,7 +575,7 @@ describe('topic action', () => {
         useChatStore.setState({
           activeAgentId: 'abc',
           topicDataMap: {
-            abc: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+            [topicMapKey({ agentId: 'abc' })]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
           },
         });
       });

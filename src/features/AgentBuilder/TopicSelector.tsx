@@ -12,6 +12,7 @@ import { Flexbox } from 'react-layout-kit';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 import { useChatStore } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 
 dayjs.extend(relativeTime);
 
@@ -41,7 +42,7 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
   const [activeTopicId, switchTopic, topics] = useChatStore((s) => [
     s.activeTopicId,
     s.switchTopic,
-    s.topicDataMap[agentId]?.items,
+    topicSelectors.currentTopics(s),
   ]);
 
   // Find active topic from the agent's topics list directly

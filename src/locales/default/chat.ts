@@ -108,6 +108,10 @@ export default {
   },
   groupDescription: '团队描述',
   groupSidebar: {
+    agentProfile: {
+      chat: '对话',
+      model: '模型',
+    },
     members: {
       addMember: '添加成员',
       enableOrchestrator: '启用主持人',

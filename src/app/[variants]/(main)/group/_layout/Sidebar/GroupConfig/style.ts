@@ -10,8 +10,9 @@ export const useStyles = createStyles(({ css, token }) => ({
     align-items: center;
 
     width: 100%;
-    padding-block: 8px;
-    padding-inline: 8px 12px;
+    min-height: 36px;
+    max-height: 36px;
+    padding: 0 4px !important;
     border-radius: ${token.borderRadius}px;
 
     transition: all 0.2s ease;
@@ -21,7 +22,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     }
 
     &:hover {
-      background: ${token.colorFillSecondary};
+      background: ${token.colorFillTertiary};
 
       .show-on-hover {
         opacity: 1;

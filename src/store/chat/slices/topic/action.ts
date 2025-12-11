@@ -5,7 +5,6 @@ import { chainSummaryTitle } from '@lobechat/prompts';
 import { TraceNameMap, UIChatMessage } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
-import { produce } from 'immer';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -16,12 +15,9 @@ import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import type { ChatStore } from '@/store/chat';
-import type { ChatStoreState } from '@/store/chat/initialState';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { topicMapKey } from '@/store/chat/utils/topicMapKey';
 import { useGlobalStore } from '@/store/global';
 import { globalHelpers } from '@/store/global/helpers';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 import { ChatTopic, CreateTopicParams } from '@/types/topic';
@@ -29,6 +25,7 @@ import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { displayMessageSelectors } from '../message/selectors';
+import { TopicData } from './initialState';
 import { ChatTopicDispatch, topicReducer } from './reducer';
 import { topicSelectors } from './selectors';
 
@@ -49,8 +46,8 @@ export interface ChatTopicAction {
   removeGroupTopics: (groupId: string) => Promise<void>;
   removeTopic: (id: string) => Promise<void>;
   removeUnstarredTopic: () => Promise<void>;
-  saveToTopic: (sessionId?: string, groupId?: string) => Promise<string | undefined>;
-  createTopic: (sessionId?: string, groupId?: string) => Promise<string | undefined>;
+  saveToTopic: (sessionId?: string) => Promise<string | undefined>;
+  createTopic: (sessionId?: string) => Promise<string | undefined>;
 
   autoRenameTopicTitle: (id: string) => Promise<void>;
   duplicateTopic: (id: string) => Promise<void>;
@@ -84,11 +81,16 @@ export interface ChatTopicAction {
     params: {
       append?: boolean;
       currentPage?: number;
+      groupId?: string;
       items: ChatTopic[];
       pageSize: number;
       total: number;
     },
   ) => void;
+  /**
+   * Update TopicData properties (loading states, pagination, etc.)
+   */
+  internal_updateTopicData: (key: string, data: Partial<TopicData>) => void;
 }
 
 export const chatTopic: StateCreator<
@@ -117,8 +119,8 @@ export const chatTopic: StateCreator<
     }
   },
 
-  createTopic: async (sessionId, groupId) => {
-    const { activeAgentId, activeSessionType, internal_createTopic } = get();
+  createTopic: async (sessionId) => {
+    const { activeAgentId, internal_createTopic } = get();
 
     const messages = displayMessageSelectors.activeDisplayMessages(get());
 
@@ -126,61 +128,31 @@ export const chatTopic: StateCreator<
     const topicId = await internal_createTopic({
       title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
-      ...(activeSessionType === 'group'
-        ? { groupId: groupId || activeAgentId }
-        : { sessionId: sessionId || activeAgentId }),
+      sessionId: sessionId || activeAgentId,
     });
     set({ creatingTopic: false }, false, n('creatingTopic/end'));
 
     return topicId;
   },
 
-  saveToTopic: async (sessionId, groupId) => {
+  saveToTopic: async (sessionId) => {
     // if there is no message, stop
     const messages = displayMessageSelectors.activeDisplayMessages(get());
     if (messages.length === 0) return;
 
-    const { activeAgentId, activeSessionType, summaryTopicTitle, internal_createTopic } = get();
+    const { activeAgentId, summaryTopicTitle, internal_createTopic } = get();
 
     // 1. create topic and bind these messages
     const topicId = await internal_createTopic({
       title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
-      ...(activeSessionType === 'group'
-        ? { groupId: groupId || activeAgentId }
-        : { sessionId: sessionId || activeAgentId }),
+      sessionId: sessionId || activeAgentId,
     });
 
     get().internal_updateTopicLoading(topicId, true);
     // 2. auto summary topic Title
     // we don't need to wait for summary, just let it run async
     summaryTopicTitle(topicId, messages);
-
-    // Clear supervisor todos for temporary topic in current container after saving
-    try {
-      const { activeAgentId, activeSessionType } = get();
-      let isGroupSession = activeSessionType === 'group';
-      if (activeSessionType === undefined) {
-        const sessionStore = useSessionStore.getState();
-        isGroupSession = sessionSelectors.isCurrentSessionGroupSession(sessionStore);
-      }
-
-      if (isGroupSession) {
-        set(
-          produce((state: ChatStoreState) => {
-            state.supervisorTodos[
-              messageMapKey({ agentId: groupId || activeAgentId, topicId: null })
-            ] = [];
-          }),
-          false,
-          n('resetSupervisorTodosOnSaveToTopic', { groupId: groupId || activeAgentId }),
-        );
-      }
-    } catch (error) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error('Failed to reset supervisor todos on save to topic:', error);
-      }
-    }
 
     return topicId;
   },
@@ -264,88 +236,74 @@ export const chatTopic: StateCreator<
   // query
   useFetchTopics: (enable, { agentId, groupId, pageSize: customPageSize, isInbox }) => {
     const pageSize = customPageSize || 20;
-    // Use groupId or agentId as the container key for topic data map
-    const containerId = groupId || agentId;
+    // Use topicMapKey to generate the container key for topic data map
+    const containerKey = topicMapKey({ agentId, groupId });
+    const hasValidContainer = !!(groupId || agentId);
 
     return useClientDataSWR<{ items: ChatTopic[]; total: number }>(
-      enable && containerId ? [SWR_USE_FETCH_TOPIC, { agentId, groupId, isInbox, pageSize }] : null,
+      enable && hasValidContainer
+        ? [SWR_USE_FETCH_TOPIC, { agentId, groupId, isInbox, pageSize }]
+        : null,
       async ([, params]: [
         string,
         { agentId?: string; groupId?: string; isInbox?: boolean; pageSize: number },
       ]) => {
         const { agentId, groupId, isInbox, pageSize } = params;
-        const containerId = groupId || agentId;
-        if (!containerId) return { items: [], total: 0 };
+        const key = topicMapKey({ agentId, groupId });
+        if (!agentId && !groupId) return { items: [], total: 0 };
 
-        const currentData = get().topicDataMap[containerId];
+        const currentData = get().topicDataMap[key];
         const currentLength = currentData?.items?.length || 0;
 
-        // If we already have data and new pageSize is larger, fetch incrementally
-        if (currentLength > 0 && pageSize > currentLength) {
-          set(
-            {
-              topicDataMap: {
-                ...get().topicDataMap,
-                [containerId]: { ...currentData!, isExpandingPageSize: true },
-              },
-            },
-            false,
-            n('useFetchTopics(expandingStart)'),
-          );
-
-          // Fetch only the additional topics needed
-          const result = await topicService.getTopics({
-            agentId,
-            current: 0,
-            groupId,
-            isInbox,
-            pageSize,
-          });
-
-          set(
-            {
-              topicDataMap: {
-                ...get().topicDataMap,
-                [containerId]: { ...get().topicDataMap[containerId]!, isExpandingPageSize: false },
-              },
-            },
-            false,
-            n('useFetchTopics(expandingEnd)'),
-          );
-
-          return result;
+        // If we already have data and new pageSize is larger, show expanding loading state
+        const isExpanding = currentLength > 0 && pageSize > currentLength;
+        if (isExpanding) {
+          get().internal_updateTopicData(key, { isExpandingPageSize: true });
         }
 
-        // Otherwise fetch normally
-        return topicService.getTopics({ agentId, current: 0, groupId, isInbox, pageSize });
+        const result = await topicService.getTopics({
+          agentId,
+          current: 0,
+          groupId,
+          isInbox,
+          pageSize,
+        });
+
+        // Reset expanding state after fetch completes
+        if (isExpanding) {
+          get().internal_updateTopicData(key, { isExpandingPageSize: false });
+        }
+
+        return result;
       },
       {
+        // onSuccess: responsible for state updates
         onSuccess: async (result) => {
-          if (!containerId) return;
+          if (!hasValidContainer) return;
 
           const { items: topics, total: totalCount } = result;
           const hasMore = topics.length >= pageSize;
 
-          const currentData = get().topicDataMap[containerId];
+          const currentData = get().topicDataMap[containerKey];
 
-          // no need to update map if the topics have been init and the map is the same
-          if (get().topicsInit && isEqual(topics, currentData?.items)) return;
+          // no need to update map if the current key's data exists and is the same
+          if (currentData && isEqual(topics, currentData.items)) return;
 
           set(
             {
               topicDataMap: {
                 ...get().topicDataMap,
-                [containerId]: {
+                [containerKey]: {
                   currentPage: 0,
                   hasMore,
+                  isExpandingPageSize: false,
                   items: topics,
                   total: totalCount,
                 },
               },
-              topicsInit: true,
             },
             false,
-            n('useFetchTopics(success)', { containerId }),
+            n('useFetchTopics(success)', { containerKey }),
           );
         },
       },
@@ -353,10 +311,11 @@ export const chatTopic: StateCreator<
   },
 
   loadMoreTopics: async () => {
-    const { activeAgentId, topicDataMap } = get();
-    const currentData = topicDataMap[activeAgentId];
+    const { activeAgentId, activeGroupId, topicDataMap } = get();
+    const key = topicMapKey({ agentId: activeAgentId, groupId: activeGroupId });
+    const currentData = topicDataMap[key];
 
-    if (!activeAgentId || currentData?.isLoadingMore) return;
+    if ((!activeAgentId && !activeGroupId) || currentData?.isLoadingMore) return;
 
     const currentPage = currentData?.currentPage || 0;
     const nextPage = currentPage + 1;
@@ -365,7 +324,7 @@ export const chatTopic: StateCreator<
       {
         topicDataMap: {
           ...topicDataMap,
-          [activeAgentId]: { ...currentData!, isLoadingMore: true },
+          [key]: { ...currentData!, isLoadingMore: true },
         },
       },
       false,
@@ -377,6 +336,7 @@ export const chatTopic: StateCreator<
       const result = await topicService.getTopics({
         agentId: activeAgentId,
         current: nextPage,
+        groupId: activeGroupId,
         pageSize,
       });
 
@@ -387,7 +347,7 @@ export const chatTopic: StateCreator<
         {
           topicDataMap: {
             ...get().topicDataMap,
-            [activeAgentId]: {
+            [key]: {
               currentPage: nextPage,
               hasMore,
               isLoadingMore: false,
@@ -404,7 +364,7 @@ export const chatTopic: StateCreator<
         {
           topicDataMap: {
             ...get().topicDataMap,
-            [activeAgentId]: { ...get().topicDataMap[activeAgentId]!, isLoadingMore: false },
+            [key]: { ...get().topicDataMap[key]!, isLoadingMore: false },
           },
         },
         false,
@@ -435,39 +395,13 @@ export const chatTopic: StateCreator<
       n('toggleTopic'),
     );
 
-    // Reset supervisor todos when switching topics in group chats
-    try {
-      const { activeAgentId, activeSessionType, internal_cancelSupervisorDecision } = get();
-      // Determine group session robustly (cached flag or from session store)
-      let isGroupSession = activeSessionType === 'group';
-      if (activeSessionType === undefined) {
-        const sessionStore = useSessionStore.getState();
-        isGroupSession = sessionSelectors.isCurrentSessionGroupSession(sessionStore);
-      }
-
-      if (isGroupSession) {
-        const newKey = messageMapKey({ agentId: activeAgentId, topicId: id ?? null });
-        set(
-          produce((state: ChatStoreState) => {
-            state.supervisorTodos[newKey] = [];
-          }),
-          false,
-          n('resetSupervisorTodosOnTopicSwitch', { groupId: activeAgentId, topicId: id ?? null }),
-        );
-
-        // Also cancel any pending supervisor decisions tied to this group
-        internal_cancelSupervisorDecision?.(activeAgentId);
-      }
-    } catch {
-      // no-op: resetting todos should not block topic switching
-    }
-
     if (skipRefreshMessage) return;
     await get().refreshMessages();
   },
   // delete
   removeSessionTopics: async () => {
     const { switchTopic, activeAgentId, refreshTopic } = get();
+    if (!activeAgentId) return;
 
     await topicService.removeTopics(activeAgentId);
     await refreshTopic();
@@ -479,8 +413,9 @@ export const chatTopic: StateCreator<
   removeGroupTopics: async (groupId: string) => {
     const { switchTopic, refreshTopic } = get();
 
-    // Get topics for this specific group from the topic map
-    const groupTopics = get().topicDataMap[groupId]?.items || [];
+    // Get topics for this specific group from the topic map using topicMapKey
+    const key = topicMapKey({ groupId });
+    const groupTopics = get().topicDataMap[key]?.items || [];
     const topicIds = groupTopics.map((t) => t.id);
 
     if (topicIds.length > 0) {
@@ -500,6 +435,7 @@ export const chatTopic: StateCreator<
   },
   removeTopic: async (id) => {
     const { activeAgentId, activeTopicId, switchTopic, refreshTopic } = get();
+    if (!activeAgentId) return;
 
     // remove messages in the topic
     // TODO: Need to remove because server service don't need to call it
@@ -531,15 +467,16 @@ export const chatTopic: StateCreator<
     );
   },
   refreshTopic: async () => {
-    const agentId = get().activeAgentId;
-    // Use matcher function to match SWR keys with the same agentId
-    // Key format: [SWR_USE_FETCH_TOPIC, { agentId, isInbox, pageSize }]
+    const { activeAgentId, activeGroupId } = get();
+    // Use matcher function to match SWR keys with the same agentId/groupId
+    // Key format: [SWR_USE_FETCH_TOPIC, { agentId, groupId, isInbox, pageSize }]
     await mutate(
       (key) =>
         Array.isArray(key) &&
         key[0] === SWR_USE_FETCH_TOPIC &&
         typeof key[1] === 'object' &&
-        key[1]?.agentId === agentId,
+        key[1]?.agentId === activeAgentId &&
+        key[1]?.groupId === activeGroupId,
     );
   },
 
@@ -582,8 +519,9 @@ export const chatTopic: StateCreator<
   },
 
   internal_dispatchTopic: (payload, action) => {
-    const agentId = get().activeAgentId;
-    const currentData = get().topicDataMap[agentId];
+    const { activeAgentId, activeGroupId } = get();
+    const key = topicMapKey({ agentId: activeAgentId, groupId: activeGroupId });
+    const currentData = get().topicDataMap[key];
     const nextItems = topicReducer(currentData?.items, payload);
 
     // no need to update if is the same
@@ -593,7 +531,7 @@ export const chatTopic: StateCreator<
       {
         topicDataMap: {
           ...get().topicDataMap,
-          [agentId]: {
+          [key]: {
             ...currentData,
             currentPage: currentData?.currentPage ?? 0,
             hasMore: currentData?.hasMore ?? false,
@@ -608,8 +546,9 @@ export const chatTopic: StateCreator<
   },
 
   internal_updateTopics: (agentId, params) => {
-    const { items, total, pageSize, currentPage = 0, append = false } = params;
-    const currentData = get().topicDataMap[agentId];
+    const { items, total, pageSize, currentPage = 0, append = false, groupId } = params;
+    const key = topicMapKey({ agentId, groupId });
+    const currentData = get().topicDataMap[key];
 
     const nextItems = append ? [...(currentData?.items || []), ...items] : items;
 
@@ -617,7 +556,7 @@ export const chatTopic: StateCreator<
       {
         topicDataMap: {
           ...get().topicDataMap,
-          [agentId]: {
+          [key]: {
             currentPage,
             hasMore: items.length >= pageSize,
             isExpandingPageSize: false,
@@ -626,10 +565,28 @@ export const chatTopic: StateCreator<
             total,
           },
         },
-        topicsInit: true,
       },
       false,
-      n('internal_updateTopics', { agentId, append }),
+      n('internal_updateTopics', { key, append }),
+    );
+  },
+
+  internal_updateTopicData: (key, data) => {
+    const currentData = get().topicDataMap[key];
+    if (!currentData) return;
+
+    set(
+      {
+        topicDataMap: {
+          ...get().topicDataMap,
+          [key]: {
+            ...currentData,
+            ...data,
+          },
+        },
+      },
+      false,
+      n('internal_updateTopicData', { key, data }),
     );
   },
 });

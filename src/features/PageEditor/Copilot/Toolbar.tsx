@@ -16,6 +16,7 @@ import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useFetchAgentList } from '@/hooks/useFetchAgentList';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
@@ -172,7 +173,7 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
   const [activeTopicId, switchTopic, topics] = useChatStore((s) => [
     s.activeTopicId,
     s.switchTopic,
-    s.topicDataMap[agentId]?.items,
+    topicSelectors.currentTopics(s),
   ]);
 
   const items = useMemo<ItemType[]>(

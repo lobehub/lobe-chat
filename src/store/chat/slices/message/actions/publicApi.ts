@@ -201,21 +201,13 @@ export const messagePublicApi: StateCreator<
   },
 
   clearMessage: async () => {
-    const { activeId, activeTopicId, refreshTopic, switchTopic, activeSessionType } = get();
-
-    // Check if this is a group session - use activeSessionType if available, otherwise check session store
-    let isGroupSession = activeSessionType === 'group';
-    if (activeSessionType === undefined) {
-      // Fallback: check session store directly
-      const sessionStore = useSessionStore.getState();
-      isGroupSession = sessionSelectors.isCurrentSessionGroupSession(sessionStore);
-    }
+    const { activeId, activeTopicId, activeGroupId, refreshTopic, switchTopic } = get();
 
     // For group sessions, we need to clear group messages using groupId
     // For regular sessions, we clear session messages using sessionId
-    if (isGroupSession) {
-      // For group chat, activeId is the groupId
-      await messageService.removeMessagesByGroup(activeId, activeTopicId);
+    if (activeGroupId) {
+      // For group chat, activeGroupId is the groupId
+      await messageService.removeMessagesByGroup(activeGroupId, activeTopicId);
     } else {
       // For regular session, activeId is the sessionId
       await messageService.removeMessagesByAssistant(activeId, activeTopicId);

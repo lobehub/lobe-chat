@@ -9,6 +9,7 @@ export interface MessageMapKeyInput {
    * Agent ID (maps to scopeId in main/thread scope)
    */
   agentId: string;
+  groupId?: string;
   /**
    * Whether this is a new/creating state (for optimistic updates)
    * For thread scope: indicates creating a new thread
