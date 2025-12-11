@@ -694,6 +694,7 @@ export default {
       title: '语音合成声源',
     },
   },
+  startConversation: '开始对话',
   storage: {
     actions: {
       export: {
