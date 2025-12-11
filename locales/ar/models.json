@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview هو نموذج Wenxin متعدد الوسائط من الجيل الجديد من Baidu، بارع في الفهم متعدد الوسائط، اتباع التعليمات، الإبداع، الأسئلة والأجوبة الواقعية، واستخدام الأدوات."
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - إصدار FLUX Pro أسرع وأكثر كفاءة، يتميز بجودة صور رائعة وقدرة عالية على اتباع التعليمات."
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - إصدار FLUX المخصص للتطوير، مخصص للاستخدام غير التجاري فقط."
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - النموذج الاحترافي من FLUX، يقدّم صورًا عالية الجودة."
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - نموذج توليد صور سريع مُحسَّن خصيصًا من أجل السرعة."
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse هو نموذج متعدد اللغات عالي الأداء بسعة 32B، يهدف إلى تحدي أداء النماذج أحادية اللغة من خلال تحسين التعليمات، وتداول البيانات، وتدريب التفضيلات، وابتكارات دمج النماذج. يدعم 23 لغة."
   },

@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview, Baidu’nun yeni nesil yerel çok modlu Wenxin modelidir; çok modlu anlama, komut takibi, yaratım, gerçeklere dayalı soru-cevap ve araç çağırma konularında uzmandır."
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - Daha hızlı ve daha gelişmiş FLUX Pro sürümü, üstün görsel kalite ve komutlara yüksek uyum sağlar."
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - FLUX'un geliştirme sürümü, yalnızca ticari olmayan kullanım içindir."
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - Yüksek kaliteli görseller üreten profesyonel FLUX modeli."
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - Hız için optimize edilmiş, hızlı görsel üretim modeli."
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse, talimat ayarlama, veri arbitrajı, tercih eğitimi ve model birleştirme yenilikleri ile tek dilli modellerin performansını zorlamak için tasarlanmış yüksek performanslı bir 32B çok dilli modeldir. 23 dili desteklemektedir."
   },

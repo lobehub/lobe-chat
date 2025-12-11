@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview는 바이두의 차세대 멀티모달 원어 모델로, 멀티모달 이해, 명령 수행, 창작, 사실 기반 질의응답 및 도구 호출에 능숙합니다."
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - 더 빠르고 향상된 FLUX Pro 버전으로, 뛰어난 이미지 품질과 프롬프트 반영 능력을 자랑합니다."
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - FLUX 개발 버전으로, 비상업적 용도로만 사용 가능합니다."
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - 고품질 이미지를 생성하는 전문 FLUX 모델입니다."
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - 속도에 최적화된 빠른 이미지 생성 모델입니다."
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse는 지시 조정, 데이터 차익 거래, 선호 훈련 및 모델 통합의 혁신을 통해 단일 언어 모델의 성능에 도전하는 고성능 32B 다국어 모델입니다. 23개 언어를 지원합니다."
   },

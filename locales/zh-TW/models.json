@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview 是百度新一代原生多模態文心模型，擅長多模態理解、指令遵循、創作、事實問答與工具調用。"
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - 更快速且更優化的 FLUX Pro 版本，具備卓越的影像品質與提示詞遵循能力。"
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - FLUX 開發版本，僅供非商業用途使用。"
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - 專業版 FLUX 模型，輸出高品質影像。"
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - 專為速度優化的快速影像生成模型。"
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse 是一款高性能的 32B 多語言模型，旨在通過指令調優、數據套利、偏好訓練和模型合併的創新，挑戰單語言模型的表現。它支持 23 種語言。"
   },

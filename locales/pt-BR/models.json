@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview é o novo modelo multimodal nativo da Baidu, especializado em compreensão multimodal, seguimento de instruções, criação, perguntas factuais e uso de ferramentas."
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - Uma versão FLUX Pro mais rápida e aprimorada, com excelente qualidade de imagem e alta fidelidade às instruções."
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - Versão de desenvolvimento do FLUX, destinada apenas para uso não comercial."
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - Modelo FLUX profissional com geração de imagens de alta qualidade."
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - Modelo de geração de imagens otimizado para velocidade."
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse é um modelo multilíngue de alto desempenho com 32B, projetado para desafiar o desempenho de modelos monolíngues por meio de inovações em ajuste por instrução, arbitragem de dados, treinamento de preferências e fusão de modelos. Ele suporta 23 idiomas."
   },
