@@ -11,11 +11,12 @@ import {
   inArray,
   isNull,
   lte,
+  ne,
   or,
   sql,
 } from 'drizzle-orm';
 
-import { TopicItem, agents, agentsToSessions, messages, topics } from '../schemas';
+import { TopicItem, agentsToSessions, messages, topics } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
@@ -540,9 +541,12 @@ export class TopicModel {
     } = {},
   ) => {
     const cursorCondition = options.cursor
-      ? or(
-          gt(topics.createdAt, options.cursor.createdAt),
-          and(eq(topics.createdAt, options.cursor.createdAt), gt(topics.id, options.cursor.id)),
+      ? and(
+          ne(topics.id, options.cursor.id),
+          or(
+            gt(topics.createdAt, options.cursor.createdAt),
+            and(eq(topics.createdAt, options.cursor.createdAt), gt(topics.id, options.cursor.id)),
+          ),
         )
       : undefined;
 
