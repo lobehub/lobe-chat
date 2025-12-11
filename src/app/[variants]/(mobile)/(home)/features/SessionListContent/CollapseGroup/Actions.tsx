@@ -109,7 +109,6 @@ const Actions = memo<ActionsProps>(
           selectedAgents,
         );
         setIsGroupModalOpen(false);
-        message.success({ content: t('sessionGroup.createGroupSuccess') });
       } catch (error) {
         console.error('Failed to create group:', error);
         message.error({ content: t('sessionGroup.createGroupFailed') });

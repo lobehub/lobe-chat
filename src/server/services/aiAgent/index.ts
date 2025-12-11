@@ -21,6 +21,7 @@ export interface ExecAgentParams {
   agentId?: string;
   /** Application context for message storage */
   appContext?: {
+    groupId?: string | null;
     scope?: string | null;
     sessionId?: string;
     threadId?: string | null;
@@ -277,6 +278,7 @@ export class AiAgentService {
       agentConfig,
       appContext: {
         agentId: resolvedAgentId,
+        groupId: appContext?.groupId,
         threadId: appContext?.threadId,
         topicId,
       },
