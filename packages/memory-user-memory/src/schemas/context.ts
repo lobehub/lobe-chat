@@ -4,13 +4,13 @@ import { MemoryTypeSchema } from './common';
 import { LayersEnum, UserMemoryContextObjectType, UserMemoryContextSubjectType } from '@/types/userMemory';
 
 export const AssociatedObjectSchema = z.object({
-  extra:z.string().nullable().describe('Additional metadata about the object'),
+  extra:z.string().nullable().describe('Additional metadata about the object, should always be a valid JSON string if present'),
   name: z.string().describe('Name of the associated object'),
   type: z.nativeEnum(UserMemoryContextObjectType).describe('Type/category of the associated object'),
 })
 
 export const AssociatedSubjectSchema = z.object({
-  extra:z.string().nullable().describe('Additional metadata about the subject'),
+  extra:z.string().nullable().describe('Additional metadata about the subject, should always be a valid JSON string if present'),
   name: z.string().describe('Name of the associated subject'),
   type: z.nativeEnum(UserMemoryContextSubjectType).describe('Type/category of the associated subject'),
 })

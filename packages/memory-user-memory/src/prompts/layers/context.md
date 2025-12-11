@@ -47,6 +47,12 @@ validates the output and includes:
 - Context-specific fields in withContext: title, description, extractedLabels,
   associatedSubjects (array of object), associatedObjects (array of object),
   currentStatus, type, scoreImpact, scoreUrgency.
+- For associatedSubjects and associatedObjects, the following fields are possible
+  to have:
+  - name (string)
+  - type (string)
+  - extra (object in JSON string, valid JSON format)
+
 
 ## Memory Formatting Guidelines
 

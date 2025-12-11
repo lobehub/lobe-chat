@@ -455,7 +455,7 @@ export class MemoryExtractionExecutor {
   async persistContextMemories(
     job: MemoryExtractionJob,
     messageIds: string[],
-    result: NonNullable<MemoryExtractionResult['outputs']['context']>,
+    result: NonNullable<MemoryExtractionResult['outputs']['context']>['data'],
     runtime: ModelRuntime,
     model: string,
     tokenLimit: number | undefined,
@@ -464,7 +464,7 @@ export class MemoryExtractionExecutor {
     const insertedIds: string[] = [];
     const userMemoryModel = new UserMemoryModel(db, job.userId);
 
-    for (const item of result.memories ?? []) {
+    for (const item of result?.memories ?? []) {
       const [summaryVector, detailsVector, descriptionVector] = await this.generateEmbeddings(
         runtime,
         model,
@@ -515,7 +515,7 @@ export class MemoryExtractionExecutor {
   async persistExperienceMemories(
     job: MemoryExtractionJob,
     messageIds: string[],
-    result: NonNullable<MemoryExtractionResult['outputs']['experience']>,
+    result: NonNullable<MemoryExtractionResult['outputs']['experience']>['data'],
     runtime: ModelRuntime,
     model: string,
     tokenLimit: number | undefined,
@@ -524,7 +524,7 @@ export class MemoryExtractionExecutor {
     const insertedIds: string[] = [];
     const userMemoryModel = new UserMemoryModel(db, job.userId);
 
-    for (const item of result.memories ?? []) {
+    for (const item of result?.memories ?? []) {
       const [summaryVector, detailsVector, situationVector, actionVector, keyLearningVector] =
         await this.generateEmbeddings(runtime, model, [
           item.summary,
@@ -574,7 +574,7 @@ export class MemoryExtractionExecutor {
   async persistPreferenceMemories(
     job: MemoryExtractionJob,
     messageIds: string[],
-    result: NonNullable<MemoryExtractionResult['outputs']['preference']>,
+    result: NonNullable<MemoryExtractionResult['outputs']['preference']>['data'],
     runtime: ModelRuntime,
     model: string,
     tokenLimit: number | undefined,
@@ -583,7 +583,7 @@ export class MemoryExtractionExecutor {
     const insertedIds: string[] = [];
     const userMemoryModel = new UserMemoryModel(db, job.userId);
 
-    for (const item of result.memories ?? []) {
+    for (const item of result?.memories ?? []) {
       const [summaryVector, detailsVector, directiveVector] = await this.generateEmbeddings(
         runtime,
         model,
@@ -629,7 +629,7 @@ export class MemoryExtractionExecutor {
   async persistIdentityMemories(
     job: MemoryExtractionJob,
     messageIds: string[],
-    result: NonNullable<MemoryExtractionResult['outputs']['identity']>,
+    result: NonNullable<MemoryExtractionResult['outputs']['identity']>['data'],
     runtime: ModelRuntime,
     model: string,
     tokenLimit: number | undefined,
@@ -1257,6 +1257,11 @@ export class MemoryExtractionExecutor {
     });
   }
 
+  private normalizeLayerError(layer: LayersEnum, stage: 'extract' | 'persist', error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return new Error(`[${stage}] ${LAYER_LABEL_MAP[layer]}: ${message}`);
+  }
+
   private async persistExtraction(
     job: MemoryExtractionJob,
     messageIds: string[],
@@ -1266,68 +1271,131 @@ export class MemoryExtractionExecutor {
   ): Promise<PersistedMemoryResult> {
     const createdIds: string[] = [];
     const perLayer: Partial<Record<LayersEnum, number>> = {};
+    const errors: Error[] = [];
+    const appendError = (layer: LayersEnum, stage: 'extract' | 'persist', error: unknown) => {
+      errors.push(this.normalizeLayerError(layer, stage, error));
+    };
 
-    if (extraction.outputs.context) {
-      const ids = await this.persistContextMemories(
-        job,
-        messageIds,
-        extraction.outputs.context,
-        runtimes.embeddings,
-        this.modelConfig.embeddingsModel,
-        this.embeddingContextLimit,
-        db,
+    const persistWithSpan = async (
+      layer: LayersEnum,
+      persist: () => Promise<string[]>,
+    ): Promise<void> => {
+      const attributes = {
+        layer: LAYER_LABEL_MAP[layer],
+        source: job.source,
+        source_id: job.sourceId,
+        user_id: job.userId,
+        ...attributesCommon(),
+      };
+
+      await tracer.startActiveSpan(
+        `Memory User Memory: Persist ${LAYER_LABEL_MAP[layer]}`,
+        { attributes },
+        async (span) => {
+          try {
+            const ids = await persist();
+
+            createdIds.push(...ids);
+            perLayer[layer] = ids.length;
+            this.recordLayerEntries(job, layer, ids.length);
+            span.setStatus({ code: SpanStatusCode.OK });
+            span.setAttribute('memory.persisted_count', ids.length);
+          } catch (error) {
+            appendError(layer, 'persist', error);
+            span.setStatus({
+              code: SpanStatusCode.ERROR,
+              message:
+                error instanceof Error ? error.message : 'Failed to persist extracted memories',
+            });
+            span.recordException(error as Error);
+          } finally {
+            span.end();
+          }
+        },
       );
-      createdIds.push(...ids);
-      perLayer.context = ids.length;
-      this.recordLayerEntries(job, LayersEnum.Context, ids.length);
+    };
+
+    const contextOutput = extraction.outputs.context;
+    if (contextOutput?.error) {
+      appendError(LayersEnum.Context, 'extract', contextOutput.error);
+    }
+    if (contextOutput?.data) {
+      await persistWithSpan(LayersEnum.Context, () =>
+        this.persistContextMemories(
+          job,
+          messageIds,
+          contextOutput.data,
+          runtimes.embeddings,
+          this.modelConfig.embeddingsModel,
+          this.embeddingContextLimit,
+          db,
+        ),
+      );
     }
 
-    if (extraction.outputs.experience) {
-      const ids = await this.persistExperienceMemories(
-        job,
-        messageIds,
-        extraction.outputs.experience,
-        runtimes.embeddings,
-        this.modelConfig.embeddingsModel,
-        this.embeddingContextLimit,
-        db,
+    const experienceOutput = extraction.outputs.experience;
+    if (experienceOutput?.error) {
+      appendError(LayersEnum.Experience, 'extract', experienceOutput.error);
+    }
+    if (experienceOutput?.data) {
+      await persistWithSpan(LayersEnum.Experience, () =>
+        this.persistExperienceMemories(
+          job,
+          messageIds,
+          experienceOutput.data,
+          runtimes.embeddings,
+          this.modelConfig.embeddingsModel,
+          this.embeddingContextLimit,
+          db,
+        ),
       );
-      createdIds.push(...ids);
-      perLayer.experience = ids.length;
-      this.recordLayerEntries(job, LayersEnum.Experience, ids.length);
     }
 
-    if (extraction.outputs.preference) {
-      const ids = await this.persistPreferenceMemories(
-        job,
-        messageIds,
-        extraction.outputs.preference,
-        runtimes.embeddings,
-        this.modelConfig.embeddingsModel,
-        this.embeddingContextLimit,
-        db,
+    const preferenceOutput = extraction.outputs.preference;
+    if (preferenceOutput?.error) {
+      appendError(LayersEnum.Preference, 'extract', preferenceOutput.error);
+    }
+    if (preferenceOutput?.data) {
+      await persistWithSpan(LayersEnum.Preference, () =>
+        this.persistPreferenceMemories(
+          job,
+          messageIds,
+          preferenceOutput.data,
+          runtimes.embeddings,
+          this.modelConfig.embeddingsModel,
+          this.embeddingContextLimit,
+          db,
+        ),
       );
-      createdIds.push(...ids);
-      perLayer.preference = ids.length;
-      this.recordLayerEntries(job, LayersEnum.Preference, ids.length);
     }
 
-    if (extraction.outputs.identity) {
-      const ids = await this.persistIdentityMemories(
-        job,
-        messageIds,
-        extraction.outputs.identity,
-        runtimes.embeddings,
-        this.modelConfig.embeddingsModel,
-        this.embeddingContextLimit,
-        db,
+    const identityOutput = extraction.outputs.identity;
+    if (identityOutput?.error) {
+      appendError(LayersEnum.Identity, 'extract', identityOutput.error);
+    }
+    if (identityOutput?.data) {
+      await persistWithSpan(LayersEnum.Identity, () =>
+        this.persistIdentityMemories(
+          job,
+          messageIds,
+          identityOutput.data,
+          runtimes.embeddings,
+          this.modelConfig.embeddingsModel,
+          this.embeddingContextLimit,
+          db,
+        ),
       );
-      createdIds.push(...ids);
-      perLayer.identity = ids.length;
-      this.recordLayerEntries(job, LayersEnum.Identity, ids.length);
     }
 
-    return { createdIds, layers: perLayer };
+    if (errors.length) {
+      const detail = errors.map((error) => error.message).join('; ');
+      throw new AggregateError(errors, `Memory extraction encountered layer errors: ${detail}`);
+    }
+
+    return {
+      createdIds,
+      layers: perLayer,
+    };
   }
 
   private async getRuntime(userId: string, keyVaults?: UserKeyVaults): Promise<RuntimeBundle> {
