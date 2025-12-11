@@ -1,15 +1,15 @@
+import { DiscordIcon } from '@lobehub/ui/icons';
 import { Command } from 'cmdk';
 import {
-  BookOpen,
   Bot,
-  Brain,
-  Compass,
-  FileText,
+  BrainCircuit,
+  FilePen,
   Github,
-  MessageCircle,
+  Image,
+  LibraryBig,
   Monitor,
-  Palette,
   Settings,
+  Shapes,
   Star,
 } from 'lucide-react';
 import { memo } from 'react';
@@ -77,7 +77,7 @@ const MainMenu = memo<MainMenuProps>(
         <Command.Group heading={t('cmdk.navigate')}>
           {!pathname?.startsWith('/discover') && (
             <Command.Item onSelect={() => onNavigate('/discover')} value="discover">
-              <Compass className={styles.icon} />
+              <Shapes className={styles.icon} />
               <div className={styles.itemContent}>
                 <div className={styles.itemLabel}>{t('cmdk.discover')}</div>
               </div>
@@ -85,7 +85,7 @@ const MainMenu = memo<MainMenuProps>(
           )}
           {!pathname?.startsWith('/image') && (
             <Command.Item onSelect={() => onNavigate('/image')} value="painting">
-              <Palette className={styles.icon} />
+              <Image className={styles.icon} />
               <div className={styles.itemContent}>
                 <div className={styles.itemLabel}>{t('cmdk.painting')}</div>
               </div>
@@ -93,7 +93,7 @@ const MainMenu = memo<MainMenuProps>(
           )}
           {!pathname?.startsWith('/knowledge') && (
             <Command.Item onSelect={() => onNavigate('/resource')} value="resource">
-              <BookOpen className={styles.icon} />
+              <LibraryBig className={styles.icon} />
               <div className={styles.itemContent}>
                 <div className={styles.itemLabel}>{t('cmdk.resource')}</div>
               </div>
@@ -101,7 +101,7 @@ const MainMenu = memo<MainMenuProps>(
           )}
           {!pathname?.startsWith('/page') && (
             <Command.Item onSelect={() => onNavigate('/page')} value="page documents write">
-              <FileText className={styles.icon} />
+              <FilePen className={styles.icon} />
               <div className={styles.itemContent}>
                 <div className={styles.itemLabel}>{t('cmdk.pages')}</div>
               </div>
@@ -109,7 +109,7 @@ const MainMenu = memo<MainMenuProps>(
           )}
           {!pathname?.startsWith('/memory') && (
             <Command.Item onSelect={() => onNavigate('/memory')} value="memory">
-              <Brain className={styles.icon} />
+              <BrainCircuit className={styles.icon} />
               <div className={styles.itemContent}>
                 <div className={styles.itemLabel}>{t('cmdk.memory')}</div>
               </div>
@@ -142,7 +142,7 @@ const MainMenu = memo<MainMenuProps>(
             onSelect={() => onExternalLink('https://discord.gg/AYFPHvv2jT')}
             value="discord"
           >
-            <MessageCircle className={styles.icon} />
+            <DiscordIcon className={styles.icon} />
             <div className={styles.itemContent}>
               <div className={styles.itemLabel}>{t('cmdk.communitySupport')}</div>
             </div>
