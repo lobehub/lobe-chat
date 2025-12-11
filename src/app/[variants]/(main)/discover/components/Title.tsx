@@ -35,7 +35,7 @@ const useStyles = createStyles(({ css, responsive, token }) => ({
   `,
   title: css`
     margin-block-start: 0.5em;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
     ${responsive.mobile} {
       font-size: 18px;

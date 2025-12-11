@@ -4,8 +4,6 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
-import { useUserDetailContext } from '../DetailProvider';
-
 const useStyles = createStyles(({ css, token }) => ({
   banner: css`
     position: absolute;
@@ -50,19 +48,17 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Banner = memo(() => {
+const Banner = memo<{ avatar?: string | null }>(({ avatar }) => {
   const { styles } = useStyles();
-  const { user } = useUserDetailContext();
-
   return (
     <>
       <div className={styles.banner}>
         <Center className={styles.bannerInner}>
-          {user.avatarUrl && (
+          {avatar && (
             <div
               className={styles.bannerAvatar}
               style={{
-                backgroundImage: `url(${user.avatarUrl})`,
+                backgroundImage: `url(${avatar})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 height: '100%',

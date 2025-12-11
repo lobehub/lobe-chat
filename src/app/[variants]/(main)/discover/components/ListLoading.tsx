@@ -6,11 +6,11 @@ import { useResponsive, useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const ListLoading = memo(() => {
+const ListLoading = memo<{ length?: number; rows?: number }>(({ rows = 3, length = 12 }) => {
   return (
     <Flexbox width={'100%'}>
-      <Grid rows={3} width={'100%'}>
-        {Array.from({ length: 12 }).map((_, index) => (
+      <Grid rows={rows} width={'100%'}>
+        {Array.from({ length }).map((_, index) => (
           <Block gap={24} key={index} padding={16} variant={'outlined'}>
             <Flexbox align={'center'} gap={8} horizontal>
               <Skeleton.Avatar active key={index} size={40} />

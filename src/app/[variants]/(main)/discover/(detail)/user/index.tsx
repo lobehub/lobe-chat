@@ -43,10 +43,8 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
 
   const contextConfig = useMemo(() => {
     if (!data || !data.user) return null;
-
     const { user, agents } = data;
     const totalInstalls = agents.reduce((sum, agent) => sum + (agent.installCount || 0), 0);
-
     return {
       agentCount: agents.length,
       agents,

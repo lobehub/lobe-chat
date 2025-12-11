@@ -1,7 +1,7 @@
 'use client';
 
-import { Grid } from '@lobehub/ui';
-import { Empty, Typography } from 'antd';
+import { Grid, Tag, Text } from '@lobehub/ui';
+import { Empty } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -13,9 +13,9 @@ interface UserAgentListProps {
   rows?: number;
 }
 
-const UserAgentList = memo<UserAgentListProps>(({ rows = 3 }) => {
+const UserAgentList = memo<UserAgentListProps>(({ rows = 4 }) => {
   const { t } = useTranslation('discover');
-  const { agents } = useUserDetailContext();
+  const { agents, agentCount } = useUserDetailContext();
 
   if (agents.length === 0)
     return (
@@ -26,9 +26,12 @@ const UserAgentList = memo<UserAgentListProps>(({ rows = 3 }) => {
 
   return (
     <Flexbox gap={16}>
-      <Typography.Title level={5} style={{ margin: 0 }}>
-        {t('user.publishedAgents')}
-      </Typography.Title>
+      <Flexbox align={'center'} gap={8} horizontal>
+        <Text fontSize={16} weight={500}>
+          {t('user.publishedAgents')}
+        </Text>
+        {agentCount > 0 && <Tag>{agentCount}</Tag>}
+      </Flexbox>
       <Grid rows={rows} width={'100%'}>
         {agents.map((item, index) => (
           <UserAgentCard key={index} {...item} />
