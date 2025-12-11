@@ -258,8 +258,10 @@ table documents {
   indexes {
     source [name: 'documents_source_idx']
     file_type [name: 'documents_file_type_idx']
+    source_type [name: 'documents_source_type_idx']
     file_id [name: 'documents_file_id_idx']
     parent_id [name: 'documents_parent_id_idx']
+    (user_id, source_type, file_type, updated_at) [name: 'documents_query_idx']
     (client_id, user_id) [name: 'documents_client_id_user_id_unique', unique]
     (slug, user_id) [name: 'documents_slug_user_id_unique', unique]
   }
