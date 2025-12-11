@@ -53,12 +53,37 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
 
   const agents = useHomeStore(homeAgentListSelectors.allAgents);
   const isAgentListInit = useHomeStore(homeAgentListSelectors.isAgentListInit);
+  const pageAgentId = useAgentStore((s) => s.builtinAgentIdMap['page-agent']);
 
   useFetchAgentList();
 
+  // Always include the Built-in Copilot (page agent) in the agent list
+  const agentsWithBuiltin = useMemo(() => {
+    // Check if page agent is already in the list
+    const hasPageAgent = agents.some((agent) => agent.id === pageAgentId);
+
+    // If page agent exists and is not in the list, add it at the beginning
+    if (pageAgentId && !hasPageAgent) {
+      return [
+        {
+          id: pageAgentId,
+          title: t('builtinCopilot', { defaultValue: 'Built-in Copilot', ns: 'chat' }),
+          avatar: null,
+          description: null,
+          type: 'agent' as const,
+          pinned: false,
+          updatedAt: new Date(),
+        },
+        ...agents,
+      ];
+    }
+
+    return agents;
+  }, [agents, pageAgentId, t]);
+
   const activeAgent = useMemo(
-    () => agents.find((agent) => agent.id === agentId),
-    [agentId, agents],
+    () => agentsWithBuiltin.find((agent) => agent.id === agentId),
+    [agentId, agentsWithBuiltin],
   );
 
   const renderAgents = (
@@ -70,7 +95,7 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
         overflowY: 'auto',
       }}
     >
-      {agents.map((agent) => (
+      {agentsWithBuiltin.map((agent) => (
         <NavItem
           active={agent.id === agentId}
           icon={
