@@ -97,6 +97,7 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
     return `search-result ${result.type} ${result.id} ${meta}`.trim();
   };
 
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   const getDescription = (result: SearchResult) => {
     if (!result.description) return null;
     // Sanitize markdown content for message search results
