@@ -64,6 +64,8 @@ export const messageQuery: StateCreator<
     if (params?.context) {
       ctx = {
         agentId: params.context.agentId ?? get().activeAgentId,
+        // Preserve groupId from context
+        groupId: params.context.groupId,
         // Preserve scope from context
         isNew: params.context.isNew,
 
@@ -82,6 +84,7 @@ export const messageQuery: StateCreator<
     else {
       ctx = {
         agentId: get().activeAgentId,
+        groupId: get().activeGroupId,
         threadId: get().activeThreadId,
         topicId: get().activeTopicId,
       };

@@ -27,7 +27,8 @@ const AddTopicButon = memo(() => {
     <ActionIcon
       icon={MessageSquarePlusIcon}
       onClick={() => {
-        router.push(urlJoin('/group', activeGroupId));
+        useChatStore.setState({ activeTopicId: undefined });
+        router.push(urlJoin('/group', activeGroupId), { query: { topic: null, thread: null } });
       }}
       size={DESKTOP_HEADER_ICON_SIZE}
       title={t('actions.addNewTopic')}
