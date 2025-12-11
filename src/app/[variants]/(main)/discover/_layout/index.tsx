@@ -3,25 +3,22 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
-import NProgress from '@/components/NProgress';
-
-import Header from './Header';
+import Sidebar from './Sidebar';
 
 const Layout = memo(() => {
   const theme = useTheme();
   return (
     <>
-      <NProgress />
+      <Sidebar />
       <Flexbox
+        flex={1}
         height={'100%'}
         style={{
-          background: theme.colorBgContainerSecondary,
+          background: theme.colorBgContainer,
           overflow: 'hidden',
           position: 'relative',
         }}
-        width={'100%'}
       >
-        <Header />
         <Outlet />
       </Flexbox>
       {/* ↓ cloud slot ↓ */}

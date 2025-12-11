@@ -10,10 +10,8 @@ import Header from '@/features/MCPPluginDetail/Header';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
-import { DiscoverTab } from '@/types/discover';
 
 import NotFound from '../components/NotFound';
-import Breadcrumb from '../features/Breadcrumb';
 import { TocProvider } from '../features/Toc/useToc';
 import Details from './features/Details';
 import Loading from './loading';
@@ -38,7 +36,6 @@ const McpDetailPage = memo<McpDetailPageProps>(({ mobile }) => {
   return (
     <TocProvider>
       <DetailProvider config={data}>
-        {!mobile && <Breadcrumb identifier={identifier} tab={DiscoverTab.Mcp} />}
         <Flexbox gap={16}>
           <Header mobile={mobile} />
           <Details mobile={mobile} />

@@ -2,31 +2,21 @@ import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import Footer from '@/features/Setting/Footer';
+import WideScreenContainer from '@/features/WideScreenContainer';
 
-import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../features/const';
-import Nav from './Nav';
+import { MAX_WIDTH } from '../../features/const';
+import Header from './Header';
 
 const Layout = () => {
   return (
     <>
-      <Nav />
-      <Flexbox
-        align={'center'}
-        flex={1}
-        id={SCROLL_PARENT_ID}
-        padding={16}
-        style={{ overflowX: 'hidden', overflowY: 'scroll', position: 'relative' }}
-        width={'100%'}
-      >
-        <Flexbox
-          gap={16}
-          style={{ maxWidth: MAX_WIDTH, paddingTop: 64, position: 'relative' }}
-          width={'100%'}
-        >
+      <Header />
+      <Flexbox height={'100%'} style={{ overflowY: 'auto' }} width={'100%'}>
+        <WideScreenContainer gap={32} minWidth={MAX_WIDTH} paddingBlock={16}>
           {<Outlet />}
           <div />
           <Footer />
-        </Flexbox>
+        </WideScreenContainer>
       </Flexbox>
     </>
   );

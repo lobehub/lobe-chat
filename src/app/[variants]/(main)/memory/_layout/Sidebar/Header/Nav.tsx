@@ -35,6 +35,7 @@ enum MemoryTabKey {
 
 const useActiveTabKey = () => {
   const pathname = usePathname();
+  if (pathname === '/memory') return MemoryTabKey.Home;
   return (pathname.split('/memory/').find(Boolean)! as MemoryTabKey) || MemoryTabKey.Home;
 };
 

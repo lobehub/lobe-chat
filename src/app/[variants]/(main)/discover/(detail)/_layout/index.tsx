@@ -5,10 +5,10 @@ import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import Footer from '@/features/Setting/Footer';
+import WideScreenContainer from '@/features/WideScreenContainer';
 
-import { SCROLL_PARENT_ID } from '../../features/const';
-
-const MAX_WIDTH = 1440;
+import { MAX_WIDTH } from '../../features/const';
+import Header from './Header';
 
 /**
  * Desktop Discover Detail Layout
@@ -16,20 +16,16 @@ const MAX_WIDTH = 1440;
  */
 const DesktopDiscoverDetailLayout = memo(() => {
   return (
-    <Flexbox
-      align={'center'}
-      flex={1}
-      id={SCROLL_PARENT_ID}
-      padding={24}
-      style={{ overflowX: 'hidden', overflowY: 'auto', position: 'static' }}
-      width={'100%'}
-    >
-      <Flexbox gap={24} style={{ maxWidth: MAX_WIDTH, minHeight: '100%' }} width={'100%'}>
-        <Outlet />
-        <div />
-        <Footer />
+    <>
+      <Header />
+      <Flexbox height={'100%'} style={{ overflowY: 'auto' }} width={'100%'}>
+        <WideScreenContainer gap={32} minWidth={MAX_WIDTH} paddingBlock={16}>
+          <Outlet />
+          <div />
+          <Footer />
+        </WideScreenContainer>
       </Flexbox>
-    </Flexbox>
+    </>
   );
 });
 
