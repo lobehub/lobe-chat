@@ -1,14 +1,18 @@
 import { AgentRuntimeContext } from '@lobechat/agent-runtime';
+import { ExecGroupAgentSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import pMap from 'p-map';
 import { z } from 'zod';
 
 import { isEnableAgent } from '@/app/(backend)/api/agent/isEnableAgent';
+import { MessageModel } from '@/database/models/message';
+import { TopicModel } from '@/database/models/topic';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
 import { AiAgentService } from '@/server/services/aiAgent';
+import { AiChatService } from '@/server/services/aiChat';
 import { nanoid } from '@/utils/uuid';
 
 const log = debug('lobe-server:ai-agent-router');
@@ -118,6 +122,9 @@ const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) =>
     ctx: {
       agentRuntimeService: new AgentRuntimeService(ctx.serverDB, ctx.userId),
       aiAgentService: new AiAgentService(ctx.serverDB, ctx.userId),
+      aiChatService: new AiChatService(ctx.serverDB, ctx.userId),
+      messageModel: new MessageModel(ctx.serverDB, ctx.userId),
+      topicModel: new TopicModel(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -235,6 +242,55 @@ export const aiAgentRouter = router({
         cause: error,
         code: 'INTERNAL_SERVER_ERROR',
         message: `Failed to execute agent: ${error.message}`,
+      });
+    }
+  }),
+
+  /**
+   * Execute Group Agent (Supervisor) in a single call
+   *
+   * This endpoint combines message creation and agent execution:
+   * 1. Create topic (if needed)
+   * 2. Create user message
+   * 3. Create assistant message placeholder
+   * 4. Trigger Supervisor Agent execution
+   * 5. Return operationId for SSE connection + messages for UI sync
+   */
+  execGroupAgent: aiAgentProcedure.input(ExecGroupAgentSchema).mutation(async ({ input, ctx }) => {
+    const { agentId, groupId, message, files, topicId, newTopic } = input;
+
+    log('execGroupAgent: agentId=%s, groupId=%s', agentId, groupId);
+
+    try {
+      // Execute group agent
+      const result = await ctx.aiAgentService.execGroupAgent({
+        agentId,
+        files,
+        groupId,
+        message,
+        newTopic,
+        topicId,
+      });
+
+      // Get messages and topics for UI sync
+      const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
+        agentId,
+        includeTopic: result.isCreateNewTopic,
+        topicId: result.topicId,
+      });
+
+      return { ...result, messages, topics };
+    } catch (error: any) {
+      log('execGroupAgent failed: %O', error);
+
+      if (error instanceof TRPCError) {
+        throw error;
+      }
+
+      throw new TRPCError({
+        cause: error,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Failed to execute group agent: ${error.message}`,
       });
     }
   }),
