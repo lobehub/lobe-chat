@@ -63,33 +63,32 @@ export class DocumentModel {
     // Fetch items and total count in parallel
     // Optimize: Exclude large JSONB fields (content, pages, editorData) for better performance
     const [rawItems, totalResult] = await Promise.all([
-      this.db.query.documents.findMany({
-        columns: {
-          clientId: true,
-          content: false, // Exclude large text content for list view performance
-          createdAt: true,
-          editorData: false, // Exclude large JSONB editorData for list view performance
-          fileId: true,
-          fileType: true,
-          filename: true,
-          id: true,
-          metadata: true,
-          pages: false, // Exclude large JSONB pages for list view performance
-          parentId: true,
-          slug: true,
-          source: true,
-          sourceType: true,
-          title: true,
-          totalCharCount: true,
-          totalLineCount: true,
-          updatedAt: true,
-          userId: true,
-        },
-        limit: pageSize,
-        offset,
-        orderBy: [desc(documents.updatedAt)],
-        where: whereCondition,
-      }),
+      this.db
+        .select({
+          accessedAt: documents.accessedAt,
+          clientId: documents.clientId,
+          createdAt: documents.createdAt,
+          fileId: documents.fileId,
+          fileType: documents.fileType,
+          filename: documents.filename,
+          id: documents.id,
+          metadata: documents.metadata,
+          parentId: documents.parentId,
+          slug: documents.slug,
+          source: documents.source,
+          sourceType: documents.sourceType,
+          title: documents.title,
+          totalCharCount: documents.totalCharCount,
+          totalLineCount: documents.totalLineCount,
+          updatedAt: documents.updatedAt,
+          userId: documents.userId,
+          // Exclude large fields: content, pages, editorData
+        })
+        .from(documents)
+        .where(whereCondition)
+        .orderBy(desc(documents.updatedAt))
+        .limit(pageSize)
+        .offset(offset),
       this.db
         .select({ count: count(documents.id) })
         .from(documents)

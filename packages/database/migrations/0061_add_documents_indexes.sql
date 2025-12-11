@@ -1,2 +1,2 @@
-CREATE INDEX "documents_source_type_idx" ON "documents" USING btree ("source_type");--> statement-breakpoint
-CREATE INDEX "documents_query_idx" ON "documents" USING btree ("user_id","source_type","file_type","updated_at");
+CREATE INDEX IF NOT EXISTS "documents_source_type_idx" ON "documents" USING btree ("source_type");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "documents_query_idx" ON "documents" USING btree ("user_id","source_type","file_type","updated_at");
