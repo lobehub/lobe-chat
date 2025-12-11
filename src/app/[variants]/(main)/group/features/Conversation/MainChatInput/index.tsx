@@ -9,15 +9,12 @@ import { useChatStore } from '@/store/chat';
 import { useSendMenuItems } from './useSendMenuItems';
 
 const leftActions: ActionKeys[] = [
-  'model',
-  'search',
   'typo',
   'fileUpload',
   'knowledgeBase',
-  'tools',
   '---',
-  ['params', 'history', 'stt', 'clear'],
-  'mainToken',
+  ['stt', 'clear'],
+  'groupChatToken',
 ];
 
 const rightActions: ActionKeys[] = [];

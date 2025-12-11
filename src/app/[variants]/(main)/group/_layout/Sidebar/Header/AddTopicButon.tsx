@@ -21,19 +21,14 @@ const AddTopicButon = memo(() => {
   const router = useQueryRoute();
   const hasTopic = useChatStore((s) => !!s.activeTopicId);
 
-  const handleNewTopic = () => {
-    // Navigate to group root to start a new conversation
-    if (activeGroupId) {
-      router.push(urlJoin('/group', activeGroupId));
-    }
-  };
-
-  if (!hasTopic) return;
+  if (!hasTopic || !activeGroupId) return null;
 
   return (
     <ActionIcon
       icon={MessageSquarePlusIcon}
-      onClick={handleNewTopic}
+      onClick={() => {
+        router.push(urlJoin('/group', activeGroupId));
+      }}
       size={DESKTOP_HEADER_ICON_SIZE}
       title={t('actions.addNewTopic')}
       tooltipProps={{

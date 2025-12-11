@@ -17,7 +17,7 @@ import { useProfileStore } from './features/store';
 
 const ProfileArea = memo(() => {
   const editor = useProfileStore((s) => s.editor);
-  const isGroupsLoading = useAgentGroupStore(agentGroupSelectors.isGroupsLoading);
+  const isGroupsLoading = useAgentGroupStore(agentGroupSelectors.isGroupsInit);
 
   return (
     <>

@@ -4,17 +4,16 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
-import { LobeGroupSession } from '@/types/session';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 
 const MemberCountTag = memo(() => {
   const { t } = useTranslation('chat');
-  const currentSession = useSessionStore(sessionSelectors.currentSession);
+  const currentGroupAgents = useAgentGroupStore(agentGroupSelectors.currentGroupAgents);
 
-  const memberCount = (currentSession as LobeGroupSession).members?.length ?? 0 + 1;
+  const memberCount = currentGroupAgents?.length ?? 0;
 
-  if (memberCount < 0) return null;
+  if (memberCount <= 0) return null;
 
   return (
     <Tooltip title={t('group.memberTooltip', { count: memberCount })}>

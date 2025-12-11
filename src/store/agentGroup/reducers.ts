@@ -47,13 +47,7 @@ export const chatGroupReducers = {
         },
         {} as Record<string, AgentGroupDetail>,
       );
-      draft.isGroupsLoading = false;
     }),
-
-  // Set the loading state for groups
-  setGroupsLoading: (state: ChatGroupState, { payload }: { payload: boolean }) => {
-    return { ...state, isGroupsLoading: payload };
-  },
 
   // Update a group in the map
   updateGroup: (
@@ -78,6 +72,5 @@ export type ChatGroupDispatchPayloads = {
   addGroup: ChatGroupItem;
   deleteGroup: string;
   loadGroups: ChatGroupItem[];
-  setGroupsLoading: boolean;
   updateGroup: { id: string; value: Partial<ChatGroupItem> };
 };
