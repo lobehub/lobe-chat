@@ -53,8 +53,8 @@ const GroupMemberItem = memo<GroupMemberItemProps>(
           gap={4}
           horizontal
           onClick={(e) => {
-            e.stopPropagation();
             onClick?.();
+            e.stopPropagation();
           }}
           style={{ overflow: 'hidden' }}
         >
@@ -62,21 +62,22 @@ const GroupMemberItem = memo<GroupMemberItemProps>(
             <SortableList.DragHandle
               disabled
               icon={PinIcon}
-              style={{
-                cursor: 'not-allowed',
-              }}
+              size={'small'}
+              style={{ cursor: 'not-allowed', height: 28, width: 28 }}
             />
           ) : (
-            <SortableList.DragHandle />
+            <SortableList.DragHandle size={'small'} style={{ height: 28, width: 28 }} />
           )}
           <Flexbox flex={1} gap={8} horizontal style={{ overflow: 'hidden' }}>
             <Avatar
               avatar={avatar || DEFAULT_AVATAR}
               background={background}
-              size={24}
+              size={20}
               style={{ flex: 'none' }}
             />
-            <Text ellipsis>{title}</Text>
+            <Text ellipsis style={{ fontSize: 14 }}>
+              {title}
+            </Text>
           </Flexbox>
         </Flexbox>
         {actions !== undefined && (

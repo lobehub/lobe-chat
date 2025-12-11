@@ -152,15 +152,16 @@ export const operationActions: StateCreator<
 
     // Fallback to global state
     const agentId = get().activeAgentId;
+    const groupId = get().activeGroupId;
     const topicId = get().activeTopicId;
     const threadId = get().activeThreadId;
-    log(
-      '[internal_getConversationContext] use global state: agentId=%s, topicId=%s, threadId=%s',
+    log('[internal_getConversationContext] use global state: ', {
       agentId,
       topicId,
       threadId,
-    );
-    return { agentId, topicId, threadId };
+      groupId,
+    });
+    return { agentId, topicId, threadId, groupId };
   },
 
   startOperation: (params) => {

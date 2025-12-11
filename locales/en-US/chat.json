@@ -106,6 +106,10 @@
   },
   "groupDescription": "Team Description",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Chat",
+      "model": "Model"
+    },
     "members": {
       "addMember": "Add Member",
       "enableOrchestrator": "Enable Host",

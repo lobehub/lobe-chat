@@ -16,11 +16,6 @@ export interface ChatMessageState {
    */
   activePageId?: string;
   /**
-   * Type of the currently active session ('agent' | 'group')
-   * Derived from session.type, used for caching to avoid repeated lookups
-   */
-  activeSessionType?: 'agent' | 'group';
-  /**
    * Raw messages from database (flat structure)
    */
   dbMessagesMap: Record<string, UIChatMessage[]>;
@@ -64,10 +59,9 @@ export interface ChatMessageState {
 }
 
 export const initialMessageState: ChatMessageState = {
-  activeAgentId: 'inbox',
+  activeAgentId: '',
   activeId: 'inbox',
   activePageId: undefined,
-  activeSessionType: undefined,
   dbMessagesMap: {},
   groupAgentMaps: {},
   isCreatingMessage: false,

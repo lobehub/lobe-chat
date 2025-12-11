@@ -39,11 +39,6 @@ export interface MessageRuntimeStateAction {
    * Update active page ID for Page Agent context
    */
   internal_updateActivePageId: (pageId?: string) => void;
-
-  /**
-   * Update active session type
-   */
-  internal_updateActiveSessionType: (sessionType?: 'agent' | 'group') => void;
 }
 
 export const messageRuntimeState: StateCreator<
@@ -110,11 +105,5 @@ export const messageRuntimeState: StateCreator<
 
     console.log('[ChatStore] Updating activePageId:', pageId);
     set({ activePageId: pageId }, false, n(`updateActivePageId/${pageId || 'undefined'}`));
-  },
-
-  internal_updateActiveSessionType: (sessionType?: 'agent' | 'group') => {
-    if (get().activeSessionType === sessionType) return;
-
-    set({ activeSessionType: sessionType }, false, n('updateActiveSessionType'));
   },
 });

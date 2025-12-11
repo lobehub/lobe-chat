@@ -4,11 +4,17 @@ import { ChatTopic, ChatTopicSummary, GroupedTopic } from '@/types/topic';
 import { groupTopicsByTime } from '@/utils/client/topic';
 
 import { ChatStoreState } from '../../initialState';
+import { topicMapKey } from '../../utils/topicMapKey';
 import { TopicData } from './initialState';
 
-// Helper selector: get current agent's topic data
-const currentTopicData = (s: ChatStoreState): TopicData | undefined =>
-  s.topicDataMap[s.activeAgentId];
+// Helper selector: get current topic data based on session context
+const currentTopicData = (s: ChatStoreState): TopicData | undefined => {
+  const key = topicMapKey({
+    agentId: s.activeAgentId,
+    groupId: s.activeGroupId,
+  });
+  return s.topicDataMap[key];
+};
 
 const currentTopics = (s: ChatStoreState): ChatTopic[] | undefined => currentTopicData(s)?.items;
 

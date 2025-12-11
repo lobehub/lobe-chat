@@ -22,10 +22,7 @@ import SearchResult from './SearchResult';
 const TopicListContent = memo(() => {
   const { t } = useTranslation('topic');
   const { isDarkMode } = useThemeMode();
-  const [topicsInit, topicLength] = useChatStore((s) => [
-    s.topicsInit,
-    topicSelectors.currentTopicLength(s),
-  ]);
+  const topicLength = useChatStore((s) => topicSelectors.currentTopicLength(s));
   const [isUndefinedTopics, isInSearchMode] = useChatStore((s) => [
     topicSelectors.isUndefinedTopics(s),
     topicSelectors.isInSearchMode(s),
@@ -41,8 +38,8 @@ const TopicListContent = memo(() => {
 
   if (isInSearchMode) return <SearchResult />;
 
-  // first time loading or has no data
-  if (!topicsInit || isUndefinedTopics) return <SkeletonList />;
+  // Show skeleton when current session's topic data is not yet loaded
+  if (isUndefinedTopics) return <SkeletonList />;
 
   return (
     <>

@@ -44,6 +44,7 @@ const Agent = memo<PropsWithChildren>(() => {
           avatars={agents.map((agent) => ({
             avatar: agent.avatar || DEFAULT_AVATAR,
             background: agent.backgroundColor || undefined,
+            style: { borderRadius: 3 },
           }))}
           cornerShape={'square'}
           size={28}

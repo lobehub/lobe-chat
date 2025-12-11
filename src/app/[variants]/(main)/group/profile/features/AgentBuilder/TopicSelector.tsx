@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 import { useChatStore } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 
 interface TopicSelectorProps {
   agentId: string;
@@ -22,7 +23,7 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
   const [activeTopicId, switchTopic, topics] = useChatStore((s) => [
     s.activeTopicId,
     s.switchTopic,
-    s.topicDataMap[agentId]?.items,
+    topicSelectors.currentTopics(s),
   ]);
 
   // Find active topic from the agent's topics list directly

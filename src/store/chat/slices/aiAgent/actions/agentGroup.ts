@@ -746,8 +746,7 @@ export const agentGroupSlice: StateCreator<
   },
 
   internal_setActiveGroup: () => {
-    // Update the active session type to 'group' when setting an active group
-    get().internal_updateActiveSessionType('group');
+    // No-op: activeGroupId is now used to determine group session type
   },
 
   internal_toggleSupervisorLoading: (loading: boolean, groupId?: string) => {
