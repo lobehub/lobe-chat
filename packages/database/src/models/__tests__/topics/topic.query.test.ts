@@ -644,5 +644,31 @@ describe('TopicModel - Query', () => {
 
       expect(rows.map((t) => t.id)).toEqual(['et1', 'et2']);
     });
+
+    it('should paginate forward from the cursor, excluding items at or before it and including later ones', async () => {
+      const createdAt = new Date('2025-01-20T18:43:33.603Z');
+
+      await serverDB.insert(topics).values([
+        // Before cursor
+        { createdAt: new Date(createdAt.getTime() - 2), id: 'before-old', userId },
+        { createdAt, id: 'before-same-timestamp', userId },
+        // Cursor row
+        { createdAt, id: 'cursor-topic', userId },
+        // Same timestamp, after cursor by ID
+        { createdAt, id: 'cursor-topic-z', userId },
+        // Later timestamps
+        { createdAt: new Date(createdAt.getTime() + 1), id: 'after-1', userId },
+        { createdAt: new Date(createdAt.getTime() + 2), id: 'after-2', userId },
+        // Different user should be ignored
+        { createdAt: new Date(createdAt.getTime() + 3), id: 'other-user', userId: userId2 },
+      ] satisfies Array<typeof topics.$inferInsert>);
+
+      const rows = await topicModel.listTopicsForMemoryExtractor({
+        cursor: { createdAt, id: 'cursor-topic' },
+        limit: 10,
+      });
+
+      expect(rows.map((t) => t.id)).toEqual(['cursor-topic-z', 'after-1', 'after-2']);
+    });
   });
 });
