@@ -45,3 +45,23 @@ export interface NewChatGroupAgent {
   role?: string;
   userId: string;
 }
+
+// Chat Group Item type (independent from schema)
+export interface ChatGroupItem {
+  accessedAt?: Date;
+  clientId?: string | null;
+  config?: LobeChatGroupConfig | null;
+  createdAt: Date;
+  description?: string | null;
+  groupId?: string | null;
+  id: string;
+  pinned?: boolean | null;
+  title?: string | null;
+  updatedAt: Date;
+  userId: string;
+}
+
+// Agent Group Detail - extends ChatGroupItem with agents
+export interface AgentGroupDetail extends ChatGroupItem {
+  agents: import('../agent').AgentItem[];
+}
