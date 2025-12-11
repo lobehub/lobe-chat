@@ -1,1 +1,25 @@
-export { default } from '../../components/ListLoading';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import ListLoading from '@/app/[variants]/(main)/discover/components/ListLoading';
+import Title from '@/app/[variants]/(main)/discover/components/Title';
+
+const Loading = memo(() => {
+  const { t } = useTranslation('discover');
+
+  return (
+    <>
+      <Title more={t('home.more')} moreLink={'/discover/assistant'}>
+        {t('home.featuredAssistants')}
+      </Title>
+      <ListLoading length={4} rows={8} />
+      <div />
+      <Title more={t('home.more')} moreLink={'/discover/mcp'}>
+        {t('home.featuredTools')}
+      </Title>
+      <ListLoading length={4} rows={8} />
+    </>
+  );
+});
+
+export default Loading;

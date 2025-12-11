@@ -22,7 +22,7 @@ const UserHeader = memo(() => {
 
   return (
     <>
-      <Banner />
+      <Banner avatar={user?.avatarUrl} />
       <Flexbox gap={16}>
         <Avatar
           avatar={user.avatarUrl || undefined}
@@ -30,7 +30,6 @@ const UserHeader = memo(() => {
           size={64}
           style={{ boxShadow: `0 0 0 4px ${theme.colorBgContainer}`, flexShrink: 0 }}
         />
-
         <Flexbox align={'flex-start'} gap={16} horizontal justify={'space-between'}>
           <Flexbox
             gap={4}

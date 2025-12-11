@@ -23,12 +23,16 @@ const DesktopDiscoverDetailLayout = memo(() => {
           gap={32}
           minWidth={MAX_WIDTH}
           paddingBlock={16}
+          style={{
+            minHeight: '100%',
+          }}
           wrapperStyle={{
+            minHeight: '100%',
             position: 'relative',
           }}
         >
           <Outlet />
-          <div />
+          <div style={{ flex: 1 }} />
           <Footer />
         </WideScreenContainer>
       </Flexbox>

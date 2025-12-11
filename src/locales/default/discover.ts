@@ -711,7 +711,7 @@ export default {
     logout: '退出登录',
     myProfile: '我的主页',
     noAgents: '该用户暂未发布助手',
-    publishedAgents: '发布的助手',
+    publishedAgents: '创作的助手',
     website: '个人网站',
   },
 };

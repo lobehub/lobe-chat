@@ -12,9 +12,20 @@ const Layout = () => {
     <>
       <Header />
       <Flexbox height={'100%'} style={{ overflowY: 'auto' }} width={'100%'}>
-        <WideScreenContainer gap={32} minWidth={MAX_WIDTH} paddingBlock={16}>
+        <WideScreenContainer
+          gap={16}
+          minWidth={MAX_WIDTH}
+          paddingBlock={16}
+          style={{
+            minHeight: '100%',
+          }}
+          wrapperStyle={{
+            minHeight: '100%',
+            position: 'relative',
+          }}
+        >
           {<Outlet />}
-          <div />
+          <div style={{ flex: 1 }} />
           <Footer />
         </WideScreenContainer>
       </Flexbox>
