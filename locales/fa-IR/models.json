@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "پیش‌نمایش ERNIE 5.0 Thinking مدل چندوجهی نسل جدید Baidu است که در درک چندوجهی، پیروی از دستورات، تولید محتوا، پرسش و پاسخ واقعی و استفاده از ابزارها تخصص دارد."
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - نسخه حرفه‌ای و بهینه‌تر FLUX با کیفیت تصویر عالی و توانایی بالای پیروی از دستورات."
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - نسخه توسعه FLUX، فقط برای استفاده غیرتجاری."
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - نسخه حرفه‌ای مدل FLUX با خروجی تصاویر با کیفیت بالا."
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - مدل تولید تصویر سریع که برای سرعت بهینه‌سازی شده است."
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse یک مدل چندزبانه با عملکرد بالا و 32B است که با هدف به چالش کشیدن عملکرد مدل‌های تک‌زبانه از طریق بهینه‌سازی دستور، آربیتراژ داده‌ها، آموزش ترجیحات و نوآوری در ادغام مدل‌ها طراحی شده است. این مدل از 23 زبان پشتیبانی می‌کند."
   },

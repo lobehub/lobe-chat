@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview は、百度の次世代ネイティブマルチモーダル文心モデルで、マルチモーダル理解、指示の遵守、創作、事実に基づく質疑応答、ツール呼び出しに優れています。"
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - より高速かつ高性能なFLUX Proバージョンで、優れた画像品質とプロンプトの忠実度を実現します。"
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - FLUXの開発バージョンで、非商用利用のみを目的としています。"
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - 高品質な画像を生成するプロフェッショナル向けFLUXモデルです。"
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - 高速な画像生成のために最適化されたモデルです。"
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanseは、高性能な32B多言語モデルで、指示調整、データアービトラージ、好みのトレーニング、モデル統合の革新を通じて、単一言語モデルのパフォーマンスに挑戦します。23の言語をサポートしています。"
   },

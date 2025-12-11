@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview là mô hình đa phương thức thế hệ mới của Baidu, xuất sắc trong hiểu đa phương thức, tuân thủ chỉ dẫn, sáng tạo, hỏi đáp thực tế và gọi công cụ."
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - Phiên bản FLUX Pro nhanh hơn và tối ưu hơn, với chất lượng hình ảnh vượt trội và khả năng tuân thủ prompt xuất sắc."
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - Phiên bản phát triển của FLUX, chỉ sử dụng cho mục đích phi thương mại."
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - Phiên bản chuyên nghiệp của mô hình FLUX, tạo ra hình ảnh chất lượng cao."
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - Mô hình tạo hình ảnh nhanh được tối ưu hóa cho tốc độ."
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse là một mô hình đa ngôn ngữ hiệu suất cao 32B, được thiết kế để thách thức hiệu suất của các mô hình đơn ngôn ngữ thông qua việc tinh chỉnh theo chỉ dẫn, khai thác dữ liệu, đào tạo theo sở thích và hợp nhất mô hình. Nó hỗ trợ 23 ngôn ngữ."
   },
