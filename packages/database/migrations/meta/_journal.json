@@ -434,6 +434,13 @@
       "when": 1765457226210,
       "tag": "0061_add_documents_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "7",
+      "when": 1765457620678,
+      "tag": "0062_add_memory_user_id_index",
+      "breakpoints": true
     }
   ],
   "version": "6"

@@ -976,5 +976,22 @@
     "bps": true,
     "folderMillis": 1765457226210,
     "hash": "d23bb5d12c0ccdf9d10cdc74de8939d4fefce49a6c0510dcb404feb3311303da"
+  },
+  {
+    "sql": [
+      "DROP INDEX \"user_memories_summary_vector_1024_index\";",
+      "\nDROP INDEX \"user_memories_details_vector_1024_index\";",
+      "\nCREATE INDEX IF NOT EXISTS \"user_memories_user_id_index\" ON \"user_memories\" USING btree (\"user_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"user_memories_contexts_user_id_index\" ON \"user_memories_contexts\" USING btree (\"user_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"user_memories_experiences_user_id_index\" ON \"user_memories_experiences\" USING btree (\"user_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"user_memories_experiences_user_memory_id_index\" ON \"user_memories_experiences\" USING btree (\"user_memory_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"user_memories_identities_user_id_index\" ON \"user_memories_identities\" USING btree (\"user_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"user_memories_identities_user_memory_id_index\" ON \"user_memories_identities\" USING btree (\"user_memory_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"user_memories_preferences_user_id_index\" ON \"user_memories_preferences\" USING btree (\"user_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"user_memories_preferences_user_memory_id_index\" ON \"user_memories_preferences\" USING btree (\"user_memory_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1765457620678,
+    "hash": "299dc500b344377558f7b3bf3dc696da25a0b1fe6ef08b9c289fb62fbb01f7b2"
   }
 ]
