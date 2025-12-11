@@ -3,16 +3,28 @@
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
-import { memo, useCallback, useMemo, useRef } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { VList, VListHandle } from 'virtua';
 
+import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
+import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
+import { useFileStore } from '@/store/file';
 import { FileListItem as FileListItemType } from '@/types/files';
 
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './ListItem';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+  dropZone: css`
+    position: relative;
+    height: 100%;
+  `,
+  dropZoneActive: css`
+    background: ${token.colorPrimaryBg};
+    outline: 2px dashed ${token.colorPrimary};
+    outline-offset: -4px;
+  `,
   header: css`
     height: 40px;
     min-height: 40px;
@@ -51,9 +63,18 @@ const ListView = memo<ListViewProps>(
     setSelectedFileIds,
   }) => {
     const { t } = useTranslation('components');
-    const { styles } = useStyles();
+    const { styles, cx } = useStyles();
     const virtuaRef = useRef<VListHandle>(null);
     const isLoadingMore = useRef(false);
+    const isDragActive = useDragActive();
+    const [isDropZoneActive, setIsDropZoneActive] = useState(false);
+
+    const { currentFolderSlug } = useFolderPath();
+    const useFetchFolderBreadcrumb = useFileStore((s) => s.useFetchFolderBreadcrumb);
+    const { data: folderBreadcrumb } = useFetchFolderBreadcrumb(currentFolderSlug);
+
+    // Get current folder ID - either from breadcrumb or null for root
+    const currentFolderId = folderBreadcrumb?.at(-1)?.id || null;
 
     // Calculate select all checkbox state
     const { allSelected, indeterminate } = useMemo(() => {
@@ -93,6 +114,25 @@ const ListView = memo<ListViewProps>(
       }
     }, [hasMore, loadMore]);
 
+    // Drop zone handlers for dragging to blank space
+    const handleDropZoneDragOver = useCallback(
+      (e: React.DragEvent) => {
+        if (!isDragActive) return;
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDropZoneActive(true);
+      },
+      [isDragActive],
+    );
+
+    const handleDropZoneDragLeave = useCallback(() => {
+      setIsDropZoneActive(false);
+    }, []);
+
+    const handleDropZoneDrop = useCallback(() => {
+      setIsDropZoneActive(false);
+    }, []);
+
     return (
       <>
         <Flexbox style={{ fontSize: 12 }}>
@@ -115,25 +155,34 @@ const ListView = memo<ListViewProps>(
             </Flexbox>
           </Flexbox>
         </Flexbox>
-        <VList
-          bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
-          data={data}
-          itemSize={48}
-          onScroll={handleScroll}
-          ref={virtuaRef}
-          style={{ height: '100%' }}
+        <div
+          className={cx(styles.dropZone, isDropZoneActive && styles.dropZoneActive)}
+          data-drop-target-id={currentFolderId || undefined}
+          data-is-folder="true"
+          onDragLeave={handleDropZoneDragLeave}
+          onDragOver={handleDropZoneDragOver}
+          onDrop={handleDropZoneDrop}
         >
-          {(item, index) => (
-            <FileListItem
-              index={index}
-              key={item.id}
-              onSelectedChange={onSelectionChange}
-              pendingRenameItemId={pendingRenameItemId}
-              selected={selectFileIds.includes(item.id)}
-              {...item}
-            />
-          )}
-        </VList>
+          <VList
+            bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
+            data={data}
+            itemSize={48}
+            onScroll={handleScroll}
+            ref={virtuaRef}
+            style={{ height: '100%' }}
+          >
+            {(item, index) => (
+              <FileListItem
+                index={index}
+                key={item.id}
+                onSelectedChange={onSelectionChange}
+                pendingRenameItemId={pendingRenameItemId}
+                selected={selectFileIds.includes(item.id)}
+                {...item}
+              />
+            )}
+          </VList>
+        </div>
       </>
     );
   },
