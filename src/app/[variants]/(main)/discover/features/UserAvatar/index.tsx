@@ -1,33 +1,16 @@
 'use client';
 
-import { Avatar } from '@lobehub/ui';
-import { Button, Skeleton } from 'antd';
-import { createStyles } from 'antd-style';
+import { Avatar, Button } from '@lobehub/ui';
+import { Skeleton } from 'antd';
+import { UserCircleIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/MarketAuth';
 
-const useStyles = createStyles(({ css, token }) => ({
-  avatar: css`
-    cursor: pointer;
-    border: 2px solid ${token.colorBorder};
-    border-radius: 50%;
-
-    &:hover {
-      border-color: ${token.colorPrimary};
-    }
-  `,
-  loginButton: css`
-    font-size: 13px;
-  `,
-}));
-
 const UserAvatar = memo(() => {
   const { t } = useTranslation('discover');
-  const { styles } = useStyles();
   const navigate = useNavigate();
 
   const { isAuthenticated, isLoading, getCurrentUserInfo, signIn } = useMarketAuth();
@@ -55,12 +38,19 @@ const UserAvatar = memo(() => {
   }, [navigate, userProfile?.userName]);
 
   if (isLoading) {
-    return <Skeleton.Avatar active size={32} />;
+    return <Skeleton.Avatar active shape={'square'} size={28} style={{ borderRadius: 6 }} />;
   }
 
-  if (!isAuthenticated) {
+  if (isAuthenticated) {
     return (
-      <Button className={styles.loginButton} onClick={handleSignIn} size="small" type="primary">
+      <Button
+        icon={UserCircleIcon}
+        onClick={handleSignIn}
+        style={{
+          height: 30,
+        }}
+        type="text"
+      >
         {t('user.login')}
       </Button>
     );
@@ -70,9 +60,12 @@ const UserAvatar = memo(() => {
   const avatarUrl = userProfile?.avatarUrl;
 
   return (
-    <Flexbox className={styles.avatar} onClick={handleNavigateToProfile}>
-      <Avatar avatar={avatarUrl || undefined} size={32} />
-    </Flexbox>
+    <Avatar
+      avatar={avatarUrl || userProfile?.userName}
+      onClick={handleNavigateToProfile}
+      shape={'square'}
+      size={28}
+    />
   );
 });
 

@@ -1,11 +1,12 @@
 import { IEditor } from '@lobehub/editor';
+import { EditorState } from '@lobehub/editor/react';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PublicState {}
 
 export interface State extends PublicState {
   editor?: IEditor;
-  editorState?: any; // EditorState from useEditorState hook
+  editorState?: EditorState; // EditorState from useEditorState hook
   /**
    * Content being streamed from AI
    */

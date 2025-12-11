@@ -106,7 +106,7 @@ export const useSlashItems = (): SlashOptions['items'] => {
         key: 'codeblock',
         label: t('typobar.codeblock'),
         onSelect: () => {
-          editorState.codeblock();
+          editorState?.codeblock();
         },
       },
       {

@@ -707,7 +707,7 @@ export default {
     agents: '助手',
     downloads: '下载',
     editProfile: '编辑个人资料',
-    login: '登录',
+    login: '成为创作者',
     logout: '退出登录',
     myProfile: '我的主页',
     noAgents: '该用户暂未发布助手',
