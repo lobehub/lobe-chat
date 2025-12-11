@@ -4,6 +4,7 @@ import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { ToolCallContent } from '@/libs/mcp';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DiscoverService } from '@/server/services/discover';
@@ -80,13 +81,15 @@ export const marketRouter = router({
           toolName: input.toolName,
           userAccessToken,
         });
+        const cloudResultContent = (cloudResult?.content ?? []) as ToolCallContent[];
 
         // Format the cloud result to MCPToolCallResult format
         // Process content blocks (upload images, etc.)
         const newContent =
           cloudResult?.isError || !ctx.fileService
-            ? cloudResult?.content
-            : await processContentBlocks(cloudResult?.content, ctx.fileService);
+            ? cloudResultContent
+            : // FIXME: the type assertion here is a temporary solution, need to remove it after refactoring
+              await processContentBlocks(cloudResultContent, ctx.fileService);
 
         // Convert content blocks to string
         const content = contentBlocksToString(newContent);
@@ -442,7 +445,6 @@ export const marketRouter = router({
       }
     }),
 
-  
   getPluginDetail: marketProcedure
     .input(
       z.object({
@@ -465,8 +467,7 @@ export const marketRouter = router({
       }
     }),
 
-  
-getPluginIdentifiers: marketProcedure.query(async ({ ctx }) => {
+  getPluginIdentifiers: marketProcedure.query(async ({ ctx }) => {
     log('getPluginIdentifiers called');
 
     try {
@@ -480,8 +481,7 @@ getPluginIdentifiers: marketProcedure.query(async ({ ctx }) => {
     }
   }),
 
-  
-getPluginList: marketProcedure
+  getPluginList: marketProcedure
     .input(
       z
         .object({
@@ -509,9 +509,8 @@ getPluginList: marketProcedure
       }
     }),
 
-  
-// ============================== Providers ==============================
-getProviderDetail: marketProcedure
+  // ============================== Providers ==============================
+  getProviderDetail: marketProcedure
     .input(
       z.object({
         identifier: z.string(),
@@ -533,9 +532,7 @@ getProviderDetail: marketProcedure
       }
     }),
 
-  
-  
-getProviderIdentifiers: marketProcedure.query(async ({ ctx }) => {
+  getProviderIdentifiers: marketProcedure.query(async ({ ctx }) => {
     log('getProviderIdentifiers called');
 
     try {
@@ -549,8 +546,7 @@ getProviderIdentifiers: marketProcedure.query(async ({ ctx }) => {
     }
   }),
 
-  
-getProviderList: marketProcedure
+  getProviderList: marketProcedure
     .input(
       z
         .object({
@@ -578,7 +574,7 @@ getProviderList: marketProcedure
     }),
 
   // ============================== User Profile ==============================
-getUserInfo: marketProcedure
+  getUserInfo: marketProcedure
     .input(
       z.object({
         locale: z.string().optional(),
