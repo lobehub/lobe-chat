@@ -203,7 +203,8 @@ describe('execAgent', () => {
 
       expect(result.success).toBe(true);
       expect(result.operationId).toBeDefined();
-      expect(result.operationId).toMatch(/^agent_/);
+      // operationId format: agentId_topicId_random (e.g., agt_xxx_tpc_yyy_zzz)
+      expect(result.operationId).toMatch(/^agt_.+_.+_\w+$/);
 
       // Verify topic was created
       const createdTopics = await serverDB
@@ -1266,16 +1267,16 @@ describe('Batch Execution (execAgents)', () => {
       total: 2,
     });
 
-    // Verify each result
+    // Verify each result (operationId format: agentId_topicId_random)
     expect(result.results[0]).toMatchObject({
       success: true,
       taskIndex: 0,
-      operationId: expect.stringMatching(/^agent_/),
+      operationId: expect.stringMatching(/^agt_.+_.+_\w+$/),
     });
     expect(result.results[1]).toMatchObject({
       success: true,
       taskIndex: 1,
-      operationId: expect.stringMatching(/^agent_/),
+      operationId: expect.stringMatching(/^agt_.+_.+_\w+$/),
     });
 
     // Verify different operationIds

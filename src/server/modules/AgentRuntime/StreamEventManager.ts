@@ -52,7 +52,7 @@ export interface StreamChunkData {
 export class StreamEventManager {
   private redis: Redis;
   private readonly STREAM_PREFIX = 'agent_runtime_stream';
-  private readonly STREAM_RETENTION = 3600; // 1小时
+  private readonly STREAM_RETENTION = 2 * 3600; // 2小时
 
   constructor() {
     const redisClient = getAgentRuntimeRedisClient();
