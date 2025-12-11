@@ -65,7 +65,7 @@ The project follows a well-organized monorepo structure:
 
 ### Type Checking
 
-- Use `bun run type-check` to check for type errors
+- Use `bun run typecheck` to check for type errors
 
 ### i18n
 

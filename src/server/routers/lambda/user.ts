@@ -55,6 +55,11 @@ export const userRouter = router({
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
+    // don't block following process
+    ctx.userModel.updateUser({ lastActiveAt: new Date() }).catch((err) => {
+      console.error('update lastActiveAt failed, error:', err);
+    });
+
     let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
 
     // get or create first-time user

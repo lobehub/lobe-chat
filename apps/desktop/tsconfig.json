@@ -8,23 +8,14 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "composite": true,
-    "baseUrl": ".",
     "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "paths": {
-      "@/*": [
-        "src/main/*"
-      ],
-      "~common/*": [
-        "src/common/*"
-      ]
+      "@/*": ["./src/main/*"],
+      "~common/*": ["./src/common/*"]
     }
   },
-  "include": [
-    "src/main/**/*",
-    "src/preload/**/*",
-    "electron-builder.js"
-  ]
+  "include": ["src/main/**/*", "src/preload/**/*", "src/common/**/*", "electron-builder.js"]
 }

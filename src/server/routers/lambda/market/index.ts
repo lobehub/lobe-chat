@@ -4,6 +4,7 @@ import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { ToolCallContent } from '@/libs/mcp';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DiscoverService } from '@/server/services/discover';
@@ -80,13 +81,15 @@ export const marketRouter = router({
           toolName: input.toolName,
           userAccessToken,
         });
+        const cloudResultContent = (cloudResult?.content ?? []) as ToolCallContent[];
 
         // Format the cloud result to MCPToolCallResult format
         // Process content blocks (upload images, etc.)
         const newContent =
           cloudResult?.isError || !ctx.fileService
-            ? cloudResult?.content
-            : await processContentBlocks(cloudResult?.content, ctx.fileService);
+            ? cloudResultContent
+            : // FIXME: the type assertion here is a temporary solution, need to remove it after refactoring
+              await processContentBlocks(cloudResultContent, ctx.fileService);
 
         // Convert content blocks to string
         const content = contentBlocksToString(newContent);

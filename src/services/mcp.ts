@@ -102,6 +102,7 @@ class MCPService {
         // Call cloud gateway via lambda market endpoint
         // Server will automatically get user access token from database
         // and format the result to MCPToolCallResult
+        // @ts-ignore tsgo 误报错误
         result = await lambdaClient.market.callCloudMcpEndpoint.mutate({
           apiParams,
           identifier,

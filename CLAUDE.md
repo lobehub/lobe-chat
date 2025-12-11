@@ -47,7 +47,7 @@ see @.cursor/rules/typescript.mdc
 
 ### Typecheck
 
-- use `bun run type-check` to check type errors.
+- use `bun run typecheck` to check type errors.
 
 ### i18n
 
@@ -79,7 +79,7 @@ When working with Linear issues:
 **Workflow for EACH individual issue:**
 
 1. Complete the implementation for this specific issue
-2. Run type check: `bun run type-check`
+2. Run type check: `bun run typecheck`
 3. Run related tests if applicable
 4. Create PR if needed
 5. **IMMEDIATELY** update issue status to **"In Review"** (NOT "Done"): `mcp__linear-server__update_issue`

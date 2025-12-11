@@ -98,6 +98,7 @@ describe('userRouter', () => {
         () =>
           ({
             getUserState: vi.fn().mockResolvedValue(mockState),
+            updateUser: vi.fn().mockResolvedValue({ rowCount: 1 }),
           }) as any,
       );
 
@@ -163,6 +164,7 @@ describe('userRouter', () => {
                 preference: { telemetry: null },
                 settings: {},
               }),
+            updateUser: vi.fn().mockResolvedValue({ rowCount: 1 }),
           }) as any,
       );
 

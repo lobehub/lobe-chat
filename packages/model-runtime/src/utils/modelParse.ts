@@ -144,6 +144,7 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
+  replicate: [],
   v0: ['v0'],
   volcengine: ['doubao'],
   wenxin: ['ernie', 'qianfan'],

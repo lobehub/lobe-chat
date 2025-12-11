@@ -420,6 +420,13 @@
       "when": 1764858574403,
       "tag": "0059_add_normalized_email_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1765437218969,
+      "tag": "0060_add_user_last_active_at",
+      "breakpoints": true
     }
   ],
   "version": "6"
