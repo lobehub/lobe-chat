@@ -17,19 +17,19 @@ import {
 } from '@/features/GroupChatSettings';
 import Footer from '@/features/Setting/Footer';
 import { useInitGroupConfig } from '@/hooks/useInitGroupConfig';
-import { useChatGroupStore } from '@/store/chatGroup';
-import { chatGroupSelectors } from '@/store/chatGroup/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { chatGroupSelectors } from '@/store/agentGroup/selectors';
 import { GroupSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
 const AgentTeamSettingsWrapper = memo(() => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
-  const config = useChatGroupStore(chatGroupSelectors.currentGroupConfig, isEqual);
-  const meta = useChatGroupStore(chatGroupSelectors.currentGroupMeta, isEqual);
+  const config = useAgentGroupStore(chatGroupSelectors.currentGroupConfig, isEqual);
+  const meta = useAgentGroupStore(chatGroupSelectors.currentGroupMeta, isEqual);
   const { isLoading } = useInitGroupConfig();
 
-  const [showGroupSetting, updateGroupConfig, updateGroupMeta] = useChatGroupStore((s) => [
+  const [showGroupSetting, updateGroupConfig, updateGroupMeta] = useAgentGroupStore((s) => [
     s.showGroupSetting,
     s.updateGroupConfig,
     s.updateGroupMeta,
@@ -50,7 +50,7 @@ const AgentTeamSettingsWrapper = memo(() => {
         containerMaxWidth={1280}
         height={isDesktop ? `calc(100vh - ${TITLE_BAR_HEIGHT}px)` : '100vh'}
         noHeader
-        onClose={() => useChatGroupStore.setState({ showGroupSetting: false })}
+        onClose={() => useAgentGroupStore.setState({ showGroupSetting: false })}
         open={showGroupSetting}
         placement={'bottom'}
         sidebar={

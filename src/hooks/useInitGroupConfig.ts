@@ -1,10 +1,10 @@
-import { useChatGroupStore } from '@/store/chatGroup';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
 export const useInitGroupConfig = () => {
-  const [useFetchGroupDetail] = useChatGroupStore((s) => [s.useFetchGroupDetail]);
+  const [useFetchGroupDetail] = useAgentGroupStore((s) => [s.useFetchGroupDetail]);
 
   const isLogin = useUserStore(authSelectors.isLogin);
 

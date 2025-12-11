@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 import VirtualizedList from '@/features/Conversation/ChatList/components/VirtualizedList';
 import SkeletonList from '@/features/Conversation/components/SkeletonList';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { useChatGroupStore } from '@/store/chatGroup';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -16,7 +16,7 @@ import ThreadChatItem from './ThreadChatItem';
 const ThreadChatList = memo(() => {
   const { t } = useTranslation('chat');
   const [isCurrentChatLoaded] = useChatStore((s) => [chatSelectors.isCurrentChatLoaded(s)]);
-  const activeThreadAgentId = useChatGroupStore((s) => s.activeThreadAgentId);
+  const activeThreadAgentId = useAgentGroupStore((s) => s.activeThreadAgentId);
 
   // Get agent info for better empty state
   const agents = useSessionStore(sessionSelectors.currentGroupAgents);

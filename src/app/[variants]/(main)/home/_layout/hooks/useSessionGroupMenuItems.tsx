@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { useAgentStore } from '@/store/agent';
-import { useChatGroupStore } from '@/store/chatGroup';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useHomeStore } from '@/store/home';
 
 const useStyles = createStyles(({ css }) => ({
@@ -35,7 +35,7 @@ export const useSessionGroupMenuItems = () => {
 
   const [storeCreateAgent] = useAgentStore((s) => [s.createAgent]);
   const [removeGroup, refreshAgentList] = useHomeStore((s) => [s.removeGroup, s.refreshAgentList]);
-  const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
+  const [createGroup] = useAgentGroupStore((s) => [s.createGroup]);
 
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
@@ -231,12 +231,12 @@ export const useSessionGroupMenuItems = () => {
           const result = await storeCreateAgent({
             config: {
               // MetaData fields
-avatar: member.avatar,
-              
-backgroundColor: member.backgroundColor,
-              
-description: `${member.title} - ${template.description}`,
-              
+              avatar: member.avatar,
+
+              backgroundColor: member.backgroundColor,
+
+              description: `${member.title} - ${template.description}`,
+
               plugins: member.plugins,
               systemRole: member.systemRole,
               title: member.title,

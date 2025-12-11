@@ -13,6 +13,7 @@ export interface AgentOperationInfo {
 }
 
 export interface ChatAIAgentState {
+  activeGroupId?: string;
   /**
    * Agent operations map, keyed by messageId (assistantMessageId)
    */

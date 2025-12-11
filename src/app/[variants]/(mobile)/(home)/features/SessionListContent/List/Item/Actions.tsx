@@ -18,7 +18,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { isDesktop } from '@/const/index';
-import { useChatGroupStore } from '@/store/chatGroup';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
@@ -59,7 +59,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
       ];
     });
 
-  const [deleteGroup, pinGroup] = useChatGroupStore((s) => [s.deleteGroup, s.pinGroup]);
+  const [deleteGroup, pinGroup] = useAgentGroupStore((s) => [s.deleteGroup, s.pinGroup]);
 
   const { modal, message } = App.useApp();
 

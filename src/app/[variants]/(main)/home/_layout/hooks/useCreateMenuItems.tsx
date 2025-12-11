@@ -11,7 +11,7 @@ import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { useActionSWR } from '@/libs/swr';
 import { GroupMemberConfig, chatGroupService } from '@/services/chatGroup';
 import { useAgentStore } from '@/store/agent';
-import { useChatGroupStore } from '@/store/chatGroup';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useFileStore } from '@/store/file';
 import { useHomeStore } from '@/store/home';
 
@@ -42,7 +42,7 @@ export const useCreateMenuItems = () => {
     s.refreshAgentList,
     s.switchToGroup,
   ]);
-  const [createGroup, loadGroups] = useChatGroupStore((s) => [s.createGroup, s.loadGroups]);
+  const [createGroup, loadGroups] = useAgentGroupStore((s) => [s.createGroup, s.loadGroups]);
   const createNewPage = useFileStore((s) => s.createNewPage);
 
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);

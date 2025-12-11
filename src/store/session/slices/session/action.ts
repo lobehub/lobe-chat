@@ -11,7 +11,7 @@ import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatGroupService } from '@/services/chatGroup';
 import { sessionService } from '@/services/session';
-import { getChatGroupStoreState } from '@/store/chatGroup';
+import { getChatGroupStoreState } from '@/store/agentGroup';
 import { SessionStore } from '@/store/session';
 import { getUserStoreState, useUserStore } from '@/store/user';
 import { settingsSelectors, userProfileSelectors } from '@/store/user/selectors';

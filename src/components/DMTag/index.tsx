@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useChatStore } from '@/store/chat';
-import { useChatGroupStore } from '@/store/chatGroup';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
@@ -24,7 +24,7 @@ export interface DMTagProps {
 
 const DMTag = memo<DMTagProps>(({ senderId, targetId }) => {
   const { t } = useTranslation('chat');
-  const toggleThread = useChatGroupStore((s) => s.toggleThread);
+  const toggleThread = useAgentGroupStore((s) => s.toggleThread);
   const togglePortal = useChatStore((s) => s.togglePortal);
 
   const currentUserAvatar = useUserStore(userProfileSelectors.userAvatar);
