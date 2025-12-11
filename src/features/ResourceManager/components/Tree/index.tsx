@@ -59,6 +59,13 @@ const useStyles = createStyles(({ css, token }) => ({
       color: ${token.colorBgElevated} !important;
     }
   `,
+  treeItem: css`
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+  `,
 }));
 
 interface TreeItem {
@@ -230,6 +237,11 @@ const FileTreeItem = memo<{
       setIsOver(false);
     }, []);
 
+    const handleDrop = useCallback(() => {
+      // Clear the highlight after drop
+      setIsOver(false);
+    }, []);
+
     const handleItemClick = useCallback(() => {
       // Open file modal using slug-based routing
       const currentPath = currentFolderSlug
@@ -277,10 +289,14 @@ const FileTreeItem = memo<{
           <Dropdown menu={{ items: menuItems }} trigger={['contextMenu']}>
             <Block
               align={'center'}
-              className={cx(isOver && styles.fileItemDragOver, isDragging && styles.dragging)}
+              className={cx(
+                styles.treeItem,
+                isOver && styles.fileItemDragOver,
+                isDragging && styles.dragging,
+              )}
               clickable
               data-drop-target-id={item.id}
-              data-is-folder={item.isFolder}
+              data-is-folder={String(item.isFolder)}
               draggable
               gap={8}
               height={36}
@@ -290,6 +306,7 @@ const FileTreeItem = memo<{
               onDragLeave={handleDragLeave}
               onDragOver={handleDragOver}
               onDragStart={handleDragStart}
+              onDrop={handleDrop}
               paddingInline={4}
               style={{
                 paddingInlineStart: level * 12 + 4,
@@ -402,7 +419,7 @@ const FileTreeItem = memo<{
         <Dropdown menu={{ items: menuItems }} trigger={['contextMenu']}>
           <Block
             align={'center'}
-            className={cx(isDragging && styles.dragging)}
+            className={cx(styles.treeItem, isDragging && styles.dragging)}
             clickable
             data-drop-target-id={item.id}
             data-is-folder={false}
