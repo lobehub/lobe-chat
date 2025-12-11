@@ -16,7 +16,7 @@ import { CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { usePageEditorStore } from '../store';
-import TypoBar from './TypoBar';
+import InlineToolbar from './InlineToolbar';
 import { useSlashItems } from './useSlashItems';
 
 interface EditorCanvasProps {
@@ -61,7 +61,7 @@ const EditorCanvas = memo<EditorCanvasProps>(({ placeholder, style }) => {
             defaultBlockImage: true,
           }),
           Editor.withProps(ReactToolbarPlugin, {
-            children: <TypoBar floating />,
+            children: <InlineToolbar floating />,
           }),
         ]}
         slashOption={{

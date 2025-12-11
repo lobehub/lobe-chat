@@ -8,9 +8,10 @@ import {
   FloatActions,
 } from '@lobehub/editor/react';
 import { Block } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
+import { createStyles, useTheme } from 'antd-style';
 import {
   BoldIcon,
+  BotIcon,
   CodeXmlIcon,
   Heading1Icon,
   Heading2Icon,
@@ -30,6 +31,7 @@ import {
 } from 'lucide-react';
 import { type CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { usePageEditorStore } from '../store';
 
@@ -39,15 +41,54 @@ interface ToolbarProps {
   style?: CSSProperties;
 }
 
+const useStyles = createStyles(({ css, token }) => ({
+  askCopilot: css`
+    color: ${token.colorTextDescription};
+
+    border-radius: 6px;
+    &:hover {
+      color: ${token.colorTextSecondary};
+    }
+  `,
+}));
+
 const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
   const { t } = useTranslation('editor');
   const editor = usePageEditorStore((s) => s.editor);
   const editorState = usePageEditorStore((s) => s.editorState);
   const theme = useTheme();
+  const { styles } = useStyles();
 
   const items: ChatInputActionsProps['items'] = useMemo(() => {
     if (!editorState) return [];
     const baseItems = [
+      {
+        active: editorState.isItalic,
+        children: (
+          <Block
+            align="center"
+            className={styles.askCopilot}
+            gap={8}
+            horizontal
+            clickable
+            variant="borderless"
+            paddingInline={12}
+            paddingBlock={6}
+          >
+            <BotIcon />
+            <span>Ask Copilot</span>
+          </Block>
+        ),
+        key: 'italic',
+        label: 'Ask Copilot',
+        onClick: () => {
+          // TODO: Ask Copilot
+        },
+        tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.Italic).keys },
+      },
+      {
+        type: 'divider',
+      },
       !floating && {
         disabled: !editorState.canUndo,
         icon: Undo2Icon,

@@ -126,10 +126,9 @@ const FileTreeItem = memo<{
     const inputRef = useRef<any>(null);
 
     // Memoize computed values that don't change frequently
-    const { itemKey, droppableId } = useMemo(
+    const { itemKey } = useMemo(
       () => ({
         itemKey: item.slug || item.id,
-        droppableId: `tree:${item.id}`,
       }),
       [item.slug, item.id],
     );

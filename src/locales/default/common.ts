@@ -144,7 +144,7 @@ export default {
     aiModePlaceholder: '向 AI 提问...',
     communitySupport: '社区支持',
     discover: '发现',
-    knowledgeBase: '知识库',
+    resource: '资源',
     memory: '记忆',
     navigate: '导航',
     newAgent: '新建助手',

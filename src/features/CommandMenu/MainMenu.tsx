@@ -92,10 +92,10 @@ const MainMenu = memo<MainMenuProps>(
             </Command.Item>
           )}
           {!pathname?.startsWith('/knowledge') && (
-            <Command.Item onSelect={() => onNavigate('/knowledge')} value="knowledge">
+            <Command.Item onSelect={() => onNavigate('/resource')} value="resource">
               <BookOpen className={styles.icon} />
               <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.knowledgeBase')}</div>
+                <div className={styles.itemLabel}>{t('cmdk.resource')}</div>
               </div>
             </Command.Item>
           )}

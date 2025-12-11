@@ -3,7 +3,7 @@
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { type DragEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { VList, VListHandle } from 'virtua';
@@ -116,7 +116,7 @@ const ListView = memo<ListViewProps>(
 
     // Drop zone handlers for dragging to blank space
     const handleDropZoneDragOver = useCallback(
-      (e: React.DragEvent) => {
+      (e: DragEvent) => {
         if (!isDragActive) return;
         e.preventDefault();
         e.stopPropagation();
