@@ -23,8 +23,6 @@ import { AgentRuntimeService } from '@/server/services/agentRuntime';
 
 const log = debug('lobe-server:ai-agent-service');
 
-
-
 /**
  * AI Agent Service
  *
@@ -348,11 +346,11 @@ export class AiAgentService {
     log('execGroupAgent: delegated to execAgent, operationId=%s', result.operationId);
 
     return {
+      assistantMessageId: result.assistantMessageId,
       isCreateNewTopic,
       operationId: result.operationId,
       topicId: result.topicId,
+      userMessageId: result.userMessageId,
     };
   }
 }
-
-export {type ExecAgentParams, type ExecAgentResult, type ExecGroupAgentParams, type ExecGroupAgentResult} from '@lobechat/types';

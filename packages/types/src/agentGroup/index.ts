@@ -183,18 +183,24 @@ export interface ExecGroupAgentParams {
  * Result from execGroupAgent (internal, without messages/topics)
  */
 export interface ExecGroupAgentResult {
+  /** The assistant message ID created for this operation */
+  assistantMessageId: string;
   /** Whether a new topic was created */
   isCreateNewTopic: boolean;
   /** Operation ID for SSE connection */
   operationId: string;
   /** The topic ID */
   topicId: string;
+  /** The user message ID created for this operation */
+  userMessageId: string;
 }
 
 /**
  * Response from execGroupAgent (with messages/topics for UI sync)
  */
 export interface ExecGroupAgentResponse {
+  /** The assistant message ID created for this operation */
+  assistantMessageId: string;
   /** Whether a new topic was created */
   isCreateNewTopic: boolean;
   /** Latest messages in the conversation */
@@ -208,4 +214,6 @@ export interface ExecGroupAgentResponse {
     items: ChatTopic[];
     total: number;
   };
+  /** The user message ID created for this operation */
+  userMessageId: string;
 }
