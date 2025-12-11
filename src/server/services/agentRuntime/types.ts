@@ -21,6 +21,7 @@ export interface OperationCreationParams {
   agentConfig?: any;
   appContext: {
     agentId?: string;
+    groupId?: string | null;
     threadId?: string | null;
     topicId?: string | null;
   };

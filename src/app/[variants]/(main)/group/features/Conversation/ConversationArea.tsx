@@ -4,7 +4,6 @@ import { Suspense, memo, useEffect, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { ChatList, ConversationProvider } from '@/features/Conversation';
-import { useCurrentContext } from '@/hooks/useCurrentContext';
 import { useOperationState } from '@/hooks/useOperationState';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -24,6 +23,7 @@ import MessageFromUrl from './MainChatInput/MessageFromUrl';
 import ThreadHydration from './ThreadHydration';
 import ZenModeToast from './ZenModeToast';
 import { useActionsBarConfig } from './useActionsBarConfig';
+import { useGroupContext } from './useGroupContext';
 
 interface ConversationAreaProps {
   mobile?: boolean;
@@ -36,7 +36,7 @@ interface ConversationAreaProps {
  * Uses ChatList from @/features/Conversation and MainChatInput for custom features.
  */
 const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
-  const context = useCurrentContext();
+  const context = useGroupContext();
 
   const enabledPlugins = useAgentStore(agentSelectors.currentAgentPlugins);
   const [useFetchUserMemory, setActiveMemoryContext] = useUserMemoryStore((s) => [

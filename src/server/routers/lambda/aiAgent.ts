@@ -74,6 +74,7 @@ const ExecAgentTaskSchema = z
     /** Application context for message storage */
     appContext: z
       .object({
+        groupId: z.string().optional().nullable(),
         scope: z.string().optional().nullable(),
         sessionId: z.string().optional(),
         threadId: z.string().optional().nullable(),

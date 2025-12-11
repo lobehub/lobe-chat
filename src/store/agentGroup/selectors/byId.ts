@@ -1,4 +1,4 @@
-import type { AgentGroupDetail, AgentItem } from '@lobechat/types';
+import type { AgentGroupDetail, AgentGroupMember, AgentItem } from '@lobechat/types';
 
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG, DEFAULT_CHAT_GROUP_META_CONFIG } from '@/const/settings';
 import { merge } from '@/utils/merge';
@@ -30,10 +30,27 @@ const groupAgents =
     return group?.agents || [];
   };
 
+/**
+ * Get participant members in a group (excluding supervisor)
+ * Used for UI display where supervisor should not be shown in the member list
+ */
+const groupMembers =
+  (groupId: string) =>
+  (s: ChatGroupStore): AgentGroupMember[] => {
+    const group = groupById(groupId)(s);
+    const agents = group?.agents || [];
+    return agents.filter((agent) => !agent.isSupervisor);
+  };
+
 const groupAgentCount =
   (groupId: string) =>
   (s: ChatGroupStore): number =>
     groupAgents(groupId)(s).length;
+
+const groupMemberCount =
+  (groupId: string) =>
+  (s: ChatGroupStore): number =>
+    groupMembers(groupId)(s).length;
 
 const agentByIdFromGroup =
   (groupId: string, agentId: string) =>
@@ -48,5 +65,7 @@ export const agentGroupByIdSelectors = {
   groupAgents,
   groupById,
   groupConfig,
+  groupMemberCount,
+  groupMembers,
   groupMeta,
 };
