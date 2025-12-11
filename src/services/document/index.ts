@@ -24,7 +24,7 @@ export class DocumentService {
     return lambdaClient.document.createDocument.mutate(params);
   }
 
-  async queryDocuments(): Promise<DocumentItem[]> {
+  async queryDocuments(): Promise<{ items: DocumentItem[]; total: number }> {
     return lambdaClient.document.queryDocuments.query();
   }
 

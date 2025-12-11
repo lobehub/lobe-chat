@@ -136,8 +136,9 @@ describe('DocumentModel', () => {
 
       const result = await documentModel.query();
 
-      expect(result).toHaveLength(1);
-      expect(result[0].content).toBe('User 1 document');
+      expect(result.items).toHaveLength(1);
+      expect(result.total).toBe(1);
+      expect(result.items[0].content).toBe(null); // content is excluded in query
     });
 
     it('should return documents ordered by updatedAt desc', async () => {
@@ -160,8 +161,8 @@ describe('DocumentModel', () => {
 
       const result = await documentModel.query();
 
-      expect(result[0].id).toBe(doc1Id);
-      expect(result[1].id).toBe(doc2Id);
+      expect(result.items[0].id).toBe(doc1Id);
+      expect(result.items[1].id).toBe(doc2Id);
     });
   });
 
