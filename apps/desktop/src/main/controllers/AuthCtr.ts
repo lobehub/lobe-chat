@@ -563,6 +563,7 @@ export default class AuthCtr extends ControllerModule {
     // Hash codeVerifier using SHA-256
     const encoder = new TextEncoder();
     const data = encoder.encode(codeVerifier);
+    // @ts-ignore tsgo report error but tsc not
     const digest = await crypto.subtle.digest('SHA-256', data);
 
     // Convert hash result to base64url encoding
