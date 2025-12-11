@@ -2,7 +2,12 @@ import type { TFunction } from 'i18next';
 import { type ChangeEvent, useCallback } from 'react';
 
 import type { FileManageAction } from '@/store/file/slices/fileManager/action';
-import { filterFilesByGitignore, findGitignoreFile, readGitignoreContent } from '@/utils/gitignore';
+import {
+  filterFilesByBuiltInBlockList,
+  filterFilesByGitignore,
+  findGitignoreFile,
+  readGitignoreContent,
+} from '@/utils/gitignore';
 
 interface UseUploadFolderOptions {
   currentFolderId?: string | null;
@@ -27,39 +32,56 @@ const useUploadFolder = ({
       const upload = async (fileList: File[]) =>
         uploadFolderWithStructure(fileList, targetLibraryId, targetFolderId);
 
+      // Apply built-in block list first
+      const originalCount = files.length;
+      files = filterFilesByBuiltInBlockList(files);
+      const builtInBlockedCount = originalCount - files.length;
+
+      if (builtInBlockedCount > 0) {
+        const { message } = await import('antd');
+        message.info(
+          t('header.actions.builtInBlockList.filtered', {
+            ignored: builtInBlockedCount,
+            total: originalCount,
+          }),
+        );
+      }
+
       const gitignoreFile = findGitignoreFile(files);
 
       if (gitignoreFile) {
         try {
           const gitignoreContent = await readGitignoreContent(gitignoreFile);
-          const originalCount = files.length;
+          const gitignoreOriginalCount = files.length;
 
           const { Modal } = await import('antd');
 
           Modal.confirm({
             cancelText: t('header.actions.gitignore.cancel'),
             content: t('header.actions.gitignore.content', {
-              count: originalCount,
+              count: gitignoreOriginalCount,
             }),
             okText: t('header.actions.gitignore.apply'),
-            onCancel: async () => {
-              await upload(files);
+            onCancel: () => {
+              // Upload without awaiting - let it run in background
+              upload(files);
             },
             onOk: async () => {
               const filteredFiles = filterFilesByGitignore(files, gitignoreContent);
-              const ignoredCount = originalCount - filteredFiles.length;
+              const ignoredCount = gitignoreOriginalCount - filteredFiles.length;
 
               if (ignoredCount > 0) {
                 const { message } = await import('antd');
                 message.info(
                   t('header.actions.gitignore.filtered', {
                     ignored: ignoredCount,
-                    total: originalCount,
+                    total: gitignoreOriginalCount,
                   }),
                 );
               }
 
-              await upload(filteredFiles);
+              // Upload without awaiting - let it run in background
+              upload(filteredFiles);
             },
             title: t('header.actions.gitignore.title'),
           });

@@ -77,6 +77,9 @@ export default {
   header: {
     actions: {
       connect: '连接...',
+      builtInBlockList: {
+        filtered: '已过滤 {{ignored}} 个文件（共 {{total}} 个文件）',
+      },
       gitignore: {
         apply: '应用规则',
         cancel: '忽略规则',

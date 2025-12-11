@@ -1,4 +1,19 @@
 /**
+ * Built-in block list patterns that should always be excluded from folder uploads
+ * These patterns follow gitignore syntax
+ */
+export const BUILT_IN_BLOCK_LIST = [
+  '.git/',
+  'node_modules/',
+  '.DS_Store',
+  'Thumbs.db',
+  '__pycache__/',
+  '*.pyc',
+  '.idea/',
+  '.vscode/',
+] as const;
+
+/**
  * Parse .gitignore content into patterns
  * @param content - .gitignore file content
  * @returns Array of patterns (comments and empty lines removed)
@@ -107,6 +122,23 @@ export const findGitignoreFile = (files: File[]): File | undefined => {
  */
 export const readGitignoreContent = async (file: File): Promise<string> => {
   return file.text();
+};
+
+/**
+ * Filter files based on built-in block list
+ * @param files - Array of files to filter
+ * @returns Filtered array of files (blocked files removed)
+ */
+export const filterFilesByBuiltInBlockList = (files: File[]): File[] => {
+  const patterns = [...BUILT_IN_BLOCK_LIST];
+
+  return files.filter((file) => {
+    const path = (file as any).webkitRelativePath || file.name;
+    // Remove root folder name from path for matching
+    const relativePath = path.split('/').slice(1).join('/');
+
+    return !shouldIgnoreFile(relativePath, patterns);
+  });
 };
 
 /**
