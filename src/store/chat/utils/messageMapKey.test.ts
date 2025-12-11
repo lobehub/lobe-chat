@@ -63,6 +63,70 @@ describe('messageMapKey', () => {
     });
   });
 
+  describe('Group mode with groupId (auto-detected)', () => {
+    it('should auto-detect group scope when groupId is present', () => {
+      const result = messageMapKey({
+        agentId: 'agt_xxx',
+        groupId: 'grp_yyy',
+      });
+      expect(result).toBe('group_grp_yyy_new');
+    });
+
+    it('should use groupId as scopeId for group conversations', () => {
+      const result = messageMapKey({
+        agentId: 'agt_xxx',
+        groupId: 'grp_yyy',
+        topicId: 'tpc_zzz',
+      });
+      expect(result).toBe('group_grp_yyy_tpc_zzz');
+    });
+
+    it('should prioritize groupId over agentId for scope detection', () => {
+      const result = messageMapKey({
+        agentId: 'agt_xxx',
+        groupId: 'grp_yyy',
+        topicId: 'tpc_zzz',
+      });
+      // groupId takes priority, agentId is ignored
+      expect(result).toContain('grp_yyy');
+      expect(result).not.toContain('agt_xxx');
+    });
+
+    it('should handle groupId with isNew flag', () => {
+      const result = messageMapKey({
+        agentId: 'agt_xxx',
+        groupId: 'grp_yyy',
+        isNew: true,
+      });
+      expect(result).toBe('group_grp_yyy_new');
+    });
+
+    it('should use explicit scope when provided with groupId', () => {
+      const result = messageMapKey({
+        scope: 'group_agent',
+        agentId: 'agt_xxx',
+        groupId: 'grp_yyy',
+        topicId: 'tpc_zzz',
+      });
+      // When scope is explicitly set, use that scope but groupId as scopeId
+      expect(result).toBe('group_agent_grp_yyy_tpc_zzz');
+    });
+
+    it('should generate different keys for same agent in different groups', () => {
+      const key1 = messageMapKey({
+        agentId: 'agt_xxx',
+        groupId: 'grp_111',
+        topicId: 'tpc_yyy',
+      });
+      const key2 = messageMapKey({
+        agentId: 'agt_xxx',
+        groupId: 'grp_222',
+        topicId: 'tpc_yyy',
+      });
+      expect(key1).not.toBe(key2);
+    });
+  });
+
   describe('Group agent mode', () => {
     it('should generate key for new agent topic in group', () => {
       const result = messageMapKey({
@@ -269,6 +333,24 @@ describe('messageMapKey', () => {
         threadId: 'tpc_agenttopic',
       });
       expect(result).toBe('group_agent_grp_group001_tpc_grouptopic_tpc_agenttopic');
+    });
+
+    it('Scenario: User sends message to group using groupId parameter', () => {
+      // This is the new pattern used in sendGroupMessage
+      const result = messageMapKey({
+        agentId: 'agt_agent001',
+        groupId: 'grp_group001',
+        topicId: 'tpc_grouptopic',
+      });
+      expect(result).toBe('group_grp_group001_tpc_grouptopic');
+    });
+
+    it('Scenario: User starts new conversation in group using groupId parameter', () => {
+      const result = messageMapKey({
+        agentId: 'agt_agent001',
+        groupId: 'grp_group001',
+      });
+      expect(result).toBe('group_grp_group001_new');
     });
   });
 });

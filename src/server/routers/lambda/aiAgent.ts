@@ -1,5 +1,4 @@
 import { AgentRuntimeContext } from '@lobechat/agent-runtime';
-import { ExecGroupAgentSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import pMap from 'p-map';
@@ -70,8 +69,10 @@ const StartExecutionSchema = z.object({
   priority: z.enum(['high', 'normal', 'low']).optional().default('normal'),
 });
 
-/** Schema for single agent task (used in both execAgent and execAgents) */
-const ExecAgentTaskSchema = z
+/**
+ * Schema for execAgent - execute a single Agent
+ */
+const ExecAgentSchema = z
   .object({
     /** The agent ID to run (either agentId or slug is required) */
     agentId: z.string().optional(),
@@ -98,7 +99,28 @@ const ExecAgentTaskSchema = z
     message: 'Either agentId or slug must be provided',
   });
 
-const ExecAgentSchema = ExecAgentTaskSchema;
+/**
+ * Schema for execGroupAgent - execute Supervisor Agent in Group chat
+ */
+const ExecGroupAgentSchema = z.object({
+  /** The Supervisor agent ID */
+  agentId: z.string(),
+  /** File IDs attached to the message */
+  files: z.array(z.string()).optional(),
+  /** The Group ID */
+  groupId: z.string(),
+  /** User message content */
+  message: z.string(),
+  /** Optional: Create a new topic */
+  newTopic: z
+    .object({
+      title: z.string().optional(),
+      topicMessageIds: z.array(z.string()).optional(),
+    })
+    .optional(),
+  /** Existing topic ID */
+  topicId: z.string().optional().nullable(),
+});
 
 /**
  * Schema for execAgents - batch execution of multiple agents
@@ -107,7 +129,7 @@ const ExecAgentsSchema = z.object({
   /** Whether to execute tasks in parallel (default: true) */
   parallel: z.boolean().optional().default(true),
   /** Array of agent tasks to execute */
-  tasks: z.array(ExecAgentTaskSchema).min(1),
+  tasks: z.array(ExecAgentSchema).min(1),
 });
 
 const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {

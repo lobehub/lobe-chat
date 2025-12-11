@@ -52,9 +52,9 @@ export const agentSlice: StateCreator<ChatStore, [['zustand/devtools', never]], 
 
     log(`Cleaning up agent operation for ${assistantId}`);
 
-    // 关闭 EventSource 连接
+    // 关闭 EventSource 连接 (通过 AbortController 取消)
     if (operation.eventSource) {
-      operation.eventSource.close();
+      operation.eventSource.abort();
     }
 
     // 删除操作信息
