@@ -55,6 +55,11 @@ export const userRouter = router({
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
+    // don't block following process
+    ctx.userModel.updateUser({ lastActiveAt: new Date() }).catch((err) => {
+      console.error('update lastActiveAt failed, error:', err);
+    });
+
     let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
 
     // get or create first-time user
@@ -105,9 +110,6 @@ export const userRouter = router({
         throw error;
       }
     }
-
-    // Update last activity timestamp (fire-and-forget, user confirmed to exist at this point)
-    ctx.userModel.updateUser({ lastActiveAt: new Date() });
 
     // Run all count queries in parallel
     const [hasMoreThan4Messages, hasAnyMessages, hasExtraSession] = await Promise.all([
