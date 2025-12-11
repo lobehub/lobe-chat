@@ -1,24 +1,10 @@
 'use client';
 
-import {
-  CollisionDetection,
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  PointerSensor,
-  closestCorners,
-  pointerWithin,
-  rectIntersection,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
 import { Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { FileText, FolderIcon } from 'lucide-react';
-import { PropsWithChildren, createContext, memo, useContext, useState } from 'react';
+import { PropsWithChildren, createContext, memo, useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { useFileStore } from '@/store/file';
@@ -37,175 +23,204 @@ const DragActiveContext = createContext<boolean>(false);
  */
 export const useDragActive = () => useContext(DragActiveContext);
 
-/**
- * Custom collision detection that prefers specific folders over root drop zones
- * This prevents root drop zones from capturing drops meant for child folders
- */
-const customCollisionDetection: CollisionDetection = (args) => {
-  // First, try pointerWithin for precise detection
-  const pointerCollisions = pointerWithin(args);
+interface DragState {
+  data: any;
+  id: string;
+  type: 'file' | 'folder';
+}
 
-  // If pointer is within a droppable, prefer non-root targets
-  if (pointerCollisions.length > 0) {
-    const nonRootCollisions = pointerCollisions.filter((collision) => {
-      const id = collision.id;
-      return typeof id !== 'string' || !id.startsWith('__root__:');
-    });
+const DragStateContext = createContext<{
+  currentDrag: DragState | null;
+  setCurrentDrag: (state: DragState | null) => void;
+}>({
+  currentDrag: null,
+  setCurrentDrag: () => {},
+});
 
-    if (nonRootCollisions.length > 0) {
-      return nonRootCollisions;
-    }
-
-    return pointerCollisions;
-  }
-
-  // If no pointer collisions, try rectIntersection for more forgiving detection
-  const rectCollisions = rectIntersection(args);
-
-  if (rectCollisions.length > 0) {
-    const nonRootCollisions = rectCollisions.filter((collision) => {
-      const id = collision.id;
-      return typeof id !== 'string' || !id.startsWith('__root__:');
-    });
-
-    if (nonRootCollisions.length > 0) {
-      return nonRootCollisions;
-    }
-
-    return rectCollisions;
-  }
-
-  // Finally, fall back to closestCorners for best UX
-  const cornerCollisions = closestCorners(args);
-
-  if (cornerCollisions.length > 0) {
-    const nonRootCollisions = cornerCollisions.filter((collision) => {
-      const id = collision.id;
-      return typeof id !== 'string' || !id.startsWith('__root__:');
-    });
-
-    if (nonRootCollisions.length > 0) {
-      return nonRootCollisions;
-    }
-  }
-
-  // Last resort: return all corner collisions or empty array
-  return cornerCollisions;
-};
+export const useDragState = () => useContext(DragStateContext);
 
 /**
- * DndContext wrapper for resource drag-and-drop
- * Must be used within ResourceManagerProvider
+ * Pragmatic DnD wrapper for resource drag-and-drop
+ * Much more performant than dnd-kit for large virtualized lists
  */
 export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
   const theme = useTheme();
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [activeData, setActiveData] = useState<any>(null);
+  const [currentDrag, setCurrentDrag] = useState<DragState | null>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const updateDocument = useFileStore((s) => s.updateDocument);
   const moveFileToFolder = useFileStore((s) => s.moveFileToFolder);
   const fileList = useFileStore((s) => s.fileList);
   const selectedFileIds = useResourceManagerStore((s) => s.selectedFileIds);
   const setSelectedFileIds = useResourceManagerStore((s) => s.setSelectedFileIds);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-  );
-
-  const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
-    setActiveData(event.active.data.current);
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      const overData = over.data.current;
-      const isDraggingSelection = selectedFileIds.includes(active.id as string);
-      const itemsToMove = isDraggingSelection ? selectedFileIds : [active.id as string];
-
-      if (overData?.isFolder) {
-        const isRootDrop = typeof over.id === 'string' && over.id.startsWith('__root__:');
-        const targetParentId = isRootDrop ? null : (over.id as string);
-
-        const pools = itemsToMove.map((id) => {
-          const item = fileList.find((f) => f.id === id);
-
-          // Fallback to active drag data if item not in fileList (e.g., from tree lazy-loaded folders)
-          const itemData = item || (id === active.id ? active.data.current : null);
-          if (!itemData) return Promise.resolve();
-
-          const isDocument =
-            itemData.sourceType === 'document' ||
-            itemData.fileType === 'custom/document' ||
-            itemData.fileType === 'custom/folder';
-
-          if (isDocument) {
-            return updateDocument(id, { parentId: targetParentId });
-          } else {
-            return moveFileToFolder(id, targetParentId);
-          }
-        });
-
-        Promise.all(pools).then(() => {
-          if (isDraggingSelection) {
-            setSelectedFileIds([]);
-          }
-        });
+  // Track mouse position and handle drag events
+  useEffect(() => {
+    const handleDragStart = (event: DragEvent) => {
+      // Set initial position directly on DOM element
+      if (overlayRef.current) {
+        overlayRef.current.style.left = `${event.clientX + 12}px`;
+        overlayRef.current.style.top = `${event.clientY + 12}px`;
       }
+    };
+
+    const handleDrag = (event: DragEvent) => {
+      // Update position directly on DOM element (no React re-render!)
+      // clientX/Y are 0 on dragend, so check for that
+      if (overlayRef.current && (event.clientX !== 0 || event.clientY !== 0)) {
+        overlayRef.current.style.left = `${event.clientX + 12}px`;
+        overlayRef.current.style.top = `${event.clientY + 12}px`;
+      }
+    };
+
+    const handleDrop = async (event: DragEvent) => {
+      event.preventDefault();
+
+      if (!currentDrag) return;
+
+      // Find the drop target by traversing up the DOM tree
+      let dropTarget = event.target as HTMLElement;
+      let targetId: string | undefined;
+      let isFolder = false;
+      let isRootDrop = false;
+
+      // Traverse up to find element with data-drop-target-id
+      while (dropTarget && dropTarget !== document.body) {
+        const dataset = dropTarget.dataset;
+        if (dataset.dropTargetId) {
+          targetId = dataset.dropTargetId;
+          isFolder = dataset.isFolder === 'true';
+          isRootDrop = dataset.rootDrop === 'true';
+          break;
+        }
+        dropTarget = dropTarget.parentElement as HTMLElement;
+      }
+
+      if (!isFolder && !isRootDrop) {
+        setCurrentDrag(null);
+        return;
+      }
+
+      const targetParentId = isRootDrop ? null : targetId ?? null;
+      const isDraggingSelection = selectedFileIds.includes(currentDrag.id);
+      const itemsToMove = isDraggingSelection ? selectedFileIds : [currentDrag.id];
+
+      // Prevent dropping into itself
+      if (!isRootDrop && targetParentId && itemsToMove.includes(targetParentId)) {
+        setCurrentDrag(null);
+        return;
+      }
+
+      const pools = itemsToMove.map((id) => {
+        const item = fileList.find((f) => f.id === id);
+        const itemData = item || (id === currentDrag.id ? currentDrag.data : null);
+
+        if (!itemData) return Promise.resolve();
+
+        const isDocument =
+          itemData.sourceType === 'document' ||
+          itemData.fileType === 'custom/document' ||
+          itemData.fileType === 'custom/folder';
+
+        if (isDocument) {
+          return updateDocument(id, { parentId: targetParentId });
+        } else {
+          return moveFileToFolder(id, targetParentId);
+        }
+      });
+
+      await Promise.all(pools);
+
+      if (isDraggingSelection) {
+        setSelectedFileIds([]);
+      }
+
+      setCurrentDrag(null);
+    };
+
+    const handleDragOver = (event: DragEvent) => {
+      event.preventDefault();
+    };
+
+    document.addEventListener('dragstart', handleDragStart);
+    document.addEventListener('drag', handleDrag);
+    document.addEventListener('drop', handleDrop);
+    document.addEventListener('dragover', handleDragOver);
+
+    return () => {
+      document.removeEventListener('dragstart', handleDragStart);
+      document.removeEventListener('drag', handleDrag);
+      document.removeEventListener('drop', handleDrop);
+      document.removeEventListener('dragover', handleDragOver);
+    };
+  }, [currentDrag, selectedFileIds, fileList, updateDocument, moveFileToFolder, setSelectedFileIds]);
+
+  // Change cursor to grabbing during drag
+  useEffect(() => {
+    if (currentDrag) {
+      document.body.style.cursor = 'grabbing';
+      document.body.style.userSelect = 'none';
+    } else {
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
     }
-    setActiveId(null);
-    setActiveData(null);
-  };
+
+    return () => {
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, [currentDrag]);
 
   return (
-    <DragActiveContext.Provider value={activeId !== null}>
-      <DndContext
-        collisionDetection={customCollisionDetection}
-        onDragEnd={handleDragEnd}
-        onDragStart={handleDragStart}
-        sensors={sensors}
-      >
+    <DragActiveContext.Provider value={currentDrag !== null}>
+      <DragStateContext.Provider value={{ currentDrag, setCurrentDrag }}>
         {children}
-        {createPortal(
-          <DragOverlay dropAnimation={null}>
-            {activeId && activeData ? (
-              <Flexbox
-                align={'center'}
-                gap={12}
-                horizontal
-                paddingInline={12}
+        {typeof document !== 'undefined' &&
+          createPortal(
+            currentDrag ? (
+              <div
+                ref={overlayRef}
                 style={{
+                  alignItems: 'center',
                   background: theme.colorBgElevated,
                   border: `1px solid ${theme.colorPrimaryBorder}`,
                   borderRadius: theme.borderRadiusLG,
                   boxShadow: theme.boxShadow,
-                  cursor: 'grabbing',
+                  display: 'flex',
+                  gap: 12,
                   height: 44,
+                  left: 0,
                   maxWidth: 320,
                   minWidth: 200,
+                  padding: '0 12px',
+                  pointerEvents: 'none',
+                  position: 'fixed',
+                  top: 0,
+                  transform: 'translate3d(0, 0, 0)',
+                  willChange: 'transform',
+                  zIndex: 9999,
                 }}
               >
-                <Flexbox
-                  align={'center'}
-                  justify={'center'}
+                <div
                   style={{
+                    alignItems: 'center',
                     color: theme.colorPrimary,
+                    display: 'flex',
                     flexShrink: 0,
+                    justifyContent: 'center',
                   }}
                 >
-                  {activeData.fileType === 'custom/folder' ? (
+                  {currentDrag.data.fileType === 'custom/folder' ? (
                     <Icon icon={FolderIcon} size={20} />
-                  ) : activeData.fileType === 'custom/document' ? (
+                  ) : currentDrag.data.fileType === 'custom/document' ? (
                     <Icon icon={FileText} size={20} />
                   ) : (
-                    <FileIcon fileName={activeData.name} fileType={activeData.fileType} size={20} />
+                    <FileIcon
+                      fileName={currentDrag.data.name}
+                      fileType={currentDrag.data.fileType}
+                      size={20}
+                    />
                   )}
-                </Flexbox>
+                </div>
                 <span
                   style={{
                     color: theme.colorText,
@@ -217,33 +232,33 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {activeData.name}
+                  {currentDrag.data.name}
                 </span>
-                {selectedFileIds.includes(activeId) && selectedFileIds.length > 1 && (
-                  <Flexbox
-                    align={'center'}
-                    justify={'center'}
+                {selectedFileIds.includes(currentDrag.id) && selectedFileIds.length > 1 && (
+                  <div
                     style={{
+                      alignItems: 'center',
                       background: theme.colorPrimary,
                       borderRadius: theme.borderRadiusSM,
                       color: theme.colorTextLightSolid,
+                      display: 'flex',
                       flexShrink: 0,
                       fontSize: 12,
                       fontWeight: 600,
                       height: 22,
+                      justifyContent: 'center',
                       minWidth: 22,
-                      paddingInline: 6,
+                      padding: '0 6px',
                     }}
                   >
                     {selectedFileIds.length}
-                  </Flexbox>
+                  </div>
                 )}
-              </Flexbox>
-            ) : null}
-          </DragOverlay>,
-          document.body,
-        )}
-      </DndContext>
+              </div>
+            ) : null,
+            document.body,
+          )}
+      </DragStateContext.Provider>
     </DragActiveContext.Provider>
   );
 });

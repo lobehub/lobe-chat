@@ -1,18 +1,19 @@
 'use client';
 
 import { CaretDownFilled, LoadingOutlined } from '@ant-design/icons';
-import { useDraggable, useDroppable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
 import { ActionIcon, Block, Dropdown, Icon } from '@lobehub/ui';
 import { App, Input } from 'antd';
 import { createStyles } from 'antd-style';
 import { motion } from 'framer-motion';
 import { FileText, FolderIcon, FolderOpenIcon } from 'lucide-react';
-import React, { memo, useCallback, useReducer, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useReducer, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
-import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
+import {
+  useDragActive,
+  useDragState,
+} from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import FileIcon from '@/components/FileIcon';
@@ -48,6 +49,7 @@ const getTreeState = (knowledgeBaseId: string) => {
 const useStyles = createStyles(({ css, token }) => ({
   dragging: css`
     opacity: 0.5;
+    will-change: transform;
   `,
   fileItemDragOver: css`
     color: ${token.colorBgElevated} !important;
@@ -116,7 +118,14 @@ const FileTreeItem = memo<{
     const [renamingValue, setRenamingValue] = useState(item.name);
     const inputRef = useRef<any>(null);
 
-    const itemKey = item.slug || item.id;
+    // Memoize computed values that don't change frequently
+    const { itemKey, droppableId } = useMemo(
+      () => ({
+        itemKey: item.slug || item.id,
+        droppableId: `tree:${item.id}`,
+      }),
+      [item.slug, item.id],
+    );
 
     const handleRenameStart = useCallback(() => {
       setIsRenaming(true);
@@ -168,42 +177,58 @@ const FileTreeItem = memo<{
     const children = folderChildrenCache.get(itemKey);
 
     const isDragActive = useDragActive();
+    const { setCurrentDrag } = useDragState();
+    const [isDragging, setIsDragging] = useState(false);
+    const [isOver, setIsOver] = useState(false);
 
-    const {
-      attributes,
-      listeners,
-      setNodeRef: setDraggableRef,
-      transform,
-      isDragging,
-    } = useDraggable({
-      data: {
+    // Memoize drag data to prevent recreation
+    const dragData = useMemo(
+      () => ({
         fileType: item.fileType,
         isFolder: item.isFolder,
         name: item.name,
         sourceType: item.sourceType,
+      }),
+      [item.fileType, item.isFolder, item.name, item.sourceType],
+    );
+
+    // Native HTML5 drag event handlers
+    const handleDragStart = useCallback(
+      (e: React.DragEvent) => {
+        setIsDragging(true);
+        setCurrentDrag({
+          data: dragData,
+          id: item.id,
+          type: item.isFolder ? 'folder' : 'file',
+        });
+
+        // Set drag image to be transparent (we use custom overlay)
+        const img = new Image();
+        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+        e.dataTransfer.setDragImage(img, 0, 0);
+        e.dataTransfer.effectAllowed = 'move';
       },
-      id: item.id,
-    });
+      [dragData, item.id, item.isFolder, setCurrentDrag],
+    );
 
-    const { setNodeRef: setDroppableRef, isOver } = useDroppable({
-      data: {
-        fileType: item.fileType,
-        isFolder: item.isFolder,
-        name: item.name,
-        sourceType: item.sourceType,
+    const handleDragEnd = useCallback(() => {
+      setIsDragging(false);
+    }, []);
+
+    const handleDragOver = useCallback(
+      (e: React.DragEvent) => {
+        if (!item.isFolder || !isDragActive) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        setIsOver(true);
       },
-      disabled: !item.isFolder || !isDragActive,
-      id: item.id,
-    });
+      [item.isFolder, isDragActive],
+    );
 
-    const setNodeRef = (node: HTMLElement | null) => {
-      setDraggableRef(node);
-      setDroppableRef(node);
-    };
-
-    const dndStyle = {
-      transform: CSS.Translate.toString(transform),
-    };
+    const handleDragLeave = useCallback(() => {
+      setIsOver(false);
+    }, []);
 
     const handleItemClick = useCallback(() => {
       // Open file modal using slug-based routing
@@ -254,19 +279,22 @@ const FileTreeItem = memo<{
               align={'center'}
               className={cx(isOver && styles.fileItemDragOver, isDragging && styles.dragging)}
               clickable
+              data-drop-target-id={item.id}
+              data-is-folder={item.isFolder}
+              draggable
               gap={8}
               height={36}
               horizontal
               onClick={() => handleFolderClick(item.id, item.slug)}
+              onDragEnd={handleDragEnd}
+              onDragLeave={handleDragLeave}
+              onDragOver={handleDragOver}
+              onDragStart={handleDragStart}
               paddingInline={4}
-              ref={setNodeRef}
               style={{
                 paddingInlineStart: level * 12 + 4,
-                ...dndStyle,
               }}
               variant={isActive ? 'filled' : 'borderless'}
-              {...attributes}
-              {...listeners}
             >
               {isLoading ? (
                 <ActionIcon
@@ -376,19 +404,20 @@ const FileTreeItem = memo<{
             align={'center'}
             className={cx(isDragging && styles.dragging)}
             clickable
+            data-drop-target-id={item.id}
+            data-is-folder={false}
+            draggable
             gap={8}
             height={36}
             horizontal
             onClick={handleItemClick}
+            onDragEnd={handleDragEnd}
+            onDragStart={handleDragStart}
             paddingInline={4}
-            ref={setNodeRef}
             style={{
               paddingInlineStart: level * 12 + 4,
-              ...dndStyle,
             }}
             variant={isActive ? 'filled' : 'borderless'}
-            {...attributes}
-            {...listeners}
           >
             <div style={{ width: 20 }} />
             <Flexbox

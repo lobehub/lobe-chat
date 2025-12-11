@@ -1,11 +1,12 @@
-import { useDraggable, useDroppable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
+import {
+  useDragActive,
+  useDragState,
+} from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import PageEditorModal from '@/features/PageEditor/Modal';
 import { documentService } from '@/services/document';
@@ -137,6 +138,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   dragging: css`
     opacity: 0.5;
+    will-change: transform;
   `,
   dropdown: css`
     position: absolute;
@@ -197,54 +199,79 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const setMode = useResourceManagerStore((s) => s.setMode);
     const setCurrentViewItemId = useResourceManagerStore((s) => s.setCurrentViewItemId);
 
-    const isImage = fileType && IMAGE_TYPES.has(fileType);
-    const isMarkdown = isMarkdownFile(name, fileType);
-    const isNote = isCustomNote(fileType);
-    const isFolder = fileType === 'custom/folder';
-
     const isDragActive = useDragActive();
+    const { setCurrentDrag } = useDragState();
+    const [isDragging, setIsDragging] = useState(false);
+    const [isOver, setIsOver] = useState(false);
 
-    const {
-      attributes,
-      listeners,
-      setNodeRef: setDraggableRef,
-      transform,
-      isDragging,
-    } = useDraggable({
-      data: {
+    // Memoize computed values that don't change
+    const computedValues = useMemo(
+      () => ({
+        isImage: fileType && IMAGE_TYPES.has(fileType),
+        isMarkdown: isMarkdownFile(name, fileType),
+        isNote: isCustomNote(fileType),
+        isFolder: fileType === 'custom/folder',
+      }),
+      [fileType, name],
+    );
+
+    const { isImage, isMarkdown, isNote, isFolder } = computedValues;
+
+    // Memoize drag data to prevent recreation
+    const dragData = useMemo(
+      () => ({
         fileType,
         isFolder,
         name,
         sourceType,
-      },
-      disabled: !knowledgeBaseId,
-      id,
-    });
+      }),
+      [fileType, isFolder, name, sourceType],
+    );
 
-    // Performance optimization: only activate droppable for folders during active drag
-    // Using disabled property instead of conditional hook call to comply with Rules of Hooks
-    const { setNodeRef: setDroppableRef, isOver } = useDroppable({
-      data: {
-        fileType,
-        isFolder,
-        name,
-        sourceType,
+    // Native HTML5 drag event handlers
+    const handleDragStart = useCallback(
+      (e: React.DragEvent) => {
+        if (!knowledgeBaseId) {
+          e.preventDefault();
+          return;
+        }
+
+        setIsDragging(true);
+        setCurrentDrag({
+          data: dragData,
+          id,
+          type: isFolder ? 'folder' : 'file',
+        });
+
+        // Set drag image to be transparent (we use custom overlay)
+        const img = new Image();
+        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+        e.dataTransfer.setDragImage(img, 0, 0);
+        e.dataTransfer.effectAllowed = 'move';
       },
-      disabled: !isFolder || !isDragActive,
-      id,
-    });
+      [knowledgeBaseId, dragData, id, isFolder, setCurrentDrag],
+    );
+
+    const handleDragEnd = useCallback(() => {
+      setIsDragging(false);
+    }, []);
+
+    const handleDragOver = useCallback(
+      (e: React.DragEvent) => {
+        if (!isFolder || !isDragActive) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        setIsOver(true);
+      },
+      [isFolder, isDragActive],
+    );
+
+    const handleDragLeave = useCallback(() => {
+      setIsOver(false);
+    }, []);
 
     const cardRef = useRef<HTMLDivElement>(null);
-
-    const setNodeRef = (node: HTMLElement | null) => {
-      setDraggableRef(node);
-      setDroppableRef(node);
-      cardRef.current = node as HTMLDivElement;
-    };
-
-    const dndStyle = {
-      transform: CSS.Translate.toString(transform),
-    };
     const [isInView, setIsInView] = useState(false);
 
     // Use Intersection Observer to detect when card enters viewport
@@ -327,10 +354,14 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
           isDragging && styles.dragging,
           isOver && styles.dragOver,
         )}
-        ref={setNodeRef}
-        style={dndStyle}
-        {...attributes}
-        {...listeners}
+        data-drop-target-id={id}
+        data-is-folder={isFolder}
+        draggable={!!knowledgeBaseId}
+        onDragEnd={handleDragEnd}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDragStart={handleDragStart}
+        ref={cardRef}
       >
         <div
           className={cx('checkbox', styles.checkbox)}

@@ -48,6 +48,7 @@ const Head = memo<{ id: string }>(({ id }) => {
       fileType: 'custom/folder',
       isFolder: true,
       name: 'Root',
+      targetId: null,
     },
     disabled: !isDragActive,
     id: ROOT_DROP_ID,

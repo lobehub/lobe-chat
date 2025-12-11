@@ -48,6 +48,7 @@ export const useToggleRightPanelHotkey = () => {
   });
 };
 
+// CMDK
 export const useCommandPaletteHotkey = () => {
   const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
 
@@ -55,8 +56,6 @@ export const useCommandPaletteHotkey = () => {
     enableOnContentEditable: true,
   });
 };
-
-// 注册聚合
 
 export const useRegisterGlobalHotkeys = () => {
   // 全局自动注册不需要 enableScope
