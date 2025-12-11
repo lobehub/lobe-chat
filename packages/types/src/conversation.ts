@@ -103,10 +103,23 @@ export interface MessageMapContext {
  *   sourceMessageId: 'msg-1',
  *   threadType: ThreadType.Standalone,
  * };
+ *
+ * // Group conversation
+ * const groupContext: ConversationContext = {
+ *   agentId: 'agent-1',
+ *   groupId: 'group-1',
+ *   topicId: 'topic-1',
+ *   scope: 'group',
+ * };
  * ```
  */
 export interface ConversationContext {
   agentId: string;
+  /**
+   * Group ID for group conversations
+   * Used when scope is 'group' or 'group_agent'
+   */
+  groupId?: string;
   /**
    * Whether this is creating a new conversation (new topic or new thread)
    * Used for optimistic updates
@@ -122,7 +135,7 @@ export interface ConversationContext {
    */
   scope?: MessageMapScope;
   /**
-   * Session or group ID
+   * @deprecated Use agentId for agent sessions. This field is kept for backward compatibility.
    */
   sessionId?: string;
   /**
