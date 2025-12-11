@@ -151,7 +151,6 @@ export const useCreateMenuItems = () => {
         await refreshAgentList();
         await loadGroups();
 
-        message.success({ content: t('sessionGroup.createGroupSuccess') });
         return true;
       } catch (error) {
         console.error('Failed to create group from template:', error);
@@ -195,7 +194,6 @@ export const useCreateMenuItems = () => {
           selectedAgents,
         );
 
-        message.success({ content: t('sessionGroup.createGroupSuccess') });
         return true;
       } catch (error) {
         console.error('Failed to create group:', error);

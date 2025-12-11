@@ -102,7 +102,6 @@ export class ChatGroupModel {
       agentId,
       chatGroupId: group.id,
       order: index,
-      role: 'assistant',
       userId: this.userId,
     }));
 

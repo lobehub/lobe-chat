@@ -188,7 +188,6 @@ export const useSessionGroupMenuItems = () => {
                   },
                   selectedAgents,
                 );
-                message.success({ content: t('sessionGroup.createGroupSuccess') });
               } catch (error) {
                 console.error('Failed to create group:', error);
                 message.error({ content: t('sessionGroup.createGroupFailed') });
@@ -273,7 +272,6 @@ export const useSessionGroupMenuItems = () => {
           memberAgentIds,
         );
 
-        message.success({ content: t('sessionGroup.createGroupSuccess') });
         return true;
       } catch (error) {
         console.error('Failed to create group from template:', error);
@@ -318,7 +316,6 @@ export const useSessionGroupMenuItems = () => {
           selectedAgents,
         );
 
-        message.success({ content: t('sessionGroup.createGroupSuccess') });
         return true;
       } catch (error) {
         console.error('Failed to create group:', error);

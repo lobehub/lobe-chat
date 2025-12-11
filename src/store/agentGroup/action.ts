@@ -71,7 +71,7 @@ export const chatGroupAction: StateCreator<
     createGroup: async (newGroup, agentIds, silent = false) => {
       const { switchSession } = getSessionStoreState();
 
-      const group = await chatGroupService.createGroup(newGroup);
+      const { group } = await chatGroupService.createGroup(newGroup);
 
       if (agentIds && agentIds.length > 0) {
         await chatGroupService.addAgentsToGroup(group.id, agentIds);
