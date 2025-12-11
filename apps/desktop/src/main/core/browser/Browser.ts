@@ -2,14 +2,20 @@ import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-c
 import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
+  session as electronSession,
   ipcMain,
   nativeTheme,
+  net,
   screen,
 } from 'electron';
 import { join } from 'node:path';
 
 import { buildDir, preloadDir, resourcesDir } from '@/const/dir';
-import { isDev, isMac, isWindows } from '@/const/env';
+import { OFFICIAL_CLOUD_SERVER, isDev, isMac, isWindows } from '@/const/env';
+import {
+  REMOTE_REQUEST_EXCLUDE_PREFIXES,
+  REMOTE_REQUEST_ROUTE_PREFIXES,
+} from '@/const/remoteRequest';
 import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
@@ -18,12 +24,15 @@ import {
   THEME_CHANGE_DELAY,
   TITLE_BAR_HEIGHT,
 } from '@/const/theme';
+import RemoteServerConfigCtr from '@/controllers/RemoteServerConfigCtr';
 import { createLogger } from '@/utils/logger';
 
 import type { App } from '../App';
 
 // Create logger
 const logger = createLogger('core:Browser');
+// Track sessions that already have protocol handlers installed to avoid duplicates
+const protocolHandledSessions = new WeakSet<Electron.Session>();
 
 export interface BrowserWindowOpts extends BrowserWindowConstructorOptions {
   devTools?: boolean;
@@ -357,6 +366,8 @@ export default class Browser {
 
     // Setup CORS bypass for local file server
     this.setupCORSBypass(browserWindow);
+    // Setup request hook for remote server sync (base URL rewrite + OIDC header)
+    this.setupRemoteServerRequestHook(browserWindow);
 
     logger.debug(`[${this.identifier}] Initiating placeholder and URL loading sequence.`);
     this.loadPlaceholder().then(() => {
@@ -521,5 +532,170 @@ export default class Browser {
     });
 
     logger.debug(`[${this.identifier}] CORS bypass setup completed`);
+  }
+
+  /**
+   * Rewrite tRPC requests to remote server and inject OIDC token via webRequest hooks.
+   * Replaces the previous proxyTRPCRequest IPC forwarding.
+   */
+  private setupRemoteServerRequestHook(browserWindow: BrowserWindow) {
+    const session = browserWindow.webContents.session;
+    const remoteServerConfigCtr = this.app.getController(RemoteServerConfigCtr);
+    const logPrefix = `[${this.identifier}] RemoteServerRequestHook`;
+
+    // Guard to ensure hooks are registered only once per session
+    const targetSession = session || electronSession.defaultSession;
+    if (!targetSession || protocolHandledSessions.has(targetSession)) return;
+
+    // Cache remote server config to avoid repeated async calls
+    let cachedConfig: { remoteServerUrl: string; active: boolean } | null = null;
+    let lastConfigCheck = 0;
+    const CONFIG_CACHE_TTL = 5000; // 5 seconds cache
+
+    const shouldHandle = async () => {
+      const now = Date.now();
+      // Use cache if available and fresh
+      if (cachedConfig && cachedConfig.active && now - lastConfigCheck < CONFIG_CACHE_TTL) {
+        return cachedConfig;
+      }
+
+      const config = await remoteServerConfigCtr.getRemoteServerConfig();
+      if (!config.active) {
+        cachedConfig = { active: false, remoteServerUrl: '' };
+        lastConfigCheck = now;
+        return null;
+      }
+
+      const remoteServerUrl = config.remoteServerUrl || OFFICIAL_CLOUD_SERVER;
+      if (config.storageMode === 'selfHost' && !remoteServerUrl) {
+        cachedConfig = { active: false, remoteServerUrl: '' };
+        lastConfigCheck = now;
+        return null;
+      }
+
+      cachedConfig = { active: true, remoteServerUrl };
+      lastConfigCheck = now;
+      return cachedConfig;
+    };
+
+    const isProxyPath = (pathname: string) =>
+      REMOTE_REQUEST_ROUTE_PREFIXES.some((p) => pathname.startsWith(p)) &&
+      !REMOTE_REQUEST_EXCLUDE_PREFIXES.some((p) => pathname.startsWith(p));
+
+    const rewriteUrl = async (rawUrl: string) => {
+      const cfg = await shouldHandle();
+      if (!cfg) return;
+
+      const requestUrl = new URL(rawUrl);
+      const pathname = requestUrl.pathname;
+      if (!isProxyPath(pathname)) return;
+
+      const remoteBase = new URL(cfg.remoteServerUrl);
+      if (requestUrl.origin === remoteBase.origin) return;
+
+      const rewrittenUrl = new URL(requestUrl.pathname + requestUrl.search, remoteBase).toString();
+      logger.debug(`${logPrefix} rewrite ${rawUrl} -> ${rewrittenUrl}`);
+      return rewrittenUrl;
+    };
+
+    // Transparent rewrite via protocol handlers (no HTTP 302)
+    const registerProtocolHandlers = async () => {
+      const proxyHandler = async (request: Request): Promise<Response | null> => {
+        try {
+          // Prevent recursive interception when we issue upstream fetch
+          if (request.headers.get('X-Lobe-Proxy') === '1') {
+            return net.fetch(request);
+          }
+
+          // Early synchronous filtering: Only process URLs that potentially need proxying
+          // This avoids async config checks for most requests (static assets, etc.)
+          const url = new URL(request.url);
+          if (!isProxyPath(url.pathname)) {
+            return net.fetch(request);
+          }
+
+          const rewrittenUrl = await rewriteUrl(request.url);
+          if (!rewrittenUrl) {
+            // Pass through untouched requests to the default stack
+            return net.fetch(request);
+          }
+
+          const headers = new Headers(request.headers);
+          headers.set('X-Lobe-Proxy', '1'); // mark upstream fetch to bypass handler
+          const token = await remoteServerConfigCtr.getAccessToken();
+          if (token) headers.set('Oidc-Auth', token);
+
+          const requestInit: RequestInit = {
+            method: request.method,
+            headers,
+          };
+
+          // Only forward body for non-GET/HEAD requests
+          if (request.method !== 'GET' && request.method !== 'HEAD') {
+            requestInit.body = request.body ?? undefined;
+          }
+
+          const upstreamResponse = await net.fetch(rewrittenUrl, requestInit);
+          const responseHeaders = new Headers(upstreamResponse.headers);
+
+          const allowOrigin = request.headers.get('Origin') || undefined;
+          if (allowOrigin) {
+            responseHeaders.set('Access-Control-Allow-Origin', allowOrigin);
+            responseHeaders.set('Access-Control-Allow-Credentials', 'true');
+          }
+          responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+          responseHeaders.set('Access-Control-Allow-Headers', '*');
+
+          return new Response(upstreamResponse.body, {
+            status: upstreamResponse.status,
+            statusText: upstreamResponse.statusText,
+            headers: responseHeaders,
+          });
+        } catch (error) {
+          logger.error(`${logPrefix} protocol.handle error:`, error);
+          return null;
+        }
+      };
+
+      await Promise.all(
+        ['http', 'https'].map(async (scheme) => {
+          try {
+            await targetSession.protocol.handle(scheme, proxyHandler);
+            logger.debug(`${logPrefix} protocol handler registered for ${scheme}`);
+          } catch (error) {
+            logger.error(`${logPrefix} failed to register protocol handler for ${scheme}:`, error);
+          }
+        }),
+      );
+    };
+
+    void registerProtocolHandlers();
+    protocolHandledSessions.add(targetSession);
+
+    // // Inject Oidc-Auth header (single handler)
+    // targetSession.webRequest.onBeforeSendHeaders({ urls: ['*://*/*'] }, (details, callback) => {
+    //   (async () => {
+    //     try {
+    //       const injected = await handleInjectHeaders(details);
+    //       callback({ requestHeaders: injected ?? details.requestHeaders });
+    //     } catch (error) {
+    //       logger.error(`${logPrefix} onBeforeSendHeaders error:`, error);
+    //       callback({ requestHeaders: details.requestHeaders });
+    //     }
+    //   })();
+    // });
+
+    // Add CORS headers for proxied routes (to allow renderer access)
+    // targetSession.webRequest.onHeadersReceived({ urls: ['*://*/*'] }, (details, callback) => {
+    //   (async () => {
+    //     try {
+    //       const headers = await handleCorsHeaders(details);
+    //       callback({ responseHeaders: headers });
+    //     } catch (error) {
+    //       logger.error(`${logPrefix} onHeadersReceived error:`, error);
+    //       callback({ responseHeaders: details.responseHeaders });
+    //     }
+    //   })();
+    // });
   }
 }
