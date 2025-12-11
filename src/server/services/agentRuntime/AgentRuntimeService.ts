@@ -12,8 +12,8 @@ import { LobeChatDatabase } from '@/database/type';
 import {
   AgentRuntimeCoordinator,
   type AgentRuntimeCoordinatorOptions,
+  StreamEventManager,
 } from '@/server/modules/AgentRuntime';
-import { InMemoryStreamEventManager } from '@/server/modules/AgentRuntime/InMemoryStreamEventManager';
 import {
   RuntimeExecutorContext,
   createRuntimeExecutors,
@@ -51,6 +51,8 @@ export interface AgentRuntimeServiceOptions {
   queueService?: QueueService | null;
   /**
    * 自定义 StreamEventManager
+   * 默认使用 Redis 实现的 StreamEventManager
+   * 测试环境可以传入 InMemoryStreamEventManager
    */
   streamEventManager?: IStreamEventManager;
 }
@@ -61,11 +63,12 @@ export interface AgentRuntimeServiceOptions {
  *
  * 支持依赖注入，可以使用内存实现进行测试：
  * ```ts
+ * // 生产环境（默认使用 Redis）
+ * const service = new AgentRuntimeService(db, userId);
+ *
+ * // 测试环境
  * const service = new AgentRuntimeService(db, userId, {
- *   coordinatorOptions: {
- *     stateManager: new InMemoryAgentStateManager(),
- *     streamEventManager: new InMemoryStreamEventManager(),
- *   },
+ *   streamEventManager: new InMemoryStreamEventManager(),
  *   queueService: null, // 禁用队列，使用 executeSync
  * });
  * ```
@@ -85,11 +88,15 @@ export class AgentRuntimeService {
   private messageModel: MessageModel;
 
   constructor(db: LobeChatDatabase, userId: string, options?: AgentRuntimeServiceOptions) {
-    this.coordinator = new AgentRuntimeCoordinator(options?.coordinatorOptions);
+    // Default to Redis-based StreamEventManager for production
     this.streamManager =
       options?.streamEventManager ??
       options?.coordinatorOptions?.streamEventManager ??
-      new InMemoryStreamEventManager();
+      new StreamEventManager();
+    this.coordinator = new AgentRuntimeCoordinator({
+      ...options?.coordinatorOptions,
+      streamEventManager: this.streamManager,
+    });
     this.queueService =
       options?.queueService === null ? null : (options?.queueService ?? new QueueService());
     this.userId = userId;

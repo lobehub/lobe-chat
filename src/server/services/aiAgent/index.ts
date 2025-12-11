@@ -1,7 +1,15 @@
 import { AgentRuntimeContext } from '@lobechat/agent-runtime';
 import { LobeChatDatabase } from '@lobechat/database';
+import type {
+  ExecAgentParams,
+  ExecAgentResult,
+  ExecGroupAgentParams,
+  ExecGroupAgentResult,
+} from '@lobechat/types';
+import { nanoid } from '@lobechat/utils';
 import debug from 'debug';
 
+import { LOADING_FLAT } from '@/const/message';
 import { AgentModel } from '@/database/models/agent';
 import { MessageModel } from '@/database/models/message';
 import { PluginModel } from '@/database/models/plugin';
@@ -12,43 +20,10 @@ import {
   serverMessagesEngine,
 } from '@/server/modules/Mecha';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
-import { nanoid } from '@/utils/uuid';
 
 const log = debug('lobe-server:ai-agent-service');
 
-export interface ExecAgentParams {
-  /** The agent ID to run (either agentId or slug is required) */
-  agentId?: string;
-  /** Application context for message storage */
-  appContext?: {
-    groupId?: string | null;
-    scope?: string | null;
-    sessionId?: string;
-    threadId?: string | null;
-    topicId?: string | null;
-  };
-  /** Whether to auto-start execution after creating operation */
-  autoStart?: boolean;
-  /** Optional existing message IDs to include in context */
-  existingMessageIds?: string[];
-  /** The user input/prompt */
-  prompt: string;
-  /** The agent slug to run (either agentId or slug is required) */
-  slug?: string;
-}
 
-export interface ExecAgentResult {
-  agentId: string;
-  autoStarted: boolean;
-  createdAt: string;
-  message: string;
-  messageId?: string;
-  operationId: string;
-  status: string;
-  success: boolean;
-  timestamp: string;
-  topicId: string;
-}
 
 /**
  * AI Agent Service
@@ -206,13 +181,25 @@ export class AiAgentService {
     });
     log('execAgent: created user message %s', userMessageRecord.id);
 
+    // 8. Create assistant message placeholder in database
+    const assistantMessageRecord = await this.messageModel.create({
+      agentId: resolvedAgentId,
+      content: LOADING_FLAT,
+      model,
+      parentId: userMessageRecord.id,
+      provider,
+      role: 'assistant',
+      topicId,
+    });
+    log('execAgent: created assistant message %s', assistantMessageRecord.id);
+
     // Create user message object for processing
     const userMessage = { content: prompt, role: 'user' as const };
 
     // Combine history messages with user message
     const allMessages = [...historyMessages, userMessage];
 
-    // 8. Process messages using Server ContextEngineering
+    // 9. Process messages using Server ContextEngineering
     const processedMessages = await serverMessagesEngine({
       capabilities: {
         isCanUseFC: isModelSupportToolUse,
@@ -247,19 +234,18 @@ export class AiAgentService {
 
     log('execAgent: processed %d messages', processedMessages.length);
 
-    // 9. Generate operation ID: agentId_topicId_random
-    let prefix = `agent_${Date.now()}`;
-    if (agentId && topicId) prefix = `${agentId}_${topicId}`;
+    // 10. Generate operation ID: agt_{timestamp}_{agentId}_{topicId}_{random}
+    const timestamp = Date.now();
+    const operationId = `op_${timestamp}_${resolvedAgentId}_${topicId}_${nanoid(8)}`;
 
-    // Generate runtime operation ID: agentId_topicId_random
-    const operationId = `${prefix}_${nanoid(8)}`;
-
-    // 10. Create initial context
+    // 11. Create initial context
     const initialContext: AgentRuntimeContext = {
       payload: {
+        // Pass assistant message ID so agent runtime knows which message to update
+        assistantMessageId: assistantMessageRecord.id,
         isFirstMessage: true,
         message: [{ content: prompt }],
-        // Pass user message ID as parentMessageId for assistant message creation
+        // Pass user message ID as parentMessageId for reference
         parentMessageId: userMessageRecord.id,
         // Include tools for initial LLM call
         tools,
@@ -273,7 +259,7 @@ export class AiAgentService {
       },
     };
 
-    // 11. Create operation using AgentRuntimeService
+    // 12. Create operation using AgentRuntimeService
     const result = await this.agentRuntimeService.createOperation({
       agentConfig,
       appContext: {
@@ -296,6 +282,7 @@ export class AiAgentService {
 
     return {
       agentId: resolvedAgentId,
+      assistantMessageId: assistantMessageRecord.id,
       autoStarted: result.autoStarted,
       createdAt: new Date().toISOString(),
       message: 'Agent operation created successfully',
@@ -305,6 +292,67 @@ export class AiAgentService {
       success: true,
       timestamp: new Date().toISOString(),
       topicId,
+      userMessageId: userMessageRecord.id,
+    };
+  }
+
+  /**
+   * Execute Group Agent (Supervisor) in a single call
+   *
+   * This method handles Group-specific logic (topic with groupId) and delegates
+   * the core agent execution to execAgent.
+   *
+   * Flow:
+   * 1. Create topic with groupId (if needed)
+   * 2. Delegate to execAgent for the rest
+   */
+  async execGroupAgent(params: ExecGroupAgentParams): Promise<ExecGroupAgentResult> {
+    const { agentId, groupId, message, topicId: inputTopicId, newTopic } = params;
+
+    log(
+      'execGroupAgent: agentId=%s, groupId=%s, message=%s',
+      agentId,
+      groupId,
+      message.slice(0, 50),
+    );
+
+    // 1. Create topic with groupId if needed
+    let topicId = inputTopicId;
+    let isCreateNewTopic = false;
+
+    // Create new topic when:
+    // - newTopic is explicitly provided, OR
+    // - no topicId is provided (default behavior for group chat)
+    if (newTopic || !inputTopicId) {
+      const topicTitle =
+        newTopic?.title || message.slice(0, 50) + (message.length > 50 ? '...' : '');
+      const topicItem = await this.topicModel.create({
+        agentId,
+        groupId,
+        messages: newTopic?.topicMessageIds,
+        title: topicTitle,
+      });
+      topicId = topicItem.id;
+      isCreateNewTopic = true;
+      log('execGroupAgent: created new topic %s with groupId %s', topicId, groupId);
+    }
+
+    // 2. Delegate to execAgent with groupId in appContext
+    const result = await this.execAgent({
+      agentId,
+      appContext: { groupId, topicId },
+      autoStart: true,
+      prompt: message,
+    });
+
+    log('execGroupAgent: delegated to execAgent, operationId=%s', result.operationId);
+
+    return {
+      isCreateNewTopic,
+      operationId: result.operationId,
+      topicId: result.topicId,
     };
   }
 }
+
+export {type ExecAgentParams, type ExecAgentResult, type ExecGroupAgentParams, type ExecGroupAgentResult} from '@lobechat/types';

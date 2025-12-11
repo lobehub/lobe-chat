@@ -242,14 +242,11 @@ export const chatTopic: StateCreator<
 
     return useClientDataSWR<{ items: ChatTopic[]; total: number }>(
       enable && hasValidContainer
-        ? [SWR_USE_FETCH_TOPIC, { agentId, groupId, isInbox, pageSize }]
+        ? [SWR_USE_FETCH_TOPIC, containerKey, { isInbox, pageSize }]
         : null,
-      async ([, params]: [
-        string,
-        { agentId?: string; groupId?: string; isInbox?: boolean; pageSize: number },
-      ]) => {
-        const { agentId, groupId, isInbox, pageSize } = params;
-        const key = topicMapKey({ agentId, groupId });
+      async ([, key, params]: [string, string, { isInbox?: boolean; pageSize: number }]) => {
+        const { isInbox, pageSize } = params;
+        // agentId and groupId come from the outer scope closure
         if (!agentId && !groupId) return { items: [], total: 0 };
 
         const currentData = get().topicDataMap[key];
@@ -434,18 +431,15 @@ export const chatTopic: StateCreator<
     await refreshTopic();
   },
   removeTopic: async (id) => {
-    const { activeAgentId, activeTopicId, switchTopic, refreshTopic } = get();
-    if (!activeAgentId) return;
-
-    // remove messages in the topic
-    // TODO: Need to remove because server service don't need to call it
-    await messageService.removeMessagesByAssistant(activeAgentId, id);
+    const { activeAgentId, activeGroupId, activeTopicId, switchTopic, refreshTopic } = get();
+    // Allow deletion when either agentId or groupId is active
+    if (!activeAgentId && !activeGroupId) return;
 
     // remove topic
     await topicService.removeTopic(id);
     await refreshTopic();
 
-    // switch bach to default topic
+    // switch back to default topic
     if (activeTopicId === id) switchTopic();
   },
   removeUnstarredTopic: async () => {
@@ -468,15 +462,11 @@ export const chatTopic: StateCreator<
   },
   refreshTopic: async () => {
     const { activeAgentId, activeGroupId } = get();
-    // Use matcher function to match SWR keys with the same agentId/groupId
-    // Key format: [SWR_USE_FETCH_TOPIC, { agentId, groupId, isInbox, pageSize }]
+    // Use topicMapKey to generate the same key used in useFetchTopics
+    // Key format: [SWR_USE_FETCH_TOPIC, containerKey, { isInbox, pageSize }]
+    const containerKey = topicMapKey({ agentId: activeAgentId, groupId: activeGroupId });
     await mutate(
-      (key) =>
-        Array.isArray(key) &&
-        key[0] === SWR_USE_FETCH_TOPIC &&
-        typeof key[1] === 'object' &&
-        key[1]?.agentId === activeAgentId &&
-        key[1]?.groupId === activeGroupId,
+      (key) => Array.isArray(key) && key[0] === SWR_USE_FETCH_TOPIC && key[1] === containerKey,
     );
   },
 

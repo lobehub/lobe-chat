@@ -36,7 +36,17 @@ export interface MessageMapKeyInput {
  * Handles mapping from agentId/threadId to scopeId/subTopicId format
  */
 const toMessageMapContext = (input: MessageMapKeyInput): MessageMapContext => {
-  const { agentId, topicId, threadId, isNew, scope } = input;
+  const { agentId, topicId, threadId, isNew, scope, groupId } = input;
+
+  // If groupId is present, it's a group conversation
+  if (groupId) {
+    return {
+      isNew,
+      scope: scope ?? 'group',
+      scopeId: groupId,
+      topicId,
+    };
+  }
 
   // If threadId is present, it's an existing thread - auto-detect thread scope
   if (threadId) {

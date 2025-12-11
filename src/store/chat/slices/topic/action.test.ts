@@ -159,7 +159,6 @@ describe('topic action', () => {
       );
       expect(topicId).toEqual('new-topic-id');
     });
-
   });
   describe('refreshTopic', () => {
     beforeEach(() => {
@@ -193,22 +192,22 @@ describe('topic action', () => {
       expect(mutate).toHaveBeenCalledWith(expect.any(Function));
 
       // Verify the matcher function works correctly
+      // Key format: [SWR_USE_FETCH_TOPIC, containerKey, { isInbox, pageSize }]
       const matcherFn = (mutate as Mock).mock.calls[0][0];
-      // Should match key with correct agentId
+      const containerKey = `agent_${activeAgentId}`;
+
+      // Should match key with correct containerKey
       expect(
-        matcherFn([
-          'SWR_USE_FETCH_TOPIC',
-          { agentId: activeAgentId, isInbox: false, pageSize: 20 },
-        ]),
+        matcherFn(['SWR_USE_FETCH_TOPIC', containerKey, { isInbox: false, pageSize: 20 }]),
       ).toBe(true);
-      // Should not match key with different agentId
+      // Should not match key with different containerKey
       expect(
-        matcherFn(['SWR_USE_FETCH_TOPIC', { agentId: 'other-id', isInbox: false, pageSize: 20 }]),
+        matcherFn(['SWR_USE_FETCH_TOPIC', 'agent_other-id', { isInbox: false, pageSize: 20 }]),
       ).toBe(false);
       // Should not match non-array keys
       expect(matcherFn('some-string')).toBe(false);
       // Should not match keys with wrong prefix
-      expect(matcherFn(['OTHER_KEY', { agentId: activeAgentId }])).toBe(false);
+      expect(matcherFn(['OTHER_KEY', containerKey, {}])).toBe(false);
     });
 
     it('should handle errors during refreshing topics', async () => {
@@ -272,7 +271,9 @@ describe('topic action', () => {
         expect(result.current.data).toEqual({ items: topics, total: topics.length });
       });
       // Verify topics are stored in topicDataMap with correct key
-      expect(useChatStore.getState().topicDataMap[topicMapKey({ agentId: sessionId })]?.items).toEqual(topics);
+      expect(
+        useChatStore.getState().topicDataMap[topicMapKey({ agentId: sessionId })]?.items,
+      ).toEqual(topics);
     });
   });
   describe('useSearchTopics', () => {
@@ -335,7 +336,6 @@ describe('topic action', () => {
       // Verify that the refreshMessages was called to update the messages
       expect(refreshMessagesSpy).toHaveBeenCalled();
     });
-
   });
   describe('removeSessionTopics', () => {
     it('should remove all topics from the current session and refresh the topic list', async () => {
@@ -368,7 +368,12 @@ describe('topic action', () => {
       await act(async () => {
         useChatStore.setState({
           topicDataMap: {
-            [topicMapKey({ groupId })]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+            [topicMapKey({ groupId })]: {
+              items: topics,
+              total: topics.length,
+              currentPage: 0,
+              hasMore: false,
+            },
           },
         });
       });
@@ -418,12 +423,11 @@ describe('topic action', () => {
         await result.current.removeTopic(topicId);
       });
 
-      expect(messageService.removeMessagesByAssistant).toHaveBeenCalledWith(activeAgentId, topicId);
       expect(topicService.removeTopic).toHaveBeenCalledWith(topicId);
       expect(refreshTopicSpy).toHaveBeenCalled();
       expect(switchTopicSpy).toHaveBeenCalled();
     });
-    it('should remove a specific topic and its messages, then not refresh the topic list', async () => {
+    it('should remove a specific topic and its messages, then not switch topic if not active', async () => {
       const topicId = 'topic-1';
       const { result } = renderHook(() => useChatStore());
       const activeAgentId = 'test-session-id';
@@ -439,10 +443,48 @@ describe('topic action', () => {
         await result.current.removeTopic(topicId);
       });
 
-      expect(messageService.removeMessagesByAssistant).toHaveBeenCalledWith(activeAgentId, topicId);
       expect(topicService.removeTopic).toHaveBeenCalledWith(topicId);
       expect(refreshTopicSpy).toHaveBeenCalled();
       expect(switchTopicSpy).not.toHaveBeenCalled();
+    });
+
+    it('should remove topic when activeGroupId is set (group scenario)', async () => {
+      const topicId = 'topic-1';
+      const { result } = renderHook(() => useChatStore());
+      const activeGroupId = 'test-group-id';
+
+      await act(async () => {
+        useChatStore.setState({ activeGroupId, activeTopicId: topicId });
+      });
+
+      const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
+      const switchTopicSpy = vi.spyOn(result.current, 'switchTopic');
+
+      await act(async () => {
+        await result.current.removeTopic(topicId);
+      });
+
+      expect(topicService.removeTopic).toHaveBeenCalledWith(topicId);
+      expect(refreshTopicSpy).toHaveBeenCalled();
+      expect(switchTopicSpy).toHaveBeenCalled();
+    });
+
+    it('should not remove topic when neither agentId nor groupId is active', async () => {
+      const topicId = 'topic-1';
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        useChatStore.setState({ activeAgentId: undefined, activeGroupId: undefined });
+      });
+
+      const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
+
+      await act(async () => {
+        await result.current.removeTopic(topicId);
+      });
+
+      expect(topicService.removeTopic).not.toHaveBeenCalled();
+      expect(refreshTopicSpy).not.toHaveBeenCalled();
     });
   });
   describe('removeUnstarredTopic', () => {
@@ -458,7 +500,12 @@ describe('topic action', () => {
         useChatStore.setState({
           activeAgentId: 'abc',
           topicDataMap: {
-            [topicMapKey({ agentId: 'abc' })]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+            [topicMapKey({ agentId: 'abc' })]: {
+              items: topics,
+              total: topics.length,
+              currentPage: 0,
+              hasMore: false,
+            },
           },
         });
       });
@@ -500,7 +547,12 @@ describe('topic action', () => {
       await act(async () => {
         useChatStore.setState({
           topicDataMap: {
-            [topicMapKey({ agentId: 'test' })]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+            [topicMapKey({ agentId: 'test' })]: {
+              items: topics,
+              total: topics.length,
+              currentPage: 0,
+              hasMore: false,
+            },
           },
           activeAgentId: 'test',
         });
@@ -575,7 +627,12 @@ describe('topic action', () => {
         useChatStore.setState({
           activeAgentId: 'abc',
           topicDataMap: {
-            [topicMapKey({ agentId: 'abc' })]: { items: topics, total: topics.length, currentPage: 0, hasMore: false },
+            [topicMapKey({ agentId: 'abc' })]: {
+              items: topics,
+              total: topics.length,
+              currentPage: 0,
+              hasMore: false,
+            },
           },
         });
       });

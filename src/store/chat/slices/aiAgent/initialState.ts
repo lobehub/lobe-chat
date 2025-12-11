@@ -1,6 +1,6 @@
 export interface AgentOperationInfo {
   error?: string;
-  eventSource?: EventSource;
+  eventSource?: AbortController;
   lastEventId?: string;
   needsHumanInput?: boolean;
   operationId: string;

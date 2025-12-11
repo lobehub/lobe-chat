@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
 import { z } from 'zod';
 
+import { ConversationContext } from '../../conversation';
 import { UploadFileItem } from '../../files';
 import { MessageSemanticSearchChunk } from '../../rag';
 import { ChatMessageError, ChatMessageErrorSchema } from '../common/base';
@@ -105,13 +106,12 @@ export interface SendMessageParams {
 
 export interface SendGroupMessageParams {
   files?: UploadFileItem[];
-  groupId: string;
+  context: ConversationContext;
   message: string;
   /**
    * Additional metadata for the message (e.g., mentioned users)
    */
   metadata?: Record<string, any>;
-  onlyAddUserMessage?: boolean;
   /**
    * for group chat
    */
