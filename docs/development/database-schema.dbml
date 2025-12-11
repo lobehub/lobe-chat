@@ -1094,8 +1094,7 @@ table user_memories {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    summary_vector_1024 [name: 'user_memories_summary_vector_1024_index']
-    details_vector_1024 [name: 'user_memories_details_vector_1024_index']
+    user_id [name: 'user_memories_user_id_index']
   }
 }
 
@@ -1123,6 +1122,7 @@ table user_memories_contexts {
     title_vector [name: 'user_memories_contexts_title_vector_index']
     description_vector [name: 'user_memories_contexts_description_vector_index']
     type [name: 'user_memories_contexts_type_index']
+    user_id [name: 'user_memories_contexts_user_id_index']
   }
 }
 
@@ -1151,6 +1151,8 @@ table user_memories_experiences {
     action_vector [name: 'user_memories_experiences_action_vector_index']
     key_learning_vector [name: 'user_memories_experiences_key_learning_vector_index']
     type [name: 'user_memories_experiences_type_index']
+    user_id [name: 'user_memories_experiences_user_id_index']
+    user_memory_id [name: 'user_memories_experiences_user_memory_id_index']
   }
 }
 
@@ -1173,6 +1175,8 @@ table user_memories_identities {
   indexes {
     description_vector [name: 'user_memories_identities_description_vector_index']
     type [name: 'user_memories_identities_type_index']
+    user_id [name: 'user_memories_identities_user_id_index']
+    user_memory_id [name: 'user_memories_identities_user_memory_id_index']
   }
 }
 
@@ -1193,6 +1197,8 @@ table user_memories_preferences {
 
   indexes {
     conclusion_directives_vector [name: 'user_memories_preferences_conclusion_directives_vector_index']
+    user_id [name: 'user_memories_preferences_user_id_index']
+    user_memory_id [name: 'user_memories_preferences_user_memory_id_index']
   }
 }
 

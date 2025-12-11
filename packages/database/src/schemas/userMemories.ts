@@ -34,14 +34,7 @@ export const userMemories = pgTable(
     ...timestamps,
   },
   (table) => [
-    index('user_memories_summary_vector_1024_index').using(
-      'hnsw',
-      table.summaryVector1024.op('vector_cosine_ops'),
-    ),
-    index('user_memories_details_vector_1024_index').using(
-      'hnsw',
-      table.detailsVector1024.op('vector_cosine_ops'),
-    ),
+    index('user_memories_user_id_index').on(table.userId),
   ],
 );
 
@@ -84,6 +77,7 @@ export const userMemoriesContexts = pgTable(
       table.descriptionVector.op('vector_cosine_ops'),
     ),
     index('user_memories_contexts_type_index').on(table.type),
+    index('user_memories_contexts_user_id_index').on(table.userId),
   ],
 );
 
@@ -117,6 +111,8 @@ export const userMemoriesPreferences = pgTable(
       'hnsw',
       table.conclusionDirectivesVector.op('vector_cosine_ops'),
     ),
+    index('user_memories_preferences_user_id_index').on(table.userId),
+    index('user_memories_preferences_user_memory_id_index').on(table.userMemoryId),
   ],
 );
 
@@ -150,6 +146,8 @@ export const userMemoriesIdentities = pgTable(
       table.descriptionVector.op('vector_cosine_ops'),
     ),
     index('user_memories_identities_type_index').on(table.type),
+    index('user_memories_identities_user_id_index').on(table.userId),
+    index('user_memories_identities_user_memory_id_index').on(table.userMemoryId),
   ],
 );
 
@@ -196,6 +194,8 @@ export const userMemoriesExperiences = pgTable(
       table.keyLearningVector.op('vector_cosine_ops'),
     ),
     index('user_memories_experiences_type_index').on(table.type),
+    index('user_memories_experiences_user_id_index').on(table.userId),
+    index('user_memories_experiences_user_memory_id_index').on(table.userMemoryId),
   ],
 );
 
