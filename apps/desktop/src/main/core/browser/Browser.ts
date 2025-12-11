@@ -8,6 +8,7 @@ import {
   net,
   screen,
 } from 'electron';
+import console from 'node:console';
 import { join } from 'node:path';
 
 import { buildDir, preloadDir, resourcesDir } from '@/const/dir';
@@ -548,7 +549,7 @@ export default class Browser {
     if (!targetSession || protocolHandledSessions.has(targetSession)) return;
 
     // Cache remote server config to avoid repeated async calls
-    let cachedConfig: { remoteServerUrl: string; active: boolean } | null = null;
+    let cachedConfig: { active: boolean; remoteServerUrl: string } | null = null;
     let lastConfigCheck = 0;
     const CONFIG_CACHE_TTL = 5000; // 5 seconds cache
 
@@ -602,32 +603,35 @@ export default class Browser {
     const registerProtocolHandlers = async () => {
       const proxyHandler = async (request: Request): Promise<Response | null> => {
         try {
-          // Prevent recursive interception when we issue upstream fetch
-          if (request.headers.get('X-Lobe-Proxy') === '1') {
-            return net.fetch(request);
-          }
+          await remoteServerConfigCtr.getAccessToken();
+          const upstreamFetch = (input: string | Request, init?: RequestInit) =>
+            net.fetch(input, {
+              ...init,
+              // Electron extends RequestInit with bypassCustomProtocolHandlers
+              bypassCustomProtocolHandlers: true,
+            });
 
           // Early synchronous filtering: Only process URLs that potentially need proxying
           // This avoids async config checks for most requests (static assets, etc.)
           const url = new URL(request.url);
           if (!isProxyPath(url.pathname)) {
-            return net.fetch(request);
+            return upstreamFetch(request);
           }
 
           const rewrittenUrl = await rewriteUrl(request.url);
           if (!rewrittenUrl) {
             // Pass through untouched requests to the default stack
-            return net.fetch(request);
+            return upstreamFetch(request);
           }
 
           const headers = new Headers(request.headers);
-          headers.set('X-Lobe-Proxy', '1'); // mark upstream fetch to bypass handler
+
           const token = await remoteServerConfigCtr.getAccessToken();
           if (token) headers.set('Oidc-Auth', token);
 
           const requestInit: RequestInit = {
-            method: request.method,
             headers,
+            method: request.method,
           };
 
           // Only forward body for non-GET/HEAD requests
@@ -635,7 +639,7 @@ export default class Browser {
             requestInit.body = request.body ?? undefined;
           }
 
-          const upstreamResponse = await net.fetch(rewrittenUrl, requestInit);
+          const upstreamResponse = await upstreamFetch(rewrittenUrl, requestInit);
           const responseHeaders = new Headers(upstreamResponse.headers);
 
           const allowOrigin = request.headers.get('Origin') || undefined;
@@ -647,9 +651,9 @@ export default class Browser {
           responseHeaders.set('Access-Control-Allow-Headers', '*');
 
           return new Response(upstreamResponse.body, {
+            headers: responseHeaders,
             status: upstreamResponse.status,
             statusText: upstreamResponse.statusText,
-            headers: responseHeaders,
           });
         } catch (error) {
           logger.error(`${logPrefix} protocol.handle error:`, error);
