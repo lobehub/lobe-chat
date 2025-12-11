@@ -1,5 +1,3 @@
-import { useDraggable, useDroppable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
 import { Button, Icon, Tooltip } from '@lobehub/ui';
 import { App, Checkbox, Input } from 'antd';
 import { createStyles } from 'antd-style';
@@ -8,12 +6,15 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon, FileText, FolderIcon } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
+import {
+  useDragActive,
+  useDragState,
+} from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
@@ -36,7 +37,7 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
   return {
     checkbox: hover,
     container: css`
-      cursor: pointer;
+      cursor: grab;
       border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
 
       &:hover {
@@ -45,6 +46,10 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
         .${cx(hover)} {
           opacity: 1;
         }
+      }
+
+      &:active {
+        cursor: grabbing;
       }
 
       .chunk-tag {
@@ -63,6 +68,7 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
 
     dragging: css`
       opacity: 0.5;
+      will-change: transform;
     `,
 
     hover,
@@ -146,58 +152,92 @@ const FileListItem = memo<FileListItemProps>(
     const [renamingValue, setRenamingValue] = useState(name);
     const inputRef = useRef<any>(null);
 
-    const isSupportedForChunking = !isChunkingUnsupported(fileType);
-    const isPage = sourceType === 'document' || fileType === 'custom/document';
-    const isFolder = fileType === 'custom/folder';
-
     const libraryId = useResourceManagerStore((s) => s.libraryId);
     const isDragActive = useDragActive();
+    const { setCurrentDrag } = useDragState();
+    const [isDragging, setIsDragging] = useState(false);
+    const [isOver, setIsOver] = useState(false);
 
-    const {
-      attributes,
-      listeners,
-      setNodeRef: setDraggableRef,
-      transform,
-      isDragging,
-    } = useDraggable({
-      data: {
+    // Memoize computed values that don't change
+    const computedValues = useMemo(
+      () => ({
+        isSupportedForChunking: !isChunkingUnsupported(fileType),
+        isPage: sourceType === 'document' || fileType === 'custom/document',
+        isFolder: fileType === 'custom/folder',
+        emoji: (sourceType === 'document' || fileType === 'custom/document') ? metadata?.emoji : null,
+      }),
+      [fileType, sourceType, metadata?.emoji],
+    );
+
+    const { isSupportedForChunking, isPage, isFolder, emoji } = computedValues;
+
+    // Memoize drag data to prevent recreation
+    const dragData = useMemo(
+      () => ({
         fileType,
         isFolder,
         name,
         sourceType,
+      }),
+      [fileType, isFolder, name, sourceType],
+    );
+
+    // Native HTML5 drag event handlers
+    const handleDragStart = useCallback(
+      (e: React.DragEvent) => {
+        if (!libraryId) {
+          e.preventDefault();
+          return;
+        }
+
+        setIsDragging(true);
+        setCurrentDrag({
+          data: dragData,
+          id,
+          type: isFolder ? 'folder' : 'file',
+        });
+
+        // Set drag image to be transparent (we use custom overlay)
+        const img = new Image();
+        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+        e.dataTransfer.setDragImage(img, 0, 0);
+        e.dataTransfer.effectAllowed = 'move';
       },
-      disabled: !libraryId,
-      id,
-    });
+      [libraryId, dragData, id, isFolder, setCurrentDrag],
+    );
 
-    // Performance optimization: only activate droppable for folders during active drag
-    // Using disabled property instead of conditional hook call to comply with Rules of Hooks
-    const { setNodeRef: setDroppableRef, isOver } = useDroppable({
-      data: {
-        fileType,
-        isFolder,
-        name,
-        sourceType,
+    const handleDragEnd = useCallback(() => {
+      setIsDragging(false);
+    }, []);
+
+    const handleDragOver = useCallback(
+      (e: React.DragEvent) => {
+        if (!isFolder || !isDragActive) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        setIsOver(true);
       },
-      disabled: !isFolder || !isDragActive,
-      id,
-    });
+      [isFolder, isDragActive],
+    );
 
-    const setNodeRef = (node: HTMLElement | null) => {
-      setDraggableRef(node);
-      setDroppableRef(node);
-    };
+    const handleDragLeave = useCallback(() => {
+      setIsOver(false);
+    }, []);
 
-    const dndStyle = {
-      transform: CSS.Translate.toString(transform),
-    };
+    const handleDrop = useCallback(() => {
+      // Clear the highlight after drop
+      setIsOver(false);
+    }, []);
 
-    const emoji = isPage ? metadata?.emoji : null;
-
-    const displayTime =
-      dayjs().diff(dayjs(createdAt), 'd') < 7
-        ? dayjs(createdAt).fromNow()
-        : dayjs(createdAt).format('YYYY-MM-DD');
+    // Memoize display time calculation
+    const displayTime = useMemo(
+      () =>
+        dayjs().diff(dayjs(createdAt), 'd') < 7
+          ? dayjs(createdAt).fromNow()
+          : dayjs(createdAt).format('YYYY-MM-DD'),
+      [createdAt],
+    );
 
     const handleRenameStart = () => {
       setIsRenaming(true);
@@ -256,13 +296,17 @@ const FileListItem = memo<FileListItemProps>(
           isDragging && styles.dragging,
           isOver && styles.dragOver,
         )}
+        data-drop-target-id={id}
+        data-is-folder={String(isFolder)}
+        draggable={!!libraryId}
         height={48}
         horizontal
+        onDragEnd={handleDragEnd}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDragStart={handleDragStart}
+        onDrop={handleDrop}
         paddingInline={8}
-        ref={setNodeRef}
-        style={dndStyle}
-        {...attributes}
-        {...listeners}
       >
         <Flexbox
           align={'center'}
