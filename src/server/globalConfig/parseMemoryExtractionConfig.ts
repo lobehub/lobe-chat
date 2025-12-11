@@ -10,6 +10,15 @@ const MEMORY_LAYERS: GlobalMemoryLayer[] = ['context', 'experience', 'identity',
 const DEFAULT_GATE_MODEL = 'gpt-5-mini';
 const DEFAULT_PROVIDER = 'openai';
 
+const parseTokenLimitEnv = (value?: string) => {
+  if (value === undefined) return undefined;
+  const parsed = Number(value);
+
+  if (!Number.isFinite(parsed) || parsed <= 0) return undefined;
+
+  return Math.floor(parsed);
+};
+
 export type MemoryAgentConfig = MemoryAgentPublicConfig & { apiKey?: string; model: string };
 export type MemoryLayerExtractorConfig = MemoryLayerExtractorPublicConfig &
   MemoryAgentConfig & {
@@ -54,6 +63,9 @@ const parseLayerExtractorAgent = (fallbackModel: string): MemoryLayerExtractorCo
   const baseURL = process.env.MEMORY_USER_MEMORY_LAYER_EXTRACTOR_BASE_URL;
   const model = process.env.MEMORY_USER_MEMORY_LAYER_EXTRACTOR_MODEL || fallbackModel;
   const provider = process.env.MEMORY_USER_MEMORY_LAYER_EXTRACTOR_PROVIDER || DEFAULT_PROVIDER;
+  const contextLimit = parseTokenLimitEnv(
+    process.env.MEMORY_USER_MEMORY_LAYER_EXTRACTOR_CONTEXT_LIMIT,
+  );
 
   const layers = MEMORY_LAYERS.reduce<Record<GlobalMemoryLayer, string>>(
     (acc, layer) => {
@@ -69,6 +81,7 @@ const parseLayerExtractorAgent = (fallbackModel: string): MemoryLayerExtractorCo
   return {
     apiKey,
     baseURL,
+    contextLimit,
     layers,
     model,
     provider,
@@ -92,6 +105,7 @@ const parseEmbeddingAgent = (
   return {
     apiKey: process.env.MEMORY_USER_MEMORY_EMBEDDING_API_KEY ?? fallbackApiKey,
     baseURL: process.env.MEMORY_USER_MEMORY_EMBEDDING_BASE_URL,
+    contextLimit: parseTokenLimitEnv(process.env.MEMORY_USER_MEMORY_EMBEDDING_CONTEXT_LIMIT),
     model,
     provider,
   };

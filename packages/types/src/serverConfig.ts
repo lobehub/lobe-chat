@@ -14,6 +14,7 @@ export type GlobalMemoryLayer = 'context' | 'experience' | 'identity' | 'prefere
 
 export interface MemoryAgentPublicConfig {
   baseURL?: string;
+  contextLimit?: number;
   model?: string;
   provider?: string;
 }

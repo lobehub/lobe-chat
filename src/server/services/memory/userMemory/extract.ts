@@ -51,6 +51,7 @@ import { S3 } from '@/server/modules/S3';
 import type { GlobalMemoryLayer } from '@/types/serverConfig';
 import type { UserKeyVaults } from '@/types/user/settings';
 import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
+import { encodeAsync } from '@/utils/tokenizer';
 import { attributesCommon } from '@lobechat/observability-otel/node';
 
 const SOURCE_ALIAS_MAP: Record<string, MemoryExtractionSourceType> = {
@@ -297,6 +298,7 @@ export class MemoryExtractionExecutor {
     layerModels: Partial<Record<LayersEnum, string>>;
     observabilityS3: MemoryExtractionConfig['observabilityS3'];
   };
+  private readonly embeddingContextLimit?: number;
 
   private readonly runtimeCache = new Map<string, RuntimeBundle>();
   private readonly db = getServerDB();
@@ -320,6 +322,9 @@ export class MemoryExtractionExecutor {
       ),
       observabilityS3: privateConfig.observabilityS3,
     };
+
+    this.embeddingContextLimit =
+      privateConfig.embedding?.contextLimit ?? privateConfig.agentLayerExtractor.contextLimit;
   }
 
   static async create() {
@@ -346,25 +351,88 @@ export class MemoryExtractionExecutor {
     };
   }
 
+  private async countTokens(text: string) {
+    const normalized = text.trim();
+    if (!normalized) return 0;
+
+    return await encodeAsync(normalized);
+  }
+
+  private trimTextToTokenLimit(text: string, tokenLimit?: number) {
+    if (!tokenLimit || tokenLimit <= 0) return text;
+
+    const tokens = text.split(/\s+/);
+    if (tokens.length <= tokenLimit) return text;
+
+    return tokens.slice(Math.max(tokens.length - tokenLimit, 0)).join(' ');
+  }
+
+  private async trimConversationsToTokenLimit<T extends OpenAIChatMessage>(
+    conversations: (T & { createdAt: Date })[],
+    tokenLimit?: number,
+  ) {
+    if (!tokenLimit || tokenLimit <= 0) return conversations;
+
+    let remaining = tokenLimit;
+    const trimmed: (T & { createdAt: Date })[] = [];
+
+    for (let i = conversations.length - 1; i >= 0 && remaining > 0; i -= 1) {
+      const conversation = conversations[i];
+      // TODO: we might need to think about how to deal with non-string contents
+      // as multi-modal models become more prevalent
+      const content =
+        typeof conversation.content === 'string'
+          ? conversation.content
+          : JSON.stringify(conversation.content);
+
+      const tokenCount = await this.countTokens(content);
+      if (tokenCount <= remaining) {
+        trimmed.push(conversation);
+        remaining -= tokenCount;
+        continue;
+      }
+
+      const trimmedContent =
+        typeof conversation.content === 'string'
+          ? this.trimTextToTokenLimit(conversation.content, remaining)
+          : conversation.content;
+
+      if (trimmedContent && remaining > 0) {
+        trimmed.push({ ...conversation, content: trimmedContent });
+      }
+
+      break;
+    }
+
+    return trimmed.reverse();
+  }
+
   private async generateEmbeddings(
     runtimes: ModelRuntime,
     model: string,
     texts: Array<string | undefined | null>,
+    tokenLimit?: number,
   ) {
     const requests = texts
-      .map((text, index) => ({ index, text }))
-      .filter(
-        (item): item is { index: number; text: string } =>
-          typeof item.text === 'string' && item.text.trim().length > 0,
-      );
+      .map((text, index) => {
+        if (typeof text !== 'string') return null;
 
-    if (requests.length === 0) return texts.map(() => null);
+        const trimmed = this.trimTextToTokenLimit(text, tokenLimit);
+        if (!trimmed.trim()) return null;
+
+        return { index, text: trimmed };
+      })
+      .filter(Boolean);
+
+    if (requests.length === 0) {
+      return texts.map(() => null);
+    }
 
     try {
       const response = await runtimes.embeddings(
         {
           dimensions: DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
-          input: requests.map((item) => item.text),
+          input: requests.map((item) => item!.text),
           model,
         },
         { user: 'memory-extraction' },
@@ -390,6 +458,7 @@ export class MemoryExtractionExecutor {
     result: NonNullable<MemoryExtractionResult['outputs']['context']>,
     runtime: ModelRuntime,
     model: string,
+    tokenLimit: number | undefined,
     db: Awaited<ReturnType<typeof getServerDB>>,
   ) {
     const insertedIds: string[] = [];
@@ -400,6 +469,7 @@ export class MemoryExtractionExecutor {
         runtime,
         model,
         [item.summary, item.details, item.withContext?.description],
+        tokenLimit,
       );
       const baseMetadata = this.buildBaseMetadata(
         job,
@@ -448,6 +518,7 @@ export class MemoryExtractionExecutor {
     result: NonNullable<MemoryExtractionResult['outputs']['experience']>,
     runtime: ModelRuntime,
     model: string,
+    tokenLimit: number | undefined,
     db: Awaited<ReturnType<typeof getServerDB>>,
   ) {
     const insertedIds: string[] = [];
@@ -461,7 +532,7 @@ export class MemoryExtractionExecutor {
           item.withExperience?.situation,
           item.withExperience?.action,
           item.withExperience?.keyLearning,
-        ]);
+        ], tokenLimit);
       const baseMetadata = this.buildBaseMetadata(
         job,
         messageIds,
@@ -506,6 +577,7 @@ export class MemoryExtractionExecutor {
     result: NonNullable<MemoryExtractionResult['outputs']['preference']>,
     runtime: ModelRuntime,
     model: string,
+    tokenLimit: number | undefined,
     db: Awaited<ReturnType<typeof getServerDB>>,
   ) {
     const insertedIds: string[] = [];
@@ -516,6 +588,7 @@ export class MemoryExtractionExecutor {
         runtime,
         model,
         [item.summary, item.details, item.withPreference?.conclusionDirectives],
+        tokenLimit,
       );
       const baseMetadata = this.buildBaseMetadata(
         job,
@@ -559,6 +632,7 @@ export class MemoryExtractionExecutor {
     result: NonNullable<MemoryExtractionResult['outputs']['identity']>,
     runtime: ModelRuntime,
     model: string,
+    tokenLimit: number | undefined,
     db: Awaited<ReturnType<typeof getServerDB>>,
   ) {
     const insertedIds: string[] = [];
@@ -569,11 +643,12 @@ export class MemoryExtractionExecutor {
     const removeActions = result?.remove ?? [];
 
     for (const action of addActions) {
-      const [summaryVector, detailsVector, descriptionVector] = await this.generateEmbeddings(runtime, model, [
-        action.summary,
-        action.details,
-        action.withIdentity.description
-      ]);
+      const [summaryVector, detailsVector, descriptionVector] = await this.generateEmbeddings(
+        runtime,
+        model,
+        [action.summary, action.details, action.withIdentity.description],
+        tokenLimit,
+      );
       const metadata = this.buildBaseMetadata(
         job,
         messageIds,
@@ -610,7 +685,12 @@ export class MemoryExtractionExecutor {
       const { set } = action;
 
       const [summaryVector, detailsVector, descriptionVector] = set.withIdentity?.description
-        ? await this.generateEmbeddings(runtime, model, [set.summary, set.details, set.withIdentity.description])
+        ? await this.generateEmbeddings(
+            runtime,
+            model,
+            [set.summary, set.details, set.withIdentity.description],
+            tokenLimit,
+          )
         : [];
 
       await userMemoryModel.updateIdentityEntry({
@@ -684,14 +764,16 @@ export class MemoryExtractionExecutor {
     embeddingModel: string,
     userId: string,
     conversations: OpenAIChatMessage[],
+    tokenLimit?: number,
   ) {
     const db = await this.db;
     const userMemoryModel = new UserMemoryModel(db, userId);
     // TODO: make topK configurable
     const topK = 10;
-    const aggregatedContent = conversations
-      .map((msg) => `${msg.role.toUpperCase()}: ${msg.content}`)
-      .join('\n\n');
+    const aggregatedContent = this.trimTextToTokenLimit(
+      conversations.map((msg) => `${msg.role.toUpperCase()}: ${msg.content}`).join('\n\n'),
+      tokenLimit,
+    );
 
     const embeddings = await runtime.embeddings({
       dimensions: DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
@@ -825,10 +907,21 @@ export class MemoryExtractionExecutor {
             };
           }
 
-          const messageIds = conversations.map((item) => item.id);
+          const extractorContextLimit = this.privateConfig.agentLayerExtractor.contextLimit;
+          const embeddingContextLimit = this.embeddingContextLimit ?? extractorContextLimit;
+          const extractorConversations = await this.trimConversationsToTokenLimit(
+            conversations,
+            extractorContextLimit,
+          );
+          const embeddingConversations = await this.trimConversationsToTokenLimit(
+            conversations,
+            embeddingContextLimit,
+          );
+
+          const messageIds = extractorConversations.map((item) => item.id);
 
           const topicContextProvider = new LobeChatTopicContextProvider({
-            conversations: conversations,
+            conversations: extractorConversations,
             topic: topic,
             topicId: topic.id,
           });
@@ -848,7 +941,8 @@ export class MemoryExtractionExecutor {
             runtimes.embeddings,
             this.modelConfig.embeddingsModel,
             job.userId,
-            conversations,
+            embeddingConversations,
+            embeddingContextLimit,
           );
           const retrievedMemoryContextProvider = new RetrievalUserMemoryContextProvider({
             retrievedMemories,
@@ -866,6 +960,13 @@ export class MemoryExtractionExecutor {
             });
           const retrievedIdentityContext =
             await retrievedMemoryIdentitiesContextProvider.buildContext(extractionJob);
+          const trimmedRetrievedContexts = [topicContext.context, retrievalMemoryContext.context].map(
+            (context) => this.trimTextToTokenLimit(context, extractorContextLimit),
+          );
+          const trimmedRetrievedIdentitiesContext = this.trimTextToTokenLimit(
+            retrievedIdentityContext.context,
+            extractorContextLimit,
+          );
 
           const service = new MemoryExtractionService({
             config: this.modelConfig,
@@ -892,8 +993,8 @@ export class MemoryExtractionExecutor {
             contextProvider: topicContextProvider,
             language: language,
             resultRecorder: resultRecorder,
-            retrievedContexts: [topicContext.context, retrievalMemoryContext.context],
-            retrievedIdentitiesContext: retrievedIdentityContext.context,
+            retrievedContexts: trimmedRetrievedContexts,
+            retrievedIdentitiesContext: trimmedRetrievedIdentitiesContext,
 
             sessionDate: topic.updatedAt.toISOString(),
             // TODO: make topK configurable
@@ -1173,6 +1274,7 @@ export class MemoryExtractionExecutor {
         extraction.outputs.context,
         runtimes.embeddings,
         this.modelConfig.embeddingsModel,
+        this.embeddingContextLimit,
         db,
       );
       createdIds.push(...ids);
@@ -1187,6 +1289,7 @@ export class MemoryExtractionExecutor {
         extraction.outputs.experience,
         runtimes.embeddings,
         this.modelConfig.embeddingsModel,
+        this.embeddingContextLimit,
         db,
       );
       createdIds.push(...ids);
@@ -1201,6 +1304,7 @@ export class MemoryExtractionExecutor {
         extraction.outputs.preference,
         runtimes.embeddings,
         this.modelConfig.embeddingsModel,
+        this.embeddingContextLimit,
         db,
       );
       createdIds.push(...ids);
@@ -1215,6 +1319,7 @@ export class MemoryExtractionExecutor {
         extraction.outputs.identity,
         runtimes.embeddings,
         this.modelConfig.embeddingsModel,
+        this.embeddingContextLimit,
         db,
       );
       createdIds.push(...ids);
