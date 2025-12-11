@@ -7,10 +7,9 @@ import { useLoaderData } from 'react-router-dom';
 import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
-import { AssistantMarketSource, DiscoverTab } from '@/types/discover';
+import { AssistantMarketSource } from '@/types/discover';
 
 import NotFound from '../components/NotFound';
-import Breadcrumb from '../features/Breadcrumb';
 import { TocProvider } from '../features/Toc/useToc';
 import { DetailProvider } from './features/DetailProvider';
 import Details from './features/Details';
@@ -42,7 +41,6 @@ const AssistantDetailPage = memo<AssistantDetailPageProps>(({ mobile }) => {
   return (
     <TocProvider>
       <DetailProvider config={data}>
-        {!mobile && <Breadcrumb identifier={identifier} tab={DiscoverTab.Assistants} />}
         <Flexbox gap={16}>
           <Header mobile={mobile} />
           <Details mobile={mobile} />

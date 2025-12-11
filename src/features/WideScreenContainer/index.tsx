@@ -17,12 +17,13 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface WideScreenContainerProps extends FlexboxProps {
+  minWidth?: number;
   onChange?: () => void;
   wrapperStyle?: CSSProperties;
 }
 
 const WideScreenContainer = memo<WideScreenContainerProps>(
-  ({ children, className, onChange, wrapperStyle, onClick, ...rest }) => {
+  ({ children, className, onChange, wrapperStyle, onClick, minWidth, ...rest }) => {
     const { cx, styles } = useStyles();
     const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
 
@@ -35,7 +36,7 @@ const WideScreenContainer = memo<WideScreenContainerProps>(
         <Flexbox
           className={cx(styles.container, className)}
           paddingInline={16}
-          width={wideScreen ? '100%' : `min(${CONVERSATION_MIN_WIDTH}px, 100%)`}
+          width={wideScreen ? '100%' : `min(${minWidth || CONVERSATION_MIN_WIDTH}px, 100%)`}
           {...rest}
         >
           {children}

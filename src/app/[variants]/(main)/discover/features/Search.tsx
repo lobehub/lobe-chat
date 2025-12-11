@@ -44,7 +44,6 @@ const Search = memo<StoreSearchBarProps>(() => {
     <SearchBar
       data-testid="search-bar"
       defaultValue={q}
-      enableShortKey
       onInputChange={(v) => {
         setWord(v);
         if (!v) handleSearch('');
@@ -52,7 +51,7 @@ const Search = memo<StoreSearchBarProps>(() => {
       onSearch={handleSearch}
       placeholder={t('search.placeholder')}
       style={{
-        width: 'min(720px,100%)',
+        width: '100%',
       }}
       value={word}
       variant={'borderless'}

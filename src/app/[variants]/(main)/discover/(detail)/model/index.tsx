@@ -6,10 +6,8 @@ import { useLoaderData } from 'react-router-dom';
 
 import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { useDiscoverStore } from '@/store/discover';
-import { DiscoverTab } from '@/types/discover';
 
 import NotFound from '../components/NotFound';
-import Breadcrumb from '../features/Breadcrumb';
 import { DetailProvider } from './features/DetailProvider';
 import Details from './features/Details';
 import Header from './features/Header';
@@ -31,7 +29,6 @@ const ModelDetailPage = memo<ModelDetailPageProps>(({ mobile }) => {
 
   return (
     <DetailProvider config={data}>
-      {!mobile && <Breadcrumb identifier={identifier} tab={DiscoverTab.Models} />}
       <Flexbox gap={16}>
         <Header mobile={mobile} />
         <Details mobile={mobile} />

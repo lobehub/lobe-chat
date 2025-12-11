@@ -10,10 +10,8 @@ import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/MarketAuth';
 import { marketApiService } from '@/services/marketApi';
 import { useDiscoverStore } from '@/store/discover';
-import { DiscoverTab } from '@/types/discover';
 
 import NotFound from '../components/NotFound';
-import Breadcrumb from '../features/Breadcrumb';
 import { AgentStatusAction } from './features/UserAgentCard';
 import UserAgentList from './features/UserAgentList';
 import UserHeader from './features/UserHeader';
@@ -101,24 +99,21 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
   const totalInstalls = agents.reduce((sum, agent) => sum + (agent.installCount || 0), 0);
 
   return (
-    <>
-      {!mobile && <Breadcrumb identifier={username} tab={DiscoverTab.User} />}
-      <Flexbox gap={24}>
-        <UserHeader
-          agentCount={agents.length}
-          isOwner={isOwner}
-          mobile={mobile}
-          onEditProfile={openProfileSetup}
-          totalInstalls={totalInstalls}
-          user={user}
-        />
-        <UserAgentList
-          data={agents}
-          isOwner={isOwner}
-          onStatusChange={isOwner ? handleStatusChange : undefined}
-        />
-      </Flexbox>
-    </>
+    <Flexbox gap={24}>
+      <UserHeader
+        agentCount={agents.length}
+        isOwner={isOwner}
+        mobile={mobile}
+        onEditProfile={openProfileSetup}
+        totalInstalls={totalInstalls}
+        user={user}
+      />
+      <UserAgentList
+        data={agents}
+        isOwner={isOwner}
+        onStatusChange={isOwner ? handleStatusChange : undefined}
+      />
+    </Flexbox>
   );
 });
 
