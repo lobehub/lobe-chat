@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.167](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.166...v2.0.0-next.167)
+
+<sup>Released on **2025-12-11**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Replicate image provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Replicate image provider ([542f4d9](https://github.com/lobehub/lobe-chat/commit/542f4d9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.166](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.165...v2.0.0-next.166)
 
 <sup>Released on **2025-12-09**</sup>
