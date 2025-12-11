@@ -14,6 +14,8 @@ interface PageExplorerProps {
 
 /**
  * Dedicated for the /page route
+ *
+ * Work together with a sidebar src/app/[variants]/(main)/page/_layout/Body/index.tsx
  */
 const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
   const [selectedPageId, setSelectedPageId, getOptimisticDocuments, fetchDocuments, deletePage] =

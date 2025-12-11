@@ -16,7 +16,7 @@ interface DocumentItemProps {
   style?: CSSProperties;
 }
 
-const DocumentItem = memo<DocumentItemProps>(({ documentId, style, className }) => {
+const PageListItem = memo<DocumentItemProps>(({ documentId, style, className }) => {
   const [editing, selectedPageId, document] = useFileStore(
     useCallback(
       (s) => {
@@ -91,4 +91,4 @@ const DocumentItem = memo<DocumentItemProps>(({ documentId, style, className }) 
   );
 });
 
-export default DocumentItem;
+export default PageListItem;
