@@ -15,7 +15,6 @@ import { ChatTopicAction, chatTopic } from './slices/topic/action';
 import { ChatAIChatAction, chatAiChat } from './slices/aiChat/actions';
 import { ChatTTSAction, chatTTS } from './slices/tts/action';
 import { ChatThreadAction, chatThreadMessage } from './slices/thread/action';
-import { chatAiGroupChat, ChatGroupChatAction } from './slices/aiChat/actions/generateAIGroupChat';
 import { OperationActions, operationActions } from './slices/operation/actions';
 import { ChatAIAgentAction, chatAiAgent } from './slices/aiAgent/actions';
 
@@ -24,7 +23,6 @@ export interface ChatStoreAction
     ChatMessageAction,
     ChatThreadAction,
     ChatAIChatAction,
-    ChatGroupChatAction,
     ChatTopicAction,
     ChatTranslateAction,
     ChatTTSAction,
@@ -44,7 +42,6 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   ...chatMessage(...params),
   ...chatThreadMessage(...params),
   ...chatAiChat(...params),
-  ...chatAiGroupChat(...params),
   ...chatTopic(...params),
   ...chatTranslate(...params),
   ...chatTTS(...params),

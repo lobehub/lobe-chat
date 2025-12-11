@@ -16,7 +16,15 @@ import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
+import type { ChatStoreState } from '@/store/chat/initialState';
+import {
+  GroupChatSupervisor,
+  SupervisorContext,
+  SupervisorDecisionList,
+  SupervisorTodoItem,
+} from '@/store/chat/slices/message/supervisor';
 import { ChatStore } from '@/store/chat/store';
+import { toggleBooleanList } from '@/store/chat/utils';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -25,16 +33,7 @@ import { getUserStoreState } from '@/store/user/store';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import type { ChatStoreState } from '../../../initialState';
-import { toggleBooleanList } from '../../../utils';
-import {
-  GroupChatSupervisor,
-  SupervisorContext,
-  SupervisorDecisionList,
-  SupervisorTodoItem,
-} from '../../message/supervisor';
-
-const n = setNamespace('aiGroupChat');
+const n = setNamespace('aiAgentGroup');
 
 const supervisor = new GroupChatSupervisor();
 
@@ -255,7 +254,7 @@ export interface ChatGroupChatAction {
   ) => Promise<void>;
 }
 
-export const chatAiGroupChat: StateCreator<
+export const agentGroupSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
