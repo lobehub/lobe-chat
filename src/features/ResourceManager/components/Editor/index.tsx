@@ -31,8 +31,6 @@ const FileEditor = memo(() => {
       s.libraryId,
     ]);
 
-  console.log('currentViewItemId', currentViewItemId);
-
   const fileDetail = useFileStore(fileManagerSelectors.getFileById(currentViewItemId));
 
   return (

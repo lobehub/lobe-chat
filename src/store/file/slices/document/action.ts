@@ -529,9 +529,10 @@ export const createDocumentSlice: StateCreator<
     const { selectedPageId } = get();
 
     if (selectedPageId === documentId) {
-      // Deselect
-      set({ isCreatingNew: false, selectedPageId: null }, false, n('selectPage/deselect'));
-      updateUrl(null);
+      // Don't allow deselecting the current page, required from @canisminor
+      //
+      // set({ isCreatingNew: false, selectedPageId: null }, false, n('selectPage/deselect'));
+      // updateUrl(null);
     } else {
       // Select
       set({ isCreatingNew: false, selectedPageId: documentId }, false, n('selectPage/select'));

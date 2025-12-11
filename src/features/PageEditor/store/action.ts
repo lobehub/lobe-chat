@@ -167,7 +167,8 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
           const currentEditorData = editor.getDocument('json');
           const currentContent = (editor.getDocument('markdown') as unknown as string) || '';
 
-          if (!currentContent?.trim()) {
+          // Don't save if there's no content AND no title/emoji changes
+          if (!currentContent?.trim() && !currentTitle?.trim() && !currentEmoji) {
             set({ saveStatus: 'idle' });
             return;
           }
