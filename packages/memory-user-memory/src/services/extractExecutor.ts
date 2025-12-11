@@ -204,12 +204,17 @@ export class MemoryExtractionService<RO> {
       const outputs = await this.runLayers(job, layersToExtract, { ...options });
 
       const processedLayersCount = {
-        context: outputs.context ? outputs.context?.memories?.length : 0,
-        experience: outputs.experience ? outputs.experience?.memories?.length : 0,
-        // NOTICE: Identity layer does not process accumulatively, so we set it to 0
-        identity: 0,
-        preference: outputs.preference ? outputs.preference?.memories?.length : 0,
+        context: outputs.context?.data ? outputs.context?.data?.memories?.length : 0,
+        experience: outputs.experience?.data ? outputs.experience?.data?.memories?.length : 0,
+        identity: outputs.identity?.data ? (outputs.identity?.data?.add?.length || 0) + (outputs.identity?.data?.update?.length || 0) + (outputs.identity?.data?.remove?.length || 0) : 0,
+        preference: outputs.preference?.data ? outputs.preference?.data?.memories?.length : 0,
       };
+      const processedErrorsCount = {
+        context: outputs.context?.error ? 1 : 0,
+        experience: outputs.experience?.error ? 1 : 0,
+        identity: outputs.identity?.error ? 1 : 0,
+        preference: outputs.preference?.error ? 1 : 0,
+      }
 
       const processedCount = Object.values(processedLayersCount).reduce((a, b) => a + b, 0);
 
@@ -222,6 +227,7 @@ export class MemoryExtractionService<RO> {
         layers: layersToExtract,
         outputs,
         processedCounts: processedCount,
+        processedErrorsCount: processedErrorsCount,
         processedLayersCount: processedLayersCount,
       };
     } catch (error) {
@@ -324,11 +330,18 @@ export class MemoryExtractionService<RO> {
       LayersEnum.Identity,
     ] as LayersEnum[])
     .filter((layer) => layers.includes(layer))
-    .map(async (layer) => this.runLayer(job, layer, options))) as [
-      Awaited<ReturnType<ContextExtractor['structuredCall']>>,
-      Awaited<ReturnType<ExperienceExtractor['structuredCall']>>,
-      Awaited<ReturnType<PreferenceExtractor['structuredCall']>>,
-      Awaited<ReturnType<IdentityExtractor['structuredCall']>>,
+    .map(async (layer) => {
+      try {
+        const res = await this.runLayer(job, layer, options)
+        return { data: res };
+      } catch (error) {
+        return { error }
+      }
+    })) as [
+      { data?: Awaited<ReturnType<ContextExtractor['structuredCall']>>, error?: unknown },
+      { data?: Awaited<ReturnType<ExperienceExtractor['structuredCall']>>, error?: unknown },
+      { data?: Awaited<ReturnType<PreferenceExtractor['structuredCall']>>, error?: unknown },
+      { data?: Awaited<ReturnType<IdentityExtractor['structuredCall']>>, error?: unknown },
     ];
 
     return {
