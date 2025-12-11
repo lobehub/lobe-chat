@@ -111,12 +111,12 @@ RUN npm run build:docker
 RUN <<'EOF'
 set -e
 if [ -d "/app/out" ]; then
-    mkdir -p /app/apps/desktop/dist/next/out
-    cp -a /app/out/. /app/apps/desktop/dist/next/out/
-    echo "✅ Copied Next export output into /app/apps/desktop/dist/next/out"
+    mkdir -p /app/apps/desktop/dist/next
+    cp -a /app/out/. /app/apps/desktop/dist/next/
+    echo "✅ Copied Next export output into /app/apps/desktop/dist/next"
 else
     echo "ℹ️ No Next export output found at /app/out, creating empty directory"
-    mkdir -p /app/apps/desktop/dist/next/out
+    mkdir -p /app/apps/desktop/dist/next
 fi
 EOF
 
@@ -129,7 +129,7 @@ COPY --from=base /distroless/ /
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
 # Copy Next export output for desktop renderer
-COPY --from=builder /app/apps/desktop/dist/next/out /app/apps/desktop/dist/next/out
+COPY --from=builder /app/apps/desktop/dist/next /app/apps/desktop/dist/next
 
 # Copy database migrations
 COPY --from=builder /app/packages/database/migrations /app/migrations

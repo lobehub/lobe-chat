@@ -107,7 +107,7 @@ const config = {
     'dist',
     'resources',
     // Ensure Next export assets are packaged
-    'dist/next/out/**/*',
+    'dist/next/**/*',
     '!resources/locales',
     '!dist/next/docs',
     '!dist/next/packages',

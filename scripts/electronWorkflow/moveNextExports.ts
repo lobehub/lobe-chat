@@ -4,7 +4,7 @@ import path from 'node:path';
 const rootDir = path.resolve(__dirname, '../..');
 
 const exportSourceDir = path.join(rootDir, 'out');
-const exportTargetDir = path.join(rootDir, 'apps/desktop/dist/next/out');
+const exportTargetDir = path.join(rootDir, 'apps/desktop/dist/next');
 
 if (fs.existsSync(exportSourceDir)) {
   console.log(`📦 Copying Next export assets from ${exportSourceDir} to ${exportTargetDir}...`);
