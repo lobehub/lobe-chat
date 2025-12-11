@@ -60,12 +60,12 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
     if (pageAgentId && !hasPageAgent) {
       return [
         {
-          id: pageAgentId,
-          title: t('builtinCopilot', { defaultValue: 'Built-in Copilot', ns: 'chat' }),
           avatar: null,
           description: null,
-          type: 'agent' as const,
+          id: pageAgentId,
           pinned: false,
+          title: t('builtinCopilot', { defaultValue: 'Built-in Copilot', ns: 'chat' }),
+          type: 'agent' as const,
           updatedAt: new Date(),
         },
         ...agents,
@@ -174,12 +174,6 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
     s.switchTopic,
     s.topicDataMap[agentId]?.items,
   ]);
-
-  // Find active topic from the agent's topics list directly
-  const activeTopic = useMemo(
-    () => topics?.find((topic) => topic.id === activeTopicId),
-    [topics, activeTopicId],
-  );
 
   const items = useMemo<ItemType[]>(
     () =>
