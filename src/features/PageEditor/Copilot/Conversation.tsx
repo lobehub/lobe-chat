@@ -10,7 +10,7 @@ import CopilotToolbar from './Toolbar';
 interface ConversationProps {
   agentId: string;
 }
-const actions: ActionKeys[] = ['model'];
+const actions: ActionKeys[] = ['model', 'search'];
 
 const Conversation = memo<ConversationProps>(({ agentId }) => {
   const [activeAgentId, setActiveAgentId] = useAgentStore((s) => [
