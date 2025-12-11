@@ -5,6 +5,26 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'GLM-4.6V 在视觉理解精度上达到同参数规模 SOTA，并首次在模型架构中将 Function Call（工具调用）能力原生融入视觉模型，打通从「视觉感知」到「可执行行动（Action）」的链路，为真实业务场景中的多模态 Agent 提供统一的技术底座。',
+    displayName: 'GLM-4.6V',
+    id: 'zai-org/GLM-4.6V',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-12-08',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 163_840,
@@ -100,7 +120,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 131_072,
     description:
       'MiniMax-M2 为智能体重新定义了效率。它是一款紧凑、快速且经济高效的 MoE 模型，拥有 2300 亿总参数和 100 亿激活参数，专为编码和智能体任务的顶级性能而打造，同时保持强大的通用智能。仅需 100 亿激活参数，MiniMax-M2 就能提供与大规模模型相媲美的性能，使其成为高效率应用的理想选择。',
     displayName: 'MiniMax-M2',

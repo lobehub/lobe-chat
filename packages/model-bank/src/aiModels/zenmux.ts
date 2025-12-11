@@ -34,27 +34,6 @@ const zenmuxChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      imageOutput: true,
-      reasoning: true,
-      vision: true,
-    },
-    contextWindowTokens: 65_536,
-    description: 'Gemini 3 Pro Image 免费版，支持受限额度的多模态生成。',
-    displayName: 'Gemini 3 Pro Image (Nano Banana) Free',
-    enabled: true,
-    id: 'google/gemini-3-pro-image-preview-free',
-    maxOutput: 32_768,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
       reasoning: true,
       vision: true,
     },
@@ -71,33 +50,6 @@ const zenmuxChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-11-20',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_050_000,
-    description:
-      'Gemini 3 Pro 免费预览版，具备与标准版相同的多模态理解与推理能力，但受免费额度与速率限制影响，更适合作为体验与低频使用。',
-    displayName: 'Gemini 3 Pro Preview Free',
-    enabled: true,
-    id: 'google/gemini-3-pro-preview-free',
-    maxOutput: 65_530,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    settings: {
-      extendParams: ['thinkingLevel', 'urlContext'],
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
     type: 'chat',
   },
   {
@@ -649,31 +601,6 @@ const zenmuxChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_050_000,
-    description: 'Gemini 2.5 Pro 免费版，支持受限额度的多模态长上下文，适合试用与轻量工作流。',
-    displayName: 'Gemini 2.5 Pro Free',
-    id: 'google/gemini-2.5-pro-free',
-    maxOutput: 65_530,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    settings: {
-      extendParams: ['thinkingBudget', 'urlContext'],
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_050_000,
     description: 'Gemini 2.5 Flash（Lite/Pro/Flash）系列是 Google 的中低延迟到高性能推理模型。',
     displayName: 'Gemini 2.5 Flash',
     id: 'google/gemini-2.5-flash',
@@ -1087,26 +1014,6 @@ const zenmuxChatModels: AIChatModelCard[] = [
         { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      imageOutput: true,
-      reasoning: true,
-      vision: true,
-    },
-    contextWindowTokens: 32_768,
-    description: 'Gemini 2.5 Flash Image 免费版，支持受限额度的多模态生成。',
-    displayName: 'Gemini 2.5 Flash Image (Nano Banana) Free',
-    id: 'google/gemini-2.5-flash-image-free',
-    maxOutput: 8192,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
