@@ -101,10 +101,22 @@ export interface PersistedMemoryResult {
 }
 
 export type MemoryExtractionLayerOutputs = Partial<{
-  context: Awaited<ReturnType<ContextExtractor['structuredCall']>>;
-  experience: Awaited<ReturnType<ExperienceExtractor['structuredCall']>>;
-  identity: Awaited<ReturnType<IdentityExtractor['structuredCall']>>;
-  preference: Awaited<ReturnType<PreferenceExtractor['structuredCall']>>;
+  context: {
+    data?: Awaited<ReturnType<ContextExtractor['structuredCall']>>;
+    error?: unknown;
+  };
+  experience: {
+    data?: Awaited<ReturnType<ExperienceExtractor['structuredCall']>>;
+    error?: unknown;
+  };
+  identity: {
+    data?: Awaited<ReturnType<IdentityExtractor['structuredCall']>>;
+    error?: unknown;
+  }
+  preference: {
+    data?: Awaited<ReturnType<PreferenceExtractor['structuredCall']>>;
+    error?: unknown;
+  }
 }>;
 
 export interface GatekeeperDecision {
@@ -128,6 +140,7 @@ export interface MemoryExtractionResult {
   layers: LayersEnum[];
   outputs: MemoryExtractionLayerOutputs;
   processedCounts: number;
+  processedErrorsCount: Record<LayersEnum, number>;
   processedLayersCount: Record<LayersEnum, number>;
 }
 
