@@ -1,4 +1,4 @@
-import { ActionIcon, Block, Tag } from '@lobehub/ui';
+import { ActionIcon, Block } from '@lobehub/ui';
 import { Dropdown, Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
@@ -33,12 +33,6 @@ const useStyles = createStyles(({ css }) => ({
   fadeOut: css`
     pointer-events: none;
     opacity: 0;
-  `,
-  topicTitle: css`
-    overflow: hidden;
-    max-width: 200px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   `,
 }));
 
@@ -205,11 +199,6 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
       left={
         <Flexbox align="center" gap={8} horizontal>
           <AgentSelector agentId={agentId} onAgentChange={setActiveAgentId} />
-          {activeTopic?.title ? (
-            <Tag className={styles.topicTitle} title={activeTopic.title}>
-              {activeTopic.title}
-            </Tag>
-          ) : null}
         </Flexbox>
       }
       right={
