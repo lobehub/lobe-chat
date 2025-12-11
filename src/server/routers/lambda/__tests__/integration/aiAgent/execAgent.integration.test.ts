@@ -33,9 +33,8 @@ vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
 
 // Mock AgentStateManager to use the exported singleton instance
 vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
-  const { inMemoryAgentStateManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryAgentStateManager'
-  );
+  const { inMemoryAgentStateManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryAgentStateManager');
   return {
     AgentStateManager: class {
       constructor() {
@@ -47,9 +46,8 @@ vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
 
 // Mock StreamEventManager to use the exported singleton instance
 vi.mock('@/server/modules/AgentRuntime/StreamEventManager', async () => {
-  const { inMemoryStreamEventManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryStreamEventManager'
-  );
+  const { inMemoryStreamEventManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryStreamEventManager');
   return {
     StreamEventManager: class {
       constructor() {
@@ -138,17 +136,21 @@ describe('execAgent', () => {
       expect(createdTopics).toHaveLength(1);
       expect(createdTopics[0].title).toBe(prompt);
 
-      // Verify only user message was created
+      // Verify user message and assistant message placeholder were created
       const createdMessages = await serverDB
         .select()
         .from(messages)
         .where(and(eq(messages.agentId, testAgentId), eq(messages.topicId, createdTopics[0].id)));
 
-      expect(createdMessages).toHaveLength(1);
+      expect(createdMessages).toHaveLength(2);
 
       const userMessage = createdMessages.find((m) => m.role === 'user');
       expect(userMessage).toBeDefined();
       expect(userMessage?.content).toBe(prompt);
+
+      const assistantMessage = createdMessages.find((m) => m.role === 'assistant');
+      expect(assistantMessage).toBeDefined();
+      expect(assistantMessage?.parentId).toBe(userMessage?.id);
     });
 
     it('should create a new topic when topicId is not provided', async () => {
