@@ -4,11 +4,11 @@ import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
+import AgentBuilder from '@/features/AgentBuilder';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
-import AgentBuilder from './features/AgentBuilder';
 import Header from './features/Header';
 import ProfileEditor from './features/ProfileEditor';
 import ProfileHydration from './features/ProfileHydration';
