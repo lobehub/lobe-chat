@@ -16,10 +16,11 @@ export const searchRouter = router({
   query: searchProcedure
     .input(
       z.object({
+        agentId: z.string().optional(),
         limitPerType: z.number().optional(),
         offset: z.number().optional(),
         query: z.string(),
-        type: z.enum(['agent', 'topic', 'file']).optional(),
+        type: z.enum(['agent', 'topic', 'file', 'message']).optional(),
       }),
     )
     .query(async ({ input, ctx }) => {

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { getTestDB } from '../../models/__tests__/_util';
 import { NewAgent, agents } from '../../schemas/agent';
 import { NewFile, files } from '../../schemas/file';
+import { messages } from '../../schemas/message';
 import { NewTopic, topics } from '../../schemas/topic';
 import { users } from '../../schemas/user';
 import { LobeChatDatabase } from '../../type';
@@ -485,6 +486,273 @@ describe('SearchRepo', () => {
         expect(file.name).toBeDefined();
         expect(file.fileType).toBeDefined();
         expect(file.size).toBeGreaterThanOrEqual(0);
+      }
+    });
+  });
+
+  describe('search - agent context awareness', () => {
+    let testAgentId: string;
+    let otherAgentId: string;
+
+    beforeEach(async () => {
+      // Create test agents
+      const [agent1, agent2] = await serverDB
+        .insert(agents)
+        .values([
+          {
+            slug: 'test-agent',
+            title: 'Test Agent',
+            userId,
+          },
+          {
+            slug: 'other-agent',
+            title: 'Other Agent',
+            userId,
+          },
+        ])
+        .returning();
+
+      testAgentId = agent1.id;
+      otherAgentId = agent2.id;
+
+      // Create topics for test agent
+      await serverDB.insert(topics).values([
+        {
+          agentId: testAgentId,
+          title: 'React Testing Guide',
+          userId,
+        },
+        {
+          agentId: testAgentId,
+          title: 'Testing Best Practices',
+          userId,
+        },
+      ]);
+
+      // Create topics for other agent
+      await serverDB.insert(topics).values([
+        {
+          agentId: otherAgentId,
+          title: 'Testing Strategies',
+          userId,
+        },
+      ]);
+
+      // Create topic without agent
+      await serverDB.insert(topics).values([
+        {
+          agentId: null,
+          title: 'General Testing Tips',
+          userId,
+        },
+      ]);
+    });
+
+    it('should boost current agent topics in relevance', async () => {
+      const results = await searchRepo.search({
+        agentId: testAgentId,
+        query: 'testing',
+      });
+
+      const topicResults = results.filter((r) => r.type === 'topic');
+
+      // Current agent's topics should have better relevance (0.5-0.7)
+      const currentAgentTopics = topicResults.filter(
+        (t) => t.type === 'topic' && t.agentId === testAgentId,
+      );
+      const otherTopics = topicResults.filter(
+        (t) => t.type === 'topic' && t.agentId !== testAgentId,
+      );
+
+      expect(currentAgentTopics.length).toBeGreaterThan(0);
+      expect(otherTopics.length).toBeGreaterThan(0);
+
+      // Current agent topics should have lower relevance scores (higher priority)
+      currentAgentTopics.forEach((topic) => {
+        expect(topic.relevance).toBeLessThan(1);
+      });
+
+      otherTopics.forEach((topic) => {
+        expect(topic.relevance).toBeGreaterThanOrEqual(1);
+      });
+    });
+
+    it('should show all user topics but rank current agent topics first', async () => {
+      const results = await searchRepo.search({
+        agentId: testAgentId,
+        query: 'testing',
+      });
+
+      const topicResults = results.filter((r) => r.type === 'topic');
+
+      // Should include topics from all agents (current, other, and no agent)
+      const agentIds = new Set(topicResults.map((t) => (t.type === 'topic' ? t.agentId : null)));
+      expect(agentIds.has(testAgentId)).toBe(true);
+      expect(agentIds.has(otherAgentId)).toBe(true);
+      expect(agentIds.has(null)).toBe(true);
+
+      // First results should be from current agent
+      expect(topicResults[0].type).toBe('topic');
+      if (topicResults[0].type === 'topic') {
+        expect(topicResults[0].agentId).toBe(testAgentId);
+      }
+    });
+
+    it('should return 10 topics in agent context', async () => {
+      // Create additional topics to test limit
+      await serverDB.insert(topics).values(
+        Array.from({ length: 12 }, (_, i) => ({
+          agentId: i < 6 ? testAgentId : otherAgentId,
+          title: `Test Topic ${i}`,
+          userId,
+        })),
+      );
+
+      const results = await searchRepo.search({
+        agentId: testAgentId,
+        query: 'test',
+      });
+
+      const topicResults = results.filter((r) => r.type === 'topic');
+      expect(topicResults.length).toBe(10);
+    });
+
+    it('should return 3 agents and 3 files in agent context', async () => {
+      // Create test agents
+      await serverDB.insert(agents).values(
+        Array.from({ length: 5 }, (_, i) => ({
+          slug: `agent-${i}`,
+          title: `Test Agent ${i}`,
+          userId,
+        })),
+      );
+
+      // Create test files
+      await serverDB.insert(files).values(
+        Array.from({ length: 5 }, (_, i) => ({
+          fileType: 'text/plain',
+          name: `test-file-${i}.txt`,
+          size: 100,
+          url: `file://test-file-${i}.txt`,
+          userId,
+        })),
+      );
+
+      const results = await searchRepo.search({
+        agentId: testAgentId,
+        query: 'test',
+      });
+
+      const agentResults = results.filter((r) => r.type === 'agent');
+      const fileResults = results.filter((r) => r.type === 'file');
+
+      expect(agentResults.length).toBeLessThanOrEqual(3);
+      expect(fileResults.length).toBeLessThanOrEqual(3);
+    });
+
+    it('should use normal limits without agent context', async () => {
+      const results = await searchRepo.search({
+        query: 'testing',
+      });
+
+      const topicResults = results.filter((r) => r.type === 'topic');
+
+      // Should use default limit of 5 per type
+      expect(topicResults.length).toBeLessThanOrEqual(5);
+    });
+
+    it('should not boost topics when agentId is not provided', async () => {
+      const results = await searchRepo.search({
+        query: 'testing',
+      });
+
+      const topicResults = results.filter((r) => r.type === 'topic');
+
+      // All topics should have normal relevance (1-3)
+      topicResults.forEach((topic) => {
+        expect(topic.relevance).toBeGreaterThanOrEqual(1);
+        expect(topic.relevance).toBeLessThanOrEqual(3);
+      });
+    });
+  });
+
+  describe('search - message search', () => {
+    beforeEach(async () => {
+      // Create test messages with different roles
+      await serverDB.insert(messages).values([
+        {
+          content: 'Hello, I need help with React hooks',
+          role: 'user',
+          userId,
+        },
+        {
+          content: 'Sure, I can help you with React hooks and state management',
+          role: 'assistant',
+          userId,
+        },
+        {
+          content: 'Tool call result for React documentation lookup',
+          role: 'tool',
+          userId,
+        },
+        {
+          content: 'Another tool message about hooks',
+          role: 'tool',
+          userId,
+        },
+      ]);
+    });
+
+    it('should find messages by content', async () => {
+      const results = await searchRepo.search({ query: 'React hooks', type: 'message' });
+
+      expect(results.length).toBeGreaterThan(0);
+      results.forEach((result) => {
+        expect(result.type).toBe('message');
+      });
+    });
+
+    it('should filter out messages with role=tool', async () => {
+      const results = await searchRepo.search({ query: 'tool', type: 'message' });
+
+      // Should not find any tool messages even though they contain "tool" in content
+      const toolMessages = results.filter((r) => r.type === 'message' && r.role === 'tool');
+      expect(toolMessages.length).toBe(0);
+    });
+
+    it('should return user and assistant messages but not tool messages', async () => {
+      const results = await searchRepo.search({ query: 'hooks' });
+
+      const messageResults = results.filter((r) => r.type === 'message');
+
+      // Should find user and assistant messages
+      expect(messageResults.length).toBeGreaterThan(0);
+
+      // Verify all returned messages are not tool messages
+      messageResults.forEach((msg) => {
+        if (msg.type === 'message') {
+          expect(msg.role).not.toBe('tool');
+        }
+      });
+    });
+
+    it('should return correct message structure', async () => {
+      const results = await searchRepo.search({ query: 'help', type: 'message' });
+
+      expect(results.length).toBeGreaterThan(0);
+      const message = results[0];
+
+      expect(message.type).toBe('message');
+      expect(message.id).toBeDefined();
+      expect(message.title).toBeDefined();
+      expect(message.relevance).toBeGreaterThan(0);
+      expect(message.createdAt).toBeInstanceOf(Date);
+      expect(message.updatedAt).toBeInstanceOf(Date);
+
+      if (message.type === 'message') {
+        expect(message.content).toBeDefined();
+        expect(message.role).toBeDefined();
+        expect(['user', 'assistant']).toContain(message.role);
       }
     });
   });
