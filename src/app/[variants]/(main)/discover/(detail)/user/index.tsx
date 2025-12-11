@@ -1,20 +1,17 @@
 'use client';
 
-import { App } from 'antd';
-import { memo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { memo, useMemo } from 'react';
 import { useLoaderData } from 'react-router-dom';
 
 import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/MarketAuth';
-import { marketApiService } from '@/services/marketApi';
 import { useDiscoverStore } from '@/store/discover';
 
 import NotFound from '../components/NotFound';
-import { AgentStatusAction } from './features/UserAgentCard';
+import { UserDetailProvider } from './features/DetailProvider';
+import UserHeader from './features/Header';
 import UserAgentList from './features/UserAgentList';
-import UserHeader from './features/UserHeader';
+import { useUserDetail } from './features/useUserDetail';
 import Loading from './loading';
 
 interface UserDetailPageProps {
@@ -24,10 +21,8 @@ interface UserDetailPageProps {
 const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
   const { slug } = useLoaderData() as SlugParams;
   const username = decodeURIComponent(slug);
-  const { t } = useTranslation('setting');
-  const { message } = App.useApp();
 
-  const { getCurrentUserInfo, isAuthenticated, session, openProfileSetup } = useMarketAuth();
+  const { getCurrentUserInfo, isAuthenticated, openProfileSetup } = useMarketAuth();
 
   const useUserProfile = useDiscoverStore((s) => s.useUserProfile);
   const { data, isLoading, mutate } = useUserProfile({ username });
@@ -44,76 +39,34 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
     !!currentUserProfile?.userName &&
     data.user.userName === currentUserProfile.userName;
 
-  const handleStatusChange = useCallback(
-    async (identifier: string, action: AgentStatusAction) => {
-      if (!session?.accessToken) {
-        message.error(t('myAgents.errors.notAuthenticated'));
-        return;
-      }
+  const { handleStatusChange } = useUserDetail({ onMutate: mutate });
 
-      const messageKey = `agent-status-${action}`;
-      const loadingText = t(`myAgents.actions.${action}Loading` as any);
-      const successText = t(`myAgents.actions.${action}Success` as any);
-      const errorText = t(`myAgents.actions.${action}Error` as any);
+  const contextConfig = useMemo(() => {
+    if (!data || !data.user) return null;
 
-      try {
-        message.loading({ content: loadingText, key: messageKey });
-        marketApiService.setAccessToken(session.accessToken);
+    const { user, agents } = data;
+    const totalInstalls = agents.reduce((sum, agent) => sum + (agent.installCount || 0), 0);
 
-        switch (action) {
-          case 'publish': {
-            await marketApiService.publishAgent(identifier);
-            break;
-          }
-          case 'unpublish': {
-            await marketApiService.unpublishAgent(identifier);
-            break;
-          }
-          case 'deprecate': {
-            await marketApiService.deprecateAgent(identifier);
-            break;
-          }
-        }
-
-        message.success({ content: successText, key: messageKey });
-
-        // Refresh the user profile
-        mutate();
-      } catch (error) {
-        console.error(`[UserDetailPage] ${action} agent error:`, error);
-        message.error({
-          content: `${errorText}: ${error instanceof Error ? error.message : 'Unknown error'}`,
-          key: messageKey,
-        });
-      }
-    },
-    [session?.accessToken, message, t, mutate],
-  );
+    return {
+      agentCount: agents.length,
+      agents,
+      isOwner,
+      mobile,
+      onEditProfile: openProfileSetup,
+      onStatusChange: isOwner ? handleStatusChange : undefined,
+      totalInstalls,
+      user,
+    };
+  }, [data, isOwner, mobile, openProfileSetup, handleStatusChange]);
 
   if (isLoading) return <Loading />;
-  if (!data || !data.user) return <NotFound />;
-
-  const { user, agents } = data;
-
-  // Calculate total installs
-  const totalInstalls = agents.reduce((sum, agent) => sum + (agent.installCount || 0), 0);
+  if (!contextConfig) return <NotFound />;
 
   return (
-    <Flexbox gap={24}>
-      <UserHeader
-        agentCount={agents.length}
-        isOwner={isOwner}
-        mobile={mobile}
-        onEditProfile={openProfileSetup}
-        totalInstalls={totalInstalls}
-        user={user}
-      />
-      <UserAgentList
-        data={agents}
-        isOwner={isOwner}
-        onStatusChange={isOwner ? handleStatusChange : undefined}
-      />
-    </Flexbox>
+    <UserDetailProvider config={contextConfig}>
+      <UserHeader />
+      <UserAgentList />
+    </UserDetailProvider>
   );
 });
 

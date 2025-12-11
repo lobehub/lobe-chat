@@ -29,7 +29,7 @@ import { useHomeStore } from '@/store/home';
 import { AgentStatus, DiscoverAssistantItem } from '@/types/discover';
 import { formatIntergerNumber } from '@/utils/format';
 
-export type AgentStatusAction = 'publish' | 'unpublish' | 'deprecate';
+import { useUserDetailContext } from './DetailProvider';
 
 const getStatusTagColor = (status?: AgentStatus) => {
   switch (status) {
@@ -105,10 +105,7 @@ const useStyles = createStyles(({ css, token }) => {
   };
 });
 
-interface UserAgentCardProps extends DiscoverAssistantItem {
-  isOwner?: boolean;
-  onStatusChange?: (identifier: string, action: AgentStatusAction) => void;
-}
+type UserAgentCardProps = DiscoverAssistantItem;
 
 const UserAgentCard = memo<UserAgentCardProps>(
   ({
@@ -122,13 +119,12 @@ const UserAgentCard = memo<UserAgentCardProps>(
     installCount,
     status,
     identifier,
-    isOwner,
-    onStatusChange,
   }) => {
     const { styles } = useStyles();
     const { t } = useTranslation(['discover', 'setting']);
     const navigate = useNavigate();
-    const { message, modal } = App.useApp();
+    const { message } = App.useApp();
+    const { isOwner, onStatusChange } = useUserDetailContext();
 
     const [, setIsEditLoading] = useState(false);
     const createAgent = useAgentStore((s) => s.createAgent);
@@ -198,24 +194,10 @@ const UserAgentCard = memo<UserAgentCardProps>(
     }, [identifier, navigate, createAgent, refreshAgentList, message, t]);
 
     const handleStatusAction = useCallback(
-      (action: AgentStatusAction) => {
-        if (!onStatusChange) return;
-
-        // For deprecate action, show confirmation dialog
-        if (action === 'deprecate') {
-          modal.confirm({
-            cancelText: t('setting:myAgents.actions.cancel'),
-            content: t('setting:myAgents.actions.deprecateConfirmContent'),
-            okButtonProps: { danger: true },
-            okText: t('setting:myAgents.actions.confirmDeprecate'),
-            onOk: () => onStatusChange(identifier, action),
-            title: t('setting:myAgents.actions.deprecateConfirmTitle'),
-          });
-        } else {
-          onStatusChange(identifier, action);
-        }
+      (action: 'publish' | 'unpublish' | 'deprecate') => {
+        onStatusChange?.(identifier, action);
       },
-      [identifier, onStatusChange, modal, t],
+      [identifier, onStatusChange],
     );
 
     const menuItems = isOwner
