@@ -245,7 +245,8 @@ export type ExtendParamsType =
   | 'thinkingLevel'
   | 'imageAspectRatio'
   | 'imageResolution'
-  | 'urlContext';
+  | 'urlContext'
+  | 'codeExecution';
 
 export interface AiModelSettings {
   extendParams?: ExtendParamsType[];
