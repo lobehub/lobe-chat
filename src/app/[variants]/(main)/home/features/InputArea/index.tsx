@@ -15,6 +15,7 @@ const InputArea = memo(() => {
   const { loading, send, inboxAgentId } = useSend();
   const inputActiveMode = useHomeStore((s) => s.inputActiveMode);
 
+  // A slot to insert content above the chat input
   const inputContainerProps = useMemo(
     () => ({
       header: inputActiveMode ? <ModeHeader /> : undefined,

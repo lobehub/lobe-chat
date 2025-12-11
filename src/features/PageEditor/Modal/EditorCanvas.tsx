@@ -16,7 +16,7 @@ import { Editor, useEditor } from '@lobehub/editor/react';
 import { CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import TypoBar from '../EditorCanvas/TypoBar';
+import TypoBar from '../EditorCanvas/InlineToolbar';
 import { useSlashItems } from '../EditorCanvas/useSlashItems';
 
 type EditorInstance = ReturnType<typeof useEditor>;

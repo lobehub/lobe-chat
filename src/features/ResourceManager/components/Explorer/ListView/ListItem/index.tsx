@@ -6,7 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon, FileText, FolderIcon } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type DragEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -184,7 +184,7 @@ const FileListItem = memo<FileListItemProps>(
 
     // Native HTML5 drag event handlers
     const handleDragStart = useCallback(
-      (e: React.DragEvent) => {
+      (e: DragEvent) => {
         if (!libraryId) {
           e.preventDefault();
           return;
@@ -211,7 +211,7 @@ const FileListItem = memo<FileListItemProps>(
     }, []);
 
     const handleDragOver = useCallback(
-      (e: React.DragEvent) => {
+      (e: DragEvent) => {
         if (!isFolder || !isDragActive) return;
 
         e.preventDefault();
