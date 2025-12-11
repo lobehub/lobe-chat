@@ -138,16 +138,17 @@ export const operationActions: StateCreator<
         );
         throw new Error(`Operation not found: ${context.operationId}`);
       }
-      const { agentId, topicId, threadId, scope, isNew } = operation.context;
+      const { agentId, topicId, threadId, scope, isNew, groupId } = operation.context;
       log(
-        '[internal_getConversationContext] get from operation %s: agentId=%s, topicId=%s, threadId=%s, scope=%s',
+        '[internal_getConversationContext] get from operation %s: agentId=%s, topicId=%s, threadId=%s, scope=%s, groupId=%s',
         context.operationId,
         agentId,
         topicId,
         threadId,
         scope,
+        groupId,
       );
-      return { agentId: agentId!, topicId, threadId, scope, isNew };
+      return { agentId: agentId!, topicId, threadId, scope, isNew, groupId };
     }
 
     // Fallback to global state
