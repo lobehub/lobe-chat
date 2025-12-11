@@ -68,17 +68,29 @@ export const createRuntimeExecutors = (
     // Get parentId from payload (parentId or parentMessageId depending on payload type)
     const parentId = llmPayload.parentId || (llmPayload as any).parentMessageId;
 
-    // create assistant message
-    const assistantMessageItem = await ctx.messageModel.create({
-      agentId: state.metadata!.agentId!,
-      content: '',
-      model,
-      parentId,
-      provider,
-      role: 'assistant',
-      threadId: state.metadata?.threadId,
-      topicId: state.metadata?.topicId,
-    });
+    // Get or create assistant message
+    // If assistantMessageId is provided in payload, use existing message instead of creating new one
+    const existingAssistantMessageId = (llmPayload as any).assistantMessageId;
+    let assistantMessageItem: { id: string };
+
+    if (existingAssistantMessageId) {
+      // Use existing assistant message (created by execAgent)
+      assistantMessageItem = { id: existingAssistantMessageId };
+      log(`${stagePrefix} Using existing assistant message: %s`, existingAssistantMessageId);
+    } else {
+      // Create new assistant message (legacy behavior)
+      assistantMessageItem = await ctx.messageModel.create({
+        agentId: state.metadata!.agentId!,
+        content: '',
+        model,
+        parentId,
+        provider,
+        role: 'assistant',
+        threadId: state.metadata?.threadId,
+        topicId: state.metadata?.topicId,
+      });
+      log(`${stagePrefix} Created new assistant message: %s`, assistantMessageItem.id);
+    }
 
     // 发布流式开始事件
     await streamManager.publishStreamEvent(operationId, {

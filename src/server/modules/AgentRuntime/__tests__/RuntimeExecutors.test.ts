@@ -242,6 +242,160 @@ describe('RuntimeExecutors', () => {
         }),
       );
     });
+
+    describe('assistantMessageId reuse', () => {
+      it('should reuse existing assistant message when assistantMessageId is provided', async () => {
+        const executors = createRuntimeExecutors(ctx);
+        const state = createMockState();
+
+        const existingAssistantId = 'existing-assistant-msg-123';
+        const instruction = {
+          payload: {
+            assistantMessageId: existingAssistantId,
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'gpt-4',
+            parentMessageId: 'parent-msg-123',
+            provider: 'openai',
+            tools: [],
+          },
+          type: 'call_llm' as const,
+        };
+
+        await executors.call_llm!(instruction, state);
+
+        // Should NOT create a new assistant message
+        expect(mockMessageModel.create).not.toHaveBeenCalled();
+
+        // Should publish stream_start event with existing assistant message ID
+        expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith(
+          'op-123',
+          expect.objectContaining({
+            data: expect.objectContaining({
+              assistantMessage: { id: existingAssistantId },
+            }),
+            type: 'stream_start',
+          }),
+        );
+      });
+
+      it('should create new assistant message when assistantMessageId is not provided', async () => {
+        const executors = createRuntimeExecutors(ctx);
+        const state = createMockState();
+
+        const instruction = {
+          payload: {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'gpt-4',
+            parentMessageId: 'parent-msg-123',
+            provider: 'openai',
+            tools: [],
+          },
+          type: 'call_llm' as const,
+        };
+
+        await executors.call_llm!(instruction, state);
+
+        // Should create a new assistant message
+        expect(mockMessageModel.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            agentId: 'agent-123',
+            content: '',
+            model: 'gpt-4',
+            parentId: 'parent-msg-123',
+            provider: 'openai',
+            role: 'assistant',
+          }),
+        );
+
+        // Should publish stream_start event with newly created message ID
+        expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith(
+          'op-123',
+          expect.objectContaining({
+            data: expect.objectContaining({
+              assistantMessage: { id: 'msg-123' },
+            }),
+            type: 'stream_start',
+          }),
+        );
+      });
+
+      it('should use existing assistantMessageId even when parentMessageId is also provided', async () => {
+        const executors = createRuntimeExecutors(ctx);
+        const state = createMockState();
+
+        const existingAssistantId = 'pre-created-assistant-456';
+        const instruction = {
+          payload: {
+            assistantMessageId: existingAssistantId,
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'gpt-4',
+            parentId: 'parent-id-789',
+            parentMessageId: 'parent-msg-789',
+            provider: 'openai',
+            tools: [],
+          },
+          type: 'call_llm' as const,
+        };
+
+        await executors.call_llm!(instruction, state);
+
+        // Should NOT create a new message
+        expect(mockMessageModel.create).not.toHaveBeenCalled();
+
+        // Stream event should reference the existing message
+        expect(mockStreamManager.publishStreamEvent).toHaveBeenCalledWith(
+          'op-123',
+          expect.objectContaining({
+            data: expect.objectContaining({
+              assistantMessage: { id: existingAssistantId },
+            }),
+            type: 'stream_start',
+          }),
+        );
+      });
+
+      it('should create new message when assistantMessageId is undefined', async () => {
+        const executors = createRuntimeExecutors(ctx);
+        const state = createMockState();
+
+        const instruction = {
+          payload: {
+            assistantMessageId: undefined,
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'gpt-4',
+            provider: 'openai',
+            tools: [],
+          },
+          type: 'call_llm' as const,
+        };
+
+        await executors.call_llm!(instruction, state);
+
+        // Should create a new assistant message
+        expect(mockMessageModel.create).toHaveBeenCalledTimes(1);
+      });
+
+      it('should create new message when assistantMessageId is empty string', async () => {
+        const executors = createRuntimeExecutors(ctx);
+        const state = createMockState();
+
+        const instruction = {
+          payload: {
+            assistantMessageId: '',
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'gpt-4',
+            provider: 'openai',
+            tools: [],
+          },
+          type: 'call_llm' as const,
+        };
+
+        await executors.call_llm!(instruction, state);
+
+        // Empty string is falsy, so should create new message
+        expect(mockMessageModel.create).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 
   describe('call_tool executor', () => {

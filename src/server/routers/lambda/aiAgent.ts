@@ -154,11 +154,9 @@ export const aiAgentRouter = router({
         });
       }
 
-      let prefix = `agent_${Date.now()}`;
-      if (agentId && topicId) prefix = `${agentId}_${topicId}`;
-
-      // Generate runtime operation ID: agentId_topicId_random
-      const operationId = `${prefix}_${nanoid(8)}`;
+      // Generate runtime operation ID: agt_{timestamp}_{agentId}_{topicId}_{random}
+      const timestamp = Date.now();
+      const operationId = `agt_${timestamp}_${agentId || 'unknown'}_${topicId || 'none'}_${nanoid(8)}`;
 
       log(`Creating operation ${operationId} for user ${ctx.userId}`);
 
@@ -247,55 +245,6 @@ export const aiAgentRouter = router({
   }),
 
   /**
-   * Execute Group Agent (Supervisor) in a single call
-   *
-   * This endpoint combines message creation and agent execution:
-   * 1. Create topic (if needed)
-   * 2. Create user message
-   * 3. Create assistant message placeholder
-   * 4. Trigger Supervisor Agent execution
-   * 5. Return operationId for SSE connection + messages for UI sync
-   */
-  execGroupAgent: aiAgentProcedure.input(ExecGroupAgentSchema).mutation(async ({ input, ctx }) => {
-    const { agentId, groupId, message, files, topicId, newTopic } = input;
-
-    log('execGroupAgent: agentId=%s, groupId=%s', agentId, groupId);
-
-    try {
-      // Execute group agent
-      const result = await ctx.aiAgentService.execGroupAgent({
-        agentId,
-        files,
-        groupId,
-        message,
-        newTopic,
-        topicId,
-      });
-
-      // Get messages and topics for UI sync
-      const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
-        agentId,
-        includeTopic: result.isCreateNewTopic,
-        topicId: result.topicId,
-      });
-
-      return { ...result, messages, topics };
-    } catch (error: any) {
-      log('execGroupAgent failed: %O', error);
-
-      if (error instanceof TRPCError) {
-        throw error;
-      }
-
-      throw new TRPCError({
-        cause: error,
-        code: 'INTERNAL_SERVER_ERROR',
-        message: `Failed to execute group agent: ${error.message}`,
-      });
-    }
-  }),
-
-  /**
    * Batch execute multiple agents
    * Supports parallel or sequential execution
    */
@@ -364,6 +313,55 @@ export const aiAgentRouter = router({
         total: tasks.length,
       },
     };
+  }),
+
+  /**
+   * Execute Group Agent (Supervisor) in a single call
+   *
+   * This endpoint combines message creation and agent execution:
+   * 1. Create topic (if needed)
+   * 2. Create user message
+   * 3. Create assistant message placeholder
+   * 4. Trigger Supervisor Agent execution
+   * 5. Return operationId for SSE connection + messages for UI sync
+   */
+  execGroupAgent: aiAgentProcedure.input(ExecGroupAgentSchema).mutation(async ({ input, ctx }) => {
+    const { agentId, groupId, message, files, topicId, newTopic } = input;
+
+    log('execGroupAgent: agentId=%s, groupId=%s', agentId, groupId);
+
+    try {
+      // Execute group agent
+      const result = await ctx.aiAgentService.execGroupAgent({
+        agentId,
+        files,
+        groupId,
+        message,
+        newTopic,
+        topicId,
+      });
+
+      // Get messages and topics for UI sync
+      const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
+        agentId,
+        includeTopic: result.isCreateNewTopic,
+        topicId: result.topicId,
+      });
+
+      return { ...result, messages, topics };
+    } catch (error: any) {
+      log('execGroupAgent failed: %O', error);
+
+      if (error instanceof TRPCError) {
+        throw error;
+      }
+
+      throw new TRPCError({
+        cause: error,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Failed to execute group agent: ${error.message}`,
+      });
+    }
   }),
 
   getOperationStatus: aiAgentProcedure
