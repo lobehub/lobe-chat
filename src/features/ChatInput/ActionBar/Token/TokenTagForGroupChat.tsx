@@ -13,11 +13,11 @@ import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
+import { chatGroupSelectors } from '@/store/agentGroup/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup/store';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { chatGroupSelectors } from '@/store/chatGroup/selectors';
-import { useChatGroupStore } from '@/store/chatGroup/store';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -51,7 +51,7 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
   // Group chat specific data
   const groupAgents = useSessionStore(sessionSelectors.currentGroupAgents);
   const activeSessionId = useSessionStore((s) => s.activeId);
-  const groupConfig = useChatGroupStore(chatGroupSelectors.currentGroupConfig);
+  const groupConfig = useAgentGroupStore(chatGroupSelectors.currentGroupConfig);
   const supervisorTodos = useChatStore((s) =>
     activeSessionId
       ? s.supervisorTodos[messageMapKey({ agentId: activeSessionId, topicId: activeTopicId })] || []

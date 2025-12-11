@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useChatGroupStore } from '@/store/chatGroup';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
@@ -42,7 +42,7 @@ const Actions = memo<ActionsProps>(
       s.removeSessionGroup,
     ]);
 
-    const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
+    const [createGroup] = useAgentGroupStore((s) => [s.createGroup]);
 
     const { enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 

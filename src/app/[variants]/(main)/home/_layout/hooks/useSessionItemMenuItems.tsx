@@ -18,7 +18,7 @@ import {
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useChatGroupStore } from '@/store/chatGroup';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useGlobalStore } from '@/store/global';
 import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
@@ -48,7 +48,7 @@ export const useSessionItemMenuItems = () => {
     s.removeAgent,
   ]);
 
-  const [pinGroup, deleteGroup] = useChatGroupStore((s) => [s.pinGroup, s.deleteGroup]);
+  const [pinGroup, deleteGroup] = useAgentGroupStore((s) => [s.pinGroup, s.deleteGroup]);
 
   /**
    * Pin/Unpin menu item

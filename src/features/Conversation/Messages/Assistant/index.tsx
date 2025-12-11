@@ -12,7 +12,7 @@ import { useNewScreen } from '@/features/Conversation/Messages/components/useNew
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
-import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
+import { chatGroupSelectors, useAgentGroupStore } from '@/store/agentGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -72,7 +72,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
     const message = !editing ? normalizeThinkTags(processWithArtifact(content)) : content;
 
     const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
-    const groupConfig = useChatGroupStore(chatGroupSelectors.currentGroupConfig);
+    const groupConfig = useAgentGroupStore(chatGroupSelectors.currentGroupConfig);
 
     const reducted =
       isGroupSession && targetId !== null && targetId !== 'user' && !groupConfig?.revealDM;

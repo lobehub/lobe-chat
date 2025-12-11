@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import GroupInfo from '@/features/GroupInfo';
-import { useChatGroupStore } from '@/store/chatGroup';
-import { chatGroupSelectors } from '@/store/chatGroup/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { chatGroupSelectors } from '@/store/agentGroup/selectors';
 import { useSessionStore } from '@/store/session';
 import { LobeSession } from '@/types/session';
 
@@ -27,8 +27,8 @@ const GroupRole = memo<GroupRoleProps>(
     const { t } = useTranslation('chat');
 
     const activeGroupId = useSessionStore((s) => s.activeId);
-    const updateGroupConfig = useChatGroupStore((s) => s.updateGroupConfig);
-    const groupConfig = useChatGroupStore(chatGroupSelectors.currentGroupConfig);
+    const updateGroupConfig = useAgentGroupStore((s) => s.updateGroupConfig);
+    const groupConfig = useAgentGroupStore(chatGroupSelectors.currentGroupConfig);
 
     const handleSystemPromptChange = async (value: string) => {
       if (!activeGroupId) return;

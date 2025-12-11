@@ -1,17 +1,8 @@
-import dynamic from 'next/dynamic';
 import { Flexbox } from 'react-layout-kit';
 
 import TopicSearchBar from '@/app/[variants]/(main)/chat/_layout/Sidebar/Topic/TopicSearchBar';
-import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 
 import TopicModal from './features/TopicModal';
-
-const ConfigSwitcher = dynamic(
-  () => import('@/app/[variants]/(mobile)/chat/features/Topic/features/ConfigSwitcher'),
-  {
-    loading: () => <SkeletonList />,
-  },
-);
 
 const Topic = () => {
   return (
@@ -23,7 +14,6 @@ const Topic = () => {
           style={{ marginInline: -8, overflow: 'hidden', position: 'relative' }}
           width={'calc(100% + 16px)'}
         >
-          <ConfigSwitcher />
           <Topic />
         </Flexbox>
       </Flexbox>

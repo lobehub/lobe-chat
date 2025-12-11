@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
-import { useChatGroupStore } from '@/store/chatGroup';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
@@ -32,7 +32,7 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
   // The chat settings need some compatibility so we use a hook but for
   // the group settings we use a store directly
   const openChatSettings = useOpenChatSettings();
-  const openGroupSettings = useChatGroupStore((s) => s.toggleGroupSetting);
+  const openGroupSettings = useAgentGroupStore((s) => s.toggleGroupSetting);
 
   return (
     <>

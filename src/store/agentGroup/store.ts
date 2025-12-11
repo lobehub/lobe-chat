@@ -1,4 +1,4 @@
-import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
@@ -15,9 +15,9 @@ const createStore: StateCreator<ChatGroupStore, [['zustand/devtools', never]]> =
   };
 };
 
-export const useChatGroupStore = createWithEqualityFn<ChatGroupStore>()(
-  subscribeWithSelector(devtools(createStore)),
+export const useAgentGroupStore = createWithEqualityFn<ChatGroupStore>()(
+  devtools(createStore),
   shallow,
 );
 
-export const getChatGroupStoreState = () => useChatGroupStore.getState();
+export const getChatGroupStoreState = () => useAgentGroupStore.getState();

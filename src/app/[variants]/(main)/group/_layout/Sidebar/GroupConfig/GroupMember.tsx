@@ -9,10 +9,10 @@ import { Flexbox } from 'react-layout-kit';
 import AgentSettings from '@/app/[variants]/(main)/chat/profile/features/AgentSettings';
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 import { DEFAULT_AVATAR, DEFAULT_SUPERVISOR_AVATAR } from '@/const/meta';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { chatGroupSelectors } from '@/store/agentGroup/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { useChatGroupStore } from '@/store/chatGroup';
-import { chatGroupSelectors } from '@/store/chatGroup/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { LobeGroupSession } from '@/types/session';
@@ -33,17 +33,17 @@ const GroupMember = memo<GroupMemberProps>(
   ({ currentSession, addModalOpen, onAddModalOpenChange, sessionId }) => {
     const { t } = useTranslation('chat');
 
-    const addAgentsToGroup = useChatGroupStore((s) => s.addAgentsToGroup);
-    const removeAgentFromGroup = useChatGroupStore((s) => s.removeAgentFromGroup);
-    const persistReorder = useChatGroupStore((s) => s.reorderGroupMembers);
-    const toggleThread = useChatGroupStore((s) => s.toggleThread);
-    const updateGroupConfig = useChatGroupStore((s) => s.updateGroupConfig);
+    const addAgentsToGroup = useAgentGroupStore((s) => s.addAgentsToGroup);
+    const removeAgentFromGroup = useAgentGroupStore((s) => s.removeAgentFromGroup);
+    const persistReorder = useAgentGroupStore((s) => s.reorderGroupMembers);
+    const toggleThread = useAgentGroupStore((s) => s.toggleThread);
+    const updateGroupConfig = useAgentGroupStore((s) => s.updateGroupConfig);
     const togglePortal = useChatStore((s) => s.togglePortal);
     const cancelSupervisorDecision = useChatStore((s) => s.internal_cancelSupervisorDecision);
     const triggerSupervisorDecision = useChatStore((s) => s.internal_triggerSupervisorDecision);
 
     const isSupervisorLoading = useChatStore(chatSelectors.isSupervisorLoading(sessionId || ''));
-    const groupConfig = useChatGroupStore(chatGroupSelectors.getGroupConfig(sessionId || ''));
+    const groupConfig = useAgentGroupStore(chatGroupSelectors.getGroupConfig(sessionId || ''));
 
     const currentUser = useUserStore((s) => ({
       avatar: userProfileSelectors.userAvatar(s),
