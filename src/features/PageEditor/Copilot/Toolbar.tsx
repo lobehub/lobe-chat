@@ -135,7 +135,6 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
         padding={2}
         style={{
           minWidth: 32,
-          overflow: 'hidden',
         }}
         variant={'borderless'}
       >
