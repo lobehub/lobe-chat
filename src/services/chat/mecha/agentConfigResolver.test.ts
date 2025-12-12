@@ -1,6 +1,6 @@
+import * as builtinAgents from '@lobechat/builtin-agents';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as builtinAgents from '@lobechat/builtin-agents';
 import * as agentStore from '@/store/agent';
 import * as agentSelectors from '@/store/agent/selectors';
 
@@ -197,6 +197,65 @@ describe('resolveAgentConfig', () => {
         plugins: ['input-plugin'],
         targetAgentConfig,
       });
+    });
+
+    it('should merge runtime chatConfig with base chatConfig', () => {
+      vi.spyOn(builtinAgents, 'getAgentRuntimeConfig').mockReturnValue({
+        chatConfig: {
+          enableHistoryCount: false,
+          historyCount: 10,
+        },
+        plugins: ['runtime-plugin'],
+        systemRole: 'Runtime system role',
+      });
+
+      const result = resolveAgentConfig({ agentId: 'builtin-agent' });
+
+      // Base chatConfig has enableStreaming: true
+      // Runtime chatConfig adds enableHistoryCount: false and historyCount: 10
+      expect(result.chatConfig).toEqual({
+        enableHistoryCount: false,
+        enableStreaming: true,
+        historyCount: 10,
+      });
+    });
+
+    it('should override base chatConfig values with runtime chatConfig', () => {
+      vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        () =>
+          ({
+            enableHistoryCount: true,
+            enableStreaming: true,
+            historyCount: 20,
+          }) as any,
+      );
+      vi.spyOn(builtinAgents, 'getAgentRuntimeConfig').mockReturnValue({
+        chatConfig: {
+          enableHistoryCount: false,
+        },
+        plugins: ['runtime-plugin'],
+        systemRole: 'Runtime system role',
+      });
+
+      const result = resolveAgentConfig({ agentId: 'builtin-agent' });
+
+      expect(result.chatConfig).toEqual({
+        enableHistoryCount: false,
+        enableStreaming: true,
+        historyCount: 20,
+      });
+    });
+
+    it('should use base chatConfig when runtime chatConfig is undefined', () => {
+      vi.spyOn(builtinAgents, 'getAgentRuntimeConfig').mockReturnValue({
+        chatConfig: undefined,
+        plugins: ['runtime-plugin'],
+        systemRole: 'Runtime system role',
+      });
+
+      const result = resolveAgentConfig({ agentId: 'builtin-agent' });
+
+      expect(result.chatConfig).toEqual(mockChatConfig);
     });
   });
 });

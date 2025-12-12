@@ -1,6 +1,6 @@
 import debug from 'debug';
 
-import { BaseProvider } from '../base/BaseProvider';
+import { BaseLastUserContentProvider } from '../base/BaseLastUserContentProvider';
 import type { PipelineContext, ProcessorOptions } from '../types';
 
 const log = debug('context-engine:provider:PageEditorContextInjector');
@@ -282,17 +282,16 @@ const defaultFormatPageContext = (context: PageEditorContext): string => {
     return '';
   }
 
-  return `<current_page_context>
-<instruction>This is the current page/document context. The document uses an XML-based structure with unique node IDs. Use the Document tools (initPage, editTitle, etc.) to read and modify the page content when the user asks.</instruction>
-${parts.join('\n')}
-</current_page_context>`;
+  return `<instruction>This is the current page/document context. The document uses an XML-based structure with unique node IDs. Use the Document tools (initPage, editTitle, etc.) to read and modify the page content when the user asks.</instruction>
+${parts.join('\n')}`;
 };
 
 /**
  * Page Editor Context Injector
- * Responsible for injecting current page context when Page Agent tool is enabled
+ * Responsible for injecting current page context at the end of the last user message
+ * This ensures the model receives the most up-to-date page/document state
  */
-export class PageEditorContextInjector extends BaseProvider {
+export class PageEditorContextInjector extends BaseLastUserContentProvider {
   readonly name = 'PageEditorContextInjector';
 
   constructor(
@@ -303,86 +302,58 @@ export class PageEditorContextInjector extends BaseProvider {
   }
 
   protected async doProcess(context: PipelineContext): Promise<PipelineContext> {
-    console.log('[PageEditorContextInjector] doProcess called');
-    console.log('[PageEditorContextInjector] config.enabled:', this.config.enabled);
-    console.log('[PageEditorContextInjector] config.pageContext:', this.config.pageContext);
+    log('doProcess called');
+    log('config.enabled:', this.config.enabled);
 
     const clonedContext = this.cloneContext(context);
 
     // Skip if Page Editor is not enabled
     if (!this.config.enabled) {
-      console.log('[PageEditorContextInjector] Page Editor not enabled, skipping injection');
       log('Page Editor not enabled, skipping injection');
       return this.markAsExecuted(clonedContext);
     }
 
     // Skip if no page context
     if (!this.config.pageContext) {
-      console.log('[PageEditorContextInjector] No page context provided, skipping injection');
       log('No page context provided, skipping injection');
       return this.markAsExecuted(clonedContext);
     }
 
-    console.log('[PageEditorContextInjector] Formatting page context...');
     // Format page context
     const formatFn = this.config.formatPageContext || defaultFormatPageContext;
     const formattedContent = formatFn(this.config.pageContext);
 
-    console.log('[PageEditorContextInjector] Formatted content length:', formattedContent.length);
-    console.log(
-      '[PageEditorContextInjector] Formatted content preview:',
-      formattedContent.slice(0, 200),
-    );
+    log('Formatted content length:', formattedContent.length);
 
     // Skip if no content to inject
     if (!formattedContent) {
-      console.log('[PageEditorContextInjector] No content to inject after formatting');
       log('No content to inject after formatting');
       return this.markAsExecuted(clonedContext);
     }
 
-    // Find the first user message index
-    const firstUserIndex = clonedContext.messages.findIndex((msg) => msg.role === 'user');
+    // Find the last user message index
+    const lastUserIndex = this.findLastUserMessageIndex(clonedContext.messages);
 
-    console.log('[PageEditorContextInjector] First user message index:', firstUserIndex);
-    console.log(
-      '[PageEditorContextInjector] Total messages before injection:',
-      clonedContext.messages.length,
-    );
+    log('Last user message index:', lastUserIndex);
 
-    if (firstUserIndex === -1) {
-      console.log('[PageEditorContextInjector] No user messages found, skipping injection');
+    if (lastUserIndex === -1) {
       log('No user messages found, skipping injection');
       return this.markAsExecuted(clonedContext);
     }
 
-    // Insert a new user message with page context before the first user message
-    const pageContextMessage = {
-      content: formattedContent,
-      createdAt: Date.now(),
-      id: `page-editor-context-${Date.now()}`,
-      meta: { injectType: 'page-editor-context', systemInjection: true },
-      role: 'user' as const,
-      updatedAt: Date.now(),
-    };
+    // Check if system context wrapper already exists
+    // If yes, only insert context block; if no, use full wrapper
+    const hasExistingWrapper = this.hasExistingSystemContext(clonedContext);
+    const contentToAppend = hasExistingWrapper
+      ? this.createContextBlock(formattedContent, 'current_page_context')
+      : this.wrapWithSystemContext(formattedContent, 'current_page_context');
 
-    console.log('[PageEditorContextInjector] Injecting page context message:', {
-      contentLength: pageContextMessage.content.length,
-      id: pageContextMessage.id,
-      position: firstUserIndex,
-    });
-
-    clonedContext.messages.splice(firstUserIndex, 0, pageContextMessage);
+    this.appendToLastUserMessage(clonedContext, contentToAppend);
 
     // Update metadata
     clonedContext.metadata.pageEditorContextInjected = true;
 
-    console.log(
-      '[PageEditorContextInjector] Total messages after injection:',
-      clonedContext.messages.length,
-    );
-    console.log('[PageEditorContextInjector] Page Editor context injected successfully');
-    log('Page Editor context injected as new user message');
+    log('Page Editor context appended to last user message');
 
     return this.markAsExecuted(clonedContext);
   }

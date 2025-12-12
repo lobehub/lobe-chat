@@ -97,9 +97,15 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
       ? runtimeConfig.plugins
       : basePlugins;
 
+  // Merge chatConfig: runtime chatConfig overrides base chatConfig
+  const resolvedChatConfig: LobeAgentChatConfig = {
+    ...chatConfig,
+    ...runtimeConfig?.chatConfig,
+  };
+
   return {
     agentConfig: resolvedAgentConfig,
-    chatConfig,
+    chatConfig: resolvedChatConfig,
     isBuiltinAgent: true,
     plugins: finalPlugins,
     slug,
