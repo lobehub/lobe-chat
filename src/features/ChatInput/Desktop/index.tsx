@@ -17,6 +17,7 @@ import ActionBar from '../ActionBar';
 import InputEditor from '../InputEditor';
 import SendArea from '../SendArea';
 import TypoBar from '../TypoBar';
+import ContextItem from './ContextContainer';
 import FilePreview from './FilePreview';
 
 const useStyles = createStyles(({ css }) => ({
@@ -75,10 +76,11 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
     }, [chatKey, editor]);
 
     const fileNode = leftActions.flat().includes('fileUpload') && <FilePreview />;
+    const contextNode = leftActions.flat().includes('fileUpload') && <ContextItem />;
 
     return (
       <>
-        {!expand && fileNode}
+        {/* {!expand && fileNode} */}
         <Flexbox
           className={cx(styles.container, expand && styles.fullscreen)}
           gap={8}
@@ -108,6 +110,7 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
             className={cx(expand && styles.inputFullscreen, inputContainerProps?.className)}
           >
             {expand && fileNode}
+            {!expand && contextNode}
             <InputEditor />
           </ChatInput>
           {showFootnote && !expand && (
