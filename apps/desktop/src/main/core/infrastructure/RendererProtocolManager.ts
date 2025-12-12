@@ -1,9 +1,8 @@
 import { app, protocol } from 'electron';
 import { pathExistsSync } from 'fs-extra';
 import { readFile } from 'node:fs/promises';
-import { extname } from 'node:path';
+import { basename, extname } from 'node:path';
 
-import { ELECTRON_BE_PROTOCOL_SCHEME } from '@/const/protocol';
 import { createLogger } from '@/utils/logger';
 
 type ResolveRendererFilePath = (url: URL) => Promise<string | null>;
@@ -78,13 +77,34 @@ export class RendererProtocolManager {
       protocol.handle(this.scheme, async (request) => {
         const url = new URL(request.url);
         const hostname = url.hostname;
-        const isAssetRequest = this.isAssetRequest(url.pathname);
+        const pathname = url.pathname;
+        const isAssetRequest = this.isAssetRequest(pathname);
+        const isExplicit404HtmlRequest = pathname.endsWith('/404.html');
 
         if (hostname !== this.host) {
           return new Response('Not Found', { status: 404 });
         }
 
+        const buildFileResponse = async (targetPath: string) => {
+          const buffer = await readFile(targetPath);
+          const headers = new Headers();
+          const mimeType = this.getExportMimeType(targetPath);
+
+          if (mimeType) headers.set('Content-Type', mimeType);
+
+          return new Response(buffer, { headers });
+        };
+
+        const resolveEntryFilePath = () =>
+          this.resolveRendererFilePath(new URL(`${this.scheme}://${this.host}/`));
+
         let filePath = await this.resolveRendererFilePath(url);
+
+        // If the resolved file is the export 404 page, treat it as missing so we can
+        // fall back to the entry HTML for SPA routing (unless explicitly requested).
+        if (filePath && this.is404Html(filePath) && !isExplicit404HtmlRequest) {
+          filePath = null;
+        }
 
         if (!filePath) {
           if (isAssetRequest) {
@@ -92,21 +112,37 @@ export class RendererProtocolManager {
           }
 
           // Fallback to entry HTML for unknown routes (SPA-like behavior)
-          filePath = await this.resolveRendererFilePath(new URL(`${url.origin}/`));
-          if (!filePath) {
+          filePath = await resolveEntryFilePath();
+          if (!filePath || this.is404Html(filePath)) {
             return new Response('Render file Not Found', { status: 404 });
           }
         }
 
         try {
-          const buffer = await readFile(filePath);
-          const headers = new Headers();
-          const mimeType = this.getExportMimeType(filePath);
-
-          if (mimeType) headers.set('Content-Type', mimeType);
-
-          return new Response(buffer, { headers });
+          return await buildFileResponse(filePath);
         } catch (error) {
+          const code = (error as NodeJS.ErrnoException).code;
+
+          if (code === 'ENOENT') {
+            logger.warn(`Export asset missing on disk ${filePath}, falling back`, error);
+
+            if (isAssetRequest) {
+              return new Response('File Not Found', { status: 404 });
+            }
+
+            const fallbackPath = await resolveEntryFilePath();
+            if (!fallbackPath || this.is404Html(fallbackPath)) {
+              return new Response('Render file Not Found', { status: 404 });
+            }
+
+            try {
+              return await buildFileResponse(fallbackPath);
+            } catch (fallbackError) {
+              logger.error(`Failed to serve fallback entry ${fallbackPath}:`, fallbackError);
+              return new Response('Internal Server Error', { status: 500 });
+            }
+          }
+
           logger.error(`Failed to serve export asset ${filePath}:`, error);
           return new Response('Internal Server Error', { status: 500 });
         }
@@ -135,5 +171,9 @@ export class RendererProtocolManager {
       pathname === '/manifest.json' ||
       !!ext
     );
+  }
+
+  private is404Html(filePath: string) {
+    return basename(filePath) === '404.html';
   }
 }
