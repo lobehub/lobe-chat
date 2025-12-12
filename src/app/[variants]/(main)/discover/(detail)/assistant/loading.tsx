@@ -13,7 +13,7 @@ const Loading = memo(() => {
     <Flexbox gap={24}>
       <Flexbox gap={12}>
         <Flexbox align={'center'} gap={16} horizontal width={'100%'}>
-          <Skeleton.Avatar active size={mobile ? 48 : 64} />
+          <Skeleton.Avatar active shape={'square'} size={mobile ? 48 : 64} />
           <Skeleton.Button active style={{ height: 36, width: 200 }} />
         </Flexbox>
         <Skeleton.Button size={'small'} style={{ width: 200 }} />
