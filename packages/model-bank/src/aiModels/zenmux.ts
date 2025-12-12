@@ -130,6 +130,7 @@ const zenmuxChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 1_050_000,
@@ -145,6 +146,11 @@ const zenmuxChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-11-20',
+    settings: {
+      extendParams: ['thinkingLevel', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
     type: 'chat',
   },
   {

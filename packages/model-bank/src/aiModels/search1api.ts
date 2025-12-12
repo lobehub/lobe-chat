@@ -12,6 +12,9 @@ const search1apiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-r1-70b-online',
     maxOutput: 16_384,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
@@ -26,6 +29,9 @@ const search1apiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-r1-online',
     maxOutput: 8192,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
@@ -40,6 +46,9 @@ const search1apiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-r1-70b-fast-online',
     maxOutput: 16_384,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
@@ -54,6 +63,9 @@ const search1apiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-r1-fast-online',
     maxOutput: 16_384,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
 ];
