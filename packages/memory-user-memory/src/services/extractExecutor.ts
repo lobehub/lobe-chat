@@ -318,38 +318,44 @@ export class MemoryExtractionService<RO> {
       existingIdentitiesContext?: string;
     },
   ): Promise<MemoryExtractionLayerOutputs> {
-    const [
-      context,
-      experience,
-      preference,
-      identity,
-    ] = await Promise.all(([
-      LayersEnum.Context,
-      LayersEnum.Experience,
-      LayersEnum.Preference,
-      LayersEnum.Identity,
-    ] as LayersEnum[])
-    .filter((layer) => layers.includes(layer))
-    .map(async (layer) => {
-      try {
-        const res = await this.runLayer(job, layer, options)
-        return { data: res };
-      } catch (error) {
-        return { error }
-      }
-    })) as [
-      { data?: Awaited<ReturnType<ContextExtractor['structuredCall']>>, error?: unknown },
-      { data?: Awaited<ReturnType<ExperienceExtractor['structuredCall']>>, error?: unknown },
-      { data?: Awaited<ReturnType<PreferenceExtractor['structuredCall']>>, error?: unknown },
-      { data?: Awaited<ReturnType<IdentityExtractor['structuredCall']>>, error?: unknown },
-    ];
+    const outputs: Partial<MemoryExtractionLayerOutputs> = {};
 
-    return {
-      context,
-      experience,
-      identity,
-      preference,
-    }
+    await Promise.all(
+      ([
+        LayersEnum.Context,
+        LayersEnum.Experience,
+        LayersEnum.Preference,
+        LayersEnum.Identity,
+      ] as LayersEnum[])
+        .filter((layer) => layers.includes(layer))
+        .map(async (layer) => {
+          const result = await this.runLayer(job, layer, options);
+
+          switch (layer) {
+            case LayersEnum.Context: {
+              outputs.context = result;
+              break;
+            }
+            case LayersEnum.Experience: {
+              outputs.experience = result;
+              break;
+            }
+            case LayersEnum.Preference: {
+              outputs.preference = result;
+              break;
+            }
+            case LayersEnum.Identity: {
+              outputs.identity = result;
+              break;
+            }
+            default: {
+              break;
+            }
+          }
+        }),
+    );
+
+    return outputs as MemoryExtractionLayerOutputs;
   }
 
   private async runLayer(
