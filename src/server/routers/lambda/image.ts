@@ -1,5 +1,6 @@
 import debug from 'debug';
 import { and, eq } from 'drizzle-orm';
+import { after } from 'next/server';
 import { z } from 'zod';
 
 import { AsyncTaskModel } from '@/database/models/asyncTask';
@@ -232,14 +233,14 @@ export const imageRouter = router({
       generationsWithTasks.forEach(({ generation, asyncTaskId }) => {
         log('Starting background async task %s for generation %s', asyncTaskId, generation.id);
 
-        // 不使用 await，让任务在后台异步执行
-        // 这里不应该 await 也不应该 .then.catch，让 runtime 早点释放计算资源
-        asyncCaller.image.createImage({
-          generationId: generation.id,
-          model,
-          params,
-          provider,
-          taskId: asyncTaskId, // 使用原始参数
+        after(async () => {
+          await asyncCaller.image.createImage({
+            generationId: generation.id,
+            model,
+            params,
+            provider,
+            taskId: asyncTaskId,
+          });
         });
       });
 
