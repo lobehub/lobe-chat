@@ -1,0 +1,92 @@
+description: Memory (User Memory) eval Gate Keeper
+
+providers:
+  - id: openai:gpt-5-mini
+
+prompts:
+  - file://prompt.ts
+
+tests:
+  - name: Weekly design updates without explicit bio
+    vars:
+      messages:
+        - role: user
+          content: >
+            Quick reminder: I lead the onboarding redesign for NovaSoft's mobile app. Please keep
+            weekly check-ins tight and send them every Monday morning, based on the notes we already
+            have in the thread.
+    assert:
+      - type: contains
+        value: '"context"'
+      - type: contains
+        value: '"preference"'
+
+  - name: Pair-programming experience preference
+    vars:
+      messages:
+        - role: user
+          content: >
+            Last sprint we tried pairing on complex backend tickets and it cut our review time by
+            about 30%. I want to keep pair programming for critical backend work going forward, and
+            I'm fine skipping it for small UI fixes.
+    assert:
+      - type: contains
+        value: '"experience"'
+      - type: contains
+        value: '"preference"'
+
+  - name: Pet care routines and household context
+    vars:
+      messages:
+        - role: user
+          content: >
+            Can you remind me to feed Mochi the cat at 7pm and leave out her thyroid meds on the
+            kitchen counter? I walk the corgi before 8am because the Bay Area heat gets bad later.
+            Keep those on my daily checklist.
+    assert:
+      - type: contains
+        value: '"context"'
+      - type: contains
+        value: '"preference"'
+
+  - name: Travel planning with lifestyle hints
+    vars:
+      messages:
+        - role: user
+          content: >
+            I'm heading to Kyoto from Sept 18-24 for a solo trip. Please line up an itinerary that
+            balances temple visits and coffee shops with good Wi-Fi so I can work a few hours each
+            afternoon. I'm vegetarian and like small boutique hotels near transit.
+    assert:
+      - type: contains
+        value: '"context"'
+      - type: contains
+        value: '"preference"'
+
+  - name: Scheduling around work and studies
+    vars:
+      messages:
+        - role: user
+          content: >
+            My morning shift at the waterfront cafe runs 6am-11am, and community college classes are
+            Tue/Thu 6-9pm. Block out Wednesday evenings for thesis research on urban gardens and set
+            a Sunday afternoon reminder to email Professor Lee.
+    assert:
+      - type: contains
+        value: '"identity"'
+      - type: contains
+        value: '"context"'
+
+  - name: Emotional support with workplace context
+    vars:
+      messages:
+        - role: user
+          content: >
+            I'm nervous about the quarterly review with my manager at Redwood Labs tomorrow. Help me
+            rehearse how to bring up the long hours on the Phoenix project without sounding
+            ungrateful, and remind me of the wins we logged last week.
+    assert:
+      - type: contains
+        value: '"experience"'
+      - type: contains
+        value: '"identity"'
