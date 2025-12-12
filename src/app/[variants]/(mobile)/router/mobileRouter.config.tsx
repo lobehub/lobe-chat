@@ -74,10 +74,6 @@ export const createMobileRouter = () =>
                       path: 'assistant',
                     },
                   ],
-                  element: dynamicElement(
-                    () => import('../../(main)/discover/(list)/assistant/_layout/Mobile'),
-                    'Mobile > Discover > List > Assistant > Layout',
-                  ),
                 },
                 {
                   children: [
@@ -89,10 +85,6 @@ export const createMobileRouter = () =>
                       path: 'model',
                     },
                   ],
-                  element: dynamicElement(
-                    () => import('../../(main)/discover/(list)/model/_layout/Mobile'),
-                    'Mobile > Discover > List > Model > Layout',
-                  ),
                 },
                 {
                   element: dynamicElement(
@@ -111,10 +103,6 @@ export const createMobileRouter = () =>
                       path: 'mcp',
                     },
                   ],
-                  element: dynamicElement(
-                    () => import('../../(main)/discover/(list)/mcp/_layout/Mobile'),
-                    'Mobile > Discover > List > MCP > Layout',
-                  ),
                 },
               ],
               element: dynamicElement(
