@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix CVE errors."]
+    },
+    "date": "2025-12-12",
+    "version": "2.0.0-next.169"
+  },
+  {
+    "children": {
       "fixes": ["Slove market oidc error."]
     },
     "date": "2025-12-12",
