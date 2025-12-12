@@ -1,10 +1,13 @@
 import type { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
 
+import { GroupSupervisorContext } from './agents/group-supervisor/type';
+
 /**
  * Builtin Agent Slugs - unique identifiers for builtin agents
  */
 export const BUILTIN_AGENT_SLUGS = {
   agentBuilder: 'agent-builder',
+  groupSupervisor: 'group-supervisor',
   inbox: 'inbox',
   pageAgent: 'page-agent',
 } as const;
@@ -43,6 +46,9 @@ export interface BuiltinAgentRuntimeResult {
 export interface RuntimeContext {
   /** Document content for PageAgent */
   documentContent?: string;
+
+  /** Context for GroupSupervisor */
+  groupSupervisorContext?: GroupSupervisorContext;
 
   /** Current model being used */
   model?: string;

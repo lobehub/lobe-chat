@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../models/__tests__/_util';
@@ -348,6 +349,72 @@ describe('AgentGroupRepository', () => {
       expect(result!.agents).toEqual([
         expect.objectContaining({ isSupervisor: true, title: 'Supervisor', virtual: true }),
       ]);
+    });
+
+    it('should inject group-supervisor slug for supervisor agent', async () => {
+      // Create group
+      await serverDB.insert(chatGroups).values({
+        id: 'slug-test-group',
+        title: 'Slug Test Group',
+        userId,
+      });
+
+      // Create supervisor and participant agents
+      await serverDB.insert(agents).values([
+        { id: 'slug-supervisor', slug: null, title: 'Supervisor', userId, virtual: true },
+        { id: 'slug-participant', slug: 'custom-slug', title: 'Participant', userId },
+      ]);
+
+      // Link agents with roles
+      await serverDB.insert(chatGroupsAgents).values([
+        {
+          agentId: 'slug-supervisor',
+          chatGroupId: 'slug-test-group',
+          order: -1,
+          role: 'supervisor',
+          userId,
+        },
+        {
+          agentId: 'slug-participant',
+          chatGroupId: 'slug-test-group',
+          order: 0,
+          role: 'participant',
+          userId,
+        },
+      ]);
+
+      const result = await agentGroupRepo.findByIdWithAgents('slug-test-group');
+
+      expect(result).not.toBeNull();
+      expect(result!.agents).toHaveLength(2);
+
+      // Verify supervisor has injected slug
+      const supervisor = result!.agents.find((a) => a.isSupervisor);
+      expect(supervisor).toBeDefined();
+      expect(supervisor!.slug).toBe(BUILTIN_AGENT_SLUGS.groupSupervisor);
+
+      // Verify participant keeps original slug
+      const participant = result!.agents.find((a) => !a.isSupervisor);
+      expect(participant).toBeDefined();
+      expect(participant!.slug).toBe('custom-slug');
+    });
+
+    it('should inject group-supervisor slug for auto-created supervisor', async () => {
+      await serverDB.insert(chatGroups).values({
+        id: 'auto-slug-group',
+        title: 'Auto Slug Group',
+        userId,
+      });
+
+      const result = await agentGroupRepo.findByIdWithAgents('auto-slug-group');
+
+      expect(result).not.toBeNull();
+      expect(result!.agents).toHaveLength(1);
+
+      // Verify auto-created supervisor has injected slug
+      const supervisor = result!.agents[0];
+      expect(supervisor.isSupervisor).toBe(true);
+      expect(supervisor.slug).toBe(BUILTIN_AGENT_SLUGS.groupSupervisor);
     });
   });
 
