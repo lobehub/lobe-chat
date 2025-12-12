@@ -167,10 +167,7 @@ export const createDesktopRouter = () =>
               children: [
                 {
                   element: dynamicElement(
-                    () =>
-                      import('../(main)/discover/(detail)/assistant').then(
-                        (m) => m.DesktopDiscoverAssistantDetailPage,
-                      ),
+                    () => import('../(main)/discover/(detail)/assistant'),
                     'Desktop > Discover > Detail > Assistant',
                   ),
                   loader: slugLoader,
@@ -178,8 +175,7 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(
-                    () =>
-                      import('../(main)/discover/(detail)/model').then((m) => m.DesktopModelPage),
+                    () => import('../(main)/discover/(detail)/model'),
                     'Desktop > Discover > Detail > Model',
                   ),
                   loader: slugLoader,
@@ -187,10 +183,7 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(
-                    () =>
-                      import('../(main)/discover/(detail)/provider').then(
-                        (m) => m.DesktopProviderPage,
-                      ),
+                    () => import('../(main)/discover/(detail)/provider'),
                     'Desktop > Discover > Detail > Provider',
                   ),
                   loader: slugLoader,
@@ -198,7 +191,7 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(
-                    () => import('../(main)/discover/(detail)/mcp').then((m) => m.DesktopMcpPage),
+                    () => import('../(main)/discover/(detail)/mcp'),
                     'Desktop > Discover > Detail > MCP',
                   ),
                   loader: slugLoader,
@@ -206,10 +199,7 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(
-                    () =>
-                      import('../(main)/discover/(detail)/user').then(
-                        (m) => m.DesktopUserDetailPage,
-                      ),
+                    () => import('../(main)/discover/(detail)/user'),
                     'Desktop > Discover > Detail > User',
                   ),
                   loader: slugLoader,

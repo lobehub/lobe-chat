@@ -37,12 +37,8 @@ const ProviderDetailPage = memo<ProviderDetailPageProps>(({ mobile }) => {
   );
 });
 
-const DesktopProviderPage = memo<{ mobile?: boolean }>(() => {
-  return <ProviderDetailPage mobile={false} />;
-});
-
-const MobileProviderPage = memo<{ mobile?: boolean }>(() => {
+export const MobileProviderPage = memo<{ mobile?: boolean }>(() => {
   return <ProviderDetailPage mobile={true} />;
 });
 
-export { DesktopProviderPage, MobileProviderPage };
+export default ProviderDetailPage;
