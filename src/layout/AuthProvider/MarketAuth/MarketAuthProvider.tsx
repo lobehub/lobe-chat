@@ -92,13 +92,15 @@ const saveMarketTokensToDB = async (
  * 清除 DB 中的 market tokens
  */
 const clearMarketTokensFromDB = async () => {
+  // 如果已经没有 tokens，不需要调用 setSettings
+  const currentTokens = getMarketTokensFromDB();
+  if (!currentTokens?.accessToken && !currentTokens?.refreshToken && !currentTokens?.expiresAt) {
+    return;
+  }
+
   try {
     await useUserStore.getState().setSettings({
-      market: {
-        accessToken: undefined,
-        expiresAt: undefined,
-        refreshToken: undefined,
-      },
+      market: undefined,
     });
   } catch (error) {
     console.error('[MarketAuth] Failed to clear tokens from DB:', error);
