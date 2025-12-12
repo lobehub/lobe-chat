@@ -34,9 +34,6 @@ jobs:
     env:
       NODE_OPTIONS: --max-old-space-size=6144
       UPDATE_CHANNEL: nightly
-      APP_URL: http://localhost:3015
-      DATABASE_URL: postgresql://postgres@localhost:5432/postgres
-      KEY_VAULTS_SECRET: oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE=
       NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID || 'dummy-desktop-project' }}
       NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_BASE_URL || 'https://analytics.example.com' }}
     steps:
