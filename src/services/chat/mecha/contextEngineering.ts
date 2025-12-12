@@ -10,7 +10,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
-import { PAGE_AGENT_TOOL_ID } from '@/tools/document/const';
+import { PAGE_AGENT_TOOL_ID } from '@/tools/page-agent/const';
 
 import { isCanUseVideo, isCanUseVision } from '../helper';
 import type { UserMemoriesResult } from './memoryManager';

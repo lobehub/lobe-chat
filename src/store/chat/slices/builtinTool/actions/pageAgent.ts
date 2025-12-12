@@ -1,7 +1,7 @@
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
-import { PageAgentExecutionRuntime } from '@/tools/document/ExecutionRuntime';
+import { PageAgentExecutionRuntime } from '@/tools/page-agent/ExecutionRuntime';
 
 export interface PageAgentAction {
   // ============ Batch Operations ============

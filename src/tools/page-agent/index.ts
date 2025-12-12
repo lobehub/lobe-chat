@@ -55,7 +55,7 @@ export const DocumentApiName = {
   saveSnapshot: 'saveSnapshot',
 };
 
-export const DocumentManifest: BuiltinToolManifest = {
+export const PageAgentManifest: BuiltinToolManifest = {
   api: [
     // ============ Initialize ============
     {
@@ -93,7 +93,7 @@ export const DocumentManifest: BuiltinToolManifest = {
     // ============ Basic CRUD ============
     {
       description:
-        'Create a new node in the document. You can create paragraph (p), span, file, image, heading, list, table and other elements. The new node will be inserted at the specified position.',
+        'Create a new node in the page. You can create paragraph (p), span, file, image, heading, list, table and other elements. The new node will be inserted at the specified position.',
       name: DocumentApiName.createNode,
       parameters: {
         properties: {
