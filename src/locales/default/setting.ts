@@ -367,6 +367,10 @@ export default {
     title: '聊天设置',
   },
   settingChatAppearance: {
+    autoScroll: {
+      desc: '启用后，当助手生成内容时将不会自动滚动到底部。',
+      title: '禁用生成时自动滚动',
+    },
     fontSize: {
       desc: '聊天内容的字体大小',
       marks: {
