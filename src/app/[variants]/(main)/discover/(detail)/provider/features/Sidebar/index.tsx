@@ -30,7 +30,7 @@ const Sidebar = memo<{ mobile?: boolean }>(({ mobile }) => {
         maxHeight: 'calc(100vh - 76px)',
         paddingBottom: 24,
         position: 'sticky',
-        top: 0,
+        top: 16,
       }}
       width={360}
     >
