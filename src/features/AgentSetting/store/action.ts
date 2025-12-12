@@ -1,4 +1,4 @@
-import { MessageTextChunk } from '@lobechat/fetch-sse';
+import { MessageContentPartChunk, MessageTextChunk } from '@lobechat/fetch-sse';
 import {
   chainPickEmoji,
   chainSummaryAgentName,
@@ -306,11 +306,17 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
 
   streamUpdateMetaArray: (key: keyof MetaData) => {
     let value = '';
-    return (chunk: MessageTextChunk) => {
+    return (chunk: MessageTextChunk | MessageContentPartChunk) => {
       switch (chunk.type) {
         case 'text': {
           value += chunk.text;
           get().dispatchMeta({ type: 'update', value: { [key]: value.split(',') } });
+          break;
+        }
+        case 'content_part': {
+          value += chunk.content;
+          get().dispatchMeta({ type: 'update', value: { [key]: value.split(',') } });
+          break;
         }
       }
     };
@@ -318,11 +324,17 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
 
   streamUpdateMetaString: (key: keyof MetaData) => {
     let value = '';
-    return (chunk: MessageTextChunk) => {
+    return (chunk: MessageTextChunk | MessageContentPartChunk) => {
       switch (chunk.type) {
         case 'text': {
           value += chunk.text;
           get().dispatchMeta({ type: 'update', value: { [key]: value } });
+          break;
+        }
+        case 'content_part': {
+          value += chunk.content;
+          get().dispatchMeta({ type: 'update', value: { [key]: value } });
+          break;
         }
       }
     };
