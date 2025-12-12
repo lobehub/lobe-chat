@@ -1,4 +1,4 @@
-ALTER TABLE "user_memories" ADD COLUMN IF NOT EXISTS "captured_at" timestamp with time zone NOT NULL;--> statement-breakpoint
+ALTER TABLE "user_memories" ADD COLUMN IF NOT EXISTS "captured_at" timestamp with time zone DEFAULT now() NOT NULL;--> statement-breakpoint
 ALTER TABLE "user_memories_contexts" ADD COLUMN IF NOT EXISTS "captured_at" timestamp with time zone NOT NULL;--> statement-breakpoint
 ALTER TABLE "user_memories_experiences" ADD COLUMN IF NOT EXISTS "captured_at" timestamp with time zone NOT NULL;--> statement-breakpoint
 ALTER TABLE "user_memories_identities" ADD COLUMN IF NOT EXISTS "captured_at" timestamp with time zone NOT NULL;--> statement-breakpoint

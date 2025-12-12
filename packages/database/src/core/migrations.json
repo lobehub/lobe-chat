@@ -970,7 +970,7 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"user_memories\" ADD COLUMN \"captured_at\" timestamp with time zone NOT NULL;",
+      "ALTER TABLE \"user_memories\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
       "\nALTER TABLE \"user_memories_contexts\" ADD COLUMN \"captured_at\" timestamp with time zone NOT NULL;",
       "\nALTER TABLE \"user_memories_experiences\" ADD COLUMN \"captured_at\" timestamp with time zone NOT NULL;",
       "\nALTER TABLE \"user_memories_identities\" ADD COLUMN \"captured_at\" timestamp with time zone NOT NULL;",
@@ -987,7 +987,7 @@
       "\nCREATE INDEX \"user_memories_preferences_user_memory_id_index\" ON \"user_memories_preferences\" USING btree (\"user_memory_id\");"
     ],
     "bps": true,
-    "folderMillis": 1765524908005,
-    "hash": "0d547f8f197108783e6dd4a6c5df16cc274fee67d00b2ad1e69350fff3a3d8e7"
+    "folderMillis": 1765526509188,
+    "hash": "ce068c1b367e3fe535d6124509204b7694aeaf76db35938d3cc5e78c70d3558e"
   }
 ]

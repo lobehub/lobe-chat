@@ -1092,7 +1092,7 @@ table user_memories {
   status varchar(255)
   accessed_count bigint [default: 0]
   last_accessed_at "timestamp with time zone" [not null]
-  captured_at "timestamp with time zone" [not null]
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

@@ -30,7 +30,7 @@ export const userMemories = pgTable(
 
     accessedCount: bigint('accessed_count', { mode: 'number' }).default(0),
     lastAccessedAt: timestamptz('last_accessed_at').notNull(),
-    capturedAt: timestamptz('captured_at').notNull(),
+    capturedAt: timestamptz('captured_at').notNull().defaultNow(),
 
     ...timestamps,
   },
