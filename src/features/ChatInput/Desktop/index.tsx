@@ -17,8 +17,7 @@ import ActionBar from '../ActionBar';
 import InputEditor from '../InputEditor';
 import SendArea from '../SendArea';
 import TypoBar from '../TypoBar';
-import ContextItem from './ContextContainer';
-import FilePreview from './FilePreview';
+import ContextContainer from './ContextContainer';
 
 const useStyles = createStyles(({ css }) => ({
   container: css`
@@ -75,51 +74,48 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
       if (editor) editor.focus();
     }, [chatKey, editor]);
 
-    // TODO: Original fileNode should be discarded
-    const fileNode = leftActions.flat().includes('fileUpload') && <FilePreview />;
-    const contextNode = leftActions.flat().includes('fileUpload') && <ContextItem />;
+    const contextContainerNode = leftActions.flat().includes('fileUpload') && <ContextContainer />;
 
     return (
       <Flexbox
-          className={cx(styles.container, expand && styles.fullscreen)}
-          gap={8}
-          paddingBlock={expand ? 0 : showFootnote ? '0 12px' : '0 16px'}
+        className={cx(styles.container, expand && styles.fullscreen)}
+        gap={8}
+        paddingBlock={expand ? 0 : showFootnote ? '0 12px' : '0 16px'}
+      >
+        <ChatInput
+          defaultHeight={chatInputHeight || 32}
+          footer={
+            <ChatInputActionBar
+              left={<ActionBar />}
+              right={<SendArea />}
+              style={{
+                paddingRight: 8,
+              }}
+            />
+          }
+          fullscreen={expand}
+          header={(expand || showTypoBar) && <TypoBar />}
+          maxHeight={320}
+          minHeight={36}
+          onSizeChange={(height) => {
+            updateSystemStatus({ chatInputHeight: height });
+          }}
+          resize={true}
+          slashMenuRef={slashMenuRef}
+          {...inputContainerProps}
+          className={cx(expand && styles.inputFullscreen, inputContainerProps?.className)}
         >
-          <ChatInput
-            defaultHeight={chatInputHeight || 32}
-            footer={
-              <ChatInputActionBar
-                left={<ActionBar />}
-                right={<SendArea />}
-                style={{
-                  paddingRight: 8,
-                }}
-              />
-            }
-            fullscreen={expand}
-            header={(expand || showTypoBar) && <TypoBar />}
-            maxHeight={320}
-            minHeight={36}
-            onSizeChange={(height) => {
-              updateSystemStatus({ chatInputHeight: height });
-            }}
-            resize={true}
-            slashMenuRef={slashMenuRef}
-            {...inputContainerProps}
-            className={cx(expand && styles.inputFullscreen, inputContainerProps?.className)}
-          >
-            {expand && fileNode}
-            {!expand && contextNode}
-            <InputEditor />
-          </ChatInput>
-          {showFootnote && !expand && (
-            <Center style={{ pointerEvents: 'none', zIndex: 100 }}>
-              <Text className={styles.footnote} type={'secondary'}>
-                {t('input.disclaimer')}
-              </Text>
-            </Center>
-          )}
-        </Flexbox>
+          {contextContainerNode}
+          <InputEditor />
+        </ChatInput>
+        {showFootnote && !expand && (
+          <Center style={{ pointerEvents: 'none', zIndex: 100 }}>
+            <Text className={styles.footnote} type={'secondary'}>
+              {t('input.disclaimer')}
+            </Text>
+          </Center>
+        )}
+      </Flexbox>
     );
   },
 );
