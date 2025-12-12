@@ -11,7 +11,7 @@ import Pagination from '../features/Pagination';
 import List from './features/List';
 import Loading from './loading';
 
-const Client = memo<{ mobile?: boolean }>(() => {
+const ProviderPage = memo(() => {
   const { q, page, sort, order } = useQuery() as ProviderQueryParams;
   const useProviderList = useDiscoverStore((s) => s.useProviderList);
   const { data, isLoading } = useProviderList({
@@ -39,12 +39,4 @@ const Client = memo<{ mobile?: boolean }>(() => {
   );
 });
 
-const DesktopProviderPage = memo<{ mobile?: boolean }>(() => {
-  return <Client mobile={false} />;
-});
-
-const MobileProviderPage = memo<{ mobile?: boolean }>(() => {
-  return <Client mobile={true} />;
-});
-
-export { DesktopProviderPage, MobileProviderPage };
+export default ProviderPage;

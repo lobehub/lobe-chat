@@ -11,7 +11,7 @@ import Pagination from '../features/Pagination';
 import List from './features/List';
 import Loading from './loading';
 
-const AssistantPage = memo<{ mobile?: boolean }>(() => {
+const AssistantPage = memo(() => {
   const { q, page, category, sort, order, source } = useQuery() as AssistantQueryParams;
   const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
   const { data, isLoading } = useAssistantList({
@@ -41,21 +41,4 @@ const AssistantPage = memo<{ mobile?: boolean }>(() => {
   );
 });
 
-const MobileAssistantPage = memo<{ mobile?: boolean }>(() => {
-  return (
-    <AssistantPage mobile={true} />
-  );
-});
-
-const DesktopAssistantPage = memo<{ mobile?: boolean }>(() => {
-  return (
-    <AssistantPage mobile={false} />
-  );
-});
-
-MobileAssistantPage.displayName = 'MobileAssistantPage';
-
-DesktopAssistantPage.displayName = 'DesktopAssistantPage';
-
-export { DesktopAssistantPage, MobileAssistantPage };
 export default AssistantPage;
