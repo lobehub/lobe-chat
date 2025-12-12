@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.168](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.167...v2.0.0-next.168)
+
+<sup>Released on **2025-12-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Slove market oidc error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Slove market oidc error, closes [#10715](https://github.com/lobehub/lobe-chat/issues/10715) ([108d2a7](https://github.com/lobehub/lobe-chat/commit/108d2a7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.167](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.166...v2.0.0-next.167)
 
 <sup>Released on **2025-12-11**</sup>
