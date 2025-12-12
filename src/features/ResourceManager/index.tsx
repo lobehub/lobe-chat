@@ -75,7 +75,7 @@ const ResourceManager = memo(() => {
           <Flexbox
             height={'100%'}
             style={{
-              backgroundColor: theme.colorBgLayout,
+              backgroundColor: theme.colorBgContainerSecondary,
               inset: 0,
               position: 'absolute',
               zIndex: 1,

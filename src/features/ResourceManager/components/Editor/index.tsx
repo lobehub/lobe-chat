@@ -1,6 +1,7 @@
 'use client';
 
 import { ActionIcon } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { XIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,12 +34,14 @@ const FileEditor = memo(() => {
 
   const fileDetail = useFileStore(fileManagerSelectors.getFileById(currentViewItemId));
 
+  const theme = useTheme();
+
   return (
     <Flexbox height={'100%'}>
       <NavHeader
         left={
           <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
-            <Flexbox align={'center'} style={{ marginLeft: 12 }}>
+            <Flexbox align={'center'} style={{ marginLeft: 8 }}>
               <Breadcrumb
                 category={category}
                 fileName={fileDetail?.name}
@@ -59,6 +62,9 @@ const FileEditor = memo(() => {
             />
           </Flexbox>
         }
+        style={{
+          borderBottom: `1px solid ${theme.colorBorderSecondary}`,
+        }}
         styles={{
           left: { padding: 0 },
         }}
