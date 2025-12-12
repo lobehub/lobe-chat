@@ -16,41 +16,41 @@ export interface LobeAgentConfig {
    */
   knowledgeBases?: KnowledgeBaseItem[];
   /**
-   * 角色所使用的语言模型
+   * Language model used by the agent
    * @default gpt-4o-mini
    */
   model: string;
 
   /**
-   * 开场白
+   * Opening message
    */
   openingMessage?: string;
   /**
-   * 开场问题
+   * Opening questions
    */
   openingQuestions?: string[];
 
   /**
-   * 语言模型参数
+   * Language model parameters
    */
   params: LLMParams;
   /**
-   * 启用的插件
+   * Enabled plugins
    */
   plugins?: string[];
 
   /**
-   *  模型供应商
+   * Model provider
    */
   provider?: string;
 
   /**
-   * 系统角色
+   * System role
    */
   systemRole: string;
 
   /**
-   * 语音服务
+   * Voice service
    */
   tts: LobeAgentTTSConfig;
 
