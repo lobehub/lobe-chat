@@ -7,6 +7,7 @@ import type { SearchResult } from '@/database/repositories/search';
 import { lambdaClient } from '@/libs/trpc/client';
 import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
+import { globalHelpers } from '@/store/global/helpers';
 import { useHomeStore } from '@/store/home';
 
 import type { ChatMessage, ThemeMode } from './types';
@@ -51,7 +52,8 @@ export const useCommandMenu = () => {
   const { data: searchResults, isLoading: isSearching } = useSWR<SearchResult[]>(
     hasSearch && !isAiMode ? ['search', searchQuery, agentId] : null,
     async () => {
-      return lambdaClient.search.query.query({ agentId, query: searchQuery });
+      const locale = globalHelpers.getCurrentLanguage();
+      return lambdaClient.search.query.query({ agentId, locale, query: searchQuery });
     },
     {
       revalidateOnFocus: false,

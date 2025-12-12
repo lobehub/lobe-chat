@@ -177,6 +177,10 @@ export class KnowledgeRepo {
       LEFT JOIN ${documents} d
         ON f.id = d.file_id
       WHERE f.user_id = ${this.userId}
+        AND NOT EXISTS (
+          SELECT 1 FROM ${knowledgeBaseFiles}
+          WHERE ${knowledgeBaseFiles.fileId} = f.id
+        )
     `;
 
     const documentQuery = sql`
@@ -198,6 +202,7 @@ export class KnowledgeRepo {
       FROM ${documents}
       WHERE user_id = ${this.userId}
         AND source_type != ${'file'}
+        AND (metadata->>'knowledgeBaseId') IS NULL
     `;
 
     const combinedQuery = sql`

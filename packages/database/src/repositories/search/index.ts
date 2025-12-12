@@ -3,7 +3,14 @@ import { sql } from 'drizzle-orm';
 import { agents, documents, files, messages, topics } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 
-export type SearchResultType = 'agent' | 'topic' | 'file' | 'message';
+export type SearchResultType =
+  | 'agent'
+  | 'topic'
+  | 'file'
+  | 'message'
+  | 'mcp'
+  | 'plugin'
+  | 'assistant';
 
 export interface BaseSearchResult {
   // 1=exact, 2=prefix, 3=contains
@@ -48,11 +55,45 @@ export interface MessageSearchResult extends BaseSearchResult {
   type: 'message';
 }
 
+export interface MCPSearchResult extends BaseSearchResult {
+  author: string;
+  avatar?: string | null;
+  category?: string | null;
+  connectionType?: 'http' | 'stdio' | null;
+  identifier: string;
+  installCount?: number | null;
+  isFeatured?: boolean | null;
+  isValidated?: boolean | null;
+  tags?: string[] | null;
+  type: 'mcp';
+}
+
+export interface PluginSearchResult extends BaseSearchResult {
+  author: string;
+  avatar?: string | null;
+  category?: string | null;
+  identifier: string;
+  tags?: string[] | null;
+  type: 'plugin';
+}
+
+export interface AssistantSearchResult extends BaseSearchResult {
+  author: string;
+  avatar?: string | null;
+  homepage?: string | null;
+  identifier: string;
+  tags?: string[] | null;
+  type: 'assistant';
+}
+
 export type SearchResult =
   | AgentSearchResult
   | TopicSearchResult
   | FileSearchResult
-  | MessageSearchResult;
+  | MessageSearchResult
+  | MCPSearchResult
+  | PluginSearchResult
+  | AssistantSearchResult;
 
 export interface SearchOptions {
   agentId?: string;
@@ -235,25 +276,25 @@ export class SearchRepo {
     // Build relevance CASE statement with agent boosting
     const relevanceCase = agentId
       ? sql`
-          CASE
-            WHEN t.agent_id = ${agentId} THEN
-              CASE
-                WHEN t.title ILIKE ${exactQuery} THEN 0.5
-                WHEN t.title ILIKE ${prefixQuery} THEN 0.6
-                ELSE 0.7
-              END
-            WHEN t.title ILIKE ${exactQuery} THEN 1
-            WHEN t.title ILIKE ${prefixQuery} THEN 2
-            ELSE 3
-          END
-        `
+        CASE
+          WHEN t.agent_id = ${agentId} THEN
+            CASE
+              WHEN t.title ILIKE ${exactQuery} THEN 0.5
+              WHEN t.title ILIKE ${prefixQuery} THEN 0.6
+              ELSE 0.7
+            END
+          WHEN t.title ILIKE ${exactQuery} THEN 1
+          WHEN t.title ILIKE ${prefixQuery} THEN 2
+          ELSE 3
+        END
+      `
       : sql`
-          CASE
-            WHEN t.title ILIKE ${exactQuery} THEN 1
-            WHEN t.title ILIKE ${prefixQuery} THEN 2
-            ELSE 3
-          END
-        `;
+        CASE
+          WHEN t.title ILIKE ${exactQuery} THEN 1
+          WHEN t.title ILIKE ${prefixQuery} THEN 2
+          ELSE 3
+        END
+      `;
 
     return sql`
       SELECT
@@ -319,25 +360,25 @@ export class SearchRepo {
     // Build relevance CASE statement with agent boosting
     const relevanceCase = agentId
       ? sql`
-          CASE
-            WHEN m.agent_id = ${agentId} THEN
-              CASE
-                WHEN m.content ILIKE ${exactQuery} THEN 0.5
-                WHEN m.content ILIKE ${prefixQuery} THEN 0.6
-                ELSE 0.7
-              END
-            WHEN m.content ILIKE ${exactQuery} THEN 1
-            WHEN m.content ILIKE ${prefixQuery} THEN 2
-            ELSE 3
-          END
-        `
+        CASE
+          WHEN m.agent_id = ${agentId} THEN
+            CASE
+              WHEN m.content ILIKE ${exactQuery} THEN 0.5
+              WHEN m.content ILIKE ${prefixQuery} THEN 0.6
+              ELSE 0.7
+            END
+          WHEN m.content ILIKE ${exactQuery} THEN 1
+          WHEN m.content ILIKE ${prefixQuery} THEN 2
+          ELSE 3
+        END
+      `
       : sql`
-          CASE
-            WHEN m.content ILIKE ${exactQuery} THEN 1
-            WHEN m.content ILIKE ${prefixQuery} THEN 2
-            ELSE 3
-          END
-        `;
+        CASE
+          WHEN m.content ILIKE ${exactQuery} THEN 1
+          WHEN m.content ILIKE ${prefixQuery} THEN 2
+          ELSE 3
+        END
+      `;
 
     return sql`
       SELECT
