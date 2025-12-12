@@ -24,7 +24,7 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-12-11',
     settings: {
-      extendParams: ['gpt5_2ReasoningEffort', 'textVerbosity'],
+      extendParams: ['textVerbosity'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -50,7 +50,6 @@ const aihubmixModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-12-11',
     settings: {
-      extendParams: ['gpt5_2ProReasoningEffort'],
       searchImpl: 'params',
     },
     type: 'chat',
