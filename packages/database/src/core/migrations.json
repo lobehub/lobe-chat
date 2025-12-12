@@ -946,5 +946,31 @@
     "bps": true,
     "folderMillis": 1765437218969,
     "hash": "004923916a27bc61294eeb20738f2884f1ca43978a03aa9f0216fc849c98465b"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"user_memories\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_contexts\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_experiences\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_identities\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_preferences\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nCREATE INDEX \"agents_user_id_idx\" ON \"agents\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"documents_source_type_idx\" ON \"documents\" USING btree (\"source_type\");",
+      "\nCREATE INDEX \"documents_user_id_idx\" ON \"documents\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"files_user_id_idx\" ON \"files\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"users_created_at_idx\" ON \"users\" USING btree (\"created_at\");",
+      "\nCREATE INDEX \"users_banned_true_created_at_idx\" ON \"users\" USING btree (\"created_at\") WHERE \"users\".\"banned\" = true;",
+      "\nCREATE INDEX \"user_memories_user_id_index\" ON \"user_memories\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_contexts_user_id_index\" ON \"user_memories_contexts\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_experiences_user_id_index\" ON \"user_memories_experiences\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_experiences_user_memory_id_index\" ON \"user_memories_experiences\" USING btree (\"user_memory_id\");",
+      "\nCREATE INDEX \"user_memories_identities_user_id_index\" ON \"user_memories_identities\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_identities_user_memory_id_index\" ON \"user_memories_identities\" USING btree (\"user_memory_id\");",
+      "\nCREATE INDEX \"user_memories_preferences_user_id_index\" ON \"user_memories_preferences\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_preferences_user_memory_id_index\" ON \"user_memories_preferences\" USING btree (\"user_memory_id\");"
+    ],
+    "bps": true,
+    "folderMillis": 1765540257262,
+    "hash": "2cc13eba2a174ebf18ac32a3ae673338a3dd46ec37a22108a7783a80f44a5286"
   }
 ]

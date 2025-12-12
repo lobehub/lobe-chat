@@ -28,6 +28,7 @@ table agents {
   indexes {
     (client_id, user_id) [name: 'client_id_user_id_unique', unique]
     (slug, user_id) [name: 'agents_slug_user_id_unique', unique]
+    user_id [name: 'agents_user_id_idx']
     title [name: 'agents_title_idx']
     description [name: 'agents_description_idx']
   }
@@ -258,6 +259,8 @@ table documents {
   indexes {
     source [name: 'documents_source_idx']
     file_type [name: 'documents_file_type_idx']
+    source_type [name: 'documents_source_type_idx']
+    user_id [name: 'documents_user_id_idx']
     file_id [name: 'documents_file_id_idx']
     parent_id [name: 'documents_parent_id_idx']
     (client_id, user_id) [name: 'documents_client_id_user_id_unique', unique]
@@ -285,6 +288,7 @@ table files {
 
   indexes {
     file_hash [name: 'file_hash_idx']
+    user_id [name: 'files_user_id_idx']
     parent_id [name: 'files_parent_id_idx']
     (client_id, user_id) [name: 'files_client_id_user_id_unique', unique]
   }
@@ -1071,6 +1075,8 @@ table users {
   indexes {
     email [name: 'users_email_idx']
     username [name: 'users_username_idx']
+    created_at [name: 'users_created_at_idx']
+    created_at [name: 'users_banned_true_created_at_idx']
   }
 }
 
@@ -1090,6 +1096,7 @@ table user_memories {
   status varchar(255)
   accessed_count bigint [default: 0]
   last_accessed_at "timestamp with time zone" [not null]
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -1097,6 +1104,7 @@ table user_memories {
   indexes {
     summary_vector_1024 [name: 'user_memories_summary_vector_1024_index']
     details_vector_1024 [name: 'user_memories_details_vector_1024_index']
+    user_id [name: 'user_memories_user_id_index']
   }
 }
 
@@ -1116,6 +1124,7 @@ table user_memories_contexts {
   current_status text
   score_impact numeric [default: 0]
   score_urgency numeric [default: 0]
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -1124,6 +1133,7 @@ table user_memories_contexts {
     title_vector [name: 'user_memories_contexts_title_vector_index']
     description_vector [name: 'user_memories_contexts_description_vector_index']
     type [name: 'user_memories_contexts_type_index']
+    user_id [name: 'user_memories_contexts_user_id_index']
   }
 }
 
@@ -1143,6 +1153,7 @@ table user_memories_experiences {
   key_learning text
   key_learning_vector vector(1024)
   score_confidence real [default: 0]
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -1152,6 +1163,8 @@ table user_memories_experiences {
     action_vector [name: 'user_memories_experiences_action_vector_index']
     key_learning_vector [name: 'user_memories_experiences_key_learning_vector_index']
     type [name: 'user_memories_experiences_type_index']
+    user_id [name: 'user_memories_experiences_user_id_index']
+    user_memory_id [name: 'user_memories_experiences_user_memory_id_index']
   }
 }
 
@@ -1167,6 +1180,7 @@ table user_memories_identities {
   episodic_date "timestamp with time zone"
   relationship varchar(255)
   role text
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -1174,6 +1188,8 @@ table user_memories_identities {
   indexes {
     description_vector [name: 'user_memories_identities_description_vector_index']
     type [name: 'user_memories_identities_type_index']
+    user_id [name: 'user_memories_identities_user_id_index']
+    user_memory_id [name: 'user_memories_identities_user_memory_id_index']
   }
 }
 
@@ -1188,12 +1204,15 @@ table user_memories_preferences {
   type varchar(255)
   suggestions text
   score_priority numeric [default: 0]
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
     conclusion_directives_vector [name: 'user_memories_preferences_conclusion_directives_vector_index']
+    user_id [name: 'user_memories_preferences_user_id_index']
+    user_memory_id [name: 'user_memories_preferences_user_memory_id_index']
   }
 }
 

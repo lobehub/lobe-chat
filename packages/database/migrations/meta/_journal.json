@@ -427,6 +427,13 @@
       "when": 1765437218969,
       "tag": "0060_add_user_last_active_at",
       "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1765540257262,
+      "tag": "0061_add_document_and_memory_index",
+      "breakpoints": true
     }
   ],
   "version": "6"
