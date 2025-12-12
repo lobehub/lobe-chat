@@ -27,14 +27,19 @@ refine this biography over time through updates rather than duplicating facts.
 Keep identity distinct from preference. Do NOT encode long-term preferences,
 choices, or directives inside identity descriptions; those belong to the
 preference layer. Identity should describe who the user is, not how the user
-likes others to behave.
+likes others to behave. Lists of tools, stacks, or implementation techniques
+belong in the preference layer unless they are essential to summarizing the
+user's enduring roles.
 
-Use CRUD-style actions to keep the identity record accurate:
+Use CRUD-style actions to keep the identity record accurate and compact:
 
 - Use `withIdentities.actions.add` for genuinely new identity aspects that are
   absent from the existing list.
 - Use `withIdentities.actions.update` when an existing entry changes or gains
-  more precision. Prefer updates over new entries to prevent duplication.
+  more precision. Prefer updates over new entries to prevent duplication. If
+  multiple statements describe the same role or biography (e.g., repeated
+  "developer/engineer/test maintainer" variants), consolidate them into a
+  single enriched entry rather than creating parallel items.
 - Use `withIdentities.actions.remove` to remove incorrect, obsolete, or
   duplicated entries.
 
