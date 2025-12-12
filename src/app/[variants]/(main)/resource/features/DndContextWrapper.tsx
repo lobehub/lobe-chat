@@ -1,12 +1,23 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
+import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import { FileText, FolderIcon } from 'lucide-react';
-import { PropsWithChildren, createContext, memo, useContext, useEffect, useRef, useState } from 'react';
+import {
+  PropsWithChildren,
+  createContext,
+  memo,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 import FileIcon from '@/components/FileIcon';
+import { clearTreeFolderCache } from '@/features/ResourceManager/components/Tree';
 import { useFileStore } from '@/store/file';
 
 import { useResourceManagerStore } from './store';
@@ -45,13 +56,17 @@ export const useDragState = () => useContext(DragStateContext);
  */
 export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
   const theme = useTheme();
+  const { t } = useTranslation('components');
+  const { message } = App.useApp();
   const [currentDrag, setCurrentDrag] = useState<DragState | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const updateDocument = useFileStore((s) => s.updateDocument);
   const moveFileToFolder = useFileStore((s) => s.moveFileToFolder);
+  const refreshFileList = useFileStore((s) => s.refreshFileList);
   const fileList = useFileStore((s) => s.fileList);
   const selectedFileIds = useResourceManagerStore((s) => s.selectedFileIds);
   const setSelectedFileIds = useResourceManagerStore((s) => s.setSelectedFileIds);
+  const libraryId = useResourceManagerStore((s) => s.libraryId);
 
   // Track mouse position and handle drag events
   useEffect(() => {
@@ -100,7 +115,7 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
         return;
       }
 
-      const targetParentId = isRootDrop ? null : targetId ?? null;
+      const targetParentId = isRootDrop ? null : (targetId ?? null);
       const isDraggingSelection = selectedFileIds.includes(currentDrag.id);
       const itemsToMove = isDraggingSelection ? selectedFileIds : [currentDrag.id];
 
@@ -110,31 +125,54 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
         return;
       }
 
-      const pools = itemsToMove.map((id) => {
-        const item = fileList.find((f) => f.id === id);
-        const itemData = item || (id === currentDrag.id ? currentDrag.data : null);
+      try {
+        // Track source folder IDs before moving
+        const sourceFolderIds = new Set<string | null>();
 
-        if (!itemData) return Promise.resolve();
+        const pools = itemsToMove.map((id) => {
+          const item = fileList.find((f) => f.id === id);
+          const itemData = item || (id === currentDrag.id ? currentDrag.data : null);
 
-        const isDocument =
-          itemData.sourceType === 'document' ||
-          itemData.fileType === 'custom/document' ||
-          itemData.fileType === 'custom/folder';
+          if (!itemData) return Promise.resolve();
 
-        if (isDocument) {
-          return updateDocument(id, { parentId: targetParentId });
-        } else {
-          return moveFileToFolder(id, targetParentId);
+          // Track source folder ID
+          if (item?.parentId !== undefined) {
+            sourceFolderIds.add(item.parentId);
+          }
+
+          const isDocument =
+            itemData.sourceType === 'document' ||
+            itemData.fileType === 'custom/document' ||
+            itemData.fileType === 'custom/folder';
+
+          if (isDocument) {
+            return updateDocument(id, { parentId: targetParentId });
+          } else {
+            return moveFileToFolder(id, targetParentId);
+          }
+        });
+
+        await Promise.all(pools);
+
+        // Refresh file list to invalidate SWR cache for both Explorer and Tree
+        await refreshFileList();
+
+        // Clear and reload all expanded folders in Tree's module-level cache
+        if (libraryId) {
+          await clearTreeFolderCache(libraryId);
         }
-      });
 
-      await Promise.all(pools);
+        message.success(t('FileManager.actions.moveSuccess'));
 
-      if (isDraggingSelection) {
-        setSelectedFileIds([]);
+        if (isDraggingSelection) {
+          setSelectedFileIds([]);
+        }
+      } catch (error) {
+        console.error('Failed to move file:', error);
+        message.error(t('FileManager.actions.moveError'));
+      } finally {
+        setCurrentDrag(null);
       }
-
-      setCurrentDrag(null);
     };
 
     const handleDragOver = (event: DragEvent) => {
@@ -152,7 +190,18 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
       document.removeEventListener('drop', handleDrop);
       document.removeEventListener('dragover', handleDragOver);
     };
-  }, [currentDrag, selectedFileIds, fileList, updateDocument, moveFileToFolder, setSelectedFileIds]);
+  }, [
+    currentDrag,
+    selectedFileIds,
+    fileList,
+    updateDocument,
+    moveFileToFolder,
+    refreshFileList,
+    setSelectedFileIds,
+    message,
+    t,
+    libraryId,
+  ]);
 
   // Change cursor to grabbing during drag
   useEffect(() => {
