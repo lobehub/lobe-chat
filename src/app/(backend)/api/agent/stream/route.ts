@@ -1,8 +1,8 @@
+import { createSSEHeaders, createSSEWriter } from '@lobechat/utils/server';
 import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { StreamEventManager } from '@/server/modules/AgentRuntime';
-import { createSSEHeaders, createSSEWriter } from '@/utils/server';
 
 import { isEnableAgent } from '../isEnableAgent';
 
@@ -97,6 +97,38 @@ export async function GET(request: NextRequest) {
       // 创建 AbortController 用于取消订阅
       const abortController = new AbortController();
 
+      // Track if stream has ended (agent_runtime_end received)
+      // Once set to true, no more events will be sent
+      let streamEnded = false;
+
+      // 定期发送心跳（每 30 秒）
+      const heartbeatInterval = setInterval(() => {
+        // Skip heartbeat if stream has ended
+        if (streamEnded) {
+          return;
+        }
+
+        try {
+          const heartbeat = {
+            operationId,
+            timestamp: Date.now(),
+            type: 'heartbeat',
+          };
+
+          controller.enqueue(`data: ${JSON.stringify(heartbeat)}\n\n`);
+        } catch (error) {
+          console.error('[Agent Stream] Heartbeat error:', error);
+          clearInterval(heartbeatInterval);
+        }
+      }, 30_000);
+
+      // Cleanup function
+      const cleanup = () => {
+        abortController.abort();
+        clearInterval(heartbeatInterval);
+        log(`SSE connection closed for operation ${operationId}`);
+      };
+
       // 订阅新的流式事件
       const subscribeToEvents = async () => {
         try {
@@ -105,6 +137,11 @@ export async function GET(request: NextRequest) {
             lastEventId,
             (events) => {
               events.forEach((event) => {
+                // Skip all events if stream has ended
+                if (streamEnded) {
+                  return;
+                }
+
                 try {
                   // 添加 SSE 特定的字段
                   const sseEvent = {
@@ -115,25 +152,21 @@ export async function GET(request: NextRequest) {
 
                   writer.writeStreamEvent(sseEvent, operationId);
 
-                  // 如果收到 agent_runtime_end 事件，停止心跳并准备关闭连接
+                  // 如果收到 agent_runtime_end 事件，立即终止流
                   if (event.type === 'agent_runtime_end') {
                     log(
-                      `Agent runtime ended for operation ${operationId}, preparing to close connection`,
+                      `Agent runtime ended for operation ${operationId}, terminating stream immediately`,
                     );
 
-                    // 延迟关闭连接，确保客户端有时间处理最后的事件
-                    setTimeout(() => {
-                      try {
-                        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-                        cleanup();
-                        controller.close();
-                        log(
-                          `SSE connection closed after agent runtime end for operation ${operationId}`,
-                        );
-                      } catch (closeError) {
-                        console.error('[Agent Stream] Error closing connection:', closeError);
-                      }
-                    }, 1000); // 1秒延迟，给客户端处理时间
+                    // Mark stream as ended to prevent any more events
+                    streamEnded = true;
+
+                    // Immediately cleanup and close connection
+                    cleanup();
+                    controller.close();
+                    log(
+                      `SSE connection closed after agent runtime end for operation ${operationId}`,
+                    );
                   }
                 } catch (error) {
                   console.error('[Agent Stream] Error sending event:', error);
@@ -157,29 +190,6 @@ export async function GET(request: NextRequest) {
 
       // 开始订阅
       subscribeToEvents();
-
-      // 定期发送心跳（每 30 秒）
-      const heartbeatInterval = setInterval(() => {
-        try {
-          const heartbeat = {
-            operationId,
-            timestamp: Date.now(),
-            type: 'heartbeat',
-          };
-
-          controller.enqueue(`data: ${JSON.stringify(heartbeat)}\n\n`);
-        } catch (error) {
-          console.error('[Agent Stream] Heartbeat error:', error);
-          clearInterval(heartbeatInterval);
-        }
-      }, 30_000);
-
-      // Cleanup function
-      const cleanup = () => {
-        abortController.abort();
-        clearInterval(heartbeatInterval);
-        log(`SSE connection closed for operation ${operationId}`);
-      };
 
       // 监听连接关闭
       request.signal?.addEventListener('abort', cleanup);

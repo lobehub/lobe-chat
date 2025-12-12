@@ -626,6 +626,209 @@ data: {"type":"stream_end","timestamp":300,"operationId":"test-operation","data"
     });
   });
 
+  describe('Heartbeat and connection lifecycle', () => {
+    it('should close connection immediately after agent_runtime_end', async () => {
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
+
+      let capturedCallback: ((events: any[]) => void) | null = null;
+      let capturedSignal: AbortSignal | null = null;
+
+      mockStreamEventManager.subscribeStreamEvents.mockImplementation(
+        (operationId, lastEventId, callback, signal) => {
+          capturedCallback = callback;
+          capturedSignal = signal;
+          return new Promise(() => {});
+        },
+      );
+
+      const response = await GET(request);
+
+      expect(capturedCallback).toBeDefined();
+      expect(capturedSignal).toBeDefined();
+
+      // Signal should not be aborted initially
+      expect(capturedSignal!.aborted).toBe(false);
+
+      // Simulate agent_runtime_end event
+      const endEvent = {
+        type: 'agent_runtime_end',
+        timestamp: MOCK_TIMESTAMP + 1000,
+        operationId: 'test-operation',
+        data: { status: 'completed' },
+      };
+      capturedCallback!([endEvent]);
+
+      // Signal should be aborted immediately after agent_runtime_end
+      expect(capturedSignal!.aborted).toBe(true);
+    });
+
+    it('should set streamEnded flag and close connection when agent_runtime_end is received', async () => {
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
+
+      let capturedCallback: ((events: any[]) => void) | null = null;
+      let capturedSignal: AbortSignal | null = null;
+
+      mockStreamEventManager.subscribeStreamEvents.mockImplementation(
+        (operationId, lastEventId, callback, signal) => {
+          capturedCallback = callback;
+          capturedSignal = signal;
+          return new Promise(() => {});
+        },
+      );
+
+      const response = await GET(request);
+
+      expect(response.status).toBe(200);
+      expect(capturedCallback).toBeDefined();
+      expect(capturedSignal).toBeDefined();
+
+      // Simulate agent_runtime_end event - this should set streamEnded = true
+      const endEvent = {
+        type: 'agent_runtime_end',
+        timestamp: MOCK_TIMESTAMP + 1000,
+        operationId: 'test-operation',
+        data: { status: 'completed' },
+      };
+
+      // This should not throw - verifies the callback can handle the event
+      expect(() => capturedCallback!([endEvent])).not.toThrow();
+      // Signal should be aborted (connection closed)
+      expect(capturedSignal!.aborted).toBe(true);
+    });
+
+    it('should handle agent_runtime_end event in callback without errors', async () => {
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
+
+      let capturedCallback: ((events: any[]) => void) | null = null;
+
+      mockStreamEventManager.subscribeStreamEvents.mockImplementation(
+        (operationId, lastEventId, callback, signal) => {
+          capturedCallback = callback;
+          return new Promise(() => {});
+        },
+      );
+
+      const response = await GET(request);
+
+      expect(response.status).toBe(200);
+      expect(capturedCallback).toBeDefined();
+
+      // Simulate agent_runtime_end with full data
+      const endEvent = {
+        type: 'agent_runtime_end',
+        timestamp: MOCK_TIMESTAMP + 1000,
+        operationId: 'test-operation',
+        data: {
+          finalState: { status: 'completed' },
+          reason: 'completed',
+          reasonDetail: 'Agent runtime completed successfully',
+        },
+      };
+
+      // Verify the event is processed without throwing
+      expect(() => capturedCallback!([endEvent])).not.toThrow();
+    });
+
+    it('should handle batch events including agent_runtime_end without errors', async () => {
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
+
+      let capturedCallback: ((events: any[]) => void) | null = null;
+
+      mockStreamEventManager.subscribeStreamEvents.mockImplementation(
+        (operationId, lastEventId, callback, signal) => {
+          capturedCallback = callback;
+          return new Promise(() => {});
+        },
+      );
+
+      const response = await GET(request);
+
+      expect(response.status).toBe(200);
+      expect(capturedCallback).toBeDefined();
+
+      // Simulate batch of events ending with agent_runtime_end
+      const batchEvents = [
+        {
+          type: 'stream_chunk',
+          timestamp: MOCK_TIMESTAMP + 800,
+          operationId: 'test-operation',
+          data: { content: 'Final chunk' },
+        },
+        {
+          type: 'stream_end',
+          timestamp: MOCK_TIMESTAMP + 900,
+          operationId: 'test-operation',
+          data: { messageId: 'msg-001' },
+        },
+        {
+          type: 'agent_runtime_end',
+          timestamp: MOCK_TIMESTAMP + 1000,
+          operationId: 'test-operation',
+          data: { status: 'completed' },
+        },
+      ];
+
+      // All events should be processed without throwing
+      expect(() => capturedCallback!(batchEvents)).not.toThrow();
+    });
+
+    it('should skip events after streamEnded flag is set', async () => {
+      const request = new NextRequest(
+        'https://test.com/api/agent/stream?operationId=test-operation',
+      );
+
+      let capturedCallback: ((events: any[]) => void) | null = null;
+      let capturedSignal: AbortSignal | null = null;
+
+      mockStreamEventManager.subscribeStreamEvents.mockImplementation(
+        (operationId, lastEventId, callback, signal) => {
+          capturedCallback = callback;
+          capturedSignal = signal;
+          return new Promise(() => {});
+        },
+      );
+
+      await GET(request);
+
+      expect(capturedCallback).toBeDefined();
+      expect(capturedSignal).toBeDefined();
+      expect(capturedSignal!.aborted).toBe(false);
+
+      // First, send agent_runtime_end to set streamEnded = true
+      capturedCallback!([
+        {
+          type: 'agent_runtime_end',
+          timestamp: MOCK_TIMESTAMP + 1000,
+          operationId: 'test-operation',
+          data: { status: 'completed' },
+        },
+      ]);
+
+      // Signal should be aborted immediately
+      expect(capturedSignal!.aborted).toBe(true);
+
+      // Any subsequent events should be skipped (no errors)
+      expect(() =>
+        capturedCallback!([
+          {
+            type: 'step_complete',
+            timestamp: MOCK_TIMESTAMP + 1100,
+            operationId: 'test-operation',
+            data: { stepIndex: 1 },
+          },
+        ]),
+      ).not.toThrow();
+    });
+  });
+
   describe('Parameter validation', () => {
     it('should handle operationId with special characters', async () => {
       const operationId = 'test-operation-123_456';
