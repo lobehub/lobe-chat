@@ -105,7 +105,7 @@ export const createDesktopRouter = () =>
                     },
                   ],
                   element: dynamicElement(
-                    () => import('../(main)/discover/(list)/assistant/_layout/Desktop'),
+                    () => import('../(main)/discover/(list)/assistant/_layout'),
                     'Desktop > Discover > List > Assistant > Layout',
                   ),
                   path: 'assistant',
@@ -121,7 +121,7 @@ export const createDesktopRouter = () =>
                     },
                   ],
                   element: dynamicElement(
-                    () => import('../(main)/discover/(list)/model/_layout/Desktop'),
+                    () => import('../(main)/discover/(list)/model/_layout'),
                     'Desktop > Discover > List > Model > Layout',
                   ),
                   path: 'model',
@@ -144,7 +144,7 @@ export const createDesktopRouter = () =>
                     },
                   ],
                   element: dynamicElement(
-                    () => import('../(main)/discover/(list)/mcp/_layout/Desktop'),
+                    () => import('../(main)/discover/(list)/mcp/_layout'),
                     'Desktop > Discover > List > MCP > Layout',
                   ),
                   path: 'mcp',

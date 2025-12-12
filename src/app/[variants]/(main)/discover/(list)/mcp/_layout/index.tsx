@@ -1,5 +1,6 @@
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
+
 import CategoryContainer from '../../../components/CategoryContainer';
 import Category from '../features/Category';
 
@@ -16,6 +17,6 @@ const Layout = () => {
   );
 };
 
-Layout.displayName = 'DesktopDiscoverAssistantsLayout';
+Layout.displayName = 'DesktopDiscoverToolsLayout';
 
 export default Layout;
