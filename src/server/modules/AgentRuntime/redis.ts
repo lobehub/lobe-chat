@@ -4,6 +4,7 @@ import Redis from 'ioredis';
 import { redisEnv } from '@/envs/redis';
 
 const log = debug('lobe-server:agent-runtime:redis');
+const timing = debug('lobe-server:agent-runtime:timing');
 
 /**
  * Get Redis URL from environment
@@ -37,12 +38,26 @@ export const createAgentRuntimeRedisClient = (url?: string): Redis | null => {
     return null;
   }
 
+  const createStart = Date.now();
+  timing('Redis client creating at %d', createStart);
+
   const client = new Redis(redisUrl, {
     maxRetriesPerRequest: 3,
   });
 
   client.on('connect', () => {
+    const connectTime = Date.now();
     log('Connected to Redis: %s', getRedisConnectionDescription(redisUrl));
+    timing(
+      'Redis connected at %d, took %dms from creation',
+      connectTime,
+      connectTime - createStart,
+    );
+  });
+
+  client.on('ready', () => {
+    const readyTime = Date.now();
+    timing('Redis ready at %d, took %dms from creation', readyTime, readyTime - createStart);
   });
 
   client.on('error', (error) => {
@@ -67,8 +82,11 @@ let redisInitialized = false;
  */
 export function getAgentRuntimeRedisClient(): Redis | null {
   if (!redisInitialized) {
+    timing('Redis client not initialized, creating new instance at %d', Date.now());
     globalAgentRuntimeRedisClient = createAgentRuntimeRedisClient();
     redisInitialized = true;
+  } else {
+    timing('Redis client already initialized, reusing at %d', Date.now());
   }
   return globalAgentRuntimeRedisClient;
 }
