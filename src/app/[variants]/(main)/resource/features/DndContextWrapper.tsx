@@ -23,6 +23,24 @@ import { useFileStore } from '@/store/file';
 import { useResourceManagerStore } from './store';
 
 /**
+ * Pre-create a transparent 1x1 pixel image for drag operations
+ * This ensures the image is loaded and ready when setDragImage is called
+ */
+let transparentDragImage: HTMLImageElement | null = null;
+
+if (typeof window !== 'undefined') {
+  transparentDragImage = new Image();
+  transparentDragImage.src =
+    'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+}
+
+/**
+ * Get the pre-loaded transparent drag image
+ * Use this in setDragImage to prevent browser default drag icons
+ */
+export const getTransparentDragImage = () => transparentDragImage;
+
+/**
  * Context to track if drag is currently active
  * Used to optimize droppable zones - only activate them during active drag
  */
@@ -205,17 +223,31 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
 
   // Change cursor to grabbing during drag
   useEffect(() => {
+    let styleElement: HTMLStyleElement | null = null;
+
     if (currentDrag) {
-      document.body.style.cursor = 'grabbing';
-      document.body.style.userSelect = 'none';
-    } else {
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
+      // Inject global style to ensure grabbing cursor shows everywhere
+      styleElement = document.createElement('style');
+      styleElement.id = 'drag-cursor-override';
+      styleElement.textContent = `
+        * {
+          cursor: grabbing !important;
+          user-select: none !important;
+        }
+      `;
+      document.head.append(styleElement);
     }
 
     return () => {
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
+      // Remove the style element when drag ends
+      if (styleElement && styleElement.parentNode) {
+        styleElement.remove();
+      }
+      // Also clean up any existing style element by ID
+      const existingStyle = document.getElementById('drag-cursor-override');
+      if (existingStyle && existingStyle.parentNode) {
+        existingStyle.remove();
+      }
     };
   }, [currentDrag]);
 
@@ -237,13 +269,13 @@ export const DndContextWrapper = memo<PropsWithChildren>(({ children }) => {
                   display: 'flex',
                   gap: 12,
                   height: 44,
-                  left: 0,
+                  left: '-999px',
                   maxWidth: 320,
                   minWidth: 200,
                   padding: '0 12px',
                   pointerEvents: 'none',
                   position: 'fixed',
-                  top: 0,
+                  top: '-999px',
                   transform: 'translate3d(0, 0, 0)',
                   willChange: 'transform',
                   zIndex: 9999,

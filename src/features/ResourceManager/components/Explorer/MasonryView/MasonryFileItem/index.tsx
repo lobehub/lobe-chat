@@ -4,6 +4,7 @@ import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from '
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
+  getTransparentDragImage,
   useDragActive,
   useDragState,
 } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
@@ -137,8 +138,8 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   dragging: css`
-    opacity: 0.5;
     will-change: transform;
+    opacity: 0.5;
   `,
   dropdown: css`
     position: absolute;
@@ -207,10 +208,10 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     // Memoize computed values that don't change
     const computedValues = useMemo(
       () => ({
+        isFolder: fileType === 'custom/folder',
         isImage: fileType && IMAGE_TYPES.has(fileType),
         isMarkdown: isMarkdownFile(name, fileType),
         isNote: isCustomNote(fileType),
-        isFolder: fileType === 'custom/folder',
       }),
       [fileType, name],
     );
@@ -244,9 +245,10 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         });
 
         // Set drag image to be transparent (we use custom overlay)
-        const img = new Image();
-        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-        e.dataTransfer.setDragImage(img, 0, 0);
+        const img = getTransparentDragImage();
+        if (img) {
+          e.dataTransfer.setDragImage(img, 0, 0);
+        }
         e.dataTransfer.effectAllowed = 'move';
       },
       [knowledgeBaseId, dragData, id, isFolder, setCurrentDrag],
