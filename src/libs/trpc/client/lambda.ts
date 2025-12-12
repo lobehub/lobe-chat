@@ -4,7 +4,9 @@ import { observable } from '@trpc/server/observable';
 import debug from 'debug';
 import { ModelProvider } from 'model-bank';
 import superjson from 'superjson';
+import type { transformer } from 'zod';
 
+import { withElectronProtocolIfElectron } from '@/const/protocol';
 import { isDesktop } from '@/const/version';
 import type { LambdaRouter } from '@/server/routers/lambda';
 
@@ -97,7 +99,7 @@ const customHttpBatchLink = httpBatchLink({
   },
   maxURLLength: 2083,
   transformer: superjson,
-  url: '/trpc/lambda',
+  url: withElectronProtocolIfElectron('/trpc/lambda'),
 });
 
 // 3. assembly links

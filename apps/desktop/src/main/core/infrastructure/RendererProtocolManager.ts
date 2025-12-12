@@ -3,13 +3,11 @@ import { pathExistsSync } from 'fs-extra';
 import { readFile } from 'node:fs/promises';
 import { extname } from 'node:path';
 
+import { ELECTRON_BE_PROTOCOL_SCHEME } from '@/const/protocol';
 import { createLogger } from '@/utils/logger';
 
 type ResolveRendererFilePath = (url: URL) => Promise<string | null>;
 type GetExportMimeType = (filePath: string) => string | undefined;
-
-export const DEFAULT_RENDERER_PROTOCOL_SCHEME = 'app';
-export const DEFAULT_RENDERER_PROTOCOL_HOST = 'next';
 
 const RENDERER_PROTOCOL_PRIVILEGES = {
   allowServiceWorkers: true,
@@ -27,6 +25,7 @@ interface RendererProtocolManagerOptions {
   scheme?: string;
 }
 
+const RENDERER_DIR = 'next';
 export class RendererProtocolManager {
   private readonly scheme: string;
   private readonly host: string;
@@ -36,16 +35,10 @@ export class RendererProtocolManager {
   private handlerRegistered = false;
 
   constructor(options: RendererProtocolManagerOptions) {
-    const {
-      scheme = DEFAULT_RENDERER_PROTOCOL_SCHEME,
-      host = DEFAULT_RENDERER_PROTOCOL_HOST,
-      nextExportDir,
-      resolveRendererFilePath,
-      getExportMimeType,
-    } = options;
+    const { nextExportDir, resolveRendererFilePath, getExportMimeType } = options;
 
-    this.scheme = scheme;
-    this.host = host;
+    this.scheme = 'app';
+    this.host = RENDERER_DIR;
     this.nextExportDir = nextExportDir;
     this.resolveRendererFilePath = resolveRendererFilePath;
     this.getExportMimeType = getExportMimeType;
@@ -58,15 +51,12 @@ export class RendererProtocolManager {
     return `${this.scheme}://${this.host}`;
   }
 
-  registerScheme() {
-    protocol.registerSchemesAsPrivileged([
-      {
-        privileges: RENDERER_PROTOCOL_PRIVILEGES,
-        scheme: this.scheme,
-      },
-    ]);
+  get protocolScheme() {
+    return {
+      privileges: RENDERER_PROTOCOL_PRIVILEGES,
+      scheme: this.scheme,
+    };
   }
-
   registerHandler() {
     if (this.handlerRegistered) return;
 

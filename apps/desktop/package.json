@@ -43,6 +43,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "@lobechat/desktop-bridge": "workspace:*",
     "@lobechat/electron-client-ipc": "workspace:*",
+    "@lobechat/const": "workspace:*",
     "@lobechat/electron-server-ipc": "workspace:*",
     "@lobechat/file-loaders": "workspace:*",
     "@lobehub/i18n-cli": "^1.25.1",

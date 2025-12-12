@@ -6,8 +6,7 @@ import {
   RouteVariants,
 } from '@lobechat/desktop-bridge';
 import { ElectronIPCEventHandler, ElectronIPCServer } from '@lobechat/electron-server-ipc';
-import { Session, protocol } from 'electron';
-import { app, ipcMain, session } from 'electron';
+import { app, protocol, session } from 'electron';
 import { macOS, windows } from 'electron-is';
 import { pathExistsSync } from 'fs-extra';
 import os from 'node:os';
@@ -16,6 +15,7 @@ import { extname, join } from 'node:path';
 import { name } from '@/../../package.json';
 import { buildDir, nextExportDir } from '@/const/dir';
 import { isDev } from '@/const/env';
+import { ELECTRON_BE_PROTOCOL_SCHEME } from '@/const/protocol';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
 import { getServerMethodMetadata } from '@/utils/ipc';
@@ -25,11 +25,7 @@ import { BrowserManager } from './browser/BrowserManager';
 import { I18nManager } from './infrastructure/I18nManager';
 import { IoCContainer } from './infrastructure/IoCContainer';
 import { ProtocolManager } from './infrastructure/ProtocolManager';
-import {
-  DEFAULT_RENDERER_PROTOCOL_HOST,
-  DEFAULT_RENDERER_PROTOCOL_SCHEME,
-  RendererProtocolManager,
-} from './infrastructure/RendererProtocolManager';
+import { RendererProtocolManager } from './infrastructure/RendererProtocolManager';
 import { StaticFileServerManager } from './infrastructure/StaticFileServerManager';
 import { StoreManager } from './infrastructure/StoreManager';
 import { UpdaterManager } from './infrastructure/UpdaterManager';
@@ -98,14 +94,26 @@ export class App {
     logger.debug('Initializing App');
     // Initialize store manager
     this.storeManager = new StoreManager(this);
+
     this.rendererProtocolManager = new RendererProtocolManager({
       getExportMimeType: this.getExportMimeType.bind(this),
-      host: DEFAULT_RENDERER_PROTOCOL_HOST,
+
       nextExportDir,
       resolveRendererFilePath: this.resolveRendererFilePath.bind(this),
-      scheme: DEFAULT_RENDERER_PROTOCOL_SCHEME,
     });
-    this.rendererProtocolManager.registerScheme();
+    protocol.registerSchemesAsPrivileged([
+      {
+        privileges: {
+          allowServiceWorkers: true,
+          corsEnabled: true,
+          secure: true,
+          standard: true,
+          supportFetchAPI: true,
+        },
+        scheme: ELECTRON_BE_PROTOCOL_SCHEME,
+      },
+      this.rendererProtocolManager.protocolScheme,
+    ]);
 
     // Initialize rendererLoadedUrl from RendererProtocolManager
     this.rendererLoadedUrl = this.rendererProtocolManager.getRendererUrl();

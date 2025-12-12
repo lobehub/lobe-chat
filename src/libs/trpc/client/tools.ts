@@ -1,6 +1,8 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import superjson from 'superjson';
+import type { transformer } from 'zod';
 
+import { withElectronProtocolIfElectron } from '@/const/protocol';
 import { isDesktop } from '@/const/version';
 import type { ToolsRouter } from '@/server/routers/tools';
 
@@ -19,7 +21,7 @@ export const toolsClient = createTRPCClient<ToolsRouter>({
       },
       maxURLLength: 2083,
       transformer: superjson,
-      url: '/trpc/tools',
+      url: withElectronProtocolIfElectron('/trpc/tools'),
     }),
   ],
 });
