@@ -2,6 +2,7 @@
 import { DEFAULT_PREFERENCE } from '@lobechat/const';
 import type { CustomPluginParams } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
+import { sql } from 'drizzle-orm';
 import { boolean, index, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
 import { timestamps, timestamptz, varchar255 } from './_helpers';
@@ -46,10 +47,18 @@ export const users = pgTable(
 
     ...timestamps,
   },
-  (table) => ({
-    emailIdx: index('users_email_idx').on(table.email),
-    usernameIdx: index('users_username_idx').on(table.username),
-  }),
+  (table) => [
+    index('users_email_idx').on(table.email),
+    index('users_username_idx').on(table.username),
+    index('users_created_at_idx').on(table.createdAt),
+    /**
+     * Partial index to speed up admin queries on banned users.
+     * Only rows with banned=true are indexed.
+     */
+    index('users_banned_true_created_at_idx')
+      .on(table.createdAt)
+      .where(sql`${table.banned} = true`),
+  ],
 );
 
 export type NewUser = typeof users.$inferInsert;

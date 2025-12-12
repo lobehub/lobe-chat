@@ -28,6 +28,7 @@ table agents {
   indexes {
     (client_id, user_id) [name: 'client_id_user_id_unique', unique]
     (slug, user_id) [name: 'agents_slug_user_id_unique', unique]
+    user_id [name: 'agents_user_id_idx']
     title [name: 'agents_title_idx']
     description [name: 'agents_description_idx']
   }
@@ -287,6 +288,7 @@ table files {
 
   indexes {
     file_hash [name: 'file_hash_idx']
+    user_id [name: 'files_user_id_idx']
     parent_id [name: 'files_parent_id_idx']
     (client_id, user_id) [name: 'files_client_id_user_id_unique', unique]
   }
@@ -1073,6 +1075,8 @@ table users {
   indexes {
     email [name: 'users_email_idx']
     username [name: 'users_username_idx']
+    created_at [name: 'users_created_at_idx']
+    created_at [name: 'users_banned_true_created_at_idx']
   }
 }
 
