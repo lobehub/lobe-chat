@@ -289,6 +289,13 @@ export const modifyAppCode = async (TEMP_DIR: string) => {
     console.log('  Processing src/layout/AuthProvider/index.tsx...');
     await rewriteFile(authProviderPath, removeClerkLogic);
   }
+
+  // 7. Replace mdx Image component with next/image export
+  const mdxImagePath = path.join(TEMP_DIR, 'src/components/mdx/Image.tsx');
+  if (fs.existsSync(mdxImagePath)) {
+    console.log('  Processing src/components/mdx/Image.tsx...');
+    await fs.writeFile(mdxImagePath, "export { default } from 'next/image';\n");
+  }
 };
 
 if (isDirectRun(import.meta.url)) {
@@ -298,5 +305,6 @@ if (isDirectRun(import.meta.url)) {
     { lang: Lang.Tsx, path: 'src/app/[variants]/(main)/settings/features/SettingsContent.tsx' },
     { lang: Lang.Tsx, path: 'src/app/[variants]/layout.tsx' },
     { lang: Lang.Tsx, path: 'src/layout/AuthProvider/index.tsx' },
+    { lang: Lang.Tsx, path: 'src/components/mdx/Image.tsx' },
   ]);
 }

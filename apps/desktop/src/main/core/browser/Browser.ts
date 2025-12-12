@@ -5,19 +5,14 @@ import {
   session as electronSession,
   ipcMain,
   nativeTheme,
-  net,
   screen,
 } from 'electron';
 import console from 'node:console';
 import { join } from 'node:path';
 
 import { buildDir, preloadDir, resourcesDir } from '@/const/dir';
-import { OFFICIAL_CLOUD_SERVER, isDev, isMac, isWindows } from '@/const/env';
+import { isDev, isMac, isWindows } from '@/const/env';
 import { ELECTRON_BE_PROTOCOL_SCHEME } from '@/const/protocol';
-import {
-  REMOTE_REQUEST_EXCLUDE_PREFIXES,
-  REMOTE_REQUEST_ROUTE_PREFIXES,
-} from '@/const/remoteRequest';
 import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
@@ -549,14 +544,9 @@ export default class Browser {
     const targetSession = session || electronSession.defaultSession;
     if (!targetSession || protocolHandledSessions.has(targetSession)) return;
 
-    const isProxyPath = (pathname: string) =>
-      REMOTE_REQUEST_ROUTE_PREFIXES.some((p) => pathname.startsWith(p)) &&
-      !REMOTE_REQUEST_EXCLUDE_PREFIXES.some((p) => pathname.startsWith(p));
-
     const rewriteUrl = async (rawUrl: string) => {
       const requestUrl = new URL(rawUrl);
-      const pathname = requestUrl.pathname;
-      if (!isProxyPath(pathname)) return;
+
       const config = await remoteServerConfigCtr.getRemoteServerConfig();
       const remoteBase = new URL(config.remoteServerUrl);
       if (requestUrl.origin === remoteBase.origin) return;
@@ -569,29 +559,10 @@ export default class Browser {
     // Transparent rewrite via protocol handlers (no HTTP 302)
     const registerProtocolHandlers = async () => {
       const proxyHandler = async (request: Request): Promise<Response | null> => {
-        console.log('request', request.url);
         // lobe-backend://lobe/trpc/xxx -> http://<target_host>/trpc/xxx
         try {
-          await remoteServerConfigCtr.getAccessToken();
-          const upstreamFetch = (input: string | Request, init?: RequestInit) =>
-            net.fetch(input, {
-              ...init,
-              // Electron extends RequestInit with bypassCustomProtocolHandlers
-              bypassCustomProtocolHandlers: true,
-            });
-
-          // Early synchronous filtering: Only process URLs that potentially need proxying
-          // This avoids async config checks for most requests (static assets, etc.)
-          const url = new URL(request.url);
-          if (!isProxyPath(url.pathname)) {
-            return upstreamFetch(request);
-          }
-
           const rewrittenUrl = await rewriteUrl(request.url);
-          if (!rewrittenUrl) {
-            // Pass through untouched requests to the default stack
-            return upstreamFetch(request);
-          }
+          if (!rewrittenUrl) return null;
 
           const headers = new Headers(request.headers);
 
@@ -608,7 +579,20 @@ export default class Browser {
             requestInit.body = request.body ?? undefined;
           }
 
-          const upstreamResponse = await upstreamFetch(rewrittenUrl, requestInit);
+          let upstreamResponse: Response;
+          try {
+            upstreamResponse = await fetch(rewrittenUrl, requestInit);
+          } catch (error) {
+            logger.warn(`${logPrefix} upstream fetch failed: ${rewrittenUrl}`, error);
+
+            return new Response('Bad Gateway', {
+              headers: {
+                'Content-Type': 'text/plain; charset=utf-8',
+              },
+              status: 502,
+              statusText: 'Bad Gateway',
+            });
+          }
           const responseHeaders = new Headers(upstreamResponse.headers);
 
           const allowOrigin = request.headers.get('Origin') || undefined;

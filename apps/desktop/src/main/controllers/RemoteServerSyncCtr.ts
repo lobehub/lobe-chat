@@ -11,7 +11,7 @@ import { defaultProxySettings } from '@/const/store';
 import { createLogger } from '@/utils/logger';
 
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
-import { ControllerModule, IpcMethod } from './index';
+import { ControllerModule } from './index';
 
 // Create logger
 const logger = createLogger('controllers:RemoteServerSyncCtr');
@@ -219,13 +219,5 @@ export default class RemoteServerSyncCtr extends ControllerModule {
 
     const requester = url.protocol === 'https:' ? https : http;
     return { requestOptions, requester };
-  }
-
-  /**
-   * Clean up resources - No protocol handler to unregister anymore
-   */
-  destroy() {
-    logger.info('Destroying RemoteServerSyncCtr');
-    // Nothing specific to clean up here regarding request handling now
   }
 }
