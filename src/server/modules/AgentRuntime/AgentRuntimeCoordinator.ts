@@ -91,11 +91,22 @@ export class AgentRuntimeCoordinator {
    */
   async saveStepResult(operationId: string, stepResult: StepResult): Promise<void> {
     try {
+      // 获取之前的状态用于检测状态变化
+      const previousState = await this.stateManager.loadAgentState(operationId);
+
       // 保存步骤结果
       await this.stateManager.saveStepResult(operationId, stepResult);
 
-      // 不在这里发送 agent_runtime_end 事件，让 saveAgentState 统一处理
-      // 这样确保 agent_runtime_end 是最后一个事件
+      // 如果状态变为 done，发送 agent_runtime_end 事件
+      // 这确保 agent_runtime_end 在所有步骤事件之后发送
+      if (stepResult.newState.status === 'done' && previousState?.status !== 'done') {
+        await this.streamEventManager.publishAgentRuntimeEnd(
+          operationId,
+          stepResult.newState.stepCount,
+          stepResult.newState,
+        );
+        log('[%s] Agent runtime completed', operationId);
+      }
     } catch (error) {
       console.error('Failed to save step result and handle events:', error);
       throw error;

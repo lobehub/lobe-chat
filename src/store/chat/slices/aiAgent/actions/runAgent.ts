@@ -4,7 +4,6 @@ import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
 import { StreamEvent, agentRuntimeService } from '@/services/agentRuntime';
-import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 
 const log = debug('store:chat:ai-agent:runAgent');
@@ -64,12 +63,17 @@ export const agentSlice: StateCreator<ChatStore, [['zustand/devtools', never]], 
       });
     }
 
-    // 更新消息错误状态
-    messageService.updateMessageError(assistantId, {
-      message: errorMessage,
-      type: 'UnknownError' as any,
+    // Update error state in frontend only (backend already persists the error)
+    get().internal_dispatchMessage({
+      id: assistantId,
+      type: 'updateMessage',
+      value: {
+        error: {
+          message: errorMessage,
+          type: 'UnknownError' as any,
+        },
+      },
     });
-    get().refreshMessages();
 
     // 停止 loading 状态
     get().internal_toggleMessageLoading(false, assistantId);
@@ -214,12 +218,18 @@ export const agentSlice: StateCreator<ChatStore, [['zustand/devtools', never]], 
           hasToolCalls: !!(toolCalls && toolCalls.length > 0),
         });
 
+        // Update frontend UI only (backend already persists all data)
         if (finalContent !== undefined) {
-          await get().optimisticUpdateMessageContent(assistantId, finalContent, {
-            ...(toolCalls && toolCalls.length > 0 ? { tools: toolCalls } : {}),
-            ...(reasoning ? { reasoning } : {}),
-            ...(imageList && imageList.length > 0 ? { imageList } : {}),
-            ...(grounding ? { search: grounding } : {}),
+          internal_dispatchMessage({
+            id: assistantId,
+            type: 'updateMessage',
+            value: {
+              content: finalContent,
+              ...(toolCalls && toolCalls.length > 0 ? { tools: toolCalls } : {}),
+              ...(reasoning ? { reasoning } : {}),
+              ...(imageList && imageList.length > 0 ? { imageList } : {}),
+              ...(grounding ? { search: grounding } : {}),
+            },
           });
         }
 

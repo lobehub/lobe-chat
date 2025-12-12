@@ -420,8 +420,7 @@ export const agentGroupSlice: StateCreator<
       get().associateMessageWithOperation(result.assistantMessageId, result.operationId);
 
       // 10. Connect to SSE stream
-      // Note: The SSE connection will be closed by the server when it sends agent_runtime_end event
-      // The server handles the close logic in api/agent/stream/route.ts
+      // Server will automatically close the connection after sending agent_runtime_end event
       const eventSource = agentRuntimeClient.createStreamConnection(result.operationId, {
         includeHistory: false,
         onConnect: () => {

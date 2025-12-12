@@ -154,7 +154,7 @@ describe('AgentRuntimeCoordinator', () => {
   });
 
   describe('saveStepResult', () => {
-    it('should save step result but not publish end event (left to saveAgentState)', async () => {
+    it('should save step result and publish end event when status becomes done', async () => {
       const operationId = 'test-operation-id';
       const stepResult = {
         executionTime: 1000,
@@ -162,11 +162,18 @@ describe('AgentRuntimeCoordinator', () => {
         stepIndex: 5,
       };
 
+      // Mock previous state as running
+      mockStateManager.loadAgentState.mockResolvedValue({ status: 'running', stepCount: 4 });
+
       await coordinator.saveStepResult(operationId, stepResult as any);
 
+      expect(mockStateManager.loadAgentState).toHaveBeenCalledWith(operationId);
       expect(mockStateManager.saveStepResult).toHaveBeenCalledWith(operationId, stepResult);
-      // agent_runtime_end 事件现在由 saveAgentState 统一处理，确保它是最后一个事件
-      expect(mockStreamManager.publishAgentRuntimeEnd).not.toHaveBeenCalled();
+      expect(mockStreamManager.publishAgentRuntimeEnd).toHaveBeenCalledWith(
+        operationId,
+        5,
+        stepResult.newState,
+      );
     });
 
     it('should not publish end event when status is not done', async () => {
@@ -177,9 +184,29 @@ describe('AgentRuntimeCoordinator', () => {
         stepIndex: 3,
       };
 
+      mockStateManager.loadAgentState.mockResolvedValue({ status: 'running', stepCount: 2 });
+
       await coordinator.saveStepResult(operationId, stepResult as any);
 
       expect(mockStateManager.saveStepResult).toHaveBeenCalledWith(operationId, stepResult);
+      expect(mockStreamManager.publishAgentRuntimeEnd).not.toHaveBeenCalled();
+    });
+
+    it('should not publish end event when status was already done', async () => {
+      const operationId = 'test-operation-id';
+      const stepResult = {
+        executionTime: 1000,
+        newState: { status: 'done', stepCount: 5 },
+        stepIndex: 5,
+      };
+
+      // Mock previous state as already done
+      mockStateManager.loadAgentState.mockResolvedValue({ status: 'done', stepCount: 5 });
+
+      await coordinator.saveStepResult(operationId, stepResult as any);
+
+      expect(mockStateManager.saveStepResult).toHaveBeenCalledWith(operationId, stepResult);
+      // Should not publish again since status was already done
       expect(mockStreamManager.publishAgentRuntimeEnd).not.toHaveBeenCalled();
     });
   });
