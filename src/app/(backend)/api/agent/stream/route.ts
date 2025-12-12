@@ -7,6 +7,7 @@ import { StreamEventManager } from '@/server/modules/AgentRuntime';
 import { isEnableAgent } from '../isEnableAgent';
 
 const log = debug('api-route:agent:stream');
+const timing = debug('lobe-server:agent-runtime:timing');
 
 /**
  * Server-Sent Events (SSE) endpoint
@@ -150,7 +151,18 @@ export async function GET(request: NextRequest) {
                     timestamp: event.timestamp || Date.now(),
                   };
 
+                  const now = Date.now();
+                  const totalLatency = now - sseEvent.timestamp;
                   writer.writeStreamEvent(sseEvent, operationId);
+                  timing(
+                    '[%s:%d] SSE sent %s, original timestamp %d, sent at %d, total latency %dms',
+                    operationId,
+                    event.stepIndex,
+                    event.type,
+                    sseEvent.timestamp,
+                    now,
+                    totalLatency,
+                  );
 
                   // 如果收到 agent_runtime_end 事件，立即终止流
                   if (event.type === 'agent_runtime_end') {
