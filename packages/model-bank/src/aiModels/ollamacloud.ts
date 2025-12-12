@@ -4,6 +4,17 @@ const ollamaCloudModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Devstral 2 123B 模型，擅长使用工具探索代码库、编辑多个文件并为软件工程代理提供支持。',
+    displayName: 'Devstral 2',
+    id: 'devstral-2:123b',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 163_840,

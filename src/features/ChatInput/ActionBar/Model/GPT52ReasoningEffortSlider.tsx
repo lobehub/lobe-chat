@@ -16,7 +16,7 @@ const GPT52ReasoningEffortSlider = memo(() => {
   const marks = {
     0: 'none',
     1: 'low',
-    2: 'medium',
+    2: 'med',
     3: 'high',
     4: 'xhigh',
   };
