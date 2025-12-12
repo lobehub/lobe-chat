@@ -50,12 +50,8 @@ const AssistantDetailPage = memo<AssistantDetailPageProps>(({ mobile }) => {
   );
 });
 
-const DesktopDiscoverAssistantDetailPage = memo<{ mobile?: boolean }>(() => {
-  return <AssistantDetailPage mobile={false} />;
-});
-
-const MobileDiscoverAssistantDetailPage = memo<{ mobile?: boolean }>(() => {
+export const MobileDiscoverAssistantDetailPage = memo<{ mobile?: boolean }>(() => {
   return <AssistantDetailPage mobile={true} />;
 });
 
-export { DesktopDiscoverAssistantDetailPage, MobileDiscoverAssistantDetailPage };
+export default AssistantDetailPage;

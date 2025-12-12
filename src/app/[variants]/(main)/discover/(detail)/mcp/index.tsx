@@ -45,12 +45,8 @@ const McpDetailPage = memo<McpDetailPageProps>(({ mobile }) => {
   );
 });
 
-const DesktopMcpPage = memo<{ mobile?: boolean }>(() => {
-  return <McpDetailPage mobile={false} />;
-});
-
-const MobileMcpPage = memo<{ mobile?: boolean }>(() => {
+export const MobileMcpPage = memo<{ mobile?: boolean }>(() => {
   return <McpDetailPage mobile={true} />;
 });
 
-export { DesktopMcpPage, MobileMcpPage };
+export default McpDetailPage;

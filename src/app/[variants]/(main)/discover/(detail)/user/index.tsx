@@ -68,12 +68,8 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
   );
 });
 
-const DesktopUserDetailPage = memo(() => {
-  return <UserDetailPage mobile={false} />;
-});
-
-const MobileUserDetailPage = memo(() => {
+export const MobileUserDetailPage = memo(() => {
   return <UserDetailPage mobile={true} />;
 });
 
-export { DesktopUserDetailPage, MobileUserDetailPage };
+export default UserDetailPage;

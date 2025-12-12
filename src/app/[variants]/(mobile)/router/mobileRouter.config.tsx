@@ -152,6 +152,17 @@ export const createMobileRouter = () =>
                   loader: slugLoader,
                   path: 'mcp/:slug',
                 },
+                {
+                  element: dynamicElement(
+                    () =>
+                      import('../../(main)/discover/(detail)/user').then(
+                        (m) => m.MobileUserDetailPage,
+                      ),
+                    'Mobile > Discover > Detail > User',
+                  ),
+                  loader: slugLoader,
+                  path: 'user/:slug',
+                },
               ],
               element: dynamicElement(
                 () => import('../disocver/(detail)/_layout'),
