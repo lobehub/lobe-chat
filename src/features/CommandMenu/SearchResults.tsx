@@ -1,5 +1,5 @@
 import { Command } from 'cmdk';
-import { FileText, MessageCircle, MessageSquare, Sparkles } from 'lucide-react';
+import { Bot, FileText, MessageCircle, MessageSquare, Plug, Puzzle, Sparkles } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -49,6 +49,18 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
         navigate(`/files?id=${result.id}`);
         break;
       }
+      case 'mcp': {
+        navigate(`/discover/mcp/${result.identifier}`);
+        break;
+      }
+      case 'plugin': {
+        navigate(`/discover/plugins/${result.identifier}`);
+        break;
+      }
+      case 'assistant': {
+        navigate(`/discover/assistant/${result.identifier}`);
+        break;
+      }
     }
     onClose();
   };
@@ -67,6 +79,15 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
       case 'file': {
         return <FileText size={16} />;
       }
+      case 'mcp': {
+        return <Puzzle size={16} />;
+      }
+      case 'plugin': {
+        return <Plug size={16} />;
+      }
+      case 'assistant': {
+        return <Bot size={16} />;
+      }
     }
   };
 
@@ -83,6 +104,15 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
       }
       case 'file': {
         return t('cmdk.search.file');
+      }
+      case 'mcp': {
+        return t('cmdk.search.mcp');
+      }
+      case 'plugin': {
+        return t('cmdk.search.plugin');
+      }
+      case 'assistant': {
+        return t('cmdk.search.assistant');
       }
     }
   };
@@ -132,6 +162,9 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
   const agentResults = results.filter((r) => r.type === 'agent');
   const topicResults = results.filter((r) => r.type === 'topic');
   const fileResults = results.filter((r) => r.type === 'file');
+  const mcpResults = results.filter((r) => r.type === 'mcp');
+  const pluginResults = results.filter((r) => r.type === 'plugin');
+  const assistantResults = results.filter((r) => r.type === 'assistant');
 
   return (
     <>
@@ -218,6 +251,75 @@ const SearchResults = memo<SearchResultsProps>(({ results, isLoading, onClose, s
                   <div className={styles.itemTitle}>{result.title}</div>
                   {result.type === 'file' && (
                     <div className={styles.itemDescription}>{result.fileType}</div>
+                  )}
+                </div>
+                <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
+              </div>
+            </Command.Item>
+          ))}
+        </Command.Group>
+      )}
+
+      {mcpResults.length > 0 && (
+        <Command.Group heading={t('cmdk.search.mcps')}>
+          {mcpResults.map((result) => (
+            <Command.Item
+              key={`mcp-${result.id}`}
+              onSelect={() => handleNavigate(result)}
+              value={getItemValue(result)}
+            >
+              <div className={styles.itemContent}>
+                <div className={styles.itemIcon}>{getIcon(result.type)}</div>
+                <div className={styles.itemDetails}>
+                  <div className={styles.itemTitle}>{result.title}</div>
+                  {getDescription(result) && (
+                    <div className={styles.itemDescription}>{getDescription(result)}</div>
+                  )}
+                </div>
+                <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
+              </div>
+            </Command.Item>
+          ))}
+        </Command.Group>
+      )}
+
+      {pluginResults.length > 0 && (
+        <Command.Group heading={t('cmdk.search.plugins')}>
+          {pluginResults.map((result) => (
+            <Command.Item
+              key={`plugin-${result.id}`}
+              onSelect={() => handleNavigate(result)}
+              value={getItemValue(result)}
+            >
+              <div className={styles.itemContent}>
+                <div className={styles.itemIcon}>{getIcon(result.type)}</div>
+                <div className={styles.itemDetails}>
+                  <div className={styles.itemTitle}>{result.title}</div>
+                  {getDescription(result) && (
+                    <div className={styles.itemDescription}>{getDescription(result)}</div>
+                  )}
+                </div>
+                <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
+              </div>
+            </Command.Item>
+          ))}
+        </Command.Group>
+      )}
+
+      {assistantResults.length > 0 && (
+        <Command.Group heading={t('cmdk.search.assistants')}>
+          {assistantResults.map((result) => (
+            <Command.Item
+              key={`assistant-${result.id}`}
+              onSelect={() => handleNavigate(result)}
+              value={getItemValue(result)}
+            >
+              <div className={styles.itemContent}>
+                <div className={styles.itemIcon}>{getIcon(result.type)}</div>
+                <div className={styles.itemDetails}>
+                  <div className={styles.itemTitle}>{result.title}</div>
+                  {getDescription(result) && (
+                    <div className={styles.itemDescription}>{getDescription(result)}</div>
                   )}
                 </div>
                 <div className={styles.itemType}>{getTypeLabel(result.type)}</div>

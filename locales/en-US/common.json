@@ -150,9 +150,17 @@
     "search": {
       "agent": "Assistant",
       "agents": "Assistants",
+      "assistant": "AI Assistant",
+      "assistants": "AI Assistants",
       "file": "File",
       "files": "Files",
       "loading": "Searching...",
+      "mcp": "MCP Server",
+      "mcps": "MCP Servers",
+      "message": "Message",
+      "messages": "Messages",
+      "plugin": "Plugin",
+      "plugins": "Plugins",
       "searching": "Search Results",
       "topic": "Topic",
       "topics": "Topics"
