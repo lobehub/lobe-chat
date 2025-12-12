@@ -14,6 +14,11 @@ export const PAGE_AGENT: BuiltinAgentDefinition = {
 
   // Runtime function - generates dynamic config
   runtime: (ctx) => ({
+    // Disable history count limit for page agent
+    // to ensure full document context is available
+    chatConfig: {
+      enableHistoryCount: false,
+    },
     plugins: ['lobe-page-agent', ...(ctx.plugins || [])],
     systemRole: systemRoleTemplate,
   }),

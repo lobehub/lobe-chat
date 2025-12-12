@@ -27,6 +27,9 @@ export interface BuiltinAgentPersistConfig {
  * Runtime Result - dynamically generated config, not persisted
  */
 export interface BuiltinAgentRuntimeResult {
+  /** Runtime chat configuration overrides */
+  chatConfig?: Partial<LobeAgentChatConfig>;
+
   /** Plugins to enable for the agent */
   plugins?: string[];
 
