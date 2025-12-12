@@ -81,6 +81,7 @@ const ChatItem = memo<ChatItemProps>(
               loading={loading}
               onClick={onAvatarClick}
               placement={placement}
+              shape={'square'}
               {...avatarProps}
               avatar={avatar}
             />

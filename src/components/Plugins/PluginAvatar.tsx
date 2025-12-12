@@ -15,6 +15,7 @@ const PluginAvatar = memo<PluginAvatarProps>(({ avatar, style, size = 40, alt })
   return avatar === 'MCP_AVATAR' ? (
     <MCP.Avatar
       className={`${theme.prefixCls}-avatar`}
+      shape={'square'}
       size={size}
       style={{ flex: 'none', overflow: 'hidden', ...style }}
     />
@@ -22,6 +23,7 @@ const PluginAvatar = memo<PluginAvatarProps>(({ avatar, style, size = 40, alt })
     <Avatar
       alt={alt}
       avatar={avatar}
+      shape={'square'}
       size={size}
       style={{ flex: 'none', overflow: 'hidden', ...style }}
     />

@@ -12,7 +12,6 @@ import { pluginSelectors } from '@/store/tool/selectors';
 import { ChatPluginPayload } from '@/types/index';
 
 import { ErrorActionContainer, useStyles } from '../../../Error/style';
-
 import { useConversationStore } from '../../../store';
 
 interface PluginSettingsProps {
@@ -41,6 +40,7 @@ const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
             avatar={pluginHelpers.getPluginAvatar(pluginMeta) || '⚙️'}
             background={theme.colorFillContent}
             gap={12}
+            shape={'square'}
             size={80}
           />
           <Flexbox style={{ fontSize: 20 }}>

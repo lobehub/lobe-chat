@@ -43,6 +43,7 @@ const AgentInfo = memo<AgentInfoProps>(({ systemRole, style, meta, onAvatarClick
           background={meta.backgroundColor || theme.colorFillTertiary}
           className={styles.avatar}
           onClick={onAvatarClick}
+          shape={'square'}
           size={100}
         />
       )}

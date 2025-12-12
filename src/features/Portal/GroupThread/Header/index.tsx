@@ -41,6 +41,7 @@ const Header = memo(() => {
           <Avatar
             avatar={currentAgent?.avatar || DEFAULT_AVATAR}
             background={currentAgent?.backgroundColor ?? undefined}
+            shape={'square'}
             size={20}
           />
           <div style={{ fontWeight: 600 }}>

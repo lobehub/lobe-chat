@@ -94,7 +94,7 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
   return (
     <Flexbox gap={12}>
       <Flexbox align={'flex-start'} gap={16} horizontal width={'100%'}>
-        <Avatar avatar={icon} size={mobile ? 48 : 64} />
+        <Avatar avatar={icon} shape={'square'} size={mobile ? 48 : 64} />
         <Flexbox
           flex={1}
           gap={4}

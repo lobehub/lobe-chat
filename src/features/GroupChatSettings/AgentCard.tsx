@@ -86,7 +86,7 @@ const AgentCard = memo<AgentCardProps>(
                 <Avatar
                   avatar={avatar}
                   background={avatarBackground}
-                  shape="circle"
+                  shape={'square'}
                   size={24}
                   style={{ flexShrink: 0 }}
                 />

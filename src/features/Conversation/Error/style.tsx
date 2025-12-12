@@ -65,6 +65,7 @@ export const FormAction = memo<
           avatar={avatar}
           background={background ?? theme.colorFillContent}
           gap={12}
+          shape={'square'}
           size={80}
         />
         <Flexbox gap={8} width={'100%'}>
