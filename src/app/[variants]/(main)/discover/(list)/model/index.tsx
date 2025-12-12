@@ -40,12 +40,4 @@ const ModelPage = memo<{ mobile?: boolean }>(() => {
   );
 });
 
-const DesktopModelPage = memo<{ mobile?: boolean }>(() => {
-  return <ModelPage mobile={false} />;
-});
-
-const MobileModelPage = memo<{ mobile?: boolean }>(() => {
-  return <ModelPage mobile={true} />;
-});
-
-export { DesktopModelPage, MobileModelPage };
+export default ModelPage;

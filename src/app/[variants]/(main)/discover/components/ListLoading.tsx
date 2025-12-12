@@ -8,19 +8,17 @@ import { Flexbox } from 'react-layout-kit';
 
 const ListLoading = memo<{ length?: number; rows?: number }>(({ rows = 3, length = 12 }) => {
   return (
-    <Flexbox width={'100%'}>
-      <Grid rows={rows} width={'100%'}>
-        {Array.from({ length }).map((_, index) => (
-          <Block gap={24} key={index} padding={16} variant={'outlined'}>
-            <Flexbox align={'center'} gap={8} horizontal>
-              <Skeleton.Avatar active key={index} size={40} />
-              <Skeleton.Button active style={{ height: 32, width: 120 }} />
-            </Flexbox>
-            <Skeleton paragraph={{ rows: 4 }} title={false} />
-          </Block>
-        ))}
-      </Grid>
-    </Flexbox>
+    <Grid rows={rows} width={'100%'}>
+      {Array.from({ length }).map((_, index) => (
+        <Block gap={24} key={index} padding={16} variant={'outlined'}>
+          <Flexbox align={'center'} gap={8} horizontal>
+            <Skeleton.Avatar active key={index} size={40} />
+            <Skeleton.Button active style={{ height: 32, width: 120 }} />
+          </Flexbox>
+          <Skeleton paragraph={{ rows: 4 }} title={false} />
+        </Block>
+      ))}
+    </Grid>
   );
 });
 

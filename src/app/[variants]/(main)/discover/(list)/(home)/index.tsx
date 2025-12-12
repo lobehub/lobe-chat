@@ -10,7 +10,7 @@ import AssistantList from '../assistant/features/List';
 import McpList from '../mcp/features/List';
 import Loading from './loading';
 
-const HomePage = memo<{ mobile?: boolean }>(() => {
+const HomePage = memo(() => {
   const { t } = useTranslation('discover');
   const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
   const useMcpList = useDiscoverStore((s) => s.useFetchMcpList);
@@ -42,17 +42,4 @@ const HomePage = memo<{ mobile?: boolean }>(() => {
   );
 });
 
-const MobileHomePage = memo<{ mobile?: boolean }>(() => {
-  return <HomePage mobile={true} />;
-});
-
-MobileHomePage.displayName = 'MobileHomePage';
-
-const DesktopHomePage = memo<{ mobile?: boolean }>(() => {
-  return <HomePage mobile={false} />;
-});
-
-DesktopHomePage.displayName = 'DesktopHomePage';
-
-export { DesktopHomePage, MobileHomePage };
 export default HomePage;

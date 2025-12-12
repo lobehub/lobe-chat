@@ -11,7 +11,7 @@ import Pagination from '../features/Pagination';
 import List from './features/List';
 import Loading from './loading';
 
-const McpPage = memo<{ mobile?: boolean }>(() => {
+const McpPage = memo(() => {
   const { q, page, category, sort, order } = useQuery() as McpQueryParams;
   const useMcpList = useDiscoverStore((s) => s.useFetchMcpList);
   const { data, isLoading } = useMcpList({
@@ -40,12 +40,4 @@ const McpPage = memo<{ mobile?: boolean }>(() => {
   );
 });
 
-const DesktopMcpPage = memo<{ mobile?: boolean }>(() => {
-  return <McpPage mobile={false} />;
-});
-
-const MobileMcpPage = memo<{ mobile?: boolean }>(() => {
-  return <McpPage mobile={true} />;
-});
-
-export { DesktopMcpPage, MobileMcpPage };
+export default McpPage;

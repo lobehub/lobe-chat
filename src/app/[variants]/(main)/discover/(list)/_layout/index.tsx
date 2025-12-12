@@ -24,7 +24,7 @@ const Layout = () => {
             position: 'relative',
           }}
         >
-          {<Outlet />}
+          <Outlet />
           <div style={{ flex: 1 }} />
           <Footer />
         </WideScreenContainer>

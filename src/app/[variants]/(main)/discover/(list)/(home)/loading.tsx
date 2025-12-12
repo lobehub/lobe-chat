@@ -12,12 +12,12 @@ const Loading = memo(() => {
       <Title more={t('home.more')} moreLink={'/discover/assistant'}>
         {t('home.featuredAssistants')}
       </Title>
-      <ListLoading length={4} rows={8} />
+      <ListLoading length={8} rows={4} />
       <div />
       <Title more={t('home.more')} moreLink={'/discover/mcp'}>
         {t('home.featuredTools')}
       </Title>
-      <ListLoading length={4} rows={8} />
+      <ListLoading length={8} rows={4} />
     </>
   );
 });

@@ -98,10 +98,7 @@ export const createDesktopRouter = () =>
                   children: [
                     {
                       element: dynamicElement(
-                        () =>
-                          import('../(main)/discover/(list)/assistant').then(
-                            (m) => m.DesktopAssistantPage,
-                          ),
+                        () => import('../(main)/discover/(list)/assistant'),
                         'Desktop > Discover > List > Assistant',
                       ),
                       index: true,
@@ -117,8 +114,7 @@ export const createDesktopRouter = () =>
                   children: [
                     {
                       element: dynamicElement(
-                        () =>
-                          import('../(main)/discover/(list)/model').then((m) => m.DesktopModelPage),
+                        () => import('../(main)/discover/(list)/model'),
                         'Desktop > Discover > List > Model',
                       ),
                       index: true,
@@ -132,10 +128,7 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(
-                    () =>
-                      import('../(main)/discover/(list)/provider').then(
-                        (m) => m.DesktopProviderPage,
-                      ),
+                    () => import('../(main)/discover/(list)/provider'),
                     'Desktop > Discover > List > Provider',
                   ),
                   path: 'provider',
@@ -144,7 +137,7 @@ export const createDesktopRouter = () =>
                   children: [
                     {
                       element: dynamicElement(
-                        () => import('../(main)/discover/(list)/mcp').then((m) => m.DesktopMcpPage),
+                        () => import('../(main)/discover/(list)/mcp'),
                         'Desktop > Discover > List > MCP',
                       ),
                       index: true,
@@ -158,7 +151,7 @@ export const createDesktopRouter = () =>
                 },
                 {
                   element: dynamicElement(
-                    () => import('../(main)/discover/(list)/(home)').then((m) => m.DesktopHomePage),
+                    () => import('../(main)/discover/(list)/(home)'),
                     'Desktop > Discover > List > Home',
                   ),
                   index: true,
