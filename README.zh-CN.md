@@ -345,7 +345,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [SEO](https://lobechat.com/discover/plugin/SEO)<br/><sup>By **orrenprunckun** on **2025-11-14**</sup>                       | 输入任何 URL 和关键词，获取页面 SEO 分析和见解！<br/>`seo`                                                         |
 | [购物工具](https://lobechat.com/discover/plugin/ShoppingTools)<br/><sup>By **shoppingtools** on **2025-10-27**</sup>        | 在 eBay 和 AliExpress 上搜索产品，查找 eBay 活动和优惠券。获取快速示例。<br/>`购物` `e-bay` `ali-express` `优惠券` |
 
-> 📊 Total plugins: [<kbd>**41**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**37**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 

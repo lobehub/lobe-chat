@@ -352,7 +352,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [SEO](https://lobechat.com/discover/plugin/SEO)<br/><sup>By **orrenprunckun** on **2025-11-14**</sup>                       | Enter any URL and keyword and get an On-Page SEO analysis & insights!<br/>`seo`                                                           |
 | [Shopping tools](https://lobechat.com/discover/plugin/ShoppingTools)<br/><sup>By **shoppingtools** on **2025-10-27**</sup>  | Search for products on eBay & AliExpress, find eBay events & coupons. Get prompt examples.<br/>`shopping` `e-bay` `ali-express` `coupons` |
 
-> 📊 Total plugins: [<kbd>**41**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**37**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
