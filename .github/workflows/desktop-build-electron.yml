@@ -49,7 +49,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
 
       - name: Enable Corepack
         run: corepack enable
@@ -58,6 +57,19 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-store
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ env.NODE_VERSION }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-${{ env.NODE_VERSION }}-
+            ${{ runner.os }}-pnpm-store-
 
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
