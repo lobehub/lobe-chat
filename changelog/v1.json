@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-12-12",
+    "version": "2.0.0-next.170"
+  },
+  {
     "children": {
       "fixes": ["Fix CVE errors."]
     },
