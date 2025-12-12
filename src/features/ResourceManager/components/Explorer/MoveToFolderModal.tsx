@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import FolderTree, { FolderTreeItem } from '@/features/ResourceManager/components/FolderTree';
+import { clearTreeFolderCache } from '@/features/ResourceManager/components/Tree';
 import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';
 
@@ -26,7 +27,10 @@ const MoveToFolderModal = memo<MoveToFolderModalProps>(
     const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
     const [loadedFolders, setLoadedFolders] = useState<Set<string>>(new Set());
 
-    const moveFileToFolder = useFileStore((s) => s.moveFileToFolder);
+    const [moveFileToFolder, refreshFileList] = useFileStore((s) => [
+      s.moveFileToFolder,
+      s.refreshFileList,
+    ]);
 
     // Sort items: folders only
     const sortItems = useCallback((items: FolderTreeItem[]): FolderTreeItem[] => {
@@ -136,6 +140,15 @@ const MoveToFolderModal = memo<MoveToFolderModalProps>(
     const handleMove = async () => {
       try {
         await moveFileToFolder(fileId, selectedFolderId);
+
+        // Refresh file list to invalidate SWR cache for both Explorer and Tree
+        await refreshFileList();
+
+        // Clear and reload all expanded folders in Tree's module-level cache
+        if (knowledgeBaseId) {
+          await clearTreeFolderCache(knowledgeBaseId);
+        }
+
         message.success(t('FileManager.actions.moveSuccess'));
         onClose();
       } catch (error) {
@@ -147,6 +160,15 @@ const MoveToFolderModal = memo<MoveToFolderModalProps>(
     const handleMoveToRoot = async () => {
       try {
         await moveFileToFolder(fileId, null);
+
+        // Refresh file list to invalidate SWR cache for both Explorer and Tree
+        await refreshFileList();
+
+        // Clear and reload all expanded folders in Tree's module-level cache
+        if (knowledgeBaseId) {
+          await clearTreeFolderCache(knowledgeBaseId);
+        }
+
         message.success(t('FileManager.actions.moveSuccess'));
         onClose();
       } catch (error) {

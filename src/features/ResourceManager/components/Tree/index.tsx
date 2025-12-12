@@ -46,10 +46,65 @@ const getTreeState = (knowledgeBaseId: string) => {
   return treeState.get(knowledgeBaseId)!;
 };
 
+/**
+ * Clear and reload all expanded folders
+ * This should be called along with file store's refreshFileList()
+ * Simpler approach: reload all expanded folders to avoid ID vs slug issues
+ */
+export const clearTreeFolderCache = async (knowledgeBaseId: string) => {
+  const state = treeState.get(knowledgeBaseId);
+  if (!state) return;
+
+  // Get list of all currently expanded folders before clearing
+  const expandedFoldersList = Array.from(state.expandedFolders);
+
+  // Clear all caches
+  state.folderChildrenCache.clear();
+  state.loadedFolders.clear();
+
+  // Reload each expanded folder
+  for (const folderKey of expandedFoldersList) {
+    try {
+      // The API expects document ID, but folderKey could be slug or ID
+      // We'll use it as is and let the API handle it
+      const response = await fileService.getKnowledgeItems({
+        knowledgeBaseId,
+        parentId: folderKey,
+        showFilesInKnowledgeBase: false,
+      });
+
+      if (response?.items) {
+        const childItems = response.items.map((item) => ({
+          fileType: item.fileType,
+          id: item.id,
+          isFolder: item.fileType === 'custom/folder',
+          name: item.name,
+          slug: item.slug,
+          sourceType: item.sourceType,
+          url: item.url,
+        }));
+
+        // Sort children: folders first, then files
+        const sortedChildren = childItems.sort((a, b) => {
+          if (a.isFolder && !b.isFolder) return -1;
+          if (!a.isFolder && b.isFolder) return 1;
+          return a.name.localeCompare(b.name);
+        });
+
+        // Update cache using the same key that was used before
+        state.folderChildrenCache.set(folderKey, sortedChildren);
+        state.loadedFolders.add(folderKey);
+      }
+    } catch (error) {
+      console.error(`Failed to reload folder ${folderKey}:`, error);
+    }
+  }
+};
+
 const useStyles = createStyles(({ css, token }) => ({
   dragging: css`
-    opacity: 0.5;
     will-change: transform;
+    opacity: 0.5;
   `,
   fileItemDragOver: css`
     color: ${token.colorBgElevated} !important;
@@ -60,11 +115,7 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   treeItem: css`
-    cursor: grab;
-
-    &:active {
-      cursor: grabbing;
-    }
+    cursor: pointer;
   `,
 }));
 

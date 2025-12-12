@@ -37,7 +37,7 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
   return {
     checkbox: hover,
     container: css`
-      cursor: grab;
+      cursor: pointer;
       border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
 
       &:hover {
@@ -46,10 +46,6 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
         .${cx(hover)} {
           opacity: 1;
         }
-      }
-
-      &:active {
-        cursor: grabbing;
       }
 
       .chunk-tag {
@@ -67,8 +63,8 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
     `,
 
     dragging: css`
-      opacity: 0.5;
       will-change: transform;
+      opacity: 0.5;
     `,
 
     hover,
@@ -161,10 +157,10 @@ const FileListItem = memo<FileListItemProps>(
     // Memoize computed values that don't change
     const computedValues = useMemo(
       () => ({
-        isSupportedForChunking: !isChunkingUnsupported(fileType),
-        isPage: sourceType === 'document' || fileType === 'custom/document',
+        emoji: sourceType === 'document' || fileType === 'custom/document' ? metadata?.emoji : null,
         isFolder: fileType === 'custom/folder',
-        emoji: (sourceType === 'document' || fileType === 'custom/document') ? metadata?.emoji : null,
+        isPage: sourceType === 'document' || fileType === 'custom/document',
+        isSupportedForChunking: !isChunkingUnsupported(fileType),
       }),
       [fileType, sourceType, metadata?.emoji],
     );
