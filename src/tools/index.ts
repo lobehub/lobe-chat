@@ -5,10 +5,10 @@ import { isDesktop } from '@/const/version';
 import { AgentBuilderManifest } from './agent-builder';
 import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';
-import { DocumentManifest } from './document';
 import { KnowledgeBaseManifest } from './knowledge-base';
 import { LocalSystemManifest } from './local-system';
 import { MemoryManifest } from './memory';
+import { PageAgentManifest } from './page-agent';
 import { WebBrowsingManifest } from './web-browsing';
 
 export const builtinTools: LobeBuiltinTool[] = [
@@ -48,8 +48,8 @@ export const builtinTools: LobeBuiltinTool[] = [
   },
   {
     hidden: true,
-    identifier: DocumentManifest.identifier,
-    manifest: DocumentManifest,
+    identifier: PageAgentManifest.identifier,
+    manifest: PageAgentManifest,
     type: 'builtin',
   },
   {
