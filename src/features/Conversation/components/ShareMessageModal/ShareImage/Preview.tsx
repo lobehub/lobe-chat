@@ -50,6 +50,7 @@ const Preview = memo<PreviewProps>(
                 <Avatar
                   avatar={agentMeta.avatar}
                   background={agentMeta.backgroundColor}
+                  shape={'square'}
                   size={40}
                   title={displayTitle}
                 />

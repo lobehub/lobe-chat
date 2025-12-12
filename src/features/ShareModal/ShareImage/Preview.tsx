@@ -42,7 +42,13 @@ const Preview = memo<FieldType & { title?: string }>(
           <Flexbox className={styles.container} gap={16}>
             <div className={styles.header}>
               <Flexbox align={'flex-start'} gap={12} horizontal>
-                <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
+                <Avatar
+                  avatar={avatar}
+                  background={backgroundColor}
+                  shape={'square'}
+                  size={40}
+                  title={title}
+                />
                 <ChatHeaderTitle
                   desc={displayDesc}
                   tag={

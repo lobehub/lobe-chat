@@ -40,6 +40,7 @@ const GroupInfo = memo<GroupInfoProps>(({ style, meta, onAvatarClick }) => {
         background={theme.colorFillTertiary}
         className={styles.avatar}
         onClick={onAvatarClick}
+        shape={'square'}
         size={100}
       />
       {meta.title && <div className={styles.title}>{meta.title}</div>}

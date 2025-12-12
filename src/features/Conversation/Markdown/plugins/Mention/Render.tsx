@@ -84,6 +84,7 @@ const Render = memo<MarkdownElementProps<MentionProps>>(({ children, node }) => 
             <Avatar
               avatar={member.avatar || DEFAULT_AVATAR}
               background={member.backgroundColor ?? undefined}
+              shape={'square'}
               style={{ flex: 'none' }}
             />
             <Flexbox style={{ overflow: 'hidden' }}>

@@ -4,10 +4,10 @@ import { Avatar, Button, Form, type FormGroupItemType, Tag, Tooltip } from '@lob
 import { Empty, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideTrash2, Store } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
 import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
+import { Link, useNavigate } from 'react-router-dom';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import PluginTag from '@/components/Plugins/PluginTag';
@@ -73,7 +73,7 @@ const AgentPlugin = memo(() => {
   const deprecatedList = userEnabledPlugins
     .filter((pluginId) => !installedPlugins.some((p) => p.identifier === pluginId))
     .map((id) => ({
-      avatar: <Avatar avatar={'♻️'} size={40} />,
+      avatar: <Avatar avatar={'♻️'} shape={'square'} size={40} />,
       children: (
         <Switch
           checked={true}

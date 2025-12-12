@@ -126,7 +126,9 @@ export const useControls = ({
     () => [
       // 原有的 builtin 工具
       ...filteredBuiltinList.map((item) => ({
-        icon: <Avatar avatar={item.meta.avatar} size={20} style={{ flex: 'none' }} />,
+        icon: (
+          <Avatar avatar={item.meta.avatar} shape={'square'} size={20} style={{ flex: 'none' }} />
+        ),
         key: item.identifier,
         label: (
           <ToolItem
@@ -211,7 +213,9 @@ export const useControls = ({
     const enabledBuiltinItems = filteredBuiltinList
       .filter((item) => checked.includes(item.identifier))
       .map((item) => ({
-        icon: <Avatar avatar={item.meta.avatar} size={20} style={{ flex: 'none' }} />,
+        icon: (
+          <Avatar avatar={item.meta.avatar} shape={'square'} size={20} style={{ flex: 'none' }} />
+        ),
         key: item.identifier,
         label: (
           <ToolItem

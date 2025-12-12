@@ -38,6 +38,7 @@ const ArtifactList = () => {
       <Avatar
         avatar={<Icon icon={Origami} size={'large'} />}
         background={theme.colorFillTertiary}
+        shape={'square'}
         size={48}
       />
       <Balancer>

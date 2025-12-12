@@ -7,12 +7,12 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { ErrorActionContainer, useStyles } from '../../../../Error/style';
 import PluginSettingsConfig from '@/features/PluginSettings';
 import { useChatStore } from '@/store/chat';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
+import { ErrorActionContainer, useStyles } from '../../../../Error/style';
 import { useConversationStore } from '../../../../store';
 
 interface PluginSettingsProps {
@@ -40,6 +40,7 @@ const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
             avatar={pluginHelpers.getPluginAvatar(pluginMeta) || '⚙️'}
             background={theme.colorFillContent}
             gap={12}
+            shape={'square'}
             size={80}
           />
           <Flexbox style={{ fontSize: 20 }}>
