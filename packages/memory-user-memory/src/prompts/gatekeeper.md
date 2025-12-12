@@ -22,6 +22,9 @@ Evaluate the conversation for these memory layers:
 - Relationships with other people
 - Background and experience
 - Roles in various contexts
+- Identity should remain compact. Route lists of tools, stacks, or
+  implementation techniques to the preference layer unless they materially
+  change the user's biography.
 
 **Context Layer** - Situational frameworks and ongoing situations:
 
@@ -40,6 +43,8 @@ Evaluate the conversation for these memory layers:
 - Communication style preferences explicitly stated as ongoing
 - Response formatting preferences explicitly stated as ongoing
 - Priority levels for preference resolution
+- Capture recurring tool/stacks/technology usage as preferences rather than
+  duplicating them as identity facts.
 
 Note: Task-specific requirements, constraints for a single object/entity, or one-time instructions do NOT belong to this layer.
 
