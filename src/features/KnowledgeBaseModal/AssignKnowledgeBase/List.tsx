@@ -20,8 +20,9 @@ export const List = memo(() => {
   const { t } = useTranslation('file');
 
   const useFetchFilesAndKnowledgeBases = useAgentStore((s) => s.useFetchFilesAndKnowledgeBases);
+  const activeAgentId = useAgentStore((s) => s.activeAgentId);
 
-  const { isLoading, error, data } = useFetchFilesAndKnowledgeBases();
+  const { isLoading, error, data } = useFetchFilesAndKnowledgeBases(activeAgentId);
 
   const [columnCount, setColumnCount] = useState(2);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -107,19 +108,18 @@ export const List = memo(() => {
           totalCount={data!.length}
         />
       ) : (
-        <div style={{ flex: 1, overflow: 'hidden' }}>
-          <div style={{ height: '100%', overflowY: 'auto' }}>
-            <div style={{ paddingInline: 16 }}>
-              <VirtuosoMasonry
-                ItemContent={MasonryItemWrapper}
-                columnCount={columnCount}
-                context={masonryContext}
-                data={data || []}
-                style={{
-                  gap: '16px',
-                }}
-              />
-            </div>
+        <div style={{ height: '100%', position: 'relative' }}>
+          <div style={{ inset: 0, position: 'absolute' }}>
+            <VirtuosoMasonry
+              ItemContent={MasonryItemWrapper}
+              columnCount={columnCount}
+              context={masonryContext}
+              data={data || []}
+              style={{
+                gap: '16px',
+                height: '100%',
+              }}
+            />
           </div>
         </div>
       )}
