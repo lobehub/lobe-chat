@@ -68,7 +68,7 @@ export const checkAuth =
       // check the Auth With payload and clerk auth
       let clerkAuth = {} as AuthObject;
 
-      // TODO: V2 完整移除 client 模式下的 clerk 集成代码
+      // TODO: V2 completely remove clerk integration code in client mode
       if (enableClerk) {
         const auth = new ClerkAuth();
         const data = auth.getAuthFromRequest(req as NextRequest);
