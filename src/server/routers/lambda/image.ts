@@ -1,6 +1,5 @@
 import debug from 'debug';
 import { and, eq } from 'drizzle-orm';
-import { after } from 'next/server';
 import { z } from 'zod';
 
 import { AsyncTaskModel } from '@/database/models/asyncTask';
@@ -229,22 +228,18 @@ export const imageRouter = router({
       log('Unified async caller created successfully for userId: %s', ctx.userId);
       log('Processing %d async image generation tasks', generationsWithTasks.length);
 
-      // 启动所有图像生成任务（不等待完成，真正的后台任务）
+      // Fire-and-forget: trigger async tasks without awaiting
+      // These calls go to the async router which handles them independently
+      // Do NOT use after() here as it would keep the lambda alive unnecessarily
       generationsWithTasks.forEach(({ generation, asyncTaskId }) => {
         log('Starting background async task %s for generation %s', asyncTaskId, generation.id);
 
-        after(async () => {
-          try {
-            await asyncCaller.image.createImage({
-              generationId: generation.id,
-              model,
-              params,
-              provider,
-              taskId: asyncTaskId,
-            });
-          } catch (err) {
-            log('Background task failed for generation %s: %O', generation.id, err);
-          }
+        asyncCaller.image.createImage({
+          generationId: generation.id,
+          model,
+          params,
+          provider,
+          taskId: asyncTaskId,
         });
       });
 
