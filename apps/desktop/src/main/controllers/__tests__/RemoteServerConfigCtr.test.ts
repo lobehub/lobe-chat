@@ -105,7 +105,10 @@ describe('RemoteServerConfigCtr', () => {
       const result = await controller.clearRemoteServerConfig();
 
       expect(result).toBe(true);
-      expect(mockStoreManager.set).toHaveBeenCalledWith('dataSyncConfig', { storageMode: 'local' });
+      expect(mockStoreManager.set).toHaveBeenCalledWith('dataSyncConfig', {
+        active: false,
+        storageMode: 'cloud',
+      });
       expect(mockStoreManager.delete).toHaveBeenCalledWith('encryptedTokens');
     });
   });
