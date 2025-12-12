@@ -46,10 +46,10 @@ export const userProfileSelectors = {
 };
 
 /**
- * 使用此方法可以兼容不需要登录鉴权的情况
+ * Use this method to be compatible with situations that don't require login authentication
  */
 const isLogin = (s: UserStore) => {
-  // 如果没有开启鉴权，说明不需要登录，默认是登录态
+  // If authentication is not enabled, no login is required, default is logged in state
   if (!enableAuth) return true;
 
   return s.isSignedIn;
