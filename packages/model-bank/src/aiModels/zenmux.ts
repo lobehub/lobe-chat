@@ -31,7 +31,7 @@ const zenmuxChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-12-11',
     settings: {
-      extendParams: ['textVerbosity'],
+      extendParams: ['gpt5_1ReasoningEffort', 'textVerbosity'],
       searchImpl: 'params',
     },
     type: 'chat',
