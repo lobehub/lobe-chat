@@ -2,6 +2,7 @@ import type { StateCreator } from 'zustand';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/index';
 import { useChatStore } from '@/store/chat';
+import { AI_RUNTIME_OPERATION_TYPES } from '@/store/chat/slices/operation/types';
 
 import type { Store as ConversationStore } from '../../action';
 
@@ -248,9 +249,10 @@ export const generationSlice: StateCreator<
 
     const chatStore = useChatStore.getState();
 
-    // Cancel all running execAgentRuntime operations in this conversation context
+    // Cancel all running AI runtime operations in this conversation context
+    // Includes both client-side (execAgentRuntime) and server-side (execServerAgentRuntime) operations
     chatStore.cancelOperations(
-      { agentId, status: 'running', topicId, type: 'execAgentRuntime' },
+      { agentId, status: 'running', topicId, type: AI_RUNTIME_OPERATION_TYPES },
       MESSAGE_CANCEL_FLAT,
     );
 

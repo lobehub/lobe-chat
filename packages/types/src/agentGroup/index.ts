@@ -131,6 +131,8 @@ export interface ExecAgentResult {
   autoStarted: boolean;
   /** Timestamp when operation was created */
   createdAt: string;
+  /** Error message if operation failed to start */
+  error?: string;
   /** Status message */
   message: string;
   /** Queue message ID if auto-started */
@@ -185,10 +187,14 @@ export interface ExecGroupAgentParams {
 export interface ExecGroupAgentResult {
   /** The assistant message ID created for this operation */
   assistantMessageId: string;
+  /** Error message if operation failed to start */
+  error?: string;
   /** Whether a new topic was created */
   isCreateNewTopic: boolean;
   /** Operation ID for SSE connection */
   operationId: string;
+  /** Whether the operation was created successfully */
+  success?: boolean;
   /** The topic ID */
   topicId: string;
   /** The user message ID created for this operation */
@@ -201,12 +207,16 @@ export interface ExecGroupAgentResult {
 export interface ExecGroupAgentResponse {
   /** The assistant message ID created for this operation */
   assistantMessageId: string;
+  /** Error message if operation failed to start */
+  error?: string;
   /** Whether a new topic was created */
   isCreateNewTopic: boolean;
   /** Latest messages in the conversation */
   messages: UIChatMessage[];
   /** Operation ID for SSE connection */
   operationId: string;
+  /** Whether the operation was created successfully */
+  success?: boolean;
   /** The topic ID */
   topicId: string;
   /** Topics list (if new topic was created) */

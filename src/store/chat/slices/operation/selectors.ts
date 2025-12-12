@@ -1,16 +1,7 @@
 import type { ChatStoreState } from '@/store/chat/initialState';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
-import type { Operation, OperationType } from './types';
-
-/**
- * Operation types that indicate AI is generating content
- * Used for loading state indicators in UI
- */
-const AI_RUNTIME_OPERATION_TYPES: OperationType[] = [
-  'execAgentRuntime', // Client-side agent execution
-  'execServerAgentRuntime', // Server-side agent execution (Group Chat)
-];
+import { AI_RUNTIME_OPERATION_TYPES, type Operation, type OperationType } from './types';
 
 // === Basic Queries ===
 /**

@@ -188,7 +188,7 @@ export class AgentRuntimeService {
 
       return { autoStarted, messageId, operationId, success: true };
     } catch (error) {
-      log('Failed to create operation %s: %O', operationId, error);
+      console.error('Failed to create operation %s: %O', operationId, error);
       throw error;
     }
   }

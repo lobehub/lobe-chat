@@ -32,9 +32,8 @@ vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
 
 // Mock AgentStateManager to use the exported singleton instance
 vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
-  const { inMemoryAgentStateManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryAgentStateManager'
-  );
+  const { inMemoryAgentStateManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryAgentStateManager');
   return {
     AgentStateManager: class {
       constructor() {
@@ -46,9 +45,8 @@ vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
 
 // Mock StreamEventManager to use the exported singleton instance
 vi.mock('@/server/modules/AgentRuntime/StreamEventManager', async () => {
-  const { inMemoryStreamEventManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryStreamEventManager'
-  );
+  const { inMemoryStreamEventManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryStreamEventManager');
   return {
     StreamEventManager: class {
       constructor() {
@@ -150,12 +148,12 @@ describe('Batch Execution (execAgents)', () => {
     expect(result.results[0]).toMatchObject({
       success: true,
       taskIndex: 0,
-      operationId: expect.stringMatching(/^agt_.+_.+_\w+$/),
+      operationId: expect.stringMatching(/^op_\d+_agt_.+_tpc_.+_\w+$/),
     });
     expect(result.results[1]).toMatchObject({
       success: true,
       taskIndex: 1,
-      operationId: expect.stringMatching(/^agt_.+_.+_\w+$/),
+      operationId: expect.stringMatching(/^op_\d+_agt_.+_tpc_.+_\w+$/),
     });
 
     expect(result.results[0].operationId).not.toBe(result.results[1].operationId);

@@ -166,3 +166,18 @@ export interface OperationFilter {
   threadId?: string;
   groupId?: string;
 }
+
+// === Operation Type Constants ===
+
+/**
+ * Operation types that indicate AI is generating content
+ * Used for loading state indicators and animation in UI
+ *
+ * Includes:
+ * - execAgentRuntime: Client-side agent execution (single chat)
+ * - execServerAgentRuntime: Server-side agent execution (Group Chat)
+ */
+export const AI_RUNTIME_OPERATION_TYPES: OperationType[] = [
+  'execAgentRuntime',
+  'execServerAgentRuntime',
+];

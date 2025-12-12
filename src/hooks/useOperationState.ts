@@ -8,6 +8,7 @@ import {
 } from '@/features/Conversation/types/operation';
 import { useChatStore } from '@/store/chat';
 import { operationSelectors } from '@/store/chat/selectors';
+import { AI_RUNTIME_OPERATION_TYPES } from '@/store/chat/slices/operation/types';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 /**
@@ -72,7 +73,8 @@ export const useOperationState = (context: ConversationContext): OperationState 
           isCreating: runningOps.some(
             (op) => op.type === 'sendMessage' || op.type === 'createAssistantMessage',
           ),
-          isGenerating: runningOps.some((op) => op.type === 'execAgentRuntime'),
+          // Check AI runtime operations (client-side and server-side)
+          isGenerating: runningOps.some((op) => AI_RUNTIME_OPERATION_TYPES.includes(op.type)),
           isInReasoning: runningOps.some((op) => op.type === 'reasoning'),
           isProcessing: operationSelectors.isMessageProcessing(messageId)(state),
           isRegenerating: runningOps.some((op) => op.type === 'regenerate'),

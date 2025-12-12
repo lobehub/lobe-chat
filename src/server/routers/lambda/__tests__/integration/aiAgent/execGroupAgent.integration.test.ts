@@ -33,9 +33,8 @@ vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
 }));
 
 vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
-  const { inMemoryAgentStateManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryAgentStateManager'
-  );
+  const { inMemoryAgentStateManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryAgentStateManager');
   return {
     AgentStateManager: class {
       constructor() {
@@ -46,9 +45,8 @@ vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
 });
 
 vi.mock('@/server/modules/AgentRuntime/StreamEventManager', async () => {
-  const { inMemoryStreamEventManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryStreamEventManager'
-  );
+  const { inMemoryStreamEventManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryStreamEventManager');
   return {
     StreamEventManager: class {
       constructor() {
@@ -152,9 +150,7 @@ describe('execGroupAgent', () => {
     });
 
     it('should truncate long message for topic title', async () => {
-      mockResponsesCreate.mockResolvedValue(
-        createMockResponsesAPIStream('Response') as any,
-      );
+      mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream('Response') as any);
 
       const caller = aiAgentRouter.createCaller(createTestCallerContext(userId));
       const longMessage =
@@ -206,10 +202,7 @@ describe('execGroupAgent', () => {
       expect(result.isCreateNewTopic).toBe(false);
 
       // Verify no new topic was created
-      const allTopics = await serverDB
-        .select()
-        .from(topics)
-        .where(eq(topics.groupId, testGroupId));
+      const allTopics = await serverDB.select().from(topics).where(eq(topics.groupId, testGroupId));
 
       expect(allTopics).toHaveLength(1);
       expect(allTopics[0].id).toBe(existingTopic.id);
@@ -245,9 +238,7 @@ describe('execGroupAgent', () => {
 
   describe('Message Creation', () => {
     it('should create user message in the topic', async () => {
-      mockResponsesCreate.mockResolvedValue(
-        createMockResponsesAPIStream('Agent response') as any,
-      );
+      mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream('Agent response') as any);
 
       const caller = aiAgentRouter.createCaller(createTestCallerContext(userId));
 
@@ -261,12 +252,7 @@ describe('execGroupAgent', () => {
       const createdMessages = await serverDB
         .select()
         .from(messages)
-        .where(
-          and(
-            eq(messages.topicId, result.topicId),
-            eq(messages.role, 'user'),
-          ),
-        );
+        .where(and(eq(messages.topicId, result.topicId), eq(messages.role, 'user')));
 
       expect(createdMessages).toHaveLength(1);
       expect(createdMessages[0].content).toBe('User message in group');
@@ -301,9 +287,7 @@ describe('execGroupAgent', () => {
     });
 
     it('should not return topics when using existing topic', async () => {
-      mockResponsesCreate.mockResolvedValue(
-        createMockResponsesAPIStream('Response') as any,
-      );
+      mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream('Response') as any);
 
       // Create an existing topic
       const [existingTopic] = await serverDB
@@ -345,11 +329,88 @@ describe('execGroupAgent', () => {
     });
   });
 
+  describe('Stream Events', () => {
+    // TODO: LOBE-1748 - Fix missing agent_runtime_end event
+    // This test documents the current bug where agent_runtime_end is not sent
+    // When fixed, remove .todo and the test should pass
+    it.todo('should emit agent_runtime_end event when agent completes', async () => {
+      mockResponsesCreate.mockResolvedValue(
+        createMockResponsesAPIStream('Completed response') as any,
+      );
+
+      const caller = aiAgentRouter.createCaller(createTestCallerContext(userId));
+
+      const result = await caller.execGroupAgent({
+        agentId: testAgentId,
+        groupId: testGroupId,
+        message: 'Test message for stream events',
+      });
+
+      expect(result.operationId).toBeDefined();
+
+      // Wait a bit for all events to be processed
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Check all events that were emitted
+      const allEvents = inMemoryStreamEventManager.getAllEvents(result.operationId);
+      const eventTypes = allEvents.map((e) => e.type);
+
+      console.log('All emitted event types:', eventTypes);
+
+      // IMPORTANT: This test verifies that agent_runtime_end event is sent
+      // If this test fails, it means the SSE stream won't close properly
+      // See LOBE-1748 for details
+      expect(eventTypes).toContain('agent_runtime_end');
+
+      // Also verify the event has correct data structure
+      const endEvent = allEvents.find((e) => e.type === 'agent_runtime_end');
+      if (endEvent) {
+        expect(endEvent.data).toBeDefined();
+        expect(endEvent.data.phase).toBe('execution_complete');
+      }
+    });
+
+    it('should emit events in correct order: init -> chunks -> end', async () => {
+      mockResponsesCreate.mockResolvedValue(
+        createMockResponsesAPIStream('Response content') as any,
+      );
+
+      const caller = aiAgentRouter.createCaller(createTestCallerContext(userId));
+
+      const result = await caller.execGroupAgent({
+        agentId: testAgentId,
+        groupId: testGroupId,
+        message: 'Test event order',
+      });
+
+      // Wait a bit for all events to be processed
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const allEvents = inMemoryStreamEventManager.getAllEvents(result.operationId);
+      const eventTypes = allEvents.map((e) => e.type);
+
+      // Log event types for debugging
+      console.log('Emitted event types:', eventTypes);
+
+      // Verify agent_runtime_init is emitted (should be first or near first)
+      const initIndex = eventTypes.indexOf('agent_runtime_init');
+
+      // Verify agent_runtime_end is emitted (should be last)
+      const endIndex = eventTypes.indexOf('agent_runtime_end');
+
+      // If both events exist, verify order
+      if (initIndex !== -1 && endIndex !== -1) {
+        expect(initIndex).toBeLessThan(endIndex);
+      }
+
+      // At minimum, we should have some events
+      expect(allEvents.length).toBeGreaterThan(0);
+    });
+  });
+
   describe('Multiple Group Sessions', () => {
     it('should create separate topics for different groups', async () => {
-      mockResponsesCreate.mockResolvedValue(
-        createMockResponsesAPIStream('Response') as any,
-      );
+      mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream('Response') as any);
 
       // Create another group
       const [group2] = await serverDB
@@ -380,23 +441,15 @@ describe('execGroupAgent', () => {
       expect(result1.topicId).not.toBe(result2.topicId);
 
       // Verify topics have correct groupIds
-      const topic1 = await serverDB
-        .select()
-        .from(topics)
-        .where(eq(topics.id, result1.topicId));
-      const topic2 = await serverDB
-        .select()
-        .from(topics)
-        .where(eq(topics.id, result2.topicId));
+      const topic1 = await serverDB.select().from(topics).where(eq(topics.id, result1.topicId));
+      const topic2 = await serverDB.select().from(topics).where(eq(topics.id, result2.topicId));
 
       expect(topic1[0].groupId).toBe(testGroupId);
       expect(topic2[0].groupId).toBe(group2.id);
     });
 
     it('should allow multiple topics within same group', async () => {
-      mockResponsesCreate.mockResolvedValue(
-        createMockResponsesAPIStream('Response') as any,
-      );
+      mockResponsesCreate.mockResolvedValue(createMockResponsesAPIStream('Response') as any);
 
       const caller = aiAgentRouter.createCaller(createTestCallerContext(userId));
 

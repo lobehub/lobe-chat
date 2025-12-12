@@ -258,40 +258,79 @@ export class AiAgentService {
     };
 
     // 12. Create operation using AgentRuntimeService
-    const result = await this.agentRuntimeService.createOperation({
-      agentConfig,
-      appContext: {
+    // Wrap in try-catch to handle operation startup failures (e.g., QStash unavailable)
+    // If createOperation fails, we still have valid messages that need error info
+    try {
+      const result = await this.agentRuntimeService.createOperation({
+        agentConfig,
+        appContext: {
+          agentId: resolvedAgentId,
+          groupId: appContext?.groupId,
+          threadId: appContext?.threadId,
+          topicId,
+        },
+        autoStart,
+        initialContext,
+        initialMessages: processedMessages,
+        modelRuntimeConfig: { model, provider },
+        operationId,
+        toolManifestMap,
+        tools,
+        userId: this.userId,
+      });
+
+      log('execAgent: created operation %s (autoStarted: %s)', operationId, result.autoStarted);
+
+      return {
         agentId: resolvedAgentId,
-        groupId: appContext?.groupId,
-        threadId: appContext?.threadId,
+        assistantMessageId: assistantMessageRecord.id,
+        autoStarted: result.autoStarted,
+        createdAt: new Date().toISOString(),
+        message: 'Agent operation created successfully',
+        messageId: result.messageId,
+        operationId,
+        status: 'created',
+        success: true,
+        timestamp: new Date().toISOString(),
         topicId,
-      },
-      autoStart,
-      initialContext,
-      initialMessages: processedMessages,
-      modelRuntimeConfig: { model, provider },
-      operationId,
-      toolManifestMap,
-      tools,
-      userId: this.userId,
-    });
+        userMessageId: userMessageRecord.id,
+      };
+    } catch (error) {
+      // Operation startup failed (e.g., QStash queue service unavailable)
+      // Update assistant message with error so user can see what went wrong
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error starting agent';
+      log(
+        'execAgent: createOperation failed, updating assistant message with error: %s',
+        errorMessage,
+      );
 
-    log('execAgent: created operation %s (autoStarted: %s)', operationId, result.autoStarted);
+      await this.messageModel.update(assistantMessageRecord.id, {
+        content: '',
+        error: {
+          body: {
+            detail: errorMessage,
+          },
+          message: errorMessage,
+          type: 'ServerAgentRuntimeError', // ServiceUnavailable - agent runtime service unavailable
+        },
+      });
 
-    return {
-      agentId: resolvedAgentId,
-      assistantMessageId: assistantMessageRecord.id,
-      autoStarted: result.autoStarted,
-      createdAt: new Date().toISOString(),
-      message: 'Agent operation created successfully',
-      messageId: result.messageId,
-      operationId,
-      status: 'created',
-      success: true,
-      timestamp: new Date().toISOString(),
-      topicId,
-      userMessageId: userMessageRecord.id,
-    };
+      // Return result with error status - messages are valid but agent didn't start
+      return {
+        agentId: resolvedAgentId,
+        assistantMessageId: assistantMessageRecord.id,
+        autoStarted: false,
+        createdAt: new Date().toISOString(),
+        error: errorMessage,
+        message: 'Agent operation failed to start',
+        operationId,
+        status: 'error',
+        success: false,
+        timestamp: new Date().toISOString(),
+        topicId,
+        userMessageId: userMessageRecord.id,
+      };
+    }
   }
 
   /**
@@ -343,12 +382,18 @@ export class AiAgentService {
       prompt: message,
     });
 
-    log('execGroupAgent: delegated to execAgent, operationId=%s', result.operationId);
+    log(
+      'execGroupAgent: delegated to execAgent, operationId=%s, success=%s',
+      result.operationId,
+      result.success,
+    );
 
     return {
       assistantMessageId: result.assistantMessageId,
+      error: result.error,
       isCreateNewTopic,
       operationId: result.operationId,
+      success: result.success,
       topicId: result.topicId,
       userMessageId: result.userMessageId,
     };

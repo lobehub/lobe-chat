@@ -126,7 +126,7 @@ describe('execAgent', () => {
 
       expect(result.success).toBe(true);
       expect(result.operationId).toBeDefined();
-      expect(result.operationId).toMatch(/^agt_.+_.+_\w+$/);
+      expect(result.operationId).toMatch(/^op_\d+_agt_.+_tpc_.+_\w+$/);
 
       // Verify topic was created
       const createdTopics = await serverDB

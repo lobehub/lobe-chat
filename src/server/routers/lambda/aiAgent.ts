@@ -252,7 +252,7 @@ export const aiAgentRouter = router({
         slug,
       });
     } catch (error: any) {
-      log('execAgent failed: %O', error);
+      console.error('execAgent failed: %O', error);
 
       if (error instanceof TRPCError) {
         throw error;
@@ -364,12 +364,15 @@ export const aiAgentRouter = router({
       });
 
       // Get messages and topics for UI sync
+      // Messages include the assistant message with error if operation failed to start
       const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
         agentId,
         includeTopic: result.isCreateNewTopic,
         topicId: result.topicId,
       });
 
+      // Return result with messages/topics - includes error/success fields
+      // Frontend can check success to decide whether to connect to SSE stream
       return { ...result, messages, topics };
     } catch (error: any) {
       log('execGroupAgent failed: %O', error);
