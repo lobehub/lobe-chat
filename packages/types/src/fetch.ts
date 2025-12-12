@@ -22,6 +22,7 @@ export const ChatErrorType = {
   PluginFailToTransformArguments: 'PluginFailToTransformArguments',
   UnknownChatFetchError: 'UnknownChatFetchError',
   SystemTimeNotMatchError: 'SystemTimeNotMatchError',
+  ServerAgentRuntimeError: 'ServerAgentRuntimeError',
 
   // ******* Client Errors ******* //
   BadRequest: 400,

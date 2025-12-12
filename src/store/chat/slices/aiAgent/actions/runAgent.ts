@@ -107,6 +107,30 @@ export const agentSlice: StateCreator<ChatStore, [['zustand/devtools', never]], 
         break;
       }
 
+      case 'agent_runtime_init': {
+        // Agent runtime initialization event
+        log(`Agent runtime initialized for ${assistantId}:`, event.data);
+        break;
+      }
+
+      case 'agent_runtime_end': {
+        // Agent runtime finished - this is the definitive signal that generation is complete
+        const { reason, reasonDetail, finalState } = event.data || {};
+        log(`Agent runtime ended for ${assistantId}: reason=${reason}, detail=${reasonDetail}`);
+
+        // Update operation metadata with final state
+        if (finalState) {
+          get().updateOperationMetadata(operationId, {
+            finalStatus: finalState.status || reason,
+          });
+        }
+
+        // Stop loading state
+        log(`Stopping loading for completed agent runtime: ${assistantId}`);
+        get().internal_toggleMessageLoading(false, assistantId);
+        break;
+      }
+
       case 'stream_start': {
         // If assistantId is already set (Group Chat flow), skip message creation/deletion
         // In Group Chat, messages are already synced via replaceMessages from backend response

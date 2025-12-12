@@ -292,16 +292,16 @@ export const agentGroupSlice: StateCreator<
 
     set({ isCreatingMessage: true }, false, n('sendGroupMessage/start'));
 
-    // 1. Optimistic update - create temp messages immediately for instant UI feedback
-    // No operation needed for optimistic updates
+    // 0. Create execServerAgentRuntime operation FIRST for correct loading state
+    // This ensures isAgentRuntimeRunningByContext returns true during mutate call
     const tempUserId = 'tmp_' + nanoid();
     const tempAssistantId = 'tmp_' + nanoid();
     const fileIds = files?.map((f) => f.id);
 
-    const { operationId: optimisticOperationId } = startOperation({
-      type: 'sendMessage',
+    const { operationId: execOperationId, abortController: execAbortController } = startOperation({
+      type: 'execServerAgentRuntime',
       context: { ...context, messageId: tempUserId },
-      label: 'Send Group Message',
+      label: 'Execute Server Agent',
     });
 
     // 1. Optimistic update - create temp messages immediately for instant UI feedback
@@ -315,7 +315,7 @@ export const agentGroupSlice: StateCreator<
         groupId,
         topicId: topicId ?? undefined,
       },
-      { tempMessageId: tempUserId, operationId: optimisticOperationId },
+      { tempMessageId: tempUserId, operationId: execOperationId },
     );
 
     // Create temp assistant message (loading state)
@@ -327,33 +327,29 @@ export const agentGroupSlice: StateCreator<
         groupId,
         topicId: topicId ?? undefined,
       },
-      { tempMessageId: tempAssistantId, operationId: optimisticOperationId },
+      { tempMessageId: tempAssistantId, operationId: execOperationId },
     );
 
     // Start loading state for temp messages
     get().internal_toggleMessageLoading(true, tempUserId);
     get().internal_toggleMessageLoading(true, tempAssistantId);
 
-    // 2. Create execServerAgentRuntime operation - from here starts the real Agent execution
-    const { operationId } = startOperation({
-      type: 'execServerAgentRuntime',
-      context: { ...context, topicId },
-      label: 'Execute Server Agent',
-    });
-
     try {
-      // 3. Call backend execGroupAgent - creates messages and triggers Agent
-      const result = await lambdaClient.aiAgent.execGroupAgent.mutate({
-        agentId,
-        files: fileIds,
-        groupId,
-        message,
-        topicId,
-      });
+      // 2. Call backend execGroupAgent - creates messages and triggers Agent
+      // Pass AbortSignal to allow cancellation during the API call
+      const result = await lambdaClient.aiAgent.execGroupAgent.mutate(
+        { agentId, files: fileIds, groupId, message, topicId },
+        { signal: execAbortController.signal },
+      );
 
-      log('execGroupAgent result: operationId=%s, topicId=%s', result.operationId, result.topicId);
+      log(
+        'execGroupAgent result: operationId=%s, topicId=%s, success=%s',
+        result.operationId,
+        result.topicId,
+        result.success,
+      );
 
-      // 4. Update topics if new topic was created
+      // 3. Update topics if new topic was created
       if (result.topics) {
         const pageSize = 20; // Default page size for topics
         get().internal_updateTopics(agentId, {
@@ -364,28 +360,43 @@ export const agentGroupSlice: StateCreator<
         });
       }
 
-      // 5. Replace temp messages with server messages
-      if (result.messages) {
-        get().replaceMessages(result.messages, {
-          action: n('sendGroupMessage/syncMessages'),
-          context: { ...context, topicId: result.topicId || topicId },
-        });
-        // Pass operationId so internal_dispatchMessage can get correct context (groupId, topicId, etc.)
-        get().internal_dispatchMessage(
-          {
-            type: 'deleteMessages',
-            ids: [tempUserId, tempAssistantId],
-          },
-          { operationId: optimisticOperationId },
-        );
-      }
-
-      // 6. Switch to new topic if created
+      // 4. Switch to new topic if created
       if (result.isCreateNewTopic && result.topicId) {
         await get().switchTopic(result.topicId, true);
       }
 
-      // 7. Create streaming context - use assistantMessageId from backend response
+      // 5. Create execContext with updated topicId from server response
+      const execContext = { ...context, topicId: result.topicId || topicId };
+
+      // 6. Replace temp messages with server messages
+      // Messages include assistant message with error if operation failed to start
+      if (result.messages) {
+        get().replaceMessages(result.messages, {
+          action: n('sendGroupMessage/syncMessages'),
+          context: execContext,
+        });
+        // Delete temp messages - use execOperationId for correct context
+        get().internal_dispatchMessage(
+          { type: 'deleteMessages', ids: [tempUserId, tempAssistantId] },
+          { operationId: execOperationId },
+        );
+      }
+
+      // 7. Check if operation failed to start (e.g., QStash unavailable)
+      // In this case, messages are synced but we skip SSE connection
+      if (result.success === false) {
+        log('Agent operation failed to start: %s', result.error);
+        // Complete the operation with error status
+        get().failOperation(execOperationId, {
+          type: 'AgentStartupError',
+          message: result.error || 'Agent operation failed to start',
+        });
+        // Stop loading state for assistant message
+        get().internal_toggleMessageLoading(false, result.assistantMessageId);
+        return;
+      }
+
+      // 8. Create streaming context - use assistantMessageId from backend response
       const streamContext = {
         assistantId: result.assistantMessageId,
         content: '',
@@ -393,24 +404,24 @@ export const agentGroupSlice: StateCreator<
         tmpAssistantId: tempAssistantId, // Used for cleanup if needed
       };
 
-      // 8. Start child operation for SSE stream using backend operationId
+      // 9. Start child operation for SSE stream using backend operationId
       get().startOperation({
         type: 'groupAgentStream',
         operationId: result.operationId,
-        context: {
-          agentId,
-          groupId,
-          topicId: result.topicId || topicId,
-          messageId: result.assistantMessageId,
-        },
+        context: { ...execContext, messageId: result.assistantMessageId },
         label: 'Group Agent Stream',
-        parentOperationId: operationId,
+        parentOperationId: execOperationId,
       });
 
-      // Associate assistant message with the stream operation
+      // Associate assistant message with both operations:
+      // - execServerAgentRuntime (parent) - for isGenerating detection
+      // - groupAgentStream (child) - for stream cancel handling
+      get().associateMessageWithOperation(result.assistantMessageId, execOperationId);
       get().associateMessageWithOperation(result.assistantMessageId, result.operationId);
 
-      // 9. Connect to SSE stream
+      // 10. Connect to SSE stream
+      // Note: The SSE connection will be closed by the server when it sends agent_runtime_end event
+      // The server handles the close logic in api/agent/stream/route.ts
       const eventSource = agentRuntimeClient.createStreamConnection(result.operationId, {
         includeHistory: false,
         onConnect: () => {
@@ -418,9 +429,9 @@ export const agentGroupSlice: StateCreator<
         },
         onDisconnect: () => {
           log('Stream disconnected from %s', result.operationId);
-          // Complete both operations when stream disconnects
+          // Complete both operations when stream disconnects (either by server close or client abort)
           get().completeOperation(result.operationId);
-          get().completeOperation(operationId);
+          get().completeOperation(execOperationId);
         },
         onError: (error: Error) => {
           log('Stream error for %s: %O', result.operationId, error);
@@ -438,20 +449,49 @@ export const agentGroupSlice: StateCreator<
         },
       });
 
-      // 10. Register cancel handler for aborting SSE stream
+      // 11. Register cancel handler for aborting SSE stream
       get().onOperationCancel(result.operationId, () => {
         log('Cancelling SSE stream for operation %s', result.operationId);
         eventSource.abort();
       });
     } catch (error) {
-      log('sendGroupMessage failed: %O', error);
-      console.error('Failed to send group message:', error);
+      // Check if this is an abort error (user cancelled the operation)
+      const isAbortError =
+        error instanceof Error &&
+        (error.name === 'AbortError' ||
+          error.message.includes('aborted') ||
+          error.message.includes('cancelled'));
 
-      // Fail the operation
-      get().failOperation(operationId, {
-        type: 'SendGroupMessageError',
-        message: error instanceof Error ? error.message : 'Unknown error',
-      });
+      if (isAbortError) {
+        log('sendGroupMessage aborted by user');
+        // Operation was cancelled by user, status already updated by cancelOperation
+        // Just clean up temp messages
+        get().internal_dispatchMessage(
+          {
+            type: 'deleteMessages',
+            ids: [tempUserId, tempAssistantId],
+          },
+          { operationId: execOperationId },
+        );
+      } else {
+        log('sendGroupMessage failed: %O', error);
+        console.error('Failed to send group message:', error);
+
+        // Remove temp messages on error - use execOperationId for correct context
+        get().internal_dispatchMessage(
+          {
+            type: 'deleteMessages',
+            ids: [tempUserId, tempAssistantId],
+          },
+          { operationId: execOperationId },
+        );
+
+        // Fail the execServerAgentRuntime operation
+        get().failOperation(execOperationId, {
+          type: 'SendGroupMessageError',
+          message: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
     } finally {
       get().internal_toggleMessageLoading(false, tempUserId);
       get().internal_toggleMessageLoading(false, tempAssistantId);

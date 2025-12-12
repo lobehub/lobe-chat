@@ -124,12 +124,19 @@ describe('agentGroup actions', () => {
         replaceMessages: vi.fn(),
         startOperation: vi
           .fn()
-          .mockReturnValueOnce({ operationId: 'op-123' })
-          .mockReturnValueOnce({ operationId: TEST_IDS.OPERATION_ID }),
+          .mockReturnValueOnce({
+            operationId: 'op-exec',
+            abortController: new AbortController(),
+          }) // execServerAgentRuntime (first)
+          .mockReturnValueOnce({
+            operationId: TEST_IDS.OPERATION_ID,
+            abortController: new AbortController(),
+          }), // groupAgentStream (second)
         completeOperation: vi.fn(),
         failOperation: vi.fn(),
         onOperationCancel: vi.fn(),
         switchTopic: vi.fn(),
+        associateMessageWithOperation: vi.fn(),
       });
     });
   });
@@ -208,7 +215,7 @@ describe('agentGroup actions', () => {
     });
 
     describe('optimistic update', () => {
-      it('should create sendMessage operation for optimistic updates and execServerAgentRuntime for agent execution', async () => {
+      it('should create execServerAgentRuntime operation first for loading state', async () => {
         const { result } = renderHook(() => useChatStore());
 
         vi.mocked(lambdaClient.aiAgent.execGroupAgent.mutate).mockResolvedValue(
@@ -225,22 +232,9 @@ describe('agentGroup actions', () => {
           });
         });
 
-        // First call should be sendMessage (for optimistic updates)
+        // First call should be execServerAgentRuntime (created BEFORE mutate call for loading state)
         expect(result.current.startOperation).toHaveBeenNthCalledWith(
           1,
-          expect.objectContaining({
-            type: 'sendMessage',
-            context: expect.objectContaining({
-              agentId: TEST_IDS.AGENT_ID,
-              groupId: TEST_IDS.GROUP_ID,
-            }),
-            label: 'Send Group Message',
-          }),
-        );
-
-        // Second call should be execServerAgentRuntime (the main operation)
-        expect(result.current.startOperation).toHaveBeenNthCalledWith(
-          2,
           expect.objectContaining({
             type: 'execServerAgentRuntime',
             context: expect.objectContaining({
@@ -334,13 +328,16 @@ describe('agentGroup actions', () => {
           });
         });
 
-        expect(lambdaClient.aiAgent.execGroupAgent.mutate).toHaveBeenCalledWith({
-          agentId: TEST_IDS.AGENT_ID,
-          groupId: TEST_IDS.GROUP_ID,
-          message: TEST_CONTENT.GROUP_MESSAGE,
-          topicId: TEST_IDS.TOPIC_ID,
-          files: ['file-1'],
-        });
+        expect(lambdaClient.aiAgent.execGroupAgent.mutate).toHaveBeenCalledWith(
+          {
+            agentId: TEST_IDS.AGENT_ID,
+            groupId: TEST_IDS.GROUP_ID,
+            message: TEST_CONTENT.GROUP_MESSAGE,
+            topicId: TEST_IDS.TOPIC_ID,
+            files: ['file-1'],
+          },
+          expect.objectContaining({ signal: expect.any(AbortSignal) }),
+        );
       });
 
       it('should replace messages with server response using correct context', async () => {
@@ -387,7 +384,7 @@ describe('agentGroup actions', () => {
         });
 
         // Verify that startOperation was called twice:
-        // 1. For execServerAgentRuntime operation (main)
+        // 1. For execServerAgentRuntime operation (created BEFORE mutate for loading state)
         // 2. For groupAgentStream operation (child, with backend operationId)
         expect(result.current.startOperation).toHaveBeenCalledTimes(2);
         expect(result.current.startOperation).toHaveBeenNthCalledWith(
@@ -395,7 +392,7 @@ describe('agentGroup actions', () => {
           expect.objectContaining({
             type: 'groupAgentStream',
             operationId: TEST_IDS.OPERATION_ID,
-            parentOperationId: 'op-123',
+            parentOperationId: 'op-exec',
           }),
         );
       });
@@ -419,6 +416,37 @@ describe('agentGroup actions', () => {
           TEST_IDS.OPERATION_ID,
           expect.any(Function),
         );
+      });
+
+      it('should associate assistant message with both execServerAgentRuntime and groupAgentStream operations', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        vi.mocked(lambdaClient.aiAgent.execGroupAgent.mutate).mockResolvedValue(
+          createMockExecGroupAgentResponse(),
+        );
+        vi.mocked(agentRuntimeClient.createStreamConnection).mockReturnValue({} as any);
+
+        await act(async () => {
+          await result.current.sendGroupMessage({
+            context: createTestContext(),
+            message: TEST_CONTENT.GROUP_MESSAGE,
+          });
+        });
+
+        // Should associate assistant message with execServerAgentRuntime (for isGenerating detection)
+        expect(result.current.associateMessageWithOperation).toHaveBeenCalledWith(
+          TEST_IDS.ASSISTANT_MESSAGE_ID,
+          'op-exec', // execServerAgentRuntime operationId
+        );
+
+        // Should also associate assistant message with groupAgentStream (for stream cancel handling)
+        expect(result.current.associateMessageWithOperation).toHaveBeenCalledWith(
+          TEST_IDS.ASSISTANT_MESSAGE_ID,
+          TEST_IDS.OPERATION_ID, // groupAgentStream operationId
+        );
+
+        // Total 2 calls for the assistant message
+        expect(result.current.associateMessageWithOperation).toHaveBeenCalledTimes(2);
       });
 
       it('should create stream connection with operationId', async () => {
@@ -475,9 +503,9 @@ describe('agentGroup actions', () => {
           onDisconnectCallback?.();
         });
 
-        // Should complete both the stream operation and the main operation
+        // Should complete both the stream operation and the main execServerAgentRuntime operation
         expect(result.current.completeOperation).toHaveBeenCalledWith(TEST_IDS.OPERATION_ID);
-        expect(result.current.completeOperation).toHaveBeenCalledWith('op-123');
+        expect(result.current.completeOperation).toHaveBeenCalledWith('op-exec');
       });
 
       it('should update topics when new topic is created', async () => {
@@ -569,6 +597,7 @@ describe('agentGroup actions', () => {
         });
 
         // Should delete both temp user and assistant messages with operationId for correct context
+        // execServerAgentRuntime is now created BEFORE mutate, so use its operationId
         expect(result.current.internal_dispatchMessage).toHaveBeenCalledWith(
           expect.objectContaining({
             type: 'deleteMessages',
@@ -578,7 +607,7 @@ describe('agentGroup actions', () => {
             ]),
           }),
           expect.objectContaining({
-            operationId: 'op-123', // The first operation's ID (execServerAgentRuntime)
+            operationId: 'op-exec', // execServerAgentRuntime operation's ID
           }),
         );
         // Verify exactly 2 messages are deleted
@@ -601,7 +630,8 @@ describe('agentGroup actions', () => {
           });
         });
 
-        expect(result.current.failOperation).toHaveBeenCalledWith('op-123', {
+        // Fails the execServerAgentRuntime operation (created BEFORE mutate)
+        expect(result.current.failOperation).toHaveBeenCalledWith('op-exec', {
           type: 'SendGroupMessageError',
           message: 'Backend error',
         });
@@ -644,6 +674,33 @@ describe('agentGroup actions', () => {
           expect.any(String),
         );
       });
+
+      it('should handle abort error without calling failOperation', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        // Create an AbortError
+        const abortError = new Error('The operation was aborted');
+        abortError.name = 'AbortError';
+        vi.mocked(lambdaClient.aiAgent.execGroupAgent.mutate).mockRejectedValue(abortError);
+
+        await act(async () => {
+          await result.current.sendGroupMessage({
+            context: createTestContext(),
+            message: TEST_CONTENT.GROUP_MESSAGE,
+          });
+        });
+
+        // Should NOT call failOperation for abort errors (status already updated by cancelOperation)
+        expect(result.current.failOperation).not.toHaveBeenCalled();
+
+        // Should still clean up temp messages
+        expect(result.current.internal_dispatchMessage).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: 'deleteMessages',
+          }),
+          expect.any(Object),
+        );
+      });
     });
 
     describe('with files', () => {
@@ -667,6 +724,7 @@ describe('agentGroup actions', () => {
           expect.objectContaining({
             files: ['file-1', 'file-2'],
           }),
+          expect.objectContaining({ signal: expect.any(AbortSignal) }),
         );
       });
 
