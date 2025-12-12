@@ -8,7 +8,6 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
   actions?: ReactNode;
   actionsWrapWidth?: number;
   avatar: MetaData;
-  avatarAddon?: ReactNode;
   avatarProps?: AvatarProps;
   belowMessage?: ReactNode;
   children?: ReactNode;

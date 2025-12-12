@@ -13,7 +13,6 @@ import { ChatItemProps } from './type';
 
 const ChatItem = memo<ChatItemProps>(
   ({
-    avatarAddon,
     onAvatarClick,
     avatarProps,
     actions,
@@ -76,11 +75,9 @@ const ChatItem = memo<ChatItemProps>(
         >
           {showAvatar && (
             <Avatar
-              addon={avatarAddon}
               alt={avatarProps?.alt || avatar.title || 'avatar'}
               loading={loading}
               onClick={onAvatarClick}
-              placement={placement}
               shape={'square'}
               {...avatarProps}
               avatar={avatar}
