@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "23b73151-ec05-497e-b657-9c5629ed3af5",
+  "id": "6657ec44-d6ab-440f-9089-f6271e7f2c37",
   "policies": {},
   "prevId": "3dfd3c18-3aca-45f5-a91b-9cbf43cf71ad",
   "roles": {},
@@ -1732,6 +1732,21 @@
           "method": "btree",
           "with": {}
         },
+        "documents_user_id_idx": {
+          "name": "documents_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "documents_file_id_idx": {
           "name": "documents_file_id_idx",
           "columns": [
@@ -1752,39 +1767,6 @@
           "columns": [
             {
               "expression": "parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "documents_query_idx": {
-          "name": "documents_query_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "source_type",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "file_type",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "updated_at",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

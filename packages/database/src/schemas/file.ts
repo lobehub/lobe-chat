@@ -98,15 +98,9 @@ export const documents = pgTable(
     index('documents_source_idx').on(table.source),
     index('documents_file_type_idx').on(table.fileType),
     index('documents_source_type_idx').on(table.sourceType),
+    index('documents_user_id_idx').on(table.userId),
     index('documents_file_id_idx').on(table.fileId),
     index('documents_parent_id_idx').on(table.parentId),
-    // Compound index for queryDocuments performance
-    index('documents_query_idx').on(
-      table.userId,
-      table.sourceType,
-      table.fileType,
-      table.updatedAt,
-    ),
     uniqueIndex('documents_client_id_user_id_unique').on(table.clientId, table.userId),
     uniqueIndex('documents_slug_user_id_unique')
       .on(table.slug, table.userId)
