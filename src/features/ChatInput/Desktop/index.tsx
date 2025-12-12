@@ -75,13 +75,12 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
       if (editor) editor.focus();
     }, [chatKey, editor]);
 
+    // TODO: Original fileNode should be discarded
     const fileNode = leftActions.flat().includes('fileUpload') && <FilePreview />;
     const contextNode = leftActions.flat().includes('fileUpload') && <ContextItem />;
 
     return (
-      <>
-        {/* {!expand && fileNode} */}
-        <Flexbox
+      <Flexbox
           className={cx(styles.container, expand && styles.fullscreen)}
           gap={8}
           paddingBlock={expand ? 0 : showFootnote ? '0 12px' : '0 16px'}
@@ -121,7 +120,6 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
             </Center>
           )}
         </Flexbox>
-      </>
     );
   },
 );
