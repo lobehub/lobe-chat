@@ -4,14 +4,19 @@ import type { OpenAIChatMessage } from '@lobechat/types';
 import type { ServerMessagesEngineParams } from './types';
 
 /**
- * Server-side variable generators
+ * Create server-side variable generators with runtime context
  * These are safe to use in Node.js environment
  */
-const SERVER_VARIABLE_GENERATORS = {
+const createServerVariableGenerators = (model?: string, provider?: string) => ({
+  // Time-related variables
   date: () => new Date().toLocaleDateString('en-US', { dateStyle: 'full' }),
   datetime: () => new Date().toISOString(),
   time: () => new Date().toLocaleTimeString('en-US', { timeStyle: 'medium' }),
-};
+  /* eslint-disable sort-keys-fix/sort-keys-fix */
+  // Model-related variables
+  model: () => model ?? '',
+  provider: () => provider ?? '',
+});
 
 /**
  * Server-side messages engine function
@@ -52,49 +57,39 @@ export const serverMessagesEngine = async ({
   pageEditorContext,
 }: ServerMessagesEngineParams): Promise<OpenAIChatMessage[]> => {
   const engine = new MessagesEngine({
-    
     // Capability injection
-capabilities: {
+    capabilities: {
       isCanUseFC: capabilities?.isCanUseFC,
       isCanUseVideo: capabilities?.isCanUseVideo,
       isCanUseVision: capabilities?.isCanUseVision,
     },
-    
-// Agent configuration
-enableHistoryCount,
-    
-// File context configuration (server always includes file URLs)
-fileContext: { enabled: true, includeFileUrl: true },
-    
 
-formatHistorySummary,
-    
+    // Agent configuration
+    enableHistoryCount,
 
-historyCount,
-    
+    // File context configuration (server always includes file URLs)
+    fileContext: { enabled: true, includeFileUrl: true },
 
-historySummary,
+    formatHistorySummary,
 
-    
-    
-inputTemplate,
+    historyCount,
 
-    
+    historySummary,
+
+    inputTemplate,
+
     // Knowledge injection
-knowledge: {
+    knowledge: {
       fileContents: knowledge?.fileContents,
       knowledgeBases: knowledge?.knowledgeBases,
     },
 
-    
     // Messages
-messages,
+    messages,
 
-    
     // Model info
-model,
+    model,
 
-    
     provider,
     systemRole,
 
@@ -113,8 +108,8 @@ model,
         }
       : undefined,
 
-    // Server-side variable generators
-    variableGenerators: SERVER_VARIABLE_GENERATORS,
+    // Server-side variable generators (with model/provider context)
+    variableGenerators: createServerVariableGenerators(model, provider),
 
     // Extended contexts
     ...(agentBuilderContext && { agentBuilderContext }),

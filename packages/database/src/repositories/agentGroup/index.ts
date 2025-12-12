@@ -1,3 +1,4 @@
+import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { AgentGroupDetail, AgentGroupMember } from '@lobechat/types';
 import { and, eq } from 'drizzle-orm';
 
@@ -71,6 +72,8 @@ export class AgentGroupRepository {
       agentItems.push({
         ...row.agent,
         isSupervisor,
+        // Inject builtin agent slug for supervisor
+        slug: isSupervisor ? BUILTIN_AGENT_SLUGS.groupSupervisor : row.agent.slug,
       } as AgentGroupMember);
       if (isSupervisor) {
         supervisorAgentId = row.agent.id;
@@ -108,6 +111,8 @@ export class AgentGroupRepository {
       agentItems.unshift({
         ...supervisorAgent,
         isSupervisor: true,
+        // Inject builtin agent slug for supervisor
+        slug: BUILTIN_AGENT_SLUGS.groupSupervisor,
       } as AgentGroupMember);
     }
 
