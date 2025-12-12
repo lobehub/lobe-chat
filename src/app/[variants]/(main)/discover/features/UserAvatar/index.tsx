@@ -41,7 +41,7 @@ const UserAvatar = memo(() => {
     return <Skeleton.Avatar active shape={'square'} size={28} style={{ borderRadius: 6 }} />;
   }
 
-  if (isAuthenticated) {
+  if (!isAuthenticated) {
     return (
       <Button
         icon={UserCircleIcon}
