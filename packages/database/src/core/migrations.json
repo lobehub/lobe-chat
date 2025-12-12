@@ -971,10 +971,10 @@
   {
     "sql": [
       "ALTER TABLE \"user_memories\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
-      "\nALTER TABLE \"user_memories_contexts\" ADD COLUMN \"captured_at\" timestamp with time zone NOT NULL;",
-      "\nALTER TABLE \"user_memories_experiences\" ADD COLUMN \"captured_at\" timestamp with time zone NOT NULL;",
-      "\nALTER TABLE \"user_memories_identities\" ADD COLUMN \"captured_at\" timestamp with time zone NOT NULL;",
-      "\nALTER TABLE \"user_memories_preferences\" ADD COLUMN \"captured_at\" timestamp with time zone NOT NULL;",
+      "\nALTER TABLE \"user_memories_contexts\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_experiences\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_identities\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_preferences\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
       "\nCREATE INDEX \"documents_source_type_idx\" ON \"documents\" USING btree (\"source_type\");",
       "\nCREATE INDEX \"documents_query_idx\" ON \"documents\" USING btree (\"user_id\",\"source_type\",\"file_type\",\"updated_at\");",
       "\nCREATE INDEX \"user_memories_user_id_index\" ON \"user_memories\" USING btree (\"user_id\");",
@@ -987,7 +987,7 @@
       "\nCREATE INDEX \"user_memories_preferences_user_memory_id_index\" ON \"user_memories_preferences\" USING btree (\"user_memory_id\");"
     ],
     "bps": true,
-    "folderMillis": 1765526509188,
-    "hash": "ce068c1b367e3fe535d6124509204b7694aeaf76db35938d3cc5e78c70d3558e"
+    "folderMillis": 1765527471764,
+    "hash": "7d87bb3863cd955d8009d110214369a75f23ad357ecf74e1a62d07f78d8861a9"
   }
 ]

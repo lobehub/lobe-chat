@@ -1120,7 +1120,7 @@ table user_memories_contexts {
   current_status text
   score_impact numeric [default: 0]
   score_urgency numeric [default: 0]
-  captured_at "timestamp with time zone" [not null]
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -1149,7 +1149,7 @@ table user_memories_experiences {
   key_learning text
   key_learning_vector vector(1024)
   score_confidence real [default: 0]
-  captured_at "timestamp with time zone" [not null]
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -1176,7 +1176,7 @@ table user_memories_identities {
   episodic_date "timestamp with time zone"
   relationship varchar(255)
   role text
-  captured_at "timestamp with time zone" [not null]
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -1200,7 +1200,7 @@ table user_memories_preferences {
   type varchar(255)
   suggestions text
   score_priority numeric [default: 0]
-  captured_at "timestamp with time zone" [not null]
+  captured_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

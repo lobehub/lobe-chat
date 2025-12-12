@@ -74,7 +74,7 @@ export const userMemoriesContexts = pgTable(
     scoreImpact: numeric('score_impact', { mode: 'number' }).default(0),
     scoreUrgency: numeric('score_urgency', { mode: 'number' }).default(0),
 
-    capturedAt: timestamptz('captured_at').notNull(),
+    capturedAt: timestamptz('captured_at').notNull().defaultNow(),
 
     ...timestamps,
   },
@@ -115,7 +115,7 @@ export const userMemoriesPreferences = pgTable(
 
     scorePriority: numeric('score_priority', { mode: 'number' }).default(0),
 
-    capturedAt: timestamptz('captured_at').notNull(),
+    capturedAt: timestamptz('captured_at').notNull().defaultNow(),
 
     ...timestamps,
   },
@@ -151,7 +151,7 @@ export const userMemoriesIdentities = pgTable(
     relationship: varchar255('relationship'),
     role: text('role'),
 
-    capturedAt: timestamptz('captured_at').notNull(),
+    capturedAt: timestamptz('captured_at').notNull().defaultNow(),
 
     ...timestamps,
   },
@@ -193,7 +193,7 @@ export const userMemoriesExperiences = pgTable(
 
     scoreConfidence: real('score_confidence').default(0),
 
-    capturedAt: timestamptz('captured_at').notNull(),
+    capturedAt: timestamptz('captured_at').notNull().defaultNow(),
 
     ...timestamps,
   },

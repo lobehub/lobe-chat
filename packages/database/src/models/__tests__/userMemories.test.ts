@@ -109,6 +109,7 @@ function generateRandomCreateUserMemoryExperienceParams() {
       situationVector: generateRandomEmbedding(),
       tags: [],
       type: 'learning',
+      capturedAt: new Date(),
     },
   } as CreateUserMemoryExperienceParams;
 }
@@ -127,6 +128,7 @@ function generateRandomCreateUserMemoryIdentityParams() {
       role: 'role ' + nanoid(),
       tags: [],
       type: 'personal',
+      capturedAt: new Date(),
     },
   } as CreateUserMemoryIdentityParams;
 }
@@ -148,6 +150,7 @@ function generateRandomCreateUserMemoryContextParams() {
       titleVector: generateRandomEmbedding(),
       type: 'environment',
       userMemoryIds: [],
+      capturedAt: new Date(),
     },
   } as CreateUserMemoryContextParams;
 }
@@ -163,6 +166,7 @@ function generateRandomCreateUserMemoryPreferenceParams() {
       suggestions: 'suggestions ' + nanoid(),
       tags: [],
       type: 'choice',
+      capturedAt: new Date(),
     },
   } as CreateUserMemoryPreferenceParams;
 }

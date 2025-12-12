@@ -1,5 +1,5 @@
 {
-  "id": "8b6a6747-b14c-4dbd-9028-8c9b52545d42",
+  "id": "86b9766c-12ca-49f6-9f8b-4dffa2ad6ac3",
   "prevId": "3dfd3c18-3aca-45f5-a91b-9cbf43cf71ad",
   "version": "7",
   "dialect": "postgresql",
@@ -8576,7 +8576,8 @@
           "name": "captured_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "accessed_at": {
           "name": "accessed_at",
@@ -8784,7 +8785,8 @@
           "name": "captured_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "accessed_at": {
           "name": "accessed_at",
@@ -9011,7 +9013,8 @@
           "name": "captured_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "accessed_at": {
           "name": "accessed_at",
@@ -9201,7 +9204,8 @@
           "name": "captured_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "accessed_at": {
           "name": "accessed_at",
