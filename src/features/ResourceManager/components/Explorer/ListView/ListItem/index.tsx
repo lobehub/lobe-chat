@@ -12,6 +12,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
+  getTransparentDragImage,
   useDragActive,
   useDragState,
 } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
@@ -194,9 +195,10 @@ const FileListItem = memo<FileListItemProps>(
         });
 
         // Set drag image to be transparent (we use custom overlay)
-        const img = new Image();
-        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-        e.dataTransfer.setDragImage(img, 0, 0);
+        const img = getTransparentDragImage();
+        if (img) {
+          e.dataTransfer.setDragImage(img, 0, 0);
+        }
         e.dataTransfer.effectAllowed = 'move';
       },
       [libraryId, dragData, id, isFolder, setCurrentDrag],
