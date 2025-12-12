@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.169](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.168...v2.0.0-next.169)
+
+<sup>Released on **2025-12-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix CVE errors.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix CVE errors, closes [#10748](https://github.com/lobehub/lobe-chat/issues/10748) ([6591f3c](https://github.com/lobehub/lobe-chat/commit/6591f3c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.168](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.167...v2.0.0-next.168)
 
 <sup>Released on **2025-12-12**</sup>
