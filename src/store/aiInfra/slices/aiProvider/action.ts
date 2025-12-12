@@ -278,6 +278,7 @@ export const createAiProviderSlice: StateCreator<
     get().internal_toggleAiProviderConfigUpdating(id, true);
     await aiProviderService.updateAiProviderConfig(id, value);
     await get().refreshAiProviderDetail();
+    await get().refreshAiProviderRuntimeState();
 
     get().internal_toggleAiProviderConfigUpdating(id, false);
   },
