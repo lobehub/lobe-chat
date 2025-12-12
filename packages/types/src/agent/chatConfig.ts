@@ -33,6 +33,8 @@ export interface LobeAgentChatConfig {
   reasoningEffort?: 'low' | 'medium' | 'high';
   gpt5ReasoningEffort?: 'minimal' | 'low' | 'medium' | 'high';
   gpt5_1ReasoningEffort?: 'none' | 'low' | 'medium' | 'high';
+  gpt5_2ReasoningEffort?: 'none' | 'low' | 'medium' | 'high' | 'xhigh';
+  gpt5_2ProReasoningEffort?: 'medium' | 'high' | 'xhigh';
   /**
    * Output text verbosity control
    */
@@ -87,6 +89,8 @@ export const AgentChatConfigSchema = z.object({
   enableStreaming: z.boolean().optional(),
   gpt5ReasoningEffort: z.enum(['minimal', 'low', 'medium', 'high']).optional(),
   gpt5_1ReasoningEffort: z.enum(['none', 'low', 'medium', 'high']).optional(),
+  gpt5_2ProReasoningEffort: z.enum(['medium', 'high', 'xhigh']).optional(),
+  gpt5_2ReasoningEffort: z.enum(['none', 'low', 'medium', 'high', 'xhigh']).optional(),
   historyCount: z.number().optional(),
   imageAspectRatio: z.string().optional(),
   imageResolution: z.enum(['1K', '2K', '4K']).optional(),

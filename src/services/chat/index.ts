@@ -181,6 +181,20 @@ class ChatService {
         extendParams.reasoning_effort = chatConfig.gpt5_1ReasoningEffort;
       }
 
+      if (
+        modelExtendParams!.includes('gpt5_2ReasoningEffort') &&
+        chatConfig.gpt5_2ReasoningEffort
+      ) {
+        extendParams.reasoning_effort = chatConfig.gpt5_2ReasoningEffort;
+      }
+
+      if (
+        modelExtendParams!.includes('gpt5_2ProReasoningEffort') &&
+        chatConfig.gpt5_2ProReasoningEffort
+      ) {
+        extendParams.reasoning_effort = chatConfig.gpt5_2ProReasoningEffort;
+      }
+
       if (modelExtendParams!.includes('textVerbosity') && chatConfig.textVerbosity) {
         extendParams.verbosity = chatConfig.textVerbosity;
       }
