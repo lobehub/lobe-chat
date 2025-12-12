@@ -1097,6 +1097,8 @@ table user_memories {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
+    summary_vector_1024 [name: 'user_memories_summary_vector_1024_index']
+    details_vector_1024 [name: 'user_memories_details_vector_1024_index']
     user_id [name: 'user_memories_user_id_index']
   }
 }

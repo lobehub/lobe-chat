@@ -34,6 +34,14 @@ export const userMemories = pgTable(
     ...timestamps,
   },
   (table) => [
+    index('user_memories_summary_vector_1024_index').using(
+      'hnsw',
+      table.summaryVector1024.op('vector_cosine_ops'),
+    ),
+    index('user_memories_details_vector_1024_index').using(
+      'hnsw',
+      table.detailsVector1024.op('vector_cosine_ops'),
+    ),
     index('user_memories_user_id_index').on(table.userId),
   ],
 );

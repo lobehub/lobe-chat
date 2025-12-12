@@ -1,5 +1,5 @@
-DROP INDEX IF EXISTS "user_memories_summary_vector_1024_index";--> statement-breakpoint
-DROP INDEX IF EXISTS "user_memories_details_vector_1024_index";--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "documents_source_type_idx" ON "documents" USING btree ("source_type");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "documents_query_idx" ON "documents" USING btree ("user_id","source_type","file_type","updated_at");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_memories_user_id_index" ON "user_memories" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_memories_contexts_user_id_index" ON "user_memories_contexts" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_memories_experiences_user_id_index" ON "user_memories_experiences" USING btree ("user_id");--> statement-breakpoint
