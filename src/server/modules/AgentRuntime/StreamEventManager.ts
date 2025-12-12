@@ -5,6 +5,7 @@ import type { Redis } from 'ioredis';
 import { getAgentRuntimeRedisClient } from './redis';
 
 const log = debug('lobe-server:agent-runtime:stream-event-manager');
+const timing = debug('lobe-server:agent-runtime:timing');
 
 export interface StreamEvent {
   data: any;
@@ -78,6 +79,7 @@ export class StreamEventManager {
     };
 
     try {
+      const xaddStart = Date.now();
       const eventId = await this.redis.xadd(
         streamKey,
         'MAXLEN',
@@ -95,6 +97,7 @@ export class StreamEventManager {
         'timestamp',
         eventData.timestamp.toString(),
       );
+      const xaddEnd = Date.now();
 
       // 设置过期时间
       await this.redis.expire(streamKey, this.STREAM_RETENTION);
@@ -104,6 +107,15 @@ export class StreamEventManager {
         eventData.type,
         operationId,
         eventData.stepIndex,
+      );
+
+      timing(
+        '[%s:%d] Redis XADD %s at %d, took %dms',
+        operationId,
+        eventData.stepIndex,
+        eventData.type,
+        xaddStart,
+        xaddEnd - xaddStart,
       );
 
       return eventId as string;
@@ -178,6 +190,7 @@ export class StreamEventManager {
 
     while (!signal?.aborted) {
       try {
+        const xreadStart = Date.now();
         const results = await this.redis.xread(
           'BLOCK',
           1000, // 1秒超时
@@ -185,6 +198,7 @@ export class StreamEventManager {
           streamKey,
           currentLastId,
         );
+        const xreadEnd = Date.now();
 
         if (results && results.length > 0) {
           const [, messages] = results[0];
@@ -216,6 +230,21 @@ export class StreamEventManager {
           }
 
           if (events.length > 0) {
+            const now = Date.now();
+            // 计算事件从发布到被读取的延迟
+            for (const event of events) {
+              const latency = now - event.timestamp;
+              timing(
+                '[%s:%d] XREAD %s, published at %d, read at %d, latency %dms, xread took %dms',
+                operationId,
+                event.stepIndex,
+                event.type,
+                event.timestamp,
+                now,
+                latency,
+                xreadEnd - xreadStart,
+              );
+            }
             onEvents(events);
           }
         }

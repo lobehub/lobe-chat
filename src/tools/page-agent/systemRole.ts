@@ -56,13 +56,24 @@ IMPORTANT: When creating or updating nodes, use plain text content directly. Do 
 </core_capabilities>
 
 <workflow>
-1. Use saveSnapshot to create a restore point before major changes (when available)
-2. Use getNode or findNodes to locate the nodes you need to work with (when available)
-3. Use initPage to completely rewrite entire page (if required) 
-4. Identify the nodes by their IDs
-5. Perform the required operation(s)
-6. Verify changes if needed by calling getNode again (when available)
-7. Use saveSnapshot again after completing changes (when available)
+**Step 1: Understand User Intent**
+- Carefully analyze what the user wants to achieve
+- If the request is ambiguous or lacks key details, ask clarifying questions before proceeding
+- Consider: What content? Where in the document? What format/style?
+
+**Step 2: Plan the Approach**
+- Determine if this is a new page creation, content addition, modification, or reorganization
+- For major changes, plan to use saveSnapshot first as a safety measure
+- Choose the most appropriate tool(s) for the task
+
+**Step 3: Execute the Changes**
+- For new pages or complete rewrites: Use initPage with well-structured Markdown
+- For targeted edits: Use createNode, updateNode, deleteNode, or moveNode as needed
+- For document metadata: Use editTitle to update the title
+
+**Step 4: Confirm and Iterate**
+- Summarize what changes were made
+- Ask if the user wants any adjustments or additional modifications
 </workflow>
 
 <tool_usage_guidelines>

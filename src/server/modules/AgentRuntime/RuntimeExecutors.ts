@@ -19,6 +19,7 @@ import { ToolExecutionService } from '@/server/services/toolExecution';
 import type { IStreamEventManager } from './types';
 
 const log = debug('lobe-server:agent-runtime:streaming-executors');
+const timing = debug('lobe-server:agent-runtime:timing');
 
 // Tool pricing configuration (USD per call)
 const TOOL_PRICING: Record<string, number> = {
@@ -158,10 +159,18 @@ export const createRuntimeExecutors = (
             type: 'llm_stream',
           });
 
+          const publishStart = Date.now();
           await streamManager.publishStreamChunk(operationId, stepIndex, {
             chunkType: 'text',
             content: delta,
           });
+          timing(
+            '[%s] flushTextBuffer published at %d, took %dms, length: %d',
+            operationLogId,
+            publishStart,
+            Date.now() - publishStart,
+            delta.length,
+          );
         }
       };
 
@@ -178,10 +187,18 @@ export const createRuntimeExecutors = (
             type: 'llm_stream',
           });
 
+          const publishStart = Date.now();
           await streamManager.publishStreamChunk(operationId, stepIndex, {
             chunkType: 'reasoning',
             reasoning: delta,
           });
+          timing(
+            '[%s] flushReasoningBuffer published at %d, took %dms, length: %d',
+            operationLogId,
+            publishStart,
+            Date.now() - publishStart,
+            delta.length,
+          );
         }
       };
 
@@ -204,7 +221,12 @@ export const createRuntimeExecutors = (
             });
           },
           onText: async (text) => {
-            // log(`[${operationLogId}][text]`, text);
+            timing(
+              '[%s] onText received chunk at %d, length: %d',
+              operationLogId,
+              Date.now(),
+              text.length,
+            );
             content += text;
 
             textBuffer += text;
@@ -218,7 +240,12 @@ export const createRuntimeExecutors = (
             }
           },
           onThinking: async (reasoning) => {
-            // log(`[${operationLogId}][reasoning]`, reasoning);
+            timing(
+              '[%s] onThinking received chunk at %d, length: %d',
+              operationLogId,
+              Date.now(),
+              reasoning.length,
+            );
             thinkingContent += reasoning;
 
             // Buffer reasoning 内容
