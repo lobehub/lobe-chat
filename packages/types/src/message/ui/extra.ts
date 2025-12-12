@@ -9,7 +9,7 @@ export interface ChatTTS {
 export interface ChatMessageExtra {
   model?: string;
   provider?: string;
-  // 翻译
+  // Translation
   translate?: ChatTranslate | false | null;
   // TTS
   tts?: ChatTTS;
