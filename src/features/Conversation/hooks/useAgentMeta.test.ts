@@ -148,6 +148,99 @@ describe('useAgentMeta', () => {
     // Should return empty object or undefined properties
     expect(result.current).toBeDefined();
   });
+
+  it('should use messageAgentId when provided instead of context agentId', () => {
+    const contextAgentId = 'context-agent-123';
+    const messageAgentId = 'message-agent-456';
+    const contextMeta = {
+      avatar: 'context-avatar.png',
+      title: 'Context Agent',
+    };
+    const messageMeta = {
+      avatar: 'message-avatar.png',
+      title: 'Message Agent',
+    };
+
+    // Mock ConversationStore to return context agentId
+    vi.mocked(useConversationStore).mockImplementation((selector: any) => {
+      const state = { context: { agentId: contextAgentId } };
+      return selector(state);
+    });
+
+    // Mock AgentStore state with both agents
+    act(() => {
+      useAgentStore.setState({
+        agentMap: {
+          [contextAgentId]: contextMeta,
+          [messageAgentId]: messageMeta,
+        },
+        builtinAgentIdMap: {},
+      });
+    });
+
+    // When messageAgentId is provided, should use that agent's meta
+    const { result } = renderHook(() => useAgentMeta(messageAgentId));
+
+    expect(result.current).toMatchObject(messageMeta);
+    expect(result.current.title).toBe('Message Agent');
+    expect(result.current.avatar).toBe('message-avatar.png');
+  });
+
+  it('should fallback to context agentId when messageAgentId is null', () => {
+    const contextAgentId = 'context-agent-123';
+    const contextMeta = {
+      avatar: 'context-avatar.png',
+      title: 'Context Agent',
+    };
+
+    vi.mocked(useConversationStore).mockImplementation((selector: any) => {
+      const state = { context: { agentId: contextAgentId } };
+      return selector(state);
+    });
+
+    act(() => {
+      useAgentStore.setState({
+        agentMap: {
+          [contextAgentId]: contextMeta,
+        },
+        builtinAgentIdMap: {},
+      });
+    });
+
+    // When messageAgentId is null, should fallback to context agentId
+    const { result } = renderHook(() => useAgentMeta(null));
+
+    expect(result.current).toMatchObject(contextMeta);
+    expect(result.current.title).toBe('Context Agent');
+  });
+
+  it('should fallback to context agentId when messageAgentId is undefined', () => {
+    const contextAgentId = 'context-agent-123';
+    const contextMeta = {
+      avatar: 'context-avatar.png',
+      title: 'Context Agent',
+    };
+
+    vi.mocked(useConversationStore).mockImplementation((selector: any) => {
+      const state = { context: { agentId: contextAgentId } };
+      return selector(state);
+    });
+
+    act(() => {
+      useAgentStore.setState({
+        agentMap: {
+          [contextAgentId]: contextMeta,
+        },
+        builtinAgentIdMap: {},
+      });
+    });
+
+    // When messageAgentId is undefined, should fallback to context agentId
+    const { result } = renderHook(() => useAgentMeta(undefined));
+
+    expect(result.current).toMatchObject(contextMeta);
+    expect(result.current.title).toBe('Context Agent');
+  });
 });
 
 describe('useIsBuiltinAgent', () => {

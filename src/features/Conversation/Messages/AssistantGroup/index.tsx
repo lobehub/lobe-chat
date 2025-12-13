@@ -31,8 +31,8 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
     (s) => s.actionsBar?.assistantGroup ?? s.actionsBar?.assistant,
   );
 
-  const { usage, createdAt, children, performance, model, provider } = item;
-  const avatar = useAgentMeta();
+  const { agentId, usage, createdAt, children, performance, model, provider } = item;
+  const avatar = useAgentMeta(agentId);
 
   const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
   const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);

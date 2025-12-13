@@ -42,6 +42,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
     const actionsConfig = useConversationStore((s) => s.actionsBar?.assistant);
 
     const {
+      agentId,
       branch,
       error,
       role,
@@ -57,7 +58,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
       metadata,
     } = item;
 
-    const avatar = useAgentMeta();
+    const avatar = useAgentMeta(agentId);
     const { t } = useTranslation('chat');
 
     // Get editing and generating state from ConversationStore
