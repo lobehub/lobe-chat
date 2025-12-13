@@ -247,6 +247,8 @@ export const conversationLifecycle: StateCreator<
               }
             : undefined,
           agentId: operationContext.agentId,
+          // Pass groupId for group chat scenarios
+          groupId: operationContext.groupId ?? undefined,
           newAssistantMessage: { model, provider: provider! },
         },
         abortController,

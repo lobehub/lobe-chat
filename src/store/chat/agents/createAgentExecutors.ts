@@ -469,7 +469,7 @@ export const createAgentExecutors = (context: {
         context.get().completeOperation(executeToolOpId);
 
         const executionTime = Math.round(performance.now() - startTime);
-        const isSuccess = !result.error;
+        const isSuccess = result && !result.error;
 
         log(
           '[%s][call_tool] Executing %s in %dms, result: %O',
@@ -486,7 +486,7 @@ export const createAgentExecutors = (context: {
           } else {
             context.get().failOperation(toolOperationId, {
               type: 'ToolExecutionError',
-              message: result.error || 'Tool execution failed',
+              message: result?.error || 'Tool execution failed',
             });
           }
         }
@@ -527,6 +527,24 @@ export const createAgentExecutors = (context: {
           isSuccess,
           toolCost.toFixed(4),
         );
+
+        // Check if tool wants to stop execution flow (e.g., group management tools)
+        if (result?.stop) {
+          log(
+            '[%s][call_tool] Tool returned stop=true, terminating execution. state: %O',
+            sessionLogId,
+            result.state,
+          );
+
+          // Mark state as done and return without nextContext to stop the runtime
+          newState.status = 'done';
+
+          return {
+            events,
+            newState,
+            nextContext: undefined, // No next context means execution stops
+          };
+        }
 
         log('[%s][call_tool] Tool execution completed', sessionLogId);
 

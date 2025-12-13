@@ -165,17 +165,35 @@ export const generationSlice: StateCreator<
   },
 
   delAndRegenerateMessage: async (messageId: string) => {
+    const { context } = get();
     const chatStore = useChatStore.getState();
+
+    // Create operation to track context (use 'regenerate' type since this is a regenerate action)
+    const { operationId } = chatStore.startOperation({
+      context: { ...context, messageId },
+      type: 'regenerate',
+    });
+
     // Regenerate first, then delete
     await get().regenerateAssistantMessage(messageId);
-    await chatStore.deleteMessage(messageId);
+    await chatStore.deleteMessage(messageId, { operationId });
+    chatStore.completeOperation(operationId);
   },
 
   delAndResendThreadMessage: async (messageId: string) => {
+    const { context } = get();
     const chatStore = useChatStore.getState();
+
+    // Create operation to track context (use 'regenerate' type since resend is essentially regenerate)
+    const { operationId } = chatStore.startOperation({
+      context: { ...context, messageId },
+      type: 'regenerate',
+    });
+
     // Resend then delete
     await get().resendThreadMessage(messageId);
-    await chatStore.deleteMessage(messageId);
+    await chatStore.deleteMessage(messageId, { operationId });
+    chatStore.completeOperation(operationId);
   },
 
   openThreadCreator: (messageId: string) => {
@@ -235,8 +253,10 @@ export const generationSlice: StateCreator<
     });
 
     try {
-      // Switch to a new branch
-      await chatStore.switchMessageBranch(messageId, item.branch ? item.branch.count : 1);
+      // Switch to a new branch (pass operationId for correct context in optimistic update)
+      await chatStore.switchMessageBranch(messageId, item.branch ? item.branch.count : 1, {
+        operationId,
+      });
 
       // Execute agent runtime with full context from ConversationStore
       await chatStore.internal_execAgentRuntime({

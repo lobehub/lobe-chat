@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Lobe Group Management Executor
  *
@@ -11,24 +12,29 @@ import {
   ExecuteTaskParams,
   GetAgentInfoParams,
   GroupManagementApiName,
+  GroupManagementIdentifier,
   InterruptParams,
   InviteAgentParams,
   RemoveAgentParams,
   SearchAgentParams,
   SpeakParams,
   SummarizeParams,
-  GroupManagementIdentifier,
   VoteParams,
 } from '@lobechat/builtin-tool-group-management';
 
-import type { BuiltinToolContext, BuiltinToolResult, IBuiltinToolExecutor } from '../types';
+import type { BuiltinToolContext, BuiltinToolResult } from '../types';
+import { BaseExecutor } from './BaseExecutor';
 
-class GroupManagementExecutor implements IBuiltinToolExecutor {
+class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName> {
   readonly identifier = GroupManagementIdentifier;
+  protected readonly apiEnum = GroupManagementApiName;
 
   // ==================== Member Management ====================
 
-  searchAgent = async (params: SearchAgentParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  searchAgent = async (
+    params: SearchAgentParams,
+    _ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     // TODO: Implement agent search logic
     return {
       content: JSON.stringify({
@@ -40,7 +46,10 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
     };
   };
 
-  inviteAgent = async (params: InviteAgentParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  inviteAgent = async (
+    params: InviteAgentParams,
+    _ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     // TODO: Implement agent invitation logic
     return {
       content: JSON.stringify({
@@ -52,7 +61,10 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
     };
   };
 
-  createAgent = async (params: CreateAgentParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  createAgent = async (
+    params: CreateAgentParams,
+    _ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     // TODO: Implement dynamic agent creation
     return {
       content: JSON.stringify({
@@ -63,7 +75,10 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
     };
   };
 
-  removeAgent = async (params: RemoveAgentParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  removeAgent = async (
+    params: RemoveAgentParams,
+    _ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     // TODO: Implement agent removal from group
     return {
       content: JSON.stringify({
@@ -75,7 +90,10 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
     };
   };
 
-  getAgentInfo = async (params: GetAgentInfoParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  getAgentInfo = async (
+    params: GetAgentInfoParams,
+    _ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     // TODO: Implement agent info retrieval
     return {
       content: JSON.stringify({
@@ -89,15 +107,22 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
   // ==================== Communication Coordination ====================
 
   speak = async (params: SpeakParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
-    // Returns stop: true to indicate the supervisor should stop and let agent respond
-    return {
-      content: JSON.stringify({
+    // Trigger group orchestration if available
+    if (ctx.groupOrchestration && ctx.agentId) {
+      // Fire and forget - the orchestration will handle the async execution
+      ctx.groupOrchestration.triggerSpeak({
         agentId: params.agentId,
         instruction: params.instruction,
-        message: 'Delegating to agent to speak',
-      }),
+        supervisorAgentId: ctx.agentId,
+      });
+    }
+
+    // Returns stop: true to indicate the supervisor should stop and let agent respond
+    return {
+      content: `Triggered agent "${params.agentId}" to respond.`,
       state: {
         agentId: params.agentId,
+        instruction: params.instruction,
         type: 'speak',
       },
       stop: true,
@@ -105,16 +130,26 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
     };
   };
 
-  broadcast = async (params: BroadcastParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
-    // Returns stop: true to trigger multiple agents to respond in parallel
-    return {
-      content: JSON.stringify({
+  broadcast = async (
+    params: BroadcastParams,
+    ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
+    // Trigger group orchestration if available
+    if (ctx.groupOrchestration && ctx.agentId) {
+      // Fire and forget - the orchestration will handle the async execution
+      ctx.groupOrchestration.triggerBroadcast({
         agentIds: params.agentIds,
         instruction: params.instruction,
-        message: 'Broadcasting to agents',
-      }),
+        supervisorAgentId: ctx.agentId,
+      });
+    }
+
+    // Returns stop: true to trigger multiple agents to respond in parallel
+    return {
+      content: `Triggered broadcast to agents: ${params.agentIds.join(', ')}.`,
       state: {
         agentIds: params.agentIds,
+        instruction: params.instruction,
         type: 'broadcast',
       },
       stop: true,
@@ -122,16 +157,26 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
     };
   };
 
-  delegate = async (params: DelegateParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  delegate = async (
+    params: DelegateParams,
+    ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
+    // Trigger group orchestration if available
+    if (ctx.groupOrchestration && ctx.agentId) {
+      // Fire and forget - the orchestration will handle the async execution
+      ctx.groupOrchestration.triggerDelegate({
+        agentId: params.agentId,
+        reason: params.reason,
+        supervisorAgentId: ctx.agentId,
+      });
+    }
+
     // The supervisor exits and delegated agent takes control
     return {
-      content: JSON.stringify({
-        agentId: params.agentId,
-        message: 'Delegating conversation to agent',
-        reason: params.reason,
-      }),
+      content: `Delegated conversation control to agent "${params.agentId}".`,
       state: {
         agentId: params.agentId,
+        reason: params.reason,
         type: 'delegate',
       },
       stop: true,
@@ -141,7 +186,10 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
 
   // ==================== Task Execution ====================
 
-  executeTask = async (params: ExecuteTaskParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  executeTask = async (
+    params: ExecuteTaskParams,
+    _ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     // TODO: Implement async task execution
     return {
       content: JSON.stringify({
@@ -153,7 +201,10 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
     };
   };
 
-  interrupt = async (params: InterruptParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  interrupt = async (
+    params: InterruptParams,
+    _ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     // TODO: Implement task interruption
     return {
       content: JSON.stringify({
@@ -166,7 +217,10 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
 
   // ==================== Context Management ====================
 
-  summarize = async (params: SummarizeParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  summarize = async (
+    params: SummarizeParams,
+    _ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     // TODO: Implement conversation summarization
     return {
       content: JSON.stringify({
@@ -180,7 +234,7 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
 
   // ==================== Flow Control ====================
 
-  createWorkflow = async (params: CreateWorkflowParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  createWorkflow = async (params: CreateWorkflowParams): Promise<BuiltinToolResult> => {
     // TODO: Implement workflow creation
     return {
       content: JSON.stringify({
@@ -192,8 +246,9 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
     };
   };
 
-  vote = async (params: VoteParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  vote = async (params: VoteParams): Promise<BuiltinToolResult> => {
     // TODO: Implement voting mechanism
+
     return {
       content: JSON.stringify({
         message: 'Voting not yet implemented',
@@ -203,30 +258,6 @@ class GroupManagementExecutor implements IBuiltinToolExecutor {
       success: true,
     };
   };
-
-  // ==================== Interface Methods ====================
-
-  invoke = async (apiName: string, params: any, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
-    const handler = this[apiName as keyof this];
-    if (typeof handler !== 'function') {
-      return {
-        error: {
-          message: `Unknown API: ${apiName}`,
-          type: 'ApiNotFound',
-        },
-        success: false,
-      };
-    }
-    return (handler as Function)(params, ctx);
-  };
-
-  hasApi(apiName: string): boolean {
-    return apiName in GroupManagementApiName;
-  }
-
-  getApiNames(): string[] {
-    return Object.values(GroupManagementApiName);
-  }
 }
 
 // Export the executor instance for registration in index.ts

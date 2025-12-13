@@ -1171,4 +1171,223 @@ describe('chatMessage actions', () => {
       expect(result.current.messagesMap[key2]).toEqual(messages2);
     });
   });
+
+  describe('Public API with context parameter', () => {
+    describe('deleteMessage with context', () => {
+      it('should pass context to optimisticDeleteMessages', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+
+        // Setup: use the same agentId for both global state and message
+        // This ensures the message can be found by the selector
+        const agentId = 'session-id';
+        const topicId = 'topic-123';
+        const key = messageMapKey({ agentId, topicId });
+
+        const messages = [{ id: messageId, role: 'user', content: 'Test message' }] as any;
+
+        act(() => {
+          useChatStore.setState({
+            activeAgentId: agentId,
+            activeTopicId: topicId,
+            messagesMap: {
+              [key]: messages,
+            },
+          });
+        });
+
+        // Create operation with context
+        let operationId: string;
+        act(() => {
+          const op = result.current.startOperation({
+            type: 'regenerate',
+            context: { agentId, topicId },
+          });
+          operationId = op.operationId;
+        });
+
+        // Spy on optimisticDeleteMessages to verify context is passed
+        const optimisticDeleteSpy = vi.spyOn(result.current, 'optimisticDeleteMessages');
+
+        // Use vi.spyOn to mock the service response
+        vi.spyOn(messageService, 'removeMessages').mockResolvedValue({
+          success: true,
+          messages: [],
+        } as any);
+
+        // Delete message with operationId context
+        await act(async () => {
+          await result.current.deleteMessage(messageId, { operationId: operationId! });
+        });
+
+        // Verify: optimisticDeleteMessages was called with the context
+        expect(optimisticDeleteSpy).toHaveBeenCalledWith([messageId], {
+          operationId: operationId!,
+        });
+      });
+    });
+
+    describe('modifyMessageContent with context', () => {
+      it('should use operationId context for optimistic update', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const newContent = 'Modified content';
+
+        // Group context
+        const groupContext = {
+          agentId: 'agent-in-group',
+          groupId: 'group-123',
+          topicId: 'topic-in-group',
+        };
+        const groupKey = messageMapKey(groupContext);
+
+        // Global state - different from group context
+        const globalAgentId = 'global-agent';
+        const globalKey = messageMapKey({ agentId: globalAgentId });
+
+        // Setup: messages in both contexts
+        const groupMessages = [
+          { id: messageId, role: 'user', content: 'Original group content' },
+        ] as any;
+        const globalMessages = [
+          { id: 'global-msg', role: 'user', content: 'Global message' },
+        ] as any;
+
+        act(() => {
+          useChatStore.setState({
+            activeAgentId: globalAgentId,
+            activeTopicId: undefined,
+            dbMessagesMap: {
+              [groupKey]: groupMessages,
+              [globalKey]: globalMessages,
+            },
+            messagesMap: {
+              [groupKey]: groupMessages,
+              [globalKey]: globalMessages,
+            },
+          });
+        });
+
+        // Create operation with group context
+        let operationId: string;
+        act(() => {
+          const op = result.current.startOperation({
+            type: 'regenerate',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+        });
+
+        // Use vi.spyOn to mock the service response
+        const updateMessageSpy = vi.spyOn(messageService, 'updateMessage').mockResolvedValue({
+          success: true,
+          messages: [{ id: messageId, role: 'user', content: newContent }],
+        } as any);
+
+        // Modify message with operationId context
+        await act(async () => {
+          await result.current.modifyMessageContent(messageId, newContent, {
+            operationId: operationId!,
+          });
+        });
+
+        // Verify: service was called with the message update
+        // Note: updateMessage is called with all fields, we just check that it was called with the id and content
+        expect(updateMessageSpy).toHaveBeenCalledWith(
+          messageId,
+          expect.objectContaining({ content: newContent }),
+          expect.anything(),
+        );
+
+        // Verify: global messages should remain untouched
+        expect(result.current.messagesMap[globalKey]).toEqual(globalMessages);
+      });
+    });
+
+    describe('switchMessageBranch with context', () => {
+      it('should use operationId context for optimistic update', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const branchIndex = 2;
+
+        // Group context
+        const groupContext = {
+          agentId: 'agent-in-group',
+          groupId: 'group-123',
+          topicId: 'topic-in-group',
+        };
+        const groupKey = messageMapKey(groupContext);
+
+        // Global state - different from group context
+        const globalAgentId = 'global-agent';
+        const globalKey = messageMapKey({ agentId: globalAgentId });
+
+        // Setup: messages in both contexts
+        const groupMessages = [
+          { id: messageId, role: 'user', content: 'Group message', metadata: {} },
+        ] as any;
+        const globalMessages = [
+          { id: 'global-msg', role: 'user', content: 'Global message', metadata: {} },
+        ] as any;
+
+        act(() => {
+          useChatStore.setState({
+            activeAgentId: globalAgentId,
+            activeTopicId: undefined,
+            dbMessagesMap: {
+              [groupKey]: groupMessages,
+              [globalKey]: globalMessages,
+            },
+            messagesMap: {
+              [groupKey]: groupMessages,
+              [globalKey]: globalMessages,
+            },
+          });
+        });
+
+        // Create operation with group context
+        let operationId: string;
+        act(() => {
+          const op = result.current.startOperation({
+            type: 'regenerate',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+        });
+
+        // Use vi.spyOn to mock the service response
+        const updateMetadataSpy = vi
+          .spyOn(messageService, 'updateMessageMetadata')
+          .mockResolvedValue({
+            success: true,
+            messages: [
+              {
+                id: messageId,
+                role: 'user',
+                content: 'Group message',
+                metadata: { activeBranchIndex: branchIndex },
+              },
+            ],
+          } as any);
+
+        // Switch branch with operationId context
+        await act(async () => {
+          await result.current.switchMessageBranch(messageId, branchIndex, {
+            operationId: operationId!,
+          });
+        });
+
+        // Verify: service was called with the metadata update
+        // Note: service is called with 3 args: (id, metadata, context)
+        expect(updateMetadataSpy).toHaveBeenCalledWith(
+          messageId,
+          { activeBranchIndex: branchIndex },
+          { agentId: groupContext.agentId, topicId: groupContext.topicId },
+        );
+
+        // Verify: global messages should remain untouched
+        expect(result.current.messagesMap[globalKey]).toEqual(globalMessages);
+      });
+    });
+  });
 });
