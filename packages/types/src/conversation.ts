@@ -72,6 +72,7 @@ export interface MessageMapContext {
   topicId?: string | null;
 }
 
+/* eslint-disable typescript-sort-keys/interface */
 /**
  * Context for identifying a conversation or message list
  * This is the standard type for all conversation-related context passing
@@ -120,6 +121,22 @@ export interface ConversationContext {
    * Used when scope is 'group' or 'group_agent'
    */
   groupId?: string;
+  /**
+   * Sub Agent ID for group orchestration scenarios
+   * - Used to get Agent config (model, provider, plugins) instead of agentId
+   * - Used to set message.agentId (mark message source)
+   * - Falls back to agentId if not set
+   *
+   * @example
+   * ```ts
+   * // Supervisor executes: no subAgentId needed
+   * { agentId: 'supervisor', groupId: 'group-1', scope: 'group' }
+   *
+   * // Agent speaks in group: use subAgentId for agent config
+   * { agentId: 'supervisor', subAgentId: 'agent-1', groupId: 'group-1', scope: 'group' }
+   * ```
+   */
+  subAgentId?: string;
   /**
    * Whether this is creating a new conversation (new topic or new thread)
    * Used for optimistic updates

@@ -2453,4 +2453,427 @@ describe('MessageModel Query Tests', () => {
       expect(result.map((m) => m.id)).toEqual(['msg1', 'thread1-msg1']);
     });
   });
+
+  describe('Group Chat message query scenarios', () => {
+    /**
+     * Scenario 1: Group Chat main channel
+     *
+     * In Group Chat, all messages in the main channel should have:
+     * - groupId: the same group ID
+     * - agentId: different for each agent (user, supervisor, agent-1, agent-2)
+     * - topicId: same topic or null
+     *
+     * When querying by groupId, should return ALL messages regardless of agentId
+     */
+    describe('main channel messages', () => {
+      it('should return all messages from user, supervisor, and multiple agents when querying by groupId', async () => {
+        await serverDB.transaction(async (trx) => {
+          // Create group and agents
+          await trx
+            .insert(chatGroups)
+            .values([{ id: 'group-chat-1', userId, title: 'Group Chat 1' }]);
+
+          await trx.insert(agents).values([
+            { id: 'supervisor-agent', userId, title: 'Supervisor' },
+            { id: 'agent-1', userId, title: 'Data Analyst' },
+            { id: 'agent-2', userId, title: 'Code Writer' },
+          ]);
+
+          await trx.insert(topics).values([{ id: 'topic-group-1', userId }]);
+
+          // Create messages from different agents in the same group
+          await trx.insert(messages).values([
+            // User message
+            {
+              id: 'msg-user',
+              userId,
+              role: 'user',
+              content: 'Analyze the weather data for Hangzhou',
+              groupId: 'group-chat-1',
+              agentId: 'supervisor-agent', // User message uses supervisor's agentId
+              topicId: 'topic-group-1',
+              createdAt: new Date('2024-01-01T10:00:00'),
+            },
+            // Supervisor's first response with tool call
+            {
+              id: 'msg-supervisor-1',
+              userId,
+              role: 'assistant',
+              content: 'I will delegate this to the Data Analyst.',
+              groupId: 'group-chat-1',
+              agentId: 'supervisor-agent',
+              topicId: 'topic-group-1',
+              createdAt: new Date('2024-01-01T10:01:00'),
+            },
+            // Tool message for delegation
+            {
+              id: 'msg-tool-delegate',
+              userId,
+              role: 'tool',
+              content: 'Triggered agent "agent-1" to respond.',
+              groupId: 'group-chat-1',
+              agentId: 'supervisor-agent',
+              topicId: 'topic-group-1',
+              createdAt: new Date('2024-01-01T10:01:30'),
+            },
+            // Agent-1 (Data Analyst) response
+            {
+              id: 'msg-agent1-response',
+              userId,
+              role: 'assistant',
+              content: 'Based on the weather data, Hangzhou has...',
+              groupId: 'group-chat-1',
+              agentId: 'agent-1',
+              topicId: 'topic-group-1',
+              createdAt: new Date('2024-01-01T10:02:00'),
+            },
+            // Supervisor asks Agent-2
+            {
+              id: 'msg-supervisor-2',
+              userId,
+              role: 'assistant',
+              content: 'Let me also get some code analysis.',
+              groupId: 'group-chat-1',
+              agentId: 'supervisor-agent',
+              topicId: 'topic-group-1',
+              createdAt: new Date('2024-01-01T10:03:00'),
+            },
+            // Agent-2 (Code Writer) response
+            {
+              id: 'msg-agent2-response',
+              userId,
+              role: 'assistant',
+              content: 'Here is the code to visualize the data...',
+              groupId: 'group-chat-1',
+              agentId: 'agent-2',
+              topicId: 'topic-group-1',
+              createdAt: new Date('2024-01-01T10:04:00'),
+            },
+          ]);
+        });
+
+        // Query by groupId - should return ALL messages from all agents
+        const result = await messageModel.query({
+          groupId: 'group-chat-1',
+          topicId: 'topic-group-1',
+        });
+
+        // Should return all 6 messages
+        expect(result).toHaveLength(6);
+
+        // Verify each message has correct agentId
+        const messageMap = new Map(result.map((m) => [m.id, m]));
+
+        expect(messageMap.get('msg-user')?.agentId).toBe('supervisor-agent');
+        expect(messageMap.get('msg-supervisor-1')?.agentId).toBe('supervisor-agent');
+        expect(messageMap.get('msg-tool-delegate')?.agentId).toBe('supervisor-agent');
+        expect(messageMap.get('msg-agent1-response')?.agentId).toBe('agent-1');
+        expect(messageMap.get('msg-supervisor-2')?.agentId).toBe('supervisor-agent');
+        expect(messageMap.get('msg-agent2-response')?.agentId).toBe('agent-2');
+
+        // All messages should have the same groupId
+        for (const msg of result) {
+          expect(msg.groupId).toBe('group-chat-1');
+        }
+
+        // Verify chronological order
+        expect(result.map((m) => m.id)).toEqual([
+          'msg-user',
+          'msg-supervisor-1',
+          'msg-tool-delegate',
+          'msg-agent1-response',
+          'msg-supervisor-2',
+          'msg-agent2-response',
+        ]);
+      });
+
+      it('should not return messages from different groups', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(chatGroups).values([
+            { id: 'group-1', userId, title: 'Group 1' },
+            { id: 'group-2', userId, title: 'Group 2' },
+          ]);
+
+          await trx.insert(agents).values([
+            { id: 'agent-g1', userId, title: 'Agent G1' },
+            { id: 'agent-g2', userId, title: 'Agent G2' },
+          ]);
+
+          await trx.insert(messages).values([
+            {
+              id: 'msg-g1',
+              userId,
+              role: 'user',
+              content: 'Message in group 1',
+              groupId: 'group-1',
+              agentId: 'agent-g1',
+              createdAt: new Date('2024-01-01'),
+            },
+            {
+              id: 'msg-g2',
+              userId,
+              role: 'user',
+              content: 'Message in group 2',
+              groupId: 'group-2',
+              agentId: 'agent-g2',
+              createdAt: new Date('2024-01-02'),
+            },
+          ]);
+        });
+
+        const result = await messageModel.query({ groupId: 'group-1' });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe('msg-g1');
+      });
+    });
+
+    /**
+     * Scenario 2: Agent's private trajectory (thread)
+     *
+     * When an agent executes a task, it may create messages in its own thread.
+     * These messages should:
+     * - Have the same groupId as the main conversation
+     * - Have the agent's agentId
+     * - Have a threadId pointing to the agent's execution trajectory
+     *
+     * When querying by threadId, should return only the agent's trajectory messages
+     */
+    describe('agent private trajectory (thread)', () => {
+      it('should return only agent-1 trajectory messages when querying by threadId', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx
+            .insert(chatGroups)
+            .values([{ id: 'group-chat-1', userId, title: 'Group Chat' }]);
+
+          await trx.insert(agents).values([
+            { id: 'supervisor', userId, title: 'Supervisor' },
+            { id: 'agent-1', userId, title: 'Data Analyst' },
+          ]);
+
+          await trx.insert(topics).values([{ id: 'topic-1', userId }]);
+
+          // Create thread for agent-1's execution trajectory
+          await trx.insert(threads).values([
+            {
+              id: 'agent-1-trajectory',
+              userId,
+              topicId: 'topic-1',
+              sourceMessageId: 'msg-delegate-to-agent1', // Source is the delegation message
+              type: 'standalone',
+            },
+          ]);
+
+          // Main channel messages
+          await trx.insert(messages).values([
+            // User's request
+            {
+              id: 'msg-user-request',
+              userId,
+              role: 'user',
+              content: 'Analyze weather data',
+              groupId: 'group-chat-1',
+              agentId: 'supervisor',
+              topicId: 'topic-1',
+              threadId: null,
+              createdAt: new Date('2024-01-01T10:00:00'),
+            },
+            // Supervisor delegates to agent-1
+            {
+              id: 'msg-delegate-to-agent1',
+              userId,
+              role: 'assistant',
+              content: 'Delegating to Data Analyst',
+              groupId: 'group-chat-1',
+              agentId: 'supervisor',
+              topicId: 'topic-1',
+              threadId: null,
+              createdAt: new Date('2024-01-01T10:01:00'),
+            },
+            // Agent-1's execution trajectory (in thread)
+            {
+              id: 'msg-agent1-step1',
+              userId,
+              role: 'assistant',
+              content: 'Starting data analysis...',
+              groupId: 'group-chat-1',
+              agentId: 'agent-1',
+              topicId: 'topic-1',
+              threadId: 'agent-1-trajectory',
+              createdAt: new Date('2024-01-01T10:02:00'),
+            },
+            {
+              id: 'msg-agent1-tool-call',
+              userId,
+              role: 'tool',
+              content: 'Fetched weather API data',
+              groupId: 'group-chat-1',
+              agentId: 'agent-1',
+              topicId: 'topic-1',
+              threadId: 'agent-1-trajectory',
+              createdAt: new Date('2024-01-01T10:02:30'),
+            },
+            {
+              id: 'msg-agent1-step2',
+              userId,
+              role: 'assistant',
+              content: 'Analysis complete. Temperature trend shows...',
+              groupId: 'group-chat-1',
+              agentId: 'agent-1',
+              topicId: 'topic-1',
+              threadId: 'agent-1-trajectory',
+              createdAt: new Date('2024-01-01T10:03:00'),
+            },
+            // Final response in main channel (no threadId)
+            {
+              id: 'msg-agent1-final',
+              userId,
+              role: 'assistant',
+              content: 'Here is my analysis summary...',
+              groupId: 'group-chat-1',
+              agentId: 'agent-1',
+              topicId: 'topic-1',
+              threadId: null,
+              createdAt: new Date('2024-01-01T10:04:00'),
+            },
+          ]);
+        });
+
+        // Query agent-1's trajectory by threadId
+        const trajectoryResult = await messageModel.query({
+          threadId: 'agent-1-trajectory',
+        });
+
+        // Should return source message + thread messages
+        expect(trajectoryResult).toHaveLength(4);
+        expect(trajectoryResult.map((m) => m.id)).toEqual([
+          'msg-delegate-to-agent1', // Source message
+          'msg-agent1-step1',
+          'msg-agent1-tool-call',
+          'msg-agent1-step2',
+        ]);
+
+        // All trajectory messages should have the same groupId and agent-1's agentId
+        for (const msg of trajectoryResult.slice(1)) {
+          // Skip source message
+          expect(msg.groupId).toBe('group-chat-1');
+          expect(msg.agentId).toBe('agent-1');
+          expect(msg.threadId).toBe('agent-1-trajectory');
+        }
+
+        // Query main channel by groupId (should include all non-thread messages)
+        const mainChannelResult = await messageModel.query({
+          groupId: 'group-chat-1',
+          topicId: 'topic-1',
+          threadId: null, // Explicitly null to get main channel only
+        });
+
+        // Should return main channel messages only
+        expect(mainChannelResult).toHaveLength(3);
+        expect(mainChannelResult.map((m) => m.id)).toEqual([
+          'msg-user-request',
+          'msg-delegate-to-agent1',
+          'msg-agent1-final',
+        ]);
+      });
+
+      it('should return separate trajectories for different agents', async () => {
+        await serverDB.transaction(async (trx) => {
+          await trx.insert(chatGroups).values([{ id: 'group-1', userId, title: 'Group' }]);
+
+          await trx.insert(agents).values([
+            { id: 'supervisor', userId, title: 'Supervisor' },
+            { id: 'agent-1', userId, title: 'Agent 1' },
+            { id: 'agent-2', userId, title: 'Agent 2' },
+          ]);
+
+          await trx.insert(topics).values([{ id: 'topic-1', userId }]);
+
+          // Create threads for each agent's trajectory
+          await trx.insert(threads).values([
+            {
+              id: 'agent-1-thread',
+              userId,
+              topicId: 'topic-1',
+              sourceMessageId: 'msg-source-1',
+              type: 'standalone',
+            },
+            {
+              id: 'agent-2-thread',
+              userId,
+              topicId: 'topic-1',
+              sourceMessageId: 'msg-source-2',
+              type: 'standalone',
+            },
+          ]);
+
+          await trx.insert(messages).values([
+            // Source messages
+            {
+              id: 'msg-source-1',
+              userId,
+              role: 'assistant',
+              content: 'Delegating to Agent 1',
+              groupId: 'group-1',
+              agentId: 'supervisor',
+              topicId: 'topic-1',
+              threadId: null,
+              createdAt: new Date('2024-01-01T10:00:00'),
+            },
+            {
+              id: 'msg-source-2',
+              userId,
+              role: 'assistant',
+              content: 'Delegating to Agent 2',
+              groupId: 'group-1',
+              agentId: 'supervisor',
+              topicId: 'topic-1',
+              threadId: null,
+              createdAt: new Date('2024-01-01T10:05:00'),
+            },
+            // Agent-1 trajectory
+            {
+              id: 'msg-agent1-work',
+              userId,
+              role: 'assistant',
+              content: 'Agent 1 working...',
+              groupId: 'group-1',
+              agentId: 'agent-1',
+              topicId: 'topic-1',
+              threadId: 'agent-1-thread',
+              createdAt: new Date('2024-01-01T10:01:00'),
+            },
+            // Agent-2 trajectory
+            {
+              id: 'msg-agent2-work',
+              userId,
+              role: 'assistant',
+              content: 'Agent 2 working...',
+              groupId: 'group-1',
+              agentId: 'agent-2',
+              topicId: 'topic-1',
+              threadId: 'agent-2-thread',
+              createdAt: new Date('2024-01-01T10:06:00'),
+            },
+          ]);
+        });
+
+        // Query agent-1's trajectory
+        const agent1Result = await messageModel.query({ threadId: 'agent-1-thread' });
+        expect(agent1Result).toHaveLength(2);
+        expect(agent1Result.map((m) => m.id)).toEqual(['msg-source-1', 'msg-agent1-work']);
+        expect(agent1Result[1].agentId).toBe('agent-1');
+
+        // Query agent-2's trajectory
+        const agent2Result = await messageModel.query({ threadId: 'agent-2-thread' });
+        expect(agent2Result).toHaveLength(2);
+        expect(agent2Result.map((m) => m.id)).toEqual(['msg-source-2', 'msg-agent2-work']);
+        expect(agent2Result[1].agentId).toBe('agent-2');
+
+        // Both trajectories should have the same groupId
+        expect(agent1Result[1].groupId).toBe('group-1');
+        expect(agent2Result[1].groupId).toBe('group-1');
+      });
+    });
+  });
 });

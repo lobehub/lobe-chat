@@ -31,7 +31,7 @@ const Preview = memo<PreviewProps>(
       agentSelectors.displayableAgentPlugins(s),
     ]);
 
-    const agentMeta = useAgentMeta();
+    const agentMeta = useAgentMeta(message.agentId);
     const isBuiltinAgent = useIsBuiltinAgent();
 
     const { t } = useTranslation('chat');
