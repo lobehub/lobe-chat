@@ -377,6 +377,136 @@ describe('aiChatRouter', () => {
         }),
       );
     });
+
+    it('should pass groupId to both user and assistant message creation', async () => {
+      const mockCreateMessage = vi
+        .fn()
+        .mockResolvedValueOnce({ id: 'm-user' })
+        .mockResolvedValueOnce({ id: 'm-assistant' });
+      const mockGet = vi.fn().mockResolvedValue({ messages: [], topics: undefined });
+
+      vi.mocked(MessageModel).mockImplementation(() => ({ create: mockCreateMessage }) as any);
+      vi.mocked(AiChatService).mockImplementation(() => ({ getMessagesAndTopics: mockGet }) as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      await caller.sendMessageInServer({
+        agentId: 'supervisor-agent',
+        groupId: 'group-123',
+        newAssistantMessage: { model: 'gpt-4o', provider: 'openai' },
+        newUserMessage: { content: 'Analyze weather data' },
+        sessionId: 's1',
+        topicId: 't1',
+      } as any);
+
+      // Verify groupId is passed to user message
+      expect(mockCreateMessage).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          agentId: 'supervisor-agent',
+          content: 'Analyze weather data',
+          groupId: 'group-123',
+          role: 'user',
+          sessionId: 's1',
+          topicId: 't1',
+        }),
+      );
+
+      // Verify groupId is passed to assistant message
+      expect(mockCreateMessage).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          agentId: 'supervisor-agent',
+          groupId: 'group-123',
+          parentId: 'm-user',
+          role: 'assistant',
+          sessionId: 's1',
+          topicId: 't1',
+        }),
+      );
+    });
+
+    it('should pass groupId to getMessagesAndTopics for querying', async () => {
+      const mockCreateMessage = vi
+        .fn()
+        .mockResolvedValueOnce({ id: 'm-user' })
+        .mockResolvedValueOnce({ id: 'm-assistant' });
+      const mockGet = vi.fn().mockResolvedValue({ messages: [], topics: undefined });
+
+      vi.mocked(MessageModel).mockImplementation(() => ({ create: mockCreateMessage }) as any);
+      vi.mocked(AiChatService).mockImplementation(() => ({ getMessagesAndTopics: mockGet }) as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      await caller.sendMessageInServer({
+        agentId: 'supervisor-agent',
+        groupId: 'group-123',
+        newAssistantMessage: { model: 'gpt-4o', provider: 'openai' },
+        newUserMessage: { content: 'hi' },
+        sessionId: 's1',
+        topicId: 't1',
+      } as any);
+
+      // Verify groupId is passed to getMessagesAndTopics
+      expect(mockGet).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'supervisor-agent',
+          groupId: 'group-123',
+          sessionId: 's1',
+          topicId: 't1',
+        }),
+      );
+    });
+
+    it('should not set groupId when not provided (normal single-agent chat)', async () => {
+      const mockCreateMessage = vi
+        .fn()
+        .mockResolvedValueOnce({ id: 'm-user' })
+        .mockResolvedValueOnce({ id: 'm-assistant' });
+      const mockGet = vi.fn().mockResolvedValue({ messages: [], topics: undefined });
+
+      vi.mocked(MessageModel).mockImplementation(() => ({ create: mockCreateMessage }) as any);
+      vi.mocked(AiChatService).mockImplementation(() => ({ getMessagesAndTopics: mockGet }) as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      await caller.sendMessageInServer({
+        agentId: 'agent-1',
+        // no groupId - normal single-agent chat
+        newAssistantMessage: { model: 'gpt-4o', provider: 'openai' },
+        newUserMessage: { content: 'hi' },
+        sessionId: 's1',
+        topicId: 't1',
+      } as any);
+
+      // Verify groupId is undefined in user message
+      expect(mockCreateMessage).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          agentId: 'agent-1',
+          groupId: undefined,
+          role: 'user',
+        }),
+      );
+
+      // Verify groupId is undefined in assistant message
+      expect(mockCreateMessage).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          agentId: 'agent-1',
+          groupId: undefined,
+          role: 'assistant',
+        }),
+      );
+
+      // Verify groupId is undefined in getMessagesAndTopics
+      expect(mockGet).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'agent-1',
+          groupId: undefined,
+        }),
+      );
+    });
   });
 
   describe('agentId support', () => {

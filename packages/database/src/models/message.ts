@@ -134,6 +134,24 @@ export class MessageModel {
       });
     }
 
+    // For Group Chat queries: filter by groupId only (not agentId)
+    // In Group Chat, all messages (user, supervisor, workers) should have groupId
+    // and may have different agentIds, so we only filter by groupId + topicId
+    if (groupId) {
+      const whereCondition = and(
+        eq(messages.groupId, groupId),
+        this.matchTopic(topicId),
+        this.matchThread(threadId),
+      );
+
+      return this.queryWithWhere({
+        current,
+        pageSize,
+        postProcessUrl: options.postProcessUrl,
+        where: whereCondition,
+      });
+    }
+
     // Standard query with session/topic/group filters
     const whereCondition = and(
       agentCondition ?? this.matchSession(sessionId),
