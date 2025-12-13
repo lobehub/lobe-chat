@@ -6,21 +6,27 @@ import type {
   GroupOrchestrationInstructionAgentSpoke,
   GroupOrchestrationInstructionAgentsBroadcasted,
   GroupOrchestrationInstructionBroadcast,
-  GroupOrchestrationInstructionCallSupervisor,
   GroupOrchestrationInstructionFinish,
   GroupOrchestrationInstructionSpeak,
 } from '@lobechat/agent-runtime';
+import type { ConversationContext } from '@lobechat/types';
 import debug from 'debug';
 
+import { displayMessageSelectors } from '@/store/chat/slices/message/selectors';
 import type { ChatStore } from '@/store/chat/store';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 const log = debug('lobe-store:group-orchestration-executors');
 
 export interface GroupOrchestrationExecutorsContext {
   get: () => ChatStore;
-  groupId: string;
+  /**
+   * Message context for fetching messages
+   * Contains agentId (groupId for group chat), topicId, scope, etc.
+   */
+  messageContext: ConversationContext;
   orchestrationOperationId: string;
-  topicId?: string;
+  supervisorAgentId: string;
 }
 
 /**
@@ -49,7 +55,15 @@ export interface GroupOrchestrationExecutorsContext {
 export const createGroupOrchestrationExecutors = (
   context: GroupOrchestrationExecutorsContext,
 ): Partial<Record<GroupOrchestrationInstruction['type'], GroupOrchestrationExecutor>> => {
-  const { get, groupId, orchestrationOperationId } = context;
+  const { get, messageContext, orchestrationOperationId, supervisorAgentId } = context;
+
+  // Pre-compute the chat key for message fetching
+  const chatKey = messageMapKey(messageContext);
+
+  /**
+   * Helper to get current messages for the group conversation
+   */
+  const getMessages = () => displayMessageSelectors.getDisplayMessagesByKey(chatKey)(get());
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */
 
@@ -63,25 +77,34 @@ export const createGroupOrchestrationExecutors = (
      * then the tool handler internally triggers the next step (speak/broadcast etc.)
      */
     call_supervisor: async (instruction, state) => {
-      const { supervisorAgentId } = (instruction as GroupOrchestrationInstructionCallSupervisor)
-        .payload;
-
       const sessionLogId = `${state.operationId}:call_supervisor`;
       log(`[${sessionLogId}] Starting supervisor agent: ${supervisorAgentId}`);
 
-      // 1. Create child Operation for Supervisor
-      const { operationId: supervisorOpId } = get().startOperation({
-        context: { agentId: supervisorAgentId, groupId },
+      const messages = getMessages();
+      const lastMessage = messages.at(-1);
+
+      if (!lastMessage) {
+        log(`[${sessionLogId}] No messages found, cannot execute supervisor`);
+        return {
+          events: [{ type: 'supervisor_finished' }] as GroupOrchestrationEvent[],
+          newState: { ...state, status: 'done' },
+          nextContext: undefined,
+        };
+      }
+
+      // Execute Supervisor agent with the supervisor's agentId in context
+      await get().internal_execAgentRuntime({
+        context: { ...messageContext, agentId: supervisorAgentId },
+        messages,
+        operationId: state.operationId,
+        parentMessageId: lastMessage.id,
+        parentMessageType: lastMessage.role as 'user' | 'assistant' | 'tool',
         parentOperationId: orchestrationOperationId,
-        type: 'execAgentRuntime',
       });
 
-      // 2. Execute Supervisor
-      // TODO: Call internal_execAgentRuntime when Group Chat support is added
-      // For now, just log and return
-      log(`[${sessionLogId}] Would execute supervisor with operationId: ${supervisorOpId}`);
+      log(`[${sessionLogId}] Supervisor agent finished`);
 
-      // 3. If we reach here, Supervisor finished without calling group-management tool
+      // If we reach here, Supervisor finished without calling group-management tool
       // Orchestration ends
       return {
         events: [{ type: 'supervisor_finished' }] as GroupOrchestrationEvent[],
@@ -102,20 +125,33 @@ export const createGroupOrchestrationExecutors = (
       const sessionLogId = `${state.operationId}:speak`;
       log(`[${sessionLogId}] Speaking agent: ${agentId}, instruction: ${agentInstruction}`);
 
-      // 1. Create child Operation
-      const { operationId: agentOpId } = get().startOperation({
-        context: { agentId, groupId },
-        parentOperationId: orchestrationOperationId,
-        type: 'execAgentRuntime',
-      });
+      const messages = getMessages();
+      const lastMessage = messages.at(-1);
 
-      // 2. Execute target Agent completely
-      // TODO: Call internal_execAgentRuntime when Group Chat support is added
-      log(`[${sessionLogId}] Would execute agent with operationId: ${agentOpId}`);
+      if (!lastMessage) {
+        log(`[${sessionLogId}] No messages found, cannot execute agent`);
+        return {
+          events: [{ agentId, type: 'agent_spoke' }] as GroupOrchestrationEvent[],
+          newState: state,
+          nextContext: {
+            payload: { agentId, completed: true },
+            phase: 'agent_spoke',
+          } as GroupOrchestrationContext,
+        };
+      }
+
+      // Execute target Agent with the target agent's agentId in context
+      await get().internal_execAgentRuntime({
+        context: { ...messageContext, agentId },
+        messages,
+        parentMessageId: lastMessage.id,
+        parentMessageType: lastMessage.role as 'user' | 'assistant' | 'tool',
+        parentOperationId: orchestrationOperationId,
+      });
 
       log(`[${sessionLogId}] Agent ${agentId} finished speaking`);
 
-      // 3. Return agent_spoke phase
+      // Return agent_spoke phase
       return {
         events: [{ agentId, type: 'agent_spoke' }] as GroupOrchestrationEvent[],
         newState: state,
@@ -140,17 +176,31 @@ export const createGroupOrchestrationExecutors = (
         `[${sessionLogId}] Broadcasting to agents: ${agentIds.join(', ')}, instruction: ${agentInstruction}`,
       );
 
-      // Execute all Agents in parallel
-      // TODO: Call internal_execAgentRuntime when Group Chat support is added
+      const messages = getMessages();
+      const lastMessage = messages.at(-1);
+
+      if (!lastMessage) {
+        log(`[${sessionLogId}] No messages found, cannot execute agents`);
+        return {
+          events: [{ agentIds, type: 'agents_broadcasted' }] as GroupOrchestrationEvent[],
+          newState: state,
+          nextContext: {
+            payload: { agentIds, completed: true },
+            phase: 'agents_broadcasted',
+          } as GroupOrchestrationContext,
+        };
+      }
+
+      // Execute all Agents in parallel, each with their own agentId in context
       await Promise.all(
         agentIds.map(async (agentId) => {
-          const { operationId: agentOpId } = get().startOperation({
-            context: { agentId, groupId },
+          await get().internal_execAgentRuntime({
+            context: { ...messageContext, agentId },
+            messages,
+            parentMessageId: lastMessage.id,
+            parentMessageType: lastMessage.role as 'user' | 'assistant' | 'tool',
             parentOperationId: orchestrationOperationId,
-            type: 'execAgentRuntime',
           });
-
-          log(`[${sessionLogId}] Would execute agent ${agentId} with operationId: ${agentOpId}`);
         }),
       );
 

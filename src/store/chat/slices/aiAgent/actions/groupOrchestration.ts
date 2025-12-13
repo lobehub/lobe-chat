@@ -205,9 +205,9 @@ export const groupOrchestrationSlice: StateCreator<
     // 4. Create Executors
     const executors = createGroupOrchestrationExecutors({
       get,
-      groupId,
-      topicId,
+      messageContext: { agentId: groupId!, groupId, scope: 'group', topicId },
       orchestrationOperationId: operationId,
+      supervisorAgentId: groupConfig.supervisorAgentId,
     });
 
     // 5. Create GroupOrchestrationRuntime

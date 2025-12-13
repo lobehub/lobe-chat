@@ -1,3 +1,4 @@
+import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
@@ -6,6 +7,7 @@ import { Action, setNamespace } from '@/utils/storeDebug';
 import type { ChatStoreState } from '../../../initialState';
 import { preventLeavingFn, toggleBooleanList } from '../../../utils';
 
+const log = debug('lobe-store:runtime-state');
 const n = setNamespace('m');
 
 /**
@@ -88,7 +90,7 @@ export const messageRuntimeState: StateCreator<
   internal_updateActivePageId: (pageId?: string) => {
     if (get().activePageId === pageId) return;
 
-    console.log('[ChatStore] Updating activePageId:', pageId);
+    log('[internal_updateActivePageId] Updating activePageId: %s', pageId);
     set({ activePageId: pageId }, false, n(`updateActivePageId/${pageId || 'undefined'}`));
   },
 });

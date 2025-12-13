@@ -3,6 +3,7 @@ import { AgentBuilderContext, MessagesEngine, PageEditorContext } from '@lobecha
 import { historySummaryPrompt } from '@lobechat/prompts';
 import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
+import debug from 'debug';
 
 import { isCanUseFC } from '@/helpers/isCanUseFC';
 import { getAgentStoreState } from '@/store/agent';
@@ -14,6 +15,8 @@ import { PAGE_AGENT_TOOL_ID } from '@/tools/page-agent/const';
 
 import { isCanUseVideo, isCanUseVision } from '../helper';
 import type { UserMemoriesResult } from './memoryManager';
+
+const log = debug('context-engine:contextEngineering');
 
 interface ContextEngineeringContext {
   /** Agent Builder context for injecting current agent info */
@@ -48,8 +51,8 @@ export const contextEngineering = async ({
   agentBuilderContext,
   pageEditorContext,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
-  console.log('[contextEngineering] tools:', tools);
-  console.log('[contextEngineering] pageEditorContext:', pageEditorContext);
+  log('tools: %o', tools);
+  log('pageEditorContext: %o', pageEditorContext);
 
   // Check if Agent Builder tool is enabled
   const isAgentBuilderEnabled = tools?.includes(AGENT_BUILDER_TOOL_ID) ?? false;
@@ -57,8 +60,11 @@ export const contextEngineering = async ({
   // Check if Page Agent tool is enabled
   const isPageAgentEnabled = tools?.includes(PAGE_AGENT_TOOL_ID) ?? false;
 
-  console.log('[contextEngineering] isAgentBuilderEnabled:', isAgentBuilderEnabled);
-  console.log('[contextEngineering] isPageAgentEnabled:', isPageAgentEnabled);
+  log(
+    'isAgentBuilderEnabled: %s, isPageAgentEnabled: %s',
+    isAgentBuilderEnabled,
+    isPageAgentEnabled,
+  );
 
   // Get enabled agent files with content and knowledge bases from agent store
   const agentStoreState = getAgentStoreState();
