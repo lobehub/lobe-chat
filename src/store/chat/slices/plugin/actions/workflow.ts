@@ -54,21 +54,22 @@ export const pluginWorkflow: StateCreator<
     });
   },
 
-  triggerAIMessage: async ({ parentId, traceId, threadId, inPortalThread, inSearchWorkflow }) => {
-    const { internal_execAgentRuntime } = get();
+  triggerAIMessage: async ({ parentId, threadId, inPortalThread, inSearchWorkflow }) => {
+    const { internal_execAgentRuntime, activeAgentId, activeTopicId } = get();
 
     const chats = inPortalThread
       ? threadSelectors.portalAIChatsWithHistoryConfig(get())
       : displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
 
     await internal_execAgentRuntime({
+      context: {
+        agentId: activeAgentId,
+        topicId: activeTopicId,
+        threadId,
+      },
       messages: chats,
       parentMessageId: parentId ?? chats.at(-1)!.id,
       parentMessageType: 'user',
-      agentId: get().activeAgentId,
-      topicId: get().activeTopicId,
-      traceId,
-      threadId,
       inPortalThread,
       inSearchWorkflow,
     });

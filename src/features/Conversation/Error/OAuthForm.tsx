@@ -5,10 +5,10 @@ import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
+import { useConversationStore } from '../store';
 import { FormAction } from './style';
 
 const OAuthForm = memo<{ id: string }>(({ id }) => {
@@ -18,7 +18,10 @@ const OAuthForm = memo<{ id: string }>(({ id }) => {
   const user = useUserStore(userProfileSelectors.userProfile);
   const isOAuthLoggedIn = useUserStore(authSelectors.isLoginWithAuth);
 
-  const [resend, deleteMessage] = useChatStore((s) => [s.delAndRegenerateMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useConversationStore((s) => [
+    s.delAndRegenerateMessage,
+    s.deleteMessage,
+  ]);
 
   const { message, modal } = App.useApp();
 

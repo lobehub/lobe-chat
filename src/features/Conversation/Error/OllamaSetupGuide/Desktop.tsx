@@ -1,4 +1,5 @@
 import { Ollama } from '@lobehub/icons';
+import { Button } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -6,10 +7,17 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 import FormAction from '@/components/FormAction';
+import { useConversationStore } from '@/features/Conversation/store';
 
-const OllamaDesktopSetupGuide = memo(() => {
+// TODO: 优化 Ollama setup 的流程，isDesktop 模式下可以直接做到端到端检测
+const OllamaDesktopSetupGuide = memo<{ id?: string }>(({ id }) => {
   const theme = useTheme();
   const { t } = useTranslation('components');
+
+  const [delAndRegenerateMessage, deleteMessage] = useConversationStore((s) => [
+    s.delAndRegenerateMessage,
+    s.deleteMessage,
+  ]);
 
   return (
     <Center gap={16} paddingBlock={32} style={{ maxWidth: 300, width: '100%' }}>
@@ -25,6 +33,28 @@ const OllamaDesktopSetupGuide = memo(() => {
         }
         title={t('OllamaSetupGuide.install.title')}
       />
+      {id && (
+        <>
+          <Button
+            block
+            onClick={() => {
+              delAndRegenerateMessage(id);
+            }}
+            style={{ marginTop: 8 }}
+            type={'primary'}
+          >
+            {t('OllamaSetupGuide.action.start')}
+          </Button>
+          <Button
+            block
+            onClick={() => {
+              deleteMessage(id);
+            }}
+          >
+            {t('OllamaSetupGuide.action.close')}
+          </Button>
+        </>
+      )}
     </Center>
   );
 });

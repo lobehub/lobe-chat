@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 import UserLoginOrSignup from '@/features/User/UserLoginOrSignup';
 import { useGreeting } from '@/hooks/useGreeting';
-import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
+import { useConversationStore } from '../../store';
 import { ErrorActionContainer, FormAction } from '../style';
 
 const ClerkLogin = memo<{ id: string }>(({ id }) => {
@@ -15,7 +15,10 @@ const ClerkLogin = memo<{ id: string }>(({ id }) => {
   const [openSignIn, isSignedIn] = useUserStore((s) => [s.openLogin, s.isSignedIn]);
   const greeting = useGreeting();
   const nickName = useUserStore(userProfileSelectors.nickName);
-  const [resend, deleteMessage] = useChatStore((s) => [s.delAndRegenerateMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useConversationStore((s) => [
+    s.delAndRegenerateMessage,
+    s.deleteMessage,
+  ]);
 
   return (
     <ErrorActionContainer>

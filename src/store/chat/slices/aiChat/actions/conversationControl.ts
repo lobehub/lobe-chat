@@ -200,13 +200,10 @@ export const conversationControl: StateCreator<
     // 7. Execute agent runtime from tool message position
     try {
       await internal_execAgentRuntime({
+        context: effectiveContext,
         messages: currentMessages,
         parentMessageId: toolMessageId, // Start from tool message
         parentMessageType: 'tool', // Type is 'tool'
-        agentId,
-        topicId,
-        threadId: threadId ?? undefined,
-        scope,
         initialState: state,
         initialContext: agentRuntimeContext,
         // Pass parent operation ID to establish parent-child relationship
@@ -327,13 +324,10 @@ export const conversationControl: StateCreator<
     // Execute agent runtime from rejected tool message position to continue
     try {
       await internal_execAgentRuntime({
+        context: effectiveContext,
         messages: currentMessages,
         parentMessageId: messageId,
         parentMessageType: 'tool',
-        agentId,
-        topicId,
-        threadId: threadId ?? undefined,
-        scope,
         initialState: state,
         initialContext: agentRuntimeContext,
         // Pass parent operation ID to establish parent-child relationship

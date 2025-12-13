@@ -7,7 +7,7 @@ import ErrorJsonViewer from '../ErrorJsonViewer';
 
 const loading = () => <Skeleton active style={{ width: 300 }} />;
 
-const SetupGuide = dynamic(() => import('@/features/OllamaSetupGuide'), { loading, ssr: false });
+const SetupGuide = dynamic(() => import('../OllamaSetupGuide'), { loading, ssr: false });
 
 const InvalidModel = dynamic(() => import('./InvalidOllamaModel'), { loading, ssr: false });
 

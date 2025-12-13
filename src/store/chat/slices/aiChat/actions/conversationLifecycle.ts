@@ -7,7 +7,6 @@ import {
   ConversationContext,
   SendMessageParams,
   SendMessageServerResponse,
-  TraceEventType,
 } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
 import { TRPCClientError } from '@trpc/client';
@@ -67,22 +66,20 @@ export interface ConversationLifecycleAction {
    * @returns Result containing message IDs and created thread ID if applicable
    */
   sendMessage: (params: SendMessageWithContextParams) => Promise<SendMessageResult | undefined>;
-  regenerateUserMessage: (
-    id: string,
-    params?: { skipTrace?: boolean; traceId?: string },
-  ) => Promise<void>;
-  regenerateAssistantMessage: (
-    id: string,
-    params?: { skipTrace?: boolean; traceId?: string },
-  ) => Promise<void>;
+  /**
+   * @deprecated Use ConversationStore.regenerateUserMessage instead.
+   * This method uses global state which doesn't work in Group Chat scenarios.
+   */
+  regenerateUserMessage: (id: string) => Promise<void>;
+  /**
+   * @deprecated Use ConversationStore.regenerateAssistantMessage instead.
+   * This method uses global state which doesn't work in Group Chat scenarios.
+   */
+  regenerateAssistantMessage: (id: string) => Promise<void>;
   /**
    * Continue generating from current assistant message
    */
   continueGenerationMessage: (lastBlockId: string, messageId: string) => Promise<void>;
-  /**
-   * Deletes an existing message and generates a new one in its place
-   */
-  delAndRegenerateMessage: (id: string) => Promise<void>;
 }
 
 export const conversationLifecycle: StateCreator<
@@ -363,17 +360,14 @@ export const conversationLifecycle: StateCreator<
 
     try {
       await internal_execAgentRuntime({
+        context: execContext,
         messages: displayMessages,
         parentMessageId: data.assistantMessageId,
         parentMessageType: 'assistant',
-        agentId: execContext.agentId,
-        topicId: execContext.topicId,
         parentOperationId: operationId, // Pass as parent operation
-        threadId: execContext.threadId ?? undefined,
         // If a new thread was created, mark as inPortalThread for consistent behavior
         inPortalThread: !!data.createdThreadId,
         skipCreateFirstMessage: true,
-        scope: execContext.scope,
       });
 
       //
@@ -401,7 +395,10 @@ export const conversationLifecycle: StateCreator<
     };
   },
 
-  regenerateUserMessage: async (id, params) => {
+  /**
+   * @deprecated Use ConversationStore.regenerateUserMessage instead
+   */
+  regenerateUserMessage: async (id) => {
     const isRegenerating = messageStateSelectors.isMessageRegenerating(id)(get());
     if (isRegenerating) return;
 
@@ -421,7 +418,7 @@ export const conversationLifecycle: StateCreator<
     const regenContext = {
       agentId: activeAgentId,
       topicId: activeTopicId,
-      threadId: activeThreadId,
+      threadId: activeThreadId ?? undefined,
     };
 
     // Create regenerate operation
@@ -431,25 +428,16 @@ export const conversationLifecycle: StateCreator<
     });
 
     try {
-      const traceId = params?.traceId ?? dbMessageSelectors.getTraceIdByDbMessageId(id)(get());
-
       // 切一个新的激活分支
       await get().switchMessageBranch(id, item.branch ? item.branch.count : 1);
 
       await internal_execAgentRuntime({
+        context: regenContext,
         messages: contextMessages,
         parentMessageId: id,
         parentMessageType: 'user',
-        agentId: regenContext.agentId,
-        topicId: regenContext.topicId,
-        traceId,
-        threadId: regenContext.threadId,
         parentOperationId: operationId,
       });
-
-      // trace the regenerate message
-      if (!params?.skipTrace)
-        get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
 
       get().completeOperation(operationId);
     } catch (error) {
@@ -461,7 +449,10 @@ export const conversationLifecycle: StateCreator<
     }
   },
 
-  regenerateAssistantMessage: async (id, params) => {
+  /**
+   * @deprecated Use ConversationStore.regenerateAssistantMessage instead
+   */
+  regenerateAssistantMessage: async (id) => {
     const isRegenerating = messageStateSelectors.isMessageRegenerating(id)(get());
     if (isRegenerating) return;
 
@@ -477,7 +468,7 @@ export const conversationLifecycle: StateCreator<
 
     if (contextMessages.length <= 0 || !userId) return;
 
-    await get().regenerateUserMessage(userId, params);
+    await get().regenerateUserMessage(userId);
   },
 
   continueGenerationMessage: async (id, messageId) => {
@@ -490,7 +481,7 @@ export const conversationLifecycle: StateCreator<
     const continueContext = {
       agentId: activeAgentId,
       topicId: activeTopicId,
-      threadId: activeThreadId,
+      threadId: activeThreadId ?? undefined,
     };
 
     // Create continue operation
@@ -503,12 +494,10 @@ export const conversationLifecycle: StateCreator<
       const chats = displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
 
       await get().internal_execAgentRuntime({
+        context: continueContext,
         messages: chats,
         parentMessageId: id,
         parentMessageType: message.role as 'assistant' | 'tool' | 'user',
-        agentId: continueContext.agentId,
-        topicId: continueContext.topicId,
-        threadId: continueContext.threadId,
         parentOperationId: operationId,
       });
 
@@ -520,14 +509,5 @@ export const conversationLifecycle: StateCreator<
       });
       throw error;
     }
-  },
-
-  delAndRegenerateMessage: async (id) => {
-    const traceId = dbMessageSelectors.getTraceIdByDbMessageId(id)(get());
-    get().regenerateAssistantMessage(id, { skipTrace: true, traceId });
-    get().deleteMessage(id);
-
-    // trace the delete and regenerate message
-    get().internal_traceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
   },
 });

@@ -10,6 +10,7 @@ import { isDesktop } from '@lobechat/const';
 import {
   ChatImageItem,
   ChatToolPayload,
+  ConversationContext,
   MessageContentPart,
   MessageMapScope,
   MessageToolCall,
@@ -92,39 +93,33 @@ export interface StreamingExecutorAction {
    * including preprocessing and postprocessing steps
    */
   internal_execAgentRuntime: (params: {
-    messages: UIChatMessage[];
-    parentMessageId: string;
-    parentMessageType: 'user' | 'assistant' | 'tool';
-    agentId?: string;
     /**
-     * Explicit topicId for this execution (avoids using global activeTopicId)
+     * Full conversation context (required)
+     * Contains agentId, topicId, threadId, groupId, scope, etc.
      */
-    topicId?: string | null;
-    /**
-     * Operation ID for this execution (automatically created if not provided)
-     */
-    operationId?: string;
-    /**
-     * Parent operation ID (creates a child operation if provided)
-     */
-    parentOperationId?: string;
-    inSearchWorkflow?: boolean;
-    threadId?: string;
-    inPortalThread?: boolean;
-    skipCreateFirstMessage?: boolean;
-    traceId?: string;
-    /**
-     * Initial agent state (for resuming execution from a specific point)
-     */
-    initialState?: AgentState;
+    context: ConversationContext;
     /**
      * Initial agent runtime context (for resuming execution from a specific phase)
      */
     initialContext?: AgentRuntimeContext;
     /**
-     * Scope for message storage key (for PageAgent, etc.)
+     * Initial agent state (for resuming execution from a specific point)
      */
-    scope?: MessageMapScope;
+    initialState?: AgentState;
+    inPortalThread?: boolean;
+    inSearchWorkflow?: boolean;
+    messages: UIChatMessage[];
+    /**
+     * Operation ID for this execution (automatically created if not provided)
+     */
+    operationId?: string;
+    parentMessageId: string;
+    parentMessageType: 'user' | 'assistant' | 'tool';
+    /**
+     * Parent operation ID (creates a child operation if provided)
+     */
+    parentOperationId?: string;
+    skipCreateFirstMessage?: boolean;
   }) => Promise<void>;
 }
 
@@ -817,23 +812,12 @@ export const streamingExecutor: StateCreator<
   },
 
   internal_execAgentRuntime: async (params) => {
-    const {
-      messages: originalMessages,
-      parentMessageId,
-      parentMessageType,
-      agentId: paramAgentId,
-      topicId: paramTopicId,
-      threadId,
-      scope,
-    } = params;
+    const { messages: originalMessages, parentMessageId, parentMessageType, context } = params;
 
-    // Use provided agentId/topicId or fallback to global state
-    const { activeAgentId, activeTopicId } = get();
-    const agentId = paramAgentId ?? activeAgentId;
-    const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
+    // Extract values from context
+    const { agentId, topicId, threadId } = context;
 
-    // Create a base context object for all operations and message map key
-    const context = { agentId, topicId, threadId, scope };
+    // Generate message key from context
     const messageKey = messageMapKey(context);
 
     // Create or use provided operation
@@ -929,7 +913,7 @@ export const streamingExecutor: StateCreator<
         parentMessageId: params.parentMessageId,
         agentId,
         topicId,
-        threadId: params.threadId,
+        threadId: threadId ?? undefined,
         initialState: params.initialState,
         initialContext: params.initialContext,
         operationId,
@@ -1061,7 +1045,6 @@ export const streamingExecutor: StateCreator<
     // Desktop notification (if not in tools calling mode)
     if (isDesktop) {
       try {
-        const messageKey = `${activeAgentId}_${activeTopicId ?? null}`;
         const finalMessages = get().messagesMap[messageKey] || [];
         const lastAssistant = finalMessages.findLast((m) => m.role === 'assistant');
 

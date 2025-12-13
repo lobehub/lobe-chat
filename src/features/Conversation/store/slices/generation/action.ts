@@ -47,13 +47,11 @@ export interface GenerationAction {
 
   /**
    * Delete and regenerate a message
-   * @deprecated Temporary bridge to ChatStore
    */
   delAndRegenerateMessage: (messageId: string) => Promise<void>;
 
   /**
    * Delete and resend a thread message
-   * @deprecated Temporary bridge to ChatStore
    */
   delAndResendThreadMessage: (messageId: string) => Promise<void>;
 
@@ -75,19 +73,12 @@ export interface GenerationAction {
   regenerateAssistantMessage: (messageId: string) => Promise<void>;
 
   /**
-   * Regenerate a message
-   * @deprecated
-   */
-  regenerateMessage: (messageId: string) => Promise<void>;
-
-  /**
    * Regenerate a user message
    */
   regenerateUserMessage: (messageId: string) => Promise<void>;
 
   /**
    * Resend a thread message
-   * @deprecated Temporary bridge to ChatStore
    */
   resendThreadMessage: (messageId: string) => Promise<void>;
 
@@ -175,12 +166,16 @@ export const generationSlice: StateCreator<
 
   delAndRegenerateMessage: async (messageId: string) => {
     const chatStore = useChatStore.getState();
-    await chatStore.delAndRegenerateMessage(messageId);
+    // Regenerate first, then delete
+    await get().regenerateAssistantMessage(messageId);
+    await chatStore.deleteMessage(messageId);
   },
 
   delAndResendThreadMessage: async (messageId: string) => {
     const chatStore = useChatStore.getState();
-    await chatStore.delAndResendThreadMessage(messageId);
+    // Resend then delete
+    await get().resendThreadMessage(messageId);
+    await chatStore.deleteMessage(messageId);
   },
 
   openThreadCreator: (messageId: string) => {
@@ -194,22 +189,38 @@ export const generationSlice: StateCreator<
   },
 
   regenerateAssistantMessage: async (messageId: string) => {
-    const chatStore = useChatStore.getState();
-    await chatStore.regenerateAssistantMessage(messageId);
+    const { displayMessages } = get();
+
+    // Find the assistant message
+    const currentIndex = displayMessages.findIndex((c) => c.id === messageId);
+    const currentMessage = displayMessages[currentIndex];
+
+    if (!currentMessage) return;
+
+    // Find the parent user message
+    const userId = currentMessage.parentId;
+    if (!userId) return;
+
+    // Delegate to regenerateUserMessage with the parent user message
+    await get().regenerateUserMessage(userId);
   },
 
-  regenerateMessage: async (messageId: string) => {
-    const state = get();
-    const { hooks } = state;
-
+  regenerateUserMessage: async (messageId: string) => {
+    const { context, displayMessages, hooks } = get();
     const chatStore = useChatStore.getState();
 
-    // Determine message type and call appropriate regenerate method
-    const message = chatStore.messagesMap[Object.keys(chatStore.messagesMap)[0]]?.find(
-      (m) => m.id === messageId,
-    );
+    // Check if already regenerating
+    const isRegenerating = chatStore.messageLoadingIds.includes(messageId);
+    if (isRegenerating) return;
 
-    if (!message) return;
+    // Find the message in current conversation messages
+    const currentIndex = displayMessages.findIndex((c) => c.id === messageId);
+    const item = displayMessages[currentIndex];
+    if (!item) return;
+
+    // Get context messages up to and including the target message
+    const contextMessages = displayMessages.slice(0, currentIndex + 1);
+    if (contextMessages.length <= 0) return;
 
     // ===== Hook: onBeforeRegenerate =====
     if (hooks.onBeforeRegenerate) {
@@ -217,29 +228,43 @@ export const generationSlice: StateCreator<
       if (shouldProceed === false) return;
     }
 
-    // Delegate to global ChatStore based on role
-    if (message.role === 'user') {
-      await chatStore.regenerateUserMessage(messageId);
-    } else if (message.role === 'assistant' || message.role === 'assistantGroup') {
-      await chatStore.regenerateAssistantMessage(messageId);
-    }
+    // Create regenerate operation with context
+    const { operationId } = chatStore.startOperation({
+      context: { ...context, messageId },
+      type: 'regenerate',
+    });
 
-    // ===== Hook: onRegenerateComplete =====
-    if (hooks.onRegenerateComplete) {
-      hooks.onRegenerateComplete(messageId);
-    }
-  },
+    try {
+      // Switch to a new branch
+      await chatStore.switchMessageBranch(messageId, item.branch ? item.branch.count : 1);
 
-  // ===== Temporary Bridge Methods =====
-  // These methods delegate to ChatStore and will be properly implemented later
-  regenerateUserMessage: async (messageId: string) => {
-    const chatStore = useChatStore.getState();
-    await chatStore.regenerateUserMessage(messageId);
+      // Execute agent runtime with full context from ConversationStore
+      await chatStore.internal_execAgentRuntime({
+        context,
+        messages: contextMessages,
+        parentMessageId: messageId,
+        parentMessageType: 'user',
+        parentOperationId: operationId,
+      });
+
+      chatStore.completeOperation(operationId);
+
+      // ===== Hook: onRegenerateComplete =====
+      if (hooks.onRegenerateComplete) {
+        hooks.onRegenerateComplete(messageId);
+      }
+    } catch (error) {
+      chatStore.failOperation(operationId, {
+        message: error instanceof Error ? error.message : String(error),
+        type: 'RegenerateError',
+      });
+      throw error;
+    }
   },
 
   resendThreadMessage: async (messageId: string) => {
-    const chatStore = useChatStore.getState();
-    await chatStore.resendThreadMessage(messageId);
+    // Resend is essentially regenerating the user message in thread context
+    await get().regenerateUserMessage(messageId);
   },
 
   stopGenerating: () => {
