@@ -5,10 +5,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { SupervisorTodoItem } from '@/store/chat/slices/message/supervisor';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
-
 const useStyles = createStyles(({ css, token }) => ({
   collapse: css`
     padding-block: 0;
@@ -29,29 +25,28 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-export interface TodoData {
-  timestamp: number;
-  todos: SupervisorTodoItem[];
-  type: 'supervisor_todo';
+export interface TodoItem {
+  assignee?: string;
+  content: string;
+  finished?: boolean;
 }
 
 export interface TodoListProps {
-  data: TodoData;
+  /**
+   * Optional function to resolve assignee ID to display name
+   */
+  resolveAssigneeName?: (assignee: string) => string | undefined;
+  /**
+   * List of todo items
+   */
+  todos: TodoItem[];
 }
 
-const TodoList = memo<TodoListProps>(({ data }) => {
+const TodoList = memo<TodoListProps>(({ todos, resolveAssigneeName }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
   const { styles } = useStyles();
 
-  const { todos } = data;
-  const agents = useSessionStore(sessionSelectors.currentGroupAgents);
-
-  const resolveAssigneeName = (assignee?: string) => {
-    if (!assignee) return undefined;
-    const agent = agents?.find((a) => a.id === assignee);
-    return agent?.title || assignee;
-  };
   const completedCount = todos.filter((todo) => todo.finished).length;
   const totalCount = todos.length;
 
@@ -116,7 +111,7 @@ const TodoList = memo<TodoListProps>(({ data }) => {
             >
               {todo.content}
             </span>
-            {resolveAssigneeName(todo.assignee) && (
+            {todo.assignee && (
               <span
                 style={{
                   color: theme.colorTextTertiary,
@@ -124,7 +119,7 @@ const TodoList = memo<TodoListProps>(({ data }) => {
                   marginLeft: 6,
                 }}
               >
-                @{resolveAssigneeName(todo.assignee)}
+                @{resolveAssigneeName?.(todo.assignee) ?? todo.assignee}
               </span>
             )}
           </Flexbox>

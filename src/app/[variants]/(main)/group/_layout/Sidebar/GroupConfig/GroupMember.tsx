@@ -12,7 +12,6 @@ import { DEFAULT_AVATAR, DEFAULT_SUPERVISOR_AVATAR } from '@/const/meta';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
 
 import AgentProfilePopup from './AgentProfilePopup';
 import GroupMemberItem from './GroupMemberItem';
@@ -35,10 +34,6 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
   const toggleThread = useAgentGroupStore((s) => s.toggleThread);
   const updateGroupConfig = useAgentGroupStore((s) => s.updateGroupConfig);
   const togglePortal = useChatStore((s) => s.togglePortal);
-  const cancelSupervisorDecision = useChatStore((s) => s.internal_cancelSupervisorDecision);
-  const triggerSupervisorDecision = useChatStore((s) => s.internal_triggerSupervisorDecision);
-
-  const isSupervisorLoading = useChatStore(chatSelectors.isSupervisorLoading(groupId || ''));
   const groupConfig = useAgentGroupStore(agentGroupSelectors.getGroupConfig(groupId || ''));
 
   // Get members from store (excluding supervisor)
@@ -115,27 +110,6 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
     togglePortal(true);
   };
 
-  // const handleOpenMemberSettings = (agentId: string) => {
-  //   setSelectedAgentId(agentId);
-  //   setAgentSettingsOpen(true);
-  // };
-  //
-  // const handleAgentSettingsClose = () => {
-  //   setAgentSettingsOpen(false);
-  //   setSelectedAgentId(undefined);
-  // };
-
-  const handleStopSupervisor = () => {
-    if (!groupId) return;
-    cancelSupervisorDecision(groupId);
-  };
-
-  const handleTriggerSupervisor = () => {
-    if (!groupId) return;
-    // Manual trigger: topicId stays current (undefined), flag manual=true
-    triggerSupervisorDecision(groupId, undefined, true);
-  };
-
   const handleEnableSupervisor = async () => {
     setEnablingSupervisor(true);
     try {
@@ -167,13 +141,7 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
               />
             }
             avatar={DEFAULT_SUPERVISOR_AVATAR}
-            generating={isSupervisorLoading}
-            generatingTooltip={t('groupSidebar.members.orchestratorThinking')}
             id={'orchestrator'}
-            onStopGenerating={handleStopSupervisor}
-            onStopGeneratingTooltip={t('groupSidebar.members.stopOrchestrator')}
-            onTriggerSupervisor={handleTriggerSupervisor}
-            onTriggerSupervisorTooltip={t('groupSidebar.members.triggerOrchestrator')}
             pin
             showActionsOnHover={true}
             title={t('groupSidebar.members.orchestrator')}

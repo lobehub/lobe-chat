@@ -31,11 +31,6 @@ export interface MessageRuntimeStateAction {
   internal_toggleMessageLoading: (loading: boolean, id: string) => void;
 
   /**
-   * Update active session ID with cleanup of pending operations
-   */
-  internal_updateActiveId: (activeId: string) => void;
-
-  /**
    * Update active page ID for Page Agent context
    */
   internal_updateActivePageId: (pageId?: string) => void;
@@ -88,16 +83,6 @@ export const messageRuntimeState: StateCreator<
       false,
       `internal_toggleMessageLoading/${loading ? 'start' : 'end'}`,
     );
-  },
-
-  internal_updateActiveId: (activeId: string) => {
-    const currentActiveAgentId = get().activeAgentId;
-    if (currentActiveAgentId === activeId) return;
-
-    // Before switching sessions, cancel all pending supervisor decisions
-    get().internal_cancelAllSupervisorDecisions();
-
-    set({ activeAgentId: activeId, activeId }, false, n(`updateActiveId/${activeId}`));
   },
 
   internal_updateActivePageId: (pageId?: string) => {
