@@ -4,18 +4,30 @@ import { describe, expect, it } from 'vitest';
 import { ChatGroupStore } from '../initialState';
 import { agentGroupByIdSelectors } from './byId';
 
+// Helper to create mock AgentGroupDetail with required fields
+const createMockGroup = (overrides: Partial<AgentGroupDetail>): AgentGroupDetail => ({
+  agents: [],
+  createdAt: new Date(),
+  id: 'group-1',
+  supervisorAgentId: 'supervisor-1',
+  title: 'Test Group',
+  updatedAt: new Date(),
+  userId: 'user-1',
+  ...overrides,
+});
+
 describe('agentGroupByIdSelectors', () => {
   describe('groupBySupervisorAgentId', () => {
     it('should find group by supervisor agent ID', () => {
-      const mockGroup: AgentGroupDetail = {
+      const mockGroup = createMockGroup({
         id: 'group-1',
-        title: 'Test Group',
         supervisorAgentId: 'supervisor-agent-1',
+        title: 'Test Group',
         agents: [
           { id: 'supervisor-agent-1', title: 'Supervisor', isSupervisor: true },
           { id: 'agent-1', title: 'Agent 1', isSupervisor: false },
-        ],
-      } as AgentGroupDetail;
+        ] as AgentGroupDetail['agents'],
+      });
 
       const state: Partial<ChatGroupStore> = {
         groupMap: {
@@ -31,12 +43,11 @@ describe('agentGroupByIdSelectors', () => {
     });
 
     it('should return undefined when supervisor agent ID not found', () => {
-      const mockGroup: AgentGroupDetail = {
+      const mockGroup = createMockGroup({
         id: 'group-1',
-        title: 'Test Group',
         supervisorAgentId: 'supervisor-agent-1',
-        agents: [],
-      } as AgentGroupDetail;
+        title: 'Test Group',
+      });
 
       const state: Partial<ChatGroupStore> = {
         groupMap: {
@@ -64,19 +75,17 @@ describe('agentGroupByIdSelectors', () => {
     });
 
     it('should find correct group when multiple groups exist', () => {
-      const mockGroup1: AgentGroupDetail = {
+      const mockGroup1 = createMockGroup({
         id: 'group-1',
-        title: 'Group 1',
         supervisorAgentId: 'supervisor-1',
-        agents: [],
-      } as AgentGroupDetail;
+        title: 'Group 1',
+      });
 
-      const mockGroup2: AgentGroupDetail = {
+      const mockGroup2 = createMockGroup({
         id: 'group-2',
-        title: 'Group 2',
         supervisorAgentId: 'supervisor-2',
-        agents: [],
-      } as AgentGroupDetail;
+        title: 'Group 2',
+      });
 
       const state: Partial<ChatGroupStore> = {
         groupMap: {

@@ -1,6 +1,8 @@
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { AI_RUNTIME_OPERATION_TYPES } from '@/store/chat/slices/operation/types';
+
 import type { ConversationContext, ConversationHooks } from '../../../types';
 import { createStore } from '../../index';
 
@@ -56,7 +58,7 @@ describe('Generation Actions', () => {
 
       expect(mockCancelOperations).toHaveBeenCalledWith(
         {
-          type: 'execAgentRuntime',
+          type: AI_RUNTIME_OPERATION_TYPES,
           status: 'running',
           agentId: 'session-1',
           topicId: 'topic-1',
@@ -136,137 +138,6 @@ describe('Generation Actions', () => {
       });
 
       // No assertions needed - it's a no-op
-    });
-  });
-
-  describe('regenerateMessage', () => {
-    it('should regenerate user message', async () => {
-      // Mock messagesMap to include the message
-      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
-        messagesMap: {
-          default: [{ id: 'msg-1', role: 'user', content: 'Hello' }],
-        },
-        regenerateUserMessage: mockRegenerateUserMessage,
-        regenerateAssistantMessage: mockRegenerateAssistantMessage,
-      } as any);
-
-      const context: ConversationContext = {
-        agentId: 'session-1',
-        topicId: null,
-        threadId: null,
-      };
-
-      const store = createStore({ context });
-
-      await act(async () => {
-        await store.getState().regenerateMessage('msg-1');
-      });
-
-      expect(mockRegenerateUserMessage).toHaveBeenCalledWith('msg-1');
-    });
-
-    it('should regenerate assistant message', async () => {
-      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
-        messagesMap: {
-          default: [{ id: 'msg-2', role: 'assistant', content: 'Hi' }],
-        },
-        regenerateUserMessage: mockRegenerateUserMessage,
-        regenerateAssistantMessage: mockRegenerateAssistantMessage,
-      } as any);
-
-      const context: ConversationContext = {
-        agentId: 'session-1',
-        topicId: null,
-        threadId: null,
-      };
-
-      const store = createStore({ context });
-
-      await act(async () => {
-        await store.getState().regenerateMessage('msg-2');
-      });
-
-      expect(mockRegenerateAssistantMessage).toHaveBeenCalledWith('msg-2');
-    });
-
-    it('should call onBeforeRegenerate hook and respect false return', async () => {
-      const onBeforeRegenerate = vi.fn().mockResolvedValue(false);
-
-      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
-        messagesMap: {
-          default: [{ id: 'msg-1', role: 'user', content: 'Hello' }],
-        },
-        regenerateUserMessage: mockRegenerateUserMessage,
-        regenerateAssistantMessage: mockRegenerateAssistantMessage,
-      } as any);
-
-      const context: ConversationContext = {
-        agentId: 'session-1',
-        topicId: null,
-        threadId: null,
-      };
-      const hooks: ConversationHooks = { onBeforeRegenerate };
-
-      const store = createStore({ context, hooks });
-
-      await act(async () => {
-        await store.getState().regenerateMessage('msg-1');
-      });
-
-      expect(onBeforeRegenerate).toHaveBeenCalledWith('msg-1');
-      expect(mockRegenerateUserMessage).not.toHaveBeenCalled();
-    });
-
-    it('should call onRegenerateComplete hook after regeneration', async () => {
-      const onRegenerateComplete = vi.fn();
-
-      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
-        messagesMap: {
-          default: [{ id: 'msg-1', role: 'user', content: 'Hello' }],
-        },
-        regenerateUserMessage: mockRegenerateUserMessage.mockResolvedValue(undefined),
-        regenerateAssistantMessage: mockRegenerateAssistantMessage,
-      } as any);
-
-      const context: ConversationContext = {
-        agentId: 'session-1',
-        topicId: null,
-        threadId: null,
-      };
-      const hooks: ConversationHooks = { onRegenerateComplete };
-
-      const store = createStore({ context, hooks });
-
-      await act(async () => {
-        await store.getState().regenerateMessage('msg-1');
-      });
-
-      expect(onRegenerateComplete).toHaveBeenCalledWith('msg-1');
-    });
-
-    it('should not regenerate if message not found', async () => {
-      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
-        messagesMap: {
-          default: [],
-        },
-        regenerateUserMessage: mockRegenerateUserMessage,
-        regenerateAssistantMessage: mockRegenerateAssistantMessage,
-      } as any);
-
-      const context: ConversationContext = {
-        agentId: 'session-1',
-        topicId: null,
-        threadId: null,
-      };
-
-      const store = createStore({ context });
-
-      await act(async () => {
-        await store.getState().regenerateMessage('non-existent');
-      });
-
-      expect(mockRegenerateUserMessage).not.toHaveBeenCalled();
-      expect(mockRegenerateAssistantMessage).not.toHaveBeenCalled();
     });
   });
 

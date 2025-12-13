@@ -153,11 +153,9 @@ describe('ConversationLifecycle actions', () => {
       setupStoreWithMessages(messages);
 
       const switchMessageBranchSpy = vi.fn().mockResolvedValue(undefined);
-      const internalTraceSpy = vi.fn();
 
       act(() => {
         useChatStore.setState({
-          internal_traceMessage: internalTraceSpy,
           switchMessageBranch: switchMessageBranchSpy,
         });
       });
@@ -175,7 +173,7 @@ describe('ConversationLifecycle actions', () => {
           parentMessageType: 'user',
         }),
       );
-      expect(internalTraceSpy).toHaveBeenCalled();
+      // Note: trace logic was removed from deprecated regenerateUserMessage
     });
 
     it('should not regenerate when already regenerating', async () => {
@@ -216,7 +214,6 @@ describe('ConversationLifecycle actions', () => {
 
       act(() => {
         useChatStore.setState({
-          internal_traceMessage: vi.fn(),
           switchMessageBranch: vi.fn(),
         });
       });
@@ -233,7 +230,7 @@ describe('ConversationLifecycle actions', () => {
           parentMessageType: 'user',
         }),
       );
-      expect(result.current.internal_traceMessage).toHaveBeenCalled();
+      // Note: trace logic was removed from deprecated regenerateAssistantMessage
     });
 
     it('should not regenerate when already regenerating', async () => {
@@ -259,39 +256,5 @@ describe('ConversationLifecycle actions', () => {
     });
   });
 
-  describe('delAndRegenerateMessage', () => {
-    it('should delete message then regenerate', async () => {
-      const messages = [
-        createMockMessage({ id: TEST_IDS.USER_MESSAGE_ID, role: 'user' }),
-        createMockMessage({
-          id: TEST_IDS.MESSAGE_ID,
-          role: 'assistant',
-          parentId: TEST_IDS.USER_MESSAGE_ID,
-        }),
-      ];
-
-      setupStoreWithMessages(messages);
-
-      act(() => {
-        useChatStore.setState({
-          regenerateAssistantMessage: vi.fn(),
-          deleteMessage: vi.fn(),
-          internal_traceMessage: vi.fn(),
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.delAndRegenerateMessage(TEST_IDS.MESSAGE_ID);
-      });
-
-      expect(result.current.regenerateAssistantMessage).toHaveBeenCalledWith(
-        TEST_IDS.MESSAGE_ID,
-        expect.objectContaining({ skipTrace: true }),
-      );
-      expect(result.current.deleteMessage).toHaveBeenCalledWith(TEST_IDS.MESSAGE_ID);
-      expect(result.current.internal_traceMessage).toHaveBeenCalled();
-    });
-  });
+  // Note: delAndRegenerateMessage has been moved to ConversationStore
 });

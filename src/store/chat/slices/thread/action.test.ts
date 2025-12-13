@@ -557,43 +557,7 @@ describe('thread action', () => {
     });
   });
 
-  describe('resendThreadMessage', () => {
-    it('should resend message in thread context', async () => {
-      const { result } = renderHook(() => useChatStore());
-
-      act(() => {
-        useChatStore.setState({
-          portalThreadId: 'thread-id',
-        });
-      });
-
-      const resendSpy = vi
-        .spyOn(result.current, 'regenerateUserMessage')
-        .mockResolvedValue(undefined);
-
-      await act(async () => {
-        await result.current.resendThreadMessage('message-id');
-      });
-
-      expect(resendSpy).toHaveBeenCalledWith('message-id', {});
-    });
-  });
-
-  describe('delAndResendThreadMessage', () => {
-    it('should delete and resend message', async () => {
-      const { result } = renderHook(() => useChatStore());
-
-      const resendSpy = vi.spyOn(result.current, 'resendThreadMessage').mockResolvedValue();
-      const deleteSpy = vi.spyOn(result.current, 'deleteMessage').mockResolvedValue();
-
-      await act(async () => {
-        await result.current.delAndResendThreadMessage('message-id');
-      });
-
-      expect(resendSpy).toHaveBeenCalledWith('message-id');
-      expect(deleteSpy).toHaveBeenCalledWith('message-id');
-    });
-  });
+  // Note: resendThreadMessage and delAndResendThreadMessage have been moved to ConversationStore
 
   describe('internal_updateThreadTitleInSummary', () => {
     it('should dispatch thread update', () => {

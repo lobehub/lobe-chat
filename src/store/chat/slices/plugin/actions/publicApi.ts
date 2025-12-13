@@ -73,7 +73,14 @@ export const pluginPublicApi: StateCreator<
     const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message || message.role !== 'tool') return;
 
+    const { activeAgentId, activeTopicId, activeThreadId } = get();
+
     await get().internal_execAgentRuntime({
+      context: {
+        agentId: activeAgentId,
+        topicId: activeTopicId,
+        threadId: activeThreadId ?? undefined,
+      },
       messages: [
         {
           role: 'assistant',

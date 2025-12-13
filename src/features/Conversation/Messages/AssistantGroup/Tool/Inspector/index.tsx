@@ -102,7 +102,6 @@ const Inspectors = memo<InspectorProps>(
     const { styles } = useStyles();
 
     const [showDebug, setShowDebug] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);
 
     // Use ConversationStore for actions
     const [deleteAssistantMessage, toggleInspectExpanded] = useConversationStore((s) => [
@@ -121,22 +120,19 @@ const Inspectors = memo<InspectorProps>(
     const isTitleLoading = !hasResult && !isPending;
 
     // Use ConversationStore for reading message data
-    const isPersistentExpanded = useConversationStore((s) => {
-      if (!toolMessageId) return undefined;
+    const isExpanded = useConversationStore((s) => {
+      if (!toolMessageId) return false;
 
       const message = dataSelectors.getDbMessageById(toolMessageId)(s);
-      return message?.metadata?.inspectExpanded;
+      return message?.metadata?.inspectExpanded ?? false;
     });
-
-    // Compute actual render state based on persistent expanded or hovered
-    const shouldShowRender = isPersistentExpanded || isHovered;
 
     // Sync with parent state
     useEffect(() => {
-      setShowRender(shouldShowRender);
-    }, [shouldShowRender, setShowRender]);
+      setShowRender(isExpanded);
+    }, [isExpanded, setShowRender]);
 
-    const showCustomPluginRender = shouldShowRender && !isPending && !isReject && !isAbort;
+    const showCustomPluginRender = isExpanded && !isPending && !isReject && !isAbort;
     return (
       <Flexbox className={styles.container} gap={4}>
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
@@ -148,23 +144,13 @@ const Inspectors = memo<InspectorProps>(
             onClick={() => {
               if (toolMessageId) toggleInspectExpanded(toolMessageId);
             }}
-            onMouseEnter={() => {
-              if (!isPersistentExpanded) {
-                setIsHovered(true);
-              }
-            }}
-            onMouseLeave={() => {
-              if (!isPersistentExpanded) {
-                setIsHovered(false);
-              }
-            }}
             paddingInline={4}
           >
             <ToolTitle
               apiName={apiName}
               identifier={identifier}
               index={index}
-              isExpanded={isPersistentExpanded}
+              isExpanded={isExpanded}
               isLoading={isTitleLoading}
               messageId={assistantMessageId}
               toolCallId={id}

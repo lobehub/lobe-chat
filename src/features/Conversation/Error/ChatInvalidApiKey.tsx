@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 
 import InvalidAPIKey from '@/components/InvalidAPIKey';
 import { useProviderName } from '@/hooks/useProviderName';
-import { useChatStore } from '@/store/chat';
 import { GlobalLLMProviderKey } from '@/types/user/settings/modelProvider';
+
+import { useConversationStore } from '../store';
 
 interface ChatInvalidAPIKeyProps {
   id: string;
@@ -13,7 +14,10 @@ interface ChatInvalidAPIKeyProps {
 const ChatInvalidAPIKey = memo<ChatInvalidAPIKeyProps>(({ id, provider }) => {
   const { t } = useTranslation('modelProvider');
   const { t: modelProviderErrorT } = useTranslation(['modelProvider', 'error']);
-  const [resend, deleteMessage] = useChatStore((s) => [s.delAndRegenerateMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useConversationStore((s) => [
+    s.delAndRegenerateMessage,
+    s.deleteMessage,
+  ]);
   const providerName = useProviderName(provider as GlobalLLMProviderKey);
 
   return (

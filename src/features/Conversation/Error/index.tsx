@@ -23,7 +23,7 @@ const loading = () => <Skeleton active />;
 
 const OllamaBizError = dynamic(() => import('./OllamaBizError'), { loading, ssr: false });
 
-const OllamaSetupGuide = dynamic(() => import('@/features/OllamaSetupGuide'), {
+const OllamaSetupGuide = dynamic(() => import('./OllamaSetupGuide'), {
   loading,
   ssr: false,
 });

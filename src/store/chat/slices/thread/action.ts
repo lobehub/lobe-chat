@@ -27,8 +27,6 @@ export interface ChatThreadAction {
   // update
   updateThreadInputMessage: (message: string) => void;
   refreshThreads: () => Promise<void>;
-  resendThreadMessage: (messageId: string) => Promise<void>;
-  delAndResendThreadMessage: (messageId: string) => Promise<void>;
   createThread: (params: {
     message: CreateMessageParams;
     sourceMessageId: string;
@@ -86,19 +84,6 @@ export const chatThreadMessage: StateCreator<
       'closeThreadPortal',
     );
     get().togglePortal(false);
-  },
-  resendThreadMessage: async (messageId) => {
-    // const chats = threadSelectors.portalAIChats(get());
-
-    await get().regenerateUserMessage(messageId, {
-      // messages: chats,
-      // threadId: get().portalThreadId,
-      // inPortalThread: true,
-    });
-  },
-  delAndResendThreadMessage: async (id) => {
-    get().resendThreadMessage(id);
-    get().deleteMessage(id);
   },
   createThread: async ({ message, sourceMessageId, topicId, type }) => {
     set({ isCreatingThread: true }, false, n('creatingThread/start'));

@@ -452,6 +452,7 @@ describe('StreamingExecutor actions', () => {
 
       await act(async () => {
         await result.current.internal_execAgentRuntime({
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
           messages,
           parentMessageId: userMessage.id,
           parentMessageType: 'user',
@@ -511,6 +512,7 @@ describe('StreamingExecutor actions', () => {
 
       await act(async () => {
         await result.current.internal_execAgentRuntime({
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
           messages: [userMessage],
           parentMessageId: userMessage.id,
           parentMessageType: 'user',
@@ -571,6 +573,7 @@ describe('StreamingExecutor actions', () => {
 
       await act(async () => {
         await result.current.internal_execAgentRuntime({
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
           messages: [userMessage],
           parentMessageId: userMessage.id,
           parentMessageType: 'user',
@@ -649,6 +652,7 @@ describe('StreamingExecutor actions', () => {
 
       await act(async () => {
         await result.current.internal_execAgentRuntime({
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
           messages: [userMessage],
           parentMessageId: userMessage.id,
           parentMessageType: 'user',
@@ -669,7 +673,7 @@ describe('StreamingExecutor actions', () => {
       streamSpy.mockRestore();
     });
 
-    it('should use provided agentId/topicId for trace parameters', async () => {
+    it('should use provided context for trace parameters', async () => {
       act(() => {
         useChatStore.setState({
           internal_execAgentRuntime: realExecAgentRuntime,
@@ -693,11 +697,10 @@ describe('StreamingExecutor actions', () => {
 
       await act(async () => {
         await result.current.internal_execAgentRuntime({
+          context: { agentId: contextSessionId, topicId: contextTopicId },
           messages: [userMessage],
           parentMessageId: userMessage.id,
           parentMessageType: 'user',
-          agentId: contextSessionId,
-          topicId: contextTopicId,
         });
       });
 

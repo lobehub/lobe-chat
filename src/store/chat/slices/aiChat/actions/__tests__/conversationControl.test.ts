@@ -441,12 +441,14 @@ describe('ConversationControl actions', () => {
         }),
       );
 
-      // Verify internal_execAgentRuntime was called with builder context
+      // Verify internal_execAgentRuntime was called with builder context (now wrapped in context object)
       expect(internal_execAgentRuntimeSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          agentId: builderAgentId,
-          topicId: builderTopicId,
-          scope: 'agent_builder',
+          context: expect.objectContaining({
+            agentId: builderAgentId,
+            topicId: builderTopicId,
+            scope: 'agent_builder',
+          }),
         }),
       );
     });
@@ -505,11 +507,13 @@ describe('ConversationControl actions', () => {
         }),
       );
 
-      // Verify internal_execAgentRuntime was called with global context
+      // Verify internal_execAgentRuntime was called with global context (now wrapped in context object)
       expect(internal_execAgentRuntimeSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          agentId: globalAgentId,
-          topicId: globalTopicId,
+          context: expect.objectContaining({
+            agentId: globalAgentId,
+            topicId: globalTopicId,
+          }),
         }),
       );
     });
@@ -608,12 +612,14 @@ describe('ConversationControl actions', () => {
         }),
       );
 
-      // Verify internal_execAgentRuntime was called with builder context
+      // Verify internal_execAgentRuntime was called with builder context (now wrapped in context object)
       expect(internal_execAgentRuntimeSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          agentId: builderAgentId,
-          topicId: builderTopicId,
-          scope: 'agent_builder',
+          context: expect.objectContaining({
+            agentId: builderAgentId,
+            topicId: builderTopicId,
+            scope: 'agent_builder',
+          }),
         }),
       );
     });
@@ -676,8 +682,10 @@ describe('ConversationControl actions', () => {
       // Verify internal_execAgentRuntime was called with global context
       expect(internal_execAgentRuntimeSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          agentId: globalAgentId,
-          topicId: globalTopicId,
+          context: expect.objectContaining({
+            agentId: globalAgentId,
+            topicId: globalTopicId,
+          }),
         }),
       );
     });

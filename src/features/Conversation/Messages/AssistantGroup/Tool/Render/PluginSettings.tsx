@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import PluginSettingsConfig from '@/features/PluginSettings';
-import { useChatStore } from '@/store/chat';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
@@ -24,10 +23,10 @@ const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('error');
   const theme = useTheme();
-  // Use ConversationStore for deleteMessage
-  const deleteMessage = useConversationStore((s) => s.deleteMessage);
-  // Keep using ChatStore for delAndRegenerateMessage (action not yet migrated)
-  const resend = useChatStore((s) => s.delAndRegenerateMessage);
+  const [resend, deleteMessage] = useConversationStore((s) => [
+    s.delAndRegenerateMessage,
+    s.deleteMessage,
+  ]);
   const pluginIdentifier = plugin?.identifier as string;
   const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(pluginIdentifier), isEqual);
   const manifest = useToolStore(pluginSelectors.getToolManifestById(pluginIdentifier), isEqual);
