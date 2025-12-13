@@ -7,6 +7,29 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-V3.2 是一款兼具高计算效率与卓越推理和 Agent 性能的模型。其方法建立在三大关键技术突破之上：DeepSeek 稀疏注意力（DSA），一种高效的注意力机制，在保持模型性能的同时显著降低了计算复杂性，并特别针对长上下文场景进行优化。',
+    displayName: 'DeepSeek V3.2 (Pro)',
+    id: 'Pro/deepseek-ai/DeepSeek-V3.2',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-12-01',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 262_144,
     description:
       "Kimi K2 Thinking 是最新、最强大的开源思考模型。它通过大幅扩展多步推理深度，并在 200–300 次连续工具调用中保持稳定的工具使用，在 Humanity's Last Exam (HLE)、BrowseComp 及其他基准测试中树立了新的标杆。同时，K2 Thinking 在编程、数学、逻辑推理和 Agent 场景中表现卓越。该模型基于混合专家（MoE）架构，总参数约 1T，支持 256K 上下文窗口并支持工具调用。",
