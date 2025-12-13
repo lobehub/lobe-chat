@@ -565,6 +565,93 @@ describe('DataSlice', () => {
         threadId: 'test-thread',
       });
     });
+
+    it('should pass groupId to messageService.getMessages for group chat', async () => {
+      const mockMessages: UIChatMessage[] = [
+        {
+          id: 'group-msg-1',
+          content: 'Group message',
+          role: 'assistant',
+          createdAt: 1000,
+          updatedAt: 1000,
+          meta: {},
+          groupId: 'group-123',
+          agentId: 'worker-agent-1',
+        },
+        {
+          id: 'group-msg-2',
+          content: 'Another group message',
+          role: 'assistant',
+          createdAt: 2000,
+          updatedAt: 2000,
+          meta: {},
+          groupId: 'group-123',
+          agentId: 'worker-agent-2',
+        },
+      ];
+
+      vi.mocked(messageService.getMessages).mockResolvedValue(mockMessages);
+
+      const store = createStore({
+        context: {
+          agentId: 'supervisor-agent',
+          topicId: 'test-topic',
+          threadId: null,
+          groupId: 'group-123',
+        },
+      });
+
+      // Call useFetchMessages with groupId - this triggers the SWR mock
+      store.getState().useFetchMessages({
+        agentId: 'supervisor-agent',
+        topicId: 'test-topic',
+        threadId: null,
+        groupId: 'group-123',
+      });
+
+      await waitFor(() => {
+        expect(messageService.getMessages).toHaveBeenCalledWith({
+          agentId: 'supervisor-agent',
+          groupId: 'group-123',
+          threadId: undefined,
+          topicId: 'test-topic',
+        });
+      });
+    });
+
+    it('should not pass groupId when not in group context', async () => {
+      const mockMessages: UIChatMessage[] = [
+        {
+          id: 'msg-1',
+          content: 'Regular message',
+          role: 'user',
+          createdAt: 1000,
+          updatedAt: 1000,
+          meta: {},
+        },
+      ];
+
+      vi.mocked(messageService.getMessages).mockResolvedValue(mockMessages);
+
+      const store = createStore({
+        context: { agentId: 'test-session', topicId: 'test-topic', threadId: null },
+      });
+
+      store.getState().useFetchMessages({
+        agentId: 'test-session',
+        topicId: 'test-topic',
+        threadId: null,
+      });
+
+      await waitFor(() => {
+        expect(messageService.getMessages).toHaveBeenCalledWith({
+          agentId: 'test-session',
+          groupId: undefined,
+          threadId: undefined,
+          topicId: 'test-topic',
+        });
+      });
+    });
   });
 
   describe('switchMessageBranch', () => {

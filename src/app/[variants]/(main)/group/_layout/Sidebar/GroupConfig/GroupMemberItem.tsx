@@ -33,7 +33,7 @@ const GroupMemberItem = memo<GroupMemberItemProps>(
           horizontal
           onClick={(e) => {
             onClick?.();
-            e.stopPropagation();
+            e?.stopPropagation();
           }}
           style={{ overflow: 'hidden' }}
         >

@@ -22,6 +22,11 @@ export interface MessageMapKeyInput {
    */
   scope?: MessageMapScope;
   /**
+   * Sub Agent ID for group orchestration scenarios
+   * Used as subTopicId in group_agent scope
+   */
+  subAgentId?: string;
+  /**
    * Thread ID (maps to subTopicId in thread scope)
    */
   threadId?: string | null;
@@ -36,16 +41,24 @@ export interface MessageMapKeyInput {
  * Handles mapping from agentId/threadId to scopeId/subTopicId format
  */
 const toMessageMapContext = (input: MessageMapKeyInput): MessageMapContext => {
-  const { agentId, topicId, threadId, isNew, scope, groupId } = input;
+  const { agentId, topicId, threadId, isNew, scope, groupId, subAgentId } = input;
 
   // If groupId is present, it's a group conversation
   if (groupId) {
-    return {
-      isNew,
-      scope: scope ?? 'group',
-      scopeId: groupId,
-      topicId,
-    };
+    // group_agent scope: Agent's independent message stream within a group
+    // subAgentId is used as subTopicId to identify agent-specific messages
+    if (scope === 'group_agent' && subAgentId) {
+      return {
+        isNew,
+        scope: 'group_agent',
+        scopeId: groupId,
+        subTopicId: subAgentId,
+        topicId,
+      };
+    }
+
+    // Default group scope
+    return { isNew, scope: scope ?? 'group', scopeId: groupId, topicId };
   }
 
   // If threadId is present, it's an existing thread - auto-detect thread scope

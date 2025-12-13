@@ -109,11 +109,7 @@ export const dataSlice: StateCreator<
       shouldFetch ? ['CONVERSATION_FETCH_MESSAGES', context] : null,
 
       async ([, key]: [string, ConversationContext]) => {
-        return messageService.getMessages({
-          agentId: key.agentId,
-          threadId: key.threadId ?? undefined,
-          topicId: key.topicId ?? undefined,
-        });
+        return messageService.getMessages(key as any);
       },
       {
         onSuccess: (data) => {

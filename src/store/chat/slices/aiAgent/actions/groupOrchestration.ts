@@ -203,9 +203,11 @@ export const groupOrchestrationSlice: StateCreator<
     });
 
     // 4. Create Executors
+    // Note: messageContext.agentId should be supervisorAgentId (for fallback in message creation)
+    // messageMapKey will use groupId (via groupId field) for message storage location
     const executors = createGroupOrchestrationExecutors({
       get,
-      messageContext: { agentId: groupId!, groupId, scope: 'group', topicId },
+      messageContext: { agentId: supervisorAgentId, groupId, scope: 'group', topicId },
       orchestrationOperationId: operationId,
       supervisorAgentId: groupConfig.supervisorAgentId,
     });

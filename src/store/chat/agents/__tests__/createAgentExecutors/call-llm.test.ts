@@ -1233,4 +1233,181 @@ describe('call_llm executor', () => {
       );
     });
   });
+
+  describe('Group Orchestration: subAgentId Support', () => {
+    it('should use subAgentId for message.agentId when present in operation context', async () => {
+      // Given - Group orchestration scenario where subAgentId is the actual executing agent
+      const mockStore = createMockStore();
+      const context = createTestContext({
+        agentId: 'supervisor-agent', // Main agent (supervisor)
+        subAgentId: 'worker-agent', // Actual executing agent
+        topicId: 'group-topic',
+      });
+      const instruction = createCallLLMInstruction({
+        model: 'gpt-4',
+        provider: 'openai',
+        messages: [createUserMessage()],
+      });
+      const state = createInitialState({ operationId: context.operationId });
+
+      mockStore.internal_fetchAIChatMessage = vi.fn().mockResolvedValue({
+        content: 'AI response from worker agent',
+        finishType: 'stop',
+        isFunctionCall: false,
+      });
+      mockStore.dbMessagesMap[context.messageKey] = [];
+
+      // When
+      await executeWithMockContext({
+        executor: 'call_llm',
+        instruction,
+        state,
+        mockStore,
+        context,
+      });
+
+      // Then - message should be created with subAgentId as the agentId
+      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'worker-agent', // Should use subAgentId, not agentId
+          role: 'assistant',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
+      );
+    });
+
+    it('should fall back to agentId when subAgentId is not present', async () => {
+      // Given - Normal scenario without subAgentId
+      const mockStore = createMockStore();
+      const context = createTestContext({
+        agentId: 'normal-agent',
+        topicId: 'normal-topic',
+        // No subAgentId
+      });
+      const instruction = createCallLLMInstruction({
+        model: 'gpt-4',
+        provider: 'openai',
+        messages: [createUserMessage()],
+      });
+      const state = createInitialState({ operationId: context.operationId });
+
+      mockStore.internal_fetchAIChatMessage = vi.fn().mockResolvedValue({
+        content: 'AI response',
+        finishType: 'stop',
+        isFunctionCall: false,
+      });
+      mockStore.dbMessagesMap[context.messageKey] = [];
+
+      // When
+      await executeWithMockContext({
+        executor: 'call_llm',
+        instruction,
+        state,
+        mockStore,
+        context,
+      });
+
+      // Then - message should be created with agentId
+      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'normal-agent', // Should use agentId when no subAgentId
+          role: 'assistant',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
+      );
+    });
+
+    it('should pass groupId to message when present in operation context', async () => {
+      // Given - Group chat scenario
+      const mockStore = createMockStore();
+      const context = createTestContext({
+        agentId: 'supervisor-agent',
+        subAgentId: 'worker-agent',
+        groupId: 'group-123',
+        topicId: 'group-topic',
+      });
+      const instruction = createCallLLMInstruction({
+        model: 'gpt-4',
+        provider: 'openai',
+        messages: [createUserMessage()],
+      });
+      const state = createInitialState({ operationId: context.operationId });
+
+      mockStore.internal_fetchAIChatMessage = vi.fn().mockResolvedValue({
+        content: 'AI response',
+        finishType: 'stop',
+        isFunctionCall: false,
+      });
+      mockStore.dbMessagesMap[context.messageKey] = [];
+
+      // When
+      await executeWithMockContext({
+        executor: 'call_llm',
+        instruction,
+        state,
+        mockStore,
+        context,
+      });
+
+      // Then - message should be created with groupId
+      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          groupId: 'group-123',
+          agentId: 'worker-agent',
+          role: 'assistant',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
+      );
+    });
+
+    it('should not include groupId when not in group chat context', async () => {
+      // Given - Normal (non-group) scenario
+      const mockStore = createMockStore();
+      const context = createTestContext({
+        agentId: 'normal-agent',
+        topicId: 'normal-topic',
+        // No groupId
+      });
+      const instruction = createCallLLMInstruction({
+        model: 'gpt-4',
+        provider: 'openai',
+        messages: [createUserMessage()],
+      });
+      const state = createInitialState({ operationId: context.operationId });
+
+      mockStore.internal_fetchAIChatMessage = vi.fn().mockResolvedValue({
+        content: 'AI response',
+        finishType: 'stop',
+        isFunctionCall: false,
+      });
+      mockStore.dbMessagesMap[context.messageKey] = [];
+
+      // When
+      await executeWithMockContext({
+        executor: 'call_llm',
+        instruction,
+        state,
+        mockStore,
+        context,
+      });
+
+      // Then - message should be created without groupId (undefined)
+      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          groupId: undefined,
+          agentId: 'normal-agent',
+          role: 'assistant',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
+      );
+    });
+  });
 });
