@@ -24,7 +24,7 @@ import ThreadHydration from './ThreadHydration';
 import ZenModeToast from './ZenModeToast';
 import { useActionsBarConfig } from './useActionsBarConfig';
 import { useGroupContext } from './useGroupContext';
-import { useGroupHooks } from './useGroupHooks';
+// import { useGroupHooks } from './useGroupHooks';
 
 interface ConversationAreaProps {
   mobile?: boolean;
@@ -93,14 +93,14 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
   const actionsBarConfig = useActionsBarConfig();
 
   // Get group-specific hooks for send logic
-  const groupHooks = useGroupHooks(context);
+  // const groupHooks = useGroupHooks(context);
 
   return (
     <ConversationProvider
       actionsBar={actionsBarConfig}
       context={context}
       hasInitMessages={!!messages}
-      hooks={groupHooks}
+      // hooks={groupHooks}
       messages={messages}
       onMessagesChange={(messages) => {
         replaceMessages(messages, { context });
