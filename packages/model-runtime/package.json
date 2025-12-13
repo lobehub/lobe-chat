@@ -12,8 +12,8 @@
     "test:update": "vitest -u"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.941.0",
-    "@huggingface/inference": "^4.13.4",
+    "@aws-sdk/client-bedrock-runtime": "^3.948.0",
+    "@huggingface/inference": "^4.13.5",
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
