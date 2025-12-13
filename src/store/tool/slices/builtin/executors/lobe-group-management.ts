@@ -17,14 +17,14 @@ import {
   SearchAgentParams,
   SpeakParams,
   SummarizeParams,
-  TOOL_IDENTIFIER,
+  GroupManagementIdentifier,
   VoteParams,
 } from '@lobechat/builtin-tool-group-management';
 
 import type { BuiltinToolContext, BuiltinToolResult, IBuiltinToolExecutor } from '../types';
 
 class GroupManagementExecutor implements IBuiltinToolExecutor {
-  readonly identifier = TOOL_IDENTIFIER;
+  readonly identifier = GroupManagementIdentifier;
 
   // ==================== Member Management ====================
 

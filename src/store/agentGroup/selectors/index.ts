@@ -9,6 +9,7 @@ export const agentGroupSelectors = {
   getGroupAgentCount: agentGroupByIdSelectors.groupAgentCount,
   getGroupAgents: agentGroupByIdSelectors.groupAgents,
   getGroupById: agentGroupByIdSelectors.groupById,
+  getGroupBySupervisorAgentId: agentGroupByIdSelectors.groupBySupervisorAgentId,
   getGroupConfig: agentGroupByIdSelectors.groupConfig,
   getGroupMemberCount: agentGroupByIdSelectors.groupMemberCount,
   getGroupMembers: agentGroupByIdSelectors.groupMembers,
