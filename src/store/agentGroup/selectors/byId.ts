@@ -59,11 +59,24 @@ const agentByIdFromGroup =
     return agents.find((agent) => agent.id === agentId);
   };
 
+/**
+ * Find a group by its supervisor agent ID
+ * Iterates through all groups to find one where supervisorAgentId matches
+ */
+const groupBySupervisorAgentId =
+  (supervisorAgentId: string) =>
+  (s: ChatGroupStore): AgentGroupDetail | undefined => {
+    return Object.values(s.groupMap).find(
+      (group) => group.supervisorAgentId === supervisorAgentId,
+    );
+  };
+
 export const agentGroupByIdSelectors = {
   agentByIdFromGroup,
   groupAgentCount,
   groupAgents,
   groupById,
+  groupBySupervisorAgentId,
   groupConfig,
   groupMemberCount,
   groupMembers,

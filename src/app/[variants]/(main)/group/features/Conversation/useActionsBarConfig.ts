@@ -52,10 +52,10 @@ export const useActionsBarConfig = (): ActionsBarConfig => {
   return useMemo(
     () => ({
       assistant: {
-        extraBarActions: [branchingFactory],
+        // extraBarActions: [branchingFactory],
       },
       user: {
-        extraBarActions: [branchingFactory],
+        // extraBarActions: [branchingFactory],
       },
     }),
     [branchingFactory],

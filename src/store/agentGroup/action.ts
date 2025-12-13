@@ -9,6 +9,7 @@ import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import type { ChatGroupItem } from '@/database/schemas/chatGroup';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatGroupService } from '@/services/chatGroup';
+import { getAgentStoreState } from '@/store/agent';
 import { getSessionStoreState } from '@/store/session';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -334,6 +335,18 @@ export const chatGroupAction: StateCreator<
               false,
               n('useFetchGroupDetail/onSuccess', { groupId: groupDetail.id }),
             );
+
+            // Sync group agents to agentStore for builtin agent resolution (e.g., supervisor slug)
+            const agentStore = getAgentStoreState();
+            for (const agent of groupDetail.agents) {
+              // AgentGroupMember extends AgentItem which shares fields with LobeAgentConfig
+              agentStore.internal_dispatchAgentMap(agent.id, agent as any);
+            }
+
+            // Set activeAgentId to supervisor for correct model resolution in sendMessage
+            if (groupDetail.supervisorAgentId) {
+              agentStore.setActiveAgentId(groupDetail.supervisorAgentId);
+            }
           },
         },
       ),

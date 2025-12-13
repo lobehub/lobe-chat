@@ -3,14 +3,15 @@ import type { BuiltinToolManifest } from '@lobechat/types';
 import { systemPrompt } from './systemRole';
 import { GroupManagementApiName } from './types';
 
-export const TOOL_IDENTIFIER = 'lobe-group-management';
+export const GroupManagementIdentifier = 'lobe-group-management';
 
 export const GroupManagementManifest: BuiltinToolManifest = {
+  /* eslint-disable sort-keys-fix/sort-keys-fix */
   api: [
     // ==================== Member Management ====================
     {
       description:
-        'Search for agents that can be invited to the group. Returns agents from both the user\'s collection and the community marketplace. Use this to find suitable agents before inviting them.',
+        "Search for agents that can be invited to the group. Returns agents from both the user's collection and the community marketplace. Use this to find suitable agents before inviting them.",
       name: GroupManagementApiName.searchAgent,
       parameters: {
         properties: {
@@ -68,11 +69,11 @@ export const GroupManagementManifest: BuiltinToolManifest = {
           },
           systemRole: {
             description:
-              'The system prompt that defines the agent\'s behavior, personality, and capabilities.',
+              "The system prompt that defines the agent's behavior, personality, and capabilities.",
             type: 'string',
           },
           avatar: {
-            description: 'An emoji or image URL for the agent\'s avatar (optional).',
+            description: "An emoji or image URL for the agent's avatar (optional).",
             type: 'string',
           },
         },
@@ -114,7 +115,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
     // ==================== Communication Coordination ====================
     {
       description:
-        'Let a specific agent speak in the conversation. This is synchronous and waits for the agent\'s response. Use this for focused, single-agent interactions.',
+        "Let a specific agent speak in the conversation. This is synchronous and waits for the agent's response. Use this for focused, single-agent interactions.",
       name: GroupManagementApiName.speak,
       parameters: {
         properties: {
@@ -124,7 +125,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
           },
           instruction: {
             description:
-              'Optional instruction or context to guide the agent\'s response. If omitted, the agent responds based on conversation context.',
+              "Optional instruction or context to guide the agent's response. If omitted, the agent responds based on conversation context.",
             type: 'string',
           },
         },
@@ -191,8 +192,9 @@ export const GroupManagementManifest: BuiltinToolManifest = {
             type: 'string',
           },
           timeout: {
-            default: 60000,
-            description: 'Maximum time in milliseconds to wait for task completion (default: 60000).',
+            default: 60_000,
+            description:
+              'Maximum time in milliseconds to wait for task completion (default: 60000).',
             type: 'number',
           },
         },
@@ -230,8 +232,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
           },
           preserveRecent: {
             default: 5,
-            description:
-              'Number of recent messages to preserve in full detail (default: 5).',
+            description: 'Number of recent messages to preserve in full detail (default: 5).',
             minimum: 0,
             type: 'number',
           },
@@ -319,15 +320,13 @@ export const GroupManagementManifest: BuiltinToolManifest = {
             type: 'array',
           },
           voterAgentIds: {
-            description:
-              'Array of agent IDs who should vote. If omitted, all group members vote.',
+            description: 'Array of agent IDs who should vote. If omitted, all group members vote.',
             items: { type: 'string' },
             type: 'array',
           },
           requireReasoning: {
             default: true,
-            description:
-              'Whether agents must provide reasoning for their vote (default: true).',
+            description: 'Whether agents must provide reasoning for their vote (default: true).',
             type: 'boolean',
           },
         },
@@ -336,7 +335,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
       },
     },
   ],
-  identifier: TOOL_IDENTIFIER,
+  identifier: GroupManagementIdentifier,
   meta: {
     avatar: '👥',
     description: 'Orchestrate and manage multi-agent group conversations',

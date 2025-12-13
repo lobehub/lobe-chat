@@ -1,8 +1,10 @@
-import { getAgentRuntimeConfig } from '@lobechat/builtin-agents';
+import { BUILTIN_AGENT_SLUGS, getAgentRuntimeConfig } from '@lobechat/builtin-agents';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
 
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { getChatGroupStoreState } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 
 /**
  * Runtime context for resolving agent config
@@ -69,16 +71,34 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
 
   // Check if this is a builtin agent
   const slug = agentSelectors.getAgentSlugById(agentId)(agentStoreState);
-
   if (!slug) {
     // Regular agent - use provided plugins if available, fallback to agent's plugins
     const finalPlugins = plugins && plugins.length > 0 ? plugins : basePlugins;
     return { agentConfig, chatConfig, isBuiltinAgent: false, plugins: finalPlugins };
   }
 
+  // Build groupSupervisorContext if this is a group-supervisor agent
+  let groupSupervisorContext;
+  if (slug === BUILTIN_AGENT_SLUGS.groupSupervisor) {
+    const groupStoreState = getChatGroupStoreState();
+    // Find the group by supervisor agent ID
+    const group = agentGroupSelectors.getGroupBySupervisorAgentId(agentId)(groupStoreState);
+
+    if (group) {
+      const groupMembers = agentGroupSelectors.getGroupMembers(group.id)(groupStoreState);
+      groupSupervisorContext = {
+        availableAgents: groupMembers.map((agent) => ({ id: agent.id, title: agent.title })),
+        groupId: group.id,
+        groupTitle: group.title || 'Group Chat',
+        systemPrompt: group.config?.systemPrompt,
+      };
+    }
+  }
+
   // Builtin agent - merge runtime config
   const runtimeConfig = getAgentRuntimeConfig(slug, {
     documentContent,
+    groupSupervisorContext,
     model,
     plugins,
     targetAgentConfig,
