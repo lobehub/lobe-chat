@@ -1,5 +1,10 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { ChatMessageError, ChatToolPayload, MessagePluginItem } from '@lobechat/types';
+import {
+  ChatMessageError,
+  ChatMessagePluginError,
+  ChatToolPayload,
+  MessagePluginItem,
+} from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -10,6 +15,15 @@ import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { displayMessageSelectors } from '../../message/selectors';
+
+/**
+ * Params for batch updating tool message content, state, and error
+ */
+export interface UpdateToolMessageParams {
+  content?: string;
+  pluginError?: ChatMessagePluginError | null;
+  pluginState?: any;
+}
 
 /**
  * Optimistic update operations for plugin-related data
@@ -76,6 +90,16 @@ export interface PluginOptimisticUpdateAction {
    */
   internal_refreshToUpdateMessageTools: (
     id: string,
+    context?: OptimisticUpdateContext,
+  ) => Promise<void>;
+
+  /**
+   * Batch update tool message content, state, and error in a single call
+   * This is optimized for builtin tool executors to reduce multiple update calls
+   */
+  optimisticUpdateToolMessage: (
+    id: string,
+    params: UpdateToolMessageParams,
     context?: OptimisticUpdateContext,
   ) => Promise<void>;
 }
@@ -248,6 +272,61 @@ export const pluginOptimisticUpdate: StateCreator<
 
     if (result?.success && result.messages) {
       replaceMessages(result.messages, { context: ctx });
+    }
+  },
+
+  optimisticUpdateToolMessage: async (id, params, context) => {
+    const { replaceMessages, internal_getConversationContext, internal_dispatchMessage } = get();
+
+    const { content, pluginState, pluginError } = params;
+
+    // Batch optimistic updates - update frontend immediately
+    // Update content if provided
+    if (content !== undefined) {
+      internal_dispatchMessage({ id, type: 'updateMessage', value: { content } }, context);
+    }
+
+    // Update pluginState if provided
+    if (pluginState !== undefined) {
+      internal_dispatchMessage({ id, type: 'updateMessage', value: { pluginState } }, context);
+    }
+
+    // Update pluginError if provided (can be null to clear error)
+    if (pluginError !== undefined) {
+      internal_dispatchMessage(
+        { id, type: 'updateMessagePlugin', value: { error: pluginError } },
+        context,
+      );
+    }
+
+    const ctx = internal_getConversationContext(context);
+    const options = { agentId: ctx.agentId, topicId: ctx.topicId };
+
+    // Persist to database in parallel for better performance
+    const updatePromises: Promise<any>[] = [];
+
+    // Update content via message update
+    if (content !== undefined) {
+      updatePromises.push(messageService.updateMessage(id, { content }, options));
+    }
+
+    // Update pluginState via plugin state update
+    if (pluginState !== undefined) {
+      updatePromises.push(messageService.updateMessagePluginState(id, pluginState, options));
+    }
+
+    // Update pluginError via plugin error update
+    if (pluginError !== undefined) {
+      updatePromises.push(messageService.updateMessagePluginError(id, pluginError, options));
+    }
+
+    // Wait for all updates to complete and get the last result with messages
+    const results = await Promise.all(updatePromises);
+
+    // Use the last successful result's messages to update the store
+    const lastResult = results.filter((r) => r?.success && r.messages).pop();
+    if (lastResult?.messages) {
+      replaceMessages(lastResult.messages, { context: ctx });
     }
   },
 });

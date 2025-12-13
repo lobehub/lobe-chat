@@ -11,6 +11,7 @@ import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
+import { hasExecutor } from '@/store/tool/slices/builtin/executors';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { dbMessageSelectors } from '../../message/selectors';
@@ -70,7 +71,64 @@ export const pluginTypes: StateCreator<
       return await get().invokeKlavisTypePlugin(id, payload);
     }
 
-    // run tool api call
+    const params = safeParseJSON(payload.arguments);
+    if (!params) return;
+
+    // Check if there's a registered executor in Tool Store (new architecture)
+    if (hasExecutor(payload.identifier, payload.apiName)) {
+      const { optimisticUpdateToolMessage } = get();
+
+      // Get operation context
+      const operationId = get().messageOperationMap[id];
+      const operation = operationId ? get().operations[operationId] : undefined;
+      const context = operationId ? { operationId } : undefined;
+
+      log(
+        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s',
+        payload.identifier,
+        payload.apiName,
+        id,
+      );
+
+      // Call Tool Store's invokeBuiltinTool
+      const result = await useToolStore.getState().invokeBuiltinTool(
+        payload.identifier,
+        payload.apiName,
+        params,
+        {
+          messageId: id,
+          operationId,
+          signal: operation?.abortController?.signal,
+        },
+      );
+
+      // Use optimisticUpdateToolMessage to batch update content, state, error
+      await optimisticUpdateToolMessage(
+        id,
+        {
+          content: result.content,
+          pluginError: result.error
+            ? {
+                body: result.error.body,
+                message: result.error.message,
+                type: result.error.type as any,
+              }
+            : undefined,
+          pluginState: result.state,
+        },
+        context,
+      );
+
+      // If result.stop is true, the tool wants to stop execution flow
+      // This is handled by returning from the function (no further processing)
+      if (result.stop) {
+        log('[invokeBuiltinTool] Executor returned stop=true, stopping execution');
+      }
+
+      return;
+    }
+
+    // Fallback to legacy action-based approach (for backward compatibility)
     // @ts-ignore
     const { [payload.apiName]: action } = get();
     if (!action) {
@@ -78,11 +136,13 @@ export const pluginTypes: StateCreator<
       return;
     }
 
-    const content = safeParseJSON(payload.arguments);
+    log(
+      '[invokeBuiltinTool] Using legacy action: %s, messageId=%s',
+      payload.apiName,
+      id,
+    );
 
-    if (!content) return;
-
-    return await action(id, content);
+    return await action(id, params);
   },
 
   invokeDefaultTypePlugin: async (id, payload) => {
