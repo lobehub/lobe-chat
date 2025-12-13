@@ -2333,4 +2333,93 @@ describe('call_tool executor', () => {
       expect(mockStore.completeOperation).toHaveBeenCalledTimes(3);
     });
   });
+
+  describe('Group Orchestration: subAgentId Support', () => {
+    it('should use subAgentId for tool message agentId when present', async () => {
+      // Given - Group orchestration scenario
+      const mockStore = createMockStore();
+      const context = createTestContext({
+        agentId: 'supervisor-agent',
+        subAgentId: 'worker-agent',
+        topicId: 'group-topic',
+      });
+
+      const assistantMessage = createAssistantMessage();
+      mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
+
+      const toolCall: ChatToolPayload = {
+        id: 'tool_sub_agent',
+        identifier: 'lobe-web-browsing',
+        apiName: 'search',
+        arguments: JSON.stringify({ query: 'test' }),
+        type: 'default',
+      };
+
+      const instruction = createCallToolInstruction(toolCall);
+      const state = createInitialState();
+
+      // When
+      await executeWithMockContext({
+        executor: 'call_tool',
+        instruction,
+        state,
+        mockStore,
+        context,
+      });
+
+      // Then - tool message should be created with subAgentId
+      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'worker-agent', // Should use subAgentId
+          role: 'tool',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
+      );
+    });
+
+    it('should fall back to agentId for tool message when subAgentId is not present', async () => {
+      // Given - Normal scenario without subAgentId
+      const mockStore = createMockStore();
+      const context = createTestContext({
+        agentId: 'normal-agent',
+        topicId: 'normal-topic',
+      });
+
+      const assistantMessage = createAssistantMessage();
+      mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
+
+      const toolCall: ChatToolPayload = {
+        id: 'tool_normal',
+        identifier: 'lobe-web-browsing',
+        apiName: 'search',
+        arguments: JSON.stringify({ query: 'test' }),
+        type: 'default',
+      };
+
+      const instruction = createCallToolInstruction(toolCall);
+      const state = createInitialState();
+
+      // When
+      await executeWithMockContext({
+        executor: 'call_tool',
+        instruction,
+        state,
+        mockStore,
+        context,
+      });
+
+      // Then - tool message should be created with agentId
+      expect(mockStore.optimisticCreateMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: 'normal-agent', // Should use agentId
+          role: 'tool',
+        }),
+        expect.objectContaining({
+          operationId: expect.any(String),
+        }),
+      );
+    });
+  });
 });

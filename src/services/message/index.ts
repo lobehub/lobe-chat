@@ -19,6 +19,16 @@ import { lambdaClient } from '@/libs/trpc/client';
 
 import { abortableRequest } from '../utils/abortableRequest';
 
+/**
+ * Query context for message operations
+ * Contains identifiers needed for querying/filtering messages after mutations
+ */
+export interface MessageQueryContext {
+  agentId?: string;
+  groupId?: string;
+  topicId?: string | null;
+}
+
 export class MessageService {
   createMessage = async (params: CreateMessageParams): Promise<CreateMessageResult> => {
     return lambdaClient.message.createMessage.mutate(params as any);
@@ -32,14 +42,6 @@ export class MessageService {
   }): Promise<UIChatMessage[]> => {
     const data = await lambdaClient.message.getMessages.query(params);
 
-    return data as unknown as UIChatMessage[];
-  };
-
-  getGroupMessages = async (groupId: string, topicId?: string): Promise<UIChatMessage[]> => {
-    const data = await lambdaClient.message.getMessages.query({
-      groupId,
-      topicId,
-    });
     return data as unknown as UIChatMessage[];
   };
 
@@ -67,19 +69,14 @@ export class MessageService {
     return lambdaClient.message.getHeatmaps.query();
   };
 
-  updateMessageError = async (
-    id: string,
-    value: ChatMessageError,
-    options?: { agentId?: string; topicId?: string | null },
-  ) => {
+  updateMessageError = async (id: string, value: ChatMessageError, ctx?: MessageQueryContext) => {
     const error = value.type
       ? value
       : { body: value, message: value.message, type: 'ApplicationRuntimeError' };
 
     return lambdaClient.message.update.mutate({
-      agentId: options?.agentId,
+      ...ctx,
       id,
-      topicId: options?.topicId,
       value: { error },
     });
   };
@@ -92,12 +89,11 @@ export class MessageService {
   updateMessage = async (
     id: string,
     value: Partial<UpdateMessageParams>,
-    options?: { agentId?: string; topicId?: string | null },
+    ctx?: MessageQueryContext,
   ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.update.mutate({
-      agentId: options?.agentId,
+      ...ctx,
       id,
-      topicId: options?.topicId,
       value,
     });
   };
@@ -113,93 +109,51 @@ export class MessageService {
   updateMessageMetadata = async (
     id: string,
     value: Partial<MessageMetadata>,
-    options?: { agentId?: string; topicId?: string | null },
+    ctx?: MessageQueryContext,
   ): Promise<UpdateMessageResult> => {
     return abortableRequest.execute(`message-metadata-${id}`, (signal) =>
-      lambdaClient.message.updateMetadata.mutate(
-        {
-          agentId: options?.agentId,
-          id,
-          topicId: options?.topicId,
-          value,
-        },
-        { signal },
-      ),
+      lambdaClient.message.updateMetadata.mutate({ ...ctx, id, value }, { signal }),
     );
   };
 
   updateMessagePluginState = async (
     id: string,
     value: Record<string, any>,
-    options?: { agentId?: string; topicId?: string | null },
+    ctx?: MessageQueryContext,
   ): Promise<UpdateMessageResult> => {
-    return lambdaClient.message.updatePluginState.mutate({
-      agentId: options?.agentId,
-      id,
-      topicId: options?.topicId,
-      value,
-    });
+    return lambdaClient.message.updatePluginState.mutate({ ...ctx, id, value });
   };
 
   updateMessagePluginError = async (
     id: string,
     error: ChatMessagePluginError | null,
-    options?: { agentId?: string; topicId?: string | null },
+    ctx?: MessageQueryContext,
   ): Promise<UpdateMessageResult> => {
-    return lambdaClient.message.updatePluginError.mutate({
-      agentId: options?.agentId,
-      id,
-      topicId: options?.topicId,
-      value: error as any,
-    });
+    return lambdaClient.message.updatePluginError.mutate({ ...ctx, id, value: error as any });
   };
 
   updateMessagePlugin = async (
     id: string,
     value: Partial<Omit<MessagePluginItem, 'id'>>,
-    options?: { agentId?: string; topicId?: string | null },
+    ctx?: MessageQueryContext,
   ): Promise<UpdateMessageResult> => {
-    return lambdaClient.message.updateMessagePlugin.mutate({
-      agentId: options?.agentId,
-      id,
-      topicId: options?.topicId,
-      value,
-    });
+    return lambdaClient.message.updateMessagePlugin.mutate({ ...ctx, id, value });
   };
 
   updateMessageRAG = async (
     id: string,
     data: UpdateMessageRAGParams,
-    options?: { agentId?: string; topicId?: string | null },
+    ctx?: MessageQueryContext,
   ): Promise<UpdateMessageResult> => {
-    return lambdaClient.message.updateMessageRAG.mutate({
-      agentId: options?.agentId,
-      id,
-      topicId: options?.topicId,
-      value: data,
-    });
+    return lambdaClient.message.updateMessageRAG.mutate({ ...ctx, id, value: data });
   };
 
-  removeMessage = async (
-    id: string,
-    options?: { agentId?: string; topicId?: string | null },
-  ): Promise<UpdateMessageResult> => {
-    return lambdaClient.message.removeMessage.mutate({
-      agentId: options?.agentId,
-      id,
-      topicId: options?.topicId,
-    });
+  removeMessage = async (id: string, ctx?: MessageQueryContext): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.removeMessage.mutate({ ...ctx, id });
   };
 
-  removeMessages = async (
-    ids: string[],
-    options?: { agentId?: string; topicId?: string | null },
-  ): Promise<UpdateMessageResult> => {
-    return lambdaClient.message.removeMessages.mutate({
-      agentId: options?.agentId,
-      ids,
-      topicId: options?.topicId,
-    });
+  removeMessages = async (ids: string[], ctx?: MessageQueryContext): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.removeMessages.mutate({ ...ctx, ids });
   };
 
   removeMessagesByAssistant = async (sessionId: string, topicId?: string) => {

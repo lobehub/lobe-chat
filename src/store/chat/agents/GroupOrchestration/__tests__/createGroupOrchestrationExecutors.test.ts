@@ -171,7 +171,7 @@ describe('createGroupOrchestrationExecutors', () => {
   });
 
   describe('speak executor', () => {
-    it('should call internal_execAgentRuntime for target agent', async () => {
+    it('should call internal_execAgentRuntime for target agent with subAgentId', async () => {
       const executors = createGroupOrchestrationExecutors(context);
       const state = createMockState();
 
@@ -185,9 +185,11 @@ describe('createGroupOrchestrationExecutors', () => {
 
       await executors.speak!(instruction, state);
 
+      // Should use subAgentId for agent config retrieval while keeping groupId in context
       expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
         context: expect.objectContaining({
-          agentId: 'agent-1',
+          agentId: 'group-1', // agentId remains as group's main agent ID
+          subAgentId: 'agent-1', // subAgentId is used for agent config retrieval
           groupId: 'group-1',
           scope: 'group',
         }),
@@ -239,7 +241,7 @@ describe('createGroupOrchestrationExecutors', () => {
   });
 
   describe('broadcast executor', () => {
-    it('should call internal_execAgentRuntime for all agents in parallel', async () => {
+    it('should call internal_execAgentRuntime for all agents with subAgentId', async () => {
       const executors = createGroupOrchestrationExecutors(context);
       const state = createMockState();
 
@@ -253,12 +255,14 @@ describe('createGroupOrchestrationExecutors', () => {
 
       await executors.broadcast!(instruction, state);
 
-      // Should call internal_execAgentRuntime for each agent
+      // Should call internal_execAgentRuntime for each agent with subAgentId
       expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledTimes(3);
 
+      // Each call should use subAgentId for the target agent while keeping groupId in context
       expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
         context: expect.objectContaining({
-          agentId: 'agent-1',
+          agentId: 'group-1', // agentId remains as group's main agent ID
+          subAgentId: 'agent-1', // subAgentId is used for agent config retrieval
           groupId: 'group-1',
           scope: 'group',
         }),
@@ -270,7 +274,8 @@ describe('createGroupOrchestrationExecutors', () => {
 
       expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
         context: expect.objectContaining({
-          agentId: 'agent-2',
+          agentId: 'group-1',
+          subAgentId: 'agent-2',
           groupId: 'group-1',
           scope: 'group',
         }),
@@ -282,7 +287,8 @@ describe('createGroupOrchestrationExecutors', () => {
 
       expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
         context: expect.objectContaining({
-          agentId: 'agent-3',
+          agentId: 'group-1',
+          subAgentId: 'agent-3',
           groupId: 'group-1',
           scope: 'group',
         }),

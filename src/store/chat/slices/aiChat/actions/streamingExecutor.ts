@@ -64,6 +64,11 @@ export interface StreamingExecutorAction {
     operationId?: string;
     initialState?: AgentState;
     initialContext?: AgentRuntimeContext;
+    /**
+     * Sub Agent ID for group orchestration scenarios
+     * Used to get Agent config (model, provider, plugins) instead of agentId
+     */
+    subAgentId?: string;
   }) => {
     state: AgentState;
     context: AgentRuntimeContext;
@@ -138,16 +143,22 @@ export const streamingExecutor: StateCreator<
     initialState,
     initialContext,
     operationId,
+    subAgentId: paramSubAgentId,
   }) => {
     // Use provided agentId/topicId or fallback to global state
     const { activeAgentId, activeTopicId } = get();
     const agentId = paramAgentId ?? activeAgentId;
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
 
+    // For group orchestration scenarios:
+    // - subAgentId is used for agent config retrieval (model, provider, plugins)
+    // - agentId is used for session ID (message storage location)
+    const effectiveAgentId = paramSubAgentId || agentId;
+
     // Resolve agent config with builtin agent runtime config merged
     // This ensures runtime plugins (e.g., 'lobe-agent-builder' for Agent Builder) are included
     const { agentConfig: agentConfigData, plugins: pluginIds } = resolveAgentConfig({
-      agentId: agentId || '',
+      agentId: effectiveAgentId || '',
     });
 
     // Get tools manifest map
@@ -221,10 +232,11 @@ export const streamingExecutor: StateCreator<
       internal_toggleToolCallingStreaming,
     } = get();
 
-    // Get agentId, topicId, and abortController from operation
+    // Get agentId, topicId, groupId and abortController from operation
     let agentId: string;
     let topicId: string | null | undefined;
     let threadId: string | undefined;
+    let groupId: string | undefined;
     let scope: MessageMapScope | undefined;
     let traceId: string | undefined = traceIdParam;
     let abortController: AbortController;
@@ -238,13 +250,15 @@ export const streamingExecutor: StateCreator<
       agentId = operation.context.agentId!;
       topicId = operation.context.topicId;
       threadId = operation.context.threadId ?? undefined;
+      groupId = operation.context.groupId;
       scope = operation.context.scope;
       abortController = operation.abortController; // 👈 Use operation's abortController
       log(
-        '[internal_fetchAIChatMessage] get context from operation %s: agentId=%s, topicId=%s, aborted=%s',
+        '[internal_fetchAIChatMessage] get context from operation %s: agentId=%s, topicId=%s, groupId=%s, aborted=%s',
         operationId,
         agentId,
         topicId,
+        groupId,
         abortController.signal.aborted,
       );
       // Get traceId from operation metadata if not explicitly provided
@@ -255,16 +269,18 @@ export const streamingExecutor: StateCreator<
       // Fallback to global state (for legacy code paths without operation)
       agentId = get().activeAgentId;
       topicId = get().activeTopicId;
+      groupId = get().activeGroupId;
       abortController = new AbortController();
       log(
-        '[internal_fetchAIChatMessage] use global context: agentId=%s, topicId=%s',
+        '[internal_fetchAIChatMessage] use global context: agentId=%s, topicId=%s, groupId=%s',
         agentId,
         topicId,
+        groupId,
       );
     }
 
-    // Create base context for child operations
-    const fetchContext = { agentId, topicId, threadId, scope };
+    // Create base context for child operations and message queries
+    const fetchContext = { agentId, topicId, threadId, groupId, scope };
 
     // Get agent config from params or use agentId-specific config
     const agentStoreState = getAgentStoreState();
@@ -363,7 +379,7 @@ export const streamingExecutor: StateCreator<
           messageService.updateMessage(
             messageId,
             { traceId, observationId: observationId ?? undefined },
-            { agentId, topicId },
+            { agentId, groupId, topicId },
           );
         }
 
@@ -815,7 +831,12 @@ export const streamingExecutor: StateCreator<
     const { messages: originalMessages, parentMessageId, parentMessageType, context } = params;
 
     // Extract values from context
-    const { agentId, topicId, threadId } = context;
+    const { agentId, topicId, threadId, subAgentId } = context;
+
+    // For group orchestration scenarios:
+    // - subAgentId is used for agent config retrieval (model, provider, plugins)
+    // - agentId is used for message storage location (via messageMapKey)
+    const effectiveAgentId = subAgentId || agentId;
 
     // Generate message key from context
     const messageKey = messageMapKey(context);
@@ -841,9 +862,11 @@ export const streamingExecutor: StateCreator<
     }
 
     log(
-      '[internal_execAgentRuntime] start, operationId: %s, agentId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
+      '[internal_execAgentRuntime] start, operationId: %s, agentId: %s, subAgentId: %s, effectiveAgentId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
       operationId,
       agentId,
+      subAgentId,
+      effectiveAgentId,
       topicId,
       messageKey,
       parentMessageId,
@@ -855,8 +878,8 @@ export const streamingExecutor: StateCreator<
     let messages = [...originalMessages];
 
     const agentStoreState = getAgentStoreState();
-    // Use agentId to get agent config instead of currentAgentConfig
-    const agentConfigData = agentSelectors.getAgentConfigById(agentId || '')(agentStoreState);
+    // Use effectiveAgentId to get agent config (subAgentId in group orchestration, agentId otherwise)
+    const agentConfigData = agentSelectors.getAgentConfigById(effectiveAgentId || '')(agentStoreState);
     const { chatConfig } = agentConfigData;
 
     // Use agent config from agentId
@@ -917,6 +940,7 @@ export const streamingExecutor: StateCreator<
         initialState: params.initialState,
         initialContext: params.initialContext,
         operationId,
+        subAgentId, // Pass subAgentId for agent config retrieval
       });
 
     let state = initialAgentState;
@@ -979,6 +1003,7 @@ export const streamingExecutor: StateCreator<
             if (assistantMessage) {
               await messageService.updateMessageError(assistantMessage.id, event.error, {
                 agentId,
+                groupId,
                 topicId,
               });
             }

@@ -57,6 +57,16 @@ export const createAgentExecutors = (context: {
     return operation.context;
   };
 
+  /**
+   * Get effective agentId for message creation
+   * In Group Orchestration scenarios, subAgentId is the actual executing agent
+   * Falls back to agentId for normal scenarios
+   */
+  const getEffectiveAgentId = () => {
+    const opContext = getOperationContext();
+    return opContext.subAgentId || opContext.agentId;
+  };
+
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   const executors: Partial<Record<AgentInstruction['type'], InstructionExecutor>> = {
     /**
@@ -81,6 +91,8 @@ export const createAgentExecutors = (context: {
       } else {
         // Get context from operation
         const opContext = getOperationContext();
+        // Get effective agentId (subAgentId for group orchestration, agentId otherwise)
+        const effectiveAgentId = getEffectiveAgentId();
 
         // 如果是 userMessage 的第一次 regenerated 创建， llmPayload 不存在 parentMessageId
         // 因此用这种方式做个赋值
@@ -92,11 +104,12 @@ export const createAgentExecutors = (context: {
         const assistantMessageItem = await context.get().optimisticCreateMessage(
           {
             content: LOADING_FLAT,
+            groupId: opContext.groupId,
             model: llmPayload.model,
             parentId: llmPayload.parentMessageId,
             provider: llmPayload.provider,
             role: 'assistant',
-            agentId: opContext.agentId!,
+            agentId: effectiveAgentId!,
             threadId: opContext.threadId,
             topicId: opContext.topicId ?? undefined,
           },
@@ -362,13 +375,15 @@ export const createAgentExecutors = (context: {
           });
 
           // Execute creation and save Promise to metadata
+          // Use effective agentId (subAgentId for group orchestration)
+          const effectiveAgentId = getEffectiveAgentId();
           const toolMessageParams: CreateMessageParams = {
             content: '',
             groupId: assistantMessage?.groupId,
             parentId: payload.parentMessageId,
             plugin: chatToolPayload,
             role: 'tool',
-            agentId: opContext.agentId!,
+            agentId: effectiveAgentId!,
             threadId: opContext.threadId,
             tool_call_id: chatToolPayload.id,
             topicId: opContext.topicId ?? undefined,
@@ -629,6 +644,8 @@ export const createAgentExecutors = (context: {
       } else {
         // Get context from operation
         const opContext = getOperationContext();
+        // Get effective agentId (subAgentId for group orchestration)
+        const effectiveAgentId = getEffectiveAgentId();
 
         // Create tool messages for each pending tool call with intervention status
         await pMap(pendingToolsCalling, async (toolPayload) => {
@@ -649,7 +666,7 @@ export const createAgentExecutors = (context: {
             },
             pluginIntervention: { status: 'pending' },
             role: 'tool',
-            agentId: opContext.agentId!,
+            agentId: effectiveAgentId!,
             threadId: opContext.threadId,
             tool_call_id: toolPayload.id,
             topicId: opContext.topicId ?? undefined,
@@ -712,6 +729,8 @@ export const createAgentExecutors = (context: {
 
       // Get context from operation
       const opContext = getOperationContext();
+      // Get effective agentId (subAgentId for group orchestration)
+      const effectiveAgentId = getEffectiveAgentId();
 
       // Create tool messages for each aborted tool
       await pMap(toolsCalling, async (toolPayload) => {
@@ -724,11 +743,12 @@ export const createAgentExecutors = (context: {
 
         const toolMessageParams: CreateMessageParams = {
           content: 'Tool execution was aborted by user.',
+          groupId: opContext.groupId,
           parentId: parentMessageId,
           plugin: toolPayload,
           pluginIntervention: { status: 'aborted' },
           role: 'tool',
-          agentId: opContext.agentId!,
+          agentId: effectiveAgentId!,
           threadId: opContext.threadId,
           tool_call_id: toolPayload.id,
           topicId: opContext.topicId ?? undefined,

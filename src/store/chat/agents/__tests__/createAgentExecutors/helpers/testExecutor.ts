@@ -26,9 +26,11 @@ export const executeWithMockContext = async ({
 }: {
   context: {
     agentId?: string;
+    groupId?: string;
     messageKey: string;
     operationId: string;
     parentId: string;
+    subAgentId?: string;
     topicId?: string | null;
   };
   executor: AgentInstruction['type'];
@@ -44,7 +46,9 @@ export const executeWithMockContext = async ({
       childOperationIds: [],
       context: {
         agentId: context.agentId || 'test-session',
+        groupId: context.groupId,
         messageId: context.parentId,
+        subAgentId: context.subAgentId,
         topicId: context.topicId !== undefined ? context.topicId : 'test-topic',
       },
       id: context.operationId,
@@ -120,19 +124,23 @@ export const createInitialState = (overrides: Partial<AgentState> = {}): AgentSt
 export const createTestContext = (
   overrides: {
     agentId?: string;
+    groupId?: string;
     messageKey?: string;
     operationId?: string;
     parentId?: string;
+    subAgentId?: string;
     topicId?: string | null;
   } = {},
 ) => {
   return {
     agentId: overrides.agentId || 'test-session',
+    groupId: overrides.groupId,
     messageKey:
       overrides.messageKey ||
       `${overrides.agentId || 'test-session'}_${overrides.topicId !== undefined ? overrides.topicId : 'test-topic'}`,
     operationId: overrides.operationId || 'op_test',
     parentId: overrides.parentId || 'msg_parent',
+    subAgentId: overrides.subAgentId,
     topicId: overrides.topicId !== undefined ? overrides.topicId : 'test-topic',
   };
 };

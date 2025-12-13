@@ -140,9 +140,11 @@ export const createGroupOrchestrationExecutors = (
         };
       }
 
-      // Execute target Agent with the target agent's agentId in context
+      // Execute target Agent with subAgentId for agent config retrieval
+      // - messageContext keeps the group's main conversation context (for message storage)
+      // - subAgentId specifies which agent's config to use
       await get().internal_execAgentRuntime({
-        context: { ...messageContext, agentId },
+        context: { ...messageContext, subAgentId: agentId },
         messages,
         parentMessageId: lastMessage.id,
         parentMessageType: lastMessage.role as 'user' | 'assistant' | 'tool',
@@ -191,11 +193,13 @@ export const createGroupOrchestrationExecutors = (
         };
       }
 
-      // Execute all Agents in parallel, each with their own agentId in context
+      // Execute all Agents in parallel, each with their own subAgentId for config retrieval
+      // - messageContext keeps the group's main conversation context (for message storage)
+      // - subAgentId specifies which agent's config to use for each agent
       await Promise.all(
         agentIds.map(async (agentId) => {
           await get().internal_execAgentRuntime({
-            context: { ...messageContext, agentId },
+            context: { ...messageContext, subAgentId: agentId },
             messages,
             parentMessageId: lastMessage.id,
             parentMessageType: lastMessage.role as 'user' | 'assistant' | 'tool',
