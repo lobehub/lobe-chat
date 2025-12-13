@@ -1,6 +1,5 @@
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
-import { useAgentGroupStore } from '@/store/agentGroup';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -13,8 +12,9 @@ export const useFetchTopics = () => {
     s.activeAgentId,
     builtinAgentSelectors.isInboxAgent(s),
   ]);
-  // Get activeGroupId directly from store state
-  const activeGroupId = useAgentGroupStore((s) => s.activeGroupId);
+  // Get activeGroupId from chatStore to ensure consistency with topic selectors
+  // which also read from chatStore.activeGroupId
+  const activeGroupId = useChatStore((s) => s.activeGroupId);
   const topicPageSize = useGlobalStore(systemStatusSelectors.topicPageSize);
   const useFetchTopics = useChatStore((s) => s.useFetchTopics);
 

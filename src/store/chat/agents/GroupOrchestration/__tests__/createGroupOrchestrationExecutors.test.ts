@@ -12,8 +12,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatStore } from '@/store/chat/store';
 
 import {
-  createGroupOrchestrationExecutors,
   type GroupOrchestrationExecutorsContext,
+  createGroupOrchestrationExecutors,
 } from '../createGroupOrchestrationExecutors';
 
 // Helper to create mock ChatStore
@@ -21,6 +21,13 @@ const createMockStore = () => {
   const operationCounter = { current: 0 };
 
   return {
+    internal_execAgentRuntime: vi.fn().mockResolvedValue(undefined),
+    messagesMap: {
+      'group_group-1_topic-1': [
+        { content: 'Hello', id: 'msg-1', role: 'user' },
+        { content: 'Hi there', id: 'msg-2', role: 'assistant' },
+      ],
+    },
     startOperation: vi.fn().mockImplementation(({ context, parentOperationId, type }) => {
       operationCounter.current++;
       return {
@@ -69,9 +76,14 @@ describe('createGroupOrchestrationExecutors', () => {
     mockStore = createMockStore();
     context = {
       get: () => mockStore,
-      groupId: 'group-1',
+      messageContext: {
+        agentId: 'group-1',
+        groupId: 'group-1',
+        scope: 'group',
+        topicId: 'topic-1',
+      },
       orchestrationOperationId: 'orchestration-op-1',
-      topicId: 'topic-1',
+      supervisorAgentId: 'supervisor-agent',
     };
   });
 
@@ -90,8 +102,13 @@ describe('createGroupOrchestrationExecutors', () => {
     it('should work without topicId', () => {
       const contextWithoutTopic: GroupOrchestrationExecutorsContext = {
         get: () => mockStore,
-        groupId: 'group-1',
+        messageContext: {
+          agentId: 'group-1',
+          groupId: 'group-1',
+          scope: 'group',
+        },
         orchestrationOperationId: 'orchestration-op-1',
+        supervisorAgentId: 'supervisor-agent',
       };
 
       const executors = createGroupOrchestrationExecutors(contextWithoutTopic);
@@ -101,7 +118,7 @@ describe('createGroupOrchestrationExecutors', () => {
   });
 
   describe('call_supervisor executor', () => {
-    it('should create child operation with correct parameters', async () => {
+    it('should call internal_execAgentRuntime with correct parameters', async () => {
       const executors = createGroupOrchestrationExecutors(context);
       const state = createMockState();
 
@@ -116,10 +133,18 @@ describe('createGroupOrchestrationExecutors', () => {
 
       await executors.call_supervisor!(instruction, state);
 
-      expect(mockStore.startOperation).toHaveBeenCalledWith({
-        context: { agentId: 'supervisor-agent', groupId: 'group-1' },
+      expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
+        context: {
+          agentId: 'supervisor-agent',
+          groupId: 'group-1',
+          scope: 'group',
+          topicId: 'topic-1',
+        },
+        messages: expect.any(Array),
+        operationId: state.operationId,
+        parentMessageId: 'msg-2',
+        parentMessageType: 'assistant',
         parentOperationId: 'orchestration-op-1',
-        type: 'execAgentRuntime',
       });
     });
 
@@ -146,7 +171,7 @@ describe('createGroupOrchestrationExecutors', () => {
   });
 
   describe('speak executor', () => {
-    it('should create child operation for target agent', async () => {
+    it('should call internal_execAgentRuntime for target agent', async () => {
       const executors = createGroupOrchestrationExecutors(context);
       const state = createMockState();
 
@@ -160,10 +185,16 @@ describe('createGroupOrchestrationExecutors', () => {
 
       await executors.speak!(instruction, state);
 
-      expect(mockStore.startOperation).toHaveBeenCalledWith({
-        context: { agentId: 'agent-1', groupId: 'group-1' },
+      expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
+        context: expect.objectContaining({
+          agentId: 'agent-1',
+          groupId: 'group-1',
+          scope: 'group',
+        }),
+        messages: expect.any(Array),
+        parentMessageId: 'msg-2',
+        parentMessageType: 'assistant',
         parentOperationId: 'orchestration-op-1',
-        type: 'execAgentRuntime',
       });
     });
 
@@ -208,7 +239,7 @@ describe('createGroupOrchestrationExecutors', () => {
   });
 
   describe('broadcast executor', () => {
-    it('should create child operations for all agents in parallel', async () => {
+    it('should call internal_execAgentRuntime for all agents in parallel', async () => {
       const executors = createGroupOrchestrationExecutors(context);
       const state = createMockState();
 
@@ -222,25 +253,43 @@ describe('createGroupOrchestrationExecutors', () => {
 
       await executors.broadcast!(instruction, state);
 
-      // Should call startOperation for each agent
-      expect(mockStore.startOperation).toHaveBeenCalledTimes(3);
+      // Should call internal_execAgentRuntime for each agent
+      expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledTimes(3);
 
-      expect(mockStore.startOperation).toHaveBeenCalledWith({
-        context: { agentId: 'agent-1', groupId: 'group-1' },
+      expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
+        context: expect.objectContaining({
+          agentId: 'agent-1',
+          groupId: 'group-1',
+          scope: 'group',
+        }),
+        messages: expect.any(Array),
+        parentMessageId: 'msg-2',
+        parentMessageType: 'assistant',
         parentOperationId: 'orchestration-op-1',
-        type: 'execAgentRuntime',
       });
 
-      expect(mockStore.startOperation).toHaveBeenCalledWith({
-        context: { agentId: 'agent-2', groupId: 'group-1' },
+      expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
+        context: expect.objectContaining({
+          agentId: 'agent-2',
+          groupId: 'group-1',
+          scope: 'group',
+        }),
+        messages: expect.any(Array),
+        parentMessageId: 'msg-2',
+        parentMessageType: 'assistant',
         parentOperationId: 'orchestration-op-1',
-        type: 'execAgentRuntime',
       });
 
-      expect(mockStore.startOperation).toHaveBeenCalledWith({
-        context: { agentId: 'agent-3', groupId: 'group-1' },
+      expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
+        context: expect.objectContaining({
+          agentId: 'agent-3',
+          groupId: 'group-1',
+          scope: 'group',
+        }),
+        messages: expect.any(Array),
+        parentMessageId: 'msg-2',
+        parentMessageType: 'assistant',
         parentOperationId: 'orchestration-op-1',
-        type: 'execAgentRuntime',
       });
     });
 
@@ -533,7 +582,7 @@ describe('createGroupOrchestrationExecutors', () => {
 
       const result1 = await executors.broadcast!(broadcastInstruction, state1);
       expect(result1.nextContext?.phase).toBe('agents_broadcasted');
-      expect(mockStore.startOperation).toHaveBeenCalledTimes(2);
+      expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledTimes(2);
 
       // Step 2: agents_broadcasted returns to call_supervisor
       const agentsBroadcastedInstruction: GroupOrchestrationInstructionAgentsBroadcasted = {
