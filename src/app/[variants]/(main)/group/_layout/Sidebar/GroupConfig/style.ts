@@ -12,7 +12,8 @@ export const useStyles = createStyles(({ css, token }) => ({
     width: 100%;
     min-height: 36px;
     max-height: 36px;
-    padding: 0 4px !important;
+    padding-block: 0 !important;
+    padding-inline: 4px !important;
     border-radius: ${token.borderRadius}px;
 
     transition: all 0.2s ease;

@@ -77,8 +77,8 @@ const defaultMiddleware = (request: NextRequest) => {
   }
 
   // 1. Read user preferences from cookies
-  const theme =
-    request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
+  const theme = (request.cookies.get(LOBE_THEME_APPEARANCE)?.value ||
+    parseDefaultThemeFromCountry(request)) as 'dark' | 'light';
 
   // locale has three levels
   // 1. search params

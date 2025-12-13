@@ -2,7 +2,7 @@
 
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { Suspense, memo, useEffect, useLayoutEffect } from 'react';
+import { Suspense, memo, useEffect } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';

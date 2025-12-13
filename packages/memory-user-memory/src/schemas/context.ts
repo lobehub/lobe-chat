@@ -1,19 +1,38 @@
 import { z } from 'zod';
 
+import {
+  LayersEnum,
+  UserMemoryContextObjectType,
+  UserMemoryContextSubjectType,
+} from '@/types/userMemory';
+
 import { MemoryTypeSchema } from './common';
-import { LayersEnum, UserMemoryContextObjectType, UserMemoryContextSubjectType } from '@/types/userMemory';
 
 export const AssociatedObjectSchema = z.object({
-  extra:z.string().nullable().describe('Additional metadata about the object, should always be a valid JSON string if present'),
+  extra: z
+    .string()
+    .nullable()
+    .describe(
+      'Additional metadata about the object, should always be a valid JSON string if present',
+    ),
   name: z.string().describe('Name of the associated object'),
-  type: z.nativeEnum(UserMemoryContextObjectType).describe('Type/category of the associated object'),
-})
+  type: z
+    .nativeEnum(UserMemoryContextObjectType)
+    .describe('Type/category of the associated object'),
+});
 
 export const AssociatedSubjectSchema = z.object({
-  extra:z.string().nullable().describe('Additional metadata about the subject, should always be a valid JSON string if present'),
+  extra: z
+    .string()
+    .nullable()
+    .describe(
+      'Additional metadata about the subject, should always be a valid JSON string if present',
+    ),
   name: z.string().describe('Name of the associated subject'),
-  type: z.nativeEnum(UserMemoryContextSubjectType).describe('Type/category of the associated subject'),
-})
+  type: z
+    .nativeEnum(UserMemoryContextSubjectType)
+    .describe('Type/category of the associated subject'),
+});
 
 /**
  * Context-specific fields
@@ -21,25 +40,21 @@ export const AssociatedSubjectSchema = z.object({
 export const WithContextSchema = z.object({
   associatedObjects: z
     .array(AssociatedObjectSchema)
-    .describe('Array of objects describing involved roles, entities, or resources, [] empty if none'),
+    .describe(
+      'Array of objects describing involved roles, entities, or resources, [] empty if none',
+    ),
   associatedSubjects: z
     .array(AssociatedSubjectSchema)
-    .describe('Array of JSON objects describing involved subjects or participants, [] empty if none'),
-  currentStatus: z
-    .string()
-    .describe("High level status markers (e.g., 'active', 'pending')"),
+    .describe(
+      'Array of JSON objects describing involved subjects or participants, [] empty if none',
+    ),
+  currentStatus: z.string().describe("High level status markers (e.g., 'active', 'pending')"),
   description: z
     .string()
     .describe('Rich narrative describing the situation, timeline, or environment'),
-  labels: z
-    .array(z.string())
-    .describe('Model generated tags that summarize the context themes'),
-  scoreImpact: z
-    .number()
-    .describe('Numeric score (0-1 or domain-specific) describing importance'),
-  scoreUrgency: z
-    .number()
-    .describe('Numeric score (0-1 or domain-specific) describing urgency'),
+  labels: z.array(z.string()).describe('Model generated tags that summarize the context themes'),
+  scoreImpact: z.number().describe('Numeric score (0-1 or domain-specific) describing importance'),
+  scoreUrgency: z.number().describe('Numeric score (0-1 or domain-specific) describing urgency'),
   title: z.string().describe('Optional synthesized context headline'),
   type: z
     .string()

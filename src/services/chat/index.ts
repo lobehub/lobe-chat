@@ -14,7 +14,6 @@ import { ModelProvider } from 'model-bank';
 
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
 import { createAgentToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
@@ -43,7 +42,6 @@ import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
 import { MemoryManifest } from '@/tools/memory';
 import { PAGE_AGENT_TOOL_ID } from '@/tools/page-agent/const';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
-import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
@@ -375,10 +373,7 @@ class ChatService {
 
     let fetcher: typeof fetch | undefined = undefined;
 
-    // Add desktop remote RPC fetch support
-    if (isDesktop) {
-      fetcher = fetchWithInvokeStream;
-    } else if (enableFetchOnClient) {
+    if (enableFetchOnClient) {
       /**
        * Notes:
        * 1. Browser agent runtime will skip auth check if a key and endpoint provided by

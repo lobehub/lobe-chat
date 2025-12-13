@@ -4,7 +4,9 @@ import { observable } from '@trpc/server/observable';
 import debug from 'debug';
 import { ModelProvider } from 'model-bank';
 import superjson from 'superjson';
+import type { transformer } from 'zod';
 
+import { withElectronProtocolIfElectron } from '@/const/protocol';
 import { isDesktop } from '@/const/version';
 import type { LambdaRouter } from '@/server/routers/lambda';
 
@@ -65,10 +67,8 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
 const customHttpBatchLink = httpBatchLink({
   fetch: async (input, init) => {
     if (isDesktop) {
-      const { desktopRemoteRPCFetch } = await import('@/utils/electron/desktopRemoteRPCFetch');
-
       // eslint-disable-next-line no-undef
-      const res = await desktopRemoteRPCFetch(input as string, init as RequestInit);
+      const res = await fetch(input as string, init as RequestInit);
 
       if (res) return res;
     }
@@ -85,9 +85,8 @@ const customHttpBatchLink = httpBatchLink({
     log('Getting provider from store for image page: %s', location.pathname);
     if (location.pathname === '/image') {
       const { getImageStoreState } = await import('@/store/image');
-      const { imageGenerationConfigSelectors } = await import(
-        '@/store/image/slices/generationConfig/selectors'
-      );
+      const { imageGenerationConfigSelectors } =
+        await import('@/store/image/slices/generationConfig/selectors');
       provider = imageGenerationConfigSelectors.provider(getImageStoreState()) as ModelProvider;
       log('Getting provider from store for image page: %s', provider);
     }
@@ -100,7 +99,7 @@ const customHttpBatchLink = httpBatchLink({
   },
   maxURLLength: 2083,
   transformer: superjson,
-  url: '/trpc/lambda',
+  url: withElectronProtocolIfElectron('/trpc/lambda'),
 });
 
 // 3. assembly links

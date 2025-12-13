@@ -112,11 +112,11 @@ export type MemoryExtractionLayerOutputs = Partial<{
   identity: {
     data?: Awaited<ReturnType<IdentityExtractor['structuredCall']>>;
     error?: unknown;
-  }
+  };
   preference: {
     data?: Awaited<ReturnType<PreferenceExtractor['structuredCall']>>;
     error?: unknown;
-  }
+  };
 }>;
 
 export interface GatekeeperDecision {

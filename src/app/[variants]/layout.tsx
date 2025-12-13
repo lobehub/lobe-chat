@@ -98,7 +98,11 @@ export const generateStaticParams = () => {
     for (const theme of themes) {
       for (const isMobile of mobileOptions) {
         variants.push({
-          variants: RouteVariants.serializeVariants({ isMobile, locale, theme }),
+          variants: RouteVariants.serializeVariants({
+            isMobile,
+            locale,
+            theme: theme as 'dark' | 'light',
+          }),
         });
       }
     }

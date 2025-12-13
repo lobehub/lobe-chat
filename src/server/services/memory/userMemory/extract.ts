@@ -26,6 +26,7 @@ import {
   processedSourceCounter,
   tracer,
 } from '@lobechat/observability-otel/modules/memory-user-memory';
+import { attributesCommon } from '@lobechat/observability-otel/node';
 import { Client } from '@upstash/workflow';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import { join } from 'pathe';
@@ -52,7 +53,6 @@ import type { GlobalMemoryLayer } from '@/types/serverConfig';
 import type { UserKeyVaults } from '@/types/user/settings';
 import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
 import { encodeAsync } from '@/utils/tokenizer';
-import { attributesCommon } from '@lobechat/observability-otel/node';
 
 const SOURCE_ALIAS_MAP: Record<string, MemoryExtractionSourceType> = {
   chatTopic: 'chat_topic',
@@ -526,13 +526,18 @@ export class MemoryExtractionExecutor {
 
     for (const item of result?.memories ?? []) {
       const [summaryVector, detailsVector, situationVector, actionVector, keyLearningVector] =
-        await this.generateEmbeddings(runtime, model, [
-          item.summary,
-          item.details,
-          item.withExperience?.situation,
-          item.withExperience?.action,
-          item.withExperience?.keyLearning,
-        ], tokenLimit);
+        await this.generateEmbeddings(
+          runtime,
+          model,
+          [
+            item.summary,
+            item.details,
+            item.withExperience?.situation,
+            item.withExperience?.action,
+            item.withExperience?.keyLearning,
+          ],
+          tokenLimit,
+        );
       const baseMetadata = this.buildBaseMetadata(
         job,
         messageIds,
@@ -708,7 +713,12 @@ export class MemoryExtractionExecutor {
           description: set.withIdentity?.description,
           descriptionVector: descriptionVector ?? undefined,
           metadata: set.withIdentity.extractedLabels
-            ? this.buildBaseMetadata(job, messageIds, LayersEnum.Identity, set.withIdentity.extractedLabels)
+            ? this.buildBaseMetadata(
+                job,
+                messageIds,
+                LayersEnum.Identity,
+                set.withIdentity.extractedLabels,
+              )
             : undefined,
           relationship: set.withIdentity.relationship ?? undefined,
           role: set.withIdentity.role ?? undefined,
@@ -960,9 +970,10 @@ export class MemoryExtractionExecutor {
             });
           const retrievedIdentityContext =
             await retrievedMemoryIdentitiesContextProvider.buildContext(extractionJob);
-          const trimmedRetrievedContexts = [topicContext.context, retrievalMemoryContext.context].map(
-            (context) => this.trimTextToTokenLimit(context, extractorContextLimit),
-          );
+          const trimmedRetrievedContexts = [
+            topicContext.context,
+            retrievalMemoryContext.context,
+          ].map((context) => this.trimTextToTokenLimit(context, extractorContextLimit));
           const trimmedRetrievedIdentitiesContext = this.trimTextToTokenLimit(
             retrievedIdentityContext.context,
             extractorContextLimit,

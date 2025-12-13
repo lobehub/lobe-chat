@@ -46,7 +46,7 @@ const Connection = () => {
         {isWaiting ? (
           <WaitingOAuth setIsOpen={setIsOpen} setWaiting={setWaiting} />
         ) : (
-          <ConnectionMode setIsOpen={setIsOpen} setWaiting={setWaiting} />
+          <ConnectionMode setWaiting={setWaiting} />
         )}
       </Drawer>
     </>

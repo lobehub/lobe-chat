@@ -3,7 +3,7 @@ export const parserPluginSettings = (
 ): Record<string, Record<string, string>> => {
   if (!settingsStr) return {};
 
-  const settings = new Map();
+  const settings = new Map<string, Record<string, string>>();
 
   const array = settingsStr.split(/[,，]/).filter(Boolean);
 

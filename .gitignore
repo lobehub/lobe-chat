@@ -116,3 +116,5 @@ CLAUDE.local.md
 *.xls*
 
 e2e/reports
+
+out

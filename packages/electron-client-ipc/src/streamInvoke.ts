@@ -1,4 +1,4 @@
-import { ProxyTRPCRequestParams } from './types';
+import { StreamInvokeRequestParams } from './types';
 import { headersToRecord } from './utils/headers';
 import { getRequestBody } from './utils/request';
 
@@ -11,7 +11,7 @@ export const streamInvoke = async (input: RequestInfo | URL, init?: RequestInit)
   const headers = headersToRecord(init?.headers);
   const body = await getRequestBody(init?.body);
 
-  const params: ProxyTRPCRequestParams = {
+  const params: StreamInvokeRequestParams = {
     body,
     headers,
     method,

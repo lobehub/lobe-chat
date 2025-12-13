@@ -4,6 +4,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    "baseUrl": ".",
     "target": "ESNext",
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
@@ -13,7 +14,8 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["src/main/*"],
-      "~common/*": ["src/common/*"]
+      "~common/*": ["src/common/*"],
+      "@lobechat/desktop-bridge": ["../../packages/desktop-bridge/src"]
     }
   },
   "include": ["src/main/**/*", "src/preload/**/*", "electron-builder.js"]

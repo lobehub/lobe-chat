@@ -1,4 +1,4 @@
-import { DispatchInvoke, type ProxyTRPCRequestParams } from './types';
+import { DispatchInvoke, type StreamInvokeRequestParams } from './types';
 
 interface StreamerCallbacks {
   onData: (chunk: Uint8Array) => void;
@@ -13,7 +13,7 @@ interface StreamerCallbacks {
 
 interface IElectronAPI {
   invoke: DispatchInvoke;
-  onStreamInvoke: (params: ProxyTRPCRequestParams, callbacks: StreamerCallbacks) => () => void;
+  onStreamInvoke: (params: StreamInvokeRequestParams, callbacks: StreamerCallbacks) => () => void;
 }
 
 declare global {

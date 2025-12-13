@@ -3,6 +3,7 @@ import useSWR, { SWRResponse, mutate } from 'swr';
 import type { PartialDeep } from 'type-fest';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { isDesktop } from '@lobechat/const';
 import { DEFAULT_PREFERENCE } from '@/const/user';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
@@ -83,7 +84,7 @@ export const createCommonSlice: StateCreator<
     ),
   useInitUserState: (isLogin, serverConfig, options) =>
     useOnlyFetchOnceSWR<UserInitializationState>(
-      !!isLogin ? GET_USER_STATE_KEY : null,
+      !!isLogin || isDesktop ? GET_USER_STATE_KEY : null,
       () => userService.getUserState(),
       {
         onError: (error) => {

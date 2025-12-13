@@ -53,7 +53,6 @@ validates the output and includes:
   - type (string)
   - extra (object in JSON string, valid JSON format)
 
-
 ## Memory Formatting Guidelines
 
 > CRITICAL REQUIREMENT: ALL MEMORY ITEMS MUST BE SELF-CONTAINED

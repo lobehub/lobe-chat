@@ -34,9 +34,8 @@ vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
 
 // Mock AgentStateManager to use the exported singleton instance
 vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
-  const { inMemoryAgentStateManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryAgentStateManager'
-  );
+  const { inMemoryAgentStateManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryAgentStateManager');
   return {
     AgentStateManager: class {
       constructor() {
@@ -48,9 +47,8 @@ vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
 
 // Mock StreamEventManager to use the exported singleton instance
 vi.mock('@/server/modules/AgentRuntime/StreamEventManager', async () => {
-  const { inMemoryStreamEventManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryStreamEventManager'
-  );
+  const { inMemoryStreamEventManager } =
+    await import('@/server/modules/AgentRuntime/InMemoryStreamEventManager');
   return {
     StreamEventManager: class {
       constructor() {
@@ -421,9 +419,7 @@ describe('Multi-Round Tool Execution', () => {
     );
     expect(stateToolMessages).toHaveLength(4);
 
-    const stateToolCallIds = stateToolMessages.map(
-      (m: { tool_call_id: string }) => m.tool_call_id,
-    );
+    const stateToolCallIds = stateToolMessages.map((m: { tool_call_id: string }) => m.tool_call_id);
     expect(new Set(stateToolCallIds).size).toBe(4);
 
     mockExecuteTool.mockRestore();
