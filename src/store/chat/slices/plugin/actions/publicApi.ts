@@ -4,6 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
 
+import { OptimisticUpdateContext } from '../../message/actions/optimisticUpdate';
 import { displayMessageSelectors } from '../../message/selectors';
 
 /**
@@ -13,11 +14,16 @@ import { displayMessageSelectors } from '../../message/selectors';
 export interface PluginPublicApiAction {
   /**
    * Fill plugin message content and optionally trigger AI message
+   * @param id - message id
+   * @param content - content to fill
+   * @param triggerAiMessage - whether to trigger AI message
+   * @param context - Optional context for optimistic update (required for Group mode)
    */
   fillPluginMessageContent: (
     id: string,
     content: string,
     triggerAiMessage?: boolean,
+    context?: OptimisticUpdateContext,
   ) => Promise<void>;
 
   /**
@@ -43,10 +49,10 @@ export const pluginPublicApi: StateCreator<
   [],
   PluginPublicApiAction
 > = (set, get) => ({
-  fillPluginMessageContent: async (id, content, triggerAiMessage) => {
+  fillPluginMessageContent: async (id, content, triggerAiMessage, context) => {
     const { triggerAIMessage, optimisticUpdateMessageContent } = get();
 
-    await optimisticUpdateMessageContent(id, content);
+    await optimisticUpdateMessageContent(id, content, undefined, context);
 
     if (triggerAiMessage) await triggerAIMessage({ parentId: id });
   },

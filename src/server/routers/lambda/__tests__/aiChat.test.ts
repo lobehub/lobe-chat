@@ -313,6 +313,72 @@ describe('aiChatRouter', () => {
     expect(res.createdThreadId).toBeUndefined();
   });
 
+  describe('groupId support', () => {
+    it('should pass groupId to topic creation when both newTopic and groupId exist', async () => {
+      const mockCreateTopic = vi.fn().mockResolvedValue({ id: 't1' });
+      const mockCreateMessage = vi
+        .fn()
+        .mockResolvedValueOnce({ id: 'm-user' })
+        .mockResolvedValueOnce({ id: 'm-assistant' });
+      const mockGet = vi.fn().mockResolvedValue({ messages: [], topics: [{}] });
+
+      vi.mocked(TopicModel).mockImplementation(() => ({ create: mockCreateTopic }) as any);
+      vi.mocked(MessageModel).mockImplementation(() => ({ create: mockCreateMessage }) as any);
+      vi.mocked(AiChatService).mockImplementation(() => ({ getMessagesAndTopics: mockGet }) as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      await caller.sendMessageInServer({
+        groupId: 'group-123',
+        newAssistantMessage: { model: 'gpt-4o', provider: 'openai' },
+        newTopic: { title: 'New Topic' },
+        newUserMessage: { content: 'hi' },
+        sessionId: 's1',
+      } as any);
+
+      // Verify groupId is passed to topic creation
+      expect(mockCreateTopic).toHaveBeenCalledWith(
+        expect.objectContaining({
+          groupId: 'group-123',
+          sessionId: 's1',
+          title: 'New Topic',
+        }),
+      );
+    });
+
+    it('should set groupId to null when newTopic exists but groupId is not provided', async () => {
+      const mockCreateTopic = vi.fn().mockResolvedValue({ id: 't1' });
+      const mockCreateMessage = vi
+        .fn()
+        .mockResolvedValueOnce({ id: 'm-user' })
+        .mockResolvedValueOnce({ id: 'm-assistant' });
+      const mockGet = vi.fn().mockResolvedValue({ messages: [], topics: [{}] });
+
+      vi.mocked(TopicModel).mockImplementation(() => ({ create: mockCreateTopic }) as any);
+      vi.mocked(MessageModel).mockImplementation(() => ({ create: mockCreateMessage }) as any);
+      vi.mocked(AiChatService).mockImplementation(() => ({ getMessagesAndTopics: mockGet }) as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      await caller.sendMessageInServer({
+        // no groupId provided
+        newAssistantMessage: { model: 'gpt-4o', provider: 'openai' },
+        newTopic: { title: 'New Topic' },
+        newUserMessage: { content: 'hi' },
+        sessionId: 's1',
+      } as any);
+
+      // Verify groupId is undefined (which will be treated as null in the database)
+      expect(mockCreateTopic).toHaveBeenCalledWith(
+        expect.objectContaining({
+          groupId: undefined,
+          sessionId: 's1',
+          title: 'New Topic',
+        }),
+      );
+    });
+  });
+
   describe('agentId support', () => {
     it('should pass agentId to messages when provided', async () => {
       const mockCreateMessage = vi

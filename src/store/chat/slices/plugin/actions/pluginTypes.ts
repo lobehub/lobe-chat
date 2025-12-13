@@ -22,11 +22,25 @@ const log = debug('lobe-store:plugin-types');
  * Plugin type-specific implementations
  * Each method handles a specific type of plugin invocation
  */
+/**
+ * Result from invokeBuiltinTool
+ */
+export interface BuiltinToolInvokeResult {
+  content?: string;
+  error?: any;
+  state?: any;
+  stop?: boolean;
+  success: boolean;
+}
+
 export interface PluginTypesAction {
   /**
    * Invoke builtin tool
    */
-  invokeBuiltinTool: (id: string, payload: ChatToolPayload) => Promise<void>;
+  invokeBuiltinTool: (
+    id: string,
+    payload: ChatToolPayload,
+  ) => Promise<BuiltinToolInvokeResult | undefined>;
 
   /**
    * Invoke default type plugin (returns data)
@@ -72,7 +86,7 @@ export const pluginTypes: StateCreator<
     }
 
     const params = safeParseJSON(payload.arguments);
-    if (!params) return;
+    if (!params) return { error: 'Invalid arguments', success: false };
 
     // Check if there's a registered executor in Tool Store (new architecture)
     if (hasExecutor(payload.identifier, payload.apiName)) {
@@ -83,24 +97,31 @@ export const pluginTypes: StateCreator<
       const operation = operationId ? get().operations[operationId] : undefined;
       const context = operationId ? { operationId } : undefined;
 
+      // Get agent ID from operation context (the agent currently executing)
+      const agentId = operation?.context?.agentId;
+
+      // Get group orchestration callbacks if available (for group management tools)
+      const groupOrchestration = get().getGroupOrchestrationCallbacks?.();
+
       log(
-        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s',
+        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s, agentId=%s, hasGroupOrchestration=%s',
         payload.identifier,
         payload.apiName,
         id,
+        agentId,
+        !!groupOrchestration,
       );
 
       // Call Tool Store's invokeBuiltinTool
-      const result = await useToolStore.getState().invokeBuiltinTool(
-        payload.identifier,
-        payload.apiName,
-        params,
-        {
+      const result = await useToolStore
+        .getState()
+        .invokeBuiltinTool(payload.identifier, payload.apiName, params, {
+          agentId,
+          groupOrchestration,
           messageId: id,
           operationId,
           signal: operation?.abortController?.signal,
-        },
-      );
+        });
 
       // Use optimisticUpdateToolMessage to batch update content, state, error
       await optimisticUpdateToolMessage(
@@ -125,7 +146,8 @@ export const pluginTypes: StateCreator<
         log('[invokeBuiltinTool] Executor returned stop=true, stopping execution');
       }
 
-      return;
+      // Return the result for call_tool executor to use
+      return result;
     }
 
     // Fallback to legacy action-based approach (for backward compatibility)
@@ -133,16 +155,12 @@ export const pluginTypes: StateCreator<
     const { [payload.apiName]: action } = get();
     if (!action) {
       console.error(`[invokeBuiltinTool] plugin Action not found: ${payload.apiName}`);
-      return;
+      return { error: `Action not found: ${payload.apiName}`, success: false };
     }
 
-    log(
-      '[invokeBuiltinTool] Using legacy action: %s, messageId=%s',
-      payload.apiName,
-      id,
-    );
+    log('[invokeBuiltinTool] Using legacy action: %s, messageId=%s', payload.apiName, id);
 
-    return await action(id, params);
+    return (await action(id, params)) as any;
   },
 
   invokeDefaultTypePlugin: async (id, payload) => {

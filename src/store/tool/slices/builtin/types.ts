@@ -41,9 +41,94 @@ export interface BuiltinToolResult {
 }
 
 /**
+ * Base params for group orchestration callbacks
+ */
+export interface GroupOrchestrationBaseParams {
+  /**
+   * The supervisor agent ID (the one who called this tool)
+   */
+  supervisorAgentId: string;
+}
+
+/**
+ * Params for triggerSpeak callback
+ */
+export interface TriggerSpeakParams extends GroupOrchestrationBaseParams {
+  /**
+   * The agent ID to speak
+   */
+  agentId: string;
+  /**
+   * Optional instruction for the agent
+   */
+  instruction?: string;
+}
+
+/**
+ * Params for triggerBroadcast callback
+ */
+export interface TriggerBroadcastParams extends GroupOrchestrationBaseParams {
+  /**
+   * Array of agent IDs to broadcast to
+   */
+  agentIds: string[];
+  /**
+   * Optional instruction for the agents
+   */
+  instruction?: string;
+}
+
+/**
+ * Params for triggerDelegate callback
+ */
+export interface TriggerDelegateParams extends GroupOrchestrationBaseParams {
+  /**
+   * The agent ID to delegate to
+   */
+  agentId: string;
+  /**
+   * Optional reason for delegation
+   */
+  reason?: string;
+}
+
+/**
+ * Group Orchestration callbacks for group management tools
+ * These callbacks are used to trigger the next phase in multi-agent orchestration
+ */
+export interface GroupOrchestrationCallbacks {
+  /**
+   * Trigger broadcast to multiple agents
+   */
+  triggerBroadcast: (params: TriggerBroadcastParams) => Promise<void>;
+
+  /**
+   * Trigger delegate to a specific agent
+   */
+  triggerDelegate: (params: TriggerDelegateParams) => Promise<void>;
+
+  /**
+   * Trigger speak to a specific agent
+   */
+  triggerSpeak: (params: TriggerSpeakParams) => Promise<void>;
+}
+
+/**
  * Context passed to builtin tool executors
  */
 export interface BuiltinToolContext {
+  /**
+   * The current agent ID executing this tool (supervisor agent in group context)
+   * Used to identify which agent called the tool for orchestration purposes
+   */
+  agentId?: string;
+
+  /**
+   * Group orchestration callbacks (only available in group chat context)
+   * Used by group management tools to trigger the next orchestration phase
+   */
+  groupOrchestration?: GroupOrchestrationCallbacks;
+
   /**
    * The tool message ID
    */

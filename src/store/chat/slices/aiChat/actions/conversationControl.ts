@@ -9,6 +9,7 @@ import { ChatStore } from '@/store/chat/store';
 
 import { displayMessageSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
+import { OptimisticUpdateContext } from '../../message/actions/optimisticUpdate';
 import { dbMessageSelectors } from '../../message/selectors';
 
 /**
@@ -29,8 +30,15 @@ export interface ConversationControlAction {
   clearSendMessageError: () => void;
   /**
    * Switches to a different branch of a message
+   * @param messageId - The ID of the message to switch branch
+   * @param branchIndex - The index of the branch to switch to
+   * @param context - Optional context for optimistic update (required for Group mode)
    */
-  switchMessageBranch: (messageId: string, branchIndex: number) => Promise<void>;
+  switchMessageBranch: (
+    messageId: string,
+    branchIndex: number,
+    context?: OptimisticUpdateContext,
+  ) => Promise<void>;
   /**
    * Approve tool intervention
    * @param toolMessageId - The ID of the tool message to approve
@@ -131,8 +139,12 @@ export const conversationControl: StateCreator<
     });
   },
 
-  switchMessageBranch: async (messageId, branchIndex) => {
-    await get().optimisticUpdateMessageMetadata(messageId, { activeBranchIndex: branchIndex });
+  switchMessageBranch: async (messageId, branchIndex, context) => {
+    await get().optimisticUpdateMessageMetadata(
+      messageId,
+      { activeBranchIndex: branchIndex },
+      context,
+    );
   },
   approveToolCalling: async (toolMessageId, _assistantGroupId, context) => {
     const { internal_execAgentRuntime, startOperation, completeOperation } = get();
