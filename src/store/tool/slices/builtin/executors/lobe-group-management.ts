@@ -234,7 +234,10 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
 
   // ==================== Flow Control ====================
 
-  createWorkflow = async (params: CreateWorkflowParams): Promise<BuiltinToolResult> => {
+  createWorkflow = async (
+    params: CreateWorkflowParams,
+    _ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     // TODO: Implement workflow creation
     return {
       content: JSON.stringify({
@@ -246,9 +249,8 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
     };
   };
 
-  vote = async (params: VoteParams): Promise<BuiltinToolResult> => {
+  vote = async (params: VoteParams, _ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
     // TODO: Implement voting mechanism
-
     return {
       content: JSON.stringify({
         message: 'Voting not yet implemented',

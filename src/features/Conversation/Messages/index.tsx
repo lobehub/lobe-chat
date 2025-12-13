@@ -30,7 +30,6 @@ import {
 } from '../store';
 import AssistantMessage from './Assistant';
 import AssistantGroupMessage from './AssistantGroup';
-import SupervisorMessage from './Supervisor';
 import ToolMessage from './Tool';
 import UserMessage from './User';
 
@@ -208,10 +207,6 @@ const MessageItem = memo<MessageItemProps>(
 
         case 'tool': {
           return <ToolMessage id={id} index={index} />;
-        }
-
-        case 'supervisor': {
-          return <SupervisorMessage disableEditing={disableEditing} id={id} index={index} />;
         }
       }
 
