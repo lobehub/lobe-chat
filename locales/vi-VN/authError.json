@@ -1,0 +1,40 @@
+{
+  "actions": {
+    "discord": "Gửi phản hồi qua Discord",
+    "home": "Quay về trang chủ",
+    "retry": "Đăng nhập lại"
+  },
+  "codes": {
+    "ACCOUNT_ALREADY_LINKED_TO_DIFFERENT_USER": "Tài khoản này đã được liên kết với người dùng khác",
+    "ACCOUNT_NOT_FOUND": "Không tìm thấy tài khoản tương ứng",
+    "CREDENTIAL_ACCOUNT_NOT_FOUND": "Tài khoản xác thực không tồn tại",
+    "EMAIL_CAN_NOT_BE_UPDATED": "Không thể thay đổi email của tài khoản hiện tại",
+    "EMAIL_NOT_VERIFIED": "Vui lòng xác minh email trước",
+    "FAILED_TO_CREATE_SESSION": "Tạo phiên làm việc thất bại",
+    "FAILED_TO_CREATE_USER": "Tạo người dùng thất bại",
+    "FAILED_TO_GET_SESSION": "Lấy thông tin phiên làm việc thất bại",
+    "FAILED_TO_GET_USER_INFO": "Lấy thông tin người dùng thất bại",
+    "FAILED_TO_UNLINK_LAST_ACCOUNT": "Không thể hủy liên kết tài khoản cuối cùng",
+    "FAILED_TO_UPDATE_USER": "Cập nhật thông tin người dùng thất bại",
+    "ID_TOKEN_NOT_SUPPORTED": "Mã định danh không được hỗ trợ",
+    "INVALID_EMAIL": "Định dạng email không hợp lệ",
+    "INVALID_EMAIL_OR_PASSWORD": "Email hoặc mật khẩu không đúng",
+    "INVALID_PASSWORD": "Định dạng mật khẩu không hợp lệ",
+    "INVALID_TOKEN": "Mã xác thực không hợp lệ hoặc đã hết hạn",
+    "PASSWORD_TOO_LONG": "Mật khẩu quá dài",
+    "PASSWORD_TOO_SHORT": "Mật khẩu quá ngắn",
+    "PROVIDER_NOT_FOUND": "Không tìm thấy cấu hình nhà cung cấp xác thực",
+    "RATE_LIMIT_EXCEEDED": "Yêu cầu quá nhiều, vui lòng thử lại sau",
+    "SESSION_EXPIRED": "Phiên làm việc đã hết hạn, vui lòng đăng nhập lại",
+    "SOCIAL_ACCOUNT_ALREADY_LINKED": "Tài khoản mạng xã hội này đã được liên kết với người dùng khác",
+    "UNEXPECTED_ERROR": "Đã xảy ra lỗi không xác định, vui lòng thử lại",
+    "UNKNOWN": "Đã xảy ra lỗi không xác định, vui lòng thử lại hoặc liên hệ hỗ trợ",
+    "USER_ALREADY_EXISTS": "Người dùng đã tồn tại",
+    "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "Email đã được sử dụng, vui lòng thử email khác",
+    "USER_ALREADY_HAS_PASSWORD": "Tài khoản này đã có mật khẩu",
+    "USER_BANNED": "Người dùng này đã bị cấm",
+    "USER_EMAIL_NOT_FOUND": "Không tìm thấy email tương ứng",
+    "USER_NOT_FOUND": "Không tìm thấy người dùng"
+  },
+  "title": "Lỗi xác thực"
+}

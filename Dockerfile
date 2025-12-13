@@ -8,35 +8,31 @@ ARG USE_CN_MIRROR
 
 ENV DEBIAN_FRONTEND="noninteractive"
 
-RUN \
-    # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
-    if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
-        sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"; \
-    fi \
-    # Add required package
-    && apt update \
-    && apt install ca-certificates proxychains-ng -qy \
-    # Prepare required package to distroless
-    && mkdir -p /distroless/bin /distroless/etc /distroless/etc/ssl/certs /distroless/lib \
-    # Copy proxychains to distroless
-    && cp /usr/lib/$(arch)-linux-gnu/libproxychains.so.4 /distroless/lib/libproxychains.so.4 \
-    && cp /usr/lib/$(arch)-linux-gnu/libdl.so.2 /distroless/lib/libdl.so.2 \
-    && cp /usr/bin/proxychains4 /distroless/bin/proxychains \
-    && cp /etc/proxychains4.conf /distroless/etc/proxychains4.conf \
-    # Copy node to distroless
-    && cp /usr/lib/$(arch)-linux-gnu/libstdc++.so.6 /distroless/lib/libstdc++.so.6 \
-    && cp /usr/lib/$(arch)-linux-gnu/libgcc_s.so.1 /distroless/lib/libgcc_s.so.1 \
-    && cp /usr/local/bin/node /distroless/bin/node \
-    # Copy CA certificates to distroless
-    && cp /etc/ssl/certs/ca-certificates.crt /distroless/etc/ssl/certs/ca-certificates.crt \
-    # Cleanup temp files
-    && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
+RUN <<'EOF'
+set -e
+if [ "${USE_CN_MIRROR:-false}" = "true" ]; then
+    sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"
+fi
+apt update
+apt install ca-certificates proxychains-ng -qy
+mkdir -p /distroless/bin /distroless/etc /distroless/etc/ssl/certs /distroless/lib
+cp /usr/lib/$(arch)-linux-gnu/libproxychains.so.4 /distroless/lib/libproxychains.so.4
+cp /usr/lib/$(arch)-linux-gnu/libdl.so.2 /distroless/lib/libdl.so.2
+cp /usr/bin/proxychains4 /distroless/bin/proxychains
+cp /etc/proxychains4.conf /distroless/etc/proxychains4.conf
+cp /usr/lib/$(arch)-linux-gnu/libstdc++.so.6 /distroless/lib/libstdc++.so.6
+cp /usr/lib/$(arch)-linux-gnu/libgcc_s.so.1 /distroless/lib/libgcc_s.so.1
+cp /usr/local/bin/node /distroless/bin/node
+cp /etc/ssl/certs/ca-certificates.crt /distroless/etc/ssl/certs/ca-certificates.crt
+rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
+EOF
 
 ## Builder image, install all the dependencies and build the app
 FROM base AS builder
 
 ARG USE_CN_MIRROR
 ARG NEXT_PUBLIC_BASE_PATH
+ARG NEXT_PUBLIC_ENABLE_BETTER_AUTH
 ARG NEXT_PUBLIC_ENABLE_NEXT_AUTH
 ARG NEXT_PUBLIC_ENABLE_CLERK_AUTH
 ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
@@ -52,7 +48,8 @@ ARG FEATURE_FLAGS
 ENV NEXT_PUBLIC_BASE_PATH="${NEXT_PUBLIC_BASE_PATH}" \
     FEATURE_FLAGS="${FEATURE_FLAGS}"
 
-ENV NEXT_PUBLIC_ENABLE_NEXT_AUTH="${NEXT_PUBLIC_ENABLE_NEXT_AUTH:-1}" \
+ENV NEXT_PUBLIC_ENABLE_BETTER_AUTH="${NEXT_PUBLIC_ENABLE_BETTER_AUTH:-0}" \
+    NEXT_PUBLIC_ENABLE_NEXT_AUTH="${NEXT_PUBLIC_ENABLE_NEXT_AUTH:-1}" \
     NEXT_PUBLIC_ENABLE_CLERK_AUTH="${NEXT_PUBLIC_ENABLE_CLERK_AUTH:-0}" \
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}" \
     CLERK_WEBHOOK_SECRET="whsec_xxx" \
@@ -84,29 +81,26 @@ WORKDIR /app
 COPY package.json pnpm-workspace.yaml ./
 COPY .npmrc ./
 COPY packages ./packages
+# bring in desktop workspace manifest so pnpm can resolve it
+COPY apps/desktop/src/main/package.json ./apps/desktop/src/main/package.json
 
-RUN \
-    # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
-    if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
-        export SENTRYCLI_CDNURL="https://npmmirror.com/mirrors/sentry-cli"; \
-        npm config set registry "https://registry.npmmirror.com/"; \
-        echo 'canvas_binary_host_mirror=https://npmmirror.com/mirrors/canvas' >> .npmrc; \
-    fi \
-    # Set the registry for corepack
-    && export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
-    # Update corepack to latest (nodejs/corepack#612)
-    && npm i -g corepack@latest \
-    # Enable corepack
-    && corepack enable \
-    # Use pnpm for corepack
-    && corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json) \
-    # Install the dependencies
-    && pnpm i \
-    # Add db migration dependencies
-    && mkdir -p /deps \
-    && cd /deps \
-    && pnpm init \
-    && pnpm add pg drizzle-orm
+RUN <<'EOF'
+set -e
+if [ "${USE_CN_MIRROR:-false}" = "true" ]; then
+    export SENTRYCLI_CDNURL="https://npmmirror.com/mirrors/sentry-cli"
+    npm config set registry "https://registry.npmmirror.com/"
+    echo 'canvas_binary_host_mirror=https://npmmirror.com/mirrors/canvas' >> .npmrc
+fi
+export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//')
+npm i -g corepack@latest
+corepack enable
+corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json)
+pnpm i
+mkdir -p /deps
+cd /deps
+pnpm init
+pnpm add pg drizzle-orm
+EOF
 
 COPY . .
 
@@ -135,12 +129,12 @@ COPY --from=builder /deps/node_modules/drizzle-orm /app/node_modules/drizzle-orm
 # Copy server launcher
 COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
 
-RUN \
-    # Add nextjs:nodejs to run the app
-    addgroup -S -g 1001 nodejs \
-    && adduser -D -G nodejs -H -S -h /app -u 1001 nextjs \
-    # Set permission for nextjs:nodejs
-    && chown -R nextjs:nodejs /app /etc/proxychains4.conf
+RUN <<'EOF'
+set -e
+addgroup -S -g 1001 nodejs
+adduser -D -G nodejs -H -S -h /app -u 1001 nextjs
+chown -R nextjs:nodejs /app /etc/proxychains4.conf
+EOF
 
 ## Production image, copy all the files and run next
 FROM scratch
@@ -177,10 +171,10 @@ ENV KEY_VAULTS_SECRET="" \
     DATABASE_DRIVER="node" \
     DATABASE_URL=""
 
-# Next Auth
-ENV NEXT_AUTH_SECRET="" \
-    NEXT_AUTH_SSO_PROVIDERS="" \
-    NEXTAUTH_URL=""
+# Better Auth
+ENV AUTH_SECRET="" \
+    AUTH_SSO_PROVIDERS="" \
+    NEXT_PUBLIC_AUTH_URL=""
 
 # Clerk
 ENV CLERK_SECRET_KEY="" \
@@ -229,6 +223,8 @@ ENV \
     GITHUB_TOKEN="" GITHUB_MODEL_LIST="" \
     # Google
     GOOGLE_API_KEY="" GOOGLE_MODEL_LIST="" GOOGLE_PROXY_URL="" \
+    # Vertex AI
+    VERTEXAI_CREDENTIALS="" VERTEXAI_PROJECT="" VERTEXAI_LOCATION="" VERTEXAI_MODEL_LIST="" \
     # Groq
     GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
     # Higress

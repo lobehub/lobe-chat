@@ -775,11 +775,36 @@
       "groupName": "Dahili Araçlar"
     },
     "disabled": "Mevcut model fonksiyon çağrılarını desteklemez, eklenti kullanılamaz",
+    "klavis": {
+      "addServer": "Sunucu Ekle",
+      "authCompleted": "Kimlik Doğrulama Tamamlandı",
+      "authFailed": "Kimlik Doğrulama Başarısız",
+      "authRequired": "Kimlik Doğrulama Gerekli",
+      "connected": "Bağlandı",
+      "error": "Hata",
+      "groupName": "Klavis Araçları",
+      "manage": "Klavis'i Yönet",
+      "manageTitle": "Klavis Entegrasyonunu Yönet",
+      "noServers": "Bağlı sunucu yok",
+      "notEnabled": "Klavis hizmeti etkin değil",
+      "oauthRequired": "Lütfen yeni pencerede OAuth kimlik doğrulamasını tamamlayın",
+      "pendingAuth": "Kimlik Doğrulama Bekleniyor",
+      "serverCreated": "Sunucu başarıyla oluşturuldu",
+      "serverCreatedFailed": "Sunucu oluşturulamadı",
+      "serverRemoved": "Sunucu silindi",
+      "servers": "sunucu",
+      "tools": "araç",
+      "verifyAuth": "Kimlik doğrulamayı tamamladım"
+    },
     "plugins": {
       "enabled": "Etkin: {{num}}",
       "groupName": "Eklentiler",
       "noEnabled": "Etkin eklenti yok",
       "store": "Eklenti Mağazası"
+    },
+    "tabs": {
+      "all": "Tümü",
+      "installed": "Etkinleştirildi"
     },
     "title": "Uzantı Araçları"
   }

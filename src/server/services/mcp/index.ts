@@ -4,6 +4,7 @@ import { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehu
 import { DeploymentOption } from '@lobehub/market-sdk';
 import { McpError } from '@modelcontextprotocol/sdk/types.js';
 import { TRPCError } from '@trpc/server';
+import retry from 'async-retry';
 import debug from 'debug';
 
 import {
@@ -20,11 +21,59 @@ import { mcpSystemDepsCheckService } from './deps';
 
 const log = debug('lobe-mcp:service');
 
+/**
+ * MCP Tool call raw result type
+ */
+export interface MCPToolCallRawResult {
+  content: any[];
+  isError?: boolean;
+}
+
+/**
+ * MCP Tool call processed result type
+ */
+export interface MCPToolCallProcessedResult {
+  content: string;
+  error?: Error;
+  state: {
+    content: any[];
+    isError?: boolean;
+  };
+  success: boolean;
+}
+
 // Removed MCPConnection interface as it's no longer needed
 
 export class MCPService {
   // Store instances of the custom MCPClient, keyed by serialized MCPClientParams
   private clients: Map<string, MCPClient> = new Map();
+
+  /**
+   * Process MCP tool call result with content blocks processing
+   * This is a common utility method that can be used by both internal MCP calls and external services (e.g., Klavis)
+   */
+  static async processToolCallResult(
+    result: MCPToolCallRawResult,
+    processContentBlocksFn?: ProcessContentBlocksFn,
+  ): Promise<MCPToolCallProcessedResult> {
+    // Process content blocks (upload images, etc.)
+
+    const newContent =
+      result.isError || !processContentBlocksFn
+        ? result.content
+        : await processContentBlocksFn(result.content);
+
+    // Convert content blocks to string
+    const content = contentBlocksToString(newContent);
+
+    const state = { ...result, content: newContent };
+
+    if (result.isError) {
+      return { content, state, success: true };
+    }
+
+    return { content, state, success: true };
+  }
 
   private sanitizeForLogging = <T extends Record<string, any>>(obj: T): Omit<T, 'env'> => {
     if (!obj) return obj;
@@ -36,48 +85,47 @@ export class MCPService {
   // --- MCP Interaction ---
 
   // listTools now accepts MCPClientParams
-  async listTools(
-    params: MCPClientParams,
-    { retryTime, skipCache }: { retryTime?: number; skipCache?: boolean } = {},
-  ): Promise<LobeChatPluginApi[]> {
-    const client = await this.getClient(params, skipCache); // Get client using params
+  async listTools(params: MCPClientParams): Promise<LobeChatPluginApi[]> {
     const loggableParams = this.sanitizeForLogging(params);
-    log(`Listing tools using client for params: %O`, loggableParams);
 
-    try {
-      const result = await client.listTools();
-      log(
-        `Tools listed successfully for params: %O, result count: %d`,
-        loggableParams,
-        result.length,
-      );
-      return result.map<LobeChatPluginApi>((item) => ({
-        // Assuming identifier is the unique name/id
-        description: item.description,
-        name: item.name,
-        parameters: item.inputSchema as PluginSchema,
-      }));
-    } catch (error) {
-      let nextReTryTime = retryTime || 0;
+    return retry(
+      async (bail, attemptNumber) => {
+        // Skip cache on retry attempts
+        const skipCache = attemptNumber > 1;
+        const client = await this.getClient(params, skipCache);
+        log(`Listing tools using client for params: %O (attempt ${attemptNumber})`, loggableParams);
 
-      if ((error as Error).message === 'NoValidSessionId' && nextReTryTime <= 3) {
-        if (!nextReTryTime) {
-          nextReTryTime = 1;
-        } else {
-          nextReTryTime += 1;
+        try {
+          const result = await client.listTools();
+          log(
+            `Tools listed successfully for params: %O, result count: %d`,
+            loggableParams,
+            result.length,
+          );
+          return result.map<LobeChatPluginApi>((item) => ({
+            // Assuming identifier is the unique name/id
+            description: item.description,
+            name: item.name,
+            parameters: item.inputSchema as PluginSchema,
+          }));
+        } catch (error) {
+          // Only retry for NoValidSessionId errors
+          if ((error as Error).message !== 'NoValidSessionId') {
+            console.error(`Error listing tools for params %O:`, loggableParams, error);
+            bail(
+              new TRPCError({
+                cause: error,
+                code: 'INTERNAL_SERVER_ERROR',
+                message: `Error listing tools from MCP server: ${(error as Error).message}`,
+              }),
+            );
+            return []; // This line will never be reached due to bail, but needed for type safety
+          }
+          throw error; // Rethrow to trigger retry
         }
-
-        return this.listTools(params, { retryTime: nextReTryTime, skipCache: true });
-      }
-
-      console.error(`Error listing tools for params %O:`, loggableParams, error);
-      // Propagate a TRPCError for better handling upstream
-      throw new TRPCError({
-        cause: error,
-        code: 'INTERNAL_SERVER_ERROR',
-        message: `Error listing tools from MCP server: ${(error as Error).message}`,
-      });
-    }
+      },
+      { maxRetryTime: 1000, minTimeout: 100, retries: 3 },
+    );
   }
 
   // listTools now accepts MCPClientParams
@@ -162,7 +210,12 @@ export class MCPService {
     processContentBlocks?: ProcessContentBlocksFn;
     toolName: string;
   }): Promise<any> {
-    const { clientParams, toolName, argsStr, processContentBlocks } = options;
+    const {
+      clientParams,
+      toolName,
+      argsStr,
+      processContentBlocks: processContentBlocksFn,
+    } = options;
 
     const client = await this.getClient(clientParams); // Get client using params
 
@@ -179,26 +232,19 @@ export class MCPService {
       // Delegate the call to the MCPClient instance
       const result = await client.callTool(toolName, args); // Pass args directly
 
-      // Process content blocks (upload images, etc.)
-      const newContent =
-        result.isError || !processContentBlocks
-          ? result.content
-          : await processContentBlocks(result.content);
-
-      // Convert content blocks to string
-      const content = contentBlocksToString(newContent);
-
-      const state = { ...result, content: newContent };
+      // Use the common processing method
+      const processedResult = await MCPService.processToolCallResult(
+        result,
+        processContentBlocksFn,
+      );
 
       log(
         `Tool "${toolName}" called successfully for params: %O, result: %O`,
         loggableParams,
-        state,
+        processedResult.state,
       );
 
-      if (result.isError) return { content, state, success: true };
-
-      return { content, state, success: true };
+      return processedResult;
     } catch (error) {
       if (error instanceof McpError) {
         const mcpError = error as McpError;

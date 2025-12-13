@@ -616,6 +616,7 @@
     "supportedProviders": "支持該模型的服務商"
   },
   "plugins": {
+    "builtinTag": "內建外掛",
     "community": "社區插件",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "安裝插件",
     "installed": "已安裝",
+    "legacyTag": "舊版外掛",
     "list": "插件列表",
     "meta": {
       "description": "描述",

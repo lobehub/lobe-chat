@@ -48,6 +48,7 @@ const Title = memo<TitleProps>(
     // Check if it's an external link or internal discover route
     const isExternalLink = moreLink?.startsWith('http') ?? false;
     const isDiscoverRoute = moreLink?.startsWith('/discover') ?? false;
+    console.log('moreLink', moreLink);
 
     let moreLinkElement = null;
     if (moreLink) {
@@ -60,7 +61,7 @@ const Title = memo<TitleProps>(
         );
       } else if (isDiscoverRoute) {
         moreLinkElement = (
-          <RouterLink className={styles.more} to={moreLink.replace('/discover', '')}>
+          <RouterLink className={styles.more} to={moreLink}>
             <span style={{ marginRight: 4 }}>{more}</span>
             <Icon icon={ChevronRight} />
           </RouterLink>

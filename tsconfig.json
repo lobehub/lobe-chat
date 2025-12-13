@@ -47,5 +47,10 @@
     ".next/types/**/*.ts",
     "next-env.d.ts",
     ".next/dev/types/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "./apps/desktop"
+    }
   ]
 }

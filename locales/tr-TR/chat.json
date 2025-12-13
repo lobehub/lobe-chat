@@ -53,6 +53,12 @@
       "desc": "Claude Thinking mekanizmasına dayalı kısıtlamalar (<1>Daha fazla bilgi edinin</1>), açıldığında otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
       "title": "Derin Düşünmeyi Aç"
     },
+    "imageAspectRatio": {
+      "title": "Görüntü En-Boy Oranı"
+    },
+    "imageResolution": {
+      "title": "Görüntü Çözünürlüğü"
+    },
     "reasoningBudgetToken": {
       "title": "Düşünme Tüketim Tokeni"
     },
@@ -248,8 +254,8 @@
   "noSelectedAgents": "Henüz üye seçilmedi",
   "openInNewWindow": "Sayfayı yeni pencerede aç",
   "owner": "Grup sahibi",
-  "pin": "Pin",
-  "pinOff": "Unpin",
+  "pin": "Sabitle",
+  "pinOff": "Sabitlemeyi Kaldır",
   "rag": {
     "referenceChunks": "Referans Parçaları",
     "userQuery": {
@@ -414,8 +420,8 @@
     "clear": "Çeviriyi Temizle"
   },
   "tts": {
-    "action": "Text-to-Speech",
-    "clear": "Clear Speech"
+    "action": "Metinden Sese",
+    "clear": "Sesi Temizle"
   },
   "untitledAgent": "Adsız Asistan",
   "updateAgent": "Asistan Bilgilerini Güncelle",

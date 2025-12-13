@@ -1,4 +1,5 @@
 import auth from './auth';
+import authError from './authError';
 import changelog from './changelog';
 import chat from './chat';
 import clerk from './clerk';
@@ -33,6 +34,7 @@ import welcome from './welcome';
 
 const resources = {
   auth,
+  authError,
   changelog,
   chat,
   clerk,

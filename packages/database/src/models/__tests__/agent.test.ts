@@ -20,9 +20,12 @@ import { getTestDB } from './_util';
 const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'agent-model-test-user-id';
+const userId2 = 'agent-model-test-user-id-2';
 const agentModel = new AgentModel(serverDB, userId);
+const agentModel2 = new AgentModel(serverDB, userId2);
 
 const knowledgeBase = { id: 'kb1', userId, name: 'knowledgeBase' };
+const knowledgeBase2 = { id: 'kb2', userId: userId2, name: 'knowledgeBase2' };
 const fileList = [
   {
     id: '1',
@@ -42,11 +45,22 @@ const fileList = [
   },
 ];
 
+const fileList2 = [
+  {
+    id: '3',
+    name: 'other.pdf',
+    url: 'https://a.com/other.pdf',
+    size: 1000,
+    fileType: 'application/pdf',
+    userId: userId2,
+  },
+];
+
 beforeEach(async () => {
   await serverDB.delete(users);
-  await serverDB.insert(users).values([{ id: userId }]);
-  await serverDB.insert(knowledgeBases).values(knowledgeBase);
-  await serverDB.insert(files).values(fileList);
+  await serverDB.insert(users).values([{ id: userId }, { id: userId2 }]);
+  await serverDB.insert(knowledgeBases).values([knowledgeBase, knowledgeBase2]);
+  await serverDB.insert(files).values([...fileList, ...fileList2]);
 });
 
 afterEach(async () => {
@@ -226,6 +240,27 @@ describe('AgentModel', () => {
 
       expect(result).toBeUndefined();
     });
+
+    it('should not delete another user agent knowledge base association', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId })
+        .returning()
+        .then((res) => res[0]);
+      await serverDB
+        .insert(agentsKnowledgeBases)
+        .values({ agentId: agent.id, knowledgeBaseId: knowledgeBase.id, userId });
+
+      // Try to delete with another user's model
+      await agentModel2.deleteAgentKnowledgeBase(agent.id, knowledgeBase.id);
+
+      const result = await serverDB.query.agentsKnowledgeBases.findFirst({
+        where: eq(agentsKnowledgeBases.agentId, agent.id),
+      });
+
+      // Should still exist
+      expect(result).toBeDefined();
+    });
   });
 
   describe('toggleKnowledgeBase', () => {
@@ -247,6 +282,28 @@ describe('AgentModel', () => {
       });
 
       expect(result?.enabled).toBe(false);
+    });
+
+    it('should not toggle another user agent knowledge base association', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId })
+        .returning()
+        .then((res) => res[0]);
+
+      await serverDB
+        .insert(agentsKnowledgeBases)
+        .values({ agentId: agent.id, knowledgeBaseId: knowledgeBase.id, userId, enabled: true });
+
+      // Try to toggle with another user's model
+      await agentModel2.toggleKnowledgeBase(agent.id, knowledgeBase.id, false);
+
+      const result = await serverDB.query.agentsKnowledgeBases.findFirst({
+        where: eq(agentsKnowledgeBases.agentId, agent.id),
+      });
+
+      // Should still be enabled
+      expect(result?.enabled).toBe(true);
     });
   });
 
@@ -363,6 +420,26 @@ describe('AgentModel', () => {
 
       expect(result).toBeUndefined();
     });
+
+    it('should not delete another user agent file association', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId })
+        .returning()
+        .then((res) => res[0]);
+
+      await serverDB.insert(agentsFiles).values({ agentId: agent.id, fileId: '1', userId });
+
+      // Try to delete with another user's model
+      await agentModel2.deleteAgentFile(agent.id, '1');
+
+      const result = await serverDB.query.agentsFiles.findFirst({
+        where: eq(agentsFiles.agentId, agent.id),
+      });
+
+      // Should still exist
+      expect(result).toBeDefined();
+    });
   });
 
   describe('toggleFile', () => {
@@ -384,6 +461,28 @@ describe('AgentModel', () => {
       });
 
       expect(result?.enabled).toBe(false);
+    });
+
+    it('should not toggle another user agent file association', async () => {
+      const agent = await serverDB
+        .insert(agents)
+        .values({ userId })
+        .returning()
+        .then((res) => res[0]);
+
+      await serverDB
+        .insert(agentsFiles)
+        .values({ agentId: agent.id, fileId: '1', userId, enabled: true });
+
+      // Try to toggle with another user's model
+      await agentModel2.toggleFile(agent.id, '1', false);
+
+      const result = await serverDB.query.agentsFiles.findFirst({
+        where: eq(agentsFiles.agentId, agent.id),
+      });
+
+      // Should still be enabled
+      expect(result?.enabled).toBe(true);
     });
   });
 });

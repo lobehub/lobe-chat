@@ -4,9 +4,9 @@ export interface PythonOptions {
    */
   pyodideIndexUrl?: string;
   /**
-   * PyPI 索引 URL，要求支持 [JSON API](https://warehouse.pypa.io/api-reference/json.html)
+   * PyPI index URL, must support [JSON API](https://warehouse.pypa.io/api-reference/json.html)
    *
-   * 默认值：`https://pypi.org/pypi/{package_name}/json`
+   * Default value: `https://pypi.org/pypi/{package_name}/json`
    */
   pypiIndexUrl?: string;
 }

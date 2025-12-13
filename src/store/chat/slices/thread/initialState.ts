@@ -20,7 +20,7 @@ export interface ChatThreadState {
   /**
    * when open thread creator, set the message id to it
    */
-  threadStartMessageId?: string;
+  threadStartMessageId?: string | null;
   threadsInit?: boolean;
 }
 

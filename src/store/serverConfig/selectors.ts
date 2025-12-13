@@ -3,6 +3,7 @@ import { ServerConfigStore } from './store';
 export const featureFlagsSelectors = (s: ServerConfigStore) => s.featureFlags;
 
 export const serverConfigSelectors = {
+  enableKlavis: (s: ServerConfigStore) => s.serverConfig.enableKlavis || false,
   enableUploadFileToServer: (s: ServerConfigStore) => s.serverConfig.enableUploadFileToServer,
   enabledAccessCode: (s: ServerConfigStore) => !!s.serverConfig?.enabledAccessCode,
   enabledOAuthSSO: (s: ServerConfigStore) => s.serverConfig.enabledOAuthSSO,

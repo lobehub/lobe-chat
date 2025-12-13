@@ -616,6 +616,7 @@
     "supportedProviders": "مزودو الخدمة المدعومون لهذا النموذج"
   },
   "plugins": {
+    "builtinTag": "الملحقات المدمجة",
     "community": "إضافات المجتمع",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "تثبيت الإضافة",
     "installed": "تم التثبيت",
+    "legacyTag": "الملحقات القديمة",
     "list": "قائمة الإضافات",
     "meta": {
       "description": "وصف",

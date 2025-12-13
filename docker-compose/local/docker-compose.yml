@@ -35,6 +35,23 @@ services:
     networks:
       - lobe-network
 
+  redis:
+    image: redis:7-alpine
+    container_name: lobe-redis
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1000 --appendonly yes
+    volumes:
+      - 'redis_data:/data'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: always
+    networks:
+      - lobe-network
+
   minio:
     image: minio/minio:RELEASE.2025-04-22T22-12-26Z
     container_name: lobe-minio
@@ -107,6 +124,8 @@ services:
         condition: service_started
       casdoor:
         condition: service_started
+      redis:
+        condition: service_healthy
 
     environment:
       - 'NEXT_AUTH_SSO_PROVIDERS=casdoor'
@@ -121,6 +140,9 @@ services:
       - 'LLM_VISION_IMAGE_USE_BASE64=1'
       - 'S3_SET_ACL=0'
       - 'SEARXNG_URL=http://searxng:8080'
+      - 'REDIS_URL=redis://redis:6379'
+      - 'REDIS_PREFIX=lobechat'
+      - 'REDIS_TLS=0'
     env_file:
       - .env
     restart: always
@@ -248,7 +270,8 @@ volumes:
     driver: local
   prometheus_data:
     driver: local
-
+  redis_data:
+    driver: local
 
 networks:
   lobe-network:

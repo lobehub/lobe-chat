@@ -97,6 +97,8 @@ export const documents = pgTable(
   (table) => [
     index('documents_source_idx').on(table.source),
     index('documents_file_type_idx').on(table.fileType),
+    index('documents_source_type_idx').on(table.sourceType),
+    index('documents_user_id_idx').on(table.userId),
     index('documents_file_id_idx').on(table.fileId),
     index('documents_parent_id_idx').on(table.parentId),
     uniqueIndex('documents_client_id_user_id_unique').on(table.clientId, table.userId),
@@ -152,6 +154,7 @@ export const files = pgTable(
   (table) => {
     return {
       fileHashIdx: index('file_hash_idx').on(table.fileHash),
+      userIdIdx: index('files_user_id_idx').on(table.userId),
       parentIdIdx: index('files_parent_id_idx').on(table.parentId),
       clientIdUnique: uniqueIndex('files_client_id_user_id_unique').on(
         table.clientId,

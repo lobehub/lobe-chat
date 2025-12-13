@@ -656,7 +656,8 @@ export class SessionModel {
       const results = await this.db.query.agents.findMany({
         limit: pageSize,
         offset,
-        orderBy: [desc(agents.updatedAt)],
+        // Keep deterministic ordering for keyword search results
+        orderBy: [asc(agents.id)],
         where: and(
           eq(agents.userId, this.userId),
           or(

@@ -2,17 +2,20 @@
 
 This document serves as a comprehensive guide for all team members when developing LobeChat.
 
+## Project Description
+
+You are developing an open-source, modern-design AI Agent Workspace: LobeHub(previous LobeChat).
+
 ## Tech Stack
 
 Built with modern technologies:
 
-- **Frontend**: Next.js 15, React 19, TypeScript
+- **Frontend**: Next.js 16, React 19, TypeScript
 - **UI Components**: Ant Design, @lobehub/ui, antd-style
 - **State Management**: Zustand, SWR
 - **Database**: PostgreSQL, PGLite, Drizzle ORM
 - **Testing**: Vitest, Testing Library
 - **Package Manager**: pnpm (monorepo structure)
-- **Build Tools**: Next.js (Turbopack in dev, Webpack in prod)
 
 ## Directory Structure
 
@@ -39,7 +42,6 @@ The project follows a well-organized monorepo structure:
 - Use `pnpm` as the primary package manager
 - Use `bun` to run npm scripts
 - Use `bunx` to run executable npm packages
-- Navigate to specific packages using `cd packages/<package-name>`
 
 ### Code Style Guidelines
 
@@ -63,7 +65,7 @@ The project follows a well-organized monorepo structure:
 
 ### Type Checking
 
-- Use `bun run type-check` to check for type errors
+- Use `bun run typecheck` to check for type errors
 
 ### i18n
 

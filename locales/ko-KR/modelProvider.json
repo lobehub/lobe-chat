@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "사용자 지정 서비스 제공자가 활성화되지 않았습니다",
       "disabled": "비활성화된 서비스 제공자",
       "enabled": "활성화된 서비스 제공자"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "사용자 지정 서비스 제공자 추가",
     "all": "전체",
     "list": {
+      "custom": "사용자 지정이 활성화되지 않았습니다",
       "disabled": "비활성화됨",
       "disabledActions": {
         "sort": "정렬 방식",

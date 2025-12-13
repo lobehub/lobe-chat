@@ -797,5 +797,180 @@
     "bps": true,
     "folderMillis": 1763987922211,
     "hash": "f823b521f4d25e5dc5ab238b372727d2d2d7f0aed27b5eabc8a9608ce4e50568"
+  },
+  {
+    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;"],
+    "bps": true,
+    "folderMillis": 1764215503726,
+    "hash": "4188893a9083b3c7baebdbad0dd3f9d9400ede7584ca2394f5c64305dc9ec7b0"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"accounts\" (\n\t\"access_token\" text,\n\t\"access_token_expires_at\" timestamp,\n\t\"account_id\" text NOT NULL,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"id_token\" text,\n\t\"password\" text,\n\t\"provider_id\" text NOT NULL,\n\t\"refresh_token\" text,\n\t\"refresh_token_expires_at\" timestamp,\n\t\"scope\" text,\n\t\"updated_at\" timestamp NOT NULL,\n\t\"user_id\" text NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"auth_sessions\" (\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"expires_at\" timestamp NOT NULL,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"ip_address\" text,\n\t\"token\" text NOT NULL,\n\t\"updated_at\" timestamp NOT NULL,\n\t\"user_agent\" text,\n\t\"user_id\" text NOT NULL,\n\tCONSTRAINT \"auth_sessions_token_unique\" UNIQUE(\"token\")\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"verifications\" (\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"expires_at\" timestamp NOT NULL,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"identifier\" text NOT NULL,\n\t\"updated_at\" timestamp DEFAULT now() NOT NULL,\n\t\"value\" text NOT NULL\n);\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"email_verified\" boolean DEFAULT false NOT NULL;",
+      "\nDO $$ BEGIN\n ALTER TABLE \"accounts\" ADD CONSTRAINT \"accounts_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n",
+      "\nDO $$ BEGIN\n ALTER TABLE \"auth_sessions\" ADD CONSTRAINT \"auth_sessions_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764229953081,
+    "hash": "1532ebceae7b70550bc9c230fb0a65090aaa773bc7b873eefbc2ce2a815997e2"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"nextauth_accounts\" RENAME COLUMN \"userId\" TO \"user_id\";",
+      "\nALTER TABLE \"nextauth_authenticators\" RENAME COLUMN \"userId\" TO \"user_id\";",
+      "\nALTER TABLE \"nextauth_sessions\" RENAME COLUMN \"userId\" TO \"user_id\";",
+      "\nALTER TABLE \"nextauth_accounts\" DROP CONSTRAINT \"nextauth_accounts_userId_users_id_fk\";\n",
+      "\nALTER TABLE \"nextauth_authenticators\" DROP CONSTRAINT \"nextauth_authenticators_userId_users_id_fk\";\n",
+      "\nALTER TABLE \"nextauth_sessions\" DROP CONSTRAINT \"nextauth_sessions_userId_users_id_fk\";\n",
+      "\nALTER TABLE \"nextauth_authenticators\" DROP CONSTRAINT \"nextauth_authenticators_userId_credentialID_pk\";",
+      "\nALTER TABLE \"threads\" ALTER COLUMN \"status\" DROP DEFAULT;",
+      "\nALTER TABLE \"threads\" ALTER COLUMN \"source_message_id\" DROP NOT NULL;",
+      "\nALTER TABLE \"nextauth_authenticators\" ADD CONSTRAINT \"nextauth_authenticators_user_id_credentialID_pk\" PRIMARY KEY(\"user_id\",\"credentialID\");",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"content\" text;",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
+      "\nALTER TABLE \"nextauth_accounts\" ADD CONSTRAINT \"nextauth_accounts_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"nextauth_authenticators\" ADD CONSTRAINT \"nextauth_authenticators_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"nextauth_sessions\" ADD CONSTRAINT \"nextauth_sessions_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764303057060,
+    "hash": "2c103eee82bdf329944fb622dd9c2b9f20df80eb54f23eb9254d2285de413099"
+  },
+  {
+    "sql": ["ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"market\" jsonb;"],
+    "bps": true,
+    "folderMillis": 1764335703306,
+    "hash": "28c0d738c0b1fdf5fd871363be1a1477b4accbabdc140fe8dc6e9b339aae2c89"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"messages\" DROP CONSTRAINT \"messages_agent_id_agents_id_fk\";\n",
+      "\nALTER TABLE \"messages\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"content\" text;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
+      "\nALTER TABLE \"topics\" ADD COLUMN IF NOT EXISTS \"agent_id\" text;",
+      "\nALTER TABLE \"messages\" ADD CONSTRAINT \"messages_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"topics\" ADD CONSTRAINT \"topics_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nCREATE INDEX IF NOT EXISTS \"topics_agent_id_idx\" ON \"topics\" USING btree (\"agent_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764500630663,
+    "hash": "94721bc06910a456a4756c9b0c27ef5d7ff55b7ea8c772acf58052c0155c693b"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"auth_sessions\" ADD COLUMN IF NOT EXISTS \"impersonated_by\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"role\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"banned\" boolean DEFAULT false;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"ban_reason\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"ban_expires\" timestamp with time zone;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764511006123,
+    "hash": "523a8418ceeadbe80c34affee07cdfa2e8076e297473c55c73e74648a9be1e45"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"two_factor\" (\n  \"backup_codes\" text NOT NULL,\n  \"id\" text PRIMARY KEY NOT NULL,\n  \"secret\" text NOT NULL,\n  \"user_id\" text NOT NULL\n);\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"two_factor_enabled\" boolean DEFAULT false;\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"phone_number\" text;\n",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"phone_number_verified\" boolean;\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (\n    SELECT 1 FROM pg_constraint WHERE conname = 'two_factor_user_id_users_id_fk'\n  ) THEN\n    ALTER TABLE \"two_factor\"\n      ADD CONSTRAINT \"two_factor_user_id_users_id_fk\"\n      FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\n  END IF;\nEND $$;\n",
+      "\nCREATE INDEX IF NOT EXISTS \"two_factor_secret_idx\" ON \"two_factor\" USING btree (\"secret\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"two_factor_user_id_idx\" ON \"two_factor\" USING btree (\"user_id\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"account_userId_idx\" ON \"accounts\" USING btree (\"user_id\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"auth_session_userId_idx\" ON \"auth_sessions\" USING btree (\"user_id\");\n",
+      "\nCREATE INDEX IF NOT EXISTS \"verification_identifier_idx\" ON \"verifications\" USING btree (\"identifier\");\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique') THEN\n    -- Normalize empty emails so the unique constraint can be created safely\n    UPDATE \"users\" SET \"email\" = NULL WHERE \"email\" = '';\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_email_unique\" UNIQUE (\"email\");\n  END IF;\nEND $$;\n",
+      "\nDO $$\nBEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_phone_number_unique') THEN\n    ALTER TABLE \"users\" ADD CONSTRAINT \"users_phone_number_unique\" UNIQUE (\"phone_number\");\n  END IF;\nEND $$;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764579351312,
+    "hash": "1d2536a9471bb87686b35053f98ba7762259a07c819dc4489bb4f3c7f27a4d8d"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"users\" DROP CONSTRAINT IF EXISTS \"users_phone_number_unique\";",
+      "\nALTER TABLE \"users\" DROP COLUMN IF EXISTS \"phone_number\";",
+      "\nALTER TABLE \"users\" DROP CONSTRAINT IF EXISTS \"users_phone_unique\";",
+      "\nALTER TABLE \"users\" ADD CONSTRAINT \"users_phone_unique\" UNIQUE(\"phone\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764583392443,
+    "hash": "6a43d90ee1d2e1e008d1b8206f227aa05b9a2e2a8fc8c31ec608a3716c716a6c"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"agents\" DROP CONSTRAINT \"agents_slug_unique\";",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"agents_slug_user_id_unique\" ON \"agents\" USING btree (\"slug\",\"user_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764685643024,
+    "hash": "6e7ac7f964eb03efa3cb0d2fd35ded23e25c3abf955c4c2a51418f8daef54af9"
+  },
+  {
+    "sql": [
+      "CREATE INDEX IF NOT EXISTS \"topics_extract_status_gin_idx\" ON \"topics\" USING gin ((metadata->'userMemoryExtractStatus') jsonb_path_ops);\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764734167674,
+    "hash": "89c134be2948d3afc360d6bac11dea0c6fd5c902bf6093ed077033adb920fd02"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"user_installed_plugins\" ADD COLUMN IF NOT EXISTS \"source\" varchar(255);"
+    ],
+    "bps": true,
+    "folderMillis": 1764842015809,
+    "hash": "276514dc101fffc66794156f4ba644599a4ae5997a68b9e7f54452ee374bfa61"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"normalized_email\" text;",
+      "\nCREATE INDEX IF NOT EXISTS \"users_email_idx\" ON \"users\" USING btree (\"email\");",
+      "\nCREATE INDEX IF NOT EXISTS \"users_username_idx\" ON \"users\" USING btree (\"username\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"users_normalized_email_unique_idx\" ON \"users\" USING btree (\"normalized_email\");",
+      "\n"
+    ],
+    "bps": true,
+    "folderMillis": 1764858574403,
+    "hash": "7838f9938b370867470e5e11807855253d23b11c2ac6aa9e90687844a356c949"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"last_active_at\" timestamp with time zone DEFAULT now() NOT NULL;"
+    ],
+    "bps": true,
+    "folderMillis": 1765437218969,
+    "hash": "004923916a27bc61294eeb20738f2884f1ca43978a03aa9f0216fc849c98465b"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"user_memories\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_contexts\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_experiences\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_identities\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nALTER TABLE \"user_memories_preferences\" ADD COLUMN \"captured_at\" timestamp with time zone DEFAULT now() NOT NULL;",
+      "\nCREATE INDEX \"agents_user_id_idx\" ON \"agents\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"documents_source_type_idx\" ON \"documents\" USING btree (\"source_type\");",
+      "\nCREATE INDEX \"documents_user_id_idx\" ON \"documents\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"files_user_id_idx\" ON \"files\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"users_created_at_idx\" ON \"users\" USING btree (\"created_at\");",
+      "\nCREATE INDEX \"users_banned_true_created_at_idx\" ON \"users\" USING btree (\"created_at\") WHERE \"users\".\"banned\" = true;",
+      "\nCREATE INDEX \"user_memories_user_id_index\" ON \"user_memories\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_contexts_user_id_index\" ON \"user_memories_contexts\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_experiences_user_id_index\" ON \"user_memories_experiences\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_experiences_user_memory_id_index\" ON \"user_memories_experiences\" USING btree (\"user_memory_id\");",
+      "\nCREATE INDEX \"user_memories_identities_user_id_index\" ON \"user_memories_identities\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_identities_user_memory_id_index\" ON \"user_memories_identities\" USING btree (\"user_memory_id\");",
+      "\nCREATE INDEX \"user_memories_preferences_user_id_index\" ON \"user_memories_preferences\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"user_memories_preferences_user_memory_id_index\" ON \"user_memories_preferences\" USING btree (\"user_memory_id\");"
+    ],
+    "bps": true,
+    "folderMillis": 1765540257262,
+    "hash": "2cc13eba2a174ebf18ac32a3ae673338a3dd46ec37a22108a7783a80f44a5286"
   }
 ]

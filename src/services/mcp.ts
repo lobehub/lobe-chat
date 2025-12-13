@@ -5,7 +5,7 @@ import { PluginManifest } from '@lobehub/market-sdk';
 import { CallReportRequest } from '@lobehub/market-types';
 
 import { MCPToolCallResult } from '@/libs/mcp';
-import { desktopClient, toolsClient } from '@/libs/trpc/client';
+import { desktopClient, lambdaClient, toolsClient } from '@/libs/trpc/client';
 
 import { discoverService } from './discover';
 
@@ -84,6 +84,7 @@ class MCPService {
     };
 
     const isStdio = plugin?.customParams?.mcp?.type === 'stdio';
+    const isCloud = plugin?.customParams?.mcp?.type === 'cloud';
 
     // Record call start time
     const callStartTime = Date.now();
@@ -93,10 +94,25 @@ class MCPService {
     let result: MCPToolCallResult | undefined;
 
     try {
-      // For desktop and stdio, use the desktopClient
-      if (isDesktop && isStdio) {
+      // For cloud type, call via cloud gateway
+      if (isCloud) {
+        // Parse args
+        const apiParams = safeParseJSON(args) || {};
+
+        // Call cloud gateway via lambda market endpoint
+        // Server will automatically get user access token from database
+        // and format the result to MCPToolCallResult
+        // @ts-ignore tsgo 误报错误
+        result = await lambdaClient.market.callCloudMcpEndpoint.mutate({
+          apiParams,
+          identifier,
+          toolName: apiName,
+        });
+      } else if (isDesktop && isStdio) {
+        // For desktop and stdio, use the desktopClient
         result = await desktopClient.mcp.callTool.mutate(data, { signal });
       } else {
+        // For other types, use the toolsClient
         result = await toolsClient.mcp.callTool.mutate(data, { signal });
       }
 

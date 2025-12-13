@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+import { enableBetterAuth, enableNextAuth } from '@lobechat/const';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import Menu from '@/components/Menu';
+import { isDesktop } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -14,8 +16,6 @@ import UserLoginOrSignup from '../UserLoginOrSignup';
 import LangButton from './LangButton';
 import ThemeButton from './ThemeButton';
 import { useMenu } from './useMenu';
-import { enableNextAuth } from '@/const/auth';
-import { isDesktop } from '@/const/version';
 
 const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const router = useRouter();
@@ -31,8 +31,9 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const handleSignOut = () => {
     signOut();
     closePopover();
-    // NextAuth doesn't need to redirect to login page
-    if (enableNextAuth) return;
+    // NextAuth and Better Auth handle redirect in their own signOut methods
+    if (enableNextAuth || enableBetterAuth) return;
+    // Clerk uses /login page
     router.push('/login');
   };
 

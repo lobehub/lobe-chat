@@ -775,7 +775,6 @@ describe('ChatPluginAction', () => {
     });
 
     it('should handle MD5 hashed API names', () => {
-      const apiName = 'testApi';
       const resolver = new ToolNameResolver();
       // Generate a very long name to force MD5 hashing
       const longApiName =
