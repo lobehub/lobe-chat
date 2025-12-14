@@ -3,6 +3,7 @@ import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import Ai21Provider from './ai21';
 import Ai302Provider from './ai302';
 import Ai360Provider from './ai360';
+import AIBadgrProvider from './aibadgr';
 import AiHubMixProvider from './aihubmix';
 import AkashChatProvider from './akashchat';
 import AnthropicProvider from './anthropic';
@@ -140,6 +141,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   DeepSeekProvider,
   MoonshotProvider,
   AiHubMixProvider,
+  AIBadgrProvider,
   OpenRouterProvider,
   FalProvider,
   HuggingFaceProvider,
@@ -206,6 +208,7 @@ export const isProviderDisableBrowserRequest = (id: string) => {
 export { default as Ai21ProviderCard } from './ai21';
 export { default as Ai302ProviderCard } from './ai302';
 export { default as Ai360ProviderCard } from './ai360';
+export { default as AIBadgrProviderCard } from './aibadgr';
 export { default as AiHubMixProviderCard } from './aihubmix';
 export { default as AkashChatProviderCard } from './akashchat';
 export { default as AnthropicProviderCard } from './anthropic';
