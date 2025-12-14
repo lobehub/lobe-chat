@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Update GPT-5.2 models."]
+    },
+    "date": "2025-12-14",
+    "version": "2.0.0-next.171"
+  },
+  {
     "children": {},
     "date": "2025-12-12",
     "version": "2.0.0-next.170"
