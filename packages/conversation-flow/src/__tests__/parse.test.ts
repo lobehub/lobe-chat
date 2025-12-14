@@ -133,6 +133,28 @@ describe('parse', () => {
     });
   });
 
+  describe('Agent Group Scenarios', () => {
+    it('should not aggregate messages from different agents into same AssistantGroup', () => {
+      const result = parse(inputs.agentGroup.speakDifferentAgent);
+
+      // The critical assertions:
+      // 1. flatList should have 3 items: user, assistantGroup(supervisor+tool), agent-backend response
+      expect(result.flatList).toHaveLength(3);
+      expect(result.flatList[0].role).toBe('user');
+      expect(result.flatList[1].role).toBe('assistantGroup');
+      expect(result.flatList[2].role).toBe('assistant');
+
+      // 2. The agent-backend response should be separate (different agentId)
+      expect(result.flatList[2].id).toBe('msg-agent-backend-1');
+      expect((result.flatList[2] as any).agentId).toBe('agent-backend');
+
+      // 3. The supervisor's assistantGroup should only contain supervisor messages
+      expect((result.flatList[1] as any).agentId).toBe('supervisor');
+
+      expect(serializeParseResult(result)).toEqual(outputs.agentGroup.speakDifferentAgent);
+    });
+  });
+
   describe('Performance', () => {
     it('should parse 10000 items within 50ms', () => {
       // Generate 10000 messages as flat siblings (no deep nesting to avoid stack overflow)
