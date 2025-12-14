@@ -38,7 +38,7 @@ const Tool = memo<ToolMessageProps>(({ id, index }) => {
           </Button>
         }
         message={t('inspector.orphanedToolCall')}
-        type={'warning'}
+        type={'secondary'}
         variant={'borderless'}
       />
       {item.plugin && (

@@ -28,7 +28,7 @@ const ErrorResponse = memo<ErrorResponseProps>(({ id, type, body, message, plugi
       }
       message={t(`response.${type}` as any)}
       showIcon
-      type={'error'}
+      type={'secondary'}
     />
   );
 });

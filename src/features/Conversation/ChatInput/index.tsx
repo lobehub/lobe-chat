@@ -129,7 +129,7 @@ const ChatInput = memo<ChatInputProps>(
               closable
               message={t('input.errorMsg', { errorMsg: sendMessageErrorMsg })}
               onClose={clearSendMessageError}
-              type={'warning'}
+              type={'secondary'}
             />
           </Flexbox>
         )}

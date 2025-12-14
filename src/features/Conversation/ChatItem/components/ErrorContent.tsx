@@ -1,27 +1,40 @@
-import { Alert } from '@lobehub/ui';
-import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Alert, Block } from '@lobehub/ui';
+import { Skeleton } from 'antd';
+import { Suspense, memo } from 'react';
 
 import { useStyles } from '../style';
 import { ChatItemProps } from '../type';
 
 export interface ErrorContentProps {
-  error?: ChatItemProps['error'];
-  message?: ChatItemProps['errorMessage'];
+  customErrorRender?: ChatItemProps['customErrorRender'];
+  error: ChatItemProps['error'];
 }
 
-const ErrorContent = memo<ErrorContentProps>(({ message, error }) => {
+const ErrorContent = memo<ErrorContentProps>(({ customErrorRender, error }) => {
   const { styles } = useStyles();
 
-  if (!error?.message) {
-    if (!message) return null;
-    return <Flexbox className={styles.errorContainer}>{message}</Flexbox>;
+  if (!error) return;
+
+  if (customErrorRender) {
+    return (
+      <Block className={styles.errorContainer} gap={8} padding={16} variant={'outlined'}>
+        <Suspense fallback={<Skeleton active paragraph={{ rows: 1 }} title={false} />}>
+          {customErrorRender(error)}
+        </Suspense>
+      </Block>
+    );
   }
 
   return (
-    <Flexbox className={styles.errorContainer}>
-      <Alert closable={false} extra={message} showIcon type={'error'} {...error} />
-    </Flexbox>
+    <Alert
+      classNames={{
+        container: styles.errorContainer,
+      }}
+      closable={false}
+      showIcon
+      type={'secondary'}
+      {...error}
+    />
   );
 });
 

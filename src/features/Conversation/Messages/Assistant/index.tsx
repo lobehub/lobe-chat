@@ -5,7 +5,6 @@ import { Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { ChatItem } from '@/features/Conversation/ChatItem';
 import { useNewScreen } from '@/features/Conversation/Messages/components/useNewScreen';
@@ -109,7 +108,6 @@ const AssistantMessage = memo<AssistantMessageProps>(
     }, [isInbox]);
 
     const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, role });
-    const errorMessage = <ErrorMessageExtra data={item} />;
 
     return (
       <ChatItem
@@ -127,39 +125,25 @@ const AssistantMessage = memo<AssistantMessageProps>(
           </>
         }
         avatar={avatar}
+        customErrorRender={() => <ErrorMessageExtra data={item} />}
         editing={editing}
         error={
           errorContent && error && (message === LOADING_FLAT || !message) ? errorContent : undefined
         }
-        errorMessage={errorMessage}
         id={id}
         loading={generating}
         message={reducted ? `*${t('hideForYou')}*` : message}
         messageExtra={
-          <>
-            {errorContent && !(error && (message === LOADING_FLAT || !message)) && (
-              <Flexbox
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderRadius: 8,
-                  padding: 0,
-                }}
-              >
-                {errorMessage}
-              </Flexbox>
-            )}
-            <AssistantMessageExtra
-              content={content}
-              extra={extra}
-              id={id}
-              model={model!}
-              performance={performance! || metadata}
-              provider={provider!}
-              tools={tools}
-              usage={usage! || metadata}
-            />
-          </>
+          <AssistantMessageExtra
+            content={content}
+            extra={extra}
+            id={id}
+            model={model!}
+            performance={performance! || metadata}
+            provider={provider!}
+            tools={tools}
+            usage={usage! || metadata}
+          />
         }
         newScreen={newScreen}
         onAvatarClick={onAvatarClick}

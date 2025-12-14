@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ErrorMessageExtra, { useErrorContent } from '../../../Error';
-
 import { useConversationStore } from '../../../store';
 
 export interface ErrorContentProps {
@@ -45,7 +44,7 @@ const ErrorContent = memo<ErrorContentProps>(({ error, id }) => {
         closable={false}
         extra={message}
         showIcon
-        type={'error'}
+        type={'secondary'}
         {...errorProps}
       />
     </Flexbox>
