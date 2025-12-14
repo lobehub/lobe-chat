@@ -125,7 +125,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
           </>
         }
         avatar={avatar}
-        customErrorRender={() => <ErrorMessageExtra data={item} />}
+        customErrorRender={(error) => <ErrorMessageExtra data={item} error={error} />}
         editing={editing}
         error={
           errorContent && error && (message === LOADING_FLAT || !message) ? errorContent : undefined

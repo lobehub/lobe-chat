@@ -1,41 +1,50 @@
+import { ProviderIcon } from '@lobehub/icons';
+import { Button } from '@lobehub/ui';
+import { ModelProvider } from 'model-bank';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import urlJoin from 'url-join';
 
-import APIKeyForm from '@/components/InvalidAPIKey';
 import { useProviderName } from '@/hooks/useProviderName';
 import { GlobalLLMProviderKey } from '@/types/user/settings/modelProvider';
 
 import { useConversationStore } from '../store';
+import BaseErrorForm from './BaseErrorForm';
 
 interface ChatInvalidAPIKeyProps {
   id: string;
   provider?: string;
 }
 const ChatInvalidAPIKey = memo<ChatInvalidAPIKeyProps>(({ id, provider }) => {
-  const { t } = useTranslation('modelProvider');
-  const { t: modelProviderErrorT } = useTranslation(['modelProvider', 'error']);
-  const [resend, deleteMessage] = useConversationStore((s) => [
-    s.delAndRegenerateMessage,
-    s.deleteMessage,
-  ]);
+  const { t } = useTranslation(['modelProvider', 'error']);
+  const navigate = useNavigate();
+  const [deleteMessage] = useConversationStore((s) => [s.deleteMessage]);
   const providerName = useProviderName(provider as GlobalLLMProviderKey);
 
   return (
-    <APIKeyForm
-      bedrockDescription={t('bedrock.unlock.description')}
-      description={modelProviderErrorT(`unlock.apiKey.description`, {
-        name: providerName,
-        ns: 'error',
-      })}
-      id={id}
-      onClose={() => {
-        deleteMessage(id);
-      }}
-      onRecreate={() => {
-        resend(id);
-        deleteMessage(id);
-      }}
-      provider={provider}
+    <BaseErrorForm
+      action={
+        <Button
+          onClick={() => {
+            navigate(urlJoin('/settings/provider', provider || 'all'));
+            deleteMessage(id);
+          }}
+          type={'primary'}
+        >
+          {t('unlock.goToSettings', { ns: 'error' })}
+        </Button>
+      }
+      avatar={<ProviderIcon provider={provider} shape={'square'} size={40} />}
+      desc={
+        provider === ModelProvider.Bedrock
+          ? t('bedrock.unlock.description')
+          : t(`unlock.apiKey.description`, {
+              name: providerName,
+              ns: 'error',
+            })
+      }
+      title={t(`unlock.apiKey.title`, { name: providerName, ns: 'error' })}
     />
   );
 });

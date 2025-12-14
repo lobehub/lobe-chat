@@ -195,6 +195,7 @@ export default {
       title: '确认你的 {{name}} 认证信息',
     },
     confirm: '确认并重试',
+    goToSettings: '前往配置',
     oauth: {
       description: '管理员已开启统一登录认证，点击下方按钮登录，即可解锁应用',
       success: '登录成功',

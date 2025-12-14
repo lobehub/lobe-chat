@@ -1,23 +1,36 @@
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
 import { ChatErrorType, ChatMessageError, ErrorType } from '@lobechat/types';
 import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
-import type { AlertProps } from '@lobehub/ui';
+import { AlertProps, Block } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import ErrorContent from '@/features/Conversation/ChatItem/components/ErrorContent';
 import { useProviderName } from '@/hooks/useProviderName';
 
 import ChatInvalidAPIKey from './ChatInvalidApiKey';
-import ClerkLogin from './ClerkLogin';
 
 interface ErrorMessageData {
   error?: ChatMessageError | null;
   id: string;
 }
 
-const loading = () => <Skeleton active />;
+const loading = () => (
+  <Block
+    align={'center'}
+    padding={16}
+    style={{
+      overflow: 'hidden',
+      position: 'relative',
+      width: '100%',
+    }}
+    variant={'outlined'}
+  >
+    <Skeleton.Button active block />
+  </Block>
+);
 
 const OllamaBizError = dynamic(() => import('./OllamaBizError'), { loading, ssr: false });
 
@@ -90,11 +103,11 @@ export const useErrorContent = (error: any) => {
 };
 
 interface ErrorExtraProps {
-  block?: boolean;
   data: ErrorMessageData;
+  error?: AlertProps;
 }
 
-const ErrorMessageExtra = memo<ErrorExtraProps>(({ data }) => {
+const ErrorMessageExtra = memo<ErrorExtraProps>(({ error: alertError, data }) => {
   const error = data.error as ChatMessageError;
   if (!error?.type) return;
 
@@ -111,10 +124,6 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(({ data }) => {
 
     /* ↑ cloud slot ↑ */
 
-    case ChatErrorType.InvalidClerkUser: {
-      return <ClerkLogin id={data.id} />;
-    }
-
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       {
         return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
@@ -126,7 +135,7 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(({ data }) => {
     return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
   }
 
-  return;
+  return <ErrorContent error={alertError} id={data.id} />;
 });
 
 export default ErrorMessageExtra;
