@@ -183,6 +183,15 @@ export const agentRouter = router({
     }),
 
   /**
+   * Get agents list for group member selection.
+   * Returns non-virtual agents with minimal info (id, title, description, avatar).
+   * Used by AddGroupMemberModal to display available agents.
+   */
+  getAgentsForSelection: agentProcedure.query(async ({ ctx }) => {
+    return ctx.agentModel.queryForSelection();
+  }),
+
+  /**
    * Get a builtin agent by slug, creating it if it doesn't exist.
    * This is a generic interface for all builtin agents (page-copilot, inbox, etc.)
    */

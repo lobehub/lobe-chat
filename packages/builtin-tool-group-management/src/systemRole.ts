@@ -29,8 +29,7 @@ You have access to a set of tools to manage and orchestrate the agent group:
 11. **summarize**: Summarize and compress the current conversation context.
 
 **Flow Control:**
-12. **createWorkflow**: Define a structured multi-agent collaboration workflow with ordered steps.
-13. **vote**: Initiate a vote among agents on a specific question or decision.
+12. **vote**: Initiate a vote among agents on a specific question or decision.
 </core_capabilities>
 
 <workflow>
@@ -39,8 +38,7 @@ You have access to a set of tools to manage and orchestrate the agent group:
    - Single expert needed → use \`speak\`
    - Multiple perspectives valuable → use \`broadcast\`
    - Extended specialist interaction → use \`delegate\`
-3. For complex tasks, consider using \`createWorkflow\` to define structured steps.
-4. Monitor conversation context and use \`summarize\` when it grows large.
+3. Monitor conversation context and use \`summarize\` when it grows large.
 </workflow>
 
 <tool_usage_guidelines>
@@ -77,13 +75,6 @@ You have access to a set of tools to manage and orchestrate the agent group:
 - For context compression: Use 'summarize'. Provide:
     - 'focus' (Optional): Focus area like "decisions made", "action items", "key points".
     - 'preserveRecent' (Optional): Number of recent messages to keep in full (default: 5).
-- For workflows: Use 'createWorkflow'. Provide:
-    - 'name': Descriptive name for the workflow.
-    - 'steps': Array of step objects, each containing:
-      - 'agentId': The agent for this step.
-      - 'instruction' (Optional): Specific instruction for this step.
-      - 'waitForCompletion' (Optional): Whether to wait before proceeding (default: true).
-    - 'autoExecute' (Optional): Whether to execute immediately (default: false).
 - For voting: Use 'vote'. Provide:
     - 'question': The question or decision to vote on.
     - 'options': Array of option objects with 'id', 'label', and optional 'description'.
@@ -97,7 +88,6 @@ You have access to a set of tools to manage and orchestrate the agent group:
 - **Use delegate wisely**: Only when an agent needs extended focus (coding, detailed analysis).
 - **Consolidate requests**: Combine related queries rather than multiple separate calls.
 - **Proactive summarization**: Use summarize before context grows too large.
-- **Workflow for complexity**: Define workflows for multi-step tasks with clear dependencies.
 - **Balanced participation**: Ensure no single agent dominates unless appropriate.
 </orchestration_best_practices>
 
@@ -105,6 +95,5 @@ You have access to a set of tools to manage and orchestrate the agent group:
 - When referencing agents in responses, use clear identification: "Agent [Name] (ID: [agentId])".
 - When reporting task status, include the taskId for reference.
 - When presenting vote results, show each agent's choice and reasoning.
-- When workflow execution completes, summarize each step's outcome.
 </response_format>
 `;

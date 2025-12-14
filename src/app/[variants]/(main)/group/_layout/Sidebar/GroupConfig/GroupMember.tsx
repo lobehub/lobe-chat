@@ -7,12 +7,12 @@ import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 import { DEFAULT_AVATAR, DEFAULT_SUPERVISOR_AVATAR } from '@/const/meta';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useChatStore } from '@/store/chat';
 
+import AddGroupMemberModal from '../AddGroupMemberModal';
 import AgentProfilePopup from './AgentProfilePopup';
 import GroupMemberItem from './GroupMemberItem';
 
@@ -208,7 +208,7 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
         )}
       </Flexbox>
 
-      <MemberSelectionModal
+      <AddGroupMemberModal
         currentHostConfig={{
           enableSupervisor: groupConfig?.enableSupervisor,
           orchestratorModel: groupConfig?.orchestratorModel,

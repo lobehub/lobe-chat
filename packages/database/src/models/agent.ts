@@ -1,6 +1,6 @@
 import { getAgentPersistConfig } from '@lobechat/builtin-agents';
 import { INBOX_SESSION_ID } from '@lobechat/const';
-import { and, desc, eq, inArray, or } from 'drizzle-orm';
+import { and, desc, eq, inArray, not, or } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
 import { merge } from '@/utils/merge';
@@ -33,6 +33,25 @@ export class AgentModel {
     if (!agent) return null;
 
     return this.enrichAgentWithKnowledge(agent);
+  };
+
+  /**
+   * Query non-virtual agents for group member selection.
+   * Returns minimal agent info (id, title, description, avatar, backgroundColor).
+   * Excludes virtual agents (like inbox, supervisors, etc).
+   */
+  queryForSelection = async () => {
+    return this.db
+      .select({
+        avatar: agents.avatar,
+        backgroundColor: agents.backgroundColor,
+        description: agents.description,
+        id: agents.id,
+        title: agents.title,
+      })
+      .from(agents)
+      .where(and(eq(agents.userId, this.userId), not(eq(agents.virtual, true))))
+      .orderBy(desc(agents.updatedAt));
   };
 
   /**

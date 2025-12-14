@@ -1169,4 +1169,100 @@ describe('AgentModel', () => {
       });
     });
   });
+
+  describe('queryForSelection', () => {
+    it('should return non-virtual agents for the user', async () => {
+      // Create non-virtual agents
+      await agentModel.create({
+        title: 'Agent 1',
+        description: 'First agent',
+        avatar: 'avatar1',
+        backgroundColor: '#ff0000',
+        virtual: false,
+      });
+      await agentModel.create({
+        title: 'Agent 2',
+        description: 'Second agent',
+        avatar: 'avatar2',
+        backgroundColor: '#00ff00',
+        virtual: false,
+      });
+
+      const result = await agentModel.queryForSelection();
+
+      expect(result.length).toBeGreaterThanOrEqual(2);
+      expect(result.some((a) => a.title === 'Agent 1')).toBe(true);
+      expect(result.some((a) => a.title === 'Agent 2')).toBe(true);
+      // Check that only required fields are returned
+      expect(result[0]).toHaveProperty('id');
+      expect(result[0]).toHaveProperty('title');
+      expect(result[0]).toHaveProperty('description');
+      expect(result[0]).toHaveProperty('avatar');
+      expect(result[0]).toHaveProperty('backgroundColor');
+    });
+
+    it('should exclude virtual agents', async () => {
+      // Create a virtual agent
+      await agentModel.create({
+        title: 'Virtual Agent',
+        virtual: true,
+      });
+      // Create a non-virtual agent
+      await agentModel.create({
+        title: 'Regular Agent',
+        virtual: false,
+      });
+
+      const result = await agentModel.queryForSelection();
+
+      expect(result.some((a) => a.title === 'Virtual Agent')).toBe(false);
+      expect(result.some((a) => a.title === 'Regular Agent')).toBe(true);
+    });
+
+    it('should only return agents for the current user', async () => {
+      // Create agent for user 1
+      await agentModel.create({
+        title: 'User1 Agent',
+        virtual: false,
+      });
+      // Create agent for user 2
+      await agentModel2.create({
+        title: 'User2 Agent',
+        virtual: false,
+      });
+
+      const result1 = await agentModel.queryForSelection();
+      const result2 = await agentModel2.queryForSelection();
+
+      expect(result1.some((a) => a.title === 'User1 Agent')).toBe(true);
+      expect(result1.some((a) => a.title === 'User2 Agent')).toBe(false);
+      expect(result2.some((a) => a.title === 'User2 Agent')).toBe(true);
+      expect(result2.some((a) => a.title === 'User1 Agent')).toBe(false);
+    });
+
+    it('should return empty array when no agents exist', async () => {
+      // Use a new user with no agents
+      const emptyUserId = 'empty-user-id';
+      await serverDB.insert(users).values({ id: emptyUserId });
+      const emptyAgentModel = new AgentModel(serverDB, emptyUserId);
+
+      const result = await emptyAgentModel.queryForSelection();
+
+      expect(result).toEqual([]);
+    });
+
+    it('should handle agents with null virtual field (treat as non-virtual)', async () => {
+      // Directly insert agent with null virtual (simulating legacy data)
+      await serverDB.insert(agents).values({
+        id: 'null-virtual-agent',
+        title: 'Null Virtual Agent',
+        userId,
+        virtual: null as unknown as boolean,
+      });
+
+      const result = await agentModel.queryForSelection();
+
+      expect(result.some((a) => a.title === 'Null Virtual Agent')).toBe(true);
+    });
+  });
 });

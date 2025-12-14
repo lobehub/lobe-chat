@@ -170,6 +170,14 @@ class AgentService {
   removeAgent = async (agentId: string) => {
     return lambdaClient.agent.removeAgent.mutate({ agentId });
   };
+
+  /**
+   * Get non-virtual agents list for group member selection.
+   * Returns agents with minimal info (id, title, description, avatar, backgroundColor).
+   */
+  getAgentsForSelection = async () => {
+    return lambdaClient.agent.getAgentsForSelection.query();
+  };
 }
 
 export const agentService = new AgentService();

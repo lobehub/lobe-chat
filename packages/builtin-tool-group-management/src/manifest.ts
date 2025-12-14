@@ -42,6 +42,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
       description:
         'Invite an agent to join the current group. The agent must be found via searchAgent first. Once invited, the agent becomes available for orchestration.',
       name: GroupManagementApiName.inviteAgent,
+      humanIntervention: 'always',
       parameters: {
         properties: {
           agentId: {
@@ -56,6 +57,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
     {
       description:
         'Create a new agent dynamically based on user requirements and add it to the group. Use this when no existing agent matches the needed expertise.',
+      humanIntervention: 'always',
       name: GroupManagementApiName.createAgent,
       parameters: {
         properties: {
@@ -85,6 +87,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
       description:
         'Remove an agent from the current group. The agent will no longer be available for orchestration but is not deleted from the system.',
       name: GroupManagementApiName.removeAgent,
+      humanIntervention: 'always',
       parameters: {
         properties: {
           agentId: {
@@ -180,6 +183,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
       description:
         'Assign an asynchronous task to an agent. The task runs in the background and results are returned to the conversation context upon completion. Ideal for longer operations.',
       name: GroupManagementApiName.executeTask,
+      humanIntervention: 'required',
       parameters: {
         properties: {
           agentId: {
@@ -243,50 +247,50 @@ export const GroupManagementManifest: BuiltinToolManifest = {
     },
 
     // ==================== Flow Control ====================
-    {
-      description:
-        'Define a multi-agent collaboration workflow. Creates a structured sequence of agent interactions for complex tasks.',
-      name: GroupManagementApiName.createWorkflow,
-      parameters: {
-        properties: {
-          name: {
-            description: 'A descriptive name for this workflow.',
-            type: 'string',
-          },
-          steps: {
-            description: 'Array of workflow steps defining agent participation order.',
-            items: {
-              properties: {
-                agentId: {
-                  description: 'The ID of the agent for this step.',
-                  type: 'string',
-                },
-                instruction: {
-                  description: 'Specific instruction for this step.',
-                  type: 'string',
-                },
-                waitForCompletion: {
-                  default: true,
-                  description: 'Whether to wait for this step before proceeding (default: true).',
-                  type: 'boolean',
-                },
-              },
-              required: ['agentId'],
-              type: 'object',
-            },
-            type: 'array',
-          },
-          autoExecute: {
-            default: false,
-            description:
-              'Whether to immediately execute the workflow after creation (default: false).',
-            type: 'boolean',
-          },
-        },
-        required: ['name', 'steps'],
-        type: 'object',
-      },
-    },
+    // {
+    //   description:
+    //     'Define a multi-agent collaboration workflow. Creates a structured sequence of agent interactions for complex tasks.',
+    //   name: GroupManagementApiName.createWorkflow,
+    //   parameters: {
+    //     properties: {
+    //       name: {
+    //         description: 'A descriptive name for this workflow.',
+    //         type: 'string',
+    //       },
+    //       steps: {
+    //         description: 'Array of workflow steps defining agent participation order.',
+    //         items: {
+    //           properties: {
+    //             agentId: {
+    //               description: 'The ID of the agent for this step.',
+    //               type: 'string',
+    //             },
+    //             instruction: {
+    //               description: 'Specific instruction for this step.',
+    //               type: 'string',
+    //             },
+    //             waitForCompletion: {
+    //               default: true,
+    //               description: 'Whether to wait for this step before proceeding (default: true).',
+    //               type: 'boolean',
+    //             },
+    //           },
+    //           required: ['agentId'],
+    //           type: 'object',
+    //         },
+    //         type: 'array',
+    //       },
+    //       autoExecute: {
+    //         default: false,
+    //         description:
+    //           'Whether to immediately execute the workflow after creation (default: false).',
+    //         type: 'boolean',
+    //       },
+    //     },
+    //     required: ['name', 'steps'],
+    //     type: 'object',
+    //   },
+    // },
     {
       description:
         'Initiate a vote among agents on a specific question or decision. Each agent provides their choice and reasoning.',
