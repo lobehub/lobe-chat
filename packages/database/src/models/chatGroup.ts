@@ -172,6 +172,20 @@ export class ChatGroupModel {
       .where(and(eq(chatGroupsAgents.chatGroupId, groupId), eq(chatGroupsAgents.agentId, agentId)));
   }
 
+  /**
+   * Batch remove multiple agents from a group.
+   * More efficient than calling removeAgentFromGroup multiple times.
+   */
+  async removeAgentsFromGroup(groupId: string, agentIds: string[]): Promise<void> {
+    if (agentIds.length === 0) return;
+
+    await this.db
+      .delete(chatGroupsAgents)
+      .where(
+        and(eq(chatGroupsAgents.chatGroupId, groupId), inArray(chatGroupsAgents.agentId, agentIds)),
+      );
+  }
+
   async updateAgentInGroup(
     groupId: string,
     agentId: string,

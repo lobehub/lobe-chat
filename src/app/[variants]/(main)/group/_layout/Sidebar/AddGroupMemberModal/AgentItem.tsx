@@ -45,8 +45,8 @@ const useStyles = createStyles(({ css, token }) => ({
     transition: all 0.2s ease;
 
     &:hover {
-      background: ${token.colorFillSecondary};
       color: ${token.colorText};
+      background: ${token.colorFillSecondary};
     }
   `,
   title: css`
@@ -60,6 +60,7 @@ const useStyles = createStyles(({ css, token }) => ({
 export interface AgentItemData {
   avatar: string | null;
   backgroundColor: string | null;
+  description: string | null;
   id: string;
   title: string | null;
 }
@@ -88,10 +89,6 @@ const AgentItem = memo<AgentItemProps>(({ agent, defaultTitle, showCheckbox, sho
     toggleAgent(agent.id);
   };
 
-  const handleCheckboxClick = (e: { stopPropagation: () => void }) => {
-    e.stopPropagation();
-  };
-
   const handleRemove = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     removeAgent(agent.id);
@@ -106,7 +103,11 @@ const AgentItem = memo<AgentItemProps>(({ agent, defaultTitle, showCheckbox, sho
     >
       <Flexbox align="center" gap={8} horizontal width="100%">
         {showCheckbox && (
-          <Checkbox checked={isSelected} onChange={handleClick} onClick={handleCheckboxClick} />
+          <Checkbox
+            checked={isSelected}
+            onChange={handleClick}
+            onClick={(e) => e.stopPropagation()}
+          />
         )}
         <Avatar
           animation={isHovering}

@@ -3,7 +3,8 @@ import type { AgentGroupDetail, AgentGroupMember, AgentItem } from '@lobechat/ty
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG, DEFAULT_CHAT_GROUP_META_CONFIG } from '@/const/settings';
 import { merge } from '@/utils/merge';
 
-import { ChatGroupState, ChatGroupStore } from '../initialState';
+import { ChatGroupState } from '../initialState';
+import { ChatGroupStore } from '../store';
 
 const groupById =
   (id: string) =>
@@ -66,9 +67,7 @@ const agentByIdFromGroup =
 const groupBySupervisorAgentId =
   (supervisorAgentId: string) =>
   (s: ChatGroupStore): AgentGroupDetail | undefined => {
-    return Object.values(s.groupMap).find(
-      (group) => group.supervisorAgentId === supervisorAgentId,
-    );
+    return Object.values(s.groupMap).find((group) => group.supervisorAgentId === supervisorAgentId);
   };
 
 export const agentGroupByIdSelectors = {

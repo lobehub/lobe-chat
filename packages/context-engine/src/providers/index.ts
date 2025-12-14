@@ -1,5 +1,6 @@
 // Context Provider exports
 export { AgentBuilderContextInjector } from './AgentBuilderContextInjector';
+export { GroupContextInjector } from './GroupContextInjector';
 export { HistorySummaryProvider } from './HistorySummary';
 export { KnowledgeInjector } from './KnowledgeInjector';
 export { PageEditorContextInjector } from './PageEditorContextInjector';
@@ -13,6 +14,10 @@ export type {
   AgentBuilderContextInjectorConfig,
   OfficialToolItem,
 } from './AgentBuilderContextInjector';
+export type {
+  GroupContextInjectorConfig,
+  GroupMemberInfo as GroupContextMemberInfo,
+} from './GroupContextInjector';
 export type { HistorySummaryConfig } from './HistorySummary';
 export type { KnowledgeInjectorConfig } from './KnowledgeInjector';
 export type {

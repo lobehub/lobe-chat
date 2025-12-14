@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type {
   AfterCompletionCallback,
@@ -6,6 +6,33 @@ import type {
   GroupOrchestrationCallbacks,
 } from '../../types';
 import { groupManagement } from '../lobe-group-management';
+
+// Mock agentGroupStore
+const mockAddAgentsToGroup = vi.fn();
+const mockRemoveAgentFromGroup = vi.fn();
+
+vi.mock('@/store/agentGroup', () => ({
+  agentGroupSelectors: {
+    getAgentByIdFromGroup: vi.fn(() => () => undefined),
+  },
+  useAgentGroupStore: {
+    getState: () => ({
+      addAgentsToGroup: mockAddAgentsToGroup,
+      removeAgentFromGroup: mockRemoveAgentFromGroup,
+    }),
+  },
+}));
+
+// Mock agentService
+const mockQueryAgents = vi.fn();
+const mockCreateAgent = vi.fn();
+
+vi.mock('@/services/agent', () => ({
+  agentService: {
+    createAgent: (...args: any[]) => mockCreateAgent(...args),
+    queryAgents: (...args: any[]) => mockQueryAgents(...args),
+  },
+}));
 
 describe('GroupManagementExecutor', () => {
   const createMockContext = (
@@ -163,6 +190,7 @@ describe('GroupManagementExecutor', () => {
         agentIds: ['agent-1', 'agent-2'],
         instruction: 'Discuss together',
         supervisorAgentId: 'supervisor-agent',
+        toolMessageId: 'test-message-id',
       });
     });
 
@@ -238,17 +266,77 @@ describe('GroupManagementExecutor', () => {
     });
   });
 
-  describe('other tools (no stop behavior)', () => {
-    it('searchAgent should not return stop=true', async () => {
+  describe('searchAgent', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should return community not supported message when source is community', async () => {
       const ctx = createMockContext();
 
+      const result = await groupManagement.searchAgent({ query: 'test', source: 'community' }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(result.content).toContain('Community agent search is not yet supported');
+      expect(result.state).toEqual({ agents: [], source: 'community', total: 0 });
+    });
+
+    it('should search user agents and return formatted results', async () => {
+      mockQueryAgents.mockResolvedValue([
+        { id: 'agent-1', title: 'Code Assistant', description: 'Helps with coding', avatar: '🤖' },
+        { id: 'agent-2', title: 'Writer', description: null, avatar: null },
+      ]);
+
+      const ctx = createMockContext();
       const result = await groupManagement.searchAgent({ query: 'test' }, ctx);
 
       expect(result.success).toBe(true);
-      expect(result.stop).toBeUndefined();
+      expect(mockQueryAgents).toHaveBeenCalledWith({ keyword: 'test', limit: 10 });
+      expect(result.content).toContain('Found 2 agents');
+      expect(result.content).toContain('Code Assistant');
+      expect(result.content).toContain('Writer');
+      expect(result.state.agents).toHaveLength(2);
+      expect(result.state.total).toBe(2);
     });
 
-    it('getAgentInfo should return error when no groupId in context', async () => {
+    it('should return no results message when no agents found', async () => {
+      mockQueryAgents.mockResolvedValue([]);
+
+      const ctx = createMockContext();
+      const result = await groupManagement.searchAgent({ query: 'nonexistent' }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(result.content).toContain('No agents found matching "nonexistent"');
+      expect(result.state).toEqual({ agents: [], query: 'nonexistent', total: 0 });
+    });
+
+    it('should pass limit to queryAgents', async () => {
+      mockQueryAgents.mockResolvedValue([
+        { id: 'agent-1', title: 'Agent 1' },
+        { id: 'agent-2', title: 'Agent 2' },
+      ]);
+
+      const ctx = createMockContext();
+      const result = await groupManagement.searchAgent({ query: 'test', limit: 2 }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(mockQueryAgents).toHaveBeenCalledWith({ keyword: 'test', limit: 2 });
+      expect(result.state.agents).toHaveLength(2);
+    });
+
+    it('should handle errors gracefully', async () => {
+      mockQueryAgents.mockRejectedValue(new Error('Network error'));
+
+      const ctx = createMockContext();
+      const result = await groupManagement.searchAgent({ query: 'test' }, ctx);
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Failed to search agents: Network error');
+    });
+  });
+
+  describe('getAgentInfo', () => {
+    it('should return error when no groupId in context', async () => {
       const ctx = createMockContext();
 
       const result = await groupManagement.getAgentInfo({ agentId: 'agent-1' }, ctx);
@@ -256,6 +344,221 @@ describe('GroupManagementExecutor', () => {
       // No groupId means we can't get agent info
       expect(result.success).toBe(false);
       expect(result.stop).toBeUndefined();
+    });
+  });
+
+  describe('inviteAgent', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should return error when no groupId in context', async () => {
+      const ctx = createMockContext();
+
+      const result = await groupManagement.inviteAgent({ agentId: 'agent-1' }, ctx);
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('No group context available');
+    });
+
+    it('should successfully invite agent when groupId is available', async () => {
+      mockAddAgentsToGroup.mockResolvedValue(undefined);
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+      };
+
+      const result = await groupManagement.inviteAgent({ agentId: 'agent-1' }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(mockAddAgentsToGroup).toHaveBeenCalledWith('test-group-id', ['agent-1']);
+      expect(result.content).toBe('Agent "agent-1" has been invited to the group.');
+      expect(result.state).toEqual({ agentId: 'agent-1', type: 'inviteAgent' });
+    });
+
+    it('should handle errors during invitation', async () => {
+      mockAddAgentsToGroup.mockRejectedValue(new Error('Database error'));
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+      };
+
+      const result = await groupManagement.inviteAgent({ agentId: 'agent-1' }, ctx);
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Failed to invite agent "agent-1": Database error');
+    });
+  });
+
+  describe('removeAgent', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should return error when no groupId in context', async () => {
+      const ctx = createMockContext();
+
+      const result = await groupManagement.removeAgent({ agentId: 'agent-1' }, ctx);
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('No group context available');
+    });
+
+    it('should successfully remove agent when groupId is available', async () => {
+      mockRemoveAgentFromGroup.mockResolvedValue(undefined);
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+      };
+
+      const result = await groupManagement.removeAgent({ agentId: 'agent-1' }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(mockRemoveAgentFromGroup).toHaveBeenCalledWith('test-group-id', 'agent-1');
+      expect(result.content).toBe('Agent "agent-1" has been removed from the group.');
+      expect(result.state).toEqual({ agentId: 'agent-1', type: 'removeAgent' });
+    });
+
+    it('should handle errors during removal', async () => {
+      mockRemoveAgentFromGroup.mockRejectedValue(new Error('Agent not found'));
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+      };
+
+      const result = await groupManagement.removeAgent({ agentId: 'agent-1' }, ctx);
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Failed to remove agent "agent-1": Agent not found');
+    });
+  });
+
+  describe('createAgent', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should return error when no groupId in context', async () => {
+      const ctx = createMockContext();
+
+      const result = await groupManagement.createAgent(
+        { title: 'New Agent', systemRole: 'You are a helpful assistant' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('No group context available');
+    });
+
+    it('should successfully create a virtual agent and add to group', async () => {
+      mockCreateAgent.mockResolvedValue({
+        agentId: 'new-agent-id',
+        sessionId: 'new-session-id',
+      });
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+      };
+
+      const result = await groupManagement.createAgent(
+        {
+          avatar: '🤖',
+          description: 'A helpful coding assistant',
+          systemRole: 'You are a coding expert',
+          title: 'Code Helper',
+        },
+        ctx,
+      );
+
+      expect(result.success).toBe(true);
+      expect(mockCreateAgent).toHaveBeenCalledWith({
+        config: {
+          avatar: '🤖',
+          description: 'A helpful coding assistant',
+          systemRole: 'You are a coding expert',
+          title: 'Code Helper',
+          virtual: true,
+        },
+        groupId: 'test-group-id',
+      });
+      expect(result.content).toBe('Agent "Code Helper" has been created and added to the group.');
+      expect(result.state).toEqual({
+        agentId: 'new-agent-id',
+        sessionId: 'new-session-id',
+        title: 'Code Helper',
+        type: 'createAgent',
+      });
+    });
+
+    it('should handle case when agentId is not returned', async () => {
+      mockCreateAgent.mockResolvedValue({
+        sessionId: 'new-session-id',
+        // No agentId returned
+      });
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+      };
+
+      const result = await groupManagement.createAgent(
+        { title: 'New Agent', systemRole: 'Test' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Failed to create agent: No agent ID returned');
+    });
+
+    it('should handle errors during creation', async () => {
+      mockCreateAgent.mockRejectedValue(new Error('Database connection failed'));
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+      };
+
+      const result = await groupManagement.createAgent(
+        { title: 'New Agent', systemRole: 'Test' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Failed to create agent: Database connection failed');
+    });
+
+    it('should create agent with minimal params (only required fields)', async () => {
+      mockCreateAgent.mockResolvedValue({
+        agentId: 'minimal-agent-id',
+        sessionId: 'minimal-session-id',
+      });
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+      };
+
+      const result = await groupManagement.createAgent(
+        { title: 'Minimal Agent', systemRole: 'Basic assistant' },
+        ctx,
+      );
+
+      expect(result.success).toBe(true);
+      expect(mockCreateAgent).toHaveBeenCalledWith({
+        config: {
+          avatar: undefined,
+          description: undefined,
+          systemRole: 'Basic assistant',
+          title: 'Minimal Agent',
+          virtual: true,
+        },
+        groupId: 'test-group-id',
+      });
     });
   });
 });

@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 import debug from 'debug';
 
 import type { OpenAIChatMessage } from '@/types/index';
@@ -16,6 +17,7 @@ import {
 } from '../../processors';
 import {
   AgentBuilderContextInjector,
+  GroupContextInjector,
   HistorySummaryProvider,
   KnowledgeInjector,
   PageEditorContextInjector,
@@ -120,6 +122,8 @@ export class MessagesEngine {
 
     const isAgentBuilderEnabled = !!agentBuilderContext;
     const isAgentGroupEnabled = agentGroup?.agentMap && Object.keys(agentGroup.agentMap).length > 0;
+    const isGroupContextEnabled =
+      isAgentGroupEnabled || !!agentGroup?.currentAgentId || !!agentGroup?.members;
     const isPageEditorEnabled = !!pageEditorContext;
     const isUserMemoryEnabled = userMemory?.enabled && userMemory?.memories;
 
@@ -135,6 +139,16 @@ export class MessagesEngine {
       // 2. System role injection (agent's system role)
       new SystemRoleInjector({ systemRole }),
 
+      // 2.5. Group context injection (agent identity and group info for multi-agent chat)
+      new GroupContextInjector({
+        enabled: isGroupContextEnabled,
+        currentAgentId: agentGroup?.currentAgentId,
+        currentAgentName: agentGroup?.currentAgentName,
+        currentAgentRole: agentGroup?.currentAgentRole,
+        groupName: agentGroup?.groupName,
+        members: agentGroup?.members,
+      }),
+
       // 3. Knowledge injection (full content for agent files + metadata for knowledge bases)
       new KnowledgeInjector({
         fileContents: knowledge?.fileContents,
@@ -143,8 +157,8 @@ export class MessagesEngine {
 
       // 4. Agent Builder context injection (current agent config/meta for editing)
       new AgentBuilderContextInjector({
-        agentContext: agentBuilderContext,
         enabled: isAgentBuilderEnabled,
+        agentContext: agentBuilderContext,
       }),
 
       // 5. Page Editor context injection (current page/document content for editing)

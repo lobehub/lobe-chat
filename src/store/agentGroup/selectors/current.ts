@@ -2,7 +2,8 @@ import type { AgentGroupDetail, AgentGroupMember, AgentItem } from '@lobechat/ty
 
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG, DEFAULT_CHAT_GROUP_META_CONFIG } from '@/const/settings';
 
-import { ChatGroupState, ChatGroupStore } from '../initialState';
+import { ChatGroupState } from '../initialState';
+import { ChatGroupStore } from '../store';
 import { agentGroupByIdSelectors } from './byId';
 
 const activeGroupId = (s: ChatGroupState): string | undefined => s.activeGroupId;

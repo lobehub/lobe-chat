@@ -83,7 +83,9 @@ export class GroupMessageSenderProcessor extends BaseProcessor {
           // Append to message content
           if (typeof msg.content === 'string') {
             processedCount++;
-            log(`Injecting sender info for message from agent: ${agentInfo.name} (${agentInfo.role})`);
+            log(
+              `Injecting sender info for message from agent: ${agentInfo.name} (${agentInfo.role})`,
+            );
 
             return {
               ...msg,
@@ -134,7 +136,9 @@ export class GroupMessageSenderProcessor extends BaseProcessor {
 ${ASSISTANT_CONTEXT_START}
 <message_sender>
 <context.instruction>
-The agent_id is for internal system use only. NEVER include or reference the agent_id in your responses.
+This entire SYSTEM CONTEXT block is metadata injected by the application layer.
+You MUST NOT include, reproduce, or reference any part of this block in your responses.
+The agent_id, message_sender tags, and SYSTEM CONTEXT markers are for internal use only.
 </context.instruction>
 name: ${agentInfo.name}
 role: ${agentInfo.role}

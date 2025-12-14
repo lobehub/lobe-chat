@@ -41,14 +41,17 @@ const AvailableAgentList = memo<AvailableAgentListProps>(({ agents, isLoading })
     setSearchTerm(e.target.value);
   }, []);
 
-  // Filter agents based on search term
+  // Filter agents based on search term (matches title or description)
   const filteredAgents = useMemo(() => {
     if (!searchTerm.trim()) return agents;
 
     const searchLower = searchTerm.toLowerCase();
     return agents.filter((agent) => {
       const title = agent.title || '';
-      return title.toLowerCase().includes(searchLower);
+      const description = agent.description || '';
+      return (
+        title.toLowerCase().includes(searchLower) || description.toLowerCase().includes(searchLower)
+      );
     });
   }, [agents, searchTerm]);
 

@@ -172,11 +172,11 @@ class AgentService {
   };
 
   /**
-   * Get non-virtual agents list for group member selection.
+   * Query non-virtual agents with optional keyword filter.
    * Returns agents with minimal info (id, title, description, avatar, backgroundColor).
    */
-  getAgentsForSelection = async () => {
-    return lambdaClient.agent.getAgentsForSelection.query();
+  queryAgents = async (params?: { keyword?: string; limit?: number; offset?: number }) => {
+    return lambdaClient.agent.queryAgents.query(params);
   };
 }
 

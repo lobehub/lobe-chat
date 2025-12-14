@@ -182,20 +182,12 @@ export const agentRouter = router({
       return ctx.agentService.getAgentConfigById(input.agentId);
     }),
 
-  /**
-   * Get agents list for group member selection.
-   * Returns non-virtual agents with minimal info (id, title, description, avatar).
-   * Used by AddGroupMemberModal to display available agents.
-   */
-  getAgentsForSelection: agentProcedure.query(async ({ ctx }) => {
-    return ctx.agentModel.queryForSelection();
-  }),
-
+  
   /**
    * Get a builtin agent by slug, creating it if it doesn't exist.
    * This is a generic interface for all builtin agents (page-copilot, inbox, etc.)
    */
-  getBuiltinAgent: agentProcedure
+getBuiltinAgent: agentProcedure
     .input(
       z.object({
         slug: z.string(),
@@ -205,7 +197,9 @@ export const agentRouter = router({
       return ctx.agentService.getBuiltinAgent(input.slug);
     }),
 
-  getKnowledgeBasesAndFiles: agentProcedure
+  
+  
+getKnowledgeBasesAndFiles: agentProcedure
     .input(
       z.object({
         agentId: z.string(),
@@ -240,6 +234,25 @@ export const agentRouter = router({
           type: KnowledgeType.KnowledgeBase,
         })),
       ];
+    }),
+
+  /**
+   * Query non-virtual agents with optional keyword filter.
+   * Returns agents with minimal info (id, title, description, avatar, backgroundColor).
+   * Used by AddGroupMemberModal and group-management tool to search/select agents.
+   */
+queryAgents: agentProcedure
+    .input(
+      z
+        .object({
+          keyword: z.string().optional(),
+          limit: z.number().optional(),
+          offset: z.number().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ input, ctx }) => {
+      return ctx.agentModel.queryAgents(input);
     }),
 
   /**

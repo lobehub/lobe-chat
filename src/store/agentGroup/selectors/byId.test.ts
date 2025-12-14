@@ -1,7 +1,7 @@
 import { AgentGroupDetail } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
-import { ChatGroupStore } from '../initialState';
+import { ChatGroupStore } from '../store';
 import { agentGroupByIdSelectors } from './byId';
 
 // Helper to create mock AgentGroupDetail with required fields

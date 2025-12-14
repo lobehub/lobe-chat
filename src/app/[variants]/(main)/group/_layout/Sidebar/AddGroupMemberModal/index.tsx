@@ -49,8 +49,8 @@ const AddGroupMemberModal = memo<AddGroupMemberModalProps>(
 
     // Fetch agents from the new API (non-virtual agents only)
     const { data: allAgents = [], isLoading: isLoadingAgents } = useSWR(
-      open ? 'getAgentsForSelection' : null,
-      () => agentService.getAgentsForSelection(),
+      open ? 'queryAgents' : null,
+      () => agentService.queryAgents(),
     );
 
     // Filter out existing members

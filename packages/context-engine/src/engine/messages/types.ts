@@ -5,6 +5,7 @@ import type { OpenAIChatMessage, UIChatMessage } from '@/types/index';
 
 import type { AgentInfo } from '../../processors/GroupMessageSender';
 import type { AgentBuilderContext } from '../../providers/AgentBuilderContextInjector';
+import type { GroupMemberInfo } from '../../providers/GroupContextInjector';
 import type { PageEditorContext } from '../../providers/PageEditorContextInjector';
 
 /**
@@ -110,6 +111,18 @@ export interface UserMemoryConfig {
 export interface AgentGroupConfig {
   /** Mapping from agentId to agent info (name, role) */
   agentMap?: Record<string, AgentInfo>;
+
+  // ========== Group context injection (for current agent's identity) ==========
+  /** Current agent's ID (the one who will respond) */
+  currentAgentId?: string;
+  /** Current agent's name */
+  currentAgentName?: string;
+  /** Current agent's role */
+  currentAgentRole?: 'supervisor' | 'participant';
+  /** Group name */
+  groupName?: string;
+  /** List of group members for context injection */
+  members?: GroupMemberInfo[];
 }
 
 /**

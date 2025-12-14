@@ -1170,7 +1170,7 @@ describe('AgentModel', () => {
     });
   });
 
-  describe('queryForSelection', () => {
+  describe('queryAgents', () => {
     it('should return non-virtual agents for the user', async () => {
       // Create non-virtual agents
       await agentModel.create({
@@ -1188,11 +1188,11 @@ describe('AgentModel', () => {
         virtual: false,
       });
 
-      const result = await agentModel.queryForSelection();
+      const result = await agentModel.queryAgents();
 
       expect(result.length).toBeGreaterThanOrEqual(2);
-      expect(result.some((a) => a.title === 'Agent 1')).toBe(true);
-      expect(result.some((a) => a.title === 'Agent 2')).toBe(true);
+      expect(result.some((a: { title: string | null }) => a.title === 'Agent 1')).toBe(true);
+      expect(result.some((a: { title: string | null }) => a.title === 'Agent 2')).toBe(true);
       // Check that only required fields are returned
       expect(result[0]).toHaveProperty('id');
       expect(result[0]).toHaveProperty('title');
@@ -1213,10 +1213,10 @@ describe('AgentModel', () => {
         virtual: false,
       });
 
-      const result = await agentModel.queryForSelection();
+      const result = await agentModel.queryAgents();
 
-      expect(result.some((a) => a.title === 'Virtual Agent')).toBe(false);
-      expect(result.some((a) => a.title === 'Regular Agent')).toBe(true);
+      expect(result.some((a: { title: string | null }) => a.title === 'Virtual Agent')).toBe(false);
+      expect(result.some((a: { title: string | null }) => a.title === 'Regular Agent')).toBe(true);
     });
 
     it('should only return agents for the current user', async () => {
@@ -1231,13 +1231,13 @@ describe('AgentModel', () => {
         virtual: false,
       });
 
-      const result1 = await agentModel.queryForSelection();
-      const result2 = await agentModel2.queryForSelection();
+      const result1 = await agentModel.queryAgents();
+      const result2 = await agentModel2.queryAgents();
 
-      expect(result1.some((a) => a.title === 'User1 Agent')).toBe(true);
-      expect(result1.some((a) => a.title === 'User2 Agent')).toBe(false);
-      expect(result2.some((a) => a.title === 'User2 Agent')).toBe(true);
-      expect(result2.some((a) => a.title === 'User1 Agent')).toBe(false);
+      expect(result1.some((a: { title: string | null }) => a.title === 'User1 Agent')).toBe(true);
+      expect(result1.some((a: { title: string | null }) => a.title === 'User2 Agent')).toBe(false);
+      expect(result2.some((a: { title: string | null }) => a.title === 'User2 Agent')).toBe(true);
+      expect(result2.some((a: { title: string | null }) => a.title === 'User1 Agent')).toBe(false);
     });
 
     it('should return empty array when no agents exist', async () => {
@@ -1246,7 +1246,7 @@ describe('AgentModel', () => {
       await serverDB.insert(users).values({ id: emptyUserId });
       const emptyAgentModel = new AgentModel(serverDB, emptyUserId);
 
-      const result = await emptyAgentModel.queryForSelection();
+      const result = await emptyAgentModel.queryAgents();
 
       expect(result).toEqual([]);
     });
@@ -1260,9 +1260,57 @@ describe('AgentModel', () => {
         virtual: null as unknown as boolean,
       });
 
-      const result = await agentModel.queryForSelection();
+      const result = await agentModel.queryAgents();
 
-      expect(result.some((a) => a.title === 'Null Virtual Agent')).toBe(true);
+      expect(result.some((a: { title: string | null }) => a.title === 'Null Virtual Agent')).toBe(
+        true,
+      );
+    });
+
+    it('should filter by keyword in title and description', async () => {
+      await agentModel.create({
+        title: 'Code Assistant',
+        description: 'Helps with coding',
+        virtual: false,
+      });
+      await agentModel.create({
+        title: 'Writer',
+        description: 'Helps with writing tasks',
+        virtual: false,
+      });
+      await agentModel.create({
+        title: 'Designer',
+        description: 'Helps with design code review',
+        virtual: false,
+      });
+
+      // Search by title
+      const codeResults = await agentModel.queryAgents({ keyword: 'Code' });
+      expect(codeResults.some((a: { title: string | null }) => a.title === 'Code Assistant')).toBe(
+        true,
+      );
+      expect(codeResults.some((a: { title: string | null }) => a.title === 'Designer')).toBe(true); // matches 'code' in description
+      expect(codeResults.some((a: { title: string | null }) => a.title === 'Writer')).toBe(false);
+
+      // Search by description
+      const writingResults = await agentModel.queryAgents({ keyword: 'writing' });
+      expect(writingResults.some((a: { title: string | null }) => a.title === 'Writer')).toBe(true);
+    });
+
+    it('should respect limit and offset parameters', async () => {
+      // Create multiple agents
+      for (let i = 1; i <= 5; i++) {
+        await agentModel.create({
+          title: `Agent ${i}`,
+          virtual: false,
+        });
+      }
+
+      const limitedResults = await agentModel.queryAgents({ limit: 2 });
+      expect(limitedResults.length).toBe(2);
+
+      const offsetResults = await agentModel.queryAgents({ limit: 2, offset: 2 });
+      expect(offsetResults.length).toBe(2);
     });
   });
 });

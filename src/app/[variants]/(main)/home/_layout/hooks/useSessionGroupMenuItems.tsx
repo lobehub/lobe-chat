@@ -175,6 +175,7 @@ export const useSessionGroupMenuItems = () => {
                 await createGroup(
                   {
                     config: {
+                      ...DEFAULT_CHAT_GROUP_CHAT_CONFIG,
                       ...(hostConfig
                         ? {
                             orchestratorModel: hostConfig.model,
@@ -182,7 +183,6 @@ export const useSessionGroupMenuItems = () => {
                           }
                         : {}),
                       enableSupervisor: enableSupervisor ?? true,
-                      scene: DEFAULT_CHAT_GROUP_CHAT_CONFIG.scene,
                     },
                     title: 'New Group Chat',
                   },
@@ -258,6 +258,7 @@ export const useSessionGroupMenuItems = () => {
         await createGroup(
           {
             config: {
+              ...DEFAULT_CHAT_GROUP_CHAT_CONFIG,
               ...(hostConfig
                 ? {
                     orchestratorModel: hostConfig.model,
@@ -265,7 +266,6 @@ export const useSessionGroupMenuItems = () => {
                   }
                 : {}),
               enableSupervisor: enableSupervisor ?? true,
-              scene: DEFAULT_CHAT_GROUP_CHAT_CONFIG.scene,
             },
             title: template.title,
           },
@@ -302,6 +302,7 @@ export const useSessionGroupMenuItems = () => {
         await createGroup(
           {
             config: {
+              ...DEFAULT_CHAT_GROUP_CHAT_CONFIG,
               ...(hostConfig
                 ? {
                     orchestratorModel: hostConfig.model,
@@ -309,7 +310,6 @@ export const useSessionGroupMenuItems = () => {
                   }
                 : {}),
               enableSupervisor: enableSupervisor ?? true,
-              scene: DEFAULT_CHAT_GROUP_CHAT_CONFIG.scene,
             },
             title,
           },

@@ -1,6 +1,6 @@
 import { getAgentPersistConfig } from '@lobechat/builtin-agents';
 import { INBOX_SESSION_ID } from '@lobechat/const';
-import { and, desc, eq, inArray, not, or } from 'drizzle-orm';
+import { and, desc, eq, ilike, inArray, isNull, or } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
 import { merge } from '@/utils/merge';
@@ -36,11 +36,26 @@ export class AgentModel {
   };
 
   /**
-   * Query non-virtual agents for group member selection.
+   * Query non-virtual agents with optional keyword filter.
    * Returns minimal agent info (id, title, description, avatar, backgroundColor).
    * Excludes virtual agents (like inbox, supervisors, etc).
    */
-  queryForSelection = async () => {
+  queryAgents = async (params?: { keyword?: string; limit?: number; offset?: number }) => {
+    const { keyword, limit = 9999, offset = 0 } = params ?? {};
+    // Include agents where virtual is false OR null (legacy data without virtual field)
+    const baseConditions = and(
+      eq(agents.userId, this.userId),
+      or(eq(agents.virtual, false), isNull(agents.virtual)),
+    );
+
+    // Add keyword search condition if provided
+    const searchCondition = keyword
+      ? and(
+          baseConditions,
+          or(ilike(agents.title, `%${keyword}%`), ilike(agents.description, `%${keyword}%`)),
+        )
+      : baseConditions;
+
     return this.db
       .select({
         avatar: agents.avatar,
@@ -50,8 +65,10 @@ export class AgentModel {
         title: agents.title,
       })
       .from(agents)
-      .where(and(eq(agents.userId, this.userId), not(eq(agents.virtual, true))))
-      .orderBy(desc(agents.updatedAt));
+      .where(searchCondition)
+      .orderBy(desc(agents.updatedAt))
+      .limit(limit)
+      .offset(offset);
   };
 
   /**

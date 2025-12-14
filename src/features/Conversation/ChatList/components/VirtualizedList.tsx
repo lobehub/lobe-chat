@@ -2,7 +2,6 @@
 
 import isEqual from 'fast-deep-equal';
 import { ReactElement, type ReactNode, memo, useCallback, useEffect, useRef } from 'react';
-import { Center } from 'react-layout-kit';
 import { VList, VListHandle } from 'virtua';
 
 import WideScreenContainer from '../../../WideScreenContainer';
@@ -128,11 +127,16 @@ const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, i
         style={{ height: '100%', paddingBottom: 24 }}
       >
         {(messageId, index): ReactElement => {
-          const shouldNotIncludeWideScreenContainer = messageId.includes('agentCouncil');
+          const isAgentCouncil = messageId.includes('agentCouncil');
           const content = itemContent(index, messageId);
 
-          if (shouldNotIncludeWideScreenContainer) {
-            return <Center width={'100%'}>{content}</Center>;
+          if (isAgentCouncil) {
+            // AgentCouncil needs full width for horizontal scroll
+            return (
+              <div key={messageId} style={{ position: 'relative', width: '100%' }}>
+                {content}
+              </div>
+            );
           }
 
           return (

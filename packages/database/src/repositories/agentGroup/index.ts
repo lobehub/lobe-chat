@@ -1,9 +1,10 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { AgentGroupDetail, AgentGroupMember } from '@lobechat/types';
 import { cleanObject } from '@lobechat/utils';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import {
+  AgentItem,
   ChatGroupItem,
   NewChatGroup,
   NewChatGroupAgent,
@@ -18,6 +19,26 @@ export interface SupervisorAgentConfig {
   model?: string;
   provider?: string;
   title?: string;
+}
+
+/**
+ * Result of checking agents before removal
+ */
+export interface RemoveAgentsCheckResult {
+  /** Agent IDs that are not virtual and can be safely removed from group */
+  nonVirtualAgentIds: string[];
+  /** Virtual agents that will be permanently deleted along with their messages */
+  virtualAgents: Array<Pick<AgentItem, 'avatar' | 'description' | 'id' | 'title'>>;
+}
+
+/**
+ * Result of removing agents from group
+ */
+export interface RemoveAgentsFromGroupResult {
+  /** IDs of virtual agents that were permanently deleted */
+  deletedVirtualAgentIds: string[];
+  /** Number of agents removed from group */
+  removedFromGroup: number;
 }
 
 export interface CreateGroupWithSupervisorResult {
@@ -191,6 +212,96 @@ export class AgentGroupRepository {
       agents: insertedAgents,
       group,
       supervisorAgentId: supervisorAgent.id,
+    };
+  }
+
+  /**
+   * Check which agents are virtual before removing them from a group.
+   * This allows the frontend to show a confirmation dialog for virtual agents.
+   *
+   * @param groupId - The chat group ID
+   * @param agentIds - Array of agent IDs to check
+   * @returns Object containing virtual and non-virtual agent lists
+   */
+  async checkAgentsBeforeRemoval(
+    groupId: string,
+    agentIds: string[],
+  ): Promise<RemoveAgentsCheckResult> {
+    if (agentIds.length === 0) {
+      return { nonVirtualAgentIds: [], virtualAgents: [] };
+    }
+
+    // Get agent details for the specified IDs
+    const agentDetails = await this.db
+      .select({
+        avatar: agents.avatar,
+        description: agents.description,
+        id: agents.id,
+        title: agents.title,
+        virtual: agents.virtual,
+      })
+      .from(agents)
+      .where(and(eq(agents.userId, this.userId), inArray(agents.id, agentIds)));
+
+    const virtualAgents: RemoveAgentsCheckResult['virtualAgents'] = [];
+    const nonVirtualAgentIds: string[] = [];
+
+    for (const agent of agentDetails) {
+      if (agent.virtual) {
+        virtualAgents.push({
+          avatar: agent.avatar,
+          description: agent.description,
+          id: agent.id,
+          title: agent.title,
+        });
+      } else {
+        nonVirtualAgentIds.push(agent.id);
+      }
+    }
+
+    return { nonVirtualAgentIds, virtualAgents };
+  }
+
+  /**
+   * Remove agents from a group. Virtual agents will be permanently deleted.
+   *
+   * @param groupId - The chat group ID
+   * @param agentIds - Array of agent IDs to remove
+   * @param deleteVirtualAgents - Whether to delete virtual agents (default: true)
+   * @returns Result containing counts and deleted virtual agent IDs
+   */
+  async removeAgentsFromGroup(
+    groupId: string,
+    agentIds: string[],
+    deleteVirtualAgents: boolean = true,
+  ): Promise<RemoveAgentsFromGroupResult> {
+    if (agentIds.length === 0) {
+      return { deletedVirtualAgentIds: [], removedFromGroup: 0 };
+    }
+
+    // 1. Check which agents are virtual
+    const { virtualAgents } = await this.checkAgentsBeforeRemoval(groupId, agentIds);
+    const virtualAgentIds = virtualAgents.map((a) => a.id);
+
+    // 2. Remove all agents from the group (batch delete from junction table)
+    await this.db
+      .delete(chatGroupsAgents)
+      .where(
+        and(eq(chatGroupsAgents.chatGroupId, groupId), inArray(chatGroupsAgents.agentId, agentIds)),
+      );
+
+    // 3. Delete virtual agents if requested
+    // Note: Virtual agents are standalone (no associated sessions), so we can delete them directly
+    // The messages sent by these agents in the group chat will remain (orphaned agentId reference)
+    if (deleteVirtualAgents && virtualAgentIds.length > 0) {
+      await this.db
+        .delete(agents)
+        .where(and(eq(agents.userId, this.userId), inArray(agents.id, virtualAgentIds)));
+    }
+
+    return {
+      deletedVirtualAgentIds: deleteVirtualAgents ? virtualAgentIds : [],
+      removedFromGroup: agentIds.length,
     };
   }
 }

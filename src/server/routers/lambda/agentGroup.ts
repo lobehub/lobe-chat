@@ -43,6 +43,21 @@ export const agentGroupRouter = router({
     }),
 
   /**
+   * Check agents before removal to identify virtual agents that will be permanently deleted.
+   * This allows the frontend to show a confirmation dialog.
+   */
+  checkAgentsBeforeRemoval: agentGroupProcedure
+    .input(
+      z.object({
+        agentIds: z.array(z.string()),
+        groupId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      return ctx.agentGroupRepo.checkAgentsBeforeRemoval(input.groupId, input.agentIds);
+    }),
+
+  /**
    * Create a group with a supervisor agent.
    * The supervisor agent is automatically created as a virtual agent.
    * Returns the groupId and supervisorAgentId.
@@ -136,17 +151,29 @@ export const agentGroupRouter = router({
     return ctx.chatGroupModel.queryWithMemberDetails();
   }),
 
+  /**
+   * Remove agents from a group.
+   * - Non-virtual agents are simply removed from the group (agent still exists)
+   * - Virtual agents are permanently deleted along with removal from group
+   *
+   * @param groupId - The group to remove agents from
+   * @param agentIds - Array of agent IDs to remove
+   * @param deleteVirtualAgents - Whether to delete virtual agents (default: true)
+   */
   removeAgentsFromGroup: agentGroupProcedure
     .input(
       z.object({
         agentIds: z.array(z.string()),
+        deleteVirtualAgents: z.boolean().optional(),
         groupId: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      for (const agentId of input.agentIds) {
-        await ctx.chatGroupModel.removeAgentFromGroup(input.groupId, agentId);
-      }
+      return ctx.agentGroupRepo.removeAgentsFromGroup(
+        input.groupId,
+        input.agentIds,
+        input.deleteVirtualAgents,
+      );
     }),
 
   updateAgentInGroup: agentGroupProcedure

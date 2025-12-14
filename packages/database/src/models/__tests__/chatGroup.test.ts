@@ -527,6 +527,119 @@ describe('ChatGroupModel', () => {
     });
   });
 
+  describe('removeAgentsFromGroup', () => {
+    it('should remove multiple agents from group', async () => {
+      // Create test data
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(chatGroups).values({
+          id: 'batch-remove-group',
+          userId,
+          title: 'Batch Remove Group',
+        });
+
+        await trx.insert(agentsTable).values([
+          { id: 'agent-to-remove-1', userId, title: 'Agent 1' },
+          { id: 'agent-to-remove-2', userId, title: 'Agent 2' },
+          { id: 'agent-to-keep', userId, title: 'Agent to Keep' },
+        ]);
+
+        await trx.insert(chatGroupsAgents).values([
+          { chatGroupId: 'batch-remove-group', agentId: 'agent-to-remove-1', userId },
+          { chatGroupId: 'batch-remove-group', agentId: 'agent-to-remove-2', userId },
+          { chatGroupId: 'batch-remove-group', agentId: 'agent-to-keep', userId },
+        ]);
+      });
+
+      await chatGroupModel.removeAgentsFromGroup('batch-remove-group', [
+        'agent-to-remove-1',
+        'agent-to-remove-2',
+      ]);
+
+      // Verify only the specified agents were removed
+      const groupAgents = toRelationAgents(
+        await chatGroupModel.getGroupAgents('batch-remove-group'),
+      );
+      expect(groupAgents).toHaveLength(1);
+      expect(groupAgents[0]?.agentId).toBe('agent-to-keep');
+    });
+
+    it('should handle empty agentIds array gracefully', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(chatGroups).values({
+          id: 'empty-remove-group',
+          userId,
+          title: 'Empty Remove Group',
+        });
+
+        await trx.insert(agentsTable).values({
+          id: 'agent-stays',
+          userId,
+          title: 'Agent Stays',
+        });
+
+        await trx.insert(chatGroupsAgents).values({
+          chatGroupId: 'empty-remove-group',
+          agentId: 'agent-stays',
+          userId,
+        });
+      });
+
+      // Should not throw error and should not remove any agents
+      await expect(
+        chatGroupModel.removeAgentsFromGroup('empty-remove-group', []),
+      ).resolves.not.toThrow();
+
+      const groupAgents = toRelationAgents(
+        await chatGroupModel.getGroupAgents('empty-remove-group'),
+      );
+      expect(groupAgents).toHaveLength(1);
+    });
+
+    it('should handle removing non-existent agents gracefully', async () => {
+      await serverDB.insert(chatGroups).values({
+        id: 'no-match-group',
+        userId,
+        title: 'No Match Group',
+      });
+
+      // Should not throw error
+      await expect(
+        chatGroupModel.removeAgentsFromGroup('no-match-group', [
+          'non-existent-1',
+          'non-existent-2',
+        ]),
+      ).resolves.not.toThrow();
+    });
+
+    it('should remove all agents when all are specified', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(chatGroups).values({
+          id: 'remove-all-group',
+          userId,
+          title: 'Remove All Group',
+        });
+
+        await trx.insert(agentsTable).values([
+          { id: 'remove-all-1', userId, title: 'Remove All 1' },
+          { id: 'remove-all-2', userId, title: 'Remove All 2' },
+        ]);
+
+        await trx.insert(chatGroupsAgents).values([
+          { chatGroupId: 'remove-all-group', agentId: 'remove-all-1', userId },
+          { chatGroupId: 'remove-all-group', agentId: 'remove-all-2', userId },
+        ]);
+      });
+
+      await chatGroupModel.removeAgentsFromGroup('remove-all-group', [
+        'remove-all-1',
+        'remove-all-2',
+      ]);
+
+      const groupAgents = await chatGroupModel.getGroupAgents('remove-all-group');
+      expect(groupAgents).toHaveLength(0);
+    });
+  });
+
   describe('updateAgentInGroup', () => {
     it('should update agent settings in group', async () => {
       // Create test data

@@ -180,6 +180,7 @@ export const useCreateMenuItems = () => {
         await createGroup(
           {
             config: {
+              ...DEFAULT_CHAT_GROUP_CHAT_CONFIG,
               ...(hostConfig
                 ? {
                     orchestratorModel: hostConfig.model,
@@ -187,7 +188,6 @@ export const useCreateMenuItems = () => {
                   }
                 : {}),
               enableSupervisor: enableSupervisor ?? true,
-              scene: DEFAULT_CHAT_GROUP_CHAT_CONFIG.scene,
             },
             title,
           },

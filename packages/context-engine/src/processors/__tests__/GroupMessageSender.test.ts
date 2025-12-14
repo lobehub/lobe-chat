@@ -41,7 +41,9 @@ describe('GroupMessageSenderProcessor', () => {
       expect(assistantContent).toContain('role: participant');
       expect(assistantContent).toContain('agent_id: agt_weather');
       expect(assistantContent).toContain('<!-- END SYSTEM CONTEXT -->');
-      expect(assistantContent).toContain('NEVER include or reference the agent_id');
+      expect(assistantContent).toContain(
+        'MUST NOT include, reproduce, or reference any part of this block',
+      );
 
       // Check metadata
       expect(result.metadata.groupMessageSenderProcessed).toBe(1);

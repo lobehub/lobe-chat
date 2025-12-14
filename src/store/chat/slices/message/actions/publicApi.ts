@@ -131,6 +131,7 @@ export const messagePublicApi: StateCreator<
       activeTopicId,
       activeAgentId,
       activeThreadId,
+      activeGroupId,
     } = get();
     if (!activeAgentId) return;
 
@@ -141,9 +142,9 @@ export const messagePublicApi: StateCreator<
       files: fileList,
       role: 'user',
       agentId: activeAgentId,
-      // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
       threadId: activeThreadId,
+      groupId: activeGroupId,
       parentId,
     });
 
