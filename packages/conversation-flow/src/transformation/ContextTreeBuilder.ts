@@ -100,8 +100,13 @@ export class ContextTreeBuilder {
       const agentCouncilNode = this.createAgentCouncilNodeFromChildren(message, idNode);
       contextTree.push(agentCouncilNode);
 
-      // AgentCouncil doesn't continue - all columns are parallel endpoints
-      // The conversation continues after the supervisor completes orchestration
+      // Continue processing children of the last member (for supervisor final reply)
+      // The supervisor's reply has parentId pointing to the last agent's message
+      const lastChild = idNode.children.at(-1);
+      if (lastChild && lastChild.children.length > 0) {
+        // Process the first child of the last agent (supervisor's reply)
+        this.transformToLinear(lastChild.children[0], contextTree);
+      }
       return;
     }
 
@@ -317,30 +322,29 @@ export class ContextTreeBuilder {
 
   /**
    * Create AgentCouncilNode from children messages
-   * Similar to CompareNode but without activeColumnId (all columns enter context)
+   * Similar to CompareNode but without activeColumnId (all members enter context)
    */
   private createAgentCouncilNodeFromChildren(message: Message, idNode: IdNode): AgentCouncilNode {
-    // Each child is a column - need to recursively process to handle AssistantGroup
-    const columns = idNode.children.map((child) => {
+    // Each child is a member - process to handle potential AssistantGroup
+    const members = idNode.children.map((child) => {
       const childMessage = this.messageMap.get(child.id);
       if (!childMessage) {
-        return [{ id: child.id, type: 'message' } as MessageNode];
+        return { id: child.id, type: 'message' } as MessageNode;
       }
 
-      // Check if this column should be an AssistantGroup (agent with tool calls)
+      // Check if this member should be an AssistantGroup (agent with tool calls)
       if (this.isAssistantGroupNode(childMessage, child)) {
-        const assistantGroupNode = this.createAssistantGroupNode(childMessage, child);
-        return [assistantGroupNode];
+        return this.createAssistantGroupNode(childMessage, child);
       }
 
       // Otherwise, just a simple MessageNode
-      return [{ id: child.id, type: 'message' } as MessageNode];
+      return { id: child.id, type: 'message' } as MessageNode;
     });
 
-    // Generate ID by joining parent message id and all column message ids
-    const columnIds = idNode.children.map((child) => child.id).join('-');
-    const agentCouncilId = `agentCouncil-${message.id}-${columnIds}`;
+    // Generate ID by joining parent message id and all member message ids
+    const memberIds = idNode.children.map((child) => child.id).join('-');
+    const agentCouncilId = `agentCouncil-${message.id}-${memberIds}`;
 
-    return { columns, id: agentCouncilId, messageId: message.id, type: 'agentCouncil' };
+    return { id: agentCouncilId, members, messageId: message.id, type: 'agentCouncil' };
   }
 }

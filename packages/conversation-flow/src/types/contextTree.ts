@@ -64,8 +64,8 @@ export interface BranchNode extends BaseNode {
  * Unlike CompareNode, all responses enter LLM context (no selection needed)
  */
 export interface AgentCouncilNode extends BaseNode {
-  /** Each column represents an agent's response tree */
-  columns: ContextNode[][];
+  /** Each member represents a single agent's response (simple ContextNode, not array) */
+  members: ContextNode[];
   /** The message that triggered the council (typically a tool message) */
   messageId: string;
   type: 'agentCouncil';
