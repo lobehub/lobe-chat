@@ -5,8 +5,6 @@
  */
 import type { AfterCompletionCallback } from '@/store/chat/slices/operation/types';
 
-
-
 /**
  * Result returned by builtin tool executors
  */
@@ -24,6 +22,12 @@ export interface BuiltinToolResult {
     message: string;
     type: string;
   };
+
+  /**
+   * Metadata to attach to the tool message
+   * Used to mark messages for special handling (e.g., agentCouncil for parallel display)
+   */
+  metadata?: Record<string, any>;
 
   /**
    * Plugin state for UI rendering
@@ -79,6 +83,11 @@ export interface TriggerBroadcastParams extends GroupOrchestrationBaseParams {
    * Optional instruction for the agents
    */
   instruction?: string;
+  /**
+   * The tool message ID that triggered the broadcast
+   * Used as parentId for agent responses to build correct message tree
+   */
+  toolMessageId: string;
 }
 
 /**
@@ -232,4 +241,4 @@ export interface OptimisticUpdateToolMessageParams {
   pluginState?: any;
 }
 
-export {type AfterCompletionCallback} from '@/store/chat/slices/operation/types';
+export { type AfterCompletionCallback } from '@/store/chat/slices/operation/types';

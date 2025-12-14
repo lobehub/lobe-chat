@@ -149,11 +149,12 @@ export const pluginTypes: StateCreator<
           signal: operation?.abortController?.signal,
         });
 
-      // Use optimisticUpdateToolMessage to batch update content, state, error
+      // Use optimisticUpdateToolMessage to batch update content, state, error, metadata
       await optimisticUpdateToolMessage(
         id,
         {
           content: result.content,
+          metadata: result.metadata,
           pluginError: result.error
             ? {
                 body: result.error.body,

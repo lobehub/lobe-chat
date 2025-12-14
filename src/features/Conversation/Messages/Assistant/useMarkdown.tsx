@@ -23,7 +23,7 @@ const isHtmlCode = (content: string, language: string) => {
 };
 
 export const useMarkdown = (id: string): Partial<MarkdownProps> => {
-  const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
+  const item = useConversationStore(dataSelectors.getDbMessageById(id), isEqual)!;
   const { role, search } = item;
   const { transitionMode } = useUserStore(userGeneralSettingsSelectors.config);
   const generating = useConversationStore(messageStateSelectors.isMessageGenerating(id));

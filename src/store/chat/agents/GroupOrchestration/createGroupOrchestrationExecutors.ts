@@ -169,19 +169,20 @@ export const createGroupOrchestrationExecutors = (
      * Executes multiple Agents in parallel
      */
     broadcast: async (instruction, state) => {
-      const { agentIds, instruction: agentInstruction } = (
-        instruction as GroupOrchestrationInstructionBroadcast
-      ).payload;
+      const {
+        agentIds,
+        instruction: agentInstruction,
+        toolMessageId,
+      } = (instruction as GroupOrchestrationInstructionBroadcast).payload;
 
       const sessionLogId = `${state.operationId}:broadcast`;
       log(
-        `[${sessionLogId}] Broadcasting to agents: ${agentIds.join(', ')}, instruction: ${agentInstruction}`,
+        `[${sessionLogId}] Broadcasting to agents: ${agentIds.join(', ')}, instruction: ${agentInstruction}, toolMessageId: ${toolMessageId}`,
       );
 
       const messages = getMessages();
-      const lastMessage = messages.at(-1);
 
-      if (!lastMessage) {
+      if (messages.length === 0) {
         log(`[${sessionLogId}] No messages found, cannot execute agents`);
         return {
           events: [{ agentIds, type: 'agents_broadcasted' }] as GroupOrchestrationEvent[],
@@ -196,13 +197,14 @@ export const createGroupOrchestrationExecutors = (
       // Execute all Agents in parallel, each with their own subAgentId for config retrieval
       // - messageContext keeps the group's main conversation context (for message storage)
       // - subAgentId specifies which agent's config to use for each agent
+      // - toolMessageId is used as parentMessageId so agent responses are children of the tool message
       await Promise.all(
         agentIds.map(async (agentId) => {
           await get().internal_execAgentRuntime({
             context: { ...messageContext, subAgentId: agentId },
             messages,
-            parentMessageId: lastMessage.id,
-            parentMessageType: lastMessage.role as 'user' | 'assistant' | 'tool',
+            parentMessageId: toolMessageId,
+            parentMessageType: 'tool',
             parentOperationId: orchestrationOperationId,
           });
         }),

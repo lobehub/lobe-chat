@@ -1,5 +1,10 @@
 import { isDesktop } from '@lobechat/const';
-import { AgentBuilderContext, MessagesEngine, PageEditorContext } from '@lobechat/context-engine';
+import {
+  AgentBuilderContext,
+  AgentGroupConfig,
+  MessagesEngine,
+  PageEditorContext,
+} from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
@@ -8,6 +13,8 @@ import debug from 'debug';
 import { isCanUseFC } from '@/helpers/isCanUseFC';
 import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { getChatGroupStoreState } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
@@ -22,6 +29,8 @@ interface ContextEngineeringContext {
   /** Agent Builder context for injecting current agent info */
   agentBuilderContext?: AgentBuilderContext;
   enableHistoryCount?: boolean;
+  /** Group ID for multi-agent scenarios */
+  groupId?: string;
   historyCount?: number;
   historySummary?: string;
   inputTemplate?: string;
@@ -49,6 +58,7 @@ export const contextEngineering = async ({
   historyCount,
   historySummary,
   agentBuilderContext,
+  groupId,
   pageEditorContext,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   log('tools: %o', tools);
@@ -65,6 +75,25 @@ export const contextEngineering = async ({
     isAgentBuilderEnabled,
     isPageAgentEnabled,
   );
+
+  // Build agent group configuration if groupId is provided
+  let agentGroup: AgentGroupConfig | undefined;
+  if (groupId) {
+    const groupStoreState = getChatGroupStoreState();
+    const groupDetail = agentGroupSelectors.getGroupById(groupId)(groupStoreState);
+
+    if (groupDetail?.agents && groupDetail.agents.length > 0) {
+      const agentMap: AgentGroupConfig['agentMap'] = {};
+      for (const agent of groupDetail.agents) {
+        agentMap[agent.id] = {
+          name: agent.title || 'Untitled Agent',
+          role: agent.isSupervisor ? 'supervisor' : 'participant',
+        };
+      }
+      agentGroup = { agentMap };
+      log('agentGroup built: %o', agentGroup);
+    }
+  }
 
   // Get enabled agent files with content and knowledge bases from agent store
   const agentStoreState = getAgentStoreState();
@@ -133,6 +162,7 @@ export const contextEngineering = async ({
 
     // Extended contexts - only pass when enabled
     ...(isAgentBuilderEnabled && { agentBuilderContext }),
+    ...(agentGroup && { agentGroup }),
     ...(isPageAgentEnabled && { pageEditorContext }),
   });
 

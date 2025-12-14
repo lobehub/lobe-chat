@@ -21,6 +21,11 @@ import { displayMessageSelectors } from '../../message/selectors';
  */
 export interface UpdateToolMessageParams {
   content?: string;
+  /**
+   * Metadata to attach to the tool message
+   * Used to mark messages for special handling (e.g., agentCouncil for parallel display)
+   */
+  metadata?: Record<string, any>;
   pluginError?: ChatMessagePluginError | null;
   pluginState?: any;
 }
@@ -261,16 +266,13 @@ export const pluginOptimisticUpdate: StateCreator<
   optimisticUpdateToolMessage: async (id, params, context) => {
     const { replaceMessages, internal_getConversationContext, internal_dispatchMessage } = get();
 
-    const { content, pluginState, pluginError } = params;
+    const { content, metadata, pluginState, pluginError } = params;
 
     // Batch optimistic updates - update frontend immediately
-    if (content !== undefined) {
-      internal_dispatchMessage({ id, type: 'updateMessage', value: { content } }, context);
-    }
-
-    if (pluginState !== undefined) {
-      internal_dispatchMessage({ id, type: 'updateMessage', value: { pluginState } }, context);
-    }
+    internal_dispatchMessage(
+      { id, type: 'updateMessage', value: { pluginState, content, metadata } },
+      context,
+    );
 
     if (pluginError !== undefined) {
       internal_dispatchMessage(
@@ -281,28 +283,16 @@ export const pluginOptimisticUpdate: StateCreator<
 
     const ctx = internal_getConversationContext(context);
 
-    // Persist to database in parallel for better performance
-    const updatePromises: Promise<any>[] = [];
+    // Use single API call to update all fields in one transaction
+    // This prevents race conditions that occurred with multiple parallel requests
+    const result = await messageService.updateToolMessage(
+      id,
+      { content, metadata, pluginError, pluginState },
+      ctx,
+    );
 
-    if (content !== undefined) {
-      updatePromises.push(messageService.updateMessage(id, { content }, ctx));
-    }
-
-    if (pluginState !== undefined) {
-      updatePromises.push(messageService.updateMessagePluginState(id, pluginState, ctx));
-    }
-
-    if (pluginError !== undefined) {
-      updatePromises.push(messageService.updateMessagePluginError(id, pluginError, ctx));
-    }
-
-    // Wait for all updates to complete and get the last result with messages
-    const results = await Promise.all(updatePromises);
-
-    // Use the last successful result's messages to update the store
-    const lastResult = results.findLast((r) => r?.success && r.messages);
-    if (lastResult?.messages) {
-      replaceMessages(lastResult.messages, { context: ctx });
+    if (result?.success && result.messages) {
+      replaceMessages(result.messages, { context: ctx });
     }
   },
 });

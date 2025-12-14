@@ -62,6 +62,7 @@ import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
   agentId?: string;
+  groupId?: string;
   messages: UIChatMessage[];
 }
 
@@ -93,7 +94,7 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
 
 class ChatService {
   createAssistantMessage = async (
-    { plugins: enabledPlugins, messages, agentId, ...params }: GetChatCompletionPayload,
+    { plugins: enabledPlugins, messages, agentId, groupId, ...params }: GetChatCompletionPayload,
     options?: FetchOptions,
   ) => {
     const payload = merge(
@@ -262,6 +263,7 @@ class ChatService {
       agentBuilderContext,
       enableHistoryCount:
         agentChatConfigSelectors.getEnableHistoryCountById(targetAgentId)(getAgentStoreState()),
+      groupId,
       historyCount:
         agentChatConfigSelectors.getHistoryCountById(targetAgentId)(getAgentStoreState()) + 2,
       inputTemplate: chatConfig.inputTemplate,

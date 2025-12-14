@@ -824,6 +824,81 @@ export class MessageModel {
     return this.db.update(messagePlugins).set(value).where(eq(messagePlugins.id, id));
   };
 
+  /**
+   * Update tool message with content, metadata, pluginState, and pluginError in a single transaction
+   * This prevents race conditions when updating multiple fields
+   */
+  updateToolMessage = async (
+    id: string,
+    params: {
+      content?: string;
+      metadata?: Record<string, any>;
+      pluginError?: any;
+      pluginState?: Record<string, any>;
+    },
+  ): Promise<{ success: boolean }> => {
+    const { content, metadata, pluginState, pluginError } = params;
+
+    try {
+      await this.db.transaction(async (trx) => {
+        // Update messages table (content, metadata)
+        if (content !== undefined || metadata !== undefined) {
+          const messageUpdateData: Record<string, any> = {};
+
+          if (content !== undefined) {
+            messageUpdateData.content = content;
+          }
+
+          if (metadata !== undefined) {
+            // Need to merge with existing metadata
+            const existingMessage = await trx.query.messages.findFirst({
+              where: and(eq(messages.id, id), eq(messages.userId, this.userId)),
+            });
+            messageUpdateData.metadata = merge(existingMessage?.metadata || {}, metadata);
+          }
+
+          if (Object.keys(messageUpdateData).length > 0) {
+            await trx
+              .update(messages)
+              .set(messageUpdateData)
+              .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
+          }
+        }
+
+        // Update messagePlugins table (pluginState, pluginError)
+        if (pluginState !== undefined || pluginError !== undefined) {
+          const pluginItem = await trx.query.messagePlugins.findFirst({
+            where: eq(messagePlugins.id, id),
+          });
+
+          if (pluginItem) {
+            const pluginUpdateData: Record<string, any> = {};
+
+            if (pluginState !== undefined) {
+              pluginUpdateData.state = merge(pluginItem.state || {}, pluginState);
+            }
+
+            if (pluginError !== undefined) {
+              pluginUpdateData.error = pluginError;
+            }
+
+            if (Object.keys(pluginUpdateData).length > 0) {
+              await trx
+                .update(messagePlugins)
+                .set(pluginUpdateData)
+                .where(eq(messagePlugins.id, id));
+            }
+          }
+        }
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('Update tool message error:', error);
+      return { success: false };
+    }
+  };
+
   updateTranslate = async (id: string, translate: Partial<ChatTranslate>) => {
     const result = await this.db.query.messageTranslates.findFirst({
       where: and(eq(messageTranslates.id, id)),

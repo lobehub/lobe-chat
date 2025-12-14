@@ -5,6 +5,7 @@ import type { OpenAIChatMessage } from '@/types/index';
 import { ContextEngine } from '../../pipeline';
 import {
   GroupMessageFlattenProcessor,
+  GroupMessageSenderProcessor,
   HistoryTruncateProcessor,
   InputTemplateProcessor,
   MessageCleanupProcessor,
@@ -112,11 +113,13 @@ export class MessagesEngine {
       variableGenerators,
       fileContext,
       agentBuilderContext,
+      agentGroup,
       pageEditorContext,
       userMemory,
     } = this.params;
 
     const isAgentBuilderEnabled = !!agentBuilderContext;
+    const isAgentGroupEnabled = agentGroup?.agentMap && Object.keys(agentGroup.agentMap).length > 0;
     const isPageEditorEnabled = !!pageEditorContext;
     const isUserMemoryEnabled = userMemory?.enabled && userMemory?.memories;
 
@@ -190,7 +193,16 @@ export class MessagesEngine {
       // 11. Group message flatten (convert role=group to standard assistant + tool messages)
       new GroupMessageFlattenProcessor(),
 
-      // 12. Message content processing (image encoding, etc.)
+      // 12. Group message sender identity injection (for multi-agent chat)
+      ...(isAgentGroupEnabled
+        ? [
+            new GroupMessageSenderProcessor({
+              agentMap: agentGroup.agentMap!,
+            }),
+          ]
+        : []),
+
+      // 13. Message content processing (image encoding, etc.)
       new MessageContentProcessor({
         fileContext: fileContext || { enabled: true, includeFileUrl: true },
         isCanUseVideo: capabilities?.isCanUseVideo || (() => false),
@@ -199,7 +211,7 @@ export class MessagesEngine {
         provider,
       }),
 
-      // 13. Tool call processing
+      // 14. Tool call processing
       new ToolCallProcessor({
         genToolCallingName: this.toolNameResolver.generate.bind(this.toolNameResolver),
         isCanUseFC: capabilities?.isCanUseFC || (() => true),
@@ -207,10 +219,10 @@ export class MessagesEngine {
         provider,
       }),
 
-      // 14. Tool message reordering
+      // 15. Tool message reordering
       new ToolMessageReorder(),
 
-      // 15. Message cleanup (final step, keep only necessary fields)
+      // 16. Message cleanup (final step, keep only necessary fields)
       new MessageCleanupProcessor(),
     ];
   }

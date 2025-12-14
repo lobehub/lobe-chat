@@ -22,11 +22,12 @@ vi.mock('zustand/traditional');
 // Mock messageService
 vi.mock('@/services/message', () => ({
   messageService: {
+    createMessage: vi.fn(),
     updateMessage: vi.fn(),
     updateMessageError: vi.fn(),
-    updateMessagePluginState: vi.fn(),
     updateMessagePluginArguments: vi.fn(),
-    createMessage: vi.fn(),
+    updateMessagePluginState: vi.fn(),
+    updateToolMessage: vi.fn(),
   },
 }));
 
@@ -1394,11 +1395,7 @@ describe('ChatPluginAction', () => {
         const content = 'new content';
         const pluginState = { status: 'success' };
 
-        (messageService.updateMessage as Mock).mockResolvedValue({
-          success: true,
-          messages: [],
-        });
-        (messageService.updateMessagePluginState as Mock).mockResolvedValue({
+        (messageService.updateToolMessage as Mock).mockResolvedValue({
           success: true,
           messages: [],
         });
@@ -1418,18 +1415,10 @@ describe('ChatPluginAction', () => {
           );
         });
 
-        expect(messageService.updateMessage).toHaveBeenCalledWith(
+        // Now uses single updateToolMessage call instead of multiple parallel calls
+        expect(messageService.updateToolMessage).toHaveBeenCalledWith(
           messageId,
-          { content },
-          expect.objectContaining({
-            agentId: groupContext.agentId,
-            groupId: groupContext.groupId,
-            topicId: groupContext.topicId,
-          }),
-        );
-        expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
-          messageId,
-          pluginState,
+          { content, metadata: undefined, pluginError: undefined, pluginState },
           expect.objectContaining({
             agentId: groupContext.agentId,
             groupId: groupContext.groupId,

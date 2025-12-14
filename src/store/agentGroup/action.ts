@@ -10,15 +10,11 @@ import type { ChatGroupItem } from '@/database/schemas/chatGroup';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatGroupService } from '@/services/chatGroup';
 import { getAgentStoreState } from '@/store/agent';
+import { useChatStore } from '@/store/chat';
 import { getSessionStoreState } from '@/store/session';
 import { setNamespace } from '@/utils/storeDebug';
 
-import {
-  ChatGroupAction,
-  ChatGroupState,
-  ChatGroupStore,
-  initialChatGroupState,
-} from './initialState';
+import { ChatGroupAction, ChatGroupState, ChatGroupStore } from './initialState';
 import { ChatGroupReducer, chatGroupReducers } from './reducers';
 import { agentGroupSelectors } from './selectors';
 
@@ -59,8 +55,6 @@ export const chatGroupAction: StateCreator<
   };
 
   return {
-    ...initialChatGroupState,
-
     addAgentsToGroup: async (groupId, agentIds) => {
       await chatGroupService.addAgentsToGroup(groupId, agentIds);
       await get().internal_refreshGroups();
@@ -346,6 +340,11 @@ export const chatGroupAction: StateCreator<
             // Set activeAgentId to supervisor for correct model resolution in sendMessage
             if (groupDetail.supervisorAgentId) {
               agentStore.setActiveAgentId(groupDetail.supervisorAgentId);
+              useChatStore.setState(
+                { activeAgentId: groupDetail.supervisorAgentId },
+                false,
+                'syncActiveAgentIdFromAgentGroup',
+              );
             }
           },
         },

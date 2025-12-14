@@ -1,11 +1,13 @@
 import type { Message, ParseResult } from '../../types';
 // Input fixtures
+import { agentCouncil as agentCouncilInputs } from './inputs/agentCouncil';
 import assistantChainWithFollowupInput from './inputs/assistant-chain-with-followup.json';
 import { assistantGroup as assistantGroupInputs } from './inputs/assistantGroup';
 import { branch as branchInputs } from './inputs/branch';
 import { compare as compareInputs } from './inputs/compare';
 import linearConversationInput from './inputs/linear-conversation.json';
 // Output fixtures
+import { agentCouncil as agentCouncilOutputs } from './outputs/agentCouncil';
 import assistantChainWithFollowupOutput from './outputs/assistant-chain-with-followup.json';
 import { assistantGroup as assistantGroupOutputs } from './outputs/assistantGroup';
 import { branch as branchOutputs } from './outputs/branch';
@@ -25,6 +27,7 @@ export interface SerializedParseResult {
  * Test input fixtures - raw messages from database
  */
 export const inputs = {
+  agentCouncil: agentCouncilInputs,
   assistantChainWithFollowup: assistantChainWithFollowupInput as Message[],
   assistantGroup: assistantGroupInputs,
   branch: branchInputs,
@@ -36,6 +39,7 @@ export const inputs = {
  * Test output fixtures - expected parse results
  */
 export const outputs = {
+  agentCouncil: agentCouncilOutputs,
   assistantChainWithFollowup: assistantChainWithFollowupOutput as unknown as SerializedParseResult,
   assistantGroup: assistantGroupOutputs,
   branch: branchOutputs,

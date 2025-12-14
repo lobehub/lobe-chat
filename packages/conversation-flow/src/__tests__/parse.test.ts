@@ -99,6 +99,32 @@ describe('parse', () => {
     });
   });
 
+  describe('AgentCouncil Mode', () => {
+    it('should parse simple agentCouncil (broadcast) correctly', () => {
+      const result = parse(inputs.agentCouncil.simple);
+
+      expect(serializeParseResult(result)).toEqual(outputs.agentCouncil.simple);
+    });
+
+    it('should parse agentCouncil with supervisor final reply correctly', () => {
+      const result = parse(inputs.agentCouncil.withSupervisorReply);
+
+      // The critical assertions:
+      // 1. flatList should have 4 items: user, assistantGroup(supervisor+tool), agentCouncil(3 agents), supervisor-summary
+      expect(result.flatList).toHaveLength(4);
+      expect(result.flatList[0].role).toBe('user');
+      expect(result.flatList[1].role).toBe('assistantGroup');
+      expect(result.flatList[2].role).toBe('agentCouncil');
+      expect(result.flatList[3].role).toBe('assistant'); // supervisor final reply
+      expect(result.flatList[3].id).toBe('msg-supervisor-summary');
+
+      // 2. agentCouncil should have 3 members (not 4, supervisor summary is separate)
+      expect((result.flatList[2] as any).members).toHaveLength(3);
+
+      expect(serializeParseResult(result)).toEqual(outputs.agentCouncil.withSupervisorReply);
+    });
+  });
+
   describe('Assistant Group Scenarios', () => {
     it('should handle tools with assistant branches correctly', () => {
       const result = parse(inputs.assistantGroup.toolsWithBranches);

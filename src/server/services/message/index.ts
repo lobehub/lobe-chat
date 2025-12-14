@@ -192,4 +192,26 @@ export class MessageService {
     await this.messageModel.updateMetadata(id, value);
     return this.queryWithSuccess(options);
   }
+
+  /**
+   * Update tool message with content, metadata, pluginState, and pluginError in a single transaction
+   * This prevents race conditions when updating multiple fields
+   * Pattern: update + conditional query
+   */
+  async updateToolMessage(
+    id: string,
+    value: {
+      content?: string;
+      metadata?: Record<string, any>;
+      pluginError?: any;
+      pluginState?: Record<string, any>;
+    },
+    options?: QueryOptions,
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
+    const result = await this.messageModel.updateToolMessage(id, value);
+    if (!result.success) {
+      return { success: false };
+    }
+    return this.queryWithSuccess(options);
+  }
 }
