@@ -4,15 +4,13 @@ import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { AlertProps } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
-import { Suspense, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useProviderName } from '@/hooks/useProviderName';
 
 import ChatInvalidAPIKey from './ChatInvalidApiKey';
 import ClerkLogin from './ClerkLogin';
-import ErrorJsonViewer from './ErrorJsonViewer';
-import { ErrorActionContainer } from './style';
 
 interface ErrorMessageData {
   error?: ChatMessageError | null;
@@ -37,7 +35,7 @@ const getErrorAlertConfig = (
     return {
       extraDefaultExpand: true,
       extraIsolate: true,
-      type: 'warning',
+      type: 'secondary',
     };
 
   /* ↓ cloud slot ↓ */
@@ -53,7 +51,7 @@ const getErrorAlertConfig = (
     case AgentRuntimeErrorType.ExceededContextWindow:
     case AgentRuntimeErrorType.LocationNotSupportError: {
       return {
-        type: 'warning',
+        type: 'secondary',
       };
     }
 
@@ -64,7 +62,7 @@ const getErrorAlertConfig = (
       return {
         extraDefaultExpand: true,
         extraIsolate: true,
-        type: 'warning',
+        type: 'secondary',
       };
     }
 
@@ -96,7 +94,7 @@ interface ErrorExtraProps {
   data: ErrorMessageData;
 }
 
-const ErrorMessageExtra = memo<ErrorExtraProps>(({ data, block }) => {
+const ErrorMessageExtra = memo<ErrorExtraProps>(({ data }) => {
   const error = data.error as ChatMessageError;
   if (!error?.type) return;
 
@@ -128,17 +126,7 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(({ data, block }) => {
     return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
   }
 
-  return <ErrorJsonViewer block={block} error={data.error} id={data.id} />;
+  return;
 });
 
-export default memo<ErrorExtraProps>(({ data, block }) => (
-  <Suspense
-    fallback={
-      <ErrorActionContainer>
-        <Skeleton active style={{ width: '100%' }} />
-      </ErrorActionContainer>
-    }
-  >
-    <ErrorMessageExtra block={block} data={data} />
-  </Suspense>
-));
+export default ErrorMessageExtra;

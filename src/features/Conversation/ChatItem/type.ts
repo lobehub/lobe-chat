@@ -11,6 +11,7 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
   avatarProps?: AvatarProps;
   belowMessage?: ReactNode;
   children?: ReactNode;
+  customErrorRender?: (error: AlertProps) => ReactNode;
   /**
    * @description Whether the chat item is disabled
    * @default false
@@ -24,7 +25,6 @@ export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange
    * @description Props for Error render
    */
   error?: AlertProps;
-  errorMessage?: ReactNode;
   fontSize?: number;
   /**
    * @description Whether the chat item is in loading state

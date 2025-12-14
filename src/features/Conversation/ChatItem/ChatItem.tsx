@@ -28,7 +28,7 @@ const ChatItem = memo<ChatItemProps>(
     editing,
     messageExtra,
     children,
-    errorMessage,
+    customErrorRender,
     onDoubleClick,
     aboveMessage,
     belowMessage,
@@ -48,7 +48,9 @@ const ChatItem = memo<ChatItemProps>(
     const isUser = placement === 'right';
     const isEmptyMessage =
       !message || String(message).trim() === '' || message === placeholderMessage;
-    const errorContent = <ErrorContent error={error} message={errorMessage} />;
+    const errorContent = error && (
+      <ErrorContent customErrorRender={customErrorRender} error={error} />
+    );
 
     return (
       <Flexbox
@@ -106,7 +108,7 @@ const ChatItem = memo<ChatItemProps>(
               message={message}
               messageExtra={
                 <>
-                  {error && <ErrorContent error={error} message={errorMessage} />}
+                  {errorContent}
                   {messageExtra}
                 </>
               }

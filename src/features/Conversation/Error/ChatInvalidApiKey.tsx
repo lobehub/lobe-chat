@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import InvalidAPIKey from '@/components/InvalidAPIKey';
+import APIKeyForm from '@/components/InvalidAPIKey';
 import { useProviderName } from '@/hooks/useProviderName';
 import { GlobalLLMProviderKey } from '@/types/user/settings/modelProvider';
 
@@ -21,7 +21,7 @@ const ChatInvalidAPIKey = memo<ChatInvalidAPIKeyProps>(({ id, provider }) => {
   const providerName = useProviderName(provider as GlobalLLMProviderKey);
 
   return (
-    <InvalidAPIKey
+    <APIKeyForm
       bedrockDescription={t('bedrock.unlock.description')}
       description={modelProviderErrorT(`unlock.apiKey.description`, {
         name: providerName,
